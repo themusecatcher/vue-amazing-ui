@@ -1,5 +1,5 @@
 import { openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, normalizeStyle } from "vue";
-const Pagination_vue_vue_type_style_index_0_scoped_e4e55ac8_lang = "";
+const Pagination_vue_vue_type_style_index_0_scoped_7b04d407_lang = "";
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -157,7 +157,7 @@ const _sfc_main$1 = {
     }
   }
 };
-const _withScopeId$1 = (n) => (pushScopeId("data-v-e4e55ac8"), n = n(), popScopeId(), n);
+const _withScopeId$1 = (n) => (pushScopeId("data-v-7b04d407"), n = n(), popScopeId(), n);
 const _hoisted_1$1 = { class: "m-pagination-wrap" };
 const _hoisted_2$1 = {
   key: 0,
@@ -292,11 +292,11 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ], 2);
 }
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render$1], ["__scopeId", "data-v-e4e55ac8"]]);
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render$1], ["__scopeId", "data-v-7b04d407"]]);
 Pagination.install = (app) => {
   app.component(Pagination.name, Pagination);
 };
-const Breadcrumb_vue_vue_type_style_index_0_scoped_a0ba6180_lang = "";
+const Breadcrumb_vue_vue_type_style_index_0_scoped_988f5a63_lang = "";
 const _sfc_main = {
   name: "Breadcrumb",
   props: {
@@ -330,7 +330,7 @@ const _sfc_main = {
     }
   }
 };
-const _withScopeId = (n) => (pushScopeId("data-v-a0ba6180"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-988f5a63"), n = n(), popScopeId(), n);
 const _hoisted_1 = ["onClick", "title"];
 const _hoisted_2 = {
   key: 0,
@@ -372,19 +372,22 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     _hoisted_6
   ], 4);
 }
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-a0ba6180"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-988f5a63"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.name, Breadcrumb);
 };
+const components = [
+  Pagination,
+  Breadcrumb
+];
 const install = (app) => {
-  app.use(Pagination);
-  app.use(Breadcrumb);
+  components.forEach((comp) => app.use(comp));
 };
-const VueUi = {
+const VueAmazingUi = {
   install
 };
 export {
   Breadcrumb,
   Pagination,
-  VueUi as default
+  VueAmazingUi as default
 };
