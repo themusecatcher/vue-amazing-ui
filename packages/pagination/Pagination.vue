@@ -185,8 +185,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-// @themeColor: rgb(251, 191, 0);
-@themeColor: rgb(24, 144, 255);
 .m-pagination {
   margin: 16px 0;
 }
@@ -302,7 +300,6 @@ export default {
       }
       &:focus {
         border-color: @themeColor;
-        // box-shadow: 0 0 0 2px rgba(251, 191, 0, 0.2);
         box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
       }
     }
