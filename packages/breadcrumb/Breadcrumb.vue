@@ -48,7 +48,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@themeColor: rgb(251, 191, 0);
 .m-breadcrumb {
   .m-bread {
     display: inline-block;
