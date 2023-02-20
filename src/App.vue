@@ -1,47 +1,59 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref } from 'vue'
+const hideOnSinglePage = ref(false);
+const total = ref(100);
+const pagination = ref({
+  pageSize: 10,
+  p: 1
+})
+const routes = ref([
+    {
+      path: '/first', // 路由地址
+      query: { id: 1, tab: 2 }, // 路由参数
+      name: '一级路由' // 路由名称
+    },
+    {
+      path: '/second',
+      name: '二级路由'
+    },
+    {
+      path: '/third',
+      name: '三级路由三级路由三级路由三级路由三级路由三级路由三级路由'
+    }
+  ])
+function changePage (pager: object) { // 分页器回调
+  console.log('pager:', pager)
+}
+// Vite 在一个特殊的 import.meta.env 对象上暴露环境变量
+console.log('import.meta.env.MODE:', import.meta.env.MODE)
+console.log('import.meta.env.BASE_URL:', import.meta.env.BASE_URL)
+console.log('import.meta.env.PROD:', import.meta.env.PROD)
+console.log('import.meta.env.DEV:', import.meta.env.DEV)
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="app">
+    <Pagination
+      class="mt60"
+      @change="changePage"
+      :current="pagination.p"
+      :pageSize="pagination.pageSize"
+      :total="total"
+      :hideOnSinglePage="hideOnSinglePage"
+      :showQuickJumper="true"
+      :showTotal="true"
+      placement="right"
+    />
+    <Breadcrumb :routes="routes" :height="60" />
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<style lang="less" scoped>
+.mt60 {
+  margin-top: 60px;
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.app {
+  width: 1200px;
+  margin: 0 auto;
 }
 </style>
