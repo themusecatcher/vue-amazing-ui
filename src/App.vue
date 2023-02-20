@@ -43,7 +43,7 @@ console.log('import.meta.env.DEV:', import.meta.env.DEV)
       :hideOnSinglePage="hideOnSinglePage"
       :showQuickJumper="true"
       :showTotal="true"
-      placement="right"
+      placement="center"
     />
   </div>
 </template>
