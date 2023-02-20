@@ -33,6 +33,7 @@ console.log('import.meta.env.DEV:', import.meta.env.DEV)
 
 <template>
   <div class="app">
+    <Breadcrumb :routes="routes" :height="60" />
     <Pagination
       class="mt60"
       @change="changePage"
@@ -44,7 +45,6 @@ console.log('import.meta.env.DEV:', import.meta.env.DEV)
       :showTotal="true"
       placement="right"
     />
-    <Breadcrumb :routes="routes" :height="60" />
   </div>
 </template>
 
