@@ -2,14 +2,18 @@
 import Pagination from './pagination'
 import Breadcrumb from './breadcrumb'
 
+const components = [
+  Pagination,
+  Breadcrumb
+]
+
 // 提供全局 install 方法
 const install = app => {
-  app.use(Pagination)
-  app.use(Breadcrumb)
+  components.forEach(comp => app.use(comp))
 }
 
-const VueUi = {
-  install,
+const VueAmazingUi = {
+  install
 }
 
 export { // 方便按需导入
@@ -17,4 +21,4 @@ export { // 方便按需导入
   Breadcrumb
 }
 
-export default VueUi
+export default VueAmazingUi
