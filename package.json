@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "dev": "vite  --port 9000 --open --force",
+    "dev": "vite --port 9000 --open --force",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build --watch",
