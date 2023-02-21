@@ -381,13 +381,13 @@ const components = [
   Breadcrumb
 ];
 const install = (app) => {
-  components.forEach((comp) => app.use(comp));
+  components.forEach((component) => app.component(component.name, component));
 };
-const VueAmazingUi = {
+const VueAmazingUI = {
   install
 };
 export {
   Breadcrumb,
   Pagination,
-  VueAmazingUi as default
+  VueAmazingUI as default
 };

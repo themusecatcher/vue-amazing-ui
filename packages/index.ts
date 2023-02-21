@@ -14,7 +14,7 @@ const install = (app: App): void => {
   components.forEach(component => app.component(component.name, component))
 }
 
-const VueAmazingUi = {
+const VueAmazingUI = {
   install
 }
 
@@ -23,4 +23,4 @@ export { // 方便按需导入
   Breadcrumb
 }
 
-export default VueAmazingUi
+export default VueAmazingUI

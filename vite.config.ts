@@ -50,7 +50,7 @@ export default defineConfig({
     */
     minify: 'terser', // Vite 2.6.x 以上需要配置 minify: "terser", terserOptions 才能生效
     terserOptions: { // 在打包代码时移除 console.log、debugger 和 注释
-      compress: {
+      compress: { 
         drop_console: false,
         drop_debugger: true,
         pure_funcs: ['console.log']
