@@ -23,15 +23,16 @@ export default defineConfig({
       },
     },
   },
-  // 配置打包入口出口
+  // 配置打包入口
   build: {
-    // 构建为库。
-    lib: { // 如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
-      entry: resolve(__dirname, 'packages/index.js'),  // entry是必需的，因为库不能使用HTML作为入口。
-      // 需要提供一个name 这个名字尽量不和 npm 上发布的包名一致，否则也会推送不到npm
-      name: 'vue3' // 暴露的全局变量
+    lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
+      // __dirname的值是vite.config.ts文件所在目录
+      entry: resolve(__dirname, 'packages/index.ts'),  // entry是必需的，因为库不能使用HTML作为入口。
+      name: 'VueAmazingUI', // 暴露的全局变量
+      fileName: 'vue-amazing-ui' // 输出的包文件名，默认是package.json的name选项
     },
-    rollupOptions: {
+    rollupOptions: { // 自定义底层的Rollup打包配置
+      // https://rollupjs.org/configuration-options/
       // 确保外部化处理那些你不想打包进库的依赖
       external: ['vue'],
       output: {
