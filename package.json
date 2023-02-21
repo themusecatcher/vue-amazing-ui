@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "dev": "vite  --port 9000 --open",
+    "dev": "vite  --port 9000 --open --force",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -39,5 +39,23 @@
     "typescript": "~4.7.4",
     "vite": "^4.0.0",
     "vue-tsc": "^1.0.12"
-  }
+  },
+  "description": "This template should help get you started developing with Vue 3 in Vite.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/themusecatcher/vue-amazing-ui.git"
+  },
+  "keywords": [
+    "Vue3",
+    "TS",
+    "Vite",
+    "UI",
+    "components"
+  ],
+  "author": "theMuseCatcher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/themusecatcher/vue-amazing-ui/issues"
+  },
+  "homepage": "https://github.com/themusecatcher/vue-amazing-ui#readme"
 }

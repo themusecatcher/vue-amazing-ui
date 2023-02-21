@@ -1,0 +1,18 @@
+# 忽略目录
+.DS_Store
+.vscode/
+node_modules
+packages/
+public/
+src/
+
+# 忽略指定文件
+.eslintrc.cjs
+.gitignore
+.nomignore
+.env.d.ts
+index.html
+tsconfig.config.json
+tsconfig.json
+vite.config.ts
+yarn.lock
