@@ -35,7 +35,6 @@ console.log('import.meta.env.DEV:', import.meta.env.DEV)
   <div class="app">
     <Breadcrumb :routes="routes" :height="60" />
     <Pagination
-      class="mt60"
       @change="changePage"
       :current="pagination.p"
       :pageSize="pagination.pageSize"
@@ -49,9 +48,6 @@ console.log('import.meta.env.DEV:', import.meta.env.DEV)
 </template>
 
 <style lang="less" scoped>
-.mt60 {
-  margin-top: 60px;
-}
 .app {
   width: 1200px;
   margin: 0 auto;

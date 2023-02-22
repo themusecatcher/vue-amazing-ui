@@ -1,12 +1,4 @@
-import { openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, normalizeStyle } from "vue";
-const Pagination_vue_vue_type_style_index_0_scoped_7b04d407_lang = "";
-const _export_sfc = (sfc, props) => {
-  const target = sfc.__vccOpts || sfc;
-  for (const [key, val] of props) {
-    target[key] = val;
-  }
-  return target;
-};
+import { openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, inject, defineComponent, computed, normalizeStyle, unref } from "vue";
 const _sfc_main$1 = {
   name: "Pagination",
   props: {
@@ -157,7 +149,15 @@ const _sfc_main$1 = {
     }
   }
 };
-const _withScopeId$1 = (n) => (pushScopeId("data-v-7b04d407"), n = n(), popScopeId(), n);
+const Pagination_vue_vue_type_style_index_0_scoped_84ba8fd3_lang = "";
+const _export_sfc = (sfc, props) => {
+  const target = sfc.__vccOpts || sfc;
+  for (const [key, val] of props) {
+    target[key] = val;
+  }
+  return target;
+};
+const _withScopeId$1 = (n) => (pushScopeId("data-v-84ba8fd3"), n = n(), popScopeId(), n);
 const _hoisted_1$1 = { class: "m-pagination-wrap" };
 const _hoisted_2$1 = {
   key: 0,
@@ -216,7 +216,7 @@ const _hoisted_16 = {
   key: 1,
   class: "u-jump-page"
 };
-function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("div", {
     class: normalizeClass([`m-pagination ${$props.placement}`, { hidden: $props.hideOnSinglePage && $props.total <= $props.pageSize }])
   }, [
@@ -292,45 +292,42 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ], 2);
 }
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render$1], ["__scopeId", "data-v-7b04d407"]]);
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-84ba8fd3"]]);
 Pagination.install = (app) => {
   app.component(Pagination.name, Pagination);
 };
-const Breadcrumb_vue_vue_type_style_index_0_scoped_988f5a63_lang = "";
-const _sfc_main = {
-  name: "Breadcrumb",
-  props: {
-    routes: {
-      // router的路由数组
-      type: Array,
-      required: true,
-      default: () => {
-        return [];
-      }
-    },
-    height: {
-      // 面包屑高度
-      type: Number,
-      default: 60
-    },
-    separator: {
-      // 自定义分隔符
-      type: String,
-      default: ""
-    }
-  },
-  computed: {
-    len() {
-      return this.routes.length;
-    }
-  },
-  methods: {
-    goRouter(route) {
-      this.$router.push({ path: route.path, query: route.query || {} });
-    }
-  }
-};
-const _withScopeId = (n) => (pushScopeId("data-v-988f5a63"), n = n(), popScopeId(), n);
+/*!
+  * vue-router v4.1.6
+  * (c) 2022 Eduardo San Martin Morote
+  * @license MIT
+  */
+var NavigationType;
+(function(NavigationType2) {
+  NavigationType2["pop"] = "pop";
+  NavigationType2["push"] = "push";
+})(NavigationType || (NavigationType = {}));
+var NavigationDirection;
+(function(NavigationDirection2) {
+  NavigationDirection2["back"] = "back";
+  NavigationDirection2["forward"] = "forward";
+  NavigationDirection2["unknown"] = "";
+})(NavigationDirection || (NavigationDirection = {}));
+Symbol(process.env.NODE_ENV !== "production" ? "navigation failure" : "");
+var NavigationFailureType;
+(function(NavigationFailureType2) {
+  NavigationFailureType2[NavigationFailureType2["aborted"] = 4] = "aborted";
+  NavigationFailureType2[NavigationFailureType2["cancelled"] = 8] = "cancelled";
+  NavigationFailureType2[NavigationFailureType2["duplicated"] = 16] = "duplicated";
+})(NavigationFailureType || (NavigationFailureType = {}));
+Symbol(process.env.NODE_ENV !== "production" ? "router view location matched" : "");
+Symbol(process.env.NODE_ENV !== "production" ? "router view depth" : "");
+const routerKey = Symbol(process.env.NODE_ENV !== "production" ? "router" : "");
+Symbol(process.env.NODE_ENV !== "production" ? "route location" : "");
+Symbol(process.env.NODE_ENV !== "production" ? "router view location" : "");
+function useRouter() {
+  return inject(routerKey);
+}
+const _withScopeId = (n) => (pushScopeId("data-v-1636f161"), n = n(), popScopeId(), n);
 const _hoisted_1 = ["onClick", "title"];
 const _hoisted_2 = {
   key: 0,
@@ -349,30 +346,53 @@ const _hoisted_5 = [
   _hoisted_4
 ];
 const _hoisted_6 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
-function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("div", {
-    class: "m-breadcrumb",
-    style: normalizeStyle(`height: ${$props.height}px;`)
-  }, [
-    (openBlock(true), createElementBlock(Fragment, null, renderList($props.routes, (route, index) => {
+const __default__ = {
+  // 导出组件name
+  name: "Breadcrumb"
+};
+const _sfc_main = /* @__PURE__ */ defineComponent({
+  ...__default__,
+  props: {
+    routes: { default: () => [] },
+    height: { default: 60 },
+    separator: { default: "" }
+  },
+  setup(__props) {
+    const props = __props;
+    const len = computed(() => {
+      return props.routes.length;
+    });
+    const router = useRouter();
+    function goRouter(route) {
+      router.push({ path: route.path, query: route.query || {} });
+    }
+    return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
-        class: "m-bread",
-        key: index
+        class: "m-breadcrumb",
+        style: normalizeStyle(`height: ${__props.height}px;`)
       }, [
-        createElementVNode("a", {
-          class: normalizeClass(["u-route", { active: index === $options.len - 1 }]),
-          onClick: ($event) => index === $options.len - 1 ? (e) => e.preventDefault() : $options.goRouter(route),
-          title: route.name
-        }, toDisplayString(route.name || "--"), 11, _hoisted_1),
-        index !== $options.len - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-          $props.separator ? (openBlock(), createElementBlock("span", _hoisted_2, toDisplayString($props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3, _hoisted_5))
-        ], 64)) : createCommentVNode("", true)
-      ]);
-    }), 128)),
-    _hoisted_6
-  ], 4);
-}
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-988f5a63"]]);
+        (openBlock(true), createElementBlock(Fragment, null, renderList(__props.routes, (route, index) => {
+          return openBlock(), createElementBlock("div", {
+            class: "m-bread",
+            key: index
+          }, [
+            createElementVNode("a", {
+              class: normalizeClass(["u-route", { active: index === unref(len) - 1 }]),
+              onClick: ($event) => index === unref(len) - 1 ? (e) => e.preventDefault() : goRouter(route),
+              title: route.name
+            }, toDisplayString(route.name || "--"), 11, _hoisted_1),
+            index !== unref(len) - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+              __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3, _hoisted_5))
+            ], 64)) : createCommentVNode("", true)
+          ]);
+        }), 128)),
+        _hoisted_6
+      ], 4);
+    };
+  }
+});
+const Breadcrumb_vue_vue_type_style_index_0_scoped_1636f161_lang = "";
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-1636f161"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.name, Breadcrumb);
 };
