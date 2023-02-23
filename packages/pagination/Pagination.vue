@@ -104,6 +104,7 @@ export default {
     },
     currentPage (to) { // 通过更改当前页码，修改分页数据
       this.loading = true
+      console.log('change:', to)
       this.$emit('change', {
         page: to,
         pageSize: this.pageSize
