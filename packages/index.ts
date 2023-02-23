@@ -18,9 +18,4 @@ const VueAmazingUI = {
   install
 }
 
-export { // 方便按需导入
-  Pagination,
-  Breadcrumb
-}
-
 export default VueAmazingUI

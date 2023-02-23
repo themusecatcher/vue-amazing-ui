@@ -11,15 +11,10 @@ npm install vue-amazing-ui
 
 ```
 import VueAmazingUI from 'vue-amazing-ui'
-import '../node_modules/vue-amazing-ui/dist/style.css'
+import 'vue-amazing-ui/dist/style.css'
 
-app.use(VueUi)
+app.use(VueAmazingUI)
 
-// 或者
-import { Pagination, Breadcrumb } from 'vue-amazing-ui'
-import '../node_modules/vue-amazing-ui/dist/style.css'
-
-app.use(Pagination).use(Breadcrumb)
 ```
 
 ## 在项目中使用(示例)

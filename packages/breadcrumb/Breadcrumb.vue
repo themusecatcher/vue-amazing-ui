@@ -1,32 +1,3 @@
-<script lang="ts">
-export default { // 导出组件name
-  name: 'Breadcrumb'
-}
-</script>
-<script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
-export interface Props {
-  routes: object[], // router的路由数组，没有 ? 时，即表示 required: true
-  height?: number, // 面包屑高度
-  separator?: string // 自定义分隔符
-}
-const props = withDefaults(defineProps<Props>(), {
-  routes: () => [],
-  height: 60,
-  separator: ''
-})
-
-const len = computed(() => {
-  return props.routes.length
-})
-
-const router = useRouter()
-function goRouter (route: { path: string; query: object; }):void {
-  // @ts-ignore (忽略下一行中产生的错误)
-  router.push({ path: route.path, query: route.query || {} })
-}
-</script>
 <template>
   <div class="m-breadcrumb" :style="`height: ${height}px;`">
     <div class="m-bread" v-for="(route, index) in routes" :key="index">
@@ -44,6 +15,38 @@ function goRouter (route: { path: string; query: object; }):void {
     <div class="assist"></div>
   </div>
 </template>
+<script>
+export default {
+  name: 'Breadcrumb',
+  props: {
+    routes: { // router的路由数组
+      type: Array,
+      required: true,
+      default: () => {
+        return []
+      }
+    },
+    height: { // 面包屑高度
+      type: Number,
+      default: 60
+    },
+    separator: { // 自定义分隔符
+      type: String,
+      default: ''
+    }
+  },
+  computed: {
+    len () { // 面包屑层级总数
+      return this.routes.length
+    }
+  },
+  methods: {
+    goRouter (route) {
+      this.$router.push({ path: route.path, query: route.query || {} })
+    }
+  }
+}
+</script>
 <style lang="less" scoped>
 .m-breadcrumb {
   .m-bread {

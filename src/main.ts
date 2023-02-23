@@ -3,16 +3,16 @@ import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import './assets/global.less'
 
-import { Pagination, Breadcrumb } from '../packages/index'
-// import { Pagination, Breadcrumb } from '../dist/vue-amazing-ui.js'
-// import '../dist/style.css'
+// import VueAmazingUI from '../packages/index'
+import VueAmazingUI from '../dist/vue-amazing-ui.js'
+import '../dist/style.css'
 
 const app = createApp(App)
 const router = createRouter({
-  history: createWebHistory(), // 使用history模式，hash模式：createWebHashHistory
+  history: createWebHistory(import.meta.env.BASE_URL), // 使用history模式，hash模式：createWebHashHistory
   routes: []
 })
-// @ts-ignore
-app.use(Pagination).use(Breadcrumb)
 app.use(router)
+app.use(VueAmazingUI)
+
 app.mount('#app')
