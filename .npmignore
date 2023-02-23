@@ -9,8 +9,10 @@ src/
 # 忽略指定文件
 .eslintrc.cjs
 .gitignore
-.nomignore
-.env.d.ts
+.npmignore
+.npmrc
+.prettierrc.json
+env.d.ts
 index.html
 tsconfig.config.json
 tsconfig.json
