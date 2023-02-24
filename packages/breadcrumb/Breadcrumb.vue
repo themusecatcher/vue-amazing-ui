@@ -42,7 +42,7 @@ export default defineComponent({
     }
   },
   methods: {
-    goRouter (route: { path: string, query: object }) {
+    goRouter (route: any) {
       this.$router.push({ path: route.path, query: route.query || {} })
     }
   }

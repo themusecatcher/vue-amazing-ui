@@ -329,8 +329,8 @@ const _sfc_main = defineComponent({
     }
   }
 });
-const Breadcrumb_vue_vue_type_style_index_0_scoped_6441c008_lang = "";
-const _withScopeId = (n) => (pushScopeId("data-v-6441c008"), n = n(), popScopeId(), n);
+const Breadcrumb_vue_vue_type_style_index_0_scoped_cebf0461_lang = "";
+const _withScopeId = (n) => (pushScopeId("data-v-cebf0461"), n = n(), popScopeId(), n);
 const _hoisted_1 = ["onClick", "title"];
 const _hoisted_2 = {
   key: 0,
@@ -372,7 +372,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     _hoisted_6
   ], 4);
 }
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-6441c008"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-cebf0461"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.name, Breadcrumb);
 };
