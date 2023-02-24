@@ -1,4 +1,5 @@
-import { defineComponent, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, normalizeStyle } from "vue";
+import { defineComponent, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, computed, normalizeStyle, unref } from "vue";
+import { useRouter } from "vue-router";
 const _sfc_main$1 = defineComponent({
   name: "Pagination",
   props: {
@@ -216,7 +217,7 @@ const _hoisted_16 = {
   key: 1,
   class: "u-jump-page"
 };
-function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("div", {
     class: normalizeClass([`m-pagination ${_ctx.placement}`, { hidden: _ctx.hideOnSinglePage && _ctx.total <= _ctx.pageSize }])
   }, [
@@ -292,45 +293,11 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ], 2);
 }
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render$1], ["__scopeId", "data-v-90e9305f"]]);
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-90e9305f"]]);
 Pagination.install = (app) => {
   app.component(Pagination.name, Pagination);
 };
-const _sfc_main = defineComponent({
-  name: "Breadcrumb",
-  props: {
-    routes: {
-      // router的路由数组
-      type: Array,
-      required: true,
-      default: () => {
-        return [];
-      }
-    },
-    height: {
-      // 面包屑高度
-      type: Number,
-      default: 60
-    },
-    separator: {
-      // 自定义分隔符
-      type: String,
-      default: ""
-    }
-  },
-  computed: {
-    len() {
-      return this.routes.length;
-    }
-  },
-  methods: {
-    goRouter(route) {
-      this.$router.push({ path: route.path, query: route.query || {} });
-    }
-  }
-});
-const Breadcrumb_vue_vue_type_style_index_0_scoped_cebf0461_lang = "";
-const _withScopeId = (n) => (pushScopeId("data-v-cebf0461"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-e7eb3765"), n = n(), popScopeId(), n);
 const _hoisted_1 = ["onClick", "title"];
 const _hoisted_2 = {
   key: 0,
@@ -349,30 +316,53 @@ const _hoisted_5 = [
   _hoisted_4
 ];
 const _hoisted_6 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
-function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("div", {
-    class: "m-breadcrumb",
-    style: normalizeStyle(`height: ${_ctx.height}px;`)
-  }, [
-    (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.routes, (route, index) => {
+const __default__ = {
+  // 导出组件name
+  name: "Breadcrumb"
+};
+const _sfc_main = /* @__PURE__ */ defineComponent({
+  ...__default__,
+  props: {
+    routes: { default: () => [] },
+    height: { default: 60 },
+    separator: { default: "" }
+  },
+  setup(__props) {
+    const props = __props;
+    const len = computed(() => {
+      return props.routes.length;
+    });
+    const router = useRouter();
+    function goRouter(route) {
+      router.push({ path: route.path, query: route.query || {} });
+    }
+    return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
-        class: "m-bread",
-        key: index
+        class: "m-breadcrumb",
+        style: normalizeStyle(`height: ${__props.height}px;`)
       }, [
-        createElementVNode("a", {
-          class: normalizeClass(["u-route", { active: index === _ctx.len - 1 }]),
-          onClick: ($event) => index === _ctx.len - 1 ? (e) => e.preventDefault() : _ctx.goRouter(route),
-          title: route.name
-        }, toDisplayString(route.name || "--"), 11, _hoisted_1),
-        index !== _ctx.len - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-          _ctx.separator ? (openBlock(), createElementBlock("span", _hoisted_2, toDisplayString(_ctx.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3, _hoisted_5))
-        ], 64)) : createCommentVNode("", true)
-      ]);
-    }), 128)),
-    _hoisted_6
-  ], 4);
-}
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-cebf0461"]]);
+        (openBlock(true), createElementBlock(Fragment, null, renderList(__props.routes, (route, index) => {
+          return openBlock(), createElementBlock("div", {
+            class: "m-bread",
+            key: index
+          }, [
+            createElementVNode("a", {
+              class: normalizeClass(["u-route", { active: index === unref(len) - 1 }]),
+              onClick: ($event) => index === unref(len) - 1 ? (e) => e.preventDefault() : goRouter(route),
+              title: route.name
+            }, toDisplayString(route.name || "--"), 11, _hoisted_1),
+            index !== unref(len) - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+              __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3, _hoisted_5))
+            ], 64)) : createCommentVNode("", true)
+          ]);
+        }), 128)),
+        _hoisted_6
+      ], 4);
+    };
+  }
+});
+const Breadcrumb_vue_vue_type_style_index_0_scoped_e7eb3765_lang = "";
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-e7eb3765"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.name, Breadcrumb);
 };

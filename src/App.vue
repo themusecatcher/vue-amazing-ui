@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { RouterView } from 'vue-router'
 const hideOnSinglePage = ref(false);
 const total = ref(100);
 const pagination = ref({
@@ -33,6 +34,7 @@ console.log('import.meta.env.DEV:', import.meta.env.DEV)
 
 <template>
   <div class="app">
+    <RouterView/>
     <Breadcrumb :routes="routes" :height="60" />
     <Pagination
       @change="changePage"
