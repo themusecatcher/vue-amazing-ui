@@ -43,8 +43,9 @@
     </div>
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'Pagination',
   props: {
     current: { // 当前页数
@@ -103,7 +104,7 @@ export default {
       this.currentPage = to
     },
     currentPage (to) { // 通过更改当前页码，修改分页数据
-      this.loading = true
+      // this.loading = true
       console.log('change:', to)
       this.$emit('change', {
         page: to,
@@ -121,7 +122,7 @@ export default {
     }
   },
   methods: {
-    dealPageList (curPage) {
+    dealPageList (curPage: number) {
       var resList = []
       var offset = Math.floor(this.pageListNum / 2) // 向下取整
       var pager = {
@@ -161,7 +162,7 @@ export default {
     onBackward () {
       this.currentPage = this.currentPage + this.pageListNum < this.totalPage ? this.currentPage + this.pageListNum : this.totalPage
     },
-    jumpPage (jumpNum) {
+    jumpPage (jumpNum: string | number) {
       if (Number(jumpNum)) {
         if (Number(jumpNum) < 1) {
           jumpNum = 1
@@ -173,7 +174,7 @@ export default {
       }
       this.jumpNumber = '' // 清空跳转输入框
     },
-    changePage (pageNum) {
+    changePage (pageNum: number) {
       if (pageNum === 0 || pageNum === this.totalPage + 1) {
         return false
       }
@@ -183,7 +184,7 @@ export default {
       }
     }
   }
-}
+})
 </script>
 <style lang="less" scoped>
 .m-pagination {

@@ -1,9 +1,9 @@
-<template>
+<!-- <template>
   <div class="m-breadcrumb" :style="`height: ${height}px;`">
     <div class="m-bread" v-for="(route, index) in routes" :key="index">
       <a
         :class="['u-route',{ active: index===len-1 }]"
-        @click="index === len - 1 ? e => e.preventDefault() : goRouter(route)"
+        @click="index === len - 1 ? (e:any) => e.preventDefault() : goRouter(route)"
         :title="route.name">
         {{ route.name || '--' }}
       </a>
@@ -15,8 +15,9 @@
     <div class="assist"></div>
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'Breadcrumb',
   props: {
     routes: { // router的路由数组
@@ -41,11 +42,11 @@ export default {
     }
   },
   methods: {
-    goRouter (route) {
+    goRouter (route: { path: string, query: object }) {
       this.$router.push({ path: route.path, query: route.query || {} })
     }
   }
-}
+})
 </script>
 <style lang="less" scoped>
 .m-breadcrumb {
@@ -92,4 +93,4 @@ export default {
     vertical-align: middle;
   }
 }
-</style>
+</style> -->
