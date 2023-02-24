@@ -18,4 +18,9 @@ const VueAmazingUI = {
   install
 }
 
+export {
+  Pagination,
+  Breadcrumb
+}
+
 export default VueAmazingUI

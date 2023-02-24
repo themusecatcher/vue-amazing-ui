@@ -6,6 +6,7 @@ import './assets/global.less'
 // import VueAmazingUI from '../packages/index'
 import VueAmazingUI from '../dist/vue-amazing-ui.js'
 import '../dist/style.css'
+// import { Pagination } from '../dist/vue-amazing-ui.js'
 
 const app = createApp(App)
 const router = createRouter({
@@ -14,5 +15,6 @@ const router = createRouter({
 })
 app.use(router)
 app.use(VueAmazingUI)
+// app.use(Pagination)
 
 app.mount('#app')
