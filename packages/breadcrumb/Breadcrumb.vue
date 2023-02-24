@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="m-breadcrumb" :style="`height: ${height}px;`">
     <div class="m-bread" v-for="(route, index) in routes" :key="index">
       <a
@@ -93,4 +93,4 @@ export default defineComponent({
     vertical-align: middle;
   }
 }
-</style> -->
+</style>
