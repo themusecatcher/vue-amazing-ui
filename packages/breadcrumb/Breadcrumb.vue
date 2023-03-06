@@ -1,8 +1,3 @@
-<script lang="ts">
-export default {  // 导出组件name
-  name: 'Breadcrumb'
-}
-</script>
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -35,7 +30,7 @@ function goRouter (route:any):void {
     <div class="m-bread" v-for="(route, index) in routes" :key="index">
       <a
         :class="['u-route',{ active: index===len-1 }]"
-        @click="index === len - 1 ? (e:any) => e.preventDefault() : goRouter(route)"
+        @click="index === len - 1 ? (e:Event) => e.preventDefault() : goRouter(route)"
         :title="route.name">
         {{ route.name || '--' }}
       </a>
