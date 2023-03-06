@@ -9,7 +9,8 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'images': fileURLToPath(new URL('./src/assets/images', import.meta.url))
     }
   },
   css: {
@@ -23,7 +24,7 @@ export default defineConfig({
       },
     },
   },
-  // 配置打包入口
+  // 构建为库
   build: {
     lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
       // __dirname的值是vite.config.ts文件所在目录

@@ -1,3 +1,118 @@
+<script setup lang="ts">
+import { ref, computed, watch, onMounted } from 'vue'
+interface Props {
+  current: number, // 当前页数
+  pageSize: number, // 每条页数
+  total: number, // 数据总数
+  pageListNum?: number, // 显示的页码数组长度
+  hideOnSinglePage?: boolean, // 只有一页时是否隐藏分页器
+  showQuickJumper?: boolean, // 是否可以快速跳转至某页
+  showTotal?: boolean, // 是否显示当前页数和数据总量
+  placement?: string // 分页器展示位置，靠左left，居中center，靠右right
+}
+const props = withDefaults(defineProps<Props>(), {
+  current: 1,
+  pageSize: 10,
+  total: 0,
+  pageListNum: 5,
+  hideOnSinglePage: false,
+  showQuickJumper: false,
+  showTotal: false,
+  placement: 'right'
+})
+const currentPage = ref(props.current) // 当前页数
+const jumpNumber = ref('') // 跳转的页码
+const forwardMore = ref(false) // 左省略号展示
+const backwardMore = ref(false) // 右省略号展示
+const forwardArrow = ref(false) // 左箭头展示
+const backwardArrow = ref(false) // 右箭头展示
+
+const totalPage = computed(() => { // 总页数
+  return Math.ceil(props.total / props.pageSize) // 向上取整
+})
+const pageList = computed(() => { // 获取显示的页码数组
+  return dealPageList(currentPage.value).filter(n => n !== 1 && n !== totalPage.value)
+})
+const emit = defineEmits(['change'])
+watch(currentPage, (to: number): void => { // 通过更改当前页码，修改分页数据
+  // loading,value = true
+  console.log('change:', to)
+  emit('change', {
+    page: to,
+    pageSize: props.pageSize
+  })
+})
+onMounted(() => {
+  // 监听键盘Enter按键
+  document.onkeydown = (e): void => {
+    const ev = e || window.event
+    if (ev && ev.keyCode === 13 && jumpNumber.value) {
+      jumpPage(jumpNumber.value)
+    }
+  }
+})
+function dealPageList (curPage: number): number[] {
+  var resList = []
+  var offset = Math.floor(props.pageListNum / 2) // 向下取整
+  var pager = {
+    start: curPage - offset,
+    end: curPage + offset
+  }
+  if (pager.start < 1) {
+    pager.end = pager.end + (1 - pager.start)
+    pager.start = 1
+  }
+  if (pager.end > totalPage.value) {
+    pager.start = pager.start - (pager.end - totalPage.value)
+    pager.end = totalPage.value
+  }
+  if (pager.start < 1) {
+    pager.start = 1
+  }
+  if (pager.start > 1) {
+    forwardMore.value = true
+  } else {
+    forwardMore.value = false
+  }
+  if (pager.end < totalPage.value) {
+    backwardMore.value = true
+  } else {
+    backwardMore.value= false
+  }
+  // 生成要显示的页码数组
+  for (let i = pager.start; i <= pager.end; i++) {
+    resList.push(i)
+  }
+  return resList
+}
+function onForward (): void {
+  currentPage.value = currentPage.value - props.pageListNum > 0 ? currentPage.value - props.pageListNum : 1
+}
+function onBackward (): void {
+  currentPage.value = currentPage.value + props.pageListNum < totalPage.value ? currentPage.value + props.pageListNum : totalPage.value
+}
+function jumpPage (jumpNum: string | number): void {
+  if (Number(jumpNum)) {
+    if (Number(jumpNum) < 1) {
+      jumpNum = 1
+    }
+    if (Number(jumpNum) > totalPage.value) {
+      jumpNum = totalPage.value
+    }
+    changePage(Number(jumpNum))
+  }
+  jumpNumber.value = '' // 清空跳转输入框
+}
+function changePage (pageNum: number): boolean | void {
+  if (pageNum === 0 || pageNum === totalPage.value + 1) {
+    return false
+  }
+  if (currentPage.value !== pageNum) {
+    // 点击的页码不是当前页码
+    currentPage.value = pageNum
+  }
+}
+</script>
 <template>
   <div :class="[`m-pagination ${placement}`, { hidden: hideOnSinglePage && total<=pageSize }]">
     <div class="m-pagination-wrap">
@@ -43,149 +158,6 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
-export default defineComponent({
-  name: 'Pagination',
-  props: {
-    current: { // 当前页数
-      type: Number,
-      default: 1
-    },
-    pageSize: { // 每页条数
-      type: Number,
-      default: 10
-    },
-    total: { // 数据总数
-      type: Number,
-      default: 0
-    },
-    pageListNum: { // 显示的页码数组长度
-      type: Number,
-      default: 5
-    },
-    hideOnSinglePage: { // 只有一页时是否隐藏分页器
-      type: Boolean,
-      default: false
-    },
-    showQuickJumper: { // 是否可以快速跳转至某页
-      type: Boolean,
-      default: false
-    },
-    showTotal: { // 是否显示当前页数和数据总量
-      type: Boolean,
-      default: false
-    },
-    placement: { // 分页器展示位置，靠左，居中，靠右
-      type: String,
-      default: 'right'
-    }
-  },
-  data () {
-    return {
-      currentPage: this.current, // 当前页数
-      jumpNumber: '', // 跳转的页码
-      forwardMore: false, // 左省略号展示
-      backwardMore: false, // 右省略号展示
-      forwardArrow: false, // 左箭头展示
-      backwardArrow: false // 右箭头展示
-    }
-  },
-  computed: {
-    totalPage () { // 总页数
-      return Math.ceil(this.total / this.pageSize) // 向上取整
-    },
-    pageList () { // 获取显示的页码数组
-      return this.dealPageList(this.currentPage).filter(n => n !== 1 && n !== this.totalPage)
-    }
-  },
-  watch: {
-    current (to) { // 当前选中页码
-      this.currentPage = to
-    },
-    currentPage (to) { // 通过更改当前页码，修改分页数据
-      // this.loading = true
-      console.log('change:', to)
-      this.$emit('change', {
-        page: to,
-        pageSize: this.pageSize
-      })
-    }
-  },
-  created () {
-    // 监听键盘Enter按键
-    document.onkeydown = (e) => {
-      const ev = e || window.event
-      if (ev && ev.keyCode === 13 && this.jumpNumber) {
-        this.jumpPage(this.jumpNumber)
-      }
-    }
-  },
-  methods: {
-    dealPageList (curPage: number) {
-      var resList = []
-      var offset = Math.floor(this.pageListNum / 2) // 向下取整
-      var pager = {
-        start: curPage - offset,
-        end: curPage + offset
-      }
-      if (pager.start < 1) {
-        pager.end = pager.end + (1 - pager.start)
-        pager.start = 1
-      }
-      if (pager.end > this.totalPage) {
-        pager.start = pager.start - (pager.end - this.totalPage)
-        pager.end = this.totalPage
-      }
-      if (pager.start < 1) {
-        pager.start = 1
-      }
-      if (pager.start > 1) {
-        this.forwardMore = true
-      } else {
-        this.forwardMore = false
-      }
-      if (pager.end < this.totalPage) {
-        this.backwardMore = true
-      } else {
-        this.backwardMore = false
-      }
-      // 生成要显示的页码数组
-      for (let i = pager.start; i <= pager.end; i++) {
-        resList.push(i)
-      }
-      return resList
-    },
-    onForward () {
-      this.currentPage = this.currentPage - this.pageListNum > 0 ? this.currentPage - this.pageListNum : 1
-    },
-    onBackward () {
-      this.currentPage = this.currentPage + this.pageListNum < this.totalPage ? this.currentPage + this.pageListNum : this.totalPage
-    },
-    jumpPage (jumpNum: string | number) {
-      if (Number(jumpNum)) {
-        if (Number(jumpNum) < 1) {
-          jumpNum = 1
-        }
-        if (Number(jumpNum) > this.totalPage) {
-          jumpNum = this.totalPage
-        }
-        this.changePage(Number(jumpNum))
-      }
-      this.jumpNumber = '' // 清空跳转输入框
-    },
-    changePage (pageNum: number) {
-      if (pageNum === 0 || pageNum === this.totalPage + 1) {
-        return false
-      }
-      if (this.currentPage !== pageNum) {
-        // 点击的页码不是当前页码
-        this.currentPage = pageNum
-      }
-    }
-  }
-})
-</script>
 <style lang="less" scoped>
 .m-pagination {
   margin: 16px 0;

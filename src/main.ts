@@ -1,11 +1,11 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
-import './assets/global.less'
+import './assets/less/global.less'
 
-// import VueAmazingUI from '../packages/index'
-import VueAmazingUI from '../dist/vue-amazing-ui.js'
-import '../dist/style.css'
+import VueAmazingUI from '../packages/index'
+// import VueAmazingUI from '../dist/vue-amazing-ui.js'
+// import '../dist/style.css'
 // import { Breadcrumb } from '../dist/vue-amazing-ui.js'
 
 const app = createApp(App)

@@ -2,9 +2,11 @@
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "packages/**/*.ts", "packages/**/*.vue"],
   "compilerOptions": {
+    "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "images/*": ["./src/assets/images"]
     }
   },
 

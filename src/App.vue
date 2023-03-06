@@ -25,6 +25,9 @@ const routes = ref([
 function changePage (pager: object) { // 分页器回调
   console.log('pager:', pager)
 }
+function onFinish () {
+  console.log('countdown finished')
+}
 // Vite 在一个特殊的 import.meta.env 对象上暴露环境变量
 console.log('import.meta.env.MODE:', import.meta.env.MODE)
 console.log('import.meta.env.BASE_URL:', import.meta.env.BASE_URL)
@@ -34,7 +37,18 @@ console.log('import.meta.env.DEV:', import.meta.env.DEV)
 
 <template>
   <div class="app">
-    <RouterView/>
+    <RouterView />
+    <Countdown
+      style="margin-top: 50px;"
+      title="Countdown"
+      :countdown="3"
+      format="D 天 H 时 m 分 s 秒"
+      finishedText="Finished"
+      @finish="onFinish">
+      <template #prefix>There's only </template>
+      <!-- <template #finish>&lt; FinishedText slot &gt;</template> -->
+      <template #suffix> left for the end.</template>
+    </CountDown>
     <Breadcrumb :routes="routes" :height="60" />
     <Pagination
       @change="changePage"
