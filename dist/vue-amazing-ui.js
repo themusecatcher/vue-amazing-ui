@@ -1,170 +1,12 @@
-import { defineComponent, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, computed, normalizeStyle, unref } from "vue";
+import { defineComponent, ref, computed, watch, onMounted, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, unref, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, normalizeStyle, renderSlot } from "vue";
 import { useRouter } from "vue-router";
-const _sfc_main$1 = defineComponent({
-  name: "Pagination",
-  props: {
-    current: {
-      // 当前页数
-      type: Number,
-      default: 1
-    },
-    pageSize: {
-      // 每页条数
-      type: Number,
-      default: 10
-    },
-    total: {
-      // 数据总数
-      type: Number,
-      default: 0
-    },
-    pageListNum: {
-      // 显示的页码数组长度
-      type: Number,
-      default: 5
-    },
-    hideOnSinglePage: {
-      // 只有一页时是否隐藏分页器
-      type: Boolean,
-      default: false
-    },
-    showQuickJumper: {
-      // 是否可以快速跳转至某页
-      type: Boolean,
-      default: false
-    },
-    showTotal: {
-      // 是否显示当前页数和数据总量
-      type: Boolean,
-      default: false
-    },
-    placement: {
-      // 分页器展示位置，靠左，居中，靠右
-      type: String,
-      default: "right"
-    }
-  },
-  data() {
-    return {
-      currentPage: this.current,
-      // 当前页数
-      jumpNumber: "",
-      // 跳转的页码
-      forwardMore: false,
-      // 左省略号展示
-      backwardMore: false,
-      // 右省略号展示
-      forwardArrow: false,
-      // 左箭头展示
-      backwardArrow: false
-      // 右箭头展示
-    };
-  },
-  computed: {
-    totalPage() {
-      return Math.ceil(this.total / this.pageSize);
-    },
-    pageList() {
-      return this.dealPageList(this.currentPage).filter((n) => n !== 1 && n !== this.totalPage);
-    }
-  },
-  watch: {
-    current(to) {
-      this.currentPage = to;
-    },
-    currentPage(to) {
-      console.log("change:", to);
-      this.$emit("change", {
-        page: to,
-        pageSize: this.pageSize
-      });
-    }
-  },
-  created() {
-    document.onkeydown = (e) => {
-      const ev = e || window.event;
-      if (ev && ev.keyCode === 13 && this.jumpNumber) {
-        this.jumpPage(this.jumpNumber);
-      }
-    };
-  },
-  methods: {
-    dealPageList(curPage) {
-      var resList = [];
-      var offset = Math.floor(this.pageListNum / 2);
-      var pager = {
-        start: curPage - offset,
-        end: curPage + offset
-      };
-      if (pager.start < 1) {
-        pager.end = pager.end + (1 - pager.start);
-        pager.start = 1;
-      }
-      if (pager.end > this.totalPage) {
-        pager.start = pager.start - (pager.end - this.totalPage);
-        pager.end = this.totalPage;
-      }
-      if (pager.start < 1) {
-        pager.start = 1;
-      }
-      if (pager.start > 1) {
-        this.forwardMore = true;
-      } else {
-        this.forwardMore = false;
-      }
-      if (pager.end < this.totalPage) {
-        this.backwardMore = true;
-      } else {
-        this.backwardMore = false;
-      }
-      for (let i = pager.start; i <= pager.end; i++) {
-        resList.push(i);
-      }
-      return resList;
-    },
-    onForward() {
-      this.currentPage = this.currentPage - this.pageListNum > 0 ? this.currentPage - this.pageListNum : 1;
-    },
-    onBackward() {
-      this.currentPage = this.currentPage + this.pageListNum < this.totalPage ? this.currentPage + this.pageListNum : this.totalPage;
-    },
-    jumpPage(jumpNum) {
-      if (Number(jumpNum)) {
-        if (Number(jumpNum) < 1) {
-          jumpNum = 1;
-        }
-        if (Number(jumpNum) > this.totalPage) {
-          jumpNum = this.totalPage;
-        }
-        this.changePage(Number(jumpNum));
-      }
-      this.jumpNumber = "";
-    },
-    changePage(pageNum) {
-      if (pageNum === 0 || pageNum === this.totalPage + 1) {
-        return false;
-      }
-      if (this.currentPage !== pageNum) {
-        this.currentPage = pageNum;
-      }
-    }
-  }
-});
-const Pagination_vue_vue_type_style_index_0_scoped_90e9305f_lang = "";
-const _export_sfc = (sfc, props) => {
-  const target = sfc.__vccOpts || sfc;
-  for (const [key, val] of props) {
-    target[key] = val;
-  }
-  return target;
-};
-const _withScopeId$1 = (n) => (pushScopeId("data-v-90e9305f"), n = n(), popScopeId(), n);
-const _hoisted_1$1 = { class: "m-pagination-wrap" };
-const _hoisted_2$1 = {
+const _withScopeId$1 = (n) => (pushScopeId("data-v-0b4fe0d6"), n = n(), popScopeId(), n);
+const _hoisted_1$2 = { class: "m-pagination-wrap" };
+const _hoisted_2$2 = {
   key: 0,
   class: "mr8"
 };
-const _hoisted_3$1 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_3$2 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-arrow",
   viewBox: "64 64 896 896",
   "data-icon": "left",
@@ -173,8 +15,8 @@ const _hoisted_3$1 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ create
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 0 0 0 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z" })
 ], -1));
-const _hoisted_4$1 = [
-  _hoisted_3$1
+const _hoisted_4$2 = [
+  _hoisted_3$2
 ];
 const _hoisted_5$1 = { class: "u-ellipsis" };
 const _hoisted_6$1 = {
@@ -217,93 +59,204 @@ const _hoisted_16 = {
   key: 1,
   class: "u-jump-page"
 };
-function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("div", {
-    class: normalizeClass([`m-pagination ${_ctx.placement}`, { hidden: _ctx.hideOnSinglePage && _ctx.total <= _ctx.pageSize }])
-  }, [
-    createElementVNode("div", _hoisted_1$1, [
-      _ctx.showTotal ? (openBlock(), createElementBlock("span", _hoisted_2$1, "共 " + toDisplayString(_ctx.totalPage) + " 页 / " + toDisplayString(_ctx.total) + " 条", 1)) : createCommentVNode("", true),
-      createElementVNode("span", {
-        class: normalizeClass(["u-item", { disabled: _ctx.currentPage === 1 }]),
-        onClick: _cache[0] || (_cache[0] = ($event) => _ctx.changePage(_ctx.currentPage - 1))
-      }, _hoisted_4$1, 2),
-      createElementVNode("span", {
-        class: normalizeClass(["u-item", { active: _ctx.currentPage === 1 }]),
-        onClick: _cache[1] || (_cache[1] = ($event) => _ctx.changePage(1))
-      }, "1", 2),
-      withDirectives(createElementVNode("span", {
-        class: "m-arrow",
-        ref: "forward",
-        onClick: _cache[2] || (_cache[2] = (...args) => _ctx.onForward && _ctx.onForward(...args)),
-        onMouseenter: _cache[3] || (_cache[3] = ($event) => _ctx.forwardArrow = true),
-        onMouseleave: _cache[4] || (_cache[4] = ($event) => _ctx.forwardArrow = false)
+const _sfc_main$2 = /* @__PURE__ */ defineComponent({
+  __name: "Pagination",
+  props: {
+    current: { default: 1 },
+    pageSize: { default: 10 },
+    total: { default: 0 },
+    pageListNum: { default: 5 },
+    hideOnSinglePage: { type: Boolean, default: false },
+    showQuickJumper: { type: Boolean, default: false },
+    showTotal: { type: Boolean, default: false },
+    placement: { default: "right" }
+  },
+  emits: ["change"],
+  setup(__props, { emit }) {
+    const props = __props;
+    const currentPage = ref(props.current);
+    const jumpNumber = ref("");
+    const forwardMore = ref(false);
+    const backwardMore = ref(false);
+    const forwardArrow = ref(false);
+    const backwardArrow = ref(false);
+    const totalPage = computed(() => {
+      return Math.ceil(props.total / props.pageSize);
+    });
+    const pageList = computed(() => {
+      return dealPageList(currentPage.value).filter((n) => n !== 1 && n !== totalPage.value);
+    });
+    watch(currentPage, (to) => {
+      console.log("change:", to);
+      emit("change", {
+        page: to,
+        pageSize: props.pageSize
+      });
+    });
+    onMounted(() => {
+      document.onkeydown = (e) => {
+        const ev = e || window.event;
+        if (ev && ev.keyCode === 13 && jumpNumber.value) {
+          jumpPage(jumpNumber.value);
+        }
+      };
+    });
+    function dealPageList(curPage) {
+      var resList = [];
+      var offset = Math.floor(props.pageListNum / 2);
+      var pager = {
+        start: curPage - offset,
+        end: curPage + offset
+      };
+      if (pager.start < 1) {
+        pager.end = pager.end + (1 - pager.start);
+        pager.start = 1;
+      }
+      if (pager.end > totalPage.value) {
+        pager.start = pager.start - (pager.end - totalPage.value);
+        pager.end = totalPage.value;
+      }
+      if (pager.start < 1) {
+        pager.start = 1;
+      }
+      if (pager.start > 1) {
+        forwardMore.value = true;
+      } else {
+        forwardMore.value = false;
+      }
+      if (pager.end < totalPage.value) {
+        backwardMore.value = true;
+      } else {
+        backwardMore.value = false;
+      }
+      for (let i = pager.start; i <= pager.end; i++) {
+        resList.push(i);
+      }
+      return resList;
+    }
+    function onForward() {
+      currentPage.value = currentPage.value - props.pageListNum > 0 ? currentPage.value - props.pageListNum : 1;
+    }
+    function onBackward() {
+      currentPage.value = currentPage.value + props.pageListNum < totalPage.value ? currentPage.value + props.pageListNum : totalPage.value;
+    }
+    function jumpPage(jumpNum) {
+      if (Number(jumpNum)) {
+        if (Number(jumpNum) < 1) {
+          jumpNum = 1;
+        }
+        if (Number(jumpNum) > totalPage.value) {
+          jumpNum = totalPage.value;
+        }
+        changePage(Number(jumpNum));
+      }
+      jumpNumber.value = "";
+    }
+    function changePage(pageNum) {
+      if (pageNum === 0 || pageNum === totalPage.value + 1) {
+        return false;
+      }
+      if (currentPage.value !== pageNum) {
+        currentPage.value = pageNum;
+      }
+    }
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", {
+        class: normalizeClass([`m-pagination ${__props.placement}`, { hidden: __props.hideOnSinglePage && __props.total <= __props.pageSize }])
       }, [
-        withDirectives(createElementVNode("span", _hoisted_5$1, "•••", 512), [
-          [vShow, !_ctx.forwardArrow]
-        ]),
-        withDirectives((openBlock(), createElementBlock("svg", _hoisted_6$1, _hoisted_8, 512)), [
-          [vShow, _ctx.forwardArrow]
+        createElementVNode("div", _hoisted_1$2, [
+          __props.showTotal ? (openBlock(), createElementBlock("span", _hoisted_2$2, "共 " + toDisplayString(unref(totalPage)) + " 页 / " + toDisplayString(__props.total) + " 条", 1)) : createCommentVNode("", true),
+          createElementVNode("span", {
+            class: normalizeClass(["u-item", { disabled: currentPage.value === 1 }]),
+            onClick: _cache[0] || (_cache[0] = ($event) => changePage(currentPage.value - 1))
+          }, _hoisted_4$2, 2),
+          createElementVNode("span", {
+            class: normalizeClass(["u-item", { active: currentPage.value === 1 }]),
+            onClick: _cache[1] || (_cache[1] = ($event) => changePage(1))
+          }, "1", 2),
+          withDirectives(createElementVNode("span", {
+            class: "m-arrow",
+            ref: "forward",
+            onClick: onForward,
+            onMouseenter: _cache[2] || (_cache[2] = ($event) => forwardArrow.value = true),
+            onMouseleave: _cache[3] || (_cache[3] = ($event) => forwardArrow.value = false)
+          }, [
+            withDirectives(createElementVNode("span", _hoisted_5$1, "•••", 512), [
+              [vShow, !forwardArrow.value]
+            ]),
+            withDirectives((openBlock(), createElementBlock("svg", _hoisted_6$1, _hoisted_8, 512)), [
+              [vShow, forwardArrow.value]
+            ])
+          ], 544), [
+            [vShow, forwardMore.value && unref(pageList)[0] - 1 > 1]
+          ]),
+          (openBlock(true), createElementBlock(Fragment, null, renderList(unref(pageList), (page, index) => {
+            return openBlock(), createElementBlock("span", {
+              class: normalizeClass(["u-item", { active: currentPage.value === page }]),
+              key: index,
+              onClick: ($event) => changePage(page)
+            }, toDisplayString(page), 11, _hoisted_9);
+          }), 128)),
+          withDirectives(createElementVNode("span", {
+            class: "m-arrow",
+            ref: "backward",
+            onClick: onBackward,
+            onMouseenter: _cache[4] || (_cache[4] = ($event) => backwardArrow.value = true),
+            onMouseleave: _cache[5] || (_cache[5] = ($event) => backwardArrow.value = false)
+          }, [
+            withDirectives(createElementVNode("span", _hoisted_10, "•••", 512), [
+              [vShow, !backwardArrow.value]
+            ]),
+            withDirectives((openBlock(), createElementBlock("svg", _hoisted_11, _hoisted_13, 512)), [
+              [vShow, backwardArrow.value]
+            ])
+          ], 544), [
+            [vShow, backwardMore.value && unref(pageList)[unref(pageList).length - 1] + 1 < unref(totalPage)]
+          ]),
+          withDirectives(createElementVNode("span", {
+            class: normalizeClass(["u-item", { active: currentPage.value === unref(totalPage) }]),
+            onClick: _cache[6] || (_cache[6] = ($event) => changePage(unref(totalPage)))
+          }, toDisplayString(unref(totalPage)), 3), [
+            [vShow, unref(totalPage) !== 1]
+          ]),
+          createElementVNode("span", {
+            class: normalizeClass(["u-item", { disabled: currentPage.value === unref(totalPage) }]),
+            onClick: _cache[7] || (_cache[7] = ($event) => changePage(currentPage.value + 1))
+          }, _hoisted_15, 2),
+          __props.showQuickJumper ? (openBlock(), createElementBlock("span", _hoisted_16, [
+            createTextVNode("跳至"),
+            withDirectives(createElementVNode("input", {
+              type: "text",
+              "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => jumpNumber.value = $event)
+            }, null, 512), [
+              [vModelText, jumpNumber.value]
+            ]),
+            createTextVNode("页")
+          ])) : createCommentVNode("", true)
         ])
-      ], 544), [
-        [vShow, _ctx.forwardMore && _ctx.pageList[0] - 1 > 1]
-      ]),
-      (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.pageList, (page, index) => {
-        return openBlock(), createElementBlock("span", {
-          class: normalizeClass(["u-item", { active: _ctx.currentPage === page }]),
-          key: index,
-          onClick: ($event) => _ctx.changePage(page)
-        }, toDisplayString(page), 11, _hoisted_9);
-      }), 128)),
-      withDirectives(createElementVNode("span", {
-        class: "m-arrow",
-        ref: "backward",
-        onClick: _cache[5] || (_cache[5] = (...args) => _ctx.onBackward && _ctx.onBackward(...args)),
-        onMouseenter: _cache[6] || (_cache[6] = ($event) => _ctx.backwardArrow = true),
-        onMouseleave: _cache[7] || (_cache[7] = ($event) => _ctx.backwardArrow = false)
-      }, [
-        withDirectives(createElementVNode("span", _hoisted_10, "•••", 512), [
-          [vShow, !_ctx.backwardArrow]
-        ]),
-        withDirectives((openBlock(), createElementBlock("svg", _hoisted_11, _hoisted_13, 512)), [
-          [vShow, _ctx.backwardArrow]
-        ])
-      ], 544), [
-        [vShow, _ctx.backwardMore && _ctx.pageList[_ctx.pageList.length - 1] + 1 < _ctx.totalPage]
-      ]),
-      withDirectives(createElementVNode("span", {
-        class: normalizeClass(["u-item", { active: _ctx.currentPage === _ctx.totalPage }]),
-        onClick: _cache[8] || (_cache[8] = ($event) => _ctx.changePage(_ctx.totalPage))
-      }, toDisplayString(_ctx.totalPage), 3), [
-        [vShow, _ctx.totalPage !== 1]
-      ]),
-      createElementVNode("span", {
-        class: normalizeClass(["u-item", { disabled: _ctx.currentPage === _ctx.totalPage }]),
-        onClick: _cache[9] || (_cache[9] = ($event) => _ctx.changePage(_ctx.currentPage + 1))
-      }, _hoisted_15, 2),
-      _ctx.showQuickJumper ? (openBlock(), createElementBlock("span", _hoisted_16, [
-        createTextVNode("跳至"),
-        withDirectives(createElementVNode("input", {
-          type: "text",
-          "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => _ctx.jumpNumber = $event)
-        }, null, 512), [
-          [vModelText, _ctx.jumpNumber]
-        ]),
-        createTextVNode("页")
-      ])) : createCommentVNode("", true)
-    ])
-  ], 2);
-}
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__scopeId", "data-v-90e9305f"]]);
-Pagination.install = (app) => {
-  app.component(Pagination.name, Pagination);
+      ], 2);
+    };
+  }
+});
+const Pagination_vue_vue_type_style_index_0_scoped_0b4fe0d6_lang = "";
+const _export_sfc = (sfc, props) => {
+  const target = sfc.__vccOpts || sfc;
+  for (const [key, val] of props) {
+    target[key] = val;
+  }
+  return target;
 };
-const _withScopeId = (n) => (pushScopeId("data-v-e7eb3765"), n = n(), popScopeId(), n);
-const _hoisted_1 = ["onClick", "title"];
-const _hoisted_2 = {
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-0b4fe0d6"]]);
+Pagination.install = (app) => {
+  app.component(Pagination.__name, Pagination);
+};
+const _withScopeId = (n) => (pushScopeId("data-v-574bc864"), n = n(), popScopeId(), n);
+const _hoisted_1$1 = ["onClick", "title"];
+const _hoisted_2$1 = {
   key: 0,
   class: "u-separator"
 };
-const _hoisted_3 = {
+const _hoisted_3$1 = {
   key: 1,
   class: "u-arrow",
   viewBox: "64 64 896 896",
@@ -311,17 +264,13 @@ const _hoisted_3 = {
   "aria-hidden": "true",
   focusable: "false"
 };
-const _hoisted_4 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1));
+const _hoisted_4$1 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1));
 const _hoisted_5 = [
-  _hoisted_4
+  _hoisted_4$1
 ];
 const _hoisted_6 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
-const __default__ = {
-  // 导出组件name
-  name: "Breadcrumb"
-};
-const _sfc_main = /* @__PURE__ */ defineComponent({
-  ...__default__,
+const _sfc_main$1 = /* @__PURE__ */ defineComponent({
+  __name: "Breadcrumb",
   props: {
     routes: { default: () => [] },
     height: { default: 60 },
@@ -350,9 +299,9 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
               class: normalizeClass(["u-route", { active: index === unref(len) - 1 }]),
               onClick: ($event) => index === unref(len) - 1 ? (e) => e.preventDefault() : goRouter(route),
               title: route.name
-            }, toDisplayString(route.name || "--"), 11, _hoisted_1),
+            }, toDisplayString(route.name || "--"), 11, _hoisted_1$1),
             index !== unref(len) - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-              __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3, _hoisted_5))
+              __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2$1, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$1, _hoisted_5))
             ], 64)) : createCommentVNode("", true)
           ]);
         }), 128)),
@@ -361,23 +310,119 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Breadcrumb_vue_vue_type_style_index_0_scoped_e7eb3765_lang = "";
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-e7eb3765"]]);
+const Breadcrumb_vue_vue_type_style_index_0_scoped_574bc864_lang = "";
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-574bc864"]]);
 Breadcrumb.install = (app) => {
-  app.component(Breadcrumb.name, Breadcrumb);
+  app.component(Breadcrumb.__name, Breadcrumb);
+};
+const _hoisted_1 = { class: "m-countdown" };
+const _hoisted_2 = { class: "u-title" };
+const _hoisted_3 = { class: "u-time" };
+const _hoisted_4 = { key: 2 };
+const _sfc_main = /* @__PURE__ */ defineComponent({
+  __name: "Countdown",
+  props: {
+    countdown: { default: 0 },
+    title: { default: "Countdown" },
+    format: { default: "HH:mm:ss" },
+    prefix: { default: "" },
+    suffix: { default: "" },
+    finishedText: { default: "" }
+  },
+  emits: ["finish"],
+  setup(__props, { emit }) {
+    const props = __props;
+    const restTime = ref(props.countdown);
+    function fixedTwo(value) {
+      return value < 10 ? "0" + value : String(value);
+    }
+    function timeFormat(time) {
+      let showTime2 = props.format;
+      if (showTime2.includes("s")) {
+        var s = time;
+      } else {
+        var s = 0;
+      }
+      if (showTime2.includes("m")) {
+        s = s % 60;
+        var m = Math.floor((time - s) / 60);
+      } else {
+        var m = 0;
+      }
+      if (showTime2.includes("H")) {
+        m = m % 60;
+        var h = Math.floor((time - s - m * 60) / 60 / 60);
+      } else {
+        var h = 0;
+      }
+      if (showTime2.includes("D")) {
+        h = h % 24;
+        var d = Math.floor((time - s - m * 60 - h * 60 * 60) / 60 / 60 / 24);
+      } else {
+        var d = 0;
+      }
+      showTime2 = showTime2.includes("ss") ? showTime2.replace("ss", fixedTwo(s)) : showTime2.replace("s", String(s));
+      showTime2 = showTime2.includes("mm") ? showTime2.replace("mm", fixedTwo(m)) : showTime2.replace("m", String(m));
+      showTime2 = showTime2.includes("HH") ? showTime2.replace("HH", fixedTwo(h)) : showTime2.replace("H", String(h));
+      showTime2 = showTime2.includes("DD") ? showTime2.replace("DD", fixedTwo(d)) : showTime2.replace("D", String(d));
+      return showTime2;
+    }
+    const showTime = computed(() => {
+      return timeFormat(restTime.value);
+    });
+    function CountDown(restTime2) {
+      setTimeout(() => {
+        restTime2.value--;
+        if (restTime2.value > 0) {
+          CountDown(restTime2);
+        } else {
+          emit("finish");
+        }
+      }, 1e3);
+    }
+    onMounted(() => {
+      CountDown(restTime);
+    });
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", _hoisted_1, [
+        renderSlot(_ctx.$slots, "title", {}, () => [
+          createElementVNode("p", _hoisted_2, toDisplayString(props.title), 1)
+        ], true),
+        createElementVNode("div", _hoisted_3, [
+          restTime.value > 0 ? renderSlot(_ctx.$slots, "prefix", { key: 0 }, () => [
+            createTextVNode(toDisplayString(__props.prefix), 1)
+          ], true) : createCommentVNode("", true),
+          __props.finishedText && restTime.value === 0 ? renderSlot(_ctx.$slots, "finish", { key: 1 }, () => [
+            createTextVNode(toDisplayString(__props.finishedText), 1)
+          ], true) : (openBlock(), createElementBlock("span", _hoisted_4, toDisplayString(unref(showTime)), 1)),
+          restTime.value > 0 ? renderSlot(_ctx.$slots, "suffix", { key: 3 }, () => [
+            createTextVNode(toDisplayString(__props.suffix), 1)
+          ], true) : createCommentVNode("", true)
+        ])
+      ]);
+    };
+  }
+});
+const Countdown_vue_vue_type_style_index_0_scoped_186d410a_lang = "";
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-186d410a"]]);
+Countdown.install = (app) => {
+  app.component(Countdown.__name, Countdown);
 };
 const components = [
   Pagination,
-  Breadcrumb
+  Breadcrumb,
+  Countdown
 ];
+console.log("components:", components);
 const install = (app) => {
-  components.forEach((component) => app.component(component.name, component));
+  components.forEach((component) => app.component(component.__name, component));
 };
 const VueAmazingUI = {
   install
 };
 export {
   Breadcrumb,
+  Countdown,
   Pagination,
   VueAmazingUI as default
 };
