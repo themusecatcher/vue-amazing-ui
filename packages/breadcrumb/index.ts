@@ -3,7 +3,6 @@ import Breadcrumb from './Breadcrumb.vue'
 
 // 使用install方法，在app.use挂载
 Breadcrumb.install = (app: App) => {
-  // @ts-ignore
   app.component(Breadcrumb.__name as string, Breadcrumb)
 }
 
