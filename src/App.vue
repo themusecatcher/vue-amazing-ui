@@ -41,8 +41,8 @@ console.log('import.meta.env.DEV:', import.meta.env.DEV)
     <Countdown
       style="margin-top: 50px;"
       title="Countdown"
-      :countdown="3"
-      format="D 天 H 时 m 分 s 秒"
+      :countdown="12 * 30 * 24 * 60 * 60"
+      format="Y 年 M 月 D 天 H 时 m 分 s 秒"
       finishedText="Finished"
       @finish="onFinish">
       <template #prefix>There's only </template>

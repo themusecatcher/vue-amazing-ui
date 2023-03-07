@@ -2,9 +2,9 @@
 import { ref, computed, onMounted } from 'vue'
 import type { Ref } from 'vue'
 interface Props {
-  countdown: number, // 倒计时数值，单位s
+  countdown: number, // 倒计时数值（countdown），必传，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(s)
   title?: string, // 倒计时标题 string | v-slot
-  format?: string, // 格式化倒计时展示，(D：天，H：小时，m：分钟，s：秒)
+  format?: string, // 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒)
   prefix?: string, // 倒计时数值的前缀 string | v-slot
   suffix?: string, // 倒计时数值的后缀 string | v-slot
   finishedText?: string // 完成后的展示文本 string | v-slot
@@ -18,9 +18,10 @@ const props = withDefaults(defineProps<Props>(), {
   finishedText: ''
 })
 const restTime = ref(props.countdown)
+
 function fixedTwo (value: number): string {
   return value < 10 ? '0' + value : String(value)
-} 
+}
 function timeFormat (time: number): string {
   let showTime = props.format
   if (showTime.includes('s')) {
@@ -36,20 +37,34 @@ function timeFormat (time: number): string {
   }
   if (showTime.includes('H')) {
     m = m % 60
-    var h = Math.floor((time - s - m * 60) / 60 / 60)
+    var H = Math.floor((time - s - m * 60) / 60 / 60)
   } else {
-    var h = 0
+    var H = 0
   }
   if (showTime.includes('D')) {
-    h = h % 24
-    var d = Math.floor((time - s - m * 60 - h * 60 * 60) / 60 / 60 / 24)
+    H = H % 24
+    var D = Math.floor((time - s - m * 60 - H * 60 * 60) / 60 / 60 / 24)
   } else {
-    var d = 0
+    var D = 0
+  }
+  if (showTime.includes('M')) {
+    D = D % 30
+    var M = Math.floor((time - s - m * 60 - H * 60 * 60 - D * 24 * 60 * 60) / 60 / 60 / 24 / 30)
+  } else {
+    var M = 0
+  }
+  if (showTime.includes('Y')) {
+    M = M % 12
+    var Y = Math.floor((time - s - m * 60 - H * 60 * 60 - D * 24 * 60 * 60 - M * 30 * 24 * 60 * 60) / 60 / 60 / 24 / 30 / 12)
+  } else {
+    var Y = 0
   }
   showTime = showTime.includes('ss') ? showTime.replace('ss', fixedTwo(s)) : showTime.replace('s', String(s))
   showTime = showTime.includes('mm') ? showTime.replace('mm', fixedTwo(m)) : showTime.replace('m', String(m))
-  showTime = showTime.includes('HH') ? showTime.replace('HH', fixedTwo(h)) : showTime.replace('H', String(h))
-  showTime = showTime.includes('DD') ? showTime.replace('DD', fixedTwo(d)) : showTime.replace('D', String(d))
+  showTime = showTime.includes('HH') ? showTime.replace('HH', fixedTwo(H)) : showTime.replace('H', String(H))
+  showTime = showTime.includes('DD') ? showTime.replace('DD', fixedTwo(D)) : showTime.replace('D', String(D))
+  showTime = showTime.includes('MM') ? showTime.replace('MM', fixedTwo(M)) : showTime.replace('M', String(M))
+  showTime = showTime.includes('YY') ? showTime.replace('YY', fixedTwo(Y)) : showTime.replace('Y', String(Y))
   return showTime
 }
 const showTime = computed(() => { // 展示的倒计时
@@ -67,6 +82,9 @@ function CountDown (restTime: Ref):void {
   }, 1000)
 }
 onMounted(() => {
+  if (restTime.value > Date.now()) {
+    restTime.value = Math.floor((restTime.value - Date.now()) / 1000)
+  }
   CountDown(restTime)
 })
 </script>
