@@ -3,7 +3,6 @@ import Countdown from './Countdown.vue'
 
 // 使用install方法，在app.use挂载
 Countdown.install = (app: App) => {
-  // @ts-ignore
   app.component(Countdown.__name as string, Countdown)
 }
 

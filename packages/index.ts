@@ -2,12 +2,14 @@ import type { App } from 'vue'
 import Pagination from './pagination'
 import Breadcrumb from './breadcrumb'
 import Countdown from './countdown'
+import Video from './video'
 
 // 所有组件列表
 const components = [
   Pagination,
   Breadcrumb,
-  Countdown
+  Countdown,
+  Video
 ]
 
 console.log('components:', components)
@@ -31,7 +33,8 @@ const VueAmazingUI = {
 export {
   Pagination,
   Breadcrumb,
-  Countdown
+  Countdown,
+  Video
 }
 
 export default VueAmazingUI

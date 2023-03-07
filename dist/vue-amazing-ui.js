@@ -1,12 +1,12 @@
-import { defineComponent, ref, computed, watch, onMounted, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, unref, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, normalizeStyle, renderSlot } from "vue";
+import { defineComponent, ref, computed, watch, onMounted, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, unref, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, normalizeStyle, renderSlot, onUnmounted, withModifiers } from "vue";
 import { useRouter } from "vue-router";
-const _withScopeId$1 = (n) => (pushScopeId("data-v-0b4fe0d6"), n = n(), popScopeId(), n);
-const _hoisted_1$2 = { class: "m-pagination-wrap" };
-const _hoisted_2$2 = {
+const _withScopeId$2 = (n) => (pushScopeId("data-v-0b4fe0d6"), n = n(), popScopeId(), n);
+const _hoisted_1$3 = { class: "m-pagination-wrap" };
+const _hoisted_2$3 = {
   key: 0,
   class: "mr8"
 };
-const _hoisted_3$2 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_3$3 = /* @__PURE__ */ _withScopeId$2(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-arrow",
   viewBox: "64 64 896 896",
   "data-icon": "left",
@@ -15,8 +15,8 @@ const _hoisted_3$2 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ create
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 0 0 0 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z" })
 ], -1));
-const _hoisted_4$2 = [
-  _hoisted_3$2
+const _hoisted_4$3 = [
+  _hoisted_3$3
 ];
 const _hoisted_5$1 = { class: "u-ellipsis" };
 const _hoisted_6$1 = {
@@ -26,7 +26,7 @@ const _hoisted_6$1 = {
   "aria-hidden": "true",
   focusable: "false"
 };
-const _hoisted_7 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("path", { d: "M272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9L272.9 512zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9L576.9 512z" }, null, -1));
+const _hoisted_7 = /* @__PURE__ */ _withScopeId$2(() => /* @__PURE__ */ createElementVNode("path", { d: "M272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9L272.9 512zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9L576.9 512z" }, null, -1));
 const _hoisted_8 = [
   _hoisted_7
 ];
@@ -39,11 +39,11 @@ const _hoisted_11 = {
   "aria-hidden": "true",
   focusable: "false"
 };
-const _hoisted_12 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("path", { d: "M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z" }, null, -1));
+const _hoisted_12 = /* @__PURE__ */ _withScopeId$2(() => /* @__PURE__ */ createElementVNode("path", { d: "M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z" }, null, -1));
 const _hoisted_13 = [
   _hoisted_12
 ];
-const _hoisted_14 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_14 = /* @__PURE__ */ _withScopeId$2(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-arrow",
   viewBox: "64 64 896 896",
   "data-icon": "right",
@@ -59,7 +59,7 @@ const _hoisted_16 = {
   key: 1,
   class: "u-jump-page"
 };
-const _sfc_main$2 = /* @__PURE__ */ defineComponent({
+const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "Pagination",
   props: {
     current: { default: 1 },
@@ -164,12 +164,12 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         class: normalizeClass([`m-pagination ${__props.placement}`, { hidden: __props.hideOnSinglePage && __props.total <= __props.pageSize }])
       }, [
-        createElementVNode("div", _hoisted_1$2, [
-          __props.showTotal ? (openBlock(), createElementBlock("span", _hoisted_2$2, "共 " + toDisplayString(unref(totalPage)) + " 页 / " + toDisplayString(__props.total) + " 条", 1)) : createCommentVNode("", true),
+        createElementVNode("div", _hoisted_1$3, [
+          __props.showTotal ? (openBlock(), createElementBlock("span", _hoisted_2$3, "共 " + toDisplayString(unref(totalPage)) + " 页 / " + toDisplayString(__props.total) + " 条", 1)) : createCommentVNode("", true),
           createElementVNode("span", {
             class: normalizeClass(["u-item", { disabled: currentPage.value === 1 }]),
             onClick: _cache[0] || (_cache[0] = ($event) => changePage(currentPage.value - 1))
-          }, _hoisted_4$2, 2),
+          }, _hoisted_4$3, 2),
           createElementVNode("span", {
             class: normalizeClass(["u-item", { active: currentPage.value === 1 }]),
             onClick: _cache[1] || (_cache[1] = ($event) => changePage(1))
@@ -246,17 +246,17 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-0b4fe0d6"]]);
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-0b4fe0d6"]]);
 Pagination.install = (app) => {
   app.component(Pagination.__name, Pagination);
 };
-const _withScopeId = (n) => (pushScopeId("data-v-574bc864"), n = n(), popScopeId(), n);
-const _hoisted_1$1 = ["onClick", "title"];
-const _hoisted_2$1 = {
+const _withScopeId$1 = (n) => (pushScopeId("data-v-574bc864"), n = n(), popScopeId(), n);
+const _hoisted_1$2 = ["onClick", "title"];
+const _hoisted_2$2 = {
   key: 0,
   class: "u-separator"
 };
-const _hoisted_3$1 = {
+const _hoisted_3$2 = {
   key: 1,
   class: "u-arrow",
   viewBox: "64 64 896 896",
@@ -264,12 +264,12 @@ const _hoisted_3$1 = {
   "aria-hidden": "true",
   focusable: "false"
 };
-const _hoisted_4$1 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1));
+const _hoisted_4$2 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1));
 const _hoisted_5 = [
-  _hoisted_4$1
+  _hoisted_4$2
 ];
-const _hoisted_6 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
-const _sfc_main$1 = /* @__PURE__ */ defineComponent({
+const _hoisted_6 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
+const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __name: "Breadcrumb",
   props: {
     routes: { default: () => [] },
@@ -299,9 +299,9 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
               class: normalizeClass(["u-route", { active: index === unref(len) - 1 }]),
               onClick: ($event) => index === unref(len) - 1 ? (e) => e.preventDefault() : goRouter(route),
               title: route.name
-            }, toDisplayString(route.name || "--"), 11, _hoisted_1$1),
+            }, toDisplayString(route.name || "--"), 11, _hoisted_1$2),
             index !== unref(len) - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-              __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2$1, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$1, _hoisted_5))
+              __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2$2, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$2, _hoisted_5))
             ], 64)) : createCommentVNode("", true)
           ]);
         }), 128)),
@@ -311,15 +311,15 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   }
 });
 const Breadcrumb_vue_vue_type_style_index_0_scoped_574bc864_lang = "";
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-574bc864"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-574bc864"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };
-const _hoisted_1 = { class: "m-countdown" };
-const _hoisted_2 = { class: "u-title" };
-const _hoisted_3 = { class: "u-time" };
-const _hoisted_4 = { key: 2 };
-const _sfc_main = /* @__PURE__ */ defineComponent({
+const _hoisted_1$1 = { class: "m-countdown" };
+const _hoisted_2$1 = { class: "u-title" };
+const _hoisted_3$1 = { class: "u-time" };
+const _hoisted_4$1 = { key: 2 };
+const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   __name: "Countdown",
   props: {
     countdown: { default: 0 },
@@ -351,20 +351,34 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }
       if (showTime2.includes("H")) {
         m = m % 60;
-        var h = Math.floor((time - s - m * 60) / 60 / 60);
+        var H = Math.floor((time - s - m * 60) / 60 / 60);
       } else {
-        var h = 0;
+        var H = 0;
       }
       if (showTime2.includes("D")) {
-        h = h % 24;
-        var d = Math.floor((time - s - m * 60 - h * 60 * 60) / 60 / 60 / 24);
+        H = H % 24;
+        var D = Math.floor((time - s - m * 60 - H * 60 * 60) / 60 / 60 / 24);
       } else {
-        var d = 0;
+        var D = 0;
+      }
+      if (showTime2.includes("M")) {
+        D = D % 30;
+        var M = Math.floor((time - s - m * 60 - H * 60 * 60 - D * 24 * 60 * 60) / 60 / 60 / 24 / 30);
+      } else {
+        var M = 0;
+      }
+      if (showTime2.includes("Y")) {
+        M = M % 12;
+        var Y = Math.floor((time - s - m * 60 - H * 60 * 60 - D * 24 * 60 * 60 - M * 30 * 24 * 60 * 60) / 60 / 60 / 24 / 30 / 12);
+      } else {
+        var Y = 0;
       }
       showTime2 = showTime2.includes("ss") ? showTime2.replace("ss", fixedTwo(s)) : showTime2.replace("s", String(s));
       showTime2 = showTime2.includes("mm") ? showTime2.replace("mm", fixedTwo(m)) : showTime2.replace("m", String(m));
-      showTime2 = showTime2.includes("HH") ? showTime2.replace("HH", fixedTwo(h)) : showTime2.replace("H", String(h));
-      showTime2 = showTime2.includes("DD") ? showTime2.replace("DD", fixedTwo(d)) : showTime2.replace("D", String(d));
+      showTime2 = showTime2.includes("HH") ? showTime2.replace("HH", fixedTwo(H)) : showTime2.replace("H", String(H));
+      showTime2 = showTime2.includes("DD") ? showTime2.replace("DD", fixedTwo(D)) : showTime2.replace("D", String(D));
+      showTime2 = showTime2.includes("MM") ? showTime2.replace("MM", fixedTwo(M)) : showTime2.replace("M", String(M));
+      showTime2 = showTime2.includes("YY") ? showTime2.replace("YY", fixedTwo(Y)) : showTime2.replace("Y", String(Y));
       return showTime2;
     }
     const showTime = computed(() => {
@@ -381,20 +395,23 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }, 1e3);
     }
     onMounted(() => {
+      if (restTime.value > Date.now()) {
+        restTime.value = Math.floor((restTime.value - Date.now()) / 1e3);
+      }
       CountDown(restTime);
     });
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1, [
+      return openBlock(), createElementBlock("div", _hoisted_1$1, [
         renderSlot(_ctx.$slots, "title", {}, () => [
-          createElementVNode("p", _hoisted_2, toDisplayString(props.title), 1)
+          createElementVNode("p", _hoisted_2$1, toDisplayString(props.title), 1)
         ], true),
-        createElementVNode("div", _hoisted_3, [
+        createElementVNode("div", _hoisted_3$1, [
           restTime.value > 0 ? renderSlot(_ctx.$slots, "prefix", { key: 0 }, () => [
             createTextVNode(toDisplayString(__props.prefix), 1)
           ], true) : createCommentVNode("", true),
           __props.finishedText && restTime.value === 0 ? renderSlot(_ctx.$slots, "finish", { key: 1 }, () => [
             createTextVNode(toDisplayString(__props.finishedText), 1)
-          ], true) : (openBlock(), createElementBlock("span", _hoisted_4, toDisplayString(unref(showTime)), 1)),
+          ], true) : (openBlock(), createElementBlock("span", _hoisted_4$1, toDisplayString(unref(showTime)), 1)),
           restTime.value > 0 ? renderSlot(_ctx.$slots, "suffix", { key: 3 }, () => [
             createTextVNode(toDisplayString(__props.suffix), 1)
           ], true) : createCommentVNode("", true)
@@ -403,15 +420,128 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Countdown_vue_vue_type_style_index_0_scoped_186d410a_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-186d410a"]]);
+const Countdown_vue_vue_type_style_index_0_scoped_203f9659_lang = "";
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-203f9659"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
+};
+const _withScopeId = (n) => (pushScopeId("data-v-19a2828d"), n = n(), popScopeId(), n);
+const _hoisted_1 = ["src", "poster", "width", "height", "autoplay", "controls", "loop", "muted", "preload", "onClickOnce"];
+const _hoisted_2 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", {
+  stroke: "currentColor",
+  "stroke-linecap": "round",
+  "stroke-linejoin": "round",
+  "stroke-width": "1.5",
+  d: "M4.75 6.75C4.75 5.64543 5.64543 4.75 6.75 4.75H17.25C18.3546 4.75 19.25 5.64543 19.25 6.75V17.25C19.25 18.3546 18.3546 19.25 17.25 19.25H6.75C5.64543 19.25 4.75 18.3546 4.75 17.25V6.75Z"
+}, null, -1));
+const _hoisted_3 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", {
+  stroke: "currentColor",
+  "stroke-linecap": "round",
+  "stroke-linejoin": "round",
+  "stroke-width": "1.5",
+  d: "M15.25 12L9.75 8.75V15.25L15.25 12Z"
+}, null, -1));
+const _hoisted_4 = [
+  _hoisted_2,
+  _hoisted_3
+];
+const _sfc_main = /* @__PURE__ */ defineComponent({
+  __name: "Video",
+  props: {
+    videoUrl: { default: "" },
+    videoCover: { default: "" },
+    width: { default: 800 },
+    height: { default: 450 },
+    autoplay: { type: Boolean, default: false },
+    controls: { type: Boolean, default: true },
+    loop: { type: Boolean, default: false },
+    muted: { type: Boolean, default: false },
+    preload: { default: "auto" },
+    showPlay: { type: Boolean, default: false },
+    playWidth: { default: 96 },
+    zoom: { default: "none" }
+  },
+  setup(__props) {
+    const props = __props;
+    const originPlay = ref(true);
+    const vplay = ref(false);
+    const veo = ref(null);
+    function onPlay() {
+      var _a, _b;
+      console.log("click");
+      if (props.autoplay) {
+        (_a = veo.value) == null ? void 0 : _a.pause();
+      } else {
+        vplay.value = true;
+        originPlay.value = false;
+        (_b = veo.value) == null ? void 0 : _b.play();
+      }
+    }
+    function onPause() {
+      vplay.value = false;
+      console.log("pause");
+    }
+    function onPlaying() {
+      vplay.value = true;
+      console.log("playing");
+    }
+    onMounted(() => {
+      var _a, _b;
+      if (props.showPlay) {
+        (_a = veo.value) == null ? void 0 : _a.addEventListener("pause", onPause);
+        (_b = veo.value) == null ? void 0 : _b.addEventListener("playing", onPlaying);
+      }
+      if (props.autoplay) {
+        vplay.value = true;
+        originPlay.value = false;
+      }
+    });
+    onUnmounted(() => {
+      var _a, _b;
+      (_a = veo.value) == null ? void 0 : _a.removeEventListener("pause", onPause);
+      (_b = veo.value) == null ? void 0 : _b.removeEventListener("playing", onPlaying);
+    });
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", {
+        class: "m-video",
+        style: normalizeStyle(`width: ${__props.width}px; height: ${__props.height}px;`)
+      }, [
+        createElementVNode("video", {
+          ref_key: "veo",
+          ref: veo,
+          style: normalizeStyle(`object-fit: ${__props.zoom};`),
+          src: __props.videoUrl,
+          poster: __props.videoCover,
+          width: __props.width,
+          height: __props.height,
+          autoplay: __props.autoplay,
+          controls: !originPlay.value && __props.controls,
+          loop: __props.loop,
+          muted: __props.autoplay || __props.muted,
+          preload: __props.preload,
+          onClickOnce: withModifiers(onPlay, ["prevent"])
+        }, " 您的浏览器不支持video标签。 ", 44, _hoisted_1),
+        withDirectives((openBlock(), createElementBlock("svg", {
+          class: normalizeClass([vplay.value ? "hidden" : "u-play"]),
+          style: normalizeStyle(`width: ${__props.playWidth}px; height: ${__props.playWidth}px;`),
+          viewBox: "0 0 24 24"
+        }, _hoisted_4, 6)), [
+          [vShow, originPlay.value || __props.showPlay]
+        ])
+      ], 4);
+    };
+  }
+});
+const Video_vue_vue_type_style_index_0_scoped_19a2828d_lang = "";
+const Video = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-19a2828d"]]);
+Video.install = (app) => {
+  app.component(Video.__name, Video);
 };
 const components = [
   Pagination,
   Breadcrumb,
-  Countdown
+  Countdown,
+  Video
 ];
 console.log("components:", components);
 const install = (app) => {
@@ -424,5 +554,6 @@ export {
   Breadcrumb,
   Countdown,
   Pagination,
+  Video,
   VueAmazingUI as default
 };

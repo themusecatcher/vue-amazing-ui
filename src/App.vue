@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { RouterView } from 'vue-router'
+// import videoUrl from '@/assets/files/Bao.mp4'
+// import videoCover from '@/assets/images/Bao.jpg'
+
+// const videoUrl = ref(new URL('@/assets/files/Bao.mp4', import.meta.url).href)
+// const videoCover = ref(new URL('@/assets/images/Bao.jpg', import.meta.url).href)
+
+const videoUrl = ref()
+const videoCover = ref()
+
 const hideOnSinglePage = ref(false);
 const total = ref(100);
 const pagination = ref({
@@ -33,6 +42,13 @@ console.log('import.meta.env.MODE:', import.meta.env.MODE)
 console.log('import.meta.env.BASE_URL:', import.meta.env.BASE_URL)
 console.log('import.meta.env.PROD:', import.meta.env.PROD)
 console.log('import.meta.env.DEV:', import.meta.env.DEV)
+
+onMounted(() => {
+  setTimeout(() => { // 模拟接口调用
+      videoUrl.value = 'https://download.jinhui365.cn/group1/M00/00/A7/CgAAcmNCagWAejQND0jqHviL8QA869.mp4'
+      videoCover.value = 'https://download.jinhui365.cn//group1/M00/00/A8/CgAAcmNCddKACHUbAADB2zx3w90256.jpg'
+    }, 1000)
+})
 </script>
 
 <template>
@@ -59,6 +75,21 @@ console.log('import.meta.env.DEV:', import.meta.env.DEV)
       :showQuickJumper="true"
       :showTotal="true"
       placement="center"
+    />
+    <Video
+      v-show="true"
+      :videoUrl="videoUrl"
+      :videoCover="videoCover"
+      :width="800"
+      :height="450"
+      :autoplay="true"
+      :controls="true"
+      :loop="false"
+      :muted="false"
+      preload="auto"
+      :showPlay="true"
+      :playWidth="96"
+      zoom="cotain"
     />
   </div>
 </template>
