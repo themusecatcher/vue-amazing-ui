@@ -35,4 +35,29 @@ app.use(Breadcrumb)
 
 ```
 <Breadcrumb :routes="routes" :height="60" />
+
+<Pagination
+  @change="changePage"
+  :current="pagination.p"
+  :pageSize="pagination.pageSize"
+  :total="total"
+  :hideOnSinglePage="hideOnSinglePage"
+  :showQuickJumper="true"
+  :showTotal="true"
+  placement="center"/>
+
+<Video
+  v-show="true"
+  :videoUrl="videoUrl"
+  :videoCover="videoCover"
+  :width="800"
+  :height="450"
+  :autoplay="true"
+  :controls="true"
+  :loop="false"
+  :muted="false"
+  preload="auto"
+  :showPlay="true"
+  :playWidth="96"
+  zoom="cotain"/>
 ```
