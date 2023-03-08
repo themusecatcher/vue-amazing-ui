@@ -37,11 +37,6 @@ function changePage (pager: object) { // 分页器回调
 function onFinish () {
   console.log('countdown finished')
 }
-// Vite 在一个特殊的 import.meta.env 对象上暴露环境变量
-console.log('import.meta.env.MODE:', import.meta.env.MODE)
-console.log('import.meta.env.BASE_URL:', import.meta.env.BASE_URL)
-console.log('import.meta.env.PROD:', import.meta.env.PROD)
-console.log('import.meta.env.DEV:', import.meta.env.DEV)
 
 onMounted(() => {
   setTimeout(() => { // 模拟接口调用
