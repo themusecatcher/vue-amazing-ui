@@ -10,8 +10,8 @@ import { RouterView } from 'vue-router'
 const videoUrl = ref()
 const videoCover = ref()
 
-const hideOnSinglePage = ref(false);
-const total = ref(100);
+const hideOnSinglePage = ref(false)
+const total = ref(100)
 const pagination = ref({
   pageSize: 10,
   p: 1
