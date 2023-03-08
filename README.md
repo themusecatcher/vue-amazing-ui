@@ -1,13 +1,13 @@
 # vue-amazing-ui
 
-## 安装插件
+### 安装插件
 
 ```
 npm install vue-amazing-ui
 或：yarn add vue-amazing-ui
 ```
 
-## 已有组件
+### 已有组件
 
 组件名 | 说明
 :--- | :---
@@ -15,7 +15,7 @@ Breadcrumb | 面包屑
 Countdown | 倒计时
 Pagination | 分页器
 
-## 引入并注册插件
+### 引入并注册插件
 
 ```
 // 全部引入
@@ -31,7 +31,7 @@ import 'vue-amazing-ui/dist/style.css'
 app.use(Breadcrumb)
 ```
 
-## 在项目中使用(示例)
+### 组件Demos(示例)
 
 ```
 <Breadcrumb :routes="routes" :height="60" />
@@ -61,3 +61,7 @@ app.use(Breadcrumb)
   :playWidth="96"
   zoom="cotain"/>
 ```
+
+### 各个组件具体介绍及实现
+
+详见：[My CSDN Blogs](https://blog.csdn.net/Dandrose)
