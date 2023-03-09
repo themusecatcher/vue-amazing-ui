@@ -3,13 +3,15 @@ import Pagination from './pagination'
 import Breadcrumb from './breadcrumb'
 import Countdown from './countdown'
 import Video from './video'
+import Button from './button'
 
 // 所有组件列表
 const components = [
   Pagination,
   Breadcrumb,
   Countdown,
-  Video
+  Video,
+  Button
 ]
 
 console.log('components:', components)
@@ -26,15 +28,15 @@ const install = (app: App): void => {
   components.forEach(component => app.component(component.__name as string, component))
 }
 
-const VueAmazingUI = {
-  install
-}
-
 export {
   Pagination,
   Breadcrumb,
   Countdown,
-  Video
+  Video,
+  Button
 }
 
+const VueAmazingUI = {
+  install
+}
 export default VueAmazingUI

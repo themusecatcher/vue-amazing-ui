@@ -37,6 +37,9 @@ function changePage (pager: object) { // 分页器回调
 function onFinish () {
   console.log('countdown finished')
 }
+function onClick () {
+  console.log('click')
+}
 
 onMounted(() => {
   setTimeout(() => { // 模拟接口调用
@@ -77,7 +80,7 @@ onMounted(() => {
       :videoCover="videoCover"
       :width="800"
       :height="450"
-      :autoplay="true"
+      :autoplay="false"
       :controls="true"
       :loop="false"
       :muted="false"
@@ -86,6 +89,20 @@ onMounted(() => {
       :playWidth="96"
       zoom="cotain"
     />
+    <br/>
+    <Button
+      class="mr20"
+      type="primary"
+      effect="reverse"
+      size="middle"
+      :width="120"
+      :height="40"
+      :borderRadius="4"
+      :disabled="false"
+      :center="false"
+      @click="onClick">
+      按钮Button
+    </Button>
   </div>
 </template>
 

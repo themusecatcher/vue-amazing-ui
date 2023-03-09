@@ -15,6 +15,7 @@ Breadcrumb | 面包屑
 Countdown | 倒计时
 Pagination | 分页器
 Video | 视频播放
+Button | 按钮
 
 ### 引入并注册插件
 
@@ -73,6 +74,20 @@ app.use(Breadcrumb)
   :showPlay="true"
   :playWidth="96"
   zoom="cotain"/>
+
+<Button
+  class="mr20"
+  type="primary"
+  effect="reverse"
+  size="middle"
+  :width="120"
+  :height="40"
+  :borderRadius="4"
+  :disabled="false"
+  :center="false"
+  @click="onClick">
+  按钮Button
+</Button>
 ```
 
 ### 各个组件具体介绍及实现
