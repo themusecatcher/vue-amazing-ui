@@ -1,7 +1,7 @@
-import { defineComponent, ref, computed, watch, onMounted, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, unref, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, normalizeStyle, renderSlot, onUnmounted, withModifiers } from "vue";
+import { defineComponent, ref, computed, watch, onMounted, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, unref, createCommentVNode, withDirectives, vShow, Fragment, renderList, createTextVNode, vModelText, pushScopeId, popScopeId, normalizeStyle, renderSlot, onUnmounted, withModifiers, resolveComponent, createBlock, withCtx } from "vue";
 import { useRouter } from "vue-router";
 const _withScopeId$2 = (n) => (pushScopeId("data-v-0b4fe0d6"), n = n(), popScopeId(), n);
-const _hoisted_1$3 = { class: "m-pagination-wrap" };
+const _hoisted_1$4 = { class: "m-pagination-wrap" };
 const _hoisted_2$3 = {
   key: 0,
   class: "mr8"
@@ -59,7 +59,7 @@ const _hoisted_16 = {
   key: 1,
   class: "u-jump-page"
 };
-const _sfc_main$3 = /* @__PURE__ */ defineComponent({
+const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   __name: "Pagination",
   props: {
     current: { default: 1 },
@@ -164,7 +164,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         class: normalizeClass([`m-pagination ${__props.placement}`, { hidden: __props.hideOnSinglePage && __props.total <= __props.pageSize }])
       }, [
-        createElementVNode("div", _hoisted_1$3, [
+        createElementVNode("div", _hoisted_1$4, [
           __props.showTotal ? (openBlock(), createElementBlock("span", _hoisted_2$3, "共 " + toDisplayString(unref(totalPage)) + " 页 / " + toDisplayString(__props.total) + " 条", 1)) : createCommentVNode("", true),
           createElementVNode("span", {
             class: normalizeClass(["u-item", { disabled: currentPage.value === 1 }]),
@@ -246,12 +246,12 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-0b4fe0d6"]]);
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-0b4fe0d6"]]);
 Pagination.install = (app) => {
   app.component(Pagination.__name, Pagination);
 };
 const _withScopeId$1 = (n) => (pushScopeId("data-v-574bc864"), n = n(), popScopeId(), n);
-const _hoisted_1$2 = ["onClick", "title"];
+const _hoisted_1$3 = ["onClick", "title"];
 const _hoisted_2$2 = {
   key: 0,
   class: "u-separator"
@@ -269,7 +269,7 @@ const _hoisted_5 = [
   _hoisted_4$2
 ];
 const _hoisted_6 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
-const _sfc_main$2 = /* @__PURE__ */ defineComponent({
+const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "Breadcrumb",
   props: {
     routes: { default: () => [] },
@@ -299,7 +299,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
               class: normalizeClass(["u-route", { active: index === unref(len) - 1 }]),
               onClick: ($event) => index === unref(len) - 1 ? (e) => e.preventDefault() : goRouter(route),
               title: route.name
-            }, toDisplayString(route.name || "--"), 11, _hoisted_1$2),
+            }, toDisplayString(route.name || "--"), 11, _hoisted_1$3),
             index !== unref(len) - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
               __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2$2, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$2, _hoisted_5))
             ], 64)) : createCommentVNode("", true)
@@ -311,15 +311,15 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   }
 });
 const Breadcrumb_vue_vue_type_style_index_0_scoped_574bc864_lang = "";
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-574bc864"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-574bc864"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };
-const _hoisted_1$1 = { class: "m-countdown" };
+const _hoisted_1$2 = { class: "m-countdown" };
 const _hoisted_2$1 = { class: "u-title" };
 const _hoisted_3$1 = { class: "u-time" };
 const _hoisted_4$1 = { key: 2 };
-const _sfc_main$1 = /* @__PURE__ */ defineComponent({
+const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __name: "Countdown",
   props: {
     countdown: { default: 0 },
@@ -401,7 +401,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       CountDown(restTime);
     });
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$1, [
+      return openBlock(), createElementBlock("div", _hoisted_1$2, [
         renderSlot(_ctx.$slots, "title", {}, () => [
           createElementVNode("p", _hoisted_2$1, toDisplayString(props.title), 1)
         ], true),
@@ -421,12 +421,12 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   }
 });
 const Countdown_vue_vue_type_style_index_0_scoped_203f9659_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-203f9659"]]);
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-203f9659"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
 };
 const _withScopeId = (n) => (pushScopeId("data-v-19a2828d"), n = n(), popScopeId(), n);
-const _hoisted_1 = ["src", "poster", "width", "height", "autoplay", "controls", "loop", "muted", "preload", "onClickOnce"];
+const _hoisted_1$1 = ["src", "poster", "width", "height", "autoplay", "controls", "loop", "muted", "preload", "onClickOnce"];
 const _hoisted_2 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", {
   stroke: "currentColor",
   "stroke-linecap": "round",
@@ -445,7 +445,7 @@ const _hoisted_4 = [
   _hoisted_2,
   _hoisted_3
 ];
-const _sfc_main = /* @__PURE__ */ defineComponent({
+const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   __name: "Video",
   props: {
     videoUrl: { default: "" },
@@ -520,7 +520,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           muted: __props.autoplay || __props.muted,
           preload: __props.preload,
           onClickOnce: withModifiers(onPlay, ["prevent"])
-        }, " 您的浏览器不支持video标签。 ", 44, _hoisted_1),
+        }, " 您的浏览器不支持video标签。 ", 44, _hoisted_1$1),
         withDirectives((openBlock(), createElementBlock("svg", {
           class: normalizeClass([vplay.value ? "hidden" : "u-play"]),
           style: normalizeStyle(`width: ${__props.playWidth}px; height: ${__props.playWidth}px;`),
@@ -533,15 +533,82 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   }
 });
 const Video_vue_vue_type_style_index_0_scoped_19a2828d_lang = "";
-const Video = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-19a2828d"]]);
+const Video = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-19a2828d"]]);
 Video.install = (app) => {
   app.component(Video.__name, Video);
+};
+const _hoisted_1 = ["disabled"];
+const _sfc_main = /* @__PURE__ */ defineComponent({
+  __name: "Button",
+  props: {
+    name: { default: "按钮" },
+    type: { default: "default" },
+    effect: { default: "fade" },
+    size: { default: "middle" },
+    width: { default: 0 },
+    height: { default: 40 },
+    borderRadius: { default: 4 },
+    route: { default: () => {
+      return {};
+    } },
+    target: { default: "_self" },
+    disabled: { type: Boolean, default: false },
+    center: { type: Boolean, default: false }
+  },
+  setup(__props) {
+    const props = __props;
+    const isRoute = computed(() => {
+      if (JSON.stringify(props.route) === "{}") {
+        return false;
+      } else {
+        return true;
+      }
+    });
+    return (_ctx, _cache) => {
+      const _component_router_link = resolveComponent("router-link");
+      return openBlock(), createElementBlock("span", {
+        class: normalizeClass(["m-button", { "center": __props.center }])
+      }, [
+        unref(isRoute) ? (openBlock(), createBlock(_component_router_link, {
+          key: 0,
+          to: __props.route,
+          target: __props.target,
+          disabled: __props.disabled,
+          class: normalizeClass(["u-button fade", [__props.type, __props.size, { [__props.effect]: __props.type === "default", widthType: __props.width, disabled: __props.disabled }]]),
+          style: normalizeStyle({ borderRadius: __props.borderRadius + "px", width: __props.width - 2 + "px", height: __props.height - 2 + "px", lineHeight: __props.height - 2 + "px" })
+        }, {
+          default: withCtx(() => [
+            renderSlot(_ctx.$slots, "default", {}, () => [
+              createTextVNode(toDisplayString(__props.name), 1)
+            ], true)
+          ]),
+          _: 3
+        }, 8, ["to", "target", "disabled", "class", "style"])) : (openBlock(), createElementBlock("a", {
+          key: 1,
+          onClick: _cache[0] || (_cache[0] = ($event) => _ctx.$emit("click")),
+          disabled: __props.disabled,
+          class: normalizeClass(["u-button", [__props.type, __props.size, { [__props.effect]: __props.type === "default", widthType: __props.width, disabled: __props.disabled }]]),
+          style: normalizeStyle({ borderRadius: __props.borderRadius + "px", width: __props.width - 2 + "px", height: __props.height - 2 + "px", lineHeight: __props.height - 2 + "px" })
+        }, [
+          renderSlot(_ctx.$slots, "default", {}, () => [
+            createTextVNode(toDisplayString(__props.name), 1)
+          ], true)
+        ], 14, _hoisted_1))
+      ], 2);
+    };
+  }
+});
+const Button_vue_vue_type_style_index_0_scoped_90914f40_lang = "";
+const Button = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-90914f40"]]);
+Button.install = (app) => {
+  app.component(Button.__name, Button);
 };
 const components = [
   Pagination,
   Breadcrumb,
   Countdown,
-  Video
+  Video,
+  Button
 ];
 console.log("components:", components);
 const install = (app) => {
@@ -552,6 +619,7 @@ const VueAmazingUI = {
 };
 export {
   Breadcrumb,
+  Button,
   Countdown,
   Pagination,
   Video,
