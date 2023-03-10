@@ -27,7 +27,6 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   center: false
 })
-
 const isRoute = computed(() => {
   if (JSON.stringify(props.route) === '{}') {
     return false
@@ -50,7 +49,7 @@ const isRoute = computed(() => {
     </router-link>
     <a
       v-else
-      @click="$emit('click')"
+      @click.stop="$emit('click')"
       :disabled="disabled"
       class="u-button"
       :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled}]"
@@ -60,6 +59,8 @@ const isRoute = computed(() => {
   </span>
 </template>
 <style lang="less" scoped>
+@primary: '#1890FF';
+@danger: '#ff4d4f';
 .m-button {
   display: inline-block;
   .u-button {
