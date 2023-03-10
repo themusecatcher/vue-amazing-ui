@@ -91,7 +91,6 @@ onMounted(() => {
     />
     <br/>
     <Button
-      class="mr20"
       type="primary"
       effect="reverse"
       size="middle"
