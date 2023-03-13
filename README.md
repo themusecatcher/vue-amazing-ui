@@ -12,10 +12,13 @@ npm install vue-amazing-ui
 组件名 | 说明
 :--- | :---
 Breadcrumb | 面包屑
+Button | 按钮
 Countdown | 倒计时
 Pagination | 分页器
-Video | 视频播放
-Button | 按钮
+Spin | 加载中
+Tooltip | 文字提示
+Video | 播放器
+
 
 ### 引入并注册插件
 
@@ -33,63 +36,6 @@ import 'vue-amazing-ui/dist/style.css'
 app.use(Breadcrumb)
 ```
 
-### 组件Demos(示例)
-
-```
-<Countdown
-  style="margin-top: 50px;"
-  title="Countdown"
-  :countdown="12 * 30 * 24 * 60 * 60"
-  format="Y 年 M 月 D 天 H 时 m 分 s 秒"
-  finishedText="Finished"
-  @finish="onFinish">
-  <template #prefix>There's only </template>
-  <!-- <template #finish>&lt; FinishedText slot &gt;</template> -->
-  <template #suffix> left for the end.</template>
-</CountDown>
-
-<Breadcrumb :routes="routes" :height="60" />
-
-<Pagination
-  @change="changePage"
-  :current="pagination.p"
-  :pageSize="pagination.pageSize"
-  :total="total"
-  :hideOnSinglePage="hideOnSinglePage"
-  :showQuickJumper="true"
-  :showTotal="true"
-  placement="center"/>
-
-<Video
-  v-show="true"
-  :videoUrl="videoUrl"
-  :videoCover="videoCover"
-  :width="800"
-  :height="450"
-  :autoplay="true"
-  :controls="true"
-  :loop="false"
-  :muted="false"
-  preload="auto"
-  :showPlay="true"
-  :playWidth="96"
-  zoom="cotain"/>
-
-<Button
-  class="mr20"
-  type="primary"
-  effect="reverse"
-  size="middle"
-  :width="120"
-  :height="40"
-  :borderRadius="4"
-  :disabled="false"
-  :center="false"
-  @click="onClick">
-  按钮Button
-</Button>
-```
-
-### 各个组件具体介绍及实现
+### 各个组件具体介绍及使用
 
 详见：[My CSDN Blogs](https://blog.csdn.net/Dandrose)

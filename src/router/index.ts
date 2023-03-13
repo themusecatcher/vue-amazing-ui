@@ -19,16 +19,16 @@ const routes = [
         component: () => import('@/views/Home.vue')
       },
       {
-        path: '/button',
-        name: 'Button',
-        meta: { title: '按钮' },
-        component: () => import('@/views/Button.vue')
-      },
-      {
         path: '/breadcrumb',
         name: 'Breadcrumb',
         meta: { title: '面包屑' },
         component: () => import('@/views/Breadcrumb.vue')
+      },
+      {
+        path: '/button',
+        name: 'Button',
+        meta: { title: '按钮' },
+        component: () => import('@/views/Button.vue')
       },
       {
         path: '/countdown',
@@ -41,6 +41,12 @@ const routes = [
         name: 'Pagination',
         meta: { title: '分页器' },
         component: () => import('@/views/Pagination.vue')
+      },
+      {
+        path: '/spin',
+        name: 'Spin',
+        meta: { title: '加载中' },
+        component: () => import('@/views/Spin.vue')
       },
       {
         path: '/tooltip',

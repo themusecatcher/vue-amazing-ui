@@ -1,19 +1,21 @@
 import type { App } from 'vue'
-import Pagination from './pagination'
 import Breadcrumb from './breadcrumb'
-import Countdown from './countdown'
-import Video from './video'
 import Button from './button'
+import Countdown from './countdown'
+import Pagination from './pagination'
+import Spin from './spin'
 import Tooltip from './tooltip'
+import Video from './video'
 
 // 所有组件列表
 const components = [
-  Pagination,
   Breadcrumb,
-  Countdown,
-  Video,
   Button,
-  Tooltip
+  Countdown,
+  Pagination,
+  Spin,
+  Tooltip,
+  Video
 ]
 
 console.log('components:', components)
@@ -31,12 +33,13 @@ const install = (app: App): void => {
 }
 
 export {
-  Pagination,
   Breadcrumb,
-  Countdown,
-  Video,
   Button,
-  Tooltip
+  Countdown,
+  Pagination,
+  Spin,
+  Tooltip,
+  Video
 }
 
 const VueAmazingUI = {
