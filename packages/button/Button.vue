@@ -59,8 +59,7 @@ const isRoute = computed(() => {
   </span>
 </template>
 <style lang="less" scoped>
-@primary: '#1890FF';
-@danger: '#ff4d4f';
+@danger: #ff4d4f;
 .m-button {
   display: inline-block;
   .u-button {

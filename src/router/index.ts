@@ -49,6 +49,12 @@ const routes = [
         component: () => import('@/views/Spin.vue')
       },
       {
+        path: '/switch',
+        name: 'Switch',
+        meta: { title: '开关' },
+        component: () => import('@/views/Switch.vue')
+      },
+      {
         path: '/tooltip',
         name: 'Tooltip',
         meta: { title: '文字提示' },

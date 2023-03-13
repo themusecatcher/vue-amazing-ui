@@ -4,6 +4,7 @@ import Button from './button'
 import Countdown from './countdown'
 import Pagination from './pagination'
 import Spin from './spin'
+import Switch from './switch'
 import Tooltip from './tooltip'
 import Video from './video'
 
@@ -14,6 +15,7 @@ const components = [
   Countdown,
   Pagination,
   Spin,
+  Switch,
   Tooltip,
   Video
 ]
@@ -38,6 +40,7 @@ export {
   Countdown,
   Pagination,
   Spin,
+  Switch,
   Tooltip,
   Video
 }
