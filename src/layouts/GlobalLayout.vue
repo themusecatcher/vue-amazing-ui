@@ -20,8 +20,8 @@ function onClick (e: any):void {
 }
 </script>
 <template>
-  <div class="globalLayout">
-    <div style="width: 256px;">
+  <a-row :gutter="{ xs: 48, xl: 64}">
+    <a-col :xs="6" :xl="5">
       <a-switch
         class="u-switch"
         :checked="theme === 'dark'"
@@ -37,17 +37,20 @@ function onClick (e: any):void {
         <a-menu-item key="Home">
           <router-link to="/home">首页</router-link>
         </a-menu-item>
-        <a-menu-item key="Button">
-          <router-link to="/button">按钮（Button）</router-link>
-        </a-menu-item>
         <a-menu-item key="Breadcrumb">
           <router-link to="/breadcrumb">面包屑（Breadcrumb）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Button">
+          <router-link to="/button">按钮（Button）</router-link>
         </a-menu-item>
         <a-menu-item key="Countdown">
           <router-link to="/countdown">倒计时（Countdown）</router-link>
         </a-menu-item>
         <a-menu-item key="Pagination">
           <router-link to="/pagination">分页器（Pagination）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Spin">
+          <router-link to="/spin">加载中（Spin）</router-link>
         </a-menu-item>
         <a-menu-item key="Tooltip">
           <router-link to="/tooltip">文字提示（Tooltip）</router-link>
@@ -57,9 +60,6 @@ function onClick (e: any):void {
         </a-menu-item>
         <!-- <a-menu-item key="Common">
           <router-link to="/common">常用</router-link>
-        </a-menu-item> -->
-        <!-- <a-menu-item key="Spin">
-          <router-link to="/spin">加载中</router-link>
         </a-menu-item> -->
         <!-- <a-menu-item key="Table">
           <router-link to="/table">分页列表</router-link>
@@ -124,29 +124,24 @@ function onClick (e: any):void {
           </a-menu-item-group>
         </a-sub-menu> -->
       </a-menu>
-    </div>
-    <div class="router-view">
+    </a-col>
+    <a-col :xs="18" :xl="19" class="router-view">
       <RouterView v-slot="{ Component }">
         <Transition name="fade" mode="out-in">
           <component :is="Component" />
         </Transition>
       </RouterView>
-  </div>
-  </div>
+    </a-col>
+  </a-row>
 </template>
 <style lang="less" scoped>
-.globalLayout {
-  display: flex;
-}
 .u-switch {
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
 }
 .router-view {
-  margin-left: 60px;
   margin-top: 62px;
-  min-width: 1000px;
   :deep(*) {
     box-sizing: content-box;
   }
