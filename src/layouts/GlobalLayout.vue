@@ -52,6 +52,9 @@ function onClick (e: any):void {
         <a-menu-item key="Spin">
           <router-link to="/spin">加载中（Spin）</router-link>
         </a-menu-item>
+        <a-menu-item key="Switch">
+          <router-link to="/switch">开关（Switch）</router-link>
+        </a-menu-item>
         <a-menu-item key="Tooltip">
           <router-link to="/tooltip">文字提示（Tooltip）</router-link>
         </a-menu-item>
