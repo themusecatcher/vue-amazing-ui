@@ -9,7 +9,7 @@ interface Props {
   suffix?: string, // 倒计时数值的后缀 string | v-slot
   finishedText?: string // 完成后的展示文本 string | v-slot
 }
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   countdown: 0,
   title: 'Countdown',
   format: 'HH:mm:ss',

@@ -4,6 +4,7 @@ import Breadcrumb from './breadcrumb'
 import Countdown from './countdown'
 import Video from './video'
 import Button from './button'
+import Tooltip from './tooltip'
 
 // 所有组件列表
 const components = [
@@ -11,7 +12,8 @@ const components = [
   Breadcrumb,
   Countdown,
   Video,
-  Button
+  Button,
+  Tooltip
 ]
 
 console.log('components:', components)
@@ -33,7 +35,8 @@ export {
   Breadcrumb,
   Countdown,
   Video,
-  Button
+  Button,
+  Tooltip
 }
 
 const VueAmazingUI = {
