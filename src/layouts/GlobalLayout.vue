@@ -4,9 +4,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
 
-const current = computed(() => {
-  return [route.name]
-})
+const current = ref([route.name])
 const theme = ref('light')
 
 function changeTheme (checked: boolean) {
@@ -48,6 +46,9 @@ function onClick (e: any):void {
         </a-menu-item>
         <a-menu-item key="Dialog">
           <router-link to="/dialog">对话框（Dialog）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Message">
+          <router-link to="/message">全局提示（Message）</router-link>
         </a-menu-item>
         <a-menu-item key="Modal">
           <router-link to="/modal">信息提示（Modal）</router-link>
