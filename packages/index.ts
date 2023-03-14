@@ -9,6 +9,7 @@ import Spin from './spin'
 import Switch from './switch'
 import Tooltip from './tooltip'
 import Video from './video'
+import Waterfall from './waterfall'
 
 // 所有组件列表
 const components = [
@@ -21,7 +22,8 @@ const components = [
   Spin,
   Switch,
   Tooltip,
-  Video
+  Video,
+  Waterfall
 ]
 
 console.log('components:', components)
@@ -48,7 +50,8 @@ export {
   Spin,
   Switch,
   Tooltip,
-  Video
+  Video,
+  Waterfall
 }
 
 const VueAmazingUI = {
