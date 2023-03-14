@@ -78,6 +78,12 @@ const routes = [
         meta: { title: '播放器' },
         component: () => import('@/views/Video.vue')
       },
+      {
+        path: '/waterfall',
+        name: 'Waterfall',
+        meta: { title: '瀑布流' },
+        component: () => import('@/views/Waterfall.vue')
+      },
       // {
       //   path: '/common',
       //   // path: '/common/:params',

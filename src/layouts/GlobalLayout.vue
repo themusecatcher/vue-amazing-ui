@@ -67,6 +67,9 @@ function onClick (e: any):void {
         <a-menu-item key="Video">
           <router-link to="/video">播放器（Video）</router-link>
         </a-menu-item>
+        <a-menu-item key="Waterfall">
+          <router-link to="/waterfall">瀑布流（Waterfall）</router-link>
+        </a-menu-item>
         <!-- <a-menu-item key="Common">
           <router-link to="/common">常用</router-link>
         </a-menu-item> -->

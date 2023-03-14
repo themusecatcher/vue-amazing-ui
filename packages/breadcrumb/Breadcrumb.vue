@@ -21,7 +21,7 @@ const len = computed(() => {
   return props.routes.length
 })
 const router = useRouter()
-function goRouter (route:any):void {
+function goRouter (route: any): void {
   router.push({ path: route.path, query: route.query || {} })
 }
 </script>
