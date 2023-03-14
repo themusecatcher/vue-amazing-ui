@@ -43,6 +43,12 @@ const routes = [
         component: () => import('@/views/Dialog.vue')
       },
       {
+        path: '/message',
+        name: 'Message',
+        meta: { title: '全局提示' },
+        component: () => import('@/views/Message.vue')
+      },
+      {
         path: '/modal',
         name: 'Modal',
         meta: { title: '信息提示' },

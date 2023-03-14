@@ -3,6 +3,7 @@ import Breadcrumb from './breadcrumb'
 import Button from './button'
 import Countdown from './countdown'
 import Dialog from './dialog'
+import Message from './message'
 import Modal from './modal'
 import Pagination from './pagination'
 import Spin from './spin'
@@ -17,6 +18,7 @@ const components = [
   Button,
   Countdown,
   Dialog,
+  Message,
   Modal,
   Pagination,
   Spin,
@@ -45,6 +47,7 @@ export {
   Button,
   Countdown,
   Dialog,
+  Message,
   Modal,
   Pagination,
   Spin,
