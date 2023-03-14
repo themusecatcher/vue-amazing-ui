@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-interface Props {
+interface Props { // 基于类型的声明
   current: number, // 当前页数
   pageSize: number, // 每条页数
   total: number, // 数据总数

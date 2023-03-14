@@ -37,6 +37,18 @@ const routes = [
         component: () => import('@/views/Countdown.vue')
       },
       {
+        path: '/dialog',
+        name: 'Dialog',
+        meta: { title: '对话框' },
+        component: () => import('@/views/Dialog.vue')
+      },
+      {
+        path: '/modal',
+        name: 'Modal',
+        meta: { title: '信息提示' },
+        component: () => import('@/views/Modal.vue')
+      },
+      {
         path: '/pagination',
         name: 'Pagination',
         meta: { title: '分页器' },
