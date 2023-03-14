@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 const props = defineProps({
-    title: { // 标题
+    title: { // 标题 string | slot
       type: String,
       default: '提示'
     },
@@ -37,7 +37,7 @@ const props = defineProps({
       type: Boolean,
       default: true
     },
-    loading: { // 加载中...
+    loading: { // 加载中
       type: Boolean,
       default: false
     }
@@ -63,7 +63,6 @@ function onBlur () {
   if (!props.loading) {
     emits('close')
   }
-  
 }
 function onFullScreen () {
   fullScreen.value = !fullScreen.value
