@@ -19,8 +19,8 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'default', // 'default' 'primary' 'danger'
   effect: 'fade', //  'fade' 'reverse'
   size: 'middle', // 'small' 'middle' 'large'
-  width: 0, // 默认0时自适应内容的宽度
-  height: 40,
+  width: 0, // 优先级高于size属性，为0时自适应内容的宽度
+  height: 0, // 优先级高于size属性
   borderRadius: 4,
   route: () => { return {} },
   target: '_self',

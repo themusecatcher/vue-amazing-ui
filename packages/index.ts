@@ -2,6 +2,8 @@ import type { App } from 'vue'
 import Breadcrumb from './breadcrumb'
 import Button from './button'
 import Countdown from './countdown'
+import Dialog from './dialog'
+import Modal from './modal'
 import Pagination from './pagination'
 import Spin from './spin'
 import Switch from './switch'
@@ -13,6 +15,8 @@ const components = [
   Breadcrumb,
   Button,
   Countdown,
+  Dialog,
+  Modal,
   Pagination,
   Spin,
   Switch,
@@ -38,6 +42,8 @@ export {
   Breadcrumb,
   Button,
   Countdown,
+  Dialog,
+  Modal,
   Pagination,
   Spin,
   Switch,

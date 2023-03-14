@@ -20,7 +20,7 @@ function onClick (e: any):void {
 }
 </script>
 <template>
-  <a-row :gutter="{ xs: 48, xl: 64}">
+  <a-row style="width: 100%;" :gutter="{ xs: 48, xl: 64}">
     <a-col :xs="6" :xl="5">
       <a-switch
         class="u-switch"
@@ -45,6 +45,12 @@ function onClick (e: any):void {
         </a-menu-item>
         <a-menu-item key="Countdown">
           <router-link to="/countdown">倒计时（Countdown）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Dialog">
+          <router-link to="/dialog">对话框（Dialog）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Modal">
+          <router-link to="/modal">信息提示（Modal）</router-link>
         </a-menu-item>
         <a-menu-item key="Pagination">
           <router-link to="/pagination">分页器（Pagination）</router-link>
