@@ -53,6 +53,9 @@ function onClick (e: any):void {
         <a-menu-item key="Modal">
           <router-link to="/modal">信息提示（Modal）</router-link>
         </a-menu-item>
+        <a-menu-item key="Notification">
+          <router-link to="/notification">通知提醒框（Notification）</router-link>
+        </a-menu-item>
         <a-menu-item key="Pagination">
           <router-link to="/pagination">分页器（Pagination）</router-link>
         </a-menu-item>
