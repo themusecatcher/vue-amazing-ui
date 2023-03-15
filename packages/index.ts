@@ -5,6 +5,7 @@ import Countdown from './countdown'
 import Dialog from './dialog'
 import Message from './message'
 import Modal from './modal'
+import Notification from './notification'
 import Pagination from './pagination'
 import Spin from './spin'
 import Switch from './switch'
@@ -20,6 +21,7 @@ const components = [
   Dialog,
   Message,
   Modal,
+  Notification,
   Pagination,
   Spin,
   Switch,
@@ -49,6 +51,7 @@ export {
   Dialog,
   Message,
   Modal,
+  Notification,
   Pagination,
   Spin,
   Switch,

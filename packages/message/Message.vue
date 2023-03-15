@@ -53,28 +53,28 @@ function show () {
 }
 function info (content: string) {
   messageContent.value.push({
-    content: content,
+    content,
     mode: 'info'
   })
   show()
 }
 function success (content: string) {
   messageContent.value.push({
-    content: content,
+    content,
     mode: 'success'
   })
   show()
 }
 function error (content: string) {
   messageContent.value.push({
-    content: content,
+    content,
     mode: 'error'
   })
   show()
 }
 function warn (content: string) {
   messageContent.value.push({
-    content: content,
+    content,
     mode: 'warn'
   })
   show()
@@ -113,7 +113,7 @@ function onHideMessage (index: number) {
 .fade-enter-active, .fade-leave-active {
   transition: opacity .3s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter-form, .fade-leave-to {
   opacity: 0;
 }
 // 滑动渐变过渡效果
@@ -123,7 +123,7 @@ function onHideMessage (index: number) {
 .slide-fade-leave-active {
   transition: all .5s ease;
 }
-.slide-fade-enter, .slide-fade-leave-to {
+.slide-fade-enter-from, .slide-fade-leave-to {
   transform: translateY(-16px);
   -ms-transform: translateY(-16px); /* IE 9 */
   -webkit-transform: translateY(-16px); /* Safari and Chrome */

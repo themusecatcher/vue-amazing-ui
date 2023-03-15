@@ -55,6 +55,12 @@ const routes = [
         component: () => import('@/views/Modal.vue')
       },
       {
+        path: '/notification',
+        name: 'Notification',
+        meta: { title: '通知提醒框' },
+        component: () => import('@/views/Notification.vue')
+      },
+      {
         path: '/pagination',
         name: 'Pagination',
         meta: { title: '分页器' },
