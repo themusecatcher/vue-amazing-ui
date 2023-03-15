@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
+import { getImageUrl } from '@/utils/util'
 
 const imageData = ref<any[]>([])
 
-function getImageUrl (name: any) {
-  return new URL(`../assets/images/${name}.jpg`, import.meta.url).href
-}
 function loadImages () {
   for (let i = 1; i <= 10; i++) {
     imageData.value.push({

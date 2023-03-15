@@ -73,6 +73,12 @@ const routes = [
         component: () => import('@/views/Spin.vue')
       },
       {
+        path: '/swiper',
+        name: 'Swiper',
+        meta: { title: '触摸滑动插件' },
+        component: () => import('@/views/Swiper.vue')
+      },
+      {
         path: '/switch',
         name: 'Switch',
         meta: { title: '开关' },
