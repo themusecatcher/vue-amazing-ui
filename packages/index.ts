@@ -8,6 +8,7 @@ import Modal from './modal'
 import Notification from './notification'
 import Pagination from './pagination'
 import Spin from './spin'
+import Swiper from './swiper'
 import Switch from './switch'
 import Tooltip from './tooltip'
 import Video from './video'
@@ -24,6 +25,7 @@ const components = [
   Notification,
   Pagination,
   Spin,
+  Swiper,
   Switch,
   Tooltip,
   Video,
@@ -54,6 +56,7 @@ export {
   Notification,
   Pagination,
   Spin,
+  Swiper,
   Switch,
   Tooltip,
   Video,

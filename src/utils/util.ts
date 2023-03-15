@@ -59,6 +59,10 @@ export function dateFormat (timestamp: number, format = 'YYYYMMDD', seq = '-', l
     }
   }
 }
+// 获取静态资源地址
+export function getImageUrl (name: any) {
+  return new URL(`../assets/images/${name}.jpg`, import.meta.url).href
+}
 export const setDocumentTitle = function (title: string) {
   document.title = title
   const ua = navigator.userAgent
