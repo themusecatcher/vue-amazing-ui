@@ -50,8 +50,6 @@ const imgHeight = computed(() => {
     return props.height
   }
 })
-// 设置Slide的切换效果，默认为"slide"（普通位移切换），还可设置为"fade"（淡入）、"cube"（方块）、"coverflow"（3d流）、"flip"（3d翻转）、"cards"(卡片式)、"creative"（创意性）
-const effect = ref<any>('slide')
 const modulesBanner = ref([Navigation, Pagination, Autoplay, EffectFade])
 const pagination = ref({
   clickable: true
@@ -85,7 +83,6 @@ function onSlideChange () {
   <swiper
     v-if="mode==='banner'"
     :modules="modulesBanner"
-    :effect="effect"
     :lazy="true"
     :navigation="navigation"
     :pagination="pagination"
@@ -94,14 +91,17 @@ function onSlideChange () {
     :loop="true"
     @swiper="onSwiper"
     @slideChange="onSlideChange"
+    v-bind="$attrs"
   >
     <swiper-slide v-for="(image, index) in imageData" :key="index">
-      <img
-        :src="image.imgUrl"
-        class="u-banner-img"
-        :style="`width: ${imgWidth}; height: ${imgHeight};`"
-        :alt="image.title"
-        loading="lazy" />
+      <a :href="image.link" target="_blank" class="m-link">
+        <img
+          :src="image.imgUrl"
+          class="u-banner-img"
+          :style="`width: ${imgWidth}; height: ${imgHeight};`"
+          :alt="image.title"
+          loading="lazy" />
+      </a>
       <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
     </swiper-slide>
   </swiper>
@@ -130,15 +130,15 @@ function onSlideChange () {
   </swiper>
 </template>
 <style lang="less" scoped>
+.m-link {
+  display: block;
+  height: 100%;
+}
 .u-banner-img {
-  // width: 100%;
-  // height: 100vh;
   object-fit: cover;
   cursor: pointer;
 }
 .u-carousel-img {
-  // width: 100%;
-  // height: 240px;
   object-fit: cover;
 }
 :deep(.swiper-wrapper) { // 自动切换过渡效果设置

@@ -5,7 +5,7 @@ import { getImageUrl } from '@/utils/util'
 const imageData = ref<any[]>([])
 
 function loadImages () {
-  for (let i = 2; i <= 10; i++) {
+  for (let i = 1; i <= 10; i++) {
     imageData.value.push({
       title: `image-${i}`,
       link: 'https://www.baidu.com',
@@ -37,9 +37,10 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
     <Swiper
       :imageData="imageData"
       mode="banner"
+      effect="fade"
       width="100%"
       height="100vh"
-      :navigation="true" />
+      navigation />
     <h1 class="mt30">carousel走马灯</h1>
     <Swiper
       :imageData="imageData"
