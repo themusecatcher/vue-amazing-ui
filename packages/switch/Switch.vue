@@ -12,25 +12,24 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   checked: false
 })
-const checkedVal = ref(props.checked)
+const checked = ref(props.checked)
 watch(
   () => props.checked,
   (to): void => {
-    checkedVal.value = to
+    checked.value = to
   }
 )
 const emit = defineEmits(['update:checked', 'change'])
 function onSwitch () {
-  checkedVal.value = !checkedVal.value
-  emit('update:checked', checkedVal.value)
-  emit('change', checkedVal.value)
+  emit('update:checked', !checked.value)
+  emit('change', !checked.value)
 }
 </script>
 <template>
   <div class="m-switch-wrap">
-    <div @click="disabled ? (e:Event) => e.preventDefault() : onSwitch()" :class="['m-switch', { 'switch-checked': checkedVal, 'disabled': disabled }]">
-      <div :class="['u-switch-inner', checkedVal ? 'inner-checked' : 'inner-unchecked' ]">{{ checkedVal ? checkedInfo : uncheckedInfo }}</div>
-      <div :class="['u-node', { 'node-checked': checkedVal }]"></div>
+    <div @click="disabled ? (e:Event) => e.preventDefault() : onSwitch()" :class="['m-switch', { 'switch-checked': checked, 'disabled': disabled }]">
+      <div :class="['u-switch-inner', checked ? 'inner-checked' : 'inner-unchecked' ]">{{ checked ? checkedInfo : uncheckedInfo }}</div>
+      <div :class="['u-node', { 'node-checked': checked }]"></div>
     </div>
   </div>
 </template>

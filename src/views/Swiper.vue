@@ -21,18 +21,32 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 <template>
   <div>
     <h1>Swiper 参考文档</h1>
-    <a class="u-file" href="https://swiperjs.com/" target="_blank">Swiper官方</a>
-    <a class="u-file" href="https://swiperjs.com/vue" target="_blank">Swiper Vue</a>
-    <a class="u-file" href="https://swiperjs.com/demos" target="_blank">Swiper Demos</a>
+    <ul class="m-list">
+      <li>
+        <a class="u-file" href="https://swiperjs.com/" target="_blank">Swiper官方</a>
+      </li>
+      <li>
+        <a class="u-file" href="https://swiperjs.com/vue" target="_blank">Swiper Vue</a>
+      </li>
+      <li>
+        <a class="u-file" href="https://swiperjs.com/demos" target="_blank">Swiper Demos</a>
+      </li>
+    </ul>
+    
     <h1 class="mt30">banner轮播图</h1>
-    <Swiper :imageData="imageData" mode="banner" />
+    <Swiper
+      :imageData="imageData"
+      mode="banner"
+      width="100%"
+      height="100vh"
+      :navigation="true" />
     <h1 class="mt30">carousel走马灯</h1>
-    <Swiper :imageData="imageData" mode="carousel" />
+    <Swiper
+      :imageData="imageData"
+      mode="carousel"
+      width="100%"
+      :height="240" />
   </div>
 </template>
 <style lang="less" scoped>
-.u-file {
-  font-size: 18px;
-  display: block;
-}
 </style>
