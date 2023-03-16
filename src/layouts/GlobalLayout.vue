@@ -44,6 +44,9 @@ function onClick (e: any):void {
         <a-menu-item key="Countdown">
           <router-link to="/countdown">倒计时（Countdown）</router-link>
         </a-menu-item>
+        <a-menu-item key="DatePicker">
+          <router-link to="/datepicker">日期选择器（DatePicker）</router-link>
+        </a-menu-item>
         <a-menu-item key="Dialog">
           <router-link to="/dialog">对话框（Dialog）</router-link>
         </a-menu-item>
@@ -83,17 +86,8 @@ function onClick (e: any):void {
         <!-- <a-menu-item key="Table">
           <router-link to="/table">分页列表</router-link>
         </a-menu-item>
-        <a-menu-item key="Modal">
-          <router-link to="/modal">对话框</router-link>
-        </a-menu-item>
-        <a-menu-item key="Tip">
-          <router-link to="/tip">提示框</router-link>
-        </a-menu-item>
         <a-menu-item key="Lines">
           <router-link to="/lines">Lines</router-link>
-        </a-menu-item>
-        <a-menu-item key="Swiper">
-          <router-link to="/swiper">触摸滑动插件</router-link>
         </a-menu-item>
         <a-menu-item key="Tree">
           <router-link to="/tree">树图</router-link>
@@ -104,9 +98,6 @@ function onClick (e: any):void {
         <a-menu-item key="Selector">
           <router-link to="/selector">下拉组件</router-link>
         </a-menu-item>
-        <a-menu-item key="Image">
-          <router-link to="/image">图片组件</router-link>
-        </a-menu-item>
         <a-menu-item key="Viewer">
           <router-link to="/viewer">预览插件</router-link>
         </a-menu-item>
@@ -116,12 +107,7 @@ function onClick (e: any):void {
         <a-menu-item key="Lazyload">
           <router-link to="/lazyload">懒加载</router-link>
         </a-menu-item> -->
-        <!-- <a-menu-item key="Video">
-          <router-link to="/video">播放组件</router-link>
-        </a-menu-item> -->
-        <!-- <a-menu-item key="Banner">
-          <router-link to="/banner">banner组件</router-link>
-        </a-menu-item>
+        <!--
         <a-menu-item key="Pdf">
           <router-link to="/pdf">pdf预览</router-link>
         </a-menu-item>
@@ -144,7 +130,7 @@ function onClick (e: any):void {
         </a-sub-menu> -->
       </a-menu>
     </a-col>
-    <a-col :xs="18" :xl="19" class="router-view">
+    <a-col :xs="18" :xl="19" :class="['router-view', {'content-box': !current.includes('DatePicker') }]">
       <RouterView v-slot="{ Component }">
         <Transition name="fade" mode="out-in">
           <component :is="Component" />
@@ -161,6 +147,8 @@ function onClick (e: any):void {
 }
 .router-view {
   margin-top: 62px;
+}
+.content-box {
   :deep(*) {
     box-sizing: content-box;
   }

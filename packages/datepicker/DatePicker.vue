@@ -1,0 +1,130 @@
+<script setup lang="ts">
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
+import { ref, computed, watch } from 'vue'
+
+interface Props {
+  inheritAttrs?: boolean, // 默认值：true
+  width?: number, // 宽度
+  mode?: string, // 选择器模式，日期，周，月，年，范围
+  // format?: string, // 日期展示格式，(y: 年, M: 月, d: 天, H: 时, m: 分, s: 秒)
+  showTime?: boolean, // 是否增加时间选择
+  showToday?: boolean, // 是否展示”今天“按钮
+  // multiCalendars?: boolean, // 范围选择器是否使用双日期面板
+  // flow?: any[], // 定义选择顺序 ("calendar" | "time" | "month" | "year" | "minutes" | "hours" | "seconds")
+  // dark?: boolean, // 样式主题是否使用黑色
+  date?: number|number[]|{month:number,year:number}|{hours:number,minutes:number,seconds:number} // （v-model）指定当前是否选中
+}
+const props = withDefaults(defineProps<Props>(), {
+  inheritAttrs: false,
+  width: 180,
+  mode: 'date',
+  // format: 'yyyy-MM-dd',
+  showTime: false,
+  showToday: false,
+  // multiCalendars: false,
+  // flow: () => [],
+  // dark: false,
+  date: 0
+})
+const date = ref(props.date)
+watch(date, (to) => {
+  console.log('s to:', to)
+  emit('update:date', to)
+})
+const emit = defineEmits(['update:date'])
+const modelType = computed(() => {
+  if (['time', 'month', 'year'].includes(props.mode)) {
+    return ''
+  } else {
+    return 'timestamp'
+  }
+})
+const time = computed(() => {
+  return props.mode === 'time'
+})
+const week = computed(() => {
+  return props.mode === 'week'
+})
+const month = computed(() => {
+  return props.mode === 'month'
+})
+const year = computed(() => {
+  return props.mode === 'year'
+})
+// const format = (date: Date) => {
+//   const day = date.getDate()
+//   const month = date.getMonth() + 1
+//   const year = date.getFullYear()
+//   return `${year}-${month}-${day}`
+// }
+</script>
+<template>
+  <div class="m-datepicker" :style="`width: ${width}px;`">
+    <VueDatePicker
+      v-model="date"
+      locale="zh-CN"
+      :month-change-on-scroll="false"
+      :enable-time-picker="showTime"
+      :time-picker="time"
+      :week-picker="week"
+      :month-picker="month"
+      :year-picker="year"
+      :show-now-button="showToday"
+      auto-apply
+      text-input
+      :model-type="modelType"
+      :day-names="['一', '二', '三', '四', '五', '六', '七']"
+      now-button-label="今天"
+      v-bind="$attrs">
+    </VueDatePicker>
+  </div>
+</template>
+<style lang="less" scoped>
+.m-datepicker {
+  display: inline-block;
+  box-sizing: border-box;
+}
+.dp__theme_dark { // dark theme
+  --dp-background-color: #212121;
+  --dp-text-color: #ffffff;
+  --dp-hover-color: #484848;
+  --dp-hover-text-color: #ffffff;
+  --dp-hover-icon-color: #959595;
+  --dp-primary-color: #005cb2;
+  --dp-primary-text-color: #ffffff;
+  --dp-secondary-color: #a9a9a9;
+  --dp-border-color: #2d2d2d;
+  --dp-menu-border-color: #2d2d2d;
+  --dp-border-color-hover: #aaaeb7;
+  --dp-disabled-color: #737373;
+  --dp-scroll-bar-background: #212121;
+  --dp-scroll-bar-color: #484848;
+  --dp-success-color: #00701a;
+  --dp-success-color-disabled: #428f59;
+  --dp-icon-color: #959595;
+  --dp-danger-color: #e53935;
+  --dp-highlight-color: rgba(0, 92, 178, 0.2);
+}
+.dp__theme_light { // light theme
+  --dp-background-color: #ffffff;
+  --dp-text-color: #212121;
+  --dp-hover-color: #f3f3f3;
+  --dp-hover-text-color: #212121;
+  --dp-hover-icon-color: #959595;
+  --dp-primary-color: #1976d2;
+  --dp-primary-text-color: #f8f5f5;
+  --dp-secondary-color: #c0c4cc;
+  --dp-border-color: #ddd;
+  --dp-menu-border-color: #ddd;
+  --dp-border-color-hover: #aaaeb7;
+  --dp-disabled-color: #f6f6f6;
+  --dp-scroll-bar-background: #f3f3f3;
+  --dp-scroll-bar-color: #959595;
+  --dp-success-color: #76d275;
+  --dp-success-color-disabled: #a3d9b1;
+  --dp-icon-color: #959595;
+  --dp-danger-color: #ff6f60;
+  --dp-highlight-color: rgba(25, 118, 210, 0.1);
+}
+</style>

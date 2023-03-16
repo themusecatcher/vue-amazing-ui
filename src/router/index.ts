@@ -37,6 +37,12 @@ const routes = [
         component: () => import('@/views/Countdown.vue')
       },
       {
+        path: '/datepicker',
+        name: 'DatePicker',
+        meta: { title: '日期选择器' },
+        component: () => import('@/views/DatePicker.vue')
+      },
+      {
         path: '/dialog',
         name: 'Dialog',
         meta: { title: '对话框' },

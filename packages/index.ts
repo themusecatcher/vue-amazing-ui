@@ -2,6 +2,7 @@ import type { App } from 'vue'
 import Breadcrumb from './breadcrumb'
 import Button from './button'
 import Countdown from './countdown'
+import DatePicker from './datepicker'
 import Dialog from './dialog'
 import Message from './message'
 import Modal from './modal'
@@ -19,6 +20,7 @@ const components = [
   Breadcrumb,
   Button,
   Countdown,
+  DatePicker,
   Dialog,
   Message,
   Modal,
@@ -50,6 +52,7 @@ export {
   Breadcrumb,
   Button,
   Countdown,
+  DatePicker,
   Dialog,
   Message,
   Modal,
