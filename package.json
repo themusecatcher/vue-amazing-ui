@@ -27,7 +27,7 @@
     "@vuepic/vue-datepicker": "^4.2.1",
     "ant-design-vue": "^3.2.15",
     "core-js": "^3.28.0",
-    "swiper": "^9.1.0",
+    "swiper": "^9.1.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
