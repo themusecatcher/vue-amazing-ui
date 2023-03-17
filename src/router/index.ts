@@ -73,6 +73,12 @@ const routes = [
         component: () => import('@/views/Pagination.vue')
       },
       {
+        path: '/select',
+        name: 'Select',
+        meta: { title: '选择器' },
+        component: () => import('@/views/Select.vue')
+      },
+      {
         path: '/spin',
         name: 'Spin',
         meta: { title: '加载中' },

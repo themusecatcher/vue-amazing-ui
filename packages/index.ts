@@ -8,6 +8,7 @@ import Message from './message'
 import Modal from './modal'
 import Notification from './notification'
 import Pagination from './pagination'
+import Select from './select'
 import Spin from './spin'
 import Swiper from './swiper'
 import Switch from './switch'
@@ -26,6 +27,7 @@ const components = [
   Modal,
   Notification,
   Pagination,
+  Select,
   Spin,
   Swiper,
   Switch,
@@ -58,6 +60,7 @@ export {
   Modal,
   Notification,
   Pagination,
+  Select,
   Spin,
   Swiper,
   Switch,
