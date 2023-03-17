@@ -1,10 +1,5 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-interface Option {
-  label?: string,
-  value?: string|number,
-  disabled?: boolean
-}
 const props = defineProps({
     options: { // 选项数据
       type: Array<any>,
@@ -51,20 +46,20 @@ const props = defineProps({
   })
 const selectedName = ref()
 const hoverValue = ref() // 鼠标悬浮项的value值
-const showOptions = ref(false)
-const activeBlur = ref(true)
-const showClose = ref(false)
+const showOptions = ref(false) // options面板
+const activeBlur = ref(true) // 是否激活blur事件
+const showClose = ref(false) // 清除按钮显隐
 watch(
   () => props.options,  
   (to) => {
   initSelector()
-  console.log('options:', to)
+  // console.log('options:', to)
 })
 watch(
   () => props.selectedValue,  
   (to) => {
   initSelector()
-  console.log('selectedValue:', props.selectedValue)
+  // console.log('selectedValue:', to)
 })
 onMounted(() => {
   initSelector()
@@ -86,19 +81,19 @@ function initSelector () {
   }
 }
 function onBlur () {
-  console.log('blur')
+  // console.log('blur')
   if (showOptions.value) {
     showOptions.value = false
   }
 }
 function onInputEnter () {
-  console.log('input enter')
+  // console.log('input enter')
   if (props.allowClear) {
     showClose.value = true
   }
 }
 function onInputLeave () {
-  console.log('input leave')
+  // console.log('input leave')
   if (props.allowClear) {
     showClose.value = false
   }
@@ -116,12 +111,11 @@ function onLeave () {
 function openSelect () {
   showOptions.value = !showOptions.value
   if (!hoverValue.value && selectedName.value) {
-    const target = props.options.find(item => item[props.label] === selectedName.value)
-    hoverValue.value = target[props.value]
+    const target = props.options.find(option => option[props.label] === selectedName.value)
+    hoverValue.value = target ? target[props.value] : null
   }
 }
 function onClear () {
-  console.log('clear')
   selectedName.value = null
   hoverValue.value = null
 }
