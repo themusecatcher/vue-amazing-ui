@@ -125,13 +125,13 @@ function onClear () {
   selectedName.value = null
   hoverValue.value = null
 }
-function onChange (label: string, value: string|number, index: number) { // 选中下拉项后的回调
+function onChange (value: string|number, label: string, index: number) { // 选中下拉项后的回调
   if (selectedName.value !== label) {
     selectedName.value = label
     hoverValue.value = value
     showOptions.value = false
     emits('update:selectedValue', value)
-    emits('change', label, value, index)
+    emits('change', value, label, index)
   }
 }
 </script>
@@ -169,7 +169,7 @@ function onChange (label: string, value: string|number, index: number) { // 选�
           :class="['u-option', {'option-selected': option[label]===selectedName, 'option-hover': !option.disabled&&option[value]===hoverValue, 'option-disabled': option.disabled }]"
           :title="option[label]"
           @mouseenter="onHover(option[value])"
-          @click="option.disabled ? (e: Event) => e.preventDefault() : onChange(option[label], option[value], index)">
+          @click="option.disabled ? (e: Event) => e.preventDefault() : onChange(option[value], option[label], index)">
           {{ option[label] }}
         </p>
       </div>
@@ -234,8 +234,12 @@ input, p {
     fill: rgba(0,0,0,.25);
     transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
-    transition: all 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
     pointer-events: none;
+  }
+  .rotate {
+    transform: translateY(-50%) rotate(180deg);
+    -webkit-transform: translateY(-50%) rotate(180deg);
   }
   .close {
     position: absolute;
@@ -246,14 +250,9 @@ input, p {
     fill: rgba(140, 140, 140, 0.6);
     transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
-    transition: all 0.3s ease-in-out;
     &:hover {
       fill: rgba(100, 100, 100,.8);
     }
-  }
-  .rotate {
-    transform: translateY(-50%) rotate(180deg);
-    -webkit-transform: translateY(-50%) rotate(180deg);
   }
 }
 .hover { // 悬浮时样式

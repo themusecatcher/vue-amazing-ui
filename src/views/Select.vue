@@ -47,8 +47,8 @@ watch(selectedValue, (to) => {
 //     selectedValue.value = 5
 //   }, 1000)
 // })
-function onChange (name: string, value: any, index: number) {
-  console.log('item:', name, value, index)
+function onChange (value: string|number, label: string,  index: number) {
+  console.log('item:', value, label, index)
 }
 </script>
 <template>
