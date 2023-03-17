@@ -37,31 +37,35 @@ const options = ref([
       }
     ])
 const selectedValue = ref(1)
+const value = ref(1)
 
 watch(selectedValue, (to) => {
   console.log('selectedValue:', to)
 })
-onMounted(() => {
-  setTimeout(() => {
-    selectedValue.value = 5
-  }, 1000)
-})
+// onMounted(() => {
+//   setTimeout(() => {
+//     selectedValue.value = 5
+//   }, 1000)
+// })
 function onChange (name: string, value: any, index: number) {
   console.log('item:', name, value, index)
 }
 </script>
 <template>
-  <Select
-    :options="options"
-    name="label"
-    value="value"
-    placeholder="请选择城市"
-    :disabled="false"
-    :width="160"
-    :height="36"
-    :num="6"
-    v-model:selectedValue="selectedValue"
-    @change="onChange" />
+  <div>
+    <Select
+      :options="options"
+      name="label"
+      value="value"
+      placeholder="请选择城市"
+      :disabled="false"
+      :width="160"
+      :height="36"
+      :num="6"
+      allowClear
+      v-model:selectedValue="selectedValue"
+      @change="onChange" />
+  </div>
 </template>
 <style lang="less" scoped>
 .selector {
