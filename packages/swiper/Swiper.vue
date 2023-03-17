@@ -35,7 +35,7 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  delay: { // 自动切换的时间间隔
+  delay: { // 自动切换的时间间隔，mode: banner时生效
     type: Number,
     default: 3000 // 单位ms
   },
@@ -103,7 +103,7 @@ function onSlideChange () {
     @slideChange="onSlideChange"
     v-bind="$attrs">
     <swiper-slide v-for="(image, index) in imageData" :key="index">
-      <a :href="image.link" target="_blank" class="m-link">
+      <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
         <img
           :src="image.imgUrl"
           class="u-img"
@@ -125,7 +125,7 @@ function onSlideChange () {
     @slideChange="onSlideChange"
     v-bind="$attrs">
     <swiper-slide v-for="(image, index) in imageData" :key="index">
-      <a :href="image.link" target="_blank" class="m-link">
+      <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
         <img
           :src="image.imgUrl"
           class="u-img"
