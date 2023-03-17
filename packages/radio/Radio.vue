@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
 
-interface Radio {
+interface Option {
   label: string,
   value: string|number,
   disabled?: boolean
 }
 interface Props {
-  options: Array<Radio>, // 单选元素数据
+  options: Array<Option>, // 单选元素数据
   disabled?: boolean, // 是否禁用
   value?: any, // 自定义分隔符
   gap?: number // 多个单选框之间的间距，单位px
@@ -34,12 +34,12 @@ function onClick (value: string|number) {
 </script>
 <template>
   <div class="m-radio">
-    <div class="m-radio-wrap" :style="`margin-right: ${sum !== index + 1 ? gap:0}px;`" @click="onClick(radio.value)" v-for="(radio, index) in options" :key="index">
-      <div class="m-input" :class="{'m-radio-checked': value === radio.value }">
-        <input type="radio" class="u-radio-input" :value="radio.value">
+    <div class="m-radio-wrap" :style="`margin-right: ${sum !== index + 1 ? gap:0}px;`" @click="onClick(option.value)" v-for="(option, index) in options" :key="index">
+      <div class="m-input" :class="{'m-radio-checked': value === option.value }">
+        <input type="radio" class="u-radio-input" :value="option.value">
         <span class="u-radio-inner"></span>
       </div>
-      <span class="u-label">{{ radio.label }}</span>
+      <span class="u-label">{{ option.label }}</span>
     </div>
   </div>
 </template>
