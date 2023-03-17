@@ -46,7 +46,10 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
       :imageData="imageData"
       mode="carousel"
       width="100%"
-      :height="240" />
+      :height="240"
+      :slides-per-view="3"
+      :space-between="20"
+      :speed="2500" />
   </div>
 </template>
 <style lang="less" scoped>

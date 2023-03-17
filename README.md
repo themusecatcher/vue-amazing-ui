@@ -1,41 +1,57 @@
 # vue-amazing-ui
 
-### 安装插件
+## Install
 
-```
+```sh
 npm install vue-amazing-ui
-或：yarn add vue-amazing-ui
+#or
+yarn add vue-amazing-ui
 ```
 
-### 已有组件
+Import and register component
 
-组件名 | 说明
-:--- | :---
-Breadcrumb | 面包屑
-Button | 按钮
-Countdown | 倒计时
-Pagination | 分页器
-Spin | 加载中
-Tooltip | 文字提示
-Video | 播放器
+**Global**
 
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
 
-### 引入并注册插件
-
-```
-// 全部引入
 import VueAmazingUI from 'vue-amazing-ui'
 import 'vue-amazing-ui/dist/style.css'
 
+const app = createApp(App)
 app.use(VueAmazingUI)
-
-// 按需引入
-import Breadcrumb from 'vue-amazing-ui'
-import 'vue-amazing-ui/dist/style.css'
-
-app.use(Breadcrumb)
 ```
 
-### 各个组件具体介绍及使用
+**Local**
+
+```vue
+<script setup lang="ts">
+import { Breadcrumb } from '@web/vue-ui'
+import '@web/vue-ui/dist/style.css'
+</script>
+```
+
+## Components
+
+| Component name | Descriptions |
+| :--- | :--- |
+Breadcrumb | 面包屑
+Button | 按钮
+Countdown | 倒计时
+DatePicker | 日期选择器
+Dialog | 对话框
+Message | 全局提示
+Modal | 信息提示
+Notification | 通知提醒框
+Pagination | 分页器
+Spin | 加载中
+Swiper | 触摸滑动插件（二次封装）
+Switch | 开关
+Tooltip | 文字提示
+Video | 播放器
+Waterfall | 瀑布流
+
+## Details
 
 详见：[My CSDN Blogs](https://blog.csdn.net/Dandrose)

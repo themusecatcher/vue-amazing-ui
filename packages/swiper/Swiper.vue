@@ -34,6 +34,14 @@ const props = defineProps({
   navigation: { // 是否显示导航
     type: Boolean,
     default: true
+  },
+  delay: { // 自动切换的时间间隔
+    type: Number,
+    default: 3000 // 单位ms
+  },
+  swipe: { // 是否可以鼠标拖动
+    type: Boolean,
+    default: true
   }
 })
 const imgWidth = computed(() => {
@@ -55,14 +63,15 @@ const pagination = ref({
   clickable: true
 })
 const autoplayBanner = ref({
-  delay: 3000, // 自动切换的时间间隔
-  disableOnInteraction: true, // 用户操作swiper之后，是否禁止autoplay。默认为true：停止。
+  delay: props.delay, 
+  disableOnInteraction: false, // 用户操作swiper之后，是否禁止autoplay。默认为true：停止。
   pauseOnMouseEnter: true // 鼠标置于swiper时暂停自动切换，鼠标离开时恢复自动切换，默认false
 })
 
 const modulesCarousel = ref([Autoplay])
 const autoplayCarousel = ref<object|boolean>({
-  delay: 0
+  delay: 0,
+  disableOnInteraction: false
 })
 function onSwiper (swiper: any) {
   console.log(swiper)
@@ -81,6 +90,7 @@ function onSlideChange () {
 </script>
 <template>
   <swiper
+    :class="{'swiper-no-swiping': !swipe}"
     v-if="mode==='banner'"
     :modules="modulesBanner"
     :lazy="true"
@@ -91,13 +101,12 @@ function onSlideChange () {
     :loop="true"
     @swiper="onSwiper"
     @slideChange="onSlideChange"
-    v-bind="$attrs"
-  >
+    v-bind="$attrs">
     <swiper-slide v-for="(image, index) in imageData" :key="index">
       <a :href="image.link" target="_blank" class="m-link">
         <img
           :src="image.imgUrl"
-          class="u-banner-img"
+          class="u-img"
           :style="`width: ${imgWidth}; height: ${imgHeight};`"
           :alt="image.title"
           loading="lazy" />
@@ -110,21 +119,20 @@ function onSlideChange () {
     v-if="mode==='carousel'"
     :modules="modulesCarousel"
     :lazy="true"
-    :slides-per-view="3"
-    :space-between="20"
-    :speed="2500"
     :autoplay="autoplayCarousel"
     :loop="true"
     @swiper="onSwiper"
     @slideChange="onSlideChange"
-  >
+    v-bind="$attrs">
     <swiper-slide v-for="(image, index) in imageData" :key="index">
-      <img
-        :src="image.imgUrl"
-        class="u-carousel-img"
-        :style="`width: ${imgWidth}; height: ${imgHeight};`"
-        :alt="image.title"
-        loading="lazy" />
+      <a :href="image.link" target="_blank" class="m-link">
+        <img
+          :src="image.imgUrl"
+          class="u-img"
+          :style="`width: ${imgWidth}; height: ${imgHeight};`"
+          :alt="image.title"
+          loading="lazy" />
+      </a>
       <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
     </swiper-slide>
   </swiper>
@@ -134,12 +142,12 @@ function onSlideChange () {
   display: block;
   height: 100%;
 }
-.u-banner-img {
+.u-img {
   object-fit: cover;
   cursor: pointer;
 }
-.u-carousel-img {
-  object-fit: cover;
+.swiper {
+  --swiper-theme-color: @themeColor;
 }
 :deep(.swiper-wrapper) { // 自动切换过渡效果设置
   transition-timing-function: linear; // 线性过渡模拟走马灯效果
