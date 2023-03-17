@@ -45,6 +45,7 @@ Message | 全局提示
 Modal | 信息提示
 Notification | 通知提醒框
 Pagination | 分页器
+Select | 选择器
 Spin | 加载中
 Swiper | 触摸滑动插件（二次封装）
 Switch | 开关
