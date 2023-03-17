@@ -73,6 +73,12 @@ const routes = [
         component: () => import('@/views/Pagination.vue')
       },
       {
+        path: '/radio',
+        name: 'Radio',
+        meta: { title: '单选框' },
+        component: () => import('@/views/Radio.vue')
+      },
+      {
         path: '/select',
         name: 'Select',
         meta: { title: '选择器' },
