@@ -8,7 +8,7 @@ function loadImages () {
   for (let i = 1; i <= 10; i++) {
     imageData.value.push({
       title: `image-${i}`,
-      link: 'https://www.baidu.com',
+      // link: '',
       imgUrl: getImageUrl(i)
     })
   }
