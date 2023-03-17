@@ -45,7 +45,6 @@ function onClick (value: string|number) {
 </template>
 <style lang="less" scoped>
 .m-radio {
-  width: 100%;
   display: inline-flex;
   height: 24px;
   .m-radio-wrap {
