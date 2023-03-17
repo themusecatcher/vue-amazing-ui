@@ -52,7 +52,7 @@ function onChange (value: string|number, label: string,  index: number) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">选择器基本使用</h2>
+    <!-- <h2 class="mb10">选择器基本使用</h2> -->
     <Select
       :options="options"
       name="label"
