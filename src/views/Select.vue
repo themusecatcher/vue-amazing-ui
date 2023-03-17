@@ -37,22 +37,22 @@ const options = ref([
       }
     ])
 const selectedValue = ref(1)
-const value = ref(1)
 
 watch(selectedValue, (to) => {
   console.log('selectedValue:', to)
 })
-// onMounted(() => {
-//   setTimeout(() => {
-//     selectedValue.value = 5
-//   }, 1000)
-// })
+onMounted(() => {
+  setTimeout(() => { // 模拟接口调用
+    selectedValue.value = 3
+  }, 1000)
+})
 function onChange (value: string|number, label: string,  index: number) {
   console.log('item:', value, label, index)
 }
 </script>
 <template>
   <div>
+    <h2 class="mb10">选择器基本使用</h2>
     <Select
       :options="options"
       name="label"
