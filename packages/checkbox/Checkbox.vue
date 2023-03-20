@@ -70,7 +70,9 @@ function onCheckAll () { // 全选切换
       :style="sum !== index + 1 ? styleObject: ''"
       @click="(disabled || option.disabled) ? (e: Event) => e.preventDefault() : onClick(option.value)" v-for="(option, index) in options" :key="index">
       <span class="u-checkbox" :class="{'u-checkbox-checked': checkedValue.includes(option.value) }"></span>
-      <span class="u-label">{{ option.label }}</span>
+      <span class="u-label">
+        <slot :label="option.label">{{ option.label }}</slot>
+      </span>
     </div>
     <div
       v-else

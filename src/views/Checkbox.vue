@@ -71,7 +71,7 @@ watch(checkAll, (to) => {
       :gap="16"
       :vertical="false"
       @change="onChange"
-      v-model:value="value" />
+      v-model:value="value"/>
     <h2 class="mt30 mb10">Checkbox 实现全选效果</h2>
     <Checkbox
       class="mb10"
