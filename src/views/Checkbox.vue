@@ -41,27 +41,15 @@ const value = ref(1)
 watch(value, (to) => {
   console.log('p to:', to)
 })
-function onChange (value: any) {
-  console.log('change:', value)
-  
-}
 </script>
 <template>
   <div>
     <Radio
       :options="options"
       :gap="16"
-      :vertical="false"
-      disabled
-      @change="onChange"
       v-model:value="value" />
-    <a-radio-group class="border-box" v-model:value="value" disabled :options="options" />
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  :deep(*) {
-    box-sizing: border-box;
-  }
-}
+
 </style>
