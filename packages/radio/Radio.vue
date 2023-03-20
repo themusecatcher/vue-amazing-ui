@@ -43,7 +43,7 @@ function onClick (value: any) {
 }
 </script>
 <template>
-  <div class="m-radio" :class="{ 'vertical': vertical }">
+  <div class="m-radio" :class="{'vertical': vertical}">
     <div
       class="m-radio-wrap"
       :class="{'disabled': disabled || option.disabled}"
