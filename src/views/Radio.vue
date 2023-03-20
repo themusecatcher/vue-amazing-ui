@@ -48,14 +48,16 @@ function onChange (value: any) {
 </script>
 <template>
   <div>
+    <h2>Radio 组件</h2>
+    <p class="u-intro">用于在多个备选项中选中单个状态</p>
     <Radio
       :options="options"
       :gap="16"
       :vertical="false"
-      disabled
       @change="onChange"
       v-model:value="value" />
-    <a-radio-group class="border-box" v-model:value="value" disabled :options="options" />
+    <h2 class="mt30 mb10">Ant Design Vue 的 a-radio-group 组件</h2>
+    <a-radio-group class="border-box" v-model:value="value" :options="options" />
   </div>
 </template>
 <style lang="less" scoped>
