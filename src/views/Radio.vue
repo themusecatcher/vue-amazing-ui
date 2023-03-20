@@ -43,7 +43,6 @@ watch(value, (to) => {
 })
 function onChange (value: any) {
   console.log('change:', value)
-  
 }
 </script>
 <template>
@@ -57,7 +56,7 @@ function onChange (value: any) {
       @change="onChange"
       v-model:value="value" />
     <h2 class="mt30 mb10">Ant Design Vue 的 a-radio-group 组件</h2>
-    <a-radio-group class="border-box" v-model:value="value" :options="options" />
+    <a-radio-group class="border-box" @change="onChange($event.target.value)" v-model:value="value" :options="options" />
   </div>
 </template>
 <style lang="less" scoped>
