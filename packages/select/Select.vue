@@ -130,7 +130,7 @@ function onChange (value: string|number, label: string, index: number) { // 选�
 }
 </script>
 <template>
-  <div class="vue-amazing-selector" :style="`height: ${height}px;`">
+  <div class="m-select" :style="`height: ${height}px;`">
     <div
       :class="['m-select-wrap', { 'hover': !disabled, 'focus': showOptions, 'disabled': disabled }]"
       :style="`width: ${width - 2}px; height: ${height - 2}px;`"
@@ -144,14 +144,12 @@ function onChange (value: string|number, label: string, index: number) { // 选�
         :style="`line-height: ${height - 2}px;width: ${width - 37}px; height: ${height - 2}px;`"
         :title="selectedName"
       >{{ selectedName || placeholder }}</div>
-      <transition name="fade-svg">
-        <svg @click="openSelect" v-show="!showClose" :class="['triangle', { 'rotate': showOptions }]" viewBox="64 64 896 896" data-icon="down" aria-hidden="true" focusable="false"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
-      </transition>
-      <transition name="fade-svg">
-        <svg @click.stop="onClear" v-show="showClose" class="close" focusable="false" data-icon="close-circle" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
-      </transition>
+      <TransitionGroup name="fade-svg" tag="div">
+        <svg @click="openSelect" key="1" v-if="!showClose" :class="['triangle', { 'rotate': showOptions }]" viewBox="64 64 896 896" data-icon="down" aria-hidden="true" focusable="false"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
+        <svg @click.stop="onClear" key="2" v-else class="close" focusable="false" data-icon="close-circle" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
+      </TransitionGroup>
     </div>
-    <transition name="fade">
+    <Transition name="fade">
       <div
         v-show="showOptions"
         class="m-options-panel"
@@ -167,38 +165,37 @@ function onChange (value: string|number, label: string, index: number) { // 选�
           {{ option[label] }}
         </p>
       </div>
-    </transition>
+    </Transition>
   </div>
 </template>
 <style lang="less" scoped>
-input:focus {
-  outline: none;
-}
-input, p {
-  margin: 0;
-  padding: 0;
-}
-.vue-amazing-selector {
+.m-select {
   position: relative;
   display: inline-block;
   font-size: 14px;
   font-weight: 400;
   color: rgba(0,0,0,.65);
 }
-// 渐变过渡效果
 .fade-svg-enter-active, .fade-svg-leave-active {
-  transition: all .3s;
+  transition: opacity .3s;
 }
 .fade-svg-enter-from, .fade-svg-leave-to {
   opacity: 0;
-  // transform: translateY(-6px); // 滑动变换
 }
 .fade-enter-active, .fade-leave-active {
-  transition: all .5s;
+  transform: scaleY(1);
+  transform-origin: 0% 0%;
+  opacity: 1;
+  transition: all .15s;
 }
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from {
+  transform: scaleY(0.8);
+  transform-origin: 0% 0%;
   opacity: 0;
-  // transform: translateY(-6px); // 滑动变换
+}
+.fade-leave-to {
+  transform: scaleY(1);
+  opacity: 0;
 }
 .m-select-wrap {
   position: relative;

@@ -52,19 +52,7 @@ function onChange (value: string|number, label: string,  index: number) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">选择器基本使用</h2>
-    <Select
-      :options="options"
-      name="label"
-      value="value"
-      placeholder="请选择城市"
-      :disabled="false"
-      :width="160"
-      :height="36"
-      :num="6"
-      v-model:selectedValue="selectedValue"
-      @change="onChange" />
-    <h2 class="mt30 mb10">选择器支持清除（allowClear）</h2>
+    <!-- <h2 class="mb10">选择器基本使用</h2> -->
     <Select
       :options="options"
       name="label"
@@ -76,25 +64,10 @@ function onChange (value: string|number, label: string,  index: number) {
       :num="6"
       allowClear
       v-model:selectedValue="selectedValue"
-      @change="onChange" />
-    <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除（allowClear）</h2>
-    <a-select
-      class="border-box"
-      :options="options"
-      style="width: 180px"
-      placeholder="请选择城市"
-      :disabled="false"
-      allowClear
-      v-model:value="selectedValue"
       @change="onChange" />
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  :deep(*) {
-    box-sizing: border-box;
-  }
-}
 .selector {
   width: 1200px;
   margin: 0 auto;
