@@ -41,6 +41,9 @@ function onClick (e: any):void {
         <a-menu-item key="Button">
           <router-link to="/button">按钮（Button）</router-link>
         </a-menu-item>
+        <a-menu-item key="Cascader">
+          <router-link to="/cascader">级联选择（Cascader）</router-link>
+        </a-menu-item>
         <a-menu-item key="Checkbox">
           <router-link to="/checkbox">多选框（Checkbox）</router-link>
         </a-menu-item>
@@ -103,9 +106,6 @@ function onClick (e: any):void {
         </a-menu-item>
         <a-menu-item key="Drag">
           <router-link to="/drag">拖拽组件</router-link>
-        </a-menu-item>
-        <a-menu-item key="Selector">
-          <router-link to="/selector">下拉组件</router-link>
         </a-menu-item>
         <a-menu-item key="Viewer">
           <router-link to="/viewer">预览插件</router-link>

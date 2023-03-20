@@ -31,6 +31,12 @@ const routes = [
         component: () => import('@/views/Button.vue')
       },
       {
+        path: '/cascader',
+        name: 'Cascader',
+        meta: { title: '级联选择' },
+        component: () => import('@/views/Cascader.vue')
+      },
+      {
         path: '/checkbox',
         name: 'Checkbox',
         meta: { title: '多选框' },
