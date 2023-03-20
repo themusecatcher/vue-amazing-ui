@@ -31,6 +31,12 @@ const routes = [
         component: () => import('@/views/Button.vue')
       },
       {
+        path: '/checkbox',
+        name: 'Checkbox',
+        meta: { title: '多选框' },
+        component: () => import('@/views/Checkbox.vue')
+      },
+      {
         path: '/countdown',
         name: 'Countdown',
         meta: { title: '倒计时' },
