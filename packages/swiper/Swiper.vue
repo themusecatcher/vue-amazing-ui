@@ -42,6 +42,10 @@ const props = defineProps({
   swipe: { // 是否可以鼠标拖动
     type: Boolean,
     default: true
+  },
+  preloaderColor: { // preload时loading的颜色
+    type: String,
+    default: 'theme' // 可选theme white black
   }
 })
 const imgWidth = computed(() => {
@@ -111,7 +115,7 @@ function onSlideChange () {
           :alt="image.title"
           loading="lazy" />
       </a>
-      <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+      <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </swiper-slide>
   </swiper>
   <swiper
@@ -133,7 +137,7 @@ function onSlideChange () {
           :alt="image.title"
           loading="lazy" />
       </a>
-      <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+      <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </swiper-slide>
   </swiper>
 </template>
@@ -163,5 +167,8 @@ function onSlideChange () {
 }
 :deep(.swiper-pagination-bullet-active) {
   background: @themeColor;
+}
+.swiper-lazy-preloader-theme {
+  --swiper-preloader-color: @themeColor;
 }
 </style>

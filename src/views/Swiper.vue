@@ -9,7 +9,8 @@ function loadImages () {
     imageData.value.push({
       title: `image-${i}`,
       // link: '',
-      imgUrl: getImageUrl(i)
+      // imgUrl: getImageUrl(i)
+      imgUrl: 'https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg'
     })
   }
   console.log(imageData.value)
@@ -46,6 +47,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
       :imageData="imageData"
       mode="carousel"
       width="100%"
+      preloaderColor="theme"
       :height="240"
       :slides-per-view="3"
       :space-between="20"
