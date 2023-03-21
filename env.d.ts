@@ -6,3 +6,4 @@
 // }
 
 declare module '*.js'
+declare module '*.gz'
