@@ -1,91 +1,116 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 
 const options = ref([
+  {
+    values: '1',
+    labels: '北京',
+    childrens: [
       {
-        label: '北京市',
-        value: 1
-      },
-      {
-        label: '上海市上海市上海市上海市',
-        value: 2,
-        disabled: true
-      },
-      {
-        label: '郑州市',
-        value: 3
-      },
-      {
-        label: '纽约市纽约市纽约市纽约市',
-        value: 4
-      },
-      {
-        label: '旧金山',
-        value: 5
-      },
-      {
-        label: '悉尼市',
-        value: 6
-      },
-      {
-        label: '伦敦市',
-        value: 7
-      },
-      {
-        label: '巴黎市',
-        value: 8
+        values: '11',
+        labels: '北京市',
+        childrens: [
+          {
+            values: '111',
+            labels: '东城区'
+          },
+          {
+            values: '112',
+            labels: '西城区'
+          }
+        ]
       }
-    ])
-const selectedValue = ref(1)
-
+    ]
+  },
+  {
+    values: '2',
+    labels: '浙江',
+    childrens: [
+      {
+        values: '21',
+        labels: '杭州市',
+        childrens: [
+          {
+            values: '211',
+            labels: '西湖区'
+          },
+          {
+            values: '212',
+            labels: '余杭区'
+          }
+        ]
+      },
+      {
+        values: '22',
+        labels: '湖州市',
+        childrens: [
+          {
+            values: '221',
+            labels: '吴兴区'
+          },
+          {
+            values: '222',
+            labels: '安吉区'
+          }
+        ]
+      }
+    ]
+  }
+])
+const selectedValue = ref<any[]>(['2', '21', '212'])
 watch(selectedValue, (to) => {
-  console.log('selectedValue:', to)
+  console.log('p to:', to)
 })
-onMounted(() => {
-  setTimeout(() => { // 模拟接口调用
-    selectedValue.value = 3
-  }, 1000)
-})
-function onChange (value: string|number, label: string,  index: number) {
-  console.log('item:', value, label, index)
+function onChange (value: Array<number|string>, label: Array<string>) {
+  selectedValue.value = value
+  console.log('value:', value)
+  console.log('label:', label)
+}
+function onAntChange (value: Array<number|string>, selectedOptions: any) {
+  selectedValue.value = value
+  console.log('value:', value)
+  console.log('selectedOptions:', selectedOptions)
 }
 </script>
 <template>
   <div>
-    <!-- <h2 class="mb10">选择器基本使用</h2> -->
-    <Select
-      :options="options"
-      name="label"
-      value="value"
-      placeholder="请选择城市"
-      :disabled="false"
-      :width="160"
-      :height="36"
-      :num="6"
-      allowClear
+    <h2 class="mb10">Cascader 级联选择基本使用</h2>
+    <Cascader
       v-model:selectedValue="selectedValue"
+      label="labels"
+      value="values"
+      children="childrens"
+      changeOnSelect
+      :options="options"
+      :zIndex="9"
+      :gap="8"
+      :provinceWidth="120"
+      :cityWidth="120"
+      :areaWidth="120"
+      :width="120"
+      :height="36"
+      :provinceDisabled="false"
+      :cityDisabled="false"
+      :disabled="false"
+      :num="6"
       @change="onChange" />
+    <h2 class="mt30 mb10">Ant Design Vue 级联选择</h2>
+    <a-cascader
+      class="border-box"
+      :options="options"
+      style="width: 280px"
+      placeholder="Please select"
+      :disabled="false"
+      allowClear
+      changeOnSelect
+      v-model:value="selectedValue"
+      @change="onAntChange" />
   </div>
 </template>
 <style lang="less" scoped>
-.selector {
-  width: 1200px;
-  margin: 0 auto;
-}
-.m-tab {
-  border: 1px solid @themeColor;
-  padding: 60px;
-  .u-tab {
-    width: 60px;
-    height: 60px;
-    background: @themeColor;
+.border-box {
+  :deep(*) {
+    box-sizing: border-box;
   }
-}
-.triangle { // 等边三角形
-  height: 0;
-  width: 0;
-  border-bottom: calc(50px * sqrt(3)) solid @themeColor;
-  border-left: 50px solid transparent;
-  border-right: 50px solid transparent;
 }
 </style>
