@@ -11,23 +11,10 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 // 打包体积可视化插件
 // import { visualizer } from 'rollup-plugin-visualizer'
 
-// 使用gzip压缩
-import viteCompression from 'vite-plugin-compression'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    viteCompression(
-      {
-        filter: /.(js|mjs|json|css|html)$/i, // 过滤器，要压缩的文件类型，默认 /.(js|mjs|json|css|html)$/i
-        verbose: true, // 是否在控制台输出压缩结果，默认true
-        disable: false, // 是否禁用压缩，默认false
-        deleteOriginFile: false, // 压缩后是否删除原文件，默认false
-        threshold: 10240, // 压缩的文件大小限制，单位byte，默认为0
-        algorithm: 'gzip', //压缩算法，默认gzip
-        ext: '.gz', // 压缩包后缀
-      }
-    ),
     // visualizer({ open: true }),
     Components({
       resolvers: [AntDesignVueResolver()]
