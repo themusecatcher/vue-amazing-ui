@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import swiper from 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination, Navigation, Autoplay, EffectFade } from 'swiper'
 import 'swiper/css'
