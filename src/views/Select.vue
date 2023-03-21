@@ -52,7 +52,7 @@ function onChange (value: string|number, label: string,  index: number) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">选择器基本使用</h2>
+    <h2 class="mb10">Select 选择器基本使用</h2>
     <Select
       :options="options"
       name="label"
@@ -94,25 +94,5 @@ function onChange (value: string|number, label: string,  index: number) {
   :deep(*) {
     box-sizing: border-box;
   }
-}
-.selector {
-  width: 1200px;
-  margin: 0 auto;
-}
-.m-tab {
-  border: 1px solid @themeColor;
-  padding: 60px;
-  .u-tab {
-    width: 60px;
-    height: 60px;
-    background: @themeColor;
-  }
-}
-.triangle { // 等边三角形
-  height: 0;
-  width: 0;
-  border-bottom: calc(50px * sqrt(3)) solid @themeColor;
-  border-left: 50px solid transparent;
-  border-right: 50px solid transparent;
 }
 </style>

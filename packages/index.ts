@@ -1,6 +1,7 @@
 import type { App } from 'vue'
 import Breadcrumb from './breadcrumb'
 import Button from './button'
+import Cascader from './cascader'
 import Checkbox from './checkbox'
 import Countdown from './countdown'
 import DatePicker from './datepicker'
@@ -22,6 +23,7 @@ import Waterfall from './waterfall'
 const components = [
   Breadcrumb,
   Button,
+  Cascader,
   Checkbox,
   Countdown,
   DatePicker,
@@ -57,6 +59,7 @@ const install = (app: App): void => {
 export {
   Breadcrumb,
   Button,
+  Cascader,
   Checkbox,
   Countdown,
   DatePicker,
