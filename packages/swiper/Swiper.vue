@@ -9,7 +9,7 @@ import { ref, computed } from 'vue'
 
 interface Image {
   title: string,
-  link: string,
+  link?: string,
   imgUrl: string
 }
 const props = defineProps({
