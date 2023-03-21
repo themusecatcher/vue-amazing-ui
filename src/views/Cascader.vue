@@ -3,54 +3,54 @@ import { ref, watch } from 'vue'
 
 const options = ref([
   {
-    values: '1',
-    labels: '北京',
-    childrens: [
+    value: '1',
+    label: '北京',
+    children: [
       {
-        values: '11',
-        labels: '北京市',
-        childrens: [
+        value: '11',
+        label: '北京市',
+        children: [
           {
-            values: '111',
-            labels: '东城区'
+            value: '111',
+            label: '东城区'
           },
           {
-            values: '112',
-            labels: '西城区'
+            value: '112',
+            label: '西城区'
           }
         ]
       }
     ]
   },
   {
-    values: '2',
-    labels: '浙江',
-    childrens: [
+    value: '2',
+    label: '浙江',
+    children: [
       {
-        values: '21',
-        labels: '杭州市',
-        childrens: [
+        value: '21',
+        label: '杭州市',
+        children: [
           {
-            values: '211',
-            labels: '西湖区'
+            value: '211',
+            label: '西湖区'
           },
           {
-            values: '212',
-            labels: '余杭区'
+            value: '212',
+            label: '余杭区'
           }
         ]
       },
       {
-        values: '22',
-        labels: '湖州市',
-        childrens: [
+        value: '22',
+        label: '湖州市',
+        children: [
           {
-            values: '221',
-            labels: '吴兴区'
+            value: '221',
+            label: '吴兴区'
           },
           {
-            values: '222',
-            labels: '安吉区'
+            value: '222',
+            label: '安吉区'
           }
         ]
       }
@@ -77,9 +77,9 @@ function onAntChange (value: Array<number|string>, selectedOptions: any) {
     <h2 class="mb10">Cascader 级联选择基本使用</h2>
     <Cascader
       v-model:selectedValue="selectedValue"
-      label="labels"
-      value="values"
-      children="childrens"
+      label="label"
+      value="value"
+      children="children"
       changeOnSelect
       :options="options"
       :zIndex="9"
@@ -98,7 +98,7 @@ function onAntChange (value: Array<number|string>, selectedOptions: any) {
     <a-cascader
       class="border-box"
       :options="options"
-      style="width: 280px"
+      style="width: 200px;"
       placeholder="Please select"
       :disabled="false"
       allowClear
