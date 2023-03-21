@@ -8,9 +8,9 @@ import 'swiper/css/effect-fade'
 import { ref, computed } from 'vue'
 
 interface Image {
-  title: string,
-  link?: string,
-  imgUrl: string
+  title: string, // 图片名称
+  link?: string, // 图片跳转链接
+  imgUrl: string // 图片地址
 }
 const props = defineProps({
   imageData: {
