@@ -38,6 +38,8 @@ import '@web/vue-ui/dist/style.css'
 | :--- | :--- |
 Breadcrumb | 面包屑
 Button | 按钮
+Cascader | 级联选择
+Checkbox | 多选框
 Countdown | 倒计时
 DatePicker | 日期选择器
 Dialog | 对话框
@@ -45,9 +47,10 @@ Message | 全局提示
 Modal | 信息提示
 Notification | 通知提醒框
 Pagination | 分页器
+Radio | 单选框
 Select | 选择器
 Spin | 加载中
-Swiper | 触摸滑动插件（二次封装）
+Swiper | 触摸滑动插件
 Switch | 开关
 Tooltip | 文字提示
 Video | 播放器
