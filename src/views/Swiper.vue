@@ -8,9 +8,8 @@ function loadImages () {
   for (let i = 1; i <= 10; i++) {
     imageData.value.push({
       title: `image-${i}`,
-      // link: '',
-      // imgUrl: getImageUrl(i)
-      imgUrl: 'https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg'
+      link: '',
+      imgUrl: getImageUrl(i)
     })
   }
   console.log(imageData.value)
