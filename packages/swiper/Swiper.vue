@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import swiper from 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination, Navigation, Autoplay, EffectFade } from 'swiper'
 import 'swiper/css'
@@ -15,9 +16,7 @@ interface Image {
 const props = defineProps({
   imageData: {
     type: Array<Image>,
-    default: () => {
-      return []
-    }
+    default: () => []
   },
   width: { // 图片宽度
     type: [Number, String],
