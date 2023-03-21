@@ -19438,9 +19438,7 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   props: {
     imageData: {
       type: Array,
-      default: () => {
-        return [];
-      }
+      default: () => []
     },
     width: {
       // 图片宽度
@@ -19610,8 +19608,8 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Swiper_vue_vue_type_style_index_0_scoped_ab314b1a_lang = "";
-const Swiper2 = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-ab314b1a"]]);
+const Swiper_vue_vue_type_style_index_0_scoped_10c139d5_lang = "";
+const Swiper2 = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-10c139d5"]]);
 Swiper2.install = (app) => {
   app.component(Swiper2.__name, Swiper2);
 };
