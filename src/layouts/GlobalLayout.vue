@@ -18,7 +18,7 @@ function onClick (e: any):void {
 }
 </script>
 <template>
-  <a-row style="width: 100%;" :gutter="{ xs: 48, xl: 64}">
+  <a-row style="width: 100%;" :gutter="{ xs: 48, sm: 48, xl: 64}">
     <a-col :xs="6" :xl="5">
       <a-switch
         class="u-switch"
