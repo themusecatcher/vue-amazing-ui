@@ -3567,7 +3567,6 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
       if (props.vertical) {
         if (len.value > 1) {
           clearTimeout(timer.value);
-          timer.value = null;
         }
       } else {
         cancelAnimationFrame(moveRaf.value);
@@ -3642,8 +3641,8 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const TextScroll_vue_vue_type_style_index_0_scoped_e32711ca_lang = "";
-const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-e32711ca"]]);
+const TextScroll_vue_vue_type_style_index_0_scoped_bd8148b8_lang = "";
+const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-bd8148b8"]]);
 TextScroll.install = (app) => {
   app.component(TextScroll.__name, TextScroll);
 };

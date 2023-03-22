@@ -12,6 +12,7 @@ import Notification from './notification'
 import Pagination from './pagination'
 import Radio from './radio'
 import Select from './select'
+import Slider from './slider'
 import Spin from './spin'
 import Swiper from './swiper'
 import Switch from './switch'
@@ -35,6 +36,7 @@ const components = [
   Pagination,
   Radio,
   Select,
+  Slider,
   Spin,
   Swiper,
   Switch,
@@ -72,6 +74,7 @@ export {
   Pagination,
   Radio,
   Select,
+  Slider,
   Spin,
   Swiper,
   Switch,

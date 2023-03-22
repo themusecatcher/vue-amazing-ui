@@ -124,7 +124,7 @@ function onStop () {
   if (props.vertical) {
     if (len.value > 1) {
       clearTimeout(timer.value) // 暂停滚动
-      timer.value = null
+      // timer.value = null
     }
   } else {
     cancelAnimationFrame(moveRaf.value) // 暂停动画
