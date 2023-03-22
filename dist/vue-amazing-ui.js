@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import Swiper$2, { Navigation, Pagination as Pagination$1, Autoplay, EffectFade } from "swiper";
 const _withScopeId$8 = (n) => (pushScopeId("data-v-9d95a75c"), n = n(), popScopeId(), n);
-const _hoisted_1$h = ["onClick", "title"];
+const _hoisted_1$i = ["onClick", "title"];
 const _hoisted_2$f = {
   key: 0,
   class: "u-separator"
@@ -21,7 +21,7 @@ const _hoisted_5$6 = [
   _hoisted_4$9
 ];
 const _hoisted_6$6 = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
-const _sfc_main$j = /* @__PURE__ */ defineComponent({
+const _sfc_main$k = /* @__PURE__ */ defineComponent({
   __name: "Breadcrumb",
   props: {
     routes: { default: () => [] },
@@ -51,7 +51,7 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
               class: normalizeClass(["u-route", { active: index === unref(len) - 1 }]),
               onClick: ($event) => index === unref(len) - 1 ? (e) => e.preventDefault() : goRouter(route),
               title: route.name
-            }, toDisplayString(route.name || "--"), 11, _hoisted_1$h),
+            }, toDisplayString(route.name || "--"), 11, _hoisted_1$i),
             index !== unref(len) - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
               __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2$f, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$b, _hoisted_5$6))
             ], 64)) : createCommentVNode("", true)
@@ -70,12 +70,12 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-9d95a75c"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-9d95a75c"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };
-const _hoisted_1$g = ["disabled"];
-const _sfc_main$i = /* @__PURE__ */ defineComponent({
+const _hoisted_1$h = ["disabled"];
+const _sfc_main$j = /* @__PURE__ */ defineComponent({
   __name: "Button",
   props: {
     name: { default: "按钮" },
@@ -130,17 +130,17 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
           renderSlot(_ctx.$slots, "default", {}, () => [
             createTextVNode(toDisplayString(__props.name), 1)
           ], true)
-        ], 14, _hoisted_1$g))
+        ], 14, _hoisted_1$h))
       ], 2);
     };
   }
 });
 const Button_vue_vue_type_style_index_0_scoped_c6861aa2_lang = "";
-const Button = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-c6861aa2"]]);
+const Button = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-c6861aa2"]]);
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
-const _sfc_main$h = /* @__PURE__ */ defineComponent({
+const _sfc_main$i = /* @__PURE__ */ defineComponent({
   __name: "Cascader",
   props: {
     options: {
@@ -345,14 +345,14 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
   }
 });
 const Cascader_vue_vue_type_style_index_0_scoped_3936cf14_lang = "";
-const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-3936cf14"]]);
+const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-3936cf14"]]);
 Cascader.install = (app) => {
   app.component(Cascader.__name, Cascader);
 };
-const _hoisted_1$f = ["onClick"];
+const _hoisted_1$g = ["onClick"];
 const _hoisted_2$e = { class: "u-label" };
 const _hoisted_3$a = { class: "u-label" };
-const _sfc_main$g = /* @__PURE__ */ defineComponent({
+const _sfc_main$h = /* @__PURE__ */ defineComponent({
   __name: "Checkbox",
   props: {
     options: { default: () => [] },
@@ -422,7 +422,7 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
                 createTextVNode(toDisplayString(option.label), 1)
               ], true)
             ])
-          ], 14, _hoisted_1$f);
+          ], 14, _hoisted_1$g);
         }), 128)) : (openBlock(), createElementBlock("div", {
           key: 1,
           class: normalizeClass(["m-checkbox-wrap", { "disabled": __props.disabled }]),
@@ -440,15 +440,15 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
   }
 });
 const Checkbox_vue_vue_type_style_index_0_scoped_2e6d02dd_lang = "";
-const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-2e6d02dd"]]);
+const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-2e6d02dd"]]);
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
-const _hoisted_1$e = { class: "m-countdown" };
+const _hoisted_1$f = { class: "m-countdown" };
 const _hoisted_2$d = { class: "u-title" };
 const _hoisted_3$9 = { class: "u-time" };
 const _hoisted_4$8 = { key: 2 };
-const _sfc_main$f = /* @__PURE__ */ defineComponent({
+const _sfc_main$g = /* @__PURE__ */ defineComponent({
   __name: "Countdown",
   props: {
     countdown: { default: 0 },
@@ -530,7 +530,7 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
       CountDown(restTime);
     });
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$e, [
+      return openBlock(), createElementBlock("div", _hoisted_1$f, [
         renderSlot(_ctx.$slots, "title", {}, () => [
           createElementVNode("p", _hoisted_2$d, toDisplayString(props.title), 1)
         ], true),
@@ -550,12 +550,12 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
   }
 });
 const Countdown_vue_vue_type_style_index_0_scoped_2f02a0b2_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-2f02a0b2"]]);
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-2f02a0b2"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
 };
 const main = "";
-const _sfc_main$e = /* @__PURE__ */ defineComponent({
+const _sfc_main$f = /* @__PURE__ */ defineComponent({
   __name: "DatePicker",
   props: {
     inheritAttrs: { type: Boolean, default: false },
@@ -618,12 +618,12 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
   }
 });
 const DatePicker_vue_vue_type_style_index_0_scoped_deb3eee4_lang = "";
-const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-deb3eee4"]]);
+const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-deb3eee4"]]);
 DatePicker.install = (app) => {
   app.component(DatePicker.__name, DatePicker);
 };
 const _withScopeId$7 = (n) => (pushScopeId("data-v-8aa1c704"), n = n(), popScopeId(), n);
-const _hoisted_1$d = ["onClick"];
+const _hoisted_1$e = ["onClick"];
 const _hoisted_2$c = { class: "m-spin-dot" };
 const _hoisted_3$8 = /* @__PURE__ */ _withScopeId$7(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_4$7 = /* @__PURE__ */ _withScopeId$7(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -650,7 +650,7 @@ const _hoisted_13$3 = [
 const _hoisted_14$3 = { class: "m-dialog-header" };
 const _hoisted_15$3 = { class: "u-head" };
 const _hoisted_16$3 = { class: "m-dialog-footer" };
-const _sfc_main$d = /* @__PURE__ */ defineComponent({
+const _sfc_main$e = /* @__PURE__ */ defineComponent({
   __name: "Dialog",
   props: {
     title: {
@@ -809,17 +809,17 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
             ])
           ], 2)
         ], 6)
-      ], 8, _hoisted_1$d);
+      ], 8, _hoisted_1$e);
     };
   }
 });
 const Dialog_vue_vue_type_style_index_0_scoped_8aa1c704_lang = "";
-const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-8aa1c704"]]);
+const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-8aa1c704"]]);
 Dialog.install = (app) => {
   app.component(Dialog.__name, Dialog);
 };
 const _withScopeId$6 = (n) => (pushScopeId("data-v-c86bd983"), n = n(), popScopeId(), n);
-const _hoisted_1$c = ["onMouseenter", "onMouseleave"];
+const _hoisted_1$d = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$b = /* @__PURE__ */ _withScopeId$6(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z" }, null, -1));
 const _hoisted_3$7 = [
   _hoisted_2$b
@@ -844,7 +844,7 @@ var ColorStyle$1 = /* @__PURE__ */ ((ColorStyle2) => {
   ColorStyle2["warn"] = "#faad14";
   return ColorStyle2;
 })(ColorStyle$1 || {});
-const _sfc_main$c = /* @__PURE__ */ defineComponent({
+const _sfc_main$d = /* @__PURE__ */ defineComponent({
   __name: "Message",
   props: {
     duration: {
@@ -989,7 +989,7 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
                     focusable: "false"
                   }, _hoisted_9$3, 4)) : createCommentVNode("", true),
                   createElementVNode("p", _hoisted_10$3, toDisplayString(message.content), 1)
-                ], 40, _hoisted_1$c)) : createCommentVNode("", true)
+                ], 40, _hoisted_1$d)) : createCommentVNode("", true)
               ]),
               _: 2
             }, 1024))
@@ -1000,12 +1000,12 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
   }
 });
 const Message_vue_vue_type_style_index_0_scoped_c86bd983_lang = "";
-const Message = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-c86bd983"]]);
+const Message = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-c86bd983"]]);
 Message.install = (app) => {
   app.component(Message.__name, Message);
 };
 const _withScopeId$5 = (n) => (pushScopeId("data-v-4aa7e0ff"), n = n(), popScopeId(), n);
-const _hoisted_1$b = ["onClick"];
+const _hoisted_1$c = ["onClick"];
 const _hoisted_2$a = { class: "m-modal-content" };
 const _hoisted_3$6 = { class: "m-spin-dot" };
 const _hoisted_4$5 = /* @__PURE__ */ _withScopeId$5(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -1043,7 +1043,7 @@ const _hoisted_15$2 = {
 const _hoisted_16$2 = { class: "u-title" };
 const _hoisted_17$1 = { class: "u-content" };
 const _hoisted_18$1 = { class: "m-btns" };
-const _sfc_main$b = /* @__PURE__ */ defineComponent({
+const _sfc_main$c = /* @__PURE__ */ defineComponent({
   __name: "Modal",
   props: {
     // 运行时声明
@@ -1164,17 +1164,17 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
             ], 2)
           ])
         ], 6)
-      ], 8, _hoisted_1$b);
+      ], 8, _hoisted_1$c);
     };
   }
 });
 const Modal_vue_vue_type_style_index_0_scoped_4aa7e0ff_lang = "";
-const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-4aa7e0ff"]]);
+const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-4aa7e0ff"]]);
 Modal.install = (app) => {
   app.component(Modal.__name, Modal);
 };
 const _withScopeId$4 = (n) => (pushScopeId("data-v-eab91dfd"), n = n(), popScopeId(), n);
-const _hoisted_1$a = ["onMouseenter", "onMouseleave"];
+const _hoisted_1$b = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$9 = ["fill"];
 const _hoisted_3$5 = /* @__PURE__ */ _withScopeId$4(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
 const _hoisted_4$4 = /* @__PURE__ */ _withScopeId$4(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z" }, null, -1));
@@ -1215,7 +1215,7 @@ var ColorStyle = /* @__PURE__ */ ((ColorStyle2) => {
   ColorStyle2["warn"] = "#faad14";
   return ColorStyle2;
 })(ColorStyle || {});
-const _sfc_main$a = /* @__PURE__ */ defineComponent({
+const _sfc_main$b = /* @__PURE__ */ defineComponent({
   __name: "Notification",
   props: {
     title: {
@@ -1396,7 +1396,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
                   "aria-hidden": "true",
                   focusable: "false"
                 }, _hoisted_20, 8, _hoisted_18))
-              ], 40, _hoisted_1$a)), [
+              ], 40, _hoisted_1$b)), [
                 [vShow, !hideIndex.value.includes(index)]
               ]);
             }), 128))
@@ -1408,12 +1408,12 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
   }
 });
 const Notification_vue_vue_type_style_index_0_scoped_eab91dfd_lang = "";
-const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-eab91dfd"]]);
+const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-eab91dfd"]]);
 Notification.install = (app) => {
   app.component(Notification.__name, Notification);
 };
 const _withScopeId$3 = (n) => (pushScopeId("data-v-47fb5a25"), n = n(), popScopeId(), n);
-const _hoisted_1$9 = { class: "m-pagination-wrap" };
+const _hoisted_1$a = { class: "m-pagination-wrap" };
 const _hoisted_2$8 = {
   key: 0,
   class: "mr8"
@@ -1471,7 +1471,7 @@ const _hoisted_16 = {
   key: 1,
   class: "u-jump-page"
 };
-const _sfc_main$9 = /* @__PURE__ */ defineComponent({
+const _sfc_main$a = /* @__PURE__ */ defineComponent({
   __name: "Pagination",
   props: {
     current: { default: 1 },
@@ -1576,7 +1576,7 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         class: normalizeClass([`m-pagination ${__props.placement}`, { hidden: __props.hideOnSinglePage && __props.total <= __props.pageSize }])
       }, [
-        createElementVNode("div", _hoisted_1$9, [
+        createElementVNode("div", _hoisted_1$a, [
           __props.showTotal ? (openBlock(), createElementBlock("span", _hoisted_2$8, "共 " + toDisplayString(unref(totalPage)) + " 页 / " + toDisplayString(__props.total) + " 条", 1)) : createCommentVNode("", true),
           createElementVNode("span", {
             class: normalizeClass(["u-item", { disabled: currentPage.value === 1 }]),
@@ -1651,13 +1651,13 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
   }
 });
 const Pagination_vue_vue_type_style_index_0_scoped_47fb5a25_lang = "";
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-47fb5a25"]]);
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-47fb5a25"]]);
 Pagination.install = (app) => {
   app.component(Pagination.__name, Pagination);
 };
-const _hoisted_1$8 = ["onClick"];
+const _hoisted_1$9 = ["onClick"];
 const _hoisted_2$7 = { class: "u-label" };
-const _sfc_main$8 = /* @__PURE__ */ defineComponent({
+const _sfc_main$9 = /* @__PURE__ */ defineComponent({
   __name: "Radio",
   props: {
     options: { default: () => [] },
@@ -1704,19 +1704,19 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
               class: normalizeClass(["u-radio", { "u-radio-checked": __props.value === option.value }])
             }, null, 2),
             createElementVNode("span", _hoisted_2$7, toDisplayString(option.label), 1)
-          ], 14, _hoisted_1$8);
+          ], 14, _hoisted_1$9);
         }), 128))
       ], 2);
     };
   }
 });
 const Radio_vue_vue_type_style_index_0_scoped_8d631e03_lang = "";
-const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-8d631e03"]]);
+const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-8d631e03"]]);
 Radio.install = (app) => {
   app.component(Radio.__name, Radio);
 };
 const _withScopeId$2 = (n) => (pushScopeId("data-v-e1d11167"), n = n(), popScopeId(), n);
-const _hoisted_1$7 = ["title"];
+const _hoisted_1$8 = ["title"];
 const _hoisted_2$6 = /* @__PURE__ */ _withScopeId$2(() => /* @__PURE__ */ createElementVNode("path", { d: "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
 const _hoisted_3$3 = [
   _hoisted_2$6
@@ -1727,7 +1727,7 @@ const _hoisted_6 = [
   _hoisted_5
 ];
 const _hoisted_7 = ["title", "onMouseenter", "onClick"];
-const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+const _sfc_main$8 = /* @__PURE__ */ defineComponent({
   __name: "Select",
   props: {
     options: {
@@ -1882,7 +1882,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
             class: normalizeClass(["u-select-input", { "placeholder": !selectedName.value }]),
             style: normalizeStyle(`line-height: ${__props.height - 2}px;width: ${__props.width - 37}px; height: ${__props.height - 2}px;`),
             title: selectedName.value
-          }, toDisplayString(selectedName.value || __props.placeholder), 15, _hoisted_1$7),
+          }, toDisplayString(selectedName.value || __props.placeholder), 15, _hoisted_1$8),
           createVNode(TransitionGroup, {
             name: "fade-svg",
             tag: "div"
@@ -1937,9 +1937,183 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   }
 });
 const Select_vue_vue_type_style_index_0_scoped_e1d11167_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-e1d11167"]]);
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-e1d11167"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
+};
+const _hoisted_1$7 = ["onClick"];
+const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+  __name: "Slider",
+  props: {
+    width: {
+      // 滑动输入条在页面中的宽度
+      type: Number,
+      default: 600
+    },
+    min: {
+      // 滑动输入条最小值
+      type: Number,
+      default: 0
+    },
+    max: {
+      // 滑动输入条最大值
+      type: Number,
+      default: 100
+    },
+    disabled: {
+      // 是否禁用
+      type: Boolean,
+      default: false
+    },
+    range: {
+      // 是否双滑块模式
+      type: Boolean,
+      default: false
+    },
+    value: {
+      // （v-model）设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
+      type: [Number, Array],
+      default: 0
+    }
+  },
+  emits: ["update:value", "change"],
+  setup(__props, { emit }) {
+    const props = __props;
+    const transition = ref(false);
+    const timer = ref();
+    const left = ref(0);
+    const right = ref(0);
+    const slider = ref();
+    const scale = computed(() => {
+      return props.width / (props.max - props.min);
+    });
+    const sliderValue = computed(() => {
+      const high = Math.round(right.value / scale.value + props.min);
+      if (props.range) {
+        const low = Math.round(left.value / scale.value + props.min);
+        return [low, high];
+      }
+      return high;
+    });
+    watch(
+      () => props.value,
+      () => {
+        getPosition();
+      }
+    );
+    watch(sliderValue, (to) => {
+      emit("update:value", to);
+      emit("change", to);
+    });
+    onMounted(() => {
+      getPosition();
+    });
+    function getPosition() {
+      if (props.range) {
+        left.value = (props.value[0] - props.min) * scale.value;
+        right.value = (props.value[1] - props.min) * scale.value;
+      } else {
+        right.value = (props.value - props.min) * scale.value;
+      }
+    }
+    function onClickPoint(e) {
+      if (transition.value) {
+        clearTimeout(timer.value);
+        timer.value = null;
+      } else {
+        transition.value = true;
+      }
+      timer.value = setTimeout(() => {
+        transition.value = false;
+      }, 300);
+      var moveX = e.layerX;
+      if (props.range) {
+        if (moveX <= left.value) {
+          left.value = moveX;
+        } else if (moveX >= right.value) {
+          right.value = moveX;
+        } else {
+          if (moveX - left.value < right.value - moveX) {
+            left.value = moveX;
+          } else {
+            right.value = moveX;
+          }
+        }
+      } else {
+        right.value = moveX;
+      }
+    }
+    function onLeftMouseDown() {
+      const leftX = slider.value.getBoundingClientRect().left;
+      document.onmousemove = (e) => {
+        var moveX = e.clientX - leftX;
+        if (moveX < 0) {
+          left.value = 0;
+        } else if (moveX >= 0 && moveX <= right.value) {
+          left.value = moveX;
+        } else {
+          left.value = right.value;
+          onRightMouseDown();
+        }
+      };
+      document.onmouseup = () => {
+        document.onmousemove = null;
+      };
+    }
+    function onRightMouseDown() {
+      const leftX = slider.value.getBoundingClientRect().left;
+      document.onmousemove = (e) => {
+        console.log(e.clientX);
+        var moveX = e.clientX - leftX;
+        if (moveX > props.width) {
+          right.value = props.width;
+        } else if (left.value <= moveX && moveX <= props.width) {
+          right.value = moveX;
+        } else {
+          right.value = left.value;
+          onLeftMouseDown();
+        }
+      };
+      document.onmouseup = () => {
+        document.onmousemove = null;
+      };
+    }
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", {
+        class: normalizeClass(["m-slider", { disabled: __props.disabled }]),
+        ref_key: "slider",
+        ref: slider,
+        style: normalizeStyle(`width: ${__props.width}px;`)
+      }, [
+        createElementVNode("div", {
+          class: "u-slider-rail",
+          onClick: withModifiers(onClickPoint, ["self"])
+        }, null, 8, _hoisted_1$7),
+        createElementVNode("div", {
+          class: normalizeClass(["u-slider-track", { trackTransition: transition.value }]),
+          style: normalizeStyle(`left: ${left.value}px; right: auto; width: ${right.value - left.value}px;`)
+        }, null, 6),
+        __props.range ? (openBlock(), createElementBlock("div", {
+          key: 0,
+          class: normalizeClass(["u-slider-handle", { handleTransition: transition.value }]),
+          tabindex: "0",
+          onMousedown: onLeftMouseDown,
+          style: normalizeStyle(`left: ${left.value}px; right: auto; transform: translateX(-50%);`)
+        }, null, 38)) : createCommentVNode("", true),
+        createElementVNode("div", {
+          class: normalizeClass(["u-slider-handle", { handleTransition: transition.value }]),
+          tabindex: "0",
+          onMousedown: onRightMouseDown,
+          style: normalizeStyle(`left: ${right.value}px; right: auto; transform: translateX(-50%);`)
+        }, null, 38)
+      ], 6);
+    };
+  }
+});
+const Slider_vue_vue_type_style_index_0_scoped_ad902f4d_lang = "";
+const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-ad902f4d"]]);
+Slider.install = (app) => {
+  app.component(Slider.__name, Slider);
 };
 const _hoisted_1$6 = { class: "m-spin" };
 const _hoisted_2$5 = { class: "m-spin-box" };
@@ -4022,6 +4196,7 @@ const components = [
   Pagination,
   Radio,
   Select,
+  Slider,
   Spin,
   Swiper,
   Switch,
@@ -4051,6 +4226,7 @@ export {
   Pagination,
   Radio,
   Select,
+  Slider,
   Spin,
   Swiper,
   Switch,

@@ -47,12 +47,9 @@ const sliderValue = computed(() => {
 const emit = defineEmits(['update:value', 'change'])
 watch(
   () => props.value,
-  () => {
-    getPosition()
-  })
+  () => { getPosition() })
 watch(sliderValue, (to) => {
-  console.log('s to:', to)
-  emit('update:value', to) // 通知v-model值变化
+  emit('update:value', to)
   emit('change', to)
 })
 onMounted(() => {
