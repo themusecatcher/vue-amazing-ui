@@ -15,7 +15,10 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
   plugins: [
     vue(),
-    // visualizer({ open: true }),
+    // visualizer({
+    //   file: 'stats.html', // 生成的分析图文件名，默认stats.html
+    //   open: true // 打包后自动打开分析图
+    // }),
     Components({
       resolvers: [AntDesignVueResolver()]
     })
@@ -50,7 +53,7 @@ export default defineConfig({
     rollupOptions: { // 自定义底层的Rollup打包配置
       // https://rollupjs.org/configuration-options/
       // 确保外部化处理那些你不想打包进库的依赖
-      external: ['vue', 'vue-router', 'swiper'],
+      external: ['vue', 'vue-router', 'swiper', '@vuepic/vue-datepicker'],
       output: {
         format: 'es', // 默认es，可选 'amd' 'cjs' 'es' 'iife' 'umd' 'system'
         exports: 'named', // https://rollupjs.org/configuration-options/#output-exports
@@ -58,7 +61,8 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
           'vue-router': 'VueRouter', // 引入vue-router全局变量，否则router.push将无法使用
-          'swiper': 'Swiper'
+          'swiper': 'Swiper',
+          '@vuepic/vue-datepicker': '@vuepic/VueDatepicker'
         }
       }
     },
