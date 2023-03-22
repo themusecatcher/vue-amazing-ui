@@ -97,6 +97,12 @@ const routes = [
         component: () => import('@/views/Select.vue')
       },
       {
+        path: '/slider',
+        name: 'Slider',
+        meta: { title: '滑动输入条' },
+        component: () => import('@/views/Slider.vue')
+      },
+      {
         path: '/spin',
         name: 'Spin',
         meta: { title: '加载中' },

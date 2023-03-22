@@ -18,8 +18,8 @@ function onClick (e: any):void {
 }
 </script>
 <template>
-  <a-row style="width: 100%;" :gutter="{ xs: 48, sm: 48, xl: 64}">
-    <a-col :xs="6" :xl="5">
+  <a-row style="width: 100%;">
+    <a-col :xs="5" :xl="4">
       <a-switch
         class="u-switch"
         :checked="theme === 'dark'"
@@ -28,6 +28,7 @@ function onClick (e: any):void {
         @change="changeTheme"
       />
       <a-menu
+        class="m-menus"
         v-model:selectedKeys="current"
         mode="inline"
         :theme="theme"
@@ -74,6 +75,9 @@ function onClick (e: any):void {
         <a-menu-item key="Select">
           <router-link to="/select">选择器（Select）</router-link>
         </a-menu-item>
+        <a-menu-item key="Slider">
+          <router-link to="/slider">滑动输入条（Slider）</router-link>
+        </a-menu-item>
         <a-menu-item key="Spin">
           <router-link to="/spin">加载中（Spin）</router-link>
         </a-menu-item>
@@ -101,9 +105,6 @@ function onClick (e: any):void {
         <!-- <a-menu-item key="Table">
           <router-link to="/table">分页列表</router-link>
         </a-menu-item>
-        <a-menu-item key="Lines">
-          <router-link to="/lines">Lines</router-link>
-        </a-menu-item>
         <a-menu-item key="Tree">
           <router-link to="/tree">树图</router-link>
         </a-menu-item>
@@ -123,9 +124,6 @@ function onClick (e: any):void {
         <a-menu-item key="Pdf">
           <router-link to="/pdf">pdf预览</router-link>
         </a-menu-item>
-        <a-menu-item key="Slider">
-          <router-link to="/slider">文字滚动</router-link>
-        </a-menu-item>
         <a-menu-item key="Ws">
           <router-link to="/ws">WebSocket</router-link>
         </a-menu-item> -->
@@ -142,29 +140,38 @@ function onClick (e: any):void {
         </a-sub-menu> -->
       </a-menu>
     </a-col>
-    <a-col :xs="18" :xl="19" :class="['router-view', {'content-box': !current.includes('DatePicker') }]">
-      <RouterView v-slot="{ Component }">
-        <Transition name="fade" mode="out-in">
-          <component :is="Component" />
-        </Transition>
-      </RouterView>
+    <a-col :xs="19" :xl="20">
+      <div :class="['router-view', {'content-box': !current.includes('DatePicker')}]">
+        <RouterView v-slot="{ Component }">
+          <Transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </Transition>
+        </RouterView>
+      </div>
     </a-col>
   </a-row>
 </template>
 <style lang="less" scoped>
 .u-switch {
-  text-align: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+.m-menus {
+  overflow: auto;
+  max-height: calc(100vh - 50px);
 }
 .router-view {
-  margin-top: 62px;
+  margin-top: 50px;
+  padding-left: 48px;
+  padding-right: 30px;
+  overflow: auto;
+  max-height: calc(100vh - 50px);
 }
 .content-box {
-  :deep(*) {
-    box-sizing: content-box;
+    :deep(*) {
+      box-sizing: content-box;
+    }
   }
-}
 .fade-enter-active, .fade-leave-active {
   transition: opacity .3s;
 }

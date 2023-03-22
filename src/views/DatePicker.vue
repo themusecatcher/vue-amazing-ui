@@ -95,14 +95,15 @@ watch(yearValue, (to) => {
       :max-date="new Date()"
       format="yyyy-MM-dd"
       :width="180" />
-    <h2 class="mt30 mb10">日期时间选择器（mode: date & show-time）</h2>
+    <h2 class="mt30 mb10">日期时间选择器（mode: date & show-time & enable-seconds）</h2>
     <DatePicker
       placeholder="请选择日期时间"
       v-model:date="dateValue"
       mode="date"
       format="yyyy-MM-dd HH:mm:ss"
       :width="240"
-      show-time />
+      show-time
+      enable-seconds />
     <h2 class="mt30 mb10">日期范围选择器（range）</h2>
     <DatePicker
       placeholder="请选择日期范围"
@@ -128,7 +129,7 @@ watch(yearValue, (to) => {
       show-time
       mode-height="120"
       format="HH:mm"
-      :width="160" />
+      :width="120" />
     <h2 class="mt30 mb10">时分秒选择器（mode: time & show-time & enable-seconds）</h2>
     <DatePicker
       placeholder="请选择时间"
@@ -138,7 +139,7 @@ watch(yearValue, (to) => {
       enable-seconds
       mode-height="120"
       format="HH:mm:ss"
-      :width="160" />
+      :width="150" />
     <h2 class="mt30 mb10">时分秒范围选择器（mode: time & show-time & enable-seconds）</h2>
     <DatePicker
       placeholder="请选择时间"
@@ -163,14 +164,14 @@ watch(yearValue, (to) => {
       v-model:date="monthValue"
       mode="month"
       format="yyyy-MM"
-      :width="240" />
+      :width="150" />
     <h2 class="mt30 mb10">年选择器（mode: year）</h2>
     <DatePicker
       placeholder="请选择年"
       v-model:date="yearValue"
       mode="year"
       format="yyyy"
-      :width="240" />
+      :width="120" />
   </div>
 </template>
 <style lang="less" scoped>
