@@ -15,6 +15,7 @@ import Select from './select'
 import Spin from './spin'
 import Swiper from './swiper'
 import Switch from './switch'
+import TextScroll from './textscroll'
 import Tooltip from './tooltip'
 import Video from './video'
 import Waterfall from './waterfall'
@@ -37,6 +38,7 @@ const components = [
   Spin,
   Swiper,
   Switch,
+  TextScroll,
   Tooltip,
   Video,
   Waterfall
@@ -73,6 +75,7 @@ export {
   Spin,
   Swiper,
   Switch,
+  TextScroll,
   Tooltip,
   Video,
   Waterfall

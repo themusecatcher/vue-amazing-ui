@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
@@ -82,6 +82,9 @@ function onClick (e: any):void {
         </a-menu-item>
         <a-menu-item key="Switch">
           <router-link to="/switch">开关（Switch）</router-link>
+        </a-menu-item>
+        <a-menu-item key="TextScroll">
+          <router-link to="/textscroll">文字滚动（TextScroll）</router-link>
         </a-menu-item>
         <a-menu-item key="Tooltip">
           <router-link to="/tooltip">文字提示（Tooltip）</router-link>
