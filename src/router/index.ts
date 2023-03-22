@@ -115,6 +115,12 @@ const routes = [
         component: () => import('@/views/Switch.vue')
       },
       {
+        path: '/textscroll',
+        name: 'TextScroll',
+        meta: { title: '文字滚动' },
+        component: () => import('@/views/TextScroll.vue')
+      },
+      {
         path: '/tooltip',
         name: 'Tooltip',
         meta: { title: '文字提示' },
