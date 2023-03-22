@@ -27,8 +27,8 @@ app.use(VueAmazingUI)
 
 ```vue
 <script setup lang="ts">
-import { Breadcrumb } from '@web/vue-ui'
-import '@web/vue-ui/dist/style.css'
+import { Button } from 'vue-amazing-ui'
+import 'vue-amazing-ui/dist/style.css'
 </script>
 ```
 
