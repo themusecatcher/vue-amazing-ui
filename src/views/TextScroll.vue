@@ -18,9 +18,6 @@ const sliderText = ref([
         title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
       }
     ])
-watch(sliderText, (to) => {
-  console.log('to:', to)
-})
 function onClick (value: string) { // 获取点击的标题
   console.log('value:', value)
 }
@@ -33,7 +30,6 @@ function onClick (value: string) { // 获取点击的标题
       @click="onClick"
       width="100%"
       :amount="4"
-      :key="1"
       backgroundColor="#FFF"
       :height="50" />
     <h2 class="mt30 mb10">垂直文字滚动基本使用</h2>
@@ -41,7 +37,6 @@ function onClick (value: string) { // 获取点击的标题
       :sliderText="sliderText"
       @click="onClick"
       vertical
-      :key="2"
       backgroundColor="#F6FFED"
       :gap="60"
       :interval="3000"
