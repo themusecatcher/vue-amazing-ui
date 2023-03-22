@@ -152,7 +152,7 @@ function startMove () {
 <template>
   <div v-if="!vertical" class="m-slider-horizon" @mouseenter="onStop" @mouseleave="onStart" ref="horizonRef" :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor};`">
     <a
-      :style="`will-change: transform; transform: translateX(${-left}px); line-height: ${height}px; width: ${distance - gap}px; margin-left: ${gap}px;`"
+      :style="`will-change: transform; transform: translateX(${-left}px); width: ${distance - gap}px; margin-left: ${gap}px;`"
       class="u-slide-title"
       v-for="(text, index) in textData"
       :key="index"
@@ -189,9 +189,17 @@ function startMove () {
   border-radius: 5px;
   white-space: nowrap;
   overflow: hidden;
+  text-align: center; // 水平居中
+  &:after { // 垂直居中
+    content: '';
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+  }
   .u-slide-title {
     display: inline-block;
-    font-size: 14px;
+    vertical-align: middle;
+    font-size: 16px;
     color: #333;
     font-weight: 400;
     overflow: hidden;
