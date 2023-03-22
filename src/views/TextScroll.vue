@@ -37,7 +37,7 @@ function onClick (value: string) { // 获取点击的标题
       :sliderText="sliderText"
       @click="onClick"
       vertical
-      backgroundColor="#F6FFED"
+      backgroundColor="#e6f4ff"
       :gap="60"
       :interval="3000"
       width="100%"
