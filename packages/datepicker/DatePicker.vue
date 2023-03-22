@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const date = ref(props.date)
 watch(date, (to) => {
-  console.log('s to:', to)
+  // console.log('s to:', to)
   emit('update:date', to)
 })
 const emit = defineEmits(['update:date'])
