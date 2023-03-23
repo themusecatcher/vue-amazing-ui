@@ -7,3 +7,6 @@
 
 declare module '*.js'
 declare module '*.gz'
+interface Window {
+  rafTimeout: Function
+}

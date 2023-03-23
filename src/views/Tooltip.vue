@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { rafTimeout } from '../../packages'
+
 const title = ref('')
 const content = ref('')
 
 onMounted(() => {
-  setTimeout(() => { // 模拟接口调用
+  rafTimeout(() => { // 模拟接口调用
     title.value = '《哥斯拉大战金刚》是由美国传奇影业公司出品，亚当·温佳德执导，亚历山大·斯卡斯加德、米莉·博比·布朗、丽贝卡·豪尔、凯莉·霍特尔、布莱恩·泰里·亨利、小栗旬联合主演的动作科幻片，于2021于3月26日在中国内地上映'
     content.value = '哥斯拉'
   }, 1000)

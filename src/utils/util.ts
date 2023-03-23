@@ -63,15 +63,19 @@ export function dateFormat (timestamp: number, format = 'YYYYMMDD', seq = '-', l
 export function getImageUrl (name: any) {
   return new URL(`../assets/images/${name}.jpg`, import.meta.url).href
 }
-// @ts-ignore
+// @ts-ignore 兼容性requestAnimationFrame
 export const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
-// @ts-ignore
+// @ts-ignore 兼容性cancelAnimationFrame
 export const cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame
 /*
   使用 requestAnimationFrame 模拟 setTimeout 和 setInterval
+  一共接收三个参数：
   fn: 延迟 delay ms后要执行的函数
-  delay: 延迟的毫秒数，默认值0
-  interval: 默认情况下rafTimeout等效setTimeout，如果要使用setInterval，这传入第三个参数（interval: true）
+  delay（可选）: 延迟的毫秒数，默认值0ms
+  interval（可选）: 默认情况下 rafTimeout 等效于 setTimeout 功能，如果要使用 setInterval 功能，则需传入第三个参数（interval: true）
+
+  返回值（用于取消 rafTimeout）：（object）raf: { id: [number] }
+  取消 rafTimeout 定时器：cancelRaf(raf) 或者 cancelAnimationFrame(raf.id)
 */
 export function rafTimeout (func: Function, delay = 0, interval = false) {
   // @ts-ignore
@@ -102,6 +106,12 @@ export function rafTimeout (func: Function, delay = 0, interval = false) {
   }
   return raf
 }
+// 用于取消 rafTimeout 函数
+export function cancelRaf (raf: { id: number }) {
+  if (raf && raf.id) {
+    cancelAnimationFrame(raf.id)
+  }
+}
 export const setDocumentTitle = function (title: string) {
   document.title = title
   const ua = navigator.userAgent
@@ -112,7 +122,7 @@ export const setDocumentTitle = function (title: string) {
     i.src = '/favicon.ico'
     i.style.display = 'none'
     i.onload = function () {
-      setTimeout(function () {
+      rafTimeout(function () {
         i.remove()
       }, 9)
     }

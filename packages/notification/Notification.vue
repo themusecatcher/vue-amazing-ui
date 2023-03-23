@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { rafTimeout, cancelRaf } from '../index'
 const props = defineProps({
     title: { // 消息的标题
       type: String,
@@ -42,30 +43,30 @@ const clear = computed(() => {
     return hideIndex.value.length === notificationData.value.length
   })
 watch(clear, (to, from) => { // 所有提示都消失后重置
-    if (!from && to) {
-      resetTimer.value = setTimeout(() => {
-        hideIndex.value.splice(0)
-        notificationData.value.splice(0)
-      }, 500)
-    }
-  })
+  if (!from && to) {
+    resetTimer.value = rafTimeout(() => {
+      hideIndex.value.splice(0)
+      notificationData.value.splice(0)
+    }, 500)
+  }
+})
 function onEnter (index: number) {
-  clearTimeout(hideTimers.value[index])
+  cancelRaf(hideTimers.value[index])
   hideTimers.value[index] = null
 }
 function onLeave (index: number) {
   if (props.duration) {
-    hideTimers.value[index] = setTimeout(() => {
+    hideTimers.value[index] = rafTimeout(() => {
       onClose(index)
     }, props.duration)
   }
 }
 function show () {
-  clearTimeout(resetTimer.value)
+  cancelRaf(resetTimer.value)
   hideTimers.value.push(null)
   const index = notificationData.value.length - 1
   if (props.duration) {
-    hideTimers.value[index] = setTimeout(() => {
+    hideTimers.value[index] = rafTimeout(() => {
       onClose(index)
     }, props.duration)
   }

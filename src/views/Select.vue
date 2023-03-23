@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
+import { rafTimeout } from '../../packages'
 
 const options = ref([
       {
@@ -42,7 +43,7 @@ watch(selectedValue, (to) => {
   console.log('selectedValue:', to)
 })
 onMounted(() => {
-  setTimeout(() => { // 模拟接口调用
+  rafTimeout(() => { // 模拟接口调用
     selectedValue.value = 3
   }, 1000)
 })

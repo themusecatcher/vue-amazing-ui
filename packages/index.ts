@@ -1,4 +1,4 @@
-import { requestAnimationFrame, cancelAnimationFrame, rafTimeout } from '@/utils/util'
+import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf } from '@/utils/util'
 import type { App } from 'vue'
 import Breadcrumb from './breadcrumb'
 import Button from './button'
@@ -64,7 +64,8 @@ const install = (app: App): void => {
 export {
   requestAnimationFrame,
   cancelAnimationFrame,
-  rafTimeout
+  rafTimeout,
+  cancelRaf
 }
 export {
   Breadcrumb,

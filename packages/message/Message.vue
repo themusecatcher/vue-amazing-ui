@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
+import { rafTimeout, cancelRaf } from '../index'
 const props = defineProps({
     duration: { // 自动关闭的延时,单位ms
       type: Number,
@@ -30,20 +31,20 @@ const clear = computed(() => { // 所有提示是否已经全部变为false
 })
 watch(clear, (to, from) => { // 所有提示都消失后重置
   if (!from && to) {
-    resetTimer.value = setTimeout(() => {
+    resetTimer.value = rafTimeout(() => {
       messageContent.value.splice(0)
       showMessage.value.splice(0)
     }, 500)
   }
 })
 function onEnter (index: number) {
-  clearTimeout(hideTimers.value[index])
+  cancelRaf(hideTimers.value[index])
 }
 function  onLeave (index: number) {
   onHideMessage(index)
 }
 function show () {
-  clearTimeout(resetTimer.value)
+  cancelRaf(resetTimer.value)
   const index = messageContent.value.length - 1
   console.log('index:', index)
   nextTick(() => { // 待异步更新队列之后显示提示框，否则过渡效果会异常
@@ -87,7 +88,7 @@ defineExpose({
 })
 const emit = defineEmits(['close'])
 function onHideMessage (index: number) {
-  hideTimers.value[index] = setTimeout(() => {
+  hideTimers.value[index] = rafTimeout(() => {
     showMessage.value[index] = false
     emit('close')
   }, props.duration)
