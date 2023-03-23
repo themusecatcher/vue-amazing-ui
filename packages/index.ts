@@ -11,6 +11,7 @@ import Message from './message'
 import Modal from './modal'
 import Notification from './notification'
 import Pagination from './pagination'
+import Progress from './progress'
 import Radio from './radio'
 import Select from './select'
 import Slider from './slider'
@@ -35,6 +36,7 @@ const components = [
   Modal,
   Notification,
   Pagination,
+  Progress,
   Radio,
   Select,
   Slider,
@@ -79,6 +81,7 @@ export {
   Modal,
   Notification,
   Pagination,
+  Progress,
   Radio,
   Select,
   Slider,

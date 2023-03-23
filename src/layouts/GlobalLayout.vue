@@ -69,6 +69,9 @@ function onClick (e: any):void {
         <a-menu-item key="Pagination">
           <router-link to="/pagination">分页器（Pagination）</router-link>
         </a-menu-item>
+        <a-menu-item key="Progress">
+          <router-link to="/progress">进度条（Progress）</router-link>
+        </a-menu-item>
         <a-menu-item key="Radio">
           <router-link to="/radio">单选框（Radio）</router-link>
         </a-menu-item>
