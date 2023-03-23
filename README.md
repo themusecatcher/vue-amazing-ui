@@ -47,6 +47,7 @@ Message | 全局提示
 Modal | 信息提示
 Notification | 通知提醒框
 Pagination | 分页器
+Progress | 进度条
 Radio | 单选框
 Select | 选择器
 Slider | 滑动输入条
