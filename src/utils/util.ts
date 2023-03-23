@@ -63,6 +63,10 @@ export function dateFormat (timestamp: number, format = 'YYYYMMDD', seq = '-', l
 export function getImageUrl (name: any) {
   return new URL(`../assets/images/${name}.jpg`, import.meta.url).href
 }
+// @ts-ignore
+export const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
+// @ts-ignore
+export const cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame
 /*
   使用 requestAnimationFrame 模拟 setTimeout 和 setInterval
   fn: 延迟 delay ms后要执行的函数
@@ -70,7 +74,9 @@ export function getImageUrl (name: any) {
   interval: 默认情况下rafTimeout等效setTimeout，如果要使用setInterval，这传入第三个参数（interval: true）
 */
 export function rafTimeout (func: Function, delay = 0, interval = false) {
-  let start: any = null
+  // @ts-ignore
+  const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
+  var start: any = null
   function timeElapse (timestamp: number) {
     /*
       timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame() 开始去执行回调函数的时刻
