@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 const sliderText = ref([
       {
         title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
