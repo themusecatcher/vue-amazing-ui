@@ -1,4 +1,19 @@
 <script setup lang="ts">
+import { ref, type Ref } from 'vue'
+import { rafTimeout } from '@/utils/util'
+
+const n = ref(0)
+function test (n: Ref) {
+  n.value++
+  console.log('n:', n.value)
+  console.log('rafId:', raf.id)
+}
+const raf = rafTimeout(() => {
+  test(n)
+}, 1000, true)
+rafTimeout(() => {
+  cancelAnimationFrame(raf.id)
+}, 10000)
 
 </script>
 <template>
