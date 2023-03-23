@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 const props = defineProps({
     sliderText: { // 滚动文字数组
       type: Array<any>,
@@ -53,13 +53,14 @@ const step = computed(() => { // 移动参数（120fps: 0.5, 60fps: 1）
     return 60 / fps.value
   }
 })
-function getFPS (timestamp: number) {
+function getFPS (timestamp: number) { // 获取屏幕刷新率
   // 单位ms，用1000ms/两个时间的间隔≈刷新频率fps
   // console.log('timestamp:', timestamp)
-  if (fpsRaf.value === 2) {
+  // console.log('fpsRaf:', fpsRaf.value)
+  if (fpsRaf.value === 5) {
     start.value = timestamp
   }
-  if (fpsRaf.value === 3) {
+  if (fpsRaf.value === 6) {
     end.value = timestamp
     // 计算屏幕刷新率
     fps.value = Math.floor(1000 / (end.value - start.value))
@@ -67,7 +68,7 @@ function getFPS (timestamp: number) {
     console.log('step:', step.value)
   }
   fpsRaf.value = requestAnimationFrame(getFPS)
-  if (fpsRaf.value > 3) {
+  if (fpsRaf.value > 6) {
     cancelAnimationFrame(fpsRaf.value)
     distance.value = getDistance() // 获取每列文字宽度
     onStart() // 开始滚动
@@ -124,7 +125,6 @@ function onStop () {
   if (props.vertical) {
     if (len.value > 1) {
       clearTimeout(timer.value) // 暂停滚动
-      // timer.value = null
     }
   } else {
     cancelAnimationFrame(moveRaf.value) // 暂停动画
