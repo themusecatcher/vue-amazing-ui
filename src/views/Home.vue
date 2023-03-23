@@ -3,7 +3,6 @@ import { ref, type Ref } from 'vue'
 import { rafTimeout, cancelAnimationFrame } from '@/utils/util'
 
 const n = ref(0)
-console.log('n:', n.value)
 function test (n: Ref) {
   n.value++
   console.log('n:', n.value)
@@ -15,7 +14,7 @@ const raf = rafTimeout(() => {
 
 rafTimeout(() => {
   cancelAnimationFrame(raf.id)
-}, 5000)
+}, 3000)
 
 </script>
 <template>

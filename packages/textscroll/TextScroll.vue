@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { requestAnimationFrame, cancelAnimationFrame, rafTimeout } from '@/utils/util'
+import { requestAnimationFrame, cancelAnimationFrame, rafTimeout } from '../index'
 
 const props = defineProps({
     sliderText: { // 滚动文字数组
