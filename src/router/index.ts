@@ -85,6 +85,12 @@ const routes = [
         component: () => import('@/views/Pagination.vue')
       },
       {
+        path: '/progress',
+        name: 'Progress',
+        meta: { title: '进度条' },
+        component: () => import('@/views/Progress.vue')
+      },
+      {
         path: '/radio',
         name: 'Radio',
         meta: { title: '单选框' },
