@@ -67,13 +67,11 @@ const backgroundColor = computed(() => {
       background: #f5f5f5;
       border-radius: 100px;
       .u-progress-bg {
-        // background: @themeColor;
-        // background: linear-gradient(to right, rgb(16, 142, 233), rgb(135, 208, 104));
         border-radius: 100px;
-        transition: all .3s cubic-bezier(.08,.82,.17,1);
+        transition: all .3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
       }
       .u-success-bg {
-        background: #52C41A;
+        background: #52C41A !important;
       }
     }
   }
