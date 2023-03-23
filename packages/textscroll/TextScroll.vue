@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { rafTimeout } from '@/utils/util'
+
 const props = defineProps({
     sliderText: { // 滚动文字数组
       type: Array<any>,
@@ -100,12 +102,6 @@ const len = computed(() => {
 onMounted(() => {
   if (props.vertical) {
     onStart() // 启动垂直滚动
-    window.onfocus = () => { // 页面激活
-      onStart()
-    }
-    window.onblur = () => { // 页面失焦
-      onStop()
-    }
   } else {
     fpsRaf.value = requestAnimationFrame(getFPS)
   }
@@ -124,7 +120,7 @@ function onStart () {
 function onStop () {
   if (props.vertical) {
     if (len.value > 1) {
-      clearTimeout(timer.value) // 暂停滚动
+      cancelAnimationFrame(timer.id)
     }
   } else {
     cancelAnimationFrame(moveRaf.value) // 暂停动画
@@ -137,9 +133,10 @@ function onClick (title: string) { // 通知父组件点击的标题
 
 // vertical
 const actIndex = ref(0)
-const timer = ref()
+var timer: any = null
+
 function startMove () {
-  timer.value = setTimeout(() => {
+  timer = rafTimeout(() => {
     if (actIndex.value === len.value - 1) {
       actIndex.value = 0
     } else {
