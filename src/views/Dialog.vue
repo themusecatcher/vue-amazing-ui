@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { rafTimeout } from '../../packages'
 
 const center = ref(true)
 const footer = ref(false)
@@ -37,7 +38,7 @@ function onCancel () { // “取消”按钮回调
 }
 function onConfirm () { // “确定”,“知道了”按钮回调
   loading.value = true // 开启加载状态
-  setTimeout(() => {
+  rafTimeout(() => {
     visible.value = false
     loading.value = false
   }, 500)

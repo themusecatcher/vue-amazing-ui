@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-
+import { rafTimeout, cancelRaf } from '../index'
 const props = defineProps({
     width: { // 滑动输入条在页面中的宽度
       type: Number,
@@ -65,12 +65,12 @@ function getPosition () {
 }
 function onClickPoint (e: any) { // 点击滑动条，移动滑块
   if (transition.value) {
-    clearTimeout(timer.value)
+    cancelRaf(timer.value)
     timer.value = null
   } else {
     transition.value = true
   }
-  timer.value = setTimeout(() => {
+  timer.value = rafTimeout(() => {
     transition.value = false
   }, 300)
   // 元素是absolute时，e.layerX是相对于自身元素左上角的水平位置

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUpdated } from 'vue'
+import { rafTimeout, cancelRaf } from '../index'
 defineProps({ // 运行时声明
   maxWidth: { // 提示框内容最大宽度
     type: Number,
@@ -38,11 +39,11 @@ function getPosition (): void {
   left.value = targetLeft - (titleWidth - targetWidth) / 2
 }
 function onShow (): void {
-  clearTimeout(hideTimer.value)
+  cancelRaf(hideTimer.value)
   visible.value = true
 }
 function onHide (): void {
-  hideTimer.value = setTimeout(() => {
+  hideTimer.value = rafTimeout(() => {
     visible.value = false
   }, 100)
 }

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { setDocumentTitle, domTitle } from '@/utils/util'
+import { setDocumentTitle, domTitle, rafTimeout } from '@/utils/util'
 import GlobalLayout from '@/layouts/GlobalLayout.vue'
 
 const routes = [
@@ -279,7 +279,7 @@ const router = createRouter({
   routes, // `routes: routes` 的缩写
   scrollBehavior(to, from, savedPosition) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
+      rafTimeout(() => {
         resolve({ left: 0, top: 0, behavior: 'smooth' })
       }, 300)
     })

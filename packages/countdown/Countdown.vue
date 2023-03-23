@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { Ref } from 'vue'
+import { rafTimeout } from '../index'
+
 interface Props {
   countdown: number, // 倒计时数值（countdown），必传，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(s)
   title?: string, // 倒计时标题 string | v-slot
@@ -71,8 +73,8 @@ const showTime = computed(() => { // 展示的倒计时
   return timeFormat(restTime.value)
 })
 const emit = defineEmits(['finish'])
-function CountDown (restTime: Ref):void {
-  setTimeout(() => {
+function CountDown (restTime: Ref): void {
+  rafTimeout(() => {
     restTime.value--
     if (restTime.value > 0) { // js中Boolean(非0)都是true
       CountDown(restTime)
