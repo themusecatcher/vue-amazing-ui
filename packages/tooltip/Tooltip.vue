@@ -98,7 +98,7 @@ function onHide (): void {
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    color: #666666;
+    color: #333;
   }
   .u-arrow {
     position: absolute;
