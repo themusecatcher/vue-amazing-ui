@@ -154,7 +154,7 @@ function onConfirm () {
           position: absolute;
           width: 8px;
           height: 8px;
-          background: #1890ff;
+          background: @themeColor;
           border-radius: 50%;
           opacity: .3;
           animation: spinMove 1s linear infinite alternate;
@@ -260,12 +260,12 @@ function onConfirm () {
             cursor: pointer;
             transition: all .3s cubic-bezier(.645,.045,.355,1);
             &:hover {
-              color: #40a9ff;
-              border-color: #40a9ff;
+              color: fade(@themeColor, 80%);
+              border-color: fade(@themeColor, 80%);
             }
             &:focus {
-              color: #096dd9;
-              border-color: #096dd9;
+              color: shade(@themeColor, 12%);
+              border-color: shade(@themeColor, 12%);
             }
           }
           .u-confirm {
@@ -280,15 +280,15 @@ function onConfirm () {
             cursor: pointer;
           }
           .primary {
-            background: #1890ff;
-            border: 1px solid #1890ff;
+            background: @themeColor;
+            border: 1px solid @themeColor;
             &:hover {
-              background: #40a9ff;
-              border-color: #40a9ff;
+              background: fade(@themeColor, 80%);
+              border-color: fade(@themeColor, 80%);
             }
             &:focus {
-              background: #096dd9;
-              border-color: #096dd9;
+              background: shade(@themeColor, 12%);
+              border-color: shade(@themeColor, 12%);
             }
           }
           .delete {

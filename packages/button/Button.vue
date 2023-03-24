@@ -113,8 +113,8 @@ const isRoute = computed(() => {
       border-color: fade(@themeColor, 80%);
     }
     &:active {
-      color: shade(@themeColor, 15%);
-      border-color: shade(@themeColor, 15%);
+      color: shade(@themeColor, 12%);
+      border-color: shade(@themeColor, 12%);
     }
   }
   .reverse {
@@ -125,8 +125,8 @@ const isRoute = computed(() => {
     }
     &:active {
       color: #fff;
-      background-color: shade(@themeColor, 15%);
-      border-color: shade(@themeColor, 15%);
+      background-color: shade(@themeColor, 12%);
+      border-color: shade(@themeColor, 12%);
     }
   }
   .small {
