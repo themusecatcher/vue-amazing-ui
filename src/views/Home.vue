@@ -28,14 +28,16 @@ rafTimeout(() => {
       <li class="u-tip mb10">（yarn add vue-amazing-ui）安装组件库后，按需引入部分组件</li>
       <li class="u-tip mb10"> git clone<a href="https://github.com/themusecatcher/vue-amazing-ui" target="_blank">组件库项目</a>到本地后，从packages下单独拷贝某个单文件组件（SFC）到需要组件的项目内使用。</li>
     </ul>
-    <h2 class="mt30">除此以外，Vue Amazing UI 还提供了四个常用 API ：</h2>
+    <h2 class="mt30">除此以外，Vue Amazing UI 还提供了六个常用 API ：</h2>
     <ul class="m-list">
       <li class="u-tip mb10 mt10">requestAnimationFrame: 针对不同浏览器进行兼容处理！</li>
       <li class="u-tip mb10">cancelAnimationFrame: 针对不同浏览器进行兼容处理！</li>
       <li class="u-tip mb10">rafTimeout: 使用 requestAnimationFrame 实现的定时器函数，等效替代（setTimeout 和 setInterval）！</li>
       <li class="u-tip mb10">cancelRaf: 用于取消 rafTimeout 函数！</li>
+      <li class="u-tip mb10">throttle: 使用 rafTimeout 实现的节流函数！</li>
+      <li class="u-tip mb10">debounce: 使用 rafTimeout 实现的防抖函数！</li>
     </ul>
-    <p class="u-tip">以上四个 API 使用时只需 import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf } from 'vue-amazing-ui'</p>
+    <p class="u-tip">以上六个 API 使用时只需 import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce } from 'vue-amazing-ui'</p>
   </div>
 </template>
 <style lang="less" scoped>
