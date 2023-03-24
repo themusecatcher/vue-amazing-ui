@@ -21,7 +21,7 @@ const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const contentRef = ref() // 声明一个同名的模板引用
 const titleRef = ref() // 声明一个同名的模板引用
-const duration = ref(0)
+const transition = ref(false)
 
 onMounted(() => {
   getPosition()
@@ -36,17 +36,17 @@ function getPosition () {
   const targetWidth = rect.width
   const titleWidth = titleRef.value.offsetWidth // 提示文本宽度
   const titleHeight = titleRef.value.offsetHeight // 提示文本高度
-  duration.value = 0
   top.value = targetTop - titleHeight
   left.value = targetLeft - (titleWidth - targetWidth) / 2
-  nextTick()
 }
-async function onShow () {
-  await getPosition()
-  duration.value = 0.3
-  cancelRaf(hideTimer.value)
-  visible.value = true
-  
+function onShow () {
+  transition.value = false
+  getPosition()
+  nextTick(() => {
+    transition.value = true
+    cancelRaf(hideTimer.value)
+    visible.value = true
+  })
 }
 function onHide (): void {
   hideTimer.value = rafTimeout(() => {
@@ -59,10 +59,10 @@ function onHide (): void {
     <div
       ref="titleRef"
       class="m-title"
-      :class="{'show-tip': visible}"
+      :class="{'show-tip': visible, 'transition': transition}"
       @mouseenter="onShow"
       @mouseleave="onHide"
-      :style="`max-width: ${maxWidth}px; top: ${top}px; left: ${left}px; transition-duration: ${duration}s;`">
+      :style="`max-width: ${maxWidth}px; top: ${top}px; left: ${left}px;`">
       <div class="u-title">
         <slot name="title">{{ title }}</slot>
       </div>
@@ -86,7 +86,6 @@ function onHide (): void {
   transform: scale(0.8); // 缩放变换
   -ms-transform: scale(0.8); /* IE 9 */
   -webkit-transform: scale(0.8); /* Safari and Chrome */
-  transition-property: all;
   .u-title {
     padding: 10px;
     margin: 0 auto;
@@ -112,6 +111,9 @@ function onHide (): void {
     z-index: 0;
     box-shadow: 3px 3px 7px fade(@themeColor, 36%);
   }
+}
+.transition {
+  transition: all .3s;
 }
 .show-tip {
   pointer-events: auto;
