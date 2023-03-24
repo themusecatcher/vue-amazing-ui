@@ -140,7 +140,7 @@ watch(yearValue, (to) => {
       mode-height="120"
       format="HH:mm:ss"
       :width="150" />
-    <h2 class="mt30 mb10">时分秒范围选择器（mode: time & show-time & enable-seconds）</h2>
+    <h2 class="mt30 mb10">时分秒范围选择器（mode: time & range & show-time & enable-seconds）</h2>
     <DatePicker
       placeholder="请选择时间"
       v-model:date="timeRangeValue"
