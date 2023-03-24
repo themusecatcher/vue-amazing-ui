@@ -74,7 +74,7 @@ function onHide (): void {
 .m-title {
   position: fixed;
   z-index: 999;
-  padding-bottom: 6px;
+  padding-bottom: 12px;
   pointer-events: none;
   opacity: 0;
   transform: scale(0.8); // 缩放变换
@@ -87,20 +87,24 @@ function onHide (): void {
     word-break: break-all;
     word-wrap: break-word;
     background: #FFFFFF;
-    box-shadow: 0px 2px 8px 0px fade(@themeColor, 20%);
-    border-radius: 6px;
+    box-shadow: 0px 0px 7px 1px fade(@themeColor, 36%);
+    border-radius: 5px;
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
     color: #666666;
   }
   .u-arrow {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
     margin: 0 auto;
-    width: 0;
-    height: 0;
-    border-left: 3px solid transparent;
-    border-right: 3px solid transparent;
-    border-top: 4px solid #FFF;
+    width: 10px;
+    height: 10px;
+    background: #FFF;
+    border-radius: 0 0 3px 0;
+    z-index: 0;
+    box-shadow: 3px 3px 7px fade(@themeColor, 36%);
   }
 }
 .show-tip {

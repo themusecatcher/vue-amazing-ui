@@ -157,7 +157,7 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
   .u-slider-track { // 蓝色已选择滑动条背景色
     position: absolute;
     z-index: 99;
-    background: #91d5ff;
+    background: lighten(fade(@themeColor, 54%), 10%);
     border-radius: 4px;
     height: 4px;
     cursor: pointer;
@@ -182,7 +182,7 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
     height: 12px;
     top: -6px;
     background: #fff;
-    border: 2px solid #91d5ff;
+    border: 2px solid lighten(fade(@themeColor, 54%), 10%);
     border-radius: 50%;
     cursor: pointer;
     transition: border-color .3s,box-shadow .6s,transform .3s cubic-bezier(.18,.89,.32,1.28);
