@@ -51,8 +51,8 @@ Progress | 进度条
 Radio | 单选框
 Select | 选择器
 Slider | 滑动输入条
+Swiper | 触摸滑动插件  
 Spin | 加载中
-Swiper | 触摸滑动插件
 Switch | 开关
 TextScroll | 文字滚动
 Tooltip | 文字提示
