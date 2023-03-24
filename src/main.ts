@@ -4,7 +4,7 @@ import router from './router'
 import './assets/less/global.less'
 
 import VueAmazingUI from '../packages'
-// import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf } from '../packages'
+// import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce } from '../packages'
 // import VueAmazingUI from '../dist/vue-amazing-ui.js'
 // import '../dist/style.css'
 // import { Breadcrumb } from '../dist/vue-amazing-ui.js'

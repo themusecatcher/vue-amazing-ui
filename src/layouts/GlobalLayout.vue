@@ -168,7 +168,7 @@ function onClick (e: any):void {
   padding-left: 48px;
   padding-right: 30px;
   overflow: auto;
-  height: calc(100vh - 50px);
+  min-height: calc(100vh - 50px);
 }
 .content-box {
     :deep(*), :deep(:before), :deep(:after) {

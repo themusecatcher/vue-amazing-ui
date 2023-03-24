@@ -112,6 +112,30 @@ export function cancelRaf (raf: { id: number }) {
     cancelAnimationFrame(raf.id)
   }
 }
+// 节流函数throttle
+export function throttle (fn: Function, delay = 300) {
+  var valid = true
+  return function () {
+    if (valid) {
+      valid = false // 将函数置为无效
+      rafTimeout(() => {
+        fn()
+        valid = true
+      }, delay)
+    }
+    return false // valid为false时，函数不执行
+  }
+}
+// 防抖函数debounce
+export function debounce (fn: Function, delay = 300) {
+  let timer: any = null //借助闭包
+  return function () {
+    if (timer) {
+      cancelRaf(timer)
+    }
+    timer = rafTimeout(fn, delay)
+  }
+}
 export const setDocumentTitle = function (title: string) {
   document.title = title
   const ua = navigator.userAgent
