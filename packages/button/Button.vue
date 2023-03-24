@@ -59,7 +59,6 @@ const isRoute = computed(() => {
   </span>
 </template>
 <style lang="less" scoped>
-@danger: #ff4d4f;
 .m-button {
   display: inline-block;
   .u-button {
@@ -100,8 +99,8 @@ const isRoute = computed(() => {
     text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
     box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
     &:hover {
-      background-color: #ff7875;
-      border-color: #ff7875;
+      background-color: fade(@danger, 80%);
+      border-color: fade(@danger, 80%);
     }
     &:active {
       background-color: #d9363e;
@@ -110,24 +109,24 @@ const isRoute = computed(() => {
   }
   .fade {
     &:hover {
-      color: #40a9ff;
-      border-color: #40a9ff;
+      color: fade(@themeColor, 80%);
+      border-color: fade(@themeColor, 80%);
     }
     &:active {
-      color: #096dd9;
-      border-color: #096dd9;
+      color: shade(@themeColor, 15%);
+      border-color: shade(@themeColor, 15%);
     }
   }
   .reverse {
     &:hover {
       color: #fff;
-      background-color: #40a9ff;
-      border-color: #40a9ff;
+      background-color: fade(@themeColor, 80%);
+      border-color: fade(@themeColor, 80%);
     }
     &:active {
       color: #fff;
-      background-color: #096dd9;
-      border-color: #096dd9;
+      background-color: shade(@themeColor, 15%);
+      border-color: shade(@themeColor, 15%);
     }
   }
   .small {
