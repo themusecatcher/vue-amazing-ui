@@ -61,7 +61,7 @@ function onChange (value: any) {
 </template>
 <style lang="less" scoped>
 .border-box {
-  :deep(*) {
+  :deep(*), :deep(:before), :deep(:after) {
     box-sizing: border-box;
   }
 }

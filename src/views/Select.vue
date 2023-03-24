@@ -92,7 +92,7 @@ function onChange (value: string|number, label: string,  index: number) {
 </template>
 <style lang="less" scoped>
 .border-box {
-  :deep(*) {
+  :deep(*), :deep(:before), :deep(:after) {
     box-sizing: border-box;
   }
 }

@@ -109,7 +109,7 @@ function onAntChange (value: Array<number|string>, selectedOptions: any) {
 </template>
 <style lang="less" scoped>
 .border-box {
-  :deep(*) {
+  :deep(*), :deep(:before), :deep(:after) {
     box-sizing: border-box;
   }
 }
