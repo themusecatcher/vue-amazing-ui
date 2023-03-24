@@ -117,9 +117,8 @@ function onCheckAll () { // 全选切换
         position: absolute;
         top: 50%;
         left: 21.5%;
-        display: table;
-        width: 5.71428571px;
-        height: 9.14285714px;
+        width: 3.71428571px;
+        height: 7.14285714px;
         border: 2px solid #fff;
         border-top: 0;
         border-left: 0;
@@ -134,7 +133,6 @@ function onCheckAll () { // 全选切换
       border-color: @themeColor;
       &:after {
         position: absolute;
-        display: table;
         border: 2px solid #fff;
         border-top: 0;
         border-left: 0;
@@ -150,7 +148,7 @@ function onCheckAll () { // 全选切换
         left: 50%;
         width: 8px;
         height: 8px;
-        background-color: #1890ff;
+        background-color: @themeColor;
         border: 0;
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;

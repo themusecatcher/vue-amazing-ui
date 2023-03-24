@@ -171,7 +171,7 @@ function onClick (e: any):void {
   max-height: calc(100vh - 50px);
 }
 .content-box {
-    :deep(*) {
+    :deep(*), :deep(:before), :deep(:after) {
       box-sizing: content-box;
     }
   }

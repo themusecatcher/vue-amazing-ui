@@ -79,6 +79,7 @@ watch(checkAll, (to) => {
       v-model:checked="checkAll">
       Check All
     </Checkbox>
+    <br/>
     <Checkbox
       :options="options"
       :gap="16"
@@ -104,7 +105,7 @@ watch(checkAll, (to) => {
 <style lang="less" scoped>
 .border-box {
   margin-bottom: 10px;
-  :deep(*) {
+  :deep(*), :deep(:before), :deep(:after) {
     box-sizing: border-box;
   }
 }
