@@ -274,7 +274,7 @@ function changePage (pageNum: number): boolean | void {
       }
       &:focus {
         border-color: @themeColor;
-        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        box-shadow: 0 0 0 2px fade(@themeColor, 20%);
       }
     }
   }

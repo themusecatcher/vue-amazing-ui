@@ -161,14 +161,14 @@ function onClick (e: any):void {
 }
 .m-menus {
   overflow: auto;
-  max-height: calc(100vh - 50px);
+  height: calc(100vh - 50px);
 }
 .router-view {
   margin-top: 50px;
   padding-left: 48px;
   padding-right: 30px;
   overflow: auto;
-  max-height: calc(100vh - 50px);
+  height: calc(100vh - 50px);
 }
 .content-box {
     :deep(*), :deep(:before), :deep(:after) {

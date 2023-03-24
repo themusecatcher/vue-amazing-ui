@@ -87,7 +87,7 @@ function onHide (): void {
     word-break: break-all;
     word-wrap: break-word;
     background: #FFFFFF;
-    box-shadow: 0px 2px 8px 0px rgba(0,121,221,0.3000);
+    box-shadow: 0px 2px 8px 0px fade(@themeColor, 20%);
     border-radius: 6px;
     font-weight: 400;
     font-size: 14px;

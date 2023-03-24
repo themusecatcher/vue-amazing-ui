@@ -188,7 +188,7 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
     transition: border-color .3s,box-shadow .6s,transform .3s cubic-bezier(.18,.89,.32,1.28);
     &:focus {
       border-color: @themeColor;
-      box-shadow: 0 0 0 5px rgba(24, 144, 255, 0.2);
+      box-shadow: 0 0 0 5px fade(@themeColor, 20%);
     }
     &:hover {
       border-color: @themeColor;

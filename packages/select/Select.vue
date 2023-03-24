@@ -86,13 +86,13 @@ function onBlur () {
 }
 function onInputEnter () {
   // console.log('input enter')
-  if (props.allowClear) {
+  if (props.allowClear && selectedName.value) {
     showClose.value = true
   }
 }
 function onInputLeave () {
   // console.log('input leave')
-  if (props.allowClear) {
+  if (props.allowClear && showClose.value) {
     showClose.value = false
   }
 }
@@ -114,6 +114,7 @@ function openSelect () {
   }
 }
 function onClear () {
+  showClose.value = false
   selectedName.value = null
   hoverValue.value = null
 }
@@ -142,10 +143,8 @@ function onChange (value: string|number, label: string, index: number) { // 选�
         :style="`line-height: ${height - 2}px;width: ${width - 37}px; height: ${height - 2}px;`"
         :title="selectedName"
       >{{ selectedName || placeholder }}</div>
-      <TransitionGroup name="fade-svg" tag="div">
-        <svg @click="openSelect" key="1" v-if="!showClose" :class="['triangle', {'rotate': showOptions}]" viewBox="64 64 896 896" data-icon="down" aria-hidden="true" focusable="false"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
-        <svg @click.stop="onClear" key="2" v-else class="close" focusable="false" data-icon="close-circle" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
-      </TransitionGroup>
+      <svg :class="['triangle', {'rotate': showOptions, 'show': !showClose}]" viewBox="64 64 896 896" data-icon="down" aria-hidden="true" focusable="false"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
+      <svg @click.stop="onClear" :class="['close', {'show': showClose}]" focusable="false" data-icon="close-circle" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
     </div>
     <Transition name="fade">
       <div
@@ -173,12 +172,6 @@ function onChange (value: string|number, label: string, index: number) { // 选�
   font-size: 14px;
   font-weight: 400;
   color: rgba(0,0,0,.65);
-}
-.fade-svg-enter-active, .fade-svg-leave-active {
-  transition: opacity .3s;
-}
-.fade-svg-enter-from, .fade-svg-leave-to {
-  opacity: 0;
 }
 .fade-enter-active, .fade-leave-active {
   transform: scaleY(1);
@@ -216,32 +209,40 @@ function onChange (value: string|number, label: string, index: number) { // 选�
   }
   .triangle {
     position: absolute;
-    top: 50%;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
     right: 12px;
     width: 12px;
     height: 12px;
     fill: rgba(0,0,0,.25);
-    transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
-    transition: transform 0.3s ease-in-out;
+    opacity: 0;
     pointer-events: none;
+    transition: all 0.3s ease-in-out;
   }
   .rotate {
-    transform: translateY(-50%) rotate(180deg);
-    -webkit-transform: translateY(-50%) rotate(180deg);
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
   }
   .close {
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
     position: absolute;
-    top: 50%;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
     right: 12px;
     width: 12px;
     height: 12px;
     fill: rgba(140, 140, 140, 0.6);
-    transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
     &:hover {
       fill: rgba(100, 100, 100,.8);
     }
+  }
+  .show {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 .hover { // 悬浮时样式
@@ -251,7 +252,7 @@ function onChange (value: string|number, label: string, index: number) { // 选�
 }
 .focus { // 激活时样式
   border-color: @themeColor;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 20%);
+  box-shadow: 0 0 0 2px fade(@themeColor, 20%);
 }
 .disabled { // 下拉禁用样式
   color: rgba(0,0,0,.25);
@@ -284,7 +285,8 @@ function onChange (value: string|number, label: string, index: number) { // 选�
     background: #fafafa;
   }
   .option-hover { // 悬浮时的下拉项样式
-    background: #e6f7ff;
+    // background: #e6f7ff;
+    background: lighten(@themeColor, 40%);
   }
   .option-disabled { // 禁用某个下拉选项时的样式
     color: rgba(0,0,0,.25);
