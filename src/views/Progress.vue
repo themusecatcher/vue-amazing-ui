@@ -52,6 +52,7 @@ console.log(Math.PI)
       type="circle" />
     <h2 class="mt30 mb10">Ant Design Vue 进度圈</h2>
     <a-progress
+      class="border-box"
       :width="120"
       :percent="percent"
       :strokeWidth="12"
@@ -59,5 +60,9 @@ console.log(Math.PI)
   </div>
 </template>
 <style lang="less" scoped>
-
+.border-box {
+  :deep(*) {
+    box-sizing: border-box;
+  }
+}
 </style>
