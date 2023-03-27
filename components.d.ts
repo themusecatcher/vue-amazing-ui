@@ -17,6 +17,7 @@ declare module '@vue/runtime-core' {
     ADivider: typeof import('ant-design-vue/es')['Divider']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
+    AProgress: typeof import('ant-design-vue/es')['Progress']
     ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
     ARow: typeof import('ant-design-vue/es')['Row']
     ASelect: typeof import('ant-design-vue/es')['Select']

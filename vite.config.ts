@@ -36,7 +36,8 @@ export default defineConfig({
           // `themeColor` is global variables fields name
           themeColor: '#1890FF',
           primary: '#1890FF',
-          danger: '#ff4d4f'
+          danger: '#ff4d4f',
+          success: '#52C41A'
         },
         javascriptEnabled: true
       },
