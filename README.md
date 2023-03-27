@@ -54,6 +54,7 @@ Slider | 滑动输入条
 Swiper | 触摸滑动插件  
 Spin | 加载中
 Switch | 开关
+Table | 表格
 TextScroll | 文字滚动
 Tooltip | 文字提示
 Video | 播放器
