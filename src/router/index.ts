@@ -127,6 +127,12 @@ const routes = [
         component: () => import('@/views/Switch.vue')
       },
       {
+        path: '/table',
+        name: 'Table',
+        meta: { title: '表格' },
+        component: () => import('@/views/Table.vue')
+      },
+      {
         path: '/textscroll',
         name: 'TextScroll',
         meta: { title: '文字滚动' },

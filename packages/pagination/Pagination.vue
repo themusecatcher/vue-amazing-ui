@@ -190,7 +190,7 @@ function changePage (pageNum: number): boolean | void {
     display: inline-block;
     user-select: none; // 禁止选取文本
     border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
     transition: all .3s;
     &:hover {
@@ -264,7 +264,7 @@ function changePage (pageNum: number): boolean | void {
       padding: 5px 11px;
       margin: 0 8px;
       border: 1px solid #d9d9d9;
-      border-radius: 4px;
+      border-radius: 5px;
       background: transparent;
       text-align: left;
       outline: none;

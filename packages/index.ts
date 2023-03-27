@@ -18,6 +18,7 @@ import Slider from './slider'
 import Spin from './spin'
 import Swiper from './swiper'
 import Switch from './switch'
+import Table from './table'
 import TextScroll from './textscroll'
 import Tooltip from './tooltip'
 import Video from './video'
@@ -43,6 +44,7 @@ const components = [
   Spin,
   Swiper,
   Switch,
+  Table,
   TextScroll,
   Tooltip,
   Video,
@@ -90,6 +92,7 @@ export {
   Spin,
   Swiper,
   Switch,
+  Table,
   TextScroll,
   Tooltip,
   Video,
