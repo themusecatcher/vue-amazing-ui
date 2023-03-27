@@ -108,9 +108,6 @@ function onHideMessage (index: number) {
   </div>
 </template>
 <style lang="less" scoped>
-.container {
-  position: relative;
-}
 // 滑动渐变过渡效果
 .slide-fade-move,
 .slide-fade-enter-active,
