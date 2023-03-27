@@ -22,7 +22,7 @@ defineProps({
       return {}
     }
   },
-  showPagination: {
+  showPagination: { // 是否显示分页器
     type: Boolean,
     default: false,
   },
