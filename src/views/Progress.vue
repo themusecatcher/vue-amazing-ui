@@ -32,7 +32,7 @@ console.log(Math.PI)
     <Progress
       :width="900"
       :percent="percent"
-      :strokeWidth="30"
+      :strokeWidth="10"
       :strokeColor="{
         '0%': '#108ee9',
         '100%': '#87d068',
@@ -46,12 +46,12 @@ console.log(Math.PI)
     <Progress
       :width="120"
       :percent="percent"
-      :strokeWidth="10"
+      :strokeWidth="12"
       :showInfo="true"
       type="circle" />
     <h2 class="mt30 mb10">Ant Design Vue 进度圈</h2>
     <a-progress
-      :width="140"
+      :width="120"
       :percent="percent"
       :strokeWidth="12"
       type="circle" />
