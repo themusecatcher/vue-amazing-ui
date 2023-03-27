@@ -116,21 +116,21 @@ const backgroundColor = computed(() => {
     .u-progress-circle-trail {
       stroke: #f5f5f5;
       stroke-dashoffset: 0px;
-      transition: stroke-dashoffset 0.3s ease 0s,
-                  stroke-dasharray 0.3s ease 0s,
-                  stroke 0.3s ease 0s,
-                  stroke-width 0.06s ease 0.3s,
-                  opacity 0.3s ease 0s;
+      transition: stroke-dashoffset 0.3s,
+                  stroke-dasharray 0.3s,
+                  stroke 0.3s,
+                  stroke-width 0.06s 0.3s,
+                  opacity 0.3s;
     }
     .u-progress-circle-path {
       stroke: @themeColor;
       stroke-dashoffset: 0px;
       animation: ant-progress-appear 0.3s;
-      transition: stroke-dashoffset 0.3s ease 0s,
-                  stroke-dasharray 0.3s ease 0s,
-                  stroke 0.3s ease 0s,
-                  stroke-width 0.06s ease 0.3s,
-                  opacity ease 0s;
+      transition: stroke-dashoffset 0.3s,
+                  stroke-dasharray 0.3s,
+                  stroke 0.3s,
+                  stroke-width 0.06s 0.3s,
+                  opacity .3s;
     }
     .success {
       stroke: @success;
@@ -141,8 +141,8 @@ const backgroundColor = computed(() => {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     fill: @success;
   }
   .u-progress-text {
