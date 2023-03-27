@@ -58,7 +58,9 @@ function onHide (): void {
       <div class="u-title">
         <slot name="title">{{ title }}</slot>
       </div>
-      <div class="u-arrow"></div>
+      <div class="m-arrow">
+        <span class="u-arrow"></span>
+      </div>
     </div>
     <div ref="contentRef" class="u-content">
       <slot>{{ content }}</slot>
@@ -75,16 +77,17 @@ function onHide (): void {
   padding-bottom: 12px;
   pointer-events: none;
   opacity: 0;
+  transform-origin: 50% 75%;
   transform: scale(0.8); // 缩放变换
   -ms-transform: scale(0.8); /* IE 9 */
   -webkit-transform: scale(0.8); /* Safari and Chrome */
-  transition: transform .3s, opacity .3s;
+  transition: transform .25s, opacity .25s;
   .u-title {
     padding: 10px;
     margin: 0 auto;
     word-break: break-all;
     word-wrap: break-word;
-    background: #FFFFFF;
+    background: #FFF;
     box-shadow: 0px 0px 7px 1px fade(@themeColor, 36%);
     border-radius: 5px;
     font-weight: 400;
@@ -92,17 +95,29 @@ function onHide (): void {
     line-height: 20px;
     color: #333;
   }
-  .u-arrow {
+  .m-arrow {
     position: absolute;
+    z-index: 9;
+    bottom: 12px;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
-    margin: 0 auto;
-    width: 10px;
+    transform: translate(-50%, 100%);
+    width: 15.55px;
     height: 10px;
-    background: #FFF;
-    border-radius: 0 0 3px 0;
-    z-index: 0;
-    box-shadow: 3px 3px 7px fade(@themeColor, 36%);
+    border-radius: 0 0 5px 5px;
+    overflow: hidden;
+    .u-arrow {
+      position: absolute;
+      left: 50%;
+      top: 0px;
+      transform: translate(-50%, -50%) rotate(45deg);
+      margin: 0 auto;
+      width: 11px;
+      height: 11px;
+      background: #FFF;
+      border-radius: 0 0 3px 0;
+      z-index: 8;
+      box-shadow: 1px 1px 3px 1px fade(@themeColor, 10%);
+    }
   }
 }
 .show-tip {
