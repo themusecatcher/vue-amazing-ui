@@ -90,6 +90,9 @@ function onClick (e: any):void {
         <a-menu-item key="Switch">
           <router-link to="/switch">开关（Switch）</router-link>
         </a-menu-item>
+        <a-menu-item key="Table">
+          <router-link to="/table">表格（Table）</router-link>
+        </a-menu-item>
         <a-menu-item key="TextScroll">
           <router-link to="/textscroll">文字滚动（TextScroll）</router-link>
         </a-menu-item>
@@ -165,8 +168,7 @@ function onClick (e: any):void {
 }
 .router-view {
   margin-top: 50px;
-  padding-left: 48px;
-  padding-right: 30px;
+  padding: 0 48px;
   overflow: auto;
   height: calc(100vh - 50px);
 }
