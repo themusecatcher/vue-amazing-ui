@@ -67,13 +67,6 @@ function onNext () {
       <a-step title="Step 4" description="This is a description." />
       <a-step title="Step 5" description="This is a description." />
     </a-steps>
-    <a-steps class="border-box" :current="current">
-      <a-step title="Step 1" description="This is a description." />
-      <a-step title="Step 2" description="This is a description." />
-      <a-step title="Step 3" description="This is a description." />
-      <a-step title="Step 4" description="This is a description." />
-      <a-step title="Step 5" description="This is a description." />
-    </a-steps>
   </div>
 </template>
 <style lang="less" scoped>
