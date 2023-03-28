@@ -36,7 +36,7 @@ import 'vue-amazing-ui/dist/style.css'
 
 - Get the project code
 
-```bash
+```sh
 git clone https://github.com/themusecatcher/vue-amazing-ui.git
 ```
 
@@ -44,6 +44,7 @@ git clone https://github.com/themusecatcher/vue-amazing-ui.git
 
 ```sh
 cd vue-amazing-ui
+
 yarn
 #or
 yarn install
@@ -51,7 +52,7 @@ yarn install
 
 - Run project
 
-```bash
+```sh
 yarn dev
 ```
 
