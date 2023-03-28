@@ -8,7 +8,7 @@ interface Collapse {
 }
 interface Props {
   collapseData: Collapse[], // 折叠面板数据
-  activeKey?: number[] | number | string[] | string, // 当前激活 tab 面板的 key
+  activeKey: number[] | number | string[] | string // 当前激活 tab 面板的 key
 }
 const props = withDefaults(defineProps<Props>(), {
   activeKey: 0,
