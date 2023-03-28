@@ -40,10 +40,12 @@ import 'vue-amazing-ui/dist/style.css'
 git clone https://github.com/themusecatcher/vue-amazing-ui.git
 ```
 
-- Installation dependencies
+- Install dependencies
 
-```bash
+```sh
 cd vue-amazing-ui
+yarn
+#or
 yarn install
 ```
 
@@ -84,4 +86,4 @@ Waterfall | 瀑布流
 
 ## Details
 
-详见：[My CSDN Blogs](https://blog.csdn.net/Dandrose)
+[My CSDN Blogs](https://blog.csdn.net/Dandrose)
