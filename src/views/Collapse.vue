@@ -3,20 +3,27 @@ import { ref, watch } from 'vue'
 
 const collapseData = ref([
   {
+    // key: '1',
     header: 'This is panel header 1',
     text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   },
   {
+    // key: '2',
     header: 'This is panel header 2',
-    text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. hello world hello worldhello worldhello worldhello worldhello world'
+    text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   },
   {
+    // key: '3',
     header: 'This is panel header 3',
     text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
 const activeKey = ref([1])
 watch(activeKey, (to) => {
+  console.log('p to:', to)
+})
+const key = ref(1)
+watch(key, (to) => {
   console.log('p to:', to)
 })
 
@@ -26,8 +33,11 @@ function onChange (key: any) {
 </script>
 <template>
   <div>
-    <Collapse :collapseData="collapseData" v-model:activeKey="activeKey" />
-    <h2 class="mt30 mb10"></h2>
+    <h2 class="mb10">Collapse 折叠面板基本使用（activeKey 传入 number[] | string[]，所有面板可同时展开）</h2>
+    <Collapse :collapseData="collapseData" v-model:activeKey="activeKey" @change="onChange" />
+    <h2 class="mt30 mb10">'手风琴'（只允许单个内容区域展开，只需 activeKey 传入 number | string 即可）</h2>
+    <Collapse :collapseData="collapseData" v-model:activeKey="key"  @change="onChange" />
+    <h2 class="mt30 mb10">Ant Design Vue 折叠面板</h2>
     <a-collapse v-model:activeKey="activeKey" @change="onChange">
       <a-collapse-panel
         v-for="(data, index) in collapseData" :key="index"
