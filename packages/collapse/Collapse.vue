@@ -2,60 +2,57 @@
 import { onMounted, ref } from 'vue'
 
 interface Collapse {
-  header?: string, // 标题
-  text?: string // 内容文本
+  key?: string|number, // 对应activeKey，如果没有传入key属性，则默认使用数字索引(0,1,2...)绑定
+  header?: string, // 面板头内容
+  text?: string // 面板内容
 }
 interface Props {
   collapseData: Collapse[], // 折叠面板数据
-  activeKey?: number[] | number, // 当前激活 tab 面板的 key
+  activeKey?: number[] | number | string[] | string, // 当前激活 tab 面板的 key
 }
 const props = withDefaults(defineProps<Props>(), {
   activeKey: 0,
   collapseData: () => []
 })
 
-
-const emits = defineEmits(['update:activeKey'])
 onMounted(() => {
-  console.log('activeKey:', props.activeKey)
-  computedHeightStyle()
+  getCollapseHeight() // 获取各个面板内容高度
 })
 const collapseHeight = ref<any[]>([])
-function computedHeightStyle () {
+function getCollapseHeight () {
   const len = props.collapseData.length
   for (let n = 0; n < len; n++) {
-    console.log('n', n)
     const el = document.getElementById(`${n}`)
     collapseHeight.value.push(el?.offsetHeight)
   }
-  console.log('collapseHeight:', collapseHeight.value)
-  
 }
-function onClick (index: number) {
-  if (activeJudge(index)) {
+
+const emits = defineEmits(['update:activeKey', 'change'])
+function dealEmit (value: any) {
+  emits('update:activeKey', value)
+  emits('change', value)
+}
+function onClick (key: number|string) {
+  if (activeJudge(key)) {
     if (Array.isArray(props.activeKey)) {
-      const res = props.activeKey.filter(key => key!== index)
-      emits('update:activeKey', res)
-      emits('update:activeKey', res)
+      const res = (props.activeKey as any[]).filter(actKey => actKey!== key)
+      dealEmit(res)
     } else {
-      emits('update:activeKey', index)
-      emits('update:activeKey', index)
+      dealEmit(null)
     }
   } else {
     if (Array.isArray(props.activeKey)) {
-      emits('update:activeKey', [...props.activeKey, index])
-      emits('update:activeKey', [...props.activeKey, index])
+      dealEmit([...props.activeKey, key])
     } else {
-      emits('update:activeKey', index)
-      emits('update:activeKey', index)
+      dealEmit(key)
     }
   }
 }
-function activeJudge (index: number): boolean {
+function activeJudge (key: number|string): boolean {
   if (Array.isArray(props.activeKey)) {
-    return (props.activeKey as number[]).includes(index)
+    return (props.activeKey as any[]).includes(key)
   } else {
-    return props.activeKey === index
+    return props.activeKey === key
   }
 }
 </script>
@@ -63,13 +60,13 @@ function activeJudge (index: number): boolean {
   <div class="m-collapse">
     <div
       class="m-collapse-item"
-      :class="{'u-collapse-item-active': activeJudge(index)}"
+      :class="{'u-collapse-item-active': activeJudge(data.key || index)}"
       v-for="(data, index) in collapseData" :key="index">
-      <div class="u-collapse-header" @click="onClick(index)">
+      <div class="u-collapse-header" @click="onClick(data.key || index)">
         <svg focusable="false" class="u-arrow" data-icon="right" aria-hidden="true" viewBox="64 64 896 896"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
         <span class="u-header">{{ data.header || '--' }}</span>
       </div>
-      <div class="u-collapse-content" :style="`height: ${activeJudge(index) ? collapseHeight[index]:0}px;`">
+      <div class="u-collapse-content" :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index]:0}px;`">
         <p class="u-content" :id="`${index}`">{{ data.text || '--' }}</p>
       </div>
     </div>
