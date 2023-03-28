@@ -25,7 +25,7 @@ const props = defineProps({
     type: [Number, String],
     default: '100vh'
   },
-  mode: { // banner轮播图模式 | carousel走马灯模式
+  type: { // banner轮播图模式 | carousel走马灯模式
     type: String,
     default: 'banner' // banner | carousel
   },
@@ -33,7 +33,7 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  delay: { // 自动切换的时间间隔，mode: banner时生效
+  delay: { // 自动切换的时间间隔，type: banner时生效
     type: Number,
     default: 3000 // 单位ms
   },
@@ -77,7 +77,7 @@ const autoplayCarousel = ref<object|boolean>({
 })
 function onSwiper (swiper: any) {
   console.log(swiper)
-  if (props.mode === 'carousel') {
+  if (props.type === 'carousel') {
     swiper.el.onmouseenter = () => { // 移入暂停
       swiper.autoplay.stop()
     }
@@ -93,7 +93,7 @@ function onSlideChange () {
 <template>
   <swiper
     :class="{'swiper-no-swiping': !swipe}"
-    v-if="mode==='banner'"
+    v-if="type==='banner'"
     :modules="modulesBanner"
     :lazy="true"
     :navigation="navigation"
@@ -118,7 +118,7 @@ function onSlideChange () {
   </swiper>
   <swiper
     class="swiper-no-swiping"
-    v-if="mode==='carousel'"
+    v-if="type==='carousel'"
     :modules="modulesCarousel"
     :lazy="true"
     :autoplay="autoplayCarousel"

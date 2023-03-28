@@ -19,7 +19,10 @@ const routes = ref([
 </script>
 
 <template>
-  <Breadcrumb :routes="routes" :height="60" />
+  <div>
+    <h2 class="mb10">Breadcrumb 面包屑基本使用</h2>
+    <Breadcrumb :routes="routes" :height="60" />
+  </div>
 </template>
 
 <style lang="less" scoped>

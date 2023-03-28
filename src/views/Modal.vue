@@ -59,6 +59,7 @@ function onConfirm () { // “确定”,“知道了”按钮回调
 </script>
 <template>
   <div>
+    <h2 class="mb10">Modal 信息提示基本使用</h2>
     <Button class="mr30" @click="showConfirmModal('Some descriptions ...')">提交确认信息提示框</Button>
     <Button class="mr30" @click="showDeleteModal('Some descriptions ...')">删除确认信息提示框</Button>
     <Button class="mr30" @click="showFixModal('Some descriptions ...')">高度固定信息提示框</Button>

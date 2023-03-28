@@ -15,14 +15,14 @@ function onChange (val: number|number[]) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">单滑块滑动输入条基本使用（{{  singleValue }}）</h2>
+    <h2 class="mb10">Slider 单滑块滑动输入条基本使用（{{  singleValue }}）</h2>
     <Slider
       :min="0"
       :max="100"
       :width="1000"
       v-model:value="singleValue"
       @change="onChange"/>
-    <h2 class="mt30 mb10">双滑块滑动输入条基本使用（range & {{ doubleValue }}）</h2>
+    <h2 class="mt30 mb10">Slider 双滑块滑动输入条基本使用（range & {{ doubleValue }}）</h2>
     <Slider
       :min="0"
       :max="100"
@@ -30,7 +30,7 @@ function onChange (val: number|number[]) {
       range
       v-model:value="doubleValue"
       @change="onChange"/>
-    <h2 class="mt30 mb10">禁用双滑块滑动输入条（range & disabled & {{ doubleValue }}）</h2>
+    <h2 class="mt30 mb10">Slider 禁用双滑块滑动输入条（range & disabled & {{ doubleValue }}）</h2>
     <Slider
       :min="0"
       :max="100"

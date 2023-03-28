@@ -14,6 +14,7 @@ onMounted(() => {
 </script>
 <template>
   <div>
+    <h2 class="mb10">Tooltip 文字提示基本使用</h2>
     <p class="u-info mt150 mb10">普通用法：</p>
     <Tooltip :maxWidth="240">
       <template #title>特斯拉(Tesla)是美国一家电动汽车及能源公司，总部位于帕洛阿托(Palo Alto)，市值达2100亿美元，产销电动汽车、太阳能板、及储能设备</template>

@@ -64,7 +64,7 @@ watch(checkAll, (to) => {
 </script>
 <template>
   <div>
-    <h2>Checkbox 组件</h2>
+    <h2 class="mb10">Checkbox 多选框基本使用</h2>
     <p class="u-intro">用于在一组可选项中进行多项选择</p>
     <Checkbox
       :options="options"

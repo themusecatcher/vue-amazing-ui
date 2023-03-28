@@ -47,7 +47,7 @@ function onChange (value: any) {
 </script>
 <template>
   <div>
-    <h2>Radio 组件</h2>
+    <h2 class="mb10">Radio 单选框基本使用</h2>
     <p class="u-intro">用于在多个备选项中选中单个状态</p>
     <Radio
       :options="options"
