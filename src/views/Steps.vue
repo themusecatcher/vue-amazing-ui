@@ -42,7 +42,7 @@ function onNext () {
 }
 </script>
 <template>
-  <div class="steps">
+  <div>
     <h2 class="mb10">Steps 步骤条基本使用</h2>
     <Steps
       :steps="steps"

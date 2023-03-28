@@ -13,15 +13,18 @@ function changePage (pager: object) { // 分页器回调
 </script>
 
 <template>
-  <Pagination
-    @change="changePage"
-    :current="pagination.p"
-    :pageSize="pagination.pageSize"
-    :total="total"
-    :hideOnSinglePage="hideOnSinglePage"
-    :showQuickJumper="true"
-    :showTotal="true"
-    placement="center"/>
+  <div>
+    <h2 class="mb10">Pagination 分页器基本使用</h2>
+    <Pagination
+      @change="changePage"
+      :current="pagination.p"
+      :pageSize="pagination.pageSize"
+      :total="total"
+      :hideOnSinglePage="hideOnSinglePage"
+      :showQuickJumper="true"
+      :showTotal="true"
+      placement="center"/>
+  </div>
 </template>
 
 <style lang="less" scoped>

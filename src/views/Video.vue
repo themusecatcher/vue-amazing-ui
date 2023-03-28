@@ -19,20 +19,23 @@ onMounted(() => {
 </script>
 
 <template>
-  <Video
-    v-show="true"
-    :videoUrl="videoUrl"
-    :videoCover="videoCover"
-    :width="800"
-    :height="450"
-    :autoplay="false"
-    :controls="true"
-    :loop="false"
-    :muted="false"
-    preload="auto"
-    :showPlay="true"
-    :playWidth="96"
-    zoom="cotain" />
+  <div>
+    <h2 class="mb10">Video 播放器基本使用</h2>
+    <Video
+      v-show="true"
+      :videoUrl="videoUrl"
+      :videoCover="videoCover"
+      :width="800"
+      :height="450"
+      :autoplay="false"
+      :controls="true"
+      :loop="false"
+      :muted="false"
+      preload="auto"
+      :showPlay="true"
+      :playWidth="96"
+      zoom="cotain" />
+  </div>
 </template>
 
 <style lang="less" scoped>

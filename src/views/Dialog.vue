@@ -46,6 +46,7 @@ function onConfirm () { // “确定”,“知道了”按钮回调
 </script>
 <template>
   <div>
+    <h2 class="mb10">Dialog 对话框基本使用</h2>
     <Button class="mr30" @click="showDialog('Some descriptions ...')">默认对话框</Button>
     <Button class="mr30" @click="showFooterDialog('Some descriptions ...')">有底部按钮的对话框</Button>
     <Button class="mr30" @click="showCenterDialog('Some descriptions ...')">水平垂直居中对话框</Button>

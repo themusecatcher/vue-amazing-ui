@@ -21,6 +21,7 @@ function onClose () {
 </script>
 <template>
   <div>
+    <h2 class="mb10">Message 全局提示基本使用</h2>
     <Button @click="onInfo('This is a normal message')" class="mr30">Info</Button>
     <Button @click="onSuccess('This is a success message')" class="mr30">Success</Button>
     <Button @click="onError('This is a error message')" class="mr30">Error</Button>

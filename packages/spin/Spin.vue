@@ -32,14 +32,17 @@ withDefaults(defineProps<Props>(), {
 .m-spin-wrap {
   position: relative;
   height: 100%;
+  width: 100%;
 }
 .m-spin {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   z-index: 9;
   .m-spin-box {
     text-align: center;
@@ -151,16 +154,11 @@ withDefaults(defineProps<Props>(), {
   }
 }
 .m-spin-content {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 8;
-  transition: all .3s;
+  transition: opacity .3s;
 }
 .m-spin-mask {
-  opacity: .5;
-  background: rgba(255, 255, 255, .4);
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.4;
 }
 </style>

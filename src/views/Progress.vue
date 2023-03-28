@@ -23,7 +23,7 @@ console.log(Math.PI)
 </script>
 <template>
   <div>
-    <h2 class="mb10">进度条基本使用（type: line）</h2>
+    <h2 class="mb10">Progress 进度条基本使用（type: line）</h2>
     <Progress :width="900" :percent="percent" :strokeWidth="10" :showInfo="true" />
     <h2 class="mt30 mb10">完成进度条（width: 100% & percent: 100）</h2>
     <Progress width="100%" :percent="100" :strokeWidth="10" :showInfo="true" />

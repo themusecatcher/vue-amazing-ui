@@ -12,6 +12,7 @@ watch(checked, (to) => {
 
 <template>
   <div>
+    <h2 class="mb10">Switch 开关基本使用</h2>
     <Switch class="mb30" v-model:checked="checked" @change="onChange" checkedInfo="开" uncheckedInfo="关" :disabled="false" />
     <br/>
     <Switch class="mb30" v-model:checked="checked" @change="onChange" :disabled="false" />
