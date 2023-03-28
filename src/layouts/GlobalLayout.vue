@@ -84,6 +84,9 @@ function onClick (e: any):void {
         <a-menu-item key="Spin">
           <router-link to="/spin">加载中（Spin）</router-link>
         </a-menu-item>
+        <a-menu-item key="Steps">
+          <router-link to="/steps">步骤条（Steps）</router-link>
+        </a-menu-item>
         <a-menu-item key="Swiper">
           <router-link to="/swiper">触摸滑动插件（Swiper）</router-link>
         </a-menu-item>
