@@ -53,6 +53,7 @@ Select | 选择器
 Slider | 滑动输入条
 Swiper | 触摸滑动插件  
 Spin | 加载中
+Steps | 步骤条
 Switch | 开关
 Table | 表格
 TextScroll | 文字滚动
