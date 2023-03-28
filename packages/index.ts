@@ -16,6 +16,7 @@ import Radio from './radio'
 import Select from './select'
 import Slider from './slider'
 import Spin from './spin'
+import Steps from './steps'
 import Swiper from './swiper'
 import Switch from './switch'
 import Table from './table'
@@ -42,6 +43,7 @@ const components = [
   Select,
   Slider,
   Spin,
+  Steps,
   Swiper,
   Switch,
   Table,
@@ -90,6 +92,7 @@ export {
   Select,
   Slider,
   Spin,
+  Steps,
   Swiper,
   Switch,
   Table,
