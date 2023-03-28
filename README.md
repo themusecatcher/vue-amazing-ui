@@ -1,6 +1,6 @@
 # vue-amazing-ui
 
-## Install
+## Install & Use
 
 ```sh
 npm install vue-amazing-ui
@@ -30,6 +30,27 @@ app.use(VueAmazingUI)
 import { Button } from 'vue-amazing-ui'
 import 'vue-amazing-ui/dist/style.css'
 </script>
+```
+
+## Project
+
+- Get the project code
+
+```bash
+git clone https://github.com/themusecatcher/vue-amazing-ui.git
+```
+
+- Installation dependencies
+
+```bash
+cd vue-amazing-ui
+yarn install
+```
+
+- Run project
+
+```bash
+yarn dev
 ```
 
 ## Components
