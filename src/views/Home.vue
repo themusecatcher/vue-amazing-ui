@@ -37,7 +37,8 @@ rafTimeout(() => {
       <li class="u-tip mb10">throttle: 使用 rafTimeout 实现的节流函数！</li>
       <li class="u-tip mb10">debounce: 使用 rafTimeout 实现的防抖函数！</li>
     </ul>
-    <p class="u-tip">以上六个 API 使用时只需 import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce } from 'vue-amazing-ui'</p>
+    <p class="u-tip">以上六个 API 使用时只需:</p>
+    <p class="u-tip">import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce } from 'vue-amazing-ui'</p>
   </div>
 </template>
 <style lang="less" scoped>

@@ -48,6 +48,9 @@ function onClick (e: any):void {
         <a-menu-item key="Checkbox">
           <router-link to="/checkbox">多选框（Checkbox）</router-link>
         </a-menu-item>
+        <a-menu-item key="Collapse">
+          <router-link to="/collapse">折叠面板（Collapse）</router-link>
+        </a-menu-item>
         <a-menu-item key="Countdown">
           <router-link to="/countdown">倒计时（Countdown）</router-link>
         </a-menu-item>

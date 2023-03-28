@@ -4,6 +4,7 @@ import Breadcrumb from './breadcrumb'
 import Button from './button'
 import Cascader from './cascader'
 import Checkbox from './checkbox'
+import Collapse from './collapse'
 import Countdown from './countdown'
 import DatePicker from './datepicker'
 import Dialog from './dialog'
@@ -31,6 +32,7 @@ const components = [
   Button,
   Cascader,
   Checkbox,
+  Collapse,
   Countdown,
   DatePicker,
   Dialog,
@@ -80,6 +82,7 @@ export {
   Button,
   Cascader,
   Checkbox,
+  Collapse,
   Countdown,
   DatePicker,
   Dialog,

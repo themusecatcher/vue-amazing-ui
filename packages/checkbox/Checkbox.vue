@@ -80,7 +80,6 @@ function onCheckAll () { // 全选切换
       :class="{'disabled': disabled}"
       @click="onCheckAll">
       <span class="u-checkbox" :class="{'u-checkbox-checked': checked && !indeterminate, 'indeterminate': indeterminate }"></span>
-      
       <span class="u-label">
         <slot></slot>
       </span>
