@@ -45,8 +45,19 @@ const activeKey = ref(0)
       <li class="u-tip mb10">throttle: 使用 rafTimeout 实现的节流函数！</li>
       <li class="u-tip mb10">debounce: 使用 rafTimeout 实现的防抖函数！</li>
     </ul>
-    <Collapse :collapseData="collapseData" v-model:activeKey="activeKey" copyable />
+    <Collapse
+      lang="ts"
+      :fontSize="16"
+      :collapseData="collapseData"
+      v-model:activeKey="activeKey"
+      copyable />
   </div>
 </template>
-<style lang="less" scoped>
+<style lang="less">
+.u-head {
+  font-size: 16px;
+}
+.u-text {
+  font-size: 16px;
+}
 </style>
