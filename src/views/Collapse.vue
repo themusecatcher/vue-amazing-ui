@@ -10,7 +10,9 @@ const collapseData = ref([
   {
     // key: '2',
     header: 'This is panel header 2',
-    text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+    text: `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.
+          A dog is a type of of of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.
+          A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
   },
   {
     // key: '3',
@@ -34,9 +36,22 @@ function onChange (key: any) {
 <template>
   <div>
     <h2 class="mb10">Collapse 折叠面板基本使用（activeKey 传入 number[] | string[]，所有面板可同时展开）</h2>
-    <Collapse :collapseData="collapseData" v-model:activeKey="activeKey" @change="onChange" />
+    <Collapse
+      :collapseData="collapseData"
+      v-model:activeKey="activeKey"
+      @change="onChange" />
     <h2 class="mt30 mb10">'手风琴'（只允许单个内容区域展开，只需 activeKey 传入 number | string 即可）</h2>
-    <Collapse :collapseData="collapseData" v-model:activeKey="key"  @change="onChange" />
+    <Collapse
+      :collapseData="collapseData"
+      v-model:activeKey="key"
+      @change="onChange" />
+    <h2 class="mt30 mb10">折叠面板，可复制面板内容（copyable）</h2>
+    <Collapse
+      lang="template"
+      copyable
+      :collapseData="collapseData"
+      v-model:activeKey="activeKey"
+      @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 折叠面板</h2>
     <a-collapse v-model:activeKey="activeKey" @change="onChange">
       <a-collapse-panel

@@ -64,7 +64,7 @@ const isRoute = computed(() => {
   .u-button {
     display: inline-block;
     color: rgba(0,0,0,.65);
-    background-color: #fff;
+    background-color: transparent;
     border: 1px solid #d9d9d9;
     box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
     transition: all .3s cubic-bezier(.645,.045,.355,1);
