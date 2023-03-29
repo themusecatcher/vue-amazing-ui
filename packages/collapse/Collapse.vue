@@ -8,11 +8,13 @@ interface Collapse {
 }
 interface Props {
   collapseData: Collapse[], // 折叠面板数据
-  activeKey: number[] | number | string[] | string // 当前激活 tab 面板的 key
+  activeKey: number[] | number | string[] | string | null, // 当前激活 tab 面板的 key
+  copyable?: boolean // 是否可复制面板内容 
 }
 const props = withDefaults(defineProps<Props>(), {
-  activeKey: 0,
-  collapseData: () => []
+  activeKey: null,
+  collapseData: () => [],
+  copyable: false
 })
 
 onMounted(() => {
@@ -55,6 +57,9 @@ function activeJudge (key: number|string): boolean {
     return props.activeKey === key
   }
 }
+function onCopy (index: number) {
+  const el = document.getElementById(`${index}`)
+}
 </script>
 <template>
   <div class="m-collapse">
@@ -67,6 +72,7 @@ function activeJudge (key: number|string): boolean {
         <span class="u-header">{{ data.header || '--' }}</span>
       </div>
       <div class="u-collapse-content" :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index]:0}px;`">
+        <Button size="small" effect="reverse" class="u-copy" @click="onCopy(index)">Copy</Button>
         <p class="u-content" :id="`${index}`">{{ data.text || '--' }}</p>
       </div>
     </div>
@@ -114,10 +120,23 @@ function activeJudge (key: number|string): boolean {
       }
     }
     .u-collapse-content {
+      position: relative;
       height: 0;
       overflow: hidden;
       background-color: #fff;
       transition: height .3s;
+      &:hover {
+        .u-copy {
+          opacity: 1;
+        }
+      }
+      .u-copy {
+        position: absolute;
+        right: 8px;
+        top: 8px;
+        opacity: 0;
+        transition: opacity .3s;
+      }
       .u-content {
         padding: 16px;
         font-size: 14px;

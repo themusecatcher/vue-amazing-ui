@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 interface Props {
   videoUrl: string, // 视频文件url，必传，支持网络地址 https 和相对地址 require('@/assets/files/Bao.mp4')
   videoCover?: string // 视频封面url，支持网络地址 https 和相对地址 require('@/assets/images/Bao.jpg')
@@ -51,8 +51,8 @@ const props = withDefaults(defineProps<Props>(), {
 const originPlay = ref(true)
 const vplay = ref(false)
 // 为模板引用标注类型
-// 或 const veo = ref()
-const veo = ref<HTMLVideoElement | null>(null) // 声明一个同名的模板引用
+const veo = ref()
+// const veo = ref<HTMLVideoElement | null>(null) // 声明一个同名的模板引用
 
 function onPlay () {
   console.log('click')
@@ -81,8 +81,12 @@ onMounted(() => {
     vplay.value = true
     originPlay.value = false
   }
-  // 自定义设置播放速度
-  // this.$refs.veo.playbackRate = 2
+  /*
+    自定义设置播放速度，经测试：
+    在vue2中需设置：this.$refs.veo.playbackRate = 2
+    在vue3中需设置：veo.value.defaultPlaybackRate = 2
+  */
+  // veo.value.defaultPlaybackRate = 2
 })
 onUnmounted(() => {
   veo.value?.removeEventListener('pause', onPause)
@@ -90,7 +94,7 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <div class="m-video" :style="`width: ${width}px; height: ${height}px;`">
+  <div class="m-video" :class="{'u-video-hover': !vplay}" :style="`width: ${width}px; height: ${height}px;`">
     <video
       ref="veo"
       :style="`object-fit: ${zoom};`"
@@ -106,7 +110,7 @@ onUnmounted(() => {
       @click.prevent.once="onPlay">
       您的浏览器不支持video标签。
     </video>
-    <svg v-show="originPlay || showPlay" :class="[vplay ? 'hidden' : 'u-play']" :style="`width: ${playWidth}px; height: ${playWidth}px;`" viewBox="0 0 24 24">
+    <svg v-show="originPlay || showPlay" class="u-play" :class="{'hidden': vplay}" :style="`width: ${playWidth}px; height: ${playWidth}px;`" viewBox="0 0 24 24">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.75 6.75C4.75 5.64543 5.64543 4.75 6.75 4.75H17.25C18.3546 4.75 19.25 5.64543 19.25 6.75V17.25C19.25 18.3546 18.3546 19.25 17.25 19.25H6.75C5.64543 19.25 4.75 18.3546 4.75 17.25V6.75Z"></path>
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.25 12L9.75 8.75V15.25L15.25 12Z"></path>
     </svg>
@@ -118,11 +122,6 @@ onUnmounted(() => {
   position: relative;
   background: #000;
   cursor: pointer;
-  &:hover {
-    .u-play {
-      opacity: 0.9;
-    }
-  }
   .u-play {
     position: absolute;
     top: 0;
@@ -137,7 +136,14 @@ onUnmounted(() => {
     transition: opacity .3s;
   }
   .hidden {
-    display: none;
+    opacity: 0;
+  }
+}
+.u-video-hover {
+  &:hover {
+    .u-play {
+      opacity: 0.9;
+    }
   }
 }
 </style>
