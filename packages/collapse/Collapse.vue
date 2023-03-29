@@ -12,10 +12,11 @@ interface Props {
   collapseData: Collapse[], // 折叠面板数据
   activeKey?: number[] | number | string[] | string | null, // 当前激活 tab 面板的 key
   copyable?: boolean, // 是否可复制面板内容
-  lang?: string, // 面板右上角固定内容，例如标识language
+  lang?: string, // 面板右上角固定内容，例如标识language string | slot
   fontSize?: number, // 面板标题和内容，字体大小
   headerFontSize?: number, // 面板标题字体大小，优先级高于fontSize
-  textFontSize?: number // 面板内容字体大小，优先级高于fontSize
+  textFontSize?: number, // 面板内容字体大小，优先级高于fontSize
+  showArrow?: boolean // 是否展示当前面板上的箭头
 }
 const props = withDefaults(defineProps<Props>(), {
   activeKey: null,
@@ -24,7 +25,8 @@ const props = withDefaults(defineProps<Props>(), {
   lang: '',
   fontSize: 0,
   headerFontSize: 14,
-  textFontSize: 14
+  textFontSize: 14,
+  showArrow: true
 })
 
 onMounted(() => {
@@ -68,14 +70,18 @@ function activeJudge (key: number|string): boolean {
   }
 }
 const copyTxt = ref('Copy')
-async function onCopy (index: number) {
+function onCopy (index: number) {
   const el = document.getElementById(`${index}`)
-  console.log('el:', el?.innerText)
-  await navigator.clipboard.writeText(el?.innerText || '')
-  copyTxt.value = 'Copied'
-  rafTimeout(() => {
-    copyTxt.value = 'Copy'
-  }, 3000)
+  navigator.clipboard.writeText(el?.innerHTML || '').then(() => {
+    /* clipboard successfully set */
+    copyTxt.value = 'Copied'
+    rafTimeout(() => {
+      copyTxt.value = 'Copy'
+    }, 3000)
+  }, (err) => {
+    /* clipboard write failed */
+    copyTxt.value = err
+  })
 }
 </script>
 <template>
@@ -85,13 +91,18 @@ async function onCopy (index: number) {
       :class="{'u-collapse-item-active': activeJudge(data.key || index)}"
       v-for="(data, index) in collapseData" :key="index">
       <div class="u-collapse-header" @click="onClick(data.key || index)">
-        <svg focusable="false" class="u-arrow" data-icon="right" aria-hidden="true" viewBox="64 64 896 896"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
-        <span class="u-header" :style="`font-size: ${fontSize || headerFontSize}px;`">{{ data.header || '--' }}</span>
+        <svg focusable="false" v-if="showArrow" class="u-arrow" data-icon="right" aria-hidden="true" viewBox="64 64 896 896"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
+        <div class="u-header" :class="{ml24: showArrow}" :style="`font-size: ${fontSize || headerFontSize}px;`">
+          <slot name="header" :header="data.header" :index="index">{{ data.header || '--' }}
+          </slot>
+        </div>
       </div>
       <div class="u-collapse-content" :class="{'u-collapse-copyable': copyable}" :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index]:0}px;`">
-        <p class="u-lang">{{ lang }}</p>
+        <div class="u-lang">
+          <slot name="lang" :lang="lang" :index="index">{{ lang }}</slot>
+        </div>
         <Button size="small" class="u-copy" type="primary" @click="onCopy(index)">{{ copyTxt }}</Button>
-        <p class="u-content" :style="`font-size: ${fontSize || textFontSize}px;`" :id="`${index}`">{{ data.text || '--' }}</p>
+        <p class="u-content" :style="`font-size: ${fontSize || textFontSize}px;`" :id="`${index}`" v-html="data.text"></p>
       </div>
     </div>
   </div>
@@ -113,7 +124,6 @@ async function onCopy (index: number) {
     .u-collapse-header {
       position: relative;
       padding: 12px 16px;
-      height: 22px;
       cursor: pointer;
       transition: all 0.3s;
       .u-arrow {
@@ -128,9 +138,11 @@ async function onCopy (index: number) {
       }
       .u-header {
         display: inline-block;
-        margin-left: 24px;
         color: rgba(0, 0, 0, 0.88);
         line-height: 1.5714285714285714;
+      }
+      .ml24 {
+        margin-left: 24px;
       }
     }
     .u-collapse-content {
@@ -159,6 +171,7 @@ async function onCopy (index: number) {
       .u-content {
         padding: 16px;
         color: rgba(0, 0, 0, 0.88);
+        white-space: pre-wrap;
       }
     }
     .u-collapse-copyable {

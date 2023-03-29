@@ -139,17 +139,6 @@ function onClick (e: any):void {
         <a-menu-item key="Ws">
           <router-link to="/ws">WebSocket</router-link>
         </a-menu-item> -->
-        <!-- <a-sub-menu>
-          <span slot="title" class="submenu-title-wrapper">Navigation Three - Submenu</span>
-          <a-menu-item-group title="Item 1">
-            <a-menu-item key="setting:1">
-              Option 1
-            </a-menu-item>
-            <a-menu-item key="setting:2">
-              Option 2
-            </a-menu-item>
-          </a-menu-item-group>
-        </a-sub-menu> -->
       </a-menu>
     </a-col>
     <a-col :xs="19" :xl="20">
