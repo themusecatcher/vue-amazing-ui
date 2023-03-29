@@ -16,6 +16,14 @@ rafTimeout(() => {
   cancelRaf(raf)
   // cancelAnimationFrame(raf.id)
 }, 3000)
+
+const collapseData = ref([
+  {
+    header: '以上六个 API 使用时只需:',
+    text: `import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce } from 'vue-amazing-ui'`
+  }
+])
+const activeKey = ref(0)
 </script>
 <template>
   <div class="home">
@@ -37,8 +45,7 @@ rafTimeout(() => {
       <li class="u-tip mb10">throttle: 使用 rafTimeout 实现的节流函数！</li>
       <li class="u-tip mb10">debounce: 使用 rafTimeout 实现的防抖函数！</li>
     </ul>
-    <p class="u-tip">以上六个 API 使用时只需:</p>
-    <p class="u-tip">import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce } from 'vue-amazing-ui'</p>
+    <Collapse :collapseData="collapseData" v-model:activeKey="activeKey" copyable />
   </div>
 </template>
 <style lang="less" scoped>
