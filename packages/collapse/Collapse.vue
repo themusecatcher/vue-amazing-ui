@@ -118,7 +118,6 @@ async function onCopy (index: number) {
       transition: all 0.3s;
       .u-arrow {
         position: absolute;
-        // display: inline-block;
         width: 12px;
         height: 12px;
         top: 0;
@@ -144,6 +143,8 @@ async function onCopy (index: number) {
         position: absolute;
         right: 10px;
         top: 6px;
+        font-size: 14px;
+        color: rgba(0, 0, 0, .38);
         opacity: 1;
         transition: opacity .3s;
       }
