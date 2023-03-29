@@ -16,7 +16,7 @@ interface Props {
   fontSize?: number, // 面板标题和内容，字体大小
   headerFontSize?: number, // 面板标题字体大小，优先级高于fontSize
   textFontSize?: number, // 面板内容字体大小，优先级高于fontSize
-  showArrow?: boolean // 是否展示当前面板上的箭头
+  showArrow?: boolean // 是否展示面板上的箭头
 }
 const props = withDefaults(defineProps<Props>(), {
   collapseData: () => [],

@@ -497,7 +497,7 @@ const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
-const _withScopeId$b = (n) => (pushScopeId("data-v-28648cb5"), n = n(), popScopeId(), n);
+const _withScopeId$b = (n) => (pushScopeId("data-v-b5410ee0"), n = n(), popScopeId(), n);
 const _hoisted_1$j = { class: "m-collapse" };
 const _hoisted_2$h = ["onClick"];
 const _hoisted_3$d = {
@@ -640,8 +640,8 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Collapse_vue_vue_type_style_index_0_scoped_28648cb5_lang = "";
-const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-28648cb5"]]);
+const Collapse_vue_vue_type_style_index_0_scoped_b5410ee0_lang = "";
+const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-b5410ee0"]]);
 Collapse.install = (app) => {
   app.component(Collapse.__name, Collapse);
 };
