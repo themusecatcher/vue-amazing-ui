@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { Ref } from 'vue'
-import { rafTimeout } from '../index'
+import { requestAnimationFrame } from '../index'
 
 interface Props {
-  countdown: number, // 倒计时数值（countdown），必传，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(s)
+  countdown: number, // 倒计时数值（countdown），必传，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(ms)
   title?: string, // 倒计时标题 string | v-slot
   format?: string, // 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒)
   prefix?: string, // 倒计时数值的前缀 string | v-slot
@@ -19,14 +19,23 @@ const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   suffix: '',
   finishedText: ''
 })
-const restTime = ref(props.countdown)
+const futureTime = ref() // 未来某时刻
+const restTime = ref() // 剩余时间
+const millisecond = computed(() => { // 显示毫秒值
+  return props.format.includes('SSS')
+})
 
 function fixedTwo (value: number): string {
   return value < 10 ? '0' + value : String(value)
 }
 function timeFormat (time: number): string {
   let showTime = props.format
+  if (millisecond) {
+    var S = time % 1000
+    showTime = showTime.replace('SSS', String(S))
+  }
   if (showTime.includes('s')) {
+    time = Math.floor(time / 1000)
     var s = time
   } else {
     var s = 0
@@ -69,36 +78,34 @@ function timeFormat (time: number): string {
   showTime = showTime.includes('YY') ? showTime.replace('YY', fixedTwo(Y)) : showTime.replace('Y', String(Y))
   return showTime
 }
-const showTime = computed(() => { // 展示的倒计时
-  return timeFormat(restTime.value)
-})
 const emit = defineEmits(['finish'])
-function CountDown (restTime: Ref): void {
-  rafTimeout(() => {
-    restTime.value--
-    if (restTime.value > 0) { // js中Boolean(非0)都是true
-      CountDown(restTime)
-    } else {
-      emit('finish')
-    }
-  }, 1000)
+function CountDown () {
+  if (futureTime.value > Date.now()) {
+    restTime.value = futureTime.value - Date.now()
+    requestAnimationFrame(CountDown)
+  } else {
+    restTime.value = 0
+    emit('finish')
+  }
 }
 onMounted(() => {
-  if (restTime.value > Date.now()) {
-    restTime.value = Math.floor((restTime.value - Date.now()) / 1000)
+  if (props.countdown > Date.now()) { // 未来某时刻的时间戳，单位ms
+    futureTime.value = props.countdown
+  } else { // 相对剩余时间，单位ms
+    futureTime.value = props.countdown + Date.now()
   }
-  CountDown(restTime)
+  requestAnimationFrame(CountDown)
 })
 </script>
 <template>
   <div class="m-countdown">
-    <slot name="title">
-      <p class="u-title">{{ props.title }}</p>
-    </slot>
+    <div class="u-title">
+      <slot name="title">{{ props.title }}</slot>
+    </div>
     <div class="u-time">
       <slot name="prefix" v-if="restTime > 0">{{ prefix }}</slot>
       <slot v-if="finishedText && restTime === 0" name="finish">{{ finishedText }}</slot>
-      <span v-else>{{ showTime }}</span>
+      <span v-else>{{ timeFormat(restTime) }}</span>
       <slot name="suffix" v-if="restTime > 0">{{ suffix }}</slot>
     </div>
   </div>
