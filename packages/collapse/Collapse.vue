@@ -19,8 +19,8 @@ interface Props {
   showArrow?: boolean // 是否展示当前面板上的箭头
 }
 const props = withDefaults(defineProps<Props>(), {
-  activeKey: null,
   collapseData: () => [],
+  activeKey: null,
   copyable: false,
   lang: '',
   fontSize: 0,
