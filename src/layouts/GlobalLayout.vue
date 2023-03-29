@@ -111,13 +111,7 @@ function onClick (e: any):void {
         <a-menu-item key="Waterfall">
           <router-link to="/waterfall">瀑布流（Waterfall）</router-link>
         </a-menu-item>
-        <!-- <a-menu-item key="Common">
-          <router-link to="/common">常用</router-link>
-        </a-menu-item> -->
-        <!-- <a-menu-item key="Table">
-          <router-link to="/table">分页列表</router-link>
-        </a-menu-item>
-        <a-menu-item key="Tree">
+        <!-- <a-menu-item key="Tree">
           <router-link to="/tree">树图</router-link>
         </a-menu-item>
         <a-menu-item key="Drag">
