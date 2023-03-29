@@ -10,9 +10,8 @@ const collapseData = ref([
   {
     // key: '2',
     header: 'This is panel header 2',
-    text: `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.
-          A dog is a type of of of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.
-          A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+    text: `  A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.
+  A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
   },
   {
     // key: '3',
@@ -51,7 +50,18 @@ function onChange (key: any) {
       copyable
       :collapseData="collapseData"
       v-model:activeKey="activeKey"
-      @change="onChange" />
+      @change="onChange">
+      <template #header="{ header, index }">
+        <span v-if="index===1" style="color: burlywood;">burlywood color header (index = {{ index }})</span>
+      </template>
+      <template #lang>typescript</template>
+    </Collapse>
+    <h2 class="mt30 mb10">折叠面板，隐藏箭头图标（showArrow: false）</h2>
+    <Collapse
+      :show-arrow="false"
+      :collapseData="collapseData"
+      v-model:activeKey="activeKey"
+      @change="onChange"/>
     <h2 class="mt30 mb10">Ant Design Vue 折叠面板</h2>
     <a-collapse v-model:activeKey="activeKey" @change="onChange">
       <a-collapse-panel
