@@ -120,9 +120,6 @@ function onClick (e: any):void {
         <a-menu-item key="Viewer">
           <router-link to="/viewer">预览插件</router-link>
         </a-menu-item>
-        <a-menu-item key="Steps">
-          <router-link to="/steps">步骤条组件</router-link>
-        </a-menu-item>
         <a-menu-item key="Lazyload">
           <router-link to="/lazyload">懒加载</router-link>
         </a-menu-item> -->
