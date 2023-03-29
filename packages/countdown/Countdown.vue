@@ -6,7 +6,7 @@ import { requestAnimationFrame } from '../index'
 interface Props {
   countdown: number, // 倒计时数值（countdown），必传，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(ms)
   title?: string, // 倒计时标题 string | v-slot
-  format?: string, // 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒)
+  format?: string, // 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒，S：毫秒)
   prefix?: string, // 倒计时数值的前缀 string | v-slot
   suffix?: string, // 倒计时数值的后缀 string | v-slot
   finishedText?: string // 完成后的展示文本 string | v-slot
@@ -32,7 +32,7 @@ function timeFormat (time: number): string {
   let showTime = props.format
   if (millisecond) {
     var S = time % 1000
-    showTime = showTime.replace('SSS', String(S))
+    showTime = showTime.replace('SSS', '0'.repeat(3 - String(S).length) + S)
   }
   if (showTime.includes('s')) {
     time = Math.floor(time / 1000)

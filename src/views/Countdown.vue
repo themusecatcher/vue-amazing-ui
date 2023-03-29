@@ -6,7 +6,7 @@ function onFinish () {
 
 <template>
   <div>
-    <h2 class="mb10">Countdown 倒计时基本使用</h2>
+    <h2 class="mb10">Countdown 倒计时基本使用（format: Y 年 M 月 D 天 H 时 m 分 s 秒）</h2>
     <Countdown
       title="Countdown"
       :countdown="12 * 30 * 24 * 60 * 60 * 1000"
@@ -17,7 +17,7 @@ function onFinish () {
       <!-- <template #finish>&lt; FinishedText slot &gt;</template> -->
       <template #suffix> left for the end.</template>
     </CountDown>
-    <h2 class="mt30 mb10">毫秒倒计时基本使用</h2>
+    <h2 class="mt30 mb10">毫秒倒计时基本使用（format: Y 年 M 月 D 天 H 时 m 分 s 秒 SSS）</h2>
     <Countdown
       title="Countdown"
       :countdown="1714528800000"
