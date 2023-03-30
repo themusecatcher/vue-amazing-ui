@@ -6,9 +6,9 @@ function onFinish () {
 
 <template>
   <div>
-    <h2 class="mb10">Countdown 倒计时基本使用（format: Y 年 M 月 D 天 H 时 m 分 s 秒）</h2>
+    <h2 class="mb10">Countdown 倒计时基本使用（format: Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒）</h2>
     <Countdown
-      title="Countdown"
+      title="Countdown 1年"
       :countdown="12 * 30 * 24 * 60 * 60 * 1000"
       format="Y 年 M月 D 天 H 时 m 分 s 秒 SSS 毫秒"
       finishedText="Finished"
