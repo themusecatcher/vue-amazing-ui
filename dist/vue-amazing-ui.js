@@ -497,7 +497,7 @@ const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
-const _withScopeId$b = (n) => (pushScopeId("data-v-b5410ee0"), n = n(), popScopeId(), n);
+const _withScopeId$b = (n) => (pushScopeId("data-v-36bcc6a9"), n = n(), popScopeId(), n);
 const _hoisted_1$j = { class: "m-collapse" };
 const _hoisted_2$h = ["onClick"];
 const _hoisted_3$d = {
@@ -640,8 +640,8 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Collapse_vue_vue_type_style_index_0_scoped_b5410ee0_lang = "";
-const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-b5410ee0"]]);
+const Collapse_vue_vue_type_style_index_0_scoped_36bcc6a9_lang = "";
+const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-36bcc6a9"]]);
 Collapse.install = (app) => {
   app.component(Collapse.__name, Collapse);
 };
@@ -657,91 +657,105 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
     format: { default: "HH:mm:ss" },
     prefix: { default: "" },
     suffix: { default: "" },
-    finishedText: { default: "" }
+    finishedText: { default: "Finished" }
   },
   emits: ["finish"],
   setup(__props, { emit }) {
     const props = __props;
-    const restTime = ref(props.countdown);
+    const futureTime = ref();
+    const restTime = ref();
+    const showType = computed(() => {
+      return {
+        showMillisecond: props.format.includes("SSS"),
+        showYear: props.format.includes("Y"),
+        showMonth: props.format.includes("M"),
+        showDay: props.format.includes("D"),
+        showHour: props.format.includes("H"),
+        showMinute: props.format.includes("m"),
+        showSecond: props.format.includes("s")
+      };
+    });
     function fixedTwo(value) {
       return value < 10 ? "0" + value : String(value);
     }
     function timeFormat(time) {
-      let showTime2 = props.format;
-      if (showTime2.includes("s")) {
-        var s = time;
-      } else {
-        var s = 0;
+      let showTime = props.format;
+      if (showType.value.showMillisecond) {
+        var S = time % 1e3;
+        showTime = showTime.replace("SSS", "0".repeat(3 - String(S).length) + S);
       }
-      if (showTime2.includes("m")) {
-        s = s % 60;
-        var m = Math.floor((time - s) / 60);
-      } else {
-        var m = 0;
-      }
-      if (showTime2.includes("H")) {
-        m = m % 60;
-        var H = Math.floor((time - s - m * 60) / 60 / 60);
-      } else {
-        var H = 0;
-      }
-      if (showTime2.includes("D")) {
-        H = H % 24;
-        var D = Math.floor((time - s - m * 60 - H * 60 * 60) / 60 / 60 / 24);
-      } else {
-        var D = 0;
-      }
-      if (showTime2.includes("M")) {
-        D = D % 30;
-        var M = Math.floor((time - s - m * 60 - H * 60 * 60 - D * 24 * 60 * 60) / 60 / 60 / 24 / 30);
-      } else {
-        var M = 0;
-      }
-      if (showTime2.includes("Y")) {
-        M = M % 12;
-        var Y = Math.floor((time - s - m * 60 - H * 60 * 60 - D * 24 * 60 * 60 - M * 30 * 24 * 60 * 60) / 60 / 60 / 24 / 30 / 12);
+      time = Math.floor(time / 1e3);
+      if (showType.value.showYear) {
+        var Y = Math.floor(time / (60 * 60 * 24 * 30 * 12));
+        showTime = showTime.includes("YY") ? showTime.replace("YY", fixedTwo(Y)) : showTime.replace("Y", String(Y));
       } else {
         var Y = 0;
       }
-      showTime2 = showTime2.includes("ss") ? showTime2.replace("ss", fixedTwo(s)) : showTime2.replace("s", String(s));
-      showTime2 = showTime2.includes("mm") ? showTime2.replace("mm", fixedTwo(m)) : showTime2.replace("m", String(m));
-      showTime2 = showTime2.includes("HH") ? showTime2.replace("HH", fixedTwo(H)) : showTime2.replace("H", String(H));
-      showTime2 = showTime2.includes("DD") ? showTime2.replace("DD", fixedTwo(D)) : showTime2.replace("D", String(D));
-      showTime2 = showTime2.includes("MM") ? showTime2.replace("MM", fixedTwo(M)) : showTime2.replace("M", String(M));
-      showTime2 = showTime2.includes("YY") ? showTime2.replace("YY", fixedTwo(Y)) : showTime2.replace("Y", String(Y));
-      return showTime2;
+      if (showType.value.showMonth) {
+        time = time - Y * 60 * 60 * 24 * 30 * 12;
+        var M = Math.floor(time / (60 * 60 * 24 * 30));
+        showTime = showTime.includes("MM") ? showTime.replace("MM", fixedTwo(M)) : showTime.replace("M", String(M));
+      } else {
+        var M = 0;
+      }
+      if (showType.value.showDay) {
+        time = time - M * 60 * 60 * 24 * 30;
+        var D = Math.floor(time / (60 * 60 * 24));
+        showTime = showTime.includes("DD") ? showTime.replace("DD", fixedTwo(D)) : showTime.replace("D", String(D));
+      } else {
+        var D = 0;
+      }
+      if (showType.value.showHour) {
+        time = time - D * 60 * 60 * 24;
+        var H = Math.floor(time / (60 * 60));
+        showTime = showTime.includes("HH") ? showTime.replace("HH", fixedTwo(H)) : showTime.replace("H", String(H));
+      } else {
+        var H = 0;
+      }
+      if (showType.value.showMinute) {
+        time = time - H * 60 * 60;
+        var m = Math.floor(time / 60);
+        showTime = showTime.includes("mm") ? showTime.replace("mm", fixedTwo(m)) : showTime.replace("m", String(m));
+      } else {
+        var m = 0;
+      }
+      if (showType.value.showSecond) {
+        var s = time - m * 60;
+        showTime = showTime.includes("ss") ? showTime.replace("ss", fixedTwo(s)) : showTime.replace("s", String(s));
+      }
+      return showTime;
     }
-    const showTime = computed(() => {
-      return timeFormat(restTime.value);
-    });
-    function CountDown(restTime2) {
-      rafTimeout(() => {
-        restTime2.value--;
-        if (restTime2.value > 0) {
-          CountDown(restTime2);
-        } else {
-          emit("finish");
-        }
-      }, 1e3);
+    function CountDown() {
+      if (futureTime.value > Date.now()) {
+        restTime.value = futureTime.value - Date.now();
+        requestAnimationFrame(CountDown);
+      } else {
+        restTime.value = 0;
+        emit("finish");
+      }
     }
     onMounted(() => {
-      if (restTime.value > Date.now()) {
-        restTime.value = Math.floor((restTime.value - Date.now()) / 1e3);
+      if (props.countdown > Date.now()) {
+        futureTime.value = props.countdown;
+      } else {
+        futureTime.value = props.countdown + Date.now();
       }
-      CountDown(restTime);
+      requestAnimationFrame(CountDown);
     });
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$i, [
-        renderSlot(_ctx.$slots, "title", {}, () => [
-          createElementVNode("p", _hoisted_2$g, toDisplayString(props.title), 1)
-        ], true),
+        createElementVNode("div", _hoisted_2$g, [
+          renderSlot(_ctx.$slots, "title", {}, () => [
+            createTextVNode(toDisplayString(props.title), 1)
+          ], true)
+        ]),
         createElementVNode("div", _hoisted_3$c, [
           restTime.value > 0 ? renderSlot(_ctx.$slots, "prefix", { key: 0 }, () => [
             createTextVNode(toDisplayString(__props.prefix), 1)
           ], true) : createCommentVNode("", true),
           __props.finishedText && restTime.value === 0 ? renderSlot(_ctx.$slots, "finish", { key: 1 }, () => [
             createTextVNode(toDisplayString(__props.finishedText), 1)
-          ], true) : (openBlock(), createElementBlock("span", _hoisted_4$b, toDisplayString(unref(showTime)), 1)),
+          ], true) : (openBlock(), createElementBlock("span", _hoisted_4$b, toDisplayString(timeFormat(restTime.value)), 1)),
           restTime.value > 0 ? renderSlot(_ctx.$slots, "suffix", { key: 3 }, () => [
             createTextVNode(toDisplayString(__props.suffix), 1)
           ], true) : createCommentVNode("", true)
@@ -750,8 +764,8 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Countdown_vue_vue_type_style_index_0_scoped_62180f8f_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-62180f8f"]]);
+const Countdown_vue_vue_type_style_index_0_scoped_e9b21e09_lang = "";
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-e9b21e09"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
 };
@@ -823,7 +837,7 @@ const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data
 DatePicker.install = (app) => {
   app.component(DatePicker.__name, DatePicker);
 };
-const _withScopeId$a = (n) => (pushScopeId("data-v-307ec802"), n = n(), popScopeId(), n);
+const _withScopeId$a = (n) => (pushScopeId("data-v-83d91acb"), n = n(), popScopeId(), n);
 const _hoisted_1$h = ["onClick"];
 const _hoisted_2$f = { class: "m-spin-dot" };
 const _hoisted_3$b = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -903,6 +917,11 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
       // 加载中
       type: Boolean,
       default: false
+    },
+    visible: {
+      // 对话框是否可见
+      type: Boolean,
+      default: false
     }
   },
   emits: ["close", "cancel", "ok"],
@@ -923,6 +942,14 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
         return props.height + "px";
       }
     });
+    watch(
+      () => props.visible,
+      (to) => {
+        if (!to) {
+          fullScreen.value = false;
+        }
+      }
+    );
     function onBlur() {
       if (!props.loading) {
         emits("close");
@@ -941,7 +968,7 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
       emits("ok");
     }
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", {
+      return withDirectives((openBlock(), createElementBlock("div", {
         class: "m-dialog-mask",
         onClick: withModifiers(onBlur, ["self"])
       }, [
@@ -1010,12 +1037,14 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
             ])
           ], 2)
         ], 6)
-      ], 8, _hoisted_1$h);
+      ], 8, _hoisted_1$h)), [
+        [vShow, __props.visible]
+      ]);
     };
   }
 });
-const Dialog_vue_vue_type_style_index_0_scoped_307ec802_lang = "";
-const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-307ec802"]]);
+const Dialog_vue_vue_type_style_index_0_scoped_83d91acb_lang = "";
+const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-83d91acb"]]);
 Dialog.install = (app) => {
   app.component(Dialog.__name, Dialog);
 };
@@ -2466,7 +2495,7 @@ const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-60b
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
-const _withScopeId$3 = (n) => (pushScopeId("data-v-4109fe94"), n = n(), popScopeId(), n);
+const _withScopeId$3 = (n) => (pushScopeId("data-v-e613996b"), n = n(), popScopeId(), n);
 const _hoisted_1$7 = { class: "m-steps" };
 const _hoisted_2$6 = ["onClick"];
 const _hoisted_3$3 = { class: "m-steps-icon" };
@@ -2551,8 +2580,9 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
               class: normalizeClass([
                 "m-steps-item",
                 {
-                  "finished": unref(currentStep) > index + 1,
-                  "process": unref(currentStep) === index + 1
+                  "finish": unref(currentStep) > index + 1,
+                  "process": unref(currentStep) === index + 1,
+                  "wait": unref(currentStep) < index + 1
                 }
               ]),
               key: index
@@ -2581,8 +2611,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Steps_vue_vue_type_style_index_0_scoped_4109fe94_lang = "";
-const Steps = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-4109fe94"]]);
+const Steps_vue_vue_type_style_index_0_scoped_e613996b_lang = "";
+const Steps = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-e613996b"]]);
 Steps.install = (app) => {
   app.component(Steps.__name, Steps);
 };
