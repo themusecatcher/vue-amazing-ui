@@ -10,6 +10,7 @@
   "module": "./dist/vue-amazing-ui.js",
   "exports": {
     "./dist/style.css": "./dist/style.css",
+    "./css": "./dist/style.css",
     ".": {
       "import": "./dist/vue-amazing-ui.js",
       "require": "./dist/vue-amazing-ui.umd.cjs"

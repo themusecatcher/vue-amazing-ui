@@ -17,7 +17,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 import VueAmazingUI from 'vue-amazing-ui'
-import 'vue-amazing-ui/dist/style.css'
+import 'vue-amazing-ui/css'
 
 const app = createApp(App)
 app.use(VueAmazingUI)
@@ -28,7 +28,7 @@ app.use(VueAmazingUI)
 ```vue
 <script setup lang="ts">
 import { Button } from 'vue-amazing-ui'
-import 'vue-amazing-ui/dist/style.css'
+import 'vue-amazing-ui/css'
 </script>
 ```
 

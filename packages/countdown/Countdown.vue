@@ -21,61 +21,65 @@ const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
 })
 const futureTime = ref() // 未来某时刻
 const restTime = ref() // 剩余时间
-const millisecond = computed(() => { // 显示毫秒值
-  return props.format.includes('SSS')
+const showType = computed(() => {
+  return {
+    showMillisecond: props.format.includes('SSS'),
+    showYear: props.format.includes('Y'),
+    showMonth: props.format.includes('M'),
+    showDay: props.format.includes('D'),
+    showHour: props.format.includes('H'),
+    showMinute: props.format.includes('m'),
+    showSecond: props.format.includes('s')
+  }
 })
-
 function fixedTwo (value: number): string {
   return value < 10 ? '0' + value : String(value)
 }
 function timeFormat (time: number): string {
   let showTime = props.format
-  if (millisecond) {
+  if (showType.value.showMillisecond) {
     var S = time % 1000
     showTime = showTime.replace('SSS', '0'.repeat(3 - String(S).length) + S)
   }
-  if (showTime.includes('s')) {
-    time = Math.floor(time / 1000)
-    var s = time
-  } else {
-    var s = 0
-  }
-  if (showTime.includes('m')) {
-    s = s % 60
-    var m = Math.floor((time - s) / 60)
-  } else {
-    var m = 0
-  }
-  if (showTime.includes('H')) {
-    m = m % 60
-    var H = Math.floor((time - s - m * 60) / 60 / 60)
-  } else {
-    var H = 0
-  }
-  if (showTime.includes('D')) {
-    H = H % 24
-    var D = Math.floor((time - s - m * 60 - H * 60 * 60) / 60 / 60 / 24)
-  } else {
-    var D = 0
-  }
-  if (showTime.includes('M')) {
-    D = D % 30
-    var M = Math.floor((time - s - m * 60 - H * 60 * 60 - D * 24 * 60 * 60) / 60 / 60 / 24 / 30)
-  } else {
-    var M = 0
-  }
-  if (showTime.includes('Y')) {
-    M = M % 12
-    var Y = Math.floor((time - s - m * 60 - H * 60 * 60 - D * 24 * 60 * 60 - M * 30 * 24 * 60 * 60) / 60 / 60 / 24 / 30 / 12)
+  time = Math.floor(time / 1000) // 将时间转为s为单位
+  if (showType.value.showYear) {
+    var Y = Math.floor(time / (60 * 60 * 24 * 30 * 12))
+    showTime = showTime.includes('YY') ? showTime.replace('YY', fixedTwo(Y)) : showTime.replace('Y', String(Y))
   } else {
     var Y = 0
   }
-  showTime = showTime.includes('ss') ? showTime.replace('ss', fixedTwo(s)) : showTime.replace('s', String(s))
-  showTime = showTime.includes('mm') ? showTime.replace('mm', fixedTwo(m)) : showTime.replace('m', String(m))
-  showTime = showTime.includes('HH') ? showTime.replace('HH', fixedTwo(H)) : showTime.replace('H', String(H))
-  showTime = showTime.includes('DD') ? showTime.replace('DD', fixedTwo(D)) : showTime.replace('D', String(D))
-  showTime = showTime.includes('MM') ? showTime.replace('MM', fixedTwo(M)) : showTime.replace('M', String(M))
-  showTime = showTime.includes('YY') ? showTime.replace('YY', fixedTwo(Y)) : showTime.replace('Y', String(Y))
+  if (showType.value.showMonth) {
+    time = time - Y * 60 * 60 * 24 * 30 * 12
+    var M = Math.floor(time / (60 * 60 * 24 * 30))
+    showTime = showTime.includes('MM') ? showTime.replace('MM', fixedTwo(M)) : showTime.replace('M', String(M))
+  } else {
+    var M = 0
+  }
+  if (showType.value.showDay) {
+    time = time - M * 60 * 60 * 24 * 30
+    var D = Math.floor(time / (60 * 60 * 24))
+    showTime = showTime.includes('DD') ? showTime.replace('DD', fixedTwo(D)) : showTime.replace('D', String(D))
+  } else {
+    var D = 0
+  }
+  if (showType.value.showHour) {
+    time = time - D * 60 * 60 * 24
+    var H = Math.floor(time / (60 * 60))
+    showTime = showTime.includes('HH') ? showTime.replace('HH', fixedTwo(H)) : showTime.replace('H', String(H))
+  } else {
+    var H = 0
+  }
+  if (showType.value.showMinute) {
+    time = time - H * 60 * 60
+    var m = Math.floor(time / 60)
+    showTime = showTime.includes('mm') ? showTime.replace('mm', fixedTwo(m)) : showTime.replace('m', String(m))
+  } else {
+    var m = 0
+  }
+  if (showType.value.showSecond) {
+    var s = time - m * 60
+    showTime = showTime.includes('ss') ? showTime.replace('ss', fixedTwo(s)) : showTime.replace('s', String(s))
+  }
   return showTime
 }
 const emit = defineEmits(['finish'])
