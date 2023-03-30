@@ -15,9 +15,8 @@ const route = useRoute() // 返回当前路由地址，相当于在模板中使�
 
 const current = ref([route.name])
 function onClick (e: any):void {
-  console.log('e:', e)
-  console.log('key:', e.key)
-  // console.log('keyPath:', keyPath)
+  console.log(e.key)
+  // console.log(e.keyPath)
 }
 </script>
 <template>
