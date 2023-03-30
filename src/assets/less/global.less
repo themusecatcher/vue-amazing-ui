@@ -5,6 +5,10 @@ body,
   margin: 0;
   padding: 0;
 }
+/*
+  invert(): 反转输入图像，1表示完全反转
+  hue-rotate(): 在输入图像上应用色相旋转
+*/
 html.dark { // 网站暗黑模式
   filter: invert(1) hue-rotate(180deg);
 }
@@ -14,11 +18,12 @@ html {
 img, video { // 将图片和视频再次反转以恢复原本的颜色
   filter: invert(1) hue-rotate(180deg);
 }
+// sepia(): 将图像转换为深褐色
 html.cafe {
   filter: sepia(0.9) hue-rotate(315deg) brightness(0.9);
 }
 html.contrast {
-  filter: contrast(2);
+  filter: contrast(2); // 调整颜色对比度
 }
 h1,h2,h3,h4,h5,h6,hr,a,span,p,div,ul,ol,li,button,input,textarea,th,td,img {
   margin: 0;
