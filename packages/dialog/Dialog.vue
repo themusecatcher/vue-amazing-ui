@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 const props = defineProps({
     title: { // 标题 string | slot
       type: String,
@@ -40,6 +40,10 @@ const props = defineProps({
     loading: { // 加载中
       type: Boolean,
       default: false
+    },
+    visible: { // 对话框是否可见
+      type: Boolean,
+      default: false
     }
   })
 
@@ -58,6 +62,12 @@ const dialogHeight = computed(() => {
       return props.height + 'px'
     }
   })
+watch(
+  () => props.visible, (to) => {
+    if (!to) { // 重置全屏显示
+      fullScreen.value = false
+    }
+})
 const emits = defineEmits(['close', 'cancel', 'ok'])
 function onBlur () {
   if (!props.loading) {
@@ -78,7 +88,7 @@ function onConfirm () {
 }
 </script>
 <template>
-  <div class="m-dialog-mask" @click.self="onBlur">
+  <div class="m-dialog-mask" v-show="visible" @click.self="onBlur">
     <div :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']" :style="`width: ${dialogWidth}; height: ${dialogHeight};`">
       <div class="m-dialog-content" :class="{loading: loading}">
         <div class="m-spin-dot" v-show="loading">

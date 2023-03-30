@@ -177,43 +177,6 @@ const routes = [
       //   // props: { name: 'curry', age: '30' }, // 当props为对象时，它将原样设置为组件props。当props是静态的时候很有用
       //   // props: (route: object) => ({ route: route, name: 'curry', age: '30' }), // 可以创建一个返回props的函数
       //   component: () => import('@/views/Common.vue')
-      // },
-      // {
-      //   path: '/spin',
-      //   name: 'Spin',
-      //   meta: { title: '加载中' },
-      //   component: () => import('../views/SpinPage.vue')
-      // },
-      // {
-      //   path: '/table',
-      //   name: 'Table',
-      //   meta: { title: '分页列表' },
-      //   component: () => import('../views/TablePage.vue')
-      // },
-      // {
-      //   path: '/modal',
-      //   name: 'Modal',
-      //   meta: { title: '对话框' },
-      //   component: () => import('../views/ModalPage.vue')
-      // },
-      // {
-      //   path: '/tip',
-      //   name: 'Tip',
-      //   meta: { title: '提示框' },
-      //   component: () => import('../views/InfoTip.vue')
-      // },
-      // {
-      //   path: '/lines',
-      //   name: 'Lines',
-      //   meta: { title: 'Lines' },
-      //   component: () => import('../views/Lines.vue')
-      // },
-      // {
-      //   path: '/swiper',
-      //   name: 'Swiper',
-      //   meta: { title: '触摸滑动插件', depth: 2 },
-      //   component: () => import('@/views/Swiper.vue')
-      // },
       // {
       //   path: '/tree',
       //   name: 'Tree',
@@ -227,28 +190,10 @@ const routes = [
       //   component: () => import('@/views/Draggable.vue')
       // },
       // {
-      //   path: '/selector',
-      //   name: 'Selector',
-      //   meta: { title: '下拉组件', keepAlive: false, depth: 1 },
-      //   component: () => import('@/views/Selector.vue')
-      // },
-      // {
-      //   path: '/image',
-      //   name: 'Image',
-      //   meta: { title: '图片组件' },
-      //   component: () => import('@/views/Image.vue')
-      // },
-      // {
       //   path: '/viewer',
       //   name: 'Viewer',
       //   meta: { title: '预览插件' },
       //   component: () => import('@/views/Viewer.vue')
-      // },
-      // {
-      //   path: '/steps',
-      //   name: 'Steps',
-      //   meta: { title: '步骤条组件' },
-      //   component: () => import('@/views/Steps.vue')
       // },
       // {
       //   path: '/lazyload',
@@ -256,29 +201,11 @@ const routes = [
       //   meta: { title: '懒加载' },
       //   component: () => import('@/views/Lazyload.vue')
       // },
-      // { // 视频播放组件；序列化图片播放组件
-      //   path: '/video',
-      //   name: 'Video',
-      //   meta: { title: '播放组件' },
-      //   component: () => import('@/views/Video.vue')
-      // },
-      // {
-      //   path: '/banner',
-      //   name: 'Banner',
-      //   meta: { title: 'banner组件' },
-      //   component: () => import('@/views/Banner.vue')
-      // },
       // {
       //   path: '/pdf',
       //   name: 'Pdf',
       //   meta: { title: 'pdf预览' },
       //   component: () => import('@/views/PdfView.vue')
-      // },
-      // {
-      //   path: '/slider',
-      //   name: 'Slider',
-      //   meta: { title: '文字滚动' },
-      //   component: () => import('@/views/Slider.vue')
       // },
       // {
       //   path: '/ws',
