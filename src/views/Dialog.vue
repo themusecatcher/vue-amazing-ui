@@ -65,7 +65,7 @@ function onConfirm () { // “确定”,“知道了”按钮回调
       @ok="onConfirm"
       :center="center"
       :loading="loading"
-      v-show="visible">
+      :visible="visible">
       <template #title>
         <p class="u-title">Title</p>
       </template>

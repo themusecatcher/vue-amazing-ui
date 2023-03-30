@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+
+import { useDark, useToggle } from '@vueuse/core'
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
+
+const checked = ref(false)
+
+
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
 
 const current = ref([route.name])
-const theme = ref('light')
-
-function changeTheme (checked: boolean) {
-  theme.value = checked ? 'dark' : 'light'
-}
-console.log(route.name)
 function onClick (e: any):void {
   console.log('e:', e)
   console.log('key:', e.key)
@@ -20,18 +23,16 @@ function onClick (e: any):void {
 <template>
   <a-row style="width: 100%;">
     <a-col :xs="5" :xl="4">
-      <a-switch
-        class="u-switch"
-        :checked="theme === 'dark'"
-        checked-children="Dark"
-        un-checked-children="Light"
-        @change="changeTheme"
-      />
+      <Switch
+      class="u-switch"
+      v-model:checked="checked"
+      @change="toggleDark"
+      checkedInfo="Dark"
+      uncheckedInfo="Light" />
       <a-menu
         class="m-menus"
         v-model:selectedKeys="current"
         mode="inline"
-        :theme="theme"
         @click="onClick">
         <a-menu-item key="Home">
           <router-link to="/home">首页</router-link>

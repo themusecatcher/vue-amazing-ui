@@ -5,6 +5,21 @@ body,
   margin: 0;
   padding: 0;
 }
+html.dark { // 网站暗黑模式
+  filter: invert(1) hue-rotate(180deg);
+}
+html {
+  transition: filter .3s;
+}
+img, video { // 将图片和视频再次反转以恢复原本的颜色
+  filter: invert(1) hue-rotate(180deg);
+}
+html.cafe {
+  filter: sepia(0.9) hue-rotate(315deg) brightness(0.9);
+}
+html.contrast {
+  filter: contrast(2);
+}
 h1,h2,h3,h4,h5,h6,hr,a,span,p,div,ul,ol,li,button,input,textarea,th,td,img {
   margin: 0;
   padding: 0;

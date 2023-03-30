@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^4.2.1",
+    "@vueuse/core": "^9.13.0",
     "ant-design-vue": "^3.2.16",
     "core-js": "^3.28.0",
     "swiper": "^9.1.1",
