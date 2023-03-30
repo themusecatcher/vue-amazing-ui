@@ -21,6 +21,8 @@ declare module '@vue/runtime-core' {
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
     ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
     ARow: typeof import('ant-design-vue/es')['Row']
+    AStep: typeof import('ant-design-vue/es')['Step']
+    ASteps: typeof import('ant-design-vue/es')['Steps']
     ASwitch: typeof import('ant-design-vue/es')['Switch']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

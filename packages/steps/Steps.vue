@@ -56,8 +56,9 @@ function onChange (index: number) { // 点击切换选择步骤
     <div class="m-steps">
       <div :class="['m-steps-item',
           {
-            'finished': currentStep > index + 1,
-            'process': currentStep === index + 1
+            'finish': currentStep > index + 1,
+            'process': currentStep === index + 1,
+            'wait': currentStep < index + 1
           }
         ]"
         v-for="(step, index) in steps" :key="index">
@@ -79,7 +80,6 @@ function onChange (index: number) { // 点击切换选择步骤
 .m-steps-area {
   margin: 0px auto;
   .m-steps {
-    padding: 30px 0;
     display: flex;
     .m-steps-item {
       display: inline-block;
@@ -106,7 +106,6 @@ function onChange (index: number) { // 点击切换选择步骤
       }
       .m-info-wrap {
         display: inline-block;
-        cursor: pointer;
         .m-steps-icon {
           display: inline-block;
           margin-right: 8px;
@@ -152,25 +151,10 @@ function onChange (index: number) { // 点击切换选择步骤
           }
         }
       }
-      &:hover {
-        .m-steps-icon {
-          border-color: @themeColor;
-          .u-num {
-            color: @themeColor;
-          }
-        }
-        .m-steps-content {
-          .u-steps-title {
-            color: @themeColor;
-          }
-          .u-steps-description {
-            color: @themeColor;
-          }
-        }
-      }
     }
-    .finished {
+    .finish {
       .m-info-wrap {
+        cursor: pointer;
         .m-steps-icon {
           background: #fff;
           border: 1px solid rgba(0,0,0,.25);
@@ -187,9 +171,7 @@ function onChange (index: number) { // 点击切换选择步骤
             color: rgba(0,0,0,.45);
           }
         }
-      }
-      &:hover {
-        .m-info-wrap {
+        &:hover {
           .m-steps-content {
             .u-steps-title {
               color: @themeColor;
@@ -218,6 +200,27 @@ function onChange (index: number) { // 点击切换选择步骤
           }
           .u-steps-description {
             color: rgba(0,0,0,.85);
+          }
+        }
+      }
+    }
+    .wait {
+      .m-info-wrap {
+        cursor: pointer;
+        &:hover {
+          .m-steps-icon {
+            border-color: @themeColor;
+            .u-num {
+              color: @themeColor;
+            }
+          }
+          .m-steps-content {
+            .u-steps-title {
+              color: @themeColor;
+            }
+            .u-steps-description {
+              color: @themeColor;
+            }
           }
         }
       }
