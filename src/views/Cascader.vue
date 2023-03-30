@@ -62,12 +62,10 @@ watch(selectedValue, (to) => {
   console.log('p to:', to)
 })
 function onChange (value: Array<number|string>, label: Array<string>) {
-  selectedValue.value = value
   console.log('value:', value)
   console.log('label:', label)
 }
 function onAntChange (value: Array<number|string>, selectedOptions: any) {
-  selectedValue.value = value
   console.log('value:', value)
   console.log('selectedOptions:', selectedOptions)
 }
