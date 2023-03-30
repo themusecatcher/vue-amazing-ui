@@ -1,21 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
-import { rafTimeout, cancelRaf } from '../../packages'
-
-const n = ref(0)
-function test (n: Ref) {
-  n.value++
-  console.log('n:', n.value)
-  console.log('rafId:', raf.id)
-}
-const raf = rafTimeout(() => {
-  test(n)
-}, 1000, true)
-
-rafTimeout(() => {
-  cancelRaf(raf)
-  // cancelAnimationFrame(raf.id)
-}, 3000)
+import { ref } from 'vue'
 
 const collapseData = ref([
   {
