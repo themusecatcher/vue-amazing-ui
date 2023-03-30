@@ -10,7 +10,7 @@ function onFinish () {
     <Countdown
       title="Countdown"
       :countdown="12 * 30 * 24 * 60 * 60 * 1000"
-      format="Y 年 M 月 D 天 H 时 m 分 s 秒"
+      format="Y 年 M月 D 天 H 时 m 分 s 秒 SSS 毫秒"
       finishedText="Finished"
       @finish="onFinish">
       <template #prefix>There's only </template>
