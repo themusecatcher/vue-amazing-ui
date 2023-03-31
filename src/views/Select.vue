@@ -78,7 +78,7 @@ function onChange (value: string|number, label: string,  index: number) {
       allowClear
       v-model:selectedValue="selectedValue"
       @change="onChange" />
-    <!-- <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除（allowClear）</h2>
+    <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除（allowClear）</h2>
     <a-select
       class="border-box"
       :options="options"
@@ -87,7 +87,7 @@ function onChange (value: string|number, label: string,  index: number) {
       :disabled="false"
       allowClear
       v-model:value="selectedValue"
-      @change="onChange" /> -->
+      @change="onChange" />
   </div>
 </template>
 <style lang="less" scoped>

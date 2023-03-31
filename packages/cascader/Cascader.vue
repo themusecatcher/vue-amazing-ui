@@ -11,7 +11,7 @@ const props = defineProps({
       type: Array<any>,
       default: () => []
     },
-    selectedValue: { // （v-model）省市区选中项
+    selectedValue: { // （v-model）级联选中项
       type: Array<number|string>,
       default: () => []
     },
@@ -47,8 +47,8 @@ const props = defineProps({
       type: Number,
       default: 36
     },
-    disabled: { // 省市区统一是否全部禁用
-      type: Boolean,
+    disabled: { // 三级各自是否禁用
+      type: [Boolean, Array<boolean>],
       default: false
     },
     placeholder: { // 三级下拉各自占位文本
@@ -81,6 +81,15 @@ onMounted(() => {
     initLabels(props.selectedValue)
   }
 })
+function findChildren (options: any[], index: number): Option[] {
+  const len = options.length
+  for (let i = 0; i < len; i++) {
+    if (options[i][props.value] === props.selectedValue[index]) {
+      return options[i][props.children] || []
+    }
+  }
+  return []
+}
 function initCascader (selectedValue: (string|number)[]) {
   secondOptions.value = findChildren(firstOptions.value, 0)
   thirdOptions.value = []
@@ -88,14 +97,14 @@ function initCascader (selectedValue: (string|number)[]) {
     thirdOptions.value = findChildren(secondOptions.value, 1)
   }
 }
-function findChildren (options: any[], index: number): Option[] {
+function findLabel (options: any[], index: number): any {
   const len = options.length
-  for(let i = 0; i < len; i++) {
+  for (let i = 0; i < len; i++) {
     if (options[i][props.value] === props.selectedValue[index]) {
-      return options[i][props.children] || []
+      return options[i][props.label]
     }
   }
-  return []
+  return props.selectedValue[index]
 }
 function initLabels (selectedValue: (string|number)[]) {
   labels.value[0] = findLabel(firstOptions.value, 0)
@@ -105,15 +114,6 @@ function initLabels (selectedValue: (string|number)[]) {
   if (selectedValue.length > 2) {
     labels.value[2] = findLabel(thirdOptions.value, 2)
   }
-}
-function findLabel (options: any[], index: number): any {
-  const len = options.length
-  for(let i = 0; i < len; i++) {
-    if (options[i][props.value] === props.selectedValue[index]) {
-      return options[i][props.label]
-    }
-  }
-  return props.selectedValue[index]
 }
 const emits = defineEmits(['update:selectedValue', 'change'])
 function onFirstChange (value: string|number, label: string, index: number) { // 一级下拉回调
@@ -152,7 +152,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       v-model:selectedValue="selectedValue[0]"
       :label="label"
       :value="value"
-      :disabled="disabled"
+      :disabled="Array.isArray(disabled) ? disabled[0] : disabled"
       :width="Array.isArray(width) ? width[0] : width"
       :height="height"
       :num="num"
@@ -164,7 +164,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       v-model:selectedValue="selectedValue[1]"
       :label="label"
       :value="value"
-      :disabled="disabled"
+      :disabled="Array.isArray(disabled) ? disabled[1] : disabled"
       :width="Array.isArray(width) ? width[1] : width"
       :height="36"
       :num="num"
@@ -176,7 +176,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       v-model:selectedValue="selectedValue[2]"
       :label="label"
       :value="value"
-      :disabled="disabled"
+      :disabled="Array.isArray(disabled) ? disabled[2] : disabled"
       :width="Array.isArray(width) ? width[2] : width"
       :height="height"
       :num="num"
