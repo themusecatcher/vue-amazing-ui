@@ -27,7 +27,10 @@ withDefaults(defineProps<Props>(), {
         <span class="u-tail"></span>
         <div class="m-dot">
           <slot name="dot" :index="index">
-            <span class="u-dot" :style="{borderColor: ColorStyle[data.color || 'blue']}"></span>
+            <span class="u-dot" v-if="data.color === 'red'" :style="{borderColor: ColorStyle.red}"></span>
+            <span class="u-dot" v-else-if="data.color === 'gray'" :style="{borderColor: ColorStyle.gray}"></span>
+            <span class="u-dot" v-else-if="data.color === 'green'" :style="{borderColor: ColorStyle.green}"></span>
+            <span class="u-dot" v-else="data.color === 'blue'" :style="{borderColor: ColorStyle.blue}"></span>
           </slot>
         </div>
         <div class="u-content">
