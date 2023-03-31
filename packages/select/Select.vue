@@ -5,15 +5,15 @@ const props = defineProps({
       type: Array<any>,
       default: () => []
     },
-    label: { // 下拉字典项的文本字段名
+    label: { // 选择器字典项的文本字段名
       type: String,
       default: 'label'
     },
-    value: { // 下拉字典项的值字段名
+    value: { // 选择器字典项的值字段名
       type: String,
       default: 'value'
     },
-    placeholder: { // 下拉框默认文字
+    placeholder: { // 选择框默认文字
       type: String,
       default: '请选择'
     },
@@ -21,15 +21,15 @@ const props = defineProps({
       type: Boolean,
       default: false
     },
-    allowClear: { // 是否支持清楚
+    allowClear: { // 是否支持清除
       type: Boolean,
       default: false
     },
-    width: { // 下拉框宽度
+    width: { // 选择框宽度
       type: Number,
       default: 200
     },
-    height: { // 下拉框高度
+    height: { // 选择框高度
       type: Number,
       default: 36
     },
@@ -37,7 +37,7 @@ const props = defineProps({
       type: Number,
       default: 6
     },
-    selectedValue: { // v-model当前选中的option
+    selectedValue: { // 当前选中的option条目（v-model）
       type: [Number, String],
       default: null
     }
