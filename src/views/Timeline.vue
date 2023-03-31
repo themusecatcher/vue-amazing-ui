@@ -69,12 +69,13 @@ const timelineData = ref([
   display: inline-block;
   width: 10px;
   height: 10px;
-  border: 5px solid @themeColor;
+  border: 4px solid @themeColor;
   border-radius: 50%;
   background: #FFF;
 }
 .u-desc {
-  font-size: 32px;
+  font-size: 16px;
+  font-weight: 500;
 }
 .border-box {
   :deep(*) {
