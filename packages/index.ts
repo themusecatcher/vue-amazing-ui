@@ -1,4 +1,4 @@
-import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce } from '@/utils/util'
+import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, dateFormat } from '@/utils/util'
 import type { App } from 'vue'
 import Breadcrumb from './breadcrumb'
 import Button from './button'
@@ -75,7 +75,8 @@ export {
   rafTimeout,
   cancelRaf,
   throttle,
-  debounce
+  debounce,
+  dateFormat
 }
 export {
   Breadcrumb,
