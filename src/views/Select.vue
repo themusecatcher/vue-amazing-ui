@@ -56,7 +56,7 @@ function onChange (value: string|number, label: string,  index: number) {
     <h2 class="mb10">Select 选择器基本使用</h2>
     <Select
       :options="options"
-      name="label"
+      label="label"
       value="value"
       placeholder="请选择城市"
       :disabled="false"
@@ -68,7 +68,7 @@ function onChange (value: string|number, label: string,  index: number) {
     <h2 class="mt30 mb10">Select 选择器支持清除（allowClear）</h2>
     <Select
       :options="options"
-      name="label"
+      label="label"
       value="value"
       placeholder="请选择城市"
       :disabled="false"

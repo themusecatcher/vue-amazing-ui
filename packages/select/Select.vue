@@ -37,7 +37,7 @@ const props = defineProps({
       type: Number,
       default: 6
     },
-    selectedValue: { // 当前选中的option条目（v-model）
+    selectedValue: { // （v-model）当前选中的option条目
       type: [Number, String],
       default: null
     }
