@@ -10,38 +10,42 @@ function onClick () {
       class="mr30"
       type="default"
       effect="reverse"
-      size="small"
-      :borderRadius="4"
       :disabled="false"
       :center="false"
       @click="onClick">
-      按钮Button
+      Default Button
     </Button>
     <Button
       class="mr30"
       type="primary"
       effect="fade"
-      size="middle"
       :width="120"
       :height="40"
-      :borderRadius="4"
       :disabled="false"
       :center="false"
       @click="onClick">
-      按钮Button
+      Primary Button
     </Button>
     <Button
+      class="mr30"
       type="danger"
       effect="fade"
       size="large"
-      :borderRadius="4"
       :disabled="false"
       :center="false"
       @click="onClick">
-      按钮Button
+      Danger Button
+    </Button>
+    <Button
+      type="primary"
+      effect="fade"
+      size="large"
+      disabled
+      @click="onClick">
+      Disabled Button
     </Button>
     <h2 class="mt30 mb10">Ant Design Vue 按钮</h2>
-    <a-button class="border-box" type="primary">按钮Button</a-button>
+    <a-button class="border-box" type="primary" disabled>按钮Button</a-button>
   </div>
 </template>
 <style lang="less" scoped>
