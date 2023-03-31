@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle', // 'small' 'middle' 'large'
   width: 0, // 优先级高于size属性，为0时自适应内容的宽度
   height: 0, // 优先级高于size属性
-  borderRadius: 4,
+  borderRadius: 5,
   route: () => { return {} },
   target: '_self',
   disabled: false,
@@ -157,6 +157,14 @@ const isRoute = computed(() => {
     border-color: #d9d9d9;
     text-shadow: none;
     box-shadow: none;
+    cursor: not-allowed;
+    &:hover, &:active {
+      color: rgba(0, 0, 0, 0.25);
+      background-color: #f5f5f5;
+      border-color: #d9d9d9;
+      text-shadow: none;
+      box-shadow: none;
+    }
   }
 }
 .center {
