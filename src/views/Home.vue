@@ -3,8 +3,8 @@ import { ref } from 'vue'
 
 const collapseData = ref([
   {
-    header: '以上六个 API 使用时只需:',
-    text: `import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce } from 'vue-amazing-ui'`
+    header: '以上七个 API 使用时只需:',
+    text: `import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, dateFormat } from 'vue-amazing-ui'`
   }
 ])
 const activeKey = ref(0)
@@ -28,6 +28,7 @@ const activeKey = ref(0)
       <li class="u-tip mb10">cancelRaf: 用于取消 rafTimeout 函数！</li>
       <li class="u-tip mb10">throttle: 使用 rafTimeout 实现的节流函数！</li>
       <li class="u-tip mb10">debounce: 使用 rafTimeout 实现的防抖函数！</li>
+      <li class="u-tip mb10">dateFormat: 简单易用的日期格式化函数！</li>
     </ul>
     <Collapse
       lang="ts"
