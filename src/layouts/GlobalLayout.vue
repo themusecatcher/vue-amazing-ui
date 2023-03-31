@@ -99,6 +99,9 @@ function onClick (e: any):void {
         <a-menu-item key="TextScroll">
           <router-link to="/textscroll">文字滚动（TextScroll）</router-link>
         </a-menu-item>
+        <a-menu-item key="Timeline">
+          <router-link to="/timeline">时间轴（Timeline）</router-link>
+        </a-menu-item>
         <a-menu-item key="Tooltip">
           <router-link to="/tooltip">文字提示（Tooltip）</router-link>
         </a-menu-item>

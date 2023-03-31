@@ -22,6 +22,7 @@ import Swiper from './swiper'
 import Switch from './switch'
 import Table from './table'
 import TextScroll from './textscroll'
+import Timeline from './timeline'
 import Tooltip from './tooltip'
 import Video from './video'
 import Waterfall from './waterfall'
@@ -50,6 +51,7 @@ const components = [
   Switch,
   Table,
   TextScroll,
+  Timeline,
   Tooltip,
   Video,
   Waterfall
@@ -101,6 +103,7 @@ export {
   Switch,
   Table,
   TextScroll,
+  Timeline,
   Tooltip,
   Video,
   Waterfall
