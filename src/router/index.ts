@@ -151,6 +151,12 @@ const routes = [
         component: () => import('@/views/TextScroll.vue')
       },
       {
+        path: '/timeline',
+        name: 'Timeline',
+        meta: { title: '时间轴' },
+        component: () => import('@/views/Timeline.vue')
+      },
+      {
         path: '/tooltip',
         name: 'Tooltip',
         meta: { title: '文字提示' },
