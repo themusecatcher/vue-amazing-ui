@@ -74,22 +74,18 @@ function onAntChange (value: Array<number|string>, selectedOptions: any) {
   <div>
     <h2 class="mb10">Cascader 级联选择基本使用</h2>
     <Cascader
+      :options="options"
       v-model:selectedValue="selectedValue"
       label="label"
       value="value"
       children="children"
       changeOnSelect
-      :options="options"
       :zIndex="9"
       :gap="8"
-      :provinceWidth="120"
-      :cityWidth="120"
-      :areaWidth="120"
       :width="120"
       :height="36"
-      :provinceDisabled="false"
-      :cityDisabled="false"
       :disabled="false"
+      placeholder="请选择"
       :num="6"
       @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 级联选择</h2>
