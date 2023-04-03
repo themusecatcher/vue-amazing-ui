@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 interface Props {
   videoUrl: string, // 视频文件url，必传，支持网络地址 https 和相对地址 require('@/assets/files/Bao.mp4')
   videoCover?: string // 视频封面url，支持网络地址 https 和相对地址 require('@/assets/images/Bao.jpg')
