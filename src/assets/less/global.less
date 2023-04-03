@@ -11,12 +11,12 @@ body,
 */
 html.dark { // 网站暗黑模式
   filter: invert(1) hue-rotate(180deg);
+  img, video { // 将图片和视频再次反转以恢复原本的颜色
+    filter: invert(1) hue-rotate(180deg);
+  }
 }
 html {
   transition: filter .3s;
-}
-img, video { // 将图片和视频再次反转以恢复原本的颜色
-  filter: invert(1) hue-rotate(180deg);
 }
 // sepia(): 将图像转换为深褐色
 html.cafe {

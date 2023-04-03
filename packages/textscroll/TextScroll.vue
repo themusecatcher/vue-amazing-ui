@@ -39,10 +39,8 @@ const props = defineProps({
   })
 // horizon
 const left = ref(0)
-const fpsRaf = ref() // fps回调标识
+const fpsRaf = ref(0) // fps回调标识
 const moveRaf = ref() // 一个 long 整数，请求 ID ，是回调列表中唯一的标识。是个非零值，没别的意义
-const start = ref(0)
-const end = ref(0)
 const fps = ref(60)
 const textData = ref([...props.sliderText])
 const horizonRef = ref()
@@ -55,26 +53,28 @@ const step = computed(() => { // 移动参数（120fps: 0.5, 60fps: 1）
     return 60 / fps.value
   }
 })
-function getFPS (timestamp: number) { // 获取屏幕刷新率
-  // 单位ms，用1000ms/两个时间的间隔≈刷新频率fps
-  // console.log('timestamp:', timestamp)
-  // console.log('fpsRaf:', fpsRaf.value)
-  if (fpsRaf.value === 5) {
-    start.value = timestamp
+function getFPS () { // 获取屏幕刷新率
+  // @ts-ignore
+  const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
+  var start: any = null
+  function timeElapse (timestamp: number) {
+    /*
+      timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame() 开始去执行回调函数的时刻
+    */
+    // console.log('timestamp:', timestamp)
+    if (!start) {
+      if (fpsRaf.value > 10) {
+        start = timestamp
+      }
+      fpsRaf.value = requestAnimationFrame(timeElapse)
+    } else {
+      fps.value = Math.floor(1000 / (timestamp - start))
+      console.log('fps', fps.value)
+      distance.value = getDistance() // 获取每列文字宽度
+      onStart() // 开始滚动
+    }
   }
-  if (fpsRaf.value === 6) {
-    end.value = timestamp
-    // 计算屏幕刷新率
-    fps.value = Math.floor(1000 / (end.value - start.value))
-    console.log('fps:', fps.value)
-    console.log('step:', step.value)
-  }
-  fpsRaf.value = requestAnimationFrame(getFPS)
-  if (fpsRaf.value > 6) {
-    cancelAnimationFrame(fpsRaf.value)
-    distance.value = getDistance() // 获取每列文字宽度
-    onStart() // 开始滚动
-  }
+  fpsRaf.value = requestAnimationFrame(timeElapse)
 }
 function getDistance ():number {
   return parseFloat((horizonRef.value.offsetWidth / props.amount).toFixed(2))
@@ -103,7 +103,7 @@ onMounted(() => {
   if (props.vertical) {
     onStart() // 启动垂直滚动
   } else {
-    fpsRaf.value = requestAnimationFrame(getFPS)
+    getFPS()
   }
 })
 function onStart () {

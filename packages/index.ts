@@ -2,6 +2,7 @@ import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, thr
 import type { App } from 'vue'
 import Breadcrumb from './breadcrumb'
 import Button from './button'
+import Carousel from './carousel'
 import Cascader from './cascader'
 import Checkbox from './checkbox'
 import Collapse from './collapse'
@@ -31,6 +32,7 @@ import Waterfall from './waterfall'
 const components = [
   Breadcrumb,
   Button,
+  Carousel,
   Cascader,
   Checkbox,
   Collapse,
@@ -83,6 +85,7 @@ export {
 export {
   Breadcrumb,
   Button,
+  Carousel,
   Cascader,
   Checkbox,
   Collapse,

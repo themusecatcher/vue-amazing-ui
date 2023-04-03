@@ -36,7 +36,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
     <Swiper
       :imageData="imageData"
       type="banner"
-      effect="fade"
+      effect="slider"
       width="100%"
       height="100vh"
       navigation />

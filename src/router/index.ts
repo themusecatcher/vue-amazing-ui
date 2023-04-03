@@ -31,6 +31,12 @@ const routes = [
         component: () => import('@/views/Button.vue')
       },
       {
+        path: '/carousel',
+        name: 'Carousel',
+        meta: { title: '走马灯' },
+        component: () => import('@/views/Carousel.vue')
+      },
+      {
         path: '/cascader',
         name: 'Cascader',
         meta: { title: '级联选择' },

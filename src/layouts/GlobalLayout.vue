@@ -5,7 +5,7 @@ import { useDark, useToggle } from '@vueuse/core'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
-const checked = ref(false)
+const checked = ref(isDark)
 
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
@@ -38,6 +38,9 @@ function onClick (e: any):void {
         </a-menu-item>
         <a-menu-item key="Button">
           <router-link to="/button">按钮（Button）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Carousel">
+          <router-link to="/carousel">走马灯（Carousel）</router-link>
         </a-menu-item>
         <a-menu-item key="Cascader">
           <router-link to="/cascader">级联选择（Cascader）</router-link>
