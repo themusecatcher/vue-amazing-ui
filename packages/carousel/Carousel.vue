@@ -25,6 +25,14 @@ const props = defineProps({
     pagination: { // 是否显示分页
       type: Boolean,
       default: true
+    },
+    disableOnInteraction: { // 用户操作导航或分页之后，是否禁止autoplay。默认为true：停止。
+      type: Boolean,
+      default: true
+    },
+    pauseOnMouseEnter: { // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
+      type: Boolean,
+      default: true
     }
   })
 const toLeft = ref(true) // 左滑标志，默认左滑
@@ -56,9 +64,7 @@ const totalWidth = computed(() => { // 容器宽度：(图片数组长度+1) * �
 const len = computed(() => { // 图片数量
   return props.imageData.length
 })
-const activeSwitcher = computed(() => { // 当前展示图片标志
-  return (toLeft ? Math.ceil(left.value / imageWidth.value) % len.value : Math.floor(left.value / imageWidth.value) % len.value) + 1
-})
+const activeSwitcher = ref(1) // 当前展示图片标识
 
 onMounted(() => {
   getFPS() // 获取浏览器的刷新率
@@ -67,11 +73,11 @@ onMounted(() => {
 
 const fpsRaf = ref() // fps回调标识
 const fps = ref(60)
-const step = computed(() => { // 移动参数（120fps: 10, 60fps: 20）
+const step = computed(() => { // 移动参数（120fps: 40, 60fps: 20）
   if (fps.value === 60) {
-    return 20
+    return 15
   } else {
-    return 20 / (fps.value / 60)
+    return 12 * (fps.value / 60)
   }
 })
 function getFPS () { // 获取屏幕刷新率
@@ -120,6 +126,7 @@ function onStop () {
   console.log('imageSlider stop')
 }
 function onStopLeft () { // 停止往左滑动
+  cancelRaf(slideTimer.value)
   cancelAnimationFrame(moveRaf.value)
   transition.value = true
   left.value = Math.ceil(left.value / imageWidth.value) * imageWidth.value // ceil：向上取整，floor：向下取整
@@ -138,16 +145,32 @@ function onAutoSlide () {
   }, props.interval)
 }
 function goLeft (target: number) { // 点击右箭头，往左滑动
-  toLeft.value = true // 向左滑动
-  onStopLeft()
+  if (toLeft.value) {
+    onStopLeft()
+  } else {
+    onStopRight()
+    toLeft.value = true // 向左滑动
+  }
   transition.value = false
   moveLeft(target)
 }
 function goRight (target: number) { // 点击左箭头，往右滑动
-  toLeft.value = false // 非向左滑动
-  onStopRight()
+  if (toLeft.value) {
+    onStopLeft()
+    toLeft.value = false // 非向左滑动
+  } else {
+    onStopRight()
+  }
   transition.value = false
   moveRight(target)
+}
+function onLeftArrow (target: number) {
+  activeSwitcher.value = (activeSwitcher.value - 1 > 0) ? activeSwitcher.value - 1 : len.value
+  goRight(target)
+}
+function onRightArrow (target: number) {
+  activeSwitcher.value = activeSwitcher.value % len.value + 1
+  goLeft(target)
 }
 function autoMoveLeftEffect () {
   if (left.value >= targetMove.value) {
@@ -169,7 +192,9 @@ function moveLeftEffect () {
   if (left.value >= targetMove.value) {
     if (switched.value) { // 跳转切换，完成后自动滑动
       switched.value = false
-      onStart()
+      if (!props.disableOnInteraction && !props.pauseOnMouseEnter) {
+        onStart()
+      }
     }
   } else {
     var move = Math.ceil((targetMove.value - left.value) / step.value) // 越来越慢的滑动过程
@@ -188,7 +213,9 @@ function moveRightEffect () {
   if (left.value <= targetMove.value) {
     if (switched.value) { // 跳转切换，完成后自动滑动
       switched.value = false
-      onStart()
+      if (!props.disableOnInteraction && !props.pauseOnMouseEnter) {
+        onStart()
+      }
     }
   } else {
     var move = Math.floor((targetMove.value - left.value) / step.value) // 越来越慢的滑动过程
@@ -204,20 +231,27 @@ function moveRight (target: number) { // 箭头切换或跳转切换，向右滑
   moveRaf.value = requestAnimationFrame(moveRightEffect)
 }
 function onSwitch (n: number) { // 分页切换图片
-  if (n < activeSwitcher.value) { // 往右滑动
+  if (activeSwitcher.value !== n) {
     switched.value = true // 跳转切换标志
     const target = (n - 1) * imageWidth.value
-    goRight(target)
-  }
-  if (n > activeSwitcher.value) { // 往左滑动
-    switched.value = true // 跳转切换标志
-    const target = (n - 1) * imageWidth.value
-    goLeft(target)
+    if (n < activeSwitcher.value) { // 往右滑动
+      activeSwitcher.value = n
+      goRight(target)
+    }
+    if (n > activeSwitcher.value) { // 往左滑动
+      activeSwitcher.value = n
+      goLeft(target)
+    }
   }
 }
 </script>
 <template>
-  <div class="m-slider" ref="carousel" :style="`width: ${carouselWidth}; height: ${carouselHeight};`" @mouseenter="onStop" @mouseleave="onStart">
+  <div
+    class="m-slider"
+    ref="carousel"
+    :style="`width: ${carouselWidth}; height: ${carouselHeight};`"
+    @mouseenter="pauseOnMouseEnter ? onStop() : (e: Event) => e.preventDefault()"
+    @mouseleave="pauseOnMouseEnter ? onStart() : (e: Event) => e.preventDefault()">
     <div :class="{'transition': transition}" :style="`width: ${totalWidth}px; height: 100%; will-change: transform; transform: translateX(${-left}px);`">
       <div
         v-for="(image, index) in imageData"
@@ -234,8 +268,8 @@ function onSwitch (n: number) { // 分页切换图片
       </div>
     </div>
     <template v-if="navigation">
-      <svg class="arrow-left" @click="goRight((activeSwitcher+1)%len*imageWidth)" viewBox="64 64 896 896" data-icon="left-circle" aria-hidden="true" focusable="false"><path d="M603.3 327.5l-246 178a7.95 7.95 0 0 0 0 12.9l246 178c5.3 3.8 12.7 0 12.7-6.5V643c0-10.2-4.9-19.9-13.2-25.9L457.4 512l145.4-105.2c8.3-6 13.2-15.6 13.2-25.9V334c0-6.5-7.4-10.3-12.7-6.5z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
-      <svg class="arrow-right" @click="goLeft(activeSwitcher%(len+1)*imageWidth)" viewBox="64 64 896 896" data-icon="right-circle" aria-hidden="true" focusable="false"><path d="M666.7 505.5l-246-178A8 8 0 0 0 408 334v46.9c0 10.2 4.9 19.9 13.2 25.9L566.6 512 421.2 617.2c-8.3 6-13.2 15.6-13.2 25.9V690c0 6.5 7.4 10.3 12.7 6.5l246-178c4.4-3.2 4.4-9.8 0-13z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
+      <svg class="arrow-left" @click="onLeftArrow((activeSwitcher + len - 2)%len*imageWidth)" viewBox="64 64 896 896" data-icon="left-circle" aria-hidden="true" focusable="false"><path d="M603.3 327.5l-246 178a7.95 7.95 0 0 0 0 12.9l246 178c5.3 3.8 12.7 0 12.7-6.5V643c0-10.2-4.9-19.9-13.2-25.9L457.4 512l145.4-105.2c8.3-6 13.2-15.6 13.2-25.9V334c0-6.5-7.4-10.3-12.7-6.5z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
+      <svg class="arrow-right" @click="onRightArrow(activeSwitcher*imageWidth)" viewBox="64 64 896 896" data-icon="right-circle" aria-hidden="true" focusable="false"><path d="M666.7 505.5l-246-178A8 8 0 0 0 408 334v46.9c0 10.2 4.9 19.9 13.2 25.9L566.6 512 421.2 617.2c-8.3 6-13.2 15.6-13.2 25.9V690c0 6.5 7.4 10.3 12.7 6.5l246-178c4.4-3.2 4.4-9.8 0-13z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
     </template>
     <div class="m-switch" v-if="pagination">
       <div
