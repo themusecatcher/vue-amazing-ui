@@ -24,9 +24,9 @@ onMounted(() => {
     <h2 class="mb10">Carousel 走马灯基本使用</h2>
     <Carousel
       :imageData="imageData"
-      :width="500"
-      :height="400"
-      :interval="3000"
+      :width="800"
+      :height="450"
+      :interval="1500"
       :pauseOnMouseEnter="true"
       :disableOnInteraction="false" />
   </div>
