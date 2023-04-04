@@ -48,6 +48,7 @@ const moveRaf = ref() // 滑动效果回调标识
 const targetMove = ref() // 目标移动位置
 const switched = ref(false) // 是否在进行跳转切换，用于区别箭头或自动切换（false）和跳转切换（true）
 const carousel = ref() // DOM引用
+const activeSwitcher = ref(1) // 当前展示图片标识
 
 const carouselWidth = computed(() => { // 走马灯区域宽度
   if (typeof props.width === 'number') {
@@ -69,7 +70,6 @@ const totalWidth = computed(() => { // 容器宽度：(图片数组长度+1) * �
 const len = computed(() => { // 图片数量
   return props.imageData.length
 })
-const activeSwitcher = ref(1) // 当前展示图片标识
 
 onMounted(() => {
   getFPS() // 获取浏览器的刷新率
