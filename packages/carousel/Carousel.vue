@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
+interface Image {
+  title: string, // 图片名称
+  link?: string, // 图片跳转链接
+  imgUrl: string // 图片地址
+}
 const props = defineProps({
-    imageData: { // 轮播图片数组
-      type: Array<any>,
+    imageData: { // 走马灯图片数组
+      type: Array<Image>,
       default: () => []
     },
     interval: { // 自动滑动轮播间隔
@@ -26,7 +31,7 @@ const props = defineProps({
       type: Boolean,
       default: true
     },
-    disableOnInteraction: { // 用户操作导航或分页之后，是否禁止autoplay。默认为true：停止。
+    disableOnInteraction: { // 用户操作导航或分页之后，是否禁止自动切换。默认为true：停止。
       type: Boolean,
       default: true
     },
@@ -139,8 +144,8 @@ function onStopRight () { // 停止往右滑动
 function onAutoSlide () {
   cancelRaf(slideTimer.value)
   slideTimer.value = rafTimeout(() => {
-    // 或者使用 activeSwitcher % (len + 1) * imageWidth
     const target = left.value % (len.value * imageWidth.value) + imageWidth.value
+    activeSwitcher.value = activeSwitcher.value % len.value + 1
     autoMoveLeft(target)
   }, props.interval)
 }
