@@ -62,6 +62,7 @@ yarn dev
 | :--- | :--- |
 Breadcrumb | 面包屑
 Button | 按钮
+Carousel | 走马灯
 Cascader | 级联选择
 Checkbox | 多选框
 Collapse | 折叠面板

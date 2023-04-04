@@ -1,7 +1,8 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "packages/**/*.ts", "packages/**/*.vue", "dist/*.gz"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "packages/**/*.ts", "packages/**/*.vue"],
   "compilerOptions": {
+    "ignoreDeprecations": "5.0",
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {

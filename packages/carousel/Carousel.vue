@@ -78,9 +78,9 @@ onMounted(() => {
 
 const fpsRaf = ref() // fps回调标识
 const fps = ref(60)
-const step = computed(() => { // 移动参数（120fps: 40, 60fps: 20）
+const step = computed(() => { // 移动参数（120fps: 24, 60fps: 12）
   if (fps.value === 60) {
-    return 15
+    return 12
   } else {
     return 12 * (fps.value / 60)
   }
@@ -142,7 +142,6 @@ function onStopRight () { // 停止往右滑动
   left.value = Math.floor(left.value / imageWidth.value) * imageWidth.value // ceil：向上取整，floor：向下取整
 }
 function onAutoSlide () {
-  cancelRaf(slideTimer.value)
   slideTimer.value = rafTimeout(() => {
     const target = left.value % (len.value * imageWidth.value) + imageWidth.value
     activeSwitcher.value = activeSwitcher.value % len.value + 1
