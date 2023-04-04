@@ -308,39 +308,41 @@ function onSwitch (n: number) { // 分页切换图片
   }
   &:hover {
     .arrow-left {
-      display: inline-block;
+      opacity: 1;
+      pointer-events: auto;
     }
     .arrow-right {
-      display: inline-block;
+      opacity: 1;
+      pointer-events: auto;
     }
   }
   .arrow-left {
-    display: none;
-    width: 25px;
-    height: 25px;
+    width: 28px;
+    height: 28px;
     position: absolute;
-    left: 12px;
+    left: 16px;
     top: 50%;
     transform: translateY(-50%);
     fill: rgba(255, 255, 255, .6);
     cursor: pointer;
-    vertical-align: bottom;
+    opacity: 0;
+    pointer-events: none;
     transition: all .3s;
     &:hover {
       fill: rgba(255, 255, 255);
     }
   }
   .arrow-right {
-    display: none;
-    width: 25px;
-    height: 25px;
+    width: 28px;
+    height: 28px;
     position: absolute;
-    right: 12px;
+    right: 16px;
     top: 50%;
     transform: translateY(-50%);
     fill: rgba(255, 255, 255, .6);
     cursor: pointer;
-    vertical-align: bottom;
+    opacity: 0;
+    pointer-events: none;
     transition: all .3s;
     &:hover {
       fill: rgba(255, 255, 255);
