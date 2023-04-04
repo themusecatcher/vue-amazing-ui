@@ -4,7 +4,7 @@ import { getImageUrl } from '@/utils/util'
 
 const imageData = ref<any[]>([])
 function loadImages () {
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; i <= 8; i++) {
     imageData.value.push({
       title: `image-${i}`,
       link: '',
@@ -24,9 +24,11 @@ onMounted(() => {
     <h2 class="mb10">Carousel 走马灯基本使用</h2>
     <Carousel
       :imageData="imageData"
-      width="100%"
-      height="100vh"
-      :interval="3000" />
+      :width="500"
+      :height="400"
+      :interval="3000"
+      :pauseOnMouseEnter="true"
+      :disableOnInteraction="false" />
   </div>
 </template>
 <style lang="less" scoped>
