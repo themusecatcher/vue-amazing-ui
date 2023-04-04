@@ -20,11 +20,11 @@ function onClick (e: any):void {
   <a-row style="width: 100%;">
     <a-col :xs="5" :xl="4">
       <Switch
-      class="u-switch"
-      v-model:checked="checked"
-      @change="toggleDark"
-      checkedInfo="Dark"
-      uncheckedInfo="Light" />
+        class="u-switch"
+        v-model:checked="checked"
+        @change="toggleDark"
+        checkedInfo="Dark"
+        uncheckedInfo="Light" />
       <a-menu
         class="m-menus"
         v-model:selectedKeys="current"
@@ -157,7 +157,7 @@ function onClick (e: any):void {
 }
 .router-view {
   margin-top: 50px;
-  padding: 0 48px;
+  padding: 0 48px 48px;
   overflow: auto;
   height: calc(100vh - 50px);
 }
