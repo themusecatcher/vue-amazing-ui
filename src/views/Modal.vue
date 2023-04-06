@@ -75,22 +75,22 @@ function onConfirm () { // “确定”,“知道了”按钮回调
     loading.value = false
   }, 500)
 }
+
 </script>
 <template>
   <div>
     <h2 class="mb10">Modal 信息提示基本使用</h2>
-    <Button class="mr30" @click="showConfirmModal('Some descriptions ...')">提交确认信息提示框</Button>
-    <Button class="mr30" @click="showDeleteModal('Some descriptions ...')">删除确认信息提示框</Button>
-    <Button class="mr30" @click="showInfoModal('Some descriptions ...')">info信息提示框</Button>
-    <Button class="mr30" @click="showSuccessModal('Some descriptions ...')">success信息提示框</Button>
-    <Button class="mr30" @click="showErrorModal('Some descriptions ...')">error信息提示框</Button>
-    <Button class="mr30" @click="showWarnModal('Some descriptions ...')">warn信息提示框</Button>
-    <Button class="mr30" @click="showFixModal('Some descriptions ...')">高度固定信息提示框</Button>
-    <Button class="mr30" @click="showCenterModal('Some descriptions ...')">水平垂直居中信息提示框</Button>
+    <Button class="mr30" @click="showConfirmModal('Some descriptions ...')">提交确认</Button>
+    <Button class="mr30" @click="showDeleteModal('Some descriptions ...')">删除确认</Button>
+    <Button class="mr30" @click="showInfoModal('Some descriptions ...')">Info</Button>
+    <Button class="mr30" @click="showSuccessModal('Some descriptions ...')">Success</Button>
+    <Button class="mr30" @click="showErrorModal('Some descriptions ...')">Error</Button>
+    <Button class="mr30" @click="showWarnModal('Some descriptions ...')">Warn</Button>
+    <Button class="mr30" @click="showFixModal('Some descriptions ...')">高度固定</Button>
     <Modal
       :title="title"
       :content="content"
-      :width="480"
+      :width="416"
       cancelText="取消"
       okText="确认"
       noticeText="知道了"

@@ -61,39 +61,37 @@ function onConfirm () {
   <Transition>
     <div class="m-modal-mask" v-show="visible" @click.self="onBlur">
       <div :class="['m-modal', center ? 'relative-hv-center' : 'top-center']" :style="`width: ${width}px;`">
-        <div class="m-modal-content">
+        <div :class="['m-modal-body', {'loading':loading}]">
           <div class="m-spin-dot" v-show="loading">
             <span class="u-dot-item"></span>
             <span class="u-dot-item"></span>
             <span class="u-dot-item"></span>
             <span class="u-dot-item"></span>
           </div>
-          <div :class="['m-modal-body', {'loading':loading}]">
-            <div class="m-body">
-              <div class="m-title">
-                <template v-if="mode==='confirm'">
-                  <span class="u-icon question">?</span>
-                </template>
-                <template v-if="mode==='info'">
-                  <span class="u-icon info" v-if="type==='info'">!</span>
-                  <span class="u-icon success" v-if="type==='success'">✓</span>
-                  <span class="u-icon error" v-if="type==='error'">x</span>
-                  <span class="u-icon warn" v-if="type==='warn'">!</span>
-                </template>
-                <div class="u-title">{{ title }}</div>
-              </div>
-              <div class="u-content">{{ content }}</div>
-            </div>
-            <div class="m-btns">
+          <div class="m-body">
+            <div class="m-title">
               <template v-if="mode==='confirm'">
-                <button class="u-cancel" @click="onCancel">{{ cancelText }}</button>
-                <button class="u-confirm primary" @click="onConfirm" v-if="type==='confirm'">{{ okText }}</button>
-                <button class="u-confirm delete" @click="onConfirm" v-if="type==='delete'">{{ okText }}</button>
+                <svg focusable="false" class="u-icon confirm" data-icon="exclamation-circle" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"></path></svg>
               </template>
               <template v-if="mode==='info'">
-                <button class="u-confirm primary" @click="onConfirm">{{ noticeText }}</button>
+                <svg focusable="false" class="u-icon info" v-if="type==='info'" data-icon="info-circle" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"></path></svg>
+                <svg focusable="false" class="u-icon success" v-if="type==='success'" data-icon="check-circle" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"></path></svg>
+                <svg focusable="false" class="u-icon error" v-if="type==='error'" data-icon="close-circle" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
+                <svg focusable="false" class="u-icon warn" v-if="type==='warn'" data-icon="exclamation-circle" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"></path></svg>
               </template>
+              <div class="u-title">{{ title }}</div>
             </div>
+            <div class="u-content">{{ content }}</div>
+          </div>
+          <div class="m-btns">
+            <template v-if="mode==='confirm'">
+              <button class="u-cancel" @click="onCancel">{{ cancelText }}</button>
+              <button class="u-confirm primary" @click="onConfirm" v-if="type==='confirm'">{{ okText }}</button>
+              <button class="u-confirm delete" @click="onConfirm" v-if="type==='delete'">{{ okText }}</button>
+            </template>
+            <template v-if="mode==='info'">
+              <button class="u-confirm primary" @click="onConfirm">{{ noticeText }}</button>
+            </template>
           </div>
         </div>
       </div>
@@ -129,19 +127,21 @@ function onConfirm () {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 100000;
+  z-index: 1000;
   background: rgba(0,0,0,0.45);
   .m-modal {
     width: 420px;
     margin: 0 auto;
-    color: rgba(0,0,0,.65);
+    color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 1.5;
-    .m-modal-content {
+    .m-modal-body {
       position: relative;
+      word-wrap: break-word;
+      padding: 20px 24px;
       background: #fff;
-      border-radius: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,.1);
+      border-radius: 8px;
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
       .m-spin-dot { // 绝对定位，并设置水平垂直居中
         position: absolute;
         display: inline-block;
@@ -198,125 +198,112 @@ function onConfirm () {
           -webkit-animation-delay: 1.2s;
         }
       }
-      .loading { // 加载过程背景虚化
-        opacity: 0.4;
-        background: #e8e8e8;
-        pointer-events: none; // 屏蔽鼠标事件
-      }
-      .m-modal-body {
-        padding: 32px 32px 24px;
-        word-wrap: break-word;
-        .m-body {
-          .m-title {
-            width: 100%;
-            display: -webKit-box;
-            display: -webKit-inline-box;
-            .u-icon {
-              margin-right: 16px;
-              width: 20px;
-              height: 20px;
-              font-size: 16px;
-              font-weight: bold;
-              border-radius: 50%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-            .question {
-              color: #faad14;
-              border: 2px solid #faad14;
-            }
-            .info {
-              color: #1890ff;
-              border: 2px solid #1890ff;
-            }
-            .success {
-              color: #52c41a;
-              border: 2px solid #52c41a;
-            }
-            .error {
-              color: #f5222d;
-              border: 2px solid #f5222d;
-            }
-            .warn {
-              color: #faad14;
-              border: 2px solid #faad14;
-            }
-            .u-title {
-              font-size: 16px;
-              font-weight: 500;
-              color: rgba(0,0,0,.85);
-              line-height: 24px;
-              width: calc(100% - 40px);
-            }
+      .m-body {
+        .m-title {
+          width: 100%;
+          .u-icon {
+            display: inline-block;
+            margin-right: 12px;
+            margin-top: 1px;
+            width: 22px;
+            height: 22px;
+            font-size: 16px;
+            font-weight: bold;
+            vertical-align: top;
           }
-          .u-content {
-            margin-left: 40px;
-            margin-top: 8px;
-            color: rgba(0,0,0,.65);
-            font-size: 14px;
+          .confirm {
+            fill: #faad14;
+          }
+          .info {
+            fill: @themeColor;
+          }
+          .success {
+            fill: #52c41a;
+          }
+          .error {
+            fill: #ff4d4f;
+          }
+          .warn {
+            fill: #faad14;
+          }
+          .u-title {
+            display: inline-block;
+            vertical-align: top;
+            font-size: 16px;
+            font-weight: 600;
+            max-width: calc(100% - 34px);
           }
         }
-        .m-btns {
-          margin-top: 24px;
-          text-align: right;
-          .u-cancel {
-            height: 32px;
-            line-height: 32px;
-            padding: 0 15px;
-            font-size: 14px;
-            border-radius: 4px;
-            color: rgba(0,0,0,.65);
-            background: #fff;
-            border: 1px solid #d9d9d9;
-            cursor: pointer;
-            transition: all .3s cubic-bezier(.645,.045,.355,1);
-            &:hover {
-              color: fade(@themeColor, 80%);
-              border-color: fade(@themeColor, 80%);
-            }
-            &:focus {
-              color: shade(@themeColor, 12%);
-              border-color: shade(@themeColor, 12%);
-            }
+        .u-content {
+          margin-left: 34px;
+          margin-top: 8px;
+          font-size: 14px;
+          max-width: calc(100% - 34px);
+        }
+      }
+      .m-btns {
+        margin-top: 24px;
+        text-align: right;
+        .u-cancel {
+          height: 32px;
+          line-height: 32px;
+          padding: 0 15px;
+          font-size: 14px;
+          border-radius: 4px;
+          color: rgba(0,0,0,.65);
+          background: #fff;
+          border: 1px solid #d9d9d9;
+          cursor: pointer;
+          transition: all .3s cubic-bezier(.645,.045,.355,1);
+          &:hover {
+            color: fade(@themeColor, 80%);
+            border-color: fade(@themeColor, 80%);
           }
-          .u-confirm {
-            margin-left: 8px;
-            height: 32px;
-            line-height: 32px;
-            padding: 0 15px;
-            font-size: 14px;
-            border-radius: 4px;
-            color: #fff;
-            transition: all .3s cubic-bezier(.645,.045,.355,1);
-            cursor: pointer;
+          &:focus {
+            color: shade(@themeColor, 12%);
+            border-color: shade(@themeColor, 12%);
           }
-          .primary {
-            background: @themeColor;
-            border: 1px solid @themeColor;
-            &:hover {
-              background: fade(@themeColor, 80%);
-              border-color: fade(@themeColor, 80%);
-            }
-            &:focus {
-              background: shade(@themeColor, 12%);
-              border-color: shade(@themeColor, 12%);
-            }
+        }
+        .u-confirm {
+          margin-left: 8px;
+          height: 32px;
+          line-height: 32px;
+          padding: 0 15px;
+          font-size: 14px;
+          border-radius: 4px;
+          color: #fff;
+          transition: all .3s cubic-bezier(.645,.045,.355,1);
+          cursor: pointer;
+        }
+        .primary {
+          background: @themeColor;
+          border: 1px solid @themeColor;
+          &:hover {
+            background: fade(@themeColor, 80%);
+            border-color: fade(@themeColor, 80%);
           }
-          .delete {
-            background: #ff4d4f;
-            border: 1px solid #ff4d4f;
-            &:hover {
-              background-color: #ff7875;
-              border-color: #ff7875;
-            }
-            &:focus {
-              background-color: #d9363e;
-              border-color: #d9363e;
-            }
+          &:focus {
+            background: shade(@themeColor, 12%);
+            border-color: shade(@themeColor, 12%);
+          }
+        }
+        .delete {
+          background: #ff4d4f;
+          border: 1px solid #ff4d4f;
+          &:hover {
+            background-color: #ff7875;
+            border-color: #ff7875;
+          }
+          &:focus {
+            background-color: #d9363e;
+            border-color: #d9363e;
           }
         }
       }
+    }
+    .loading { // 加载过程背景虚化
+      background: rgb(248, 248, 248);
+      pointer-events: none; // 屏蔽鼠标事件
     }
   }
 }
