@@ -46,7 +46,7 @@ console.log(Math.PI)
     <Progress
       :width="120"
       :percent="percent"
-      :strokeWidth="12"
+      :strokeWidth="10"
       :strokeColor="'#1890FF'"
       :showInfo="true"
       type="circle" />

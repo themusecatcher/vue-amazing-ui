@@ -19,14 +19,14 @@ function onChange (val: number|number[]) {
     <Slider
       :min="0"
       :max="100"
-      :width="1000"
+      width="80%"
       v-model:value="singleValue"
       @change="onChange"/>
     <h2 class="mt30 mb10">Slider 双滑块滑动输入条基本使用（range & {{ doubleValue }}）</h2>
     <Slider
       :min="0"
       :max="100"
-      :width="1000"
+      width="80%"
       range
       v-model:value="doubleValue"
       @change="onChange"/>
@@ -34,7 +34,7 @@ function onChange (val: number|number[]) {
     <Slider
       :min="0"
       :max="100"
-      :width="1000"
+      width="80%"
       disabled
       range
       v-model:value="doubleValue"
