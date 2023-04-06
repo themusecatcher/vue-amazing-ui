@@ -36,6 +36,10 @@ defineProps({ // 运行时声明
     type: Boolean,
     default: true
   },
+  top: { // 固定高度水平居中时，距顶部高度
+    type: Number,
+    default: 100
+  },
   loading: { // 加载中...
     type: Boolean,
     default: false
@@ -60,7 +64,7 @@ function onConfirm () {
 <template>
   <Transition>
     <div class="m-modal-mask" v-show="visible" @click.self="onBlur">
-      <div :class="['m-modal', center ? 'relative-hv-center' : 'top-center']" :style="`width: ${width}px;`">
+      <div :class="['m-modal', center ? 'relative-hv-center' : 'top-center']" :style="`width: ${width}px; top: ${!center ? top + 'px':'50%'};`">
         <div :class="['m-modal-body', {'loading':loading}]">
           <div class="m-spin-dot" v-show="loading">
             <span class="u-dot-item"></span>
