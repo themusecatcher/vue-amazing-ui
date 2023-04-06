@@ -2,9 +2,9 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 const props = defineProps({
-    width: { // 滑动输入条在页面中的宽度
-      type: Number,
-      default: 600
+    width: { // 滑动输入条的宽度
+      type: [String, Number],
+      default: '100%'
     },
     min: { // 滑动输入条最小值
       type: Number,
@@ -32,9 +32,17 @@ const timer = ref()
 const left = ref(0) // 左滑块距离滑动条左端的距离
 const right = ref(0) // 右滑动距离滑动条左端的距离
 const slider = ref()
+const sliderWidth = ref()
 
 const scale = computed(() => {
-  return props.width / (props.max - props.min)
+  return sliderWidth.value / (props.max - props.min)
+})
+const totalWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return props.width + 'px'
+  } else {
+    return props.width
+  }
 })
 const sliderValue = computed(() => {
   const high = Math.round(right.value / scale.value + props.min)
@@ -53,8 +61,12 @@ watch(sliderValue, (to) => {
   emit('change', to)
 })
 onMounted(() => {
+  getSliderWidth()
   getPosition()
 })
+function getSliderWidth () {
+  sliderWidth.value = slider.value.offsetWidth
+}
 function getPosition () {
   if (props.range) { // 双滑块模式
     left.value = ((props.value as number[])[0] - props.min) * scale.value
@@ -115,9 +127,9 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
     console.log(e.clientX)
     var moveX = e.clientX - leftX
-    if (moveX > props.width) {
-      right.value = props.width
-    } else if (left.value <= moveX && moveX <= props.width) {
+    if (moveX > sliderWidth.value) {
+      right.value = sliderWidth.value
+    } else if (left.value <= moveX && moveX <= sliderWidth.value) {
       right.value = moveX
     } else { // moveX < left
       right.value = left.value
@@ -130,7 +142,7 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
 }
 </script>
 <template>
-  <div :class="['m-slider', { disabled: disabled }]" ref="slider" :style="`width: ${width}px;`">
+  <div :class="['m-slider', { disabled: disabled }]" ref="slider" :style="`width: ${totalWidth};`">
     <div class="u-slider-rail" @click.self="onClickPoint"></div>
     <div class="u-slider-track" :class="{trackTransition: transition}" :style="`left: ${left}px; right: auto; width: ${right - left}px;`"></div>
     <div class="u-slider-handle" :class="{handleTransition: transition}" v-if="range" tabindex="0" @mousedown="onLeftMouseDown" :style="`left: ${left}px; right: auto; transform: translateX(-50%);`"></div>
@@ -149,10 +161,10 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
     z-index: 99;
     height: 4px;
     width: 100%;
-    background: #f5f5f5;
+    background-color: #f5f5f5;
     border-radius: 2px;
     cursor: pointer;
-    transition: background .3s;
+    transition: background-color .3s;
   }
   .u-slider-track { // 蓝色已选择滑动条背景色
     position: absolute;
