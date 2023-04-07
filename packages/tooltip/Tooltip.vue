@@ -13,6 +13,18 @@ defineProps({ // 运行时声明
   title: { // 提示的文本
     type: String,
     default: '暂无提示' // string | slot
+  },
+  fontSize: { // 提示文本字体大小
+    type: Number,
+    default: 14
+  },
+  color: { // 提示文本字体颜色
+    type: String,
+    default: 'rgba(0,0,0,.85)'
+  },
+  backgroundColor: { // 提示框背景色
+    type: String,
+    default: '#FFF'
   }
 })
 const visible = ref(false)
@@ -55,11 +67,11 @@ function onHide (): void {
       @mouseenter="onShow"
       @mouseleave="onHide"
       :style="`max-width: ${maxWidth}px; top: ${top}px; left: ${left}px;`">
-      <div class="u-title">
+      <div class="u-title" :style="`font-size: ${fontSize}px; color: ${color}; background-color: ${backgroundColor};`">
         <slot name="title">{{ title }}</slot>
       </div>
       <div class="m-arrow">
-        <span class="u-arrow"></span>
+        <span class="u-arrow" :style="`background-color: ${backgroundColor};`"></span>
       </div>
     </div>
     <div ref="contentRef" class="u-content">
@@ -87,13 +99,11 @@ function onHide (): void {
     margin: 0 auto;
     word-break: break-all;
     word-wrap: break-word;
-    background: #FFF;
-    box-shadow: 0px 0px 7px 1px fade(@themeColor, 36%);
+    box-shadow: 0px 0px 5px 1px fade(@themeColor, 36%);
     border-radius: 5px;
     font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    color: #333;
+    line-height: 1.5;
+    // line-height: 20px;
   }
   .m-arrow {
     position: absolute;
@@ -108,15 +118,14 @@ function onHide (): void {
     .u-arrow {
       position: absolute;
       left: 50%;
-      top: 0px;
+      top: -1px;
       transform: translate(-50%, -50%) rotate(45deg);
       margin: 0 auto;
       width: 11px;
       height: 11px;
-      background: #FFF;
       border-radius: 0 0 3px 0;
       z-index: 8;
-      box-shadow: 1px 1px 3px 1px fade(@themeColor, 10%);
+      box-shadow: 1px 1px 1px 1px fade(@themeColor, 12%);
     }
   }
 }
