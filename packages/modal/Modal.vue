@@ -121,7 +121,7 @@ function onConfirm () {
 }
 .top-center { // 相对定位，固定高度，始终距离视图顶端100px
   position: relative;
-  top: 100px;
+  // top: 100px;
 }
 .m-modal-mask {
   position: fixed;
