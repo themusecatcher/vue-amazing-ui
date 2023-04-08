@@ -10,7 +10,7 @@ defineProps({ // 运行时声明
   },
   width: { // 提示框宽度
     type: Number,
-    default: 420,
+    default: 420
   },
   cancelText: { // 取消按钮文字
     type: String,
