@@ -37,6 +37,10 @@ const props = defineProps({
       type: Boolean,
       default: true
     },
+    top: { // 固定高度水平居中时，距顶部高度
+      type: Number,
+      default: 100
+    },
     loading: { // 加载中
       type: Boolean,
       default: false
@@ -90,7 +94,7 @@ function onConfirm () {
 <template>
   <Transition>
     <div class="m-dialog-mask" v-show="visible" @click.self="onBlur">
-      <div :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']" :style="`width: ${dialogWidth}; height: ${dialogHeight};`">
+      <div :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']" :style="`width: ${dialogWidth}; height: ${dialogHeight}; top: ${!center ? top + 'px':'50%'}`">
         <div class="m-dialog-content" :class="{loading: loading}">
           <div class="m-spin-dot" v-show="loading">
             <span class="u-dot-item"></span>
@@ -139,7 +143,7 @@ function onConfirm () {
 }
 .top-center { // 相对定位，固定高度，始终距离视图顶端100px
   position: relative;
-  top: 100px;
+  // top: 100px;
 }
 .m-dialog-mask {
   position: fixed;
