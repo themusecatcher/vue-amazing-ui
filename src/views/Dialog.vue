@@ -64,6 +64,7 @@ function onConfirm () { // “确定”,“知道了”按钮回调
       @cancel="onCancel"
       @ok="onConfirm"
       :center="center"
+      :top="100"
       :loading="loading"
       :visible="visible">
       <template #title>
