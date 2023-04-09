@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 interface Step {
-  title?: string,
-  subTitle?: string,
-  description?: string
+  title?: string, // 标题
+  description?: string // 描述
 }
 const props = defineProps({
     steps: { // 步骤数组
       type: Array<Step>,
       default: () => []
     },
-    current: { // 当前选中的步骤（v-model），设置 v-model 后，Steps 变为可点击状态。
+    current: { // 当前选中的步骤（v-model），设置 v-model 后，Steps 变为可点击状态。从1开始计数
       type: Number,
       default: 1
     },
