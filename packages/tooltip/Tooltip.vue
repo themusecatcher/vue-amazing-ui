@@ -103,7 +103,6 @@ function onHide (): void {
     border-radius: 5px;
     font-weight: 400;
     line-height: 1.5;
-    // line-height: 20px;
   }
   .m-arrow {
     position: absolute;
