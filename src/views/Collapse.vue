@@ -34,17 +34,17 @@ function onChange (key: any) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Collapse 折叠面板基本使用（activeKey 传入 number[] | string[]，所有面板可同时展开）</h2>
+    <h2 class="mb10">Collapse 折叠面板基本使用 (activeKey 传入 number[] | string[]，所有面板可同时展开)</h2>
     <Collapse
       :collapseData="collapseData"
       v-model:activeKey="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">'手风琴'（只允许单个内容区域展开，只需 activeKey 传入 number | string 即可）</h2>
+    <h2 class="mt30 mb10">'手风琴' (只允许单个内容区域展开，只需 activeKey 传入 number | string 即可)</h2>
     <Collapse
       :collapseData="collapseData"
       v-model:activeKey="key"
       @change="onChange" />
-    <h2 class="mt30 mb10">折叠面板，可复制面板内容（copyable）</h2>
+    <h2 class="mt30 mb10">折叠面板，可复制面板内容 (copyable)</h2>
     <Collapse
       lang="template"
       copyable
@@ -56,7 +56,7 @@ function onChange (key: any) {
       </template>
       <template #lang>typescript</template>
     </Collapse>
-    <h2 class="mt30 mb10">折叠面板，隐藏箭头图标（showArrow: false）</h2>
+    <h2 class="mt30 mb10">折叠面板，隐藏箭头图标 (showArrow: false)</h2>
     <Collapse
       :show-arrow="false"
       :collapseData="collapseData"

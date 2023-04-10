@@ -32,7 +32,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
         <a class="u-file" href="https://swiperjs.com/demos" target="_blank">Swiper Demos</a>
       </li>
     </ul>
-    <h2 class="mt30 mb10">Swiper 轮播图基本使用（type: banner）</h2>
+    <h2 class="mt30 mb10">Swiper 轮播图基本使用 (type: banner)</h2>
     <Swiper
       :imageData="imageData"
       type="banner"
@@ -40,7 +40,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
       width="100%"
       height="100vh"
       navigation />
-    <h2 class="mt30 mb10">Swiper 走马灯基本使用（type: carousel）</h2>
+    <h2 class="mt30 mb10">Swiper 走马灯基本使用 (type: carousel)</h2>
     <Swiper
       :imageData="imageData"
       type="carousel"
