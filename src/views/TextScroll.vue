@@ -32,7 +32,7 @@ function onClick (value: string) { // 获取点击的标题
       :amount="4"
       backgroundColor="#FFF"
       :height="50" />
-    <h2 class="mt30 mb10">垂直文字滚动基本使用（vertical）</h2>
+    <h2 class="mt30 mb10">垂直文字滚动基本使用 (vertical)</h2>
     <TextScroll
       :sliderText="sliderText"
       @click="onClick"

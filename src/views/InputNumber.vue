@@ -20,6 +20,14 @@ function onAntChange (number: number) {
       :min="-10"
       :max="10"
       :step="1"
+      @change="onChange"
+      v-model:value="value">
+    </InputNumber>
+    <h2 class="mt30 mb10">InputNumber (prefix: '$')</h2>
+    <InputNumber
+      :min="-10"
+      :max="10"
+      :step="1"
       prefix="$"
       @change="onChange"
       v-model:value="value">

@@ -72,7 +72,7 @@ watch(yearValue, (to) => {
       </li>
     </ul>
     <h2 class="mt30 mb10">DatePicker 日期选择器基本使用</h2>
-    <h2 class="mb10">日期选择器（mode: date 默认）</h2>
+    <h2 class="mb10">日期选择器 (mode: date 默认)</h2>
     <DatePicker
       placeholder="请选择日期"
       v-model:date="dateValue"
@@ -80,7 +80,7 @@ watch(yearValue, (to) => {
       show-today
       format="yyyy-MM-dd"
       :width="180" />
-    <h2 class="mt30 mb10">禁用过去的日期选择器（mode: date ）</h2>
+    <h2 class="mt30 mb10">禁用过去的日期选择器 (mode: date )</h2>
     <DatePicker
       placeholder="请选择日期"
       v-model:date="dateValue"
@@ -88,7 +88,7 @@ watch(yearValue, (to) => {
       :min-date="new Date()"
       format="yyyy-MM-dd"
       :width="180" />
-    <h2 class="mt30 mb10">禁用未来的日期选择器（mode: date ）</h2>
+    <h2 class="mt30 mb10">禁用未来的日期选择器 (mode: date )</h2>
     <DatePicker
       placeholder="请选择日期"
       v-model:date="dateValue"
@@ -96,7 +96,7 @@ watch(yearValue, (to) => {
       :max-date="new Date()"
       format="yyyy-MM-dd"
       :width="180" />
-    <h2 class="mt30 mb10">日期时间选择器（mode: date & show-time & enable-seconds）</h2>
+    <h2 class="mt30 mb10">日期时间选择器 (mode: date & show-time & enable-seconds)</h2>
     <DatePicker
       placeholder="请选择日期时间"
       v-model:date="dateValue"
@@ -105,7 +105,7 @@ watch(yearValue, (to) => {
       :width="240"
       show-time
       enable-seconds />
-    <h2 class="mt30 mb10">日期范围选择器（range）</h2>
+    <h2 class="mt30 mb10">日期范围选择器 (range)</h2>
     <DatePicker
       placeholder="请选择日期范围"
       v-model:date="rangeValue"
@@ -113,7 +113,7 @@ watch(yearValue, (to) => {
       :preset-ranges="presetRanges"
       format="yyyy-MM-dd"
       :width="280" />
-    <h2 class="mt30 mb10">日期范围选择器，双日期面板（range & multi-calendars）</h2>
+    <h2 class="mt30 mb10">日期范围选择器，双日期面板 (range & multi-calendars)</h2>
     <DatePicker
       placeholder="请选择日期范围"
       v-model:date="rangeValue"
@@ -122,7 +122,7 @@ watch(yearValue, (to) => {
       :width="280"
       range
       multi-calendars />
-    <h2 class="mt30 mb10">时分选择器（mode: time & show-time）</h2>
+    <h2 class="mt30 mb10">时分选择器 (mode: time & show-time)</h2>
     <DatePicker
       placeholder="请选择时间"
       v-model:date="timeValue"
@@ -131,7 +131,7 @@ watch(yearValue, (to) => {
       mode-height="120"
       format="HH:mm"
       :width="120" />
-    <h2 class="mt30 mb10">时分秒选择器（mode: time & show-time & enable-seconds）</h2>
+    <h2 class="mt30 mb10">时分秒选择器 (mode: time & show-time & enable-seconds)</h2>
     <DatePicker
       placeholder="请选择时间"
       v-model:date="secondsValue"
@@ -141,7 +141,7 @@ watch(yearValue, (to) => {
       mode-height="120"
       format="HH:mm:ss"
       :width="150" />
-    <h2 class="mt30 mb10">时分秒范围选择器（mode: time & range & show-time & enable-seconds）</h2>
+    <h2 class="mt30 mb10">时分秒范围选择器 (mode: time & range & show-time & enable-seconds)</h2>
     <DatePicker
       placeholder="请选择时间"
       v-model:date="timeRangeValue"
@@ -152,21 +152,21 @@ watch(yearValue, (to) => {
       mode-height="120"
       format="HH:mm:ss"
       :width="240" />
-    <h2 class="mt30 mb10">周选择器（mode: week）</h2>
+    <h2 class="mt30 mb10">周选择器 (mode: week)</h2>
     <DatePicker
       placeholder="请选择周"
       v-model:date="weekValue"
       mode="week"
       format="yyyy-MM-dd"
       :width="280" />
-    <h2 class="mt30 mb10">月选择器（mode: month）</h2>
+    <h2 class="mt30 mb10">月选择器 (mode: month)</h2>
     <DatePicker
       placeholder="请选择月"
       v-model:date="monthValue"
       mode="month"
       format="yyyy-MM"
       :width="150" />
-    <h2 class="mt30 mb10">年选择器（mode: year）</h2>
+    <h2 class="mt30 mb10">年选择器 (mode: year)</h2>
     <DatePicker
       placeholder="请选择年"
       v-model:date="yearValue"

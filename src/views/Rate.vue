@@ -15,7 +15,7 @@ function onHoverChange (value: number) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Rate 评分基本使用（character: star）</h2>
+    <h2 class="mb10">Rate 评分基本使用 (character: star)</h2>
     <Rate
       :allowClear="false"
       :allowHalf="true"
@@ -26,7 +26,7 @@ function onHoverChange (value: number) {
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
-    <h2 class="mt30 mb10">Rate （character: heart & size: 30）</h2>
+    <h2 class="mt30 mb10">Rate  (character: heart & size: 30)</h2>
     <Rate
       :allowClear="true"
       :allowHalf="true"
@@ -38,7 +38,7 @@ function onHoverChange (value: number) {
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
-    <h2 class="mt30 mb10">Rate 评分基本使用（character: 好 & size: 30）</h2>
+    <h2 class="mt30 mb10">Rate 评分基本使用 (character: 好 & size: 30)</h2>
     <Rate
       :allowClear="false"
       :allowHalf="true"
