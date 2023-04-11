@@ -5,6 +5,7 @@ interface Props {
   max?: number, // 最大值
   step?: number, // 每次改变步数，可以为小数
   prefix?: string, // 前缀图标 string | slot
+  keyboard?: boolean, // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   value?: number|null // 当前值(v-model)
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -12,6 +13,7 @@ const props = withDefaults(defineProps<Props>(), {
   max: -Infinity,
   step: 1,
   prefix: '',
+  keyboard: true,
   value: 0
 })
 const numValue = ref<number|null>(props.value)
@@ -24,6 +26,7 @@ function onChange (e: any) {
   const value = e.target.value
   if (!Number.isNaN(parseFloat(value))) { // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为Number
     numValue.value = parseFloat(value)
+    console.log(numValue.value)
     if (numValue.value > props.max) {
       numValue.value = props.max
     }
@@ -43,6 +46,7 @@ function onInput (e: any) {
     emitValue(null)
   }
   if (!Number.isNaN(parseFloat(value)) && parseFloat(value) >= props.min && parseFloat(value) <= props.max && parseFloat(value) !== props.value) {
+    numValue.value = parseFloat(value)
     emitValue(parseFloat(value) || 0)
   }
 }
@@ -57,7 +61,7 @@ function add (num1: number, num2: number) {
 }
 function onUp () {
   if (numValue.value !== props.max) {
-    const res = add(numValue.value || 0, + props.step)
+    const res = add(numValue.value || 0, +props.step)
     emitValue(Math.min(props.max, res))
     numValue.value = Math.min(props.max, res)
   }
@@ -74,7 +78,23 @@ function onDown () {
   <div class="m-input-number" tabindex="1">
     <span class="u-input-prefix"><slot name="prefix">{{ prefix }}</slot></span>
     <div class="m-input-wrap">
-      <input autocomplete="off" @change="onChange" @input="onInput" v-model="numValue" class="u-input-number">
+      <input
+        v-if="keyboard"
+        autocomplete="off"
+        class="u-input-number"
+        @change="onChange"
+        @input="onInput"
+        v-model="numValue"
+        @keydown.up.prevent
+        @keyup.up="onUp"
+        @keyup.down="onDown">
+      <input
+        v-else
+        autocomplete="off"
+        class="u-input-number"
+        @change="onChange"
+        @input="onInput"
+        v-model="numValue">
     </div>
     <div class="m-handler-wrap">
       <span class="u-up-arrow" :class="{disabled: min === numValue || max === numValue}" @click="onUp">
