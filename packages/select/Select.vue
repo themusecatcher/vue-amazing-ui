@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
+interface Option {
+  label?: string
+  value?: string|number
+  disabled?: boolean
+  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
+}
 const props = defineProps({
   options: { // 选项数据
-    type: Array<any>,
+    type: Array<Option>,
     default: () => []
   },
   label: { // 选择器字典项的文本字段名
