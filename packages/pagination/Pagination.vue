@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 interface Props { // 基于类型的声明
-  current: number, // 当前页数
-  pageSize: number, // 每条页数
-  total: number, // 数据总数
-  pageListNum?: number, // 显示的页码数组长度
-  hideOnSinglePage?: boolean, // 只有一页时是否隐藏分页器
-  showQuickJumper?: boolean, // 是否可以快速跳转至某页
-  showTotal?: boolean, // 是否显示当前页数和数据总量
+  current: number // 当前页数
+  pageSize: number // 每条页数
+  total: number // 数据总数
+  pageListNum?: number // 显示的页码数组长度
+  hideOnSinglePage?: boolean // 只有一页时是否隐藏分页器
+  showQuickJumper?: boolean // 是否可以快速跳转至某页
+  showTotal?: boolean // 是否显示当前页数和数据总量
   placement?: string // 分页器展示位置，靠左left，居中center，靠右right
 }
 const props = withDefaults(defineProps<Props>(), {

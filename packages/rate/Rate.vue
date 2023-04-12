@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 interface Props {
-  allowClear?: boolean, // 是否允许再次点击后清除
-  allowHalf?: boolean, // 是否允许半选
-  count?: number, // star 总数
-  character?: string, // 自定义字符，string | slot 预置 'star' 'heart' 两种svg图标
-  size?: number, // 字符时是字体高度，图标时是图片大小
-  gap?: number, // 字符间距
-  disabled?: boolean, // 只读，无法进行交互
+  allowClear?: boolean // 是否允许再次点击后清除
+  allowHalf?: boolean // 是否允许半选
+  count?: number // star 总数
+  character?: string // 自定义字符，string | slot 预置 'star' 'heart' 两种svg图标
+  size?: number // 字符时是字体高度，图标时是图片大小
+  gap?: number // 字符间距
+  disabled?: boolean // 只读，无法进行交互
   value?: number // v-model 当前数，受控值 1,2,3...
-  
 }
 const props = withDefaults(defineProps<Props>(), {
   allowClear: true,

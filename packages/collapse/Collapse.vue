@@ -2,20 +2,19 @@
 import { onMounted, ref } from 'vue'
 // 使用 requestAnimationFrame 实现的等效 setTimeout
 import { rafTimeout } from '../index'
-
 interface Collapse {
-  key?: string|number, // 对应activeKey，如果没有传入key属性，则默认使用数字索引(0,1,2...)绑定
-  header?: string, // 面板标特
+  key?: string|number // 对应activeKey，如果没有传入key属性，则默认使用数字索引(0,1,2...)绑定
+  header?: string // 面板标特
   text?: string // 面板内容
 }
 interface Props {
-  collapseData: Collapse[], // 折叠面板数据
-  activeKey?: number[] | number | string[] | string | null, // 当前激活 tab 面板的 key
-  copyable?: boolean, // 是否可复制面板内容
-  lang?: string, // 面板右上角固定内容，例如标识language string | slot
-  fontSize?: number, // 面板标题和内容，字体大小
-  headerFontSize?: number, // 面板标题字体大小，优先级高于fontSize
-  textFontSize?: number, // 面板内容字体大小，优先级高于fontSize
+  collapseData: Collapse[] // 折叠面板数据
+  activeKey?: number[] | number | string[] | string | null // 当前激活 tab 面板的 key
+  copyable?: boolean // 是否可复制面板内容
+  lang?: string // 面板右上角固定内容，例如标识language string | slot
+  fontSize?: number // 面板标题和内容，字体大小
+  headerFontSize?: number // 面板标题字体大小，优先级高于fontSize
+  textFontSize?: number // 面板内容字体大小，优先级高于fontSize
   showArrow?: boolean // 是否展示面板上的箭头
 }
 const props = withDefaults(defineProps<Props>(), {

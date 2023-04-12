@@ -9,12 +9,18 @@ import Collapse from './collapse'
 import Countdown from './countdown'
 import DatePicker from './datepicker'
 import Dialog from './dialog'
+import Divider from './divider'
+import Empty from './empty'
+import Image from './image'
+import InputNumber from './inputnumber'
 import Message from './message'
 import Modal from './modal'
 import Notification from './notification'
 import Pagination from './pagination'
 import Progress from './progress'
+import QRCode from './qrcode'
 import Radio from './radio'
+import Rate from './rate'
 import Select from './select'
 import Slider from './slider'
 import Spin from './spin'
@@ -22,6 +28,7 @@ import Steps from './steps'
 import Swiper from './swiper'
 import Switch from './switch'
 import Table from './table'
+import Tabs from './tabs'
 import TextScroll from './textscroll'
 import Timeline from './timeline'
 import Tooltip from './tooltip'
@@ -39,12 +46,18 @@ const components = [
   Countdown,
   DatePicker,
   Dialog,
+  Divider,
+  Empty,
+  Image,
+  InputNumber,
   Message,
   Modal,
   Notification,
   Pagination,
   Progress,
+  QRCode,
   Radio,
+  Rate,
   Select,
   Slider,
   Spin,
@@ -52,6 +65,7 @@ const components = [
   Swiper,
   Switch,
   Table,
+  Tabs,
   TextScroll,
   Timeline,
   Tooltip,
@@ -92,12 +106,18 @@ export {
   Countdown,
   DatePicker,
   Dialog,
+  Divider,
+  Empty,
+  Image,
+  InputNumber,
   Message,
   Modal,
   Notification,
   Pagination,
   Progress,
+  QRCode,
   Radio,
+  Rate,
   Select,
   Slider,
   Spin,
@@ -105,6 +125,7 @@ export {
   Swiper,
   Switch,
   Table,
+  Tabs,
   TextScroll,
   Timeline,
   Tooltip,

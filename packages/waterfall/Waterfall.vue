@@ -7,42 +7,41 @@ import { ref, onMounted, computed, watch } from 'vue'
   纯CSS，实现简单，但图片顺序是每列从上往下排列
 */
 interface Image {
-  title: string,
+  title: string
   imgUrl: string
 }
 const props = defineProps({
-    imageData: { // 瀑布流的图片数组
-      type: Array<Image>,
-      required: true,
-      default: () => {
-        return []
-      }
-    },
-    columnCount: { // 瀑布流要划分的列数
-      type: Number,
-      default: 3
-    },
-    columnGap: { // 瀑布流各列之间的间隙
-      type: Number,
-      default: 30
-    },
-    totalWidth: { // 瀑布流区域的总宽度
-      type: Number,
-      default: 1200
-    },
-    backgroundColor: { // 瀑布流区域背景填充色
-      type: String,
-      default: '#F2F4F8'
-    },
-    mode: { // JS：js计算模式，CSS：css布局模式
-      type: String,
-      default: 'JS'
+  imageData: { // 瀑布流的图片数组
+    type: Array<Image>,
+    required: true,
+    default: () => {
+      return []
     }
-  })
+  },
+  columnCount: { // 瀑布流要划分的列数
+    type: Number,
+    default: 3
+  },
+  columnGap: { // 瀑布流各列之间的间隙
+    type: Number,
+    default: 30
+  },
+  totalWidth: { // 瀑布流区域的总宽度
+    type: Number,
+    default: 1200
+  },
+  backgroundColor: { // 瀑布流区域背景填充色
+    type: String,
+    default: '#F2F4F8'
+  },
+  mode: { // JS：js计算模式，CSS：css布局模式
+    type: String,
+    default: 'JS'
+  }
+})
 const cssWidth = computed(() => {
   return props.totalWidth - 2 * props.columnGap
 })
-
 const imagesProperty = ref<any[]>([])
 const preColumnHeight = ref<number[]>([])
 

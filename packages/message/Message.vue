@@ -2,15 +2,15 @@
 import { ref, computed, watch } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 const props = defineProps({
-    duration: { // 自动关闭的延时,单位ms
-      type: Number,
-      default: 3000
-    },
-    top: { // 消息距离顶部的位置，单位px
-      type: Number,
-      default: 30
-    }
-  })
+  duration: { // 自动关闭的延时,单位ms
+    type: Number,
+    default: 3000
+  },
+  top: { // 消息距离顶部的位置，单位px
+    type: Number,
+    default: 30
+  }
+})
 enum ColorStyle { // 颜色主题对象
   info = '#1890FF',
   success = '#52c41a',

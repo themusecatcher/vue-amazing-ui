@@ -2,13 +2,13 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 interface Route {
-  path: string,
-  query: object,
+  path: string
+  query: object
   name: string
 }
 interface Props {
-  routes: Array<Route>, // 或者Route[] router的路由数组，没有 ? 时，即表示 required: true
-  height?: number, // 面包屑高度
+  routes: Array<Route> // 或者Route[] router的路由数组，没有 ? 时，即表示 required: true
+  height?: number // 面包屑高度
   separator?: string // 自定义分隔符
 }
 const props = withDefaults(defineProps<Props>(), {

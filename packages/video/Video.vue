@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 interface Props {
-  videoSrc: string, // 视频文件url，必传，支持网络地址 https 和相对地址
+  videoSrc: string // 视频文件url，必传，支持网络地址 https 和相对地址
   videoPoster?: string // 视频封面url，支持网络地址 https 和相对地址（在未设置封面且preload不等于none时，自动获取视频第0.3s对应帧作为封面图）
   width?: number // 视频播放器宽度
   height?: number // 视频播放器高度
-  autoplay?: boolean, // 视频就绪后是否马上播放，优先级高于preload
-  controls?: boolean, // 是否向用户显示控件，比如进度条，全屏等
+  autoplay?: boolean // 视频就绪后是否马上播放，优先级高于preload
+  controls?: boolean // 是否向用户显示控件，比如进度条，全屏等
   loop?: boolean // 视频播放完成后，是否循环播放
   muted?: boolean // 是否静音
   preload?: string // 是否在页面加载后载入视频，如果设置了autoplay属性，则preload将被忽略
-  showPlay?: boolean, // 播放暂停时是否显示播放器中间的暂停图标
-  playWidth?: number, // 中间播放暂停按钮的边长
+  showPlay?: boolean // 播放暂停时是否显示播放器中间的暂停图标
+  playWidth?: number // 中间播放暂停按钮的边长
   zoom?: string // video的poster默认图片和视频内容缩放规则
 }
 const props = withDefaults(defineProps<Props>(), {

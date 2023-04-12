@@ -2,9 +2,9 @@
 import Spin from '../spin'
 import Pagination from '../pagination'
 interface Column {
-  title?: string,
-  width?: number,
-  dataIndex?: string,
+  title?: string
+  width?: number
+  dataIndex?: string
   slot?: string
 }
 defineProps({

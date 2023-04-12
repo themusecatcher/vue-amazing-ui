@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-
 interface Option {
-  label: string,
-  value: any,
+  label: string
+  value: any
   disabled?: boolean // 是否禁用单个单选器
 }
 interface Props {
-  options: Array<Option>, // 单选元素数据
-  disabled?: boolean, // 是否禁用所有子单选器
-  vertical?: boolean, // 是否垂直排列
-  value?: any, // 当前选中的值（v-model）
+  options: Array<Option> // 单选元素数据
+  disabled?: boolean // 是否禁用所有子单选器
+  vertical?: boolean // 是否垂直排列
+  value?: any // 当前选中的值（v-model）
   gap?: number // 多个单选框之间的间距，单位px
 }
 const props = withDefaults(defineProps<Props>(), {

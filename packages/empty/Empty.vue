@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 interface Props {
-  description?: string, // 自定义描述内容
-  image?: string, // 显示图片的链接，或者 选择预置的两种风格图片，可选 '1' | '2'
+  description?: string // 自定义描述内容
+  image?: string // 显示图片的链接，或者 选择预置的两种风格图片，可选 '1' | '2'
   imageStyle?: CSSProperties // 图片样式
 }
 withDefaults(defineProps<Props>(), {
@@ -38,7 +38,6 @@ withDefaults(defineProps<Props>(), {
   }
   .u-description {
     margin-top: 8px;
-    // height: 22px;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.88);
     line-height: 1.571;

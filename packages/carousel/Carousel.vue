@@ -2,44 +2,44 @@
 import { ref, computed, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Image {
-  title: string, // 图片名称
-  link?: string, // 图片跳转链接
+  title: string // 图片名称
+  link?: string // 图片跳转链接
   imgUrl: string // 图片地址
 }
 const props = defineProps({
-    imageData: { // 走马灯图片数组
-      type: Array<Image>,
-      default: () => []
-    },
-    interval: { // 自动滑动轮播间隔
-      type: Number,
-      default: 3000
-    },
-    width: { // 走马灯宽度
-      type: [Number, String],
-      default: '100%'
-    },
-    height: { // 走马灯高度
-      type: [Number, String],
-      default: '100vh'
-    },
-    navigation: { // 是否显示导航
-      type: Boolean,
-      default: true
-    },
-    pagination: { // 是否显示分页
-      type: Boolean,
-      default: true
-    },
-    disableOnInteraction: { // 用户操作导航或分页之后，是否禁止自动切换。默认为true：停止。
-      type: Boolean,
-      default: true
-    },
-    pauseOnMouseEnter: { // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
-      type: Boolean,
-      default: true
-    }
-  })
+  imageData: { // 走马灯图片数组
+    type: Array<Image>,
+    default: () => []
+  },
+  interval: { // 自动滑动轮播间隔
+    type: Number,
+    default: 3000
+  },
+  width: { // 走马灯宽度
+    type: [Number, String],
+    default: '100%'
+  },
+  height: { // 走马灯高度
+    type: [Number, String],
+    default: '100vh'
+  },
+  navigation: { // 是否显示导航
+    type: Boolean,
+    default: true
+  },
+  pagination: { // 是否显示分页
+    type: Boolean,
+    default: true
+  },
+  disableOnInteraction: { // 用户操作导航或分页之后，是否禁止自动切换。默认为true：停止。
+    type: Boolean,
+    default: true
+  },
+  pauseOnMouseEnter: { // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
+    type: Boolean,
+    default: true
+  }
+})
 const toLeft = ref(true) // 左滑标志，默认左滑
 const left = ref(0) // 滑动偏移值
 const transition = ref(false) // 暂停时为完成滑动的过渡标志

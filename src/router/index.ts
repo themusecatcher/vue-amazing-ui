@@ -73,6 +73,30 @@ const routes = [
         component: () => import('@/views/Dialog.vue')
       },
       {
+        path: '/divider',
+        name: 'Divider',
+        meta: { title: '分割线' },
+        component: () => import('@/views/Divider.vue')
+      },
+      {
+        path: '/empty',
+        name: 'Empty',
+        meta: { title: '空状态' },
+        component: () => import('@/views/Empty.vue')
+      },
+      {
+        path: '/image',
+        name: 'Image',
+        meta: { title: '图片' },
+        component: () => import('@/views/Image.vue')
+      },
+      {
+        path: '/inputnumber',
+        name: 'InputNumber',
+        meta: { title: '数字输入框' },
+        component: () => import('@/views/InputNumber.vue')
+      },
+      {
         path: '/message',
         name: 'Message',
         meta: { title: '全局提示' },
@@ -103,10 +127,22 @@ const routes = [
         component: () => import('@/views/Progress.vue')
       },
       {
+        path: '/qrcode',
+        name: 'QRCode',
+        meta: { title: '二维码' },
+        component: () => import('@/views/QRCode.vue')
+      },
+      {
         path: '/radio',
         name: 'Radio',
         meta: { title: '单选框' },
         component: () => import('@/views/Radio.vue')
+      },
+      {
+        path: '/rate',
+        name: 'Rate',
+        meta: { title: '评分' },
+        component: () => import('@/views/Rate.vue')
       },
       {
         path: '/select',
@@ -149,6 +185,12 @@ const routes = [
         name: 'Table',
         meta: { title: '表格' },
         component: () => import('@/views/Table.vue')
+      },
+      {
+        path: '/tabs',
+        name: 'Tabs',
+        meta: { title: '标签页' },
+        component: () => import('@/views/Tabs.vue')
       },
       {
         path: '/textscroll',

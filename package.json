@@ -27,8 +27,10 @@
   "dependencies": {
     "@vuepic/vue-datepicker": "^4.2.1",
     "@vueuse/core": "^9.13.0",
-    "ant-design-vue": "^3.2.16",
+    "@vueuse/integrations": "^9.13.0",
+    "ant-design-vue": "^3.2.17",
     "core-js": "^3.28.0",
+    "qrcode": "^1.5.1",
     "swiper": "^9.1.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"

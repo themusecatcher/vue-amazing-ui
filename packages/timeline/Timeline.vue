@@ -6,11 +6,11 @@ enum ColorStyle { // 颜色主题对象
   gray = '#00000040'
 }
 interface Data {
-  desc: string,
+  desc: string
   color?: string
 }
 interface Props {
-  timelineData?: Data[], // 时间轴内容数组
+  timelineData?: Data[] // 时间轴内容数组
   width?: number // 时间轴区域总宽度
 }
 withDefaults(defineProps<Props>(), {
