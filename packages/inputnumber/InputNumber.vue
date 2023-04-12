@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 interface Props {
-  min?: number, // 最小值
-  max?: number, // 最大值
-  step?: number, // 每次改变步数，可以为小数
-  prefix?: string, // 前缀图标 string | slot
-  keyboard?: boolean, // 是否启用键盘快捷键行为（上方向键增，下方向键减）
+  min?: number // 最小值
+  max?: number // 最大值
+  step?: number // 每次改变步数，可以为小数
+  prefix?: string // 前缀图标 string | slot
+  keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   value?: number|null // 当前值(v-model)
 }
 const props = withDefaults(defineProps<Props>(), {

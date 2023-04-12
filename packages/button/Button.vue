@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-
 interface Props {
-  name?: string, // 按钮默认文本
-  type?: string, // 按钮类型
-  effect?: string, // 按钮悬浮变化效果，只有type为default时，reverse才生效
-  size?: string, // 按钮尺寸
-  width?: number, // 按钮宽度
-  height?: number, // 按钮高度
-  borderRadius?: number, // 按钮圆角
-  route?: object, // 按钮跳转目标URL地址
-  target?: string, // 按钮如何打开目标URL，设置route时才起作用
-  disabled?: boolean, // 按钮是否禁用
-  center?: boolean, // 是否将按钮设置为块级元素并居中展示
+  name?: string // 按钮默认文本
+  type?: string // 按钮类型
+  effect?: string // 按钮悬浮变化效果，只有type为default时，reverse才生效
+  size?: string // 按钮尺寸
+  width?: number // 按钮宽度
+  height?: number // 按钮高度
+  borderRadius?: number // 按钮圆角
+  route?: object // 按钮跳转目标URL地址
+  target?: string // 按钮如何打开目标URL，设置route时才起作用
+  disabled?: boolean // 按钮是否禁用
+  center?: boolean // 是否将按钮设置为块级元素并居中展示
 }
 const props = withDefaults(defineProps<Props>(), {
   name: '按钮', // string 或 v-slot

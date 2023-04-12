@@ -1,42 +1,41 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { requestAnimationFrame, cancelAnimationFrame, rafTimeout } from '../index'
-
 const props = defineProps({
-    sliderText: { // 滚动文字数组
-      type: Array<any>,
-      required: true,
-      default: () => []
-    },
-    width: { // 滚动区域宽度
-      type: [Number, String],
-      default: '100%'
-    },
-    height: { // 滚动区域高度
-      type: Number,
-      default: 60
-    },
-    backgroundColor: { // 滚动区域背景色
-      type: String,
-      default: '#FFF'
-    },
-    amount: { // 滚动区域展示条数，水平滚动时生效
-      type: Number,
-      default: 4
-    },
-    gap: { // 水平滚动文字各列间距或垂直滚动文字两边的边距
-      type: Number,
-      default: 20
-    },
-    vertical: { // 是否垂直滚动
-      type: Boolean,
-      default: false
-    },
-    interval: { // 文字滚动时间间隔，垂直滚动时生效
-      type: Number,
-      default: 3000
-    }
-  })
+  sliderText: { // 滚动文字数组
+    type: Array<any>,
+    required: true,
+    default: () => []
+  },
+  width: { // 滚动区域宽度
+    type: [Number, String],
+    default: '100%'
+  },
+  height: { // 滚动区域高度
+    type: Number,
+    default: 60
+  },
+  backgroundColor: { // 滚动区域背景色
+    type: String,
+    default: '#FFF'
+  },
+  amount: { // 滚动区域展示条数，水平滚动时生效
+    type: Number,
+    default: 4
+  },
+  gap: { // 水平滚动文字各列间距或垂直滚动文字两边的边距
+    type: Number,
+    default: 20
+  },
+  vertical: { // 是否垂直滚动
+    type: Boolean,
+    default: false
+  },
+  interval: { // 文字滚动时间间隔，垂直滚动时生效
+    type: Number,
+    default: 3000
+  }
+})
 // horizon
 const left = ref(0)
 const fpsRaf = ref(0) // fps回调标识
@@ -183,7 +182,7 @@ function startMove () {
 // 水平滚动
 .m-slider-horizon {
   box-shadow: 0px 0px 5px #D3D3D3;
-  border-radius: 5px;
+  border-radius: 6px;
   white-space: nowrap;
   overflow: hidden;
   text-align: center; // 水平居中
@@ -224,6 +223,7 @@ function startMove () {
 .m-slider-vertical {
   position: relative;
   overflow: hidden;
+  border-radius: 6px;
   .m-slider {
     position: absolute;
     left: 0;

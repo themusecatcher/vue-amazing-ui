@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 interface Gradient {
-  '0%'?: string,
-  '100%'?: string,
-  from?: string,
-  to?: string,
+  '0%'?: string
+  '100%'?: string
+  from?: string
+  to?: string
   direction?: string
 }
 interface Props {
-  width?: number|string, // 进度条总宽度
-  percent?: number, // 当前进度百分比
-  strokeColor?: string|Gradient, // 进度条的色彩，传入 string 时为纯色，传入 object 时为渐变
-  strokeWidth?: number, // 进度条线的宽度，单位px
-  showInfo?: boolean, // 是否显示进度数值或状态图标
-  type?: string, // 进度条类型 'line' | 'circle'
+  width?: number|string // 进度条总宽度
+  percent?: number // 当前进度百分比
+  strokeColor?: string|Gradient // 进度条的色彩，传入 string 时为纯色，传入 object 时为渐变
+  strokeWidth?: number // 进度条线的宽度，单位px
+  showInfo?: boolean // 是否显示进度数值或状态图标
+  type?: string // 进度条类型 'line' | 'circle'
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',

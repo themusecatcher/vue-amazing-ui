@@ -2,31 +2,31 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 const props = defineProps({
-    width: { // 滑动输入条的宽度
-      type: [String, Number],
-      default: '100%'
-    },
-    min: { // 滑动输入条最小值
-      type: Number,
-      default: 0
-    },
-    max: { // 滑动输入条最大值
-      type: Number,
-      default: 100
-    },
-    disabled: { // 是否禁用
-      type: Boolean,
-      default: false
-    },
-    range: { // 是否双滑块模式
-      type: Boolean,
-      default: false
-    },
-    value: { // （v-model）设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
-      type: [Number, Array<number>],
-      default: 0
-    }
-  })
+  width: { // 滑动输入条的宽度
+    type: [String, Number],
+    default: '100%'
+  },
+  min: { // 滑动输入条最小值
+    type: Number,
+    default: 0
+  },
+  max: { // 滑动输入条最大值
+    type: Number,
+    default: 100
+  },
+  disabled: { // 是否禁用
+    type: Boolean,
+    default: false
+  },
+  range: { // 是否双滑块模式
+    type: Boolean,
+    default: false
+  },
+  value: { // （v-model）设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
+    type: [Number, Array<number>],
+    default: 0
+  }
+})
 const transition = ref(false)
 const timer = ref()
 const left = ref(0) // 左滑块距离滑动条左端的距离

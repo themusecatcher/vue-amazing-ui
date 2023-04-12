@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Props {
-  spinning?: boolean, // 是否为加载中状态
-  size?: string, // 组件大小，可选small default large
+  spinning?: boolean // 是否为加载中状态
+  size?: string // 组件大小，可选small default large
   tip?: string // 描述文案 string | slot
 }
 withDefaults(defineProps<Props>(), {

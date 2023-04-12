@@ -2,17 +2,16 @@
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { ref, computed, watch } from 'vue'
-
 interface Props {
-  inheritAttrs?: boolean, // 默认值：true
-  width?: number, // 日期选择器宽度
-  mode?: string, // 选择器模式，可选：时间time，日期date，周week，月month，年year
-  // format?: string, // 日期展示格式，(y: 年, M: 月, d: 天, H: 时, m: 分, s: 秒)
-  showTime?: boolean, // 是否增加时间选择
-  showToday?: boolean, // 是否展示”今天“按钮
-  // multiCalendars?: boolean, // 范围选择器是否使用双日期面板
-  // flow?: any[], // 定义选择顺序 ("calendar" | "time" | "month" | "year" | "minutes" | "hours" | "seconds")[]
-  // dark?: boolean, // 样式主题是否使用黑色
+  inheritAttrs?: boolean // 默认值：true
+  width?: number // 日期选择器宽度
+  mode?: string // 选择器模式，可选：时间time，日期date，周week，月month，年year
+  // format?: string // 日期展示格式，(y: 年, M: 月, d: 天, H: 时, m: 分, s: 秒)
+  showTime?: boolean // 是否增加时间选择
+  showToday?: boolean // 是否展示”今天“按钮
+  // multiCalendars?: boolean // 范围选择器是否使用双日期面板
+  // flow?: any[] // 定义选择顺序 ("calendar" | "time" | "month" | "year" | "minutes" | "hours" | "seconds")[]
+  // dark?: boolean // 样式主题是否使用黑色
   date?: number|number[]|{month:number,year:number}|{hours:number,minutes:number,seconds:number} // （v-model）当前选中日期
 }
 const props = withDefaults(defineProps<Props>(), {

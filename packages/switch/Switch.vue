@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 interface Props {
-  checkedInfo?: string, // 选中时的内容
-  uncheckedInfo?: string, // 未选中时的内容
-  disabled?: boolean, // 是否禁用
+  checkedInfo?: string // 选中时的内容
+  uncheckedInfo?: string // 未选中时的内容
+  disabled?: boolean // 是否禁用
   checked?: boolean // （v-model）指定当前是否选中
 }
 const props = withDefaults(defineProps<Props>(), {

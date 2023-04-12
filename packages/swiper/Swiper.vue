@@ -6,10 +6,9 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-fade'
 import { ref, computed } from 'vue'
-
 interface Image {
-  title: string, // 图片名称
-  link?: string, // 图片跳转链接
+  title: string // 图片名称
+  link?: string // 图片跳转链接
   imgUrl: string // 图片地址
 }
 const props = defineProps({

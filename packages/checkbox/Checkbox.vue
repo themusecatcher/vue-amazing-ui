@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-
 interface Option {
-  label: string,
-  value: any,
+  label: string
+  value: any
   disabled?: boolean // 是否禁用单个复选框
 }
 interface Props {
-  options?: Array<Option>, // 复选元素数据
-  disabled?: boolean, // 是否禁用所有复选框
-  vertical?: boolean, // 是否垂直排列
-  value?: any[], // 当前选中的值（v-model）
-  gap?: number, // 多个单选框之间的间距，单位px
-  indeterminate?: boolean, // 全选时的样式控制
+  options?: Array<Option> // 复选元素数据
+  disabled?: boolean // 是否禁用所有复选框
+  vertical?: boolean // 是否垂直排列
+  value?: any[] // 当前选中的值（v-model）
+  gap?: number // 多个单选框之间的间距，单位px
+  indeterminate?: boolean // 全选时的样式控制
   checked?: boolean // 是否全选（v-model）
 }
 const props = withDefaults(defineProps<Props>(), {

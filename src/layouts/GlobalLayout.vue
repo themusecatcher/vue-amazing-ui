@@ -60,6 +60,18 @@ function onClick (e: any):void {
         <a-menu-item key="Dialog">
           <router-link to="/dialog">对话框（Dialog）</router-link>
         </a-menu-item>
+        <a-menu-item key="Divider">
+          <router-link to="/divider">分割线（Divider）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Empty">
+          <router-link to="/empty">空状态（Empty）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Image">
+          <router-link to="/image">图片（Image）</router-link>
+        </a-menu-item>
+        <a-menu-item key="InputNumber">
+          <router-link to="/inputnumber">数字输入框（InputNumber）</router-link>
+        </a-menu-item>
         <a-menu-item key="Message">
           <router-link to="/message">全局提示（Message）</router-link>
         </a-menu-item>
@@ -75,8 +87,14 @@ function onClick (e: any):void {
         <a-menu-item key="Progress">
           <router-link to="/progress">进度条（Progress）</router-link>
         </a-menu-item>
+        <a-menu-item key="QRCode">
+          <router-link to="/qrcode">二维码（QRCode）</router-link>
+        </a-menu-item>
         <a-menu-item key="Radio">
           <router-link to="/radio">单选框（Radio）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Rate">
+          <router-link to="/rate">评分（Rate）</router-link>
         </a-menu-item>
         <a-menu-item key="Select">
           <router-link to="/select">选择器（Select）</router-link>
@@ -98,6 +116,9 @@ function onClick (e: any):void {
         </a-menu-item>
         <a-menu-item key="Table">
           <router-link to="/table">表格（Table）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Tabs">
+          <router-link to="/tabs">标签页（Tabs）</router-link>
         </a-menu-item>
         <a-menu-item key="TextScroll">
           <router-link to="/textscroll">文字滚动（TextScroll）</router-link>

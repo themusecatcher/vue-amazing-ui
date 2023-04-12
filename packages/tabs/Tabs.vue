@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 interface Tab {
-  key: string | number, // 对应 activeKey
-  tab: string, // 标签页显示文字
-  content?: string, // 标签页内容 string | slot
+  key: string | number // 对应 activeKey
+  tab: string // 标签页显示文字
+  content?: string // 标签页内容 string | slot
   disabled?: boolean // 禁用对应标签页
 }
 interface Props {
-  tabPages: Array<Tab>, // 标签页数组
-  centered?: boolean, // 标签是否居中展示
-  size?: string, // 标签页大小 可选 small | large
+  tabPages: Array<Tab> // 标签页数组
+  centered?: boolean // 标签是否居中展示
+  size?: string // 标签页大小 可选 small | large
   activeKey?: string | number // 当前激活 tab 面板的 key
 }
 const props = withDefaults(defineProps<Props>(), {

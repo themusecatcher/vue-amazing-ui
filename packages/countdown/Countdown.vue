@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { requestAnimationFrame } from '../index'
-
 interface Props {
-  countdown?: number, // 倒计时数值（countdown），必传，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(ms)
-  title?: string, // 倒计时标题 string | v-slot
-  format?: string, // 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒)
-  prefix?: string, // 倒计时数值的前缀 string | v-slot
-  suffix?: string, // 倒计时数值的后缀 string | v-slot
+  countdown?: number // 倒计时数值（countdown），必传，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(ms)
+  title?: string // 倒计时标题 string | v-slot
+  format?: string // 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒)
+  prefix?: string // 倒计时数值的前缀 string | v-slot
+  suffix?: string // 倒计时数值的后缀 string | v-slot
   finishedText?: string // 完成后的展示文本 string | v-slot
 }
 const props = withDefaults(defineProps<Props>(), { // 基于类型的声明

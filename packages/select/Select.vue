@@ -1,47 +1,47 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 const props = defineProps({
-    options: { // 选项数据
-      type: Array<any>,
-      default: () => []
-    },
-    label: { // 选择器字典项的文本字段名
-      type: String,
-      default: 'label'
-    },
-    value: { // 选择器字典项的值字段名
-      type: String,
-      default: 'value'
-    },
-    placeholder: { // 选择框默认文字
-      type: String,
-      default: '请选择'
-    },
-    disabled: { // 是否禁用下拉
-      type: Boolean,
-      default: false
-    },
-    allowClear: { // 是否支持清除
-      type: Boolean,
-      default: false
-    },
-    width: { // 选择框宽度
-      type: Number,
-      default: 200
-    },
-    height: { // 选择框高度
-      type: Number,
-      default: 36
-    },
-    num: { // 下拉面板最多能展示的下拉项数，超过后滚动显示
-      type: Number,
-      default: 6
-    },
-    selectedValue: { // （v-model）当前选中的option条目
-      type: [Number, String],
-      default: null
-    }
-  })
+  options: { // 选项数据
+    type: Array<any>,
+    default: () => []
+  },
+  label: { // 选择器字典项的文本字段名
+    type: String,
+    default: 'label'
+  },
+  value: { // 选择器字典项的值字段名
+    type: String,
+    default: 'value'
+  },
+  placeholder: { // 选择框默认文字
+    type: String,
+    default: '请选择'
+  },
+  disabled: { // 是否禁用下拉
+    type: Boolean,
+    default: false
+  },
+  allowClear: { // 是否支持清除
+    type: Boolean,
+    default: false
+  },
+  width: { // 选择框宽度
+    type: Number,
+    default: 200
+  },
+  height: { // 选择框高度
+    type: Number,
+    default: 36
+  },
+  num: { // 下拉面板最多能展示的下拉项数，超过后滚动显示
+    type: Number,
+    default: 6
+  },
+  selectedValue: { // （v-model）当前选中的option条目
+    type: [Number, String],
+    default: null
+  }
+})
 const selectedName = ref()
 const hoverValue = ref() // 鼠标悬浮项的value值
 const showOptions = ref(false) // options面板

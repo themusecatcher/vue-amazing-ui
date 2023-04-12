@@ -1,65 +1,64 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-
 interface Option {
-  value: string | number,
-  label: string,
+  value: string | number
+  label: string
   children?: Option[]
 }
 const props = defineProps({
-    options: { // 可选项数据源
-      type: Array<any>,
-      default: () => []
-    },
-    selectedValue: { // （v-model）级联选中项
-      type: Array<number|string>,
-      default: () => []
-    },
-    label: { // 下拉字典项的文本字段名
-      type: String,
-      default: 'label'
-    },
-    value: { // 下拉字典项的值字段名
-      type: String,
-      default: 'value'
-    },
-    children: { // 下拉字典项的后代字段名
-      type: String,
-      default: 'children'
-    },
-    changeOnSelect: { // 当此项为true时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择三级选项后选项值才会变化
-      type: Boolean,
-      default: false
-    },
-    zIndex: { // 下拉层级
-      type: Number,
-      default: 1
-    },
-    gap: { // 级联下拉框相互间隙宽度，单位px，默认8px
-      type: Number,
-      default: 8
-    },
-    width: { // 三级下拉各自宽度
-      type: [Number, Array<number>],
-      default: 160
-    },
-    height: { // 下拉框高度
-      type: Number,
-      default: 36
-    },
-    disabled: { // 三级各自是否禁用
-      type: [Boolean, Array<boolean>],
-      default: false
-    },
-    placeholder: { // 三级下拉各自占位文本
-      type: [String, Array<string>],
-      default: '请选择'
-    },
-    num: { // 下拉面板最多能展示的下拉项数，超过后滚动显示
-      type: Number,
-      default: 6
-    }
-  })
+  options: { // 可选项数据源
+    type: Array<any>,
+    default: () => []
+  },
+  selectedValue: { // （v-model）级联选中项
+    type: Array<number|string>,
+    default: () => []
+  },
+  label: { // 下拉字典项的文本字段名
+    type: String,
+    default: 'label'
+  },
+  value: { // 下拉字典项的值字段名
+    type: String,
+    default: 'value'
+  },
+  children: { // 下拉字典项的后代字段名
+    type: String,
+    default: 'children'
+  },
+  changeOnSelect: { // 当此项为true时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择三级选项后选项值才会变化
+    type: Boolean,
+    default: false
+  },
+  zIndex: { // 下拉层级
+    type: Number,
+    default: 1
+  },
+  gap: { // 级联下拉框相互间隙宽度，单位px，默认8px
+    type: Number,
+    default: 8
+  },
+  width: { // 三级下拉各自宽度
+    type: [Number, Array<number>],
+    default: 160
+  },
+  height: { // 下拉框高度
+    type: Number,
+    default: 36
+  },
+  disabled: { // 三级各自是否禁用
+    type: [Boolean, Array<boolean>],
+    default: false
+  },
+  placeholder: { // 三级下拉各自占位文本
+    type: [String, Array<string>],
+    default: '请选择'
+  },
+  num: { // 下拉面板最多能展示的下拉项数，超过后滚动显示
+    type: Number,
+    default: 6
+  }
+})
 const values = ref(props.selectedValue) // 级联value值数组
 const labels = ref<any[]>([]) // 级联label文本数组
 const firstOptions = ref(props.options)

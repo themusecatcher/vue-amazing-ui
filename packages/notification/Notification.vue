@@ -2,27 +2,27 @@
 import { ref, computed, watch } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 const props = defineProps({
-    title: { // 消息的标题
-      type: String,
-      default: '温馨提示'
-    },
-    duration: { // 自动关闭的延时时长,单位ms，默认4500ms；设置null时，不自动关闭
-      type: Number,
-      default: 4500
-    },
-    top: { // 消息从顶部弹出时，距离顶部的位置，单位像素px
-      type: Number,
-      default: 24
-    },
-    bottom: { // 消息从底部弹出时，距离底部的位置，单位像素
-      type: Number,
-      default: 24
-    },
-    placement: { // 消息弹出位置，可选topLeft,topRight,bottomLeft,bottomRight
-      type: String,
-      default: 'topRight'
-    }
-  })
+  title: { // 消息的标题
+    type: String,
+    default: '温馨提示'
+  },
+  duration: { // 自动关闭的延时时长,单位ms，默认4500ms；设置null时，不自动关闭
+    type: Number,
+    default: 4500
+  },
+  top: { // 消息从顶部弹出时，距离顶部的位置，单位像素px
+    type: Number,
+    default: 24
+  },
+  bottom: { // 消息从底部弹出时，距离底部的位置，单位像素
+    type: Number,
+    default: 24
+  },
+  placement: { // 消息弹出位置，可选topLeft,topRight,bottomLeft,bottomRight
+    type: String,
+    default: 'topRight'
+  }
+})
 enum ColorStyle { // 颜色主题对象
   info = '#1890FF',
   success = '#52c41a',

@@ -1,55 +1,55 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 const props = defineProps({
-    title: { // 标题 string | slot
-      type: String,
-      default: '提示'
-    },
-    content: { // 内容 string | slot
-      type: String,
-      default: ''
-    },
-    width: { // 宽度，默认640
-      type: Number,
-      default: 640
-    },
-    height: { // 高度，默认480
-      type: Number,
-      default: 480
-    },
-    switchFullscreen: { // 是否允许切换全屏，允许后右上角会出现一个按钮
-      type: Boolean,
-      default: false
-    },
-    cancelText: { // 取消按钮文字
-      type: String,
-      default: '取消'
-    },
-    okText: { // 确认按钮文字
-      type: String,
-      default: '确定'
-    },
-    footer: { // 是否显示底部按钮，默认不显示
-      type: Boolean,
-      default: false
-    },
-    center: { // 水平垂直居中：true  固定高度水平居中：false
-      type: Boolean,
-      default: true
-    },
-    top: { // 固定高度水平居中时，距顶部高度
-      type: Number,
-      default: 100
-    },
-    loading: { // 加载中
-      type: Boolean,
-      default: false
-    },
-    visible: { // 对话框是否可见
-      type: Boolean,
-      default: false
-    }
-  })
+  title: { // 标题 string | slot
+    type: String,
+    default: '提示'
+  },
+  content: { // 内容 string | slot
+    type: String,
+    default: ''
+  },
+  width: { // 宽度，默认640
+    type: Number,
+    default: 640
+  },
+  height: { // 高度，默认480
+    type: Number,
+    default: 480
+  },
+  switchFullscreen: { // 是否允许切换全屏，允许后右上角会出现一个按钮
+    type: Boolean,
+    default: false
+  },
+  cancelText: { // 取消按钮文字
+    type: String,
+    default: '取消'
+  },
+  okText: { // 确认按钮文字
+    type: String,
+    default: '确定'
+  },
+  footer: { // 是否显示底部按钮，默认不显示
+    type: Boolean,
+    default: false
+  },
+  center: { // 水平垂直居中：true  固定高度水平居中：false
+    type: Boolean,
+    default: true
+  },
+  top: { // 固定高度水平居中时，距顶部高度
+    type: Number,
+    default: 100
+  },
+  loading: { // 加载中
+    type: Boolean,
+    default: false
+  },
+  visible: { // 对话框是否可见
+    type: Boolean,
+    default: false
+  }
+})
 
 const fullScreen = ref(false)
 const dialogWidth = computed(() => {

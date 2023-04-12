@@ -1,4 +1,4 @@
-import { defineComponent, computed, openBlock, createElementBlock, normalizeStyle, Fragment, renderList, createElementVNode, normalizeClass, unref, toDisplayString, createCommentVNode, pushScopeId, popScopeId, resolveComponent, createBlock, withCtx, renderSlot, createTextVNode, withModifiers, ref, onMounted, watch, createVNode, mergeProps, withDirectives, vShow, TransitionGroup, vModelText, Transition, createStaticVNode, h, onUpdated, provide, nextTick, onBeforeUnmount, onBeforeUpdate, onUnmounted } from "vue";
+import { defineComponent, computed, openBlock, createElementBlock, normalizeStyle, Fragment, renderList, createElementVNode, normalizeClass, unref, toDisplayString, createCommentVNode, pushScopeId, popScopeId, resolveComponent, createBlock, withCtx, renderSlot, createTextVNode, withModifiers, ref, onMounted, watch, createVNode, mergeProps, Transition, withDirectives, vShow, TransitionGroup, vModelText, createStaticVNode, h, onUpdated, provide, nextTick, onBeforeUnmount, onBeforeUpdate, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import Swiper$2, { Navigation, Pagination as Pagination$1, Autoplay, EffectFade } from "swiper";
@@ -878,15 +878,17 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
             class: normalizeClass(["u-checkbox", { "u-checkbox-checked": __props.checked && !__props.indeterminate, "indeterminate": __props.indeterminate }])
           }, null, 2),
           createElementVNode("span", _hoisted_3$f, [
-            renderSlot(_ctx.$slots, "default", {}, void 0, true)
+            renderSlot(_ctx.$slots, "default", {}, () => [
+              createTextVNode("Check all")
+            ], true)
           ])
         ], 2))
       ], 2);
     };
   }
 });
-const Checkbox_vue_vue_type_style_index_0_scoped_0152aab0_lang = "";
-const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-0152aab0"]]);
+const Checkbox_vue_vue_type_style_index_0_scoped_a0c26b06_lang = "";
+const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-a0c26b06"]]);
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
@@ -1157,8 +1159,8 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Countdown_vue_vue_type_style_index_0_scoped_e9b21e09_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-e9b21e09"]]);
+const Countdown_vue_vue_type_style_index_0_scoped_fa25c39b_lang = "";
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-fa25c39b"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
 };
@@ -1225,12 +1227,12 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const DatePicker_vue_vue_type_style_index_0_scoped_deb3eee4_lang = "";
-const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-deb3eee4"]]);
+const DatePicker_vue_vue_type_style_index_0_scoped_3776851d_lang = "";
+const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-3776851d"]]);
 DatePicker.install = (app) => {
   app.component(DatePicker.__name, DatePicker);
 };
-const _withScopeId$b = (n) => (pushScopeId("data-v-83d91acb"), n = n(), popScopeId(), n);
+const _withScopeId$b = (n) => (pushScopeId("data-v-7bfb31f8"), n = n(), popScopeId(), n);
 const _hoisted_1$i = ["onClick"];
 const _hoisted_2$g = { class: "m-spin-dot" };
 const _hoisted_3$c = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -1282,7 +1284,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
       default: 480
     },
     switchFullscreen: {
-      // 是否允许切换全屏（允许后右上角会出现一个按钮）
+      // 是否允许切换全屏，允许后右上角会出现一个按钮
       type: Boolean,
       default: false
     },
@@ -1361,83 +1363,88 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
       emits("ok");
     }
     return (_ctx, _cache) => {
-      return withDirectives((openBlock(), createElementBlock("div", {
-        class: "m-dialog-mask",
-        onClick: withModifiers(onBlur, ["self"])
-      }, [
-        createElementVNode("div", {
-          class: normalizeClass(["m-dialog", __props.center ? "relative-hv-center" : "top-center"]),
-          style: normalizeStyle(`width: ${unref(dialogWidth)}; height: ${unref(dialogHeight)};`)
-        }, [
-          createElementVNode("div", {
-            class: normalizeClass(["m-dialog-content", { loading: __props.loading }])
+      return openBlock(), createBlock(Transition, null, {
+        default: withCtx(() => [
+          withDirectives(createElementVNode("div", {
+            class: "m-dialog-mask",
+            onClick: withModifiers(onBlur, ["self"])
           }, [
-            withDirectives(createElementVNode("div", _hoisted_2$g, _hoisted_7$8, 512), [
-              [vShow, __props.loading]
-            ]),
-            withDirectives((openBlock(), createElementBlock("svg", {
-              onClick: onFullScreen,
-              class: "u-screen",
-              viewBox: "64 64 896 896",
-              "data-icon": "fullscreen",
-              "aria-hidden": "true",
-              focusable: "false"
-            }, _hoisted_9$7, 512)), [
-              [vShow, !fullScreen.value && __props.switchFullscreen]
-            ]),
-            withDirectives((openBlock(), createElementBlock("svg", {
-              onClick: onFullScreen,
-              class: "u-screen",
-              viewBox: "64 64 896 896",
-              "data-icon": "fullscreen-exit",
-              "aria-hidden": "true",
-              focusable: "false"
-            }, _hoisted_11$4, 512)), [
-              [vShow, fullScreen.value && __props.switchFullscreen]
-            ]),
-            (openBlock(), createElementBlock("svg", {
-              onClick: onClose,
-              class: "u-close",
-              viewBox: "64 64 896 896",
-              "data-icon": "close",
-              "aria-hidden": "true",
-              focusable: "false"
-            }, _hoisted_13$3)),
-            createElementVNode("div", _hoisted_14$3, [
-              renderSlot(_ctx.$slots, "title", {}, () => [
-                createElementVNode("div", _hoisted_15$3, toDisplayString(__props.title), 1)
-              ], true)
-            ]),
             createElementVNode("div", {
-              class: "m-dialog-body",
-              style: normalizeStyle(`height: calc(${unref(dialogHeight)} - ${__props.footer ? "158px" : "103px"});`)
+              class: normalizeClass(["m-dialog", __props.center ? "relative-hv-center" : "top-center"]),
+              style: normalizeStyle(`width: ${unref(dialogWidth)}; height: ${unref(dialogHeight)};`)
             }, [
-              renderSlot(_ctx.$slots, "default", {}, () => [
-                createTextVNode(toDisplayString(__props.content), 1)
-              ], true)
-            ], 4),
-            withDirectives(createElementVNode("div", _hoisted_16$3, [
-              createElementVNode("button", {
-                class: "u-cancel",
-                onClick: onCancel
-              }, toDisplayString(__props.cancelText), 1),
-              createElementVNode("button", {
-                class: "u-confirm",
-                onClick: onConfirm
-              }, toDisplayString(__props.okText), 1)
-            ], 512), [
-              [vShow, __props.footer]
-            ])
-          ], 2)
-        ], 6)
-      ], 8, _hoisted_1$i)), [
-        [vShow, __props.visible]
-      ]);
+              createElementVNode("div", {
+                class: normalizeClass(["m-dialog-content", { loading: __props.loading }])
+              }, [
+                withDirectives(createElementVNode("div", _hoisted_2$g, _hoisted_7$8, 512), [
+                  [vShow, __props.loading]
+                ]),
+                withDirectives((openBlock(), createElementBlock("svg", {
+                  onClick: onFullScreen,
+                  class: "u-screen",
+                  viewBox: "64 64 896 896",
+                  "data-icon": "fullscreen",
+                  "aria-hidden": "true",
+                  focusable: "false"
+                }, _hoisted_9$7, 512)), [
+                  [vShow, !fullScreen.value && __props.switchFullscreen]
+                ]),
+                withDirectives((openBlock(), createElementBlock("svg", {
+                  onClick: onFullScreen,
+                  class: "u-screen",
+                  viewBox: "64 64 896 896",
+                  "data-icon": "fullscreen-exit",
+                  "aria-hidden": "true",
+                  focusable: "false"
+                }, _hoisted_11$4, 512)), [
+                  [vShow, fullScreen.value && __props.switchFullscreen]
+                ]),
+                (openBlock(), createElementBlock("svg", {
+                  onClick: onClose,
+                  class: "u-close",
+                  viewBox: "64 64 896 896",
+                  "data-icon": "close",
+                  "aria-hidden": "true",
+                  focusable: "false"
+                }, _hoisted_13$3)),
+                createElementVNode("div", _hoisted_14$3, [
+                  renderSlot(_ctx.$slots, "title", {}, () => [
+                    createElementVNode("div", _hoisted_15$3, toDisplayString(__props.title), 1)
+                  ], true)
+                ]),
+                createElementVNode("div", {
+                  class: "m-dialog-body",
+                  style: normalizeStyle(`height: calc(${unref(dialogHeight)} - ${__props.footer ? "158px" : "103px"});`)
+                }, [
+                  renderSlot(_ctx.$slots, "default", {}, () => [
+                    createTextVNode(toDisplayString(__props.content), 1)
+                  ], true)
+                ], 4),
+                withDirectives(createElementVNode("div", _hoisted_16$3, [
+                  createElementVNode("button", {
+                    class: "u-cancel",
+                    onClick: onCancel
+                  }, toDisplayString(__props.cancelText), 1),
+                  createElementVNode("button", {
+                    class: "u-confirm",
+                    onClick: onConfirm
+                  }, toDisplayString(__props.okText), 1)
+                ], 512), [
+                  [vShow, __props.footer]
+                ])
+              ], 2)
+            ], 6)
+          ], 8, _hoisted_1$i), [
+            [vShow, __props.visible]
+          ])
+        ]),
+        _: 3
+      });
     };
   }
 });
-const Dialog_vue_vue_type_style_index_0_scoped_83d91acb_lang = "";
-const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-83d91acb"]]);
+const Dialog_vue_vue_type_style_index_0_scoped_7bfb31f8_lang = "";
+const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-7bfb31f8"]]);
 Dialog.install = (app) => {
   app.component(Dialog.__name, Dialog);
 };
@@ -1623,45 +1630,86 @@ const Message = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-
 Message.install = (app) => {
   app.component(Message.__name, Message);
 };
-const _withScopeId$9 = (n) => (pushScopeId("data-v-83cc9ace"), n = n(), popScopeId(), n);
+const _withScopeId$9 = (n) => (pushScopeId("data-v-411dda47"), n = n(), popScopeId(), n);
 const _hoisted_1$g = ["onClick"];
-const _hoisted_2$e = { class: "m-modal-content" };
-const _hoisted_3$a = { class: "m-spin-dot" };
+const _hoisted_2$e = { class: "m-spin-dot" };
+const _hoisted_3$a = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_4$9 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_5$6 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_6$6 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
-const _hoisted_7$6 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
-const _hoisted_8$5 = [
+const _hoisted_7$6 = [
+  _hoisted_3$a,
   _hoisted_4$9,
   _hoisted_5$6,
-  _hoisted_6$6,
-  _hoisted_7$6
+  _hoisted_6$6
 ];
-const _hoisted_9$5 = { class: "m-body" };
-const _hoisted_10$3 = { class: "m-title" };
-const _hoisted_11$3 = {
+const _hoisted_8$5 = { class: "m-body" };
+const _hoisted_9$5 = { class: "m-title" };
+const _hoisted_10$3 = {
   key: 0,
-  class: "u-icon question"
+  focusable: "false",
+  class: "u-icon confirm",
+  "data-icon": "exclamation-circle",
+  "aria-hidden": "true",
+  viewBox: "64 64 896 896"
 };
-const _hoisted_12$3 = {
-  key: 0,
-  class: "u-icon info"
-};
-const _hoisted_13$2 = {
-  key: 1,
-  class: "u-icon success"
-};
+const _hoisted_11$3 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_12$3 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z" }, null, -1));
+const _hoisted_13$2 = [
+  _hoisted_11$3,
+  _hoisted_12$3
+];
 const _hoisted_14$2 = {
+  key: 0,
+  focusable: "false",
+  class: "u-icon info",
+  "data-icon": "info-circle",
+  "aria-hidden": "true",
+  viewBox: "64 64 896 896"
+};
+const _hoisted_15$2 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" }, null, -1));
+const _hoisted_16$2 = [
+  _hoisted_15$2
+];
+const _hoisted_17$1 = {
+  key: 1,
+  focusable: "false",
+  class: "u-icon success",
+  "data-icon": "check-circle",
+  "aria-hidden": "true",
+  viewBox: "64 64 896 896"
+};
+const _hoisted_18$1 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z" }, null, -1));
+const _hoisted_19$1 = [
+  _hoisted_18$1
+];
+const _hoisted_20$1 = {
   key: 2,
-  class: "u-icon error"
+  focusable: "false",
+  class: "u-icon error",
+  "data-icon": "close-circle",
+  "aria-hidden": "true",
+  viewBox: "64 64 896 896"
 };
-const _hoisted_15$2 = {
+const _hoisted_21 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z" }, null, -1));
+const _hoisted_22 = [
+  _hoisted_21
+];
+const _hoisted_23 = {
   key: 3,
-  class: "u-icon warning"
+  focusable: "false",
+  class: "u-icon warn",
+  "data-icon": "exclamation-circle",
+  "aria-hidden": "true",
+  viewBox: "64 64 896 896"
 };
-const _hoisted_16$2 = { class: "u-title" };
-const _hoisted_17$1 = { class: "u-content" };
-const _hoisted_18$1 = { class: "m-btns" };
+const _hoisted_24 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" }, null, -1));
+const _hoisted_25 = [
+  _hoisted_24
+];
+const _hoisted_26 = { class: "u-title" };
+const _hoisted_27 = { class: "u-content" };
+const _hoisted_28 = { class: "m-btns" };
 const _sfc_main$g = /* @__PURE__ */ defineComponent({
   __name: "Modal",
   props: {
@@ -1669,15 +1717,15 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
     title: {
       // 标题描述
       type: String,
-      default: "Do you Want to delete these items ?"
+      default: "Title"
     },
     content: {
       // 内容描述
       type: String,
-      default: "Some descriptions"
+      default: "Content"
     },
     width: {
-      // 提示窗口宽度
+      // 提示框宽度
       type: Number,
       default: 420
     },
@@ -1697,12 +1745,12 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
       default: "知道了"
     },
     mode: {
-      // 确认对话框：confirm  信息提示框：info
+      // 确认提示框：confirm  信息提示框：info
       type: String,
       default: "confirm"
     },
     type: {
-      // confirm mode: 'confirm', 'delete'   info mode: 'info', 'success', 'error', 'warning'
+      // confirm mode: 'confirm', 'delete'   info mode: 'info', 'success', 'error', 'warn'
       type: String,
       default: "confirm"
     },
@@ -1711,8 +1759,18 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
       type: Boolean,
       default: true
     },
+    top: {
+      // 固定高度水平居中时，距顶部高度
+      type: Number,
+      default: 100
+    },
     loading: {
       // 加载中...
+      type: Boolean,
+      default: false
+    },
+    visible: {
+      // 提示框是否可见
       type: Boolean,
       default: false
     }
@@ -1729,66 +1787,71 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
       emits("ok");
     }
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", {
-        class: "m-modal-mask",
-        onClick: withModifiers(onBlur, ["self"])
-      }, [
-        createElementVNode("div", {
-          class: normalizeClass(["m-modal", __props.center ? "relative-hv-center" : "top-center"]),
-          style: normalizeStyle(`width: ${__props.width}px;`)
-        }, [
-          createElementVNode("div", _hoisted_2$e, [
-            withDirectives(createElementVNode("div", _hoisted_3$a, _hoisted_8$5, 512), [
-              [vShow, __props.loading]
-            ]),
+      return openBlock(), createBlock(Transition, null, {
+        default: withCtx(() => [
+          withDirectives(createElementVNode("div", {
+            class: "m-modal-mask",
+            onClick: withModifiers(onBlur, ["self"])
+          }, [
             createElementVNode("div", {
-              class: normalizeClass(["m-modal-body", { "loading": __props.loading }])
+              class: normalizeClass(["m-modal", __props.center ? "relative-hv-center" : "top-center"]),
+              style: normalizeStyle(`width: ${__props.width}px; top: ${!__props.center ? __props.top + "px" : "50%"};`)
             }, [
-              createElementVNode("div", _hoisted_9$5, [
-                createElementVNode("div", _hoisted_10$3, [
-                  __props.mode === "confirm" ? (openBlock(), createElementBlock("span", _hoisted_11$3, "?")) : createCommentVNode("", true),
-                  __props.mode === "info" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                    __props.type === "info" ? (openBlock(), createElementBlock("span", _hoisted_12$3, "!")) : createCommentVNode("", true),
-                    __props.type === "success" ? (openBlock(), createElementBlock("span", _hoisted_13$2, "✓")) : createCommentVNode("", true),
-                    __props.type === "error" ? (openBlock(), createElementBlock("span", _hoisted_14$2, "×")) : createCommentVNode("", true),
-                    __props.type === "warning" ? (openBlock(), createElementBlock("span", _hoisted_15$2, "!")) : createCommentVNode("", true)
-                  ], 64)) : createCommentVNode("", true),
-                  createElementVNode("div", _hoisted_16$2, toDisplayString(__props.title), 1)
+              createElementVNode("div", {
+                class: normalizeClass(["m-modal-body", { "loading": __props.loading }])
+              }, [
+                withDirectives(createElementVNode("div", _hoisted_2$e, _hoisted_7$6, 512), [
+                  [vShow, __props.loading]
                 ]),
-                createElementVNode("div", _hoisted_17$1, toDisplayString(__props.content), 1)
-              ]),
-              createElementVNode("div", _hoisted_18$1, [
-                __props.mode === "confirm" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-                  createElementVNode("button", {
-                    class: "u-cancel",
-                    onClick: onCancel
-                  }, toDisplayString(__props.cancelText), 1),
-                  __props.type === "confirm" ? (openBlock(), createElementBlock("button", {
-                    key: 0,
+                createElementVNode("div", _hoisted_8$5, [
+                  createElementVNode("div", _hoisted_9$5, [
+                    __props.mode === "confirm" ? (openBlock(), createElementBlock("svg", _hoisted_10$3, _hoisted_13$2)) : createCommentVNode("", true),
+                    __props.mode === "info" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                      __props.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_14$2, _hoisted_16$2)) : createCommentVNode("", true),
+                      __props.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_17$1, _hoisted_19$1)) : createCommentVNode("", true),
+                      __props.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_20$1, _hoisted_22)) : createCommentVNode("", true),
+                      __props.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_23, _hoisted_25)) : createCommentVNode("", true)
+                    ], 64)) : createCommentVNode("", true),
+                    createElementVNode("div", _hoisted_26, toDisplayString(__props.title), 1)
+                  ]),
+                  createElementVNode("div", _hoisted_27, toDisplayString(__props.content), 1)
+                ]),
+                createElementVNode("div", _hoisted_28, [
+                  __props.mode === "confirm" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+                    createElementVNode("button", {
+                      class: "u-cancel",
+                      onClick: onCancel
+                    }, toDisplayString(__props.cancelText), 1),
+                    __props.type === "confirm" ? (openBlock(), createElementBlock("button", {
+                      key: 0,
+                      class: "u-confirm primary",
+                      onClick: onConfirm
+                    }, toDisplayString(__props.okText), 1)) : createCommentVNode("", true),
+                    __props.type === "delete" ? (openBlock(), createElementBlock("button", {
+                      key: 1,
+                      class: "u-confirm delete",
+                      onClick: onConfirm
+                    }, toDisplayString(__props.okText), 1)) : createCommentVNode("", true)
+                  ], 64)) : createCommentVNode("", true),
+                  __props.mode === "info" ? (openBlock(), createElementBlock("button", {
+                    key: 1,
                     class: "u-confirm primary",
                     onClick: onConfirm
-                  }, toDisplayString(__props.okText), 1)) : createCommentVNode("", true),
-                  __props.type === "delete" ? (openBlock(), createElementBlock("button", {
-                    key: 1,
-                    class: "u-confirm delete",
-                    onClick: onConfirm
-                  }, toDisplayString(__props.okText), 1)) : createCommentVNode("", true)
-                ], 64)) : createCommentVNode("", true),
-                __props.mode === "info" ? (openBlock(), createElementBlock("button", {
-                  key: 1,
-                  class: "u-confirm primary",
-                  onClick: onConfirm
-                }, toDisplayString(__props.noticeText), 1)) : createCommentVNode("", true)
-              ])
-            ], 2)
+                  }, toDisplayString(__props.noticeText), 1)) : createCommentVNode("", true)
+                ])
+              ], 2)
+            ], 6)
+          ], 8, _hoisted_1$g), [
+            [vShow, __props.visible]
           ])
-        ], 6)
-      ], 8, _hoisted_1$g);
+        ]),
+        _: 1
+      });
     };
   }
 });
-const Modal_vue_vue_type_style_index_0_scoped_83cc9ace_lang = "";
-const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-83cc9ace"]]);
+const Modal_vue_vue_type_style_index_0_scoped_411dda47_lang = "";
+const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-411dda47"]]);
 Modal.install = (app) => {
   app.component(Modal.__name, Modal);
 };
@@ -2680,9 +2743,9 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
   __name: "Slider",
   props: {
     width: {
-      // 滑动输入条在页面中的宽度
-      type: Number,
-      default: 600
+      // 滑动输入条的宽度
+      type: [String, Number],
+      default: "100%"
     },
     min: {
       // 滑动输入条最小值
@@ -2718,8 +2781,16 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
     const left = ref(0);
     const right = ref(0);
     const slider = ref();
+    const sliderWidth = ref();
     const scale = computed(() => {
-      return props.width / (props.max - props.min);
+      return sliderWidth.value / (props.max - props.min);
+    });
+    const totalWidth = computed(() => {
+      if (typeof props.width === "number") {
+        return props.width + "px";
+      } else {
+        return props.width;
+      }
     });
     const sliderValue = computed(() => {
       const high = Math.round(right.value / scale.value + props.min);
@@ -2740,8 +2811,12 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
       emit("change", to);
     });
     onMounted(() => {
+      getSliderWidth();
       getPosition();
     });
+    function getSliderWidth() {
+      sliderWidth.value = slider.value.offsetWidth;
+    }
     function getPosition() {
       if (props.range) {
         left.value = (props.value[0] - props.min) * scale.value;
@@ -2799,9 +2874,9 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
       document.onmousemove = (e) => {
         console.log(e.clientX);
         var moveX = e.clientX - leftX;
-        if (moveX > props.width) {
-          right.value = props.width;
-        } else if (left.value <= moveX && moveX <= props.width) {
+        if (moveX > sliderWidth.value) {
+          right.value = sliderWidth.value;
+        } else if (left.value <= moveX && moveX <= sliderWidth.value) {
           right.value = moveX;
         } else {
           right.value = left.value;
@@ -2817,7 +2892,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
         class: normalizeClass(["m-slider", { disabled: __props.disabled }]),
         ref_key: "slider",
         ref: slider,
-        style: normalizeStyle(`width: ${__props.width}px;`)
+        style: normalizeStyle(`width: ${unref(totalWidth)};`)
       }, [
         createElementVNode("div", {
           class: "u-slider-rail",
@@ -2844,8 +2919,8 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Slider_vue_vue_type_style_index_0_scoped_7fe64517_lang = "";
-const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-7fe64517"]]);
+const Slider_vue_vue_type_style_index_0_scoped_b97fd301_lang = "";
+const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-b97fd301"]]);
 Slider.install = (app) => {
   app.component(Slider.__name, Slider);
 };
