@@ -116,7 +116,6 @@ function preventDefault (e: Event) {
       text-align: center;
       vertical-align: middle;
       fill: rgba(0, 0, 0, 0.06);
-      font-size: 140%;
       color: rgba(0, 0, 0, 0.06);
       transition: all 0.3s;
     }
