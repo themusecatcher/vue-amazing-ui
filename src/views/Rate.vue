@@ -17,10 +17,7 @@ function onHoverChange (value: number) {
   <div>
     <h2 class="mb10">Rate 评分基本使用 (character: star)</h2>
     <Rate
-      :allowClear="false"
-      :allowHalf="true"
       :count="5"
-      :tooltips="desc"
       character="star"
       :disabled="false"
       v-model:value="value"
@@ -31,7 +28,6 @@ function onHoverChange (value: number) {
       :allowClear="true"
       :allowHalf="true"
       :count="5"
-      :tooltips="desc"
       character="heart"
       :size="30"
       :disabled="false"
@@ -43,15 +39,23 @@ function onHoverChange (value: number) {
       :allowClear="false"
       :allowHalf="true"
       :count="5"
-      :tooltips="desc"
       character="好"
       :size="30"
-      :disabled="false"
+      v-model:value="value"
+      @change="onChange"
+      @hoverChange="onHoverChange"/>
+    <h2 class="mt30 mb10">Rate 评分基本使用 (character: A & size: 50)</h2>
+    <Rate
+      :allowClear="false"
+      :allowHalf="true"
+      :count="5"
+      character="A"
+      :size="50"
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
     <h2 class="mt30 mb10">Ant Design Vue 评分</h2>
-    <a-rate v-model:value="value" :tooltips="desc" @change="onChange" />
+    <a-rate v-model:value="value" @change="onChange" />
   </div>
 </template>
 <style lang="less" scoped>
