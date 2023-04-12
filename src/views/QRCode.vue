@@ -16,7 +16,7 @@
   <QRCode
     value="https://blog.csdn.net/Dandrose"
     color="#1677FF"
-    backgroundColor="d9d9d9"/>
+    backgroundColor="f5f5f5"/>
   </div>
 </template>
 <style lang="less" scoped>
