@@ -7,8 +7,8 @@ import { useQRCode } from '@vueuse/integrations/useQRCode'
 interface Props {
   value?: string, // 扫描后的文本或地址
   size?: number, // 二维码大小
-  color?: string, // 二维码颜色
-  backgroundColor?: string, // 二维码背景色
+  color?: string, // 二维码颜色，Value must be in hex format (十六进制颜色值)
+  backgroundColor?: string, // 二维码背景色，Value must be in hex format (十六进制颜色值)
   bordered?: boolean, // 是否有边框
   scale?: number, // 每个black dots多少像素
   /*
@@ -25,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
   color: '#000',
   backgroundColor: '#FFF',
   bordered: true,
+  scale: 8,
   errorLevel: 'H' // 可选 L M Q H
 })
 
