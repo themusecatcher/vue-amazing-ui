@@ -116,6 +116,16 @@ export function debounce (fn: Function, delay = 300) {
     timer = rafTimeout(fn, delay)
   }
 }
+// 消除js加减精度问题的加法函数
+export function add (num1: number, num2: number) {
+  const num1DeciStr = String(num1).split('.')[1]
+  const num2DeciStr = String(num2).split('.')[1]
+  let maxLen = Math.max(num1DeciStr?.length || 0, num2DeciStr?.length || 0) // 两数中最长的小数位长度
+  let num1Str = num1.toFixed(maxLen) // 补零，返回字符串
+  let num2Str = num2.toFixed(maxLen)
+  const result = +(num1Str.replace('.', '')) + +(num2Str.replace('.', '')) // 转换为整数相加
+  return result / Math.pow(10, maxLen)
+}
 export const setDocumentTitle = function (title: string) {
   document.title = title
   const ua = navigator.userAgent
