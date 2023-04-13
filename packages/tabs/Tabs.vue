@@ -70,7 +70,8 @@ function onTab (key: string|number) {
   WheelEvent.deltaMode 只读：返回一个无符号长整型数（unsigned long），表示 delta* 值滚动量的单位。允许的值为：
 */
 function onWheel (e: WheelEvent) {
-  const scrollX = e.deltaX * 1 // 滚动速度
+  // e.preventDefault() // 禁止浏览器捕获滑动事件
+  const scrollX = e.deltaX * 1 // 滚轮的横向滚动量
   if (scrollLeft.value + scrollX > scrollMax.value) {
     scrollLeft.value = scrollMax.value
   } else if (scrollLeft.value + scrollX < 0) {
