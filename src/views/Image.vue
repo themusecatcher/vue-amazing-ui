@@ -15,15 +15,15 @@ const images = ref([
   <div>
     <h2 class="mb10">Image 图片基本使用</h2>
     <Image src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg" />
-    <h2 class="mt30 mb10">Image 多张图片预览 (src: images)</h2>
+    <h2 class="mt30 mb10">多张图片预览 (src: images)</h2>
     <Image :src="images" />
-    <h2 class="mt30 mb10">Image 预览文本设为preview (preview: preview)</h2>
+    <h2 class="mt30 mb10">预览文本设为preview (preview: preview)</h2>
     <Image src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg">
       <template #preview>
         <p class="u-pre">preview</p>
       </template>
     </Image>
-    <h2 class="mt30 mb10">Image 更改缩放比率和最大最小缩放比例 (zoomRatio: 0.2 & minZoomScale: 0.5 & maxZoomScale: 2)</h2>
+    <h2 class="mt30 mb10">更改缩放比率和最大最小缩放比例 (zoomRatio: 0.2 & minZoomScale: 0.5 & maxZoomScale: 2)</h2>
     <Image
       :zoomRatio="0.2"
       :minZoomScale="0.5"

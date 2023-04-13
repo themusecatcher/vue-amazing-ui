@@ -75,7 +75,7 @@ const autoplayCarousel = ref<object|boolean>({
   disableOnInteraction: false
 })
 function onSwiper (swiper: any) {
-  console.log(swiper)
+  // console.log(swiper)
   if (props.type === 'carousel') {
     swiper.el.onmouseenter = () => { // 移入暂停
       swiper.autoplay.stop()
@@ -84,9 +84,6 @@ function onSwiper (swiper: any) {
       swiper.autoplay.start()
     }
   }
-}
-function onSlideChange () {
-  console.log('slide change')
 }
 </script>
 <template>
@@ -101,7 +98,7 @@ function onSlideChange () {
     :autoplay="autoplayBanner"
     :loop="true"
     @swiper="onSwiper"
-    @slideChange="onSlideChange"
+    @slideChange="$emit('change')"
     v-bind="$attrs">
     <swiper-slide v-for="(image, index) in imageData" :key="index">
       <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
@@ -123,7 +120,7 @@ function onSlideChange () {
     :autoplay="autoplayCarousel"
     :loop="true"
     @swiper="onSwiper"
-    @slideChange="onSlideChange"
+    @slideChange="$emit('change')"
     v-bind="$attrs">
     <swiper-slide v-for="(image, index) in imageData" :key="index">
       <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">

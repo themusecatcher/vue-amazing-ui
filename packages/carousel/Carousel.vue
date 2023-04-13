@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Image {
-  title: string // 图片名称
+  title?: string // 图片名称
   link?: string // 图片跳转链接
   imgUrl: string // 图片地址
 }

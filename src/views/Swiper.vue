@@ -7,8 +7,8 @@ const imageData = ref<any[]>([])
 function loadImages () {
   for (let i = 1; i <= 10; i++) {
     imageData.value.push({
-      title: `image-${i}`,
-      link: '',
+      // title: `image-${i}`,
+      // link: '',
       imgUrl: getImageUrl(i)
     })
   }
@@ -17,6 +17,9 @@ function loadImages () {
 onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
   loadImages()
 })
+function onChange () {
+  console.log('slider change')
+}
 </script>
 <template>
   <div>
@@ -39,7 +42,8 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
       effect="slider"
       width="100%"
       height="100vh"
-      navigation />
+      navigation
+      @change="onChange" />
     <h2 class="mt30 mb10">Swiper 走马灯基本使用 (type: carousel)</h2>
     <Swiper
       :imageData="imageData"
