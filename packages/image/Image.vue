@@ -13,7 +13,7 @@ interface Props {
   zoomRatio?: number // 每次缩放比率，默认0.1
   minZoomScale?: number // 最小缩放比例，默认0.1
   maxZoomScale?: number // 最大缩放比例，默认10
-  resetOnDbclick?: boolean // 缩放图片时，是否可以双击还原
+  resetOnDbclick?: boolean // 缩放移动旋转图片后，是否可以双击还原
 }
 const props = withDefaults(defineProps<Props>(), {
   alt: 'image',
@@ -95,8 +95,29 @@ function onZoomout () { // 缩小
   }
   console.log(scale.value)
 }
-function onResetZoom () {
+function onWheel (e: WheelEvent) { // 鼠标滚轮缩放
+  // e.preventDefault() // 禁止浏览器捕获滑动事件
+  const scrollZoom = e.deltaY * props.zoomRatio // 滚轮的纵向滚动量
+  if (scale.value === props.minZoomScale && scrollZoom > 0) {
+    return
+  }
+  if (scale.value === props.maxZoomScale && scrollZoom < 0) {
+    return
+  }
+  if (scale.value - scrollZoom < props.minZoomScale) {
+    scale.value = props.minZoomScale
+  } else if (scale.value - scrollZoom > props.maxZoomScale) {
+    scale.value = props.maxZoomScale
+  } else {
+    scale.value = add(scale.value, -scrollZoom)
+  }
+  console.log('scale:', scale.value)
+}
+function onResetZoom () { // 双击图片重置为初始状态
   scale.value = 1
+  rotate.value = 0
+  dragX.value = 0
+  dragY.value = 0
 }
 function onAnticlockwiseRotate () { // 逆时针旋转
   rotate.value -= 90
@@ -160,7 +181,7 @@ function onSwitchRight () {
       <div class="m-preview-mask" v-show="showPreview"></div>
     </Transition>
     <Transition name="preview">
-      <div class="m-preview-wrap" v-show="showPreview" @click.self="onClose">
+      <div class="m-preview-wrap" v-show="showPreview" @click.self="onClose" @wheel.prevent="onWheel">
         <div class="m-preview-body">
           <div class="m-preview-operations">
             <div class="u-preview-operation" @click="onClose">
