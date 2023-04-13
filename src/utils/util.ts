@@ -40,7 +40,7 @@ export function dateFormat (timestamp: number|string|Date, format = 'YYYY-MM-DD 
   return showTime
 }
 // 获取静态资源地址
-export function getImageUrl (name: any) {
+export function getImageUrl (name: any): string {
   return new URL(`../assets/images/${name}.jpg`, import.meta.url).href
 }
 // @ts-ignore 兼容性requestAnimationFrame
@@ -57,7 +57,7 @@ export const cancelAnimationFrame = window.cancelAnimationFrame || window.mozCan
   返回值（用于取消 rafTimeout）：（object）raf: { id: [number] }
   取消 rafTimeout 定时器：cancelRaf(raf) 或者 cancelAnimationFrame(raf.id)
 */
-export function rafTimeout (func: Function, delay = 0, interval = false) {
+export function rafTimeout (func: Function, delay = 0, interval = false): object {
   // @ts-ignore
   const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
   var start: any = null
@@ -65,12 +65,10 @@ export function rafTimeout (func: Function, delay = 0, interval = false) {
     /*
       timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame() 开始去执行回调函数的时刻
     */
-    // console.log('timestamp:', timestamp)
     if (!start) {
       start = timestamp
     }
     const elapsed = timestamp - start
-    // console.log('elapsed:', elapsed)
     if (elapsed >= delay) {
       func() // 执行目标函数func
       if (interval) { // 使用间歇调用
@@ -87,13 +85,13 @@ export function rafTimeout (func: Function, delay = 0, interval = false) {
   return raf
 }
 // 用于取消 rafTimeout 函数
-export function cancelRaf (raf: { id: number }) {
+export function cancelRaf (raf: { id: number }): void {
   if (raf && raf.id) {
     cancelAnimationFrame(raf.id)
   }
 }
 // 节流函数throttle
-export function throttle (fn: Function, delay = 300) {
+export function throttle (fn: Function, delay = 300): any {
   var valid = true
   return function () {
     if (valid) {
@@ -107,7 +105,7 @@ export function throttle (fn: Function, delay = 300) {
   }
 }
 // 防抖函数debounce
-export function debounce (fn: Function, delay = 300) {
+export function debounce (fn: Function, delay = 300): any {
   let timer: any = null //借助闭包
   return function () {
     if (timer) {
@@ -117,7 +115,7 @@ export function debounce (fn: Function, delay = 300) {
   }
 }
 // 消除js加减精度问题的加法函数
-export function add (num1: number, num2: number) {
+export function add (num1: number, num2: number): number {
   const num1DeciStr = String(num1).split('.')[1]
   const num2DeciStr = String(num2).split('.')[1]
   let maxLen = Math.max(num1DeciStr?.length || 0, num2DeciStr?.length || 0) // 两数中最长的小数位长度

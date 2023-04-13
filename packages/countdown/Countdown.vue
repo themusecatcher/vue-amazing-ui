@@ -115,6 +115,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .m-countdown {
   display: inline-block;
+  line-height: 1.571;
   .u-title {
     margin-bottom: 4px;
     color: #00000073;
@@ -123,7 +124,6 @@ onMounted(() => {
   .u-time {
     color: #000000d9;
     font-size: 24px;
-    line-height: 1.5;
   }
 }
 </style>
