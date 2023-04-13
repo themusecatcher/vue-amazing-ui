@@ -105,7 +105,7 @@ function onClickPoint (e: any) { // 点击滑动条，移动滑块
 }
 function onLeftMouseDown () { // 在滚动条上拖动左滑块
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
-  document.onmousemove = (e) => {
+  document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
     var moveX = e.clientX - leftX
     if (moveX < 0) {
@@ -123,9 +123,8 @@ function onLeftMouseDown () { // 在滚动条上拖动左滑块
 }
 function onRightMouseDown () { // 在滚动条上拖动右滑块
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
-  document.onmousemove = (e) => {
+  document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    console.log(e.clientX)
     var moveX = e.clientX - leftX
     if (moveX > sliderWidth.value) {
       right.value = sliderWidth.value
@@ -145,8 +144,8 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
   <div :class="['m-slider', { disabled: disabled }]" ref="slider" :style="`width: ${totalWidth};`">
     <div class="u-slider-rail" @click.self="onClickPoint"></div>
     <div class="u-slider-track" :class="{trackTransition: transition}" :style="`left: ${left}px; right: auto; width: ${right - left}px;`"></div>
-    <div class="u-slider-handle" :class="{handleTransition: transition}" v-if="range" tabindex="0" @mousedown="onLeftMouseDown" :style="`left: ${left}px; right: auto; transform: translateX(-50%);`"></div>
-    <div class="u-slider-handle" :class="{handleTransition: transition}" tabindex="0" @mousedown="onRightMouseDown" :style="`left: ${right}px; right: auto; transform: translateX(-50%);`"></div>
+    <div class="u-slider-handle" :class="{handleTransition: transition}" v-if="range" tabindex="-1" @mousedown="onLeftMouseDown" :style="`left: ${left}px; right: auto; transform: translateX(-50%);`"></div>
+    <div class="u-slider-handle" :class="{handleTransition: transition}" tabindex="-1" @mousedown="onRightMouseDown" :style="`left: ${right}px; right: auto; transform: translateX(-50%);`"></div>
   </div>
 </template>
 <style lang="less" scoped>
