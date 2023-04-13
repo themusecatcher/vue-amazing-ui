@@ -50,6 +50,7 @@ function onInput (e: any) {
     emitValue(parseFloat(value) || 0)
   }
 }
+// 消除js加减精度问题的加法函数
 function add (num1: number, num2: number) {
   const num1DeciStr = String(num1).split('.')[1]
   const num2DeciStr = String(num2).split('.')[1]

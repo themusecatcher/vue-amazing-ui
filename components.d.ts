@@ -16,6 +16,8 @@ declare module '@vue/runtime-core' {
     ACollapse: typeof import('ant-design-vue/es')['Collapse']
     ACollapsePanel: typeof import('ant-design-vue/es')['CollapsePanel']
     ADivider: typeof import('ant-design-vue/es')['Divider']
+    AImage: typeof import('ant-design-vue/es')['Image']
+    AImagePreviewGroup: typeof import('ant-design-vue/es')['ImagePreviewGroup']
     AInputNumber: typeof import('ant-design-vue/es')['InputNumber']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
