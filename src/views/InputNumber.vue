@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-
 const value = ref(3)
 watch(value, (to) => {
   console.log('to:', to)
 })
-
 function onChange (number: number) {
   console.log('number:', number)
 }
@@ -30,8 +28,7 @@ function onAntChange (number: number) {
       :step="1"
       prefix="$"
       @change="onChange"
-      v-model:value="value">
-    </InputNumber>
+      v-model:value="value" />
     <h2 class="mt30 mb10">Ant Design Vue 数字输入框</h2>
     <a-input-number
       class="border-box"

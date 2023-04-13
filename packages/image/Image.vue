@@ -123,11 +123,11 @@ function onMouseDown (event: MouseEvent) {
     dragY.value = sourceDragY + e.clientY - sourceY.value
   }
   document.onmouseup = () => {
-    if (dragX.value < sourceDragX - left) { // 溢出视口左边缘
-      dragX.value = sourceDragX - left
-    }
     if (dragX.value > sourceDragX + viewportWidth - right) { // 溢出视口右边缘
       dragX.value = sourceDragX + viewportWidth - right
+    }
+    if (dragX.value < sourceDragX - left) { // 溢出视口左边缘
+      dragX.value = sourceDragX - left
     }
     if (dragY.value > sourceDragY + viewportHeight - bottom) { // 溢出视口下边缘
       dragY.value = sourceDragY + viewportHeight - bottom

@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { requestAnimationFrame, cancelAnimationFrame, rafTimeout } from '../index'
+import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf } from '../index'
+interface Text {
+  title: string // 文字标题
+  link?: string // 跳转链接
+}
 const props = defineProps({
   sliderText: { // 滚动文字数组
-    type: Array<any>,
+    type: Array<Text>,
     required: true,
     default: () => []
   },
@@ -41,7 +45,7 @@ const left = ref(0)
 const fpsRaf = ref(0) // fps回调标识
 const moveRaf = ref() // 一个 long 整数，请求 ID ，是回调列表中唯一的标识。是个非零值，没别的意义
 const fps = ref(60)
-const textData = ref([...props.sliderText])
+const textData = ref<Text[]>([...props.sliderText])
 const horizonRef = ref()
 const distance = ref(0) // 每条滚动文字移动距离
 
@@ -60,7 +64,6 @@ function getFPS () { // 获取屏幕刷新率
     /*
       timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame() 开始去执行回调函数的时刻
     */
-    // console.log('timestamp:', timestamp)
     if (!start) {
       if (fpsRaf.value > 10) {
         start = timestamp
@@ -80,7 +83,7 @@ function getDistance ():number {
 }
 function moveLeft () {
   if (left.value >= distance.value) {
-    textData.value.push(textData.value.shift()) // 将第一条数据放到最后
+    textData.value.push(textData.value.shift() as Text) // 将第一条数据放到最后
     left.value = 0
   } else {
     left.value += step.value // 每次移动step（px）
@@ -119,7 +122,7 @@ function onStart () {
 function onStop () {
   if (props.vertical) {
     if (len.value > 1) {
-      cancelAnimationFrame(timer.id)
+      cancelRaf(timer)
     }
   } else {
     cancelAnimationFrame(moveRaf.value) // 暂停动画
@@ -165,7 +168,7 @@ function startMove () {
         class="m-slider"
         :style="`width: calc(${totalWidth} - ${2*gap}px); height: ${height}px;`"
         v-for="(text, index) in sliderText"
-        :key="text"
+        :key="index"
         v-show="actIndex===index">
         <a
           class="u-slider"
@@ -173,7 +176,8 @@ function startMove () {
           :href="text.link ? text.link:'javascript:;'"
           :target="text.link ? '_blank':'_self'"
           @click="onClick(text.title)">
-        {{ text.title }}</a>
+        {{ text.title }}
+        </a>
       </div>
     </TransitionGroup>
   </div>
