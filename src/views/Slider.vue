@@ -39,8 +39,14 @@ function onChange (val: number|number[]) {
       range
       v-model:value="doubleValue"
       @change="onChange"/>
+    <h2 class="mt30 mb10">Ant Design Vue 滑动输入条</h2>
+    <a-slider class="border-box" v-model:value="doubleValue" :min="0" :max="100" range />
   </div>
 </template>
 <style lang="less" scoped>
-
+.border-box {
+  :deep(*) {
+    box-sizing: border-box;
+  }
+}
 </style>
