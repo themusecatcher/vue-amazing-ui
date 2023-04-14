@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 interface Image {
   src: string // 图像地址
-  alt?: string // 图像描述
+  alt?: string // 图像无法加载时显示的描述
 }
 interface Props {
-  alt?: string // 图像描述
+  alt?: string // 图像无法加载时显示的描述
   width?: string|number // 图像宽度
   height?: string|number // 图像高度
+  fit?: string // 图形如何适应容器高度和宽度
   src?: string|Image[] // 图像地址 | 图形地址数组
   preview?: string // 预览文本 string | slot
   zoomRatio?: number // 每次缩放比率，默认0.1
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   alt: 'image',
   width: 300,
   height: '100%',
+  fit: 'contain', // 可选 fill(填充) | contain(等比缩放包含) | cover(等比缩放覆盖)
   src: '',
   preview: '预览',
   zoomRatio: 0.1,
@@ -50,6 +52,16 @@ const images = computed(() => {
     }]
   }
 })
+onMounted(() => {
+  // 监听键盘切换事件
+  document.addEventListener('keydown', keyboadrSwitch)
+})
+onUnmounted(() => {
+  // 移除键盘切换事件
+  document.removeEventListener('keydown', keyboadrSwitch)
+})
+const complete = ref(false) // 图片是否加载完成
+const loaded = ref(false)
 const previewIndex = ref(0)
 const showPreview = ref(false)
 const rotate = ref(0) // 预览图片旋转角度
@@ -59,6 +71,24 @@ const sourceY = ref(0) // 拖动开始时位置
 const dragX = ref(0) // 拖动横向距离
 const dragY = ref(0) // 拖动纵向距离
 const image = ref() // 预览图片模板引用
+function keyboadrSwitch (e: KeyboardEvent) {
+  e.preventDefault()
+  if (showPreview.value && images.value.length > 1) {
+    if (e.key === 'ArrowLeft' && previewIndex.value > 0) {
+      onSwitchLeft()
+    }
+    if (e.key === 'ArrowRight' && previewIndex.value < images.value.length - 1) {
+      onSwitchRight()
+    }
+  }
+}
+function onComplete () { // 图片加载完成
+  complete.value = true
+}
+function onLoaded () { // 预览图片加载完成
+  console.log('loaded')
+  loaded.value = true
+}
 function onPreview () {
   scale.value = 1
   rotate.value = 0
@@ -85,7 +115,6 @@ function onZoomin () { // 放大
   } else {
     scale.value = add(scale.value, props.zoomRatio)
   }
-  console.log(scale.value)
 }
 function onZoomout () { // 缩小
   if (scale.value - props.zoomRatio < props.minZoomScale) {
@@ -93,7 +122,6 @@ function onZoomout () { // 缩小
   } else {
     scale.value = add(scale.value, -props.zoomRatio)
   }
-  console.log(scale.value)
 }
 function onWheel (e: WheelEvent) { // 鼠标滚轮缩放
   // e.preventDefault() // 禁止浏览器捕获滑动事件
@@ -111,7 +139,6 @@ function onWheel (e: WheelEvent) { // 鼠标滚轮缩放
   } else {
     scale.value = add(scale.value, -scrollZoom)
   }
-  console.log('scale:', scale.value)
 }
 function onResetZoom () { // 双击图片重置为初始状态
   scale.value = 1
@@ -127,7 +154,7 @@ function onClockwiseRotate () { // 顺时针旋转
 }
 function onMouseDown (event: MouseEvent) {
   // event.preventDefault() // 消除拖动元素时的阴影
-  const imageRect = image.value.getBoundingClientRect()
+  const imageRect = image.value[0].getBoundingClientRect()
   const top = imageRect.top // 图片上边缘距浏览器窗口上边界的距离
   const bottom = imageRect.bottom // 图片下边缘距浏览器窗口上边界的距离
   const right = imageRect.right // 图片右边缘距浏览器窗口左边界的距离
@@ -164,12 +191,14 @@ function onSwitchLeft () {
 }
 function onSwitchRight () {
   previewIndex.value++
+  loaded.value = false
 }
 </script>
 <template>
   <div class="m-image-wrap">
-    <div class="m-image" :style="`width: ${imageWidth}; height: ${imageHeight};`">
-      <img class="u-image" :src="images[previewIndex].src" :alt="images[previewIndex].alt" />
+    <div class="m-image" :class="{'image-hover-mask': complete}" :style="`width: ${imageWidth}; height: ${imageHeight};`">
+      <div class="u-spin-circle" v-show="!complete"></div>
+      <img class="u-image" :style="`object-fit: ${fit};`" @load="onComplete" :src="images[previewIndex].src" :alt="images[previewIndex].alt" />
       <div class="m-image-mask" @click="onPreview">
         <div class="m-image-mask-info">
           <svg class="u-eye" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
@@ -181,7 +210,7 @@ function onSwitchRight () {
       <div class="m-preview-mask" v-show="showPreview"></div>
     </Transition>
     <Transition name="preview">
-      <div class="m-preview-wrap" v-show="showPreview" @click.self="onClose" @wheel.prevent="onWheel">
+      <div class="m-preview-wrap" v-if="showPreview" @click.self="onClose" @wheel.prevent="onWheel">
         <div class="m-preview-body">
           <div class="m-preview-operations">
             <div class="u-preview-operation" @click="onClose">
@@ -204,12 +233,16 @@ function onSwitchRight () {
             class="m-preview-image"
             :style="`transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
             @mousedown.prevent="onMouseDown">
+            <div class="u-spin-circle" v-show="!loaded"></div>
             <img
+              v-for="(image, index) in images" :key="index"
+              v-show="previewIndex === index"
               ref="image"
               class="u-preview-image"
               :style="`transform: scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg);`"
-              :src="images[previewIndex].src"
-              :alt="images[previewIndex].alt"
+              :src="image.src"
+              :alt="image.alt"
+              @load="onLoaded"
               @dblclick="resetOnDbclick ? onResetZoom():(e: Event) => e.preventDefault()"/>
           </div>
           <div
@@ -246,15 +279,39 @@ function onSwitchRight () {
   opacity: 0;
   transform: scale(0.1);
 }
+.u-spin-circle {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border-width: 4px;
+  border-style: solid;
+  border-color: @themeColor;
+  border-top-color: transparent; // 隐藏1/4圆
+  animation: loadingCircle 1s infinite linear;
+  -webkit-animation: loadingCircle 1s infinite linear;
+}
+@keyframes loadingCircle {
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .m-image-wrap {
-  .m-image {
-    position: relative;
-    display: inline-block;
+  .image-hover-mask {
     &:hover {
       .m-image-mask {
         opacity: 1;
+        pointer-events: auto;
       }
     }
+  }
+  .m-image {
+    position: relative;
+    display: inline-block;
     .u-image {
       width: 100%;
       height: 100%;
@@ -273,6 +330,7 @@ function onSwitchRight () {
       background: rgba(0, 0, 0, 0.5);
       cursor: pointer;
       opacity: 0;
+      pointer-events: none;
       transition: opacity 0.3s;
       .m-image-mask-info {
         overflow: hidden;
