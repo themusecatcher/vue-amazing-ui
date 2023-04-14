@@ -2426,7 +2426,7 @@ spdx-license-ids@^3.0.0:
 
 ssr-window@^4.0.2:
   version "4.0.2"
-  resolved "https://registry.npmmirror.com/ssr-window/-/ssr-window-4.0.2.tgz#dc6b3ee37be86ac0e3ddc60030f7b3bc9b8553be"
+  resolved "https://registry.npmjs.org/ssr-window/-/ssr-window-4.0.2.tgz#dc6b3ee37be86ac0e3ddc60030f7b3bc9b8553be"
   integrity sha512-ISv/Ch+ig7SOtw7G2+qkwfVASzazUnvlDTwypdLoPoySv+6MqlOV10VwPSE6EWkGjhW50lUmghPmpYZXMu/+AQ==
 
 string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
@@ -2502,9 +2502,9 @@ supports-preserve-symlinks-flag@^1.0.0:
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
 swiper@^9.1.1:
-  version "9.1.1"
-  resolved "https://registry.npmmirror.com/swiper/-/swiper-9.1.1.tgz#8e8d49a3667d9ef8997cddb023d913c422e72142"
-  integrity sha512-D1zArOwI6XCXCYBULPA4jTxpqp5SQtvntjinbXNZwXzj6P3KS51zSWuMarCLXq5oRISay4nX+TuShpxz8qhtbw==
+  version "9.2.0"
+  resolved "https://registry.npmjs.org/swiper/-/swiper-9.2.0.tgz#40e950b1c0d516403b3bf7083560ebac22a6f325"
+  integrity sha512-lWK9toYumUQss+YuTL+Mt0+8twiMJEyzioER4bbS4rrGHlkeLrDM8uhtAmnpdijELrNscuNUujDgKoMQZfQGlQ==
   dependencies:
     ssr-window "^4.0.2"
 

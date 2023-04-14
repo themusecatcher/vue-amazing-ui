@@ -6,7 +6,7 @@ const images = ref([
     alt: 'image-1'
   },
   {
-    src: 'https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZOKAPknKAAUO5gkkV8M466.jpg',
+    src: 'https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg',
     alt: 'image-3'
   }
 ])
@@ -14,33 +14,23 @@ const images = ref([
 <template>
   <div>
     <h2 class="mb10">Image 图片基本使用</h2>
-    <Image src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg" />
-    <h2 class="mt30 mb10">多张图片预览 (src: images)</h2>
-    <Image :src="images" />
-    <h2 class="mt30 mb10">预览文本设为preview (preview: preview)</h2>
-    <Image src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg">
+    <Image :width="400" :height="300" src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg" />
+    <h2 class="mt30 mb10">多张图片预览，同时支持键盘箭头(left/right)切换 (src: images)</h2>
+    <Image :width="400" :height="300" :src="images" />
+    <h2 class="mt30 mb10">预览文本设为 preview 同时图片覆盖容器 (preview: preview & fit: cover)</h2>
+    <Image :width="400" :height="300" fit="cover" src="https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg">
       <template #preview>
         <p class="u-pre">preview</p>
       </template>
     </Image>
     <h2 class="mt30 mb10">更改缩放比率和最大最小缩放比例 (zoomRatio: 0.2 & minZoomScale: 0.5 & maxZoomScale: 2)</h2>
     <Image
+      :width="400"
+      :height="300"
       :zoomRatio="0.2"
       :minZoomScale="0.5"
       :maxZoomScale="2"
       src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg" />
-    <h2 class="mt30 mb10">Ant Design Vue 图片</h2>
-    <a-image
-      class="border-box"
-      :width="200"
-      :height="200"
-      src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg"
-    />
-    <br/>
-    <a-image-preview-group>
-      <a-image :width="200" :src="images[0].src" />
-      <a-image :width="200" :src="images[1].src" />
-    </a-image-preview-group>
   </div>
 </template>
 <style lang="less" scoped>
