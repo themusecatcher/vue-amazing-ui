@@ -1,31 +1,23 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
-const props = defineProps({
-  width: { // 滑动输入条的宽度
-    type: [String, Number],
-    default: '100%'
-  },
-  min: { // 滑动输入条最小值
-    type: Number,
-    default: 0
-  },
-  max: { // 滑动输入条最大值
-    type: Number,
-    default: 100
-  },
-  disabled: { // 是否禁用
-    type: Boolean,
-    default: false
-  },
-  range: { // 是否双滑块模式
-    type: Boolean,
-    default: false
-  },
-  value: { // （v-model）设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
-    type: [Number, Array<number>],
-    default: 0
-  }
+interface Props {
+  width?: string|number // 滑动输入条的宽度
+  min?: number // 滑动输入条最小值
+  max?: number // 滑动输入条最大值
+  disabled?: boolean // 是否禁用
+  range?: boolean // 是否双滑块模式
+  step?: number // 步长，取值必须大于 0，并且可被 (max - min) 整除
+  value?: number | number[] // （v-model）设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
+}
+const props = withDefaults(defineProps<Props>(), {
+  width: '100%',
+  min: 0,
+  max: 100,
+  disabled: false,
+  range: false,
+  step: 1,
+  value: 0
 })
 const transition = ref(false)
 const timer = ref()
@@ -33,6 +25,8 @@ const left = ref(0) // 左滑块距离滑动条左端的距离
 const right = ref(0) // 右滑动距离滑动条左端的距离
 const slider = ref()
 const sliderWidth = ref()
+const leftHandle = ref() // left模板引用
+const rightHandle = ref() // right模板引用
 
 const scale = computed(() => {
   return sliderWidth.value / (props.max - props.min)
@@ -86,33 +80,33 @@ function onClickPoint (e: any) { // 点击滑动条，移动滑块
     transition.value = false
   }, 300)
   // 元素是absolute时，e.layerX是相对于自身元素左上角的水平位置
-  var moveX = e.layerX // 鼠标点击位置距离滑动输入条左端的水平距离
+  const targetX = e.layerX // 鼠标点击位置距离滑动输入条左端的水平距离
   if (props.range) { // 双滑块模式
-    if (moveX <= left.value) {
-      left.value = moveX
-    } else if (moveX >= right.value) {
-      right.value = moveX
+    if (targetX <= left.value) {
+      left.value = targetX
+    } else if (targetX >= right.value) {
+      right.value = targetX
     } else {
-      if ((moveX - left.value) < (right.value - moveX)) {
-        left.value = moveX
+      if ((targetX - left.value) < (right.value - targetX)) {
+        left.value = targetX
       } else {
-        right.value = moveX
+        right.value = targetX
       }
     }
   } else { // 单滑块模式
-    right.value = moveX
+    right.value = targetX
   }
 }
 function onLeftMouseDown () { // 在滚动条上拖动左滑块
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    var moveX = e.clientX - leftX
-    if (moveX < 0) {
+    const targetX = e.clientX - leftX
+    if (targetX < 0) {
       left.value = 0
-    } else if (moveX >= 0 && moveX <= right.value) {
-      left.value = moveX
-    } else { // moveX > right
+    } else if (targetX >= 0 && targetX <= right.value) {
+      left.value = targetX
+    } else { // targetX > right
       left.value = right.value
       onRightMouseDown()
     }
@@ -125,12 +119,12 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    var moveX = e.clientX - leftX
-    if (moveX > sliderWidth.value) {
+    const targetX = e.clientX - leftX
+    if (targetX > sliderWidth.value) {
       right.value = sliderWidth.value
-    } else if (left.value <= moveX && moveX <= sliderWidth.value) {
-      right.value = moveX
-    } else { // moveX < left
+    } else if (left.value <= targetX && targetX <= sliderWidth.value) {
+      right.value = targetX
+    } else { // targetX < left
       right.value = left.value
       onLeftMouseDown()
     }
@@ -139,13 +133,71 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
     document.onmousemove = null
   }
 }
+function onLeftSlide (source: number, place: string) {
+  const targetX = source - props.step * scale.value
+  if (place === 'left') { // 左滑块左移
+    if (targetX < 0) {
+      left.value = 0
+    } else {
+      left.value = targetX
+    }
+  } else { // 右滑块左移
+    if (targetX >= left.value) {
+      right.value = targetX
+    } else {
+      right.value = left.value
+      left.value = targetX
+      leftHandle.value.focus()
+    }
+  }
+}
+function onRightSlide (source: number, place: string) {
+  const targetX = source + props.step * scale.value
+  if (place === 'right') {
+    if (targetX > sliderWidth.value) {
+      right.value = sliderWidth.value
+    } else {
+      right.value = targetX
+    }
+  } else { // 左滑块右移
+    if (targetX <= right.value) {
+      left.value = targetX
+    } else {
+      left.value = right.value
+      right.value = targetX
+      rightHandle.value.focus()
+    }
+  }
+}
 </script>
 <template>
   <div :class="['m-slider', { disabled: disabled }]" ref="slider" :style="`width: ${totalWidth};`">
     <div class="u-slider-rail" @click.self="onClickPoint"></div>
     <div class="u-slider-track" :class="{trackTransition: transition}" :style="`left: ${left}px; right: auto; width: ${right - left}px;`"></div>
-    <div class="u-slider-handle" :class="{handleTransition: transition}" v-if="range" tabindex="-1" @mousedown="onLeftMouseDown" :style="`left: ${left}px; right: auto; transform: translateX(-50%);`"></div>
-    <div class="u-slider-handle" :class="{handleTransition: transition}" tabindex="-1" @mousedown="onRightMouseDown" :style="`left: ${right}px; right: auto; transform: translateX(-50%);`"></div>
+    <div
+      v-if="range"
+      tabindex="-1"
+      ref="leftHandle"
+      class="u-slider-handle"
+      :class="{handleTransition: transition}"
+      :style="`left: ${left}px; right: auto; transform: translateX(-50%);`"
+      @keydown.left.prevent="onLeftSlide(left, 'left')"
+      @keydown.right.prevent="onRightSlide(left, 'left')"
+      @keydown.down.prevent="onLeftSlide(left, 'left')"
+      @keydown.up.prevent="onRightSlide(left, 'left')"
+      @mousedown="onLeftMouseDown"></div>
+    <div
+      tabindex="-1"
+      ref="rightHandle"
+      class="u-slider-handle"
+      :class="{handleTransition: transition}"
+      :style="`left: ${right}px; right: auto; transform: translateX(-50%);`"
+      @keydown.left.prevent="onLeftSlide(right, 'right')"
+      @keydown.right.prevent="onRightSlide(right, 'right')"
+      @keydown.down.prevent="onLeftSlide(right, 'right')"
+      @keydown.up.prevent="onRightSlide(right, 'right')"
+      @mousedown="onRightMouseDown"
+      ></div>
   </div>
 </template>
 <style lang="less" scoped>
