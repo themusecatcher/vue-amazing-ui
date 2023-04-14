@@ -153,7 +153,7 @@ function onLeftSlide (source: number, place: string) {
 }
 function onRightSlide (source: number, place: string) {
   const targetX = source + props.step * scale.value
-  if (place === 'right') {
+  if (place === 'right') { // 右滑块右移
     if (targetX > sliderWidth.value) {
       right.value = sliderWidth.value
     } else {
