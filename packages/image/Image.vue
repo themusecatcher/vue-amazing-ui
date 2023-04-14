@@ -204,6 +204,7 @@ function onMouseDown (event: MouseEvent) {
 }
 function onSwitchLeft () {
   previewIndex.value = (previewIndex.value - 1 + imageCount.value) % imageCount.value
+  loaded.value = false
 }
 function onSwitchRight () {
   previewIndex.value = (previewIndex.value + 1) % imageCount.value
