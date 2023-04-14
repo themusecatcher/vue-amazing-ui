@@ -7,7 +7,19 @@ const images = ref([
   },
   {
     src: 'https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg',
+    alt: 'image-2'
+  },
+  {
+    src: new URL(`../assets/images/1.jpg`, import.meta.url).href,
     alt: 'image-3'
+  },
+  {
+    src: new URL(`../assets/images/2.jpg`, import.meta.url).href,
+    alt: 'image-4'
+  },
+  {
+    src: new URL(`../assets/images/3.jpg`, import.meta.url).href,
+    alt: 'image-5'
   }
 ])
 </script>
@@ -17,6 +29,8 @@ const images = ref([
     <Image :width="400" :height="300" src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg" />
     <h2 class="mt30 mb10">多张图片预览，同时支持键盘箭头(left/right)切换 (src: images)</h2>
     <Image :width="400" :height="300" :src="images" />
+    <h2 class="mt30 mb10">多张图片预览，支持循环切换图片 (loop: true)</h2>
+    <Image :width="400" :height="300" loop :src="images" />
     <h2 class="mt30 mb10">预览文本设为 preview 同时图片覆盖容器 (preview: preview & fit: cover)</h2>
     <Image :width="400" :height="300" fit="cover" src="https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg">
       <template #preview>
