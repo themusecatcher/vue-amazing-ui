@@ -7,7 +7,7 @@ interface Props {
   max?: number // 滑动输入条最大值
   disabled?: boolean // 是否禁用
   range?: boolean // 是否双滑块模式
-  step?: number // 步长，取值必须大于 0，并且可被 (max - min) 整除
+  step?: number // 步长，取值必须大于0，并且可被 (max - min) 整除
   value?: number | number[] // （v-model）设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
 }
 const props = withDefaults(defineProps<Props>(), {

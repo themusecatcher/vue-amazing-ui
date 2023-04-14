@@ -9,11 +9,11 @@ const spinning = ref(true)
 <template>
   <div>
     <h2 class="mb10">Spin 加载中基本使用</h2>
-    <Spin :tip="tip" :spinning="spinning">
+    <Spin style="width: 800px;" :tip="tip" :spinning="spinning">
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，延迟`delay`ms时间后，显示 loading 效果；如果 spinning 状态在 `delay` 时间内结束，则不显示 loading 状态；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
     <h2 class="mt30 mb10">圆形加载指示符 (indicator: circle)</h2>
-    <Spin :tip="tip" :spinning="spinning" indicator="circle">
+    <Spin style="width: 800px;" :tip="tip" :spinning="spinning" indicator="circle">
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，延迟`delay`ms时间后，显示 loading 效果；如果 spinning 状态在 `delay` 时间内结束，则不显示 loading 状态；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
     <h2 class="mt30 mb10">各种大小</h2>
@@ -33,6 +33,7 @@ const spinning = ref(true)
 
 <style lang="less" scoped>
 .spin-content {
+  display: inline-block;
   border: 1px solid #91d5ff;
   background-color: #e6f7ff;
   padding: 30px;
