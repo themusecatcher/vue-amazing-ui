@@ -15,6 +15,7 @@ interface Props {
   minZoomScale?: number // 最小缩放比例，默认0.1
   maxZoomScale?: number // 最大缩放比例，默认10
   resetOnDbclick?: boolean // 缩放移动旋转图片后，是否可以双击还原
+  loop?: boolean // 是否可以循环切换图片
 }
 const props = withDefaults(defineProps<Props>(), {
   alt: 'image',
@@ -26,7 +27,8 @@ const props = withDefaults(defineProps<Props>(), {
   zoomRatio: 0.1,
   minZoomScale: 0.1,
   maxZoomScale: 10,
-  resetOnDbclick: true
+  resetOnDbclick: true,
+  loop: false
 })
 const imageWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -52,6 +54,9 @@ const images = computed(() => {
     }]
   }
 })
+const imageCount = computed(() => {
+  return images.value.length
+})
 onMounted(() => {
   // 监听键盘切换事件
   document.addEventListener('keydown', keyboadrSwitch)
@@ -61,9 +66,9 @@ onUnmounted(() => {
   document.removeEventListener('keydown', keyboadrSwitch)
 })
 const complete = ref(false) // 图片是否加载完成
-const loaded = ref(false)
-const previewIndex = ref(0)
-const showPreview = ref(false)
+const loaded = ref(false) // 预览图片是否加载完成
+const previewIndex = ref(0) // 当前预览的图片索引
+const showPreview = ref(false) // 是否显示预览
 const rotate = ref(0) // 预览图片旋转角度
 const scale = ref(1) // 缩放比例
 const sourceX = ref(0) // 拖动开始时位置
@@ -73,12 +78,24 @@ const dragY = ref(0) // 拖动纵向距离
 const image = ref() // 预览图片模板引用
 function keyboadrSwitch (e: KeyboardEvent) {
   e.preventDefault()
-  if (showPreview.value && images.value.length > 1) {
-    if (e.key === 'ArrowLeft' && previewIndex.value > 0) {
-      onSwitchLeft()
+  if (showPreview.value && imageCount.value > 1) {
+    if (e.key === 'ArrowLeft') {
+      if (props.loop) {
+        onSwitchLeft()
+      } else {
+        if (previewIndex.value > 0) {
+          onSwitchLeft()
+        }
+      }
     }
-    if (e.key === 'ArrowRight' && previewIndex.value < images.value.length - 1) {
-      onSwitchRight()
+    if (e.key === 'ArrowRight') {
+      if (props.loop) {
+        onSwitchRight()
+      } else {
+        if (previewIndex.value < imageCount.value - 1) {
+          onSwitchRight()
+        }
+      }
     }
   }
 }
@@ -86,7 +103,6 @@ function onComplete () { // 图片加载完成
   complete.value = true
 }
 function onLoaded () { // 预览图片加载完成
-  console.log('loaded')
   loaded.value = true
 }
 function onPreview () {
@@ -187,10 +203,10 @@ function onMouseDown (event: MouseEvent) {
   }
 }
 function onSwitchLeft () {
-  previewIndex.value--
+  previewIndex.value = (previewIndex.value - 1 + imageCount.value) % imageCount.value
 }
 function onSwitchRight () {
-  previewIndex.value++
+  previewIndex.value = (previewIndex.value + 1) % imageCount.value
   loaded.value = false
 }
 </script>
@@ -198,7 +214,7 @@ function onSwitchRight () {
   <div class="m-image-wrap">
     <div class="m-image" :class="{'image-hover-mask': complete}" :style="`width: ${imageWidth}; height: ${imageHeight};`">
       <div class="u-spin-circle" v-show="!complete"></div>
-      <img class="u-image" :style="`object-fit: ${fit};`" @load="onComplete" :src="images[previewIndex].src" :alt="images[previewIndex].alt" />
+      <img class="u-image" :style="`object-fit: ${fit};`" @load="onComplete" :src="images[0].src" :alt="images[0].alt" />
       <div class="m-image-mask" @click="onPreview">
         <div class="m-image-mask-info">
           <svg class="u-eye" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
@@ -210,7 +226,7 @@ function onSwitchRight () {
       <div class="m-preview-mask" v-show="showPreview"></div>
     </Transition>
     <Transition name="preview">
-      <div class="m-preview-wrap" v-if="showPreview" @click.self="onClose" @wheel.prevent="onWheel">
+      <div class="m-preview-wrap" v-show="showPreview" @click.self="onClose" @wheel.prevent="onWheel">
         <div class="m-preview-body">
           <div class="m-preview-operations">
             <div class="u-preview-operation" @click="onClose">
@@ -245,20 +261,20 @@ function onSwitchRight () {
               @load="onLoaded"
               @dblclick="resetOnDbclick ? onResetZoom():(e: Event) => e.preventDefault()"/>
           </div>
-          <div
-            v-if="images.length > 1"
-            class="m-switch-left"
-            :class="{'u-switch-disabled': previewIndex === 0}"
-            @click="previewIndex === 0 ? (e: Event) => e.preventDefault():onSwitchLeft()">
-            <svg focusable="false" class="u-switch" data-icon="left" aria-hidden="true" viewBox="64 64 896 896"><path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"></path></svg>
-          </div>
-          <div
-            v-if="images.length > 1"
-            class="m-switch-right"
-            :class="{'u-switch-disabled': previewIndex === images.length - 1}"
-            @click="previewIndex === images.length - 1 ? (e: Event) => e.preventDefault():onSwitchRight()">
-            <svg focusable="false" class="u-switch" data-icon="right" aria-hidden="true" viewBox="64 64 896 896"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
-          </div>
+          <template v-if="imageCount > 1">
+            <div
+              class="m-switch-left"
+              :class="{'u-switch-disabled': previewIndex === 0 && !loop}"
+              @click="previewIndex === 0 ? (e: Event) => e.preventDefault():onSwitchLeft()">
+              <svg focusable="false" class="u-switch" data-icon="left" aria-hidden="true" viewBox="64 64 896 896"><path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"></path></svg>
+            </div>
+            <div
+              class="m-switch-right"
+              :class="{'u-switch-disabled': previewIndex === imageCount - 1 && !loop}"
+              @click="previewIndex === imageCount - 1 ? (e: Event) => e.preventDefault():onSwitchRight()">
+              <svg focusable="false" class="u-switch" data-icon="right" aria-hidden="true" viewBox="64 64 896 896"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
+            </div>
+          </template>
         </div>
       </div>
     </Transition>
