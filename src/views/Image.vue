@@ -27,7 +27,7 @@ const images = ref([
   <div>
     <h2 class="mb10">Image 图片基本使用</h2>
     <Image :width="400" :height="300" src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg" />
-    <h2 class="mt30 mb10">多张图片预览，同时支持键盘箭头(left/right)切换 (src: images)</h2>
+    <h2 class="mt30 mb10">多张图片预览，同时支持键盘 (left / right / up / down) 按键切换 (src: images)</h2>
     <Image :width="400" :height="300" :src="images" />
     <h2 class="mt30 mb10">多张图片预览，支持循环切换图片 (loop: true)</h2>
     <Image :width="400" :height="300" loop :src="images" />
