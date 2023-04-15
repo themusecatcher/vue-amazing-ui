@@ -50,7 +50,7 @@ export const cancelAnimationFrame = window.cancelAnimationFrame || window.mozCan
   delay（可选）: 延迟的毫秒数，默认值0ms
   interval（可选）: 默认情况下 rafTimeout 等效于 setTimeout 功能，如果要使用 setInterval 功能，则需传入第三个参数（interval: true）
 
-  返回值（用于取消 rafTimeout）：（object）raf: { id: [number] }
+  返回值（用于取消 rafTimeout）：（object）raf: { id: number }
   取消 rafTimeout 定时器：cancelRaf(raf) 或者 cancelAnimationFrame(raf.id)
 */
 export function rafTimeout (func: Function, delay = 0, interval = false): object {
