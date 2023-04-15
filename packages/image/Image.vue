@@ -59,11 +59,11 @@ const imageCount = computed(() => {
 })
 onMounted(() => {
   // 监听键盘切换事件
-  document.addEventListener('keydown', keyboadrSwitch)
+  document.addEventListener('keydown', keyboardSwitch)
 })
 onUnmounted(() => {
   // 移除键盘切换事件
-  document.removeEventListener('keydown', keyboadrSwitch)
+  document.removeEventListener('keydown', keyboardSwitch)
 })
 const complete = ref(false) // 图片是否加载完成
 const loaded = ref(false) // 预览图片是否加载完成
@@ -76,10 +76,10 @@ const sourceY = ref(0) // 拖动开始时位置
 const dragX = ref(0) // 拖动横向距离
 const dragY = ref(0) // 拖动纵向距离
 const image = ref() // 预览图片模板引用
-function keyboadrSwitch (e: KeyboardEvent) {
+function keyboardSwitch (e: KeyboardEvent) {
   e.preventDefault()
   if (showPreview.value && imageCount.value > 1) {
-    if (e.key === 'ArrowLeft') {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       if (props.loop) {
         onSwitchLeft()
       } else {
@@ -88,7 +88,7 @@ function keyboadrSwitch (e: KeyboardEvent) {
         }
       }
     }
-    if (e.key === 'ArrowRight') {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       if (props.loop) {
         onSwitchRight()
       } else {
