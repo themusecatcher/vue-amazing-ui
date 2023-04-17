@@ -2,10 +2,10 @@
 import Spin from '../spin'
 import Pagination from '../pagination'
 interface Column {
-  title?: string
-  width?: number
-  dataIndex?: string
-  slot?: string
+  title?: string // 列头显示文字
+  width?: number // 列宽度
+  dataIndex?: string // 列数据字符索引
+  slot?: string // 列插槽名称索引
 }
 defineProps({
   columns: { // 表格列的配置项
@@ -16,7 +16,7 @@ defineProps({
     type: Array<any>,
     default: () => []
   },
-  pagination: { // 分页器，为false时不展示和进行分页
+  pagination: { // 分页器配置
     type: Object,
     default: () => {
       return {}

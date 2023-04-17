@@ -90,18 +90,44 @@ function onChangeTable (pagination: {page: number, pageSize: number}) {
       :hideOnSinglePage="false"
       :total="total"
       :loading="loading"
-      @change="onChangeTable"
-    >
-      <!-- 配置指定列数据 -->
-      <template #name="record">
+      @change="onChangeTable">
+    <!-- 配置指定列数据 -->
+    <template #name="record">
         hello {{ record.name }}
       </template>
       <template #job="{ job, index }">
         hi {{ job }}
       </template>
     </Table>
+    <h2 class="mt30 mb10">加载中表格 (loading: true)</h2>
+    <Table
+      :columns="columns"
+      :dataSource="[]"
+      :pagination="{
+        page: queryParams.page,
+        pageSize: queryParams.pageSize
+      }"
+      :showPagination="true"
+      :hideOnSinglePage="false"
+      :total="0"
+      :loading="true"
+      @change="onChangeTable"
+    ></Table>
+    <h2 class="mt30 mb10">无数据表格 (total: 0)</h2>
+    <Table
+      :columns="columns"
+      :dataSource="[]"
+      :pagination="{
+        page: queryParams.page,
+        pageSize: queryParams.pageSize
+      }"
+      :showPagination="true"
+      :hideOnSinglePage="false"
+      :total="0"
+      :loading="false"
+      @change="onChangeTable"
+    ></Table>
   </div>
 </template>
 <style lang="less" scoped>
-
 </style>
