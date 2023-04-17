@@ -21,7 +21,7 @@ function onAntChange (number: number) {
       @change="onChange"
       v-model:value="value">
     </InputNumber>
-    <h2 class="mt30 mb10">InputNumber (prefix: '$')</h2>
+    <h2 class="mt30 mb10">前缀图标$ (prefix: '$')</h2>
     <InputNumber
       :min="-10"
       :max="10"

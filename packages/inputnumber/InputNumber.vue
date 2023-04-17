@@ -9,8 +9,8 @@ interface Props {
   value?: number|null // 当前值(v-model)
 }
 const props = withDefaults(defineProps<Props>(), {
-  min: Infinity,
-  max: -Infinity,
+  min: -Infinity,
+  max: Infinity,
   step: 1,
   prefix: '',
   keyboard: true,
@@ -77,7 +77,9 @@ function onDown () {
 </script>
 <template>
   <div class="m-input-number" tabindex="1">
-    <span class="u-input-prefix"><slot name="prefix">{{ prefix }}</slot></span>
+    <span class="u-input-prefix">
+      <slot name="prefix">{{ prefix }}</slot>
+    </span>
     <div class="m-input-wrap">
       <input
         v-if="keyboard"
