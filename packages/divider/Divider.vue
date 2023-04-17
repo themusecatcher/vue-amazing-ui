@@ -4,11 +4,13 @@ interface Props {
   dashed?: boolean // 是否为虚线
   orientation?: string // 分割线标题的位置
   orientationMargin?: string|number // 标题和最近 left/right 边框之间的距离，去除了分割线，同时 orientation 必须为 left 或 right
+  borderWidth?: number // 分割线宽度
 }
 const props = withDefaults(defineProps<Props>(), {
   dashed: false,
   orientation: 'center', // 可选 left center right
-  orientationMargin: ''
+  orientationMargin: '',
+  borderWidth: 1
 })
 const text = ref()
 const showText = ref(true)
@@ -36,7 +38,8 @@ onMounted(() => {
         marginLeft: orientationMargin !== '' && orientation === 'left',
         marginRight: orientationMargin !== '' && orientation === 'right'
       }
-    ]">
+    ]"
+    :style="`--border-width: ${borderWidth}px;`">
     <span class="u-text" v-if="orientation === 'left'" :style="`margin-left: ${margin};`" ref="text" v-show="showText">
       <slot></slot>
     </span>
@@ -58,7 +61,7 @@ onMounted(() => {
   &:before, &:after {
     position: relative;
     width: 50%;
-    border-top-width: 1px;
+    border-top-width: var(--border-width);
     border-top-style: solid;
     border-top-color: rgba(5, 5, 5, 0.06);
     transform: translateY(50%);
