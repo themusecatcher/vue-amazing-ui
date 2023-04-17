@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 interface Props {
-  description?: string // 自定义描述内容
+  description?: string // 自定义描述内容 string | slot
   image?: string // 显示图片的链接，或者 选择预置的两种风格图片，可选 '1' | '2'
   imageStyle?: CSSProperties // 图片样式
 }
