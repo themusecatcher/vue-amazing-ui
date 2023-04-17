@@ -80,30 +80,30 @@ function onChange (key: string|number) {
       :tabPages="tabPages"
       v-model:activeKey="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">Tabs 禁用 key: 3 标签页 (disabled: true)</h2>
+    <h2 class="mt30 mb10">禁用 key: 3 标签页 (disabled: true)</h2>
     <Tabs
       :tabPages="tabPagesDisabled"
       v-model:activeKey="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">Tabs 居中 (centered: true)</h2>
+    <h2 class="mt30 mb10">居中展示 (centered: true)</h2>
     <Tabs
       centered
       :tabPages="tabPages"
       v-model:activeKey="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">Tabs 左右滑动，容纳更多标签</h2>
+    <h2 class="mt30 mb10">左右滑动，容纳更多标签</h2>
     <Tabs
       style="width: 320px;"
       :tabPages="tabPages"
       v-model:activeKey="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">Tabs 大号标签页 (size: large)</h2>
+    <h2 class="mt30 mb10">大号标签页 (size: large)</h2>
     <Tabs
       size="large"
       :tabPages="tabPages"
       v-model:activeKey="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">Tabs 自定义内容</h2>
+    <h2 class="mt30 mb10">自定义内容</h2>
     <Tabs
       :tabPages="tabPages"
       v-model:activeKey="activeKey"

@@ -33,6 +33,8 @@ declare module '@vue/runtime-core' {
     ASteps: typeof import('ant-design-vue/es')['Steps']
     ATabPane: typeof import('ant-design-vue/es')['TabPane']
     ATabs: typeof import('ant-design-vue/es')['Tabs']
+    ATimeline: typeof import('ant-design-vue/es')['Timeline']
+    ATimelineItem: typeof import('ant-design-vue/es')['TimelineItem']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
