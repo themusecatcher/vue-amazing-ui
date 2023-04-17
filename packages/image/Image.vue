@@ -8,12 +8,12 @@ interface Props {
   alt?: string // 图像无法加载时显示的描述
   width?: string|number // 图像宽度
   height?: string|number // 图像高度
-  fit?: string // 图形如何适应容器高度和宽度
-  src?: string|Image[] // 图像地址 | 图形地址数组
+  fit?: string // 图像如何适应容器高度和宽度
+  src?: string|Image[] // 图像地址 | 图像地址数组
   preview?: string // 预览文本 string | slot
-  zoomRatio?: number // 每次缩放比率，默认0.1
-  minZoomScale?: number // 最小缩放比例，默认0.1
-  maxZoomScale?: number // 最大缩放比例，默认10
+  zoomRatio?: number // 每次缩放比率
+  minZoomScale?: number // 最小缩放比例
+  maxZoomScale?: number // 最大缩放比例
   resetOnDbclick?: boolean // 缩放移动旋转图片后，是否可以双击还原
   loop?: boolean // 是否可以循环切换图片
 }

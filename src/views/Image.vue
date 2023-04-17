@@ -48,11 +48,6 @@ const images = ref([
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  :deep(*) {
-    box-sizing: border-box;
-  }
-}
 .u-pre {
   display: inline-block;
   font-size: 16px;
