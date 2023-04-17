@@ -31,7 +31,7 @@
     "ant-design-vue": "^3.2.17",
     "core-js": "^3.28.0",
     "qrcode": "^1.5.1",
-    "swiper": "^9.1.1",
+    "swiper": "^9.2.2",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },

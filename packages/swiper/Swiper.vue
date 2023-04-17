@@ -9,41 +9,27 @@ import { ref, computed } from 'vue'
 interface Image {
   title: string // 图片名称
   link?: string // 图片跳转链接
-  imgUrl: string // 图片地址
+  src: string // 图片地址
 }
-const props = defineProps({
-  imageData: {
-    type: Array<Image>,
-    default: () => []
-  },
-  width: { // 图片宽度
-    type: [Number, String],
-    default: '100%'
-  },
-  height: { // 图片高度
-    type: [Number, String],
-    default: '100vh'
-  },
-  type: { // banner轮播图模式 | carousel走马灯模式
-    type: String,
-    default: 'banner' // banner | carousel
-  },
-  navigation: { // 是否显示导航
-    type: Boolean,
-    default: true
-  },
-  delay: { // 自动切换的时间间隔，type: banner时生效
-    type: Number,
-    default: 3000 // 单位ms
-  },
-  swipe: { // 是否可以鼠标拖动
-    type: Boolean,
-    default: true
-  },
-  preloaderColor: { // preload时loading的颜色
-    type: String,
-    default: 'theme' // 可选theme white black
-  }
+interface Props {
+  images: Image[] // 轮播图片数组
+  width?: number|string // 图片宽度
+  height?: number|string // 图片高度
+  type?: string // banner轮播图模式 | carousel走马灯模式
+  navigation?: boolean // 是否显示导航
+  delay?: number // 自动切换的时间间隔（type: banner时生效），单位ms
+  swipe?: boolean // 是否可以鼠标拖动
+  preloaderColor?: string // 预加载时的loading颜色
+}
+const props = withDefaults(defineProps<Props>(), {
+  images: () => [],
+  width: '100%',
+  height: '100vh',
+  type: 'banner', // 可选 banner | carousel
+  navigation: true,
+  delay: 3000,
+  swipe: true,
+  preloaderColor: 'theme' // 可选 theme white black
 })
 const imgWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -100,10 +86,10 @@ function onSwiper (swiper: any) {
     @swiper="onSwiper"
     @slideChange="$emit('change')"
     v-bind="$attrs">
-    <swiper-slide v-for="(image, index) in imageData" :key="index">
+    <swiper-slide v-for="(image, index) in images" :key="index">
       <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
         <img
-          :src="image.imgUrl"
+          :src="image.src"
           class="u-img"
           :style="`width: ${imgWidth}; height: ${imgHeight};`"
           :alt="image.title"
@@ -122,10 +108,10 @@ function onSwiper (swiper: any) {
     @swiper="onSwiper"
     @slideChange="$emit('change')"
     v-bind="$attrs">
-    <swiper-slide v-for="(image, index) in imageData" :key="index">
+    <swiper-slide v-for="(image, index) in images" :key="index">
       <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
         <img
-          :src="image.imgUrl"
+          :src="image.src"
           class="u-img"
           :style="`width: ${imgWidth}; height: ${imgHeight};`"
           :alt="image.title"
