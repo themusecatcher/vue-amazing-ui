@@ -60,17 +60,17 @@ function onTab (key: string|number) {
   emits('change', key)
 }
 /*
-  监听滚轮事件，结合 transform: translate(${scrollLeft}px, 0) 模拟滚动效果
+  （触摸板滑动也会触发）监听滚轮事件，结合 transform: translate(${scrollLeft}px, 0) 模拟滚动效果
   参考文档：https://developer.mozilla.org/zh-CN/docs/Web/API/Element/wheel_event
   WheelEvent:
   事件属性：
   WheelEvent.deltaX 只读：返回一个浮点数（double），表示水平方向的滚动量。
   WheelEvent.deltaY 只读：返回一个浮点数（double），表示垂直方向的滚动量。
   WheelEvent.deltaZ 只读：返回一个浮点数（double）表示 z 轴方向的滚动量。
-  WheelEvent.deltaMode 只读：返回一个无符号长整型数（unsigned long），表示 delta* 值滚动量的单位。允许的值为：
+  WheelEvent.deltaMode 只读：返回一个无符号长整型数（unsigned long），表示 delta* 值滚动量的单位。
 */
 function onWheel (e: WheelEvent) {
-  // e.preventDefault() // 禁止浏览器捕获滑动事件
+  // e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
   const scrollX = e.deltaX * 1 // 滚轮的横向滚动量
   if (scrollLeft.value + scrollX > scrollMax.value) {
     scrollLeft.value = scrollMax.value
