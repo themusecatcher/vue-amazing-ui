@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 interface Props { // 基于类型的声明
   current: number // 当前页数
-  pageSize: number // 每条页数
+  pageSize: number // 每页条数
   total: number // 数据总数
   pageListNum?: number // 显示的页码数组长度
   hideOnSinglePage?: boolean // 只有一页时是否隐藏分页器
@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
   hideOnSinglePage: false,
   showQuickJumper: false,
   showTotal: false,
-  placement: 'right'
+  placement: 'center'
 })
 const currentPage = ref(props.current) // 当前页数
 const jumpNumber = ref('') // 跳转的页码
@@ -26,7 +26,6 @@ const forwardMore = ref(false) // 左省略号展示
 const backwardMore = ref(false) // 右省略号展示
 const forwardArrow = ref(false) // 左箭头展示
 const backwardArrow = ref(false) // 右箭头展示
-
 const totalPage = computed(() => { // 总页数
   return Math.ceil(props.total / props.pageSize) // 向上取整
 })

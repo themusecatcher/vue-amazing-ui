@@ -72,7 +72,7 @@ watch(checkAll, (to) => {
       :vertical="false"
       @change="onChange"
       v-model:value="value"/>
-    <h2 class="mt30 mb10">Checkbox 实现全选效果</h2>
+    <h2 class="mt30 mb10">实现全选效果</h2>
     <Checkbox
       class="mb10"
       :indeterminate="indeterminate"
@@ -87,7 +87,7 @@ watch(checkAll, (to) => {
       @change="onChange"
       v-model:value="value" />
     <a-divider />
-    <h2 class="mt30 mb10">Ant Design Vue 的 a-checkbox-group 组件</h2>
+    <h2 class="mt30 mb10">Ant Design Vue 多选框组件</h2>
     <a-checkbox
       :indeterminate="indeterminate"
       v-model:checked="checkAll"
