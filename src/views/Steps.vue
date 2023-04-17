@@ -50,7 +50,7 @@ function onNext () {
       :descMaxWidth="160"
       :current="current"
       @change="onChange" />
-    <h2 class="mb10">Steps 步骤条，设置 (v-model: current后可点击)</h2>
+    <h2 class="mb10">步骤条设置 v-model: current 后可点击</h2>
     <Steps
       :steps="steps"
       :width="'100%'"

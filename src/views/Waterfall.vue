@@ -19,7 +19,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 </script>
 <template>
   <div>
-    <h2 class="mb10">Waterfall 瀑布流基本使用</h2>
+    <h2 class="mb10">Waterfall 瀑布流基本使用 (默认使用JS计算进行布局展示)</h2>
     <Waterfall
       class="mt60"
       :imageData="imageData"
@@ -27,6 +27,15 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
       :columnGap="30"
       :totalWidth="900"
       mode="JS"
+      backgroundColor="#F2F4F8" />
+    <h2 class="mt30 mb10">瀑布流使用CSS布局展示 (mode: CSS)</h2>
+    <Waterfall
+      class="mt60"
+      :imageData="imageData"
+      :columnCount="3"
+      :columnGap="30"
+      :totalWidth="900"
+      mode="CSS"
       backgroundColor="#F2F4F8" />
   </div>
 </template>
