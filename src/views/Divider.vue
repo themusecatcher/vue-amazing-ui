@@ -4,18 +4,18 @@
   <div>
     <h2 class="mb10">Divider 分割线基本使用</h2>
     <Divider>Center Text</Divider>
-    <h2 class="mt30 mb10">Divider 中间无文字</h2>
+    <h2 class="mt30 mb10">中间无文字</h2>
     <Divider />
-    <h2 class="mt30 mb10">Divider (orientation: left)</h2>
+    <h2 class="mt30 mb10">使用 orientation 指定文字位置 (left | center | right)</h2>
     <Divider orientation="left">Left Text</Divider>
-    <h2 class="mt30 mb10">Divider (orientation: right)</h2>
     <Divider orientation="right">Right Text</Divider>
-    <h2 class="mt30 mb10">Divider (orientation: left & orientation-margin: 120)</h2>
+    <h2 class="mt30 mb10">文字居左(右)并距左(右)边120px (orientation: left(right) & orientation-margin: 120)</h2>
     <Divider orientation="left" :orientation-margin="120">Left Text</Divider>
-    <h2 class="mt30 mb10">Divider (orientation: right & orientation-margin: 120)</h2>
     <Divider orientation="right" :orientation-margin="120">Right Text</Divider>
-    <h2 class="mt30 mb10">Divider (dashed: true)</h2>
+    <h2 class="mt30 mb10">虚线 (dashed: true)</h2>
     <Divider dashed>Center Text</Divider>
+    <h2 class="mt30 mb10">分割线线宽3px (borderWidth: 3)</h2>
+    <Divider :borderWidth="3">Center Text</Divider>
   </div>
 </template>
 <style lang="less" scoped>
