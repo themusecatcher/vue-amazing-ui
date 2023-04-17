@@ -23,7 +23,7 @@ function onHoverChange (value: number) {
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
-    <h2 class="mt30 mb10">Rate  (character: heart & size: 30)</h2>
+    <h2 class="mt30 mb10">使用预置的心型字符图标，并设置高度为30px (character: heart & size: 30)</h2>
     <Rate
       :allowClear="true"
       :allowHalf="true"
@@ -34,7 +34,7 @@ function onHoverChange (value: number) {
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
-    <h2 class="mt30 mb10">Rate 评分基本使用 (character: 好 & size: 30)</h2>
+    <h2 class="mt30 mb10">使用中文: 好 (character: 好 & size: 30)</h2>
     <Rate
       :allowClear="false"
       :allowHalf="true"
@@ -44,7 +44,7 @@ function onHoverChange (value: number) {
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
-    <h2 class="mt30 mb10">Rate 评分基本使用 (character: A & size: 50)</h2>
+    <h2 class="mt30 mb10">使用英文字母: A (character: A & size: 50)</h2>
     <Rate
       :allowClear="false"
       :allowHalf="true"
@@ -59,7 +59,4 @@ function onHoverChange (value: number) {
   </div>
 </template>
 <style lang="less" scoped>
-.u1 {
-  font-size: 16px;
-}
 </style>
