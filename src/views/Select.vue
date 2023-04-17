@@ -65,7 +65,7 @@ function onChange (value: string|number, label: string,  index: number) {
       :num="6"
       v-model:selectedValue="selectedValue"
       @change="onChange" />
-    <h2 class="mt30 mb10">Select 选择器支持清除 (allowClear)</h2>
+    <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
     <Select
       :options="options"
       label="label"
