@@ -2,17 +2,17 @@
 import { ref, onBeforeMount } from 'vue'
 import { getImageUrl } from '@/utils/util'
 
-const imageData = ref<any[]>([])
+const images = ref<any[]>([])
 
 function loadImages () {
   for (let i = 1; i <= 10; i++) {
-    imageData.value.push({
+    images.value.push({
       title: `image-${i}`,
       link: '',
-      imgUrl: getImageUrl(i)
+      src: getImageUrl(i)
     })
   }
-  console.log(imageData.value)
+  console.log(images.value)
 }
 onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
   loadImages()
@@ -37,16 +37,16 @@ function onChange () {
     </ul>
     <h2 class="mt30 mb10">Swiper 轮播图基本使用 (type: banner)</h2>
     <Swiper
-      :imageData="imageData"
+      :images="images"
       type="banner"
       effect="slider"
       width="100%"
-      height="100vh"
+      height="600px"
       navigation
       @change="onChange" />
     <h2 class="mt30 mb10">Swiper 走马灯基本使用 (type: carousel)</h2>
     <Swiper
-      :imageData="imageData"
+      :images="images"
       type="carousel"
       width="100%"
       preloaderColor="theme"
