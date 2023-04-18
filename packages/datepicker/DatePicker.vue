@@ -1,9 +1,17 @@
+<script lang="ts">
+/*
+  一个根节点时，禁用组件根节点自动继承 attribute，必须使用这种写法！然后在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
+  多个根节点时，只需在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
+*/
+export default {
+  inheritAttrs: false
+}
+</script>
 <script setup lang="ts">
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { ref, computed, watch } from 'vue'
 interface Props {
-  inheritAttrs?: boolean // 默认值：true
   width?: number // 日期选择器宽度
   mode?: string // 选择器模式，可选：时间time，日期date，周week，月month，年year
   // format?: string // 日期展示格式，(y: 年, M: 月, d: 天, H: 时, m: 分, s: 秒)
@@ -15,7 +23,6 @@ interface Props {
   date?: number|number[]|{month:number,year:number}|{hours:number,minutes:number,seconds:number} // （v-model）当前选中日期
 }
 const props = withDefaults(defineProps<Props>(), {
-  inheritAttrs: false,
   width: 180,
   mode: 'date',
   // format: 'yyyy-MM-dd',
