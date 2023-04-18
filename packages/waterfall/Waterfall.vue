@@ -7,60 +7,50 @@ import { ref, onMounted, computed, watch } from 'vue'
   纯CSS，实现简单，但图片顺序是每列从上往下排列
 */
 interface Image {
-  title: string
-  imgUrl: string
+  title: string // 图片名称
+  src: string // 图片地址
 }
-const props = defineProps({
-  imageData: { // 瀑布流的图片数组
-    type: Array<Image>,
-    required: true,
-    default: () => {
-      return []
-    }
-  },
-  columnCount: { // 瀑布流要划分的列数
-    type: Number,
-    default: 3
-  },
-  columnGap: { // 瀑布流各列之间的间隙
-    type: Number,
-    default: 30
-  },
-  totalWidth: { // 瀑布流区域的总宽度
-    type: Number,
-    default: 1200
-  },
-  backgroundColor: { // 瀑布流区域背景填充色
-    type: String,
-    default: '#F2F4F8'
-  },
-  mode: { // JS：js计算模式，CSS：css布局模式
-    type: String,
-    default: 'JS'
+interface Props {
+  images: Image[] // 图片数组
+  columnCount?: number // 要划分的列数
+  columnGap?: number // 各列之间的间隙
+  width?: string|number // 瀑布流区域的总宽度
+  backgroundColor?: string // 瀑布流区域背景填充色
+  mode?: string // 瀑布流排列方式，可选：JS(js计算) CSS(css布局)
+}
+const props = withDefaults(defineProps<Props>(), {
+  images: () => [],
+  columnCount: 3,
+  columnGap: 30,
+  width: '100%',
+  backgroundColor: '#F2F4F8',
+  mode: 'JS'
+})
+const totalWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return props.width + 'px'
+  } else {
+    return props.width
   }
 })
-const cssWidth = computed(() => {
-  return props.totalWidth - 2 * props.columnGap
-})
-const imagesProperty = ref<any[]>([])
-const preColumnHeight = ref<number[]>([])
 
-const imageWidth = computed(() => {
-    return (props.totalWidth - 4 * props.columnGap) / props.columnCount
-  })
+const imagesProperty = ref<any[]>([])
+const preColumnHeight = ref<number[]>([]) // 每列的高度
+const waterfall = ref()
+const imageWidth = ref()
 const height = computed(() =>{
-    return Math.max(...preColumnHeight.value) + props.columnGap
-  })
+  return Math.max(...preColumnHeight.value) + props.columnGap
+})
 watch(
-  () => props.imageData,
-  (to) => {
+() => props.images,
+(to) => {
+  if (to.length && props.mode === 'JS') {
     onPreload()
-    imagesProperty.value.splice(to.length)
-  })
+  }
+})
 onMounted(() => {
-  if (props.imageData.length) {
+  if (props.images.length && props.mode === 'JS') {
     onPreload()
-    imagesProperty.value.splice(props.imageData.length)
   }
 })
 
@@ -103,26 +93,29 @@ function onLoad (url: string, i: number) {
   })
 }
 async function onPreload () { // 计算图片宽高和位置（top，left）
-  const len = props.imageData.length
+  // 计算每列的图片宽度
+  imageWidth.value = (waterfall.value.offsetWidth - (props.columnCount + 1) * props.columnGap) / props.columnCount
+  const len = props.images.length
+  imagesProperty.value.splice(len)
   for (let i = 0; i < len; i++) {
-    await onLoad(props.imageData[i].imgUrl, i)
+    await onLoad(props.images[i].src, i)
   }
 }
 </script>
 <template>
-  <div v-if="mode==='JS'" class="m-waterfall-js" :style="`background-color: ${backgroundColor}; width: ${totalWidth}px; height: ${height}px;`">
+  <div v-if="mode==='JS'" v-bind="$attrs" class="m-waterfall-js" ref="waterfall" :style="`background-color: ${backgroundColor}; width: ${totalWidth}; height: ${height}px;`">
     <img
       class="u-img"
-      v-for="(item, index) in imagesProperty"
+      v-for="(property, index) in imagesProperty"
       :key="index"
-      :style="`width: ${imageWidth}px; top: ${item && item.top}px; left: ${item && item.left}px;`"
-      :src="imageData[index].imgUrl"
-      :title="imageData[index].title"
-      :alt="imageData[index].title" />
+      :style="`width: ${imageWidth}px; top: ${property && property.top}px; left: ${property && property.left}px;`"
+      :src="images[index].src"
+      :title="images[index].title"
+      :alt="images[index].title" />
   </div>
-  <div v-else class="m-waterfall-css" :style="`background: ${backgroundColor}; width: ${cssWidth}px; padding: ${columnGap}px; column-count: ${columnCount}; column-gap: ${columnGap}px;`">
-    <div class="m-img" :style="`margin-bottom: ${columnGap}px;`" v-for="(item, index) in imageData" :key="index">
-      <img class="u-img" :src="item.imgUrl" :title="item.title" :alt="item.title" />
+  <div v-if="mode==='CSS'" v-bind="$attrs" class="m-waterfall-css" :style="`background: ${backgroundColor}; width: calc(${totalWidth} - ${2 * props.columnGap}px); padding: ${columnGap}px; column-count: ${columnCount}; column-gap: ${columnGap}px;`">
+    <div class="m-img" :style="`margin-bottom: ${columnGap}px;`" v-for="(item, index) in images" :key="index">
+      <img class="u-img" :src="item.src" :title="item.title" :alt="item.title" />
     </div>
   </div>
 </template>
