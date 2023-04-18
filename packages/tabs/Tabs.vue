@@ -70,14 +70,16 @@ function onTab (key: string|number) {
   WheelEvent.deltaMode 只读：返回一个无符号长整型数（unsigned long），表示 delta* 值滚动量的单位。
 */
 function onWheel (e: WheelEvent) {
-  // e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
-  const scrollX = e.deltaX * 1 // 滚轮的横向滚动量
-  if (scrollLeft.value + scrollX > scrollMax.value) {
-    scrollLeft.value = scrollMax.value
-  } else if (scrollLeft.value + scrollX < 0) {
-    scrollLeft.value = 0
-  } else {
-    scrollLeft.value += scrollX
+  if (e.deltaX !== 0) { // 防止标签页处触摸板上下滚动不生效
+    e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
+    const scrollX = e.deltaX * 1 // 滚轮的横向滚动量
+    if (scrollLeft.value + scrollX > scrollMax.value) {
+      scrollLeft.value = scrollMax.value
+    } else if (scrollLeft.value + scrollX < 0) {
+      scrollLeft.value = 0
+    } else {
+      scrollLeft.value += scrollX
+    }
   }
 }
 </script>
@@ -91,7 +93,7 @@ function onWheel (e: WheelEvent) {
         <div
           ref="nav"
           class="m-tabs-nav-list"
-          @wheel.prevent="showWheel ? onWheel($event):(e: Event) => e.preventDefault()"
+          @wheel="showWheel ? onWheel($event):(e: Event) => e.preventDefault()"
           :style="`transform: translate(${-scrollLeft}px, 0)`">
           <div
             ref="tabs"
