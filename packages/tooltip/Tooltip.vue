@@ -1,31 +1,21 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
-defineProps({ // 运行时声明
-  maxWidth: { // 提示框内容最大宽度
-    type: Number,
-    default: 120
-  },
-  content: { // 展示的文本
-    type: String,
-    default: '暂无内容' // string | slot
-  },
-  title: { // 提示的文本
-    type: String,
-    default: '暂无提示' // string | slot
-  },
-  fontSize: { // 提示文本字体大小
-    type: Number,
-    default: 14
-  },
-  color: { // 提示文本字体颜色
-    type: String,
-    default: 'rgba(0,0,0,.85)'
-  },
-  backgroundColor: { // 提示框背景色
-    type: String,
-    default: '#FFF'
-  }
+interface Props {
+  maxWidth?: number // 提示框内容最大宽度
+  content?: string // 展示的文本 string | slot
+  title?: string // 提示的文本 string | slot
+  fontSize?: number // 提示文本字体大小
+  color?: string // 提示文本字体颜色
+  backgroundColor?: string // 提示框背景色
+}
+withDefaults(defineProps<Props>(), {
+  maxWidth: 120,
+  content: '暂无内容',
+  title: '暂无提示',
+  fontSize: 14,
+  color: 'rgba(0,0,0,.85)',
+  backgroundColor: '#FFF'
 })
 const visible = ref(false)
 const hideTimer = ref()
@@ -33,7 +23,6 @@ const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const contentRef = ref() // 声明一个同名的模板引用
 const titleRef = ref() // 声明一个同名的模板引用
-
 onMounted(() => {
   getPosition()
 })

@@ -6,8 +6,8 @@ enum ColorStyle { // 颜色主题对象
   gray = '#00000040'
 }
 interface Data {
-  desc: string
-  color?: string
+  desc: string // 文字描述 string | slot
+  color?: string // 圆圈颜色，可选四种预置颜色：blue | green | red | gray 或者 使用颜色值，string | slot
 }
 interface Props {
   timelineData?: Data[] // 时间轴内容数组
@@ -30,7 +30,8 @@ withDefaults(defineProps<Props>(), {
             <span class="u-dot" v-if="data.color === 'red'" :style="{borderColor: ColorStyle.red}"></span>
             <span class="u-dot" v-else-if="data.color === 'gray'" :style="{borderColor: ColorStyle.gray}"></span>
             <span class="u-dot" v-else-if="data.color === 'green'" :style="{borderColor: ColorStyle.green}"></span>
-            <span class="u-dot" v-else="data.color === 'blue'" :style="{borderColor: ColorStyle.blue}"></span>
+            <span class="u-dot" v-else-if="data.color === 'blue'" :style="{borderColor: ColorStyle.blue}"></span>
+            <span class="u-dot" v-else :style="{borderColor: data.color || ColorStyle.blue}"></span>
           </slot>
         </div>
         <div class="u-content">
