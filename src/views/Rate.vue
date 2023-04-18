@@ -34,13 +34,13 @@ function onHoverChange (value: number) {
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
-    <h2 class="mt30 mb10">使用中文: 好 (character: 好 & size: 30)</h2>
+    <h2 class="mt30 mb10">使用中文: 好 (character: 好 & size: 36)</h2>
     <Rate
       :allowClear="false"
       :allowHalf="true"
       :count="5"
       character="好"
-      :size="30"
+      :size="36"
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
