@@ -7,8 +7,8 @@ const routes = ref([
       name: '一级路由' // 路由名称
     },
     {
-      path: '/second',
-      name: '二级路由'
+      // path: '/second',
+      name: 'Carousel'
     },
     {
       path: '/third',
