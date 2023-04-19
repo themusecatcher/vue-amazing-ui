@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 interface Route {
-  path: string
-  query: object
-  name: string
+  path: string // 路由地址
+  query?: object // 路由查询参数
+  name: string // 路由名称
 }
 interface Props {
   routes: Array<Route> // 或者Route[] router的路由数组，没有 ? 时，即表示 required: true
@@ -22,7 +22,7 @@ const len = computed(() => {
 })
 const router = useRouter()
 function goRouter (route: any): void {
-  router.push({ path: route.path, query: route.query || {} })
+  router.push({ path: route.path, query: route.query || '' })
 }
 </script>
 <template>

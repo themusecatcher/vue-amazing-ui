@@ -26,7 +26,7 @@ onMounted(() => {
       :imageData="imageData"
       :width="800"
       :height="450"
-      :interval="1500"
+      :interval="3000"
       :pauseOnMouseEnter="true"
       :disableOnInteraction="false" />
   </div>
