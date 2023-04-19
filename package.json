@@ -25,14 +25,19 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.1.6",
+    "@codemirror/lang-vue": "^0.1.1",
+    "@codemirror/theme-one-dark": "^6.1.2",
     "@vuepic/vue-datepicker": "^4.2.1",
     "@vueuse/core": "^9.13.0",
     "@vueuse/integrations": "^9.13.0",
     "ant-design-vue": "^3.2.17",
+    "codemirror": "^6.0.1",
     "core-js": "^3.28.0",
     "qrcode": "^1.5.1",
     "swiper": "^9.2.2",
     "vue": "^3.2.45",
+    "vue-codemirror": "^6.1.1",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

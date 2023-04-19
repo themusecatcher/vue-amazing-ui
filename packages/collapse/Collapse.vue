@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref, onMounted } from 'vue'
 // 使用 requestAnimationFrame 实现的等效 setTimeout
 import { rafTimeout } from '../index'
 interface Collapse {
   key?: string|number // 对应activeKey，如果没有传入key属性，则默认使用数字索引(0,1,2...)绑定
-  header?: string // 面板标特
-  text?: string // 面板内容
+  header?: string // 面板标特 string | slot
+  text?: string // 面板内容 string | slot
 }
 interface Props {
-  collapseData: Collapse[] // 折叠面板数据
+  collapseData: Collapse[] // 折叠面板数据，可使用 slot 替换对应索引的 header 和 text
   activeKey?: number[] | number | string[] | string | null // 当前激活 tab 面板的 key
   copyable?: boolean // 是否可复制面板内容
   lang?: string // 面板右上角固定内容，例如标识language string | slot
@@ -27,19 +27,17 @@ const props = withDefaults(defineProps<Props>(), {
   textFontSize: 14,
   showArrow: true
 })
-
 onMounted(() => {
   getCollapseHeight() // 获取各个面板内容高度
 })
+const text = ref()
 const collapseHeight = ref<any[]>([])
 function getCollapseHeight () {
   const len = props.collapseData.length
   for (let n = 0; n < len; n++) {
-    const el = document.getElementById(`${n}`)
-    collapseHeight.value.push(el?.offsetHeight)
+    collapseHeight.value.push(text.value[n].offsetHeight)
   }
 }
-
 const emits = defineEmits(['update:activeKey', 'change'])
 function dealEmit (value: any) {
   emits('update:activeKey', value)
@@ -71,7 +69,7 @@ function activeJudge (key: number|string): boolean {
 const copyTxt = ref('Copy')
 function onCopy (index: number) {
   const el = document.getElementById(`${index}`)
-  navigator.clipboard.writeText(el?.innerHTML || '').then(() => {
+  navigator.clipboard.writeText(el?.innerText || '').then(() => {
     /* clipboard successfully set */
     copyTxt.value = 'Copied'
     rafTimeout(() => {
@@ -92,8 +90,7 @@ function onCopy (index: number) {
       <div class="u-collapse-header" @click="onClick(data.key || index)">
         <svg focusable="false" v-if="showArrow" class="u-arrow" data-icon="right" aria-hidden="true" viewBox="64 64 896 896"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
         <div class="u-header" :class="{ml24: showArrow}" :style="`font-size: ${fontSize || headerFontSize}px;`">
-          <slot name="header" :header="data.header" :index="index">{{ data.header || '--' }}
-          </slot>
+          <slot name="header" :header="data.header" :index="index">{{ data.header || '--' }}</slot>
         </div>
       </div>
       <div class="u-collapse-content" :class="{'u-collapse-copyable': copyable}" :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index]:0}px;`">
@@ -101,7 +98,9 @@ function onCopy (index: number) {
           <slot name="lang" :lang="lang" :index="index">{{ lang }}</slot>
         </div>
         <Button size="small" class="u-copy" type="primary" @click="onCopy(index)">{{ copyTxt }}</Button>
-        <p class="u-content" :style="`font-size: ${fontSize || textFontSize}px;`" :id="`${index}`" v-html="data.text"></p>
+        <div  ref="text" class="u-text" :style="`font-size: ${fontSize || textFontSize}px;`">
+          <slot name="text" :text="data.text" :index="index">{{ data.text }}</slot>
+        </div>
       </div>
     </div>
   </div>
@@ -167,7 +166,7 @@ function onCopy (index: number) {
         pointer-events: none;
         transition: opacity .3s;
       }
-      .u-content {
+      .u-text {
         padding: 16px;
         color: rgba(0, 0, 0, 0.88);
         white-space: pre-wrap;

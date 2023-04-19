@@ -3,7 +3,10 @@ import { ref } from 'vue'
 const collapseData = ref([
   {
     header: '以上八个 API 使用时直接引入即可:',
-    text: `import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add } from 'vue-amazing-ui'`
+    text: `<script setup lang="ts">
+import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add } from 'vue-amazing-ui'
+
+<\/script>`
   }
 ])
 const activeKey = ref(0)
@@ -31,11 +34,12 @@ const activeKey = ref(0)
       <li class="u-tip mb10">add: 消除js加减精度问题的加法函数！</li>
     </ul>
     <Collapse
-      lang="ts"
+      lang="vue3"
       :fontSize="16"
       :collapseData="collapseData"
       v-model:activeKey="activeKey"
-      copyable />
+      copyable>
+    </Collapse>
   </div>
 </template>
 <style lang="less">

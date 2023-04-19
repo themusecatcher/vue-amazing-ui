@@ -44,17 +44,26 @@ function onChange (key: any) {
       :collapseData="collapseData"
       v-model:activeKey="key"
       @change="onChange" />
-    <h2 class="mt30 mb10">折叠面板，可复制面板内容 (copyable)</h2>
+    <h2 class="mt30 mb10">可复制面板内容 (copyable)</h2>
     <Collapse
       lang="template"
       copyable
       :collapseData="collapseData"
       v-model:activeKey="activeKey"
+      @change="onChange" />
+    <h2 class="mt30 mb10">使用插槽 slot 自定义 header、lang、text 内容</h2>
+    <Collapse
+      copyable
+      :collapseData="collapseData"
+      v-model:activeKey="activeKey"
       @change="onChange">
       <template #header="{ header, index }">
-        <span v-if="index===1" style="color: burlywood;">burlywood color header (index = {{ index }})</span>
+        <span v-if="index===1" style="color: burlywood;">burlywood color {{ header }} (index = {{ index }})</span>
       </template>
       <template #lang>typescript</template>
+      <template #text="{ text, index }">
+        <span v-if="index===1" style="color: burlywood;">burlywood color {{ text }} (index = {{ index }})</span>
+      </template>
     </Collapse>
     <h2 class="mt30 mb10">折叠面板，隐藏箭头图标 (showArrow: false)</h2>
     <Collapse
