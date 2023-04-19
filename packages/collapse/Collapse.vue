@@ -68,8 +68,7 @@ function activeJudge (key: number|string): boolean {
 }
 const copyTxt = ref('Copy')
 function onCopy (index: number) {
-  const el = document.getElementById(`${index}`)
-  navigator.clipboard.writeText(el?.innerText || '').then(() => {
+  navigator.clipboard.writeText(text.value[index].innerText || '').then(() => {
     /* clipboard successfully set */
     copyTxt.value = 'Copied'
     rafTimeout(() => {
@@ -98,7 +97,7 @@ function onCopy (index: number) {
           <slot name="lang" :lang="lang" :index="index">{{ lang }}</slot>
         </div>
         <Button size="small" class="u-copy" type="primary" @click="onCopy(index)">{{ copyTxt }}</Button>
-        <div  ref="text" class="u-text" :style="`font-size: ${fontSize || textFontSize}px;`">
+        <div ref="text" class="u-text" :style="`font-size: ${fontSize || textFontSize}px;`">
           <slot name="text" :text="data.text" :index="index">{{ data.text }}</slot>
         </div>
       </div>

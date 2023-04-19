@@ -50,12 +50,6 @@ const routes = [
         component: () => import('@/views/Checkbox.vue')
       },
       {
-        path: '/codemirror',
-        name: 'CodeMirror',
-        meta: { title: '代码展示' },
-        component: () => import('@/views/CodeMirror.vue')
-      },
-      {
         path: '/collapse',
         name: 'Collapse',
         meta: { title: '折叠面板' },

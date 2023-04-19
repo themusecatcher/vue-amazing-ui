@@ -48,9 +48,6 @@ function onClick (e: any):void {
         <a-menu-item key="Checkbox">
           <router-link to="/checkbox">多选框（Checkbox）</router-link>
         </a-menu-item>
-        <a-menu-item key="CodeMirror">
-          <router-link to="/codemirror">代码展示（CodeMirror）</router-link>
-        </a-menu-item>
         <a-menu-item key="Collapse">
           <router-link to="/collapse">折叠面板（Collapse）</router-link>
         </a-menu-item>
@@ -138,14 +135,9 @@ function onClick (e: any):void {
         <a-menu-item key="Waterfall">
           <router-link to="/waterfall">瀑布流（Waterfall）</router-link>
         </a-menu-item>
-        <!-- <a-menu-item key="Tree">
-          <router-link to="/tree">树图</router-link>
-        </a-menu-item>
+        <!--
         <a-menu-item key="Drag">
           <router-link to="/drag">拖拽组件</router-link>
-        </a-menu-item>
-        <a-menu-item key="Viewer">
-          <router-link to="/viewer">预览插件</router-link>
         </a-menu-item>
         <a-menu-item key="Lazyload">
           <router-link to="/lazyload">懒加载</router-link>
