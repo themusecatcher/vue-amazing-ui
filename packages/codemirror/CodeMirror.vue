@@ -3,17 +3,9 @@ import type { CSSProperties } from 'vue'
 import { ref, shallowRef } from 'vue'
 import { Codemirror } from 'vue-codemirror'
 import { vue } from '@codemirror/lang-vue'
+import { javascript } from '@codemirror/lang-javascript'
 import { oneDark } from '@codemirror/theme-one-dark'
 
-const code = ref(`<script setup lang="ts">
-import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add } from 'vue-amazing-ui'
-
-<\/script>
-<script setup lang="ts">
-import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add } from 'vue-amazing-ui'
-
-<\/script>`)
-const extensions = [vue(), oneDark]
 
 // Codemirror EditorView instance ref
 const view = shallowRef() // ref() 的浅层作用形式，浅层 ref 的内部值将会原样存储和暴露，并且不会被深层递归地转为响应式。只有对 .value 的访问是响应式的
@@ -34,16 +26,31 @@ const getCodemirrorStates = () => {
 }
 
 interface Props {
-  placeholder?: string // 占位文本
   codeStyle?: CSSProperties // 图片样式
+  dark?: boolean // 是否暗黑主题
+  // placeholder?: string // 占位文本
+  // autofocus?: boolean // 自动聚焦
+  // disabled?: boolean // 禁用输入行为和更改状态
+  // indentWithTab?: boolean // 启用tab按键
+  // tabSize?: number // tab按键缩进空格数
+  code?: string // 代码串
 }
 const props = withDefaults(defineProps<Props>(), {
-  placeholder: 'Code goes here...',
-  codeStyle: () => { return {} }
+  // placeholder: 'Code goes here...',
+  codeStyle: () => { return {} },
+  dark: false,
+  // autofocus: false,
+  // disabled: false,
+  // indentWithTab: true,
+  // tabSize: 2,
+  code: ''
 })
-const emits = defineEmits(['change', 'focus', 'blur'])
+const extensions = props.dark ? [vue(), oneDark] : [vue()]
+const codeValue = ref(props.code)
+const emits = defineEmits(['update:code', 'change', 'focus', 'blur'])
 function onChange (value: string, viewUpdate: any) {
   emits('change', value, viewUpdate)
+  emits('update:code', value)
 }
 function onFocus (viewUpdate: any) {
   emits('focus', viewUpdate)
@@ -55,8 +62,7 @@ function onBlur (viewUpdate: any) {
 <template>
   <div>
     <Codemirror
-      v-model="code"
-      :placeholder="placeholder"
+      v-model="codeValue"
       :style="codeStyle"
       :autofocus="true"
       indent-with-tab
@@ -73,10 +79,13 @@ function onBlur (viewUpdate: any) {
 <style lang="less" scoped>
 :deep(.cm-editor) {
   border-radius: 8px;
+  outline: none;
+  border: 1px solid transparent;
   .cm-scroller {
     border-radius: 8px;
-    .cm-gutterElement span {
-    }
   }
+}
+:deep(.cm-focused) {
+  border: 1px solid fade(@themeColor, 48%);
 }
 </style>
