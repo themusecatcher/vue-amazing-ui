@@ -4,7 +4,7 @@ const collapseData = ref([
   {
     header: '以上八个 API 使用时直接引入即可:',
     text: `<script setup lang="ts">
-import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add } from 'vue-amazing-ui'
+\import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add } from 'vue-amazing-ui'
 
 <\/script>`
   }
@@ -38,8 +38,7 @@ const activeKey = ref(0)
       :fontSize="16"
       :collapseData="collapseData"
       v-model:activeKey="activeKey"
-      copyable>
-    </Collapse>
+      copyable />
   </div>
 </template>
 <style lang="less">

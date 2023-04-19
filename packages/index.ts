@@ -5,7 +5,6 @@ import Button from './button'
 import Carousel from './carousel'
 import Cascader from './cascader'
 import Checkbox from './checkbox'
-import CodeMirror from './codemirror'
 import Collapse from './collapse'
 import Countdown from './countdown'
 import DatePicker from './datepicker'
@@ -43,7 +42,6 @@ const components = [
   Carousel,
   Cascader,
   Checkbox,
-  CodeMirror,
   Collapse,
   Countdown,
   DatePicker,
@@ -105,7 +103,6 @@ export {
   Carousel,
   Cascader,
   Checkbox,
-  CodeMirror,
   Collapse,
   Countdown,
   DatePicker,

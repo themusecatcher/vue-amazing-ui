@@ -65,7 +65,6 @@ Button | 按钮
 Carousel | 走马灯
 Cascader | 级联选择
 Checkbox | 多选框
-CodeMirror | 代码展示
 Collapse | 折叠面板
 Countdown | 倒计时
 DatePicker | 日期选择器
