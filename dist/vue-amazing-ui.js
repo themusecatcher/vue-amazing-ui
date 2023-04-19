@@ -902,7 +902,7 @@ const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
-const _withScopeId$f = (n) => (pushScopeId("data-v-9cb9cd86"), n = n(), popScopeId(), n);
+const _withScopeId$f = (n) => (pushScopeId("data-v-9a12a53a"), n = n(), popScopeId(), n);
 const _hoisted_1$q = { class: "m-collapse" };
 const _hoisted_2$m = ["onClick"];
 const _hoisted_3$j = {
@@ -973,8 +973,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     }
     const copyTxt = ref("Copy");
     function onCopy(index) {
-      const el = document.getElementById(`${index}`);
-      navigator.clipboard.writeText((el == null ? void 0 : el.innerText) || "").then(() => {
+      navigator.clipboard.writeText(text.value[index].innerText || "").then(() => {
         copyTxt.value = "Copied";
         rafTimeout(() => {
           copyTxt.value = "Copy";
@@ -1052,8 +1051,8 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Collapse_vue_vue_type_style_index_0_scoped_9cb9cd86_lang = "";
-const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-9cb9cd86"]]);
+const Collapse_vue_vue_type_style_index_0_scoped_9a12a53a_lang = "";
+const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-9a12a53a"]]);
 Collapse.install = (app) => {
   app.component(Collapse.__name, Collapse);
 };
