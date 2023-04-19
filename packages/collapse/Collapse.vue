@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 import { rafTimeout } from '../index'
 interface Collapse {
   key?: string|number // 对应activeKey，如果没有传入key属性，则默认使用数字索引(0,1,2...)绑定
-  header?: string // 面板标特 string | slot
+  header?: string // 面板标题 string | slot
   text?: string // 面板内容 string | slot
 }
 interface Props {
