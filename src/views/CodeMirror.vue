@@ -5,6 +5,9 @@ const code = ref(`<script setup lang="ts">
 import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add } from 'vue-amazing-ui'
 <\/script>
 `)
+function onReady (payload: any) {
+  console.log('ready:', payload)
+}
 function onChange (value: string, viewUpdate: any) {
   console.log('change:', value)
   console.log('change:', viewUpdate)
@@ -20,6 +23,9 @@ function onBlur (viewUpdate: any) {
   <div>
     <h1>vue-codemirror 参考文档</h1>
     <ul class="m-list">
+      <li>
+        <a class="u-file" href="https://www.npmjs.com/package/vue-codemirror" target="_blank">vue-codemirror 插件</a>
+      </li>
       <li>
         <a class="u-file" href="https://codemirror.net/" target="_blank">CodeMirror 官网</a>
       </li>
@@ -38,6 +44,7 @@ function onBlur (viewUpdate: any) {
       v-model:code="code"
       dark
       :codeStyle="{ width: '1000px', height: '500px', fontSize: '16px' }"
+      @ready="onReady"
       @change="onChange"
       @focus="onFocus"
       @blur="onBlur" />
