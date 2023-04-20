@@ -224,43 +224,16 @@ const routes = [
         component: () => import('@/views/Waterfall.vue')
       },
       // {
-      //   path: '/common',
-      //   // path: '/common/:params',
-      //   name: 'Common',
-      //   meta: { title: '常用' },
-      //   // props: true, // 当props为true时，路由参数route.params将被设置为组件的props
-      //   // props: { name: 'curry', age: '30' }, // 当props为对象时，它将原样设置为组件props。当props是静态的时候很有用
-      //   // props: (route: object) => ({ route: route, name: 'curry', age: '30' }), // 可以创建一个返回props的函数
-      //   component: () => import('@/views/Common.vue')
-      // {
-      //   path: '/tree',
-      //   name: 'Tree',
-      //   meta: { title: '树图' },
-      //   component: () => import('@/views/Tree.vue')
-      // },
-      // {
       //   path: '/drag',
       //   name: 'Drag',
       //   meta: { title: '拖拽组件' },
       //   component: () => import('@/views/Draggable.vue')
       // },
       // {
-      //   path: '/viewer',
-      //   name: 'Viewer',
-      //   meta: { title: '预览插件' },
-      //   component: () => import('@/views/Viewer.vue')
-      // },
-      // {
       //   path: '/lazyload',
       //   name: 'Lazyload',
       //   meta: { title: '懒加载' },
       //   component: () => import('@/views/Lazyload.vue')
-      // },
-      // {
-      //   path: '/pdf',
-      //   name: 'Pdf',
-      //   meta: { title: 'pdf预览' },
-      //   component: () => import('@/views/PdfView.vue')
       // },
       // {
       //   path: '/ws',

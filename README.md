@@ -103,7 +103,7 @@ Waterfall | 瀑布流
 
 | Function name | Descriptions | Arguments
 | :--- | :--- | :--- |
-dateFormat | 简单易用的日期格式化函数！ | (timestamp: number|string|Date, format = 'YYYY-MM-DD HH:mm:ss') => string
+dateFormat | 简单易用的日期格式化函数！ | (timestamp: number&#124;string&#124;Date, format = 'YYYY-MM-DD HH:mm:ss') => string
 requestAnimationFrame | 针对不同浏览器进行兼容处理！ | 使用方式不变
 cancelAnimationFrame | 针对不同浏览器进行兼容处理！ | 使用方式不变
 rafTimeout | 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！ | (func: Function, delay = 0, interval = false) => object

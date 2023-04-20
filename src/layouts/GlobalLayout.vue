@@ -143,9 +143,6 @@ function onClick (e: any):void {
           <router-link to="/lazyload">懒加载</router-link>
         </a-menu-item> -->
         <!--
-        <a-menu-item key="Pdf">
-          <router-link to="/pdf">pdf预览</router-link>
-        </a-menu-item>
         <a-menu-item key="Ws">
           <router-link to="/ws">WebSocket</router-link>
         </a-menu-item> -->
