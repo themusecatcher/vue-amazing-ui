@@ -101,7 +101,7 @@ function add(num1, num2) {
   const result = +num1Str.replace(".", "") + +num2Str.replace(".", "");
   return result / Math.pow(10, maxLen);
 }
-const _withScopeId$h = (n) => (pushScopeId("data-v-f723210c"), n = n(), popScopeId(), n);
+const _withScopeId$h = (n) => (pushScopeId("data-v-6999222a"), n = n(), popScopeId(), n);
 const _hoisted_1$u = ["onClick", "title"];
 const _hoisted_2$p = {
   key: 0,
@@ -134,7 +134,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     });
     const router = useRouter();
     function goRouter(route) {
-      router.push({ path: route.path, query: route.query || {} });
+      router.push({ path: route.path, query: route.query || "" });
     }
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
@@ -161,7 +161,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Breadcrumb_vue_vue_type_style_index_0_scoped_f723210c_lang = "";
+const Breadcrumb_vue_vue_type_style_index_0_scoped_6999222a_lang = "";
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -169,7 +169,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-f723210c"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-6999222a"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };
