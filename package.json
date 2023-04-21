@@ -3,9 +3,7 @@
   "version": "0.0.22",
   "private": false,
   "type": "module",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/vue-amazing-ui.umd.cjs",
   "module": "./dist/vue-amazing-ui.js",
   "exports": {
