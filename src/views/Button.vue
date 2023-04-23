@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+const loading = ref(false)
 function onClick () {
   console.log('click')
 }
@@ -8,44 +10,77 @@ function onClick () {
     <h2 class="mb10">Button 按钮基本使用</h2>
     <Button
       class="mr30"
-      type="default"
-      effect="reverse"
-      :disabled="false"
-      :center="false"
+      :loading="loading"
       @click="onClick">
       Default Button
     </Button>
     <Button
       class="mr30"
+      effect="reverse"
+      :loading="loading"
+      @click="onClick">
+      Reverse Button
+    </Button>
+    <Button
+      class="mr30"
       type="primary"
-      effect="fade"
-      :width="120"
-      :height="40"
-      :disabled="false"
-      :center="false"
+      :loading="loading"
       @click="onClick">
       Primary Button
     </Button>
     <Button
       class="mr30"
       type="danger"
-      effect="fade"
-      size="large"
-      :disabled="false"
-      :center="false"
+      :loading="loading"
       @click="onClick">
       Danger Button
     </Button>
     <Button
-      type="primary"
-      effect="fade"
-      size="large"
+      class="mr30"
       disabled
+      :loading="loading"
       @click="onClick">
       Disabled Button
     </Button>
+    <h2 class="mt30 mb10">大(large)、中(default)、小(small)三种尺寸</h2>
+    <Button
+      class="mr30"
+      size="large"
+      :loading="loading"
+      @click="onClick">
+      Default Button
+    </Button>
+    <Button
+      class="mr30"
+      :loading="loading"
+      @click="onClick">
+      Default Button
+    </Button>
+    <Button
+      size="small"
+      :loading="loading"
+      @click="onClick">
+      Default Button
+    </Button>
+    <h2 class="mt30 mb10">自定义按钮宽高 (width: 150 & height: 40)</h2>
+    <Button
+      class="mr30"
+      :width="150"
+      :height="40"
+      :loading="loading"
+      @click="onClick">
+      Default Button
+    </Button>
+    <h2 class="mt30 mb10">加载中状态</h2>
+    <Button
+      class="mr30"
+      loading
+      @click="onClick">
+      Default Button
+    </Button>
+    <h3 class="mt30">Loading state: <Switch v-model:checked="loading" /></h3>
     <h2 class="mt30 mb10">Ant Design Vue 按钮</h2>
-    <a-button class="border-box" type="primary" disabled>按钮Button</a-button>
+    <a-button class="border-box" type="default" :loading="loading" @click="onClick">按钮Button</a-button>
   </div>
 </template>
 <style lang="less" scoped>
