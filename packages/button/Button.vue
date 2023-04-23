@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 interface Props {
-  name?: string // 按钮默认文本
+  name?: string // 按钮默认文本 string | slot
   type?: string // 按钮类型
-  effect?: string // 按钮悬浮变化效果，只有type为default时，reverse才生效
+  effect?: string // 按钮悬浮变化效果，只有 type 为 default 时，reverse 才生效
   size?: string // 按钮尺寸
   width?: number // 按钮宽度
   height?: number // 按钮高度
@@ -11,6 +11,7 @@ interface Props {
   route?: object // 按钮跳转目标URL地址
   target?: string // 按钮如何打开目标URL，设置route时才起作用
   disabled?: boolean // 按钮是否禁用
+  loading?: boolean // 按钮是否加载中
   center?: boolean // 是否将按钮设置为块级元素并居中展示
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -24,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
   route: () => { return {} },
   target: '_self',
   disabled: false,
+  loading: false,
   center: false
 })
 const isRoute = computed(() => {
@@ -35,43 +37,86 @@ const isRoute = computed(() => {
 })
 </script>
 <template>
-  <span :class="['m-button', {'center': center}]">
+  <span :class="['m-btn-wrap', {'center': center}]">
     <router-link
       v-if="isRoute"
       :to="route"
       :target="target"
       :disabled="disabled"
-      class="u-button fade"
+      class="m-btn fade"
       :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled}]"
       :style="{borderRadius: borderRadius + 'px', width: (width - 2) + 'px', height: (height - 2)+'px', lineHeight: (height - 2)+'px'}">
-      <slot>{{ name }}</slot>
+      <span class="u-text">
+        <slot>{{ name }}</slot>
+      </span>
     </router-link>
     <a
       v-else
       @click.stop="$emit('click')"
       :disabled="disabled"
-      class="u-button"
-      :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled}]"
+      class="m-btn"
+      :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled, 'm-btn-loading': loading}]"
       :style="{borderRadius: borderRadius + 'px', width: (width - 2) + 'px', height: (height - 2)+'px', lineHeight: (height - 2)+'px'}">
-      <slot>{{ name }}</slot>
+      <span class="m-loading-icon" :class="{'show-spin': loading}">
+        <span class="u-spin-circle" v-show="loading"></span>
+      </span>
+      <span class="u-text">
+        <slot>{{ name }}</slot>
+      </span>
     </a>
   </span>
 </template>
 <style lang="less" scoped>
-.m-button {
+.m-btn-wrap {
   display: inline-block;
-  .u-button {
+  .m-btn {
     display: inline-block;
-    color: rgba(0,0,0,.65);
+    color: rgba(0,0,0,.88);
     background-color: transparent;
     border: 1px solid #d9d9d9;
-    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
-    transition: all .3s cubic-bezier(.645,.045,.355,1);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+    transition: all .2s cubic-bezier(.645,.045,.355,1);
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
     cursor: pointer;
+    .m-loading-icon {
+      display: inline-block;
+      text-align: left;
+      opacity: 0;
+      width: 0;
+      transition: width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      .u-spin-circle {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border-width: 1px;
+        border-style: solid;
+        vertical-align: -0.125em;
+        border-color: transparent;
+        border-top-color: inherit; // 显示1/4圆
+        animation: loadingCircle 1s infinite linear;
+        -webkit-animation: loadingCircle 1s infinite linear;
+      }
+      @keyframes loadingCircle {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    }
+    .show-spin {
+      width: 22px;
+      opacity: 1;
+    }
+    .u-text {
+      display: inline-block;
+    }
+  }
+  .m-btn-loading {
+    opacity: 0.65;
+    pointer-events: none;
   }
   .primary {
     color: #fff;
