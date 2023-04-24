@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
-const props = defineProps({
-  duration: { // 自动关闭的延时,单位ms
-    type: Number,
-    default: 3000
-  },
-  top: { // 消息距离顶部的位置，单位px
-    type: Number,
-    default: 30
-  }
+interface Props {
+  duration?: number // 自动关闭的延时，单位ms
+  top?: number // 消息距离顶部的位置，单位px
+}
+const props = withDefaults(defineProps<Props>(), {
+  duration: 3000,
+  top: 30
 })
 enum ColorStyle { // 颜色主题对象
   info = '#1890FF',
@@ -46,7 +44,6 @@ function  onLeave (index: number) {
 function show () {
   cancelRaf(resetTimer.value)
   const index = messageContent.value.length - 1
-  console.log('index:', index)
   showMessage.value[index] = true
   onHideMessage(index)
 }
