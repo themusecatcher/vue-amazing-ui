@@ -18,7 +18,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
   percent: 0,
-  strokeColor: '#1890FF',
+  strokeColor: '#1677FF',
   strokeWidth: 8,
   showInfo: true,
   type: 'line'
@@ -49,7 +49,7 @@ const backgroundColor = computed(() => {
 </script>
 <template>
   <div v-if="type==='line'" class="m-progress-line" :style="`width: ${totalWidth}; height: ${strokeWidth < 24 ? 24:strokeWidth}px;`">
-    <div class="m-progress-inner">
+    <div class="m-progress-inner" :style="`width: ${showInfo? 'calc(100% - 44px)':'100%'};`">
       <div :class="['u-progress-bg', {'u-success-bg': percent >= 100}]" :style="`background: ${backgroundColor}; width: ${percent >= 100 ? 100:percent}%; height: ${strokeWidth}px;`"></div>
     </div>
     <template v-if="showInfo">
@@ -80,7 +80,6 @@ const backgroundColor = computed(() => {
   .m-progress-inner {
     display: inline-block;
     vertical-align: middle;
-    width: calc(100% - 44px);
     background: #f5f5f5;
     border-radius: 100px;
     .u-progress-bg {

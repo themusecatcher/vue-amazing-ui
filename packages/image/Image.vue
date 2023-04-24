@@ -358,7 +358,7 @@ function onSwitchRight () {
           display: inline-flex;
           align-items: center;
           margin-right: 4px;
-          vertical-align:  -0.125em;
+          vertical-align: -0.125em;
           width: 14px;
           height: 14px;
           fill: #FFF;
@@ -368,10 +368,7 @@ function onSwitchRight () {
   }
   .m-preview-mask {
     position: fixed;
-    top: 0;
-    inset-inline-end: 0;
-    bottom: 0;
-    inset-inline-start: 0;
+    inset: 0;
     z-index: 1000;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.45);

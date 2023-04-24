@@ -7,12 +7,11 @@ import VueAmazingUI from '../packages'
 // import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add } from '../packages'
 // import VueAmazingUI from '../dist/vue-amazing-ui.js'
 // import '../dist/style.css'
-// import { Breadcrumb } from '../dist/vue-amazing-ui.js'
 
 const app = createApp(App)
 // window.rafTimeout = rafTimeout // 挂载到window上，全局可用，无需引入
+
 app.use(router)
 app.use(VueAmazingUI)
-// app.use(Breadcrumb)
 
 app.mount('#app')
