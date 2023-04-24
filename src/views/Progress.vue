@@ -47,7 +47,7 @@ console.log(Math.PI)
       :width="120"
       :percent="percent"
       :strokeWidth="10"
-      :strokeColor="'#1890FF'"
+      :strokeColor="'#1677FF'"
       :showInfo="true"
       type="circle" />
     <h2 class="mt30 mb10">Ant Design Vue 进度圈</h2>

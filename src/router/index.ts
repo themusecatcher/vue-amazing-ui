@@ -212,6 +212,12 @@ const routes = [
         component: () => import('@/views/Tooltip.vue')
       },
       {
+        path: '/upload',
+        name: 'Upload',
+        meta: { title: '上传' },
+        component: () => import('@/views/Upload.vue')
+      },
+      {
         path: '/video',
         name: 'Video',
         meta: { title: '播放器' },

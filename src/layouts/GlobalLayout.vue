@@ -129,6 +129,9 @@ function onClick (e: any):void {
         <a-menu-item key="Tooltip">
           <router-link to="/tooltip">文字提示（Tooltip）</router-link>
         </a-menu-item>
+        <a-menu-item key="Upload">
+          <router-link to="/upload">上传（Upload）</router-link>
+        </a-menu-item>
         <a-menu-item key="Video">
           <router-link to="/video">播放器（Video）</router-link>
         </a-menu-item>

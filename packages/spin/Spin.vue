@@ -1,8 +1,8 @@
 <script setup lang="ts">
 interface Props {
   spinning?: boolean // 是否为加载中状态
-  size?: string // 组件大小，可选small default large
-  tip?: string // 描述文案 string | slot
+  size?: string // 组件大小，可选 small default large
+  tip?: string // 描述文案 string
   indicator?: string // 加载指示符 string
 }
 withDefaults(defineProps<Props>(), {
@@ -49,6 +49,7 @@ withDefaults(defineProps<Props>(), {
   z-index: 9;
   .m-spin-box {
     text-align: center;
+    line-height: 0.75;
     .m-spin-dot {
       position: relative;
       display: inline-block;
@@ -135,7 +136,7 @@ withDefaults(defineProps<Props>(), {
       font-size: 16px;
       font-weight: 500;
       line-height: 20px;
-      padding-top: 10px;
+      margin-top: 12px;
     }
   }
 }
@@ -158,7 +159,7 @@ withDefaults(defineProps<Props>(), {
       font-size: 14px;
       font-weight: 500;
       line-height: 18px;
-      padding-top: 6px;
+      margin-top: 9px;
     }
   }
 }
@@ -181,7 +182,7 @@ withDefaults(defineProps<Props>(), {
       font-size: 14px;
       font-weight: 400;
       line-height: 16px;
-      padding-top: 4px;
+      margin-top: 6px;
     }
   }
 }

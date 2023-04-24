@@ -32,6 +32,7 @@ import Tabs from './tabs'
 import TextScroll from './textscroll'
 import Timeline from './timeline'
 import Tooltip from './tooltip'
+import Upload from './upload'
 import Video from './video'
 import Waterfall from './waterfall'
 
@@ -69,6 +70,7 @@ const components = [
   TextScroll,
   Timeline,
   Tooltip,
+  Upload,
   Video,
   Waterfall
 ]
@@ -130,6 +132,7 @@ export {
   TextScroll,
   Timeline,
   Tooltip,
+  Upload,
   Video,
   Waterfall
 }
