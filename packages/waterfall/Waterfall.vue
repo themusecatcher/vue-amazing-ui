@@ -2,9 +2,10 @@
 import { ref, onMounted, computed, watch } from 'vue'
 /*
   mode: JS
-  使用js进行计算，新的图片每次都添加在最短那列的末尾
+  使用JS获取每张图片宽高，结合relative和absolute定位计算每个图片的位置top，left，
+  保证每张新的图片都追加在当前高度最小的那列末尾
   mode: CSS
-  纯CSS，实现简单，但图片顺序是每列从上往下排列
+  使用CSS的column-count和column-gap，实现简单，但图片顺序是每列从上往下排列
 */
 interface Image {
   title: string // 图片名称
