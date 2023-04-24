@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import Spin from '../spin'
 import Message from '../message'
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, watchEffect, nextTick } from 'vue'
 interface Props {
   accept?: string // 接受上传的文件类型，详见 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file
-  disabled?: boolean // 是否禁用，此时只能预览，并不能删除和上传
-  maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
   multiple?: boolean // 是否支持多选文件
-  tip?: string // 描述文字 string | slot
-  uploadingTip?: string // 上传时文字提示
+  maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
+  tip?: string // 上传描述文字 string | slot
+  uploadingTip?: string // uploading时的文字描述
   fit?: string // 预览图片缩放规则，仅上传文件为图片时生效
   errorInfo?: string // 上传中断时的错误提示信息
   beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传
   uploadMode?: 'base64'|'formData' // 上传文件的方式，默认是 base64，可选 'base64' | 'formData'
+  disabled?: boolean // 是否禁用，只能预览，不能删除和上传
   fileList?: FileType[] // 已上传的文件列表
 }
 interface FileType {
@@ -21,30 +21,35 @@ interface FileType {
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
 const props = withDefaults(defineProps<Props>(), {
-  accept: 'image/*',
-  disabled: false,
-  maxCount: 1,
+  accept: '*',
   multiple: false,
+  maxCount: 1,
   tip: 'Upload',
   uploadingTip: 'Uploading',
   fit: 'contain', // 可选 fill(填充) | contain(等比缩放包含) | cover(等比缩放覆盖)
   errorInfo: '',
   beforeUpload: () => true,
   uploadMode: 'base64',
+  disabled: false,
   fileList: () => []
 })
-const uploadedFiles = ref(props.fileList) // 上传文件列表
+const uploadedFiles = ref<FileType[]>([]) // 上传文件列表
 const showUpload = ref(1)
 const imageUrlReg = /\.(jpg|jpeg|png|gif)$/i // 验证是否图片
 const base64Reg = /^data:image/i // 验证是否图片
 const uploading = ref<boolean[]>(Array(props.maxCount).fill(false))
 const uploadInput = ref()
 const errorMessage = ref('')
-onMounted(() => {
+watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+  initUpload()
+})
+function initUpload () {
+  uploadedFiles.value = [...props.fileList]
+  if (uploadedFiles.value.length > props.maxCount) {
+    uploadedFiles.value.splice(props.maxCount)
+  }
   if (props.disabled) { // 禁用
-    if (uploadedFiles.value.length) {
-      showUpload.value = props.fileList.length
-    }
+    showUpload.value = uploadedFiles.value.length
   } else {
     if (uploadedFiles.value.length < props.maxCount) {
       showUpload.value = props.fileList.length + 1
@@ -52,7 +57,7 @@ onMounted(() => {
       showUpload.value = props.maxCount
     }
   }
-})
+}
 function isImage (url: string) { // 验证url是否是图片
   return imageUrlReg.test(url) || base64Reg.test(url)
 }

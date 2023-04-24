@@ -76,7 +76,8 @@ Steps | 步骤条 | Swiper | 触摸滑动插件
 Switch | 开关 | Table | 表格
 Tabs | 标签页 | TextScroll | 文字滚动
 Timeline | 时间轴 | Tooltip | 文字提示
-Video | 播放器 | Waterfall | 瀑布流
+Upload | 上传 | Video | 播放器
+Waterfall | 瀑布流
 
 ## Details
 

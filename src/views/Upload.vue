@@ -10,6 +10,7 @@ const fileList = ref([
     url: "https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg"
   }
 ])
+const files = ref([])
 watch(fileList, (to) => {
   console.log('fileList to:', to)
 }, {deep: true})
@@ -36,18 +37,13 @@ function onRemove (file: object) {
 <template>
   <div>
     <h2 class="mb10">Upload 上传基本使用</h2>
-    <Upload
-      accept="image/*"
-      :maxCount="5"
-      multiple
-      tip="上传"
-      fit="cover"
-      :maxSize="500 * 1024"
-      :errorInfo="errorInfo"
-      :beforeUpload="onBeforeUpload"
-      @change="onChange"
-      @remove="onRemove"
-      v-model:fileList="fileList" />
+    <Upload v-model:fileList="fileList" />
+    <h2 class="mb10">多文件上传，并限制上传数量为3 (multiple: true & maxCount: 3)</h2>
+    <Upload multiple :maxCount="3" v-model:fileList="fileList" />
+    <h2 class="mb10">预览图片缩放使用等比覆盖，同时上传描述文字使用：上传 (fit: cover & tip: 上传)</h2>
+    <Upload :maxCount="3" tip="上传" fit="cover" v-model:fileList="fileList" />
+    <h2 class="mb10">禁用，只能预览，不能删除和上传 (disabled: true)</h2>
+    <Upload disabled v-model:fileList="fileList" />
   </div>
 </template>
 <style lang="less" scoped>
