@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { rafTimeout } from '../../packages'
 const files = ref([])
 const fileList = ref([
   {
@@ -29,7 +30,7 @@ function onBeforeUpload (file: File) {
 }
 function onCustomRequest (file: File) {
   return new Promise((resolve, reject) => {
-    window.rafTimeout(() => { // 模拟接口调用返回name和url
+    rafTimeout(() => { // 模拟接口调用返回name和url
       const res = true
       if (res) {
         resolve({
