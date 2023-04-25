@@ -2,7 +2,6 @@
 import { ref, watch } from 'vue'
 
 const value = ref(2.99)
-const desc = ref(['terrible', 'bad', 'normal', 'good', 'wonderful'])
 watch(value, (to) => {
   console.log('p to:', to)
 })
@@ -15,47 +14,38 @@ function onHoverChange (value: number) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Rate 评分基本使用 (character: star)</h2>
+    <h2 class="mb10">Rate 评分基本使用</h2>
+    <Rate v-model:value="value"/>
+    <h2 class="mt30 mb10">空心星型图标，高度30px (character: star-outlined & size: 30)</h2>
+    <Rate character="star-outlined" :size="30" v-model:value="value"/>
+    <h2 class="mt30 mb10">实心心型图标，高度30px (character: heart-filled & size: 30)</h2>
+    <Rate character="heart-filled" :size="30" v-model:value="value"/>
+    <h2 class="mt30 mb10">空心心型图标，高度30px (character: heart-outlined & size: 30)</h2>
+    <Rate character="heart-outlined" :size="30" v-model:value="value"/>
+    <h2 class="mt30 mb10">支持选中半星，选中颜色：#1677FF，高度30px (allowHalf: true & color: #1677FF & size: 30)</h2>
+    <Rate allowHalf :size="30" color="#1677FF" v-model:value="value"/>
+    <h2 class="mt30 mb10">使用中文文字: 好，高度36px (character: 好 & size: 36)</h2>
     <Rate
-      :count="5"
-      character="star"
-      :disabled="false"
-      v-model:value="value"
-      @change="onChange"
-      @hoverChange="onHoverChange"/>
-    <h2 class="mt30 mb10">使用预置的心型字符图标，并设置高度为30px (character: heart & size: 30)</h2>
-    <Rate
-      :allowClear="true"
-      :allowHalf="true"
-      :count="5"
-      character="heart"
-      :size="30"
-      :disabled="false"
-      v-model:value="value"
-      @change="onChange"
-      @hoverChange="onHoverChange"/>
-    <h2 class="mt30 mb10">使用中文: 好 (character: 好 & size: 36)</h2>
-    <Rate
-      :allowClear="false"
-      :allowHalf="true"
-      :count="5"
+      allowHalf
       character="好"
       :size="36"
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
-    <h2 class="mt30 mb10">使用英文字母: A (character: A & size: 50)</h2>
+    <h2 class="mt30 mb10">使用英文字母: A (character: A & size: 48)</h2>
     <Rate
-      :allowClear="false"
-      :allowHalf="true"
-      :count="5"
+      allowHalf
       character="A"
-      :size="50"
+      :size="48"
       v-model:value="value"
       @change="onChange"
       @hoverChange="onHoverChange"/>
     <h2 class="mt30 mb10">Ant Design Vue 评分</h2>
-    <a-rate v-model:value="value" @change="onChange" />
+    <a-rate v-model:value="value" allow-half>
+      <template #character>
+        <heart-outlined />
+      </template>
+    </a-rate>
   </div>
 </template>
 <style lang="less" scoped>
