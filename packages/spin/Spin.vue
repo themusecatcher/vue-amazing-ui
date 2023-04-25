@@ -58,8 +58,8 @@ withDefaults(defineProps<Props>(), {
       -moz-transform: rotate(45deg); /* Firefox */
       -webkit-transform: rotate(45deg); /* Safari 和 Chrome */
       -o-transform: rotate(45deg); /* Opera */
-      animation: loadingDot 1.2s infinite linear;
-      -webkit-animation: loadingDot 1.2s infinite linear;
+      // animation: loadingDot 1.2s infinite linear;
+      // -webkit-animation: loadingDot 1.2s infinite linear;
       @keyframes loadingDot {
         100% {transform: rotate(405deg);} // to {transform: rotate(405deg);}
       }
@@ -103,8 +103,8 @@ withDefaults(defineProps<Props>(), {
       border-style: solid;
       border-color: @themeColor;
       border-top-color: transparent; // 隐藏1/4圆
-      animation: loadingCircle 1s infinite linear;
-      -webkit-animation: loadingCircle 1s infinite linear;
+      // animation: loadingCircle 1s infinite linear;
+      // -webkit-animation: loadingCircle 1s infinite linear;
     }
     @keyframes loadingCircle {
       100% {
@@ -123,8 +123,8 @@ withDefaults(defineProps<Props>(), {
       width: 36px;
       height: 36px;
       .u-dot-item {
-        width: 13px;
-        height: 13px;
+        width: 12px;
+        height: 12px;
       }
     }
     .u-spin-circle {
@@ -136,7 +136,7 @@ withDefaults(defineProps<Props>(), {
       font-size: 16px;
       font-weight: 500;
       line-height: 20px;
-      margin-top: 12px;
+      margin-top: 14px;
     }
   }
 }
@@ -159,7 +159,7 @@ withDefaults(defineProps<Props>(), {
       font-size: 14px;
       font-weight: 500;
       line-height: 18px;
-      margin-top: 9px;
+      margin-top: 10px;
     }
   }
 }
@@ -169,8 +169,8 @@ withDefaults(defineProps<Props>(), {
       width: 20px;
       height: 20px;
       .u-dot-item {
-        width: 7px;
-        height: 7px;
+        width: 8px;
+        height: 8px;
       }
     }
     .u-spin-circle {
