@@ -4,11 +4,17 @@ import { rafTimeout } from '../../packages'
 const files = ref([])
 const fileList = ref([
   {
-    name: "xxx.png",
-    url: "https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg"
+    name: '1.jpg',
+    url: "https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg"
   },
   {
-    name: "xxx.png",
+    name: 'Markdown.pdf',
+    url: 'https://download.jinhui365.cn/group1/M00/01/36/CgABcmRHl-qABv_cAAFDCXziBoQ316.pdf'
+  }
+])
+const imageList = ref([
+  {
+    name: '1.jpg',
     url: "https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg"
   }
 ])
@@ -93,12 +99,11 @@ function onRemove (file: object) {
       :maxCount="3"
       :error-info="errorInfo"
       :before-upload="onBeforeUpload"
-      v-model:fileList="fileList"
+      v-model:fileList="imageList"
       @change="onChange"
       @remove="onRemove" />
     <h2 class="mt30 mb10">自定义上传行为 (upload-mode: custom & custom-request: onCustomRequest)</h2>
     <Upload
-      accept="image/*"
       multiple
       :maxCount="5"
       :error-info="errorInfo"
@@ -111,9 +116,4 @@ function onRemove (file: object) {
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  :deep(*) {
-    box-sizing: border-box;
-  }
-}
 </style>

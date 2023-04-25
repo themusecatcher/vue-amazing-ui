@@ -2,24 +2,24 @@
 import Spin from '../spin'
 import Message from '../message'
 import { ref, watchEffect, nextTick } from 'vue'
+interface FileType {
+  name?: string // 文件名
+  url: any // 文件url
+  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
+}
 interface Props {
   accept?: string // 接受上传的文件类型，与<input type="file">的accept属性一致，详见 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file
   multiple?: boolean // 是否支持多选文件
   maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
   tip?: string // 上传描述文字 string | slot
-  uploadingTip?: string // uploading时的文字描述
-  fit?: string // 预览图片缩放规则，仅上传文件为图片时生效
+  uploadingTip?: string // 上传时的文字描述
+  fit?: 'fill'|'contain'|'cover' // 预览图片缩放规则，仅当上传文件为图片时生效
   errorInfo?: string // 上传中断时的错误提示信息
   beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传
   uploadMode?: 'base64'|'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
   customRequest?: Function // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
   disabled?: boolean // 是否禁用，只能预览，不能删除和上传
   fileList?: FileType[] // 已上传的文件列表
-}
-interface FileType {
-  name?: string // 文件名
-  url: any // 文件url
-  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
 const props = withDefaults(defineProps<Props>(), {
   accept: '*', // 默认支持所有类型
@@ -39,7 +39,6 @@ const uploadedFiles = ref<FileType[]>([]) // 上传文件列表
 const showUpload = ref(1)
 const uploading = ref<boolean[]>(Array(props.maxCount).fill(false))
 const uploadInput = ref()
-const errorMessage = ref('')
 watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   initUpload()
 })
@@ -88,7 +87,6 @@ function onClick (index: number) {
 }
 function onUpload (e: any, index: number) { // 点击上传
   const files = e.target.files
-  console.log('filse:', files)
   if (files?.length) {
     const len = files.length
     for (let n = 0; n < len; n++) {
@@ -107,11 +105,9 @@ const uploadFile = function (file: File, index: number) { // 统一上传文件�
 	// console.log('开始上传 upload-event files:', file)
   if (!props.beforeUpload(file)) { // 使用用户钩子进行上传前文件判断，例如大小、类型限制
     nextTick(() => { // 获取更新后的errorInfo 否则无法立即获取props更新
-      errorMessage.value = props.errorInfo
-      onError(errorMessage.value)
+      onError(props.errorInfo)
     })
   } else {
-    errorMessage.value = ''
     if (props.maxCount > showUpload.value) {
       showUpload.value++
     }
@@ -168,8 +164,7 @@ function customUpload (file: File, index: number) {
     if (props.maxCount > 1) {
       showUpload.value = uploadedFiles.value.length + 1
     }
-    errorMessage.value = err
-    onError(errorMessage.value)
+    onError(err)
   }).finally(() => {
     uploading.value[index] = false
   })
@@ -226,7 +221,6 @@ function onError (content: any) {
         </div>
       </div>
     </div>
-    <p class="u-message">{{ errorMessage }}</p>
     <Message ref="message" :duration="3000" :top="30" />
   </div>
 </template>
@@ -239,12 +233,6 @@ function onError (content: any) {
     &:not(:last-child) {
       margin-right: 8px;
     }
-  }
-  .u-message {
-    margin-top: 8px;
-    font-size: 14px;
-    color: #FF4D4F;
-    line-height: 1.571;
   }
 }
 .m-upload {
