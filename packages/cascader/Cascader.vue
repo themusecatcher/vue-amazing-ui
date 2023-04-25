@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 interface Option {
   value: string | number
   label: string
@@ -59,22 +59,13 @@ const props = defineProps({
     default: 6
   }
 })
-const values = ref(props.selectedValue) // 级联value值数组
+const values = ref<(string|number)[]>([]) // 级联value值数组
 const labels = ref<any[]>([]) // 级联label文本数组
 const firstOptions = ref(props.options)
 const secondOptions = ref<any[]>([])
 const thirdOptions = ref<Option[]>([])
-
-watch(
-  () => props.selectedValue,
-  (to) => {
-    values.value = to
-    if (to.length) {
-      initCascader(to)
-      initLabels(to)
-    }
-  })
-onMounted(() => {
+watchEffect(() => {
+  values.value = props.selectedValue
   if (props.selectedValue.length) {
     initCascader(props.selectedValue)
     initLabels(props.selectedValue)

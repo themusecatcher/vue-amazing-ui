@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-
+import { ref, watch, onMounted } from 'vue'
 const options = ref([
   {
     value: '1',
@@ -57,9 +56,14 @@ const options = ref([
     ]
   }
 ])
-const selectedValue = ref<any[]>(['2', '21', '212'])
+const selectedValue = ref<any[]>([])
 watch(selectedValue, (to) => {
   console.log('p to:', to)
+})
+onMounted(() => {
+  setTimeout(() => {
+    selectedValue.value = ['2', '21', '212']
+  }, 1000)
 })
 function onChange (value: Array<number|string>, label: Array<string>) {
   console.log('value:', value)
