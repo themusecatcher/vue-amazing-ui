@@ -97,7 +97,7 @@ function getImageName (image: Image) { // 从图像地址src中获取图像名�
   if (image.name) {
     return image.name
   } else {
-    const res = image.src.split('/')
+    const res = image.src.split('?')[0].split('/')
     return res[res.length - 1]
   }
 }
