@@ -3,23 +3,23 @@ import { ref } from 'vue'
 const images = ref([
   {
     src: 'https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg',
-    alt: 'image-1'
+    name: 'image-1.jpg'
   },
   {
     src: 'https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg',
-    alt: 'image-2'
+    name: 'image-2.jpg'
   },
   {
     src: new URL(`../assets/images/1.jpg`, import.meta.url).href,
-    alt: 'image-3'
+    name: 'image-3.jpg'
   },
   {
     src: new URL(`../assets/images/2.jpg`, import.meta.url).href,
-    alt: 'image-4'
+    name: 'image-4.jpg'
   },
   {
     src: new URL(`../assets/images/3.jpg`, import.meta.url).href,
-    alt: 'image-5'
+    name: 'image-5.jpg'
   }
 ])
 </script>
