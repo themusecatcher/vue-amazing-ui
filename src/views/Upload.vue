@@ -27,6 +27,48 @@ function onBeforeUpload (file: File) {
   }
   return true
 }
+function onCustomRequest (file: File) {
+  return new Promise((resolve, reject) => {
+    window.rafTimeout(() => { // 模拟接口调用返回name和url
+      const res = true
+      if (res) {
+        resolve({
+          name: file.name,
+          url: 'https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg'
+        })
+      } else {
+        reject('upload request fail ...')
+      }
+    }, 1000)
+  })
+  /*
+    调用接口进行文件上传，假设接口返回值如下格式：
+    res: {
+      message: {
+        code: 0,
+        message: 'success'
+      },
+      data: {
+        url: 'https...'
+      }
+    }
+  */
+  // const formData = new FormData()
+  // formData.set('name', file.name)
+  // formData.set('type', file.type)
+  // formData.set('file', file)
+  // upload(formData).then((res:any) => { // 调用接口
+  //   console.log('upload-res:', res)
+  //   if (res.message.code === 0) { // 上传成功
+  //    return {
+  //       name: file.name,
+  //       url: res.data.url
+  //     }
+  //   } else { // 上传失败
+  //     errorInfo.value = res.message.message
+  //   }
+  // })
+}
 function onChange (files: object[]) {
   console.log('change:', files)
 }
@@ -50,6 +92,17 @@ function onRemove (file: object) {
       :maxCount="3"
       :error-info="errorInfo"
       :before-upload="onBeforeUpload"
+      v-model:fileList="fileList"
+      @change="onChange"
+      @remove="onRemove" />
+    <h2 class="mt30 mb10">自定义上传行为 (multiple: true & upload-mode: custom & custom-request: onCustomRequest)</h2>
+    <Upload
+      accept="image/*"
+      multiple
+      :maxCount="3"
+      :error-info="errorInfo"
+      upload-mode="custom"
+      :custom-request="onCustomRequest"
       v-model:fileList="fileList"
       @change="onChange"
       @remove="onRemove" />

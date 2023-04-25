@@ -11,7 +11,8 @@ interface Props {
   fit?: string // 预览图片缩放规则，仅上传文件为图片时生效
   errorInfo?: string // 上传中断时的错误提示信息
   beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传
-  uploadMode?: 'base64'|'formData' // 上传文件的方式，默认是 base64，可选 'base64' | 'formData'
+  uploadMode?: 'base64'|'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
+  customRequest?: Function // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
   disabled?: boolean // 是否禁用，只能预览，不能删除和上传
   fileList?: FileType[] // 已上传的文件列表
 }
@@ -30,6 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   errorInfo: '',
   beforeUpload: () => true,
   uploadMode: 'base64',
+  customRequest: () => {},
   disabled: false,
   fileList: () => []
 })
@@ -72,6 +74,8 @@ function onDrop (e: DragEvent, index: number) { // 拖拽上传
         break
       }
     }
+    // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
+    uploadInput.value[index].value = ''
   }
 }
 function onClick (index: number) {
@@ -79,6 +83,7 @@ function onClick (index: number) {
 }
 function onUpload (e: any, index: number) { // 点击上传
   const files = e.target.files
+  console.log('filse:', files)
   if (files?.length) {
     const len = files.length
     for (let n = 0; n < len; n++) {
@@ -88,11 +93,13 @@ function onUpload (e: any, index: number) { // 点击上传
         break
       }
     }
+    // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
+    uploadInput.value[index].value = ''
   }
 }
 const emits = defineEmits(['update:fileList', 'change', 'remove'])
 const uploadFile = function (file: File, index: number) { // 统一上传文件方法
-	// console.log('开始上传 upload-event files:', file)
+	console.log('开始上传 upload-event files:', file)
   if (!props.beforeUpload(file)) { // 使用用户钩子进行上传前文件判断，例如大小、类型限制
     nextTick(() => { // 获取更新后的errorInfo 否则无法立即获取props更新
       errorMessage.value = props.errorInfo
@@ -103,16 +110,17 @@ const uploadFile = function (file: File, index: number) { // 统一上传文件�
     if (props.maxCount > showUpload.value) {
       showUpload.value++
     }
-    uploading.value[index] = true
     if (props.uploadMode === 'base64') {
+      uploading.value[index] = true
       base64Upload(file, index)
     }
-    if (props.uploadMode === 'formData') {
-      formDataUpload(file, index)
+    if (props.uploadMode === 'custom') { // 自定义上传行为
+      uploading.value[index] = true
+      customUpload(file, index)
+    } else {
+      console.log(props.customRequest, typeof props.customRequest)
     }
   }
-  // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
-  uploadInput.value[index].value = ''
 }
 function base64Upload (file: File, index: number) {
   var reader = new FileReader()
@@ -148,36 +156,20 @@ function base64Upload (file: File, index: number) {
     // console.log('读取结束 onloadend:', e)
   }
 }
-function formDataUpload (file: File, index: number) {
-  /*
-    使用接口进行文件上传，假设接口返回值如下格式：
-    res: {
-      message: {
-        code: 0,
-        message: 'success'
-      },
-      data: {
-        url: 'https...'
-      }
+function customUpload (file: File, index: number) {
+  props.customRequest(file).then((res: any) => {
+    uploadedFiles.value.push(res)
+    emits('update:fileList', uploadedFiles.value)
+    emits('change', uploadedFiles.value)
+  }).catch((err: any) => {
+    if (props.maxCount > 1) {
+      showUpload.value = uploadedFiles.value.length + 1
     }
-  */
-  // const formData = new FormData()
-  // formData.set('file', file)
-  // formData.set('type', file.type)
-  // upload(formData).then((res:any) => { // 接口调用
-  //   console.log('upload-res:', res)
-  //   if (res.message.code === 0) { // 上传成功
-  //     uploadedFiles.value.push({
-  //       name: file.name,
-  //       url: res.data.url
-  //     })
-  //     emits('update:fileList', uploadedFiles.value)
-  //     emits('change', uploadedFiles.value)
-  //   } else { // 上传失败
-  //     errorMessage.value = props.errorInfo
-  //     onError(errorMessage.value)
-  //   }
-  // })
+    errorMessage.value = err
+    onError(errorMessage.value)
+  }).finally(() => {
+    uploading.value[index] = false
+  })
 }
 function onRemove (index: number) {
   if (uploadedFiles.value.length < props.maxCount) {
@@ -205,7 +197,7 @@ function onError (content: any) {
           @dragover.stop.prevent
           @drop.stop.prevent="disabled ? () => false : onDrop($event, n-1)"
           @click="disabled ? () => false : onClick(n-1)">
-          <input ref="uploadInput" type="file" @click.stop :accept="accept" :multiple="multiple" @change="onUpload($event, n-1)" style="display: none;" />
+          <input ref="uploadInput" type="file" @click.stop :accept="accept" :multiple="multiple" async @change="onUpload($event, n-1)" style="display: none;" />
           <div>
             <svg class="u-plus" focusable="false" data-icon="plus" aria-hidden="true" viewBox="64 64 896 896"><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path></svg>
             <p class="u-tip">
