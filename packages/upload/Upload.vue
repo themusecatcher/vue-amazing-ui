@@ -15,7 +15,7 @@ interface Props {
   uploadingTip?: string // 上传时的文字描述
   fit?: 'fill'|'contain'|'cover' // 预览图片缩放规则，仅当上传文件为图片时生效
   errorInfo?: string // 上传中断时的错误提示信息
-  beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传
+  beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传，通常用来现在用户上传的文件格式和大小
   uploadMode?: 'base64'|'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
   customRequest?: Function // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
   disabled?: boolean // 是否禁用，只能预览，不能删除和上传
