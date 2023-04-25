@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 interface Option {
-  label: string
-  value: any
-  disabled?: boolean // 是否禁用单个复选框
+  label: string // 选项名
+  value: any // 选项值
+  disabled?: boolean // 是否禁用选项
 }
 interface Props {
   options?: Array<Option> // 复选元素数据
@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   indeterminate: false,
   checked: false
 })
-const sum = computed(() => {
+const sum = computed(() => { // 选项总数
   return props.options.length
 })
 const checkedValue = ref(props.value)
@@ -62,17 +62,19 @@ function onCheckAll () { // 全选切换
 </script>
 <template>
   <div class="m-checkbox" :class="{'vertical': vertical}">
-    <div
-      v-if="sum"
-      class="m-checkbox-wrap"
-      :class="{'disabled': disabled || option.disabled}"
-      :style="sum !== index + 1 ? styleObject: ''"
-      @click="(disabled || option.disabled) ? (e: Event) => e.preventDefault() : onClick(option.value)" v-for="(option, index) in options" :key="index">
-      <span class="u-checkbox" :class="{'u-checkbox-checked': checkedValue.includes(option.value) }"></span>
-      <span class="u-label">
-        <slot :label="option.label">{{ option.label }}</slot>
-      </span>
-    </div>
+    <template v-if="sum">
+      <div
+        class="m-checkbox-wrap"
+        :class="{'disabled': disabled || option.disabled}"
+        :style="sum !== index + 1 ? styleObject: ''"
+        @click="(disabled || option.disabled) ? (e: Event) => e.preventDefault() : onClick(option.value)"
+        v-for="(option, index) in options" :key="index">
+        <span class="u-checkbox" :class="{'u-checkbox-checked': checkedValue.includes(option.value) }"></span>
+        <span class="u-label">
+          <slot :label="option.label">{{ option.label }}</slot>
+        </span>
+      </div>
+    </template>
     <div
       v-else
       class="m-checkbox-wrap"
