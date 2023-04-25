@@ -6,47 +6,29 @@ interface Option {
   disabled?: boolean
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
-const props = defineProps({
-  options: { // 选项数据
-    type: Array<Option>,
-    default: () => []
-  },
-  label: { // 选择器字典项的文本字段名
-    type: String,
-    default: 'label'
-  },
-  value: { // 选择器字典项的值字段名
-    type: String,
-    default: 'value'
-  },
-  placeholder: { // 选择框默认文字
-    type: String,
-    default: '请选择'
-  },
-  disabled: { // 是否禁用下拉
-    type: Boolean,
-    default: false
-  },
-  allowClear: { // 是否支持清除
-    type: Boolean,
-    default: false
-  },
-  width: { // 选择框宽度
-    type: Number,
-    default: 200
-  },
-  height: { // 选择框高度
-    type: Number,
-    default: 36
-  },
-  num: { // 下拉面板最多能展示的下拉项数，超过后滚动显示
-    type: Number,
-    default: 6
-  },
-  selectedValue: { // （v-model）当前选中的option条目
-    type: [Number, String],
-    default: null
-  }
+interface Props {
+  options?: Option[] // 选项数据
+  label?: string // 选择器字典项的文本字段名
+  value?: string // 选择器字典项的值字段名
+  placeholder?: string // 选择框默认文字
+  disabled?: boolean // 是否禁用下拉
+  allowClear?: boolean // 是否支持清除
+  width?: number // 选择框宽度
+  height?: number // 选择框高度
+  num?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
+  selectedValue?: number|string|null // （v-model）当前选中的option条目
+}
+const props = withDefaults(defineProps<Props>(), {
+  options: () => [],
+  label: 'label',
+  value: 'value',
+  placeholder: '请选择',
+  disabled: false,
+  allowClear: false,
+  width: 200,
+  height: 36,
+  num: 6,
+  selectedValue: null
 })
 const selectedName = ref()
 const hoverValue = ref() // 鼠标悬浮项的value值

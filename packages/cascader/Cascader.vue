@@ -1,70 +1,48 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 interface Option {
-  value: string | number
-  label: string
-  children?: Option[]
+  value?: string | number // 选项值
+  label?: string // 选项名
+  children?: Option[] // 选项children数组
+  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
-const props = defineProps({
-  options: { // 可选项数据源
-    type: Array<any>,
-    default: () => []
-  },
-  selectedValue: { // （v-model）级联选中项
-    type: Array<number|string>,
-    default: () => []
-  },
-  label: { // 下拉字典项的文本字段名
-    type: String,
-    default: 'label'
-  },
-  value: { // 下拉字典项的值字段名
-    type: String,
-    default: 'value'
-  },
-  children: { // 下拉字典项的后代字段名
-    type: String,
-    default: 'children'
-  },
-  changeOnSelect: { // 当此项为true时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择三级选项后选项值才会变化
-    type: Boolean,
-    default: false
-  },
-  zIndex: { // 下拉层级
-    type: Number,
-    default: 1
-  },
-  gap: { // 级联下拉框相互间隙宽度，单位px，默认8px
-    type: Number,
-    default: 8
-  },
-  width: { // 三级下拉各自宽度
-    type: [Number, Array<number>],
-    default: 160
-  },
-  height: { // 下拉框高度
-    type: Number,
-    default: 36
-  },
-  disabled: { // 三级各自是否禁用
-    type: [Boolean, Array<boolean>],
-    default: false
-  },
-  placeholder: { // 三级下拉各自占位文本
-    type: [String, Array<string>],
-    default: '请选择'
-  },
-  num: { // 下拉面板最多能展示的下拉项数，超过后滚动显示
-    type: Number,
-    default: 6
-  }
+interface Props {
+  options?: Option[] // 可选项数据源
+  selectedValue?: (number|string)[] // （v-model）级联选中项
+  label?: string // 下拉字典项的文本字段名
+  value?: string // 下拉字典项的值字段名
+  children?: string // 下拉字典项的后代字段名
+  changeOnSelect?: boolean // 当此项为true时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择三级选项后选项值才会变化
+  zIndex?: number // 下拉层级
+  gap?: number // 级联下拉框相互间隙宽度，单位px，默认8px
+  width?: number|number[] // 三级下拉各自宽度
+  height?: number // 下拉框高度
+  disabled?: boolean|boolean[] // 三级各自是否禁用
+  placeholder?: string|string[] // 三级下拉各自占位文本
+  num?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
+}
+const props = withDefaults(defineProps<Props>(), {
+  options: () => [],
+  selectedValue: () => [],
+  label: 'label',
+  value: 'value',
+  children: 'children',
+  changeOnSelect: false,
+  zIndex: 1,
+  gap: 8,
+  width: 160,
+  height: 36,
+  disabled: false,
+  placeholder: '请选择',
+  num: 6,
 })
 const values = ref<(string|number)[]>([]) // 级联value值数组
 const labels = ref<any[]>([]) // 级联label文本数组
-const firstOptions = ref(props.options)
-const secondOptions = ref<any[]>([])
+const firstOptions = ref<Option[]>([])
+const secondOptions = ref<Option[]>([])
 const thirdOptions = ref<Option[]>([])
 watchEffect(() => {
+  firstOptions.value = props.options
   values.value = props.selectedValue
   if (props.selectedValue.length) {
     initCascader(props.selectedValue)
