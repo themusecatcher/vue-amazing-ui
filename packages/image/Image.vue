@@ -2,10 +2,10 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 interface Image {
   src: string // 图像地址
-  alt?: string // 图像无法加载时显示的描述
+  name?: string // 图像名称
 }
 interface Props {
-  alt?: string // 图像无法加载时显示的描述
+  name?: string // 图像名称，没有传入图片名时自动从图像地址src中读取
   width?: string|number // 图像宽度
   height?: string|number // 图像高度
   fit?: string // 图像如何适应容器高度和宽度
@@ -18,7 +18,7 @@ interface Props {
   loop?: boolean // 是否可以循环切换图片
 }
 const props = withDefaults(defineProps<Props>(), {
-  alt: 'image',
+  name: '',
   width: 300,
   height: '100%',
   fit: 'contain', // 可选 fill(填充) | contain(等比缩放包含) | cover(等比缩放覆盖)
@@ -50,7 +50,7 @@ const images = computed(() => {
   } else {
     return [{
       src: props.src,
-      alt: props.alt
+      name: props.name
     }]
   }
 })
@@ -104,6 +104,14 @@ function onComplete () { // 图片加载完成
 }
 function onLoaded () { // 预览图片加载完成
   loaded.value = true
+}
+function getImageName (image: Image) { // 从图像地址src中获取图像名称
+  if (image.name) {
+    return image.name
+  } else {
+    const res = image.src.split('/')
+    return res[res.length - 1]
+  }
 }
 function onPreview () {
   scale.value = 1
@@ -215,7 +223,7 @@ function onSwitchRight () {
   <div class="m-image-wrap">
     <div class="m-image" :class="{'image-hover-mask': complete}" :style="`width: ${imageWidth}; height: ${imageHeight};`">
       <div class="u-spin-circle" v-show="!complete"></div>
-      <img class="u-image" :style="`object-fit: ${fit};`" @load="onComplete" :src="images[0].src" :alt="images[0].alt" />
+      <img class="u-image" :style="`object-fit: ${fit};`" @load="onComplete" :src="images[0].src" :alt="images[0].name" />
       <div class="m-image-mask" @click="onPreview">
         <div class="m-image-mask-info">
           <svg class="u-eye" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
@@ -230,6 +238,7 @@ function onSwitchRight () {
       <div class="m-preview-wrap" v-show="showPreview" @click.self="onClose" @wheel.prevent="onWheel">
         <div class="m-preview-body">
           <div class="m-preview-operations">
+            <p class="u-name">{{ getImageName(images[previewIndex]) }}</p>
             <div class="u-preview-operation" @click="onClose">
               <svg class="u-icon" focusable="false" data-icon="close" aria-hidden="true" viewBox="64 64 896 896"><path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg>
             </div>
@@ -258,7 +267,7 @@ function onSwitchRight () {
               class="u-preview-image"
               :style="`transform: scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg);`"
               :src="image.src"
-              :alt="image.alt"
+              :alt="image.name"
               @load="onLoaded"
               @dblclick="resetOnDbclick ? onResetZoom():(e: Event) => e.preventDefault()"/>
           </div>
@@ -390,12 +399,19 @@ function onSwitchRight () {
       overflow: hidden;
       pointer-events: none;
       .m-preview-operations {
+        position: relative;
         display: flex;
         flex-direction: row-reverse;
         align-items: center;
         background: rgba(0, 0, 0, 0.1);
         height: 42px;
         pointer-events: auto;
+        .u-name {
+          position: absolute;
+          left: 12px;
+          color: rgba(255, 255, 255, 0.88);
+          font-size: 16px;
+        }
         .u-preview-operation {
           line-height: 1;
           padding: 12px;
