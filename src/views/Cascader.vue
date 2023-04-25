@@ -61,7 +61,7 @@ watch(selectedValue, (to) => {
   console.log('p to:', to)
 })
 onMounted(() => {
-  setTimeout(() => {
+  setTimeout(() => { // 模拟接口调用
     selectedValue.value = ['2', '21', '212']
   }, 1000)
 })
