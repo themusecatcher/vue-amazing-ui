@@ -96,12 +96,13 @@ function onRemove (file: object) {
       v-model:fileList="fileList"
       @change="onChange"
       @remove="onRemove" />
-    <h2 class="mt30 mb10">自定义上传行为 (multiple: true & upload-mode: custom & custom-request: onCustomRequest)</h2>
+    <h2 class="mt30 mb10">自定义上传行为 (upload-mode: custom & custom-request: onCustomRequest)</h2>
     <Upload
       accept="image/*"
       multiple
-      :maxCount="3"
+      :maxCount="5"
       :error-info="errorInfo"
+      :before-upload="onBeforeUpload"
       upload-mode="custom"
       :custom-request="onCustomRequest"
       v-model:fileList="fileList"

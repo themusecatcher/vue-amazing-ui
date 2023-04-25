@@ -99,7 +99,7 @@ function onUpload (e: any, index: number) { // 点击上传
 }
 const emits = defineEmits(['update:fileList', 'change', 'remove'])
 const uploadFile = function (file: File, index: number) { // 统一上传文件方法
-	console.log('开始上传 upload-event files:', file)
+	// console.log('开始上传 upload-event files:', file)
   if (!props.beforeUpload(file)) { // 使用用户钩子进行上传前文件判断，例如大小、类型限制
     nextTick(() => { // 获取更新后的errorInfo 否则无法立即获取props更新
       errorMessage.value = props.errorInfo
@@ -110,15 +110,13 @@ const uploadFile = function (file: File, index: number) { // 统一上传文件�
     if (props.maxCount > showUpload.value) {
       showUpload.value++
     }
-    if (props.uploadMode === 'base64') {
+    if (props.uploadMode === 'base64') { // 以base64方式读取文件
       uploading.value[index] = true
       base64Upload(file, index)
     }
-    if (props.uploadMode === 'custom') { // 自定义上传行为
+    if (props.uploadMode === 'custom') { // 自定义上传行为，需配合 customRequest 属性
       uploading.value[index] = true
       customUpload(file, index)
-    } else {
-      console.log(props.customRequest, typeof props.customRequest)
     }
   }
 }
