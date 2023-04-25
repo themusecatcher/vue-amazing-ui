@@ -80,22 +80,10 @@ function keyboardSwitch (e: KeyboardEvent) {
   e.preventDefault()
   if (showPreview.value && imageCount.value > 1) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      if (props.loop) {
-        onSwitchLeft()
-      } else {
-        if (previewIndex.value > 0) {
-          onSwitchLeft()
-        }
-      }
+      onSwitchLeft()
     }
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      if (props.loop) {
-        onSwitchRight()
-      } else {
-        if (previewIndex.value < imageCount.value - 1) {
-          onSwitchRight()
-        }
-      }
+      onSwitchRight()
     }
   }
 }
@@ -211,11 +199,23 @@ function onMouseDown (event: MouseEvent) {
   }
 }
 function onSwitchLeft () {
-  previewIndex.value = (previewIndex.value - 1 + imageCount.value) % imageCount.value
+  if (props.loop) {
+    previewIndex.value = (previewIndex.value - 1 + imageCount.value) % imageCount.value
+  } else {
+    if (previewIndex.value > 0) {
+      previewIndex.value--
+    }
+  }
   loaded.value = false
 }
 function onSwitchRight () {
-  previewIndex.value = (previewIndex.value + 1) % imageCount.value
+  if (props.loop) {
+    previewIndex.value = (previewIndex.value + 1) % imageCount.value
+  } else {
+    if (previewIndex.value < imageCount.value - 1) {
+      previewIndex.value++
+    }
+  }
   loaded.value = false
 }
 </script>
@@ -275,13 +275,13 @@ function onSwitchRight () {
             <div
               class="m-switch-left"
               :class="{'u-switch-disabled': previewIndex === 0 && !loop}"
-              @click="previewIndex === 0 ? (e: Event) => e.preventDefault():onSwitchLeft()">
+              @click="onSwitchLeft">
               <svg focusable="false" class="u-switch" data-icon="left" aria-hidden="true" viewBox="64 64 896 896"><path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"></path></svg>
             </div>
             <div
               class="m-switch-right"
               :class="{'u-switch-disabled': previewIndex === imageCount - 1 && !loop}"
-              @click="previewIndex === imageCount - 1 ? (e: Event) => e.preventDefault():onSwitchRight()">
+              @click="onSwitchRight">
               <svg focusable="false" class="u-switch" data-icon="right" aria-hidden="true" viewBox="64 64 896 896"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
             </div>
           </template>
@@ -292,18 +292,16 @@ function onSwitchRight () {
 </template>
 <style lang="less" scoped>
 .mask-enter-active, .mask-leave-active {
-  transition: all 0.15s ease-out;
+  transition: opacity 0.3s ease-in-out;
 }
 .mask-enter-from, .mask-leave-to {
   opacity: 0;
-  transform: scale(0.5);
 }
 .preview-enter-active, .preview-leave-active {
-  transition: all 0.15s ease-out;
+  transition: opacity 0.3s ease-in-out;
 }
 .preview-enter-from, .preview-leave-to {
   opacity: 0;
-  transform: scale(0.1);
 }
 .u-spin-circle {
   position: absolute;
