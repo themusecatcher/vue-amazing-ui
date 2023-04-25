@@ -58,8 +58,8 @@ withDefaults(defineProps<Props>(), {
       -moz-transform: rotate(45deg); /* Firefox */
       -webkit-transform: rotate(45deg); /* Safari 和 Chrome */
       -o-transform: rotate(45deg); /* Opera */
-      // animation: loadingDot 1.2s infinite linear;
-      // -webkit-animation: loadingDot 1.2s infinite linear;
+      animation: loadingDot 1.2s infinite linear;
+      -webkit-animation: loadingDot 1.2s infinite linear;
       @keyframes loadingDot {
         100% {transform: rotate(405deg);} // to {transform: rotate(405deg);}
       }
@@ -103,8 +103,8 @@ withDefaults(defineProps<Props>(), {
       border-style: solid;
       border-color: @themeColor;
       border-top-color: transparent; // 隐藏1/4圆
-      // animation: loadingCircle 1s infinite linear;
-      // -webkit-animation: loadingCircle 1s infinite linear;
+      animation: loadingCircle 1s infinite linear;
+      -webkit-animation: loadingCircle 1s infinite linear;
     }
     @keyframes loadingCircle {
       100% {

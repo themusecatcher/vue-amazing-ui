@@ -17,12 +17,12 @@ interface Props {
   fileList?: FileType[] // 已上传的文件列表
 }
 interface FileType {
-  name: string // 文件名
+  name?: string // 文件名
   url: any // 文件url
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
 const props = withDefaults(defineProps<Props>(), {
-  accept: '*',
+  accept: '*', // 默认支持所有类型
   multiple: false,
   maxCount: 1,
   tip: 'Upload',
