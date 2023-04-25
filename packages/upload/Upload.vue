@@ -3,7 +3,7 @@ import Spin from '../spin'
 import Message from '../message'
 import { ref, watchEffect, nextTick } from 'vue'
 interface Props {
-  accept?: string // 接受上传的文件类型，详见 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file
+  accept?: string // 接受上传的文件类型，与<input type="file">的accept属性一致，详见 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file
   multiple?: boolean // 是否支持多选文件
   maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
   tip?: string // 上传描述文字 string | slot
