@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watchEffect } from 'vue'
 const options = ref([
   {
     value: '1',
@@ -56,14 +56,9 @@ const options = ref([
     ]
   }
 ])
-const selectedValue = ref<any[]>([])
-watch(selectedValue, (to) => {
-  console.log('p to:', to)
-})
-onMounted(() => {
-  setTimeout(() => { // 模拟接口调用
-    selectedValue.value = ['2', '21', '212']
-  }, 1000)
+const selectedValue = ref<any[]>(['2', '21', '212'])
+watchEffect(() => {
+  console.log('p selectedValue:', selectedValue.value)
 })
 function onChange (value: Array<number|string>, label: Array<string>) {
   console.log('value:', value)
@@ -77,20 +72,25 @@ function onAntChange (value: Array<number|string>, selectedOptions: any) {
 <template>
   <div>
     <h2 class="mb10">Cascader 级联选择基本使用</h2>
+    <Cascader :options="options" v-model:selectedValue="selectedValue" @change="onChange" />
+    <h2 class="mt30 mb10">点击每级下拉时，选项值都会发生变化 (changeOnSelect: true)</h2>
     <Cascader
       :options="options"
       v-model:selectedValue="selectedValue"
-      label="label"
-      value="value"
-      children="children"
       changeOnSelect
-      :zIndex="9"
-      :gap="8"
+      @change="onChange" />
+    <h2 class="mt30 mb10">只禁用第一级下拉 (disabled: [true])</h2>
+    <Cascader
+      :options="options"
+      v-model:selectedValue="selectedValue"
+      :disabled="[true]"
+      @change="onChange" />
+    <h2 class="mt30 mb10">设置每级宽度都为120px，间距12px (width: 120)</h2>
+    <Cascader
+      :options="options"
+      v-model:selectedValue="selectedValue"
       :width="120"
-      :height="36"
-      :disabled="false"
-      placeholder="请选择"
-      :num="6"
+      :gap="12"
       @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 级联选择</h2>
     <a-cascader
@@ -100,7 +100,6 @@ function onAntChange (value: Array<number|string>, selectedOptions: any) {
       placeholder="Please select"
       :disabled="false"
       allowClear
-      changeOnSelect
       v-model:value="selectedValue"
       @change="onAntChange" />
   </div>
