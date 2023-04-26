@@ -36,7 +36,6 @@ const showOptions = ref(false) // options面板
 const activeBlur = ref(true) // 是否激活blur事件
 const showClose = ref(false) // 清除按钮显隐
 watchEffect(() =>{ // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
-  console.log('init')
   initSelector()
 })
 function initSelector () {
@@ -89,12 +88,14 @@ function openSelect () {
     hoverValue.value = target ? target[props.value] : null
   }
 }
+const emits = defineEmits(['update:selectedValue', 'change'])
 function onClear () {
   showClose.value = false
   selectedName.value = null
   hoverValue.value = null
+  emits('update:selectedValue')
+  emits('change')
 }
-const emits = defineEmits(['update:selectedValue', 'change'])
 function onChange (value: string|number, label: string, index: number) { // 选中下拉项后的回调
   if (props.selectedValue !== value) {
     selectedName.value = label

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect, onMounted } from 'vue'
-import { rafTimeout } from '../../packages'
-
+import { ref, watchEffect } from 'vue'
 const options = ref([
       {
         label: '北京市',
@@ -42,7 +40,13 @@ watchEffect(() => {
   console.log('p selectedValue:', selectedValue.value)
 })
 function onChange (value: string|number, label: string,  index: number) {
-  console.log('item:', value, label, index)
+  console.log('value:', value)
+  console.log('label:', label)
+  console.log('index:', index)
+}
+function onAntChange (value: string|number, option: any) {
+  console.log('value:', value)
+  console.log('option:', option)
 }
 </script>
 <template>
@@ -52,14 +56,18 @@ function onChange (value: string|number, label: string,  index: number) {
     <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
     <Select
       :options="options"
-      label="label"
-      value="value"
-      placeholder="请选择城市"
-      :disabled="false"
-      :width="160"
-      :height="36"
-      :num="6"
       allowClear
+      v-model:selectedValue="selectedValue"
+      @change="onChange" />
+    <h2 class="mt30 mb10">禁用 (disabled: true)</h2>
+    <Select
+      :options="options"
+      disabled
+      v-model:selectedValue="selectedValue" />
+    <h2 class="mt30 mb10">宽度设置为160px (width: 160)</h2>
+    <Select
+      :options="options"
+      :width="160"
       v-model:selectedValue="selectedValue"
       @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除 (allowClear)</h2>
@@ -71,7 +79,7 @@ function onChange (value: string|number, label: string,  index: number) {
       :disabled="false"
       allowClear
       v-model:value="selectedValue"
-      @change="onChange" />
+      @change="onAntChange" />
   </div>
 </template>
 <style lang="less" scoped>
