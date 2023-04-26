@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Select from '../select'
 import { ref, watchEffect } from 'vue'
 interface Option {
   value?: string | number // 选项值
@@ -12,7 +13,7 @@ interface Props {
   label?: string // 下拉字典项的文本字段名
   value?: string // 下拉字典项的值字段名
   children?: string // 下拉字典项的后代字段名
-  changeOnSelect?: boolean // 当此项为true时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择三级选项后选项值才会变化
+  changeOnSelect?: boolean // 当此项为true时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择第三级选项后选项值才会变化
   zIndex?: number // 下拉层级
   gap?: number // 级联下拉框相互间隙宽度，单位px，默认8px
   width?: number|number[] // 三级下拉各自宽度
@@ -42,74 +43,73 @@ const firstOptions = ref<Option[]>([])
 const secondOptions = ref<Option[]>([])
 const thirdOptions = ref<Option[]>([])
 watchEffect(() => {
-  firstOptions.value = props.options
-  values.value = props.selectedValue
-  if (props.selectedValue.length) {
-    initCascader(props.selectedValue)
-    initLabels(props.selectedValue)
-  }
+  firstOptions.value = [...props.options]
 })
-function findChildren (options: any[], index: number): Option[] {
+watchEffect(() => {
+  values.value = [...props.selectedValue]
+})
+watchEffect(() => {
+  initCascader(values.value)
+  initLabels(values.value)
+})
+function findChildren (options: Option[], index: number): Option[] {
   const len = options.length
   for (let i = 0; i < len; i++) {
-    if (options[i][props.value] === props.selectedValue[index]) {
+    if (options[i][props.value] === values.value[index]) {
       return options[i][props.children] || []
     }
   }
   return []
 }
-function initCascader (selectedValue: (string|number)[]) {
+function initCascader (values: (string|number)[]) { // 获取二级/三级下拉项
   secondOptions.value = findChildren(firstOptions.value, 0)
   thirdOptions.value = []
-  if (selectedValue.length > 1) {
+  if (values.length > 1) {
     thirdOptions.value = findChildren(secondOptions.value, 1)
   }
 }
-function findLabel (options: any[], index: number): any {
+function findLabel (options: Option[], index: number): any {
   const len = options.length
   for (let i = 0; i < len; i++) {
-    if (options[i][props.value] === props.selectedValue[index]) {
+    if (options[i][props.value] === values.value[index]) {
       return options[i][props.label]
     }
   }
-  return props.selectedValue[index]
+  return values.value[index]
 }
-function initLabels (selectedValue: (string|number)[]) {
+function initLabels (values: (string|number)[]) {
   labels.value[0] = findLabel(firstOptions.value, 0)
-  if (selectedValue.length > 1) {
+  if (values.length > 1) {
     labels.value[1] = findLabel(secondOptions.value, 1)
   }
-  if (selectedValue.length > 2) {
+  if (values.length > 2) {
     labels.value[2] = findLabel(thirdOptions.value, 2)
   }
 }
 const emits = defineEmits(['update:selectedValue', 'change'])
-function onFirstChange (value: string|number, label: string, index: number) { // 一级下拉回调
-  values.value = [value]
-  labels.value = [label]
+function onFirstChange (value: string|number, label: string) { // 一级下拉回调
   if (props.changeOnSelect) {
-    emits('update:selectedValue', values.value)
-    emits('change', values.value, labels.value)
+    emits('update:selectedValue', [value])
+    emits('change', [value], [label])
+  } else {
+    values.value = [value]
+    labels.value = [label]
   }
-  // 获取二级下拉选项
-  secondOptions.value = firstOptions.value[index][props.children] || []
-  thirdOptions.value = []
 }
-function onSecondChange (value: string|number, label: string, index: number) { // 二级下拉回调
-  values.value = [values.value[0], value]
-  labels.value = [labels.value[0], label]
+function onSecondChange (value: string|number, label: string) { // 二级下拉回调
   if (props.changeOnSelect) {
-    emits('update:selectedValue', values.value)
-    emits('change', values.value, labels.value)
+    emits('update:selectedValue', [values.value[0], value])
+    emits('change', [values.value[0], value], [labels.value[0], label])
+  } else {
+    values.value = [values.value[0], value]
+    labels.value = [labels.value[0], label]
   }
-  // 获取三级下拉选项
-  thirdOptions.value = secondOptions.value[index][props.children] || []
 }
 function onThirdChange (value: string|number, label: string) { // 三级下拉回调
-  values.value[2] = value
-  labels.value[2] = label
-  emits('update:selectedValue', values.value)
-  emits('change', values.value, labels.value)
+  // values.value[2] = value
+  // labels.value[2] = label
+  emits('update:selectedValue', [...values.value.slice(0, 2), value])
+  emits('change', [...values.value.slice(0, 2), value], [...labels.value.slice(0, 2), label])
 }
 </script>
 <template>
@@ -117,7 +117,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
     <Select
       :style="`margin-right: ${gap}px; z-index: ${zIndex};`"
       :options="firstOptions"
-      v-model:selectedValue="selectedValue[0]"
+      v-model:selectedValue="values[0]"
       :label="label"
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[0] : disabled"
@@ -129,7 +129,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
     <Select
       :style="`margin-right: ${gap}px; z-index: ${zIndex};`"
       :options="secondOptions"
-      v-model:selectedValue="selectedValue[1]"
+      v-model:selectedValue="values[1]"
       :label="label"
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[1] : disabled"
@@ -141,7 +141,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
     <Select
       :style="`z-index: ${zIndex};`"
       :options="thirdOptions"
-      v-model:selectedValue="selectedValue[2]"
+      v-model:selectedValue="values[2]"
       :label="label"
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[2] : disabled"
