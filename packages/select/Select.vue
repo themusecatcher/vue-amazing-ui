@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 interface Option {
-  label?: string
-  value?: string|number
-  disabled?: boolean
+  label?: string // 选项值
+  value?: string|number // 选项名
+  disabled?: boolean // 是否禁用选项
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
 interface Props {
@@ -36,6 +36,7 @@ const showOptions = ref(false) // options面板
 const activeBlur = ref(true) // 是否激活blur事件
 const showClose = ref(false) // 清除按钮显隐
 watchEffect(() =>{ // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+  console.log('init')
   initSelector()
 })
 function initSelector () {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watchEffect, onMounted } from 'vue'
 import { rafTimeout } from '../../packages'
 
 const options = ref([
@@ -38,14 +38,8 @@ const options = ref([
       }
     ])
 const selectedValue = ref(1)
-
-watch(selectedValue, (to) => {
-  console.log('selectedValue:', to)
-})
-onMounted(() => {
-  rafTimeout(() => { // 模拟接口调用
-    selectedValue.value = 3
-  }, 1000)
+watchEffect(() => {
+  console.log('p selectedValue:', selectedValue.value)
 })
 function onChange (value: string|number, label: string,  index: number) {
   console.log('item:', value, label, index)
@@ -54,17 +48,7 @@ function onChange (value: string|number, label: string,  index: number) {
 <template>
   <div>
     <h2 class="mb10">Select 选择器基本使用</h2>
-    <Select
-      :options="options"
-      label="label"
-      value="value"
-      placeholder="请选择城市"
-      :disabled="false"
-      :width="160"
-      :height="36"
-      :num="6"
-      v-model:selectedValue="selectedValue"
-      @change="onChange" />
+    <Select :options="options" v-model:selectedValue="selectedValue" />
     <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
     <Select
       :options="options"

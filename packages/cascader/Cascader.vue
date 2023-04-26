@@ -4,6 +4,7 @@ import { ref, watchEffect } from 'vue'
 interface Option {
   value?: string | number // 选项值
   label?: string // 选项名
+  disabled?: boolean // 是否禁用选项
   children?: Option[] // 选项children数组
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
@@ -38,7 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
   num: 6,
 })
 const values = ref<(string|number)[]>([]) // 级联value值数组
-const labels = ref<any[]>([]) // 级联label文本数组
+const labels = ref<string[]>([]) // 级联label文本数组
 const firstOptions = ref<Option[]>([])
 const secondOptions = ref<Option[]>([])
 const thirdOptions = ref<Option[]>([])
@@ -106,8 +107,6 @@ function onSecondChange (value: string|number, label: string) { // 二级下拉�
   }
 }
 function onThirdChange (value: string|number, label: string) { // 三级下拉回调
-  // values.value[2] = value
-  // labels.value[2] = label
   emits('update:selectedValue', [...values.value.slice(0, 2), value])
   emits('change', [...values.value.slice(0, 2), value], [...labels.value.slice(0, 2), label])
 }

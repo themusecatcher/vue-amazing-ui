@@ -56,23 +56,23 @@ const options = ref([
     ]
   }
 ])
-const selectedValue = ref<any[]>(['2', '21', '212'])
+const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
   console.log('p selectedValue:', selectedValue.value)
 })
-function onChange (value: Array<number|string>, label: Array<string>) {
-  console.log('value:', value)
-  console.log('label:', label)
+function onChange (values: (number|string)[], labels: string[]) {
+  console.log('values:', values)
+  console.log('labels:', labels)
 }
-function onAntChange (value: Array<number|string>, selectedOptions: any) {
-  console.log('value:', value)
+function onAntChange (values: (number|string)[], selectedOptions: any) {
+  console.log('values:', values)
   console.log('selectedOptions:', selectedOptions)
 }
 </script>
 <template>
   <div>
     <h2 class="mb10">Cascader 级联选择基本使用</h2>
-    <Cascader :options="options" v-model:selectedValue="selectedValue" @change="onChange" />
+    <Cascader :options="options" v-model:selectedValue="selectedValue" />
     <h2 class="mt30 mb10">点击每级下拉时，选项值都会发生变化 (changeOnSelect: true)</h2>
     <Cascader
       :options="options"
