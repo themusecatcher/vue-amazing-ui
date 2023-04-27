@@ -1,5 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+const installData = ref([
+  {
+    header: 'Install',
+    text: `pnpm i vue-amazing-ui
+# or
+yarn add vue-amazing-ui
+# or
+npm i vue-amazing-ui`
+  }
+])
 const collapseData = ref([
   {
     header: '以上八个 API 使用时直接引入即可:',
@@ -17,9 +27,15 @@ const activeKey = ref(0)
     <p class="u-tip mb10 mt10">该组件库采用 Vue3 + TS + Vite3 + Less 实现！</p>
     <p class="u-tip">开箱即用！</p>
     <h2 class="mt30">主要有以下三种使用方式：</h2>
+    <Collapse
+      lang="bash"
+      :fontSize="16"
+      :collapseData="installData"
+      v-model:activeKey="activeKey"
+      copyable />
     <ul class="m-list">
-      <li class="u-tip mb10 mt10"> (yarn add vue-amazing-ui)安装组件库后，全局引入所有组件</li>
-      <li class="u-tip mb10"> (yarn add vue-amazing-ui)安装组件库后，按需引入部分组件</li>
+      <li class="u-tip mb10 mt10">全局引入所有组件</li>
+      <li class="u-tip mb10">按需引入部分组件</li>
       <li class="u-tip mb10"> git clone <a href="https://github.com/themusecatcher/vue-amazing-ui" target="_blank">组件库项目</a> 到本地后，从packages下单独拷贝某个单文件组件 (SFC)到需要组件的项目内使用。</li>
     </ul>
     <h2 class="mt30">除此以外，Vue Amazing UI 还提供了八个常用工具函数 ：</h2>
