@@ -12,9 +12,11 @@ src/
 .npmignore
 .npmrc
 .prettierrc.json
+components.d.ts
 env.d.ts
 index.html
+pnpm-lock.yaml
+stats.html
 tsconfig.config.json
 tsconfig.json
 vite.config.ts
-yarn.lock
