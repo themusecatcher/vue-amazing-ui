@@ -3,6 +3,8 @@
 ## Install & Use
 
 ```sh
+pnpm i vue-amazing-ui
+#or
 npm install vue-amazing-ui
 #or
 yarn add vue-amazing-ui
@@ -45,15 +47,13 @@ git clone https://github.com/themusecatcher/vue-amazing-ui.git
 ```sh
 cd vue-amazing-ui
 
-yarn
-#or
-yarn install
+pnpm i
 ```
 
 - Run project
 
 ```sh
-yarn dev
+pnpm dev
 ```
 
 ## Components
