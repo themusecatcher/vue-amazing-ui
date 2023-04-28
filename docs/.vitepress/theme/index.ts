@@ -18,7 +18,7 @@ export default {
   //     // 'aside-ads-before': () => h(AsideSponsors),
   //   })
   // },
-  enhanceApp({ app }) {
+  enhanceApp ({ app }) {
     // app.component('SvgImage', SvgImage)
     app.use(VueAmazingUI)
   },
