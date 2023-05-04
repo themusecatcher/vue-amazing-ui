@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, watchEffect } from 'vue'
 // 使用 requestAnimationFrame 实现的等效 setTimeout
 import { rafTimeout } from '../index'
 interface Collapse {
-  key?: string|number // 对应activeKey，如果没有传入key属性，则默认使用数字索引(0,1,2...)绑定
+  key?: string|number // 对应activeKey，如果没有传入key属性，则默认使用数据索引(0,1,2...)绑定
   header?: string // 面板标题 string | slot
   text?: string // 面板内容 string | slot
 }
@@ -27,13 +27,15 @@ const props = withDefaults(defineProps<Props>(), {
   textFontSize: 14,
   showArrow: true
 })
-onMounted(() => {
-  getCollapseHeight() // 获取各个面板内容高度
-})
+watchEffect(() => {
+  const len = props.collapseData.length
+  if (len) {
+    getCollapseHeight(len) // 获取各个面板内容高度
+  }
+}, { flush: 'post' })
 const text = ref()
 const collapseHeight = ref<any[]>([])
-function getCollapseHeight () {
-  const len = props.collapseData.length
+function getCollapseHeight (len: number) {
   for (let n = 0; n < len; n++) {
     collapseHeight.value.push(text.value[n].offsetHeight)
   }
@@ -94,11 +96,11 @@ function onCopy (index: number) {
       </div>
       <div class="u-collapse-content" :class="{'u-collapse-copyable': copyable}" :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index]:0}px;`">
         <div class="u-lang">
-          <slot name="lang" :lang="lang" :index="index">{{ lang }}</slot>
+          <slot name="lang" :lang="lang" :key="data.key || index">{{ lang }}</slot>
         </div>
         <Button size="small" class="u-copy" type="primary" @click="onCopy(index)">{{ copyTxt }}</Button>
         <div ref="text" class="u-text" :style="`font-size: ${fontSize || textFontSize}px;`">
-          <slot name="text" :text="data.text" :index="index">{{ data.text }}</slot>
+          <slot name="text" :text="data.text" :key="data.key || index">{{ data.text }}</slot>
         </div>
       </div>
     </div>

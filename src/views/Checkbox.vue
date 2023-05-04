@@ -39,7 +39,7 @@ const options = ref([
 
 const value = ref([2]) // 多选框v-model
 watchEffect(() => {
-  console.log('value:', value)
+  console.log('value:', value.value)
 })
 function onChange (value: any[]) {
   console.log('change:', value)
