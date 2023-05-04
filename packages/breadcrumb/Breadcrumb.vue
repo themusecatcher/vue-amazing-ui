@@ -30,7 +30,7 @@ function goRouter (route: any): void {
     <div class="m-bread" v-for="(route, index) in routes" :key="index">
       <a
         :class="['u-route',{ active: index===len-1 }]"
-        @click="index === len - 1 ? (e:Event) => e.preventDefault() : goRouter(route)"
+        @click="index === len - 1 ? () => false : goRouter(route)"
         :title="route.name">
         {{ route.name || '--' }}
       </a>
@@ -78,6 +78,7 @@ function goRouter (route: any): void {
       margin: 0 5px;
       width: 12px;
       height: 12px;
+      fill: inherit;
     }
   }
   .assist {

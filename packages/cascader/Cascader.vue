@@ -16,7 +16,7 @@ interface Props {
   children?: string // 下拉字典项的后代字段名
   changeOnSelect?: boolean // 当此项为true时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择第三级选项后选项值才会变化
   zIndex?: number // 下拉层级
-  gap?: number // 级联下拉框相互间隙宽度，单位px，默认8px
+  gap?: number // 级联下拉框相互间隙宽度，单位px
   width?: number|number[] // 三级下拉各自宽度
   height?: number // 下拉框高度
   disabled?: boolean|boolean[] // 三级各自是否禁用
@@ -32,8 +32,8 @@ const props = withDefaults(defineProps<Props>(), {
   changeOnSelect: false,
   zIndex: 1,
   gap: 8,
-  width: 160,
-  height: 36,
+  width: 120,
+  height: 32,
   disabled: false,
   placeholder: '请选择',
   num: 6,
@@ -133,7 +133,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[1] : disabled"
       :width="Array.isArray(width) ? width[1] : width"
-      :height="36"
+      :height="height"
       :num="num"
       :placeholder="Array.isArray(placeholder) ? placeholder[1] : placeholder"
       @change="onSecondChange" />

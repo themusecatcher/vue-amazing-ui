@@ -2,11 +2,11 @@
 
 ## Install & Use
 
-```sh
+```bash
 pnpm i vue-amazing-ui
-#or
+# or
 npm install vue-amazing-ui
-#or
+# or
 yarn add vue-amazing-ui
 ```
 
@@ -63,7 +63,7 @@ pnpm dev
 Breadcrumb | 面包屑 | Button | 按钮
 Carousel | 走马灯 | Cascader | 级联选择
 Checkbox | 多选框 | Collapse | 折叠面板
-Countdown | 倒计时 | DatePicker | 日期选择器
+Countdown | 倒计时 | DatePicker | 日期选择
 Dialog | 对话框 | Divider | 分割线
 Empty | 空状态 | Image | 图片
 InputNumber | 数字输入框 | Message | 全局提示

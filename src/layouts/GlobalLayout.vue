@@ -55,7 +55,7 @@ function onClick (e: any):void {
           <router-link to="/countdown">倒计时（Countdown）</router-link>
         </a-menu-item>
         <a-menu-item key="DatePicker">
-          <router-link to="/datepicker">日期选择器（DatePicker）</router-link>
+          <router-link to="/datepicker">日期选择（DatePicker）</router-link>
         </a-menu-item>
         <a-menu-item key="Dialog">
           <router-link to="/dialog">对话框（Dialog）</router-link>
@@ -152,7 +152,7 @@ function onClick (e: any):void {
       </a-menu>
     </a-col>
     <a-col :xs="19" :xl="20">
-      <div :class="['router-view', {'content-box': !current.includes('DatePicker')}]">
+      <div class="router-view">
         <RouterView v-slot="{ Component }">
           <Transition name="fade" mode="out-in">
             <component :is="Component" />
@@ -177,11 +177,6 @@ function onClick (e: any):void {
   overflow: auto;
   height: calc(100vh - 50px);
 }
-.content-box {
-    :deep(*), :deep(:before), :deep(:after) {
-      box-sizing: content-box;
-    }
-  }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .3s;
 }

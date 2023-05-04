@@ -72,9 +72,8 @@ function onAntChange (value: string|number, option: any) {
       @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除 (allowClear)</h2>
     <a-select
-      class="border-box"
       :options="options"
-      style="width: 180px"
+      style="width: 120px"
       placeholder="请选择城市"
       :disabled="false"
       allowClear
@@ -82,10 +81,3 @@ function onAntChange (value: string|number, option: any) {
       @change="onAntChange" />
   </div>
 </template>
-<style lang="less" scoped>
-.border-box {
-  :deep(*), :deep(:before), :deep(:after) {
-    box-sizing: border-box;
-  }
-}
-</style>

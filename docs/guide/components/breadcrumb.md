@@ -8,8 +8,6 @@
 - 当需要告知用户『你在哪里』时
 - 当需要向上导航的功能时
 
-## 基本使用
-
 <script setup lang="ts">
 const routes = [
     {
@@ -27,6 +25,8 @@ const routes = [
     }
   ]
 </script>
+
+## 基本使用
 
 <Breadcrumb :routes="routes" />
 
