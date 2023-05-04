@@ -124,6 +124,7 @@ onMounted(() => {
   .u-time {
     color: #000000d9;
     font-size: 24px;
+    font-family: 'Helvetica Neue'; // 保证数字等宽显示
   }
 }
 </style>
