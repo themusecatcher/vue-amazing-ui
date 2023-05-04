@@ -1,5 +1,5 @@
-import { defineComponent, computed, openBlock, createElementBlock, normalizeStyle, Fragment, renderList, createElementVNode, normalizeClass, unref, toDisplayString, createCommentVNode, pushScopeId, popScopeId, resolveComponent, createBlock, withCtx, renderSlot, createTextVNode, withModifiers, withDirectives, vShow, ref, onMounted, watchEffect, createVNode, Transition, watch, mergeProps, createStaticVNode, onUnmounted, withKeys, vModelText, TransitionGroup, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, nextTick, onBeforeUnmount, onBeforeUpdate } from "vue";
-import { useRouter } from "vue-router";
+import { defineComponent, computed, openBlock, createElementBlock, normalizeStyle, Fragment, renderList, createElementVNode, normalizeClass, unref, toDisplayString, createCommentVNode, pushScopeId, popScopeId, createBlock, withCtx, renderSlot, createTextVNode, withModifiers, withDirectives, vShow, ref, onMounted, watchEffect, createVNode, Transition, watch, resolveComponent, mergeProps, createStaticVNode, onUnmounted, withKeys, vModelText, TransitionGroup, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, nextTick, onBeforeUnmount, onBeforeUpdate } from "vue";
+import { useRouter, RouterLink } from "vue-router";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import QRCode$1 from "qrcode";
 import Swiper$2, { Navigation, Pagination as Pagination$1, Autoplay, EffectFade } from "swiper";
@@ -39,8 +39,10 @@ function dateFormat(timestamp, format = "YYYY-MM-DD HH:mm:ss") {
   }
   return showTime;
 }
-const requestAnimationFrame$1 = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-const cancelAnimationFrame$1 = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+const requestAnimationFrame$1 = typeof window !== "undefined" ? window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame : () => {
+};
+const cancelAnimationFrame$1 = typeof window !== "undefined" ? window.cancelAnimationFrame || window.mozCancelAnimationFrame : () => {
+};
 function rafTimeout(func, delay = 0, interval = false) {
   const requestAnimationFrame2 = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
   var start = null;
@@ -101,7 +103,7 @@ function add(num1, num2) {
   const result = +num1Str.replace(".", "") + +num2Str.replace(".", "");
   return result / Math.pow(10, maxLen);
 }
-const _withScopeId$i = (n) => (pushScopeId("data-v-6999222a"), n = n(), popScopeId(), n);
+const _withScopeId$i = (n) => (pushScopeId("data-v-9a052820"), n = n(), popScopeId(), n);
 const _hoisted_1$v = ["onClick", "title"];
 const _hoisted_2$r = {
   key: 0,
@@ -115,9 +117,9 @@ const _hoisted_3$o = {
   "aria-hidden": "true",
   focusable: "false"
 };
-const _hoisted_4$m = /* @__PURE__ */ _withScopeId$i(() => /* @__PURE__ */ createElementVNode("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1));
-const _hoisted_5$h = [
-  _hoisted_4$m
+const _hoisted_4$n = /* @__PURE__ */ _withScopeId$i(() => /* @__PURE__ */ createElementVNode("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1));
+const _hoisted_5$i = [
+  _hoisted_4$n
 ];
 const _hoisted_6$h = /* @__PURE__ */ _withScopeId$i(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
 const _sfc_main$y = /* @__PURE__ */ defineComponent({
@@ -148,11 +150,11 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
           }, [
             createElementVNode("a", {
               class: normalizeClass(["u-route", { active: index === unref(len) - 1 }]),
-              onClick: ($event) => index === unref(len) - 1 ? (e) => e.preventDefault() : goRouter(route),
+              onClick: ($event) => index === unref(len) - 1 ? () => false : goRouter(route),
               title: route.name
             }, toDisplayString(route.name || "--"), 11, _hoisted_1$v),
             index !== unref(len) - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-              __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2$r, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$o, _hoisted_5$h))
+              __props.separator ? (openBlock(), createElementBlock("span", _hoisted_2$r, toDisplayString(__props.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$o, _hoisted_5$i))
             ], 64)) : createCommentVNode("", true)
           ]);
         }), 128)),
@@ -161,7 +163,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Breadcrumb_vue_vue_type_style_index_0_scoped_6999222a_lang = "";
+const Breadcrumb_vue_vue_type_style_index_0_scoped_9a052820_lang = "";
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -169,14 +171,14 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-6999222a"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-9a052820"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };
 const _hoisted_1$u = { class: "u-text" };
 const _hoisted_2$q = ["disabled"];
 const _hoisted_3$n = { class: "u-spin-circle" };
-const _hoisted_4$l = { class: "u-text" };
+const _hoisted_4$m = { class: "u-text" };
 const _sfc_main$x = /* @__PURE__ */ defineComponent({
   __name: "Button",
   props: {
@@ -205,17 +207,16 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
       }
     });
     return (_ctx, _cache) => {
-      const _component_router_link = resolveComponent("router-link");
       return openBlock(), createElementBlock("span", {
         class: normalizeClass(["m-btn-wrap", { "center": __props.center }])
       }, [
-        unref(isRoute) ? (openBlock(), createBlock(_component_router_link, {
+        unref(isRoute) ? (openBlock(), createBlock(unref(RouterLink), {
           key: 0,
           to: __props.route,
           target: __props.target,
           disabled: __props.disabled,
           class: normalizeClass(["m-btn fade", [__props.type, __props.size, { [__props.effect]: __props.type === "default", widthType: __props.width, disabled: __props.disabled }]]),
-          style: normalizeStyle({ borderRadius: __props.borderRadius + "px", width: __props.width - 2 + "px", height: __props.height - 2 + "px", lineHeight: __props.height - 2 + "px" })
+          style: normalizeStyle(`border-radius: ${__props.borderRadius}px; width: ${__props.width ? __props.width + "px" : "auto"}; height: ${__props.height ? __props.height + "px" : "auto"}; line-height: ${__props.height - 2}px;`)
         }, {
           default: withCtx(() => [
             createElementVNode("span", _hoisted_1$u, [
@@ -230,7 +231,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
           onClick: _cache[0] || (_cache[0] = withModifiers(($event) => _ctx.$emit("click"), ["stop"])),
           disabled: __props.disabled,
           class: normalizeClass(["m-btn", [__props.type, __props.size, { [__props.effect]: __props.type === "default", widthType: __props.width, disabled: __props.disabled, "m-btn-loading": __props.loading }]]),
-          style: normalizeStyle({ borderRadius: __props.borderRadius + "px", width: __props.width - 2 + "px", height: __props.height - 2 + "px", lineHeight: __props.height - 2 + "px" })
+          style: normalizeStyle(`border-radius: ${__props.borderRadius}px; width: ${__props.width ? __props.width + "px" : "auto"}; height: ${__props.height ? __props.height + "px" : "auto"}; line-height: ${__props.height - 2}px;`)
         }, [
           createElementVNode("span", {
             class: normalizeClass(["m-loading-icon", { "show-spin": __props.loading }])
@@ -239,7 +240,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
               [vShow, __props.loading]
             ])
           ], 2),
-          createElementVNode("span", _hoisted_4$l, [
+          createElementVNode("span", _hoisted_4$m, [
             renderSlot(_ctx.$slots, "default", {}, () => [
               createTextVNode(toDisplayString(__props.name), 1)
             ], true)
@@ -249,8 +250,8 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Button_vue_vue_type_style_index_0_scoped_8acdd5c9_lang = "";
-const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-8acdd5c9"]]);
+const Button_vue_vue_type_style_index_0_scoped_0d16cbea_lang = "";
+const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-0d16cbea"]]);
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
@@ -261,8 +262,8 @@ const _hoisted_3$m = {
   key: 0,
   class: "m-image"
 };
-const _hoisted_4$k = ["href", "target"];
-const _hoisted_5$g = ["src", "alt"];
+const _hoisted_4$l = ["href", "target"];
+const _hoisted_5$h = ["src", "alt"];
 const _hoisted_6$g = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("path", { d: "M603.3 327.5l-246 178a7.95 7.95 0 0 0 0 12.9l246 178c5.3 3.8 12.7 0 12.7-6.5V643c0-10.2-4.9-19.9-13.2-25.9L457.4 512l145.4-105.2c8.3-6 13.2-15.6 13.2-25.9V334c0-6.5-7.4-10.3-12.7-6.5z" }, null, -1));
 const _hoisted_7$e = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
 const _hoisted_8$d = [
@@ -571,8 +572,8 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
                 alt: __props.imageData[0].title,
                 class: "u-img",
                 style: normalizeStyle(`width: ${imageWidth.value}px; height: ${imageHeight.value}px;`)
-              }, null, 12, _hoisted_5$g))
-            ], 8, _hoisted_4$k)
+              }, null, 12, _hoisted_5$h))
+            ], 8, _hoisted_4$l)
           ])) : createCommentVNode("", true)
         ], 6),
         __props.navigation ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
@@ -611,16 +612,16 @@ const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
-const _withScopeId$g = (n) => (pushScopeId("data-v-7457d3ef"), n = n(), popScopeId(), n);
+const _withScopeId$g = (n) => (pushScopeId("data-v-b1c9075e"), n = n(), popScopeId(), n);
 const _hoisted_1$s = ["title"];
 const _hoisted_2$o = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
 const _hoisted_3$l = [
   _hoisted_2$o
 ];
-const _hoisted_4$j = ["onClick"];
-const _hoisted_5$f = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z" }, null, -1));
+const _hoisted_4$k = ["onClick"];
+const _hoisted_5$g = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z" }, null, -1));
 const _hoisted_6$f = [
-  _hoisted_5$f
+  _hoisted_5$g
 ];
 const _hoisted_7$d = ["title", "onMouseenter", "onClick"];
 const _sfc_main$v = /* @__PURE__ */ defineComponent({
@@ -632,8 +633,8 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     placeholder: { default: "请选择" },
     disabled: { type: Boolean, default: false },
     allowClear: { type: Boolean, default: false },
-    width: { default: 200 },
-    height: { default: 36 },
+    width: { default: 120 },
+    height: { default: 32 },
     num: { default: 6 },
     selectedValue: { default: null }
   },
@@ -718,7 +719,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
       }, [
         createElementVNode("div", {
           class: normalizeClass(["m-select-wrap", { "hover": !__props.disabled, "focus": showOptions.value, "disabled": __props.disabled }]),
-          style: normalizeStyle(`width: ${__props.width - 2}px; height: ${__props.height - 2}px;`),
+          style: normalizeStyle(`width: ${__props.width}px; height: ${__props.height}px;`),
           tabindex: "0",
           onMouseenter: onInputEnter,
           onMouseleave: onInputLeave,
@@ -727,7 +728,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
         }, [
           createElementVNode("div", {
             class: normalizeClass(["u-select-input", { "placeholder": !selectedName.value }]),
-            style: normalizeStyle(`line-height: ${__props.height - 2}px;width: ${__props.width - 37}px; height: ${__props.height - 2}px;`),
+            style: normalizeStyle(`line-height: ${__props.height - 2}px;`),
             title: selectedName.value
           }, toDisplayString(selectedName.value || __props.placeholder), 15, _hoisted_1$s),
           (openBlock(), createElementBlock("svg", {
@@ -744,7 +745,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
             "data-icon": "close-circle",
             "aria-hidden": "true",
             viewBox: "64 64 896 896"
-          }, _hoisted_6$f, 10, _hoisted_4$j))
+          }, _hoisted_6$f, 10, _hoisted_4$k))
         ], 38),
         createVNode(Transition, { name: "fade" }, {
           default: withCtx(() => [
@@ -752,7 +753,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
               class: "m-options-panel",
               onMouseenter: onEnter,
               onMouseleave: onLeave,
-              style: normalizeStyle(`top: ${__props.height + 6}px; line-height: ${__props.height - 12}px; max-height: ${__props.num * (__props.height - 2)}px; width: ${__props.width}px;`)
+              style: normalizeStyle(`top: ${__props.height + 4}px; line-height: ${__props.height - 10}px; max-height: ${__props.num * __props.height + 4}px; width: ${__props.width}px;`)
             }, [
               (openBlock(true), createElementBlock(Fragment, null, renderList(__props.options, (option, index) => {
                 return openBlock(), createElementBlock("p", {
@@ -773,8 +774,8 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Select_vue_vue_type_style_index_0_scoped_7457d3ef_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-7457d3ef"]]);
+const Select_vue_vue_type_style_index_0_scoped_b1c9075e_lang = "";
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-b1c9075e"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
 };
@@ -789,8 +790,8 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
     changeOnSelect: { type: Boolean, default: false },
     zIndex: { default: 1 },
     gap: { default: 8 },
-    width: { default: 160 },
-    height: { default: 36 },
+    width: { default: 120 },
+    height: { default: 32 },
     disabled: { type: [Boolean, Array], default: false },
     placeholder: { default: "请选择" },
     num: { default: 6 }
@@ -897,11 +898,11 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
           value: __props.value,
           disabled: Array.isArray(__props.disabled) ? __props.disabled[1] : __props.disabled,
           width: Array.isArray(__props.width) ? __props.width[1] : __props.width,
-          height: 36,
+          height: __props.height,
           num: __props.num,
           placeholder: Array.isArray(__props.placeholder) ? __props.placeholder[1] : __props.placeholder,
           onChange: onSecondChange
-        }, null, 8, ["style", "options", "selectedValue", "label", "value", "disabled", "width", "num", "placeholder"]),
+        }, null, 8, ["style", "options", "selectedValue", "label", "value", "disabled", "width", "height", "num", "placeholder"]),
         createVNode(unref(Select), {
           style: normalizeStyle(`z-index: ${__props.zIndex};`),
           options: thirdOptions.value,
@@ -920,14 +921,19 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Cascader_vue_vue_type_style_index_0_scoped_dffeccb8_lang = "";
-const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-dffeccb8"]]);
+const Cascader_vue_vue_type_style_index_0_scoped_d9ac3b16_lang = "";
+const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-d9ac3b16"]]);
 Cascader.install = (app) => {
   app.component(Cascader.__name, Cascader);
 };
-const _hoisted_1$r = ["onClick"];
-const _hoisted_2$n = { class: "u-label" };
+const _hoisted_1$r = { class: "m-checkbox" };
+const _hoisted_2$n = ["onClick"];
 const _hoisted_3$k = { class: "u-label" };
+const _hoisted_4$j = {
+  key: 1,
+  class: "m-checkbox-wrap"
+};
+const _hoisted_5$f = { class: "u-label" };
 const _sfc_main$t = /* @__PURE__ */ defineComponent({
   __name: "Checkbox",
   props: {
@@ -978,47 +984,50 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
       emits("update:checked", !props.checked);
     }
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", {
-        class: normalizeClass(["m-checkbox", { "vertical": __props.vertical }])
-      }, [
+      return openBlock(), createElementBlock("div", _hoisted_1$r, [
         unref(sum) ? (openBlock(true), createElementBlock(Fragment, { key: 0 }, renderList(__props.options, (option, index) => {
           return openBlock(), createElementBlock("div", {
-            class: normalizeClass(["m-checkbox-wrap", { "disabled": __props.disabled || option.disabled }]),
+            class: normalizeClass(["m-checkbox-wrap", { "vertical": __props.vertical }]),
             style: normalizeStyle(unref(sum) !== index + 1 ? unref(styleObject) : ""),
-            onClick: ($event) => __props.disabled || option.disabled ? (e) => e.preventDefault() : onClick(option.value),
             key: index
           }, [
+            createElementVNode("div", {
+              class: normalizeClass(["m-box", { "disabled": __props.disabled || option.disabled }]),
+              onClick: ($event) => __props.disabled || option.disabled ? () => false : onClick(option.value)
+            }, [
+              createElementVNode("span", {
+                class: normalizeClass(["u-checkbox", { "u-checkbox-checked": checkedValue.value.includes(option.value) }])
+              }, null, 2),
+              createElementVNode("span", _hoisted_3$k, [
+                renderSlot(_ctx.$slots, "default", {
+                  label: option.label
+                }, () => [
+                  createTextVNode(toDisplayString(option.label), 1)
+                ], true)
+              ])
+            ], 10, _hoisted_2$n)
+          ], 6);
+        }), 128)) : (openBlock(), createElementBlock("div", _hoisted_4$j, [
+          createElementVNode("div", {
+            class: normalizeClass(["m-box", { "disabled": __props.disabled }]),
+            onClick: onCheckAll
+          }, [
             createElementVNode("span", {
-              class: normalizeClass(["u-checkbox", { "u-checkbox-checked": checkedValue.value.includes(option.value) }])
+              class: normalizeClass(["u-checkbox", { "u-checkbox-checked": __props.checked && !__props.indeterminate, "indeterminate": __props.indeterminate }])
             }, null, 2),
-            createElementVNode("span", _hoisted_2$n, [
-              renderSlot(_ctx.$slots, "default", {
-                label: option.label
-              }, () => [
-                createTextVNode(toDisplayString(option.label), 1)
+            createElementVNode("span", _hoisted_5$f, [
+              renderSlot(_ctx.$slots, "default", {}, () => [
+                createTextVNode("Check all")
               ], true)
             ])
-          ], 14, _hoisted_1$r);
-        }), 128)) : (openBlock(), createElementBlock("div", {
-          key: 1,
-          class: normalizeClass(["m-checkbox-wrap", { "disabled": __props.disabled }]),
-          onClick: onCheckAll
-        }, [
-          createElementVNode("span", {
-            class: normalizeClass(["u-checkbox", { "u-checkbox-checked": __props.checked && !__props.indeterminate, "indeterminate": __props.indeterminate }])
-          }, null, 2),
-          createElementVNode("span", _hoisted_3$k, [
-            renderSlot(_ctx.$slots, "default", {}, () => [
-              createTextVNode("Check all")
-            ], true)
-          ])
-        ], 2))
-      ], 2);
+          ], 2)
+        ]))
+      ]);
     };
   }
 });
-const Checkbox_vue_vue_type_style_index_0_scoped_d8213629_lang = "";
-const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-d8213629"]]);
+const Checkbox_vue_vue_type_style_index_0_scoped_cef7ee39_lang = "";
+const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-cef7ee39"]]);
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
@@ -5462,14 +5471,16 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
           }, toDisplayString(checked.value ? __props.checkedInfo : __props.uncheckedInfo), 3),
           createElementVNode("div", {
             class: normalizeClass(["u-node", { "node-checked": checked.value }])
-          }, null, 2)
+          }, [
+            renderSlot(_ctx.$slots, "node", { checked: checked.value }, void 0, true)
+          ], 2)
         ], 2)
       ]);
     };
   }
 });
-const Switch_vue_vue_type_style_index_0_scoped_5395951c_lang = "";
-const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-5395951c"]]);
+const Switch_vue_vue_type_style_index_0_scoped_d99a4543_lang = "";
+const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-d99a4543"]]);
 Switch.install = (app) => {
   app.component(Switch.__name, Switch);
 };

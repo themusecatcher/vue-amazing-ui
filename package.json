@@ -3,7 +3,9 @@
   "version": "0.0.23",
   "private": false,
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/vue-amazing-ui.umd.cjs",
   "module": "./dist/vue-amazing-ui.js",
   "exports": {
@@ -17,6 +19,9 @@
   "scripts": {
     "dev": "vite --port 9000 --open --force",
     "build": "run-p type-check build-only",
+    "docs:dev": "vitepress dev docs --open",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
@@ -26,12 +31,13 @@
     "@vuepic/vue-datepicker": "^4.5.1",
     "@vueuse/core": "^10.1.0",
     "@vueuse/integrations": "^10.1.0",
-    "ant-design-vue": "^3.2.19",
+    "ant-design-vue": "^3.2.20",
     "core-js": "^3.30.1",
     "date-fns": "^2.29.3",
     "qrcode": "^1.5.3",
     "swiper": "^9.2.4",
     "vue": "^3.2.47",
+    "vue-amazing-ui": "^0.0.23",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
@@ -50,6 +56,7 @@
     "typescript": "~4.7.4",
     "unplugin-vue-components": "^0.24.1",
     "vite": "^4.3.2",
+    "vitepress": "1.0.0-alpha.74",
     "vue-tsc": "^1.4.4"
   },
   "description": "This template should help get you started developing with Vue 3 in Vite.",

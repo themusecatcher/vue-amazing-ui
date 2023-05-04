@@ -5,8 +5,6 @@
 - 需要从一组相关联的数据集合进行选择，例如省市区，公司层级，事物分类等
 - 从一个较大的数据集合中进行选择时，用多级分类进行分隔，方便选择
 
-## 基本使用
-
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const options = ref([
@@ -74,6 +72,8 @@ function onChange (values: (number|string)[], labels: string[]) {
   console.log('labels:', labels)
 }
 </script>
+
+## 基本使用
 
 <Cascader :options="options" v-model:selectedValue="selectedValue" />
 

@@ -4,8 +4,6 @@
 
 - 当需要添加一个操作按钮时
 
-## 基本使用
-
 <script setup lang="ts">
 import { ref } from 'vue'
 const loading = ref(true)
@@ -13,6 +11,8 @@ function onClick () {
   console.log('click')
 }
 </script>
+
+## 基本使用
 
 <Button class="mr30" @click="onClick">Default Button</Button>
 <Button class="mr30" effect="reverse" @click="onClick">Reverse Button</Button>

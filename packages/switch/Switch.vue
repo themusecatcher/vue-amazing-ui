@@ -29,7 +29,9 @@ function onSwitch () {
   <div class="m-switch-wrap">
     <div @click="disabled ? (e:Event) => e.preventDefault() : onSwitch()" :class="['m-switch', { 'switch-checked': checked, 'disabled': disabled }]">
       <div :class="['u-switch-inner', checked ? 'inner-checked' : 'inner-unchecked' ]">{{ checked ? checkedInfo : uncheckedInfo }}</div>
-      <div :class="['u-node', { 'node-checked': checked }]"></div>
+      <div :class="['u-node', { 'node-checked': checked }]">
+        <slot name="node" :checked="checked"></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -71,6 +73,9 @@ function onSwitch () {
       border-radius: 100%;
       cursor: pointer;
       transition: all .36s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .node-checked { // 结果等价于right: 2px; 为了滑动效果都以左边为基准进行偏移
       left: 100%;

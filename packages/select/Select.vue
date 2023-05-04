@@ -25,8 +25,8 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: 'è¯·é€‰æ‹©',
   disabled: false,
   allowClear: false,
-  width: 200,
-  height: 36,
+  width: 120,
+  height: 32,
   num: 6,
   selectedValue: null
 })
@@ -110,7 +110,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
   <div class="m-select" :style="`height: ${height}px;`">
     <div
       :class="['m-select-wrap', {'hover': !disabled, 'focus': showOptions, 'disabled': disabled}]"
-      :style="`width: ${width - 2}px; height: ${height - 2}px;`"
+      :style="`width: ${width}px; height: ${height}px;`"
       tabindex="0"
       @mouseenter="onInputEnter"
       @mouseleave="onInputLeave"
@@ -118,7 +118,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
       @click="disabled ? (e: Event) => e.preventDefault() : openSelect()">
       <div
         :class="['u-select-input', {'placeholder': !selectedName}]"
-        :style="`line-height: ${height - 2}px;width: ${width - 37}px; height: ${height - 2}px;`"
+        :style="`line-height: ${height - 2}px;`"
         :title="selectedName"
       >{{ selectedName || placeholder }}</div>
       <svg :class="['triangle', {'rotate': showOptions, 'show': !showClose}]" viewBox="64 64 896 896" data-icon="down" aria-hidden="true" focusable="false"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
@@ -130,7 +130,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
         class="m-options-panel"
         @mouseenter="onEnter"
         @mouseleave="onLeave"
-        :style="`top: ${height + 6}px; line-height: ${height - 12}px; max-height: ${ num * (height - 2) }px; width: ${width}px;`">
+        :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${ num * height + 4 }px; width: ${width}px;`">
         <p
           v-for="(option, index) in options" :key="index"
           :class="['u-option', {'option-selected': option[label]===selectedName, 'option-hover': !option.disabled&&option[value]===hoverValue, 'option-disabled': option.disabled }]"
@@ -145,6 +145,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
 </template>
 <style lang="less" scoped>
 .m-select {
+  box-sizing: border-box;
   position: relative;
   display: inline-block;
   font-size: 14px;
@@ -177,7 +178,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
     display: block;
     text-align: left;
     margin-left: 11px;
-    margin-right: 24px;
+    margin-right: 27px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -190,7 +191,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
     top: 0;
     bottom: 0;
     margin: auto 0;
-    right: 12px;
+    right: 11px;
     width: 12px;
     height: 12px;
     fill: rgba(0,0,0,.25);

@@ -40,9 +40,9 @@ export function dateFormat (timestamp: number|string|Date, format = 'YYYY-MM-DD 
   return showTime
 }
 // @ts-ignore 兼容性requestAnimationFrame
-export const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
+export const requestAnimationFrame = typeof window !== 'undefined' ? window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame : () => {}
 // @ts-ignore 兼容性cancelAnimationFrame
-export const cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame
+export const cancelAnimationFrame = typeof window !== 'undefined' ? window.cancelAnimationFrame || window.mozCancelAnimationFrame : () => {}
 /*
   使用 requestAnimationFrame 模拟 setTimeout 和 setInterval
   一共接收三个参数：

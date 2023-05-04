@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, watchEffect, computed } from 'vue'
 
 const options = ref([
       {
@@ -38,8 +38,8 @@ const options = ref([
     ])
 
 const value = ref([2]) // 多选框v-model
-watch(value, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('value:', value)
 })
 function onChange (value: any[]) {
   console.log('change:', value)
@@ -50,11 +50,11 @@ const indeterminate = computed(() => {
   if (value.value.length > 0 && value.value.length < options.value.length) {
     return true
   } else {
-    false
+    return false
   }
 }) // 全选样式控制
 watch(checkAll, (to) => {
-  console.log('p to:', to)
+  console.log('checkAll:', to)
   if (to) {
     value.value = options.value.map(option => option.value)
   } else {
@@ -65,11 +65,8 @@ watch(checkAll, (to) => {
 <template>
   <div>
     <h2 class="mb10">Checkbox 多选框基本使用</h2>
-    <p class="u-intro">用于在一组可选项中进行多项选择</p>
     <Checkbox
       :options="options"
-      :gap="16"
-      :vertical="false"
       @change="onChange"
       v-model:value="value"/>
     <h2 class="mt30 mb10">实现全选效果</h2>
@@ -82,10 +79,14 @@ watch(checkAll, (to) => {
     <br/>
     <Checkbox
       :options="options"
-      :gap="16"
-      :vertical="false"
       @change="onChange"
       v-model:value="value" />
+    <h2 class="mt30 mb10">垂直排列</h2>
+    <Checkbox
+      :options="options"
+      vertical
+      @change="onChange"
+      v-model:value="value"/>
     <a-divider />
     <h2 class="mt30 mb10">Ant Design Vue 多选框组件</h2>
     <a-checkbox

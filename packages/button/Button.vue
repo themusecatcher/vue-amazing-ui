@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
 import { computed } from 'vue'
 interface Props {
   name?: string // 按钮默认文本 string | slot
@@ -9,7 +10,7 @@ interface Props {
   height?: number // 按钮高度
   borderRadius?: number // 按钮圆角
   route?: object // 按钮跳转目标URL地址
-  target?: string // 按钮如何打开目标URL，设置route时才起作用
+  target?: string // 按钮如何打开目标URL，设置route时才起作用，与a标签的target属性一致
   disabled?: boolean // 按钮是否禁用
   loading?: boolean // 按钮是否加载中
   center?: boolean // 是否将按钮设置为块级元素并居中展示
@@ -38,25 +39,25 @@ const isRoute = computed(() => {
 </script>
 <template>
   <span :class="['m-btn-wrap', {'center': center}]">
-    <router-link
+    <RouterLink
       v-if="isRoute"
       :to="route"
       :target="target"
       :disabled="disabled"
       class="m-btn fade"
       :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled}]"
-      :style="{borderRadius: borderRadius + 'px', width: (width - 2) + 'px', height: (height - 2)+'px', lineHeight: (height - 2)+'px'}">
+      :style="`border-radius: ${borderRadius}px; width: ${width ? width + 'px':'auto'}; height: ${height ? height + 'px':'auto'}; line-height: ${height - 2}px;`">
       <span class="u-text">
         <slot>{{ name }}</slot>
       </span>
-    </router-link>
+    </RouterLink>
     <a
       v-else
       @click.stop="$emit('click')"
       :disabled="disabled"
       class="m-btn"
       :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled, 'm-btn-loading': loading}]"
-      :style="{borderRadius: borderRadius + 'px', width: (width - 2) + 'px', height: (height - 2)+'px', lineHeight: (height - 2)+'px'}">
+      :style="`border-radius: ${borderRadius}px; width: ${width ? width + 'px':'auto'}; height: ${height ? height + 'px':'auto'}; line-height: ${height - 2}px;`">
       <span class="m-loading-icon" :class="{'show-spin': loading}">
         <span class="u-spin-circle" v-show="loading"></span>
       </span>
@@ -68,6 +69,7 @@ const isRoute = computed(() => {
 </template>
 <style lang="less" scoped>
 .m-btn-wrap {
+  box-sizing: border-box;
   display: inline-block;
   .m-btn {
     display: inline-block;
@@ -82,7 +84,8 @@ const isRoute = computed(() => {
     user-select: none;
     cursor: pointer;
     .m-loading-icon {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       text-align: left;
       opacity: 0;
       width: 0;
@@ -94,7 +97,6 @@ const isRoute = computed(() => {
         border-radius: 50%;
         border-width: 1px;
         border-style: solid;
-        vertical-align: -0.125em;
         border-color: transparent;
         border-top-color: inherit; // 显示1/4圆
         animation: loadingCircle 1s infinite linear;
@@ -174,20 +176,17 @@ const isRoute = computed(() => {
     }
   }
   .small {
-    height: 24px;
-    line-height: 24px;
+    line-height: 22px;
     padding: 0 7px;
     font-size: 14px;
   }
   .middle {
-    height: 32px;
-    line-height: 32px;
+    line-height: 30px;
     padding: 0 15px;
     font-size: 14px;
   }
   .large {
-    height: 40px;
-    line-height: 40px;
+    line-height: 38px;
     padding: 0 15px;
     font-size: 16px;
   }

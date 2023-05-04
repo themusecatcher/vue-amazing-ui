@@ -5,8 +5,6 @@
 - 首页banner轮播展示
 - 轮播新闻展示
 
-## 基本使用
-
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
@@ -28,6 +26,8 @@ onMounted(() => {
   loadImages()
 })
 </script>
+
+## 基本使用
 
 <Carousel :imageData="imageData" :height="360" />
 
