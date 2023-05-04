@@ -1,33 +1,32 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const collapseData = ref([
   {
-    // key: '1',
+    key: '1',
     header: 'This is panel header 1',
     text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   },
   {
-    // key: '2',
+    key: '2',
     header: 'This is panel header 2',
     text: `  A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.
   A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
   },
   {
-    // key: '3',
+    key: '3',
     header: 'This is panel header 3',
     text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref([1])
-watch(activeKey, (to) => {
-  console.log('p to:', to)
+const activeKey = ref(['1'])
+watchEffect(() => {
+  console.log('activeKey:', activeKey.value)
 })
-const key = ref(1)
-watch(key, (to) => {
-  console.log('p to:', to)
+const key = ref('1')
+watchEffect(() => {
+  console.log('key:', key.value)
 })
-
 function onChange (key: any) {
   console.log('change:', key)
 }
@@ -57,12 +56,12 @@ function onChange (key: any) {
       :collapseData="collapseData"
       v-model:activeKey="activeKey"
       @change="onChange">
-      <template #header="{ header, index }">
-        <span v-if="index===1" style="color: burlywood;">burlywood color {{ header }} (index = {{ index }})</span>
+      <template #header="{ header, key }">
+        <span v-if="key==='1'" style="color: burlywood;">burlywood color {{ header }} (key = {{ key }})</span>
       </template>
       <template #lang>typescript</template>
-      <template #text="{ text, index }">
-        <span v-if="index===1" style="color: burlywood;">burlywood color {{ text }} (index = {{ index }})</span>
+      <template #text="{ text, key }">
+        <span v-if="key==='1'" style="color: burlywood;">burlywood color {{ text }} (key = {{ key }})</span>
       </template>
     </Collapse>
     <h2 class="mt30 mb10">折叠面板，隐藏箭头图标 (showArrow: false)</h2>
