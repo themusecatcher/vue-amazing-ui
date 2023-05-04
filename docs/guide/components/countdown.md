@@ -1,91 +1,118 @@
-# 面包屑 Breadcrumb
-
-显示当前页面在系统层级结构中的位置，并能向上返回
+# 倒计时 Countdown
 
 ## 何时使用
 
-- 当系统拥有超过两级以上的层级结构时
-- 当需要告知用户『你在哪里』时
-- 当需要向上导航的功能时
+- 当要展示倒计时时
 
-## Breadcrumb 基本使用
-
-<script setup>
-const routes = [
-    {
-      path: '/first', // 路由地址
-      query: { id: 1, tab: 2 }, // 路由参数
-      name: '一级路由' // 路由名称
-    },
-    {
-      path: '/second',
-      name: '二级路由'
-    },
-    {
-      path: '/third',
-      name: '三级路由三级路由三级路由三级路由三级路由三级路由三级路由'
-    }
-  ]
+<script setup lang="ts">
+function onFinish () {
+  console.log('countdown finished')
+}
 </script>
 
-<Breadcrumb :routes="routes" />
+## 基本使用
+
+#### format: MM月 DD天 HH:mm:ss
+
+<br/>
+<Countdown
+  title="Countdown 1年"
+  :countdown="12 * 30 * 24 * 60 * 60 * 1000"
+  format="MM月 DD天 HH:mm:ss"
+  finishedText="Finished"
+  @finish="onFinish">
+  <template #prefix>There's only </template>
+  <template #suffix> left for the end.</template>
+</CountDown>
 
 <details>
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
-const routes = [
-    {
-      path: '/first', // 路由地址
-      query: { id: 1, tab: 2 }, // 路由参数
-      name: '一级路由' // 路由名称
-    },
-    {
-      path: '/second',
-      name: '二级路由'
-    },
-    {
-      path: '/third',
-      name: '三级路由三级路由三级路由三级路由三级路由三级路由三级路由'
-    }
-  ]
+<script setup lang="ts">
+function onFinish () {
+  console.log('countdown finished')
+}
 </script>
 <template>
-  <Breadcrumb :routes="routes" />
+  <Countdown
+    title="Countdown 1年"
+    :countdown="12 * 30 * 24 * 60 * 60 * 1000"
+    format="MM月 DD天 HH:mm:ss"
+    finishedText="Finished"
+    @finish="onFinish">
+    <template #prefix>There's only </template>
+    <template #suffix> left for the end.</template>
+  </CountDown>
 </template>
 ```
 
 </details>
 
+## 毫秒倒计时基本使用
 
-## 使用自定义分隔符 ('/')
+#### format: Y 年 M 月 D 天 H 时 m 分 s 秒 SSS
 
-<Breadcrumb :routes="routes" separator="/" :height="36" />
+<br/>
+<Countdown
+  title="Countdown"
+  :countdown="1714528800000"
+  format="Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒"
+  finishedText="Finished"
+  @finish="onFinish">
+  <template #title>2024年 五一 Countdown</template>
+  <template #prefix>There's only </template>
+  <template #suffix> left for the end.</template>
+</CountDown>
 
 <details>
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
-const routes = [
-    {
-      path: '/first', // 路由地址
-      query: { id: 1, tab: 2 }, // 路由参数
-      name: '一级路由' // 路由名称
-    },
-    {
-      path: '/second',
-      name: '二级路由'
-    },
-    {
-      path: '/third',
-      name: '三级路由三级路由三级路由三级路由三级路由三级路由三级路由'
-    }
-  ]
+<script setup lang="ts">
+function onFinish () {
+  console.log('countdown finished')
+}
 </script>
 <template>
-  <Breadcrumb :routes="routes" separator="/" :height="36" />
+  <Countdown
+    title="Countdown"
+    :countdown="1714528800000"
+    format="Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒"
+    finishedText="Finished"
+    @finish="onFinish">
+    <template #title>2024年 五一 Countdown</template>
+    <template #prefix>There's only </template>
+    <template #suffix> left for the end.</template>
+  </CountDown>
+</template>
+```
+
+</details>
+
+## 倒计时已完成
+
+<Countdown
+  title="Finished"
+  finishedText="Finished"
+  @finish="onFinish">
+</CountDown>
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+function onFinish () {
+  console.log('countdown finished')
+}
+</script>
+<template>
+  <Countdown
+    title="Finished"
+    finishedText="Finished"
+    @finish="onFinish">
+  </CountDown>
 </template>
 ```
 

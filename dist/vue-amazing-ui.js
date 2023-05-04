@@ -612,7 +612,7 @@ const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
-const _withScopeId$g = (n) => (pushScopeId("data-v-b1c9075e"), n = n(), popScopeId(), n);
+const _withScopeId$g = (n) => (pushScopeId("data-v-09a70536"), n = n(), popScopeId(), n);
 const _hoisted_1$s = ["title"];
 const _hoisted_2$o = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
 const _hoisted_3$l = [
@@ -774,8 +774,8 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Select_vue_vue_type_style_index_0_scoped_b1c9075e_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-b1c9075e"]]);
+const Select_vue_vue_type_style_index_0_scoped_09a70536_lang = "";
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-09a70536"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
 };
@@ -1031,7 +1031,7 @@ const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
-const _withScopeId$f = (n) => (pushScopeId("data-v-9a12a53a"), n = n(), popScopeId(), n);
+const _withScopeId$f = (n) => (pushScopeId("data-v-1331c4fa"), n = n(), popScopeId(), n);
 const _hoisted_1$q = { class: "m-collapse" };
 const _hoisted_2$m = ["onClick"];
 const _hoisted_3$j = {
@@ -1062,13 +1062,15 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
   emits: ["update:activeKey", "change"],
   setup(__props, { emit: emits }) {
     const props = __props;
-    onMounted(() => {
-      getCollapseHeight();
-    });
+    watchEffect(() => {
+      const len = props.collapseData.length;
+      if (len) {
+        getCollapseHeight(len);
+      }
+    }, { flush: "post" });
     const text = ref();
     const collapseHeight = ref([]);
-    function getCollapseHeight() {
-      const len = props.collapseData.length;
+    function getCollapseHeight(len) {
       for (let n = 0; n < len; n++) {
         collapseHeight.value.push(text.value[n].offsetHeight);
       }
@@ -1143,7 +1145,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               createElementVNode("div", _hoisted_6$e, [
                 renderSlot(_ctx.$slots, "lang", {
                   lang: __props.lang,
-                  index
+                  key: data.key || index
                 }, () => [
                   createTextVNode(toDisplayString(__props.lang), 1)
                 ], true)
@@ -1168,7 +1170,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               }, [
                 renderSlot(_ctx.$slots, "text", {
                   text: data.text,
-                  index
+                  key: data.key || index
                 }, () => [
                   createTextVNode(toDisplayString(data.text), 1)
                 ], true)
@@ -1180,8 +1182,8 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Collapse_vue_vue_type_style_index_0_scoped_9a12a53a_lang = "";
-const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-9a12a53a"]]);
+const Collapse_vue_vue_type_style_index_0_scoped_1331c4fa_lang = "";
+const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-1331c4fa"]]);
 Collapse.install = (app) => {
   app.component(Collapse.__name, Collapse);
 };
@@ -1304,8 +1306,8 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Countdown_vue_vue_type_style_index_0_scoped_dd7fbd14_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-dd7fbd14"]]);
+const Countdown_vue_vue_type_style_index_0_scoped_1932e6aa_lang = "";
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-1932e6aa"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
 };
