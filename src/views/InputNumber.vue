@@ -31,7 +31,6 @@ function onAntChange (number: number) {
       v-model:value="value" />
     <h2 class="mt30 mb10">Ant Design Vue 数字输入框</h2>
     <a-input-number
-      class="border-box"
       :min="-10"
       :max="10"
       :step="1"
@@ -40,9 +39,4 @@ function onAntChange (number: number) {
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  :deep(*) {
-    box-sizing: border-box;
-  }
-}
 </style>

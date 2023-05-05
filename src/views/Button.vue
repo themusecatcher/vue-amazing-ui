@@ -80,11 +80,8 @@ function onClick () {
     </Button>
     <h3 class="mt30">Loading state: <Switch v-model:checked="loading" /></h3>
     <h2 class="mt30 mb10">Ant Design Vue 按钮</h2>
-    <a-button class="border-box" type="default" :loading="loading" @click="onClick">按钮Button</a-button>
+    <a-button type="default" :loading="loading" @click="onClick">按钮Button</a-button>
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  box-sizing: border-box;
-}
 </style>
