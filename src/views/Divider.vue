@@ -12,7 +12,7 @@
     <h2 class="mt30 mb10">文字居左(右)并距左(右)边120px (orientation: left(right) & orientation-margin: 120)</h2>
     <Divider orientation="left" :orientation-margin="120">Left Text</Divider>
     <Divider orientation="right" :orientation-margin="120">Right Text</Divider>
-    <h2 class="mt30 mb10">虚线 (dashed: true)</h2>
+    <h2 class="mt30 mb10">使用虚线 (dashed: true)</h2>
     <Divider dashed>Center Text</Divider>
     <h2 class="mt30 mb10">分割线线宽3px (borderWidth: 3)</h2>
     <Divider :borderWidth="3">Center Text</Divider>
