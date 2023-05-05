@@ -83,5 +83,3 @@ function onClick () {
     <a-button type="default" :loading="loading" @click="onClick">按钮Button</a-button>
   </div>
 </template>
-<style lang="less" scoped>
-</style>

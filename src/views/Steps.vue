@@ -69,5 +69,3 @@ function onNext () {
     </a-steps>
   </div>
 </template>
-<style lang="less" scoped>
-</style>

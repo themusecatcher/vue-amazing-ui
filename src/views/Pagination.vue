@@ -53,6 +53,3 @@ function changePage (pager: object) { // 分页器回调
       placement="left"/>
   </div>
 </template>
-
-<style lang="less" scoped>
-</style>

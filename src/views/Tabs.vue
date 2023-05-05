@@ -129,5 +129,3 @@ function onChange (key: string|number) {
     </a-tabs>
   </div>
 </template>
-<style lang="less" scoped>
-</style>

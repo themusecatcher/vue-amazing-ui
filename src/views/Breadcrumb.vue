@@ -24,5 +24,3 @@ const routes = ref([
     <Breadcrumb :routes="routes" separator="/" :height="36" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

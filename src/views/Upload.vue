@@ -115,5 +115,3 @@ function onRemove (file: object) {
       @remove="onRemove" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

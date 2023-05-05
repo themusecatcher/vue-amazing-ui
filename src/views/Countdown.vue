@@ -35,6 +35,3 @@ function onFinish () {
     </CountDown>
   </div>
 </template>
-
-<style lang="less" scoped>
-</style>

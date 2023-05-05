@@ -44,5 +44,3 @@ function onHoverChange (value: number) {
     <a-rate v-model:value="value" allow-half />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

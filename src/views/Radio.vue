@@ -64,5 +64,3 @@ function onChange (value: any) {
     <a-radio-group @change="onChange($event.target.value)" v-model:value="value" :options="options" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

@@ -103,5 +103,3 @@ function onAntChange (values: (number|string)[], selectedOptions: any) {
       @change="onAntChange" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>
