@@ -43,5 +43,3 @@ function onChange (val: number|number[]) {
     <a-slider v-model:value="doubleValue" :min="0" :max="100" range />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

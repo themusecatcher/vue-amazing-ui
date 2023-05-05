@@ -101,5 +101,3 @@ watch(checkAll, (to) => {
       :options="options" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

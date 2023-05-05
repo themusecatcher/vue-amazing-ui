@@ -38,5 +38,3 @@ function onAntChange (number: number) {
       v-model:value="value" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

@@ -16,5 +16,3 @@
     <Divider :borderWidth="3">Center Text</Divider>
   </div>
 </template>
-<style lang="less" scoped>
-</style>

@@ -56,5 +56,3 @@ function onChange () {
       :speed="2500" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

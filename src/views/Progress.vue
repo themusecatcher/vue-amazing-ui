@@ -58,5 +58,3 @@ console.log(Math.PI)
       type="circle" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

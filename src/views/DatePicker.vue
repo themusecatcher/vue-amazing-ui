@@ -170,5 +170,3 @@ watchEffect(() => {
       :width="120" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

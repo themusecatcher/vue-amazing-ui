@@ -37,6 +37,3 @@ onMounted(() => {
       zoom="cotain" />
   </div>
 </template>
-
-<style lang="less" scoped>
-</style>

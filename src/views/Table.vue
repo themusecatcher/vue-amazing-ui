@@ -129,5 +129,3 @@ function onChangeTable (pagination: {page: number, pageSize: number}) {
     ></Table>
   </div>
 </template>
-<style lang="less" scoped>
-</style>

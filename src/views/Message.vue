@@ -29,5 +29,3 @@ function onClose () {
     <Message ref="message" :duration="3000" :top="30" @close="onClose" />
   </div>
 </template>
-<style lang="less" scoped>
-</style>

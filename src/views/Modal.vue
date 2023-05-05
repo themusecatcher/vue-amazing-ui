@@ -105,5 +105,3 @@ function onConfirm () { // “确定”,“知道了”按钮回调
     />
   </div>
 </template>
-<style lang="less" scoped>
-</style>
