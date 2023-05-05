@@ -70,6 +70,7 @@ const backgroundColor = computed(() => {
 </template>
 <style lang="less" scoped>
 .m-progress-line {
+  box-sizing: border-box;
   display: inline-block;
   &:after {
     content: '';

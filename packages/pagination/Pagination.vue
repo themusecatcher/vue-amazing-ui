@@ -159,6 +159,7 @@ function changePage (pageNum: number): boolean | void {
 </template>
 <style lang="less" scoped>
 .m-pagination {
+  box-sizing: border-box;
   margin: 16px 0;
 }
 .hidden {
@@ -178,18 +179,18 @@ function changePage (pageNum: number): boolean | void {
   height: 32px;
   line-height: 30px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.65);
+  color: rgba(0, 0, 0, 0.88);
   text-align: center;
   .mr8 {
     margin-right: 8px;
   }
   .u-item {
-    min-width: 30px;
-    height: 30px;
+    min-width: 32px;
+    height: 32px;
     display: inline-block;
     user-select: none; // 禁止选取文本
     border: 1px solid #d9d9d9;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all .3s;
     &:hover {
@@ -206,7 +207,7 @@ function changePage (pageNum: number): boolean | void {
     }
   }
   .active { // 悬浮/选中样式
-    font-weight: 500;
+    font-weight: 600;
     color: @themeColor;
     border-color: @themeColor;
     .u-arrow {
@@ -253,17 +254,16 @@ function changePage (pageNum: number): boolean | void {
   }
   .u-jump-page {
     margin-left: 8px;
-    line-height: 32px;
+    line-height: 30px;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.65);
     input {
       vertical-align: top;
-      width: 26px;
-      height: 20px;
-      padding: 5px 11px;
+      width: 50px;
+      height: 32px;
+      padding: 4px 11px;
       margin: 0 8px;
       border: 1px solid #d9d9d9;
-      border-radius: 5px;
+      border-radius: 6px;
       background: transparent;
       text-align: left;
       outline: none;

@@ -122,6 +122,7 @@ async function onPreload () { // 计算图片宽高和位置（top，left）
 </template>
 <style lang="less" scoped>
 .m-waterfall-css {
+  box-sizing: border-box;
   .m-img {
     .u-img {
       width: 100%;
@@ -130,6 +131,7 @@ async function onPreload () { // 计算图片宽高和位置（top，left）
   }
 }
 .m-waterfall-js {
+  box-sizing: border-box;
   position: relative;
   .u-img {
     position: absolute;

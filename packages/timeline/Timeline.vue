@@ -43,6 +43,7 @@ withDefaults(defineProps<Props>(), {
 </template>
 <style lang="less" scoped>
 .m-timeline-area {
+  box-sizing: border-box;
   .m-timeline {
     .m-timeline-item {
       position: relative;

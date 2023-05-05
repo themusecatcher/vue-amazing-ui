@@ -111,6 +111,7 @@ function onDown () {
 </template>
 <style lang="less" scoped>
 .m-input-number {
+  box-sizing: border-box;
   position: relative;
   display: inline-block;
   font-size: 14px;

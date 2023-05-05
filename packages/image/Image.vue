@@ -304,6 +304,7 @@ function onSwitchRight () {
   opacity: 0;
 }
 .u-spin-circle {
+  box-sizing: border-box;
   position: absolute;
   inset: 0;
   margin: auto;

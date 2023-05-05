@@ -90,8 +90,8 @@ function onConfirm () { // “确定”,“知道了”按钮回调
     <Modal
       :title="title"
       :content="content"
-      :width="416"
-      :top="200"
+      :width="420"
+      :top="120"
       cancelText="取消"
       okText="确认"
       noticeText="知道了"

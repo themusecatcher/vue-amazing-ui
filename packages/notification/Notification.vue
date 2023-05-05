@@ -168,6 +168,7 @@ function onClose (index: number) {
   left: 0;
 }
 .m-notification-wrap {
+  box-sizing: border-box;
   position: fixed;
   z-index: 999; // 突出显示该层级
   width: 384px;

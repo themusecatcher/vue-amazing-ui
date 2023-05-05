@@ -124,6 +124,7 @@ function onConfirm () {
   // top: 100px;
 }
 .m-modal-mask {
+  box-sizing: border-box;
   position: fixed;
   top: 0;
   right: 0;

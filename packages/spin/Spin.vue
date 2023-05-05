@@ -33,6 +33,7 @@ withDefaults(defineProps<Props>(), {
 </template>
 <style lang="less" scoped>
 .m-spin-wrap {
+  box-sizing: border-box;
   position: relative;
   height: 100%;
   width: 100%;

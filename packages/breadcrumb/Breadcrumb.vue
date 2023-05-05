@@ -44,6 +44,7 @@ function goRouter (route: any): void {
 </template>
 <style lang="less" scoped>
 .m-breadcrumb {
+  box-sizing: border-box;
   .m-bread {
     display: inline-block;
     vertical-align: middle;

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 interface Option {
-  label: string
-  value: any
+  label: string // 选项名
+  value: any // 选项值
   disabled?: boolean // 是否禁用单个单选器
 }
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   disabled?: boolean // 是否禁用所有子单选器
   vertical?: boolean // 是否垂直排列
   value?: any // 当前选中的值（v-model）
-  gap?: number // 多个单选框之间的间距，单位px
+  gap?: number // 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: null,
   gap: 8
 })
-const sum = computed(() => {
+const sum = computed(() => { // 选项总数
   return props.options.length
 })
 const styleObject = computed(() => {
@@ -42,91 +42,99 @@ function onClick (value: any) {
 }
 </script>
 <template>
-  <div class="m-radio" :class="{'vertical': vertical}">
+  <div class="m-radio">
     <div
       class="m-radio-wrap"
-      :class="{'disabled': disabled || option.disabled}"
+      :class="{'vertical': vertical}"
       :style="sum !== index + 1 ? styleObject: ''"
-      @click="(disabled || option.disabled) ? (e: Event) => e.preventDefault() : onClick(option.value)" v-for="(option, index) in options" :key="index">
-      <span class="u-radio" :class="{'u-radio-checked': value === option.value }"></span>
-      <span class="u-label">{{ option.label }}</span>
+      v-for="(option, index) in options" :key="index">
+      <div class="m-box" :class="{'disabled': disabled || option.disabled}" @click="(disabled || option.disabled) ? () => false : onClick(option.value)">
+        <span class="u-radio" :class="{'u-radio-checked': value === option.value }"></span>
+        <span class="u-label">
+          <slot :label="option.label">{{ option.label }}</slot>
+        </span>
+      </div>
     </div>
   </div>
 </template>
 <style lang="less" scoped>
 .m-radio {
-  display: inline-flex;
-  height: 24px;
+  box-sizing: border-box;
+  display: inline-block;
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: 1;
   .m-radio-wrap {
-    color: #000000d9;
-    font-size: 14px;
-    height: 24px;
-    line-height: 24px;
-    cursor: pointer;
-    &:hover {
-      .u-radio {
-        border-color: @themeColor;
+    display: inline-block;
+    height: 22px;
+    .m-box {
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      &:hover {
+        .u-radio {
+          border-color: @themeColor;
+        }
       }
-    }
-    .u-radio {
-      position: relative;
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      background: #fff;
-      border: 1px solid #d9d9d9;
-      border-radius: 50%;
-      transition: all .3s;
-      vertical-align: top;
-      top: 4px;
-      &:after {
-        position: absolute;
-        top: 50%;
-        left: 50%;
+      .u-radio {
+        position: relative;
+        display: inline-block;
         width: 16px;
         height: 16px;
-        margin-top: -8px;
-        margin-left: -8px;
-        background-color: @themeColor;
-        border-radius: 100%;
-        transform: scale(0);
-        opacity: 0;
-        transition: all .3s cubic-bezier(.78,.14,.15,.86);
-        content: "";
+        background: #fff;
+        border: 1px solid #d9d9d9;
+        border-radius: 50%;
+        transition: all .3s;
+        &:after {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 16px;
+          height: 16px;
+          margin-top: -8px;
+          margin-left: -8px;
+          background-color: @themeColor;
+          border-radius: 100%;
+          transform: scale(0);
+          opacity: 0;
+          transition: all .3s cubic-bezier(.78,.14,.15,.86);
+          content: "";
+        }
+      }
+      .u-radio-checked {
+        border-color: @themeColor;
+        &:after {
+          transform: scale(.5);
+          opacity: 1;
+        }
+      }
+      .u-label {
+        padding: 0 8px;
+        font-size: 14px;
+        line-height: 22px;
+        display: inline-block;
       }
     }
-    .u-radio-checked {
-      border-color: @themeColor;
-      &:after {
-        transform: scale(.5);
-        opacity: 1;
+    .disabled {
+      color: rgba(0, 0, 0, 0.25);
+      cursor: not-allowed;
+      &:hover {
+        .u-radio {
+          border-color: #d9d9d9;
+        }
       }
-    }
-    .u-label {
-      padding: 0 8px;
-      font-size: 16px;
-      display: inline-block;
-      line-height: 24px;
-    }
-  }
-  .disabled {
-    color: #00000040;
-    cursor: not-allowed;
-    &:hover {
       .u-radio {
         border-color: #d9d9d9;
-      }
-    }
-    .u-radio {
-      border-color: #d9d9d9;
-      background-color: #f5f5f5;
-      &:after {
-        background-color: rgba(0, 0, 0, 0.2);
+        background-color: #f5f5f5;
+        &:after {
+          background-color: rgba(0, 0, 0, 0.2);
+        }
       }
     }
   }
-}
-.vertical {
-  display: inline-block;
+  .vertical {
+    display: block;
+  }
 }
 </style>

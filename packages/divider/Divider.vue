@@ -53,6 +53,7 @@ onMounted(() => {
 </template>
 <style lang="less" scoped>
 .m-divider {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   margin: 16px 0;

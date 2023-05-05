@@ -70,6 +70,7 @@ function onHide (): void {
 </template>
 <style lang="less" scoped>
 .m-tooltip {
+  box-sizing: border-box;
   display: inline-block;
 }
 .m-title {
