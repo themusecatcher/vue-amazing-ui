@@ -1377,12 +1377,12 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const DatePicker_vue_vue_type_style_index_0_scoped_21ed1cc4_lang = "";
-const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-21ed1cc4"]]);
+const DatePicker_vue_vue_type_style_index_0_scoped_eab34b33_lang = "";
+const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-eab34b33"]]);
 DatePicker.install = (app) => {
   app.component(DatePicker.__name, DatePicker);
 };
-const _withScopeId$e = (n) => (pushScopeId("data-v-7f5f8cf6"), n = n(), popScopeId(), n);
+const _withScopeId$e = (n) => (pushScopeId("data-v-5144e8e4"), n = n(), popScopeId(), n);
 const _hoisted_1$o = ["onClick"];
 const _hoisted_2$k = { class: "m-spin-dot" };
 const _hoisted_3$h = /* @__PURE__ */ _withScopeId$e(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -1413,66 +1413,18 @@ const _hoisted_16$6 = { class: "m-dialog-footer" };
 const _sfc_main$p = /* @__PURE__ */ defineComponent({
   __name: "Dialog",
   props: {
-    title: {
-      // 标题 string | slot
-      type: String,
-      default: "提示"
-    },
-    content: {
-      // 内容 string | slot
-      type: String,
-      default: ""
-    },
-    width: {
-      // 宽度，默认640
-      type: Number,
-      default: 640
-    },
-    height: {
-      // 高度，默认480
-      type: Number,
-      default: 480
-    },
-    switchFullscreen: {
-      // 是否允许切换全屏，允许后右上角会出现一个按钮
-      type: Boolean,
-      default: false
-    },
-    cancelText: {
-      // 取消按钮文字
-      type: String,
-      default: "取消"
-    },
-    okText: {
-      // 确认按钮文字
-      type: String,
-      default: "确定"
-    },
-    footer: {
-      // 是否显示底部按钮，默认不显示
-      type: Boolean,
-      default: false
-    },
-    center: {
-      // 水平垂直居中：true  固定高度水平居中：false
-      type: Boolean,
-      default: true
-    },
-    top: {
-      // 固定高度水平居中时，距顶部高度
-      type: Number,
-      default: 100
-    },
-    loading: {
-      // 加载中
-      type: Boolean,
-      default: false
-    },
-    visible: {
-      // 对话框是否可见
-      type: Boolean,
-      default: false
-    }
+    title: { default: "提示" },
+    content: { default: "" },
+    width: { default: 640 },
+    height: { default: "auto" },
+    switchFullscreen: { type: Boolean, default: false },
+    cancelText: { default: "取消" },
+    okText: { default: "确定" },
+    footer: { type: Boolean, default: false },
+    center: { type: Boolean, default: true },
+    top: { default: 100 },
+    loading: { type: Boolean, default: false },
+    visible: { type: Boolean, default: false }
   },
   emits: ["close", "cancel", "ok"],
   setup(__props, { emit: emits }) {
@@ -1489,7 +1441,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
       if (fullScreen.value) {
         return "100vh";
       } else {
-        return props.height + "px";
+        return typeof props.height === "number" ? props.height + "px" : props.height;
       }
     });
     watch(
@@ -1526,7 +1478,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
           }, [
             createElementVNode("div", {
               class: normalizeClass(["m-dialog", __props.center ? "relative-hv-center" : "top-center"]),
-              style: normalizeStyle(`width: ${unref(dialogWidth)}; height: ${unref(dialogHeight)}; top: ${!__props.center ? __props.top + "px" : "50%"}`)
+              style: normalizeStyle(`width: ${unref(dialogWidth)}; height: ${unref(dialogHeight)}; top: ${!fullScreen.value ? !__props.center ? __props.top + "px" : "50%" : 0}`)
             }, [
               createElementVNode("div", {
                 class: normalizeClass(["m-dialog-content", { loading: __props.loading }])
@@ -1563,13 +1515,15 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                   focusable: "false"
                 }, _hoisted_13$6)),
                 createElementVNode("div", _hoisted_14$6, [
-                  renderSlot(_ctx.$slots, "title", {}, () => [
-                    createElementVNode("div", _hoisted_15$6, toDisplayString(__props.title), 1)
-                  ], true)
+                  createElementVNode("div", _hoisted_15$6, [
+                    renderSlot(_ctx.$slots, "title", {}, () => [
+                      createTextVNode(toDisplayString(__props.title), 1)
+                    ], true)
+                  ])
                 ]),
                 createElementVNode("div", {
                   class: "m-dialog-body",
-                  style: normalizeStyle(`height: calc(${unref(dialogHeight)} - ${__props.footer ? "158px" : "103px"});`)
+                  style: normalizeStyle(`height: calc(${unref(dialogHeight)} - ${__props.footer ? "110px" : "57px"});`)
                 }, [
                   renderSlot(_ctx.$slots, "default", {}, () => [
                     createTextVNode(toDisplayString(__props.content), 1)
@@ -1598,8 +1552,8 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Dialog_vue_vue_type_style_index_0_scoped_7f5f8cf6_lang = "";
-const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-7f5f8cf6"]]);
+const Dialog_vue_vue_type_style_index_0_scoped_5144e8e4_lang = "";
+const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-5144e8e4"]]);
 Dialog.install = (app) => {
   app.component(Dialog.__name, Dialog);
 };

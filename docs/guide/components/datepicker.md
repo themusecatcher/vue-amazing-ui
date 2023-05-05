@@ -86,7 +86,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const dateValue = ref(Date.now())
 watchEffect(() => {
@@ -112,7 +112,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const dateValue = ref(Date.now())
 watchEffect(() => {
@@ -143,7 +143,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const dateValue = ref(Date.now())
 watchEffect(() => {
@@ -177,7 +177,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const dateValue = ref(Date.now())
 watchEffect(() => {
@@ -212,7 +212,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const rangeValue = ref<number[]>([Date.now(), addDays(new Date(), 1).getTime()])
 watchEffect(() => {
@@ -247,7 +247,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const rangeValue = ref<number[]>([Date.now(), addDays(new Date(), 1).getTime()])
 watchEffect(() => {
@@ -283,7 +283,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const timeValue = ref({
   hours: new Date().getHours(),
@@ -323,7 +323,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const secondsValue = ref({
   hours: new Date().getHours(),
@@ -366,7 +366,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const timeRangeValue = ref([
   {
@@ -413,7 +413,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const weekValue = ref([startOfWeek(new Date()), endOfWeek(new Date())])
 watchEffect(() => {
@@ -445,7 +445,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const monthValue = ref({
   year: new Date().getFullYear(),
@@ -480,7 +480,7 @@ watchEffect(() => {
 <summary>查看代码</summary>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const yearValue = ref(new Date().getFullYear())
 watchEffect(() => {
