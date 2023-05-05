@@ -147,7 +147,6 @@ function onLeftSlide (source: number, place: string) {
     } else {
       right.value = left.value
       left.value = targetX
-      leftHandle.value.focus()
     }
   }
 }
@@ -165,7 +164,6 @@ function onRightSlide (source: number, place: string) {
     } else {
       left.value = right.value
       right.value = targetX
-      rightHandle.value.focus()
     }
   }
 }
@@ -180,7 +178,7 @@ function onRightSlide (source: number, place: string) {
       ref="leftHandle"
       class="u-slider-handle"
       :class="{handleTransition: transition}"
-      :style="`left: ${left}px; right: auto; transform: translateX(-50%);`"
+      :style="`left: ${left}px; right: auto; transform: translate(-50%, -50%);`"
       @keydown.left.prevent="onLeftSlide(left, 'left')"
       @keydown.right.prevent="onRightSlide(left, 'left')"
       @keydown.down.prevent="onLeftSlide(left, 'left')"
@@ -191,7 +189,7 @@ function onRightSlide (source: number, place: string) {
       ref="rightHandle"
       class="u-slider-handle"
       :class="{handleTransition: transition}"
-      :style="`left: ${right}px; right: auto; transform: translateX(-50%);`"
+      :style="`left: ${right}px; right: auto; transform: translate(-50%, -50%);`"
       @keydown.left.prevent="onLeftSlide(right, 'right')"
       @keydown.right.prevent="onRightSlide(right, 'right')"
       @keydown.down.prevent="onLeftSlide(right, 'right')"
@@ -242,24 +240,23 @@ function onRightSlide (source: number, place: string) {
   .u-slider-handle { // 滑块
     position: absolute;
     z-index: 999;
-    width: 12px;
-    height: 12px;
-    top: -6px;
+    width: 14px;
+    height: 14px;
+    top: 50%;
     background: #fff;
     border: 2px solid lighten(fade(@themeColor, 54%), 10%);
     border-radius: 50%;
     cursor: pointer;
-    transition: border-color .3s,box-shadow .6s,transform .3s cubic-bezier(.18,.89,.32,1.28);
-    &:focus {
-      border-color: @themeColor;
-      box-shadow: 0 0 0 5px fade(@themeColor, 20%);
-    }
+    transition: width .3s, height .3s, border-color .3s, border-width .3s, transform .3s cubic-bezier(.18,.89,.32,1.28);
     &:hover {
+      width: 20px;
+      height: 20px;
+      border-width: 4px;
       border-color: @themeColor;
     }
   }
   .handleTransition {
-    transition: left .2s, border-color .3s,box-shadow .6s,transform .3s cubic-bezier(.18,.89,.32,1.28);
+    transition: left .2s;
   }
 }
 .disabled {

@@ -41,11 +41,7 @@ function onHoverChange (value: number) {
       @change="onChange"
       @hoverChange="onHoverChange"/>
     <h2 class="mt30 mb10">Ant Design Vue 评分</h2>
-    <a-rate v-model:value="value" allow-half>
-      <template #character>
-        <heart-outlined />
-      </template>
-    </a-rate>
+    <a-rate v-model:value="value" allow-half />
   </div>
 </template>
 <style lang="less" scoped>
