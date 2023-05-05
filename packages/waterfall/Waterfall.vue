@@ -114,7 +114,7 @@ async function onPreload () { // 计算图片宽高和位置（top，left）
       :title="images[index].title"
       :alt="images[index].title" />
   </div>
-  <div v-if="mode==='CSS'" v-bind="$attrs" class="m-waterfall-css" :style="`background: ${backgroundColor}; width: calc(${totalWidth} - ${2 * props.columnGap}px); padding: ${columnGap}px; column-count: ${columnCount}; column-gap: ${columnGap}px;`">
+  <div v-if="mode==='CSS'" v-bind="$attrs" class="m-waterfall-css" :style="`background: ${backgroundColor}; width: ${totalWidth}; padding: ${columnGap}px; column-count: ${columnCount}; column-gap: ${columnGap}px;`">
     <div class="m-img" :style="`margin-bottom: ${columnGap}px;`" v-for="(item, index) in images" :key="index">
       <img class="u-img" :src="item.src" :title="item.title" :alt="item.title" />
     </div>

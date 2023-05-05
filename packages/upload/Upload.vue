@@ -185,7 +185,7 @@ function onError (content: any) {
 </script>
 <template>
   <div class="m-upload-list">
-    <div class="m-upload-item" v-for="n of showUpload" :key="n">
+    <div class="m-upload-item" :class="{mr8: n !== showUpload}" v-for="n of showUpload" :key="n">
       <div class="m-upload">
         <div
           v-show="!uploading[n-1] && !uploadedFiles[n-1]"
@@ -231,9 +231,9 @@ function onError (content: any) {
   .m-upload-item {
     display: inline-block;
     vertical-align: top;
-    &:not(:last-child) {
-      margin-right: 8px;
-    }
+  }
+  .mr8 {
+    margin-right: 8px;
   }
 }
 .m-upload {
@@ -246,8 +246,8 @@ function onError (content: any) {
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 98px;
-    height: 98px;
+    width: 100px;
+    height: 100px;
     border-radius: 8px;
     border: 1px dashed #d9d9d9;
     background-color: rgba(0, 0, 0, 0.02);
@@ -275,8 +275,8 @@ function onError (content: any) {
     }
   }
   .m-file-uploading {
-    width: 82px;
-    height: 82px;
+    width: 100px;
+    height: 100px;
     padding: 8px;
     border-radius: 8px;
     border: 1px dashed #d9d9d9;
@@ -297,8 +297,8 @@ function onError (content: any) {
   .m-file-preview {
     position: relative;
     padding: 8px;
-    width: 82px;
-    height: 82px;
+    width: 100px;
+    height: 100px;
     border-radius: 8px;
     padding: 8px;
     border: 1px solid #d9d9d9;

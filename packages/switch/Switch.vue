@@ -27,7 +27,7 @@ function onSwitch () {
 </script>
 <template>
   <div class="m-switch-wrap">
-    <div @click="disabled ? (e:Event) => e.preventDefault() : onSwitch()" :class="['m-switch', { 'switch-checked': checked, 'disabled': disabled }]">
+    <div @click="disabled ? () => false : onSwitch()" :class="['m-switch', { 'switch-checked': checked, 'disabled': disabled }]">
       <div :class="['u-switch-inner', checked ? 'inner-checked' : 'inner-unchecked' ]">{{ checked ? checkedInfo : uncheckedInfo }}</div>
       <div :class="['u-node', { 'node-checked': checked }]">
         <slot name="node" :checked="checked"></slot>
@@ -90,6 +90,9 @@ function onSwitch () {
   .disabled {
     cursor: not-allowed;
     opacity: .4;
+    .u-node {
+      cursor: not-allowed;
+    }
   }
 }
 </style>
