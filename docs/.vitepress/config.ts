@@ -101,7 +101,7 @@ export default defineConfig({
     logo: '/logo.svg',
 
     editLink: {
-      pattern: 'https://github.com/vitejs/vite/edit/main/docs/:path',
+      pattern: 'https://github.com/themusecatcher/vue-amazing-ui/tree/master/docs/:path',
       text: 'Suggest changes to this page',
     },
 
