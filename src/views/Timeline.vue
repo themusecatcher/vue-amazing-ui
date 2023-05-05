@@ -36,6 +36,11 @@ const timelineData = ref([
         <p class="u-desc" v-if="index===2">Create a services site</p>
       </template>
     </Timeline>
+    <h2 class="mb10">使用虚线</h2>
+    <Timeline
+      :timelineData="timelineData"
+      :width="480"
+      line-style="dashed" />
     <h2 class="mt30 mb10">Ant Design Vue 时间轴</h2>
     <a-timeline>
       <a-timeline-item color="green">Create a services site 2015-09-01</a-timeline-item>
@@ -67,8 +72,8 @@ const timelineData = ref([
 <style lang="less" scoped>
 .u-dot {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 18px;
+  height: 18px;
   border: 4px solid @themeColor;
   border-radius: 50%;
   background: #FFF;

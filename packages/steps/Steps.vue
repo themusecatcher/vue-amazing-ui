@@ -4,23 +4,17 @@ interface Step {
   title?: string // 标题
   description?: string // 描述
 }
-const props = defineProps({
-  steps: { // 步骤数组
-    type: Array<Step>,
-    default: () => []
-  },
-  current: { // 当前选中的步骤（v-model），设置 v-model 后，Steps 变为可点击状态。从1开始计数
-    type: Number,
-    default: 1
-  },
-  width: { // 步骤条总宽度
-    type: [String, Number],
-    default: '100%'
-  },
-  descMaxWidth: { // 描述文本最大宽度
-    type: Number,
-    default: 140
-  }
+interface Props {
+  steps?: Step[] // 步骤数组
+  current?: number // 当前选中的步骤（v-model），设置 v-model 后，Steps 变为可点击状态。从1开始计数
+  width?: number|string //步骤条总宽度步骤条总宽度
+  descMaxWidth?: number // 描述文本最大宽度
+}
+const props = withDefaults(defineProps<Props>(), {
+  steps: () => [],
+  current: 1,
+  width: '100%',
+  descMaxWidth: 140
 })
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -85,7 +79,6 @@ function onChange (index: number) { // 点击切换选择步骤
       display: inline-block;
       overflow: hidden;
       font-size: 16px;
-      line-height: 32px;
       &:not(:last-child) {
         margin-right: 16px;
         flex: 1; // 弹性盒模型对象的子元素都有相同的长度，且忽略它们内部的内容
@@ -109,8 +102,8 @@ function onChange (index: number) { // 点击切换选择步骤
         .m-steps-icon {
           display: inline-block;
           margin-right: 8px;
-          width: 30px;
-          height: 30px;
+          width: 32px;
+          height: 32px;
           border-radius: 50%;
           text-align: center;
           background: #fff;
@@ -141,11 +134,13 @@ function onChange (index: number) { // 点击切换选择步骤
             display: inline-block;
             padding-right: 16px;
             color: rgba(0,0,0,.45);
+            line-height: 32px;
             transition: all .3s;
           }
           .u-steps-description {
             font-size: 14px;
             color: rgba(0,0,0,.45);
+            line-height: 22px;
             word-wrap: break-word;
             transition: all .3s;
           }

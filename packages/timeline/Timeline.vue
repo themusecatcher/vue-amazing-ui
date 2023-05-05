@@ -12,10 +12,12 @@ interface Data {
 interface Props {
   timelineData?: Data[] // 时间轴内容数组
   width?: number // 时间轴区域总宽度
+  lineStyle?: 'solid'|'dashed'|'dotted' // 时间线样式
 }
 withDefaults(defineProps<Props>(), {
   timelineData: () => [],
-  width: 360
+  width: 360,
+  lineStyle: 'solid'
 })
 </script>
 <template>
@@ -24,7 +26,7 @@ withDefaults(defineProps<Props>(), {
       <div
         :class="['m-timeline-item', {'last': index === timelineData.length - 1}]"
         v-for="(data, index) in timelineData" :key="index">
-        <span class="u-tail"></span>
+        <span class="u-tail" :style="`border-left-style: ${lineStyle};`"></span>
         <div class="m-dot">
           <slot name="dot" :index="index">
             <span class="u-dot" v-if="data.color === 'red'" :style="{borderColor: ColorStyle.red}"></span>
@@ -54,9 +56,8 @@ withDefaults(defineProps<Props>(), {
         top: 12px;
         left: 5px;
         height: 100%;
-        border-left: 2px solid #e8e8e8; // 实线
-        // border-left: 2px dotted #e8e8e8; // 点线
-        // border-left: 2px dashed #e8e8e8; // 虚线
+        border-left-width: 2px;
+        border-left-color: #e8e8e8;
       }
       .m-dot {
         position: absolute;
@@ -65,8 +66,8 @@ withDefaults(defineProps<Props>(), {
         transform: translate(-50%, -50%);
         .u-dot {
           display: inline-block;
-          width: 8px;
-          height: 8px;
+          width: 12px;
+          height: 12px;
           border-width: 2px;
           border-style: solid;
           border-radius: 50%;
