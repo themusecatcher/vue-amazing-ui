@@ -36,7 +36,7 @@ function onClose () { // 关闭回调
 function onCancel () { // “取消”按钮回调
   visible.value = false
 }
-function onConfirm () { // “确定”,“知道了”按钮回调
+function onConfirm () { // “确定”按钮回调
   loading.value = true // 开启加载状态
   rafTimeout(() => {
     visible.value = false
@@ -47,24 +47,19 @@ function onConfirm () { // “确定”,“知道了”按钮回调
 <template>
   <div>
     <h2 class="mb10">Dialog 对话框基本使用</h2>
-    <Button class="mr30" @click="showDialog('Some descriptions ...')">默认对话框</Button>
-    <Button class="mr30" @click="showFooterDialog('Some descriptions ...')">有底部按钮的对话框</Button>
-    <Button class="mr30" @click="showCenterDialog('Some descriptions ...')">水平垂直居中对话框</Button>
-    <Button class="mr30" @click="showFixDialog('Some descriptions ...')">高度固定对话框</Button>
+    <Button type="primary" class="mr30" @click="showDialog('Some descriptions ...')">默认对话框</Button>
+    <Button type="primary" class="mr30" @click="showFooterDialog('Some descriptions ...')">有底部按钮的对话框</Button>
+    <Button type="primary" class="mr30" @click="showCenterDialog('Some descriptions ...')">水平垂直居中对话框</Button>
+    <Button type="primary" class="mr30" @click="showFixDialog('Some descriptions ...')">高度固定对话框</Button>
     <Dialog
       :title="title"
-      :width="720"
-      :height="480"
       :content="content"
       :footer="footer"
-      cancelText="取消"
-      okText="确认"
       switchFullscreen
       @close="onClose"
       @cancel="onCancel"
       @ok="onConfirm"
       :center="center"
-      :top="100"
       :loading="loading"
       :visible="visible">
       <template #title>
