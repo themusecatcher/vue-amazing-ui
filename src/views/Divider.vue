@@ -1,5 +1,3 @@
-<script setup lang="ts">
-</script>
 <template>
   <div>
     <h2 class="mb10">Divider 分割线基本使用</h2>

@@ -1,6 +1,3 @@
-<script setup lang="ts">
-
-</script>
 <template>
   <div>
     <h2 class="mb10">Empty 空状态基本使用 预置风格1</h2>
