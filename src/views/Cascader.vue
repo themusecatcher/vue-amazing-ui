@@ -94,7 +94,6 @@ function onAntChange (values: (number|string)[], selectedOptions: any) {
       @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 级联选择</h2>
     <a-cascader
-      class="border-box"
       :options="options"
       style="width: 200px;"
       placeholder="Please select"
@@ -105,9 +104,4 @@ function onAntChange (values: (number|string)[], selectedOptions: any) {
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  :deep(*), :deep(:before), :deep(:after) {
-    box-sizing: border-box;
-  }
-}
 </style>

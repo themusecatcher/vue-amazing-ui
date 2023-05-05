@@ -60,7 +60,7 @@ function onNext () {
     <Button @click="onPrevious()" size="large" class="mt30 mr30">Previous</Button>
     <Button @click="onNext()" size="large">Next</Button>
     <h2 class="mt30 mb10">Ant Design Vue 步骤条</h2>
-    <a-steps class="border-box" v-model:current="current">
+    <a-steps v-model:current="current">
       <a-step title="Step 1" description="This is a description." />
       <a-step title="Step 2" description="This is a description." />
       <a-step title="Step 3" description="This is a description." />
@@ -70,9 +70,4 @@ function onNext () {
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  :deep(*) {
-    box-sizing: border-box;
-  }
-}
 </style>

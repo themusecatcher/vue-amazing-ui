@@ -91,23 +91,15 @@ watch(checkAll, (to) => {
     <h2 class="mt30 mb10">Ant Design Vue 多选框组件</h2>
     <a-checkbox
       :indeterminate="indeterminate"
-      v-model:checked="checkAll"
-      class="border-box">
+      v-model:checked="checkAll">
       Check all
     </a-checkbox>
     <br/>
     <a-checkbox-group
-      class="border-box"
       v-model:value="value"
       @change="onChange"
       :options="options" />
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  margin-bottom: 10px;
-  :deep(*), :deep(:before), :deep(:after) {
-    box-sizing: border-box;
-  }
-}
 </style>

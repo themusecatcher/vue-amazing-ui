@@ -34,22 +34,6 @@ const options = ref([
       {
         label: '巴黎市',
         value: 8
-      },
-      {
-        label: '伦敦市',
-        value: 7
-      },
-      {
-        label: '巴黎市',
-        value: 8
-      },
-      {
-        label: '伦敦市',
-        value: 7
-      },
-      {
-        label: '巴黎市',
-        value: 8
       }
     ])
 
@@ -68,25 +52,17 @@ function onChange (value: any) {
     <Radio
       :options="options"
       :gap="16"
-      :vertical="false"
       @change="onChange"
       v-model:value="value" />
     <h2 class="mt30 mb10">垂直排列</h2>
     <Radio
       vertical
       :options="options"
-      :gap="16"
-      :vertical="false"
       @change="onChange"
       v-model:value="value" />
     <h2 class="mt30 mb10">Ant Design Vue 的 a-radio-group 组件</h2>
-    <a-radio-group class="border-box" @change="onChange($event.target.value)" v-model:value="value" :options="options" />
+    <a-radio-group @change="onChange($event.target.value)" v-model:value="value" :options="options" />
   </div>
 </template>
 <style lang="less" scoped>
-.border-box {
-  :deep(*), :deep(:before), :deep(:after) {
-    box-sizing: border-box;
-  }
-}
 </style>

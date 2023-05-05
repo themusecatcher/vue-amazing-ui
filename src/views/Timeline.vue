@@ -37,7 +37,7 @@ const timelineData = ref([
       </template>
     </Timeline>
     <h2 class="mt30 mb10">Ant Design Vue 时间轴</h2>
-    <a-timeline class="border-box">
+    <a-timeline>
       <a-timeline-item color="green">Create a services site 2015-09-01</a-timeline-item>
       <a-timeline-item color="green">Create a services site 2015-09-01</a-timeline-item>
       <a-timeline-item color="red">
@@ -76,10 +76,5 @@ const timelineData = ref([
 .u-desc {
   font-size: 16px;
   font-weight: 500;
-}
-.border-box {
-  :deep(*) {
-    box-sizing: border-box;
-  }
 }
 </style>
