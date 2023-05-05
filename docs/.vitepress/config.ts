@@ -67,7 +67,9 @@ export default defineConfig({
   base: '/vue-amazing-ui/',
 
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+    // 网站图标
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: 'logo.svg' }],
+    // ['link', { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
     // ['meta', { property: 'og:type', content: 'website' }],
     // ['meta', { property: 'og:title', content: ogTitle }],
     // ['meta', { property: 'og:image', content: ogImage }],

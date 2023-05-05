@@ -1,56 +1,65 @@
 {
   "hash": "063404f1",
-  "browserHash": "2932add7",
+  "browserHash": "2fe4bb95",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.2.47/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "9ae7e8bb",
+      "fileHash": "b06a3710",
       "needsInterop": false
     },
     "vue-amazing-ui": {
       "src": "../../../../node_modules/.pnpm/vue-amazing-ui@0.0.23/node_modules/vue-amazing-ui/dist/vue-amazing-ui.js",
       "file": "vue-amazing-ui.js",
-      "fileHash": "924d46bd",
+      "fileHash": "ce383e90",
       "needsInterop": false
     },
     "vue-router": {
       "src": "../../../../node_modules/.pnpm/vue-router@4.1.6_vue@3.2.47/node_modules/vue-router/dist/vue-router.mjs",
       "file": "vue-router.js",
-      "fileHash": "5ba5cb1e",
+      "fileHash": "b9728d7c",
       "needsInterop": false
     },
     "@vuepic/vue-datepicker": {
       "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.2.47/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
       "file": "@vuepic_vue-datepicker.js",
-      "fileHash": "9dc70056",
+      "fileHash": "15237f96",
       "needsInterop": false
     },
     "qrcode": {
       "src": "../../../../node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/browser.js",
       "file": "qrcode.js",
-      "fileHash": "4b2d69e1",
+      "fileHash": "e2963ffb",
       "needsInterop": true
     },
     "swiper": {
       "src": "../../../../node_modules/.pnpm/swiper@9.2.4/node_modules/swiper/swiper.esm.js",
       "file": "swiper.js",
-      "fileHash": "b94bfefb",
+      "fileHash": "9c2e8fdf",
+      "needsInterop": false
+    },
+    "date-fns": {
+      "src": "../../../../node_modules/.pnpm/date-fns@2.29.3/node_modules/date-fns/esm/index.js",
+      "file": "date-fns.js",
+      "fileHash": "b5491852",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-UTJDH6YF": {
-      "file": "chunk-UTJDH6YF.js"
-    },
     "chunk-H4UJRISF": {
       "file": "chunk-H4UJRISF.js"
+    },
+    "chunk-WVDWTHW5": {
+      "file": "chunk-WVDWTHW5.js"
     },
     "chunk-NHOGBFVC": {
       "file": "chunk-NHOGBFVC.js"
     },
-    "chunk-WVDWTHW5": {
-      "file": "chunk-WVDWTHW5.js"
+    "chunk-5DG2BXQD": {
+      "file": "chunk-5DG2BXQD.js"
+    },
+    "chunk-MTFI5C67": {
+      "file": "chunk-MTFI5C67.js"
     },
     "chunk-LZPJ5JBW": {
       "file": "chunk-LZPJ5JBW.js"
