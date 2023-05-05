@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths } from 'date-fns'
+import { ref, watchEffect } from 'vue'
+import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, addDays, startOfWeek, endOfWeek, addHours, addMinutes, addSeconds } from 'date-fns'
 
-const dateValue = ref(1678936740000)
-const rangeValue = ref<number[]>([1678936740000, 1679541540000])
+const dateValue = ref(Date.now())
+const rangeValue = ref<number[]>([Date.now(), addDays(new Date(), 1).getTime()])
+console.log(addHours(Date.now(), 1))
+
 const timeRangeValue = ref([
   {
-    hours: 10,
-    minutes: 20,
-    seconds: 30
+    hours: new Date().getHours(),
+    minutes: new Date().getMinutes(),
+    seconds: new Date().getSeconds()
   },
   {
-    hours: 14,
-    minutes: 20,
-    seconds: 30
+    hours: addHours(Date.now(), 1).getHours(),
+    minutes: addMinutes(Date.now(), 10).getMinutes(),
+    seconds: addSeconds(Date.now(), 30).getSeconds()
   }
 ])
 const presetRanges = ref([
@@ -23,41 +25,41 @@ const presetRanges = ref([
     label: 'Last month',
     range: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
   },
-  { label: 'This year', range: [startOfYear(new Date()), endOfYear(new Date())] }
+  { label: 'This year', range: [startOfYear(new Date()).getTime(), endOfYear(new Date()).getTime()] }
 ])
 const timeValue = ref({
-  hours: 10,
-  minutes: 20
+  hours: new Date().getHours(),
+  minutes: new Date().getMinutes()
 })
 const secondsValue = ref({
-  hours: 10,
-  minutes: 20,
-  seconds: 30
+  hours: new Date().getHours(),
+  minutes: new Date().getMinutes(),
+  seconds: new Date().getSeconds()
 })
-const weekValue = ref([1678032000000, 1678636799999])
+const weekValue = ref([startOfWeek(new Date()), endOfWeek(new Date())])
 const monthValue = ref({
-  year: 2023,
-  month: 0
+  year: new Date().getFullYear(),
+  month: new Date().getMonth()
 })
-const yearValue = ref(2023)
+const yearValue = ref(new Date().getFullYear())
 
-watch(dateValue, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('dateValue:', dateValue.value)
 })
-watch(rangeValue, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('rangeValue:', rangeValue.value)
 })
-watch(timeValue, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('timeValue:', timeValue.value)
 })
-watch(weekValue, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('weekValue:', weekValue.value)
 })
-watch(monthValue, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('monthValue:', monthValue.value)
 })
-watch(yearValue, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('yearValue:', yearValue.value)
 })
 </script>
 <template>
@@ -65,7 +67,7 @@ watch(yearValue, (to) => {
     <h1>Vue datepicker 参考文档</h1>
     <ul class="m-list">
       <li>
-        <a class="u-file" href="https://vue3datepicker.com/" target="_blank">Vue datepicker</a>
+        <a class="u-file" href="https://vue3datepicker.com/" target="_blank">Vue Datepicker</a>
       </li>
       <li>
         <a class="u-file" href="https://vue3datepicker.com/installation/" target="_blank">Vue Datepicker Documents</a>
@@ -76,31 +78,24 @@ watch(yearValue, (to) => {
     <DatePicker
       placeholder="请选择日期"
       v-model:date="dateValue"
-      mode="date"
       show-today
-      format="yyyy-MM-dd"
-      :width="180" />
+      format="yyyy-MM-dd" />
     <h2 class="mt30 mb10">禁用过去的日期选择器 (mode: date )</h2>
     <DatePicker
       placeholder="请选择日期"
       v-model:date="dateValue"
-      mode="date"
       :min-date="new Date()"
-      format="yyyy-MM-dd"
-      :width="180" />
+      format="yyyy-MM-dd" />
     <h2 class="mt30 mb10">禁用未来的日期选择器 (mode: date )</h2>
     <DatePicker
       placeholder="请选择日期"
       v-model:date="dateValue"
-      mode="date"
       :max-date="new Date()"
-      format="yyyy-MM-dd"
-      :width="180" />
+      format="yyyy-MM-dd" />
     <h2 class="mt30 mb10">日期时间选择器 (mode: date & show-time & enable-seconds)</h2>
     <DatePicker
       placeholder="请选择日期时间"
       v-model:date="dateValue"
-      mode="date"
       format="yyyy-MM-dd HH:mm:ss"
       :width="240"
       show-time

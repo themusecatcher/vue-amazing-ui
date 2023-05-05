@@ -38,4 +38,4 @@ hero:
 #   - icon: 🔑
 #     title: Fully Typed APIs
 #     details: Flexible programmatic APIs with full TypeScript typing.
-# ---
+---

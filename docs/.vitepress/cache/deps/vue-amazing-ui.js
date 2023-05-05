@@ -1,9 +1,9 @@
 import {
-  Xn
-} from "./chunk-UTJDH6YF.js";
-import {
   require_browser
 } from "./chunk-H4UJRISF.js";
+import {
+  useRouter
+} from "./chunk-WVDWTHW5.js";
 import {
   Autoplay,
   EffectFade,
@@ -12,8 +12,9 @@ import {
   core_default
 } from "./chunk-NHOGBFVC.js";
 import {
-  useRouter
-} from "./chunk-WVDWTHW5.js";
+  Xn
+} from "./chunk-5DG2BXQD.js";
+import "./chunk-MTFI5C67.js";
 import {
   Fragment,
   Transition,

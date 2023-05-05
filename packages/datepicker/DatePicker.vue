@@ -14,7 +14,7 @@ import { ref, computed, watch } from 'vue'
 interface Props {
   width?: number // 日期选择器宽度
   mode?: string // 选择器模式，可选：时间time，日期date，周week，月month，年year
-  // format?: string // 日期展示格式，(y: 年, M: 月, d: 天, H: 时, m: 分, s: 秒)
+  // format?: string | (params: Date | Date[]) => string // 日期展示格式，(y: 年, M: 月, d: 天, H: 时, m: 分, s: 秒)
   showTime?: boolean // 是否增加时间选择
   showToday?: boolean // 是否展示”今天“按钮
   // multiCalendars?: boolean // 范围选择器是否使用双日期面板
@@ -25,7 +25,14 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   width: 180,
   mode: 'date',
-  // format: 'yyyy-MM-dd',
+  /* format default
+    Single picker: 'MM/dd/yyyy HH:mm'
+    Range picker: 'MM/dd/yyyy HH:mm - MM/dd/yyyy HH:mm'
+    Month picker: 'MM/yyyy'
+    Time picker: 'HH:mm'
+    Time picker range: 'HH:mm - HH:mm'
+  */
+  // format: 'MM/dd/yyyy',
   showTime: false,
   showToday: false,
   // multiCalendars: false,
