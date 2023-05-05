@@ -124,6 +124,7 @@ function onHideMessage (index: number) {
   margin: 0 auto;
 }
 .m-message-wrap {
+  box-sizing: border-box;
   position: fixed;
   z-index: 999; // 突出显示该层级
   width: 100vw;

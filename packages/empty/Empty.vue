@@ -25,6 +25,7 @@ withDefaults(defineProps<Props>(), {
 </template>
 <style lang="less" scoped>
 .m-empty {
+  box-sizing: border-box;
   font-size: 0;
   margin: 0 auto;
   text-align: center;

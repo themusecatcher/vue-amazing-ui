@@ -37,9 +37,10 @@ function onSwitch () {
 </template>
 <style lang="less" scoped>
 .m-switch-wrap {
+  box-sizing: border-box;
+  display: inline-block;
   height: 22px;
   min-width: 44px;
-  display: inline-block;
   .m-switch {
     position: relative;
     height: 22px;

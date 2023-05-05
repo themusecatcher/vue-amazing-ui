@@ -108,6 +108,7 @@ function onCopy (index: number) {
 </template>
 <style lang="less" scoped>
 .m-collapse {
+  box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.02);
   border: 1px solid #d9d9d9;
   border-bottom: 0;

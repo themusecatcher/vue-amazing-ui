@@ -114,6 +114,7 @@ onMounted(() => {
 </template>
 <style lang="less" scoped>
 .m-countdown {
+  box-sizing: border-box;
   display: inline-block;
   line-height: 1.571;
   .u-title {

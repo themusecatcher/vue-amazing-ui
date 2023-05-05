@@ -77,6 +77,7 @@ function onChange (index: number) { // 点击切换选择步骤
 </template>
 <style lang="less" scoped>
 .m-steps-area {
+  box-sizing: border-box;
   margin: 0px auto;
   .m-steps {
     display: flex;

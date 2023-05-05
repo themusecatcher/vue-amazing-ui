@@ -185,6 +185,7 @@ function startMove () {
 <style lang="less" scoped>
 // 水平滚动
 .m-slider-horizon {
+  box-sizing: border-box;
   box-shadow: 0px 0px 5px #D3D3D3;
   border-radius: 6px;
   white-space: nowrap;

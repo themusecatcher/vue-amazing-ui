@@ -34,6 +34,22 @@ const options = ref([
       {
         label: '巴黎市',
         value: 8
+      },
+      {
+        label: '伦敦市',
+        value: 7
+      },
+      {
+        label: '巴黎市',
+        value: 8
+      },
+      {
+        label: '伦敦市',
+        value: 7
+      },
+      {
+        label: '巴黎市',
+        value: 8
       }
     ])
 
@@ -50,6 +66,14 @@ function onChange (value: any) {
     <h2 class="mb10">Radio 单选框基本使用</h2>
     <p class="u-intro">用于在多个备选项中选中单个状态</p>
     <Radio
+      :options="options"
+      :gap="16"
+      :vertical="false"
+      @change="onChange"
+      v-model:value="value" />
+    <h2 class="mt30 mb10">垂直排列</h2>
+    <Radio
+      vertical
       :options="options"
       :gap="16"
       :vertical="false"

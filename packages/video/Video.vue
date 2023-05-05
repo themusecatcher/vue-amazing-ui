@@ -146,6 +146,7 @@ onUnmounted(() => {
 </template>
 <style lang="less" scoped>
 .m-video {
+  box-sizing: border-box;
   display: inline-block;
   position: relative;
   background: #000;

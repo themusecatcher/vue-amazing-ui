@@ -106,6 +106,7 @@ function preventDefault (e: Event) {
 </template>
 <style lang="less" scoped>
 .m-rate {
+  box-sizing: border-box;
   display: inline-block;
   .m-star {
     position: relative;

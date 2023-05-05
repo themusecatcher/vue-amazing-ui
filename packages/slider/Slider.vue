@@ -202,6 +202,7 @@ function onRightSlide (source: number, place: string) {
 </template>
 <style lang="less" scoped>
 .m-slider {
+  box-sizing: border-box;
   display: inline-block;
   height: 4px;
   position: relative;

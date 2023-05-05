@@ -10,7 +10,7 @@ interface Props {
   disabled?: boolean // 是否禁用所有复选框
   vertical?: boolean // 是否垂直排列
   value?: any[] // 当前选中的值（v-model）
-  gap?: number // 多个单选框之间的间距，单位px
+  gap?: number // 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距
   indeterminate?: boolean // 全选时的样式控制
   checked?: boolean // 是否全选（v-model）
 }
@@ -88,11 +88,11 @@ function onCheckAll () { // 全选切换
 </template>
 <style lang="less" scoped>
 .m-checkbox {
+  box-sizing: border-box;
   display: inline-block;
-  color: #000000d9;
+  color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1;
-  box-sizing: border-box;
   .m-checkbox-wrap {
     display: inline-block;
     height: 22px;
@@ -159,11 +159,12 @@ function onCheckAll () { // 全选切换
       .u-label {
         padding: 0 8px;
         font-size: 14px;
+        line-height: 22px;
         display: inline-block;
       }
     }
     .disabled {
-      color: #00000040;
+      color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
       &:hover {
         .u-checkbox {
