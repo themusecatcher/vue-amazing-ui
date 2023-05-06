@@ -1,4 +1,4 @@
-# 分割线 Divider
+# 文字提示 Tooltip
 
 <br/>
 

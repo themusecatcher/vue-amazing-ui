@@ -2429,7 +2429,7 @@ const Message = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-
 Message.install = (app) => {
   app.component(Message.__name, Message);
 };
-const _withScopeId$9 = (n) => (pushScopeId("data-v-7c167d2d"), n = n(), popScopeId(), n);
+const _withScopeId$9 = (n) => (pushScopeId("data-v-7832aeef"), n = n(), popScopeId(), n);
 const _hoisted_1$j = ["onClick"];
 const _hoisted_2$f = { class: "m-spin-dot" };
 const _hoisted_3$d = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -2459,7 +2459,7 @@ const _hoisted_13$4 = [
   _hoisted_12$4
 ];
 const _hoisted_14$4 = {
-  key: 0,
+  key: 1,
   focusable: "false",
   class: "u-icon info",
   "data-icon": "info-circle",
@@ -2471,7 +2471,7 @@ const _hoisted_16$4 = [
   _hoisted_15$4
 ];
 const _hoisted_17$3 = {
-  key: 1,
+  key: 2,
   focusable: "false",
   class: "u-icon success",
   "data-icon": "check-circle",
@@ -2483,7 +2483,7 @@ const _hoisted_19$3 = [
   _hoisted_18$3
 ];
 const _hoisted_20$2 = {
-  key: 2,
+  key: 3,
   focusable: "false",
   class: "u-icon error",
   "data-icon": "close-circle",
@@ -2495,7 +2495,7 @@ const _hoisted_22$1 = [
   _hoisted_21$1
 ];
 const _hoisted_23$1 = {
-  key: 3,
+  key: 4,
   focusable: "false",
   class: "u-icon warn",
   "data-icon": "exclamation-circle",
@@ -2512,70 +2512,51 @@ const _hoisted_28 = { class: "m-btns" };
 const _sfc_main$j = /* @__PURE__ */ defineComponent({
   __name: "Modal",
   props: {
-    // 运行时声明
-    title: {
-      // 标题描述
-      type: String,
-      default: "Title"
-    },
-    content: {
-      // 内容描述
-      type: String,
-      default: "Content"
-    },
-    width: {
-      // 提示框宽度
-      type: Number,
-      default: 420
-    },
-    cancelText: {
-      // 取消按钮文字
-      type: String,
-      default: "取消"
-    },
-    okText: {
-      // 确认按钮文字
-      type: String,
-      default: "确定"
-    },
-    noticeText: {
-      // 通知按钮文字
-      type: String,
-      default: "知道了"
-    },
-    mode: {
-      // 确认提示框：confirm  信息提示框：info
-      type: String,
-      default: "confirm"
-    },
-    type: {
-      // confirm mode: 'confirm', 'delete'   info mode: 'info', 'success', 'error', 'warn'
-      type: String,
-      default: "confirm"
-    },
-    center: {
-      // 水平垂直居中：true  固定高度水平居中：false
-      type: Boolean,
-      default: true
-    },
-    top: {
-      // 固定高度水平居中时，距顶部高度
-      type: Number,
-      default: 100
-    },
-    loading: {
-      // 加载中...
-      type: Boolean,
-      default: false
-    },
-    visible: {
-      // 提示框是否可见
-      type: Boolean,
-      default: false
-    }
+    width: { default: 420 },
+    cancelText: { default: "取消" },
+    okText: { default: "确定" },
+    noticeText: { default: "知道了" },
+    center: { type: Boolean, default: true },
+    top: { default: 100 },
+    loading: { type: Boolean, default: false },
+    visible: { type: Boolean, default: false }
   },
-  emits: ["cancel", "ok"],
-  setup(__props, { emit: emits }) {
+  emits: ["cancel", "ok", "know"],
+  setup(__props, { expose, emit: emits }) {
+    const mode = ref("");
+    const desc = ref();
+    function info(data) {
+      mode.value = "info";
+      desc.value = data;
+    }
+    function success(data) {
+      mode.value = "success";
+      desc.value = data;
+    }
+    function error(data) {
+      mode.value = "error";
+      desc.value = data;
+    }
+    function warn(data) {
+      mode.value = "warn";
+      desc.value = data;
+    }
+    function confirm(data) {
+      mode.value = "confirm";
+      desc.value = data;
+    }
+    function erase(data) {
+      mode.value = "erase";
+      desc.value = data;
+    }
+    expose({
+      info,
+      success,
+      error,
+      warn,
+      confirm,
+      erase
+    });
     function onBlur() {
       emits("cancel");
     }
@@ -2585,72 +2566,76 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
     function onConfirm() {
       emits("ok");
     }
+    function onKnow() {
+      emits("know");
+    }
     return (_ctx, _cache) => {
       return openBlock(), createBlock(Transition, null, {
-        default: withCtx(() => [
-          withDirectives(createElementVNode("div", {
-            class: "m-modal-mask",
-            onClick: withModifiers(onBlur, ["self"])
-          }, [
-            createElementVNode("div", {
-              class: normalizeClass(["m-modal", __props.center ? "relative-hv-center" : "top-center"]),
-              style: normalizeStyle(`width: ${__props.width}px; top: ${!__props.center ? __props.top + "px" : "50%"};`)
+        default: withCtx(() => {
+          var _a, _b;
+          return [
+            withDirectives(createElementVNode("div", {
+              class: "m-modal-mask",
+              onClick: withModifiers(onBlur, ["self"])
             }, [
               createElementVNode("div", {
-                class: normalizeClass(["m-modal-body", { "loading": __props.loading }])
+                class: normalizeClass(["m-modal", __props.center ? "relative-hv-center" : "top-center"]),
+                style: normalizeStyle(`width: ${__props.width}px; top: ${!__props.center ? __props.top + "px" : "50%"};`)
               }, [
-                withDirectives(createElementVNode("div", _hoisted_2$f, _hoisted_7$8, 512), [
-                  [vShow, __props.loading]
-                ]),
-                createElementVNode("div", _hoisted_8$8, [
-                  createElementVNode("div", _hoisted_9$8, [
-                    __props.mode === "confirm" ? (openBlock(), createElementBlock("svg", _hoisted_10$5, _hoisted_13$4)) : createCommentVNode("", true),
-                    __props.mode === "info" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                      __props.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_14$4, _hoisted_16$4)) : createCommentVNode("", true),
-                      __props.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_17$3, _hoisted_19$3)) : createCommentVNode("", true),
-                      __props.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_20$2, _hoisted_22$1)) : createCommentVNode("", true),
-                      __props.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_23$1, _hoisted_25)) : createCommentVNode("", true)
-                    ], 64)) : createCommentVNode("", true),
-                    createElementVNode("div", _hoisted_26, toDisplayString(__props.title), 1)
+                createElementVNode("div", {
+                  class: normalizeClass(["m-modal-body", { "loading": __props.loading }])
+                }, [
+                  withDirectives(createElementVNode("div", _hoisted_2$f, _hoisted_7$8, 512), [
+                    [vShow, __props.loading]
                   ]),
-                  createElementVNode("div", _hoisted_27, toDisplayString(__props.content), 1)
-                ]),
-                createElementVNode("div", _hoisted_28, [
-                  __props.mode === "confirm" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-                    createElementVNode("button", {
-                      class: "u-cancel",
-                      onClick: onCancel
-                    }, toDisplayString(__props.cancelText), 1),
-                    __props.type === "confirm" ? (openBlock(), createElementBlock("button", {
-                      key: 0,
-                      class: "u-confirm primary",
-                      onClick: onConfirm
-                    }, toDisplayString(__props.okText), 1)) : createCommentVNode("", true),
-                    __props.type === "delete" ? (openBlock(), createElementBlock("button", {
+                  createElementVNode("div", _hoisted_8$8, [
+                    createElementVNode("div", _hoisted_9$8, [
+                      mode.value === "confirm" || mode.value === "erase" ? (openBlock(), createElementBlock("svg", _hoisted_10$5, _hoisted_13$4)) : createCommentVNode("", true),
+                      mode.value === "info" ? (openBlock(), createElementBlock("svg", _hoisted_14$4, _hoisted_16$4)) : createCommentVNode("", true),
+                      mode.value === "success" ? (openBlock(), createElementBlock("svg", _hoisted_17$3, _hoisted_19$3)) : createCommentVNode("", true),
+                      mode.value === "error" ? (openBlock(), createElementBlock("svg", _hoisted_20$2, _hoisted_22$1)) : createCommentVNode("", true),
+                      mode.value === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_23$1, _hoisted_25)) : createCommentVNode("", true),
+                      createElementVNode("div", _hoisted_26, toDisplayString((_a = desc.value) == null ? void 0 : _a.title), 1)
+                    ]),
+                    createElementVNode("div", _hoisted_27, toDisplayString((_b = desc.value) == null ? void 0 : _b.content), 1)
+                  ]),
+                  createElementVNode("div", _hoisted_28, [
+                    mode.value === "confirm" || mode.value === "erase" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+                      createElementVNode("button", {
+                        class: "u-cancel",
+                        onClick: onCancel
+                      }, toDisplayString(__props.cancelText), 1),
+                      mode.value === "confirm" ? (openBlock(), createElementBlock("button", {
+                        key: 0,
+                        class: "u-confirm primary",
+                        onClick: onConfirm
+                      }, toDisplayString(__props.okText), 1)) : createCommentVNode("", true),
+                      mode.value === "erase" ? (openBlock(), createElementBlock("button", {
+                        key: 1,
+                        class: "u-confirm delete",
+                        onClick: onConfirm
+                      }, toDisplayString(__props.okText), 1)) : createCommentVNode("", true)
+                    ], 64)) : createCommentVNode("", true),
+                    ["info", "success", "error", "warn"].includes(mode.value) ? (openBlock(), createElementBlock("button", {
                       key: 1,
-                      class: "u-confirm delete",
-                      onClick: onConfirm
-                    }, toDisplayString(__props.okText), 1)) : createCommentVNode("", true)
-                  ], 64)) : createCommentVNode("", true),
-                  __props.mode === "info" ? (openBlock(), createElementBlock("button", {
-                    key: 1,
-                    class: "u-confirm primary",
-                    onClick: onConfirm
-                  }, toDisplayString(__props.noticeText), 1)) : createCommentVNode("", true)
-                ])
-              ], 2)
-            ], 6)
-          ], 8, _hoisted_1$j), [
-            [vShow, __props.visible]
-          ])
-        ]),
+                      class: "u-confirm primary",
+                      onClick: onKnow
+                    }, toDisplayString(__props.noticeText), 1)) : createCommentVNode("", true)
+                  ])
+                ], 2)
+              ], 6)
+            ], 8, _hoisted_1$j), [
+              [vShow, __props.visible]
+            ])
+          ];
+        }),
         _: 1
       });
     };
   }
 });
-const Modal_vue_vue_type_style_index_0_scoped_7c167d2d_lang = "";
-const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-7c167d2d"]]);
+const Modal_vue_vue_type_style_index_0_scoped_7832aeef_lang = "";
+const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-7832aeef"]]);
 Modal.install = (app) => {
   app.component(Modal.__name, Modal);
 };

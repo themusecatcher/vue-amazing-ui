@@ -1,4 +1,4 @@
-# 分割线 Divider
+# 滑动输入条 Slider
 
 <br/>
 

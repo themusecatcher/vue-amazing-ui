@@ -1,4 +1,4 @@
-# 分割线 Divider
+# 步骤条 Steps
 
 <br/>
 

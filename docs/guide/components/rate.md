@@ -1,4 +1,4 @@
-# 分割线 Divider
+# 评分 Rate
 
 <br/>
 

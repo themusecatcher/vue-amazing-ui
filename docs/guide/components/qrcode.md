@@ -1,4 +1,4 @@
-# 分割线 Divider
+# 二维码 QRCode
 
 <br/>
 
