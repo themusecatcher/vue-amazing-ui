@@ -3,42 +3,28 @@ import { ref, computed, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Image {
   title?: string // 图片名称
+  src: string // 图片地址
   link?: string // 图片跳转链接
-  imgUrl: string // 图片地址
 }
-const props = defineProps({
-  imageData: { // 走马灯图片数组
-    type: Array<Image>,
-    default: () => []
-  },
-  interval: { // 自动滑动轮播间隔
-    type: Number,
-    default: 3000
-  },
-  width: { // 走马灯宽度
-    type: [Number, String],
-    default: '100%'
-  },
-  height: { // 走马灯高度
-    type: [Number, String],
-    default: '100vh'
-  },
-  navigation: { // 是否显示导航
-    type: Boolean,
-    default: true
-  },
-  pagination: { // 是否显示分页
-    type: Boolean,
-    default: true
-  },
-  disableOnInteraction: { // 用户操作导航或分页之后，是否禁止自动切换。默认为true：停止。
-    type: Boolean,
-    default: true
-  },
-  pauseOnMouseEnter: { // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
-    type: Boolean,
-    default: true
-  }
+interface Props {
+  images: Image[] // 走马灯图片数组
+  interval?: number // 自动滑动轮播间隔
+  width?: number|string // 走马灯宽度
+  height?: number|string // 走马灯高度
+  navigation?: boolean // 是否显示导航
+  pagination?: boolean // 是否显示分页
+  disableOnInteraction?: boolean // 用户操作导航或分页之后，是否禁止自动切换，默认为true：停止
+  pauseOnMouseEnter?: boolean // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
+}
+const props = withDefaults(defineProps<Props>(), {
+  images: () => [],
+  interval: 3000,
+  width: '100%',
+  height:  '100vh',
+  navigation: true,
+  pagination: true,
+  disableOnInteraction: true,
+  pauseOnMouseEnter:  true,
 })
 const toLeft = ref(true) // 左滑标志，默认左滑
 const left = ref(0) // 滑动偏移值
@@ -65,10 +51,10 @@ const carouselHeight = computed(() => { // 走马灯区域高度
   }
 })
 const totalWidth = computed(() => { // 容器宽度：(图片数组长度+1) * 图片宽度
-  return (props.imageData.length + 1) * imageWidth.value
+  return (props.images.length + 1) * imageWidth.value
 })
 const len = computed(() => { // 图片数量
-  return props.imageData.length
+  return props.images.length
 })
 
 onMounted(() => {
@@ -76,6 +62,7 @@ onMounted(() => {
   getImageSize() // 获取每张图片大小
 })
 
+const complete = ref(Array(len.value).fill(false)) // 图片是否加载完成
 const fpsRaf = ref() // fps回调标识
 const fps = ref(60)
 const step = computed(() => { // 移动参数（120fps: 24, 60fps: 12）
@@ -85,6 +72,9 @@ const step = computed(() => { // 移动参数（120fps: 24, 60fps: 12）
     return 12 * (fps.value / 60)
   }
 })
+function onComplete (index: number) { // 图片加载完成
+  complete.value[index] = true
+}
 function getFPS () { // 获取屏幕刷新率
   // @ts-ignore
   const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
@@ -254,20 +244,19 @@ function onSwitch (n: number) { // 分页切换图片
     class="m-slider"
     ref="carousel"
     :style="`width: ${carouselWidth}; height: ${carouselHeight};`"
-    @mouseenter="pauseOnMouseEnter ? onStop() : (e: Event) => e.preventDefault()"
-    @mouseleave="pauseOnMouseEnter ? onStart() : (e: Event) => e.preventDefault()">
+    @mouseenter="pauseOnMouseEnter ? onStop() : () => false"
+    @mouseleave="pauseOnMouseEnter ? onStart() : () => false">
     <div :class="{'transition': transition}" :style="`width: ${totalWidth}px; height: 100%; will-change: transform; transform: translateX(${-left}px);`">
-      <div
-        v-for="(image, index) in imageData"
-        :key="index"
-        class="m-image">
+      <div class="m-image" v-for="(image, index) in images" :key="index">
         <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
-          <img :src="image.imgUrl" :key="image.imgUrl" :alt="image.title" class="u-img" :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"/>
+          <img @load="onComplete(index)" :src="image.src" :key="image.src" :alt="image.title" class="u-img" :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"/>
+          <div class="u-spin-circle" v-show="!complete[index]"></div>
         </a>
       </div>
       <div class="m-image" v-if="len">
-        <a :href="imageData[0].link ? imageData[0].link:'javascript:;'" :target="imageData[0].link ? '_blank':'_self'" class="m-link">
-          <img :src="imageData[0].imgUrl" :key="imageData[0].imgUrl" :alt="imageData[0].title" class="u-img"  :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"/>
+        <a :href="images[0].link ? images[0].link:'javascript:;'" :target="images[0].link ? '_blank':'_self'" class="m-link">
+          <img @load="onComplete(0)" :src="images[0].src" :key="images[0].src" :alt="images[0].title" class="u-img"  :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"/>
+          <div class="u-spin-circle" v-show="!complete[0]"></div>
         </a>
       </div>
     </div>
@@ -298,12 +287,34 @@ function onSwitch (n: number) { // 分页切换图片
   .m-image {
     display: inline-block;
     .m-link {
+      position: relative;
       display: block;
       height: 100%;
       .u-img {
         object-fit: cover;
         vertical-align: bottom; // 消除img标签底部的5px
         cursor: pointer;
+      }
+      .u-spin-circle {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        pointer-events: none;
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border-width: 4px;
+        border-style: solid;
+        border-color: @themeColor;
+        border-top-color: transparent; // 隐藏1/4圆
+        animation: loadingCircle 1s infinite linear;
+        -webkit-animation: loadingCircle 1s infinite linear;
+      }
+      @keyframes loadingCircle {
+        100% {
+          transform: rotate(360deg);
+        }
       }
     }
   }

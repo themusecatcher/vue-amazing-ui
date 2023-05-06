@@ -269,7 +269,7 @@ function onSwitchRight () {
               :src="image.src"
               :alt="image.name"
               @load="onLoaded"
-              @dblclick="resetOnDbclick ? onResetZoom():(e: Event) => e.preventDefault()"/>
+              @dblclick="resetOnDbclick ? onResetZoom():() => false"/>
           </div>
           <template v-if="imageCount > 1">
             <div
@@ -304,7 +304,6 @@ function onSwitchRight () {
   opacity: 0;
 }
 .u-spin-circle {
-  box-sizing: border-box;
   position: absolute;
   inset: 0;
   margin: auto;
@@ -326,6 +325,7 @@ function onSwitchRight () {
   }
 }
 .m-image-wrap {
+  box-sizing: border-box;
   .image-hover-mask {
     &:hover {
       .m-image-mask {

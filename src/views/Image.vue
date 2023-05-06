@@ -2,23 +2,23 @@
 import { ref } from 'vue'
 const images = ref([
   {
-    src: 'https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: new URL(`../assets/images/1.jpg`, import.meta.url).href,
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: new URL(`../assets/images/2.jpg`, import.meta.url).href,
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: new URL(`../assets/images/3.jpg`, import.meta.url).href,
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -26,13 +26,13 @@ const images = ref([
 <template>
   <div>
     <h2 class="mb10">Image 图片基本使用</h2>
-    <Image :width="400" :height="300" src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg" />
+    <Image :width="400" :height="300" src="https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg" />
     <h2 class="mt30 mb10">多张图片预览，同时支持键盘 (left / right / up / down) 按键切换 (src: images)</h2>
     <Image :width="400" :height="300" :src="images" />
     <h2 class="mt30 mb10">多张图片预览，支持循环切换图片 (loop: true)</h2>
     <Image :width="400" :height="300" loop :src="images" />
     <h2 class="mt30 mb10">预览文本设为 preview 同时图片覆盖容器 (preview: preview & fit: cover)</h2>
-    <Image :width="400" :height="300" fit="cover" src="https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg">
+    <Image :width="400" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg">
       <template #preview>
         <p class="u-pre">preview</p>
       </template>
@@ -44,7 +44,7 @@ const images = ref([
       :zoomRatio="0.2"
       :minZoomScale="0.5"
       :maxZoomScale="2"
-      src="https://ali.jinhui365.cn/group5/M00/00/73/CgAAcmEDZMWADliHAAf8CDmwJyU179.jpg" />
+      src="https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg" />
   </div>
 </template>
 <style lang="less" scoped>
