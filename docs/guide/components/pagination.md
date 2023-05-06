@@ -1,4 +1,4 @@
-# 分割线 Divider
+# 分页器 Pagination
 
 <br/>
 

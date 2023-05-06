@@ -34,7 +34,7 @@ function onClose () {
 
 ## 基本使用
 
-<Button type="primary" @click="onInfo('This is a normal message')" class="mr30">Info</Button>
+<Button type="primary" @click="onInfo('This is a normal message')">Info</Button>
 
 <details>
 <summary>查看代码</summary>
@@ -52,7 +52,7 @@ function onClose () {
 }
 </script>
 <template>
-  <Button type="primary" @click="onInfo('This is a normal message')" class="mr30">Info</Button>
+  <Button type="primary" @click="onInfo('This is a normal message')">Info</Button>
   <Message ref="message" :duration="3000" :top="30" @close="onClose" />
 </template>
 ```
@@ -61,7 +61,7 @@ function onClose () {
 
 ## 成功提示
 
-<Button type="primary" @click="onSuccess('This is a success message')" class="mr30">Success</Button>
+<Button type="primary" @click="onSuccess('This is a success message')">Success</Button>
 
 <details>
 <summary>查看代码</summary>
@@ -79,7 +79,7 @@ function onClose () {
 }
 </script>
 <template>
-  <Button type="primary" @click="onSuccess('This is a success message')" class="mr30">Success</Button>
+  <Button type="primary" @click="onSuccess('This is a success message')">Success</Button>
   <Message ref="message" :duration="3000" :top="30" @close="onClose" />
 </template>
 ```
@@ -88,7 +88,7 @@ function onClose () {
 
 ## 失败提示
 
-<Button type="primary" @click="onError('This is a error message')" class="mr30">Error</Button>
+<Button type="primary" @click="onError('This is a error message')">Error</Button>
 
 <details>
 <summary>查看代码</summary>
@@ -106,7 +106,7 @@ function onClose () {
 }
 </script>
 <template>
-  <Button type="primary" @click="onError('This is a error message')" class="mr30">Error</Button>
+  <Button type="primary" @click="onError('This is a error message')">Error</Button>
   <Message ref="message" :duration="3000" :top="30" @close="onClose" />
 </template>
 ```
@@ -115,7 +115,7 @@ function onClose () {
 
 ## 警告提示
 
-<Button type="primary" @click="onWarn('This is a warn message')" class="mr30">Warn</Button>
+<Button type="primary" @click="onWarn('This is a warn message')">Warn</Button>
 
 <details>
 <summary>查看代码</summary>
@@ -133,7 +133,7 @@ function onClose () {
 }
 </script>
 <template>
-  <Button type="primary" @click="onWarn('This is a warn message')" class="mr30">Warn</Button>
+  <Button type="primary" @click="onWarn('This is a warn message')">Warn</Button>
   <Message ref="message" :duration="3000" :top="30" @close="onClose" />
 </template>
 ```

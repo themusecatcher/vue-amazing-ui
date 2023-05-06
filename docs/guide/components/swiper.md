@@ -1,4 +1,4 @@
-# 分割线 Divider
+# 触摸滑动插件 Swiper
 
 <br/>
 

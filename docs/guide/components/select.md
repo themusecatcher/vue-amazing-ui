@@ -1,4 +1,4 @@
-# 分割线 Divider
+# 选择器 Select
 
 <br/>
 
