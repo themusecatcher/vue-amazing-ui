@@ -2853,7 +2853,7 @@ const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "da
 Notification.install = (app) => {
   app.component(Notification.__name, Notification);
 };
-const _withScopeId$7 = (n) => (pushScopeId("data-v-638caa96"), n = n(), popScopeId(), n);
+const _withScopeId$7 = (n) => (pushScopeId("data-v-9866523f"), n = n(), popScopeId(), n);
 const _hoisted_1$h = { class: "m-pagination-wrap" };
 const _hoisted_2$d = {
   key: 0,
@@ -3091,12 +3091,12 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Pagination_vue_vue_type_style_index_0_scoped_638caa96_lang = "";
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-638caa96"]]);
+const Pagination_vue_vue_type_style_index_0_scoped_9866523f_lang = "";
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-9866523f"]]);
 Pagination.install = (app) => {
   app.component(Pagination.__name, Pagination);
 };
-const _withScopeId$6 = (n) => (pushScopeId("data-v-55d0b413"), n = n(), popScopeId(), n);
+const _withScopeId$6 = (n) => (pushScopeId("data-v-efa5489d"), n = n(), popScopeId(), n);
 const _hoisted_1$g = {
   key: 0,
   class: "u-success",
@@ -3118,7 +3118,7 @@ const _hoisted_5$5 = {
   viewBox: "0 0 100 100"
 };
 const _hoisted_6$5 = ["d", "stroke-width"];
-const _hoisted_7$5 = ["d", "stroke-width", "opacity"];
+const _hoisted_7$5 = ["d", "stroke-width", "stroke", "opacity"];
 const _hoisted_8$5 = {
   key: 0,
   class: "u-success",
@@ -3164,7 +3164,7 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
    a ${long / 2},${long / 2} 0 1 1 0,${long}
    a ${long / 2},${long / 2} 0 1 1 0,-${long}`;
     });
-    const backgroundColor = computed(() => {
+    const lineColor = computed(() => {
       if (typeof props.strokeColor === "string") {
         return props.strokeColor;
       } else {
@@ -3183,7 +3183,7 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
         }, [
           createElementVNode("div", {
             class: normalizeClass(["u-progress-bg", { "u-success-bg": __props.percent >= 100 }]),
-            style: normalizeStyle(`background: ${unref(backgroundColor)}; width: ${__props.percent >= 100 ? 100 : __props.percent}%; height: ${__props.strokeWidth}px;`)
+            style: normalizeStyle(`background: ${unref(lineColor)}; width: ${__props.percent >= 100 ? 100 : __props.percent}%; height: ${__props.strokeWidth}px;`)
           }, null, 6)
         ], 4),
         __props.showInfo ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
@@ -3208,7 +3208,8 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
             "stroke-linecap": "round",
             class: normalizeClass(["u-progress-circle-path", { success: __props.percent >= 100 }]),
             "stroke-width": __props.strokeWidth,
-            style: normalizeStyle(`stroke: ${unref(backgroundColor)}; stroke-dasharray: ${__props.percent / 100 * unref(perimeter)}px, ${unref(perimeter)}px;`),
+            stroke: unref(lineColor),
+            style: normalizeStyle(`stroke-dasharray: ${__props.percent / 100 * unref(perimeter)}px, ${unref(perimeter)}px;`),
             opacity: __props.percent === 0 ? 0 : 1,
             "fill-opacity": "0"
           }, null, 14, _hoisted_7$5)
@@ -3220,8 +3221,8 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Progress_vue_vue_type_style_index_0_scoped_55d0b413_lang = "";
-const Progress = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-55d0b413"]]);
+const Progress_vue_vue_type_style_index_0_scoped_efa5489d_lang = "";
+const Progress = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-efa5489d"]]);
 Progress.install = (app) => {
   app.component(Progress.__name, Progress);
 };
@@ -3256,6 +3257,7 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
     color: { default: "#000" },
     backgroundColor: { default: "#FFF" },
     bordered: { type: Boolean, default: true },
+    borderColor: { default: "#0505050f" },
     scale: { default: 8 },
     errorLevel: { default: "H" }
   },
@@ -3278,7 +3280,7 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
         class: normalizeClass(["m-qrcode", { "bordered": __props.bordered }]),
-        style: normalizeStyle(`width: ${__props.size}px; height: ${__props.size}px;`)
+        style: normalizeStyle(`width: ${__props.size}px; height: ${__props.size}px; border-color: ${__props.borderColor};`)
       }, [
         createElementVNode("img", {
           src: unref(qrcode),
@@ -3289,8 +3291,8 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const QRCode_vue_vue_type_style_index_0_scoped_119eb030_lang = "";
-const QRCode = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-119eb030"]]);
+const QRCode_vue_vue_type_style_index_0_scoped_59ce767b_lang = "";
+const QRCode = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-59ce767b"]]);
 QRCode.install = (app) => {
   app.component(QRCode.__name, QRCode);
 };
