@@ -197,6 +197,7 @@ function changePage (pageNum: number): boolean | void {
       .active();
     }
     .u-arrow {
+      display: inline-block;
       fill: rgba(0, 0, 0, 0.65);
       width: 12px;
       height: 12px;

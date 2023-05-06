@@ -13,7 +13,7 @@ interface Props {
   strokeColor?: string|Gradient // 进度条的色彩，传入 string 时为纯色，传入 object 时为渐变
   strokeWidth?: number // 进度条线的宽度，单位px
   showInfo?: boolean // 是否显示进度数值或状态图标
-  type?: string // 进度条类型 'line' | 'circle'
+  type?: 'line'|'circle' // 进度条类型
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
@@ -39,7 +39,7 @@ const path = computed(() => { // 圆条轨道路径指令
    a ${(long / 2)},${(long / 2)} 0 1 1 0,${long}
    a ${(long / 2)},${(long / 2)} 0 1 1 0,-${long}`
 })
-const backgroundColor = computed(() => {
+const lineColor = computed(() => {
   if (typeof props.strokeColor === 'string') {
     return props.strokeColor
   } else {
@@ -50,7 +50,7 @@ const backgroundColor = computed(() => {
 <template>
   <div v-if="type==='line'" class="m-progress-line" :style="`width: ${totalWidth}; height: ${strokeWidth < 24 ? 24:strokeWidth}px;`">
     <div class="m-progress-inner" :style="`width: ${showInfo? 'calc(100% - 44px)':'100%'};`">
-      <div :class="['u-progress-bg', {'u-success-bg': percent >= 100}]" :style="`background: ${backgroundColor}; width: ${percent >= 100 ? 100:percent}%; height: ${strokeWidth}px;`"></div>
+      <div :class="['u-progress-bg', {'u-success-bg': percent >= 100}]" :style="`background: ${lineColor}; width: ${percent >= 100 ? 100:percent}%; height: ${strokeWidth}px;`"></div>
     </div>
     <template v-if="showInfo">
       <svg class="u-success" v-if="percent>=100" viewBox="64 64 896 896" data-icon="check-circle" aria-hidden="true" focusable="false"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 0 1-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"></path></svg>
@@ -60,7 +60,7 @@ const backgroundColor = computed(() => {
   <div v-else class="m-progress-circle" :style="`width: ${totalWidth}; height: ${totalWidth};`">
     <svg class="u-progress-circle" viewBox="0 0 100 100">
       <path :d="path" stroke-linecap="round" class="u-progress-circle-trail" :stroke-width="strokeWidth" :style="`stroke-dasharray: ${perimeter}px, ${perimeter}px;`" fill-opacity="0"></path>
-      <path :d="path" stroke-linecap="round" class="u-progress-circle-path" :class="{success: percent >= 100}" :stroke-width="strokeWidth" :style="`stroke: ${backgroundColor}; stroke-dasharray: ${(percent / 100) * perimeter}px, ${perimeter}px;`" :opacity="percent === 0 ? 0:1" fill-opacity="0"></path>
+      <path :d="path" stroke-linecap="round" class="u-progress-circle-path" :class="{success: percent >= 100}" :stroke-width="strokeWidth" :stroke="lineColor" :style="`stroke-dasharray: ${(percent / 100) * perimeter}px, ${perimeter}px;`" :opacity="percent === 0 ? 0:1" fill-opacity="0"></path>
     </svg>
     <template v-if="showInfo">
       <svg class="u-success" v-if="percent>=100" focusable="false" data-icon="check" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"></path></svg>
@@ -123,7 +123,6 @@ const backgroundColor = computed(() => {
                   opacity 0.3s;
     }
     .u-progress-circle-path {
-      stroke: @themeColor;
       stroke-dashoffset: 0px;
       animation: ant-progress-appear 0.3s;
       transition: stroke-dashoffset 0.3s,

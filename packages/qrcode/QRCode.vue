@@ -10,6 +10,7 @@ interface Props {
   color?: string // 二维码颜色，Value must be in hex format (十六进制颜色值)
   backgroundColor?: string // 二维码背景色，Value must be in hex format (十六进制颜色值)
   bordered?: boolean // 是否有边框
+  borderColor?: string // 边框颜色
   scale?: number // 每个black dots多少像素
   /*
     纠错等级也叫纠错率，就是指二维码可以被遮挡后还能正常扫描，而这个能被遮挡的最大面积就是纠错率。
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   color: '#000',
   backgroundColor: '#FFF',
   bordered: true,
+  borderColor: '#0505050f',
   scale: 8,
   errorLevel: 'H' // 可选 L M Q H
 })
@@ -43,7 +45,7 @@ const qrcode = useQRCode(props.value, {
 })
 </script>
 <template>
-  <div class="m-qrcode" :class="{'bordered': bordered}" :style="`width: ${size}px; height: ${size}px;`">
+  <div class="m-qrcode" :class="{'bordered': bordered}" :style="`width: ${size}px; height: ${size}px; border-color: ${borderColor};`">
     <img :src="qrcode" class="u-qrcode" alt="QRCode" />
   </div>
 </template>
@@ -59,6 +61,7 @@ const qrcode = useQRCode(props.value, {
   }
 }
 .bordered {
-  border: 1px solid rgba(5, 5, 5, 0.06);
+  border-width: 1px;
+  border-style: solid;
 }
 </style>
