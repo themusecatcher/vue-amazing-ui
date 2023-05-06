@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const message = ref()
 
 function onInfo (content: any) {
@@ -22,10 +21,10 @@ function onClose () {
 <template>
   <div>
     <h2 class="mb10">Message 全局提示基本使用</h2>
-    <Button @click="onInfo('This is a normal message')" class="mr30">Info</Button>
-    <Button @click="onSuccess('This is a success message')" class="mr30">Success</Button>
-    <Button @click="onError('This is a error message')" class="mr30">Error</Button>
-    <Button @click="onWarn('This is a warn message')" class="mr30">Warn</Button>
+    <Button type="primary" @click="onInfo('This is a normal message')" class="mr30">Info</Button>
+    <Button type="primary" @click="onSuccess('This is a success message')" class="mr30">Success</Button>
+    <Button type="primary" @click="onError('This is a error message')" class="mr30">Error</Button>
+    <Button type="primary" @click="onWarn('This is a warn message')" class="mr30">Warn</Button>
     <Message ref="message" :duration="3000" :top="30" @close="onClose" />
   </div>
 </template>

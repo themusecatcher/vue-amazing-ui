@@ -10,9 +10,9 @@ const props = withDefaults(defineProps<Props>(), {
   top: 30
 })
 enum ColorStyle { // 颜色主题对象
-  info = '#1890FF',
+  info = '#1677FF',
   success = '#52c41a',
-  error = '#f5222d',
+  error = '#ff4d4f',
   warn = '#faad14'
 }
 interface Message {
@@ -133,26 +133,30 @@ function onHideMessage (index: number) {
   pointer-events: none; // 保证整个message区域不遮挡背后元素响应鼠标事件
   .m-message {
     text-align: center;
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
     .m-message-content {
-      margin: 8px 0;
       display: inline-block;
-      padding: 10px 16px;
+      padding: 9px 12px;
       background: #FFF;
-      border-radius: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+      border-radius: 8px;
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
       pointer-events: auto; // 保证内容区域部分可以正常响应鼠标事件
       .svg {
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 3px;
         width: 16px;
         height: 16px;
         margin-right: 8px;
-        position: relative;
-        top: 2px;
+        
       }
       .content {
         display: inline-block;
         font-size: 14px;
-        color: rgba(0,0,0,.65);
-        line-height: 20px;
+        color: rgba(0,0,0,.88);
+        line-height: 22px;
       }
     }
   }

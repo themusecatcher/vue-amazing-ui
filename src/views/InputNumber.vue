@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 const value = ref(3)
-watch(value, (to) => {
-  console.log('to:', to)
+watchEffect(() => {
+  console.log('value:', value.value)
 })
 function onChange (number: number) {
   console.log('number:', number)
@@ -19,8 +19,7 @@ function onAntChange (number: number) {
       :max="10"
       :step="1"
       @change="onChange"
-      v-model:value="value">
-    </InputNumber>
+      v-model:value="value" />
     <h2 class="mt30 mb10">前缀图标$ (prefix: '$')</h2>
     <InputNumber
       :min="-10"

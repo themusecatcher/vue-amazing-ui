@@ -6,58 +6,118 @@
 - 轮播新闻展示
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
-const imageData = ref<any[]>([])
-function getImageUrl (name: any): string {
-  return new URL(`../../public/images/${name}.jpg`, import.meta.url).href
-}
-function loadImages () {
-  for (let i = 1; i <= 8; i++) {
-    imageData.value.push({
-      title: `image-${i}`,
-      link: '',
-      imgUrl: getImageUrl(i)
-    })
+const images = ref([
+  {
+    title: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg',
+    link: ''
+  },
+  {
+    title: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/2.jpg',
+    link: ''
+  },
+  {
+    title: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/3.jpg',
+    link: ''
+  },
+  {
+    title: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/4.jpg',
+    link: ''
+  },
+  {
+    title: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/5.jpg',
+    link: ''
+  },
+  {
+    title: 'image-6',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/6.jpg',
+    link: ''
+  },
+  {
+    title: 'image-7',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/7.jpg',
+    link: ''
+  },
+  {
+    title: 'image-8',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/8.jpg',
+    link: ''
+  },
+  {
+    title: 'image-9',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/9.jpg',
+    link: ''
   }
-  console.log(imageData.value)
-}
-onMounted(() => {
-  loadImages()
-})
+])
 </script>
 
 ## 基本使用
 
-<Carousel :imageData="imageData" :height="360" />
+<Carousel :images="images" :height="360" />
 
 <details>
 <summary>查看代码</summary>
 
 ```vue
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
-const imageData = ref<any[]>([])
-function getImageUrl (name: any): string {
-  return new URL(`../../public/images/${name}.jpg`, import.meta.url).href
-}
-function loadImages () {
-  for (let i = 1; i <= 8; i++) {
-    imageData.value.push({
-      title: `image-${i}`,
-      link: '',
-      imgUrl: getImageUrl(i)
-    })
+const images = ref([
+  {
+    title: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg',
+    link: ''
+  },
+  {
+    title: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/2.jpg',
+    link: ''
+  },
+  {
+    title: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/3.jpg',
+    link: ''
+  },
+  {
+    title: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/4.jpg',
+    link: ''
+  },
+  {
+    title: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/5.jpg',
+    link: ''
+  },
+  {
+    title: 'image-6',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/6.jpg',
+    link: ''
+  },
+  {
+    title: 'image-7',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/7.jpg',
+    link: ''
+  },
+  {
+    title: 'image-8',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/8.jpg',
+    link: ''
+  },
+  {
+    title: 'image-9',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/9.jpg',
+    link: ''
   }
-  console.log(imageData.value)
-}
-onMounted(() => {
-  loadImages()
-})
+])
 </script>
 <template>
-  <Carousel :imageData="imageData" :height="360" />
+  <Carousel :images="images" :height="360" />
 </template>
 ```
 

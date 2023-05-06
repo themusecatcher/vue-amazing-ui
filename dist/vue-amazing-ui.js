@@ -255,75 +255,45 @@ const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-0
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
-const _withScopeId$g = (n) => (pushScopeId("data-v-fd73b55a"), n = n(), popScopeId(), n);
+const _withScopeId$g = (n) => (pushScopeId("data-v-8c00dd95"), n = n(), popScopeId(), n);
 const _hoisted_1$t = ["href", "target"];
-const _hoisted_2$p = ["src", "alt"];
-const _hoisted_3$n = {
+const _hoisted_2$p = ["onLoad", "src", "alt"];
+const _hoisted_3$n = { class: "u-spin-circle" };
+const _hoisted_4$k = {
   key: 0,
   class: "m-image"
 };
-const _hoisted_4$k = ["href", "target"];
-const _hoisted_5$h = ["src", "alt"];
-const _hoisted_6$g = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M603.3 327.5l-246 178a7.95 7.95 0 0 0 0 12.9l246 178c5.3 3.8 12.7 0 12.7-6.5V643c0-10.2-4.9-19.9-13.2-25.9L457.4 512l145.4-105.2c8.3-6 13.2-15.6 13.2-25.9V334c0-6.5-7.4-10.3-12.7-6.5z" }, null, -1));
-const _hoisted_7$e = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_8$d = [
-  _hoisted_6$g,
-  _hoisted_7$e
+const _hoisted_5$h = ["href", "target"];
+const _hoisted_6$g = ["src", "alt"];
+const _hoisted_7$e = { class: "u-spin-circle" };
+const _hoisted_8$d = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M603.3 327.5l-246 178a7.95 7.95 0 0 0 0 12.9l246 178c5.3 3.8 12.7 0 12.7-6.5V643c0-10.2-4.9-19.9-13.2-25.9L457.4 512l145.4-105.2c8.3-6 13.2-15.6 13.2-25.9V334c0-6.5-7.4-10.3-12.7-6.5z" }, null, -1));
+const _hoisted_9$d = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_10$9 = [
+  _hoisted_8$d,
+  _hoisted_9$d
 ];
-const _hoisted_9$d = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M666.7 505.5l-246-178A8 8 0 0 0 408 334v46.9c0 10.2 4.9 19.9 13.2 25.9L566.6 512 421.2 617.2c-8.3 6-13.2 15.6-13.2 25.9V690c0 6.5 7.4 10.3 12.7 6.5l246-178c4.4-3.2 4.4-9.8 0-13z" }, null, -1));
-const _hoisted_10$9 = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_11$8 = [
-  _hoisted_9$d,
-  _hoisted_10$9
+const _hoisted_11$8 = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M666.7 505.5l-246-178A8 8 0 0 0 408 334v46.9c0 10.2 4.9 19.9 13.2 25.9L566.6 512 421.2 617.2c-8.3 6-13.2 15.6-13.2 25.9V690c0 6.5 7.4 10.3 12.7 6.5l246-178c4.4-3.2 4.4-9.8 0-13z" }, null, -1));
+const _hoisted_12$7 = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_13$7 = [
+  _hoisted_11$8,
+  _hoisted_12$7
 ];
-const _hoisted_12$7 = {
+const _hoisted_14$7 = {
   key: 1,
   class: "m-switch"
 };
-const _hoisted_13$7 = ["onClick"];
+const _hoisted_15$7 = ["onClick"];
 const _sfc_main$w = /* @__PURE__ */ defineComponent({
   __name: "Carousel",
   props: {
-    imageData: {
-      // 走马灯图片数组
-      type: Array,
-      default: () => []
-    },
-    interval: {
-      // 自动滑动轮播间隔
-      type: Number,
-      default: 3e3
-    },
-    width: {
-      // 走马灯宽度
-      type: [Number, String],
-      default: "100%"
-    },
-    height: {
-      // 走马灯高度
-      type: [Number, String],
-      default: "100vh"
-    },
-    navigation: {
-      // 是否显示导航
-      type: Boolean,
-      default: true
-    },
-    pagination: {
-      // 是否显示分页
-      type: Boolean,
-      default: true
-    },
-    disableOnInteraction: {
-      // 用户操作导航或分页之后，是否禁止自动切换。默认为true：停止。
-      type: Boolean,
-      default: true
-    },
-    pauseOnMouseEnter: {
-      // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
-      type: Boolean,
-      default: true
-    }
+    images: { default: () => [] },
+    interval: { default: 3e3 },
+    width: { default: "100%" },
+    height: { default: "100vh" },
+    navigation: { type: Boolean, default: true },
+    pagination: { type: Boolean, default: true },
+    disableOnInteraction: { type: Boolean, default: true },
+    pauseOnMouseEnter: { type: Boolean, default: true }
   },
   setup(__props) {
     const props = __props;
@@ -351,15 +321,16 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
       }
     });
     const totalWidth = computed(() => {
-      return (props.imageData.length + 1) * imageWidth.value;
+      return (props.images.length + 1) * imageWidth.value;
     });
     const len = computed(() => {
-      return props.imageData.length;
+      return props.images.length;
     });
     onMounted(() => {
       getFPS();
       getImageSize();
     });
+    const complete = ref(Array(len.value).fill(false));
     const fpsRaf = ref();
     const fps = ref(60);
     const step = computed(() => {
@@ -369,6 +340,9 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
         return 12 * (fps.value / 60);
       }
     });
+    function onComplete(index) {
+      complete.value[index] = true;
+    }
     function getFPS() {
       const requestAnimationFrame2 = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
       var start = null;
@@ -533,17 +507,17 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
         ref_key: "carousel",
         ref: carousel,
         style: normalizeStyle(`width: ${unref(carouselWidth)}; height: ${unref(carouselHeight)};`),
-        onMouseenter: _cache[2] || (_cache[2] = ($event) => __props.pauseOnMouseEnter ? onStop() : (e) => e.preventDefault()),
-        onMouseleave: _cache[3] || (_cache[3] = ($event) => __props.pauseOnMouseEnter ? onStart() : (e) => e.preventDefault())
+        onMouseenter: _cache[3] || (_cache[3] = ($event) => __props.pauseOnMouseEnter ? onStop() : () => false),
+        onMouseleave: _cache[4] || (_cache[4] = ($event) => __props.pauseOnMouseEnter ? onStart() : () => false)
       }, [
         createElementVNode("div", {
           class: normalizeClass({ "transition": transition.value }),
           style: normalizeStyle(`width: ${unref(totalWidth)}px; height: 100%; will-change: transform; transform: translateX(${-left.value}px);`)
         }, [
-          (openBlock(true), createElementBlock(Fragment, null, renderList(__props.imageData, (image, index) => {
+          (openBlock(true), createElementBlock(Fragment, null, renderList(__props.images, (image, index) => {
             return openBlock(), createElementBlock("div", {
-              key: index,
-              class: "m-image"
+              class: "m-image",
+              key: index
             }, [
               createElementVNode("a", {
                 href: image.link ? image.link : "javascript:;",
@@ -551,64 +525,72 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
                 class: "m-link"
               }, [
                 (openBlock(), createElementBlock("img", {
-                  src: image.imgUrl,
-                  key: image.imgUrl,
+                  onLoad: ($event) => onComplete(index),
+                  src: image.src,
+                  key: image.src,
                   alt: image.title,
                   class: "u-img",
                   style: normalizeStyle(`width: ${imageWidth.value}px; height: ${imageHeight.value}px;`)
-                }, null, 12, _hoisted_2$p))
+                }, null, 44, _hoisted_2$p)),
+                withDirectives(createElementVNode("div", _hoisted_3$n, null, 512), [
+                  [vShow, !complete.value[index]]
+                ])
               ], 8, _hoisted_1$t)
             ]);
           }), 128)),
-          unref(len) ? (openBlock(), createElementBlock("div", _hoisted_3$n, [
+          unref(len) ? (openBlock(), createElementBlock("div", _hoisted_4$k, [
             createElementVNode("a", {
-              href: __props.imageData[0].link ? __props.imageData[0].link : "javascript:;",
-              target: __props.imageData[0].link ? "_blank" : "_self",
+              href: __props.images[0].link ? __props.images[0].link : "javascript:;",
+              target: __props.images[0].link ? "_blank" : "_self",
               class: "m-link"
             }, [
               (openBlock(), createElementBlock("img", {
-                src: __props.imageData[0].imgUrl,
-                key: __props.imageData[0].imgUrl,
-                alt: __props.imageData[0].title,
+                onLoad: _cache[0] || (_cache[0] = ($event) => onComplete(0)),
+                src: __props.images[0].src,
+                key: __props.images[0].src,
+                alt: __props.images[0].title,
                 class: "u-img",
                 style: normalizeStyle(`width: ${imageWidth.value}px; height: ${imageHeight.value}px;`)
-              }, null, 12, _hoisted_5$h))
-            ], 8, _hoisted_4$k)
+              }, null, 44, _hoisted_6$g)),
+              withDirectives(createElementVNode("div", _hoisted_7$e, null, 512), [
+                [vShow, !complete.value[0]]
+              ])
+            ], 8, _hoisted_5$h)
           ])) : createCommentVNode("", true)
         ], 6),
         __props.navigation ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
           (openBlock(), createElementBlock("svg", {
             class: "arrow-left",
-            onClick: _cache[0] || (_cache[0] = ($event) => onLeftArrow((activeSwitcher.value + unref(len) - 2) % unref(len) * imageWidth.value)),
+            onClick: _cache[1] || (_cache[1] = ($event) => onLeftArrow((activeSwitcher.value + unref(len) - 2) % unref(len) * imageWidth.value)),
             viewBox: "64 64 896 896",
             "data-icon": "left-circle",
             "aria-hidden": "true",
             focusable: "false"
-          }, _hoisted_8$d)),
+          }, _hoisted_10$9)),
           (openBlock(), createElementBlock("svg", {
             class: "arrow-right",
-            onClick: _cache[1] || (_cache[1] = ($event) => onRightArrow(activeSwitcher.value * imageWidth.value)),
+            onClick: _cache[2] || (_cache[2] = ($event) => onRightArrow(activeSwitcher.value * imageWidth.value)),
             viewBox: "64 64 896 896",
             "data-icon": "right-circle",
             "aria-hidden": "true",
             focusable: "false"
-          }, _hoisted_11$8))
+          }, _hoisted_13$7))
         ], 64)) : createCommentVNode("", true),
-        __props.pagination ? (openBlock(), createElementBlock("div", _hoisted_12$7, [
+        __props.pagination ? (openBlock(), createElementBlock("div", _hoisted_14$7, [
           (openBlock(true), createElementBlock(Fragment, null, renderList(unref(len), (n) => {
             return openBlock(), createElementBlock("div", {
               onClick: ($event) => onSwitch(n),
               class: normalizeClass(["u-rect", { "active": activeSwitcher.value === n }]),
               key: n
-            }, null, 10, _hoisted_13$7);
+            }, null, 10, _hoisted_15$7);
           }), 128))
         ])) : createCommentVNode("", true)
       ], 36);
     };
   }
 });
-const Carousel_vue_vue_type_style_index_0_scoped_fd73b55a_lang = "";
-const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-fd73b55a"]]);
+const Carousel_vue_vue_type_style_index_0_scoped_8c00dd95_lang = "";
+const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-8c00dd95"]]);
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
@@ -1694,7 +1676,7 @@ const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-fa
 Empty.install = (app) => {
   app.component(Empty.__name, Empty);
 };
-const _withScopeId$c = (n) => (pushScopeId("data-v-66e46ca8"), n = n(), popScopeId(), n);
+const _withScopeId$c = (n) => (pushScopeId("data-v-cad2cb89"), n = n(), popScopeId(), n);
 const _hoisted_1$m = { class: "m-image-wrap" };
 const _hoisted_2$i = { class: "u-spin-circle" };
 const _hoisted_3$g = ["src", "alt"];
@@ -2087,7 +2069,7 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
                       src: image2.src,
                       alt: image2.name,
                       onLoad: onLoaded,
-                      onDblclick: _cache[0] || (_cache[0] = ($event) => __props.resetOnDbclick ? onResetZoom() : (e) => e.preventDefault())
+                      onDblclick: _cache[0] || (_cache[0] = ($event) => __props.resetOnDbclick ? onResetZoom() : () => false)
                     }, null, 44, _hoisted_23$2)), [
                       [vShow, previewIndex.value === index]
                     ]);
@@ -2114,8 +2096,8 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Image_vue_vue_type_style_index_0_scoped_66e46ca8_lang = "";
-const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-66e46ca8"]]);
+const Image_vue_vue_type_style_index_0_scoped_cad2cb89_lang = "";
+const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-cad2cb89"]]);
 Image$1.install = (app) => {
   app.component(Image$1.__name, Image$1);
 };
@@ -2274,7 +2256,7 @@ const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "dat
 InputNumber.install = (app) => {
   app.component(InputNumber.__name, InputNumber);
 };
-const _withScopeId$a = (n) => (pushScopeId("data-v-e18d8699"), n = n(), popScopeId(), n);
+const _withScopeId$a = (n) => (pushScopeId("data-v-138958dd"), n = n(), popScopeId(), n);
 const _hoisted_1$k = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$g = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z" }, null, -1));
 const _hoisted_3$e = [
@@ -2294,9 +2276,9 @@ const _hoisted_9$9 = [
 ];
 const _hoisted_10$6 = { class: "content" };
 var ColorStyle$1 = /* @__PURE__ */ ((ColorStyle2) => {
-  ColorStyle2["info"] = "#1890FF";
+  ColorStyle2["info"] = "#1677FF";
   ColorStyle2["success"] = "#52c41a";
-  ColorStyle2["error"] = "#f5222d";
+  ColorStyle2["error"] = "#ff4d4f";
   ColorStyle2["warn"] = "#faad14";
   return ColorStyle2;
 })(ColorStyle$1 || {});
@@ -2442,8 +2424,8 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Message_vue_vue_type_style_index_0_scoped_e18d8699_lang = "";
-const Message = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-e18d8699"]]);
+const Message_vue_vue_type_style_index_0_scoped_138958dd_lang = "";
+const Message = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-138958dd"]]);
 Message.install = (app) => {
   app.component(Message.__name, Message);
 };
