@@ -32,7 +32,7 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
     <Notification
       ref="notification"
       placement="topRight"
-      :duration="4500"
+      :duration="0"
       :top="24"
       @close="onClose" />
   </div>

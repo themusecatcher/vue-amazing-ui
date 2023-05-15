@@ -1008,8 +1008,8 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Checkbox_vue_vue_type_style_index_0_scoped_82b600b3_lang = "";
-const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-82b600b3"]]);
+const Checkbox_vue_vue_type_style_index_0_scoped_69748eca_lang = "";
+const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-69748eca"]]);
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
@@ -3360,8 +3360,8 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Radio_vue_vue_type_style_index_0_scoped_4c5ad164_lang = "";
-const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-4c5ad164"]]);
+const Radio_vue_vue_type_style_index_0_scoped_47901de8_lang = "";
+const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-47901de8"]]);
 Radio.install = (app) => {
   app.component(Radio.__name, Radio);
 };

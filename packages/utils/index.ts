@@ -120,3 +120,28 @@ export function add (num1: number, num2: number): number {
   const result = +(num1Str.replace('.', '')) + +(num2Str.replace('.', '')) // 转换为整数相加
   return result / Math.pow(10, maxLen)
 }
+/*
+  下载文件并自定义文件名
+  url: 文件地址
+  name: 自定义文件名
+*/
+export function downloadFile (url: string, name: string) {
+  var xhr = new XMLHttpRequest()
+  xhr.open('GET', url, true)
+  xhr.responseType = 'blob'
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const blob = xhr.response
+      const link = document.createElement('a')
+      const body = document.querySelector('body')
+      link.href = window.URL.createObjectURL(blob)
+      link.download = name
+      link.style.display = 'none'
+      body?.appendChild(link)
+      link.click()
+      body?.removeChild(link)
+      window.URL.revokeObjectURL(link.href)
+    }
+  }
+  xhr.send()
+}

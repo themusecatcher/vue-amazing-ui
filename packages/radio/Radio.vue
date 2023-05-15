@@ -58,19 +58,20 @@ function onClick (value: any) {
   </div>
 </template>
 <style lang="less" scoped>
-.m-radio {
+* {
   box-sizing: border-box;
+}
+.m-radio {
   display: inline-block;
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1;
   .m-radio-wrap {
     display: inline-block;
-    height: 22px;
     .m-box {
       height: 100%;
-      display: inline-flex;
-      align-items: center;
+      display: inline-flex; // 设置为flex布局后，所有的子元素都会变成行内块元素
+      align-items: flex-start;
       cursor: pointer;
       &:hover {
         .u-radio {
@@ -79,10 +80,15 @@ function onClick (value: any) {
       }
       .u-radio {
         position: relative;
-        display: inline-block;
+        /*
+          如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小
+          如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
+        */
+        flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
+        margin-top: 3px;
         width: 16px;
         height: 16px;
-        background: #fff;
+        background: #FFF;
         border: 1px solid #d9d9d9;
         border-radius: 50%;
         transition: all .3s;
@@ -94,22 +100,24 @@ function onClick (value: any) {
           height: 16px;
           margin-top: -8px;
           margin-left: -8px;
-          background-color: @themeColor;
+          background-color: #FFF;
           border-radius: 100%;
           transform: scale(0);
           opacity: 0;
-          transition: all .3s cubic-bezier(.78,.14,.15,.86);
+          transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
           content: "";
         }
       }
       .u-radio-checked {
+        background: @themeColor;
         border-color: @themeColor;
         &:after {
-          transform: scale(.5);
+          transform: scale(0.375);
           opacity: 1;
         }
       }
       .u-label {
+        word-break: break-all;
         padding: 0 8px;
         font-size: 14px;
         line-height: 22px;
@@ -128,7 +136,8 @@ function onClick (value: any) {
         border-color: #d9d9d9;
         background-color: #f5f5f5;
         &:after {
-          background-color: rgba(0, 0, 0, 0.2);
+          transform: scale(0.5);
+          background-color: rgba(0, 0, 0, 0.25);
         }
       }
     }

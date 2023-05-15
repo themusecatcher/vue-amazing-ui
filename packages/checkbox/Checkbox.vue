@@ -87,19 +87,20 @@ function onCheckAll () { // 全选切换
   </div>
 </template>
 <style lang="less" scoped>
-.m-checkbox {
+* {
   box-sizing: border-box;
+}
+.m-checkbox {
   display: inline-block;
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1;
   .m-checkbox-wrap {
     display: inline-block;
-    height: 22px;
     .m-box {
       height: 100%;
-      display: inline-flex;
-      align-items: center;
+      display: inline-flex; // 设置为flex布局后，所有的子元素都会变成行内块元素
+      align-items: flex-start;
       cursor: pointer;
       &:hover {
         .u-checkbox {
@@ -108,19 +109,24 @@ function onCheckAll () { // 全选切换
       }
       .u-checkbox {
         position: relative;
-        display: inline-block;
+        /*
+          如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小
+          如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
+        */
+        flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
+        margin-top: 3px;
         width: 16px;
         height: 16px;
         background: #fff;
         border: 1px solid #d9d9d9;
-        border-radius: 2px;
+        border-radius: 4px;
         transition: all .3s;
         &:after {
           position: absolute;
           top: 50%;
           left: 21.5%;
-          width: 5.715px;
-          height: 9.143px;
+          width: 5.7142857142857135px;
+          height: 9.142857142857142px;
           border: 2px solid #fff;
           border-top: 0;
           border-left: 0;
@@ -157,10 +163,10 @@ function onCheckAll () { // 全选切换
         }
       }
       .u-label {
+        word-break: break-all;
         padding: 0 8px;
         font-size: 14px;
         line-height: 22px;
-        display: inline-block;
       }
     }
     .disabled {
