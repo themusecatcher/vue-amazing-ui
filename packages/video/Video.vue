@@ -13,6 +13,7 @@ interface Props {
   showPlay?: boolean // 播放暂停时是否显示播放器中间的暂停图标
   playWidth?: number // 中间播放暂停按钮的边长
   zoom?: string // video的poster默认图片和视频内容缩放规则
+  second?: number // 在未设置封面时，自动获取视频第 second 秒对应帧作为视频封面
 }
 const props = withDefaults(defineProps<Props>(), {
   videoSrc: '',
@@ -52,7 +53,8 @@ const props = withDefaults(defineProps<Props>(), {
     contain: 保存原有比例，内容以包含方式缩放;
     cover: 保存原有比例，内容以覆盖方式缩放
   */
-  zoom: 'none'
+  zoom: 'none',
+  second: 0.3
 })
 // 参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
 const poster = ref(props.videoPoster)
@@ -68,7 +70,7 @@ const veo = ref()
 */
 function getPoster () { // 在未设置封面时，自动获取视频0.3s对应帧作为视频封面
   // 由于不少视频第一帧为黑屏，故设置视频开始播放时间为0.3s，即取该时刻帧作为封面图
-  veo.value.currentTime = 0.3
+  veo.value.currentTime = props.second
   // 创建canvas元素
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
