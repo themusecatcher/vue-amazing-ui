@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { rafTimeout } from '../../packages'
-// import videoSrc from '@/assets/files/Bao.mp4'
+import videoSrc from '@/assets/files/Bao.mp4'
 // import videoPoster from '@/assets/images/bao.jpg'
 
 // const videoSrc = ref(new URL('@/assets/files/Bao.mp4', import.meta.url).href)
 // const videoPoster = ref(new URL('@/assets/images/bao.jpg', import.meta.url).href)
 
-const videoSrc = ref('https://cdn.jsdelivr.net/gh/themusecatcher/static-resources@0.0.2/Bao.mp4')
+// const videoSrc = ref('https://cdn.jsdelivr.net/gh/themusecatcher/static-resources@0.0.2/Bao.mp4')
 const videoPoster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/static-resources@0.0.2/bao.jpg')
 
 onMounted(() => {
