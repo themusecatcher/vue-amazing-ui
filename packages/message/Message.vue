@@ -105,6 +105,11 @@ function onHideMessage (index: number) {
   </div>
 </template>
 <style lang="less" scoped>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 // 滑动渐变过渡效果
 .slide-fade-move,
 .slide-fade-enter-active,
@@ -124,7 +129,6 @@ function onHideMessage (index: number) {
   margin: 0 auto;
 }
 .m-message-wrap {
-  box-sizing: border-box;
   position: fixed;
   z-index: 999; // 突出显示该层级
   width: 100vw;

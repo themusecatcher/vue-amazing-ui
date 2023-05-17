@@ -97,8 +97,12 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页器回�
   </div>
 </template>
 <style lang="less" scoped>
-.m-table-wrap {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-table-wrap {
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
   line-height: 1.5;

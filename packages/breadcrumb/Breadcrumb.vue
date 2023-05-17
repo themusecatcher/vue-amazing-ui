@@ -43,8 +43,12 @@ function goRouter (route: any): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-breadcrumb {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-breadcrumb {
   .m-bread {
     display: inline-block;
     vertical-align: middle;

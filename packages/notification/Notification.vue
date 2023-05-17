@@ -134,6 +134,11 @@ function onClose (index: number) {
   </div>
 </template>
 <style lang="less" scoped>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 .right-enter-active,
 .right-leave-active {
   transition: all .3s ease-in-out;
@@ -169,9 +174,6 @@ function onClose (index: number) {
 .bottomLeft {
   margin-left: 24px;
   left: 0;
-}
-* {
-  box-sizing: border-box;
 }
 .m-notification-wrap {
   position: fixed;

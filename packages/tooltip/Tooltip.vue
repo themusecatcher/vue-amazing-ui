@@ -69,8 +69,12 @@ function onHide (): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-tooltip {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-tooltip {
   display: inline-block;
 }
 .m-title {

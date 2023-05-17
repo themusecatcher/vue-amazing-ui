@@ -94,9 +94,13 @@ const year = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 .m-datepicker {
   display: inline-block;
-  box-sizing: border-box;
 }
 .dp__theme_dark { // dark theme
   --dp-background-color: #212121;

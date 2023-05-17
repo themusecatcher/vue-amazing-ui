@@ -144,8 +144,12 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
   </div>
 </template>
 <style lang="less" scoped>
-.m-select {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-select {
   position: relative;
   display: inline-block;
   font-size: 14px;

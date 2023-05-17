@@ -36,8 +36,12 @@ function onSwitch () {
   </div>
 </template>
 <style lang="less" scoped>
-.m-switch-wrap {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-switch-wrap {
   display: inline-block;
   height: 22px;
   min-width: 44px;

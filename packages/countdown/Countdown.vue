@@ -113,8 +113,12 @@ onMounted(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-countdown {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-countdown {
   display: inline-block;
   line-height: 1.571;
   .u-title {
