@@ -1,6 +1,6 @@
 # vue-amazing-ui
 
-## Online Preview
+## Document & Online preview
 
 [Vue Amazing UI](https://themusecatcher.github.io/vue-amazing-ui/)
 
