@@ -2,7 +2,7 @@
 
 ## Online Preview
 
-https://themusecatcher.github.io/vue-amazing-ui/
+[Vue Amazing UI](https://themusecatcher.github.io/vue-amazing-ui/)
 
 ## Install & Use
 
