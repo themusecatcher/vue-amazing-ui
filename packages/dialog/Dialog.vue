@@ -103,6 +103,11 @@ function onConfirm () {
   </Transition>
 </template>
 <style lang="less" scoped>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 .v-enter-active, .v-leave-active {
   transition: opacity 0.3s ease;
 }
@@ -135,7 +140,6 @@ function onConfirm () {
   height: 100%;
   z-index: 10000;
   background: rgba(0, 0, 0, 0.45);
-  box-sizing: border-box;
   .m-dialog {
     margin: 0 auto;
     transition: all .3s ease;

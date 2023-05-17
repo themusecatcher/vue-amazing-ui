@@ -68,8 +68,12 @@ const isRoute = computed(() => {
   </span>
 </template>
 <style lang="less" scoped>
-.m-btn-wrap {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-btn-wrap {
   display: inline-block;
   .m-btn {
     display: inline-block;

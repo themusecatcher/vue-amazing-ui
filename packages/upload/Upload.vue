@@ -225,8 +225,12 @@ function onError (content: any) {
   </div>
 </template>
 <style lang="less" scoped>
-.m-upload-list {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-upload-list {
   display: inline-block;
   .m-upload-item {
     display: inline-block;

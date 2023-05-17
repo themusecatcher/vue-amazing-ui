@@ -103,7 +103,27 @@ function add(num1, num2) {
   const result = +num1Str.replace(".", "") + +num2Str.replace(".", "");
   return result / Math.pow(10, maxLen);
 }
-const _withScopeId$h = (n) => (pushScopeId("data-v-fcef2ca0"), n = n(), popScopeId(), n);
+function downloadFile(url, name) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.responseType = "blob";
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      const blob = xhr.response;
+      const link = document.createElement("a");
+      const body = document.querySelector("body");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = name;
+      link.style.display = "none";
+      body == null ? void 0 : body.appendChild(link);
+      link.click();
+      body == null ? void 0 : body.removeChild(link);
+      window.URL.revokeObjectURL(link.href);
+    }
+  };
+  xhr.send();
+}
+const _withScopeId$h = (n) => (pushScopeId("data-v-a67593ef"), n = n(), popScopeId(), n);
 const _hoisted_1$v = ["onClick", "title"];
 const _hoisted_2$r = {
   key: 0,
@@ -163,7 +183,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Breadcrumb_vue_vue_type_style_index_0_scoped_fcef2ca0_lang = "";
+const Breadcrumb_vue_vue_type_style_index_0_scoped_a67593ef_lang = "";
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -171,7 +191,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-fcef2ca0"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-a67593ef"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };
@@ -250,12 +270,12 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Button_vue_vue_type_style_index_0_scoped_0d16cbea_lang = "";
-const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-0d16cbea"]]);
+const Button_vue_vue_type_style_index_0_scoped_33b3ef8d_lang = "";
+const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-33b3ef8d"]]);
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
-const _withScopeId$g = (n) => (pushScopeId("data-v-8c00dd95"), n = n(), popScopeId(), n);
+const _withScopeId$g = (n) => (pushScopeId("data-v-eb8d5710"), n = n(), popScopeId(), n);
 const _hoisted_1$t = ["href", "target"];
 const _hoisted_2$p = ["onLoad", "src", "alt"];
 const _hoisted_3$n = { class: "u-spin-circle" };
@@ -589,12 +609,12 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Carousel_vue_vue_type_style_index_0_scoped_8c00dd95_lang = "";
-const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-8c00dd95"]]);
+const Carousel_vue_vue_type_style_index_0_scoped_eb8d5710_lang = "";
+const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-eb8d5710"]]);
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
-const _withScopeId$f = (n) => (pushScopeId("data-v-09a70536"), n = n(), popScopeId(), n);
+const _withScopeId$f = (n) => (pushScopeId("data-v-53d2969a"), n = n(), popScopeId(), n);
 const _hoisted_1$s = ["title"];
 const _hoisted_2$o = /* @__PURE__ */ _withScopeId$f(() => /* @__PURE__ */ createElementVNode("path", { d: "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
 const _hoisted_3$m = [
@@ -756,8 +776,8 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Select_vue_vue_type_style_index_0_scoped_09a70536_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-09a70536"]]);
+const Select_vue_vue_type_style_index_0_scoped_53d2969a_lang = "";
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-53d2969a"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
 };
@@ -1008,12 +1028,12 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Checkbox_vue_vue_type_style_index_0_scoped_69748eca_lang = "";
-const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-69748eca"]]);
+const Checkbox_vue_vue_type_style_index_0_scoped_4b9094e1_lang = "";
+const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-4b9094e1"]]);
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
-const _withScopeId$e = (n) => (pushScopeId("data-v-9919781a"), n = n(), popScopeId(), n);
+const _withScopeId$e = (n) => (pushScopeId("data-v-b3677973"), n = n(), popScopeId(), n);
 const _hoisted_1$q = { class: "m-collapse" };
 const _hoisted_2$m = ["onClick"];
 const _hoisted_3$k = {
@@ -1164,8 +1184,8 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Collapse_vue_vue_type_style_index_0_scoped_9919781a_lang = "";
-const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-9919781a"]]);
+const Collapse_vue_vue_type_style_index_0_scoped_b3677973_lang = "";
+const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-b3677973"]]);
 Collapse.install = (app) => {
   app.component(Collapse.__name, Collapse);
 };
@@ -1288,8 +1308,8 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Countdown_vue_vue_type_style_index_0_scoped_ce1d437f_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-ce1d437f"]]);
+const Countdown_vue_vue_type_style_index_0_scoped_33c4dd4f_lang = "";
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-33c4dd4f"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
 };
@@ -1359,12 +1379,12 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const DatePicker_vue_vue_type_style_index_0_scoped_eab34b33_lang = "";
-const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-eab34b33"]]);
+const DatePicker_vue_vue_type_style_index_0_scoped_37c4f4dc_lang = "";
+const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-37c4f4dc"]]);
 DatePicker.install = (app) => {
   app.component(DatePicker.__name, DatePicker);
 };
-const _withScopeId$d = (n) => (pushScopeId("data-v-5144e8e4"), n = n(), popScopeId(), n);
+const _withScopeId$d = (n) => (pushScopeId("data-v-10ddbaec"), n = n(), popScopeId(), n);
 const _hoisted_1$o = ["onClick"];
 const _hoisted_2$k = { class: "m-spin-dot" };
 const _hoisted_3$i = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -1534,8 +1554,8 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Dialog_vue_vue_type_style_index_0_scoped_5144e8e4_lang = "";
-const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-5144e8e4"]]);
+const Dialog_vue_vue_type_style_index_0_scoped_10ddbaec_lang = "";
+const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-10ddbaec"]]);
 Dialog.install = (app) => {
   app.component(Dialog.__name, Dialog);
 };
@@ -1612,17 +1632,17 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Divider_vue_vue_type_style_index_0_scoped_4cbfac38_lang = "";
-const Divider = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-4cbfac38"]]);
+const Divider_vue_vue_type_style_index_0_scoped_1939bda0_lang = "";
+const Divider = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-1939bda0"]]);
 Divider.install = (app) => {
   app.component(Divider.__name, Divider);
 };
 const _hoisted_1$n = { class: "m-empty" };
-const _hoisted_2$j = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" data-v-fa07a389><g transform="translate(24 31.67)" data-v-fa07a389><ellipse fill-opacity=".8" fill="#F5F5F7" cx="67.797" cy="106.89" rx="67.797" ry="12.668" data-v-fa07a389></ellipse><path d="M122.034 69.674L98.109 40.229c-1.148-1.386-2.826-2.225-4.593-2.225h-51.44c-1.766 0-3.444.839-4.592 2.225L13.56 69.674v15.383h108.475V69.674z" fill="#AEB8C2" data-v-fa07a389></path><path d="M101.537 86.214L80.63 61.102c-1.001-1.207-2.507-1.867-4.048-1.867H31.724c-1.54 0-3.047.66-4.048 1.867L6.769 86.214v13.792h94.768V86.214z" fill="url(#linearGradient-1)" transform="translate(13.56)" data-v-fa07a389></path><path d="M33.83 0h67.933a4 4 0 0 1 4 4v93.344a4 4 0 0 1-4 4H33.83a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z" fill="#F5F5F7" data-v-fa07a389></path><path d="M42.678 9.953h50.237a2 2 0 0 1 2 2V36.91a2 2 0 0 1-2 2H42.678a2 2 0 0 1-2-2V11.953a2 2 0 0 1 2-2zM42.94 49.767h49.713a2.262 2.262 0 1 1 0 4.524H42.94a2.262 2.262 0 0 1 0-4.524zM42.94 61.53h49.713a2.262 2.262 0 1 1 0 4.525H42.94a2.262 2.262 0 0 1 0-4.525zM121.813 105.032c-.775 3.071-3.497 5.36-6.735 5.36H20.515c-3.238 0-5.96-2.29-6.734-5.36a7.309 7.309 0 0 1-.222-1.79V69.675h26.318c2.907 0 5.25 2.448 5.25 5.42v.04c0 2.971 2.37 5.37 5.277 5.37h34.785c2.907 0 5.277-2.421 5.277-5.393V75.1c0-2.972 2.343-5.426 5.25-5.426h26.318v33.569c0 .617-.077 1.216-.221 1.789z" fill="#DCE0E6" data-v-fa07a389></path></g><path d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z" fill="#DCE0E6" data-v-fa07a389></path><g transform="translate(149.65 15.383)" fill="#FFF" data-v-fa07a389><ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815" data-v-fa07a389></ellipse><path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z" data-v-fa07a389></path></g></g>', 1);
+const _hoisted_2$j = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" data-v-1940b331><g transform="translate(24 31.67)" data-v-1940b331><ellipse fill-opacity=".8" fill="#F5F5F7" cx="67.797" cy="106.89" rx="67.797" ry="12.668" data-v-1940b331></ellipse><path d="M122.034 69.674L98.109 40.229c-1.148-1.386-2.826-2.225-4.593-2.225h-51.44c-1.766 0-3.444.839-4.592 2.225L13.56 69.674v15.383h108.475V69.674z" fill="#AEB8C2" data-v-1940b331></path><path d="M101.537 86.214L80.63 61.102c-1.001-1.207-2.507-1.867-4.048-1.867H31.724c-1.54 0-3.047.66-4.048 1.867L6.769 86.214v13.792h94.768V86.214z" fill="url(#linearGradient-1)" transform="translate(13.56)" data-v-1940b331></path><path d="M33.83 0h67.933a4 4 0 0 1 4 4v93.344a4 4 0 0 1-4 4H33.83a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z" fill="#F5F5F7" data-v-1940b331></path><path d="M42.678 9.953h50.237a2 2 0 0 1 2 2V36.91a2 2 0 0 1-2 2H42.678a2 2 0 0 1-2-2V11.953a2 2 0 0 1 2-2zM42.94 49.767h49.713a2.262 2.262 0 1 1 0 4.524H42.94a2.262 2.262 0 0 1 0-4.524zM42.94 61.53h49.713a2.262 2.262 0 1 1 0 4.525H42.94a2.262 2.262 0 0 1 0-4.525zM121.813 105.032c-.775 3.071-3.497 5.36-6.735 5.36H20.515c-3.238 0-5.96-2.29-6.734-5.36a7.309 7.309 0 0 1-.222-1.79V69.675h26.318c2.907 0 5.25 2.448 5.25 5.42v.04c0 2.971 2.37 5.37 5.277 5.37h34.785c2.907 0 5.277-2.421 5.277-5.393V75.1c0-2.972 2.343-5.426 5.25-5.426h26.318v33.569c0 .617-.077 1.216-.221 1.789z" fill="#DCE0E6" data-v-1940b331></path></g><path d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z" fill="#DCE0E6" data-v-1940b331></path><g transform="translate(149.65 15.383)" fill="#FFF" data-v-1940b331><ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815" data-v-1940b331></ellipse><path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z" data-v-1940b331></path></g></g>', 1);
 const _hoisted_3$h = [
   _hoisted_2$j
 ];
-const _hoisted_4$e = /* @__PURE__ */ createStaticVNode('<g transform="translate(0 1)" fill="none" fill-rule="evenodd" data-v-fa07a389><ellipse fill="#f5f5f5" cx="32" cy="33" rx="32" ry="7" data-v-fa07a389></ellipse><g fill-rule="nonzero" stroke="#d9d9d9" data-v-fa07a389><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z" data-v-fa07a389></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" fill="#fafafa" data-v-fa07a389></path></g></g>', 1);
+const _hoisted_4$e = /* @__PURE__ */ createStaticVNode('<g transform="translate(0 1)" fill="none" fill-rule="evenodd" data-v-1940b331><ellipse fill="#f5f5f5" cx="32" cy="33" rx="32" ry="7" data-v-1940b331></ellipse><g fill-rule="nonzero" stroke="#d9d9d9" data-v-1940b331><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z" data-v-1940b331></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" fill="#fafafa" data-v-1940b331></path></g></g>', 1);
 const _hoisted_5$c = [
   _hoisted_4$e
 ];
@@ -1671,12 +1691,12 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Empty_vue_vue_type_style_index_0_scoped_fa07a389_lang = "";
-const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-fa07a389"]]);
+const Empty_vue_vue_type_style_index_0_scoped_1940b331_lang = "";
+const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-1940b331"]]);
 Empty.install = (app) => {
   app.component(Empty.__name, Empty);
 };
-const _withScopeId$c = (n) => (pushScopeId("data-v-cad2cb89"), n = n(), popScopeId(), n);
+const _withScopeId$c = (n) => (pushScopeId("data-v-4d80fda6"), n = n(), popScopeId(), n);
 const _hoisted_1$m = { class: "m-image-wrap" };
 const _hoisted_2$i = { class: "u-spin-circle" };
 const _hoisted_3$g = ["src", "alt"];
@@ -2096,12 +2116,12 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Image_vue_vue_type_style_index_0_scoped_cad2cb89_lang = "";
-const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-cad2cb89"]]);
+const Image_vue_vue_type_style_index_0_scoped_4d80fda6_lang = "";
+const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-4d80fda6"]]);
 Image$1.install = (app) => {
   app.component(Image$1.__name, Image$1);
 };
-const _withScopeId$b = (n) => (pushScopeId("data-v-7d0b7770"), n = n(), popScopeId(), n);
+const _withScopeId$b = (n) => (pushScopeId("data-v-4b6768e2"), n = n(), popScopeId(), n);
 const _hoisted_1$l = {
   class: "m-input-number",
   tabindex: "1"
@@ -2251,12 +2271,12 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const InputNumber_vue_vue_type_style_index_0_scoped_7d0b7770_lang = "";
-const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-7d0b7770"]]);
+const InputNumber_vue_vue_type_style_index_0_scoped_4b6768e2_lang = "";
+const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-4b6768e2"]]);
 InputNumber.install = (app) => {
   app.component(InputNumber.__name, InputNumber);
 };
-const _withScopeId$a = (n) => (pushScopeId("data-v-138958dd"), n = n(), popScopeId(), n);
+const _withScopeId$a = (n) => (pushScopeId("data-v-8990c5a8"), n = n(), popScopeId(), n);
 const _hoisted_1$k = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$g = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z" }, null, -1));
 const _hoisted_3$e = [
@@ -2424,12 +2444,12 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Message_vue_vue_type_style_index_0_scoped_138958dd_lang = "";
-const Message = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-138958dd"]]);
+const Message_vue_vue_type_style_index_0_scoped_8990c5a8_lang = "";
+const Message = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-8990c5a8"]]);
 Message.install = (app) => {
   app.component(Message.__name, Message);
 };
-const _withScopeId$9 = (n) => (pushScopeId("data-v-7832aeef"), n = n(), popScopeId(), n);
+const _withScopeId$9 = (n) => (pushScopeId("data-v-f1cab80c"), n = n(), popScopeId(), n);
 const _hoisted_1$j = ["onClick"];
 const _hoisted_2$f = { class: "m-spin-dot" };
 const _hoisted_3$d = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -2634,12 +2654,12 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Modal_vue_vue_type_style_index_0_scoped_7832aeef_lang = "";
-const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-7832aeef"]]);
+const Modal_vue_vue_type_style_index_0_scoped_f1cab80c_lang = "";
+const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-f1cab80c"]]);
 Modal.install = (app) => {
   app.component(Modal.__name, Modal);
 };
-const _withScopeId$8 = (n) => (pushScopeId("data-v-f12591c2"), n = n(), popScopeId(), n);
+const _withScopeId$8 = (n) => (pushScopeId("data-v-c0f60137"), n = n(), popScopeId(), n);
 const _hoisted_1$i = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$e = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
 const _hoisted_3$c = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z" }, null, -1));
@@ -2848,12 +2868,12 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Notification_vue_vue_type_style_index_0_scoped_f12591c2_lang = "";
-const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-f12591c2"]]);
+const Notification_vue_vue_type_style_index_0_scoped_c0f60137_lang = "";
+const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-c0f60137"]]);
 Notification.install = (app) => {
   app.component(Notification.__name, Notification);
 };
-const _withScopeId$7 = (n) => (pushScopeId("data-v-9866523f"), n = n(), popScopeId(), n);
+const _withScopeId$7 = (n) => (pushScopeId("data-v-41c1c393"), n = n(), popScopeId(), n);
 const _hoisted_1$h = { class: "m-pagination-wrap" };
 const _hoisted_2$d = {
   key: 0,
@@ -3091,12 +3111,12 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Pagination_vue_vue_type_style_index_0_scoped_9866523f_lang = "";
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-9866523f"]]);
+const Pagination_vue_vue_type_style_index_0_scoped_41c1c393_lang = "";
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-41c1c393"]]);
 Pagination.install = (app) => {
   app.component(Pagination.__name, Pagination);
 };
-const _withScopeId$6 = (n) => (pushScopeId("data-v-efa5489d"), n = n(), popScopeId(), n);
+const _withScopeId$6 = (n) => (pushScopeId("data-v-aae7fb36"), n = n(), popScopeId(), n);
 const _hoisted_1$g = {
   key: 0,
   class: "u-success",
@@ -3221,8 +3241,8 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Progress_vue_vue_type_style_index_0_scoped_efa5489d_lang = "";
-const Progress = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-efa5489d"]]);
+const Progress_vue_vue_type_style_index_0_scoped_aae7fb36_lang = "";
+const Progress = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-aae7fb36"]]);
 Progress.install = (app) => {
   app.component(Progress.__name, Progress);
 };
@@ -3291,8 +3311,8 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const QRCode_vue_vue_type_style_index_0_scoped_59ce767b_lang = "";
-const QRCode = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-59ce767b"]]);
+const QRCode_vue_vue_type_style_index_0_scoped_24388852_lang = "";
+const QRCode = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-24388852"]]);
 QRCode.install = (app) => {
   app.component(QRCode.__name, QRCode);
 };
@@ -3360,12 +3380,12 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Radio_vue_vue_type_style_index_0_scoped_47901de8_lang = "";
-const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-47901de8"]]);
+const Radio_vue_vue_type_style_index_0_scoped_685b2f97_lang = "";
+const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-685b2f97"]]);
 Radio.install = (app) => {
   app.component(Radio.__name, Radio);
 };
-const _withScopeId$5 = (n) => (pushScopeId("data-v-2a3d6240"), n = n(), popScopeId(), n);
+const _withScopeId$5 = (n) => (pushScopeId("data-v-28739c5b"), n = n(), popScopeId(), n);
 const _hoisted_1$d = ["onClick"];
 const _hoisted_2$a = ["onClick", "onMouseenter"];
 const _hoisted_3$8 = /* @__PURE__ */ _withScopeId$5(() => /* @__PURE__ */ createElementVNode("path", { d: "M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" }, null, -1));
@@ -3573,8 +3593,8 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Rate_vue_vue_type_style_index_0_scoped_2a3d6240_lang = "";
-const Rate = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-2a3d6240"]]);
+const Rate_vue_vue_type_style_index_0_scoped_28739c5b_lang = "";
+const Rate = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-28739c5b"]]);
 Rate.install = (app) => {
   app.component(Rate.__name, Rate);
 };
@@ -3787,12 +3807,12 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Slider_vue_vue_type_style_index_0_scoped_0332c992_lang = "";
-const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-0332c992"]]);
+const Slider_vue_vue_type_style_index_0_scoped_a8173757_lang = "";
+const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-a8173757"]]);
 Slider.install = (app) => {
   app.component(Slider.__name, Slider);
 };
-const _withScopeId$4 = (n) => (pushScopeId("data-v-a68d0a1b"), n = n(), popScopeId(), n);
+const _withScopeId$4 = (n) => (pushScopeId("data-v-25233002"), n = n(), popScopeId(), n);
 const _hoisted_1$b = { class: "m-spin" };
 const _hoisted_2$9 = { class: "m-spin-box" };
 const _hoisted_3$7 = {
@@ -3846,12 +3866,12 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Spin_vue_vue_type_style_index_0_scoped_a68d0a1b_lang = "";
-const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-a68d0a1b"]]);
+const Spin_vue_vue_type_style_index_0_scoped_25233002_lang = "";
+const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-25233002"]]);
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
-const _withScopeId$3 = (n) => (pushScopeId("data-v-ff52b568"), n = n(), popScopeId(), n);
+const _withScopeId$3 = (n) => (pushScopeId("data-v-ec32ee56"), n = n(), popScopeId(), n);
 const _hoisted_1$a = { class: "m-steps" };
 const _hoisted_2$8 = ["onClick"];
 const _hoisted_3$6 = { class: "m-steps-icon" };
@@ -3951,8 +3971,8 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Steps_vue_vue_type_style_index_0_scoped_ff52b568_lang = "";
-const Steps = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-ff52b568"]]);
+const Steps_vue_vue_type_style_index_0_scoped_ec32ee56_lang = "";
+const Steps = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-ec32ee56"]]);
 Steps.install = (app) => {
   app.component(Steps.__name, Steps);
 };
@@ -5327,8 +5347,8 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Swiper_vue_vue_type_style_index_0_scoped_2cae4c49_lang = "";
-const Swiper = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-2cae4c49"]]);
+const Swiper_vue_vue_type_style_index_0_scoped_c772694a_lang = "";
+const Swiper = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-c772694a"]]);
 Swiper.install = (app) => {
   app.component(Swiper.__name, Swiper);
 };
@@ -5374,12 +5394,12 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Switch_vue_vue_type_style_index_0_scoped_cae030de_lang = "";
-const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-cae030de"]]);
+const Switch_vue_vue_type_style_index_0_scoped_6b3af117_lang = "";
+const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-6b3af117"]]);
 Switch.install = (app) => {
   app.component(Switch.__name, Switch);
 };
-const _withScopeId$2 = (n) => (pushScopeId("data-v-fbbfb0a3"), n = n(), popScopeId(), n);
+const _withScopeId$2 = (n) => (pushScopeId("data-v-a690ab7e"), n = n(), popScopeId(), n);
 const _hoisted_1$7 = { class: "m-table-wrap" };
 const _hoisted_2$6 = ["width"];
 const _hoisted_3$4 = { class: "m-body" };
@@ -5529,8 +5549,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Table_vue_vue_type_style_index_0_scoped_fbbfb0a3_lang = "";
-const Table = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-fbbfb0a3"]]);
+const Table_vue_vue_type_style_index_0_scoped_a690ab7e_lang = "";
+const Table = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-a690ab7e"]]);
 Table.install = (app) => {
   app.component(Table.__name, Table);
 };
@@ -5653,8 +5673,8 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tabs_vue_vue_type_style_index_0_scoped_4c8e9bf3_lang = "";
-const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-4c8e9bf3"]]);
+const Tabs_vue_vue_type_style_index_0_scoped_bf0ac737_lang = "";
+const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-bf0ac737"]]);
 Tabs.install = (app) => {
   app.component(Tabs.__name, Tabs);
 };
@@ -5858,8 +5878,8 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const TextScroll_vue_vue_type_style_index_0_scoped_6638eac9_lang = "";
-const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-6638eac9"]]);
+const TextScroll_vue_vue_type_style_index_0_scoped_ec3651f6_lang = "";
+const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-ec3651f6"]]);
 TextScroll.install = (app) => {
   app.component(TextScroll.__name, TextScroll);
 };
@@ -5941,8 +5961,8 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Timeline_vue_vue_type_style_index_0_scoped_f079566e_lang = "";
-const Timeline = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-f079566e"]]);
+const Timeline_vue_vue_type_style_index_0_scoped_f62150c0_lang = "";
+const Timeline = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-f62150c0"]]);
 Timeline.install = (app) => {
   app.component(Timeline.__name, Timeline);
 };
@@ -6029,12 +6049,12 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tooltip_vue_vue_type_style_index_0_scoped_08fb6f39_lang = "";
-const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-08fb6f39"]]);
+const Tooltip_vue_vue_type_style_index_0_scoped_bdf7f356_lang = "";
+const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-bdf7f356"]]);
 Tooltip.install = (app) => {
   app.component(Tooltip.__name, Tooltip);
 };
-const _withScopeId$1 = (n) => (pushScopeId("data-v-dba63aa1"), n = n(), popScopeId(), n);
+const _withScopeId$1 = (n) => (pushScopeId("data-v-a11ba72f"), n = n(), popScopeId(), n);
 const _hoisted_1$2 = { class: "m-upload-list" };
 const _hoisted_2$2 = { class: "m-upload" };
 const _hoisted_3$1 = ["onDrop", "onClick"];
@@ -6356,12 +6376,12 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Upload_vue_vue_type_style_index_0_scoped_dba63aa1_lang = "";
-const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-dba63aa1"]]);
+const Upload_vue_vue_type_style_index_0_scoped_a11ba72f_lang = "";
+const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-a11ba72f"]]);
 Upload.install = (app) => {
   app.component(Upload.__name, Upload);
 };
-const _withScopeId = (n) => (pushScopeId("data-v-56f5e623"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-5d9cc5de"), n = n(), popScopeId(), n);
 const _hoisted_1$1 = ["src", "poster", "width", "height", "autoplay", "controls", "loop", "muted", "preload", "onClickOnce"];
 const _hoisted_2$1 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", {
   stroke: "currentColor",
@@ -6395,7 +6415,8 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     preload: { default: "auto" },
     showPlay: { type: Boolean, default: false },
     playWidth: { default: 96 },
-    zoom: { default: "none" }
+    zoom: { default: "none" },
+    second: { default: 0.3 }
   },
   setup(__props) {
     const props = __props;
@@ -6404,7 +6425,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     const vplay = ref(false);
     const veo = ref();
     function getPoster() {
-      veo.value.currentTime = 0.3;
+      veo.value.currentTime = props.second;
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       canvas.width = veo.value.videoWidth;
@@ -6481,8 +6502,8 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Video_vue_vue_type_style_index_0_scoped_56f5e623_lang = "";
-const Video = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-56f5e623"]]);
+const Video_vue_vue_type_style_index_0_scoped_5d9cc5de_lang = "";
+const Video = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-5d9cc5de"]]);
 Video.install = (app) => {
   app.component(Video.__name, Video);
 };
@@ -6616,8 +6637,8 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Waterfall_vue_vue_type_style_index_0_scoped_192a8376_lang = "";
-const Waterfall = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-192a8376"]]);
+const Waterfall_vue_vue_type_style_index_0_scoped_6107a361_lang = "";
+const Waterfall = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-6107a361"]]);
 Waterfall.install = (app) => {
   app.component(Waterfall.__name, Waterfall);
 };
@@ -6707,6 +6728,7 @@ export {
   dateFormat,
   debounce,
   VueAmazingUI as default,
+  downloadFile,
   rafTimeout,
   requestAnimationFrame$1 as requestAnimationFrame,
   throttle

@@ -118,8 +118,12 @@ function onWheel (e: WheelEvent) {
   </div>
 </template>
 <style lang="less" scoped>
-.m-tabs {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-tabs {
   display: flex;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.57;

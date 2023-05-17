@@ -52,8 +52,12 @@ onMounted(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-divider {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.m-divider {
   display: flex;
   align-items: center;
   margin: 16px 0;

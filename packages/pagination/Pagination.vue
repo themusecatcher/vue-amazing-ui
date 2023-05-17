@@ -158,9 +158,10 @@ function changePage (pageNum: number): boolean | void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-pagination {
+* {
   box-sizing: border-box;
-  margin: 16px 0;
+  margin: 0;
+  padding: 0;
 }
 .hidden {
   display: none;
@@ -174,107 +175,110 @@ function changePage (pageNum: number): boolean | void {
 .right {
   text-align: right;
 }
-.m-pagination-wrap {
-  display: inline-block;
-  height: 32px;
-  line-height: 30px;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
-  text-align: center;
-  .mr8 {
-    margin-right: 8px;
-  }
-  .u-item {
-    min-width: 32px;
-    height: 32px;
+.m-pagination {
+  margin: 16px 0;
+  .m-pagination-wrap {
     display: inline-block;
-    user-select: none; // 禁止选取文本
-    border: 1px solid #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all .3s;
-    &:hover {
-      .active();
-    }
-    .u-arrow {
-      display: inline-block;
-      fill: rgba(0, 0, 0, 0.65);
-      width: 12px;
-      height: 12px;
-      transition: all .3s;
-    }
-    &:not(:last-child) {
+    height: 32px;
+    line-height: 30px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.88);
+    text-align: center;
+    .mr8 {
       margin-right: 8px;
     }
-  }
-  .active { // 悬浮/选中样式
-    font-weight: 600;
-    color: @themeColor;
-    border-color: @themeColor;
-    .u-arrow {
-      fill: @themeColor;
+    .u-item {
+      min-width: 32px;
+      height: 32px;
+      display: inline-block;
+      user-select: none; // 禁止选取文本
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all .3s;
+      &:hover {
+        .active();
+      }
+      .u-arrow {
+        display: inline-block;
+        fill: rgba(0, 0, 0, 0.65);
+        width: 12px;
+        height: 12px;
+        transition: all .3s;
+      }
+      &:not(:last-child) {
+        margin-right: 8px;
+      }
     }
-  }
-  .disabled {
-    // pointer-events: none; // 禁用鼠标事件
-    color: rgba(0, 0, 0, 0.25);
-    background: #fff;
-    border-color: #d9d9d9;
-    cursor: not-allowed;
-    &:hover {
-      font-weight: 400;
-      color: rgba(0, 0, 0, 0.65);
+    .active { // 悬浮/选中样式
+      font-weight: 600;
+      color: @themeColor;
+      border-color: @themeColor;
+      .u-arrow {
+        fill: @themeColor;
+      }
+    }
+    .disabled {
+      // pointer-events: none; // 禁用鼠标事件
+      color: rgba(0, 0, 0, 0.25);
+      background: #fff;
       border-color: #d9d9d9;
+      cursor: not-allowed;
+      &:hover {
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.65);
+        border-color: #d9d9d9;
+        .u-arrow {
+          fill: rgba(0, 0, 0, 0.25);
+        }
+      }
       .u-arrow {
         fill: rgba(0, 0, 0, 0.25);
       }
     }
-    .u-arrow {
-      fill: rgba(0, 0, 0, 0.25);
-    }
-  }
-  .m-arrow {
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 8px;
-    min-width: 32px;
-    height: 32px;
-    letter-spacing: 2px;
-    font-size: 12px;
-    color: rgba(0, 0, 0, 0.25);
-    transition: all .3s;
-    cursor: pointer;
-    .u-ellipsis {
-      transition: all .3s;
-    }
-    .u-icon {
-      fill: @themeColor;
-      width: 12px;
-      height: 12px;
-    }
-  }
-  .u-jump-page {
-    margin-left: 8px;
-    line-height: 30px;
-    font-size: 14px;
-    input {
-      vertical-align: top;
-      width: 50px;
+    .m-arrow {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+      min-width: 32px;
       height: 32px;
-      padding: 4px 11px;
-      margin: 0 8px;
-      border: 1px solid #d9d9d9;
-      border-radius: 6px;
-      background: transparent;
-      text-align: left;
-      outline: none;
-      transition: all 0.3s;
-      &:hover {
-        border-color: @themeColor
+      letter-spacing: 2px;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.25);
+      transition: all .3s;
+      cursor: pointer;
+      .u-ellipsis {
+        transition: all .3s;
       }
-      &:focus {
-        border-color: @themeColor;
-        box-shadow: 0 0 0 2px fade(@themeColor, 20%);
+      .u-icon {
+        fill: @themeColor;
+        width: 12px;
+        height: 12px;
+      }
+    }
+    .u-jump-page {
+      margin-left: 8px;
+      line-height: 30px;
+      font-size: 14px;
+      input {
+        vertical-align: top;
+        width: 50px;
+        height: 32px;
+        padding: 4px 11px;
+        margin: 0 8px;
+        border: 1px solid #d9d9d9;
+        border-radius: 6px;
+        background: transparent;
+        text-align: left;
+        outline: none;
+        transition: all 0.3s;
+        &:hover {
+          border-color: @themeColor
+        }
+        &:focus {
+          border-color: @themeColor;
+          box-shadow: 0 0 0 2px fade(@themeColor, 20%);
+        }
       }
     }
   }

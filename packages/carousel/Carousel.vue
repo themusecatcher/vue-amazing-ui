@@ -275,12 +275,16 @@ function onSwitch (n: number) { // 分页切换图片
   </div>
 </template>
 <style lang="less" scoped>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 .m-slider {
   display: inline-block;
   margin: 0 auto;
   position: relative;
   overflow: hidden;
-  box-sizing: border-box;
   .transition {
     transition: transform 0.3s ease-out;
   }
