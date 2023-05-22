@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-
+import { ref, watchEffect } from 'vue'
 const options = ref([
       {
         label: '北京市',
@@ -38,8 +37,8 @@ const options = ref([
     ])
 
 const value = ref(1)
-watch(value, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('value:', value.value)
 })
 function onChange (value: any) {
   console.log('change:', value)

@@ -21,7 +21,7 @@ onMounted(() => {
       <div class="u-tag yellow">特斯拉</div>
     </Tooltip>
     <p class="u-info ml120 mb10">模拟接口调用：</p>
-    <Tooltip :maxWidth="240" :fontSize="14" color="#FFF" backgroundColor="rgba(0,0,0,.85)">
+    <Tooltip :maxWidth="240" :fontSize="14" color="#FFF" backgroundColor=" v x">
       <!-- <template #title>《哥斯拉大战金刚》是由美国传奇影业公司出品，亚当·温佳德执导，亚历山大·斯卡斯加德、米莉·博比·布朗、丽贝卡·豪尔、凯莉·霍特尔、布莱恩·泰里·亨利、小栗旬联合主演的动作科幻片，于2021于3月26日在中国内地上映</template> -->
       <template #title>{{ title || '--' }}</template>
       <!-- <div class="u-tag blue">哥斯拉</div> -->

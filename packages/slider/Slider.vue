@@ -8,6 +8,7 @@ interface Props {
   disabled?: boolean // 是否禁用
   range?: boolean // 是否双滑块模式
   step?: number // 步长，取值必须大于0，并且可被 (max - min) 整除
+  tipFormatter?: Function | null // Slider 会把当前值传给 tipFormatter，并在 Tooltip 中显示 tipFormatter 的返回值，若为 null，则隐藏 Tooltip。
   value?: number | number[] // （v-model）设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   range: false,
   step: 1,
+  tipFormatter: () => {},
   value: 0
 })
 const transition = ref(false)
@@ -46,18 +48,43 @@ const sliderValue = computed(() => {
   }
   return high
 })
-const emit = defineEmits(['update:value', 'change'])
+console.log(typeof props.tipFormatter)
+const leftValue = computed(() => {
+  if (props.range) {
+    if (typeof props.tipFormatter === 'function') {
+      return props.tipFormatter((sliderValue.value as number[])[0])
+    }
+    return (sliderValue.value as number[])[0]
+  }
+  return null
+})
+const rightValue = computed(() => {
+  if (props.range) {
+    if (typeof props.tipFormatter === 'function') {
+      return props.tipFormatter((sliderValue.value as number[])[0])
+    }
+    return (sliderValue.value as number[])[1]
+  }
+  if (typeof props.tipFormatter === 'function') {
+    return props.tipFormatter(sliderValue.value)
+  }
+  return sliderValue.value
+})
+const emits = defineEmits(['update:value', 'change'])
 watch(
   () => props.value,
   () => { getPosition() })
 watch(sliderValue, (to) => {
-  emit('update:value', to)
-  emit('change', to)
+  emits('update:value', to)
+  emits('change', to)
 })
 onMounted(() => {
   getSliderWidth()
   getPosition()
 })
+function formatter (value: number) {
+  return value
+}
 function getSliderWidth () {
   sliderWidth.value = slider.value.offsetWidth
 }
@@ -70,6 +97,9 @@ function getPosition () {
   }
 }
 function onClickPoint (e: any) { // 点击滑动条，移动滑块
+  if (props.disabled) {
+    return
+  }
   if (transition.value) {
     cancelRaf(timer.value)
     timer.value = null
@@ -98,6 +128,9 @@ function onClickPoint (e: any) { // 点击滑动条，移动滑块
   }
 }
 function onLeftMouseDown () { // 在滚动条上拖动左滑块
+  if (props.disabled) {
+    return
+  }
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
@@ -116,6 +149,9 @@ function onLeftMouseDown () { // 在滚动条上拖动左滑块
   }
 }
 function onRightMouseDown () { // 在滚动条上拖动右滑块
+  if (props.disabled) {
+    return
+  }
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
@@ -134,6 +170,9 @@ function onRightMouseDown () { // 在滚动条上拖动右滑块
   }
 }
 function onLeftSlide (source: number, place: string) {
+  if (props.disabled) {
+    return
+  }
   const targetX = source - props.step * scale.value
   if (place === 'left') { // 左滑块左移
     if (targetX < 0) {
@@ -151,6 +190,9 @@ function onLeftSlide (source: number, place: string) {
   }
 }
 function onRightSlide (source: number, place: string) {
+  if (props.disabled) {
+    return
+  }
   const targetX = source + props.step * scale.value
   if (place === 'right') { // 右滑块右移
     if (targetX > sliderWidth.value) {
@@ -183,7 +225,14 @@ function onRightSlide (source: number, place: string) {
       @keydown.right.prevent="onRightSlide(left, 'left')"
       @keydown.down.prevent="onLeftSlide(left, 'left')"
       @keydown.up.prevent="onRightSlide(left, 'left')"
-      @mousedown="onLeftMouseDown"></div>
+      @mousedown="onLeftMouseDown">
+      <div v-if="tipFormatter !== null" class="u-handle-tooltip">
+        {{ leftValue }}
+        <div class="m-arrow">
+          <span class="u-arrow"></span>
+        </div>
+      </div>
+    </div>
     <div
       tabindex="-1"
       ref="rightHandle"
@@ -194,8 +243,13 @@ function onRightSlide (source: number, place: string) {
       @keydown.right.prevent="onRightSlide(right, 'right')"
       @keydown.down.prevent="onLeftSlide(right, 'right')"
       @keydown.up.prevent="onRightSlide(right, 'right')"
-      @mousedown="onRightMouseDown"
-      ></div>
+      @mousedown="onRightMouseDown">
+      <div v-if="tipFormatter !== null" class="u-handle-tooltip">
+        {{ rightValue }}
+        <div class="m-arrow">
+          <span class="u-arrow"></span>
+        </div>
+      </div></div>
   </div>
 </template>
 <style lang="less" scoped>
@@ -252,11 +306,59 @@ function onRightSlide (source: number, place: string) {
     border-radius: 50%;
     cursor: pointer;
     transition: width .3s, height .3s, border-color .3s, border-width .3s, transform .3s cubic-bezier(.18,.89,.32,1.28);
+    .u-handle-tooltip {
+      position: relative;
+      display: inline-block;
+      padding: 6px 8px;
+      font-size: 14px;
+      color: #FFF;
+      line-height: 20px;
+      text-align: center;
+      min-width: 32px;
+      border-radius: 6px;
+      transform: translate(-50%, -50%) scale(0.8);
+      top: -32px;
+      left: 50%;
+      background: rgba(0,0,0,.85);
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      pointer-events: none;
+      opacity: 0;
+      transition: transform .25s, opacity .25s;
+      .m-arrow {
+        position: absolute;
+        z-index: 9;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 100%);
+        width: 15.55px;
+        height: 10px;
+        border-radius: 0 0 5px 5px;
+        overflow: hidden;
+        .u-arrow {
+          position: absolute;
+          left: 50%;
+          top: -1px;
+          transform: translate(-50%, -50%) rotate(45deg);
+          margin: 0 auto;
+          width: 11px;
+          height: 11px;
+          border-radius: 0 0 2px 0;
+          z-index: 8;
+          background: rgba(0,0,0,.85);
+          box-shadow: 1px 1px 1px 1px fade(@themeColor, 12%);
+        }
+      }
+    }
     &:hover {
       width: 20px;
       height: 20px;
       border-width: 4px;
       border-color: @themeColor;
+      .u-handle-tooltip {
+        pointer-events: auto;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
     }
   }
   .handleTransition {
@@ -264,20 +366,29 @@ function onRightSlide (source: number, place: string) {
   }
 }
 .disabled {
-  cursor: not-allowed;
   .u-slider-rail {
-    pointer-events: none;
+    cursor: not-allowed;
+    background: rgba(0, 0, 0, 0.06);
   }
   .u-slider-track {
     background: rgba(0, 0, 0, .25);
   }
   .u-slider-handle {
     border-color: rgba(0, 0, 0, .25);
-    pointer-events: none;
+    cursor: not-allowed;
+    &:hover {
+      width: 14px;
+      height: 14px;
+      border-width: 2px;
+      border-color: rgba(0, 0, 0, .25);
+    }
   }
   &:hover {
+    .u-slider-rail {
+      background: rgba(0, 0, 0, .06);
+    }
     .u-slider-track {
-       background: rgba(0, 0, 0, .25);
+      background: rgba(0, 0, 0, .25);
     }
   }
 }

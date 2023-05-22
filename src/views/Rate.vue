@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const value = ref(2.99)
-watch(value, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('value:', value.value)
 })
 function onChange (value: number) {
   console.log('change value:', value)
@@ -31,7 +31,7 @@ function onHoverChange (value: number) {
       :size="36"
       v-model:value="value"
       @change="onChange"
-      @hoverChange="onHoverChange"/>
+      @hover-change="onHoverChange"/>
     <h2 class="mt30 mb10">使用英文字母: A (character: A & size: 48)</h2>
     <Rate
       allowHalf
@@ -39,7 +39,7 @@ function onHoverChange (value: number) {
       :size="48"
       v-model:value="value"
       @change="onChange"
-      @hoverChange="onHoverChange"/>
+      @hover-change="onHoverChange"/>
     <h2 class="mt30 mb10">Ant Design Vue 评分</h2>
     <a-rate v-model:value="value" allow-half />
   </div>
