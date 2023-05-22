@@ -37,7 +37,7 @@ const options = ref([
     ])
 const selectedValue = ref(1)
 watchEffect(() => {
-  console.log('p selectedValue:', selectedValue.value)
+  console.log('selectedValue:', selectedValue.value)
 })
 function onChange (value: string|number, label: string,  index: number) {
   console.log('value:', value)
@@ -66,8 +66,9 @@ function onAntChange (value: string|number, option: any) {
       v-model:selectedValue="selectedValue" />
     <h2 class="mt30 mb10">宽度设置为160px (width: 160)</h2>
     <Select
-      :options="options"
       :width="160"
+      :height="36"
+      :options="options"
       v-model:selectedValue="selectedValue"
       @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除 (allowClear)</h2>

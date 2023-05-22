@@ -130,7 +130,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
         class="m-options-panel"
         @mouseenter="onEnter"
         @mouseleave="onLeave"
-        :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${ num * height + 4 }px; width: ${width}px;`">
+        :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${ num * height + 9 }px; width: ${width}px;`">
         <p
           v-for="(option, index) in options" :key="index"
           :class="['u-option', {'option-selected': option[label]===selectedName, 'option-hover': !option.disabled&&option[value]===hoverValue, 'option-disabled': option.disabled }]"
@@ -257,6 +257,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
     display: block;
     padding: 5px 12px;
     font-weight: 400;
+    line-height: inherit;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
