@@ -195,51 +195,51 @@ export default defineConfig({
           text: '组件',
           items: [
             {
-              text: 'Breadcrumb 面包屑',
+              text: '面包屑 Breadcrumb',
               link: '/guide/components/breadcrumb'
             },
             {
-              text: 'Button 按钮',
+              text: '按钮 Button',
               link: '/guide/components/button'
             },
             {
-              text: 'Carousel 走马灯',
+              text: '走马灯 Carousel',
               link: '/guide/components/carousel'
             },
             {
-              text: 'Cascader 级联选择',
+              text: '级联选择 Cascader',
               link: '/guide/components/cascader'
             },
             {
-              text: 'Checkbox 多选框',
+              text: '多选框 Checkbox',
               link: '/guide/components/checkbox'
             },
             {
-              text: 'Collapse 折叠面板',
+              text: '折叠面板 Collapse',
               link: '/guide/components/collapse'
             },
             {
-              text: 'Countdown 倒计时',
+              text: '倒计时 Countdown',
               link: '/guide/components/countdown'
             },
             {
-              text: 'DatePicker 日期选择',
+              text: '日期选择 DatePicker',
               link: '/guide/components/datepicker'
             },
             {
-              text: 'Dialog 对话框',
+              text: '对话框 Dialog',
               link: '/guide/components/dialog'
             },
             {
-              text: 'Divider 分割线',
+              text: '分割线 Divider',
               link: '/guide/components/divider'
             },
             {
-              text: 'Empty 空状态',
+              text: '空状态 Empty',
               link: '/guide/components/empty'
             },
             {
-              text: 'Image 图片',
+              text: '图片 Image',
               link: '/guide/components/image'
             },
             {
@@ -247,91 +247,91 @@ export default defineConfig({
               link: '/guide/components/inputNumber'
             },
             {
-              text: 'Message 全局提示',
+              text: '全局提示 Message',
               link: '/guide/components/message'
             },
             {
-              text: 'Modal 信息提示',
+              text: '信息提示 Modal',
               link: '/guide/components/modal'
             },
             {
-              text: 'Notification 通知提醒框',
+              text: '通知提醒框 Notification',
               link: '/guide/components/notification'
             },
             {
-              text: 'Pagination 分页器',
+              text: '分页器 Pagination',
               link: '/guide/components/pagination'
             },
             {
-              text: 'Progress 进度条',
+              text: '进度条 Progress',
               link: '/guide/components/progress'
             },
             {
-              text: 'QRCode 二维码',
+              text: '二维码 QRCode',
               link: '/guide/components/qrcode'
             },
             {
-              text: 'Radio 单选框',
+              text: '单选框 Radio',
               link: '/guide/components/radio'
             },
             {
-              text: 'Rate 评分',
+              text: '评分 Rate',
               link: '/guide/components/rate'
             },
             {
-              text: 'Select 选择器',
+              text: '选择器 Select',
               link: '/guide/components/select'
             },
             {
-              text: 'Slider 滑动输入条',
+              text: '滑动输入条 Slider',
               link: '/guide/components/slider'
             },
             {
-              text: 'Spin 加载中',
+              text: '加载中 Spin',
               link: '/guide/components/spin'
             },
             {
-              text: 'Steps 步骤条',
+              text: '步骤条 Steps',
               link: '/guide/components/steps'
             },
             {
-              text: 'Swiper 触摸滑动插件',
+              text: '触摸滑动插件 Swiper',
               link: '/guide/components/swiper'
             },
             {
-              text: 'Switch 开关',
+              text: '开关 Switch',
               link: '/guide/components/switch'
             },
             {
-              text: 'Table 表格',
+              text: '表格 Table',
               link: '/guide/components/table'
             },
             {
-              text: 'Tabs 标签页',
+              text: '标签页 Tabs',
               link: '/guide/components/tabs'
             },
             {
-              text: 'TextScroll 文字滚动',
+              text: '文字滚动 TextScroll',
               link: '/guide/components/textscroll'
             },
             {
-              text: 'Timeline 时间轴',
+              text: '时间轴 Timeline',
               link: '/guide/components/timeline'
             },
             {
-              text: 'Tooltip 文字提示',
+              text: '文字提示 Tooltip',
               link: '/guide/components/tooltip'
             },
             {
-              text: 'Upload 上传',
+              text: '上传 Upload',
               link: '/guide/components/upload'
             },
             {
-              text: 'Video 播放器',
+              text: '播放器 Video',
               link: '/guide/components/video'
             },
             {
-              text: 'Waterfall 瀑布流',
+              text: '瀑布流 Waterfall',
               link: '/guide/components/waterfall'
             }
           ]

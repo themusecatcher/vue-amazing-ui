@@ -8,7 +8,7 @@ interface Props {
   disabled?: boolean // 是否禁用
   range?: boolean // 是否双滑块模式
   step?: number // 步长，取值必须大于0，并且可被 (max - min) 整除
-  tipFormatter?: Function | null // Slider 会把当前值传给 tipFormatter，并在 Tooltip 中显示 tipFormatter 的返回值，若为 null，则隐藏 Tooltip。
+  tipFormatter?: Function | null // Slider 会把当前值传给 tipFormatter，并在 Tooltip 中显示 tipFormatter 的返回值，若为 null，则隐藏 Tooltip
   value?: number | number[] // （v-model）设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
 }
 const props = withDefaults(defineProps<Props>(), {
