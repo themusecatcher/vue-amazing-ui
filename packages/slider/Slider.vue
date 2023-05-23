@@ -48,7 +48,6 @@ const sliderValue = computed(() => {
   }
   return high
 })
-console.log(typeof props.tipFormatter)
 const leftValue = computed(() => {
   if (props.range) {
     if (typeof props.tipFormatter === 'function') {
@@ -82,9 +81,6 @@ onMounted(() => {
   getSliderWidth()
   getPosition()
 })
-function formatter (value: number) {
-  return value
-}
 function getSliderWidth () {
   sliderWidth.value = slider.value.offsetWidth
 }

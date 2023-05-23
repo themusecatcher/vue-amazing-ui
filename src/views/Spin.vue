@@ -11,16 +11,20 @@ const spinning = ref(true)
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
     <h2 class="mt30 mb10">圆形加载指示符 (indicator: circle)</h2>
-    <Spin style="width: 800px;" :tip="tip" :spinning="spinning" indicator="circle">
+    <Spin style="width: 800px;" :tip="tip" :spinning="spinning" indicator="static-circle">
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
     <h2 class="mt30 mb10">各种大小</h2>
     <Spin :tip="tip" class="u-spin" :spinning="spinning" size="small" />
     <Spin :tip="tip" class="u-spin" :spinning="spinning" size="default" />
+    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="default" />
     <Spin :tip="tip" class="u-spin" :spinning="spinning" size="large" />
-    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="small" indicator="circle" />
-    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="default"  indicator="circle" />
-    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="large"  indicator="circle" />
+    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="small" indicator="static-circle" />
+    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="default"  indicator="static-circle" />
+    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="large"  indicator="static-circle" />
+    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
+    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="default"  indicator="dynamic-circle" />
+    <Spin :tip="tip" class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
     <h3>Loading state: <Switch v-model:checked="spinning" /></h3>
     <h2 class="mt30 mb10">Ant Design Vue 加载中</h2>
     <a-spin :tip="tip" size="default" :spinning="spinning">
