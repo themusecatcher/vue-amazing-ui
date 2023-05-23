@@ -243,7 +243,7 @@ export default defineConfig({
               link: '/guide/components/image'
             },
             {
-              text: 'InputNumber 数字输入框',
+              text: '数字输入框 InputNumber',
               link: '/guide/components/inputNumber'
             },
             {

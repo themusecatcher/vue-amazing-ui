@@ -288,15 +288,15 @@ const _hoisted_6$g = ["src", "alt"];
 const _hoisted_7$e = { class: "u-spin-circle" };
 const _hoisted_8$d = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("path", { d: "M603.3 327.5l-246 178a7.95 7.95 0 0 0 0 12.9l246 178c5.3 3.8 12.7 0 12.7-6.5V643c0-10.2-4.9-19.9-13.2-25.9L457.4 512l145.4-105.2c8.3-6 13.2-15.6 13.2-25.9V334c0-6.5-7.4-10.3-12.7-6.5z" }, null, -1));
 const _hoisted_9$d = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_10$9 = [
+const _hoisted_10$a = [
   _hoisted_8$d,
   _hoisted_9$d
 ];
-const _hoisted_11$8 = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("path", { d: "M666.7 505.5l-246-178A8 8 0 0 0 408 334v46.9c0 10.2 4.9 19.9 13.2 25.9L566.6 512 421.2 617.2c-8.3 6-13.2 15.6-13.2 25.9V690c0 6.5 7.4 10.3 12.7 6.5l246-178c4.4-3.2 4.4-9.8 0-13z" }, null, -1));
-const _hoisted_12$7 = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_11$9 = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("path", { d: "M666.7 505.5l-246-178A8 8 0 0 0 408 334v46.9c0 10.2 4.9 19.9 13.2 25.9L566.6 512 421.2 617.2c-8.3 6-13.2 15.6-13.2 25.9V690c0 6.5 7.4 10.3 12.7 6.5l246-178c4.4-3.2 4.4-9.8 0-13z" }, null, -1));
+const _hoisted_12$8 = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
 const _hoisted_13$7 = [
-  _hoisted_11$8,
-  _hoisted_12$7
+  _hoisted_11$9,
+  _hoisted_12$8
 ];
 const _hoisted_14$7 = {
   key: 1,
@@ -586,7 +586,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
             "data-icon": "left-circle",
             "aria-hidden": "true",
             focusable: "false"
-          }, _hoisted_10$9)),
+          }, _hoisted_10$a)),
           (openBlock(), createElementBlock("svg", {
             class: "arrow-right",
             onClick: _cache[2] || (_cache[2] = ($event) => onRightArrow(activeSwitcher.value * imageWidth.value)),
@@ -1401,13 +1401,13 @@ const _hoisted_8$c = /* @__PURE__ */ _withScopeId$e(() => /* @__PURE__ */ create
 const _hoisted_9$c = [
   _hoisted_8$c
 ];
-const _hoisted_10$8 = /* @__PURE__ */ _withScopeId$e(() => /* @__PURE__ */ createElementVNode("path", { d: "M391 240.9c-.8-6.6-8.9-9.4-13.6-4.7l-43.7 43.7L200 146.3a8.03 8.03 0 0 0-11.3 0l-42.4 42.3a8.03 8.03 0 0 0 0 11.3L280 333.6l-43.9 43.9a8.01 8.01 0 0 0 4.7 13.6L401 410c5.1.6 9.5-3.7 8.9-8.9L391 240.9zm10.1 373.2L240.8 633c-6.6.8-9.4 8.9-4.7 13.6l43.9 43.9L146.3 824a8.03 8.03 0 0 0 0 11.3l42.4 42.3c3.1 3.1 8.2 3.1 11.3 0L333.7 744l43.7 43.7A8.01 8.01 0 0 0 391 783l18.9-160.1c.6-5.1-3.7-9.4-8.8-8.8zm221.8-204.2L783.2 391c6.6-.8 9.4-8.9 4.7-13.6L744 333.6 877.7 200c3.1-3.1 3.1-8.2 0-11.3l-42.4-42.3a8.03 8.03 0 0 0-11.3 0L690.3 279.9l-43.7-43.7a8.01 8.01 0 0 0-13.6 4.7L614.1 401c-.6 5.2 3.7 9.5 8.8 8.9zM744 690.4l43.9-43.9a8.01 8.01 0 0 0-4.7-13.6L623 614c-5.1-.6-9.5 3.7-8.9 8.9L633 783.1c.8 6.6 8.9 9.4 13.6 4.7l43.7-43.7L824 877.7c3.1 3.1 8.2 3.1 11.3 0l42.4-42.3c3.1-3.1 3.1-8.2 0-11.3L744 690.4z" }, null, -1));
-const _hoisted_11$7 = [
-  _hoisted_10$8
+const _hoisted_10$9 = /* @__PURE__ */ _withScopeId$e(() => /* @__PURE__ */ createElementVNode("path", { d: "M391 240.9c-.8-6.6-8.9-9.4-13.6-4.7l-43.7 43.7L200 146.3a8.03 8.03 0 0 0-11.3 0l-42.4 42.3a8.03 8.03 0 0 0 0 11.3L280 333.6l-43.9 43.9a8.01 8.01 0 0 0 4.7 13.6L401 410c5.1.6 9.5-3.7 8.9-8.9L391 240.9zm10.1 373.2L240.8 633c-6.6.8-9.4 8.9-4.7 13.6l43.9 43.9L146.3 824a8.03 8.03 0 0 0 0 11.3l42.4 42.3c3.1 3.1 8.2 3.1 11.3 0L333.7 744l43.7 43.7A8.01 8.01 0 0 0 391 783l18.9-160.1c.6-5.1-3.7-9.4-8.8-8.8zm221.8-204.2L783.2 391c6.6-.8 9.4-8.9 4.7-13.6L744 333.6 877.7 200c3.1-3.1 3.1-8.2 0-11.3l-42.4-42.3a8.03 8.03 0 0 0-11.3 0L690.3 279.9l-43.7-43.7a8.01 8.01 0 0 0-13.6 4.7L614.1 401c-.6 5.2 3.7 9.5 8.8 8.9zM744 690.4l43.9-43.9a8.01 8.01 0 0 0-4.7-13.6L623 614c-5.1-.6-9.5 3.7-8.9 8.9L633 783.1c.8 6.6 8.9 9.4 13.6 4.7l43.7-43.7L824 877.7c3.1 3.1 8.2 3.1 11.3 0l42.4-42.3c3.1-3.1 3.1-8.2 0-11.3L744 690.4z" }, null, -1));
+const _hoisted_11$8 = [
+  _hoisted_10$9
 ];
-const _hoisted_12$6 = /* @__PURE__ */ _withScopeId$e(() => /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1));
+const _hoisted_12$7 = /* @__PURE__ */ _withScopeId$e(() => /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1));
 const _hoisted_13$6 = [
-  _hoisted_12$6
+  _hoisted_12$7
 ];
 const _hoisted_14$6 = { class: "m-dialog-header" };
 const _hoisted_15$6 = { class: "u-head" };
@@ -1505,7 +1505,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                   "data-icon": "fullscreen-exit",
                   "aria-hidden": "true",
                   focusable: "false"
-                }, _hoisted_11$7, 512)), [
+                }, _hoisted_11$8, 512)), [
                   [vShow, fullScreen.value && _ctx.switchFullscreen]
                 ]),
                 (openBlock(), createElementBlock("svg", {
@@ -1714,8 +1714,8 @@ const _hoisted_6$b = { class: "m-preview-mask" };
 const _hoisted_7$b = ["onClick", "onWheel"];
 const _hoisted_8$b = { class: "m-preview-body" };
 const _hoisted_9$b = { class: "m-preview-operations" };
-const _hoisted_10$7 = { class: "u-name" };
-const _hoisted_11$6 = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_10$8 = { class: "u-name" };
+const _hoisted_11$7 = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
   "data-icon": "close",
@@ -1724,8 +1724,8 @@ const _hoisted_11$6 = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" })
 ], -1));
-const _hoisted_12$5 = [
-  _hoisted_11$6
+const _hoisted_12$6 = [
+  _hoisted_11$7
 ];
 const _hoisted_13$5 = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
@@ -2048,11 +2048,11 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
             }, [
               createElementVNode("div", _hoisted_8$b, [
                 createElementVNode("div", _hoisted_9$b, [
-                  createElementVNode("p", _hoisted_10$7, toDisplayString(getImageName(images.value[previewIndex.value])), 1),
+                  createElementVNode("p", _hoisted_10$8, toDisplayString(getImageName(images.value[previewIndex.value])), 1),
                   createElementVNode("div", {
                     class: "u-preview-operation",
                     onClick: onClose
-                  }, _hoisted_12$5),
+                  }, _hoisted_12$6),
                   createElementVNode("div", {
                     class: normalizeClass(["u-preview-operation", { "u-operation-disabled": scale.value === _ctx.maxZoomScale }]),
                     onClick: onZoomin
@@ -2294,7 +2294,7 @@ const _hoisted_8$9 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ create
 const _hoisted_9$9 = [
   _hoisted_8$9
 ];
-const _hoisted_10$6 = { class: "content" };
+const _hoisted_10$7 = { class: "content" };
 var ColorStyle$1 = /* @__PURE__ */ ((ColorStyle2) => {
   ColorStyle2["info"] = "#1677FF";
   ColorStyle2["success"] = "#52c41a";
@@ -2431,7 +2431,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
                     "aria-hidden": "true",
                     focusable: "false"
                   }, _hoisted_9$9, 4)) : createCommentVNode("", true),
-                  createElementVNode("p", _hoisted_10$6, toDisplayString(message.content), 1)
+                  createElementVNode("p", _hoisted_10$7, toDisplayString(message.content), 1)
                 ], 40, _hoisted_1$k)
               ])), [
                 [vShow, showMessage.value[index]]
@@ -2464,7 +2464,7 @@ const _hoisted_7$8 = [
 ];
 const _hoisted_8$8 = { class: "m-body" };
 const _hoisted_9$8 = { class: "m-title" };
-const _hoisted_10$5 = {
+const _hoisted_10$6 = {
   key: 0,
   focusable: "false",
   class: "u-icon confirm",
@@ -2472,11 +2472,11 @@ const _hoisted_10$5 = {
   "aria-hidden": "true",
   viewBox: "64 64 896 896"
 };
-const _hoisted_11$5 = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_12$4 = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z" }, null, -1));
+const _hoisted_11$6 = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_12$5 = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z" }, null, -1));
 const _hoisted_13$4 = [
-  _hoisted_11$5,
-  _hoisted_12$4
+  _hoisted_11$6,
+  _hoisted_12$5
 ];
 const _hoisted_14$4 = {
   key: 1,
@@ -2610,7 +2610,7 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
                   ]),
                   createElementVNode("div", _hoisted_8$8, [
                     createElementVNode("div", _hoisted_9$8, [
-                      mode.value === "confirm" || mode.value === "erase" ? (openBlock(), createElementBlock("svg", _hoisted_10$5, _hoisted_13$4)) : createCommentVNode("", true),
+                      mode.value === "confirm" || mode.value === "erase" ? (openBlock(), createElementBlock("svg", _hoisted_10$6, _hoisted_13$4)) : createCommentVNode("", true),
                       mode.value === "info" ? (openBlock(), createElementBlock("svg", _hoisted_14$4, _hoisted_16$4)) : createCommentVNode("", true),
                       mode.value === "success" ? (openBlock(), createElementBlock("svg", _hoisted_17$2, _hoisted_19$2)) : createCommentVNode("", true),
                       mode.value === "error" ? (openBlock(), createElementBlock("svg", _hoisted_20$1, _hoisted_22$1)) : createCommentVNode("", true),
@@ -2675,15 +2675,15 @@ const _hoisted_7$7 = [
 ];
 const _hoisted_8$7 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
 const _hoisted_9$7 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 688a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z" }, null, -1));
-const _hoisted_10$4 = [
+const _hoisted_10$5 = [
   _hoisted_8$7,
   _hoisted_9$7
 ];
-const _hoisted_11$4 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z" }, null, -1));
-const _hoisted_12$3 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_11$5 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z" }, null, -1));
+const _hoisted_12$4 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
 const _hoisted_13$3 = [
-  _hoisted_11$4,
-  _hoisted_12$3
+  _hoisted_11$5,
+  _hoisted_12$4
 ];
 const _hoisted_14$3 = ["onClick"];
 const _hoisted_15$3 = /* @__PURE__ */ _withScopeId$9(() => /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1));
@@ -2833,7 +2833,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
                   "data-icon": "exclamation-circle",
                   "aria-hidden": "true",
                   focusable: "false"
-                }, _hoisted_10$4, 4)) : createCommentVNode("", true),
+                }, _hoisted_10$5, 4)) : createCommentVNode("", true),
                 data.mode === "error" ? (openBlock(), createElementBlock("svg", {
                   key: 3,
                   class: "u-status-svg",
@@ -2904,17 +2904,17 @@ const _hoisted_8$6 = [
   _hoisted_7$6
 ];
 const _hoisted_9$6 = ["onClick"];
-const _hoisted_10$3 = { class: "u-ellipsis" };
-const _hoisted_11$3 = {
+const _hoisted_10$4 = { class: "u-ellipsis" };
+const _hoisted_11$4 = {
   class: "u-icon",
   viewBox: "64 64 896 896",
   "data-icon": "double-right",
   "aria-hidden": "true",
   focusable: "false"
 };
-const _hoisted_12$2 = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("path", { d: "M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z" }, null, -1));
+const _hoisted_12$3 = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("path", { d: "M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z" }, null, -1));
 const _hoisted_13$2 = [
-  _hoisted_12$2
+  _hoisted_12$3
 ];
 const _hoisted_14$2 = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-arrow",
@@ -3077,10 +3077,10 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
             onMouseenter: _cache[4] || (_cache[4] = ($event) => backwardArrow.value = true),
             onMouseleave: _cache[5] || (_cache[5] = ($event) => backwardArrow.value = false)
           }, [
-            withDirectives(createElementVNode("span", _hoisted_10$3, "•••", 512), [
+            withDirectives(createElementVNode("span", _hoisted_10$4, "•••", 512), [
               [vShow, !backwardArrow.value]
             ]),
-            withDirectives((openBlock(), createElementBlock("svg", _hoisted_11$3, _hoisted_13$2, 512)), [
+            withDirectives((openBlock(), createElementBlock("svg", _hoisted_11$4, _hoisted_13$2, 512)), [
               [vShow, backwardArrow.value]
             ])
           ], 544), [
@@ -3149,10 +3149,10 @@ const _hoisted_8$5 = {
   viewBox: "64 64 896 896"
 };
 const _hoisted_9$5 = /* @__PURE__ */ _withScopeId$7(() => /* @__PURE__ */ createElementVNode("path", { d: "M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z" }, null, -1));
-const _hoisted_10$2 = [
+const _hoisted_10$3 = [
   _hoisted_9$5
 ];
-const _hoisted_11$2 = {
+const _hoisted_11$3 = {
   key: 1,
   class: "u-progress-text"
 };
@@ -3235,7 +3235,7 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
           }, null, 14, _hoisted_7$5)
         ])),
         _ctx.showInfo ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-          _ctx.percent >= 100 ? (openBlock(), createElementBlock("svg", _hoisted_8$5, _hoisted_10$2)) : (openBlock(), createElementBlock("p", _hoisted_11$2, toDisplayString(_ctx.percent >= 100 ? 100 : _ctx.percent) + "%", 1))
+          _ctx.percent >= 100 ? (openBlock(), createElementBlock("svg", _hoisted_8$5, _hoisted_10$3)) : (openBlock(), createElementBlock("p", _hoisted_11$3, toDisplayString(_ctx.percent >= 100 ? 100 : _ctx.percent) + "%", 1))
         ], 64)) : createCommentVNode("", true)
       ], 4));
     };
@@ -3401,13 +3401,13 @@ const _hoisted_8$4 = [
   _hoisted_7$4
 ];
 const _hoisted_9$4 = /* @__PURE__ */ _withScopeId$6(() => /* @__PURE__ */ createElementVNode("path", { d: "M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9zM512 814.8S156 586.7 156 385.5C156 283.6 240.3 201 344.3 201c73.1 0 136.5 40.8 167.7 100.4C543.2 241.8 606.6 201 679.7 201c104 0 188.3 82.6 188.3 184.5 0 201.2-356 429.3-356 429.3z" }, null, -1));
-const _hoisted_10$1 = [
+const _hoisted_10$2 = [
   _hoisted_9$4
 ];
-const _hoisted_11$1 = ["onClick", "onMouseenter"];
-const _hoisted_12$1 = /* @__PURE__ */ _withScopeId$6(() => /* @__PURE__ */ createElementVNode("path", { d: "M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" }, null, -1));
+const _hoisted_11$2 = ["onClick", "onMouseenter"];
+const _hoisted_12$2 = /* @__PURE__ */ _withScopeId$6(() => /* @__PURE__ */ createElementVNode("path", { d: "M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" }, null, -1));
 const _hoisted_13$1 = [
-  _hoisted_12$1
+  _hoisted_12$2
 ];
 const _hoisted_14$1 = /* @__PURE__ */ _withScopeId$6(() => /* @__PURE__ */ createElementVNode("path", { d: "M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3zM664.8 561.6l36.1 210.3L512 672.7 323.1 772l36.1-210.3-152.8-149L417.6 382 512 190.7 606.4 382l211.2 30.7-152.8 148.9z" }, null, -1));
 const _hoisted_15$1 = [
@@ -3529,7 +3529,7 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
                 "data-icon": "heart",
                 "aria-hidden": "true",
                 viewBox: "64 64 896 896"
-              }, _hoisted_10$1, 4)) : (openBlock(), createElementBlock("span", {
+              }, _hoisted_10$2, 4)) : (openBlock(), createElementBlock("span", {
                 key: 4,
                 class: "u-star",
                 style: normalizeStyle(`font-size: ${0.66 * _ctx.size}px; height: ${_ctx.size}px;`)
@@ -3586,7 +3586,7 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
                   createTextVNode(toDisplayString(_ctx.character), 1)
                 ], true)
               ], 4))
-            ], 42, _hoisted_11$1)
+            ], 42, _hoisted_11$2)
           ], 14, _hoisted_1$d);
         }), 128))
       ], 38);
@@ -3598,7 +3598,7 @@ const Rate = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-287
 Rate.install = (app) => {
   app.component(Rate.__name, Rate);
 };
-const _withScopeId$5 = (n) => (pushScopeId("data-v-92e9dbed"), n = n(), popScopeId(), n);
+const _withScopeId$5 = (n) => (pushScopeId("data-v-8c1551ec"), n = n(), popScopeId(), n);
 const _hoisted_1$c = ["onClick"];
 const _hoisted_2$a = {
   key: 0,
@@ -3656,7 +3656,6 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
       }
       return high;
     });
-    console.log(typeof props.tipFormatter);
     const leftValue = computed(() => {
       if (props.range) {
         if (typeof props.tipFormatter === "function") {
@@ -3871,12 +3870,12 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Slider_vue_vue_type_style_index_0_scoped_92e9dbed_lang = "";
-const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-92e9dbed"]]);
+const Slider_vue_vue_type_style_index_0_scoped_8c1551ec_lang = "";
+const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-8c1551ec"]]);
 Slider.install = (app) => {
   app.component(Slider.__name, Slider);
 };
-const _withScopeId$4 = (n) => (pushScopeId("data-v-25233002"), n = n(), popScopeId(), n);
+const _withScopeId$4 = (n) => (pushScopeId("data-v-b57c2b0b"), n = n(), popScopeId(), n);
 const _hoisted_1$b = { class: "m-spin" };
 const _hoisted_2$9 = { class: "m-spin-box" };
 const _hoisted_3$7 = {
@@ -3897,6 +3896,14 @@ const _hoisted_9$3 = {
   key: 1,
   class: "u-spin-circle"
 };
+const _hoisted_10$1 = {
+  key: 2,
+  class: "m-dynamic-circle"
+};
+const _hoisted_11$1 = /* @__PURE__ */ createStaticVNode('<div class="m-dynamic-layer" data-v-b57c2b0b><div class="m-circle-left" data-v-b57c2b0b><svg class="u-left-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" data-v-b57c2b0b><circle stroke-width="20" stroke-linecap="round" cx="100" cy="100" r="90" stroke-dasharray="491" stroke-dashoffset="246" data-v-b57c2b0b></circle></svg></div><div class="m-circle-right" data-v-b57c2b0b><svg class="u-right-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" data-v-b57c2b0b><circle stroke-width="20" stroke-linecap="round" cx="100" cy="100" r="90" stroke-dasharray="491" stroke-dashoffset="246" data-v-b57c2b0b></circle></svg></div></div>', 1);
+const _hoisted_12$1 = [
+  _hoisted_11$1
+];
 const _sfc_main$b = /* @__PURE__ */ defineComponent({
   __name: "Spin",
   props: {
@@ -3913,7 +3920,8 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
         withDirectives(createElementVNode("div", _hoisted_1$b, [
           createElementVNode("div", _hoisted_2$9, [
             _ctx.indicator === "dot" ? (openBlock(), createElementBlock("div", _hoisted_3$7, _hoisted_8$3)) : createCommentVNode("", true),
-            _ctx.indicator === "circle" ? (openBlock(), createElementBlock("div", _hoisted_9$3)) : createCommentVNode("", true),
+            _ctx.indicator === "static-circle" ? (openBlock(), createElementBlock("div", _hoisted_9$3)) : createCommentVNode("", true),
+            _ctx.indicator === "dynamic-circle" ? (openBlock(), createElementBlock("div", _hoisted_10$1, _hoisted_12$1)) : createCommentVNode("", true),
             withDirectives(createElementVNode("p", { class: "u-tip" }, toDisplayString(_ctx.tip), 513), [
               [vShow, _ctx.tip]
             ])
@@ -3930,8 +3938,8 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Spin_vue_vue_type_style_index_0_scoped_25233002_lang = "";
-const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-25233002"]]);
+const Spin_vue_vue_type_style_index_0_scoped_b57c2b0b_lang = "";
+const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-b57c2b0b"]]);
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
