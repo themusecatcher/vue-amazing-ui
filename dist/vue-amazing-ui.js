@@ -3875,7 +3875,7 @@ const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-8
 Slider.install = (app) => {
   app.component(Slider.__name, Slider);
 };
-const _withScopeId$4 = (n) => (pushScopeId("data-v-b57c2b0b"), n = n(), popScopeId(), n);
+const _withScopeId$4 = (n) => (pushScopeId("data-v-88eca36e"), n = n(), popScopeId(), n);
 const _hoisted_1$b = { class: "m-spin" };
 const _hoisted_2$9 = { class: "m-spin-box" };
 const _hoisted_3$7 = {
@@ -3900,7 +3900,7 @@ const _hoisted_10$1 = {
   key: 2,
   class: "m-dynamic-circle"
 };
-const _hoisted_11$1 = /* @__PURE__ */ createStaticVNode('<div class="m-dynamic-layer" data-v-b57c2b0b><div class="m-circle-left" data-v-b57c2b0b><svg class="u-left-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" data-v-b57c2b0b><circle stroke-width="20" stroke-linecap="round" cx="100" cy="100" r="90" stroke-dasharray="491" stroke-dashoffset="246" data-v-b57c2b0b></circle></svg></div><div class="m-circle-right" data-v-b57c2b0b><svg class="u-right-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" data-v-b57c2b0b><circle stroke-width="20" stroke-linecap="round" cx="100" cy="100" r="90" stroke-dasharray="491" stroke-dashoffset="246" data-v-b57c2b0b></circle></svg></div></div>', 1);
+const _hoisted_11$1 = /* @__PURE__ */ createStaticVNode('<div class="m-dynamic-layer" data-v-88eca36e><div class="m-circle-left" data-v-88eca36e><svg class="u-left-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" data-v-88eca36e><circle stroke-width="20" stroke-linecap="round" cx="100" cy="100" r="90" stroke-dasharray="491" stroke-dashoffset="246" data-v-88eca36e></circle></svg></div><div class="m-circle-right" data-v-88eca36e><svg class="u-right-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" data-v-88eca36e><circle stroke-width="20" stroke-linecap="round" cx="100" cy="100" r="90" stroke-dasharray="491" stroke-dashoffset="246" data-v-88eca36e></circle></svg></div></div>', 1);
 const _hoisted_12$1 = [
   _hoisted_11$1
 ];
@@ -3938,8 +3938,8 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Spin_vue_vue_type_style_index_0_scoped_b57c2b0b_lang = "";
-const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-b57c2b0b"]]);
+const Spin_vue_vue_type_style_index_0_scoped_88eca36e_lang = "";
+const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-88eca36e"]]);
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
@@ -6129,7 +6129,7 @@ const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-
 Tooltip.install = (app) => {
   app.component(Tooltip.__name, Tooltip);
 };
-const _withScopeId$1 = (n) => (pushScopeId("data-v-a11ba72f"), n = n(), popScopeId(), n);
+const _withScopeId$1 = (n) => (pushScopeId("data-v-17a033d1"), n = n(), popScopeId(), n);
 const _hoisted_1$2 = { class: "m-upload-list" };
 const _hoisted_2$2 = { class: "m-upload" };
 const _hoisted_3$1 = ["onDrop", "onClick"];
@@ -6409,7 +6409,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
                   class: "u-spin",
                   tip: _ctx.uploadingTip,
                   size: "small",
-                  indicator: "circle"
+                  indicator: "dynamic-circle"
                 }, null, 8, ["tip"])
               ], 512), [
                 [vShow, uploading.value[n - 1]]
@@ -6451,8 +6451,8 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Upload_vue_vue_type_style_index_0_scoped_a11ba72f_lang = "";
-const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-a11ba72f"]]);
+const Upload_vue_vue_type_style_index_0_scoped_17a033d1_lang = "";
+const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-17a033d1"]]);
 Upload.install = (app) => {
   app.component(Upload.__name, Upload);
 };

@@ -259,7 +259,7 @@ withDefaults(defineProps<Props>(), {
     .u-spin-circle {
       width: 40px;
       height: 40px;
-      border-width: 5px;
+      border-width: 4px;
     }
     .m-dynamic-circle {
       width: 40px;
@@ -286,7 +286,7 @@ withDefaults(defineProps<Props>(), {
     .u-spin-circle {
       width: 32px;
       height: 32px;
-      border-width: 4px;
+      border-width: 3px;
     }
     .m-dynamic-circle {
       width: 32px;
@@ -313,7 +313,7 @@ withDefaults(defineProps<Props>(), {
     .u-spin-circle {
       width: 24px;
       height: 24px;
-      border-width: 3px;
+      border-width: 2px;
     }
     .m-dynamic-circle {
       width: 24px;
