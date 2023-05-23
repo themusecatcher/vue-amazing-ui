@@ -10,8 +10,12 @@ const spinning = ref(true)
     <Spin style="width: 800px;" :tip="tip" :spinning="spinning">
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
-    <h2 class="mt30 mb10">圆形加载指示符 (indicator: circle)</h2>
+    <h2 class="mt30 mb10">静态圆形指示符 (indicator: static-circle)</h2>
     <Spin style="width: 800px;" :tip="tip" :spinning="spinning" indicator="static-circle">
+      <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+    </Spin>
+    <h2 class="mt30 mb10">动态圆形指示符 (indicator: dynamic-circle)</h2>
+    <Spin style="width: 800px;" :tip="tip" :spinning="spinning" indicator="dynamic-circle">
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
     <h2 class="mt30 mb10">各种大小</h2>

@@ -204,7 +204,7 @@ function onError (content: any) {
           </div>
         </div>
         <div class="m-file-uploading" v-show="uploading[n-1]">
-          <Spin class="u-spin" :tip="uploadingTip" size="small" indicator="circle"/>
+          <Spin class="u-spin" :tip="uploadingTip" size="small" indicator="dynamic-circle"/>
         </div>
         <div class="m-file-preview" v-if="uploadedFiles[n-1]">
           <img class="u-image" v-if="isImage(uploadedFiles[n-1].url)" :style="`object-fit: ${fit};`" :src="uploadedFiles[n-1].url" :alt="uploadedFiles[n-1].name" />
