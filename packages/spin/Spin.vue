@@ -24,14 +24,7 @@ withDefaults(defineProps<Props>(), {
         </div>
         <div v-if="indicator==='static-circle'" class="u-spin-circle"></div>
         <div v-if="indicator==='dynamic-circle'" class="m-dynamic-circle">
-          <div class="m-dynamic-layer">
-            <div class="m-circle-left">
-              <svg class="u-left-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle stroke-width="20" stroke-linecap="round" cx="100" cy="100" r="90" stroke-dasharray="491" stroke-dashoffset="246"></circle></svg>
-            </div>
-            <div class="m-circle-right">
-              <svg class="u-right-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle stroke-width="20" stroke-linecap="round" cx="100" cy="100" r="90" stroke-dasharray="491" stroke-dashoffset="246"></circle></svg>
-            </div>
-          </div>
+          <svg class="circular" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none"></circle></svg>
         </div>
         <p class="u-tip" v-show="tip">{{ tip }}</p>
       </div>
@@ -129,112 +122,35 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .m-dynamic-circle {
-      display: inline-flex;
-      position: relative;
-      animation: loading-container-rotate 1568.2352941176ms linear infinite;
-      @keyframes loading-container-rotate {
-        100% {
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-        }
-      }
-      .m-dynamic-layer {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        animation: loading-layer-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
-        @keyframes loading-layer-rotate {
-          12.5% {
-            -webkit-transform: rotate(135deg);
-            transform: rotate(135deg);
-          }
-          25% {
-            -webkit-transform: rotate(270deg);
-            transform: rotate(270deg);
-          }
-          37.5% {
-            -webkit-transform: rotate(405deg);
-            transform: rotate(405deg);
-          }
-          50% {
-            -webkit-transform: rotate(540deg);
-            transform: rotate(540deg);
-          }
-          62.5% {
-            -webkit-transform: rotate(675deg);
-            transform: rotate(675deg);
-          }
-          75% {
-            -webkit-transform: rotate(810deg);
-            transform: rotate(810deg);
-          }
-          87.5% {
-            -webkit-transform: rotate(945deg);
-            transform: rotate(945deg);
-          }
+      display: inline-block;
+      .circular {
+        display: inline;
+        animation: loading-rotate 2s linear infinite;
+        @keyframes loading-rotate {
           100% {
-            -webkit-transform: rotate(1080deg);
-            transform: rotate(1080deg);
+            transform: rotate(360deg);
           }
         }
-        .m-circle-left {
-          display: inline-flex;
-          position: relative;
-          width: 50%;
-          height: 100%;
-          overflow: hidden;
-          .u-left-svg {
-            width: 200%;
-            stroke: @themeColor;
-            fill: transparent;
-            position: absolute;
-            height: 100%;
-            overflow: hidden;
-            animation: loading-left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
-            @keyframes loading-left-spin {
-              0% {
-                -webkit-transform: rotate(265deg);
-                transform: rotate(265deg);
-              }
-              50% {
-                -webkit-transform: rotate(130deg);
-                transform: rotate(130deg);
-              }
-              100% {
-                -webkit-transform: rotate(265deg);
-                transform: rotate(265deg);
-              }
+        .path {
+          stroke-dasharray: 90,150;
+          stroke-dashoffset: 0;
+          stroke-width: 5;
+          stroke: @themeColor;
+          stroke-linecap: round;
+          animation: loading-dash 1.5s ease-in-out infinite;
+          @keyframes loading-dash {
+            0% {
+              stroke-dasharray: 1,200;
+              stroke-dashoffset: 0;
             }
-          }
-        }
-        .m-circle-right {
-          display: inline-flex;
-          position: relative;
-          width: 50%;
-          height: 100%;
-          overflow: hidden;
-          .u-right-svg {
-            left: -100%;
-            width: 200%;
-            stroke: @themeColor;
-            fill: transparent;
-            position: absolute;
-            height: 100%;
-            overflow: hidden;
-            animation: loading-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
-            @keyframes loading-right-spin {
-              0% {
-                -webkit-transform: rotate(-265deg);
-                transform: rotate(-265deg);
-              }
-              50% {
-                -webkit-transform: rotate(-130deg);
-                transform: rotate(-130deg);
-              }
-              100% {
-                -webkit-transform: rotate(-265deg);
-                transform: rotate(-265deg);
-              }
+
+            50% {
+              stroke-dasharray: 90,150;
+              stroke-dashoffset: -40px;
+            }
+            100% {
+              stroke-dasharray: 90,150;
+              stroke-dashoffset: -120px;
             }
           }
         }

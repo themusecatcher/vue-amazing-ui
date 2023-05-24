@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
   steps: () => [],
   current: 1,
   width: '100%',
-  descMaxWidth: 140
+  descMaxWidth: 120
 })
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -104,7 +104,9 @@ function onChange (index: number) { // 点击切换选择步骤
       .m-info-wrap {
         display: inline-block;
         .m-steps-icon {
-          display: inline-block;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           margin-right: 8px;
           width: 32px;
           height: 32px;
@@ -115,19 +117,16 @@ function onChange (index: number) { // 点击切换选择步骤
           transition: all .3s;
           .u-num {
             display: inline-block;
-            vertical-align: top;
             font-size: 16px;
             line-height: 1;
-            margin-top: 7px;
             color: rgba(0, 0, 0, .25);
             transition: all .3s;
           }
           .u-icon {
+            display: inline-block;
             fill: @themeColor;
             width: 16px;
             height: 16px;
-            vertical-align: top;
-            margin-top: 7px;
           }
         }
         .m-steps-content {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-import { getImageUrl } from '@/utils/util'
 
 const images = ref<any[]>([])
 
@@ -9,7 +8,7 @@ function loadImages () {
     images.value.push({
       title: `image-${i}`,
       link: '',
-      src: getImageUrl(i)
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.1/${i}.jpg`
     })
   }
   console.log(images.value)

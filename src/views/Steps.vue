@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 const steps = ref([
   {
     title: 'Step 1',
@@ -23,10 +23,9 @@ const steps = ref([
   }
 ])
 const current = ref(3)
-watch(current, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('current:', current.value)
 })
-
 function onChange (index: number) { // 父组件获取切换后的选中步骤
   console.log('current:', index)
 }

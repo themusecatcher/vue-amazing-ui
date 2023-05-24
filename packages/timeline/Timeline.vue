@@ -65,9 +65,12 @@ withDefaults(defineProps<Props>(), {
       }
       .m-dot {
         position: absolute;
-        top: 13px;
         left: 6px;
-        transform: translate(-50%, -50%);
+        height: 12px;
+        transform: translate(-50%, 50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;;
         .u-dot {
           display: inline-block;
           width: 12px;
@@ -79,10 +82,11 @@ withDefaults(defineProps<Props>(), {
         }
       }
       .u-content {
+        font-size: 16px;
         margin-left: 25px;
         word-break: break-all;
         word-wrap: break-word;
-        line-height: 24px;
+        line-height: 1.5;
       }
     }
     .last {

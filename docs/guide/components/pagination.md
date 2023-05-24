@@ -24,8 +24,6 @@ function changePage (pager: object) { // 分页器回调
 
 ## 基本使用
 
-<Progress :percent="percent" />
-
 <Pagination
   :current="pagination.p"
   :pageSize="pagination.pageSize"
