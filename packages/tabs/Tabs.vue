@@ -93,13 +93,13 @@ function onWheel (e: WheelEvent) {
         <div
           ref="nav"
           class="m-tabs-nav-list"
-          @wheel="showWheel ? onWheel($event):(e: Event) => e.preventDefault()"
+          @wheel="showWheel ? onWheel($event) : () => false"
           :style="`transform: translate(${-scrollLeft}px, 0)`">
           <div
             ref="tabs"
             class="u-tab"
             :class="{'u-tab-active': activeKey === page.key, 'u-tab-disabled': page.disabled}"
-            @click="page.disabled ? (e: Event) => e.preventDefault() : onTab(page.key)"
+            @click="page.disabled ? () => false : onTab(page.key)"
             v-for="page in tabPages" :key="page.key">
             {{ page.tab }}
           </div>
@@ -134,14 +134,7 @@ function onWheel (e: WheelEvent) {
     flex: none;
     align-items: center;
     margin-bottom: 16px;
-    &:before {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
-      content: '';
-    }
+    border-bottom: 1px solid rgba(5, 5, 5, 0.06);
     .m-tabs-nav-wrap {
       position: relative;
       display: flex;
@@ -181,7 +174,6 @@ function onWheel (e: WheelEvent) {
           align-items: center;
           background: transparent;
           border: 0;
-          outline: none;
           cursor: pointer;
           transition: all 0.3s;
           &:not(:first-child) {

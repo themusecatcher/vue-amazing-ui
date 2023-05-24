@@ -5,40 +5,25 @@ interface Text {
   title: string // 文字标题
   link?: string // 跳转链接
 }
-const props = defineProps({
-  sliderText: { // 滚动文字数组
-    type: Array<Text>,
-    required: true,
-    default: () => []
-  },
-  width: { // 滚动区域宽度
-    type: [Number, String],
-    default: '100%'
-  },
-  height: { // 滚动区域高度
-    type: Number,
-    default: 60
-  },
-  backgroundColor: { // 滚动区域背景色
-    type: String,
-    default: '#FFF'
-  },
-  amount: { // 滚动区域展示条数，水平滚动时生效
-    type: Number,
-    default: 4
-  },
-  gap: { // 水平滚动文字各列间距或垂直滚动文字两边的边距
-    type: Number,
-    default: 20
-  },
-  vertical: { // 是否垂直滚动
-    type: Boolean,
-    default: false
-  },
-  interval: { // 文字滚动时间间隔，垂直滚动时生效
-    type: Number,
-    default: 3000
-  }
+interface Props {
+  sliderText: Text[] // 滚动文字数组
+  width?: number|string // 滚动区域宽度
+  height?: number // 滚动区域高度
+  backgroundColor?: string // 滚动区域背景色
+  amount?: number // 滚动区域展示条数，水平滚动时生效
+  gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距
+  vertical?: boolean // 是否垂直滚动
+  interval?: number // 文字滚动时间间隔，垂直滚动时生效
+}
+const props = withDefaults(defineProps<Props>(), {
+  sliderText: () => [],
+  width: '100%',
+  height: 60,
+  backgroundColor:  '#FFF',
+  amount: 4,
+  gap: 20,
+  vertical: false,
+  interval: 3000,
 })
 // horizon
 const left = ref(0)

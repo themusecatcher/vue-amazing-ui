@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Spin from '../spin'
+import Empty from '../empty'
 import Pagination from '../pagination'
 interface Column {
   title?: string // 列头显示文字
@@ -7,37 +8,27 @@ interface Column {
   dataIndex?: string // 列数据字符索引
   slot?: string // 列插槽名称索引
 }
-defineProps({
-  columns: { // 表格列的配置项
-    type: Array<Column>,
-    default: () => []
-  },
-  dataSource: { // 表格数据数组
-    type: Array<any>,
-    default: () => []
-  },
-  pagination: { // 分页器配置
-    type: Object,
-    default: () => {
-      return {}
-    }
-  },
-  showPagination: { // 是否显示分页器
-    type: Boolean,
-    default: false,
-  },
-  hideOnSinglePage: { // 只有一页时是否隐藏分页器
-    type: Boolean,
-    default: false
-  },
-  total: { // 数据总数
-    type: Number,
-    default: 0
-  },
-  loading: { // 页面是否加载中
-    type: Boolean,
-    default: false
-  }
+interface Pagination {
+  page: number
+  pageSize: number
+}
+interface Props {
+  columns?: Column[] // 表格列的配置项
+  dataSource?: any[] // 表格数据数组
+  pagination?: Pagination // 分页器配置
+  showPagination?: boolean // 是否显示分页器
+  hideOnSinglePage?: boolean // 只有一页时是否隐藏分页器
+  total?: number // 数据总数
+  loading?: boolean // 页面是否加载中
+}
+withDefaults(defineProps<Props>(), {
+  columns: () => [],
+  dataSource: () => [],
+  pagination: () => { return { page: 1, pageSize: 10 } },
+  showPagination: true,
+  hideOnSinglePage: false,
+  total: 0,
+  loading: false
 })
 const emit = defineEmits(['change'])
 function changePage (pager: {page: number, pageSize: number}) { // 分页器回调
@@ -46,37 +37,25 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页器回�
 </script>
 <template>
   <div class="m-table-wrap">
-    <table>
+    <table class="m-table">
       <thead>
-        <tr>
-          <th :width="item.width" v-for="(item, index) in columns" :key="index">
+        <tr class="m-tr">
+          <th class="m-th" :width="item.width" v-for="(item, index) in columns" :key="index">
             {{ item.title }}
           </th>
         </tr>
       </thead>
       <tbody class="m-body">
-        <tr v-show="loading">
+        <tr class="m-tr-loading" v-show="loading">
           <Spin class="m-loading" size="small" :colspan="columns.length" />
         </tr>
-        <tr v-show="!total">
-          <td class="m-empty" :colspan="columns.length">
-            <svg class="u-empty-icon" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg">
-              <g transform="translate(0 1)" fill="none" fillRule="evenodd">
-                <ellipse fill="#F5F5F5" cx="32" cy="33" rx="32" ry="7"></ellipse>
-                <g fillRule="nonzero" stroke="#D9D9D9">
-                  <path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path>
-                  <path
-                  d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z"
-                  fill="#FAFAFA"
-                  ></path>
-                </g>
-              </g>
-            </svg>
-            <p class="u-empty-desc">暂无数据</p>
+        <tr class="m-tr-empty" v-show="!total">
+          <td class="m-td-empty" :colspan="columns.length">
+            <Empty class="empty" image="2" />
           </td>
         </tr>
-        <tr v-for="(data, index) in dataSource" :key="index">
-          <td v-for="(col, ind) in columns" :key="ind" :title="data[col.dataIndex as any]">
+        <tr class="m-tr" v-for="(data, index) in dataSource" :key="index">
+          <td class="m-td" v-for="(col, n) in columns" :key="n" :title="data[col.dataIndex as any]">
             <slot v-if="col.slot" v-bind="data" :name="col.slot" :index="index">{{ data[col.dataIndex as any] || '--' }}</slot>
             <span v-else>{{ data[col.dataIndex as any] || '--' }}</span>
           </td>
@@ -106,19 +85,22 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页器回�
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
   line-height: 1.5;
-  table {
+  .m-table {
+    display: table;
     table-layout: fixed;
     width: 100%;
     text-align: left;
     border-radius: 4px 4px 0 0;
     border-collapse: separate;
     border-spacing: 0;
-    thead tr th {
+    margin: 0;
+    .m-th {
       padding: 16px;
       color: rgba(0, 0, 0, 0.85);
       font-weight: 500;
       text-align: left;
       background: #fafafa;
+      border: none;
       border-bottom: 1px solid #e8e8e8;
       transition: background .3s ease;
       &:first-child {
@@ -130,34 +112,38 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页器回�
     }
     .m-body {
       position: relative;
-      .m-loading {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-      .m-empty {
-        padding: 48px 16px;
-        color: rgba(0, 0, 0, 0.25);
-        font-size: 14px;
-        text-align: center;
-        background: #fff;
-        border-bottom: 1px solid #e8e8e8;
-        border-radius: 0 0 2px 2px;
-        .u-empty-icon {
-          width: 64px;
-          height: 41px;
-          margin-bottom: 8px;
+      .m-tr-loading {
+        border: none;
+        background-color: #FFF;
+        .m-loading {
+          position: absolute;
+          width: 100%;
+          height: 100%;
         }
-        .u-empty-desc {
-          color: rgba(0, 0, 0, 0.25);
-          font-size: 14px;
+      }
+      .m-tr-empty {
+        border: none;
+        background-color: #FFF;
+        &:hover {
+          background: #FFF;
+        }
+        .m-td-empty {
+          padding: 16px;
+          border: none;
+          border-bottom: 1px solid #e8e8e8;
+          .empty {
+            margin: 32px 0;
+          }
         }
       }
     }
-    tbody tr {
-      transition: background .3s;
-      td {
+    .m-tr {
+      border: none;
+      background-color: #FFF;
+      transition: background-color .3s;
+      .m-td {
         padding: 16px;
+        border: none;
         border-bottom: 1px solid #e8e8e8;
         transition: background .3s;
         overflow: hidden;
@@ -165,8 +151,7 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页器回�
         text-overflow: ellipsis;
       }
       &:hover {
-        background: saturate(fade(@themeColor, 12%), 30%);
-        
+        background-color: saturate(fade(@themeColor, 12%), 30%);
       }
     }
   }

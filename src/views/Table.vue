@@ -67,9 +67,12 @@ const tableData = ref([
       ])
 function getData () {
   loading.value = true
-  // 调用分页接口获取列表数据
+  // 模拟调用接口获取列表数据
+  setTimeout(() => {
+    loading.value = false
+  }, 500)
 }
-function onChangeTable (pagination: {page: number, pageSize: number}) {
+function onChange (pagination: {page: number, pageSize: number}) {
   console.log('pagination:', pagination)
   queryParams.value.page = pagination.page
   queryParams.value.pageSize = pagination.pageSize
@@ -86,11 +89,9 @@ function onChangeTable (pagination: {page: number, pageSize: number}) {
         page: queryParams.page,
         pageSize: queryParams.pageSize
       }"
-      :showPagination="true"
-      :hideOnSinglePage="false"
       :total="total"
       :loading="loading"
-      @change="onChangeTable">
+      @change="onChange">
     <!-- 配置指定列数据 -->
     <template #name="record">
         hello {{ record.name }}
@@ -111,7 +112,7 @@ function onChangeTable (pagination: {page: number, pageSize: number}) {
       :hideOnSinglePage="false"
       :total="0"
       :loading="true"
-      @change="onChangeTable"
+      @change="onChange"
     ></Table>
     <h2 class="mt30 mb10">无数据表格 (total: 0)</h2>
     <Table
@@ -125,7 +126,7 @@ function onChangeTable (pagination: {page: number, pageSize: number}) {
       :hideOnSinglePage="false"
       :total="0"
       :loading="false"
-      @change="onChangeTable"
+      @change="onChange"
     ></Table>
   </div>
 </template>

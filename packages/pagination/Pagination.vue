@@ -251,6 +251,8 @@ function changePage (pageNum: number): boolean | void {
         transition: all .3s;
       }
       .u-icon {
+        display: inline-block;
+        vertical-align: middle;
         fill: @themeColor;
         width: 12px;
         height: 12px;
