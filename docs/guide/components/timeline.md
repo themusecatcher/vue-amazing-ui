@@ -14,19 +14,19 @@ import { ref } from 'vue'
 
 const timelineData = ref([
   {
-    desc: 'Create a services site 2015-09-01',
+    desc: 'Create a services site 2023-05-24',
     color: 'green'
   },
   {
-    desc: 'Solve initial network problems 1 Solve initial network problems 2 Solve initial network problems 3 2015-09-01',
+    desc: 'Solve initial network problems 1 Solve initial network problems 2 2023-05-24',
     color: 'red'
   },
   {
-    desc: 'Technical testing 2015-09-01',
+    desc: 'Technical testing 2023-05-24',
     color: 'blue'
   },
   {
-    desc: 'Network problems being solved 2015-09-01'
+    desc: 'Network problems being solved 2023-05-24'
   },
   {
     desc: 'Network problems being solved 2',
@@ -48,19 +48,19 @@ import { ref } from 'vue'
 
 const timelineData = ref([
   {
-    desc: 'Create a services site 2015-09-01',
+    desc: 'Create a services site 2023-05-24',
     color: 'green'
   },
   {
-    desc: 'Solve initial network problems 1 Solve initial network problems 2 Solve initial network problems 3 2015-09-01',
+    desc: 'Solve initial network problems 1 Solve initial network problems 2 2023-05-24',
     color: 'red'
   },
   {
-    desc: 'Technical testing 2015-09-01',
+    desc: 'Technical testing 2023-05-24',
     color: 'blue'
   },
   {
-    desc: 'Network problems being solved 2015-09-01'
+    desc: 'Network problems being solved 2023-05-24'
   },
   {
     desc: 'Network problems being solved 2',
@@ -79,15 +79,15 @@ const timelineData = ref([
 
 <Timeline :timeline-data="timelineData">
   <template #dot="{ index }">
-    <span class="u-dot" v-if="index===2"></span>
+    <span class="dot" v-if="index===2"></span>
   </template>
   <template #desc="{ index }">
-    <p class="u-desc" v-if="index===2">Create a services site</p>
+    <p class="desc" v-if="index===2">Create a services site</p>
   </template>
 </Timeline>
 
 <style>
-.u-dot {
+.dot {
   display: inline-block;
   width: 18px;
   height: 18px;
@@ -95,10 +95,9 @@ const timelineData = ref([
   border-radius: 50%;
   background: #FFF;
 }
-.u-desc {
+.desc {
   font-size: 16px;
   font-weight: 500;
-  line-height: 1.5;
 }
 </style>
 
@@ -111,19 +110,19 @@ import { ref } from 'vue'
 
 const timelineData = ref([
   {
-    desc: 'Create a services site 2015-09-01',
+    desc: 'Create a services site 2023-05-24',
     color: 'green'
   },
   {
-    desc: 'Solve initial network problems 1 Solve initial network problems 2 Solve initial network problems 3 2015-09-01',
+    desc: 'Solve initial network problems 1 Solve initial network problems 2 2023-05-24',
     color: 'red'
   },
   {
-    desc: 'Technical testing 2015-09-01',
+    desc: 'Technical testing 2023-05-24',
     color: 'blue'
   },
   {
-    desc: 'Network problems being solved 2015-09-01'
+    desc: 'Network problems being solved 2023-05-24'
   },
   {
     desc: 'Network problems being solved 2',
@@ -134,15 +133,15 @@ const timelineData = ref([
 <template>
   <Timeline :timeline-data="timelineData">
     <template #dot="{ index }">
-      <span class="u-dot" v-if="index===2"></span>
+      <span class="dot" v-if="index===2"></span>
     </template>
     <template #desc="{ index }">
-      <p class="u-desc" v-if="index===2">Create a services site</p>
+      <p class="desc" v-if="index===2">Create a services site</p>
     </template>
   </Timeline>
 </template>
 <style>
-.u-dot {
+.dot {
   display: inline-block;
   width: 18px;
   height: 18px;
@@ -150,10 +149,9 @@ const timelineData = ref([
   border-radius: 50%;
   background: #FFF;
 }
-.u-desc {
+.desc {
   font-size: 16px;
   font-weight: 500;
-  line-height: 1.5;
 }
 </style>
 ```
@@ -173,19 +171,19 @@ import { ref } from 'vue'
 
 const timelineData = ref([
   {
-    desc: 'Create a services site 2015-09-01',
+    desc: 'Create a services site 2023-05-24',
     color: 'green'
   },
   {
-    desc: 'Solve initial network problems 1 Solve initial network problems 2 Solve initial network problems 3 2015-09-01',
+    desc: 'Solve initial network problems 1 Solve initial network problems 2 2023-05-24',
     color: 'red'
   },
   {
-    desc: 'Technical testing 2015-09-01',
+    desc: 'Technical testing 2023-05-24',
     color: 'blue'
   },
   {
-    desc: 'Network problems being solved 2015-09-01'
+    desc: 'Network problems being solved 2023-05-24'
   },
   {
     desc: 'Network problems being solved 2',

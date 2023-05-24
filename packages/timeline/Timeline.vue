@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, watchEffect } from 'vue'
 enum ColorStyle { // 颜色主题对象
   blue = '#1677ff',
   green = '#52c41a',
@@ -14,11 +15,22 @@ interface Props {
   width?: number // 时间轴区域总宽度
   lineStyle?: 'solid'|'dashed'|'dotted' // 时间线样式
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   timelineData: () => [],
   width: 360,
   lineStyle: 'solid'
 })
+const desc = ref()
+const dotsHeight = ref<string[]>([])
+function getDotsHeight () {
+  const len = props.timelineData.length
+  for (let n = 0; n < len; n++) {
+    dotsHeight.value[n] = getComputedStyle(desc.value[n].firstElementChild || desc.value[n], null).getPropertyValue('line-height')
+  }
+}
+watchEffect(() => {
+  getDotsHeight()
+}, {flush: 'post'})
 </script>
 <template>
   <div class="m-timeline-area" :style="`width: ${width}px`">
@@ -27,7 +39,7 @@ withDefaults(defineProps<Props>(), {
         :class="['m-timeline-item', {'last': index === timelineData.length - 1}]"
         v-for="(data, index) in timelineData" :key="index">
         <span class="u-tail" :style="`border-left-style: ${lineStyle};`"></span>
-        <div class="m-dot">
+        <div class="m-dot" :style="`height: ${dotsHeight[index]}`">
           <slot name="dot" :index="index">
             <span class="u-dot" v-if="data.color === 'red'" :style="{borderColor: ColorStyle.red}"></span>
             <span class="u-dot" v-else-if="data.color === 'gray'" :style="{borderColor: ColorStyle.gray}"></span>
@@ -36,7 +48,7 @@ withDefaults(defineProps<Props>(), {
             <span class="u-dot" v-else :style="{borderColor: data.color || ColorStyle.blue}"></span>
           </slot>
         </div>
-        <div class="u-content">
+        <div ref="desc" class="u-desc">
           <slot name="desc" :index="index">{{ data.desc || '--' }}</slot>
         </div>
       </div>
@@ -54,7 +66,6 @@ withDefaults(defineProps<Props>(), {
     .m-timeline-item {
       position: relative;
       padding-bottom: 30px;
-      line-height: 1;
       .u-tail {
         position: absolute;
         top: 12px;
@@ -66,11 +77,9 @@ withDefaults(defineProps<Props>(), {
       .m-dot {
         position: absolute;
         left: 6px;
-        height: 12px;
-        transform: translate(-50%, 50%);
+        transform: translateX(-50%);
         display: flex;
         align-items: center;
-        justify-content: center;;
         .u-dot {
           display: inline-block;
           width: 12px;
@@ -81,12 +90,11 @@ withDefaults(defineProps<Props>(), {
           background: #FFF;
         }
       }
-      .u-content {
-        font-size: 16px;
+      .u-desc {
+        font-size: 14px;
+        line-height: 1.5;
         margin-left: 25px;
         word-break: break-all;
-        word-wrap: break-word;
-        line-height: 1.5;
       }
     }
     .last {
