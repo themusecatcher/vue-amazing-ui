@@ -1,10 +1,8 @@
 // import { h } from 'vue'
 import Theme from 'vitepress/theme'
 import './global.less'
-import VueAmazingUI from '../../../dist/vue-amazing-ui'
-import '../../../dist/style.css'
-// import VueAmazingUI from 'vue-amazing-ui'
-// import 'vue-amazing-ui/css'
+import VueAmazingUI from 'vue-amazing-ui'
+import 'vue-amazing-ui/css'
 
 export default {
   ...Theme,
