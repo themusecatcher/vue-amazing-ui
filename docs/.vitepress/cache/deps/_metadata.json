@@ -1,71 +1,23 @@
 {
-  "hash": "2d64c15e",
-  "browserHash": "fe0f64fd",
+  "hash": "14e22cd4",
+  "browserHash": "1a1b9009",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.3.2/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "e61bd8be",
-      "needsInterop": false
-    },
-    "vue-router": {
-      "src": "../../../../node_modules/.pnpm/vue-router@4.2.0_vue@3.3.2/node_modules/vue-router/dist/vue-router.mjs",
-      "file": "vue-router.js",
-      "fileHash": "54bffd47",
-      "needsInterop": false
-    },
-    "@vuepic/vue-datepicker": {
-      "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.2/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
-      "file": "@vuepic_vue-datepicker.js",
-      "fileHash": "90f156b0",
-      "needsInterop": false
-    },
-    "qrcode": {
-      "src": "../../../../node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/browser.js",
-      "file": "qrcode.js",
-      "fileHash": "6bcd2036",
-      "needsInterop": true
-    },
-    "swiper": {
-      "src": "../../../../node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/swiper.esm.js",
-      "file": "swiper.js",
-      "fileHash": "a5ad50c5",
-      "needsInterop": false
-    },
-    "date-fns": {
-      "src": "../../../../node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/index.js",
-      "file": "date-fns.js",
-      "fileHash": "609cba04",
+      "fileHash": "fdaf4f43",
       "needsInterop": false
     },
     "vue-amazing-ui": {
-      "src": "../../../../node_modules/.pnpm/vue-amazing-ui@0.0.23/node_modules/vue-amazing-ui/dist/vue-amazing-ui.js",
+      "src": "../../../../node_modules/.pnpm/vue-amazing-ui@0.0.25/node_modules/vue-amazing-ui/dist/vue-amazing-ui.js",
       "file": "vue-amazing-ui.js",
-      "fileHash": "dce1be76",
+      "fileHash": "56de7070",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-H4UJRISF": {
-      "file": "chunk-H4UJRISF.js"
-    },
-    "chunk-3F4Y7QWA": {
-      "file": "chunk-3F4Y7QWA.js"
-    },
-    "chunk-64TUZDJO": {
-      "file": "chunk-64TUZDJO.js"
-    },
-    "chunk-7Y3QRIQM": {
-      "file": "chunk-7Y3QRIQM.js"
-    },
-    "chunk-52YGQE6P": {
-      "file": "chunk-52YGQE6P.js"
-    },
-    "chunk-OF2FADSE": {
-      "file": "chunk-OF2FADSE.js"
-    },
-    "chunk-DFKQJ226": {
-      "file": "chunk-DFKQJ226.js"
+    "chunk-NLL2AYAR": {
+      "file": "chunk-NLL2AYAR.js"
     }
   }
 }
