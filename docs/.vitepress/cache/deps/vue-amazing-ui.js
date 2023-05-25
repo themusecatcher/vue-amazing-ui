@@ -2219,7 +2219,7 @@ var require_browser = __commonJS({
   }
 });
 
-// node_modules/.pnpm/vue-router@4.2.0_vue@3.3.2/node_modules/vue-router/dist/vue-router.mjs
+// node_modules/.pnpm/vue-router@4.2.1_vue@3.3.4/node_modules/vue-router/dist/vue-router.mjs
 var isBrowser = typeof window !== "undefined";
 var assign = Object.assign;
 var noop = () => {
@@ -7236,7 +7236,7 @@ function subYears(dirtyDate, dirtyAmount) {
   return addYears(dirtyDate, -amount);
 }
 
-// node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.2/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
+// node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
 function Lt() {
   return openBlock(), createElementBlock(
     "svg",
@@ -22870,7 +22870,7 @@ export {
 
 vue-router/dist/vue-router.mjs:
   (*!
-    * vue-router v4.2.0
+    * vue-router v4.2.1
     * (c) 2023 Eduardo San Martin Morote
     * @license MIT
     *)
