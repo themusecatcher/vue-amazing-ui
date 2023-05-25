@@ -1,26 +1,32 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { rafTimeout } from '../../packages'
 const files = ref([])
 const fileList = ref([
   {
     name: '1.jpg',
-    url: "https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://download.jinhui365.cn/group1/M00/01/36/CgABcmRHl-qABv_cAAFDCXziBoQ316.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Markdown.pdf'
   }
 ])
 const imageList = ref([
   {
     name: '1.jpg',
-    url: "https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
   }
 ])
-watch(fileList, (to) => {
-  console.log('fileList to:', to)
-}, {deep: true})
+watchEffect(() => {
+  console.log('files:', files.value)
+})
+watchEffect(() => {
+  console.log('fileList:', fileList.value)
+})
+watchEffect(() => {
+  console.log('imageList:', imageList.value)
+})
 const errorInfo = ref('') // 上传错误提示信息
 function onBeforeUpload (file: File) {
   const acceptTypes = ['image/jpg', 'image/jpeg', 'image/png']
@@ -37,44 +43,17 @@ function onBeforeUpload (file: File) {
 function onCustomRequest (file: File) {
   return new Promise((resolve, reject) => {
     rafTimeout(() => { // 模拟接口调用返回name和url
-      const res = true
+      const res = {
+        name: '1.jpg',
+        url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+      }
       if (res) {
-        resolve({
-          name: file.name,
-          url: 'https://download.jinhui365.cn/group1/M00/01/30/CgABcmQ4yseAGS8yAAugtJ8mHPI827.jpg'
-        })
+        resolve(res)
       } else {
         reject('upload request fail ...')
       }
     }, 1000)
   })
-  /*
-    调用接口进行文件上传，假设接口返回值如下格式：
-    res: {
-      message: {
-        code: 0,
-        message: 'success'
-      },
-      data: {
-        url: 'https...'
-      }
-    }
-  */
-  // const formData = new FormData()
-  // formData.set('name', file.name)
-  // formData.set('type', file.type)
-  // formData.set('file', file)
-  // upload(formData).then((res:any) => { // 调用接口
-  //   console.log('upload-res:', res)
-  //   if (res.message.code === 0) { // 上传成功
-  //    return {
-  //       name: file.name,
-  //       url: res.data.url
-  //     }
-  //   } else { // 上传失败
-  //     errorInfo.value = res.message.message
-  //   }
-  // })
 }
 function onChange (files: object[]) {
   console.log('change:', files)

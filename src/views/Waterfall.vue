@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-import { getImageUrl } from '@/utils/util'
 
 const images = ref<any[]>([])
 
@@ -8,10 +7,10 @@ function loadImages () {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
       title: `image-${i}`,
-      src: getImageUrl(i)
+      link: '',
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.1/${i}.jpg`
     })
   }
-  console.log(images.value)
 }
 onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
   loadImages()
@@ -37,6 +36,3 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
       backgroundColor="#F2F4F8" />
   </div>
 </template>
-<style lang="less" scoped>
-
-</style>
