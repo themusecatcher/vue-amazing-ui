@@ -5996,8 +5996,8 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     content: { default: "暂无内容" },
     title: { default: "暂无提示" },
     fontSize: { default: 14 },
-    color: { default: "rgba(0,0,0,.85)" },
-    backgroundColor: { default: "#FFF" }
+    color: { default: "#FFF" },
+    backgroundColor: { default: "rgba(0,0,0,.85)" }
   },
   setup(__props) {
     const visible = ref(false);
@@ -6071,8 +6071,8 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tooltip_vue_vue_type_style_index_0_scoped_bdf7f356_lang = "";
-const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-bdf7f356"]]);
+const Tooltip_vue_vue_type_style_index_0_scoped_869066cf_lang = "";
+const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-869066cf"]]);
 Tooltip.install = (app) => {
   app.component(Tooltip.__name, Tooltip);
 };
