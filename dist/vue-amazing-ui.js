@@ -6403,17 +6403,15 @@ const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-1
 Upload.install = (app) => {
   app.component(Upload.__name, Upload);
 };
-const _withScopeId = (n) => (pushScopeId("data-v-5d9cc5de"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-88c8c60f"), n = n(), popScopeId(), n);
 const _hoisted_1$1 = ["src", "poster", "width", "height", "autoplay", "controls", "loop", "muted", "preload", "onClickOnce"];
 const _hoisted_2$1 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", {
-  stroke: "currentColor",
   "stroke-linecap": "round",
   "stroke-linejoin": "round",
   "stroke-width": "1.5",
   d: "M4.75 6.75C4.75 5.64543 5.64543 4.75 6.75 4.75H17.25C18.3546 4.75 19.25 5.64543 19.25 6.75V17.25C19.25 18.3546 18.3546 19.25 17.25 19.25H6.75C5.64543 19.25 4.75 18.3546 4.75 17.25V6.75Z"
 }, null, -1));
 const _hoisted_3 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", {
-  stroke: "currentColor",
   "stroke-linecap": "round",
   "stroke-linejoin": "round",
   "stroke-width": "1.5",
@@ -6426,8 +6424,9 @@ const _hoisted_4 = [
 const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   __name: "Video",
   props: {
-    videoSrc: { default: "" },
-    videoPoster: { default: "" },
+    src: { default: "" },
+    poster: { default: "" },
+    second: { default: 0.5 },
     width: { default: 800 },
     height: { default: 450 },
     autoplay: { type: Boolean, default: false },
@@ -6435,16 +6434,15 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     loop: { type: Boolean, default: false },
     muted: { type: Boolean, default: false },
     preload: { default: "auto" },
-    showPlay: { type: Boolean, default: false },
+    showPlay: { type: Boolean, default: true },
     playWidth: { default: 96 },
-    zoom: { default: "none" },
-    second: { default: 0.3 }
+    zoom: { default: "contain" }
   },
   setup(__props) {
     const props = __props;
-    const poster = ref(props.videoPoster);
+    const veoPoster = ref(props.poster);
     const originPlay = ref(true);
-    const vplay = ref(false);
+    const hidden = ref(false);
     const veo = ref();
     function getPoster() {
       veo.value.currentTime = props.second;
@@ -6453,54 +6451,44 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       canvas.width = veo.value.videoWidth;
       canvas.height = veo.value.videoHeight;
       ctx == null ? void 0 : ctx.drawImage(veo.value, 0, 0, canvas.width, canvas.height);
-      poster.value = canvas.toDataURL("image/png");
+      veoPoster.value = canvas.toDataURL("image/png");
     }
     function onPlay() {
       var _a, _b;
-      console.log("click");
+      if (originPlay.value) {
+        veo.value.currentTime = 0;
+        originPlay.value = false;
+      }
       if (props.autoplay) {
         (_a = veo.value) == null ? void 0 : _a.pause();
       } else {
-        vplay.value = true;
-        originPlay.value = false;
+        hidden.value = true;
         (_b = veo.value) == null ? void 0 : _b.play();
       }
     }
     function onPause() {
-      vplay.value = false;
-      console.log("pause");
+      hidden.value = false;
     }
     function onPlaying() {
-      vplay.value = true;
-      console.log("playing");
+      hidden.value = true;
     }
     onMounted(() => {
-      var _a, _b;
-      if (props.showPlay) {
-        (_a = veo.value) == null ? void 0 : _a.addEventListener("pause", onPause);
-        (_b = veo.value) == null ? void 0 : _b.addEventListener("playing", onPlaying);
-      }
       if (props.autoplay) {
-        vplay.value = true;
+        hidden.value = true;
         originPlay.value = false;
       }
     });
-    onUnmounted(() => {
-      var _a, _b;
-      (_a = veo.value) == null ? void 0 : _a.removeEventListener("pause", onPause);
-      (_b = veo.value) == null ? void 0 : _b.removeEventListener("playing", onPlaying);
-    });
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
-        class: normalizeClass(["m-video", { "u-video-hover": !vplay.value }]),
+        class: normalizeClass(["m-video", { "u-video-hover": !hidden.value }]),
         style: normalizeStyle(`width: ${_ctx.width}px; height: ${_ctx.height}px;`)
       }, [
         createElementVNode("video", mergeProps({
           ref_key: "veo",
           ref: veo,
           style: `object-fit: ${_ctx.zoom};`,
-          src: _ctx.videoSrc,
-          poster: poster.value,
+          src: _ctx.src,
+          poster: veoPoster.value,
           width: _ctx.width,
           height: _ctx.height,
           autoplay: _ctx.autoplay,
@@ -6508,13 +6496,14 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
           loop: _ctx.loop,
           muted: _ctx.autoplay || _ctx.muted,
           preload: _ctx.preload,
-          crossorigin: "anonymous"
-        }, _ctx.$attrs, {
-          onLoadeddata: _cache[0] || (_cache[0] = ($event) => poster.value ? (e) => e.preventDefault() : getPoster()),
+          crossorigin: "anonymous",
+          onLoadeddata: _cache[0] || (_cache[0] = ($event) => _ctx.poster ? () => false : getPoster()),
+          onPause: _cache[1] || (_cache[1] = ($event) => _ctx.showPlay ? onPause() : () => false),
+          onPlaying: _cache[2] || (_cache[2] = ($event) => _ctx.showPlay ? onPlaying() : () => false),
           onClickOnce: withModifiers(onPlay, ["prevent"])
-        }), " 您的浏览器不支持video标签。 ", 16, _hoisted_1$1),
+        }, _ctx.$attrs), " 您的浏览器不支持video标签。 ", 16, _hoisted_1$1),
         withDirectives((openBlock(), createElementBlock("svg", {
-          class: normalizeClass(["u-play", { "hidden": vplay.value }]),
+          class: normalizeClass(["u-play", { "hidden": hidden.value }]),
           style: normalizeStyle(`width: ${_ctx.playWidth}px; height: ${_ctx.playWidth}px;`),
           viewBox: "0 0 24 24"
         }, _hoisted_4, 6)), [
@@ -6524,8 +6513,8 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Video_vue_vue_type_style_index_0_scoped_5d9cc5de_lang = "";
-const Video = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-5d9cc5de"]]);
+const Video_vue_vue_type_style_index_0_scoped_88c8c60f_lang = "";
+const Video = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-88c8c60f"]]);
 Video.install = (app) => {
   app.component(Video.__name, Video);
 };

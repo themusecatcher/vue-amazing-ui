@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
 interface Props {
-  videoSrc: string // 视频文件url，必传，支持网络地址 https 和相对地址
-  videoPoster?: string // 视频封面url，支持网络地址 https 和相对地址（在未设置封面且preload不等于none时，自动获取视频第0.3s对应帧作为封面图）
+  src: string // 视频文件url，必传，支持网络地址 https 和相对地址
+  poster?: string // 视频封面url，支持网络地址 https 和相对地址
+  second?: number // 在未设置封面时，自动截取视频第 second 秒对应帧作为视频封面
   width?: number // 视频播放器宽度
   height?: number // 视频播放器高度
   autoplay?: boolean // 视频就绪后是否马上播放，优先级高于preload
@@ -13,11 +14,11 @@ interface Props {
   showPlay?: boolean // 播放暂停时是否显示播放器中间的暂停图标
   playWidth?: number // 中间播放暂停按钮的边长
   zoom?: string // video的poster默认图片和视频内容缩放规则
-  second?: number // 在未设置封面时，自动获取视频第 second 秒对应帧作为视频封面
 }
 const props = withDefaults(defineProps<Props>(), {
-  videoSrc: '',
-  videoPoster: '',
+  src: '',
+  poster: '',
+  second: 0.5,
   width: 800,
   height: 450,
   /*
@@ -44,22 +45,21 @@ const props = withDefaults(defineProps<Props>(), {
     none: 页面加载后不应加载视频
   */
   preload: 'auto',
-  showPlay: false,
+  showPlay: true,
   playWidth: 96,
   /*
     zoom可选属性：
-    none: (默认)保存原有内容，不进行缩放;
+    none: 保存原有内容，不进行缩放;
     fill: 不保持原有比例，内容拉伸填充整个内容容器;
     contain: 保存原有比例，内容以包含方式缩放;
     cover: 保存原有比例，内容以覆盖方式缩放
   */
-  zoom: 'none',
-  second: 0.3
+  zoom: 'contain'
 })
 // 参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
-const poster = ref(props.videoPoster)
+const veoPoster = ref(props.poster)
 const originPlay = ref(true)
-const vplay = ref(false)
+const hidden = ref(false) // 是否隐藏播放器中间的播放按钮
 // 为模板引用标注类型
 const veo = ref()
 // const veo = ref<HTMLVideoElement | null>(null) // 声明一个同名的模板引用
@@ -68,8 +68,8 @@ const veo = ref()
   loadeddata 事件在媒体当前播放位置的视频帧（通常是第一帧）加载完成后触发
   preload为none时不会触发
 */
-function getPoster () { // 在未设置封面时，自动获取视频0.3s对应帧作为视频封面
-  // 由于不少视频第一帧为黑屏，故设置视频开始播放时间为0.3s，即取该时刻帧作为封面图
+function getPoster () { // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
+  // 由于不少视频第一帧为黑屏，故设置视频开始播放时间为0.5s，即取该时刻帧作为封面图
   veo.value.currentTime = props.second
   // 创建canvas元素
   const canvas = document.createElement('canvas')
@@ -79,33 +79,29 @@ function getPoster () { // 在未设置封面时，自动获取视频0.3s对应�
   canvas.height = veo.value.videoHeight
   ctx?.drawImage(veo.value, 0, 0, canvas.width, canvas.height)
   // 把canvas转成base64编码格式
-  poster.value = canvas.toDataURL('image/png')
+  veoPoster.value = canvas.toDataURL('image/png')
 }
 function onPlay () {
-  console.log('click')
+  if (originPlay.value) {
+    veo.value.currentTime = 0
+    originPlay.value = false
+  }
   if (props.autoplay) {
     veo.value?.pause()
   } else {
-    vplay.value = true
-    originPlay.value = false
+    hidden.value = true
     veo.value?.play()
   }
 }
 function onPause () {
-  vplay.value = false
-  console.log('pause')
+  hidden.value = false
 }
 function onPlaying () {
-  vplay.value = true
-  console.log('playing')
+  hidden.value = true
 }
 onMounted(() => {
-  if (props.showPlay) {
-    veo.value?.addEventListener('pause', onPause)
-    veo.value?.addEventListener('playing', onPlaying)
-  }
   if (props.autoplay) {
-    vplay.value = true
+    hidden.value = true
     originPlay.value = false
   }
   /*
@@ -115,18 +111,14 @@ onMounted(() => {
   */
   // veo.value.defaultPlaybackRate = 2
 })
-onUnmounted(() => {
-  veo.value?.removeEventListener('pause', onPause)
-  veo.value?.removeEventListener('playing', onPlaying)
-})
 </script>
 <template>
-  <div class="m-video" :class="{'u-video-hover': !vplay}" :style="`width: ${width}px; height: ${height}px;`">
+  <div class="m-video" :class="{'u-video-hover': !hidden}" :style="`width: ${width}px; height: ${height}px;`">
     <video
       ref="veo"
       :style="`object-fit: ${zoom};`"
-      :src="videoSrc"
-      :poster="poster"
+      :src="src"
+      :poster="veoPoster"
       :width="width"
       :height="height"
       :autoplay="autoplay"
@@ -135,14 +127,16 @@ onUnmounted(() => {
       :muted="autoplay || muted"
       :preload="preload"
       crossorigin="anonymous"
-      v-bind="$attrs"
-      @loadeddata="poster ? (e: Event) => e.preventDefault():getPoster()"
-      @click.prevent.once="onPlay">
+      @loadeddata="poster ? () => false : getPoster()"
+      @pause="showPlay ? onPause() : () => false"
+      @playing="showPlay ? onPlaying() : () => false"
+      @click.prevent.once="onPlay"
+      v-bind="$attrs">
       您的浏览器不支持video标签。
     </video>
-    <svg v-show="originPlay || showPlay" class="u-play" :class="{'hidden': vplay}" :style="`width: ${playWidth}px; height: ${playWidth}px;`" viewBox="0 0 24 24">
-      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.75 6.75C4.75 5.64543 5.64543 4.75 6.75 4.75H17.25C18.3546 4.75 19.25 5.64543 19.25 6.75V17.25C19.25 18.3546 18.3546 19.25 17.25 19.25H6.75C5.64543 19.25 4.75 18.3546 4.75 17.25V6.75Z"></path>
-      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.25 12L9.75 8.75V15.25L15.25 12Z"></path>
+    <svg v-show="originPlay || showPlay" class="u-play" :class="{'hidden': hidden}" :style="`width: ${playWidth}px; height: ${playWidth}px;`" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.75 6.75C4.75 5.64543 5.64543 4.75 6.75 4.75H17.25C18.3546 4.75 19.25 5.64543 19.25 6.75V17.25C19.25 18.3546 18.3546 19.25 17.25 19.25H6.75C5.64543 19.25 4.75 18.3546 4.75 17.25V6.75Z"></path>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.25 12L9.75 8.75V15.25L15.25 12Z"></path>
     </svg>
   </div>
 </template>
@@ -169,6 +163,9 @@ onUnmounted(() => {
     pointer-events: none;
     opacity: 0.7;
     transition: opacity .3s;
+    path {
+      stroke: #FFF;
+    }
   }
   .hidden {
     opacity: 0;
