@@ -19,7 +19,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
   interval: 3000,
-  width: '100vw',
+  width: '100%',
   height: '100vh',
   navigation: true,
   pagination: true,

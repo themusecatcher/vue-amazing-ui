@@ -287,7 +287,7 @@ const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-c
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
-const _withScopeId$g = (n) => (pushScopeId("data-v-f717d67a"), n = n(), popScopeId(), n);
+const _withScopeId$g = (n) => (pushScopeId("data-v-722ba211"), n = n(), popScopeId(), n);
 const _hoisted_1$t = ["href", "target"];
 const _hoisted_2$p = ["onLoad", "src", "alt"];
 const _hoisted_3$n = { class: "u-spin-circle" };
@@ -320,7 +320,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
   props: {
     images: { default: () => [] },
     interval: { default: 3e3 },
-    width: { default: "100vw" },
+    width: { default: "100%" },
     height: { default: "100vh" },
     navigation: { type: Boolean, default: true },
     pagination: { type: Boolean, default: true },
@@ -621,8 +621,8 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Carousel_vue_vue_type_style_index_0_scoped_f717d67a_lang = "";
-const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-f717d67a"]]);
+const Carousel_vue_vue_type_style_index_0_scoped_722ba211_lang = "";
+const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-722ba211"]]);
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
@@ -935,8 +935,8 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Cascader_vue_vue_type_style_index_0_scoped_a0e31a72_lang = "";
-const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-a0e31a72"]]);
+const Cascader_vue_vue_type_style_index_0_scoped_d182b701_lang = "";
+const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-d182b701"]]);
 Cascader.install = (app) => {
   app.component(Cascader.__name, Cascader);
 };
@@ -1040,12 +1040,12 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Checkbox_vue_vue_type_style_index_0_scoped_a09feac4_lang = "";
-const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-a09feac4"]]);
+const Checkbox_vue_vue_type_style_index_0_scoped_ad3c5aae_lang = "";
+const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-ad3c5aae"]]);
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
-const _withScopeId$e = (n) => (pushScopeId("data-v-1331c4fa"), n = n(), popScopeId(), n);
+const _withScopeId$e = (n) => (pushScopeId("data-v-206969f7"), n = n(), popScopeId(), n);
 const _hoisted_1$q = { class: "m-collapse" };
 const _hoisted_2$m = ["onClick"];
 const _hoisted_3$k = {
@@ -1068,9 +1068,9 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     activeKey: { default: null },
     copyable: { type: Boolean, default: false },
     lang: { default: "" },
-    fontSize: { default: 0 },
-    headerFontSize: { default: 14 },
-    textFontSize: { default: 14 },
+    fontSize: { default: 14 },
+    headerFontSize: { default: 0 },
+    textFontSize: { default: 0 },
     showArrow: { type: Boolean, default: true }
   },
   emits: ["update:activeKey", "change"],
@@ -1142,7 +1142,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               _ctx.showArrow ? (openBlock(), createElementBlock("svg", _hoisted_3$k, _hoisted_5$f)) : createCommentVNode("", true),
               createElementVNode("div", {
                 class: normalizeClass(["u-header", { ml24: _ctx.showArrow }]),
-                style: normalizeStyle(`font-size: ${_ctx.fontSize || _ctx.headerFontSize}px;`)
+                style: normalizeStyle(`font-size: ${_ctx.headerFontSize || _ctx.fontSize}px;`)
               }, [
                 renderSlot(_ctx.$slots, "header", {
                   header: data.header,
@@ -1180,7 +1180,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
                 ref_key: "text",
                 ref: text,
                 class: "u-text",
-                style: normalizeStyle(`font-size: ${_ctx.fontSize || _ctx.textFontSize}px;`)
+                style: normalizeStyle(`font-size: ${_ctx.textFontSize || _ctx.fontSize}px;`)
               }, [
                 renderSlot(_ctx.$slots, "text", {
                   text: data.text,
@@ -1196,8 +1196,8 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Collapse_vue_vue_type_style_index_0_scoped_1331c4fa_lang = "";
-const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-1331c4fa"]]);
+const Collapse_vue_vue_type_style_index_0_scoped_206969f7_lang = "";
+const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-206969f7"]]);
 Collapse.install = (app) => {
   app.component(Collapse.__name, Collapse);
 };
@@ -1320,8 +1320,8 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Countdown_vue_vue_type_style_index_0_scoped_1932e6aa_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-1932e6aa"]]);
+const Countdown_vue_vue_type_style_index_0_scoped_de734ac1_lang = "";
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-de734ac1"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
 };
@@ -1391,8 +1391,8 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const DatePicker_vue_vue_type_style_index_0_scoped_d830c9eb_lang = "";
-const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-d830c9eb"]]);
+const DatePicker_vue_vue_type_style_index_0_scoped_ce0087fa_lang = "";
+const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-ce0087fa"]]);
 DatePicker.install = (app) => {
   app.component(DatePicker.__name, DatePicker);
 };
