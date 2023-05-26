@@ -1,23 +1,23 @@
 {
-  "hash": "cafd1e9e",
-  "browserHash": "d68e85ed",
+  "hash": "e91a3c98",
+  "browserHash": "b9fae81b",
   "optimized": {
     "vue": {
-      "src": "../../node_modules/.pnpm/vue@3.2.47/node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "src": "../../node_modules/.pnpm/vue@3.3.4/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "aa1595a9",
+      "fileHash": "00622ab2",
       "needsInterop": false
     },
     "vue-router": {
-      "src": "../../node_modules/.pnpm/vue-router@4.1.6_vue@3.2.47/node_modules/vue-router/dist/vue-router.mjs",
+      "src": "../../node_modules/.pnpm/vue-router@4.2.1_vue@3.3.4/node_modules/vue-router/dist/vue-router.mjs",
       "file": "vue-router.js",
-      "fileHash": "70e3fad7",
+      "fileHash": "6351261a",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-Q3I63ZQ2": {
-      "file": "chunk-Q3I63ZQ2.js"
+    "chunk-MFXDHSGI": {
+      "file": "chunk-MFXDHSGI.js"
     }
   }
 }

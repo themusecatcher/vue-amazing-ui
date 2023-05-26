@@ -1696,7 +1696,7 @@ const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-19
 Empty.install = (app) => {
   app.component(Empty.__name, Empty);
 };
-const _withScopeId$c = (n) => (pushScopeId("data-v-4d80fda6"), n = n(), popScopeId(), n);
+const _withScopeId$c = (n) => (pushScopeId("data-v-b805cb83"), n = n(), popScopeId(), n);
 const _hoisted_1$m = { class: "m-image-wrap" };
 const _hoisted_2$i = { class: "u-spin-circle" };
 const _hoisted_3$g = ["src", "alt"];
@@ -1714,7 +1714,7 @@ const _hoisted_6$b = { class: "m-preview-mask" };
 const _hoisted_7$b = ["onClick", "onWheel"];
 const _hoisted_8$b = { class: "m-preview-body" };
 const _hoisted_9$b = { class: "m-preview-operations" };
-const _hoisted_10$9 = { class: "u-name" };
+const _hoisted_10$9 = ["title"];
 const _hoisted_11$7 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
@@ -1754,6 +1754,18 @@ const _hoisted_16$5 = [
 const _hoisted_17$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
+  "data-icon": "expand",
+  "aria-hidden": "true",
+  viewBox: "64 64 896 896"
+}, [
+  /* @__PURE__ */ createElementVNode("path", { d: "M342 88H120c-17.7 0-32 14.3-32 32v224c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V168h174c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm578 576h-48c-8.8 0-16 7.2-16 16v176H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h222c17.7 0 32-14.3 32-32V680c0-8.8-7.2-16-16-16zM342 856H168V680c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v224c0 17.7 14.3 32 32 32h222c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM904 88H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h174v176c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V120c0-17.7-14.3-32-32-32z" })
+], -1));
+const _hoisted_18$3 = [
+  _hoisted_17$3
+];
+const _hoisted_19$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+  class: "u-icon",
+  focusable: "false",
   "data-icon": "rotate-right",
   "aria-hidden": "true",
   viewBox: "64 64 896 896"
@@ -1761,10 +1773,10 @@ const _hoisted_17$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
   /* @__PURE__ */ createElementVNode("path", { d: "M480.5 251.2c13-1.6 25.9-2.4 38.8-2.5v63.9c0 6.5 7.5 10.1 12.6 6.1L660 217.6c4-3.2 4-9.2 0-12.3l-128-101c-5.1-4-12.6-.4-12.6 6.1l-.2 64c-118.6.5-235.8 53.4-314.6 154.2A399.75 399.75 0 00123.5 631h74.9c-.9-5.3-1.7-10.7-2.4-16.1-5.1-42.1-2.1-84.1 8.9-124.8 11.4-42.2 31-81.1 58.1-115.8 27.2-34.7 60.3-63.2 98.4-84.3 37-20.6 76.9-33.6 119.1-38.8z" }),
   /* @__PURE__ */ createElementVNode("path", { d: "M880 418H352c-17.7 0-32 14.3-32 32v414c0 17.7 14.3 32 32 32h528c17.7 0 32-14.3 32-32V450c0-17.7-14.3-32-32-32zm-44 402H396V494h440v326z" })
 ], -1));
-const _hoisted_18$3 = [
-  _hoisted_17$3
+const _hoisted_20$2 = [
+  _hoisted_19$3
 ];
-const _hoisted_19$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_21$2 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
   "data-icon": "rotate-left",
@@ -1774,13 +1786,12 @@ const _hoisted_19$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
   /* @__PURE__ */ createElementVNode("path", { d: "M672 418H144c-17.7 0-32 14.3-32 32v414c0 17.7 14.3 32 32 32h528c17.7 0 32-14.3 32-32V450c0-17.7-14.3-32-32-32zm-44 402H188V494h440v326z" }),
   /* @__PURE__ */ createElementVNode("path", { d: "M819.3 328.5c-78.8-100.7-196-153.6-314.6-154.2l-.2-64c0-6.5-7.6-10.1-12.6-6.1l-128 101c-4 3.1-3.9 9.1 0 12.3L492 318.6c5.1 4 12.7.4 12.6-6.1v-63.9c12.9.1 25.9.9 38.8 2.5 42.1 5.2 82.1 18.2 119 38.7 38.1 21.2 71.2 49.7 98.4 84.3 27.1 34.7 46.7 73.7 58.1 115.8a325.95 325.95 0 016.5 140.9h74.9c14.8-103.6-11.3-213-81-302.3z" })
 ], -1));
-const _hoisted_20$2 = [
-  _hoisted_19$3
+const _hoisted_22$2 = [
+  _hoisted_21$2
 ];
-const _hoisted_21$2 = ["onMousedown"];
-const _hoisted_22$2 = { class: "u-spin-circle" };
-const _hoisted_23$2 = ["src", "alt"];
-const _hoisted_24$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_23$2 = { class: "u-spin-circle" };
+const _hoisted_24$1 = ["src", "alt"];
+const _hoisted_25$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
   class: "u-switch",
   "data-icon": "left",
@@ -1789,10 +1800,10 @@ const _hoisted_24$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z" })
 ], -1));
-const _hoisted_25$1 = [
-  _hoisted_24$1
+const _hoisted_26$1 = [
+  _hoisted_25$1
 ];
-const _hoisted_26$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_27$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
   class: "u-switch",
   "data-icon": "right",
@@ -1801,8 +1812,8 @@ const _hoisted_26$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z" })
 ], -1));
-const _hoisted_27$1 = [
-  _hoisted_26$1
+const _hoisted_28$1 = [
+  _hoisted_27$1
 ];
 const _sfc_main$m = /* @__PURE__ */ defineComponent({
   __name: "Image",
@@ -1864,7 +1875,6 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     const sourceY = ref(0);
     const dragX = ref(0);
     const dragY = ref(0);
-    const image = ref();
     function keyboardSwitch(e) {
       e.preventDefault();
       if (showPreview.value && imageCount.value > 1) {
@@ -1882,11 +1892,11 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     function onLoaded() {
       loaded.value = true;
     }
-    function getImageName(image2) {
-      if (image2.name) {
-        return image2.name;
+    function getImageName(image) {
+      if (image.name) {
+        return image.name;
       } else {
-        const res = image2.src.split("?")[0].split("/");
+        const res = image.src.split("?")[0].split("/");
         return res[res.length - 1];
       }
     }
@@ -1897,9 +1907,6 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
       dragY.value = 0;
       showPreview.value = true;
     }
-    function onClose() {
-      showPreview.value = false;
-    }
     function add2(num1, num2) {
       const num1DeciStr = String(num1).split(".")[1];
       const num2DeciStr = String(num2).split(".")[1];
@@ -1908,6 +1915,9 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
       let num2Str = num2.toFixed(maxLen);
       const result = +num1Str.replace(".", "") + +num2Str.replace(".", "");
       return result / Math.pow(10, maxLen);
+    }
+    function onClose() {
+      showPreview.value = false;
     }
     function onZoomin() {
       if (scale.value + props.zoomRatio > props.maxZoomScale) {
@@ -1922,6 +1932,12 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
       } else {
         scale.value = add2(scale.value, -props.zoomRatio);
       }
+    }
+    function onResetOrigin() {
+      scale.value = 1;
+      rotate.value = 0;
+      dragX.value = 0;
+      dragY.value = 0;
     }
     function onWheel(e) {
       const scrollZoom = e.deltaY * props.zoomRatio;
@@ -1939,12 +1955,6 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
         scale.value = add2(scale.value, -scrollZoom);
       }
     }
-    function onResetZoom() {
-      scale.value = 1;
-      rotate.value = 0;
-      dragX.value = 0;
-      dragY.value = 0;
-    }
     function onAnticlockwiseRotate() {
       rotate.value -= 90;
     }
@@ -1952,7 +1962,8 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
       rotate.value += 90;
     }
     function onMouseDown(event) {
-      const imageRect = image.value[0].getBoundingClientRect();
+      const el = event.target;
+      const imageRect = el.getBoundingClientRect();
       const top = imageRect.top;
       const bottom = imageRect.bottom;
       const right = imageRect.right;
@@ -2048,62 +2059,72 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
             }, [
               createElementVNode("div", _hoisted_8$b, [
                 createElementVNode("div", _hoisted_9$b, [
-                  createElementVNode("p", _hoisted_10$9, toDisplayString(getImageName(images.value[previewIndex.value])), 1),
+                  createElementVNode("p", {
+                    class: "u-name",
+                    title: getImageName(images.value[previewIndex.value])
+                  }, toDisplayString(getImageName(images.value[previewIndex.value])), 9, _hoisted_10$9),
                   createElementVNode("div", {
                     class: "u-preview-operation",
+                    title: "关闭",
                     onClick: onClose
                   }, _hoisted_12$6),
                   createElementVNode("div", {
                     class: normalizeClass(["u-preview-operation", { "u-operation-disabled": scale.value === _ctx.maxZoomScale }]),
+                    title: "放大",
                     onClick: onZoomin
                   }, _hoisted_14$5, 2),
                   createElementVNode("div", {
                     class: normalizeClass(["u-preview-operation", { "u-operation-disabled": scale.value === _ctx.minZoomScale }]),
+                    title: "缩小",
                     onClick: onZoomout
                   }, _hoisted_16$5, 2),
                   createElementVNode("div", {
                     class: "u-preview-operation",
-                    onClick: onClockwiseRotate
+                    title: "还原",
+                    onClick: onResetOrigin
                   }, _hoisted_18$3),
                   createElementVNode("div", {
                     class: "u-preview-operation",
+                    title: "向右旋转",
+                    onClick: onClockwiseRotate
+                  }, _hoisted_20$2),
+                  createElementVNode("div", {
+                    class: "u-preview-operation",
+                    title: "向左旋转",
                     onClick: onAnticlockwiseRotate
-                  }, _hoisted_20$2)
+                  }, _hoisted_22$2)
                 ]),
                 createElementVNode("div", {
                   class: "m-preview-image",
-                  style: normalizeStyle(`transform: translate3d(${dragX.value}px, ${dragY.value}px, 0px);`),
-                  onMousedown: withModifiers(onMouseDown, ["prevent"])
+                  style: normalizeStyle(`transform: translate3d(${dragX.value}px, ${dragY.value}px, 0px);`)
                 }, [
-                  withDirectives(createElementVNode("div", _hoisted_22$2, null, 512), [
+                  withDirectives(createElementVNode("div", _hoisted_23$2, null, 512), [
                     [vShow, !loaded.value]
                   ]),
-                  (openBlock(true), createElementBlock(Fragment, null, renderList(images.value, (image2, index) => {
+                  (openBlock(true), createElementBlock(Fragment, null, renderList(images.value, (image, index) => {
                     return withDirectives((openBlock(), createElementBlock("img", {
                       key: index,
-                      ref_for: true,
-                      ref_key: "image",
-                      ref: image2,
                       class: "u-preview-image",
                       style: normalizeStyle(`transform: scale3d(${scale.value}, ${scale.value}, 1) rotate(${rotate.value}deg);`),
-                      src: image2.src,
-                      alt: image2.name,
+                      src: image.src,
+                      alt: image.name,
+                      onMousedown: _cache[0] || (_cache[0] = withModifiers(($event) => onMouseDown($event), ["prevent"])),
                       onLoad: onLoaded,
-                      onDblclick: _cache[0] || (_cache[0] = ($event) => _ctx.resetOnDbclick ? onResetZoom() : () => false)
-                    }, null, 44, _hoisted_23$2)), [
+                      onDblclick: _cache[1] || (_cache[1] = ($event) => _ctx.resetOnDbclick ? onResetOrigin() : () => false)
+                    }, null, 44, _hoisted_24$1)), [
                       [vShow, previewIndex.value === index]
                     ]);
                   }), 128))
-                ], 44, _hoisted_21$2),
+                ], 4),
                 imageCount.value > 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
                   createElementVNode("div", {
                     class: normalizeClass(["m-switch-left", { "u-switch-disabled": previewIndex.value === 0 && !_ctx.loop }]),
                     onClick: onSwitchLeft
-                  }, _hoisted_25$1, 2),
+                  }, _hoisted_26$1, 2),
                   createElementVNode("div", {
                     class: normalizeClass(["m-switch-right", { "u-switch-disabled": previewIndex.value === imageCount.value - 1 && !_ctx.loop }]),
                     onClick: onSwitchRight
-                  }, _hoisted_27$1, 2)
+                  }, _hoisted_28$1, 2)
                 ], 64)) : createCommentVNode("", true)
               ])
             ], 40, _hoisted_7$b), [
@@ -2116,8 +2137,8 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Image_vue_vue_type_style_index_0_scoped_4d80fda6_lang = "";
-const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-4d80fda6"]]);
+const Image_vue_vue_type_style_index_0_scoped_b805cb83_lang = "";
+const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-b805cb83"]]);
 Image$1.install = (app) => {
   app.component(Image$1.__name, Image$1);
 };

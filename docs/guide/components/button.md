@@ -1,4 +1,4 @@
-# 按钮 Button
+# 按钮
 
 ## 何时使用
 
@@ -14,12 +14,13 @@ function onClick () {
 
 ## 基本使用
 
-<Button class="mr30" @click="onClick">Default Button</Button>
-<Button class="mr30" effect="reverse" @click="onClick">Reverse Button</Button>
-<Button type="primary" @click="onClick">Primary Button</Button>
-<br/>
-<Button class="mt20 mr30" type="danger" @click="onClick">Danger Button</Button>
-<Button class="mt20 mr30" disabled @click="onClick">Disabled Button</Button>
+<div class="m-flex">
+  <Button @click="onClick">Default</Button>
+  <Button effect="reverse" @click="onClick">Reverse</Button>
+  <Button type="primary" @click="onClick">Primary</Button>
+  <Button type="danger" @click="onClick">Danger</Button>
+  <Button disabled @click="onClick">Disabled</Button>
+</div>
 
 <details>
 <summary>查看代码</summary>
@@ -31,11 +32,11 @@ function onClick () {
 }
 </script>
 <template>
-  <Button @click="onClick">Default Button</Button>
-  <Button effect="reverse" @click="onClick">Reverse Button</Button>
-  <Button type="primary" @click="onClick">Primary Button</Button>
-  <Button type="danger" @click="onClick">Danger Button</Button>
-  <Button disabled @click="onClick">Disabled Button</Button>
+  <Button @click="onClick">Default</Button>
+  <Button effect="reverse" @click="onClick">Reverse</Button>
+  <Button type="primary" @click="onClick">Primary</Button>
+  <Button type="danger" @click="onClick">Danger</Button>
+  <Button disabled @click="onClick">Disabled</Button>
 </template>
 
 ```
@@ -44,9 +45,11 @@ function onClick () {
 
 ## 大、中、小三种尺寸
 
-<Button class="mr30" size="large" @click="onClick">Large Button</Button>
-<Button class="mr30" @click="onClick">Default Button</Button>
-<Button size="small" @click="onClick">Small Button</Button>
+<div class="m-flex">
+  <Button size="small" @click="onClick">Small</Button>
+  <Button @click="onClick">Default</Button>
+  <Button size="large" @click="onClick">Large</Button>
+</div>
 
 <details>
 <summary>查看代码</summary>
@@ -58,9 +61,9 @@ function onClick () {
 }
 </script>
 <template>
-  <Button size="large" @click="onClick">Large Button</Button>
-  <Button @click="onClick">Default Button</Button>
-  <Button size="small" @click="onClick">Small Button</Button>
+  <Button size="small" @click="onClick">Small</Button>
+  <Button @click="onClick">Default</Button>
+  <Button size="large" @click="onClick">Large</Button>
 </template>
 
 ```
@@ -69,7 +72,7 @@ function onClick () {
 
 ## 自定义按钮宽高
 
-<Button :width="150" :height="40" @click="onClick">Default Button</Button>
+<Button :width="120" :height="40" @click="onClick">Default</Button>
 
 <details>
 <summary>查看代码</summary>
@@ -81,7 +84,7 @@ function onClick () {
 }
 </script>
 <template>
-  <Button :width="150" :height="40" @click="onClick">Default Button</Button>
+  <Button :width="120" :height="40" @click="onClick">Default</Button>
 </template>
 
 ```
@@ -90,8 +93,8 @@ function onClick () {
 
 ## 加载中状态
 
-<Button @click="onClick" :loading="loading">Default Button</Button>
-<h3 class="mt30">Loading state: <Switch v-model:checked="loading" /></h3>
+<Button @click="onClick" :loading="loading">Default</Button>
+<h3>Loading state: <Switch v-model:checked="loading" /></h3>
 
 <details>
 <summary>查看代码</summary>
@@ -105,7 +108,7 @@ function onClick () {
 }
 </script>
 <template>
-  <Button @click="onClick" :loading="loading">Default Button</Button>
+  <Button @click="onClick" :loading="loading">Default</Button>
 </template>
 
 ```
@@ -113,10 +116,9 @@ function onClick () {
 </details>
 
 <style>
-.mt20 {
-  margin-top: 20px;
-}
-.mr30 {
-  margin-right: 30px;
+.m-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 </style>
