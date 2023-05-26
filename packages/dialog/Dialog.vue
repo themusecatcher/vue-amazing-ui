@@ -103,11 +103,6 @@ function onConfirm () {
   </Transition>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .v-enter-active, .v-leave-active {
   transition: opacity 0.3s ease;
 }

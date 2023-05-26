@@ -237,3 +237,15 @@ function onHoverChange (value: number) {
 ```
 
 </details>
+
+## APIs
+
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+name |  |  |
+
+## Events
+
+事件名称 | 说明 | 参数
+-- | -- | --
+change |  |

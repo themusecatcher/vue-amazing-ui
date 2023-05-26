@@ -6,7 +6,7 @@
 - 和 Select 的区别是，Radio 所有选项默认可见，方便用户在比较中选择，因此选项不宜过多
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 const options = ref([
       {
         label: '北京市',
@@ -25,12 +25,20 @@ const options = ref([
         value: 4
       },
       {
-        label: '伦敦市',
+        label: '布宜诺斯艾利斯',
         value: 5
       },
       {
-        label: '巴黎市',
+        label: '伊斯坦布尔',
         value: 6
+      },
+      {
+        label: '拜占庭',
+        value: 7
+      },
+      {
+        label: '君士坦丁堡',
+        value: 8
       }
     ])
 const optionsDisabled = ref([
@@ -52,18 +60,25 @@ const optionsDisabled = ref([
         value: 4
       },
       {
-        label: '伦敦市',
+        label: '布宜诺斯艾利斯',
         value: 5
       },
       {
-        label: '巴黎市',
+        label: '伊斯坦布尔',
         value: 6
+      },
+      {
+        label: '拜占庭',
+        value: 7
+      },
+      {
+        label: '君士坦丁堡',
+        value: 8
       }
     ])
-
 const value = ref(1)
-watch(value, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('value:', value.value)
 })
 function onChange (value: any) {
   console.log('change:', value)
@@ -72,14 +87,14 @@ function onChange (value: any) {
 
 ## 基本使用
 
-<Radio :options="options" @change="onChange" v-model:value="value" />
+<Radio :options="options" v-model:value="value" />
 
 <details>
 <summary>查看代码</summary>
 
 ```vue
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 const options = ref([
       {
         label: '北京市',
@@ -98,83 +113,35 @@ const options = ref([
         value: 4
       },
       {
-        label: '伦敦市',
+        label: '布宜诺斯艾利斯',
         value: 5
       },
       {
-        label: '巴黎市',
+        label: '伊斯坦布尔',
         value: 6
+      },
+      {
+        label: '拜占庭',
+        value: 7
+      },
+      {
+        label: '君士坦丁堡',
+        value: 8
       }
     ])
-
 const value = ref(1)
-watch(value, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('value:', value.value)
 })
-function onChange (value: any) {
-  console.log('change:', value)
-}
 </script>
 <template>
-  <Radio :options="options" @change="onChange" v-model:value="value" />
+  <Radio :options="options" v-model:value="value" />
 </template>
 ```
 
 </details>
 
-## 垂直排列
-
-<Radio :options="options" @change="onChange" v-model:value="value" vertical />
-
-<details>
-<summary>查看代码</summary>
-
-```vue
-<script setup lang="ts">
-import { ref, watch } from 'vue'
-const options = ref([
-      {
-        label: '北京市',
-        value: 1
-      },
-      {
-        label: '上海市',
-        value: 2
-      },
-      {
-        label: '纽约市',
-        value: 3
-      },
-      {
-        label: '旧金山',
-        value: 4
-      },
-      {
-        label: '伦敦市',
-        value: 5
-      },
-      {
-        label: '巴黎市',
-        value: 6
-      }
-    ])
-
-const value = ref(1)
-watch(value, (to) => {
-  console.log('p to:', to)
-})
-function onChange (value: any) {
-  console.log('change:', value)
-}
-</script>
-<template>
-  <Radio :options="options" @change="onChange" v-model:value="value" vertical />
-</template>
-```
-
-</details>
-
-## 禁用全部
+## 禁用
 
 <Radio :options="options" @change="onChange" v-model:value="value" disabled />
 
@@ -183,7 +150,7 @@ function onChange (value: any) {
 
 ```vue
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 const options = ref([
       {
         label: '北京市',
@@ -202,41 +169,42 @@ const options = ref([
         value: 4
       },
       {
-        label: '伦敦市',
+        label: '布宜诺斯艾利斯',
         value: 5
       },
       {
-        label: '巴黎市',
+        label: '伊斯坦布尔',
         value: 6
+      },
+      {
+        label: '拜占庭',
+        value: 7
+      },
+      {
+        label: '君士坦丁堡',
+        value: 8
       }
     ])
-
 const value = ref(1)
-watch(value, (to) => {
-  console.log('p to:', to)
-})
-function onChange (value: any) {
-  console.log('change:', value)
-}
 </script>
 <template>
-  <Radio :options="options" @change="onChange" v-model:value="value" disabled />
+  <Radio :options="options" v-model:value="value" disabled />
 </template>
 ```
 
 </details>
 
-## 禁用单个
+## 禁用选项
 
-<Radio :options="optionsDisabled" @change="onChange" v-model:value="value" />
+<Radio :options="optionsDisabled" v-model:value="value" />
 
 <details>
 <summary>查看代码</summary>
 
 ```vue
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-const options = ref([
+import { ref, watchEffect } from 'vue'
+const optionsDisabled = ref([
       {
         label: '北京市',
         value: 1
@@ -255,26 +223,99 @@ const options = ref([
         value: 4
       },
       {
-        label: '伦敦市',
+        label: '布宜诺斯艾利斯',
         value: 5
       },
       {
-        label: '巴黎市',
+        label: '伊斯坦布尔',
         value: 6
+      },
+      {
+        label: '拜占庭',
+        value: 7
+      },
+      {
+        label: '君士坦丁堡',
+        value: 8
       }
     ])
 
 const value = ref(1)
-watch(value, (to) => {
-  console.log('p to:', to)
+watchEffect(() => {
+  console.log('value:', value.value)
 })
-function onChange (value: any) {
-  console.log('change:', value)
-}
 </script>
 <template>
-  <Radio :options="options" @change="onChange" v-model:value="value" />
+  <Radio :options="optionsDisabled" v-model:value="value" />
 </template>
 ```
 
 </details>
+
+## 垂直排列
+
+<Radio vertical :options="options" v-model:value="value" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+      {
+        label: '北京市',
+        value: 1
+      },
+      {
+        label: '上海市',
+        value: 2
+      },
+      {
+        label: '纽约市',
+        value: 3
+      },
+      {
+        label: '旧金山',
+        value: 4
+      },
+      {
+        label: '布宜诺斯艾利斯',
+        value: 5
+      },
+      {
+        label: '伊斯坦布尔',
+        value: 6
+      },
+      {
+        label: '拜占庭',
+        value: 7
+      },
+      {
+        label: '君士坦丁堡',
+        value: 8
+      }
+    ])
+const value = ref(1)
+watchEffect(() => {
+  console.log('value:', value.value)
+})
+</script>
+<template>
+  <Radio vertical :options="options" v-model:value="value" />
+</template>
+```
+
+</details>
+
+## APIs
+
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+name |  |  |
+
+## Events
+
+事件名称 | 说明 | 参数
+-- | -- | --
+change |  |

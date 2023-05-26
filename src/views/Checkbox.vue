@@ -7,32 +7,32 @@ const options = ref([
         value: 1
       },
       {
-        label: '上海市上海市上海市上海市',
+        label: '上海市',
         value: 2,
         disabled: true
       },
       {
-        label: '郑州市',
+        label: '纽约市',
         value: 3
       },
       {
-        label: '纽约市纽约市纽约市纽约市',
+        label: '旧金山',
         value: 4
       },
       {
-        label: '旧金山',
+        label: '布宜诺斯艾利斯',
         value: 5
       },
       {
-        label: '悉尼市',
+        label: '伊斯坦布尔',
         value: 6
       },
       {
-        label: '伦敦市',
+        label: '拜占庭',
         value: 7
       },
       {
-        label: '巴黎市',
+        label: '君士坦丁堡',
         value: 8
       }
     ])
@@ -46,13 +46,13 @@ function onChange (value: any[]) {
 }
 
 const checkAll = ref(false) // 全选v-model
-const indeterminate = computed(() => {
+const indeterminate = computed(() => { // 全选样式控制
   if (value.value.length > 0 && value.value.length < options.value.length) {
     return true
   } else {
     return false
   }
-}) // 全选样式控制
+})
 watch(checkAll, (to) => {
   console.log('checkAll:', to)
   if (to) {

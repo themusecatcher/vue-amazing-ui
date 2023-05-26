@@ -54,14 +54,14 @@ export default defineConfig({
     rollupOptions: { // 自定义底层的Rollup打包配置
       // https://rollupjs.org/configuration-options/
       // 确保外部化处理那些你不想打包进库的依赖
-      external: ['vue', 'vue-router', 'swiper', '@vuepic/vue-datepicker', 'qrcode'],
+      external: ['vue', 'swiper', '@vuepic/vue-datepicker', 'qrcode'],
       output: {
         // format: 'es', // 默认es，可选 'amd' 'cjs' 'es' 'iife' 'umd' 'system'
         exports: 'named', // https://rollupjs.org/configuration-options/#output-exports
       //   // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
         globals: {
           vue: 'Vue',
-          'vue-router': 'VueRouter', // 引入vue-router全局变量，否则router.push将无法使用
+          // 'vue-router': 'VueRouter', // 引入vue-router全局变量，否则router.push将无法使用
           swiper: 'Swiper',
           '@vuepic/vue-datepicker': 'VueDatePicker',
           qrcode: 'qrcode'

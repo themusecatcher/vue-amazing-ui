@@ -19,8 +19,10 @@ const routes = ref([
 <template>
   <div>
     <h2 class="mb10">Breadcrumb 面包屑基本使用</h2>
-    <Breadcrumb :routes="routes" :height="36" />
+    <Breadcrumb :routes="routes" />
     <h2 class="mt30 mb10">使用自定义分隔符: / (separator: /)</h2>
-    <Breadcrumb :routes="routes" separator="/" :height="36" />
+    <Breadcrumb :routes="routes" separator="/" />
+    <h2 class="mt30 mb10">新页面打开目标链接: / (target: _blank)</h2>
+    <Breadcrumb :routes="routes" target="_blank" />
   </div>
 </template>

@@ -158,11 +158,6 @@ function changePage (pageNum: number): boolean | void {
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .hidden {
   display: none;
 }

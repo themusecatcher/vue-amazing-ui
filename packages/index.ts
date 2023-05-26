@@ -1,3 +1,4 @@
+import './less/global.less'
 import {
   dateFormat,
   requestAnimationFrame,

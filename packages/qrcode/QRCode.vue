@@ -50,11 +50,6 @@ const qrcode = useQRCode(props.value, {
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-qrcode {
   display: inline-block;
   border-radius: 8px;

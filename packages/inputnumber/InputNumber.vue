@@ -110,11 +110,6 @@ function onDown () {
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-input-number {
   position: relative;
   display: inline-block;

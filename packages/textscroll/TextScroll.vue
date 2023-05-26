@@ -168,11 +168,6 @@ function startMove () {
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 // 水平滚动
 .m-slider-horizon {
   box-shadow: 0px 0px 5px #D3D3D3;

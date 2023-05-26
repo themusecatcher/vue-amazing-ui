@@ -121,11 +121,6 @@ async function onPreload () { // 计算图片宽高和位置（top，left）
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-waterfall-css {
   .m-img {
     .u-img {

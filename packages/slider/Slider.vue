@@ -249,11 +249,6 @@ function onRightSlide (source: number, place: string) {
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-slider {
   display: inline-block;
   height: 4px;

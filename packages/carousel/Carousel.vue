@@ -19,12 +19,12 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
   interval: 3000,
-  width: '100%',
-  height:  '100vh',
+  width: '100vw',
+  height: '100vh',
   navigation: true,
   pagination: true,
   disableOnInteraction: true,
-  pauseOnMouseEnter:  true,
+  pauseOnMouseEnter:  true
 })
 const toLeft = ref(true) // 左滑标志，默认左滑
 const left = ref(0) // 滑动偏移值
@@ -275,11 +275,6 @@ function onSwitch (n: number) { // 分页切换图片
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-slider {
   display: inline-block;
   margin: 0 auto;
