@@ -33,26 +33,6 @@ const images = ref([
     title: 'image-5',
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
     link: ''
-  },
-  {
-    title: 'image-6',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/6.jpg',
-    link: ''
-  },
-  {
-    title: 'image-7',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/7.jpg',
-    link: ''
-  },
-  {
-    title: 'image-8',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/8.jpg',
-    link: ''
-  },
-  {
-    title: 'image-9',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/9.jpg',
-    link: ''
   }
 ])
 </script>
@@ -92,26 +72,6 @@ const images = ref([
   {
     title: 'image-5',
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
-    link: ''
-  },
-  {
-    title: 'image-6',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/6.jpg',
-    link: ''
-  },
-  {
-    title: 'image-7',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/7.jpg',
-    link: ''
-  },
-  {
-    title: 'image-8',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/8.jpg',
-    link: ''
-  },
-  {
-    title: 'image-9',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/9.jpg',
     link: ''
   }
 ])
