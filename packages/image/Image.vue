@@ -293,11 +293,6 @@ function onSwitchRight () {
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .mask-enter-active, .mask-leave-active {
   transition: opacity 0.3s ease-in-out;
 }

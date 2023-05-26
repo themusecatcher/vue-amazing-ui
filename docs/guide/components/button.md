@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const loading = ref(true)
-function onClick () {
+function onClick (e: Event) {
   console.log('click')
 }
 </script>
@@ -27,7 +27,7 @@ function onClick () {
 
 ```vue
 <script setup lang="ts">
-function onClick () {
+function onClick (e: Event) {
   console.log('click')
 }
 </script>
@@ -56,7 +56,7 @@ function onClick () {
 
 ```vue
 <script setup lang="ts">
-function onClick () {
+function onClick (e: Event) {
   console.log('click')
 }
 </script>
@@ -70,7 +70,7 @@ function onClick () {
 
 </details>
 
-## 自定义按钮宽高
+## 自定义宽高
 
 <Button :width="120" :height="40" @click="onClick">Default</Button>
 
@@ -79,7 +79,7 @@ function onClick () {
 
 ```vue
 <script setup lang="ts">
-function onClick () {
+function onClick (e: Event) {
   console.log('click')
 }
 </script>
@@ -103,7 +103,7 @@ function onClick () {
 <script setup lang="ts">
 import { ref } from 'vue'
 const loading = ref(true)
-function onClick () {
+function onClick (e: Event) {
   console.log('click')
 }
 </script>
@@ -122,3 +122,26 @@ function onClick () {
   gap: 8px;
 }
 </style>
+
+## APIs
+
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+name | 默认文本 | string &#124; slot | '按钮' | false
+type | 类型 | 'default' &#124; 'primary' &#124; 'danger' | 'default' | false
+effect | 悬浮变化效果，只有 type 为 default 时，effect 才生效 | 'fade' &#124; 'reverse' | ''
+size | 尺寸 | 'small' &#124; 'middle' &#124; 'large' | '_self' | false
+width | 宽度，优先级高于size属性，为0时自适应内容的宽度 | number | 0 | false
+height | 高度，优先级高于size属性 | number | 0 | false
+borderRadius | 圆角 | number | 5 | false
+route | 跳转目标URL地址 | {path?: string&#44; query?: object} | {} | false
+target | 如何打开目标URL，设置 route 时生效 | '_self' &#124; '_blank' | '_self' | false
+disabled | 是否禁用 | boolean | false | false
+loading | 是否加载中 | boolean | false | false
+center | 是否将按钮设置为块级元素并居中展示 | boolean | false | false
+
+## Events
+
+事件名称 | 说明 | 参数
+-- | -- | --
+click | 点击按钮时的回调，未设置 route 时生效 | (e: Event) => void

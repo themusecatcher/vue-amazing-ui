@@ -15,7 +15,7 @@ interface Props {
   allowClear?: boolean // 是否支持清除
   width?: number // 选择框宽度
   height?: number // 选择框高度
-  num?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
+  maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
   selectedValue?: number|string|null // （v-model）当前选中的option条目
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
   width: 120,
   height: 32,
-  num: 6,
+  maxDisplay: 6,
   selectedValue: null
 })
 const selectedName = ref()
@@ -130,7 +130,7 @@ function onChange (value: string|number, label: string, index: number) { // 选�
         class="m-options-panel"
         @mouseenter="onEnter"
         @mouseleave="onLeave"
-        :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${ num * height + 9 }px; width: ${width}px;`">
+        :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${ maxDisplay * height + 9 }px; width: ${width}px;`">
         <p
           v-for="(option, index) in options" :key="index"
           :class="['u-option', {'option-selected': option[label]===selectedName, 'option-hover': !option.disabled&&option[value]===hoverValue, 'option-disabled': option.disabled }]"
@@ -144,11 +144,6 @@ function onChange (value: string|number, label: string, index: number) { // 选�
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-select {
   position: relative;
   display: inline-block;

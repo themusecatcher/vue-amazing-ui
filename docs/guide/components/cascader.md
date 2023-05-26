@@ -422,3 +422,37 @@ function onChange (values: (number|string)[], labels: string[]) {
 ```
 
 </details>
+
+## APIs
+
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+options | 可选项数据源 | Option[] | [] | false
+selectedValue(v-model) | 级联选中项 | (number|string)[] | [] | false
+label | 下拉字典项的文本字段名 | string | 'label' | false
+value | 下拉字典项的值字段名 | string | 'value' | false
+children | 下拉字典项的后代字段名 | string | 'children' | false
+changeOnSelect | 当此项为true时，点选每级菜单选项值都会发生变化；否则只有选择第三级选项后选项值才会变化 | boolean | false | false
+zIndex | 下拉层级 | number | 1 | false
+gap | 级联下拉框相互间隙宽度，单位px | number | 8 | false
+width | 三级下拉各自宽度，单位px | number &#124; number[] | 120 | false
+height | 下拉框高度，单位px | number | 32 | false
+disabled | 三级各自是否禁用 | boolean &#124; boolean[] | false | false
+placeholder | 三级下拉各自占位文本 | string &#124; string[] | '请选择' | false
+maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
+
+## Option Type
+
+名称 | 说明 | 类型 | 必传
+-- | -- | -- | --
+label | 选项名 | string | false
+value | 选项值 | string &#124; number | false
+disabled | 是否禁用选项 | boolean | false
+children | 选项children数组 | Option[] | false
+[propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | -
+
+## Events
+
+事件名称 | 说明 | 参数
+-- | -- | --
+change | 选择完成后的回调 | (values: (number&#124;string)[], labels: string[]) => void

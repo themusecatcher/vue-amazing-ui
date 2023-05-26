@@ -1,25 +1,31 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
 import { computed } from 'vue'
+interface Query {
+  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
+}
+interface Route {
+  path?: string // 路由地址
+  query?: Query // 路由查询参数
+}
 interface Props {
-  name?: string // 按钮默认文本 string | slot
-  type?: string // 按钮类型
-  effect?: string // 按钮悬浮变化效果，只有 type 为 default 时，reverse 才生效
-  size?: string // 按钮尺寸
-  width?: number // 按钮宽度
-  height?: number // 按钮高度
-  borderRadius?: number // 按钮圆角
-  route?: object // 按钮跳转目标URL地址
-  target?: string // 按钮如何打开目标URL，设置route时才起作用，与a标签的target属性一致
-  disabled?: boolean // 按钮是否禁用
-  loading?: boolean // 按钮是否加载中
+  name?: string // 默认文本 string | slot
+  type?: 'default'|'primary'|'danger' // 类型
+  effect?: 'fade'|'reverse' // 悬浮变化效果，只有 type 为 default 时，effect 才生效
+  size?: 'small'|'middle'|'large' // 尺寸
+  width?: number // 宽度
+  height?: number // 高度
+  borderRadius?: number // 圆角
+  route?: Route // 跳转目标URL地址
+  target?: '_self'|'_blank' // 如何打开目标URL，设置route时才起作用，与a标签的target属性一致
+  disabled?: boolean // 是否禁用
+  loading?: boolean // 是否加载中
   center?: boolean // 是否将按钮设置为块级元素并居中展示
 }
 const props = withDefaults(defineProps<Props>(), {
-  name: '按钮', // string 或 v-slot
-  type: 'default', // 'default' 'primary' 'danger'
-  effect: 'fade', //  'fade' 'reverse'
-  size: 'middle', // 'small' 'middle' 'large'
+  name: '按钮',
+  type: 'default',
+  effect: 'fade',
+  size: 'middle',
   width: 0, // 优先级高于size属性，为0时自适应内容的宽度
   height: 0, // 优先级高于size属性
   borderRadius: 5,
@@ -36,43 +42,41 @@ const isRoute = computed(() => {
     return true
   }
 })
+function getUrl (route: Route) {
+  var targetUrl = route.path
+  if (route.query && JSON.stringify(route.query) !== '{}') {
+    const query = route.query
+    Object.keys(query).forEach((param, index) => {
+      if (index === 0) {
+        targetUrl = targetUrl + '?' + param + '=' + query[param]
+      } else {
+        targetUrl = targetUrl + '&' + param + '=' + query[param]
+      }
+    })
+  }
+  return targetUrl
+}
 </script>
 <template>
-  <span :class="['m-btn-wrap', {'center': center}]">
-    <RouterLink
-      v-if="isRoute"
-      :to="route"
-      :target="target"
-      :disabled="disabled"
-      class="m-btn fade"
-      :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled}]"
-      :style="`border-radius: ${borderRadius}px; width: ${width ? width + 'px':'auto'}; height: ${height ? height + 'px':'auto'}; line-height: ${height - 2}px;`">
-      <span class="u-text">
-        <slot>{{ name }}</slot>
-      </span>
-    </RouterLink>
+  <div :class="['m-btn-wrap', {'center': center}]">
     <a
-      v-else
-      @click.stop="$emit('click')"
+      @click.stop="isRoute ? () => false : $emit('click', $event)"
+      :href="getUrl(route)"
+      :target="isRoute ? target : '_self'"
       :disabled="disabled"
       class="m-btn"
-      :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled, 'm-btn-loading': loading}]"
+      :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled, 'm-btn-loading': !isRoute && loading}]"
       :style="`border-radius: ${borderRadius}px; width: ${width ? width + 'px':'auto'}; height: ${height ? height + 'px':'auto'}; line-height: ${height - 2}px;`">
-      <span class="m-loading-icon" :class="{'show-spin': loading}">
+      <span v-show="!isRoute" class="m-loading-icon" :class="{'show-spin': loading}">
         <span class="u-spin-circle" v-show="loading"></span>
       </span>
       <span class="u-text">
         <slot>{{ name }}</slot>
       </span>
     </a>
-  </span>
+  </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-btn-wrap {
   display: inline-block;
   .m-btn {

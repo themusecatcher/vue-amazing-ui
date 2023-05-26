@@ -70,11 +70,6 @@ function onChange (index: number) { // 点击切换选择步骤
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-steps-area {
   margin: 0px auto;
   .m-steps {

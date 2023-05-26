@@ -2,8 +2,8 @@
 import Select from '../select'
 import { ref, watchEffect } from 'vue'
 interface Option {
-  value?: string | number // 选项值
   label?: string // 选项名
+  value?: string | number // 选项值
   disabled?: boolean // 是否禁用选项
   children?: Option[] // 选项children数组
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
@@ -21,7 +21,7 @@ interface Props {
   height?: number // 下拉框高度
   disabled?: boolean|boolean[] // 三级各自是否禁用
   placeholder?: string|string[] // 三级下拉各自占位文本
-  num?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
+  maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
   height: 32,
   disabled: false,
   placeholder: '请选择',
-  num: 6,
+  maxDisplay: 6
 })
 const values = ref<(string|number)[]>([]) // 级联value值数组
 const labels = ref<string[]>([]) // 级联label文本数组
@@ -122,7 +122,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :disabled="Array.isArray(disabled) ? disabled[0] : disabled"
       :width="Array.isArray(width) ? width[0] : width"
       :height="height"
-      :num="num"
+      :maxDisplay="maxDisplay"
       :placeholder="Array.isArray(placeholder) ? placeholder[0] : placeholder"
       @change="onFirstChange" />
     <Select
@@ -134,7 +134,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :disabled="Array.isArray(disabled) ? disabled[1] : disabled"
       :width="Array.isArray(width) ? width[1] : width"
       :height="height"
-      :num="num"
+      :maxDisplay="maxDisplay"
       :placeholder="Array.isArray(placeholder) ? placeholder[1] : placeholder"
       @change="onSecondChange" />
     <Select
@@ -146,7 +146,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :disabled="Array.isArray(disabled) ? disabled[2] : disabled"
       :width="Array.isArray(width) ? width[2] : width"
       :height="height"
-      :num="num"
+      :maxDisplay="maxDisplay"
       :placeholder="Array.isArray(placeholder) ? placeholder[2]:placeholder"
       @change="onThirdChange" />
   </div>

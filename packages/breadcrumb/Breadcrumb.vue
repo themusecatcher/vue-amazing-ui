@@ -1,28 +1,41 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+interface Query {
+  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
+}
 interface Route {
   path: string // 路由地址
-  query?: object // 路由查询参数
+  query?: Query // 路由查询参数
   name: string // 路由名称
 }
 interface Props {
   routes: Array<Route> // 或者Route[] router的路由数组，没有 ? 时，即表示 required: true
   height?: number // 面包屑高度
   separator?: string // 自定义分隔符
+  target?: '_self'|'_blank' // 如何打开目标URL，当前窗口或新窗口
 }
 const props = withDefaults(defineProps<Props>(), {
   routes: () => [],
-  height: 60,
-  separator: ''
+  height: 36,
+  separator: '',
+  target: '_self'
 })
-
 const len = computed(() => {
   return props.routes.length
 })
-const router = useRouter()
-function goRouter (route: any): void {
-  router.push({ path: route.path, query: route.query || '' })
+function getUrl (route: Route) {
+  var targetUrl = route.path
+  if (route.query && JSON.stringify(route.query) !== '{}') {
+    const query = route.query
+    Object.keys(query).forEach((param, index) => {
+      if (index === 0) {
+        targetUrl = targetUrl + '?' + param + '=' + query[param]
+      } else {
+        targetUrl = targetUrl + '&' + param + '=' + query[param]
+      }
+    })
+  }
+  return targetUrl
 }
 </script>
 <template>
@@ -30,8 +43,9 @@ function goRouter (route: any): void {
     <div class="m-bread" v-for="(route, index) in routes" :key="index">
       <a
         :class="['u-route',{ active: index===len-1 }]"
-        @click="index === len - 1 ? () => false : goRouter(route)"
-        :title="route.name">
+        :href="index === len - 1 ? 'javascript:;' : getUrl(route)"
+        :title="route.name"
+        :target="index === len - 1 ? '_self' : target">
         {{ route.name || '--' }}
       </a>
       <template v-if="index !== len - 1">
@@ -43,11 +57,6 @@ function goRouter (route: any): void {
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-breadcrumb {
   .m-bread {
     display: inline-block;

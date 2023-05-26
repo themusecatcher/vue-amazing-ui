@@ -61,9 +61,9 @@ const routes = [
 </details>
 
 
-## 使用自定义分隔符 ('/')
+## 自定义分隔符
 
-<Breadcrumb :routes="routes" separator="/" :height="36" />
+<Breadcrumb :routes="routes" separator="/" />
 
 <details>
 <summary>查看代码</summary>
@@ -87,8 +87,57 @@ const routes = [
   ]
 </script>
 <template>
-  <Breadcrumb :routes="routes" separator="/" :height="36" />
+  <Breadcrumb :routes="routes" separator="/" />
 </template>
 ```
 
 </details>
+
+## 新页面打开目标链接
+
+<Breadcrumb :routes="routes" target="_blank" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+const routes = [
+    {
+      path: '/first', // 路由地址
+      query: { id: 1, tab: 2 }, // 路由参数
+      name: '一级路由' // 路由名称
+    },
+    {
+      path: '/second',
+      name: '二级路由'
+    },
+    {
+      path: '/third',
+      name: '三级路由三级路由三级路由三级路由三级路由三级路由三级路由'
+    }
+  ]
+</script>
+<template>
+  <Breadcrumb :routes="routes" target="_blank" />
+</template>
+```
+
+</details>
+
+## APIs
+
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+routes | 路由数组 | Route[] | [] | true
+height | 面包屑高度 | number | 36 | false
+separator | 分隔符，默认''时为箭头 | string | '' | false
+target | 如何打开目标URL | '_self' &#124; '_blank' | '_self' | false
+
+## Route Type
+
+名称 | 说明 | 类型 | 必传
+-- | -- | -- | --
+path | 路由地址 | string | true
+query | 路由查询参数 | [propName: string]: any | false
+name | 路由名称 | string | true

@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { requestAnimationFrame } from '../index'
 interface Props {
-  countdown?: number // 倒计时数值（countdown），必传，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(ms)
+  countdown?: number // 倒计时数值，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(ms)
   title?: string // 倒计时标题 string | v-slot
   format?: string // 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒)
   prefix?: string // 倒计时数值的前缀 string | v-slot
@@ -113,11 +113,6 @@ onMounted(() => {
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-countdown {
   display: inline-block;
   line-height: 1.571;

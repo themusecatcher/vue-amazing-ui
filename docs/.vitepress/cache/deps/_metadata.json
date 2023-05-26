@@ -1,59 +1,68 @@
 {
   "hash": "90ced763",
-  "browserHash": "b867c32c",
+  "browserHash": "f946fe04",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.3.4/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "56b45b19",
+      "fileHash": "4b5d8d8d",
       "needsInterop": false
     },
     "vue-router": {
       "src": "../../../../node_modules/.pnpm/vue-router@4.2.1_vue@3.3.4/node_modules/vue-router/dist/vue-router.mjs",
       "file": "vue-router.js",
-      "fileHash": "22a7789a",
+      "fileHash": "82833e74",
       "needsInterop": false
     },
     "@vuepic/vue-datepicker": {
       "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
       "file": "@vuepic_vue-datepicker.js",
-      "fileHash": "f3f8fb3a",
+      "fileHash": "888ebae7",
       "needsInterop": false
     },
     "swiper/vue": {
       "src": "../../../../node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/vue/swiper-vue.js",
       "file": "swiper_vue.js",
-      "fileHash": "3842e293",
+      "fileHash": "0d6c2548",
       "needsInterop": false
     },
     "swiper": {
       "src": "../../../../node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/swiper.esm.js",
       "file": "swiper.js",
-      "fileHash": "bbdacbd8",
+      "fileHash": "0f43a08d",
       "needsInterop": false
     },
     "@vueuse/integrations/useQRCode": {
       "src": "../../../../node_modules/.pnpm/@vueuse+integrations@10.1.2_qrcode@1.5.3_vue@3.3.4/node_modules/@vueuse/integrations/useQRCode.mjs",
       "file": "@vueuse_integrations_useQRCode.js",
-      "fileHash": "01593fb4",
+      "fileHash": "2dc20b2d",
       "needsInterop": false
     },
     "qrcode": {
       "src": "../../../../node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/browser.js",
       "file": "qrcode.js",
-      "fileHash": "af83b2f3",
+      "fileHash": "e02ef081",
       "needsInterop": true
+    },
+    "date-fns": {
+      "src": "../../../../node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/index.js",
+      "file": "date-fns.js",
+      "fileHash": "bf9de8ef",
+      "needsInterop": false
     }
   },
   "chunks": {
     "chunk-3F4Y7QWA": {
       "file": "chunk-3F4Y7QWA.js"
     },
-    "chunk-H4UJRISF": {
-      "file": "chunk-H4UJRISF.js"
+    "chunk-OF2FADSE": {
+      "file": "chunk-OF2FADSE.js"
     },
     "chunk-JKV2V35Q": {
       "file": "chunk-JKV2V35Q.js"
+    },
+    "chunk-H4UJRISF": {
+      "file": "chunk-H4UJRISF.js"
     },
     "chunk-DFKQJ226": {
       "file": "chunk-DFKQJ226.js"

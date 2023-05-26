@@ -119,3 +119,15 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Bao.
 ```
 
 </details>
+
+## APIs
+
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+name |  |  |
+
+## Events
+
+事件名称 | 说明 | 参数
+-- | -- | --
+change |  |

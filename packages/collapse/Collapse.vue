@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-// 使用 requestAnimationFrame 实现的等效 setTimeout
 import { rafTimeout } from '../index'
 interface Collapse {
   key?: string|number // 对应activeKey，如果没有传入key属性，则默认使用数据索引(0,1,2...)绑定
@@ -8,11 +7,11 @@ interface Collapse {
   text?: string // 面板内容 string | slot
 }
 interface Props {
-  collapseData: Collapse[] // 折叠面板数据，可使用 slot 替换对应索引的 header 和 text
-  activeKey?: number[] | number | string[] | string | null // 当前激活 tab 面板的 key
+  collapseData: Collapse[] // 折叠面板数据，可使用 v-slot 替换对应索引的 header 和 text
+  activeKey?: number[] | number | string[] | string | null // (v-model)当前激活 tab 面板的 key
   copyable?: boolean // 是否可复制面板内容
   lang?: string // 面板右上角固定内容，例如标识language string | slot
-  fontSize?: number // 面板标题和内容，字体大小
+  fontSize?: number // 面板标题和内容的字体大小
   headerFontSize?: number // 面板标题字体大小，优先级高于fontSize
   textFontSize?: number // 面板内容字体大小，优先级高于fontSize
   showArrow?: boolean // 是否展示面板上的箭头
@@ -22,9 +21,9 @@ const props = withDefaults(defineProps<Props>(), {
   activeKey: null,
   copyable: false,
   lang: '',
-  fontSize: 0,
-  headerFontSize: 14,
-  textFontSize: 14,
+  fontSize: 14,
+  headerFontSize: 0,
+  textFontSize: 0,
   showArrow: true
 })
 watchEffect(() => {
@@ -90,7 +89,7 @@ function onCopy (index: number) {
       v-for="(data, index) in collapseData" :key="index">
       <div class="u-collapse-header" @click="onClick(data.key || index)">
         <svg focusable="false" v-if="showArrow" class="u-arrow" data-icon="right" aria-hidden="true" viewBox="64 64 896 896"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
-        <div class="u-header" :class="{ml24: showArrow}" :style="`font-size: ${fontSize || headerFontSize}px;`">
+        <div class="u-header" :class="{ml24: showArrow}" :style="`font-size: ${headerFontSize || fontSize }px;`">
           <slot name="header" :header="data.header" :index="index">{{ data.header || '--' }}</slot>
         </div>
       </div>
@@ -99,7 +98,7 @@ function onCopy (index: number) {
           <slot name="lang" :lang="lang" :key="data.key || index">{{ lang }}</slot>
         </div>
         <Button size="small" class="u-copy" type="primary" @click="onCopy(index)">{{ copyTxt }}</Button>
-        <div ref="text" class="u-text" :style="`font-size: ${fontSize || textFontSize}px;`">
+        <div ref="text" class="u-text" :style="`font-size: ${textFontSize || fontSize}px;`">
           <slot name="text" :text="data.text" :key="data.key || index">{{ data.text }}</slot>
         </div>
       </div>
@@ -107,11 +106,6 @@ function onCopy (index: number) {
   </div>
 </template>
 <style lang="less" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .m-collapse {
   background-color: rgba(0, 0, 0, 0.02);
   border: 1px solid #d9d9d9;
