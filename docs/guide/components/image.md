@@ -13,23 +13,23 @@
 import { ref } from 'vue'
 const images = ref([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -37,62 +37,26 @@ const images = ref([
 
 ## 基本使用
 
-<Image :width="400" :height="300" src="https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg" />
+<Image :width="400" :height="300" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
 
 <details>
 <summary>查看代码</summary>
 
 ```vue
 <template>
-  <Image :width="400" :height="300" src="https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg" />
+  <Image :width="400" :height="300" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
 </template>
 ```
 
 </details>
 
-## 多张图片预览，支持键盘 (left / right / up / down) 按键切换
+## 多张图片预览
 
-<Image :width="400" :height="300" :src="images" />
+*可循环切换图片，并支持键盘 (left / right / up / down) 按键切换*
 
-<details>
-<summary>查看代码</summary>
+<br/>
 
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const images = ref([
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg',
-    name: 'image-1.jpg'
-  },
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/2.jpg',
-    name: 'image-2.jpg'
-  },
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/3.jpg',
-    name: 'image-3.jpg'
-  },
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/4.jpg',
-    name: 'image-4.jpg'
-  },
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/5.jpg',
-    name: 'image-5.jpg'
-  }
-])
-</script>
-<template>
-  <Image :width="400" :height="300" :src="images" />
-</template>
-```
-
-</details>
-
-## 多张图片预览，循环切换图片
-
-<Image :width="400" :height="300" loop :src="images" />
+<Image :width="400" :height="300" :src="images" loop />
 
 <details>
 <summary>查看代码</summary>
@@ -102,37 +66,41 @@ const images = ref([
 import { ref } from 'vue'
 const images = ref([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
     name: 'image-5.jpg'
   }
 ])
 </script>
 <template>
-  <Image :width="400" :height="300" loop :src="images" />
+  <Image :width="400" :height="300" :src="images" loop />
 </template>
 ```
 
 </details>
 
-## 预览文本设为 preview 同时图片覆盖容器
+## 自定义样式
 
-<Image :width="400" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg">
+*预览文本设为 preview，同时图片覆盖容器*
+
+<br/>
+
+<Image :width="400" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
   <template #preview>
     <p class="u-pre">preview</p>
   </template>
@@ -143,7 +111,7 @@ const images = ref([
 
 ```vue
 <template>
-  <Image :width="400" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg">
+  <Image :width="400" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
     <template #preview>
       <p class="u-pre">preview</p>
     </template>
@@ -153,15 +121,19 @@ const images = ref([
 
 </details>
 
-## 更改缩放比率和最大最小缩放比例
+## 自定义预览配置
+
+*更改缩放比率和最大最小缩放比例*
+
+<br/>
 
 <Image
   :width="400"
   :height="300"
-  :zoomRatio="0.2"
-  :minZoomScale="0.5"
-  :maxZoomScale="2"
-  src="https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg" />
+  :zoom-ratio="0.2"
+  :min-zoom-scale="0.5"
+  :max-zoom-scale="2"
+  src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.1/1.jpg" />
 
 <details>
 <summary>查看代码</summary>
@@ -169,12 +141,12 @@ const images = ref([
 ```vue
 <template>
   <Image
-  :width="400"
-  :height="300"
-  :zoomRatio="0.2"
-  :minZoomScale="0.5"
-  :maxZoomScale="2"
-  src="https://cdn.jsdelivr.net/gh/themusecatcher/images@0.0.1/1.jpg" />
+    :width="400"
+    :height="300"
+    :zoom-ratio="0.2"
+    :min-zoom-scale="0.5"
+    :max-zoom-scale="2"
+    src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
 </template>
 ```
 

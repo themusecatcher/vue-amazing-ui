@@ -1,23 +1,62 @@
 {
-  "hash": "3fd79e54",
-  "browserHash": "b7202b7f",
+  "hash": "90ced763",
+  "browserHash": "b867c32c",
   "optimized": {
     "vue": {
-      "src": "../../../../node_modules/.pnpm/vue@3.3.2/node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "src": "../../../../node_modules/.pnpm/vue@3.3.4/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "a117be4e",
+      "fileHash": "56b45b19",
       "needsInterop": false
     },
-    "vue-amazing-ui": {
-      "src": "../../../../node_modules/.pnpm/vue-amazing-ui@0.0.25/node_modules/vue-amazing-ui/dist/vue-amazing-ui.js",
-      "file": "vue-amazing-ui.js",
-      "fileHash": "571e01ee",
+    "vue-router": {
+      "src": "../../../../node_modules/.pnpm/vue-router@4.2.1_vue@3.3.4/node_modules/vue-router/dist/vue-router.mjs",
+      "file": "vue-router.js",
+      "fileHash": "22a7789a",
       "needsInterop": false
+    },
+    "@vuepic/vue-datepicker": {
+      "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
+      "file": "@vuepic_vue-datepicker.js",
+      "fileHash": "f3f8fb3a",
+      "needsInterop": false
+    },
+    "swiper/vue": {
+      "src": "../../../../node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/vue/swiper-vue.js",
+      "file": "swiper_vue.js",
+      "fileHash": "3842e293",
+      "needsInterop": false
+    },
+    "swiper": {
+      "src": "../../../../node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/swiper.esm.js",
+      "file": "swiper.js",
+      "fileHash": "bbdacbd8",
+      "needsInterop": false
+    },
+    "@vueuse/integrations/useQRCode": {
+      "src": "../../../../node_modules/.pnpm/@vueuse+integrations@10.1.2_qrcode@1.5.3_vue@3.3.4/node_modules/@vueuse/integrations/useQRCode.mjs",
+      "file": "@vueuse_integrations_useQRCode.js",
+      "fileHash": "01593fb4",
+      "needsInterop": false
+    },
+    "qrcode": {
+      "src": "../../../../node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/browser.js",
+      "file": "qrcode.js",
+      "fileHash": "af83b2f3",
+      "needsInterop": true
     }
   },
   "chunks": {
-    "chunk-NLL2AYAR": {
-      "file": "chunk-NLL2AYAR.js"
+    "chunk-3F4Y7QWA": {
+      "file": "chunk-3F4Y7QWA.js"
+    },
+    "chunk-H4UJRISF": {
+      "file": "chunk-H4UJRISF.js"
+    },
+    "chunk-JKV2V35Q": {
+      "file": "chunk-JKV2V35Q.js"
+    },
+    "chunk-DFKQJ226": {
+      "file": "chunk-DFKQJ226.js"
     }
   }
 }
