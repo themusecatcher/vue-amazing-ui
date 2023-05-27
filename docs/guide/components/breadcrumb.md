@@ -23,7 +23,7 @@ const routes = [
     },
     {
       path: '/third',
-      name: '三级路由三级路由三级路由三级路由三级路由三级路由三级路由'
+      name: '三级路由三级路由三级路由三级路由'
     }
   ]
 </script>
@@ -49,7 +49,7 @@ const routes = [
     },
     {
       path: '/third',
-      name: '三级路由三级路由三级路由三级路由三级路由三级路由三级路由'
+      name: '三级路由三级路由三级路由三级路由'
     }
   ]
 </script>
@@ -59,7 +59,6 @@ const routes = [
 ```
 
 </details>
-
 
 ## 自定义分隔符
 
@@ -82,12 +81,44 @@ const routes = [
     },
     {
       path: '/third',
-      name: '三级路由三级路由三级路由三级路由三级路由三级路由三级路由'
+      name: '三级路由三级路由三级路由三级路由'
     }
   ]
 </script>
 <template>
   <Breadcrumb :routes="routes" separator="/" />
+</template>
+```
+
+</details>
+
+## 自定义样式
+
+<Breadcrumb :routes="routes" :font-size="16" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+const routes = [
+    {
+      path: '/first', // 路由地址
+      query: { id: 1, tab: 2 }, // 路由参数
+      name: '一级路由' // 路由名称
+    },
+    {
+      path: '/second',
+      name: '二级路由'
+    },
+    {
+      path: '/third',
+      name: '三级路由三级路由三级路由三级路由三级路由'
+    }
+  ]
+</script>
+<template>
+  <Breadcrumb :routes="routes" :font-size="16" />
 </template>
 ```
 
@@ -114,7 +145,7 @@ const routes = [
     },
     {
       path: '/third',
-      name: '三级路由三级路由三级路由三级路由三级路由三级路由三级路由'
+      name: '三级路由三级路由三级路由三级路由'
     }
   ]
 </script>
@@ -130,7 +161,9 @@ const routes = [
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 routes | 路由数组 | Route[] | [] | true
+fontSize | 字体大小，单位px | number | 14 | false
 height | 面包屑高度 | number | 36 | false
+maxWidth | 文本最大显示宽度，超出后显示省略号，单位px | 180 | false
 separator | 分隔符，默认''时为箭头 | string | '' | false
 target | 如何打开目标URL | '_self' &#124; '_blank' | '_self' | false
 

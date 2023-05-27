@@ -10,15 +10,20 @@ interface Route {
 }
 interface Props {
   routes: Array<Route> // 或者Route[] router的路由数组，没有 ? 时，即表示 required: true
+  fontSize: number // 字体大小
   height?: number // 面包屑高度
+  maxWidth?: number // 文本最大显示宽度，超出后显示省略号
   separator?: string // 自定义分隔符
   target?: '_self'|'_blank' // 如何打开目标URL，当前窗口或新窗口
 }
 const props = withDefaults(defineProps<Props>(), {
   routes: () => [],
-  height: 36,
+  fontSize: 14,
+  height: 21,
+  maxWidth: 180,
   separator: '',
   target: '_self'
+  
 })
 const len = computed(() => {
   return props.routes.length
@@ -43,6 +48,7 @@ function getUrl (route: Route) {
     <div class="m-bread" v-for="(route, index) in routes" :key="index">
       <a
         :class="['u-route',{ active: index===len-1 }]"
+        :style="`font-size: ${fontSize}px; max-width: ${maxWidth}px;`"
         :href="index === len - 1 ? 'javascript:;' : getUrl(route)"
         :title="route.name"
         :target="index === len - 1 ? '_self' : target">
@@ -58,41 +64,41 @@ function getUrl (route: Route) {
 </template>
 <style lang="less" scoped>
 .m-breadcrumb {
+  display: flex;
+  align-items: center;
   .m-bread {
-    display: inline-block;
-    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.5;
     .u-route {
-      height: 22px;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 22px;
-      color: #333;
-      display: inline-block;
-      vertical-align: middle;
-      max-width: 240px;
+      color: rgba(0, 0, 0, 0.45);
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       cursor: pointer;
+      padding: 0 4px;
+      border-radius: 4px;
+      transition: color 0.2s, background-color 0.2s;
       &:hover {
-        color: @themeColor;
+        background-color: rgba(0, 0, 0, 0.05);
+        color: rgba(0, 0, 0, 0.88);
       }
     }
     .active {
-      color: @themeColor;
+      color: rgba(0, 0, 0, 0.88);
       cursor: default;
+      &:hover {
+        background-color: transparent;
+      }
     }
     .u-separator {
-      display: inline-block;
-      vertical-align: middle;
-      margin: 0 6px;
+      margin: 0 4px;
+      color: rgba(0, 0, 0, 0.45);
     }
     .u-arrow {
-      .u-separator();
-      margin: 0 5px;
       width: 12px;
       height: 12px;
-      fill: inherit;
+      fill: rgba(0, 0, 0, 0.45);
     }
   }
   .assist {

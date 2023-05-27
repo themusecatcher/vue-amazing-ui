@@ -123,7 +123,7 @@ function downloadFile(url, name) {
   };
   xhr.send();
 }
-const _withScopeId$h = (n) => (pushScopeId("data-v-c2fbc0e8"), n = n(), popScopeId(), n);
+const _withScopeId$h = (n) => (pushScopeId("data-v-2a630eda"), n = n(), popScopeId(), n);
 const _hoisted_1$v = ["href", "title", "target"];
 const _hoisted_2$r = {
   key: 0,
@@ -146,7 +146,9 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
   __name: "Breadcrumb",
   props: {
     routes: { default: () => [] },
-    height: { default: 36 },
+    fontSize: { default: 14 },
+    height: { default: 21 },
+    maxWidth: { default: 180 },
     separator: { default: "" },
     target: { default: "_self" }
   },
@@ -181,10 +183,11 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
           }, [
             createElementVNode("a", {
               class: normalizeClass(["u-route", { active: index === len.value - 1 }]),
+              style: normalizeStyle(`font-size: ${_ctx.fontSize}px; max-width: ${_ctx.maxWidth}px;`),
               href: index === len.value - 1 ? "javascript:;" : getUrl(route),
               title: route.name,
               target: index === len.value - 1 ? "_self" : _ctx.target
-            }, toDisplayString(route.name || "--"), 11, _hoisted_1$v),
+            }, toDisplayString(route.name || "--"), 15, _hoisted_1$v),
             index !== len.value - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
               _ctx.separator ? (openBlock(), createElementBlock("span", _hoisted_2$r, toDisplayString(_ctx.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$p, _hoisted_5$j))
             ], 64)) : createCommentVNode("", true)
@@ -195,7 +198,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Breadcrumb_vue_vue_type_style_index_0_scoped_c2fbc0e8_lang = "";
+const Breadcrumb_vue_vue_type_style_index_0_scoped_2a630eda_lang = "";
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -203,7 +206,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-c2fbc0e8"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-2a630eda"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };
@@ -6109,7 +6112,7 @@ const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-
 Tooltip.install = (app) => {
   app.component(Tooltip.__name, Tooltip);
 };
-const _withScopeId$1 = (n) => (pushScopeId("data-v-bc478cc3"), n = n(), popScopeId(), n);
+const _withScopeId$1 = (n) => (pushScopeId("data-v-0d7d7aea"), n = n(), popScopeId(), n);
 const _hoisted_1$2 = { class: "m-upload-list" };
 const _hoisted_2$2 = { class: "m-upload" };
 const _hoisted_3$1 = ["onDrop", "onClick"];
@@ -6369,7 +6372,6 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
                   }, ["stop"])),
                   accept: _ctx.accept,
                   multiple: _ctx.multiple,
-                  async: "",
                   onChange: ($event) => onUpload($event, n - 1),
                   style: { "display": "none" }
                 }, null, 40, _hoisted_4$1),
@@ -6431,8 +6433,8 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Upload_vue_vue_type_style_index_0_scoped_bc478cc3_lang = "";
-const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-bc478cc3"]]);
+const Upload_vue_vue_type_style_index_0_scoped_0d7d7aea_lang = "";
+const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-0d7d7aea"]]);
 Upload.install = (app) => {
   app.component(Upload.__name, Upload);
 };

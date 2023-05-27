@@ -195,7 +195,7 @@ function onError (content: any) {
           @dragover.stop.prevent
           @drop.stop.prevent="disabled ? () => false : onDrop($event, n-1)"
           @click="disabled ? () => false : onClick(n-1)">
-          <input ref="uploadInput" type="file" @click.stop :accept="accept" :multiple="multiple" async @change="onUpload($event, n-1)" style="display: none;" />
+          <input ref="uploadInput" type="file" @click.stop :accept="accept" :multiple="multiple" @change="onUpload($event, n-1)" style="display: none;" />
           <div>
             <svg class="u-plus" focusable="false" data-icon="plus" aria-hidden="true" viewBox="64 64 896 896"><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path></svg>
             <p class="u-tip">
