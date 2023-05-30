@@ -200,7 +200,7 @@ function onKnow () { // “我知道了”按钮回调
 
 </details>
 
-## Success
+## success
 
 <Button type="primary" @click="showSuccessModal('Some descriptions ...')">Success</Button>
 
@@ -316,12 +316,21 @@ function onKnow () { // “我知道了”按钮回调
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-name |  |  |
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+width | 提示框宽度，单位px | number | 420 | false
+cancelText | 取消按钮文字 | string | '取消' | false
+okText | 确认按钮文字 | string | '确定' | false
+noticeText | 通知按钮文字 | string | '知道了' | false
+center | 水平垂直居中：true，固定高度水平居中：false | boolean | true | false
+top | 固定高度水平居中时，距顶部高度，单位px | number | 100 | false
+loading | 加载中 | boolean | false | false
+visible | 是否可见 | boolean | false | false
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+cancel | 点击遮罩层或取消按钮的回调 | () => void
+ok | 点击确定回调 | () => void
+know | 点击知道了的回调 | () => void

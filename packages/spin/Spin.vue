@@ -1,9 +1,9 @@
 <script setup lang="ts">
 interface Props {
   spinning?: boolean // 是否为加载中状态
-  size?: string // 组件大小，可选 small default large
-  tip?: string // 描述文案 string
-  indicator?: 'dot'|'static-circle'|'dynamic-circle' // 加载指示符 string
+  size?: 'small'|'default'|'large' // 组件大小，可选 small default large
+  tip?: string // 描述文案
+  indicator?: 'dot'|'static-circle'|'dynamic-circle' // 加载指示符
 }
 withDefaults(defineProps<Props>(), {
   spinning: true,

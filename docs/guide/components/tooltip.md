@@ -71,12 +71,11 @@
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-name |  |  |
-
-## Events
-
-事件名称 | 说明 | 参数
--- | -- | --
-change |  |
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+maxWidth | 提示框内容最大宽度，单位px | number | 120 | false
+content | 展示的文本 | string | '暂无内容' | false
+title | 提示的文本 | string | '暂无提示' | false
+fontSize | 提示文本字体大小，单位px | number | 14 | false
+color | 提示文本字体颜色 | string | '#FFF' | false
+backgroundColor | 提示框背景色 | string | 'rgba(0,0,0,.85)' | false

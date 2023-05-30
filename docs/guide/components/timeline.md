@@ -200,12 +200,15 @@ const timelineData = ref([
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+timelineData | 时间轴内容数组 | Data[] | [] | true
+width | 时间轴区域总宽度，单位px | number | 360 | false
+lineStyle | 时间线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid' | false
+
+## Data Type
+
+名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-name |  |  |
-
-## Events
-
-事件名称 | 说明 | 参数
--- | -- | --
-change |  |
+desc | 文字描述 | string &#124; slot | true
+color | 圆圈颜色，可选四种预置颜色：blue、green、red、gray 或者使用颜色值 | string &#124; slot | false

@@ -5,7 +5,7 @@ interface Gradient {
   '100%'?: string
   from?: string
   to?: string
-  direction?: string
+  direction?: 'right'|'left'
 }
 interface Props {
   width?: number|string // 进度条总宽度

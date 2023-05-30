@@ -178,12 +178,9 @@ const spinning = ref(true)
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-name |  |  |
-
-## Events
-
-事件名称 | 说明 | 参数
--- | -- | --
-change |  |
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+spinning | 是否为加载中状态 | boolean | true | false
+size | 组件大小 | 'small' &#124; 'default' &#124; 'large' | 'default' | false
+tip | 描述文案 | string | '' | false
+indicator | 加载指示符 | 'dot' &#124; 'static-circle' &#124; 'dynamic-circle' | 'dot' | false

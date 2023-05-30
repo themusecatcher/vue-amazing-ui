@@ -7,7 +7,7 @@ interface Props {
   character?: string // 自定义字符，string | slot，预置 'star-outlined' 'star-filled' 'heart-outlined' 'heart-filled' 四种svg图标
   size?: number // 字符时是字体高度，图标时是图片大小
   color?: string // 字符选中颜色
-  gap?: number // 字符间距
+  gap?: number // 字符间距，单位px
   disabled?: boolean // 只读，无法进行交互
   value?: number // v-model 当前数，受控值 1,2,3...
 }

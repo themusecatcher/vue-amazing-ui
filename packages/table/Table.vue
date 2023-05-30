@@ -4,13 +4,13 @@ import Empty from '../empty'
 import Pagination from '../pagination'
 interface Column {
   title?: string // 列头显示文字
-  width?: number // 列宽度
-  dataIndex?: string // 列数据字符索引
+  width: number|string // 列宽度
+  dataIndex: string // 列数据字符索引
   slot?: string // 列插槽名称索引
 }
 interface Pagination {
-  page: number
-  pageSize: number
+  page: number // 当前页码
+  pageSize: number // 每页条数
 }
 interface Props {
   columns?: Column[] // 表格列的配置项
@@ -19,7 +19,7 @@ interface Props {
   showPagination?: boolean // 是否显示分页器
   hideOnSinglePage?: boolean // 只有一页时是否隐藏分页器
   total?: number // 数据总数
-  loading?: boolean // 页面是否加载中
+  loading?: boolean // 是否加载中
 }
 withDefaults(defineProps<Props>(), {
   columns: () => [],
@@ -40,7 +40,7 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页器回�
     <table class="m-table">
       <thead>
         <tr class="m-tr">
-          <th class="m-th" :width="item.width" v-for="(item, index) in columns" :key="index">
+          <th class="m-th" :style="`width: ${typeof item.width === 'number' ? item.width + 'px' : item.width};`" v-for="(item, index) in columns" :key="index">
             {{ item.title }}
           </th>
         </tr>

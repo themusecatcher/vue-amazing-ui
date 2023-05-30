@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Props {
   title?: string // 消息的标题
-  duration?: number // 自动关闭的延时时长,单位ms，默认4500ms；设置0时，不自动关闭
+  duration?: number // 自动关闭的延时时长，单位ms，默认4500ms；设置0时，不自动关闭
   top?: number // 消息从顶部弹出时，距离顶部的位置，单位px
   bottom?: number // 消息从底部弹出时，距离底部的位置，单位px
   placement?: 'topLeft'|'topRight'|'bottomLeft'|'bottomRight' // 消息弹出位置
@@ -31,9 +31,9 @@ const hideTimers = ref<any[]>([])
 const notificationData = ref<Notification[]>([])
 
 const clear = computed(() => {
-    // 所有提示是否已经全部变为false
-    return hideIndex.value.length === notificationData.value.length
-  })
+  // 所有提示是否已经全部变为false
+  return hideIndex.value.length === notificationData.value.length
+})
 watch(clear, (to, from) => { // 所有提示都消失后重置
   if (!from && to) {
     resetTimer.value = rafTimeout(() => {

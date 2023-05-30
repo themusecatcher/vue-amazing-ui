@@ -15,11 +15,11 @@ interface Props {
   images: Image[] // 轮播图片数组
   width?: number|string // 图片宽度
   height?: number|string // 图片高度
-  type?: string // banner轮播图模式 | carousel走马灯模式
+  type?: 'banner'|'carousel' // banner轮播图模式 | carousel走马灯模式
   navigation?: boolean // 是否显示导航
   delay?: number // 自动切换的时间间隔（type: banner时生效），单位ms
   swipe?: boolean // 是否可以鼠标拖动
-  preloaderColor?: string // 预加载时的loading颜色
+  preloaderColor?: 'theme'|'white'|'black' // 预加载时的loading颜色
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],

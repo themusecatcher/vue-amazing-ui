@@ -310,12 +310,24 @@ watchEffect(() => {
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+options | 单选元素数据 | Option[] | [] | true
+disabled | 是否禁用 | boolean | false | false
+vertical | 是否垂直排列 | boolean | false | false
+value(v-model) | 当前选中的值 | any | null | false
+gap | 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距 | number | 8 | false
+
+## Option Type
+
+名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-name |  |  |
+label | 选项名 | string | true
+value | 选项值 | any | true
+disabled | 是否禁用单个单选器 | boolean | false
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+change | 选项变化时的回调函数 | (value: any) => void

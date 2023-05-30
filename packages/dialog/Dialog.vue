@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   okText: '确定',
   footer: false,
   center: true,
-  top:  100,
+  top: 100,
   loading: false,
   visible:  false
 })
@@ -47,7 +47,7 @@ const dialogHeight = computed(() => {
 watch(
   () => props.visible,
   (to) => {
-    if (!to) { // 重置全屏显示
+    if (to) { // 重置全屏显示
       fullScreen.value = false
     }
   }
@@ -74,7 +74,9 @@ function onConfirm () {
 <template>
   <Transition>
     <div class="m-dialog-mask" v-show="visible" @click.self="onBlur">
-      <div :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']" :style="`width: ${dialogWidth}; height: ${dialogHeight}; top: ${!fullScreen ? (!center ? top + 'px':'50%'):0}`">
+      <div
+        :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']"
+        :style="`width: ${dialogWidth}; height: ${dialogHeight}; top: ${center ? '50%' : (fullScreen ? 0:top + 'px')};`">
         <div class="m-dialog-content" :class="{loading: loading}">
           <div class="m-spin-dot" v-show="loading">
             <span class="u-dot-item"></span>
@@ -137,7 +139,7 @@ function onConfirm () {
   background: rgba(0, 0, 0, 0.45);
   .m-dialog {
     margin: 0 auto;
-    transition: all .3s ease;
+    transition: all .3s ease-in-out;
     .m-spin-dot { // 绝对定位，并设置水平垂直居中
       position: absolute;
       display: inline-block;

@@ -10,7 +10,7 @@ export default {
 <script setup lang="ts">
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { ref, computed, watch } from 'vue'
+import { computed } from 'vue'
 interface Props {
   width?: number // 日期选择器宽度
   mode?: 'time'|'date'|'week'|'month'|'year' // 选择器模式，可选：时间time，日期date，周week，月month，年year
@@ -20,7 +20,7 @@ interface Props {
   // multiCalendars?: boolean // 范围选择器是否使用双日期面板
   // flow?: any[] // 定义选择顺序 ("calendar" | "time" | "month" | "year" | "minutes" | "hours" | "seconds")[]
   // dark?: boolean // 样式主题是否使用黑色
-  date?: number|number[]|{month:number,year:number}|{hours:number,minutes:number,seconds:number} // （v-model）当前选中日期
+  modelType?: 'timestamp'|'format', // v-model 值类型，可选时间戳(timestamp)、字符串(format)，mode为week和year时，该配置不生效
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 180,
@@ -38,20 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   // multiCalendars: false,
   // flow: () => [],
   // dark: false,
-  date: 0
-})
-const date = ref(props.date)
-watch(date, (to) => {
-  // console.log('s to:', to)
-  emit('update:date', to)
-})
-const emit = defineEmits(['update:date'])
-const modelType = computed(() => {
-  if (['time', 'month', 'year'].includes(props.mode)) {
-    return ''
-  } else {
-    return 'timestamp'
-  }
+  modelType: 'format'
 })
 const time = computed(() => {
   return props.mode === 'time'
@@ -75,7 +62,6 @@ const year = computed(() => {
 <template>
   <div class="m-datepicker" :style="`width: ${width}px;`">
     <VueDatePicker
-      v-model="date"
       locale="zh-CN"
       :month-change-on-scroll="false"
       :enable-time-picker="showTime"
@@ -83,12 +69,12 @@ const year = computed(() => {
       :week-picker="week"
       :month-picker="month"
       :year-picker="year"
+      now-button-label="今天"
       :show-now-button="showToday"
-      auto-apply
+      :auto-apply="true"
       text-input
       :model-type="modelType"
       :day-names="['一', '二', '三', '四', '五', '六', '七']"
-      now-button-label="今天"
       v-bind="$attrs">
     </VueDatePicker>
   </div>

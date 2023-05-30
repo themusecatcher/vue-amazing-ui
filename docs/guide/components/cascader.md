@@ -63,6 +63,119 @@ const options = ref([
     ]
   }
 ])
+const optionsCustom = ref([
+  {
+    code: '1',
+    name: '北京',
+    items: [
+      {
+        code: '11',
+        name: '北京市',
+        items: [
+          {
+            code: '111',
+            name: '东城区'
+          },
+          {
+            code: '112',
+            name: '西城区'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    code: '2',
+    name: '浙江',
+    items: [
+      {
+        code: '21',
+        name: '杭州市',
+        items: [
+          {
+            code: '211',
+            name: '西湖区'
+          },
+          {
+            code: '212',
+            name: '余杭区'
+          }
+        ]
+      },
+      {
+        code: '22',
+        name: '湖州市',
+        items: [
+          {
+            code: '221',
+            name: '吴兴区'
+          },
+          {
+            code: '222',
+            name: '安吉区'
+          }
+        ]
+      }
+    ]
+  }
+])
+const optionsDisabled = ref([
+  {
+    value: '1',
+    label: '北京',
+    disabled: true,
+    children: [
+      {
+        value: '11',
+        label: '北京市',
+        children: [
+          {
+            value: '111',
+            label: '东城区'
+          },
+          {
+            value: '112',
+            label: '西城区'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    value: '2',
+    label: '浙江',
+    children: [
+      {
+        value: '21',
+        label: '杭州市',
+        children: [
+          {
+            value: '211',
+            label: '西湖区'
+          },
+          {
+            value: '212',
+            label: '余杭区'
+          }
+        ]
+      },
+      {
+        value: '22',
+        label: '湖州市',
+        children: [
+          {
+            value: '221',
+            label: '吴兴区'
+          },
+          {
+            value: '222',
+            label: '安吉区'
+          }
+        ]
+      }
+    ]
+  }
+])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
@@ -75,7 +188,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 ## 基本使用
 
-<Cascader :options="options" v-model:selectedValue="selectedValue" />
+<Cascader :options="options" v-model:selected-value="selectedValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -145,18 +258,18 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Cascader :options="options" v-model:selectedValue="selectedValue" />
+  <Cascader :options="options" v-model:selected-value="selectedValue" />
 </template>
 ```
 
 </details>
 
-## 点击任一级下拉时，选项值都会发生变化
+## 选择即改变
 
 <Cascader
   :options="options"
-  v-model:selectedValue="selectedValue"
-  changeOnSelect
+  v-model:selected-value="selectedValue"
+  change-on-select
   @change="onChange" />
 
 <details>
@@ -233,19 +346,106 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="options"
-    v-model:selectedValue="selectedValue"
-    changeOnSelect
+    v-model:selected-value="selectedValue"
+    change-on-select
     @change="onChange" />
 </template>
 ```
 
 </details>
 
-## 只禁用第一级下拉
+## 禁用
 
 <Cascader
   :options="options"
-  v-model:selectedValue="selectedValue"
+  v-model:selected-value="selectedValue"
+  disabled />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+  {
+    value: '1',
+    label: '北京',
+    children: [
+      {
+        value: '11',
+        label: '北京市',
+        children: [
+          {
+            value: '111',
+            label: '东城区'
+          },
+          {
+            value: '112',
+            label: '西城区'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    value: '2',
+    label: '浙江',
+    children: [
+      {
+        value: '21',
+        label: '杭州市',
+        children: [
+          {
+            value: '211',
+            label: '西湖区'
+          },
+          {
+            value: '212',
+            label: '余杭区'
+          }
+        ]
+      },
+      {
+        value: '22',
+        label: '湖州市',
+        children: [
+          {
+            value: '221',
+            label: '吴兴区'
+          },
+          {
+            value: '222',
+            label: '安吉区'
+          }
+        ]
+      }
+    ]
+  }
+])
+const selectedValue = ref(['2', '21', '212'])
+</script>
+<template>
+  <Cascader
+    :options="options"
+    v-model:selected-value="selectedValue"
+    disabled />
+</template>
+```
+
+</details>
+
+## 禁用某一级
+
+*只禁用第一级：disabled:[true]*
+
+*禁用前两级：disabled:[true, true]*
+
+<br/>
+
+<Cascader
+  :options="options"
+  v-model:selected-value="selectedValue"
   :disabled="[true]"
   @change="onChange" />
 
@@ -323,7 +523,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="options"
-    v-model:selectedValue="selectedValue"
+    v-model:selected-value="selectedValue"
     :disabled="[true]"
     @change="onChange" />
 </template>
@@ -331,11 +531,104 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 </details>
 
-## 自定义每级宽度和间隙
+## 禁用选项
+
+*只需指定 options 里的 disabled 字段*
+
+<br/>
+
+<Cascader
+  :options="optionsDisabled"
+  v-model:selected-value="selectedValue"
+  @change="onChange" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const optionsDisabled = ref([
+  {
+    value: '1',
+    label: '北京',
+    disabled: true,
+    children: [
+      {
+        value: '11',
+        label: '北京市',
+        children: [
+          {
+            value: '111',
+            label: '东城区'
+          },
+          {
+            value: '112',
+            label: '西城区'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    value: '2',
+    label: '浙江',
+    children: [
+      {
+        value: '21',
+        label: '杭州市',
+        children: [
+          {
+            value: '211',
+            label: '西湖区'
+          },
+          {
+            value: '212',
+            label: '余杭区'
+          }
+        ]
+      },
+      {
+        value: '22',
+        label: '湖州市',
+        children: [
+          {
+            value: '221',
+            label: '吴兴区'
+          },
+          {
+            value: '222',
+            label: '安吉区'
+          }
+        ]
+      }
+    ]
+  }
+])
+const selectedValue = ref(['2', '21', '212'])
+watchEffect(() => {
+  console.log('selectedValue:', selectedValue.value)
+})
+function onChange (values: (number|string)[], labels: string[]) {
+  console.log('values:', values)
+  console.log('labels:', labels)
+}
+</script>
+<template>
+  <Cascader
+    :options="optionsDisabled"
+    v-model:selected-value="selectedValue"
+    @change="onChange" />
+</template>
+```
+
+</details>
+
+## 自定义样式
 
 <Cascader
   :options="options"
-  v-model:selectedValue="selectedValue"
+  v-model:selected-value="selectedValue"
   :width="120"
   :gap="12"
   @change="onChange" />
@@ -414,9 +707,103 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="options"
-    v-model:selectedValue="selectedValue"
+    v-model:selected-value="selectedValue"
     :width="120"
     :gap="12"
+    @change="onChange" />
+</template>
+```
+
+</details>
+
+## 自定义字段名
+
+<Cascader
+  :options="optionsCustom"
+  v-model:selected-value="selectedValue"
+  label="name"
+  value="code"
+  children="items"
+  @change="onChange" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const optionsCustom = ref([
+  {
+    code: '1',
+    name: '北京',
+    items: [
+      {
+        code: '11',
+        name: '北京市',
+        items: [
+          {
+            code: '111',
+            name: '东城区'
+          },
+          {
+            code: '112',
+            name: '西城区'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    code: '2',
+    name: '浙江',
+    items: [
+      {
+        code: '21',
+        name: '杭州市',
+        items: [
+          {
+            code: '211',
+            name: '西湖区'
+          },
+          {
+            code: '212',
+            name: '余杭区'
+          }
+        ]
+      },
+      {
+        code: '22',
+        name: '湖州市',
+        items: [
+          {
+            code: '221',
+            name: '吴兴区'
+          },
+          {
+            code: '222',
+            name: '安吉区'
+          }
+        ]
+      }
+    ]
+  }
+])
+const selectedValue = ref(['2', '21', '212'])
+watchEffect(() => {
+  console.log('selectedValue:', selectedValue.value)
+})
+function onChange (values: (number|string)[], labels: string[]) {
+  console.log('values:', values)
+  console.log('labels:', labels)
+}
+</script>
+<template>
+  <Cascader
+    :options="optionsCustom"
+    v-model:selected-value="selectedValue"
+    label="name"
+    value="code"
+    children="items"
     @change="onChange" />
 </template>
 ```

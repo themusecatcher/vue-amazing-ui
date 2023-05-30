@@ -18,7 +18,7 @@ interface Props {
     并不是所有位置都可以缺损，像最明显的三个角上的方框，直接影响初始定位。中间零散的部分是内容编码，可以容忍缺损。
     当二维码的内容编码携带信息比较少的时候，也就是链接比较短的时候，设置不同的纠错等级，生成的图片不会发生变化。
   */
-  errorLevel?: string // 二维码纠错等级
+  errorLevel?: 'L'|'M'|'Q'|'H' // 二维码纠错等级
 }
 const props = withDefaults(defineProps<Props>(), {
   value: '',

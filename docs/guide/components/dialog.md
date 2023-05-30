@@ -88,9 +88,9 @@ function onClose () {
 
 </details>
 
-## 弹窗高度自定义的对话框
+## 内容高度自定义
 
-<Button type="primary" @click="showCustomHeightDialog">弹窗高度自定义的对话框</Button>
+<Button type="primary" @click="showCustomHeightDialog">内容高度自定义</Button>
 <Dialog
   :height="360"
   @close="onClose"
@@ -116,7 +116,7 @@ function onClose () {
 }
 </script>
 <template>
-  <Button type="primary" @click="showCustomHeightDialog">弹窗高度自定义的对话框</Button>
+  <Button type="primary" @click="showCustomHeightDialog">内容高度自定义</Button>
   <Dialog
     :height="360"
     @close="onClose"
@@ -131,9 +131,9 @@ function onClose () {
 
 </details>
 
-## 有底部按钮的对话框
+## 有底部按钮
 
-<Button type="primary" @click="showFooterDialog">有底部按钮的对话框</Button>
+<Button type="primary" @click="showFooterDialog">有底部按钮</Button>
 <Dialog
   footer
   @close="onClose"
@@ -173,7 +173,7 @@ function onConfirm () { // “确定”按钮回调
 }
 </script>
 <template>
-  <Button type="primary" @click="showFooterDialog">有底部按钮的对话框</Button>
+  <Button type="primary" @click="showFooterDialog">有底部按钮</Button>
   <Dialog
     footer
     @close="onClose"
@@ -191,9 +191,9 @@ function onConfirm () { // “确定”按钮回调
 
 </details>
 
-## 弹窗位置固定高度的对话框
+## 位置高度自定义
 
-<Button type="primary" @click="showFixPositionDialog">弹窗位置固定高度的对话框</Button>
+<Button type="primary" @click="showFixPositionDialog">位置高度自定义</Button>
 <Dialog
   :center="false"
   :top="120"
@@ -220,7 +220,7 @@ function onClose () {
 }
 </script>
 <template>
-  <Button type="primary" @click="showFixPositionDialog">弹窗位置固定高度的对话框</Button>
+  <Button type="primary" @click="showFixPositionDialog">位置高度自定义</Button>
   <Dialog
     :center="false"
     :top="120"
@@ -236,11 +236,11 @@ function onClose () {
 
 </details>
 
-## 允许切换全屏的对话框
+## 允许切换全屏
 
-<Button type="primary" @click="showFullScreenDialog">允许切换全屏的对话框</Button>
+<Button type="primary" @click="showFullScreenDialog">允许切换全屏</Button>
 <Dialog
-  switchFullscreen
+  switch-fullscreen
   @close="onClose"
   :visible="visible5">
   <template #title>Title</template>
@@ -264,9 +264,9 @@ function onClose () {
 }
 </script>
 <template>
-  <Button type="primary" @click="showFullScreenDialog">允许切换全屏的对话框</Button>
+  <Button type="primary" @click="showFullScreenDialog">允许切换全屏</Button>
   <Dialog
-    switchFullscreen
+    switch-fullscreen
     @close="onClose"
     :visible="visible">
     <template #title>Title</template>
@@ -281,12 +281,25 @@ function onClose () {
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-name |  |  |
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+title | 标题 | string &#124; slot | '提示' | false
+content | 内容 | string &#124; slot | '' | false
+width | 宽度，单位px | number | 640 | false
+height | 高度，默认auto，自适应内容高度 | number &#124; string | 'auto' | false
+switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false | false
+cancelText | 取消按钮文字 | string | '取消' | false
+okText | 确定按钮文字 | string | '确定' | false
+footer | 是否显示底部按钮，默认不显示 | boolean | false | false
+center | 水平垂直居中：true，固定高度水平居中：false | boolean | true | false
+top | 固定高度水平居中时，距顶部高度，单位px | number | 100 | false
+loading | 加载中 | boolean | false | false
+visible | 是否可见 | boolean | false | false
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+close | 点击遮罩层或右上角叉的回调 | () => void
+cancel | 点击取消回调 | () => void
+ok | 点击确定回调 | () => void

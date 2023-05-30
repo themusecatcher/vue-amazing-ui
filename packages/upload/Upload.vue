@@ -4,7 +4,7 @@ import Message from '../message'
 import { ref, watchEffect, nextTick } from 'vue'
 interface FileType {
   name?: string // 文件名
-  url: any // 文件url
+  url: any // 文件地址
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
 interface Props {
@@ -12,14 +12,14 @@ interface Props {
   multiple?: boolean // 是否支持多选文件
   maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
   tip?: string // 上传描述文字 string | slot
-  uploadingTip?: string // 上传时的文字描述
+  uploadingTip?: string // 上传中的文字描述
   fit?: 'fill'|'contain'|'cover' // 预览图片缩放规则，仅当上传文件为图片时生效
   errorInfo?: string // 上传中断时的错误提示信息
   beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传，通常用来现在用户上传的文件格式和大小
   uploadMode?: 'base64'|'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
   customRequest?: Function // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
   disabled?: boolean // 是否禁用，只能预览，不能删除和上传
-  fileList?: FileType[] // 已上传的文件列表
+  fileList?: FileType[] // (v-model)已上传的文件列表
 }
 const props = withDefaults(defineProps<Props>(), {
   accept: '*', // 默认支持所有类型

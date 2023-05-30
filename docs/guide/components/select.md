@@ -89,7 +89,7 @@ function onChange (value: string|number, label: string,  index: number) {
 
 ## 基本使用
 
-<Select :options="options" v-model:selectedValue="selectedValue" />
+<Select :options="options" v-model="selectedValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -137,7 +137,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Select :options="options" v-model:selectedValue="selectedValue" />
+  <Select :options="options" v-model="selectedValue" />
 </template>
 ```
 
@@ -147,7 +147,7 @@ watchEffect(() => {
 
 <Select
   :options="options"
-  v-model:selectedValue="selectedValue"
+  v-model="selectedValue"
   @change="onChange"
   allow-clear />
 
@@ -204,7 +204,7 @@ function onChange (value: string|number, label: string,  index: number) {
 <template>
   <Select
     :options="options"
-    v-model:selectedValue="selectedValue"
+    v-model="selectedValue"
     @change="onChange"
     allow-clear />
 </template>
@@ -214,7 +214,7 @@ function onChange (value: string|number, label: string,  index: number) {
 
 ## 禁用
 
-<Select :options="options" v-model:selectedValue="selectedValue" disabled />
+<Select :options="options" v-model="selectedValue" disabled />
 
 <details>
 <summary>查看代码</summary>
@@ -259,7 +259,7 @@ const options = ref([
 const selectedValue = ref(1)
 </script>
 <template>
-  <Select :options="options" v-model:selectedValue="selectedValue" disabled />
+  <Select :options="options" v-model="selectedValue" disabled />
 </template>
 ```
 
@@ -269,7 +269,7 @@ const selectedValue = ref(1)
 
 <Select
   :options="optionsDisabled"
-  v-model:selectedValue="selectedValue" />
+  v-model="selectedValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -315,7 +315,7 @@ const optionsDisabled = ref([
 const selectedValue = ref(1)
 </script>
 <template>
-  <Select :options="optionsDisabled" v-model:selectedValue="selectedValue" />
+  <Select :options="optionsDisabled" v-model="selectedValue" />
 </template>
 ```
 
@@ -327,7 +327,7 @@ const selectedValue = ref(1)
   :width="160"
   :height="36"
   :options="options"
-  v-model:selectedValue="selectedValue"
+  v-model="selectedValue"
   @change="onChange" />
 
 <details>
@@ -385,7 +385,7 @@ function onChange (value: string|number, label: string,  index: number) {
     :width="160"
     :height="36"
     :options="options"
-    v-model:selectedValue="selectedValue"
+    v-model="selectedValue"
     @change="onChange" />
 </template>
 ```
@@ -394,12 +394,30 @@ function onChange (value: string|number, label: string,  index: number) {
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+options | 选项数据 | Option[] | [] | false
+label | 字典项的文本字段名 | string | 'label' | false
+value | 字典项的值字段名 | string | 'value' | false
+placeholder | 默认文字 | string | '请选择' | false
+disabled | 是否禁用 | boolean | false | false
+allowClear | 是否支持清除 | boolean | false | false
+width | 宽度 | number | 120 | false
+height | 高度 | number | 32 | false
+maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
+modelValue(v-model) | 当前选中的option条目 | number &#124; string &#124; null | null | false
+
+## Option Type
+
+名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-name |  |  |
+label | 选项名 | string | false
+value | 选项值 | string &#124; number | false
+disabled | 是否禁用选项 | boolean | false
+[propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | -
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+change | 选项值改变后的回调 | (value: string &#124; number, label: string,  index: number) => void

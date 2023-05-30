@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 interface Props {
-  src: string // 视频文件url，必传，支持网络地址 https 和相对地址
-  poster?: string // 视频封面url，支持网络地址 https 和相对地址
+  src: string // 视频文件地址，支持网络地址 https 和相对地址
+  poster?: string // 视频封面地址，支持网络地址 https 和相对地址
   second?: number // 在未设置封面时，自动截取视频第 second 秒对应帧作为视频封面
-  width?: number // 视频播放器宽度
-  height?: number // 视频播放器高度
+  width?: number // 视频播放器宽度，单位px
+  height?: number // 视频播放器高度，单位px
   autoplay?: boolean // 视频就绪后是否马上播放，优先级高于preload
   controls?: boolean // 是否向用户显示控件，比如进度条，全屏等
   loop?: boolean // 视频播放完成后，是否循环播放
   muted?: boolean // 是否静音
-  preload?: string // 是否在页面加载后载入视频，如果设置了autoplay属性，则preload将被忽略
+  preload?: 'auto'|'metadata'|'none' // 是否在页面加载后载入视频，如果设置了autoplay属性，则preload将被忽略
   showPlay?: boolean // 播放暂停时是否显示播放器中间的暂停图标
   playWidth?: number // 中间播放暂停按钮的边长
-  zoom?: string // video的poster默认图片和视频内容缩放规则
+  fit?: 'none'|'fill'|'contain'|'cover' // video的poster默认图片和视频内容缩放规则
 }
 const props = withDefaults(defineProps<Props>(), {
   src: '',
@@ -48,13 +48,13 @@ const props = withDefaults(defineProps<Props>(), {
   showPlay: true,
   playWidth: 96,
   /*
-    zoom可选属性：
+    fit可选属性：
     none: 保存原有内容，不进行缩放;
     fill: 不保持原有比例，内容拉伸填充整个内容容器;
     contain: 保存原有比例，内容以包含方式缩放;
     cover: 保存原有比例，内容以覆盖方式缩放
   */
-  zoom: 'contain'
+  fit: 'contain'
 })
 // 参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
 const veoPoster = ref(props.poster)
@@ -116,7 +116,7 @@ onMounted(() => {
   <div class="m-video" :class="{'u-video-hover': !hidden}" :style="`width: ${width}px; height: ${height}px;`">
     <video
       ref="veo"
-      :style="`object-fit: ${zoom};`"
+      :style="`object-fit: ${fit};`"
       :src="src"
       :poster="veoPoster"
       :width="width"

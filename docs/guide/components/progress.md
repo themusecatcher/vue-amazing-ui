@@ -154,12 +154,21 @@ function onDecline (scale: number) {
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+width | 进度条总宽度 | number &#124; string | '100%' | false
+percent | 当前进度百分比 | number | 0 | false
+strokeColor | 进度条的色彩，传入 string 时为纯色，传入 object 时为渐变 | string &#124; Gradient | '#1677FF' | false
+strokeWidth | 进度条线的宽度，单位px | number | 8 | false
+showInfo | 是否显示进度数值或状态图标 | boolean | true | false
+type | 进度条类型 | 'line' &#124; 'circle' | 'line' | false
+
+## Gradient Type
+
+名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-name |  |  |
-
-## Events
-
-事件名称 | 说明 | 参数
--- | -- | --
-change |  |
+'0%' | 起始值 | string | false
+'100%' | 终点值 | string | false
+from | 起始值 | string | false
+to | 终点值 | string | false
+direction | 渐变方向 | 'right' &#124; 'left' | false

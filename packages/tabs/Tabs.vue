@@ -9,8 +9,8 @@ interface Tab {
 interface Props {
   tabPages: Array<Tab> // 标签页数组
   centered?: boolean // 标签是否居中展示
-  size?: string // 标签页大小 可选 small | large
-  activeKey?: string | number // 当前激活 tab 面板的 key
+  size?: 'small'|'large' // 标签页大小 可选 small | large
+  activeKey?: string|number // (v-model)当前激活 tab 面板的 key
 }
 const props = withDefaults(defineProps<Props>(), {
   tabPages: () => [],

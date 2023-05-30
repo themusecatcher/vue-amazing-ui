@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 enum ColorStyle { // 颜色主题对象
   blue = '#1677ff',
   green = '#52c41a',
@@ -11,8 +11,8 @@ interface Data {
   color?: string // 圆圈颜色，可选四种预置颜色：blue | green | red | gray 或者 使用颜色值，string | slot
 }
 interface Props {
-  timelineData?: Data[] // 时间轴内容数组
-  width?: number // 时间轴区域总宽度
+  timelineData: Data[] // 时间轴内容数组
+  width?: number|string // 时间轴区域总宽度，单位px
   lineStyle?: 'solid'|'dashed'|'dotted' // 时间线样式
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -22,6 +22,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const desc = ref()
 const dotsHeight = ref<string[]>([])
+const totalWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return props.width + 'px'
+  } else {
+    return props.width
+  }
+})
 function getDotsHeight () {
   const len = props.timelineData.length
   for (let n = 0; n < len; n++) {
@@ -33,7 +40,7 @@ watchEffect(() => {
 }, {flush: 'post'})
 </script>
 <template>
-  <div class="m-timeline-area" :style="`width: ${width}px`">
+  <div class="m-timeline-area" :style="`width: ${totalWidth};`">
     <div class="m-timeline">
       <div
         :class="['m-timeline-item', {'last': index === timelineData.length - 1}]"
