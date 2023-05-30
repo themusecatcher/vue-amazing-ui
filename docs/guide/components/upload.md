@@ -96,6 +96,34 @@ watchEffect(() => {
 
 </details>
 
+## 禁用
+
+*只能预览，不能删除和上传*
+
+<br/>
+
+<Upload disabled v-model:file-list="imageList" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const imageList = ref([
+  {
+    name: '1.jpg',
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+  }
+])
+</script>
+<template>
+  <Upload disabled v-model:file-list="imageList" />
+</template>
+```
+
+</details>
+
 ## 多文件上传
 
 *限制上传数量为3*
@@ -161,34 +189,6 @@ watchEffect(() => {
 </script>
 <template>
   <Upload :max-count="3" tip="上传" fit="cover" v-model:file-list="fileList" />
-</template>
-```
-
-</details>
-
-## 禁用
-
-*只能预览，不能删除和上传*
-
-<br/>
-
-<Upload disabled v-model:file-list="imageList" />
-
-<details>
-<summary>查看代码</summary>
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const imageList = ref([
-  {
-    name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
-  }
-])
-</script>
-<template>
-  <Upload disabled v-model:file-list="imageList" />
 </template>
 ```
 

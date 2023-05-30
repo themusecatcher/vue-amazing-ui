@@ -12,15 +12,19 @@
 import { ref, watchEffect } from 'vue'
 
 const singleValue = ref(20)
+const singleCustomValue = ref(0)
 const doubleValue = ref([20, 80])
 watchEffect(() => {
   console.log('singleValue:', singleValue.value)
 })
 watchEffect(() => {
+  console.log('singleCustomValue:', singleCustomValue.value)
+})
+watchEffect(() => {
   console.log('doubleValue:', doubleValue.value)
 })
-function onChange (val: number|number[]) {
-  console.log('change:', val)
+function onChange (value: number|number[]) {
+  console.log('change:', value)
 }
 function formatter (value: number) {
   return `${value}%`
@@ -29,11 +33,7 @@ function formatter (value: number) {
 
 ## 基本使用
 
-<Slider
-  :min="0"
-  :max="100"
-  v-model:value="singleValue"
-  @change="onChange"/>
+<Slider v-model:value="singleValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -46,94 +46,9 @@ const singleValue = ref(20)
 watchEffect(() => {
   console.log('singleValue:', singleValue.value)
 })
-function onChange (val: number) {
-  console.log('change:', val)
-}
 </script>
 <template>
-  <Slider
-    :min="0"
-    :max="100"
-    v-model:value="singleValue"
-    @change="onChange"/>
-</template>
-```
-
-</details>
-
-## 双滑块
-
-<Slider
-  :min="0"
-  :max="100"
-  range
-  v-model:value="doubleValue"
-  @change="onChange"/>
-
-<details>
-<summary>查看代码</summary>
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-
-const doubleValue = ref([20, 80])
-watchEffect(() => {
-  console.log('doubleValue:', doubleValue.value)
-})
-function onChange (val: number[]) {
-  console.log('change:', val)
-}
-</script>
-<template>
-  <Slider
-    :min="0"
-    :max="100"
-    range
-    v-model:value="doubleValue"
-    @change="onChange"/>
-</template>
-```
-
-</details>
-
-## 格式化 Tooltip 的内容
-
-<Slider
-  :min="0"
-  :max="100"
-  width="80%"
-  range
-  :tip-formatter="formatter"
-  v-model:value="doubleValue"
-  @change="onChange"/>
-
-<details>
-<summary>查看代码</summary>
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-
-const doubleValue = ref([20, 80])
-watchEffect(() => {
-  console.log('doubleValue:', doubleValue.value)
-})
-function onChange (val: number[]) {
-  console.log('change:', val)
-}
-function formatter (value: number) {
-  return `${value}%`
-}
-</script>
-<template>
-  <Slider
-    :min="0"
-    :max="100"
-    range
-    :tip-formatter="formatter"
-    v-model:value="doubleValue"
-    @change="onChange"/>
+  <Slider v-model:value="singleValue" />
 </template>
 ```
 
@@ -141,12 +56,30 @@ function formatter (value: number) {
 
 ## 禁用
 
-<Slider
-  :min="0"
-  :max="100"
-  disabled
-  range
-  v-model:value="doubleValue" />
+<Slider disabled v-model:value="singleValue" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const singleValue = ref(20)
+watchEffect(() => {
+  console.log('singleValue:', singleValue.value)
+})
+</script>
+<template>
+  <Slider disabled v-model:value="singleValue" />
+</template>
+```
+
+</details>
+
+## 双滑块
+
+<Slider range v-model:value="doubleValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -156,14 +89,98 @@ function formatter (value: number) {
 import { ref, watchEffect } from 'vue'
 
 const doubleValue = ref([20, 80])
+watchEffect(() => {
+  console.log('doubleValue:', doubleValue.value)
+})
 </script>
 <template>
-  <Slider
-    :min="0"
-    :max="100"
-    disabled
-    range
-    v-model:value="doubleValue" />
+  <Slider range v-model:value="doubleValue" />
+</template>
+```
+
+</details>
+
+## 格式化提示内容
+
+<Slider :tip-formatter="formatter" v-model:value="singleValue" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const singleValue = ref(20)
+watchEffect(() => {
+  console.log('singleValue:', singleValue.value)
+})
+function formatter (value: number) {
+  return `${value}%`
+}
+</script>
+<template>
+  <Slider :tip-formatter="formatter" v-model:value="singleValue" />
+</template>
+```
+
+</details>
+
+## 自定义最大最小值
+
+<Slider :min="-10" :max="10" v-model:value="singleCustomValue" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const singleCustomValue = ref(0)
+watchEffect(() => {
+  console.log('singleCustomValue:', singleCustomValue.value)
+})
+</script>
+<template>
+  <Slider :min="-10" :max="10" v-model:value="singleCustomValue" />
+</template>
+```
+
+</details>
+
+## 自定义步长
+
+*单滑块*
+
+<Slider :step="5" v-model:value="singleValue" />
+
+<br/>
+<br/>
+
+*双滑块*
+
+<Slider range :step="5" v-model:value="doubleValue" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const singleValue = ref(20)
+const doubleValue = ref([20, 80])
+watchEffect(() => {
+  console.log('singleValue:', singleValue.value)
+})
+watchEffect(() => {
+  console.log('doubleValue:', doubleValue.value)
+})
+</script>
+<template>
+  <Slider :step="5" v-model:value="singleValue" />
+  <Slider range :step="5" v-model:value="doubleValue" />
 </template>
 ```
 

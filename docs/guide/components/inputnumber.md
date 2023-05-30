@@ -63,7 +63,7 @@ watchEffect(() => {
 
 </details>
 
-## 限制最大最小值
+## 自定义最大最小值
 
 <InputNumber :min="0" :max="10" v-model:value="value" />
 
@@ -85,7 +85,7 @@ watchEffect(() => {
 
 </details>
 
-## 添加前缀图标 $
+## 添加前缀图标
 
 <InputNumber prefix="$" v-model:value="value" />
 

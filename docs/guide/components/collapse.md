@@ -173,15 +173,19 @@ watchEffect(() => {
 
 </details>
 
-## 自定义 header、lang、text 内容
+## 自定义内容
+
+*自定义 header、lang、text 内容和样式*
+
+<br/>
 
 <Collapse :collapse-data="collapseData" v-model:active-key="activeKey">
   <template #header="{ header, key }">
-    <span v-if="key==='1'" style="color: burlywood;">burlywood color {{ header }} (key = {{ key }})</span>
+    <span v-if="key==='1'" style="color: burlywood;">burlywood color: {{ header }} (key = {{ key }})</span>
   </template>
   <template #lang>typescript</template>
   <template #text="{ text, key }">
-    <span v-if="key==='1'" style="color: burlywood;">burlywood color {{ text }} (key = {{ key }})</span>
+    <span v-if="key==='1'" style="color: burlywood;">burlywood color: {{ text }} (key = {{ key }})</span>
   </template>
 </Collapse>
 

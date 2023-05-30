@@ -55,7 +55,11 @@
 
 </details>
 
-## 自定义二维码颜色和背景色
+## 自定义样式
+
+*自定义二维码颜色和背景色*
+
+<br/>
 
 <QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" background-color="f5f5f5" />
 
@@ -74,11 +78,11 @@
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-value | 扫描后的文本或地址 | string | ''
-size | 二维码大小 | number | 160
-color | 二维码颜色，Value must be in hex format (十六进制颜色值) | string | '#000'
-backgroundColor | 二维码背景色，Value must be in hex format (十六进制颜色值) | string | '#FFF'
-bordered | 是否有边框 | boolean | true
-borderColor | 边框颜色 | string | '#0505050f'
-scale | 每个black dots多少像素 | number | 8
-errorLevel | 二维码纠错等级 | 'L' &#124; 'M' &#124; 'Q' &#124; 'H' | 'H'
+value | 扫描后的文本或地址 | string | '' | false
+size | 二维码大小，单位px | number | 160 | false
+color | 二维码颜色，Value must be in hex format (十六进制颜色值) | string | '#000' | false
+backgroundColor | 二维码背景色，Value must be in hex format (十六进制颜色值) | string | '#FFF' | false
+bordered | 是否有边框 | boolean | true | false
+borderColor | 边框颜色 | string | '#0505050f' | false
+scale | 每个black dots多少像素 | number | 8 | false
+errorLevel | 二维码纠错等级 | 'L' &#124; 'M' &#124; 'Q' &#124; 'H' | 'H' | false

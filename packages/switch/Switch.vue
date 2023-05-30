@@ -42,7 +42,10 @@ function onSwitch () {
   min-width: 44px;
   .m-switch {
     position: relative;
-    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
     color: rgba(0,0,0,.65);
     font-size: 14px;
     background: rgba(0,0,0,.25);
@@ -50,7 +53,6 @@ function onSwitch () {
     cursor: pointer;
     transition: background .36s;
     .u-switch-inner {
-      display: inline-block;
       color: #fff;
       font-size: 14px;
       line-height: 22px;
@@ -65,17 +67,16 @@ function onSwitch () {
     }
     .u-node {
       position: absolute;
-      top: 2px;
       left: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 18px;
       height: 18px;
       background: #FFF;
       border-radius: 100%;
       cursor: pointer;
       transition: all .36s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     .node-checked { // 结果等价于right: 2px; 为了滑动效果都以左边为基准进行偏移
       left: 100%;

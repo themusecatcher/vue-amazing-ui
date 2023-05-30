@@ -56,7 +56,9 @@
 
 </details>
 
-## 文字居左(右)并距左(右)边120px
+## 自定义文字位置
+
+*文字居左(右)并距左(右)边 120px*
 
 <Divider orientation="left" :orientation-margin="120">Left Text</Divider>
 <Divider orientation="right" :orientation-margin="120">Right Text</Divider>
@@ -88,7 +90,9 @@
 
 </details>
 
-## 分割线线宽3px
+## 自定义线宽
+
+*线宽3px*
 
 <Divider :borderWidth="3">Center Text</Divider>
 

@@ -60,7 +60,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 
 </details>
 
-## 使用CSS布局方式
+## CSS布局方式
 
 <Waterfall :images="images" mode="CSS" />
 

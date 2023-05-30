@@ -31,6 +31,10 @@ function onClick (value: string) { // 获取点击的标题
 
 ## 基本使用
 
+*水平文字滚动*
+
+<br/>
+
 <TextScroll :slider-text="sliderText" @click="onClick" />
 
 <details>

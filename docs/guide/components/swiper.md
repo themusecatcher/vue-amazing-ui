@@ -39,6 +39,10 @@ function onChange () {
 
 ## 基本使用
 
+*首页banner*
+
+<br/>
+
 <Swiper :images="images" :height="420" @change="onChange" />
 
 <details>

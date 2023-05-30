@@ -131,7 +131,7 @@ function changePage (pager: object) { // 分页器回调
 
 </details>
 
-## 快速跳转，当前页数和数据总量
+## 快速跳转和数据总量
 
 <Pagination
   :current="pagination.p"

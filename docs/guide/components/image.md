@@ -100,7 +100,7 @@ const images = ref([
 
 <br/>
 
-<Image :width="400" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+<Image :width="600" :height="400" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
   <template #preview>
     <p class="u-pre">preview</p>
   </template>
@@ -111,7 +111,7 @@ const images = ref([
 
 ```vue
 <template>
-  <Image :width="400" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+  <Image :width="600" :height="400" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
     <template #preview>
       <p class="u-pre">preview</p>
     </template>
