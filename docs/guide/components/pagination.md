@@ -172,12 +172,19 @@ function changePage (pager: object) { // 分页器回调
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-name |  |  |
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+current | 当前页数 | number | 1  | false
+pageSize | 每页条数 | number | 10 | false
+total | 数据总数 | number | 0 | false
+pageListNum | 显示的页码数组长度 | number | 5 | false
+hideOnSinglePage | 只有一页时是否隐藏分页器 | boolean | false | false
+showQuickJumper | 是否可以快速跳转至某页 | boolean | false | false
+showTotal | 是否显示当前页数和数据总量 | boolean | false | false
+placement | 分页器展示位置，靠左left，居中center，靠右right | 'left' &#124; 'center' &#124; 'right' | 'center' | false
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+change | 页码改变后的回调 | (pager: { page: number, pageSize: pageSize }) => void

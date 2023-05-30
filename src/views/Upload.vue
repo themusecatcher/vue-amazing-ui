@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { rafTimeout } from '../../packages'
 const files = ref([])
 const fileList = ref([
   {
@@ -29,23 +28,30 @@ watchEffect(() => {
 })
 const errorInfo = ref('') // 上传错误提示信息
 function onBeforeUpload (file: File) {
-  const acceptTypes = ['image/jpg', 'image/jpeg', 'image/png']
+  const acceptTypes = ['image/jpg', 'image/jpeg', 'image/png', 'application/pdf']
   if (file.size > 500 * 1024) { // 文件大于 500KB 时取消上传
     errorInfo.value = '文件必须小于500KB'
     return false
   }
   if (!acceptTypes.includes(file.type)) { // 继续上传
-    errorInfo.value = '只能上传jpg、jpeg、png格式的文件'
+    errorInfo.value = '只能上传jpg、jpeg、png、pdf格式的文件'
     return false // 停止上传
   }
   return true
 }
 function onCustomRequest (file: File) {
   return new Promise((resolve, reject) => {
-    rafTimeout(() => { // 模拟接口调用返回name和url
-      const res = {
-        name: '1.jpg',
-        url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    setTimeout(() => { // 模拟接口调用返回name和url
+      if (file.type === 'application/pdf') {
+        var res = {
+          name: 'Markdown.pdf',
+          url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Markdown.pdf"
+        }
+      } else {
+        var res = {
+          name: '1.jpg',
+          url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+        }
       }
       if (res) {
         resolve(res)
@@ -55,10 +61,15 @@ function onCustomRequest (file: File) {
     }, 1000)
   })
 }
-function onChange (files: object[]) {
+interface FileType {
+  name?: string // 文件名
+  url: any // 文件地址
+  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
+}
+function onChange (files: FileType[]) {
   console.log('change:', files)
 }
-function onRemove (file: object) {
+function onRemove (file: FileType) {
   console.log('remove:', file)
 }
 </script>
@@ -74,7 +85,7 @@ function onRemove (file: object) {
     <Upload disabled v-model:fileList="fileList" />
     <h2 class="mt30 mb10">限制上传文件最大500KB，同时文件类型只能是图片 (error-info: errorInfo & before-upload: onBeforeUpload)</h2>
     <Upload
-      accept="image/*"
+      accept="image/*,application/pdf"
       :maxCount="3"
       :error-info="errorInfo"
       :before-upload="onBeforeUpload"

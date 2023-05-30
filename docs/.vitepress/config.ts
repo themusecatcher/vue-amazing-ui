@@ -244,7 +244,7 @@ export default defineConfig({
             },
             {
               text: '数字输入框 InputNumber',
-              link: '/guide/components/inputNumber'
+              link: '/guide/components/inputnumber'
             },
             {
               text: '全局提示 Message',

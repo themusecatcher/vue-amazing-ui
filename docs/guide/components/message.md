@@ -142,12 +142,12 @@ function onClose () {
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-name |  |  |
-
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+duration | 自动关闭的延时，单位ms | number | 3000 | false
+top | 消息距离顶部的位置，单位px | number | 30 | false
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+change | 关闭时触发的回调函数 | () => void

@@ -240,12 +240,21 @@ function onHoverChange (value: number) {
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-name |  |  |
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+allowClear | 是否允许再次点击后清除 | boolean | true | false
+allowHalf | 是否允许半选 | boolean | false | false
+count | star 总数 | number | 5 | false
+character | 自定义字符，string &#124; slot，预置 'star-outlined' 'star-filled' 'heart-outlined' 'heart-filled' 四种svg图标 | string | 'star-filled' | false
+size | 字符时是字体高度，图标时是图片大小 | number | 20 | false
+color | 字符选中颜色 | string | '#fadb14' | false
+gap | 字符间距，单位px | number | 8 | false
+disabled | 只读，无法进行交互 | boolean | false | false
+value(v-model) | 当前数，受控值 1,2,3... | number | 0 | false
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+change | 选择时的回调 | (value: number) => void
+hoverChange | 鼠标经过时数值变化的回调 | (value: number) => void

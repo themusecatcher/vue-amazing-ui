@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 interface Props {
   dashed?: boolean // 是否为虚线
-  orientation?: string // 分割线标题的位置
+  orientation?: 'left'|'center'|'right' // 分割线标题的位置
   orientationMargin?: string|number // 标题和最近 left/right 边框之间的距离，去除了分割线，同时 orientation 必须为 left 或 right
   borderWidth?: number // 分割线宽度
 }

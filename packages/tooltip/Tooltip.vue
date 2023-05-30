@@ -2,10 +2,10 @@
 import { ref, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Props {
-  maxWidth?: number // 提示框内容最大宽度
+  maxWidth?: number // 提示框内容最大宽度，单位px
   content?: string // 展示的文本 string | slot
   title?: string // 提示的文本 string | slot
-  fontSize?: number // 提示文本字体大小
+  fontSize?: number // 提示文本字体大小，单位px
   color?: string // 提示文本字体颜色
   backgroundColor?: string // 提示框背景色
 }

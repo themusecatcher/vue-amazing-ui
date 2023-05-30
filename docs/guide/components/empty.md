@@ -98,12 +98,8 @@
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-name |  |  |
-
-## Events
-
-事件名称 | 说明 | 参数
--- | -- | --
-change |  |
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+description | 自定义描述内容 | string &#124; slot | '暂无数据' | false
+image | 显示图片的链接，或者 选择预置的两种风格图片，可选 '1' &#124; '2' | string | '1' | false
+imageStyle | 图片样式 | CSSProperties | {} | false

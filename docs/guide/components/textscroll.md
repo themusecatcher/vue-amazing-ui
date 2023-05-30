@@ -117,12 +117,26 @@ function onClick (value: string) { // 获取点击的标题
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+sliderText | 滚动文字数组 | Text[] | [] | true
+width | 滚动区域宽度，单位px | number &#124; string | '100%' | false
+height | 滚动区域高度，单位px | number | 60 | false
+backgroundColor | 滚动区域背景色 | string | '#FFF' | false
+amount | 滚动区域展示条数，水平滚动时生效 | number | 4 | false
+gap | 水平滚动文字各列间距或垂直滚动文字两边的边距，单位px |  number | 20 | false
+vertical | 是否垂直滚动 | boolean | false | false
+interval | 文字滚动时间间隔，垂直滚动时生效，单位ms | number | 3000 | false
+
+## Text Type
+
+名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-name |  |  |
+title | 文字标题 | string | true
+link | 跳转链接 | string | false
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+click | 点击标题时的回调 | (title: string) => void

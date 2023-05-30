@@ -8,15 +8,15 @@ interface Option {
 }
 interface Props {
   options?: Option[] // 选项数据
-  label?: string // 选择器字典项的文本字段名
-  value?: string // 选择器字典项的值字段名
-  placeholder?: string // 选择框默认文字
-  disabled?: boolean // 是否禁用下拉
+  label?: string // 字典项的文本字段名
+  value?: string // 字典项的值字段名
+  placeholder?: string // 默认文本
+  disabled?: boolean // 是否禁用
   allowClear?: boolean // 是否支持清除
-  width?: number // 选择框宽度
-  height?: number // 选择框高度
+  width?: number // 宽度
+  height?: number // 高度
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
-  selectedValue?: number|string|null // （v-model）当前选中的option条目
+  modelValue?: number|string|null // （v-model）当前选中的option条目
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
@@ -28,24 +28,25 @@ const props = withDefaults(defineProps<Props>(), {
   width: 120,
   height: 32,
   maxDisplay: 6,
-  selectedValue: null
+  modelValue: null
 })
 const selectedName = ref()
 const hoverValue = ref() // 鼠标悬浮项的value值
 const showOptions = ref(false) // options面板
 const activeBlur = ref(true) // 是否激活blur事件
 const showClose = ref(false) // 清除按钮显隐
+const select = ref()
 watchEffect(() =>{ // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   initSelector()
 })
 function initSelector () {
-  if (props.selectedValue) {
-    const target = props.options.find(option => option[props.value] === props.selectedValue)
+  if (props.modelValue) {
+    const target = props.options.find(option => option[props.value] === props.modelValue)
     if (target) {
       selectedName.value = target[props.label]
       hoverValue.value = target[props.value]
     } else {
-      selectedName.value = props.selectedValue
+      selectedName.value = props.modelValue
       hoverValue.value = null
     }
   } else {
@@ -54,7 +55,6 @@ function initSelector () {
   }
 }
 function onBlur () {
-  // console.log('blur')
   if (showOptions.value) {
     showOptions.value = false
   }
@@ -80,6 +80,7 @@ function onEnter () {
 function onLeave () {
   hoverValue.value = null
   activeBlur.value = true
+  select.value.focus()
 }
 function openSelect () {
   showOptions.value = !showOptions.value
@@ -88,19 +89,19 @@ function openSelect () {
     hoverValue.value = target ? target[props.value] : null
   }
 }
-const emits = defineEmits(['update:selectedValue', 'change'])
+const emits = defineEmits(['update:modelValue', 'change'])
 function onClear () {
   showClose.value = false
   selectedName.value = null
   hoverValue.value = null
-  emits('update:selectedValue')
+  emits('update:modelValue')
   emits('change')
 }
 function onChange (value: string|number, label: string, index: number) { // 选中下拉项后的回调
-  if (props.selectedValue !== value) {
+  if (props.modelValue !== value) {
     selectedName.value = label
     hoverValue.value = value
-    emits('update:selectedValue', value)
+    emits('update:modelValue', value)
     emits('change', value, label, index)
   }
   showOptions.value = false
@@ -112,10 +113,11 @@ function onChange (value: string|number, label: string, index: number) { // 选�
       :class="['m-select-wrap', {'hover': !disabled, 'focus': showOptions, 'disabled': disabled}]"
       :style="`width: ${width}px; height: ${height}px;`"
       tabindex="0"
+      ref="select"
       @mouseenter="onInputEnter"
       @mouseleave="onInputLeave"
-      @blur="activeBlur && !disabled ? onBlur() : (e: Event) => e.preventDefault()"
-      @click="disabled ? (e: Event) => e.preventDefault() : openSelect()">
+      @blur="activeBlur && !disabled ? onBlur() : () => false"
+      @click="disabled ? () => false : openSelect()">
       <div
         :class="['u-select-input', {'placeholder': !selectedName}]"
         :style="`line-height: ${height - 2}px;`"
@@ -136,7 +138,7 @@ function onChange (value: string|number, label: string, index: number) { // 选�
           :class="['u-option', {'option-selected': option[label]===selectedName, 'option-hover': !option.disabled&&option[value]===hoverValue, 'option-disabled': option.disabled }]"
           :title="option[label]"
           @mouseenter="onHover(option[value])"
-          @click="option.disabled ? (e: Event) => e.preventDefault() : onChange(option[value], option[label], index)">
+          @click="option.disabled ? () => false : onChange(option[value], option[label], index)">
           {{ option[label] }}
         </p>
       </div>
@@ -240,7 +242,7 @@ function onChange (value: string|number, label: string, index: number) { // 选�
 }
 .m-options-panel {
   position: absolute;
-  z-index: 999;
+  z-index: 9;
   overflow: auto;
   background: #FFF;
   padding: 4px 0;

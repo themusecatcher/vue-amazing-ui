@@ -5,9 +5,9 @@ interface Step {
   description?: string // 描述
 }
 interface Props {
-  steps?: Step[] // 步骤数组
+  steps: Step[] // 步骤数组
   current?: number // 当前选中的步骤（v-model），设置 v-model 后，Steps 变为可点击状态。从1开始计数
-  width?: number|string //步骤条总宽度步骤条总宽度
+  width?: number|string // 步骤条总宽度
   descMaxWidth?: number // 描述文本最大宽度
 }
 const props = withDefaults(defineProps<Props>(), {

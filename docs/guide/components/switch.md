@@ -145,12 +145,15 @@ const checked = ref(false)
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-name |  |  |
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+checkedInfo | 选中时的内容 | string | '' | false
+uncheckedInfo | 未选中时的内容 | string | '' | false
+disabled | 是否禁用 | boolean | false | false
+checked(v-model) | 指定当前是否选中 | boolean | false | false
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+change | 变化时的回调 | (checked: boolean) => void

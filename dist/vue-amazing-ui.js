@@ -303,7 +303,7 @@ const _hoisted_6$g = ["src", "alt"];
 const _hoisted_7$e = { class: "u-spin-circle" };
 const _hoisted_8$d = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M603.3 327.5l-246 178a7.95 7.95 0 0 0 0 12.9l246 178c5.3 3.8 12.7 0 12.7-6.5V643c0-10.2-4.9-19.9-13.2-25.9L457.4 512l145.4-105.2c8.3-6 13.2-15.6 13.2-25.9V334c0-6.5-7.4-10.3-12.7-6.5z" }, null, -1));
 const _hoisted_9$d = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_10$b = [
+const _hoisted_10$a = [
   _hoisted_8$d,
   _hoisted_9$d
 ];
@@ -601,7 +601,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
             "data-icon": "left-circle",
             "aria-hidden": "true",
             focusable: "false"
-          }, _hoisted_10$b)),
+          }, _hoisted_10$a)),
           (openBlock(), createElementBlock("svg", {
             class: "arrow-right",
             onClick: _cache[2] || (_cache[2] = ($event) => onRightArrow(activeSwitcher.value * imageWidth.value)),
@@ -629,7 +629,7 @@ const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
-const _withScopeId$f = (n) => (pushScopeId("data-v-d16e3a1d"), n = n(), popScopeId(), n);
+const _withScopeId$f = (n) => (pushScopeId("data-v-d75b56e9"), n = n(), popScopeId(), n);
 const _hoisted_1$s = ["title"];
 const _hoisted_2$o = /* @__PURE__ */ _withScopeId$f(() => /* @__PURE__ */ createElementVNode("path", { d: "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
 const _hoisted_3$m = [
@@ -653,9 +653,9 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     width: { default: 120 },
     height: { default: 32 },
     maxDisplay: { default: 6 },
-    selectedValue: { default: null }
+    modelValue: { default: null }
   },
-  emits: ["update:selectedValue", "change"],
+  emits: ["update:modelValue", "change"],
   setup(__props, { emit: emits }) {
     const props = __props;
     const selectedName = ref();
@@ -663,17 +663,18 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     const showOptions = ref(false);
     const activeBlur = ref(true);
     const showClose = ref(false);
+    const select = ref();
     watchEffect(() => {
       initSelector();
     });
     function initSelector() {
-      if (props.selectedValue) {
-        const target = props.options.find((option) => option[props.value] === props.selectedValue);
+      if (props.modelValue) {
+        const target = props.options.find((option) => option[props.value] === props.modelValue);
         if (target) {
           selectedName.value = target[props.label];
           hoverValue.value = target[props.value];
         } else {
-          selectedName.value = props.selectedValue;
+          selectedName.value = props.modelValue;
           hoverValue.value = null;
         }
       } else {
@@ -705,6 +706,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     function onLeave() {
       hoverValue.value = null;
       activeBlur.value = true;
+      select.value.focus();
     }
     function openSelect() {
       showOptions.value = !showOptions.value;
@@ -717,14 +719,14 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
       showClose.value = false;
       selectedName.value = null;
       hoverValue.value = null;
-      emits("update:selectedValue");
+      emits("update:modelValue");
       emits("change");
     }
     function onChange(value, label, index) {
-      if (props.selectedValue !== value) {
+      if (props.modelValue !== value) {
         selectedName.value = label;
         hoverValue.value = value;
-        emits("update:selectedValue", value);
+        emits("update:modelValue", value);
         emits("change", value, label, index);
       }
       showOptions.value = false;
@@ -738,10 +740,12 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
           class: normalizeClass(["m-select-wrap", { "hover": !_ctx.disabled, "focus": showOptions.value, "disabled": _ctx.disabled }]),
           style: normalizeStyle(`width: ${_ctx.width}px; height: ${_ctx.height}px;`),
           tabindex: "0",
+          ref_key: "select",
+          ref: select,
           onMouseenter: onInputEnter,
           onMouseleave: onInputLeave,
-          onBlur: _cache[0] || (_cache[0] = ($event) => activeBlur.value && !_ctx.disabled ? onBlur() : (e) => e.preventDefault()),
-          onClick: _cache[1] || (_cache[1] = ($event) => _ctx.disabled ? (e) => e.preventDefault() : openSelect())
+          onBlur: _cache[0] || (_cache[0] = ($event) => activeBlur.value && !_ctx.disabled ? onBlur() : () => false),
+          onClick: _cache[1] || (_cache[1] = ($event) => _ctx.disabled ? () => false : openSelect())
         }, [
           createElementVNode("div", {
             class: normalizeClass(["u-select-input", { "placeholder": !selectedName.value }]),
@@ -778,7 +782,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
                   class: normalizeClass(["u-option", { "option-selected": option[_ctx.label] === selectedName.value, "option-hover": !option.disabled && option[_ctx.value] === hoverValue.value, "option-disabled": option.disabled }]),
                   title: option[_ctx.label],
                   onMouseenter: ($event) => onHover(option[_ctx.value]),
-                  onClick: ($event) => option.disabled ? (e) => e.preventDefault() : onChange(option[_ctx.value], option[_ctx.label], index)
+                  onClick: ($event) => option.disabled ? () => false : onChange(option[_ctx.value], option[_ctx.label], index)
                 }, toDisplayString(option[_ctx.label]), 43, _hoisted_7$d);
               }), 128))
             ], 36), [
@@ -791,8 +795,8 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Select_vue_vue_type_style_index_0_scoped_d16e3a1d_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-d16e3a1d"]]);
+const Select_vue_vue_type_style_index_0_scoped_d75b56e9_lang = "";
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-d75b56e9"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
 };
@@ -1340,22 +1344,10 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
     mode: { default: "date" },
     showTime: { type: Boolean, default: false },
     showToday: { type: Boolean, default: false },
-    date: { default: 0 }
+    modelType: { default: "format" }
   },
-  emits: ["update:date"],
-  setup(__props, { emit }) {
+  setup(__props) {
     const props = __props;
-    const date = ref(props.date);
-    watch(date, (to) => {
-      emit("update:date", to);
-    });
-    const modelType = computed(() => {
-      if (["time", "month", "year"].includes(props.mode)) {
-        return "";
-      } else {
-        return "timestamp";
-      }
-    });
     const time = computed(() => {
       return props.mode === "time";
     });
@@ -1374,8 +1366,6 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
         style: normalizeStyle(`width: ${_ctx.width}px;`)
       }, [
         createVNode(unref(VueDatePicker), mergeProps({
-          modelValue: date.value,
-          "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => date.value = $event),
           locale: "zh-CN",
           "month-change-on-scroll": false,
           "enable-time-picker": _ctx.showTime,
@@ -1383,23 +1373,23 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
           "week-picker": week.value,
           "month-picker": month.value,
           "year-picker": year.value,
+          "now-button-label": "今天",
           "show-now-button": _ctx.showToday,
-          "auto-apply": "",
+          "auto-apply": true,
           "text-input": "",
-          "model-type": modelType.value,
-          "day-names": ["一", "二", "三", "四", "五", "六", "七"],
-          "now-button-label": "今天"
-        }, _ctx.$attrs), null, 16, ["modelValue", "enable-time-picker", "time-picker", "week-picker", "month-picker", "year-picker", "show-now-button", "model-type"])
+          "model-type": _ctx.modelType,
+          "day-names": ["一", "二", "三", "四", "五", "六", "七"]
+        }, _ctx.$attrs), null, 16, ["enable-time-picker", "time-picker", "week-picker", "month-picker", "year-picker", "show-now-button", "model-type"])
       ], 4);
     };
   }
 });
-const DatePicker_vue_vue_type_style_index_0_scoped_ce0087fa_lang = "";
-const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-ce0087fa"]]);
+const DatePicker_vue_vue_type_style_index_0_scoped_e389c0e6_lang = "";
+const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-e389c0e6"]]);
 DatePicker.install = (app) => {
   app.component(DatePicker.__name, DatePicker);
 };
-const _withScopeId$d = (n) => (pushScopeId("data-v-a7518a4a"), n = n(), popScopeId(), n);
+const _withScopeId$d = (n) => (pushScopeId("data-v-d1139c50"), n = n(), popScopeId(), n);
 const _hoisted_1$o = ["onClick"];
 const _hoisted_2$k = { class: "m-spin-dot" };
 const _hoisted_3$i = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -1416,9 +1406,9 @@ const _hoisted_8$c = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ create
 const _hoisted_9$c = [
   _hoisted_8$c
 ];
-const _hoisted_10$a = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("path", { d: "M391 240.9c-.8-6.6-8.9-9.4-13.6-4.7l-43.7 43.7L200 146.3a8.03 8.03 0 0 0-11.3 0l-42.4 42.3a8.03 8.03 0 0 0 0 11.3L280 333.6l-43.9 43.9a8.01 8.01 0 0 0 4.7 13.6L401 410c5.1.6 9.5-3.7 8.9-8.9L391 240.9zm10.1 373.2L240.8 633c-6.6.8-9.4 8.9-4.7 13.6l43.9 43.9L146.3 824a8.03 8.03 0 0 0 0 11.3l42.4 42.3c3.1 3.1 8.2 3.1 11.3 0L333.7 744l43.7 43.7A8.01 8.01 0 0 0 391 783l18.9-160.1c.6-5.1-3.7-9.4-8.8-8.8zm221.8-204.2L783.2 391c6.6-.8 9.4-8.9 4.7-13.6L744 333.6 877.7 200c3.1-3.1 3.1-8.2 0-11.3l-42.4-42.3a8.03 8.03 0 0 0-11.3 0L690.3 279.9l-43.7-43.7a8.01 8.01 0 0 0-13.6 4.7L614.1 401c-.6 5.2 3.7 9.5 8.8 8.9zM744 690.4l43.9-43.9a8.01 8.01 0 0 0-4.7-13.6L623 614c-5.1-.6-9.5 3.7-8.9 8.9L633 783.1c.8 6.6 8.9 9.4 13.6 4.7l43.7-43.7L824 877.7c3.1 3.1 8.2 3.1 11.3 0l42.4-42.3c3.1-3.1 3.1-8.2 0-11.3L744 690.4z" }, null, -1));
+const _hoisted_10$9 = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("path", { d: "M391 240.9c-.8-6.6-8.9-9.4-13.6-4.7l-43.7 43.7L200 146.3a8.03 8.03 0 0 0-11.3 0l-42.4 42.3a8.03 8.03 0 0 0 0 11.3L280 333.6l-43.9 43.9a8.01 8.01 0 0 0 4.7 13.6L401 410c5.1.6 9.5-3.7 8.9-8.9L391 240.9zm10.1 373.2L240.8 633c-6.6.8-9.4 8.9-4.7 13.6l43.9 43.9L146.3 824a8.03 8.03 0 0 0 0 11.3l42.4 42.3c3.1 3.1 8.2 3.1 11.3 0L333.7 744l43.7 43.7A8.01 8.01 0 0 0 391 783l18.9-160.1c.6-5.1-3.7-9.4-8.8-8.8zm221.8-204.2L783.2 391c6.6-.8 9.4-8.9 4.7-13.6L744 333.6 877.7 200c3.1-3.1 3.1-8.2 0-11.3l-42.4-42.3a8.03 8.03 0 0 0-11.3 0L690.3 279.9l-43.7-43.7a8.01 8.01 0 0 0-13.6 4.7L614.1 401c-.6 5.2 3.7 9.5 8.8 8.9zM744 690.4l43.9-43.9a8.01 8.01 0 0 0-4.7-13.6L623 614c-5.1-.6-9.5 3.7-8.9 8.9L633 783.1c.8 6.6 8.9 9.4 13.6 4.7l43.7-43.7L824 877.7c3.1 3.1 8.2 3.1 11.3 0l42.4-42.3c3.1-3.1 3.1-8.2 0-11.3L744 690.4z" }, null, -1));
 const _hoisted_11$8 = [
-  _hoisted_10$a
+  _hoisted_10$9
 ];
 const _hoisted_12$7 = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1));
 const _hoisted_13$6 = [
@@ -1464,7 +1454,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     watch(
       () => props.visible,
       (to) => {
-        if (!to) {
+        if (to) {
           fullScreen.value = false;
         }
       }
@@ -1495,7 +1485,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
           }, [
             createElementVNode("div", {
               class: normalizeClass(["m-dialog", _ctx.center ? "relative-hv-center" : "top-center"]),
-              style: normalizeStyle(`width: ${dialogWidth.value}; height: ${dialogHeight.value}; top: ${!fullScreen.value ? !_ctx.center ? _ctx.top + "px" : "50%" : 0}`)
+              style: normalizeStyle(`width: ${dialogWidth.value}; height: ${dialogHeight.value}; top: ${_ctx.center ? "50%" : fullScreen.value ? 0 : _ctx.top + "px"};`)
             }, [
               createElementVNode("div", {
                 class: normalizeClass(["m-dialog-content", { loading: _ctx.loading }])
@@ -1569,8 +1559,8 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Dialog_vue_vue_type_style_index_0_scoped_a7518a4a_lang = "";
-const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-a7518a4a"]]);
+const Dialog_vue_vue_type_style_index_0_scoped_d1139c50_lang = "";
+const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-d1139c50"]]);
 Dialog.install = (app) => {
   app.component(Dialog.__name, Dialog);
 };
@@ -1647,8 +1637,8 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Divider_vue_vue_type_style_index_0_scoped_af7a57e1_lang = "";
-const Divider = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-af7a57e1"]]);
+const Divider_vue_vue_type_style_index_0_scoped_71a4746d_lang = "";
+const Divider = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-71a4746d"]]);
 Divider.install = (app) => {
   app.component(Divider.__name, Divider);
 };
@@ -1711,7 +1701,7 @@ const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-f6
 Empty.install = (app) => {
   app.component(Empty.__name, Empty);
 };
-const _withScopeId$c = (n) => (pushScopeId("data-v-63feabb9"), n = n(), popScopeId(), n);
+const _withScopeId$c = (n) => (pushScopeId("data-v-838473ab"), n = n(), popScopeId(), n);
 const _hoisted_1$m = { class: "m-image-wrap" };
 const _hoisted_2$i = { class: "u-spin-circle" };
 const _hoisted_3$g = ["src", "alt"];
@@ -1725,12 +1715,14 @@ const _hoisted_5$c = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ create
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z" })
 ], -1));
-const _hoisted_6$b = { class: "m-preview-mask" };
-const _hoisted_7$b = ["onClick", "onWheel"];
-const _hoisted_8$b = { class: "m-preview-body" };
-const _hoisted_9$b = { class: "m-preview-operations" };
-const _hoisted_10$9 = ["title"];
-const _hoisted_11$7 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_6$b = { class: "u-pre" };
+const _hoisted_7$b = { class: "m-preview-mask" };
+const _hoisted_8$b = ["onClick", "onWheel"];
+const _hoisted_9$b = { class: "m-preview-body" };
+const _hoisted_10$8 = { class: "m-preview-operations" };
+const _hoisted_11$7 = ["title"];
+const _hoisted_12$6 = { class: "u-preview-progress" };
+const _hoisted_13$5 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
   "data-icon": "close",
@@ -1739,10 +1731,10 @@ const _hoisted_11$7 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" })
 ], -1));
-const _hoisted_12$6 = [
-  _hoisted_11$7
+const _hoisted_14$5 = [
+  _hoisted_13$5
 ];
-const _hoisted_13$5 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_15$5 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
   "data-icon": "zoom-in",
@@ -1751,10 +1743,10 @@ const _hoisted_13$5 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M637 443H519V309c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v134H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h118v134c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V519h118c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8zm284 424L775 721c122.1-148.9 113.6-369.5-26-509-148-148.1-388.4-148.1-537 0-148.1 148.6-148.1 389 0 537 139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11zM696 696c-118.8 118.7-311.2 118.7-430 0-118.7-118.8-118.7-311.2 0-430 118.8-118.7 311.2-118.7 430 0 118.7 118.8 118.7 311.2 0 430z" })
 ], -1));
-const _hoisted_14$5 = [
-  _hoisted_13$5
+const _hoisted_16$5 = [
+  _hoisted_15$5
 ];
-const _hoisted_15$5 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_17$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
   "data-icon": "zoom-out",
@@ -1763,10 +1755,10 @@ const _hoisted_15$5 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M637 443H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h312c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8zm284 424L775 721c122.1-148.9 113.6-369.5-26-509-148-148.1-388.4-148.1-537 0-148.1 148.6-148.1 389 0 537 139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11zM696 696c-118.8 118.7-311.2 118.7-430 0-118.7-118.8-118.7-311.2 0-430 118.8-118.7 311.2-118.7 430 0 118.7 118.8 118.7 311.2 0 430z" })
 ], -1));
-const _hoisted_16$5 = [
-  _hoisted_15$5
+const _hoisted_18$3 = [
+  _hoisted_17$3
 ];
-const _hoisted_17$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_19$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
   "data-icon": "expand",
@@ -1775,10 +1767,10 @@ const _hoisted_17$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M342 88H120c-17.7 0-32 14.3-32 32v224c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V168h174c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm578 576h-48c-8.8 0-16 7.2-16 16v176H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h222c17.7 0 32-14.3 32-32V680c0-8.8-7.2-16-16-16zM342 856H168V680c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v224c0 17.7 14.3 32 32 32h222c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM904 88H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h174v176c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V120c0-17.7-14.3-32-32-32z" })
 ], -1));
-const _hoisted_18$3 = [
-  _hoisted_17$3
+const _hoisted_20$2 = [
+  _hoisted_19$3
 ];
-const _hoisted_19$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_21$2 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
   "data-icon": "rotate-right",
@@ -1788,10 +1780,10 @@ const _hoisted_19$3 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
   /* @__PURE__ */ createElementVNode("path", { d: "M480.5 251.2c13-1.6 25.9-2.4 38.8-2.5v63.9c0 6.5 7.5 10.1 12.6 6.1L660 217.6c4-3.2 4-9.2 0-12.3l-128-101c-5.1-4-12.6-.4-12.6 6.1l-.2 64c-118.6.5-235.8 53.4-314.6 154.2A399.75 399.75 0 00123.5 631h74.9c-.9-5.3-1.7-10.7-2.4-16.1-5.1-42.1-2.1-84.1 8.9-124.8 11.4-42.2 31-81.1 58.1-115.8 27.2-34.7 60.3-63.2 98.4-84.3 37-20.6 76.9-33.6 119.1-38.8z" }),
   /* @__PURE__ */ createElementVNode("path", { d: "M880 418H352c-17.7 0-32 14.3-32 32v414c0 17.7 14.3 32 32 32h528c17.7 0 32-14.3 32-32V450c0-17.7-14.3-32-32-32zm-44 402H396V494h440v326z" })
 ], -1));
-const _hoisted_20$2 = [
-  _hoisted_19$3
+const _hoisted_22$2 = [
+  _hoisted_21$2
 ];
-const _hoisted_21$2 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_23$2 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-icon",
   focusable: "false",
   "data-icon": "rotate-left",
@@ -1801,12 +1793,12 @@ const _hoisted_21$2 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
   /* @__PURE__ */ createElementVNode("path", { d: "M672 418H144c-17.7 0-32 14.3-32 32v414c0 17.7 14.3 32 32 32h528c17.7 0 32-14.3 32-32V450c0-17.7-14.3-32-32-32zm-44 402H188V494h440v326z" }),
   /* @__PURE__ */ createElementVNode("path", { d: "M819.3 328.5c-78.8-100.7-196-153.6-314.6-154.2l-.2-64c0-6.5-7.6-10.1-12.6-6.1l-128 101c-4 3.1-3.9 9.1 0 12.3L492 318.6c5.1 4 12.7.4 12.6-6.1v-63.9c12.9.1 25.9.9 38.8 2.5 42.1 5.2 82.1 18.2 119 38.7 38.1 21.2 71.2 49.7 98.4 84.3 27.1 34.7 46.7 73.7 58.1 115.8a325.95 325.95 0 016.5 140.9h74.9c14.8-103.6-11.3-213-81-302.3z" })
 ], -1));
-const _hoisted_22$2 = [
-  _hoisted_21$2
+const _hoisted_24$1 = [
+  _hoisted_23$2
 ];
-const _hoisted_23$2 = { class: "u-spin-circle" };
-const _hoisted_24$1 = ["src", "alt"];
-const _hoisted_25$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_25$1 = { class: "u-spin-circle" };
+const _hoisted_26$1 = ["src", "alt"];
+const _hoisted_27$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
   class: "u-switch",
   "data-icon": "left",
@@ -1815,10 +1807,10 @@ const _hoisted_25$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z" })
 ], -1));
-const _hoisted_26$1 = [
-  _hoisted_25$1
+const _hoisted_28$1 = [
+  _hoisted_27$1
 ];
-const _hoisted_27$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
+const _hoisted_29 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
   class: "u-switch",
   "data-icon": "right",
@@ -1827,17 +1819,17 @@ const _hoisted_27$1 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z" })
 ], -1));
-const _hoisted_28$1 = [
-  _hoisted_27$1
+const _hoisted_30 = [
+  _hoisted_29
 ];
 const _sfc_main$m = /* @__PURE__ */ defineComponent({
   __name: "Image",
   props: {
+    src: { default: "" },
     name: { default: "" },
     width: { default: 300 },
     height: { default: "100%" },
     fit: { default: "contain" },
-    src: { default: "" },
     preview: { default: "预览" },
     zoomRatio: { default: 0.1 },
     minZoomScale: { default: 0.1 },
@@ -2051,15 +2043,17 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
           }, [
             createElementVNode("div", _hoisted_4$e, [
               _hoisted_5$c,
-              renderSlot(_ctx.$slots, "preview", {}, () => [
-                createTextVNode(toDisplayString(_ctx.preview), 1)
-              ], true)
+              createElementVNode("p", _hoisted_6$b, [
+                renderSlot(_ctx.$slots, "preview", {}, () => [
+                  createTextVNode(toDisplayString(_ctx.preview), 1)
+                ], true)
+              ])
             ])
           ])
         ], 6),
         createVNode(Transition, { name: "mask" }, {
           default: withCtx(() => [
-            withDirectives(createElementVNode("div", _hoisted_6$b, null, 512), [
+            withDirectives(createElementVNode("div", _hoisted_7$b, null, 512), [
               [vShow, showPreview.value]
             ])
           ]),
@@ -2072,48 +2066,49 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
               onClick: withModifiers(onClose, ["self"]),
               onWheel: withModifiers(onWheel, ["prevent"])
             }, [
-              createElementVNode("div", _hoisted_8$b, [
-                createElementVNode("div", _hoisted_9$b, [
+              createElementVNode("div", _hoisted_9$b, [
+                createElementVNode("div", _hoisted_10$8, [
                   createElementVNode("p", {
                     class: "u-name",
                     title: getImageName(images.value[previewIndex.value])
-                  }, toDisplayString(getImageName(images.value[previewIndex.value])), 9, _hoisted_10$9),
+                  }, toDisplayString(getImageName(images.value[previewIndex.value])), 9, _hoisted_11$7),
+                  createElementVNode("p", _hoisted_12$6, toDisplayString(previewIndex.value + 1) + " / " + toDisplayString(imageCount.value), 1),
                   createElementVNode("div", {
                     class: "u-preview-operation",
                     title: "关闭",
                     onClick: onClose
-                  }, _hoisted_12$6),
+                  }, _hoisted_14$5),
                   createElementVNode("div", {
                     class: normalizeClass(["u-preview-operation", { "u-operation-disabled": scale.value === _ctx.maxZoomScale }]),
                     title: "放大",
                     onClick: onZoomin
-                  }, _hoisted_14$5, 2),
+                  }, _hoisted_16$5, 2),
                   createElementVNode("div", {
                     class: normalizeClass(["u-preview-operation", { "u-operation-disabled": scale.value === _ctx.minZoomScale }]),
                     title: "缩小",
                     onClick: onZoomout
-                  }, _hoisted_16$5, 2),
+                  }, _hoisted_18$3, 2),
                   createElementVNode("div", {
                     class: "u-preview-operation",
                     title: "还原",
                     onClick: onResetOrigin
-                  }, _hoisted_18$3),
+                  }, _hoisted_20$2),
                   createElementVNode("div", {
                     class: "u-preview-operation",
                     title: "向右旋转",
                     onClick: onClockwiseRotate
-                  }, _hoisted_20$2),
+                  }, _hoisted_22$2),
                   createElementVNode("div", {
                     class: "u-preview-operation",
                     title: "向左旋转",
                     onClick: onAnticlockwiseRotate
-                  }, _hoisted_22$2)
+                  }, _hoisted_24$1)
                 ]),
                 createElementVNode("div", {
                   class: "m-preview-image",
                   style: normalizeStyle(`transform: translate3d(${dragX.value}px, ${dragY.value}px, 0px);`)
                 }, [
-                  withDirectives(createElementVNode("div", _hoisted_23$2, null, 512), [
+                  withDirectives(createElementVNode("div", _hoisted_25$1, null, 512), [
                     [vShow, !loaded.value]
                   ]),
                   (openBlock(true), createElementBlock(Fragment, null, renderList(images.value, (image, index) => {
@@ -2126,7 +2121,7 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
                       onMousedown: _cache[0] || (_cache[0] = withModifiers(($event) => onMouseDown($event), ["prevent"])),
                       onLoad: onLoaded,
                       onDblclick: _cache[1] || (_cache[1] = ($event) => _ctx.resetOnDbclick ? onResetOrigin() : () => false)
-                    }, null, 44, _hoisted_24$1)), [
+                    }, null, 44, _hoisted_26$1)), [
                       [vShow, previewIndex.value === index]
                     ]);
                   }), 128))
@@ -2135,14 +2130,14 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
                   createElementVNode("div", {
                     class: normalizeClass(["m-switch-left", { "u-switch-disabled": previewIndex.value === 0 && !_ctx.loop }]),
                     onClick: onSwitchLeft
-                  }, _hoisted_26$1, 2),
+                  }, _hoisted_28$1, 2),
                   createElementVNode("div", {
                     class: normalizeClass(["m-switch-right", { "u-switch-disabled": previewIndex.value === imageCount.value - 1 && !_ctx.loop }]),
                     onClick: onSwitchRight
-                  }, _hoisted_28$1, 2)
+                  }, _hoisted_30, 2)
                 ], 64)) : createCommentVNode("", true)
               ])
-            ], 40, _hoisted_7$b), [
+            ], 40, _hoisted_8$b), [
               [vShow, showPreview.value]
             ])
           ]),
@@ -2152,12 +2147,12 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Image_vue_vue_type_style_index_0_scoped_63feabb9_lang = "";
-const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-63feabb9"]]);
+const Image_vue_vue_type_style_index_0_scoped_838473ab_lang = "";
+const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-838473ab"]]);
 Image$1.install = (app) => {
   app.component(Image$1.__name, Image$1);
 };
-const _withScopeId$b = (n) => (pushScopeId("data-v-2434c913"), n = n(), popScopeId(), n);
+const _withScopeId$b = (n) => (pushScopeId("data-v-1de40ef9"), n = n(), popScopeId(), n);
 const _hoisted_1$l = {
   class: "m-input-number",
   tabindex: "1"
@@ -2198,12 +2193,15 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
     step: { default: 1 },
     prefix: { default: "" },
     keyboard: { type: Boolean, default: true },
-    value: { default: 0 }
+    value: { default: null }
   },
   emits: ["update:value", "change"],
   setup(__props, { emit: emits }) {
     const props = __props;
-    const numValue = ref(props.value);
+    const numValue = ref();
+    watchEffect(() => {
+      numValue.value = props.value;
+    });
     function emitValue(value) {
       emits("change", value);
       emits("update:value", value);
@@ -2295,11 +2293,11 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
         ]),
         createElementVNode("div", _hoisted_5$b, [
           createElementVNode("span", {
-            class: normalizeClass(["u-up-arrow", { disabled: _ctx.min === numValue.value || _ctx.max === numValue.value }]),
+            class: normalizeClass(["u-up-arrow", { disabled: (numValue.value || 0) >= _ctx.max }]),
             onClick: onUp
           }, _hoisted_7$a, 2),
           createElementVNode("span", {
-            class: normalizeClass(["u-down-arrow", { disabled: _ctx.min === numValue.value || _ctx.max === numValue.value }]),
+            class: normalizeClass(["u-down-arrow", { disabled: (numValue.value || 0) <= _ctx.min }]),
             onClick: onDown
           }, _hoisted_9$a, 2)
         ])
@@ -2307,8 +2305,8 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const InputNumber_vue_vue_type_style_index_0_scoped_2434c913_lang = "";
-const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-2434c913"]]);
+const InputNumber_vue_vue_type_style_index_0_scoped_1de40ef9_lang = "";
+const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-1de40ef9"]]);
 InputNumber.install = (app) => {
   app.component(InputNumber.__name, InputNumber);
 };
@@ -2330,7 +2328,7 @@ const _hoisted_8$9 = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ create
 const _hoisted_9$9 = [
   _hoisted_8$9
 ];
-const _hoisted_10$8 = { class: "content" };
+const _hoisted_10$7 = { class: "content" };
 var ColorStyle$1 = /* @__PURE__ */ ((ColorStyle2) => {
   ColorStyle2["info"] = "#1677FF";
   ColorStyle2["success"] = "#52c41a";
@@ -2467,7 +2465,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
                     "aria-hidden": "true",
                     focusable: "false"
                   }, _hoisted_9$9, 4)) : createCommentVNode("", true),
-                  createElementVNode("p", _hoisted_10$8, toDisplayString(message.content), 1)
+                  createElementVNode("p", _hoisted_10$7, toDisplayString(message.content), 1)
                 ], 40, _hoisted_1$k)
               ])), [
                 [vShow, showMessage.value[index]]
@@ -2500,7 +2498,7 @@ const _hoisted_7$8 = [
 ];
 const _hoisted_8$8 = { class: "m-body" };
 const _hoisted_9$8 = { class: "m-title" };
-const _hoisted_10$7 = {
+const _hoisted_10$6 = {
   key: 0,
   focusable: "false",
   class: "u-icon confirm",
@@ -2646,7 +2644,7 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
                   ]),
                   createElementVNode("div", _hoisted_8$8, [
                     createElementVNode("div", _hoisted_9$8, [
-                      mode.value === "confirm" || mode.value === "erase" ? (openBlock(), createElementBlock("svg", _hoisted_10$7, _hoisted_13$4)) : createCommentVNode("", true),
+                      mode.value === "confirm" || mode.value === "erase" ? (openBlock(), createElementBlock("svg", _hoisted_10$6, _hoisted_13$4)) : createCommentVNode("", true),
                       mode.value === "info" ? (openBlock(), createElementBlock("svg", _hoisted_14$4, _hoisted_16$4)) : createCommentVNode("", true),
                       mode.value === "success" ? (openBlock(), createElementBlock("svg", _hoisted_17$2, _hoisted_19$2)) : createCommentVNode("", true),
                       mode.value === "error" ? (openBlock(), createElementBlock("svg", _hoisted_20$1, _hoisted_22$1)) : createCommentVNode("", true),
@@ -2695,7 +2693,7 @@ const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-e4
 Modal.install = (app) => {
   app.component(Modal.__name, Modal);
 };
-const _withScopeId$8 = (n) => (pushScopeId("data-v-d3f18224"), n = n(), popScopeId(), n);
+const _withScopeId$8 = (n) => (pushScopeId("data-v-65b80cd6"), n = n(), popScopeId(), n);
 const _hoisted_1$i = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$e = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
 const _hoisted_3$c = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z" }, null, -1));
@@ -2711,7 +2709,7 @@ const _hoisted_7$7 = [
 ];
 const _hoisted_8$7 = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
 const _hoisted_9$7 = /* @__PURE__ */ _withScopeId$8(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 688a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z" }, null, -1));
-const _hoisted_10$6 = [
+const _hoisted_10$5 = [
   _hoisted_8$7,
   _hoisted_9$7
 ];
@@ -2869,7 +2867,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
                   "data-icon": "exclamation-circle",
                   "aria-hidden": "true",
                   focusable: "false"
-                }, _hoisted_10$6, 4)) : createCommentVNode("", true),
+                }, _hoisted_10$5, 4)) : createCommentVNode("", true),
                 data.mode === "error" ? (openBlock(), createElementBlock("svg", {
                   key: 3,
                   class: "u-status-svg",
@@ -2904,12 +2902,12 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Notification_vue_vue_type_style_index_0_scoped_d3f18224_lang = "";
-const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-d3f18224"]]);
+const Notification_vue_vue_type_style_index_0_scoped_65b80cd6_lang = "";
+const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-65b80cd6"]]);
 Notification.install = (app) => {
   app.component(Notification.__name, Notification);
 };
-const _withScopeId$7 = (n) => (pushScopeId("data-v-5e4f8b4d"), n = n(), popScopeId(), n);
+const _withScopeId$7 = (n) => (pushScopeId("data-v-49e5ef67"), n = n(), popScopeId(), n);
 const _hoisted_1$h = { class: "m-pagination-wrap" };
 const _hoisted_2$d = {
   key: 0,
@@ -2940,7 +2938,7 @@ const _hoisted_8$6 = [
   _hoisted_7$6
 ];
 const _hoisted_9$6 = ["onClick"];
-const _hoisted_10$5 = { class: "u-ellipsis" };
+const _hoisted_10$4 = { class: "u-ellipsis" };
 const _hoisted_11$4 = {
   class: "u-icon",
   viewBox: "64 64 896 896",
@@ -3113,7 +3111,7 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
             onMouseenter: _cache[4] || (_cache[4] = ($event) => backwardArrow.value = true),
             onMouseleave: _cache[5] || (_cache[5] = ($event) => backwardArrow.value = false)
           }, [
-            withDirectives(createElementVNode("span", _hoisted_10$5, "•••", 512), [
+            withDirectives(createElementVNode("span", _hoisted_10$4, "•••", 512), [
               [vShow, !backwardArrow.value]
             ]),
             withDirectives((openBlock(), createElementBlock("svg", _hoisted_11$4, _hoisted_13$2, 512)), [
@@ -3147,12 +3145,12 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Pagination_vue_vue_type_style_index_0_scoped_5e4f8b4d_lang = "";
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-5e4f8b4d"]]);
+const Pagination_vue_vue_type_style_index_0_scoped_49e5ef67_lang = "";
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-49e5ef67"]]);
 Pagination.install = (app) => {
   app.component(Pagination.__name, Pagination);
 };
-const _withScopeId$6 = (n) => (pushScopeId("data-v-c40d2493"), n = n(), popScopeId(), n);
+const _withScopeId$6 = (n) => (pushScopeId("data-v-0c446023"), n = n(), popScopeId(), n);
 const _hoisted_1$g = {
   key: 0,
   class: "u-success",
@@ -3185,7 +3183,7 @@ const _hoisted_8$5 = {
   viewBox: "64 64 896 896"
 };
 const _hoisted_9$5 = /* @__PURE__ */ _withScopeId$6(() => /* @__PURE__ */ createElementVNode("path", { d: "M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z" }, null, -1));
-const _hoisted_10$4 = [
+const _hoisted_10$3 = [
   _hoisted_9$5
 ];
 const _hoisted_11$3 = {
@@ -3271,14 +3269,14 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
           }, null, 14, _hoisted_7$5)
         ])),
         _ctx.showInfo ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-          _ctx.percent >= 100 ? (openBlock(), createElementBlock("svg", _hoisted_8$5, _hoisted_10$4)) : (openBlock(), createElementBlock("p", _hoisted_11$3, toDisplayString(_ctx.percent >= 100 ? 100 : _ctx.percent) + "%", 1))
+          _ctx.percent >= 100 ? (openBlock(), createElementBlock("svg", _hoisted_8$5, _hoisted_10$3)) : (openBlock(), createElementBlock("p", _hoisted_11$3, toDisplayString(_ctx.percent >= 100 ? 100 : _ctx.percent) + "%", 1))
         ], 64)) : createCommentVNode("", true)
       ], 4));
     };
   }
 });
-const Progress_vue_vue_type_style_index_0_scoped_c40d2493_lang = "";
-const Progress = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-c40d2493"]]);
+const Progress_vue_vue_type_style_index_0_scoped_0c446023_lang = "";
+const Progress = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-0c446023"]]);
 Progress.install = (app) => {
   app.component(Progress.__name, Progress);
 };
@@ -3347,8 +3345,8 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const QRCode_vue_vue_type_style_index_0_scoped_d1170359_lang = "";
-const QRCode = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-d1170359"]]);
+const QRCode_vue_vue_type_style_index_0_scoped_061c32ae_lang = "";
+const QRCode = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-061c32ae"]]);
 QRCode.install = (app) => {
   app.component(QRCode.__name, QRCode);
 };
@@ -3416,12 +3414,12 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Radio_vue_vue_type_style_index_0_scoped_81f74d08_lang = "";
-const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-81f74d08"]]);
+const Radio_vue_vue_type_style_index_0_scoped_8f878371_lang = "";
+const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-8f878371"]]);
 Radio.install = (app) => {
   app.component(Radio.__name, Radio);
 };
-const _withScopeId$5 = (n) => (pushScopeId("data-v-cbf33b13"), n = n(), popScopeId(), n);
+const _withScopeId$5 = (n) => (pushScopeId("data-v-c9783345"), n = n(), popScopeId(), n);
 const _hoisted_1$d = ["onClick"];
 const _hoisted_2$a = ["onClick", "onMouseenter"];
 const _hoisted_3$8 = /* @__PURE__ */ _withScopeId$5(() => /* @__PURE__ */ createElementVNode("path", { d: "M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" }, null, -1));
@@ -3437,7 +3435,7 @@ const _hoisted_8$4 = [
   _hoisted_7$4
 ];
 const _hoisted_9$4 = /* @__PURE__ */ _withScopeId$5(() => /* @__PURE__ */ createElementVNode("path", { d: "M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9zM512 814.8S156 586.7 156 385.5C156 283.6 240.3 201 344.3 201c73.1 0 136.5 40.8 167.7 100.4C543.2 241.8 606.6 201 679.7 201c104 0 188.3 82.6 188.3 184.5 0 201.2-356 429.3-356 429.3z" }, null, -1));
-const _hoisted_10$3 = [
+const _hoisted_10$2 = [
   _hoisted_9$4
 ];
 const _hoisted_11$2 = ["onClick", "onMouseenter"];
@@ -3565,7 +3563,7 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
                 "data-icon": "heart",
                 "aria-hidden": "true",
                 viewBox: "64 64 896 896"
-              }, _hoisted_10$3, 4)) : (openBlock(), createElementBlock("span", {
+              }, _hoisted_10$2, 4)) : (openBlock(), createElementBlock("span", {
                 key: 4,
                 class: "u-star",
                 style: normalizeStyle(`font-size: ${0.66 * _ctx.size}px; height: ${_ctx.size}px;`)
@@ -3629,8 +3627,8 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Rate_vue_vue_type_style_index_0_scoped_cbf33b13_lang = "";
-const Rate = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-cbf33b13"]]);
+const Rate_vue_vue_type_style_index_0_scoped_c9783345_lang = "";
+const Rate = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-c9783345"]]);
 Rate.install = (app) => {
   app.component(Rate.__name, Rate);
 };
@@ -3911,7 +3909,7 @@ const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-9
 Slider.install = (app) => {
   app.component(Slider.__name, Slider);
 };
-const _withScopeId$3 = (n) => (pushScopeId("data-v-e8f5072b"), n = n(), popScopeId(), n);
+const _withScopeId$3 = (n) => (pushScopeId("data-v-c40f8c6b"), n = n(), popScopeId(), n);
 const _hoisted_1$b = { class: "m-spin" };
 const _hoisted_2$8 = { class: "m-spin-box" };
 const _hoisted_3$6 = {
@@ -3932,7 +3930,7 @@ const _hoisted_9$3 = {
   key: 1,
   class: "u-spin-circle"
 };
-const _hoisted_10$2 = {
+const _hoisted_10$1 = {
   key: 2,
   class: "m-dynamic-circle"
 };
@@ -3968,7 +3966,7 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
           createElementVNode("div", _hoisted_2$8, [
             _ctx.indicator === "dot" ? (openBlock(), createElementBlock("div", _hoisted_3$6, _hoisted_8$3)) : createCommentVNode("", true),
             _ctx.indicator === "static-circle" ? (openBlock(), createElementBlock("div", _hoisted_9$3)) : createCommentVNode("", true),
-            _ctx.indicator === "dynamic-circle" ? (openBlock(), createElementBlock("div", _hoisted_10$2, _hoisted_12$1)) : createCommentVNode("", true),
+            _ctx.indicator === "dynamic-circle" ? (openBlock(), createElementBlock("div", _hoisted_10$1, _hoisted_12$1)) : createCommentVNode("", true),
             withDirectives(createElementVNode("p", { class: "u-tip" }, toDisplayString(_ctx.tip), 513), [
               [vShow, _ctx.tip]
             ])
@@ -3985,12 +3983,12 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Spin_vue_vue_type_style_index_0_scoped_e8f5072b_lang = "";
-const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-e8f5072b"]]);
+const Spin_vue_vue_type_style_index_0_scoped_c40f8c6b_lang = "";
+const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-c40f8c6b"]]);
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
-const _withScopeId$2 = (n) => (pushScopeId("data-v-cbae2724"), n = n(), popScopeId(), n);
+const _withScopeId$2 = (n) => (pushScopeId("data-v-f837a4aa"), n = n(), popScopeId(), n);
 const _hoisted_1$a = { class: "m-steps" };
 const _hoisted_2$7 = ["onClick"];
 const _hoisted_3$5 = { class: "m-steps-icon" };
@@ -4090,8 +4088,8 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Steps_vue_vue_type_style_index_0_scoped_cbae2724_lang = "";
-const Steps = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-cbae2724"]]);
+const Steps_vue_vue_type_style_index_0_scoped_f837a4aa_lang = "";
+const Steps = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-f837a4aa"]]);
 Steps.install = (app) => {
   app.component(Steps.__name, Steps);
 };
@@ -5469,8 +5467,8 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Swiper_vue_vue_type_style_index_0_scoped_2cae4c49_lang = "";
-const Swiper = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-2cae4c49"]]);
+const Swiper_vue_vue_type_style_index_0_scoped_270119b1_lang = "";
+const Swiper = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-270119b1"]]);
 Swiper.install = (app) => {
   app.component(Swiper.__name, Swiper);
 };
@@ -5524,13 +5522,12 @@ Switch.install = (app) => {
 const _hoisted_1$7 = { class: "m-table-wrap" };
 const _hoisted_2$5 = { class: "m-table" };
 const _hoisted_3$3 = { class: "m-tr" };
-const _hoisted_4$2 = ["width"];
-const _hoisted_5$1 = { class: "m-body" };
-const _hoisted_6$1 = { class: "m-tr-loading" };
-const _hoisted_7$1 = { class: "m-tr-empty" };
-const _hoisted_8$1 = ["colspan"];
-const _hoisted_9$1 = ["title"];
-const _hoisted_10$1 = { key: 1 };
+const _hoisted_4$2 = { class: "m-body" };
+const _hoisted_5$1 = { class: "m-tr-loading" };
+const _hoisted_6$1 = { class: "m-tr-empty" };
+const _hoisted_7$1 = ["colspan"];
+const _hoisted_8$1 = ["title"];
+const _hoisted_9$1 = { key: 1 };
 const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   __name: "Table",
   props: {
@@ -5557,14 +5554,14 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
               (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.columns, (item, index) => {
                 return openBlock(), createElementBlock("th", {
                   class: "m-th",
-                  width: item.width,
+                  style: normalizeStyle(`width: ${typeof item.width === "number" ? item.width + "px" : item.width};`),
                   key: index
-                }, toDisplayString(item.title), 9, _hoisted_4$2);
+                }, toDisplayString(item.title), 5);
               }), 128))
             ])
           ]),
-          createElementVNode("tbody", _hoisted_5$1, [
-            withDirectives(createElementVNode("tr", _hoisted_6$1, [
+          createElementVNode("tbody", _hoisted_4$2, [
+            withDirectives(createElementVNode("tr", _hoisted_5$1, [
               createVNode(unref(Spin), {
                 class: "m-loading",
                 size: "small",
@@ -5573,7 +5570,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
             ], 512), [
               [vShow, _ctx.loading]
             ]),
-            withDirectives(createElementVNode("tr", _hoisted_7$1, [
+            withDirectives(createElementVNode("tr", _hoisted_6$1, [
               createElementVNode("td", {
                 class: "m-td-empty",
                 colspan: _ctx.columns.length
@@ -5582,7 +5579,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
                   class: "empty",
                   image: "2"
                 })
-              ], 8, _hoisted_8$1)
+              ], 8, _hoisted_7$1)
             ], 512), [
               [vShow, !_ctx.total]
             ]),
@@ -5599,8 +5596,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
                   }, [
                     col.slot ? renderSlot(_ctx.$slots, col.slot, mergeProps({ key: 0 }, data, { index }), () => [
                       createTextVNode(toDisplayString(data[col.dataIndex] || "--"), 1)
-                    ], true) : (openBlock(), createElementBlock("span", _hoisted_10$1, toDisplayString(data[col.dataIndex] || "--"), 1))
-                  ], 8, _hoisted_9$1);
+                    ], true) : (openBlock(), createElementBlock("span", _hoisted_9$1, toDisplayString(data[col.dataIndex] || "--"), 1))
+                  ], 8, _hoisted_8$1);
                 }), 128))
               ]);
             }), 128))
@@ -5622,8 +5619,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Table_vue_vue_type_style_index_0_scoped_5bc8691a_lang = "";
-const Table = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-5bc8691a"]]);
+const Table_vue_vue_type_style_index_0_scoped_7353f744_lang = "";
+const Table = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-7353f744"]]);
 Table.install = (app) => {
   app.component(Table.__name, Table);
 };
@@ -5746,8 +5743,8 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tabs_vue_vue_type_style_index_0_scoped_ce3c2318_lang = "";
-const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-ce3c2318"]]);
+const Tabs_vue_vue_type_style_index_0_scoped_828c6d3d_lang = "";
+const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-828c6d3d"]]);
 Tabs.install = (app) => {
   app.component(Tabs.__name, Tabs);
 };
@@ -5918,8 +5915,8 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const TextScroll_vue_vue_type_style_index_0_scoped_101d4198_lang = "";
-const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-101d4198"]]);
+const TextScroll_vue_vue_type_style_index_0_scoped_9aa9743c_lang = "";
+const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-9aa9743c"]]);
 TextScroll.install = (app) => {
   app.component(TextScroll.__name, TextScroll);
 };
@@ -5935,6 +5932,13 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     const props = __props;
     const desc = ref();
     const dotsHeight = ref([]);
+    const totalWidth = computed(() => {
+      if (typeof props.width === "number") {
+        return props.width + "px";
+      } else {
+        return props.width;
+      }
+    });
     function getDotsHeight() {
       const len = props.timelineData.length;
       for (let n = 0; n < len; n++) {
@@ -5947,7 +5951,7 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
         class: "m-timeline-area",
-        style: normalizeStyle(`width: ${_ctx.width}px`)
+        style: normalizeStyle(`width: ${totalWidth.value};`)
       }, [
         createElementVNode("div", _hoisted_1$4, [
           (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.timelineData, (data, index) => {
@@ -6019,8 +6023,8 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Timeline_vue_vue_type_style_index_0_scoped_896c0193_lang = "";
-const Timeline = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-896c0193"]]);
+const Timeline_vue_vue_type_style_index_0_scoped_04f57bbf_lang = "";
+const Timeline = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-04f57bbf"]]);
 Timeline.install = (app) => {
   app.component(Timeline.__name, Timeline);
 };
@@ -6107,12 +6111,12 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tooltip_vue_vue_type_style_index_0_scoped_7f413517_lang = "";
-const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-7f413517"]]);
+const Tooltip_vue_vue_type_style_index_0_scoped_c3922115_lang = "";
+const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-c3922115"]]);
 Tooltip.install = (app) => {
   app.component(Tooltip.__name, Tooltip);
 };
-const _withScopeId$1 = (n) => (pushScopeId("data-v-0d7d7aea"), n = n(), popScopeId(), n);
+const _withScopeId$1 = (n) => (pushScopeId("data-v-e03921d9"), n = n(), popScopeId(), n);
 const _hoisted_1$2 = { class: "m-upload-list" };
 const _hoisted_2$2 = { class: "m-upload" };
 const _hoisted_3$1 = ["onDrop", "onClick"];
@@ -6433,12 +6437,12 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Upload_vue_vue_type_style_index_0_scoped_0d7d7aea_lang = "";
-const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-0d7d7aea"]]);
+const Upload_vue_vue_type_style_index_0_scoped_e03921d9_lang = "";
+const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-e03921d9"]]);
 Upload.install = (app) => {
   app.component(Upload.__name, Upload);
 };
-const _withScopeId = (n) => (pushScopeId("data-v-cc2b0df3"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-41a5c827"), n = n(), popScopeId(), n);
 const _hoisted_1$1 = ["src", "poster", "width", "height", "autoplay", "controls", "loop", "muted", "preload", "onClickOnce"];
 const _hoisted_2$1 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("path", {
   "stroke-linecap": "round",
@@ -6471,7 +6475,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     preload: { default: "auto" },
     showPlay: { type: Boolean, default: true },
     playWidth: { default: 96 },
-    zoom: { default: "contain" }
+    fit: { default: "contain" }
   },
   setup(__props) {
     const props = __props;
@@ -6521,7 +6525,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
         createElementVNode("video", mergeProps({
           ref_key: "veo",
           ref: veo,
-          style: `object-fit: ${_ctx.zoom};`,
+          style: `object-fit: ${_ctx.fit};`,
           src: _ctx.src,
           poster: veoPoster.value,
           width: _ctx.width,
@@ -6548,19 +6552,19 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Video_vue_vue_type_style_index_0_scoped_cc2b0df3_lang = "";
-const Video = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-cc2b0df3"]]);
+const Video_vue_vue_type_style_index_0_scoped_41a5c827_lang = "";
+const Video = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-41a5c827"]]);
 Video.install = (app) => {
   app.component(Video.__name, Video);
 };
-const _hoisted_1 = ["src", "title", "alt"];
-const _hoisted_2 = ["src", "title", "alt"];
+const _hoisted_1 = ["src", "alt", "onLoad"];
+const _hoisted_2 = ["src", "alt", "onLoad"];
 const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "Waterfall",
   props: {
     images: { default: () => [] },
     columnCount: { default: 3 },
-    columnGap: { default: 30 },
+    columnGap: { default: 20 },
     width: { default: "100%" },
     backgroundColor: { default: "#F2F4F8" },
     mode: { default: "JS" }
@@ -6581,6 +6585,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const height = computed(() => {
       return Math.max(...preColumnHeight.value) + props.columnGap;
     });
+    const len = computed(() => {
+      return props.images.length;
+    });
+    const loaded = ref(Array(len.value).fill(false));
     watch(
       () => props.images,
       (to) => {
@@ -6594,6 +6602,9 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         onPreload();
       }
     });
+    function onLoaded(index) {
+      loaded.value[index] = true;
+    }
     function getPosition(i, height2) {
       if (i < props.columnCount) {
         preColumnHeight.value[i] = props.columnGap + height2;
@@ -6617,17 +6628,17 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         };
       }
     }
-    function onLoad(url, i) {
+    function loadImage(url, n) {
       return new Promise((resolve) => {
         const image = new Image();
         image.src = url;
         image.onload = function() {
           var height2 = image.height / (image.width / imageWidth.value);
-          imagesProperty.value[i] = {
+          imagesProperty.value[n] = {
             // 存储图片宽高和位置信息
             width: imageWidth.value,
             height: height2,
-            ...getPosition(i, height2)
+            ...getPosition(n, height2)
           };
           resolve("load");
         };
@@ -6635,10 +6646,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     }
     async function onPreload() {
       imageWidth.value = (waterfall.value.offsetWidth - (props.columnCount + 1) * props.columnGap) / props.columnCount;
-      const len = props.images.length;
-      imagesProperty.value.splice(len);
-      for (let i = 0; i < len; i++) {
-        await onLoad(props.images[i].src, i);
+      const len2 = props.images.length;
+      imagesProperty.value.splice(len2);
+      for (let i = 0; i < len2; i++) {
+        await loadImage(props.images[i].src, i);
       }
     }
     return (_ctx, _cache) => {
@@ -6650,14 +6661,24 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           style: `background-color: ${_ctx.backgroundColor}; width: ${totalWidth.value}; height: ${height.value}px;`
         }), [
           (openBlock(true), createElementBlock(Fragment, null, renderList(imagesProperty.value, (property, index) => {
-            return openBlock(), createElementBlock("img", {
-              class: "u-img",
-              key: index,
-              style: normalizeStyle(`width: ${imageWidth.value}px; top: ${property && property.top}px; left: ${property && property.left}px;`),
-              src: _ctx.images[index].src,
-              title: _ctx.images[index].title,
-              alt: _ctx.images[index].title
-            }, null, 12, _hoisted_1);
+            return openBlock(), createBlock(unref(Spin), {
+              class: "m-img",
+              style: normalizeStyle(`width: ${property.width}px; height: ${property.height}px; top: ${property && property.top}px; left: ${property && property.left}px;`),
+              spinning: !loaded.value[index],
+              size: "small",
+              indicator: "dynamic-circle",
+              key: index
+            }, {
+              default: withCtx(() => [
+                createElementVNode("img", {
+                  class: "u-img",
+                  src: _ctx.images[index].src,
+                  alt: _ctx.images[index].title,
+                  onLoad: ($event) => onLoaded(index)
+                }, null, 40, _hoisted_1)
+              ]),
+              _: 2
+            }, 1032, ["style", "spinning"]);
           }), 128))
         ], 16)) : createCommentVNode("", true),
         _ctx.mode === "CSS" ? (openBlock(), createElementBlock("div", mergeProps({ key: 1 }, _ctx.$attrs, {
@@ -6665,26 +6686,31 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           style: `background: ${_ctx.backgroundColor}; width: ${totalWidth.value}; padding: ${_ctx.columnGap}px; column-count: ${_ctx.columnCount}; column-gap: ${_ctx.columnGap}px;`
         }), [
           (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.images, (item, index) => {
-            return openBlock(), createElementBlock("div", {
-              class: "m-img",
+            return openBlock(), createBlock(unref(Spin), {
               style: normalizeStyle(`margin-bottom: ${_ctx.columnGap}px;`),
+              spinning: !loaded.value[index],
+              size: "small",
+              indicator: "dynamic-circle",
               key: index
-            }, [
-              createElementVNode("img", {
-                class: "u-img",
-                src: item.src,
-                title: item.title,
-                alt: item.title
-              }, null, 8, _hoisted_2)
-            ], 4);
+            }, {
+              default: withCtx(() => [
+                createElementVNode("img", {
+                  class: "u-img",
+                  src: item.src,
+                  alt: item.title,
+                  onLoad: ($event) => onLoaded(index)
+                }, null, 40, _hoisted_2)
+              ]),
+              _: 2
+            }, 1032, ["style", "spinning"]);
           }), 128))
         ], 16)) : createCommentVNode("", true)
       ], 64);
     };
   }
 });
-const Waterfall_vue_vue_type_style_index_0_scoped_a6e50e9b_lang = "";
-const Waterfall = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-a6e50e9b"]]);
+const Waterfall_vue_vue_type_style_index_0_scoped_e4db009c_lang = "";
+const Waterfall = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-e4db009c"]]);
 Waterfall.install = (app) => {
   app.component(Waterfall.__name, Waterfall);
 };

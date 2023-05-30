@@ -309,12 +309,34 @@ const columns = ref([
 
 ## APIs
 
-参数 | 说明 | 类型 | 默认值
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+columns | 表格列的配置项 | Column[] | [] | false
+dataSource | 表格数据数组 | any[] | [] | false
+pagination | 分页器配置 | Pagination | { page: 1&#44; pageSize: 10 } | false
+showPagination | 是否显示分页器 | boolean | true | false
+hideOnSinglePage | 只有一页时是否隐藏分页器 | boolean | false
+total | 数据总数 | number | 0 | false
+loading | 是否加载中 | boolean | false | false
+
+## Column Type
+
+名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-name |  |  |
+title | 列头显示文字 | string | false
+width | 列宽度 | number &#124; string | true
+dataIndex | 列数据字符索引 | string | true
+slot | 列插槽名称索引 | string | false
+
+## Pagination Type
+
+名称 | 说明 | 类型 | 必传
+-- | -- | -- | --
+page | 当前页码 | number | true
+pageSize | 每页条数 | number | true
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change |  |
+change | 分页变化时的回调 | (pager: {page: number, pageSize: number}) => void

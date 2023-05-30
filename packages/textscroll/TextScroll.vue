@@ -7,13 +7,13 @@ interface Text {
 }
 interface Props {
   sliderText: Text[] // 滚动文字数组
-  width?: number|string // 滚动区域宽度
-  height?: number // 滚动区域高度
+  width?: number|string // 滚动区域宽度，单位px
+  height?: number // 滚动区域高度，单位px
   backgroundColor?: string // 滚动区域背景色
   amount?: number // 滚动区域展示条数，水平滚动时生效
-  gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距
+  gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距，单位px
   vertical?: boolean // 是否垂直滚动
-  interval?: number // 文字滚动时间间隔，垂直滚动时生效
+  interval?: number // 文字滚动时间间隔，单位ms，垂直滚动时生效
 }
 const props = withDefaults(defineProps<Props>(), {
   sliderText: () => [],

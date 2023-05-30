@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 interface Props {
   min?: number // 最小值
   max?: number // 最大值
@@ -14,9 +14,12 @@ const props = withDefaults(defineProps<Props>(), {
   step: 1,
   prefix: '',
   keyboard: true,
-  value: 0
+  value: null
 })
-const numValue = ref<number|null>(props.value)
+const numValue = ref<number|null>()
+watchEffect(() => {
+  numValue.value = props.value
+})
 const emits = defineEmits(['update:value', 'change'])
 function emitValue (value: any) {
   emits('change', value)
@@ -100,10 +103,10 @@ function onDown () {
         v-model="numValue">
     </div>
     <div class="m-handler-wrap">
-      <span class="u-up-arrow" :class="{disabled: min === numValue || max === numValue}" @click="onUp">
+      <span class="u-up-arrow" :class="{disabled: (numValue || 0) >= max}" @click="onUp">
         <svg focusable="false" class="u-icon" data-icon="up" aria-hidden="true" viewBox="64 64 896 896"><path d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"></path></svg>
       </span>
-      <span class="u-down-arrow" :class="{disabled: min === numValue || max === numValue}" @click="onDown">
+      <span class="u-down-arrow" :class="{disabled: (numValue || 0) <= min}" @click="onDown">
         <svg focusable="false" class="u-icon" data-icon="down" aria-hidden="true" viewBox="64 64 896 896"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
       </span>
     </div>

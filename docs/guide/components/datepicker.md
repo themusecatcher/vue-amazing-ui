@@ -8,17 +8,19 @@
 
 - 当用户需要选择或输入一个日期，弹出日期面板进行选择
 
-## 参考文档
+## 官方文档
 
 - [Vue Datepicker](https://vue3datepicker.com/)
 - [Vue Datepicker Documents](https://vue3datepicker.com/installation/)
+- [date-fns](https://date-fns.org/)
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, addDays, startOfWeek, endOfWeek, addHours, addMinutes, addSeconds } from 'date-fns'
+import { format, endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, addDays, startOfWeek, endOfWeek, addHours, addMinutes, addSeconds } from 'date-fns'
 
-const dateValue = ref(Date.now())
-const rangeValue = ref<number[]>([Date.now(), addDays(new Date(), 1).getTime()])
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
+const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
+const rangeValue = ref([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
 console.log(addHours(Date.now(), 1))
 
 const timeRangeValue = ref([
@@ -62,10 +64,19 @@ watchEffect(() => {
   console.log('dateValue:', dateValue.value)
 })
 watchEffect(() => {
+  console.log('dateTimeValue:', dateTimeValue.value)
+})
+watchEffect(() => {
   console.log('rangeValue:', rangeValue.value)
 })
 watchEffect(() => {
+  console.log('timeRangeValue:', timeRangeValue.value)
+})
+watchEffect(() => {
   console.log('timeValue:', timeValue.value)
+})
+watchEffect(() => {
+  console.log('secondsValue:', secondsValue.value)
 })
 watchEffect(() => {
   console.log('weekValue:', weekValue.value)
@@ -80,7 +91,7 @@ watchEffect(() => {
 
 ## 基本使用
 
-<DatePicker placeholder="请选择日期" v-model:date="dateValue"/>
+<DatePicker placeholder="请选择日期" format="yyyy-MM-dd" v-model="dateValue"/>
 
 <details>
 <summary>查看代码</summary>
@@ -88,25 +99,26 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const dateValue = ref(Date.now())
+import { format } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 watchEffect(() => {
   console.log('dateValue:', dateValue.value)
 })
 </script>
 <template>
-  <DatePicker placeholder="请选择日期" v-model:date="dateValue"/>
+  <DatePicker placeholder="请选择日期" format="yyyy-MM-dd" v-model="dateValue"/>
 </template>
 ```
 
 </details>
 
-## 禁用过去的日期选择器
+## 禁用过去
 
 <DatePicker
   placeholder="请选择日期"
-  v-model:date="dateValue"
   :min-date="new Date()"
-  format="yyyy-MM-dd" />
+  format="yyyy-MM-dd"
+  v-model="dateValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -114,7 +126,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const dateValue = ref(Date.now())
+import { format } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 watchEffect(() => {
   console.log('dateValue:', dateValue.value)
 })
@@ -122,22 +135,22 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择日期"
-    v-model:date="dateValue"
     :min-date="new Date()"
-    format="yyyy-MM-dd" />
+    format="yyyy-MM-dd"
+    v-model="dateValue" />
 </template>
 ```
 
 </details>
 
-## 禁用未来的日期选择器
+## 禁用未来
 
 <DatePicker
   placeholder="请选择日期"
-  v-model:date="dateValue"
   mode="date"
   :max-date="new Date()"
-  format="yyyy-MM-dd" />
+  format="yyyy-MM-dd"
+  v-model="dateValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -145,7 +158,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const dateValue = ref(Date.now())
+import { format } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 watchEffect(() => {
   console.log('dateValue:', dateValue.value)
 })
@@ -153,10 +167,10 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择日期"
-    v-model:date="dateValue"
     mode="date"
     :max-date="new Date()"
-    format="yyyy-MM-dd" />
+    format="yyyy-MM-dd"
+    v-model="dateValue" />
 </template>
 ```
 
@@ -166,12 +180,12 @@ watchEffect(() => {
 
 <DatePicker
   placeholder="请选择日期时间"
-  v-model:date="dateValue"
   mode="date"
   format="yyyy-MM-dd HH:mm:ss"
   :width="240"
   show-time
-  enable-seconds />
+  enable-seconds
+  v-model="dateTimeValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -179,20 +193,21 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const dateValue = ref(Date.now())
+import { format } from 'date-fns'
+const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
 watchEffect(() => {
-  console.log('dateValue:', dateValue.value)
+  console.log('dateTimeValue:', dateTimeValue.value)
 })
 </script>
 <template>
   <DatePicker
     placeholder="请选择日期时间"
-    v-model:date="dateValue"
     mode="date"
     format="yyyy-MM-dd HH:mm:ss"
     :width="240"
     show-time
-    enable-seconds />
+    enable-seconds
+    v-model="dateTimeValue" />
 </template>
 ```
 
@@ -202,11 +217,10 @@ watchEffect(() => {
 
 <DatePicker
   placeholder="请选择日期范围"
-  v-model:date="rangeValue"
   range
-  :preset-ranges="presetRanges"
   format="yyyy-MM-dd"
-  :width="280" />
+  :width="280"
+  v-model="rangeValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -214,7 +228,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const rangeValue = ref<number[]>([Date.now(), addDays(new Date(), 1).getTime()])
+import { format, addDays } from 'date-fns'
+const rangeValue = ref([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
 watchEffect(() => {
   console.log('rangeValue:', rangeValue.value)
 })
@@ -222,26 +237,25 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择日期范围"
-    v-model:date="rangeValue"
     range
-    :preset-ranges="presetRanges"
     format="yyyy-MM-dd"
-    :width="280" />
+    :width="280"
+    v-model="rangeValue" />
 </template>
 ```
 
 </details>
 
-## 日期范围选择器，双日期面板
+## 双日期面板
 
 <DatePicker
   placeholder="请选择日期范围"
-  v-model:date="rangeValue"
   mode="range"
   format="yyyy-MM-dd"
   :width="280"
   range
-  multi-calendars />
+  multi-calendars
+  v-model="rangeValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -249,7 +263,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const rangeValue = ref<number[]>([Date.now(), addDays(new Date(), 1).getTime()])
+import { format, addDays } from 'date-fns'
+const rangeValue = ref([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
 watchEffect(() => {
   console.log('rangeValue:', rangeValue.value)
 })
@@ -257,12 +272,64 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择日期范围"
-    v-model:date="rangeValue"
     mode="range"
     format="yyyy-MM-dd"
     :width="280"
     range
-    multi-calendars />
+    multi-calendars
+    v-model="rangeValue" />
+</template>
+```
+
+</details>
+
+## 预设范围
+
+*预设常用的日期范围以提高用户体验*
+
+<br/>
+
+<DatePicker
+  placeholder="请选择日期范围"
+  mode="range"
+  format="yyyy-MM-dd"
+  :width="280"
+  range
+  :presetRanges="presetRanges"
+  multi-calendars
+  v-model="rangeValue" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { format, addDays, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear } from 'date-fns'
+const rangeValue = ref([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
+const presetRanges = ref([
+  { label: 'Today', range: [new Date(), new Date()] },
+  { label: 'This month', range: [startOfMonth(new Date()), endOfMonth(new Date())] },
+  {
+    label: 'Last month',
+    range: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
+  },
+  { label: 'This year', range: [startOfYear(new Date()).getTime(), endOfYear(new Date()).getTime()] }
+])
+watchEffect(() => {
+  console.log('rangeValue:', rangeValue.value)
+})
+</script>
+<template>
+  <DatePicker
+    placeholder="请选择日期范围"
+    mode="range"
+    format="yyyy-MM-dd"
+    :width="280"
+    range
+    :presetRanges="presetRanges"
+    multi-calendars
+    v-model="rangeValue" />
 </template>
 ```
 
@@ -272,12 +339,12 @@ watchEffect(() => {
 
 <DatePicker
   placeholder="请选择时间"
-  v-model:date="timeValue"
   mode="time"
   show-time
   mode-height="120"
   format="HH:mm"
-  :width="120" />
+  :width="120"
+  v-model="timeValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -296,12 +363,12 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择时间"
-    v-model:date="timeValue"
     mode="time"
     show-time
     mode-height="120"
     format="HH:mm"
-    :width="120" />
+    :width="120"
+    v-model="timeValue" />
 </template>
 ```
 
@@ -311,13 +378,13 @@ watchEffect(() => {
 
 <DatePicker
   placeholder="请选择时间"
-  v-model:date="secondsValue"
   mode="time"
   show-time
   enable-seconds
   mode-height="120"
   format="HH:mm:ss"
-  :width="150" />
+  :width="150"
+  v-model="secondsValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -337,13 +404,13 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择时间"
-    v-model:date="secondsValue"
     mode="time"
     show-time
     enable-seconds
     mode-height="120"
     format="HH:mm:ss"
-    :width="150" />
+    :width="150"
+    v-model="secondsValue" />
 </template>
 ```
 
@@ -353,14 +420,14 @@ watchEffect(() => {
 
 <DatePicker
   placeholder="请选择时间"
-  v-model:date="timeRangeValue"
   mode="time"
   show-time
   range
   enable-seconds
   mode-height="120"
   format="HH:mm:ss"
-  :width="240" />
+  :width="240"
+  v-model="timeRangeValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -368,6 +435,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { addHours, addMinutes, addSeconds } from 'date-fns'
 const timeRangeValue = ref([
   {
     hours: new Date().getHours(),
@@ -387,14 +455,14 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择时间"
-    v-model:date="timeRangeValue"
     mode="time"
     show-time
     range
     enable-seconds
     mode-height="120"
     format="HH:mm:ss"
-    :width="240" />
+    :width="240"
+    v-model="timeRangeValue" />
 </template>
 ```
 
@@ -404,10 +472,10 @@ watchEffect(() => {
 
 <DatePicker
   placeholder="请选择周"
-  v-model:date="weekValue"
   mode="week"
   format="yyyy-MM-dd"
-  :width="280" />
+  :width="280"
+  v-model="weekValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -415,6 +483,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { startOfWeek, endOfWeek } from 'date-fns'
 const weekValue = ref([startOfWeek(new Date()), endOfWeek(new Date())])
 watchEffect(() => {
   console.log('weekValue:', weekValue.value)
@@ -423,10 +492,10 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择周"
-    v-model:date="weekValue"
     mode="week"
     format="yyyy-MM-dd"
-    :width="280" />
+    :width="280"
+    v-model="weekValue" />
 </template>
 ```
 
@@ -436,10 +505,10 @@ watchEffect(() => {
 
 <DatePicker
   placeholder="请选择月"
-  v-model:date="monthValue"
   mode="month"
   format="yyyy-MM"
-  :width="150" />
+  :width="150"
+  v-model="monthValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -458,10 +527,10 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择月"
-    v-model:date="monthValue"
     mode="month"
     format="yyyy-MM"
-    :width="150" />
+    :width="150"
+    v-model="monthValue" />
 </template>
 ```
 
@@ -471,10 +540,10 @@ watchEffect(() => {
 
 <DatePicker
   placeholder="请选择年"
-  v-model:date="yearValue"
   mode="year"
   format="yyyy"
-  :width="120" />
+  :width="120"
+  v-model="yearValue" />
 
 <details>
 <summary>查看代码</summary>
@@ -490,10 +559,10 @@ watchEffect(() => {
 <template>
   <DatePicker
     placeholder="请选择年"
-    v-model:date="yearValue"
     mode="year"
     format="yyyy"
-    :width="120" />
+    :width="120"
+    v-model="yearValue" />
 </template>
 ```
 
@@ -501,10 +570,12 @@ watchEffect(() => {
 
 ## APIs
 
+*更多使用 APIs 请参考[官方文档](https://vue3datepicker.com/)*
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 日期选择器宽度，单位px | number | 180 | false
 mode | 选择器模式 | 'time' &#124; 'date' &#124; 'week' &#124; 'month' &#124; 'year' | 'date' | false
 showTime | 是否增加时间选择 | boolean | false | false
 showToday | 是否展示”今天“按钮 | boolean | false | false
-date(v-model) | 当前选中日期 | number &#124; number[] &#124; {month:number, year:number} &#124; {hours: number, minutes: number&#44; seconds: number} | date | false
+modelType | v-model 值类型，可选时间戳(timestamp)、字符串(format) | 'timestamp' &#124; 'format' | 'format' | false
