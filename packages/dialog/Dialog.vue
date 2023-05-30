@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 interface Props {
   title?: string // 标题 string | slot
   content?: string // 内容 string | slot
@@ -26,24 +26,16 @@ const props = withDefaults(defineProps<Props>(), {
   center: true,
   top: 100,
   loading: false,
-  visible:  false
+  visible: false
 })
-
 const fullScreen = ref(false)
-const dialogWidth = computed(() => {
-  if (fullScreen.value) {
-      return '100%'
-    } else {
-      return props.width + 'px'
-    }
-  })
 const dialogHeight = computed(() => {
-    if (fullScreen.value) {
-      return '100vh'
-    } else {
-      return typeof props.height === 'number' ? props.height + 'px' : props.height
-    }
-  })
+  if (typeof props.height === 'number') {
+    return props.height + 'px'
+  } else {
+    return props.height
+  }
+})
 watch(
   () => props.visible,
   (to) => {
@@ -75,8 +67,9 @@ function onConfirm () {
   <Transition>
     <div class="m-dialog-mask" v-show="visible" @click.self="onBlur">
       <div
-        :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']"
-        :style="`width: ${dialogWidth}; height: ${dialogHeight}; top: ${center ? '50%' : (fullScreen ? 0:top + 'px')};`">
+        ref="dialog"
+        :class="['m-dialog', center ? 'relative-hv-center' : 'top-center', {transition: dialogHeight !== 'auto'}]"
+        :style="`width: ${fullScreen ? '100%' : props.width + 'px'}; height: ${fullScreen ? '100vh' : dialogHeight}; top: ${center ? '50%' : (fullScreen ? 0:top + 'px')};`">
         <div class="m-dialog-content" :class="{loading: loading}">
           <div class="m-spin-dot" v-show="loading">
             <span class="u-dot-item"></span>
@@ -92,7 +85,7 @@ function onConfirm () {
               <slot name="title">{{ title }}</slot>
             </div>
           </div>
-          <div class="m-dialog-body" :style="`height: calc(${dialogHeight} - ${footer ? '110px':'57px'});`">
+          <div class="m-dialog-body" :style="`height: calc(${fullScreen ? '100vh' : dialogHeight} - ${footer ? '110px':'57px'});`">
             <slot>{{ content }}</slot>
           </div>
           <div class="m-dialog-footer" v-show="footer">
@@ -137,9 +130,11 @@ function onConfirm () {
   height: 100%;
   z-index: 10000;
   background: rgba(0, 0, 0, 0.45);
+  .transition {
+    transition: all .3s ease;
+  }
   .m-dialog {
     margin: 0 auto;
-    transition: all .3s ease-in-out;
     .m-spin-dot { // 绝对定位，并设置水平垂直居中
       position: absolute;
       display: inline-block;

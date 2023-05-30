@@ -121,7 +121,9 @@ function getUrl (route: Route) {
       opacity: 1;
     }
     .u-text {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      height: 100%;
     }
   }
   .m-btn-loading {

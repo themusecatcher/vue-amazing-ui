@@ -43,6 +43,25 @@ watchEffect(() => {
 
 </details>
 
+## 禁用开关
+
+<Switch v-model:checked="checked" disabled />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const checked = ref(false)
+</script>
+<template>
+  <Switch v-model:checked="checked" disabled />
+</template>
+```
+
+</details>
+
 ## 带文字的开关
 
 <Switch v-model:checked="checked" checkedInfo="开" uncheckedInfo="关" />
@@ -120,25 +139,6 @@ watchEffect(() => {
   fill: rgba(60, 60, 67, 0.75);
 }
 </style>
-```
-
-</details>
-
-## 禁用开关
-
-<Switch v-model:checked="checked" disabled />
-
-<details>
-<summary>查看代码</summary>
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const checked = ref(false)
-</script>
-<template>
-  <Switch v-model:checked="checked" disabled />
-</template>
 ```
 
 </details>

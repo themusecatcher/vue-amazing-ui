@@ -70,9 +70,11 @@ function onClick (e: Event) {
 
 </details>
 
-## 自定义宽高
+## 自定义样式
 
-<Button :width="120" :height="40" @click="onClick">Default</Button>
+<Button :width="120" :height="40" :border-radius="8" size="large" @click="onClick">
+  <p style="font-size: 18px;">自定义样式</p>
+</Button>
 
 <details>
 <summary>查看代码</summary>
@@ -84,7 +86,9 @@ function onClick (e: Event) {
 }
 </script>
 <template>
-  <Button :width="120" :height="40" @click="onClick">Default</Button>
+  <Button :width="120" :height="40" :border-radius="8" size="large" @click="onClick">
+    <p style="font-size: 18px;">自定义样式</p>
+  </Button>
 </template>
 
 ```
@@ -93,7 +97,11 @@ function onClick (e: Event) {
 
 ## 加载中状态
 
-<Button @click="onClick" :loading="loading">Default</Button>
+<div class="m-flex">
+  <Button :loading="loading" @click="onClick">Default</Button>
+  <Button :loading="loading" type="primary" @click="onClick">Primary</Button>
+  <Button :loading="loading" type="danger" @click="onClick">Danger</Button>
+</div>
 <h3>Loading state: <Switch v-model:checked="loading" /></h3>
 
 <details>
@@ -108,7 +116,10 @@ function onClick (e: Event) {
 }
 </script>
 <template>
-  <Button @click="onClick" :loading="loading">Default</Button>
+  <Button :loading="loading" @click="onClick">Default</Button>
+  <Button :loading="loading" type="primary" @click="onClick">Primary</Button>
+  <Button :loading="loading" type="danger" @click="onClick">Danger</Button>
+  <h3>Loading state: <Switch v-model:checked="loading" /></h3>
 </template>
 
 ```

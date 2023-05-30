@@ -31,7 +31,7 @@
 
 ## 自定义样式
 
-<Tooltip :maxWidth="280" :fontSize="14" color="rgba(0, 0, 0, 0.85)" backgroundColor="#FFF">
+<Tooltip :maxWidth="300" :fontSize="16" color="rgba(0, 0, 0, 0.85)" backgroundColor="#FFF">
   <template #title>《哥斯拉大战金刚》是由美国传奇影业公司出品，亚当·温佳德执导，亚历山大·斯卡斯加德、米莉·博比·布朗、丽贝卡·豪尔、凯莉·霍特尔、布莱恩·泰里·亨利、小栗旬联合主演的动作科幻片，于2021于3月26日在中国内地上映</template>
   <Button type="primary">哥斯拉大战金刚</Button>
 </Tooltip>
@@ -41,7 +41,7 @@
 
 ```vue
 <template>
-  <Tooltip :maxWidth="280" :fontSize="14" color="rgba(0, 0, 0, 0.85)" backgroundColor="#FFF">
+  <Tooltip :maxWidth="300" :fontSize="16" color="rgba(0, 0, 0, 0.85)" backgroundColor="#FFF">
     <template #title>《哥斯拉大战金刚》是由美国传奇影业公司出品，亚当·温佳德执导，亚历山大·斯卡斯加德、米莉·博比·布朗、丽贝卡·豪尔、凯莉·霍特尔、布莱恩·泰里·亨利、小栗旬联合主演的动作科幻片，于2021于3月26日在中国内地上映</template>
     <Button type="primary">哥斯拉大战金刚</Button>
   </Tooltip>

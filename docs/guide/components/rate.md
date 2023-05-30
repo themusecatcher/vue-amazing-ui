@@ -47,8 +47,6 @@ watchEffect(() => {
 
 <Rate v-model:value="value" disabled />
 
-<Rate character="star-outlined" :size="30" v-model:value="value" />
-
 <details>
 <summary>查看代码</summary>
 
@@ -137,9 +135,9 @@ watchEffect(() => {
 
 </details>
 
-## 支持选中半星，自定义选中颜色
+## 支持选中半星
 
-<Rate  color="#1677FF" :size="30" v-model:value="value" allow-half />
+<Rate v-model:value="value" :size="30" allow-half />
 
 <details>
 <summary>查看代码</summary>
@@ -154,7 +152,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Rate  color="#1677FF" :size="30" v-model:value="value" allow-half />
+  <Rate v-model:value="value" allow-half />
 </template>
 ```
 
@@ -233,6 +231,75 @@ function onHoverChange (value: number) {
     v-model:value="value"
     @change="onChange"
     @hover-change="onHoverChange" />
+</template>
+```
+
+</details>
+
+## 自定义选中颜色
+
+<Rate color="#1677FF" :size="30" v-model:value="value" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const value = ref(2.99)
+watchEffect(() => {
+  console.log('value:', value.value)
+})
+</script>
+<template>
+  <Rate color="#1677FF" :size="30" v-model:value="value" />
+</template>
+```
+
+</details>
+
+## 自定义间距
+
+<Rate :size="30" :gap="16" v-model:value="value" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const value = ref(2.99)
+watchEffect(() => {
+  console.log('value:', value.value)
+})
+</script>
+<template>
+  <Rate :size="30" :gap="16" v-model:value="value" />
+</template>
+```
+
+</details>
+
+## 自定义 star 总数
+
+<Rate :size="30" :count="10" v-model:value="value" />
+
+<details>
+<summary>查看代码</summary>
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const value = ref(2.99)
+watchEffect(() => {
+  console.log('value:', value.value)
+})
+</script>
+<template>
+  <Rate :size="30" :count="10" v-model:value="value" />
 </template>
 ```
 

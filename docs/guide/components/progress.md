@@ -68,7 +68,7 @@ const percent = ref(60)
 
 ## 渐变进度条
 
-**strokeColor: { '0%': '#108ee9', '100%': '#87d068', direction: 'right' } 或 { from: '#108ee9', to: '#87d068', direction: 'right' }**
+*strokeColor: { '0%': '#108ee9', '100%': '#87d068', direction: 'right' } 或 { from: '#108ee9', to: '#87d068', direction: 'right' }*
 
 <br/>
 
