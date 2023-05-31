@@ -1,65 +1,4 @@
-import { defineConfig, DefaultTheme } from 'vitepress'
-
-const ogDescription = 'Next Generation Frontend Tooling'
-const ogImage = 'https://vitejs.dev/og-image.png'
-const ogTitle = 'Vite'
-const ogUrl = 'https://vitejs.dev'
-
-// netlify envs
-// const deployURL = process.env.DEPLOY_PRIME_URL || ''
-const commitRef = process.env.COMMIT_REF?.slice(0, 8) || 'dev'
-
-// const deployType = (() => {
-//   switch (deployURL) {
-//     case 'https://main--vite-docs-main.netlify.app':
-//       return 'main'
-//     case '':
-//       return 'local'
-//     default:
-//       return 'release'
-//   }
-// })()
-// const additionalTitle = ((): string => {
-//   switch (deployType) {
-//     case 'main':
-//       return ' (main branch)'
-//     case 'local':
-//       return ' (local)'
-//     case 'release':
-//       return ''
-//   }
-// })()
-// const versionLinks = ((): DefaultTheme.NavItemWithLink[] => {
-//   switch (deployType) {
-//     case 'main':
-//     case 'local':
-//       return [
-//         {
-//           text: 'Vite 4 Docs (release)',
-//           link: 'https://vitejs.dev',
-//         },
-//         {
-//           text: 'Vite 3 Docs',
-//           link: 'https://v3.vitejs.dev',
-//         },
-//         {
-//           text: 'Vite 2 Docs',
-//           link: 'https://v2.vitejs.dev',
-//         },
-//       ]
-//     case 'release':
-//       return [
-//         {
-//           text: 'Vite 3 Docs',
-//           link: 'https://v3.vitejs.dev',
-//         },
-//         {
-//           text: 'Vite 2 Docs',
-//           link: 'https://v2.vitejs.dev',
-//         },
-//       ]
-//   }
-// })()
+import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: `Vue Amazing UI`,
@@ -70,33 +9,11 @@ export default defineConfig({
     // 网站图标
     ['link', { rel: 'icon', type: 'image/svg+xml', href: 'logo.svg' }],
     // ['link', { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
-    // ['meta', { property: 'og:type', content: 'website' }],
-    // ['meta', { property: 'og:title', content: ogTitle }],
-    // ['meta', { property: 'og:image', content: ogImage }],
-    // ['meta', { property: 'og:url', content: ogUrl }],
-    // ['meta', { property: 'og:description', content: ogDescription }],
-    // ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    // ['meta', { name: 'twitter:site', content: '@vite_js' }],
-    // ['meta', { name: 'theme-color', content: '#646cff' }],
-    // [
-    //   'script',
-    //   {
-    //     src: 'https://cdn.usefathom.com/script.js',
-    //     'data-site': 'CBDFBSLI',
-    //     'data-spa': 'auto',
-    //     defer: '',
-    //   },
-    // ],
   ],
-
-  locales: {
-    // root: { label: 'English' },
-    // zh: { label: '简体中文', link: 'https://cn.vitejs.dev' },
-    // ja: { label: '日本語', link: 'https://ja.vitejs.dev' },
-    // es: { label: 'Español', link: 'https://es.vitejs.dev' },
-    // pt: { label: 'Português', link: 'https://pt.vitejs.dev' },
+  appearance: true, // 默认 true，设为 false 则无法切换dark/light主题，可选 'dark' true false
+  markdown: {
+    lineNumbers: false // 是否显示行数，默认false
   },
-
   themeConfig: {
     logo: '/logo.svg',
 
@@ -104,76 +21,53 @@ export default defineConfig({
       pattern: 'https://github.com/themusecatcher/vue-amazing-ui/tree/master/docs/:path',
       text: 'Suggest changes to this page',
     },
-
+    // 默认支持icon包括：'discord'|'facebook'|'github'|'instagram'|'linkedin'|'mastodon'|'slack'|'twitter'|'youtube'
     socialLinks: [
-      // { icon: 'mastodon', link: 'https://elk.zone/m.webtoo.ls/@vite' },
-      // { icon: 'twitter', link: 'https://twitter.com/vite_js' },
-      // { icon: 'discord', link: 'https://chat.vitejs.dev' },
       { icon: 'github', link: 'https://github.com/themusecatcher/vue-amazing-ui' },
+      // 自定义icon
+      // {
+      //   icon: {
+      //     svg: '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Dribbble</title><path d="M12...6.38z"/></svg>'
+      //   },
+      //   link: 'https://www.npmjs.com/package/vue-amazing-ui'
+      // }
     ],
 
-    // algolia: {
-    //   appId: '7H67QR5P0A',
-    //   apiKey: 'deaab78bcdfe96b599497d25acc6460e',
-    //   indexName: 'vitejs',
-    //   searchParameters: {
-    //     facetFilters: ['tags:en'],
-    //   },
-    // },
-
-    // carbonAds: {
-    //   code: 'CEBIEK3N',
-    //   placement: 'vitejsdev',
+    // search: {
+    //   provider: 'local'
     // },
 
     footer: {
-      message: `Released under the MIT License. (${commitRef})`,
-      // copyright: 'Copyright © 2019-present Evan You & Vite Contributors',
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2023-present The Muse Catcher',
     },
 
     nav: [
-      { text: '指引', link: '/guide/', activeMatch: '/guide/' },
-      // { text: 'Config', link: '/config/', activeMatch: '/config/' },
-      // { text: 'Plugins', link: '/plugins/', activeMatch: '/plugins/' },
-      // {
-      //   text: 'Resources',
-      //   items: [
-      //     { text: 'Team', link: '/team' },
-      //     { text: 'Releases', link: '/releases' },
-      //     {
-      //       items: [
-      //         {
-      //           text: 'Twitter',
-      //           link: 'https://twitter.com/vite_js',
-      //         },
-      //         {
-      //           text: 'Discord Chat',
-      //           link: 'https://chat.vitejs.dev',
-      //         },
-      //         {
-      //           text: 'Awesome Vite',
-      //           link: 'https://github.com/vitejs/awesome-vite',
-      //         },
-      //         {
-      //           text: 'DEV Community',
-      //           link: 'https://dev.to/t/vite',
-      //         },
-      //         {
-      //           text: 'Rollup Plugins Compat',
-      //           link: 'https://vite-rollup-plugins.patak.dev/',
-      //         },
-      //         {
-      //           text: 'Changelog',
-      //           link: 'https://github.com/vitejs/vite/blob/main/packages/vite/CHANGELOG.md',
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
-      // {
-      //   text: 'Version',
-      //   items: versionLinks,
-      // },
+      { text: '指引', link: '/guide/features', activeMatch: '/guide/' },
+      { text: '工具', link: '/utils/date-format', activeMatch: '/utils/' },
+      {
+        text: '链接',
+        items: [
+          { text: 'My Github', link: 'https://github.com/themusecatcher' },
+          { text: 'My CSDN', link: 'https://blog.csdn.net/Dandrose?type=blog' },
+          {
+            items: [
+              {
+                text: 'vue',
+                link: 'https://cn.vuejs.org/',
+              },
+              {
+                text: 'vitepress',
+                link: 'https://vitepress.dev/',
+              },
+              {
+                text: 'vitepress-theme-vuetom',
+                link: 'https://github.com/vuetom/vitepress-theme-vuetom',
+              }
+            ]
+          }
+        ]
+      }
     ],
 
     sidebar: {
@@ -183,7 +77,7 @@ export default defineConfig({
           items: [
             {
               text: '特性',
-              link: '/guide/'
+              link: '/guide/features'
             },
             {
               text: '快速上手',
@@ -337,45 +231,37 @@ export default defineConfig({
           ]
         }
       ],
-      // '/config/': [
-      //   {
-      //     text: 'Config',
-      //     items: [
-      //       {
-      //         text: 'Configuring Vite',
-      //         link: '/config/'
-      //       },
-      //       {
-      //         text: 'Shared Options',
-      //         link: '/config/shared-options'
-      //       },
-      //       {
-      //         text: 'Server Options',
-      //         link: '/config/server-options'
-      //       },
-      //       {
-      //         text: 'Build Options',
-      //         link: '/config/build-options'
-      //       },
-      //       {
-      //         text: 'Preview Options',
-      //         link: '/config/preview-options'
-      //       },
-      //       {
-      //         text: 'Dep Optimization Options',
-      //         link: '/config/dep-optimization-options'
-      //       },
-      //       {
-      //         text: 'SSR Options',
-      //         link: '/config/ssr-options'
-      //       },
-      //       {
-      //         text: 'Worker Options',
-      //         link: '/config/worker-options'
-      //       },
-      //     ],
-      //   },
-      // ]
+      '/utils/': [
+        {
+          text: 'Utils',
+          items: [
+            {
+              text: 'date 日期格式化',
+              link: '/utils/date-format'
+            },
+            {
+              text: 'raf 动画帧',
+              link: '/utils/animation-frame'
+            },
+            {
+              text: 'raf 定时器',
+              link: '/utils/raf-timeout'
+            },
+            {
+              text: 'throttle 节流',
+              link: '/utils/throttle'
+            },
+            {
+              text: 'debounce 防抖',
+              link: '/utils/debounce'
+            },
+            {
+              text: 'add 加法',
+              link: '/utils/add'
+            }
+          ]
+        }
+      ]
     }
   }
 })

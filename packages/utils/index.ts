@@ -1,10 +1,14 @@
 /*
-  timestamp: 13位时间戳 | new Date() | Date()
+  value: 13位时间戳 | new Date() | Date()
   console.log(dateFormat(1680227496788, 'YYYY-MM-DD HH:mm:ss'))
   format => YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
 */
-export function dateFormat (timestamp: number|string|Date, format = 'YYYY-MM-DD HH:mm:ss'): string {
-  var date = new Date(timestamp)
+export function dateFormat (value: number|string|Date = Date.now(), format = 'YYYY-MM-DD HH:mm:ss'): string {
+  if (typeof value === 'number' || typeof value === 'string') {
+    var date = new Date(value)
+  } else {
+    var date = value
+  }
   function fixedTwo (value: number): string {
     return value < 10 ? '0' + value : String(value)
   }
@@ -53,7 +57,7 @@ export const cancelAnimationFrame = typeof window !== 'undefined' ? window.cance
   返回值（用于取消 rafTimeout）：（object）raf: { id: number }
   取消 rafTimeout 定时器：cancelRaf(raf) 或者 cancelAnimationFrame(raf.id)
 */
-export function rafTimeout (func: Function, delay = 0, interval = false): object {
+export function rafTimeout (fn: Function, delay = 0, interval = false): object {
   // @ts-ignore
   const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
   var start: any = null
@@ -66,7 +70,7 @@ export function rafTimeout (func: Function, delay = 0, interval = false): object
     }
     const elapsed = timestamp - start
     if (elapsed >= delay) {
-      func() // 执行目标函数func
+      fn() // 执行目标函数func
       if (interval) { // 使用间歇调用
         start = null
         raf.id = requestAnimationFrame(timeElapse)

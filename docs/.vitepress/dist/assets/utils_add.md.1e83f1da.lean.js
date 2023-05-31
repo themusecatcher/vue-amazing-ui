@@ -1,0 +1,1 @@
+import{_ as s,c as a,o as n,O as l}from"./chunks/framework.2ede44d5.js";const i=JSON.parse('{"title":"加法","description":"","frontmatter":{},"headers":[],"relativePath":"utils/add.md","filePath":"utils/add.md"}'),o={name:"utils/add.md"},p=l("",8),t=[p];function e(r,c,y,F,D,C){return n(),a("div",null,t)}const d=s(o,[["render",e]]);export{i as __pageData,d as default};

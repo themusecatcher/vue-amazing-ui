@@ -3,10 +3,14 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import QRCode$1 from "qrcode";
 import Swiper$2, { Navigation, Pagination as Pagination$1, Autoplay, EffectFade } from "swiper";
 const global = "";
-function dateFormat(timestamp, format = "YYYY-MM-DD HH:mm:ss") {
-  var date = new Date(timestamp);
-  function fixedTwo(value) {
-    return value < 10 ? "0" + value : String(value);
+function dateFormat(value = Date.now(), format = "YYYY-MM-DD HH:mm:ss") {
+  if (typeof value === "number" || typeof value === "string") {
+    var date = new Date(value);
+  } else {
+    var date = value;
+  }
+  function fixedTwo(value2) {
+    return value2 < 10 ? "0" + value2 : String(value2);
   }
   var showTime = format;
   if (showTime.includes("SSS")) {
@@ -43,7 +47,7 @@ const requestAnimationFrame$1 = typeof window !== "undefined" ? window.requestAn
 };
 const cancelAnimationFrame$1 = typeof window !== "undefined" ? window.cancelAnimationFrame || window.mozCancelAnimationFrame : () => {
 };
-function rafTimeout(func, delay = 0, interval = false) {
+function rafTimeout(fn, delay = 0, interval = false) {
   const requestAnimationFrame2 = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
   var start = null;
   function timeElapse(timestamp) {
@@ -52,7 +56,7 @@ function rafTimeout(func, delay = 0, interval = false) {
     }
     const elapsed = timestamp - start;
     if (elapsed >= delay) {
-      func();
+      fn();
       if (interval) {
         start = null;
         raf.id = requestAnimationFrame2(timeElapse);
@@ -899,8 +903,8 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
         createVNode(unref(Select), {
           style: normalizeStyle(`margin-right: ${_ctx.gap}px; z-index: ${_ctx.zIndex};`),
           options: firstOptions.value,
-          selectedValue: values.value[0],
-          "onUpdate:selectedValue": _cache[0] || (_cache[0] = ($event) => values.value[0] = $event),
+          modelValue: values.value[0],
+          "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => values.value[0] = $event),
           label: _ctx.label,
           value: _ctx.value,
           disabled: Array.isArray(_ctx.disabled) ? _ctx.disabled[0] : _ctx.disabled,
@@ -909,12 +913,12 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
           maxDisplay: _ctx.maxDisplay,
           placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[0] : _ctx.placeholder,
           onChange: onFirstChange
-        }, null, 8, ["style", "options", "selectedValue", "label", "value", "disabled", "width", "height", "maxDisplay", "placeholder"]),
+        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "width", "height", "maxDisplay", "placeholder"]),
         createVNode(unref(Select), {
           style: normalizeStyle(`margin-right: ${_ctx.gap}px; z-index: ${_ctx.zIndex};`),
           options: secondOptions.value,
-          selectedValue: values.value[1],
-          "onUpdate:selectedValue": _cache[1] || (_cache[1] = ($event) => values.value[1] = $event),
+          modelValue: values.value[1],
+          "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => values.value[1] = $event),
           label: _ctx.label,
           value: _ctx.value,
           disabled: Array.isArray(_ctx.disabled) ? _ctx.disabled[1] : _ctx.disabled,
@@ -923,12 +927,12 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
           maxDisplay: _ctx.maxDisplay,
           placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[1] : _ctx.placeholder,
           onChange: onSecondChange
-        }, null, 8, ["style", "options", "selectedValue", "label", "value", "disabled", "width", "height", "maxDisplay", "placeholder"]),
+        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "width", "height", "maxDisplay", "placeholder"]),
         createVNode(unref(Select), {
           style: normalizeStyle(`z-index: ${_ctx.zIndex};`),
           options: thirdOptions.value,
-          selectedValue: values.value[2],
-          "onUpdate:selectedValue": _cache[2] || (_cache[2] = ($event) => values.value[2] = $event),
+          modelValue: values.value[2],
+          "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => values.value[2] = $event),
           label: _ctx.label,
           value: _ctx.value,
           disabled: Array.isArray(_ctx.disabled) ? _ctx.disabled[2] : _ctx.disabled,
@@ -937,13 +941,13 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
           maxDisplay: _ctx.maxDisplay,
           placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[2] : _ctx.placeholder,
           onChange: onThirdChange
-        }, null, 8, ["style", "options", "selectedValue", "label", "value", "disabled", "width", "height", "maxDisplay", "placeholder"])
+        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "width", "height", "maxDisplay", "placeholder"])
       ], 4);
     };
   }
 });
-const Cascader_vue_vue_type_style_index_0_scoped_d182b701_lang = "";
-const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-d182b701"]]);
+const Cascader_vue_vue_type_style_index_0_scoped_f22f1659_lang = "";
+const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-f22f1659"]]);
 Cascader.install = (app) => {
   app.component(Cascader.__name, Cascader);
 };
