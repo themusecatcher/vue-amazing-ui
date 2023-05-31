@@ -58,7 +58,7 @@ const options = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('p selectedValue:', selectedValue.value)
+  console.log('selectedValue:', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
   console.log('values:', values)

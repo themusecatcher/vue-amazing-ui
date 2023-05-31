@@ -116,7 +116,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
     <Select
       :style="`margin-right: ${gap}px; z-index: ${zIndex};`"
       :options="firstOptions"
-      v-model:selectedValue="values[0]"
+      v-model="values[0]"
       :label="label"
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[0] : disabled"
@@ -128,7 +128,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
     <Select
       :style="`margin-right: ${gap}px; z-index: ${zIndex};`"
       :options="secondOptions"
-      v-model:selectedValue="values[1]"
+      v-model="values[1]"
       :label="label"
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[1] : disabled"
@@ -140,7 +140,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
     <Select
       :style="`z-index: ${zIndex};`"
       :options="thirdOptions"
-      v-model:selectedValue="values[2]"
+      v-model="values[2]"
       :label="label"
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[2] : disabled"
