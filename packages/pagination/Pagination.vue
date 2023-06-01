@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 interface Props { // 基于类型的声明
   current?: number // 当前页数
   pageSize?: number // 每页条数
@@ -43,12 +43,14 @@ watch(currentPage, (to: number): void => { // 通过更改当前页码，修改�
 })
 onMounted(() => {
   // 监听键盘Enter按键
-  document.onkeydown = (e): void => {
-    const ev = e || window.event
-    if (ev && ev.keyCode === 13 && jumpNumber.value) {
-      jumpPage(jumpNumber.value)
+  document.onkeydown = (e: KeyboardEvent) => {
+    if (e && e.key === 'Enter') {
+      jumpPage()
     }
   }
+})
+onUnmounted(() => {
+  document.onkeydown = null
 })
 function dealPageList (curPage: number): number[] {
   var resList = []
@@ -90,17 +92,18 @@ function onForward (): void {
 function onBackward (): void {
   currentPage.value = currentPage.value + props.pageListNum < totalPage.value ? currentPage.value + props.pageListNum : totalPage.value
 }
-function jumpPage (jumpNum: string | number): void {
-  if (Number(jumpNum)) {
-    if (Number(jumpNum) < 1) {
-      jumpNum = 1
+function jumpPage (): void {
+  var num = Number(jumpNumber.value)
+  if (Number.isInteger(num)) {
+    if (num < 1) {
+      num = 1
     }
-    if (Number(jumpNum) > totalPage.value) {
-      jumpNum = totalPage.value
+    if (num > totalPage.value) {
+      num = totalPage.value
     }
-    changePage(Number(jumpNum))
+    changePage(num)
   }
-  jumpNumber.value = '' // 清空跳转输入框
+  jumpNumber.value = '' // 清空跳转输入框 
 }
 function changePage (pageNum: number): boolean | void {
   if (pageNum === 0 || pageNum === totalPage.value + 1) {

@@ -1058,8 +1058,8 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Checkbox_vue_vue_type_style_index_0_scoped_ad3c5aae_lang = "";
-const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-ad3c5aae"]]);
+const Checkbox_vue_vue_type_style_index_0_scoped_a09feac4_lang = "";
+const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-a09feac4"]]);
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
@@ -2910,7 +2910,7 @@ const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "da
 Notification.install = (app) => {
   app.component(Notification.__name, Notification);
 };
-const _withScopeId$7 = (n) => (pushScopeId("data-v-49e5ef67"), n = n(), popScopeId(), n);
+const _withScopeId$7 = (n) => (pushScopeId("data-v-16ece15d"), n = n(), popScopeId(), n);
 const _hoisted_1$h = { class: "m-pagination-wrap" };
 const _hoisted_2$d = {
   key: 0,
@@ -3005,11 +3005,13 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
     });
     onMounted(() => {
       document.onkeydown = (e) => {
-        const ev = e || window.event;
-        if (ev && ev.keyCode === 13 && jumpNumber.value) {
-          jumpPage(jumpNumber.value);
+        if (e && e.key === "Enter") {
+          jumpPage();
         }
       };
+    });
+    onUnmounted(() => {
+      document.onkeydown = null;
     });
     function dealPageList(curPage) {
       var resList = [];
@@ -3050,15 +3052,16 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
     function onBackward() {
       currentPage.value = currentPage.value + props.pageListNum < totalPage.value ? currentPage.value + props.pageListNum : totalPage.value;
     }
-    function jumpPage(jumpNum) {
-      if (Number(jumpNum)) {
-        if (Number(jumpNum) < 1) {
-          jumpNum = 1;
+    function jumpPage() {
+      var num = Number(jumpNumber.value);
+      if (Number.isInteger(num)) {
+        if (num < 1) {
+          num = 1;
         }
-        if (Number(jumpNum) > totalPage.value) {
-          jumpNum = totalPage.value;
+        if (num > totalPage.value) {
+          num = totalPage.value;
         }
-        changePage(Number(jumpNum));
+        changePage(num);
       }
       jumpNumber.value = "";
     }
@@ -3148,8 +3151,8 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Pagination_vue_vue_type_style_index_0_scoped_49e5ef67_lang = "";
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-49e5ef67"]]);
+const Pagination_vue_vue_type_style_index_0_scoped_16ece15d_lang = "";
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-16ece15d"]]);
 Pagination.install = (app) => {
   app.component(Pagination.__name, Pagination);
 };
