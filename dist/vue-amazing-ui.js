@@ -108,6 +108,13 @@ function add(num1, num2) {
   return result / Math.pow(10, maxLen);
 }
 function downloadFile(url, name) {
+  var fileName = "";
+  if (name) {
+    fileName = name;
+  } else {
+    const res = url.split("?")[0].split("/");
+    fileName = res[res.length - 1];
+  }
   var xhr = new XMLHttpRequest();
   xhr.open("GET", url, true);
   xhr.responseType = "blob";
@@ -117,7 +124,7 @@ function downloadFile(url, name) {
       const link = document.createElement("a");
       const body = document.querySelector("body");
       link.href = window.URL.createObjectURL(blob);
-      link.download = name;
+      link.download = fileName;
       link.style.display = "none";
       body == null ? void 0 : body.appendChild(link);
       link.click();

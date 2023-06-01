@@ -127,9 +127,16 @@ export function add (num1: number, num2: number): number {
 /*
   下载文件并自定义文件名
   url: 文件地址
-  name: 自定义文件名
+  name: 自定义文件名，未传时，从文件地址中自动获取文件名称
 */
 export function downloadFile (url: string, name: string) {
+  var fileName = ''
+  if (name) {
+    fileName = name
+  } else {
+    const res = url.split('?')[0].split('/')
+    fileName = res[res.length - 1]
+  }
   var xhr = new XMLHttpRequest()
   xhr.open('GET', url, true)
   xhr.responseType = 'blob'
@@ -139,7 +146,7 @@ export function downloadFile (url: string, name: string) {
       const link = document.createElement('a')
       const body = document.querySelector('body')
       link.href = window.URL.createObjectURL(blob)
-      link.download = name
+      link.download = fileName
       link.style.display = 'none'
       body?.appendChild(link)
       link.click()

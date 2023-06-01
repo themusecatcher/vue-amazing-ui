@@ -5,8 +5,7 @@ export default defineConfig({
   description: 'Amazing UI 组件库',
   base: '/vue-amazing-ui/',
 
-  head: [
-    // 网站图标
+  head: [ // 网站图标
     ['link', { rel: 'icon', type: 'image/svg+xml', href: 'logo.svg' }],
     // ['link', { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
   ],
@@ -33,9 +32,9 @@ export default defineConfig({
       // }
     ],
 
-    // search: {
-    //   provider: 'local'
-    // },
+    search: {
+      provider: 'local'
+    },
 
     footer: {
       message: 'Released under the MIT License.',
@@ -43,8 +42,8 @@ export default defineConfig({
     },
 
     nav: [
-      { text: '指引', link: '/guide/features', activeMatch: '/guide/' },
-      { text: '工具', link: '/utils/date-format', activeMatch: '/utils/' },
+      { text: '组件', link: '/guide/features', activeMatch: '/guide/' },
+      { text: '工具', link: '/utils/started', activeMatch: '/utils/' },
       {
         text: '链接',
         items: [
@@ -81,7 +80,7 @@ export default defineConfig({
             },
             {
               text: '快速上手',
-              link: '/guide/install'
+              link: '/guide/started'
             }
           ]
         },
@@ -233,7 +232,16 @@ export default defineConfig({
       ],
       '/utils/': [
         {
-          text: 'Utils',
+          text: '指引',
+          items: [
+            {
+              text: '快速上手',
+              link: '/utils/started'
+            }
+          ]
+        },
+        {
+          text: '工具',
           items: [
             {
               text: 'date 日期格式化',
@@ -258,6 +266,10 @@ export default defineConfig({
             {
               text: 'add 加法',
               link: '/utils/add'
+            },
+            {
+              text: 'downloadFile 下载文件',
+              link: '/utils/download-file'
             }
           ]
         }
