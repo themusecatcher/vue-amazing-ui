@@ -82,7 +82,7 @@ function getUrl (route: Route) {
   .m-btn {
     display: inline-block;
     color: rgba(0,0,0,.88);
-    background-color: transparent;
+    background-color: #ffffff;
     border: 1px solid #d9d9d9;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
     transition: all .2s cubic-bezier(.645,.045,.355,1);
@@ -97,7 +97,7 @@ function getUrl (route: Route) {
       text-align: left;
       opacity: 0;
       width: 0;
-      transition: width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       .u-spin-circle {
         display: inline-block;
         width: 12px;
