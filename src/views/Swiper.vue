@@ -11,7 +11,6 @@ function loadImages () {
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/${i}.jpg`
     })
   }
-  console.log(images.value)
 }
 onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
   loadImages()
@@ -38,20 +37,11 @@ function onChange () {
       </li>
     </ul>
     <h2 class="mt30 mb10">Swiper 轮播图基本使用 (type: banner)</h2>
-    <Swiper
-      :images="images"
-      type="banner"
-      effect="slider"
-      width="100%"
-      height="600px"
-      navigation
-      @change="onChange" />
+    <Swiper :images="images" :height="600" @change="onChange" />
     <h2 class="mt30 mb10">Swiper 走马灯基本使用 (type: carousel)</h2>
     <Swiper
       :images="images"
       type="carousel"
-      width="100%"
-      preloaderColor="theme"
       :height="240"
       :slides-per-view="3"
       :space-between="20"
