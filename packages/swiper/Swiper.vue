@@ -47,6 +47,7 @@ const imgHeight = computed(() => {
 })
 const modulesBanner = ref([Navigation, Pagination, Autoplay, EffectFade])
 const pagination = ref({
+  dynamicBullets: true,
   clickable: true
 })
 const autoplayBanner = ref({
@@ -138,15 +139,8 @@ function onSwiper (swiper: any) {
   -webkit-transition-timing-function: linear;
 }
 :deep(.swiper-pagination-bullet) {
-  width: 36px;
-  height: 4px;
-  background: #E3E3E3;
-  border-radius: 1px;
-  margin-right: 10px;
-  cursor: pointer;
-}
-:deep(.swiper-pagination-bullet-active) {
-  background: @themeColor;
+  width: 12px;
+  height: 12px;
 }
 .swiper-lazy-preloader-theme {
   --swiper-preloader-color: @themeColor;
