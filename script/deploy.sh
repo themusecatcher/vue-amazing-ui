@@ -3,6 +3,10 @@
 # 确保脚本抛出遇到的错误
 set -e
 
+# 重新打包组件库
+
+pnpm build
+
 # 打包生成静态文件
 pnpm docs:build
 
