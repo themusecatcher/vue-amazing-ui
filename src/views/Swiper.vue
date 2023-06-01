@@ -28,6 +28,9 @@ function onChange () {
         <a class="u-file" href="https://swiperjs.com/" target="_blank">Swiper官方</a>
       </li>
       <li>
+        <a class="u-file" href="https://swiperjs.com/swiper-api" target="_blank">Swiper API</a>
+      </li>
+      <li>
         <a class="u-file" href="https://swiperjs.com/vue" target="_blank">Swiper Vue</a>
       </li>
       <li>

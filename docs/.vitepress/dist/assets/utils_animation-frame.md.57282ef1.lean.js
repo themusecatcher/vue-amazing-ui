@@ -1,0 +1,1 @@
+import{_ as s,c as a,o as n,O as o}from"./chunks/framework.4b78f2b9.js";const C=JSON.parse('{"title":"动画帧","description":"","frontmatter":{},"headers":[],"relativePath":"utils/animation-frame.md"}'),l={name:"utils/animation-frame.md"},e=o("",8),p=[e];function t(r,c,D,i,y,F){return n(),a("div",null,p)}const m=s(l,[["render",t]]);export{C as __pageData,m as default};

@@ -12,6 +12,7 @@
 ## 参考文档
 
 - [Swiper 官方](https://swiperjs.com/)
+- [Swiper API](https://swiperjs.com/swiper-api)
 - [Swiper Vue](https://swiperjs.com/vue)
 - [Swiper Demos](https://swiperjs.com/demos)
 
@@ -25,7 +26,7 @@ function loadImages () {
     images.value.push({
       title: `image-${i}`,
       link: '',
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.1/${i}.jpg`
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/${i}.jpg`
     })
   }
 }

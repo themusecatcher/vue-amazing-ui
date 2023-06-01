@@ -289,8 +289,8 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Button_vue_vue_type_style_index_0_scoped_c0bb03ae_lang = "";
-const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-c0bb03ae"]]);
+const Button_vue_vue_type_style_index_0_scoped_a9881684_lang = "";
+const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-a9881684"]]);
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
@@ -633,7 +633,7 @@ const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
-const _withScopeId$f = (n) => (pushScopeId("data-v-d75b56e9"), n = n(), popScopeId(), n);
+const _withScopeId$f = (n) => (pushScopeId("data-v-a4eb534e"), n = n(), popScopeId(), n);
 const _hoisted_1$s = ["title"];
 const _hoisted_2$o = /* @__PURE__ */ _withScopeId$f(() => /* @__PURE__ */ createElementVNode("path", { d: "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
 const _hoisted_3$m = [
@@ -799,8 +799,8 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Select_vue_vue_type_style_index_0_scoped_d75b56e9_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-d75b56e9"]]);
+const Select_vue_vue_type_style_index_0_scoped_a4eb534e_lang = "";
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-a4eb534e"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
 };
@@ -5343,6 +5343,7 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
     });
     const modulesBanner = ref([Navigation, Pagination$1, Autoplay, EffectFade]);
     const pagination = ref({
+      dynamicBullets: true,
       clickable: true
     });
     const autoplayBanner = ref({
@@ -5450,8 +5451,8 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Swiper_vue_vue_type_style_index_0_scoped_270119b1_lang = "";
-const Swiper = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-270119b1"]]);
+const Swiper_vue_vue_type_style_index_0_scoped_956587f0_lang = "";
+const Swiper = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-956587f0"]]);
 Swiper.install = (app) => {
   app.component(Swiper.__name, Swiper);
 };
