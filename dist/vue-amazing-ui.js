@@ -640,7 +640,7 @@ const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
-const _withScopeId$f = (n) => (pushScopeId("data-v-a4eb534e"), n = n(), popScopeId(), n);
+const _withScopeId$f = (n) => (pushScopeId("data-v-b62eea44"), n = n(), popScopeId(), n);
 const _hoisted_1$s = ["title"];
 const _hoisted_2$o = /* @__PURE__ */ _withScopeId$f(() => /* @__PURE__ */ createElementVNode("path", { d: "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
 const _hoisted_3$m = [
@@ -806,8 +806,8 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Select_vue_vue_type_style_index_0_scoped_a4eb534e_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-a4eb534e"]]);
+const Select_vue_vue_type_style_index_0_scoped_b62eea44_lang = "";
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-b62eea44"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
 };
@@ -825,6 +825,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
     width: { default: 120 },
     height: { default: 32 },
     disabled: { type: [Boolean, Array], default: false },
+    allowClear: { type: Boolean, default: false },
     placeholder: { default: "请选择" },
     maxDisplay: { default: 6 }
   },
@@ -915,12 +916,13 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
           label: _ctx.label,
           value: _ctx.value,
           disabled: Array.isArray(_ctx.disabled) ? _ctx.disabled[0] : _ctx.disabled,
+          allowClear: _ctx.allowClear,
           width: Array.isArray(_ctx.width) ? _ctx.width[0] : _ctx.width,
           height: _ctx.height,
           maxDisplay: _ctx.maxDisplay,
           placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[0] : _ctx.placeholder,
           onChange: onFirstChange
-        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "width", "height", "maxDisplay", "placeholder"]),
+        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "allowClear", "width", "height", "maxDisplay", "placeholder"]),
         createVNode(unref(Select), {
           style: normalizeStyle(`margin-right: ${_ctx.gap}px; z-index: ${_ctx.zIndex};`),
           options: secondOptions.value,
@@ -929,12 +931,13 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
           label: _ctx.label,
           value: _ctx.value,
           disabled: Array.isArray(_ctx.disabled) ? _ctx.disabled[1] : _ctx.disabled,
+          allowClear: _ctx.allowClear,
           width: Array.isArray(_ctx.width) ? _ctx.width[1] : _ctx.width,
           height: _ctx.height,
           maxDisplay: _ctx.maxDisplay,
           placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[1] : _ctx.placeholder,
           onChange: onSecondChange
-        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "width", "height", "maxDisplay", "placeholder"]),
+        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "allowClear", "width", "height", "maxDisplay", "placeholder"]),
         createVNode(unref(Select), {
           style: normalizeStyle(`z-index: ${_ctx.zIndex};`),
           options: thirdOptions.value,
@@ -943,18 +946,19 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
           label: _ctx.label,
           value: _ctx.value,
           disabled: Array.isArray(_ctx.disabled) ? _ctx.disabled[2] : _ctx.disabled,
+          allowClear: _ctx.allowClear,
           width: Array.isArray(_ctx.width) ? _ctx.width[2] : _ctx.width,
           height: _ctx.height,
           maxDisplay: _ctx.maxDisplay,
           placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[2] : _ctx.placeholder,
           onChange: onThirdChange
-        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "width", "height", "maxDisplay", "placeholder"])
+        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "allowClear", "width", "height", "maxDisplay", "placeholder"])
       ], 4);
     };
   }
 });
-const Cascader_vue_vue_type_style_index_0_scoped_f22f1659_lang = "";
-const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-f22f1659"]]);
+const Cascader_vue_vue_type_style_index_0_scoped_f589250d_lang = "";
+const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-f589250d"]]);
 Cascader.install = (app) => {
   app.component(Cascader.__name, Cascader);
 };

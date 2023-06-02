@@ -92,6 +92,14 @@ function onAntChange (values: (number|string)[], selectedOptions: any) {
       :width="120"
       :gap="12"
       @change="onChange" />
+    <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
+    <Cascader
+      :options="options"
+      v-model:selectedValue="selectedValue"
+      :width="120"
+      :gap="12"
+      allowClear
+      @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 级联选择</h2>
     <a-cascader
       :options="options"
