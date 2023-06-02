@@ -23,8 +23,7 @@ function onFinish () {
   finished-text="Finished"
   @finish="onFinish" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -42,7 +41,7 @@ function onFinish () {
 </template>
 ```
 
-</details>
+:::
 
 ## 毫秒倒计时
 
@@ -57,8 +56,7 @@ function onFinish () {
   finished-text="Finished"
   @finish="onFinish" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -76,7 +74,7 @@ function onFinish () {
 </template>
 ```
 
-</details>
+:::
 
 ## 使用插槽
 
@@ -90,8 +88,7 @@ function onFinish () {
   <template #suffix> left for the end.</template>
 </CountDown>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -112,15 +109,14 @@ function onFinish () {
 </template>
 ```
 
-</details>
+:::
 
 ## 倒计时已完成
 
 <Countdown title="Finished" finished-text="Finished" @finish="onFinish">
   </CountDown>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -134,7 +130,7 @@ function onFinish () {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

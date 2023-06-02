@@ -13,8 +13,7 @@
 
 <Divider>Center Text</Divider>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -22,14 +21,13 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 中间无文字
 
 <Divider />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -37,15 +35,14 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 指定文字位置
 
 <Divider orientation="left">Left Text</Divider>
 <Divider orientation="right">Right Text</Divider>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -54,7 +51,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义文字位置
 
@@ -63,8 +60,7 @@
 <Divider orientation="left" :orientation-margin="120">Left Text</Divider>
 <Divider orientation="right" :orientation-margin="120">Right Text</Divider>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -73,14 +69,13 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 使用虚线
 
 <Divider dashed>Center Text</Divider>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -88,7 +83,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义线宽
 
@@ -96,8 +91,7 @@
 
 <Divider :borderWidth="3">Center Text</Divider>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -105,7 +99,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

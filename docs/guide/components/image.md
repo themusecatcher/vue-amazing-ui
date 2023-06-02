@@ -39,8 +39,7 @@ const images = ref([
 
 <Image :width="400" :height="300" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -48,7 +47,7 @@ const images = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## 多张图片预览
 
@@ -58,8 +57,7 @@ const images = ref([
 
 <Image :width="400" :height="300" :src="images" loop />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -92,7 +90,7 @@ const images = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义样式
 
@@ -106,8 +104,7 @@ const images = ref([
   </template>
 </Image>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -119,7 +116,7 @@ const images = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义预览配置
 
@@ -135,8 +132,7 @@ const images = ref([
   :max-zoom-scale="2"
   src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.1/1.jpg" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -150,7 +146,7 @@ const images = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

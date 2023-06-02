@@ -41,8 +41,7 @@ const images = ref([
 
 <Carousel :images="images" :height="360" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -81,7 +80,7 @@ const images = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

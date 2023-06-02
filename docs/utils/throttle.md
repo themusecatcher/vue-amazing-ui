@@ -4,8 +4,7 @@
 
 *如果短时间内大量触发同一事件，那么在函数执行一次之后，该函数在指定的时间（delay）期限内不再工作，直至过了这段时间才重新生效*
 
-<details>
-<summary>查看源码</summary>
+::: details  Show Source Code
 
 ```ts
 function throttle (fn: Function, delay = 300): any {
@@ -23,7 +22,7 @@ function throttle (fn: Function, delay = 300): any {
 }
 ```
 
-</details>
+:::
 
 ## 何时使用
 

@@ -1,7 +1,6 @@
 # 下载文件
 
-<details>
-<summary>查看源码</summary>
+::: details  Show Source Code
 
 ```ts
 function downloadFile (url: string, name: string) {
@@ -33,7 +32,7 @@ function downloadFile (url: string, name: string) {
 }
 ```
 
-</details>
+:::
 
 ## 何时使用
 

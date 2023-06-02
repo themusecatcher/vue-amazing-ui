@@ -23,8 +23,7 @@ function onChange (number: number) {
 
 <InputNumber v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -39,14 +38,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 步长为小数
 
 <InputNumber :step="0.1" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -61,14 +59,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义最大最小值
 
 <InputNumber :min="0" :max="10" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -83,14 +80,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 添加前缀图标
 
 <InputNumber prefix="$" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -105,7 +101,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

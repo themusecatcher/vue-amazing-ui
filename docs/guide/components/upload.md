@@ -78,8 +78,7 @@ function onRemove (file: object) {
 
 <Upload v-model:file-list="files" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -94,7 +93,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用
 
@@ -104,8 +103,7 @@ watchEffect(() => {
 
 <Upload disabled v-model:file-list="imageList" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -122,7 +120,7 @@ const imageList = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## 多文件上传
 
@@ -132,8 +130,7 @@ const imageList = ref([
 
 <Upload multiple :max-count="3" v-model:file-list="fileList" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -157,7 +154,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义样式
 
@@ -167,8 +164,7 @@ watchEffect(() => {
 
 <Upload :max-count="3" tip="上传" fit="cover" v-model:file-list="fileList" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -192,7 +188,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 限制文件大小和类型
 
@@ -209,8 +205,7 @@ watchEffect(() => {
   @change="onChange"
   @remove="onRemove" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -256,7 +251,7 @@ function onRemove (file: object) {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义上传行为
 
@@ -271,8 +266,7 @@ function onRemove (file: object) {
   @change="onChange"
   @remove="onRemove" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -339,7 +333,7 @@ function onRemove (file: object) {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

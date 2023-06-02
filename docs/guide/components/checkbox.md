@@ -92,8 +92,7 @@ watch(checkAll, (to) => {
 
 <Checkbox :options="options" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -136,14 +135,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用
 
 <Checkbox :options="options" v-model:value="value" disabled />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -182,14 +180,13 @@ const value = ref([2]) // 多选框v-model
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用选项
 
 <Checkbox :options="optionsDisabled" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -232,7 +229,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 实现全选效果
 
@@ -240,8 +237,7 @@ watchEffect(() => {
 <br/>
 <Checkbox :options="options" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -302,14 +298,13 @@ watch(checkAll, (to) => {
 </template>
 ```
 
-</details>
+:::
 
 ## 垂直排列
 
 <Checkbox vertical :options="options" v-model:value="value"/>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -352,14 +347,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义间距
 
 <Checkbox :gap="24" :options="options" v-model:value="value"/>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -402,7 +396,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

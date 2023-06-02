@@ -185,7 +185,7 @@ function onError (content: any) {
 </script>
 <template>
   <div class="m-upload-list">
-    <div class="m-upload-item" :class="{mr8: n !== showUpload}" v-for="n of showUpload" :key="n">
+    <div class="m-upload-item" v-for="n of showUpload" :key="n">
       <div class="m-upload">
         <div
           v-show="!uploading[n-1] && !uploadedFiles[n-1]"
@@ -230,6 +230,8 @@ function onError (content: any) {
   .m-upload-item {
     display: inline-block;
     vertical-align: top;
+    margin-right: 8px;
+    margin-bottom: 8px
   }
   .mr8 {
     margin-right: 8px;

@@ -21,10 +21,12 @@ const spinning = ref(true)
   <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
 </Spin>
 <br/>
-<h4>Loading state: <Switch v-model:checked="spinning" /></h4>
+<div class="m-flex">
+  <h3 class="u-h3">Loading state: </h3>
+  <Switch v-model:checked="spinning" />
+</div>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -49,7 +51,7 @@ const spinning = ref(true)
 </style>
 ```
 
-</details>
+:::
 
 ## 静态圆形指示符
 
@@ -57,8 +59,7 @@ const spinning = ref(true)
 <Spin :spinning="spinning" indicator="static-circle" />
 <br/>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -71,7 +72,7 @@ const spinning = ref(true)
 </template>
 ```
 
-</details>
+:::
 
 ## 动态圆形指示符
 
@@ -79,8 +80,7 @@ const spinning = ref(true)
 <Spin :spinning="spinning" indicator="dynamic-circle" />
 <br/>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -93,7 +93,7 @@ const spinning = ref(true)
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义描述文案
 
@@ -101,8 +101,7 @@ const spinning = ref(true)
 <Spin tip="加载中..." :spinning="spinning" />
 <br/>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -115,7 +114,39 @@ const spinning = ref(true)
 </template>
 ```
 
-</details>
+:::
+
+## 自定义主题色
+
+<br/>
+<Spin class="u-spin" color="#fadb14" :spinning="spinning" />
+<Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="static-circle" />
+<Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+<br/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const spinning = ref(true)
+</script>
+<template>
+  <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
+  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="static-circle" />
+  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+</template>
+<style>
+.u-spin {
+  display: inline-block;
+  width: 100px !important;
+  height: 100px !important;
+}
+</style>
+```
+
+:::
 
 ## 各种大小
 
@@ -131,8 +162,7 @@ const spinning = ref(true)
 <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
 <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -160,9 +190,17 @@ const spinning = ref(true)
 </style>
 ```
 
-</details>
+:::
 
 <style>
+.m-flex {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.u-h3 {
+  margin-top: 0 !important;
+}
 .spin-content {
   display: inline-block;
   border: 1px solid #91d5ff;

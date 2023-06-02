@@ -88,8 +88,7 @@ function onChange (key: string|number) {
 
 <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -136,7 +135,7 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用某一项
 
@@ -146,8 +145,7 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 
 <Tabs :tab-pages="tabPagesDisabled" v-model:active-key="activeKey" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -195,14 +193,13 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 </template>
 ```
 
-</details>
+:::
 
 ## 居中展示
 
 <Tabs centered :tab-pages="tabPages" v-model:active-key="activeKey" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -249,14 +246,13 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 </template>
 ```
 
-</details>
+:::
 
 ## 左右滑动，容纳更多标签
 
 <Tabs style="width: 320px;" :tab-pages="tabPages" v-model:active-key="activeKey" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -303,14 +299,13 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 </template>
 ```
 
-</details>
+:::
 
 ## 大号标签页
 
 <Tabs size="large" :tab-pages="tabPages" v-model:active-key="activeKey" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -357,7 +352,7 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义内容
 
@@ -373,8 +368,7 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
   </template>
 </Tabs>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -431,7 +425,7 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

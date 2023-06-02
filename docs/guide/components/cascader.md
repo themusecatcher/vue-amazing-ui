@@ -190,8 +190,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 <Cascader :options="options" v-model:selected-value="selectedValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -262,7 +261,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 选择即改变
 
@@ -272,8 +271,7 @@ watchEffect(() => {
   change-on-select
   @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -352,7 +350,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用
 
@@ -361,8 +359,7 @@ function onChange (values: (number|string)[], labels: string[]) {
   v-model:selected-value="selectedValue"
   disabled />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -433,7 +430,7 @@ const selectedValue = ref(['2', '21', '212'])
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用某一级
 
@@ -449,8 +446,7 @@ const selectedValue = ref(['2', '21', '212'])
   :disabled="[true]"
   @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -529,7 +525,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用选项
 
@@ -542,8 +538,7 @@ function onChange (values: (number|string)[], labels: string[]) {
   v-model:selected-value="selectedValue"
   @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -622,7 +617,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义样式
 
@@ -633,8 +628,7 @@ function onChange (values: (number|string)[], labels: string[]) {
   :gap="12"
   @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -714,7 +708,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义字段名
 
@@ -726,8 +720,7 @@ function onChange (values: (number|string)[], labels: string[]) {
   children="items"
   @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -808,7 +801,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

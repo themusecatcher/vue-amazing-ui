@@ -15,8 +15,7 @@
   <Button type="primary">特斯拉</Button>
 </Tooltip>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -27,7 +26,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义样式
 
@@ -36,8 +35,7 @@
   <Button type="primary">哥斯拉大战金刚</Button>
 </Tooltip>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -48,7 +46,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 暂无数据
 
@@ -56,8 +54,7 @@
   <Button type="primary">暂无数据</Button>
 </Tooltip>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -67,7 +64,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

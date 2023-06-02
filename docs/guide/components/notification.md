@@ -60,8 +60,7 @@ function onBottomLeft (info: string) {
 
 <Button type="primary" @click="onOpen('This is a normal notification')">Open</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -80,14 +79,13 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 </template>
 ```
 
-</details>
+:::
 
 ## info
 
 <Button type="primary" @click="onInfo('This is a normal notification')">Info</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -106,14 +104,13 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 </template>
 ```
 
-</details>
+:::
 
 ## success
 
 <Button type="primary" @click="onSuccess('This is a success notification')">Success</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -132,14 +129,13 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 </template>
 ```
 
-</details>
+:::
 
 ## error
 
 <Button type="primary" @click="onError('This is a error notification')">Error</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -158,14 +154,13 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 </template>
 ```
 
-</details>
+:::
 
 ## warn
 
 <Button type="primary" @click="onWarn('This is a warn notification')">Warn</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -184,14 +179,13 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 </template>
 ```
 
-</details>
+:::
 
 ## 左上角弹出
 
 <Button type="primary" @click="onTopLeft('This is a topLeft notification')">TopLeft</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -211,14 +205,13 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 </template>
 ```
 
-</details>
+:::
 
 ## 右下角弹出
 
 <Button type="primary" @click="onBottomRight('This is a bottomRight notification')">BottomRight</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -238,14 +231,13 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 </template>
 ```
 
-</details>
+:::
 
 ## 左下角弹出
 
 <Button type="primary" @click="onBottomLeft('This is a bottomLeft notification')">BottomLeft</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -265,7 +257,7 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

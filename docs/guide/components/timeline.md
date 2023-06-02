@@ -39,8 +39,7 @@ const timelineData = ref([
 
 <Timeline :timeline-data="timelineData" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -73,7 +72,7 @@ const timelineData = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义样式
 
@@ -101,8 +100,7 @@ const timelineData = ref([
 }
 </style>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -156,14 +154,13 @@ const timelineData = ref([
 </style>
 ```
 
-</details>
+:::
 
 ## 使用虚线
 
 <Timeline :timeline-data="timelineData" line-style="dashed" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -196,7 +193,7 @@ const timelineData = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

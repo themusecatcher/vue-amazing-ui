@@ -14,8 +14,7 @@
 
 <Empty />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -23,7 +22,7 @@
 </template>
 ```
 
-</details>
+:::
 
 <br/>
 
@@ -31,8 +30,7 @@
 
 <Empty image="2" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -40,14 +38,13 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 无描述
 
 <Empty :description="null" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -55,7 +52,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义
 
@@ -77,8 +74,7 @@
   </template>
 </Empty>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -98,7 +94,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

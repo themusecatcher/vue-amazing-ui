@@ -93,8 +93,7 @@ watchEffect(() => {
 
 <DatePicker placeholder="请选择日期" format="yyyy-MM-dd" v-model="dateValue"/>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -110,7 +109,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用过去
 
@@ -120,8 +119,7 @@ watchEffect(() => {
   format="yyyy-MM-dd"
   v-model="dateValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -141,7 +139,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用未来
 
@@ -152,8 +150,7 @@ watchEffect(() => {
   format="yyyy-MM-dd"
   v-model="dateValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -174,7 +171,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 日期时间选择器
 
@@ -187,8 +184,7 @@ watchEffect(() => {
   enable-seconds
   v-model="dateTimeValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -211,7 +207,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 日期范围选择器
 
@@ -222,8 +218,7 @@ watchEffect(() => {
   :width="280"
   v-model="rangeValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -244,7 +239,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 双日期面板
 
@@ -257,8 +252,7 @@ watchEffect(() => {
   multi-calendars
   v-model="rangeValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -281,7 +275,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 预设范围
 
@@ -299,8 +293,7 @@ watchEffect(() => {
   multi-calendars
   v-model="rangeValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -333,7 +326,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 时分选择器
 
@@ -346,8 +339,7 @@ watchEffect(() => {
   :width="120"
   v-model="timeValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -372,7 +364,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 时分秒选择器
 
@@ -386,8 +378,7 @@ watchEffect(() => {
   :width="150"
   v-model="secondsValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -414,7 +405,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 时分秒范围选择器
 
@@ -429,8 +420,7 @@ watchEffect(() => {
   :width="240"
   v-model="timeRangeValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -466,7 +456,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 周选择器
 
@@ -477,8 +467,7 @@ watchEffect(() => {
   :width="280"
   v-model="weekValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -499,7 +488,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 月选择器
 
@@ -510,8 +499,7 @@ watchEffect(() => {
   :width="150"
   v-model="monthValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -534,7 +522,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 年选择器
 
@@ -545,8 +533,7 @@ watchEffect(() => {
   :width="120"
   v-model="yearValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -566,7 +553,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

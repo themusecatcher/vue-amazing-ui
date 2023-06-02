@@ -108,8 +108,7 @@ function onChange (pagination: {page: number, pageSize: number}) {
   </template>
 </Table>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -211,14 +210,13 @@ function onChange (pagination: {page: number, pageSize: number}) {
 </template>
 ```
 
-</details>
+:::
 
 ## 加载中
 
 <Table :columns="columns" :loading="true" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -258,14 +256,13 @@ const columns = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## 暂无数据
 
 <Table :columns="columns" :total="0" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -305,7 +302,7 @@ const columns = ref([
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

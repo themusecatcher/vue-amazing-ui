@@ -8,8 +8,7 @@
 
 <QRCode value="https://blog.csdn.net/Dandrose"/>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -17,14 +16,13 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 无边框
 
 <QRCode value="https://blog.csdn.net/Dandrose" :bordered="false" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -32,7 +30,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 纠错等级 M
 
@@ -44,8 +42,7 @@
 
 <QRCode value="https://blog.csdn.net/Dandrose" error-level="M" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -53,7 +50,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义样式
 
@@ -63,8 +60,7 @@
 
 <QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" background-color="f5f5f5" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -72,7 +68,7 @@
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

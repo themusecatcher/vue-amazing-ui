@@ -4,8 +4,7 @@
 
 *使用 raf 动画帧模拟实现的定时器，等效替代 setTimeout() 和 setInterval()*
 
-<details>
-<summary>查看源码</summary>
+::: details  Show Source Code
 
 ```typescript
 function rafTimeout (fn: Function, delay = 0, interval = false): object {
@@ -43,7 +42,7 @@ function cancelRaf (raf: { id: number }): void {
 }
 ```
 
-</details>
+:::
 
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
