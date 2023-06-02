@@ -125,8 +125,7 @@ function onChange (value: string|number, label: string,  index: number) {
 
 <Select :options="options" v-model="selectedValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -175,14 +174,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用
 
 <Select :options="options" v-model="selectedValue" disabled />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -228,7 +226,7 @@ const selectedValue = ref(1)
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用选项
 
@@ -236,8 +234,7 @@ const selectedValue = ref(1)
   :options="optionsDisabled"
   v-model="selectedValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -284,7 +281,7 @@ const selectedValue = ref(1)
 </template>
 ```
 
-</details>
+:::
 
 ## 支持清除
 
@@ -294,8 +291,7 @@ const selectedValue = ref(1)
   v-model="selectedValue"
   @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -353,7 +349,7 @@ function onChange (value: string|number, label: string,  index: number) {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义样式
 
@@ -364,8 +360,7 @@ function onChange (value: string|number, label: string,  index: number) {
   v-model="selectedValue"
   @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -424,7 +419,7 @@ function onChange (value: string|number, label: string,  index: number) {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义字段名
 
@@ -435,8 +430,7 @@ function onChange (value: string|number, label: string,  index: number) {
   v-model="selectedValue"
   @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -495,7 +489,7 @@ function onChange (id: string|number, name: string,  index: number) {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义下拉面板展示数
 
@@ -505,8 +499,7 @@ function onChange (id: string|number, name: string,  index: number) {
   v-model="selectedValue"
   @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -564,7 +557,7 @@ function onChange (value: string|number, label: string,  index: number) {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

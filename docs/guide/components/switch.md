@@ -24,8 +24,7 @@ watchEffect(() => {
 
 <Switch v-model:checked="checked" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -41,14 +40,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用开关
 
 <Switch v-model:checked="checked" disabled />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -60,14 +58,13 @@ const checked = ref(false)
 </template>
 ```
 
-</details>
+:::
 
 ## 带文字的开关
 
 <Switch v-model:checked="checked" checkedInfo="开" uncheckedInfo="关" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -83,7 +80,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义 node 图标
 
@@ -107,8 +104,7 @@ watchEffect(() => {
 }
 </style>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -141,7 +137,7 @@ watchEffect(() => {
 </style>
 ```
 
-</details>
+:::
 
 ## APIs
 

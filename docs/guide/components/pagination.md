@@ -30,8 +30,7 @@ function changePage (pager: object) { // 分页器回调
   :total="total"
   @change="changePage" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -55,7 +54,7 @@ function changePage (pager: object) { // 分页器回调
 </template>
 ```
 
-</details>
+:::
 
 ## 靠左展示
 
@@ -66,8 +65,7 @@ function changePage (pager: object) { // 分页器回调
   placement="left"
   @change="changePage" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -92,7 +90,7 @@ function changePage (pager: object) { // 分页器回调
 </template>
 ```
 
-</details>
+:::
 
 ## 靠右展示
 
@@ -103,8 +101,7 @@ function changePage (pager: object) { // 分页器回调
   placement="right"
   @change="changePage" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -129,7 +126,7 @@ function changePage (pager: object) { // 分页器回调
 </template>
 ```
 
-</details>
+:::
 
 ## 快速跳转和数据总量
 
@@ -141,8 +138,7 @@ function changePage (pager: object) { // 分页器回调
   showTotal
   @change="changePage" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -168,7 +164,7 @@ function changePage (pager: object) { // 分页器回调
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

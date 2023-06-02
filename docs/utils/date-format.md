@@ -1,7 +1,6 @@
 # 日期格式化
 
-<details>
-<summary>查看源码</summary>
+::: details  Show Source Code
 
 ```ts
 function dateFormat (value: number|string|Date = Date.now(), format = 'YYYY-MM-DD HH:mm:ss'): string {
@@ -46,7 +45,7 @@ function dateFormat (value: number|string|Date = Date.now(), format = 'YYYY-MM-D
 }
 ```
 
-</details>
+:::
 
 ## 何时使用
 

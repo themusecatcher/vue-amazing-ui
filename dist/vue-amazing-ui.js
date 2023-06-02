@@ -3902,7 +3902,7 @@ const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-2
 Slider.install = (app) => {
   app.component(Slider.__name, Slider);
 };
-const _withScopeId$3 = (n) => (pushScopeId("data-v-c40f8c6b"), n = n(), popScopeId(), n);
+const _withScopeId$3 = (n) => (pushScopeId("data-v-01220d1b"), n = n(), popScopeId(), n);
 const _hoisted_1$b = { class: "m-spin" };
 const _hoisted_2$8 = { class: "m-spin-box" };
 const _hoisted_3$6 = {
@@ -3948,12 +3948,14 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     spinning: { type: Boolean, default: true },
     size: { default: "default" },
     tip: { default: "" },
-    indicator: { default: "dot" }
+    indicator: { default: "dot" },
+    color: { default: "#1677FF" }
   },
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
-        class: normalizeClass(`m-spin-wrap ${_ctx.size}`)
+        class: normalizeClass(`m-spin-wrap ${_ctx.size}`),
+        style: normalizeStyle(`--color: ${_ctx.color};`)
       }, [
         withDirectives(createElementVNode("div", _hoisted_1$b, [
           createElementVNode("div", _hoisted_2$8, [
@@ -3972,12 +3974,12 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
         }, [
           renderSlot(_ctx.$slots, "default", {}, void 0, true)
         ], 2)
-      ], 2);
+      ], 6);
     };
   }
 });
-const Spin_vue_vue_type_style_index_0_scoped_c40f8c6b_lang = "";
-const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-c40f8c6b"]]);
+const Spin_vue_vue_type_style_index_0_scoped_01220d1b_lang = "";
+const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-01220d1b"]]);
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
@@ -5508,8 +5510,8 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Switch_vue_vue_type_style_index_0_scoped_1ede669c_lang = "";
-const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-1ede669c"]]);
+const Switch_vue_vue_type_style_index_0_scoped_cea6fee2_lang = "";
+const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-cea6fee2"]]);
 Switch.install = (app) => {
   app.component(Switch.__name, Switch);
 };
@@ -6110,7 +6112,7 @@ const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-
 Tooltip.install = (app) => {
   app.component(Tooltip.__name, Tooltip);
 };
-const _withScopeId$1 = (n) => (pushScopeId("data-v-e03921d9"), n = n(), popScopeId(), n);
+const _withScopeId$1 = (n) => (pushScopeId("data-v-dabd8435"), n = n(), popScopeId(), n);
 const _hoisted_1$2 = { class: "m-upload-list" };
 const _hoisted_2$2 = { class: "m-upload" };
 const _hoisted_3$1 = ["onDrop", "onClick"];
@@ -6348,7 +6350,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", _hoisted_1$2, [
         (openBlock(true), createElementBlock(Fragment, null, renderList(showUpload.value, (n) => {
           return openBlock(), createElementBlock("div", {
-            class: normalizeClass(["m-upload-item", { mr8: n !== showUpload.value }]),
+            class: "m-upload-item",
             key: n
           }, [
             createElementVNode("div", _hoisted_2$2, [
@@ -6419,7 +6421,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
                 ])
               ])) : createCommentVNode("", true)
             ])
-          ], 2);
+          ]);
         }), 128)),
         createVNode(unref(Message), {
           ref_key: "message",
@@ -6431,8 +6433,8 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Upload_vue_vue_type_style_index_0_scoped_e03921d9_lang = "";
-const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-e03921d9"]]);
+const Upload_vue_vue_type_style_index_0_scoped_dabd8435_lang = "";
+const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-dabd8435"]]);
 Upload.install = (app) => {
   app.component(Upload.__name, Upload);
 };

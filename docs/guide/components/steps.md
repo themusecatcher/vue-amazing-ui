@@ -48,8 +48,7 @@ function onNext () {
 
 <Steps :steps="steps" :current="current" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -75,7 +74,7 @@ const current = ref(2)
 </template>
 ```
 
-</details>
+:::
 
 ## 可点击
 
@@ -90,8 +89,7 @@ const current = ref(2)
 <Button @click="onPrevious()" class="mt30 mr30">Previous</Button>
 <Button @click="onNext()">Next</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -135,7 +133,7 @@ function onNext () {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

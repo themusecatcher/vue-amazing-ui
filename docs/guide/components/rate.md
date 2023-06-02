@@ -24,8 +24,7 @@ function onHoverChange (value: number) {
 
 <Rate v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -41,14 +40,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用
 
 <Rate v-model:value="value" disabled />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -64,14 +62,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 空心星型
 
 <Rate character="star-outlined" :size="30" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -87,14 +84,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 实心心型
 
 <Rate character="heart-filled" :size="30" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -110,14 +106,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 空心心型
 
 <Rate character="heart-outlined" :size="30" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -133,14 +128,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 支持选中半星
 
 <Rate v-model:value="value" :size="30" allow-half />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -156,7 +150,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 使用中文文字: 好
 
@@ -167,8 +161,7 @@ watchEffect(() => {
   @change="onChange"
   @hover-change="onHoverChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -195,7 +188,7 @@ function onHoverChange (value: number) {
 </template>
 ```
 
-</details>
+:::
 
 ## 使用英文字母: A
 
@@ -206,8 +199,7 @@ function onHoverChange (value: number) {
   @change="onChange"
   @hover-change="onHoverChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -234,14 +226,13 @@ function onHoverChange (value: number) {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义选中颜色
 
 <Rate color="#1677FF" :size="30" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -257,14 +248,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义间距
 
 <Rate :size="30" :gap="16" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -280,14 +270,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义 star 总数
 
 <Rate :size="30" :count="10" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -303,7 +292,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

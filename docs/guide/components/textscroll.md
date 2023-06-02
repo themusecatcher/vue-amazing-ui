@@ -37,8 +37,7 @@ function onClick (value: string) { // 获取点击的标题
 
 <TextScroll :slider-text="sliderText" @click="onClick" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -70,7 +69,7 @@ function onClick (value: string) { // 获取点击的标题
 </template>
 ```
 
-</details>
+:::
 
 ## 垂直文字滚动
 
@@ -80,8 +79,7 @@ function onClick (value: string) { // 获取点击的标题
   vertical
   @click="onClick" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -117,7 +115,7 @@ function onClick (value: string) { // 获取点击的标题
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

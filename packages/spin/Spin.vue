@@ -4,16 +4,18 @@ interface Props {
   size?: 'small'|'default'|'large' // 组件大小，可选 small default large
   tip?: string // 描述文案
   indicator?: 'dot'|'static-circle'|'dynamic-circle' // 加载指示符
+  color?: string // 主题颜色
 }
 withDefaults(defineProps<Props>(), {
   spinning: true,
   size: 'default',
   tip: '',
-  indicator: 'dot'
+  indicator: 'dot',
+  color: '#1677FF'
 })
 </script>
 <template>
-  <div :class="`m-spin-wrap ${size}`">
+  <div :class="`m-spin-wrap ${size}`" :style="`--color: ${color};`">
     <div class="m-spin" v-show="spinning">
       <div class="m-spin-box">
         <div class="m-spin-dot" v-if="indicator==='dot'">
@@ -70,7 +72,7 @@ withDefaults(defineProps<Props>(), {
       }
       .u-dot-item { // 单个圆点样式
         position: absolute;
-        background: @themeColor;
+        background: var(--color);
         border-radius: 50%;
         opacity: .3;
         animation: spinMove 1s linear infinite alternate;
@@ -106,7 +108,7 @@ withDefaults(defineProps<Props>(), {
       display: inline-block;
       border-radius: 50%;
       border-style: solid;
-      border-color: @themeColor;
+      border-color: var(--color);
       border-top-color: transparent; // 隐藏1/4圆
       animation: loadingCircle 1s infinite linear;
       -webkit-animation: loadingCircle 1s infinite linear;
@@ -130,7 +132,7 @@ withDefaults(defineProps<Props>(), {
           stroke-dasharray: 90,150;
           stroke-dashoffset: 0;
           stroke-width: 5;
-          stroke: @themeColor;
+          stroke: var(--color);
           stroke-linecap: round;
           animation: loading-dash 1.5s ease-in-out infinite;
           @keyframes loading-dash {
@@ -152,7 +154,7 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .u-tip {
-      color: @themeColor;
+      color: var(--color);
       text-align: center;
     }
   }
@@ -173,8 +175,8 @@ withDefaults(defineProps<Props>(), {
       border-width: 4px;
     }
     .m-dynamic-circle {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
     }
     .u-tip {
       font-size: 16px;
@@ -200,8 +202,8 @@ withDefaults(defineProps<Props>(), {
       border-width: 3px;
     }
     .m-dynamic-circle {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
     }
     .u-tip {
       font-size: 14px;
@@ -227,8 +229,8 @@ withDefaults(defineProps<Props>(), {
       border-width: 2px;
     }
     .m-dynamic-circle {
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
     }
     .u-tip {
       font-size: 14px;

@@ -1,7 +1,6 @@
 # 加法
 
-<details>
-<summary>查看源码</summary>
+::: details Show Source Code
 
 ```ts
 function add (num1: number, num2: number): number {
@@ -15,7 +14,7 @@ function add (num1: number, num2: number): number {
 }
 ```
 
-</details>
+:::
 
 ## 何时使用
 

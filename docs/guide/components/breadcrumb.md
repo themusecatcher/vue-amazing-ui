@@ -32,8 +32,7 @@ const routes = [
 
 <Breadcrumb :routes="routes" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -58,14 +57,13 @@ const routes = [
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义分隔符
 
 <Breadcrumb :routes="routes" separator="/" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -90,14 +88,13 @@ const routes = [
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义样式
 
 <Breadcrumb :routes="routes" :font-size="16" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -122,14 +119,13 @@ const routes = [
 </template>
 ```
 
-</details>
+:::
 
 ## 新页面打开目标链接
 
 <Breadcrumb :routes="routes" target="_blank" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -154,7 +150,7 @@ const routes = [
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

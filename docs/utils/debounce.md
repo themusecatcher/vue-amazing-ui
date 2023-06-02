@@ -4,8 +4,7 @@
 
 *对于短时间内连续触发的事件，防抖就是让某个时间（delay）期限内，事件处理函数只执行一次*
 
-<details>
-<summary>查看源码</summary>
+::: details  Show Source Code
 
 ```ts
 function debounce (fn: Function, delay = 300): any {
@@ -19,7 +18,7 @@ function debounce (fn: Function, delay = 300): any {
 }
 ```
 
-</details>
+:::
 
 ## 何时使用
 

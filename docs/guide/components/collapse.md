@@ -50,8 +50,7 @@ function onChange (key: any) {
 
 <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -85,7 +84,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 手风琴
 
@@ -95,8 +94,7 @@ watchEffect(() => {
 
 <Collapse :collapse-data="collapseData" v-model:active-key="key" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -130,14 +128,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 可复制面板内容
 
 <Collapse copyable lang="template" :collapse-data="collapseData" v-model:active-key="activeKey" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -171,7 +168,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义内容
 
@@ -189,8 +186,7 @@ watchEffect(() => {
   </template>
 </Collapse>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -232,14 +228,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 隐藏箭头图标
 
 <Collapse :show-arrow="false" :collapse-data="collapseData" v-model:active-key="activeKey" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -273,7 +268,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

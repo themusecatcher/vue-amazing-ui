@@ -35,8 +35,7 @@ function onDecline (scale: number) {
 
 <Progress :percent="percent" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -49,14 +48,13 @@ const percent = ref(60)
 </template>
 ```
 
-</details>
+:::
 
 ## 完成进度条
 
 <Progress width="100%" :percent="100" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <template>
@@ -64,7 +62,7 @@ const percent = ref(60)
 </template>
 ```
 
-</details>
+:::
 
 ## 渐变进度条
 
@@ -80,8 +78,7 @@ const percent = ref(60)
     direction: 'right'
   }" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -100,7 +97,7 @@ const percent = ref(60)
 </template>
 ```
 
-</details>
+:::
 
 ## 进度圈
 
@@ -114,8 +111,7 @@ const percent = ref(60)
 <Button @click="onDecline(5)" size="large" style="margin-right: 30px; margin-top: 30px;">Decline-</Button>
 <Button @click="onIncrease(5)" size="large">Increase+</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -150,7 +146,7 @@ function onDecline (scale: number) {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

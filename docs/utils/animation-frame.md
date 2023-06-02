@@ -4,8 +4,7 @@
 
 - 希望执行一个动画时
 
-<details>
-<summary>查看源码</summary>
+::: details  Show Source Code
 
 ```typescript
 // @ts-ignore 兼容性requestAnimationFrame
@@ -14,7 +13,7 @@ const requestAnimationFrame = typeof window !== 'undefined' ? window.requestAnim
 const cancelAnimationFrame = typeof window !== 'undefined' ? window.cancelAnimationFrame || window.mozCancelAnimationFrame : () => {}
 ```
 
-</details>
+:::
 
 ## 基本使用
 

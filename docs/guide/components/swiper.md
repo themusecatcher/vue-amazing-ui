@@ -46,8 +46,7 @@ function onChange () {
 
 <Swiper :images="images" :height="420" @change="onChange" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -76,7 +75,7 @@ function onChange () {
 </template>
 ```
 
-</details>
+:::
 
 ## 走马灯
 
@@ -88,8 +87,7 @@ function onChange () {
   :space-between="20"
   :speed="2500" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -121,7 +119,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

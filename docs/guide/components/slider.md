@@ -35,8 +35,7 @@ function formatter (value: number) {
 
 <Slider v-model:value="singleValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -52,14 +51,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用
 
 <Slider disabled v-model:value="singleValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -75,14 +73,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 双滑块
 
 <Slider range v-model:value="doubleValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -98,14 +95,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 格式化提示内容
 
 <Slider :tip-formatter="formatter" v-model:value="singleValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -124,14 +120,13 @@ function formatter (value: number) {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义最大最小值
 
 <Slider :min="-10" :max="10" v-model:value="singleCustomValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -147,7 +142,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义步长
 
@@ -162,8 +157,7 @@ watchEffect(() => {
 
 <Slider range :step="5" v-model:value="doubleValue" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -184,7 +178,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

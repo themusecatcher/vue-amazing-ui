@@ -31,8 +31,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 
 <Waterfall :images="images" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -58,14 +57,13 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 </template>
 ```
 
-</details>
+:::
 
 ## CSS布局方式
 
 <Waterfall :images="images" mode="CSS" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -91,7 +89,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

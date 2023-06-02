@@ -36,8 +36,7 @@ function onClose () {
 
 <Button type="primary" @click="onInfo('This is a normal message')">Info</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -57,14 +56,13 @@ function onClose () {
 </template>
 ```
 
-</details>
+:::
 
 ## 成功提示
 
 <Button type="primary" @click="onSuccess('This is a success message')">Success</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -84,14 +82,13 @@ function onClose () {
 </template>
 ```
 
-</details>
+:::
 
 ## 失败提示
 
 <Button type="primary" @click="onError('This is a error message')">Error</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -111,14 +108,13 @@ function onClose () {
 </template>
 ```
 
-</details>
+:::
 
 ## 警告提示
 
 <Button type="primary" @click="onWarn('This is a warn message')">Warn</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -138,7 +134,7 @@ function onClose () {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

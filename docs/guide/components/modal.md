@@ -100,8 +100,7 @@ function onKnow () { // “我知道了”按钮回调
 
 <Button type="primary" @click="showConfirmModal('Some descriptions ...')">Confirm</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -132,14 +131,13 @@ function onConfirm () { // “确定”按钮回调
 </template>
 ```
 
-</details>
+:::
 
 ## erase
 
 <Button type="primary" @click="showEraseModal('Some descriptions ...')">Erase</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -170,14 +168,13 @@ function onConfirm () { // “确定”按钮回调
 </template>
 ```
 
-</details>
+:::
 
 ## info
 
 <Button type="primary" @click="showInfoModal('Some descriptions ...')">Info</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -198,14 +195,13 @@ function onKnow () { // “我知道了”按钮回调
 </template>
 ```
 
-</details>
+:::
 
 ## success
 
 <Button type="primary" @click="showSuccessModal('Some descriptions ...')">Success</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -226,14 +222,13 @@ function onKnow () { // “我知道了”按钮回调
 </template>
 ```
 
-</details>
+:::
 
 ## error
 
 <Button type="primary" @click="showErrorModal('Some descriptions ...')">Error</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -254,14 +249,13 @@ function onKnow () { // “我知道了”按钮回调
 </template>
 ```
 
-</details>
+:::
 
 ## warn
 
 <Button type="primary" @click="showWarnModal('Some descriptions ...')">Warn</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -282,14 +276,13 @@ function onKnow () { // “我知道了”按钮回调
 </template>
 ```
 
-</details>
+:::
 
 ## 高度固定
 
 <Button type="primary" @click="showFixModal('Some descriptions ...')">高度固定</Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -312,7 +305,7 @@ function onKnow () { // “我知道了”按钮回调
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

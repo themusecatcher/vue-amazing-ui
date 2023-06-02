@@ -61,8 +61,7 @@ function onConfirm () { // “确定”,“知道了”按钮回调
   <p>Bla bla ...</p>
 </Dialog>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -86,7 +85,7 @@ function onClose () {
 </template>
 ```
 
-</details>
+:::
 
 ## 内容高度自定义
 
@@ -101,8 +100,7 @@ function onClose () {
   <p>Bla bla ...</p>
 </Dialog>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -129,7 +127,7 @@ function onClose () {
 </template>
 ```
 
-</details>
+:::
 
 ## 有底部按钮
 
@@ -147,8 +145,7 @@ function onClose () {
   <p>Bla bla ...</p>
 </Dialog>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -189,7 +186,7 @@ function onConfirm () { // “确定”按钮回调
 </template>
 ```
 
-</details>
+:::
 
 ## 位置高度自定义
 
@@ -205,8 +202,7 @@ function onConfirm () { // “确定”按钮回调
   <p>Bla bla ...</p>
 </Dialog>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -234,7 +230,7 @@ function onClose () {
 </template>
 ```
 
-</details>
+:::
 
 ## 允许切换全屏
 
@@ -249,8 +245,7 @@ function onClose () {
   <p>Bla bla ...</p>
 </Dialog>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -277,7 +272,7 @@ function onClose () {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

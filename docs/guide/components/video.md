@@ -23,8 +23,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
   :height="375"
   :play-width="80" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -42,7 +41,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
 </template>
 ```
 
-</details>
+:::
 
 ## 自动播放
 
@@ -66,8 +65,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
   :height="375"
   :play-width="80" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -86,7 +84,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
 </template>
 ```
 
-</details>
+:::
 
 ## 自动截取视频指定帧作为封面图
 
@@ -101,8 +99,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
   :play-width="80"
   :second="3" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -119,7 +116,7 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Bao.
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 

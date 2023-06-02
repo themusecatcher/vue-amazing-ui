@@ -14,7 +14,7 @@ function onClick (e: Event) {
 
 ## 基本使用
 
-<div class="m-flex">
+<div :class="$style['m-flex']">
   <Button @click="onClick">Default</Button>
   <Button effect="reverse" @click="onClick">Reverse</Button>
   <Button type="primary" @click="onClick">Primary</Button>
@@ -22,8 +22,7 @@ function onClick (e: Event) {
   <Button disabled @click="onClick">Disabled</Button>
 </div>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -41,18 +40,17 @@ function onClick (e: Event) {
 
 ```
 
-</details>
+:::
 
 ## 大、中、小三种尺寸
 
-<div class="m-flex">
+<div :class="$style['m-flex']">
   <Button size="small" @click="onClick">Small</Button>
   <Button @click="onClick">Default</Button>
   <Button size="large" @click="onClick">Large</Button>
 </div>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -68,7 +66,7 @@ function onClick (e: Event) {
 
 ```
 
-</details>
+:::
 
 ## 自定义样式
 
@@ -76,8 +74,7 @@ function onClick (e: Event) {
   <p style="font-size: 18px;">自定义样式</p>
 </Button>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -93,19 +90,21 @@ function onClick (e: Event) {
 
 ```
 
-</details>
+:::
 
 ## 加载中状态
 
-<div class="m-flex">
+<div :class="$style['m-flex']">
   <Button :loading="loading" @click="onClick">Default</Button>
   <Button :loading="loading" type="primary" @click="onClick">Primary</Button>
   <Button :loading="loading" type="danger" @click="onClick">Danger</Button>
 </div>
-<h3>Loading state: <Switch v-model:checked="loading" /></h3>
+<div :class="$style['m-flex']" style="margin-top: 30px;">
+  <h3 :class="$style['u-h3']">Loading state: </h3>
+  <Switch v-model:checked="loading" />
+</div>
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -124,13 +123,17 @@ function onClick (e: Event) {
 
 ```
 
-</details>
+:::
 
-<style>
+<style module>
 .m-flex {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
+  align-items: center;
+}
+.u-h3 {
+  margin-top: 0 !important;
 }
 </style>
 

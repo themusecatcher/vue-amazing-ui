@@ -73,8 +73,7 @@ function onChange (value: any) {
 
 <Radio :options="options" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -115,14 +114,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用
 
 <Radio :options="options" @change="onChange" v-model:value="value" disabled />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -160,14 +158,13 @@ const value = ref(1)
 </template>
 ```
 
-</details>
+:::
 
 ## 禁用选项
 
 <Radio :options="optionsDisabled" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -210,14 +207,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 垂直排列
 
 <Radio vertical :options="options" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -258,14 +254,13 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## 自定义间距
 
 <Radio :gap="24" :options="options" v-model:value="value" />
 
-<details>
-<summary>查看代码</summary>
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -306,7 +301,7 @@ watchEffect(() => {
 </template>
 ```
 
-</details>
+:::
 
 ## APIs
 
