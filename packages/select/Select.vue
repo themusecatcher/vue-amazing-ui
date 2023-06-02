@@ -170,6 +170,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
 }
 .m-select-wrap {
   position: relative;
+  z-index: 8;
   display: inline-block;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
@@ -206,17 +207,17 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
     -webkit-transform: rotate(180deg);
   }
   .close {
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s ease-in-out;
     position: absolute;
     top: 0;
     bottom: 0;
     margin: auto 0;
-    right: 12px;
+    right: 11px;
     width: 12px;
     height: 12px;
     fill: rgba(140, 140, 140, 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
     &:hover {
       fill: rgba(100, 100, 100,.8);
     }

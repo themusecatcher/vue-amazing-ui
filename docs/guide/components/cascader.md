@@ -263,95 +263,6 @@ watchEffect(() => {
 
 :::
 
-## 选择即改变
-
-<Cascader
-  :options="options"
-  v-model:selected-value="selectedValue"
-  change-on-select
-  @change="onChange" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-const options = ref([
-  {
-    value: '1',
-    label: '北京',
-    children: [
-      {
-        value: '11',
-        label: '北京市',
-        children: [
-          {
-            value: '111',
-            label: '东城区'
-          },
-          {
-            value: '112',
-            label: '西城区'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    value: '2',
-    label: '浙江',
-    children: [
-      {
-        value: '21',
-        label: '杭州市',
-        children: [
-          {
-            value: '211',
-            label: '西湖区'
-          },
-          {
-            value: '212',
-            label: '余杭区'
-          }
-        ]
-      },
-      {
-        value: '22',
-        label: '湖州市',
-        children: [
-          {
-            value: '221',
-            label: '吴兴区'
-          },
-          {
-            value: '222',
-            label: '安吉区'
-          }
-        ]
-      }
-    ]
-  }
-])
-const selectedValue = ref(['2', '21', '212'])
-watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
-})
-function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
-}
-</script>
-<template>
-  <Cascader
-    :options="options"
-    v-model:selected-value="selectedValue"
-    change-on-select
-    @change="onChange" />
-</template>
-```
-
-:::
-
 ## 禁用
 
 <Cascader
@@ -613,6 +524,184 @@ function onChange (values: (number|string)[], labels: string[]) {
   <Cascader
     :options="optionsDisabled"
     v-model:selected-value="selectedValue"
+    @change="onChange" />
+</template>
+```
+
+:::
+
+## 选择即改变
+
+<Cascader
+  :options="options"
+  v-model:selected-value="selectedValue"
+  change-on-select
+  @change="onChange" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+  {
+    value: '1',
+    label: '北京',
+    children: [
+      {
+        value: '11',
+        label: '北京市',
+        children: [
+          {
+            value: '111',
+            label: '东城区'
+          },
+          {
+            value: '112',
+            label: '西城区'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    value: '2',
+    label: '浙江',
+    children: [
+      {
+        value: '21',
+        label: '杭州市',
+        children: [
+          {
+            value: '211',
+            label: '西湖区'
+          },
+          {
+            value: '212',
+            label: '余杭区'
+          }
+        ]
+      },
+      {
+        value: '22',
+        label: '湖州市',
+        children: [
+          {
+            value: '221',
+            label: '吴兴区'
+          },
+          {
+            value: '222',
+            label: '安吉区'
+          }
+        ]
+      }
+    ]
+  }
+])
+const selectedValue = ref(['2', '21', '212'])
+watchEffect(() => {
+  console.log('selectedValue:', selectedValue.value)
+})
+function onChange (values: (number|string)[], labels: string[]) {
+  console.log('values:', values)
+  console.log('labels:', labels)
+}
+</script>
+<template>
+  <Cascader
+    :options="options"
+    v-model:selected-value="selectedValue"
+    change-on-select
+    @change="onChange" />
+</template>
+```
+
+:::
+
+## 支持清除
+
+<Cascader
+  :options="options"
+  v-model:selected-value="selectedValue"
+  allow-clear
+  @change="onChange" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+  {
+    value: '1',
+    label: '北京',
+    children: [
+      {
+        value: '11',
+        label: '北京市',
+        children: [
+          {
+            value: '111',
+            label: '东城区'
+          },
+          {
+            value: '112',
+            label: '西城区'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    value: '2',
+    label: '浙江',
+    children: [
+      {
+        value: '21',
+        label: '杭州市',
+        children: [
+          {
+            value: '211',
+            label: '西湖区'
+          },
+          {
+            value: '212',
+            label: '余杭区'
+          }
+        ]
+      },
+      {
+        value: '22',
+        label: '湖州市',
+        children: [
+          {
+            value: '221',
+            label: '吴兴区'
+          },
+          {
+            value: '222',
+            label: '安吉区'
+          }
+        ]
+      }
+    ]
+  }
+])
+const selectedValue = ref(['2', '21', '212'])
+watchEffect(() => {
+  console.log('selectedValue:', selectedValue.value)
+})
+function onChange (values: (number|string)[], labels: string[]) {
+  console.log('values:', values)
+  console.log('labels:', labels)
+}
+</script>
+<template>
+  <Cascader
+    :options="options"
+    v-model:selected-value="selectedValue"
+    allow-clear
     @change="onChange" />
 </template>
 ```

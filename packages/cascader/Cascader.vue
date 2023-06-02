@@ -20,6 +20,7 @@ interface Props {
   width?: number|number[] // 三级下拉各自宽度
   height?: number // 下拉框高度
   disabled?: boolean|boolean[] // 三级各自是否禁用
+  allowClear?: boolean // 是否支持清除
   placeholder?: string|string[] // 三级下拉各自占位文本
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
 }
@@ -35,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
   width: 120,
   height: 32,
   disabled: false,
+  allowClear: false,
   placeholder: '请选择',
   maxDisplay: 6
 })
@@ -120,6 +122,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :label="label"
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[0] : disabled"
+      :allowClear="allowClear"
       :width="Array.isArray(width) ? width[0] : width"
       :height="height"
       :maxDisplay="maxDisplay"
@@ -132,6 +135,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :label="label"
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[1] : disabled"
+      :allowClear="allowClear"
       :width="Array.isArray(width) ? width[1] : width"
       :height="height"
       :maxDisplay="maxDisplay"
@@ -144,6 +148,7 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :label="label"
       :value="value"
       :disabled="Array.isArray(disabled) ? disabled[2] : disabled"
+      :allowClear="allowClear"
       :width="Array.isArray(width) ? width[2] : width"
       :height="height"
       :maxDisplay="maxDisplay"
