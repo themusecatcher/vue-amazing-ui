@@ -6442,7 +6442,7 @@ const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-d
 Upload.install = (app) => {
   app.component(Upload.__name, Upload);
 };
-const _withScopeId = (n) => (pushScopeId("data-v-32724361"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-bdba4d3d"), n = n(), popScopeId(), n);
 const _hoisted_1$1 = ["src", "poster", "width", "height", "autoplay", "controls", "loop", "muted", "preload", "onClickOnce"];
 const _hoisted_2$1 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("svg", {
   class: "u-svg",
@@ -6543,8 +6543,8 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Video_vue_vue_type_style_index_0_scoped_32724361_lang = "";
-const Video = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-32724361"]]);
+const Video_vue_vue_type_style_index_0_scoped_bdba4d3d_lang = "";
+const Video = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-bdba4d3d"]]);
 Video.install = (app) => {
   app.component(Video.__name, Video);
 };
