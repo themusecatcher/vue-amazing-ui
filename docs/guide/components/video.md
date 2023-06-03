@@ -20,8 +20,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
   :src="src"
   :poster="poster"
   :width="666.67"
-  :height="375"
-  :play-width="80" />
+  :height="375" />
 
 ::: details Show Code
 
@@ -36,8 +35,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
     :src="src"
     :poster="poster"
     :width="666.67"
-    :height="375"
-    :play-width="80" />
+    :height="375" />
 </template>
 ```
 
@@ -62,8 +60,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
   :src="src"
   :poster="poster"
   :width="666.67"
-  :height="375"
-  :play-width="80" />
+  :height="375" />
 
 ::: details Show Code
 
@@ -79,8 +76,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
     :src="src"
     :poster="poster"
     :width="666.67"
-    :height="375"
-    :play-width="80" />
+    :height="375" />
 </template>
 ```
 
@@ -96,7 +92,6 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
   :src="src"
   :width="666.67"
   :height="375"
-  :play-width="80"
   :second="3" />
 
 ::: details Show Code
@@ -111,7 +106,6 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Bao.
     :src="src"
     :width="666.67"
     :height="375"
-    :play-width="80"
     :second="3" />
 </template>
 ```
@@ -133,7 +127,6 @@ loop | 视频播放完成后，是否循环播放 | boolean | false | false
 muted |  是否静音 | boolean | false | false
 preload | 是否在页面加载后载入视频，如果设置了autoplay属性，则preload将被忽略 | 'auto' &#124; 'metadata' &#124; 'none' | 'auto' | false
 showPlay | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true | false
-playWidth | 中间播放暂停按钮的边长 | number | 96 | false
 fit | video的poster默认图片和视频内容缩放规则 | 'none' &#124; 'fill' &#124; 'contain' &#124; 'cover' | 'contain' | false
 
 *preload可选属性：*
