@@ -19,7 +19,7 @@ hero:
       text: View on GitHub
       link: https://github.com/themusecatcher/vue-amazing-ui
     - theme: alt
-      text: View on Npm
+      text: View on NPM
       link: https://www.npmjs.com/package/vue-amazing-ui
 
 features:

@@ -22,7 +22,7 @@ $ yarn add vue-amazing-ui
 $ npm i vue-amazing-ui
 ```
 
-## 引入并注册
+## 使用
 
 **Global**
 
