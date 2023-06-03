@@ -12,7 +12,6 @@ interface Props {
   muted?: boolean // 是否静音
   preload?: 'auto'|'metadata'|'none' // 是否在页面加载后载入视频，如果设置了autoplay属性，则preload将被忽略
   showPlay?: boolean // 播放暂停时是否显示播放器中间的暂停图标
-  playWidth?: number // 中间播放暂停按钮的边长
   fit?: 'none'|'fill'|'contain'|'cover' // video的poster默认图片和视频内容缩放规则
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -46,7 +45,6 @@ const props = withDefaults(defineProps<Props>(), {
   */
   preload: 'auto',
   showPlay: true,
-  playWidth: 96,
   /*
     fit可选属性：
     none: 保存原有内容，不进行缩放;
@@ -134,10 +132,12 @@ onMounted(() => {
       v-bind="$attrs">
       您的浏览器不支持video标签。
     </video>
-    <svg v-show="originPlay || showPlay" class="u-play" :class="{'hidden': hidden}" :style="`width: ${playWidth}px; height: ${playWidth}px;`" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.75 6.75C4.75 5.64543 5.64543 4.75 6.75 4.75H17.25C18.3546 4.75 19.25 5.64543 19.25 6.75V17.25C19.25 18.3546 18.3546 19.25 17.25 19.25H6.75C5.64543 19.25 4.75 18.3546 4.75 17.25V6.75Z"></path>
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.25 12L9.75 8.75V15.25L15.25 12Z"></path>
-    </svg>
+    <span v-show="originPlay || showPlay" class="m-icon-play" :class="{'hidden': hidden}">
+      <svg class="u-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34">
+      <path d="M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039
+          C31.913,19.675,31.913,14.325,28.26,11.961z"></path>
+      </svg>        
+    </span>
   </div>
 </template>
 <style lang="less" scoped>
@@ -146,20 +146,28 @@ onMounted(() => {
   position: relative;
   background: #000;
   cursor: pointer;
-  .u-play {
+  .m-icon-play {
+    display: inline-block;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     margin: auto;
-    fill: none;
-    color: #FFF;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(0,0,0,.7);
     pointer-events: none;
-    opacity: 0.7;
+    opacity: 0.8;
     transition: opacity .3s;
-    path {
-      stroke: #FFF;
+    .u-svg {
+      display: inline-block;
+      fill: #FFF;
+      width: 29px;
+      height: 34px;
+      margin-top: 23px;
+      margin-left: 27px;
     }
   }
   .hidden {
@@ -168,8 +176,8 @@ onMounted(() => {
 }
 .u-video-hover {
   &:hover {
-    .u-play {
-      opacity: 0.9;
+    .m-icon-play {
+      opacity: 1;
     }
   }
 }
