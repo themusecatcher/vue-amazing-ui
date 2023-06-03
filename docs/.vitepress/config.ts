@@ -58,10 +58,6 @@ export default defineConfig({
               {
                 text: 'vitepress',
                 link: 'https://vitepress.dev/',
-              },
-              {
-                text: 'vitepress-theme-vuetom',
-                link: 'https://github.com/vuetom/vitepress-theme-vuetom',
               }
             ]
           }
