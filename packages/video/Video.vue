@@ -157,10 +157,9 @@ onMounted(() => {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: rgba(0,0,0,.7);
+    background-color: rgba(0,0,0,.6);
     pointer-events: none;
-    opacity: 0.8;
-    transition: opacity .3s;
+    transition: background-color .3s;
     .u-svg {
       display: inline-block;
       fill: #FFF;
@@ -177,7 +176,7 @@ onMounted(() => {
 .u-video-hover {
   &:hover {
     .m-icon-play {
-      opacity: 1;
+      background-color: rgba(0,0,0,.7);
     }
   }
 }
