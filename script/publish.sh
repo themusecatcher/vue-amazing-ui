@@ -3,7 +3,7 @@ version=`jq -r .version ../package.json` # 读取package.json中的version
 pnpm build # 打包构建
 cd ../
 
- # 提交项目代码到github
+ # 提交带包代码到github
 git add .
 git commit -m "update $version"
 git push
@@ -13,3 +13,8 @@ pnpm publish
 
 # 升级 vue-amazing-ui 依赖版本
 pnpm up vue-amazing-ui@$version
+
+# 提交版本更新代码到github
+git add .
+git cm -m "update $version"
+git push
