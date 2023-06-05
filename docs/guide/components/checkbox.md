@@ -237,6 +237,11 @@ watchEffect(() => {
 <br/>
 <Checkbox :options="options" v-model:value="value" />
 
+<style>
+.mb10 {
+  margin-bottom: 10px;
+}
+</style>
 ::: details Show Code
 
 ```vue
@@ -296,6 +301,11 @@ watch(checkAll, (to) => {
   <br/>
   <Checkbox :options="options" v-model:value="value" />
 </template>
+<style>
+.mb10 {
+  margin-bottom: 10px;
+}
+</style>
 ```
 
 :::
