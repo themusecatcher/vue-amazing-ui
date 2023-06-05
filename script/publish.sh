@@ -1,6 +1,11 @@
 # /bin/bash
-version=`jq -r .version ../package.json` # 读取package.json中的version
-pnpm build # 打包构建
+
+ # 读取package.json中的version
+version=`jq -r .version ../package.json`
+
+ # 打包构建
+pnpm build
+
 cd ../
 
  # 提交带包代码到github
