@@ -20,19 +20,40 @@ const images = ref([
   {
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
     name: 'image-5.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/6.jpg',
+    name: 'image-6.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/7.jpg',
+    name: 'image-7.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/8.jpg',
+    name: 'image-8.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/9.jpg',
+    name: 'image-9.jpg'
   }
 ])
+setTimeout(() => {
+  
+}, 1000)
 </script>
 <template>
   <div>
     <h2 class="mb10">Image 图片基本使用</h2>
-    <Image :width="400" :height="300" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
+    <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
     <h2 class="mt30 mb10">多张图片预览，同时支持键盘 (left / right / up / down) 按键切换 (src: images)</h2>
-    <Image :width="400" :height="300" :src="images" />
+    <Image :src="images" />
     <h2 class="mt30 mb10">多张图片预览，支持循环切换图片 (loop: true)</h2>
-    <Image :width="400" :height="300" loop :src="images" />
+    <Image loop :src="images" />
+    <h2 class="mt30 mb10">多张图片预览，相册模式 (album: true)</h2>
+    <Image loop :src="images" album />
     <h2 class="mt30 mb10">预览文本设为 preview 同时图片覆盖容器 (preview: preview & fit: cover)</h2>
-    <Image :width="400" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+    <Image fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
       <template #preview>
         <p class="u-pre">preview</p>
       </template>
