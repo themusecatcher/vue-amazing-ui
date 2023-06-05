@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watchEffect } from 'vue'
 interface Image {
   src: string // 图像地址
   name?: string // 图像名称
@@ -16,19 +16,21 @@ interface Props {
   maxZoomScale?: number // 最大缩放比例
   resetOnDbclick?: boolean // 缩放移动旋转图片后，是否可以双击还原
   loop?: boolean // 是否可以循环切换图片
+  album?: boolean // 是否相册模式，即从一张展示图片点开相册
 }
 const props = withDefaults(defineProps<Props>(), {
   src: '',
   name: '',
-  width: 300,
-  height: '100%',
+  width: 200,
+  height: 200,
   fit: 'contain', // 可选 fill(填充) | contain(等比缩放包含) | cover(等比缩放覆盖)
   preview: '预览',
   zoomRatio: 0.1,
   minZoomScale: 0.1,
   maxZoomScale: 10,
   resetOnDbclick: true,
-  loop: false
+  loop: false,
+  album: false
 })
 const imageWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -44,7 +46,11 @@ const imageHeight = computed(() => {
     return props.height
   }
 })
-const images = computed(() => {
+const images = ref<Image[]>([])
+watchEffect(() => {
+  images.value = getImages()
+})
+function getImages () {
   if (Array.isArray(props.src)) {
     return props.src
   } else {
@@ -53,7 +59,7 @@ const images = computed(() => {
       name: props.name
     }]
   }
-})
+}
 const imageCount = computed(() => {
   return images.value.length
 })
@@ -65,7 +71,7 @@ onUnmounted(() => {
   // 移除键盘切换事件
   document.removeEventListener('keydown', keyboardSwitch)
 })
-const complete = ref(false) // 图片是否加载完成
+const complete = ref(Array(imageCount.value).fill(false)) // 图片是否加载完成
 const loaded = ref(false) // 预览图片是否加载完成
 const previewIndex = ref(0) // 当前预览的图片索引
 const showPreview = ref(false) // 是否显示预览
@@ -86,26 +92,29 @@ function keyboardSwitch (e: KeyboardEvent) {
     }
   }
 }
-function onComplete () { // 图片加载完成
-  complete.value = true
+function onComplete (n: number) { // 图片加载完成
+  complete.value[n] = true
 }
 function onLoaded () { // 预览图片加载完成
   loaded.value = true
 }
 function getImageName (image: Image) { // 从图像地址src中获取图像名称
-  if (image.name) {
-    return image.name
-  } else {
-    const res = image.src.split('?')[0].split('/')
-    return res[res.length - 1]
+  if (image) {
+    if (image.name) {
+      return image.name
+    } else {
+      const res = image.src.split('?')[0].split('/')
+      return res[res.length - 1]
+    }
   }
 }
-function onPreview () {
+function onPreview (n: number) {
   scale.value = 1
   rotate.value = 0
   dragX.value = 0
   dragY.value = 0
   showPreview.value = true
+  previewIndex.value = n
 }
 // 消除js加减精度问题的加法函数
 function add (num1: number, num2: number) {
@@ -221,10 +230,15 @@ function onSwitchRight () {
 </script>
 <template>
   <div class="m-image-wrap">
-    <div class="m-image" :class="{'image-hover-mask': complete}" :style="`width: ${imageWidth}; height: ${imageHeight};`">
-      <div class="u-spin-circle" v-show="!complete"></div>
-      <img class="u-image" :style="`object-fit: ${fit};`" @load="onComplete" :src="images[0].src" :alt="images[0].name" />
-      <div class="m-image-mask" @click="onPreview">
+    <div
+      class="m-image"
+      :class="{'image-hover-mask': complete}"
+      :style="`width: ${imageWidth}; height: ${imageHeight};`"
+      v-for="(image, index) in images" :key="index"
+      v-show="!album || (album && index === 0)">
+      <div class="u-spin-circle" v-show="!complete[index]"></div>
+      <img class="u-image" :style="`object-fit: ${fit};`" @load="onComplete(index)" :src="image.src" :alt="image.name" />
+      <div class="m-image-mask" @click="onPreview(index)">
         <div class="m-image-mask-info">
           <svg class="u-eye" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
           <p class="u-pre">
@@ -245,10 +259,10 @@ function onSwitchRight () {
             <div class="u-preview-operation" title="关闭" @click="onClose">
               <svg class="u-icon" focusable="false" data-icon="close" aria-hidden="true" viewBox="64 64 896 896"><path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg>
             </div>
-            <div class="u-preview-operation" title="放大" :class="{'u-operation-disabled': scale===maxZoomScale}" @click="onZoomin">
+            <div class="u-preview-operation" title="放大" :class="{'u-operation-disabled': scale === maxZoomScale}" @click="onZoomin">
               <svg class="u-icon" focusable="false" data-icon="zoom-in" aria-hidden="true" viewBox="64 64 896 896"><path d="M637 443H519V309c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v134H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h118v134c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V519h118c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8zm284 424L775 721c122.1-148.9 113.6-369.5-26-509-148-148.1-388.4-148.1-537 0-148.1 148.6-148.1 389 0 537 139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11zM696 696c-118.8 118.7-311.2 118.7-430 0-118.7-118.8-118.7-311.2 0-430 118.8-118.7 311.2-118.7 430 0 118.7 118.8 118.7 311.2 0 430z"></path></svg>
             </div>
-            <div class="u-preview-operation" title="缩小" :class="{'u-operation-disabled': scale===minZoomScale}" @click="onZoomout">
+            <div class="u-preview-operation" title="缩小" :class="{'u-operation-disabled': scale === minZoomScale}" @click="onZoomout">
               <svg class="u-icon" focusable="false" data-icon="zoom-out" aria-hidden="true" viewBox="64 64 896 896"><path d="M637 443H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h312c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8zm284 424L775 721c122.1-148.9 113.6-369.5-26-509-148-148.1-388.4-148.1-537 0-148.1 148.6-148.1 389 0 537 139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11zM696 696c-118.8 118.7-311.2 118.7-430 0-118.7-118.8-118.7-311.2 0-430 118.8-118.7 311.2-118.7 430 0 118.7 118.8 118.7 311.2 0 430z"></path></svg>
             </div>
             <div class="u-preview-operation" title="还原" @click="onResetOrigin">
@@ -330,6 +344,7 @@ function onSwitchRight () {
   }
 }
 .m-image-wrap {
+  display: inline-block;
   .image-hover-mask {
     &:hover {
       .m-image-mask {
@@ -341,7 +356,14 @@ function onSwitchRight () {
   .m-image {
     position: relative;
     display: inline-block;
+    vertical-align: top;
+    margin-right: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    overflow: hidden;
     .u-image {
+      display: inline-block;
       width: 100%;
       height: 100%;
       vertical-align: middle;
