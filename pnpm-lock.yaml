@@ -29,8 +29,8 @@ dependencies:
     specifier: ^3.3.4
     version: 3.3.4
   vue-amazing-ui:
-    specifier: ^0.0.27
-    version: 0.0.27
+    specifier: ^0.0.28
+    version: 0.0.28
   vue-router:
     specifier: ^4.2.1
     version: 4.2.2(vue@3.3.4)
@@ -963,8 +963,8 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /@vuepic/vue-datepicker@5.1.2(vue@3.3.4):
-    resolution: {integrity: sha512-1SFDntlbH9Ct4f7CRrXbIIq7xsKs584T1ZqZdaeS3REdnaK45+Kob2dJtY7zjyFjeXs8EVpch8YrJKMpmtJ2rw==}
+  /@vuepic/vue-datepicker@5.2.0(vue@3.3.4):
+    resolution: {integrity: sha512-rDqmDGtkWNXVucuF8jWAoniRu7YS77ea/lN458D8AErfVoBmPZSax52vEYOXXhw530qXSeZwzFbeBbTEoeS7UQ==}
     engines: {node: '>=14'}
     peerDependencies:
       vue: '>=3.2.0'
@@ -3261,7 +3261,7 @@ packages:
   /vue-amazing-ui@0.0.27:
     resolution: {integrity: sha512-VSjC8ZAzOXRY1CA58nvQfmY5qUod1tOpFEE5mxWEQd5Bm5J10RR2a/C3CgaSSoiEzKVFzqt/Hh90uJy1T5cT6g==}
     dependencies:
-      '@vuepic/vue-datepicker': 5.1.2(vue@3.3.4)
+      '@vuepic/vue-datepicker': 5.2.0(vue@3.3.4)
       '@vueuse/core': 10.1.2(vue@3.3.4)
       '@vueuse/integrations': 10.1.2(focus-trap@7.4.3)(qrcode@1.5.3)(vue@3.3.4)
       ant-design-vue: 3.2.20(vue@3.3.4)
@@ -3271,6 +3271,35 @@ packages:
       swiper: 9.3.2
       vue: 3.3.4
       vue-amazing-ui: 0.0.26
+      vue-router: 4.2.2(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - async-validator
+      - axios
+      - change-case
+      - drauu
+      - focus-trap
+      - fuse.js
+      - idb-keyval
+      - jwt-decode
+      - nprogress
+      - sortablejs
+      - universal-cookie
+    dev: false
+
+  /vue-amazing-ui@0.0.28:
+    resolution: {integrity: sha512-7PqiYkmNsuiHXXwBRLUTA73vE/EHjmiMuZNtDSlXgx95RhXNtFRVFjUMlZhbEGDwkcxa/MLlzY3BY4Cl2r3ytg==}
+    dependencies:
+      '@vuepic/vue-datepicker': 4.5.1(vue@3.3.4)
+      '@vueuse/core': 10.1.2(vue@3.3.4)
+      '@vueuse/integrations': 10.1.2(focus-trap@7.4.3)(qrcode@1.5.3)(vue@3.3.4)
+      ant-design-vue: 3.2.20(vue@3.3.4)
+      core-js: 3.30.2
+      date-fns: 2.30.0
+      qrcode: 1.5.3
+      swiper: 9.3.2
+      vue: 3.3.4
+      vue-amazing-ui: 0.0.27
       vue-router: 4.2.2(vue@3.3.4)
     transitivePeerDependencies:
       - '@vue/composition-api'
