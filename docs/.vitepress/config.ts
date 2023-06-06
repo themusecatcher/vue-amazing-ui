@@ -32,8 +32,14 @@ export default defineConfig({
       // }
     ],
 
-    search: {
-      provider: 'local'
+    // search: {
+    //   provider: 'local' // vitepress内置search
+    // },
+
+    algolia: {
+      appId: 'SHDNEYGA8Z',
+      apiKey: '91419401b0b0efd31b610e54e5b97249',
+      indexName: 'vue-amazing-ui'
     },
 
     footer: {

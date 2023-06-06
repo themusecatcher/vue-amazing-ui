@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted, watchEffect } from 'vue'
+import Spin from '../spin'
 interface Image {
   src: string // 图像地址
   name?: string // 图像名称
@@ -236,7 +237,7 @@ function onSwitchRight () {
       :style="`width: ${imageWidth}; height: ${imageHeight};`"
       v-for="(image, index) in images" :key="index"
       v-show="!album || (album && index === 0)">
-      <div class="u-spin-circle" v-show="!complete[index]"></div>
+      <Spin :spinning="!complete[index]" indicator="dynamic-circle" />
       <img class="u-image" :style="`object-fit: ${fit};`" @load="onComplete(index)" :src="image.src" :alt="image.name" />
       <div class="m-image-mask" @click="onPreview(index)">
         <div class="m-image-mask-info">
@@ -278,7 +279,7 @@ function onSwitchRight () {
           <div
             class="m-preview-image"
             :style="`transform: translate3d(${dragX}px, ${dragY}px, 0px);`">
-            <div class="u-spin-circle" v-show="!loaded"></div>
+            <Spin :spinning="!loaded" indicator="dynamic-circle" />
             <img
               v-for="(image, index) in images" :key="index"
               v-show="previewIndex === index"
@@ -321,27 +322,6 @@ function onSwitchRight () {
 }
 .preview-enter-from, .preview-leave-to {
   opacity: 0;
-}
-.u-spin-circle {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  pointer-events: none;
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border-width: 4px;
-  border-style: solid;
-  border-color: @themeColor;
-  border-top-color: transparent; // 隐藏1/4圆
-  animation: loadingCircle 1s infinite linear;
-  -webkit-animation: loadingCircle 1s infinite linear;
-}
-@keyframes loadingCircle {
-  100% {
-    transform: rotate(360deg);
-  }
 }
 .m-image-wrap {
   display: inline-block;
