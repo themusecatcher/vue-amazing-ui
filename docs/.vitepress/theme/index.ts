@@ -8,7 +8,6 @@ import '../../../dist/style.css'
 export default {
   extends: DefaultTheme, // or ...DefaultTheme
   enhanceApp ({ app }) {
-    // app.component('SvgImage', SvgImage)
     app.use(VueAmazingUI)
   }
 }

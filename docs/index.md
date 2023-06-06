@@ -21,24 +21,13 @@ hero:
     - theme: alt
       text: View on NPM
       link: https://www.npmjs.com/package/vue-amazing-ui
-
-features:
-  # - icon: 💡
-  #   title: Instant Server Start
-  #   details: On demand file serving over native ESM, no bundling required!
-  # - icon: ⚡️
-  #   title: Lightning Fast HMR
-  #   details: Hot Module Replacement (HMR) that stays fast regardless of app size.
-  # - icon: 🛠️
-  #   title: Rich Features
-  #   details: Out-of-the-box support for TypeScript, JSX, CSS and more.
 ---
 
 <script setup>
 import { onMounted } from 'vue'
-import { fetchReleaseTag } from './.vitepress/utils/fetchReleaseTag.js'
+import { fetchVersion } from './.vitepress/utils/fetchVersion.js'
 
 onMounted(() => {
-  fetchReleaseTag()
+  fetchVersion()
 })
 </script>
