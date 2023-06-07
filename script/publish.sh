@@ -4,7 +4,7 @@
 set -e
 
  # 读取package.json中的version
-version=`jq -r .version ../package.json`
+version=`jq -r .version package.json`
 
  # 打包构建
 pnpm build
