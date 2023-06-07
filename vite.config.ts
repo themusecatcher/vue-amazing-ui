@@ -34,10 +34,7 @@ export default defineConfig({
       less: {
         modifyVars: { // 或者globalVars
           // `themeColor` is global variables fields name
-          themeColor: '#1677FF', // #1890FF
-          primary: '#1677FF',
-          danger: '#ff4d4f',
-          success: '#52C41A'
+          themeColor: '#1677FF' // #1890FF
         },
         javascriptEnabled: true
       },

@@ -77,6 +77,8 @@ function getUrl (route: Route) {
   </div>
 </template>
 <style lang="less" scoped>
+@primary: #1677FF;
+@danger: #FF4D4F;
 .m-btn-wrap {
   display: inline-block;
   .m-btn {
@@ -85,7 +87,7 @@ function getUrl (route: Route) {
     background-color: #ffffff;
     border: 1px solid #d9d9d9;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
-    transition: all .2s cubic-bezier(.645,.045,.355,1);
+    transition: all .25s cubic-bezier(.645,.045,.355,1);
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -137,12 +139,12 @@ function getUrl (route: Route) {
     text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
     box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
     &:hover {
-      background-color: #40a9ff;
-      border-color: #40a9ff;
+      background-color: fade(@primary, 80%);
+      border-color: fade(@primary, 80%);
     }
     &:active {
-      background-color: #096dd9;
-      border-color: #096dd9;
+      background-color: shade(@primary, 12%);
+      border-color: shade(@primary, 12%);
     }
   }
   .default {
@@ -159,30 +161,30 @@ function getUrl (route: Route) {
       border-color: fade(@danger, 80%);
     }
     &:active {
-      background-color: #d9363e;
-      border-color: #d9363e;
+      background-color: shade(@danger, 12%);
+      border-color: shade(@danger, 12%);
     }
   }
   .fade {
     &:hover {
-      color: fade(@themeColor, 80%);
-      border-color: fade(@themeColor, 80%);
+      color: fade(@primary, 80%);
+      border-color: fade(@primary, 80%);
     }
     &:active {
-      color: shade(@themeColor, 12%);
-      border-color: shade(@themeColor, 12%);
+      color: shade(@primary, 12%);
+      border-color: shade(@primary, 12%);
     }
   }
   .reverse {
     &:hover {
       color: #fff;
-      background-color: fade(@themeColor, 80%);
-      border-color: fade(@themeColor, 80%);
+      background-color: fade(@primary, 80%);
+      border-color: fade(@primary, 80%);
     }
     &:active {
       color: #fff;
-      background-color: shade(@themeColor, 12%);
-      border-color: shade(@themeColor, 12%);
+      background-color: shade(@primary, 12%);
+      border-color: shade(@primary, 12%);
     }
   }
   .small {
