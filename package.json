@@ -22,7 +22,7 @@
     "docs:dev": "vitepress dev docs --port 8000 --open",
     "docs:build": "vitepress build docs",
     "docs:deploy": "sh script/deploy.sh",
-    "publish": "sh script/publish.sh",
+    "pub": "sh script/publish.sh",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
