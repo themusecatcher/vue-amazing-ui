@@ -32,11 +32,11 @@ export default defineConfig({
       // }
     ],
 
-    // search: {
-    //   provider: 'local' // vitepress内置search
+    // search: { // vitepress 内置 search
+    //   provider: 'local'
     // },
 
-    algolia: {
+    algolia: { // algolia 搜索服务 与 内置 search 可二选一
       appId: 'SHDNEYGA8Z',
       apiKey: '91419401b0b0efd31b610e54e5b97249',
       indexName: 'vue-amazing-ui'
