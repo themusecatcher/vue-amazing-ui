@@ -23,9 +23,9 @@ hero:
       link: https://www.npmjs.com/package/vue-amazing-ui
 ---
 
-<script setup>
+<script setup lang="ts">
 import { onMounted } from 'vue'
-import { fetchVersion } from './.vitepress/utils/fetchVersion.js'
+import { fetchVersion } from './.vitepress/utils/fetchVersion'
 
 onMounted(() => {
   fetchVersion()
