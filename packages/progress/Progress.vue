@@ -69,6 +69,7 @@ const lineColor = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
+@success: #52C41A;
 .m-progress-line {
   display: inline-block;
   &:after {
