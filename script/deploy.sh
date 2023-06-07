@@ -11,7 +11,7 @@ pnpm build
 pnpm docs:build
 
 # 进入待发布的 dist/ 目录
-cd ../docs/.vitepress/dist
+cd docs/.vitepress/dist
 
 git init
 git add .
