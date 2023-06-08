@@ -62,8 +62,8 @@ pnpm dev
 
 ## Components
 
-| Component name | Descriptions | Component name | Descriptions |
-| :--- | :--- | :--- | :--- |
+Component name | Descriptions | Component name | Descriptions
+-- | -- | -- | --
 Breadcrumb | 面包屑 | Button | 按钮
 Carousel | 走马灯 | Cascader | 级联选择
 Checkbox | 多选框 | Collapse | 折叠面板
@@ -89,8 +89,8 @@ Waterfall | 瀑布流
 
 ## Functions
 
-| Function name | Descriptions | Arguments
-| :--- | :--- | :--- |
+Function name | Descriptions | Arguments
+-- | -- | --
 dateFormat | 简单易用的日期格式化函数！ | (timestamp: number&#124;string&#124;Date, format = 'YYYY-MM-DD HH:mm:ss') => string
 requestAnimationFrame | 针对不同浏览器进行兼容处理！ | 使用方式不变
 cancelAnimationFrame | 针对不同浏览器进行兼容处理！ | 使用方式不变
