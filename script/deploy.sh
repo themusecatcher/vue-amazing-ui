@@ -4,7 +4,6 @@
 set -e
 
 # 重新打包组件库
-
 pnpm build
 
 # 打包生成静态文件
@@ -13,6 +12,7 @@ pnpm docs:build
 # 进入待发布的 dist/ 目录
 cd docs/.vitepress/dist
 
+# 提交打包静态网站到 github-pages 分支
 git init
 git add .
 git commit -m 'deploy'
