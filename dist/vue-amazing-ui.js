@@ -301,7 +301,7 @@ const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-7
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
-const _withScopeId$g = (n) => (pushScopeId("data-v-722ba211"), n = n(), popScopeId(), n);
+const _withScopeId$g = (n) => (pushScopeId("data-v-79590e5d"), n = n(), popScopeId(), n);
 const _hoisted_1$t = ["href", "target"];
 const _hoisted_2$p = ["onLoad", "src", "alt"];
 const _hoisted_3$n = { class: "u-spin-circle" };
@@ -312,23 +312,19 @@ const _hoisted_4$k = {
 const _hoisted_5$h = ["href", "target"];
 const _hoisted_6$g = ["src", "alt"];
 const _hoisted_7$e = { class: "u-spin-circle" };
-const _hoisted_8$d = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M603.3 327.5l-246 178a7.95 7.95 0 0 0 0 12.9l246 178c5.3 3.8 12.7 0 12.7-6.5V643c0-10.2-4.9-19.9-13.2-25.9L457.4 512l145.4-105.2c8.3-6 13.2-15.6 13.2-25.9V334c0-6.5-7.4-10.3-12.7-6.5z" }, null, -1));
-const _hoisted_9$d = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_10$a = [
-  _hoisted_8$d,
-  _hoisted_9$d
+const _hoisted_8$d = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M10.26 3.2a.75.75 0 0 1 .04 1.06L6.773 8l3.527 3.74a.75.75 0 1 1-1.1 1.02l-4-4.25a.75.75 0 0 1 0-1.02l4-4.25a.75.75 0 0 1 1.06-.04z" }, null, -1));
+const _hoisted_9$d = [
+  _hoisted_8$d
 ];
-const _hoisted_11$9 = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M666.7 505.5l-246-178A8 8 0 0 0 408 334v46.9c0 10.2 4.9 19.9 13.2 25.9L566.6 512 421.2 617.2c-8.3 6-13.2 15.6-13.2 25.9V690c0 6.5 7.4 10.3 12.7 6.5l246-178c4.4-3.2 4.4-9.8 0-13z" }, null, -1));
-const _hoisted_12$8 = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_13$7 = [
-  _hoisted_11$9,
-  _hoisted_12$8
+const _hoisted_10$a = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("path", { d: "M5.74 3.2a.75.75 0 0 0-.04 1.06L9.227 8L5.7 11.74a.75.75 0 1 0 1.1 1.02l4-4.25a.75.75 0 0 0 0-1.02l-4-4.25a.75.75 0 0 0-1.06-.04z" }, null, -1));
+const _hoisted_11$9 = [
+  _hoisted_10$a
 ];
-const _hoisted_14$7 = {
+const _hoisted_12$8 = {
   key: 1,
   class: "m-switch"
 };
-const _hoisted_15$7 = ["onClick"];
+const _hoisted_13$7 = ["onClick"];
 const _sfc_main$w = /* @__PURE__ */ defineComponent({
   __name: "Carousel",
   props: {
@@ -608,35 +604,31 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
           (openBlock(), createElementBlock("svg", {
             class: "arrow-left",
             onClick: _cache[1] || (_cache[1] = ($event) => onLeftArrow((activeSwitcher.value + len.value - 2) % len.value * imageWidth.value)),
-            viewBox: "64 64 896 896",
-            "data-icon": "left-circle",
-            "aria-hidden": "true",
-            focusable: "false"
-          }, _hoisted_10$a)),
+            xmlns: "http://www.w3.org/2000/svg",
+            viewBox: "0 0 16 16"
+          }, _hoisted_9$d)),
           (openBlock(), createElementBlock("svg", {
             class: "arrow-right",
             onClick: _cache[2] || (_cache[2] = ($event) => onRightArrow(activeSwitcher.value * imageWidth.value)),
-            viewBox: "64 64 896 896",
-            "data-icon": "right-circle",
-            "aria-hidden": "true",
-            focusable: "false"
-          }, _hoisted_13$7))
+            xmlns: "http://www.w3.org/2000/svg",
+            viewBox: "0 0 16 16"
+          }, _hoisted_11$9))
         ], 64)) : createCommentVNode("", true),
-        _ctx.pagination ? (openBlock(), createElementBlock("div", _hoisted_14$7, [
+        _ctx.pagination ? (openBlock(), createElementBlock("div", _hoisted_12$8, [
           (openBlock(true), createElementBlock(Fragment, null, renderList(len.value, (n) => {
             return openBlock(), createElementBlock("div", {
               onClick: ($event) => onSwitch(n),
-              class: normalizeClass(["u-rect", { "active": activeSwitcher.value === n }]),
+              class: normalizeClass(["u-circle", { "active": activeSwitcher.value === n }]),
               key: n
-            }, null, 10, _hoisted_15$7);
+            }, null, 10, _hoisted_13$7);
           }), 128))
         ])) : createCommentVNode("", true)
       ], 36);
     };
   }
 });
-const Carousel_vue_vue_type_style_index_0_scoped_722ba211_lang = "";
-const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-722ba211"]]);
+const Carousel_vue_vue_type_style_index_0_scoped_79590e5d_lang = "";
+const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-79590e5d"]]);
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };

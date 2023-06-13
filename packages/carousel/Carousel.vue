@@ -261,13 +261,13 @@ function onSwitch (n: number) { // 分页切换图片
       </div>
     </div>
     <template v-if="navigation">
-      <svg class="arrow-left" @click="onLeftArrow((activeSwitcher + len - 2)%len*imageWidth)" viewBox="64 64 896 896" data-icon="left-circle" aria-hidden="true" focusable="false"><path d="M603.3 327.5l-246 178a7.95 7.95 0 0 0 0 12.9l246 178c5.3 3.8 12.7 0 12.7-6.5V643c0-10.2-4.9-19.9-13.2-25.9L457.4 512l145.4-105.2c8.3-6 13.2-15.6 13.2-25.9V334c0-6.5-7.4-10.3-12.7-6.5z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
-      <svg class="arrow-right" @click="onRightArrow(activeSwitcher*imageWidth)" viewBox="64 64 896 896" data-icon="right-circle" aria-hidden="true" focusable="false"><path d="M666.7 505.5l-246-178A8 8 0 0 0 408 334v46.9c0 10.2 4.9 19.9 13.2 25.9L566.6 512 421.2 617.2c-8.3 6-13.2 15.6-13.2 25.9V690c0 6.5 7.4 10.3 12.7 6.5l246-178c4.4-3.2 4.4-9.8 0-13z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
+      <svg class="arrow-left" @click="onLeftArrow((activeSwitcher + len - 2)%len*imageWidth)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M10.26 3.2a.75.75 0 0 1 .04 1.06L6.773 8l3.527 3.74a.75.75 0 1 1-1.1 1.02l-4-4.25a.75.75 0 0 1 0-1.02l4-4.25a.75.75 0 0 1 1.06-.04z"></path></svg>
+      <svg class="arrow-right" @click="onRightArrow(activeSwitcher*imageWidth)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5.74 3.2a.75.75 0 0 0-.04 1.06L9.227 8L5.7 11.74a.75.75 0 1 0 1.1 1.02l4-4.25a.75.75 0 0 0 0-1.02l-4-4.25a.75.75 0 0 0-1.06-.04z"></path></svg>
     </template>
     <div class="m-switch" v-if="pagination">
       <div
         @click="onSwitch(n)"
-        :class="['u-rect', {'active': activeSwitcher === n }]"
+        :class="['u-circle', {'active': activeSwitcher === n }]"
         v-for="n in len"
         :key="n">
       </div>
@@ -328,13 +328,13 @@ function onSwitch (n: number) { // 分页切换图片
     }
   }
   .arrow-left {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     position: absolute;
-    left: 16px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    fill: rgba(255, 255, 255, .6);
+    fill: rgba(255, 255, 255, .7);
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
@@ -344,13 +344,13 @@ function onSwitch (n: number) { // 分页切换图片
     }
   }
   .arrow-right {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     position: absolute;
-    right: 16px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    fill: rgba(255, 255, 255, .6);
+    fill: rgba(255, 255, 255, .7);
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
@@ -361,19 +361,19 @@ function onSwitch (n: number) { // 分页切换图片
   }
   .m-switch {
     position: absolute;
-    width: 100%;
-    text-align: center;
-    bottom: 8px;
-    .u-rect {
-      display: inline-block;
-      vertical-align: middle;
-      width: 36px;
-      height: 4px;
-      background: #E3E3E3;
-      border-radius: 1px;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: nowrap;
+    .u-circle {
+      width: 10px;
+      height: 10px;
+      background-color: rgba(255, 255, 255, .3);
+      border-radius: 50%;
       margin: 0 4px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color .3s cubic-bezier(.4, 0, .2, 1);
     }
     .active {
       background-color: @themeColor;
