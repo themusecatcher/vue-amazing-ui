@@ -1,23 +1,53 @@
 {
   "hash": "5aa615a5",
-  "browserHash": "e58df552",
+  "browserHash": "d8e618da",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.3.4/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "48a5dd91",
+      "fileHash": "53500313",
       "needsInterop": false
     },
     "vue-amazing-ui": {
       "src": "../../../../node_modules/.pnpm/vue-amazing-ui@0.0.30/node_modules/vue-amazing-ui/dist/vue-amazing-ui.js",
       "file": "vue-amazing-ui.js",
-      "fileHash": "ee389d88",
+      "fileHash": "706845ac",
+      "needsInterop": false
+    },
+    "@vuepic/vue-datepicker": {
+      "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
+      "file": "@vuepic_vue-datepicker.js",
+      "fileHash": "19f6afd5",
+      "needsInterop": false
+    },
+    "qrcode": {
+      "src": "../../../../node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/browser.js",
+      "file": "qrcode.js",
+      "fileHash": "11261bcd",
+      "needsInterop": true
+    },
+    "swiper": {
+      "src": "../../../../node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/swiper.esm.js",
+      "file": "swiper.js",
+      "fileHash": "b1daea2a",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-LYVKDZC2": {
-      "file": "chunk-LYVKDZC2.js"
+    "chunk-JZBU7VHF": {
+      "file": "chunk-JZBU7VHF.js"
+    },
+    "chunk-H4UJRISF": {
+      "file": "chunk-H4UJRISF.js"
+    },
+    "chunk-3F4Y7QWA": {
+      "file": "chunk-3F4Y7QWA.js"
+    },
+    "chunk-JKV2V35Q": {
+      "file": "chunk-JKV2V35Q.js"
+    },
+    "chunk-DFKQJ226": {
+      "file": "chunk-DFKQJ226.js"
     }
   }
 }
