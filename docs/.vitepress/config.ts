@@ -55,11 +55,16 @@ export default defineConfig({
         items: [
           { text: 'My Github', link: 'https://github.com/themusecatcher' },
           { text: 'My CSDN', link: 'https://blog.csdn.net/Dandrose?type=blog' },
+          { text: 'Front-end Notes', link: 'https://themusecatcher.github.io/front-end-notes/' },
           {
             items: [
               {
                 text: 'vue',
                 link: 'https://cn.vuejs.org/',
+              },
+              {
+                text: 'markdown',
+                link: 'https://markdown.com.cn/',
               },
               {
                 text: 'vitepress',
