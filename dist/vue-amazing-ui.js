@@ -6052,18 +6052,12 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     const left = ref(0);
     const contentRef = ref();
     const titleRef = ref();
-    onMounted(() => {
-      getPosition();
-    });
     function getPosition() {
-      const rect = contentRef.value.getBoundingClientRect();
-      const targetTop = rect.top;
-      const targetLeft = rect.left;
-      const targetWidth = rect.width;
+      const contentWidth = contentRef.value.offsetWidth;
       const titleWidth = titleRef.value.offsetWidth;
       const titleHeight = titleRef.value.offsetHeight;
-      top.value = targetTop - titleHeight;
-      left.value = targetLeft - (titleWidth - targetWidth) / 2;
+      top.value = titleHeight;
+      left.value = (titleWidth - contentWidth) / 2;
     }
     function onShow() {
       getPosition();
@@ -6087,7 +6081,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
           class: normalizeClass(["m-title", { "show-tip": visible.value }]),
           onMouseenter: onShow,
           onMouseleave: onHide,
-          style: normalizeStyle(`max-width: ${_ctx.maxWidth}px; top: ${top.value}px; left: ${left.value}px;`)
+          style: normalizeStyle(`max-width: ${_ctx.maxWidth}px; top: ${-top.value}px; left: ${-left.value}px;`)
         }, [
           createElementVNode("div", {
             class: "u-title",
@@ -6117,8 +6111,8 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tooltip_vue_vue_type_style_index_0_scoped_c3922115_lang = "";
-const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-c3922115"]]);
+const Tooltip_vue_vue_type_style_index_0_scoped_125a9676_lang = "";
+const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-125a9676"]]);
 Tooltip.install = (app) => {
   app.component(Tooltip.__name, Tooltip);
 };
