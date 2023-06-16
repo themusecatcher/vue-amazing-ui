@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Props {
   maxWidth?: number // 提示框内容最大宽度，单位px
@@ -23,18 +23,12 @@ const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const contentRef = ref() // 声明一个同名的模板引用
 const titleRef = ref() // 声明一个同名的模板引用
-onMounted(() => {
-  getPosition()
-})
 function getPosition () {
-  const rect = contentRef.value.getBoundingClientRect()
-  const targetTop = rect.top
-  const targetLeft = rect.left
-  const targetWidth = rect.width
+  const contentWidth = contentRef.value.offsetWidth // 内容宽度
   const titleWidth = titleRef.value.offsetWidth // 提示文本宽度
   const titleHeight = titleRef.value.offsetHeight // 提示文本高度
-  top.value = targetTop - titleHeight
-  left.value = targetLeft - (titleWidth - targetWidth) / 2
+  top.value = titleHeight
+  left.value = (titleWidth - contentWidth) / 2
 }
 function onShow () {
   getPosition()
@@ -55,7 +49,7 @@ function onHide (): void {
       :class="{'show-tip': visible}"
       @mouseenter="onShow"
       @mouseleave="onHide"
-      :style="`max-width: ${maxWidth}px; top: ${top}px; left: ${left}px;`">
+      :style="`max-width: ${maxWidth}px; top: ${-top}px; left: ${-left}px;`">
       <div class="u-title" :style="`font-size: ${fontSize}px; color: ${color}; background-color: ${backgroundColor};`">
         <slot name="title">{{ title }}</slot>
       </div>
@@ -70,10 +64,12 @@ function onHide (): void {
 </template>
 <style lang="less" scoped>
 .m-tooltip {
+  position: relative;
   display: inline-block;
   .m-title {
-    position: fixed;
+    position: absolute;
     z-index: 999;
+    width: max-content;
     padding-bottom: 16px;
     pointer-events: none;
     opacity: 0;
@@ -83,7 +79,7 @@ function onHide (): void {
     -webkit-transform: scale(0.8); /* Safari and Chrome */
     transition: transform .25s, opacity .25s;
     .u-title {
-      padding: 10px;
+      padding: 6px 8px;
       margin: 0 auto;
       text-align: start;
       word-break: break-all;

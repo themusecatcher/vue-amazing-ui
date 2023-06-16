@@ -168,13 +168,13 @@ function onClick (e: any):void {
   margin-bottom: 14px;
 }
 .m-menus {
-  overflow: auto;
+  overflow-y: auto;
   height: calc(100vh - 50px);
 }
 .router-view {
   margin-top: 50px;
   padding: 0 48px 48px;
-  overflow: auto;
+  overflow-y: auto;
   height: calc(100vh - 50px);
 }
 .fade-enter-active, .fade-leave-active {
