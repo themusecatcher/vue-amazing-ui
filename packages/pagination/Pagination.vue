@@ -134,8 +134,8 @@ function changePage (pageNum: number): boolean | void {
         @click="onForward"
         @mouseenter="forwardArrow = true"
         @mouseleave="forwardArrow = false">
-        <span v-show="!forwardArrow" class="u-ellipsis">•••</span>
-        <svg v-show="forwardArrow" class="u-icon" viewBox="64 64 896 896" data-icon="double-left" aria-hidden="true" focusable="false"><path d="M272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9L272.9 512zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9L576.9 512z"></path></svg>
+        <span class="u-ellipsis">•••</span>
+        <svg class="u-icon" viewBox="64 64 896 896" data-icon="double-left" aria-hidden="true" focusable="false"><path d="M272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9L272.9 512zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9L576.9 512z"></path></svg>
       </span>
       <span :class="['u-item', { active: currentPage === page }]" v-for="(page, index) in pageList" :key="index" @click="changePage(page)">{{ page }}</span>
       <span
@@ -145,8 +145,8 @@ function changePage (pageNum: number): boolean | void {
         @click="onBackward"
         @mouseenter="backwardArrow = true"
         @mouseleave="backwardArrow = false">
-        <span v-show="!backwardArrow" class="u-ellipsis">•••</span>
-        <svg v-show="backwardArrow" class="u-icon" viewBox="64 64 896 896" data-icon="double-right" aria-hidden="true" focusable="false"><path d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z"></path></svg>
+        <span class="u-ellipsis">•••</span>
+        <svg class="u-icon" viewBox="64 64 896 896" data-icon="double-right" aria-hidden="true" focusable="false"><path d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z"></path></svg>
       </span>
       <span v-show="totalPage!==1" :class="['u-item', { active: currentPage === totalPage }]" @click="changePage(totalPage)">{{ totalPage }}</span>
       <span class="u-item" :class="{ disabled: currentPage === totalPage }" @click="changePage(currentPage + 1)">
@@ -192,6 +192,7 @@ function changePage (pageNum: number): boolean | void {
       user-select: none; // 禁止选取文本
       border: 1px solid #d9d9d9;
       border-radius: 6px;
+      background: #FFF;
       cursor: pointer;
       transition: all .3s;
       &:hover {
@@ -235,25 +236,44 @@ function changePage (pageNum: number): boolean | void {
       }
     }
     .m-arrow {
+      position: relative;
       display: inline-block;
-      vertical-align: middle;
+      vertical-align: top;
       margin-right: 8px;
-      min-width: 32px;
+      width: 32px;
       height: 32px;
-      letter-spacing: 2px;
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.25);
       transition: all .3s;
       cursor: pointer;
+      &:hover {
+        .u-ellipsis {
+          opacity: 0;
+          pointer-events: none;
+        }
+        .u-icon {
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
       .u-ellipsis {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        letter-spacing: 1px;
+        font-size: 16px;
+        color: rgba(0, 0, 0, 0.25);
         transition: all .3s;
       }
       .u-icon {
+        position: absolute;
+        inset: 0;
+        margin: auto;
         display: inline-block;
-        vertical-align: middle;
         fill: @themeColor;
         width: 12px;
         height: 12px;
+        opacity: 0;
+        pointer-events: none;
+        transition: all .3s;
       }
     }
     .u-jump-page {
@@ -268,7 +288,7 @@ function changePage (pageNum: number): boolean | void {
         margin: 0 8px;
         border: 1px solid #d9d9d9;
         border-radius: 6px;
-        background: transparent;
+        background: #FFF;
         text-align: left;
         outline: none;
         transition: all 0.3s;
