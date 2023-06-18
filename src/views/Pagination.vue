@@ -11,7 +11,6 @@ function changePage (pager: object) { // 分页回调
   console.log('pager:', pager)
 }
 </script>
-
 <template>
   <div>
     <h2 class="mb10">Pagination 分页基本使用</h2>
