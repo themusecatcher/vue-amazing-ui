@@ -7,14 +7,14 @@ const pagination = ref({
   pageSize: 10,
   p: 1
 })
-function changePage (pager: object) { // 分页器回调
+function changePage (pager: object) { // 分页回调
   console.log('pager:', pager)
 }
 </script>
 
 <template>
   <div>
-    <h2 class="mb10">Pagination 分页器基本使用</h2>
+    <h2 class="mb10">Pagination 分页基本使用</h2>
     <Pagination
       @change="changePage"
       :current="pagination.p"
@@ -24,7 +24,7 @@ function changePage (pager: object) { // 分页器回调
       :showQuickJumper="true"
       :showTotal="true"
       placement="center"/>
-    <h2 class="mt30 mb10">分页器靠左(右)展示 (placement: left(right))</h2>
+    <h2 class="mt30 mb10">分页靠左(右)展示 (placement: left(right))</h2>
     <Pagination
       @change="changePage"
       :current="pagination.p"

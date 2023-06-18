@@ -118,7 +118,7 @@ const routes = [
       {
         path: '/pagination',
         name: 'Pagination',
-        meta: { title: '分页器' },
+        meta: { title: '分页' },
         component: () => import('@/views/Pagination.vue')
       },
       {

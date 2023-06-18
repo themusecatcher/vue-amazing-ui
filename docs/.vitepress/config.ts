@@ -159,7 +159,7 @@ export default defineConfig({
               link: '/guide/components/notification'
             },
             {
-              text: '分页器 Pagination',
+              text: '分页 Pagination',
               link: '/guide/components/pagination'
             },
             {

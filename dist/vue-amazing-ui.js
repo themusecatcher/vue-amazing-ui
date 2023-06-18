@@ -3001,7 +3001,7 @@ const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "da
 Notification.install = (app) => {
   app.component(Notification.__name, Notification);
 };
-const _withScopeId$6 = (n) => (pushScopeId("data-v-8c691d90"), n = n(), popScopeId(), n);
+const _withScopeId$6 = (n) => (pushScopeId("data-v-58cc7d31"), n = n(), popScopeId(), n);
 const _hoisted_1$g = { class: "m-pagination-wrap" };
 const _hoisted_2$c = {
   key: 0,
@@ -3232,8 +3232,8 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Pagination_vue_vue_type_style_index_0_scoped_8c691d90_lang = "";
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-8c691d90"]]);
+const Pagination_vue_vue_type_style_index_0_scoped_58cc7d31_lang = "";
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-58cc7d31"]]);
 Pagination.install = (app) => {
   app.component(Pagination.__name, Pagination);
 };
@@ -5615,8 +5615,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Table_vue_vue_type_style_index_0_scoped_7353f744_lang = "";
-const Table = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-7353f744"]]);
+const Table_vue_vue_type_style_index_0_scoped_f9df0ebd_lang = "";
+const Table = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-f9df0ebd"]]);
 Table.install = (app) => {
   app.component(Table.__name, Table);
 };
