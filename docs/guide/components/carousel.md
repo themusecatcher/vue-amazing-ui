@@ -91,6 +91,8 @@ interval | 自动滑动轮播间隔，单位s | number | 3000 | false
 width | 走马灯宽度 | number &#124; string | '100vw' | false
 height | 走马灯高度 | number &#124; string | '100vh' | false
 navigation | 是否显示导航 | boolean | true | false
+navColor | 导航颜色 | string | '#FFF' | false
+navSize | 导航大小，单位px | number | 36 | false
 pagination | 是否显示分页 | boolean | true | false
 disableOnInteraction | 用户操作导航或分页之后，是否禁止自动切换 | boolean | true | false
 pauseOnMouseEnter | 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换 | boolean | true | false

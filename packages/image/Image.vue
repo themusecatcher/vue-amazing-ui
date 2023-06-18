@@ -73,7 +73,7 @@ onUnmounted(() => {
   document.removeEventListener('keydown', keyboardSwitch)
 })
 const complete = ref(Array(imageCount.value).fill(false)) // 图片是否加载完成
-const loaded = ref(false) // 预览图片是否加载完成
+const loaded = ref(Array(imageCount.value).fill(false)) // 预览图片是否加载完成
 const previewIndex = ref(0) // 当前预览的图片索引
 const showPreview = ref(false) // 是否显示预览
 const rotate = ref(0) // 预览图片旋转角度
@@ -96,8 +96,8 @@ function keyboardSwitch (e: KeyboardEvent) {
 function onComplete (n: number) { // 图片加载完成
   complete.value[n] = true
 }
-function onLoaded () { // 预览图片加载完成
-  loaded.value = true
+function onLoaded (index: number) { // 预览图片加载完成
+  loaded.value[index] = true
 }
 function getImageName (image: Image) { // 从图像地址src中获取图像名称
   if (image) {
@@ -152,7 +152,8 @@ function onResetOrigin () { // 重置图片为初始状态
 }
 function onWheel (e: WheelEvent) { // 鼠标滚轮缩放
   // e.preventDefault() // 禁止浏览器捕获滑动事件
-  const scrollZoom = e.deltaY * props.zoomRatio // 滚轮的纵向滚动量
+  console.log('e', e)
+  const scrollZoom = e.deltaY * props.zoomRatio * 0.1 // 滚轮的纵向滚动量
   if (scale.value === props.minZoomScale && scrollZoom > 0) {
     return
   }
@@ -216,7 +217,7 @@ function onSwitchLeft () {
       previewIndex.value--
     }
   }
-  loaded.value = false
+  onResetOrigin()
 }
 function onSwitchRight () {
   if (props.loop) {
@@ -226,19 +227,20 @@ function onSwitchRight () {
       previewIndex.value++
     }
   }
-  loaded.value = false
+  onResetOrigin()
 }
 </script>
 <template>
   <div class="m-image-wrap">
     <div
       class="m-image"
-      :class="{'image-hover-mask': complete}"
+      :class="{'image-hover-mask': complete[index]}"
       :style="`width: ${imageWidth}; height: ${imageHeight};`"
       v-for="(image, index) in images" :key="index"
       v-show="!album || (album && index === 0)">
-      <Spin :spinning="!complete[index]" indicator="dynamic-circle" />
-      <img class="u-image" :style="`object-fit: ${fit};`" @load="onComplete(index)" :src="image.src" :alt="image.name" />
+      <Spin :spinning="!complete[index]" indicator="dynamic-circle">
+        <img class="u-image" :style="`width: calc(${imageWidth} - 2px); height: calc(${imageHeight} - 2px); object-fit: ${fit};`" @load="onComplete(index)" :src="image.src" :alt="image.name" />
+      </Spin>
       <div class="m-image-mask" @click="onPreview(index)">
         <div class="m-image-mask-info">
           <svg class="u-eye" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
@@ -279,17 +281,20 @@ function onSwitchRight () {
           <div
             class="m-preview-image"
             :style="`transform: translate3d(${dragX}px, ${dragY}px, 0px);`">
-            <Spin :spinning="!loaded" indicator="dynamic-circle" />
-            <img
-              v-for="(image, index) in images" :key="index"
+            <Spin
+              :spinning="!loaded[index]"
+              indicator="dynamic-circle"
               v-show="previewIndex === index"
-              class="u-preview-image"
-              :style="`transform: scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg);`"
-              :src="image.src"
-              :alt="image.name"
-              @mousedown.prevent="onMouseDown($event)"
-              @load="onLoaded"
-              @dblclick="resetOnDbclick ? onResetOrigin() : () => false"/>
+              v-for="(image, index) in images" :key="index">
+              <img
+                class="u-preview-image"
+                :style="`transform: scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg);`"
+                :src="image.src"
+                :alt="image.name"
+                @mousedown.prevent="onMouseDown($event)"
+                @load="onLoaded(index)"
+                @dblclick="resetOnDbclick ? onResetOrigin() : () => false"/>
+            </Spin>
           </div>
           <template v-if="imageCount > 1">
             <div
@@ -471,9 +476,8 @@ function onSwitchRight () {
         .u-preview-image {
           display: inline-block;
           vertical-align: middle;
-          max-width: 100%;
-          max-height: 100%;
-          transform: scale3d(1, 1, 1);
+          max-width: 100vw;
+          max-height: 100vh;
           cursor: grab;
           transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
           user-select: none;
