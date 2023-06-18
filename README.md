@@ -72,7 +72,7 @@ Dialog | 对话框 | Divider | 分割线
 Empty | 空状态 | Image | 图片
 InputNumber | 数字输入框 | Message | 全局提示
 Modal | 信息提示 | Notification | 通知提醒框
-Pagination | 分页器 | Progress | 进度条
+Pagination | 分页 | Progress | 进度条
 QRCode | 二维码 | Radio | 单选框
 Rate | 评分 | Select | 选择器
 Slider | 滑动输入条 | Spin | 加载中

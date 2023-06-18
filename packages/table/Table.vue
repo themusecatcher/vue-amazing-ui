@@ -15,9 +15,9 @@ interface Pagination {
 interface Props {
   columns?: Column[] // 表格列的配置项
   dataSource?: any[] // 表格数据数组
-  pagination?: Pagination // 分页器配置
-  showPagination?: boolean // 是否显示分页器
-  hideOnSinglePage?: boolean // 只有一页时是否隐藏分页器
+  pagination?: Pagination // 分页配置
+  showPagination?: boolean // 是否显示分页
+  hideOnSinglePage?: boolean // 只有一页时是否隐藏分页
   total?: number // 数据总数
   loading?: boolean // 是否加载中
 }
@@ -31,7 +31,7 @@ withDefaults(defineProps<Props>(), {
   loading: false
 })
 const emit = defineEmits(['change'])
-function changePage (pager: {page: number, pageSize: number}) { // 分页器回调
+function changePage (pager: {page: number, pageSize: number}) { // 分页回调
   emit('change', pager)
 }
 </script>

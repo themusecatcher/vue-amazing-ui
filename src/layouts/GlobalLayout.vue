@@ -82,7 +82,7 @@ function onClick (e: any):void {
           <router-link to="/notification">通知提醒框（Notification）</router-link>
         </a-menu-item>
         <a-menu-item key="Pagination">
-          <router-link to="/pagination">分页器（Pagination）</router-link>
+          <router-link to="/pagination">分页（Pagination）</router-link>
         </a-menu-item>
         <a-menu-item key="Progress">
           <router-link to="/progress">进度条（Progress）</router-link>
