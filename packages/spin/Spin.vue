@@ -41,6 +41,9 @@ withDefaults(defineProps<Props>(), {
   position: relative;
   height: 100%;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .m-spin {
   position: absolute;

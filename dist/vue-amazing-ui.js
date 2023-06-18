@@ -301,7 +301,7 @@ const Button = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-7
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
-const _withScopeId$g = (n) => (pushScopeId("data-v-01220d1b"), n = n(), popScopeId(), n);
+const _withScopeId$g = (n) => (pushScopeId("data-v-77a73a96"), n = n(), popScopeId(), n);
 const _hoisted_1$t = { class: "m-spin" };
 const _hoisted_2$p = { class: "m-spin-box" };
 const _hoisted_3$n = {
@@ -377,8 +377,8 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Spin_vue_vue_type_style_index_0_scoped_01220d1b_lang = "";
-const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-01220d1b"]]);
+const Spin_vue_vue_type_style_index_0_scoped_77a73a96_lang = "";
+const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-77a73a96"]]);
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
