@@ -39,6 +39,10 @@ const images = ref([
 
 ## 基本使用
 
+*支持自动切换，导航切换，键盘上、下、左、右按键切换，分页切换*
+
+<br>
+
 <Carousel :images="images" :height="360" />
 
 ::: details Show Code
