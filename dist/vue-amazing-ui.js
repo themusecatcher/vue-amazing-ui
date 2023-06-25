@@ -2291,7 +2291,7 @@ const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-
 Image$1.install = (app) => {
   app.component(Image$1.__name, Image$1);
 };
-const _withScopeId$a = (n) => (pushScopeId("data-v-432e89a7"), n = n(), popScopeId(), n);
+const _withScopeId$a = (n) => (pushScopeId("data-v-39c0b862"), n = n(), popScopeId(), n);
 const _hoisted_1$k = {
   class: "m-input-number",
   tabindex: "1"
@@ -2442,8 +2442,8 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const InputNumber_vue_vue_type_style_index_0_scoped_432e89a7_lang = "";
-const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-432e89a7"]]);
+const InputNumber_vue_vue_type_style_index_0_scoped_39c0b862_lang = "";
+const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-39c0b862"]]);
 InputNumber.install = (app) => {
   app.component(InputNumber.__name, InputNumber);
 };

@@ -6,6 +6,7 @@ interface Props {
   step?: number // 每次改变步数，可以为小数
   prefix?: string // 前缀图标 string | slot
   precision?: number // 数值精度
+  
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   value?: number|null // 当前值(v-model)
 }
@@ -19,10 +20,6 @@ const props = withDefaults(defineProps<Props>(), {
   value: null
 })
 const numValue = ref(props.value?.toFixed(props.precision))
-// watchEffect(() => {
-//   numValue.value = props.value?.toFixed(props.precision)
-//   console.log('numValue', numValue.value)
-// })
 watch(
   () => props.value,
   (to) => {
