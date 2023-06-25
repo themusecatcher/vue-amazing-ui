@@ -10,10 +10,18 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { moneyFormat } from 'vue-amazing-ui'
 const value = ref(3)
+const formatValue = ref(1000)
 watchEffect(() => {
   console.log('value:', value.value)
 })
+watchEffect(() => {
+  console.log('formatValue:', formatValue.value)
+})
+function formatter (num: string): string {
+  return moneyFormat(num, 2)
+}
 function onChange (number: number) {
   console.log('number:', number)
 }
@@ -82,6 +90,31 @@ watchEffect(() => {
 
 :::
 
+## 格式化展示
+
+<InputNumber :width="120" :step="10" :formatter="formatter" v-model:value="formatValue" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { moneyFormat } from 'vue-amazing-ui'
+const formatValue = ref(1000)
+watchEffect(() => {
+  console.log('formatValue:', formatValue.value)
+})
+function formatter (num: string): string {
+  return moneyFormat(num, 2)
+}
+</script>
+<template>
+  <InputNumber :width="120" :step="10" :formatter="formatter" v-model:value="formatValue" />
+</template>
+```
+
+:::
+
 ## 自定义最大最小值
 
 <InputNumber :min="0" :max="10" v-model:value="value" />
@@ -128,11 +161,13 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
+width | 输入框宽度，单位px | number | 90 | false
 min | 最小值 | number | -Infinity | false
 max | 最大值 | number | Infinity | false
 step | 每次改变步数，可以为小数 | number | 1 | false
-precision ｜ 数值精度 | number | 0 | false
+precision | 数值精度 | number | 0 | false
 prefix | 前缀图标 | string &#124; slot | '' | false
+formatter | 指定展示值的格式 | Funtion | (value: string) => value | false
 keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true | false
 value(v-model) | 当前值 | number &#124; null | null | false
 
