@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { moneyFormat } from '../../packages'
 const value = ref(3)
+const formatValue = ref(1000)
 watchEffect(() => {
   console.log('value:', value.value)
 })
 function onChange (number: number) {
   console.log('number:', number)
+}
+function formatter (num: string): string {
+  return moneyFormat(num, 2)
 }
 function onAntChange (number: number) {
   console.log('ant:', number)
@@ -28,12 +33,18 @@ function onAntChange (number: number) {
       :step="0.6"
       :precision="2"
       v-model:value="value" />
+    <h2 class="mt30 mb10">格式化展示</h2>
+    <InputNumber
+      :width="120"
+      :step="10"
+      :formatter="formatter"
+      v-model:value="formatValue" />
     <h2 class="mt30 mb10">Ant Design Vue 数字输入框</h2>
     <a-input-number
       :min="-10"
       :max="10"
-      :precision="2"
-      :step="0.6"
+      :step="0.01"
+      :precision="1"
       @change="onAntChange"
       v-model:value="value" />
   </div>

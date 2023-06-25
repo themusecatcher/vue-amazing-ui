@@ -8,7 +8,8 @@ import {
   throttle,
   debounce,
   add,
-  downloadFile
+  downloadFile,
+  moneyFormat
 } from './utils'
 import type { App } from 'vue'
 import Breadcrumb from './breadcrumb'
@@ -109,7 +110,8 @@ export {
   throttle,
   debounce,
   add,
-  downloadFile
+  downloadFile,
+  moneyFormat
 }
 export {
   Breadcrumb,
