@@ -1,53 +1,38 @@
 {
-  "hash": "02b0458f",
-  "browserHash": "dd5a4445",
+  "hash": "082a246e",
+  "browserHash": "89dc58b9",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.3.4/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "349c51bd",
+      "fileHash": "416c6ccb",
       "needsInterop": false
     },
     "@vuepic/vue-datepicker": {
       "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
       "file": "@vuepic_vue-datepicker.js",
-      "fileHash": "cd9ad393",
+      "fileHash": "eb4db5d4",
       "needsInterop": false
     },
     "qrcode": {
       "src": "../../../../node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/browser.js",
       "file": "qrcode.js",
-      "fileHash": "65158c58",
+      "fileHash": "cdb951c0",
       "needsInterop": true
     },
     "swiper": {
       "src": "../../../../node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/swiper.esm.js",
       "file": "swiper.js",
-      "fileHash": "90621b5b",
-      "needsInterop": false
-    },
-    "vue-amazing-ui": {
-      "src": "../../../../node_modules/.pnpm/vue-amazing-ui@0.0.32/node_modules/vue-amazing-ui/dist/vue-amazing-ui.js",
-      "file": "vue-amazing-ui.js",
-      "fileHash": "78e70105",
+      "fileHash": "00d9072c",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-H4UJRISF": {
-      "file": "chunk-H4UJRISF.js"
-    },
-    "chunk-JZBU7VHF": {
-      "file": "chunk-JZBU7VHF.js"
-    },
     "chunk-JKV2V35Q": {
       "file": "chunk-JKV2V35Q.js"
     },
-    "chunk-3F4Y7QWA": {
-      "file": "chunk-3F4Y7QWA.js"
-    },
-    "chunk-DFKQJ226": {
-      "file": "chunk-DFKQJ226.js"
+    "chunk-RSJERJUL": {
+      "file": "chunk-RSJERJUL.js"
     }
   }
 }
