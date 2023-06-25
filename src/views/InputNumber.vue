@@ -21,11 +21,19 @@ function onAntChange (number: number) {
     <InputNumber :min="0" :max="10" v-model:value="value" />
     <h2 class="mt30 mb10">添加前缀图标 $</h2>
     <InputNumber prefix="$" v-model:value="value" />
+    <h2 class="mt30 mb10">设置精度 (precision: 2)</h2>
+    <InputNumber
+      :min="-10"
+      :max="10"
+      :step="0.6"
+      :precision="2"
+      v-model:value="value" />
     <h2 class="mt30 mb10">Ant Design Vue 数字输入框</h2>
     <a-input-number
       :min="-10"
       :max="10"
-      :step="1"
+      :precision="2"
+      :step="0.6"
       @change="onAntChange"
       v-model:value="value" />
   </div>

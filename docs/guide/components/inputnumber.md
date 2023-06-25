@@ -61,6 +61,27 @@ watchEffect(() => {
 
 :::
 
+## 设置数值精度
+
+<InputNumber :step="0.3" :precision="2" v-model:value="value" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const value = ref(3)
+watchEffect(() => {
+  console.log('value:', value.value)
+})
+</script>
+<template>
+  <InputNumber :step="0.3" :precision="2" v-model:value="value" />
+</template>
+```
+
+:::
+
 ## 自定义最大最小值
 
 <InputNumber :min="0" :max="10" v-model:value="value" />
@@ -110,6 +131,7 @@ watchEffect(() => {
 min | 最小值 | number | -Infinity | false
 max | 最大值 | number | Infinity | false
 step | 每次改变步数，可以为小数 | number | 1 | false
+precision ｜ 数值精度 | number | 0 | false
 prefix | 前缀图标 | string &#124; slot | '' | false
 keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true | false
 value(v-model) | 当前值 | number &#124; null | null | false

@@ -2291,7 +2291,7 @@ const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-
 Image$1.install = (app) => {
   app.component(Image$1.__name, Image$1);
 };
-const _withScopeId$a = (n) => (pushScopeId("data-v-1de40ef9"), n = n(), popScopeId(), n);
+const _withScopeId$a = (n) => (pushScopeId("data-v-432e89a7"), n = n(), popScopeId(), n);
 const _hoisted_1$k = {
   class: "m-input-number",
   tabindex: "1"
@@ -2331,46 +2331,52 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     max: { default: Infinity },
     step: { default: 1 },
     prefix: { default: "" },
+    precision: { default: 0 },
     keyboard: { type: Boolean, default: true },
     value: { default: null }
   },
   emits: ["update:value", "change"],
   setup(__props, { emit: emits }) {
+    var _a;
     const props = __props;
-    const numValue = ref();
-    watchEffect(() => {
-      numValue.value = props.value;
-    });
+    const numValue = ref((_a = props.value) == null ? void 0 : _a.toFixed(props.precision));
+    watch(
+      () => props.value,
+      (to) => {
+        numValue.value = to == null ? void 0 : to.toFixed(props.precision);
+      }
+    );
+    watch(
+      numValue,
+      (to) => {
+        if (!to) {
+          emitValue(null);
+        }
+      }
+    );
     function emitValue(value) {
       emits("change", value);
       emits("update:value", value);
     }
     function onChange(e) {
+      var _a2, _b;
       const value = e.target.value;
       if (!Number.isNaN(parseFloat(value))) {
-        numValue.value = parseFloat(value);
-        console.log(numValue.value);
-        if (numValue.value > props.max) {
-          numValue.value = props.max;
+        if (parseFloat(value) > props.max) {
+          emitValue(props.max);
+          return;
         }
-        if (numValue.value < props.min) {
-          numValue.value = props.min;
+        if (parseFloat(value) < props.min) {
+          emitValue(props.min);
+          return;
         }
-        if (numValue.value !== props.value) {
-          emitValue(numValue.value);
+        if (parseFloat(value) !== props.value) {
+          emitValue(parseFloat(value));
+        } else {
+          numValue.value = (_a2 = props.value) == null ? void 0 : _a2.toFixed(props.precision);
         }
       } else {
-        numValue.value = props.value;
-      }
-    }
-    function onInput(e) {
-      const value = e.target.value;
-      if (value === "") {
-        emitValue(null);
-      }
-      if (!Number.isNaN(parseFloat(value)) && parseFloat(value) >= props.min && parseFloat(value) <= props.max && parseFloat(value) !== props.value) {
-        numValue.value = parseFloat(value);
-        emitValue(parseFloat(value) || 0);
+        numValue.value = (_b = props.value) == null ? void 0 : _b.toFixed(props.precision);
       }
     }
     function add2(num1, num2) {
@@ -2383,18 +2389,12 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
       return result / Math.pow(10, maxLen);
     }
     function onUp() {
-      if (numValue.value !== props.max) {
-        const res = add2(numValue.value || 0, +props.step);
-        emitValue(Math.min(props.max, res));
-        numValue.value = Math.min(props.max, res);
-      }
+      const res = Math.min(props.max, add2(props.value || 0, +props.step));
+      emitValue(res);
     }
     function onDown() {
-      if (numValue.value !== props.min) {
-        const res = add2(numValue.value || 0, -props.step);
-        emitValue(Math.max(props.min, res));
-        numValue.value = Math.max(props.min, res);
-      }
+      const res = Math.max(props.min, add2(props.value || 0, -props.step));
+      emitValue(res);
     }
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$k, [
@@ -2409,7 +2409,6 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
             autocomplete: "off",
             class: "u-input-number",
             onChange,
-            onInput,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => numValue.value = $event),
             onKeydown: _cache[1] || (_cache[1] = withKeys(withModifiers(() => {
             }, ["prevent"]), ["up"])),
@@ -2424,7 +2423,6 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
             autocomplete: "off",
             class: "u-input-number",
             onChange,
-            onInput,
             "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => numValue.value = $event)
           }, null, 544)), [
             [vModelText, numValue.value]
@@ -2432,11 +2430,11 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
         ]),
         createElementVNode("div", _hoisted_5$9, [
           createElementVNode("span", {
-            class: normalizeClass(["u-up-arrow", { disabled: (numValue.value || 0) >= _ctx.max }]),
+            class: normalizeClass(["u-up-arrow", { disabled: (_ctx.value || 0) >= _ctx.max }]),
             onClick: onUp
           }, _hoisted_7$9, 2),
           createElementVNode("span", {
-            class: normalizeClass(["u-down-arrow", { disabled: (numValue.value || 0) <= _ctx.min }]),
+            class: normalizeClass(["u-down-arrow", { disabled: (_ctx.value || 0) <= _ctx.min }]),
             onClick: onDown
           }, _hoisted_9$9, 2)
         ])
@@ -2444,8 +2442,8 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const InputNumber_vue_vue_type_style_index_0_scoped_1de40ef9_lang = "";
-const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-1de40ef9"]]);
+const InputNumber_vue_vue_type_style_index_0_scoped_432e89a7_lang = "";
+const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-432e89a7"]]);
 InputNumber.install = (app) => {
   app.component(InputNumber.__name, InputNumber);
 };

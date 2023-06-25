@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watch } from 'vue'
 interface Props {
   min?: number // 最小值
   max?: number // 最大值
   step?: number // 每次改变步数，可以为小数
   prefix?: string // 前缀图标 string | slot
+  precision?: number // 数值精度
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   value?: number|null // 当前值(v-model)
 }
@@ -13,13 +14,29 @@ const props = withDefaults(defineProps<Props>(), {
   max: Infinity,
   step: 1,
   prefix: '',
+  precision: 0,
   keyboard: true,
   value: null
 })
-const numValue = ref<number|null>()
-watchEffect(() => {
-  numValue.value = props.value
-})
+const numValue = ref(props.value?.toFixed(props.precision))
+// watchEffect(() => {
+//   numValue.value = props.value?.toFixed(props.precision)
+//   console.log('numValue', numValue.value)
+// })
+watch(
+  () => props.value,
+  (to) => {
+    numValue.value = to?.toFixed(props.precision)
+  }
+)
+watch(
+  numValue,
+  (to) => {
+    if (!to)  {
+      emitValue(null)
+    }
+  }
+)
 const emits = defineEmits(['update:value', 'change'])
 function emitValue (value: any) {
   emits('change', value)
@@ -28,29 +45,21 @@ function emitValue (value: any) {
 function onChange (e: any) {
   const value = e.target.value
   if (!Number.isNaN(parseFloat(value))) { // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为Number
-    numValue.value = parseFloat(value)
-    console.log(numValue.value)
-    if (numValue.value > props.max) {
-      numValue.value = props.max
+    if (parseFloat(value) > props.max) {
+      emitValue(props.max)
+      return
     }
-    if (numValue.value < props.min) {
-      numValue.value = props.min
+    if (parseFloat(value) < props.min) {
+      emitValue(props.min)
+      return
     }
-    if (numValue.value !== props.value) {
-      emitValue(numValue.value)
+    if (parseFloat(value) !== props.value) {
+      emitValue(parseFloat(value))
+    } else {
+      numValue.value = props.value?.toFixed(props.precision)
     }
   } else {
-    numValue.value = props.value
-  }
-}
-function onInput (e: any) {
-  const value = e.target.value
-  if (value === '') {
-    emitValue(null)
-  }
-  if (!Number.isNaN(parseFloat(value)) && parseFloat(value) >= props.min && parseFloat(value) <= props.max && parseFloat(value) !== props.value) {
-    numValue.value = parseFloat(value)
-    emitValue(parseFloat(value) || 0)
+    numValue.value = props.value?.toFixed(props.precision)
   }
 }
 // 消除js加减精度问题的加法函数
@@ -64,18 +73,12 @@ function add (num1: number, num2: number) {
   return result / Math.pow(10, maxLen)
 }
 function onUp () {
-  if (numValue.value !== props.max) {
-    const res = add(numValue.value || 0, +props.step)
-    emitValue(Math.min(props.max, res))
-    numValue.value = Math.min(props.max, res)
-  }
+  const res = Math.min(props.max, add(props.value || 0, +props.step))
+  emitValue(res)
 }
 function onDown () {
-  if (numValue.value !== props.min) {
-    const res = add(numValue.value || 0, -props.step)
-    emitValue(Math.max(props.min, res))
-    numValue.value = Math.max(props.min, res)
-  }
+  const res = Math.max(props.min, add(props.value || 0, -props.step))
+  emitValue(res)
 }
 </script>
 <template>
@@ -89,7 +92,6 @@ function onDown () {
         autocomplete="off"
         class="u-input-number"
         @change="onChange"
-        @input="onInput"
         v-model="numValue"
         @keydown.up.prevent
         @keyup.up="onUp"
@@ -99,14 +101,13 @@ function onDown () {
         autocomplete="off"
         class="u-input-number"
         @change="onChange"
-        @input="onInput"
         v-model="numValue">
     </div>
     <div class="m-handler-wrap">
-      <span class="u-up-arrow" :class="{disabled: (numValue || 0) >= max}" @click="onUp">
+      <span class="u-up-arrow" :class="{disabled: (value || 0) >= max}" @click="onUp">
         <svg focusable="false" class="u-icon" data-icon="up" aria-hidden="true" viewBox="64 64 896 896"><path d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"></path></svg>
       </span>
-      <span class="u-down-arrow" :class="{disabled: (numValue || 0) <= min}" @click="onDown">
+      <span class="u-down-arrow" :class="{disabled: (value || 0) <= min}" @click="onDown">
         <svg focusable="false" class="u-icon" data-icon="down" aria-hidden="true" viewBox="64 64 896 896"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
       </span>
     </div>
