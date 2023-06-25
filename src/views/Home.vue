@@ -12,9 +12,9 @@ npm i vue-amazing-ui`
 ])
 const collapseData = ref([
   {
-    header: '以上九个 API 使用时直接引入即可:',
+    header: '以上十个 API 使用时直接引入即可:',
     text: `<script setup lang="ts">
-\import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add, downloadFile } from 'vue-amazing-ui'
+\import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add, downloadFile, moneyFormat } from 'vue-amazing-ui'
 
 <\/script>`
   }
@@ -49,6 +49,7 @@ const activeKey = ref(0)
       <li class="u-tip mb10">debounce: 使用 rafTimeout 实现的防抖函数！</li>
       <li class="u-tip mb10">add: 消除js加减精度问题的加法函数！</li>
       <li class="u-tip mb10">downloadFile: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
+      <li class="u-tip mb10">moneyFormat: 金额格式化函数！</li>
     </ul>
     <Collapse
       lang="vue3"

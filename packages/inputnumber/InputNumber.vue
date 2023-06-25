@@ -1,29 +1,36 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 interface Props {
+  width?: number // 输入框宽度
   min?: number // 最小值
   max?: number // 最大值
   step?: number // 每次改变步数，可以为小数
-  prefix?: string // 前缀图标 string | slot
   precision?: number // 数值精度
-  
+  prefix?: string // 前缀图标 string | slot
+  formatter?: Function // 指定展示值的格式
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   value?: number|null // 当前值(v-model)
 }
 const props = withDefaults(defineProps<Props>(), {
+  width: 90,
   min: -Infinity,
   max: Infinity,
   step: 1,
-  prefix: '',
   precision: 0,
+  prefix: '',
+  formatter: (value: string) => value,
   keyboard: true,
   value: null
 })
-const numValue = ref(props.value?.toFixed(props.precision))
+const precision = computed(() => { // 数值精度取步长和精度中较大者
+  const stepPrecision = String(props.step).split('.')[1]?.length || 0
+  return Math.max(props.precision, stepPrecision)
+})
+const numValue = ref(props.formatter(props.value?.toFixed(precision.value)))
 watch(
   () => props.value,
   (to) => {
-    numValue.value = to?.toFixed(props.precision)
+    numValue.value = props.formatter(to?.toFixed(precision.value))
   }
 )
 watch(
@@ -40,7 +47,7 @@ function emitValue (value: any) {
   emits('update:value', value)
 }
 function onChange (e: any) {
-  const value = e.target.value
+  const value = e.target.value.replaceAll(',', '')
   if (!Number.isNaN(parseFloat(value))) { // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为Number
     if (parseFloat(value) > props.max) {
       emitValue(props.max)
@@ -53,10 +60,10 @@ function onChange (e: any) {
     if (parseFloat(value) !== props.value) {
       emitValue(parseFloat(value))
     } else {
-      numValue.value = props.value?.toFixed(props.precision)
+      numValue.value = props.value?.toFixed(precision.value)
     }
   } else {
-    numValue.value = props.value?.toFixed(props.precision)
+    numValue.value = props.value?.toFixed(precision.value)
   }
 }
 // 消除js加减精度问题的加法函数
@@ -69,21 +76,29 @@ function add (num1: number, num2: number) {
   const result = +(num1Str.replace('.', '')) + +(num2Str.replace('.', '')) // 转换为整数相加
   return result / Math.pow(10, maxLen)
 }
+function onKeyboard (e: any) {
+  if (e.key === 'ArrowUp') {
+    onUp()
+  }
+  if (e.key === 'ArrowDown') {
+    onDown()
+  }
+}
 function onUp () {
-  const res = Math.min(props.max, add(props.value || 0, +props.step))
+  const res = parseFloat(Math.min(props.max, add(props.value || 0, +props.step)).toFixed(precision.value))
   emitValue(res)
 }
 function onDown () {
-  const res = Math.max(props.min, add(props.value || 0, -props.step))
+  const res = parseFloat(Math.max(props.min, add(props.value || 0, -props.step)).toFixed(precision.value))
   emitValue(res)
 }
 </script>
 <template>
-  <div class="m-input-number" tabindex="1">
-    <span class="u-input-prefix">
-      <slot name="prefix">{{ prefix }}</slot>
-    </span>
+  <div class="m-input-number" tabindex="1" :style="`width: ${width}px;`">
     <div class="m-input-wrap">
+      <span class="u-input-prefix" :class="{mr3: prefix}">
+        <slot name="prefix">{{ prefix }}</slot>
+      </span>
       <input
         v-if="keyboard"
         autocomplete="off"
@@ -91,8 +106,7 @@ function onDown () {
         @change="onChange"
         v-model="numValue"
         @keydown.up.prevent
-        @keyup.up="onUp"
-        @keyup.down="onDown">
+        @keydown="onKeyboard">
       <input
         v-else
         autocomplete="off"
@@ -114,6 +128,7 @@ function onDown () {
 .m-input-number {
   position: relative;
   display: inline-block;
+  height: 30px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5;
@@ -125,6 +140,7 @@ function onDown () {
   &:hover {
     border-color: @themeColor;
     .m-handler-wrap {
+      background: #FFF;
       opacity: 1;
     }
   }
@@ -132,18 +148,18 @@ function onDown () {
     border-color: @themeColor;
     box-shadow: 0 0 0 2px fade(@themeColor, 20%);
   }
-  .u-input-prefix {
-    margin-right: 4px;
-    display: inline-block;
-    vertical-align: middle;
-    pointer-events: none;
-  }
   .m-input-wrap {
-    display: inline-block;
-    vertical-align: middle;
+    display: inline-flex;
+    vertical-align: top;
+    align-items: center;
+    .u-input-prefix {
+      pointer-events: none;
+    }
+    .mr3 {
+      margin-right: 3px;
+    }
     .u-input-number {
-      display: inline-block;
-      width: 68px;
+      width: 100%;
       height: 28px;
       background: transparent;
       border: none;
@@ -160,13 +176,13 @@ function onDown () {
     right: 0;
     width: 22px;
     height: 100%;
-    background: #fff;
+    background: transparent;
     border-radius: 0 6px 6px 0;
     opacity: 0;
     display: flex;
     flex-direction: column;
     align-items: stretch; // 默认值，元素被拉伸以适应容器
-    transition: opacity 0.2s linear 0.2s;
+    transition: all 0.2s linear 0.2s;
     .u-icon {
       width: 7px;
       height: 7px;

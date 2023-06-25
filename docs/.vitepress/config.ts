@@ -251,12 +251,28 @@ export default defineConfig({
           text: '工具',
           items: [
             {
-              text: 'date 日期格式化',
-              link: '/utils/date-format'
+              text: 'add 加法',
+              link: '/utils/add'
             },
             {
               text: 'raf 动画帧',
               link: '/utils/animation-frame'
+            },
+            {
+              text: 'date 日期格式化',
+              link: '/utils/date-format'
+            },
+            {
+              text: 'debounce 防抖',
+              link: '/utils/debounce'
+            },
+            {
+              text: 'downloadFile 下载文件',
+              link: '/utils/download-file'
+            },
+            {
+              text: 'moneyFormat 金额格式化',
+              link: '/utils/money-format'
             },
             {
               text: 'raf 定时器',
@@ -265,18 +281,6 @@ export default defineConfig({
             {
               text: 'throttle 节流',
               link: '/utils/throttle'
-            },
-            {
-              text: 'debounce 防抖',
-              link: '/utils/debounce'
-            },
-            {
-              text: 'add 加法',
-              link: '/utils/add'
-            },
-            {
-              text: 'downloadFile 下载文件',
-              link: '/utils/download-file'
             }
           ]
         }

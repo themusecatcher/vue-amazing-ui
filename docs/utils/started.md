@@ -24,4 +24,5 @@ cancelRaf | 用于取消 rafTimeout 函数！ | (raf: { id: number }) => void
 throttle | 使用 rafTimeout 实现的节流函数！ | (fn: Function, delay = 300) => any
 debounce | 使用 rafTimeout 实现的防抖函数！ | (fn: Function, delay = 300) => any
 add | 消除js加减精度问题的加法函数！ | (num1: number, num2: number) => number
-downloadFile | 下载文件并自定义文件名，未传 name 时，从文件地址中自动获取文件名称 | (url: string, name: string) => void
+downloadFile | 下载文件并自定义文件名，未传 name 时，从文件地址中自动获取文件名称！ | (url: string, name: string) => void
+moneyFormat | 简单易用的金额格式化函数！ | (value: number&#124;string, decimal = 2, split = ',') => string
