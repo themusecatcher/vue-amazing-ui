@@ -10,7 +10,7 @@ $ pnpm i vue-amazing-ui
 $ pnpm add vue-amazing-ui
 ```
 
-**With Yarn**
+**With YARN**
 
 ```bash
 $ yarn add vue-amazing-ui
@@ -24,7 +24,7 @@ $ npm i vue-amazing-ui
 
 ## 使用
 
-**Global**
+> **Global**
 
 ```ts
 import { createApp } from 'vue'
@@ -39,7 +39,7 @@ app.use(VueAmazingUI)
 app.mount('#app')
 ```
 
-**Local**
+> **Local**
 
 ```vue
 <script setup lang="ts">
