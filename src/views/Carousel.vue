@@ -55,9 +55,15 @@ const images = ref([
     <Carousel
       :images="images"
       :width="800"
+      :height="450" />
+    <h2 class="mt30 mb10">自定义导航、分页样式</h2>
+    <Carousel
+      :images="images"
+      :width="800"
       :height="450"
-      :interval="3000"
-      :pauseOnMouseEnter="true"
-      :disableOnInteraction="false" />
+      navColor="#13C2C2"
+      navSize="48"
+      pageActiveColor="#13C2C2"
+      :pageStyle="{ width: '20px', height: '12px', borderRadius: '12px', backgroundColor: '#DDD' }" />
   </div>
 </template>

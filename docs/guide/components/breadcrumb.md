@@ -160,7 +160,7 @@ routes | 路由数组 | Route[] | [] | true
 fontSize | 字体大小，单位px | number | 14 | false
 height | 面包屑高度 | number | 36 | false
 maxWidth | 文本最大显示宽度，超出后显示省略号，单位px | 180 | false
-separator | 分隔符，默认''时为箭头 | string | '' | false
+separator | 分隔符，默认 '' 时为箭头 | string | '' | false
 target | 如何打开目标URL | '_self' &#124; '_blank' | '_self' | false
 
 ## Route Type

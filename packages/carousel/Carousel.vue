@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 import Spin from '../spin'
 interface Image {
@@ -16,6 +17,9 @@ interface Props {
   navColor?: string // 导航颜色
   navSize?: number // 导航大小
   pagination?: boolean // 是否显示分页
+  pageActiveColor?: string // 分页选中颜色
+  pageSize?: number // 分页大小
+  pageStyle?: CSSProperties // 分页样式，优先级高于pageSize
   disableOnInteraction?: boolean // 用户操作导航或分页之后，是否禁止自动切换，默认为true：停止
   pauseOnMouseEnter?: boolean // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
 }
@@ -28,6 +32,9 @@ const props = withDefaults(defineProps<Props>(), {
   navColor: '#FFF',
   navSize: 36,
   pagination: true,
+  pageActiveColor: '#1677FF',
+  pageSize: 10,
+  pageStyle: () => { return {} },
   disableOnInteraction: true,
   pauseOnMouseEnter:  true
 })
@@ -273,7 +280,7 @@ function onSwitch (n: number) { // 分页切换图片
   <div
     class="m-slider"
     ref="carousel"
-    :style="`--navColor: ${navColor}; width: ${carouselWidth}; height: ${carouselHeight};`"
+    :style="`--navColor: ${navColor}; --pageActiveColor: ${pageActiveColor}; width: ${carouselWidth}; height: ${carouselHeight};`"
     @mouseenter="pauseOnMouseEnter ? onStop() : () => false"
     @mouseleave="pauseOnMouseEnter ? onStart() : () => false">
     <div :class="{'transition': transition}" :style="`width: ${totalWidth}px; height: 100%; will-change: transform; transform: translateX(${-left}px);`">
@@ -300,8 +307,8 @@ function onSwitch (n: number) { // 分页切换图片
       <div
         @click="onSwitch(n)"
         :class="['u-circle', {'active': activeSwitcher === n }]"
-        v-for="n in imageCount"
-        :key="n">
+        :style="[{width: `${pageSize}px`, height: `${pageSize}px`}, pageStyle]"
+        v-for="n in imageCount" :key="n">
       </div>
     </div>
   </div>
@@ -374,8 +381,6 @@ function onSwitch (n: number) { // 分页切换图片
     display: flex;
     flex-wrap: nowrap;
     .u-circle {
-      width: 10px;
-      height: 10px;
       background-color: rgba(255, 255, 255, .3);
       border-radius: 50%;
       margin: 0 4px;
@@ -383,7 +388,7 @@ function onSwitch (n: number) { // 分页切换图片
       transition: background-color .3s cubic-bezier(.4, 0, .2, 1);
     }
     .active {
-      background-color: @themeColor;
+      background-color: var(--pageActiveColor) !important;
     }
   }
 }
