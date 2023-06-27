@@ -407,7 +407,7 @@ const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-77a
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
-const _withScopeId$f = (n) => (pushScopeId("data-v-2b9ab937"), n = n(), popScopeId(), n);
+const _withScopeId$f = (n) => (pushScopeId("data-v-956ab9d7"), n = n(), popScopeId(), n);
 const _hoisted_1$s = ["href", "target"];
 const _hoisted_2$o = ["onLoad", "src", "alt"];
 const _hoisted_3$m = {
@@ -440,6 +440,11 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     navColor: { default: "#FFF" },
     navSize: { default: 36 },
     pagination: { type: Boolean, default: true },
+    pageActiveColor: { default: "#1677FF" },
+    pageSize: { default: 10 },
+    pageStyle: { default: () => {
+      return {};
+    } },
     disableOnInteraction: { type: Boolean, default: true },
     pauseOnMouseEnter: { type: Boolean, default: true }
   },
@@ -678,7 +683,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
         class: "m-slider",
         ref_key: "carousel",
         ref: carousel,
-        style: normalizeStyle(`--navColor: ${_ctx.navColor}; width: ${carouselWidth.value}; height: ${carouselHeight.value};`),
+        style: normalizeStyle(`--navColor: ${_ctx.navColor}; --pageActiveColor: ${_ctx.pageActiveColor}; width: ${carouselWidth.value}; height: ${carouselHeight.value};`),
         onMouseenter: _cache[1] || (_cache[1] = ($event) => _ctx.pauseOnMouseEnter ? onStop() : () => false),
         onMouseleave: _cache[2] || (_cache[2] = ($event) => _ctx.pauseOnMouseEnter ? onStart() : () => false)
       }, [
@@ -761,16 +766,17 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
             return openBlock(), createElementBlock("div", {
               onClick: ($event) => onSwitch(n),
               class: normalizeClass(["u-circle", { "active": activeSwitcher.value === n }]),
+              style: normalizeStyle([{ width: `${_ctx.pageSize}px`, height: `${_ctx.pageSize}px` }, _ctx.pageStyle]),
               key: n
-            }, null, 10, _hoisted_11$8);
+            }, null, 14, _hoisted_11$8);
           }), 128))
         ])) : createCommentVNode("", true)
       ], 36);
     };
   }
 });
-const Carousel_vue_vue_type_style_index_0_scoped_2b9ab937_lang = "";
-const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-2b9ab937"]]);
+const Carousel_vue_vue_type_style_index_0_scoped_956ab9d7_lang = "";
+const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-956ab9d7"]]);
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };

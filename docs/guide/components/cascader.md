@@ -345,9 +345,9 @@ const selectedValue = ref(['2', '21', '212'])
 
 ## 禁用某一级
 
-*只禁用第一级：disabled:[true]*
+*只禁用第一级：`disabled: [true]`*
 
-*禁用前两级：disabled:[true, true]*
+*禁用前两级：`disabled: [true, true]`*
 
 <br/>
 
@@ -440,7 +440,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 ## 禁用选项
 
-*只需指定 options 里的 disabled 字段*
+*只需指定 `options` 里的 `disabled` 字段*
 
 <br/>
 
@@ -901,7 +901,7 @@ selectedValue(v-model) | 级联选中项 | (number|string)[] | [] | false
 label | 下拉字典项的文本字段名 | string | 'label' | false
 value | 下拉字典项的值字段名 | string | 'value' | false
 children | 下拉字典项的后代字段名 | string | 'children' | false
-changeOnSelect | 当此项为true时，点选每级菜单选项值都会发生变化；否则只有选择第三级选项后选项值才会变化 | boolean | false | false
+changeOnSelect | 当此项为 true 时，点选每级菜单选项值都会发生变化；否则只有选择第三级选项后选项值才会变化 | boolean | false | false
 zIndex | 下拉层级 | number | 1 | false
 gap | 级联下拉框相互间隙宽度，单位px | number | 8 | false
 width | 三级下拉各自宽度，单位px | number &#124; number[] | 120 | false
@@ -917,7 +917,7 @@ maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 
 label | 选项名 | string | false
 value | 选项值 | string &#124; number | false
 disabled | 是否禁用选项 | boolean | false
-children | 选项children数组 | Option[] | false
+children | 选项 children 数组 | Option[] | false
 [propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | -
 
 ## Events

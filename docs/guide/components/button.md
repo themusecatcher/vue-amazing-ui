@@ -145,9 +145,9 @@ name | 默认文本 | string &#124; slot | '按钮' | false
 type | 类型 | 'default' &#124; 'primary' &#124; 'danger' | 'default' | false
 effect | 悬浮变化效果，只有 type 为 default 时，effect 才生效 | 'fade' &#124; 'reverse' | ''
 size | 尺寸 | 'small' &#124; 'middle' &#124; 'large' | '_self' | false
-width | 宽度，优先级高于size属性，为0时自适应内容的宽度 | number | 0 | false
-height | 高度，优先级高于size属性 | number | 0 | false
-borderRadius | 圆角 | number | 5 | false
+width | 宽度，优先级高于 size 属性，为0时自适应内容的宽度 | number | 0 | false
+height | 高度，优先级高于 size 属性 | number | 0 | false
+borderRadius | 圆角，单位px | number | 5 | false
 route | 跳转目标URL地址 | {path?: string&#44; query?: object} | {} | false
 target | 如何打开目标URL，设置 route 时生效 | '_self' &#124; '_blank' | '_self' | false
 disabled | 是否禁用 | boolean | false | false
