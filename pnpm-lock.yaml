@@ -15,7 +15,7 @@ dependencies:
     specifier: ^10.1.2
     version: 10.1.2(focus-trap@7.4.3)(qrcode@1.5.3)(vue@3.3.4)
   ant-design-vue:
-    specifier: 4.0.0-rc.5
+    specifier: ^4.0.0-rc.5
     version: 4.0.0-rc.5(vue@3.3.4)
   core-js:
     specifier: ^3.30.2
@@ -33,8 +33,8 @@ dependencies:
     specifier: ^3.3.4
     version: 3.3.4
   vue-amazing-ui:
-    specifier: ^0.0.32
-    version: 0.0.32
+    specifier: ^0.0.33
+    version: 0.0.33
   vue-router:
     specifier: ^4.2.1
     version: 4.2.2(vue@3.3.4)
@@ -269,6 +269,13 @@ packages:
 
   /@babel/runtime@7.22.3:
     resolution: {integrity: sha512-XsDuspWKLUsxwCp6r7EhsExHtYfbe5oAGQ19kqngTdCPUoPQzOPdUbD/pB9PJiwb2ptYKQDjSJT3R6dC+EPqfQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
+
+  /@babel/runtime@7.22.5:
+    resolution: {integrity: sha512-ecjvYlnAaZ/KVneE/OdKYBYfgXV3Ptu6zQWmgEF7vwKhQnvVS6bjMD2XYgj+SNvQ1GfK/pjgokfPkC/2CO8CuA==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
@@ -1154,12 +1161,12 @@ packages:
     dependencies:
       '@ant-design/colors': 6.0.0
       '@ant-design/icons-vue': 6.1.0(vue@3.3.4)
-      '@babel/runtime': 7.22.3
+      '@babel/runtime': 7.22.5
       '@ctrl/tinycolor': 3.6.0
       '@simonwep/pickr': 1.8.2
       array-tree-filter: 2.1.0
       async-validator: 4.2.5
-      dayjs: 1.11.7
+      dayjs: 1.11.8
       dom-align: 1.12.4
       dom-scroll-into-view: 2.0.1
       lodash: 4.17.21
@@ -1433,6 +1440,10 @@ packages:
 
   /dayjs@1.11.7:
     resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
+    dev: false
+
+  /dayjs@1.11.8:
+    resolution: {integrity: sha512-LcgxzFoWMEPO7ggRv1Y2N31hUf2R0Vj7fuy/m+Bg1K8rr+KAs1AEy4y9jd5DXe8pbHgX+srkHNS7TH6Q6ZhYeQ==}
     dev: false
 
   /de-indent@1.0.2:
@@ -3499,6 +3510,35 @@ packages:
       swiper: 9.3.2
       vue: 3.3.4
       vue-amazing-ui: 0.0.31
+      vue-router: 4.2.2(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - async-validator
+      - axios
+      - change-case
+      - drauu
+      - focus-trap
+      - fuse.js
+      - idb-keyval
+      - jwt-decode
+      - nprogress
+      - sortablejs
+      - universal-cookie
+    dev: false
+
+  /vue-amazing-ui@0.0.33:
+    resolution: {integrity: sha512-C8uZ+7td8z/MhUmZY2kdz7xM6hpydmRbe3FKiuFgraHuEA/FtVIkVuiIEG+ZMVCCLxwbb1O/K59YRUydku+p2g==}
+    dependencies:
+      '@vuepic/vue-datepicker': 4.5.1(vue@3.3.4)
+      '@vueuse/core': 10.1.2(vue@3.3.4)
+      '@vueuse/integrations': 10.1.2(focus-trap@7.4.3)(qrcode@1.5.3)(vue@3.3.4)
+      ant-design-vue: 4.0.0-rc.5(vue@3.3.4)
+      core-js: 3.30.2
+      date-fns: 2.30.0
+      qrcode: 1.5.3
+      swiper: 9.3.2
+      vue: 3.3.4
+      vue-amazing-ui: 0.0.32
       vue-router: 4.2.2(vue@3.3.4)
     transitivePeerDependencies:
       - '@vue/composition-api'
