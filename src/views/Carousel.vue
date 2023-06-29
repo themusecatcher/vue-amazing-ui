@@ -62,7 +62,7 @@ const images = ref([
       :width="800"
       :height="450"
       navColor="#13C2C2"
-      navSize="48"
+      :navSize="48"
       pageActiveColor="#13C2C2"
       :pageStyle="{ width: '20px', height: '12px', borderRadius: '12px', backgroundColor: '#DDD' }" />
   </div>
