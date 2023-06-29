@@ -20,7 +20,11 @@ export default defineConfig({
     //   open: true // 打包后自动打开分析图
     // }),
     Components({
-      resolvers: [AntDesignVueResolver()]
+      resolvers: [
+        AntDesignVueResolver({
+          importStyle: false // css in js
+        })
+      ]
     })
   ],
   resolve: {
