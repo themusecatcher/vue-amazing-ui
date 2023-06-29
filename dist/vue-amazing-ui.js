@@ -3807,7 +3807,7 @@ const Rate = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-c97
 Rate.install = (app) => {
   app.component(Rate.__name, Rate);
 };
-const _withScopeId$3 = (n) => (pushScopeId("data-v-2a9f34cf"), n = n(), popScopeId(), n);
+const _withScopeId$3 = (n) => (pushScopeId("data-v-1f9ea816"), n = n(), popScopeId(), n);
 const _hoisted_1$b = {
   key: 0,
   class: "u-handle-tooltip"
@@ -4066,8 +4066,8 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Slider_vue_vue_type_style_index_0_scoped_2a9f34cf_lang = "";
-const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-2a9f34cf"]]);
+const Slider_vue_vue_type_style_index_0_scoped_1f9ea816_lang = "";
+const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-1f9ea816"]]);
 Slider.install = (app) => {
   app.component(Slider.__name, Slider);
 };

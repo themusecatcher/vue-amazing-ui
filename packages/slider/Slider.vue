@@ -332,17 +332,23 @@ function onRightSlide (source: number, place: string) {
         }
       }
     }
-    &:focus {
+    .hover-focus-handle {
       width: 20px;
       height: 20px;
       border-width: 4px;
       border-color: @themeColor;
       outline: none; // 消除浏览器focus时的默认样式
+    }
+    &:hover {
+      .hover-focus-handle();
       .u-handle-tooltip {
         pointer-events: auto;
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
       }
+    }
+    &:focus {
+      .hover-focus-handle();
     }
   }
   .handleTransition {

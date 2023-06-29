@@ -42,5 +42,7 @@ function formatter (value: number) {
       v-model:value="doubleValue" />
     <h2 class="mt30 mb10">自定义步长 (range & step: 5)</h2>
     <Slider range :step="5" width="80%" v-model:value="doubleValue" />
+    <h2 class="mt30 mb10">Ant Design Slider</h2>
+    <a-slider v-model:value="doubleValue" range />
   </div>
 </template>
