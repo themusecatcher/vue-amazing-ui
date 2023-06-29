@@ -87,7 +87,7 @@
 
 ## 自定义线宽
 
-*线宽3px*
+*线宽 3px*
 
 <Divider :borderWidth="3">Center Text</Divider>
 
