@@ -32,7 +32,7 @@
     "@vuepic/vue-datepicker": "^4.5.1",
     "@vueuse/core": "^10.1.2",
     "@vueuse/integrations": "^10.1.2",
-    "ant-design-vue": "4.0.0-rc.5",
+    "ant-design-vue": "^4.0.0-rc.5",
     "core-js": "^3.30.2",
     "date-fns": "^2.30.0",
     "qrcode": "^1.5.3",
