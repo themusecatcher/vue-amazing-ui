@@ -9,7 +9,7 @@
 ```typescript
 function rafTimeout (fn: Function, delay = 0, interval = false): object {
   // @ts-ignore
-  const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
+  const requestAnimationFrame = typeof window !== 'undefined' ? (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame) : () => {}
   var start: any = null
   function timeElapse (timestamp: number) {
     /*
@@ -36,6 +36,8 @@ function rafTimeout (fn: Function, delay = 0, interval = false): object {
 }
 // 用于取消 rafTimeout 函数
 function cancelRaf (raf: { id: number }): void {
+  // @ts-ignore
+  const cancelAnimationFrame = typeof window !== 'undefined' ? (window.cancelAnimationFrame || window.mozCancelAnimationFrame) : () => {}
   if (raf && raf.id) {
     cancelAnimationFrame(raf.id)
   }

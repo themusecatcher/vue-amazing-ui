@@ -44,9 +44,9 @@ export function dateFormat (value: number|string|Date = Date.now(), format = 'YY
   return showTime
 }
 // @ts-ignore 兼容性requestAnimationFrame
-export const requestAnimationFrame = typeof window !== 'undefined' ? window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame : () => {}
+export const requestAnimationFrame = typeof window !== 'undefined' ? (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame) : () => {}
 // @ts-ignore 兼容性cancelAnimationFrame
-export const cancelAnimationFrame = typeof window !== 'undefined' ? window.cancelAnimationFrame || window.mozCancelAnimationFrame : () => {}
+export const cancelAnimationFrame = typeof window !== 'undefined' ? (window.cancelAnimationFrame || window.mozCancelAnimationFrame) : () => {}
 /*
   使用 requestAnimationFrame 模拟 setTimeout 和 setInterval
   一共接收三个参数：
@@ -59,7 +59,7 @@ export const cancelAnimationFrame = typeof window !== 'undefined' ? window.cance
 */
 export function rafTimeout (fn: Function, delay = 0, interval = false): object {
   // @ts-ignore
-  const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
+  const requestAnimationFrame = typeof window !== 'undefined' ? (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame) : () => {}
   var start: any = null
   function timeElapse (timestamp: number) {
     /*
@@ -86,6 +86,8 @@ export function rafTimeout (fn: Function, delay = 0, interval = false): object {
 }
 // 用于取消 rafTimeout 函数
 export function cancelRaf (raf: { id: number }): void {
+  // @ts-ignore
+  const cancelAnimationFrame = typeof window !== 'undefined' ? (window.cancelAnimationFrame || window.mozCancelAnimationFrame) : () => {}
   if (raf && raf.id) {
     cancelAnimationFrame(raf.id)
   }

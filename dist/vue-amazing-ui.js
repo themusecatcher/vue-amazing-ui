@@ -48,7 +48,8 @@ const requestAnimationFrame$1 = typeof window !== "undefined" ? window.requestAn
 const cancelAnimationFrame$1 = typeof window !== "undefined" ? window.cancelAnimationFrame || window.mozCancelAnimationFrame : () => {
 };
 function rafTimeout(fn, delay = 0, interval = false) {
-  const requestAnimationFrame2 = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+  const requestAnimationFrame2 = typeof window !== "undefined" ? window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame : () => {
+  };
   var start = null;
   function timeElapse(timestamp) {
     if (!start) {
@@ -72,8 +73,10 @@ function rafTimeout(fn, delay = 0, interval = false) {
   return raf;
 }
 function cancelRaf(raf) {
+  const cancelAnimationFrame2 = typeof window !== "undefined" ? window.cancelAnimationFrame || window.mozCancelAnimationFrame : () => {
+  };
   if (raf && raf.id) {
-    cancelAnimationFrame$1(raf.id);
+    cancelAnimationFrame2(raf.id);
   }
 }
 function throttle(fn, delay = 300) {
