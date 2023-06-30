@@ -10,7 +10,7 @@ interface Route {
 }
 interface Props {
   routes: Array<Route> // 或者Route[] router的路由数组，没有 ? 时，即表示 required: true
-  fontSize: number // 字体大小
+  fontSize?: number // 字体大小
   height?: number // 面包屑高度
   maxWidth?: number // 文本最大显示宽度，超出后显示省略号
   separator?: string // 自定义分隔符
