@@ -36,7 +36,7 @@ const options = ref([
       }
     ])
 
-const value = ref(1)
+const value = ref(2)
 watchEffect(() => {
   console.log('value:', value.value)
 })
