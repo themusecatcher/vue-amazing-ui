@@ -162,7 +162,7 @@ function moneyFormat(value, decimal = 2, split = ",") {
     return "--";
   }
 }
-const _withScopeId$h = (n) => (pushScopeId("data-v-2a630eda"), n = n(), popScopeId(), n);
+const _withScopeId$h = (n) => (pushScopeId("data-v-3ac8d6d2"), n = n(), popScopeId(), n);
 const _hoisted_1$v = ["href", "title", "target"];
 const _hoisted_2$r = {
   key: 0,
@@ -237,7 +237,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Breadcrumb_vue_vue_type_style_index_0_scoped_2a630eda_lang = "";
+const Breadcrumb_vue_vue_type_style_index_0_scoped_3ac8d6d2_lang = "";
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -245,7 +245,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-2a630eda"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-3ac8d6d2"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };

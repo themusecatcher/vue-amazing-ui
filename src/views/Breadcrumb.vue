@@ -24,5 +24,7 @@ const routes = ref([
     <Breadcrumb :routes="routes" separator="/" />
     <h2 class="mt30 mb10">新页面打开目标链接: / (target: _blank)</h2>
     <Breadcrumb :routes="routes" target="_blank" />
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <Breadcrumb :routes="routes" :font-size="18" :height="36" :max-width="240" />
   </div>
 </template>

@@ -17,14 +17,14 @@ function onClick (e: any):void {
 }
 </script>
 <template>
-  <a-row style="width: 100%;">
+  <a-row style="position: relative; width: 100%;">
+    <a-switch
+      class="u-switch"
+      v-model:checked="checked"
+      @change="toggleDark"
+      checked-children="Dark"
+      un-checked-children="Light" />
     <a-col :xs="5" :xl="4">
-      <Switch
-        class="u-switch"
-        v-model:checked="checked"
-        @change="toggleDark"
-        checkedInfo="Dark"
-        uncheckedInfo="Light" />
       <a-menu
         class="m-menus"
         v-model:selectedKeys="current"
@@ -164,8 +164,10 @@ function onClick (e: any):void {
 </template>
 <style lang="less" scoped>
 .u-switch {
-  margin-top: 14px;
-  margin-bottom: 14px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 9;
 }
 .m-menus {
   overflow-y: auto;
