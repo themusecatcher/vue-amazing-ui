@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useDark, useToggle } from '@vueuse/core'
 
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
-const checked = ref(isDark)
+const theme = ref('dark')
 
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
@@ -15,20 +12,24 @@ function onClick (e: any):void {
   console.log(e.key)
   // console.log(e.keyPath)
 }
+function changeTheme (checked: boolean) {
+  theme.value = checked ? 'dark' : 'light'
+}
 </script>
 <template>
   <a-row style="position: relative; width: 100%;">
     <a-switch
       class="u-switch"
-      v-model:checked="checked"
-      @change="toggleDark"
+      :checked="theme === 'dark'"
       checked-children="Dark"
-      un-checked-children="Light" />
+      un-checked-children="Light"
+      @change="changeTheme" />
     <a-col :xs="5" :xl="4">
       <a-menu
         class="m-menus"
         v-model:selectedKeys="current"
         mode="inline"
+        :theme="theme"
         @click="onClick">
         <a-menu-item key="Home">
           <router-link to="/home">首页</router-link>
@@ -171,13 +172,12 @@ function onClick (e: any):void {
 }
 .m-menus {
   overflow-y: auto;
-  height: calc(100vh - 50px);
+  height: 100vh;
 }
 .router-view {
-  margin-top: 50px;
-  padding: 0 48px 48px;
+  padding: 36px;
   overflow-y: auto;
-  height: calc(100vh - 50px);
+  height: 100vh;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .3s;
