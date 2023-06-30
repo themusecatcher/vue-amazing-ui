@@ -119,32 +119,29 @@ function onCheckAll () { // 全选切换
         border-radius: 4px;
         transition: all .3s;
         &:after {
+          box-sizing: border-box;
           position: absolute;
           top: 50%;
-          left: 21.5%;
+          inset-inline-start: 21.5%;
+          display: table;
           width: 5.7142857142857135px;
           height: 9.142857142857142px;
           border: 2px solid #fff;
           border-top: 0;
-          border-left: 0;
-          transform: rotate(45deg) scale(0) translate(-50%, -50%);
+          border-inline-start: 0;
+          transform: rotate(45deg) scale(0) translate(-50%,-50%);
           opacity: 0;
+          content: "";
           transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
-          content: '';
         }
       }
       .u-checkbox-checked {
         background-color: @themeColor;
         border-color: @themeColor;
         &:after {
-          position: absolute;
-          border: 2px solid #fff;
-          border-top: 0;
-          border-left: 0;
-          transform: rotate(45deg) scale(1) translate(-50%, -50%);
           opacity: 1;
+          transform: rotate(45deg) scale(1) translate(-50%,-50%);
           transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
-          content: '';
         }
       }
       .indeterminate {
@@ -176,7 +173,7 @@ function onCheckAll () { // 全选切换
       }
       .u-checkbox {
         border-color: #d9d9d9;
-        background-color: #f5f5f5;
+        background-color: rgba(0, 0, 0, 0.04);
         &:after {
           border-color: rgba(0, 0, 0, 0.25);
           animation-name: none;

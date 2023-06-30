@@ -90,15 +90,19 @@ function onClick (value: any) {
         border-radius: 50%;
         transition: all .3s;
         &:after {
+          box-sizing: border-box;
           position: absolute;
-          top: 50%;
-          left: 50%;
+          inset-block-start: 50%;
+          inset-inline-start: 50%;
+          display: block;
           width: 16px;
           height: 16px;
-          margin-top: -8px;
-          margin-left: -8px;
-          background-color: #FFF;
-          border-radius: 100%;
+          margin-block-start: -8px;
+          margin-inline-start: -8px;
+          background-color: #fff;
+          border-block-start: 0;
+          border-inline-start: 0;
+          border-radius: 16px;
           transform: scale(0);
           opacity: 0;
           transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
@@ -106,11 +110,12 @@ function onClick (value: any) {
         }
       }
       .u-radio-checked {
-        background: @themeColor;
         border-color: @themeColor;
+        background-color: @themeColor;
         &:after {
           transform: scale(0.375);
           opacity: 1;
+          transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
         }
       }
       .u-label {
@@ -130,8 +135,9 @@ function onClick (value: any) {
         }
       }
       .u-radio {
+        background-color: rgba(0, 0, 0, 0.04);
         border-color: #d9d9d9;
-        background-color: #f5f5f5;
+        cursor: not-allowed;
         &:after {
           transform: scale(0.5);
           background-color: rgba(0, 0, 0, 0.25);
