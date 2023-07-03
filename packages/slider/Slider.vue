@@ -2,9 +2,9 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Props {
-  width?: string|number // 滑动输入条的宽度，单位px
-  min?: number // 滑动输入条最小值
-  max?: number // 滑动输入条最大值
+  width?: string|number // 宽度
+  min?: number // 最小值
+  max?: number // 最大值
   disabled?: boolean // 是否禁用
   range?: boolean // 是否双滑块模式
   step?: number // 步长，取值必须大于0，并且可被 (max - min) 整除

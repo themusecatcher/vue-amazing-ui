@@ -177,7 +177,7 @@ pageListNum | 显示的页码数组长度 | number | 5 | false
 hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false | false
 showQuickJumper | 是否可以快速跳转至某页 | boolean | false | false
 showTotal | 是否显示当前页数和数据总量 | boolean | false | false
-placement | 分页展示位置，靠左left，居中center，靠右right | 'left' &#124; 'center' &#124; 'right' | 'center' | false
+placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'center' &#124; 'right' | 'center' | false
 
 ## Events
 

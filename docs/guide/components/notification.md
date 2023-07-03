@@ -267,7 +267,7 @@ title | 消息的标题 | string | '温馨提示' | false
 duration | 自动关闭的延时时长，单位ms，默认4500ms；设置0时，不自动关闭 | number | 4500 | false
 top | 消息从顶部弹出时，距离顶部的位置，单位px | number | 24 | false
 bottom | 消息从底部弹出时，距离底部的位置，单位px | number | 24 | false
-placement | 消息弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | 'topRight' | false
+placement | 消息弹出位置：上左、上右、下左、下右 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | 'topRight' | false
 
 ## Events
 
