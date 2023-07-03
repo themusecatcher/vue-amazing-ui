@@ -569,8 +569,8 @@ value | 字典项的值字段名 | string | 'value' | false
 placeholder | 默认文字 | string | '请选择' | false
 disabled | 是否禁用 | boolean | false | false
 allowClear | 是否支持清除 | boolean | false | false
-width | 宽度 | number | 120 | false
-height | 高度 | number | 32 | false
+width | 宽度，单位px | number | 120 | false
+height | 高度，单位px | number | 32 | false
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
 modelValue(v-model) | 当前选中的option条目 | number &#124; string &#124; null | null | false
 

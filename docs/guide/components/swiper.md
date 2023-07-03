@@ -132,7 +132,7 @@ type | banner轮播图模式、carousel走马灯模式 | 'banner' &#124; 'carous
 navigation | 是否显示导航 | boolean | true | false
 delay | 自动切换的时间间隔（type: banner时生效），单位ms | number | 3000 | false
 swipe | 是否可以鼠标拖动 | boolean | true | false
-preloaderColor | 预加载时的loading颜色 | 'theme' &#124; 'white' &#124; 'black' | 'theme' | false
+preloaderColor | 预加载时的 loading 颜色 | 'theme' &#124; 'white' &#124; 'black' | 'theme' | false
 
 ## Image Type
 

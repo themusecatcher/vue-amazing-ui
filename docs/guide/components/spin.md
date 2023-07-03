@@ -116,7 +116,7 @@ const spinning = ref(true)
 
 :::
 
-## 自定义主题色
+## 自定义颜色
 
 <br/>
 <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
@@ -222,3 +222,4 @@ spinning | 是否为加载中状态 | boolean | true | false
 size | 组件大小 | 'small' &#124; 'default' &#124; 'large' | 'default' | false
 tip | 描述文案 | string | '' | false
 indicator | 加载指示符 | 'dot' &#124; 'static-circle' &#124; 'dynamic-circle' | 'dot' | false
+color | 主题颜色 | string | '#1677FF' | false
