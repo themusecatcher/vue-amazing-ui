@@ -38,7 +38,7 @@ const activeKey = ref(0)
       <li class="u-tip mb10">按需引入部分组件</li>
       <li class="u-tip mb10"> git clone <a href="https://github.com/themusecatcher/vue-amazing-ui" target="_blank">vue-amazing-ui</a> 到本地后，从 packages 下单独拷贝单文件组件 (SFC) 到项目内使用</li>
     </ul>
-    <h2 class="mt30">除此以外，Vue Amazing UI 还提供了八个常用工具函数 ：</h2>
+    <h2 class="mt30">除此以外，Vue Amazing UI 还提供了十个常用工具函数 ：</h2>
     <ul class="m-list">
       <li class="u-tip mb10 mt10">dateFormat: 简单易用的日期格式化函数！</li>
       <li class="u-tip mb10">requestAnimationFrame: 针对不同浏览器进行兼容处理！</li>
