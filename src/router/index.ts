@@ -272,7 +272,7 @@ const router = createRouter({
 })
 // 注册全局前置守卫
 router.beforeEach((to, from) => {
-  to.meta && to.meta.title && setDocumentTitle(`${to.meta.title} - ${domTitle}`)
+  to.meta && to.meta.title && setDocumentTitle(`${to.meta.title} | ${domTitle}`)
   return true
 })
 
