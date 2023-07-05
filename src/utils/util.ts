@@ -20,4 +20,4 @@ export const setDocumentTitle = function (title: string) {
     document.body.appendChild(i)
   }
 }
-export const domTitle = 'Vue Amazing UI'
+export const webTitle = 'Vue Amazing UI'
