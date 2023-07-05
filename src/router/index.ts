@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { setDocumentTitle, domTitle } from '@/utils/util'
+import { setDocumentTitle, webTitle } from '@/utils/util'
 import { rafTimeout } from '../../packages'
 import GlobalLayout from '@/layouts/GlobalLayout.vue'
 
@@ -272,8 +272,8 @@ const router = createRouter({
 })
 // 注册全局前置守卫
 router.beforeEach((to, from) => {
-  to.meta && to.meta.title && setDocumentTitle(`${to.meta.title} | ${domTitle}`)
-  return true
+  const domTitle = to.meta.title + ' ' + String(to.name) + ' | ' + webTitle
+  setDocumentTitle(domTitle)
 })
 
 export default router
