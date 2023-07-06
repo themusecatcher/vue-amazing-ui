@@ -17,14 +17,14 @@ function changeTheme (checked: boolean) {
 }
 </script>
 <template>
-  <a-row style="position: relative; width: 100%;">
-    <a-switch
-      class="u-switch"
-      :checked="theme === 'dark'"
-      checked-children="Dark"
-      un-checked-children="Light"
-      @change="changeTheme" />
+  <a-row style="width: 100%;">
     <a-col :xs="5" :xl="4">
+      <a-switch
+        class="u-switch"
+        :checked="theme === 'dark'"
+        checked-children="Dark"
+        un-checked-children="Light"
+        @change="changeTheme" />
       <a-menu
         class="m-menus"
         v-model:selectedKeys="current"
@@ -140,9 +140,6 @@ function changeTheme (checked: boolean) {
           <router-link to="/waterfall">瀑布流（Waterfall）</router-link>
         </a-menu-item>
         <!--
-        <a-menu-item key="Drag">
-          <router-link to="/drag">拖拽组件</router-link>
-        </a-menu-item>
         <a-menu-item key="Lazyload">
           <router-link to="/lazyload">懒加载</router-link>
         </a-menu-item> -->
@@ -166,8 +163,8 @@ function changeTheme (checked: boolean) {
 <style lang="less" scoped>
 .u-switch {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 13px;
+  right: 13px;
   z-index: 9;
 }
 .m-menus {
