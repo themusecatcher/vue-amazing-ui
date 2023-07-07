@@ -3,9 +3,7 @@
   "version": "0.0.34",
   "private": false,
   "type": "module",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/vue-amazing-ui.umd.cjs",
   "module": "./dist/vue-amazing-ui.js",
   "exports": {
@@ -23,6 +21,7 @@
     "docs:build": "vitepress build docs",
     "docs:deploy": "sh script/deploy.sh",
     "pub": "sh script/publish.sh",
+    "push": "sh script/push.sh",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
