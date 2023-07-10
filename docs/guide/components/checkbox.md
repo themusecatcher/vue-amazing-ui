@@ -312,7 +312,7 @@ watch(checkAll, (to) => {
 
 ## 垂直排列
 
-<Checkbox vertical :options="options" v-model:value="value"/>
+<Checkbox vertical :options="options" v-model:value="value" />
 
 ::: details Show Code
 
@@ -353,7 +353,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Checkbox vertical :options="options" v-model:value="value"/>
+  <Checkbox vertical :options="options" v-model:value="value" />
 </template>
 ```
 
@@ -361,7 +361,7 @@ watchEffect(() => {
 
 ## 自定义间距
 
-<Checkbox :gap="24" :options="options" v-model:value="value"/>
+<Checkbox :gap="24" :options="options" v-model:value="value" />
 
 ::: details Show Code
 
@@ -402,7 +402,56 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Checkbox :gap="24" :options="options" v-model:value="value"/>
+  <Checkbox :gap="24" :options="options" v-model:value="value" />
+</template>
+```
+
+:::
+
+## 自定义展示区域宽高
+
+<Checkbox vertical :width="110" :height="150" :options="options" v-model:value="value" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const options = ref([
+      {
+        label: '北京市',
+        value: 1
+      },
+      {
+        label: '纽约市',
+        value: 2
+      },
+      {
+        label: '布宜诺斯艾利斯',
+        value: 3
+      },
+      {
+        label: '伊斯坦布尔',
+        value: 4
+      },
+      {
+        label: '拜占庭',
+        value: 5
+      },
+      {
+        label: '君士坦丁堡',
+        value: 6
+      }
+    ])
+
+const value = ref([2]) // 多选框v-model
+watchEffect(() => {
+  console.log('value:', value.value)
+})
+</script>
+<template>
+  <Checkbox vertical :width="120" :height="150" :options="options" v-model:value="value" />
 </template>
 ```
 
@@ -417,6 +466,8 @@ disabled | 是否禁用所有复选框 | boolean | false | false
 vertical | 是否垂直排列 | boolean | false | false
 value(v-model) | 当前选中的值 | any[] | [] | false
 gap | 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距 | number | 8 | false
+width | 复选区域最大展示宽度，超出后折行 | string &#124; number | 'auto' | false
+height | 复选区域最大展示高度，超出后滚动 | string &#124; number | 'auto' | false
 indeterminate | 全选时的样式控制 | boolean | false | false
 checked(v-model) | 是否全选 | boolean | false | false
 

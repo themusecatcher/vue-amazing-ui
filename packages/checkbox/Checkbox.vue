@@ -11,6 +11,8 @@ interface Props {
   vertical?: boolean // 是否垂直排列
   value?: any[] // 当前选中的值（v-model）
   gap?: number // 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距
+  width?: string|number, // 复选区域最大展示宽度，超出后折行
+  height?: string|number, // 复选区域最大展示高度，超出后滚动
   indeterminate?: boolean // 全选时的样式控制
   checked?: boolean // 是否全选（v-model）
 }
@@ -20,11 +22,27 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   value: () => [],
   gap: 8,
+  width: 'auto',
+  height: 'auto',
   indeterminate: false,
   checked: false
 })
 const sum = computed(() => { // 选项总数
   return props.options.length
+})
+const maxWidth = computed(() => { // 选项总数
+  if (typeof props.width === 'number') {
+    return props.width + 'px'
+  } else {
+    return props.width
+  }
+})
+const maxHeight = computed(() => { // 选项总数
+  if (typeof props.height === 'number') {
+    return props.height + 'px'
+  } else {
+    return props.height
+  }
 })
 const checkedValue = ref(props.value)
 watch(
@@ -61,7 +79,7 @@ function onCheckAll () { // 全选切换
 }
 </script>
 <template>
-  <div class="m-checkbox">
+  <div class="m-checkbox" :style="`max-width: ${maxWidth}; max-height: ${maxHeight};`">
     <template v-if="sum">
       <div
         class="m-checkbox-wrap"
@@ -92,6 +110,7 @@ function onCheckAll () { // 全选切换
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1;
+  overflow: auto;
   .m-checkbox-wrap {
     display: inline-block;
     .m-box {
