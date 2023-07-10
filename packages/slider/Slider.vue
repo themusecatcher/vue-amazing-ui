@@ -372,6 +372,12 @@ function onRightSlide (source: number, place: string) {
       border-width: 2px;
       border-color: rgba(0, 0, 0, .25);
     }
+    &:focus {
+      width: 14px;
+      height: 14px;
+      border-width: 2px;
+      border-color: rgba(0, 0, 0, .25);
+    }
   }
   &:hover {
     .u-slider-rail {
