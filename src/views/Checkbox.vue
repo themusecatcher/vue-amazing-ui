@@ -68,7 +68,7 @@ watch(checkAll, (to) => {
     <Checkbox
       :options="options"
       @change="onChange"
-      v-model:value="value"/>
+      v-model:value="value" />
     <h2 class="mt30 mb10">实现全选效果</h2>
     <Checkbox
       class="mb10"
@@ -86,7 +86,15 @@ watch(checkAll, (to) => {
       :options="options"
       vertical
       @change="onChange"
-      v-model:value="value"/>
+      v-model:value="value" />
+    <h2 class="mt30 mb10">自定义展示区域宽高</h2>
+    <Checkbox
+      :options="options"
+      vertical
+      :width="120"
+      :height="160"
+      @change="onChange"
+      v-model:value="value" />
     <a-divider />
     <h2 class="mt30 mb10">Ant Design Vue 多选框组件</h2>
     <a-checkbox

@@ -177,7 +177,7 @@ const _hoisted_3$p = {
   focusable: "false"
 };
 const _hoisted_4$l = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1));
-const _hoisted_5$i = [
+const _hoisted_5$h = [
   _hoisted_4$l
 ];
 const _hoisted_6$h = /* @__PURE__ */ _withScopeId$h(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
@@ -228,7 +228,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
               target: index === len.value - 1 ? "_self" : _ctx.target
             }, toDisplayString(route.name || "--"), 15, _hoisted_1$v),
             index !== len.value - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-              _ctx.separator ? (openBlock(), createElementBlock("span", _hoisted_2$r, toDisplayString(_ctx.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$p, _hoisted_5$i))
+              _ctx.separator ? (openBlock(), createElementBlock("span", _hoisted_2$r, toDisplayString(_ctx.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$p, _hoisted_5$h))
             ], 64)) : createCommentVNode("", true)
           ]);
         }), 128)),
@@ -337,12 +337,12 @@ const _hoisted_3$n = {
   class: "m-spin-dot"
 };
 const _hoisted_4$k = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
-const _hoisted_5$h = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
+const _hoisted_5$g = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_6$g = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_7$d = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_8$c = [
   _hoisted_4$k,
-  _hoisted_5$h,
+  _hoisted_5$g,
   _hoisted_6$g,
   _hoisted_7$d
 ];
@@ -418,7 +418,7 @@ const _hoisted_3$m = {
   class: "m-image"
 };
 const _hoisted_4$j = ["href", "target"];
-const _hoisted_5$g = ["src", "alt"];
+const _hoisted_5$f = ["src", "alt"];
 const _hoisted_6$f = /* @__PURE__ */ _withScopeId$f(() => /* @__PURE__ */ createElementVNode("path", { d: "M10.26 3.2a.75.75 0 0 1 .04 1.06L6.773 8l3.527 3.74a.75.75 0 1 1-1.1 1.02l-4-4.25a.75.75 0 0 1 0-1.02l4-4.25a.75.75 0 0 1 1.06-.04z" }, null, -1));
 const _hoisted_7$c = [
   _hoisted_6$f
@@ -741,7 +741,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
                     alt: _ctx.images[0].title,
                     class: "u-img",
                     style: normalizeStyle(`width: ${imageWidth.value}px; height: ${imageHeight.value}px;`)
-                  }, null, 44, _hoisted_5$g))
+                  }, null, 44, _hoisted_5$f))
                 ], 8, _hoisted_4$j)
               ]),
               _: 1
@@ -790,9 +790,9 @@ const _hoisted_3$l = [
   _hoisted_2$n
 ];
 const _hoisted_4$i = ["onClick"];
-const _hoisted_5$f = /* @__PURE__ */ _withScopeId$e(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z" }, null, -1));
+const _hoisted_5$e = /* @__PURE__ */ _withScopeId$e(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z" }, null, -1));
 const _hoisted_6$e = [
-  _hoisted_5$f
+  _hoisted_5$e
 ];
 const _hoisted_7$b = ["title", "onMouseenter", "onClick"];
 const _sfc_main$u = /* @__PURE__ */ defineComponent({
@@ -1105,14 +1105,13 @@ const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v
 Cascader.install = (app) => {
   app.component(Cascader.__name, Cascader);
 };
-const _hoisted_1$q = { class: "m-checkbox" };
-const _hoisted_2$m = ["onClick"];
-const _hoisted_3$k = { class: "u-label" };
-const _hoisted_4$h = {
+const _hoisted_1$q = ["onClick"];
+const _hoisted_2$m = { class: "u-label" };
+const _hoisted_3$k = {
   key: 1,
   class: "m-checkbox-wrap"
 };
-const _hoisted_5$e = { class: "u-label" };
+const _hoisted_4$h = { class: "u-label" };
 const _sfc_main$s = /* @__PURE__ */ defineComponent({
   __name: "Checkbox",
   props: {
@@ -1121,6 +1120,8 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     vertical: { type: Boolean, default: false },
     value: { default: () => [] },
     gap: { default: 8 },
+    width: { default: "auto" },
+    height: { default: "auto" },
     indeterminate: { type: Boolean, default: false },
     checked: { type: Boolean, default: false }
   },
@@ -1129,6 +1130,20 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     const props = __props;
     const sum = computed(() => {
       return props.options.length;
+    });
+    const maxWidth = computed(() => {
+      if (typeof props.width === "number") {
+        return props.width + "px";
+      } else {
+        return props.width;
+      }
+    });
+    const maxHeight = computed(() => {
+      if (typeof props.height === "number") {
+        return props.height + "px";
+      } else {
+        return props.height;
+      }
     });
     const checkedValue = ref(props.value);
     watch(
@@ -1163,7 +1178,10 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
       emits("update:checked", !props.checked);
     }
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$q, [
+      return openBlock(), createElementBlock("div", {
+        class: "m-checkbox",
+        style: normalizeStyle(`max-width: ${maxWidth.value}; max-height: ${maxHeight.value};`)
+      }, [
         sum.value ? (openBlock(true), createElementBlock(Fragment, { key: 0 }, renderList(_ctx.options, (option, index) => {
           return openBlock(), createElementBlock("div", {
             class: normalizeClass(["m-checkbox-wrap", { "vertical": _ctx.vertical }]),
@@ -1177,16 +1195,16 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               createElementVNode("span", {
                 class: normalizeClass(["u-checkbox", { "u-checkbox-checked": checkedValue.value.includes(option.value) }])
               }, null, 2),
-              createElementVNode("span", _hoisted_3$k, [
+              createElementVNode("span", _hoisted_2$m, [
                 renderSlot(_ctx.$slots, "default", {
                   label: option.label
                 }, () => [
                   createTextVNode(toDisplayString(option.label), 1)
                 ], true)
               ])
-            ], 10, _hoisted_2$m)
+            ], 10, _hoisted_1$q)
           ], 6);
-        }), 128)) : (openBlock(), createElementBlock("div", _hoisted_4$h, [
+        }), 128)) : (openBlock(), createElementBlock("div", _hoisted_3$k, [
           createElementVNode("div", {
             class: normalizeClass(["m-box", { "disabled": _ctx.disabled }]),
             onClick: onCheckAll
@@ -1194,19 +1212,19 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
             createElementVNode("span", {
               class: normalizeClass(["u-checkbox", { "u-checkbox-checked": _ctx.checked && !_ctx.indeterminate, "indeterminate": _ctx.indeterminate }])
             }, null, 2),
-            createElementVNode("span", _hoisted_5$e, [
+            createElementVNode("span", _hoisted_4$h, [
               renderSlot(_ctx.$slots, "default", {}, () => [
                 createTextVNode("Check all")
               ], true)
             ])
           ], 2)
         ]))
-      ]);
+      ], 4);
     };
   }
 });
-const Checkbox_vue_vue_type_style_index_0_scoped_4e759781_lang = "";
-const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-4e759781"]]);
+const Checkbox_vue_vue_type_style_index_0_scoped_70d9feb2_lang = "";
+const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-70d9feb2"]]);
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
