@@ -24,6 +24,7 @@ import Dialog from './dialog'
 import Divider from './divider'
 import Empty from './empty'
 import Image from './image'
+import Input from './input'
 import InputNumber from './inputnumber'
 import Message from './message'
 import Modal from './modal'
@@ -62,6 +63,7 @@ const components = [
   Divider,
   Empty,
   Image,
+  Input,
   InputNumber,
   Message,
   Modal,
@@ -126,6 +128,7 @@ export {
   Divider,
   Empty,
   Image,
+  Input,
   InputNumber,
   Message,
   Modal,
