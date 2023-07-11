@@ -20,6 +20,12 @@ const routes = [
         component: () => import('@/views/Home.vue')
       },
       {
+        path: '/alert',
+        name: 'Alert',
+        meta: { title: '警告提示' },
+        component: () => import('@/views/Alert.vue')
+      },
+      {
         path: '/breadcrumb',
         name: 'Breadcrumb',
         meta: { title: '面包屑' },
@@ -30,6 +36,12 @@ const routes = [
         name: 'Button',
         meta: { title: '按钮' },
         component: () => import('@/views/Button.vue')
+      },
+      {
+        path: '/card',
+        name: 'Card',
+        meta: { title: '卡片' },
+        component: () => import('@/views/Card.vue')
       },
       {
         path: '/carousel',
@@ -68,6 +80,12 @@ const routes = [
         component: () => import('@/views/DatePicker.vue')
       },
       {
+        path: '/descriptions',
+        name: 'Descriptions',
+        meta: { title: '描述列表' },
+        component: () => import('@/views/Descriptions.vue')
+      },
+      {
         path: '/dialog',
         name: 'Dialog',
         meta: { title: '对话框' },
@@ -80,6 +98,12 @@ const routes = [
         component: () => import('@/views/Divider.vue')
       },
       {
+        path: '/drawer',
+        name: 'Drawer',
+        meta: { title: '抽屉' },
+        component: () => import('@/views/Drawer.vue')
+      },
+      {
         path: '/empty',
         name: 'Empty',
         meta: { title: '空状态' },
@@ -90,6 +114,12 @@ const routes = [
         name: 'Image',
         meta: { title: '图片' },
         component: () => import('@/views/Image.vue')
+      },
+      {
+        path: '/input',
+        name: 'Input',
+        meta: { title: '输入框' },
+        component: () => import('@/views/Input.vue')
       },
       {
         path: '/inputnumber',
@@ -146,6 +176,12 @@ const routes = [
         component: () => import('@/views/Rate.vue')
       },
       {
+        path: '/result',
+        name: 'Result',
+        meta: { title: '结果' },
+        component: () => import('@/views/Result.vue')
+      },
+      {
         path: '/select',
         name: 'Select',
         meta: { title: '选择器' },
@@ -162,6 +198,12 @@ const routes = [
         name: 'Spin',
         meta: { title: '加载中' },
         component: () => import('@/views/Spin.vue')
+      },
+      {
+        path: '/statistic',
+        name: 'Statistic',
+        meta: { title: '统计数值' },
+        component: () => import('@/views/Statistic.vue')
       },
       {
         path: '/steps',
@@ -192,6 +234,12 @@ const routes = [
         name: 'Tabs',
         meta: { title: '标签页' },
         component: () => import('@/views/Tabs.vue')
+      },
+      {
+        path: '/tag',
+        name: 'Tag',
+        meta: { title: '标签' },
+        component: () => import('@/views/Tag.vue')
       },
       {
         path: '/textscroll',
@@ -229,12 +277,6 @@ const routes = [
         meta: { title: '瀑布流' },
         component: () => import('@/views/Waterfall.vue')
       },
-      // {
-      //   path: '/drag',
-      //   name: 'Drag',
-      //   meta: { title: '拖拽组件' },
-      //   component: () => import('@/views/Draggable.vue')
-      // },
       // {
       //   path: '/lazyload',
       //   name: 'Lazyload',

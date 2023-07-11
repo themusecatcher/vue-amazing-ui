@@ -34,11 +34,17 @@ function changeTheme (checked: boolean) {
         <a-menu-item key="Home">
           <router-link to="/home">首页</router-link>
         </a-menu-item>
+        <a-menu-item key="Alert">
+          <router-link to="/alert">警告提示（Alert）</router-link>
+        </a-menu-item>
         <a-menu-item key="Breadcrumb">
           <router-link to="/breadcrumb">面包屑（Breadcrumb）</router-link>
         </a-menu-item>
         <a-menu-item key="Button">
           <router-link to="/button">按钮（Button）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Card">
+          <router-link to="/card">卡片（Card）</router-link>
         </a-menu-item>
         <a-menu-item key="Carousel">
           <router-link to="/carousel">走马灯（Carousel）</router-link>
@@ -58,17 +64,26 @@ function changeTheme (checked: boolean) {
         <a-menu-item key="DatePicker">
           <router-link to="/datepicker">日期选择（DatePicker）</router-link>
         </a-menu-item>
+        <a-menu-item key="Descriptions">
+          <router-link to="/descriptions">描述列表（Descriptions）</router-link>
+        </a-menu-item>
         <a-menu-item key="Dialog">
           <router-link to="/dialog">对话框（Dialog）</router-link>
         </a-menu-item>
         <a-menu-item key="Divider">
           <router-link to="/divider">分割线（Divider）</router-link>
         </a-menu-item>
+        <a-menu-item key="Drawer">
+          <router-link to="/drawer">抽屉（Drawer）</router-link>
+        </a-menu-item>
         <a-menu-item key="Empty">
           <router-link to="/empty">空状态（Empty）</router-link>
         </a-menu-item>
         <a-menu-item key="Image">
           <router-link to="/image">图片（Image）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Input">
+          <router-link to="/input">输入框（Input）</router-link>
         </a-menu-item>
         <a-menu-item key="InputNumber">
           <router-link to="/inputnumber">数字输入框（InputNumber）</router-link>
@@ -97,6 +112,9 @@ function changeTheme (checked: boolean) {
         <a-menu-item key="Rate">
           <router-link to="/rate">评分（Rate）</router-link>
         </a-menu-item>
+        <a-menu-item key="Result">
+          <router-link to="/result">结果（Result）</router-link>
+        </a-menu-item>
         <a-menu-item key="Select">
           <router-link to="/select">选择器（Select）</router-link>
         </a-menu-item>
@@ -105,6 +123,9 @@ function changeTheme (checked: boolean) {
         </a-menu-item>
         <a-menu-item key="Spin">
           <router-link to="/spin">加载中（Spin）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Statistic">
+          <router-link to="/statistic">统计数值（Statistic）</router-link>
         </a-menu-item>
         <a-menu-item key="Steps">
           <router-link to="/steps">步骤条（Steps）</router-link>
@@ -120,6 +141,9 @@ function changeTheme (checked: boolean) {
         </a-menu-item>
         <a-menu-item key="Tabs">
           <router-link to="/tabs">标签页（Tabs）</router-link>
+        </a-menu-item>
+        <a-menu-item key="Tag">
+          <router-link to="/tag">标签（Tag）</router-link>
         </a-menu-item>
         <a-menu-item key="TextScroll">
           <router-link to="/textscroll">文字滚动（TextScroll）</router-link>
