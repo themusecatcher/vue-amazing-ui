@@ -96,7 +96,7 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页回调
       text-align: left;
       background: #fafafa;
       border: none;
-      border-bottom: 1px solid #e8e8e8;
+      border-bottom: 1px solid #f0f0f0;;
       transition: background .3s ease;
       &:first-child {
         border-top-left-radius: 4px;
@@ -125,7 +125,7 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页回调
         .m-td-empty {
           padding: 16px;
           border: none;
-          border-bottom: 1px solid #e8e8e8;
+          border-bottom: 1px solid #f0f0f0;;
           .empty {
             margin: 32px 0;
           }
@@ -139,14 +139,14 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页回调
       .m-td {
         padding: 16px;
         border: none;
-        border-bottom: 1px solid #e8e8e8;
+        border-bottom: 1px solid #f0f0f0;;
         transition: background .3s;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
       }
       &:hover {
-        background-color: saturate(fade(@themeColor, 12%), 30%);
+        background-color: #fafafa;
       }
     }
   }
