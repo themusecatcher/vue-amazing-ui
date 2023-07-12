@@ -2,7 +2,9 @@
 
 ## 简要介绍
 
-该组件库采用 `Vue3 + TS + Vite3 + Less` 实现！
+该组件库采用 `Vue3@3.3.4` + `TS@4.7.4` + `Vite4.4.3` + `Less@4.1.3` 实现！
+
+所有组件样式 `CSS` 均使用 `box-sizing: border-box;` 模式！
 
 开箱即用！
 

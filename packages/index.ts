@@ -19,6 +19,7 @@ import Card from './card'
 import Carousel from './carousel'
 import Cascader from './cascader'
 import Checkbox from './checkbox'
+import Col from './col'
 import Collapse from './collapse'
 import Countdown from './countdown'
 import DatePicker from './datepicker'
@@ -39,6 +40,7 @@ import QRCode from './qrcode'
 import Radio from './radio'
 import Rate from './rate'
 import Result from './result'
+import Row from './row'
 import Select from './select'
 import Slider from './slider'
 import Spin from './spin'
@@ -65,6 +67,7 @@ const components = [
   Carousel,
   Cascader,
   Checkbox,
+  Col,
   Collapse,
   Countdown,
   DatePicker,
@@ -85,6 +88,7 @@ const components = [
   Radio,
   Rate,
   Result,
+  Row,
   Select,
   Slider,
   Spin,
@@ -137,6 +141,7 @@ export {
   Carousel,
   Cascader,
   Checkbox,
+  Col,
   Collapse,
   Countdown,
   DatePicker,
@@ -157,6 +162,7 @@ export {
   Radio,
   Rate,
   Result,
+  Row,
   Select,
   Slider,
   Spin,

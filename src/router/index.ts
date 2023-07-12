@@ -110,6 +110,12 @@ const routes = [
         component: () => import('@/views/Empty.vue')
       },
       {
+        path: '/grid',
+        name: 'Grid',
+        meta: { title: '栅格' },
+        component: () => import('@/views/Grid.vue')
+      },
+      {
         path: '/image',
         name: 'Image',
         meta: { title: '图片' },

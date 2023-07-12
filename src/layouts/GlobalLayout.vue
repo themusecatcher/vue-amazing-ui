@@ -79,6 +79,9 @@ function changeTheme (checked: boolean) {
         <a-menu-item key="Empty">
           <router-link to="/empty">空状态（Empty）</router-link>
         </a-menu-item>
+        <a-menu-item key="Grid">
+          <router-link to="/grid">栅格（Grid）</router-link>
+        </a-menu-item>
         <a-menu-item key="Image">
           <router-link to="/image">图片（Image）</router-link>
         </a-menu-item>
