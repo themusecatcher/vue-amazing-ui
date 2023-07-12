@@ -1,99 +1,143 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { SlotsType } from 'vue'
 interface Props {
-  width?: number|string // 卡片宽度
-  bordered?: boolean // 是否有边框
-  extra?: string|SlotsType // 卡片右上角的操作区域
-  size?: 'default'|'small' // 卡片的尺寸
-  title?: string|SlotsType // 卡片标题
+  span?: number // 栅格占位格数，为 0 时相当于 display: none
 }
-const props = withDefaults(defineProps<Props>(), {
-  width: 'auto',
-  bordered: true,
-  extra: '',
-  size: 'default',
-  title: ''
-})
-const cardWidth = computed(() => {
-  if (typeof props.width === 'number') {
-    return props.width + 'px'
-  }
-  return props.width
+withDefaults(defineProps<Props>(), {
+  span: 0
 })
 </script>
 <template>
-  <div class="m-card" :class="{'bordered': bordered, 'm-small-card': size === 'small'}" :style="`width: ${cardWidth};`">
-    <div class="m-card-head">
-      <div class="m-head-wrapper">
-        <div class="u-title">
-          <slot name="title">{{ title }}</slot>
-        </div>
-        <div class="u-extra">
-          <slot name="extra"></slot>
-        </div>
-      </div>
-    </div>
-    <div class="m-card-body">
-      <slot></slot>
-    </div>
+  <div :class="`m-col col-${span}`" style="padding-left: var(--xGap); padding-right: var(--xGap);">
+    <slot></slot>
   </div>
 </template>
 <style lang="less" scoped>
-.bordered {
-  border: 1px solid #f0f0f0;
-}
-.m-card {
+.m-col {
+  position: relative;
+  max-width: 100%;
+  min-height: 1px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
-  position: relative;
-  background: #ffffff;
-  border-radius: 8px;
-  .m-card-head {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    min-height: 56px;
-    margin-bottom: -1px;
-    padding: 0 24px;
-    color: rgba(0, 0, 0, 0.88);
-    font-weight: 600;
-    font-size: 16px;
-    background: transparent;
-    border-bottom: 1px solid #f0f0f0;
-    border-radius: 8px 8px 0 0;
-    .m-head-wrapper {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      .u-title {
-        display: inline-block;
-        flex: 1;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-      .u-extra {
-        margin-inline-start: auto;
-        font-weight: normal;
-        font-size: 14px;
-      }
-    }
-  }
-  .m-card-body {
-    padding: 24px;
-    border-radius: 0 0 8px 8px;
-  }
 }
-.m-small-card {
-  .m-card-head {
-    min-height: 38px;
-    padding: 0 12px;
-    font-size: 14px;
-  }
-  .m-card-body {
-    padding: 12px;
-  }
+.col-1 {
+  display: block;
+  flex: 0 0 4.16666666666666%;
+  max-width: 4.16666666666666%;
+}
+.col-2 {
+  display: block;
+  flex: 0 0 8.33333333333333%;
+  max-width: 8.33333333333333%;
+}
+.col-3 {
+  display: block;
+  flex: 0 0 12.5%;
+  max-width: 12.5%;
+}
+.col-4 {
+  display: block;
+  flex: 0 0 16.66666666666666%;
+  max-width: 16.66666666666666%;
+}
+.col-5 {
+  display: block;
+  flex: 0 0 20.83333333333333%;
+  max-width: 20.83333333333333%;
+}
+.col-6 {
+  display: block;
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+.col-7 {
+  display: block;
+  flex: 0 0 29.16666666666666%;
+  max-width: 29.16666666666666%;
+}
+.col-8 {
+  display: block;
+  flex: 0 0 33.33333333333333%;
+  max-width: 33.33333333333333%;
+}
+.col-9 {
+  display: block;
+  flex: 0 0 37.5%;
+  max-width: 37.5%;
+}
+.col-10 {
+  display: block;
+  flex: 0 0 41.66666666666666%;
+  max-width: 41.66666666666666%;
+}
+.col-11 {
+  display: block;
+  flex: 0 0 45.83333333333333%;
+  max-width: 45.83333333333333%;
+}
+.col-12 {
+  display: block;
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+.col-13 {
+  display: block;
+  flex: 0 0 54.16666666666666%;
+  max-width: 54.16666666666666%;
+}
+.col-14 {
+  display: block;
+  flex: 0 0 58.33333333333333%;
+  max-width: 58.33333333333333%;
+}
+.col-15 {
+  display: block;
+  flex: 0 0 62.5%;
+  max-width: 62.5%;
+}
+.col-16 {
+  display: block;
+  flex: 0 0 66.66666666666666%;
+  max-width: 66.66666666666666%;
+}
+.col-17 {
+  display: block;
+  flex: 0 0 70.83333333333333%;
+  max-width: 70.83333333333333%;
+}
+.col-18 {
+  display: block;
+  flex: 0 0 75%;
+  max-width: 75%;
+}
+.col-19 {
+  display: block;
+  flex: 0 0 79.16666666666666%;
+  max-width: 79.16666666666666%;
+}
+.col-20 {
+  display: block;
+  flex: 0 0 83.33333333333333%;
+  max-width: 83.33333333333333%;
+}
+.col-21 {
+  display: block;
+  flex: 0 0 87.5%;
+  max-width: 87.5%;
+}
+.col-22 {
+  display: block;
+  flex: 0 0 91.66666666666666%;
+  max-width: 91.66666666666666%;
+}
+.col-23 {
+  display: block;
+  flex: 0 0 95.83333333333333%;
+  max-width: 95.83333333333333%;
+}
+.col-24 {
+  display: block;
+  flex: 0 0 100%;
+  max-width: 100%;
 }
 </style>

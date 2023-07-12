@@ -94,11 +94,11 @@ function onChange (pagination: {page: number, pageSize: number}) {
       @change="onChange">
     <!-- 配置指定列数据 -->
     <template #name="record">
-        hello {{ record.name }}
-      </template>
-      <template #job="{ job, index }">
-        hi {{ job }}
-      </template>
+      hello {{ record.name }}
+    </template>
+    <template #job="{ job, index }">
+      hi {{ job }}
+    </template>
     </Table>
     <h2 class="mt30 mb10">加载中表格 (loading: true)</h2>
     <Table
