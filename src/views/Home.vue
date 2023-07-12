@@ -24,7 +24,7 @@ const activeKey = ref(0)
 <template>
   <div class="home">
     <h1>Vue Amazing UI</h1>
-    <p class="u-tip mb10 mt10">该组件库采用 Vue3 + TS + Vite3 + Less 实现！</p>
+    <p class="u-tip mb10 mt10">该组件库采用 Vue3@3.3.4 + TS@4.7.4 + Vite4.4.3 + Less@4.1.3 实现！CSS 样式全部使用 border-box</p>
     <p class="u-tip">开箱即用！</p>
     <h2 class="mt30 mb10">主要有以下三种使用方式：</h2>
     <Collapse
