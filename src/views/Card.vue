@@ -24,7 +24,7 @@
     </div>
     <h2 class="mt30 mb10">内部卡片</h2>
     <Card title="Card title" :width="360">
-      <p style="font-size: 14px; color: rgba(0, 0, 0, 0.85); margin-bottom: 16px; font-weight: 500">
+      <p style="font-size: 14px; color: rgba(0, 0, 0, 0.85); margin-bottom: 16px; font-weight: 500;">
         Group title
       </p>
       <Card title="Inner card title">
@@ -41,7 +41,7 @@
       </Card>
     </Card>
     <h2 class="mt30 mb10">栅格卡片</h2>
-    <div style="background-color: #ececec; padding: 20px">
+    <div style="background-color: #ececec; padding: 20px;">
       <Row :gutter="16">
         <Col :span="8">
           <Card title="Card title" :bordered="false">
@@ -60,5 +60,11 @@
         </Col>
       </Row>
     </div>
+    <h2 class="mt30 mb10">简洁卡片</h2>
+    <Card :width="300">
+      <p>Card content</p>
+      <p>Card content</p>
+      <p>Card content</p>
+    </Card>
   </div>
 </template>

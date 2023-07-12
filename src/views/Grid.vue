@@ -1,64 +1,95 @@
 <template>
   <div>
-    <h2 class="mb10">Card 卡片基本使用</h2>
-    <Card title="Default size card" :width="300">
-      <template #extra><a href="#">more</a></template>
-      <p>card content</p>
-      <p>card content</p>
-      <p>card content</p>
-    </Card>
-    <h2 class="mt30 mb10">小尺寸卡片</h2>
-    <Card size="small" title="Small size card" :width="300">
-      <template #extra><a href="#">more</a></template>
-      <p>card content</p>
-      <p>card content</p>
-      <p>card content</p>
-    </Card>
-    <h2 class="mt30 mb10">在灰色背景上使用无边框的卡片</h2>
-    <div style="display: inline-block; background: #ececec; padding: 30px;">
-      <Card title="Card title" :bordered="false" :width="300">
-        <p>Card content</p>
-        <p>Card content</p>
-        <p>Card content</p>
-      </Card>
-    </div>
-    <h2 class="mt30 mb10">内部卡片</h2>
-    <Card title="Card title" :width="360">
-      <p style="font-size: 14px; color: rgba(0, 0, 0, 0.85); margin-bottom: 16px; font-weight: 500">
-        Group title
-      </p>
-      <Card title="Inner card title">
-        <template #extra>
-          <a href="#">More</a>
-        </template>
-        Inner Card content
-      </Card>
-      <Card title="Inner card title" :style="{ marginTop: '16px' }">
-        <template #extra>
-          <a href="#">More</a>
-        </template>
-        Inner Card content
-      </Card>
-    </Card>
-    <h2 class="mt30 mb10">栅格卡片</h2>
-    <div style="background-color: #ececec; padding: 20px">
-      <Row :gutter="16">
-        <Col :span="8">
-          <Card title="Card title" :bordered="false">
-            <p>card content</p>
-          </Card>
-        </Col>
-        <Col :span="8">
-          <Card title="Card title" :bordered="false">
-            <p>card content</p>
-          </Card>
-        </Col>
-        <Col :span="8">
-          <Card title="Card title" :bordered="false">
-            <p>card content</p>
-          </Card>
-        </Col>
-      </Row>
-    </div>
+    <h2 class="mb10">Grid 栅格基本使用</h2>
+    <Row class="row">
+      <Col :span="24">col</Col>
+    </Row>
+    <Row class="row">
+      <Col :span="12">col-12</Col>
+      <Col :span="12">col-12</Col>
+    </Row>
+    <Row class="row">
+      <Col :span="8">col-8</Col>
+      <Col :span="8">col-8</Col>
+      <Col :span="8">col-8</Col>
+    </Row>
+    <Row class="row">
+      <Col :span="6">col-6</Col>
+      <Col :span="6">col-6</Col>
+      <Col :span="6">col-6</Col>
+      <Col :span="6">col-6</Col>
+    </Row>
+    <h2 class="mt30 mb10">水平区块间隔</h2>
+    <Row :gutter="16">
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+    </Row>
+    <h2 class="mt30 mb10">响应式区块间隔</h2>
+    <Row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+    </Row>
+    <h2 class="mt30 mb10">垂直区块间隔</h2>
+    <Row :gutter="[16, 24]">
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+      <Col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </Col>
+    </Row>
   </div>
 </template>
+<style lang="less" scoped>
+.row {
+  .m-col {
+    padding: 16px 0;
+    background: #1677ff;
+  }
+  :deep(:nth-child(2n+1)) {
+    background: #1677ffbf;
+  }
+}
+.gutter-box {
+  background: #0092ff;
+  padding: 8px 0;
+}
+</style>

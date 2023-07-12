@@ -320,7 +320,7 @@ const router = createRouter({
 })
 // 注册全局前置守卫
 router.beforeEach((to, from) => {
-  const domTitle = to.meta.title + ' ' + String(to.name) + ' | ' + webTitle
+  const domTitle = to.meta.title + ' ' + String(to.name) + ' - ' + webTitle
   setDocumentTitle(domTitle)
 })
 
