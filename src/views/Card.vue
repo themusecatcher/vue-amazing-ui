@@ -22,6 +22,17 @@
         <p>Card content</p>
       </Card>
     </div>
+    <h2 class="mt30 mb10">自定义标题和内容区域样式</h2>
+    <Card
+      title="Default size card"
+      :width="300"
+      :headStyle="{ fontSize: '18px', color: '#fff', backgroundColor: '#52c41a'}"
+      :bodyStyle="{ fontSize: '16px', color: '#fff', backgroundColor: '#faad14'}">
+      <template #extra><a href="#">more</a></template>
+      <p>card content</p>
+      <p>card content</p>
+      <p>card content</p>
+    </Card>
     <h2 class="mt30 mb10">内部卡片</h2>
     <Card title="Card title" :width="360">
       <p style="font-size: 14px; color: rgba(0, 0, 0, 0.85); margin-bottom: 16px; font-weight: 500;">
