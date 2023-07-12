@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import type { SlotsType } from 'vue'
+import type { SlotsType, CSSProperties } from 'vue'
 interface Props {
   width?: number|string // 卡片宽度
   bordered?: boolean // 是否有边框
   extra?: string|SlotsType // 卡片右上角的操作区域
   size?: 'default'|'small' // 卡片的尺寸
   title?: string|SlotsType // 卡片标题
+  headStyle?: CSSProperties //	标题区域自定义样式
+  bodyStyle?: CSSProperties // 内容区域自定义样式
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
   bordered: true,
   extra: '',
   size: 'default',
-  title: ''
+  title: '',
+  headStyle: () => { return {} },
+  bodyStyle: () => { return {} }
 })
 const cardWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -29,7 +33,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="m-card" :class="{'bordered': bordered, 'm-small-card': size === 'small'}" :style="`width: ${cardWidth};`">
-    <div class="m-card-head" v-if="showHead">
+    <div class="m-card-head" :style="headStyle" v-if="showHead">
       <div class="m-head-wrapper" ref="headRef">
         <div class="u-title">
           <slot name="title">{{ title }}</slot>
@@ -39,7 +43,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="m-card-body">
+    <div class="m-card-body" :style="bodyStyle">
       <slot></slot>
     </div>
   </div>
