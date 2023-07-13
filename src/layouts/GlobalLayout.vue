@@ -17,7 +17,6 @@ function onClick (e: any):void {
 function changeTheme (checked: boolean) {
   theme.value = checked ? 'dark' : 'light'
 }
-console.log('menus:', menus.value)
 </script>
 <template>
   <a-row style="width: 100%;">
