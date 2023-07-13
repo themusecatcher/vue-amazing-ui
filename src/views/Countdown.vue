@@ -6,7 +6,8 @@ function onFinish () {
 
 <template>
   <div>
-    <h2 class="mb10">Countdown 倒计时基本使用 (format: MM月 DD天 HH:mm:ss)</h2>
+    <h1>Countdown 倒计时</h1>
+    <h2 class="mt30 mb10">基本使用 (format: MM月 DD天 HH:mm:ss)</h2>
     <Countdown
       title="Countdown 1年"
       :countdown="12 * 30 * 24 * 60 * 60 * 1000"

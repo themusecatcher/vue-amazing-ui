@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h2 class="mb10">Tooltip 文字提示基本使用</h2>
+    <h1>Tooltip 文字提示</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Tooltip :maxWidth="240">
       <template #title>特斯拉(Tesla)是美国一家电动汽车及能源公司，总部位于帕洛阿托(Palo Alto)，市值达2100亿美元，产销电动汽车、太阳能板、及储能设备</template>
       <Button type="primary">特斯拉</Button>

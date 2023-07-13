@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const options = ref([
-{
+      {
         label: '北京市',
         value: 1
       },
@@ -46,7 +46,8 @@ function onChange (value: any) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Radio 单选框基本使用</h2>
+    <h1>Radio 单选框</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <p class="u-intro">用于在多个备选项中选中单个状态</p>
     <Radio
       :options="options"

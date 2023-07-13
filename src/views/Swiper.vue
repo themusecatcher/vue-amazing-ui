@@ -36,7 +36,8 @@ function onChange () {
         <a class="u-file" href="https://swiperjs.com/demos" target="_blank">Swiper Demos</a>
       </li>
     </ul>
-    <h2 class="mt30 mb10">Swiper 轮播图基本使用 (type: banner)</h2>
+    <h1 class="mt30">Swiper 触摸滑动插件</h1>
+    <h2 class="mt30 mb10">轮播图基本使用 (type: banner)</h2>
     <Swiper :images="images" :height="600" @change="onChange" />
     <h2 class="mt30 mb10">Swiper 走马灯基本使用 (type: carousel)</h2>
     <Swiper

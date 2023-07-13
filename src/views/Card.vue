@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h2 class="mb10">Card 卡片基本使用</h2>
+    <h1>Card 卡片</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Card title="Default size card" :width="300">
       <template #extra><a href="#">more</a></template>
       <p>card content</p>

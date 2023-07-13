@@ -83,8 +83,8 @@ watchEffect(() => {
         <a class="u-file" href="https://vue3datepicker.com/installation/" target="_blank">Vue Datepicker Documents</a>
       </li>
     </ul>
-    <h2 class="mt30 mb10">DatePicker 日期选择器基本使用</h2>
-    <h2 class="mb10">日期选择器 (mode: date 默认)</h2>
+    <h1 class="mt30">DatePicker 日期选择器</h1>
+    <h2 class="mt30 mb10">日期选择器 (mode: date 默认)</h2>
     <DatePicker
       placeholder="请选择日期"
       v-model="dateValue"

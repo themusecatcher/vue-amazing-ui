@@ -64,7 +64,8 @@ watch(checkAll, (to) => {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Checkbox 多选框基本使用</h2>
+    <h1>Checkbox 多选框</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Checkbox
       :options="options"
       @change="onChange"

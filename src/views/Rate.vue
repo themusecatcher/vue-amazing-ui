@@ -14,7 +14,8 @@ function onHoverChange (value: number) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Rate 评分基本使用</h2>
+    <h1>Rate 评分</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Rate v-model:value="value"/>
     <h2 class="mt30 mb10">空心星型图标，高度30px (character: star-outlined & size: 30)</h2>
     <Rate character="star-outlined" :size="30" v-model:value="value"/>

@@ -71,7 +71,8 @@ function onAntChange (values: (number|string)[], selectedOptions: any) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Cascader 级联选择基本使用</h2>
+    <h1>Cascader 级联选择</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Cascader :options="options" v-model:selectedValue="selectedValue" />
     <h2 class="mt30 mb10">点击每级下拉时，选项值都会发生变化 (changeOnSelect: true)</h2>
     <Cascader

@@ -18,12 +18,13 @@ function formatter (value: number) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Slider 单滑块滑动输入条基本使用 ({{  singleValue }})</h2>
+    <h1>Slider 滑动输入条</h1>
+    <h2 class="mt30 mb10">单滑块基本使用 ({{  singleValue }})</h2>
     <Slider
       width="80%"
       v-model:value="singleValue"
       @change="onChange" />
-    <h2 class="mt30 mb10">双滑块滑动输入条基本使用 (range & {{ doubleValue }})</h2>
+    <h2 class="mt30 mb10">双滑块基本使用 (range & {{ doubleValue }})</h2>
     <Slider
       width="80%"
       range

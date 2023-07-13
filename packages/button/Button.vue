@@ -9,7 +9,7 @@ interface Route {
 }
 interface Props {
   name?: string // 默认文本 string | slot
-  type?: 'default'|'primary'|'danger' // 类型
+  type?: 'default'|'primary'|'danger'|'dashed' // 类型
   effect?: 'fade'|'reverse' // 悬浮变化效果，只有 type 为 default 时，effect 才生效
   size?: 'small'|'middle'|'large' // 尺寸
   width?: number // 宽度
@@ -132,6 +132,19 @@ function getUrl (route: Route) {
     opacity: 0.65;
     pointer-events: none;
   }
+  .fade {
+    &:hover {
+      color: fade(@primary, 80%);
+      border-color: fade(@primary, 80%);
+    }
+    &:active {
+      color: shade(@primary, 12%);
+      border-color: shade(@primary, 12%);
+    }
+  }
+  .default {
+    .fade();
+  }
   .primary {
     color: #fff;
     background-color: @primary;
@@ -146,9 +159,6 @@ function getUrl (route: Route) {
       background-color: shade(@primary, 12%);
       border-color: shade(@primary, 12%);
     }
-  }
-  .default {
-    .fade();
   }
   .danger {
     color: #fff;
@@ -165,15 +175,9 @@ function getUrl (route: Route) {
       border-color: shade(@danger, 12%);
     }
   }
-  .fade {
-    &:hover {
-      color: fade(@primary, 80%);
-      border-color: fade(@primary, 80%);
-    }
-    &:active {
-      color: shade(@primary, 12%);
-      border-color: shade(@primary, 12%);
-    }
+  .dashed {
+    border-style: dashed;
+    .fade();
   }
   .reverse {
     &:hover {

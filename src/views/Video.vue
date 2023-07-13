@@ -8,7 +8,8 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/b
 
 <template>
   <div>
-    <h2 class="mb10">Video 播放器基本使用</h2>
+    <h1>Video 播放器</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Video :src="src" :poster="poster" />
     <h2 class="mt30 mb10">自动播放</h2>
     <Video autoplay :src="src" :poster="poster" />

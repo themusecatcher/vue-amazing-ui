@@ -75,7 +75,8 @@ function onRemove (file: FileType) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Upload 上传基本使用</h2>
+    <h1>Upload 上传</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Upload v-model:fileList="files" />
     <h2 class="mt30 mb10">多文件上传，并限制上传数量为3 (multiple: true & maxCount: 3)</h2>
     <Upload multiple :maxCount="3" v-model:fileList="fileList" />

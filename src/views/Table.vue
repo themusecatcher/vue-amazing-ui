@@ -81,7 +81,8 @@ function onChange (pagination: {page: number, pageSize: number}) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Table 表格基本使用</h2>
+    <h1>Table 表格</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
       :dataSource="tableData"

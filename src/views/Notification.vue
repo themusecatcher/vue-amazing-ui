@@ -23,7 +23,8 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 </script>
 <template>
   <div>
-    <h2 class="mb10">Notification 通知提醒框基本使用</h2>
+    <h1>Notification 通知提醒框</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Button @click="onOpen('This is a normal notification')" class="mr30">Open</Button>
     <Button @click="onInfo('This is a normal notification')" class="mr30">Info</Button>
     <Button @click="onSuccess('This is a success notification')" class="mr30">Success</Button>

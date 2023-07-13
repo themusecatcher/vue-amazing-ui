@@ -44,7 +44,8 @@ setTimeout(() => {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Image 图片基本使用</h2>
+    <h1>Image 图片</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
     <h2 class="mt30 mb10">多张图片预览，同时支持键盘 (left / right / up / down) 按键切换 (src: images)</h2>
     <Image :src="images" />

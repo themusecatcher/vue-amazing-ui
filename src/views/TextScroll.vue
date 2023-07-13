@@ -24,7 +24,8 @@ function onClick (value: string) { // 获取点击的标题
 </script>
 <template>
   <div>
-    <h2 class="mb10">TextScroll 横向文字滚动基本使用</h2>
+    <h1>TextScroll 文字滚动</h1>
+    <h2 class="mt30 mb10">横向文字滚动基本使用</h2>
     <TextScroll
       :sliderText="sliderText"
       @click="onClick"

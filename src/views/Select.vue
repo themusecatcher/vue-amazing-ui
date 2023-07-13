@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const options = ref([
-{
+      {
         label: '北京市',
         value: 1
       },
@@ -51,7 +51,8 @@ function onAntChange (value: string|number, option: any) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Select 选择器基本使用</h2>
+    <h1>Select 选择器</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Select :options="options" v-model="selectedValue" />
     <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
     <Select
