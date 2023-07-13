@@ -28,7 +28,7 @@ const cardWidth = computed(() => {
 const headRef = ref() // 声明一个同名的模板引用
 const showHead = ref(1)
 onMounted(() => {
-  showHead.value = headRef.value.clientHeight
+  showHead.value = headRef.value.offsetHeight
 })
 </script>
 <template>
