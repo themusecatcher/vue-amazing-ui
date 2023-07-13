@@ -109,7 +109,6 @@ const components = [
   Waterfall
 ]
 
-console.log('components:', components)
 // 定义 install 方法
 const install = (app: App): void => {
   // 遍历注册所有组件
