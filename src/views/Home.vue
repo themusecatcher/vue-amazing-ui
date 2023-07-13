@@ -3,11 +3,7 @@ import { ref } from 'vue'
 const installData = ref([
   {
     header: 'Install',
-    text: `pnpm i vue-amazing-ui
-# or
-yarn add vue-amazing-ui
-# or
-npm i vue-amazing-ui`
+    text: `pnpm i vue-amazing-ui\n# or\nyarn add vue-amazing-ui\n# or\nnpm i vue-amazing-ui`
   }
 ])
 const collapseData = ref([
@@ -15,7 +11,6 @@ const collapseData = ref([
     header: '以上十个 API 使用时直接引入即可:',
     text: `<script setup lang="ts">
 \import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add, downloadFile, moneyFormat } from 'vue-amazing-ui'
-
 <\/script>`
   }
 ])
@@ -24,7 +19,8 @@ const activeKey = ref(0)
 <template>
   <div class="home">
     <h1>Vue Amazing UI</h1>
-    <p class="u-tip mb10 mt10">该组件库采用 Vue3@3.3.4 + TS@4.7.4 + Vite4.4.3 + Less@4.1.3 实现！CSS 样式全部使用 border-box</p>
+    <p class="u-tip mb10 mt30">该组件库采用 Vue3@3.3.4 + TS@4.7.4 + Vite4.4.3 + Less@4.1.3 实现！</p>
+    <p class="u-tip mb10">所有组件样式 CSS 均使用 box-sizing: border-box; 模式！</p>
     <p class="u-tip">开箱即用！</p>
     <h2 class="mt30 mb10">主要有以下三种使用方式：</h2>
     <Collapse

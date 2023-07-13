@@ -43,6 +43,7 @@ import Result from './result'
 import Row from './row'
 import Select from './select'
 import Slider from './slider'
+import Space from './space'
 import Spin from './spin'
 import Statistic from './statistic'
 import Steps from './steps'
@@ -91,6 +92,7 @@ const components = [
   Row,
   Select,
   Slider,
+  Space,
   Spin,
   Statistic,
   Steps,
@@ -165,6 +167,7 @@ export {
   Row,
   Select,
   Slider,
+  Space,
   Spin,
   Statistic,
   Steps,

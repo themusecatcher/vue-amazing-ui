@@ -3,7 +3,7 @@ import { setDocumentTitle, webTitle } from '@/utils/util'
 import { rafTimeout } from '../../packages'
 import GlobalLayout from '@/layouts/GlobalLayout.vue'
 
-const routes = [
+export const routes = [
   {
     path: '/',
     name: 'Index',
@@ -198,6 +198,12 @@ const routes = [
         name: 'Slider',
         meta: { title: '滑动输入条' },
         component: () => import('@/views/Slider.vue')
+      },
+      {
+        path: '/space',
+        name: 'Space',
+        meta: { title: '间距' },
+        component: () => import('@/views/Space.vue')
       },
       {
         path: '/spin',

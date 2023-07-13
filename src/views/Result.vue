@@ -1,5 +1,3 @@
-<script setup lang="ts">
-</script>
 <template>
   <div>
     <h2 class="mb10">Result 结果基本使用</h2>
