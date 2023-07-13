@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import type { SlotsType, CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 interface Props {
   width?: number|string // 卡片宽度
   bordered?: boolean // 是否有边框
-  extra?: string|SlotsType // 卡片右上角的操作区域
+  extra?: string // 卡片右上角的操作区域 string | slot
   size?: 'default'|'small' // 卡片的尺寸
-  title?: string|SlotsType // 卡片标题
+  title?: string // 卡片标题 string | slot
   headStyle?: CSSProperties //	标题区域自定义样式
   bodyStyle?: CSSProperties // 内容区域自定义样式
 }

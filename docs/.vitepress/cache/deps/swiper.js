@@ -1,4 +1,4 @@
-import "./chunk-RSJERJUL.js";
+import "./chunk-76J2PTFD.js";
 
 // node_modules/.pnpm/ssr-window@4.0.2/node_modules/ssr-window/ssr-window.esm.js
 function isObject(obj) {
@@ -144,7 +144,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/utils.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/utils.js
 function deleteProps(obj) {
   const object = obj;
   Object.keys(object).forEach((key) => {
@@ -404,7 +404,7 @@ function elementOuterSize(el, size, includeMargins) {
   return el.offsetWidth;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/get-support.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/get-support.js
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -421,7 +421,7 @@ function getSupport() {
   return support;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/get-device.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/get-device.js
 var deviceCached;
 function calcDevice({
   userAgent
@@ -466,7 +466,7 @@ function getDevice(overrides = {}) {
   return deviceCached;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/get-browser.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/get-browser.js
 var browser;
 function calcBrowser() {
   const window2 = getWindow();
@@ -495,7 +495,7 @@ function getBrowser() {
   return browser;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/modules/resize/resize.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/modules/resize/resize.js
 function Resize({
   swiper,
   on,
@@ -567,7 +567,7 @@ function Resize({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/modules/observer/observer.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/modules/observer/observer.js
 function Observer({
   swiper,
   extendParams,
@@ -632,7 +632,7 @@ function Observer({
   on("destroy", destroy);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/events-emitter.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/events-emitter.js
 var events_emitter_default = {
   on(events2, handler, priority) {
     const self = this;
@@ -743,7 +743,7 @@ var events_emitter_default = {
   }
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/updateSize.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/updateSize.js
 function updateSize() {
   const swiper = this;
   let width;
@@ -775,7 +775,7 @@ function updateSize() {
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/updateSlides.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/updateSlides.js
 function updateSlides() {
   const swiper = this;
   function getDirectionLabel(property) {
@@ -1007,7 +1007,7 @@ function updateSlides() {
     allSlidesSize -= spaceBetween;
     const maxSnap = allSlidesSize - swiperSize;
     snapGrid = snapGrid.map((snap) => {
-      if (snap < 0)
+      if (snap <= 0)
         return -offsetBefore;
       if (snap > maxSnap)
         return maxSnap + offsetAfter;
@@ -1070,7 +1070,7 @@ function updateSlides() {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/updateAutoHeight.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/updateAutoHeight.js
 function updateAutoHeight(speed) {
   const swiper = this;
   const activeSlides = [];
@@ -1114,7 +1114,7 @@ function updateAutoHeight(speed) {
     swiper.wrapperEl.style.height = `${newHeight}px`;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/updateSlidesOffset.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/updateSlidesOffset.js
 function updateSlidesOffset() {
   const swiper = this;
   const slides = swiper.slides;
@@ -1124,7 +1124,7 @@ function updateSlidesOffset() {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/updateSlidesProgress.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/updateSlidesProgress.js
 function updateSlidesProgress(translate = this && this.translate || 0) {
   const swiper = this;
   const params = swiper.params;
@@ -1172,7 +1172,7 @@ function updateSlidesProgress(translate = this && this.translate || 0) {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/updateProgress.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/updateProgress.js
 function updateProgress(translate) {
   const swiper = this;
   if (typeof translate === "undefined") {
@@ -1239,7 +1239,7 @@ function updateProgress(translate) {
   swiper.emit("progress", progress);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/updateSlidesClasses.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/updateSlidesClasses.js
 function updateSlidesClasses() {
   const swiper = this;
   const {
@@ -1290,7 +1290,7 @@ function updateSlidesClasses() {
   swiper.emitSlidesClasses();
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/process-lazy-preloader.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/process-lazy-preloader.js
 var processLazyPreloader = (swiper, imageEl) => {
   if (!swiper || swiper.destroyed || !swiper.params)
     return;
@@ -1319,22 +1319,37 @@ var preload = (swiper) => {
   amount = Math.min(amount, len);
   const slidesPerView = swiper.params.slidesPerView === "auto" ? swiper.slidesPerViewDynamic() : Math.ceil(swiper.params.slidesPerView);
   const activeIndex = swiper.activeIndex;
+  if (swiper.params.grid && swiper.params.grid.rows > 1) {
+    const activeColumn = activeIndex;
+    const preloadColumns = [activeColumn - amount];
+    preloadColumns.push(...Array.from({
+      length: amount
+    }).map((_, i) => {
+      return activeColumn + slidesPerView + i;
+    }));
+    swiper.slides.forEach((slideEl, i) => {
+      if (preloadColumns.includes(slideEl.column))
+        unlazy(swiper, i);
+    });
+    return;
+  }
   const slideIndexLastInView = activeIndex + slidesPerView - 1;
-  if (swiper.params.rewind) {
+  if (swiper.params.rewind || swiper.params.loop) {
     for (let i = activeIndex - amount; i <= slideIndexLastInView + amount; i += 1) {
       const realIndex = (i % len + len) % len;
-      if (realIndex !== activeIndex && realIndex > slideIndexLastInView)
+      if (realIndex < activeIndex || realIndex > slideIndexLastInView)
         unlazy(swiper, realIndex);
     }
   } else {
-    for (let i = Math.max(slideIndexLastInView - amount, 0); i <= Math.min(slideIndexLastInView + amount, len - 1); i += 1) {
-      if (i !== activeIndex && i > slideIndexLastInView)
+    for (let i = Math.max(activeIndex - amount, 0); i <= Math.min(slideIndexLastInView + amount, len - 1); i += 1) {
+      if (i !== activeIndex && (i > slideIndexLastInView || i < activeIndex)) {
         unlazy(swiper, i);
+      }
     }
   }
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/updateActiveIndex.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/updateActiveIndex.js
 function getActiveIndexByTranslate(swiper) {
   const {
     slidesGrid,
@@ -1431,7 +1446,7 @@ function updateActiveIndex(newActiveIndex) {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/updateClickedSlide.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/updateClickedSlide.js
 function updateClickedSlide(e) {
   const swiper = this;
   const params = swiper.params;
@@ -1464,7 +1479,7 @@ function updateClickedSlide(e) {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/update/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/update/index.js
 var update_default = {
   updateSize,
   updateSlides,
@@ -1477,7 +1492,7 @@ var update_default = {
   updateClickedSlide
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/translate/getTranslate.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/translate/getTranslate.js
 function getSwiperTranslate(axis = this.isHorizontal() ? "x" : "y") {
   const swiper = this;
   const {
@@ -1499,7 +1514,7 @@ function getSwiperTranslate(axis = this.isHorizontal() ? "x" : "y") {
   return currentTranslate || 0;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/translate/setTranslate.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/translate/setTranslate.js
 function setTranslate(translate, byController) {
   const swiper = this;
   const {
@@ -1545,17 +1560,17 @@ function setTranslate(translate, byController) {
   swiper.emit("setTranslate", swiper.translate, byController);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/translate/minTranslate.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/translate/minTranslate.js
 function minTranslate() {
   return -this.snapGrid[0];
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/translate/maxTranslate.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/translate/maxTranslate.js
 function maxTranslate() {
   return -this.snapGrid[this.snapGrid.length - 1];
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/translate/translateTo.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/translate/translateTo.js
 function translateTo(translate = 0, speed = this.params.speed, runCallbacks = true, translateBounds = true, internal) {
   const swiper = this;
   const {
@@ -1631,7 +1646,7 @@ function translateTo(translate = 0, speed = this.params.speed, runCallbacks = tr
   return true;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/translate/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/translate/index.js
 var translate_default = {
   getTranslate: getSwiperTranslate,
   setTranslate,
@@ -1640,7 +1655,7 @@ var translate_default = {
   translateTo
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/transition/setTransition.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/transition/setTransition.js
 function setTransition(duration, byController) {
   const swiper = this;
   if (!swiper.params.cssMode) {
@@ -1649,7 +1664,7 @@ function setTransition(duration, byController) {
   swiper.emit("setTransition", duration, byController);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/transition/transitionEmit.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/transition/transitionEmit.js
 function transitionEmit({
   swiper,
   runCallbacks,
@@ -1684,7 +1699,7 @@ function transitionEmit({
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/transition/transitionStart.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/transition/transitionStart.js
 function transitionStart(runCallbacks = true, direction) {
   const swiper = this;
   const {
@@ -1703,7 +1718,7 @@ function transitionStart(runCallbacks = true, direction) {
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/transition/transitionEnd.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/transition/transitionEnd.js
 function transitionEnd(runCallbacks = true, direction) {
   const swiper = this;
   const {
@@ -1721,14 +1736,14 @@ function transitionEnd(runCallbacks = true, direction) {
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/transition/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/transition/index.js
 var transition_default = {
   setTransition,
   transitionStart,
   transitionEnd
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/slide/slideTo.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/slide/slideTo.js
 function slideTo(index = 0, speed = this.params.speed, runCallbacks = true, internal, initial) {
   if (typeof index === "string") {
     index = parseInt(index, 10);
@@ -1772,7 +1787,7 @@ function slideTo(index = 0, speed = this.params.speed, runCallbacks = true, inte
     }
   }
   if (swiper.initialized && slideIndex !== activeIndex) {
-    if (!swiper.allowSlideNext && translate < swiper.translate && translate < swiper.minTranslate()) {
+    if (!swiper.allowSlideNext && (rtl ? translate > swiper.translate && translate > swiper.minTranslate() : translate < swiper.translate && translate < swiper.minTranslate())) {
       return false;
     }
     if (!swiper.allowSlidePrev && translate > swiper.translate && translate > swiper.maxTranslate()) {
@@ -1873,7 +1888,7 @@ function slideTo(index = 0, speed = this.params.speed, runCallbacks = true, inte
   return true;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/slide/slideToLoop.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/slide/slideToLoop.js
 function slideToLoop(index = 0, speed = this.params.speed, runCallbacks = true, internal) {
   if (typeof index === "string") {
     const indexAsNumber = parseInt(index, 10);
@@ -1891,7 +1906,7 @@ function slideToLoop(index = 0, speed = this.params.speed, runCallbacks = true, 
   return swiper.slideTo(newIndex, speed, runCallbacks, internal);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/slide/slideNext.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/slide/slideNext.js
 function slideNext(speed = this.params.speed, runCallbacks = true, internal) {
   const swiper = this;
   const {
@@ -1921,7 +1936,7 @@ function slideNext(speed = this.params.speed, runCallbacks = true, internal) {
   return swiper.slideTo(swiper.activeIndex + increment, speed, runCallbacks, internal);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/slide/slidePrev.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/slide/slidePrev.js
 function slidePrev(speed = this.params.speed, runCallbacks = true, internal) {
   const swiper = this;
   const {
@@ -1980,13 +1995,13 @@ function slidePrev(speed = this.params.speed, runCallbacks = true, internal) {
   return swiper.slideTo(prevIndex, speed, runCallbacks, internal);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/slide/slideReset.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/slide/slideReset.js
 function slideReset(speed = this.params.speed, runCallbacks = true, internal) {
   const swiper = this;
   return swiper.slideTo(swiper.activeIndex, speed, runCallbacks, internal);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/slide/slideToClosest.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/slide/slideToClosest.js
 function slideToClosest(speed = this.params.speed, runCallbacks = true, internal, threshold = 0.5) {
   const swiper = this;
   let index = swiper.activeIndex;
@@ -2011,7 +2026,7 @@ function slideToClosest(speed = this.params.speed, runCallbacks = true, internal
   return swiper.slideTo(index, speed, runCallbacks, internal);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/slide/slideToClickedSlide.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/slide/slideToClickedSlide.js
 function slideToClickedSlide() {
   const swiper = this;
   const {
@@ -2050,7 +2065,7 @@ function slideToClickedSlide() {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/slide/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/slide/index.js
 var slide_default = {
   slideTo,
   slideToLoop,
@@ -2061,7 +2076,7 @@ var slide_default = {
   slideToClickedSlide
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/loop/loopCreate.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/loop/loopCreate.js
 function loopCreate(slideRealIndex) {
   const swiper = this;
   const {
@@ -2080,7 +2095,7 @@ function loopCreate(slideRealIndex) {
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/loop/loopFix.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/loop/loopFix.js
 function loopFix({
   slideRealIndex,
   slideTo: slideTo2 = true,
@@ -2230,7 +2245,7 @@ function loopFix({
   swiper.emit("loopFix");
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/loop/loopDestroy.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/loop/loopDestroy.js
 function loopDestroy() {
   const swiper = this;
   const {
@@ -2255,14 +2270,14 @@ function loopDestroy() {
   swiper.slideTo(swiper.realIndex, 0);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/loop/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/loop/index.js
 var loop_default = {
   loopCreate,
   loopFix,
   loopDestroy
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/grab-cursor/setGrabCursor.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/grab-cursor/setGrabCursor.js
 function setGrabCursor(moving) {
   const swiper = this;
   if (!swiper.params.simulateTouch || swiper.params.watchOverflow && swiper.isLocked || swiper.params.cssMode)
@@ -2280,7 +2295,7 @@ function setGrabCursor(moving) {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/grab-cursor/unsetGrabCursor.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/grab-cursor/unsetGrabCursor.js
 function unsetGrabCursor() {
   const swiper = this;
   if (swiper.params.watchOverflow && swiper.isLocked || swiper.params.cssMode) {
@@ -2297,13 +2312,13 @@ function unsetGrabCursor() {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/grab-cursor/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/grab-cursor/index.js
 var grab_cursor_default = {
   setGrabCursor,
   unsetGrabCursor
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/events/onTouchStart.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/events/onTouchStart.js
 function closestElement(selector, base = this) {
   function __closestFrom(el) {
     if (!el || el === getDocument() || el === getWindow())
@@ -2410,13 +2425,13 @@ function onTouchStart(event2) {
   if ((params.touchStartForcePreventDefault || shouldPreventDefault) && !targetEl.isContentEditable) {
     e.preventDefault();
   }
-  if (swiper.params.freeMode && swiper.params.freeMode.enabled && swiper.freeMode && swiper.animating && !params.cssMode) {
+  if (params.freeMode && params.freeMode.enabled && swiper.freeMode && swiper.animating && !params.cssMode) {
     swiper.freeMode.onTouchStart();
   }
   swiper.emit("touchStart", e);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/events/onTouchMove.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/events/onTouchMove.js
 function onTouchMove(event2) {
   const document2 = getDocument();
   const swiper = this;
@@ -2645,14 +2660,14 @@ function onTouchMove(event2) {
     swiper.updateActiveIndex();
     swiper.updateSlidesClasses();
   }
-  if (swiper.params.freeMode && params.freeMode.enabled && swiper.freeMode) {
+  if (params.freeMode && params.freeMode.enabled && swiper.freeMode) {
     swiper.freeMode.onTouchMove();
   }
   swiper.updateProgress(data.currentTranslate);
   swiper.setTranslate(data.currentTranslate);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/events/onTouchEnd.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/events/onTouchEnd.js
 function onTouchEnd(event2) {
   const swiper = this;
   const data = swiper.touchEventsData;
@@ -2728,7 +2743,7 @@ function onTouchEnd(event2) {
   if (params.cssMode) {
     return;
   }
-  if (swiper.params.freeMode && params.freeMode.enabled) {
+  if (params.freeMode && params.freeMode.enabled) {
     swiper.freeMode.onTouchEnd({
       currentPos
     });
@@ -2752,7 +2767,7 @@ function onTouchEnd(event2) {
   let rewindLastIndex = null;
   if (params.rewind) {
     if (swiper.isBeginning) {
-      rewindLastIndex = swiper.params.virtual && swiper.params.virtual.enabled && swiper.virtual ? swiper.virtual.slides.length - 1 : swiper.slides.length - 1;
+      rewindLastIndex = params.virtual && params.virtual.enabled && swiper.virtual ? swiper.virtual.slides.length - 1 : swiper.slides.length - 1;
     } else if (swiper.isEnd) {
       rewindFirstIndex = 0;
     }
@@ -2800,7 +2815,7 @@ function onTouchEnd(event2) {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/events/onResize.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/events/onResize.js
 function onResize() {
   const swiper = this;
   const {
@@ -2848,7 +2863,7 @@ function onResize() {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/events/onClick.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/events/onClick.js
 function onClick(e) {
   const swiper = this;
   if (!swiper.enabled)
@@ -2863,7 +2878,7 @@ function onClick(e) {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/events/onScroll.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/events/onScroll.js
 function onScroll() {
   const swiper = this;
   const {
@@ -2896,7 +2911,7 @@ function onScroll() {
   swiper.emit("setTranslate", swiper.translate, false);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/events/onLoad.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/events/onLoad.js
 function onLoad(e) {
   const swiper = this;
   processLazyPreloader(swiper, e.target);
@@ -2906,7 +2921,7 @@ function onLoad(e) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/events/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/events/index.js
 var dummyEventAttached = false;
 function dummyEventListener() {
 }
@@ -2984,7 +2999,7 @@ var events_default = {
   detachEvents
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/breakpoints/setBreakpoint.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/breakpoints/setBreakpoint.js
 var isGridEnabled = (swiper, params) => {
   return swiper.grid && params.grid && params.grid.rows > 1;
 };
@@ -3018,6 +3033,8 @@ function setBreakpoint() {
     swiper.emitContainerClasses();
   }
   ["navigation", "pagination", "scrollbar"].forEach((prop) => {
+    if (typeof breakpointParams[prop] === "undefined")
+      return;
     const wasModuleEnabled = params[prop] && params[prop].enabled;
     const isModuleEnabled = breakpointParams[prop] && breakpointParams[prop].enabled;
     if (wasModuleEnabled && !isModuleEnabled) {
@@ -3054,7 +3071,7 @@ function setBreakpoint() {
   swiper.emit("breakpoint", breakpointParams);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/breakpoints/getBreakpoint.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/breakpoints/getBreakpoint.js
 function getBreakpoint(breakpoints, base = "window", containerEl) {
   if (!breakpoints || base === "container" && !containerEl)
     return void 0;
@@ -3092,13 +3109,13 @@ function getBreakpoint(breakpoints, base = "window", containerEl) {
   return breakpoint || "max";
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/breakpoints/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/breakpoints/index.js
 var breakpoints_default = {
   setBreakpoint,
   getBreakpoint
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/classes/addClasses.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/classes/addClasses.js
 function prepareClasses(entries, prefix) {
   const resultClasses = [];
   entries.forEach((item) => {
@@ -3149,7 +3166,7 @@ function addClasses() {
   swiper.emitContainerClasses();
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/classes/removeClasses.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/classes/removeClasses.js
 function removeClasses() {
   const swiper = this;
   const {
@@ -3160,13 +3177,13 @@ function removeClasses() {
   swiper.emitContainerClasses();
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/classes/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/classes/index.js
 var classes_default = {
   addClasses,
   removeClasses
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/check-overflow/index.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/check-overflow/index.js
 function checkOverflow() {
   const swiper = this;
   const {
@@ -3200,7 +3217,7 @@ var check_overflow_default = {
   checkOverflow
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/defaults.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/defaults.js
 var defaults_default = {
   init: true,
   direction: "horizontal",
@@ -3318,7 +3335,7 @@ var defaults_default = {
   _emitClasses: false
 };
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/moduleExtendParams.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/moduleExtendParams.js
 function moduleExtendParams(params, allModulesParams) {
   return function extendParams(obj = {}) {
     const moduleParamName = Object.keys(obj)[0];
@@ -3352,7 +3369,7 @@ function moduleExtendParams(params, allModulesParams) {
   };
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/core/core.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/core/core.js
 var prototypes = {
   eventsEmitter: events_emitter_default,
   update: update_default,
@@ -3367,7 +3384,7 @@ var prototypes = {
   classes: classes_default
 };
 var extendedDefaults = {};
-var Swiper = class {
+var Swiper = class _Swiper {
   constructor(...args) {
     let el;
     let params;
@@ -3388,7 +3405,7 @@ var Swiper = class {
         const newParams = extend2({}, params, {
           el: containerEl
         });
-        swipers.push(new Swiper(newParams));
+        swipers.push(new _Swiper(newParams));
       });
       return swipers;
     }
@@ -3600,7 +3617,7 @@ var Swiper = class {
     } = swiper;
     let spv = 1;
     if (params.centeredSlides) {
-      let slideSize = slides[activeIndex].swiperSlideSize;
+      let slideSize = slides[activeIndex] ? slides[activeIndex].swiperSlideSize : 0;
       let breakLoop;
       for (let i = activeIndex + 1; i < slides.length; i += 1) {
         if (slides[i] && !breakLoop) {
@@ -3665,14 +3682,14 @@ var Swiper = class {
       swiper.updateSlidesClasses();
     }
     let translated;
-    if (swiper.params.freeMode && swiper.params.freeMode.enabled) {
+    if (params.freeMode && params.freeMode.enabled && !params.cssMode) {
       setTranslate2();
-      if (swiper.params.autoHeight) {
+      if (params.autoHeight) {
         swiper.updateAutoHeight();
       }
     } else {
-      if ((swiper.params.slidesPerView === "auto" || swiper.params.slidesPerView > 1) && swiper.isEnd && !swiper.params.centeredSlides) {
-        const slides = swiper.virtual && swiper.params.virtual.enabled ? swiper.virtual.slides : swiper.slides;
+      if ((params.slidesPerView === "auto" || params.slidesPerView > 1) && swiper.isEnd && !params.centeredSlides) {
+        const slides = swiper.virtual && params.virtual.enabled ? swiper.virtual.slides : swiper.slides;
         translated = swiper.slideTo(slides.length - 1, 0, false, true);
       } else {
         translated = swiper.slideTo(swiper.activeIndex, 0, false, true);
@@ -3866,20 +3883,20 @@ var Swiper = class {
     return defaults_default;
   }
   static installModule(mod) {
-    if (!Swiper.prototype.__modules__)
-      Swiper.prototype.__modules__ = [];
-    const modules = Swiper.prototype.__modules__;
+    if (!_Swiper.prototype.__modules__)
+      _Swiper.prototype.__modules__ = [];
+    const modules = _Swiper.prototype.__modules__;
     if (typeof mod === "function" && modules.indexOf(mod) < 0) {
       modules.push(mod);
     }
   }
   static use(module) {
     if (Array.isArray(module)) {
-      module.forEach((m) => Swiper.installModule(m));
-      return Swiper;
+      module.forEach((m) => _Swiper.installModule(m));
+      return _Swiper;
     }
-    Swiper.installModule(module);
-    return Swiper;
+    _Swiper.installModule(module);
+    return _Swiper;
   }
 };
 Object.keys(prototypes).forEach((prototypeGroup) => {
@@ -3890,7 +3907,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 Swiper.use([Resize, Observer]);
 var core_default = Swiper;
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/virtual/virtual.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/virtual/virtual.js
 function Virtual({
   swiper,
   extendParams,
@@ -4229,7 +4246,7 @@ function Virtual({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/keyboard/keyboard.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/keyboard/keyboard.js
 function Keyboard({
   swiper,
   extendParams,
@@ -4356,7 +4373,7 @@ function Keyboard({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/mousewheel/mousewheel.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/mousewheel/mousewheel.js
 function Mousewheel({
   swiper,
   extendParams,
@@ -4678,7 +4695,7 @@ function Mousewheel({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/create-element-if-not-defined.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/create-element-if-not-defined.js
 function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
   if (swiper.params.createElements) {
     Object.keys(checkProps).forEach((key) => {
@@ -4697,7 +4714,7 @@ function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
   return params;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/navigation/navigation.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/navigation/navigation.js
 function Navigation({
   swiper,
   extendParams,
@@ -4890,12 +4907,12 @@ function Navigation({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/classes-to-selector.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/classes-to-selector.js
 function classesToSelector(classes = "") {
   return `.${classes.trim().replace(/([\.:!+\/])/g, "\\$1").replace(/ /g, ".")}`;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/pagination/pagination.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/pagination/pagination.js
 function Pagination({
   swiper,
   extendParams,
@@ -5040,6 +5057,8 @@ function Pagination({
           const bulletIndex = elementIndex(bullet);
           if (bulletIndex === current) {
             bullet.classList.add(...params.bulletActiveClass.split(" "));
+          } else if (swiper.isElement) {
+            bullet.setAttribute("part", "bullet");
           }
           if (params.dynamicBullets) {
             if (bulletIndex >= firstIndex && bulletIndex <= lastIndex) {
@@ -5057,6 +5076,11 @@ function Pagination({
         const bullet = bullets[current];
         if (bullet) {
           bullet.classList.add(...params.bulletActiveClass.split(" "));
+        }
+        if (swiper.isElement) {
+          bullets.forEach((bulletEl, bulletIndex) => {
+            bulletEl.setAttribute("part", bulletIndex === current ? "bullet-active" : "bullet");
+          });
         }
         if (params.dynamicBullets) {
           const firstDisplayedBullet = bullets[firstIndex];
@@ -5139,7 +5163,7 @@ function Pagination({
         if (params.renderBullet) {
           paginationHTML += params.renderBullet.call(swiper, i, params.bulletClass);
         } else {
-          paginationHTML += `<${params.bulletElement} class="${params.bulletClass}"></${params.bulletElement}>`;
+          paginationHTML += `<${params.bulletElement} ${swiper.isElement ? 'part="bullet"' : ""} class="${params.bulletClass}"></${params.bulletElement}>`;
         }
       }
     }
@@ -5350,7 +5374,7 @@ function Pagination({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/scrollbar/scrollbar.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/scrollbar/scrollbar.js
 function Scrollbar({
   swiper,
   extendParams,
@@ -5710,7 +5734,7 @@ function Scrollbar({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/parallax/parallax.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/parallax/parallax.js
 function Parallax({
   swiper,
   extendParams,
@@ -5822,7 +5846,7 @@ function Parallax({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/zoom/zoom.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/zoom/zoom.js
 function Zoom({
   swiper,
   extendParams,
@@ -6422,7 +6446,7 @@ function Zoom({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/controller/controller.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/controller/controller.js
 function Controller({
   swiper,
   extendParams,
@@ -6596,7 +6620,7 @@ function Controller({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/a11y/a11y.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/a11y/a11y.js
 function A11y({
   swiper,
   extendParams,
@@ -6939,7 +6963,7 @@ function A11y({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/history/history.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/history/history.js
 function History({
   swiper,
   extendParams,
@@ -7081,7 +7105,7 @@ function History({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/hash-navigation/hash-navigation.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/hash-navigation/hash-navigation.js
 function HashNavigation({
   swiper,
   extendParams,
@@ -7111,7 +7135,7 @@ function HashNavigation({
   const onHashChange = () => {
     emit("hashChange");
     const newHash = document2.location.hash.replace("#", "");
-    const activeSlideEl = swiper.slidesEl.querySelector(`[data-swiper-slide-index="${swiper.activeIndex}"]`);
+    const activeSlideEl = swiper.virtual && swiper.params.virtual.enabled ? swiper.slidesEl.querySelector(`[data-swiper-slide-index="${swiper.activeIndex}"]`) : swiper.slides[swiper.activeIndex];
     const activeSlideHash = activeSlideEl ? activeSlideEl.getAttribute("data-hash") : "";
     if (newHash !== activeSlideHash) {
       const newIndex = swiper.params.hashNavigation.getSlideIndex(swiper, newHash);
@@ -7123,7 +7147,7 @@ function HashNavigation({
   const setHash = () => {
     if (!initialized || !swiper.params.hashNavigation.enabled)
       return;
-    const activeSlideEl = swiper.slidesEl.querySelector(`[data-swiper-slide-index="${swiper.activeIndex}"]`);
+    const activeSlideEl = swiper.virtual && swiper.params.virtual.enabled ? swiper.slidesEl.querySelector(`[data-swiper-slide-index="${swiper.activeIndex}"]`) : swiper.slides[swiper.activeIndex];
     const activeSlideHash = activeSlideEl ? activeSlideEl.getAttribute("data-hash") || activeSlideEl.getAttribute("data-history") : "";
     if (swiper.params.hashNavigation.replaceState && window2.history && window2.history.replaceState) {
       window2.history.replaceState(null, null, `#${activeSlideHash}` || "");
@@ -7174,7 +7198,7 @@ function HashNavigation({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/autoplay/autoplay.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/autoplay/autoplay.js
 function Autoplay({
   swiper,
   extendParams,
@@ -7468,7 +7492,7 @@ function Autoplay({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/thumbs/thumbs.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/thumbs/thumbs.js
 function Thumb({
   swiper,
   extendParams,
@@ -7664,7 +7688,7 @@ function Thumb({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/free-mode/free-mode.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/free-mode/free-mode.js
 function freeMode({
   swiper,
   extendParams,
@@ -7684,6 +7708,8 @@ function freeMode({
     }
   });
   function onTouchStart2() {
+    if (swiper.params.cssMode)
+      return;
     const translate = swiper.getTranslate();
     swiper.setTranslate(translate);
     swiper.setTransition(0);
@@ -7693,6 +7719,8 @@ function freeMode({
     });
   }
   function onTouchMove2() {
+    if (swiper.params.cssMode)
+      return;
     const {
       touchEventsData: data,
       touches
@@ -7711,6 +7739,8 @@ function freeMode({
   function onTouchEnd2({
     currentPos
   }) {
+    if (swiper.params.cssMode)
+      return;
     const {
       params,
       wrapperEl,
@@ -7887,7 +7917,7 @@ function freeMode({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/grid/grid.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/grid/grid.js
 function Grid({
   swiper,
   extendParams
@@ -7918,7 +7948,6 @@ function Grid({
       rows,
       fill
     } = swiper.params.grid;
-    slidesPerRow = slidesNumberEvenToRows / rows;
     numFullColumns = Math.floor(slidesLength / rows);
     if (Math.floor(slidesLength / rows) === slidesLength / rows) {
       slidesNumberEvenToRows = slidesLength;
@@ -7928,6 +7957,7 @@ function Grid({
     if (slidesPerView !== "auto" && fill === "row") {
       slidesNumberEvenToRows = Math.max(slidesNumberEvenToRows, slidesPerView * rows);
     }
+    slidesPerRow = slidesNumberEvenToRows / rows;
   };
   const updateSlide = (i, slide, slidesLength, getDirectionLabel) => {
     const {
@@ -7963,6 +7993,8 @@ function Grid({
       row = Math.floor(i / slidesPerRow);
       column = i - row * slidesPerRow;
     }
+    slide.row = row;
+    slide.column = column;
     slide.style[getDirectionLabel("margin-top")] = row !== 0 ? spaceBetween && `${spaceBetween}px` : "";
   };
   const updateWrapperSize = (slideSize, snapGrid, getDirectionLabel) => {
@@ -7997,7 +8029,7 @@ function Grid({
   };
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/manipulation/methods/appendSlide.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/manipulation/methods/appendSlide.js
 function appendSlide(slides) {
   const swiper = this;
   const {
@@ -8034,7 +8066,7 @@ function appendSlide(slides) {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/manipulation/methods/prependSlide.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/manipulation/methods/prependSlide.js
 function prependSlide(slides) {
   const swiper = this;
   const {
@@ -8075,7 +8107,7 @@ function prependSlide(slides) {
   swiper.slideTo(newActiveIndex, 0, false);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/manipulation/methods/addSlide.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/manipulation/methods/addSlide.js
 function addSlide(index, slides) {
   const swiper = this;
   const {
@@ -8131,7 +8163,7 @@ function addSlide(index, slides) {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/manipulation/methods/removeSlide.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/manipulation/methods/removeSlide.js
 function removeSlide(slidesIndexes) {
   const swiper = this;
   const {
@@ -8176,7 +8208,7 @@ function removeSlide(slidesIndexes) {
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/manipulation/methods/removeAllSlides.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/manipulation/methods/removeAllSlides.js
 function removeAllSlides() {
   const swiper = this;
   const slidesIndexes = [];
@@ -8186,7 +8218,7 @@ function removeAllSlides() {
   swiper.removeSlide(slidesIndexes);
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/manipulation/manipulation.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/manipulation/manipulation.js
 function Manipulation({
   swiper
 }) {
@@ -8199,7 +8231,7 @@ function Manipulation({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/effect-init.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/effect-init.js
 function effectInit(params) {
   const {
     effect,
@@ -8261,7 +8293,7 @@ function effectInit(params) {
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/effect-target.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/effect-target.js
 function effectTarget(effectParams, slideEl) {
   const transformEl = getSlideTransformEl(slideEl);
   if (transformEl !== slideEl) {
@@ -8271,7 +8303,7 @@ function effectTarget(effectParams, slideEl) {
   return transformEl;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/effect-virtual-transition-end.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/effect-virtual-transition-end.js
 function effectVirtualTransitionEnd({
   swiper,
   duration,
@@ -8317,7 +8349,7 @@ function effectVirtualTransitionEnd({
   }
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/effect-fade/effect-fade.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/effect-fade/effect-fade.js
 function EffectFade({
   swiper,
   extendParams,
@@ -8378,7 +8410,7 @@ function EffectFade({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/effect-cube/effect-cube.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/effect-cube/effect-cube.js
 function EffectCube({
   swiper,
   extendParams,
@@ -8550,7 +8582,7 @@ function EffectCube({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/shared/create-shadow.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/shared/create-shadow.js
 function createShadow(params, slideEl, side) {
   const shadowClass = `swiper-slide-shadow${side ? `-${side}` : ""}`;
   const shadowContainer = getSlideTransformEl(slideEl);
@@ -8562,7 +8594,7 @@ function createShadow(params, slideEl, side) {
   return shadowEl;
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/effect-flip/effect-flip.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/effect-flip/effect-flip.js
 function EffectFlip({
   swiper,
   extendParams,
@@ -8666,7 +8698,7 @@ function EffectFlip({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/effect-coverflow/effect-coverflow.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/effect-coverflow/effect-coverflow.js
 function EffectCoverflow({
   swiper,
   extendParams,
@@ -8765,7 +8797,7 @@ function EffectCoverflow({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/effect-creative/effect-creative.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/effect-creative/effect-creative.js
 function EffectCreative({
   swiper,
   extendParams,
@@ -8899,7 +8931,7 @@ function EffectCreative({
   });
 }
 
-// node_modules/.pnpm/swiper@9.3.2/node_modules/swiper/modules/effect-cards/effect-cards.js
+// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/modules/effect-cards/effect-cards.js
 function EffectCards({
   swiper,
   extendParams,
@@ -8916,14 +8948,15 @@ function EffectCards({
   const setTranslate2 = () => {
     const {
       slides,
-      activeIndex
+      activeIndex,
+      rtlTranslate: rtl
     } = swiper;
     const params = swiper.params.cardsEffect;
     const {
       startTranslate,
       isTouched
     } = swiper.touchEventsData;
-    const currentTranslate = swiper.translate;
+    const currentTranslate = rtl ? -swiper.translate : swiper.translate;
     for (let i = 0; i < slides.length; i += 1) {
       const slideEl = slides[i];
       const slideProgress = slideEl.progress;
@@ -8952,9 +8985,9 @@ function EffectCards({
         tY = `${-25 * subProgress * Math.abs(progress)}%`;
       }
       if (progress < 0) {
-        tX = `calc(${tX}px + (${tXAdd * Math.abs(progress)}%))`;
+        tX = `calc(${tX}px ${rtl ? "-" : "+"} (${tXAdd * Math.abs(progress)}%))`;
       } else if (progress > 0) {
-        tX = `calc(${tX}px + (-${tXAdd * Math.abs(progress)}%))`;
+        tX = `calc(${tX}px ${rtl ? "-" : "+"} (-${tXAdd * Math.abs(progress)}%))`;
       } else {
         tX = `${tX}px`;
       }
@@ -8966,7 +8999,7 @@ function EffectCards({
       const scaleString = progress < 0 ? `${1 + (1 - scale) * progress}` : `${1 - (1 - scale) * progress}`;
       const transform = `
         translate3d(${tX}, ${tY}, ${tZ}px)
-        rotateZ(${params.rotate ? rotate : 0}deg)
+        rotateZ(${params.rotate ? rtl ? -rotate : rotate : 0}deg)
         scale(${scaleString})
       `;
       if (params.slideShadows) {
