@@ -13,7 +13,8 @@ function changePage (pager: object) { // 分页回调
 </script>
 <template>
   <div>
-    <h2 class="mb10">Pagination 分页基本使用</h2>
+    <h1>Pagination 分页</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Pagination
       @change="changePage"
       :current="pagination.p"

@@ -12,7 +12,8 @@ watchEffect(() => {
 
 <template>
   <div>
-    <h2 class="mb10">Switch 开关基本使用</h2>
+    <h1>Switch 开关</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Switch v-model:checked="checked" @change="onChange" />
     <h2 class="mt30 mb10">带文字的开关 (checkedInfo: 开 & uncheckedInfo: 关)</h2>
     <Switch v-model:checked="checked" checkedInfo="开" uncheckedInfo="关" />

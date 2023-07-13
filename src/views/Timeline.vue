@@ -25,7 +25,8 @@ const timelineData = ref([
 </script>
 <template>
   <div>
-    <h2 class="mb10">Timeline 时间轴基本使用</h2>
+    <h1>Timeline 时间轴</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Timeline :timelineData="timelineData" />
     <h2 class="mb10">自定义样式</h2>
     <Timeline :timelineData="timelineData">

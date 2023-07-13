@@ -33,7 +33,8 @@ function onChange (key: any) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Collapse 折叠面板基本使用 (activeKey 传入 number[] | string[]，所有面板可同时展开)</h2>
+    <h1>Collapse 折叠面板</h1>
+    <h2 class="mt30 mb10">基本使用 (activeKey 传入 number[] | string[]，所有面板可同时展开)</h2>
     <Collapse
       :collapseData="collapseData"
       v-model:activeKey="activeKey"

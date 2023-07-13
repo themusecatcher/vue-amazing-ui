@@ -18,7 +18,8 @@ const routes = ref([
 </script>
 <template>
   <div>
-    <h2 class="mb10">Breadcrumb 面包屑基本使用</h2>
+    <h1>Breadcrumb 面包屑</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Breadcrumb :routes="routes" />
     <h2 class="mt30 mb10">使用自定义分隔符: / (separator: /)</h2>
     <Breadcrumb :routes="routes" separator="/" />

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2 class="mb10">Result 结果基本使用</h2>
-    <h2 class="mb10">成功的结果</h2>
+    <h1>Result 结果</h1>
+    <h2 class="mt30 mb10">成功的结果</h2>
     <Result
       status="success"
       title="Successfully Purchased Cloud Server ECS!"

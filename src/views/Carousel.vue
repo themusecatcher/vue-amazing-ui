@@ -51,7 +51,8 @@ const images = ref([
 </script>
 <template>
   <div>
-    <h2 class="mb10">Carousel 走马灯基本使用</h2>
+    <h1>Carousel 走马灯</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Carousel
       :images="images"
       :width="800"

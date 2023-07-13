@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h2 class="mb10">Empty 空状态基本使用 预置风格1</h2>
+    <h1>Empty 空状态</h1>
+    <h2 class="mt30 mb10">预置风格1</h2>
     <Empty />
     <h2 class="mt30 mb10">预置风格2 (image: 2)</h2>
     <Empty image="2" />

@@ -7,7 +7,8 @@ function onClick (e: Event) {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Button 按钮基本使用</h2>
+    <h1>Button 按钮</h1>
+    <h2 class="mt30 mb10">基本使用，共五种类型</h2>
     <Button
       class="mr30"
       :loading="loading"
@@ -31,6 +32,13 @@ function onClick (e: Event) {
     <Button
       class="mr30"
       type="danger"
+      :loading="loading"
+      @click="onClick">
+      Danger Button
+    </Button>
+    <Button
+      class="mr30"
+      type="dashed"
       :loading="loading"
       @click="onClick">
       Danger Button

@@ -20,7 +20,8 @@ function onClose () {
 </script>
 <template>
   <div>
-    <h2 class="mb10">Message 全局提示基本使用</h2>
+    <h1>Message 全局提示</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Button type="primary" @click="onInfo('This is a normal message')" class="mr30">Info</Button>
     <Button type="primary" @click="onSuccess('This is a success message')" class="mr30">Success</Button>
     <Button type="primary" @click="onError('This is a error message')" class="mr30">Error</Button>
