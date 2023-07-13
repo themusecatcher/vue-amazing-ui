@@ -13,7 +13,7 @@ withDefaults(defineProps<Props>(), {
 const contentRef = ref() // 声明一个同名的模板引用
 const showContent = ref(1)
 onMounted(() => {
-  showContent.value = contentRef.value.clientHeight
+  showContent.value = contentRef.value.offsetHeight
 })
 </script>
 <template>

@@ -182,8 +182,8 @@ function onMouseDown (event: MouseEvent) {
   const bottom = imageRect.bottom // 图片下边缘距浏览器窗口上边界的距离
   const right = imageRect.right // 图片右边缘距浏览器窗口左边界的距离
   const left = imageRect.left // 图片左边缘距浏览器窗口左边界的距离
-  const viewportWidth = document.body.clientWidth
-  const viewportHeight = document.body.clientHeight
+  const viewportWidth = document.documentElement.clientWidth
+  const viewportHeight = document.documentElement.clientHeight
   sourceX.value = event.clientX // 鼠标按下时相对于视口左边缘的X坐标
   sourceY.value = event.clientY // 鼠标按下时相对于视口上边缘的Y坐标
   const sourceDragX = dragX.value // 鼠标按下时图片的X轴偏移量
