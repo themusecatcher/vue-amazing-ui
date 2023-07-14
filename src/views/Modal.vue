@@ -79,13 +79,15 @@ function onKnow () { // “我知道了”按钮回调
   <div>
     <h1>Modal 信息提示</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Button class="mr30" @click="showConfirmModal('Some descriptions ...')">提交确认</Button>
-    <Button class="mr30" @click="showDeleteModal('Some descriptions ...')">删除确认</Button>
-    <Button class="mr30" @click="showInfoModal('Some descriptions ...')">Info</Button>
-    <Button class="mr30" @click="showSuccessModal('Some descriptions ...')">Success</Button>
-    <Button class="mr30" @click="showErrorModal('Some descriptions ...')">Error</Button>
-    <Button class="mr30" @click="showWarnModal('Some descriptions ...')">Warn</Button>
-    <Button class="mr30" @click="showFixModal('Some descriptions ...')">高度固定</Button>
+    <Space :size="30">
+      <Button type="primary" @click="showConfirmModal('Some descriptions ...')">提交确认</Button>
+      <Button type="primary" @click="showDeleteModal('Some descriptions ...')">删除确认</Button>
+      <Button type="primary" @click="showInfoModal('Some descriptions ...')">Info</Button>
+      <Button type="primary" @click="showSuccessModal('Some descriptions ...')">Success</Button>
+      <Button type="primary" @click="showErrorModal('Some descriptions ...')">Error</Button>
+      <Button type="primary" @click="showWarnModal('Some descriptions ...')">Warn</Button>
+      <Button type="primary" @click="showFixModal('Some descriptions ...')">高度固定</Button>
+    </Space>
     <Modal
       ref="modal"
       :width="420"

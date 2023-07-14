@@ -2,14 +2,14 @@
 import { ref, computed, watch } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Props {
-  title?: string // 消息的标题
-  duration?: number // 自动关闭的延时时长，单位ms，默认4500ms；设置0时，不自动关闭
+  message?: string // 全局通知提醒标题，优先级低于 Notification 中的 message
+  duration?: number|null // 自动关闭的延时时长，单位ms，默认4500ms；设置 null 时，不自动关闭
   top?: number // 消息从顶部弹出时，距离顶部的位置，单位px
   bottom?: number // 消息从底部弹出时，距离底部的位置，单位px
-  placement?: 'topLeft'|'topRight'|'bottomLeft'|'bottomRight' // 消息弹出位置
+  placement?: 'topLeft'|'topRight'|'bottomLeft'|'bottomRight' // 消息弹出位置，优先级低于 Notification 中的 placement
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '温馨提示',
+  message: '温馨提示',
   duration: 4500,
   top: 24,
   bottom: 24,
@@ -22,13 +22,16 @@ enum ColorStyle { // 颜色主题对象
   warn = '#faad14'
 }
 interface Notification {
-  notification: string
-  mode: string
+  message?: string // 通知提醒标题
+  description: string // 通知提醒内容
+  mode?: 'open'|'info'|'success'|'warn'|'error' // 通知提醒框类型
+  placement?: 'topLeft'|'topRight'|'bottomLeft'|'bottomRight' // 通知提醒框弹出位置
 }
 const resetTimer = ref()
 const hideIndex = ref<number[]>([])
 const hideTimers = ref<any[]>([])
-const notificationData = ref<Notification[]>([])
+const notificationData = ref<Array<Notification>>([])
+const place = ref<any>(props.placement)
 
 const clear = computed(() => {
   // 所有提示是否已经全部变为false
@@ -57,43 +60,46 @@ function show () {
   cancelRaf(resetTimer.value)
   hideTimers.value.push(null)
   const index = notificationData.value.length - 1
+  if (notificationData.value[index].placement) {
+    place.value = notificationData.value[index].placement
+  }
   if (props.duration) {
     hideTimers.value[index] = rafTimeout(() => {
       onClose(index)
     }, props.duration)
   }
 }
-function open (notification: string) {
+function open (data: Notification) {
   notificationData.value.push({
-    notification,
+    ...data,
     mode: 'open'
   })
   show()
 }
-function info (notification: string) {
+function info (data: Notification) {
   notificationData.value.push({
-    notification,
+    ...data,
     mode: 'info'
   })
   show()
 }
-function success (notification: string) {
+function success (data: Notification) {
   notificationData.value.push({
-    notification,
+    ...data,
     mode: 'success'
   })
   show()
 }
-function error (notification: string) {
+function error (data: Notification) {
   notificationData.value.push({
-    notification,
+    ...data,
     mode: 'error'
   })
   show()
 }
-function warn (notification: string) {
+function warn (data: Notification) {
   notificationData.value.push({
-    notification,
+    ...data,
     mode: 'warn'
   })
   show()
@@ -113,21 +119,21 @@ function onClose (index: number) {
 </script>
 <template>
   <div
-    :class="['m-notification-wrap', placement]"
-    :style="`top: ${['topRight', 'topLeft'].includes(placement) ? top : 'auto'}px; bottom: ${['bottomRight', 'bottomLeft'].includes(placement) ? bottom : ''}px;`">
-    <TransitionGroup :name="['topRight', 'bottomRight'].includes(placement) ? 'right':'left'">
+    :class="['m-notification-wrapper', place]"
+    :style="`top: ${['topRight', 'topLeft'].includes(place) ? top : 'auto'}px; bottom: ${['bottomRight', 'bottomLeft'].includes(place) ? bottom : ''}px;`">
+    <TransitionGroup :name="['topRight', 'bottomRight'].includes(place) ? 'right':'left'">
       <div
         class="m-notification"
         @mouseenter="onEnter(index)"
         @mouseleave="onLeave(index)"
         v-show="!hideIndex.includes(index)"
         v-for="(data, index) in notificationData" :key="index">
-        <svg v-if="data.mode==='info'" class="u-status-svg" :style="`fill: ${ColorStyle[data.mode]}`" viewBox="64 64 896 896" data-icon="info-circle" aria-hidden="true" focusable="false"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"></path></svg>
-        <svg v-if="data.mode==='success'" class="u-status-svg" :style="`fill: ${ColorStyle[data.mode]}`" viewBox="64 64 896 896" data-icon="check-circle" aria-hidden="true" focusable="false"><path d="M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0 0 51.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
-        <svg v-if="data.mode==='warn'" class="u-status-svg" :style="`fill: ${ColorStyle[data.mode]}`" viewBox="64 64 896 896" data-icon="exclamation-circle" aria-hidden="true" focusable="false"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M464 688a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"></path></svg>
-        <svg v-if="data.mode==='error'" class="u-status-svg" :style="`fill: ${ColorStyle[data.mode]}`" viewBox="64 64 896 896" data-icon="close-circle" aria-hidden="true" focusable="false"><path d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z"></path><path d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
-        <div :class="['u-title', {'mb4': data.mode!=='open', 'ml36': data.mode!=='open'}]">{{ title || '--' }}</div>
-        <p :class="['u-description', {'ml36': data.mode!=='open'}]">{{ data.notification || '--' }}</p>
+        <svg v-if="data.mode==='info'" class="u-svg" :style="`fill: ${ColorStyle[data.mode]}`" viewBox="64 64 896 896" data-icon="info-circle" aria-hidden="true" focusable="false"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"></path></svg>
+        <svg v-if="data.mode==='success'" class="u-svg" :style="`fill: ${ColorStyle[data.mode]}`" viewBox="64 64 896 896" data-icon="check-circle" aria-hidden="true" focusable="false"><path d="M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0 0 51.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
+        <svg v-if="data.mode==='warn'" class="u-svg" :style="`fill: ${ColorStyle[data.mode]}`" viewBox="64 64 896 896" data-icon="exclamation-circle" aria-hidden="true" focusable="false"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M464 688a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"></path></svg>
+        <svg v-if="data.mode==='error'" class="u-svg" :style="`fill: ${ColorStyle[data.mode]}`" viewBox="64 64 896 896" data-icon="close-circle" aria-hidden="true" focusable="false"><path d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z"></path><path d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
+        <div :class="['u-title', {'mb4': data.mode!=='open', 'ml36': data.mode!=='open'}]">{{ data.message || message }}</div>
+        <p :class="['u-description', {'ml36': data.mode!=='open'}]">{{ data.description || '--' }}</p>
         <svg class="u-close" @click="onClose(index)" viewBox="64 64 896 896" data-icon="close" aria-hidden="true" focusable="false"><path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg>
       </div>
     </TransitionGroup>
@@ -170,7 +176,7 @@ function onClose (index: number) {
   margin-left: 24px;
   left: 0;
 }
-.m-notification-wrap {
+.m-notification-wrapper {
   position: fixed;
   z-index: 999; // 突出显示该层级
   width: 384px;
@@ -183,11 +189,11 @@ function onClose (index: number) {
     border-radius: 8px;
     box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
     transition: all .3s ease-in-out;
-    .u-status-svg {
+    .u-svg {
+      position: absolute;
+      display: inline-block;
       width: 24px;
       height: 24px;
-      display: inline-block;
-      position: absolute;
     }
     .u-title {
       display: inline-block;
