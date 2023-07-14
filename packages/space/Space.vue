@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 interface Props {
   align?: 'start'|'end'|'center'|'baseline' // 对齐方式
-  direction?: 'vertical'|'horizontal' // 间距方向
-  size?: 'small'|'middle'|'large'|number|number[] // 间距大小，数组时表示: [水平间距, 垂直间距]
+  direction?: 'horizontal'|'vertical' // 间距方向
+  size?: number|number[]|'small'|'middle'|'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
   wrap?: boolean // 是否自动换行，仅在 horizontal 时有效
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -13,6 +13,12 @@ const props = withDefaults(defineProps<Props>(), {
   wrap: false
 })
 const gap = computed(() => {
+  if (typeof props.size === 'number') {
+    return props.size + 'px'
+  }
+  if (Array.isArray(props.size)) {
+    return props.size[1] + 'px ' + props.size[0] + 'px '
+  }
   if (['small', 'middle', 'large'].includes(props.size)) {
     const gapMap = {
       small: '8px',
@@ -20,12 +26,6 @@ const gap = computed(() => {
       large: '24px'
     }
     return gapMap[props.size]
-  }
-  if (typeof props.size === 'number') {
-    return props.size + 'px'
-  }
-  if (Array.isArray(props.size)) {
-    return props.size[1] + 'px ' + props.size[0] + 'px '
   }
 })
 </script>

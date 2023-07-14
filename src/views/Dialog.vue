@@ -48,10 +48,12 @@ function onConfirm () { // “确定”按钮回调
   <div>
     <h1>Dialog 对话框</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Button type="primary" class="mr30" @click="showDialog('Some descriptions ...')">默认对话框</Button>
-    <Button type="primary" class="mr30" @click="showFooterDialog('Some descriptions ...')">有底部按钮的对话框</Button>
-    <Button type="primary" class="mr30" @click="showCenterDialog('Some descriptions ...')">水平垂直居中对话框</Button>
-    <Button type="primary" class="mr30" @click="showFixDialog('Some descriptions ...')">高度固定对话框</Button>
+    <Space :size="30">
+      <Button type="primary" @click="showDialog('Some descriptions ...')">默认对话框</Button>
+      <Button type="primary" @click="showFooterDialog('Some descriptions ...')">有底部按钮的对话框</Button>
+      <Button type="primary" @click="showCenterDialog('Some descriptions ...')">水平垂直居中对话框</Button>
+      <Button type="primary" @click="showFixDialog('Some descriptions ...')">高度固定对话框</Button>
+    </Space>
     <Dialog
       :title="title"
       :content="content"

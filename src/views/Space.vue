@@ -46,5 +46,3 @@ const size = ref('small')
     </Space>
   </div>
 </template>
-<style lang="less" scoped>
-</style>
