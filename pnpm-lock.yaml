@@ -15,8 +15,8 @@ dependencies:
     specifier: ^10.2.1
     version: 10.2.1(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
   ant-design-vue:
-    specifier: 4.0.0-rc.6
-    version: 4.0.0-rc.6(vue@3.3.4)
+    specifier: ^4.0.0
+    version: 4.0.0(vue@3.3.4)
   core-js:
     specifier: ^3.31.1
     version: 3.31.1
@@ -1178,8 +1178,8 @@ packages:
       warning: 4.0.3
     dev: false
 
-  /ant-design-vue@4.0.0-rc.6(vue@3.3.4):
-    resolution: {integrity: sha512-j+GAhgC1p1+nmQVbaEeY2miZ1h+8jBLlxTESX93MwcshVaYTkZNhiyddtl92VvEDJTedzuX+1oT3TP5wG/+tHg==}
+  /ant-design-vue@4.0.0(vue@3.3.4):
+    resolution: {integrity: sha512-6V8DxHPv3HJYDdv48W/KFOUjeZDsYJhFlk13HFSKCJSR2MQs4YnPIAC+rWie9vYcVEKbO+cQDqiOM3cBoHMNUQ==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'
@@ -3527,7 +3527,7 @@ packages:
       '@vuepic/vue-datepicker': 4.5.1(vue@3.3.4)
       '@vueuse/core': 10.2.1(vue@3.3.4)
       '@vueuse/integrations': 10.2.1(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
-      ant-design-vue: 4.0.0-rc.6(vue@3.3.4)
+      ant-design-vue: 4.0.0(vue@3.3.4)
       core-js: 3.31.1
       date-fns: 2.30.0
       qrcode: 1.5.3
@@ -3556,7 +3556,7 @@ packages:
       '@vuepic/vue-datepicker': 4.5.1(vue@3.3.4)
       '@vueuse/core': 10.2.1(vue@3.3.4)
       '@vueuse/integrations': 10.2.1(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
-      ant-design-vue: 4.0.0-rc.6(vue@3.3.4)
+      ant-design-vue: 4.0.0(vue@3.3.4)
       core-js: 3.31.1
       date-fns: 2.30.0
       qrcode: 1.5.3
@@ -3585,7 +3585,7 @@ packages:
       '@vuepic/vue-datepicker': 4.5.1(vue@3.3.4)
       '@vueuse/core': 10.2.1(vue@3.3.4)
       '@vueuse/integrations': 10.2.1(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
-      ant-design-vue: 4.0.0-rc.6(vue@3.3.4)
+      ant-design-vue: 4.0.0(vue@3.3.4)
       core-js: 3.31.1
       date-fns: 2.30.0
       qrcode: 1.5.3

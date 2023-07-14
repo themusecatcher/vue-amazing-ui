@@ -90,7 +90,7 @@ function onCopy (index: number) {
           <slot name="header" :header="data.header" :key="data.key || index">{{ data.header || '--' }}</slot>
         </div>
       </div>
-      <div class="u-collapse-content" :class="{'u-collapse-copyable': copyable}" :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index]:0}px;`">
+      <div class="u-collapse-content" :class="{'u-collapse-copyable': copyable}" :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index]:0}px; opacity: ${activeJudge(data.key || index) ? 1:0};`">
         <div class="u-lang">
           <slot name="lang" :lang="lang" :key="data.key || index">{{ lang }}</slot>
         </div>
@@ -142,10 +142,9 @@ function onCopy (index: number) {
     }
     .u-collapse-content {
       position: relative;
-      height: 0;
       overflow: hidden;
-      background-color: #fff;
-      transition: height .3s;
+      background-color: #ffffff;
+      transition: height 0.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
       .u-lang {
         position: absolute;
         right: 10px;
