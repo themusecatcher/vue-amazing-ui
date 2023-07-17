@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import { moneyFormat } from '../index'
 interface Props {
@@ -23,22 +23,30 @@ const props = withDefaults(defineProps<Props>(), {
   formatter: (value: string) => value
 })
 const showValue = computed(() => {
-  return moneyFormat(props.value, props.precision, props.separator)
+  return props.formatter(moneyFormat(props.value, props.precision, props.separator))
+})
+const prefixRef = ref() // 声明一个同名的模板引用
+const showPrefix = ref(1)
+const suffixRef = ref() // 声明一个同名的模板引用
+const showSuffix = ref(1)
+onMounted(() => {
+  showPrefix.value = prefixRef.value.offsetHeight
+  showSuffix.value = suffixRef.value.offsetHeight
 })
 </script>
 <template>
   <div class="m-statistic">
     <div class="u-title">
-      <slot name="title"></slot>
+      <slot name="title">{{ title }}</slot>
     </div>
-    <div class="m-content">
-      <span class="u-prefix">
+    <div class="m-content" :style="valueStyle">
+      <span ref="prefixRef" class="u-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <span class="u-content-value">
         <slot name="content">{{ showValue }}</slot>
       </span>
-      <span class="u-suffix">
+      <span ref="suffixRef" class="u-suffix" v-if="showSuffix">
         <slot name="suffix">{{ suffix }}</slot>
       </span>
     </div>
