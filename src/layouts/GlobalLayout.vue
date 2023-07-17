@@ -56,6 +56,12 @@ function changeTheme (checked: boolean) {
   right: 13px;
   z-index: 9;
 }
+:deep(.ant-switch-checked) {
+  background: #52c41a;
+  &:hover {
+    background: #73d13d !important;
+  }
+}
 .m-menus {
   overflow-y: auto;
   height: 100vh;
