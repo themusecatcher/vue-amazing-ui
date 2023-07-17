@@ -178,7 +178,11 @@ export function moneyFormat (value: number|string, decimal = 2, split = ',') {
       var res = ''
       var dotIndex = money.indexOf('.')
       if (dotIndex === -1) { // 整数
-        res = thousandFormat(money) + '.' + '0'.repeat(decimal)
+        if (decimal === 0) {
+          res = thousandFormat(money)
+        } else {
+          res = thousandFormat(money) + '.' + '0'.repeat(decimal)
+        }
       } else { // 非整数
         // 四舍五入 Math.round()：正数时4舍5入，负数时5舍6入
         // Math.round(1.5) = 2

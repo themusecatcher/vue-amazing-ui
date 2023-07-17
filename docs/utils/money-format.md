@@ -3,7 +3,7 @@
 ::: details  Show Source Code
 
 ```ts
-function moneyFormat (value: number|string, decimal = 2, split = ','): string {
+function moneyFormat (value: number|string, decimal = 2, split = ',') {
   function thousandFormat (numStr: string): string {
     const len = numStr.length
     return len <= 3 ? numStr : thousandFormat(numStr.slice(0, len - 3)) + split + numStr.slice(len - 3, len)
@@ -16,7 +16,11 @@ function moneyFormat (value: number|string, decimal = 2, split = ','): string {
       var res = ''
       var dotIndex = money.indexOf('.')
       if (dotIndex === -1) { // 整数
-        res = thousandFormat(money) + '.' + '0'.repeat(decimal)
+        if (decimal === 0) {
+          res = thousandFormat(money)
+        } else {
+          res = thousandFormat(money) + '.' + '0'.repeat(decimal)
+        }
       } else { // 非整数
         // 四舍五入 Math.round()：正数时4舍5入，负数时5舍6入
         // Math.round(1.5) = 2
