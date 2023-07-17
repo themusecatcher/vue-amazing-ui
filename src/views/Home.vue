@@ -19,9 +19,28 @@ const activeKey = ref(0)
 const sum = computed(() => {
   return (routes[0].children as Array<any>).length - 1
 })
+function onFinish () {
+  console.log('Off Duty！')
+}
+const getNowDate = (time: string): number => {
+  const date = new Date()
+  const Y = date.getFullYear()
+  const M = date.getMonth() + 1
+  const D = date.getDate()
+  console.log()
+  
+  return new Date(`${Y}-${M}-${D} ${time}`).getTime() + 10 * 60 * 60 * 1000
+}
 </script>
 <template>
-  <div class="home">
+  <div>
+    <Countdown
+      class="countdown"
+      title="Off Duty"
+      :countdown="getNowDate('9:01')"
+      format="HH:mm:ss"
+      finished-text="GO GO GO"
+      @finish="onFinish" />
     <h1>Vue Amazing UI</h1>
     <p class="u-tip mb10 mt30">该组件库采用 Vue3@3.3.4 + TS@4.7.4 + Vite4.4.3 + Less@4.1.3 实现！</p>
     <p class="u-tip mb10">所有组件样式 CSS 均使用 box-sizing: border-box; 模式！</p>
@@ -61,6 +80,12 @@ const sum = computed(() => {
   </div>
 </template>
 <style lang="less">
+.countdown {
+  position: fixed;
+  top: 36px;
+  right: 36px;
+  z-index: 1;
+}
 .u-head {
   font-size: 16px;
 }

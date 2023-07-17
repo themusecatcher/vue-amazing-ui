@@ -1,20 +1,25 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import type { CSSProperties } from 'vue'
 import { requestAnimationFrame } from '../index'
 interface Props {
-  countdown?: number // 倒计时数值，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(ms)
   title?: string // 倒计时标题 string | v-slot
+  value?: number // 倒计时数值，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(ms)
   format?: string // 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒)
   prefix?: string // 倒计时数值的前缀 string | v-slot
   suffix?: string // 倒计时数值的后缀 string | v-slot
+  titleStyle?: CSSProperties // 设置标题的样式
+  valueStyle?: CSSProperties // 设置数值的样式
   finishedText?: string // 完成后的展示文本 string | v-slot
 }
 const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
-  countdown: 0,
   title: 'Countdown',
+  value: 0,
   format: 'HH:mm:ss',
   prefix: '',
   suffix: '',
+  titleStyle: () => { return {} },
+  valueStyle: () => { return {} },
   finishedText: 'Finished'
 })
 const futureTime = ref() // 未来截止时间戳
@@ -91,23 +96,25 @@ function CountDown () {
   }
 }
 onMounted(() => {
-  if (props.countdown > Date.now()) { // 未来某时刻的时间戳，单位ms
-    futureTime.value = props.countdown
+  if (props.value >= Date.now()) { // 未来某时刻的时间戳，单位ms
+    futureTime.value = props.value
   } else { // 相对剩余时间，单位ms
-    futureTime.value = props.countdown + Date.now()
+    futureTime.value = props.value + Date.now()
   }
   requestAnimationFrame(CountDown)
 })
 </script>
 <template>
   <div class="m-countdown">
-    <div class="u-title">
+    <div class="u-title" :style="titleStyle">
       <slot name="title">{{ props.title }}</slot>
     </div>
     <div class="u-time">
       <slot name="prefix" v-if="restTime > 0">{{ prefix }}</slot>
-      <slot v-if="finishedText && restTime === 0" name="finish">{{ finishedText }}</slot>
-      <span v-else>{{ timeFormat(restTime) }}</span>
+      <span :style="valueStyle" v-if="finishedText && restTime === 0">
+        <slot name="finish">{{ finishedText }}</slot>
+      </span>
+      <span :style="valueStyle" v-else>{{ timeFormat(restTime) }}</span>
       <slot name="suffix" v-if="restTime > 0">{{ suffix }}</slot>
     </div>
   </div>
