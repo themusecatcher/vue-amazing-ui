@@ -109,13 +109,17 @@ onMounted(() => {
     <div class="u-title" :style="titleStyle">
       <slot name="title">{{ props.title }}</slot>
     </div>
-    <div class="u-time">
-      <slot name="prefix" v-if="restTime > 0">{{ prefix }}</slot>
-      <span :style="valueStyle" v-if="finishedText && restTime === 0">
+    <div class="m-time">
+      <span class="u-prefix" v-if="restTime > 0">
+        <slot name="prefix">{{ prefix }}</slot>
+      </span>
+      <span class="u-time-value" :style="valueStyle" v-if="finishedText && restTime === 0">
         <slot name="finish">{{ finishedText }}</slot>
       </span>
-      <span :style="valueStyle" v-else>{{ timeFormat(restTime) }}</span>
-      <slot name="suffix" v-if="restTime > 0">{{ suffix }}</slot>
+      <span class="u-time-value" :style="valueStyle" v-else>{{ timeFormat(restTime) }}</span>
+      <span class="u-suffix" v-if="restTime > 0">
+        <slot name="suffix">{{ suffix }}</slot>
+      </span>
     </div>
   </div>
 </template>
@@ -128,10 +132,22 @@ onMounted(() => {
     color: #00000073;
     font-size: 14px;
   }
-  .u-time {
+  .m-time {
     color: #000000d9;
     font-size: 24px;
     font-family: 'Helvetica Neue'; // 保证数字等宽显示
+    .u-prefix {
+      display: inline-block;
+      margin-inline-end: 4px;
+    }
+    .u-time-value {
+      display: inline-block;
+      direction: ltr;
+    }
+    .u-suffix {
+      display: inline-block;
+      margin-inline-start: 4px;
+    }
   }
 }
 </style>

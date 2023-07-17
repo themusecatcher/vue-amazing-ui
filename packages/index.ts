@@ -24,6 +24,7 @@ import Collapse from './collapse'
 import Countdown from './countdown'
 import DatePicker from './datepicker'
 import Descriptions from './descriptions'
+import DescriptionsItem from './descriptionsitem'
 import Dialog from './dialog'
 import Divider from './divider'
 import Drawer from './drawer'
@@ -73,6 +74,7 @@ const components = [
   Countdown,
   DatePicker,
   Descriptions,
+  DescriptionsItem,
   Dialog,
   Divider,
   Drawer,
@@ -147,6 +149,7 @@ export {
   Countdown,
   DatePicker,
   Descriptions,
+  DescriptionsItem,
   Dialog,
   Divider,
   Drawer,
