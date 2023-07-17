@@ -1,15 +1,112 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 interface Props {
   span?: number // 栅格占位格数，为 0 时相当于 display: none，取0,1,2...24
   offset?: number // 栅格左侧的间隔格数，取0,1,2...24
+  flex?: string|number //	flex 布局填充
+  xs?: number|{span: number, offset?: number} // <576px 响应式栅格
+  sm?: number|{span: number, offset?: number} // ≥576px 响应式栅格
+  md?: number|{span: number, offset?: number} // ≥768px 响应式栅格
+  lg?: number|{span: number, offset?: number} // ≥992px 响应式栅格
+  xl?: number|{span: number, offset?: number} // ≥1200px 响应式栅格
+  xxl?: number|{span: number, offset?: number} // ≥1600px 响应式栅格
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   span: undefined,
-  offset: 0
+  offset: 0,
+  flex: '',
+  xs: undefined,
+  sm: undefined,
+  md: undefined,
+  lg: undefined,
+  xl: undefined,
+  xxl: undefined
 })
+const flexValue = computed(() => {
+  if (typeof props.flex === 'number') {
+    return `${props.flex} ${props.flex} auto`
+  }
+  return props.flex
+})
+const responsiveProperty = computed(() => {
+  if (clientWidth.value >= 1600 && props.xxl) {
+    if (typeof props.xxl === 'object') {
+      return props.xxl
+    } else {
+      return {
+        span: props.xxl,
+        offset: undefined
+      }
+    }
+  }
+  if (clientWidth.value >= 1200 && props.xl) {
+    if (typeof props.xl === 'object') {
+      return props.xl
+    } else {
+      return {
+        span: props.xl,
+        offset: undefined
+      }
+    }
+  }
+  if (clientWidth.value >= 992 && props.lg) {
+    if (typeof props.lg === 'object') {
+      return props.lg
+    } else {
+      return {
+        span: props.lg,
+        offset: undefined
+      }
+    }
+  }
+  if (clientWidth.value >= 768 && props.md) {
+    if (typeof props.md === 'object') {
+      return props.md
+    } else {
+      return {
+        span: props.md,
+        offset: undefined
+      }
+    }
+  }
+  if (clientWidth.value >= 576 && props.sm) {
+    if (typeof props.sm === 'object') {
+      return props.sm
+    } else {
+      return {
+        span: props.sm,
+        offset: undefined
+      }
+    }
+  }
+  if (clientWidth.value < 576 && props.xs) {
+    if (typeof props.xs === 'object') {
+      return props.xs
+    } else {
+      return {
+        span: props.xs,
+        offset: undefined
+      }
+    }
+  }
+})
+const clientWidth = ref(document.documentElement.clientWidth)
+onMounted(() => {
+  window.addEventListener('resize', getBrowserSize)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', getBrowserSize)
+})
+function getBrowserSize () {
+  // document.documentElement返回<html>元素
+  clientWidth.value = document.documentElement.clientWidth
+}
 </script>
 <template>
-  <div :class="`m-col col-${span} offset-${offset}`" style="padding-left: var(--xGap); padding-right: var(--xGap);">
+  <div
+    :class="`m-col col-${responsiveProperty?.span || span} offset-${responsiveProperty?.offset || offset}`"
+    style="padding-left: var(--xGap); padding-right: var(--xGap);"
+    :style="`flex: ${flexValue}`">
     <slot></slot>
   </div>
 </template>
@@ -21,6 +118,7 @@ withDefaults(defineProps<Props>(), {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
+  transition: all .3s;
 }
 .col-0 {
   display: none;

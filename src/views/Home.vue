@@ -27,9 +27,7 @@ const getNowDate = (time: string): number => {
   const Y = date.getFullYear()
   const M = date.getMonth() + 1
   const D = date.getDate()
-  console.log()
-  
-  return new Date(`${Y}-${M}-${D} ${time}`).getTime() + 10 * 60 * 60 * 1000
+  return new Date(`${Y} ${M} ${D} ${time}`).getTime() + 9 * 60 * 60 * 1000
 }
 </script>
 <template>
@@ -37,7 +35,7 @@ const getNowDate = (time: string): number => {
     <Countdown
       class="countdown"
       title="Off Duty"
-      :countdown="getNowDate('9:01')"
+      :value="getNowDate('9:01')"
       format="HH:mm:ss"
       finished-text="GO GO GO"
       @finish="onFinish" />
