@@ -150,7 +150,11 @@ function moneyFormat(value, decimal = 2, split = ",") {
       var res = "";
       var dotIndex = money.indexOf(".");
       if (dotIndex === -1) {
-        res = thousandFormat(money) + "." + "0".repeat(decimal);
+        if (decimal === 0) {
+          res = thousandFormat(money);
+        } else {
+          res = thousandFormat(money) + "." + "0".repeat(decimal);
+        }
       } else {
         const numStr = String((Math.round(parseFloat(money) * Math.pow(10, decimal)) / Math.pow(10, decimal)).toFixed(decimal));
         const decimals = numStr.slice(dotIndex, dotIndex + decimal + 1);
@@ -5076,6 +5080,10 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
     formatter: { type: Function, default: (value) => value }
   },
   setup(__props) {
+    const props = __props;
+    const showValue = computed(() => {
+      return moneyFormat(props.value, props.precision, props.separator);
+    });
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$b, [
         createElementVNode("div", _hoisted_2$8, [
@@ -5088,7 +5096,9 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
             ], true)
           ]),
           createElementVNode("span", _hoisted_5$3, [
-            renderSlot(_ctx.$slots, "content", {}, void 0, true)
+            renderSlot(_ctx.$slots, "content", {}, () => [
+              createTextVNode(toDisplayString(showValue.value), 1)
+            ], true)
           ]),
           createElementVNode("span", _hoisted_6$3, [
             renderSlot(_ctx.$slots, "suffix", {}, () => [
@@ -5100,8 +5110,8 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Statistic_vue_vue_type_style_index_0_scoped_455d1c52_lang = "";
-const Statistic = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-455d1c52"]]);
+const Statistic_vue_vue_type_style_index_0_scoped_028f1b7c_lang = "";
+const Statistic = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-028f1b7c"]]);
 Statistic.install = (app) => {
   app.component(Statistic.__name, Statistic);
 };

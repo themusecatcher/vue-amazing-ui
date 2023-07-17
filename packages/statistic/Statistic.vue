@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
+import { moneyFormat } from '../index'
 interface Props {
   title?: string // 数值的标题 string | slot
   value?: string|number // 数值的内容 string | slot
@@ -20,6 +22,9 @@ const props = withDefaults(defineProps<Props>(), {
   separator: ',',
   formatter: (value: string) => value
 })
+const showValue = computed(() => {
+  return moneyFormat(props.value, props.precision, props.separator)
+})
 </script>
 <template>
   <div class="m-statistic">
@@ -31,7 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <span class="u-content-value">
-        <slot name="content"></slot>
+        <slot name="content">{{ showValue }}</slot>
       </span>
       <span class="u-suffix">
         <slot name="suffix">{{ suffix }}</slot>
