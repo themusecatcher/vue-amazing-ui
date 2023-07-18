@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 interface Props {
-  status?: 'success'|'error'|'info'|'warn'|'404'|'403'|'500' // 结果的状态,决定图标和颜色
+  status?: 'success'|'error'|'info'|'warn'|'404'|'403'|'500' // 结果的状态，决定图标和颜色
   title?: string // 标题文字 string | slot
   subTitle?: string // 副标题文字 string | slot
 }
