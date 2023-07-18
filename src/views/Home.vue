@@ -35,7 +35,7 @@ const getNowDate = (time: string): number => {
     <Countdown
       class="countdown"
       title="Off Duty"
-      :value="getNowDate('9:01')"
+      :value="getNowDate('8:59')"
       format="HH:mm:ss"
       finished-text="GO GO GO"
       @finish="onFinish" />

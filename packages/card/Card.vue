@@ -32,7 +32,10 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="m-card" :class="{'bordered': bordered, 'm-small-card': size === 'small'}" :style="`width: ${cardWidth};`">
+  <div
+    class="m-card"
+    :class="{'bordered': bordered, 'm-small-card': size === 'small'}"
+    :style="`width: ${cardWidth};`">
     <div class="m-card-head" :style="headStyle" v-if="showHead">
       <div class="m-head-wrapper" ref="headRef">
         <div class="u-title">

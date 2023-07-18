@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, computed } from 'vue'
 interface Responsive {
-  xs?: number // <576px
-  sm?: number // ≥576px
-  md?: number // ≥768px
-  lg?: number // ≥992px
-  xl?: number // ≥1200px
-  xxl?: number // ≥1600px
+  xs?: number // <576px 响应式栅格
+  sm?: number // ≥576px 响应式栅格
+  md?: number // ≥768px 响应式栅格
+  lg?: number // ≥992px 响应式栅格
+  xl?: number // ≥1200px 响应式栅格
+  xxl?: number // ≥1600px 响应式栅格
 }
 interface Props {
   // 推荐使用 (16+8n)px 作为栅格间隔(n 是自然数：0,1,2,3...)
