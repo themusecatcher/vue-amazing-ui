@@ -143,28 +143,36 @@ function onClose (e: MouseEvent):void {
   background-color: #e6f4ff;
   border: 1px solid #91caff;
   .m-icon, .m-big-icon {
-    color: #1677ff;
+    :deep(.u-icon) {
+      fill: #1677ff;
+    }
   }
 }
 .success {
   background-color: #f6ffed;
   border: 1px solid #b7eb8f;
   .m-icon, .m-big-icon {
-    color: #52c41a;
+    :deep(.u-icon) {
+      fill: #52c41a;
+    }
   }
 }
 .warn {
   background-color: #fffbe6;
   border: 1px solid #ffe58f;
   .m-icon, .m-big-icon {
-    color: #faad14;
+    :deep(.u-icon) {
+      fill: #faad14;
+    }
   }
 }
 .error {
   background-color: #fff2f0;
   border: 1px solid #ffccc7;
   .m-icon, .m-big-icon {
-    color: #ff4d4f;
+    :deep(.u-icon) {
+      fill: #ff4d4f;
+    }
   }
 }
 .width-description {

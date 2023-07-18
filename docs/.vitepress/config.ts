@@ -95,12 +95,20 @@ export default defineConfig({
           text: '组件',
           items: [
             {
+              text: '警告提示 Alert',
+              link: '/guide/components/alert'
+            },
+            {
               text: '面包屑 Breadcrumb',
               link: '/guide/components/breadcrumb'
             },
             {
               text: '按钮 Button',
               link: '/guide/components/button'
+            },
+            {
+              text: '卡片 Card',
+              link: '/guide/components/card'
             },
             {
               text: '走马灯 Carousel',
@@ -127,6 +135,10 @@ export default defineConfig({
               link: '/guide/components/datepicker'
             },
             {
+              text: '描述列表 Descriptions',
+              link: '/guide/components/descriptions'
+            },
+            {
               text: '对话框 Dialog',
               link: '/guide/components/dialog'
             },
@@ -135,12 +147,24 @@ export default defineConfig({
               link: '/guide/components/divider'
             },
             {
+              text: '抽屉 Drawer',
+              link: '/guide/components/drawer'
+            },
+            {
               text: '空状态 Empty',
               link: '/guide/components/empty'
             },
             {
+              text: '栅格 Grid',
+              link: '/guide/components/grid'
+            },
+            {
               text: '图片 Image',
               link: '/guide/components/image'
+            },
+            {
+              text: '输入框 Input',
+              link: '/guide/components/input'
             },
             {
               text: '数字输入框 InputNumber',
@@ -179,6 +203,10 @@ export default defineConfig({
               link: '/guide/components/rate'
             },
             {
+              text: '结果 Result',
+              link: '/guide/components/result'
+            },
+            {
               text: '选择器 Select',
               link: '/guide/components/select'
             },
@@ -187,8 +215,16 @@ export default defineConfig({
               link: '/guide/components/slider'
             },
             {
+              text: '间距 Space',
+              link: '/guide/components/space'
+            },
+            {
               text: '加载中 Spin',
               link: '/guide/components/spin'
+            },
+            {
+              text: '统计数值 Statistic',
+              link: '/guide/components/statistic'
             },
             {
               text: '步骤条 Steps',
@@ -209,6 +245,10 @@ export default defineConfig({
             {
               text: '标签页 Tabs',
               link: '/guide/components/tabs'
+            },
+            {
+              text: '标签 Tag',
+              link: '/guide/components/tag'
             },
             {
               text: '文字滚动 TextScroll',

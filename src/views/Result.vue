@@ -8,31 +8,31 @@
       sub-title="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
     >
       <template #extra>
-        <a-button key="console" type="primary">Go Console</a-button>
-        <a-button key="buy">Buy Again</a-button>
+        <Button key="console" type="primary">Go Console</Button>
+        <Button key="buy">Buy Again</Button>
       </template>
     </Result>
-    <h2 class="mb10 mt30">展示处理结果</h2>
+    <h2 class="mt30 mb10">展示处理结果</h2>
     <Result title="Your operation has been executed">
       <template #extra>
-        <a-button key="console" type="primary">Go Console</a-button>
+        <Button key="console" type="primary">Go Console</Button>
       </template>
     </Result>
-    <h2 class="mb10 mt30">警告类型的结果</h2>
+    <h2 class="mt30 mb10">警告类型的结果</h2>
     <Result status="warn" title="There are some problems with your operation.">
       <template #extra>
-        <a-button key="console" type="primary">Go Console</a-button>
+        <Button key="console" type="primary">Go Console</Button>
       </template>
     </Result>
-    <h2 class="mb10 mt30">复杂的错误反馈</h2>
+    <h2 class="mt30 mb10">复杂的错误反馈</h2>
     <Result
       status="error"
       title="Submission Failed"
       sub-title="Please check and modify the following information before resubmitting."
     >
       <template #extra>
-        <a-button key="console" type="primary">Go Console</a-button>
-        <a-button key="buy">Buy Again</a-button>
+        <Button key="console" type="primary">Go Console</Button>
+        <Button key="buy">Buy Again</Button>
       </template>
 
       <div class="desc">
@@ -51,31 +51,31 @@
         </p>
       </div>
     </Result>
-    <h2 class="mb10 mt30">403 你没有此页面的访问权限</h2>
+    <h2 class="mt30 mb10">403 你没有此页面的访问权限</h2>
     <Result status="403" title="403" sub-title="Sorry, you are not authorized to access this page.">
       <template #extra>
-        <a-button type="primary">Back Home</a-button>
+        <Button type="primary">Back Home</Button>
       </template>
     </Result>
-    <h2 class="mb10 mt30">404 此页面未找到</h2>
+    <h2 class="mt30 mb10">404 此页面未找到</h2>
     <Result status="404" title="404" sub-title="Sorry, the page you visited does not exist.">
       <template #extra>
-        <a-button type="primary">Back Home</a-button>
+        <Button type="primary">Back Home</Button>
       </template>
     </Result>
-    <h2 class="mb10 mt30">500 服务器发生了错误</h2>
+    <h2 class="mt30 mb10">500 服务器发生了错误</h2>
     <Result status="500" title="500" sub-title="Sorry, the server is wrong.">
       <template #extra>
-        <a-button type="primary">Back Home</a-button>
+        <Button type="primary">Back Home</Button>
       </template>
     </Result>
-    <h2 class="mb10 mt30">自定义 image</h2>
+    <h2 class="mt30 mb10">自定义 image</h2>
     <Result title="Great, we have done all the operations!">
       <template #image>
-        <svg focusable="false" class="u-image" data-icon="smile" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" fill="#1890ff"></path><path d="M512 140c-205.4 0-372 166.6-372 372s166.6 372 372 372 372-166.6 372-372-166.6-372-372-372zM288 421a48.01 48.01 0 0196 0 48.01 48.01 0 01-96 0zm224 272c-85.5 0-155.6-67.3-160-151.6a8 8 0 018-8.4h48.1c4.2 0 7.8 3.2 8.1 7.4C420 589.9 461.5 629 512 629s92.1-39.1 95.8-88.6c.3-4.2 3.9-7.4 8.1-7.4H664a8 8 0 018 8.4C667.6 625.7 597.5 693 512 693zm176-224a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" fill="#e6f7ff"></path><path d="M288 421a48 48 0 1096 0 48 48 0 10-96 0zm376 112h-48.1c-4.2 0-7.8 3.2-8.1 7.4-3.7 49.5-45.3 88.6-95.8 88.6s-92-39.1-95.8-88.6c-.3-4.2-3.9-7.4-8.1-7.4H360a8 8 0 00-8 8.4c4.4 84.3 74.5 151.6 160 151.6s155.6-67.3 160-151.6a8 8 0 00-8-8.4zm-24-112a48 48 0 1096 0 48 48 0 10-96 0z" fill="#1890ff"></path></svg>
+        <svg focusable="false" class="u-svg" data-icon="smile" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" fill="#1890ff"></path><path d="M512 140c-205.4 0-372 166.6-372 372s166.6 372 372 372 372-166.6 372-372-166.6-372-372-372zM288 421a48.01 48.01 0 0196 0 48.01 48.01 0 01-96 0zm224 272c-85.5 0-155.6-67.3-160-151.6a8 8 0 018-8.4h48.1c4.2 0 7.8 3.2 8.1 7.4C420 589.9 461.5 629 512 629s92.1-39.1 95.8-88.6c.3-4.2 3.9-7.4 8.1-7.4H664a8 8 0 018 8.4C667.6 625.7 597.5 693 512 693zm176-224a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" fill="#e6f7ff"></path><path d="M288 421a48 48 0 1096 0 48 48 0 10-96 0zm376 112h-48.1c-4.2 0-7.8 3.2-8.1 7.4-3.7 49.5-45.3 88.6-95.8 88.6s-92-39.1-95.8-88.6c-.3-4.2-3.9-7.4-8.1-7.4H360a8 8 0 00-8 8.4c4.4 84.3 74.5 151.6 160 151.6s155.6-67.3 160-151.6a8 8 0 00-8-8.4zm-24-112a48 48 0 1096 0 48 48 0 10-96 0z" fill="#1890ff"></path></svg>
       </template>
       <template #extra>
-        <a-button type="primary">Next</a-button>
+        <Button type="primary">Next</Button>
       </template>
     </Result>
   </div>
@@ -91,11 +91,5 @@
   width: 14px;
   height: 14px;
   fill: #ff4d4f;
-}
-.u-image {
-  display: inline-block;
-  vertical-align: bottom;
-  width: 72px;
-  height: 72px;
 }
 </style>

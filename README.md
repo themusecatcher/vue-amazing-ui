@@ -64,18 +64,21 @@ pnpm dev
 
 Component name | Descriptions | Component name | Descriptions
 :-- | :-- | :-- | :--
-Breadcrumb | 面包屑 | Button | 按钮
+Alert | 警告提示 | Breadcrumb | 面包屑
+Button | 按钮 | Card | 卡片
 Carousel | 走马灯 | Cascader | 级联选择
 Checkbox | 多选框 | Collapse | 折叠面板
 Countdown | 倒计时 | DatePicker | 日期选择
 Dialog | 对话框 | Divider | 分割线
-Empty | 空状态 | Image | 图片
-InputNumber | 数字输入框 | Message | 全局提示
-Modal | 信息提示 | Notification | 通知提醒框
-Pagination | 分页 | Progress | 进度条
-QRCode | 二维码 | Radio | 单选框
-Rate | 评分 | Select | 选择器
-Slider | 滑动输入条 | Spin | 加载中
+Empty | 空状态 | Grid | 栅格
+Image | 图片 | InputNumber | 数字输入框
+Message | 全局提示 | Modal | 信息提示
+Notification | 通知提醒框 | Pagination | 分页
+Progress | 进度条 | QRCode | 二维码
+Radio | 单选框 | Rate | 评分
+Result | 结果 | Select | 选择器
+Slider | 滑动输入条 | Space | 间距
+Spin | 加载中 | Statistic | 统计数值
 Steps | 步骤条 | Swiper | 触摸滑动插件
 Switch | 开关 | Table | 表格
 Tabs | 标签页 | TextScroll | 文字滚动
@@ -100,4 +103,4 @@ throttle | 使用 rafTimeout 实现的节流函数！ | (fn: Function, delay = 3
 debounce | 使用 rafTimeout 实现的防抖函数！ | (fn: Function, delay = 300) => any
 add | 消除js加减精度问题的加法函数！ | (num1: number, num2: number) => number
 downloadFile | 下载文件并自定义文件名！ | (url: string, name: string) => void
-moneyFormat | 金额格式化函数！ | (value: number|string, decimal = 2, split = ',') => string
+moneyFormat | 金额格式化函数！ | (value: number&#124;string, decimal = 2, split = ',') => string

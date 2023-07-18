@@ -4,7 +4,7 @@ import type { CSSProperties } from 'vue'
 import { moneyFormat } from '../index'
 interface Props {
   title?: string // 数值的标题 string | slot
-  value?: string|number // 数值的内容 string | slot
+  value?: string|number // 数值的内容
   valueStyle?: CSSProperties // 设置数值的样式
   precision?: number //	数值精度
   prefix?: string // 设置数值的前缀 string | slot
@@ -43,9 +43,7 @@ onMounted(() => {
       <span ref="prefixRef" class="u-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
-      <span class="u-content-value">
-        <slot name="content">{{ showValue }}</slot>
-      </span>
+      <span class="u-content-value">{{ showValue }}</span>
       <span ref="suffixRef" class="u-suffix" v-if="showSuffix">
         <slot name="suffix">{{ suffix }}</slot>
       </span>
