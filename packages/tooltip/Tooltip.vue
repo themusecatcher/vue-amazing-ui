@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Props {
   maxWidth?: number // 提示框内容最大宽度，单位px
   content?: string // 展示的文本 string | slot
   title?: string // 提示的文本 string | slot
-  fontSize?: number // 提示文本字体大小，单位px
-  color?: string // 提示文本字体颜色
-  backgroundColor?: string // 提示框背景色
+  fontSize?: number // 提示文本字体大小，单位px，优先级高于 overlayStyle
+  color?: string // 提示文本字体颜色，优先级高于 overlayStyle
+  backgroundColor?: string // 提示框背景颜色，优先级高于 overlayStyle
+  overlayStyle?: CSSProperties // 提示框内容区域样式
 }
 withDefaults(defineProps<Props>(), {
   maxWidth: 120,
@@ -15,7 +17,8 @@ withDefaults(defineProps<Props>(), {
   title: '暂无提示',
   fontSize: 14,
   color: '#FFF',
-  backgroundColor: 'rgba(0,0,0,.85)'
+  backgroundColor: 'rgba(0,0,0,.85)',
+  overlayStyle: () => { return {} }
 })
 const visible = ref(false)
 const hideTimer = ref()
@@ -30,14 +33,17 @@ function getPosition () {
   top.value = titleHeight
   left.value = (titleWidth - contentWidth) / 2
 }
+const emit = defineEmits(['openChange'])
 function onShow () {
   getPosition()
   cancelRaf(hideTimer.value)
   visible.value = true
+  emit('openChange', visible.value)
 }
 function onHide (): void {
   hideTimer.value = rafTimeout(() => {
     visible.value = false
+    emit('openChange', visible.value)
   }, 100)
 }
 </script>
@@ -50,7 +56,9 @@ function onHide (): void {
       @mouseenter="onShow"
       @mouseleave="onHide"
       :style="`max-width: ${maxWidth}px; top: ${-top}px; left: ${-left}px;`">
-      <div class="u-title" :style="`font-size: ${fontSize}px; color: ${color}; background-color: ${backgroundColor};`">
+      <div
+        class="u-title"
+        :style="[overlayStyle, `font-size: ${fontSize}px; color: ${color}; background-color: ${backgroundColor};`]">
         <slot name="title">{{ title }}</slot>
       </div>
       <div class="m-arrow">
