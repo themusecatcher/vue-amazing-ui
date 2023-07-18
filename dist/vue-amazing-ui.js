@@ -7268,9 +7268,13 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     title: { default: "暂无提示" },
     fontSize: { default: 14 },
     color: { default: "#FFF" },
-    backgroundColor: { default: "rgba(0,0,0,.85)" }
+    backgroundColor: { default: "rgba(0,0,0,.85)" },
+    overlayStyle: { default: () => {
+      return {};
+    } }
   },
-  setup(__props) {
+  emits: ["openChange"],
+  setup(__props, { emit }) {
     const visible = ref(false);
     const hideTimer = ref();
     const top = ref(0);
@@ -7288,10 +7292,12 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
       getPosition();
       cancelRaf(hideTimer.value);
       visible.value = true;
+      emit("openChange", visible.value);
     }
     function onHide() {
       hideTimer.value = rafTimeout(() => {
         visible.value = false;
+        emit("openChange", visible.value);
       }, 100);
     }
     return (_ctx, _cache) => {
@@ -7310,7 +7316,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
         }, [
           createElementVNode("div", {
             class: "u-title",
-            style: normalizeStyle(`font-size: ${_ctx.fontSize}px; color: ${_ctx.color}; background-color: ${_ctx.backgroundColor};`)
+            style: normalizeStyle([_ctx.overlayStyle, `font-size: ${_ctx.fontSize}px; color: ${_ctx.color}; background-color: ${_ctx.backgroundColor};`])
           }, [
             renderSlot(_ctx.$slots, "title", {}, () => [
               createTextVNode(toDisplayString(_ctx.title), 1)
@@ -7336,8 +7342,8 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tooltip_vue_vue_type_style_index_0_scoped_125a9676_lang = "";
-const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-125a9676"]]);
+const Tooltip_vue_vue_type_style_index_0_scoped_621fd164_lang = "";
+const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-621fd164"]]);
 Tooltip.install = (app) => {
   app.component(Tooltip.__name, Tooltip);
 };
