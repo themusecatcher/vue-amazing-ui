@@ -137,7 +137,7 @@ function onClose (e: MouseEvent):void {
       display: inline-block;
       vertical-align: bottom;
       fill: rgba(0, 0, 0, 0.45);
-      transition: color 0.2s;
+      transition: fill 0.2s;
       &:hover {
         fill: rgba(0, 0, 0, 0.88);
       }
