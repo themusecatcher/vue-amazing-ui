@@ -136,6 +136,7 @@ function onClose (e: MouseEvent):void {
     .u-close {
       display: inline-block;
       vertical-align: bottom;
+      fill: rgba(0, 0, 0, 0.45);
     }
   }
 }
