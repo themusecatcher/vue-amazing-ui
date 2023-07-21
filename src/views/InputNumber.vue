@@ -20,7 +20,7 @@ function onAntChange (number: number) {
   <div>
     <h1>InputNumber 数字输入框</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <InputNumber v-model:value="value" />
+    <InputNumber v-model:value="value" placeholder="请输入" />
     <h2 class="mt30 mb10">步数为小数</h2>
     <InputNumber :step="0.1" v-model:value="value" />
     <h2 class="mt30 mb10">限制最大最小值</h2>

@@ -53,6 +53,7 @@ import Switch from './switch'
 import Table from './table'
 import Tabs from './tabs'
 import Tag from './tag'
+import Textarea from './textarea'
 import TextScroll from './textscroll'
 import Timeline from './timeline'
 import Tooltip from './tooltip'
@@ -103,6 +104,7 @@ const components = [
   Table,
   Tabs,
   Tag,
+  Textarea,
   TextScroll,
   Timeline,
   Tooltip,
@@ -178,6 +180,7 @@ export {
   Table,
   Tabs,
   Tag,
+  Textarea,
   TextScroll,
   Timeline,
   Tooltip,

@@ -254,6 +254,12 @@ export const routes = [
         component: () => import('@/views/Tag.vue')
       },
       {
+        path: '/textarea',
+        name: 'Textarea',
+        meta: { title: '文本域' },
+        component: () => import('@/views/Textarea.vue')
+      },
+      {
         path: '/textscroll',
         name: 'TextScroll',
         meta: { title: '文字滚动' },
@@ -288,19 +294,7 @@ export const routes = [
         name: 'Waterfall',
         meta: { title: '瀑布流' },
         component: () => import('@/views/Waterfall.vue')
-      },
-      // {
-      //   path: '/lazyload',
-      //   name: 'Lazyload',
-      //   meta: { title: '懒加载' },
-      //   component: () => import('@/views/Lazyload.vue')
-      // },
-      // {
-      //   path: '/ws',
-      //   name: 'Ws',
-      //   meta: { title: 'WebSocket' },
-      //   component: () => import('@/views/WebSocket.vue')
-      // }
+      }
     ]
   },
   {

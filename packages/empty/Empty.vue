@@ -8,7 +8,7 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   description: '暂无数据',
   image: '1',
-  imageStyle: () => { return {} }
+  imageStyle: () => ({})
 })
 </script>
 <template>

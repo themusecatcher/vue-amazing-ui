@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@ant-design/icons-vue':
+    specifier: ^6.1.0
+    version: 6.1.0(vue@3.3.4)
   '@vuepic/vue-datepicker':
     specifier: ^4.5.1
     version: 4.5.1(vue@3.3.4)

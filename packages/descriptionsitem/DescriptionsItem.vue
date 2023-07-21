@@ -8,8 +8,8 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   label: '',
-  labelStyle: () => { return {} },
-  contentStyle: () => { return {} },
+  labelStyle: () => ({}),
+  contentStyle: () => ({}),
   span: 1
 })
 </script>

@@ -18,8 +18,8 @@ const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   format: 'HH:mm:ss',
   prefix: '',
   suffix: '',
-  titleStyle: () => { return {} },
-  valueStyle: () => { return {} },
+  titleStyle: () => ({}),
+  valueStyle: () => ({}),
   finishedText: 'Finished'
 })
 const futureTime = ref() // 未来截止时间戳

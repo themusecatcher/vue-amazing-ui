@@ -22,20 +22,23 @@ const sum = computed(() => {
 function onFinish () {
   console.log('Off Duty！')
 }
-const getNowDate = (time: string): number => {
+const getOffDate = (time: string): number => {
   const date = new Date()
   const Y = date.getFullYear()
   const M = date.getMonth() + 1
   const D = date.getDate()
   return new Date(`${Y} ${M} ${D} ${time}`).getTime() + 9 * 60 * 60 * 1000
 }
+const countdown = computed(() => {
+  return getOffDate('8:57')
+})
 </script>
 <template>
   <div>
     <Countdown
       class="countdown"
       title="Off Duty"
-      :value="getNowDate('8:59')"
+      :value="countdown"
       format="HH:mm:ss"
       finished-text="GO GO GO"
       @finish="onFinish" />

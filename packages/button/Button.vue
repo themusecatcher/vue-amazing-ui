@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
   width: 0, // 优先级高于size属性，为0时自适应内容的宽度
   height: 0, // 优先级高于size属性
   borderRadius: 5,
-  route: () => { return {} },
+  route: () => ({}),
   target: '_self',
   disabled: false,
   loading: false,

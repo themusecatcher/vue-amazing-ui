@@ -1,9 +1,5 @@
 # 动画帧
 
-## 何时使用
-
-- 希望执行一个动画时
-
 ::: details  Show Source Code
 
 ```typescript
@@ -14,6 +10,10 @@ const cancelAnimationFrame = typeof window !== 'undefined' ? window.cancelAnimat
 ```
 
 :::
+
+## 何时使用
+
+- 希望执行一个动画时
 
 ## 基本使用
 

@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   pagination: true,
   pageActiveColor: '#1677FF',
   pageSize: 10,
-  pageStyle: () => { return {} },
+  pageStyle: () => ({}),
   disableOnInteraction: true,
   pauseOnMouseEnter:  true
 })

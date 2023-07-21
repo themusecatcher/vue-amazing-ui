@@ -16,8 +16,8 @@ const props = withDefaults(defineProps<Props>(), {
   extra: '',
   size: 'default',
   title: '',
-  headStyle: () => { return {} },
-  bodyStyle: () => { return {} }
+  headStyle: () => ({}),
+  bodyStyle: () => ({})
 })
 const cardWidth = computed(() => {
   if (typeof props.width === 'number') {

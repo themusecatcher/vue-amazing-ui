@@ -18,7 +18,7 @@ withDefaults(defineProps<Props>(), {
   fontSize: 14,
   color: '#FFF',
   backgroundColor: 'rgba(0,0,0,.85)',
-  overlayStyle: () => { return {} }
+  overlayStyle: () => ({})
 })
 const visible = ref(false)
 const hideTimer = ref()

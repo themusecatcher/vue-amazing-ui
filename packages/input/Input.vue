@@ -1,236 +1,306 @@
+<script lang="ts">
+/*
+  一个根节点时，禁用组件根节点自动继承 attribute，必须使用这种写法！然后在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
+  多个根节点时，只需在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
+*/
+export default {
+  inheritAttrs: false
+}
+</script>
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 interface Props {
-  width?: number // 输入框宽度
-  min?: number // 最小值
-  max?: number // 最大值
-  step?: number // 每次改变步数，可以为小数
-  precision?: number // 数值精度
+  width?: string|number // 输入框宽度
+  addonBefore?: string // 设置前置标签 string | slot
+  addonAfter?: string // 设置后置标签 string | slot
+  allowClear?: boolean // 可以点击清除图标删除内容
+  password?: boolean // 是否启用密码框
+  disabled?: boolean // 是否禁用
+  maxlength?: number // 最大长度
+  showCount?: boolean // 是否展示字数
+  size?: 'large'|'middle'|'small' // 输入框大小。标准表单内的输入框大小限制为 middle。
   prefix?: string // 前缀图标 string | slot
-  formatter?: Function // 指定展示值的格式
-  keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
-  value?: number|null // 当前值(v-model)
+  suffix?: string // 后缀图标 string | slot
+  value?: string // 输入框内容(v-model)
+  valueModifiers?: object // 用于访问组件的v-model上添加的修饰符
 }
 const props = withDefaults(defineProps<Props>(), {
-  width: 90,
-  min: -Infinity,
-  max: Infinity,
-  step: 1,
-  precision: 0,
+  width: '100%',
+  addonBefore: '',
+  addonAfter: '',
+  allowClear: false,
+  password: false,
+  disabled: false,
+  maxlength: undefined,
+  showCount: false,
+  size: 'middle',
   prefix: '',
-  formatter: (value: string) => value,
-  keyboard: true,
-  value: null
+  suffix: '',
+  value: '',
+  valueModifiers: () => ({})
 })
-const precision = computed(() => { // 数值精度取步长和精度中较大者
-  const stepPrecision = String(props.step).split('.')[1]?.length || 0
-  return Math.max(props.precision, stepPrecision)
+const inputWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return props.width + 'px'
+  }
+  return props.width
 })
-const numValue = ref(props.formatter(props.value?.toFixed(precision.value)))
-watch(
-  () => props.value,
-  (to) => {
-    numValue.value = props.formatter(to?.toFixed(precision.value))
+const showCountNum = computed(() => {
+  if (props.maxlength) {
+    return props.value.length + ' / ' + props.maxlength
   }
-)
-watch(
-  numValue,
-  (to) => {
-    if (!to)  {
-      emitValue(null)
-    }
+  return props.value.length
+})
+const showPassword = ref(false)
+const prefixRef = ref()
+const showPrefix = ref(1)
+const suffixRef = ref()
+const showSuffix = ref(1)
+const beforeRef = ref()
+const showBefore = ref(1)
+const afterRef = ref()
+const showAfter = ref(1)
+onMounted(() => {
+  showPrefix.value = prefixRef.value.offsetWidth
+  showSuffix.value = suffixRef.value.offsetWidth
+  showBefore.value = beforeRef.value.offsetWidth
+  showAfter.value = afterRef.value.offsetWidth
+})
+const emits = defineEmits(['update:value', 'change', 'enter'])
+function onInput (e: any) {
+  if (!('lazy' in props.valueModifiers)) {
+    emits('update:value', e.target.value)
+    emits('change', e)
   }
-)
-const emits = defineEmits(['update:value', 'change'])
-function emitValue (value: any) {
-  emits('change', value)
-  emits('update:value', value)
 }
 function onChange (e: any) {
-  const value = e.target.value.replaceAll(',', '')
-  if (!Number.isNaN(parseFloat(value))) { // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为Number
-    if (parseFloat(value) > props.max) {
-      emitValue(props.max)
-      return
-    }
-    if (parseFloat(value) < props.min) {
-      emitValue(props.min)
-      return
-    }
-    if (parseFloat(value) !== props.value) {
-      emitValue(parseFloat(value))
-    } else {
-      numValue.value = props.value?.toFixed(precision.value)
-    }
-  } else {
-    numValue.value = props.value?.toFixed(precision.value)
+  if ('lazy' in props.valueModifiers) {
+    emits('update:value', e.target.value)
+    emits('change', e)
   }
-}
-// 消除js加减精度问题的加法函数
-function add (num1: number, num2: number) {
-  const num1DeciStr = String(num1).split('.')[1]
-  const num2DeciStr = String(num2).split('.')[1]
-  let maxLen = Math.max(num1DeciStr?.length || 0, num2DeciStr?.length || 0) // 两数中最长的小数位长度
-  let num1Str = num1.toFixed(maxLen) // 补零，返回字符串
-  let num2Str = num2.toFixed(maxLen)
-  const result = +(num1Str.replace('.', '')) + +(num2Str.replace('.', '')) // 转换为整数相加
-  return result / Math.pow(10, maxLen)
 }
 function onKeyboard (e: any) {
-  if (e.key === 'ArrowUp') {
-    onUp()
-  }
-  if (e.key === 'ArrowDown') {
-    onDown()
+  if (e.key === 'Enter') {
+    emits('enter', e)
   }
 }
-function onUp () {
-  const res = parseFloat(Math.min(props.max, add(props.value || 0, +props.step)).toFixed(precision.value))
-  emitValue(res)
+const input = ref()
+function onClear () {
+  emits('update:value', '')
+  input.value.focus()
 }
-function onDown () {
-  const res = parseFloat(Math.max(props.min, add(props.value || 0, -props.step)).toFixed(precision.value))
-  emitValue(res)
+function onPassword () {
+  showPassword.value = !showPassword.value
 }
 </script>
 <template>
-  <div class="m-input-number" tabindex="1" :style="`width: ${width}px;`">
-    <div class="m-input-wrap">
-      <span class="u-input-prefix" :class="{mr3: prefix}">
+  <div class="m-input-wrap" :style="`width: ${inputWidth};`">
+    <span class="m-addon" :class="{before: showBefore}" ref="beforeRef" v-if="showBefore!==23">
+      <slot name="addonBefore">{{ addonBefore }}</slot>
+    </span>
+    <div
+      class="m-input"
+      :class="[`${size}`, {disabled: disabled, 'input-before': showBefore!==23, 'input-after': showAfter!==23}]"
+      tabindex="1">
+      <span class="m-prefix" ref="prefixRef" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
-        v-if="keyboard"
-        autocomplete="off"
-        class="u-input-number"
+        class="u-input"
+        ref="input"
+        :type="password && !showPassword ? 'password':'text'"
+        :value="value"
+        :maxlength="maxlength"
+        :disabled="disabled"
+        @input="onInput"
         @change="onChange"
-        v-model="numValue"
-        @keydown.up.prevent
-        @keydown="onKeyboard">
-      <input
-        v-else
-        autocomplete="off"
-        class="u-input-number"
-        @change="onChange"
-        v-model="numValue">
-    </div>
-    <div class="m-handler-wrap">
-      <span class="u-up-arrow" :class="{disabled: (value || 0) >= max}" @click="onUp">
-        <svg focusable="false" class="u-icon" data-icon="up" aria-hidden="true" viewBox="64 64 896 896"><path d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"></path></svg>
-      </span>
-      <span class="u-down-arrow" :class="{disabled: (value || 0) <= min}" @click="onDown">
-        <svg focusable="false" class="u-icon" data-icon="down" aria-hidden="true" viewBox="64 64 896 896"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
+        @keydown="onKeyboard"
+        v-bind="$attrs" />
+      <span class="m-suffix" ref="suffixRef" v-if="showSuffix">
+        <span class="m-action" v-if="!disabled&&allowClear&&value" @click="onClear">
+          <svg focusable="false" class="u-clear" data-icon="close-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
+        </span>
+        <span class="m-action" v-if="password" @click="onPassword">
+          <svg focusable="false" v-show="showPassword" class="u-eye" data-icon="eye" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
+          <svg focusable="false" v-show="!showPassword" class="u-eye" data-icon="eye-invisible" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z"></path><path d="M508 624c-3.46 0-6.87-.16-10.25-.47l-52.82 52.82a176.09 176.09 0 00227.42-227.42l-52.82 52.82c.31 3.38.47 6.79.47 10.25a111.94 111.94 0 01-112 112z"></path></svg>
+        </span>
+        <span class="m-count" v-if="showCount">{{ showCountNum }}</span>
+        <slot name="suffix">{{ suffix }}</slot>
       </span>
     </div>
+    <span class="m-addon" :class="{after: showAfter}" ref="afterRef" v-if="showAfter!==23">
+      <slot name="addonAfter">{{ addonAfter }}</slot>
+    </span>
   </div>
 </template>
 <style lang="less" scoped>
-.m-input-number {
+.m-input-wrap {
+  width: 100%;
+  text-align: start;
+  vertical-align: top;
   position: relative;
-  display: inline-block;
-  height: 30px;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
-  line-height: 1.5;
-  padding: 0 11px;
-  background-color: #ffffff;
-  border-radius: 6px;
-  border: 1px solid #d9d9d9;
-  transition: all 0.2s;
-  &:hover {
-    border-color: @themeColor;
-    .m-handler-wrap {
-      background: #FFF;
-      opacity: 1;
-    }
+  display: inline-table;
+  border-collapse: separate;
+  border-spacing: 0;
+  .m-addon {
+    position: relative;
+    padding: 0 11px;
+    color: rgba(0, 0, 0, 0.88);
+    font-weight: normal;
+    font-size: 14px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    transition: all 0.3s;
+    line-height: 1;
+    display: table-cell;
+    width: 1px;
+    white-space: nowrap;
+    vertical-align: middle;
   }
-  &:focus-within { // 激活时样式
-    border-color: @themeColor;
-    box-shadow: 0 0 0 2px fade(@themeColor, 20%);
+  .before {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    border-inline-end: 0;
   }
-  .m-input-wrap {
+  .after {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+    border-inline-start: 0;
+  }
+  .m-input {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.88);
+    line-height: 1.5714285714285714;
+    position: relative;
     display: inline-flex;
-    vertical-align: top;
-    align-items: center;
-    .u-input-prefix {
-      pointer-events: none;
+    width: 100%;
+    min-width: 0;
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+    transition: all 0.2s;
+    &:hover {
+      border-color: #4096ff;
+      border-inline-end-width: 1px;
+      z-index: 1;
     }
-    .mr3 {
-      margin-right: 3px;
-    }
-    .u-input-number {
-      width: 100%;
-      height: 28px;
-      background: transparent;
-      border: none;
-      border-radius: 6px;
+    &:focus-within {
+      border-color: #4096ff;
+      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+      border-inline-end-width: 1px;
       outline: 0;
-      transition: all 0.2s linear;
-      appearance: textfield;
-      color: rgba(0, 0, 0, 0.88);
+    }
+    .m-prefix {
+      margin-inline-end: 4px;
+      display: flex;
+      flex: none;
+      align-items: center;
+    }
+    .u-input {
+      font-size: 14px;
+      line-height: 1.5714285714285714;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      min-width: 0;
+      background-color: #ffffff;
+      border: none;
+      outline: none;
+      text-overflow: ellipsis;
+      transition: all 0.2s;
+    }
+    input:disabled {
+      color: rgba(0, 0, 0, 0.25);
+    }
+    input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.25)
+    }
+    input:-moz-placeholder {
+      color: rgba(0, 0, 0, 0.25)
+    }
+    input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.25)
+    }
+    input:-ms-input-placeholder {
+      color: rgba(0, 0, 0, 0.25)
+    }
+    .m-suffix {
+      margin-inline-start: 4px;
+      display: flex;
+      flex: none;
+      align-items: center;
+      span {
+        margin-right: 4px;
+      }
+      .m-action {
+        cursor: pointer;
+        .u-clear {
+          font-size: 12px;
+          display: inline-block;
+          fill: rgba(0, 0, 0, 0.25);
+          text-align: center;
+          line-height: 0;
+          vertical-align: -0.08em;
+          transition: fill 0.3s;
+          &:hover {
+            fill: rgba(0, 0, 0, 0.45);
+          }
+        }
+        .u-eye {
+          font-size: 14px;
+          display: inline-block;
+          fill: rgba(0, 0, 0, 0.45);
+          text-align: center;
+          line-height: 1;
+          vertical-align: -0.125em;
+          transition: fill 0.3s;
+          &:hover {
+            fill: rgba(0, 0, 0, 0.85);
+          }
+        }
+      }
+      .m-count {
+        color: rgba(0, 0, 0, 0.45);
+      }
     }
   }
-  .m-handler-wrap {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 22px;
-    height: 100%;
-    background: transparent;
-    border-radius: 0 6px 6px 0;
-    opacity: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch; // 默认值，元素被拉伸以适应容器
-    transition: all 0.2s linear 0.2s;
-    .u-icon {
-      width: 7px;
-      height: 7px;
-      fill: rgba(0, 0, 0, 0.25);
-      transition: all 0.2s linear;
+  .large {
+    padding: 7px 11px;
+    font-size: 16px;
+    line-height: 1.5;
+    border-radius: 8px;
+  }
+  .middle {
+    padding: 4px 11px;
+    border-radius: 6px;
+  }
+  .small {
+    padding: 0px 7px;
+    border-radius: 4px;
+  }
+  .input-before {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+  .input-after {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+  .disabled {
+    color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.04);
+    cursor: not-allowed;
+    &:hover {
+      border-color: #d9d9d9;
     }
-    .u-up-arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: auto;
-      height: 40%;
-      border-top-right-radius: 6px;
-      border-left: 1px solid #d9d9d9;
-      cursor: pointer;
-      transition: all 0.2s linear;
-      &:hover {
-        height: 60%;
-        .u-icon {
-          fill: @themeColor;
-        }
-      }
+    &:focus-within {
+      border-color: #d9d9d9;
+      box-shadow: none
     }
-    .u-down-arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: auto;
-      height: 40%;
-      border-top: 1px solid #d9d9d9;
-      border-left: 1px solid #d9d9d9;
-      border-bottom-right-radius: 2px;
-      cursor: pointer;
-      transition: all 0.2s linear;
-      &:hover {
-        height: 60%;
-        .u-icon {
-          fill: @themeColor;
-        }
-      }
-    }
-    .disabled {
+    .u-input {
+      background-color: transparent;
       cursor: not-allowed;
-      &:hover {
-        .u-icon {
-          fill: rgba(0, 0, 0, 0.25);
-        }
-      }
     }
   }
 }
