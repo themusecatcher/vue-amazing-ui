@@ -15,7 +15,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   title: '',
   value: '',
-  valueStyle: () => { return {} },
+  valueStyle: () => ({}),
   precision: 0,
   prefix: '',
   suffix: '',

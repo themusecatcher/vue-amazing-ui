@@ -30,6 +30,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^6.1.0",
     "@vuepic/vue-datepicker": "^4.5.1",
     "@vueuse/core": "^10.2.1",
     "@vueuse/integrations": "^10.2.1",
