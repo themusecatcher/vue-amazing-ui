@@ -5153,6 +5153,7 @@ Slider.install = (app) => {
 const _sfc_main$e = /* @__PURE__ */ defineComponent({
   __name: "Space",
   props: {
+    width: { default: "auto" },
     align: { default: void 0 },
     direction: { default: "horizontal" },
     size: { default: "small" },
@@ -5160,6 +5161,12 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
+    const spaceWidth = computed(() => {
+      if (typeof props.width === "number") {
+        return props.width + "px";
+      }
+      return props.width;
+    });
     const gap = computed(() => {
       if (typeof props.size === "number") {
         return props.size + "px";
@@ -5179,15 +5186,15 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
         class: normalizeClass(["m-space", [`${_ctx.direction} ${_ctx.align}`, { wrap: _ctx.wrap }]]),
-        style: normalizeStyle(`gap: ${gap.value}; margin-bottom: -${Array.isArray(props.size) && _ctx.wrap ? props.size[1] : 0}px;`)
+        style: normalizeStyle(`width: ${spaceWidth.value}; gap: ${gap.value}; margin-bottom: -${Array.isArray(props.size) && _ctx.wrap ? props.size[1] : 0}px;`)
       }, [
         renderSlot(_ctx.$slots, "default", {}, void 0, true)
       ], 6);
     };
   }
 });
-const Space_vue_vue_type_style_index_0_scoped_255dd3d7_lang = "";
-const Space = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-255dd3d7"]]);
+const Space_vue_vue_type_style_index_0_scoped_c99ca457_lang = "";
+const Space = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-c99ca457"]]);
 Space.install = (app) => {
   app.component(Space.__name, Space);
 };
@@ -7033,7 +7040,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
 _sfc_main$7.install = (app) => {
   app.component(_sfc_main$7.__name, _sfc_main$7);
 };
-const _withScopeId$2 = (n) => (pushScopeId("data-v-57e8bd9e"), n = n(), popScopeId(), n);
+const _withScopeId$2 = (n) => (pushScopeId("data-v-3951c201"), n = n(), popScopeId(), n);
 const _hoisted_1$6 = ["value", "maxlength", "disabled"];
 const _hoisted_2$4 = /* @__PURE__ */ _withScopeId$2(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
@@ -7085,11 +7092,35 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
       }
       return props.value.length;
     });
+    watch(
+      () => props.value,
+      (to) => {
+      }
+    );
+    const textarea = ref();
+    const areaHeight = ref();
     const suffixRef = ref();
     const showSuffix = ref(1);
+    const observer = ref();
     onMounted(() => {
+      if (props.autoSize) {
+        getAreaHeight();
+      }
       showSuffix.value = suffixRef.value.offsetWidth;
+      const config = { attributes: true, childList: false, subtree: false };
+      observer.value = new MutationObserver(callback);
+      observer.value.observe(textarea.value, config);
     });
+    onUnmounted(() => {
+      observer.value.disconnect();
+    });
+    const callback = function(mutationsList, observer2) {
+      console.log("mutation");
+      getAreaHeight();
+    };
+    function getAreaHeight() {
+      areaHeight.value = textarea.value.offsetHeight;
+    }
     function onInput(e) {
       if (!("lazy" in props.valueModifiers)) {
         emits("update:value", e.target.value);
@@ -7118,8 +7149,10 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
         style: normalizeStyle(`width: ${areaWidth.value};`)
       }, [
         createElementVNode("textarea", mergeProps({
-          class: "u-textarea",
-          ref: "textarea",
+          ref_key: "textarea",
+          ref: textarea,
+          class: ["u-textarea", { "auto-size": _ctx.autoSize }],
+          style: `height: ${areaHeight.value}px;`,
           value: _ctx.value,
           maxlength: _ctx.maxlength,
           disabled: _ctx.disabled,
@@ -7144,8 +7177,8 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Textarea_vue_vue_type_style_index_0_scoped_57e8bd9e_lang = "";
-const Textarea = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-57e8bd9e"]]);
+const Textarea_vue_vue_type_style_index_0_scoped_3951c201_lang = "";
+const Textarea = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-3951c201"]]);
 Textarea.install = (app) => {
   app.component(Textarea.__name, Textarea);
 };

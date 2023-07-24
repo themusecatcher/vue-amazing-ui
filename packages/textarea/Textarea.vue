@@ -8,7 +8,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 interface Props {
   width?: string|number // 输入框宽度
   allowClear?: boolean // 可以点击清除图标删除内容
@@ -41,11 +41,55 @@ const showCountNum = computed(() => {
   }
   return props.value.length
 })
+watch(
+  () => props.value,
+  (to) => {
+    // console.log('%O', textarea.value)
+  }
+)
+const textarea = ref()
+const areaHeight = ref()
 const suffixRef = ref()
 const showSuffix = ref(1)
+const observer = ref()
 onMounted(() => {
+  if (props.autoSize) {
+    getAreaHeight()
+  }
   showSuffix.value = suffixRef.value.offsetWidth
+  // 观察器的配置（需要观察什么变动）
+  const config = { attributes: true, childList: false, subtree: false }
+  // 创建一个观察器实例并传入回调函数
+  observer.value = new MutationObserver(callback)
+  // 以上述配置开始观察目标节点
+  observer.value.observe(textarea.value, config)
 })
+onUnmounted(() => {
+  // 之后，可停止观察
+  observer.value.disconnect()
+})
+/*
+  使用 MutationObserver 监听 textarea resize 时的属性变化
+  参考文档：https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver
+*/
+// 当观察到变动时执行的回调函数
+const callback = function (mutationsList: any, observer: any) {
+  console.log('mutation')
+  getAreaHeight()
+  // Use traditional 'for loops' for IE 11
+  // for(let mutation of mutationsList) {
+  //   if (mutation.type === 'childList') {
+  //     console.log('A child node has been added or removed.')
+  //   }
+  //   if (mutation.type === 'attributes') {
+  //     console.log('The ' + mutation.attributeName + ' attribute was modified.')
+  //     console.log(mutation.target.style.height)
+  //   }
+  // }
+}
+function getAreaHeight () {
+  areaHeight.value = textarea.value.offsetHeight
+}
 const emits = defineEmits(['update:value', 'change', 'enter'])
 function onInput (e: any) {
   if (!('lazy' in props.valueModifiers)) {
@@ -73,8 +117,10 @@ function onClear () {
 <template>
   <div class="m-textarea" :class="{disabled: disabled}" :style="`width: ${areaWidth};`">
     <textarea
-      class="u-textarea"
       ref="textarea"
+      class="u-textarea"
+      :class="{'auto-size': autoSize}"
+      :style="`height: ${areaHeight}px;`"
       :value="value"
       :maxlength="maxlength"
       :disabled="disabled"
@@ -92,54 +138,43 @@ function onClear () {
 </template>
 <style lang="less" scoped>
 .m-textarea {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
-  line-height: 1.5714285714285714;
   position: relative;
-  display: inline-flex;
-  width: 100%;
-  min-width: 0;
-  padding: 4px 11px;
-  background-color: #ffffff;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #d9d9d9;
-  border-radius: 6px;
-  transition: all 0.2s;
-  &:hover {
-    border-color: #4096ff;
-    border-inline-end-width: 1px;
-    z-index: 1;
-  }
-  &:focus-within {
-    border-color: #4096ff;
-    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
-    border-inline-end-width: 1px;
-    outline: 0;
-  }
+  display: inline-block;
   .u-textarea {
-    font-size: 14px;
-    line-height: 1.5714285714285714;
-    position: relative;
-    display: inline-block;
     width: 100%;
     min-width: 0;
-    background-color: #ffffff;
-    border: none;
-    outline: none;
+    min-height: 32px;
+    max-width: 100%;
+    height: auto;
+    padding: 4px 11px;
+    color: rgba(0, 0, 0, 0.88);
+    font-size: 14px;
+    line-height: 1.5714285714285714;
+    transition: all 0.3s, height 0s;
+    resize: vertical;
+    position: relative;
+    display: inline-block;
+    vertical-align: bottom;
     text-overflow: ellipsis;
-    transition: all 0.2s;
-
-    height: 32px;
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    outline: none;
+    &:hover {
+      border-color: #4096ff;
+      border-inline-end-width: 1px;
+      z-index: 1;
+    }
+    &:focus-within {
+      border-color: #4096ff;
+      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+      border-inline-end-width: 1px;
+      outline: 0;
+    }
+  }
+  .auto-size {
     max-height: 9.0072e15px;
     resize: none;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    min-height: 32px;
-    line-height: 1.5714285714285714;
-    vertical-align: bottom;
-    transition: all 0.3s,height 0s;
-    resize: vertical;
   }
   textarea:disabled {
     color: rgba(0, 0, 0, 0.25);
