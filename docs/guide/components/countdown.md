@@ -167,14 +167,14 @@ function onFinish () {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-title | 倒计时标题 | string &#124; v-slot | Countdown | false
+title | 倒计时标题 | string &#124; slot | Countdown | false
 value | 倒计时数值支持设置未来某时刻的时间戳或相对剩余时间，单位ms | number | 0 | false
-format | 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒) | string | 'HH:mm:ss' | false
-prefix | 倒计时数值的前缀 | string &#124; v-slot | '' | false
-suffix | 倒计时数值的后缀 | string &#124; v-slot | '' | false
+format | 格式化倒计时展示，(`Y/YY`：年，`M/MM`：月，`D/DD`：日，`H/HH`：时，`m/mm`：分钟，`s/ss`：秒，`SSS`：毫秒) | string | 'HH:mm:ss' | false
+prefix | 倒计时数值的前缀 | string &#124; slot | '' | false
+suffix | 倒计时数值的后缀 | string &#124; slot | '' | false
 titleStyle | 设置标题的样式 | CSSProperties | {} | false
 valueStyle | 设置数值的样式 | CSSProperties | {} | false
-finishedText | 完成后的展示文本 | string &#124; v-slot | 'Finished' | false
+finishedText | 完成后的展示文本 | string &#124; slot | 'Finished' | false
 
 ## Events
 

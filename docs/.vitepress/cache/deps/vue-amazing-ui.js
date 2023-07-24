@@ -1,7 +1,4 @@
 import {
-  require_browser
-} from "./chunk-2FKCZR47.js";
-import {
   Autoplay,
   EffectFade,
   Navigation,
@@ -10,7 +7,8 @@ import {
 } from "./chunk-FRLFTGA2.js";
 import {
   Xn
-} from "./chunk-DHZVYEIX.js";
+} from "./chunk-GDN26EU4.js";
+import "./chunk-SIFL4DJN.js";
 import {
   Fragment,
   Transition,
@@ -56,6 +54,9 @@ import {
   withKeys,
   withModifiers
 } from "./chunk-67UUJLDS.js";
+import {
+  require_browser
+} from "./chunk-2FKCZR47.js";
 import {
   __toESM
 } from "./chunk-UXIASGQL.js";

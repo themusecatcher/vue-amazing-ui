@@ -208,4 +208,4 @@ lineStyle | 时间线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid' 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
 desc | 文字描述 | string &#124; slot | true
-color | 圆圈颜色，可选四种预置颜色：blue、green、red、gray 或者使用颜色值 | string &#124; slot | false
+color | 圆圈颜色，可选四种预置颜色：`blue`、`green`、`red`、`gray` 或者使用颜色值 | string &#124; slot | false

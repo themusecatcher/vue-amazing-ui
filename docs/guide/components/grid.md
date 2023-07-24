@@ -658,23 +658,23 @@ justify | 水平排列方式 | 'start' &#124; 'end' &#124; 'center' &#124; 'spac
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-xs | <576px 响应式栅格 | number | false
-sm | ≥576px 响应式栅格 | number | false
-md | ≥768px 响应式栅格 | number | false
-lg | ≥992px 响应式栅格 | number | false
-xl | ≥1200px 响应式栅格 | number | false
-xxl | ≥1600px 响应式栅格 | number | false
+xs | `&lt;576px` 响应式栅格 | number | false
+sm | `≥576px` 响应式栅格 | number | false
+md | `≥768px` 响应式栅格 | number | false
+lg | `≥992px` 响应式栅格 | number | false
+xl | `≥1200px` 响应式栅格 | number | false
+xxl | `≥1600px` 响应式栅格 | number | false
 
 ### Col
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-span | 栅格占位格数，为 0 时相当于 display: none，取0,1,2...24 | number | undefined | false
+span | 栅格占位格数，取 `0,1,2...24`；为 `0` 时相当于 `display: none` | number | undefined | false
 offset | 栅格左侧的间隔格数，取0,1,2...24 | number | 0 | false
 flex | flex 布局填充 | string &#124; number | '' | false
-xs | <576px 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-sm | ≥576px 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-md | ≥768px 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-lg | ≥992px 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-xl | ≥1200px 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-xxl | ≥1600px 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
+xs | `&lt;576px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
+sm | `≥576px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
+md | `≥768px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
+lg | `≥992px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
+xl | `≥1200px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
+xxl | `≥1600px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false

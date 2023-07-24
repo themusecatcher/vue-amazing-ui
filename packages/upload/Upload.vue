@@ -197,7 +197,7 @@ function onError (content: any) {
           @click="disabled ? () => false : onClick(n-1)">
           <input ref="uploadInput" type="file" @click.stop :accept="accept" :multiple="multiple" @change="onUpload($event, n-1)" style="display: none;" />
           <div>
-            <svg class="u-plus" focusable="false" data-icon="plus" aria-hidden="true" viewBox="64 64 896 896"><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path></svg>
+            <svg focusable="false" class="u-plus" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><defs></defs><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path></svg>
             <p class="u-tip">
               <slot>{{ tip }}</slot>
             </p>
@@ -261,6 +261,7 @@ function onError (content: any) {
       display: inline-block;
       width: 14px;
       height: 14px;
+      fill: rgba(0, 0, 0, 0.88);
     }
     .u-tip {
       margin-top: 8px;
