@@ -7040,7 +7040,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
 _sfc_main$7.install = (app) => {
   app.component(_sfc_main$7.__name, _sfc_main$7);
 };
-const _withScopeId$2 = (n) => (pushScopeId("data-v-3951c201"), n = n(), popScopeId(), n);
+const _withScopeId$2 = (n) => (pushScopeId("data-v-2bad34a2"), n = n(), popScopeId(), n);
 const _hoisted_1$6 = ["value", "maxlength", "disabled"];
 const _hoisted_2$4 = /* @__PURE__ */ _withScopeId$2(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
@@ -7098,18 +7098,19 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
       }
     );
     const textarea = ref();
-    const areaHeight = ref();
+    const areaHeight = ref(32);
     const suffixRef = ref();
     const showSuffix = ref(1);
     const observer = ref();
     onMounted(() => {
-      if (props.autoSize) {
-        getAreaHeight();
-      }
-      showSuffix.value = suffixRef.value.offsetWidth;
+      showSuffix.value = suffixRef.value.offsetHeight;
       const config = { attributes: true, childList: false, subtree: false };
       observer.value = new MutationObserver(callback);
-      observer.value.observe(textarea.value, config);
+      if (props.autoSize) {
+        observer.value.observe(textarea.value, config);
+      } else {
+        observer.value.disconnect();
+      }
     });
     onUnmounted(() => {
       observer.value.disconnect();
@@ -7119,7 +7120,7 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
       getAreaHeight();
     };
     function getAreaHeight() {
-      areaHeight.value = textarea.value.offsetHeight;
+      areaHeight.value = textarea.value.scrollHeight + 2;
     }
     function onInput(e) {
       if (!("lazy" in props.valueModifiers)) {
@@ -7177,8 +7178,8 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Textarea_vue_vue_type_style_index_0_scoped_3951c201_lang = "";
-const Textarea = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-3951c201"]]);
+const Textarea_vue_vue_type_style_index_0_scoped_2bad34a2_lang = "";
+const Textarea = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-2bad34a2"]]);
 Textarea.install = (app) => {
   app.component(Textarea.__name, Textarea);
 };

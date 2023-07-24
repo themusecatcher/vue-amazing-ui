@@ -48,21 +48,23 @@ watch(
   }
 )
 const textarea = ref()
-const areaHeight = ref()
+const areaHeight = ref(32)
 const suffixRef = ref()
 const showSuffix = ref(1)
 const observer = ref()
 onMounted(() => {
-  if (props.autoSize) {
-    getAreaHeight()
-  }
-  showSuffix.value = suffixRef.value.offsetWidth
+  showSuffix.value = suffixRef.value.offsetHeight
   // 观察器的配置（需要观察什么变动）
   const config = { attributes: true, childList: false, subtree: false }
   // 创建一个观察器实例并传入回调函数
   observer.value = new MutationObserver(callback)
-  // 以上述配置开始观察目标节点
-  observer.value.observe(textarea.value, config)
+  if (props.autoSize) {
+    // 以上述配置开始观察目标节点
+    observer.value.observe(textarea.value, config)
+    // getAreaHeight()
+  } else {
+    observer.value.disconnect()
+  }
 })
 onUnmounted(() => {
   // 之后，可停止观察
@@ -88,10 +90,14 @@ const callback = function (mutationsList: any, observer: any) {
   // }
 }
 function getAreaHeight () {
-  areaHeight.value = textarea.value.offsetHeight
+  areaHeight.value = textarea.value.scrollHeight + 2
 }
 const emits = defineEmits(['update:value', 'change', 'enter'])
 function onInput (e: any) {
+  // if (props.autoSize) {
+  //   areaHeight.value = 32
+  //   getAreaHeight()
+  // }
   if (!('lazy' in props.valueModifiers)) {
     emits('update:value', e.target.value)
     emits('change', e)
