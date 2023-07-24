@@ -41,7 +41,7 @@ function onClick (e: Event) {
       type="dashed"
       :loading="loading"
       @click="onClick">
-      Danger Button
+      Dashed Button
     </Button>
     <Button
       class="mr30"

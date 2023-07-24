@@ -88,6 +88,115 @@ const size = ref('small')
 
 :::
 
+## 对齐
+
+<div class="space-align-container">
+  <div class="space-align-block">
+    <Space align="center">
+      center
+      <Button type="primary">Primary</Button>
+      <span class="mock-block">Block</span>
+    </Space>
+  </div>
+  <div class="space-align-block">
+    <Space align="start">
+      start
+      <Button type="primary">Primary</Button>
+      <span class="mock-block">Block</span>
+    </Space>
+  </div>
+  <div class="space-align-block">
+    <Space align="end">
+      end
+      <Button type="primary">Primary</Button>
+      <span class="mock-block">Block</span>
+    </Space>
+  </div>
+  <div class="space-align-block">
+    <Space align="baseline">
+      baseline
+      <Button type="primary">Primary</Button>
+      <span class="mock-block">Block</span>
+    </Space>
+  </div>
+</div>
+
+<style scoped>
+.space-align-container {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.space-align-block {
+  margin: 8px 4px;
+  border: 1px solid #40a9ff;
+  padding: 4px;
+  flex: none;
+}
+.space-align-block .mock-block {
+  display: inline-block;
+  padding: 32px 8px 16px;
+  background: rgba(150, 150, 150, 0.2);
+}
+</style>
+
+::: details Show Code
+
+```vue
+<template>
+  <div class="space-align-container">
+    <div class="space-align-block">
+      <Space align="center">
+        center
+        <Button type="primary">Primary</Button>
+        <span class="mock-block">Block</span>
+      </Space>
+    </div>
+    <div class="space-align-block">
+      <Space align="start">
+        start
+        <Button type="primary">Primary</Button>
+        <span class="mock-block">Block</span>
+      </Space>
+    </div>
+    <div class="space-align-block">
+      <Space align="end">
+        end
+        <Button type="primary">Primary</Button>
+        <span class="mock-block">Block</span>
+      </Space>
+    </div>
+    <div class="space-align-block">
+      <Space align="baseline">
+        baseline
+        <Button type="primary">Primary</Button>
+        <span class="mock-block">Block</span>
+      </Space>
+    </div>
+  </div>
+</template>
+<style lang="less" scoped>
+.space-align-container {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.space-align-block {
+  margin: 8px 4px;
+  border: 1px solid #40a9ff;
+  padding: 4px;
+  flex: none;
+}
+.space-align-block .mock-block {
+  display: inline-block;
+  padding: 32px 8px 16px;
+  background: rgba(150, 150, 150, 0.2);
+}
+</style>
+```
+
+:::
+
 ## 自动换行
 
 <Space :size="[8, 16]" wrap>
@@ -95,6 +204,8 @@ const size = ref('small')
     <Button>Button</Button>
   </template>
 </Space>
+
+<br/><br/>
 
 ::: details Show Code
 
@@ -117,4 +228,4 @@ const size = ref('small')
 align | 对齐方式 | 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | undefined | false
 direction | 间距方向 | 'horizontal' &#124; 'vertical' | 'horizontal' | false
 size | 间距大小，数组时表示: [水平间距, 垂直间距] | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
-wrap | 是否自动换行，仅在 horizontal 时有效 | boolean | false | false
+wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | false | false
