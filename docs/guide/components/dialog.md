@@ -281,12 +281,12 @@ function onClose () {
 title | 标题 | string &#124; slot | '提示' | false
 content | 内容 | string &#124; slot | '' | false
 width | 宽度，单位px | number | 640 | false
-height | 高度，默认auto，自适应内容高度 | number &#124; string | 'auto' | false
+height | 高度，默认 `auto`，自适应内容高度 | number &#124; string | 'auto' | false
 switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false | false
 cancelText | 取消按钮文字 | string | '取消' | false
 okText | 确定按钮文字 | string | '确定' | false
 footer | 是否显示底部按钮，默认不显示 | boolean | false | false
-center | 水平垂直居中：true，固定高度水平居中：false | boolean | true | false
+center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true | false
 top | 固定高度水平居中时，距顶部高度，单位px | number | 100 | false
 loading | 加载中 | boolean | false | false
 visible | 是否可见 | boolean | false | false

@@ -157,7 +157,7 @@ navSize | 导航大小，单位px | number | 36 | false
 pagination | 是否显示分页 | boolean | true | false
 pageActiveColor | 分页选中颜色 | string | '#1677FF' | false
 pageSize | 分页大小，单位px | number | 10 | false
-pageStyle | 分页样式，优先级高于 pageSize | CSSProperties | {} | false
+pageStyle | 分页样式，优先级高于 `pageSize` | CSSProperties | {} | false
 disableOnInteraction | 用户操作导航或分页之后，是否禁止自动切换 | boolean | true | false
 pauseOnMouseEnter | 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换 | boolean | true | false
 

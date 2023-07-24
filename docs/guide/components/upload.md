@@ -339,16 +339,16 @@ function onRemove (file: object) {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-accept | 接受上传的文件类型，与\<input type="file">的accept属性一致，详见 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file) | string | '*' | false
+accept | 接受上传的文件类型，与\<input type="file">的 `accept` 属性一致，详见 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file) | string | '*' | false
 multiple | 是否支持多选文件 | boolean | false | false
 maxCount | 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件 | number | 1 | false
 tip | 上传描述文字 | string | 'Upload' | false
 uploadingTip | 上传中的文字描述 | string | 'Uploading' | false
 fit | 预览图片缩放规则，仅当上传文件为图片时生效 | 'fill' &#124; 'contain' &#124; 'cover' | 'contain' | false
 errorInfo | 上传中断时的错误提示信息 | string | '' | false
-beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传，通常用来现在用户上传的文件格式和大小 | Function | () => true | false
-uploadMode | 上传文件的方式，默认是 base64，可选 'base64' &#124; 'custom' | 'base64' &#124; 'custom' | 'base64' | false
-customRequest | 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为 | Function | () => {} | false
+beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 继续上传，通常用来现在用户上传的文件格式和大小 | Function | () => true | false
+uploadMode | 上传文件的方式，可选 `'base64'` &#124; `'custom'` | 'base64' &#124; 'custom' | 'base64' | false
+customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为 | Function | () => {} | false
 disabled | 是否禁用，只能预览，不能删除和上传 | boolean | false | false
 fileList(v-model) | 已上传的文件列表 | FileType[] | [] | false
 

@@ -274,20 +274,20 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-collapseData | 折叠面板数据，可使用 v-slot 替换对应索引的 header 和 text | Collapse[] | [] | true
-activeKey(v-model) | 当前激活 tab 面板的 key | number[] &#124; number &#124; string[] &#124; string &#124; null | null | false
+collapseData | 折叠面板数据，可使用 `v-slot` 替换对应索引的 `header` 和 `text` | Collapse[] | [] | true
+activeKey(v-model) | 当前激活 `tab` 面板的 `key` | number[] &#124; number &#124; string[] &#124; string &#124; null | null | false
 copyable | 是否可复制面板内容 | boolean | false | false
-lang | 面板右上角固定内容，例如标识language | string &#124; slot | '' | false
+lang | 面板右上角固定内容，例如标识 language | string &#124; slot | '' | false
 fontSize | 面板标题和内容的字体大小，单位px | number | 14 | false
-headerFontSize | 面板标题字体大小，单位px，优先级高于fontSize | number | 0 | false
-textFontSize | 面板内容字体大小，单位px，优先级高于fontSize | number | 0 | false
+headerFontSize | 面板标题字体大小，单位px，优先级高于 `fontSize` | number | 0 | false
+textFontSize | 面板内容字体大小，单位px，优先级高于 `fontSize` | number | 0 | false
 showArrow | 是否展示面板上的箭头 | boolean | true | false
 
 ## Collapse Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-key | 对应activeKey，如果没有传入key属性，则默认使用数据索引(0,1,2...)绑定 | string &#124; number | false
+key | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 (0,1,2...) 绑定 | string &#124; number | false
 header | 面板标题 | string &#124; slot | false
 text | 面板内容 | string &#124; slot | false
 

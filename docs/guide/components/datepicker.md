@@ -565,4 +565,4 @@ width | 日期选择器宽度，单位px | number | 180 | false
 mode | 选择器模式 | 'time' &#124; 'date' &#124; 'week' &#124; 'month' &#124; 'year' | 'date' | false
 showTime | 是否增加时间选择 | boolean | false | false
 showToday | 是否展示”今天“按钮 | boolean | false | false
-modelType | v-model 值类型，可选时间戳(timestamp)、字符串(format) | 'timestamp' &#124; 'format' | 'format' | false
+modelType | `v-model` 值类型，可选时间戳(`timestamp`)、字符串(`format`) | 'timestamp' &#124; 'format' | 'format' | false

@@ -434,13 +434,13 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 tabPages | 标签页数组 | Tab[] | [] | true
 centered | 标签是否居中展示 | boolean | false | false
 size | 标签页大小 | 'small' &#124; 'large' | 'small' | false
-activeKey(v-model) | 当前激活 tab 面板的 key | string &#124; number | '' | false
+activeKey(v-model) | 当前激活 `tab` 面板的 `key` | string &#124; number | '' | false
 
 ## Tab Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-key | 对应 activeKey | string &#124; number | true
+key | 对应 `activeKey` | string &#124; number | true
 tab | 标签页显示文字 | string | true
 content | 标签页内容 | string &#124; slot | false
 disabled | 禁用对应标签页 | boolean | false

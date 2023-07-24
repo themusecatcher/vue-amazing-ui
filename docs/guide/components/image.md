@@ -188,10 +188,10 @@ const images = ref([
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 src | 图像地址 &#124; 图像地址数组 | string &#124; Image[] | '' | true
-name | 图像名称，没有传入图片名时自动从图像地址src中读取 | string | '' | false
+name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | '' | false
 width | 图像宽度，单位px | string &#124; number | 300 | false
 height | 图像高度，单位px | string &#124; number | '100%' | false
-fit | 图像如何适应容器高度和宽度，可选 fill(填充)、contain(等比缩放包含)、cover(等比缩放覆盖) | 'contain' &#124; 'fill' &#124; 'cover' | 'contain' | false
+fit | 图像如何适应容器高度和宽度，可选 `fill`(填充)、`contain`(等比缩放包含)、`cover`(等比缩放覆盖) | 'contain' &#124; 'fill' &#124; 'cover' | 'contain' | false
 preview | 预览文本 | string &#124; slot | '预览' | false
 zoomRatio | 每次缩放比率 | number | 0.1 | false
 minZoomScale | 最小缩放比例 | number | 0.1 | false

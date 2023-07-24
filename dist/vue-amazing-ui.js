@@ -7515,18 +7515,22 @@ const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-
 Tooltip.install = (app) => {
   app.component(Tooltip.__name, Tooltip);
 };
-const _withScopeId$1 = (n) => (pushScopeId("data-v-dabd8435"), n = n(), popScopeId(), n);
+const _withScopeId$1 = (n) => (pushScopeId("data-v-162c93cc"), n = n(), popScopeId(), n);
 const _hoisted_1$2 = { class: "m-upload-list" };
 const _hoisted_2$2 = { class: "m-upload" };
 const _hoisted_3$1 = ["onDrop", "onClick"];
 const _hoisted_4 = ["accept", "multiple", "onChange"];
 const _hoisted_5 = /* @__PURE__ */ _withScopeId$1(() => /* @__PURE__ */ createElementVNode("svg", {
-  class: "u-plus",
   focusable: "false",
+  class: "u-plus",
   "data-icon": "plus",
+  width: "1em",
+  height: "1em",
+  fill: "currentColor",
   "aria-hidden": "true",
   viewBox: "64 64 896 896"
 }, [
+  /* @__PURE__ */ createElementVNode("defs"),
   /* @__PURE__ */ createElementVNode("path", { d: "M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z" }),
   /* @__PURE__ */ createElementVNode("path", { d: "M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z" })
 ], -1));
@@ -7836,8 +7840,8 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Upload_vue_vue_type_style_index_0_scoped_dabd8435_lang = "";
-const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-dabd8435"]]);
+const Upload_vue_vue_type_style_index_0_scoped_162c93cc_lang = "";
+const Upload = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-162c93cc"]]);
 Upload.install = (app) => {
   app.component(Upload.__name, Upload);
 };

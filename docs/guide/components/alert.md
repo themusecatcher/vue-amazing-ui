@@ -322,10 +322,10 @@ function onClose (e: MouseEvent) {
 -- | -- | -- | -- | --
 message | 警告提示内容 | string &#124; slot | '' | false
 description | 警告提示的辅助性文字介绍 | string &#124; slot | '' | false
-type | 指定警告提示的样式，有四种选择 success、info、warn、error | 'success' &#124; 'info' &#124; 'warn' &#124; 'error' | 'info' | false
+type | 指定警告提示的样式，有四种选择 `success`、`info`、`warn`、`error` | 'success' &#124; 'info' &#124; 'warn' &#124; 'error' | 'info' | false
 closable | 是否显示关闭按钮 | boolean | false | false
 closeText | 自定义关闭按钮 |  string &#124; slot | '' | false
-icon | 自定义图标，showIcon 为 true 时有效 |  string &#124; slot | '' | false
+icon | 自定义图标，`showIcon` 为 `true` 时有效 |  string &#124; slot | '' | false
 showIcon | 是否显示辅助图标 | boolean | false | false
 
 ## Events

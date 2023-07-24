@@ -315,7 +315,7 @@ width | 提示框宽度，单位px | number | 420 | false
 cancelText | 取消按钮文字 | string | '取消' | false
 okText | 确认按钮文字 | string | '确定' | false
 noticeText | 通知按钮文字 | string | '知道了' | false
-center | 水平垂直居中：true，固定高度水平居中：false | boolean | true | false
+center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true | false
 top | 固定高度水平居中时，距顶部高度，单位px | number | 100 | false
 loading | 加载中 | boolean | false | false
 visible | 是否可见 | boolean | false | false
