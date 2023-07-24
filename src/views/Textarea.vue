@@ -34,7 +34,7 @@ function onAntEnter (e: Event) {
         placeholder="Autosize height based on content lines" />
     </Space>
     <h2 class="mt30 mb10">适应文本高度的文本域</h2>
-    <Space direction="vertical" width="600px">
+    <Space direction="vertical" width="200px">
       <a-textarea
         v-model:value="value"
         placeholder="Autosize height based on content lines"
