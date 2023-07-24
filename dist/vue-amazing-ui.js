@@ -5178,7 +5178,7 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
     });
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
-        class: normalizeClass(["m-space", [`${_ctx.direction}`, { align: _ctx.align, wrap: _ctx.wrap }]]),
+        class: normalizeClass(["m-space", [`${_ctx.direction} ${_ctx.align}`, { wrap: _ctx.wrap }]]),
         style: normalizeStyle(`gap: ${gap.value}; margin-bottom: -${Array.isArray(props.size) && _ctx.wrap ? props.size[1] : 0}px;`)
       }, [
         renderSlot(_ctx.$slots, "default", {}, void 0, true)
@@ -5186,8 +5186,8 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Space_vue_vue_type_style_index_0_scoped_dfaa5608_lang = "";
-const Space = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-dfaa5608"]]);
+const Space_vue_vue_type_style_index_0_scoped_255dd3d7_lang = "";
+const Space = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-255dd3d7"]]);
 Space.install = (app) => {
   app.component(Space.__name, Space);
 };

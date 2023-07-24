@@ -30,7 +30,7 @@ const gap = computed(() => {
 })
 </script>
 <template>
-  <div class="m-space" :class="[`${direction}`, {align: align, wrap: wrap}]" :style="`gap: ${gap}; margin-bottom: -${Array.isArray(props.size) && wrap ? props.size[1] : 0}px;`">
+  <div class="m-space" :class="[`${direction} ${align}`, {wrap: wrap}]" :style="`gap: ${gap}; margin-bottom: -${Array.isArray(props.size) && wrap ? props.size[1] : 0}px;`">
     <slot></slot>
   </div>
 </template>
