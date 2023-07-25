@@ -76,6 +76,8 @@ const onClose = (e: MouseEvent) => {
   line-height: 1;
 }
 .u-spin {
+  width: 12px;
+  height: 12px;
   display: inline-block;
   line-height: 1;
   -webkit-animation: loadingCircle 1s infinite linear;
