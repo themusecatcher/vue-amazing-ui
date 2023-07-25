@@ -34,7 +34,6 @@ function onAntEnter (e: Event) {
           @enter="onEnter" />
         <Input
           v-model:value.lazy="lazyValue"
-          autofocus
           placeholder="Lazy usage"
           @change="onChange" />
       </Space>
