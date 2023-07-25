@@ -8,7 +8,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 interface Props {
   width?: string|number // 输入框宽度
   allowClear?: boolean // 可以点击清除图标删除内容
@@ -54,21 +54,21 @@ const showSuffix = ref(1)
 const observer = ref()
 onMounted(() => {
   showSuffix.value = suffixRef.value.offsetHeight
-  // 观察器的配置（需要观察什么变动）
-  const config = { attributes: true, childList: false, subtree: false }
-  // 创建一个观察器实例并传入回调函数
-  observer.value = new MutationObserver(callback)
   if (props.autoSize) {
+    // 观察器的配置（需要观察什么变动）
+    const config = { attributes: true, childList: false, subtree: false }
+    // 创建一个观察器实例并传入回调函数
+    observer.value = new MutationObserver(callback)
     // 以上述配置开始观察目标节点
     observer.value.observe(textarea.value, config)
-    // getAreaHeight()
-  } else {
-    observer.value.disconnect()
   }
+  getAreaHeight()
 })
 onUnmounted(() => {
-  // 之后，可停止观察
-  observer.value.disconnect()
+  if (props.autoSize) {
+    // 之后，可停止观察
+    observer.value.disconnect()
+  }
 })
 /*
   使用 MutationObserver 监听 textarea resize 时的属性变化
@@ -79,15 +79,15 @@ const callback = function (mutationsList: any, observer: any) {
   console.log('mutation')
   getAreaHeight()
   // Use traditional 'for loops' for IE 11
-  // for(let mutation of mutationsList) {
-  //   if (mutation.type === 'childList') {
-  //     console.log('A child node has been added or removed.')
-  //   }
-  //   if (mutation.type === 'attributes') {
-  //     console.log('The ' + mutation.attributeName + ' attribute was modified.')
-  //     console.log(mutation.target.style.height)
-  //   }
-  // }
+  for(let mutation of mutationsList) {
+    if (mutation.type === 'childList') {
+      console.log('A child node has been added or removed.')
+    }
+    if (mutation.type === 'attributes') {
+      console.log('The ' + mutation.attributeName + ' attribute was modified.')
+      console.log(mutation.target.style.height)
+    }
+  }
 }
 function getAreaHeight () {
   areaHeight.value = textarea.value.scrollHeight + 2
@@ -179,7 +179,7 @@ function onClear () {
     }
   }
   .auto-size {
-    max-height: 9.0072e15px;
+    max-height: 9000000000000000px;
     resize: none;
   }
   textarea:disabled {
