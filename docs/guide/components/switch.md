@@ -91,7 +91,7 @@ watchEffect(() => {
   </template>
 </Switch>
 
-<style>
+<style lang="less" scoped>
 .sun {
   width: 12px;
   height: 12px;
@@ -123,7 +123,7 @@ watchEffect(() => {
     </template>
   </Switch>
 </template>
-<style>
+<style lang="less" scoped>
 .sun {
   width: 12px;
   height: 12px;
