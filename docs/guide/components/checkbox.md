@@ -237,7 +237,7 @@ watchEffect(() => {
 <br/>
 <Checkbox :options="options" v-model:value="value" />
 
-<style>
+<style lang="less" scoped>
 .mb10 {
   margin-bottom: 10px;
 }

@@ -85,7 +85,7 @@ const timelineData = ref([
   </template>
 </Timeline>
 
-<style>
+<style lang="less" scoped>
 .dot {
   display: inline-block;
   width: 18px;
@@ -138,7 +138,7 @@ const timelineData = ref([
     </template>
   </Timeline>
 </template>
-<style>
+<style lang="less" scoped>
 .dot {
   display: inline-block;
   width: 18px;

@@ -41,7 +41,7 @@ const spinning = ref(true)
   <br/>
   <h4>Loading state: <Switch v-model:checked="spinning" /></h4>
 </template>
-<style>
+<style lang="less" scoped>
 .spin-content {
   display: inline-block;
   border: 1px solid #91d5ff;
@@ -137,7 +137,7 @@ const spinning = ref(true)
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="static-circle" />
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
 </template>
-<style>
+<style lang="less" scoped>
 .u-spin {
   display: inline-block;
   width: 100px !important;
@@ -181,7 +181,7 @@ const spinning = ref(true)
   <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
   <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
 </template>
-<style>
+<style lang="less" scoped>
 .u-spin {
   display: inline-block;
   width: 100px !important;
@@ -192,7 +192,7 @@ const spinning = ref(true)
 
 :::
 
-<style>
+<style lang="less" scoped>
 .m-flex {
   display: flex;
   gap: 12px;

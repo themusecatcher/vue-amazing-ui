@@ -121,7 +121,7 @@ const size = ref('small')
   </div>
 </div>
 
-<style scoped>
+<style lang="less" scoped>
 .space-align-container {
   display: flex;
   align-items: flex-start;
