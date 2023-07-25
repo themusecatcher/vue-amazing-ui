@@ -8,15 +8,15 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 interface Props {
-  width?: string|number // 输入框宽度
+  width?: string|number // 文本域宽度
   allowClear?: boolean // 可以点击清除图标删除内容
   autoSize?: boolean|{minRows?:number, maxRows?:number} // 自适应内容高度
   disabled?: boolean // 是否禁用
   maxlength?: number // 最大长度
   showCount?: boolean // 是否展示字数
-  value?: string // 输入框内容(v-model)
+  value?: string // 文本域内容(v-model)
   valueModifiers?: object // 用于访问组件的v-model上添加的修饰符
 }
 const props = withDefaults(defineProps<Props>(), {

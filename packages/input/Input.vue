@@ -18,7 +18,7 @@ interface Props {
   disabled?: boolean // 是否禁用
   maxlength?: number // 最大长度
   showCount?: boolean // 是否展示字数
-  size?: 'large'|'middle'|'small' // 输入框大小。标准表单内的输入框大小限制为 middle。
+  size?: 'large'|'middle'|'small' // 输入框大小
   prefix?: string // 前缀图标 string | slot
   suffix?: string // 后缀图标 string | slot
   value?: string // 输入框内容(v-model)

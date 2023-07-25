@@ -63,13 +63,3 @@ function onEnter (e: KeyboardEvent) {
     </Space>
   </div>
 </template>
-<style lang="less" scoped>
-.u-svg {
-  display: inline-flex;
-  align-items: center;
-  color: inherit;
-  line-height: 0;
-  text-align: center;
-  vertical-align: -0.125em;
-}
-</style>

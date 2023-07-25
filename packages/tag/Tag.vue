@@ -82,56 +82,89 @@ function onClose (e: MouseEvent) {
   color: #52c41a;
   background: #f6ffed;
   border-color: #b7eb8f;
+  :deep(svg) {
+    fill: #52c41a;
+  }
 }
 .tag-processing {
   color: #1677ff;
   background: #e6f4ff;
   border-color: #91caff;
+  :deep(svg) {
+    fill: #1677ff;
+  }
 }
 .tag-error {
   color: #ff4d4f;
   background: #fff2f0;
   border-color: #ffccc7;
+  :deep(svg) {
+    fill: #ff4d4f;
+  }
 }
 .tag-warn {
   color: #faad14;
   background: #fffbe6;
   border-color: #ffe58f;
+  :deep(svg) {
+    fill: #faad14;
+  }
 }
 .tag-pink {
   color: #c41d7f;
   background: #fff0f6;
   border-color: #ffadd2;
+  :deep(svg) {
+    fill: #c41d7f;
+  }
 }
 .tag-red {
   color: #cf1322;
   background: #fff1f0;
   border-color: #ffa39e;
+  :deep(svg) {
+    fill: #cf1322;
+  }
 }
 .tag-orange {
   color: #d46b08;
   background: #fff7e6;
   border-color: #ffd591;
+  :deep(svg) {
+    fill: #d46b08;
+  }
 }
 .tag-green {
   color: #389e0d;
   background: #f6ffed;
   border-color: #b7eb8f;
+  :deep(svg) {
+    fill: #389e0d;
+  }
 }
 .tag-cyan {
   color: #08979c;
   background: #e6fffb;
   border-color: #87e8de;
+  :deep(svg) {
+    fill: #08979c;
+  }
 }
 .tag-blue {
   color: #0958d9;
   background: #e6f4ff;
   border-color: #91caff;
+  :deep(svg) {
+    fill: #0958d9;
+  }
 }
 .tag-purple {
   color: #531dab;
   background: #f9f0ff;
   border-color: #d3adf7;
+  :deep(svg) {
+    fill: #531dab;
+  }
 }
 .has-color {
   color: #fff;

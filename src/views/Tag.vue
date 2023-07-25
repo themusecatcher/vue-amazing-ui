@@ -8,7 +8,7 @@ const onClose = (e: MouseEvent) => {
     <h1>Tag 标签</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Tag>Tag 1</Tag>
-    <Tag><a href="https://github.com/vueComponent/ant-design">Link</a></Tag>
+    <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
     <Tag closable @close="onClose">Tag 2</Tag>
     <h2 class="mt30 mb10">多彩标签</h2>
     <Tag color="pink">pink</Tag>
