@@ -114,6 +114,7 @@ function onClear () {
     :data-count="showCountNum">
     <textarea
       ref="textarea"
+      type="hidden"
       class="u-textarea"
       :class="{disabled: disabled}"
       :style="[`height: ${autoSize ? areaHeight : ''}px`, autoSizeProperty]"
@@ -170,16 +171,16 @@ function onClear () {
     color: rgba(0, 0, 0, 0.25);
   }
   textarea::-webkit-input-placeholder {
-    color: rgba(0, 0, 0, 0.25)
+    color: rgba(0, 0, 0, 0.25);
   }
   textarea:-moz-placeholder {
-    color: rgba(0, 0, 0, 0.25)
+    color: rgba(0, 0, 0, 0.25);
   }
   textarea::-moz-placeholder {
-    color: rgba(0, 0, 0, 0.25)
+    color: rgba(0, 0, 0, 0.25);
   }
   textarea:-ms-input-placeholder {
-    color: rgba(0, 0, 0, 0.25)
+    color: rgba(0, 0, 0, 0.25);
   }
   .m-clear {
     position: absolute;

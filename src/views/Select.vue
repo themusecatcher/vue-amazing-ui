@@ -60,6 +60,12 @@ function onAntChange (value: string|number, option: any) {
       allowClear
       v-model="selectedValue"
       @change="onChange" />
+    <h2 class="mt30 mb10">带搜索框 (search: true)</h2>
+    <Select
+      :options="options"
+      search
+      allowClear
+      v-model="selectedValue" />
     <h2 class="mt30 mb10">禁用 (disabled: true)</h2>
     <Select
       :options="options"
@@ -69,6 +75,7 @@ function onAntChange (value: string|number, option: any) {
     <Select
       :width="160"
       :height="36"
+      search
       :options="options"
       v-model="selectedValue"
       @change="onChange" />
@@ -79,6 +86,7 @@ function onAntChange (value: string|number, option: any) {
       placeholder="请选择城市"
       :disabled="false"
       allowClear
+      show-search
       v-model:value="selectedValue"
       @change="onAntChange" />
   </div>
