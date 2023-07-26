@@ -329,10 +329,10 @@ function onChange (value: string|number, label: string, index: number) { // 选�
   position: absolute;
   z-index: 9;
   overflow: auto;
-  background: #FFF;
+  background-color: #FFF;
   padding: 4px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 15%);
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   .u-option { // 下拉项默认样式
     text-align: left;
     position: relative;
@@ -365,8 +365,8 @@ function onChange (value: string|number, label: string, index: number) { // 选�
   z-index: 9;
   height: 100px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 15%);
   padding: 13px 20px;
   background-color: #FFF;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
 </style>
