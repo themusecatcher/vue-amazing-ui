@@ -214,16 +214,16 @@ function onPassword () {
       color: rgba(0, 0, 0, 0.25);
     }
     input::-webkit-input-placeholder {
-      color: rgba(0, 0, 0, 0.25)
+      color: rgba(0, 0, 0, 0.25);
     }
     input:-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25)
+      color: rgba(0, 0, 0, 0.25);
     }
     input::-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25)
+      color: rgba(0, 0, 0, 0.25);
     }
     input:-ms-input-placeholder {
-      color: rgba(0, 0, 0, 0.25)
+      color: rgba(0, 0, 0, 0.25);
     }
     .m-suffix {
       margin-inline-start: 4px;
