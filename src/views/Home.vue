@@ -30,7 +30,7 @@ const getOffDate = (time: string): number => {
   return new Date(`${Y} ${M} ${D} ${time}`).getTime() + 9 * 60 * 60 * 1000
 }
 const countdown = computed(() => {
-  return getOffDate('9:01')
+  return getOffDate('9:02')
 })
 </script>
 <template>
@@ -55,8 +55,8 @@ const countdown = computed(() => {
       v-model:activeKey="activeKey"
       copyable />
     <ul class="m-list">
-      <li class="u-tip mb10 mt10">全局引入所有组件</li>
-      <li class="u-tip mb10">按需引入部分组件</li>
+      <li class="u-tip mb10 mt10">全局引入并注册所有组件</li>
+      <li class="u-tip mb10">按需引入并注册部分组件</li>
       <li class="u-tip mb10"> git clone <a href="https://github.com/themusecatcher/vue-amazing-ui" target="_blank">vue-amazing-ui</a> 到本地后，从 packages 下单独拷贝单文件组件 (SFC) 到项目内使用</li>
     </ul>
     <h2 class="mt30">除此以外，Vue Amazing UI 还提供了十个常用工具函数 ：</h2>
