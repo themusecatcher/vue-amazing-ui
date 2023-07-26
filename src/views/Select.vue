@@ -54,23 +54,22 @@ function onAntChange (value: string|number, option: any) {
     <h1>Select 选择器</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Select :options="options" v-model="selectedValue" />
-    <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
-    <Select
-      :options="options"
-      allowClear
-      v-model="selectedValue"
-      @change="onChange" />
-    <h2 class="mt30 mb10">带搜索框 (search: true)</h2>
-    <Select
-      :options="options"
-      search
-      allowClear
-      v-model="selectedValue" />
     <h2 class="mt30 mb10">禁用 (disabled: true)</h2>
     <Select
       :options="options"
       disabled
       v-model="selectedValue" />
+    <h2 class="mt30 mb10">支持搜索 (search: true)</h2>
+    <Select
+      :options="options"
+      search
+      v-model="selectedValue" />
+    <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
+    <Select
+      :options="options"
+      allow-clear
+      v-model="selectedValue"
+      @change="onChange" />
     <h2 class="mt30 mb10">宽度设置为160px (width: 160)</h2>
     <Select
       :width="160"

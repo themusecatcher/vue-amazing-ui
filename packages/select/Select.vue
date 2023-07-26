@@ -13,7 +13,7 @@ interface Props {
   value?: string // 字典项的值字段名
   placeholder?: string // 默认文本
   disabled?: boolean // 是否禁用
-  search?: boolean // 是否可搜索
+  search?: boolean // 是否支持搜索
   allowClear?: boolean // 是否支持清除
   width?: number // 宽度
   height?: number // 高度
