@@ -111,7 +111,7 @@ function preventDefault (e: Event) {
     position: relative;
     display: inline-block;
     cursor: pointer;
-    transition: transform 0.3s ease-in-out;
+    transition: transform .3s ease-in-out;
     &:hover {
       transform: scale(1.1);
     }
@@ -120,9 +120,9 @@ function preventDefault (e: Event) {
       align-items: center;
       text-align: center;
       vertical-align: middle;
-      fill: rgba(0, 0, 0, 0.06);
-      color: rgba(0, 0, 0, 0.06);
-      transition: all 0.3s;
+      fill: rgba(0, 0, 0, .06);
+      color: rgba(0, 0, 0, .06);
+      transition: all .3s;
     }
     .u-star-first {
       position: absolute;
@@ -131,7 +131,7 @@ function preventDefault (e: Event) {
       height: 100%;
       opacity: 0;
       overflow: hidden;
-      transition: all 0.3s;
+      transition: all .3s;
       &:hover {
         opacity: 1;
         .u-star {
@@ -153,16 +153,16 @@ function preventDefault (e: Event) {
       &:hover {
         opacity: 0;
         .u-star {
-          fill: rgba(0, 0, 0, 0.06);
-          color: rgba(0, 0, 0, 0.06);
+          fill: rgba(0, 0, 0, .06);
+          color: rgba(0, 0, 0, .06);
         }
       }
     }
     .temp-gray-second {
       &:hover {
         .u-star {
-          fill: rgba(0, 0, 0, 0.06);
-          color: rgba(0, 0, 0, 0.06);
+          fill: rgba(0, 0, 0, .06);
+          color: rgba(0, 0, 0, .06);
         }
       }
     }

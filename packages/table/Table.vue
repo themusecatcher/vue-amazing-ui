@@ -77,7 +77,7 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页回调
 </template>
 <style lang="less" scoped>
 .m-table-wrap {
-  color: rgba(0, 0, 0, 0.65);
+  color: rgba(0, 0, 0, .65);
   font-size: 14px;
   line-height: 1.5;
   .m-table {
@@ -91,7 +91,7 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页回调
     margin: 0;
     .m-th {
       padding: 16px;
-      color: rgba(0, 0, 0, 0.85);
+      color: rgba(0, 0, 0, .85);
       font-weight: 500;
       text-align: left;
       background: #fafafa;

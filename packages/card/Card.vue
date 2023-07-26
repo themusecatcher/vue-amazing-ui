@@ -57,7 +57,7 @@ onMounted(() => {
 }
 .m-card {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   line-height: 1.5714285714285714;
   position: relative;
   background: #ffffff;
@@ -70,7 +70,7 @@ onMounted(() => {
     min-height: 56px;
     margin-bottom: -1px;
     padding: 0 24px;
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     font-weight: 600;
     font-size: 16px;
     background: transparent;

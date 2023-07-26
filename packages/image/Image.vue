@@ -317,13 +317,13 @@ function onSwitchRight () {
 </template>
 <style lang="less" scoped>
 .mask-enter-active, .mask-leave-active {
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity .3s ease-in-out;
 }
 .mask-enter-from, .mask-leave-to {
   opacity: 0;
 }
 .preview-enter-active, .preview-leave-active {
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity .3s ease-in-out;
 }
 .preview-enter-from, .preview-leave-to {
   opacity: 0;
@@ -362,11 +362,11 @@ function onSwitchRight () {
       align-items: center;
       justify-content: center;
       color: #fff;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, .5);
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s;
+      transition: opacity .3s;
       .m-image-mask-info {
         overflow: hidden;
         white-space: nowrap;
@@ -376,7 +376,7 @@ function onSwitchRight () {
           display: inline-flex;
           align-items: center;
           margin-right: 4px;
-          vertical-align: -0.125em;
+          vertical-align: -.125em;
           width: 14px;
           height: 14px;
           fill: #FFF;
@@ -392,7 +392,7 @@ function onSwitchRight () {
     inset: 0;
     z-index: 1000;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.45);
+    background-color: rgba(0, 0, 0, .45);
   }
   .m-preview-wrap {
     position: fixed;
@@ -417,7 +417,7 @@ function onSwitchRight () {
         display: flex;
         flex-direction: row-reverse;
         align-items: center;
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, .1);
         height: 42px;
         pointer-events: auto;
         .u-name {
@@ -443,12 +443,12 @@ function onSwitchRight () {
           line-height: 1;
           padding: 12px;
           cursor: pointer;
-          transition: all 0.3s;
+          transition: all .3s;
           &:not(:last-child) {
             margin-left: 12px;
           }
           &:hover {
-            background: rgba(0,0,0,0.25);
+            background: rgba(0,0,0,.25);
           }
           .u-icon {
             width: 18px;
@@ -458,10 +458,10 @@ function onSwitchRight () {
           }
         }
         .u-operation-disabled {
-          color: rgba(255, 255, 255, 0.25);
+          color: rgba(255, 255, 255, .25);
           pointer-events: none;
           .u-icon {
-            fill: rgba(255, 255, 255, 0.25);
+            fill: rgba(255, 255, 255, .25);
           }
         }
       }
@@ -469,7 +469,7 @@ function onSwitchRight () {
         position: absolute;
         z-index: 3;
         inset: 0;
-        transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+        transition: transform .3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -479,7 +479,7 @@ function onSwitchRight () {
           max-width: 100vw;
           max-height: 100vh;
           cursor: grab;
-          transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+          transition: transform .3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
           user-select: none;
           pointer-events: auto;
         }
@@ -496,14 +496,14 @@ function onSwitchRight () {
         height: 40px;
         margin-top: -20px;
         color: rgb(255, 255, 255);
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, .1);
         border-radius: 50%;
         transform: translateY(-50%);
         cursor: pointer;
-        transition: all 0.3s;
+        transition: all .3s;
         pointer-events: auto;
         &:hover {
-          background: rgba(0, 0, 0, 0.2);
+          background: rgba(0, 0, 0, .2);
         }
         .u-switch {
           width: 18px;
@@ -523,14 +523,14 @@ function onSwitchRight () {
         height: 40px;
         margin-top: -20px;
         color: rgb(255, 255, 255);
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, .1);
         border-radius: 50%;
         transform: translateY(-50%);
         cursor: pointer;
-        transition: all 0.3s;
+        transition: all .3s;
         pointer-events: auto;
         &:hover {
-          background: rgba(0, 0, 0, 0.2);
+          background: rgba(0, 0, 0, .2);
         }
         .u-switch {
           width: 18px;
@@ -539,14 +539,14 @@ function onSwitchRight () {
         }
       }
       .u-switch-disabled {
-        color: rgba(255, 255, 255, 0.25);
+        color: rgba(255, 255, 255, .25);
         background: transparent;
         cursor: not-allowed;
         &:hover {
           background: transparent;
         }
         .u-switch {
-          fill: rgba(255, 255, 255, 0.25);
+          fill: rgba(255, 255, 255, .25);
         }
       }
     }

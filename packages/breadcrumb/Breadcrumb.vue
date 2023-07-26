@@ -71,21 +71,21 @@ function getUrl (route: Route) {
     align-items: center;
     line-height: 1.5;
     .u-route {
-      color: rgba(0, 0, 0, 0.45);
+      color: rgba(0, 0, 0, .45);
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       cursor: pointer;
       padding: 0 4px;
       border-radius: 4px;
-      transition: color 0.2s, background-color 0.2s;
+      transition: color .2s, background-color .2s;
       &:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-        color: rgba(0, 0, 0, 0.88);
+        background-color: rgba(0, 0, 0, .05);
+        color: rgba(0, 0, 0, .88);
       }
     }
     .active {
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
       cursor: default;
       &:hover {
         background-color: transparent;
@@ -93,12 +93,12 @@ function getUrl (route: Route) {
     }
     .u-separator {
       margin: 0 4px;
-      color: rgba(0, 0, 0, 0.45);
+      color: rgba(0, 0, 0, .45);
     }
     .u-arrow {
       width: 12px;
       height: 12px;
-      fill: rgba(0, 0, 0, 0.45);
+      fill: rgba(0, 0, 0, .45);
     }
   }
   .assist {

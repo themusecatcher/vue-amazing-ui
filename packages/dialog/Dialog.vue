@@ -99,7 +99,7 @@ function onConfirm () {
 </template>
 <style lang="less" scoped>
 .v-enter-active, .v-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity .3s ease;
 }
 .v-enter-from, .v-leave-to {
   opacity: 0;
@@ -129,7 +129,7 @@ function onConfirm () {
   width: 100%;
   height: 100%;
   z-index: 10000;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, .45);
   .transition {
     transition: all .3s ease;
   }

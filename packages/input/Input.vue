@@ -145,14 +145,14 @@ function onPassword () {
   .m-addon {
     position: relative;
     padding: 0 11px;
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     font-weight: normal;
     font-size: 14px;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: rgba(0, 0, 0, .02);
     border: 1px solid #d9d9d9;
     border-radius: 6px;
-    transition: all 0.3s;
+    transition: all .3s;
     line-height: 1;
     display: table-cell;
     width: 1px;
@@ -171,7 +171,7 @@ function onPassword () {
   }
   .m-input {
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     line-height: 1.5714285714285714;
     position: relative;
     display: inline-flex;
@@ -179,7 +179,7 @@ function onPassword () {
     min-width: 0;
     background-color: #ffffff;
     border: 1px solid #d9d9d9;
-    transition: all 0.2s;
+    transition: all .2s;
     &:hover {
       border-color: #4096ff;
       border-inline-end-width: 1px;
@@ -187,7 +187,7 @@ function onPassword () {
     }
     &:focus-within {
       border-color: #4096ff;
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+      box-shadow: 0 0 0 2px rgba(5, 145, 255, .1);
       border-inline-end-width: 1px;
       outline: 0;
     }
@@ -208,22 +208,22 @@ function onPassword () {
       border: none;
       outline: none;
       text-overflow: ellipsis;
-      transition: all 0.2s;
+      transition: all .2s;
     }
     input:disabled {
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, .25);
     }
     input::-webkit-input-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, .25);
     }
     input:-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, .25);
     }
     input::-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, .25);
     }
     input:-ms-input-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, .25);
     }
     .m-suffix {
       margin-inline-start: 4px;
@@ -238,30 +238,30 @@ function onPassword () {
         .u-clear {
           font-size: 12px;
           display: inline-block;
-          fill: rgba(0, 0, 0, 0.25);
+          fill: rgba(0, 0, 0, .25);
           text-align: center;
           line-height: 0;
-          vertical-align: -0.08em;
-          transition: fill 0.3s;
+          vertical-align: -.08em;
+          transition: fill .3s;
           &:hover {
-            fill: rgba(0, 0, 0, 0.45);
+            fill: rgba(0, 0, 0, .45);
           }
         }
         .u-eye {
           font-size: 14px;
           display: inline-block;
-          fill: rgba(0, 0, 0, 0.45);
+          fill: rgba(0, 0, 0, .45);
           text-align: center;
           line-height: 1;
-          vertical-align: -0.125em;
-          transition: fill 0.3s;
+          vertical-align: -.125em;
+          transition: fill .3s;
           &:hover {
-            fill: rgba(0, 0, 0, 0.85);
+            fill: rgba(0, 0, 0, .85);
           }
         }
       }
       .m-count {
-        color: rgba(0, 0, 0, 0.45);
+        color: rgba(0, 0, 0, .45);
       }
     }
   }
@@ -288,8 +288,8 @@ function onPassword () {
     border-end-end-radius: 0;
   }
   .disabled {
-    color: rgba(0, 0, 0, 0.25);
-    background-color: rgba(0, 0, 0, 0.04);
+    color: rgba(0, 0, 0, .25);
+    background-color: rgba(0, 0, 0, .04);
     cursor: not-allowed;
     &:hover {
       border-color: #d9d9d9;

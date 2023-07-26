@@ -116,19 +116,19 @@ const lineColor = computed(() => {
     .u-progress-circle-trail {
       stroke: #f5f5f5;
       stroke-dashoffset: 0px;
-      transition: stroke-dashoffset 0.3s,
-                  stroke-dasharray 0.3s,
-                  stroke 0.3s,
-                  stroke-width 0.06s 0.3s,
-                  opacity 0.3s;
+      transition: stroke-dashoffset .3s,
+                  stroke-dasharray .3s,
+                  stroke .3s,
+                  stroke-width .06s .3s,
+                  opacity .3s;
     }
     .u-progress-circle-path {
       stroke-dashoffset: 0px;
-      animation: ant-progress-appear 0.3s;
-      transition: stroke-dashoffset 0.3s,
-                  stroke-dasharray 0.3s,
-                  stroke 0.3s,
-                  stroke-width 0.06s 0.3s,
+      animation: ant-progress-appear .3s;
+      transition: stroke-dashoffset .3s,
+                  stroke-dasharray .3s,
+                  stroke .3s,
+                  stroke-width .06s .3s,
                   opacity .3s;
     }
     .success {

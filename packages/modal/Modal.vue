@@ -116,7 +116,7 @@ function onKnow () {
 </template>
 <style lang="less" scoped>
 .v-enter-active, .v-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity .3s ease;
 }
 .v-enter-from, .v-leave-to {
   opacity: 0;
@@ -144,11 +144,11 @@ function onKnow () {
   width: 100%;
   height: 100%;
   z-index: 1000;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,.45);
   .m-modal {
     width: 420px;
     margin: 0 auto;
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     font-size: 14px;
     line-height: 1.571;
     .m-modal-body {
@@ -157,7 +157,7 @@ function onKnow () {
       padding: 20px 24px;
       background: #fff;
       border-radius: 8px;
-      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
       .m-spin-dot { // 绝对定位，并设置水平垂直居中
         position: absolute;
         display: inline-block;
@@ -271,7 +271,7 @@ function onKnow () {
           background: #fff;
           border: 1px solid #d9d9d9;
           cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+          transition: all .2s cubic-bezier(0.645, 0.045, 0.355, 1);
           &:hover {
             color: fade(@themeColor, 80%);
             border-color: fade(@themeColor, 80%);
@@ -288,7 +288,7 @@ function onKnow () {
           font-size: 14px;
           border-radius: 6px;
           color: #fff;
-          transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+          transition: all .2s cubic-bezier(0.645, 0.045, 0.355, 1);
           cursor: pointer;
         }
         .primary {

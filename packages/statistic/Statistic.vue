@@ -53,15 +53,15 @@ onMounted(() => {
 <style lang="less" scoped>
 .m-statistic {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   line-height: 1.5714285714285714;
   .u-title {
     margin-bottom: 4px;
-    color: rgba(0, 0, 0, 0.45);
+    color: rgba(0, 0, 0, .45);
     font-size: 14px;
   }
   .m-content {
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     font-size: 24px;
     .u-prefix {
       display: inline-block;

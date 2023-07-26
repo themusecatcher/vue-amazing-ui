@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
     .u-label {
       display: inline-flex;
       align-items: baseline;
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
       font-weight: normal;
       font-size: 14px;
       line-height: 1.5714285714285714;
@@ -42,7 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
       &::after {
         content: ":";
         position: relative;
-        top: -0.5px;
+        top: -.5px;
         margin-inline: 2px 8px;
       }
     }
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
       display: inline-flex;
       align-items: baseline;
       flex: 1;
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
       font-size: 14px;
       line-height: 1.5714285714285714;
       word-break: break-word;

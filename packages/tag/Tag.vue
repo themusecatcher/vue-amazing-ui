@@ -43,38 +43,38 @@ function onClose (e: MouseEvent) {
   line-height: 20px;
   display: inline-block;
   height: auto;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   margin-inline-end: 8px;
   padding-inline: 7px;
   white-space: nowrap;
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(0, 0, 0, .02);
   border: 1px solid #d9d9d9;
   border-radius: 4px;
   opacity: 1;
-  transition: all 0.2s;
+  transition: all .2s;
   text-align: start;
   .m-icon {
     margin-right: 5px;
     display: inline-flex;
     align-items: center;
     text-align: center;
-    vertical-align: -0.125em;
+    vertical-align: -.125em;
   }
   .u-tag {
     display: inline-block;
   }
   .u-close {
     margin-inline-start: 3px;
-    fill: rgba(0, 0, 0, 0.45);
+    fill: rgba(0, 0, 0, .45);
     font-size: 12px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all .2s;
     display: inline-flex;
     align-items: center;
     text-align: center;
-    vertical-align: -0.125em;
+    vertical-align: -.125em;
     &:hover {
-      fill: rgba(0, 0, 0, 0.88);
+      fill: rgba(0, 0, 0, .88);
     }
   }
 }

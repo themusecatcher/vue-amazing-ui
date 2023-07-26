@@ -47,7 +47,7 @@ onMounted(() => {
 .m-result {
   padding: 48px 32px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   .m-image {
     margin-bottom: 24px;
     text-align: center;
@@ -63,14 +63,14 @@ onMounted(() => {
     }
   }
   .m-title {
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     font-size: 24px;
     line-height: 1.3333333333333333;
     margin-block: 8px;
     text-align: center;
   }
   .m-subtitle {
-    color: rgba(0, 0, 0, 0.45);
+    color: rgba(0, 0, 0, .45);
     font-size: 14px;
     line-height: 1.5714285714285714;
     text-align: center;
@@ -88,7 +88,7 @@ onMounted(() => {
   .m-content {
     margin-top: 24px;
     padding: 24px 40px;
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: rgba(0, 0, 0, .02);
   }
 }
 </style>

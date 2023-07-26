@@ -180,7 +180,7 @@ function changePage (pageNum: number): boolean | void {
     height: 32px;
     line-height: 30px;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     text-align: center;
     .mr8 {
       margin-right: 8px;
@@ -200,7 +200,7 @@ function changePage (pageNum: number): boolean | void {
       }
       .u-arrow {
         display: inline-block;
-        fill: rgba(0, 0, 0, 0.65);
+        fill: rgba(0, 0, 0, .65);
         width: 12px;
         height: 12px;
         transition: all .3s;
@@ -219,20 +219,20 @@ function changePage (pageNum: number): boolean | void {
     }
     .disabled {
       // pointer-events: none; // 禁用鼠标事件
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, .25);
       background: #fff;
       border-color: #d9d9d9;
       cursor: not-allowed;
       &:hover {
         font-weight: 400;
-        color: rgba(0, 0, 0, 0.65);
+        color: rgba(0, 0, 0, .65);
         border-color: #d9d9d9;
         .u-arrow {
-          fill: rgba(0, 0, 0, 0.25);
+          fill: rgba(0, 0, 0, .25);
         }
       }
       .u-arrow {
-        fill: rgba(0, 0, 0, 0.25);
+        fill: rgba(0, 0, 0, .25);
       }
     }
     .m-arrow {
@@ -260,7 +260,7 @@ function changePage (pageNum: number): boolean | void {
         margin: auto;
         letter-spacing: 1px;
         font-size: 16px;
-        color: rgba(0, 0, 0, 0.25);
+        color: rgba(0, 0, 0, .25);
         transition: all .3s;
       }
       .u-icon {
@@ -291,7 +291,7 @@ function changePage (pageNum: number): boolean | void {
         background: #FFF;
         text-align: left;
         outline: none;
-        transition: all 0.3s;
+        transition: all .3s;
         &:hover {
           border-color: @themeColor
         }

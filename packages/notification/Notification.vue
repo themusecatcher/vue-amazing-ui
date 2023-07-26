@@ -187,7 +187,7 @@ function onClose (index: number) {
     padding: 20px 24px;
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
     transition: all .3s ease-in-out;
     .u-svg {
       position: absolute;
@@ -200,12 +200,12 @@ function onClose (index: number) {
       padding-right: 24px;
       margin-bottom: 8px;
       font-size: 16px;
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
       line-height: 1.5;
     }
     .u-description {
       font-size: 14px;
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
       line-height: 1.5;
     }
     .mb4 {

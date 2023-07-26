@@ -102,7 +102,7 @@ const year = computed(() => {
   --dp-success-color-disabled: #428f59;
   --dp-icon-color: #959595;
   --dp-danger-color: #e53935;
-  --dp-highlight-color: rgba(0, 92, 178, 0.2);
+  --dp-highlight-color: rgba(0, 92, 178, .2);
 }
 .dp__theme_light { // light theme
   --dp-background-color: #ffffff;
@@ -123,6 +123,6 @@ const year = computed(() => {
   --dp-success-color-disabled: #a3d9b1;
   --dp-icon-color: #959595;
   --dp-danger-color: #ff6f60;
-  --dp-highlight-color: rgba(25, 118, 210, 0.1);
+  --dp-highlight-color: rgba(25, 118, 210, .1);
 }
 </style>

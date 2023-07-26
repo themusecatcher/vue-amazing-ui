@@ -202,11 +202,11 @@ function startMove () {
   transition: all 1s ease;
 }
 .slide-enter-from {
-  transform: translateY(50px) scale(0.6);
+  transform: translateY(50px) scale(.6);
   opacity: 0;
 }
 .slide-leave-to {
-  transform: translateY(-50px) scale(0.6);
+  transform: translateY(-50px) scale(.6);
   opacity: 0;
 }
 .m-slider-vertical {

@@ -141,11 +141,11 @@ function onClear () {
     max-width: 100%;
     height: auto;
     padding: 4px 11px;
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     font-size: 14px;
     line-height: 1.5714285714285714;
     list-style: none;
-    transition: all 0.3s, height 0s;
+    transition: all .3s, height 0s;
     resize: vertical;
     position: relative;
     display: inline-block;
@@ -162,25 +162,25 @@ function onClear () {
     }
     &:focus-within {
       border-color: #4096ff;
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+      box-shadow: 0 0 0 2px rgba(5, 145, 255, .1);
       border-inline-end-width: 1px;
       outline: 0;
     }
   }
   textarea:disabled {
-    color: rgba(0, 0, 0, 0.25);
+    color: rgba(0, 0, 0, .25);
   }
   textarea::-webkit-input-placeholder {
-    color: rgba(0, 0, 0, 0.25);
+    color: rgba(0, 0, 0, .25);
   }
   textarea:-moz-placeholder {
-    color: rgba(0, 0, 0, 0.25);
+    color: rgba(0, 0, 0, .25);
   }
   textarea::-moz-placeholder {
-    color: rgba(0, 0, 0, 0.25);
+    color: rgba(0, 0, 0, .25);
   }
   textarea:-ms-input-placeholder {
-    color: rgba(0, 0, 0, 0.25);
+    color: rgba(0, 0, 0, .25);
   }
   .m-clear {
     position: absolute;
@@ -191,21 +191,21 @@ function onClear () {
     line-height: 0;
     .u-clear {
       display: inline-block;
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, .25);
       font-size: 12px;
       line-height: 1;
       vertical-align: -1px;
       cursor: pointer;
-      transition: color 0.3s;
-      transition: fill 0.3s;
+      transition: color .3s;
+      transition: fill .3s;
       &:hover {
-        fill: rgba(0, 0, 0, 0.45);
+        fill: rgba(0, 0, 0, .45);
       }
     }
   }
   .disabled {
-    color: rgba(0, 0, 0, 0.25);
-    background-color: rgba(0, 0, 0, 0.04);
+    color: rgba(0, 0, 0, .25);
+    background-color: rgba(0, 0, 0, .04);
     cursor: not-allowed;
     &:hover {
       border-color: #d9d9d9;
@@ -218,7 +218,7 @@ function onClear () {
 }
 .show-count {
   &::after {
-    color: rgba(0, 0, 0, 0.45);
+    color: rgba(0, 0, 0, .45);
     white-space: nowrap;
     content: attr(data-count);
     pointer-events: none;

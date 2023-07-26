@@ -82,13 +82,13 @@ function onClose (e: MouseEvent):void {
 <style lang="less" scoped>
 .m-alert-wrapper {
   overflow: hidden;
-  transition: height 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  transition: height .3s cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity .3s cubic-bezier(.78, 0.14, 0.15, 0.86);
 }
 .m-alert {
   box-sizing: border-box;
   margin: 0;
   padding: 8px 12px;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   font-size: 14px;
   line-height: 1.5714285714285714;
   list-style: none;
@@ -126,20 +126,20 @@ function onClose (e: MouseEvent):void {
   .m-close {
     margin-inline-start: 8px;
     font-size: 12px;
-    color: rgba(0, 0, 0, 0.45);
+    color: rgba(0, 0, 0, .45);
     line-height: 12px;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: color .2s;
     &:hover {
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
     }
     .u-close {
       display: inline-block;
       vertical-align: bottom;
-      fill: rgba(0, 0, 0, 0.45);
-      transition: fill 0.2s;
+      fill: rgba(0, 0, 0, .45);
+      transition: fill .2s;
       &:hover {
-        fill: rgba(0, 0, 0, 0.88);
+        fill: rgba(0, 0, 0, .88);
       }
     }
   }
@@ -187,7 +187,7 @@ function onClose (e: MouseEvent):void {
   .u-message {
     display: block;
     margin-bottom: 8px;
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     font-size: 16px;
   }
   .u-description {
