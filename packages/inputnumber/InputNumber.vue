@@ -152,13 +152,13 @@ function onDown () {
   display: inline-block;
   height: 30px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   line-height: 1.5714285714285714;
   padding: 0 11px;
   background-color: #ffffff;
   border-radius: 6px;
   border: 1px solid #d9d9d9;
-  transition: all 0.2s;
+  transition: all .2s;
   &:hover {
     border-color: @themeColor;
     .m-handler-wrap {
@@ -186,21 +186,21 @@ function onDown () {
       border: none;
       border-radius: 6px;
       outline: 0;
-      transition: all 0.2s linear;
+      transition: all .2s linear;
       appearance: textfield;
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
     }
     input::-webkit-input-placeholder {
-      color: rgba(0, 0, 0, 0.25)
+      color: rgba(0, 0, 0, .25)
     }
     input:-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25)
+      color: rgba(0, 0, 0, .25)
     }
     input::-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25)
+      color: rgba(0, 0, 0, .25)
     }
     input:-ms-input-placeholder {
-      color: rgba(0, 0, 0, 0.25)
+      color: rgba(0, 0, 0, .25)
     }
   }
   .m-handler-wrap {
@@ -215,12 +215,12 @@ function onDown () {
     display: flex;
     flex-direction: column;
     align-items: stretch; // 默认值，元素被拉伸以适应容器
-    transition: all 0.2s linear 0.2s;
+    transition: all .2s linear .2s;
     .u-icon {
       width: 7px;
       height: 7px;
-      fill: rgba(0, 0, 0, 0.25);
-      transition: all 0.2s linear;
+      fill: rgba(0, 0, 0, .25);
+      transition: all .2s linear;
     }
     .u-up-arrow {
       display: flex;
@@ -231,7 +231,7 @@ function onDown () {
       border-top-right-radius: 6px;
       border-left: 1px solid #d9d9d9;
       cursor: pointer;
-      transition: all 0.2s linear;
+      transition: all .2s linear;
       &:hover {
         height: 60%;
         .u-icon {
@@ -249,7 +249,7 @@ function onDown () {
       border-left: 1px solid #d9d9d9;
       border-bottom-right-radius: 2px;
       cursor: pointer;
-      transition: all 0.2s linear;
+      transition: all .2s linear;
       &:hover {
         height: 60%;
         .u-icon {
@@ -261,7 +261,7 @@ function onDown () {
       cursor: not-allowed;
       &:hover {
         .u-icon {
-          fill: rgba(0, 0, 0, 0.25);
+          fill: rgba(0, 0, 0, .25);
         }
       }
     }

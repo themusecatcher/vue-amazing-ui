@@ -320,7 +320,7 @@ function onSwitch (n: number) { // 分页切换图片
   position: relative;
   overflow: hidden;
   .transition {
-    transition: transform 0.3s ease-out;
+    transition: transform .3s ease-out;
   }
   .m-image {
     display: inline-block;
@@ -337,11 +337,11 @@ function onSwitch (n: number) { // 分页切换图片
   }
   &:hover {
     .arrow-left {
-      opacity: 0.7;
+      opacity: .7;
       pointer-events: auto;
     }
     .arrow-right {
-      opacity: 0.7;
+      opacity: .7;
       pointer-events: auto;
     }
   }

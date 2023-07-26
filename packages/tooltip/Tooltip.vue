@@ -82,16 +82,16 @@ function onHide (): void {
     pointer-events: none;
     opacity: 0;
     transform-origin: 50% 75%;
-    transform: scale(0.8); // 缩放变换
-    -ms-transform: scale(0.8); /* IE 9 */
-    -webkit-transform: scale(0.8); /* Safari and Chrome */
+    transform: scale(.8); // 缩放变换
+    -ms-transform: scale(.8); /* IE 9 */
+    -webkit-transform: scale(.8); /* Safari and Chrome */
     transition: transform .25s, opacity .25s;
     .u-title {
       padding: 6px 8px;
       margin: 0 auto;
       text-align: start;
       word-break: break-all;
-      box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 24px 6px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 3px 12px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 6px 24px 6px rgba(0, 0, 0, .05);
       border-radius: 6px;
       font-weight: 400;
       line-height: 1.5;
@@ -115,7 +115,7 @@ function onHide (): void {
         height: 12px;
         border-radius: 0 0 3px 0;
         z-index: 8;
-        box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.05);
+        box-shadow: 2px 2px 3px rgba(0, 0, 0, .05);
       }
     }
   }

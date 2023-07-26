@@ -49,7 +49,7 @@ const gap = computed(() => {
 .m-space {
   display: inline-flex;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   transition: all .3s;
 }
 .horizontal {

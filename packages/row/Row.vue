@@ -138,7 +138,7 @@ function getBrowserSize () {
   align-items: var(--align);
   min-width: 0;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   transition: all .3s;
 }
 </style>

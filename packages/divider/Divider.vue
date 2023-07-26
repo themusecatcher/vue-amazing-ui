@@ -63,14 +63,14 @@ onMounted(() => {
     width: 50%;
     border-top-width: var(--border-width);
     border-top-style: solid;
-    border-top-color: rgba(5, 5, 5, 0.06);
+    border-top-color: rgba(5, 5, 5, .06);
     transform: translateY(50%);
     content: '';
   }
   .u-text {
     display: inline-block;
     font-size: 16px;
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     font-weight: 500;
     line-height: 1.571;
     white-space: nowrap;

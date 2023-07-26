@@ -86,8 +86,8 @@ function getUrl (route: Route) {
     color: rgba(0,0,0,.88);
     background-color: #ffffff;
     border: 1px solid #d9d9d9;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
-    transition: all .25s cubic-bezier(.645,.045,.355,1);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .02);
+    transition: all .25s cubic-bezier(0.645, 0.045, 0.355, 1);
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -99,7 +99,7 @@ function getUrl (route: Route) {
       text-align: left;
       opacity: 0;
       width: 0;
-      transition: width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: width .3s cubic-bezier(0.645, 0.045, 0.355, 1), opacity .3s cubic-bezier(0.645, 0.045, 0.355, 1);
       .u-spin-circle {
         display: inline-block;
         width: 12px;
@@ -129,7 +129,7 @@ function getUrl (route: Route) {
     }
   }
   .m-btn-loading {
-    opacity: 0.65;
+    opacity: .65;
     pointer-events: none;
   }
   .fade {
@@ -211,14 +211,14 @@ function getUrl (route: Route) {
     text-align: center;
   }
   .disabled {
-    color: rgba(0, 0, 0, 0.25);
+    color: rgba(0, 0, 0, .25);
     background-color: #f5f5f5;
     border-color: #d9d9d9;
     text-shadow: none;
     box-shadow: none;
     cursor: not-allowed;
     &:hover, &:active {
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, .25);
       background-color: #f5f5f5;
       border-color: #d9d9d9;
       text-shadow: none;

@@ -43,11 +43,11 @@ withDefaults(defineProps<Props>(), {
   .u-description {
     margin-top: 8px;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, .88);
     line-height: 1.571;
   }
   .gray {
-    color: rgba(0, 0, 0, 0.25);
+    color: rgba(0, 0, 0, .25);
   }
 }
 </style>

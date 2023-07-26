@@ -249,6 +249,6 @@ withDefaults(defineProps<Props>(), {
 .m-spin-mask {
   user-select: none;
   pointer-events: none;
-  opacity: 0.4;
+  opacity: .4;
 }
 </style>

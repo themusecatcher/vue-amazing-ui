@@ -60,7 +60,7 @@ function onClick (value: any) {
 <style lang="less" scoped>
 .m-radio {
   display: inline-block;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   font-size: 14px;
   line-height: 1;
   .m-radio-wrap {
@@ -105,7 +105,7 @@ function onClick (value: any) {
           border-radius: 16px;
           transform: scale(0);
           opacity: 0;
-          transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+          transition: all .3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
           content: "";
         }
       }
@@ -113,9 +113,9 @@ function onClick (value: any) {
         border-color: @themeColor;
         background-color: @themeColor;
         &:after {
-          transform: scale(0.375);
+          transform: scale(.375);
           opacity: 1;
-          transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+          transition: all .3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
         }
       }
       .u-label {
@@ -127,7 +127,7 @@ function onClick (value: any) {
       }
     }
     .disabled {
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, .25);
       cursor: not-allowed;
       &:hover {
         .u-radio {
@@ -135,12 +135,12 @@ function onClick (value: any) {
         }
       }
       .u-radio {
-        background-color: rgba(0, 0, 0, 0.04);
+        background-color: rgba(0, 0, 0, .04);
         border-color: #d9d9d9;
         cursor: not-allowed;
         &:after {
-          transform: scale(0.5);
-          background-color: rgba(0, 0, 0, 0.25);
+          transform: scale(.5);
+          background-color: rgba(0, 0, 0, .25);
         }
       }
     }

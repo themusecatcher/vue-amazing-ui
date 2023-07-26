@@ -120,7 +120,7 @@ function onWheel (e: WheelEvent) {
 <style lang="less" scoped>
 .m-tabs {
   display: flex;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   line-height: 1.57;
   flex-direction: column; // 子元素将垂直显示，正如一个列一样。
   .m-tabs-nav {
@@ -129,7 +129,7 @@ function onWheel (e: WheelEvent) {
     flex: none;
     align-items: center;
     margin-bottom: 16px;
-    border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+    border-bottom: 1px solid rgba(5, 5, 5, .06);
     .m-tabs-nav-wrap {
       position: relative;
       display: flex;
@@ -142,7 +142,7 @@ function onWheel (e: WheelEvent) {
         position: absolute;
         z-index: 1;
         opacity: 0;
-        transition: opacity 0.3s;
+        transition: opacity .3s;
         content: '';
         pointer-events: none;
         top: 0;
@@ -152,13 +152,13 @@ function onWheel (e: WheelEvent) {
       &:before {
         .shadow();
         left: 0;
-        box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, .08);
         
       }
       &:after {
         .shadow();
         right: 0;
-        box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, .08);
       }
       .m-tabs-nav-list {
         position: relative;
@@ -170,7 +170,7 @@ function onWheel (e: WheelEvent) {
           background: transparent;
           border: 0;
           cursor: pointer;
-          transition: all 0.3s;
+          transition: all .3s;
           &:not(:first-child) {
             margin-left: 32px;
           }
@@ -180,13 +180,13 @@ function onWheel (e: WheelEvent) {
         }
         .u-tab-active {
           color: @themeColor;
-          text-shadow: 0 0 0.25px currentcolor;
+          text-shadow: 0 0 .25px currentcolor;
         }
         .u-tab-disabled {
-          color: rgba(0, 0, 0, 0.25);
+          color: rgba(0, 0, 0, .25);
           cursor: not-allowed;
           &:hover {
-            color: rgba(0, 0, 0, 0.25);
+            color: rgba(0, 0, 0, .25);
           }
         }
         .u-tab-bar {
@@ -194,7 +194,7 @@ function onWheel (e: WheelEvent) {
           background: @themeColor;
           pointer-events: none;
           height: 2px;
-          transition: width 0.3s,left 0.3s,right 0.3s;
+          transition: width .3s,left .3s,right .3s;
           bottom: 0;
         }
       }

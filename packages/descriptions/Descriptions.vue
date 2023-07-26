@@ -43,7 +43,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .m-desc {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: rgba(0, 0, 0, .88);
   line-height: 1.5714285714285714;
   .m-header {
     display: flex;
@@ -56,13 +56,13 @@ onMounted(() => {
       flex: auto;
       font-weight: 600;
       font-size: 16px;
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
       line-height: 1.5;
     }
     .u-extra {
       margin-inline-start: auto;
       font-size: 14px;
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
     }
   }
   .m-desc-view {
@@ -72,23 +72,23 @@ onMounted(() => {
     border-radius: 8px;
   }
   .bordered {
-    border: 1px solid rgba(5, 5, 5, 0.06);
+    border: 1px solid rgba(5, 5, 5, .06);
     :deep(.m-desc-item) {
       padding-bottom: 0;
     }
     :deep(.u-label) {
-      background-color: rgba(0, 0, 0, 0.02);
+      background-color: rgba(0, 0, 0, .02);
       padding: 16px 24px;
-      border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+      border-inline-end: 1px solid rgba(5, 5, 5, .06);
+      border-bottom: 1px solid rgba(5, 5, 5, .06);
       &::after {
         content: '' !important;
       }
     }
     :deep(.u-content) {
       padding: 16px 24px;
-      border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+      border-inline-end: 1px solid rgba(5, 5, 5, .06);
+      border-bottom: 1px solid rgba(5, 5, 5, .06);
     }
   }
 }

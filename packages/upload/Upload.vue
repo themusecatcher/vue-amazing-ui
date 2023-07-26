@@ -251,9 +251,9 @@ function onError (content: any) {
     height: 100px;
     border-radius: 8px;
     border: 1px dashed #d9d9d9;
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: rgba(0, 0, 0, .02);
     cursor: pointer;
-    transition: border-color 0.3s;
+    transition: border-color .3s;
     &:hover {
       border-color: @themeColor;
     }
@@ -261,12 +261,12 @@ function onError (content: any) {
       display: inline-block;
       width: 14px;
       height: 14px;
-      fill: rgba(0, 0, 0, 0.88);
+      fill: rgba(0, 0, 0, .88);
     }
     .u-tip {
       margin-top: 8px;
       font-size: 14px;
-      color: rgba(0, 0, 0, 0.88);
+      color: rgba(0, 0, 0, .88);
       line-height: 1.571;
     }
   }
@@ -282,7 +282,7 @@ function onError (content: any) {
     padding: 8px;
     border-radius: 8px;
     border: 1px dashed #d9d9d9;
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: rgba(0, 0, 0, .02);
     display: flex;
     align-items: center;
     text-align: center;
@@ -327,10 +327,10 @@ function onError (content: any) {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, .5);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s;
+      transition: opacity .3s;
       .m-icon {
         display: inline-block;
         height: 16px;
@@ -340,9 +340,9 @@ function onError (content: any) {
           display: inline-block;
           width: 16px;
           height: 16px;
-          fill: rgba(255, 255, 255, 0.65);
+          fill: rgba(255, 255, 255, .65);
           cursor: pointer;
-          transition: all 0.3s;
+          transition: all .3s;
           &:hover {
             fill: rgba(255, 255, 255, 1);
           }

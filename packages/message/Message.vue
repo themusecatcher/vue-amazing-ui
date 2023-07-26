@@ -140,7 +140,7 @@ function onHideMessage (index: number) {
       padding: 9px 12px;
       background: #FFF;
       border-radius: 8px;
-      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
       pointer-events: auto; // 保证内容区域部分可以正常响应鼠标事件
       .svg {
         display: inline-block;

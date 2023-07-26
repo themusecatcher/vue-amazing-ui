@@ -104,7 +104,7 @@ function onCopy (index: number) {
 </template>
 <style lang="less" scoped>
 .m-collapse {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(0, 0, 0, .02);
   border: 1px solid #d9d9d9;
   border-bottom: 0;
   border-radius: 8px;
@@ -120,7 +120,7 @@ function onCopy (index: number) {
       position: relative;
       padding: 12px 16px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all .3s;
       .u-arrow {
         position: absolute;
         width: 12px;
@@ -129,11 +129,11 @@ function onCopy (index: number) {
         bottom: 0;
         margin: auto 0;
         fill: rgba(0,0,0,.88);
-        transition: transform 0.3s;
+        transition: transform .3s;
       }
       .u-header {
         display: inline-block;
-        color: rgba(0, 0, 0, 0.88);
+        color: rgba(0, 0, 0, .88);
         line-height: 1.5714285714285714;
       }
       .ml24 {
@@ -144,7 +144,7 @@ function onCopy (index: number) {
       position: relative;
       overflow: hidden;
       background-color: #ffffff;
-      transition: height 0.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+      transition: height .2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity .2s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
       .u-lang {
         position: absolute;
         right: 10px;
@@ -164,7 +164,7 @@ function onCopy (index: number) {
       }
       .u-text {
         padding: 16px;
-        color: rgba(0, 0, 0, 0.88);
+        color: rgba(0, 0, 0, .88);
         white-space: pre-wrap;
       }
     }

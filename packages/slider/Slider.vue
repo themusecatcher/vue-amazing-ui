@@ -298,11 +298,11 @@ function onRightSlide (source: number, place: string) {
       text-align: center;
       min-width: 32px;
       border-radius: 6px;
-      transform: translate(-50%, -50%) scale(0.8);
+      transform: translate(-50%, -50%) scale(.8);
       top: -32px;
       left: 50%;
       background: rgba(0,0,0,.85);
-      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
       pointer-events: none;
       user-select: none;
       opacity: 0;
@@ -358,7 +358,7 @@ function onRightSlide (source: number, place: string) {
 .disabled {
   .u-slider-rail {
     cursor: not-allowed;
-    background: rgba(0, 0, 0, 0.06);
+    background: rgba(0, 0, 0, .06);
   }
   .u-slider-track {
     background: rgba(0, 0, 0, .25);
