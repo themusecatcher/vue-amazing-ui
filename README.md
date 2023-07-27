@@ -1,11 +1,8 @@
 # vue-amazing-ui
 
-*该组件库采用 Vue3@3.3.4 + TypeScript@4.7.4 + Vite4.4.7 + Less@4.1.3 实现！*
-
-*所有组件样式 CSS 均使用 box-sizing: border-box; 模式！*
-
-*目前共有 46 个基础 UI 组件，并且持续探索更新中...！*
-
+*该组件库采用 Vue3@3.3.4 + TypeScript@4.7.4 + Vite4.4.7 + Less@4.1.3 实现！*<br/>
+*所有组件样式 CSS 均使用 box-sizing: border-box; 模式！*<br/>
+*目前共有 46 个基础 UI 组件，并且持续探索更新中...！*<br/>
 *开箱即用！*
 
 ## Document & Online preview
