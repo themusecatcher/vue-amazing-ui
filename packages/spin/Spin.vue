@@ -124,7 +124,7 @@ withDefaults(defineProps<Props>(), {
     .m-dynamic-circle {
       display: inline-block;
       .circular {
-        display: inline;
+        display: inline-block;
         animation: loading-rotate 2s linear infinite;
         @keyframes loading-rotate {
           100% {
