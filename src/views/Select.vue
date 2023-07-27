@@ -33,6 +33,10 @@ const options = ref([
       {
         label: '君士坦丁堡',
         value: 8
+      },
+      {
+        label: '墨尔本',
+        value: 9
       }
     ])
 const selectedValue = ref(1)
@@ -43,6 +47,10 @@ function onChange (value: string|number, label: string,  index: number) {
   console.log('value:', value)
   console.log('label:', label)
   console.log('index:', index)
+}
+// 自定义过滤函数，但选项的 value 值大于 输入项时返回 true
+function filter (inputValue: string, option: any) {
+  return option.value > inputValue
 }
 function onAntChange (value: string|number, option: any) {
   console.log('value:', value)
@@ -59,17 +67,18 @@ function onAntChange (value: string|number, option: any) {
       :options="options"
       disabled
       v-model="selectedValue" />
-    <h2 class="mt30 mb10">支持搜索 (search: true)</h2>
-    <Select
-      :options="options"
-      search
-      v-model="selectedValue" />
     <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
     <Select
       :options="options"
       allow-clear
       v-model="selectedValue"
       @change="onChange" />
+    <h2 class="mt30 mb10">支持搜索 (search: true)</h2>
+    <Select
+      :options="options"
+      search
+      :filter="filter"
+      v-model="selectedValue" />
     <h2 class="mt30 mb10">宽度设置为160px (width: 160)</h2>
     <Select
       :width="160"
