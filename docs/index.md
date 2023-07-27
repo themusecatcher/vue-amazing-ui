@@ -22,24 +22,15 @@ hero:
       text: View on NPM
       link: https://www.npmjs.com/package/vue-amazing-ui
 features:
-  - icon: 💡
-    title: Instant Server Start
-    details: On demand file serving over native ESM, no bundling required!
-  - icon: ⚡️
-    title: Lightning Fast HMR
-    details: Hot Module Replacement (HMR) that stays fast regardless of app size.
   - icon: 🛠️
     title: 开发依赖
     details: 组件库采用 Vue3@3.3.4 + TypeScript@4.7.4 + Vite4.4.7 + Less@4.1.3 实现
+  - icon: ⚡️
+    title: border-box
+    details: '所有组件 CSS 样式均使用 box-sizing: border-box; 模式'
   - icon: 🚀
-    title: Optimized Build
-    details: Pre-configured Rollup build with multi-page and library mode support.
-  - icon: 🔩
     title: 开箱即用
-    details: Rollup-superset plugin interface shared between dev and build.
-  - icon: 🔑
-    title: Fully Typed APIs
-    details: Flexible programmatic APIs with full TypeScript typing.
+    details: 目前共有 46 个常用基础 UI 组件，以及 10 个常用工具函数
 ---
 
 <script setup lang="ts">
