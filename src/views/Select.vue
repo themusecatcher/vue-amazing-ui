@@ -78,7 +78,7 @@ function onAntChange (value: string|number, option: any) {
       :options="options"
       v-model="selectedValue"
       @change="onChange" />
-    <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除 (allowClear)</h2>
+    <!-- <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除 (allowClear)</h2>
     <a-select
       :options="options"
       style="width: 120px"
@@ -87,6 +87,6 @@ function onAntChange (value: string|number, option: any) {
       allowClear
       show-search
       v-model:value="selectedValue"
-      @change="onAntChange" />
+      @change="onAntChange" /> -->
   </div>
 </template>

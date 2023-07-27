@@ -32,8 +32,8 @@ const size = ref('small')
 
 ## 水平间距
 
-<Radio :options="options" v-model:value="size" />
-<br/><br/>
+<Radio style="margin-bottom: 30px;" :options="options" v-model:value="size" />
+<br/>
 <Space :size="size">
   <Button type="primary">Primary</Button>
   <Button>Default</Button>
@@ -44,8 +44,8 @@ const size = ref('small')
 
 ```vue
 <template>
-  <Radio :options="options" v-model:value="size" />
-  <br/><br/>
+  <Radio style="margin-bottom: 30px;" :options="options" v-model:value="size" />
+  <br/>
   <Space :size="size">
     <Button type="primary">Primary</Button>
     <Button>Default</Button>
