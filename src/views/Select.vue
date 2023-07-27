@@ -39,6 +39,40 @@ const options = ref([
         value: 9
       }
     ])
+const optionsCustom = ref([
+      {
+        name: '北京市',
+        id: 1
+      },
+      {
+        name: '上海市',
+        id: 2
+      },
+      {
+        name: '纽约市',
+        id: 3
+      },
+      {
+        name: '旧金山',
+        id: 4
+      },
+      {
+        name: '布宜诺斯艾利斯',
+        id: 5
+      },
+      {
+        name: '伊斯坦布尔',
+        id: 6
+      },
+      {
+        name: '拜占庭',
+        id: 7
+      },
+      {
+        name: '君士坦丁堡',
+        id: 8
+      }
+    ])
 const selectedValue = ref(1)
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
@@ -77,9 +111,14 @@ function onAntChange (value: string|number, option: any) {
     <Select
       :options="options"
       search
+      v-model="selectedValue" />
+    <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
+    <Select
+      :options="options"
+      search
       :filter="filter"
       v-model="selectedValue" />
-    <h2 class="mt30 mb10">宽度设置为160px (width: 160)</h2>
+    <h2 class="mt30 mb10">自定义样式 (width: 160 & height: 36)</h2>
     <Select
       :width="160"
       :height="36"
@@ -87,6 +126,17 @@ function onAntChange (value: string|number, option: any) {
       :options="options"
       v-model="selectedValue"
       @change="onChange" />
+    <h2 class="mt30 mb10">自定义节点 lable、value 字段名</h2>
+    <Select
+      :options="optionsCustom"
+      label="name"
+      value="id"
+      v-model="selectedValue" />
+    <h2 class="mt30 mb10">自定义下拉面板数</h2>
+    <Select
+      :options="options"
+      :max-display="8"
+      v-model="selectedValue" />
     <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除 (allowClear)</h2>
     <a-select
       :options="options"

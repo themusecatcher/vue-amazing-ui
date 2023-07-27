@@ -234,9 +234,7 @@ const selectedValue = ref(1)
 
 ## 禁用选项
 
-<Select
-  :options="optionsDisabled"
-  v-model="selectedValue" />
+<Select :options="optionsDisabled" v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -357,12 +355,66 @@ function onChange (value: string|number, label: string,  index: number) {
 
 ## 支持搜索
 
+<Select :options="options" search v-model="selectedValue" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+      {
+        label: '北京市',
+        value: 1
+      },
+      {
+        label: '上海市',
+        value: 2
+      },
+      {
+        label: '纽约市',
+        value: 3
+      },
+      {
+        label: '旧金山',
+        value: 4
+      },
+      {
+        label: '布宜诺斯艾利斯',
+        value: 5
+      },
+      {
+        label: '伊斯坦布尔',
+        value: 6
+      },
+      {
+        label: '拜占庭',
+        value: 7
+      },
+      {
+        label: '君士坦丁堡',
+        value: 8
+      }
+    ])
+const selectedValue = ref(1)
+watchEffect(() => {
+  console.log('selectedValue:', selectedValue.value)
+})
+</script>
+<template>
+  <Select :options="options" search v-model="selectedValue" />
+</template>
+```
+
+:::
+
+## 自定义搜索过滤函数
+
 <Select
   :options="options"
   search
   :filter="filter"
-  v-model="selectedValue"
-  @change="onChange" />
+  v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -411,19 +463,13 @@ watchEffect(() => {
 function filter (inputValue: string, option: any) {
   return option.value > inputValue
 }
-function onChange (value: string|number, label: string,  index: number) {
-  console.log('value:', value)
-  console.log('label:', label)
-  console.log('index:', index)
-}
 </script>
 <template>
   <Select
     :options="options"
     search
     :filter="filter"
-    v-model="selectedValue"
-    @change="onChange" />
+    v-model="selectedValue" />
 </template>
 ```
 
@@ -435,8 +481,7 @@ function onChange (value: string|number, label: string,  index: number) {
   :width="160"
   :height="36"
   :options="options"
-  v-model="selectedValue"
-  @change="onChange" />
+  v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -481,32 +526,25 @@ const selectedValue = ref(1)
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
 })
-function onChange (value: string|number, label: string,  index: number) {
-  console.log('value:', value)
-  console.log('label:', label)
-  console.log('index:', index)
-}
 </script>
 <template>
   <Select
     :width="160"
     :height="36"
     :options="options"
-    v-model="selectedValue"
-    @change="onChange" />
+    v-model="selectedValue" />
 </template>
 ```
 
 :::
 
-## 自定义字段名
+## 自定义节点 `label`、`value` 字段名
 
 <Select
   :options="optionsCustom"
   label="name"
   value="id"
-  v-model="selectedValue"
-  @change="onChange" />
+  v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -551,19 +589,13 @@ const selectedValue = ref(1)
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
 })
-function onChange (id: string|number, name: string,  index: number) {
-  console.log('id:', id)
-  console.log('name:', label)
-  console.log('index:', index)
-}
 </script>
 <template>
   <Select
     :options="optionsCustom"
     label="name"
     value="id"
-    v-model="selectedValue"
-    @change="onChange" />
+    v-model="selectedValue" />
 </template>
 ```
 
@@ -574,8 +606,7 @@ function onChange (id: string|number, name: string,  index: number) {
 <Select
   :options="options"
   :max-display="8"
-  v-model="selectedValue"
-  @change="onChange" />
+  v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -620,18 +651,12 @@ const selectedValue = ref(1)
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
 })
-function onChange (value: string|number, label: string,  index: number) {
-  console.log('value:', value)
-  console.log('label:', label)
-  console.log('index:', index)
-}
 </script>
 <template>
   <Select
     :options="options"
     :max-display="8"
-    v-model="selectedValue"
-    @change="onChange" />
+    v-model="selectedValue" />
 </template>
 ```
 
@@ -642,9 +667,9 @@ function onChange (value: string|number, label: string,  index: number) {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 options | 选项数据 | Option[] | [] | false
-label | 字典项的文本字段名 | string | 'label' | false
-value | 字典项的值字段名 | string | 'value' | false
-placeholder | 默认文字 | string | '请选择' | false
+label | 选项的 `label` 文本字段名 | string | 'label' | false
+value | 选项的 `value` 值字段名 | string | 'value' | false
+placeholder | 选择框默认文字 | string | '请选择' | false
 disabled | 是否禁用 | boolean | false | false
 allowClear | 是否支持清除 | boolean | false | false
 search | 是否支持搜索 | boolean | false | false
