@@ -107,8 +107,14 @@ function onInputLeave () {
     }
   }
   if (props.search) {
-    showSearch.value = true
-    select.value.focus()
+    if (showOptions.value) {
+      showSearch.value = true
+      showArrow.value = false
+      select.value.focus()
+    } else {
+      showSearch.value = false
+      showArrow.value = true
+    }
   }
 }
 function onHover (value: string|number) {
