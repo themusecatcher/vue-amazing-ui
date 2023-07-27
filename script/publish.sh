@@ -3,6 +3,7 @@
 # 确保脚本抛出遇到的错误
 set -e
 
+pnpm push
 # 读取package.json中的version
 version=`jq -r .version package.json`
 
