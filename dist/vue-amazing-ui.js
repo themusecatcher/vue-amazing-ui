@@ -1160,7 +1160,7 @@ const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["__scopeId", "data-v-8f
 Empty.install = (app) => {
   app.component(Empty.__name, Empty);
 };
-const _withScopeId$i = (n) => (pushScopeId("data-v-daca0d24"), n = n(), popScopeId(), n);
+const _withScopeId$i = (n) => (pushScopeId("data-v-7f009bf5"), n = n(), popScopeId(), n);
 const _hoisted_1$x = ["title"];
 const _hoisted_2$t = ["placeholder"];
 const _hoisted_3$r = /* @__PURE__ */ _withScopeId$i(() => /* @__PURE__ */ createElementVNode("path", { d: "M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z" }, null, -1));
@@ -1185,8 +1185,9 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
     value: { default: "value" },
     placeholder: { default: "请选择" },
     disabled: { type: Boolean, default: false },
-    search: { type: Boolean, default: false },
     allowClear: { type: Boolean, default: false },
+    search: { type: Boolean, default: false },
+    filter: { type: [Function, Boolean], default: true },
     width: { default: 120 },
     height: { default: 32 },
     maxDisplay: { default: 6 },
@@ -1204,24 +1205,30 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
     const showArrow = ref(true);
     const showClear = ref(false);
     const showSearch = ref(false);
-    const select = ref();
+    const selectRef = ref();
     watchEffect(() => {
-      filterOptions.value = props.options;
+      if (props.search) {
+        filterOptions.value = props.options.filter((option) => {
+          if (typeof props.filter === "function") {
+            return props.filter(inputValue.value, option);
+          } else {
+            return option[props.label].includes(inputValue.value);
+          }
+        });
+        if (filterOptions.value.length) {
+          hoverValue.value = filterOptions.value[0][props.value];
+        } else {
+          hoverValue.value = null;
+        }
+      } else {
+        filterOptions.value = props.options;
+      }
     });
     watchEffect(() => {
       initSelector();
     });
-    watchEffect(() => {
-      inputValue.value = selectedName.value;
-    });
-    watchEffect(() => {
-      filterOptions.value = props.options.filter((option) => option[props.label].includes(inputValue.value));
-      console.log("filterOptions", filterOptions.value);
-      console.log("showArrow", showArrow.value);
-      console.log("showSearch", showSearch.value);
-    });
     watch(showOptions, (to) => {
-      if (!to) {
+      if (!to && props.search) {
         inputValue.value = selectedName.value;
       }
     });
@@ -1238,6 +1245,9 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
       } else {
         selectedName.value = null;
         hoverValue.value = null;
+      }
+      if (props.search) {
+        inputValue.value = selectedName.value;
       }
     }
     function onBlur() {
@@ -1269,7 +1279,7 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
         if (showOptions.value) {
           showSearch.value = true;
           showArrow.value = false;
-          select.value.focus();
+          selectRef.value.focus();
         } else {
           showSearch.value = false;
           showArrow.value = true;
@@ -1285,7 +1295,7 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
     function onLeave() {
       hoverValue.value = null;
       activeBlur.value = true;
-      select.value.focus();
+      selectRef.value.focus();
     }
     function openSelect() {
       showOptions.value = !showOptions.value;
@@ -1332,8 +1342,8 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
           class: normalizeClass(["m-select-wrap", { "hover": !_ctx.disabled, "focus": showOptions.value, "disabled": _ctx.disabled }]),
           style: normalizeStyle(`width: ${_ctx.width}px; height: ${_ctx.height}px;`),
           tabindex: "1",
-          ref_key: "select",
-          ref: select,
+          ref_key: "selectRef",
+          ref: selectRef,
           onMouseenter: onInputEnter,
           onMouseleave: onInputLeave,
           onBlur: _cache[1] || (_cache[1] = ($event) => activeBlur.value && !_ctx.disabled ? onBlur() : () => false),
@@ -1352,7 +1362,15 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
             "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => inputValue.value = $event),
             placeholder: selectedName.value || _ctx.placeholder
           }, null, 12, _hoisted_2$t)), [
-            [vModelText, inputValue.value]
+            [
+              vModelText,
+              inputValue.value,
+              void 0,
+              {
+                number: true,
+                trim: true
+              }
+            ]
           ]),
           (openBlock(), createElementBlock("svg", {
             focusable: "false",
@@ -1389,7 +1407,7 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
               key: "1",
               style: normalizeStyle(`top: ${_ctx.height + 4}px; line-height: ${_ctx.height - 10}px; max-height: ${_ctx.maxDisplay * _ctx.height + 9}px; width: ${_ctx.width}px;`)
             }, [
-              (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.search && showOptions.value ? filterOptions.value : _ctx.options, (option, index) => {
+              (openBlock(true), createElementBlock(Fragment, null, renderList(filterOptions.value, (option, index) => {
                 return openBlock(), createElementBlock("p", {
                   key: index,
                   class: normalizeClass(["u-option", { "option-hover": !option.disabled && option[_ctx.value] === hoverValue.value, "option-selected": option[_ctx.label] === selectedName.value, "option-disabled": option.disabled }]),
@@ -1420,8 +1438,8 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Select_vue_vue_type_style_index_0_scoped_daca0d24_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["__scopeId", "data-v-daca0d24"]]);
+const Select_vue_vue_type_style_index_0_scoped_7f009bf5_lang = "";
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["__scopeId", "data-v-7f009bf5"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
 };

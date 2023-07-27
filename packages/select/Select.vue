@@ -13,8 +13,13 @@ interface Props {
   value?: string // 字典项的值字段名
   placeholder?: string // 默认文本
   disabled?: boolean // 是否禁用
-  search?: boolean // 是否支持搜索
   allowClear?: boolean // 是否支持清除
+  search?: boolean // 是否支持搜索
+  /*
+    根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
+    当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
+  */
+  filter?: Function|true // 过滤条件函数，仅当支持搜索时生效
   width?: number // 宽度
   height?: number // 高度
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
@@ -28,6 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   search: false,
   allowClear: false,
+  filter: true,
   width: 120,
   height: 32,
   maxDisplay: 6,
@@ -42,24 +48,30 @@ const activeBlur = ref(true) // 是否激活blur事件
 const showArrow = ref(true) // 剪头图标显隐
 const showClear = ref(false) // 清除图标显隐
 const showSearch = ref(false) // 搜索图标显隐
-const select = ref()
+const selectRef = ref()
 watchEffect(() => {
-  filterOptions.value = props.options
+  if (props.search) {
+    filterOptions.value = props.options.filter(option => {
+      if (typeof props.filter === 'function') {
+        return props.filter(inputValue.value, option)
+      } else {
+        return option[props.label].includes(inputValue.value)
+      }
+    })
+    if (filterOptions.value.length) {
+      hoverValue.value = filterOptions.value[0][props.value]
+    } else {
+      hoverValue.value = null
+    }
+  } else {
+    filterOptions.value = props.options
+  }
 })
 watchEffect(() =>{ // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   initSelector()
 })
-watchEffect(() => {
-  inputValue.value = selectedName.value
-})
-watchEffect(() => {
-  filterOptions.value = props.options.filter(option => option[props.label].includes(inputValue.value))
-  console.log('filterOptions', filterOptions.value)
-  console.log('showArrow', showArrow.value)
-  console.log('showSearch', showSearch.value)
-})
 watch(showOptions, (to) => {
-  if (!to) {
+  if (!to && props.search) {
     inputValue.value = selectedName.value
   }
 })
@@ -76,6 +88,9 @@ function initSelector () {
   } else {
     selectedName.value = null
     hoverValue.value = null
+  }
+  if (props.search) {
+    inputValue.value = selectedName.value
   }
 }
 function onBlur () {
@@ -110,7 +125,7 @@ function onInputLeave () {
     if (showOptions.value) {
       showSearch.value = true
       showArrow.value = false
-      select.value.focus()
+      selectRef.value.focus()
     } else {
       showSearch.value = false
       showArrow.value = true
@@ -126,7 +141,7 @@ function onEnter () {
 function onLeave () {
   hoverValue.value = null
   activeBlur.value = true
-  select.value.focus()
+  selectRef.value.focus()
 }
 function openSelect () {
   showOptions.value = !showOptions.value
@@ -172,7 +187,7 @@ function onChange (value: string|number, label: string, index: number) { // 选�
       :class="['m-select-wrap', {'hover': !disabled, 'focus': showOptions, 'disabled': disabled}]"
       :style="`width: ${width}px; height: ${height}px;`"
       tabindex="1"
-      ref="select"
+      ref="selectRef"
       @mouseenter="onInputEnter"
       @mouseleave="onInputLeave"
       @blur="activeBlur && !disabled ? onBlur() : () => false"
@@ -188,7 +203,7 @@ function onChange (value: string|number, label: string, index: number) { // 选�
         class="u-search"
         :style="`line-height: ${height - 2}px;`"
         autocomplete="off"
-        v-model="inputValue"
+        v-model.number.trim="inputValue"
         :placeholder="selectedName || placeholder" />
       <svg focusable="false" :class="['u-svg', {'show': showSearch}]" data-icon="search" aria-hidden="true" viewBox="64 64 896 896"><path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path></svg>
       <svg :class="['u-svg', {'rotate': showOptions, 'show': showArrow}]" viewBox="64 64 896 896" data-icon="down" aria-hidden="true" focusable="false"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
@@ -203,7 +218,7 @@ function onChange (value: string|number, label: string, index: number) { // 选�
         key="1"
         :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${ maxDisplay * height + 9 }px; width: ${width}px;`">
         <p
-          v-for="(option, index) in search && showOptions ? filterOptions : options" :key="index"
+          v-for="(option, index) in filterOptions" :key="index"
           :class="['u-option', {'option-hover': !option.disabled&&option[value]===hoverValue, 'option-selected': option[label]===selectedName, 'option-disabled': option.disabled }]"
           :title="option[label]"
           @mouseenter="onHover(option[value])"
