@@ -11,7 +11,7 @@ const route = useRoute() // 返回当前路由地址，相当于在模板中使�
 const menus = ref(routes[0].children)
 const current = ref([route.name])
 function onClick (e: any):void {
-  console.log(`${e.key} ${e.item.title}`)
+  console.log(`${e.item.title} ${e.key}`)
   // console.log(e.keyPath)
 }
 function changeTheme (checked: boolean) {
