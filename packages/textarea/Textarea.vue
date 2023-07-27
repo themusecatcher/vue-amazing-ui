@@ -191,7 +191,7 @@ function onClear () {
     line-height: 0;
     .u-clear {
       display: inline-block;
-      color: rgba(0, 0, 0, .25);
+      fill: rgba(0, 0, 0, .25);
       font-size: 12px;
       line-height: 1;
       vertical-align: -1px;

@@ -70,6 +70,7 @@ onMounted(() => {
     flex-flow: row wrap;
     width: 100%;
     border-radius: 8px;
+    overflow: hidden;
   }
   .bordered {
     border: 1px solid rgba(5, 5, 5, .06);
