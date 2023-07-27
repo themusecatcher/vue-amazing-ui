@@ -1,5 +1,7 @@
 # vue-amazing-ui
 
+*Vue3 + TS + Vite + Less 开发的常用基础 UI 组件库*
+
 ## Document & Online preview
 
 [Vue Amazing UI](https://themusecatcher.github.io/vue-amazing-ui/)
