@@ -1,6 +1,3 @@
-<script setup lang="ts">
-//
-</script>
 <template>
   <div>
     <h1>Descriptions 描述列表</h1>

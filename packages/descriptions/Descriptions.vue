@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { getCurrentInstance } from 'vue'
 interface Props {
   title?: string // 描述列表的标题，显示在最顶部 string | slot
   bordered?: boolean // 是否展示边框
@@ -16,12 +14,6 @@ withDefaults(defineProps<Props>(), {
   extra: '',
   layout: 'horizontal',
   size: 'default'
-})
-const view = ref()
-const instance = getCurrentInstance()
-onMounted(() => {
-  console.log('view%O', view.value.children)
-  console.log('slots', instance)
 })
 </script>
 <template>

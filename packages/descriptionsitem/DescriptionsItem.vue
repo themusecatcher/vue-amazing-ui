@@ -6,7 +6,7 @@ interface Props {
   contentStyle?: CSSProperties // 自定义内容样式
   span?: number // 包含列的数量
 }
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   label: '',
   labelStyle: () => ({}),
   contentStyle: () => ({}),
