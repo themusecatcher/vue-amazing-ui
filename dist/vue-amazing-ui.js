@@ -1,4 +1,4 @@
-import { defineComponent, ref, onMounted, nextTick, openBlock, createElementBlock, createElementVNode, normalizeClass, Fragment, renderSlot, createCommentVNode, createTextVNode, toDisplayString, pushScopeId, popScopeId, computed, normalizeStyle, renderList, withModifiers, withDirectives, vShow, onUnmounted, watch, createVNode, unref, withCtx, createStaticVNode, watchEffect, vModelText, TransitionGroup, resolveComponent, mergeProps, getCurrentInstance, createBlock, Transition, withKeys, vModelDynamic, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, onBeforeUnmount, onBeforeUpdate } from "vue";
+import { defineComponent, ref, onMounted, nextTick, openBlock, createElementBlock, createElementVNode, normalizeClass, Fragment, renderSlot, createCommentVNode, createTextVNode, toDisplayString, pushScopeId, popScopeId, computed, normalizeStyle, renderList, withModifiers, withDirectives, vShow, onUnmounted, watch, createVNode, unref, withCtx, createStaticVNode, watchEffect, vModelText, TransitionGroup, resolveComponent, mergeProps, createBlock, Transition, withKeys, vModelDynamic, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, onBeforeUnmount, onBeforeUpdate } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import QRCode$1 from "qrcode";
 import Swiper$2, { Navigation, Pagination as Pagination$1, Autoplay, EffectFade } from "swiper";
@@ -2205,12 +2205,6 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     size: { default: "default" }
   },
   setup(__props) {
-    const view = ref();
-    const instance = getCurrentInstance();
-    onMounted(() => {
-      console.log("view%O", view.value.children);
-      console.log("slots", instance);
-    });
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$u, [
         createElementVNode("div", _hoisted_2$q, [
@@ -2227,8 +2221,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
         ]),
         createElementVNode("div", _hoisted_5$f, null, 512),
         createElementVNode("div", {
-          ref_key: "view",
-          ref: view,
+          ref: "view",
           class: normalizeClass(["m-desc-view", { bordered: _ctx.bordered }]),
           style: normalizeStyle(`--column: ${_ctx.column}; --bordered: ${_ctx.bordered};`)
         }, [
@@ -2238,8 +2231,8 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Descriptions_vue_vue_type_style_index_0_scoped_d2573ae1_lang = "";
-const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-d2573ae1"]]);
+const Descriptions_vue_vue_type_style_index_0_scoped_7a8f1a1b_lang = "";
+const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-7a8f1a1b"]]);
 Descriptions.install = (app) => {
   app.component(Descriptions.__name, Descriptions);
 };
@@ -2274,8 +2267,8 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const DescriptionsItem_vue_vue_type_style_index_0_scoped_079083b6_lang = "";
-const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-079083b6"]]);
+const DescriptionsItem_vue_vue_type_style_index_0_scoped_50165a2f_lang = "";
+const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-50165a2f"]]);
 DescriptionsItem.install = (app) => {
   app.component(DescriptionsItem.__name, DescriptionsItem);
 };
