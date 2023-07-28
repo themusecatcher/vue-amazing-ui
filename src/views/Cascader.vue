@@ -16,6 +16,10 @@ const options = ref([
           {
             value: '112',
             label: '西城区'
+          },
+          {
+            value: '113',
+            label: '海淀区'
           }
         ]
       }
@@ -68,6 +72,10 @@ function onAntChange (values: (number|string)[], selectedOptions: any) {
   console.log('values:', values)
   console.log('selectedOptions:', selectedOptions)
 }
+// 自定义过滤函数，但选项的 value 值大于 输入项时返回 true
+function filter (inputValue: string, option: any) {
+  return option.value > inputValue
+}
 </script>
 <template>
   <div>
@@ -78,7 +86,7 @@ function onAntChange (values: (number|string)[], selectedOptions: any) {
     <Cascader
       :options="options"
       v-model:selectedValue="selectedValue"
-      changeOnSelect
+      change-on-select
       @change="onChange" />
     <h2 class="mt30 mb10">只禁用第一级下拉 (disabled: [true])</h2>
     <Cascader
@@ -86,20 +94,31 @@ function onAntChange (values: (number|string)[], selectedOptions: any) {
       v-model:selectedValue="selectedValue"
       :disabled="[true]"
       @change="onChange" />
+    <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
+    <Cascader
+      :options="options"
+      v-model:selectedValue="selectedValue"
+      allow-clear
+      @change="onChange" />
+    <h2 class="mt30 mb10">支持搜索 (search: true)</h2>
+    <Cascader
+      :options="options"
+      v-model:selectedValue="selectedValue"
+      search
+      @change="onChange" />
+    <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
+    <Cascader
+      :options="options"
+      v-model:selectedValue="selectedValue"
+      search
+      :filter="filter"
+      @change="onChange" />
     <h2 class="mt30 mb10">设置每级宽度都为120px，间距12px (width: 120)</h2>
     <Cascader
       :options="options"
       v-model:selectedValue="selectedValue"
       :width="120"
       :gap="12"
-      @change="onChange" />
-    <h2 class="mt30 mb10">支持清除 (allowClear: true)</h2>
-    <Cascader
-      :options="options"
-      v-model:selectedValue="selectedValue"
-      :width="120"
-      :gap="12"
-      allowClear
       @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 级联选择</h2>
     <a-cascader

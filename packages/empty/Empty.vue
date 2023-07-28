@@ -18,29 +18,32 @@ withDefaults(defineProps<Props>(), {
     <slot v-else>
       <img class="u-empty" :src="image" :style="imageStyle" alt="image" />
     </slot>
-    <p class="u-description" v-if="description" :class="{gray: image === '2'}">
+    <span class="u-description" v-if="description" :class="{gray: image === '2'}">
       <slot name="description">{{ description }}</slot>
-    </p>
+    </span>
   </div>
 </template>
 <style lang="less" scoped>
 .m-empty {
-  font-size: 0;
   text-align: center;
   .u-empty {
     display: inline-block;
+    vertical-align: bottom;
   }
   .u-empty-1 {
     display: inline-block;
     width: 184px;
     height: 100px;
+    vertical-align: bottom;
   }
   .u-empty-2 {
     display: inline-block;
     width: 64px;
     height: 40px;
+    vertical-align: bottom;
   }
   .u-description {
+    display: inline-block;
     margin-top: 8px;
     font-size: 14px;
     color: rgba(0, 0, 0, .88);

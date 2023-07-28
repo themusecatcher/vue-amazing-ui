@@ -651,7 +651,7 @@ const Card = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["__scopeId", "data-v-b66
 Card.install = (app) => {
   app.component(Card.__name, Card);
 };
-const _withScopeId$k = (n) => (pushScopeId("data-v-2891f487"), n = n(), popScopeId(), n);
+const _withScopeId$k = (n) => (pushScopeId("data-v-8036454f"), n = n(), popScopeId(), n);
 const _hoisted_1$A = { class: "m-spin" };
 const _hoisted_2$w = { class: "m-spin-box" };
 const _hoisted_3$u = {
@@ -727,8 +727,8 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Spin_vue_vue_type_style_index_0_scoped_2891f487_lang = "";
-const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$H, [["__scopeId", "data-v-2891f487"]]);
+const Spin_vue_vue_type_style_index_0_scoped_8036454f_lang = "";
+const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$H, [["__scopeId", "data-v-8036454f"]]);
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
@@ -1104,11 +1104,11 @@ Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
 const _hoisted_1$y = { class: "m-empty" };
-const _hoisted_2$u = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" data-v-8faf42b4><g transform="translate(24 31.67)" data-v-8faf42b4><ellipse fill-opacity=".8" fill="#F5F5F7" cx="67.797" cy="106.89" rx="67.797" ry="12.668" data-v-8faf42b4></ellipse><path d="M122.034 69.674L98.109 40.229c-1.148-1.386-2.826-2.225-4.593-2.225h-51.44c-1.766 0-3.444.839-4.592 2.225L13.56 69.674v15.383h108.475V69.674z" fill="#AEB8C2" data-v-8faf42b4></path><path d="M101.537 86.214L80.63 61.102c-1.001-1.207-2.507-1.867-4.048-1.867H31.724c-1.54 0-3.047.66-4.048 1.867L6.769 86.214v13.792h94.768V86.214z" fill="url(#linearGradient-1)" transform="translate(13.56)" data-v-8faf42b4></path><path d="M33.83 0h67.933a4 4 0 0 1 4 4v93.344a4 4 0 0 1-4 4H33.83a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z" fill="#F5F5F7" data-v-8faf42b4></path><path d="M42.678 9.953h50.237a2 2 0 0 1 2 2V36.91a2 2 0 0 1-2 2H42.678a2 2 0 0 1-2-2V11.953a2 2 0 0 1 2-2zM42.94 49.767h49.713a2.262 2.262 0 1 1 0 4.524H42.94a2.262 2.262 0 0 1 0-4.524zM42.94 61.53h49.713a2.262 2.262 0 1 1 0 4.525H42.94a2.262 2.262 0 0 1 0-4.525zM121.813 105.032c-.775 3.071-3.497 5.36-6.735 5.36H20.515c-3.238 0-5.96-2.29-6.734-5.36a7.309 7.309 0 0 1-.222-1.79V69.675h26.318c2.907 0 5.25 2.448 5.25 5.42v.04c0 2.971 2.37 5.37 5.277 5.37h34.785c2.907 0 5.277-2.421 5.277-5.393V75.1c0-2.972 2.343-5.426 5.25-5.426h26.318v33.569c0 .617-.077 1.216-.221 1.789z" fill="#DCE0E6" data-v-8faf42b4></path></g><path d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z" fill="#DCE0E6" data-v-8faf42b4></path><g transform="translate(149.65 15.383)" fill="#FFF" data-v-8faf42b4><ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815" data-v-8faf42b4></ellipse><path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z" data-v-8faf42b4></path></g></g>', 1);
+const _hoisted_2$u = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" data-v-bd4f9b87><g transform="translate(24 31.67)" data-v-bd4f9b87><ellipse fill-opacity=".8" fill="#F5F5F7" cx="67.797" cy="106.89" rx="67.797" ry="12.668" data-v-bd4f9b87></ellipse><path d="M122.034 69.674L98.109 40.229c-1.148-1.386-2.826-2.225-4.593-2.225h-51.44c-1.766 0-3.444.839-4.592 2.225L13.56 69.674v15.383h108.475V69.674z" fill="#AEB8C2" data-v-bd4f9b87></path><path d="M101.537 86.214L80.63 61.102c-1.001-1.207-2.507-1.867-4.048-1.867H31.724c-1.54 0-3.047.66-4.048 1.867L6.769 86.214v13.792h94.768V86.214z" fill="url(#linearGradient-1)" transform="translate(13.56)" data-v-bd4f9b87></path><path d="M33.83 0h67.933a4 4 0 0 1 4 4v93.344a4 4 0 0 1-4 4H33.83a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z" fill="#F5F5F7" data-v-bd4f9b87></path><path d="M42.678 9.953h50.237a2 2 0 0 1 2 2V36.91a2 2 0 0 1-2 2H42.678a2 2 0 0 1-2-2V11.953a2 2 0 0 1 2-2zM42.94 49.767h49.713a2.262 2.262 0 1 1 0 4.524H42.94a2.262 2.262 0 0 1 0-4.524zM42.94 61.53h49.713a2.262 2.262 0 1 1 0 4.525H42.94a2.262 2.262 0 0 1 0-4.525zM121.813 105.032c-.775 3.071-3.497 5.36-6.735 5.36H20.515c-3.238 0-5.96-2.29-6.734-5.36a7.309 7.309 0 0 1-.222-1.79V69.675h26.318c2.907 0 5.25 2.448 5.25 5.42v.04c0 2.971 2.37 5.37 5.277 5.37h34.785c2.907 0 5.277-2.421 5.277-5.393V75.1c0-2.972 2.343-5.426 5.25-5.426h26.318v33.569c0 .617-.077 1.216-.221 1.789z" fill="#DCE0E6" data-v-bd4f9b87></path></g><path d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z" fill="#DCE0E6" data-v-bd4f9b87></path><g transform="translate(149.65 15.383)" fill="#FFF" data-v-bd4f9b87><ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815" data-v-bd4f9b87></ellipse><path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z" data-v-bd4f9b87></path></g></g>', 1);
 const _hoisted_3$s = [
   _hoisted_2$u
 ];
-const _hoisted_4$m = /* @__PURE__ */ createStaticVNode('<g transform="translate(0 1)" fill="none" fill-rule="evenodd" data-v-8faf42b4><ellipse fill="#f5f5f5" cx="32" cy="33" rx="32" ry="7" data-v-8faf42b4></ellipse><g fill-rule="nonzero" stroke="#d9d9d9" data-v-8faf42b4><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z" data-v-8faf42b4></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" fill="#fafafa" data-v-8faf42b4></path></g></g>', 1);
+const _hoisted_4$m = /* @__PURE__ */ createStaticVNode('<g transform="translate(0 1)" fill="none" fill-rule="evenodd" data-v-bd4f9b87><ellipse fill="#f5f5f5" cx="32" cy="33" rx="32" ry="7" data-v-bd4f9b87></ellipse><g fill-rule="nonzero" stroke="#d9d9d9" data-v-bd4f9b87><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z" data-v-bd4f9b87></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" fill="#fafafa" data-v-bd4f9b87></path></g></g>', 1);
 const _hoisted_5$h = [
   _hoisted_4$m
 ];
@@ -1143,7 +1143,7 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
             alt: "image"
           }, null, 12, _hoisted_6$g)
         ], true),
-        _ctx.description ? (openBlock(), createElementBlock("p", {
+        _ctx.description ? (openBlock(), createElementBlock("span", {
           key: 3,
           class: normalizeClass(["u-description", { gray: _ctx.image === "2" }])
         }, [
@@ -1155,12 +1155,12 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Empty_vue_vue_type_style_index_0_scoped_8faf42b4_lang = "";
-const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["__scopeId", "data-v-8faf42b4"]]);
+const Empty_vue_vue_type_style_index_0_scoped_bd4f9b87_lang = "";
+const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["__scopeId", "data-v-bd4f9b87"]]);
 Empty.install = (app) => {
   app.component(Empty.__name, Empty);
 };
-const _withScopeId$i = (n) => (pushScopeId("data-v-7f009bf5"), n = n(), popScopeId(), n);
+const _withScopeId$i = (n) => (pushScopeId("data-v-c92d5a45"), n = n(), popScopeId(), n);
 const _hoisted_1$x = ["title"];
 const _hoisted_2$t = ["placeholder"];
 const _hoisted_3$r = /* @__PURE__ */ _withScopeId$i(() => /* @__PURE__ */ createElementVNode("path", { d: "M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z" }, null, -1));
@@ -1215,7 +1215,7 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
             return option[props.label].includes(inputValue.value);
           }
         });
-        if (filterOptions.value.length) {
+        if (filterOptions.value.length && inputValue.value) {
           hoverValue.value = filterOptions.value[0][props.value];
         } else {
           hoverValue.value = null;
@@ -1438,8 +1438,8 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Select_vue_vue_type_style_index_0_scoped_7f009bf5_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["__scopeId", "data-v-7f009bf5"]]);
+const Select_vue_vue_type_style_index_0_scoped_c92d5a45_lang = "";
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["__scopeId", "data-v-c92d5a45"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
 };
@@ -1447,19 +1447,20 @@ const _sfc_main$D = /* @__PURE__ */ defineComponent({
   __name: "Cascader",
   props: {
     options: { default: () => [] },
-    selectedValue: { default: () => [] },
     label: { default: "label" },
     value: { default: "value" },
     children: { default: "children" },
+    placeholder: { default: "请选择" },
     changeOnSelect: { type: Boolean, default: false },
-    zIndex: { default: 1 },
     gap: { default: 8 },
     width: { default: 120 },
     height: { default: 32 },
     disabled: { type: [Boolean, Array], default: false },
     allowClear: { type: Boolean, default: false },
-    placeholder: { default: "请选择" },
-    maxDisplay: { default: 6 }
+    search: { type: Boolean, default: false },
+    filter: { type: [Function, Boolean], default: true },
+    maxDisplay: { default: 6 },
+    selectedValue: { default: () => [] }
   },
   emits: ["update:selectedValue", "change"],
   setup(__props, { emit: emits }) {
@@ -1537,60 +1538,63 @@ const _sfc_main$D = /* @__PURE__ */ defineComponent({
     }
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
-        class: "m-cascader-wrap",
-        style: normalizeStyle(`height: ${_ctx.height}px;`)
+        class: "m-cascader",
+        style: normalizeStyle(`height: ${_ctx.height}px; gap: ${_ctx.gap}px;`)
       }, [
         createVNode(unref(Select), {
-          style: normalizeStyle(`margin-right: ${_ctx.gap}px; z-index: ${_ctx.zIndex};`),
           options: firstOptions.value,
-          modelValue: values.value[0],
-          "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => values.value[0] = $event),
           label: _ctx.label,
           value: _ctx.value,
+          placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[0] : _ctx.placeholder,
           disabled: Array.isArray(_ctx.disabled) ? _ctx.disabled[0] : _ctx.disabled,
-          allowClear: _ctx.allowClear,
+          "allow-clear": _ctx.allowClear,
+          search: _ctx.search,
+          filter: _ctx.filter,
           width: Array.isArray(_ctx.width) ? _ctx.width[0] : _ctx.width,
           height: _ctx.height,
-          maxDisplay: _ctx.maxDisplay,
-          placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[0] : _ctx.placeholder,
+          "max-display": _ctx.maxDisplay,
+          modelValue: values.value[0],
+          "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => values.value[0] = $event),
           onChange: onFirstChange
-        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "allowClear", "width", "height", "maxDisplay", "placeholder"]),
+        }, null, 8, ["options", "label", "value", "placeholder", "disabled", "allow-clear", "search", "filter", "width", "height", "max-display", "modelValue"]),
         createVNode(unref(Select), {
-          style: normalizeStyle(`margin-right: ${_ctx.gap}px; z-index: ${_ctx.zIndex};`),
           options: secondOptions.value,
-          modelValue: values.value[1],
-          "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => values.value[1] = $event),
           label: _ctx.label,
           value: _ctx.value,
+          placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[1] : _ctx.placeholder,
           disabled: Array.isArray(_ctx.disabled) ? _ctx.disabled[1] : _ctx.disabled,
-          allowClear: _ctx.allowClear,
+          "allow-clear": _ctx.allowClear,
+          search: _ctx.search,
+          filter: _ctx.filter,
           width: Array.isArray(_ctx.width) ? _ctx.width[1] : _ctx.width,
           height: _ctx.height,
-          maxDisplay: _ctx.maxDisplay,
-          placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[1] : _ctx.placeholder,
+          "max-display": _ctx.maxDisplay,
+          modelValue: values.value[1],
+          "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => values.value[1] = $event),
           onChange: onSecondChange
-        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "allowClear", "width", "height", "maxDisplay", "placeholder"]),
+        }, null, 8, ["options", "label", "value", "placeholder", "disabled", "allow-clear", "search", "filter", "width", "height", "max-display", "modelValue"]),
         createVNode(unref(Select), {
-          style: normalizeStyle(`z-index: ${_ctx.zIndex};`),
           options: thirdOptions.value,
-          modelValue: values.value[2],
-          "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => values.value[2] = $event),
           label: _ctx.label,
           value: _ctx.value,
+          placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[2] : _ctx.placeholder,
           disabled: Array.isArray(_ctx.disabled) ? _ctx.disabled[2] : _ctx.disabled,
-          allowClear: _ctx.allowClear,
+          "allow-clear": _ctx.allowClear,
+          search: _ctx.search,
+          filter: _ctx.filter,
           width: Array.isArray(_ctx.width) ? _ctx.width[2] : _ctx.width,
           height: _ctx.height,
-          maxDisplay: _ctx.maxDisplay,
-          placeholder: Array.isArray(_ctx.placeholder) ? _ctx.placeholder[2] : _ctx.placeholder,
+          "max-display": _ctx.maxDisplay,
+          modelValue: values.value[2],
+          "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => values.value[2] = $event),
           onChange: onThirdChange
-        }, null, 8, ["style", "options", "modelValue", "label", "value", "disabled", "allowClear", "width", "height", "maxDisplay", "placeholder"])
+        }, null, 8, ["options", "label", "value", "placeholder", "disabled", "allow-clear", "search", "filter", "width", "height", "max-display", "modelValue"])
       ], 4);
     };
   }
 });
-const Cascader_vue_vue_type_style_index_0_scoped_f589250d_lang = "";
-const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["__scopeId", "data-v-f589250d"]]);
+const Cascader_vue_vue_type_style_index_0_scoped_3cd9d99b_lang = "";
+const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["__scopeId", "data-v-3cd9d99b"]]);
 Cascader.install = (app) => {
   app.component(Cascader.__name, Cascader);
 };

@@ -10,35 +10,41 @@ interface Option {
 }
 interface Props {
   options?: Option[] // 可选项数据源
-  selectedValue?: (number|string)[] // （v-model）级联选中项
   label?: string // 下拉字典项的文本字段名
   value?: string // 下拉字典项的值字段名
   children?: string // 下拉字典项的后代字段名
-  changeOnSelect?: boolean // 当此项为true时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择第三级选项后选项值才会变化
-  zIndex?: number // 下拉层级
+  placeholder?: string|string[] // 三级下拉各自占位文本
+  changeOnSelect?: boolean // 当此项为 true 时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择第三级选项后选项值才会变化
   gap?: number // 级联下拉框相互间隙宽度，单位px
   width?: number|number[] // 三级下拉各自宽度
   height?: number // 下拉框高度
   disabled?: boolean|boolean[] // 三级各自是否禁用
   allowClear?: boolean // 是否支持清除
-  placeholder?: string|string[] // 三级下拉各自占位文本
+  search?: boolean // 是否支持搜索
+  /*
+    根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
+    当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
+  */
+  filter?: Function|true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
+  selectedValue?: (number|string)[] // （v-model）级联选中项
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
-  selectedValue: () => [],
   label: 'label',
   value: 'value',
   children: 'children',
+  placeholder: '请选择',
   changeOnSelect: false,
-  zIndex: 1,
   gap: 8,
   width: 120,
   height: 32,
   disabled: false,
   allowClear: false,
-  placeholder: '请选择',
-  maxDisplay: 6
+  search: false,
+  filter: true,
+  maxDisplay: 6,
+  selectedValue: () => [],
 })
 const values = ref<(string|number)[]>([]) // 级联value值数组
 const labels = ref<string[]>([]) // 级联label文本数组
@@ -114,50 +120,53 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
 }
 </script>
 <template>
-  <div class="m-cascader-wrap" :style="`height: ${height}px;`">
+  <div class="m-cascader" :style="`height: ${height}px; gap: ${gap}px;`">
     <Select
-      :style="`margin-right: ${gap}px; z-index: ${zIndex};`"
       :options="firstOptions"
-      v-model="values[0]"
       :label="label"
       :value="value"
+      :placeholder="Array.isArray(placeholder) ? placeholder[0] : placeholder"
       :disabled="Array.isArray(disabled) ? disabled[0] : disabled"
-      :allowClear="allowClear"
+      :allow-clear="allowClear"
+      :search="search"
+      :filter="filter"
       :width="Array.isArray(width) ? width[0] : width"
       :height="height"
-      :maxDisplay="maxDisplay"
-      :placeholder="Array.isArray(placeholder) ? placeholder[0] : placeholder"
+      :max-display="maxDisplay"
+      v-model="values[0]"
       @change="onFirstChange" />
     <Select
-      :style="`margin-right: ${gap}px; z-index: ${zIndex};`"
       :options="secondOptions"
-      v-model="values[1]"
       :label="label"
       :value="value"
+      :placeholder="Array.isArray(placeholder) ? placeholder[1] : placeholder"
       :disabled="Array.isArray(disabled) ? disabled[1] : disabled"
-      :allowClear="allowClear"
+      :allow-clear="allowClear"
+      :search="search"
+      :filter="filter"
       :width="Array.isArray(width) ? width[1] : width"
       :height="height"
-      :maxDisplay="maxDisplay"
-      :placeholder="Array.isArray(placeholder) ? placeholder[1] : placeholder"
+      :max-display="maxDisplay"
+      v-model="values[1]"
       @change="onSecondChange" />
     <Select
-      :style="`z-index: ${zIndex};`"
       :options="thirdOptions"
-      v-model="values[2]"
       :label="label"
       :value="value"
+      :placeholder="Array.isArray(placeholder) ? placeholder[2]:placeholder"
       :disabled="Array.isArray(disabled) ? disabled[2] : disabled"
-      :allowClear="allowClear"
+      :allow-clear="allowClear"
+      :search="search"
+      :filter="filter"
       :width="Array.isArray(width) ? width[2] : width"
       :height="height"
-      :maxDisplay="maxDisplay"
-      :placeholder="Array.isArray(placeholder) ? placeholder[2]:placeholder"
+      :max-display="maxDisplay"
+      v-model="values[2]"
       @change="onThirdChange" />
   </div>
 </template>
 <style lang="less" scoped>
-.m-cascader-wrap {
-  display: inline-block;
+.m-cascader {
+  display: inline-flex;
 }
 </style>

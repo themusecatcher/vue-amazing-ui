@@ -58,7 +58,7 @@ watchEffect(() => {
         return option[props.label].includes(inputValue.value)
       }
     })
-    if (filterOptions.value.length) {
+    if (filterOptions.value.length && inputValue.value) {
       hoverValue.value = filterOptions.value[0][props.value]
     } else {
       hoverValue.value = null
@@ -266,6 +266,7 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   background-color: #FFF;
+  outline: none;
   cursor: pointer;
   transition: all .3s cubic-bezier(.645, .045, .355, 1);
   .u-select-input {
