@@ -75,8 +75,6 @@ watchEffect(() => {
   } else {
     children.value = Array.from(view.value.children).filter((element: any) => element.className === 'm-desc-item')
   }
-  console.log('view', view.value.children)
-  console.log('children', children.value)
 }, {flush: 'post'})
 watch(children, (to) => {
   groupItems.value = []
@@ -95,7 +93,6 @@ function getGroupItems (children: any, responsiveColumn: number) {
   const len = children.length
   let group: any[] = []
   for (let n = 0; n < len; n++) {
-    console.log('span', children[n].dataset.span)
     const item = {
       span: Math.min(children[n].dataset.span, responsiveColumn),
       element: children[n]
@@ -129,12 +126,12 @@ function getGroupItems (children: any, responsiveColumn: number) {
           th.colSpan = 1
           // 动态添加节点样式
           setStyle(th, props.labelStyle)
-          setStyle(th, item.element.__vnode.ctx.ctx.labelStyle)
+          setStyle(th, JSON.parse(item.element.dataset.labelStyle))
           const td = itemChildren[1].cloneNode(true)
           td.colSpan = item.span * 2 - 1
           // 动态添加节点样式
           setStyle(td, props.contentStyle)
-          setStyle(td, item.element.__vnode.ctx.ctx.contentStyle)
+          setStyle(td, JSON.parse(item.element.dataset.contentStyle))
           // 插入节点到指定位置
           rows.value[index].appendChild(th)
           rows.value[index].appendChild(td)
@@ -148,11 +145,11 @@ function getGroupItems (children: any, responsiveColumn: number) {
         const label = elementChildren[0]
         // 动态添加节点样式
         setStyle(label, props.labelStyle)
-        setStyle(label, element.__vnode.ctx.ctx.labelStyle)
+        setStyle(label, JSON.parse(element.dataset.labelStyle))
         const content = elementChildren[1]
         // 动态添加节点样式
         setStyle(content, props.contentStyle)
-        setStyle(content, element.__vnode.ctx.ctx.contentStyle)
+        setStyle(content, JSON.parse(element.dataset.contentStyle))
         // 插入节点到指定位置
         cols.value[index].appendChild(element)
       })
