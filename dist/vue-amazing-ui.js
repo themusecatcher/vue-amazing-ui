@@ -2289,6 +2289,8 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
       } else {
         children.value = Array.from(view.value.children).filter((element) => element.className === "m-desc-item");
       }
+      console.log("view", view.value.children);
+      console.log("children", children.value);
     }, { flush: "post" });
     watch(children, (to) => {
       groupItems.value = [];
@@ -2306,8 +2308,9 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
       const len = children2.length;
       let group = [];
       for (let n = 0; n < len; n++) {
+        console.log("span", children2[n].dataset.span);
         const item = {
-          span: Math.min(children2[n].__vnode.ctx.ctx.span, responsiveColumn2),
+          span: Math.min(children2[n].dataset.span, responsiveColumn2),
           element: children2[n]
         };
         if (getTotalSpan(group) < responsiveColumn2) {
@@ -2431,13 +2434,13 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Descriptions_vue_vue_type_style_index_0_scoped_12e1a530_lang = "";
-const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-12e1a530"]]);
+const Descriptions_vue_vue_type_style_index_0_scoped_a321d043_lang = "";
+const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-a321d043"]]);
 Descriptions.install = (app) => {
   app.component(Descriptions.__name, Descriptions);
 };
-const _hoisted_1$t = { class: "m-desc-item" };
-const _hoisted_2$p = { class: "m-desc-item-bordered" };
+const _hoisted_1$t = ["data-span"];
+const _hoisted_2$p = ["data-span"];
 const _sfc_main$w = /* @__PURE__ */ defineComponent({
   __name: "DescriptionsItem",
   props: {
@@ -2449,7 +2452,10 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock(Fragment, null, [
-        createElementVNode("div", _hoisted_1$t, [
+        createElementVNode("div", {
+          class: "m-desc-item",
+          "data-span": _ctx.span
+        }, [
           createElementVNode("span", {
             class: "u-label",
             style: normalizeStyle(_ctx.labelStyle)
@@ -2464,8 +2470,11 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
           }, [
             renderSlot(_ctx.$slots, "default", {}, void 0, true)
           ], 4)
-        ]),
-        createElementVNode("div", _hoisted_2$p, [
+        ], 8, _hoisted_1$t),
+        createElementVNode("div", {
+          class: "m-desc-item-bordered",
+          "data-span": _ctx.span
+        }, [
           createElementVNode("th", {
             class: "u-label-th",
             style: normalizeStyle(_ctx.labelStyle)
@@ -2480,13 +2489,13 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
           }, [
             renderSlot(_ctx.$slots, "default", {}, void 0, true)
           ], 4)
-        ])
+        ], 8, _hoisted_2$p)
       ], 64);
     };
   }
 });
-const DescriptionsItem_vue_vue_type_style_index_0_scoped_76588c50_lang = "";
-const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-76588c50"]]);
+const DescriptionsItem_vue_vue_type_style_index_0_scoped_528c9f21_lang = "";
+const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-528c9f21"]]);
 DescriptionsItem.install = (app) => {
   app.component(DescriptionsItem.__name, DescriptionsItem);
 };
