@@ -172,7 +172,7 @@ const _hoisted_1$F = {
   class: "m-icon"
 };
 const _hoisted_2$B = ["src"];
-const _hoisted_3$y = {
+const _hoisted_3$x = {
   key: 1,
   focusable: "false",
   class: "u-icon",
@@ -187,7 +187,7 @@ const _hoisted_4$r = /* @__PURE__ */ _withScopeId$n(() => /* @__PURE__ */ create
 const _hoisted_5$m = [
   _hoisted_4$r
 ];
-const _hoisted_6$l = {
+const _hoisted_6$m = {
   key: 2,
   focusable: "false",
   class: "u-icon",
@@ -370,7 +370,7 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
                   key: 0,
                   src: _ctx.icon,
                   class: "u-icon-img"
-                }, null, 8, _hoisted_2$B)) : _ctx.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_3$y, _hoisted_5$m)) : _ctx.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_6$l, _hoisted_8$h)) : _ctx.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_9$h, _hoisted_11$d)) : _ctx.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_12$a, _hoisted_14$9)) : createCommentVNode("", true)
+                }, null, 8, _hoisted_2$B)) : _ctx.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_3$x, _hoisted_5$m)) : _ctx.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_6$m, _hoisted_8$h)) : _ctx.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_9$h, _hoisted_11$d)) : _ctx.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_12$a, _hoisted_14$9)) : createCommentVNode("", true)
               ], true)
             ])) : (openBlock(), createElementBlock("span", _hoisted_15$8, [
               renderSlot(_ctx.$slots, "icon", {}, () => [
@@ -431,7 +431,7 @@ const _hoisted_2$A = {
   key: 0,
   class: "u-separator"
 };
-const _hoisted_3$x = {
+const _hoisted_3$w = {
   key: 1,
   class: "u-arrow",
   viewBox: "64 64 896 896",
@@ -443,7 +443,7 @@ const _hoisted_4$q = /* @__PURE__ */ _withScopeId$m(() => /* @__PURE__ */ create
 const _hoisted_5$l = [
   _hoisted_4$q
 ];
-const _hoisted_6$k = /* @__PURE__ */ _withScopeId$m(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
+const _hoisted_6$l = /* @__PURE__ */ _withScopeId$m(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
 const _sfc_main$K = /* @__PURE__ */ defineComponent({
   __name: "Breadcrumb",
   props: {
@@ -491,11 +491,11 @@ const _sfc_main$K = /* @__PURE__ */ defineComponent({
               target: index === len.value - 1 ? "_self" : _ctx.target
             }, toDisplayString(route.name || "--"), 15, _hoisted_1$E),
             index !== len.value - 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-              _ctx.separator ? (openBlock(), createElementBlock("span", _hoisted_2$A, toDisplayString(_ctx.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$x, _hoisted_5$l))
+              _ctx.separator ? (openBlock(), createElementBlock("span", _hoisted_2$A, toDisplayString(_ctx.separator), 1)) : (openBlock(), createElementBlock("svg", _hoisted_3$w, _hoisted_5$l))
             ], 64)) : createCommentVNode("", true)
           ]);
         }), 128)),
-        _hoisted_6$k
+        _hoisted_6$l
       ], 4);
     };
   }
@@ -507,7 +507,7 @@ Breadcrumb.install = (app) => {
 };
 const _hoisted_1$D = ["href", "target", "disabled"];
 const _hoisted_2$z = { class: "u-spin-circle" };
-const _hoisted_3$w = { class: "u-text" };
+const _hoisted_3$v = { class: "u-text" };
 const _sfc_main$J = /* @__PURE__ */ defineComponent({
   __name: "Button",
   props: {
@@ -568,7 +568,7 @@ const _sfc_main$J = /* @__PURE__ */ defineComponent({
           ], 2), [
             [vShow, !isRoute.value]
           ]),
-          createElementVNode("span", _hoisted_3$w, [
+          createElementVNode("span", _hoisted_3$v, [
             renderSlot(_ctx.$slots, "default", {}, () => [
               createTextVNode(toDisplayString(_ctx.name), 1)
             ], true)
@@ -654,18 +654,18 @@ Card.install = (app) => {
 const _withScopeId$l = (n) => (pushScopeId("data-v-8036454f"), n = n(), popScopeId(), n);
 const _hoisted_1$B = { class: "m-spin" };
 const _hoisted_2$x = { class: "m-spin-box" };
-const _hoisted_3$v = {
+const _hoisted_3$u = {
   key: 0,
   class: "m-spin-dot"
 };
 const _hoisted_4$p = /* @__PURE__ */ _withScopeId$l(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_5$k = /* @__PURE__ */ _withScopeId$l(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
-const _hoisted_6$j = /* @__PURE__ */ _withScopeId$l(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
+const _hoisted_6$k = /* @__PURE__ */ _withScopeId$l(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_7$g = /* @__PURE__ */ _withScopeId$l(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_8$g = [
   _hoisted_4$p,
   _hoisted_5$k,
-  _hoisted_6$j,
+  _hoisted_6$k,
   _hoisted_7$g
 ];
 const _hoisted_9$g = {
@@ -708,7 +708,7 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
       }, [
         withDirectives(createElementVNode("div", _hoisted_1$B, [
           createElementVNode("div", _hoisted_2$x, [
-            _ctx.indicator === "dot" ? (openBlock(), createElementBlock("div", _hoisted_3$v, _hoisted_8$g)) : createCommentVNode("", true),
+            _ctx.indicator === "dot" ? (openBlock(), createElementBlock("div", _hoisted_3$u, _hoisted_8$g)) : createCommentVNode("", true),
             _ctx.indicator === "static-circle" ? (openBlock(), createElementBlock("div", _hoisted_9$g)) : createCommentVNode("", true),
             _ctx.indicator === "dynamic-circle" ? (openBlock(), createElementBlock("div", _hoisted_10$e, _hoisted_12$9)) : createCommentVNode("", true),
             withDirectives(createElementVNode("p", { class: "u-tip" }, toDisplayString(_ctx.tip), 513), [
@@ -735,15 +735,15 @@ Spin.install = (app) => {
 const _withScopeId$k = (n) => (pushScopeId("data-v-49eb85a6"), n = n(), popScopeId(), n);
 const _hoisted_1$A = ["href", "target"];
 const _hoisted_2$w = ["onLoad", "src", "alt"];
-const _hoisted_3$u = {
+const _hoisted_3$t = {
   key: 0,
   class: "m-image"
 };
 const _hoisted_4$o = ["href", "target"];
 const _hoisted_5$j = ["src", "alt"];
-const _hoisted_6$i = /* @__PURE__ */ _withScopeId$k(() => /* @__PURE__ */ createElementVNode("path", { d: "M10.26 3.2a.75.75 0 0 1 .04 1.06L6.773 8l3.527 3.74a.75.75 0 1 1-1.1 1.02l-4-4.25a.75.75 0 0 1 0-1.02l4-4.25a.75.75 0 0 1 1.06-.04z" }, null, -1));
+const _hoisted_6$j = /* @__PURE__ */ _withScopeId$k(() => /* @__PURE__ */ createElementVNode("path", { d: "M10.26 3.2a.75.75 0 0 1 .04 1.06L6.773 8l3.527 3.74a.75.75 0 1 1-1.1 1.02l-4-4.25a.75.75 0 0 1 0-1.02l4-4.25a.75.75 0 0 1 1.06-.04z" }, null, -1));
 const _hoisted_7$f = [
-  _hoisted_6$i
+  _hoisted_6$j
 ];
 const _hoisted_8$f = /* @__PURE__ */ _withScopeId$k(() => /* @__PURE__ */ createElementVNode("path", { d: "M5.74 3.2a.75.75 0 0 0-.04 1.06L9.227 8L5.7 11.74a.75.75 0 1 0 1.1 1.02l4-4.25a.75.75 0 0 0 0-1.02l-4-4.25a.75.75 0 0 0-1.06-.04z" }, null, -1));
 const _hoisted_9$f = [
@@ -1043,7 +1043,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
               }, 1032, ["spinning"])
             ]);
           }), 128)),
-          imageCount.value ? (openBlock(), createElementBlock("div", _hoisted_3$u, [
+          imageCount.value ? (openBlock(), createElementBlock("div", _hoisted_3$t, [
             createVNode(unref(Spin), {
               spinning: !complete.value[0],
               indicator: "dynamic-circle"
@@ -1105,14 +1105,14 @@ Carousel.install = (app) => {
 };
 const _hoisted_1$z = { class: "m-empty" };
 const _hoisted_2$v = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" data-v-bd4f9b87><g transform="translate(24 31.67)" data-v-bd4f9b87><ellipse fill-opacity=".8" fill="#F5F5F7" cx="67.797" cy="106.89" rx="67.797" ry="12.668" data-v-bd4f9b87></ellipse><path d="M122.034 69.674L98.109 40.229c-1.148-1.386-2.826-2.225-4.593-2.225h-51.44c-1.766 0-3.444.839-4.592 2.225L13.56 69.674v15.383h108.475V69.674z" fill="#AEB8C2" data-v-bd4f9b87></path><path d="M101.537 86.214L80.63 61.102c-1.001-1.207-2.507-1.867-4.048-1.867H31.724c-1.54 0-3.047.66-4.048 1.867L6.769 86.214v13.792h94.768V86.214z" fill="url(#linearGradient-1)" transform="translate(13.56)" data-v-bd4f9b87></path><path d="M33.83 0h67.933a4 4 0 0 1 4 4v93.344a4 4 0 0 1-4 4H33.83a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z" fill="#F5F5F7" data-v-bd4f9b87></path><path d="M42.678 9.953h50.237a2 2 0 0 1 2 2V36.91a2 2 0 0 1-2 2H42.678a2 2 0 0 1-2-2V11.953a2 2 0 0 1 2-2zM42.94 49.767h49.713a2.262 2.262 0 1 1 0 4.524H42.94a2.262 2.262 0 0 1 0-4.524zM42.94 61.53h49.713a2.262 2.262 0 1 1 0 4.525H42.94a2.262 2.262 0 0 1 0-4.525zM121.813 105.032c-.775 3.071-3.497 5.36-6.735 5.36H20.515c-3.238 0-5.96-2.29-6.734-5.36a7.309 7.309 0 0 1-.222-1.79V69.675h26.318c2.907 0 5.25 2.448 5.25 5.42v.04c0 2.971 2.37 5.37 5.277 5.37h34.785c2.907 0 5.277-2.421 5.277-5.393V75.1c0-2.972 2.343-5.426 5.25-5.426h26.318v33.569c0 .617-.077 1.216-.221 1.789z" fill="#DCE0E6" data-v-bd4f9b87></path></g><path d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z" fill="#DCE0E6" data-v-bd4f9b87></path><g transform="translate(149.65 15.383)" fill="#FFF" data-v-bd4f9b87><ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815" data-v-bd4f9b87></ellipse><path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z" data-v-bd4f9b87></path></g></g>', 1);
-const _hoisted_3$t = [
+const _hoisted_3$s = [
   _hoisted_2$v
 ];
 const _hoisted_4$n = /* @__PURE__ */ createStaticVNode('<g transform="translate(0 1)" fill="none" fill-rule="evenodd" data-v-bd4f9b87><ellipse fill="#f5f5f5" cx="32" cy="33" rx="32" ry="7" data-v-bd4f9b87></ellipse><g fill-rule="nonzero" stroke="#d9d9d9" data-v-bd4f9b87><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z" data-v-bd4f9b87></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" fill="#fafafa" data-v-bd4f9b87></path></g></g>', 1);
 const _hoisted_5$i = [
   _hoisted_4$n
 ];
-const _hoisted_6$h = ["src"];
+const _hoisted_6$i = ["src"];
 const _sfc_main$F = /* @__PURE__ */ defineComponent({
   __name: "Empty",
   props: {
@@ -1129,7 +1129,7 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
           style: normalizeStyle(_ctx.imageStyle),
           viewBox: "0 0 184 152",
           xmlns: "http://www.w3.org/2000/svg"
-        }, _hoisted_3$t, 4)) : _ctx.image === "2" ? (openBlock(), createElementBlock("svg", {
+        }, _hoisted_3$s, 4)) : _ctx.image === "2" ? (openBlock(), createElementBlock("svg", {
           key: 1,
           class: "u-empty-2",
           style: normalizeStyle(_ctx.imageStyle),
@@ -1141,7 +1141,7 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
             src: _ctx.image,
             style: normalizeStyle(_ctx.imageStyle),
             alt: "image"
-          }, null, 12, _hoisted_6$h)
+          }, null, 12, _hoisted_6$i)
         ], true),
         _ctx.description ? (openBlock(), createElementBlock("span", {
           key: 3,
@@ -1163,12 +1163,12 @@ Empty.install = (app) => {
 const _withScopeId$j = (n) => (pushScopeId("data-v-c92d5a45"), n = n(), popScopeId(), n);
 const _hoisted_1$y = ["title"];
 const _hoisted_2$u = ["placeholder"];
-const _hoisted_3$s = /* @__PURE__ */ _withScopeId$j(() => /* @__PURE__ */ createElementVNode("path", { d: "M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z" }, null, -1));
+const _hoisted_3$r = /* @__PURE__ */ _withScopeId$j(() => /* @__PURE__ */ createElementVNode("path", { d: "M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z" }, null, -1));
 const _hoisted_4$m = [
-  _hoisted_3$s
+  _hoisted_3$r
 ];
 const _hoisted_5$h = /* @__PURE__ */ _withScopeId$j(() => /* @__PURE__ */ createElementVNode("path", { d: "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
-const _hoisted_6$g = [
+const _hoisted_6$h = [
   _hoisted_5$h
 ];
 const _hoisted_7$e = ["onClick"];
@@ -1385,7 +1385,7 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
             "data-icon": "down",
             "aria-hidden": "true",
             focusable: "false"
-          }, _hoisted_6$g, 2)),
+          }, _hoisted_6$h, 2)),
           (openBlock(), createElementBlock("svg", {
             onClick: withModifiers(onClear, ["stop"]),
             class: normalizeClass(["close", { "show": showClear.value }]),
@@ -1600,7 +1600,7 @@ Cascader.install = (app) => {
 };
 const _hoisted_1$x = ["onClick"];
 const _hoisted_2$t = { class: "u-label" };
-const _hoisted_3$r = {
+const _hoisted_3$q = {
   key: 1,
   class: "m-checkbox-wrap"
 };
@@ -1697,7 +1697,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
               ])
             ], 10, _hoisted_1$x)
           ], 6);
-        }), 128)) : (openBlock(), createElementBlock("div", _hoisted_3$r, [
+        }), 128)) : (openBlock(), createElementBlock("div", _hoisted_3$q, [
           createElementVNode("div", {
             class: normalizeClass(["m-box", { "disabled": _ctx.disabled }]),
             onClick: onCheckAll
@@ -1833,7 +1833,7 @@ Col.install = (app) => {
 const _withScopeId$i = (n) => (pushScopeId("data-v-ca9cd42c"), n = n(), popScopeId(), n);
 const _hoisted_1$w = { class: "m-collapse" };
 const _hoisted_2$s = ["onClick"];
-const _hoisted_3$q = {
+const _hoisted_3$p = {
   key: 0,
   focusable: "false",
   class: "u-arrow",
@@ -1845,7 +1845,7 @@ const _hoisted_4$k = /* @__PURE__ */ _withScopeId$i(() => /* @__PURE__ */ create
 const _hoisted_5$g = [
   _hoisted_4$k
 ];
-const _hoisted_6$f = { class: "u-lang" };
+const _hoisted_6$g = { class: "u-lang" };
 const _sfc_main$A = /* @__PURE__ */ defineComponent({
   __name: "Collapse",
   props: {
@@ -1921,7 +1921,7 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
               class: "u-collapse-header",
               onClick: ($event) => onClick(data.key || index)
             }, [
-              _ctx.showArrow ? (openBlock(), createElementBlock("svg", _hoisted_3$q, _hoisted_5$g)) : createCommentVNode("", true),
+              _ctx.showArrow ? (openBlock(), createElementBlock("svg", _hoisted_3$p, _hoisted_5$g)) : createCommentVNode("", true),
               createElementVNode("div", {
                 class: normalizeClass(["u-header", { ml24: _ctx.showArrow }]),
                 style: normalizeStyle(`font-size: ${_ctx.headerFontSize || _ctx.fontSize}px;`)
@@ -1938,7 +1938,7 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
               class: normalizeClass(["u-collapse-content", { "u-collapse-copyable": _ctx.copyable }]),
               style: normalizeStyle(`height: ${activeJudge(data.key || index) ? collapseHeight.value[index] : 0}px; opacity: ${activeJudge(data.key || index) ? 1 : 0};`)
             }, [
-              createElementVNode("div", _hoisted_6$f, [
+              createElementVNode("div", _hoisted_6$g, [
                 renderSlot(_ctx.$slots, "lang", {
                   lang: _ctx.lang,
                   key: data.key || index
@@ -1985,7 +1985,7 @@ Collapse.install = (app) => {
 };
 const _hoisted_1$v = { class: "m-countdown" };
 const _hoisted_2$r = { class: "m-time" };
-const _hoisted_3$p = {
+const _hoisted_3$o = {
   key: 0,
   class: "u-prefix"
 };
@@ -2099,7 +2099,7 @@ const _sfc_main$z = /* @__PURE__ */ defineComponent({
           ], true)
         ], 4),
         createElementVNode("div", _hoisted_2$r, [
-          restTime.value > 0 ? (openBlock(), createElementBlock("span", _hoisted_3$p, [
+          restTime.value > 0 ? (openBlock(), createElementBlock("span", _hoisted_3$o, [
             renderSlot(_ctx.$slots, "prefix", {}, () => [
               createTextVNode(toDisplayString(_ctx.prefix), 1)
             ], true)
@@ -2189,86 +2189,270 @@ const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data
 DatePicker.install = (app) => {
   app.component(DatePicker.__name, DatePicker);
 };
-const _hoisted_1$u = { class: "m-desc" };
-const _hoisted_2$q = { class: "m-header" };
-const _hoisted_3$o = { class: "u-title" };
-const _hoisted_4$i = { class: "u-extra" };
-const _hoisted_5$f = { ref: "childWrapper" };
+const _hoisted_1$u = { class: "m-header" };
+const _hoisted_2$q = { class: "u-title" };
+const _hoisted_3$n = { class: "u-extra" };
+const _hoisted_4$i = { key: 0 };
+const _hoisted_5$f = ["colspan"];
+const _hoisted_6$f = { key: 1 };
 const _sfc_main$x = /* @__PURE__ */ defineComponent({
   __name: "Descriptions",
   props: {
     title: { default: "" },
     bordered: { type: Boolean, default: false },
-    column: { default: 3 },
+    column: { default: () => ({ xs: 1, sm: 2, md: 3 }) },
     extra: { default: "" },
-    layout: { default: "horizontal" },
-    size: { default: "default" }
+    size: { default: "default" },
+    labelStyle: { default: () => ({}) },
+    contentStyle: { default: () => ({}) }
   },
   setup(__props) {
+    const props = __props;
+    const clientWidth = ref(document.documentElement.clientWidth);
+    onMounted(() => {
+      window.addEventListener("resize", getBrowserSize);
+    });
+    onUnmounted(() => {
+      window.removeEventListener("resize", getBrowserSize);
+    });
+    function getBrowserSize() {
+      clientWidth.value = document.documentElement.clientWidth;
+    }
+    const responsiveColumn = computed(() => {
+      if (typeof props.column === "object") {
+        if (clientWidth.value >= 1600 && props.column.xxl) {
+          return props.column.xxl;
+        }
+        if (clientWidth.value >= 1200 && props.column.xl) {
+          return props.column.xl;
+        }
+        if (clientWidth.value >= 992 && props.column.lg) {
+          return props.column.lg;
+        }
+        if (clientWidth.value >= 768 && props.column.md) {
+          return props.column.md;
+        }
+        if (clientWidth.value >= 576 && props.column.sm) {
+          return props.column.sm;
+        }
+        if (clientWidth.value < 576 && props.column.xs) {
+          return props.column.xs;
+        }
+      }
+      return props.column;
+    });
+    const view = ref();
+    const children = ref();
+    const cols = ref();
+    const rows = ref();
+    const groupItems = ref([]);
+    const groupRows = computed(() => {
+      return groupItems.value.length;
+    });
+    watchEffect(() => {
+      if (props.bordered) {
+        children.value = Array.from(view.value.children).filter((element) => element.className === "m-desc-item-bordered");
+      } else {
+        children.value = Array.from(view.value.children).filter((element) => element.className === "m-desc-item");
+      }
+    }, { flush: "post" });
+    watch(children, (to) => {
+      groupItems.value = [];
+      nextTick(() => {
+        getGroupItems(to, responsiveColumn.value);
+      });
+    });
+    watch(responsiveColumn, (to) => {
+      groupItems.value = [];
+      nextTick(() => {
+        getGroupItems(children.value, to);
+      });
+    });
+    function getGroupItems(children2, responsiveColumn2) {
+      const len = children2.length;
+      let group = [];
+      for (let n = 0; n < len; n++) {
+        const item = {
+          span: Math.min(children2[n].__vnode.ctx.ctx.span, responsiveColumn2),
+          element: children2[n]
+        };
+        if (getTotalSpan(group) < responsiveColumn2) {
+          item.span = Math.min(item.span, responsiveColumn2 - getTotalSpan(group));
+          if (n === len - 1) {
+            item.span = responsiveColumn2 - getTotalSpan(group);
+          }
+          group.push(item);
+          if (n === len - 1) {
+            groupItems.value.push(group);
+          }
+        } else {
+          groupItems.value.push(group);
+          group = [item];
+          if (n === len - 1) {
+            item.span = responsiveColumn2;
+            groupItems.value.push(group);
+          }
+        }
+      }
+      if (props.bordered) {
+        nextTick(() => {
+          groupItems.value.forEach((items, index) => {
+            items.forEach((item) => {
+              const itemChildren = Array.from(item.element.children);
+              const th = itemChildren[0].cloneNode(true);
+              th.colSpan = 1;
+              setStyle(th, props.labelStyle);
+              setStyle(th, item.element.__vnode.ctx.ctx.labelStyle);
+              const td = itemChildren[1].cloneNode(true);
+              td.colSpan = item.span * 2 - 1;
+              setStyle(td, props.contentStyle);
+              setStyle(td, item.element.__vnode.ctx.ctx.contentStyle);
+              rows.value[index].appendChild(th);
+              rows.value[index].appendChild(td);
+            });
+          });
+        });
+      } else {
+        nextTick(() => {
+          children2.forEach((element, index) => {
+            const elementChildren = Array.from(element.children);
+            const label = elementChildren[0];
+            setStyle(label, props.labelStyle);
+            setStyle(label, element.__vnode.ctx.ctx.labelStyle);
+            const content = elementChildren[1];
+            setStyle(content, props.contentStyle);
+            setStyle(content, element.__vnode.ctx.ctx.contentStyle);
+            cols.value[index].appendChild(element);
+          });
+        });
+      }
+    }
+    function getTotalSpan(group) {
+      return group.reduce((accumulator, currentValue) => accumulator + currentValue.span, 0);
+    }
+    function setStyle(element, style) {
+      if (JSON.stringify(style) !== "{}") {
+        Object.keys(style).forEach((key) => {
+          element.style[key] = style[key];
+        });
+      }
+    }
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$u, [
-        createElementVNode("div", _hoisted_2$q, [
-          createElementVNode("div", _hoisted_3$o, [
+      return openBlock(), createElementBlock("div", {
+        class: normalizeClass(["m-desc", `desc-${_ctx.size}`])
+      }, [
+        createElementVNode("div", _hoisted_1$u, [
+          createElementVNode("div", _hoisted_2$q, [
             renderSlot(_ctx.$slots, "title", {}, () => [
               createTextVNode(toDisplayString(_ctx.title), 1)
             ], true)
           ]),
-          createElementVNode("div", _hoisted_4$i, [
+          createElementVNode("div", _hoisted_3$n, [
             renderSlot(_ctx.$slots, "extra", {}, () => [
               createTextVNode(toDisplayString(_ctx.extra), 1)
             ], true)
           ])
         ]),
-        createElementVNode("div", _hoisted_5$f, null, 512),
-        createElementVNode("div", {
-          ref: "view",
-          class: normalizeClass(["m-desc-view", { bordered: _ctx.bordered }]),
-          style: normalizeStyle(`--column: ${_ctx.column}; --bordered: ${_ctx.bordered};`)
+        withDirectives(createElementVNode("div", {
+          ref_key: "view",
+          ref: view
         }, [
           renderSlot(_ctx.$slots, "default", {}, void 0, true)
-        ], 6)
-      ]);
+        ], 512), [
+          [vShow, false]
+        ]),
+        createElementVNode("div", {
+          class: normalizeClass(["m-desc-view", { "m-bordered": _ctx.bordered }])
+        }, [
+          createElementVNode("table", null, [
+            !_ctx.bordered ? (openBlock(), createElementBlock("tbody", _hoisted_4$i, [
+              (openBlock(true), createElementBlock(Fragment, null, renderList(groupItems.value, (items, row) => {
+                return openBlock(), createElementBlock("tr", { key: row }, [
+                  (openBlock(true), createElementBlock(Fragment, null, renderList(items, (item, col) => {
+                    return openBlock(), createElementBlock("td", {
+                      ref_for: true,
+                      ref_key: "cols",
+                      ref: cols,
+                      class: "u-item-td",
+                      colspan: item.span,
+                      key: col
+                    }, null, 8, _hoisted_5$f);
+                  }), 128))
+                ]);
+              }), 128))
+            ])) : (openBlock(), createElementBlock("tbody", _hoisted_6$f, [
+              groupRows.value ? (openBlock(true), createElementBlock(Fragment, { key: 0 }, renderList(groupRows.value, (row) => {
+                return openBlock(), createElementBlock("tr", {
+                  ref_for: true,
+                  ref_key: "rows",
+                  ref: rows,
+                  class: "tr-bordered",
+                  key: row
+                });
+              }), 128)) : createCommentVNode("", true)
+            ]))
+          ])
+        ], 2)
+      ], 2);
     };
   }
 });
-const Descriptions_vue_vue_type_style_index_0_scoped_7a8f1a1b_lang = "";
-const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-7a8f1a1b"]]);
+const Descriptions_vue_vue_type_style_index_0_scoped_12e1a530_lang = "";
+const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-12e1a530"]]);
 Descriptions.install = (app) => {
   app.component(Descriptions.__name, Descriptions);
 };
-const _hoisted_1$t = { class: "m-item-container" };
-const _hoisted_2$p = { class: "u-label" };
-const _hoisted_3$n = { class: "u-content" };
+const _hoisted_1$t = { class: "m-desc-item" };
+const _hoisted_2$p = { class: "m-desc-item-bordered" };
 const _sfc_main$w = /* @__PURE__ */ defineComponent({
   __name: "DescriptionsItem",
   props: {
     label: { default: "" },
+    span: { default: 1 },
     labelStyle: { default: () => ({}) },
-    contentStyle: { default: () => ({}) },
-    span: { default: 1 }
+    contentStyle: { default: () => ({}) }
   },
   setup(__props) {
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", {
-        class: "m-desc-item col-span",
-        style: normalizeStyle(`--col-width: calc(${_ctx.span * 100}% / var(--column));`)
-      }, [
+      return openBlock(), createElementBlock(Fragment, null, [
         createElementVNode("div", _hoisted_1$t, [
-          createElementVNode("span", _hoisted_2$p, [
+          createElementVNode("span", {
+            class: "u-label",
+            style: normalizeStyle(_ctx.labelStyle)
+          }, [
             renderSlot(_ctx.$slots, "label", {}, () => [
               createTextVNode(toDisplayString(_ctx.label), 1)
             ], true)
-          ]),
-          createElementVNode("span", _hoisted_3$n, [
+          ], 4),
+          createElementVNode("span", {
+            class: "u-content",
+            style: normalizeStyle(_ctx.contentStyle)
+          }, [
             renderSlot(_ctx.$slots, "default", {}, void 0, true)
-          ])
+          ], 4)
+        ]),
+        createElementVNode("div", _hoisted_2$p, [
+          createElementVNode("th", {
+            class: "u-label-th",
+            style: normalizeStyle(_ctx.labelStyle)
+          }, [
+            renderSlot(_ctx.$slots, "label", {}, () => [
+              createTextVNode(toDisplayString(_ctx.label), 1)
+            ], true)
+          ], 4),
+          createElementVNode("td", {
+            class: "u-content-td",
+            style: normalizeStyle(_ctx.contentStyle)
+          }, [
+            renderSlot(_ctx.$slots, "default", {}, void 0, true)
+          ], 4)
         ])
-      ], 4);
+      ], 64);
     };
   }
 });
-const DescriptionsItem_vue_vue_type_style_index_0_scoped_50165a2f_lang = "";
-const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-50165a2f"]]);
+const DescriptionsItem_vue_vue_type_style_index_0_scoped_76588c50_lang = "";
+const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-76588c50"]]);
 DescriptionsItem.install = (app) => {
   app.component(DescriptionsItem.__name, DescriptionsItem);
 };

@@ -3,14 +3,18 @@
     <h1>Card 卡片</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Card title="Default size card" :width="300">
-      <template #extra><a href="#">more</a></template>
+      <template #extra>
+        <a href="#">more</a>
+      </template>
       <p>card content</p>
       <p>card content</p>
       <p>card content</p>
     </Card>
     <h2 class="mt30 mb10">小尺寸卡片</h2>
     <Card size="small" title="Small size card" :width="300">
-      <template #extra><a href="#">more</a></template>
+      <template #extra>
+        <a href="#">more</a>
+      </template>
       <p>card content</p>
       <p>card content</p>
       <p>card content</p>
@@ -29,7 +33,9 @@
       :width="300"
       :headStyle="{ fontSize: '18px', color: '#fff', backgroundColor: '#52c41a'}"
       :bodyStyle="{ fontSize: '16px', color: '#fff', backgroundColor: '#faad14'}">
-      <template #extra><a href="#">more</a></template>
+      <template #extra>
+        <a href="#">more</a>
+      </template>
       <p>card content</p>
       <p>card content</p>
       <p>card content</p>

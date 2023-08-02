@@ -13,6 +13,7 @@ import {
 } from './utils'
 import type { App } from 'vue'
 import Alert from './alert'
+import Badge from './badge'
 import Breadcrumb from './breadcrumb'
 import Button from './button'
 import Card from './card'
@@ -64,6 +65,7 @@ import Waterfall from './waterfall'
 // 所有组件列表
 const components = [
   Alert,
+  Badge,
   Breadcrumb,
   Button,
   Card,
@@ -140,6 +142,7 @@ export {
 }
 export {
   Alert,
+  Badge,
   Breadcrumb,
   Button,
   Card,
