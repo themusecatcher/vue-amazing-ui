@@ -167,11 +167,11 @@ function moneyFormat(value, decimal = 2, split = ",") {
   }
 }
 const _withScopeId$n = (n) => (pushScopeId("data-v-d31b30b3"), n = n(), popScopeId(), n);
-const _hoisted_1$F = {
+const _hoisted_1$G = {
   key: 0,
   class: "m-icon"
 };
-const _hoisted_2$B = ["src"];
+const _hoisted_2$C = ["src"];
 const _hoisted_3$x = {
   key: 1,
   focusable: "false",
@@ -323,7 +323,7 @@ const _hoisted_37 = /* @__PURE__ */ _withScopeId$n(() => /* @__PURE__ */ createE
 const _hoisted_38 = [
   _hoisted_37
 ];
-const _sfc_main$L = /* @__PURE__ */ defineComponent({
+const _sfc_main$M = /* @__PURE__ */ defineComponent({
   __name: "Alert",
   props: {
     message: { default: "" },
@@ -364,13 +364,13 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
           class: normalizeClass(["m-alert", [`${_ctx.type}`, { "width-description": showDesc.value }]])
         }, [
           _ctx.showIcon ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-            !showDesc.value ? (openBlock(), createElementBlock("span", _hoisted_1$F, [
+            !showDesc.value ? (openBlock(), createElementBlock("span", _hoisted_1$G, [
               renderSlot(_ctx.$slots, "icon", {}, () => [
                 _ctx.icon ? (openBlock(), createElementBlock("img", {
                   key: 0,
                   src: _ctx.icon,
                   class: "u-icon-img"
-                }, null, 8, _hoisted_2$B)) : _ctx.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_3$x, _hoisted_5$m)) : _ctx.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_6$m, _hoisted_8$h)) : _ctx.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_9$h, _hoisted_11$d)) : _ctx.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_12$a, _hoisted_14$9)) : createCommentVNode("", true)
+                }, null, 8, _hoisted_2$C)) : _ctx.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_3$x, _hoisted_5$m)) : _ctx.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_6$m, _hoisted_8$h)) : _ctx.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_9$h, _hoisted_11$d)) : _ctx.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_12$a, _hoisted_14$9)) : createCommentVNode("", true)
               ], true)
             ])) : (openBlock(), createElementBlock("span", _hoisted_15$8, [
               renderSlot(_ctx.$slots, "icon", {}, () => [
@@ -421,11 +421,45 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Alert = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-d31b30b3"]]);
+const Alert = /* @__PURE__ */ _export_sfc(_sfc_main$M, [["__scopeId", "data-v-d31b30b3"]]);
 Alert.install = (app) => {
   app.component(Alert.__name, Alert);
 };
-const _withScopeId$m = (n) => (pushScopeId("data-v-d011bfe7"), n = n(), popScopeId(), n);
+const _hoisted_1$F = { class: "m-badge" };
+const _hoisted_2$B = { class: "u-status-text" };
+const _sfc_main$L = /* @__PURE__ */ defineComponent({
+  __name: "Badge",
+  props: {
+    color: { default: "" },
+    count: { default: void 0 },
+    dot: { type: Boolean, default: false },
+    status: {
+      default: "default"
+      /* default */
+    },
+    text: { default: "" }
+  },
+  setup(__props) {
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", _hoisted_1$F, [
+        createElementVNode("span", {
+          class: normalizeClass(["u-status-dot", `status-${_ctx.status}`])
+        }, null, 2),
+        createElementVNode("span", _hoisted_2$B, [
+          renderSlot(_ctx.$slots, "default", {}, () => [
+            createTextVNode(toDisplayString(_ctx.text), 1)
+          ], true)
+        ])
+      ]);
+    };
+  }
+});
+const Badge_vue_vue_type_style_index_0_scoped_0f29ea67_lang = "";
+const Badge = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-0f29ea67"]]);
+Badge.install = (app) => {
+  app.component(Badge.__name, Badge);
+};
+const _withScopeId$m = (n) => (pushScopeId("data-v-dbb4d1c8"), n = n(), popScopeId(), n);
 const _hoisted_1$E = ["href", "title", "target"];
 const _hoisted_2$A = {
   key: 0,
@@ -500,8 +534,8 @@ const _sfc_main$K = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Breadcrumb_vue_vue_type_style_index_0_scoped_d011bfe7_lang = "";
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$K, [["__scopeId", "data-v-d011bfe7"]]);
+const Breadcrumb_vue_vue_type_style_index_0_scoped_dbb4d1c8_lang = "";
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$K, [["__scopeId", "data-v-dbb4d1c8"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };
@@ -8647,6 +8681,7 @@ Waterfall.install = (app) => {
 };
 const components = [
   Alert,
+  Badge,
   Breadcrumb,
   Button,
   Card,
@@ -8703,6 +8738,7 @@ const VueAmazingUI = {
 };
 export {
   Alert,
+  Badge,
   Breadcrumb,
   Button,
   Card,
