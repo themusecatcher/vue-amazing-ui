@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { CSSProperties } from 'vue'
 interface Props {
   label?: string // 内容的描述标签 string | slot
@@ -14,7 +15,7 @@ withDefaults(defineProps<Props>(), {
 })
 </script>
 <template>
-  <div class="m-desc-item">
+  <div class="m-desc-item" :data-span="span">
     <span class="u-label" :style="labelStyle">
       <slot name="label">{{ label }}</slot>
     </span>
@@ -22,7 +23,7 @@ withDefaults(defineProps<Props>(), {
       <slot></slot>
     </span>
   </div>
-  <div class="m-desc-item-bordered">
+  <div class="m-desc-item-bordered" :data-span="span">
     <th class="u-label-th" :style="labelStyle">
       <slot name="label">{{ label }}</slot>
     </th>

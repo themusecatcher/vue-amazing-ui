@@ -75,6 +75,8 @@ watchEffect(() => {
   } else {
     children.value = Array.from(view.value.children).filter((element: any) => element.className === 'm-desc-item')
   }
+  console.log('view', view.value.children)
+  console.log('children', children.value)
 }, {flush: 'post'})
 watch(children, (to) => {
   groupItems.value = []
@@ -93,8 +95,9 @@ function getGroupItems (children: any, responsiveColumn: number) {
   const len = children.length
   let group: any[] = []
   for (let n = 0; n < len; n++) {
+    console.log('span', children[n].dataset.span)
     const item = {
-      span: Math.min(children[n].__vnode.ctx.ctx.span, responsiveColumn),
+      span: Math.min(children[n].dataset.span, responsiveColumn),
       element: children[n]
     }
     if (getTotalSpan(group) < responsiveColumn) { // 已有 items 的 totalSpan ＜ column
