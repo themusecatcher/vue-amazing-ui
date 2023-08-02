@@ -99,6 +99,10 @@ export default defineConfig({
               link: '/guide/components/alert'
             },
             {
+              text: '徽标数 Badge',
+              link: '/guide/components/badge'
+            },
+            {
               text: '面包屑 Breadcrumb',
               link: '/guide/components/breadcrumb'
             },
