@@ -15,18 +15,18 @@ withDefaults(defineProps<Props>(), {
 </script>
 <template>
   <div class="m-desc-item" :data-span="span" :data-label-style="JSON.stringify(labelStyle)" :data-content-style="JSON.stringify(contentStyle)">
-    <span class="u-label" :style="labelStyle">
+    <span class="u-label">
       <slot name="label">{{ label }}</slot>
     </span>
-    <span class="u-content" :style="contentStyle">
+    <span class="u-content">
       <slot></slot>
     </span>
   </div>
   <div class="m-desc-item-bordered" :data-span="span" :data-label-style="JSON.stringify(labelStyle)" :data-content-style="JSON.stringify(contentStyle)">
-    <th class="u-label-th" :style="labelStyle">
+    <th class="u-label-th">
       <slot name="label">{{ label }}</slot>
     </th>
-    <td class="u-content-td" :style="contentStyle">
+    <td class="u-content-td">
       <slot></slot>
     </td>
   </div>
