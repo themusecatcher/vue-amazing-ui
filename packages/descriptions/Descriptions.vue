@@ -62,7 +62,7 @@ const responsiveColumn = computed(() => {
   return props.column
 })
 const view = ref()
-const children = ref() // DescriptionsItems 节点
+const children = ref<any[]>() // DescriptionsItems 节点
 const cols = ref() // 放置 DescriptionsItems 节点的模板引用数组
 const rows = ref() // 放置 DescriptionsItems 节点的模板引用数组（带边框）
 const groupItems = ref<any[]>([]) // 处理后的 DescriptionsItems 节点数组

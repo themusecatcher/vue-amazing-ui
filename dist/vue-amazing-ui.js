@@ -2431,8 +2431,8 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Descriptions_vue_vue_type_style_index_0_scoped_f4bdc3e0_lang = "";
-const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-f4bdc3e0"]]);
+const Descriptions_vue_vue_type_style_index_0_scoped_8653bb6d_lang = "";
+const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-8653bb6d"]]);
 Descriptions.install = (app) => {
   app.component(Descriptions.__name, Descriptions);
 };
