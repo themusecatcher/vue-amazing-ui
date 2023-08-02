@@ -649,7 +649,7 @@
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 行宽度 | string &#124; number | 'auto' | false
-gutter | 栅格间隔，可以写成像素值或支持响应式的对象写法来设置水平间隔 { xs: 8, sm: 16, md: 24}。或者使用数组形式同时设置 [水平间距, 垂直间距] | number &#124; [number &#124; Responsive, number &#124; Responsive] &#124; Responsive | 0 | false
+gutter | 栅格间隔，可以写成像素值或支持响应式的对象写法来设置水平间隔 `{ xs: 8, sm: 16, md: 24}`。或者使用数组形式同时设置 `[水平间距, 垂直间距]` | number &#124; [number &#124; Responsive, number &#124; Responsive] &#124; Responsive | 0 | false
 wrap | 是否自动换行 | boolean | false | false
 align | 垂直对齐方式 | 'top' &#124; 'middle' &#124; 'bottom' &#124; 'stretch' | 'top' | false
 justify | 水平排列方式 | 'start' &#124; 'end' &#124; 'center' &#124; 'space-around' &#124; 'space-between' &#124; 'space-evenly' | 'start' | false
@@ -658,7 +658,7 @@ justify | 水平排列方式 | 'start' &#124; 'end' &#124; 'center' &#124; 'spac
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-xs | `&lt;576px` 响应式栅格 | number | false
+xs | `<576px` 响应式栅格 | number | false
 sm | `≥576px` 响应式栅格 | number | false
 md | `≥768px` 响应式栅格 | number | false
 lg | `≥992px` 响应式栅格 | number | false
@@ -670,9 +670,9 @@ xxl | `≥1600px` 响应式栅格 | number | false
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 span | 栅格占位格数，取 `0,1,2...24`；为 `0` 时相当于 `display: none` | number | undefined | false
-offset | 栅格左侧的间隔格数，取0,1,2...24 | number | 0 | false
-flex | flex 布局填充 | string &#124; number | '' | false
-xs | `&lt;576px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
+offset | 栅格左侧的间隔格数，取 `0,1,2...24` | number | 0 | false
+flex | `flex` 布局填充 | string &#124; number | '' | false
+xs | `<576px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
 sm | `≥576px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
 md | `≥768px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
 lg | `≥992px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
