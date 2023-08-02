@@ -2289,8 +2289,6 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
       } else {
         children.value = Array.from(view.value.children).filter((element) => element.className === "m-desc-item");
       }
-      console.log("view", view.value.children);
-      console.log("children", children.value);
     }, { flush: "post" });
     watch(children, (to) => {
       groupItems.value = [];
@@ -2308,7 +2306,6 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
       const len = children2.length;
       let group = [];
       for (let n = 0; n < len; n++) {
-        console.log("span", children2[n].dataset.span);
         const item = {
           span: Math.min(children2[n].dataset.span, responsiveColumn2),
           element: children2[n]
@@ -2339,11 +2336,11 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
               const th = itemChildren[0].cloneNode(true);
               th.colSpan = 1;
               setStyle(th, props.labelStyle);
-              setStyle(th, item.element.__vnode.ctx.ctx.labelStyle);
+              setStyle(th, JSON.parse(item.element.dataset.labelStyle));
               const td = itemChildren[1].cloneNode(true);
               td.colSpan = item.span * 2 - 1;
               setStyle(td, props.contentStyle);
-              setStyle(td, item.element.__vnode.ctx.ctx.contentStyle);
+              setStyle(td, JSON.parse(item.element.dataset.contentStyle));
               rows.value[index].appendChild(th);
               rows.value[index].appendChild(td);
             });
@@ -2355,10 +2352,10 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
             const elementChildren = Array.from(element.children);
             const label = elementChildren[0];
             setStyle(label, props.labelStyle);
-            setStyle(label, element.__vnode.ctx.ctx.labelStyle);
+            setStyle(label, JSON.parse(element.dataset.labelStyle));
             const content = elementChildren[1];
             setStyle(content, props.contentStyle);
-            setStyle(content, element.__vnode.ctx.ctx.contentStyle);
+            setStyle(content, JSON.parse(element.dataset.contentStyle));
             cols.value[index].appendChild(element);
           });
         });
@@ -2434,13 +2431,13 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Descriptions_vue_vue_type_style_index_0_scoped_a321d043_lang = "";
-const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-a321d043"]]);
+const Descriptions_vue_vue_type_style_index_0_scoped_f4bdc3e0_lang = "";
+const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-f4bdc3e0"]]);
 Descriptions.install = (app) => {
   app.component(Descriptions.__name, Descriptions);
 };
-const _hoisted_1$t = ["data-span"];
-const _hoisted_2$p = ["data-span"];
+const _hoisted_1$t = ["data-span", "data-label-style", "data-content-style"];
+const _hoisted_2$p = ["data-span", "data-label-style", "data-content-style"];
 const _sfc_main$w = /* @__PURE__ */ defineComponent({
   __name: "DescriptionsItem",
   props: {
@@ -2454,7 +2451,9 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock(Fragment, null, [
         createElementVNode("div", {
           class: "m-desc-item",
-          "data-span": _ctx.span
+          "data-span": _ctx.span,
+          "data-label-style": JSON.stringify(_ctx.labelStyle),
+          "data-content-style": JSON.stringify(_ctx.contentStyle)
         }, [
           createElementVNode("span", {
             class: "u-label",
@@ -2473,7 +2472,9 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
         ], 8, _hoisted_1$t),
         createElementVNode("div", {
           class: "m-desc-item-bordered",
-          "data-span": _ctx.span
+          "data-span": _ctx.span,
+          "data-label-style": JSON.stringify(_ctx.labelStyle),
+          "data-content-style": JSON.stringify(_ctx.contentStyle)
         }, [
           createElementVNode("th", {
             class: "u-label-th",
@@ -2494,8 +2495,8 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const DescriptionsItem_vue_vue_type_style_index_0_scoped_528c9f21_lang = "";
-const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-528c9f21"]]);
+const DescriptionsItem_vue_vue_type_style_index_0_scoped_67374148_lang = "";
+const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-67374148"]]);
 DescriptionsItem.install = (app) => {
   app.component(DescriptionsItem.__name, DescriptionsItem);
 };
