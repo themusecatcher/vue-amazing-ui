@@ -508,7 +508,7 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
                 title: _ctx.title || String(_ctx.count)
               }, [
                 !_ctx.dot ? (openBlock(), createElementBlock("span", _hoisted_3$y, [
-                  createElementVNode("p", _hoisted_4$s, toDisplayString(_ctx.count > _ctx.overflowCount ? _ctx.overflowCount + "+" : _ctx.count), 1)
+                  createElementVNode("span", _hoisted_4$s, toDisplayString(_ctx.count > _ctx.overflowCount ? _ctx.overflowCount + "+" : _ctx.count), 1)
                 ])) : createCommentVNode("", true)
               ], 14, _hoisted_2$B), [
                 [vShow, _ctx.showZero || _ctx.count !== 0 || _ctx.dot]
@@ -521,8 +521,8 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Badge_vue_vue_type_style_index_0_scoped_d00d0f93_lang = "";
-const Badge = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-d00d0f93"]]);
+const Badge_vue_vue_type_style_index_0_scoped_007a1c05_lang = "";
+const Badge = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-007a1c05"]]);
 Badge.install = (app) => {
   app.component(Badge.__name, Badge);
 };

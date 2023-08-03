@@ -79,7 +79,7 @@ onMounted(() => {
           :style="numberStyle"
           :title="title || String(count)">
           <span v-if="!dot" class="m-number" style="transition: none 0s ease 0s;">
-            <p class="u-number">{{ count > overflowCount ? overflowCount + '+' : count }}</p>
+            <span class="u-number">{{ count > overflowCount ? overflowCount + '+' : count }}</span>
           </span>
         </div>
       </Transition>
@@ -264,11 +264,11 @@ onMounted(() => {
       display: inline-block;
       height: 20px;
       transition: all .3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
-      -webkit-transform-style: preserve-3d;
-      -webkit-backface-visibility: hidden;
+      -webkit-transform-style: preserve-3d; // 设置元素的子元素是位于 3D 空间中还是平面中 flat | preserve-3d
+      -webkit-backface-visibility: hidden; // 当元素背面朝向观察者时是否可见 hidden | visible
       .u-number {
+        display: inline-block;
         height: 20px;
-        line-height: 20px;
         margin: 0;
         -webkit-transform-style: preserve-3d;
         -webkit-backface-visibility: hidden;
