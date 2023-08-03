@@ -32,6 +32,7 @@ const onClose = (e: MouseEvent) => {
     <Tag color="#108ee9">#108ee9</Tag>
     <h2 class="mt30 mb10">预设状态的标签</h2>
     <Divider orientation="left">Without icon</Divider>
+    <Space></Space>
     <Tag color="success">success</Tag>
     <Tag color="processing">processing</Tag>
     <Tag color="error">error</Tag>
