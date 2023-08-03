@@ -1,41 +1,47 @@
 {
-  "hash": "7a269b57",
-  "browserHash": "00bee5c6",
+  "hash": "4b8f5394",
+  "browserHash": "156185f9",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.3.4/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "16429d3c",
+      "fileHash": "e552c6cd",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/.pnpm/@vue+devtools-api@6.5.0/node_modules/@vue/devtools-api/lib/esm/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "cbd08318",
+      "fileHash": "260ad89e",
       "needsInterop": false
     },
     "@vuepic/vue-datepicker": {
       "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
       "file": "@vuepic_vue-datepicker.js",
-      "fileHash": "fe359f95",
+      "fileHash": "532ac49f",
       "needsInterop": false
     },
     "qrcode": {
       "src": "../../../../node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/browser.js",
       "file": "qrcode.js",
-      "fileHash": "33bbac12",
+      "fileHash": "71d8f30a",
       "needsInterop": true
     },
     "swiper": {
       "src": "../../../../node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/swiper.esm.js",
       "file": "swiper.js",
-      "fileHash": "a72bcb7c",
+      "fileHash": "9554163a",
       "needsInterop": false
     },
     "vue-amazing-ui": {
       "src": "../../../../node_modules/.pnpm/vue-amazing-ui@0.0.39/node_modules/vue-amazing-ui/dist/vue-amazing-ui.js",
       "file": "vue-amazing-ui.js",
-      "fileHash": "644a00cd",
+      "fileHash": "16b109c4",
+      "needsInterop": false
+    },
+    "date-fns": {
+      "src": "../../../../node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/index.js",
+      "file": "date-fns.js",
+      "fileHash": "a3ebf8ec",
       "needsInterop": false
     }
   },
@@ -43,8 +49,11 @@
     "chunk-FRLFTGA2": {
       "file": "chunk-FRLFTGA2.js"
     },
-    "chunk-DHZVYEIX": {
-      "file": "chunk-DHZVYEIX.js"
+    "chunk-GDN26EU4": {
+      "file": "chunk-GDN26EU4.js"
+    },
+    "chunk-SIFL4DJN": {
+      "file": "chunk-SIFL4DJN.js"
     },
     "chunk-67UUJLDS": {
       "file": "chunk-67UUJLDS.js"

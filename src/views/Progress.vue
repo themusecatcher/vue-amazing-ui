@@ -40,16 +40,16 @@ console.log(Math.PI)
         direction: 'right'
       }"
       show-info />
-    <br/>
-    <Button @click="onIncrease(5)" size="large" class="mt30 mr30">Increase+</Button>
-    <Button @click="onDecline(5)" size="large">Decline-</Button>
     <h2 class="mt30 mb10">进度圈基本使用 (type: circle)</h2>
-    <Progress
-      :width="120"
-      :percent="percent"
-      :stroke-width="10"
-      show-info
-      type="circle" />
+    <Space align="center" :size="30">
+      <Progress
+        :width="120"
+        :stroke-width="12"
+        :percent="percent"
+        type="circle" />
+      <Button @click="onDecline(5)" size="large">Decline-</Button>
+      <Button @click="onIncrease(5)" size="large">Increase+</Button>
+    </Space>
     <h2 class="mt30 mb10">Ant Design Vue 进度圈</h2>
     <a-progress
       :width="120"
