@@ -10,7 +10,7 @@ withDefaults(defineProps<Props>(), {
   color: '',
   icon: ''
 })
-const presetColor = ['success', 'processing', 'error', 'warn', 'pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
+const presetColor = ['success', 'processing', 'error', 'warn', 'default', 'pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
 const hidden = ref(false)
 const iconRef = ref()
 const showIcon = ref(1)
