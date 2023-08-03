@@ -44,7 +44,6 @@ function onClose (e: MouseEvent) {
   display: inline-block;
   height: auto;
   color: rgba(0, 0, 0, .88);
-  margin-inline-end: 8px;
   padding-inline: 7px;
   white-space: nowrap;
   background: rgba(0, 0, 0, .02);
