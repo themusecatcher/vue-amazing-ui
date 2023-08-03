@@ -155,6 +155,10 @@ export default defineConfig({
               link: '/guide/components/drawer'
             },
             {
+              text: '文本省略 Ellipsis',
+              link: '/guide/components/ellipsis'
+            },
+            {
               text: '空状态 Empty',
               link: '/guide/components/empty'
             },

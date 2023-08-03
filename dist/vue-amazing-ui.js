@@ -323,7 +323,7 @@ const _hoisted_37 = /* @__PURE__ */ _withScopeId$n(() => /* @__PURE__ */ createE
 const _hoisted_38 = [
   _hoisted_37
 ];
-const _sfc_main$M = /* @__PURE__ */ defineComponent({
+const _sfc_main$N = /* @__PURE__ */ defineComponent({
   __name: "Alert",
   props: {
     message: { default: "" },
@@ -421,7 +421,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Alert = /* @__PURE__ */ _export_sfc(_sfc_main$M, [["__scopeId", "data-v-d31b30b3"]]);
+const Alert = /* @__PURE__ */ _export_sfc(_sfc_main$N, [["__scopeId", "data-v-d31b30b3"]]);
 Alert.install = (app) => {
   app.component(Alert.__name, Alert);
 };
@@ -433,7 +433,7 @@ const _hoisted_3$y = {
   style: { "transition": "none 0s ease 0s" }
 };
 const _hoisted_4$s = { class: "u-number" };
-const _sfc_main$L = /* @__PURE__ */ defineComponent({
+const _sfc_main$M = /* @__PURE__ */ defineComponent({
   __name: "Badge",
   props: {
     color: { default: "" },
@@ -522,7 +522,7 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
   }
 });
 const Badge_vue_vue_type_style_index_0_scoped_007a1c05_lang = "";
-const Badge = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-007a1c05"]]);
+const Badge = /* @__PURE__ */ _export_sfc(_sfc_main$M, [["__scopeId", "data-v-007a1c05"]]);
 Badge.install = (app) => {
   app.component(Badge.__name, Badge);
 };
@@ -545,7 +545,7 @@ const _hoisted_5$m = [
   _hoisted_4$r
 ];
 const _hoisted_6$m = /* @__PURE__ */ _withScopeId$m(() => /* @__PURE__ */ createElementVNode("div", { class: "assist" }, null, -1));
-const _sfc_main$K = /* @__PURE__ */ defineComponent({
+const _sfc_main$L = /* @__PURE__ */ defineComponent({
   __name: "Breadcrumb",
   props: {
     routes: { default: () => [] },
@@ -602,14 +602,14 @@ const _sfc_main$K = /* @__PURE__ */ defineComponent({
   }
 });
 const Breadcrumb_vue_vue_type_style_index_0_scoped_dbb4d1c8_lang = "";
-const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$K, [["__scopeId", "data-v-dbb4d1c8"]]);
+const Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-dbb4d1c8"]]);
 Breadcrumb.install = (app) => {
   app.component(Breadcrumb.__name, Breadcrumb);
 };
 const _hoisted_1$D = ["href", "target", "disabled"];
 const _hoisted_2$z = { class: "u-spin-circle" };
 const _hoisted_3$w = { class: "u-text" };
-const _sfc_main$J = /* @__PURE__ */ defineComponent({
+const _sfc_main$K = /* @__PURE__ */ defineComponent({
   __name: "Button",
   props: {
     name: { default: "按钮" },
@@ -679,14 +679,14 @@ const _sfc_main$J = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Button_vue_vue_type_style_index_0_scoped_4e151365_lang = "";
-const Button = /* @__PURE__ */ _export_sfc(_sfc_main$J, [["__scopeId", "data-v-4e151365"]]);
+const Button_vue_vue_type_style_index_0_scoped_8d16361f_lang = "";
+const Button = /* @__PURE__ */ _export_sfc(_sfc_main$K, [["__scopeId", "data-v-8d16361f"]]);
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
 const _hoisted_1$C = { class: "u-title" };
 const _hoisted_2$y = { class: "u-extra" };
-const _sfc_main$I = /* @__PURE__ */ defineComponent({
+const _sfc_main$J = /* @__PURE__ */ defineComponent({
   __name: "Card",
   props: {
     width: { default: "auto" },
@@ -748,7 +748,7 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
   }
 });
 const Card_vue_vue_type_style_index_0_scoped_b66e2672_lang = "";
-const Card = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["__scopeId", "data-v-b66e2672"]]);
+const Card = /* @__PURE__ */ _export_sfc(_sfc_main$J, [["__scopeId", "data-v-b66e2672"]]);
 Card.install = (app) => {
   app.component(Card.__name, Card);
 };
@@ -792,7 +792,7 @@ const _hoisted_11$c = /* @__PURE__ */ _withScopeId$l(() => /* @__PURE__ */ creat
 const _hoisted_12$9 = [
   _hoisted_11$c
 ];
-const _sfc_main$H = /* @__PURE__ */ defineComponent({
+const _sfc_main$I = /* @__PURE__ */ defineComponent({
   __name: "Spin",
   props: {
     spinning: { type: Boolean, default: true },
@@ -829,7 +829,7 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
   }
 });
 const Spin_vue_vue_type_style_index_0_scoped_8036454f_lang = "";
-const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$H, [["__scopeId", "data-v-8036454f"]]);
+const Spin = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["__scopeId", "data-v-8036454f"]]);
 Spin.install = (app) => {
   app.component(Spin.__name, Spin);
 };
@@ -855,7 +855,7 @@ const _hoisted_10$d = {
   class: "m-switch"
 };
 const _hoisted_11$b = ["onClick"];
-const _sfc_main$G = /* @__PURE__ */ defineComponent({
+const _sfc_main$H = /* @__PURE__ */ defineComponent({
   __name: "Carousel",
   props: {
     images: { default: () => [] },
@@ -1200,7 +1200,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
   }
 });
 const Carousel_vue_vue_type_style_index_0_scoped_49eb85a6_lang = "";
-const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$G, [["__scopeId", "data-v-49eb85a6"]]);
+const Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$H, [["__scopeId", "data-v-49eb85a6"]]);
 Carousel.install = (app) => {
   app.component(Carousel.__name, Carousel);
 };
@@ -1214,7 +1214,7 @@ const _hoisted_5$j = [
   _hoisted_4$o
 ];
 const _hoisted_6$j = ["src"];
-const _sfc_main$F = /* @__PURE__ */ defineComponent({
+const _sfc_main$G = /* @__PURE__ */ defineComponent({
   __name: "Empty",
   props: {
     description: { default: "暂无数据" },
@@ -1257,7 +1257,7 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
   }
 });
 const Empty_vue_vue_type_style_index_0_scoped_bd4f9b87_lang = "";
-const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["__scopeId", "data-v-bd4f9b87"]]);
+const Empty = /* @__PURE__ */ _export_sfc(_sfc_main$G, [["__scopeId", "data-v-bd4f9b87"]]);
 Empty.install = (app) => {
   app.component(Empty.__name, Empty);
 };
@@ -1278,7 +1278,7 @@ const _hoisted_9$e = [
   _hoisted_8$e
 ];
 const _hoisted_10$c = ["title", "onMouseenter", "onClick"];
-const _sfc_main$E = /* @__PURE__ */ defineComponent({
+const _sfc_main$F = /* @__PURE__ */ defineComponent({
   __name: "Select",
   props: {
     options: { default: () => [] },
@@ -1540,11 +1540,11 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
   }
 });
 const Select_vue_vue_type_style_index_0_scoped_c92d5a45_lang = "";
-const Select = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["__scopeId", "data-v-c92d5a45"]]);
+const Select = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["__scopeId", "data-v-c92d5a45"]]);
 Select.install = (app) => {
   app.component(Select.__name, Select);
 };
-const _sfc_main$D = /* @__PURE__ */ defineComponent({
+const _sfc_main$E = /* @__PURE__ */ defineComponent({
   __name: "Cascader",
   props: {
     options: { default: () => [] },
@@ -1695,7 +1695,7 @@ const _sfc_main$D = /* @__PURE__ */ defineComponent({
   }
 });
 const Cascader_vue_vue_type_style_index_0_scoped_3cd9d99b_lang = "";
-const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["__scopeId", "data-v-3cd9d99b"]]);
+const Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$E, [["__scopeId", "data-v-3cd9d99b"]]);
 Cascader.install = (app) => {
   app.component(Cascader.__name, Cascader);
 };
@@ -1706,7 +1706,7 @@ const _hoisted_3$r = {
   class: "m-checkbox-wrap"
 };
 const _hoisted_4$m = { class: "u-label" };
-const _sfc_main$C = /* @__PURE__ */ defineComponent({
+const _sfc_main$D = /* @__PURE__ */ defineComponent({
   __name: "Checkbox",
   props: {
     options: { default: () => [] },
@@ -1818,11 +1818,11 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
   }
 });
 const Checkbox_vue_vue_type_style_index_0_scoped_4cc152a7_lang = "";
-const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$C, [["__scopeId", "data-v-4cc152a7"]]);
+const Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$D, [["__scopeId", "data-v-4cc152a7"]]);
 Checkbox.install = (app) => {
   app.component(Checkbox.__name, Checkbox);
 };
-const _sfc_main$B = /* @__PURE__ */ defineComponent({
+const _sfc_main$C = /* @__PURE__ */ defineComponent({
   __name: "Col",
   props: {
     span: { default: void 0 },
@@ -1927,7 +1927,7 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
   }
 });
 const Col_vue_vue_type_style_index_0_scoped_c7ddaac6_lang = "";
-const Col = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["__scopeId", "data-v-c7ddaac6"]]);
+const Col = /* @__PURE__ */ _export_sfc(_sfc_main$C, [["__scopeId", "data-v-c7ddaac6"]]);
 Col.install = (app) => {
   app.component(Col.__name, Col);
 };
@@ -1947,7 +1947,7 @@ const _hoisted_5$h = [
   _hoisted_4$l
 ];
 const _hoisted_6$h = { class: "u-lang" };
-const _sfc_main$A = /* @__PURE__ */ defineComponent({
+const _sfc_main$B = /* @__PURE__ */ defineComponent({
   __name: "Collapse",
   props: {
     collapseData: { default: () => [] },
@@ -2080,7 +2080,7 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
   }
 });
 const Collapse_vue_vue_type_style_index_0_scoped_ca9cd42c_lang = "";
-const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["__scopeId", "data-v-ca9cd42c"]]);
+const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["__scopeId", "data-v-ca9cd42c"]]);
 Collapse.install = (app) => {
   app.component(Collapse.__name, Collapse);
 };
@@ -2094,7 +2094,7 @@ const _hoisted_4$k = {
   key: 3,
   class: "u-suffix"
 };
-const _sfc_main$z = /* @__PURE__ */ defineComponent({
+const _sfc_main$A = /* @__PURE__ */ defineComponent({
   __name: "Countdown",
   props: {
     title: { default: "Countdown" },
@@ -2229,7 +2229,7 @@ const _sfc_main$z = /* @__PURE__ */ defineComponent({
   }
 });
 const Countdown_vue_vue_type_style_index_0_scoped_1917ad9b_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["__scopeId", "data-v-1917ad9b"]]);
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["__scopeId", "data-v-1917ad9b"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
 };
@@ -2237,7 +2237,7 @@ const main = "";
 const __default__$3 = {
   inheritAttrs: false
 };
-const _sfc_main$y = /* @__PURE__ */ defineComponent({
+const _sfc_main$z = /* @__PURE__ */ defineComponent({
   ...__default__$3,
   __name: "DatePicker",
   props: {
@@ -2286,7 +2286,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
   }
 });
 const DatePicker_vue_vue_type_style_index_0_scoped_e697080a_lang = "";
-const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-e697080a"]]);
+const DatePicker = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["__scopeId", "data-v-e697080a"]]);
 DatePicker.install = (app) => {
   app.component(DatePicker.__name, DatePicker);
 };
@@ -2296,7 +2296,7 @@ const _hoisted_3$o = { class: "u-extra" };
 const _hoisted_4$j = { key: 0 };
 const _hoisted_5$g = ["colspan"];
 const _hoisted_6$g = { key: 1 };
-const _sfc_main$x = /* @__PURE__ */ defineComponent({
+const _sfc_main$y = /* @__PURE__ */ defineComponent({
   __name: "Descriptions",
   props: {
     title: { default: "" },
@@ -2499,7 +2499,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
   }
 });
 const Descriptions_vue_vue_type_style_index_0_scoped_8653bb6d_lang = "";
-const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-8653bb6d"]]);
+const Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-8653bb6d"]]);
 Descriptions.install = (app) => {
   app.component(Descriptions.__name, Descriptions);
 };
@@ -2509,7 +2509,7 @@ const _hoisted_3$n = { class: "u-content" };
 const _hoisted_4$i = ["data-span", "data-label-style", "data-content-style"];
 const _hoisted_5$f = { class: "u-label-th" };
 const _hoisted_6$f = { class: "u-content-td" };
-const _sfc_main$w = /* @__PURE__ */ defineComponent({
+const _sfc_main$x = /* @__PURE__ */ defineComponent({
   __name: "DescriptionsItem",
   props: {
     label: { default: "" },
@@ -2555,7 +2555,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
   }
 });
 const DescriptionsItem_vue_vue_type_style_index_0_scoped_d38b635d_lang = "";
-const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-d38b635d"]]);
+const DescriptionsItem = /* @__PURE__ */ _export_sfc(_sfc_main$x, [["__scopeId", "data-v-d38b635d"]]);
 DescriptionsItem.install = (app) => {
   app.component(DescriptionsItem.__name, DescriptionsItem);
 };
@@ -2587,7 +2587,7 @@ const _hoisted_13$8 = [
 const _hoisted_14$8 = { class: "m-dialog-header" };
 const _hoisted_15$7 = { class: "u-head" };
 const _hoisted_16$7 = { class: "m-dialog-footer" };
-const _sfc_main$v = /* @__PURE__ */ defineComponent({
+const _sfc_main$w = /* @__PURE__ */ defineComponent({
   __name: "Dialog",
   props: {
     title: { default: "提示" },
@@ -2724,11 +2724,11 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
   }
 });
 const Dialog_vue_vue_type_style_index_0_scoped_14995359_lang = "";
-const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-14995359"]]);
+const Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$w, [["__scopeId", "data-v-14995359"]]);
 Dialog.install = (app) => {
   app.component(Dialog.__name, Dialog);
 };
-const _sfc_main$u = /* @__PURE__ */ defineComponent({
+const _sfc_main$v = /* @__PURE__ */ defineComponent({
   __name: "Divider",
   props: {
     dashed: { type: Boolean, default: false },
@@ -2802,7 +2802,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
   }
 });
 const Divider_vue_vue_type_style_index_0_scoped_cf529cec_lang = "";
-const Divider = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-cf529cec"]]);
+const Divider = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-cf529cec"]]);
 Divider.install = (app) => {
   app.component(Divider.__name, Divider);
 };
@@ -2839,7 +2839,7 @@ const _hoisted_16$6 = [
 const _hoisted_17$5 = { class: "u-title" };
 const _hoisted_18$5 = { class: "m-drawer-extra" };
 const _hoisted_19$5 = { class: "m-drawer-body" };
-const _sfc_main$t = /* @__PURE__ */ defineComponent({
+const _sfc_main$u = /* @__PURE__ */ defineComponent({
   __name: "Drawer",
   props: {
     title: { default: "" },
@@ -2969,12 +2969,198 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
   }
 });
 const Drawer_vue_vue_type_style_index_0_scoped_1d8c5137_lang = "";
-const Drawer = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-1d8c5137"]]);
+const Drawer = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-1d8c5137"]]);
 Drawer.install = (app) => {
   app.component(Drawer.__name, Drawer);
 };
+const _hoisted_1$q = { class: "m-arrow" };
+const _sfc_main$t = /* @__PURE__ */ defineComponent({
+  __name: "Tooltip",
+  props: {
+    maxWidth: { default: 120 },
+    content: { default: "暂无内容" },
+    title: { default: "暂无提示" },
+    fontSize: { default: 14 },
+    color: { default: "#FFF" },
+    backgroundColor: { default: "rgba(0, 0, 0, .85)" },
+    overlayStyle: { default: () => ({}) }
+  },
+  emits: ["openChange"],
+  setup(__props, { emit }) {
+    const visible = ref(false);
+    const hideTimer = ref();
+    const top = ref(0);
+    const left = ref(0);
+    const contentRef = ref();
+    const titleRef = ref();
+    function getPosition() {
+      const contentWidth = contentRef.value.offsetWidth;
+      const titleWidth = titleRef.value.offsetWidth;
+      const titleHeight = titleRef.value.offsetHeight;
+      top.value = titleHeight;
+      left.value = (titleWidth - contentWidth) / 2;
+    }
+    function onShow() {
+      getPosition();
+      cancelRaf(hideTimer.value);
+      visible.value = true;
+      emit("openChange", visible.value);
+    }
+    function onHide() {
+      hideTimer.value = rafTimeout(() => {
+        visible.value = false;
+        emit("openChange", visible.value);
+      }, 100);
+    }
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", {
+        class: "m-tooltip",
+        onMouseenter: onShow,
+        onMouseleave: onHide
+      }, [
+        createElementVNode("div", {
+          ref_key: "titleRef",
+          ref: titleRef,
+          class: normalizeClass(["m-title", { "show-tip": visible.value }]),
+          onMouseenter: onShow,
+          onMouseleave: onHide,
+          style: normalizeStyle(`max-width: ${_ctx.maxWidth}px; top: ${-top.value}px; left: ${-left.value}px;`)
+        }, [
+          createElementVNode("div", {
+            class: "u-title",
+            style: normalizeStyle([_ctx.overlayStyle, `font-size: ${_ctx.fontSize}px; color: ${_ctx.color}; background-color: ${_ctx.backgroundColor};`])
+          }, [
+            renderSlot(_ctx.$slots, "title", {}, () => [
+              createTextVNode(toDisplayString(_ctx.title), 1)
+            ], true)
+          ], 4),
+          createElementVNode("div", _hoisted_1$q, [
+            createElementVNode("span", {
+              class: "u-arrow",
+              style: normalizeStyle(`background-color: ${_ctx.backgroundColor};`)
+            }, null, 4)
+          ])
+        ], 38),
+        createElementVNode("div", {
+          ref_key: "contentRef",
+          ref: contentRef,
+          class: "u-content"
+        }, [
+          renderSlot(_ctx.$slots, "default", {}, () => [
+            createTextVNode(toDisplayString(_ctx.content), 1)
+          ], true)
+        ], 512)
+      ], 32);
+    };
+  }
+});
+const Tooltip_vue_vue_type_style_index_0_scoped_31253442_lang = "";
+const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-31253442"]]);
+Tooltip.install = (app) => {
+  app.component(Tooltip.__name, Tooltip);
+};
+const _sfc_main$s = /* @__PURE__ */ defineComponent({
+  __name: "Ellipsis",
+  props: {
+    maxWidth: { default: "100%" },
+    line: { default: void 0 },
+    trigger: { default: void 0 },
+    tooltip: { type: Boolean, default: true },
+    tooltipMaxWidth: { default: void 0 },
+    tooltipFontSize: { default: 14 },
+    tooltipColor: { default: "#FFF" },
+    tooltipBackgroundColor: { default: "rgba(0, 0, 0, .85)" },
+    tooltipOverlayStyle: { default: () => ({ padding: "8px 12px", textAlign: "justify" }) }
+  },
+  emits: ["expand"],
+  setup(__props, { emit }) {
+    const props = __props;
+    const textMaxWidth = computed(() => {
+      if (typeof props.maxWidth === "number") {
+        return props.maxWidth + "px";
+      }
+      return props.maxWidth;
+    });
+    const showTooltip = ref();
+    const ellipsis = ref();
+    const defaultTooltipMaxWidth = ref();
+    watchEffect(() => {
+      showTooltip.value = props.tooltip;
+    });
+    watchEffect(() => {
+      if (props.tooltip) {
+        if (props.tooltipMaxWidth) {
+          defaultTooltipMaxWidth.value = props.tooltipMaxWidth;
+        } else {
+          defaultTooltipMaxWidth.value = ellipsis.value.offsetWidth + 24;
+        }
+      }
+    }, { flush: "post" });
+    function onExpand() {
+      if (ellipsis.value.style["-webkit-line-clamp"]) {
+        if (props.tooltip) {
+          showTooltip.value = false;
+          nextTick(() => {
+            ellipsis.value.style["-webkit-line-clamp"] = "";
+          });
+        } else {
+          ellipsis.value.style["-webkit-line-clamp"] = "";
+        }
+        emit("expand", true);
+      } else {
+        if (props.tooltip) {
+          showTooltip.value = true;
+        }
+        ellipsis.value.style["-webkit-line-clamp"] = props.line;
+        emit("expand", false);
+      }
+    }
+    return (_ctx, _cache) => {
+      return showTooltip.value ? (openBlock(), createBlock(unref(Tooltip), {
+        key: 0,
+        "max-width": defaultTooltipMaxWidth.value,
+        fontSize: _ctx.tooltipFontSize,
+        color: _ctx.tooltipColor,
+        backgroundColor: _ctx.tooltipBackgroundColor,
+        overlayStyle: _ctx.tooltipOverlayStyle
+      }, {
+        title: withCtx(() => [
+          renderSlot(_ctx.$slots, "tooltip", {}, () => [
+            renderSlot(_ctx.$slots, "default", {}, void 0, true)
+          ], true)
+        ]),
+        default: withCtx(() => [
+          createElementVNode("div", mergeProps({
+            ref_key: "ellipsis",
+            ref: ellipsis,
+            class: ["m-ellipsis", [_ctx.line ? "ellipsis-line" : "not-ellipsis-line", { "cursor-pointer": _ctx.trigger === "click" }]],
+            style: `-webkit-line-clamp: ${_ctx.line}; max-width: ${textMaxWidth.value};`,
+            onClick: _cache[0] || (_cache[0] = ($event) => _ctx.trigger === "click" ? onExpand() : () => false)
+          }, _ctx.$attrs), [
+            renderSlot(_ctx.$slots, "default", {}, void 0, true)
+          ], 16)
+        ]),
+        _: 3
+      }, 8, ["max-width", "fontSize", "color", "backgroundColor", "overlayStyle"])) : (openBlock(), createElementBlock("div", mergeProps({
+        key: 1,
+        ref_key: "ellipsis",
+        ref: ellipsis,
+        class: ["m-ellipsis", [_ctx.line ? "ellipsis-line" : "not-ellipsis-line", { "cursor-pointer": _ctx.trigger === "click" }]],
+        style: `-webkit-line-clamp: ${_ctx.line}; max-width: ${textMaxWidth.value};`,
+        onClick: _cache[1] || (_cache[1] = ($event) => _ctx.trigger === "click" ? onExpand() : () => false)
+      }, _ctx.$attrs), [
+        renderSlot(_ctx.$slots, "default", {}, void 0, true)
+      ], 16));
+    };
+  }
+});
+const Ellipsis_vue_vue_type_style_index_0_scoped_1073a92a_lang = "";
+const Ellipsis = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-1073a92a"]]);
+Ellipsis.install = (app) => {
+  app.component(Ellipsis.__name, Ellipsis);
+};
 const _withScopeId$f = (n) => (pushScopeId("data-v-4872a94f"), n = n(), popScopeId(), n);
-const _hoisted_1$q = { class: "m-image-wrap" };
+const _hoisted_1$p = { class: "m-image-wrap" };
 const _hoisted_2$m = ["onLoad", "src", "alt"];
 const _hoisted_3$k = ["onClick"];
 const _hoisted_4$f = { class: "m-image-mask-info" };
@@ -3092,7 +3278,7 @@ const _hoisted_27$2 = /* @__PURE__ */ _withScopeId$f(() => /* @__PURE__ */ creat
 const _hoisted_28$2 = [
   _hoisted_27$2
 ];
-const _sfc_main$s = /* @__PURE__ */ defineComponent({
+const _sfc_main$r = /* @__PURE__ */ defineComponent({
   __name: "Image",
   props: {
     src: { default: "" },
@@ -3301,7 +3487,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
       onResetOrigin();
     }
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$q, [
+      return openBlock(), createElementBlock("div", _hoisted_1$p, [
         (openBlock(true), createElementBlock(Fragment, null, renderList(images.value, (image, index) => {
           return withDirectives((openBlock(), createElementBlock("div", {
             class: normalizeClass(["m-image", { "image-hover-mask": complete.value[index] }]),
@@ -3444,12 +3630,12 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
   }
 });
 const Image_vue_vue_type_style_index_0_scoped_4872a94f_lang = "";
-const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-4872a94f"]]);
+const Image$1 = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-4872a94f"]]);
 Image$1.install = (app) => {
   app.component(Image$1.__name, Image$1);
 };
 const _withScopeId$e = (n) => (pushScopeId("data-v-3de4ba2c"), n = n(), popScopeId(), n);
-const _hoisted_1$p = ["type", "value", "maxlength", "disabled"];
+const _hoisted_1$o = ["type", "value", "maxlength", "disabled"];
 const _hoisted_2$l = /* @__PURE__ */ _withScopeId$e(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
   class: "u-clear",
@@ -3502,7 +3688,7 @@ const _hoisted_11$7 = {
 const __default__$2 = {
   inheritAttrs: false
 };
-const _sfc_main$r = /* @__PURE__ */ defineComponent({
+const _sfc_main$q = /* @__PURE__ */ defineComponent({
   ...__default__$2,
   __name: "Input",
   props: {
@@ -3615,7 +3801,7 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
             onInput,
             onChange,
             onKeydown: onKeyboard
-          }, _ctx.$attrs), null, 16, _hoisted_1$p),
+          }, _ctx.$attrs), null, 16, _hoisted_1$o),
           showSuffix.value ? (openBlock(), createElementBlock("span", {
             key: 1,
             class: "m-suffix",
@@ -3660,12 +3846,12 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
   }
 });
 const Input_vue_vue_type_style_index_0_scoped_3de4ba2c_lang = "";
-const Input = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-3de4ba2c"]]);
+const Input = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-3de4ba2c"]]);
 Input.install = (app) => {
   app.component(Input.__name, Input);
 };
 const _withScopeId$d = (n) => (pushScopeId("data-v-c72b0d89"), n = n(), popScopeId(), n);
-const _hoisted_1$o = { class: "m-input-wrap" };
+const _hoisted_1$n = { class: "m-input-wrap" };
 const _hoisted_2$k = { class: "m-handler-wrap" };
 const _hoisted_3$i = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
@@ -3694,7 +3880,7 @@ const _hoisted_6$a = [
 const __default__$1 = {
   inheritAttrs: false
 };
-const _sfc_main$q = /* @__PURE__ */ defineComponent({
+const _sfc_main$p = /* @__PURE__ */ defineComponent({
   ...__default__$1,
   __name: "InputNumber",
   props: {
@@ -3799,7 +3985,7 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
         tabindex: "1",
         style: normalizeStyle(`width: ${inputWidth.value};`)
       }, [
-        createElementVNode("div", _hoisted_1$o, [
+        createElementVNode("div", _hoisted_1$n, [
           showPrefix.value ? (openBlock(), createElementBlock("span", {
             key: 0,
             class: "u-input-prefix",
@@ -3848,12 +4034,12 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
   }
 });
 const InputNumber_vue_vue_type_style_index_0_scoped_c72b0d89_lang = "";
-const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-c72b0d89"]]);
+const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-c72b0d89"]]);
 InputNumber.install = (app) => {
   app.component(InputNumber.__name, InputNumber);
 };
 const _withScopeId$c = (n) => (pushScopeId("data-v-96e26681"), n = n(), popScopeId(), n);
-const _hoisted_1$n = ["onMouseenter", "onMouseleave"];
+const _hoisted_1$m = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$j = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z" }, null, -1));
 const _hoisted_3$h = [
   _hoisted_2$j
@@ -3878,7 +4064,7 @@ var ColorStyle$1 = /* @__PURE__ */ ((ColorStyle2) => {
   ColorStyle2["warn"] = "#faad14";
   return ColorStyle2;
 })(ColorStyle$1 || {});
-const _sfc_main$p = /* @__PURE__ */ defineComponent({
+const _sfc_main$o = /* @__PURE__ */ defineComponent({
   __name: "Message",
   props: {
     duration: { default: 3e3 },
@@ -4008,7 +4194,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                     focusable: "false"
                   }, _hoisted_9$9, 4)) : createCommentVNode("", true),
                   createElementVNode("p", _hoisted_10$7, toDisplayString(message.content), 1)
-                ], 40, _hoisted_1$n)
+                ], 40, _hoisted_1$m)
               ])), [
                 [vShow, showMessage.value[index]]
               ]);
@@ -4021,12 +4207,12 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
   }
 });
 const Message_vue_vue_type_style_index_0_scoped_96e26681_lang = "";
-const Message = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-96e26681"]]);
+const Message = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-96e26681"]]);
 Message.install = (app) => {
   app.component(Message.__name, Message);
 };
 const _withScopeId$b = (n) => (pushScopeId("data-v-2c49aec1"), n = n(), popScopeId(), n);
-const _hoisted_1$m = ["onClick"];
+const _hoisted_1$l = ["onClick"];
 const _hoisted_2$i = { class: "m-spin-dot" };
 const _hoisted_3$g = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
 const _hoisted_4$b = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("span", { class: "u-dot-item" }, null, -1));
@@ -4105,7 +4291,7 @@ const _hoisted_25$1 = [
 const _hoisted_26$1 = { class: "u-title" };
 const _hoisted_27$1 = { class: "u-content" };
 const _hoisted_28$1 = { class: "m-btns" };
-const _sfc_main$o = /* @__PURE__ */ defineComponent({
+const _sfc_main$n = /* @__PURE__ */ defineComponent({
   __name: "Modal",
   props: {
     width: { default: 420 },
@@ -4220,7 +4406,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
                   ])
                 ], 2)
               ], 6)
-            ], 8, _hoisted_1$m), [
+            ], 8, _hoisted_1$l), [
               [vShow, _ctx.visible]
             ])
           ];
@@ -4231,12 +4417,12 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
   }
 });
 const Modal_vue_vue_type_style_index_0_scoped_2c49aec1_lang = "";
-const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-2c49aec1"]]);
+const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-2c49aec1"]]);
 Modal.install = (app) => {
   app.component(Modal.__name, Modal);
 };
 const _withScopeId$a = (n) => (pushScopeId("data-v-5654627c"), n = n(), popScopeId(), n);
-const _hoisted_1$l = ["onMouseenter", "onMouseleave"];
+const _hoisted_1$k = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$h = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
 const _hoisted_3$f = /* @__PURE__ */ _withScopeId$a(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z" }, null, -1));
 const _hoisted_4$a = [
@@ -4273,7 +4459,7 @@ var ColorStyle = /* @__PURE__ */ ((ColorStyle2) => {
   ColorStyle2["warn"] = "#faad14";
   return ColorStyle2;
 })(ColorStyle || {});
-const _sfc_main$n = /* @__PURE__ */ defineComponent({
+const _sfc_main$m = /* @__PURE__ */ defineComponent({
   __name: "Notification",
   props: {
     message: { default: "温馨提示" },
@@ -4437,7 +4623,7 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
                   "aria-hidden": "true",
                   focusable: "false"
                 }, _hoisted_16$3, 8, _hoisted_14$4))
-              ], 40, _hoisted_1$l)), [
+              ], 40, _hoisted_1$k)), [
                 [vShow, !hideIndex.value.includes(index)]
               ]);
             }), 128))
@@ -4449,12 +4635,12 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
   }
 });
 const Notification_vue_vue_type_style_index_0_scoped_5654627c_lang = "";
-const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-5654627c"]]);
+const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-5654627c"]]);
 Notification.install = (app) => {
   app.component(Notification.__name, Notification);
 };
 const _withScopeId$9 = (n) => (pushScopeId("data-v-024b46a7"), n = n(), popScopeId(), n);
-const _hoisted_1$k = { class: "m-pagination-wrap" };
+const _hoisted_1$j = { class: "m-pagination-wrap" };
 const _hoisted_2$g = {
   key: 0,
   class: "mr8"
@@ -4516,7 +4702,7 @@ const _hoisted_14$3 = {
   key: 1,
   class: "u-jump-page"
 };
-const _sfc_main$m = /* @__PURE__ */ defineComponent({
+const _sfc_main$l = /* @__PURE__ */ defineComponent({
   __name: "Pagination",
   props: {
     current: { default: 1 },
@@ -4624,7 +4810,7 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         class: normalizeClass([`m-pagination ${_ctx.placement}`, { hidden: _ctx.hideOnSinglePage && _ctx.total <= _ctx.pageSize }])
       }, [
-        createElementVNode("div", _hoisted_1$k, [
+        createElementVNode("div", _hoisted_1$j, [
           _ctx.showTotal ? (openBlock(), createElementBlock("span", _hoisted_2$g, "共 " + toDisplayString(totalPage.value) + " 页 / " + toDisplayString(_ctx.total) + " 条", 1)) : createCommentVNode("", true),
           createElementVNode("span", {
             class: normalizeClass(["u-item", { disabled: currentPage.value === 1 }]),
@@ -4685,12 +4871,12 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
   }
 });
 const Pagination_vue_vue_type_style_index_0_scoped_024b46a7_lang = "";
-const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-024b46a7"]]);
+const Pagination = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-024b46a7"]]);
 Pagination.install = (app) => {
   app.component(Pagination.__name, Pagination);
 };
 const _withScopeId$8 = (n) => (pushScopeId("data-v-20c088e9"), n = n(), popScopeId(), n);
-const _hoisted_1$j = {
+const _hoisted_1$i = {
   key: 0,
   class: "u-success",
   viewBox: "64 64 896 896",
@@ -4729,7 +4915,7 @@ const _hoisted_11$3 = {
   key: 1,
   class: "u-progress-text"
 };
-const _sfc_main$l = /* @__PURE__ */ defineComponent({
+const _sfc_main$k = /* @__PURE__ */ defineComponent({
   __name: "Progress",
   props: {
     width: { default: "100%" },
@@ -4780,7 +4966,7 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
           }, null, 6)
         ], 4),
         _ctx.showInfo ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-          _ctx.percent >= 100 ? (openBlock(), createElementBlock("svg", _hoisted_1$j, _hoisted_3$d)) : (openBlock(), createElementBlock("p", _hoisted_4$8, toDisplayString(_ctx.percent >= 100 ? 100 : _ctx.percent) + "%", 1))
+          _ctx.percent >= 100 ? (openBlock(), createElementBlock("svg", _hoisted_1$i, _hoisted_3$d)) : (openBlock(), createElementBlock("p", _hoisted_4$8, toDisplayString(_ctx.percent >= 100 ? 100 : _ctx.percent) + "%", 1))
         ], 64)) : createCommentVNode("", true)
       ], 4)) : (openBlock(), createElementBlock("div", {
         key: 1,
@@ -4815,7 +5001,7 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
   }
 });
 const Progress_vue_vue_type_style_index_0_scoped_20c088e9_lang = "";
-const Progress = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-20c088e9"]]);
+const Progress = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-20c088e9"]]);
 Progress.install = (app) => {
   app.component(Progress.__name, Progress);
 };
@@ -4841,8 +5027,8 @@ function useQRCode(text, options) {
   );
   return result;
 }
-const _hoisted_1$i = ["src"];
-const _sfc_main$k = /* @__PURE__ */ defineComponent({
+const _hoisted_1$h = ["src"];
+const _sfc_main$j = /* @__PURE__ */ defineComponent({
   __name: "QRCode",
   props: {
     value: { default: "" },
@@ -4879,20 +5065,20 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
           src: unref(qrcode),
           class: "u-qrcode",
           alt: "QRCode"
-        }, null, 8, _hoisted_1$i)
+        }, null, 8, _hoisted_1$h)
       ], 6);
     };
   }
 });
 const QRCode_vue_vue_type_style_index_0_scoped_a604e87a_lang = "";
-const QRCode = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-a604e87a"]]);
+const QRCode = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-a604e87a"]]);
 QRCode.install = (app) => {
   app.component(QRCode.__name, QRCode);
 };
-const _hoisted_1$h = { class: "m-radio" };
+const _hoisted_1$g = { class: "m-radio" };
 const _hoisted_2$e = ["onClick"];
 const _hoisted_3$c = { class: "u-label" };
-const _sfc_main$j = /* @__PURE__ */ defineComponent({
+const _sfc_main$i = /* @__PURE__ */ defineComponent({
   __name: "Radio",
   props: {
     options: { default: () => [] },
@@ -4925,7 +5111,7 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
       }
     }
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$h, [
+      return openBlock(), createElementBlock("div", _hoisted_1$g, [
         (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.options, (option, index) => {
           return openBlock(), createElementBlock("div", {
             class: normalizeClass(["m-radio-wrap", { "vertical": _ctx.vertical }]),
@@ -4954,12 +5140,12 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
   }
 });
 const Radio_vue_vue_type_style_index_0_scoped_847937e0_lang = "";
-const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-847937e0"]]);
+const Radio = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-847937e0"]]);
 Radio.install = (app) => {
   app.component(Radio.__name, Radio);
 };
 const _withScopeId$7 = (n) => (pushScopeId("data-v-3840d4df"), n = n(), popScopeId(), n);
-const _hoisted_1$g = ["onClick"];
+const _hoisted_1$f = ["onClick"];
 const _hoisted_2$d = ["onClick", "onMouseenter"];
 const _hoisted_3$b = /* @__PURE__ */ _withScopeId$7(() => /* @__PURE__ */ createElementVNode("path", { d: "M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" }, null, -1));
 const _hoisted_4$7 = [
@@ -4994,7 +5180,7 @@ const _hoisted_18$2 = /* @__PURE__ */ _withScopeId$7(() => /* @__PURE__ */ creat
 const _hoisted_19$2 = [
   _hoisted_18$2
 ];
-const _sfc_main$i = /* @__PURE__ */ defineComponent({
+const _sfc_main$h = /* @__PURE__ */ defineComponent({
   __name: "Rate",
   props: {
     allowClear: { type: Boolean, default: true },
@@ -5160,19 +5346,19 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
                 ], true)
               ], 4))
             ], 42, _hoisted_11$2)
-          ], 14, _hoisted_1$g);
+          ], 14, _hoisted_1$f);
         }), 128))
       ], 38);
     };
   }
 });
 const Rate_vue_vue_type_style_index_0_scoped_3840d4df_lang = "";
-const Rate = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-3840d4df"]]);
+const Rate = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-3840d4df"]]);
 Rate.install = (app) => {
   app.component(Rate.__name, Rate);
 };
 const _withScopeId$6 = (n) => (pushScopeId("data-v-8a3dac0f"), n = n(), popScopeId(), n);
-const _hoisted_1$f = { class: "m-result" };
+const _hoisted_1$e = { class: "m-result" };
 const _hoisted_2$c = { class: "m-image" };
 const _hoisted_3$a = {
   key: 0,
@@ -5259,7 +5445,7 @@ const _hoisted_25 = [
 const _hoisted_26 = { class: "m-title" };
 const _hoisted_27 = { class: "m-subtitle" };
 const _hoisted_28 = { class: "m-extra" };
-const _sfc_main$h = /* @__PURE__ */ defineComponent({
+const _sfc_main$g = /* @__PURE__ */ defineComponent({
   __name: "Result",
   props: {
     status: { default: "info" },
@@ -5273,7 +5459,7 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
       showContent.value = contentRef.value.offsetHeight;
     });
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$f, [
+      return openBlock(), createElementBlock("div", _hoisted_1$e, [
         createElementVNode("div", _hoisted_2$c, [
           renderSlot(_ctx.$slots, "image", {}, () => [
             _ctx.status === "info" ? (openBlock(), createElementBlock("svg", _hoisted_3$a, _hoisted_5$3)) : createCommentVNode("", true),
@@ -5311,11 +5497,11 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
   }
 });
 const Result_vue_vue_type_style_index_0_scoped_8a3dac0f_lang = "";
-const Result = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-8a3dac0f"]]);
+const Result = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-8a3dac0f"]]);
 Result.install = (app) => {
   app.component(Result.__name, Result);
 };
-const _sfc_main$g = /* @__PURE__ */ defineComponent({
+const _sfc_main$f = /* @__PURE__ */ defineComponent({
   __name: "Row",
   props: {
     width: { default: "auto" },
@@ -5434,12 +5620,12 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
   }
 });
 const Row_vue_vue_type_style_index_0_scoped_87fb3172_lang = "";
-const Row = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-87fb3172"]]);
+const Row = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-87fb3172"]]);
 Row.install = (app) => {
   app.component(Row.__name, Row);
 };
 const _withScopeId$5 = (n) => (pushScopeId("data-v-f77b5c19"), n = n(), popScopeId(), n);
-const _hoisted_1$e = {
+const _hoisted_1$d = {
   key: 0,
   class: "u-handle-tooltip"
 };
@@ -5453,7 +5639,7 @@ const _hoisted_3$9 = {
 const _hoisted_4$5 = /* @__PURE__ */ _withScopeId$5(() => /* @__PURE__ */ createElementVNode("div", { class: "m-arrow" }, [
   /* @__PURE__ */ createElementVNode("span", { class: "u-arrow" })
 ], -1));
-const _sfc_main$f = /* @__PURE__ */ defineComponent({
+const _sfc_main$e = /* @__PURE__ */ defineComponent({
   __name: "Slider",
   props: {
     width: { default: "100%" },
@@ -5669,7 +5855,7 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
           ],
           onMousedown: _cache[5] || (_cache[5] = ($event) => _ctx.disabled ? () => false : onLeftMouseDown())
         }, [
-          !_ctx.hideTip ? (openBlock(), createElementBlock("div", _hoisted_1$e, [
+          !_ctx.hideTip ? (openBlock(), createElementBlock("div", _hoisted_1$d, [
             createTextVNode(toDisplayString(leftValue.value) + " ", 1),
             _hoisted_2$b
           ])) : createCommentVNode("", true)
@@ -5698,11 +5884,11 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
   }
 });
 const Slider_vue_vue_type_style_index_0_scoped_f77b5c19_lang = "";
-const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-f77b5c19"]]);
+const Slider = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-f77b5c19"]]);
 Slider.install = (app) => {
   app.component(Slider.__name, Slider);
 };
-const _sfc_main$e = /* @__PURE__ */ defineComponent({
+const _sfc_main$d = /* @__PURE__ */ defineComponent({
   __name: "Space",
   props: {
     width: { default: "auto" },
@@ -5746,14 +5932,14 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
   }
 });
 const Space_vue_vue_type_style_index_0_scoped_58af11f6_lang = "";
-const Space = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-58af11f6"]]);
+const Space = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-58af11f6"]]);
 Space.install = (app) => {
   app.component(Space.__name, Space);
 };
-const _hoisted_1$d = { class: "m-statistic" };
+const _hoisted_1$c = { class: "m-statistic" };
 const _hoisted_2$a = { class: "u-title" };
 const _hoisted_3$8 = { class: "u-content-value" };
-const _sfc_main$d = /* @__PURE__ */ defineComponent({
+const _sfc_main$c = /* @__PURE__ */ defineComponent({
   __name: "Statistic",
   props: {
     title: { default: "" },
@@ -5779,7 +5965,7 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
       showSuffix.value = suffixRef.value.offsetHeight;
     });
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$d, [
+      return openBlock(), createElementBlock("div", _hoisted_1$c, [
         createElementVNode("div", _hoisted_2$a, [
           renderSlot(_ctx.$slots, "title", {}, () => [
             createTextVNode(toDisplayString(_ctx.title), 1)
@@ -5816,12 +6002,12 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
   }
 });
 const Statistic_vue_vue_type_style_index_0_scoped_c18f8df0_lang = "";
-const Statistic = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-c18f8df0"]]);
+const Statistic = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-c18f8df0"]]);
 Statistic.install = (app) => {
   app.component(Statistic.__name, Statistic);
 };
 const _withScopeId$4 = (n) => (pushScopeId("data-v-f837a4aa"), n = n(), popScopeId(), n);
-const _hoisted_1$c = { class: "m-steps" };
+const _hoisted_1$b = { class: "m-steps" };
 const _hoisted_2$9 = ["onClick"];
 const _hoisted_3$7 = { class: "m-steps-icon" };
 const _hoisted_4$4 = {
@@ -5842,7 +6028,7 @@ const _hoisted_7$2 = [
 ];
 const _hoisted_8$2 = { class: "m-steps-content" };
 const _hoisted_9$2 = { class: "u-steps-title" };
-const _sfc_main$c = /* @__PURE__ */ defineComponent({
+const _sfc_main$b = /* @__PURE__ */ defineComponent({
   __name: "Steps",
   props: {
     steps: { default: () => [] },
@@ -5883,7 +6069,7 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
         class: "m-steps-area",
         style: normalizeStyle(`width: ${totalWidth.value};`)
       }, [
-        createElementVNode("div", _hoisted_1$c, [
+        createElementVNode("div", _hoisted_1$b, [
           (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.steps, (step, index) => {
             return openBlock(), createElementBlock("div", {
               class: normalizeClass([
@@ -5921,7 +6107,7 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
   }
 });
 const Steps_vue_vue_type_style_index_0_scoped_f837a4aa_lang = "";
-const Steps = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-f837a4aa"]]);
+const Steps = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-f837a4aa"]]);
 Steps.install = (app) => {
   app.component(Steps.__name, Steps);
 };
@@ -7158,11 +7344,11 @@ const swiper_min = "";
 const navigation_min = "";
 const pagination_min = "";
 const effectFade_min = "";
-const _hoisted_1$b = ["href", "target"];
+const _hoisted_1$a = ["href", "target"];
 const _hoisted_2$8 = ["src", "alt"];
 const _hoisted_3$6 = ["href", "target"];
 const _hoisted_4$3 = ["src", "alt"];
-const _sfc_main$b = /* @__PURE__ */ defineComponent({
+const _sfc_main$a = /* @__PURE__ */ defineComponent({
   __name: "Swiper",
   props: {
     images: { default: () => [] },
@@ -7248,7 +7434,7 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
                       alt: image.title,
                       loading: "lazy"
                     }, null, 12, _hoisted_2$8)
-                  ], 8, _hoisted_1$b),
+                  ], 8, _hoisted_1$a),
                   createElementVNode("div", {
                     class: normalizeClass(`swiper-lazy-preloader swiper-lazy-preloader-${_ctx.preloaderColor}`)
                   }, null, 2)
@@ -7301,12 +7487,12 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
   }
 });
 const Swiper_vue_vue_type_style_index_0_scoped_956587f0_lang = "";
-const Swiper = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-956587f0"]]);
+const Swiper = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-956587f0"]]);
 Swiper.install = (app) => {
   app.component(Swiper.__name, Swiper);
 };
-const _hoisted_1$a = { class: "m-switch-wrap" };
-const _sfc_main$a = /* @__PURE__ */ defineComponent({
+const _hoisted_1$9 = { class: "m-switch-wrap" };
+const _sfc_main$9 = /* @__PURE__ */ defineComponent({
   __name: "Switch",
   props: {
     checkedInfo: { default: "" },
@@ -7329,7 +7515,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
       emit("change", !checked.value);
     }
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$a, [
+      return openBlock(), createElementBlock("div", _hoisted_1$9, [
         createElementVNode("div", {
           onClick: _cache[0] || (_cache[0] = ($event) => _ctx.disabled ? () => false : onSwitch()),
           class: normalizeClass(["m-switch", { "switch-checked": checked.value, "disabled": _ctx.disabled }])
@@ -7348,11 +7534,11 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
   }
 });
 const Switch_vue_vue_type_style_index_0_scoped_cea6fee2_lang = "";
-const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-cea6fee2"]]);
+const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-cea6fee2"]]);
 Switch.install = (app) => {
   app.component(Switch.__name, Switch);
 };
-const _hoisted_1$9 = { class: "m-table-wrap" };
+const _hoisted_1$8 = { class: "m-table-wrap" };
 const _hoisted_2$7 = { class: "m-table" };
 const _hoisted_3$5 = { class: "m-tr" };
 const _hoisted_4$2 = { class: "m-body" };
@@ -7361,7 +7547,7 @@ const _hoisted_6$1 = { class: "m-tr-empty" };
 const _hoisted_7$1 = ["colspan"];
 const _hoisted_8$1 = ["title"];
 const _hoisted_9$1 = { key: 1 };
-const _sfc_main$9 = /* @__PURE__ */ defineComponent({
+const _sfc_main$8 = /* @__PURE__ */ defineComponent({
   __name: "Table",
   props: {
     columns: { default: () => [] },
@@ -7380,7 +7566,7 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
       emit("change", pager);
     }
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$9, [
+      return openBlock(), createElementBlock("div", _hoisted_1$8, [
         createElementVNode("table", _hoisted_2$7, [
           createElementVNode("thead", null, [
             createElementVNode("tr", _hoisted_3$5, [
@@ -7453,14 +7639,14 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
   }
 });
 const Table_vue_vue_type_style_index_0_scoped_c5789d1a_lang = "";
-const Table = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-c5789d1a"]]);
+const Table = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-c5789d1a"]]);
 Table.install = (app) => {
   app.component(Table.__name, Table);
 };
-const _hoisted_1$8 = { class: "m-tabs-nav" };
+const _hoisted_1$7 = { class: "m-tabs-nav" };
 const _hoisted_2$6 = ["onClick"];
 const _hoisted_3$4 = { class: "m-tabs-page" };
-const _sfc_main$8 = /* @__PURE__ */ defineComponent({
+const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   __name: "Tabs",
   props: {
     tabPages: { default: () => [] },
@@ -7528,7 +7714,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         class: normalizeClass(`m-tabs ${_ctx.size}`)
       }, [
-        createElementVNode("div", _hoisted_1$8, [
+        createElementVNode("div", _hoisted_1$7, [
           createElementVNode("div", {
             ref_key: "wrap",
             ref: wrap,
@@ -7577,17 +7763,17 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
   }
 });
 const Tabs_vue_vue_type_style_index_0_scoped_c1d51504_lang = "";
-const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-c1d51504"]]);
+const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-c1d51504"]]);
 Tabs.install = (app) => {
   app.component(Tabs.__name, Tabs);
 };
 const _withScopeId$3 = (n) => (pushScopeId("data-v-59a974b6"), n = n(), popScopeId(), n);
-const _hoisted_1$7 = { class: "u-tag" };
+const _hoisted_1$6 = { class: "u-tag" };
 const _hoisted_2$5 = /* @__PURE__ */ _withScopeId$3(() => /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1));
 const _hoisted_3$3 = [
   _hoisted_2$5
 ];
-const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+const _sfc_main$6 = /* @__PURE__ */ defineComponent({
   __name: "Tag",
   props: {
     closable: { type: Boolean, default: false },
@@ -7620,7 +7806,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
         }, [
           renderSlot(_ctx.$slots, "icon", {}, void 0, true)
         ], 512)) : createCommentVNode("", true),
-        createElementVNode("span", _hoisted_1$7, [
+        createElementVNode("span", _hoisted_1$6, [
           renderSlot(_ctx.$slots, "default", {}, void 0, true)
         ]),
         _ctx.closable ? (openBlock(), createElementBlock("svg", {
@@ -7640,12 +7826,12 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   }
 });
 const Tag_vue_vue_type_style_index_0_scoped_59a974b6_lang = "";
-const Tag = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-59a974b6"]]);
+const Tag = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-59a974b6"]]);
 Tag.install = (app) => {
   app.component(Tag.__name, Tag);
 };
 const _withScopeId$2 = (n) => (pushScopeId("data-v-94787871"), n = n(), popScopeId(), n);
-const _hoisted_1$6 = ["data-count"];
+const _hoisted_1$5 = ["data-count"];
 const _hoisted_2$4 = ["value", "maxlength", "disabled"];
 const _hoisted_3$2 = /* @__PURE__ */ _withScopeId$2(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
@@ -7665,7 +7851,7 @@ const _hoisted_4$1 = [
 const __default__ = {
   inheritAttrs: false
 };
-const _sfc_main$6 = /* @__PURE__ */ defineComponent({
+const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   ...__default__,
   __name: "Textarea",
   props: {
@@ -7780,18 +7966,18 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
           class: "m-clear",
           onClick: onClear
         }, _hoisted_4$1)) : createCommentVNode("", true)
-      ], 14, _hoisted_1$6);
+      ], 14, _hoisted_1$5);
     };
   }
 });
 const Textarea_vue_vue_type_style_index_0_scoped_94787871_lang = "";
-const Textarea = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-94787871"]]);
+const Textarea = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-94787871"]]);
 Textarea.install = (app) => {
   app.component(Textarea.__name, Textarea);
 };
-const _hoisted_1$5 = ["title", "href", "target", "onClick"];
+const _hoisted_1$4 = ["title", "href", "target", "onClick"];
 const _hoisted_2$3 = ["title", "href", "target", "onClick"];
-const _sfc_main$5 = /* @__PURE__ */ defineComponent({
+const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   __name: "TextScroll",
   props: {
     sliderText: { default: () => [] },
@@ -7921,7 +8107,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
             href: text.link ? text.link : "javascript:;",
             target: text.link ? "_blank" : "_self",
             onClick: ($event) => onClick(text.title)
-          }, toDisplayString(text.title || "--"), 13, _hoisted_1$5);
+          }, toDisplayString(text.title || "--"), 13, _hoisted_1$4);
         }), 128))
       ], 36)) : (openBlock(), createElementBlock("div", {
         key: 1,
@@ -7957,12 +8143,12 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   }
 });
 const TextScroll_vue_vue_type_style_index_0_scoped_13e7a03b_lang = "";
-const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-13e7a03b"]]);
+const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-13e7a03b"]]);
 TextScroll.install = (app) => {
   app.component(TextScroll.__name, TextScroll);
 };
-const _hoisted_1$4 = { class: "m-timeline" };
-const _sfc_main$4 = /* @__PURE__ */ defineComponent({
+const _hoisted_1$3 = { class: "m-timeline" };
+const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "Timeline",
   props: {
     timelineData: { default: () => [] },
@@ -7994,7 +8180,7 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
         class: "m-timeline-area",
         style: normalizeStyle(`width: ${totalWidth.value};`)
       }, [
-        createElementVNode("div", _hoisted_1$4, [
+        createElementVNode("div", _hoisted_1$3, [
           (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.timelineData, (data, index) => {
             return openBlock(), createElementBlock("div", {
               class: normalizeClass(["m-timeline-item", { "last": index === _ctx.timelineData.length - 1 }]),
@@ -8065,95 +8251,9 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   }
 });
 const Timeline_vue_vue_type_style_index_0_scoped_04f57bbf_lang = "";
-const Timeline = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-04f57bbf"]]);
+const Timeline = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-04f57bbf"]]);
 Timeline.install = (app) => {
   app.component(Timeline.__name, Timeline);
-};
-const _hoisted_1$3 = { class: "m-arrow" };
-const _sfc_main$3 = /* @__PURE__ */ defineComponent({
-  __name: "Tooltip",
-  props: {
-    maxWidth: { default: 120 },
-    content: { default: "暂无内容" },
-    title: { default: "暂无提示" },
-    fontSize: { default: 14 },
-    color: { default: "#FFF" },
-    backgroundColor: { default: "rgba(0,0,0,.85)" },
-    overlayStyle: { default: () => ({}) }
-  },
-  emits: ["openChange"],
-  setup(__props, { emit }) {
-    const visible = ref(false);
-    const hideTimer = ref();
-    const top = ref(0);
-    const left = ref(0);
-    const contentRef = ref();
-    const titleRef = ref();
-    function getPosition() {
-      const contentWidth = contentRef.value.offsetWidth;
-      const titleWidth = titleRef.value.offsetWidth;
-      const titleHeight = titleRef.value.offsetHeight;
-      top.value = titleHeight;
-      left.value = (titleWidth - contentWidth) / 2;
-    }
-    function onShow() {
-      getPosition();
-      cancelRaf(hideTimer.value);
-      visible.value = true;
-      emit("openChange", visible.value);
-    }
-    function onHide() {
-      hideTimer.value = rafTimeout(() => {
-        visible.value = false;
-        emit("openChange", visible.value);
-      }, 100);
-    }
-    return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", {
-        class: "m-tooltip",
-        onMouseenter: onShow,
-        onMouseleave: onHide
-      }, [
-        createElementVNode("div", {
-          ref_key: "titleRef",
-          ref: titleRef,
-          class: normalizeClass(["m-title", { "show-tip": visible.value }]),
-          onMouseenter: onShow,
-          onMouseleave: onHide,
-          style: normalizeStyle(`max-width: ${_ctx.maxWidth}px; top: ${-top.value}px; left: ${-left.value}px;`)
-        }, [
-          createElementVNode("div", {
-            class: "u-title",
-            style: normalizeStyle([_ctx.overlayStyle, `font-size: ${_ctx.fontSize}px; color: ${_ctx.color}; background-color: ${_ctx.backgroundColor};`])
-          }, [
-            renderSlot(_ctx.$slots, "title", {}, () => [
-              createTextVNode(toDisplayString(_ctx.title), 1)
-            ], true)
-          ], 4),
-          createElementVNode("div", _hoisted_1$3, [
-            createElementVNode("span", {
-              class: "u-arrow",
-              style: normalizeStyle(`background-color: ${_ctx.backgroundColor};`)
-            }, null, 4)
-          ])
-        ], 38),
-        createElementVNode("div", {
-          ref_key: "contentRef",
-          ref: contentRef,
-          class: "u-content"
-        }, [
-          renderSlot(_ctx.$slots, "default", {}, () => [
-            createTextVNode(toDisplayString(_ctx.content), 1)
-          ], true)
-        ], 512)
-      ], 32);
-    };
-  }
-});
-const Tooltip_vue_vue_type_style_index_0_scoped_6a907ec3_lang = "";
-const Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-6a907ec3"]]);
-Tooltip.install = (app) => {
-  app.component(Tooltip.__name, Tooltip);
 };
 const _withScopeId$1 = (n) => (pushScopeId("data-v-2a513af2"), n = n(), popScopeId(), n);
 const _hoisted_1$2 = { class: "m-upload-list" };
@@ -8766,6 +8866,7 @@ const components = [
   Dialog,
   Divider,
   Drawer,
+  Ellipsis,
   Empty,
   Image$1,
   Input,
@@ -8823,6 +8924,7 @@ export {
   Dialog,
   Divider,
   Drawer,
+  Ellipsis,
   Empty,
   Image$1 as Image,
   Input,

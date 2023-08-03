@@ -83,7 +83,7 @@ function getUrl (route: Route) {
   display: inline-block;
   .m-btn {
     display: inline-block;
-    color: rgba(0,0,0,.88);
+    color: rgba(0, 0, 0, .88);
     background-color: #ffffff;
     border: 1px solid #d9d9d9;
     box-shadow: 0 2px 0 rgba(0, 0, 0, .02);
