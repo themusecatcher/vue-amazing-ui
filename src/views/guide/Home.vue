@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { routes } from '../router'
+import { routes } from '../../router'
 const installData = ref([
   {
     header: 'Install',
@@ -30,7 +30,7 @@ const getOffDate = (time: string): number => {
   return new Date(`${Y} ${M} ${D} ${time}`).getTime() + 9 * 60 * 60 * 1000
 }
 const countdown = computed(() => {
-  return getOffDate('9:09')
+  return getOffDate('9:08')
 })
 </script>
 <template>

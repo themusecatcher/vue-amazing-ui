@@ -17,7 +17,7 @@ export const routes = [
         // route level code-splitting
         // this generates a separate chunk (About.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import('@/views/Home.vue')
+        component: () => import('@/views/guide/Home.vue')
       },
       {
         path: '/alert',
@@ -309,7 +309,7 @@ export const routes = [
     // path: '/:pathMatch(.*)',
     name: 'not-found',
     meta: { title: 'NotFound'},
-    component: () => import('@/views/NotFound.vue')
+    component: () => import('@/views/guide/NotFound.vue')
   }
 ]
 

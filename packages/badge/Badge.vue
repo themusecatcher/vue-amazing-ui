@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 enum Status {
   success = 'success',
   process = 'processing',
@@ -8,33 +10,111 @@ enum Status {
 }
 interface Props {
   color?: string // 自定义小圆点的颜色
-  count?: number|string // 展示的数字，大于 overflowCount 时显示为 ${overflowCount}+，为 0 时隐藏
+  count?: number // 展示的数字，大于 overflowCount 时显示为 overflowCount+，为 0 时隐藏；number | slot
+  overflowCount?: number // 展示封顶的数字值
+  showZero?: boolean // 当数值为 0 时，是否展示 Badge
   dot?: boolean // 不展示数字，只有一个小红点
   status?: Status // 设置 Badge 为状态点
   text?: string // 在设置了 status 的前提下有效，设置状态点的文本 string | slot
+  numberStyle?: CSSProperties // 设置状态点的样式
+  title?: string // 设置鼠标放在状态点上时显示的文字
 }
 const props = withDefaults(defineProps<Props>(), {
   color: '',
-  count: undefined,
+  count: 0,
+  overflowCount: 99,
+  showZero: false,
   dot: false,
-  status: Status.default,
-  text: ''
+  status: undefined,
+  text: '',
+  numberStyle: () => ({}),
+  title: ''
+})
+const presetColor = ['pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
+const customStyle = computed(() => {
+  if (props.color && !presetColor.includes(props.color)) {
+    return {
+      color: props.color,
+      backgroundColor: props.color
+    } 
+  }
+})
+const contentRef = ref()
+const showContent = ref(1)
+const countRef = ref()
+const showCount = ref(1)
+onMounted(() => {
+  if (!props.status && !props.color) {
+    showContent.value = contentRef.value.offsetHeight
+    showCount.value = countRef.value.offsetHeight
+  }
 })
 </script>
 <template>
-  <div class="m-badge">
-    <span class="u-status-dot" :class="`status-${status}`"></span>
-    <span class="u-status-text">
-      <slot>{{ text }}</slot>
-    </span>
+  <div class="m-badge" :class="{'badge-status': status}">
+    <template v-if="status||color">
+      <span class="u-status-dot" :class="`status-${status||color}`" :style="customStyle"></span>
+      <span class="u-status-text">
+        <slot>{{ text }}</slot>
+      </span>
+    </template>
+    <template v-else>
+      <span ref="contentRef" v-if="showContent">
+        <slot></slot>
+      </span>
+      <span
+        ref="countRef"
+        v-if="showCount"
+        class="m-count"
+        :class="{'only-number': !showContent}">
+        <slot name="count"></slot>
+      </span>
+      <Transition name="zoom" v-else>
+        <div
+          v-show="showZero || count !== 0 || dot"
+          class="m-badge-count"
+          :class="{'small-num': count < 10, 'only-number': !showContent, 'only-dot': count === 0 && !showZero}"
+          :style="numberStyle"
+          :title="title || String(count)">
+          <span v-if="!dot" class="m-number" style="transition: none 0s ease 0s;">
+            <p class="u-number">{{ count > overflowCount ? overflowCount + '+' : count }}</p>
+          </span>
+        </div>
+      </Transition>
+    </template>
   </div>
 </template>
 <style lang="less" scoped>
+.zoom-enter-active {
+  animation: zoomBadgeIn .3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+  animation-fill-mode: both;
+}
+.zoom-leave-active {
+  animation: zoomBadgeOut .3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+  animation-fill-mode: both;
+}
+@keyframes zoomBadgeIn {
+  0% {
+    transform: scale(0) translate(50%, -50%);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translate(50%, -50%);
+  }
+}
+@keyframes zoomBadgeOut {
+  0% {
+    transform: scale(1) translate(50%, -50%);
+  }
+  100% {
+    transform: scale(0) translate(50%, -50%);
+    opacity: 0;
+  }
+}
 .m-badge {
-  line-height: inherit;
-  vertical-align: baseline;
   color: rgba(0, 0, 0, .88);
   font-size: 14px;
+  line-height: 1;
   position: relative;
   display: inline-block;
   width: fit-content;
@@ -94,10 +174,126 @@ const props = withDefaults(defineProps<Props>(), {
     color: #faad14;
     background-color: #faad14;
   }
+  .status-pink {
+    color: #eb2f96;
+    background-color: #eb2f96;;
+  }
+  .status-red {
+    color: #f5222d;
+    background-color: #f5222d;
+  }
+  .status-yellow {
+    color: #fadb14;
+    background-color: #fadb14;
+  }
+  .status-orange {
+    color: #fa8c16;
+    background-color: #fa8c16;
+  }
+  .status-cyan {
+    color: #13c2c2;
+    background-color: #13c2c2;
+  }
+  .status-green {
+    color: #52c41a;
+    background-color: #52c41a;
+  }
+  .status-blue {
+    color: #1677ff;
+    background-color: #1677ff;
+  }
+  .status-purple {
+    color: #722ed1;
+    background-color: #722ed1;
+  }
+  .status-geekblue {
+    color: #2f54eb;
+    background-color: #2f54eb;
+  }
+  .status-magenta {
+    color: #eb2f96;
+    background-color: #eb2f96;
+  }
+  .status-volcano {
+    color: #fa541c;
+    background-color: #fa541c;
+  }
+  .status-gold {
+    color: #faad14;
+    background-color: #faad14;
+  }
+  .status-lime {
+    color: #a0d911;
+    background-color: #a0d911;
+  }
   .u-status-text {
     margin-inline-start: 8px;
     color: rgba(0, 0, 0, .88);
     font-size: 14px;
   }
+  .m-count {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    transform: translate(50%, -50%);
+    transform-origin: 100% 0%;
+  }
+  .m-badge-count {
+    .m-count();
+    overflow: hidden;
+    padding: 0 8px;
+    z-index: auto;
+    min-width: 20px;
+    height: 20px;
+    color: #ffffff;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+    text-align: center;
+    background: #ff4d4f;
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px #ffffff;
+    transition: background .2s;
+    .m-number {
+      position: relative;
+      display: inline-block;
+      height: 20px;
+      transition: all .3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+      -webkit-transform-style: preserve-3d;
+      -webkit-backface-visibility: hidden;
+      .u-number {
+        height: 20px;
+        margin: 0;
+        -webkit-transform-style: preserve-3d;
+        -webkit-backface-visibility: hidden;
+      }
+    }
+  }
+  .small-num {
+    padding: 0;
+  }
+  .only-number {
+    position: relative;
+    top: auto;
+    display: block;
+    transform-origin: 50% 50%;
+    transform: none;
+  }
+  .only-dot {
+    z-index: auto;
+    width: 6px;
+    min-width: 6px;
+    height: 6px;
+    background: #ff4d4f;
+    border-radius: 100%;
+    box-shadow: 0 0 0 1px #ffffff;
+    padding: 0;
+    transition: background .3s;
+  }
+}
+.badge-status {
+  line-height: inherit;
+  vertical-align: baseline;
 }
 </style>
