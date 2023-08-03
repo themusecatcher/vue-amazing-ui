@@ -84,8 +84,36 @@ const lineColor = computed(() => {
     background: #f5f5f5;
     border-radius: 100px;
     .u-progress-bg {
+      position: relative;
+      background-color: #1677ff;
       border-radius: 100px;
       transition: all .3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+      &::before {
+        position: absolute;
+        inset: 0;
+        background-color: #ffffff;
+        border-radius: 100px;
+        opacity: 0;
+        animation-name: progressRipple;
+        animation-duration: 2.4s;
+        animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+        animation-iteration-count: infinite;
+        content: "";
+      }
+      @keyframes progressRipple {
+        0% {
+          transform: translateX(-100%) scaleX(0);
+          opacity: .1;
+        }
+        20% {
+          transform: translateX(-100%) scaleX(0);
+          opacity: .5;
+        }
+        100% {
+          transform: translateX(0) scaleX(1);
+          opacity: 0;
+        }
+      }
     }
     .u-success-bg {
       background: @success !important;
@@ -106,7 +134,7 @@ const lineColor = computed(() => {
     font-size: 16px;
     line-height: 1;
     margin-left: 8px;
-    color: rgba(0,0,0,.88);
+    color: rgba(0, 0, 0, .88);
   }
 }
 .m-progress-circle {
@@ -115,21 +143,12 @@ const lineColor = computed(() => {
   .u-progress-circle {
     .u-progress-circle-trail {
       stroke: #f5f5f5;
-      stroke-dashoffset: 0px;
-      transition: stroke-dashoffset .3s,
-                  stroke-dasharray .3s,
-                  stroke .3s,
-                  stroke-width .06s .3s,
-                  opacity .3s;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s ease 0s, stroke-width .06s ease .3s, opacity .3s ease 0s;
     }
     .u-progress-circle-path {
-      stroke-dashoffset: 0px;
-      animation: ant-progress-appear .3s;
-      transition: stroke-dashoffset .3s,
-                  stroke-dasharray .3s,
-                  stroke .3s,
-                  stroke-width .06s .3s,
-                  opacity .3s;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s ease 0s, stroke-width .06s ease .3s, opacity .3s ease 0s;
     }
     .success {
       stroke: @success !important;
@@ -153,7 +172,7 @@ const lineColor = computed(() => {
     font-size: 27px;
     line-height: 1;
     text-align: center;
-    color: rgba(0,0,0,.85);
+    color: rgba(0, 0, 0, .85);
   }
 }
 </style>
