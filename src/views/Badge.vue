@@ -21,7 +21,7 @@ const colors = [
   <div>
     <h1>Badge 徽标数</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space :size="30">
+    <Space :size="20">
       <Badge :count="5">
         <span class="u-cube"></span>
       </Badge>
@@ -36,7 +36,7 @@ const colors = [
       </Badge>
     </Space>
     <h2 class="mt30 mb10">独立使用</h2>
-    <Space :size="30">
+    <Space :size="20">
       <Badge :count="25" />
       <Badge
         :count="4"
@@ -68,23 +68,23 @@ const colors = [
       <a href="#">Link something</a>
     </Badge>
     <h2 class="mt30 mb10">状态点</h2>
-    <Badge status="success" />
-    <Badge status="error" />
-    <Badge status="default" />
-    <Badge status="processing" />
-    <Badge status="warn" />
-    <br />
-    <Badge status="success" text="Success" />
-    <br />
-    <Badge status="error" text="Error" />
-    <br />
-    <Badge status="default" text="Default" />
-    <br />
-    <Badge status="processing" text="Processing" />
-    <br />
-    <Badge status="warn" text="warning" />
+    <Space :size="10">
+      <Badge status="success" />
+      <Badge status="error" />
+      <Badge status="default" />
+      <Badge status="processing" />
+      <Badge status="warn" />
+    </Space>
+    <br/>
+    <Space style="margin-top: 10px;" direction="vertical" :size="10">
+      <Badge status="success" text="Success" />
+      <Badge status="error" text="Error" />
+      <Badge status="default" text="Default" />
+      <Badge status="processing" text="Processing" />
+      <Badge status="warn" text="warning" />
+    </Space>
     <h2 class="mt30 mb10">动态</h2>
-    <Space :size="30" align="center">
+    <Space :size="20" align="center">
       <Badge :dot="show">
         <span class="u-cube"></span>
       </Badge>
@@ -96,19 +96,19 @@ const colors = [
     </Badge>
     <h2 class="mt30 mb10">多彩徽标</h2>
     <h4 class="mb10">Presets</h4>
-    <div>
-      <div v-for="color in colors" :key="color">
-        <Badge :color="color" :text="color" />
-      </div>
-    </div>
+    <Space wrap :size="20">
+      <Badge
+        v-for="color in colors" :key="color"
+        :color="color"
+        :text="color" />
+    </Space>
     <h4 class="mt10 mb10">Custom</h4>
-    <Badge color="#f50" text="#f50" />
-    <br />
-    <Badge color="#2db7f5" text="#2db7f5" />
-    <br />
-    <Badge color="#87d068" text="#87d068" />
-    <br />
-    <Badge color="#108ee9" text="#108ee9" />
+    <Space wrap :size="20">
+      <Badge color="#f50" text="#f50" />
+      <Badge color="#2db7f5" text="#2db7f5" />
+      <Badge color="#87d068" text="#87d068" />
+      <Badge color="#108ee9" text="#108ee9" />
+    </Space>
   </div>
 </template>
 <style lang="less" scoped>

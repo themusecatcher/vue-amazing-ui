@@ -1,4 +1,4 @@
-import { defineComponent, ref, onMounted, nextTick, openBlock, createElementBlock, createElementVNode, normalizeClass, Fragment, renderSlot, createCommentVNode, createTextVNode, toDisplayString, pushScopeId, popScopeId, computed, normalizeStyle, renderList, withModifiers, withDirectives, vShow, onUnmounted, watch, createVNode, unref, withCtx, createStaticVNode, watchEffect, vModelText, TransitionGroup, resolveComponent, mergeProps, createBlock, Transition, withKeys, vModelDynamic, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, onBeforeUnmount, onBeforeUpdate } from "vue";
+import { defineComponent, ref, onMounted, nextTick, openBlock, createElementBlock, createElementVNode, normalizeClass, Fragment, renderSlot, createCommentVNode, createTextVNode, toDisplayString, pushScopeId, popScopeId, computed, normalizeStyle, createBlock, Transition, withCtx, withDirectives, vShow, renderList, withModifiers, onUnmounted, watch, createVNode, unref, createStaticVNode, watchEffect, vModelText, TransitionGroup, resolveComponent, mergeProps, withKeys, vModelDynamic, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, onBeforeUnmount, onBeforeUpdate } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import QRCode$1 from "qrcode";
 import Swiper$2, { Navigation, Pagination as Pagination$1, Autoplay, EffectFade } from "swiper";
@@ -172,7 +172,7 @@ const _hoisted_1$G = {
   class: "m-icon"
 };
 const _hoisted_2$C = ["src"];
-const _hoisted_3$y = {
+const _hoisted_3$z = {
   key: 1,
   focusable: "false",
   class: "u-icon",
@@ -183,9 +183,9 @@ const _hoisted_3$y = {
   "aria-hidden": "true",
   viewBox: "64 64 896 896"
 };
-const _hoisted_4$s = /* @__PURE__ */ _withScopeId$n(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" }, null, -1));
+const _hoisted_4$t = /* @__PURE__ */ _withScopeId$n(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" }, null, -1));
 const _hoisted_5$n = [
-  _hoisted_4$s
+  _hoisted_4$t
 ];
 const _hoisted_6$n = {
   key: 2,
@@ -370,7 +370,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
                   key: 0,
                   src: _ctx.icon,
                   class: "u-icon-img"
-                }, null, 8, _hoisted_2$C)) : _ctx.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_3$y, _hoisted_5$n)) : _ctx.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_6$n, _hoisted_8$h)) : _ctx.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_9$h, _hoisted_11$d)) : _ctx.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_12$a, _hoisted_14$9)) : createCommentVNode("", true)
+                }, null, 8, _hoisted_2$C)) : _ctx.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_3$z, _hoisted_5$n)) : _ctx.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_6$n, _hoisted_8$h)) : _ctx.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_9$h, _hoisted_11$d)) : _ctx.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_12$a, _hoisted_14$9)) : createCommentVNode("", true)
               ], true)
             ])) : (openBlock(), createElementBlock("span", _hoisted_15$8, [
               renderSlot(_ctx.$slots, "icon", {}, () => [
@@ -425,37 +425,104 @@ const Alert = /* @__PURE__ */ _export_sfc(_sfc_main$M, [["__scopeId", "data-v-d3
 Alert.install = (app) => {
   app.component(Alert.__name, Alert);
 };
-const _hoisted_1$F = { class: "m-badge" };
-const _hoisted_2$B = { class: "u-status-text" };
+const _hoisted_1$F = { class: "u-status-text" };
+const _hoisted_2$B = ["title"];
+const _hoisted_3$y = {
+  key: 0,
+  class: "m-number",
+  style: { "transition": "none 0s ease 0s" }
+};
+const _hoisted_4$s = { class: "u-number" };
 const _sfc_main$L = /* @__PURE__ */ defineComponent({
   __name: "Badge",
   props: {
     color: { default: "" },
-    count: { default: void 0 },
+    count: { default: 0 },
+    overflowCount: { default: 99 },
+    showZero: { type: Boolean, default: false },
     dot: { type: Boolean, default: false },
-    status: {
-      default: "default"
-      /* default */
-    },
-    text: { default: "" }
+    status: { default: void 0 },
+    text: { default: "" },
+    numberStyle: { default: () => ({}) },
+    title: { default: "" },
+    ripple: { type: Boolean, default: true }
   },
   setup(__props) {
+    const props = __props;
+    const presetColor = ["pink", "red", "yellow", "orange", "cyan", "green", "blue", "purple", "geekblue", "magenta", "volcano", "gold", "lime"];
+    const customStyle = computed(() => {
+      if (props.color && !presetColor.includes(props.color)) {
+        return {
+          color: props.color,
+          backgroundColor: props.color
+        };
+      }
+    });
+    const contentRef = ref();
+    const showContent = ref(1);
+    const countRef = ref();
+    const showCount = ref(1);
+    onMounted(() => {
+      if (!props.status && !props.color) {
+        showContent.value = contentRef.value.offsetHeight;
+        showCount.value = countRef.value.offsetHeight;
+      }
+    });
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$F, [
-        createElementVNode("span", {
-          class: normalizeClass(["u-status-dot", `status-${_ctx.status}`])
-        }, null, 2),
-        createElementVNode("span", _hoisted_2$B, [
-          renderSlot(_ctx.$slots, "default", {}, () => [
-            createTextVNode(toDisplayString(_ctx.text), 1)
-          ], true)
-        ])
-      ]);
+      return openBlock(), createElementBlock("div", {
+        class: normalizeClass(["m-badge", { "badge-status": _ctx.status }])
+      }, [
+        _ctx.status || _ctx.color ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+          createElementVNode("span", {
+            class: normalizeClass(["u-status-dot", [`status-${_ctx.status || _ctx.color}`, { "dot-ripple": _ctx.ripple }]]),
+            style: normalizeStyle(customStyle.value)
+          }, null, 6),
+          createElementVNode("span", _hoisted_1$F, [
+            renderSlot(_ctx.$slots, "default", {}, () => [
+              createTextVNode(toDisplayString(_ctx.text), 1)
+            ], true)
+          ])
+        ], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+          showContent.value ? (openBlock(), createElementBlock("span", {
+            key: 0,
+            ref_key: "contentRef",
+            ref: contentRef
+          }, [
+            renderSlot(_ctx.$slots, "default", {}, void 0, true)
+          ], 512)) : createCommentVNode("", true),
+          showCount.value ? (openBlock(), createElementBlock("span", {
+            key: 1,
+            ref_key: "countRef",
+            ref: countRef,
+            class: normalizeClass(["m-count", { "only-number": !showContent.value }])
+          }, [
+            renderSlot(_ctx.$slots, "count", {}, void 0, true)
+          ], 2)) : (openBlock(), createBlock(Transition, {
+            key: 2,
+            name: "zoom"
+          }, {
+            default: withCtx(() => [
+              withDirectives(createElementVNode("div", {
+                class: normalizeClass(["m-badge-count", { "small-num": _ctx.count < 10, "only-number": !showContent.value, "only-dot": _ctx.count === 0 && !_ctx.showZero }]),
+                style: normalizeStyle(_ctx.numberStyle),
+                title: _ctx.title || String(_ctx.count)
+              }, [
+                !_ctx.dot ? (openBlock(), createElementBlock("span", _hoisted_3$y, [
+                  createElementVNode("p", _hoisted_4$s, toDisplayString(_ctx.count > _ctx.overflowCount ? _ctx.overflowCount + "+" : _ctx.count), 1)
+                ])) : createCommentVNode("", true)
+              ], 14, _hoisted_2$B), [
+                [vShow, _ctx.showZero || _ctx.count !== 0 || _ctx.dot]
+              ])
+            ]),
+            _: 1
+          }))
+        ], 64))
+      ], 2);
     };
   }
 });
-const Badge_vue_vue_type_style_index_0_scoped_0f29ea67_lang = "";
-const Badge = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-0f29ea67"]]);
+const Badge_vue_vue_type_style_index_0_scoped_d00d0f93_lang = "";
+const Badge = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-d00d0f93"]]);
 Badge.install = (app) => {
   app.component(Badge.__name, Badge);
 };
@@ -7514,7 +7581,7 @@ const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-c1d
 Tabs.install = (app) => {
   app.component(Tabs.__name, Tabs);
 };
-const _withScopeId$3 = (n) => (pushScopeId("data-v-1a5c850f"), n = n(), popScopeId(), n);
+const _withScopeId$3 = (n) => (pushScopeId("data-v-6f1260c9"), n = n(), popScopeId(), n);
 const _hoisted_1$7 = { class: "u-tag" };
 const _hoisted_2$5 = /* @__PURE__ */ _withScopeId$3(() => /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1));
 const _hoisted_3$3 = [
@@ -7529,7 +7596,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   },
   emits: ["close"],
   setup(__props, { emit }) {
-    const presetColor = ["success", "processing", "error", "warn", "default", "pink", "red", "orange", "green", "cyan", "blue", "purple"];
+    const presetColor = ["success", "processing", "error", "warn", "pink", "red", "yellow", "orange", "cyan", "green", "blue", "purple", "geekblue", "magenta", "volcano", "gold", "lime"];
     const hidden = ref(false);
     const iconRef = ref();
     const showIcon = ref(1);
@@ -7572,8 +7639,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tag_vue_vue_type_style_index_0_scoped_1a5c850f_lang = "";
-const Tag = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-1a5c850f"]]);
+const Tag_vue_vue_type_style_index_0_scoped_6f1260c9_lang = "";
+const Tag = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-6f1260c9"]]);
 Tag.install = (app) => {
   app.component(Tag.__name, Tag);
 };

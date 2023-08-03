@@ -18,6 +18,7 @@ interface Props {
   text?: string // 在设置了 status 的前提下有效，设置状态点的文本 string | slot
   numberStyle?: CSSProperties // 设置状态点的样式
   title?: string // 设置鼠标放在状态点上时显示的文字
+  ripple?: boolean // 是否开启涟漪动画效果
 }
 const props = withDefaults(defineProps<Props>(), {
   color: '',
@@ -28,7 +29,8 @@ const props = withDefaults(defineProps<Props>(), {
   status: undefined,
   text: '',
   numberStyle: () => ({}),
-  title: ''
+  title: '',
+  ripple: true
 })
 const presetColor = ['pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
 const customStyle = computed(() => {
@@ -53,7 +55,7 @@ onMounted(() => {
 <template>
   <div class="m-badge" :class="{'badge-status': status}">
     <template v-if="status||color">
-      <span class="u-status-dot" :class="`status-${status||color}`" :style="customStyle"></span>
+      <span class="u-status-dot" :class="[`status-${status||color}`, {'dot-ripple': ripple}]" :style="customStyle"></span>
       <span class="u-status-text">
         <slot>{{ text }}</slot>
       </span>
@@ -126,6 +128,8 @@ onMounted(() => {
     height: 6px;
     vertical-align: middle;
     border-radius: 50%;
+  }
+  .dot-ripple {
     &::after {
       box-sizing: border-box;
       position: absolute;
@@ -137,13 +141,13 @@ onMounted(() => {
       border-style: solid;
       border-color: inherit;
       border-radius: 50%;
-      animation-name: antStatusProcessing;
+      animation-name: dotRipple;
       animation-duration: 1.2s;
       animation-iteration-count: infinite;
       animation-timing-function: ease-in-out;
       content: "";
     }
-    @keyframes antStatusProcessing {
+    @keyframes dotRipple {
       0% {
         transform: scale(.8);
         opacity: .5;
@@ -264,6 +268,7 @@ onMounted(() => {
       -webkit-backface-visibility: hidden;
       .u-number {
         height: 20px;
+        line-height: 20px;
         margin: 0;
         -webkit-transform-style: preserve-3d;
         -webkit-backface-visibility: hidden;

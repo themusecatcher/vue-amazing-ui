@@ -42,17 +42,17 @@ const onClose = (e: MouseEvent) => {
 
 <Tag color="pink">pink</Tag>
 <Tag color="red">red</Tag>
+<Tag color="yellow">yellow</Tag>
 <Tag color="orange">orange</Tag>
-<Tag color="green">green</Tag>
 <Tag color="cyan">cyan</Tag>
+<Tag color="green">green</Tag>
 <Tag color="blue">blue</Tag>
 <Tag color="purple">purple</Tag>
-<br/>
-<br/>
-<Tag color="#f50">#f50</Tag>
-<Tag color="#2db7f5">#2db7f5</Tag>
-<Tag color="#87d068">#87d068</Tag>
-<Tag color="#108ee9">#108ee9</Tag>
+<Tag color="geekblue">geekblue</Tag>
+<Tag color="magenta">magenta</Tag>
+<Tag color="volcano">volcano</Tag>
+<Tag color="gold">gold</Tag>
+<Tag color="lime">lime</Tag>
 
 ::: details Show Code
 
@@ -60,17 +60,17 @@ const onClose = (e: MouseEvent) => {
 <template>
   <Tag color="pink">pink</Tag>
   <Tag color="red">red</Tag>
+  <Tag color="yellow">yellow</Tag>
   <Tag color="orange">orange</Tag>
-  <Tag color="green">green</Tag>
   <Tag color="cyan">cyan</Tag>
+  <Tag color="green">green</Tag>
   <Tag color="blue">blue</Tag>
   <Tag color="purple">purple</Tag>
-  <br/>
-  <br/>
-  <Tag color="#f50">#f50</Tag>
-  <Tag color="#2db7f5">#2db7f5</Tag>
-  <Tag color="#87d068">#87d068</Tag>
-  <Tag color="#108ee9">#108ee9</Tag>
+  <Tag color="geekblue">geekblue</Tag>
+  <Tag color="magenta">magenta</Tag>
+  <Tag color="volcano">volcano</Tag>
+  <Tag color="gold">gold</Tag>
+  <Tag color="lime">lime</Tag>
 </template>
 ```
 
@@ -216,7 +216,7 @@ const onClose = (e: MouseEvent) => {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 closable | 标签是否可以关闭 | boolean | false | false
-color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warn'`, `'pink'`, `'red'`, `'orange'`, `'green'`, `'cyan'`, `'blue'`, `'purple'` | string | '' | false
+color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warn'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | '' | false
 icon | 设置图标 | string &#124; slot | '' | false
 
 ## Events
