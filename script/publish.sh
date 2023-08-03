@@ -4,6 +4,7 @@
 set -e
 
 pnpm push
+
 # 读取package.json中的version
 version=`jq -r .version package.json`
 
