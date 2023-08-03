@@ -7581,7 +7581,7 @@ const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-c1d
 Tabs.install = (app) => {
   app.component(Tabs.__name, Tabs);
 };
-const _withScopeId$3 = (n) => (pushScopeId("data-v-90ba4985"), n = n(), popScopeId(), n);
+const _withScopeId$3 = (n) => (pushScopeId("data-v-59a974b6"), n = n(), popScopeId(), n);
 const _hoisted_1$7 = { class: "u-tag" };
 const _hoisted_2$5 = /* @__PURE__ */ _withScopeId$3(() => /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1));
 const _hoisted_3$3 = [
@@ -7596,7 +7596,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   },
   emits: ["close"],
   setup(__props, { emit }) {
-    const presetColor = ["success", "processing", "error", "warn", "pink", "red", "yellow", "orange", "cyan", "green", "blue", "purple", "geekblue", "magenta", "volcano", "gold", "lime"];
+    const presetColor = ["success", "processing", "error", "warn", "default", "pink", "red", "yellow", "orange", "cyan", "green", "blue", "purple", "geekblue", "magenta", "volcano", "gold", "lime"];
     const hidden = ref(false);
     const iconRef = ref();
     const showIcon = ref(1);
@@ -7639,8 +7639,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tag_vue_vue_type_style_index_0_scoped_90ba4985_lang = "";
-const Tag = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-90ba4985"]]);
+const Tag_vue_vue_type_style_index_0_scoped_59a974b6_lang = "";
+const Tag = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-59a974b6"]]);
 Tag.install = (app) => {
   app.component(Tag.__name, Tag);
 };
