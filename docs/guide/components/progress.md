@@ -101,15 +101,14 @@ const percent = ref(60)
 
 ## 进度圈
 
-<Progress
-  :width="120"
-  :percent="percent"
-  type="circle" />
-
-<br/>
-
-<Button @click="onDecline(5)" size="large" style="margin-right: 30px; margin-top: 30px;">Decline-</Button>
-<Button @click="onIncrease(5)" size="large">Increase+</Button>
+<Space align="center" :size="30">
+  <Progress
+    :width="120"
+    :percent="percent"
+    type="circle" />
+  <Button @click="onDecline(5)" size="large">Decline-</Button>
+  <Button @click="onIncrease(5)" size="large">Increase+</Button>
+</Space>
 
 ::: details Show Code
 
@@ -136,13 +135,14 @@ function onDecline (scale: number) {
 }
 </script>
 <template>
-  <Progress
-    :width="120"
-    :percent="percent"
-    type="circle" />
-  <br/>
-  <Button @click="onDecline(5)" size="large" style="margin-right: 30px; margin-top: 30px;">Decline-</Button>
-  <Button @click="onIncrease(5)" size="large">Increase+</Button>
+  <Space align="center" :size="30">
+    <Progress
+      :width="120"
+      :percent="percent"
+      type="circle" />
+    <Button @click="onDecline(5)" size="large">Decline-</Button>
+    <Button @click="onIncrease(5)" size="large">Increase+</Button>
+  </Space>
 </template>
 ```
 
