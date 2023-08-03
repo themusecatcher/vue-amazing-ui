@@ -118,11 +118,11 @@ const spinning = ref(true)
 
 ## 自定义颜色
 
-<br/>
-<Spin class="u-spin" color="#fadb14" :spinning="spinning" />
-<Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="static-circle" />
-<Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
-<br/>
+<Space>
+  <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
+  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="static-circle" />
+  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+</Space>
 
 ::: details Show Code
 
@@ -133,9 +133,11 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
-  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="static-circle" />
-  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+  <Space>
+    <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
+    <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="static-circle" />
+    <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+  </Space>
 </template>
 <style lang="less" scoped>
 .u-spin {
@@ -150,17 +152,23 @@ const spinning = ref(true)
 
 ## 各种大小
 
-<Spin class="u-spin" :spinning="spinning" size="small" />
-<Spin class="u-spin" :spinning="spinning" />
-<Spin class="u-spin" :spinning="spinning" size="large" />
+<Space>
+  <Spin class="u-spin" :spinning="spinning" size="small" />
+  <Spin class="u-spin" :spinning="spinning" />
+  <Spin class="u-spin" :spinning="spinning" size="large" />
+</Space>
 <br/>
-<Spin class="u-spin" :spinning="spinning" size="small" indicator="static-circle" />
-<Spin class="u-spin" :spinning="spinning" indicator="static-circle" />
-<Spin class="u-spin" :spinning="spinning" size="large"  indicator="static-circle" />
+<Space>
+  <Spin class="u-spin" :spinning="spinning" size="small" indicator="static-circle" />
+  <Spin class="u-spin" :spinning="spinning" indicator="static-circle" />
+  <Spin class="u-spin" :spinning="spinning" size="large"  indicator="static-circle" />
+</Space>
 <br/>
-<Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-<Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
-<Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
+<Space>
+  <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
+  <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
+  <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
+</Space>
 
 ::: details Show Code
 
@@ -171,15 +179,23 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin class="u-spin" :spinning="spinning" size="small" />
-  <Spin class="u-spin" :spinning="spinning" />
-  <Spin class="u-spin" :spinning="spinning" size="large" />
-  <Spin class="u-spin" :spinning="spinning" size="small" indicator="static-circle" />
-  <Spin class="u-spin" :spinning="spinning" indicator="static-circle" />
-  <Spin class="u-spin" :spinning="spinning" size="large"  indicator="static-circle" />
-  <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-  <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
-  <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
+  <Space>
+    <Spin class="u-spin" :spinning="spinning" size="small" />
+    <Spin class="u-spin" :spinning="spinning" />
+    <Spin class="u-spin" :spinning="spinning" size="large" />
+  </Space>
+  <br/>
+  <Space>
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="static-circle" />
+    <Spin class="u-spin" :spinning="spinning" indicator="static-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="large"  indicator="static-circle" />
+  </Space>
+  <br/>
+  <Space>
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
+    <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
+  </Space>
 </template>
 <style lang="less" scoped>
 .u-spin {

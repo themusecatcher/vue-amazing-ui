@@ -81,13 +81,12 @@ const current = ref(2)
 *设置 v-model: current 后即可点击*
 
 <br/>
-
 <Steps :steps="steps" v-model:current="current" @change="onChange" />
-
 <br/>
-
-<Button @click="onPrevious()" class="mt30 mr30">Previous</Button>
-<Button @click="onNext()">Next</Button>
+<Space>
+  <Button @click="onPrevious()" class="mt30 mr30">Previous</Button>
+  <Button @click="onNext()">Next</Button>
+</Space>
 
 ::: details Show Code
 
@@ -128,8 +127,11 @@ function onNext () {
 </script>
 <template>
   <Steps :steps="steps" v-model:current="current" @change="onChange" />
-  <Button @click="onPrevious()" class="mt30 mr30">Previous</Button>
-  <Button @click="onNext()">Next</Button>
+  <br/>
+  <Space>
+    <Button @click="onPrevious()" class="mt30 mr30">Previous</Button>
+    <Button @click="onNext()">Next</Button>
+  </Space>
 </template>
 ```
 

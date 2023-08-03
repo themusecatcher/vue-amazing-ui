@@ -312,7 +312,7 @@ columns | 表格列的配置项 | Column[] | [] | false
 dataSource | 表格数据数组 | any[] | [] | false
 pagination | 分页配置 | Pagination | { page: 1&#44; pageSize: 10 } | false
 showPagination | 是否显示分页 | boolean | true | false
-hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false
+hideOnSinglePage | 只有 `1` 页时是否隐藏分页 | boolean | false
 total | 数据总数 | number | 0 | false
 loading | 是否加载中 | boolean | false | false
 

@@ -17,9 +17,11 @@ const onClose = (e: MouseEvent) => {
 
 ## 基本使用
 
-<Tag>Tag 1</Tag>
-<Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
-<Tag closable @close="onClose">Tag 2</Tag>
+<Space>
+  <Tag>Tag 1</Tag>
+  <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
+  <Tag closable @close="onClose">Tag 2</Tag>
+</Space>
 
 ::: details Show Code
 
@@ -30,9 +32,11 @@ const onClose = (e: MouseEvent) => {
 }
 </script>
 <template>
-  <Tag>Tag 1</Tag>
-  <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
-  <Tag closable @close="onClose">Tag 2</Tag>
+  <Space>
+    <Tag>Tag 1</Tag>
+    <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
+    <Tag closable @close="onClose">Tag 2</Tag>
+  </Space>
 </template>
 ```
 
@@ -40,24 +44,7 @@ const onClose = (e: MouseEvent) => {
 
 ## 多彩标签
 
-<Tag color="pink">pink</Tag>
-<Tag color="red">red</Tag>
-<Tag color="yellow">yellow</Tag>
-<Tag color="orange">orange</Tag>
-<Tag color="cyan">cyan</Tag>
-<Tag color="green">green</Tag>
-<Tag color="blue">blue</Tag>
-<Tag color="purple">purple</Tag>
-<Tag color="geekblue">geekblue</Tag>
-<Tag color="magenta">magenta</Tag>
-<Tag color="volcano">volcano</Tag>
-<Tag color="gold">gold</Tag>
-<Tag color="lime">lime</Tag>
-
-::: details Show Code
-
-```vue
-<template>
+<Space wrap>
   <Tag color="pink">pink</Tag>
   <Tag color="red">red</Tag>
   <Tag color="yellow">yellow</Tag>
@@ -71,6 +58,27 @@ const onClose = (e: MouseEvent) => {
   <Tag color="volcano">volcano</Tag>
   <Tag color="gold">gold</Tag>
   <Tag color="lime">lime</Tag>
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space wrap>
+    <Tag color="pink">pink</Tag>
+    <Tag color="red">red</Tag>
+    <Tag color="yellow">yellow</Tag>
+    <Tag color="orange">orange</Tag>
+    <Tag color="cyan">cyan</Tag>
+    <Tag color="green">green</Tag>
+    <Tag color="blue">blue</Tag>
+    <Tag color="purple">purple</Tag>
+    <Tag color="geekblue">geekblue</Tag>
+    <Tag color="magenta">magenta</Tag>
+    <Tag color="volcano">volcano</Tag>
+    <Tag color="gold">gold</Tag>
+    <Tag color="lime">lime</Tag>
+  </Space>
 </template>
 ```
 
