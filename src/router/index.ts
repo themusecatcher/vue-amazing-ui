@@ -110,6 +110,12 @@ export const routes = [
         component: () => import('@/views/Drawer.vue')
       },
       {
+        path: '/ellipsis',
+        name: 'Ellipsis',
+        meta: { title: '文本省略' },
+        component: () => import('@/views/Ellipsis.vue')
+      },
+      {
         path: '/empty',
         name: 'Empty',
         meta: { title: '空状态' },

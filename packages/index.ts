@@ -29,6 +29,7 @@ import DescriptionsItem from './descriptionsitem'
 import Dialog from './dialog'
 import Divider from './divider'
 import Drawer from './drawer'
+import Ellipsis from './ellipsis'
 import Empty from './empty'
 import Image from './image'
 import Input from './input'
@@ -81,6 +82,7 @@ const components = [
   Dialog,
   Divider,
   Drawer,
+  Ellipsis,
   Empty,
   Image,
   Input,
@@ -158,6 +160,7 @@ export {
   Dialog,
   Divider,
   Drawer,
+  Ellipsis,
   Empty,
   Image,
   Input,
