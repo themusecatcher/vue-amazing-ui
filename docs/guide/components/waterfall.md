@@ -111,10 +111,10 @@ src | 图片地址 | string | true
 
 ## 不同 mode 的区别
 
-*mode: JS*
+**mode: JS**
 
 - 使用JS获取每张图片宽高，结合 `relative` 和 `absolute` 定位计算每个图片的位置 `top`，`left`，保证每张新的图片都追加在当前高度最小的那列末尾
 
-*mode: CSS*
+**mode: CSS**
 
 - 使用CSS的 `column-count` 和 `column-gap`，实现简单，但图片顺序是每列从上往下排列

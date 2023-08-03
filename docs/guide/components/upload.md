@@ -339,9 +339,9 @@ function onRemove (file: object) {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-accept | 接受上传的文件类型，与\<input type="file">的 `accept` 属性一致，详见 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file) | string | '*' | false
+accept | 接受上传的文件类型，与`<input type="file" />`的 `accept` 属性一致，详见 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file) | string | '*' | false
 multiple | 是否支持多选文件 | boolean | false | false
-maxCount | 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件 | number | 1 | false
+maxCount | 限制上传数量。当为 `1` 时，始终用最新上传的文件代替当前文件 | number | 1 | false
 tip | 上传描述文字 | string | 'Upload' | false
 uploadingTip | 上传中的文字描述 | string | 'Uploading' | false
 fit | 预览图片缩放规则，仅当上传文件为图片时生效 | 'fill' &#124; 'contain' &#124; 'cover' | 'contain' | false
