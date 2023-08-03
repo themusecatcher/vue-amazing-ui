@@ -19,7 +19,6 @@ function onDecline (scale: number) {
     percent.value = res
   }
 }
-console.log(Math.PI)
 </script>
 <template>
   <div>

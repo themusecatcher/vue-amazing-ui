@@ -88,29 +88,26 @@ const lineColor = computed(() => {
       background-color: #1677ff;
       border-radius: 100px;
       transition: all .3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-      &::before {
-        position: absolute;
-        inset: 0;
-        background-color: #ffffff;
-        border-radius: 100px;
-        opacity: 0;
-        animation-name: progressRipple;
-        animation-duration: 2.4s;
-        animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-        animation-iteration-count: infinite;
+      &::after {
         content: "";
+        background-image: linear-gradient(90deg, rgba(255, 255, 255, .3) 0%, rgba(255, 255, 255, .5) 100%);
+        animation: progressRipple 2s cubic-bezier(.4, 0, .2, 1) infinite;
       }
       @keyframes progressRipple {
         0% {
-          transform: translateX(-100%) scaleX(0);
-          opacity: .1;
+          position: absolute;
+          inset: 0;
+          right: 100%;
+          opacity: 1;
         }
-        20% {
-          transform: translateX(-100%) scaleX(0);
-          opacity: .5;
+        66% {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
         }
         100% {
-          transform: translateX(0) scaleX(1);
+          position: absolute;
+          inset: 0;
           opacity: 0;
         }
       }
