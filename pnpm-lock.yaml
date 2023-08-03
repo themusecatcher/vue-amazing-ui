@@ -36,8 +36,8 @@ dependencies:
     specifier: ^3.3.4
     version: 3.3.4
   vue-amazing-ui:
-    specifier: ^0.0.40
-    version: 0.0.40
+    specifier: ^0.0.41
+    version: 0.0.41
   vue-router:
     specifier: ^4.2.4
     version: 4.2.4(vue@3.3.4)
@@ -3806,6 +3806,36 @@ packages:
       swiper: 9.4.1
       vue: 3.3.4
       vue-amazing-ui: 0.0.39
+      vue-router: 4.2.4(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - async-validator
+      - axios
+      - change-case
+      - drauu
+      - focus-trap
+      - fuse.js
+      - idb-keyval
+      - jwt-decode
+      - nprogress
+      - sortablejs
+      - universal-cookie
+    dev: false
+
+  /vue-amazing-ui@0.0.41:
+    resolution: {integrity: sha512-1UTNhZlyLVlfWG+e/qpGQbiQWEeu8NAJTWrXHxXiWYXalDLJbUlniFl7Lqu4jHQzDeTn30nCzzPamwIk6YDyqg==}
+    dependencies:
+      '@ant-design/icons-vue': 6.1.0(vue@3.3.4)
+      '@vuepic/vue-datepicker': 4.5.1(vue@3.3.4)
+      '@vueuse/core': 10.2.1(vue@3.3.4)
+      '@vueuse/integrations': 10.2.1(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
+      ant-design-vue: 4.0.0(vue@3.3.4)
+      core-js: 3.31.1
+      date-fns: 2.30.0
+      qrcode: 1.5.3
+      swiper: 9.4.1
+      vue: 3.3.4
+      vue-amazing-ui: 0.0.40
       vue-router: 4.2.4(vue@3.3.4)
     transitivePeerDependencies:
       - '@vue/composition-api'
