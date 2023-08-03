@@ -30,7 +30,7 @@ const colors = [
 
 ## 基本使用
 
-<Space :size="30">
+<Space :size="20">
   <Badge :count="5">
     <span class="u-cube"></span>
   </Badge>
@@ -49,7 +49,7 @@ const colors = [
 
 ```vue
 <template>
-  <Space :size="30">
+  <Space :size="20">
     <Badge :count="5">
       <span class="u-cube"></span>
     </Badge>
@@ -82,7 +82,7 @@ const colors = [
 
 ## 独立使用
 
-<Space :size="30">
+<Space :size="20">
   <Badge :count="25" />
   <Badge
     :count="4"
@@ -99,7 +99,7 @@ const colors = [
 
 ```vue
 <template>
-  <Space :size="30">
+  <Space :size="20">
     <Badge :count="25" />
     <Badge
       :count="4"
@@ -185,41 +185,41 @@ const colors = [
 
 ## 状态点
 
-<Badge status="success" />
-<Badge status="error" />
-<Badge status="default" />
-<Badge status="processing" />
-<Badge status="warn" />
-<br />
-<Badge status="success" text="Success" />
-<br />
-<Badge status="error" text="Error" />
-<br />
-<Badge status="default" text="Default" />
-<br />
-<Badge status="processing" text="Processing" />
-<br />
-<Badge status="warn" text="warning" />
-
-::: details Show Code
-
-```vue
-<template>
+<Space :size="10">
   <Badge status="success" />
   <Badge status="error" />
   <Badge status="default" />
   <Badge status="processing" />
   <Badge status="warn" />
-  <br />
+</Space>
+<br/>
+<Space style="margin-top: 10px;" direction="vertical" :size="10">
   <Badge status="success" text="Success" />
-  <br />
   <Badge status="error" text="Error" />
-  <br />
   <Badge status="default" text="Default" />
-  <br />
   <Badge status="processing" text="Processing" />
-  <br />
   <Badge status="warn" text="warning" />
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space :size="10">
+    <Badge status="success" />
+    <Badge status="error" />
+    <Badge status="default" />
+    <Badge status="processing" />
+    <Badge status="warn" />
+  </Space>
+  <br/>
+  <Space style="margin-top: 10px;" direction="vertical" :size="10">
+    <Badge status="success" text="Success" />
+    <Badge status="error" text="Error" />
+    <Badge status="default" text="Default" />
+    <Badge status="processing" text="Processing" />
+    <Badge status="warn" text="warning" />
+  </Space>
 </template>
 ```
 
@@ -227,7 +227,7 @@ const colors = [
 
 ## 动态
 
-<Space :size="30" align="center">
+<Space :size="20" align="center">
   <Badge :dot="show">
     <span class="u-cube"></span>
   </Badge>
@@ -242,7 +242,7 @@ import { ref } from 'vue'
 const show = ref(true)
 </script>
 <template>
-  <Space :size="30" align="center">
+  <Space :size="20" align="center">
     <Badge :dot="show">
       <span class="u-cube"></span>
     </Badge>
@@ -291,20 +291,14 @@ const show = ref(true)
 
 ## 多彩徽标
 
-<h4 class="mb10">Presets</h4>
-<div>
-  <div v-for="color in colors" :key="color">
-    <Badge :color="color" :text="color" />
-  </div>
-</div>
-<h4 class="mt10 mb10">Custom</h4>
-<Badge color="#f50" text="#f50" />
-<br />
-<Badge color="#2db7f5" text="#2db7f5" />
-<br />
-<Badge color="#87d068" text="#87d068" />
-<br />
-<Badge color="#108ee9" text="#108ee9" />
+### Presets
+
+<Space wrap :size="20">
+  <Badge
+    v-for="color in colors" :key="color"
+    :color="color"
+    :text="color" />
+</Space>
 
 ::: details Show Code
 
@@ -327,20 +321,36 @@ const colors = [
 ]
 </script>
 <template>
-  <h4 class="mb10">Presets</h4>
-  <div>
-    <div v-for="color in colors" :key="color">
-      <Badge :color="color" :text="color" />
-    </div>
-  </div>
-  <h4 class="mt10 mb10">Custom</h4>
+  <Space wrap :size="20">
+    <Badge
+      v-for="color in colors" :key="color"
+      :color="color"
+      :text="color" />
+  </Space>
+</template>
+```
+
+:::
+
+### Custom
+
+<Space wrap :size="20">
   <Badge color="#f50" text="#f50" />
-  <br />
   <Badge color="#2db7f5" text="#2db7f5" />
-  <br />
   <Badge color="#87d068" text="#87d068" />
-  <br />
   <Badge color="#108ee9" text="#108ee9" />
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space wrap :size="20">
+    <Badge color="#f50" text="#f50" />
+    <Badge color="#2db7f5" text="#2db7f5" />
+    <Badge color="#87d068" text="#87d068" />
+    <Badge color="#108ee9" text="#108ee9" />
+  </Space>
 </template>
 ```
 
@@ -372,3 +382,4 @@ status | 设置 `Badge` 为状态点 | 'success' &#124; 'processing &#124; 'defa
 text | 在设置了 `status` 的前提下有效，设置状态点的文本 | string &#124; slot | '' | false
 numberStyle | 设置状态点的样式 | CSSProperties | {} | false
 title | 设置鼠标放在状态点上时显示的文字 | string | '' | false
+ripple | 是否开启涟漪动画效果 | boolean | true | false

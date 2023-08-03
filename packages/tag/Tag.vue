@@ -10,7 +10,7 @@ withDefaults(defineProps<Props>(), {
   color: '',
   icon: ''
 })
-const presetColor = ['success', 'processing', 'error', 'warn', 'default', 'pink', 'red', 'orange', 'green', 'cyan', 'blue', 'purple']
+const presetColor = ['success', 'processing', 'error', 'warn', 'pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
 const hidden = ref(false)
 const iconRef = ref()
 const showIcon = ref(1)
@@ -126,6 +126,14 @@ function onClose (e: MouseEvent) {
     fill: #cf1322;
   }
 }
+.tag-yellow {
+  color: #d4b106;
+  background: #feffe6;
+  border-color: #fffb8f;
+  :deep(svg) {
+    fill: #d4b106;
+  }
+}
 .tag-orange {
   color: #d46b08;
   background: #fff7e6;
@@ -164,6 +172,46 @@ function onClose (e: MouseEvent) {
   border-color: #d3adf7;
   :deep(svg) {
     fill: #531dab;
+  }
+}
+.tag-geekblue {
+  color: #1d39c4;
+  background: #f0f5ff;
+  border-color: #adc6ff;
+  :deep(svg) {
+    fill: #1d39c4;
+  }
+}
+.tag-magenta {
+  color: #c41d7f;
+  background: #fff0f6;
+  border-color: #ffadd2;
+  :deep(svg) {
+    fill: #c41d7f;
+  }
+}
+.tag-volcano {
+  color: #d4380d;
+  background: #fff2e8;
+  border-color: #ffbb96;
+  :deep(svg) {
+    fill: #d4380d;
+  }
+}
+.tag-gold {
+  color: #d48806;
+  background: #fffbe6;
+  border-color: #ffe58f;
+  :deep(svg) {
+    fill: #d48806;
+  }
+}
+.tag-lime {
+  color: #7cb305;
+  background: #fcffe6;
+  border-color: #eaff8f;
+  :deep(svg) {
+    fill: #7cb305;
   }
 }
 .has-color {

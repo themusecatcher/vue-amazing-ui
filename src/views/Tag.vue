@@ -13,11 +13,17 @@ const onClose = (e: MouseEvent) => {
     <h2 class="mt30 mb10">多彩标签</h2>
     <Tag color="pink">pink</Tag>
     <Tag color="red">red</Tag>
+    <Tag color="yellow">yellow</Tag>
     <Tag color="orange">orange</Tag>
-    <Tag color="green">green</Tag>
     <Tag color="cyan">cyan</Tag>
+    <Tag color="green">green</Tag>
     <Tag color="blue">blue</Tag>
     <Tag color="purple">purple</Tag>
+    <Tag color="geekblue">geekblue</Tag>
+    <Tag color="magenta">magenta</Tag>
+    <Tag color="volcano">volcano</Tag>
+    <Tag color="gold">gold</Tag>
+    <Tag color="lime">lime</Tag>
     <br/>
     <br/>
     <Tag color="#f50">#f50</Tag>
