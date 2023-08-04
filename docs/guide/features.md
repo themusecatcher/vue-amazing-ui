@@ -11,4 +11,3 @@
 
 - 全局引入并注册所有组件
 - 按需引入并注册部分组件
-- `git clone` [vue-amazing-ui](https://github.com/themusecatcher/vue-amazing-ui) 到本地后，从 `packages` 下单独拷贝单文件组件 (SFC) 到项目内使用
