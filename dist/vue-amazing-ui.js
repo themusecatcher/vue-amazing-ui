@@ -5892,7 +5892,7 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
     align: { default: void 0 },
     direction: { default: "horizontal" },
     size: { default: "small" },
-    wrap: { type: Boolean, default: false }
+    wrap: { type: Boolean, default: true }
   },
   setup(__props) {
     const props = __props;
@@ -5928,8 +5928,8 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Space_vue_vue_type_style_index_0_scoped_58af11f6_lang = "";
-const Space = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-58af11f6"]]);
+const Space_vue_vue_type_style_index_0_scoped_c3d946db_lang = "";
+const Space = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-c3d946db"]]);
 Space.install = (app) => {
   app.component(Space.__name, Space);
 };

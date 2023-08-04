@@ -44,7 +44,7 @@ const onClose = (e: MouseEvent) => {
 
 ## 多彩标签
 
-<Space wrap>
+<Space>
   <Tag color="pink">pink</Tag>
   <Tag color="red">red</Tag>
   <Tag color="yellow">yellow</Tag>
@@ -64,7 +64,7 @@ const onClose = (e: MouseEvent) => {
 
 ```vue
 <template>
-  <Space wrap>
+  <Space>
     <Tag color="pink">pink</Tag>
     <Tag color="red">red</Tag>
     <Tag color="yellow">yellow</Tag>

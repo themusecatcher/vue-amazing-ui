@@ -70,7 +70,7 @@ const size = ref('small')
       </div>
     </div>
     <h2 class="mt30 mb10">自动换行</h2>
-    <Space :size="[8, 16]" wrap style="width: 600px;">
+    <Space :size="[8, 16]" style="width: 600px;">
       <template v-for="n in 10" :key="n">
         <Button>Button</Button>
       </template>
