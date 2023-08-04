@@ -255,25 +255,34 @@ function changePage (pageNum: number): boolean | void {
         }
       }
       .u-ellipsis {
+        box-sizing: border-box;
         position: absolute;
-        inset: 0;
+        top: 0;
+        inset-inline-end: 0;
+        bottom: 0;
+        inset-inline-start: 0;
+        display: block;
         margin: auto;
-        letter-spacing: 1px;
-        font-size: 16px;
         color: rgba(0, 0, 0, .25);
-        transition: all .3s;
+        font-family: Arial,Helvetica,sans-serif;
+        line-height: 32px;
+        letter-spacing: 2px;
+        text-align: center;
+        text-indent: .13em;
+        opacity: 1;
+        transition: all .2s;
       }
       .u-icon {
-        position: absolute;
-        inset: 0;
-        margin: auto;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        text-align: center;
+        vertical-align: -0.125em;
         fill: @themeColor;
         width: 12px;
         height: 12px;
         opacity: 0;
         pointer-events: none;
-        transition: all .3s;
+        transition: all .2s;
       }
     }
     .u-jump-page {
