@@ -29,6 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
 watchEffect(() => {
   getCollapseHeight(props.collapseData.length) // 获取各个面板内容高度
 }, { flush: 'post' })
+
 const text = ref()
 const collapseHeight = ref<any[]>([])
 function getCollapseHeight (len: number) {
@@ -37,7 +38,7 @@ function getCollapseHeight (len: number) {
   }
 }
 const emits = defineEmits(['update:activeKey', 'change'])
-function dealEmit (value: any) {
+function emitValue (value: any) {
   emits('update:activeKey', value)
   emits('change', value)
 }
@@ -45,15 +46,16 @@ function onClick (key: number|string) {
   if (activeJudge(key)) {
     if (Array.isArray(props.activeKey)) {
       const res = (props.activeKey as any[]).filter(actKey => actKey!== key)
-      dealEmit(res)
+      emitValue(res)
     } else {
-      dealEmit(null)
+      emitValue(null)
     }
+
   } else {
     if (Array.isArray(props.activeKey)) {
-      dealEmit([...props.activeKey, key])
+      emitValue([...props.activeKey, key])
     } else {
-      dealEmit(key)
+      emitValue(key)
     }
   }
 }
