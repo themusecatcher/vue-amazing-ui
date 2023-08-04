@@ -155,7 +155,7 @@ function onChange (index: number) { // 点击切换选择步骤
         }
         .m-steps-content {
           .u-steps-title {
-            color: rgba(0,0,0,.85);
+            color: rgba(0, 0, 0, .85);;
             &:after {
               background: @themeColor;
             }
@@ -189,10 +189,10 @@ function onChange (index: number) { // 点击切换选择步骤
         .m-steps-content {
           .u-steps-title {
             font-weight: 500;
-            color: rgba(0,0,0,.85);
+            color: rgba(0, 0, 0, .85);;
           }
           .u-steps-description {
-            color: rgba(0,0,0,.85);
+            color: rgba(0, 0, 0, .85);;
           }
         }
       }

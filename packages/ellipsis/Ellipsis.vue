@@ -75,7 +75,7 @@ function onExpand () {
     :color="tooltipColor"
     :backgroundColor="tooltipBackgroundColor"
     :overlayStyle="tooltipOverlayStyle">
-    <template #title>
+    <template #tooltip>
       <slot name="tooltip">
         <slot></slot>
       </slot>
@@ -103,8 +103,6 @@ function onExpand () {
 </template>
 <style lang="less" scoped>
 .m-ellipsis {
-  font-size: 14px;
-  line-height: 1.5714285714285714;
   overflow: hidden;
   cursor: text;
 }

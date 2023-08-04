@@ -224,7 +224,7 @@ function onConfirm () {
         border-bottom: 1px solid #e8e8e8;
         .u-head {
           margin: 0;
-          color: rgba(0,0,0,.85);
+          color: rgba(0, 0, 0, .85);;
           font-weight: 500;
           font-size: 16px;
           line-height: 1.5;
