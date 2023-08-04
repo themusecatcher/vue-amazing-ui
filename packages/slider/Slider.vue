@@ -301,7 +301,7 @@ function onRightSlide (source: number, place: string) {
       transform: translate(-50%, -50%) scale(.8);
       top: -32px;
       left: 50%;
-      background: rgba(0,0,0,.85);
+      background: rgba(0, 0, 0, .85);;
       box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
       pointer-events: none;
       user-select: none;
@@ -327,7 +327,7 @@ function onRightSlide (source: number, place: string) {
           height: 11px;
           border-radius: 0 0 2px 0;
           z-index: 8;
-          background: rgba(0,0,0,.85);
+          background: rgba(0, 0, 0, .85);;
           box-shadow: 1px 1px 1px 1px fade(@themeColor, 12%);
         }
       }
