@@ -1931,7 +1931,7 @@ const Col = /* @__PURE__ */ _export_sfc(_sfc_main$C, [["__scopeId", "data-v-c7dd
 Col.install = (app) => {
   app.component(Col.__name, Col);
 };
-const _withScopeId$j = (n) => (pushScopeId("data-v-ca9cd42c"), n = n(), popScopeId(), n);
+const _withScopeId$j = (n) => (pushScopeId("data-v-7bb27cfd"), n = n(), popScopeId(), n);
 const _hoisted_1$w = { class: "m-collapse" };
 const _hoisted_2$s = ["onClick"];
 const _hoisted_3$q = {
@@ -1972,7 +1972,7 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
         collapseHeight.value.push(text.value[n].offsetHeight);
       }
     }
-    function dealEmit(value) {
+    function emitValue(value) {
       emits("update:activeKey", value);
       emits("change", value);
     }
@@ -1980,15 +1980,15 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
       if (activeJudge(key)) {
         if (Array.isArray(props.activeKey)) {
           const res = props.activeKey.filter((actKey) => actKey !== key);
-          dealEmit(res);
+          emitValue(res);
         } else {
-          dealEmit(null);
+          emitValue(null);
         }
       } else {
         if (Array.isArray(props.activeKey)) {
-          dealEmit([...props.activeKey, key]);
+          emitValue([...props.activeKey, key]);
         } else {
-          dealEmit(key);
+          emitValue(key);
         }
       }
     }
@@ -2079,8 +2079,8 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Collapse_vue_vue_type_style_index_0_scoped_ca9cd42c_lang = "";
-const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["__scopeId", "data-v-ca9cd42c"]]);
+const Collapse_vue_vue_type_style_index_0_scoped_7bb27cfd_lang = "";
+const Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$B, [["__scopeId", "data-v-7bb27cfd"]]);
 Collapse.install = (app) => {
   app.component(Collapse.__name, Collapse);
 };
