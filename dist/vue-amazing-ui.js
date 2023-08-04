@@ -3061,7 +3061,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
   props: {
     maxWidth: { default: "100%" },
     line: { default: void 0 },
-    trigger: { default: void 0 },
+    expand: { type: Boolean, default: false },
     tooltip: { type: Boolean, default: true },
     tooltipMaxWidth: { default: void 0 },
     tooltipFontSize: { default: 14 },
@@ -3069,7 +3069,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     tooltipBackgroundColor: { default: "rgba(0, 0, 0, .85)" },
     tooltipOverlayStyle: { default: () => ({ padding: "8px 12px", textAlign: "justify" }) }
   },
-  emits: ["expand"],
+  emits: ["expandChange"],
   setup(__props, { emit }) {
     const props = __props;
     const textMaxWidth = computed(() => {
@@ -3103,13 +3103,13 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
         } else {
           ellipsis.value.style["-webkit-line-clamp"] = "";
         }
-        emit("expand", true);
+        emit("expandChange", true);
       } else {
         if (props.tooltip) {
           showTooltip.value = true;
         }
         ellipsis.value.style["-webkit-line-clamp"] = props.line;
-        emit("expand", false);
+        emit("expandChange", false);
       }
     }
     return (_ctx, _cache) => {
@@ -3130,9 +3130,9 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
           createElementVNode("div", mergeProps({
             ref_key: "ellipsis",
             ref: ellipsis,
-            class: ["m-ellipsis", [_ctx.line ? "ellipsis-line" : "not-ellipsis-line", { "cursor-pointer": _ctx.trigger === "click" }]],
+            class: ["m-ellipsis", [_ctx.line ? "ellipsis-line" : "not-ellipsis-line", { "cursor-pointer": _ctx.expand }]],
             style: `-webkit-line-clamp: ${_ctx.line}; max-width: ${textMaxWidth.value};`,
-            onClick: _cache[0] || (_cache[0] = ($event) => _ctx.trigger === "click" ? onExpand() : () => false)
+            onClick: _cache[0] || (_cache[0] = ($event) => _ctx.expand ? onExpand() : () => false)
           }, _ctx.$attrs), [
             renderSlot(_ctx.$slots, "default", {}, void 0, true)
           ], 16)
@@ -3142,17 +3142,17 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
         key: 1,
         ref_key: "ellipsis",
         ref: ellipsis,
-        class: ["m-ellipsis", [_ctx.line ? "ellipsis-line" : "not-ellipsis-line", { "cursor-pointer": _ctx.trigger === "click" }]],
+        class: ["m-ellipsis", [_ctx.line ? "ellipsis-line" : "not-ellipsis-line", { "cursor-pointer": _ctx.expand }]],
         style: `-webkit-line-clamp: ${_ctx.line}; max-width: ${textMaxWidth.value};`,
-        onClick: _cache[1] || (_cache[1] = ($event) => _ctx.trigger === "click" ? onExpand() : () => false)
+        onClick: _cache[1] || (_cache[1] = ($event) => _ctx.expand ? onExpand() : () => false)
       }, _ctx.$attrs), [
         renderSlot(_ctx.$slots, "default", {}, void 0, true)
       ], 16));
     };
   }
 });
-const Ellipsis_vue_vue_type_style_index_0_scoped_880bf85e_lang = "";
-const Ellipsis = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-880bf85e"]]);
+const Ellipsis_vue_vue_type_style_index_0_scoped_becc1d77_lang = "";
+const Ellipsis = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-becc1d77"]]);
 Ellipsis.install = (app) => {
   app.component(Ellipsis.__name, Ellipsis);
 };

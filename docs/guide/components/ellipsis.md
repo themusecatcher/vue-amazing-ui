@@ -48,7 +48,7 @@
 
 ## 展开方式
 
-<Ellipsis trigger="click" :line="2">
+<Ellipsis expand :line="2">
   电灯熄灭 物换星移 泥牛入海<br>黑暗好像 一颗巨石 按在胸口<br>独脚大盗
   百万富翁 摸爬滚打<br>黑暗好像 一颗巨石 按在胸口
 </Ellipsis>
@@ -57,7 +57,7 @@
 
 ```vue
 <template>
-  <Ellipsis trigger="click" :line="2">
+  <Ellipsis expand :line="2">
     电灯熄灭 物换星移 泥牛入海<br>黑暗好像 一颗巨石 按在胸口<br>独脚大盗
     百万富翁 摸爬滚打<br>黑暗好像 一颗巨石 按在胸口
   </Ellipsis>
@@ -102,7 +102,7 @@
 -- | -- | -- | -- | --
 maxWidth | 文本最大宽度 | number &#124; string | '100%' | false
 line | 最大行数 | number | undefined | false
-trigger | 展开的触发方式 | 'click' | undefined | false
+expand | 是否启用点击文本展开全部 | boolean | false | false
 tooltip | 是否启用文本提示框 | boolean | true | false
 tooltipMaxWidth | 提示框内容最大宽度，单位px，默认不设置时，提示文本内容自动与展示文本宽度保持一致 | number | undefined | false
 tooltipFontSize | 提示文本字体大小，单位px，优先级高于 `overlayStyle` | number | 14 | false
@@ -114,4 +114,4 @@ tooltipOverlayStyle | 提示框内容区域样式 | CSSProperties | {padding: \'
 
 事件名称 | 说明 | 参数
 -- | -- | --
-expand | 点击文本展开收起时的回调 | (expand: boolean) => void
+expandChange | 点击文本展开收起时的回调 | (expand: boolean) => void
