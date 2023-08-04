@@ -3,13 +3,13 @@
 # 确保脚本抛出遇到的错误
 set -e
 
-pnpm push
-
 # 读取package.json中的version
 version=`jq -r .version package.json`
 
 # 打包构建
 pnpm build
+
+npm push
 
 # 发布到npm，pnpm(高性能的npm)
 pnpm publish

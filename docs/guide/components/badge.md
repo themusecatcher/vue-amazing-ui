@@ -293,7 +293,7 @@ const show = ref(true)
 
 ### Presets
 
-<Space wrap :size="20">
+<Space :size="20">
   <Badge
     v-for="color in colors" :key="color"
     :color="color"
@@ -321,7 +321,7 @@ const colors = [
 ]
 </script>
 <template>
-  <Space wrap :size="20">
+  <Space :size="20">
     <Badge
       v-for="color in colors" :key="color"
       :color="color"
@@ -334,7 +334,7 @@ const colors = [
 
 ### Custom
 
-<Space wrap :size="20">
+<Space :size="20">
   <Badge color="#f50" text="#f50" />
   <Badge color="#2db7f5" text="#2db7f5" />
   <Badge color="#87d068" text="#87d068" />
@@ -345,7 +345,7 @@ const colors = [
 
 ```vue
 <template>
-  <Space wrap :size="20">
+  <Space :size="20">
     <Badge color="#f50" text="#f50" />
     <Badge color="#2db7f5" text="#2db7f5" />
     <Badge color="#87d068" text="#87d068" />

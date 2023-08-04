@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<Props>(), {
   align: undefined,
   direction: 'horizontal',
   size: 'small',
-  wrap: false
+  wrap: true
 })
 const spaceWidth = computed(() => {
   if (typeof props.width === 'number') {
