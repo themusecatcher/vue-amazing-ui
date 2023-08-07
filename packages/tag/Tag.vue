@@ -1,32 +1,124 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
+interface Tag {
+  label: string // 标签文本名 string | slot
+  closable?: boolean // 标签是否可以关闭，默认 true
+  color?: string // 标签颜色
+  icon?: string // 设置图标 string | slot
+  size?: 'small'|'middle'|'large' // 标签尺寸
+}
 interface Props {
   closable?: boolean // 标签是否可以关闭
   color?: string // 标签颜色
   icon?: string // 设置图标 string | slot
+  size?: 'small'|'middle'|'large' // 标签尺寸
+  dynamic?: boolean // 是否启用标签动态添加和删除
+  value?: string[]|Tag[] // 动态标签数组，dynamic 为 true 时生效
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   closable: false,
   color: '',
-  icon: ''
+  icon: '',
+  size: 'middle',
+  dynamic: false,
+  value: () => []
 })
+const isStrArray = computed(() => {
+  if (props.dynamic) {
+    if (props.value.length) {
+      if (typeof props.value[0] === 'string') {
+        return true
+      }
+      if (typeof props.value[0] === 'object') {
+        return false
+      }
+    }
+  }
+  return null
+})
+const tags = computed(() => {
+  if (props.dynamic) {
+    if (props.value.length) {
+      if (isStrArray.value) {
+        return props.value.map((tag: any) => {
+          return {
+            label: tag,
+            closable: true
+          }
+        })
+      } else {
+        return props.value.map((tag: any) => {
+          return {
+            closable: true,
+            ...tag
+          }
+        })
+      }
+    }
+  }
+  return []
+})
+const inputRef = ref()
+const showInput = ref(false)
+const inputValue = ref('')
 const presetColor = ['success', 'processing', 'error', 'warn', 'default', 'pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
 const hidden = ref(false)
 const iconRef = ref()
 const showIcon = ref(1)
+const tagsIconRef = ref()
+const showTagsIcon = ref(Array(props.value.length).fill(1))
 onMounted(() => {
-  showIcon.value = iconRef.value.offsetWidth
+  if (props.dynamic) {
+    for (let n = 0; n < props.value.length; n++) {
+      showTagsIcon.value[n] = tagsIconRef.value[n].offsetWidth
+    }
+  } else {
+    showIcon.value = iconRef.value.offsetWidth
+  }
 })
-const emit = defineEmits(['close'])
+const emits = defineEmits(['update:value', 'close', 'dynamicClose'])
 function onClose (e: MouseEvent) {
   hidden.value = true
-  emit('close', e)
+  emits('close', e)
+}
+function onCloseTags (tag: Tag, n: number) {
+  const newValue = (props.value as any[]).filter((tag: any, index: number) => {
+    return index !== n
+  })
+  emits('update:value', newValue)
+  emits('dynamicClose', tag, n)
+}
+function onAdd () {
+  showInput.value = true
+  nextTick(() => {
+    inputRef.value.focus()
+  })
+}
+function onChange () {
+  if (isStrArray.value) {
+    emits('update:value', [...props.value, inputValue.value])
+  } else {
+    emits('update:value', [
+      ...props.value,
+      {
+        label: inputValue.value
+      }
+    ])
+  }
+  showInput.value = false
+  inputRef.value = ''
+}
+function onKeyboard (e: KeyboardEvent) {
+  if (e.key === 'Enter') {
+    inputRef.value.blur()
+  }
 }
 </script>
 <template>
   <div
+    v-if="!dynamic"
     class="m-tag"
-    :class="[color && presetColor.includes(color) ? 'tag-' + color:'', {'has-color': color && !presetColor.includes(color), hidden: hidden}]"
+    :class="[`tag-${size}`, color && presetColor.includes(color) ? 'tag-' + color:'', {'has-color': color && !presetColor.includes(color), hidden: hidden}]"
     :style="`background-color: ${color && !presetColor.includes(color) ? color : ''};`">
     <span class="m-icon" ref="iconRef" v-if="showIcon">
       <slot name="icon"></slot>
@@ -34,22 +126,55 @@ function onClose (e: MouseEvent) {
     <span class="u-tag">
       <slot></slot>
     </span>
-    <svg v-if="closable" @click="onClose" focusable="false" class="u-close" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg>
-  </div>
+    <span class="m-close" v-if="closable" @click="onClose">
+      <svg focusable="false" class="u-close" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg>
+    </span>
+    </div>
+  <template v-else>
+    <Space>
+      <div
+        class="m-tag"
+        :class="[`tag-${tag.size || size}`, (tag.color || color) && presetColor.includes((tag.color || color)) ? 'tag-' + (tag.color || color):'', {'has-color': (tag.color || color) && !presetColor.includes((tag.color || color))}]"
+        :style="`background-color: ${(tag.color || color) && !presetColor.includes((tag.color || color)) ? (tag.color || color) : ''};`"
+        v-for="(tag, index) in tags" :key="index">
+        <span class="m-icon" ref="tagsIconRef" v-if="showTagsIcon[index]">
+          <slot name="icon" :index="index">{{ tag.icon }}</slot>
+        </span>
+        <span class="u-tag">
+          <slot :label="tag.label" :index="index">{{ tag.label }}</slot>
+        </span>
+        <span class="m-close" v-if="tag.closable || closable" @click="onCloseTags(tag, index)">
+          <svg focusable="false" class="u-close" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg>
+        </span>
+      </div>
+      <div v-if="!showInput" class="m-tag" :class="[`tag-${size}`, {'m-plus': dynamic}]" @click="onAdd">
+        <svg focusable="false" class="u-plus" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path></svg>
+      </div>
+      <input
+        v-show="showInput"
+        ref="inputRef"
+        class="u-input"
+        :class="`input-${size}`"
+        type="text"
+        v-model="inputValue"
+        @blur="showInput = false"
+        @change="onChange"
+        @keydown="onKeyboard" />
+    </Space>
+  </template>
 </template>
 <style lang="less" scoped>
 .m-tag {
-  font-size: 12px;
-  line-height: 20px;
+  height: 24px;
+  font-size: 14px;
+  line-height: 22px;
   display: inline-block;
-  height: auto;
   color: rgba(0, 0, 0, .88);
   padding-inline: 7px;
   white-space: nowrap;
   background: rgba(0, 0, 0, .02);
   border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  opacity: 1;
+  border-radius: 6px;
   transition: all .2s;
   text-align: start;
   .m-icon {
@@ -61,21 +186,108 @@ function onClose (e: MouseEvent) {
   }
   .u-tag {
     display: inline-block;
+    vertical-align: bottom;
   }
-  .u-close {
-    margin-inline-start: 3px;
-    fill: rgba(0, 0, 0, .45);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all .2s;
+  .u-plus {
     display: inline-flex;
     align-items: center;
+    width: 14px;
+    height: 14px;
+    fill: rgba(0, 0, 0, .88);
+    font-style: normal;
+    line-height: 0;
     text-align: center;
-    vertical-align: -.125em;
-    &:hover {
-      fill: rgba(0, 0, 0, .88);
+    vertical-align: -0.175em;
+    transition: fill .2s;
+  }
+  .m-close {
+    margin-inline-start: 3px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    font-style: normal;
+    line-height: 0;
+    text-align: center;
+    vertical-align: -0.125em;
+    cursor: pointer;
+    .u-close {
+      display: inline-block;
+      line-height: 1;
+      fill: rgba(0, 0, 0, .45);
+      transition: all .2s;
+      &:hover {
+        fill: rgba(0, 0, 0, .88);
+      }
     }
   }
+}
+.tag-small {
+  height: 22px;
+  font-size: 12px;
+  line-height: 20px;
+  border-radius: 4px;
+  .u-plus {
+    width: 12px;
+    height: 12px;
+  }
+  .m-close {
+    font-size: 10px;
+  }
+}
+.tag-large {
+  height: 28px;
+  line-height: 26px;
+  .m-close {
+    font-size: 14px;
+    vertical-align: -0.16em;
+  }
+}
+.m-plus {
+  background: rgb(255, 255, 255);
+  border-style: dashed;
+  padding-inline: 10px;
+  cursor: pointer;
+  &:hover {
+    border-color: @themeColor;
+    .u-plus {
+      fill: @themeColor;
+    }
+  }
+}
+.u-input {
+  width: 86px;
+  color: rgba(0, 0, 0, .88);
+  height: 24px;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 0 8px;
+  position: relative;
+  display: inline-block;
+  min-width: 0;
+  background-color: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  outline: none;
+  transition: all .2s;
+  &:focus {
+    border-color: #4096ff;
+    box-shadow: 0 0 0 2px rgba(5, 145, 255, .1);
+    border-inline-end-width: 1px;
+    outline: 0;
+  }
+}
+.input-small {
+  width: 78px;
+  height: 22px;
+  font-size: 12px;
+  line-height: 20px;
+  padding: 0 6px;
+  border-radius: 4px;
+}
+.input-large {
+  width: 90px;
+  height: 28px;
+  line-height: 26px;
 }
 .tag-success {
   color: #52c41a;
@@ -216,6 +428,12 @@ function onClose (e: MouseEvent) {
 .has-color {
   color: #fff;
   border-color: transparent;
+  .m-close .u-close {
+    fill: rgba(255, 255, 255, .85);
+    &:hover {
+      fill: rgba(255, 255, 255, 1);
+    }
+  }
 }
 .hidden {
   display: none;

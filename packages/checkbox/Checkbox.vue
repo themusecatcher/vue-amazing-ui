@@ -137,7 +137,7 @@ function onCheckAll () { // 全选切换
         border: 1px solid #d9d9d9;
         border-radius: 4px;
         transition: all .3s;
-        &:after {
+        &::after {
           box-sizing: border-box;
           position: absolute;
           top: 50%;
@@ -157,14 +157,14 @@ function onCheckAll () { // 全选切换
       .u-checkbox-checked {
         background-color: @themeColor;
         border-color: @themeColor;
-        &:after {
+        &::after {
           opacity: 1;
           transform: rotate(45deg) scale(1) translate(-50%,-50%);
           transition: all .2s cubic-bezier(0.12, 0.4, 0.29, 1.46) .1s;
         }
       }
       .indeterminate {
-        &:after {
+        &::after {
           top: 50%;
           left: 50%;
           width: 8px;
@@ -193,7 +193,7 @@ function onCheckAll () { // 全选切换
       .u-checkbox {
         border-color: #d9d9d9;
         background-color: rgba(0, 0, 0, .04);
-        &:after {
+        &::after {
           border-color: rgba(0, 0, 0, .25);
           animation-name: none;
         }

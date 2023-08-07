@@ -30,7 +30,7 @@ const getOffDate = (time: string): number => {
   return new Date(`${Y} ${M} ${D} ${time}`).getTime() + 9 * 60 * 60 * 1000
 }
 const countdown = computed(() => {
-  return getOffDate('9:02')
+  return getOffDate('9:01')
 })
 </script>
 <template>
