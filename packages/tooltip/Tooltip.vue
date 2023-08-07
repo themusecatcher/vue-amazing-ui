@@ -78,7 +78,7 @@ function onHide (): void {
     position: absolute;
     z-index: 999;
     width: max-content;
-    padding-bottom: 16px;
+    padding-bottom: 12px;
     pointer-events: none;
     opacity: 0;
     transform-origin: 50% 75%;
@@ -104,7 +104,7 @@ function onHide (): void {
       position: absolute;
       z-index: 9;
       left: 50%;
-      bottom: 16px;
+      bottom: 12px;
       transform: translateX(-50%) translateY(100%) rotate(180deg);
       display: block;
       border-radius: 0 0 2px;
