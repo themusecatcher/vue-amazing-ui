@@ -175,7 +175,7 @@ function startMove () {
   white-space: nowrap;
   overflow: hidden;
   text-align: center; // 水平居中
-  &:after { // 垂直居中
+  &::after { // 垂直居中
     content: '';
     height: 100%;
     display: inline-block;
@@ -219,7 +219,7 @@ function startMove () {
     right: 0;
     margin: 0 auto;
     text-align: center; // 水平居中
-    &:after { // 垂直居中
+    &::after { // 垂直居中
       content: '';
       height: 100%;
       display: inline-block;

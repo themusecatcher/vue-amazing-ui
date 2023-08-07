@@ -58,7 +58,7 @@ onMounted(() => {
   margin: 16px 0;
   width: 100%;
   min-width: 100%;
-  &:before, &:after {
+  &::before, &::after {
     position: relative;
     width: 50%;
     border-top-width: var(--border-width);
@@ -79,26 +79,26 @@ onMounted(() => {
   }
 }
 .dashed {
-  &:before {
+  &::before {
     border-top-style: dashed;
   }
-  &:after {
+  &::after {
     border-top-style: dashed;
   }
 }
 .left {
-  &:before {
+  &::before {
     width: 5%;
   }
-  &:after {
+  &::after {
     width: 95%;
   }
 }
 .right {
-  &:before {
+  &::before {
     width: 95%;
   }
-  &:after {
+  &::after {
     width: 5%;
   }
 }
@@ -106,18 +106,18 @@ onMounted(() => {
   margin: 24px 0;
 }
 .marginLeft {
-  &:before {
+  &::before {
     width: 0;
   }
-  &:after {
+  &::after {
     width: 100%;
   }
 }
 .marginRight {
-  &:before {
+  &::before {
     width: 100%;
   }
-  &:after {
+  &::after {
     width: 0;
   }
 }

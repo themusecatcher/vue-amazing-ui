@@ -72,7 +72,7 @@ const lineColor = computed(() => {
 @success: #52C41A;
 .m-progress-line {
   display: inline-block;
-  &:after {
+  &::after {
     content: '';
     height: 100%;
     display: inline-block;

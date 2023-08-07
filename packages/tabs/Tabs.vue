@@ -149,13 +149,13 @@ function onWheel (e: WheelEvent) {
         bottom: 0;
         width: 32px;
       }
-      &:before {
+      &::before {
         .shadow();
         left: 0;
         box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, .08);
         
       }
-      &:after {
+      &::after {
         .shadow();
         right: 0;
         box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, .08);
@@ -203,12 +203,12 @@ function onWheel (e: WheelEvent) {
       justify-content: center;
     }
     .before-shadow-active {
-      &:before {
+      &::before {
         opacity: 1;
       }
     }
     .after-shadow-active {
-      &:after {
+      &::after {
         opacity: 1;
       }
     }

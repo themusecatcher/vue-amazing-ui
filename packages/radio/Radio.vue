@@ -89,7 +89,7 @@ function onClick (value: any) {
         border: 1px solid #d9d9d9;
         border-radius: 50%;
         transition: all .3s;
-        &:after {
+        &::after {
           box-sizing: border-box;
           position: absolute;
           inset-block-start: 50%;
@@ -112,7 +112,7 @@ function onClick (value: any) {
       .u-radio-checked {
         border-color: @themeColor;
         background-color: @themeColor;
-        &:after {
+        &::after {
           transform: scale(.375);
           opacity: 1;
           transition: all .3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
@@ -138,7 +138,7 @@ function onClick (value: any) {
         background-color: rgba(0, 0, 0, .04);
         border-color: #d9d9d9;
         cursor: not-allowed;
-        &:after {
+        &::after {
           transform: scale(.5);
           background-color: rgba(0, 0, 0, .25);
         }

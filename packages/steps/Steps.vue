@@ -82,7 +82,7 @@ function onChange (index: number) { // 点击切换选择步骤
         margin-right: 16px;
         flex: 1; // 弹性盒模型对象的子元素都有相同的长度，且忽略它们内部的内容
         .u-steps-title {
-          &:after {
+          &::after {
             background: #e8e8e8;
             position: absolute;
             top: 16px;
@@ -156,7 +156,7 @@ function onChange (index: number) { // 点击切换选择步骤
         .m-steps-content {
           .u-steps-title {
             color: rgba(0, 0, 0, .85);;
-            &:after {
+            &::after {
               background: @themeColor;
             }
           }
