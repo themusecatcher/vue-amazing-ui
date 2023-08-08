@@ -94,7 +94,7 @@ watchEffect(() => {
       }
       .u-desc {
         font-size: 14px;
-        line-height: 1.5;
+        line-height: 1.5714285714285714;
         margin-left: 25px;
         word-break: break-all;
       }

@@ -68,7 +68,7 @@ function getUrl (route: Route) {
   .m-bread {
     display: inline-flex;
     align-items: center;
-    line-height: 1.5;
+    line-height: 1.5714285714285714;
     .u-route {
       color: rgba(0, 0, 0, .45);
       overflow: hidden;

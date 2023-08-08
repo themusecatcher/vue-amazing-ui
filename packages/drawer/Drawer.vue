@@ -165,7 +165,7 @@ function onClose (e: Event) {
           align-items: center;
           padding: 16px 24px;
           font-size: 16px;
-          line-height: 1.5;
+          line-height: 1.5714285714285714;
           border-bottom: 1px solid rgba(5, 5, 5, .06);
           .m-header-title {
             display: flex;
@@ -191,7 +191,7 @@ function onClose (e: Event) {
               color: rgba(0, 0, 0, 0.88);
               font-weight: 600;
               font-size: 16px;
-              line-height: 1.5;
+              line-height: 1.5714285714285714;
             }
           }
           .m-drawer-extra {

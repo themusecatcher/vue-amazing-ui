@@ -267,7 +267,7 @@ function onError (content: any) {
       margin-top: 8px;
       font-size: 14px;
       color: rgba(0, 0, 0, .88);
-      line-height: 1.571;
+      line-height: 1.5714285714285714;
     }
   }
   .upload-disabled {

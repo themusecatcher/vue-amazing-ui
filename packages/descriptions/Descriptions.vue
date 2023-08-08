@@ -224,7 +224,7 @@ function setStyle(element: any, style: any) {
       font-weight: 600;
       font-size: 16px;
       color: rgba(0, 0, 0, .88);
-      line-height: 1.5;
+      line-height: 1.5714285714285714;
     }
     .u-extra {
       margin-inline-start: auto;
