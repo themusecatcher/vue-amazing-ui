@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed, watchEffect, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import { requestAnimationFrame } from '../index'
 interface Props {
@@ -21,6 +21,14 @@ const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   titleStyle: () => ({}),
   valueStyle: () => ({}),
   finishedText: 'Finished'
+})
+const prefixRef = ref()
+const suffixRef = ref()
+const showPrefix = ref(1)
+const showSuffix = ref(1)
+onMounted(() => {
+  showPrefix.value = prefixRef.value.offsetWidth
+  showSuffix.value = suffixRef.value.offsetWidth
 })
 const futureTime = ref() // 未来截止时间戳
 const restTime = ref() // 剩余时间戳
@@ -118,16 +126,20 @@ watchEffect(() => {
       <slot name="title">{{ props.title }}</slot>
     </div>
     <div class="m-time">
-      <span class="u-prefix" v-if="restTime > 0 || restTime === null">
-        <slot name="prefix">{{ prefix }}</slot>
-      </span>
+      <template v-if="showPrefix">
+        <span ref="prefixRef" class="u-prefix" v-if="showPrefix || restTime > 0 || restTime === null">
+          <slot name="prefix">{{ prefix }}</slot>
+        </span>
+      </template>
       <span class="u-time-value" :style="valueStyle" v-if="finishedText && restTime === 0 && restTime !== null">
         <slot name="finish">{{ finishedText }}</slot>
       </span>
-      <span class="u-time-value" :style="valueStyle" v-else>{{ timeFormat(restTime) }}</span>
-      <span class="u-suffix" v-if="restTime > 0 || restTime === null">
-        <slot name="suffix">{{ suffix }}</slot>
-      </span>
+      <span class="u-time-value" :style="valueStyle" v-if="Number.isFinite(restTime) && restTime > 0">{{ timeFormat(restTime) }}</span>
+      <template v-if="showSuffix">
+        <span ref="suffixRef" class="u-suffix" v-if="showSuffix || restTime > 0 || restTime === null">
+          <slot name="suffix">{{ suffix }}</slot>
+        </span>
+      </template>
     </div>
   </div>
 </template>

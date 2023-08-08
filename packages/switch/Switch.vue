@@ -47,18 +47,22 @@ function onSwitch () {
     vertical-align: top;
     width: 100%;
     height: 100%;
-    color: rgba(0,0,0,.65);
+    color: rgba(0, 0, 0, .88);
     font-size: 14px;
-    background: rgba(0,0,0,.25);
+    line-height: 22px;
+    background: rgba(0, 0, 0, .25);
     border-radius: 100px;
     cursor: pointer;
-    transition: background .36s;
+    transition: all .2s;
+    &:hover:not(.disabled) {
+      background: rgba(0, 0, 0, .45);
+    }
     .u-switch-inner {
       color: #fff;
       font-size: 14px;
       line-height: 22px;
       padding: 0 8px;
-      transition: all .36s;
+      transition: all .2s ease-in-out;
     }
     .inner-checked {
       margin-right: 18px;
@@ -77,7 +81,7 @@ function onSwitch () {
       background: #FFF;
       border-radius: 100%;
       cursor: pointer;
-      transition: all .36s;
+      transition: all .2s ease-in-out;
     }
     .node-checked { // 结果等价于right: 2px; 为了滑动效果都以左边为基准进行偏移
       left: 100%;
@@ -87,10 +91,13 @@ function onSwitch () {
   }
   .switch-checked {
     background: @themeColor;
+    &:hover:not(.disabled) {
+      background: #4096ff;
+    }
   }
   .disabled {
     cursor: not-allowed;
-    opacity: .4;
+    opacity: .65;
     .u-node {
       cursor: not-allowed;
     }
