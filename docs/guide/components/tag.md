@@ -418,6 +418,48 @@ const onDynamicClose = (tag: any, index: number) => {
 
 :::
 
+## 自定义动态标签排列方式
+
+<Tag
+  space-direction="vertical"
+  :space-size="12"
+  color="blue"
+  size="large"
+  dynamic
+  v-model:value="strTags"
+  closable
+  @close="onDynamicClose" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const strTags = ref(['天空', '大海', '湖泊'])
+watchEffect(() => {
+  console.log('strTags', strTags.value)
+})
+const onDynamicClose = (tag: any, index: number) => {
+  console.log('tag', tag)  
+  console.log('index', index)  
+}
+</script>
+<template>
+  <Tag
+    space-direction="vertical"
+    :space-size="12"
+    color="blue"
+    size="large"
+    dynamic
+    v-model:value="strTags"
+    closable
+    @close="onDynamicClose" />
+</template>
+```
+
+:::
+
 <style lang="less" scoped>
 .u-svg {
   display: inline-block;
@@ -447,12 +489,16 @@ icon | 设置图标 | string &#124; slot | '' | false
 size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 dynamic | 是否启用标签动态添加和删除 | boolean | false | false
 value(v-model) | 动态标签数组，`dynamic` 为 `true` 时生效 | string[] &#124; Tag[] | [] | false
+spaceWidth | 间距区域总宽度 | string &#124; number | 'auto' | false
+spaceAlign | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' | false
+spaceDirection | 间距方向 | 'horizontal' &#124; 'vertical' | 'horizontal' | false
+spaceSize | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
 
 ## Tag Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-label | 标签文本名 | string &#124; slot | true
+label | 标签文本名 | string &#124; slot | false
 closable | 标签是否可以关闭，默认 `true` | boolean | false
 color | 标签颜色 | string | false
 icon | 设置图标 | string &#124; slot | false

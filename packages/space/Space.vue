@@ -2,14 +2,14 @@
 import { computed } from 'vue'
 interface Props {
   width?: string|number // 区域总宽度
-  align?: 'start'|'end'|'center'|'baseline' // 对齐方式
+  align?: 'stretch'|'start'|'end'|'center'|'baseline' // 垂直排列方式
   direction?: 'horizontal'|'vertical' // 间距方向
   size?: number|number[]|'small'|'middle'|'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
   wrap?: boolean // 是否自动换行，仅在 horizontal 时有效
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
-  align: undefined,
+  align: 'stretch',
   direction: 'horizontal',
   size: 'small',
   wrap: true
@@ -57,6 +57,9 @@ const gap = computed(() => {
 }
 .vertical {
   flex-direction: column;
+}
+.stretch {
+  align-items: stretch;
 }
 .start {
   align-items: flex-start;

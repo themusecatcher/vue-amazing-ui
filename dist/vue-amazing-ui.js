@@ -5889,7 +5889,7 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
   __name: "Space",
   props: {
     width: { default: "auto" },
-    align: { default: void 0 },
+    align: { default: "stretch" },
     direction: { default: "horizontal" },
     size: { default: "small" },
     wrap: { type: Boolean, default: true }
@@ -5928,8 +5928,8 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Space_vue_vue_type_style_index_0_scoped_c3d946db_lang = "";
-const Space = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-c3d946db"]]);
+const Space_vue_vue_type_style_index_0_scoped_e1899783_lang = "";
+const Space = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-e1899783"]]);
 Space.install = (app) => {
   app.component(Space.__name, Space);
 };
@@ -7764,7 +7764,7 @@ const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-b65
 Tabs.install = (app) => {
   app.component(Tabs.__name, Tabs);
 };
-const _withScopeId$3 = (n) => (pushScopeId("data-v-32714fd2"), n = n(), popScopeId(), n);
+const _withScopeId$3 = (n) => (pushScopeId("data-v-5d010490"), n = n(), popScopeId(), n);
 const _hoisted_1$6 = { class: "u-tag" };
 const _hoisted_2$5 = /* @__PURE__ */ _withScopeId$3(() => /* @__PURE__ */ createElementVNode("svg", {
   focusable: "false",
@@ -7822,7 +7822,11 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
     icon: { default: "" },
     size: { default: "middle" },
     dynamic: { type: Boolean, default: false },
-    value: { default: () => [] }
+    value: { default: () => [] },
+    spaceWidth: { default: "auto" },
+    spaceAlign: { default: "start" },
+    spaceDirection: { default: "horizontal" },
+    spaceSize: { default: "small" }
   },
   emits: ["update:value", "close", "dynamicClose"],
   setup(__props, { emit: emits }) {
@@ -7917,7 +7921,6 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
       }
     }
     return (_ctx, _cache) => {
-      const _component_Space = resolveComponent("Space");
       return !_ctx.dynamic ? (openBlock(), createElementBlock("div", {
         key: 0,
         class: normalizeClass(["m-tag", [`tag-${_ctx.size}`, _ctx.color && presetColor.includes(_ctx.color) ? "tag-" + _ctx.color : "", { "has-color": _ctx.color && !presetColor.includes(_ctx.color), hidden: hidden.value }]]),
@@ -7939,7 +7942,13 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
           class: "m-close",
           onClick: onClose
         }, _hoisted_3$3)) : createCommentVNode("", true)
-      ], 6)) : (openBlock(), createBlock(_component_Space, { key: 1 }, {
+      ], 6)) : (openBlock(), createBlock(unref(Space), {
+        key: 1,
+        width: _ctx.spaceWidth,
+        align: _ctx.spaceAlign,
+        direction: _ctx.spaceDirection,
+        size: _ctx.spaceSize
+      }, {
         default: withCtx(() => [
           (openBlock(true), createElementBlock(Fragment, null, renderList(tags.value, (tag, index) => {
             return openBlock(), createElementBlock("div", {
@@ -7993,12 +8002,12 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
           ])
         ]),
         _: 3
-      }));
+      }, 8, ["width", "align", "direction", "size"]));
     };
   }
 });
-const Tag_vue_vue_type_style_index_0_scoped_32714fd2_lang = "";
-const Tag = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-32714fd2"]]);
+const Tag_vue_vue_type_style_index_0_scoped_5d010490_lang = "";
+const Tag = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-5d010490"]]);
 Tag.install = (app) => {
   app.component(Tag.__name, Tag);
 };

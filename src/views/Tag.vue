@@ -150,6 +150,16 @@ const onDynamicClose = (tag: any, index: number) => {
         closable
         @close="onDynamicClose" />
     </Space>
+    <h2 class="mt30 mb10">自定义动态标签排列方式</h2>
+    <Tag
+      space-direction="vertical"
+      :space-size="12"
+      color="blue"
+      size="large"
+      dynamic
+      v-model:value="strTags"
+      closable
+      @close="onDynamicClose" />
   </div>
 </template>
 <style lang="less" scoped>
