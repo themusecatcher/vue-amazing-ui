@@ -7517,7 +7517,8 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
     checkedInfo: { default: "" },
     uncheckedInfo: { default: "" },
     disabled: { type: Boolean, default: false },
-    checked: { type: Boolean, default: false }
+    checked: { type: Boolean, default: false },
+    nodeStyle: { default: () => ({}) }
   },
   emits: ["update:checked", "change"],
   setup(__props, { emit }) {
@@ -7543,17 +7544,18 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
             class: normalizeClass(["u-switch-inner", checked.value ? "inner-checked" : "inner-unchecked"])
           }, toDisplayString(checked.value ? _ctx.checkedInfo : _ctx.uncheckedInfo), 3),
           createElementVNode("div", {
-            class: normalizeClass(["u-node", { "node-checked": checked.value }])
+            class: normalizeClass(["u-node", { "node-checked": checked.value }]),
+            style: normalizeStyle(_ctx.nodeStyle)
           }, [
             renderSlot(_ctx.$slots, "node", { checked: checked.value }, void 0, true)
-          ], 2)
+          ], 6)
         ], 2)
       ]);
     };
   }
 });
-const Switch_vue_vue_type_style_index_0_scoped_cda7688c_lang = "";
-const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-cda7688c"]]);
+const Switch_vue_vue_type_style_index_0_scoped_bc6e0cd3_lang = "";
+const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-bc6e0cd3"]]);
 Switch.install = (app) => {
   app.component(Switch.__name, Switch);
 };
