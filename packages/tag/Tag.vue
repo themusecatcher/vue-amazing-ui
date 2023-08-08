@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
+import Space from '../space'
 interface Tag {
-  label: string // 标签文本名 string | slot
+  label?: string // 标签文本名 string | slot
   closable?: boolean // 标签是否可以关闭，默认 true
   color?: string // 标签颜色
   icon?: string // 设置图标 string | slot
@@ -14,6 +15,11 @@ interface Props {
   size?: 'small'|'middle'|'large' // 标签尺寸
   dynamic?: boolean // 是否启用标签动态添加和删除
   value?: string[]|Tag[] // 动态标签数组，dynamic 为 true 时生效
+  // 启用动态标签后，可设置以下 Space 相关属性
+  spaceWidth?: string|number // 间距区域总宽度
+  spaceAlign?: 'stretch'|'start'|'end'|'center'|'baseline' // 垂直排列方式
+  spaceDirection?: 'horizontal'|'vertical' // 间距方向
+  spaceSize?: number|number[]|'small'|'middle'|'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
 }
 const props = withDefaults(defineProps<Props>(), {
   closable: false,
@@ -21,7 +27,11 @@ const props = withDefaults(defineProps<Props>(), {
   icon: '',
   size: 'middle',
   dynamic: false,
-  value: () => []
+  value: () => [],
+  spaceWidth: 'auto',
+  spaceAlign: 'start',
+  spaceDirection: 'horizontal',
+  spaceSize: 'small'
 })
 const isStrArray = computed(() => {
   if (props.dynamic) {
@@ -131,7 +141,7 @@ function onKeyboard (e: KeyboardEvent) {
     </span>
     </div>
   <template v-else>
-    <Space>
+    <Space :width="spaceWidth" :align="spaceAlign" :direction="spaceDirection" :size="spaceSize">
       <div
         class="m-tag"
         :class="[`tag-${tag.size || size}`, (tag.color || color) && presetColor.includes((tag.color || color)) ? 'tag-' + (tag.color || color):'', {'has-color': (tag.color || color) && !presetColor.includes((tag.color || color))}]"
@@ -246,6 +256,7 @@ function onKeyboard (e: KeyboardEvent) {
   background: rgb(255, 255, 255);
   border-style: dashed;
   padding-inline: 10px;
+  text-align: center;
   cursor: pointer;
   &:hover {
     border-color: @themeColor;
