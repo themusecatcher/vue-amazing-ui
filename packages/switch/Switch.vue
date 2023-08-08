@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import type { CSSProperties } from 'vue'
 interface Props {
   checkedInfo?: string // 选中时的内容
   uncheckedInfo?: string // 未选中时的内容
   disabled?: boolean // 是否禁用
   checked?: boolean // （v-model）指定当前是否选中
+  nodeStyle?: CSSProperties // 节点样式
 }
 const props = withDefaults(defineProps<Props>(), {
   checkedInfo: '',
   uncheckedInfo: '',
   disabled: false,
-  checked: false
+  checked: false,
+  nodeStyle: () => ({})
 })
 const checked = ref(props.checked)
 watch(
@@ -29,7 +32,7 @@ function onSwitch () {
   <div class="m-switch-wrap">
     <div @click="disabled ? () => false : onSwitch()" :class="['m-switch', { 'switch-checked': checked, 'disabled': disabled }]">
       <div :class="['u-switch-inner', checked ? 'inner-checked' : 'inner-unchecked' ]">{{ checked ? checkedInfo : uncheckedInfo }}</div>
-      <div :class="['u-node', { 'node-checked': checked }]">
+      <div :class="['u-node', { 'node-checked': checked }]" :style="nodeStyle">
         <slot name="node" :checked="checked"></slot>
       </div>
     </div>
