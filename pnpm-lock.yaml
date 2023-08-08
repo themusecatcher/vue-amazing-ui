@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.3.4
     version: 3.3.4
   vue-amazing-ui:
-    specifier: ^0.0.44
-    version: 0.0.44
+    specifier: ^0.0.45
+    version: 0.0.45
   vue-router:
     specifier: ^4.2.4
     version: 4.2.4(vue@3.3.4)
@@ -277,6 +277,13 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.22.5
+
+  /@babel/runtime@7.22.10:
+    resolution: {integrity: sha512-21t/fkKLMZI4pqP2wlmsQAWnYW1PDyKyyUV4vCi+B25ydmdaYTKXPwCj0BzSUnZf4seIiYvSA3jcZ3gdsMFkLQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.0
+    dev: false
 
   /@babel/runtime@7.22.6:
     resolution: {integrity: sha512-wDb5pWm4WDdF6LFUde3Jl8WzPA+3ZbxYqkC6xAXuD3irdEHN1k0NfTRrJD8ZD378SJ61miMLCqIOXYhd8x+AJQ==}
@@ -1204,7 +1211,7 @@ packages:
     dependencies:
       '@ant-design/colors': 6.0.0
       '@ant-design/icons-vue': 6.1.0(vue@3.3.4)
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.22.10
       '@ctrl/tinycolor': 3.6.0
       '@simonwep/pickr': 1.8.2
       array-tree-filter: 2.1.0
@@ -2831,6 +2838,10 @@ packages:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
     dev: false
 
+  /regenerator-runtime@0.14.0:
+    resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==}
+    dev: false
+
   /regexp.prototype.flags@1.5.0:
     resolution: {integrity: sha512-0SutC3pNudRKgquxGoRGIz946MZVHqbNfPjBdxeOhBrdgDKlRoXmYLQN9xRbrR09ZXWeGAdPuif7egofn6v5LA==}
     engines: {node: '>= 0.4'}
@@ -4042,6 +4053,37 @@ packages:
       swiper: 9.4.1
       vue: 3.3.4
       vue-amazing-ui: 0.0.43
+      vue-router: 4.2.4(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - async-validator
+      - axios
+      - change-case
+      - drauu
+      - focus-trap
+      - fuse.js
+      - idb-keyval
+      - jwt-decode
+      - nprogress
+      - sortablejs
+      - universal-cookie
+    dev: false
+
+  /vue-amazing-ui@0.0.45:
+    resolution: {integrity: sha512-F62xuO3hKM0KFV5SWZHG3hCanufK3JaNh60JXXnD1JLcNwUDPcM7FD3DZfeujBC1QPOpmvHewKYVHgysZ1KtQg==}
+    dependencies:
+      '@ant-design/icons-vue': 6.1.0(vue@3.3.4)
+      '@vuepic/vue-datepicker': 4.5.1(vue@3.3.4)
+      '@vueuse/core': 10.2.1(vue@3.3.4)
+      '@vueuse/integrations': 10.2.1(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
+      ant-design-vue: 4.0.0(vue@3.3.4)
+      core-js: 3.31.1
+      date-fns: 2.30.0
+      naive-ui: 2.34.4(vue@3.3.4)
+      qrcode: 1.5.3
+      swiper: 9.4.1
+      vue: 3.3.4
+      vue-amazing-ui: 0.0.44
       vue-router: 4.2.4(vue@3.3.4)
     transitivePeerDependencies:
       - '@vue/composition-api'
