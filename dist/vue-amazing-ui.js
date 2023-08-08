@@ -2250,8 +2250,8 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Countdown_vue_vue_type_style_index_0_scoped_fac9d2fb_lang = "";
-const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["__scopeId", "data-v-fac9d2fb"]]);
+const Countdown_vue_vue_type_style_index_0_scoped_8a3ac908_lang = "";
+const Countdown = /* @__PURE__ */ _export_sfc(_sfc_main$A, [["__scopeId", "data-v-8a3ac908"]]);
 Countdown.install = (app) => {
   app.component(Countdown.__name, Countdown);
 };
