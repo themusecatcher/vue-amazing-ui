@@ -17,7 +17,7 @@ function onClick (e: any):void {
 function onFinish () {
   console.log('Off Duty！')
 }
-const getOffDate = (time: string): number => {
+const getOffDate = (time = '9:00'): number => {
   const date = new Date()
   const Y = date.getFullYear()
   const M = date.getMonth() + 1
@@ -25,7 +25,7 @@ const getOffDate = (time: string): number => {
   return new Date(`${Y} ${M} ${D} ${time}`).getTime() + 9 * 60 * 60 * 1000
 }
 const countdown = computed(() => {
-  return getOffDate('9:00')
+  return getOffDate()
 })
 </script>
 <template>
