@@ -7,7 +7,7 @@ function onClose (e: MouseEvent) {
   <div style="width: 425px;">
     <h1>Alert 警告提示</h1>
     <h2 class="mt30 mb10">共有四种样式 success、info、warn、error</h2>
-    <Space direction="vertical" style="width: 100%">
+    <Space direction="vertical" align="stretch" style="width: 100%">
       <Alert message="Info Text" />
       <Alert message="Success Text" type="success" />
       <Alert message="Warn Text" type="warn" />

@@ -9,7 +9,7 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
-  align: 'stretch',
+  align: 'start',
   direction: 'horizontal',
   size: 'small',
   wrap: true

@@ -226,7 +226,7 @@ const size = ref('small')
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 区域总宽度 | string &#124; number | 'auto' | false
-align | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'stretch' | false
+align | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' | false
 direction | 间距方向 | 'horizontal' &#124; 'vertical' | 'horizontal' | false
 size | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
 wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | true | false

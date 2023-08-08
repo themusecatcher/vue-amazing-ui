@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { routes } from '../../router'
+import { routes } from '@/router'
 const installData = ref([
   {
     header: 'Install',
@@ -19,29 +19,9 @@ const activeKey = ref(0)
 const sum = computed(() => {
   return (routes[0].children as Array<any>).length - 1
 })
-function onFinish () {
-  console.log('Off Duty！')
-}
-const getOffDate = (time: string): number => {
-  const date = new Date()
-  const Y = date.getFullYear()
-  const M = date.getMonth() + 1
-  const D = date.getDate()
-  return new Date(`${Y} ${M} ${D} ${time}`).getTime() + 9 * 60 * 60 * 1000
-}
-const countdown = computed(() => {
-  return getOffDate('9:01')
-})
 </script>
 <template>
   <div>
-    <Countdown
-      class="countdown"
-      title="Off Duty"
-      :value="countdown"
-      format="HH:mm:ss"
-      finished-text="GO GO GO"
-      @finish="onFinish" />
     <h1>Vue Amazing UI</h1>
     <p class="u-tip mb10 mt30">该组件库采用 Vue3@3.3.4 + TypeScript@4.7.4 + Vite4.4.7 + Less@4.1.3 实现！</p>
     <p class="u-tip mb10">所有组件 CSS 样式均使用 box-sizing: border-box; 模式！</p>
@@ -80,12 +60,6 @@ const countdown = computed(() => {
   </div>
 </template>
 <style lang="less">
-.countdown {
-  position: fixed;
-  top: 36px;
-  right: 36px;
-  z-index: 1;
-}
 .u-head {
   font-size: 16px;
 }
