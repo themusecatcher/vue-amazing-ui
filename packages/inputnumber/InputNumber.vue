@@ -68,7 +68,7 @@ function emitValue (value: any) {
 }
 function onChange (e: any) {
   const value = e.target.value.replaceAll(',', '')
-  if (!Number.isNaN(parseFloat(value))) { // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为Number
+  if (!Number.isNaN(parseFloat(value))) { // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为 Number
     if (parseFloat(value) > props.max) {
       emitValue(props.max)
       return

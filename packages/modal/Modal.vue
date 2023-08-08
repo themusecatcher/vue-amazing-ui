@@ -150,7 +150,7 @@ function onKnow () {
     margin: 0 auto;
     color: rgba(0, 0, 0, .88);
     font-size: 14px;
-    line-height: 1.571;
+    line-height: 1.5714285714285714;
     .m-modal-body {
       position: relative;
       word-wrap: break-word;

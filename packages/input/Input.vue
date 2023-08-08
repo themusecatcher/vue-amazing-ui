@@ -268,7 +268,7 @@ function onPassword () {
   .large {
     padding: 7px 11px;
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.5714285714285714;
     border-radius: 8px;
   }
   .middle {

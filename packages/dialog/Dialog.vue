@@ -227,14 +227,14 @@ function onConfirm () {
           color: rgba(0, 0, 0, .85);;
           font-weight: 500;
           font-size: 16px;
-          line-height: 1.5;
+          line-height: 1.5714285714285714;
           word-wrap: break-word;
         }
       }
       .m-dialog-body {
         padding: 24px;
         font-size: 16px;
-        line-height: 1.5;
+        line-height: 1.5714285714285714;
         word-wrap: break-word;
         overflow: auto;
         transition: all .3s;

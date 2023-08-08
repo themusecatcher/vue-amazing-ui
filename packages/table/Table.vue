@@ -79,7 +79,7 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页回调
 .m-table-wrap {
   color: rgba(0, 0, 0, .65);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.5714285714285714;
   .m-table {
     display: table;
     table-layout: fixed;

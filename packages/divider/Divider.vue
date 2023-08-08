@@ -72,7 +72,7 @@ onMounted(() => {
     font-size: 16px;
     color: rgba(0, 0, 0, .88);
     font-weight: 500;
-    line-height: 1.571;
+    line-height: 1.5714285714285714;
     white-space: nowrap;
     text-align: center;
     padding: 0 16px;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
 import { requestAnimationFrame } from '../index'
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   title: 'Countdown',
-  value: 0,
+  value: undefined,
   format: 'HH:mm:ss',
   prefix: '',
   suffix: '',
@@ -38,7 +38,10 @@ const showType = computed(() => {
 function fixedTwo (value: number): string {
   return value < 10 ? '0' + value : String(value)
 }
-function timeFormat (time: number): string {
+function timeFormat (time: number|null): string {
+  if (time === null) {
+    return '--'
+  }
   let showTime = props.format
   if (showType.value.showMillisecond) {
     var S = time % 1000
@@ -95,13 +98,18 @@ function CountDown () {
     emit('finish')
   }
 }
-onMounted(() => {
-  if (props.value >= Date.now()) { // 未来某时刻的时间戳，单位ms
-    futureTime.value = props.value
-  } else { // 相对剩余时间，单位ms
-    futureTime.value = props.value + Date.now()
+watchEffect(() => {
+  // 只有数值类型的值，且是有穷的（finite），才返回 true
+  if (Number.isFinite(props.value)) { //检测传入的参数是否是一个有穷数
+    if ((props.value as number) >= Date.now()) { // 未来某时刻的时间戳，单位ms
+      futureTime.value = props.value
+    } else { // 相对剩余时间，单位ms
+      futureTime.value = (props.value as number) + Date.now()
+    }
+    requestAnimationFrame(CountDown)
+  } else {
+    restTime.value = null
   }
-  requestAnimationFrame(CountDown)
 })
 </script>
 <template>
@@ -110,14 +118,14 @@ onMounted(() => {
       <slot name="title">{{ props.title }}</slot>
     </div>
     <div class="m-time">
-      <span class="u-prefix" v-if="restTime > 0">
+      <span class="u-prefix" v-if="restTime > 0 || restTime === null">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
-      <span class="u-time-value" :style="valueStyle" v-if="finishedText && restTime === 0">
+      <span class="u-time-value" :style="valueStyle" v-if="finishedText && restTime === 0 && restTime !== null">
         <slot name="finish">{{ finishedText }}</slot>
       </span>
       <span class="u-time-value" :style="valueStyle" v-else>{{ timeFormat(restTime) }}</span>
-      <span class="u-suffix" v-if="restTime > 0">
+      <span class="u-suffix" v-if="restTime > 0 || restTime === null">
         <slot name="suffix">{{ suffix }}</slot>
       </span>
     </div>
@@ -126,7 +134,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .m-countdown {
   display: inline-block;
-  line-height: 1.571;
+  line-height: 1.5714285714285714;
   .u-title {
     margin-bottom: 4px;
     color: #00000073;
