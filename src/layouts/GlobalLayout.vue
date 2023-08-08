@@ -86,6 +86,12 @@ const countdown = computed(() => {
   top: 32px;
   right: 32px;
   z-index: 2;
+  :deep(.switch-checked) {
+    background: #faad14;
+    &:hover:not(.disabled) {
+      background: #e8b339;
+    }
+  }
 }
 .u-duty-countdown {
   position: fixed;
@@ -100,8 +106,8 @@ const countdown = computed(() => {
   z-index: 9;
   :deep(.switch-checked) {
     background: #52c41a;
-    &:hover {
-      background: #73d13d !important;
+    &:hover:not(.disabled) {
+      background: #73d13d;
     }
   }
 }

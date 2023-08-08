@@ -149,11 +149,11 @@ watchEffect(() => {
   line-height: 1.5714285714285714;
   .u-title {
     margin-bottom: 4px;
-    color: #00000073;
+    color: rgba(0, 0, 0, .45);
     font-size: 14px;
   }
   .m-time {
-    color: #000000d9;
+    color: rgba(0, 0, 0, .88);
     font-size: 24px;
     font-family: 'Helvetica Neue'; // 保证数字等宽显示
     .u-prefix {
