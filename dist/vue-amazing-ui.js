@@ -7523,39 +7523,32 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
   emits: ["update:checked", "change"],
   setup(__props, { emit }) {
     const props = __props;
-    const checked = ref(props.checked);
-    watch(
-      () => props.checked,
-      (to) => {
-        checked.value = to;
-      }
-    );
     function onSwitch() {
-      emit("update:checked", !checked.value);
-      emit("change", !checked.value);
+      emit("update:checked", !props.checked);
+      emit("change", !props.checked);
     }
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$9, [
         createElementVNode("div", {
           onClick: _cache[0] || (_cache[0] = ($event) => _ctx.disabled ? () => false : onSwitch()),
-          class: normalizeClass(["m-switch", { "switch-checked": checked.value, "disabled": _ctx.disabled }])
+          class: normalizeClass(["m-switch", { "switch-checked": _ctx.checked, "disabled": _ctx.disabled }])
         }, [
           createElementVNode("div", {
-            class: normalizeClass(["u-switch-inner", checked.value ? "inner-checked" : "inner-unchecked"])
-          }, toDisplayString(checked.value ? _ctx.checkedInfo : _ctx.uncheckedInfo), 3),
+            class: normalizeClass(["u-switch-inner", _ctx.checked ? "inner-checked" : "inner-unchecked"])
+          }, toDisplayString(_ctx.checked ? _ctx.checkedInfo : _ctx.uncheckedInfo), 3),
           createElementVNode("div", {
-            class: normalizeClass(["u-node", { "node-checked": checked.value }]),
+            class: normalizeClass(["u-node", { "node-checked": _ctx.checked }]),
             style: normalizeStyle(_ctx.nodeStyle)
           }, [
-            renderSlot(_ctx.$slots, "node", { checked: checked.value }, void 0, true)
+            renderSlot(_ctx.$slots, "node", { checked: _ctx.checked }, void 0, true)
           ], 6)
         ], 2)
       ]);
     };
   }
 });
-const Switch_vue_vue_type_style_index_0_scoped_bc6e0cd3_lang = "";
-const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-bc6e0cd3"]]);
+const Switch_vue_vue_type_style_index_0_scoped_fdd68abf_lang = "";
+const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-fdd68abf"]]);
 Switch.install = (app) => {
   app.component(Switch.__name, Switch);
 };

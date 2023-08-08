@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 interface Props {
   checkedInfo?: string // 选中时的内容
@@ -15,17 +14,10 @@ const props = withDefaults(defineProps<Props>(), {
   checked: false,
   nodeStyle: () => ({})
 })
-const checked = ref(props.checked)
-watch(
-  () => props.checked,
-  (to): void => {
-    checked.value = to
-  }
-)
 const emit = defineEmits(['update:checked', 'change'])
 function onSwitch () {
-  emit('update:checked', !checked.value)
-  emit('change', !checked.value)
+  emit('update:checked', !props.checked)
+  emit('change', !props.checked)
 }
 </script>
 <template>
