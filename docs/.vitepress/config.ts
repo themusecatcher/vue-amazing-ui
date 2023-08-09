@@ -195,6 +195,10 @@ export default defineConfig({
               link: '/guide/components/pagination'
             },
             {
+              text: '弹出确认 Popconfirm',
+              link: '/guide/components/popconfirm'
+            },
+            {
               text: '进度条 Progress',
               link: '/guide/components/progress'
             },

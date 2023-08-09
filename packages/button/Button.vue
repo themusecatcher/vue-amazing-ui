@@ -8,27 +8,21 @@ interface Route {
   query?: Query // 路由查询参数
 }
 interface Props {
-  name?: string // 默认文本 string | slot
-  type?: 'default'|'primary'|'danger'|'dashed' // 类型
+  name?: string // 按钮文本 string | slot
+  type?: 'default'|'primary'|'danger'|'dashed'|'text' // 按钮类型
   effect?: 'fade'|'reverse' // 悬浮变化效果，只有 type 为 default 时，effect 才生效
-  size?: 'small'|'middle'|'large' // 尺寸
-  width?: number // 宽度
-  height?: number // 高度
-  borderRadius?: number // 圆角
+  size?: 'small'|'middle'|'large' // 按钮尺寸
   route?: Route // 跳转目标URL地址
   target?: '_self'|'_blank' // 如何打开目标URL，设置route时才起作用，与a标签的target属性一致
   disabled?: boolean // 是否禁用
   loading?: boolean // 是否加载中
-  center?: boolean // 是否将按钮设置为块级元素并居中展示
+  center?: boolean // 是否将按钮宽度调整为其父宽度并居中展示
 }
 const props = withDefaults(defineProps<Props>(), {
   name: '按钮',
   type: 'default',
   effect: 'fade',
   size: 'middle',
-  width: 0, // 优先级高于size属性，为0时自适应内容的宽度
-  height: 0, // 优先级高于size属性
-  borderRadius: 5,
   route: () => ({}),
   target: '_self',
   disabled: false,
@@ -60,13 +54,12 @@ function getUrl (route: Route) {
 <template>
   <div :class="['m-btn-wrap', {'center': center}]">
     <a
-      @click.stop="isRoute ? () => false : $emit('click', $event)"
+      @click.self="isRoute ? () => false : $emit('click', $event)"
       :href="getUrl(route)"
       :target="isRoute ? target : '_self'"
       :disabled="disabled"
       class="m-btn"
-      :class="[type, size, {[effect]: type === 'default', widthType: width, disabled: disabled, 'm-btn-loading': !isRoute && loading}]"
-      :style="`border-radius: ${borderRadius}px; width: ${width ? width + 'px':'auto'}; height: ${height ? height + 'px':'auto'}; line-height: ${height - 2}px;`">
+      :class="[type, size, {[effect]: type === 'default', disabled: disabled, 'm-btn-loading': !isRoute && loading}]">
       <span v-show="!isRoute" class="m-loading-icon" :class="{'show-spin': loading}">
         <span class="u-spin-circle" v-show="loading"></span>
       </span>
@@ -82,17 +75,18 @@ function getUrl (route: Route) {
 .m-btn-wrap {
   display: inline-block;
   .m-btn {
+    position: relative;
     display: inline-block;
+    font-weight: 400;
+    line-height: 1.5714285714285714;
     color: rgba(0, 0, 0, .88);
-    background-color: #ffffff;
-    border: 1px solid #d9d9d9;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, .02);
-    transition: all .25s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+    white-space: nowrap;
+    text-align: center;
+    background-color: transparent;
+    border: 1px solid transparent;
     user-select: none;
     cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     .m-loading-icon {
       display: inline-flex;
       align-items: center;
@@ -119,7 +113,7 @@ function getUrl (route: Route) {
       }
     }
     .show-spin {
-      width: 22px;
+      width: 20px;
       opacity: 1;
     }
     .u-text {
@@ -133,6 +127,9 @@ function getUrl (route: Route) {
     pointer-events: none;
   }
   .fade {
+    background-color: #ffffff;
+    border-color: #d9d9d9;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .02);
     &:hover {
       color: fade(@primary, 80%);
       border-color: fade(@primary, 80%);
@@ -148,9 +145,7 @@ function getUrl (route: Route) {
   .primary {
     color: #fff;
     background-color: @primary;
-    border-color: @primary;
-    text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
-    box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+    box-shadow: 0 2px 0 rgba(5, 145, 255, .1);
     &:hover {
       background-color: fade(@primary, 80%);
       border-color: fade(@primary, 80%);
@@ -176,8 +171,16 @@ function getUrl (route: Route) {
     }
   }
   .dashed {
-    border-style: dashed;
     .fade();
+    border-style: dashed;
+  }
+  .text {
+    &:hover {
+      background-color: rgba(0, 0, 0, .06);
+    }
+    &:active {
+      background-color: rgba(0, 0, 0, .15);
+    }
   }
   .reverse {
     &:hover {
@@ -192,37 +195,33 @@ function getUrl (route: Route) {
     }
   }
   .small {
-    line-height: 22px;
-    padding: 0 7px;
     font-size: 14px;
+    height: 24px;
+    padding: 0px 7px;
+    border-radius: 4px;
   }
   .middle {
-    line-height: 30px;
-    padding: 0 15px;
     font-size: 14px;
+    height: 32px;
+    padding: 4px 15px;
+    border-radius: 6px;
   }
   .large {
-    line-height: 38px;
-    padding: 0 15px;
     font-size: 16px;
-  }
-  .widthType {
-    padding: 0;
-    text-align: center;
+    height: 40px;
+    padding: 6.428571428571429px 15px;
+    border-radius: 8px;
   }
   .disabled {
-    color: rgba(0, 0, 0, .25);
-    background-color: #f5f5f5;
     border-color: #d9d9d9;
-    text-shadow: none;
+    color: rgba(0, 0, 0, .25);
+    background-color: rgba(0, 0, 0, .04);
     box-shadow: none;
     cursor: not-allowed;
     &:hover, &:active {
-      color: rgba(0, 0, 0, .25);
-      background-color: #f5f5f5;
       border-color: #d9d9d9;
-      text-shadow: none;
-      box-shadow: none;
+      color: rgba(0, 0, 0, .25);
+      background-color: rgba(0, 0, 0, .04);
     }
   }
 }

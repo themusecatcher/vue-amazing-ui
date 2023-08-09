@@ -170,7 +170,7 @@ function changePage (pager: object) { // 分页回调
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-current | 当前页数 | number | 1  | false
+current | 当前页数 | number | 1 | false
 pageSize | 每页条数 | number | 10 | false
 total | 数据总数 | number | 0 | false
 pageListNum | 显示的页码数组长度 | number | 5 | false

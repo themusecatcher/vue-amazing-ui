@@ -180,7 +180,7 @@ function onClose (index: number) {
   position: fixed;
   z-index: 999; // 突出显示该层级
   width: 384px;
-  max-width: calc(100vw - 48px);
+  max-width: calc(100% - 48px);
   .m-notification {
     position: relative;
     margin-bottom: 16px;

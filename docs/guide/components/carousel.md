@@ -149,7 +149,7 @@ const images = ref([
 -- | -- | -- | -- | --
 images | 走马灯图片数组 | Image[] | [] | true
 interval | 自动滑动轮播间隔，单位s | number | 3000 | false
-width | 走马灯宽度 | number &#124; string | '100vw' | false
+width | 走马灯宽度 | number &#124; string | '100%' | false
 height | 走马灯高度 | number &#124; string | '100vh' | false
 navigation | 是否显示导航 | boolean | true | false
 navColor | 导航颜色 | string | '#FFF' | false
