@@ -170,6 +170,12 @@ export const routes = [
         component: () => import('@/views/Pagination.vue')
       },
       {
+        path: '/popconfirm',
+        name: 'Popconfirm',
+        meta: { title: '弹出确认' },
+        component: () => import('@/views/Popconfirm.vue')
+      },
+      {
         path: '/progress',
         name: 'Progress',
         meta: { title: '进度条' },

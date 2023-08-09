@@ -126,7 +126,7 @@ function onHideMessage (index: number) {
 .m-message-wrap {
   position: fixed;
   z-index: 999; // 突出显示该层级
-  width: 100vw;
+  width: 100%;
   left: 0;
   right: 0;
   pointer-events: none; // 保证整个message区域不遮挡背后元素响应鼠标事件
@@ -136,7 +136,8 @@ function onHideMessage (index: number) {
       margin-bottom: 8px;
     }
     .m-message-content {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       padding: 9px 12px;
       background: #FFF;
       border-radius: 8px;
@@ -144,8 +145,6 @@ function onHideMessage (index: number) {
       pointer-events: auto; // 保证内容区域部分可以正常响应鼠标事件
       .svg {
         display: inline-block;
-        vertical-align: top;
-        margin-top: 3px;
         width: 16px;
         height: 16px;
         margin-right: 8px;

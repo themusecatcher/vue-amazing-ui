@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf } from '../index'
+import { rafTimeout, cancelRaf, requestAnimationFrame, cancelAnimationFrame } from '../index'
 import Spin from '../spin'
 interface Image {
   title?: string // 图片名称
@@ -101,8 +101,6 @@ watch(
   }
 )
 function getFPS () { // 获取屏幕刷新率
-  // @ts-ignore
-  const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
   var start: any = null
   function timeElapse (timestamp: number) {
     /*
@@ -139,7 +137,7 @@ function keyboardSwitch (e: KeyboardEvent) {
   }
 }
 function onStart () {
-  if (imageCount.value > 1) { // 超过一条时滑动
+  if (imageCount.value > 1 && complete.value[0]) { // 超过一条时滑动
     toLeft.value = true // 重置左滑标志
     transition.value = false
     onAutoSlide() // 自动滑动轮播
@@ -148,6 +146,7 @@ function onStart () {
 }
 function onStop () {
   cancelRaf(slideTimer.value)
+  slideTimer.value = null
   if (toLeft.value) { // 左滑箭头移出时
     onStopLeft()
   } else {
@@ -156,7 +155,6 @@ function onStop () {
   console.log('imageSlider stop')
 }
 function onStopLeft () { // 停止往左滑动
-  cancelRaf(slideTimer.value)
   cancelAnimationFrame(moveRaf.value)
   transition.value = true
   left.value = Math.ceil(left.value / imageWidth.value) * imageWidth.value // ceil：向上取整，floor：向下取整

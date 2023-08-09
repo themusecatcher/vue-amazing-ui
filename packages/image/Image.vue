@@ -476,7 +476,7 @@ function onSwitchRight () {
         .u-preview-image {
           display: inline-block;
           vertical-align: middle;
-          max-width: 100vw;
+          max-width: 100%;
           max-height: 100vh;
           cursor: grab;
           transition: transform .3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;

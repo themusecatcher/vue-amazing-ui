@@ -38,6 +38,7 @@ import Message from './message'
 import Modal from './modal'
 import Notification from './notification'
 import Pagination from './pagination'
+import Popconfirm from './popconfirm'
 import Progress from './progress'
 import QRCode from './qrcode'
 import Radio from './radio'
@@ -91,6 +92,7 @@ const components = [
   Modal,
   Notification,
   Pagination,
+  Popconfirm,
   Progress,
   QRCode,
   Radio,
@@ -169,6 +171,7 @@ export {
   Modal,
   Notification,
   Pagination,
+  Popconfirm,
   Progress,
   QRCode,
   Radio,
