@@ -146,6 +146,13 @@ import { ref } from 'vue'
 const modal = ref()
 const loading = ref(false)
 const visible = ref(false)
+function showEraseModal (content: string) {
+  modal.value.erase({
+    title: 'Do you Want to delete these items ?',
+    content: content
+  })
+  visible.value = true
+}
 function onCancel () { // “取消”按钮回调
   visible.value = false
 }
