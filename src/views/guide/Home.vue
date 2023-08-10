@@ -9,7 +9,7 @@ const installData = ref([
 ])
 const collapseData = ref([
   {
-    header: '以上十个 API 使用时直接引入即可:',
+    header: '以上工具函数 API 使用时直接引入即可:',
     text: `<script setup lang="ts">
 \import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add, downloadFile, moneyFormat } from 'vue-amazing-ui'
 <\/script>`
@@ -38,7 +38,7 @@ const sum = computed(() => {
       <li class="u-tip mb10 mt10">全局引入并注册所有组件</li>
       <li class="u-tip mb10">按需引入并注册部分组件</li>
     </ul>
-    <h2 class="mt30">除此以外，Vue Amazing UI 还提供了 11 个常用工具函数 ：</h2>
+    <h2 class="mt30">常用工具函数：</h2>
     <ul class="m-list">
       <li class="u-tip mb10 mt10">dateFormat: 简单易用的日期格式化函数！</li>
       <li class="u-tip mb10">requestAnimationFrame: 针对不同浏览器进行兼容处理！</li>

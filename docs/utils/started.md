@@ -12,7 +12,7 @@ import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, ca
 </script>
 ```
 
-## 一共 11 个常用工具函数
+## 常用工具函数
 
 Function name | Descriptions | Arguments
 --- | :--- | :---
