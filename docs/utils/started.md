@@ -8,7 +8,19 @@
 
 ```vue
 <script setup lang="ts">
-import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add, downloadFile } from 'vue-amazing-ui'
+import {
+  dateFormat,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+  rafTimeout,
+  cancelRaf,
+  throttle,
+  debounce,
+  add,
+  downloadFile,
+  moneyFormat,
+  toggleDark
+} from 'vue-amazing-ui'
 </script>
 ```
 
