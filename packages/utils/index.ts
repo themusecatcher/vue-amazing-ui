@@ -199,4 +199,23 @@ export function moneyFormat (value: number|string, decimal = 2, split = ',') {
     return '--'
   }
 }
+/*
+  在 <html> 根元素上动态切换 dark 模式，只在根元素添加 dark 类值，具体样式需自行添加
+  // dark 主题样式参考如下：
+  html {
+    transition: filter .3s ease-in-out;
+  }
+  · invert(): 反转输入图像，1表示完全反转
+  · hue-rotate(): 在输入图像上应用色相旋转
+  html.dark { // 暗黑模式
+    filter: invert(1) hue-rotate(180deg);
+    img, video { // 将图片和视频再次反转以恢复原本的颜色
+      filter: invert(1) hue-rotate(180deg);
+    }
+  }
+*/
+export function toggleDark () {
+  // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
+  document.documentElement.classList.toggle('dark')
+}
   

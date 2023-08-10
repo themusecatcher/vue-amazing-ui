@@ -9,7 +9,8 @@ import {
   debounce,
   add,
   downloadFile,
-  moneyFormat
+  moneyFormat,
+  toggleDark
 } from './utils'
 import type { App } from 'vue'
 import Alert from './alert'
@@ -142,7 +143,8 @@ export {
   debounce,
   add,
   downloadFile,
-  moneyFormat
+  moneyFormat,
+  toggleDark
 }
 export {
   Alert,
