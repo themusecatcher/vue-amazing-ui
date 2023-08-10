@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { routes } from '@/router'
 const installData = ref([
   {
@@ -25,7 +25,7 @@ const sum = computed(() => {
     <h1>Vue Amazing UI</h1>
     <p class="u-tip mb10 mt30">该组件库采用 Vue3@3.3.4 + TypeScript@4.7.4 + Vite4.4.7 + Less@4.1.3 实现！</p>
     <p class="u-tip mb10">所有组件 CSS 样式均使用 box-sizing: border-box; 模式！</p>
-    <p class="u-tip mb10">目前共有 {{ sum }} 个常用基础 UI 组件，以及 10 个常用工具函数，并且持续探索更新中...！</p>
+    <p class="u-tip mb10">目前共有 {{ sum }} 个常用基础 UI 组件，以及 11 个常用工具函数，并且持续探索更新中...！</p>
     <p class="u-tip">开箱即用！</p>
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse
@@ -38,7 +38,7 @@ const sum = computed(() => {
       <li class="u-tip mb10 mt10">全局引入并注册所有组件</li>
       <li class="u-tip mb10">按需引入并注册部分组件</li>
     </ul>
-    <h2 class="mt30">除此以外，Vue Amazing UI 还提供了十个常用工具函数 ：</h2>
+    <h2 class="mt30">除此以外，Vue Amazing UI 还提供了 11 个常用工具函数 ：</h2>
     <ul class="m-list">
       <li class="u-tip mb10 mt10">dateFormat: 简单易用的日期格式化函数！</li>
       <li class="u-tip mb10">requestAnimationFrame: 针对不同浏览器进行兼容处理！</li>
@@ -50,6 +50,7 @@ const sum = computed(() => {
       <li class="u-tip mb10">add: 消除js加减精度问题的加法函数！</li>
       <li class="u-tip mb10">downloadFile: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
       <li class="u-tip mb10">moneyFormat: 金额格式化函数！</li>
+      <li class="u-tip mb10">toggleDark: 一键切换黑暗模式函数！</li>
     </ul>
     <Collapse
       lang="vue3"

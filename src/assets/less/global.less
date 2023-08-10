@@ -9,7 +9,7 @@ body {
   background: #FFF;
 }
 html {
-  transition: filter .3s;
+  transition: filter .3s ease-in-out;
 }
 /*
   invert(): 反转输入图像，1表示完全反转
@@ -20,9 +20,9 @@ html.dark { // 网站暗黑模式
   img, video { // 将图片和视频再次反转以恢复原本的颜色
     filter: invert(1) hue-rotate(180deg);
   }
-  // .ant-menu {
-  //   filter: invert(1) hue-rotate(180deg);
-  // }
+  .ant-menu {
+    filter: invert(1) hue-rotate(180deg);
+  }
 }
 // sepia(): 将图像转换为深褐色
 html.cafe {

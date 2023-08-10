@@ -337,6 +337,10 @@ export default defineConfig({
             {
               text: 'throttle 节流',
               link: '/utils/throttle'
+            },
+            {
+              text: 'toggleDark 切换暗黑',
+              link: '/utils/toggle-dark'
             }
           ]
         }
