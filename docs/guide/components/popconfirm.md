@@ -77,6 +77,45 @@ const cancel = (e: MouseEvent) => {
 
 :::
 
+## 预置四种 Icon 图标
+
+<Space>
+  <Popconfirm title="Are you sure delete this task?">
+    <Button type="primary">Warn</Button>
+  </Popconfirm>
+  <Popconfirm title="Are you sure delete this task?" icon-type="info">
+    <Button type="primary">Info</Button>
+  </Popconfirm>
+  <Popconfirm title="Are you sure delete this task?" icon-type="success">
+    <Button type="primary">Success</Button>
+  </Popconfirm>
+  <Popconfirm title="Are you sure delete this task?" icon-type="error">
+    <Button type="primary">Error</Button>
+  </Popconfirm>
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space>
+    <Popconfirm title="Are you sure delete this task?">
+      <Button type="primary">Warn</Button>
+    </Popconfirm>
+    <Popconfirm title="Are you sure delete this task?" icon-type="info">
+      <Button type="primary">Info</Button>
+    </Popconfirm>
+    <Popconfirm title="Are you sure delete this task?" icon-type="success">
+      <Button type="primary">Success</Button>
+    </Popconfirm>
+    <Popconfirm title="Are you sure delete this task?" icon-type="error">
+      <Button type="primary">Error</Button>
+    </Popconfirm>
+  </Space>
+</template>
+```
+
+:::
 ## 自定义 Icon 图标
 
 <Popconfirm title="Are you sure？">
@@ -142,6 +181,7 @@ title | 确认框的标题 | string &#124; slot | '' | false
 description | 确认框的内容描述 | string &#124; slot | '' | false
 content | 展示的文本 | string &#124; slot | '' | false
 icon | 自定义弹出确认框 `Icon` 图标 | string &#124; slot | '' | false
+iconType | 弹出确认框 `Icon` 图标类型 | 'success' &#124; 'info' &#124; 'warn' &#124; 'error' | 'warn' | false
 maxWidth | 弹出确认框内容最大宽度 | string &#124; number | 'auto' | false
 cancelText | 取消按钮文字 | string &#124; slot | '取消' | false
 cancelType | 取消按钮类型 | string | 'default' | false
