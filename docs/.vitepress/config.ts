@@ -6,7 +6,7 @@ export default defineConfig({
   base: '/vue-amazing-ui/',
 
   head: [ // 网站图标
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: 'logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: 'logo.svg' }]
     // ['link', { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
   ],
   appearance: true, // 默认 true，设为 false 则无法切换dark/light主题，可选 'dark' true false
@@ -18,11 +18,11 @@ export default defineConfig({
 
     editLink: {
       pattern: 'https://github.com/themusecatcher/vue-amazing-ui/tree/master/docs/:path',
-      text: 'Suggest changes to this page',
+      text: 'Suggest changes to this page'
     },
     // 默认支持icon包括：'discord'|'facebook'|'github'|'instagram'|'linkedin'|'mastodon'|'slack'|'twitter'|'youtube'
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/themusecatcher/vue-amazing-ui' },
+      { icon: 'github', link: 'https://github.com/themusecatcher/vue-amazing-ui' }
       // 自定义icon
       // {
       //   icon: {
@@ -44,7 +44,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2023-present The Muse Catcher',
+      copyright: 'Copyright © 2023-present The Muse Catcher'
     },
 
     nav: [
@@ -60,15 +60,15 @@ export default defineConfig({
             items: [
               {
                 text: 'vue',
-                link: 'https://cn.vuejs.org/',
-              },
-              {
-                text: 'markdown',
-                link: 'https://markdown.com.cn/',
+                link: 'https://cn.vuejs.org/'
               },
               {
                 text: 'vitepress',
-                link: 'https://vitepress.dev/',
+                link: 'https://vitepress.dev/'
+              },
+              {
+                text: 'markdown',
+                link: 'https://markdown.com.cn/'
               }
             ]
           }
