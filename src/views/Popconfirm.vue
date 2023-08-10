@@ -25,6 +25,21 @@ const cancel = (e: MouseEvent) => {
     <Popconfirm title="Are you sure？" ok-text="Yes" cancel-text="No">
       <Button type="danger">Delete</Button>
     </Popconfirm>
+    <h2 class="mt30 mb10">预置四种 Icon 图标</h2>
+    <Space>
+      <Popconfirm title="Are you sure delete this task?">
+        <Button type="primary">Warn</Button>
+      </Popconfirm>
+      <Popconfirm title="Are you sure delete this task?" icon-type="info">
+        <Button type="primary">Info</Button>
+      </Popconfirm>
+      <Popconfirm title="Are you sure delete this task?" icon-type="success">
+        <Button type="primary">Success</Button>
+      </Popconfirm>
+      <Popconfirm title="Are you sure delete this task?" icon-type="error">
+        <Button type="primary">Error</Button>
+      </Popconfirm>
+    </Space>
     <h2 class="mt30 mb10">自定义 Icon 图标</h2>
     <Popconfirm title="Are you sure？">
       <template #icon>
