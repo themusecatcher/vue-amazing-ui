@@ -4,14 +4,29 @@ import { useRoute } from 'vue-router'
 import { routes } from '@/router'
 import { toggleDark } from '../../packages'
 
-const showDuty = ref(false)
-const themeDark = ref(true)
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
 
+const showDuty = ref(false)
+const themeDark = ref()
+const observer = ref()
+
 onMounted(() => {
-  toggleDark() // 默认开启暗黑模式
+  // 观察器的配置（需要观察什么变动）
+  const config = { attributes: true, childList: false, subtree: false }
+  // 创建一个观察器实例并传入回调函数
+  observer.value = new MutationObserver(callback)
+  // 以上述配置开始观察目标节点
+  observer.value.observe(document.documentElement, config)
+  themeDark.value = document.documentElement.classList.contains('dark')
+  if (!themeDark.value) { // 默认开启暗黑模式
+    toggleDark()
+  }
 })
+// 当观察到变动时执行的回调函数
+const callback = function () {
+  themeDark.value = document.documentElement.classList.contains('dark')
+}
 function onThemeChange () {
   toggleDark()
 }

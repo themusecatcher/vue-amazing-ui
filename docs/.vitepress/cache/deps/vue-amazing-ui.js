@@ -1,6 +1,6 @@
 import {
-  Xn
-} from "./chunk-DHZVYEIX.js";
+  require_browser
+} from "./chunk-2FKCZR47.js";
 import {
   Autoplay,
   EffectFade,
@@ -9,8 +9,8 @@ import {
   core_default
 } from "./chunk-FRLFTGA2.js";
 import {
-  require_browser
-} from "./chunk-2FKCZR47.js";
+  Xn
+} from "./chunk-DHZVYEIX.js";
 import {
   Fragment,
   Transition,
@@ -61,7 +61,7 @@ import {
   __toESM
 } from "./chunk-UXIASGQL.js";
 
-// node_modules/.pnpm/vue-amazing-ui@0.0.46/node_modules/vue-amazing-ui/dist/vue-amazing-ui.js
+// node_modules/.pnpm/vue-amazing-ui@0.0.47/node_modules/vue-amazing-ui/dist/vue-amazing-ui.js
 var import_qrcode = __toESM(require_browser());
 function dateFormat(value = Date.now(), format = "YYYY-MM-DD HH:mm:ss") {
   if (typeof value === "number" || typeof value === "string") {
@@ -225,6 +225,9 @@ function moneyFormat(value, decimal = 2, split = ",") {
   } else {
     return "--";
   }
+}
+function toggleDark() {
+  document.documentElement.classList.toggle("dark");
 }
 var _withScopeId$p = (n) => (pushScopeId("data-v-d31b30b3"), n = n(), popScopeId(), n);
 var _hoisted_1$H = {
@@ -7721,14 +7724,14 @@ var _sfc_main$9 = defineComponent({
             class: normalizeClass(["u-node", { "node-checked": _ctx.checked }]),
             style: normalizeStyle(_ctx.nodeStyle)
           }, [
-            renderSlot(_ctx.$slots, "node", { checked: _ctx.checked }, void 0, true)
+            renderSlot(_ctx.$slots, "node", {}, void 0, true)
           ], 6)
         ], 2)
       ]);
     };
   }
 });
-var Switch = _export_sfc(_sfc_main$9, [["__scopeId", "data-v-fdd68abf"]]);
+var Switch = _export_sfc(_sfc_main$9, [["__scopeId", "data-v-0884d406"]]);
 Switch.install = (app) => {
   app.component(Switch.__name, Switch);
 };
@@ -9338,6 +9341,7 @@ export {
   moneyFormat,
   rafTimeout,
   requestAnimationFrame,
-  throttle
+  throttle,
+  toggleDark
 };
 //# sourceMappingURL=vue-amazing-ui.js.map
