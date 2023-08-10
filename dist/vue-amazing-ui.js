@@ -7707,15 +7707,15 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
             class: normalizeClass(["u-node", { "node-checked": _ctx.checked }]),
             style: normalizeStyle(_ctx.nodeStyle)
           }, [
-            renderSlot(_ctx.$slots, "node", { checked: _ctx.checked }, void 0, true)
+            renderSlot(_ctx.$slots, "node", {}, void 0, true)
           ], 6)
         ], 2)
       ]);
     };
   }
 });
-const Switch_vue_vue_type_style_index_0_scoped_fdd68abf_lang = "";
-const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-fdd68abf"]]);
+const Switch_vue_vue_type_style_index_0_scoped_0884d406_lang = "";
+const Switch = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-0884d406"]]);
 Switch.install = (app) => {
   app.component(Switch.__name, Switch);
 };

@@ -25,7 +25,7 @@ function onSwitch () {
     <div @click="disabled ? () => false : onSwitch()" :class="['m-switch', { 'switch-checked': checked, 'disabled': disabled }]">
       <div :class="['u-switch-inner', checked ? 'inner-checked' : 'inner-unchecked' ]">{{ checked ? checkedInfo : uncheckedInfo }}</div>
       <div :class="['u-node', { 'node-checked': checked }]" :style="nodeStyle">
-        <slot name="node" :checked="checked"></slot>
+        <slot name="node"></slot>
       </div>
     </div>
   </div>
