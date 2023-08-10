@@ -11,7 +11,7 @@ function toggleDark () {
 
 :::
 
-**一键切换黑暗模式，在 `<html>` 根元素上动态切换 `dark` 模式，只在根元素添加 `dark` 类值，具体样式需自行添加**
+**一键切换黑暗模式：在 `<html>` 根元素上动态切换 `dark` 模式，只在根元素添加 `dark` 类值，具体样式需自行添加**
 
 ```less
 // dark 主题样式参考如下：
@@ -32,10 +32,21 @@ html.dark { // 暗黑模式
 import { ref, onMounted } from 'vue'
 import { toggleDark } from 'vue-amazing-ui'
 
-const themeDark = ref(true)
+const themeDark = ref()
+const observer = ref()
 onMounted(() => {
-  toggleDark() // 默认开启暗黑模式
+  themeDark.value = document.documentElement.classList.contains('dark')
+  // 观察器的配置（需要观察什么变动）
+  const config = { attributes: true, childList: false, subtree: false }
+  // 创建一个观察器实例并传入回调函数
+  observer.value = new MutationObserver(callback)
+  // 以上述配置开始观察目标节点
+  observer.value.observe(document.documentElement, config)
 })
+// 当观察到变动时执行的回调函数
+const callback = function () {
+  themeDark.value = document.documentElement.classList.contains('dark')
+}
 function onThemeChange () {
   toggleDark()
 }
@@ -55,9 +66,9 @@ function onThemeChange () {
 import { ref, onMounted } from 'vue'
 import { toggleDark } from 'vue-amazing-ui'
 
-const themeDark = ref(true)
+const themeDark = ref()
 onMounted(() => {
-  toggleDark() // 默认开启暗黑模式
+  themeDark.value = document.documentElement.classList.contains('dark')
 })
 function onThemeChange () {
   toggleDark()
@@ -73,15 +84,21 @@ function onThemeChange () {
 </template>
 <style lang="less" scoped>
 .u-theme-switch {
-  position: fixed;
-  top: 13px;
-  left: 195px;
-  z-index: 3;
   :deep(.switch-checked) {
     background: #faad14;
     &:hover:not(.disabled) {
       background: #e8b339;
     }
+  }
+  .u-dark-svg {
+    width: 12px;
+    height: 12px;
+    fill: #fff;
+  }
+  .u-light-svg {
+    width: 12px;
+    height: 12px;
+    fill: rgba(60, 60, 67, .75);
   }
 }
 </style>
@@ -89,15 +106,21 @@ function onThemeChange () {
 
 <style lang="less" scoped>
 .u-theme-switch {
-  position: fixed;
-  top: 13px;
-  left: 195px;
-  z-index: 3;
   :deep(.switch-checked) {
     background: #faad14;
     &:hover:not(.disabled) {
       background: #e8b339;
     }
+  }
+  .u-dark-svg {
+    width: 12px;
+    height: 12px;
+    fill: #fff;
+  }
+  .u-light-svg {
+    width: 12px;
+    height: 12px;
+    fill: rgba(60, 60, 67, .75);
   }
 }
 </style>
