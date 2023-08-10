@@ -10,7 +10,7 @@ lerna-debug.log*
 node_modules
 .DS_Store
 # dist
-packages
+# packages
 *.mp4
 dist-ssr
 coverage
