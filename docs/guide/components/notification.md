@@ -86,7 +86,7 @@ function onOpen (info: string) {
     description: info
   }) // 默认使用
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
+function onClose () {
   console.log('关闭notification')
 }
 </script>
@@ -114,7 +114,7 @@ function onInfo (info: string) {
     description: info
   }) // info调用
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
+function onClose () {
   console.log('关闭notification')
 }
 </script>
@@ -142,7 +142,7 @@ function onSuccess (info: string) {
     description: info
   }) // success调用
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
+function onClose () {
   console.log('关闭notification')
 }
 </script>
@@ -170,7 +170,7 @@ function onError (info: string) {
     description: info
   }) // error调用
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
+function onClose () {
   console.log('关闭notification')
 }
 </script>
@@ -198,7 +198,7 @@ function onWarn (info: string) {
     description: info
   }) // warn调用
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
+function onClose () {
   console.log('关闭notification')
 }
 </script>
@@ -227,7 +227,7 @@ function onOpenPlacement (place: string) {
     placement: place
   })
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
+function onClose () {
   console.log('关闭notification')
 }
 </script>
@@ -256,7 +256,7 @@ function onOpenPlacement (place: string) {
     placement: place
   })
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
+function onClose () {
   console.log('关闭notification')
 }
 </script>
@@ -285,7 +285,7 @@ function onOpenPlacement (place: string) {
     placement: place
   })
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
+function onClose () {
   console.log('关闭notification')
 }
 </script>
