@@ -25,7 +25,7 @@ const hideTimers = ref<any[]>([])
 const messageContent = ref<Message[]>([])
 
 const clear = computed(() => { // 所有提示是否已经全部变为false
-  return showMessage.value.every(item => !item)
+  return showMessage.value.every(show => !show)
 })
 watch(clear, (to, from) => { // 所有提示都消失后重置
   if (!from && to) {
