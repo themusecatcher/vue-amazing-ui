@@ -169,7 +169,7 @@ function moneyFormat(value, decimal = 2, split = ",") {
 function toggleDark() {
   document.documentElement.classList.toggle("dark");
 }
-const _withScopeId$p = (n) => (pushScopeId("data-v-d31b30b3"), n = n(), popScopeId(), n);
+const _withScopeId$p = (n) => (pushScopeId("data-v-6aedfe00"), n = n(), popScopeId(), n);
 const _hoisted_1$H = {
   key: 0,
   class: "m-icon"
@@ -240,7 +240,7 @@ const _hoisted_15$9 = {
   class: "m-big-icon"
 };
 const _hoisted_16$9 = ["src"];
-const _hoisted_17$7 = {
+const _hoisted_17$8 = {
   key: 1,
   focusable: "false",
   class: "u-icon",
@@ -340,9 +340,9 @@ const _sfc_main$O = /* @__PURE__ */ defineComponent({
   emits: ["close"],
   setup(__props, { emit }) {
     const props = __props;
+    const alert = ref();
     const descRef = ref();
     const showDesc = ref(1);
-    const alert = ref();
     onMounted(() => {
       showDesc.value = descRef.value.offsetHeight;
       if (props.closable) {
@@ -381,7 +381,7 @@ const _sfc_main$O = /* @__PURE__ */ defineComponent({
                   key: 0,
                   src: _ctx.icon,
                   class: "u-big-icon-img"
-                }, null, 8, _hoisted_16$9)) : _ctx.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_17$7, _hoisted_20$3)) : _ctx.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_21$4, _hoisted_24$2)) : _ctx.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_25$3, _hoisted_28$3)) : _ctx.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_29, _hoisted_32)) : createCommentVNode("", true)
+                }, null, 8, _hoisted_16$9)) : _ctx.type === "info" ? (openBlock(), createElementBlock("svg", _hoisted_17$8, _hoisted_20$3)) : _ctx.type === "success" ? (openBlock(), createElementBlock("svg", _hoisted_21$4, _hoisted_24$2)) : _ctx.type === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_25$3, _hoisted_28$3)) : _ctx.type === "error" ? (openBlock(), createElementBlock("svg", _hoisted_29, _hoisted_32)) : createCommentVNode("", true)
               ], true)
             ]))
           ], 64)) : createCommentVNode("", true),
@@ -416,7 +416,7 @@ const _sfc_main$O = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Alert_vue_vue_type_style_index_0_scoped_d31b30b3_lang = "";
+const Alert_vue_vue_type_style_index_0_scoped_6aedfe00_lang = "";
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -424,7 +424,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Alert = /* @__PURE__ */ _export_sfc(_sfc_main$O, [["__scopeId", "data-v-d31b30b3"]]);
+const Alert = /* @__PURE__ */ _export_sfc(_sfc_main$O, [["__scopeId", "data-v-6aedfe00"]]);
 Alert.install = (app) => {
   app.component(Alert.__name, Alert);
 };
@@ -2862,7 +2862,7 @@ const _hoisted_15$7 = /* @__PURE__ */ _withScopeId$i(() => /* @__PURE__ */ creat
 const _hoisted_16$7 = [
   _hoisted_15$7
 ];
-const _hoisted_17$6 = { class: "u-title" };
+const _hoisted_17$7 = { class: "u-title" };
 const _hoisted_18$6 = { class: "m-drawer-extra" };
 const _hoisted_19$5 = { class: "m-drawer-body" };
 const _sfc_main$v = /* @__PURE__ */ defineComponent({
@@ -2967,7 +2967,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
                         "aria-hidden": "true",
                         viewBox: "64 64 896 896"
                       }, _hoisted_16$7)),
-                      createElementVNode("p", _hoisted_17$6, [
+                      createElementVNode("p", _hoisted_17$7, [
                         renderSlot(_ctx.$slots, "title", {}, () => [
                           createTextVNode(toDisplayString(_ctx.title), 1)
                         ], true)
@@ -3235,7 +3235,7 @@ const _hoisted_16$6 = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ creat
 }, [
   /* @__PURE__ */ createElementVNode("path", { d: "M637 443H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h312c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8zm284 424L775 721c122.1-148.9 113.6-369.5-26-509-148-148.1-388.4-148.1-537 0-148.1 148.6-148.1 389 0 537 139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11zM696 696c-118.8 118.7-311.2 118.7-430 0-118.7-118.8-118.7-311.2 0-430 118.8-118.7 311.2-118.7 430 0 118.7 118.8 118.7 311.2 0 430z" })
 ], -1));
-const _hoisted_17$5 = [
+const _hoisted_17$6 = [
   _hoisted_16$6
 ];
 const _hoisted_18$5 = /* @__PURE__ */ _withScopeId$g(() => /* @__PURE__ */ createElementVNode("svg", {
@@ -3587,7 +3587,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
                     class: normalizeClass(["u-preview-operation", { "u-operation-disabled": scale.value === _ctx.minZoomScale }]),
                     title: "缩小",
                     onClick: onZoomout
-                  }, _hoisted_17$5, 2),
+                  }, _hoisted_17$6, 2),
                   createElementVNode("div", {
                     class: "u-preview-operation",
                     title: "还原",
@@ -4275,7 +4275,7 @@ const _hoisted_15$5 = /* @__PURE__ */ _withScopeId$c(() => /* @__PURE__ */ creat
 const _hoisted_16$5 = [
   _hoisted_15$5
 ];
-const _hoisted_17$4 = {
+const _hoisted_17$5 = {
   key: 2,
   focusable: "false",
   class: "u-icon success",
@@ -4397,7 +4397,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
                     createElementVNode("div", _hoisted_9$a, [
                       mode.value === "confirm" || mode.value === "erase" ? (openBlock(), createElementBlock("svg", _hoisted_10$7, _hoisted_13$6)) : createCommentVNode("", true),
                       mode.value === "info" ? (openBlock(), createElementBlock("svg", _hoisted_14$6, _hoisted_16$5)) : createCommentVNode("", true),
-                      mode.value === "success" ? (openBlock(), createElementBlock("svg", _hoisted_17$4, _hoisted_19$3)) : createCommentVNode("", true),
+                      mode.value === "success" ? (openBlock(), createElementBlock("svg", _hoisted_17$5, _hoisted_19$3)) : createCommentVNode("", true),
                       mode.value === "error" ? (openBlock(), createElementBlock("svg", _hoisted_20$1, _hoisted_22$2)) : createCommentVNode("", true),
                       mode.value === "warn" ? (openBlock(), createElementBlock("svg", _hoisted_23$2, _hoisted_25$1)) : createCommentVNode("", true),
                       createElementVNode("div", _hoisted_26$1, toDisplayString((_a = desc.value) == null ? void 0 : _a.title), 1)
@@ -4444,36 +4444,37 @@ const Modal = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-45
 Modal.install = (app) => {
   app.component(Modal.__name, Modal);
 };
-const _withScopeId$b = (n) => (pushScopeId("data-v-a1f80c76"), n = n(), popScopeId(), n);
+const _withScopeId$b = (n) => (pushScopeId("data-v-1d6089ca"), n = n(), popScopeId(), n);
 const _hoisted_1$l = ["onMouseenter", "onMouseleave"];
-const _hoisted_2$i = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_3$g = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z" }, null, -1));
-const _hoisted_4$c = [
-  _hoisted_2$i,
-  _hoisted_3$g
+const _hoisted_2$i = { class: "m-notification-content" };
+const _hoisted_3$g = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_4$c = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z" }, null, -1));
+const _hoisted_5$9 = [
+  _hoisted_3$g,
+  _hoisted_4$c
 ];
-const _hoisted_5$9 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0 0 51.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
-const _hoisted_6$9 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_7$9 = [
-  _hoisted_5$9,
-  _hoisted_6$9
+const _hoisted_6$9 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0 0 51.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1));
+const _hoisted_7$9 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_8$9 = [
+  _hoisted_6$9,
+  _hoisted_7$9
 ];
-const _hoisted_8$9 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_9$9 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 688a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z" }, null, -1));
-const _hoisted_10$6 = [
-  _hoisted_8$9,
-  _hoisted_9$9
+const _hoisted_9$9 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_10$6 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M464 688a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z" }, null, -1));
+const _hoisted_11$6 = [
+  _hoisted_9$9,
+  _hoisted_10$6
 ];
-const _hoisted_11$6 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z" }, null, -1));
-const _hoisted_12$5 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
-const _hoisted_13$5 = [
-  _hoisted_11$6,
-  _hoisted_12$5
+const _hoisted_12$5 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z" }, null, -1));
+const _hoisted_13$5 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1));
+const _hoisted_14$5 = [
+  _hoisted_12$5,
+  _hoisted_13$5
 ];
-const _hoisted_14$5 = ["onClick"];
-const _hoisted_15$4 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1));
-const _hoisted_16$4 = [
-  _hoisted_15$4
+const _hoisted_15$4 = ["onClick"];
+const _hoisted_16$4 = /* @__PURE__ */ _withScopeId$b(() => /* @__PURE__ */ createElementVNode("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1));
+const _hoisted_17$4 = [
+  _hoisted_16$4
 ];
 var ColorStyle = /* @__PURE__ */ ((ColorStyle2) => {
   ColorStyle2["info"] = "#1677FF";
@@ -4499,6 +4500,7 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
     const hideTimers = ref([]);
     const notificationData = ref([]);
     const place = ref(props.placement);
+    const notification = ref();
     const clear = computed(() => {
       return hideIndex.value.length === notificationData.value.length;
     });
@@ -4525,6 +4527,10 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
       cancelRaf(resetTimer.value);
       hideTimers.value.push(null);
       const index = notificationData.value.length - 1;
+      nextTick(() => {
+        notification.value[index].style.height = notification.value[index].offsetHeight + "px";
+        notification.value[index].style.opacity = 1;
+      });
       if (notificationData.value[index].placement) {
         place.value = notificationData.value[index].placement;
       }
@@ -4591,61 +4597,66 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
           default: withCtx(() => [
             (openBlock(true), createElementBlock(Fragment, null, renderList(notificationData.value, (data, index) => {
               return withDirectives((openBlock(), createElementBlock("div", {
+                ref_for: true,
+                ref_key: "notification",
+                ref: notification,
                 class: "m-notification",
                 onMouseenter: ($event) => onEnter(index),
                 onMouseleave: ($event) => onLeave(index),
                 key: index
               }, [
-                data.mode === "info" ? (openBlock(), createElementBlock("svg", {
-                  key: 0,
-                  class: "u-svg",
-                  style: normalizeStyle(`fill: ${ColorStyle[data.mode]}`),
-                  viewBox: "64 64 896 896",
-                  "data-icon": "info-circle",
-                  "aria-hidden": "true",
-                  focusable: "false"
-                }, _hoisted_4$c, 4)) : createCommentVNode("", true),
-                data.mode === "success" ? (openBlock(), createElementBlock("svg", {
-                  key: 1,
-                  class: "u-svg",
-                  style: normalizeStyle(`fill: ${ColorStyle[data.mode]}`),
-                  viewBox: "64 64 896 896",
-                  "data-icon": "check-circle",
-                  "aria-hidden": "true",
-                  focusable: "false"
-                }, _hoisted_7$9, 4)) : createCommentVNode("", true),
-                data.mode === "warn" ? (openBlock(), createElementBlock("svg", {
-                  key: 2,
-                  class: "u-svg",
-                  style: normalizeStyle(`fill: ${ColorStyle[data.mode]}`),
-                  viewBox: "64 64 896 896",
-                  "data-icon": "exclamation-circle",
-                  "aria-hidden": "true",
-                  focusable: "false"
-                }, _hoisted_10$6, 4)) : createCommentVNode("", true),
-                data.mode === "error" ? (openBlock(), createElementBlock("svg", {
-                  key: 3,
-                  class: "u-svg",
-                  style: normalizeStyle(`fill: ${ColorStyle[data.mode]}`),
-                  viewBox: "64 64 896 896",
-                  "data-icon": "close-circle",
-                  "aria-hidden": "true",
-                  focusable: "false"
-                }, _hoisted_13$5, 4)) : createCommentVNode("", true),
-                createElementVNode("div", {
-                  class: normalizeClass(["u-title", { "mb4": data.mode !== "open", "ml36": data.mode !== "open" }])
-                }, toDisplayString(data.message || _ctx.message), 3),
-                createElementVNode("p", {
-                  class: normalizeClass(["u-description", { "ml36": data.mode !== "open" }])
-                }, toDisplayString(data.description || "--"), 3),
-                (openBlock(), createElementBlock("svg", {
-                  class: "u-close",
-                  onClick: ($event) => onClose(index),
-                  viewBox: "64 64 896 896",
-                  "data-icon": "close",
-                  "aria-hidden": "true",
-                  focusable: "false"
-                }, _hoisted_16$4, 8, _hoisted_14$5))
+                createElementVNode("div", _hoisted_2$i, [
+                  data.mode === "info" ? (openBlock(), createElementBlock("svg", {
+                    key: 0,
+                    class: "u-svg",
+                    style: normalizeStyle(`fill: ${ColorStyle[data.mode]}`),
+                    viewBox: "64 64 896 896",
+                    "data-icon": "info-circle",
+                    "aria-hidden": "true",
+                    focusable: "false"
+                  }, _hoisted_5$9, 4)) : createCommentVNode("", true),
+                  data.mode === "success" ? (openBlock(), createElementBlock("svg", {
+                    key: 1,
+                    class: "u-svg",
+                    style: normalizeStyle(`fill: ${ColorStyle[data.mode]}`),
+                    viewBox: "64 64 896 896",
+                    "data-icon": "check-circle",
+                    "aria-hidden": "true",
+                    focusable: "false"
+                  }, _hoisted_8$9, 4)) : createCommentVNode("", true),
+                  data.mode === "warn" ? (openBlock(), createElementBlock("svg", {
+                    key: 2,
+                    class: "u-svg",
+                    style: normalizeStyle(`fill: ${ColorStyle[data.mode]}`),
+                    viewBox: "64 64 896 896",
+                    "data-icon": "exclamation-circle",
+                    "aria-hidden": "true",
+                    focusable: "false"
+                  }, _hoisted_11$6, 4)) : createCommentVNode("", true),
+                  data.mode === "error" ? (openBlock(), createElementBlock("svg", {
+                    key: 3,
+                    class: "u-svg",
+                    style: normalizeStyle(`fill: ${ColorStyle[data.mode]}`),
+                    viewBox: "64 64 896 896",
+                    "data-icon": "close-circle",
+                    "aria-hidden": "true",
+                    focusable: "false"
+                  }, _hoisted_14$5, 4)) : createCommentVNode("", true),
+                  createElementVNode("div", {
+                    class: normalizeClass(["u-title", { "mb4": data.mode !== "open", "ml36": data.mode !== "open" }])
+                  }, toDisplayString(data.message || _ctx.message), 3),
+                  createElementVNode("p", {
+                    class: normalizeClass(["u-description", { "ml36": data.mode !== "open" }])
+                  }, toDisplayString(data.description || "--"), 3),
+                  (openBlock(), createElementBlock("svg", {
+                    class: "u-close",
+                    onClick: ($event) => onClose(index),
+                    viewBox: "64 64 896 896",
+                    "data-icon": "close",
+                    "aria-hidden": "true",
+                    focusable: "false"
+                  }, _hoisted_17$4, 8, _hoisted_15$4))
+                ])
               ], 40, _hoisted_1$l)), [
                 [vShow, !hideIndex.value.includes(index)]
               ]);
@@ -4657,8 +4668,8 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Notification_vue_vue_type_style_index_0_scoped_a1f80c76_lang = "";
-const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-a1f80c76"]]);
+const Notification_vue_vue_type_style_index_0_scoped_1d6089ca_lang = "";
+const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-1d6089ca"]]);
 Notification.install = (app) => {
   app.component(Notification.__name, Notification);
 };

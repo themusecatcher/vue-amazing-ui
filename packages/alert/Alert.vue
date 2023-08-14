@@ -18,9 +18,9 @@ const props = withDefaults(defineProps<Props>(), {
   icon: '',
   showIcon: false
 })
+const alert = ref()
 const descRef = ref() // 声明一个同名的模板引用
 const showDesc = ref(1)
-const alert = ref()
 onMounted(() => {
   showDesc.value = descRef.value.offsetHeight
   if (props.closable) {
@@ -38,7 +38,7 @@ function onClose (e: MouseEvent):void {
 }
 </script>
 <template>
-  <div  ref="alert" class="m-alert-wrapper">
+  <div ref="alert" class="m-alert-wrapper">
     <div
       class="m-alert"
       :class="[`${type}`, {'width-description': showDesc}]">
@@ -81,17 +81,13 @@ function onClose (e: MouseEvent):void {
 </template>
 <style lang="less" scoped>
 .m-alert-wrapper {
-  overflow: hidden;
   transition: height .3s cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity .3s cubic-bezier(.78, 0.14, 0.15, 0.86);
 }
 .m-alert {
-  box-sizing: border-box;
-  margin: 0;
   padding: 8px 12px;
   color: rgba(0, 0, 0, .88);
   font-size: 14px;
   line-height: 1.5714285714285714;
-  list-style: none;
   position: relative;
   display: flex;
   align-items: center;
