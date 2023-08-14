@@ -1,4 +1,4 @@
-import { defineComponent, ref, onMounted, nextTick, openBlock, createElementBlock, createElementVNode, normalizeClass, Fragment, renderSlot, createCommentVNode, createTextVNode, toDisplayString, pushScopeId, popScopeId, computed, normalizeStyle, createBlock, Transition, withCtx, withDirectives, vShow, renderList, withModifiers, onUnmounted, watch, createVNode, unref, createStaticVNode, watchEffect, vModelText, TransitionGroup, resolveComponent, mergeProps, withKeys, vModelDynamic, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, onBeforeUnmount, onBeforeUpdate } from "vue";
+import { defineComponent, ref, onMounted, nextTick, openBlock, createElementBlock, createElementVNode, normalizeClass, Fragment, renderSlot, createCommentVNode, createTextVNode, toDisplayString, pushScopeId, popScopeId, computed, normalizeStyle, createBlock, Transition, withCtx, withDirectives, vShow, renderList, onUnmounted, watch, createVNode, unref, createStaticVNode, watchEffect, vModelText, withModifiers, TransitionGroup, resolveComponent, mergeProps, withKeys, vModelDynamic, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, onBeforeUnmount, onBeforeUpdate } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import QRCode$1 from "qrcode";
 import Swiper$2, { Navigation, Pagination as Pagination$1, Autoplay, EffectFade } from "swiper";
@@ -625,7 +625,8 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
     loading: { type: Boolean, default: false },
     center: { type: Boolean, default: false }
   },
-  setup(__props) {
+  emits: ["click"],
+  setup(__props, { emit }) {
     const props = __props;
     const isRoute = computed(() => {
       if (JSON.stringify(props.route) === "{}") {
@@ -634,6 +635,11 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
         return true;
       }
     });
+    function onClick(e) {
+      if (!isRoute.value) {
+        emit("click", e);
+      }
+    }
     function getUrl(route) {
       var targetUrl = route.path;
       if (route.query && JSON.stringify(route.query) !== "{}") {
@@ -653,7 +659,7 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
         class: normalizeClass(["m-btn-wrap", { "center": _ctx.center }])
       }, [
         createElementVNode("a", {
-          onClick: _cache[0] || (_cache[0] = withModifiers(($event) => isRoute.value ? () => false : _ctx.$emit("click", $event), ["self"])),
+          onClick,
           href: getUrl(_ctx.route),
           target: isRoute.value ? _ctx.target : "_self",
           disabled: _ctx.disabled,
@@ -678,8 +684,8 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Button_vue_vue_type_style_index_0_scoped_5eedfb2c_lang = "";
-const Button = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-5eedfb2c"]]);
+const Button_vue_vue_type_style_index_0_scoped_0ca067ef_lang = "";
+const Button = /* @__PURE__ */ _export_sfc(_sfc_main$L, [["__scopeId", "data-v-0ca067ef"]]);
 Button.install = (app) => {
   app.component(Button.__name, Button);
 };
@@ -4055,7 +4061,7 @@ const InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "dat
 InputNumber.install = (app) => {
   app.component(InputNumber.__name, InputNumber);
 };
-const _withScopeId$d = (n) => (pushScopeId("data-v-11e9dd23"), n = n(), popScopeId(), n);
+const _withScopeId$d = (n) => (pushScopeId("data-v-030cce0c"), n = n(), popScopeId(), n);
 const _hoisted_1$n = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$k = /* @__PURE__ */ _withScopeId$d(() => /* @__PURE__ */ createElementVNode("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z" }, null, -1));
 const _hoisted_3$i = [
@@ -4223,8 +4229,8 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Message_vue_vue_type_style_index_0_scoped_11e9dd23_lang = "";
-const Message = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-11e9dd23"]]);
+const Message_vue_vue_type_style_index_0_scoped_030cce0c_lang = "";
+const Message = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-030cce0c"]]);
 Message.install = (app) => {
   app.component(Message.__name, Message);
 };

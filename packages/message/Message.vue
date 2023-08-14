@@ -16,7 +16,7 @@ enum ColorStyle { // 颜色主题对象
   warn = '#faad14'
 }
 interface Message {
-  content: string,
+  content: string
   mode: string
 }
 const resetTimer = ref()
