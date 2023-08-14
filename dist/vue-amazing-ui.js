@@ -524,8 +524,8 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Badge_vue_vue_type_style_index_0_scoped_007a1c05_lang = "";
-const Badge = /* @__PURE__ */ _export_sfc(_sfc_main$N, [["__scopeId", "data-v-007a1c05"]]);
+const Badge_vue_vue_type_style_index_0_scoped_c0cc9447_lang = "";
+const Badge = /* @__PURE__ */ _export_sfc(_sfc_main$N, [["__scopeId", "data-v-c0cc9447"]]);
 Badge.install = (app) => {
   app.component(Badge.__name, Badge);
 };
