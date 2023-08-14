@@ -8446,6 +8446,7 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
           console.log("fps", fps.value);
           distance.value = getDistance();
           onStart();
+          return;
         }
       }
       fpsRaf.value = requestAnimationFrame2(timeElapse);
@@ -8568,8 +8569,8 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const TextScroll_vue_vue_type_style_index_0_scoped_3e0f8b88_lang = "";
-const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-3e0f8b88"]]);
+const TextScroll_vue_vue_type_style_index_0_scoped_e16bcc3b_lang = "";
+const TextScroll = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-e16bcc3b"]]);
 TextScroll.install = (app) => {
   app.component(TextScroll.__name, TextScroll);
 };

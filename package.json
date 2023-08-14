@@ -37,6 +37,7 @@
     "ant-design-vue": "^4.0.0",
     "core-js": "^3.31.1",
     "date-fns": "^2.30.0",
+    "lodash-es": "^4.17.21",
     "naive-ui": "^2.34.4",
     "qrcode": "^1.5.3",
     "swiper": "^9.4.1",

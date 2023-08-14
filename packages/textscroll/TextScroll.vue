@@ -59,6 +59,7 @@ function getFPS () { // 获取屏幕刷新率
       console.log('fps', fps.value)
       distance.value = getDistance() // 获取每列文字宽度
       onStart() // 开始滚动
+      return
     }
   }
   fpsRaf.value = requestAnimationFrame(timeElapse)
@@ -202,11 +203,11 @@ function startMove () {
   transition: all 1s ease;
 }
 .slide-enter-from {
-  transform: translateY(50px) scale(.6);
+  transform: translateY(50px) scale(.5);
   opacity: 0;
 }
 .slide-leave-to {
-  transform: translateY(-50px) scale(.6);
+  transform: translateY(-50px) scale(.5);
   opacity: 0;
 }
 .m-slider-vertical {
