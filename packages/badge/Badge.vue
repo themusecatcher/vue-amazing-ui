@@ -264,13 +264,17 @@ onMounted(() => {
       display: inline-block;
       height: 20px;
       transition: all .3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+      transform-style: preserve-3d;
       -webkit-transform-style: preserve-3d; // 设置元素的子元素是位于 3D 空间中还是平面中 flat | preserve-3d
+      backface-visibility: hidden;
       -webkit-backface-visibility: hidden; // 当元素背面朝向观察者时是否可见 hidden | visible
       .u-number {
         display: inline-block;
         height: 20px;
         margin: 0;
+        transform-style: preserve-3d;
         -webkit-transform-style: preserve-3d;
+        backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
       }
     }
