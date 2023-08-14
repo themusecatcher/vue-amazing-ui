@@ -3,6 +3,7 @@ import { ref } from 'vue'
 const message = ref()
 
 function onInfo (content: string) {
+  console.log('info')
   message.value.info(content) // info调用
 }
 function onSuccess (content: string) {

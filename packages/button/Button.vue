@@ -36,6 +36,12 @@ const isRoute = computed(() => {
     return true
   }
 })
+const emit = defineEmits(['click'])
+function onClick (e: Event) {
+  if (!isRoute.value) {
+    emit('click', e)
+  }
+}
 function getUrl (route: Route) {
   var targetUrl = route.path
   if (route.query && JSON.stringify(route.query) !== '{}') {
@@ -54,7 +60,7 @@ function getUrl (route: Route) {
 <template>
   <div :class="['m-btn-wrap', {'center': center}]">
     <a
-      @click.self="isRoute ? () => false : $emit('click', $event)"
+      @click="onClick"
       :href="getUrl(route)"
       :target="isRoute ? target : '_self'"
       :disabled="disabled"
