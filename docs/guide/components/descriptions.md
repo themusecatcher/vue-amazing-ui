@@ -415,7 +415,7 @@ const onChange = (value: any) => {
 
 ## APIs
 
-### Descriptions
+## Descriptions
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
@@ -423,11 +423,11 @@ title | 描述列表的标题，显示在最顶部 | string &#124; slot | '' | f
 bordered | 是否展示边框 | boolean | false | false
 column | 一行的 `DescriptionItems` 数量，可以写成数值或支持响应式的对象写法 `{ xs: 8, sm: 16, md: 24}` | number &#124; Responsive | {xs: 1, sm: 2, md\: 3} | false
 extra | 描述列表的操作区域，显示在右上方 | string &#124; slot | '' | false
-size | 设置列表的大小 | 'default' &#124; 'middle' &#124; 'small' | 'default'
+size | 设置列表的大小 | 'default' &#124; 'middle' &#124; 'small' | 'default' | false
 labelStyle | 自定义标签样式，优先级低于 `DescriptionItems` | CSSProperties | {} | false
 contentStyle | 自定义内容样式，优先级低于 `DescriptionItems` | CSSProperties | {} | false
 
-### Responsive Type
+## Responsive Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
@@ -438,7 +438,7 @@ lg | `≥992px` 响应式栅格 | number | false
 xl | `≥1200px` 响应式栅格 | number | false
 xxl | `≥1600px` 响应式栅格 | number | false
 
-### DescriptionsItem
+## DescriptionsItem
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
