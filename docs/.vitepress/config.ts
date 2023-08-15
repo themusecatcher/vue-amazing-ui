@@ -99,6 +99,10 @@ export default defineConfig({
               link: '/guide/components/alert'
             },
             {
+              text: '头像 Avatar',
+              link: '/guide/components/avatar'
+            },
+            {
               text: '徽标数 Badge',
               link: '/guide/components/badge'
             },

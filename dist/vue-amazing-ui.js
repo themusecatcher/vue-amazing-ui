@@ -1,4 +1,4 @@
-import { defineComponent, ref, onMounted, nextTick, openBlock, createElementBlock, createElementVNode, normalizeClass, Fragment, renderSlot, createCommentVNode, createTextVNode, toDisplayString, pushScopeId, popScopeId, computed, normalizeStyle, createBlock, Transition, withCtx, withDirectives, vShow, renderList, onUnmounted, watch, createVNode, unref, createStaticVNode, watchEffect, vModelText, withModifiers, TransitionGroup, resolveComponent, mergeProps, withKeys, vModelDynamic, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, onBeforeUnmount, onBeforeUpdate } from "vue";
+import { defineComponent, ref, onMounted, nextTick, openBlock, createElementBlock, createElementVNode, normalizeClass, Fragment, renderSlot, createCommentVNode, createTextVNode, toDisplayString, pushScopeId, popScopeId, onUnmounted, computed, normalizeStyle, createBlock, Transition, withCtx, withDirectives, vShow, renderList, watch, createVNode, unref, createStaticVNode, watchEffect, vModelText, withModifiers, TransitionGroup, resolveComponent, mergeProps, withKeys, vModelDynamic, toRef as toRef$1, readonly, customRef, h, onUpdated, provide, onBeforeUnmount, onBeforeUpdate } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import QRCode$1 from "qrcode";
 import Swiper$2, { Navigation, Pagination as Pagination$1, Autoplay, EffectFade } from "swiper";
@@ -170,7 +170,7 @@ function toggleDark() {
   document.documentElement.classList.toggle("dark");
 }
 const _withScopeId$p = (n) => (pushScopeId("data-v-6aedfe00"), n = n(), popScopeId(), n);
-const _hoisted_1$H = {
+const _hoisted_1$I = {
   key: 0,
   class: "m-icon"
 };
@@ -326,7 +326,7 @@ const _hoisted_37 = /* @__PURE__ */ _withScopeId$p(() => /* @__PURE__ */ createE
 const _hoisted_38 = [
   _hoisted_37
 ];
-const _sfc_main$O = /* @__PURE__ */ defineComponent({
+const _sfc_main$P = /* @__PURE__ */ defineComponent({
   __name: "Alert",
   props: {
     message: { default: "" },
@@ -367,7 +367,7 @@ const _sfc_main$O = /* @__PURE__ */ defineComponent({
           class: normalizeClass(["m-alert", [`${_ctx.type}`, { "width-description": showDesc.value }]])
         }, [
           _ctx.showIcon ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-            !showDesc.value ? (openBlock(), createElementBlock("span", _hoisted_1$H, [
+            !showDesc.value ? (openBlock(), createElementBlock("span", _hoisted_1$I, [
               renderSlot(_ctx.$slots, "icon", {}, () => [
                 _ctx.icon ? (openBlock(), createElementBlock("img", {
                   key: 0,
@@ -424,9 +424,138 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Alert = /* @__PURE__ */ _export_sfc(_sfc_main$O, [["__scopeId", "data-v-6aedfe00"]]);
+const Alert = /* @__PURE__ */ _export_sfc(_sfc_main$P, [["__scopeId", "data-v-6aedfe00"]]);
 Alert.install = (app) => {
   app.component(Alert.__name, Alert);
+};
+const _hoisted_1$H = ["src", "alt"];
+const _sfc_main$O = /* @__PURE__ */ defineComponent({
+  __name: "Avatar",
+  props: {
+    shape: { default: "circle" },
+    size: { default: "default" },
+    src: { default: "" },
+    alt: { default: "" },
+    icon: { default: void 0 }
+  },
+  setup(__props) {
+    const props = __props;
+    const clientWidth = ref(document.documentElement.clientWidth);
+    const iconRef = ref();
+    const showIcon = ref(1);
+    const strRef = ref();
+    const showStr = ref(1);
+    onMounted(() => {
+      window.addEventListener("resize", getBrowserSize);
+      if (!props.src) {
+        showIcon.value = iconRef.value.offsetHeight;
+        nextTick(() => {
+          if (!showIcon.value) {
+            showStr.value = strRef.value.offsetHeight;
+          }
+        });
+      }
+    });
+    onUnmounted(() => {
+      window.removeEventListener("resize", getBrowserSize);
+    });
+    function getBrowserSize() {
+      clientWidth.value = document.documentElement.clientWidth;
+    }
+    const avatarStyle = computed(() => {
+      if (typeof props.size === "string") {
+        return null;
+      }
+      if (typeof props.size === "number") {
+        if (showIcon.value) {
+          return {
+            width: props.size + "px",
+            height: props.size + "px",
+            lineHeight: props.size + "px",
+            fontSize: props.size / 2 + "px"
+          };
+        } else {
+          return {
+            width: props.size + "px",
+            height: props.size + "px",
+            lineHeight: props.size + "px",
+            fontSize: "18px"
+          };
+        }
+      }
+      if (typeof props.size === "object") {
+        let size = 0;
+        if (clientWidth.value >= 1600 && props.size.xxl) {
+          size = props.size.xxl;
+        } else if (clientWidth.value >= 1200 && props.size.xl) {
+          size = props.size.xl;
+        } else if (clientWidth.value >= 992 && props.size.lg) {
+          size = props.size.lg;
+        } else if (clientWidth.value >= 768 && props.size.md) {
+          size = props.size.md;
+        } else if (clientWidth.value >= 576 && props.size.sm) {
+          size = props.size.sm;
+        } else if (clientWidth.value < 576 && props.size.xs) {
+          size = props.size.xs;
+        }
+        return {
+          width: size + "px",
+          height: size + "px",
+          lineHeight: size + "px",
+          fontSize: size / 2 + "px"
+        };
+      }
+    });
+    const strStyle = computed(() => {
+      if (typeof props.size === "string") {
+        return {
+          transform: `scale(1) translateX(-50%)`
+        };
+      }
+      if (typeof props.size === "number") {
+        const scale = Math.min(1, Math.max(1 / 45, (1 + (props.size - 9) * 1) / 45));
+        return {
+          lineHeight: props.size + "px",
+          transform: `scale(${scale}) translateX(-50%)`
+        };
+      }
+    });
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", {
+        class: normalizeClass(["m-avatar", [avatarStyle.value === null ? "avatar-" + _ctx.size : "", "avatar-" + _ctx.shape, { "avatar-image": _ctx.src }]]),
+        style: normalizeStyle(avatarStyle.value || {})
+      }, [
+        _ctx.src ? (openBlock(), createElementBlock("img", {
+          key: 0,
+          class: "u-image",
+          src: _ctx.src,
+          alt: _ctx.alt
+        }, null, 8, _hoisted_1$H)) : createCommentVNode("", true),
+        !_ctx.src && showIcon.value ? (openBlock(), createElementBlock("span", {
+          key: 1,
+          class: "m-icon",
+          ref_key: "iconRef",
+          ref: iconRef
+        }, [
+          renderSlot(_ctx.$slots, "icon", {}, void 0, true)
+        ], 512)) : createCommentVNode("", true),
+        !_ctx.src && !showIcon.value && showStr.value ? (openBlock(), createElementBlock("span", {
+          key: 2,
+          class: "m-string",
+          style: normalizeStyle(strStyle.value),
+          ref_key: "strRef",
+          ref: strRef
+        }, [
+          renderSlot(_ctx.$slots, "default", {}, void 0, true)
+        ], 4)) : createCommentVNode("", true)
+      ], 6);
+    };
+  }
+});
+const Avatar_vue_vue_type_style_index_0_scoped_0756f132_lang = "";
+const Avatar = /* @__PURE__ */ _export_sfc(_sfc_main$O, [["__scopeId", "data-v-0756f132"]]);
+Avatar.install = (app) => {
+  app.component(Avatar.__name, Avatar);
 };
 const _hoisted_1$G = { class: "u-status-text" };
 const _hoisted_2$C = ["title"];
@@ -9288,6 +9417,7 @@ Waterfall.install = (app) => {
 };
 const components = [
   Alert,
+  Avatar,
   Badge,
   Breadcrumb,
   Button,
@@ -9347,6 +9477,7 @@ const VueAmazingUI = {
 };
 export {
   Alert,
+  Avatar,
   Badge,
   Breadcrumb,
   Button,
