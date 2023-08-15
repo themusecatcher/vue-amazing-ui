@@ -26,6 +26,12 @@ export const routes = [
         component: () => import('@/views/Alert.vue')
       },
       {
+        path: '/avatar',
+        name: 'Avatar',
+        meta: { title: '头像' },
+        component: () => import('@/views/Avatar.vue')
+      },
+      {
         path: '/badge',
         name: 'Badge',
         meta: { title: '徽标数' },

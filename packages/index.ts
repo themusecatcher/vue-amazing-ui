@@ -14,6 +14,7 @@ import {
 } from './utils'
 import type { App } from 'vue'
 import Alert from './alert'
+import Avatar from './avatar'
 import Badge from './badge'
 import Breadcrumb from './breadcrumb'
 import Button from './button'
@@ -68,6 +69,7 @@ import Waterfall from './waterfall'
 // 所有组件列表
 const components = [
   Alert,
+  Avatar,
   Badge,
   Breadcrumb,
   Button,
@@ -148,6 +150,7 @@ export {
 }
 export {
   Alert,
+  Avatar,
   Badge,
   Breadcrumb,
   Button,
