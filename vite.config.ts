@@ -33,6 +33,12 @@ export default defineConfig({
       'images': fileURLToPath(new URL('./src/assets/images', import.meta.url))
     }
   },
+  optimizeDeps: {
+    include: [
+      'vue',
+      'vue-router'
+    ]
+  },
   css: {
     preprocessorOptions: {
       less: {

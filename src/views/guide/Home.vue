@@ -11,7 +11,19 @@ const collapseData = ref([
   {
     header: '以上工具函数 API 使用时直接引入即可:',
     text: `<script setup lang="ts">
-\import { dateFormat, requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf, throttle, debounce, add, downloadFile, moneyFormat } from 'vue-amazing-ui'
+\import {
+  dateFormat,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+  rafTimeout,
+  cancelRaf,
+  throttle,
+  debounce,
+  add,
+  downloadFile,
+  moneyFormat,
+  toggleDark
+} from 'vue-amazing-ui'
 <\/script>`
   }
 ])
