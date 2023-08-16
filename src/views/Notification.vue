@@ -21,11 +21,11 @@ function onSuccess (info: string) {
     description: info
   }) // success调用
 }
-function onWarn (info: string) {
-  notification.value.warn({
+function onWarning (info: string) {
+  notification.value.warning({
     message: 'Notification Title',
     description: info
-  }) // warn调用
+  }) // warning调用
 }
 function onError (info: string) {
   notification.value.error({
@@ -52,7 +52,7 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
       <Button type="primary" @click="onOpen('This is a normal notification')">Open</Button>
       <Button type="primary" @click="onInfo('This is a normal notification')">Info</Button>
       <Button type="primary" @click="onSuccess('This is a success notification')">Success</Button>
-      <Button type="primary" @click="onWarn('This is a warn notification')">Warn</Button>
+      <Button type="primary" @click="onWarning('This is a warning notification')">Warning</Button>
       <Button type="primary" @click="onError('This is a error notification')">Error</Button>
     </Space>
     <h2 class="mt30 mb10">位置</h2>

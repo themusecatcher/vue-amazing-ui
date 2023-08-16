@@ -22,8 +22,11 @@ function onSuccess (content: any) {
 function onError (content: any) {
   message.value.error(content) // error调用
 }
-function onWarn (content: any) {
-  message.value.warn(content) // warn调用
+function onWarning (content: any) {
+  message.value.warning(content) // warning调用
+}
+function onLoading (content: string) {
+  message.value.loading(content) // loading调用
 }
 function onClose () {
   console.log('close')
@@ -112,7 +115,7 @@ function onClose () {
 
 ## 警告提示
 
-<Button type="primary" @click="onWarn('This is a warn message')">Warn</Button>
+<Button type="primary" @click="onWarning('This is a warning message')">Warning</Button>
 
 ::: details Show Code
 
@@ -121,15 +124,41 @@ function onClose () {
 import { ref } from 'vue'
 const message = ref()
 
-function onWarn (content: any) {
-  message.value.warn(content) // warn调用
+function onWarning (content: any) {
+  message.value.warning(content) // warning调用
 }
 function onClose () {
   console.log('close')
 }
 </script>
 <template>
-  <Button type="primary" @click="onWarn('This is a warn message')">Warn</Button>
+  <Button type="primary" @click="onWarning('This is a warning message')">Warning</Button>
+  <Message ref="message" :duration="3000" :top="30" @close="onClose" />
+</template>
+```
+
+:::
+
+## 加载提示
+
+<Button type="primary" @click="onLoading('This is a loading message')">Loading</Button>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const message = ref()
+
+function onLoading (content: string) {
+  message.value.loading(content) // loading调用
+}
+function onClose () {
+  console.log('close')
+}
+</script>
+<template>
+  <Button type="primary" @click="onLoading('This is a loading message')">Loading</Button>
   <Message ref="message" :duration="3000" :top="30" @close="onClose" />
 </template>
 ```

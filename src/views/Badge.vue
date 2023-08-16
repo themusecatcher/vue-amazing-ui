@@ -73,7 +73,7 @@ const colors = [
       <Badge status="error" />
       <Badge status="default" />
       <Badge status="processing" />
-      <Badge status="warn" />
+      <Badge status="warning" />
     </Space>
     <br/>
     <Space style="margin-top: 10px;" direction="vertical" :size="10">
@@ -81,7 +81,7 @@ const colors = [
       <Badge status="error" text="Error" />
       <Badge status="default" text="Default" />
       <Badge status="processing" text="Processing" />
-      <Badge status="warn" text="warning" />
+      <Badge status="warning" text="warning" />
     </Space>
     <h2 class="mt30 mb10">动态</h2>
     <Space :size="20" align="center">
