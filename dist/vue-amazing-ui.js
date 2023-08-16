@@ -8144,8 +8144,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tabs_vue_vue_type_style_index_0_scoped_b6552c5a_lang = "";
-const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-b6552c5a"]]);
+const Tabs_vue_vue_type_style_index_0_scoped_353fee15_lang = "";
+const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-353fee15"]]);
 Tabs.install = (app) => {
   app.component(Tabs.__name, Tabs);
 };

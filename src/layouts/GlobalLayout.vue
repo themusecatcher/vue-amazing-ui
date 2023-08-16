@@ -109,9 +109,9 @@ const countdown = computed(() => {
 }
 .u-duty-switch {
   position: fixed;
-  top: 32px;
-  right: 32px;
-  z-index: 2;
+  top: 36px;
+  right: 36px;
+  z-index: 3;
   :deep(.switch-checked) {
     background: #faad14;
     &:hover:not(.disabled) {
@@ -121,9 +121,9 @@ const countdown = computed(() => {
 }
 .u-duty-countdown {
   position: fixed;
-  top: 32px;
-  right: 48px;
-  z-index: 1;
+  top: 36px;
+  right: 50px;
+  z-index: 2;
 }
 .u-theme-switch {
   position: fixed;

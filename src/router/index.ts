@@ -20,6 +20,12 @@ export const routes = [
         component: () => import('@/views/guide/Home.vue')
       },
       {
+        path: '/ideal',
+        name: 'Ideal',
+        meta: { title: '看理想' },
+        component: () => import('@/views/mine/Ideal.vue')
+      },
+      {
         path: '/alert',
         name: 'Alert',
         meta: { title: '警告提示' },
