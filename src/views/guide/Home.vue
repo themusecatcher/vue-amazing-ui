@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { routes } from '@/router'
 const installData = ref([
   {
@@ -29,7 +29,7 @@ const collapseData = ref([
 ])
 const activeKey = ref(0)
 const sum = computed(() => {
-  return (routes[0].children as Array<any>).length - 1
+  return (routes[0].children as Array<any>).length - 2
 })
 </script>
 <template>
