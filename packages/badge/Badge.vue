@@ -6,7 +6,7 @@ enum Status {
   process = 'processing',
   default = 'default',
   error = 'error',
-  warn = 'warn'
+  warning = 'warning'
 }
 interface Props {
   color?: string // 自定义小圆点的颜色
@@ -174,7 +174,7 @@ onMounted(() => {
     color: #1677ff;
     background-color: #1677ff;
   }
-  .status-warn {
+  .status-warning {
     color: #faad14;
     background-color: #faad14;
   }

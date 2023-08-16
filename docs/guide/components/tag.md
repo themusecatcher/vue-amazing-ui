@@ -135,7 +135,7 @@ const onClose = (e: MouseEvent) => {
   <Tag color="success">success</Tag>
   <Tag color="processing">processing</Tag>
   <Tag color="error">error</Tag>
-  <Tag color="warn">warning</Tag>
+  <Tag color="warning">warning</Tag>
   <Tag color="default">default</Tag>
 </Space>
 <Divider orientation="left">With icon</Divider>
@@ -158,7 +158,7 @@ const onClose = (e: MouseEvent) => {
     </template>
     error
   </Tag>
-  <Tag color="warn">
+  <Tag color="warning">
     <template #icon>
       <svg focusable="false" class="u-svg" data-icon="exclamation-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"></path></svg>
     </template>
@@ -187,7 +187,7 @@ const onClose = (e: MouseEvent) => {
     <Tag color="success">success</Tag>
     <Tag color="processing">processing</Tag>
     <Tag color="error">error</Tag>
-    <Tag color="warn">warning</Tag>
+    <Tag color="warning">warning</Tag>
     <Tag color="default">default</Tag>
   </Space>
   <Divider orientation="left">With icon</Divider>
@@ -210,7 +210,7 @@ const onClose = (e: MouseEvent) => {
       </template>
       error
     </Tag>
-    <Tag color="warn">
+    <Tag color="warning">
       <template #icon>
         <svg focusable="false" class="u-svg" data-icon="exclamation-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"></path></svg>
       </template>
@@ -367,7 +367,7 @@ const onDynamicClose = (tag: any, index: number) => {
   <Tag closable size="small" @close="onClose">
     爱在西元前
   </Tag>
-  <Tag color="warn" closable @close="onClose">
+  <Tag color="warning" closable @close="onClose">
     超人不会飞
   </Tag>
   <Tag
@@ -402,7 +402,7 @@ const onDynamicClose = (tag: any, index: number) => {
     <Tag closable size="small" @close="onClose">
       爱在西元前
     </Tag>
-    <Tag color="warn" closable @close="onClose">
+    <Tag color="warning" closable @close="onClose">
       超人不会飞
     </Tag>
     <Tag
@@ -484,7 +484,7 @@ const onDynamicClose = (tag: any, index: number) => {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 closable | 标签是否可以关闭 | boolean | false | false
-color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warn'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | '' | false
+color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | '' | false
 icon | 设置图标 | string &#124; slot | '' | false
 size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 dynamic | 是否启用标签动态添加和删除 | boolean | false | false

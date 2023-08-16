@@ -81,7 +81,7 @@ const cancel = (e: MouseEvent) => {
 
 <Space>
   <Popconfirm title="Are you sure delete this task?">
-    <Button type="primary">Warn</Button>
+    <Button type="primary">Warning</Button>
   </Popconfirm>
   <Popconfirm title="Are you sure delete this task?" icon-type="info">
     <Button type="primary">Info</Button>
@@ -100,7 +100,7 @@ const cancel = (e: MouseEvent) => {
 <template>
   <Space>
     <Popconfirm title="Are you sure delete this task?">
-      <Button type="primary">Warn</Button>
+      <Button type="primary">Warning</Button>
     </Popconfirm>
     <Popconfirm title="Are you sure delete this task?" icon-type="info">
       <Button type="primary">Info</Button>
@@ -181,7 +181,7 @@ title | 确认框的标题 | string &#124; slot | '' | false
 description | 确认框的内容描述 | string &#124; slot | '' | false
 content | 展示的文本 | string &#124; slot | '' | false
 icon | 自定义弹出确认框 `Icon` 图标 | string &#124; slot | '' | false
-iconType | 弹出确认框 `Icon` 图标类型 | 'success' &#124; 'info' &#124; 'warn' &#124; 'error' | 'warn' | false
+iconType | 弹出确认框 `Icon` 图标类型 | 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'warning' | false
 maxWidth | 弹出确认框内容最大宽度 | string &#124; number | 'auto' | false
 cancelText | 取消按钮文字 | string &#124; slot | '取消' | false
 cancelType | 取消按钮类型 | string | 'default' | false

@@ -19,7 +19,7 @@
       </template>
     </Result>
     <h2 class="mt30 mb10">警告类型的结果</h2>
-    <Result status="warn" title="There are some problems with your operation.">
+    <Result status="warning" title="There are some problems with your operation.">
       <template #extra>
         <Button key="console" type="primary">Go Console</Button>
       </template>

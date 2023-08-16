@@ -17,7 +17,7 @@
 - notification.value.info(notification: Notification) // info调用
 - notification.value.success(notification: Notification) // success调用
 - notification.value.error(notification: Notification) // error调用
-- notification.value.warn(notification: Notification) // warn调用
+- notification.value.warning(notification: Notification) // warning调用
 
 :::
 
@@ -44,11 +44,11 @@ function onSuccess (info: string) {
     description: info
   }) // success调用
 }
-function onWarn (info: string) {
-  notification.value.warn({
+function onWarning (info: string) {
+  notification.value.warning({
     message: 'Notification Title',
     description: info
-  }) // warn调用
+  }) // warning调用
 }
 function onError (info: string) {
   notification.value.error({
@@ -182,9 +182,9 @@ function onClose () {
 
 :::
 
-## warn
+## warning
 
-<Button type="primary" @click="onWarn('This is a warn notification')">Warn</Button>
+<Button type="primary" @click="onWarning('This is a warning notification')">Warning</Button>
 
 ::: details Show Code
 
@@ -192,18 +192,18 @@ function onClose () {
 <script setup lang="ts">
 import { ref } from 'vue'
 const notification = ref()
-function onWarn (info: string) {
-  notification.value.warn({
+function onWarning (info: string) {
+  notification.value.warning({
     message: 'Notification Title',
     description: info
-  }) // warn调用
+  }) // warning调用
 }
 function onClose () {
   console.log('关闭notification')
 }
 </script>
 <template>
-  <Button type="primary" @click="onWarn('This is a warn notification')">Warn</Button>
+  <Button type="primary" @click="onWarning('This is a warning notification')">Warning</Button>
   <Notification ref="notification" @close="onClose" />
 </template>
 ```
@@ -315,7 +315,7 @@ placement | 消息弹出位置，优先级低于 `Notification` 中的 `placemen
 -- | -- | -- | --
 message | 通知提醒标题 | string | false
 description | 通知提醒内容 | string | true
-mode | 通知提醒框类型 | 'open' &#124; 'info' &#124; 'success' &#124; 'warn' &#124; 'error' | false
+mode | 通知提醒框类型 | 'open' &#124; 'info' &#124; 'success' &#124; 'warning' &#124; 'error' | false
 placement | 通知提醒框弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | false
 
 ## Events

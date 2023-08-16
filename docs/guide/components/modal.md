@@ -56,7 +56,7 @@ function showErrorModal (content: string) {
   visible.value = true
 }
 function showWarnModal (content: string) {
-  modal.value.warn({
+  modal.value.warning({
     title: 'Do you See these items ?',
     content: content
   })
@@ -258,9 +258,9 @@ function onKnow () { // “我知道了”按钮回调
 
 :::
 
-## warn
+## warning
 
-<Button type="primary" @click="showWarnModal('Some descriptions ...')">Warn</Button>
+<Button type="primary" @click="showWarnModal('Some descriptions ...')">Warning</Button>
 
 ::: details Show Code
 
@@ -275,7 +275,7 @@ function onKnow () { // “我知道了”按钮回调
 }
 </script>
 <template>
-  <Button type="primary" @click="showWarnModal('Some descriptions ...')">Warn</Button>
+  <Button type="primary" @click="showWarnModal('Some descriptions ...')">Warning</Button>
   <Modal
     ref="modal"
     :visible="visible"

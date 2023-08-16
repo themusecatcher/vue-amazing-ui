@@ -12,8 +12,11 @@ function onSuccess (content: string) {
 function onError (content: string) {
   message.value.error(content) // error调用
 }
-function onWarn (content: string) {
-  message.value.warn(content) // warn调用
+function onWarning (content: string) {
+  message.value.warning(content) // warning调用
+}
+function onLoading (content: string) {
+  message.value.loading(content) // loading调用
 }
 function onClose () {
   console.log('close')
@@ -27,7 +30,8 @@ function onClose () {
       <Button type="primary" @click="onInfo('This is a normal message')">Info</Button>
       <Button type="primary" @click="onSuccess('This is a success message')">Success</Button>
       <Button type="primary" @click="onError('This is a error message')">Error</Button>
-      <Button type="primary" @click="onWarn('This is a warn message')">Warn</Button>
+      <Button type="primary" @click="onWarning('This is a warning message')">Warning</Button>
+      <Button type="primary" @click="onLoading('This is a loading message')">Loading</Button>
     </Space>
     <Message ref="message" :duration="3000" :top="30" @close="onClose" />
   </div>

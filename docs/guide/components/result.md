@@ -64,7 +64,7 @@
 
 ## 警告类型的结果
 
-<Result status="warn" title="There are some problems with your operation.">
+<Result status="warning" title="There are some problems with your operation.">
   <template #extra>
     <Button key="console" type="primary">Go Console</Button>
   </template>
@@ -74,7 +74,7 @@
 
 ```vue
 <template>
-  <Result status="warn" title="There are some problems with your operation.">
+  <Result status="warning" title="There are some problems with your operation.">
     <template #extra>
       <Button key="console" type="primary">Go Console</Button>
     </template>
@@ -281,6 +281,6 @@
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-status | 结果的状态，决定图标和颜色 | 'success' &#124; 'error' &#124; 'info' &#124; 'warn' &#124; '404' &#124; '403' &#124; '500' | 'info' | false
+status | 结果的状态，决定图标和颜色 | 'success' &#124; 'error' &#124; 'info' &#124; 'warning' &#124; '404' &#124; '403' &#124; '500' | 'info' | false
 title | 标题文字 | string &#124; slot | '' | false
 subTitle | 副标题文字 | string &#124; slot | '' | false

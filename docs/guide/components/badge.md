@@ -190,7 +190,7 @@ const colors = [
   <Badge status="error" />
   <Badge status="default" />
   <Badge status="processing" />
-  <Badge status="warn" />
+  <Badge status="warning" />
 </Space>
 <br/>
 <Space style="margin-top: 10px;" direction="vertical" :size="10">
@@ -198,7 +198,7 @@ const colors = [
   <Badge status="error" text="Error" />
   <Badge status="default" text="Default" />
   <Badge status="processing" text="Processing" />
-  <Badge status="warn" text="warning" />
+  <Badge status="warning" text="warning" />
 </Space>
 
 ::: details Show Code
@@ -210,7 +210,7 @@ const colors = [
     <Badge status="error" />
     <Badge status="default" />
     <Badge status="processing" />
-    <Badge status="warn" />
+    <Badge status="warning" />
   </Space>
   <br/>
   <Space style="margin-top: 10px;" direction="vertical" :size="10">
@@ -218,7 +218,7 @@ const colors = [
     <Badge status="error" text="Error" />
     <Badge status="default" text="Default" />
     <Badge status="processing" text="Processing" />
-    <Badge status="warn" text="warning" />
+    <Badge status="warning" text="warning" />
   </Space>
 </template>
 ```
@@ -378,7 +378,7 @@ count | 展示的数字，大于 `overflowCount` 时显示为 `overflowCount+`�
 overflowCount | 展示封顶的数字值 | number | 99 | false
 showZero | 当数值为 `0` 时，是否展示 `Badge` | boolean | false | false
 dot | 不展示数字，只有一个小红点 | boolean | false | false
-status | 设置 `Badge` 为状态点 | 'success' &#124; 'processing &#124; 'default' &#124; 'error' &#124; 'warn' | undefined | false
+status | 设置 `Badge` 为状态点 | 'success' &#124; 'processing &#124; 'default' &#124; 'error' &#124; 'warning' | undefined | false
 text | 在设置了 `status` 的前提下有效，设置状态点的文本 | string &#124; slot | '' | false
 numberStyle | 设置状态点的样式 | CSSProperties | {} | false
 title | 设置鼠标放在状态点上时显示的文字 | string | '' | false
