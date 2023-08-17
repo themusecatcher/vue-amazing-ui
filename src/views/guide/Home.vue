@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import pkg from '../../../package.json'
+import pkg from '/package.json'
 import { ref, computed } from 'vue'
 import { routes } from '@/router'
 const installData = ref([

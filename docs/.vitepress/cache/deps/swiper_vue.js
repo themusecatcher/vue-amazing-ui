@@ -1,4 +1,9 @@
 import {
+  Swiper,
+  defaults
+} from "./chunk-VOE6RJ6F.js";
+import "./chunk-VGAOZ6JA.js";
+import {
   computed,
   h,
   inject,
@@ -11,10 +16,6 @@ import {
   ref,
   watch
 } from "./chunk-67UUJLDS.js";
-import {
-  Swiper,
-  defaults
-} from "./chunk-C457BK5C.js";
 import "./chunk-UXIASGQL.js";
 
 // node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/shared/update-swiper.mjs
