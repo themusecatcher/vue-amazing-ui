@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import pkg from '/package.json'
 import { ref, onBeforeMount } from 'vue'
 
 const images = ref<any[]>([])
@@ -36,7 +37,10 @@ function onChange () {
         <a class="u-file" href="https://swiperjs.com/demos" target="_blank">Swiper Demos</a>
       </li>
     </ul>
-    <h1 class="mt30">Swiper 触摸滑动插件</h1>
+    <Space align="top" class="mt30" :size="6">
+      <h1>Swiper</h1>
+      <Tag color="volcano">{{ pkg.dependencies.swiper }}</Tag>
+    </Space>
     <h2 class="mt30 mb10">轮播图基本使用 (type: banner)</h2>
     <Swiper :images="images" :height="600" @change="onChange" />
     <h2 class="mt30 mb10">Swiper 走马灯基本使用 (type: carousel)</h2>
