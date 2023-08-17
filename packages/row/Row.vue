@@ -53,6 +53,7 @@ const xGap = computed(() => {
       if (clientWidth.value < 576 && props.gutter[0].xs) {
         return props.gutter[0].xs
       }
+      return 16
     }
     return props.gutter[0]
   }
@@ -75,6 +76,7 @@ const xGap = computed(() => {
     if (clientWidth.value < 576 && props.gutter.xs) {
       return props.gutter.xs
     }
+    return 16
   }
   return 0
 })
@@ -99,6 +101,7 @@ const yGap = computed(() => {
       if (clientWidth.value < 576 && props.gutter[1].xs) {
         return props.gutter[1].xs
       }
+      return 16
     }
     return props.gutter[1]
   }

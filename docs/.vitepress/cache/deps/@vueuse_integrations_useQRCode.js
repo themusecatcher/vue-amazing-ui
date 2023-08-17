@@ -1,6 +1,14 @@
 import {
-  __commonJS
-} from "./chunk-76J2PTFD.js";
+  customRef,
+  readonly,
+  ref,
+  toRef,
+  watch
+} from "./chunk-67UUJLDS.js";
+import {
+  __commonJS,
+  __toESM
+} from "./chunk-UXIASGQL.js";
 
 // node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/can-promise.js
 var require_can_promise = __commonJS({
@@ -59,15 +67,15 @@ var require_utils = __commonJS({
       3532,
       3706
     ];
-    exports.getSymbolSize = function getSymbolSize(version) {
-      if (!version)
+    exports.getSymbolSize = function getSymbolSize(version2) {
+      if (!version2)
         throw new Error('"version" cannot be null or undefined');
-      if (version < 1 || version > 40)
+      if (version2 < 1 || version2 > 40)
         throw new Error('"version" should be in range from 1 to 40');
-      return version * 4 + 17;
+      return version2 * 4 + 17;
     };
-    exports.getSymbolTotalCodewords = function getSymbolTotalCodewords(version) {
-      return CODEWORDS_COUNT[version];
+    exports.getSymbolTotalCodewords = function getSymbolTotalCodewords(version2) {
+      return CODEWORDS_COUNT[version2];
     };
     exports.getBCHDigit = function(data) {
       let digit = 0;
@@ -206,11 +214,11 @@ var require_bit_matrix = __commonJS({
 var require_alignment_pattern = __commonJS({
   "node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/core/alignment-pattern.js"(exports) {
     var getSymbolSize = require_utils().getSymbolSize;
-    exports.getRowColCoords = function getRowColCoords(version) {
-      if (version === 1)
+    exports.getRowColCoords = function getRowColCoords(version2) {
+      if (version2 === 1)
         return [];
-      const posCount = Math.floor(version / 7) + 2;
-      const size = getSymbolSize(version);
+      const posCount = Math.floor(version2 / 7) + 2;
+      const size = getSymbolSize(version2);
       const intervals = size === 145 ? 26 : Math.ceil((size - 13) / (2 * posCount - 2)) * 2;
       const positions = [size - 7];
       for (let i = 1; i < posCount - 1; i++) {
@@ -219,9 +227,9 @@ var require_alignment_pattern = __commonJS({
       positions.push(6);
       return positions.reverse();
     };
-    exports.getPositions = function getPositions(version) {
+    exports.getPositions = function getPositions(version2) {
       const coords = [];
-      const pos = exports.getRowColCoords(version);
+      const pos = exports.getRowColCoords(version2);
       const posLength = pos.length;
       for (let i = 0; i < posLength; i++) {
         for (let j = 0; j < posLength; j++) {
@@ -243,8 +251,8 @@ var require_finder_pattern = __commonJS({
   "node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/core/finder-pattern.js"(exports) {
     var getSymbolSize = require_utils().getSymbolSize;
     var FINDER_PATTERN_SIZE = 7;
-    exports.getPositions = function getPositions(version) {
-      const size = getSymbolSize(version);
+    exports.getPositions = function getPositions(version2) {
+      const size = getSymbolSize(version2);
       return [
         // top-left
         [0, 0],
@@ -738,30 +746,30 @@ var require_error_correction_code = __commonJS({
       2040,
       2430
     ];
-    exports.getBlocksCount = function getBlocksCount(version, errorCorrectionLevel) {
+    exports.getBlocksCount = function getBlocksCount(version2, errorCorrectionLevel) {
       switch (errorCorrectionLevel) {
         case ECLevel.L:
-          return EC_BLOCKS_TABLE[(version - 1) * 4 + 0];
+          return EC_BLOCKS_TABLE[(version2 - 1) * 4 + 0];
         case ECLevel.M:
-          return EC_BLOCKS_TABLE[(version - 1) * 4 + 1];
+          return EC_BLOCKS_TABLE[(version2 - 1) * 4 + 1];
         case ECLevel.Q:
-          return EC_BLOCKS_TABLE[(version - 1) * 4 + 2];
+          return EC_BLOCKS_TABLE[(version2 - 1) * 4 + 2];
         case ECLevel.H:
-          return EC_BLOCKS_TABLE[(version - 1) * 4 + 3];
+          return EC_BLOCKS_TABLE[(version2 - 1) * 4 + 3];
         default:
           return void 0;
       }
     };
-    exports.getTotalCodewordsCount = function getTotalCodewordsCount(version, errorCorrectionLevel) {
+    exports.getTotalCodewordsCount = function getTotalCodewordsCount(version2, errorCorrectionLevel) {
       switch (errorCorrectionLevel) {
         case ECLevel.L:
-          return EC_CODEWORDS_TABLE[(version - 1) * 4 + 0];
+          return EC_CODEWORDS_TABLE[(version2 - 1) * 4 + 0];
         case ECLevel.M:
-          return EC_CODEWORDS_TABLE[(version - 1) * 4 + 1];
+          return EC_CODEWORDS_TABLE[(version2 - 1) * 4 + 1];
         case ECLevel.Q:
-          return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2];
+          return EC_CODEWORDS_TABLE[(version2 - 1) * 4 + 2];
         case ECLevel.H:
-          return EC_CODEWORDS_TABLE[(version - 1) * 4 + 3];
+          return EC_CODEWORDS_TABLE[(version2 - 1) * 4 + 3];
         default:
           return void 0;
       }
@@ -877,8 +885,8 @@ var require_reed_solomon_encoder = __commonJS({
 // node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/core/version-check.js
 var require_version_check = __commonJS({
   "node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/core/version-check.js"(exports) {
-    exports.isValid = function isValid(version) {
-      return !isNaN(version) && version >= 1 && version <= 40;
+    exports.isValid = function isValid(version2) {
+      return !isNaN(version2) && version2 >= 1 && version2 <= 40;
     };
   }
 });
@@ -939,15 +947,15 @@ var require_mode = __commonJS({
     exports.MIXED = {
       bit: -1
     };
-    exports.getCharCountIndicator = function getCharCountIndicator(mode, version) {
+    exports.getCharCountIndicator = function getCharCountIndicator(mode, version2) {
       if (!mode.ccBits)
         throw new Error("Invalid mode: " + mode);
-      if (!VersionCheck.isValid(version)) {
-        throw new Error("Invalid version: " + version);
+      if (!VersionCheck.isValid(version2)) {
+        throw new Error("Invalid version: " + version2);
       }
-      if (version >= 1 && version < 10)
+      if (version2 >= 1 && version2 < 10)
         return mode.ccBits[0];
-      else if (version < 27)
+      else if (version2 < 27)
         return mode.ccBits[1];
       return mode.ccBits[2];
     };
@@ -1018,13 +1026,13 @@ var require_version = __commonJS({
       }
       return void 0;
     }
-    function getReservedBitsCount(mode, version) {
-      return Mode.getCharCountIndicator(mode, version) + 4;
+    function getReservedBitsCount(mode, version2) {
+      return Mode.getCharCountIndicator(mode, version2) + 4;
     }
-    function getTotalBitsFromDataArray(segments, version) {
+    function getTotalBitsFromDataArray(segments, version2) {
       let totalBits = 0;
       segments.forEach(function(data) {
-        const reservedBits = getReservedBitsCount(data.mode, version);
+        const reservedBits = getReservedBitsCount(data.mode, version2);
         totalBits += reservedBits + data.getBitsLength();
       });
       return totalBits;
@@ -1044,18 +1052,18 @@ var require_version = __commonJS({
       }
       return defaultValue;
     };
-    exports.getCapacity = function getCapacity(version, errorCorrectionLevel, mode) {
-      if (!VersionCheck.isValid(version)) {
+    exports.getCapacity = function getCapacity(version2, errorCorrectionLevel, mode) {
+      if (!VersionCheck.isValid(version2)) {
         throw new Error("Invalid QR Code version");
       }
       if (typeof mode === "undefined")
         mode = Mode.BYTE;
-      const totalCodewords = Utils.getSymbolTotalCodewords(version);
-      const ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel);
+      const totalCodewords = Utils.getSymbolTotalCodewords(version2);
+      const ecTotalCodewords = ECCode.getTotalCodewordsCount(version2, errorCorrectionLevel);
       const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8;
       if (mode === Mode.MIXED)
         return dataTotalCodewordsBits;
-      const usableBits = dataTotalCodewordsBits - getReservedBitsCount(mode, version);
+      const usableBits = dataTotalCodewordsBits - getReservedBitsCount(mode, version2);
       switch (mode) {
         case Mode.NUMERIC:
           return Math.floor(usableBits / 10 * 3);
@@ -1084,15 +1092,15 @@ var require_version = __commonJS({
       }
       return getBestVersionForDataLength(seg.mode, seg.getLength(), ecl);
     };
-    exports.getEncodedBits = function getEncodedBits(version) {
-      if (!VersionCheck.isValid(version) || version < 7) {
+    exports.getEncodedBits = function getEncodedBits(version2) {
+      if (!VersionCheck.isValid(version2) || version2 < 7) {
         throw new Error("Invalid QR Code version");
       }
-      let d = version << 12;
+      let d = version2 << 12;
       while (Utils.getBCHDigit(d) - G18_BCH >= 0) {
         d ^= G18 << Utils.getBCHDigit(d) - G18_BCH;
       }
-      return version << 12 | d;
+      return version2 << 12 | d;
     };
   }
 });
@@ -1549,7 +1557,7 @@ var require_segments = __commonJS({
       }
       return nodes;
     }
-    function buildGraph(nodes, version) {
+    function buildGraph(nodes, version2) {
       const table = {};
       const graph = { start: {} };
       let prevNodeIds = ["start"];
@@ -1570,7 +1578,7 @@ var require_segments = __commonJS({
             } else {
               if (table[prevNodeId])
                 table[prevNodeId].lastCount = node.length;
-              graph[prevNodeId][key] = getSegmentBitsLength(node.length, node.mode) + 4 + Mode.getCharCountIndicator(node.mode, version);
+              graph[prevNodeId][key] = getSegmentBitsLength(node.length, node.mode) + 4 + Mode.getCharCountIndicator(node.mode, version2);
             }
           }
         }
@@ -1612,10 +1620,10 @@ var require_segments = __commonJS({
         return acc;
       }, []);
     };
-    exports.fromString = function fromString(data, version) {
+    exports.fromString = function fromString(data, version2) {
       const segs = getSegmentsFromString(data, Utils.isKanjiModeEnabled());
       const nodes = buildNodes(segs);
-      const graph = buildGraph(nodes, version);
+      const graph = buildGraph(nodes, version2);
       const path = dijkstra.find_path(graph.map, "start", "end");
       const optimizedSegs = [];
       for (let i = 1; i < path.length - 1; i++) {
@@ -1647,9 +1655,9 @@ var require_qrcode = __commonJS({
     var FormatInfo = require_format_info();
     var Mode = require_mode();
     var Segments = require_segments();
-    function setupFinderPattern(matrix, version) {
+    function setupFinderPattern(matrix, version2) {
       const size = matrix.size;
-      const pos = FinderPattern.getPositions(version);
+      const pos = FinderPattern.getPositions(version2);
       for (let i = 0; i < pos.length; i++) {
         const row = pos[i][0];
         const col = pos[i][1];
@@ -1676,8 +1684,8 @@ var require_qrcode = __commonJS({
         matrix.set(6, r, value, true);
       }
     }
-    function setupAlignmentPattern(matrix, version) {
-      const pos = AlignmentPattern.getPositions(version);
+    function setupAlignmentPattern(matrix, version2) {
+      const pos = AlignmentPattern.getPositions(version2);
       for (let i = 0; i < pos.length; i++) {
         const row = pos[i][0];
         const col = pos[i][1];
@@ -1692,9 +1700,9 @@ var require_qrcode = __commonJS({
         }
       }
     }
-    function setupVersionInfo(matrix, version) {
+    function setupVersionInfo(matrix, version2) {
       const size = matrix.size;
-      const bits = Version.getEncodedBits(version);
+      const bits = Version.getEncodedBits(version2);
       let row, col, mod;
       for (let i = 0; i < 18; i++) {
         row = Math.floor(i / 3);
@@ -1760,15 +1768,15 @@ var require_qrcode = __commonJS({
         }
       }
     }
-    function createData(version, errorCorrectionLevel, segments) {
+    function createData(version2, errorCorrectionLevel, segments) {
       const buffer = new BitBuffer();
       segments.forEach(function(data) {
         buffer.put(data.mode.bit, 4);
-        buffer.put(data.getLength(), Mode.getCharCountIndicator(data.mode, version));
+        buffer.put(data.getLength(), Mode.getCharCountIndicator(data.mode, version2));
         data.write(buffer);
       });
-      const totalCodewords = Utils.getSymbolTotalCodewords(version);
-      const ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel);
+      const totalCodewords = Utils.getSymbolTotalCodewords(version2);
+      const ecTotalCodewords = ECCode.getTotalCodewordsCount(version2, errorCorrectionLevel);
       const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8;
       if (buffer.getLengthInBits() + 4 <= dataTotalCodewordsBits) {
         buffer.put(0, 4);
@@ -1780,13 +1788,13 @@ var require_qrcode = __commonJS({
       for (let i = 0; i < remainingByte; i++) {
         buffer.put(i % 2 ? 17 : 236, 8);
       }
-      return createCodewords(buffer, version, errorCorrectionLevel);
+      return createCodewords(buffer, version2, errorCorrectionLevel);
     }
-    function createCodewords(bitBuffer, version, errorCorrectionLevel) {
-      const totalCodewords = Utils.getSymbolTotalCodewords(version);
-      const ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel);
+    function createCodewords(bitBuffer, version2, errorCorrectionLevel) {
+      const totalCodewords = Utils.getSymbolTotalCodewords(version2);
+      const ecTotalCodewords = ECCode.getTotalCodewordsCount(version2, errorCorrectionLevel);
       const dataTotalCodewords = totalCodewords - ecTotalCodewords;
-      const ecTotalBlocks = ECCode.getBlocksCount(version, errorCorrectionLevel);
+      const ecTotalBlocks = ECCode.getBlocksCount(version2, errorCorrectionLevel);
       const blocksInGroup2 = totalCodewords % ecTotalBlocks;
       const blocksInGroup1 = ecTotalBlocks - blocksInGroup2;
       const totalCodewordsInGroup1 = Math.floor(totalCodewords / ecTotalBlocks);
@@ -1823,12 +1831,12 @@ var require_qrcode = __commonJS({
       }
       return data;
     }
-    function createSymbol(data, version, errorCorrectionLevel, maskPattern) {
+    function createSymbol(data, version2, errorCorrectionLevel, maskPattern) {
       let segments;
       if (Array.isArray(data)) {
         segments = Segments.fromArray(data);
       } else if (typeof data === "string") {
-        let estimatedVersion = version;
+        let estimatedVersion = version2;
         if (!estimatedVersion) {
           const rawSegments = Segments.rawSplit(data);
           estimatedVersion = Version.getBestVersionForData(rawSegments, errorCorrectionLevel);
@@ -1841,22 +1849,22 @@ var require_qrcode = __commonJS({
       if (!bestVersion) {
         throw new Error("The amount of data is too big to be stored in a QR Code");
       }
-      if (!version) {
-        version = bestVersion;
-      } else if (version < bestVersion) {
+      if (!version2) {
+        version2 = bestVersion;
+      } else if (version2 < bestVersion) {
         throw new Error(
           "\nThe chosen QR Code version cannot contain this amount of data.\nMinimum version required to store current data is: " + bestVersion + ".\n"
         );
       }
-      const dataBits = createData(version, errorCorrectionLevel, segments);
-      const moduleCount = Utils.getSymbolSize(version);
+      const dataBits = createData(version2, errorCorrectionLevel, segments);
+      const moduleCount = Utils.getSymbolSize(version2);
       const modules = new BitMatrix(moduleCount);
-      setupFinderPattern(modules, version);
+      setupFinderPattern(modules, version2);
       setupTimingPattern(modules);
-      setupAlignmentPattern(modules, version);
+      setupAlignmentPattern(modules, version2);
       setupFormatInfo(modules, errorCorrectionLevel, 0);
-      if (version >= 7) {
-        setupVersionInfo(modules, version);
+      if (version2 >= 7) {
+        setupVersionInfo(modules, version2);
       }
       setupData(modules, dataBits);
       if (isNaN(maskPattern)) {
@@ -1869,7 +1877,7 @@ var require_qrcode = __commonJS({
       setupFormatInfo(modules, errorCorrectionLevel, maskPattern);
       return {
         modules,
-        version,
+        version: version2,
         errorCorrectionLevel,
         maskPattern,
         segments
@@ -1880,17 +1888,17 @@ var require_qrcode = __commonJS({
         throw new Error("No input text");
       }
       let errorCorrectionLevel = ECLevel.M;
-      let version;
+      let version2;
       let mask;
       if (typeof options !== "undefined") {
         errorCorrectionLevel = ECLevel.from(options.errorCorrectionLevel, ECLevel.M);
-        version = Version.from(options.version);
+        version2 = Version.from(options.version);
         mask = MaskPattern.from(options.maskPattern);
         if (options.toSJISFunc) {
           Utils.setToSJISFunction(options.toSJISFunc);
         }
       }
-      return createSymbol(data, version, errorCorrectionLevel, mask);
+      return createSymbol(data, version2, errorCorrectionLevel, mask);
     };
   }
 });
@@ -2097,7 +2105,7 @@ var require_svg_tag = __commonJS({
 var require_browser = __commonJS({
   "node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/browser.js"(exports) {
     var canPromise = require_can_promise();
-    var QRCode = require_qrcode();
+    var QRCode2 = require_qrcode();
     var CanvasRenderer = require_canvas();
     var SvgRenderer = require_svg_tag();
     function renderCanvas(renderFunc, canvas, text, opts, cb) {
@@ -2140,7 +2148,7 @@ var require_browser = __commonJS({
         }
         return new Promise(function(resolve, reject) {
           try {
-            const data = QRCode.create(text, opts);
+            const data = QRCode2.create(text, opts);
             resolve(renderFunc(data, canvas, opts));
           } catch (e) {
             reject(e);
@@ -2148,13 +2156,13 @@ var require_browser = __commonJS({
         });
       }
       try {
-        const data = QRCode.create(text, opts);
+        const data = QRCode2.create(text, opts);
         cb(null, renderFunc(data, canvas, opts));
       } catch (e) {
         cb(e);
       }
     }
-    exports.create = QRCode.create;
+    exports.create = QRCode2.create;
     exports.toCanvas = renderCanvas.bind(null, CanvasRenderer.render);
     exports.toDataURL = renderCanvas.bind(null, CanvasRenderer.renderToDataURL);
     exports.toString = renderCanvas.bind(null, function(data, _, opts) {
@@ -2162,5 +2170,39 @@ var require_browser = __commonJS({
     });
   }
 });
-export default require_browser();
-//# sourceMappingURL=qrcode.js.map
+
+// node_modules/.pnpm/@vueuse+shared@10.2.1_vue@3.3.4/node_modules/@vueuse/shared/index.mjs
+var isClient = typeof window !== "undefined";
+var noop = () => {
+};
+var isIOS = getIsIOS();
+function getIsIOS() {
+  var _a;
+  return isClient && ((_a = window == null ? void 0 : window.navigator) == null ? void 0 : _a.userAgent) && /iP(ad|hone|od)/.test(window.navigator.userAgent);
+}
+function toRef2(...args) {
+  if (args.length !== 1)
+    return toRef(...args);
+  const r = args[0];
+  return typeof r === "function" ? readonly(customRef(() => ({ get: r, set: noop }))) : ref(r);
+}
+
+// node_modules/.pnpm/@vueuse+integrations@10.2.1_focus-trap@7.5.2_qrcode@1.5.3_vue@3.3.4/node_modules/@vueuse/integrations/useQRCode.mjs
+var import_qrcode = __toESM(require_browser(), 1);
+function useQRCode(text, options) {
+  const src = toRef2(text);
+  const result = ref("");
+  watch(
+    src,
+    async (value) => {
+      if (src.value && isClient)
+        result.value = await import_qrcode.default.toDataURL(value, options);
+    },
+    { immediate: true }
+  );
+  return result;
+}
+export {
+  useQRCode
+};
+//# sourceMappingURL=@vueuse_integrations_useQRCode.js.map

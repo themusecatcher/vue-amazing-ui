@@ -40,13 +40,13 @@ const colors = [
       <Badge :count="25" />
       <Badge
         :count="4"
-        :number-style="{
+        :count-style="{
           backgroundColor: '#fff',
           color: '#999',
           boxShadow: '0 0 0 1px #d9d9d9 inset',
         }"
       />
-      <Badge :count="109" :number-style="{ backgroundColor: '#52c41a' }" />
+      <Badge :count="109" :count-style="{ backgroundColor: '#52c41a' }" />
     </Space>
     <h2 class="mt30 mb10">封顶数字</h2>
     <Space :size="30">
@@ -56,10 +56,10 @@ const colors = [
       <Badge :count="100">
         <span class="u-cube"></span>
       </Badge>
-      <Badge :count="99" :overflow-count="10">
+      <Badge :count="99" :max="10">
         <span class="u-cube"></span>
       </Badge>
-      <Badge :count="1000" :overflow-count="999">
+      <Badge :count="1000" :max="999">
         <span class="u-cube"></span>
       </Badge>
     </Space>

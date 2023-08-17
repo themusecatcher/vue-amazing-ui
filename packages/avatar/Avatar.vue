@@ -68,7 +68,7 @@ const avatarStyle = computed(() => {
     }
   }
   if (typeof props.size === 'object') {
-    let size = 0
+    let size = 32
     if (clientWidth.value >= 1600 && props.size.xxl) {
       size = props.size.xxl
     } else if (clientWidth.value >= 1200 && props.size.xl) {

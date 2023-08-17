@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import pkg from '../../../package.json'
 import { ref, computed } from 'vue'
 import { routes } from '@/router'
 const installData = ref([
@@ -34,10 +35,22 @@ const sum = computed(() => {
 </script>
 <template>
   <div>
-    <h1>Vue Amazing UI</h1>
-    <p class="u-tip mb10 mt30">该组件库采用 Vue3@3.3.4 + TypeScript@4.7.4 + Vite4.4.7 + Less@4.1.3 实现！</p>
-    <p class="u-tip mb10">所有组件 CSS 样式均使用 box-sizing: border-box; 模式！</p>
-    <p class="u-tip mb10">目前共有 {{ sum }} 个常用基础 UI 组件，以及 11 个常用工具函数，并且持续探索更新中...！</p>
+    <Space align="top" :size="6">
+      <h1>Vue Amazing UI</h1>
+      <Tag color="volcano">{{ pkg.version }}</Tag>
+    </Space>
+    <Descriptions class="mb10 mt30" title="生产环境依赖" :column="{md: 2, lg: 3, xl: 4}">
+      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies">
+        <Tag color="volcano">{{ version }}</Tag>
+      </DescriptionsItem>
+    </Descriptions>
+    <Descriptions class="mb10 mt30" title="开发环境依赖" :column="{md: 2, lg: 3, xl: 4}">
+      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.devDependencies">
+        <Tag color="volcano">{{ version }}</Tag>
+      </DescriptionsItem>
+    </Descriptions>
+    <p class="u-tip mb10">所有组件 <Tag color="magenta">CSS</Tag> 样式均使用 <Tag color="magenta">box-sizing: border-box;</Tag> 模式！</p>
+    <p class="u-tip mb10">目前共有 <Tag color="magenta">{{ sum }}</Tag> 个常用基础 <Tag color="magenta">UI</Tag> 组件，以及 <Tag color="magenta">11</Tag> 个常用工具函数，并且持续探索更新中...！</p>
     <p class="u-tip">开箱即用！</p>
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse
@@ -52,17 +65,17 @@ const sum = computed(() => {
     </ul>
     <h2 class="mt30">常用工具函数：</h2>
     <ul class="m-list">
-      <li class="u-tip mb10 mt10">dateFormat: 简单易用的日期格式化函数！</li>
-      <li class="u-tip mb10">requestAnimationFrame: 针对不同浏览器进行兼容处理！</li>
-      <li class="u-tip mb10">cancelAnimationFrame: 针对不同浏览器进行兼容处理！</li>
-      <li class="u-tip mb10">rafTimeout: 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！</li>
-      <li class="u-tip mb10">cancelRaf: 用于取消 rafTimeout 函数！</li>
-      <li class="u-tip mb10">throttle: 使用 rafTimeout 实现的节流函数！</li>
-      <li class="u-tip mb10">debounce: 使用 rafTimeout 实现的防抖函数！</li>
-      <li class="u-tip mb10">add: 消除js加减精度问题的加法函数！</li>
-      <li class="u-tip mb10">downloadFile: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
-      <li class="u-tip mb10">moneyFormat: 金额格式化函数！</li>
-      <li class="u-tip mb10">toggleDark: 一键切换黑暗模式函数！</li>
+      <li class="u-tip mb10 mt10"><Tag color="cyan">dateFormat</Tag>: 简单易用的日期格式化函数！</li>
+      <li class="u-tip mb10"><Tag color="cyan">requestAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
+      <li class="u-tip mb10"><Tag color="cyan">cancelAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
+      <li class="u-tip mb10"><Tag color="cyan">rafTimeout</Tag>: 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！</li>
+      <li class="u-tip mb10"><Tag color="cyan">cancelRaf</Tag>: 用于取消 rafTimeout 函数！</li>
+      <li class="u-tip mb10"><Tag color="cyan">throttle</Tag>: 使用 rafTimeout 实现的节流函数！</li>
+      <li class="u-tip mb10"><Tag color="cyan">debounce</Tag>: 使用 rafTimeout 实现的防抖函数！</li>
+      <li class="u-tip mb10"><Tag color="cyan">add</Tag>: 消除js加减精度问题的加法函数！</li>
+      <li class="u-tip mb10"><Tag color="cyan">downloadFile</Tag>: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
+      <li class="u-tip mb10"><Tag color="cyan">moneyFormat</Tag>: 金额格式化函数！</li>
+      <li class="u-tip mb10"><Tag color="cyan">toggleDark</Tag>: 一键切换黑暗模式函数！</li>
     </ul>
     <Collapse
       lang="vue3"
@@ -73,6 +86,14 @@ const sum = computed(() => {
   </div>
 </template>
 <style lang="less">
+h1 {
+  display: inline-block;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: #0000;
+  white-space: nowrap;
+  background-image: linear-gradient(to right, #1d39c4, #c41d7f);
+}
 .u-head {
   font-size: 16px;
 }
