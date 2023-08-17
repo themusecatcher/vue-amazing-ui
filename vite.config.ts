@@ -58,7 +58,7 @@ export default defineConfig({
       external: ['vue', 'swiper', 'swiper/vue', '@vueuse/integrations/useQRCode', '@vuepic/vue-datepicker', 'qrcode'],
       // 当创建 iife 或 umd 格式的 bundle 时，你需要通过 output.globals 选项提供全局变量名，以替换掉外部引入。
       output: {
-        // name: 'VueAmazingUI', // 对于输出格式为 iife | umd 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出
+        name: 'VueAmazingUI', // 对于输出格式为 iife | umd 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出
         /*
           output.format: 
           • amd – 异步模块加载，适用于 RequireJS 等模块加载器
@@ -70,6 +70,8 @@ export default defineConfig({
         */
         // format: 'umd', // 用于指定生成的 bundle 的格式，默认 'es'，可选 'amd' 'cjs' 'es' 'iife' 'umd' 'system'
         exports: 'named', // 用于指定导出模式，默认是 auto，指根据 input 模块导出推测你的意图
+        // 在大多数情况下，该选项值为 false 将避免 Rollup 生成多余代码的 getters，因此在很多情况下，可以使代码兼容 IE8。
+        externalLiveBindings: false, // 当该选项的值为 false 时，Rollup 不会为外部依赖生成支持动态绑定的代码，而是假定外部依赖永远不会改变。这使得 Rollup 会生成更多优化代码。请注意，当外部依赖存在循环引用时，该选项值为 false 可能会引起问题。
         // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
         globals: {
           vue: 'Vue',
