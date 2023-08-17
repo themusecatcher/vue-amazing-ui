@@ -13,6 +13,7 @@ import {
   defineComponent,
   getCurrentScope,
   guardReactiveProps,
+  h,
   isRef,
   mergeProps,
   nextTick,
@@ -26,6 +27,7 @@ import {
   openBlock,
   reactive,
   ref,
+  render,
   renderList,
   renderSlot,
   resolveDynamicComponent,
@@ -253,6 +255,21 @@ function addYears(dirtyDate, dirtyAmount) {
   return addMonths(dirtyDate, amount * 12);
 }
 
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/compareAsc/index.js
+function compareAsc(dirtyDateLeft, dirtyDateRight) {
+  requiredArgs(2, arguments);
+  var dateLeft = toDate(dirtyDateLeft);
+  var dateRight = toDate(dirtyDateRight);
+  var diff = dateLeft.getTime() - dateRight.getTime();
+  if (diff < 0) {
+    return -1;
+  } else if (diff > 0) {
+    return 1;
+  } else {
+    return diff;
+  }
+}
+
 // node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/constants/index.js
 var daysInYear = 365.2425;
 var maxTime = Math.pow(10, 8) * 24 * 60 * 60 * 1e3;
@@ -281,6 +298,65 @@ function isValid(dirtyDate) {
   }
   var date = toDate(dirtyDate);
   return !isNaN(Number(date));
+}
+
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/differenceInCalendarMonths/index.js
+function differenceInCalendarMonths(dirtyDateLeft, dirtyDateRight) {
+  requiredArgs(2, arguments);
+  var dateLeft = toDate(dirtyDateLeft);
+  var dateRight = toDate(dirtyDateRight);
+  var yearDiff = dateLeft.getFullYear() - dateRight.getFullYear();
+  var monthDiff = dateLeft.getMonth() - dateRight.getMonth();
+  return yearDiff * 12 + monthDiff;
+}
+
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/endOfDay/index.js
+function endOfDay(dirtyDate) {
+  requiredArgs(1, arguments);
+  var date = toDate(dirtyDate);
+  date.setHours(23, 59, 59, 999);
+  return date;
+}
+
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/endOfMonth/index.js
+function endOfMonth(dirtyDate) {
+  requiredArgs(1, arguments);
+  var date = toDate(dirtyDate);
+  var month = date.getMonth();
+  date.setFullYear(date.getFullYear(), month + 1, 0);
+  date.setHours(23, 59, 59, 999);
+  return date;
+}
+
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/isLastDayOfMonth/index.js
+function isLastDayOfMonth(dirtyDate) {
+  requiredArgs(1, arguments);
+  var date = toDate(dirtyDate);
+  return endOfDay(date).getTime() === endOfMonth(date).getTime();
+}
+
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/differenceInMonths/index.js
+function differenceInMonths(dirtyDateLeft, dirtyDateRight) {
+  requiredArgs(2, arguments);
+  var dateLeft = toDate(dirtyDateLeft);
+  var dateRight = toDate(dirtyDateRight);
+  var sign = compareAsc(dateLeft, dateRight);
+  var difference = Math.abs(differenceInCalendarMonths(dateLeft, dateRight));
+  var result;
+  if (difference < 1) {
+    result = 0;
+  } else {
+    if (dateLeft.getMonth() === 1 && dateLeft.getDate() > 27) {
+      dateLeft.setDate(30);
+    }
+    dateLeft.setMonth(dateLeft.getMonth() - sign * difference);
+    var isLastMonthNotFull = compareAsc(dateLeft, dateRight) === -sign;
+    if (isLastDayOfMonth(toDate(dirtyDateLeft)) && difference === 1 && compareAsc(dirtyDateLeft, dateRight) === 1) {
+      isLastMonthNotFull = false;
+    }
+    result = sign * (difference - Number(isLastMonthNotFull));
+  }
+  return result === 0 ? 0 : result;
 }
 
 // node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/eachDayOfInterval/index.js
@@ -511,7 +587,7 @@ var formatters = {
     }
   },
   // Hour [1-12]
-  h: function h(date, token) {
+  h: function h2(date, token) {
     return addLeadingZeros(date.getUTCHours() % 12 || 12, token.length);
   },
   // Hour [0-23]
@@ -1008,7 +1084,7 @@ var formatters2 = {
     }
   },
   // Hour [1-12]
-  h: function h2(date, token, localize2) {
+  h: function h3(date, token, localize2) {
     if (token === "ho") {
       var hours = date.getUTCHours() % 12;
       if (hours === 0)
@@ -2023,11 +2099,11 @@ function _unsupportedIterableToArray(o, minLen) {
 
 // node_modules/.pnpm/@babel+runtime@7.22.10/node_modules/@babel/runtime/helpers/esm/createForOfIteratorHelper.js
 function _createForOfIteratorHelper(o, allowArrayLike) {
-  var it2 = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
-  if (!it2) {
-    if (Array.isArray(o) || (it2 = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
-      if (it2)
-        o = it2;
+  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+  if (!it) {
+    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+      if (it)
+        o = it;
       var i2 = 0;
       var F = function F2() {
       };
@@ -2043,8 +2119,8 @@ function _createForOfIteratorHelper(o, allowArrayLike) {
             value: o[i2++]
           };
         },
-        e: function e2(_e2) {
-          throw _e2;
+        e: function e2(_e) {
+          throw _e;
         },
         f: F
       };
@@ -2054,10 +2130,10 @@ function _createForOfIteratorHelper(o, allowArrayLike) {
   var normalCompletion = true, didErr = false, err;
   return {
     s: function s3() {
-      it2 = it2.call(o);
+      it = it.call(o);
     },
     n: function n() {
-      var step = it2.next();
+      var step = it.next();
       normalCompletion = step.done;
       return step;
     },
@@ -2067,8 +2143,8 @@ function _createForOfIteratorHelper(o, allowArrayLike) {
     },
     f: function f() {
       try {
-        if (!normalCompletion && it2["return"] != null)
-          it2["return"]();
+        if (!normalCompletion && it["return"] != null)
+          it["return"]();
       } finally {
         if (didErr)
           throw err;
@@ -4753,8 +4829,8 @@ function subYears(dirtyDate, dirtyAmount) {
   return addYears(dirtyDate, -amount);
 }
 
-// node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
-function Lt() {
+// node_modules/.pnpm/@vuepic+vue-datepicker@6.0.0_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
+function It() {
   return openBlock(), createElementBlock(
     "svg",
     {
@@ -4780,7 +4856,10 @@ function Lt() {
     ]
   );
 }
-function fa() {
+It.compatConfig = {
+  MODE: 3
+};
+function ya() {
   return openBlock(), createElementBlock(
     "svg",
     {
@@ -4800,7 +4879,10 @@ function fa() {
     ]
   );
 }
-function wn() {
+ya.compatConfig = {
+  MODE: 3
+};
+function Cn() {
   return openBlock(), createElementBlock(
     "svg",
     {
@@ -4817,7 +4899,10 @@ function wn() {
     ]
   );
 }
-function bn() {
+Cn.compatConfig = {
+  MODE: 3
+};
+function Rn() {
   return openBlock(), createElementBlock(
     "svg",
     {
@@ -4834,7 +4919,10 @@ function bn() {
     ]
   );
 }
-function Hn() {
+Rn.compatConfig = {
+  MODE: 3
+};
+function Nn() {
   return openBlock(), createElementBlock(
     "svg",
     {
@@ -4854,7 +4942,10 @@ function Hn() {
     ]
   );
 }
-function Wn() {
+Nn.compatConfig = {
+  MODE: 3
+};
+function On() {
   return openBlock(), createElementBlock(
     "svg",
     {
@@ -4871,7 +4962,10 @@ function Wn() {
     ]
   );
 }
-function zn() {
+On.compatConfig = {
+  MODE: 3
+};
+function In() {
   return openBlock(), createElementBlock(
     "svg",
     {
@@ -4888,88 +4982,23 @@ function zn() {
     ]
   );
 }
-var Dn = (e2, n, a3, t2, s3) => {
-  const f = parse(e2, n.slice(0, e2.length), /* @__PURE__ */ new Date());
-  return isValid(f) && isDate(f) ? t2 || s3 ? f : set(f, {
-    hours: +a3.hours,
-    minutes: +(a3 == null ? void 0 : a3.minutes),
-    seconds: +(a3 == null ? void 0 : a3.seconds),
-    milliseconds: 0
-  }) : null;
+In.compatConfig = {
+  MODE: 3
 };
-var va = (e2, n, a3, t2, s3) => {
-  const f = Array.isArray(a3) ? a3[0] : a3;
-  if (typeof n == "string")
-    return Dn(e2, n, f, t2, s3);
-  if (Array.isArray(n)) {
-    let y3 = null;
-    for (const _ of n)
-      if (y3 = Dn(e2, _, f, t2, s3), y3)
-        break;
-    return y3;
-  }
-  return typeof n == "function" ? n(e2) : null;
-};
-var $ = (e2) => e2 ? new Date(e2) : /* @__PURE__ */ new Date();
-var ma = (e2, n) => {
-  if (n) {
-    const t2 = (e2.getMonth() + 1).toString().padStart(2, "0"), s3 = e2.getDate().toString().padStart(2, "0"), f = e2.getHours().toString().padStart(2, "0"), y3 = e2.getMinutes().toString().padStart(2, "0");
-    return `${e2.getFullYear()}-${t2}-${s3}T${f}:${y3}:00.000Z`;
-  }
-  const a3 = Date.UTC(
-    e2.getUTCFullYear(),
-    e2.getUTCMonth(),
-    e2.getUTCDate(),
-    e2.getUTCHours(),
-    e2.getUTCMinutes(),
-    e2.getUTCSeconds()
-  );
-  return new Date(a3).toISOString();
-};
-var Ue = (e2) => {
-  let n = $(JSON.parse(JSON.stringify(e2)));
-  return n = setHours(n, 0), n = setMinutes(n, 0), n = setSeconds(n, 0), n = setMilliseconds(n, 0), n;
-};
-var Fe = (e2, n, a3, t2) => {
-  let s3 = e2 ? $(e2) : $();
-  return (n || n === 0) && (s3 = setHours(s3, +n)), (a3 || a3 === 0) && (s3 = setMinutes(s3, +a3)), (t2 || t2 === 0) && (s3 = setSeconds(s3, +t2)), setMilliseconds(s3, 0);
-};
-var _e = (e2, n) => !e2 || !n ? false : isBefore(Ue(e2), Ue(n));
-var ve = (e2, n) => !e2 || !n ? false : isEqual(Ue(e2), Ue(n));
-var Be = (e2, n) => !e2 || !n ? false : isAfter(Ue(e2), Ue(n));
-var xn = (e2, n, a3) => e2 && e2[0] && e2[1] ? Be(a3, e2[0]) && _e(a3, e2[1]) : e2 && e2[0] && n ? Be(a3, e2[0]) && _e(a3, n) || _e(a3, e2[0]) && Be(a3, n) : false;
-var pt = (e2) => {
-  const n = set(new Date(e2), { date: 1 });
-  return Ue(n);
-};
-var kt = reactive({
-  menuFocused: false,
-  shiftKeyInMenu: false
-});
-var Kn = () => {
-  const e2 = (t2) => {
-    kt.menuFocused = t2;
-  }, n = (t2) => {
-    kt.shiftKeyInMenu !== t2 && (kt.shiftKeyInMenu = t2);
-  };
-  return {
-    control: computed(() => ({ shiftKeyInMenu: kt.shiftKeyInMenu, menuFocused: kt.menuFocused })),
-    setMenuFocused: e2,
-    setShiftKey: n
-  };
-};
-function yn(e2) {
+function Yn(e2) {
   return e2 && e2.__esModule && Object.prototype.hasOwnProperty.call(e2, "default") ? e2.default : e2;
 }
-var Bt = {};
-var ya = {
-  get exports() {
-    return Bt;
-  },
-  set exports(e2) {
-    Bt = e2;
+var pa = { exports: {} };
+(function(e2) {
+  function n(a3) {
+    return a3 && a3.__esModule ? a3 : {
+      default: a3
+    };
   }
-};
+  e2.exports = n, e2.exports.__esModule = true, e2.exports.default = e2.exports;
+})(pa);
+var qa = pa.exports;
+var kn = { exports: {} };
 (function(e2, n) {
   Object.defineProperty(n, "__esModule", {
     value: true
@@ -4977,37 +5006,31 @@ var ya = {
   function a3(t2) {
     if (t2 === null || t2 === true || t2 === false)
       return NaN;
-    var s3 = Number(t2);
-    return isNaN(s3) ? s3 : s3 < 0 ? Math.ceil(s3) : Math.floor(s3);
+    var o = Number(t2);
+    return isNaN(o) ? o : o < 0 ? Math.ceil(o) : Math.floor(o);
   }
   e2.exports = n.default;
-})(ya, Bt);
-var ga = yn(Bt);
-var Yt = {};
-var ha = {
-  get exports() {
-    return Yt;
-  },
-  set exports(e2) {
-    Yt = e2;
-  }
-};
+})(kn, kn.exports);
+var xa = kn.exports;
+var Ja = Yn(xa);
+var wn = { exports: {} };
 (function(e2, n) {
   Object.defineProperty(n, "__esModule", {
     value: true
   }), n.default = a3;
   function a3(t2) {
-    var s3 = new Date(Date.UTC(t2.getFullYear(), t2.getMonth(), t2.getDate(), t2.getHours(), t2.getMinutes(), t2.getSeconds(), t2.getMilliseconds()));
-    return s3.setUTCFullYear(t2.getFullYear()), t2.getTime() - s3.getTime();
+    var o = new Date(Date.UTC(t2.getFullYear(), t2.getMonth(), t2.getDate(), t2.getHours(), t2.getMinutes(), t2.getSeconds(), t2.getMilliseconds()));
+    return o.setUTCFullYear(t2.getFullYear()), t2.getTime() - o.getTime();
   }
   e2.exports = n.default;
-})(ha, Yt);
-var $n = yn(Yt);
-function pa(e2, n) {
-  var a3 = Da(n);
-  return a3.formatToParts ? wa(a3, e2) : ba(a3, e2);
+})(wn, wn.exports);
+var Xa = wn.exports;
+var zn = Yn(Xa);
+function Qa(e2, n) {
+  var a3 = ar(n);
+  return a3.formatToParts ? tr(a3, e2) : nr(a3, e2);
 }
-var ka = {
+var er = {
   year: 0,
   month: 1,
   day: 2,
@@ -5015,26 +5038,26 @@ var ka = {
   minute: 4,
   second: 5
 };
-function wa(e2, n) {
+function tr(e2, n) {
   try {
-    for (var a3 = e2.formatToParts(n), t2 = [], s3 = 0; s3 < a3.length; s3++) {
-      var f = ka[a3[s3].type];
-      f >= 0 && (t2[f] = parseInt(a3[s3].value, 10));
+    for (var a3 = e2.formatToParts(n), t2 = [], o = 0; o < a3.length; o++) {
+      var l = er[a3[o].type];
+      l >= 0 && (t2[l] = parseInt(a3[o].value, 10));
     }
     return t2;
-  } catch (y3) {
-    if (y3 instanceof RangeError)
+  } catch (c2) {
+    if (c2 instanceof RangeError)
       return [NaN];
-    throw y3;
+    throw c2;
   }
 }
-function ba(e2, n) {
+function nr(e2, n) {
   var a3 = e2.format(n).replace(/\u200E/g, ""), t2 = /(\d+)\/(\d+)\/(\d+),? (\d+):(\d+):(\d+)/.exec(a3);
   return [t2[3], t2[1], t2[2], t2[4], t2[5], t2[6]];
 }
-var Xt = {};
-function Da(e2) {
-  if (!Xt[e2]) {
+var on = {};
+function ar(e2) {
+  if (!on[e2]) {
     var n = new Intl.DateTimeFormat("en-US", {
       hour12: false,
       timeZone: "America/New_York",
@@ -5045,7 +5068,7 @@ function Da(e2) {
       minute: "2-digit",
       second: "2-digit"
     }).format(/* @__PURE__ */ new Date("2014-06-25T04:00:00.123Z")), a3 = n === "06/25/2014, 00:00:00" || n === "‎06‎/‎25‎/‎2014‎ ‎00‎:‎00‎:‎00";
-    Xt[e2] = a3 ? new Intl.DateTimeFormat("en-US", {
+    on[e2] = a3 ? new Intl.DateTimeFormat("en-US", {
       hour12: false,
       timeZone: e2,
       year: "numeric",
@@ -5065,41 +5088,41 @@ function Da(e2) {
       second: "2-digit"
     });
   }
-  return Xt[e2];
+  return on[e2];
 }
-function gn(e2, n, a3, t2, s3, f, y3) {
-  var _ = /* @__PURE__ */ new Date(0);
-  return _.setUTCFullYear(e2, n, a3), _.setUTCHours(t2, s3, f, y3), _;
+function Bn(e2, n, a3, t2, o, l, c2) {
+  var h4 = /* @__PURE__ */ new Date(0);
+  return h4.setUTCFullYear(e2, n, a3), h4.setUTCHours(t2, o, l, c2), h4;
 }
-var Mn = 36e5;
-var $a = 6e4;
-var qt = {
+var jn = 36e5;
+var rr = 6e4;
+var sn = {
   timezone: /([Z+-].*)$/,
   timezoneZ: /^(Z)$/,
   timezoneHH: /^([+-]\d{2})$/,
   timezoneHHMM: /^([+-]\d{2}):?(\d{2})$/
 };
-function hn(e2, n, a3) {
-  var t2, s3;
-  if (!e2 || (t2 = qt.timezoneZ.exec(e2), t2))
+function En(e2, n, a3) {
+  var t2, o;
+  if (!e2 || (t2 = sn.timezoneZ.exec(e2), t2))
     return 0;
-  var f;
-  if (t2 = qt.timezoneHH.exec(e2), t2)
-    return f = parseInt(t2[1], 10), Tn(f) ? -(f * Mn) : NaN;
-  if (t2 = qt.timezoneHHMM.exec(e2), t2) {
-    f = parseInt(t2[1], 10);
-    var y3 = parseInt(t2[2], 10);
-    return Tn(f, y3) ? (s3 = Math.abs(f) * Mn + y3 * $a, f > 0 ? -s3 : s3) : NaN;
+  var l;
+  if (t2 = sn.timezoneHH.exec(e2), t2)
+    return l = parseInt(t2[1], 10), Kn(l) ? -(l * jn) : NaN;
+  if (t2 = sn.timezoneHHMM.exec(e2), t2) {
+    l = parseInt(t2[1], 10);
+    var c2 = parseInt(t2[2], 10);
+    return Kn(l, c2) ? (o = Math.abs(l) * jn + c2 * rr, l > 0 ? -o : o) : NaN;
   }
-  if (Aa(e2)) {
+  if (sr(e2)) {
     n = new Date(n || Date.now());
-    var _ = a3 ? n : Ma(n), E2 = sn(_, e2), T2 = a3 ? E2 : Ta(n, E2, e2);
-    return -T2;
+    var h4 = a3 ? n : lr(n), y3 = Dn(h4, e2), D2 = a3 ? y3 : or(n, y3, e2);
+    return -D2;
   }
   return NaN;
 }
-function Ma(e2) {
-  return gn(
+function lr(e2) {
+  return Bn(
     e2.getFullYear(),
     e2.getMonth(),
     e2.getDate(),
@@ -5109,8 +5132,8 @@ function Ma(e2) {
     e2.getMilliseconds()
   );
 }
-function sn(e2, n) {
-  var a3 = pa(e2, n), t2 = gn(
+function Dn(e2, n) {
+  var a3 = Qa(e2, n), t2 = Bn(
     a3[0],
     a3[1] - 1,
     a3[2],
@@ -5118,36 +5141,35 @@ function sn(e2, n) {
     a3[4],
     a3[5],
     0
-  ).getTime(), s3 = e2.getTime(), f = s3 % 1e3;
-  return s3 -= f >= 0 ? f : 1e3 + f, t2 - s3;
+  ).getTime(), o = e2.getTime(), l = o % 1e3;
+  return o -= l >= 0 ? l : 1e3 + l, t2 - o;
 }
-function Ta(e2, n, a3) {
-  var t2 = e2.getTime(), s3 = t2 - n, f = sn(new Date(s3), a3);
-  if (n === f)
+function or(e2, n, a3) {
+  var t2 = e2.getTime(), o = t2 - n, l = Dn(new Date(o), a3);
+  if (n === l)
     return n;
-  s3 -= f - n;
-  var y3 = sn(new Date(s3), a3);
-  return f === y3 ? f : Math.max(f, y3);
+  o -= l - n;
+  var c2 = Dn(new Date(o), a3);
+  return l === c2 ? l : Math.max(l, c2);
 }
-function Tn(e2, n) {
+function Kn(e2, n) {
   return -23 <= e2 && e2 <= 23 && (n == null || 0 <= n && n <= 59);
 }
-var An = {};
-function Aa(e2) {
-  if (An[e2])
+var Gn = {};
+function sr(e2) {
+  if (Gn[e2])
     return true;
   try {
-    return new Intl.DateTimeFormat(void 0, { timeZone: e2 }), An[e2] = true, true;
+    return new Intl.DateTimeFormat(void 0, { timeZone: e2 }), Gn[e2] = true, true;
   } catch {
     return false;
   }
 }
-var Sa = /(Z|[+-]\d{2}(?::?\d{2})?| UTC| [a-zA-Z]+\/[a-zA-Z_]+(?:\/[a-zA-Z_]+)?)$/;
-var jn = Sa;
-var Jt = 36e5;
-var Sn = 6e4;
-var Ca = 2;
-var Ie = {
+var ha = /(Z|[+-]\d{2}(?::?\d{2})?| UTC| [a-zA-Z]+\/[a-zA-Z_]+(?:\/[a-zA-Z_]+)?)$/;
+var un = 36e5;
+var Zn = 6e4;
+var ur = 2;
+var Ye = {
   dateTimePattern: /^([0-9W+-]+)(T| )(.*)/,
   datePattern: /^([0-9W+-]+)(.*)/,
   plainTime: /:/,
@@ -5180,14 +5202,14 @@ var Ie = {
   HHMM: /^(\d{2}):?(\d{2}([.,]\d*)?)$/,
   HHMMSS: /^(\d{2}):?(\d{2}):?(\d{2}([.,]\d*)?)$/,
   // time zone tokens (to identify the presence of a tz)
-  timeZone: jn
+  timeZone: ha
 };
-function un(e2, n) {
+function Mn(e2, n) {
   if (arguments.length < 1)
     throw new TypeError("1 argument required, but only " + arguments.length + " present");
   if (e2 === null)
     return /* @__PURE__ */ new Date(NaN);
-  var a3 = n || {}, t2 = a3.additionalDigits == null ? Ca : ga(a3.additionalDigits);
+  var a3 = n || {}, t2 = a3.additionalDigits == null ? ur : Ja(a3.additionalDigits);
   if (t2 !== 2 && t2 !== 1 && t2 !== 0)
     throw new RangeError("additionalDigits must be 0, 1 or 2");
   if (e2 instanceof Date || typeof e2 == "object" && Object.prototype.toString.call(e2) === "[object Date]")
@@ -5196,233 +5218,534 @@ function un(e2, n) {
     return new Date(e2);
   if (!(typeof e2 == "string" || Object.prototype.toString.call(e2) === "[object String]"))
     return /* @__PURE__ */ new Date(NaN);
-  var s3 = Pa(e2), f = _a(s3.date, t2), y3 = f.year, _ = f.restDateString, E2 = Na(_, y3);
-  if (isNaN(E2))
+  var o = ir(e2), l = cr(o.date, t2), c2 = l.year, h4 = l.restDateString, y3 = dr(h4, c2);
+  if (isNaN(y3))
     return /* @__PURE__ */ new Date(NaN);
-  if (E2) {
-    var T2 = E2.getTime(), U = 0, A;
-    if (s3.time && (U = Ra(s3.time), isNaN(U)))
+  if (y3) {
+    var D2 = y3.getTime(), b2 = 0, T2;
+    if (o.time && (b2 = fr(o.time), isNaN(b2)))
       return /* @__PURE__ */ new Date(NaN);
-    if (s3.timeZone || a3.timeZone) {
-      if (A = hn(s3.timeZone || a3.timeZone, new Date(T2 + U)), isNaN(A))
+    if (o.timeZone || a3.timeZone) {
+      if (T2 = En(o.timeZone || a3.timeZone, new Date(D2 + b2)), isNaN(T2))
         return /* @__PURE__ */ new Date(NaN);
     } else
-      A = $n(new Date(T2 + U)), A = $n(new Date(T2 + U + A));
-    return new Date(T2 + U + A);
+      T2 = zn(new Date(D2 + b2)), T2 = zn(new Date(D2 + b2 + T2));
+    return new Date(D2 + b2 + T2);
   } else
     return /* @__PURE__ */ new Date(NaN);
 }
-function Pa(e2) {
-  var n = {}, a3 = Ie.dateTimePattern.exec(e2), t2;
-  if (a3 ? (n.date = a3[1], t2 = a3[3]) : (a3 = Ie.datePattern.exec(e2), a3 ? (n.date = a3[1], t2 = a3[2]) : (n.date = null, t2 = e2)), t2) {
-    var s3 = Ie.timeZone.exec(t2);
-    s3 ? (n.time = t2.replace(s3[1], ""), n.timeZone = s3[1].trim()) : n.time = t2;
+function ir(e2) {
+  var n = {}, a3 = Ye.dateTimePattern.exec(e2), t2;
+  if (a3 ? (n.date = a3[1], t2 = a3[3]) : (a3 = Ye.datePattern.exec(e2), a3 ? (n.date = a3[1], t2 = a3[2]) : (n.date = null, t2 = e2)), t2) {
+    var o = Ye.timeZone.exec(t2);
+    o ? (n.time = t2.replace(o[1], ""), n.timeZone = o[1].trim()) : n.time = t2;
   }
   return n;
 }
-function _a(e2, n) {
-  var a3 = Ie.YYY[n], t2 = Ie.YYYYY[n], s3;
-  if (s3 = Ie.YYYY.exec(e2) || t2.exec(e2), s3) {
-    var f = s3[1];
+function cr(e2, n) {
+  var a3 = Ye.YYY[n], t2 = Ye.YYYYY[n], o;
+  if (o = Ye.YYYY.exec(e2) || t2.exec(e2), o) {
+    var l = o[1];
     return {
-      year: parseInt(f, 10),
-      restDateString: e2.slice(f.length)
+      year: parseInt(l, 10),
+      restDateString: e2.slice(l.length)
     };
   }
-  if (s3 = Ie.YY.exec(e2) || a3.exec(e2), s3) {
-    var y3 = s3[1];
+  if (o = Ye.YY.exec(e2) || a3.exec(e2), o) {
+    var c2 = o[1];
     return {
-      year: parseInt(y3, 10) * 100,
-      restDateString: e2.slice(y3.length)
+      year: parseInt(c2, 10) * 100,
+      restDateString: e2.slice(c2.length)
     };
   }
   return {
     year: null
   };
 }
-function Na(e2, n) {
+function dr(e2, n) {
   if (n === null)
     return null;
-  var a3, t2, s3, f;
+  var a3, t2, o, l;
   if (e2.length === 0)
     return t2 = /* @__PURE__ */ new Date(0), t2.setUTCFullYear(n), t2;
-  if (a3 = Ie.MM.exec(e2), a3)
-    return t2 = /* @__PURE__ */ new Date(0), s3 = parseInt(a3[1], 10) - 1, Pn(n, s3) ? (t2.setUTCFullYear(n, s3), t2) : /* @__PURE__ */ new Date(NaN);
-  if (a3 = Ie.DDD.exec(e2), a3) {
+  if (a3 = Ye.MM.exec(e2), a3)
+    return t2 = /* @__PURE__ */ new Date(0), o = parseInt(a3[1], 10) - 1, xn(n, o) ? (t2.setUTCFullYear(n, o), t2) : /* @__PURE__ */ new Date(NaN);
+  if (a3 = Ye.DDD.exec(e2), a3) {
     t2 = /* @__PURE__ */ new Date(0);
-    var y3 = parseInt(a3[1], 10);
-    return Ba(n, y3) ? (t2.setUTCFullYear(n, 0, y3), t2) : /* @__PURE__ */ new Date(NaN);
+    var c2 = parseInt(a3[1], 10);
+    return gr(n, c2) ? (t2.setUTCFullYear(n, 0, c2), t2) : /* @__PURE__ */ new Date(NaN);
   }
-  if (a3 = Ie.MMDD.exec(e2), a3) {
-    t2 = /* @__PURE__ */ new Date(0), s3 = parseInt(a3[1], 10) - 1;
-    var _ = parseInt(a3[2], 10);
-    return Pn(n, s3, _) ? (t2.setUTCFullYear(n, s3, _), t2) : /* @__PURE__ */ new Date(NaN);
+  if (a3 = Ye.MMDD.exec(e2), a3) {
+    t2 = /* @__PURE__ */ new Date(0), o = parseInt(a3[1], 10) - 1;
+    var h4 = parseInt(a3[2], 10);
+    return xn(n, o, h4) ? (t2.setUTCFullYear(n, o, h4), t2) : /* @__PURE__ */ new Date(NaN);
   }
-  if (a3 = Ie.Www.exec(e2), a3)
-    return f = parseInt(a3[1], 10) - 1, _n(n, f) ? Cn(n, f) : /* @__PURE__ */ new Date(NaN);
-  if (a3 = Ie.WwwD.exec(e2), a3) {
-    f = parseInt(a3[1], 10) - 1;
-    var E2 = parseInt(a3[2], 10) - 1;
-    return _n(n, f, E2) ? Cn(n, f, E2) : /* @__PURE__ */ new Date(NaN);
+  if (a3 = Ye.Www.exec(e2), a3)
+    return l = parseInt(a3[1], 10) - 1, Jn(n, l) ? qn(n, l) : /* @__PURE__ */ new Date(NaN);
+  if (a3 = Ye.WwwD.exec(e2), a3) {
+    l = parseInt(a3[1], 10) - 1;
+    var y3 = parseInt(a3[2], 10) - 1;
+    return Jn(n, l, y3) ? qn(n, l, y3) : /* @__PURE__ */ new Date(NaN);
   }
   return null;
 }
-function Ra(e2) {
+function fr(e2) {
   var n, a3, t2;
-  if (n = Ie.HH.exec(e2), n)
-    return a3 = parseFloat(n[1].replace(",", ".")), Qt(a3) ? a3 % 24 * Jt : NaN;
-  if (n = Ie.HHMM.exec(e2), n)
-    return a3 = parseInt(n[1], 10), t2 = parseFloat(n[2].replace(",", ".")), Qt(a3, t2) ? a3 % 24 * Jt + t2 * Sn : NaN;
-  if (n = Ie.HHMMSS.exec(e2), n) {
+  if (n = Ye.HH.exec(e2), n)
+    return a3 = parseFloat(n[1].replace(",", ".")), cn(a3) ? a3 % 24 * un : NaN;
+  if (n = Ye.HHMM.exec(e2), n)
+    return a3 = parseInt(n[1], 10), t2 = parseFloat(n[2].replace(",", ".")), cn(a3, t2) ? a3 % 24 * un + t2 * Zn : NaN;
+  if (n = Ye.HHMMSS.exec(e2), n) {
     a3 = parseInt(n[1], 10), t2 = parseInt(n[2], 10);
-    var s3 = parseFloat(n[3].replace(",", "."));
-    return Qt(a3, t2, s3) ? a3 % 24 * Jt + t2 * Sn + s3 * 1e3 : NaN;
+    var o = parseFloat(n[3].replace(",", "."));
+    return cn(a3, t2, o) ? a3 % 24 * un + t2 * Zn + o * 1e3 : NaN;
   }
   return null;
 }
-function Cn(e2, n, a3) {
+function qn(e2, n, a3) {
   n = n || 0, a3 = a3 || 0;
   var t2 = /* @__PURE__ */ new Date(0);
   t2.setUTCFullYear(e2, 0, 4);
-  var s3 = t2.getUTCDay() || 7, f = n * 7 + a3 + 1 - s3;
-  return t2.setUTCDate(t2.getUTCDate() + f), t2;
+  var o = t2.getUTCDay() || 7, l = n * 7 + a3 + 1 - o;
+  return t2.setUTCDate(t2.getUTCDate() + l), t2;
 }
-var Oa = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-var Ia = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-function Gn(e2) {
+var vr = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+var mr = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+function ba(e2) {
   return e2 % 400 === 0 || e2 % 4 === 0 && e2 % 100 !== 0;
 }
-function Pn(e2, n, a3) {
+function xn(e2, n, a3) {
   if (n < 0 || n > 11)
     return false;
   if (a3 != null) {
     if (a3 < 1)
       return false;
-    var t2 = Gn(e2);
-    if (t2 && a3 > Ia[n] || !t2 && a3 > Oa[n])
+    var t2 = ba(e2);
+    if (t2 && a3 > mr[n] || !t2 && a3 > vr[n])
       return false;
   }
   return true;
 }
-function Ba(e2, n) {
+function gr(e2, n) {
   if (n < 1)
     return false;
-  var a3 = Gn(e2);
+  var a3 = ba(e2);
   return !(a3 && n > 366 || !a3 && n > 365);
 }
-function _n(e2, n, a3) {
+function Jn(e2, n, a3) {
   return !(n < 0 || n > 52 || a3 != null && (a3 < 0 || a3 > 6));
 }
-function Qt(e2, n, a3) {
+function cn(e2, n, a3) {
   return !(e2 != null && (e2 < 0 || e2 >= 25) || n != null && (n < 0 || n >= 60) || a3 != null && (a3 < 0 || a3 >= 60));
 }
-var Vt = {};
-var Ya = {
-  get exports() {
-    return Vt;
-  },
-  set exports(e2) {
-    Vt = e2;
-  }
-};
-var Et = {};
-var Va = {
-  get exports() {
-    return Et;
-  },
-  set exports(e2) {
-    Et = e2;
-  }
-};
+var $n = { exports: {} };
+var Tn = { exports: {} };
 (function(e2, n) {
   Object.defineProperty(n, "__esModule", {
     value: true
   }), n.default = a3;
-  function a3(t2, s3) {
+  function a3(t2, o) {
     if (t2 == null)
       throw new TypeError("assign requires that input parameter not be null or undefined");
-    for (var f in s3)
-      Object.prototype.hasOwnProperty.call(s3, f) && (t2[f] = s3[f]);
+    for (var l in o)
+      Object.prototype.hasOwnProperty.call(o, l) && (t2[l] = o[l]);
     return t2;
   }
   e2.exports = n.default;
-})(Va, Et);
+})(Tn, Tn.exports);
+var yr = Tn.exports;
 (function(e2, n) {
+  var a3 = qa.default;
   Object.defineProperty(n, "__esModule", {
     value: true
-  }), n.default = s3;
-  var a3 = t2(Et);
-  function t2(f) {
-    return f && f.__esModule ? f : { default: f };
-  }
-  function s3(f) {
-    return (0, a3.default)({}, f);
+  }), n.default = o;
+  var t2 = a3(yr);
+  function o(l) {
+    return (0, t2.default)({}, l);
   }
   e2.exports = n.default;
-})(Ya, Vt);
-var Ea = yn(Vt);
-function Fa(e2, n, a3) {
-  var t2 = un(e2, a3), s3 = hn(n, t2, true), f = new Date(t2.getTime() - s3), y3 = /* @__PURE__ */ new Date(0);
-  return y3.setFullYear(f.getUTCFullYear(), f.getUTCMonth(), f.getUTCDate()), y3.setHours(f.getUTCHours(), f.getUTCMinutes(), f.getUTCSeconds(), f.getUTCMilliseconds()), y3;
+})($n, $n.exports);
+var pr = $n.exports;
+var hr = Yn(pr);
+function br(e2, n, a3) {
+  var t2 = Mn(e2, a3), o = En(n, t2, true), l = new Date(t2.getTime() - o), c2 = /* @__PURE__ */ new Date(0);
+  return c2.setFullYear(l.getUTCFullYear(), l.getUTCMonth(), l.getUTCDate()), c2.setHours(l.getUTCHours(), l.getUTCMinutes(), l.getUTCSeconds(), l.getUTCMilliseconds()), c2;
 }
-function La(e2, n, a3) {
-  if (typeof e2 == "string" && !e2.match(jn)) {
-    var t2 = Ea(a3);
-    return t2.timeZone = n, un(e2, t2);
+function kr(e2, n, a3) {
+  if (typeof e2 == "string" && !e2.match(ha)) {
+    var t2 = hr(a3);
+    return t2.timeZone = n, Mn(e2, t2);
   }
-  var s3 = un(e2, a3), f = gn(
-    s3.getFullYear(),
-    s3.getMonth(),
-    s3.getDate(),
-    s3.getHours(),
-    s3.getMinutes(),
-    s3.getSeconds(),
-    s3.getMilliseconds()
-  ).getTime(), y3 = hn(n, new Date(f));
-  return new Date(f + y3);
+  var o = Mn(e2, a3), l = Bn(
+    o.getFullYear(),
+    o.getMonth(),
+    o.getDate(),
+    o.getHours(),
+    o.getMinutes(),
+    o.getSeconds(),
+    o.getMilliseconds()
+  ).getTime(), c2 = En(n, new Date(l));
+  return new Date(l + c2);
 }
-var Ua = (e2, n = 3) => {
-  const a3 = [];
-  for (let t2 = 0; t2 < e2.length; t2 += n)
-    a3.push([e2[t2], e2[t2 + 1], e2[t2 + 2]]);
-  return a3;
+function Xn(e2) {
+  return (n) => new Intl.DateTimeFormat(e2, { weekday: "short", timeZone: "UTC" }).format(/* @__PURE__ */ new Date(`2017-01-0${n}T00:00:00+00:00`)).slice(0, 2);
+}
+function wr(e2) {
+  return (n) => format(/* @__PURE__ */ new Date(`2017-01-0${n}T00:00:00+00:00`), "EEEEEE", { locale: e2 });
+}
+var Dr = (e2, n, a3) => {
+  const t2 = [1, 2, 3, 4, 5, 6, 7];
+  let o;
+  if (e2 !== null)
+    try {
+      o = t2.map(wr(e2));
+    } catch {
+      o = t2.map(Xn(n));
+    }
+  else
+    o = t2.map(Xn(n));
+  const l = o.slice(0, a3), c2 = o.slice(a3 + 1, o.length);
+  return [o[a3]].concat(...c2).concat(...l);
 };
-var Ha = (e2, n) => {
-  const a3 = [1, 2, 3, 4, 5, 6, 7].map((f) => new Intl.DateTimeFormat(e2, { weekday: "short", timeZone: "UTC" }).format(/* @__PURE__ */ new Date(`2017-01-0${f}T00:00:00+00:00`)).slice(0, 2)), t2 = a3.slice(0, n), s3 = a3.slice(n + 1, a3.length);
-  return [a3[n]].concat(...s3).concat(...t2);
-};
-var Wa = (e2, n) => {
+var Fn = (e2, n) => {
   const a3 = [];
   for (let t2 = +e2[0]; t2 <= +e2[1]; t2++)
     a3.push({ value: +t2, text: `${t2}` });
   return n ? a3.reverse() : a3;
 };
-var za = (e2, n) => {
-  const a3 = new Intl.DateTimeFormat(e2, { month: n, timeZone: "UTC" });
-  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((s3) => {
-    const f = s3 < 10 ? `0${s3}` : s3;
-    return /* @__PURE__ */ new Date(`2017-${f}-01T00:00:00+00:00`);
-  }).map((s3, f) => ({
-    text: a3.format(s3),
-    value: f
-  }));
+var ka = (e2, n, a3) => {
+  const t2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((l) => {
+    const c2 = l < 10 ? `0${l}` : l;
+    return /* @__PURE__ */ new Date(`2017-${c2}-01T00:00:00+00:00`);
+  });
+  if (e2 !== null)
+    try {
+      const l = a3 === "long" ? "MMMM" : "MMM";
+      return t2.map((c2, h4) => {
+        const y3 = format(c2, l, { locale: e2 });
+        return {
+          text: y3.charAt(0).toUpperCase() + y3.substring(1),
+          value: h4
+        };
+      });
+    } catch {
+    }
+  const o = new Intl.DateTimeFormat(n, { month: a3, timeZone: "UTC" });
+  return t2.map((l, c2) => {
+    const h4 = o.format(l);
+    return {
+      text: h4.charAt(0).toUpperCase() + h4.substring(1),
+      value: c2
+    };
+  });
 };
-var xa = (e2) => [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11][e2];
-var $e = (e2) => {
+var Mr = (e2) => [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11][e2];
+var Ae = (e2) => {
   const n = unref(e2);
   return n != null && n.$el ? n == null ? void 0 : n.$el : n;
 };
-var Ka = (e2) => Object.assign({ type: "dot" }, e2);
-var Zn = (e2) => Array.isArray(e2) ? !!e2[0] && !!e2[1] : false;
-var Ft = {
+var $r = (e2) => Object.assign({ type: "dot" }, e2);
+var wa = (e2) => Array.isArray(e2) ? !!e2[0] && !!e2[1] : false;
+var Gt = {
   prop: (e2) => `"${e2}" prop must be enabled!`,
   dateArr: (e2) => `You need to use array as "model-value" binding in order to support "${e2}"`
 };
-var Me = (e2) => e2;
-var Nn = (e2) => e2 === 0 ? e2 : !e2 || isNaN(+e2) ? null : +e2;
-var Rn = (e2) => Object.assign(
+var Te = (e2) => e2;
+var Qn = (e2) => e2 === 0 ? e2 : !e2 || isNaN(+e2) ? null : +e2;
+var ea = (e2) => e2 === null;
+var Tr = (e2) => {
+  if (e2)
+    return [...e2.querySelectorAll("input, button, select, textarea, a[href]")][0];
+};
+var Ar = (e2) => {
+  const n = [], a3 = (t2) => t2.filter((o) => o);
+  for (let t2 = 0; t2 < e2.length; t2 += 3) {
+    const o = [e2[t2], e2[t2 + 1], e2[t2 + 2]];
+    n.push(a3(o));
+  }
+  return n;
+};
+var Rt = (e2, n, a3) => {
+  const t2 = a3 ?? a3 === 0, o = n ?? n === 0;
+  if (!t2 && !o)
+    return false;
+  const l = +a3, c2 = +n;
+  return t2 && o ? +e2 > l || +e2 < c2 : t2 ? +e2 > l : o ? +e2 < c2 : false;
+};
+var bt = (e2, n) => Ar(e2).map((a3) => a3.map((t2) => {
+  const { active: o, disabled: l, isBetween: c2 } = n(t2);
+  return {
+    ...t2,
+    active: o,
+    disabled: l,
+    className: {
+      dp__overlay_cell_active: o,
+      dp__overlay_cell: !o,
+      dp__overlay_cell_disabled: l,
+      dp__overlay_cell_pad: true,
+      dp__overlay_cell_active_disabled: l && o,
+      dp__cell_in_between: c2
+    }
+  };
+}));
+var ta = (e2, n, a3, t2, o) => {
+  const l = parse(e2, n.slice(0, e2.length), /* @__PURE__ */ new Date());
+  return isValid(l) && isDate(l) ? t2 || o ? l : set(l, {
+    hours: +a3.hours,
+    minutes: +(a3 == null ? void 0 : a3.minutes),
+    seconds: +(a3 == null ? void 0 : a3.seconds),
+    milliseconds: 0
+  }) : null;
+};
+var _r = (e2, n, a3, t2, o) => {
+  const l = Array.isArray(a3) ? a3[0] : a3;
+  if (typeof n == "string")
+    return ta(e2, n, l, t2, o);
+  if (Array.isArray(n)) {
+    let c2 = null;
+    for (const h4 of n)
+      if (c2 = ta(e2, h4, l, t2, o), c2)
+        break;
+    return c2;
+  }
+  return typeof n == "function" ? n(e2) : null;
+};
+var S3 = (e2) => e2 ? new Date(e2) : /* @__PURE__ */ new Date();
+var Sr = (e2, n, a3) => {
+  if (n) {
+    const o = (e2.getMonth() + 1).toString().padStart(2, "0"), l = e2.getDate().toString().padStart(2, "0"), c2 = e2.getHours().toString().padStart(2, "0"), h4 = e2.getMinutes().toString().padStart(2, "0"), y3 = a3 ? e2.getSeconds().toString().padStart(2, "0") : "00";
+    return `${e2.getFullYear()}-${o}-${l}T${c2}:${h4}:${y3}.000Z`;
+  }
+  const t2 = Date.UTC(
+    e2.getUTCFullYear(),
+    e2.getUTCMonth(),
+    e2.getUTCDate(),
+    e2.getUTCHours(),
+    e2.getUTCMinutes(),
+    e2.getUTCSeconds()
+  );
+  return new Date(t2).toISOString();
+};
+var Le = (e2) => {
+  let n = S3(JSON.parse(JSON.stringify(e2)));
+  return n = setHours(n, 0), n = setMinutes(n, 0), n = setSeconds(n, 0), n = setMilliseconds(n, 0), n;
+};
+var tt = (e2, n, a3, t2) => {
+  let o = e2 ? S3(e2) : S3();
+  return (n || n === 0) && (o = setHours(o, +n)), (a3 || a3 === 0) && (o = setMinutes(o, +a3)), (t2 || t2 === 0) && (o = setSeconds(o, +t2)), setMilliseconds(o, 0);
+};
+var Pe = (e2, n) => !e2 || !n ? false : isBefore(Le(e2), Le(n));
+var ye = (e2, n) => !e2 || !n ? false : isEqual(Le(e2), Le(n));
+var Ne = (e2, n) => !e2 || !n ? false : isAfter(Le(e2), Le(n));
+var Vn = (e2, n, a3) => e2 && e2[0] && e2[1] ? Ne(a3, e2[0]) && Pe(a3, e2[1]) : e2 && e2[0] && n ? Ne(a3, e2[0]) && Pe(a3, n) || Pe(a3, e2[0]) && Ne(a3, n) : false;
+var ze = (e2) => {
+  const n = set(new Date(e2), { date: 1 });
+  return Le(n);
+};
+var dn = (e2, n, a3) => n && (a3 || a3 === 0) ? Object.fromEntries(
+  ["hours", "minutes", "seconds"].map((t2) => t2 === n ? [t2, a3] : [t2, isNaN(+e2[t2]) ? void 0 : +e2[t2]])
+) : {
+  hours: isNaN(+e2.hours) ? void 0 : +e2.hours,
+  minutes: isNaN(+e2.minutes) ? void 0 : +e2.minutes,
+  seconds: isNaN(+e2.seconds) ? void 0 : +e2.seconds
+};
+var ft = (e2) => ({
+  hours: getHours(e2),
+  minutes: getMinutes(e2),
+  seconds: getSeconds(e2)
+});
+var Da = (e2, n) => {
+  if (n) {
+    const a3 = getYear(S3(n));
+    if (a3 > e2)
+      return 12;
+    if (a3 === e2)
+      return getMonth(S3(n));
+  }
+};
+var Ma = (e2, n) => {
+  if (n) {
+    const a3 = getYear(S3(n));
+    return a3 < e2 ? -1 : a3 === e2 ? getMonth(S3(n)) : void 0;
+  }
+};
+var kt = (e2) => {
+  if (e2)
+    return getYear(S3(e2));
+};
+var Ze = (e2, n) => n ? br(e2, n) : e2;
+var Pr = (e2, n) => n ? kr(e2, n) : e2;
+var na = (e2) => e2 instanceof Date ? e2 : parseISO(e2);
+var $a = (e2, n) => {
+  const a3 = Ne(e2, n) ? n : e2, t2 = Ne(n, e2) ? n : e2;
+  return eachDayOfInterval({ start: a3, end: t2 });
+};
+var Cr = (e2) => {
+  const n = addMonths(e2, 1);
+  return { month: getMonth(n), year: getYear(n) };
+};
+var jt = (e2, n, a3) => {
+  const t2 = startOfWeek(Ze(e2, n), { weekStartsOn: +a3 }), o = endOfWeek(Ze(e2, n), { weekStartsOn: +a3 });
+  return [t2, o];
+};
+var Ta = (e2, n) => {
+  const a3 = {
+    hours: getHours(S3()),
+    minutes: getMinutes(S3()),
+    seconds: n ? getSeconds(S3()) : 0
+  };
+  return Object.assign(a3, e2);
+};
+var et = (e2, n, a3) => [set(S3(e2), { date: 1 }), set(S3(), { month: n, year: a3, date: 1 })];
+var Je = (e2, n, a3) => {
+  let t2 = e2 ? S3(e2) : S3();
+  return (n || n === 0) && (t2 = setMonth(t2, n)), a3 && (t2 = setYear(t2, a3)), t2;
+};
+var Aa = (e2, n, a3, t2, o) => {
+  if (!t2 || o && !n || !o && !a3)
+    return false;
+  const l = o ? addMonths(e2, 1) : subMonths(e2, 1), c2 = [getMonth(l), getYear(l)];
+  return o ? !Nr(...c2, n) : !Rr(...c2, a3);
+};
+var Rr = (e2, n, a3) => Pe(...et(a3, e2, n)) || ye(...et(a3, e2, n));
+var Nr = (e2, n, a3) => Ne(...et(a3, e2, n)) || ye(...et(a3, e2, n));
+var _a = (e2, n, a3, t2, o, l) => {
+  if (typeof n == "function")
+    return n(e2);
+  const c2 = a3 ? { locale: a3 } : void 0;
+  return Array.isArray(e2) ? `${format(e2[0], l, c2)}${o && !e2[1] ? "" : t2}${e2[1] ? format(e2[1], l, c2) : ""}` : format(e2, l, c2);
+};
+var gt = (e2) => {
+  if (e2)
+    return null;
+  throw new Error(Gt.prop("partial-range"));
+};
+var Ht = (e2, n) => {
+  if (n)
+    return e2();
+  throw new Error(Gt.prop("range"));
+};
+var An = (e2) => Array.isArray(e2) ? isValid(e2[0]) && (e2[1] ? isValid(e2[1]) : true) : e2 ? isValid(e2) : false;
+var Or = (e2) => set(S3(), {
+  hours: +e2.hours || 0,
+  minutes: +e2.minutes || 0,
+  seconds: +e2.seconds || 0
+});
+var fn = (e2, n, a3, t2) => {
+  if (!e2)
+    return true;
+  if (t2) {
+    const o = a3 === "max" ? isBefore(e2, n) : isAfter(e2, n), l = { seconds: 0, milliseconds: 0 };
+    return o || isEqual(set(e2, l), set(n, l));
+  }
+  return a3 === "max" ? e2.getTime() <= n.getTime() : e2.getTime() >= n.getTime();
+};
+var aa = (e2, n, a3, t2, o) => {
+  const l = e2 ? Or(e2) : S3(n);
+  return Array.isArray(t2) ? fn(t2[0], l, a3, !!n) && fn(t2[1], l, a3, !!n) && o : fn(t2, l, a3, !!n) && o;
+};
+var vn = (e2) => set(S3(), ft(e2));
+var Ir = (e2, n) => Array.isArray(e2) ? e2.map((a3) => S3(a3)).filter((a3) => getYear(S3(a3)) === n).map((a3) => getMonth(a3)) : [];
+var At = reactive({
+  menuFocused: false,
+  shiftKeyInMenu: false
+});
+var Sa = () => {
+  const e2 = (t2) => {
+    At.menuFocused = t2;
+  }, n = (t2) => {
+    At.shiftKeyInMenu !== t2 && (At.shiftKeyInMenu = t2);
+  };
+  return {
+    control: computed(() => ({ shiftKeyInMenu: At.shiftKeyInMenu, menuFocused: At.menuFocused })),
+    setMenuFocused: e2,
+    setShiftKey: n
+  };
+};
+var be = reactive({
+  monthYear: [],
+  calendar: [],
+  time: [],
+  actionRow: [],
+  selectionGrid: [],
+  timePicker: {
+    0: [],
+    1: []
+  },
+  monthPicker: []
+});
+var mn = ref(null);
+var Lt = ref(false);
+var gn = ref(false);
+var yn = ref(false);
+var pn = ref(false);
+var Oe = ref(0);
+var Se = ref(0);
+var rt = () => {
+  const e2 = computed(() => Lt.value ? [...be.selectionGrid, be.actionRow].filter(($) => $.length) : gn.value ? [
+    ...be.timePicker[0],
+    ...be.timePicker[1],
+    pn.value ? [] : [mn.value],
+    be.actionRow
+  ].filter(($) => $.length) : yn.value ? [...be.monthPicker, be.actionRow] : [be.monthYear, ...be.calendar, be.time, be.actionRow].filter(($) => $.length)), n = ($) => {
+    Oe.value = $ ? Oe.value + 1 : Oe.value - 1;
+    let W = null;
+    e2.value[Se.value] && (W = e2.value[Se.value][Oe.value]), W || (Oe.value = $ ? Oe.value - 1 : Oe.value + 1);
+  }, a3 = ($) => {
+    if (Se.value === 0 && !$ || Se.value === e2.value.length && $)
+      return;
+    Se.value = $ ? Se.value + 1 : Se.value - 1, e2.value[Se.value] ? e2.value[Se.value] && !e2.value[Se.value][Oe.value] && Oe.value !== 0 && (Oe.value = e2.value[Se.value].length - 1) : Se.value = $ ? Se.value - 1 : Se.value + 1;
+  }, t2 = ($) => {
+    let W = null;
+    e2.value[Se.value] && (W = e2.value[Se.value][Oe.value]), W ? W.focus({ preventScroll: !Lt.value }) : Oe.value = $ ? Oe.value - 1 : Oe.value + 1;
+  }, o = () => {
+    n(true), t2(true);
+  }, l = () => {
+    n(false), t2(false);
+  }, c2 = () => {
+    a3(false), t2(true);
+  }, h4 = () => {
+    a3(true), t2(true);
+  }, y3 = ($, W) => {
+    be[W] = $;
+  }, D2 = ($, W) => {
+    be[W] = $;
+  }, b2 = () => {
+    Oe.value = 0, Se.value = 0;
+  };
+  return {
+    buildMatrix: y3,
+    buildMultiLevelMatrix: D2,
+    setTimePickerBackRef: ($) => {
+      mn.value = $;
+    },
+    setSelectionGrid: ($) => {
+      Lt.value = $, b2(), $ || (be.selectionGrid = []);
+    },
+    setTimePicker: ($, W = false) => {
+      gn.value = $, pn.value = W, b2(), $ || (be.timePicker[0] = [], be.timePicker[1] = []);
+    },
+    setTimePickerElements: ($, W = 0) => {
+      be.timePicker[W] = $;
+    },
+    arrowRight: o,
+    arrowLeft: l,
+    arrowUp: c2,
+    arrowDown: h4,
+    clearArrowNav: () => {
+      be.monthYear = [], be.calendar = [], be.time = [], be.actionRow = [], be.selectionGrid = [], be.timePicker[0] = [], be.timePicker[1] = [], Lt.value = false, gn.value = false, pn.value = false, yn.value = false, b2(), mn.value = null;
+    },
+    setMonthPicker: ($) => {
+      yn.value = $, b2();
+    },
+    refSets: be
+    // exposed for testing
+  };
+};
+var ra = (e2) => Object.assign(
   {
-    menuAppear: "dp-menu-appear",
+    menuAppearTop: "dp-menu-appear-top",
+    menuAppearBottom: "dp-menu-appear-bottom",
     open: "dp-slide-down",
     close: "dp-slide-up",
     next: "calendar-next",
@@ -5432,7 +5755,7 @@ var Rn = (e2) => Object.assign(
   },
   e2
 );
-var ja = (e2) => Object.assign(
+var Yr = (e2) => Object.assign(
   {
     toggleOverlay: "Toggle overlay",
     menu: "Datepicker menu",
@@ -5449,747 +5772,576 @@ var ja = (e2) => Object.assign(
     openMonthsOverlay: "Open months overlay",
     nextMonth: "Next month",
     prevMonth: "Previous month",
+    nextYear: "Next year",
+    prevYear: "Previous year",
     day: () => ""
   },
   e2
 );
-var Ga = (e2) => e2 === null ? 0 : typeof e2 == "boolean" ? e2 ? 2 : 0 : +e2 >= 2 ? +e2 : 2;
-var Za = (e2, n, a3) => e2 || (typeof a3 == "string" ? a3 : n);
-var Xa = (e2) => typeof e2 == "boolean" ? e2 ? Rn({}) : false : Rn(e2);
-var qa = () => ({
-  enterSubmit: true,
-  tabSubmit: true,
-  openMenu: true,
-  rangeSeparator: " - "
-});
-var Ja = (e2) => Object.assign({ months: [], years: [], times: { hours: [], minutes: [], seconds: [] } }, e2);
-var Ee = (e2) => {
+var la = (e2) => e2 ? typeof e2 == "boolean" ? e2 ? 2 : 0 : +e2 >= 2 ? +e2 : 2 : 0;
+var Br = (e2) => {
+  const n = typeof e2 == "object" && e2, a3 = {
+    static: true,
+    solo: false
+  };
+  if (!e2)
+    return { ...a3, count: la(false) };
+  const t2 = n ? e2 : {}, o = n ? t2.count ?? true : e2, l = la(o);
+  return Object.assign(a3, t2, { count: l });
+};
+var Er = (e2, n, a3) => e2 || (typeof a3 == "string" ? a3 : n);
+var Fr = (e2) => typeof e2 == "boolean" ? e2 ? ra({}) : false : ra(e2);
+var Vr = (e2) => {
+  const n = {
+    enterSubmit: true,
+    tabSubmit: true,
+    openMenu: true,
+    rangeSeparator: " - "
+  };
+  return typeof e2 == "object" ? { ...n, ...e2 ?? {}, enabled: true } : { ...n, enabled: e2 };
+};
+var Hr = (e2) => Object.assign({ months: [], years: [], times: { hours: [], minutes: [], seconds: [] } }, e2);
+var Lr = (e2) => Object.assign({ showSelect: true, showCancel: true, showNow: false, showPreview: true }, e2);
+var Ur = (e2) => {
+  const n = { input: false };
+  return typeof e2 == "object" ? Object.assign(n, e2, { enabled: true }) : {
+    enabled: e2,
+    ...n
+  };
+};
+var Ce = (e2) => {
   const n = () => {
-    if (e2.partialRange)
-      return null;
-    throw new Error(Ft.prop("partial-range"));
-  }, a3 = computed(() => ({
-    ariaLabels: ja(e2.ariaLabels),
-    textInputOptions: Object.assign(qa(), e2.textInputOptions),
-    multiCalendars: Ga(e2.multiCalendars),
-    previewFormat: Za(e2.previewFormat, e2.format, f()),
-    filters: Ja(e2.filters),
-    transitions: Xa(e2.transitions),
-    startTime: c2()
-  })), t2 = (o) => {
-    if (e2.range)
-      return o();
-    throw new Error(Ft.prop("range"));
-  }, s3 = () => {
-    const o = e2.enableSeconds ? ":ss" : "";
-    return e2.is24 ? `HH:mm${o}` : `hh:mm${o} aa`;
-  }, f = () => e2.format ? e2.format : e2.monthPicker ? "MM/yyyy" : e2.timePicker ? s3() : e2.weekPicker ? "MM/dd/yyyy" : e2.yearPicker ? "yyyy" : e2.enableTimePicker ? `MM/dd/yyyy, ${s3()}` : "MM/dd/yyyy", y3 = (o, g) => {
-    if (typeof e2.format == "function")
-      return e2.format(o);
-    const r = g || f(), k2 = e2.formatLocale ? { locale: e2.formatLocale } : void 0;
-    return Array.isArray(o) ? `${format(o[0], r, k2)} ${e2.modelAuto && !o[1] ? "" : a3.value.textInputOptions.rangeSeparator || "-"} ${o[1] ? format(o[1], r, k2) : ""}` : format(o, r, k2);
-  }, _ = (o) => e2.timezone ? Fa(o, e2.timezone) : o, E2 = (o) => e2.timezone ? La(o, e2.timezone) : o, T2 = computed(() => (o) => {
-    var g;
-    return (g = e2.hideNavigation) == null ? void 0 : g.includes(o);
-  }), U = (o) => {
-    const g = e2.maxDate ? Be(_(o), _($(e2.maxDate))) : false, r = e2.minDate ? _e(_(o), _($(e2.minDate))) : false, k2 = B2(o, e2.disabledDates), R2 = a3.value.filters.months.map((se) => +se).includes(getMonth(o)), m3 = e2.disabledWeekDays.length ? e2.disabledWeekDays.some((se) => +se === getDay(o)) : false, b2 = e2.allowedDates.length ? !e2.allowedDates.some((se) => ve(_($(se)), _(o))) : false, v = getYear(o), W = v < +e2.yearRange[0] || v > +e2.yearRange[1];
-    return !(g || r || k2 || R2 || W || m3 || b2);
-  }, A = (o) => {
-    const g = {
-      hours: getHours($()),
-      minutes: getMinutes($()),
-      seconds: e2.enableSeconds ? getSeconds($()) : 0
-    };
-    return Object.assign(g, o);
-  }, c2 = () => e2.range ? e2.startTime && Array.isArray(e2.startTime) ? [A(e2.startTime[0]), A(e2.startTime[1])] : null : e2.startTime && !Array.isArray(e2.startTime) ? A(e2.startTime) : null, M3 = (o) => !U(o), te = (o) => Array.isArray(o) ? isValid(o[0]) && (o[1] ? isValid(o[1]) : true) : o ? isValid(o) : false, H3 = (o) => o instanceof Date ? o : parseISO(o), z2 = (o) => {
-    const g = startOfWeek(_(o), { weekStartsOn: +e2.weekStart }), r = endOfWeek(_(o), { weekStartsOn: +e2.weekStart });
-    return [g, r];
-  }, B2 = (o, g) => Array.isArray(g) ? g.some((r) => ve(_($(r)), _(o))) : g($(JSON.parse(JSON.stringify(o)))), w2 = (o, g, r) => {
-    let k2 = o ? $(o) : $();
-    return (g || g === 0) && (k2 = setMonth(k2, g)), r && (k2 = setYear(k2, r)), k2;
-  }, J = (o) => set($(), { hours: getHours(o), minutes: getMinutes(o), seconds: getSeconds(o) }), ee = (o) => set($(), {
-    hours: +o.hours || 0,
-    minutes: +o.minutes || 0,
-    seconds: +o.seconds || 0
-  }), x2 = (o, g, r, k2) => {
-    if (!o)
-      return true;
-    if (k2) {
-      const Y2 = r === "max" ? isBefore(o, g) : isAfter(o, g), R2 = { seconds: 0, milliseconds: 0 };
-      return Y2 || isEqual(set(o, R2), set(g, R2));
-    }
-    return r === "max" ? o.getTime() <= g.getTime() : o.getTime() >= g.getTime();
-  }, le = () => !e2.enableTimePicker || e2.monthPicker || e2.yearPicker || e2.ignoreTimeValidation, de = (o) => Array.isArray(o) ? [o[0] ? J(o[0]) : null, o[1] ? J(o[1]) : null] : J(o), C = (o) => {
-    const g = e2.maxTime ? ee(e2.maxTime) : $(e2.maxDate);
-    return Array.isArray(o) ? x2(o[0], g, "max", !!e2.maxDate) && x2(o[1], g, "max", !!e2.maxDate) : x2(o, g, "max", !!e2.maxDate);
-  }, N = (o, g) => {
-    const r = e2.minTime ? ee(e2.minTime) : $(e2.minDate);
-    return Array.isArray(o) ? x2(o[0], r, "min", !!e2.minDate) && x2(o[1], r, "min", !!e2.minDate) && g : x2(o, r, "min", !!e2.minDate) && g;
-  }, G2 = (o) => {
-    let g = true;
-    if (!o || le())
-      return true;
-    const r = !e2.minDate && !e2.maxDate ? de(o) : o;
-    return (e2.maxTime || e2.maxDate) && (g = C(Me(r))), (e2.minTime || e2.minDate) && (g = N(Me(r), g)), g;
-  }, P = (o, g) => {
-    const r = $(JSON.parse(JSON.stringify(o))), k2 = [];
-    for (let Y2 = 0; Y2 < 7; Y2++) {
-      const R2 = addDays(r, Y2), m3 = getMonth(R2) !== g;
-      k2.push({
-        text: e2.hideOffsetDates && m3 ? "" : R2.getDate(),
-        value: R2,
-        current: !m3,
-        classData: {}
-      });
-    }
-    return k2;
-  }, Z = (o, g) => {
-    const r = [], k2 = $(_(new Date(g, o))), Y2 = $(_(new Date(g, o + 1, 0))), R2 = startOfWeek(k2, { weekStartsOn: e2.weekStart }), m3 = (b2) => {
-      const v = P(b2, o);
-      if (r.push({ days: v }), !r[r.length - 1].days.some(
-        (W) => ve(Ue(W.value), Ue(Y2))
-      )) {
-        const W = addDays(b2, 7);
-        m3(W);
-      }
-    };
-    if (m3(R2), e2.sixWeeks && r.length < 6) {
-      const b2 = 6 - r.length;
-      for (let v = 1; v <= b2; v++) {
-        const W = r[r.length - 1], se = W.days[W.days.length - 1], Ne = P(addDays(se.value, 1), getMonth(k2));
-        r.push({ days: Ne });
-      }
-    }
-    return r;
-  }, p = (o, g, r) => [set($(o), { date: 1 }), set($(), { month: g, year: r, date: 1 })], q2 = (o, g) => _e(...p(e2.minDate, o, g)) || ve(...p(e2.minDate, o, g)), j = (o, g) => Be(...p(e2.maxDate, o, g)) || ve(...p(e2.maxDate, o, g)), I2 = (o, g, r) => {
-    let k2 = false;
-    return e2.maxDate && r && j(o, g) && (k2 = true), e2.minDate && !r && q2(o, g) && (k2 = true), k2;
-  };
+    const K2 = e2.enableSeconds ? ":ss" : "";
+    return e2.is24 ? `HH:mm${K2}` : `hh:mm${K2} aa`;
+  }, a3 = () => e2.format ? e2.format : e2.monthPicker ? "MM/yyyy" : e2.timePicker ? n() : e2.weekPicker ? "MM/dd/yyyy" : e2.yearPicker ? "yyyy" : e2.enableTimePicker ? `MM/dd/yyyy, ${n()}` : "MM/dd/yyyy", t2 = (K2) => Ta(K2, e2.enableSeconds), o = () => e2.range ? e2.startTime && Array.isArray(e2.startTime) ? [t2(e2.startTime[0]), t2(e2.startTime[1])] : null : e2.startTime && !Array.isArray(e2.startTime) ? t2(e2.startTime) : null, l = computed(() => Br(e2.multiCalendars)), c2 = computed(() => o()), h4 = computed(() => Yr(e2.ariaLabels)), y3 = computed(() => Hr(e2.filters)), D2 = computed(() => Fr(e2.transitions)), b2 = computed(() => Lr(e2.actionRow)), T2 = computed(
+    () => Er(e2.previewFormat, e2.format, a3())
+  ), Y2 = computed(() => Vr(e2.textInput)), q2 = computed(() => Ur(e2.inline));
   return {
-    checkPartialRangeValue: n,
-    checkRangeEnabled: t2,
-    getZonedDate: _,
-    getZonedToUtc: E2,
-    formatDate: y3,
-    getDefaultPattern: f,
-    validateDate: U,
-    getDefaultStartTime: c2,
-    isDisabled: M3,
-    isValidDate: te,
-    sanitizeDate: H3,
-    getWeekFromDate: z2,
-    matchDate: B2,
-    setDateMonthOrYear: w2,
-    isValidTime: G2,
-    getCalendarDays: Z,
-    validateMonthYearInRange: (o, g, r, k2) => {
-      let Y2 = false;
-      return k2 ? e2.minDate && e2.maxDate ? Y2 = I2(o, g, r) : (e2.minDate && q2(o, g) || e2.maxDate && j(o, g)) && (Y2 = true) : Y2 = true, Y2;
-    },
-    validateMaxDate: j,
-    validateMinDate: q2,
-    assignDefaultTime: A,
-    defaults: a3,
-    hideNavigationButtons: T2
+    defaultedTransitions: D2,
+    defaultedMultiCalendars: l,
+    defaultedStartTime: c2,
+    defaultedAriaLabels: h4,
+    defaultedFilters: y3,
+    defaultedActionRow: b2,
+    defaultedPreviewFormat: T2,
+    defaultedTextInput: Y2,
+    defaultedInline: q2,
+    getDefaultPattern: a3,
+    getDefaultStartTime: o
   };
 };
-var he = reactive({
-  monthYear: [],
-  calendar: [],
-  time: [],
-  actionRow: [],
-  selectionGrid: [],
-  timePicker: {
-    0: [],
-    1: []
-  },
-  monthPicker: []
-});
-var en = ref(null);
-var Pt = ref(false);
-var tn = ref(false);
-var nn = ref(false);
-var an = ref(false);
-var Oe = ref(0);
-var Ae = ref(0);
-var nt = () => {
-  const e2 = computed(() => Pt.value ? [...he.selectionGrid, he.actionRow].filter((B2) => B2.length) : tn.value ? [
-    ...he.timePicker[0],
-    ...he.timePicker[1],
-    an.value ? [] : [en.value],
-    he.actionRow
-  ].filter((B2) => B2.length) : nn.value ? [...he.monthPicker, he.actionRow] : [he.monthYear, ...he.calendar, he.time, he.actionRow].filter((B2) => B2.length)), n = (B2) => {
-    Oe.value = B2 ? Oe.value + 1 : Oe.value - 1;
-    let w2 = null;
-    e2.value[Ae.value] && (w2 = e2.value[Ae.value][Oe.value]), w2 || (Oe.value = B2 ? Oe.value - 1 : Oe.value + 1);
-  }, a3 = (B2) => {
-    if (Ae.value === 0 && !B2 || Ae.value === e2.value.length && B2)
-      return;
-    Ae.value = B2 ? Ae.value + 1 : Ae.value - 1, e2.value[Ae.value] ? e2.value[Ae.value] && !e2.value[Ae.value][Oe.value] && Oe.value !== 0 && (Oe.value = e2.value[Ae.value].length - 1) : Ae.value = B2 ? Ae.value - 1 : Ae.value + 1;
-  }, t2 = (B2) => {
-    let w2 = null;
-    e2.value[Ae.value] && (w2 = e2.value[Ae.value][Oe.value]), w2 ? w2.focus({ preventScroll: !Pt.value }) : Oe.value = B2 ? Oe.value - 1 : Oe.value + 1;
-  }, s3 = () => {
-    n(true), t2(true);
-  }, f = () => {
-    n(false), t2(false);
-  }, y3 = () => {
-    a3(false), t2(true);
-  }, _ = () => {
-    a3(true), t2(true);
-  }, E2 = (B2, w2) => {
-    he[w2] = B2;
-  }, T2 = (B2, w2) => {
-    he[w2] = B2;
-  }, U = () => {
-    Oe.value = 0, Ae.value = 0;
-  };
-  return {
-    buildMatrix: E2,
-    buildMultiLevelMatrix: T2,
-    setTimePickerBackRef: (B2) => {
-      en.value = B2;
-    },
-    setSelectionGrid: (B2) => {
-      Pt.value = B2, U(), B2 || (he.selectionGrid = []);
-    },
-    setTimePicker: (B2, w2 = false) => {
-      tn.value = B2, an.value = w2, U(), B2 || (he.timePicker[0] = [], he.timePicker[1] = []);
-    },
-    setTimePickerElements: (B2, w2 = 0) => {
-      he.timePicker[w2] = B2;
-    },
-    arrowRight: s3,
-    arrowLeft: f,
-    arrowUp: y3,
-    arrowDown: _,
-    clearArrowNav: () => {
-      he.monthYear = [], he.calendar = [], he.time = [], he.actionRow = [], he.selectionGrid = [], he.timePicker[0] = [], he.timePicker[1] = [], Pt.value = false, tn.value = false, an.value = false, nn.value = false, U(), en.value = null;
-    },
-    setMonthPicker: (B2) => {
-      nn.value = B2, U();
-    },
-    refSets: he
-    // exposed for testing
-  };
-};
-var On = (e2) => Array.isArray(e2);
-var lt = (e2) => Array.isArray(e2);
-var In = (e2) => Array.isArray(e2) && e2.length === 2;
-var Qa = (e2, n, a3, t2, s3) => {
-  const {
-    getDefaultStartTime: f,
-    isDisabled: y3,
-    sanitizeDate: _,
-    getWeekFromDate: E2,
-    setDateMonthOrYear: T2,
-    validateMonthYearInRange: U,
-    defaults: A
-  } = Ee(e2), c2 = computed({
-    get: () => e2.internalModelValue,
-    set: (i2) => {
-      !e2.readonly && !e2.disabled && n("update:internal-model-value", i2);
-    }
-  }), M3 = ref([]);
-  watch(c2, () => {
-    le();
-  });
-  const te = toRef(e2, "multiCalendars");
-  watch(te, () => {
-    Je(0);
-  });
-  const H3 = ref([{ month: getMonth($()), year: getYear($()) }]), z2 = reactive({
-    hours: e2.range ? [getHours($()), getHours($())] : getHours($()),
-    minutes: e2.range ? [getMinutes($()), getMinutes($())] : getMinutes($()),
-    seconds: e2.range ? [0, 0] : 0
-  }), B2 = computed(
-    () => (i2) => H3.value[i2] ? H3.value[i2].month : 0
-  ), w2 = computed(
-    () => (i2) => H3.value[i2] ? H3.value[i2].year : 0
-  ), J = computed(() => e2.flow && e2.flow.length && !e2.partialFlow ? s3.value === e2.flow.length : true), ee = (i2, D2, Q2) => {
-    var d3, V;
-    H3.value[i2] || (H3.value[i2] = { month: 0, year: 0 }), H3.value[i2].month = D2 === null ? (d3 = H3.value[i2]) == null ? void 0 : d3.month : D2, H3.value[i2].year = Q2 === null ? (V = H3.value[i2]) == null ? void 0 : V.year : Q2;
-  }, x2 = (i2, D2) => {
-    z2[i2] = D2;
-  };
-  onMounted(() => {
-    c2.value || (e2.startDate && (ee(0, getMonth($(e2.startDate)), getYear($(e2.startDate))), A.value.multiCalendars && Je(0)), A.value.startTime && I2()), le(true);
-  });
-  const le = (i2 = false) => {
-    if (c2.value)
-      return Array.isArray(c2.value) ? (M3.value = c2.value, P(i2)) : C(c2.value);
-    if (e2.timePicker)
-      return Z();
-    if (e2.monthPicker && !e2.range)
-      return p();
-    if (e2.yearPicker && !e2.range)
-      return q2();
-    if (A.value.multiCalendars && i2 && !e2.startDate)
-      return de($(), i2);
-  }, de = (i2, D2 = false) => {
-    if ((!A.value.multiCalendars || !e2.multiStatic || D2) && ee(0, getMonth(i2), getYear(i2)), A.value.multiCalendars)
-      for (let Q2 = 1; Q2 < A.value.multiCalendars; Q2++) {
-        const d3 = set($(), { month: B2.value(Q2 - 1), year: w2.value(Q2 - 1) }), V = add(d3, { months: 1 });
-        H3.value[Q2] = { month: getMonth(V), year: getYear(V) };
-      }
-  }, C = (i2) => {
-    de(i2), x2("hours", getHours(i2)), x2("minutes", getMinutes(i2)), x2("seconds", getSeconds(i2));
-  }, N = (i2, D2) => {
-    de(i2[0], D2);
-    const Q2 = (d3, V) => [
-      d3(i2[0]),
-      i2[1] ? d3(i2[1]) : z2[V][1]
-    ];
-    x2("hours", Q2(getHours, "hours")), x2("minutes", Q2(getMinutes, "minutes")), x2("seconds", Q2(getSeconds, "seconds"));
-  }, G2 = (i2, D2) => {
-    if ((e2.range || e2.weekPicker) && !e2.multiDates)
-      return N(i2, D2);
-    if (e2.multiDates) {
-      const Q2 = i2[i2.length - 1];
-      return C(Q2);
-    }
-  }, P = (i2) => {
-    const D2 = c2.value;
-    G2(D2, i2), A.value.multiCalendars && e2.multiCalendarsSolo && o();
-  }, Z = () => {
-    if (I2(), !e2.range)
-      c2.value = Fe($(), z2.hours, z2.minutes, j());
-    else {
-      const i2 = z2.hours, D2 = z2.minutes;
-      c2.value = [
-        Fe($(), i2[0], D2[0], j()),
-        Fe($(), i2[1], D2[1], j(false))
-      ];
-    }
-  }, p = () => {
-    e2.multiDates ? c2.value = [T2($(), B2.value(0), w2.value(0))] : c2.value = T2($(), B2.value(0), w2.value(0));
-  }, q2 = () => {
-    c2.value = $();
-  }, j = (i2 = true) => e2.enableSeconds ? Array.isArray(z2.seconds) ? i2 ? z2.seconds[0] : z2.seconds[1] : z2.seconds : 0, I2 = () => {
-    const i2 = f();
-    if (i2) {
-      const D2 = Array.isArray(i2), Q2 = D2 ? [+i2[0].hours, +i2[1].hours] : +i2.hours, d3 = D2 ? [+i2[0].minutes, +i2[1].minutes] : +i2.minutes, V = D2 ? [+i2[0].seconds, +i2[1].seconds] : +i2.seconds;
-      x2("hours", Q2), x2("minutes", d3), e2.enableSeconds && x2("seconds", V);
-    }
-  }, l = () => Array.isArray(c2.value) && c2.value.length ? c2.value[c2.value.length - 1] : null, o = () => {
-    if (Array.isArray(c2.value) && c2.value.length === 2) {
-      const i2 = $(
-        $(c2.value[1] ? c2.value[1] : addMonths(c2.value[0], 1))
-      ), [D2, Q2] = [getMonth(c2.value[0]), getYear(c2.value[0])], [d3, V] = [getMonth(c2.value[1]), getYear(c2.value[1])];
-      (D2 !== d3 || D2 === d3 && Q2 !== V) && e2.multiCalendarsSolo && ee(1, getMonth(i2), getYear(i2));
-    }
-  }, g = (i2) => {
-    const D2 = addMonths(i2, 1);
-    return { month: getMonth(D2), year: getYear(D2) };
-  }, r = (i2) => {
-    const D2 = getMonth($(i2)), Q2 = getYear($(i2));
-    if (ee(0, D2, Q2), A.value.multiCalendars > 0)
-      for (let d3 = 1; d3 < A.value.multiCalendars; d3++) {
-        const V = g(
-          set($(i2), { year: B2.value(d3 - 1), month: w2.value(d3 - 1) })
-        );
-        ee(d3, V.month, V.year);
-      }
-  }, k2 = (i2) => {
-    if (c2.value && Array.isArray(c2.value))
-      if (c2.value.some((D2) => ve(i2, D2))) {
-        const D2 = c2.value.filter((Q2) => !ve(Q2, i2));
-        c2.value = D2.length ? D2 : null;
-      } else
-        (e2.multiDatesLimit && +e2.multiDatesLimit > c2.value.length || !e2.multiDatesLimit) && c2.value.push(i2);
-    else
-      c2.value = [i2];
-  }, Y2 = (i2, D2) => {
-    const Q2 = Be(i2, D2) ? D2 : i2, d3 = Be(D2, i2) ? D2 : i2;
-    return eachDayOfInterval({ start: Q2, end: d3 });
-  }, R2 = (i2, D2 = 0) => {
-    if (Array.isArray(c2.value) && c2.value[D2]) {
-      const Q2 = differenceInCalendarDays(i2, c2.value[D2]), d3 = Y2(c2.value[D2], i2), V = d3.length === 1 ? 0 : d3.filter((be) => y3(be)).length, we = Math.abs(Q2) - V;
-      if (e2.minRange && e2.maxRange)
-        return we >= +e2.minRange && we <= +e2.maxRange;
-      if (e2.minRange)
-        return we >= +e2.minRange;
-      if (e2.maxRange)
-        return we <= +e2.maxRange;
-    }
-    return true;
-  }, m3 = (i2) => Array.isArray(c2.value) && c2.value.length === 2 ? e2.fixedStart && (Be(i2, c2.value[0]) || ve(i2, c2.value[0])) ? [c2.value[0], i2] : e2.fixedEnd && (_e(i2, c2.value[1]) || ve(i2, c2.value[1])) ? [i2, c2.value[1]] : (n("invalid-fixed-range", i2), c2.value) : [], b2 = () => {
-    e2.autoApply && J.value && n("auto-apply", e2.partialFlow);
-  }, v = () => {
-    e2.autoApply && n("select-date");
-  }, W = (i2) => !eachDayOfInterval({ start: i2[0], end: i2[1] }).some((Q2) => y3(Q2)), se = (i2) => (c2.value = E2($(i2.value)), b2()), Ne = (i2) => {
-    const D2 = Fe($(i2.value), z2.hours, z2.minutes, j());
-    e2.multiDates ? k2(D2) : c2.value = D2, a3(), b2();
-  }, Xe = () => {
-    M3.value = c2.value ? c2.value.slice() : [], M3.value.length === 2 && !(e2.fixedStart || e2.fixedEnd) && (M3.value = []);
-  }, re = (i2, D2) => {
-    const Q2 = [$(i2.value), addDays($(i2.value), +e2.autoRange)];
-    W(Q2) && (D2 && r(i2.value), M3.value = Q2);
-  }, qe = (i2) => {
-    xe(i2.value) || !R2(i2.value, e2.fixedStart ? 0 : 1) || (M3.value = m3($(i2.value)));
-  }, xe = (i2) => e2.noDisabledRange ? Y2(M3.value[0], i2).some((Q2) => y3(Q2)) : false, Re = (i2, D2) => {
-    if (Xe(), e2.autoRange)
-      return re(i2, D2);
-    if (e2.fixedStart || e2.fixedEnd)
-      return qe(i2);
-    M3.value[0] ? R2($(i2.value)) && !xe(i2.value) && (_e($(i2.value), $(M3.value[0])) ? M3.value.unshift($(i2.value)) : M3.value[1] = $(i2.value)) : M3.value[0] = $(i2.value);
-  }, rt = (i2) => {
-    M3.value[i2] = Fe(
-      M3.value[i2],
-      z2.hours[i2],
-      z2.minutes[i2],
-      j(i2 !== 1)
-    );
-  }, ne = () => {
-    M3.value.length && (M3.value[0] && !M3.value[1] ? rt(0) : (rt(0), rt(1), a3()), c2.value = M3.value.slice(), M3.value[0] && M3.value[1] && e2.autoApply && n("auto-apply"), M3.value[0] && !M3.value[1] && e2.modelAuto && e2.autoApply && n("auto-apply"));
-  }, me = (i2, D2 = false) => {
-    if (!(y3(i2.value) || !i2.current && e2.hideOffsetDates)) {
-      if (e2.weekPicker)
-        return se(i2);
-      if (!e2.range)
-        return Ne(i2);
-      lt(z2.hours) && lt(z2.minutes) && !e2.multiDates && (Re(i2, D2), ne());
-    }
-  }, ge = (i2) => {
-    const D2 = i2[0];
-    return e2.weekNumbers === "local" ? getWeek(D2.value, { weekStartsOn: +e2.weekStart }) : e2.weekNumbers === "iso" ? getISOWeek(D2.value) : typeof e2.weekNumbers == "function" ? e2.weekNumbers(D2.value) : "";
-  }, Je = (i2) => {
-    for (let D2 = i2 - 1; D2 >= 0; D2--) {
-      const Q2 = subMonths(set($(), { month: B2.value(D2 + 1), year: w2.value(D2 + 1) }), 1);
-      ee(D2, getMonth(Q2), getYear(Q2));
-    }
-    for (let D2 = i2 + 1; D2 <= A.value.multiCalendars - 1; D2++) {
-      const Q2 = addMonths(set($(), { month: B2.value(D2 - 1), year: w2.value(D2 - 1) }), 1);
-      ee(D2, getMonth(Q2), getYear(Q2));
-    }
-  }, Ye = (i2) => T2($(), B2.value(i2), w2.value(i2)), Tt = (i2) => Fe(i2, z2.hours, z2.minutes, j()), Ht = (i2) => {
-    k2(Ye(i2));
-  }, Wt = (i2, D2) => {
-    const Q2 = e2.monthPicker ? B2.value(i2) !== D2.month || !D2.fromNav : w2.value(i2) !== D2.year || !D2.fromNav;
-    if (ee(i2, D2.month, D2.year), A.value.multiCalendars && !e2.multiCalendarsSolo && Je(i2), e2.monthPicker || e2.yearPicker)
-      if (e2.multiDates)
-        Q2 && Ht(i2);
-      else if (e2.range) {
-        if (Q2 && R2(Ye(i2))) {
-          let d3 = c2.value ? c2.value.slice() : [];
-          d3.length === 2 && d3[1] !== null && (d3 = []), d3.length ? _e(Ye(i2), d3[0]) ? d3.unshift(Ye(i2)) : d3[1] = Ye(i2) : d3 = [Ye(i2)], c2.value = d3;
-        }
-      } else
-        c2.value = Ye(i2);
-    n("update-month-year", { instance: i2, month: D2.month, year: D2.year }), t2(e2.multiCalendarsSolo ? i2 : void 0);
-  }, zt = async (i2 = false) => {
-    if (e2.autoApply && (e2.monthPicker || e2.yearPicker)) {
-      await nextTick();
-      const D2 = e2.monthPicker ? i2 : false;
-      e2.range ? n("auto-apply", D2 || !c2.value || c2.value.length === 1) : n("auto-apply", D2);
-    }
-    a3();
-  }, At = (i2, D2) => {
-    const Q2 = set($(), { month: B2.value(D2), year: w2.value(D2) }), d3 = i2 < 0 ? addMonths(Q2, 1) : subMonths(Q2, 1);
-    U(getMonth(d3), getYear(d3), i2 < 0, e2.preventMinMaxNavigation) && (ee(D2, getMonth(d3), getYear(d3)), A.value.multiCalendars && !e2.multiCalendarsSolo && Je(D2), n("update-month-year", { instance: D2, month: getMonth(d3), year: getYear(d3) }), t2());
-  }, ht = (i2) => {
-    On(i2) && On(c2.value) && lt(z2.hours) && lt(z2.minutes) ? (i2[0] && c2.value[0] && (c2.value[0] = Fe(i2[0], z2.hours[0], z2.minutes[0], j())), i2[1] && c2.value[1] && (c2.value[1] = Fe(i2[1], z2.hours[1], z2.minutes[1], j(false)))) : e2.multiDates && Array.isArray(c2.value) ? c2.value[c2.value.length - 1] = Tt(i2) : !e2.range && !In(i2) && (c2.value = Tt(i2)), n("time-update");
-  }, xt = (i2, D2 = true, Q2 = false) => {
-    const d3 = D2 ? i2 : z2.hours, V = !D2 && !Q2 ? i2 : z2.minutes, we = Q2 ? i2 : z2.seconds;
-    if (e2.range && In(c2.value) && lt(d3) && lt(V) && lt(we) && !e2.disableTimeRangeValidation) {
-      const be = (X2) => Fe(c2.value[X2], d3[X2], V[X2], we[X2]), Ke = (X2) => setMilliseconds(c2.value[X2], 0);
-      if (ve(c2.value[0], c2.value[1]) && (isAfter(be(0), Ke(1)) || isBefore(be(1), Ke(0))))
-        return;
-    }
-    if (x2("hours", d3), x2("minutes", V), x2("seconds", we), c2.value)
-      if (e2.multiDates) {
-        const be = l();
-        be && ht(be);
-      } else
-        ht(c2.value);
-    else
-      e2.timePicker && ht(e2.range ? [$(), $()] : $());
-    a3();
-  }, Kt = (i2, D2) => {
-    e2.monthChangeOnScroll && At(e2.monthChangeOnScroll !== "inverse" ? -i2.deltaY : i2.deltaY, D2);
-  }, jt = (i2, D2, Q2 = false) => {
-    e2.monthChangeOnArrows && e2.vertical === Q2 && St(i2, D2);
-  }, St = (i2, D2) => {
-    At(i2 === "right" ? -1 : 1, D2);
-  };
-  return {
-    time: z2,
-    month: B2,
-    year: w2,
-    modelValue: c2,
-    calendars: H3,
-    monthYearSelect: zt,
-    isDisabled: y3,
-    updateTime: xt,
-    getWeekNum: ge,
-    selectDate: me,
-    updateMonthYear: Wt,
-    handleScroll: Kt,
-    getMarker: (i2) => e2.markers.find((D2) => ve(_(i2.value), _(D2.date))),
-    handleArrow: jt,
-    handleSwipe: St,
-    selectCurrentDate: () => {
-      e2.range ? c2.value && Array.isArray(c2.value) && c2.value[0] ? c2.value = _e($(), c2.value[0]) ? [$(), c2.value[0]] : [c2.value[0], $()] : c2.value = [$()] : c2.value = $(), v();
-    },
-    presetDateRange: (i2, D2) => {
-      D2 || i2.length && i2.length <= 2 && e2.range && (c2.value = i2.map((Q2) => $(Q2)), v(), e2.multiCalendars && nextTick().then(() => le(true)));
-    }
-  };
-};
-var er = (e2, n, a3) => {
-  const t2 = ref(), {
-    getZonedToUtc: s3,
-    getZonedDate: f,
-    formatDate: y3,
-    getDefaultPattern: _,
-    checkRangeEnabled: E2,
-    checkPartialRangeValue: T2,
-    isValidDate: U,
-    setDateMonthOrYear: A,
-    defaults: c2
-  } = Ee(n), M3 = ref(""), te = toRef(n, "format");
+var Wr = (e2, n, a3) => {
+  const t2 = ref(), { defaultedTextInput: o, getDefaultPattern: l } = Ce(n), c2 = ref(""), h4 = toRef(n, "format");
   watch(t2, () => {
     e2("internal-model-change", t2.value);
-  }), watch(te, () => {
-    o();
+  }), watch(h4, () => {
+    U();
   });
-  const H3 = (v) => {
-    const W = v || $();
-    return n.modelType ? r(W) : {
-      hours: getHours(W),
-      minutes: getMinutes(W),
-      seconds: n.enableSeconds ? getSeconds(W) : 0
+  const y3 = (r) => Pr(r, n.timezone), D2 = (r) => Ze(r, n.timezone), b2 = (r, L2) => _a(
+    r,
+    n.format,
+    n.formatLocale,
+    o.value.rangeSeparator,
+    n.modelAuto,
+    L2 ?? l()
+  ), T2 = (r) => {
+    const L2 = r ?? S3();
+    return n.modelType ? w2(L2) : {
+      hours: getHours(L2),
+      minutes: getMinutes(L2),
+      seconds: n.enableSeconds ? getSeconds(L2) : 0
     };
-  }, z2 = (v) => n.modelType ? r(v) : { month: getMonth(v), year: getYear(v) }, B2 = (v) => Array.isArray(v) ? E2(() => [
-    setYear($(), v[0]),
-    v[1] ? setYear($(), v[1]) : T2()
-  ]) : setYear($(), +v), w2 = (v, W) => (typeof v == "string" || typeof v == "number") && n.modelType ? g(v) : W, J = (v) => Array.isArray(v) ? [
-    w2(
-      v[0],
-      Fe(null, +v[0].hours, +v[0].minutes, v[0].seconds)
+  }, Y2 = (r) => n.modelType ? w2(r) : { month: getMonth(r), year: getYear(r) }, q2 = (r) => Array.isArray(r) ? Ht(
+    () => [
+      setYear(S3(), r[0]),
+      r[1] ? setYear(S3(), r[1]) : gt(n.partialRange)
+    ],
+    n.range
+  ) : setYear(S3(), +r), K2 = (r, L2) => (typeof r == "string" || typeof r == "number") && n.modelType ? d3(r) : L2, X2 = (r) => Array.isArray(r) ? [
+    K2(
+      r[0],
+      tt(null, +r[0].hours, +r[0].minutes, r[0].seconds)
     ),
-    w2(
-      v[1],
-      Fe(null, +v[1].hours, +v[1].minutes, v[1].seconds)
+    K2(
+      r[1],
+      tt(null, +r[1].hours, +r[1].minutes, r[1].seconds)
     )
-  ] : w2(v, Fe(null, v.hours, v.minutes, v.seconds)), ee = (v) => Array.isArray(v) ? n.multiDates ? v.map((W) => w2(W, A(null, +W.month, +W.year))) : E2(() => [
-    w2(v[0], A(null, +v[0].month, +v[0].year)),
-    w2(
-      v[1],
-      v[1] ? A(null, +v[1].month, +v[1].year) : T2()
-    )
-  ]) : w2(v, A(null, +v.month, +v.year)), x2 = (v) => {
-    if (Array.isArray(v))
-      return v.map((W) => g(W));
-    throw new Error(Ft.dateArr("multi-dates"));
-  }, le = (v) => {
-    if (Array.isArray(v))
-      return [$(v[0]), $(v[1])];
-    throw new Error(Ft.dateArr("week-picker"));
-  }, de = (v) => n.modelAuto ? Array.isArray(v) ? [g(v[0]), g(v[1])] : n.autoApply ? [g(v)] : [g(v), null] : Array.isArray(v) ? E2(() => [
-    g(v[0]),
-    v[1] ? g(v[1]) : T2()
-  ]) : g(v), C = () => {
-    Array.isArray(t2.value) && n.range && t2.value.length === 1 && t2.value.push(T2());
-  }, N = () => {
-    const v = t2.value;
+  ] : K2(r, tt(null, r.hours, r.minutes, r.seconds)), k2 = (r) => Array.isArray(r) ? n.multiDates ? r.map((L2) => K2(L2, Je(null, +L2.month, +L2.year))) : Ht(
+    () => [
+      K2(r[0], Je(null, +r[0].month, +r[0].year)),
+      K2(
+        r[1],
+        r[1] ? Je(null, +r[1].month, +r[1].year) : gt(n.partialRange)
+      )
+    ],
+    n.range
+  ) : K2(r, Je(null, +r.month, +r.year)), $ = (r) => {
+    if (Array.isArray(r))
+      return r.map((L2) => d3(L2));
+    throw new Error(Gt.dateArr("multi-dates"));
+  }, W = (r) => {
+    if (Array.isArray(r))
+      return [S3(r[0]), S3(r[1])];
+    throw new Error(Gt.dateArr("week-picker"));
+  }, V = (r) => n.modelAuto ? Array.isArray(r) ? [d3(r[0]), d3(r[1])] : n.autoApply ? [d3(r)] : [d3(r), null] : Array.isArray(r) ? Ht(
+    () => [
+      d3(r[0]),
+      r[1] ? d3(r[1]) : gt(n.partialRange)
+    ],
+    n.range
+  ) : d3(r), G2 = () => {
+    Array.isArray(t2.value) && n.range && t2.value.length === 1 && t2.value.push(gt(n.partialRange));
+  }, P = () => {
+    const r = t2.value;
     return [
-      r(v[0]),
-      v[1] ? r(v[1]) : T2()
+      w2(r[0]),
+      r[1] ? w2(r[1]) : gt(n.partialRange)
     ];
-  }, G2 = () => t2.value[1] ? N() : r(Me(t2.value[0])), P = () => (t2.value || []).map((v) => r(v)), Z = () => (C(), n.modelAuto ? G2() : n.multiDates ? P() : Array.isArray(t2.value) ? E2(() => N()) : r(Me(t2.value))), p = (v) => v ? n.timePicker ? J(Me(v)) : n.monthPicker ? ee(Me(v)) : n.yearPicker ? B2(Me(v)) : n.multiDates ? x2(Me(v)) : n.weekPicker ? le(Me(v)) : de(Me(v)) : null, q2 = (v) => {
-    const W = p(v);
-    U(Me(W)) ? (t2.value = Me(W), o()) : (t2.value = null, M3.value = "");
-  }, j = () => {
-    var W;
-    const v = (se) => {
-      var Ne;
-      return format(se, (Ne = c2.value.textInputOptions) == null ? void 0 : Ne.format);
-    };
-    return `${v(t2.value[0])} ${(W = c2.value.textInputOptions) == null ? void 0 : W.rangeSeparator} ${t2.value[1] ? v(t2.value[1]) : ""}`;
-  }, I2 = () => {
-    var v;
-    return a3.value && t2.value ? Array.isArray(t2.value) ? j() : format(t2.value, (v = c2.value.textInputOptions) == null ? void 0 : v.format) : y3(t2.value);
-  }, l = () => {
-    var v;
-    return t2.value ? n.multiDates ? t2.value.map((W) => y3(W)).join("; ") : n.textInput && typeof ((v = c2.value.textInputOptions) == null ? void 0 : v.format) == "string" ? I2() : y3(t2.value) : "";
-  }, o = () => {
-    !n.format || typeof n.format == "string" ? M3.value = l() : M3.value = n.format(t2.value);
-  }, g = (v) => {
+  }, ee = () => t2.value[1] ? P() : w2(Te(t2.value[0])), p = () => (t2.value || []).map((r) => w2(r)), _ = () => (G2(), n.modelAuto ? ee() : n.multiDates ? p() : Array.isArray(t2.value) ? Ht(() => P(), n.range) : w2(Te(t2.value))), A = (r) => !r || Array.isArray(r) && !r.length ? null : n.timePicker ? X2(Te(r)) : n.monthPicker ? k2(Te(r)) : n.yearPicker ? q2(Te(r)) : n.multiDates ? $(Te(r)) : n.weekPicker ? W(Te(r)) : V(Te(r)), H3 = (r) => {
+    const L2 = A(r);
+    An(Te(L2)) ? (t2.value = Te(L2), U()) : (t2.value = null, c2.value = "");
+  }, z2 = () => {
+    const r = (L2) => format(L2, o.value.format);
+    return `${r(t2.value[0])} ${o.value.rangeSeparator} ${t2.value[1] ? r(t2.value[1]) : ""}`;
+  }, Q2 = () => a3.value && t2.value ? Array.isArray(t2.value) ? z2() : format(t2.value, o.value.format) : b2(t2.value), f = () => t2.value ? n.multiDates ? t2.value.map((r) => b2(r)).join("; ") : o.value.enabled && typeof o.value.format == "string" ? Q2() : b2(t2.value) : "", U = () => {
+    !n.format || typeof n.format == "string" || o.value.enabled && typeof o.value.format == "string" ? c2.value = f() : c2.value = n.format(t2.value);
+  }, d3 = (r) => {
     if (n.utc) {
-      const W = new Date(v);
-      return n.utc === "preserve" ? new Date(W.getTime() + W.getTimezoneOffset() * 6e4) : W;
+      const L2 = new Date(r);
+      return n.utc === "preserve" ? new Date(L2.getTime() + L2.getTimezoneOffset() * 6e4) : L2;
     }
-    return n.modelType ? n.modelType === "date" || n.modelType === "timestamp" ? f(new Date(v)) : n.modelType === "format" && (typeof n.format == "string" || !n.format) ? parse(v, _(), /* @__PURE__ */ new Date()) : f(parse(v, n.modelType, /* @__PURE__ */ new Date())) : f(new Date(v));
-  }, r = (v) => v ? n.utc ? ma(v, n.utc === "preserve") : n.modelType ? n.modelType === "timestamp" ? +s3(v) : n.modelType === "format" && (typeof n.format == "string" || !n.format) ? y3(s3(v)) : y3(s3(v), n.modelType) : s3(v) : "", k2 = (v) => {
-    e2("update:model-value", v);
-  }, Y2 = (v) => Array.isArray(t2.value) ? n.multiDates ? t2.value.map((W) => v(W)) : [
-    v(t2.value[0]),
-    t2.value[1] ? v(t2.value[1]) : T2()
-  ] : v(Me(t2.value)), R2 = (v) => k2(Me(Y2(v)));
+    return n.modelType ? n.modelType === "date" || n.modelType === "timestamp" ? D2(new Date(r)) : n.modelType === "format" && (typeof n.format == "string" || !n.format) ? parse(r, l(), /* @__PURE__ */ new Date()) : D2(parse(r, n.modelType, /* @__PURE__ */ new Date())) : D2(new Date(r));
+  }, w2 = (r) => r ? n.utc ? Sr(r, n.utc === "preserve", n.enableSeconds) : n.modelType ? n.modelType === "timestamp" ? +y3(r) : n.modelType === "format" && (typeof n.format == "string" || !n.format) ? b2(y3(r)) : b2(y3(r), n.modelType) : y3(r) : "", u2 = (r, L2 = false) => {
+    if (e2("update:model-value", r), n.emitTimezone && L2) {
+      const R2 = Array.isArray(r) ? r.map((m3) => Ze(Te(m3)), n.emitTimezone) : Ze(Te(r), n.emitTimezone);
+      e2("update:model-timezone-value", R2);
+    }
+  }, g = (r) => Array.isArray(t2.value) ? n.multiDates ? t2.value.map((L2) => r(L2)) : [
+    r(t2.value[0]),
+    t2.value[1] ? r(t2.value[1]) : gt(n.partialRange)
+  ] : r(Te(t2.value)), s3 = (r) => u2(Te(g(r)));
   return {
-    inputValue: M3,
+    inputValue: c2,
     internalModelValue: t2,
     checkBeforeEmit: () => t2.value ? n.range ? n.partialRange ? t2.value.length >= 1 : t2.value.length === 2 : !!t2.value : false,
-    parseExternalModelValue: q2,
-    formatInputValue: o,
-    emitModelValue: () => (o(), n.monthPicker ? R2(z2) : n.timePicker ? R2(H3) : n.yearPicker ? R2(getYear) : n.weekPicker ? k2(t2.value) : k2(Z()))
+    parseExternalModelValue: H3,
+    formatInputValue: U,
+    emitModelValue: () => (U(), n.monthPicker ? s3(Y2) : n.timePicker ? s3(T2) : n.yearPicker ? s3(getYear) : n.weekPicker ? u2(t2.value, true) : u2(_(), true))
   };
 };
-var tr = (e2, n) => {
-  const { validateMonthYearInRange: a3, validateMaxDate: t2, validateMinDate: s3, defaults: f } = Ee(e2), y3 = (A, c2) => {
-    let M3 = A;
-    return f.value.filters.months.includes(getMonth(M3)) ? (M3 = c2 ? addMonths(A, 1) : subMonths(A, 1), y3(M3, c2)) : M3;
-  }, _ = (A, c2) => {
-    let M3 = A;
-    return f.value.filters.years.includes(getYear(M3)) ? (M3 = c2 ? addYears(A, 1) : subYears(A, 1), _(M3, c2)) : M3;
-  }, E2 = (A) => {
-    const c2 = set(/* @__PURE__ */ new Date(), { month: e2.month, year: e2.year });
-    let M3 = A ? addMonths(c2, 1) : subMonths(c2, 1), te = getMonth(M3), H3 = getYear(M3);
-    f.value.filters.months.includes(te) && (M3 = y3(M3, A), te = getMonth(M3), H3 = getYear(M3)), f.value.filters.years.includes(H3) && (M3 = _(M3, A), H3 = getYear(M3)), a3(te, H3, A, e2.preventMinMaxNavigation) && T2(te, H3);
-  }, T2 = (A, c2) => {
-    n("update-month-year", { month: A, year: c2 });
-  }, U = computed(() => (A) => {
-    if (!e2.preventMinMaxNavigation || A && !e2.maxDate || !A && !e2.minDate)
-      return false;
-    const c2 = set(/* @__PURE__ */ new Date(), { month: e2.month, year: e2.year }), M3 = A ? addMonths(c2, 1) : subMonths(c2, 1), te = [getMonth(M3), getYear(M3)];
-    return A ? !t2(...te) : !s3(...te);
-  });
-  return { handleMonthYearChange: E2, isDisabled: U, updateMonthYear: T2 };
+var zr = (e2, n) => {
+  const { defaultedFilters: a3 } = Ce(e2), { validateMonthYearInRange: t2 } = Bt(e2), o = (D2, b2) => {
+    let T2 = D2;
+    return a3.value.months.includes(getMonth(T2)) ? (T2 = b2 ? addMonths(D2, 1) : subMonths(D2, 1), o(T2, b2)) : T2;
+  }, l = (D2, b2) => {
+    let T2 = D2;
+    return a3.value.years.includes(getYear(T2)) ? (T2 = b2 ? addYears(D2, 1) : subYears(D2, 1), l(T2, b2)) : T2;
+  }, c2 = (D2) => {
+    const b2 = set(/* @__PURE__ */ new Date(), { month: e2.month, year: e2.year });
+    let T2 = D2 ? addMonths(b2, 1) : subMonths(b2, 1);
+    e2.disableYearSelect && (T2 = setYear(T2, e2.year));
+    let Y2 = getMonth(T2), q2 = getYear(T2);
+    a3.value.months.includes(Y2) && (T2 = o(T2, D2), Y2 = getMonth(T2), q2 = getYear(T2)), a3.value.years.includes(q2) && (T2 = l(T2, D2), q2 = getYear(T2)), t2(Y2, q2, D2, e2.preventMinMaxNavigation) && h4(Y2, q2);
+  }, h4 = (D2, b2) => {
+    n("update-month-year", { month: D2, year: b2 });
+  }, y3 = computed(() => (D2) => Aa(
+    set(/* @__PURE__ */ new Date(), { month: e2.month, year: e2.year }),
+    e2.maxDate,
+    e2.minDate,
+    e2.preventMinMaxNavigation,
+    D2
+  ));
+  return { handleMonthYearChange: c2, isDisabled: y3, updateMonthYear: h4 };
 };
-var It = ((e2) => (e2.center = "center", e2.left = "left", e2.right = "right", e2))(It || {});
-var nr = (e2, n, a3, t2) => {
-  const s3 = ref({
+var yt = ((e2) => (e2.center = "center", e2.left = "left", e2.right = "right", e2))(yt || {});
+var We = ((e2) => (e2.month = "month", e2.year = "year", e2))(We || {});
+var st = ((e2) => (e2.top = "top", e2.bottom = "bottom", e2))(st || {});
+var vt = ((e2) => (e2.header = "header", e2.calendar = "calendar", e2.timePicker = "timePicker", e2))(vt || {});
+var jr = (e2, n, a3, t2, o, l, c2) => {
+  const h4 = ref({}), y3 = ref(false), D2 = ref({
     top: "0",
-    left: "0",
-    transform: "none"
-  }), f = ref(false), y3 = toRef(t2, "teleportCenter");
-  watch(y3, () => {
-    H3();
+    left: "0"
+  }), b2 = ref(false), T2 = toRef(c2, "teleportCenter");
+  watch(T2, () => {
+    D2.value = JSON.parse(JSON.stringify({})), V();
   });
-  const _ = (C) => {
-    if (t2.teleport) {
-      const N = C.getBoundingClientRect();
+  const Y2 = (d3) => {
+    if (c2.teleport) {
+      const w2 = d3.getBoundingClientRect();
       return {
-        left: N.left + window.scrollX,
-        top: N.top + window.scrollY
+        left: w2.left + window.scrollX,
+        top: w2.top + window.scrollY
       };
     }
     return { top: 0, left: 0 };
-  }, E2 = (C, N) => {
-    s3.value.left = `${C + N}px`, s3.value.transform = "translateX(-100%)";
-  }, T2 = (C) => {
-    s3.value.left = `${C}px`, s3.value.transform = "translateX(0)";
-  }, U = (C, N, G2 = false) => {
-    t2.position === It.left && T2(C), t2.position === It.right && E2(C, N), t2.position === It.center && (s3.value.left = `${C + N / 2}px`, s3.value.transform = G2 ? "translate(-50%, -50%)" : "translateX(-50%)");
-  }, A = (C) => {
-    const { width: N, height: G2 } = C.getBoundingClientRect(), { top: P, left: Z } = t2.altPosition ? t2.altPosition(C) : _(C);
-    return { top: +P, left: +Z, width: N, height: G2 };
-  }, c2 = () => {
-    const C = $e(n);
-    if (C) {
-      const { top: N, left: G2, width: P, height: Z } = A(C);
-      s3.value.top = `${N + Z / 2}px`, s3.value.transform = "translateY(-50%)", U(G2, P, true);
+  }, q2 = (d3, w2) => {
+    D2.value.left = `${d3 + w2 - h4.value.width}px`;
+  }, K2 = (d3) => {
+    D2.value.left = `${d3}px`;
+  }, X2 = (d3, w2) => {
+    c2.position === yt.left && K2(d3), c2.position === yt.right && q2(d3, w2), c2.position === yt.center && (D2.value.left = `${d3 + w2 / 2 - h4.value.width / 2}px`);
+  }, k2 = (d3) => {
+    const { width: w2, height: u2 } = d3.getBoundingClientRect(), { top: g, left: s3 } = c2.altPosition ? c2.altPosition(d3) : Y2(d3);
+    return { top: +g, left: +s3, width: w2, height: u2 };
+  }, $ = () => {
+    D2.value.left = "50%", D2.value.top = "50%", D2.value.transform = "translate(-50%, -50%)", D2.value.position = "fixed", delete D2.value.opacity;
+  }, W = () => {
+    const d3 = Ae(a3), { top: w2, left: u2, transform: g } = c2.altPosition(d3);
+    D2.value = { top: `${w2}px`, left: `${u2}px`, transform: g ?? "" };
+  }, V = (d3 = true) => {
+    var w2;
+    if (!o.value.enabled) {
+      if (T2.value)
+        return $();
+      if (c2.altPosition !== null)
+        return W();
+      if (d3) {
+        const u2 = c2.teleport ? (w2 = n.value) == null ? void 0 : w2.$el : e2.value;
+        u2 && (h4.value = u2.getBoundingClientRect()), l("recalculate-position");
+      }
+      return H3();
     }
-  }, M3 = () => {
-    s3.value.left = "50%", s3.value.top = "50%", s3.value.transform = "translate(-50%, -50%)", s3.value.position = "fixed";
-  }, te = () => {
-    const C = $e(n), { top: N, left: G2, transform: P } = t2.altPosition(C);
-    s3.value = { top: `${N}px`, left: `${G2}px`, transform: P || "" };
-  }, H3 = (C = true) => {
-    if (!t2.inline)
-      return y3.value ? M3() : t2.altPosition !== null ? te() : (C && a3("recalculate-position"), x2());
-  }, z2 = ({
-    inputEl: C,
-    menuEl: N,
-    left: G2,
-    width: P
-  }) => {
-    window.screen.width > 768 && U(G2, P), J(C, N);
-  }, B2 = (C, N) => {
-    const { top: G2, left: P, height: Z, width: p } = A(C);
-    s3.value.top = `${Z + G2 + +t2.offset}px`, z2({ inputEl: C, menuEl: N, left: P, width: p }), f.value = false;
-  }, w2 = (C, N) => {
-    const { top: G2, left: P, width: Z } = A(C), { height: p } = N.getBoundingClientRect();
-    s3.value.top = `${G2 - p - +t2.offset}px`, z2({ inputEl: C, menuEl: N, left: P, width: Z }), f.value = true;
-  }, J = (C, N) => {
-    if (t2.autoPosition) {
-      const { left: G2, width: P } = A(C), { left: Z, right: p } = N.getBoundingClientRect();
-      return Z <= 0 || Z <= G2 ? T2(G2) : p >= document.documentElement.clientWidth ? E2(G2, P) : U(G2, P);
+  }, G2 = ({ inputEl: d3, left: w2, width: u2 }) => {
+    window.screen.width > 768 && !y3.value && X2(w2, u2), p(d3);
+  }, P = (d3) => {
+    const { top: w2, left: u2, height: g, width: s3 } = k2(d3);
+    D2.value.top = `${g + w2 + +c2.offset}px`, b2.value = false, y3.value || (D2.value.left = `${u2 + s3 / 2 - h4.value.width / 2}px`), G2({ inputEl: d3, left: u2, width: s3 });
+  }, ee = (d3) => {
+    const { top: w2, left: u2, width: g } = k2(d3);
+    D2.value.top = `${w2 - +c2.offset - h4.value.height}px`, b2.value = true, G2({ inputEl: d3, left: u2, width: g });
+  }, p = (d3) => {
+    if (c2.autoPosition) {
+      const { left: w2, width: u2 } = k2(d3), { left: g, right: s3 } = h4.value;
+      if (!y3.value) {
+        if (Math.abs(g) !== Math.abs(s3)) {
+          if (g <= 0)
+            return y3.value = true, K2(w2);
+          if (s3 >= document.documentElement.clientWidth)
+            return y3.value = true, q2(w2, u2);
+        }
+        return X2(w2, u2);
+      }
     }
-  }, ee = (C, N) => {
-    const { height: G2 } = N.getBoundingClientRect(), { top: P, height: Z } = C.getBoundingClientRect(), q2 = window.innerHeight - P - Z, j = P;
-    return G2 <= q2 ? B2(C, N) : G2 > q2 && G2 <= j ? w2(C, N) : q2 >= j ? B2(C, N) : w2(C, N);
-  }, x2 = () => {
-    const C = $e(n), N = $e(e2);
-    if (C && N)
-      return t2.autoPosition ? ee(C, N) : B2(C, N);
-  }, le = function(C) {
-    if (C) {
-      const N = C.scrollHeight > C.clientHeight, P = window.getComputedStyle(C).overflowY.indexOf("hidden") !== -1;
-      return N && !P;
+  }, _ = () => {
+    const d3 = Ae(a3);
+    if (d3) {
+      const { height: w2 } = h4.value, { top: u2, height: g } = d3.getBoundingClientRect(), C = window.innerHeight - u2 - g, ne = u2;
+      return w2 <= C ? st.bottom : w2 > C && w2 <= ne ? st.top : C >= ne ? st.bottom : st.top;
+    }
+    return st.bottom;
+  }, A = (d3) => _() === st.bottom ? P(d3) : ee(d3), H3 = () => {
+    const d3 = Ae(a3);
+    if (d3)
+      return c2.autoPosition ? A(d3) : P(d3);
+  }, z2 = function(d3) {
+    if (d3) {
+      const w2 = d3.scrollHeight > d3.clientHeight, g = window.getComputedStyle(d3).overflowY.indexOf("hidden") !== -1;
+      return w2 && !g;
     }
     return true;
-  }, de = function(C) {
-    return !C || C === document.body || C.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? window : le(C) ? C : de(C.parentNode);
+  }, Q2 = function(d3) {
+    return !d3 || d3 === document.body || d3.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? window : z2(d3) ? d3 : Q2(d3.parentNode);
+  }, f = (d3) => {
+    if (d3)
+      switch (c2.position) {
+        case yt.left:
+          return { left: 0, transform: "translateX(0)" };
+        case yt.right:
+          return { left: `${d3.width}px`, transform: "translateX(-100%)" };
+        default:
+          return { left: `${d3.width / 2}px`, transform: "translateX(-50%)" };
+      }
+    return {};
   };
-  return { openOnTop: f, menuPosition: s3, setMenuPosition: H3, setInitialPosition: c2, getScrollableParent: de };
+  return {
+    openOnTop: b2,
+    menuStyle: D2,
+    xCorrect: y3,
+    setMenuPosition: V,
+    getScrollableParent: Q2,
+    shadowRender: (d3, w2) => {
+      var L2, R2, m3;
+      const u2 = document.createElement("div"), g = (L2 = Ae(a3)) == null ? void 0 : L2.getBoundingClientRect();
+      u2.setAttribute("id", "dp--temp-container");
+      const s3 = (R2 = t2.value) != null && R2.clientWidth ? t2.value : document.body;
+      s3.append(u2);
+      const C = document.getElementById("dp--temp-container"), ne = f(g), r = h(d3, {
+        ...w2,
+        shadow: true,
+        style: { opacity: 0, position: "absolute", ...ne }
+      });
+      render(r, C), h4.value = (m3 = r.el) == null ? void 0 : m3.getBoundingClientRect(), render(null, C), s3.removeChild(C);
+    }
+  };
 };
-var vt = [
-  { name: "clock-icon", use: ["time", "calendar"] },
-  { name: "arrow-left", use: ["month-year", "calendar"] },
-  { name: "arrow-right", use: ["month-year", "calendar"] },
-  { name: "arrow-up", use: ["time", "calendar"] },
-  { name: "arrow-down", use: ["time", "calendar"] },
-  { name: "calendar-icon", use: ["month-year", "time", "calendar"] },
-  { name: "day", use: ["calendar"] },
-  { name: "month-overlay-value", use: ["calendar", "month-year"] },
-  { name: "year-overlay-value", use: ["calendar", "month-year"] },
-  { name: "year-overlay", use: ["month-year"] },
-  { name: "month-overlay", use: ["month-year"] },
-  { name: "month-overlay-header", use: ["month-year"] },
-  { name: "year-overlay-header", use: ["month-year"] },
-  { name: "hours-overlay-value", use: ["calendar", "time"] },
-  { name: "minutes-overlay-value", use: ["calendar", "time"] },
-  { name: "seconds-overlay-value", use: ["calendar", "time"] },
-  { name: "hours", use: ["calendar", "time"] },
-  { name: "minutes", use: ["calendar", "time"] },
-  { name: "month", use: ["calendar", "month-year"] },
-  { name: "year", use: ["calendar", "month-year"] },
-  { name: "action-select", use: ["action"] },
+var ot = [
+  { name: "clock-icon", use: ["time", "calendar", "shared"] },
+  { name: "arrow-left", use: ["month-year", "calendar", "shared"] },
+  { name: "arrow-right", use: ["month-year", "calendar", "shared"] },
+  { name: "arrow-up", use: ["time", "calendar", "month-year", "shared"] },
+  { name: "arrow-down", use: ["time", "calendar", "month-year", "shared"] },
+  { name: "calendar-icon", use: ["month-year", "time", "calendar", "shared"] },
+  { name: "day", use: ["calendar", "shared"] },
+  { name: "month-overlay-value", use: ["calendar", "month-year", "shared"] },
+  { name: "year-overlay-value", use: ["calendar", "month-year", "shared"] },
+  { name: "year-overlay", use: ["month-year", "shared"] },
+  { name: "month-overlay", use: ["month-year", "shared"] },
+  { name: "month-overlay-header", use: ["month-year", "shared"] },
+  { name: "year-overlay-header", use: ["month-year", "shared"] },
+  { name: "hours-overlay-value", use: ["calendar", "time", "shared"] },
+  { name: "minutes-overlay-value", use: ["calendar", "time", "shared"] },
+  { name: "seconds-overlay-value", use: ["calendar", "time", "shared"] },
+  { name: "hours", use: ["calendar", "time", "shared"] },
+  { name: "minutes", use: ["calendar", "time", "shared"] },
+  { name: "month", use: ["calendar", "month-year", "shared"] },
+  { name: "year", use: ["calendar", "month-year", "shared"] },
+  { name: "action-buttons", use: ["action"] },
   { name: "action-preview", use: ["action"] },
-  { name: "calendar-header", use: ["calendar"] },
-  { name: "marker-tooltip", use: ["calendar"] },
-  { name: "now-button", use: [] },
-  { name: "time-picker-overlay", use: ["calendar", "time"] },
-  { name: "am-pm-button", use: ["calendar", "time"] },
+  { name: "calendar-header", use: ["calendar", "shared"] },
+  { name: "marker-tooltip", use: ["calendar", "shared"] },
+  { name: "action-extra", use: ["menu"] },
+  { name: "time-picker-overlay", use: ["calendar", "time", "shared"] },
+  { name: "am-pm-button", use: ["calendar", "time", "shared"] },
   { name: "left-sidebar", use: ["menu"] },
   { name: "right-sidebar", use: ["menu"] },
-  { name: "month-year", use: ["month-year"] },
-  { name: "time-picker", use: ["menu"] },
-  { name: "action-row", use: ["action"] }
+  { name: "month-year", use: ["month-year", "shared"] },
+  { name: "time-picker", use: ["menu", "shared"] },
+  { name: "action-row", use: ["action"] },
+  { name: "marker", use: ["calendar", "shared"] }
 ];
-var ar = [{ name: "trigger" }, { name: "input-icon" }, { name: "clear-icon" }, { name: "dp-input" }];
-var rr = {
-  all: () => vt,
-  monthYear: () => vt.filter((e2) => e2.use.includes("month-year")),
-  input: () => ar,
-  timePicker: () => vt.filter((e2) => e2.use.includes("time")),
-  action: () => vt.filter((e2) => e2.use.includes("action")),
-  calendar: () => vt.filter((e2) => e2.use.includes("calendar")),
-  menu: () => vt.filter((e2) => e2.use.includes("menu"))
+var Kr = [{ name: "trigger" }, { name: "input-icon" }, { name: "clear-icon" }, { name: "dp-input" }];
+var Gr = {
+  all: () => ot,
+  monthYear: () => ot.filter((e2) => e2.use.includes("month-year")),
+  input: () => Kr,
+  timePicker: () => ot.filter((e2) => e2.use.includes("time")),
+  action: () => ot.filter((e2) => e2.use.includes("action")),
+  calendar: () => ot.filter((e2) => e2.use.includes("calendar")),
+  menu: () => ot.filter((e2) => e2.use.includes("menu")),
+  shared: () => ot.filter((e2) => e2.use.includes("shared"))
 };
-var it = (e2, n, a3) => {
+var je = (e2, n, a3) => {
   const t2 = [];
-  return rr[n]().forEach((s3) => {
-    e2[s3.name] && t2.push(s3.name);
-  }), a3 && a3.length && a3.forEach((s3) => {
-    s3.slot && t2.push(s3.slot);
+  return Gr[n]().forEach((o) => {
+    e2[o.name] && t2.push(o.name);
+  }), a3 != null && a3.length && a3.forEach((o) => {
+    o.slot && t2.push(o.slot);
   }), t2;
 };
-var Ut = (e2) => ({ transitionName: computed(() => (a3) => e2 && typeof e2 != "boolean" ? a3 ? e2.open : e2.close : ""), showTransition: !!e2 });
-var at = {
-  multiCalendars: { type: [Boolean, Number, String], default: null },
+var Yt = (e2) => {
+  const n = computed(() => (t2) => e2.value ? t2 ? e2.value.open : e2.value.close : ""), a3 = computed(() => (t2) => e2.value ? t2 ? e2.value.menuAppearTop : e2.value.menuAppearBottom : "");
+  return { transitionName: n, showTransition: !!e2.value, menuTransition: a3 };
+};
+var Zt = (e2, n) => {
+  const a3 = ref([{ month: getMonth(S3()), year: getYear(S3()) }]), t2 = reactive({
+    hours: e2.range ? [getHours(S3()), getHours(S3())] : getHours(S3()),
+    minutes: e2.range ? [getMinutes(S3()), getMinutes(S3())] : getMinutes(S3()),
+    seconds: e2.range ? [0, 0] : 0
+  }), o = computed({
+    get: () => e2.internalModelValue,
+    set: (h4) => {
+      !e2.readonly && !e2.disabled && n("update:internal-model-value", h4);
+    }
+  }), l = computed(
+    () => (h4) => a3.value[h4] ? a3.value[h4].month : 0
+  ), c2 = computed(
+    () => (h4) => a3.value[h4] ? a3.value[h4].year : 0
+  );
+  return {
+    calendars: a3,
+    time: t2,
+    modelValue: o,
+    month: l,
+    year: c2
+  };
+};
+var Zr = (e2, n) => {
+  const { defaultedMultiCalendars: a3 } = Ce(n), { isDisabled: t2, matchDate: o } = Bt(n), l = ref(null), c2 = ref(S3()), h4 = (s3) => {
+    !s3.current && n.hideOffsetDates || (l.value = s3.value);
+  }, y3 = () => {
+    l.value = null;
+  }, D2 = (s3) => Array.isArray(e2.value) && n.range && e2.value[0] && l.value ? s3 ? Ne(l.value, e2.value[0]) : Pe(l.value, e2.value[0]) : true, b2 = (s3, C) => {
+    const ne = () => e2.value ? C ? e2.value[0] || null : e2.value[1] : null, r = e2.value && Array.isArray(e2.value) ? ne() : null;
+    return ye(S3(s3.value), r);
+  }, T2 = (s3) => {
+    const C = Array.isArray(e2.value) ? e2.value[0] : null;
+    return s3 ? !Pe(l.value ?? null, C) : true;
+  }, Y2 = (s3, C = true) => (n.range || n.weekPicker) && Array.isArray(e2.value) && e2.value.length === 2 ? n.hideOffsetDates && !s3.current ? false : ye(S3(s3.value), e2.value[C ? 0 : 1]) : n.range ? b2(s3, C) && T2(C) || ye(s3.value, Array.isArray(e2.value) ? e2.value[0] : null) && D2(C) : false, q2 = (s3, C, ne) => Array.isArray(e2.value) && e2.value[0] && e2.value.length === 1 ? s3 ? false : ne ? Ne(e2.value[0], C.value) : Pe(e2.value[0], C.value) : false, K2 = (s3) => !e2.value || n.hideOffsetDates && !s3.current ? false : n.range ? n.modelAuto && Array.isArray(e2.value) ? ye(s3.value, e2.value[0] ? e2.value[0] : c2.value) : false : n.multiDates && Array.isArray(e2.value) ? e2.value.some((C) => ye(C, s3.value)) : ye(s3.value, e2.value ? e2.value : c2.value), X2 = (s3) => {
+    if (n.autoRange || n.weekPicker) {
+      if (l.value) {
+        if (n.hideOffsetDates && !s3.current)
+          return false;
+        const C = addDays(l.value, +n.autoRange), ne = jt(S3(l.value), n.timezone, n.weekStart);
+        return n.weekPicker ? ye(ne[1], S3(s3.value)) : ye(C, S3(s3.value));
+      }
+      return false;
+    }
+    return false;
+  }, k2 = (s3) => {
+    if (n.autoRange || n.weekPicker) {
+      if (l.value) {
+        const C = addDays(l.value, +n.autoRange);
+        if (n.hideOffsetDates && !s3.current)
+          return false;
+        const ne = jt(S3(l.value), n.timezone, n.weekStart);
+        return n.weekPicker ? Ne(s3.value, ne[0]) && Pe(s3.value, ne[1]) : Ne(s3.value, l.value) && Pe(s3.value, C);
+      }
+      return false;
+    }
+    return false;
+  }, $ = (s3) => {
+    if (n.autoRange || n.weekPicker) {
+      if (l.value) {
+        if (n.hideOffsetDates && !s3.current)
+          return false;
+        const C = jt(S3(l.value), n.timezone, n.weekStart);
+        return n.weekPicker ? ye(C[0], s3.value) : ye(l.value, s3.value);
+      }
+      return false;
+    }
+    return false;
+  }, W = (s3) => Vn(e2.value, l.value, s3.value), V = () => n.modelAuto && Array.isArray(n.internalModelValue) ? !!n.internalModelValue[0] : false, G2 = () => n.modelAuto ? wa(n.internalModelValue) : true, P = (s3) => {
+    if (Array.isArray(e2.value) && e2.value.length || n.weekPicker)
+      return false;
+    const C = n.range ? !Y2(s3) && !Y2(s3, false) : true;
+    return !t2(s3.value) && !K2(s3) && !(!s3.current && n.hideOffsetDates) && C;
+  }, ee = (s3) => n.range ? n.modelAuto ? V() && K2(s3) : false : K2(s3), p = (s3) => {
+    var C;
+    return n.highlight ? o(
+      s3.value,
+      (C = n.arrMapValues) != null && C.highlightedDates ? n.arrMapValues.highlightedDates : n.highlight
+    ) : false;
+  }, _ = (s3) => t2(s3.value) && n.highlightDisabledDays === false, A = (s3) => n.highlightWeekDays && n.highlightWeekDays.includes(s3.value.getDay()), H3 = (s3) => (n.range || n.weekPicker) && (!(a3.value.count > 0) || s3.current) && G2() && !(!s3.current && n.hideOffsetDates) && !K2(s3) ? W(s3) : false, z2 = (s3) => {
+    const { isRangeStart: C, isRangeEnd: ne } = U(s3), r = n.range ? C || ne : false;
+    return {
+      dp__cell_offset: !s3.current,
+      dp__pointer: !n.disabled && !(!s3.current && n.hideOffsetDates) && !t2(s3.value),
+      dp__cell_disabled: t2(s3.value),
+      dp__cell_highlight: !_(s3) && (p(s3) || A(s3)) && !ee(s3) && !r,
+      dp__cell_highlight_active: !_(s3) && (p(s3) || A(s3)) && ee(s3),
+      dp__today: !n.noToday && ye(s3.value, c2.value) && s3.current
+    };
+  }, Q2 = (s3) => ({
+    dp__active_date: ee(s3),
+    dp__date_hover: P(s3)
+  }), f = (s3) => ({
+    ...d3(s3),
+    ...w2(s3),
+    dp__range_between_week: H3(s3) && n.weekPicker
+  }), U = (s3) => {
+    const C = a3.value.count > 0 ? s3.current && Y2(s3) && G2() : Y2(s3) && G2(), ne = a3.value.count > 0 ? s3.current && Y2(s3, false) && G2() : Y2(s3, false) && G2();
+    return { isRangeStart: C, isRangeEnd: ne };
+  }, d3 = (s3) => {
+    const { isRangeStart: C, isRangeEnd: ne } = U(s3);
+    return {
+      dp__range_start: C,
+      dp__range_end: ne,
+      dp__range_between: H3(s3) && !n.weekPicker,
+      dp__date_hover_start: q2(P(s3), s3, true),
+      dp__date_hover_end: q2(P(s3), s3, false)
+    };
+  }, w2 = (s3) => ({
+    ...d3(s3),
+    dp__cell_auto_range: k2(s3),
+    dp__cell_auto_range_start: $(s3),
+    dp__cell_auto_range_end: X2(s3)
+  }), u2 = (s3) => n.range ? n.autoRange ? w2(s3) : n.modelAuto ? { ...Q2(s3), ...d3(s3) } : d3(s3) : n.weekPicker ? f(s3) : Q2(s3);
+  return {
+    setHoverDate: h4,
+    clearHoverDate: y3,
+    getDayClassData: (s3) => n.hideOffsetDates && !s3.current ? {} : {
+      ...z2(s3),
+      ...u2(s3),
+      [n.dayClass ? n.dayClass(s3.value) : ""]: true,
+      [n.calendarCellClassName]: !!n.calendarCellClassName
+    }
+  };
+};
+var Bt = (e2) => {
+  const { defaultedFilters: n } = Ce(e2), a3 = (p) => {
+    const _ = Le(t2(S3(p))).toISOString(), [A] = _.split("T");
+    return A;
+  }, t2 = (p) => Ze(p, e2.timezone), o = (p) => {
+    var u2;
+    const _ = e2.maxDate ? Ne(t2(p), t2(S3(e2.maxDate))) : false, A = e2.minDate ? Pe(t2(p), t2(S3(e2.minDate))) : false, H3 = y3(
+      p,
+      (u2 = e2.arrMapValues) != null && u2.disabledDates ? e2.arrMapValues.disabledDates : e2.disabledDates
+    ), Q2 = n.value.months.map((g) => +g).includes(getMonth(p)), f = e2.disabledWeekDays.length ? e2.disabledWeekDays.some((g) => +g === getDay(p)) : false, U = b2(p), d3 = getYear(p), w2 = d3 < +e2.yearRange[0] || d3 > +e2.yearRange[1];
+    return !(_ || A || H3 || Q2 || w2 || f || U);
+  }, l = (p, _) => Pe(...et(e2.minDate, p, _)) || ye(...et(e2.minDate, p, _)), c2 = (p, _) => Ne(...et(e2.maxDate, p, _)) || ye(...et(e2.maxDate, p, _)), h4 = (p, _, A) => {
+    let H3 = false;
+    return e2.maxDate && A && c2(p, _) && (H3 = true), e2.minDate && !A && l(p, _) && (H3 = true), H3;
+  }, y3 = (p, _) => p ? _ instanceof Map ? !!_.get(a3(p)) : Array.isArray(_) ? _.some((A) => ye(t2(S3(A)), t2(p))) : _ ? _(S3(JSON.parse(JSON.stringify(p)))) : false : true, D2 = (p, _, A, H3) => {
+    let z2 = false;
+    return H3 ? e2.minDate && e2.maxDate ? z2 = h4(p, _, A) : (e2.minDate && l(p, _) || e2.maxDate && c2(p, _)) && (z2 = true) : z2 = true, z2;
+  }, b2 = (p) => {
+    var _, A, H3, z2, Q2;
+    return Array.isArray(e2.allowedDates) && !((_ = e2.allowedDates) != null && _.length) ? true : (A = e2.arrMapValues) != null && A.allowedDates ? !y3(p, (H3 = e2.arrMapValues) == null ? void 0 : H3.allowedDates) : (z2 = e2.allowedDates) != null && z2.length ? !((Q2 = e2.allowedDates) != null && Q2.some((f) => ye(t2(S3(f)), t2(p)))) : false;
+  }, T2 = (p) => !o(p), Y2 = (p) => !eachDayOfInterval({ start: p[0], end: p[1] }).some((A) => T2(A)), q2 = (p, _, A = 0) => {
+    if (Array.isArray(_) && _[A]) {
+      const H3 = differenceInCalendarDays(p, _[A]), z2 = $a(_[A], p), Q2 = z2.length === 1 ? 0 : z2.filter((U) => T2(U)).length, f = Math.abs(H3) - Q2;
+      if (e2.minRange && e2.maxRange)
+        return f >= +e2.minRange && f <= +e2.maxRange;
+      if (e2.minRange)
+        return f >= +e2.minRange;
+      if (e2.maxRange)
+        return f <= +e2.maxRange;
+    }
+    return true;
+  }, K2 = (p) => new Map(p.map((_) => [a3(_), true])), X2 = (p) => Array.isArray(p) && p.length > 0, k2 = (p) => {
+    X2(e2.allowedDates) && (p.allowedDates = K2(e2.allowedDates)), X2(e2.highlight) && (p.highlightedDates = K2(e2.highlight)), X2(e2.disabledDates) && (p.disabledDates = K2(e2.disabledDates));
+  }, $ = () => !e2.enableTimePicker || e2.monthPicker || e2.yearPicker || e2.ignoreTimeValidation, W = (p) => Array.isArray(p) ? [p[0] ? vn(p[0]) : null, p[1] ? vn(p[1]) : null] : vn(p), V = (p, _) => !(Array.isArray(_) ? _ : [_]).some((z2) => e2.disabledTimes.find(
+    (Q2) => +Q2.hours === getHours(z2) && Q2.minutes === "*" ? true : +Q2.minutes === getMinutes(z2)
+  )) && p, G2 = (p, _) => {
+    const A = Array.isArray(_) ? [ft(_[0]), _[1] ? ft(_[1]) : void 0] : ft(_), H3 = !e2.disabledTimes(A);
+    return p && H3;
+  }, P = (p, _) => e2.disabledTimes ? Array.isArray(e2.disabledTimes) ? V(_, p) : G2(_, p) : _;
+  return {
+    isDisabled: T2,
+    validateDate: o,
+    validateMonthYearInRange: D2,
+    isDateRangeAllowed: Y2,
+    checkMinMaxRange: q2,
+    matchDate: y3,
+    mapDatesArrToMap: k2,
+    isValidTime: (p) => {
+      let _ = true;
+      if (!p || $())
+        return true;
+      const A = !e2.minDate && !e2.maxDate ? W(p) : p;
+      return (e2.maxTime || e2.maxDate) && (_ = aa(e2.maxTime, e2.maxDate, "max", Te(A), _)), (e2.minTime || e2.minDate) && (_ = aa(e2.minTime, e2.minDate, "min", Te(A), _)), P(p, _);
+    }
+  };
+};
+var qt = () => {
+  const e2 = computed(() => (t2, o) => t2 == null ? void 0 : t2.includes(o)), n = computed(() => (t2, o) => t2.count ? t2.solo ? true : o === 0 : true), a3 = computed(() => (t2, o) => t2.count ? t2.solo ? true : o === t2.count - 1 : true);
+  return { hideNavigationButtons: e2, showLeftIcon: n, showRightIcon: a3 };
+};
+var qr = (e2, n, a3) => {
+  const t2 = ref(0), o = reactive({
+    // monthYearInput: !!props.timePicker,
+    [vt.timePicker]: !e2.enableTimePicker || e2.timePicker || e2.monthPicker,
+    [vt.calendar]: false,
+    [vt.header]: false
+  }), l = (b2) => {
+    var T2;
+    (T2 = e2.flow) != null && T2.length && (o[b2] = true, Object.keys(o).filter((Y2) => !o[Y2]).length || D2());
+  }, c2 = () => {
+    var b2;
+    (b2 = e2.flow) != null && b2.length && t2.value !== -1 && (t2.value += 1, n("flow-step", t2.value), D2());
+  }, h4 = () => {
+    t2.value = -1;
+  }, y3 = (b2, T2, ...Y2) => {
+    e2.flow[t2.value] === b2 && a3.value && a3.value[T2](...Y2);
+  }, D2 = () => {
+    y3("month", "toggleMonthPicker", true), y3("year", "toggleYearPicker", true), y3("calendar", "toggleTimePicker", false, true), y3("time", "toggleTimePicker", true, true);
+    const b2 = e2.flow[t2.value];
+    (b2 === "hours" || b2 === "minutes" || b2 === "seconds") && y3(b2, "toggleTimePicker", true, true, b2);
+  };
+  return { childMount: l, updateFlowStep: c2, resetFlow: h4, flowStep: t2 };
+};
+var xt = {
+  multiCalendars: { type: [Boolean, Number, String, Object], default: void 0 },
   modelValue: { type: [String, Date, Array, Object, Number], default: null },
   modelType: { type: String, default: null },
   position: { type: String, default: "center" },
@@ -6209,12 +6361,13 @@ var at = {
   offset: { type: [Number, String], default: 10 },
   hideNavigation: { type: Array, default: () => [] },
   timezone: { type: String, default: null },
+  emitTimezone: { type: String, default: null },
   vertical: { type: Boolean, default: false },
   disableMonthYearSelect: { type: Boolean, default: false },
+  disableYearSelect: { type: Boolean, default: false },
   menuClassName: { type: String, default: null },
   dayClass: { type: Function, default: null },
   yearRange: { type: Array, default: () => [1900, 2100] },
-  multiCalendarsSolo: { type: Boolean, default: false },
   calendarCellClassName: { type: String, default: null },
   enableTimePicker: { type: Boolean, default: true },
   autoApply: { type: Boolean, default: false },
@@ -6226,15 +6379,14 @@ var at = {
   autoRange: { type: [Number, String], default: null },
   noToday: { type: Boolean, default: false },
   disabledWeekDays: { type: Array, default: () => [] },
-  allowedDates: { type: Array, default: () => [] },
-  showNowButton: { type: Boolean, default: false },
+  allowedDates: { type: Array, default: null },
   nowButtonLabel: { type: String, default: "Now" },
   markers: { type: Array, default: () => [] },
   modeHeight: { type: [Number, String], default: 255 },
   escClose: { type: Boolean, default: true },
   spaceConfirm: { type: Boolean, default: true },
   monthChangeOnArrows: { type: Boolean, default: true },
-  presetRanges: { type: Array, default: () => [] },
+  presetDates: { type: Array, default: () => [] },
   flow: { type: Array, default: () => [] },
   partialFlow: { type: Boolean, default: false },
   preventMinMaxNavigation: { type: Boolean, default: false },
@@ -6246,7 +6398,6 @@ var at = {
   weekPicker: { type: Boolean, default: false },
   filters: { type: Object, default: () => ({}) },
   arrowNavigation: { type: Boolean, default: false },
-  multiStatic: { type: Boolean, default: true },
   disableTimeRangeValidation: { type: Boolean, default: false },
   highlight: {
     type: [Array, Function],
@@ -6298,8 +6449,6 @@ var at = {
   required: { type: Boolean, default: false },
   autocomplete: { type: String, default: "off" },
   inputClassName: { type: String, default: null },
-  inlineWithInput: { type: Boolean, default: false },
-  textInputOptions: { type: Object, default: () => null },
   fixedStart: { type: Boolean, default: false },
   fixedEnd: { type: Boolean, default: false },
   timePicker: { type: Boolean, default: false },
@@ -6318,32 +6467,45 @@ var at = {
   uid: { type: String, default: null },
   disabled: { type: Boolean, default: false },
   readonly: { type: Boolean, default: false },
-  inline: { type: Boolean, default: false },
-  textInput: { type: Boolean, default: false },
+  inline: { type: [Boolean, Object], default: false },
+  textInput: { type: [Boolean, Object], default: false },
   onClickOutside: { type: Function, default: null },
   noDisabledRange: { type: Boolean, default: false },
-  sixWeeks: { type: Boolean, default: false }
+  sixWeeks: { type: [Boolean, String], default: false },
+  actionRow: { type: Object, default: () => ({}) },
+  allowPreventDefault: { type: Boolean, default: false },
+  closeOnClearValue: { type: Boolean, default: true },
+  focusStartDate: { type: Boolean, default: false },
+  disabledTimes: { type: [Function, Array], default: void 0 },
+  showLastInRange: { type: Boolean, default: true },
+  timePickerInline: { type: Boolean, default: false },
+  calendar: { type: Function, default: null }
 };
-var lr = ["aria-label", "aria-disabled", "aria-readonly"];
-var or = {
+var Xe = {
+  ...xt,
+  shadow: { type: Boolean, default: false },
+  flowStep: { type: Number, default: 0 },
+  internalModelValue: { type: [Date, Array], default: null },
+  arrMapValues: { type: Object, default: () => ({}) }
+};
+var xr = {
   key: 1,
   class: "dp__input_wrap"
 };
-var sr = ["id", "name", "inputmode", "placeholder", "disabled", "readonly", "required", "value", "autocomplete", "onKeydown"];
-var ir = {
+var Jr = ["id", "name", "inputmode", "placeholder", "disabled", "readonly", "required", "value", "autocomplete", "aria-label", "onKeydown"];
+var Xr = {
   key: 2,
-  class: "dp__input_icon"
-};
-var ur = {
-  key: 4,
   class: "dp__clear_icon"
 };
-var dr = defineComponent({
+var Qr = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
   __name: "DatepickerInput",
   props: {
     isMenuOpen: { type: Boolean, default: false },
     inputValue: { type: String, default: "" },
-    ...at
+    ...xt
   },
   emits: [
     "clear",
@@ -6356,286 +6518,1639 @@ var dr = defineComponent({
     "toggle",
     "focus-prev",
     "focus",
-    "blur"
+    "blur",
+    "real-blur"
   ],
   setup(e2, { expose: n, emit: a3 }) {
-    const t2 = e2, { getDefaultPattern: s3, isValidDate: f, defaults: y3, getDefaultStartTime: _, assignDefaultTime: E2 } = Ee(t2), T2 = ref(), U = ref(null), A = ref(false), c2 = ref(false), M3 = computed(
+    const t2 = e2, { defaultedTextInput: o, defaultedAriaLabels: l, defaultedInline: c2, getDefaultPattern: h4, getDefaultStartTime: y3 } = Ce(t2), D2 = ref(), b2 = ref(null), T2 = ref(false), Y2 = ref(false), q2 = computed(
       () => ({
-        dp__pointer: !t2.disabled && !t2.readonly && !t2.textInput,
+        dp__pointer: !t2.disabled && !t2.readonly && !o.value.enabled,
         dp__disabled: t2.disabled,
-        dp__input_readonly: !t2.textInput,
+        dp__input_readonly: !o.value.enabled,
         dp__input: true,
         dp__input_icon_pad: !t2.hideInputIcon,
         dp__input_valid: t2.state,
         dp__input_invalid: t2.state === false,
-        dp__input_focus: A.value || t2.isMenuOpen,
-        dp__input_reg: !t2.textInput,
+        dp__input_focus: T2.value || t2.isMenuOpen,
+        dp__input_reg: !o.value.enabled,
         [t2.inputClassName]: !!t2.inputClassName
       })
-    ), te = () => {
-      a3("set-input-date", null), t2.autoApply && (a3("set-empty-date"), T2.value = null);
-    }, H3 = (p) => {
-      var j;
-      const q2 = _();
-      return va(
-        p,
-        ((j = y3.value.textInputOptions) == null ? void 0 : j.format) || s3(),
-        q2 || E2({}),
+    ), K2 = () => {
+      a3("set-input-date", null), t2.autoApply && (a3("set-empty-date"), D2.value = null);
+    }, X2 = (f) => {
+      const U = y3();
+      return _r(
+        f,
+        o.value.format ?? h4(),
+        U ?? Ta({}, t2.enableSeconds),
         t2.inputValue,
-        c2.value
+        Y2.value
       );
-    }, z2 = (p) => {
-      const { rangeSeparator: q2 } = y3.value.textInputOptions, [j, I2] = p.split(`${q2}`);
-      if (j) {
-        const l = H3(j.trim()), o = I2 ? H3(I2.trim()) : null, g = l && o ? [l, o] : [l];
-        T2.value = l ? g : null;
+    }, k2 = (f) => {
+      const { rangeSeparator: U } = o.value, [d3, w2] = f.split(`${U}`);
+      if (d3) {
+        const u2 = X2(d3.trim()), g = w2 ? X2(w2.trim()) : null, s3 = u2 && g ? [u2, g] : [u2];
+        D2.value = u2 ? s3 : null;
       }
-    }, B2 = () => {
-      c2.value = true;
-    }, w2 = (p) => {
+    }, $ = () => {
+      Y2.value = true;
+    }, W = (f) => {
       if (t2.range)
-        z2(p);
+        k2(f);
       else if (t2.multiDates) {
-        const q2 = p.split(";");
-        T2.value = q2.map((j) => H3(j.trim())).filter((j) => j);
+        const U = f.split(";");
+        D2.value = U.map((d3) => X2(d3.trim())).filter((d3) => d3);
       } else
-        T2.value = H3(p);
-    }, J = (p) => {
-      var j;
-      const { value: q2 } = p.target;
-      q2 !== "" ? ((j = y3.value.textInputOptions) != null && j.openMenu && !t2.isMenuOpen && a3("open"), w2(q2), a3("set-input-date", T2.value)) : te(), c2.value = false, a3("update:input-value", q2);
+        D2.value = X2(f);
+    }, V = (f) => {
+      var d3;
+      const U = typeof f == "string" ? f : (d3 = f.target) == null ? void 0 : d3.value;
+      U !== "" ? (o.value.openMenu && !t2.isMenuOpen && a3("open"), W(U), a3("set-input-date", D2.value)) : K2(), Y2.value = false, a3("update:input-value", U);
+    }, G2 = (f) => {
+      o.value.enabled ? (W(f.target.value), o.value.enterSubmit && An(D2.value) && t2.inputValue !== "" ? (a3("set-input-date", D2.value, true), D2.value = null) : o.value.enterSubmit && t2.inputValue === "" && (D2.value = null, a3("clear"))) : p(f);
+    }, P = (f) => {
+      o.value.enabled && o.value.tabSubmit && W(f.target.value), o.value.tabSubmit && An(D2.value) && t2.inputValue !== "" ? (a3("set-input-date", D2.value, true), D2.value = null) : o.value.tabSubmit && t2.inputValue === "" && (D2.value = null, a3("clear"));
     }, ee = () => {
-      var p, q2;
-      (p = y3.value.textInputOptions) != null && p.enterSubmit && f(T2.value) && t2.inputValue !== "" ? (a3("set-input-date", T2.value, true), T2.value = null) : (q2 = y3.value.textInputOptions) != null && q2.enterSubmit && t2.inputValue === "" && (T2.value = null, a3("clear"));
-    }, x2 = () => {
-      var p, q2;
-      (p = y3.value.textInputOptions) != null && p.tabSubmit && f(T2.value) && t2.inputValue !== "" ? (a3("set-input-date", T2.value, true), T2.value = null) : (q2 = y3.value.textInputOptions) != null && q2.tabSubmit && t2.inputValue === "" && (T2.value = null, a3("clear"));
-    }, le = () => {
-      A.value = true, a3("focus");
-    }, de = (p) => {
-      var q2;
-      p.preventDefault(), p.stopImmediatePropagation(), p.stopPropagation(), t2.textInput && ((q2 = y3.value.textInputOptions) != null && q2.openMenu) && !t2.inlineWithInput ? t2.isMenuOpen ? y3.value.textInputOptions.enterSubmit && a3("select-date") : a3("open") : t2.textInput || a3("toggle");
-    }, C = () => {
-      A.value = false, t2.isMenuOpen || a3("blur"), t2.autoApply && t2.textInput && T2.value && (a3("set-input-date", T2.value), a3("select-date"), T2.value = null);
-    }, N = () => {
+      T2.value = true, a3("focus");
+    }, p = (f) => {
+      f.preventDefault(), f.stopImmediatePropagation(), f.stopPropagation(), o.value.enabled && o.value.openMenu && !c2.value.input && !t2.isMenuOpen ? a3("open") : o.value.enabled || a3("toggle");
+    }, _ = () => {
+      a3("real-blur"), T2.value = false, (!t2.isMenuOpen || c2.value.enabled && c2.value.input) && a3("blur"), t2.autoApply && o.value.enabled && D2.value && !t2.isMenuOpen && (a3("set-input-date", D2.value), a3("select-date"), D2.value = null);
+    }, A = () => {
       a3("clear");
-    }, G2 = (p) => {
-      if (!t2.textInput) {
-        if (p.code === "Tab")
+    }, H3 = (f) => {
+      if (!o.value.enabled) {
+        if (f.code === "Tab")
           return;
-        p.preventDefault();
+        f.preventDefault();
       }
     };
     return n({
       focusInput: () => {
-        U.value && U.value.focus({ preventScroll: true });
+        var f;
+        (f = b2.value) == null || f.focus({ preventScroll: true });
       },
-      setParsedDate: (p) => {
-        T2.value = p;
+      setParsedDate: (f) => {
+        D2.value = f;
       }
-    }), (p, q2) => {
-      var j;
-      return openBlock(), createElementBlock("div", {
-        onClick: de,
-        "aria-label": (j = unref(y3).ariaLabels) == null ? void 0 : j.input,
-        role: "textbox",
-        "aria-multiline": "false",
-        "aria-disabled": p.disabled,
-        "aria-readonly": p.readonly
-      }, [
-        p.$slots.trigger && !p.$slots["dp-input"] && !p.inline ? renderSlot(p.$slots, "trigger", { key: 0 }) : createCommentVNode("", true),
-        !p.$slots.trigger && (!p.inline || p.inlineWithInput) ? (openBlock(), createElementBlock("div", or, [
-          p.$slots["dp-input"] && !p.$slots.trigger && !p.inline ? renderSlot(p.$slots, "dp-input", {
+    }), (f, U) => {
+      var d3;
+      return openBlock(), createElementBlock("div", { onClick: p }, [
+        f.$slots.trigger && !f.$slots["dp-input"] && !unref(c2).enabled ? renderSlot(f.$slots, "trigger", { key: 0 }) : createCommentVNode("", true),
+        !f.$slots.trigger && (!unref(c2).enabled || unref(c2).input) ? (openBlock(), createElementBlock("div", xr, [
+          f.$slots["dp-input"] && !f.$slots.trigger && !unref(c2).enabled ? renderSlot(f.$slots, "dp-input", {
             key: 0,
             value: e2.inputValue,
-            onInput: J,
-            onEnter: ee,
-            onTab: x2,
-            onClear: N,
-            onBlur: C
+            isMenuOpen: e2.isMenuOpen,
+            onInput: V,
+            onEnter: G2,
+            onTab: P,
+            onClear: A,
+            onBlur: _,
+            onKeypress: H3,
+            onPaste: $
           }) : createCommentVNode("", true),
-          p.$slots["dp-input"] ? createCommentVNode("", true) : (openBlock(), createElementBlock("input", {
+          f.$slots["dp-input"] ? createCommentVNode("", true) : (openBlock(), createElementBlock("input", {
             key: 1,
             ref_key: "inputRef",
-            ref: U,
-            id: p.uid ? `dp-input-${p.uid}` : void 0,
-            name: p.name,
-            class: normalizeClass(unref(M3)),
-            inputmode: p.textInput ? "text" : "none",
-            placeholder: p.placeholder,
-            disabled: p.disabled,
-            readonly: p.readonly,
-            required: p.required,
+            ref: b2,
+            id: f.uid ? `dp-input-${f.uid}` : void 0,
+            name: f.name,
+            class: normalizeClass(q2.value),
+            inputmode: unref(o).enabled ? "text" : "none",
+            placeholder: f.placeholder,
+            disabled: f.disabled,
+            readonly: f.readonly,
+            required: f.required,
             value: e2.inputValue,
-            autocomplete: p.autocomplete,
-            onInput: J,
+            autocomplete: f.autocomplete,
+            "aria-label": (d3 = unref(l)) == null ? void 0 : d3.input,
+            onInput: V,
             onKeydown: [
-              withKeys(de, ["enter"]),
-              withKeys(x2, ["tab"]),
-              G2
+              withKeys(G2, ["enter"]),
+              withKeys(P, ["tab"]),
+              H3
             ],
-            onBlur: C,
-            onFocus: le,
-            onKeypress: G2,
-            onPaste: B2
-          }, null, 42, sr)),
-          p.$slots["input-icon"] && !p.hideInputIcon ? (openBlock(), createElementBlock("span", ir, [
-            renderSlot(p.$slots, "input-icon")
+            onBlur: _,
+            onFocus: ee,
+            onKeypress: H3,
+            onPaste: $
+          }, null, 42, Jr)),
+          createBaseVNode("div", {
+            onClick: U[2] || (U[2] = (w2) => a3("toggle"))
+          }, [
+            f.$slots["input-icon"] && !f.hideInputIcon ? (openBlock(), createElementBlock("span", {
+              key: 0,
+              class: "dp__input_icon",
+              onClick: U[0] || (U[0] = (w2) => a3("toggle"))
+            }, [
+              renderSlot(f.$slots, "input-icon")
+            ])) : createCommentVNode("", true),
+            !f.$slots["input-icon"] && !f.hideInputIcon && !f.$slots["dp-input"] ? (openBlock(), createBlock(unref(It), {
+              key: 1,
+              onClick: U[1] || (U[1] = (w2) => a3("toggle")),
+              class: "dp__input_icon dp__input_icons"
+            })) : createCommentVNode("", true)
+          ]),
+          f.$slots["clear-icon"] && e2.inputValue && f.clearable && !f.disabled && !f.readonly ? (openBlock(), createElementBlock("span", Xr, [
+            renderSlot(f.$slots, "clear-icon", { clear: A })
           ])) : createCommentVNode("", true),
-          !p.$slots["input-icon"] && !p.hideInputIcon && !p.$slots["dp-input"] ? (openBlock(), createBlock(unref(Lt), {
+          f.clearable && !f.$slots["clear-icon"] && e2.inputValue && !f.disabled && !f.readonly ? (openBlock(), createBlock(unref(ya), {
             key: 3,
-            class: "dp__input_icon dp__input_icons"
-          })) : createCommentVNode("", true),
-          p.$slots["clear-icon"] && e2.inputValue && p.clearable && !p.disabled && !p.readonly ? (openBlock(), createElementBlock("span", ur, [
-            renderSlot(p.$slots, "clear-icon", { clear: N })
-          ])) : createCommentVNode("", true),
-          p.clearable && !p.$slots["clear-icon"] && e2.inputValue && !p.disabled && !p.readonly ? (openBlock(), createBlock(unref(fa), {
-            key: 5,
             class: "dp__clear_icon dp__input_icons",
-            "data-test": "clear-icon",
-            onClick: withModifiers(N, ["stop", "prevent"])
+            onClick: withModifiers(A, ["stop", "prevent"])
           }, null, 8, ["onClick"])) : createCommentVNode("", true)
         ])) : createCommentVNode("", true)
-      ], 8, lr);
+      ]);
     };
   }
 });
-var cr = ["title"];
-var fr = { class: "dp__action_buttons" };
-var vr = ["onKeydown", "disabled"];
-var mr = defineComponent({
+var el = ["title"];
+var tl = { class: "dp__action_buttons" };
+var nl = ["onKeydown", "disabled"];
+var al = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
   __name: "ActionRow",
   props: {
     menuMount: { type: Boolean, default: false },
-    internalModelValue: { type: [Date, Array], default: null },
     calendarWidth: { type: Number, default: 0 },
-    ...at
+    ...Xe
   },
-  emits: ["close-picker", "select-date", "invalid-select"],
+  emits: ["close-picker", "select-date", "select-now", "invalid-select"],
   setup(e2, { emit: n }) {
-    const a3 = e2, { formatDate: t2, isValidTime: s3, defaults: f } = Ee(a3), { buildMatrix: y3 } = nt(), _ = ref(null), E2 = ref(null);
+    const a3 = e2, {
+      defaultedActionRow: t2,
+      defaultedPreviewFormat: o,
+      defaultedMultiCalendars: l,
+      defaultedTextInput: c2,
+      defaultedInline: h4,
+      getDefaultPattern: y3
+    } = Ce(a3), { isValidTime: D2 } = Bt(a3), { buildMatrix: b2 } = rt(), T2 = ref(null), Y2 = ref(null);
     onMounted(() => {
-      a3.arrowNavigation && y3([$e(_), $e(E2)], "actionRow");
+      a3.arrowNavigation && b2([Ae(T2), Ae(Y2)], "actionRow");
     });
-    const T2 = computed(() => a3.range && !a3.partialRange && a3.internalModelValue ? a3.internalModelValue.length === 2 : true), U = computed(() => !A.value || !c2.value || !T2.value), A = computed(() => !a3.enableTimePicker || a3.ignoreTimeValidation ? true : s3(a3.internalModelValue)), c2 = computed(() => a3.monthPicker ? a3.range && Array.isArray(a3.internalModelValue) ? !a3.internalModelValue.filter((J) => !z2(J)).length : z2(a3.internalModelValue) : true), M3 = () => {
-      const w2 = f.value.previewFormat;
-      return a3.timePicker || a3.monthPicker, w2(Me(a3.internalModelValue));
-    }, te = () => {
-      const w2 = a3.internalModelValue;
-      return f.value.multiCalendars > 0 ? `${t2(w2[0])} - ${t2(w2[1])}` : [t2(w2[0]), t2(w2[1])];
-    }, H3 = computed(() => !a3.internalModelValue || !a3.menuMount ? "" : typeof f.value.previewFormat == "string" ? Array.isArray(a3.internalModelValue) ? a3.internalModelValue.length === 2 && a3.internalModelValue[1] ? te() : a3.multiDates ? a3.internalModelValue.map((w2) => `${t2(w2)}`) : a3.modelAuto ? `${t2(a3.internalModelValue[0])}` : `${t2(a3.internalModelValue[0])} -` : t2(a3.internalModelValue) : M3()), z2 = (w2) => {
+    const q2 = computed(() => a3.range && !a3.partialRange && a3.internalModelValue ? a3.internalModelValue.length === 2 : true), K2 = computed(() => !X2.value || !k2.value || !q2.value), X2 = computed(() => !a3.enableTimePicker || a3.ignoreTimeValidation ? true : D2(a3.internalModelValue)), k2 = computed(() => a3.monthPicker ? a3.range && Array.isArray(a3.internalModelValue) ? !a3.internalModelValue.filter((H3) => !p(H3)).length : p(a3.internalModelValue) : true), $ = () => {
+      const A = o.value;
+      return a3.timePicker || a3.monthPicker, A(Te(a3.internalModelValue));
+    }, W = () => {
+      const A = a3.internalModelValue;
+      return l.value.count > 0 ? `${V(A[0])} - ${V(A[1])}` : [V(A[0]), V(A[1])];
+    }, V = (A) => _a(
+      A,
+      o.value,
+      a3.formatLocale,
+      c2.value.rangeSeparator,
+      a3.modelAuto,
+      y3()
+    ), G2 = computed(() => !a3.internalModelValue || !a3.menuMount ? "" : typeof o.value == "string" ? Array.isArray(a3.internalModelValue) ? a3.internalModelValue.length === 2 && a3.internalModelValue[1] ? W() : a3.multiDates ? a3.internalModelValue.map((A) => `${V(A)}`) : a3.modelAuto ? `${V(a3.internalModelValue[0])}` : `${V(a3.internalModelValue[0])} -` : V(a3.internalModelValue) : $()), P = () => a3.multiDates ? "; " : " - ", ee = computed(
+      () => Array.isArray(G2.value) ? G2.value.join(P()) : G2.value
+    ), p = (A) => {
       if (!a3.monthPicker)
         return true;
-      let J = true;
-      const ee = $(pt(w2));
+      let H3 = true;
+      const z2 = S3(ze(A));
       if (a3.minDate && a3.maxDate) {
-        const x2 = $(pt(a3.minDate)), le = $(pt(a3.maxDate));
-        return Be(ee, x2) && _e(ee, le) || ve(ee, x2) || ve(ee, le);
+        const Q2 = S3(ze(a3.minDate)), f = S3(ze(a3.maxDate));
+        return Ne(z2, Q2) && Pe(z2, f) || ye(z2, Q2) || ye(z2, f);
       }
       if (a3.minDate) {
-        const x2 = $(pt(a3.minDate));
-        J = Be(ee, x2) || ve(ee, x2);
+        const Q2 = S3(ze(a3.minDate));
+        H3 = Ne(z2, Q2) || ye(z2, Q2);
       }
       if (a3.maxDate) {
-        const x2 = $(pt(a3.maxDate));
-        J = _e(ee, x2) || ve(ee, x2);
+        const Q2 = S3(ze(a3.maxDate));
+        H3 = Pe(z2, Q2) || ye(z2, Q2);
       }
-      return J;
-    }, B2 = () => {
-      A.value && c2.value && T2.value ? n("select-date") : n("invalid-select");
+      return H3;
+    }, _ = () => {
+      X2.value && k2.value && q2.value ? n("select-date") : n("invalid-select");
     };
-    return (w2, J) => (openBlock(), createElementBlock("div", {
+    return (A, H3) => (openBlock(), createElementBlock("div", {
       class: "dp__action_row",
       style: normalizeStyle(e2.calendarWidth ? { width: `${e2.calendarWidth}px` } : {})
     }, [
-      w2.$slots["action-row"] ? renderSlot(w2.$slots, "action-row", normalizeProps(mergeProps({ key: 0 }, {
-        internalModelValue: e2.internalModelValue,
-        disabled: unref(U),
-        selectDate: () => w2.$emit("select-date"),
-        closePicker: () => w2.$emit("close-picker")
+      A.$slots["action-row"] ? renderSlot(A.$slots, "action-row", normalizeProps(mergeProps({ key: 0 }, {
+        internalModelValue: A.internalModelValue,
+        disabled: K2.value,
+        selectDate: () => A.$emit("select-date"),
+        closePicker: () => A.$emit("close-picker")
       }))) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-        createBaseVNode("div", {
+        unref(t2).showPreview ? (openBlock(), createElementBlock("div", {
+          key: 0,
           class: "dp__selection_preview",
-          title: Array.isArray(unref(H3)) ? "" : unref(H3)
+          title: ee.value
         }, [
-          w2.$slots["action-preview"] ? renderSlot(w2.$slots, "action-preview", {
+          A.$slots["action-preview"] ? renderSlot(A.$slots, "action-preview", {
             key: 0,
-            value: e2.internalModelValue
+            value: A.internalModelValue
           }) : createCommentVNode("", true),
-          w2.$slots["action-preview"] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-            Array.isArray(unref(H3)) ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-              createTextVNode(toDisplayString(unref(H3)), 1)
-            ], 64)),
-            Array.isArray(unref(H3)) ? (openBlock(true), createElementBlock(Fragment, { key: 1 }, renderList(unref(H3), (ee, x2) => (openBlock(), createElementBlock("div", { key: x2 }, toDisplayString(ee), 1))), 128)) : createCommentVNode("", true)
+          A.$slots["action-preview"] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+            createTextVNode(toDisplayString(ee.value), 1)
           ], 64))
-        ], 8, cr),
-        createBaseVNode("div", fr, [
-          w2.$slots["action-select"] ? renderSlot(w2.$slots, "action-select", {
+        ], 8, el)) : createCommentVNode("", true),
+        createBaseVNode("div", tl, [
+          A.$slots["action-buttons"] ? renderSlot(A.$slots, "action-buttons", {
             key: 0,
-            value: e2.internalModelValue
+            value: A.internalModelValue
           }) : createCommentVNode("", true),
-          w2.$slots["action-select"] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-            w2.inline ? createCommentVNode("", true) : (openBlock(), createElementBlock("button", {
+          A.$slots["action-buttons"] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+            !unref(h4).enabled && unref(t2).showCancel ? (openBlock(), createElementBlock("button", {
               key: 0,
+              type: "button",
               ref_key: "cancelButtonRef",
-              ref: _,
+              ref: T2,
               class: "dp__action_button dp__action_cancel",
-              onClick: J[0] || (J[0] = (ee) => w2.$emit("close-picker")),
+              onClick: H3[0] || (H3[0] = (z2) => A.$emit("close-picker")),
               onKeydown: [
-                J[1] || (J[1] = withKeys((ee) => w2.$emit("close-picker"), ["enter"])),
-                J[2] || (J[2] = withKeys((ee) => w2.$emit("close-picker"), ["space"]))
+                H3[1] || (H3[1] = withKeys((z2) => A.$emit("close-picker"), ["enter"])),
+                H3[2] || (H3[2] = withKeys((z2) => A.$emit("close-picker"), ["space"]))
               ]
-            }, toDisplayString(w2.cancelText), 545)),
-            createBaseVNode("button", {
+            }, toDisplayString(A.cancelText), 545)) : createCommentVNode("", true),
+            unref(t2).showNow ? (openBlock(), createElementBlock("button", {
+              key: 1,
+              type: "button",
+              ref_key: "cancelButtonRef",
+              ref: T2,
+              class: "dp__action_button dp__action_cancel",
+              onClick: H3[3] || (H3[3] = (z2) => A.$emit("select-now")),
+              onKeydown: [
+                H3[4] || (H3[4] = withKeys((z2) => A.$emit("select-now"), ["enter"])),
+                H3[5] || (H3[5] = withKeys((z2) => A.$emit("select-now"), ["space"]))
+              ]
+            }, toDisplayString(A.nowButtonLabel), 545)) : createCommentVNode("", true),
+            unref(t2).showSelect ? (openBlock(), createElementBlock("button", {
+              key: 2,
+              type: "button",
               class: "dp__action_button dp__action_select",
               onKeydown: [
-                withKeys(B2, ["enter"]),
-                withKeys(B2, ["space"])
+                withKeys(_, ["enter"]),
+                withKeys(_, ["space"])
               ],
-              onClick: B2,
-              disabled: unref(U),
-              "data-test": "select-button",
+              onClick: _,
+              disabled: K2.value,
               ref_key: "selectButtonRef",
-              ref: E2
-            }, toDisplayString(w2.selectText), 41, vr)
+              ref: Y2
+            }, toDisplayString(A.selectText), 41, nl)) : createCommentVNode("", true)
           ], 64))
         ])
       ], 64))
     ], 4));
   }
 });
-var yr = ["aria-label"];
-var gr = {
+var rl = ["onKeydown"];
+var ll = { class: "dp__selection_grid_header" };
+var ol = ["aria-selected", "aria-disabled", "onClick", "onKeydown", "onMouseover"];
+var sl = ["aria-label", "onKeydown"];
+var Nt = defineComponent({
+  __name: "SelectionOverlay",
+  props: {
+    items: {},
+    type: {},
+    isLast: { type: Boolean },
+    arrowNavigation: { type: Boolean },
+    skipButtonRef: { type: Boolean },
+    headerRefs: {},
+    hideNavigation: {},
+    escClose: { type: Boolean },
+    useRelative: { type: Boolean },
+    height: {},
+    textInput: { type: [Boolean, Object] }
+  },
+  emits: ["selected", "toggle", "reset-flow", "hover-value"],
+  setup(e2, { expose: n, emit: a3 }) {
+    const t2 = e2, { setSelectionGrid: o, buildMultiLevelMatrix: l, setMonthPicker: c2 } = rt(), { defaultedAriaLabels: h4, defaultedTextInput: y3 } = Ce(t2), { hideNavigationButtons: D2 } = qt(), b2 = ref(false), T2 = ref(null), Y2 = ref(null), q2 = ref([]), K2 = ref(), X2 = ref(null), k2 = ref(0), $ = ref(null);
+    onBeforeUpdate(() => {
+      T2.value = null;
+    }), onMounted(() => {
+      nextTick().then(() => A()), V(), W(true);
+    }), onUnmounted(() => W(false));
+    const W = (u2) => {
+      var g;
+      t2.arrowNavigation && ((g = t2.headerRefs) != null && g.length ? c2(u2) : o(u2));
+    }, V = () => {
+      var g;
+      const u2 = Ae(Y2);
+      u2 && (y3.value.enabled || (T2.value ? (g = T2.value) == null || g.focus({ preventScroll: true }) : u2.focus({ preventScroll: true })), b2.value = u2.clientHeight < u2.scrollHeight);
+    }, G2 = computed(
+      () => ({
+        dp__overlay: true,
+        "dp--overlay-absolute": !t2.useRelative,
+        "dp--overlay-relative": t2.useRelative
+      })
+    ), P = computed(
+      () => t2.useRelative ? { height: `${t2.height}px`, width: "260px" } : void 0
+    ), ee = computed(() => ({
+      dp__overlay_col: true
+    })), p = computed(
+      () => ({
+        dp__btn: true,
+        dp__button: true,
+        dp__overlay_action: true,
+        dp__over_action_scroll: b2.value,
+        dp__button_bottom: t2.isLast
+      })
+    ), _ = computed(() => {
+      var u2, g;
+      return {
+        dp__overlay_container: true,
+        dp__container_flex: ((u2 = t2.items) == null ? void 0 : u2.length) <= 6,
+        dp__container_block: ((g = t2.items) == null ? void 0 : g.length) > 6
+      };
+    }), A = () => {
+      nextTick().then(() => {
+        const u2 = Ae(T2), g = Ae(Y2), s3 = Ae(X2), C = Ae($), ne = s3 ? s3.getBoundingClientRect().height : 0;
+        g && (k2.value = g.getBoundingClientRect().height - ne), u2 && C && (C.scrollTop = u2.offsetTop - C.offsetTop - (k2.value / 2 - u2.getBoundingClientRect().height) - ne);
+      });
+    }, H3 = (u2) => {
+      u2.disabled || a3("selected", u2.value);
+    }, z2 = () => {
+      a3("toggle"), a3("reset-flow");
+    }, Q2 = () => {
+      t2.escClose && z2();
+    }, f = (u2, g, s3, C) => {
+      u2 && (g.active && (T2.value = u2), t2.arrowNavigation && (Array.isArray(q2.value[s3]) ? q2.value[s3][C] = u2 : q2.value[s3] = [u2], U()));
+    }, U = () => {
+      var g, s3;
+      const u2 = (g = t2.headerRefs) != null && g.length ? [t2.headerRefs].concat(q2.value) : q2.value.concat([t2.skipButtonRef ? [] : [X2.value]]);
+      l(Te(u2), (s3 = t2.headerRefs) != null && s3.length ? "monthPicker" : "selectionGrid");
+    }, d3 = (u2) => {
+      t2.arrowNavigation || u2.stopImmediatePropagation();
+    }, w2 = (u2) => {
+      K2.value = u2, a3("hover-value", u2);
+    };
+    return n({ focusGrid: V }), (u2, g) => {
+      var s3;
+      return openBlock(), createElementBlock("div", {
+        ref_key: "gridWrapRef",
+        ref: Y2,
+        class: normalizeClass(G2.value),
+        style: normalizeStyle(P.value),
+        role: "dialog",
+        tabindex: "0",
+        onKeydown: [
+          withKeys(withModifiers(Q2, ["prevent"]), ["esc"]),
+          g[0] || (g[0] = withKeys(withModifiers((C) => d3(C), ["prevent"]), ["left"])),
+          g[1] || (g[1] = withKeys(withModifiers((C) => d3(C), ["prevent"]), ["up"])),
+          g[2] || (g[2] = withKeys(withModifiers((C) => d3(C), ["prevent"]), ["down"])),
+          g[3] || (g[3] = withKeys(withModifiers((C) => d3(C), ["prevent"]), ["right"]))
+        ]
+      }, [
+        createBaseVNode("div", {
+          class: normalizeClass(_.value),
+          ref_key: "containerRef",
+          ref: $,
+          role: "grid",
+          style: normalizeStyle({ height: `${k2.value}px` })
+        }, [
+          createBaseVNode("div", ll, [
+            renderSlot(u2.$slots, "header")
+          ]),
+          u2.$slots.overlay ? renderSlot(u2.$slots, "overlay", { key: 0 }) : (openBlock(true), createElementBlock(Fragment, { key: 1 }, renderList(u2.items, (C, ne) => (openBlock(), createElementBlock("div", {
+            class: normalizeClass(["dp__overlay_row", { dp__flex_row: u2.items.length >= 3 }]),
+            key: ne,
+            role: "row"
+          }, [
+            (openBlock(true), createElementBlock(Fragment, null, renderList(C, (r, L2) => (openBlock(), createElementBlock("div", {
+              role: "gridcell",
+              class: normalizeClass(ee.value),
+              key: r.value,
+              "aria-selected": r.active,
+              "aria-disabled": r.disabled,
+              ref_for: true,
+              ref: (R2) => f(R2, r, ne, L2),
+              tabindex: "0",
+              onClick: (R2) => H3(r),
+              onKeydown: [
+                withKeys(withModifiers((R2) => H3(r), ["prevent"]), ["enter"]),
+                withKeys(withModifiers((R2) => H3(r), ["prevent"]), ["space"])
+              ],
+              onMouseover: (R2) => w2(r.value)
+            }, [
+              createBaseVNode("div", {
+                class: normalizeClass(r.className)
+              }, [
+                u2.$slots.item ? renderSlot(u2.$slots, "item", {
+                  key: 0,
+                  item: r
+                }) : createCommentVNode("", true),
+                u2.$slots.item ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                  createTextVNode(toDisplayString(r.text), 1)
+                ], 64))
+              ], 2)
+            ], 42, ol))), 128))
+          ], 2))), 128))
+        ], 6),
+        u2.$slots["button-icon"] ? withDirectives((openBlock(), createElementBlock("button", {
+          key: 0,
+          role: "button",
+          "aria-label": (s3 = unref(h4)) == null ? void 0 : s3.toggleOverlay,
+          class: normalizeClass(p.value),
+          tabindex: "0",
+          ref_key: "toggleButton",
+          ref: X2,
+          onClick: z2,
+          onKeydown: [
+            withKeys(z2, ["enter"]),
+            withKeys(z2, ["tab"])
+          ]
+        }, [
+          renderSlot(u2.$slots, "button-icon")
+        ], 42, sl)), [
+          [vShow, !unref(D2)(u2.hideNavigation, u2.type)]
+        ]) : createCommentVNode("", true)
+      ], 46, rl);
+    };
+  }
+});
+var Hn = defineComponent({
+  __name: "InstanceWrap",
+  props: {
+    multiCalendars: {},
+    stretch: { type: Boolean }
+  },
+  setup(e2) {
+    const n = e2, a3 = computed(
+      () => n.multiCalendars > 0 ? [...Array(n.multiCalendars).keys()] : [0]
+    ), t2 = computed(() => ({
+      dp__instance_calendar: n.multiCalendars > 0
+    }));
+    return (o, l) => (openBlock(), createElementBlock("div", {
+      class: normalizeClass({
+        dp__menu_inner: !o.stretch,
+        "dp--menu--inner-stretched": o.stretch,
+        dp__flex_display: o.multiCalendars > 0
+      })
+    }, [
+      (openBlock(true), createElementBlock(Fragment, null, renderList(a3.value, (c2, h4) => (openBlock(), createElementBlock("div", {
+        key: c2,
+        class: normalizeClass(t2.value)
+      }, [
+        renderSlot(o.$slots, "default", {
+          instance: c2,
+          index: h4
+        })
+      ], 2))), 128))
+    ], 2));
+  }
+});
+var ul = ["aria-label", "aria-disabled"];
+var _t = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
+  __name: "ArrowBtn",
+  props: {
+    ariaLabel: {},
+    disabled: { type: Boolean }
+  },
+  emits: ["activate", "set-ref"],
+  setup(e2, { emit: n }) {
+    const a3 = ref(null);
+    return onMounted(() => n("set-ref", a3)), (t2, o) => (openBlock(), createElementBlock("button", {
+      type: "button",
+      class: "dp__btn dp--arrow-btn-nav",
+      onClick: o[0] || (o[0] = (l) => t2.$emit("activate")),
+      onKeydown: [
+        o[1] || (o[1] = withKeys(withModifiers((l) => t2.$emit("activate"), ["prevent"]), ["enter"])),
+        o[2] || (o[2] = withKeys(withModifiers((l) => t2.$emit("activate"), ["prevent"]), ["space"]))
+      ],
+      tabindex: "0",
+      "aria-label": t2.ariaLabel,
+      "aria-disabled": t2.disabled,
+      ref_key: "elRef",
+      ref: a3
+    }, [
+      createBaseVNode("span", {
+        class: normalizeClass(["dp__inner_nav", { dp__inner_nav_disabled: t2.disabled }])
+      }, [
+        renderSlot(t2.$slots, "default")
+      ], 2)
+    ], 40, ul));
+  }
+});
+var Ln = (e2, n, a3) => {
+  if (n.value && Array.isArray(n.value))
+    if (n.value.some((t2) => ye(e2, t2))) {
+      const t2 = n.value.filter((o) => !ye(o, e2));
+      n.value = t2.length ? t2 : null;
+    } else
+      (a3 && +a3 > n.value.length || !a3) && n.value.push(e2);
+  else
+    n.value = [e2];
+};
+var Pa = (e2, n, a3) => {
+  let t2 = e2.value ? e2.value.slice() : [];
+  t2.length === 2 && t2[1] !== null && (t2 = []), t2.length ? Pe(n, t2[0]) ? (t2.unshift(n), a3("range-start", t2[0]), a3("range-start", t2[1])) : (t2[1] = n, a3("range-end", n)) : (t2 = [n], a3("range-start", n)), e2.value = t2;
+};
+var il = (e2, n) => {
+  const { defaultedMultiCalendars: a3, defaultedAriaLabels: t2, defaultedTransitions: o } = Ce(e2), { modelValue: l, year: c2, month: h4, calendars: y3 } = Zt(e2, n), D2 = computed(() => ka(e2.formatLocale, e2.locale, e2.monthNameFormat)), b2 = computed(() => Fn(e2.yearRange, e2.reverseYears)), T2 = ref(null), Y2 = () => {
+    for (let d3 = 0; d3 < a3.value.count; d3++)
+      if (d3 === 0)
+        y3.value[d3] = y3.value[0];
+      else {
+        const w2 = set(S3(), y3.value[d3 - 1]);
+        y3.value[d3] = { month: getMonth(w2), year: getYear(addYears(w2, d3)) };
+      }
+  }, q2 = (d3) => {
+    if (!d3)
+      return Y2();
+    const w2 = set(S3(), y3.value[d3]);
+    return y3.value[0].year = getYear(subYears(w2, a3.value.count - 1)), Y2();
+  }, K2 = (d3) => e2.focusStartDate ? d3[0] : d3[1] ? d3[1] : d3[0], X2 = () => {
+    if (l.value) {
+      const d3 = Array.isArray(l.value) ? K2(l.value) : l.value;
+      y3.value[0] = { month: getMonth(d3), year: getYear(d3) };
+    }
+  };
+  onMounted(() => {
+    X2(), a3.value.count && Y2();
+  });
+  const k2 = computed(() => (d3, w2) => {
+    const u2 = set(ze(/* @__PURE__ */ new Date()), {
+      month: h4.value(d3),
+      year: c2.value(d3)
+    });
+    return Aa(u2, e2.maxDate, e2.minDate, e2.preventMinMaxNavigation, w2);
+  }), $ = (d3) => d3 ? { month: getMonth(d3), year: getYear(d3) } : { month: null, year: null }, W = () => l.value ? Array.isArray(l.value) ? l.value.map((d3) => $(d3)) : $(l.value) : $(), V = (d3, w2) => {
+    const u2 = y3.value[d3], g = W();
+    return Array.isArray(g) ? g.some((s3) => s3.year === (u2 == null ? void 0 : u2.year) && s3.month === w2) : (u2 == null ? void 0 : u2.year) === g.year && w2 === g.month;
+  }, G2 = (d3, w2, u2) => {
+    var s3, C;
+    const g = W();
+    return Array.isArray(g) ? c2.value(w2) === ((s3 = g[u2]) == null ? void 0 : s3.year) && d3 === ((C = g[u2]) == null ? void 0 : C.month) : false;
+  }, P = (d3, w2) => {
+    if (e2.range) {
+      const u2 = W();
+      if (Array.isArray(l.value) && Array.isArray(u2)) {
+        const g = G2(d3, w2, 0) || G2(d3, w2, 1), s3 = Je(ze(S3()), d3, c2.value(w2));
+        return Vn(l.value, T2.value, s3) && !g;
+      }
+      return false;
+    }
+    return false;
+  }, ee = computed(() => (d3) => bt(D2.value, (w2) => {
+    const u2 = V(d3, w2.value), g = Rt(
+      w2.value,
+      Da(c2.value(d3), e2.minDate),
+      Ma(c2.value(d3), e2.maxDate)
+    ) || Ir(e2.disabledDates, c2.value(d3)).includes(w2.value), s3 = P(w2.value, d3);
+    return { active: u2, disabled: g, isBetween: s3 };
+  })), p = computed(() => (d3) => bt(b2.value, (w2) => {
+    const u2 = c2.value(d3) === w2.value, g = Rt(w2.value, kt(e2.minDate), kt(e2.maxDate));
+    return { active: u2, disabled: g };
+  })), _ = (d3, w2) => Je(ze(S3()), d3, c2.value(w2)), A = (d3, w2) => {
+    const u2 = l.value ? l.value : ze(/* @__PURE__ */ new Date());
+    l.value = Je(u2, d3, c2.value(w2)), n("auto-apply");
+  }, H3 = (d3, w2) => {
+    var u2;
+    Pa(l, _(d3, w2), n), n("auto-apply", ((u2 = l.value) == null ? void 0 : u2.length) === 1);
+  }, z2 = (d3, w2) => {
+    Ln(_(d3, w2), l, e2.multiDatesLimit), n("auto-apply", true);
+  };
+  return {
+    groupedMonths: ee,
+    groupedYears: p,
+    year: c2,
+    isDisabled: k2,
+    defaultedMultiCalendars: a3,
+    defaultedAriaLabels: t2,
+    defaultedTransitions: o,
+    setHoverDate: (d3, w2) => {
+      T2.value = _(d3, w2);
+    },
+    selectMonth: (d3, w2) => (y3.value[w2].month = d3, e2.multiDates ? z2(d3, w2) : e2.range ? H3(d3, w2) : A(d3, w2)),
+    selectYear: (d3, w2) => {
+      y3.value[w2].year = d3, a3.value.count && !a3.value.solo && q2(w2);
+    }
+  };
+};
+var cl = { class: "dp__month_picker_header" };
+var dl = ["aria-label", "onClick", "onKeydown"];
+var fl = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
+  __name: "MonthPicker",
+  props: {
+    ...Xe
+  },
+  emits: [
+    "update:internal-model-value",
+    "overlay-closed",
+    "reset-flow",
+    "range-start",
+    "range-end",
+    "auto-apply"
+  ],
+  setup(e2, { emit: n }) {
+    const a3 = e2, {
+      groupedMonths: t2,
+      groupedYears: o,
+      year: l,
+      isDisabled: c2,
+      defaultedMultiCalendars: h4,
+      defaultedAriaLabels: y3,
+      defaultedTransitions: D2,
+      setHoverDate: b2,
+      selectMonth: T2,
+      selectYear: Y2
+    } = il(a3, n), { transitionName: q2, showTransition: K2 } = Yt(D2), { showRightIcon: X2, showLeftIcon: k2 } = qt(), $ = ref([false]), W = (P, ee) => {
+      Y2(P, ee), G2(ee);
+    }, V = (P, ee = false) => {
+      if (!c2.value(P, ee)) {
+        const p = ee ? l.value(P) + 1 : l.value(P) - 1;
+        Y2(p, P);
+      }
+    }, G2 = (P, ee = false, p) => {
+      ee || n("reset-flow"), p !== void 0 ? $.value[P] = p : $.value[P] = !$.value[P], $.value || n("overlay-closed");
+    };
+    return (P, ee) => (openBlock(), createBlock(Hn, {
+      "multi-calendars": unref(h4).count,
+      stretch: ""
+    }, {
+      default: withCtx(({ instance: p }) => [
+        createVNode(Nt, {
+          items: unref(t2)(p),
+          "arrow-navigation": P.arrowNavigation,
+          "is-last": P.autoApply && !P.keepActionRow,
+          "esc-close": P.escClose,
+          height: P.modeHeight,
+          onSelected: (_) => unref(T2)(_, p),
+          onHoverValue: (_) => unref(b2)(_, p),
+          "use-relative": "",
+          type: "month"
+        }, {
+          header: withCtx(() => {
+            var _, A, H3;
+            return [
+              createBaseVNode("div", cl, [
+                unref(k2)(unref(h4), p) ? (openBlock(), createBlock(_t, {
+                  key: 0,
+                  ref: "mpPrevIconRef",
+                  "aria-label": (_ = unref(y3)) == null ? void 0 : _.prevYear,
+                  disabled: unref(c2)(p, false),
+                  onActivate: (z2) => V(p, false)
+                }, {
+                  default: withCtx(() => [
+                    P.$slots["arrow-left"] ? renderSlot(P.$slots, "arrow-left", { key: 0 }) : createCommentVNode("", true),
+                    P.$slots["arrow-left"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Cn), { key: 1 }))
+                  ]),
+                  _: 2
+                }, 1032, ["aria-label", "disabled", "onActivate"])) : createCommentVNode("", true),
+                createBaseVNode("div", {
+                  class: "dp--year-select",
+                  role: "button",
+                  ref: "mpYearButtonRef",
+                  "aria-label": (A = unref(y3)) == null ? void 0 : A.openYearsOverlay,
+                  tabindex: "0",
+                  onClick: () => G2(p, false),
+                  onKeydown: withKeys(() => G2(p, false), ["enter"])
+                }, [
+                  P.$slots.year ? renderSlot(P.$slots, "year", {
+                    key: 0,
+                    year: unref(l)(p)
+                  }) : createCommentVNode("", true),
+                  P.$slots.year ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                    createTextVNode(toDisplayString(unref(l)(p)), 1)
+                  ], 64))
+                ], 40, dl),
+                unref(X2)(unref(h4), p) ? (openBlock(), createBlock(_t, {
+                  key: 1,
+                  ref: "mpNextIconRef",
+                  "aria-label": (H3 = unref(y3)) == null ? void 0 : H3.nextYear,
+                  disabled: unref(c2)(p, false),
+                  onActivate: (z2) => V(p, true)
+                }, {
+                  default: withCtx(() => [
+                    P.$slots["arrow-right"] ? renderSlot(P.$slots, "arrow-right", { key: 0 }) : createCommentVNode("", true),
+                    P.$slots["arrow-right"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Rn), { key: 1 }))
+                  ]),
+                  _: 2
+                }, 1032, ["aria-label", "disabled", "onActivate"])) : createCommentVNode("", true),
+                createVNode(Transition, {
+                  name: unref(q2)($.value[p]),
+                  css: unref(K2)
+                }, {
+                  default: withCtx(() => [
+                    $.value[p] ? (openBlock(), createBlock(Nt, {
+                      key: 0,
+                      items: unref(o)(p),
+                      "text-input": P.textInput,
+                      "esc-close": P.escClose,
+                      onToggle: (z2) => G2(p),
+                      onSelected: (z2) => W(z2, p),
+                      "is-last": P.autoApply && !P.keepActionRow,
+                      type: "year"
+                    }, createSlots({
+                      "button-icon": withCtx(() => [
+                        P.$slots["calendar-icon"] ? renderSlot(P.$slots, "calendar-icon", { key: 0 }) : createCommentVNode("", true),
+                        P.$slots["calendar-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(It), { key: 1 }))
+                      ]),
+                      _: 2
+                    }, [
+                      P.$slots["year-overlay-value"] ? {
+                        name: "item",
+                        fn: withCtx(({ item: z2 }) => [
+                          renderSlot(P.$slots, "year-overlay-value", {
+                            text: z2.text,
+                            value: z2.value
+                          })
+                        ]),
+                        key: "0"
+                      } : void 0
+                    ]), 1032, ["items", "text-input", "esc-close", "onToggle", "onSelected", "is-last"])) : createCommentVNode("", true)
+                  ]),
+                  _: 2
+                }, 1032, ["name", "css"])
+              ])
+            ];
+          }),
+          _: 2
+        }, 1032, ["items", "arrow-navigation", "is-last", "esc-close", "height", "onSelected", "onHoverValue"])
+      ]),
+      _: 3
+    }, 8, ["multi-calendars"]));
+  }
+});
+var vl = (e2, n) => {
+  const { modelValue: a3 } = Zt(e2, n), t2 = ref(null), o = (b2) => Array.isArray(a3.value) ? a3.value.some((T2) => getYear(T2) === b2) : a3.value ? getYear(a3.value) === b2 : false, l = (b2) => e2.range && Array.isArray(a3.value) ? Vn(a3.value, t2.value, h4(b2)) : false, c2 = computed(() => bt(Fn(e2.yearRange, e2.reverseYears), (b2) => {
+    const T2 = o(b2.value), Y2 = Rt(b2.value, kt(e2.minDate), kt(e2.maxDate)), q2 = l(b2.value);
+    return { active: T2, disabled: Y2, isBetween: q2 };
+  })), h4 = (b2) => setYear(ze(/* @__PURE__ */ new Date()), b2);
+  return {
+    groupedYears: c2,
+    setHoverValue: (b2) => {
+      t2.value = setYear(ze(/* @__PURE__ */ new Date()), b2);
+    },
+    selectYear: (b2) => {
+      if (e2.multiDates)
+        return Ln(h4(b2), a3, e2.multiDatesLimit);
+      if (e2.range)
+        return Pa(a3, h4(b2), n);
+      a3.value = h4(b2);
+    }
+  };
+};
+var ml = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
+  __name: "YearPicker",
+  props: {
+    ...Xe
+  },
+  emits: ["update:internal-model-value", "reset-flow", "range-start", "range-end"],
+  setup(e2, { emit: n }) {
+    const a3 = e2, { groupedYears: t2, selectYear: o, setHoverValue: l } = vl(a3, n);
+    return (c2, h4) => (openBlock(), createBlock(Nt, {
+      items: unref(t2),
+      "is-last": c2.autoApply && !c2.keepActionRow,
+      height: c2.modeHeight,
+      type: "year",
+      "use-relative": "",
+      onSelected: unref(o),
+      onHoverValue: unref(l)
+    }, createSlots({ _: 2 }, [
+      c2.$slots["year-overlay-value"] ? {
+        name: "item",
+        fn: withCtx(({ item: y3 }) => [
+          renderSlot(c2.$slots, "year-overlay-value", {
+            text: y3.text,
+            value: y3.value
+          })
+        ]),
+        key: "0"
+      } : void 0
+    ]), 1032, ["items", "is-last", "height", "onSelected", "onHoverValue"]));
+  }
+});
+var gl = {
+  key: 0,
+  class: "dp__time_input"
+};
+var yl = ["aria-label", "onKeydown", "onClick"];
+var pl = createBaseVNode("span", { class: "dp__tp_inline_btn_bar dp__tp_btn_in_l" }, null, -1);
+var hl = createBaseVNode("span", { class: "dp__tp_inline_btn_bar dp__tp_btn_in_r" }, null, -1);
+var bl = ["aria-label", "disabled", "onKeydown", "onClick"];
+var kl = ["aria-label", "onKeydown", "onClick"];
+var wl = createBaseVNode("span", { class: "dp__tp_inline_btn_bar dp__tp_btn_in_l" }, null, -1);
+var Dl = createBaseVNode("span", { class: "dp__tp_inline_btn_bar dp__tp_btn_in_r" }, null, -1);
+var Ml = { key: 0 };
+var $l = ["aria-label", "onKeydown"];
+var Tl = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
+  __name: "TimeInput",
+  props: {
+    hours: { type: Number, default: 0 },
+    minutes: { type: Number, default: 0 },
+    seconds: { type: Number, default: 0 },
+    closeTimePickerBtn: { type: Object, default: null },
+    order: { type: Number, default: 0 },
+    disabledTimesConfig: { type: Object, default: () => ({}) },
+    ...Xe
+  },
+  emits: [
+    "set-hours",
+    "set-minutes",
+    "update:hours",
+    "update:minutes",
+    "update:seconds",
+    "reset-flow",
+    "mounted",
+    "overlay-closed",
+    "am-pm-change"
+  ],
+  setup(e2, { expose: n, emit: a3 }) {
+    const t2 = e2, { setTimePickerElements: o, setTimePickerBackRef: l } = rt(), { defaultedAriaLabels: c2, defaultedTransitions: h4, defaultedFilters: y3 } = Ce(t2), { transitionName: D2, showTransition: b2 } = Yt(h4), T2 = reactive({
+      hours: false,
+      minutes: false,
+      seconds: false
+    }), Y2 = ref("AM"), q2 = ref(null), K2 = ref([]);
+    onMounted(() => {
+      a3("mounted");
+    });
+    const X2 = (r) => set(/* @__PURE__ */ new Date(), {
+      hours: r.hours,
+      minutes: r.minutes,
+      seconds: t2.enableSeconds ? r.seconds : 0,
+      milliseconds: 0
+    }), k2 = computed(() => (r) => H3(r, t2[r])), $ = computed(() => ({ hours: t2.hours, minutes: t2.minutes, seconds: t2.seconds })), W = computed(() => (r) => !Q2(+t2[r] + +t2[`${r}Increment`], r)), V = computed(() => (r) => !Q2(+t2[r] - +t2[`${r}Increment`], r)), G2 = (r, L2) => add(set(S3(), r), L2), P = (r, L2) => sub(set(S3(), r), L2), ee = computed(
+      () => ({
+        dp__time_col: true,
+        dp__time_col_block: !t2.timePickerInline,
+        dp__time_col_reg_block: !t2.enableSeconds && t2.is24 && !t2.timePickerInline,
+        dp__time_col_reg_inline: !t2.enableSeconds && t2.is24 && t2.timePickerInline,
+        dp__time_col_reg_with_button: !t2.enableSeconds && !t2.is24,
+        dp__time_col_sec: t2.enableSeconds && t2.is24,
+        dp__time_col_sec_with_button: t2.enableSeconds && !t2.is24
+      })
+    ), p = computed(() => {
+      const r = [{ type: "hours" }, { type: "", separator: true }, { type: "minutes" }];
+      return t2.enableSeconds ? r.concat([{ type: "", separator: true }, { type: "seconds" }]) : r;
+    }), _ = computed(() => p.value.filter((r) => !r.separator)), A = computed(() => (r) => {
+      if (r === "hours") {
+        const L2 = u2(+t2.hours);
+        return { text: L2 < 10 ? `0${L2}` : `${L2}`, value: L2 };
+      }
+      return { text: t2[r] < 10 ? `0${t2[r]}` : `${t2[r]}`, value: t2[r] };
+    }), H3 = (r, L2) => {
+      var R2;
+      return t2.disabledTimesConfig[r] ? !!((R2 = t2.disabledTimesConfig[r]) != null && R2.includes(L2)) : true;
+    }, z2 = (r) => {
+      const L2 = t2.is24 ? 24 : 12, R2 = r === "hours" ? L2 : 60, m3 = +t2[`${r}GridIncrement`], B2 = r === "hours" && !t2.is24 ? m3 : 0, le = [];
+      for (let Z = B2; Z < R2; Z += m3)
+        le.push({ value: Z, text: Z < 10 ? `0${Z}` : `${Z}` });
+      return r === "hours" && !t2.is24 && le.push({ value: 0, text: "12" }), bt(le, (Z) => ({ active: false, disabled: y3.value.times[r].includes(Z.value) || !Q2(Z.value, r) || H3(r, Z.value) }));
+    }, Q2 = (r, L2) => {
+      const R2 = t2.minTime ? X2(dn(t2.minTime)) : null, m3 = t2.maxTime ? X2(dn(t2.maxTime)) : null, B2 = X2(dn($.value, L2, r));
+      return R2 && m3 ? (isBefore(B2, m3) || isEqual(B2, m3)) && (isAfter(B2, R2) || isEqual(B2, R2)) : R2 ? isAfter(B2, R2) || isEqual(B2, R2) : m3 ? isBefore(B2, m3) || isEqual(B2, m3) : true;
+    }, f = (r) => t2[`no${r[0].toUpperCase() + r.slice(1)}Overlay`], U = (r) => {
+      f(r) || (T2[r] = !T2[r], T2[r] || a3("overlay-closed"));
+    }, d3 = (r) => r === "hours" ? getHours : r === "minutes" ? getMinutes : getSeconds, w2 = (r, L2 = true) => {
+      const R2 = L2 ? G2 : P, m3 = L2 ? +t2[`${r}Increment`] : -+t2[`${r}Increment`];
+      Q2(+t2[r] + m3, r) && a3(
+        `update:${r}`,
+        d3(r)(R2({ [r]: +t2[r] }, { [r]: +t2[`${r}Increment`] }))
+      );
+    }, u2 = (r) => t2.is24 ? r : (r >= 12 ? Y2.value = "PM" : Y2.value = "AM", Mr(r)), g = () => {
+      Y2.value === "PM" ? (Y2.value = "AM", a3("update:hours", t2.hours - 12)) : (Y2.value = "PM", a3("update:hours", t2.hours + 12)), a3("am-pm-change", Y2.value);
+    }, s3 = (r) => {
+      T2[r] = true;
+    }, C = (r, L2, R2) => {
+      if (r && t2.arrowNavigation) {
+        Array.isArray(K2.value[L2]) ? K2.value[L2][R2] = r : K2.value[L2] = [r];
+        const m3 = K2.value.reduce(
+          (B2, le) => le.map((Z, ke) => [...B2[ke] || [], le[ke]]),
+          []
+        );
+        l(t2.closeTimePickerBtn), q2.value && (m3[1] = m3[1].concat(q2.value)), o(m3, t2.order);
+      }
+    }, ne = (r, L2) => (U(r), r === "hours" && !t2.is24 ? a3(`update:${r}`, Y2.value === "PM" ? L2 + 12 : L2) : a3(`update:${r}`, L2));
+    return n({ openChildCmp: s3 }), (r, L2) => {
+      var R2;
+      return r.disabled ? createCommentVNode("", true) : (openBlock(), createElementBlock("div", gl, [
+        (openBlock(true), createElementBlock(Fragment, null, renderList(p.value, (m3, B2) => {
+          var le, Z, ke;
+          return openBlock(), createElementBlock("div", {
+            key: B2,
+            class: normalizeClass(ee.value)
+          }, [
+            m3.separator ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+              createTextVNode(" : ")
+            ], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+              createBaseVNode("button", {
+                type: "button",
+                class: normalizeClass({
+                  dp__btn: true,
+                  dp__inc_dec_button: !t2.timePickerInline,
+                  dp__inc_dec_button_inline: t2.timePickerInline,
+                  dp__tp_inline_btn_top: t2.timePickerInline,
+                  dp__inc_dec_button_disabled: W.value(m3.type)
+                }),
+                "aria-label": (le = unref(c2)) == null ? void 0 : le.incrementValue(m3.type),
+                tabindex: "0",
+                onKeydown: [
+                  withKeys(withModifiers((se) => w2(m3.type), ["prevent"]), ["enter"]),
+                  withKeys(withModifiers((se) => w2(m3.type), ["prevent"]), ["space"])
+                ],
+                onClick: (se) => w2(m3.type),
+                ref_for: true,
+                ref: (se) => C(se, B2, 0)
+              }, [
+                t2.timePickerInline ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                  pl,
+                  hl
+                ], 64)) : (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+                  r.$slots["arrow-up"] ? renderSlot(r.$slots, "arrow-up", { key: 0 }) : createCommentVNode("", true),
+                  r.$slots["arrow-up"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(On), { key: 1 }))
+                ], 64))
+              ], 42, yl),
+              createBaseVNode("button", {
+                type: "button",
+                "aria-label": (Z = unref(c2)) == null ? void 0 : Z.openTpOverlay(m3.type),
+                class: normalizeClass({
+                  dp__time_display: true,
+                  dp__time_display_block: !t2.timePickerInline,
+                  dp__time_display_inline: t2.timePickerInline,
+                  "dp--time-invalid": k2.value(m3.type),
+                  "dp--time-overlay-btn": !k2.value(m3.type)
+                }),
+                disabled: f(m3.type),
+                tabindex: "0",
+                onKeydown: [
+                  withKeys(withModifiers((se) => U(m3.type), ["prevent"]), ["enter"]),
+                  withKeys(withModifiers((se) => U(m3.type), ["prevent"]), ["space"])
+                ],
+                onClick: (se) => U(m3.type),
+                ref_for: true,
+                ref: (se) => C(se, B2, 1)
+              }, [
+                r.$slots[m3.type] ? renderSlot(r.$slots, m3.type, {
+                  key: 0,
+                  text: A.value(m3.type).text,
+                  value: A.value(m3.type).value
+                }) : createCommentVNode("", true),
+                r.$slots[m3.type] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                  createTextVNode(toDisplayString(A.value(m3.type).text), 1)
+                ], 64))
+              ], 42, bl),
+              createBaseVNode("button", {
+                type: "button",
+                class: normalizeClass({
+                  dp__btn: true,
+                  dp__inc_dec_button: !t2.timePickerInline,
+                  dp__inc_dec_button_inline: t2.timePickerInline,
+                  dp__tp_inline_btn_bottom: t2.timePickerInline,
+                  dp__inc_dec_button_disabled: V.value(m3.type)
+                }),
+                "aria-label": (ke = unref(c2)) == null ? void 0 : ke.decrementValue(m3.type),
+                tabindex: "0",
+                onKeydown: [
+                  withKeys(withModifiers((se) => w2(m3.type, false), ["prevent"]), ["enter"]),
+                  withKeys(withModifiers((se) => w2(m3.type, false), ["prevent"]), ["space"])
+                ],
+                onClick: (se) => w2(m3.type, false),
+                ref_for: true,
+                ref: (se) => C(se, B2, 2)
+              }, [
+                t2.timePickerInline ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                  wl,
+                  Dl
+                ], 64)) : (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+                  r.$slots["arrow-down"] ? renderSlot(r.$slots, "arrow-down", { key: 0 }) : createCommentVNode("", true),
+                  r.$slots["arrow-down"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(In), { key: 1 }))
+                ], 64))
+              ], 42, kl)
+            ], 64))
+          ], 2);
+        }), 128)),
+        r.is24 ? createCommentVNode("", true) : (openBlock(), createElementBlock("div", Ml, [
+          r.$slots["am-pm-button"] ? renderSlot(r.$slots, "am-pm-button", {
+            key: 0,
+            toggle: g,
+            value: Y2.value
+          }) : createCommentVNode("", true),
+          r.$slots["am-pm-button"] ? createCommentVNode("", true) : (openBlock(), createElementBlock("button", {
+            key: 1,
+            ref_key: "amPmButton",
+            ref: q2,
+            type: "button",
+            class: "dp__pm_am_button",
+            role: "button",
+            "aria-label": (R2 = unref(c2)) == null ? void 0 : R2.amPmButton,
+            tabindex: "0",
+            onClick: g,
+            onKeydown: [
+              withKeys(withModifiers(g, ["prevent"]), ["enter"]),
+              withKeys(withModifiers(g, ["prevent"]), ["space"])
+            ]
+          }, toDisplayString(Y2.value), 41, $l))
+        ])),
+        (openBlock(true), createElementBlock(Fragment, null, renderList(_.value, (m3, B2) => (openBlock(), createBlock(Transition, {
+          key: B2,
+          name: unref(D2)(T2[m3.type]),
+          css: unref(b2)
+        }, {
+          default: withCtx(() => [
+            T2[m3.type] ? (openBlock(), createBlock(Nt, {
+              key: 0,
+              items: z2(m3.type),
+              "is-last": r.autoApply && !r.keepActionRow,
+              "esc-close": r.escClose,
+              type: m3.type,
+              "text-input": r.textInput,
+              "arrow-navigation": r.arrowNavigation,
+              onSelected: (le) => ne(m3.type, le),
+              onToggle: (le) => U(m3.type),
+              onResetFlow: L2[0] || (L2[0] = (le) => r.$emit("reset-flow"))
+            }, createSlots({
+              "button-icon": withCtx(() => [
+                r.$slots["clock-icon"] ? renderSlot(r.$slots, "clock-icon", { key: 0 }) : createCommentVNode("", true),
+                r.$slots["clock-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Nn), { key: 1 }))
+              ]),
+              _: 2
+            }, [
+              r.$slots[`${m3.type}-overlay-value`] ? {
+                name: "item",
+                fn: withCtx(({ item: le }) => [
+                  renderSlot(r.$slots, `${m3.type}-overlay-value`, {
+                    text: le.text,
+                    value: le.value
+                  })
+                ]),
+                key: "0"
+              } : void 0
+            ]), 1032, ["items", "is-last", "esc-close", "type", "text-input", "arrow-navigation", "onSelected", "onToggle"])) : createCommentVNode("", true)
+          ]),
+          _: 2
+        }, 1032, ["name", "css"]))), 128))
+      ]));
+    };
+  }
+});
+var Al = ["aria-label"];
+var _l = ["tabindex"];
+var Sl = ["aria-label"];
+var Ca = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
+  __name: "TimePicker",
+  props: {
+    hours: { type: [Number, Array], default: 0 },
+    minutes: { type: [Number, Array], default: 0 },
+    seconds: { type: [Number, Array], default: 0 },
+    disabledTimesConfig: { type: Function, default: () => ({}) },
+    ...Xe
+  },
+  emits: [
+    "update:hours",
+    "update:minutes",
+    "update:seconds",
+    "mount",
+    "reset-flow",
+    "overlay-opened",
+    "overlay-closed",
+    "am-pm-change"
+  ],
+  setup(e2, { expose: n, emit: a3 }) {
+    const t2 = e2, { buildMatrix: o, setTimePicker: l } = rt(), c2 = useSlots(), { defaultedTransitions: h4, defaultedAriaLabels: y3, defaultedTextInput: D2 } = Ce(t2), { transitionName: b2, showTransition: T2 } = Yt(h4), { hideNavigationButtons: Y2 } = qt(), q2 = ref(null), K2 = ref(null), X2 = ref([]), k2 = ref(null);
+    onMounted(() => {
+      a3("mount"), !t2.timePicker && t2.arrowNavigation ? o([Ae(q2.value)], "time") : l(true, t2.timePicker);
+    });
+    const $ = computed(() => t2.range && t2.modelAuto ? wa(t2.internalModelValue) : true), W = ref(false), V = (f) => ({
+      hours: Array.isArray(t2.hours) ? t2.hours[f] : t2.hours,
+      minutes: Array.isArray(t2.minutes) ? t2.minutes[f] : t2.minutes,
+      seconds: Array.isArray(t2.seconds) ? t2.seconds[f] : t2.seconds
+    }), G2 = computed(() => {
+      const f = [];
+      if (t2.range)
+        for (let U = 0; U < 2; U++)
+          f.push(V(U));
+      else
+        f.push(V(0));
+      return f;
+    }), P = (f, U = false, d3 = "") => {
+      U || a3("reset-flow"), W.value = f, a3(f ? "overlay-opened" : "overlay-closed"), t2.arrowNavigation && l(f), nextTick(() => {
+        d3 !== "" && X2.value[0] && X2.value[0].openChildCmp(d3);
+      });
+    }, ee = computed(() => ({
+      dp__btn: true,
+      dp__button: true,
+      dp__button_bottom: t2.autoApply && !t2.keepActionRow
+    })), p = je(c2, "timePicker"), _ = (f, U, d3) => t2.range ? U === 0 ? [f, G2.value[1][d3]] : [G2.value[0][d3], f] : f, A = (f) => {
+      a3("update:hours", f);
+    }, H3 = (f) => {
+      a3("update:minutes", f);
+    }, z2 = (f) => {
+      a3("update:seconds", f);
+    }, Q2 = () => {
+      if (k2.value && !D2.value.enabled) {
+        const f = Tr(k2.value);
+        f && f.focus({ preventScroll: true });
+      }
+    };
+    return n({ toggleTimePicker: P }), (f, U) => {
+      var d3;
+      return openBlock(), createElementBlock("div", null, [
+        !f.timePicker && !f.timePickerInline ? withDirectives((openBlock(), createElementBlock("button", {
+          key: 0,
+          type: "button",
+          class: normalizeClass(ee.value),
+          "aria-label": (d3 = unref(y3)) == null ? void 0 : d3.openTimePicker,
+          tabindex: "0",
+          ref_key: "openTimePickerBtn",
+          ref: q2,
+          onKeydown: [
+            U[0] || (U[0] = withKeys((w2) => P(true), ["enter"])),
+            U[1] || (U[1] = withKeys((w2) => P(true), ["space"]))
+          ],
+          onClick: U[2] || (U[2] = (w2) => P(true))
+        }, [
+          f.$slots["clock-icon"] ? renderSlot(f.$slots, "clock-icon", { key: 0 }) : createCommentVNode("", true),
+          f.$slots["clock-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Nn), { key: 1 }))
+        ], 42, Al)), [
+          [vShow, !unref(Y2)(f.hideNavigation, "time")]
+        ]) : createCommentVNode("", true),
+        createVNode(Transition, {
+          name: unref(b2)(W.value),
+          css: unref(T2) && !f.timePickerInline
+        }, {
+          default: withCtx(() => {
+            var w2;
+            return [
+              W.value || f.timePicker || f.timePickerInline ? (openBlock(), createElementBlock("div", {
+                key: 0,
+                class: normalizeClass({
+                  dp__overlay: !f.timePickerInline,
+                  "dp--overlay-absolute": !t2.timePicker && !f.timePickerInline,
+                  "dp--overlay-relative": t2.timePicker
+                }),
+                style: normalizeStyle(f.timePicker ? { height: `${f.modeHeight}px` } : void 0),
+                ref_key: "overlayRef",
+                ref: k2,
+                tabindex: f.timePickerInline ? void 0 : 0
+              }, [
+                createBaseVNode("div", {
+                  class: normalizeClass(
+                    f.timePickerInline ? "dp__time_picker_inline_container" : "dp__overlay_container dp__container_flex dp__time_picker_overlay_container"
+                  ),
+                  style: { display: "flex" }
+                }, [
+                  f.$slots["time-picker-overlay"] ? renderSlot(f.$slots, "time-picker-overlay", {
+                    key: 0,
+                    hours: e2.hours,
+                    minutes: e2.minutes,
+                    seconds: e2.seconds,
+                    setHours: A,
+                    setMinutes: H3,
+                    setSeconds: z2
+                  }) : createCommentVNode("", true),
+                  f.$slots["time-picker-overlay"] ? createCommentVNode("", true) : (openBlock(), createElementBlock("div", {
+                    key: 1,
+                    class: normalizeClass(f.timePickerInline ? "dp__flex" : "dp__overlay_row dp__flex_row")
+                  }, [
+                    (openBlock(true), createElementBlock(Fragment, null, renderList(G2.value, (u2, g) => withDirectives((openBlock(), createBlock(Tl, mergeProps({ key: g }, {
+                      ...f.$props,
+                      order: g,
+                      hours: u2.hours,
+                      minutes: u2.minutes,
+                      seconds: u2.seconds,
+                      closeTimePickerBtn: K2.value,
+                      disabledTimesConfig: e2.disabledTimesConfig(g),
+                      disabled: g === 0 ? f.fixedStart : f.fixedEnd
+                    }, {
+                      ref_for: true,
+                      ref_key: "timeInputRefs",
+                      ref: X2,
+                      "onUpdate:hours": (s3) => A(_(s3, g, "hours")),
+                      "onUpdate:minutes": (s3) => H3(_(s3, g, "minutes")),
+                      "onUpdate:seconds": (s3) => z2(_(s3, g, "seconds")),
+                      onMounted: Q2,
+                      onOverlayClosed: Q2,
+                      onAmPmChange: U[3] || (U[3] = (s3) => f.$emit("am-pm-change", s3))
+                    }), createSlots({ _: 2 }, [
+                      renderList(unref(p), (s3, C) => ({
+                        name: s3,
+                        fn: withCtx((ne) => [
+                          renderSlot(f.$slots, s3, normalizeProps(guardReactiveProps(ne)))
+                        ])
+                      }))
+                    ]), 1040, ["onUpdate:hours", "onUpdate:minutes", "onUpdate:seconds"])), [
+                      [vShow, g === 0 ? true : $.value]
+                    ])), 128))
+                  ], 2)),
+                  !f.timePicker && !f.timePickerInline ? withDirectives((openBlock(), createElementBlock("button", {
+                    key: 2,
+                    type: "button",
+                    ref_key: "closeTimePickerBtn",
+                    ref: K2,
+                    class: normalizeClass(ee.value),
+                    "aria-label": (w2 = unref(y3)) == null ? void 0 : w2.closeTimePicker,
+                    tabindex: "0",
+                    onKeydown: [
+                      U[4] || (U[4] = withKeys((u2) => P(false), ["enter"])),
+                      U[5] || (U[5] = withKeys((u2) => P(false), ["space"]))
+                    ],
+                    onClick: U[6] || (U[6] = (u2) => P(false))
+                  }, [
+                    f.$slots["calendar-icon"] ? renderSlot(f.$slots, "calendar-icon", { key: 0 }) : createCommentVNode("", true),
+                    f.$slots["calendar-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(It), { key: 1 }))
+                  ], 42, Sl)), [
+                    [vShow, !unref(Y2)(f.hideNavigation, "time")]
+                  ]) : createCommentVNode("", true)
+                ], 2)
+              ], 14, _l)) : createCommentVNode("", true)
+            ];
+          }),
+          _: 3
+        }, 8, ["name", "css"])
+      ]);
+    };
+  }
+});
+var Ra = (e2, n, a3, t2) => {
+  const o = (k2, $) => Array.isArray(n[k2]) ? n[k2][$] : n[k2], l = (k2) => e2.enableSeconds ? Array.isArray(n.seconds) ? n.seconds[k2] : n.seconds : 0, c2 = (k2, $) => k2 ? $ !== void 0 ? tt(k2, o("hours", $), o("minutes", $), l($)) : tt(k2, n.hours, n.minutes, l()) : S3(), h4 = (k2, $) => {
+    n[k2] = $;
+  }, y3 = (k2, $) => {
+    const W = Object.fromEntries(
+      Object.keys(n).map((V) => V === k2 ? [V, $] : [V, n[V]].slice())
+    );
+    if (e2.range && !e2.disableTimeRangeValidation) {
+      const V = (P) => a3.value ? tt(
+        a3.value[P],
+        W.hours[P],
+        W.minutes[P],
+        W.seconds[P]
+      ) : null, G2 = (P) => setMilliseconds(a3.value[P], 0);
+      return !(ye(V(0), V(1)) && (isAfter(V(0), G2(1)) || isBefore(V(1), G2(0))));
+    }
+    return true;
+  }, D2 = (k2, $) => {
+    y3(k2, $) && (h4(k2, $), t2 && t2());
+  }, b2 = (k2) => {
+    D2("hours", k2);
+  }, T2 = (k2) => {
+    D2("minutes", k2);
+  }, Y2 = (k2) => {
+    D2("seconds", k2);
+  }, q2 = (k2, $, W, V) => {
+    $ && b2(k2), !$ && !W && T2(k2), W && Y2(k2), a3.value && V(a3.value);
+  }, K2 = (k2) => {
+    if (k2) {
+      const $ = Array.isArray(k2), W = $ ? [+k2[0].hours, +k2[1].hours] : +k2.hours, V = $ ? [+k2[0].minutes, +k2[1].minutes] : +k2.minutes, G2 = $ ? [+k2[0].seconds, +k2[1].seconds] : +k2.seconds;
+      h4("hours", W), h4("minutes", V), e2.enableSeconds && h4("seconds", G2);
+    }
+  }, X2 = computed(() => (k2) => {
+    var $;
+    if (Array.isArray(e2.disabledTimes)) {
+      const W = Array.isArray(n.hours) ? n.hours[k2] : n.hours, V = e2.disabledTimes.filter((G2) => +G2.hours === W);
+      return (($ = V[0]) == null ? void 0 : $.minutes) === "*" ? { hours: [W], minutes: void 0, seconds: void 0 } : {
+        hours: [],
+        minutes: (V == null ? void 0 : V.map((G2) => +G2.minutes)) ?? [],
+        seconds: (V == null ? void 0 : V.map((G2) => G2.seconds ? +G2.seconds : void 0)) ?? []
+      };
+    }
+    return { hours: [], minutes: [], seconds: [] };
+  });
+  return {
+    setTime: h4,
+    updateHours: b2,
+    updateMinutes: T2,
+    updateSeconds: Y2,
+    getSetDateTime: c2,
+    updateTimeValues: q2,
+    getSecondsValue: l,
+    assignStartTime: K2,
+    disabledTimesConfig: X2
+  };
+};
+var Pl = (e2, n) => {
+  const { modelValue: a3, time: t2 } = Zt(e2, n), { defaultedStartTime: o } = Ce(e2), { updateTimeValues: l, getSetDateTime: c2, setTime: h4, assignStartTime: y3, disabledTimesConfig: D2 } = Ra(
+    e2,
+    t2,
+    a3
+  ), b2 = () => {
+    e2.range ? a3.value = [c2(null, 0), c2(null, 1)] : a3.value = c2(null);
+  }, T2 = (k2) => Array.isArray(k2) ? [ft(S3(k2[0])), ft(S3(k2[1]))] : [ft(k2 ?? S3())], Y2 = (k2, $, W) => {
+    h4("hours", k2), h4("minutes", $), e2.enableSeconds && h4("seconds", W);
+  }, q2 = () => {
+    const [k2, $] = T2(a3.value);
+    return e2.range ? Y2(
+      [k2.hours, $.hours],
+      [k2.minutes, $.minutes],
+      [k2.seconds, $.minutes]
+    ) : Y2(k2.hours, k2.minutes, k2.seconds);
+  };
+  onMounted(() => {
+    if (!e2.shadow)
+      return y3(o.value), a3.value ? q2() : b2();
+  });
+  const K2 = () => {
+    Array.isArray(a3.value) ? a3.value = a3.value.map((k2, $) => k2 && c2(k2, $)) : a3.value = c2(a3.value), n("time-update");
+  };
+  return {
+    time: t2,
+    disabledTimesConfig: D2,
+    updateTime: (k2, $ = true, W = false) => {
+      l(k2, $, W, K2);
+    }
+  };
+};
+var Cl = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
+  __name: "TimePickerSolo",
+  props: {
+    ...Xe
+  },
+  emits: ["update:internal-model-value", "time-update", "am-pm-change"],
+  setup(e2, { emit: n }) {
+    const a3 = e2, t2 = useSlots(), o = je(t2, "timePicker"), { time: l, disabledTimesConfig: c2, updateTime: h4 } = Pl(a3, n);
+    return (y3, D2) => (openBlock(), createBlock(Hn, {
+      "multi-calendars": 0,
+      stretch: ""
+    }, {
+      default: withCtx(() => [
+        createVNode(Ca, mergeProps(y3.$props, {
+          hours: unref(l).hours,
+          minutes: unref(l).minutes,
+          seconds: unref(l).seconds,
+          "internal-model-value": y3.internalModelValue,
+          "disabled-times-config": unref(c2),
+          "onUpdate:hours": D2[0] || (D2[0] = (b2) => unref(h4)(b2)),
+          "onUpdate:minutes": D2[1] || (D2[1] = (b2) => unref(h4)(b2, false)),
+          "onUpdate:seconds": D2[2] || (D2[2] = (b2) => unref(h4)(b2, false, true)),
+          onAmPmChange: D2[3] || (D2[3] = (b2) => y3.$emit("am-pm-change", b2))
+        }), createSlots({ _: 2 }, [
+          renderList(unref(o), (b2, T2) => ({
+            name: b2,
+            fn: withCtx((Y2) => [
+              renderSlot(y3.$slots, b2, normalizeProps(guardReactiveProps(Y2)))
+            ])
+          }))
+        ]), 1040, ["hours", "minutes", "seconds", "internal-model-value", "disabled-times-config"])
+      ]),
+      _: 3
+    }));
+  }
+});
+var Rl = { class: "dp__month_year_row" };
+var Nl = ["onClick", "onKeydown", "aria-label"];
+var Ol = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
+  __name: "DpHeader",
+  props: {
+    month: { type: Number, default: 0 },
+    year: { type: Number, default: 0 },
+    instance: { type: Number, default: 0 },
+    years: { type: Array, default: () => [] },
+    months: { type: Array, default: () => [] },
+    ...Xe
+  },
+  emits: ["update-month-year", "mount", "reset-flow", "overlay-closed"],
+  setup(e2, { expose: n, emit: a3 }) {
+    const t2 = e2, { defaultedTransitions: o, defaultedAriaLabels: l, defaultedMultiCalendars: c2, defaultedFilters: h4 } = Ce(t2), { transitionName: y3, showTransition: D2 } = Yt(o), { buildMatrix: b2 } = rt(), { handleMonthYearChange: T2, isDisabled: Y2, updateMonthYear: q2 } = zr(t2, a3), { showLeftIcon: K2, showRightIcon: X2 } = qt(), k2 = ref(false), $ = ref(false), W = ref([null, null, null, null]);
+    onMounted(() => {
+      a3("mount");
+    });
+    const V = (u2) => ({
+      get: () => t2[u2],
+      set: (g) => {
+        const s3 = u2 === We.month ? We.year : We.month;
+        a3("update-month-year", { [u2]: g, [s3]: t2[s3] }), u2 === We.month ? z2(true) : Q2(true);
+      }
+    }), G2 = computed(V(We.month)), P = computed(V(We.year)), ee = computed(() => (u2) => ({
+      month: t2.month,
+      year: t2.year,
+      items: u2 === We.month ? t2.months : t2.years,
+      instance: t2.instance,
+      updateMonthYear: q2,
+      toggle: u2 === We.month ? z2 : Q2
+    })), p = computed(() => {
+      const u2 = t2.months.find((g) => g.value === t2.month);
+      return u2 || { text: "", value: 0 };
+    }), _ = computed(() => bt(t2.months, (u2) => {
+      const g = t2.month === u2.value, s3 = Rt(
+        u2.value,
+        Da(t2.year, t2.minDate),
+        Ma(t2.year, t2.maxDate)
+      ) || h4.value.months.includes(u2.value);
+      return { active: g, disabled: s3 };
+    })), A = computed(() => bt(t2.years, (u2) => {
+      const g = t2.year === u2.value, s3 = Rt(u2.value, kt(t2.minDate), kt(t2.maxDate)) || h4.value.years.includes(u2.value);
+      return { active: g, disabled: s3 };
+    })), H3 = (u2, g) => {
+      g !== void 0 ? u2.value = g : u2.value = !u2.value, u2.value || a3("overlay-closed");
+    }, z2 = (u2 = false, g) => {
+      f(u2), H3(k2, g);
+    }, Q2 = (u2 = false, g) => {
+      f(u2), H3($, g);
+    }, f = (u2) => {
+      u2 || a3("reset-flow");
+    }, U = (u2, g) => {
+      t2.arrowNavigation && (W.value[g] = Ae(u2), b2(W.value, "monthYear"));
+    }, d3 = computed(() => {
+      var u2, g;
+      return [
+        {
+          type: We.month,
+          index: 1,
+          toggle: z2,
+          modelValue: G2.value,
+          updateModelValue: (s3) => G2.value = s3,
+          text: p.value.text,
+          showSelectionGrid: k2.value,
+          items: _.value,
+          ariaLabel: (u2 = l.value) == null ? void 0 : u2.openMonthsOverlay
+        },
+        {
+          type: We.year,
+          index: 2,
+          toggle: Q2,
+          modelValue: P.value,
+          updateModelValue: (s3) => P.value = s3,
+          text: t2.year,
+          showSelectionGrid: $.value,
+          items: A.value,
+          ariaLabel: (g = l.value) == null ? void 0 : g.openYearsOverlay
+        }
+      ];
+    }), w2 = computed(
+      () => t2.disableYearSelect ? [d3.value[0]] : d3.value
+    );
+    return n({
+      toggleMonthPicker: z2,
+      toggleYearPicker: Q2,
+      handleMonthYearChange: T2
+    }), (u2, g) => {
+      var s3, C, ne;
+      return openBlock(), createElementBlock("div", Rl, [
+        u2.$slots["month-year"] ? renderSlot(u2.$slots, "month-year", normalizeProps(mergeProps({ key: 0 }, { month: e2.month, year: e2.year, months: e2.months, years: e2.years, updateMonthYear: unref(q2), handleMonthYearChange: unref(T2), instance: e2.instance }))) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+          unref(K2)(unref(c2), e2.instance) && !u2.vertical ? (openBlock(), createBlock(_t, {
+            key: 0,
+            "aria-label": (s3 = unref(l)) == null ? void 0 : s3.prevMonth,
+            disabled: unref(Y2)(false),
+            onActivate: g[0] || (g[0] = (r) => unref(T2)(false)),
+            onSetRef: g[1] || (g[1] = (r) => U(r, 0))
+          }, {
+            default: withCtx(() => [
+              u2.$slots["arrow-left"] ? renderSlot(u2.$slots, "arrow-left", { key: 0 }) : createCommentVNode("", true),
+              u2.$slots["arrow-left"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Cn), { key: 1 }))
+            ]),
+            _: 3
+          }, 8, ["aria-label", "disabled"])) : createCommentVNode("", true),
+          createBaseVNode("div", {
+            class: normalizeClass(["dp__month_year_wrap", {
+              dp__year_disable_select: u2.disableYearSelect
+            }])
+          }, [
+            (openBlock(true), createElementBlock(Fragment, null, renderList(w2.value, (r, L2) => (openBlock(), createElementBlock(Fragment, {
+              key: r.type
+            }, [
+              createBaseVNode("button", {
+                type: "button",
+                class: "dp__btn dp__month_year_select",
+                onClick: r.toggle,
+                onKeydown: [
+                  withKeys(withModifiers(r.toggle, ["prevent"]), ["enter"]),
+                  withKeys(withModifiers(r.toggle, ["prevent"]), ["space"])
+                ],
+                "aria-label": r.ariaLabel,
+                tabindex: "0",
+                ref_for: true,
+                ref: (R2) => U(R2, L2 + 1)
+              }, [
+                u2.$slots[r.type] ? renderSlot(u2.$slots, r.type, normalizeProps(mergeProps({ key: 0 }, { text: r.text }))) : createCommentVNode("", true),
+                u2.$slots[r.type] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                  createTextVNode(toDisplayString(r.text), 1)
+                ], 64))
+              ], 40, Nl),
+              createVNode(Transition, {
+                name: unref(y3)(r.showSelectionGrid),
+                css: unref(D2)
+              }, {
+                default: withCtx(() => [
+                  r.showSelectionGrid ? (openBlock(), createBlock(Nt, {
+                    key: 0,
+                    items: r.items,
+                    "arrow-navigation": u2.arrowNavigation,
+                    "hide-navigation": u2.hideNavigation,
+                    "is-last": u2.autoApply && !u2.keepActionRow,
+                    "skip-button-ref": false,
+                    type: r.type,
+                    "header-refs": [],
+                    "esc-close": u2.escClose,
+                    "text-input": u2.textInput,
+                    onSelected: r.updateModelValue,
+                    onToggle: r.toggle
+                  }, createSlots({
+                    "button-icon": withCtx(() => [
+                      u2.$slots["calendar-icon"] ? renderSlot(u2.$slots, "calendar-icon", { key: 0 }) : createCommentVNode("", true),
+                      u2.$slots["calendar-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(It), { key: 1 }))
+                    ]),
+                    _: 2
+                  }, [
+                    u2.$slots[`${r.type}-overlay-val`] ? {
+                      name: "item",
+                      fn: withCtx(({ item: R2 }) => [
+                        renderSlot(u2.$slots, `${r.type}-overlay-val`, {
+                          text: R2.text,
+                          value: R2.value
+                        })
+                      ]),
+                      key: "0"
+                    } : void 0,
+                    u2.$slots[`${r.type}-overlay`] ? {
+                      name: "overlay",
+                      fn: withCtx(() => [
+                        renderSlot(u2.$slots, `${r.type}-overlay`, normalizeProps(guardReactiveProps(ee.value(r.type))))
+                      ]),
+                      key: "1"
+                    } : void 0,
+                    u2.$slots[`${r.type}-overlay-header`] ? {
+                      name: "header",
+                      fn: withCtx(() => [
+                        renderSlot(u2.$slots, `${r.type}-overlay-header`, {
+                          toggle: r.toggle
+                        })
+                      ]),
+                      key: "2"
+                    } : void 0
+                  ]), 1032, ["items", "arrow-navigation", "hide-navigation", "is-last", "type", "esc-close", "text-input", "onSelected", "onToggle"])) : createCommentVNode("", true)
+                ]),
+                _: 2
+              }, 1032, ["name", "css"])
+            ], 64))), 128))
+          ], 2),
+          unref(K2)(unref(c2), e2.instance) && u2.vertical ? (openBlock(), createBlock(_t, {
+            key: 1,
+            "aria-label": (C = unref(l)) == null ? void 0 : C.prevMonth,
+            disabled: unref(Y2)(false),
+            onActivate: g[2] || (g[2] = (r) => unref(T2)(false))
+          }, {
+            default: withCtx(() => [
+              u2.$slots["arrow-up"] ? renderSlot(u2.$slots, "arrow-up", { key: 0 }) : createCommentVNode("", true),
+              u2.$slots["arrow-up"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(On), { key: 1 }))
+            ]),
+            _: 3
+          }, 8, ["aria-label", "disabled"])) : createCommentVNode("", true),
+          unref(X2)(unref(c2), e2.instance) ? (openBlock(), createBlock(_t, {
+            key: 2,
+            ref: "rightIcon",
+            disabled: unref(Y2)(true),
+            "aria-label": (ne = unref(l)) == null ? void 0 : ne.nextMonth,
+            onActivate: g[3] || (g[3] = (r) => unref(T2)(true)),
+            onSetRef: g[4] || (g[4] = (r) => U(r, u2.disableYearSelect ? 2 : 3))
+          }, {
+            default: withCtx(() => [
+              u2.$slots[u2.vertical ? "arrow-down" : "arrow-right"] ? renderSlot(u2.$slots, u2.vertical ? "arrow-down" : "arrow-right", { key: 0 }) : createCommentVNode("", true),
+              u2.$slots[u2.vertical ? "arrow-down" : "arrow-right"] ? createCommentVNode("", true) : (openBlock(), createBlock(resolveDynamicComponent(u2.vertical ? unref(In) : unref(Rn)), { key: 1 }))
+            ]),
+            _: 3
+          }, 8, ["disabled", "aria-label"])) : createCommentVNode("", true)
+        ], 64))
+      ]);
+    };
+  }
+});
+var Il = ["aria-label"];
+var Yl = {
   class: "dp__calendar_header",
   role: "row"
 };
-var hr = {
+var Bl = {
   key: 0,
   class: "dp__calendar_header_item",
   role: "gridcell"
 };
-var pr = createBaseVNode("div", { class: "dp__calendar_header_separator" }, null, -1);
-var kr = ["aria-label"];
-var wr = {
+var El = createBaseVNode("div", { class: "dp__calendar_header_separator" }, null, -1);
+var Fl = ["aria-label"];
+var Vl = {
   key: 0,
   role: "gridcell",
   class: "dp__calendar_item dp__week_num"
 };
-var br = { class: "dp__cell_inner" };
-var Dr = ["aria-selected", "aria-disabled", "aria-label", "data-test", "onClick", "onKeydown", "onMouseenter", "onMouseleave"];
-var $r = defineComponent({
-  __name: "Calendar",
+var Hl = { class: "dp__cell_inner" };
+var Ll = ["aria-selected", "aria-disabled", "aria-label", "onClick", "onKeydown", "onMouseenter", "onMouseleave"];
+var Ul = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
+  __name: "DpCalendar",
   props: {
     mappedDates: { type: Array, default: () => [] },
-    getWeekNum: {
-      type: Function,
-      default: () => ""
-    },
-    specificMode: { type: Boolean, default: false },
     instance: { type: Number, default: 0 },
     month: { type: Number, default: 0 },
     year: { type: Number, default: 0 },
-    ...at
+    ...Xe
   },
   emits: [
     "select-date",
@@ -6648,187 +8163,191 @@ var $r = defineComponent({
     "tooltip-close"
   ],
   setup(e2, { expose: n, emit: a3 }) {
-    const t2 = e2, { buildMultiLevelMatrix: s3 } = nt(), { setDateMonthOrYear: f, defaults: y3 } = Ee(t2), _ = ref(null), E2 = ref({
+    const t2 = e2, { buildMultiLevelMatrix: o } = rt(), { defaultedTransitions: l, defaultedAriaLabels: c2, defaultedMultiCalendars: h4 } = Ce(t2), y3 = ref(null), D2 = ref({
       bottom: "",
       left: "",
       transform: ""
-    }), T2 = ref([]), U = ref(null), A = ref(true), c2 = ref(""), M3 = ref({ startX: 0, endX: 0, startY: 0, endY: 0 }), te = ref([]), H3 = ref({ left: "50%" }), z2 = computed(() => t2.dayNames ? Array.isArray(t2.dayNames) ? t2.dayNames : t2.dayNames(t2.locale, +t2.weekStart) : Ha(t2.locale, +t2.weekStart));
+    }), b2 = ref([]), T2 = ref(null), Y2 = ref(true), q2 = ref(""), K2 = ref({ startX: 0, endX: 0, startY: 0, endY: 0 }), X2 = ref([]), k2 = ref({ left: "50%" }), $ = computed(() => t2.calendar ? t2.calendar(t2.mappedDates) : t2.mappedDates), W = computed(() => t2.dayNames ? Array.isArray(t2.dayNames) ? t2.dayNames : t2.dayNames(t2.locale, +t2.weekStart) : Dr(t2.formatLocale, t2.locale, +t2.weekStart));
     onMounted(() => {
-      a3("mount", { cmp: "calendar", refs: T2 }), t2.noSwipe || U.value && (U.value.addEventListener("touchstart", P, { passive: false }), U.value.addEventListener("touchend", Z, { passive: false }), U.value.addEventListener("touchmove", p, { passive: false })), t2.monthChangeOnScroll && U.value && U.value.addEventListener("wheel", I2, { passive: false });
+      a3("mount", { cmp: "calendar", refs: b2 }), t2.noSwipe || T2.value && (T2.value.addEventListener("touchstart", Q2, { passive: false }), T2.value.addEventListener("touchend", f, { passive: false }), T2.value.addEventListener("touchmove", U, { passive: false })), t2.monthChangeOnScroll && T2.value && T2.value.addEventListener("wheel", u2, { passive: false });
     });
-    const B2 = (l) => l ? t2.vertical ? "vNext" : "next" : t2.vertical ? "vPrevious" : "previous", w2 = (l, o) => {
+    const V = (s3) => s3 ? t2.vertical ? "vNext" : "next" : t2.vertical ? "vPrevious" : "previous", G2 = (s3, C) => {
       if (t2.transitions) {
-        const g = Ue(f($(), t2.month, t2.year));
-        c2.value = Be(Ue(f($(), l, o)), g) ? y3.value.transitions[B2(true)] : y3.value.transitions[B2(false)], A.value = false, nextTick(() => {
-          A.value = true;
+        const ne = Le(Je(S3(), t2.month, t2.year));
+        q2.value = Ne(Le(Je(S3(), s3, C)), ne) ? l.value[V(true)] : l.value[V(false)], Y2.value = false, nextTick(() => {
+          Y2.value = true;
         });
       }
-    }, J = computed(
+    }, P = computed(
       () => ({
-        dp__calendar_wrap: true,
         [t2.calendarClassName]: !!t2.calendarClassName
       })
-    ), ee = computed(() => (l) => {
-      const o = Ka(l);
+    ), ee = computed(() => (s3) => {
+      const C = $r(s3);
       return {
-        dp__marker_dot: o.type === "dot",
-        dp__marker_line: o.type === "line"
+        dp__marker_dot: C.type === "dot",
+        dp__marker_line: C.type === "line"
       };
-    }), x2 = computed(() => (l) => ve(l, _.value)), le = computed(() => ({
+    }), p = computed(() => (s3) => ye(s3, y3.value)), _ = computed(() => ({
       dp__calendar: true,
-      dp__calendar_next: y3.value.multiCalendars > 0 && t2.instance !== 0
-    })), de = computed(() => (l) => t2.hideOffsetDates ? l.current : true), C = computed(() => t2.specificMode ? { height: `${t2.modeHeight}px` } : void 0), N = async (l, o, g) => {
-      var r, k2;
-      if (a3("set-hover-date", l), (k2 = (r = l.marker) == null ? void 0 : r.tooltip) != null && k2.length) {
-        const Y2 = $e(T2.value[o][g]);
-        if (Y2) {
-          const { width: R2, height: m3 } = Y2.getBoundingClientRect();
-          _.value = l.value;
-          let b2 = { left: `${R2 / 2}px` }, v = -50;
-          if (await nextTick(), te.value[0]) {
-            const { left: W, width: se } = te.value[0].getBoundingClientRect();
-            W < 0 && (b2 = { left: "0" }, v = 0, H3.value.left = `${R2 / 2}px`), window.innerWidth < W + se && (b2 = { right: "0" }, v = 0, H3.value.left = `${se - R2 / 2}px`);
+      dp__calendar_next: h4.value.count > 0 && t2.instance !== 0
+    })), A = computed(() => (s3) => t2.hideOffsetDates ? s3.current : true), H3 = async (s3, C, ne) => {
+      var r, L2;
+      if (a3("set-hover-date", s3), (L2 = (r = s3.marker) == null ? void 0 : r.tooltip) != null && L2.length) {
+        const R2 = Ae(b2.value[C][ne]);
+        if (R2) {
+          const { width: m3, height: B2 } = R2.getBoundingClientRect();
+          y3.value = s3.value;
+          let le = { left: `${m3 / 2}px` }, Z = -50;
+          if (await nextTick(), X2.value[0]) {
+            const { left: ke, width: se } = X2.value[0].getBoundingClientRect();
+            ke < 0 && (le = { left: "0" }, Z = 0, k2.value.left = `${m3 / 2}px`), window.innerWidth < ke + se && (le = { right: "0" }, Z = 0, k2.value.left = `${se - m3 / 2}px`);
           }
-          E2.value = {
-            bottom: `${m3}px`,
-            ...b2,
-            transform: `translateX(${v}%)`
-          }, a3("tooltip-open", l.marker);
+          D2.value = {
+            bottom: `${B2}px`,
+            ...le,
+            transform: `translateX(${Z}%)`
+          }, a3("tooltip-open", s3.marker);
         }
       }
-    }, G2 = (l) => {
-      _.value && (_.value = null, E2.value = JSON.parse(JSON.stringify({ bottom: "", left: "", transform: "" })), a3("tooltip-close", l.marker));
-    }, P = (l) => {
-      M3.value.startX = l.changedTouches[0].screenX, M3.value.startY = l.changedTouches[0].screenY;
-    }, Z = (l) => {
-      M3.value.endX = l.changedTouches[0].screenX, M3.value.endY = l.changedTouches[0].screenY, q2();
-    }, p = (l) => {
-      t2.vertical && !t2.inline && l.preventDefault();
-    }, q2 = () => {
-      const l = t2.vertical ? "Y" : "X";
-      Math.abs(M3.value[`start${l}`] - M3.value[`end${l}`]) > 10 && a3("handle-swipe", M3.value[`start${l}`] > M3.value[`end${l}`] ? "right" : "left");
-    }, j = (l, o, g) => {
-      l && (Array.isArray(T2.value[o]) ? T2.value[o][g] = l : T2.value[o] = [l]), t2.arrowNavigation && s3(T2.value, "calendar");
-    }, I2 = (l) => {
-      t2.monthChangeOnScroll && (l.preventDefault(), a3("handle-scroll", l));
+    }, z2 = (s3) => {
+      y3.value && (y3.value = null, D2.value = JSON.parse(JSON.stringify({ bottom: "", left: "", transform: "" })), a3("tooltip-close", s3.marker));
+    }, Q2 = (s3) => {
+      K2.value.startX = s3.changedTouches[0].screenX, K2.value.startY = s3.changedTouches[0].screenY;
+    }, f = (s3) => {
+      K2.value.endX = s3.changedTouches[0].screenX, K2.value.endY = s3.changedTouches[0].screenY, d3();
+    }, U = (s3) => {
+      t2.vertical && !t2.inline && s3.preventDefault();
+    }, d3 = () => {
+      const s3 = t2.vertical ? "Y" : "X";
+      Math.abs(K2.value[`start${s3}`] - K2.value[`end${s3}`]) > 10 && a3("handle-swipe", K2.value[`start${s3}`] > K2.value[`end${s3}`] ? "right" : "left");
+    }, w2 = (s3, C, ne) => {
+      s3 && (Array.isArray(b2.value[C]) ? b2.value[C][ne] = s3 : b2.value[C] = [s3]), t2.arrowNavigation && o(b2.value, "calendar");
+    }, u2 = (s3) => {
+      t2.monthChangeOnScroll && (s3.preventDefault(), a3("handle-scroll", s3));
+    }, g = (s3) => {
+      const C = s3[0];
+      return t2.weekNumbers === "local" ? getWeek(C.value, { weekStartsOn: +t2.weekStart }) : t2.weekNumbers === "iso" ? getISOWeek(C.value) : typeof t2.weekNumbers == "function" ? t2.weekNumbers(C.value) : "";
     };
-    return n({ triggerTransition: w2 }), (l, o) => {
-      var g;
+    return n({ triggerTransition: G2 }), (s3, C) => {
+      var ne;
       return openBlock(), createElementBlock("div", {
-        class: normalizeClass(unref(le))
+        class: normalizeClass(_.value)
       }, [
         createBaseVNode("div", {
-          style: normalizeStyle(unref(C))
+          ref_key: "calendarWrapRef",
+          ref: T2,
+          role: "grid",
+          class: normalizeClass(P.value),
+          "aria-label": (ne = unref(c2)) == null ? void 0 : ne.calendarWrap
         }, [
-          e2.specificMode ? createCommentVNode("", true) : (openBlock(), createElementBlock("div", {
-            key: 0,
-            ref_key: "calendarWrapRef",
-            ref: U,
-            class: normalizeClass(unref(J)),
-            role: "grid",
-            "aria-label": (g = unref(y3).ariaLabels) == null ? void 0 : g.calendarWrap
-          }, [
-            createBaseVNode("div", gr, [
-              l.weekNumbers ? (openBlock(), createElementBlock("div", hr, toDisplayString(l.weekNumName), 1)) : createCommentVNode("", true),
-              (openBlock(true), createElementBlock(Fragment, null, renderList(unref(z2), (r, k2) => (openBlock(), createElementBlock("div", {
+          (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+            createBaseVNode("div", Yl, [
+              s3.weekNumbers ? (openBlock(), createElementBlock("div", Bl, toDisplayString(s3.weekNumName), 1)) : createCommentVNode("", true),
+              (openBlock(true), createElementBlock(Fragment, null, renderList(W.value, (r, L2) => (openBlock(), createElementBlock("div", {
                 class: "dp__calendar_header_item",
                 role: "gridcell",
-                key: k2,
-                "data-test": "calendar-header"
+                key: L2
               }, [
-                l.$slots["calendar-header"] ? renderSlot(l.$slots, "calendar-header", {
+                s3.$slots["calendar-header"] ? renderSlot(s3.$slots, "calendar-header", {
                   key: 0,
                   day: r,
-                  index: k2
+                  index: L2
                 }) : createCommentVNode("", true),
-                l.$slots["calendar-header"] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                s3.$slots["calendar-header"] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
                   createTextVNode(toDisplayString(r), 1)
                 ], 64))
               ]))), 128))
             ]),
-            pr,
+            El,
             createVNode(Transition, {
-              name: c2.value,
-              css: !!l.transitions
+              name: q2.value,
+              css: !!s3.transitions
             }, {
               default: withCtx(() => {
                 var r;
                 return [
-                  A.value ? (openBlock(), createElementBlock("div", {
+                  Y2.value ? (openBlock(), createElementBlock("div", {
                     key: 0,
                     class: "dp__calendar",
                     role: "grid",
-                    "aria-label": (r = unref(y3).ariaLabels) == null ? void 0 : r.calendarDays
+                    "aria-label": (r = unref(c2)) == null ? void 0 : r.calendarDays
                   }, [
-                    (openBlock(true), createElementBlock(Fragment, null, renderList(e2.mappedDates, (k2, Y2) => (openBlock(), createElementBlock("div", {
+                    (openBlock(true), createElementBlock(Fragment, null, renderList($.value, (L2, R2) => (openBlock(), createElementBlock("div", {
                       class: "dp__calendar_row",
                       role: "row",
-                      key: Y2
+                      key: R2
                     }, [
-                      l.weekNumbers ? (openBlock(), createElementBlock("div", wr, [
-                        createBaseVNode("div", br, toDisplayString(e2.getWeekNum(k2.days)), 1)
+                      s3.weekNumbers ? (openBlock(), createElementBlock("div", Vl, [
+                        createBaseVNode("div", Hl, toDisplayString(g(L2.days)), 1)
                       ])) : createCommentVNode("", true),
-                      (openBlock(true), createElementBlock(Fragment, null, renderList(k2.days, (R2, m3) => {
-                        var b2, v, W;
+                      (openBlock(true), createElementBlock(Fragment, null, renderList(L2.days, (m3, B2) => {
+                        var le, Z, ke;
                         return openBlock(), createElementBlock("div", {
                           role: "gridcell",
                           class: "dp__calendar_item",
                           ref_for: true,
-                          ref: (se) => j(se, Y2, m3),
-                          key: m3 + Y2,
-                          "aria-selected": R2.classData.dp__active_date || R2.classData.dp__range_start || R2.classData.dp__range_start,
-                          "aria-disabled": R2.classData.dp__cell_disabled,
-                          "aria-label": (v = (b2 = unref(y3).ariaLabels) == null ? void 0 : b2.day) == null ? void 0 : v.call(b2, R2),
+                          ref: (se) => w2(se, R2, B2),
+                          key: B2 + R2,
+                          "aria-selected": m3.classData.dp__active_date || m3.classData.dp__range_start || m3.classData.dp__range_start,
+                          "aria-disabled": m3.classData.dp__cell_disabled,
+                          "aria-label": (Z = (le = unref(c2)) == null ? void 0 : le.day) == null ? void 0 : Z.call(le, m3),
                           tabindex: "0",
-                          "data-test": R2.value,
-                          onClick: withModifiers((se) => l.$emit("select-date", R2), ["stop", "prevent"]),
+                          onClick: withModifiers((se) => s3.$emit("select-date", m3), ["stop", "prevent"]),
                           onKeydown: [
-                            withKeys((se) => l.$emit("select-date", R2), ["enter"]),
-                            withKeys((se) => l.$emit("handle-space", R2), ["space"])
+                            withKeys((se) => s3.$emit("select-date", m3), ["enter"]),
+                            withKeys((se) => s3.$emit("handle-space", m3), ["space"])
                           ],
-                          onMouseenter: (se) => N(R2, Y2, m3),
-                          onMouseleave: (se) => G2(R2)
+                          onMouseenter: (se) => H3(m3, R2, B2),
+                          onMouseleave: (se) => z2(m3)
                         }, [
                           createBaseVNode("div", {
-                            class: normalizeClass(["dp__cell_inner", R2.classData])
+                            class: normalizeClass(["dp__cell_inner", m3.classData])
                           }, [
-                            l.$slots.day && unref(de)(R2) ? renderSlot(l.$slots, "day", {
+                            s3.$slots.day && A.value(m3) ? renderSlot(s3.$slots, "day", {
                               key: 0,
-                              day: +R2.text,
-                              date: R2.value
+                              day: +m3.text,
+                              date: m3.value
                             }) : createCommentVNode("", true),
-                            l.$slots.day ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                              createTextVNode(toDisplayString(R2.text), 1)
+                            s3.$slots.day ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                              createTextVNode(toDisplayString(m3.text), 1)
                             ], 64)),
-                            R2.marker && unref(de)(R2) ? (openBlock(), createElementBlock("div", {
-                              key: 2,
-                              class: normalizeClass(unref(ee)(R2.marker)),
-                              style: normalizeStyle(R2.marker.color ? { backgroundColor: R2.marker.color } : {})
-                            }, null, 6)) : createCommentVNode("", true),
-                            unref(x2)(R2.value) ? (openBlock(), createElementBlock("div", {
+                            m3.marker && A.value(m3) ? (openBlock(), createElementBlock(Fragment, { key: 2 }, [
+                              s3.$slots.marker ? renderSlot(s3.$slots, "marker", {
+                                key: 0,
+                                marker: m3.marker,
+                                day: +m3.text,
+                                date: m3.value
+                              }) : (openBlock(), createElementBlock("div", {
+                                key: 1,
+                                class: normalizeClass(ee.value(m3.marker)),
+                                style: normalizeStyle(m3.marker.color ? { backgroundColor: m3.marker.color } : {})
+                              }, null, 6))
+                            ], 64)) : createCommentVNode("", true),
+                            p.value(m3.value) ? (openBlock(), createElementBlock("div", {
                               key: 3,
                               class: "dp__marker_tooltip",
                               ref_for: true,
                               ref_key: "activeTooltip",
-                              ref: te,
-                              style: normalizeStyle(E2.value)
+                              ref: X2,
+                              style: normalizeStyle(D2.value)
                             }, [
-                              (W = R2.marker) != null && W.tooltip ? (openBlock(), createElementBlock("div", {
+                              (ke = m3.marker) != null && ke.tooltip ? (openBlock(), createElementBlock("div", {
                                 key: 0,
                                 class: "dp__tooltip_content",
-                                onClick: o[0] || (o[0] = withModifiers(() => {
+                                onClick: C[0] || (C[0] = withModifiers(() => {
                                 }, ["stop"]))
                               }, [
-                                (openBlock(true), createElementBlock(Fragment, null, renderList(R2.marker.tooltip, (se, Ne) => (openBlock(), createElementBlock("div", {
-                                  key: Ne,
+                                (openBlock(true), createElementBlock(Fragment, null, renderList(m3.marker.tooltip, (se, N) => (openBlock(), createElementBlock("div", {
+                                  key: N,
                                   class: "dp__tooltip_text"
                                 }, [
-                                  l.$slots["marker-tooltip"] ? renderSlot(l.$slots, "marker-tooltip", {
+                                  s3.$slots["marker-tooltip"] ? renderSlot(s3.$slots, "marker-tooltip", {
                                     key: 0,
                                     tooltip: se,
-                                    day: R2.value
+                                    day: m3.value
                                   }) : createCommentVNode("", true),
-                                  l.$slots["marker-tooltip"] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
+                                  s3.$slots["marker-tooltip"] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
                                     createBaseVNode("div", {
                                       class: "dp__tooltip_mark",
                                       style: normalizeStyle(se.color ? { backgroundColor: se.color } : {})
@@ -6838,1238 +8357,457 @@ var $r = defineComponent({
                                 ]))), 128)),
                                 createBaseVNode("div", {
                                   class: "dp__arrow_bottom_tp",
-                                  style: normalizeStyle(H3.value)
+                                  style: normalizeStyle(k2.value)
                                 }, null, 4)
                               ])) : createCommentVNode("", true)
                             ], 4)) : createCommentVNode("", true)
                           ], 2)
-                        ], 40, Dr);
+                        ], 40, Ll);
                       }), 128))
                     ]))), 128))
-                  ], 8, kr)) : createCommentVNode("", true)
+                  ], 8, Fl)) : createCommentVNode("", true)
                 ];
               }),
               _: 3
             }, 8, ["name", "css"])
-          ], 10, yr))
-        ], 4)
+          ], 64))
+        ], 10, Il)
       ], 2);
     };
   }
 });
-var Mr = ["aria-label", "aria-disabled"];
-var rn = defineComponent({
-  __name: "ActionIcon",
-  props: {
-    ariaLabel: { type: String, default: "" },
-    disabled: { type: Boolean, default: false }
-  },
-  emits: ["activate", "set-ref"],
-  setup(e2, { emit: n }) {
-    const a3 = ref(null);
-    return onMounted(() => n("set-ref", a3)), (t2, s3) => (openBlock(), createElementBlock("div", {
-      class: "dp__month_year_col_nav",
-      onClick: s3[0] || (s3[0] = (f) => t2.$emit("activate")),
-      onKeydown: [
-        s3[1] || (s3[1] = withKeys((f) => t2.$emit("activate"), ["enter"])),
-        s3[2] || (s3[2] = withKeys((f) => t2.$emit("activate"), ["space"]))
-      ],
-      tabindex: "0",
-      role: "button",
-      "aria-label": e2.ariaLabel,
-      "aria-disabled": e2.disabled,
-      ref_key: "elRef",
-      ref: a3
-    }, [
-      createBaseVNode("div", {
-        class: normalizeClass(["dp__inner_nav", { dp__inner_nav_disabled: e2.disabled }])
-      }, [
-        renderSlot(t2.$slots, "default")
-      ], 2)
-    ], 40, Mr));
-  }
-});
-var Tr = ["onKeydown"];
-var Ar = { class: "dp__selection_grid_header" };
-var Sr = ["aria-selected", "aria-disabled", "data-test", "onClick", "onKeydown", "onMouseover"];
-var Cr = ["aria-label", "onKeydown"];
-var Dt = defineComponent({
-  __name: "SelectionGrid",
-  props: {
-    items: { type: Array, default: () => [] },
-    modelValue: { type: [String, Number], default: null },
-    multiModelValue: { type: Array, default: () => [] },
-    disabledValues: { type: Array, default: () => [] },
-    minValue: { type: [Number, String], default: null },
-    maxValue: { type: [Number, String], default: null },
-    year: { type: Number, default: 0 },
-    skipActive: { type: Boolean, default: false },
-    headerRefs: { type: Array, default: () => [] },
-    skipButtonRef: { type: Boolean, default: false },
-    monthPicker: { type: Boolean, default: false },
-    yearPicker: { type: Boolean, default: false },
-    escClose: { type: Boolean, default: true },
-    type: { type: String, default: null },
-    arrowNavigation: { type: Boolean, default: false },
-    autoApply: { type: Boolean, default: false },
-    textInput: { type: Boolean, default: false },
-    ariaLabels: { type: Object, default: () => ({}) },
-    hideNavigation: { type: Array, default: () => [] }
-  },
-  emits: ["update:model-value", "selected", "toggle", "reset-flow"],
-  setup(e2, { expose: n, emit: a3 }) {
-    const t2 = e2, { setSelectionGrid: s3, buildMultiLevelMatrix: f, setMonthPicker: y3 } = nt(), { hideNavigationButtons: _ } = Ee(t2), E2 = ref(false), T2 = ref(null), U = ref(null), A = ref([]), c2 = ref(), M3 = ref(null), te = ref(0), H3 = ref(null);
-    onBeforeUpdate(() => {
-      T2.value = null;
-    }), onMounted(() => {
-      nextTick().then(() => N()), B2(), z2(true);
-    }), onUnmounted(() => z2(false));
-    const z2 = (I2) => {
-      var l;
-      t2.arrowNavigation && ((l = t2.headerRefs) != null && l.length ? y3(I2) : s3(I2));
-    }, B2 = () => {
-      const I2 = $e(U);
-      I2 && (t2.textInput || I2.focus({ preventScroll: true }), E2.value = I2.clientHeight < I2.scrollHeight);
-    }, w2 = computed(
-      () => ({
-        dp__overlay: true
-      })
-    ), J = computed(() => ({
-      dp__overlay_col: true
-    })), ee = (I2) => t2.skipActive ? false : I2.value === t2.modelValue, x2 = computed(() => t2.items.map((I2) => I2.filter((l) => l).map((l) => {
-      var r, k2, Y2;
-      const o = t2.disabledValues.some((R2) => R2 === l.value) || C(l.value), g = (r = t2.multiModelValue) != null && r.length ? (k2 = t2.multiModelValue) == null ? void 0 : k2.some(
-        (R2) => ve(
-          R2,
-          setYear(
-            t2.monthPicker ? setMonth(/* @__PURE__ */ new Date(), l.value) : /* @__PURE__ */ new Date(),
-            t2.monthPicker ? t2.year : l.value
-          )
-        )
-      ) : ee(l);
-      return {
-        ...l,
-        className: {
-          dp__overlay_cell_active: g,
-          dp__overlay_cell: !g,
-          dp__overlay_cell_disabled: o,
-          dp__overlay_cell_active_disabled: o && g,
-          dp__overlay_cell_pad: true,
-          dp__cell_in_between: (Y2 = t2.multiModelValue) != null && Y2.length && t2.skipActive ? P(l.value) : false
+var oa = (e2) => Array.isArray(e2);
+var Wl = (e2, n, a3, t2) => {
+  const o = ref([]), { modelValue: l, calendars: c2, time: h4 } = Zt(e2, n), { defaultedMultiCalendars: y3, defaultedStartTime: D2 } = Ce(e2), { validateMonthYearInRange: b2, isDisabled: T2, isDateRangeAllowed: Y2, checkMinMaxRange: q2 } = Bt(e2), { updateTimeValues: K2, getSetDateTime: X2, setTime: k2, assignStartTime: $, disabledTimesConfig: W } = Ra(
+    e2,
+    h4,
+    l,
+    t2
+  ), V = computed(
+    () => (i2) => c2.value[i2] ? c2.value[i2].month : 0
+  ), G2 = computed(
+    () => (i2) => c2.value[i2] ? c2.value[i2].year : 0
+  ), P = (i2, E2, ae) => {
+    var me, we;
+    c2.value[i2] || (c2.value[i2] = { month: 0, year: 0 }), c2.value[i2].month = ea(E2) ? (me = c2.value[i2]) == null ? void 0 : me.month : E2, c2.value[i2].year = ea(ae) ? (we = c2.value[i2]) == null ? void 0 : we.year : ae;
+  }, ee = () => {
+    e2.autoApply && n("select-date");
+  };
+  watch(l, (i2, E2) => {
+    JSON.stringify(i2) !== JSON.stringify(E2) && A();
+  }), onMounted(() => {
+    e2.shadow || (l.value || (s3(), D2.value && $(D2.value)), A(true), e2.focusStartDate && e2.startDate && s3());
+  });
+  const p = computed(() => {
+    var i2;
+    return (i2 = e2.flow) != null && i2.length && !e2.partialFlow ? e2.flowStep === e2.flow.length : true;
+  }), _ = () => {
+    e2.autoApply && p.value && n("auto-apply", e2.partialFlow);
+  }, A = (i2 = false) => {
+    if (l.value)
+      return Array.isArray(l.value) ? (o.value = l.value, d3(i2)) : z2(l.value, i2);
+    if (y3.value.count && i2 && !e2.startDate)
+      return H3(S3(), i2);
+  }, H3 = (i2, E2 = false) => {
+    if ((!y3.value.count || !y3.value.static || E2) && P(0, getMonth(i2), getYear(i2)), y3.value.count)
+      for (let ae = 1; ae < y3.value.count; ae++) {
+        const me = set(S3(), { month: V.value(ae - 1), year: G2.value(ae - 1) }), we = add(me, { months: 1 });
+        c2.value[ae] = { month: getMonth(we), year: getYear(we) };
+      }
+  }, z2 = (i2, E2) => {
+    H3(i2), k2("hours", getHours(i2)), k2("minutes", getMinutes(i2)), k2("seconds", getSeconds(i2)), y3.value.count && E2 && g();
+  }, Q2 = (i2) => y3.value.count ? Math.abs(differenceInMonths(i2[0], i2[1])) >= y3.value.count ? 1 : 0 : 1, f = (i2, E2) => {
+    i2[1] && e2.showLastInRange ? H3(i2[Q2(i2)], E2) : H3(i2[0], E2);
+    const ae = (me, we) => [
+      me(i2[0]),
+      i2[1] ? me(i2[1]) : h4[we][1]
+    ];
+    k2("hours", ae(getHours, "hours")), k2("minutes", ae(getMinutes, "minutes")), k2("seconds", ae(getSeconds, "seconds"));
+  }, U = (i2, E2) => {
+    if ((e2.range || e2.weekPicker) && !e2.multiDates)
+      return f(i2, E2);
+    if (e2.multiDates) {
+      const ae = i2[i2.length - 1];
+      return z2(ae, E2);
+    }
+  }, d3 = (i2) => {
+    const E2 = l.value;
+    U(E2, i2), y3.value.count && y3.value.solo && g();
+  }, w2 = (i2, E2) => {
+    const ae = set(S3(), { month: V.value(E2), year: G2.value(E2) }), me = i2 < 0 ? addMonths(ae, 1) : subMonths(ae, 1);
+    b2(getMonth(me), getYear(me), i2 < 0, e2.preventMinMaxNavigation) && (P(E2, getMonth(me), getYear(me)), y3.value.count && !y3.value.solo && u2(E2), a3());
+  }, u2 = (i2) => {
+    for (let E2 = i2 - 1; E2 >= 0; E2--) {
+      const ae = subMonths(set(S3(), { month: V.value(E2 + 1), year: G2.value(E2 + 1) }), 1);
+      P(E2, getMonth(ae), getYear(ae));
+    }
+    for (let E2 = i2 + 1; E2 <= y3.value.count - 1; E2++) {
+      const ae = addMonths(set(S3(), { month: V.value(E2 - 1), year: G2.value(E2 - 1) }), 1);
+      P(E2, getMonth(ae), getYear(ae));
+    }
+  }, g = () => {
+    if (Array.isArray(l.value) && l.value.length === 2) {
+      const i2 = S3(
+        S3(l.value[1] ? l.value[1] : addMonths(l.value[0], 1))
+      ), [E2, ae] = [getMonth(l.value[0]), getYear(l.value[0])], [me, we] = [getMonth(l.value[1]), getYear(l.value[1])];
+      (E2 !== me || E2 === me && ae !== we) && y3.value.solo && P(1, getMonth(i2), getYear(i2));
+    } else
+      l.value && !Array.isArray(l.value) && (P(0, getMonth(l.value), getYear(l.value)), H3(S3()));
+  }, s3 = () => {
+    e2.startDate && (P(0, getMonth(S3(e2.startDate)), getYear(S3(e2.startDate))), y3.value.count && u2(0));
+  }, C = (i2, E2) => {
+    e2.monthChangeOnScroll && w2(e2.monthChangeOnScroll !== "inverse" ? -i2.deltaY : i2.deltaY, E2);
+  }, ne = (i2, E2, ae = false) => {
+    e2.monthChangeOnArrows && e2.vertical === ae && r(i2, E2);
+  }, r = (i2, E2) => {
+    w2(i2 === "right" ? -1 : 1, E2);
+  }, L2 = (i2) => e2.markers.find((E2) => ye(na(i2.value), na(E2.date))), R2 = (i2, E2) => {
+    switch (e2.sixWeeks === true ? "append" : e2.sixWeeks) {
+      case "prepend":
+        return [true, false];
+      case "center":
+        return [i2 == 0, true];
+      case "fair":
+        return [i2 == 0 || E2 > i2, true];
+      case "append":
+        return [false, false];
+      default:
+        return [false, false];
+    }
+  }, m3 = (i2, E2, ae, me) => {
+    if (e2.sixWeeks && i2.length < 6) {
+      const we = 6 - i2.length, Qe = (E2.getDay() + 7 - me) % 7, Ft = 6 - (ae.getDay() + 7 - me) % 7, [Tt, rn] = R2(Qe, Ft);
+      for (let lt = 1; lt <= we; lt++)
+        if (rn ? !!(lt % 2) == Tt : Tt) {
+          const Vt = i2[0].days[0], ln = B2(addDays(Vt.value, -7), getMonth(E2));
+          i2.unshift({ days: ln });
+        } else {
+          const Vt = i2[i2.length - 1], ln = Vt.days[Vt.days.length - 1], Oa = B2(addDays(ln.value, 1), getMonth(E2));
+          i2.push({ days: Oa });
         }
-      };
-    }))), le = computed(
-      () => ({
-        dp__button: true,
-        dp__overlay_action: true,
-        dp__over_action_scroll: E2.value,
-        dp__button_bottom: t2.autoApply
-      })
-    ), de = computed(() => {
-      var I2, l;
-      return {
-        dp__overlay_container: true,
-        dp__container_flex: ((I2 = t2.items) == null ? void 0 : I2.length) <= 6,
-        dp__container_block: ((l = t2.items) == null ? void 0 : l.length) > 6
-      };
-    }), C = (I2) => {
-      const l = t2.maxValue || t2.maxValue === 0, o = t2.minValue || t2.minValue === 0;
-      return !l && !o ? false : l && o ? +I2 > +t2.maxValue || +I2 < +t2.minValue : l ? +I2 > +t2.maxValue : o ? +I2 < +t2.minValue : false;
-    }, N = () => {
-      const I2 = $e(T2), l = $e(U), o = $e(M3), g = $e(H3), r = o ? o.getBoundingClientRect().height : 0;
-      l && (te.value = l.getBoundingClientRect().height - r), I2 && g && (g.scrollTop = I2.offsetTop - g.offsetTop - (te.value / 2 - I2.getBoundingClientRect().height) - r);
-    }, G2 = (I2) => {
-      !t2.disabledValues.some((l) => l === I2) && !C(I2) && (a3("update:model-value", I2), a3("selected"));
-    }, P = (I2) => {
-      const l = t2.monthPicker ? t2.year : I2;
-      return xn(
-        t2.multiModelValue,
-        setYear(
-          t2.monthPicker ? setMonth(/* @__PURE__ */ new Date(), c2.value || 0) : /* @__PURE__ */ new Date(),
-          t2.monthPicker ? l : c2.value || l
-        ),
-        setYear(t2.monthPicker ? setMonth(/* @__PURE__ */ new Date(), I2) : /* @__PURE__ */ new Date(), l)
-      );
-    }, Z = () => {
-      a3("toggle"), a3("reset-flow");
-    }, p = () => {
-      t2.escClose && Z();
-    }, q2 = (I2, l, o, g) => {
-      I2 && (l.value === +t2.modelValue && !t2.disabledValues.includes(l.value) && (T2.value = I2), t2.arrowNavigation && (Array.isArray(A.value[o]) ? A.value[o][g] = I2 : A.value[o] = [I2], j()));
-    }, j = () => {
-      var l, o;
-      const I2 = (l = t2.headerRefs) != null && l.length ? [t2.headerRefs].concat(A.value) : A.value.concat([t2.skipButtonRef ? [] : [M3.value]]);
-      f(Me(I2), (o = t2.headerRefs) != null && o.length ? "monthPicker" : "selectionGrid");
+    }
+    return i2;
+  }, B2 = (i2, E2) => {
+    const ae = S3(JSON.parse(JSON.stringify(i2))), me = [];
+    for (let we = 0; we < 7; we++) {
+      const Qe = addDays(ae, we), $t = getMonth(Qe) !== E2;
+      me.push({
+        text: e2.hideOffsetDates && $t ? "" : Qe.getDate(),
+        value: Qe,
+        current: !$t,
+        classData: {}
+      });
+    }
+    return me;
+  }, le = (i2, E2) => {
+    const ae = [], me = S3(Ze(new Date(E2, i2), e2.timezone)), we = S3(Ze(new Date(E2, i2 + 1, 0), e2.timezone)), Qe = e2.weekStart, $t = startOfWeek(me, { weekStartsOn: Qe }), Ft = (Tt) => {
+      const rn = B2(Tt, i2);
+      if (ae.push({ days: rn }), !ae[ae.length - 1].days.some(
+        (lt) => ye(Le(lt.value), Le(we))
+      )) {
+        const lt = addDays(Tt, 7);
+        Ft(lt);
+      }
     };
-    return n({ focusGrid: B2 }), (I2, l) => {
-      var o;
-      return openBlock(), createElementBlock("div", {
-        ref_key: "gridWrapRef",
-        ref: U,
-        class: normalizeClass(unref(w2)),
-        role: "dialog",
-        tabindex: "0",
-        onKeydown: withKeys(p, ["esc"])
-      }, [
-        createBaseVNode("div", {
-          class: normalizeClass(unref(de)),
-          ref_key: "containerRef",
-          ref: H3,
-          role: "grid",
-          style: normalizeStyle({ height: `${te.value}px` })
-        }, [
-          createBaseVNode("div", Ar, [
-            renderSlot(I2.$slots, "header")
-          ]),
-          I2.$slots.overlay ? renderSlot(I2.$slots, "overlay", { key: 0 }) : (openBlock(true), createElementBlock(Fragment, { key: 1 }, renderList(unref(x2), (g, r) => (openBlock(), createElementBlock("div", {
-            class: normalizeClass(["dp__overlay_row", { dp__flex_row: unref(x2).length >= 3 }]),
-            key: r,
-            role: "row"
-          }, [
-            (openBlock(true), createElementBlock(Fragment, null, renderList(g, (k2, Y2) => (openBlock(), createElementBlock("div", {
-              role: "gridcell",
-              class: normalizeClass(unref(J)),
-              key: k2.value,
-              "aria-selected": k2.value === e2.modelValue && !e2.disabledValues.includes(k2.value),
-              "aria-disabled": k2.className.dp__overlay_cell_disabled,
-              ref_for: true,
-              ref: (R2) => q2(R2, k2, r, Y2),
-              tabindex: "0",
-              "data-test": k2.text,
-              onClick: (R2) => G2(k2.value),
-              onKeydown: [
-                withKeys((R2) => G2(k2.value), ["enter"]),
-                withKeys((R2) => G2(k2.value), ["space"])
-              ],
-              onMouseover: (R2) => c2.value = k2.value
-            }, [
-              createBaseVNode("div", {
-                class: normalizeClass(k2.className)
-              }, [
-                I2.$slots.item ? renderSlot(I2.$slots, "item", {
-                  key: 0,
-                  item: k2
-                }) : createCommentVNode("", true),
-                I2.$slots.item ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                  createTextVNode(toDisplayString(k2.text), 1)
-                ], 64))
-              ], 2)
-            ], 42, Sr))), 128))
-          ], 2))), 128))
-        ], 6),
-        I2.$slots["button-icon"] ? withDirectives((openBlock(), createElementBlock("div", {
-          key: 0,
-          role: "button",
-          "aria-label": (o = e2.ariaLabels) == null ? void 0 : o.toggleOverlay,
-          class: normalizeClass(unref(le)),
-          tabindex: "0",
-          ref_key: "toggleButton",
-          ref: M3,
-          onClick: Z,
-          onKeydown: withKeys(Z, ["enter"])
-        }, [
-          renderSlot(I2.$slots, "button-icon")
-        ], 42, Cr)), [
-          [vShow, !unref(_)(e2.type)]
-        ]) : createCommentVNode("", true)
-      ], 42, Tr);
-    };
-  }
-});
-var Pr = ["aria-label"];
-var Bn = defineComponent({
-  __name: "RegularPicker",
+    return Ft($t), m3(ae, me, we, Qe);
+  }, Z = (i2) => (l.value = jt(S3(i2.value), e2.timezone, e2.weekStart), _()), ke = (i2) => {
+    const E2 = tt(S3(i2.value), h4.hours, h4.minutes, Et());
+    e2.multiDates ? Ln(E2, l, e2.multiDatesLimit) : l.value = E2, t2(), nextTick().then(() => {
+      _();
+    });
+  }, se = (i2) => e2.noDisabledRange ? $a(o.value[0], i2).some((ae) => T2(ae)) : false, N = () => {
+    o.value = l.value ? l.value.slice() : [], o.value.length === 2 && !(e2.fixedStart || e2.fixedEnd) && (o.value = []);
+  }, x2 = (i2, E2) => {
+    const ae = [S3(i2.value), addDays(S3(i2.value), +e2.autoRange)];
+    Y2(ae) && (E2 && $e(i2.value), o.value = ae);
+  }, $e = (i2) => {
+    const E2 = getMonth(S3(i2)), ae = getYear(S3(i2));
+    if (P(0, E2, ae), y3.value.count > 0)
+      for (let me = 1; me < y3.value.count; me++) {
+        const we = Cr(
+          set(S3(i2), { year: V.value(me - 1), month: G2.value(me - 1) })
+        );
+        P(me, we.month, we.year);
+      }
+  }, J = (i2) => Array.isArray(l.value) && l.value.length === 2 ? e2.fixedStart && (Ne(i2, l.value[0]) || ye(i2, l.value[0])) ? [l.value[0], i2] : e2.fixedEnd && (Pe(i2, l.value[1]) || ye(i2, l.value[1])) ? [i2, l.value[1]] : (n("invalid-fixed-range", i2), l.value) : [], Ve = (i2) => {
+    se(i2.value) || !q2(i2.value, l.value, e2.fixedStart ? 0 : 1) || (o.value = J(S3(i2.value)));
+  }, _e = (i2, E2) => {
+    if (N(), e2.autoRange)
+      return x2(i2, E2);
+    if (e2.fixedStart || e2.fixedEnd)
+      return Ve(i2);
+    o.value[0] ? q2(S3(i2.value), l.value) && !se(i2.value) && (Pe(S3(i2.value), S3(o.value[0])) ? (o.value.unshift(S3(i2.value)), n("range-end", o.value[0])) : (o.value[1] = S3(i2.value), n("range-end", o.value[1]))) : (o.value[0] = S3(i2.value), n("range-start", o.value[0]));
+  }, Et = (i2 = true) => e2.enableSeconds ? Array.isArray(h4.seconds) ? i2 ? h4.seconds[0] : h4.seconds[1] : h4.seconds : 0, Mt = (i2) => {
+    o.value[i2] = tt(
+      o.value[i2],
+      h4.hours[i2],
+      h4.minutes[i2],
+      Et(i2 !== 1)
+    );
+  }, Jt = () => {
+    var i2, E2;
+    o.value[0] && o.value[1] && +((i2 = o.value) == null ? void 0 : i2[0]) > +((E2 = o.value) == null ? void 0 : E2[1]) && (o.value.reverse(), n("range-start", o.value[0]), n("range-end", o.value[1]));
+  }, Xt = () => {
+    o.value.length && (o.value[0] && !o.value[1] ? Mt(0) : (Mt(0), Mt(1), t2()), Jt(), l.value = o.value.slice(), o.value[0] && o.value[1] && e2.autoApply && n("auto-apply"), o.value[0] && !o.value[1] && e2.modelAuto && e2.autoApply && n("auto-apply"));
+  }, Qt = (i2, E2 = false) => {
+    if (!(T2(i2.value) || !i2.current && e2.hideOffsetDates)) {
+      if (e2.weekPicker)
+        return Z(i2);
+      if (!e2.range)
+        return ke(i2);
+      oa(h4.hours) && oa(h4.minutes) && !e2.multiDates && (_e(i2, E2), Xt());
+    }
+  }, en = (i2, E2) => {
+    P(i2, E2.month, E2.year), y3.value.count && !y3.value.solo && u2(i2), a3(y3.value.solo ? i2 : void 0), t2();
+  }, tn = (i2, E2) => {
+    Array.isArray(i2) && i2.length <= 2 && e2.range ? l.value = i2.map((ae) => Ze(S3(ae), E2 ? void 0 : e2.timezone)) : Array.isArray(i2) || (l.value = Ze(S3(i2), E2 ? void 0 : e2.timezone)), ee(), e2.multiCalendars && nextTick().then(() => A(true));
+  }, nn = () => {
+    e2.range ? l.value && Array.isArray(l.value) && l.value[0] ? l.value = Pe(S3(), l.value[0]) ? [S3(), l.value[0]] : [l.value[0], S3()] : l.value = [S3()] : l.value = S3(), ee();
+  }, an = () => {
+    if (Array.isArray(l.value))
+      if (e2.multiDates) {
+        const i2 = re();
+        l.value[l.value.length - 1] = X2(i2);
+      } else
+        l.value = l.value.map((i2, E2) => i2 && X2(i2, E2));
+    else
+      l.value = X2(l.value);
+    n("time-update");
+  }, re = () => Array.isArray(l.value) && l.value.length ? l.value[l.value.length - 1] : null;
+  return {
+    calendars: c2,
+    modelValue: l,
+    month: V,
+    year: G2,
+    time: h4,
+    disabledTimesConfig: W,
+    getCalendarDays: le,
+    getMarker: L2,
+    handleScroll: C,
+    handleSwipe: r,
+    handleArrow: ne,
+    selectDate: Qt,
+    updateMonthYear: en,
+    presetDate: tn,
+    selectCurrentDate: nn,
+    updateTime: (i2, E2 = true, ae = false) => {
+      K2(i2, E2, ae, an);
+    }
+  };
+};
+var zl = { key: 0 };
+var jl = defineComponent({
+  __name: "DatePicker",
   props: {
-    ariaLabel: { type: String, default: "" },
-    showSelectionGrid: { type: Boolean, default: false },
-    modelValue: { type: Number, default: null },
-    items: { type: Array, default: () => [] },
-    disabledValues: { type: Array, default: () => [] },
-    minValue: { type: Number, default: null },
-    maxValue: { type: Number, default: null },
-    slotName: { type: String, default: "" },
-    overlaySlot: { type: String, default: "" },
-    headerRefs: { type: Array, default: () => [] },
-    escClose: { type: Boolean, default: true },
-    type: { type: String, default: null },
-    transitions: { type: [Object, Boolean], default: false },
-    arrowNavigation: { type: Boolean, default: false },
-    autoApply: { type: Boolean, default: false },
-    textInput: { type: Boolean, default: false },
-    ariaLabels: { type: Object, default: () => ({}) },
-    hideNavigation: { type: Array, default: () => [] }
+    ...Xe
   },
-  emits: ["update:model-value", "toggle", "set-ref"],
-  setup(e2, { emit: n }) {
-    const a3 = e2, { transitionName: t2, showTransition: s3 } = Ut(a3.transitions), f = ref(null);
-    return onMounted(() => n("set-ref", f)), (y3, _) => (openBlock(), createElementBlock(Fragment, null, [
-      createBaseVNode("div", {
-        class: "dp__month_year_select",
-        onClick: _[0] || (_[0] = (E2) => y3.$emit("toggle")),
-        onKeydown: [
-          _[1] || (_[1] = withKeys((E2) => y3.$emit("toggle"), ["enter"])),
-          _[2] || (_[2] = withKeys((E2) => y3.$emit("toggle"), ["space"]))
-        ],
-        role: "button",
-        "aria-label": e2.ariaLabel,
-        tabindex: "0",
-        ref_key: "elRef",
-        ref: f
-      }, [
-        renderSlot(y3.$slots, "default")
-      ], 40, Pr),
-      createVNode(Transition, {
-        name: unref(t2)(e2.showSelectionGrid),
-        css: unref(s3)
+  emits: [
+    "tooltip-open",
+    "tooltip-close",
+    "mount",
+    "update:internal-model-value",
+    "update-flow-step",
+    "reset-flow",
+    "auto-apply",
+    "focus-menu",
+    "select-date",
+    "range-start",
+    "range-end",
+    "invalid-fixed-range",
+    "time-update",
+    "am-pm-change",
+    "time-picker-open",
+    "time-picker-close",
+    "recalculate-position"
+  ],
+  setup(e2, { expose: n, emit: a3 }) {
+    const t2 = e2, {
+      calendars: o,
+      month: l,
+      year: c2,
+      modelValue: h4,
+      time: y3,
+      disabledTimesConfig: D2,
+      getCalendarDays: b2,
+      getMarker: T2,
+      handleArrow: Y2,
+      handleScroll: q2,
+      handleSwipe: K2,
+      selectDate: X2,
+      updateMonthYear: k2,
+      presetDate: $,
+      selectCurrentDate: W,
+      updateTime: V
+    } = Wl(t2, a3, u2, g), G2 = useSlots(), { setHoverDate: P, getDayClassData: ee, clearHoverDate: p } = Zr(h4, t2), { defaultedMultiCalendars: _ } = Ce(t2), A = ref([]), H3 = ref([]), z2 = ref(null), Q2 = je(G2, "calendar"), f = je(G2, "monthYear"), U = je(G2, "timePicker"), d3 = (R2) => {
+      t2.shadow || a3("mount", R2);
+    };
+    watch(
+      o,
+      () => {
+        t2.shadow || setTimeout(() => {
+          a3("recalculate-position");
+        }, 0);
+      },
+      { deep: true }
+    );
+    const w2 = computed(() => (R2) => b2(l.value(R2), c2.value(R2)).map((m3) => ({
+      ...m3,
+      days: m3.days.map((B2) => (B2.marker = T2(B2), B2.classData = ee(B2), B2))
+    })));
+    function u2(R2) {
+      var m3;
+      R2 || R2 === 0 ? (m3 = H3.value[R2]) == null || m3.triggerTransition(l.value(R2), c2.value(R2)) : H3.value.forEach((B2, le) => B2.triggerTransition(l.value(le), c2.value(le)));
+    }
+    function g() {
+      a3("update-flow-step");
+    }
+    const s3 = (R2, m3 = false) => {
+      X2(R2, m3), t2.spaceConfirm && a3("select-date");
+    };
+    return n({
+      clearHoverDate: p,
+      presetDate: $,
+      selectCurrentDate: W,
+      toggleMonthPicker: (R2, m3, B2 = 0) => {
+        var le;
+        (le = A.value[B2]) == null || le.toggleMonthPicker(R2, m3);
+      },
+      toggleYearPicker: (R2, m3, B2 = 0) => {
+        var le;
+        (le = A.value[B2]) == null || le.toggleYearPicker(R2, m3);
+      },
+      toggleTimePicker: (R2, m3, B2) => {
+        var le;
+        (le = z2.value) == null || le.toggleTimePicker(R2, m3, B2);
+      },
+      handleArrow: Y2,
+      updateMonthYear: k2,
+      getSidebarProps: () => ({
+        modelValue: h4,
+        month: l,
+        year: c2,
+        time: y3,
+        updateTime: V,
+        updateMonthYear: k2,
+        selectDate: X2,
+        presetDate: $
+      })
+    }), (R2, m3) => (openBlock(), createElementBlock(Fragment, null, [
+      createVNode(Hn, {
+        "multi-calendars": unref(_).count
       }, {
-        default: withCtx(() => [
-          e2.showSelectionGrid ? (openBlock(), createBlock(Dt, mergeProps({ key: 0 }, {
-            modelValue: e2.modelValue,
-            items: e2.items,
-            disabledValues: e2.disabledValues,
-            minValue: e2.minValue,
-            maxValue: e2.maxValue,
-            escClose: e2.escClose,
-            type: e2.type,
-            arrowNavigation: e2.arrowNavigation,
-            textInput: e2.textInput,
-            autoApply: e2.autoApply,
-            ariaLabels: e2.ariaLabels,
-            hideNavigation: e2.hideNavigation
-          }, {
-            "header-refs": [],
-            "onUpdate:modelValue": _[3] || (_[3] = (E2) => y3.$emit("update:model-value", E2)),
-            onToggle: _[4] || (_[4] = (E2) => y3.$emit("toggle"))
-          }), createSlots({
-            "button-icon": withCtx(() => [
-              y3.$slots["calendar-icon"] ? renderSlot(y3.$slots, "calendar-icon", { key: 0 }) : createCommentVNode("", true),
-              y3.$slots["calendar-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Lt), { key: 1 }))
-            ]),
-            _: 2
-          }, [
-            y3.$slots[e2.slotName] ? {
-              name: "item",
-              fn: withCtx(({ item: E2 }) => [
-                renderSlot(y3.$slots, e2.slotName, { item: E2 })
-              ]),
-              key: "0"
-            } : void 0,
-            y3.$slots[e2.overlaySlot] ? {
-              name: "overlay",
-              fn: withCtx(() => [
-                renderSlot(y3.$slots, e2.overlaySlot)
-              ]),
-              key: "1"
-            } : void 0,
-            y3.$slots[`${e2.overlaySlot}-header`] ? {
-              name: "header",
-              fn: withCtx(() => [
-                renderSlot(y3.$slots, `${e2.overlaySlot}-header`)
-              ]),
-              key: "2"
-            } : void 0
-          ]), 1040)) : createCommentVNode("", true)
+        default: withCtx(({ instance: B2, index: le }) => [
+          R2.disableMonthYearSelect ? createCommentVNode("", true) : (openBlock(), createBlock(Ol, mergeProps({
+            key: 0,
+            ref: (Z) => {
+              Z && (A.value[le] = Z);
+            },
+            months: unref(ka)(R2.formatLocale, R2.locale, R2.monthNameFormat),
+            years: unref(Fn)(R2.yearRange, R2.reverseYears),
+            month: unref(l)(B2),
+            year: unref(c2)(B2),
+            instance: B2
+          }, R2.$props, {
+            onMount: m3[0] || (m3[0] = (Z) => d3(unref(vt).header)),
+            onResetFlow: m3[1] || (m3[1] = (Z) => R2.$emit("reset-flow")),
+            onUpdateMonthYear: (Z) => unref(k2)(B2, Z),
+            onOverlayClosed: m3[2] || (m3[2] = (Z) => R2.$emit("focus-menu"))
+          }), createSlots({ _: 2 }, [
+            renderList(unref(f), (Z, ke) => ({
+              name: Z,
+              fn: withCtx((se) => [
+                renderSlot(R2.$slots, Z, normalizeProps(guardReactiveProps(se)))
+              ])
+            }))
+          ]), 1040, ["months", "years", "month", "year", "instance", "onUpdateMonthYear"])),
+          createVNode(Ul, mergeProps({
+            ref: (Z) => {
+              Z && (H3.value[le] = Z);
+            },
+            "mapped-dates": w2.value(B2),
+            month: unref(l)(B2),
+            year: unref(c2)(B2)
+          }, R2.$props, {
+            onSelectDate: (Z) => unref(X2)(Z, B2 !== 1),
+            onHandleSpace: (Z) => s3(Z, B2 !== 1),
+            onSetHoverDate: m3[3] || (m3[3] = (Z) => unref(P)(Z)),
+            onHandleScroll: (Z) => unref(q2)(Z, B2),
+            onHandleSwipe: (Z) => unref(K2)(Z, B2),
+            onMount: m3[4] || (m3[4] = (Z) => d3(unref(vt).calendar)),
+            onResetFlow: m3[5] || (m3[5] = (Z) => R2.$emit("reset-flow")),
+            onTooltipOpen: m3[6] || (m3[6] = (Z) => R2.$emit("tooltip-open", Z)),
+            onTooltipClose: m3[7] || (m3[7] = (Z) => R2.$emit("tooltip-close", Z))
+          }), createSlots({ _: 2 }, [
+            renderList(unref(Q2), (Z, ke) => ({
+              name: Z,
+              fn: withCtx((se) => [
+                renderSlot(R2.$slots, Z, normalizeProps(guardReactiveProps({ ...se })))
+              ])
+            }))
+          ]), 1040, ["mapped-dates", "month", "year", "onSelectDate", "onHandleSpace", "onHandleScroll", "onHandleSwipe"])
         ]),
         _: 3
-      }, 8, ["name", "css"])
+      }, 8, ["multi-calendars"]),
+      R2.enableTimePicker ? (openBlock(), createElementBlock("div", zl, [
+        R2.$slots["time-picker"] ? renderSlot(R2.$slots, "time-picker", normalizeProps(mergeProps({ key: 0 }, { time: unref(y3), updateTime: unref(V) }))) : (openBlock(), createBlock(Ca, mergeProps({
+          key: 1,
+          ref_key: "timePickerRef",
+          ref: z2
+        }, R2.$props, {
+          hours: unref(y3).hours,
+          minutes: unref(y3).minutes,
+          seconds: unref(y3).seconds,
+          "internal-model-value": R2.internalModelValue,
+          "disabled-times-config": unref(D2),
+          onMount: m3[8] || (m3[8] = (B2) => d3(unref(vt).timePicker)),
+          "onUpdate:hours": m3[9] || (m3[9] = (B2) => unref(V)(B2)),
+          "onUpdate:minutes": m3[10] || (m3[10] = (B2) => unref(V)(B2, false)),
+          "onUpdate:seconds": m3[11] || (m3[11] = (B2) => unref(V)(B2, false, true)),
+          onResetFlow: m3[12] || (m3[12] = (B2) => R2.$emit("reset-flow")),
+          onOverlayClosed: m3[13] || (m3[13] = (B2) => R2.$emit("time-picker-close")),
+          onOverlayOpened: m3[14] || (m3[14] = (B2) => R2.$emit("time-picker-open", B2)),
+          onAmPmChange: m3[15] || (m3[15] = (B2) => R2.$emit("am-pm-change", B2))
+        }), createSlots({ _: 2 }, [
+          renderList(unref(U), (B2, le) => ({
+            name: B2,
+            fn: withCtx((Z) => [
+              renderSlot(R2.$slots, B2, normalizeProps(guardReactiveProps(Z)))
+            ])
+          }))
+        ]), 1040, ["hours", "minutes", "seconds", "internal-model-value", "disabled-times-config"]))
+      ])) : createCommentVNode("", true)
     ], 64));
   }
 });
-var _r = { class: "dp__month_year_row" };
-var Nr = { class: "dp__month_year_wrap" };
-var Rr = { class: "dp__month_picker_header" };
-var Or = ["aria-label"];
-var Ir = ["aria-label"];
-var Br = ["aria-label"];
-var Yr = defineComponent({
-  __name: "MonthYearPicker",
-  props: {
-    month: { type: Number, default: 0 },
-    year: { type: Number, default: 0 },
-    instance: { type: Number, default: 0 },
-    years: { type: Array, default: () => [] },
-    months: { type: Array, default: () => [] },
-    internalModelValue: { type: [Date, Array], default: null },
-    ...at
-  },
-  emits: ["update-month-year", "month-year-select", "mount", "reset-flow", "overlay-closed"],
-  setup(e2, { expose: n, emit: a3 }) {
-    const t2 = e2, { defaults: s3 } = Ee(t2), { transitionName: f, showTransition: y3 } = Ut(s3.value.transitions), { buildMatrix: _ } = nt(), { handleMonthYearChange: E2, isDisabled: T2, updateMonthYear: U } = tr(t2, a3), A = ref(false), c2 = ref(false), M3 = ref([null, null, null, null]), te = ref(null), H3 = ref(null), z2 = ref(null);
-    onMounted(() => {
-      a3("mount");
-    });
-    const B2 = (m3) => ({
-      get: () => t2[m3],
-      set: (b2) => {
-        const v = m3 === "month" ? "year" : "month";
-        a3("update-month-year", { [m3]: b2, [v]: t2[v] }), a3("month-year-select", m3 === "year"), m3 === "month" ? g(true) : r(true);
-      }
-    }), w2 = computed(B2("month")), J = computed(B2("year")), ee = (m3) => {
-      const b2 = getYear($(m3));
-      return t2.year === b2;
-    }, x2 = computed(() => t2.monthPicker ? Array.isArray(t2.disabledDates) ? t2.disabledDates.map((m3) => $(m3)).filter((m3) => ee(m3)).map((m3) => getMonth(m3)) : [] : []), le = computed(() => (m3) => {
-      const b2 = m3 === "month";
-      return {
-        showSelectionGrid: (b2 ? A : c2).value,
-        items: (b2 ? j : I2).value,
-        disabledValues: s3.value.filters[b2 ? "months" : "years"].concat(x2.value),
-        minValue: (b2 ? G2 : C).value,
-        maxValue: (b2 ? P : N).value,
-        headerRefs: b2 && t2.monthPicker ? [te.value, H3.value, z2.value] : [],
-        escClose: t2.escClose,
-        transitions: s3.value.transitions,
-        ariaLabels: s3.value.ariaLabels,
-        textInput: t2.textInput,
-        autoApply: t2.autoApply,
-        arrowNavigation: t2.arrowNavigation,
-        hideNavigation: t2.hideNavigation
-      };
-    }), de = computed(() => (m3) => ({
-      month: t2.month,
-      year: t2.year,
-      items: m3 === "month" ? t2.months : t2.years,
-      instance: t2.instance,
-      updateMonthYear: U,
-      toggle: m3 === "month" ? g : r
-    })), C = computed(() => t2.minDate ? getYear($(t2.minDate)) : null), N = computed(() => t2.maxDate ? getYear($(t2.maxDate)) : null), G2 = computed(() => {
-      if (t2.minDate && C.value) {
-        if (C.value > t2.year)
-          return 12;
-        if (C.value === t2.year)
-          return getMonth($(t2.minDate));
-      }
-      return null;
-    }), P = computed(() => t2.maxDate && N.value ? N.value < t2.year ? -1 : N.value === t2.year ? getMonth($(t2.maxDate)) : null : null), Z = computed(() => (t2.range || t2.multiDates) && t2.internalModelValue && (t2.monthPicker || t2.yearPicker) ? t2.internalModelValue : []), p = (m3) => {
-      const b2 = [], v = (W) => W;
-      for (let W = 0; W < m3.length; W += 3) {
-        const se = [m3[W], m3[W + 1], m3[W + 2]];
-        b2.push(v(se));
-      }
-      return b2;
-    }, q2 = computed(() => {
-      const m3 = t2.months.find((b2) => b2.value === t2.month);
-      return m3 || { text: "", value: 0 };
-    }), j = computed(() => p(t2.months)), I2 = computed(() => p(t2.years)), l = computed(() => s3.value.multiCalendars ? t2.multiCalendarsSolo ? true : t2.instance === 0 : true), o = computed(() => s3.value.multiCalendars ? t2.multiCalendarsSolo ? true : t2.instance === s3.value.multiCalendars - 1 : true), g = (m3 = false) => {
-      k2(m3), A.value = !A.value, A.value || a3("overlay-closed");
-    }, r = (m3 = false) => {
-      k2(m3), c2.value = !c2.value, c2.value || a3("overlay-closed");
-    }, k2 = (m3) => {
-      m3 || a3("reset-flow");
-    }, Y2 = (m3 = false) => {
-      T2.value(m3) || a3("update-month-year", {
-        year: m3 ? t2.year + 1 : t2.year - 1,
-        month: t2.month,
-        fromNav: true
-      });
-    }, R2 = (m3, b2) => {
-      t2.arrowNavigation && (M3.value[b2] = $e(m3), _(M3.value, "monthYear"));
-    };
-    return n({
-      toggleMonthPicker: g,
-      toggleYearPicker: r,
-      handleMonthYearChange: E2
-    }), (m3, b2) => {
-      var v, W, se, Ne, Xe;
-      return openBlock(), createElementBlock("div", _r, [
-        m3.$slots["month-year"] ? renderSlot(m3.$slots, "month-year", normalizeProps(mergeProps({ key: 0 }, { month: e2.month, year: e2.year, months: e2.months, years: e2.years, updateMonthYear: unref(U), handleMonthYearChange: unref(E2), instance: e2.instance }))) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-          !m3.monthPicker && !m3.yearPicker ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-            unref(l) && !m3.vertical ? (openBlock(), createBlock(rn, {
-              key: 0,
-              "aria-label": (v = unref(s3).ariaLabels) == null ? void 0 : v.prevMonth,
-              disabled: unref(T2)(false),
-              onActivate: b2[0] || (b2[0] = (re) => unref(E2)(false)),
-              onSetRef: b2[1] || (b2[1] = (re) => R2(re, 0))
-            }, {
-              default: withCtx(() => [
-                m3.$slots["arrow-left"] ? renderSlot(m3.$slots, "arrow-left", { key: 0 }) : createCommentVNode("", true),
-                m3.$slots["arrow-left"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(wn), { key: 1 }))
-              ]),
-              _: 3
-            }, 8, ["aria-label", "disabled"])) : createCommentVNode("", true),
-            createBaseVNode("div", Nr, [
-              createVNode(Bn, mergeProps({
-                type: "month",
-                "slot-name": "month-overlay-val",
-                "overlay-slot": "overlay-month",
-                "aria-label": (W = unref(s3).ariaLabels) == null ? void 0 : W.openMonthsOverlay,
-                modelValue: unref(w2),
-                "onUpdate:modelValue": b2[2] || (b2[2] = (re) => isRef(w2) ? w2.value = re : null)
-              }, unref(le)("month"), {
-                onToggle: g,
-                onSetRef: b2[3] || (b2[3] = (re) => R2(re, 1))
-              }), createSlots({
-                default: withCtx(() => [
-                  m3.$slots.month ? renderSlot(m3.$slots, "month", normalizeProps(mergeProps({ key: 0 }, unref(q2)))) : createCommentVNode("", true),
-                  m3.$slots.month ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                    createTextVNode(toDisplayString(unref(q2).text), 1)
-                  ], 64))
-                ]),
-                _: 2
-              }, [
-                m3.$slots["calendar-icon"] ? {
-                  name: "calendar-icon",
-                  fn: withCtx(() => [
-                    renderSlot(m3.$slots, "calendar-icon")
-                  ]),
-                  key: "0"
-                } : void 0,
-                m3.$slots["month-overlay-value"] ? {
-                  name: "month-overlay-val",
-                  fn: withCtx(({ item: re }) => [
-                    renderSlot(m3.$slots, "month-overlay-value", {
-                      text: re.text,
-                      value: re.value
-                    })
-                  ]),
-                  key: "1"
-                } : void 0,
-                m3.$slots["month-overlay"] ? {
-                  name: "overlay-month",
-                  fn: withCtx(() => [
-                    renderSlot(m3.$slots, "month-overlay", normalizeProps(guardReactiveProps(unref(de)("month"))))
-                  ]),
-                  key: "2"
-                } : void 0,
-                m3.$slots["month-overlay-header"] ? {
-                  name: "overlay-month-header",
-                  fn: withCtx(() => [
-                    renderSlot(m3.$slots, "month-overlay-header", { toggle: g })
-                  ]),
-                  key: "3"
-                } : void 0
-              ]), 1040, ["aria-label", "modelValue"]),
-              createVNode(Bn, mergeProps({
-                type: "year",
-                "slot-name": "year-overlay-val",
-                "overlay-slot": "overlay-year",
-                "aria-label": (se = unref(s3).ariaLabels) == null ? void 0 : se.openYearsOverlay,
-                modelValue: unref(J),
-                "onUpdate:modelValue": b2[4] || (b2[4] = (re) => isRef(J) ? J.value = re : null)
-              }, unref(le)("year"), {
-                onToggle: r,
-                onSetRef: b2[5] || (b2[5] = (re) => R2(re, 2))
-              }), createSlots({
-                default: withCtx(() => [
-                  m3.$slots.year ? renderSlot(m3.$slots, "year", {
-                    key: 0,
-                    year: e2.year
-                  }) : createCommentVNode("", true),
-                  m3.$slots.year ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                    createTextVNode(toDisplayString(e2.year), 1)
-                  ], 64))
-                ]),
-                _: 2
-              }, [
-                m3.$slots["calendar-icon"] ? {
-                  name: "calendar-icon",
-                  fn: withCtx(() => [
-                    renderSlot(m3.$slots, "calendar-icon")
-                  ]),
-                  key: "0"
-                } : void 0,
-                m3.$slots["year-overlay-value"] ? {
-                  name: "year-overlay-val",
-                  fn: withCtx(({ item: re }) => [
-                    renderSlot(m3.$slots, "year-overlay-value", {
-                      text: re.text,
-                      value: re.value
-                    })
-                  ]),
-                  key: "1"
-                } : void 0,
-                m3.$slots["year-overlay"] ? {
-                  name: "overlay-year",
-                  fn: withCtx(() => [
-                    renderSlot(m3.$slots, "year-overlay", normalizeProps(guardReactiveProps(unref(de)("year"))))
-                  ]),
-                  key: "2"
-                } : void 0,
-                m3.$slots["year-overlay-header"] ? {
-                  name: "overlay-year-header",
-                  fn: withCtx(() => [
-                    renderSlot(m3.$slots, "year-overlay-header", { toggle: r })
-                  ]),
-                  key: "3"
-                } : void 0
-              ]), 1040, ["aria-label", "modelValue"])
-            ]),
-            unref(l) && m3.vertical ? (openBlock(), createBlock(rn, {
-              key: 1,
-              "aria-label": (Ne = unref(s3).ariaLabels) == null ? void 0 : Ne.prevMonth,
-              disabled: unref(T2)(false),
-              onActivate: b2[6] || (b2[6] = (re) => unref(E2)(false))
-            }, {
-              default: withCtx(() => [
-                m3.$slots["arrow-up"] ? renderSlot(m3.$slots, "arrow-up", { key: 0 }) : createCommentVNode("", true),
-                m3.$slots["arrow-up"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Wn), { key: 1 }))
-              ]),
-              _: 3
-            }, 8, ["aria-label", "disabled"])) : createCommentVNode("", true),
-            unref(o) ? (openBlock(), createBlock(rn, {
-              key: 2,
-              ref: "rightIcon",
-              disabled: unref(T2)(true),
-              "aria-label": (Xe = unref(s3).ariaLabels) == null ? void 0 : Xe.nextMonth,
-              onActivate: b2[7] || (b2[7] = (re) => unref(E2)(true)),
-              onSetRef: b2[8] || (b2[8] = (re) => R2(re, 3))
-            }, {
-              default: withCtx(() => [
-                m3.$slots[m3.vertical ? "arrow-down" : "arrow-right"] ? renderSlot(m3.$slots, m3.vertical ? "arrow-down" : "arrow-right", { key: 0 }) : createCommentVNode("", true),
-                m3.$slots[m3.vertical ? "arrow-down" : "arrow-right"] ? createCommentVNode("", true) : (openBlock(), createBlock(resolveDynamicComponent(m3.vertical ? unref(zn) : unref(bn)), { key: 1 }))
-              ]),
-              _: 3
-            }, 8, ["disabled", "aria-label"])) : createCommentVNode("", true)
-          ], 64)) : createCommentVNode("", true),
-          m3.monthPicker ? (openBlock(), createBlock(Dt, mergeProps({ key: 1 }, unref(le)("month"), {
-            "skip-active": m3.range,
-            year: e2.year,
-            "multi-model-value": unref(Z),
-            "month-picker": "",
-            modelValue: unref(w2),
-            "onUpdate:modelValue": b2[17] || (b2[17] = (re) => isRef(w2) ? w2.value = re : null),
-            onToggle: g,
-            onSelected: b2[18] || (b2[18] = (re) => m3.$emit("overlay-closed"))
-          }), createSlots({
-            header: withCtx(() => {
-              var re, qe, xe;
-              return [
-                createBaseVNode("div", Rr, [
-                  createBaseVNode("div", {
-                    class: "dp__month_year_col_nav",
-                    tabindex: "0",
-                    ref_key: "mpPrevIconRef",
-                    ref: te,
-                    onClick: b2[9] || (b2[9] = (Re) => Y2(false)),
-                    onKeydown: b2[10] || (b2[10] = withKeys((Re) => Y2(false), ["enter"]))
-                  }, [
-                    createBaseVNode("div", {
-                      class: normalizeClass(["dp__inner_nav", { dp__inner_nav_disabled: unref(T2)(false) }]),
-                      role: "button",
-                      "aria-label": (re = unref(s3).ariaLabels) == null ? void 0 : re.prevMonth
-                    }, [
-                      m3.$slots["arrow-left"] ? renderSlot(m3.$slots, "arrow-left", { key: 0 }) : createCommentVNode("", true),
-                      m3.$slots["arrow-left"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(wn), { key: 1 }))
-                    ], 10, Or)
-                  ], 544),
-                  createBaseVNode("div", {
-                    class: "dp__pointer",
-                    role: "button",
-                    ref_key: "mpYearButtonRef",
-                    ref: H3,
-                    "aria-label": (qe = unref(s3).ariaLabels) == null ? void 0 : qe.openYearsOverlay,
-                    tabindex: "0",
-                    onClick: b2[11] || (b2[11] = () => r(false)),
-                    onKeydown: b2[12] || (b2[12] = withKeys(() => r(false), ["enter"]))
-                  }, [
-                    m3.$slots.year ? renderSlot(m3.$slots, "year", {
-                      key: 0,
-                      year: e2.year
-                    }) : createCommentVNode("", true),
-                    m3.$slots.year ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                      createTextVNode(toDisplayString(e2.year), 1)
-                    ], 64))
-                  ], 40, Ir),
-                  createBaseVNode("div", {
-                    class: "dp__month_year_col_nav",
-                    tabindex: "0",
-                    ref_key: "mpNextIconRef",
-                    ref: z2,
-                    onClick: b2[13] || (b2[13] = (Re) => Y2(true)),
-                    onKeydown: b2[14] || (b2[14] = withKeys((Re) => Y2(true), ["enter"]))
-                  }, [
-                    createBaseVNode("div", {
-                      class: normalizeClass(["dp__inner_nav", { dp__inner_nav_disabled: unref(T2)(true) }]),
-                      role: "button",
-                      "aria-label": (xe = unref(s3).ariaLabels) == null ? void 0 : xe.nextMonth
-                    }, [
-                      m3.$slots["arrow-right"] ? renderSlot(m3.$slots, "arrow-right", { key: 0 }) : createCommentVNode("", true),
-                      m3.$slots["arrow-right"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(bn), { key: 1 }))
-                    ], 10, Br)
-                  ], 544)
-                ]),
-                createVNode(Transition, {
-                  name: unref(f)(c2.value),
-                  css: unref(y3)
-                }, {
-                  default: withCtx(() => [
-                    c2.value ? (openBlock(), createBlock(Dt, mergeProps({ key: 0 }, unref(le)("year"), {
-                      modelValue: unref(J),
-                      "onUpdate:modelValue": b2[15] || (b2[15] = (Re) => isRef(J) ? J.value = Re : null),
-                      onToggle: r,
-                      onSelected: b2[16] || (b2[16] = (Re) => m3.$emit("overlay-closed"))
-                    }), createSlots({
-                      "button-icon": withCtx(() => [
-                        m3.$slots["calendar-icon"] ? renderSlot(m3.$slots, "calendar-icon", { key: 0 }) : createCommentVNode("", true),
-                        m3.$slots["calendar-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Lt), { key: 1 }))
-                      ]),
-                      _: 2
-                    }, [
-                      m3.$slots["year-overlay-value"] ? {
-                        name: "item",
-                        fn: withCtx(({ item: Re }) => [
-                          renderSlot(m3.$slots, "year-overlay-value", {
-                            text: Re.text,
-                            value: Re.value
-                          })
-                        ]),
-                        key: "0"
-                      } : void 0
-                    ]), 1040, ["modelValue"])) : createCommentVNode("", true)
-                  ]),
-                  _: 3
-                }, 8, ["name", "css"])
-              ];
-            }),
-            _: 2
-          }, [
-            m3.$slots["month-overlay-value"] ? {
-              name: "item",
-              fn: withCtx(({ item: re }) => [
-                renderSlot(m3.$slots, "month-overlay-value", {
-                  text: re.text,
-                  value: re.value
-                })
-              ]),
-              key: "0"
-            } : void 0
-          ]), 1040, ["skip-active", "year", "multi-model-value", "modelValue"])) : createCommentVNode("", true),
-          m3.yearPicker ? (openBlock(), createBlock(Dt, mergeProps({ key: 2 }, unref(le)("year"), {
-            modelValue: unref(J),
-            "onUpdate:modelValue": b2[19] || (b2[19] = (re) => isRef(J) ? J.value = re : null),
-            "multi-model-value": unref(Z),
-            "skip-active": m3.range,
-            "skip-button-ref": "",
-            "year-picker": "",
-            onToggle: r,
-            onSelected: b2[20] || (b2[20] = (re) => m3.$emit("overlay-closed"))
-          }), createSlots({ _: 2 }, [
-            m3.$slots["year-overlay-value"] ? {
-              name: "item",
-              fn: withCtx(({ item: re }) => [
-                renderSlot(m3.$slots, "year-overlay-value", {
-                  text: re.text,
-                  value: re.value
-                })
-              ]),
-              key: "0"
-            } : void 0
-          ]), 1040, ["modelValue", "multi-model-value", "skip-active"])) : createCommentVNode("", true)
-        ], 64))
-      ]);
-    };
-  }
-});
-var Vr = {
-  key: 0,
-  class: "dp__time_input"
-};
-var Er = ["aria-label", "onKeydown", "onClick"];
-var Fr = ["aria-label", "data-test", "onKeydown", "onClick"];
-var Lr = ["aria-label", "onKeydown", "onClick"];
-var Ur = { key: 0 };
-var Hr = ["aria-label", "onKeydown"];
-var Wr = defineComponent({
-  __name: "TimeInput",
-  props: {
-    hours: { type: Number, default: 0 },
-    minutes: { type: Number, default: 0 },
-    seconds: { type: Number, default: 0 },
-    closeTimePickerBtn: { type: Object, default: null },
-    order: { type: Number, default: 0 },
-    ...at
-  },
-  emits: [
-    "set-hours",
-    "set-minutes",
-    "update:hours",
-    "update:minutes",
-    "update:seconds",
-    "reset-flow",
-    "mounted",
-    "overlay-closed"
-  ],
-  setup(e2, { expose: n, emit: a3 }) {
-    const t2 = e2, { setTimePickerElements: s3, setTimePickerBackRef: f } = nt(), { defaults: y3 } = Ee(t2), { transitionName: _, showTransition: E2 } = Ut(y3.value.transitions), T2 = reactive({
-      hours: false,
-      minutes: false,
-      seconds: false
-    }), U = ref("AM"), A = ref(null), c2 = ref([]);
-    onMounted(() => {
-      a3("mounted");
-    });
-    const M3 = computed(() => (l) => !!(t2.maxTime && t2.maxTime[l] && +t2.maxTime[l] < +t2[l] + +t2[`${l}Increment`])), te = computed(() => (l) => !!(t2.minTime && t2.minTime[l] && +t2.minTime[l] > +t2[l] - +t2[`${l}Increment`])), H3 = (l, o) => add(set($(), l), o), z2 = (l, o) => sub(set($(), l), o), B2 = computed(
-      () => ({
-        dp__time_col: true,
-        dp__time_col_reg: !t2.enableSeconds && t2.is24,
-        dp__time_col_reg_with_button: !t2.enableSeconds && !t2.is24,
-        dp__time_col_sec: t2.enableSeconds && t2.is24,
-        dp__time_col_sec_with_button: t2.enableSeconds && !t2.is24
-      })
-    ), w2 = computed(() => {
-      const l = [{ type: "hours" }, { type: "", separator: true }, { type: "minutes" }];
-      return t2.enableSeconds ? l.concat([{ type: "", separator: true }, { type: "seconds" }]) : l;
-    }), J = computed(() => w2.value.filter((l) => !l.separator)), ee = computed(() => (l) => {
-      if (l === "hours") {
-        const o = Z(+t2.hours);
-        return { text: o < 10 ? `0${o}` : `${o}`, value: o };
-      }
-      return { text: t2[l] < 10 ? `0${t2[l]}` : `${t2[l]}`, value: t2[l] };
-    }), x2 = (l) => {
-      const o = t2.is24 ? 24 : 12, g = l === "hours" ? o : 60, r = +t2[`${l}GridIncrement`], k2 = l === "hours" && !t2.is24 ? r : 0, Y2 = [];
-      for (let R2 = k2; R2 < g; R2 += r)
-        Y2.push({ value: R2, text: R2 < 10 ? `0${R2}` : `${R2}` });
-      return l === "hours" && !t2.is24 && Y2.push({ value: 0, text: "12" }), Ua(Y2);
-    }, le = (l, o) => {
-      const g = t2.minTime && t2.minTime[o], r = t2.maxTime && t2.maxTime[o];
-      return g && r ? l < +g || l > +r : g ? l < +g : r ? l > +r : false;
-    }, de = computed(() => (l) => x2(l).flat().filter((g) => g).map((g) => g.value).filter((g) => le(g, l))), C = (l) => t2[`no${l[0].toUpperCase() + l.slice(1)}Overlay`], N = (l) => {
-      C(l) || (T2[l] = !T2[l], T2[l] || a3("overlay-closed"));
-    }, G2 = (l) => l === "hours" ? getHours : l === "minutes" ? getMinutes : getSeconds, P = (l, o = true) => {
-      const g = o ? H3 : z2;
-      (o ? M3.value(l) : te.value(l)) || a3(
-        `update:${l}`,
-        G2(l)(g({ [l]: +t2[l] }, { [l]: +t2[`${l}Increment`] }))
-      );
-    }, Z = (l) => t2.is24 ? l : (l >= 12 ? U.value = "PM" : U.value = "AM", xa(l)), p = () => {
-      U.value === "PM" ? (U.value = "AM", a3("update:hours", t2.hours - 12)) : (U.value = "PM", a3("update:hours", t2.hours + 12));
-    }, q2 = (l) => {
-      T2[l] = true;
-    }, j = (l, o, g) => {
-      if (l && t2.arrowNavigation) {
-        Array.isArray(c2.value[o]) ? c2.value[o][g] = l : c2.value[o] = [l];
-        const r = c2.value.reduce(
-          (k2, Y2) => Y2.map((R2, m3) => [...k2[m3] || [], Y2[m3]]),
-          []
-        );
-        f(t2.closeTimePickerBtn), A.value && (r[1] = r[1].concat(A.value)), s3(r, t2.order);
-      }
-    }, I2 = (l, o) => l === "hours" && !t2.is24 ? a3(`update:${l}`, U.value === "PM" ? o + 12 : o) : a3(`update:${l}`, o);
-    return n({ openChildCmp: q2 }), (l, o) => {
-      var g;
-      return l.disabled ? createCommentVNode("", true) : (openBlock(), createElementBlock("div", Vr, [
-        (openBlock(true), createElementBlock(Fragment, null, renderList(unref(w2), (r, k2) => {
-          var Y2, R2, m3;
-          return openBlock(), createElementBlock("div", {
-            key: k2,
-            class: normalizeClass(unref(B2))
-          }, [
-            r.separator ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-              createTextVNode(" : ")
-            ], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-              createBaseVNode("div", {
-                class: normalizeClass({
-                  dp__inc_dec_button: true,
-                  dp__inc_dec_button_disabled: unref(M3)(r.type)
-                }),
-                role: "button",
-                "data-test": "time-inc-btn",
-                "aria-label": (Y2 = unref(y3).ariaLabels) == null ? void 0 : Y2.incrementValue(r.type),
-                tabindex: "0",
-                onKeydown: [
-                  withKeys((b2) => P(r.type), ["enter"]),
-                  withKeys((b2) => P(r.type), ["space"])
-                ],
-                onClick: (b2) => P(r.type),
-                ref_for: true,
-                ref: (b2) => j(b2, k2, 0)
-              }, [
-                l.$slots["arrow-up"] ? renderSlot(l.$slots, "arrow-up", { key: 0 }) : createCommentVNode("", true),
-                l.$slots["arrow-up"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Wn), { key: 1 }))
-              ], 42, Er),
-              createBaseVNode("div", {
-                role: "button",
-                "aria-label": (R2 = unref(y3).ariaLabels) == null ? void 0 : R2.openTpOverlay(r.type),
-                class: normalizeClass(C(r.type) ? "" : "dp__time_display"),
-                tabindex: "0",
-                "data-test": `${r.type}-toggle-overlay-btn`,
-                onKeydown: [
-                  withKeys((b2) => N(r.type), ["enter"]),
-                  withKeys((b2) => N(r.type), ["space"])
-                ],
-                onClick: (b2) => N(r.type),
-                ref_for: true,
-                ref: (b2) => j(b2, k2, 1)
-              }, [
-                l.$slots[r.type] ? renderSlot(l.$slots, r.type, {
-                  key: 0,
-                  text: unref(ee)(r.type).text,
-                  value: unref(ee)(r.type).value
-                }) : createCommentVNode("", true),
-                l.$slots[r.type] ? createCommentVNode("", true) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                  createTextVNode(toDisplayString(unref(ee)(r.type).text), 1)
-                ], 64))
-              ], 42, Fr),
-              createBaseVNode("div", {
-                class: normalizeClass({
-                  dp__inc_dec_button: true,
-                  dp__inc_dec_button_disabled: unref(te)(r.type)
-                }),
-                role: "button",
-                "data-test": "time-dec-btn",
-                "aria-label": (m3 = unref(y3).ariaLabels) == null ? void 0 : m3.decrementValue(r.type),
-                tabindex: "0",
-                onKeydown: [
-                  withKeys((b2) => P(r.type, false), ["enter"]),
-                  withKeys((b2) => P(r.type, false), ["space"])
-                ],
-                onClick: (b2) => P(r.type, false),
-                ref_for: true,
-                ref: (b2) => j(b2, k2, 2)
-              }, [
-                l.$slots["arrow-down"] ? renderSlot(l.$slots, "arrow-down", { key: 0 }) : createCommentVNode("", true),
-                l.$slots["arrow-down"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(zn), { key: 1 }))
-              ], 42, Lr)
-            ], 64))
-          ], 2);
-        }), 128)),
-        l.is24 ? createCommentVNode("", true) : (openBlock(), createElementBlock("div", Ur, [
-          l.$slots["am-pm-button"] ? renderSlot(l.$slots, "am-pm-button", {
-            key: 0,
-            toggle: p,
-            value: U.value
-          }) : createCommentVNode("", true),
-          l.$slots["am-pm-button"] ? createCommentVNode("", true) : (openBlock(), createElementBlock("button", {
-            key: 1,
-            ref_key: "amPmButton",
-            ref: A,
-            type: "button",
-            class: "dp__pm_am_button",
-            role: "button",
-            "aria-label": (g = unref(y3).ariaLabels) == null ? void 0 : g.amPmButton,
-            tabindex: "0",
-            onClick: p,
-            onKeydown: [
-              withKeys(withModifiers(p, ["prevent"]), ["enter"]),
-              withKeys(withModifiers(p, ["prevent"]), ["space"])
-            ]
-          }, toDisplayString(U.value), 41, Hr))
-        ])),
-        (openBlock(true), createElementBlock(Fragment, null, renderList(unref(J), (r, k2) => (openBlock(), createBlock(Transition, {
-          key: k2,
-          name: unref(_)(T2[r.type]),
-          css: unref(E2)
-        }, {
-          default: withCtx(() => [
-            T2[r.type] ? (openBlock(), createBlock(Dt, {
-              key: 0,
-              items: x2(r.type),
-              "disabled-values": unref(y3).filters.times[r.type].concat(unref(de)(r.type)),
-              "esc-close": l.escClose,
-              "aria-labels": unref(y3).ariaLabels,
-              "hide-navigation": l.hideNavigation,
-              "onUpdate:modelValue": (Y2) => I2(r.type, Y2),
-              onSelected: (Y2) => N(r.type),
-              onToggle: (Y2) => N(r.type),
-              onResetFlow: o[0] || (o[0] = (Y2) => l.$emit("reset-flow")),
-              type: r.type
-            }, createSlots({
-              "button-icon": withCtx(() => [
-                l.$slots["clock-icon"] ? renderSlot(l.$slots, "clock-icon", { key: 0 }) : createCommentVNode("", true),
-                l.$slots["clock-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Hn), { key: 1 }))
-              ]),
-              _: 2
-            }, [
-              l.$slots[`${r.type}-overlay-value`] ? {
-                name: "item",
-                fn: withCtx(({ item: Y2 }) => [
-                  renderSlot(l.$slots, `${r.type}-overlay-value`, {
-                    text: Y2.text,
-                    value: Y2.value
-                  })
-                ]),
-                key: "0"
-              } : void 0
-            ]), 1032, ["items", "disabled-values", "esc-close", "aria-labels", "hide-navigation", "onUpdate:modelValue", "onSelected", "onToggle", "type"])) : createCommentVNode("", true)
-          ]),
-          _: 2
-        }, 1032, ["name", "css"]))), 128))
-      ]));
-    };
-  }
-});
-var zr = ["aria-label"];
-var xr = { class: "dp__overlay_container dp__container_flex dp__time_picker_overlay_container" };
-var Kr = {
-  key: 1,
-  class: "dp__overlay_row dp__flex_row"
-};
-var jr = ["aria-label"];
-var Gr = defineComponent({
-  __name: "TimePicker",
-  props: {
-    hours: { type: [Number, Array], default: 0 },
-    minutes: { type: [Number, Array], default: 0 },
-    seconds: { type: [Number, Array], default: 0 },
-    internalModelValue: { type: [Date, Array], default: null },
-    ...at
-  },
-  emits: [
-    "update:hours",
-    "update:minutes",
-    "update:seconds",
-    "mount",
-    "reset-flow",
-    "overlay-opened",
-    "overlay-closed"
-  ],
-  setup(e2, { expose: n, emit: a3 }) {
-    const t2 = e2, { buildMatrix: s3, setTimePicker: f } = nt(), y3 = useSlots(), { hideNavigationButtons: _, defaults: E2 } = Ee(t2), { transitionName: T2, showTransition: U } = Ut(E2.value.transitions), A = ref(null), c2 = ref(null), M3 = ref([]), te = ref(null);
-    onMounted(() => {
-      a3("mount"), !t2.timePicker && t2.arrowNavigation ? s3([$e(A.value)], "time") : f(true, t2.timePicker);
-    });
-    const H3 = computed(() => t2.range && t2.modelAuto ? Zn(t2.internalModelValue) : true), z2 = ref(false), B2 = (P) => ({
-      hours: Array.isArray(t2.hours) ? t2.hours[P] : t2.hours,
-      minutes: Array.isArray(t2.minutes) ? t2.minutes[P] : t2.minutes,
-      seconds: Array.isArray(t2.seconds) ? t2.seconds[P] : t2.seconds
-    }), w2 = computed(() => {
-      const P = [];
-      if (t2.range)
-        for (let Z = 0; Z < 2; Z++)
-          P.push(B2(Z));
-      else
-        P.push(B2(0));
-      return P;
-    }), J = (P, Z = false, p = "") => {
-      Z || a3("reset-flow"), z2.value = P, P && a3("overlay-opened"), t2.arrowNavigation && (f(P), P || a3("overlay-closed")), nextTick(() => {
-        p !== "" && M3.value[0] && M3.value[0].openChildCmp(p);
-      });
-    }, ee = computed(() => ({
-      dp__button: true,
-      dp__button_bottom: t2.autoApply
-    })), x2 = it(y3, "timePicker"), le = (P, Z, p) => t2.range ? Z === 0 ? [P, w2.value[1][p]] : [w2.value[0][p], P] : P, de = (P) => {
-      a3("update:hours", P);
-    }, C = (P) => {
-      a3("update:minutes", P);
-    }, N = (P) => {
-      a3("update:seconds", P);
-    }, G2 = () => {
-      te.value && t2.arrowNavigation && te.value.focus({ preventScroll: true });
-    };
-    return n({ toggleTimePicker: J }), (P, Z) => {
-      var p;
-      return openBlock(), createElementBlock("div", null, [
-        P.timePicker ? createCommentVNode("", true) : withDirectives((openBlock(), createElementBlock("div", {
-          key: 0,
-          class: normalizeClass(unref(ee)),
-          role: "button",
-          "aria-label": (p = unref(E2).ariaLabels) == null ? void 0 : p.openTimePicker,
-          tabindex: "0",
-          "data-test": "open-time-picker-btn",
-          ref_key: "openTimePickerBtn",
-          ref: A,
-          onKeydown: [
-            Z[0] || (Z[0] = withKeys((q2) => J(true), ["enter"])),
-            Z[1] || (Z[1] = withKeys((q2) => J(true), ["space"]))
-          ],
-          onClick: Z[2] || (Z[2] = (q2) => J(true))
-        }, [
-          P.$slots["clock-icon"] ? renderSlot(P.$slots, "clock-icon", { key: 0 }) : createCommentVNode("", true),
-          P.$slots["clock-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Hn), { key: 1 }))
-        ], 42, zr)), [
-          [vShow, !unref(_)("time")]
-        ]),
-        createVNode(Transition, {
-          name: unref(T2)(z2.value),
-          css: unref(U)
-        }, {
-          default: withCtx(() => {
-            var q2;
-            return [
-              z2.value || P.timePicker ? (openBlock(), createElementBlock("div", {
-                key: 0,
-                class: "dp__overlay",
-                ref_key: "overlayRef",
-                ref: te,
-                tabindex: "0"
-              }, [
-                createBaseVNode("div", xr, [
-                  P.$slots["time-picker-overlay"] ? renderSlot(P.$slots, "time-picker-overlay", {
-                    key: 0,
-                    hours: e2.hours,
-                    minutes: e2.minutes,
-                    seconds: e2.seconds,
-                    setHours: de,
-                    setMinutes: C,
-                    setSeconds: N
-                  }) : createCommentVNode("", true),
-                  P.$slots["time-picker-overlay"] ? createCommentVNode("", true) : (openBlock(), createElementBlock("div", Kr, [
-                    (openBlock(true), createElementBlock(Fragment, null, renderList(unref(w2), (j, I2) => withDirectives((openBlock(), createBlock(Wr, mergeProps({ key: I2 }, {
-                      ...P.$props,
-                      order: I2,
-                      hours: j.hours,
-                      minutes: j.minutes,
-                      seconds: j.seconds,
-                      closeTimePickerBtn: c2.value,
-                      disabled: I2 === 0 ? P.fixedStart : P.fixedEnd
-                    }, {
-                      ref_for: true,
-                      ref_key: "timeInputRefs",
-                      ref: M3,
-                      "onUpdate:hours": (l) => de(le(l, I2, "hours")),
-                      "onUpdate:minutes": (l) => C(le(l, I2, "minutes")),
-                      "onUpdate:seconds": (l) => N(le(l, I2, "seconds")),
-                      onMounted: G2,
-                      onOverlayClosed: G2
-                    }), createSlots({ _: 2 }, [
-                      renderList(unref(x2), (l, o) => ({
-                        name: l,
-                        fn: withCtx((g) => [
-                          renderSlot(P.$slots, l, normalizeProps(guardReactiveProps(g)))
-                        ])
-                      }))
-                    ]), 1040, ["onUpdate:hours", "onUpdate:minutes", "onUpdate:seconds"])), [
-                      [vShow, I2 === 0 ? true : unref(H3)]
-                    ])), 128))
-                  ])),
-                  P.timePicker ? createCommentVNode("", true) : withDirectives((openBlock(), createElementBlock("div", {
-                    key: 2,
-                    ref_key: "closeTimePickerBtn",
-                    ref: c2,
-                    class: normalizeClass(unref(ee)),
-                    role: "button",
-                    "aria-label": (q2 = unref(E2).ariaLabels) == null ? void 0 : q2.closeTimePicker,
-                    tabindex: "0",
-                    onKeydown: [
-                      Z[3] || (Z[3] = withKeys((j) => J(false), ["enter"])),
-                      Z[4] || (Z[4] = withKeys((j) => J(false), ["space"]))
-                    ],
-                    onClick: Z[5] || (Z[5] = (j) => J(false))
-                  }, [
-                    P.$slots["calendar-icon"] ? renderSlot(P.$slots, "calendar-icon", { key: 0 }) : createCommentVNode("", true),
-                    P.$slots["calendar-icon"] ? createCommentVNode("", true) : (openBlock(), createBlock(unref(Lt), { key: 1 }))
-                  ], 42, jr)), [
-                    [vShow, !unref(_)("time")]
-                  ])
-                ])
-              ], 512)) : createCommentVNode("", true)
-            ];
-          }),
-          _: 3
-        }, 8, ["name", "css"])
-      ]);
-    };
-  }
-});
-var Zr = (e2, n) => {
-  const { isDisabled: a3, matchDate: t2, getWeekFromDate: s3, defaults: f } = Ee(n), y3 = ref(null), _ = ref($()), E2 = (r) => {
-    !r.current && n.hideOffsetDates || (y3.value = r.value);
-  }, T2 = () => {
-    y3.value = null;
-  }, U = (r) => Array.isArray(e2.value) && n.range && e2.value[0] && y3.value ? r ? Be(y3.value, e2.value[0]) : _e(y3.value, e2.value[0]) : true, A = (r, k2) => {
-    const Y2 = () => e2.value ? k2 ? e2.value[0] || null : e2.value[1] : null, R2 = e2.value && Array.isArray(e2.value) ? Y2() : null;
-    return ve($(r.value), R2);
-  }, c2 = (r) => {
-    const k2 = Array.isArray(e2.value) ? e2.value[0] : null;
-    return r ? !_e(y3.value || null, k2) : true;
-  }, M3 = (r, k2 = true) => (n.range || n.weekPicker) && Array.isArray(e2.value) ? n.hideOffsetDates && !r.current ? false : ve($(r.value), e2.value[k2 ? 0 : 1]) : n.range ? A(r, k2) && c2(k2) || ve(r.value, Array.isArray(e2.value) ? e2.value[0] : null) && U(k2) : false, te = (r, k2, Y2) => Array.isArray(e2.value) && e2.value[0] && e2.value.length === 1 ? r ? false : Y2 ? Be(e2.value[0], k2.value) : _e(e2.value[0], k2.value) : false, H3 = (r) => !e2.value || n.hideOffsetDates && !r.current ? false : n.range ? n.modelAuto && Array.isArray(e2.value) ? ve(r.value, e2.value[0] ? e2.value[0] : _.value) : false : n.multiDates && Array.isArray(e2.value) ? e2.value.some((k2) => ve(k2, r.value)) : ve(r.value, e2.value ? e2.value : _.value), z2 = (r) => {
-    if (n.autoRange || n.weekPicker) {
-      if (y3.value) {
-        if (n.hideOffsetDates && !r.current)
-          return false;
-        const k2 = addDays(y3.value, +n.autoRange), Y2 = s3($(y3.value));
-        return n.weekPicker ? ve(Y2[1], $(r.value)) : ve(k2, $(r.value));
-      }
-      return false;
-    }
-    return false;
-  }, B2 = (r) => {
-    if (n.autoRange || n.weekPicker) {
-      if (y3.value) {
-        const k2 = addDays(y3.value, +n.autoRange);
-        if (n.hideOffsetDates && !r.current)
-          return false;
-        const Y2 = s3($(y3.value));
-        return n.weekPicker ? Be(r.value, Y2[0]) && _e(r.value, Y2[1]) : Be(r.value, y3.value) && _e(r.value, k2);
-      }
-      return false;
-    }
-    return false;
-  }, w2 = (r) => {
-    if (n.autoRange || n.weekPicker) {
-      if (y3.value) {
-        if (n.hideOffsetDates && !r.current)
-          return false;
-        const k2 = s3($(y3.value));
-        return n.weekPicker ? ve(k2[0], r.value) : ve(y3.value, r.value);
-      }
-      return false;
-    }
-    return false;
-  }, J = (r) => xn(e2.value, y3.value, r.value), ee = () => n.modelAuto && Array.isArray(n.internalModelValue) ? !!n.internalModelValue[0] : false, x2 = () => n.modelAuto ? Zn(n.internalModelValue) : true, le = (r) => {
-    if (Array.isArray(e2.value) && e2.value.length || n.weekPicker)
-      return false;
-    const k2 = n.range ? !M3(r) && !M3(r, false) : true;
-    return !a3(r.value) && !H3(r) && !(!r.current && n.hideOffsetDates) && k2;
-  }, de = (r) => n.range ? n.modelAuto ? ee() && H3(r) : false : H3(r), C = (r) => n.highlight ? t2(r.value, n.highlight) : false, N = (r) => a3(r.value) && n.highlightDisabledDays === false, G2 = (r) => n.highlightWeekDays && n.highlightWeekDays.includes(r.value.getDay()), P = (r) => (n.range || n.weekPicker) && (!(f.value.multiCalendars > 0) || r.current) && x2() && !(!r.current && n.hideOffsetDates) && !H3(r) ? J(r) : false, Z = (r) => {
-    const { isRangeStart: k2, isRangeEnd: Y2 } = j(r), R2 = n.range ? k2 || Y2 : false;
-    return {
-      dp__cell_offset: !r.current,
-      dp__pointer: !n.disabled && !(!r.current && n.hideOffsetDates) && !a3(r.value),
-      dp__cell_disabled: a3(r.value),
-      dp__cell_highlight: !N(r) && (C(r) || G2(r)) && !de(r) && !R2,
-      dp__cell_highlight_active: !N(r) && (C(r) || G2(r)) && de(r),
-      dp__today: !n.noToday && ve(r.value, _.value) && r.current
-    };
-  }, p = (r) => ({
-    dp__active_date: de(r),
-    dp__date_hover: le(r)
-  }), q2 = (r) => ({
-    ...I2(r),
-    ...l(r),
-    dp__range_between_week: P(r) && n.weekPicker
-  }), j = (r) => {
-    const k2 = f.value.multiCalendars > 0 ? r.current && M3(r) && x2() : M3(r) && x2(), Y2 = f.value.multiCalendars > 0 ? r.current && M3(r, false) && x2() : M3(r, false) && x2();
-    return { isRangeStart: k2, isRangeEnd: Y2 };
-  }, I2 = (r) => {
-    const { isRangeStart: k2, isRangeEnd: Y2 } = j(r);
-    return {
-      dp__range_start: k2,
-      dp__range_end: Y2,
-      dp__range_between: P(r) && !n.weekPicker,
-      dp__date_hover_start: te(le(r), r, true),
-      dp__date_hover_end: te(le(r), r, false)
-    };
-  }, l = (r) => ({
-    ...I2(r),
-    dp__cell_auto_range: B2(r),
-    dp__cell_auto_range_start: w2(r),
-    dp__cell_auto_range_end: z2(r)
-  }), o = (r) => n.range ? n.autoRange ? l(r) : n.modelAuto ? { ...p(r), ...I2(r) } : I2(r) : n.weekPicker ? q2(r) : p(r);
-  return {
-    setHoverDate: E2,
-    clearHoverDate: T2,
-    getDayClassData: (r) => ({
-      ...Z(r),
-      ...o(r),
-      [n.dayClass ? n.dayClass(r.value) : ""]: true,
-      [n.calendarCellClassName]: !!n.calendarCellClassName
-    })
-  };
-};
-var Xr = ["id", "onKeydown"];
-var qr = {
+var Kl = ["id", "onKeydown"];
+var Gl = {
   key: 0,
   class: "dp__sidebar_left"
 };
-var Jr = {
+var Zl = {
   key: 1,
-  class: "dp__preset_ranges"
+  class: "dp--preset-dates"
 };
-var Qr = ["onClick"];
-var el = {
+var ql = ["onClick", "onKeydown"];
+var xl = {
   key: 2,
   class: "dp__sidebar_right"
 };
-var tl = {
+var Jl = {
   key: 3,
-  class: "dp__now_wrap"
+  class: "dp__action_extra"
 };
-var nl = defineComponent({
+var sa = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
   __name: "DatepickerMenu",
   props: {
+    ...xt,
+    shadow: { type: Boolean, default: false },
     openOnTop: { type: Boolean, default: false },
     internalModelValue: { type: [Date, Array], default: null },
-    ...at
+    arrMapValues: { type: Object, default: () => ({}) }
   },
   emits: [
     "close-picker",
@@ -8084,378 +8822,265 @@ var nl = defineComponent({
     "invalid-fixed-range",
     "tooltip-open",
     "tooltip-close",
-    "time-picker-open"
+    "time-picker-open",
+    "time-picker-close",
+    "am-pm-change",
+    "range-start",
+    "range-end"
   ],
   setup(e2, { expose: n, emit: a3 }) {
-    const t2 = e2, { setMenuFocused: s3, setShiftKey: f, control: y3 } = Kn(), { getCalendarDays: _, defaults: E2 } = Ee(t2), T2 = useSlots(), U = ref(null), A = reactive({
-      timePicker: !!(!t2.enableTimePicker || t2.timePicker || t2.monthPicker),
-      monthYearInput: !!t2.timePicker,
-      calendar: false
-    }), c2 = ref([]), M3 = ref([]), te = ref(null), H3 = ref(null), z2 = ref(0), B2 = ref(false), w2 = ref(0);
+    const t2 = e2, o = computed(() => {
+      const { openOnTop: N, ...x2 } = t2;
+      return {
+        ...x2,
+        flowStep: ee.value
+      };
+    }), { setMenuFocused: l, setShiftKey: c2, control: h4 } = Sa(), y3 = useSlots(), { defaultedTextInput: D2, defaultedInline: b2 } = Ce(t2), T2 = ref(null), Y2 = ref(0), q2 = ref(null), K2 = ref(null), X2 = ref(false), k2 = ref(null);
     onMounted(() => {
-      var V;
-      B2.value = true, !((V = t2.presetRanges) != null && V.length) && !T2["left-sidebar"] && !T2["right-sidebar"] && (me(), window.addEventListener("resize", me));
-      const d3 = $e(H3);
-      if (d3 && !t2.textInput && !t2.inline && (s3(true), C()), d3) {
-        const we = (be) => {
-          ["action-row", "time-picker", "month-year"].some(
-            (Ke) => Object.keys(T2).includes(Ke)
-          ) || be.preventDefault(), be.stopImmediatePropagation(), be.stopPropagation();
-        };
-        d3.addEventListener("pointerdown", we), d3.addEventListener("mousedown", we);
+      if (!t2.shadow) {
+        X2.value = true, $(), window.addEventListener("resize", $);
+        const N = Ae(q2);
+        if (N && !D2.value.enabled && !b2.value.enabled && (l(true), z2()), N) {
+          const x2 = ($e) => {
+            t2.allowPreventDefault && $e.preventDefault(), $e.stopImmediatePropagation(), $e.stopPropagation();
+          };
+          N.addEventListener("pointerdown", x2), N.addEventListener("mousedown", x2);
+        }
       }
     }), onUnmounted(() => {
-      window.removeEventListener("resize", me);
+      window.removeEventListener("resize", $);
     });
-    const { arrowRight: J, arrowLeft: ee, arrowDown: x2, arrowUp: le } = nt(), de = (d3) => {
-      d3 || d3 === 0 ? M3.value[d3].triggerTransition(
-        p.value(d3),
-        q2.value(d3)
-      ) : M3.value.forEach(
-        (V, we) => V.triggerTransition(p.value(we), q2.value(we))
-      );
-    }, C = () => {
-      const d3 = $e(H3);
-      d3 && d3.focus({ preventScroll: true });
-    }, N = () => {
-      var d3;
-      (d3 = t2.flow) != null && d3.length && w2.value !== -1 && (w2.value += 1, a3("flow-step", w2.value), Gt());
-    }, G2 = () => {
-      w2.value = -1;
-    }, {
-      calendars: P,
-      modelValue: Z,
-      month: p,
-      year: q2,
-      time: j,
-      updateTime: I2,
-      updateMonthYear: l,
-      selectDate: o,
-      getWeekNum: g,
-      monthYearSelect: r,
-      handleScroll: k2,
-      handleArrow: Y2,
-      handleSwipe: R2,
-      getMarker: m3,
-      selectCurrentDate: b2,
-      presetDateRange: v
-    } = Qa(t2, a3, N, de, w2), { setHoverDate: W, clearHoverDate: se, getDayClassData: Ne } = Zr(Z, t2);
-    watch(
-      P,
-      () => {
-        t2.openOnTop && setTimeout(() => {
-          a3("recalculate-position");
-        }, 0);
-      },
-      { deep: true }
-    );
-    const Xe = it(T2, "calendar"), re = it(T2, "action"), qe = it(T2, "timePicker"), xe = it(T2, "monthYear"), Re = computed(() => t2.openOnTop ? "dp__arrow_bottom" : "dp__arrow_top"), rt = computed(() => Wa(t2.yearRange, t2.reverseYears)), ne = computed(() => za(t2.locale, t2.monthNameFormat)), me = () => {
-      const d3 = $e(U);
-      d3 && (z2.value = d3.getBoundingClientRect().width);
-    }, ge = computed(() => (d3) => _(p.value(d3), q2.value(d3))), Je = computed(
-      () => E2.value.multiCalendars > 0 && t2.range ? [...Array(E2.value.multiCalendars).keys()] : [0]
-    ), Ye = computed(
-      () => (d3) => d3 === 1
-    ), Tt = computed(() => t2.monthPicker || t2.timePicker || t2.yearPicker), Ht = computed(
-      () => ({
-        dp__flex_display: E2.value.multiCalendars > 0
-      })
-    ), Wt = computed(() => ({
-      dp__instance_calendar: E2.value.multiCalendars > 0
-    })), zt = computed(() => ({
+    const $ = () => {
+      const N = Ae(K2);
+      N && (Y2.value = N.getBoundingClientRect().width);
+    }, { arrowRight: W, arrowLeft: V, arrowDown: G2, arrowUp: P } = rt(), { flowStep: ee, updateFlowStep: p, childMount: _, resetFlow: A } = qr(t2, a3, k2), H3 = computed(() => t2.monthPicker ? fl : t2.yearPicker ? ml : t2.timePicker ? Cl : jl), z2 = () => {
+      const N = Ae(q2);
+      N && N.focus({ preventScroll: true });
+    }, Q2 = () => computed(() => {
+      var N;
+      return (N = k2.value) == null ? void 0 : N.getSidebarProps();
+    }), f = () => {
+      t2.openOnTop && a3("recalculate-position");
+    }, U = je(y3, "action"), d3 = computed(() => t2.monthPicker || t2.yearPicker ? je(y3, "monthYear") : t2.timePicker ? je(y3, "timePicker") : je(y3, "shared")), w2 = computed(() => t2.openOnTop ? "dp__arrow_bottom" : "dp__arrow_top"), u2 = computed(() => ({
       dp__menu_disabled: t2.disabled,
       dp__menu_readonly: t2.readonly
-    })), At = computed(
-      () => (d3) => xt(ge, d3)
-    ), ht = computed(
+    })), g = computed(
       () => ({
         dp__menu: true,
-        dp__menu_index: !t2.inline,
-        dp__relative: t2.inline,
+        dp__menu_index: !b2.value.enabled,
+        dp__relative: b2.value.enabled,
         [t2.menuClassName]: !!t2.menuClassName
       })
-    ), xt = (d3, V) => d3.value(V).map((we) => ({
-      ...we,
-      days: we.days.map((be) => (be.marker = m3(be), be.classData = Ne(be), be))
-    })), Kt = (d3) => {
-      d3.stopPropagation(), d3.stopImmediatePropagation();
-    }, jt = () => {
+    ), s3 = (N) => {
+      N.stopPropagation(), N.stopImmediatePropagation();
+    }, C = () => {
       t2.escClose && a3("close-picker");
-    }, St = (d3, V = false) => {
-      o(d3, V), t2.spaceConfirm && a3("select-date");
-    }, Ct = (d3) => {
-      var V;
-      (V = t2.flow) != null && V.length && (A[d3] = true, Object.keys(A).filter((we) => !A[we]).length || Gt());
-    }, ct = (d3, V, we, be, ...Ke) => {
-      if (t2.flow[w2.value] === d3) {
-        const X2 = be ? V.value[0] : V.value;
-        X2 && X2[we](...Ke);
-      }
-    }, Gt = () => {
-      ct("month", c2, "toggleMonthPicker", true, true), ct("year", c2, "toggleYearPicker", true, true), ct("calendar", te, "toggleTimePicker", false, false, true), ct("time", te, "toggleTimePicker", false, true, true);
-      const d3 = t2.flow[w2.value];
-      (d3 === "hours" || d3 === "minutes" || d3 === "seconds") && ct(d3, te, "toggleTimePicker", false, true, true, d3);
-    }, i2 = (d3) => {
+    }, ne = (N) => {
       if (t2.arrowNavigation) {
-        if (d3 === "up")
-          return le();
-        if (d3 === "down")
-          return x2();
-        if (d3 === "left")
-          return ee();
-        if (d3 === "right")
-          return J();
+        if (N === "up")
+          return P();
+        if (N === "down")
+          return G2();
+        if (N === "left")
+          return V();
+        if (N === "right")
+          return W();
       } else
-        d3 === "left" || d3 === "up" ? Y2("left", 0, d3 === "up") : Y2("right", 0, d3 === "down");
-    }, D2 = (d3) => {
-      f(d3.shiftKey), !t2.disableMonthYearSelect && d3.code === "Tab" && d3.target.classList.contains("dp__menu") && y3.value.shiftKeyInMenu && (d3.preventDefault(), d3.stopImmediatePropagation(), a3("close-picker"));
-    }, Q2 = (d3) => {
-      c2.value[0] && c2.value[0].handleMonthYearChange(d3);
+        N === "left" || N === "up" ? B2("handleArrow", "left", 0, N === "up") : B2("handleArrow", "right", 0, N === "down");
+    }, r = (N) => {
+      c2(N.shiftKey), !t2.disableMonthYearSelect && N.code === "Tab" && N.target.classList.contains("dp__menu") && h4.value.shiftKeyInMenu && (N.preventDefault(), N.stopImmediatePropagation(), a3("close-picker"));
+    }, L2 = () => {
+      z2(), a3("time-picker-close");
+    }, R2 = (N) => {
+      var x2, $e, J;
+      (x2 = k2.value) == null || x2.toggleTimePicker(false, false), ($e = k2.value) == null || $e.toggleMonthPicker(false, false, N), (J = k2.value) == null || J.toggleYearPicker(false, false, N);
+    }, m3 = (N, x2 = 0) => {
+      var $e, J, Ve;
+      return N === "month" ? ($e = k2.value) == null ? void 0 : $e.toggleMonthPicker(false, true, x2) : N === "year" ? (J = k2.value) == null ? void 0 : J.toggleYearPicker(false, true, x2) : N === "time" ? (Ve = k2.value) == null ? void 0 : Ve.toggleTimePicker(true, false) : R2(x2);
+    }, B2 = (N, ...x2) => {
+      var $e, J;
+      ($e = k2.value) != null && $e[N] && ((J = k2.value) == null || J[N](...x2));
+    }, le = () => {
+      B2("selectCurrentDate");
+    }, Z = (N, x2) => {
+      B2("presetDate", N, x2);
+    }, ke = () => {
+      B2("clearHoverDate");
     };
     return n({
-      updateMonthYear: l
-    }), (d3, V) => {
-      var we;
-      return openBlock(), createBlock(Transition, {
-        appear: "",
-        name: (we = unref(E2).transitions) == null ? void 0 : we.menuAppear,
-        mode: "out-in",
-        css: !!d3.transitions
-      }, {
-        default: withCtx(() => {
-          var be, Ke;
-          return [
-            createBaseVNode("div", {
-              id: d3.uid ? `dp-menu-${d3.uid}` : void 0,
-              tabindex: "0",
-              ref_key: "dpMenuRef",
-              ref: H3,
-              role: "dialog",
-              class: normalizeClass(unref(ht)),
-              onMouseleave: V[15] || (V[15] = //@ts-ignore
-              (...X2) => unref(se) && unref(se)(...X2)),
-              onClick: Kt,
-              onKeydown: [
-                withKeys(jt, ["esc"]),
-                V[16] || (V[16] = withKeys(withModifiers((X2) => i2("left"), ["prevent"]), ["left"])),
-                V[17] || (V[17] = withKeys(withModifiers((X2) => i2("up"), ["prevent"]), ["up"])),
-                V[18] || (V[18] = withKeys(withModifiers((X2) => i2("down"), ["prevent"]), ["down"])),
-                V[19] || (V[19] = withKeys(withModifiers((X2) => i2("right"), ["prevent"]), ["right"])),
-                D2
-              ]
+      updateMonthYear: (N, x2) => {
+        B2("updateMonthYear", N, x2);
+      },
+      switchView: m3
+    }), (N, x2) => {
+      var $e;
+      return openBlock(), createElementBlock("div", {
+        id: N.uid ? `dp-menu-${N.uid}` : void 0,
+        tabindex: "0",
+        ref_key: "dpMenuRef",
+        ref: q2,
+        role: "dialog",
+        class: normalizeClass(g.value),
+        onMouseleave: ke,
+        onClick: s3,
+        onKeydown: [
+          withKeys(C, ["esc"]),
+          x2[14] || (x2[14] = withKeys(withModifiers((J) => ne("left"), ["prevent"]), ["left"])),
+          x2[15] || (x2[15] = withKeys(withModifiers((J) => ne("up"), ["prevent"]), ["up"])),
+          x2[16] || (x2[16] = withKeys(withModifiers((J) => ne("down"), ["prevent"]), ["down"])),
+          x2[17] || (x2[17] = withKeys(withModifiers((J) => ne("right"), ["prevent"]), ["right"])),
+          r
+        ]
+      }, [
+        (N.disabled || N.readonly) && unref(b2).enabled ? (openBlock(), createElementBlock("div", {
+          key: 0,
+          class: normalizeClass(u2.value)
+        }, null, 2)) : createCommentVNode("", true),
+        !unref(b2).enabled && !N.teleportCenter ? (openBlock(), createElementBlock("div", {
+          key: 1,
+          class: normalizeClass(w2.value)
+        }, null, 2)) : createCommentVNode("", true),
+        createBaseVNode("div", {
+          ref_key: "innerMenuRef",
+          ref: K2,
+          class: normalizeClass({
+            dp__menu_content_wrapper: (($e = N.presetDates) == null ? void 0 : $e.length) || !!N.$slots["left-sidebar"] || !!N.$slots["right-sidebar"]
+          }),
+          style: normalizeStyle({ "--dp-menu-width": `${Y2.value}px` })
+        }, [
+          N.$slots["left-sidebar"] ? (openBlock(), createElementBlock("div", Gl, [
+            renderSlot(N.$slots, "left-sidebar", normalizeProps(guardReactiveProps(Q2())))
+          ])) : createCommentVNode("", true),
+          N.presetDates.length ? (openBlock(), createElementBlock("div", Zl, [
+            (openBlock(true), createElementBlock(Fragment, null, renderList(N.presetDates, (J, Ve) => (openBlock(), createElementBlock("div", {
+              key: Ve,
+              style: normalizeStyle(J.style || {}),
+              class: "dp--preset-range"
             }, [
-              (d3.disabled || d3.readonly) && d3.inline ? (openBlock(), createElementBlock("div", {
+              J.slot ? renderSlot(N.$slots, J.slot, {
                 key: 0,
-                class: normalizeClass(unref(zt))
-              }, null, 2)) : createCommentVNode("", true),
-              !d3.inline && !d3.teleportCenter ? (openBlock(), createElementBlock("div", {
+                presetDate: Z,
+                label: J.label,
+                value: J.value
+              }) : (openBlock(), createElementBlock("div", {
                 key: 1,
-                class: normalizeClass(unref(Re))
-              }, null, 2)) : createCommentVNode("", true),
-              createBaseVNode("div", {
-                class: normalizeClass({
-                  dp__menu_content_wrapper: ((be = d3.presetRanges) == null ? void 0 : be.length) || !!d3.$slots["left-sidebar"] || !!d3.$slots["right-sidebar"]
-                })
-              }, [
-                d3.$slots["left-sidebar"] ? (openBlock(), createElementBlock("div", qr, [
-                  renderSlot(d3.$slots, "left-sidebar", normalizeProps(guardReactiveProps({ handleMonthYearChange: Q2 })))
-                ])) : createCommentVNode("", true),
-                (Ke = d3.presetRanges) != null && Ke.length ? (openBlock(), createElementBlock("div", Jr, [
-                  (openBlock(true), createElementBlock(Fragment, null, renderList(d3.presetRanges, (X2, ft) => (openBlock(), createElementBlock("div", {
-                    key: ft,
-                    style: normalizeStyle(X2.style || {}),
-                    class: "dp__preset_range",
-                    onClick: (ie) => unref(v)(X2.range, !!X2.slot)
-                  }, [
-                    X2.slot ? renderSlot(d3.$slots, X2.slot, {
-                      key: 0,
-                      presetDateRange: unref(v),
-                      label: X2.label,
-                      range: X2.range
-                    }) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                      createTextVNode(toDisplayString(X2.label), 1)
-                    ], 64))
-                  ], 12, Qr))), 128))
-                ])) : createCommentVNode("", true),
-                createBaseVNode("div", {
-                  class: "dp__instance_calendar",
-                  ref_key: "calendarWrapperRef",
-                  ref: U,
-                  role: "document"
-                }, [
-                  createBaseVNode("div", {
-                    class: normalizeClass(unref(Ht))
-                  }, [
-                    (openBlock(true), createElementBlock(Fragment, null, renderList(unref(Je), (X2, ft) => (openBlock(), createElementBlock("div", {
-                      key: X2,
-                      class: normalizeClass(unref(Wt))
-                    }, [
-                      !d3.disableMonthYearSelect && !d3.timePicker ? (openBlock(), createBlock(Yr, mergeProps({
-                        key: 0,
-                        ref_for: true,
-                        ref: (ie) => {
-                          ie && (c2.value[ft] = ie);
-                        },
-                        months: unref(ne),
-                        years: unref(rt),
-                        month: unref(p)(X2),
-                        year: unref(q2)(X2),
-                        instance: X2,
-                        "internal-model-value": e2.internalModelValue
-                      }, d3.$props, {
-                        onMount: V[0] || (V[0] = (ie) => Ct("monthYearInput")),
-                        onResetFlow: G2,
-                        onUpdateMonthYear: (ie) => unref(l)(X2, ie),
-                        onMonthYearSelect: unref(r),
-                        onOverlayClosed: C
-                      }), createSlots({ _: 2 }, [
-                        renderList(unref(xe), (ie, qn) => ({
-                          name: ie,
-                          fn: withCtx((Zt) => [
-                            renderSlot(d3.$slots, ie, normalizeProps(guardReactiveProps(Zt)))
-                          ])
-                        }))
-                      ]), 1040, ["months", "years", "month", "year", "instance", "internal-model-value", "onUpdateMonthYear", "onMonthYearSelect"])) : createCommentVNode("", true),
-                      createVNode($r, mergeProps({
-                        ref_for: true,
-                        ref: (ie) => {
-                          ie && (M3.value[ft] = ie);
-                        },
-                        "specific-mode": unref(Tt),
-                        "get-week-num": unref(g),
-                        instance: X2,
-                        "mapped-dates": unref(At)(X2),
-                        month: unref(p)(X2),
-                        year: unref(q2)(X2)
-                      }, d3.$props, {
-                        "flow-step": w2.value,
-                        "onUpdate:flowStep": V[1] || (V[1] = (ie) => w2.value = ie),
-                        onSelectDate: (ie) => unref(o)(ie, !unref(Ye)(X2)),
-                        onHandleSpace: (ie) => St(ie, !unref(Ye)(X2)),
-                        onSetHoverDate: V[2] || (V[2] = (ie) => unref(W)(ie)),
-                        onHandleScroll: (ie) => unref(k2)(ie, X2),
-                        onHandleSwipe: (ie) => unref(R2)(ie, X2),
-                        onMount: V[3] || (V[3] = (ie) => Ct("calendar")),
-                        onResetFlow: G2,
-                        onTooltipOpen: V[4] || (V[4] = (ie) => d3.$emit("tooltip-open", ie)),
-                        onTooltipClose: V[5] || (V[5] = (ie) => d3.$emit("tooltip-close", ie))
-                      }), createSlots({ _: 2 }, [
-                        renderList(unref(Xe), (ie, qn) => ({
-                          name: ie,
-                          fn: withCtx((Zt) => [
-                            renderSlot(d3.$slots, ie, normalizeProps(guardReactiveProps({ ...Zt })))
-                          ])
-                        }))
-                      ]), 1040, ["specific-mode", "get-week-num", "instance", "mapped-dates", "month", "year", "flow-step", "onSelectDate", "onHandleSpace", "onHandleScroll", "onHandleSwipe"])
-                    ], 2))), 128))
-                  ], 2),
-                  createBaseVNode("div", null, [
-                    d3.$slots["time-picker"] ? renderSlot(d3.$slots, "time-picker", normalizeProps(mergeProps({ key: 0 }, { time: unref(j), updateTime: unref(I2) }))) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-                      d3.enableTimePicker && !d3.monthPicker && !d3.weekPicker ? (openBlock(), createBlock(Gr, mergeProps({
-                        key: 0,
-                        ref_key: "timePickerRef",
-                        ref: te,
-                        hours: unref(j).hours,
-                        minutes: unref(j).minutes,
-                        seconds: unref(j).seconds,
-                        "internal-model-value": e2.internalModelValue
-                      }, d3.$props, {
-                        onMount: V[6] || (V[6] = (X2) => Ct("timePicker")),
-                        "onUpdate:hours": V[7] || (V[7] = (X2) => unref(I2)(X2)),
-                        "onUpdate:minutes": V[8] || (V[8] = (X2) => unref(I2)(X2, false)),
-                        "onUpdate:seconds": V[9] || (V[9] = (X2) => unref(I2)(X2, false, true)),
-                        onResetFlow: G2,
-                        onOverlayClosed: C,
-                        onOverlayOpened: V[10] || (V[10] = (X2) => d3.$emit("time-picker-open", X2))
-                      }), createSlots({ _: 2 }, [
-                        renderList(unref(qe), (X2, ft) => ({
-                          name: X2,
-                          fn: withCtx((ie) => [
-                            renderSlot(d3.$slots, X2, normalizeProps(guardReactiveProps(ie)))
-                          ])
-                        }))
-                      ]), 1040, ["hours", "minutes", "seconds", "internal-model-value"])) : createCommentVNode("", true)
-                    ], 64))
-                  ])
-                ], 512),
-                d3.$slots["right-sidebar"] ? (openBlock(), createElementBlock("div", el, [
-                  renderSlot(d3.$slots, "right-sidebar", normalizeProps(guardReactiveProps({ handleMonthYearChange: Q2 })))
-                ])) : createCommentVNode("", true),
-                d3.showNowButton ? (openBlock(), createElementBlock("div", tl, [
-                  d3.$slots["now-button"] ? renderSlot(d3.$slots, "now-button", {
-                    key: 0,
-                    selectCurrentDate: unref(b2)
-                  }) : createCommentVNode("", true),
-                  d3.$slots["now-button"] ? createCommentVNode("", true) : (openBlock(), createElementBlock("button", {
-                    key: 1,
-                    type: "button",
-                    role: "button",
-                    class: "dp__now_button",
-                    onClick: V[11] || (V[11] = //@ts-ignore
-                    (...X2) => unref(b2) && unref(b2)(...X2))
-                  }, toDisplayString(d3.nowButtonLabel), 1))
-                ])) : createCommentVNode("", true)
-              ], 2),
-              !d3.autoApply || d3.keepActionRow ? (openBlock(), createBlock(mr, mergeProps({
-                key: 2,
-                "menu-mount": B2.value,
-                "calendar-width": z2.value,
-                "internal-model-value": e2.internalModelValue
-              }, d3.$props, {
-                onClosePicker: V[12] || (V[12] = (X2) => d3.$emit("close-picker")),
-                onSelectDate: V[13] || (V[13] = (X2) => d3.$emit("select-date")),
-                onInvalidSelect: V[14] || (V[14] = (X2) => d3.$emit("invalid-select"))
-              }), createSlots({ _: 2 }, [
-                renderList(unref(re), (X2, ft) => ({
-                  name: X2,
-                  fn: withCtx((ie) => [
-                    renderSlot(d3.$slots, X2, normalizeProps(guardReactiveProps({ ...ie })))
-                  ])
-                }))
-              ]), 1040, ["menu-mount", "calendar-width", "internal-model-value"])) : createCommentVNode("", true)
-            ], 42, Xr)
-          ];
-        }),
-        _: 3
-      }, 8, ["name", "css"]);
+                role: "button",
+                tabindex: "0",
+                onClick: (_e) => Z(J.value, J.noTz),
+                onKeydown: [
+                  withKeys(withModifiers((_e) => Z(J.value, J.noTz), ["prevent"]), ["enter"]),
+                  withKeys(withModifiers((_e) => Z(J.value, J.noTz), ["prevent"]), ["space"])
+                ]
+              }, toDisplayString(J.label), 41, ql))
+            ], 4))), 128))
+          ])) : createCommentVNode("", true),
+          createBaseVNode("div", {
+            class: "dp__instance_calendar",
+            ref_key: "calendarWrapperRef",
+            ref: T2,
+            role: "document"
+          }, [
+            (openBlock(), createBlock(resolveDynamicComponent(H3.value), mergeProps({
+              ref_key: "dynCmpRef",
+              ref: k2
+            }, o.value, {
+              "flow-step": unref(ee),
+              onMount: unref(_),
+              onUpdateFlowStep: unref(p),
+              onResetFlow: unref(A),
+              onFocusMenu: z2,
+              onSelectDate: x2[0] || (x2[0] = (J) => N.$emit("select-date")),
+              onTooltipOpen: x2[1] || (x2[1] = (J) => N.$emit("tooltip-open", J)),
+              onTooltipClose: x2[2] || (x2[2] = (J) => N.$emit("tooltip-close", J)),
+              onAutoApply: x2[3] || (x2[3] = (J) => N.$emit("auto-apply", J)),
+              onRangeStart: x2[4] || (x2[4] = (J) => N.$emit("range-start", J)),
+              onRangeEnd: x2[5] || (x2[5] = (J) => N.$emit("range-end", J)),
+              onInvalidFixedRange: x2[6] || (x2[6] = (J) => N.$emit("invalid-fixed-range", J)),
+              onTimeUpdate: x2[7] || (x2[7] = (J) => N.$emit("time-update")),
+              onAmPmChange: x2[8] || (x2[8] = (J) => N.$emit("am-pm-change", J)),
+              onTimePickerOpen: x2[9] || (x2[9] = (J) => N.$emit("time-picker-open", J)),
+              onTimePickerClose: L2,
+              onRecalculatePosition: f,
+              "onUpdate:internalModelValue": x2[10] || (x2[10] = (J) => N.$emit("update:internal-model-value", J))
+            }), createSlots({ _: 2 }, [
+              renderList(d3.value, (J, Ve) => ({
+                name: J,
+                fn: withCtx((_e) => [
+                  renderSlot(N.$slots, J, normalizeProps(guardReactiveProps({ ..._e })))
+                ])
+              }))
+            ]), 1040, ["flow-step", "onMount", "onUpdateFlowStep", "onResetFlow"]))
+          ], 512),
+          N.$slots["right-sidebar"] ? (openBlock(), createElementBlock("div", xl, [
+            renderSlot(N.$slots, "right-sidebar", normalizeProps(guardReactiveProps(Q2())))
+          ])) : createCommentVNode("", true),
+          N.$slots["action-extra"] ? (openBlock(), createElementBlock("div", Jl, [
+            N.$slots["action-extra"] ? renderSlot(N.$slots, "action-extra", {
+              key: 0,
+              selectCurrentDate: le
+            }) : createCommentVNode("", true)
+          ])) : createCommentVNode("", true)
+        ], 6),
+        !N.autoApply || N.keepActionRow ? (openBlock(), createBlock(al, mergeProps({
+          key: 2,
+          "menu-mount": X2.value
+        }, o.value, {
+          "calendar-width": Y2.value,
+          onClosePicker: x2[11] || (x2[11] = (J) => N.$emit("close-picker")),
+          onSelectDate: x2[12] || (x2[12] = (J) => N.$emit("select-date")),
+          onInvalidSelect: x2[13] || (x2[13] = (J) => N.$emit("invalid-select")),
+          onSelectNow: le
+        }), createSlots({ _: 2 }, [
+          renderList(unref(U), (J, Ve) => ({
+            name: J,
+            fn: withCtx((_e) => [
+              renderSlot(N.$slots, J, normalizeProps(guardReactiveProps({ ..._e })))
+            ])
+          }))
+        ]), 1040, ["menu-mount", "calendar-width"])) : createCommentVNode("", true)
+      ], 42, Kl);
     };
   }
 });
-var al = typeof window < "u" ? window : void 0;
-var ln = () => {
+var Xl = typeof window < "u" ? window : void 0;
+var hn = () => {
 };
-var rl = (e2) => getCurrentScope() ? (onScopeDispose(e2), true) : false;
-var ll = (e2, n, a3, t2) => {
+var Ql = (e2) => getCurrentScope() ? (onScopeDispose(e2), true) : false;
+var eo = (e2, n, a3, t2) => {
   if (!e2)
-    return ln;
-  let s3 = ln;
-  const f = watch(
+    return hn;
+  let o = hn;
+  const l = watch(
     () => unref(e2),
-    (_) => {
-      s3(), _ && (_.addEventListener(n, a3, t2), s3 = () => {
-        _.removeEventListener(n, a3, t2), s3 = ln;
+    (h4) => {
+      o(), h4 && (h4.addEventListener(n, a3, t2), o = () => {
+        h4.removeEventListener(n, a3, t2), o = hn;
       });
     },
     { immediate: true, flush: "post" }
-  ), y3 = () => {
-    f(), s3();
+  ), c2 = () => {
+    l(), o();
   };
-  return rl(y3), y3;
+  return Ql(c2), c2;
 };
-var ol = (e2, n, a3, t2 = {}) => {
-  const { window: s3 = al, event: f = "pointerdown" } = t2;
-  return s3 ? ll(s3, f, (_) => {
-    const E2 = $e(e2), T2 = $e(n);
-    !E2 || !T2 || E2 === _.target || _.composedPath().includes(E2) || _.composedPath().includes(T2) || a3(_);
+var to = (e2, n, a3, t2 = {}) => {
+  const { window: o = Xl, event: l = "pointerdown" } = t2;
+  return o ? eo(o, l, (h4) => {
+    const y3 = Ae(e2), D2 = Ae(n);
+    !y3 || !D2 || y3 === h4.target || h4.composedPath().includes(y3) || h4.composedPath().includes(D2) || a3(h4);
   }, { passive: true }) : void 0;
 };
-var sl = defineComponent({
+var no = defineComponent({
+  compatConfig: {
+    MODE: 3
+  },
   __name: "VueDatePicker",
   props: {
-    ...at
+    ...xt
   },
   emits: [
     "update:model-value",
+    "update:model-timezone-value",
     "text-submit",
     "closed",
     "cleared",
@@ -8470,193 +9095,228 @@ var sl = defineComponent({
     "invalid-fixed-range",
     "tooltip-open",
     "tooltip-close",
-    "time-picker-open"
+    "time-picker-open",
+    "time-picker-close",
+    "am-pm-change",
+    "range-start",
+    "range-end"
   ],
   setup(e2, { expose: n, emit: a3 }) {
-    const t2 = e2, s3 = useSlots(), f = ref(false), y3 = toRef(t2, "modelValue"), _ = toRef(t2, "timezone"), E2 = ref(null), T2 = ref(null), U = ref(false), A = ref(null), { setMenuFocused: c2, setShiftKey: M3 } = Kn(), { clearArrowNav: te } = nt(), { validateDate: H3, isValidTime: z2 } = Ee(t2);
+    const t2 = e2, o = useSlots(), l = ref(false), c2 = toRef(t2, "modelValue"), h4 = toRef(t2, "timezone"), y3 = ref(null), D2 = ref(null), b2 = ref(null), T2 = ref(false), Y2 = ref(null), q2 = reactive({
+      disabledDates: null,
+      allowedDates: null,
+      highlightedDates: null
+    }), { setMenuFocused: K2, setShiftKey: X2 } = Sa(), { clearArrowNav: k2 } = rt(), { mapDatesArrToMap: $, validateDate: W, isValidTime: V } = Bt(t2), { defaultedTransitions: G2, defaultedTextInput: P, defaultedInline: ee } = Ce(t2), { menuTransition: p, showTransition: _ } = Yt(G2);
     onMounted(() => {
-      G2(t2.modelValue), t2.inline || (de(A.value).addEventListener("scroll", l), window.addEventListener("resize", o)), t2.inline && (f.value = true);
+      s3(t2.modelValue), nextTick().then(() => {
+        ee.value.enabled || (d3(Y2.value).addEventListener("scroll", B2), window.addEventListener("resize", le));
+      }), ee.value.enabled && (l.value = true), $(q2);
     }), onUnmounted(() => {
-      if (!t2.inline) {
-        const ne = de(A.value);
-        ne && ne.removeEventListener("scroll", l), window.removeEventListener("resize", o);
+      if (!ee.value.enabled) {
+        const re = d3(Y2.value);
+        re && re.removeEventListener("scroll", B2), window.removeEventListener("resize", le);
       }
     });
-    const B2 = it(s3, "all", t2.presetRanges), w2 = it(s3, "input");
+    const A = je(o, "all", t2.presetDates), H3 = je(o, "input");
     watch(
-      [y3, _],
+      [c2, h4],
       () => {
-        G2(y3.value);
+        s3(c2.value);
       },
       { deep: true }
     );
-    const { openOnTop: J, menuPosition: ee, setMenuPosition: x2, setInitialPosition: le, getScrollableParent: de } = nr(
-      E2,
-      T2,
+    const { openOnTop: z2, menuStyle: Q2, xCorrect: f, setMenuPosition: U, getScrollableParent: d3, shadowRender: w2 } = jr(
+      y3,
+      D2,
+      b2,
+      Y2,
+      ee,
       a3,
       t2
     ), {
-      inputValue: C,
-      internalModelValue: N,
-      parseExternalModelValue: G2,
-      emitModelValue: P,
-      formatInputValue: Z,
-      checkBeforeEmit: p
-    } = er(a3, t2, U), q2 = computed(
+      inputValue: u2,
+      internalModelValue: g,
+      parseExternalModelValue: s3,
+      emitModelValue: C,
+      formatInputValue: ne,
+      checkBeforeEmit: r
+    } = Wr(a3, t2, T2), L2 = computed(
       () => ({
         dp__main: true,
         dp__theme_dark: t2.dark,
         dp__theme_light: !t2.dark,
-        dp__flex_display: t2.inline,
-        dp__flex_display_with_input: t2.inlineWithInput
+        dp__flex_display: ee.value.enabled,
+        dp__flex_display_with_input: ee.value.input
       })
-    ), j = computed(() => t2.dark ? "dp__theme_dark" : "dp__theme_light"), I2 = computed(() => t2.teleport ? {
+    ), R2 = computed(() => t2.dark ? "dp__theme_dark" : "dp__theme_light"), m3 = computed(() => t2.teleport ? {
       to: typeof t2.teleport == "boolean" ? "body" : t2.teleport,
-      disabled: t2.inline
-    } : { class: "dp__outer_menu_wrap" }), l = () => {
-      f.value && (t2.closeOnScroll ? W() : x2());
-    }, o = () => {
-      f.value && x2();
-    }, g = () => {
-      !t2.disabled && !t2.readonly && (le(), f.value = true, nextTick().then(() => {
-        x2(), f.value && a3("open");
-      }), f.value || v(), G2(t2.modelValue));
-    }, r = () => {
-      C.value = "", v(), a3("update:model-value", null), a3("cleared"), W();
-    }, k2 = () => {
-      const ne = N.value;
-      return !ne || !Array.isArray(ne) && H3(ne) ? true : Array.isArray(ne) ? ne.length === 2 && H3(ne[0]) && H3(ne[1]) ? true : H3(ne[0]) : false;
-    }, Y2 = () => {
-      p() && k2() ? (P(), W()) : a3("invalid-select", N.value);
-    }, R2 = (ne) => {
-      m3(), P(), t2.closeOnAutoApply && !ne && W();
-    }, m3 = () => {
-      T2.value && t2.textInput && T2.value.setParsedDate(N.value);
-    }, b2 = (ne = false) => {
-      t2.autoApply && z2(N.value) && k2() && (t2.range && Array.isArray(N.value) ? (t2.partialRange || N.value.length === 2) && R2(ne) : R2(ne));
-    }, v = () => {
-      t2.textInput || (N.value = null);
-    }, W = () => {
-      t2.inline || (f.value && (f.value = false, c2(false), M3(false), te(), a3("closed"), le(), C.value && G2(y3.value)), v());
-    }, se = (ne, me) => {
-      if (!ne) {
-        N.value = null;
+      disabled: ee.value.enabled
+    } : { class: "dp__outer_menu_wrap" }), B2 = () => {
+      l.value && (t2.closeOnScroll ? _e() : U());
+    }, le = () => {
+      l.value && U();
+    }, Z = () => {
+      !t2.disabled && !t2.readonly && (w2(sa, t2), U(false), l.value = true, l.value && a3("open"), l.value || Ve(), s3(t2.modelValue));
+    }, ke = () => {
+      u2.value = "", Ve(), a3("update:model-value", null), a3("update:model-timezone-value", null), a3("cleared"), t2.closeOnClearValue && _e();
+    }, se = () => {
+      const re = g.value;
+      return !re || !Array.isArray(re) && W(re) ? true : Array.isArray(re) ? re.length === 2 && W(re[0]) && W(re[1]) ? true : t2.partialRange && !t2.timePicker ? W(re[0]) : false : false;
+    }, N = () => {
+      r() && se() ? (C(), _e()) : a3("invalid-select", g.value);
+    }, x2 = (re) => {
+      $e(), C(), t2.closeOnAutoApply && !re && _e();
+    }, $e = () => {
+      b2.value && P.value.enabled && b2.value.setParsedDate(g.value);
+    }, J = (re = false) => {
+      t2.autoApply && V(g.value) && se() && (t2.range && Array.isArray(g.value) ? (t2.partialRange || g.value.length === 2) && x2(re) : x2(re));
+    }, Ve = () => {
+      P.value.enabled || (g.value = null);
+    }, _e = () => {
+      ee.value.enabled || (l.value && (l.value = false, f.value = false, K2(false), X2(false), k2(), a3("closed"), u2.value && s3(c2.value)), Ve(), a3("blur"));
+    }, Et = (re, ie) => {
+      if (!re) {
+        g.value = null;
         return;
       }
-      N.value = ne, me && (Y2(), a3("text-submit"));
-    }, Ne = () => {
-      t2.autoApply && z2(N.value) && P(), m3();
-    }, Xe = () => f.value ? W() : g(), re = (ne) => {
-      N.value = ne;
-    }, qe = () => {
-      t2.textInput && (U.value = true, Z()), a3("focus");
-    }, xe = () => {
-      t2.textInput && (U.value = false, G2(t2.modelValue)), a3("blur");
-    }, Re = (ne) => {
-      E2.value && E2.value.updateMonthYear(0, {
-        month: Nn(ne.month),
-        year: Nn(ne.year)
+      g.value = re, ie && (N(), a3("text-submit"));
+    }, Mt = () => {
+      t2.autoApply && V(g.value) && C(), $e();
+    }, Jt = () => l.value ? _e() : Z(), Xt = (re) => {
+      g.value = re;
+    }, Qt = () => {
+      P.value.enabled && (T2.value = true, ne()), a3("focus");
+    }, en = () => {
+      P.value.enabled && (T2.value = false, s3(t2.modelValue)), a3("blur");
+    }, tn = (re) => {
+      D2.value && D2.value.updateMonthYear(0, {
+        month: Qn(re.month),
+        year: Qn(re.year)
       });
-    }, rt = (ne) => {
-      G2(ne || t2.modelValue);
+    }, nn = (re) => {
+      s3(re ?? t2.modelValue);
+    }, an = (re, ie) => {
+      var i2;
+      (i2 = D2.value) == null || i2.switchView(re, ie);
     };
-    return ol(
-      E2,
-      T2,
-      t2.onClickOutside ? () => t2.onClickOutside(k2) : W
+    return to(
+      y3,
+      b2,
+      t2.onClickOutside ? () => t2.onClickOutside(se) : _e
     ), n({
-      closeMenu: W,
-      selectDate: Y2,
-      clearValue: r,
-      openMenu: g,
-      onScroll: l,
-      formatInputValue: Z,
+      closeMenu: _e,
+      selectDate: N,
+      clearValue: ke,
+      openMenu: Z,
+      onScroll: B2,
+      formatInputValue: ne,
       // exposed for testing purposes
-      updateInternalModelValue: re,
+      updateInternalModelValue: Xt,
       // modify internal modelValue
-      setMonthYear: Re,
-      parseModel: rt
-    }), (ne, me) => (openBlock(), createElementBlock("div", {
-      class: normalizeClass(unref(q2)),
+      setMonthYear: tn,
+      parseModel: nn,
+      switchView: an
+    }), (re, ie) => (openBlock(), createElementBlock("div", {
+      class: normalizeClass(L2.value),
       ref_key: "pickerWrapperRef",
-      ref: A
+      ref: Y2
     }, [
-      createVNode(dr, mergeProps({
+      createVNode(Qr, mergeProps({
         ref_key: "inputRef",
-        ref: T2,
-        "is-menu-open": f.value,
-        "input-value": unref(C),
-        "onUpdate:inputValue": me[0] || (me[0] = (ge) => isRef(C) ? C.value = ge : null)
-      }, ne.$props, {
-        onClear: r,
-        onOpen: g,
-        onSetInputDate: se,
-        onSetEmptyDate: unref(P),
-        onSelectDate: Y2,
-        onToggle: Xe,
-        onClose: W,
-        onFocus: qe,
-        onBlur: xe
+        ref: b2,
+        "is-menu-open": l.value,
+        "input-value": unref(u2),
+        "onUpdate:inputValue": ie[0] || (ie[0] = (i2) => isRef(u2) ? u2.value = i2 : null)
+      }, re.$props, {
+        onClear: ke,
+        onOpen: Z,
+        onSetInputDate: Et,
+        onSetEmptyDate: unref(C),
+        onSelectDate: N,
+        onToggle: Jt,
+        onClose: _e,
+        onFocus: Qt,
+        onBlur: en,
+        onRealBlur: ie[1] || (ie[1] = (i2) => T2.value = false)
       }), createSlots({ _: 2 }, [
-        renderList(unref(w2), (ge, Je) => ({
-          name: ge,
-          fn: withCtx((Ye) => [
-            renderSlot(ne.$slots, ge, normalizeProps(guardReactiveProps(Ye)))
+        renderList(unref(H3), (i2, E2) => ({
+          name: i2,
+          fn: withCtx((ae) => [
+            renderSlot(re.$slots, i2, normalizeProps(guardReactiveProps(ae)))
           ])
         }))
       ]), 1040, ["is-menu-open", "input-value", "onSetEmptyDate"]),
-      f.value ? (openBlock(), createBlock(resolveDynamicComponent(ne.teleport ? Teleport : "div"), normalizeProps(mergeProps({ key: 0 }, unref(I2))), {
+      createVNode(Transition, {
+        name: unref(p)(unref(z2)),
+        css: unref(_) && !unref(ee).enabled
+      }, {
         default: withCtx(() => [
-          f.value ? (openBlock(), createBlock(nl, mergeProps({
+          l.value ? (openBlock(), createBlock(resolveDynamicComponent(re.teleport ? Teleport : "div"), mergeProps({
             key: 0,
-            ref_key: "dpMenuRef",
-            ref: E2,
-            class: unref(j),
-            style: unref(ee),
-            "open-on-top": unref(J)
-          }, ne.$props, {
-            "internal-model-value": unref(N),
-            "onUpdate:internalModelValue": me[1] || (me[1] = (ge) => isRef(N) ? N.value = ge : null),
-            onClosePicker: W,
-            onSelectDate: Y2,
-            onAutoApply: b2,
-            onTimeUpdate: Ne,
-            onFlowStep: me[2] || (me[2] = (ge) => ne.$emit("flow-step", ge)),
-            onUpdateMonthYear: me[3] || (me[3] = (ge) => ne.$emit("update-month-year", ge)),
-            onInvalidSelect: me[4] || (me[4] = (ge) => ne.$emit("invalid-select", unref(N))),
-            onInvalidFixedRange: me[5] || (me[5] = (ge) => ne.$emit("invalid-fixed-range", ge)),
-            onRecalculatePosition: unref(x2),
-            onTooltipOpen: me[6] || (me[6] = (ge) => ne.$emit("tooltip-open", ge)),
-            onTooltipClose: me[7] || (me[7] = (ge) => ne.$emit("tooltip-close", ge)),
-            onTimePickerOpen: me[8] || (me[8] = (ge) => ne.$emit("time-picker-open", ge))
-          }), createSlots({ _: 2 }, [
-            renderList(unref(B2), (ge, Je) => ({
-              name: ge,
-              fn: withCtx((Ye) => [
-                renderSlot(ne.$slots, ge, normalizeProps(guardReactiveProps({ ...Ye })))
-              ])
-            }))
-          ]), 1040, ["class", "style", "open-on-top", "internal-model-value", "onRecalculatePosition"])) : createCommentVNode("", true)
+            ref_key: "dpWrapMenuRef",
+            ref: y3
+          }, m3.value, {
+            class: { "dp--menu-wrapper": !unref(ee).enabled },
+            style: unref(ee).enabled ? void 0 : unref(Q2)
+          }), {
+            default: withCtx(() => [
+              createVNode(sa, mergeProps({
+                ref_key: "dpMenuRef",
+                ref: D2,
+                class: { [R2.value]: true, "dp--menu-wrapper": re.teleport },
+                style: re.teleport ? unref(Q2) : void 0,
+                "open-on-top": unref(z2),
+                "arr-map-values": q2
+              }, re.$props, {
+                "internal-model-value": unref(g),
+                "onUpdate:internalModelValue": ie[2] || (ie[2] = (i2) => isRef(g) ? g.value = i2 : null),
+                onClosePicker: _e,
+                onSelectDate: N,
+                onAutoApply: J,
+                onTimeUpdate: Mt,
+                onFlowStep: ie[3] || (ie[3] = (i2) => re.$emit("flow-step", i2)),
+                onUpdateMonthYear: ie[4] || (ie[4] = (i2) => re.$emit("update-month-year", i2)),
+                onInvalidSelect: ie[5] || (ie[5] = (i2) => re.$emit("invalid-select", unref(g))),
+                onInvalidFixedRange: ie[6] || (ie[6] = (i2) => re.$emit("invalid-fixed-range", i2)),
+                onRecalculatePosition: unref(U),
+                onTooltipOpen: ie[7] || (ie[7] = (i2) => re.$emit("tooltip-open", i2)),
+                onTooltipClose: ie[8] || (ie[8] = (i2) => re.$emit("tooltip-close", i2)),
+                onTimePickerOpen: ie[9] || (ie[9] = (i2) => re.$emit("time-picker-open", i2)),
+                onTimePickerClose: ie[10] || (ie[10] = (i2) => re.$emit("time-picker-close", i2)),
+                onAmPmChange: ie[11] || (ie[11] = (i2) => re.$emit("am-pm-change", i2)),
+                onRangeStart: ie[12] || (ie[12] = (i2) => re.$emit("range-start", i2)),
+                onRangeEnd: ie[13] || (ie[13] = (i2) => re.$emit("range-end", i2))
+              }), createSlots({ _: 2 }, [
+                renderList(unref(A), (i2, E2) => ({
+                  name: i2,
+                  fn: withCtx((ae) => [
+                    renderSlot(re.$slots, i2, normalizeProps(guardReactiveProps({ ...ae })))
+                  ])
+                }))
+              ]), 1040, ["class", "style", "open-on-top", "arr-map-values", "internal-model-value", "onRecalculatePosition"])
+            ]),
+            _: 3
+          }, 16, ["class", "style"])) : createCommentVNode("", true)
         ]),
         _: 3
-      }, 16)) : createCommentVNode("", true)
+      }, 8, ["name", "css"])
     ], 2));
   }
 });
-var Xn = (() => {
-  const e2 = sl;
+var Na = (() => {
+  const e2 = no;
   return e2.install = (n) => {
     n.component("Vue3DatePicker", e2);
   }, e2;
 })();
-var il = Object.freeze(Object.defineProperty({
+var ao = Object.freeze(Object.defineProperty({
   __proto__: null,
-  default: Xn
+  default: Na
 }, Symbol.toStringTag, { value: "Module" }));
-Object.entries(il).forEach(([e2, n]) => {
-  e2 !== "default" && (Xn[e2] = n);
+Object.entries(ao).forEach(([e2, n]) => {
+  e2 !== "default" && (Na[e2] = n);
 });
 export {
-  Xn as default
+  Na as default
 };
 //# sourceMappingURL=@vuepic_vue-datepicker.js.map

@@ -39,6 +39,14 @@ h1,h2,h3,h4,h5,h6,hr,a,span,p,div,ul,ol,li,button,input,textarea,th,td,img {
   margin: 0;
   padding: 0;
 }
+h1 { // h1 标签渐变色文本
+  display: inline-block;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: #0000;
+  white-space: nowrap;
+  background-image: linear-gradient(to right, #1d39c4, #c41d7f);
+}
 .mt10 {
   margin-top: 10px;
 }

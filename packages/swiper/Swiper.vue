@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Pagination, Navigation, Autoplay, EffectFade } from 'swiper'
+import { Pagination, Navigation, Autoplay, EffectFade } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'

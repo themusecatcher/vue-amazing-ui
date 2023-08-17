@@ -1,55 +1,9 @@
 import {
-  A11y,
-  Autoplay,
-  Controller,
-  EffectCards,
-  EffectCoverflow,
-  EffectCreative,
-  EffectCube,
-  EffectFade,
-  EffectFlip,
-  Grid,
-  HashNavigation,
-  History,
-  Keyboard,
-  Manipulation,
-  Mousewheel,
-  Navigation,
-  Pagination,
-  Parallax,
-  Scrollbar,
-  Thumb,
-  Virtual,
-  Zoom,
-  core_default,
-  freeMode
-} from "./chunk-FRLFTGA2.js";
+  Swiper
+} from "./chunk-C457BK5C.js";
 import "./chunk-UXIASGQL.js";
 export {
-  A11y,
-  Autoplay,
-  Controller,
-  EffectCards,
-  EffectCoverflow,
-  EffectCreative,
-  EffectCube,
-  EffectFade,
-  EffectFlip,
-  freeMode as FreeMode,
-  Grid,
-  HashNavigation,
-  History,
-  Keyboard,
-  Manipulation,
-  Mousewheel,
-  Navigation,
-  Pagination,
-  Parallax,
-  Scrollbar,
-  core_default as Swiper,
-  Thumb as Thumbs,
-  Virtual,
-  Zoom,
-  core_default as default
+  Swiper,
+  Swiper as default
 };
 //# sourceMappingURL=swiper.js.map
