@@ -1,41 +1,41 @@
 {
-  "hash": "ae6e1ce4",
-  "browserHash": "a109287f",
+  "hash": "258f01a5",
+  "browserHash": "acd56833",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.3.4/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "c2685a3a",
+      "fileHash": "1f532105",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/.pnpm/@vue+devtools-api@6.5.0/node_modules/@vue/devtools-api/lib/esm/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "ef07388f",
+      "fileHash": "5bc14b69",
       "needsInterop": false
     },
     "@vuepic/vue-datepicker": {
-      "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@4.5.1_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
+      "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@6.0.0_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
       "file": "@vuepic_vue-datepicker.js",
-      "fileHash": "75588903",
+      "fileHash": "29b6fb2b",
       "needsInterop": false
     },
     "@vueuse/integrations/useQRCode": {
       "src": "../../../../node_modules/.pnpm/@vueuse+integrations@10.3.0_focus-trap@7.5.2_qrcode@1.5.3_vue@3.3.4/node_modules/@vueuse/integrations/useQRCode.mjs",
       "file": "@vueuse_integrations_useQRCode.js",
-      "fileHash": "7dcd86b3",
+      "fileHash": "36435984",
       "needsInterop": false
     },
     "swiper/vue": {
-      "src": "../../../../node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/vue/swiper-vue.js",
+      "src": "../../../../node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/swiper-vue.mjs",
       "file": "swiper_vue.js",
-      "fileHash": "24e94264",
+      "fileHash": "7b280664",
       "needsInterop": false
     },
     "swiper": {
-      "src": "../../../../node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/swiper.esm.js",
+      "src": "../../../../node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/swiper.mjs",
       "file": "swiper.js",
-      "fileHash": "4fb640bb",
+      "fileHash": "4060c307",
       "needsInterop": false
     }
   },
@@ -43,8 +43,8 @@
     "chunk-67UUJLDS": {
       "file": "chunk-67UUJLDS.js"
     },
-    "chunk-FRLFTGA2": {
-      "file": "chunk-FRLFTGA2.js"
+    "chunk-C457BK5C": {
+      "file": "chunk-C457BK5C.js"
     },
     "chunk-UXIASGQL": {
       "file": "chunk-UXIASGQL.js"

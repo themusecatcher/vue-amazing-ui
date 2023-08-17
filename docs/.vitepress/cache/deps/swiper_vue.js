@@ -12,56 +12,12 @@ import {
   watch
 } from "./chunk-67UUJLDS.js";
 import {
-  core_default
-} from "./chunk-FRLFTGA2.js";
+  Swiper,
+  defaults
+} from "./chunk-C457BK5C.js";
 import "./chunk-UXIASGQL.js";
 
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/components-shared/utils.js
-function isObject(o) {
-  return typeof o === "object" && o !== null && o.constructor && Object.prototype.toString.call(o).slice(8, -1) === "Object";
-}
-function extend(target, src) {
-  const noExtend = ["__proto__", "constructor", "prototype"];
-  Object.keys(src).filter((key) => noExtend.indexOf(key) < 0).forEach((key) => {
-    if (typeof target[key] === "undefined")
-      target[key] = src[key];
-    else if (isObject(src[key]) && isObject(target[key]) && Object.keys(src[key]).length > 0) {
-      if (src[key].__swiper__)
-        target[key] = src[key];
-      else
-        extend(target[key], src[key]);
-    } else {
-      target[key] = src[key];
-    }
-  });
-}
-function needsNavigation(params = {}) {
-  return params.navigation && typeof params.navigation.nextEl === "undefined" && typeof params.navigation.prevEl === "undefined";
-}
-function needsPagination(params = {}) {
-  return params.pagination && typeof params.pagination.el === "undefined";
-}
-function needsScrollbar(params = {}) {
-  return params.scrollbar && typeof params.scrollbar.el === "undefined";
-}
-function uniqueClasses(classNames = "") {
-  const classes = classNames.split(" ").map((c) => c.trim()).filter((c) => !!c);
-  const unique = [];
-  classes.forEach((c) => {
-    if (unique.indexOf(c) < 0)
-      unique.push(c);
-  });
-  return unique.join(" ");
-}
-function wrapperClass(className = "") {
-  if (!className)
-    return "swiper-wrapper";
-  if (!className.includes("swiper-wrapper"))
-    return `swiper-wrapper ${className}`;
-  return className;
-}
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/components-shared/params-list.js
+// node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -176,182 +132,75 @@ var paramsList = [
   "zoom",
   "control"
 ];
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/components-shared/get-params.js
-function getParams(obj = {}, splitEvents = true) {
-  const params = {
-    on: {}
-  };
-  const events = {};
-  const passedParams = {};
-  extend(params, core_default.defaults);
-  extend(params, core_default.extendedDefaults);
-  params._emitClasses = true;
-  params.init = false;
-  const rest = {};
-  const allowedParams = paramsList.map((key) => key.replace(/_/, ""));
-  const plainObj = Object.assign({}, obj);
-  Object.keys(plainObj).forEach((key) => {
-    if (typeof obj[key] === "undefined")
-      return;
-    if (allowedParams.indexOf(key) >= 0) {
-      if (isObject(obj[key])) {
-        params[key] = {};
-        passedParams[key] = {};
-        extend(params[key], obj[key]);
-        extend(passedParams[key], obj[key]);
-      } else {
-        params[key] = obj[key];
-        passedParams[key] = obj[key];
-      }
-    } else if (key.search(/on[A-Z]/) === 0 && typeof obj[key] === "function") {
-      if (splitEvents) {
-        events[`${key[2].toLowerCase()}${key.substr(3)}`] = obj[key];
-      } else {
-        params.on[`${key[2].toLowerCase()}${key.substr(3)}`] = obj[key];
-      }
+function isObject(o) {
+  return typeof o === "object" && o !== null && o.constructor && Object.prototype.toString.call(o).slice(8, -1) === "Object";
+}
+function extend(target, src) {
+  const noExtend = ["__proto__", "constructor", "prototype"];
+  Object.keys(src).filter((key) => noExtend.indexOf(key) < 0).forEach((key) => {
+    if (typeof target[key] === "undefined")
+      target[key] = src[key];
+    else if (isObject(src[key]) && isObject(target[key]) && Object.keys(src[key]).length > 0) {
+      if (src[key].__swiper__)
+        target[key] = src[key];
+      else
+        extend(target[key], src[key]);
     } else {
-      rest[key] = obj[key];
+      target[key] = src[key];
     }
   });
-  ["navigation", "pagination", "scrollbar"].forEach((key) => {
-    if (params[key] === true)
-      params[key] = {};
-    if (params[key] === false)
-      delete params[key];
-  });
-  return {
-    params,
-    passedParams,
-    rest,
-    events
-  };
 }
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/components-shared/mount-swiper.js
-function mountSwiper({
-  el,
-  nextEl,
-  prevEl,
-  paginationEl,
-  scrollbarEl,
-  swiper
-}, swiperParams) {
-  if (needsNavigation(swiperParams) && nextEl && prevEl) {
-    swiper.params.navigation.nextEl = nextEl;
-    swiper.originalParams.navigation.nextEl = nextEl;
-    swiper.params.navigation.prevEl = prevEl;
-    swiper.originalParams.navigation.prevEl = prevEl;
+function needsNavigation(params) {
+  if (params === void 0) {
+    params = {};
   }
-  if (needsPagination(swiperParams) && paginationEl) {
-    swiper.params.pagination.el = paginationEl;
-    swiper.originalParams.pagination.el = paginationEl;
-  }
-  if (needsScrollbar(swiperParams) && scrollbarEl) {
-    swiper.params.scrollbar.el = scrollbarEl;
-    swiper.originalParams.scrollbar.el = scrollbarEl;
-  }
-  swiper.init(el);
+  return params.navigation && typeof params.navigation.nextEl === "undefined" && typeof params.navigation.prevEl === "undefined";
 }
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/components-shared/get-changed-params.js
-function getChangedParams(swiperParams, oldParams, children, oldChildren, getKey) {
-  const keys = [];
-  if (!oldParams)
-    return keys;
-  const addKey = (key) => {
-    if (keys.indexOf(key) < 0)
-      keys.push(key);
-  };
-  if (children && oldChildren) {
-    const oldChildrenKeys = oldChildren.map(getKey);
-    const childrenKeys = children.map(getKey);
-    if (oldChildrenKeys.join("") !== childrenKeys.join(""))
-      addKey("children");
-    if (oldChildren.length !== children.length)
-      addKey("children");
+function needsPagination(params) {
+  if (params === void 0) {
+    params = {};
   }
-  const watchParams = paramsList.filter((key) => key[0] === "_").map((key) => key.replace(/_/, ""));
-  watchParams.forEach((key) => {
-    if (key in swiperParams && key in oldParams) {
-      if (isObject(swiperParams[key]) && isObject(oldParams[key])) {
-        const newKeys = Object.keys(swiperParams[key]);
-        const oldKeys = Object.keys(oldParams[key]);
-        if (newKeys.length !== oldKeys.length) {
-          addKey(key);
-        } else {
-          newKeys.forEach((newKey) => {
-            if (swiperParams[key][newKey] !== oldParams[key][newKey]) {
-              addKey(key);
-            }
-          });
-          oldKeys.forEach((oldKey) => {
-            if (swiperParams[key][oldKey] !== oldParams[key][oldKey])
-              addKey(key);
-          });
-        }
-      } else if (swiperParams[key] !== oldParams[key]) {
-        addKey(key);
-      }
-    }
-  });
-  return keys;
+  return params.pagination && typeof params.pagination.el === "undefined";
 }
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/vue/get-children.js
-function getChildren(originalSlots, slidesRef, oldSlidesRef) {
-  if (originalSlots === void 0) {
-    originalSlots = {};
+function needsScrollbar(params) {
+  if (params === void 0) {
+    params = {};
   }
-  const slides = [];
-  const slots = {
-    "container-start": [],
-    "container-end": [],
-    "wrapper-start": [],
-    "wrapper-end": []
-  };
-  const getSlidesFromElements = (els, slotName) => {
-    if (!Array.isArray(els)) {
-      return;
-    }
-    els.forEach((vnode) => {
-      const isFragment = typeof vnode.type === "symbol";
-      if (slotName === "default")
-        slotName = "container-end";
-      if (isFragment && vnode.children) {
-        getSlidesFromElements(vnode.children, slotName);
-      } else if (vnode.type && (vnode.type.name === "SwiperSlide" || vnode.type.name === "AsyncComponentWrapper")) {
-        slides.push(vnode);
-      } else if (slots[slotName]) {
-        slots[slotName].push(vnode);
-      }
-    });
-  };
-  Object.keys(originalSlots).forEach((slotName) => {
-    if (typeof originalSlots[slotName] !== "function")
-      return;
-    const els = originalSlots[slotName]();
-    getSlidesFromElements(els, slotName);
+  return params.scrollbar && typeof params.scrollbar.el === "undefined";
+}
+function uniqueClasses(classNames) {
+  if (classNames === void 0) {
+    classNames = "";
+  }
+  const classes = classNames.split(" ").map((c) => c.trim()).filter((c) => !!c);
+  const unique = [];
+  classes.forEach((c) => {
+    if (unique.indexOf(c) < 0)
+      unique.push(c);
   });
-  oldSlidesRef.value = slidesRef.value;
-  slidesRef.value = slides;
-  return {
+  return unique.join(" ");
+}
+function wrapperClass(className) {
+  if (className === void 0) {
+    className = "";
+  }
+  if (!className)
+    return "swiper-wrapper";
+  if (!className.includes("swiper-wrapper"))
+    return `swiper-wrapper ${className}`;
+  return className;
+}
+function updateSwiper(_ref) {
+  let {
+    swiper,
     slides,
-    slots
-  };
-}
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/components-shared/update-swiper.js
-function updateSwiper({
-  swiper,
-  slides,
-  passedParams,
-  changedParams,
-  nextEl,
-  prevEl,
-  scrollbarEl,
-  paginationEl
-}) {
+    passedParams,
+    changedParams,
+    nextEl,
+    prevEl,
+    scrollbarEl,
+    paginationEl
+  } = _ref;
   const updateParams = changedParams.filter((key) => key !== "children" && key !== "direction" && key !== "wrapperClass");
   const {
     params: currentParams,
@@ -453,7 +302,8 @@ function updateSwiper({
     if (swiper.isElement && (!paginationEl || typeof paginationEl === "string")) {
       paginationEl = document.createElement("div");
       paginationEl.classList.add("swiper-pagination");
-      swiper.el.shadowEl.appendChild(paginationEl);
+      paginationEl.part.add("pagination");
+      swiper.el.appendChild(paginationEl);
     }
     if (paginationEl)
       currentParams.pagination.el = paginationEl;
@@ -465,7 +315,8 @@ function updateSwiper({
     if (swiper.isElement && (!scrollbarEl || typeof scrollbarEl === "string")) {
       scrollbarEl = document.createElement("div");
       scrollbarEl.classList.add("swiper-scrollbar");
-      swiper.el.shadowEl.appendChild(scrollbarEl);
+      scrollbarEl.part.add("scrollbar");
+      swiper.el.appendChild(scrollbarEl);
     }
     if (scrollbarEl)
       currentParams.scrollbar.el = scrollbarEl;
@@ -478,12 +329,16 @@ function updateSwiper({
       if (!nextEl || typeof nextEl === "string") {
         nextEl = document.createElement("div");
         nextEl.classList.add("swiper-button-next");
-        swiper.el.shadowEl.appendChild(nextEl);
+        nextEl.innerHTML = swiper.hostEl.constructor.nextButtonSvg;
+        nextEl.part.add("button-next");
+        swiper.el.appendChild(nextEl);
       }
       if (!prevEl || typeof prevEl === "string") {
         prevEl = document.createElement("div");
         prevEl.classList.add("swiper-button-prev");
-        swiper.el.shadowEl.appendChild(prevEl);
+        prevEl.innerHTML = swiper.hostEl.constructor.prevButtonSvg;
+        prevEl.part.add("button-prev");
+        swiper.el.appendChild(prevEl);
       }
     }
     if (nextEl)
@@ -511,7 +366,181 @@ function updateSwiper({
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/vue/virtual.js
+// node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/shared/update-on-virtual-data.mjs
+function getParams(obj, splitEvents) {
+  if (obj === void 0) {
+    obj = {};
+  }
+  if (splitEvents === void 0) {
+    splitEvents = true;
+  }
+  const params = {
+    on: {}
+  };
+  const events = {};
+  const passedParams = {};
+  extend(params, defaults);
+  params._emitClasses = true;
+  params.init = false;
+  const rest = {};
+  const allowedParams = paramsList.map((key) => key.replace(/_/, ""));
+  const plainObj = Object.assign({}, obj);
+  Object.keys(plainObj).forEach((key) => {
+    if (typeof obj[key] === "undefined")
+      return;
+    if (allowedParams.indexOf(key) >= 0) {
+      if (isObject(obj[key])) {
+        params[key] = {};
+        passedParams[key] = {};
+        extend(params[key], obj[key]);
+        extend(passedParams[key], obj[key]);
+      } else {
+        params[key] = obj[key];
+        passedParams[key] = obj[key];
+      }
+    } else if (key.search(/on[A-Z]/) === 0 && typeof obj[key] === "function") {
+      if (splitEvents) {
+        events[`${key[2].toLowerCase()}${key.substr(3)}`] = obj[key];
+      } else {
+        params.on[`${key[2].toLowerCase()}${key.substr(3)}`] = obj[key];
+      }
+    } else {
+      rest[key] = obj[key];
+    }
+  });
+  ["navigation", "pagination", "scrollbar"].forEach((key) => {
+    if (params[key] === true)
+      params[key] = {};
+    if (params[key] === false)
+      delete params[key];
+  });
+  return {
+    params,
+    passedParams,
+    rest,
+    events
+  };
+}
+function mountSwiper(_ref, swiperParams) {
+  let {
+    el,
+    nextEl,
+    prevEl,
+    paginationEl,
+    scrollbarEl,
+    swiper
+  } = _ref;
+  if (needsNavigation(swiperParams) && nextEl && prevEl) {
+    swiper.params.navigation.nextEl = nextEl;
+    swiper.originalParams.navigation.nextEl = nextEl;
+    swiper.params.navigation.prevEl = prevEl;
+    swiper.originalParams.navigation.prevEl = prevEl;
+  }
+  if (needsPagination(swiperParams) && paginationEl) {
+    swiper.params.pagination.el = paginationEl;
+    swiper.originalParams.pagination.el = paginationEl;
+  }
+  if (needsScrollbar(swiperParams) && scrollbarEl) {
+    swiper.params.scrollbar.el = scrollbarEl;
+    swiper.originalParams.scrollbar.el = scrollbarEl;
+  }
+  swiper.init(el);
+}
+function getChangedParams(swiperParams, oldParams, children, oldChildren, getKey) {
+  const keys = [];
+  if (!oldParams)
+    return keys;
+  const addKey = (key) => {
+    if (keys.indexOf(key) < 0)
+      keys.push(key);
+  };
+  if (children && oldChildren) {
+    const oldChildrenKeys = oldChildren.map(getKey);
+    const childrenKeys = children.map(getKey);
+    if (oldChildrenKeys.join("") !== childrenKeys.join(""))
+      addKey("children");
+    if (oldChildren.length !== children.length)
+      addKey("children");
+  }
+  const watchParams = paramsList.filter((key) => key[0] === "_").map((key) => key.replace(/_/, ""));
+  watchParams.forEach((key) => {
+    if (key in swiperParams && key in oldParams) {
+      if (isObject(swiperParams[key]) && isObject(oldParams[key])) {
+        const newKeys = Object.keys(swiperParams[key]);
+        const oldKeys = Object.keys(oldParams[key]);
+        if (newKeys.length !== oldKeys.length) {
+          addKey(key);
+        } else {
+          newKeys.forEach((newKey) => {
+            if (swiperParams[key][newKey] !== oldParams[key][newKey]) {
+              addKey(key);
+            }
+          });
+          oldKeys.forEach((oldKey) => {
+            if (swiperParams[key][oldKey] !== oldParams[key][oldKey])
+              addKey(key);
+          });
+        }
+      } else if (swiperParams[key] !== oldParams[key]) {
+        addKey(key);
+      }
+    }
+  });
+  return keys;
+}
+var updateOnVirtualData = (swiper) => {
+  if (!swiper || swiper.destroyed || !swiper.params.virtual || swiper.params.virtual && !swiper.params.virtual.enabled)
+    return;
+  swiper.updateSlides();
+  swiper.updateProgress();
+  swiper.updateSlidesClasses();
+  if (swiper.parallax && swiper.params.parallax && swiper.params.parallax.enabled) {
+    swiper.parallax.setTranslate();
+  }
+};
+
+// node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/swiper-vue.mjs
+function getChildren(originalSlots, slidesRef, oldSlidesRef) {
+  if (originalSlots === void 0) {
+    originalSlots = {};
+  }
+  const slides = [];
+  const slots = {
+    "container-start": [],
+    "container-end": [],
+    "wrapper-start": [],
+    "wrapper-end": []
+  };
+  const getSlidesFromElements = (els, slotName) => {
+    if (!Array.isArray(els)) {
+      return;
+    }
+    els.forEach((vnode) => {
+      const isFragment = typeof vnode.type === "symbol";
+      if (slotName === "default")
+        slotName = "container-end";
+      if (isFragment && vnode.children) {
+        getSlidesFromElements(vnode.children, slotName);
+      } else if (vnode.type && (vnode.type.name === "SwiperSlide" || vnode.type.name === "AsyncComponentWrapper")) {
+        slides.push(vnode);
+      } else if (slots[slotName]) {
+        slots[slotName].push(vnode);
+      }
+    });
+  };
+  Object.keys(originalSlots).forEach((slotName) => {
+    if (typeof originalSlots[slotName] !== "function")
+      return;
+    const els = originalSlots[slotName]();
+    getSlidesFromElements(els, slotName);
+  });
+  oldSlidesRef.value = slidesRef.value;
+  slidesRef.value = slides;
+  return {
+    slides,
+    slots
+  };
+}
 function renderVirtual(swiperRef, slides, virtualData) {
   if (!virtualData)
     return null;
@@ -553,21 +582,7 @@ function renderVirtual(swiperRef, slides, virtualData) {
     }, slide.children);
   });
 }
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/components-shared/update-on-virtual-data.js
-var updateOnVirtualData = (swiper) => {
-  if (!swiper || swiper.destroyed || !swiper.params.virtual || swiper.params.virtual && !swiper.params.virtual.enabled)
-    return;
-  swiper.updateSlides();
-  swiper.updateProgress();
-  swiper.updateSlidesClasses();
-  if (swiper.parallax && swiper.params.parallax && swiper.params.parallax.enabled) {
-    swiper.parallax.setTranslate();
-  }
-};
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/vue/swiper.js
-var Swiper = {
+var Swiper2 = {
   name: "Swiper",
   props: {
     tag: {
@@ -1061,7 +1076,7 @@ var Swiper = {
       ...swiperParams
     };
     delete passParams.wrapperClass;
-    swiperRef.value = new core_default(passParams);
+    swiperRef.value = new Swiper(passParams);
     if (swiperRef.value.virtual && swiperRef.value.params.virtual.enabled) {
       swiperRef.value.virtual.slides = slidesRef.value;
       const extendWith = {
@@ -1161,8 +1176,6 @@ var Swiper = {
     };
   }
 };
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/vue/swiper-slide.js
 var SwiperSlide = {
   name: "SwiperSlide",
   props: {
@@ -1266,8 +1279,6 @@ var SwiperSlide = {
     };
   }
 };
-
-// node_modules/.pnpm/swiper@9.4.1/node_modules/swiper/vue/context.js
 var useSwiperSlide = () => {
   return inject("swiperSlide");
 };
@@ -1275,7 +1286,7 @@ var useSwiper = () => {
   return inject("swiper");
 };
 export {
-  Swiper,
+  Swiper2 as Swiper,
   SwiperSlide,
   useSwiper,
   useSwiperSlide

@@ -86,14 +86,6 @@ const sum = computed(() => {
   </div>
 </template>
 <style lang="less">
-h1 {
-  display: inline-block;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: #0000;
-  white-space: nowrap;
-  background-image: linear-gradient(to right, #1d39c4, #c41d7f);
-}
 .u-head {
   font-size: 16px;
 }
