@@ -24,7 +24,7 @@ const colors = [
   'magenta',
   'volcano',
   'gold',
-  'lime',
+  'lime'
 ]
 </script>
 
@@ -294,10 +294,7 @@ const show = ref(true)
 ### Presets
 
 <Space :size="20">
-  <Badge
-    v-for="color in colors" :key="color"
-    :color="color"
-    :text="color" />
+  <Badge :color="color" :text="color" v-for="color in colors" :key="color" />
 </Space>
 
 ::: details Show Code
@@ -317,15 +314,12 @@ const colors = [
   'magenta',
   'volcano',
   'gold',
-  'lime',
+  'lime'
 ]
 </script>
 <template>
   <Space :size="20">
-    <Badge
-      v-for="color in colors" :key="color"
-      :color="color"
-      :text="color" />
+    <Badge :color="color" :text="color" v-for="color in colors" :key="color" />
   </Space>
 </template>
 ```

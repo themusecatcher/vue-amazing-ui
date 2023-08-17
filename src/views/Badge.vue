@@ -14,7 +14,7 @@ const colors = [
   'magenta',
   'volcano',
   'gold',
-  'lime',
+  'lime'
 ]
 </script>
 <template>

@@ -41,7 +41,6 @@ const loading = ref(true)
     <Button type="text">Text Button</Button>
   </Space>
 </template>
-
 ```
 
 :::
@@ -69,7 +68,6 @@ const loading = ref(true)
     <Button disabled type="text">Text Button</Button>
   </Space>
 </template>
-
 ```
 
 :::
@@ -92,7 +90,6 @@ const loading = ref(true)
     <Button size="large">Large</Button>
   </Space>
 </template>
-
 ```
 
 :::
@@ -116,7 +113,6 @@ function onClick (e: Event) {
     <p style="font-size: 18px;">自定义样式</p>
   </Button>
 </template>
-
 ```
 
 :::
@@ -159,7 +155,6 @@ const loading = ref(true)
     <Switch v-model:checked="loading" />
   </Space>
 </template>
-
 ```
 
 :::
