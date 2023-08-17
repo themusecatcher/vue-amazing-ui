@@ -86,13 +86,13 @@ const colors = [
   <Badge :count="25" />
   <Badge
     :count="4"
-    :number-style="{
+    :count-style="{
       backgroundColor: '#fff',
       color: '#999',
       boxShadow: '0 0 0 1px #d9d9d9 inset',
     }"
   />
-  <Badge :count="109" :number-style="{ backgroundColor: '#52c41a' }" />
+  <Badge :count="109" :count-style="{ backgroundColor: '#52c41a' }" />
 </Space>
 
 ::: details Show Code
@@ -103,13 +103,13 @@ const colors = [
     <Badge :count="25" />
     <Badge
       :count="4"
-      :number-style="{
+      :count-style="{
         backgroundColor: '#fff',
         color: '#999',
         boxShadow: '0 0 0 1px #d9d9d9 inset',
       }"
     />
-    <Badge :count="109" :number-style="{ backgroundColor: '#52c41a' }" />
+    <Badge :count="109" :count-style="{ backgroundColor: '#52c41a' }" />
   </Space>
 </template>
 ```
@@ -125,10 +125,10 @@ const colors = [
   <Badge :count="100">
     <span class="u-cube"></span>
   </Badge>
-  <Badge :count="99" :overflow-count="10">
+  <Badge :count="99" :max="10">
     <span class="u-cube"></span>
   </Badge>
-  <Badge :count="1000" :overflow-count="999">
+  <Badge :count="1000" :max="999">
     <span class="u-cube"></span>
   </Badge>
 </Space>
@@ -144,10 +144,10 @@ const colors = [
     <Badge :count="100">
       <span class="u-cube"></span>
     </Badge>
-    <Badge :count="99" :overflow-count="10">
+    <Badge :count="99" :max="10">
       <span class="u-cube"></span>
     </Badge>
-    <Badge :count="1000" :overflow-count="999">
+    <Badge :count="1000" :max="999">
       <span class="u-cube"></span>
     </Badge>
   </Space>
@@ -374,12 +374,12 @@ const colors = [
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 color | 自定义小圆点的颜色 | string | '' | false
-count | 展示的数字，大于 `overflowCount` 时显示为 `overflowCount+`，为 `0` 时隐藏 | number &#124; slot | 0 | false
-overflowCount | 展示封顶的数字值 | number | 99 | false
+count | 展示的数字，大于 `max` 时显示为 `max+`，为 `0` 时隐藏 | number &#124; slot | 0 | false
+max | 展示封顶的数字值 | number | 99 | false
 showZero | 当数值为 `0` 时，是否展示 `Badge` | boolean | false | false
 dot | 不展示数字，只有一个小红点 | boolean | false | false
 status | 设置 `Badge` 为状态点 | 'success' &#124; 'processing &#124; 'default' &#124; 'error' &#124; 'warning' | undefined | false
 text | 在设置了 `status` 的前提下有效，设置状态点的文本 | string &#124; slot | '' | false
-numberStyle | 设置状态点的样式 | CSSProperties | {} | false
+countStyle | 设置状态点的样式 | CSSProperties | {} | false
 title | 设置鼠标放在状态点上时显示的文字 | string | '' | false
 ripple | 是否开启涟漪动画效果 | boolean | true | false

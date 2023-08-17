@@ -107,15 +107,27 @@ const countdown = computed(() => {
 .v-leave-to {
   opacity: 0;
 }
+.u-theme-switch {
+  position: fixed;
+  top: 13px;
+  left: 195px;
+  z-index: 3;
+  :deep(.switch-checked) {
+    background: #faad14 !important;
+    &:hover {
+      background: #e8b339 !important;
+    }
+  }
+}
 .u-duty-switch {
   position: fixed;
   top: 36px;
   right: 36px;
   z-index: 3;
   :deep(.switch-checked) {
-    background: #faad14;
-    &:hover:not(.disabled) {
-      background: #e8b339;
+    background: #faad14 !important;
+    &:hover {
+      background: #e8b339 !important;
     }
   }
 }
@@ -124,18 +136,6 @@ const countdown = computed(() => {
   top: 36px;
   right: 50px;
   z-index: 2;
-}
-.u-theme-switch {
-  position: fixed;
-  top: 13px;
-  left: 195px;
-  z-index: 3;
-  :deep(.switch-checked) {
-    background: #faad14;
-    &:hover:not(.disabled) {
-      background: #e8b339;
-    }
-  }
 }
 .u-dark-svg {
   width: 12px;

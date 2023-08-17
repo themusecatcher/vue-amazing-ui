@@ -58,6 +58,7 @@ const responsiveColumn = computed(() => {
     if (clientWidth.value < 576 && props.column.xs) {
       return props.column.xs
     }
+    return 1
   }
   return props.column
 })

@@ -28,7 +28,7 @@ export function fetchVersion () {
       if (!version) return
       const tagLineParagragh = document.querySelector('div.VPHero.has-image.VPHomeHero > div > div.main > p.tagline')
       const docsVersionSpan = document.createElement('samp')
-      docsVersionSpan.classList.add('version-tag')
+      docsVersionSpan.classList.add('tag-version')
       docsVersionSpan.innerText = version
       tagLineParagragh?.appendChild(docsVersionSpan)
     })

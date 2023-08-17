@@ -10,25 +10,25 @@ enum Status {
 }
 interface Props {
   color?: string // 自定义小圆点的颜色
-  count?: number // 展示的数字，大于 overflowCount 时显示为 overflowCount+，为 0 时隐藏；number | slot
-  overflowCount?: number // 展示封顶的数字值
+  count?: number // 展示的数字，大于 max 时显示为 max+，为 0 时隐藏；number | slot
+  max?: number // 展示封顶的数字值
   showZero?: boolean // 当数值为 0 时，是否展示 Badge
   dot?: boolean // 不展示数字，只有一个小红点
   status?: Status // 设置 Badge 为状态点
   text?: string // 在设置了 status 的前提下有效，设置状态点的文本 string | slot
-  numberStyle?: CSSProperties // 设置状态点的样式
+  countStyle?: CSSProperties // 设置状态点的样式
   title?: string // 设置鼠标放在状态点上时显示的文字
   ripple?: boolean // 是否开启涟漪动画效果
 }
 const props = withDefaults(defineProps<Props>(), {
   color: '',
   count: 0,
-  overflowCount: 99,
+  max: 99,
   showZero: false,
   dot: false,
   status: undefined,
   text: '',
-  numberStyle: () => ({}),
+  countStyle: () => ({}),
   title: '',
   ripple: true
 })
@@ -76,10 +76,10 @@ onMounted(() => {
           v-show="showZero || count !== 0 || dot"
           class="m-badge-count"
           :class="{'small-num': count < 10, 'only-number': !showContent, 'only-dot': count === 0 && !showZero}"
-          :style="numberStyle"
+          :style="countStyle"
           :title="title || String(count)">
           <span v-if="!dot" class="m-number" style="transition: none 0s ease 0s;">
-            <span class="u-number">{{ count > overflowCount ? overflowCount + '+' : count }}</span>
+            <span class="u-number">{{ count > max ? max + '+' : count }}</span>
           </span>
         </div>
       </Transition>
