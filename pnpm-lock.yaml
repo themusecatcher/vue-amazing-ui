@@ -50,8 +50,8 @@ devDependencies:
     specifier: ^1.3.3
     version: 1.3.3
   '@types/node':
-    specifier: 18.17.1
-    version: 18.17.1
+    specifier: 20.5.0
+    version: 20.5.0
   '@vitejs/plugin-vue':
     specifier: 4.2.1
     version: 4.2.1(vite@4.4.7)(vue@3.3.4)
@@ -60,7 +60,7 @@ devDependencies:
     version: 11.0.3(eslint-plugin-vue@9.11.0)(eslint@8.47.0)(typescript@4.7.4)
   '@vue/tsconfig':
     specifier: ^0.1.3
-    version: 0.1.3(@types/node@18.17.1)
+    version: 0.1.3(@types/node@20.5.0)
   eslint:
     specifier: ^8.47.0
     version: 8.47.0
@@ -84,10 +84,10 @@ devDependencies:
     version: 0.25.1(vue@3.3.4)
   vite:
     specifier: 4.4.7
-    version: 4.4.7(@types/node@18.17.1)(less@4.2.0)
+    version: 4.4.7(@types/node@20.5.0)(less@4.2.0)
   vitepress:
     specifier: 1.0.0-beta.6
-    version: 1.0.0-beta.6(@algolia/client-search@4.19.1)(@types/node@18.17.1)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.7.0)
+    version: 1.0.0-beta.6(@algolia/client-search@4.19.1)(@types/node@20.5.0)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.7.0)
   vue-tsc:
     specifier: ^1.8.8
     version: 1.8.8(typescript@4.7.4)
@@ -679,8 +679,8 @@ packages:
     resolution: {integrity: sha512-BMVOiWs0uNxHVlHBgzTIqJYmj+PgCo4euloGF+5m4okL3rEYzM2EEv78mw8zWSMM57dM7kVIgJ2QDvwHSoCI5g==}
     dev: false
 
-  /@types/node@18.17.1:
-    resolution: {integrity: sha512-xlR1jahfizdplZYRU59JlUx9uzF1ARa8jbhM11ccpCJya8kvos5jwdm2ZAgxSCwOl0fq21svP18EVwPBXMQudw==}
+  /@types/node@20.5.0:
+    resolution: {integrity: sha512-Mgq7eCtoTjT89FqNoTzzXg2XvCi5VMhRV6+I2aYanc6kQCBImeNaAYRs/DyoVqk1YEUJK5gN9VO7HRIdz4Wo3Q==}
     dev: true
 
   /@types/semver@7.5.0:
@@ -827,7 +827,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.4.7(@types/node@18.17.1)(less@4.2.0)
+      vite: 4.4.7(@types/node@20.5.0)(less@4.2.0)
       vue: 3.3.4
     dev: true
 
@@ -838,7 +838,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.4.7(@types/node@18.17.1)(less@4.2.0)
+      vite: 4.4.7(@types/node@20.5.0)(less@4.2.0)
       vue: 3.3.4
     dev: true
 
@@ -976,7 +976,7 @@ packages:
   /@vue/shared@3.3.4:
     resolution: {integrity: sha512-7OjdcV8vQ74eiz1TZLzZP4JwqM5fA94K6yntPS5Z25r9HDuGNzaGdgvwKYq6S+MxwF0TFRwe50fIR/MYnakdkQ==}
 
-  /@vue/tsconfig@0.1.3(@types/node@18.17.1):
+  /@vue/tsconfig@0.1.3(@types/node@20.5.0):
     resolution: {integrity: sha512-kQVsh8yyWPvHpb8gIc9l/HIDiiVUy1amynLNpCy8p+FoCiZXCo6fQos5/097MmnNZc9AtseDsCrfkhqCrJ8Olg==}
     peerDependencies:
       '@types/node': '*'
@@ -984,7 +984,7 @@ packages:
       '@types/node':
         optional: true
     dependencies:
-      '@types/node': 18.17.1
+      '@types/node': 20.5.0
     dev: true
 
   /@vue/typescript@1.8.8(typescript@4.7.4):
@@ -3191,7 +3191,7 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /vite@4.4.7(@types/node@18.17.1)(less@4.2.0):
+  /vite@4.4.7(@types/node@20.5.0)(less@4.2.0):
     resolution: {integrity: sha512-6pYf9QJ1mHylfVh39HpuSfMPojPSKVxZvnclX1K1FyZ1PXDOcLBibdq5t1qxJSnL63ca8Wf4zts6mD8u8oc9Fw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -3219,7 +3219,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.17.1
+      '@types/node': 20.5.0
       esbuild: 0.18.20
       less: 4.2.0
       postcss: 8.4.28
@@ -3228,7 +3228,7 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress@1.0.0-beta.6(@algolia/client-search@4.19.1)(@types/node@18.17.1)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.7.0):
+  /vitepress@1.0.0-beta.6(@algolia/client-search@4.19.1)(@types/node@20.5.0)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.7.0):
     resolution: {integrity: sha512-xK/ulKgQpKZVbvlL4+/vW49VG7ySi5nmSoKUNH1G4kM+Cj9JwYM+PDJO7jSJROv8zW99G0ise+maDYnaLlbGBQ==}
     hasBin: true
     dependencies:
@@ -3243,7 +3243,7 @@ packages:
       mark.js: 8.11.1
       minisearch: 6.1.0
       shiki: 0.14.3
-      vite: 4.4.7(@types/node@18.17.1)(less@4.2.0)
+      vite: 4.4.7(@types/node@20.5.0)(less@4.2.0)
       vue: 3.3.4
     transitivePeerDependencies:
       - '@algolia/client-search'
