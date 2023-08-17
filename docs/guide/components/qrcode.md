@@ -76,9 +76,9 @@
 -- | -- | -- | -- | --
 value | 扫描后的文本或地址 | string | '' | false
 size | 二维码大小，单位px | number | 160 | false
-color | 二维码颜色，Value must be in hex format (十六进制颜色值) | string | '#000' | false
-backgroundColor | 二维码背景色，Value must be in hex format (十六进制颜色值) | string | '#FFF' | false
+color | 二维码颜色，Value must be in `hex format` (十六进制颜色值) | string | '#000' | false
+backgroundColor | 二维码背景色，Value must be in `hex format` (十六进制颜色值) | string | '#FFF' | false
 bordered | 是否有边框 | boolean | true | false
 borderColor | 边框颜色 | string | '#0505050f' | false
-scale | 每个black dots多少像素 | number | 8 | false
+scale | 每个 `black dots` 多少像素 | number | 8 | false
 errorLevel | 二维码纠错等级 | 'L' &#124; 'M' &#124; 'Q' &#124; 'H' | 'H' | false
