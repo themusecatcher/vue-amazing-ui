@@ -41,8 +41,8 @@ export default defineConfig({
           themeColor: '#1677FF' // #1890FF
         },
         javascriptEnabled: true
-      },
-    },
+      }
+    }
   },
   // 构建为库
   build: {
@@ -58,7 +58,7 @@ export default defineConfig({
       external: ['vue', 'swiper', 'swiper/vue', '@vueuse/integrations/useQRCode', '@vuepic/vue-datepicker', 'qrcode'],
       // 当创建 iife 或 umd 格式的 bundle 时，你需要通过 output.globals 选项提供全局变量名，以替换掉外部引入。
       output: {
-        name: 'VueAmazingUI', // 对于输出格式为 iife | umd 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出
+        // name: 'VueAmazingUI', // 对于输出格式为 iife | umd 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出
         /*
           output.format: 
           • amd – 异步模块加载，适用于 RequireJS 等模块加载器
@@ -68,9 +68,8 @@ export default defineConfig({
           • umd – 通用模块定义规范，同时支持 amd，cjs 和 iife
           • system – SystemJS 模块加载器的原生格式（别名：systemjs）
         */
-        format: 'umd', // 用于指定生成的 bundle 的格式，默认 'es'，可选 'amd' 'cjs' 'es' 'iife' 'umd' 'system'
+        // format: 'umd', // 用于指定生成的 bundle 的格式，默认 'es'，可选 'amd' 'cjs' 'es' 'iife' 'umd' 'system'
         exports: 'named', // 用于指定导出模式，默认是 auto，指根据 input 模块导出推测你的意图
-        externalLiveBindings: false,
         // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
         globals: {
           vue: 'Vue',
@@ -82,7 +81,7 @@ export default defineConfig({
           qrcode: 'qrcode'
         }
       }
-    },
+    }
     /*
       minify:
       设置为 false 可以禁用最小化混淆，或是用来指定使用哪种混淆器。
@@ -106,7 +105,7 @@ export default defineConfig({
     //   }
     // },
     // cssCodeSplit: true, // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在其被加载时一并获取。如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
-    cssMinify: 'esbuild', // 默认与 build.minify 一致，允许用户覆盖 CSS 最小化压缩的配置，而不是使用默认的 build.minify
-    chunkSizeWarningLimit: 300 // 规定触发警告的 chunk 大小
+    // cssMinify: 'esbuild', // 默认与 build.minify 一致，允许用户覆盖 CSS 最小化压缩的配置，而不是使用默认的 build.minify
+    // chunkSizeWarningLimit: 500 // 默认500，规定触发警告的 chunk 大小，单位kbs
   }
 })
