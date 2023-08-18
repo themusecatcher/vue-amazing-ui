@@ -14,7 +14,7 @@ interface Props {
   loading?: boolean // 加载中
   visible?: boolean // 提示框是否可见
 }
-withDefaults(defineProps<Props>(), { // 运行时声明
+withDefaults(defineProps<Props>(), {
   width: 420,
   cancelText: '取消',
   okText: '确定',
