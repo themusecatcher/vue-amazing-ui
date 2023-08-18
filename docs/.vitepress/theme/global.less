@@ -144,6 +144,36 @@ svg {
   font-weight: 700;
   background: linear-gradient(to right, #08979c, #d4b106, #531dab);
 }
+.items {
+  align-items: flex-start;
+}
+.grid-3 {
+  cursor: pointer;
+  transition: all .25s;
+  .VPFeature {
+    transition: all .25s;
+    .icon, .title, .details {
+      transition: all .25s;
+    }
+  }
+  &:hover {
+    transform: scale(1.1);
+    transform-origin: 50%, 50%;
+    
+    .VPFeature {
+      border-color: #ffd666;
+      background-color: #ffd666;
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
+      .icon {
+        border-radius: 50%;
+        background-image: radial-gradient(#1677ff, #bd34fe 5%, #ffd666);
+      }
+      .title, .details {
+        color: rgba(0, 0, 0, .88);
+      }
+    }
+  }
+}
 .tag-version {
   font-size: 16px;
   line-height: 1.5;
