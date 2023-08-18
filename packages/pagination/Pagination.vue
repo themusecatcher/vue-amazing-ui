@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-interface Props { // 基于类型的声明
+interface Props {
   current?: number // 当前页数
   pageSize?: number // 每页条数
   total?: number // 数据总数
@@ -10,7 +10,7 @@ interface Props { // 基于类型的声明
   showTotal?: boolean // 是否显示当前页数和数据总量
   placement?: 'left'|'center'|'right' // 分页展示位置，靠左left，居中center，靠右right
 }
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   current: 1,
   pageSize: 10,
   total: 0,
