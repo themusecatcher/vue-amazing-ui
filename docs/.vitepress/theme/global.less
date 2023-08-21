@@ -163,7 +163,7 @@ svg {
 }
 .grid-3 {
   cursor: pointer;
-  transition: all .25s;
+  transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   .VPFeature {
     transition: all .25s;
     .icon, .title, .details {
@@ -183,7 +183,6 @@ svg {
       background: linear-gradient(to right, #09c8ce, #e4c31b, #eb2f96);
       box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
       .icon {
-        border-radius: 50%;
         background-image: radial-gradient(circle at 0%, #ffd666, #f669bb, #98e8de);
       }
       .title {
