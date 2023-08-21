@@ -9,7 +9,7 @@ hero:
   text: Amazing UI 组件库
   tagline: 基于 Vue3 + TS + Vite 开发
   image:
-    src: https://viteconf.org/23/_nuxt/viteconf.9feb32c8.svg
+    src: /amazing-logo.svg
     alt: Vue Amazing UI
   actions:
     - theme: brand
