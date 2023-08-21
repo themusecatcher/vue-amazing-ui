@@ -140,9 +140,23 @@ svg {
     color: var(--vp-c-brand);
   }
 }
+.VPButton {
+  border-radius: 12px !important;
+}
 .VPButton.brand {
   font-weight: 700;
   background: linear-gradient(to right, #09c8ce, #e4c31b, #eb2f96);
+  transition: all .25s;
+  &:hover {
+    background: linear-gradient(to right, #eb2f96, #09c8ce, #e4c31b);
+  }
+}
+.VPButton.alt {
+  background-color: transparent !important;
+  transition: all .25s;
+  &:hover {
+    border-color: #eb2f96 !important;
+  }
 }
 .items {
   align-items: flex-start;
@@ -185,9 +199,9 @@ svg {
   font-size: 16px;
   line-height: 1.5;
   font-weight: bold;
-  padding: 5px 10px;
+  padding: 4px 8px;
   margin-left: 8px;
-  border-radius: 8px;
+  border-radius: 12px;
   display: inline-block;
   vertical-align: top;
   margin-top: 2px;
