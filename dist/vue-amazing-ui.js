@@ -5050,7 +5050,7 @@ const Lt = /* @__PURE__ */ W(ri, [["__scopeId", "data-v-353fee15"]]);
 Lt.install = (l) => {
   l.component(Lt.__name, Lt);
 };
-const Nt = (l) => (K("data-v-7a7e490d"), l = l(), G(), l), di = { class: "u-tag" }, fi = /* @__PURE__ */ Nt(() => /* @__PURE__ */ a("svg", {
+const Nt = (l) => (K("data-v-f7ecab93"), l = l(), G(), l), di = { class: "u-tag" }, fi = /* @__PURE__ */ Nt(() => /* @__PURE__ */ a("svg", {
   focusable: "false",
   class: "u-close",
   "data-icon": "close",
@@ -5233,7 +5233,7 @@ const Nt = (l) => (K("data-v-7a7e490d"), l = l(), G(), l), di = { class: "u-tag"
     ], 6));
   }
 });
-const At = /* @__PURE__ */ W(wi, [["__scopeId", "data-v-7a7e490d"]]);
+const At = /* @__PURE__ */ W(wi, [["__scopeId", "data-v-f7ecab93"]]);
 At.install = (l) => {
   l.component(At.__name, At);
 };

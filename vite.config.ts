@@ -55,7 +55,7 @@ export default defineConfig({
     rollupOptions: { // 自定义底层的Rollup打包配置
       // https://rollupjs.org/configuration-options/
       // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
-      external: ['vue', 'swiper/modules', 'swiper/vue', '@vueuse/integrations/useQRCode', '@vuepic/vue-datepicker', 'qrcode'],
+      external: ['vue', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/integrations/useQRCode', 'qrcode'],
       // 当创建 iife 或 umd 格式的 bundle 时，你需要通过 output.globals 选项提供全局变量名，以替换掉外部引入。
       output: {
         name: 'VueAmazingUI', // 对于输出格式为 iife | umd 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出
@@ -75,11 +75,11 @@ export default defineConfig({
         // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
         globals: {
           vue: 'Vue',
-          'vue-router': 'VueRouter', // 引入vue-router全局变量，否则router.push将无法使用
+          // 'vue-router': 'VueRouter', // 引入vue-router全局变量，否则router.push将无法使用
           'swiper/modules': 'SwiperModules',
           'swiper/vue': 'SwiperVue',
-          '@vueuse/integrations/useQRCode': 'useQRCode',
           '@vuepic/vue-datepicker': 'VueDatePicker',
+          '@vueuse/integrations/useQRCode': 'useQRCode',
           qrcode: 'qrcode'
         }
       }

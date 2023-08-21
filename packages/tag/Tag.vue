@@ -405,11 +405,11 @@ function onKeyboard (e: KeyboardEvent) {
   }
 }
 .tag-magenta {
-  color: #c41d7f;
+  color: #eb2f96;
   background: #fff0f6;
   border-color: #ffadd2;
   :deep(svg) {
-    fill: #c41d7f;
+    fill: #eb2f96;
   }
 }
 .tag-volcano {
