@@ -135,13 +135,13 @@ svg {
   fill: var(--vp-c-text-1);
 }
 .VPHome {
-  background: rgba(0, 0, 0, .66) url(waterfall-1.jpg) no-repeat center;
+  background: url(waterfall.jpg) no-repeat center;
   background-size: cover;
 }
 .VPNavBarTitle .title {
   transition: all 0.25s;
   &:hover {
-    color: var(--vp-c-brand);
+    color: #bd34fe;
   }
 }
 .VPButton {
@@ -150,7 +150,7 @@ svg {
 }
 .VPButton.brand {
   font-weight: 700;
-  opacity: 0.8;
+  opacity: .78;
   border: none;
   background: linear-gradient(to right, #09c8ce, #e4c31b, #eb2f96);
   transition: all .25s;
@@ -165,6 +165,37 @@ svg {
     border-color: #41d1ff !important;
   }
 }
+.VPSwitch {
+  border-color: transparent !important;
+  background-color: transparent !important;
+  &:hover {
+    border-color: #e4c31b !important;
+  }
+}
+.DocSearch-Button {
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, .36);
+  transition: all .25s;
+  &:hover {
+    background-color: rgba(0, 0, 0, .72);
+    .DocSearch-Search-Icon,
+    .DocSearch-Button-Placeholder {
+      color: #FFF;
+    }
+  }
+  .DocSearch-Search-Icon,
+  .DocSearch-Button-Placeholder {
+    color: #FFF;
+  }
+  .DocSearch-Button-Keys {
+    .DocSearch-Button-Key {
+      color: #FFF;
+      &::after {
+        color: #FFF;
+      }
+    }
+  }
+}
 .items {
   align-items: flex-start;
 }
@@ -173,7 +204,7 @@ svg {
   transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   .VPFeature {
     border: none;
-    background-color: rgba(0, 0, 0, .3);
+    background-color: rgba(0, 0, 0, .36);
     transition: all .25s;
     .icon, .title, .details {
       color: #FFF;
