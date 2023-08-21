@@ -287,7 +287,7 @@ function onRightSlide (source: number, place: string) {
     border: 2px solid lighten(fade(@themeColor, 54%), 10%);
     border-radius: 50%;
     cursor: pointer;
-    transition: width .3s, height .3s, border-color .3s, border-width .3s, transform .3s cubic-bezier(.18,.89,.32,1.28);
+    transition: width .3s, height .3s, border-color .3s, border-width .3s, transform .3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     .u-handle-tooltip {
       position: relative;
       display: inline-block;
