@@ -36,6 +36,7 @@ const onDynamicClose = (tag: any, index: number) => {
     <h1>Tag 标签</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space>
+      <a-tag color="magenta">pink</a-tag>
       <Tag>Tag 1</Tag>
       <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
       <Tag closable @close="onClose">Tag 2</Tag>

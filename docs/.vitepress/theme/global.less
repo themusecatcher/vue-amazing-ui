@@ -142,7 +142,7 @@ svg {
 }
 .VPButton.brand {
   font-weight: 700;
-  background: linear-gradient(to right, #08979c, #d4b106, #531dab);
+  background: linear-gradient(to right, #09c8ce, #e4c31b, #eb2f96);
 }
 .items {
   align-items: flex-start;
@@ -155,21 +155,28 @@ svg {
     .icon, .title, .details {
       transition: all .25s;
     }
+    .icon {
+      border-radius: 50%;
+      background-image: radial-gradient(circle at 0%, #f669bb, #98e8de, #ffd666);
+    }
   }
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
     transform-origin: 50%, 50%;
     
     .VPFeature {
-      border-color: #ffd666;
-      background-color: #ffd666;
+      border-color: #fbdf93;
+      background: linear-gradient(to right, #09c8ce, #e4c31b, #eb2f96);
       box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
       .icon {
         border-radius: 50%;
-        background-image: radial-gradient(#1677ff, #bd34fe 5%, #ffd666);
+        background-image: radial-gradient(circle at 0%, #ffd666, #f669bb, #98e8de);
       }
-      .title, .details {
-        color: rgba(0, 0, 0, .88);
+      .title {
+        color: rgba(0, 0, 0, .78);
+      }
+      .details {
+        color: rgba(0, 0, 0, .55);
       }
     }
   }
