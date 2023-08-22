@@ -1,45 +1,54 @@
 {
   "hash": "e59d5c6a",
-  "browserHash": "df1458ba",
+  "browserHash": "cd1fe7df",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.3.4/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "eafa2438",
+      "fileHash": "b83706b0",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/.pnpm/@vue+devtools-api@6.5.0/node_modules/@vue/devtools-api/lib/esm/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "fe1c7a9e",
+      "fileHash": "dc2e8b9c",
       "needsInterop": false
     },
     "@vuepic/vue-datepicker": {
       "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@6.0.0_vue@3.3.4/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
       "file": "@vuepic_vue-datepicker.js",
-      "fileHash": "de1da274",
+      "fileHash": "18533bb7",
       "needsInterop": false
     },
     "@vueuse/integrations/useQRCode": {
       "src": "../../../../node_modules/.pnpm/@vueuse+integrations@10.3.0_focus-trap@7.5.2_qrcode@1.5.3_vue@3.3.4/node_modules/@vueuse/integrations/useQRCode.mjs",
       "file": "@vueuse_integrations_useQRCode.js",
-      "fileHash": "84278277",
+      "fileHash": "508397a4",
       "needsInterop": false
     },
     "swiper/vue": {
       "src": "../../../../node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/swiper-vue.mjs",
       "file": "swiper_vue.js",
-      "fileHash": "ca2b6fa8",
+      "fileHash": "de6496be",
       "needsInterop": false
     },
     "swiper/modules": {
       "src": "../../../../node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/modules/index.mjs",
       "file": "swiper_modules.js",
-      "fileHash": "6752e03b",
+      "fileHash": "eda39a5d",
+      "needsInterop": false
+    },
+    "date-fns": {
+      "src": "../../../../node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/index.js",
+      "file": "date-fns.js",
+      "fileHash": "0768613d",
       "needsInterop": false
     }
   },
   "chunks": {
+    "chunk-FC4E6N65": {
+      "file": "chunk-FC4E6N65.js"
+    },
     "chunk-VGAOZ6JA": {
       "file": "chunk-VGAOZ6JA.js"
     },
