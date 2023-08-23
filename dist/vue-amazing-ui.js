@@ -1761,7 +1761,7 @@ const $l = {
         "year-picker": r.value,
         "now-button-label": "今天",
         "show-now-button": o.showToday,
-        "auto-apply": !0,
+        "auto-apply": "",
         "text-input": "",
         "model-type": o.modelType,
         "day-names": ["一", "二", "三", "四", "五", "六", "七"]
@@ -1769,7 +1769,7 @@ const $l = {
     ], 4));
   }
 });
-const ot = /* @__PURE__ */ W(bl, [["__scopeId", "data-v-e697080a"]]);
+const ot = /* @__PURE__ */ W(bl, [["__scopeId", "data-v-83e36abf"]]);
 ot.install = (l) => {
   l.component(ot.__name, ot);
 };
