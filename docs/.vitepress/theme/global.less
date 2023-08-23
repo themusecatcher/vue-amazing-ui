@@ -152,6 +152,9 @@ h1 { // h1 标签渐变色文本
     color: var(--vp-c-text-1);
   }
 }
+.VPFooter {
+  padding: 24px 32px !important;
+}
 .VPNavBar, .content-body {
   border: none !important;
   background-color: transparent !important;
@@ -161,6 +164,12 @@ h1 { // h1 标签渐变色文本
   &:hover {
     transform: scale(1.1);
     color: #bd34fe;
+    .VPImage {
+      transform: scale(1.25);
+    }
+  }
+  .VPImage {
+    transition: transform .5s;
   }
 }
 .VPButton {

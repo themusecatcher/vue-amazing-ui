@@ -15,8 +15,8 @@ dependencies:
     specifier: ^10.3.0
     version: 10.3.0(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
   ant-design-vue:
-    specifier: ^4.0.0
-    version: 4.0.0(vue@3.3.4)
+    specifier: ^4.0.1
+    version: 4.0.1(vue@3.3.4)
   core-js:
     specifier: ^3.32.0
     version: 3.32.0
@@ -1142,8 +1142,8 @@ packages:
     dependencies:
       color-convert: 2.0.1
 
-  /ant-design-vue@4.0.0(vue@3.3.4):
-    resolution: {integrity: sha512-6V8DxHPv3HJYDdv48W/KFOUjeZDsYJhFlk13HFSKCJSR2MQs4YnPIAC+rWie9vYcVEKbO+cQDqiOM3cBoHMNUQ==}
+  /ant-design-vue@4.0.1(vue@3.3.4):
+    resolution: {integrity: sha512-/gZEB/e6166hlqaYfSAJLgzr6zAPuVimITYx+OaifMaHYcxKOvbISEFTsDnn7qRshVYHFyUL2HIyN9sSrWDP3w==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'
@@ -1304,7 +1304,7 @@ packages:
       normalize-path: 3.0.0
       readdirp: 3.6.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /cliui@6.0.0:
@@ -1839,8 +1839,8 @@ packages:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
 
-  /fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+  /fsevents@2.3.3:
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
@@ -2810,7 +2810,7 @@ packages:
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /run-parallel@1.2.0:
@@ -3266,7 +3266,7 @@ packages:
       postcss: 8.4.28
       rollup: 3.28.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /vitepress@1.0.0-beta.6(@algolia/client-search@4.19.1)(@types/node@20.5.0)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.7.0):
@@ -3336,7 +3336,7 @@ packages:
       '@vuepic/vue-datepicker': 6.0.0(vue@3.3.4)
       '@vueuse/core': 10.3.0(vue@3.3.4)
       '@vueuse/integrations': 10.3.0(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
-      ant-design-vue: 4.0.0(vue@3.3.4)
+      ant-design-vue: 4.0.1(vue@3.3.4)
       core-js: 3.32.0
       date-fns: 2.30.0
       naive-ui: 2.34.4(vue@3.3.4)
