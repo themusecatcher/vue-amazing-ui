@@ -71,7 +71,7 @@ const year = computed(() => {
       :year-picker="year"
       now-button-label="今天"
       :show-now-button="showToday"
-      :auto-apply="true"
+      auto-apply
       text-input
       :model-type="modelType"
       :day-names="['一', '二', '三', '四', '五', '六', '七']"

@@ -6,7 +6,7 @@ export default defineConfig({
   base: '/vue-amazing-ui/',
 
   head: [ // 网站图标
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/amazing-icon.svg' }]
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: 'amazing-icon.svg' }]
     // ['link', { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
   ],
   appearance: true, // 默认 true，设为 false 则无法切换dark/light主题，可选 'dark' true false
