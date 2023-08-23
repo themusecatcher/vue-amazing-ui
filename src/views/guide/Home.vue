@@ -65,17 +65,17 @@ const sum = computed(() => {
     </ul>
     <h2 class="mt30">常用工具函数：</h2>
     <ul class="m-list">
-      <li class="u-tip mb10 mt10"><Tag color="cyan">dateFormat</Tag>: 简单易用的日期格式化函数！</li>
-      <li class="u-tip mb10"><Tag color="cyan">requestAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
-      <li class="u-tip mb10"><Tag color="cyan">cancelAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
-      <li class="u-tip mb10"><Tag color="cyan">rafTimeout</Tag>: 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！</li>
-      <li class="u-tip mb10"><Tag color="cyan">cancelRaf</Tag>: 用于取消 rafTimeout 函数！</li>
-      <li class="u-tip mb10"><Tag color="cyan">throttle</Tag>: 使用 rafTimeout 实现的节流函数！</li>
-      <li class="u-tip mb10"><Tag color="cyan">debounce</Tag>: 使用 rafTimeout 实现的防抖函数！</li>
-      <li class="u-tip mb10"><Tag color="cyan">add</Tag>: 消除js加减精度问题的加法函数！</li>
-      <li class="u-tip mb10"><Tag color="cyan">downloadFile</Tag>: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
-      <li class="u-tip mb10"><Tag color="cyan">moneyFormat</Tag>: 金额格式化函数！</li>
-      <li class="u-tip mb10"><Tag color="cyan">toggleDark</Tag>: 一键切换黑暗模式函数！</li>
+      <li class="u-tip mb10 mt10"><Tag color="volcano">dateFormat</Tag>: 简单易用的日期格式化函数！</li>
+      <li class="u-tip mb10"><Tag color="volcano">requestAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
+      <li class="u-tip mb10"><Tag color="volcano">cancelAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
+      <li class="u-tip mb10"><Tag color="volcano">rafTimeout</Tag>: 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！</li>
+      <li class="u-tip mb10"><Tag color="volcano">cancelRaf</Tag>: 用于取消 rafTimeout 函数！</li>
+      <li class="u-tip mb10"><Tag color="volcano">throttle</Tag>: 使用 rafTimeout 实现的节流函数！</li>
+      <li class="u-tip mb10"><Tag color="volcano">debounce</Tag>: 使用 rafTimeout 实现的防抖函数！</li>
+      <li class="u-tip mb10"><Tag color="volcano">add</Tag>: 消除js加减精度问题的加法函数！</li>
+      <li class="u-tip mb10"><Tag color="volcano">downloadFile</Tag>: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
+      <li class="u-tip mb10"><Tag color="volcano">moneyFormat</Tag>: 金额格式化函数！</li>
+      <li class="u-tip mb10"><Tag color="volcano">toggleDark</Tag>: 一键切换黑暗模式函数！</li>
     </ul>
     <Collapse
       lang="vue3"
