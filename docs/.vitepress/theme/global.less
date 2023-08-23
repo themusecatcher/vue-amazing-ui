@@ -148,8 +148,21 @@ h1 { // h1 标签渐变色文本
   background-size: cover;
 }
 .VPHero {
+  .name, .text, .tagline {
+    transition: transform .25s ease-in-out;
+    transform-origin: 0% 50%;
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
   .text {
     color: var(--vp-c-text-1);
+  }
+  .image-src {
+    transition: transform .5s;
+    &:hover {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
   }
 }
 .VPFooter {
