@@ -341,7 +341,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 使用history模式，hash模式：createWebHashHistory
   routes, // `routes: routes` 的缩写
   scrollBehavior(to, from, savedPosition) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => { // 延迟滚动
       rafTimeout(() => {
         resolve({ left: 0, top: 0, behavior: 'smooth' })
       }, 300)
