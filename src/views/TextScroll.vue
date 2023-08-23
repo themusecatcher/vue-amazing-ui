@@ -3,7 +3,7 @@ import { ref } from 'vue'
 const sliderText = ref([
       {
         title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-        link: 'https://www.baidu.com'
+        link: 'https://blog.csdn.net/Dandrose?type=blog'
       },
       {
         title: '首次出版于1951年'
