@@ -143,8 +143,12 @@ h1 { // h1 标签渐变色文本
   background-image: linear-gradient(to right, #09c8ce, #eb2f96);
   margin-bottom: 20px;
 }
-.VPHome {
+html:not(.dark) .VPHome {
   background: url(/waterfall.jpg) no-repeat center;
+  background-size: cover;
+}
+html.dark .VPHome {
+  background: url(/girl.jpg) no-repeat center;
   background-size: cover;
 }
 .VPHero {
@@ -165,8 +169,31 @@ h1 { // h1 标签渐变色文本
     }
   }
 }
-.VPFooter {
-  padding: 24px 32px !important;
+.Layout {
+  position: relative;
+  .VPFooter {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    border: none;
+    background-color: transparent;
+    text-align: center;
+    padding: 24px 32px;
+    .container {
+      display: inline-block;
+      transition: all .5s;
+      .message, .copyright {
+        color: var(--vp-c-text-1);
+      }
+      &:hover {
+        transform: scale(1.25);
+        .message, .copyright {
+          font-weight: 600;
+        }
+      }
+    }
+  }
 }
 .VPNavBar, .content-body {
   border: none !important;
