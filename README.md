@@ -113,4 +113,4 @@ debounce | 使用 rafTimeout 实现的防抖函数！ | (fn: Function, delay = 3
 add | 消除js加减精度问题的加法函数！ | (num1: number, num2: number) => number
 downloadFile | 下载文件并自定义文件名！ | (url: string, name: string) => void
 moneyFormat | 金额格式化函数！ | (value: number&#124;string, decimal = 2, split = ',') => string
-toggleDark | 一键切换黑暗模式函数！ | () => void
+toggleDark | 一键切换暗黑模式函数！ | () => void
