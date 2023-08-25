@@ -46,7 +46,6 @@ import 'vue-amazing-ui/css'
 ## Use CDN in Project
 
 ```html
-<!-- unpkg -->
 <script src="https://unpkg.com/vue-amazing-ui@latest"></script>
 ```
 
