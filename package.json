@@ -1,13 +1,17 @@
 {
   "name": "vue-amazing-ui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "package.json",
+    "README.md"
   ],
   "main": "./dist/vue-amazing-ui.umd.cjs",
   "module": "./dist/vue-amazing-ui.js",
+  "browser": "./dist/vue-amazing-ui.js",
+  "unpkg": "dist/vue-amazing-ui.iife.js",
   "exports": {
     "./dist/style.css": "./dist/style.css",
     "./css": "./dist/style.css",
@@ -17,20 +21,23 @@
     }
   },
   "scripts": {
-    "dev": "vite --port 9000 --open --force",
-    "build": "run-p type-check build-only",
+    "dev": "vite",
     "docs:dev": "vitepress dev docs --port 8000 --open",
     "docs:build": "vitepress build docs",
-    "docs:deploy": "sh script/deploy.sh",
-    "pub": "sh script/publish.sh",
-    "push": "sh script/push.sh",
-    "preview": "vite preview",
-    "build-only": "vite build",
+    "docs:deploy": "sh scripts/deploy.sh",
+    "build": "run-s clean build:lib",
+    "clean": "rimraf ./dist",
+    "build:lib": "run-p type-check build:es build:browser",
     "type-check": "vue-tsc --noEmit",
+    "build:es": "vite build",
+    "build:browser": "vite -f iife build",
+    "pub": "sh scripts/publish.sh",
+    "push": "sh scripts/push.sh",
+    "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@vuepic/vue-datepicker": "^6.0.0",
+    "@vuepic/vue-datepicker": "^6.0.1",
     "@vueuse/core": "^10.3.0",
     "@vueuse/integrations": "^10.3.0",
     "ant-design-vue": "^4.0.1",
@@ -40,7 +47,6 @@
     "qrcode": "^1.5.3",
     "swiper": "^10.2.0",
     "vue": "^3.3.4",
-    "vue-amazing-ui": "^0.1.1",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
@@ -52,8 +58,10 @@
     "eslint": "^8.47.0",
     "eslint-plugin-vue": "^9.17.0",
     "less": "^4.2.0",
+    "minimist": "^1.2.8",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.2",
+    "rimraf": "^5.0.1",
     "rollup-plugin-visualizer": "^5.9.2",
     "typescript": "~5.1.6",
     "unplugin-vue-components": "^0.25.1",
@@ -61,7 +69,7 @@
     "vitepress": "1.0.0-beta.6",
     "vue-tsc": "^1.8.8"
   },
-  "description": "This Components Library will help get you started developing in Vue 3.",
+  "description": "An Amazing Vue3 UI Components Library.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/themusecatcher/vue-amazing-ui.git"
@@ -77,9 +85,14 @@
     "Tools"
   ],
   "author": "theMuseCatcher",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/themusecatcher/vue-amazing-ui/issues"
   },
-  "homepage": "https://github.com/themusecatcher/vue-amazing-ui#readme"
+  "homepage": "https://themusecatcher.github.io/vue-amazing-ui",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }
