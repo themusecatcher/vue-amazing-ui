@@ -1,10 +1,13 @@
 # 只有编译后的 dist 目录、package.json、README.md是需要被发布的
 # 忽略目录
+.vite/
 .DS_Store
 .vscode/
+docs/
 node_modules
 packages/
 public/
+scripts/
 src/
 
 # 忽略指定文件

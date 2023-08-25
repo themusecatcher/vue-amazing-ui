@@ -199,13 +199,14 @@ html.dark .VPHome {
   .curtain {
     display: none;
   }
-  .content-body, .VPNavBarSearch {
+  .content-body {
+    pointer-events: none;
+    border: none;
+    background-color: transparent !important;
+  }
+  .VPNavBarSearch {
     pointer-events: none;
   }
-}
-.VPNavBar, .content-body {
-  border: none !important;
-  background-color: transparent !important;
 }
 .VPNavBarTitle .title {
   transition: all 0.25s;
