@@ -8,7 +8,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import VueDatePicker from '@vuepic/vue-datepicker'
+// import VueDatePicker from 'VueDatePicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { computed } from 'vue'
 interface Props {
