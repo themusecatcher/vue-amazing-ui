@@ -35,6 +35,9 @@ dependencies:
   vue:
     specifier: ^3.3.4
     version: 3.3.4
+  vue-amazing-ui:
+    specifier: ^0.1.2
+    version: 0.1.2
   vue-router:
     specifier: ^4.2.4
     version: 4.2.4(vue@3.3.4)
@@ -3452,6 +3455,35 @@ packages:
   /vscode-textmate@8.0.0:
     resolution: {integrity: sha512-AFbieoL7a5LMqcnOF04ji+rpXadgOXnZsxQr//r83kLPr7biP7am3g9zbaZIaBGwBRWeSvoMD4mgPdX3e4NWBg==}
     dev: true
+
+  /vue-amazing-ui@0.1.2:
+    resolution: {integrity: sha512-uPsLZvsDMvoW+fweTSoqm9eSJEvptcKActUV6wl+7VWBnViBtOHEPq/+toxGDXgoT5nnzoFCOEVVhtwDyFetsA==}
+    dependencies:
+      '@vuepic/vue-datepicker': 6.0.1(vue@3.3.4)
+      '@vueuse/core': 10.3.0(vue@3.3.4)
+      '@vueuse/integrations': 10.3.0(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
+      ant-design-vue: 4.0.1(vue@3.3.4)
+      core-js: 3.32.1
+      date-fns: 2.30.0
+      naive-ui: 2.34.4(vue@3.3.4)
+      qrcode: 1.5.3
+      swiper: 10.2.0
+      vue: 3.3.4
+      vue-router: 4.2.4(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - async-validator
+      - axios
+      - change-case
+      - drauu
+      - focus-trap
+      - fuse.js
+      - idb-keyval
+      - jwt-decode
+      - nprogress
+      - sortablejs
+      - universal-cookie
+    dev: false
 
   /vue-demi@0.14.5(vue@3.3.4):
     resolution: {integrity: sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA==}
