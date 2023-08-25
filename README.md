@@ -43,6 +43,15 @@ import 'vue-amazing-ui/css'
 </script>
 ```
 
+## CDN
+
+全局构建版本的组件库
+
+```html
+<!-- unpkg -->
+<script src="https://unpkg.com/vue-amazing-ui@latest"></script>
+```
+
 ## Project
 
 - Get the project code

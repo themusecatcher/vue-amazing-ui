@@ -88,7 +88,7 @@ export default defineConfig({
           qrcode: 'qrcode'
         }
       }
-    }
+    },
     /*
       minify:
       设置为 false 可以禁用最小化混淆，或是用来指定使用哪种混淆器。
@@ -113,6 +113,7 @@ export default defineConfig({
     // },
     // cssCodeSplit: true, // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在其被加载时一并获取。如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
     // cssMinify: 'esbuild', // 默认与 build.minify 一致，允许用户覆盖 CSS 最小化压缩的配置，而不是使用默认的 build.minify
+    reportCompressedSize: false, // 默认 true，启用/禁用 gzip 压缩大小报告。压缩大型输出文件可能会很慢，因此禁用该功能可能会提高大型项目的构建性能。
     // chunkSizeWarningLimit: 500 // 默认500，规定触发警告的 chunk 大小，单位kbs
   },
   server: {
