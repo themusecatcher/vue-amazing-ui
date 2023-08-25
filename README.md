@@ -43,9 +43,7 @@ import 'vue-amazing-ui/css'
 </script>
 ```
 
-## CDN
-
-全局构建版本的组件库
+## Use CDN in Project
 
 ```html
 <!-- unpkg -->
