@@ -119,7 +119,7 @@
 }
 /* Transition by color instead of opacity */
 .dark .vp-doc .custom-block a {
-  transition: color 0.25s;
+  transition: color .25s;
 }
 a:hover {
   text-decoration: none !important;
@@ -195,6 +195,10 @@ html.dark .VPHome {
     }
   }
 }
+.VPNavBar.fill:not(.has-sidebar) {
+  border: none !important;
+  background-color: transparent !important;
+}
 .VPNavBar {
   .curtain {
     display: none;
@@ -209,7 +213,7 @@ html.dark .VPHome {
   }
 }
 .VPNavBarTitle .title {
-  transition: all 0.25s;
+  transition: all .25s;
   &:hover {
     transform: scale(1.1);
     color: #bd34fe;
@@ -239,6 +243,7 @@ html.dark .VPHome {
   transition: all .25s;
   &:hover {
     border-color: #41d1ff !important;
+    box-shadow: 0 0 3px 3px rgba(65, 209, 255, .12);
   }
 }
 .VPSwitch {
@@ -246,7 +251,7 @@ html.dark .VPHome {
   background-color: transparent !important;
   &:hover {
     border-color: #e4c31b !important;
-    box-shadow: 0 0 3px 3px rgba(228, 195, 27, 0.12);
+    box-shadow: 0 0 3px 3px rgba(228, 195, 27, .12);
   }
 }
 .DocSearch-Button {
@@ -257,7 +262,7 @@ html.dark .VPHome {
     transform: scale(1.1);
     border-color: #bd34fe;
     background-color: rgba(0, 0, 0, .36);
-    box-shadow: 0 0 3px 3px rgba(189, 52, 254, 0.12);
+    box-shadow: 0 0 3px 3px rgba(189, 52, 254, .12);
     .DocSearch-Search-Icon,
     .DocSearch-Button-Placeholder {
       color: #FFF;
@@ -292,7 +297,7 @@ html.dark .VPHome {
       transition: all .25s;
     }
     .details {
-      color: rgba(255, 255, 255, 0.88);
+      color: rgba(255, 255, 255, .88);
     }
     .icon {
       border-radius: 50%;
@@ -302,7 +307,6 @@ html.dark .VPHome {
   &:hover {
     transform: scale(1.2);
     transform-origin: 50%, 50%;
-    
     .VPFeature {
       border-color: #fbdf93;
       background: linear-gradient(to right, #09c8ce, #e4c31b, #eb2f96);
@@ -328,10 +332,10 @@ html.dark .VPHome {
 }
 .pager-link {
   border-radius: 12px !important;
-  transition: all 0.25s !important;
+  transition: all .25s !important;
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 3px 3px rgba(100, 108, 255, 0.12);
+    box-shadow: 0 0 3px 3px rgba(100, 108, 255, .12);
   }
 }
 .tag-version {
