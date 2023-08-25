@@ -10,6 +10,7 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 // import { visualizer } from 'rollup-plugin-visualizer'
 
 import minimist from 'minimist'
+
 // 获取构建选项 build:browser 时，传入的变量: -f iife
 const { f } = minimist(process.argv.slice(2))
 
