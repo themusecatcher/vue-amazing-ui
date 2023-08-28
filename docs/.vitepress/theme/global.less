@@ -155,7 +155,7 @@ html.dark .VPHome {
 }
 .VPHero {
   .name, .text, .tagline {
-    transition: transform .3s ease-in-out;
+    transition: transform .3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     transform-origin: 0% 50%;
     &:hover {
       transform: scale(1.2);
@@ -165,7 +165,7 @@ html.dark .VPHome {
     color: var(--vp-c-text-1);
   }
   .image-src {
-    transition: transform .5s;
+    transition: transform .5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     &:hover {
       transform: translate(-50%, -50%) scale(1.2);
     }
@@ -184,7 +184,7 @@ html.dark .VPHome {
     padding: 24px 32px;
     .container {
       display: inline-block;
-      transition: all .5s;
+      transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
       .message, .copyright {
         color: var(--vp-c-text-1);
       }
@@ -215,7 +215,7 @@ html.dark .VPHome {
   }
 }
 .VPNavBarTitle .title {
-  transition: all .25s;
+  transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   &:hover {
     transform: scale(1.1);
     color: #bd34fe;
@@ -224,7 +224,7 @@ html.dark .VPHome {
     }
   }
   .VPImage {
-    transition: transform .5s;
+    transition: transform .5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   }
 }
 .VPButton {
@@ -259,7 +259,7 @@ html.dark .VPHome {
 .DocSearch-Button {
   border-radius: 12px;
   background-color: rgba(0, 0, 0, .36);
-  transition: all .25s;
+  transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   &:hover {
     transform: scale(1.1);
     border-color: #bd34fe;
@@ -320,7 +320,7 @@ html.dark .VPHome {
   }
 }
 .VPLink .text {
-  transition: all .25s ease-in-out;
+  transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   transform-origin: 0% 50%;
   &:hover {
     transform: scale(1.1);
@@ -329,12 +329,12 @@ html.dark .VPHome {
   }
 }
 .is-active .VPLink .text {
-  transform: scale(1.1);
+  transform: scale(1.1) cubic-bezier(0.18, 0.89, 0.32, 1.28);
   font-weight: 600 !important;
 }
 .pager-link {
   border-radius: 12px !important;
-  transition: all .25s !important;
+  transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28) !important;
   &:hover {
     transform: scale(1.05);
     box-shadow: 0 0 3px 3px rgba(100, 108, 255, .12);
