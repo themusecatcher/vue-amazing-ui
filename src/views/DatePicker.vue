@@ -74,7 +74,7 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <h1>Vue datepicker 参考文档</h1>
+    <h1>参考文档</h1>
     <ul class="m-list">
       <li>
         <a class="u-file" href="https://vue3datepicker.com/" target="_blank">Vue Datepicker</a>
