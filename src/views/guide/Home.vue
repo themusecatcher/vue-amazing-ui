@@ -39,6 +39,7 @@ const sum = computed(() => {
       <h1>Vue Amazing UI</h1>
       <Tag color="volcano">{{ pkg.version }}</Tag>
     </Space>
+    
     <Descriptions class="mb10 mt30" title="生产环境依赖" :column="{md: 2, lg: 3, xl: 4}">
       <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies">
         <Tag color="volcano">{{ version }}</Tag>

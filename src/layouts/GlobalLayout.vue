@@ -43,7 +43,7 @@ function onClick (e: any):void {
 function onFinish () {
   console.log('Off Duty！')
 }
-const getOffDate = (time = '9:00'): number => {
+const getOffDate = (time = '9:03'): number => {
   const date = new Date()
   const Y = date.getFullYear()
   const M = date.getMonth() + 1
