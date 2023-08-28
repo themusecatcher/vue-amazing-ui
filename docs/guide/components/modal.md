@@ -55,7 +55,7 @@ function showErrorModal (content: string) {
   center.value = true
   visible.value = true
 }
-function showWarnModal (content: string) {
+function showWarningModal (content: string) {
   modal.value.warning({
     title: 'Do you See these items ?',
     content: content
@@ -109,6 +109,13 @@ import { ref } from 'vue'
 const modal = ref()
 const loading = ref(false)
 const visible = ref(false)
+function showConfirmModal (content: string) {
+  modal.value.confirm({
+    title: 'Do you Want to submit these items ?',
+    content: content
+  })
+  visible.value = true
+}
 function onCancel () { // “取消”按钮回调
   visible.value = false
 }
@@ -189,6 +196,13 @@ import { ref } from 'vue'
 
 const modal = ref()
 const visible = ref(false)
+function showInfoModal (content: string) {
+  modal.value.info({
+    title: 'Do you See these items ?',
+    content: content
+  })
+  visible.value = true
+}
 function onKnow () { // “我知道了”按钮回调
   visible.value = false
 }
@@ -216,6 +230,13 @@ import { ref } from 'vue'
 
 const modal = ref()
 const visible = ref(false)
+function showSuccessModal (content: string) {
+  modal.value.success({
+    title: 'Do you See these items ?',
+    content: content
+  })
+  visible.value = true
+}
 function onKnow () { // “我知道了”按钮回调
   visible.value = false
 }
@@ -243,6 +264,13 @@ import { ref } from 'vue'
 
 const modal = ref()
 const visible = ref(false)
+function showErrorModal (content: string) {
+  modal.value.error({
+    title: 'Do you See these items ?',
+    content: content
+  })
+  visible.value = true
+}
 function onKnow () { // “我知道了”按钮回调
   visible.value = false
 }
@@ -260,7 +288,7 @@ function onKnow () { // “我知道了”按钮回调
 
 ## warning
 
-<Button type="primary" @click="showWarnModal('Some descriptions ...')">Warning</Button>
+<Button type="primary" @click="showWarningModal('Some descriptions ...')">Warning</Button>
 
 ::: details Show Code
 
@@ -270,12 +298,20 @@ import { ref } from 'vue'
 
 const modal = ref()
 const visible = ref(false)
+function showWarningModal (content: string) {
+  modal.value.warning({
+    title: 'Do you See these items ?',
+    content: content
+  })
+  center.value = true
+  visible.value = true
+}
 function onKnow () { // “我知道了”按钮回调
   visible.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="showWarnModal('Some descriptions ...')">Warning</Button>
+  <Button type="primary" @click="showWarningModal('Some descriptions ...')">Warning</Button>
   <Modal
     ref="modal"
     :visible="visible"
@@ -297,6 +333,13 @@ import { ref } from 'vue'
 
 const modal = ref()
 const visible = ref(false)
+function showFixModal (content: string) {
+  modal.value.info({
+    title: 'Do you See these items ?',
+    content: content
+  })
+  visible.value = true
+}
 function onKnow () { // “我知道了”按钮回调
   visible.value = false
 }
