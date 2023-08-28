@@ -274,6 +274,12 @@ function onClose () {
 
 :::
 
+<style lang="less" scoped>
+p {
+  line-height: 1.5714285714285714;
+}
+</style>
+
 ## APIs
 
 参数 | 说明 | 类型 | 默认值 | 必传
