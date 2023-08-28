@@ -200,6 +200,7 @@ function onConfirm () {
       .m-dialog-body {
         padding: 20px 24px;
         font-size: 14px;
+        color: rgba(0, 0, 0, .88);
         line-height: 1.5714285714285714;
         word-wrap: break-word;
         overflow: auto;
