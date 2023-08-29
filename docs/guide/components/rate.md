@@ -306,7 +306,7 @@ size | 字符时是字体高度，图标时是图片大小 | number | 20 | false
 color | 字符选中颜色 | string | '#fadb14' | false
 gap | 字符间距，单位px | number | 8 | false
 disabled | 只读，无法进行交互 | boolean | false | false
-value(v-model) | 当前数，受控值 `1,2,3...` | number | 0 | false
+value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `1,2,3...` | number | 0 | false
 
 ## Events
 

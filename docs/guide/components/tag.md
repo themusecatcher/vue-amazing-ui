@@ -488,7 +488,7 @@ color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `
 icon | 设置图标 | string &#124; slot | '' | false
 size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 dynamic | 是否启用标签动态添加和删除 | boolean | false | false
-value(v-model) | 动态标签数组，`dynamic` 为 `true` 时生效 | string[] &#124; Tag[] | [] | false
+value <Tag color="cyan">v-model</Tag> | 动态标签数组，`dynamic` 为 `true` 时生效 | string[] &#124; Tag[] | [] | false
 spaceWidth | 间距区域总宽度 | string &#124; number | 'auto' | false
 spaceAlign | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' | false
 spaceDirection | 间距方向 | 'horizontal' &#124; 'vertical' | 'horizontal' | false

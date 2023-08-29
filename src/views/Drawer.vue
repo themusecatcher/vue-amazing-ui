@@ -24,9 +24,6 @@ const options = ref([
     }
   ])
 const placement = ref('right')
-const afterOpenChange = (bool: boolean) => {
-  console.log('open', bool)
-}
 
 const showDrawer1 = () => {
   open1.value = true

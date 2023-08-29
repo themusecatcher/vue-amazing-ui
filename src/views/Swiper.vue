@@ -41,9 +41,9 @@ function onChange () {
       <h1>Swiper</h1>
       <Tag color="volcano">{{ pkg.dependencies.swiper }}</Tag>
     </Space>
-    <h2 class="mt30 mb10">轮播图基本使用 (type: banner)</h2>
+    <h2 class="mt30 mb10">基本使用</h2>
     <Swiper :images="images" :height="600" @change="onChange" />
-    <h2 class="mt30 mb10">Swiper 走马灯基本使用 (type: carousel)</h2>
+    <h2 class="mt30 mb10">走马灯</h2>
     <Swiper
       :images="images"
       type="carousel"

@@ -350,7 +350,7 @@ beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `
 uploadMode | 上传文件的方式，可选 `'base64'` &#124; `'custom'` | 'base64' &#124; 'custom' | 'base64' | false
 customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为 | Function | () => {} | false
 disabled | 是否禁用，只能预览，不能删除和上传 | boolean | false | false
-fileList(v-model) | 已上传的文件列表 | FileType[] | [] | false
+fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | FileType[] | [] | false
 
 ## FileType Type
 

@@ -310,7 +310,7 @@ watchEffect(() => {
 options | 单选元素数据 | Option[] | [] | true
 disabled | 是否禁用 | boolean | false | false
 vertical | 是否垂直排列 | boolean | false | false
-value(v-model) | 当前选中的值 | any | null | false
+value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any | null | false
 gap | 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距 | number | 8 | false
 
 ## Option Type

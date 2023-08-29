@@ -78,36 +78,36 @@ function onChange (key: string|number) {
     <h1>Tabs 标签页</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Tabs
-      :tabPages="tabPages"
-      v-model:activeKey="activeKey"
+      :tab-pages="tabPages"
+      v-model:active-key="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">禁用 key: 3 标签页 (disabled: true)</h2>
+    <h2 class="mt30 mb10">禁用某一项</h2>
     <Tabs
-      :tabPages="tabPagesDisabled"
-      v-model:activeKey="activeKey"
+      :tab-pages="tabPagesDisabled"
+      v-model:active-key="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">居中展示 (centered: true)</h2>
+    <h2 class="mt30 mb10">居中展示</h2>
     <Tabs
       centered
-      :tabPages="tabPages"
-      v-model:activeKey="activeKey"
+      :tab-pages="tabPages"
+      v-model:active-key="activeKey"
       @change="onChange" />
     <h2 class="mt30 mb10">左右滑动，容纳更多标签</h2>
     <Tabs
       style="width: 320px;"
-      :tabPages="tabPages"
-      v-model:activeKey="activeKey"
+      :tab-pages="tabPages"
+      v-model:active-key="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">大号标签页 (size: large)</h2>
+    <h2 class="mt30 mb10">大号标签页</h2>
     <Tabs
       size="large"
-      :tabPages="tabPages"
-      v-model:activeKey="activeKey"
+      :tab-pages="tabPages"
+      v-model:active-key="activeKey"
       @change="onChange" />
     <h2 class="mt30 mb10">自定义内容</h2>
     <Tabs
-      :tabPages="tabPages"
-      v-model:activeKey="activeKey"
+      :tab-pages="tabPages"
+      v-model:active-key="activeKey"
       @change="onChange">
       <template #1>
         <p>key: 1 的 slot 内容</p>
@@ -120,7 +120,7 @@ function onChange (key: string|number) {
       </template>
     </Tabs>
     <h2 class="mt30 mb10">Ant Design Vue 标签页</h2>
-    <a-tabs v-model:activeKey="activeKey">
+    <a-tabs v-model:active-key="activeKey">
       <a-tab-pane key="1" tab="Tab 1">Content of Tab Pane 1</a-tab-pane>
       <a-tab-pane key="2" tab="Tab 2" force-render>Content of Tab Pane 3</a-tab-pane>
       <a-tab-pane key="3" tab="Tab 3" disabled>Content of Tab Pane 3</a-tab-pane>

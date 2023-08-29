@@ -8,8 +8,6 @@
 
 - 当某个页面需要向用户显示警告的信息时
 
-## 基本使用
-
 <script setup lang="ts">
 function openChange (visible: boolean) {
   console.log('visible:', visible)

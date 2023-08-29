@@ -169,7 +169,7 @@ precision | 数值精度 | number | 0 | false
 prefix | 前缀图标 | string &#124; slot | '' | false
 formatter | 指定展示值的格式 | Funtion | (value: string) => value | false
 keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true | false
-value(v-model) | 当前值 | number &#124; null | null | false
+value <Tag color="cyan">v-model</Tag> | 当前值 | number &#124; null | null | false
 
 ## Events
 

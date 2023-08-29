@@ -406,7 +406,7 @@ showCount | 是否展示字数 | boolean | false | false
 size | 输入框大小 | 'large' &#124; 'middle' &#124; 'small' | 'middle' | false
 prefix | 前缀图标 | string | '' | false
 suffix | 后缀图标 | string | '' | false
-value(v-model) | 输入框内容 | string | '' | false
+value <Tag color="cyan">v-model</Tag> | 输入框内容 | string | '' | false
 
 ## Events
 

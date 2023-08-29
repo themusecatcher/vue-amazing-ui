@@ -14,9 +14,9 @@ watchEffect(() => {
     <h1>Switch 开关</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Switch v-model:checked="checked" @change="onChange" />
-    <h2 class="mt30 mb10">禁用开关 (disabled: true)</h2>
+    <h2 class="mt30 mb10">禁用开关</h2>
     <Switch v-model:checked="checked" disabled />
-    <h2 class="mt30 mb10">带文字的开关 (checkedInfo: 开 & uncheckedInfo: 关)</h2>
+    <h2 class="mt30 mb10">带文字的开关</h2>
     <Switch v-model:checked="checked" checkedInfo="开" uncheckedInfo="关" />
     <h2 class="mt30 mb10">自定义图标和样式</h2>
     <Switch class="u-theme-switch" v-model:checked="checked" :node-style="{background: checked ? '#001529':'#fff'}">

@@ -227,7 +227,7 @@ autoSize | 自适应内容高度 | boolean &#124; {minRows\?: number, maxRows?: 
 disabled | 是否禁用 | boolean | false | false
 maxlength | 最大长度 | number | undefined | false
 showCount | 是否展示字数 | boolean | false | false
-value(v-model) | 文本域内容 | string | '' | false
+value <Tag color="cyan">v-model</Tag> | 文本域内容 | string | '' | false
 
 ## Events
 

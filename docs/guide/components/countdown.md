@@ -111,7 +111,7 @@ function onFinish () {
 
 :::
 
-## 自定义标题和数值样式
+## 自定义样式
 
 <Countdown
   :value="1696089600000"

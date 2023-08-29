@@ -214,7 +214,7 @@ function onChange (pagination: {page: number, pageSize: number}) {
 
 ## 加载中
 
-<Table :columns="columns" :loading="true" />
+<Table :columns="columns" loading />
 
 ::: details Show Code
 
@@ -252,7 +252,7 @@ const columns = ref([
       ])
 </script>
 <template>
-  <Table :columns="columns" :loading="true" />
+  <Table :columns="columns" loading />
 </template>
 ```
 
