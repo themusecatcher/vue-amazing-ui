@@ -11,7 +11,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const percent = ref(60)
 const total = ref(100)
 const pagination = ref({
   pageSize: 10,
@@ -26,7 +25,7 @@ function changePage (pager: object) { // 分页回调
 
 <Pagination
   :current="pagination.p"
-  :pageSize="pagination.pageSize"
+  :page-size="pagination.pageSize"
   :total="total"
   @change="changePage" />
 
@@ -48,7 +47,7 @@ function changePage (pager: object) { // 分页回调
 <template>
   <Pagination
     :current="pagination.p"
-    :pageSize="pagination.pageSize"
+    :page-size="pagination.pageSize"
     :total="total"
     @change="changePage" />
 </template>
@@ -60,7 +59,7 @@ function changePage (pager: object) { // 分页回调
 
 <Pagination
   :current="pagination.p"
-  :pageSize="pagination.pageSize"
+  :page-size="pagination.pageSize"
   :total="total"
   placement="left"
   @change="changePage" />
@@ -83,7 +82,7 @@ function changePage (pager: object) { // 分页回调
 <template>
   <Pagination
     :current="pagination.p"
-    :pageSize="pagination.pageSize"
+    :page-size="pagination.pageSize"
     :total="total"
     placement="left"
     @change="changePage" />
@@ -96,7 +95,7 @@ function changePage (pager: object) { // 分页回调
 
 <Pagination
   :current="pagination.p"
-  :pageSize="pagination.pageSize"
+  :page-size="pagination.pageSize"
   :total="total"
   placement="right"
   @change="changePage" />
@@ -119,7 +118,7 @@ function changePage (pager: object) { // 分页回调
 <template>
   <Pagination
     :current="pagination.p"
-    :pageSize="pagination.pageSize"
+    :page-size="pagination.pageSize"
     :total="total"
     placement="right"
     @change="changePage" />
@@ -132,10 +131,10 @@ function changePage (pager: object) { // 分页回调
 
 <Pagination
   :current="pagination.p"
-  :pageSize="pagination.pageSize"
+  :page-size="pagination.pageSize"
   :total="total"
-  showQuickJumper
-  showTotal
+  show-quick-jumper
+  show-total
   @change="changePage" />
 
 ::: details Show Code
@@ -156,10 +155,10 @@ function changePage (pager: object) { // 分页回调
 <template>
   <Pagination
     :current="pagination.p"
-    :pageSize="pagination.pageSize"
+    :page-size="pagination.pageSize"
     :total="total"
-    showQuickJumper
-    showTotal
+    show-quick-jumper
+    show-total
     @change="changePage" />
 </template>
 ```

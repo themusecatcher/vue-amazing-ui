@@ -91,10 +91,10 @@ const images = ref([
 <Carousel
   :images="images"
   :height="360"
-  navColor="#13C2C2"
-  :navSize="48"
-  pageActiveColor="#13C2C2"
-  :pageStyle="{ width: '20px', height: '12px', borderRadius: '12px', backgroundColor: '#DDD' }" />
+  nav-color="#13C2C2"
+  :nav-size="48"
+  page-active-color="#13C2C2"
+  :page-style="{ width: '20px', height: '12px', borderRadius: '12px', backgroundColor: '#DDD' }" />
 
 ::: details Show Code
 
@@ -134,10 +134,10 @@ const images = ref([
   <Carousel
     :images="images"
     :height="360"
-    navColor="#13C2C2"
-    :navSize="48"
-    pageActiveColor="#13C2C2"
-    :pageStyle="{ width: '20px', height: '12px', borderRadius: '12px', backgroundColor: '#DDD' }" />
+    nav-color="#13C2C2"
+    :nav-size="48"
+    page-active-color="#13C2C2"
+    :page-style="{ width: '20px', height: '12px', borderRadius: '12px', backgroundColor: '#DDD' }" />
 </template>
 ```
 

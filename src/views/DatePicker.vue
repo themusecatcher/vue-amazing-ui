@@ -84,25 +84,25 @@ watchEffect(() => {
       </li>
     </ul>
     <h1 class="mt30">DatePicker 日期选择器</h1>
-    <h2 class="mt30 mb10">日期选择器 (mode: date 默认)</h2>
+    <h2 class="mt30 mb10">基本使用</h2>
     <DatePicker
       placeholder="请选择日期"
       v-model="dateValue"
       show-today
       format="yyyy-MM-dd" />
-    <h2 class="mt30 mb10">禁用过去的日期选择器 (mode: date )</h2>
+    <h2 class="mt30 mb10">禁用过去</h2>
     <DatePicker
       placeholder="请选择日期"
       v-model="dateValue"
       :min-date="new Date()"
       format="yyyy-MM-dd" />
-    <h2 class="mt30 mb10">禁用未来的日期选择器 (mode: date )</h2>
+    <h2 class="mt30 mb10">禁用未来</h2>
     <DatePicker
       placeholder="请选择日期"
       v-model="dateValue"
       :max-date="new Date()"
       format="yyyy-MM-dd" />
-    <h2 class="mt30 mb10">日期时间选择器 (mode: date & show-time & enable-seconds)</h2>
+    <h2 class="mt30 mb10">日期时间选择器</h2>
     <DatePicker
       placeholder="请选择日期时间"
       v-model="dateTimeValue"
@@ -110,7 +110,7 @@ watchEffect(() => {
       :width="240"
       show-time
       enable-seconds />
-    <h2 class="mt30 mb10">日期范围选择器 (range)</h2>
+    <h2 class="mt30 mb10">日期范围选择器</h2>
     <DatePicker
       placeholder="请选择日期范围"
       v-model="rangeValue"
@@ -118,7 +118,7 @@ watchEffect(() => {
       :preset-ranges="presetRanges"
       format="yyyy-MM-dd"
       :width="280" />
-    <h2 class="mt30 mb10">日期范围选择器，双日期面板 (range & multi-calendars)</h2>
+    <h2 class="mt30 mb10">日期范围选择器，双日期面板</h2>
     <DatePicker
       placeholder="请选择日期范围"
       v-model="rangeValue"
@@ -127,7 +127,18 @@ watchEffect(() => {
       :width="280"
       range
       multi-calendars />
-    <h2 class="mt30 mb10">时分选择器 (mode: time & show-time)</h2>
+    <h2 class="mt30 mb10">预设范围</h2>
+    <h3 class="mb10">预设常用的日期范围以提高用户体验</h3>
+    <DatePicker
+      placeholder="请选择日期范围"
+      mode="range"
+      format="yyyy-MM-dd"
+      :width="280"
+      range
+      :presetRanges="presetRanges"
+      multi-calendars
+      v-model="rangeValue" />
+    <h2 class="mt30 mb10">时分选择器</h2>
     <DatePicker
       placeholder="请选择时间"
       v-model="timeValue"
@@ -136,7 +147,7 @@ watchEffect(() => {
       mode-height="120"
       format="HH:mm"
       :width="120" />
-    <h2 class="mt30 mb10">时分秒选择器 (mode: time & show-time & enable-seconds)</h2>
+    <h2 class="mt30 mb10">时分秒选择器</h2>
     <DatePicker
       placeholder="请选择时间"
       v-model="secondsValue"
@@ -146,7 +157,7 @@ watchEffect(() => {
       mode-height="120"
       format="HH:mm:ss"
       :width="150" />
-    <h2 class="mt30 mb10">时分秒范围选择器 (mode: time & range & show-time & enable-seconds)</h2>
+    <h2 class="mt30 mb10">时分秒范围选择器</h2>
     <DatePicker
       placeholder="请选择时间"
       v-model="timeRangeValue"
@@ -157,21 +168,21 @@ watchEffect(() => {
       mode-height="120"
       format="HH:mm:ss"
       :width="240" />
-    <h2 class="mt30 mb10">周选择器 (mode: week)</h2>
+    <h2 class="mt30 mb10">周选择器</h2>
     <DatePicker
       placeholder="请选择周"
       v-model="weekValue"
       mode="week"
       format="yyyy-MM-dd"
       :width="280" />
-    <h2 class="mt30 mb10">月选择器 (mode: month)</h2>
+    <h2 class="mt30 mb10">月选择器</h2>
     <DatePicker
       placeholder="请选择月"
       v-model="monthValue"
       mode="month"
       format="yyyy-MM"
       :width="150" />
-    <h2 class="mt30 mb10">年选择器 (mode: year)</h2>
+    <h2 class="mt30 mb10">年选择器</h2>
     <DatePicker
       placeholder="请选择年"
       v-model="yearValue"

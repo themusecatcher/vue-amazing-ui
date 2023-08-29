@@ -677,7 +677,7 @@ filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进�
 width | 宽度，单位px | number | 120 | false
 height | 高度，单位px | number | 32 | false
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
-modelValue(v-model) | 当前选中的 `option` 条目 | number &#124; string &#124; null | null | false
+modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目 | number &#124; string &#124; null | null | false
 
 ## Option Type
 

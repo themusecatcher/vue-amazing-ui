@@ -323,10 +323,11 @@ function onSwitchRight () {
   opacity: 0;
 }
 .preview-enter-active, .preview-leave-active {
-  transition: opacity .3s ease-in-out;
+  transition: all .3s ease-in-out;
 }
 .preview-enter-from, .preview-leave-to {
   opacity: 0;
+  transform: scale(0.1);
 }
 .m-image-wrap {
   display: inline-block;

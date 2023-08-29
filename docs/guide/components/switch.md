@@ -162,7 +162,7 @@ watchEffect(() => {
 checkedInfo | 选中时的内容 | string | '' | false
 uncheckedInfo | 未选中时的内容 | string | '' | false
 disabled | 是否禁用 | boolean | false | false
-checked(v-model) | 指定当前是否选中 | boolean | false | false
+checked <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean | false | false
 nodeStyle | 节点样式 | CSSProperties | {} | false
 
 ## Events

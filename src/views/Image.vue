@@ -47,25 +47,24 @@ setTimeout(() => {
     <h1>Image 图片</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
-    <h2 class="mt30 mb10">多张图片预览，同时支持键盘 (left / right / up / down) 按键切换 (src: images)</h2>
-    <Image :src="images" />
-    <h2 class="mt30 mb10">多张图片预览，支持循环切换图片 (loop: true)</h2>
-    <Image loop :src="images" />
-    <h2 class="mt30 mb10">多张图片预览，相册模式 (album: true)</h2>
+    <h2 class="mt30 mb10">多张图片预览</h2>
+    <h3 class="mb10">可循环切换图片，并支持键盘 (left / right / up / down) 按键切换</h3>
+    <Image :src="images" loop />
+    <h2 class="mt30 mb10">相册模式</h2>
     <Image loop :src="images" album />
-    <h2 class="mt30 mb10">预览文本设为 preview 同时图片覆盖容器 (preview: preview & fit: cover)</h2>
-    <Image fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <h3 class="mb10">自定义宽高，同时图片覆盖容器，预览文本设为 preview</h3>
+    <Image :width="300" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
       <template #preview>
         <p class="u-pre">preview</p>
       </template>
     </Image>
-    <h2 class="mt30 mb10">更改缩放比率和最大最小缩放比例 (zoomRatio: 0.2 & minZoomScale: 0.5 & maxZoomScale: 2)</h2>
+    <h2 class="mt30 mb10">自定义预览配置</h2>
+    <h3 class="mb10">更改缩放比率和最大最小缩放比例</h3>
     <Image
-      :width="400"
-      :height="300"
-      :zoomRatio="0.2"
-      :minZoomScale="0.5"
-      :maxZoomScale="2"
+      :zoom-ratio="0.2"
+      :min-zoom-scale="0.5"
+      :max-zoom-scale="2"
       src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
   </div>
 </template>

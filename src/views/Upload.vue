@@ -78,13 +78,17 @@ function onRemove (file: FileType) {
     <h1>Upload 上传</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Upload v-model:fileList="files" />
-    <h2 class="mt30 mb10">多文件上传，并限制上传数量为3 (multiple: true & maxCount: 3)</h2>
-    <Upload multiple :maxCount="3" v-model:fileList="fileList" />
-    <h2 class="mt30 mb10">缩略图等比覆盖，上传描述文字使用：上传 (fit: cover & tip: 上传)</h2>
-    <Upload :maxCount="3" tip="上传" fit="cover" v-model:fileList="fileList" />
-    <h2 class="mt30 mb10">禁用，只能预览，不能删除和上传 (disabled: true)</h2>
+    <h2 class="mt30 mb10">禁用</h2>
+    <h3 class="mb10">只能预览，不能删除和上传</h3>
     <Upload disabled v-model:fileList="fileList" />
-    <h2 class="mt30 mb10">限制上传文件最大500KB，同时文件类型只能是图片 (error-info: errorInfo & before-upload: onBeforeUpload)</h2>
+    <h2 class="mt30 mb10">多文件上传</h2>
+    <h3 class="mb10">限制上传数量为3</h3>
+    <Upload multiple :maxCount="3" v-model:fileList="fileList" />
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <h3 class="mb10">缩略图等比覆盖，上传描述文字使用：上传</h3>
+    <Upload :maxCount="3" tip="上传" fit="cover" v-model:fileList="fileList" />
+    <h2 class="mt30 mb10">限制文件大小和类型</h2>
+    <h3 class="mb10">上传文件最大500KB，同时文件类型只能是图片</h3>
     <Upload
       accept="image/*,application/pdf"
       :maxCount="3"
@@ -93,7 +97,7 @@ function onRemove (file: FileType) {
       v-model:fileList="imageList"
       @change="onChange"
       @remove="onRemove" />
-    <h2 class="mt30 mb10">自定义上传行为 (upload-mode: custom & custom-request: onCustomRequest)</h2>
+    <h2 class="mt30 mb10">自定义上传行为</h2>
     <Upload
       multiple
       :maxCount="5"

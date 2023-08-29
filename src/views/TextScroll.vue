@@ -45,6 +45,3 @@ function onClick (value: string) { // 获取点击的标题
       :height="60" />
   </div>
 </template>
-<style lang="less" scoped>
-
-</style>

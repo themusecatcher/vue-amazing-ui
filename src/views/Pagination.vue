@@ -16,40 +16,31 @@ function changePage (pager: object) { // 分页回调
     <h1>Pagination 分页</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Pagination
-      @change="changePage"
       :current="pagination.p"
-      :pageSize="pagination.pageSize"
+      :page-size="pagination.pageSize"
       :total="total"
-      :hideOnSinglePage="hideOnSinglePage"
-      :showQuickJumper="true"
-      :showTotal="true"
-      placement="center"/>
-    <h2 class="mt30 mb10">分页靠左(右)展示 (placement: left(right))</h2>
+      @change="changePage" />
+    <h2 class="mt30 mb10">靠左展示</h2>
     <Pagination
-      @change="changePage"
       :current="pagination.p"
-      :pageSize="pagination.pageSize"
+      :page-size="pagination.pageSize"
       :total="total"
-      :hideOnSinglePage="hideOnSinglePage"
-      :showQuickJumper="true"
-      :showTotal="true"
-      placement="left"/>
+      placement="left"
+      @change="changePage" />
+    <h2 class="mt30 mb10">靠右展示</h2>
     <Pagination
-      @change="changePage"
       :current="pagination.p"
-      :pageSize="pagination.pageSize"
+      :page-size="pagination.pageSize"
       :total="total"
-      :hideOnSinglePage="hideOnSinglePage"
-      :showQuickJumper="true"
-      :showTotal="true"
-      placement="right"/>
-    <h2 class="mt30 mb10">不展示快速跳转至某页，不显示当前页数和数据总量 (showQuickJumper: false & showTotal: false)</h2>
+      placement="right"
+      @change="changePage" />
+    <h2 class="mt30 mb10">快速跳转和数据总量</h2>
     <Pagination
-      @change="changePage"
       :current="pagination.p"
-      :pageSize="pagination.pageSize"
+      :page-size="pagination.pageSize"
       :total="total"
-      :hideOnSinglePage="hideOnSinglePage"
-      placement="left"/>
+      show-quick-jumper
+      show-total
+      @change="changePage" />
   </div>
 </template>

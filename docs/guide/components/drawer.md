@@ -265,7 +265,7 @@ destroyOnClose | 关闭时是否销毁 `Drawer` 里的子元素 | boolean | fals
 extra | 抽屉右上角的操作区域 | string &#124; slot | '' | false
 placement | 抽屉的方向 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'right' | false
 zIndex | 设置 `Drawer` 的 `z-index` | number | 1000 | false
-open(v-model) | 抽屉是否可见 | boolean | false | false
+open <Tag color="cyan">v-model</Tag> | 抽屉是否可见 | boolean | false | false
 
 ## Events
 

@@ -139,8 +139,7 @@ function startMove () {
     <a
       :style="`will-change: transform; transform: translateX(${-left}px); width: ${distance - gap}px; margin-left: ${gap}px;`"
       class="u-slide-title"
-      v-for="(text, index) in textData"
-      :key="index"
+      v-for="(text, index) in textData" :key="index"
       :title="text.title"
       :href="text.link ? text.link:'javascript:;'"
       :target="text.link ? '_blank':'_self'"
@@ -153,15 +152,15 @@ function startMove () {
       <div
         class="m-slider"
         :style="`width: calc(${totalWidth} - ${2*gap}px); height: ${height}px;`"
-        v-for="(data, index) in text" :key="index"
+        v-for="(text, index) in textData" :key="index"
         v-show="actIndex===index">
         <a
           class="u-slider"
-          :title="data.title"
-          :href="data.link ? data.link:'javascript:;'"
-          :target="data.link ? '_blank':'_self'"
-          @click="onClick(data.title)">
-          {{ data.title || '--' }}
+          :title="text.title"
+          :href="text.link ? text.link:'javascript:;'"
+          :target="text.link ? '_blank':'_self'"
+          @click="onClick(text.title)">
+          {{ text.title || '--' }}
         </a>
       </div>
     </TransitionGroup>

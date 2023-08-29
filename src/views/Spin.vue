@@ -10,18 +10,20 @@ const spinning = ref(true)
     <Spin style="width: 800px;" :tip="tip" :spinning="spinning">
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
-    <h2 class="mt30 mb10">四分之一圆形指示符 (indicator: quarter-circle)</h2>
+    <h2 class="mt30 mb10">四分之一圆形指示符</h2>
     <Spin style="width: 800px;" :tip="tip" :spinning="spinning" indicator="quarter-circle">
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
-    <h2 class="mt30 mb10">四分之三圆形指示符 (indicator: three-quarters-circle)</h2>
+    <h2 class="mt30 mb10">四分之三圆形指示符</h2>
     <Spin style="width: 800px;" :tip="tip" :spinning="spinning" indicator="three-quarters-circle">
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
-    <h2 class="mt30 mb10">动态圆形指示符 (indicator: dynamic-circle)</h2>
+    <h2 class="mt30 mb10">动态圆形指示符</h2>
     <Spin style="width: 800px;" :tip="tip" :spinning="spinning" indicator="dynamic-circle">
       <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
     </Spin>
+    <h2 class="mt30 mb10">自定义描述文案</h2>
+    <Spin tip="加载中..." :spinning="spinning" />
     <h2 class="mt30 mb10">自定义颜色</h2>
     <Space>
       <Spin :tip="tip" class="u-spin" color="#fadb14" :spinning="spinning" />

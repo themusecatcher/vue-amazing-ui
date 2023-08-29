@@ -557,7 +557,7 @@ watchEffect(() => {
 
 ## APIs
 
-*更多使用 APIs 请参考[官方文档](https://vue3datepicker.com/)*
+*更多使用 APIs 请参考 [官方文档](https://vue3datepicker.com/)*
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
@@ -565,4 +565,5 @@ width | 日期选择器宽度，单位px | number | 180 | false
 mode | 选择器模式 | 'time' &#124; 'date' &#124; 'week' &#124; 'month' &#124; 'year' | 'date' | false
 showTime | 是否增加时间选择 | boolean | false | false
 showToday | 是否展示”今天“按钮 | boolean | false | false
+modelValue <Tag color="cyan">v-model</Tag> | 双向绑定值 | number &#124; string &#124; object &#124; array | null | false
 modelType | `v-model` 值类型，可选时间戳(`timestamp`)、字符串(`format`) | 'timestamp' &#124; 'format' | 'format' | false

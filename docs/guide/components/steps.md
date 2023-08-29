@@ -142,7 +142,7 @@ function onNext () {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 steps | 步骤数组 | Step[] | [] | true
-current(v-model) | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1 | false
+current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1 | false
 width | 步骤条总宽度，单位px | number &#124; string | '100%' | false
 descMaxWidth | 描述文本最大宽度，单位px | number | 120 | false
 

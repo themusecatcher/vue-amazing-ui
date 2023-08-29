@@ -53,6 +53,7 @@ const images = ref([
   <div>
     <h1>Carousel 走马灯</h1>
     <h2 class="mt30 mb10">基本使用</h2>
+    <h3 class="mb10">支持自动切换，导航切换，键盘上、下、左、右按键切换，分页切换</h3>
     <Carousel
       :images="images"
       :width="800"
@@ -62,9 +63,9 @@ const images = ref([
       :images="images"
       :width="800"
       :height="450"
-      navColor="#13C2C2"
-      :navSize="48"
-      pageActiveColor="#13C2C2"
-      :pageStyle="{ width: '20px', height: '12px', borderRadius: '12px', backgroundColor: '#DDD' }" />
+      nav-color="#13C2C2"
+      :nav-size="48"
+      page-active-color="#13C2C2"
+      :page-style="{ width: '20px', height: '12px', borderRadius: '12px', backgroundColor: '#DDD' }" />
   </div>
 </template>

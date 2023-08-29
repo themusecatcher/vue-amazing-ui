@@ -34,28 +34,29 @@ function onChange (key: any) {
 <template>
   <div>
     <h1>Collapse 折叠面板</h1>
-    <h2 class="mt30 mb10">基本使用 (activeKey 传入 number[] | string[]，所有面板可同时展开)</h2>
+    <h2 class="mt30 mb10">基本使用</h2>
+    <h3 class="mb10">activeKey 传入 number[] | string[]，所有面板可同时展开</h3>
     <Collapse
-      :collapseData="collapseData"
-      v-model:activeKey="activeKey"
+      :collapse-data="collapseData"
+      v-model:active-key="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">'手风琴' (只允许单个内容区域展开，只需 activeKey 传入 number | string 即可)</h2>
+    <h2 class="mt30 mb10">'手风琴'</h2>
+    <h3 class="mb10">只允许单个内容区域展开，只需 activeKey 传入 number | string 即可</h3>
     <Collapse
-      :collapseData="collapseData"
-      v-model:activeKey="key"
+      :collapse-data="collapseData"
+      v-model:active-key="key"
       @change="onChange" />
-    <h2 class="mt30 mb10">可复制面板内容 (copyable)</h2>
+    <h2 class="mt30 mb10">可复制</h2>
     <Collapse
       lang="template"
       copyable
-      :collapseData="collapseData"
-      v-model:activeKey="activeKey"
+      :collapse-data="collapseData"
+      v-model:active-key="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">使用插槽 slot 自定义 header、lang、text 内容</h2>
+    <h2 class="mt30 mb10">自定义内容</h2>
     <Collapse
-      copyable
-      :collapseData="collapseData"
-      v-model:activeKey="activeKey"
+      :collapse-data="collapseData"
+      v-model:active-key="activeKey"
       @change="onChange">
       <template #header="{ header, key }">
         <span v-if="key==='1'" style="color: burlywood;">burlywood color {{ header }} (key = {{ key }})</span>
@@ -65,14 +66,14 @@ function onChange (key: any) {
         <span v-if="key==='1'" style="color: burlywood;">burlywood color {{ text }} (key = {{ key }})</span>
       </template>
     </Collapse>
-    <h2 class="mt30 mb10">折叠面板，隐藏箭头图标 (showArrow: false)</h2>
+    <h2 class="mt30 mb10">隐藏箭头图标</h2>
     <Collapse
       :show-arrow="false"
-      :collapseData="collapseData"
-      v-model:activeKey="activeKey"
+      :collapse-data="collapseData"
+      v-model:active-key="activeKey"
       @change="onChange"/>
     <h2 class="mt30 mb10">Ant Design Vue 折叠面板</h2>
-    <a-collapse v-model:activeKey="activeKey" @change="onChange">
+    <a-collapse v-model:active-key="activeKey" @change="onChange">
       <a-collapse-panel
         v-for="(data, index) in collapseData" :key="index"
         :header="data.header">
