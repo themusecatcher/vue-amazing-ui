@@ -4,7 +4,7 @@ function openChange (visible: boolean) {
 }
 </script>
 <template>
-  <div class="ml120">
+  <div class="ml60">
     <h1>Tooltip 文字提示</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space :size="30">
