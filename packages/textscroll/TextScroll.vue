@@ -6,7 +6,7 @@ interface Text {
   link?: string // 跳转链接
 }
 interface Props {
-  sliderText: Text[] // 滚动文字数组
+  text: Text[] // 滚动文字数组
   width?: number|string // 滚动区域宽度，单位px
   height?: number // 滚动区域高度，单位px
   backgroundColor?: string // 滚动区域背景色
@@ -16,7 +16,7 @@ interface Props {
   interval?: number // 文字滚动时间间隔，单位ms，垂直滚动时生效
 }
 const props = withDefaults(defineProps<Props>(), {
-  sliderText: () => [],
+  text: () => [],
   width: '100%',
   height: 60,
   backgroundColor:  '#FFF',
@@ -30,7 +30,7 @@ const left = ref(0)
 const fpsRaf = ref(0) // fps回调标识
 const moveRaf = ref() // 一个 long 整数，请求 ID ，是回调列表中唯一的标识。是个非零值，没别的意义
 const fps = ref(60)
-const textData = ref<Text[]>([...props.sliderText])
+const textData = ref<Text[]>([...props.text])
 const horizonRef = ref()
 const distance = ref(0) // 每条滚动文字移动距离
 
@@ -85,7 +85,7 @@ const totalWidth = computed(() => { // 文字滚动区域总宽度
   }
 })
 const len = computed(() => {
-  return props.sliderText.length
+  return props.text.length
 })
 onMounted(() => {
   if (props.vertical) {
@@ -153,16 +153,15 @@ function startMove () {
       <div
         class="m-slider"
         :style="`width: calc(${totalWidth} - ${2*gap}px); height: ${height}px;`"
-        v-for="(text, index) in sliderText"
-        :key="index"
+        v-for="(data, index) in text" :key="index"
         v-show="actIndex===index">
         <a
           class="u-slider"
-          :title="text.title"
-          :href="text.link ? text.link:'javascript:;'"
-          :target="text.link ? '_blank':'_self'"
-          @click="onClick(text.title)">
-        {{ text.title }}
+          :title="data.title"
+          :href="data.link ? data.link:'javascript:;'"
+          :target="data.link ? '_blank':'_self'"
+          @click="onClick(data.title)">
+          {{ data.title || '--' }}
         </a>
       </div>
     </TransitionGroup>

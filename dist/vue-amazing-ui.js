@@ -5384,7 +5384,7 @@ At.install = (a) => {
 const wi = ["title", "href", "target", "onClick"], ki = ["title", "href", "target", "onClick"], $i = /* @__PURE__ */ T({
   __name: "TextScroll",
   props: {
-    sliderText: { default: () => [] },
+    text: { default: () => [] },
     width: { default: "100%" },
     height: { default: 60 },
     backgroundColor: { default: "#FFF" },
@@ -5395,7 +5395,7 @@ const wi = ["title", "href", "target", "onClick"], ki = ["title", "href", "targe
   },
   emits: ["click"],
   setup(a, { emit: e }) {
-    const t = a, s = h(0), n = h(0), r = h(), o = h(60), c = h([...t.sliderText]), p = h(), g = h(0), d = I(() => o.value === 60 ? 1 : 60 / o.value);
+    const t = a, s = h(0), n = h(0), r = h(), o = h(60), c = h([...t.text]), p = h(), g = h(0), d = I(() => o.value === 60 ? 1 : 60 / o.value);
     function v() {
       const D = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
       var L = null;
@@ -5415,7 +5415,7 @@ const wi = ["title", "href", "target", "onClick"], ki = ["title", "href", "targe
     function k() {
       s.value >= g.value ? (c.value.push(c.value.shift()), s.value = 0) : s.value += d.value, r.value = de(k);
     }
-    const y = I(() => typeof t.width == "number" ? t.width + "px" : t.width), f = I(() => t.sliderText.length);
+    const y = I(() => typeof t.width == "number" ? t.width + "px" : t.width), f = I(() => t.text.length);
     Q(() => {
       t.vertical ? _() : v();
     });
@@ -5444,7 +5444,7 @@ const wi = ["title", "href", "target", "onClick"], ki = ["title", "href", "targe
     }, [
       Y(Vt, { name: "slide" }, {
         default: U(() => [
-          (i(!0), u(O, null, G(D.sliderText, (H, E) => j((i(), u("div", {
+          (i(!0), u(O, null, G(D.text, (H, E) => j((i(), u("div", {
             class: "m-slider",
             style: M(`width: calc(${y.value} - ${2 * D.gap}px); height: ${D.height}px;`),
             key: E
@@ -5455,7 +5455,7 @@ const wi = ["title", "href", "target", "onClick"], ki = ["title", "href", "targe
               href: H.link ? H.link : "javascript:;",
               target: H.link ? "_blank" : "_self",
               onClick: (P) => $(H.title)
-            }, B(H.title), 9, ki)
+            }, B(H.title || "--"), 9, ki)
           ], 4)), [
             [q, m.value === E]
           ])), 128))
@@ -5483,7 +5483,7 @@ const wi = ["title", "href", "target", "onClick"], ki = ["title", "href", "targe
     ], 36));
   }
 });
-const Dt = /* @__PURE__ */ W($i, [["__scopeId", "data-v-e16bcc3b"]]);
+const Dt = /* @__PURE__ */ W($i, [["__scopeId", "data-v-4db4c500"]]);
 Dt.install = (a) => {
   a.component(Dt.__name, Dt);
 };

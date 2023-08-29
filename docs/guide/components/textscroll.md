@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const sliderText = ref([
+const text = ref([
       {
         title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
         link: 'https://blog.csdn.net/Dandrose?type=blog'
@@ -35,14 +35,14 @@ function onClick (value: string) { // 获取点击的标题
 
 <br/>
 
-<TextScroll :slider-text="sliderText" @click="onClick" />
+<TextScroll :text="text" @click="onClick" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const sliderText = ref([
+const text = ref([
       {
         title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
         link: 'https://blog.csdn.net/Dandrose?type=blog'
@@ -65,16 +65,18 @@ function onClick (value: string) { // 获取点击的标题
 }
 </script>
 <template>
-  <TextScroll :slider-text="sliderText" @click="onClick" />
+  <TextScroll :text="text" @click="onClick" />
 </template>
 ```
 
 :::
 
-## 垂直文字滚动
+*垂直文字滚动*
+
+<br/>
 
 <TextScroll
-  :slider-text="sliderText"
+  :text="text"
   background-color="#e6f4ff"
   vertical
   @click="onClick" />
@@ -84,7 +86,7 @@ function onClick (value: string) { // 获取点击的标题
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const sliderText = ref([
+const text = ref([
       {
         title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
         link: 'https://blog.csdn.net/Dandrose?type=blog'
@@ -108,7 +110,7 @@ function onClick (value: string) { // 获取点击的标题
 </script>
 <template>
   <TextScroll
-    :slider-text="sliderText"
+    :text="text"
     background-color="#e6f4ff"
     vertical
     @click="onClick" />
@@ -121,7 +123,7 @@ function onClick (value: string) { // 获取点击的标题
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-sliderText | 滚动文字数组 | Text[] | [] | true
+text | 滚动文字数组 | Text[] | [] | true
 width | 滚动区域宽度，单位px | number &#124; string | '100%' | false
 height | 滚动区域高度，单位px | number | 60 | false
 backgroundColor | 滚动区域背景色 | string | '#FFF' | false
