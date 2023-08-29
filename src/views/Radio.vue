@@ -62,7 +62,7 @@ const optionsDisabled = ref([
         value: 6
       }
     ])
-const value = ref(2)
+const value = ref(3)
 watchEffect(() => {
   console.log('value:', value.value)
 })
