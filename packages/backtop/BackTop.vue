@@ -35,7 +35,7 @@ watchEffect(() => {
     if (props.listenTo === undefined) {
       scrollTarget.value = getScrollParentElement(backtop.value?.parentElement)
     } else if (typeof props.listenTo === 'string') {
-      scrollTarget.value = document && document.getElementsByTagName(props.listenTo)[0]
+      scrollTarget.value = typeof document !== 'undefined' ? document.getElementsByTagName(props.listenTo)[0] : null
     } else if (props.listenTo instanceof HTMLElement) {
       scrollTarget.value = props.listenTo
     }
@@ -64,7 +64,7 @@ watchEffect(() => {
   nextTick(() => {
     var target = null
     if (typeof props.to === 'string') {
-      target = document && document.getElementsByTagName(props.to)[0]
+      target = typeof document !== 'undefined' ? document.getElementsByTagName(props.to)[0] : null
     } else if (props.to instanceof HTMLElement) {
       target = props.to
     }
