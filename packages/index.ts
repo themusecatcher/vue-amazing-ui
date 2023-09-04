@@ -71,7 +71,7 @@ import Waterfall from './waterfall'
 const components = [
   Alert,
   Avatar,
-  BackTop,
+  // BackTop,
   Badge,
   Breadcrumb,
   Button,
@@ -153,7 +153,7 @@ export {
 export {
   Alert,
   Avatar,
-  BackTop,
+  // BackTop,
   Badge,
   Breadcrumb,
   Button,
