@@ -33,7 +33,7 @@ watchEffect(() => {
   // 监听滚动的元素
   nextTick(() => {
     if (props.listenTo === undefined) {
-      scrollTarget.value = getScrollParentElement(backtop.value.parentElement)
+      scrollTarget.value = getScrollParentElement(backtop.value?.parentElement)
     } else if (typeof props.listenTo === 'string') {
       scrollTarget.value = document.getElementsByTagName(props.listenTo)[0]
     } else if (props.listenTo instanceof HTMLElement) {
@@ -74,14 +74,15 @@ watchEffect(() => {
 const show = computed(() => {
   return scrollTop.value >= props.visibilityHeight
 })
-function getScrollParentElement (el: HTMLElement) {
-  if (el.scrollHeight > el.clientHeight) {
-    return el
-  } else if (el.parentElement) {
-    return getScrollParentElement(el.parentElement)
-  } else {
-    return null
+function getScrollParentElement (el: any) {
+  if (el) {
+    if (el.scrollHeight > el.clientHeight) {
+      return el
+    } else {
+      return getScrollParentElement(el.parentElement)
+    }
   }
+  return null
 }
 function onBackTop () {
   scrollTarget.value && scrollTarget.value.scrollTo({
