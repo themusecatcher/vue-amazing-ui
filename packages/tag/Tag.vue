@@ -309,11 +309,11 @@ function onKeyboard (e: KeyboardEvent) {
   }
 }
 .tag-processing {
-  color: #1677ff;
+  color: @themeColor;
   background: #e6f4ff;
   border-color: #91caff;
   :deep(svg) {
-    fill: #1677ff;
+    fill: @themeColor;
   }
 }
 .tag-error {

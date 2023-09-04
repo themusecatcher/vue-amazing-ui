@@ -93,7 +93,7 @@ const lineColor = computed(() => {
     border-radius: 100px;
     .u-progress-bg {
       position: relative;
-      background-color: #1677ff;
+      background-color: @themeColor;
       border-radius: 100px;
       transition: all .3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
       &::after {

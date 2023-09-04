@@ -76,7 +76,7 @@ function getUrl (route: Route) {
   </div>
 </template>
 <style lang="less" scoped>
-@primary: #1677FF;
+@primary: @themeColor;
 @danger: #FF4D4F;
 .m-btn-wrap {
   display: inline-block;

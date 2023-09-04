@@ -69,7 +69,7 @@ const countdown = computed(() => {
       title="Off Duty"
       :title-style="{fontWeight: 600}"
       :value="countdown"
-      format="HH:mm:ss"
+      format="HH:mm:ss:SSS"
       finished-text="GO GO GO"
       @finish="onFinish" />
   </Transition>
@@ -134,7 +134,7 @@ const countdown = computed(() => {
 .u-duty-countdown {
   position: fixed;
   top: 36px;
-  right: 50px;
+  right: 36px;
   z-index: 2;
 }
 .u-dark-svg {

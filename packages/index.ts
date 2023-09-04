@@ -15,6 +15,7 @@ import {
 import type { App } from 'vue'
 import Alert from './alert'
 import Avatar from './avatar'
+import BackTop from './backtop'
 import Badge from './badge'
 import Breadcrumb from './breadcrumb'
 import Button from './button'
@@ -70,6 +71,7 @@ import Waterfall from './waterfall'
 const components = [
   Alert,
   Avatar,
+  BackTop,
   Badge,
   Breadcrumb,
   Button,
@@ -151,6 +153,7 @@ export {
 export {
   Alert,
   Avatar,
+  BackTop,
   Badge,
   Breadcrumb,
   Button,
