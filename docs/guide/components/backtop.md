@@ -2,7 +2,12 @@
 
 <br/>
 
-*用于网站上的全局功能，无论浏览到何处都可以看见的按钮*
+*返回页面顶部的操作按钮*
+
+## 何时使用
+
+- 当页面内容区域比较长时
+- 当用户需要频繁返回顶部查看相关内容时。
 
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -139,4 +144,5 @@ listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近�
 
 事件名称 | 说明 | 参数
 -- | -- | --
-show | 是否展现的回调 | (show: boolean) => void
+click | 点击按钮的回调函数 | () => void
+show | 是否展现的回调函数 | (show: boolean) => void
