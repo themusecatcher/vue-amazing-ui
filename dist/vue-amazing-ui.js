@@ -419,7 +419,7 @@ const Ge = /* @__PURE__ */ W(Ja, [["__scopeId", "data-v-98fa5874"]]);
 Ge.install = (a) => {
   a.component(Ge.__name, Ge);
 };
-const Xa = (a) => (J("data-v-7680452b"), a = a(), X(), a), Za = /* @__PURE__ */ Xa(() => /* @__PURE__ */ l("span", { class: "m-icon" }, [
+const Xa = (a) => (J("data-v-def1fe2e"), a = a(), X(), a), Za = /* @__PURE__ */ Xa(() => /* @__PURE__ */ l("span", { class: "m-icon" }, [
   /* @__PURE__ */ l("svg", {
     class: "u-icon",
     viewBox: "0 0 24 24",
@@ -458,7 +458,7 @@ const Xa = (a) => (J("data-v-7680452b"), a = a(), X(), a), Za = /* @__PURE__ */ 
     to: { default: "body" },
     listenTo: { default: void 0 }
   },
-  emits: ["show"],
+  emits: ["click", "show"],
   setup(a, { emit: e }) {
     const t = a, s = E(() => typeof t.bottom == "number" ? t.bottom + "px" : t.bottom), n = E(() => typeof t.right == "number" ? t.right + "px" : t.right), c = h(), o = h(0), u = h();
     se(() => {
@@ -490,7 +490,7 @@ const Xa = (a) => (J("data-v-7680452b"), a = a(), X(), a), Za = /* @__PURE__ */ 
         top: 0,
         behavior: "smooth"
         // 平滑滚动并产生过渡效果
-      });
+      }), e("click");
     }
     return oe(g, ($) => {
       e("show", $);
@@ -514,7 +514,7 @@ const Xa = (a) => (J("data-v-7680452b"), a = a(), X(), a), Za = /* @__PURE__ */ 
     }));
   }
 });
-const Je = /* @__PURE__ */ W(xa, [["__scopeId", "data-v-7680452b"]]);
+const Je = /* @__PURE__ */ W(xa, [["__scopeId", "data-v-def1fe2e"]]);
 Je.install = (a) => {
   a.component(Je.__name, Je);
 };

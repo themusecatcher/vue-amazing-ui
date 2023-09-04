@@ -84,15 +84,16 @@ function getScrollParentElement (el: any) {
   }
   return null
 }
+const emits = defineEmits(['click', 'show'])
 function onBackTop () {
   scrollTarget.value && scrollTarget.value.scrollTo({
     top: 0,
     behavior: 'smooth' // 平滑滚动并产生过渡效果
   })
+  emits('click')
 }
-const emit = defineEmits(['show'])
 watch(show, (to) => {
-  emit('show', to)
+  emits('show', to)
 })
 </script>
 <template>
