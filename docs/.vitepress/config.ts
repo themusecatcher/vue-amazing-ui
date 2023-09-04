@@ -103,6 +103,10 @@ export default defineConfig({
               link: '/guide/components/avatar'
             },
             {
+              text: '回到顶部 BackTop',
+              link: '/guide/components/backtop'
+            },
+            {
               text: '徽标数 Badge',
               link: '/guide/components/badge'
             },

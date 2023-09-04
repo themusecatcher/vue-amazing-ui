@@ -171,8 +171,8 @@ onMounted(() => {
     background-color: rgba(0, 0, 0, .25);
   }
   .status-processing {
-    color: #1677ff;
-    background-color: #1677ff;
+    color: @themeColor;
+    background-color: @themeColor;
   }
   .status-warning {
     color: #faad14;
@@ -203,8 +203,8 @@ onMounted(() => {
     background-color: #52c41a;
   }
   .status-blue {
-    color: #1677ff;
-    background-color: #1677ff;
+    color: @themeColor;
+    background-color: @themeColor;
   }
   .status-purple {
     color: #722ed1;

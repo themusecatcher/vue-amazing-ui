@@ -38,6 +38,12 @@ export const routes = [
         component: () => import('@/views/Avatar.vue')
       },
       {
+        path: '/backtop',
+        name: 'BackTop',
+        meta: { title: '回到顶部' },
+        component: () => import('@/views/BackTop.vue')
+      },
+      {
         path: '/badge',
         name: 'Badge',
         meta: { title: '徽标数' },

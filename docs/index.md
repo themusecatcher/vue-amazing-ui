@@ -24,13 +24,13 @@ hero:
 features:
   - icon: 🛠️
     title: 开发依赖
-    details: 组件库采用 Vue3@3.3.4 + TypeScript@4.7.4 + Vite4.4.9 + Less@4.2.0 实现
+    details: 组件库采用 Vue@3.3.4 + TypeScript@5.1.6 + Vite@4.4.9 + Less@4.2.0 实现
   - icon: ⚡️
     title: border-box
     details: '所有组件 CSS 样式均使用 box-sizing: border-box; 模式'
   - icon: 🚀
     title: 开箱即用
-    details: 目前共有 50 个常用基础 UI 组件，以及 11 个常用工具函数
+    details: 目前共有 51 个常用基础 UI 组件，以及 11 个常用工具函数
 ---
 
 <script setup lang="ts">

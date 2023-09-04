@@ -145,7 +145,7 @@ function onClose (e: MouseEvent):void {
   border: 1px solid #91caff;
   .m-icon, .m-big-icon {
     :deep(.u-icon) {
-      fill: #1677ff;
+      fill: @themeColor;
     }
   }
 }
