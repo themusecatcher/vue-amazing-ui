@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { moneyFormat } from '../index'
+import { formatNumber } from '../index'
 interface Props {
   title?: string // 数值的标题 string | slot
-  value?: string|number // 数值的内容
+  value?: string|number // 数值的内容 string | number | slot
   valueStyle?: CSSProperties // 设置数值的样式
   precision?: number //	数值精度
   prefix?: string // 设置数值的前缀 string | slot
@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   formatter: (value: string) => value
 })
 const showValue = computed(() => {
-  return props.formatter(moneyFormat(props.value, props.precision, props.separator))
+  return props.formatter(formatNumber(props.value, props.precision, props.separator))
 })
 const prefixRef = ref() // 声明一个同名的模板引用
 const showPrefix = ref(1)
@@ -43,7 +43,9 @@ onMounted(() => {
       <span ref="prefixRef" class="u-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
-      <span class="u-content-value">{{ showValue }}</span>
+      <span class="u-content-value">
+        <slot>{{ showValue }}</slot>
+      </span>
       <span ref="suffixRef" class="u-suffix" v-if="showSuffix">
         <slot name="suffix">{{ suffix }}</slot>
       </span>

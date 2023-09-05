@@ -178,8 +178,14 @@ export const routes = [
       {
         path: '/notification',
         name: 'Notification',
-        meta: { title: '通知提醒框' },
+        meta: { title: '通知提醒' },
         component: () => import('@/views/Notification.vue')
+      },
+      {
+        path: '/numberanimation',
+        name: 'NumberAnimation',
+        meta: { title: '数值动画' },
+        component: () => import('@/views/NumberAnimation.vue')
       },
       {
         path: '/pagination',

@@ -22,7 +22,7 @@ const collapseData = ref([
   debounce,
   add,
   downloadFile,
-  moneyFormat,
+  formatNumber,
   toggleDark
 } from 'vue-amazing-ui'
 <\/script>`
@@ -75,7 +75,7 @@ const sum = computed(() => {
       <li class="u-tip mb10"><Tag color="volcano">debounce</Tag>: 使用 rafTimeout 实现的防抖函数！</li>
       <li class="u-tip mb10"><Tag color="volcano">add</Tag>: 消除js加减精度问题的加法函数！</li>
       <li class="u-tip mb10"><Tag color="volcano">downloadFile</Tag>: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
-      <li class="u-tip mb10"><Tag color="volcano">moneyFormat</Tag>: 金额格式化函数！</li>
+      <li class="u-tip mb10"><Tag color="volcano">formatNumber</Tag>: 数字格式化函数！</li>
       <li class="u-tip mb10"><Tag color="volcano">toggleDark</Tag>: 一键切换暗黑模式函数！</li>
     </ul>
     <Collapse

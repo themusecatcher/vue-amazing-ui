@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { moneyFormat } from '../../packages'
+import { formatNumber } from '../../packages'
 const value = ref(3)
 const formatValue = ref(1000)
 watchEffect(() => {
@@ -10,7 +10,7 @@ function onChange (number: number) {
   console.log('number:', number)
 }
 function formatter (num: string): string {
-  return moneyFormat(num, 2)
+  return formatNumber(num, 2)
 }
 function onAntChange (number: number) {
   console.log('ant:', number)

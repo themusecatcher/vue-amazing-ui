@@ -1,0 +1,250 @@
+# 数值动画 NumberAnimation
+
+<br/>
+
+*数值播放动画*
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+function onStarted () {
+  console.log('started')
+}
+function onFinished () {
+  console.log('finished')
+}
+const animationRef = ref()
+function onClick () {
+  animationRef.value.play()
+}
+</script>
+
+## 基本使用
+
+<Row>
+  <Col :span="12">
+    <Statistic title="一个小目标">
+      <NumberAnimation :to="100000000.12345" />
+    </Statistic>
+  </Col>
+  <Col :span="12">
+    <Statistic title="一个小目标">
+      <NumberAnimation :to="100000000.12345" separator="" />
+    </Statistic>
+  </Col>
+</Row>
+
+::: details Show Code
+
+```vue
+<template>
+  <Row>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation :to="100000000.12345" />
+      </Statistic>
+    </Col>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation :to="100000000.12345" separator="" />
+      </Statistic>
+    </Col>
+  </Row>
+</template>
+```
+
+:::
+
+## 精度
+
+<Row>
+  <Col :span="12">
+    <Statistic title="一个小目标">
+      <NumberAnimation :from="0.00" :to="100000000.12345" :precision="2" />
+    </Statistic>
+  </Col>
+  <Col :span="12">
+    <Statistic title="一个小目标">
+      <NumberAnimation :to="100000000.12345" :precision="3"/>
+    </Statistic>
+  </Col>
+</Row>
+
+::: details Show Code
+
+```vue
+<template>
+  <Row>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation :from="0.00" :to="100000000.12345" :precision="2" />
+      </Statistic>
+    </Col>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation :to="100000000.12345" :precision="3"/>
+      </Statistic>
+    </Col>
+  </Row>
+</template>
+```
+
+:::
+
+## 自定义前缀 & 后缀
+
+<Row>
+  <Col :span="12">
+    <Statistic title="一个小目标">
+      <NumberAnimation
+        prefix="$"
+        :from="0"
+        :to="100000000"
+        suffix="US" />
+    </Statistic>
+  </Col>
+  <Col :span="12">
+    <Statistic title="一个小目标">
+      <NumberAnimation
+        :from="0"
+        :to="100000000"
+        suffix="元" />
+    </Statistic>
+  </Col>
+</Row>
+
+::: details Show Code
+
+```vue
+<template>
+  <Row>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation
+          prefix="$"
+          :from="0"
+          :to="100000000"
+          suffix="US" />
+      </Statistic>
+    </Col>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation
+          :from="0"
+          :to="100000000"
+          suffix="元" />
+      </Statistic>
+    </Col>
+  </Row>
+</template>
+```
+
+:::
+
+## 自定义数值颜色
+
+<Row>
+  <Col :span="12">
+    <Statistic title="一个小目标">
+      <NumberAnimation color="#1677FF" :from="0" :to="100000000"/>
+    </Statistic>
+  </Col>
+</Row>
+
+::: details Show Code
+
+```vue
+<template>
+  <Row>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation color="#1677FF" :from="0" :to="100000000"/>
+      </Statistic>
+    </Col>
+  </Row>
+</template>
+```
+
+:::
+
+## 自定义播放和动画时间
+
+<Row>
+  <Col :span="12">
+    <Statistic title="一个小目标">
+      <NumberAnimation
+        ref="animationRef"
+        :from="0"
+        :to="100000000"
+        :duration="5000"
+        :precision="2"
+        :autoplay="false"
+        @started="onStarted"
+        @finished="onFinished" />
+    </Statistic>
+    <Button @click="onClick">播放</Button>
+  </Col>
+</Row>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+function onStarted () {
+  console.log('started')
+}
+function onFinished () {
+  console.log('finished')
+}
+const animationRef = ref()
+function onClick () {
+  animationRef.value.play()
+}
+</script>
+<template>
+  <Row>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation
+          ref="animationRef"
+          :from="0"
+          :to="100000000"
+          :duration="5000"
+          :precision="2"
+          :autoplay="false"
+          @started="onStarted"
+          @finished="onFinished" />
+      </Statistic>
+      <Button @click="onClick">播放</Button>
+    </Col>
+  </Row>
+</template>
+```
+
+:::
+
+## APIs
+
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+from | 数值动画起始数值 | number | 0 | false
+to | 数值目标值 | number | 1000 | false
+duration | 数值动画持续时间，单位ms | number | 3000 | false
+autoplay | 是否自动开始动画 | boolean | true | false
+precision | 精度，保留小数点后几位 | number | 0 | false
+prefix | 前缀 | string | '' | false
+suffix | 后缀 | string | '' | false
+separator | 千分位分隔符 | string | ',' | false
+decimal | 小数点字符 | string | '.' | false
+color | 数值文本颜色 | string | undefined | false
+transition | 动画过渡效果 | [TransitionFunc](https://vueuse.org/core/useTransition/#usetransition) | TransitionFunc['easeInOutCubic'] | false
+
+## Events
+
+事件名称 | 说明 | 参数
+-- | -- | --
+play | 播放动画 | () => void
+started | 动画开始播放 | () => void
+finished | 动画播放完成 | () => void

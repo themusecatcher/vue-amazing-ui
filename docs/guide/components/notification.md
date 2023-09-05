@@ -1,4 +1,4 @@
-# 通知提醒框 Notification
+# 通知提醒 Notification
 
 <br/>
 
@@ -315,8 +315,8 @@ placement | 消息弹出位置，优先级低于 `Notification` 中的 `placemen
 -- | -- | -- | --
 message | 通知提醒标题 | string | false
 description | 通知提醒内容 | string | true
-mode | 通知提醒框类型 | 'open' &#124; 'info' &#124; 'success' &#124; 'warning' &#124; 'error' | false
-placement | 通知提醒框弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | false
+mode | 通知提醒类型 | 'open' &#124; 'info' &#124; 'success' &#124; 'warning' &#124; 'error' | false
+placement | 通知提醒弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | false
 
 ## Events
 

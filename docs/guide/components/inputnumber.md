@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { moneyFormat } from 'vue-amazing-ui'
+import { formatNumber } from 'vue-amazing-ui'
 const value = ref(3)
 const formatValue = ref(1000)
 watchEffect(() => {
@@ -20,7 +20,7 @@ watchEffect(() => {
   console.log('formatValue:', formatValue.value)
 })
 function formatter (num: string): string {
-  return moneyFormat(num, 2)
+  return formatNumber(num, 2)
 }
 function onChange (number: number) {
   console.log('number:', number)
@@ -99,13 +99,13 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { moneyFormat } from 'vue-amazing-ui'
+import { formatNumber } from 'vue-amazing-ui'
 const formatValue = ref(1000)
 watchEffect(() => {
   console.log('formatValue:', formatValue.value)
 })
 function formatter (num: string): string {
-  return moneyFormat(num, 2)
+  return formatNumber(num, 2)
 }
 </script>
 <template>
