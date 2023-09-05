@@ -99,8 +99,7 @@ function onClick () {
       <NumberAnimation
         prefix="$"
         :from="0"
-        :to="100000000"
-        suffix="US" />
+        :to="100000000" />
     </Statistic>
   </Col>
   <Col :span="12">
@@ -123,8 +122,7 @@ function onClick () {
         <NumberAnimation
           prefix="$"
           :from="0"
-          :to="100000000"
-          suffix="US" />
+          :to="100000000" />
       </Statistic>
     </Col>
     <Col :span="12">
