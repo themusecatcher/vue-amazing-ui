@@ -296,7 +296,7 @@ function formatter (value: string): string {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 title | 数值的标题 | string | '' | false
-value | 数值的内容 | string &#124; number | '' | false
+value | 数值的内容 | string &#124; number &#124; slot | '' | false
 valueStyle | 设置数值的样式 | CSSProperties | {} | false
 precision | 数值精度 | number | 0 | false
 prefix | 设置数值的前缀 | string &#124; slot | '' | false

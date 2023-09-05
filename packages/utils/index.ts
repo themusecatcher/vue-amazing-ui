@@ -159,45 +159,37 @@ export function downloadFile (url: string, name: string) {
   xhr.send()
 }
 /*
-  自定义保留 decimal 位小数，并使用 split 分隔符进行数字格式化
+  自定义保留 precision 位小数，并使用 separator 分隔符进行数字格式化
   value：格式化目标数字
-  decimal：保留几位小数，默认2位
-  split：千分位分隔符，默认为','
-  moneyFormat(123456789.87654321, 2, ',') // 123,456,789.88
+  precision：精度，保留小数点后几位，默认2位
+  separator：千分位分隔符，默认为','
+  decimal：小数点符号，默认'.'
+  prefix：前缀字符，默认''
+  suffix：后缀字符，默认''
+  formatNumber(123456789.87654321, 2, ',') // 123,456,789.88
 */
-export function moneyFormat (value: number|string, decimal = 2, split = ',') {
-  function thousandFormat (numStr: string): string {
-    const len = numStr.length
-    return len <= 3 ? numStr : thousandFormat(numStr.slice(0, len - 3)) + split + numStr.slice(len - 3, len)
+export function formatNumber (value: number|string, precision = 2, separator = ',', decimal = '.', prefix = '', suffix = ''): string {
+  if (Number(value) === 0) {
+    return Number(value).toFixed(precision)
   }
-  const money = String(value)
-  if (isFinite(parseFloat(money))) { // num是数字
-    if (parseFloat(money) === 0) { // 为0
-      return parseFloat(money).toFixed(decimal)
-    } else { // 非0
-      var res = ''
-      var dotIndex = money.indexOf('.')
-      if (dotIndex === -1) { // 整数
-        if (decimal === 0) {
-          res = thousandFormat(money)
-        } else {
-          res = thousandFormat(money) + '.' + '0'.repeat(decimal)
-        }
-      } else { // 非整数
-        // 四舍五入 Math.round()：正数时4舍5入，负数时5舍6入
-        // Math.round(1.5) = 2
-        // Math.round(-1.5) = -1
-        // Math.round(-1.6) = -2
-        // 保留decimals位小数
-        const numStr = String((Math.round(parseFloat(money) * Math.pow(10, decimal)) / Math.pow(10, decimal)).toFixed(decimal)) // 四舍五入，然后固定保留2位小数
-        const decimals = numStr.slice(dotIndex, dotIndex + decimal + 1) // 截取小数位
-        res = thousandFormat(numStr.slice(0, dotIndex)) + decimals
-      }
-      return res
+  if (!value) {
+    return ''
+  }
+  value = Number(value).toFixed(precision)
+  value += ''
+  const x = value.split('.')
+  let x1 = x[0]
+  const x2 = x.length > 1 ? decimal + x[1] : ''
+  const rgx = /(\d+)(\d{3})/
+  function isNumber (val: any) {
+    return Object.prototype.toString.call(val) === '[object Number]'
+  }
+  if (separator && !isNumber(separator)) {
+    while (rgx.test(x1)) {
+      x1 = x1.replace(rgx, '$1' + separator + '$2')
     }
-  } else {
-    return '--'
   }
+  return prefix + x1 + x2 + suffix
 }
 /*
   在 <html> 根元素上动态切换 dark 模式，只在根元素添加 dark 类值，具体样式需自行添加

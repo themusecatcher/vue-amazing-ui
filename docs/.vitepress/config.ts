@@ -195,8 +195,12 @@ export default defineConfig({
               link: '/guide/components/modal'
             },
             {
-              text: '通知提醒框 Notification',
+              text: '通知提醒 Notification',
               link: '/guide/components/notification'
+            },
+            {
+              text: '数值动画 NumberAnimation',
+              link: '/guide/components/numberanimation'
             },
             {
               text: '分页 Pagination',
@@ -335,8 +339,8 @@ export default defineConfig({
               link: '/utils/download-file'
             },
             {
-              text: 'moneyFormat 金额格式化',
-              link: '/utils/money-format'
+              text: 'formatNumber 数字格式化',
+              link: '/utils/format-number'
             },
             {
               text: 'raf 定时器',

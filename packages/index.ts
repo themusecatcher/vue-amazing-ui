@@ -9,7 +9,7 @@ import {
   debounce,
   add,
   downloadFile,
-  moneyFormat,
+  formatNumber,
   toggleDark
 } from './utils'
 import type { App } from 'vue'
@@ -40,6 +40,7 @@ import InputNumber from './inputnumber'
 import Message from './message'
 import Modal from './modal'
 import Notification from './notification'
+import NumberAnimation from './numberanimation'
 import Pagination from './pagination'
 import Popconfirm from './popconfirm'
 import Progress from './progress'
@@ -96,6 +97,7 @@ const components = [
   Message,
   Modal,
   Notification,
+  NumberAnimation,
   Pagination,
   Popconfirm,
   Progress,
@@ -147,7 +149,7 @@ export {
   debounce,
   add,
   downloadFile,
-  moneyFormat,
+  formatNumber,
   toggleDark
 }
 export {
@@ -178,6 +180,7 @@ export {
   Message,
   Modal,
   Notification,
+  NumberAnimation,
   Pagination,
   Popconfirm,
   Progress,
