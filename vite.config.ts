@@ -61,7 +61,7 @@ export default defineConfig({
       // https://rollupjs.org/configuration-options/
       // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
       
-      external: f === 'iife' ? ['vue'] : ['vue', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/integrations/useQRCode', 'qrcode'],
+      external: f === 'iife' ? ['vue'] : ['vue', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/integrations/useQRCode', '@vueuse/core', 'qrcode'],
       // 当创建 iife 或 umd 格式的 bundle 时，你需要通过 output.globals 选项提供全局变量名，以替换掉外部引入。
       output: {
         name: 'VueAmazingUI', // 对于输出格式为 iife | umd 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出
@@ -85,7 +85,8 @@ export default defineConfig({
           'swiper/modules': 'SwiperModules',
           'swiper/vue': 'SwiperVue',
           '@vuepic/vue-datepicker': 'VueDatePicker',
-          '@vueuse/integrations/useQRCode': 'useQRCode',
+          '@vueuse/integrations/useQRCode': 'UseQRCode',
+          '@vueuse/core': 'Core',
           qrcode: 'qrcode'
         }
       }
