@@ -141,25 +141,17 @@ function onClick () {
 
 ## 自定义数值颜色
 
-<Row>
-  <Col :span="12">
-    <Statistic title="一个小目标">
-      <NumberAnimation color="#1677FF" :from="0" :to="100000000"/>
-    </Statistic>
-  </Col>
-</Row>
+<Statistic title="一个小目标">
+  <NumberAnimation color="#1677FF" :from="0" :to="100000000" />
+</Statistic>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Row>
-    <Col :span="12">
-      <Statistic title="一个小目标">
-        <NumberAnimation color="#1677FF" :from="0" :to="100000000"/>
-      </Statistic>
-    </Col>
-  </Row>
+  <Statistic title="一个小目标">
+    <NumberAnimation color="#1677FF" :from="0" :to="100000000" />
+  </Statistic>
 </template>
 ```
 
@@ -167,22 +159,18 @@ function onClick () {
 
 ## 自定义播放和动画时间
 
-<Row>
-  <Col :span="12">
-    <Statistic title="一个小目标">
-      <NumberAnimation
-        ref="animationRef"
-        :from="0"
-        :to="100000000"
-        :duration="5000"
-        :precision="2"
-        :autoplay="false"
-        @started="onStarted"
-        @finished="onFinished" />
-    </Statistic>
-    <Button @click="onClick">播放</Button>
-  </Col>
-</Row>
+<Statistic title="一个小目标">
+  <NumberAnimation
+    ref="animationRef"
+    :from="0"
+    :to="100000000"
+    :duration="5000"
+    :precision="2"
+    :autoplay="false"
+    @started="onStarted"
+    @finished="onFinished" />
+</Statistic>
+<Button @click="onClick">播放</Button>
 
 ::: details Show Code
 
@@ -202,22 +190,18 @@ function onClick () {
 }
 </script>
 <template>
-  <Row>
-    <Col :span="12">
-      <Statistic title="一个小目标">
-        <NumberAnimation
-          ref="animationRef"
-          :from="0"
-          :to="100000000"
-          :duration="5000"
-          :precision="2"
-          :autoplay="false"
-          @started="onStarted"
-          @finished="onFinished" />
-      </Statistic>
-      <Button @click="onClick">播放</Button>
-    </Col>
-  </Row>
+  <Statistic title="一个小目标">
+    <NumberAnimation
+      ref="animationRef"
+      :from="0"
+      :to="100000000"
+      :duration="5000"
+      :precision="2"
+      :autoplay="false"
+      @started="onStarted"
+      @finished="onFinished" />
+  </Statistic>
+  <Button @click="onClick">播放</Button>
 </template>
 ```
 
