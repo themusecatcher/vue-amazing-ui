@@ -3713,7 +3713,7 @@ const _t = /* @__PURE__ */ V({
     suffix: { default: "" },
     separator: { default: "," },
     decimal: { default: "." },
-    color: { default: void 0 },
+    valueStyle: { default: () => ({}) },
     transition: {
       default: "easeInOutCubic"
       /* easeInOutCubic */
@@ -3763,7 +3763,7 @@ const _t = /* @__PURE__ */ V({
     return e({
       play: o
     }), (d, p) => (i(), r("span", {
-      style: C({ color: d.color })
+      style: C(d.valueStyle)
     }, B(u.value), 5));
   }
 });

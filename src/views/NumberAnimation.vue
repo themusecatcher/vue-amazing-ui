@@ -60,30 +60,22 @@ function onClick () {
         </Statistic>
       </Col>
     </Row>
-    <h2 class="mt30 mb10">自定义数值颜色</h2>
-    <Row>
-      <Col :span="12">
-        <Statistic title="一个小目标">
-          <NumberAnimation color="#1677FF" :from="0" :to="100000000"/>
-        </Statistic>
-      </Col>
-    </Row>
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <Statistic title="一个小目标">
+      <NumberAnimation :value-style="{fontSize: '30px', fontWeight: 600, color: '#d4380d'}" :from="0" :to="100000000"/>
+    </Statistic>
     <h2 class="mt30 mb10">自定义播放和动画时间</h2>
-    <Row>
-      <Col :span="12">
-        <Statistic title="一个小目标">
-          <NumberAnimation
-            ref="animationRef"
-            :from="0"
-            :to="100000000"
-            :duration="5000"
-            :precision="2"
-            :autoplay="false"
-            @started="onStarted"
-            @finished="onFinished" />
-        </Statistic>
-        <Button @click="onClick">播放</Button>
-      </Col>
-    </Row>
+    <Statistic title="一个小目标">
+      <NumberAnimation
+        ref="animationRef"
+        :from="0"
+        :to="100000000"
+        :duration="5000"
+        :precision="2"
+        :autoplay="false"
+        @started="onStarted"
+        @finished="onFinished" />
+    </Statistic>
+    <Button @click="onClick">播放</Button>
   </div>
 </template>
