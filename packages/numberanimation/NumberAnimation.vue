@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, onMounted, watch } from 'vue'
+import type { CSSProperties } from 'vue'
 import { useTransition, TransitionPresets } from '@vueuse/core'
 enum TransitionFunc {
   linear = 'linear',
@@ -37,7 +38,7 @@ interface Props {
   suffix?: string // 后缀
   separator?: string // 千分位分隔符
   decimal?: string // 小数点字符
-  color?: string // 数值文本颜色
+  valueStyle?: CSSProperties // 数值文本样式
   transition?: TransitionFunc // 动画过渡效果
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -50,7 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
   suffix: '',
   separator: ',',
   decimal: '.',
-  color: undefined,
+  valueStyle: () => ({}),
   transition: TransitionFunc['easeInOutCubic']
 })
 const source = ref(props.from)
@@ -110,7 +111,7 @@ defineExpose({
 })
 </script>
 <template>
-  <span :style="{ color }">
+  <span :style="valueStyle">
     {{ showValue }}
   </span>
 </template>

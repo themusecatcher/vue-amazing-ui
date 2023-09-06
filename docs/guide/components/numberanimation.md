@@ -139,10 +139,13 @@ function onClick () {
 
 :::
 
-## 自定义数值颜色
+## 自定义样式
 
 <Statistic title="一个小目标">
-  <NumberAnimation color="#1677FF" :from="0" :to="100000000" />
+  <NumberAnimation
+    :value-style="{fontSize: '30px', fontWeight: 600, color: '#d4380d'}"
+    :from="0"
+    :to="100000000"/>
 </Statistic>
 
 ::: details Show Code
@@ -150,7 +153,10 @@ function onClick () {
 ```vue
 <template>
   <Statistic title="一个小目标">
-    <NumberAnimation color="#1677FF" :from="0" :to="100000000" />
+    <NumberAnimation
+      :value-style="{fontSize: '30px', fontWeight: 600, color: '#d4380d'}"
+      :from="0"
+      :to="100000000"/>
   </Statistic>
 </template>
 ```
@@ -220,13 +226,18 @@ prefix | 前缀 | string | '' | false
 suffix | 后缀 | string | '' | false
 separator | 千分位分隔符 | string | ',' | false
 decimal | 小数点字符 | string | '.' | false
-color | 数值文本颜色 | string | undefined | false
+valueStyle | 数值文本样式 | CSSProperties | {} | false
 transition | 动画过渡效果 | [TransitionFunc](https://vueuse.org/core/useTransition/#usetransition) | TransitionFunc['easeInOutCubic'] | false
+
+## Methods
+
+事件名称 | 说明 | 参数
+-- | -- | --
+play | 播放动画 | () => void
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-play | 播放动画 | () => void
 started | 动画开始播放 | () => void
 finished | 动画播放完成 | () => void
