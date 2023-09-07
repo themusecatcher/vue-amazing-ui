@@ -84,6 +84,15 @@ function formatter (value: string): string {
     </Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.u-svg {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-align: center;
+  vertical-align: -0.125em;
+}
+</style>
 ```
 
 :::
@@ -125,23 +134,6 @@ function formatter (value: string): string {
     </Col>
   </Row>
 </div>
-
-<style lang="less" scoped>
-.u-svg-up {
-  display: inline-flex;
-  align-items: center;
-  fill: #3f8600;
-  text-align: center;
-  vertical-align: -0.125em;
-}
-.u-svg-down {
-  display: inline-flex;
-  align-items: center;
-  fill: #cf1322;
-  text-align: center;
-  vertical-align: -0.125em;
-}
-</style>
 
 ::: details Show Code
 
@@ -290,6 +282,30 @@ function formatter (value: string): string {
 ```
 
 :::
+
+<style lang="less" scoped>
+.u-svg-up {
+  display: inline-flex;
+  align-items: center;
+  fill: #3f8600;
+  text-align: center;
+  vertical-align: -0.125em;
+}
+.u-svg-down {
+  display: inline-flex;
+  align-items: center;
+  fill: #cf1322;
+  text-align: center;
+  vertical-align: -0.125em;
+}
+.u-svg {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-align: center;
+  vertical-align: -0.125em;
+}
+</style>
 
 ## APIs
 
