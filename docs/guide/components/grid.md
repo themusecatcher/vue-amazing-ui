@@ -4,26 +4,37 @@
 
 *24 栅格系统*
 
+<br/>
+
+*布局的栅格化系统，我们是基于行（row）和列（col）来定义信息区块的外部框架，以保证页面的每个区域能够稳健地排布起来。下面简单介绍一下它的工作原理：*
+
+- 通过 `row` 在水平方向建立一组 `column`（简写 col）
+- 你的内容应当放置于 `col` 内，并且，只有 `col` 可以作为 `row` 的直接元素
+- 栅格系统中的列是指 `1` 到 `24` 的值来表示其跨越的范围。例如，三个等宽的列可以使用 `` 来创建
+- 如果一个 `row` 中的 `col` 总和超过 `24`，那么多余的 `col` 会作为一个整体另起一行排列
+
 ## 基本使用
 
-<Row class="row">
-  <Col :span="24">col</Col>
-</Row>
-<Row class="row">
-  <Col :span="12">col-12</Col>
-  <Col :span="12">col-12</Col>
-</Row>
-<Row class="row">
-  <Col :span="8">col-8</Col>
-  <Col :span="8">col-8</Col>
-  <Col :span="8">col-8</Col>
-</Row>
-<Row class="row">
-  <Col :span="6">col-6</Col>
-  <Col :span="6">col-6</Col>
-  <Col :span="6">col-6</Col>
-  <Col :span="6">col-6</Col>
-</Row>
+<ClientOnly>
+  <Row class="row">
+    <Col :span="24">col</Col>
+  </Row>
+  <Row class="row">
+    <Col :span="12">col-12</Col>
+    <Col :span="12">col-12</Col>
+  </Row>
+  <Row class="row">
+    <Col :span="8">col-8</Col>
+    <Col :span="8">col-8</Col>
+    <Col :span="8">col-8</Col>
+  </Row>
+  <Row class="row">
+    <Col :span="6">col-6</Col>
+    <Col :span="6">col-6</Col>
+    <Col :span="6">col-6</Col>
+    <Col :span="6">col-6</Col>
+  </Row>
+</ClientOnly>
 
 ::: details Show Code
 
