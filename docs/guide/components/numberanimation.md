@@ -65,7 +65,7 @@ function onClick () {
   </Col>
   <Col :span="12">
     <Statistic title="一个小目标">
-      <NumberAnimation :to="100000000.12345" :precision="3"/>
+      <NumberAnimation :to="100000000.12345" :precision="3" />
     </Statistic>
   </Col>
 </Row>
@@ -82,7 +82,7 @@ function onClick () {
     </Col>
     <Col :span="12">
       <Statistic title="一个小目标">
-        <NumberAnimation :to="100000000.12345" :precision="3"/>
+        <NumberAnimation :to="100000000.12345" :precision="3" />
       </Statistic>
     </Col>
   </Row>
@@ -145,7 +145,7 @@ function onClick () {
   <NumberAnimation
     :value-style="{fontSize: '30px', fontWeight: 600, color: '#d4380d'}"
     :from="0"
-    :to="100000000"/>
+    :to="100000000" />
 </Statistic>
 
 ::: details Show Code
@@ -156,7 +156,7 @@ function onClick () {
     <NumberAnimation
       :value-style="{fontSize: '30px', fontWeight: 600, color: '#d4380d'}"
       :from="0"
-      :to="100000000"/>
+      :to="100000000" />
   </Statistic>
 </template>
 ```
