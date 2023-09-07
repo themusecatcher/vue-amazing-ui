@@ -37,7 +37,7 @@ const secondsValue = ref({
   minutes: new Date().getMinutes(),
   seconds: new Date().getSeconds()
 })
-const weekValue = ref(['2023-05-28', '2023-06-03'])
+const weekValue = ref([startOfWeek(new Date()), endOfWeek(new Date())])
 const monthValue = ref({
   year: new Date().getFullYear(),
   month: new Date().getMonth()
