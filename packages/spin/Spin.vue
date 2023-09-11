@@ -45,6 +45,7 @@ withDefaults(defineProps<Props>(), {
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 }
 .m-spin {
   position: absolute;
