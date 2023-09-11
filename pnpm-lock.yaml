@@ -15,8 +15,8 @@ dependencies:
     specifier: ^10.4.1
     version: 10.4.1(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
   ant-design-vue:
-    specifier: ^4.0.2
-    version: 4.0.2(vue@3.3.4)
+    specifier: ^4.0.3
+    version: 4.0.3(vue@3.3.4)
   core-js:
     specifier: ^3.32.1
     version: 3.32.1
@@ -249,8 +249,8 @@ packages:
     resolution: {integrity: sha512-4QBZg8ccyC6LPIRii7A0bZUk3+lEDCLnhB+FVsflGdcWPPmV+j3fire4AwwoqHV/BibgvBmR9ZIo4s867smv+g==}
     dev: false
 
-  /@ant-design/icons-vue@6.1.0(vue@3.3.4):
-    resolution: {integrity: sha512-EX6bYm56V+ZrKN7+3MT/ubDkvJ5rK/O2t380WFRflDcVFgsvl3NLH7Wxeau6R8DbrO5jWR6DSTC3B6gYFp77AA==}
+  /@ant-design/icons-vue@7.0.0(vue@3.3.4):
+    resolution: {integrity: sha512-VEb0r/Jqo2qi9olfBephYlyxbmhQVZ5+tJ3Zw5VaBd5h0wV1zdjGt5mJxSbRRs2mnnOWpsa1s4PeoLwNnkLV/w==}
     peerDependencies:
       vue: '>=3.0.3'
     dependencies:
@@ -1173,14 +1173,14 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /ant-design-vue@4.0.2(vue@3.3.4):
-    resolution: {integrity: sha512-4vD/mVXne1avmYo5j3V9bqAlMfxTu2D+k0j6dTN++OJZOjkuaV3waMLP1EJY0nj1xl0qUV96u7OD5xgTYfdtBQ==}
+  /ant-design-vue@4.0.3(vue@3.3.4):
+    resolution: {integrity: sha512-fbgZbbirLx7rc19ytaGxApwS01CKLRzvEZmH0TVF06niQA9ekx7xkvfQGlmiSaCs4b8nWZi4Bo7gUzRNRt5YJA==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'
     dependencies:
       '@ant-design/colors': 6.0.0
-      '@ant-design/icons-vue': 6.1.0(vue@3.3.4)
+      '@ant-design/icons-vue': 7.0.0(vue@3.3.4)
       '@babel/runtime': 7.22.11
       '@ctrl/tinycolor': 3.6.1
       '@emotion/hash': 0.9.1
@@ -3459,7 +3459,7 @@ packages:
       '@vuepic/vue-datepicker': 6.0.2(vue@3.3.4)
       '@vueuse/core': 10.4.1(vue@3.3.4)
       '@vueuse/integrations': 10.4.1(focus-trap@7.5.2)(qrcode@1.5.3)(vue@3.3.4)
-      ant-design-vue: 4.0.2(vue@3.3.4)
+      ant-design-vue: 4.0.3(vue@3.3.4)
       core-js: 3.32.1
       date-fns: 2.30.0
       naive-ui: 2.34.4(vue@3.3.4)
