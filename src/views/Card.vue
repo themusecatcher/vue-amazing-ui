@@ -20,7 +20,7 @@
       <p>card content</p>
     </Card>
     <h2 class="mt30 mb10">在灰色背景上使用无边框的卡片</h2>
-    <div style="display: inline-block; background: #ececec; padding: 30px;">
+    <div style="display: inline-block; background: #ececec; padding: 30px; border-radius: 8px;">
       <Card title="Card title" :bordered="false" :width="300">
         <p>Card content</p>
         <p>Card content</p>
@@ -59,7 +59,7 @@
       </Card>
     </Card>
     <h2 class="mt30 mb10">栅格卡片</h2>
-    <div style="background-color: #ececec; padding: 20px;">
+    <div style="background-color: #ececec; padding: 20px; border-radius: 8px;">
       <Row :gutter="16">
         <Col :span="8">
           <Card title="Card title" :bordered="false">

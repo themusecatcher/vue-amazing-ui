@@ -58,7 +58,7 @@
 
 ## 在灰色背景上使用无边框的卡片
 
-<div style="display: inline-block; background: #ececec; padding: 30px;">
+<div style="display: inline-block; background: #ececec; padding: 30px; border-radius: 8px;">
   <Card title="Card title" :bordered="false" :width="300">
     <p>Card content</p>
     <p>Card content</p>
@@ -70,7 +70,7 @@
 
 ```vue
 <template>
-  <div style="display: inline-block; background: #ececec; padding: 30px;">
+  <div style="display: inline-block; background: #ececec; padding: 30px; border-radius: 8px;">
     <Card title="Card title" :bordered="false" :width="300">
       <p>Card content</p>
       <p>Card content</p>
@@ -162,31 +162,33 @@
 
 ## 栅格卡片
 
-<div style="background-color: #ececec; padding: 20px;">
-  <Row :gutter="16">
-    <Col :span="8">
-      <Card title="Card title" :bordered="false">
-        <p>card content</p>
-      </Card>
-    </Col>
-    <Col :span="8">
-      <Card title="Card title" :bordered="false">
-        <p>card content</p>
-      </Card>
-    </Col>
-    <Col :span="8">
-      <Card title="Card title" :bordered="false">
-        <p>card content</p>
-      </Card>
-    </Col>
-  </Row>
-</div>
+<ClientOnly>
+  <div style="background-color: #ececec; padding: 20px; border-radius: 8px;">
+    <Row :gutter="16">
+      <Col :span="8">
+        <Card title="Card title" :bordered="false">
+          <p>card content</p>
+        </Card>
+      </Col>
+      <Col :span="8">
+        <Card title="Card title" :bordered="false">
+          <p>card content</p>
+        </Card>
+      </Col>
+      <Col :span="8">
+        <Card title="Card title" :bordered="false">
+          <p>card content</p>
+        </Card>
+      </Col>
+    </Row>
+  </div>
+</ClientOnly>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <div style="background-color: #ececec; padding: 20px;">
+  <div style="background-color: #ececec; padding: 20px; border-radius: 8px;">
     <Row :gutter="16">
       <Col :span="8">
         <Card title="Card title" :bordered="false">
