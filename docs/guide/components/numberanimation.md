@@ -4,9 +4,25 @@
 
 *数值播放动画*
 
+<br/>
+
+<Button type="primary" @click="onPlay">Play</Button>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 
+const value1 = ref(100000000.12345)
+const value2 = ref(100000000)
+
+function onPlay () {
+  if (value1.value || value2.value) {
+    value1.value = 0
+    value2.value = 0
+  } else {
+    value1.value = 100000000.12345
+    value2.value = 100000000
+  }
+}
 function onStarted () {
   console.log('started')
 }
@@ -25,12 +41,12 @@ function onClick () {
   <Row>
     <Col :span="12">
       <Statistic title="一个小目标">
-        <NumberAnimation :to="100000000.12345" />
+        <NumberAnimation :to="value1" />
       </Statistic>
     </Col>
     <Col :span="12">
       <Statistic title="一个小目标">
-        <NumberAnimation :to="100000000.12345" separator="" />
+        <NumberAnimation :to="value1" separator="" />
       </Statistic>
     </Col>
   </Row>
@@ -63,12 +79,12 @@ function onClick () {
   <Row>
     <Col :span="12">
       <Statistic title="一个小目标">
-        <NumberAnimation :from="0.00" :to="100000000.12345" :precision="2" />
+        <NumberAnimation :from="0.00" :to="value1" :precision="2" />
       </Statistic>
     </Col>
     <Col :span="12">
       <Statistic title="一个小目标">
-        <NumberAnimation :to="100000000.12345" :precision="3" />
+        <NumberAnimation :to="value1" :precision="3" />
       </Statistic>
     </Col>
   </Row>
@@ -104,14 +120,14 @@ function onClick () {
         <NumberAnimation
           prefix="$"
           :from="0"
-          :to="100000000" />
+          :to="value2" />
       </Statistic>
     </Col>
     <Col :span="12">
       <Statistic title="一个小目标">
         <NumberAnimation
           :from="0"
-          :to="100000000"
+          :to="value2"
           suffix="元" />
       </Statistic>
     </Col>
@@ -152,7 +168,7 @@ function onClick () {
     <NumberAnimation
       :value-style="{fontSize: '30px', fontWeight: 600, color: '#d4380d'}"
       :from="0"
-      :to="100000000" />
+      :to="value2" />
   </Statistic>
 </ClientOnly>
 
