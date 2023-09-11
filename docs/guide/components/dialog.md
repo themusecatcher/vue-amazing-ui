@@ -12,11 +12,8 @@ const visible2 = ref(false)
 const visible3 = ref(false)
 const visible4 = ref(false)
 const visible5 = ref(false)
-const center = ref(true)
-const footer = ref(false)
+const visible6 = ref(false)
 const loading = ref(false)
-const title = ref('Dialog Title')
-const content = ref('Content of the modal ...')
 function showDialog () {
   visible1.value = true
 }
@@ -32,12 +29,16 @@ function showFixPositionDialog () {
 function showFullScreenDialog () {
   visible5.value = true
 }
+function showCustomHBodyDialog () {
+  visible6.value = true
+}
 function onClose () { // 关闭回调
   visible1.value = false
   visible2.value = false
   visible3.value = false
   visible4.value = false
   visible5.value = false
+  visible6.value = false
 }
 function onCancel () { // “取消”按钮回调
   visible3.value = false
@@ -274,6 +275,48 @@ function onClose () {
 
 :::
 
+## body 样式自定义
+
+<Button type="primary" @click="showCustomHBodyDialog">body 样式自定义</Button>
+<Dialog
+  :body-style="{fontSize: '20px', color: '#eb2f96'}"
+  @close="onClose"
+  :visible="visible6">
+  <template #title>Title</template>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const visible = ref(false)
+function showCustomHBodyDialog () {
+  visible.value = true
+}
+function onClose () {
+  visible.value = false
+}
+</script>
+<template>
+  <Button type="primary" @click="showCustomHBodyDialog">body 样式自定义</Button>
+  <Dialog
+    :body-style="{fontSize: '20px', color: '#eb2f96'}"
+    @close="onClose"
+    :visible="visible">
+    <template #title>Title</template>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+</template>
+```
+
+:::
+
 <style lang="less" scoped>
 p {
   line-height: 1.5714285714285714;
@@ -286,7 +329,7 @@ p {
 -- | -- | -- | -- | --
 title | 标题 | string &#124; slot | '提示' | false
 content | 内容 | string &#124; slot | '' | false
-width | 宽度，单位px | number | 640 | false
+width | 宽度，单位px | number | 540 | false
 height | 高度，默认 `auto`，自适应内容高度 | number &#124; string | 'auto' | false
 switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false | false
 cancelText | 取消按钮文字 | string | '取消' | false
@@ -295,6 +338,7 @@ footer | 是否显示底部按钮，默认不显示 | boolean | false | false
 center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true | false
 top | 固定高度水平居中时，距顶部高度，单位px | number | 100 | false
 loading | 加载中 | boolean | false | false
+bodyStyle | 对话框 body 样式 | CSSProperties | {} | false
 visible | 是否可见 | boolean | false | false
 
 ## Events
