@@ -11,6 +11,8 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 
 import minimist from 'minimist'
 
+import terser from '@rollup/plugin-terser'
+
 // 获取构建选项 build:browser 时，传入的变量: -f iife
 const { f } = minimist(process.argv.slice(2))
 
@@ -58,9 +60,11 @@ export default defineConfig({
       fileName: 'vue-amazing-ui' // 输出的包文件名，默认是 package.json 的 name 选项
     },
     rollupOptions: { // 自定义底层的Rollup打包配置
+      plugins: [
+        terser()
+      ],
       // https://rollupjs.org/configuration-options/
       // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
-      
       external: f === 'iife' ? ['vue'] : ['vue', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/integrations/useQRCode', '@vueuse/core', 'qrcode'],
       // 当创建 iife 或 umd 格式的 bundle 时，你需要通过 output.globals 选项提供全局变量名，以替换掉外部引入。
       output: {
