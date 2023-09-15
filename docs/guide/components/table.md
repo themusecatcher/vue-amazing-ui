@@ -216,7 +216,9 @@ function onChange (pagination: {page: number, pageSize: number}) {
 
 ## 加载中
 
-<Table :columns="columns" loading />
+<ClientOnly>
+  <Table :columns="columns" loading />
+</ClientOnly>
 
 ::: details Show Code
 
@@ -262,7 +264,9 @@ const columns = ref([
 
 ## 暂无数据
 
-<Table :columns="columns" :total="0" />
+<ClientOnly>
+  <Table :columns="columns" :total="0" />
+</ClientOnly>
 
 ::: details Show Code
 
