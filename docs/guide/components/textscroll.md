@@ -1,4 +1,4 @@
-# 文字滚动 TextScroll
+# 文字滚动 TextScroll<BackTop />
 
 ## 何时使用
 
