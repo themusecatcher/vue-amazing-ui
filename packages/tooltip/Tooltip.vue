@@ -107,31 +107,30 @@ function onHide (): void {
       bottom: 12px;
       transform: translateX(-50%) translateY(100%) rotate(180deg);
       display: block;
-      border-radius: 0 0 2px;
       pointer-events: none;
-      width: 32px;
-      height: 32px;
+      width: 16px;
+      height: 16px;
       overflow: hidden;
       &::before {
         position: absolute;
         bottom: 0;
         inset-inline-start: 0;
-        width: 32px;
+        width: 16px;
         height: 8px;
-        background: var(--tooltip-background-color);
-        clip-path: path('M 6.343145750507619 8 A 4 4 0 0 0 9.17157287525381 6.82842712474619 L 14.585786437626904 1.414213562373095 A 2 2 0 0 1 17.414213562373096 1.414213562373095 L 22.82842712474619 6.82842712474619 A 4 4 0 0 0 25.65685424949238 8 Z');
+        background-color: var(--tooltip-background-color);
+        clip-path: path('M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z');
         content: "";
       }
       &::after {
         position: absolute;
-        width: 11.31370849898476px;
-        height: 11.31370849898476px;
+        width: 8.970562748477143px;
+        height: 8.970562748477143px;
         bottom: 0;
         inset-inline: 0;
         margin: auto;
         border-radius: 0 0 2px 0;
         transform: translateY(50%) rotate(-135deg);
-        box-shadow: 3px 3px 7px rgba(0, 0, 0, .1);
+        box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.1);
         z-index: 0;
         background: transparent;
         content: "";

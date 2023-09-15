@@ -327,7 +327,7 @@ function onSwitchRight () {
 }
 .preview-enter-from, .preview-leave-to {
   opacity: 0;
-  transform: scale(0.1);
+  transform: scale(.01);
 }
 .m-image-wrap {
   display: inline-block;

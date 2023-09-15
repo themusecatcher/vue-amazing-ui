@@ -213,11 +213,9 @@ function onRightSlide (source: number, place: string) {
       @keydown.down.prevent="disabled ? () => false : onLeftSlide(left, 'left')"
       @keydown.up.prevent="disabled ? () => false : onRightSlide(left, 'left')"
       @mousedown="disabled ? () => false : onLeftMouseDown()">
-      <div v-if="!hideTip" class="u-handle-tooltip">
+      <div v-if="!hideTip" class="m-handle-tooltip">
         {{ leftValue }}
-        <div class="m-arrow">
-          <span class="u-arrow"></span>
-        </div>
+        <div class="m-arrow"></div>
       </div>
     </div>
     <div
@@ -231,11 +229,9 @@ function onRightSlide (source: number, place: string) {
       @keydown.down.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
       @keydown.up.prevent="disabled ? () => false : onRightSlide(right, 'right')"
       @mousedown="disabled ? () => false : onRightMouseDown()">
-      <div v-if="!hideTip" class="u-handle-tooltip">
+      <div v-if="!hideTip" class="m-handle-tooltip">
         {{ rightValue }}
-        <div class="m-arrow">
-          <span class="u-arrow"></span>
-        </div>
+        <div class="m-arrow"></div>
       </div></div>
   </div>
 </template>
@@ -288,7 +284,7 @@ function onRightSlide (source: number, place: string) {
     border-radius: 50%;
     cursor: pointer;
     transition: width .3s, height .3s, border-color .3s, border-width .3s, transform .3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-    .u-handle-tooltip {
+    .m-handle-tooltip {
       position: relative;
       display: inline-block;
       padding: 6px 8px;
@@ -301,7 +297,7 @@ function onRightSlide (source: number, place: string) {
       transform: translate(-50%, -50%) scale(.8);
       top: -32px;
       left: 50%;
-      background: rgba(0, 0, 0, .85);;
+      background: rgba(0, 0, 0, .85);
       box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
       pointer-events: none;
       user-select: none;
@@ -310,25 +306,37 @@ function onRightSlide (source: number, place: string) {
       .m-arrow {
         position: absolute;
         z-index: 9;
-        bottom: 0;
         left: 50%;
-        transform: translate(-50%, 100%);
-        width: 15.55px;
-        height: 10px;
-        border-radius: 0 0 5px 5px;
+        bottom: 0;
+        transform: translateX(-50%) translateY(100%) rotate(180deg);
+        display: block;
+        pointer-events: none;
+        width: 16px;
+        height: 16px;
         overflow: hidden;
-        .u-arrow {
+        &::before {
           position: absolute;
-          left: 50%;
-          top: -1px;
-          transform: translate(-50%, -50%) rotate(45deg);
-          margin: 0 auto;
-          width: 11px;
-          height: 11px;
+          bottom: 0;
+          inset-inline-start: 0;
+          width: 16px;
+          height: 8px;
+          background-color: rgba(0, 0, 0, .85);
+          clip-path: path('M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z');
+          content: "";
+        }
+        &::after {
+          position: absolute;
+          width: 8.970562748477143px;
+          height: 8.970562748477143px;
+          bottom: 0;
+          inset-inline: 0;
+          margin: auto;
           border-radius: 0 0 2px 0;
-          z-index: 8;
-          background: rgba(0, 0, 0, .85);;
-          box-shadow: 1px 1px 1px 1px fade(@themeColor, 12%);
+          transform: translateY(50%) rotate(-135deg);
+          box-shadow: 3px 3px 7px rgba(0, 0, 0, .1);
+          z-index: 0;
+          background: transparent;
+          content: "";
         }
       }
     }
@@ -341,7 +349,7 @@ function onRightSlide (source: number, place: string) {
     }
     &:hover {
       .hover-focus-handle();
-      .u-handle-tooltip {
+      .m-handle-tooltip {
         pointer-events: auto;
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);

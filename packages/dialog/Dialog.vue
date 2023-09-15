@@ -121,7 +121,7 @@ function onConfirm () {
 }
 .v-enter-from, .v-leave-to {
   opacity: 0;
-  transform: scale(.3);
+  transform: scale(.01);
 }
 .flex-hv-center { // 水平垂直居中方法①：弹性布局，随内容增大高度，并自适应水平垂直居中
   display: flex;

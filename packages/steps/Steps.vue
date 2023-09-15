@@ -107,7 +107,7 @@ function onChange (index: number) { // 点击切换选择步骤
           height: 32px;
           border-radius: 50%;
           text-align: center;
-          background: #fff;
+          background: transparent;
           border: 1px solid rgba(0,0,0,.25);
           transition: all .3s;
           .u-num {
@@ -149,7 +149,7 @@ function onChange (index: number) { // 点击切换选择步骤
       .m-info-wrap {
         cursor: pointer;
         .m-steps-icon {
-          background: #fff;
+          background: transparent;
           border: 1px solid rgba(0,0,0,.25);
           border-color: @themeColor;
         }
