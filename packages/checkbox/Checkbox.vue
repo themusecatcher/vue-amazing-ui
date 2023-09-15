@@ -133,7 +133,7 @@ function onCheckAll () { // 全选切换
         margin-top: 3px;
         width: 16px;
         height: 16px;
-        background: #fff;
+        background: transparent;
         border: 1px solid #d9d9d9;
         border-radius: 4px;
         transition: all .3s;

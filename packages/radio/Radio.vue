@@ -85,7 +85,7 @@ function onClick (value: any) {
         margin-top: 3px;
         width: 16px;
         height: 16px;
-        background: #FFF;
+        background: transparent;
         border: 1px solid #d9d9d9;
         border-radius: 50%;
         transition: all .3s;

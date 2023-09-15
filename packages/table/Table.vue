@@ -80,12 +80,13 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页回调
   color: rgba(0, 0, 0, .65);
   font-size: 14px;
   line-height: 1.5714285714285714;
+  border-radius: 8px 8px 0 0;
   .m-table {
     display: table;
     table-layout: fixed;
     width: 100%;
     text-align: left;
-    border-radius: 4px 4px 0 0;
+    border-radius: 8px 8px 0 0;
     border-collapse: separate;
     border-spacing: 0;
     margin: 0;
@@ -99,10 +100,10 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页回调
       border-bottom: 1px solid #f0f0f0;;
       transition: background .3s ease;
       &:first-child {
-        border-top-left-radius: 4px;
+        border-top-left-radius: 8px;
       }
       &:last-child {
-        border-top-right-radius: 4px;
+        border-top-right-radius: 8px;
       }
     }
     .m-body {
