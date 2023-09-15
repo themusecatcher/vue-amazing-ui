@@ -93,20 +93,22 @@ function onChange (pagination: {page: number, pageSize: number}) {
 
 ## 基本使用
 
-<Table
-  :columns="columns"
-  :data-source="tableData"
-  :total="total"
-  :loading="loading"
-  @change="onChange">
-<!-- 配置指定列数据 -->
-<template #name="record">
-    hello {{ record.name }}
-  </template>
-  <template #job="{ job, index }">
-    hi {{ job }}
-  </template>
-</Table>
+<ClientOnly>
+  <Table
+    :columns="columns"
+    :data-source="tableData"
+    :total="total"
+    :loading="loading"
+    @change="onChange">
+  <!-- 配置指定列数据 -->
+  <template #name="record">
+      hello {{ record.name }}
+    </template>
+    <template #job="{ job, index }">
+      hi {{ job }}
+    </template>
+  </Table>
+</ClientOnly>
 
 ::: details Show Code
 
