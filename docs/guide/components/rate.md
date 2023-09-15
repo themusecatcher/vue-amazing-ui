@@ -1,4 +1,4 @@
-# 评分 Rate
+# 评分 Rate<BackTop />
 
 ## 何时使用
 
