@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { routes } from '@/router'
-import { toggleDark, Back } from '../../packages'
+import { toggleDark, BackTop } from '../../packages'
 
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
@@ -53,6 +53,7 @@ const getOffDate = (time = '9:01'): number => {
 const countdown = computed(() => {
   return getOffDate()
 })
+const routerViewRef = ref()
 </script>
 <template>
   <Switch class="u-theme-switch" v-model:checked="themeDark" @change="onThemeChange" :node-style="{background: themeDark ? '#001529':'#fff'}">
@@ -87,7 +88,7 @@ const countdown = computed(() => {
       </a-menu>
     </a-col>
     <a-col :xs="19" :xl="20">
-      <div class="router-view">
+      <div class="router-view" ref="routerViewRef">
         <RouterView v-slot="{ Component }">
           <Transition name="fade" mode="out-in">
             <component :is="Component" />
@@ -96,6 +97,7 @@ const countdown = computed(() => {
       </div>
     </a-col>
   </a-row>
+  <BackTop :listen-to="routerViewRef" />
 </template>
 <style lang="less" scoped>
 .v-enter-active,
