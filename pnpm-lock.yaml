@@ -36,8 +36,8 @@ dependencies:
     specifier: ^3.3.4
     version: 3.3.4
   vue-amazing-ui:
-    specifier: ^0.1.13
-    version: 0.1.13
+    specifier: ^0.1.14
+    version: 0.1.14
   vue-router:
     specifier: ^4.2.4
     version: 4.2.4(vue@3.3.4)
@@ -3583,8 +3583,8 @@ packages:
     resolution: {integrity: sha512-AFbieoL7a5LMqcnOF04ji+rpXadgOXnZsxQr//r83kLPr7biP7am3g9zbaZIaBGwBRWeSvoMD4mgPdX3e4NWBg==}
     dev: true
 
-  /vue-amazing-ui@0.1.13:
-    resolution: {integrity: sha512-Ud1wfDsAE105/xa3M0U54cjao8uX4GU/zREWcv6SbrGxpd6L5LKKyvi6+4OTY9NJceNsAdDjOk70l/DWr6ppFw==}
+  /vue-amazing-ui@0.1.14:
+    resolution: {integrity: sha512-+d5Z2bJH9aFF8zede2N2EjSYnkGhBJGp7aDZ3JWB/dyK7D5+4e8Oz/ZIktm58svXiTsFeyoOsKRTVTYd4FWtbQ==}
     dependencies:
       '@vuepic/vue-datepicker': 6.0.2(vue@3.3.4)
       '@vueuse/core': 10.4.1(vue@3.3.4)
