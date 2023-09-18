@@ -131,6 +131,32 @@ const images = ref([
 
 :::
 
+## 隐藏边框
+
+*自定义宽高，同时图片覆盖容器，预览文本设为 preview*
+
+<br/>
+
+<Image :width="300" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+  <template #preview>
+    <p class="u-pre">preview</p>
+  </template>
+</Image>
+
+::: details Show Code
+
+```vue
+<template>
+  <Image :width="300" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+    <template #preview>
+      <p class="u-pre">preview</p>
+    </template>
+  </Image>
+</template>
+```
+
+:::
+
 ## 自定义样式
 
 *自定义宽高，同时图片覆盖容器，预览文本设为 preview*
