@@ -12,6 +12,7 @@ interface Props {
   width?: string|number // 图像宽度
   height?: string|number // 图像高度
   bordered?: boolean // 是否显示边框
+  gap?: number|number[] // 展示图片间距大小，数组时表示: [水平间距, 垂直间距]
   fit?: 'contain'|'fill'|'cover' // 图像如何适应容器高度和宽度
   preview?: string // 预览文本 string | slot
   zoomRatio?: number // 每次缩放比率
@@ -27,6 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   width: 200,
   height: 200,
   bordered: true,
+  gap: 8,
   fit: 'contain', // 可选 fill(填充) | contain(等比缩放包含) | cover(等比缩放覆盖)
   preview: '预览',
   zoomRatio: 0.1,
@@ -248,7 +250,7 @@ function onSwitchRight () {
 </script>
 <template>
   <div class="m-image-wrap">
-    <Space>
+    <Space :size="gap">
       <div
         class="m-image"
         :class="{bordered: bordered, 'image-hover-mask': complete[index]}"

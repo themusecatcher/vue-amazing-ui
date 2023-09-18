@@ -158,11 +158,11 @@ watchEffect(() => {
 
 ## 自定义样式
 
-*缩略图等比覆盖，上传描述文字使用：上传*
+*缩略图等比覆盖；上传描述文字使用：上传；间距设为16px*
 
 <br/>
 
-<Upload :max-count="3" tip="上传" fit="cover" v-model:file-list="fileList" />
+<Upload :max-count="3" tip="上传" fit="cover" :gap="16" v-model:file-list="fileList" />
 
 ::: details Show Code
 
@@ -184,7 +184,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Upload :max-count="3" tip="上传" fit="cover" v-model:file-list="fileList" />
+  <Upload :max-count="3" tip="上传" fit="cover" :gap="16" v-model:file-list="fileList" />
 </template>
 ```
 
@@ -344,6 +344,7 @@ multiple | 是否支持多选文件 | boolean | false | false
 maxCount | 限制上传数量。当为 `1` 时，始终用最新上传的文件代替当前文件 | number | 1 | false
 tip | 上传描述文字 | string | 'Upload' | false
 uploadingTip | 上传中的文字描述 | string | 'Uploading' | false
+gap | 展示文件间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] | 8 | false
 fit | 预览图片缩放规则，仅当上传文件为图片时生效 | 'fill' &#124; 'contain' &#124; 'cover' | 'contain' | false
 errorInfo | 上传中断时的错误提示信息 | string | '' | false
 beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 继续上传，通常用来现在用户上传的文件格式和大小 | Function | () => true | false
