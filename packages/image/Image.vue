@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted, watchEffect } from 'vue'
 import Spin from '../spin'
+import Space from '../space'
 interface Image {
   src: string // 图像地址
   name?: string // 图像名称
@@ -10,6 +11,7 @@ interface Props {
   name?: string // 图像名称，没有传入图片名时自动从图像地址src中读取
   width?: string|number // 图像宽度
   height?: string|number // 图像高度
+  bordered?: boolean // 是否显示边框
   fit?: 'contain'|'fill'|'cover' // 图像如何适应容器高度和宽度
   preview?: string // 预览文本 string | slot
   zoomRatio?: number // 每次缩放比率
@@ -24,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   name: '',
   width: 200,
   height: 200,
+  bordered: true,
   fit: 'contain', // 可选 fill(填充) | contain(等比缩放包含) | cover(等比缩放覆盖)
   preview: '预览',
   zoomRatio: 0.1,
@@ -78,6 +81,8 @@ const previewIndex = ref(0) // 当前预览的图片索引
 const showPreview = ref(false) // 是否显示预览
 const rotate = ref(0) // 预览图片旋转角度
 const scale = ref(1) // 缩放比例
+const swapX = ref(1) // 水平镜像数值符号
+const swapY = ref(1) // 垂直镜像数值符号
 const sourceX = ref(0) // 拖动开始时位置
 const sourceY = ref(0) // 拖动开始时位置
 const dragX = ref(0) // 拖动横向距离
@@ -117,6 +122,9 @@ function onPreview (n: number) {
   showPreview.value = true
   previewIndex.value = n
 }
+defineExpose({
+  onPreview
+})
 // 消除js加减精度问题的加法函数
 function add (num1: number, num2: number) {
   const num1DeciStr = String(num1).split('.')[1]
@@ -127,7 +135,7 @@ function add (num1: number, num2: number) {
   const result = +(num1Str.replace('.', '')) + +(num2Str.replace('.', '')) // 转换为整数相加
   return result / Math.pow(10, maxLen)
 }
-function onClose () {
+function onClose () { // 关闭
   showPreview.value = false
 }
 function onZoomin () { // 放大
@@ -146,9 +154,23 @@ function onZoomout () { // 缩小
 }
 function onResetOrigin () { // 重置图片为初始状态
   scale.value = 1
+  swapX.value = 1
+  swapY.value = 1
   rotate.value = 0
   dragX.value = 0
   dragY.value = 0
+}
+function onClockwiseRotate () { // 顺时针旋转
+  rotate.value += 90
+}
+function onAnticlockwiseRotate () { // 逆时针旋转
+  rotate.value -= 90
+}
+function onHorizontalMirror () {
+  swapX.value *= -1
+}
+function onVerticalMirror () {
+  swapY.value *= -1
 }
 function onWheel (e: WheelEvent) { // 鼠标滚轮缩放
   // e.preventDefault() // 禁止浏览器捕获滑动事件
@@ -167,12 +189,6 @@ function onWheel (e: WheelEvent) { // 鼠标滚轮缩放
   } else {
     scale.value = add(scale.value, -scrollZoom)
   }
-}
-function onAnticlockwiseRotate () { // 逆时针旋转
-  rotate.value -= 90
-}
-function onClockwiseRotate () { // 顺时针旋转
-  rotate.value += 90
 }
 function onMouseDown (event: MouseEvent) {
   // event.preventDefault() // 消除拖动元素时的阴影
@@ -232,24 +248,26 @@ function onSwitchRight () {
 </script>
 <template>
   <div class="m-image-wrap">
-    <div
-      class="m-image"
-      :class="{'image-hover-mask': complete[index]}"
-      :style="`width: ${imageWidth}; height: ${imageHeight};`"
-      v-for="(image, index) in images" :key="index"
-      v-show="!album || (album && index === 0)">
-      <Spin :spinning="!complete[index]" indicator="dynamic-circle">
-        <img class="u-image" :style="`width: calc(${imageWidth} - 2px); height: calc(${imageHeight} - 2px); object-fit: ${fit};`" @load="onComplete(index)" :src="image.src" :alt="image.name" />
-      </Spin>
-      <div class="m-image-mask" @click="onPreview(index)">
-        <div class="m-image-mask-info">
-          <svg class="u-eye" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
-          <p class="u-pre">
-            <slot name="preview">{{ preview }}</slot>
-          </p>
+    <Space>
+      <div
+        class="m-image"
+        :class="{bordered: bordered, 'image-hover-mask': complete[index]}"
+        :style="`width: ${imageWidth}; height: ${imageHeight};`"
+        v-for="(image, index) in images" :key="index"
+        v-show="!album || (album && index === 0)">
+        <Spin :spinning="!complete[index]" indicator="dynamic-circle">
+          <img class="u-image" :style="`width: calc(${imageWidth} - 2px); height: calc(${imageHeight} - 2px); object-fit: ${fit};`" @load="onComplete(index)" :src="image.src" :alt="image.name" />
+        </Spin>
+        <div class="m-image-mask" @click="onPreview(index)">
+          <div class="m-image-mask-info">
+            <svg class="u-eye" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
+            <p class="u-pre">
+              <slot name="preview">{{ preview }}</slot>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </Space>
     <Transition name="mask">
       <div class="m-preview-mask" v-show="showPreview"></div>
     </Transition>
@@ -257,7 +275,7 @@ function onSwitchRight () {
       <div class="m-preview-wrap" v-show="showPreview" @click.self="onClose" @wheel.prevent="onWheel">
         <div class="m-preview-body">
           <div class="m-preview-operations">
-            <p class="u-name" :title="getImageName(images[previewIndex])">{{ getImageName(images[previewIndex]) }}</p>
+            <a class="u-name" :href="images[previewIndex].src" target="_blank" :title="getImageName(images[previewIndex])">{{ getImageName(images[previewIndex]) }}</a>
             <p class="u-preview-progress" v-show="Array.isArray(src)">{{ (previewIndex + 1) }} / {{ imageCount }}</p>
             <div class="u-preview-operation" title="关闭" @click="onClose">
               <svg class="u-icon" focusable="false" data-icon="close" aria-hidden="true" viewBox="64 64 896 896"><path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg>
@@ -277,6 +295,12 @@ function onSwitchRight () {
             <div class="u-preview-operation" title="向左旋转" @click="onAnticlockwiseRotate">
               <svg class="u-icon" focusable="false" data-icon="rotate-left" aria-hidden="true" viewBox="64 64 896 896"><path d="M672 418H144c-17.7 0-32 14.3-32 32v414c0 17.7 14.3 32 32 32h528c17.7 0 32-14.3 32-32V450c0-17.7-14.3-32-32-32zm-44 402H188V494h440v326z"></path><path d="M819.3 328.5c-78.8-100.7-196-153.6-314.6-154.2l-.2-64c0-6.5-7.6-10.1-12.6-6.1l-128 101c-4 3.1-3.9 9.1 0 12.3L492 318.6c5.1 4 12.7.4 12.6-6.1v-63.9c12.9.1 25.9.9 38.8 2.5 42.1 5.2 82.1 18.2 119 38.7 38.1 21.2 71.2 49.7 98.4 84.3 27.1 34.7 46.7 73.7 58.1 115.8a325.95 325.95 0 016.5 140.9h74.9c14.8-103.6-11.3-213-81-302.3z"></path></svg>
             </div>
+            <div class="u-preview-operation" title="水平镜像" @click="onHorizontalMirror">
+              <svg class="u-icon" focusable="false" data-icon="swap" aria-hidden="true" viewBox="64 64 896 896"><path d="M847.9 592H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h605.2L612.9 851c-4.1 5.2-.4 13 6.3 13h72.5c4.9 0 9.5-2.2 12.6-6.1l168.8-214.1c16.5-21 1.6-51.8-25.2-51.8zM872 356H266.8l144.3-183c4.1-5.2.4-13-6.3-13h-72.5c-4.9 0-9.5 2.2-12.6 6.1L150.9 380.2c-16.5 21-1.6 51.8 25.1 51.8h696c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8z"></path></svg>
+            </div>
+            <div class="u-preview-operation" title="垂直镜像" @click="onVerticalMirror">
+              <svg class="u-icon" style="transform: rotate(90deg);" focusable="false" data-icon="swap" aria-hidden="true" viewBox="64 64 896 896"><path d="M847.9 592H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h605.2L612.9 851c-4.1 5.2-.4 13 6.3 13h72.5c4.9 0 9.5-2.2 12.6-6.1l168.8-214.1c16.5-21 1.6-51.8-25.2-51.8zM872 356H266.8l144.3-183c4.1-5.2.4-13-6.3-13h-72.5c-4.9 0-9.5 2.2-12.6 6.1L150.9 380.2c-16.5 21-1.6 51.8 25.1 51.8h696c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8z"></path></svg>
+            </div>
           </div>
           <div
             class="m-preview-image"
@@ -288,7 +312,7 @@ function onSwitchRight () {
               v-for="(image, index) in images" :key="index">
               <img
                 class="u-preview-image"
-                :style="`transform: scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg);`"
+                :style="`transform: scale3d(${swapX * scale}, ${swapY * scale}, 1) rotate(${rotate}deg);`"
                 :src="image.src"
                 :alt="image.name"
                 @mousedown.prevent="onMouseDown($event)"
@@ -317,13 +341,13 @@ function onSwitchRight () {
 </template>
 <style lang="less" scoped>
 .mask-enter-active, .mask-leave-active {
-  transition: opacity .3s ease-in-out;
+  transition: opacity .25s ease-in-out;
 }
 .mask-enter-from, .mask-leave-to {
   opacity: 0;
 }
 .preview-enter-active, .preview-leave-active {
-  transition: all .3s ease-in-out;
+  transition: all .25s ease-in-out;
 }
 .preview-enter-from, .preview-leave-to {
   opacity: 0;
@@ -339,13 +363,13 @@ function onSwitchRight () {
       }
     }
   }
+  .bordered {
+    border: 1px solid #d9d9d9;
+  }
   .m-image {
     position: relative;
     display: inline-block;
     vertical-align: top;
-    margin-right: 12px;
-    margin-bottom: 12px;
-    border: 1px solid #d9d9d9;
     border-radius: 8px;
     overflow: hidden;
     .u-image {
@@ -431,6 +455,10 @@ function onSwitchRight () {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          transition: color .3s;
+          &:hover {
+            color: @themeColor;
+          }
         }
         .u-preview-progress {
           position: absolute;
@@ -452,6 +480,7 @@ function onSwitchRight () {
             background: rgba(0,0,0,.25);
           }
           .u-icon {
+            display: inline-block;
             width: 18px;
             height: 18px;
             vertical-align: bottom;

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Spin from '../spin'
 import Message from '../message'
+import Image from '../image'
+import Space from '../space'
 import { ref, watchEffect, nextTick } from 'vue'
 interface FileType {
   name?: string // 文件名
@@ -169,6 +171,16 @@ function customUpload (file: File, index: number) {
     uploading.value[index] = false
   })
 }
+const imageRef = ref()
+function onPreview (n: number, url: string) {
+  console.log('isImage', isImage(url));
+  if (isImage(url)) {
+    const files = uploadedFiles.value.slice(0, n).filter(file => !isImage(file.url) )
+    imageRef.value[n - files.length].onPreview(0)
+  } else {
+    window.open(url)
+  }
+}
 function onRemove (index: number) {
   if (uploadedFiles.value.length < props.maxCount) {
     showUpload.value--
@@ -185,42 +197,52 @@ function onError (content: any) {
 </script>
 <template>
   <div class="m-upload-list">
-    <div class="m-upload-item" v-for="n of showUpload" :key="n">
-      <div class="m-upload">
-        <div
-          v-show="!uploading[n-1] && !uploadedFiles[n-1]"
-          class="m-upload-wrap"
-          :class="{'upload-disabled': disabled}"
-          @dragenter.stop.prevent
-          @dragover.stop.prevent
-          @drop.stop.prevent="disabled ? () => false : onDrop($event, n-1)"
-          @click="disabled ? () => false : onClick(n-1)">
-          <input ref="uploadInput" type="file" @click.stop :accept="accept" :multiple="multiple" @change="onUpload($event, n-1)" style="display: none;" />
-          <div>
-            <svg focusable="false" class="u-plus" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><defs></defs><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path></svg>
-            <p class="u-tip">
-              <slot>{{ tip }}</slot>
-            </p>
+    <Space>
+      <div class="m-upload-item" v-for="n of showUpload" :key="n">
+        <div class="m-upload">
+          <div
+            v-show="!uploading[n-1] && !uploadedFiles[n-1]"
+            class="m-upload-wrap"
+            :class="{'upload-disabled': disabled}"
+            @dragenter.stop.prevent
+            @dragover.stop.prevent
+            @drop.stop.prevent="disabled ? () => false : onDrop($event, n-1)"
+            @click="disabled ? () => false : onClick(n-1)">
+            <input ref="uploadInput" type="file" @click.stop :accept="accept" :multiple="multiple" @change="onUpload($event, n-1)" style="display: none;" />
+            <div>
+              <svg focusable="false" class="u-plus" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><defs></defs><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path></svg>
+              <p class="u-tip">
+                <slot>{{ tip }}</slot>
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="m-file-uploading" v-show="uploading[n-1]">
-          <Spin class="u-spin" :tip="uploadingTip" size="small" indicator="dynamic-circle"/>
-        </div>
-        <div class="m-file-preview" v-if="uploadedFiles[n-1]">
-          <img class="u-image" v-if="isImage(uploadedFiles[n-1].url)" :style="`object-fit: ${fit};`" :src="uploadedFiles[n-1].url" :alt="uploadedFiles[n-1].name" />
-          <svg class="u-file" v-else-if="isPDF(uploadedFiles[n-1].url)" focusable="false" data-icon="file-pdf" aria-hidden="true" viewBox="64 64 896 896"><path d="M531.3 574.4l.3-1.4c5.8-23.9 13.1-53.7 7.4-80.7-3.8-21.3-19.5-29.6-32.9-30.2-15.8-.7-29.9 8.3-33.4 21.4-6.6 24-.7 56.8 10.1 98.6-13.6 32.4-35.3 79.5-51.2 107.5-29.6 15.3-69.3 38.9-75.2 68.7-1.2 5.5.2 12.5 3.5 18.8 3.7 7 9.6 12.4 16.5 15 3 1.1 6.6 2 10.8 2 17.6 0 46.1-14.2 84.1-79.4 5.8-1.9 11.8-3.9 17.6-5.9 27.2-9.2 55.4-18.8 80.9-23.1 28.2 15.1 60.3 24.8 82.1 24.8 21.6 0 30.1-12.8 33.3-20.5 5.6-13.5 2.9-30.5-6.2-39.6-13.2-13-45.3-16.4-95.3-10.2-24.6-15-40.7-35.4-52.4-65.8zM421.6 726.3c-13.9 20.2-24.4 30.3-30.1 34.7 6.7-12.3 19.8-25.3 30.1-34.7zm87.6-235.5c5.2 8.9 4.5 35.8.5 49.4-4.9-19.9-5.6-48.1-2.7-51.4.8.1 1.5.7 2.2 2zm-1.6 120.5c10.7 18.5 24.2 34.4 39.1 46.2-21.6 4.9-41.3 13-58.9 20.2-4.2 1.7-8.3 3.4-12.3 5 13.3-24.1 24.4-51.4 32.1-71.4zm155.6 65.5c.1.2.2.5-.4.9h-.2l-.2.3c-.8.5-9 5.3-44.3-8.6 40.6-1.9 45 7.3 45.1 7.4zm191.4-388.2L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM790.2 326H602V137.8L790.2 326zm1.8 562H232V136h302v216a42 42 0 0042 42h216v494z"></path></svg>
-          <svg class="u-file" v-else focusable="false" data-icon="file" aria-hidden="true" viewBox="64 64 896 896"><path d="M534 352V136H232v752h560V394H576a42 42 0 01-42-42z" fill="#e6f7ff"></path><path d="M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM602 137.8L790.2 326H602V137.8zM792 888H232V136h302v216a42 42 0 0042 42h216v494z"></path></svg>
-          <div class="m-file-mask">
-            <a class="m-icon" title="预览" :href="uploadedFiles[n-1].url" target="_blank">
-              <svg class="u-icon" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
-            </a>
-            <a class="m-icon" title="删除" @click.prevent.stop="onRemove(n-1)" v-show="!disabled">
-              <svg class="u-icon" focusable="false" data-icon="delete" aria-hidden="true" viewBox="64 64 896 896"><path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path></svg>
-            </a>
+          <div class="m-file-uploading" v-show="uploading[n-1]">
+            <Spin class="u-spin" :tip="uploadingTip" size="small" indicator="dynamic-circle"/>
+          </div>
+          <div class="m-file-preview" v-if="uploadedFiles[n-1]">
+            <Image
+              v-if="isImage(uploadedFiles[n-1].url)"
+              ref="imageRef"
+              :bordered="false"
+              :width="82"
+              :height="82"
+              :src="uploadedFiles[n-1].url"
+              :name="uploadedFiles[n-1].name" />
+            <!-- <img class="m-image"  :style="`object-fit: ${fit};`"  /> -->
+            <svg class="u-file" v-else-if="isPDF(uploadedFiles[n-1].url)" focusable="false" data-icon="file-pdf" aria-hidden="true" viewBox="64 64 896 896"><path d="M531.3 574.4l.3-1.4c5.8-23.9 13.1-53.7 7.4-80.7-3.8-21.3-19.5-29.6-32.9-30.2-15.8-.7-29.9 8.3-33.4 21.4-6.6 24-.7 56.8 10.1 98.6-13.6 32.4-35.3 79.5-51.2 107.5-29.6 15.3-69.3 38.9-75.2 68.7-1.2 5.5.2 12.5 3.5 18.8 3.7 7 9.6 12.4 16.5 15 3 1.1 6.6 2 10.8 2 17.6 0 46.1-14.2 84.1-79.4 5.8-1.9 11.8-3.9 17.6-5.9 27.2-9.2 55.4-18.8 80.9-23.1 28.2 15.1 60.3 24.8 82.1 24.8 21.6 0 30.1-12.8 33.3-20.5 5.6-13.5 2.9-30.5-6.2-39.6-13.2-13-45.3-16.4-95.3-10.2-24.6-15-40.7-35.4-52.4-65.8zM421.6 726.3c-13.9 20.2-24.4 30.3-30.1 34.7 6.7-12.3 19.8-25.3 30.1-34.7zm87.6-235.5c5.2 8.9 4.5 35.8.5 49.4-4.9-19.9-5.6-48.1-2.7-51.4.8.1 1.5.7 2.2 2zm-1.6 120.5c10.7 18.5 24.2 34.4 39.1 46.2-21.6 4.9-41.3 13-58.9 20.2-4.2 1.7-8.3 3.4-12.3 5 13.3-24.1 24.4-51.4 32.1-71.4zm155.6 65.5c.1.2.2.5-.4.9h-.2l-.2.3c-.8.5-9 5.3-44.3-8.6 40.6-1.9 45 7.3 45.1 7.4zm191.4-388.2L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM790.2 326H602V137.8L790.2 326zm1.8 562H232V136h302v216a42 42 0 0042 42h216v494z"></path></svg>
+            <svg class="u-file" v-else focusable="false" data-icon="file" aria-hidden="true" viewBox="64 64 896 896"><path d="M534 352V136H232v752h560V394H576a42 42 0 01-42-42z" fill="#e6f7ff"></path><path d="M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM602 137.8L790.2 326H602V137.8zM792 888H232V136h302v216a42 42 0 0042 42h216v494z"></path></svg>
+            <div class="m-file-mask">
+              <a class="m-icon" title="预览" @click="onPreview(n-1, uploadedFiles[n-1].url)">
+                <svg class="u-icon" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
+              </a>
+              <a class="m-icon" title="删除" @click.prevent.stop="onRemove(n-1)" v-show="!disabled">
+                <svg class="u-icon" focusable="false" data-icon="delete" aria-hidden="true" viewBox="64 64 896 896"><path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path></svg>
+              </a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Space>
     <Message ref="message" :duration="3000" :top="30" />
   </div>
 </template>
@@ -229,9 +251,6 @@ function onError (content: any) {
   display: inline-block;
   .m-upload-item {
     display: inline-block;
-    vertical-align: top;
-    margin-right: 8px;
-    margin-bottom: 8px
   }
   .mr8 {
     margin-right: 8px;
@@ -307,11 +326,6 @@ function onError (content: any) {
     display: flex;
     align-items: center;
     text-align: center;
-    .u-image {
-      display: inline-block;
-      width: 100%;
-      height: 100%;
-    }
     .u-file {
       display: inline-block;
       width: 100%;
