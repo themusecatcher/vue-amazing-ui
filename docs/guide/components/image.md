@@ -133,25 +133,38 @@ const images = ref([
 
 ## 隐藏边框
 
-*自定义宽高，同时图片覆盖容器，预览文本设为 preview*
-
-<br/>
-
-<Image :width="300" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
-  <template #preview>
-    <p class="u-pre">preview</p>
-  </template>
-</Image>
+<Image :bordered="false" fit="cover" :src="images" loop />
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const images = ref([
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg',
+    name: 'image-1.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/2.jpg',
+    name: 'image-2.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/3.jpg',
+    name: 'image-3.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/4.jpg',
+    name: 'image-4.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
+    name: 'image-5.jpg'
+  }
+])
+</script>
 <template>
-  <Image :width="300" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
-    <template #preview>
-      <p class="u-pre">preview</p>
-    </template>
-  </Image>
+  <Image :bordered="false" fit="cover" :src="images" loop />
 </template>
 ```
 
@@ -159,11 +172,11 @@ const images = ref([
 
 ## 自定义样式
 
-*自定义宽高，同时图片覆盖容器，预览文本设为 preview*
+*自定义宽高；同时图片覆盖容器；预览文本设为 preview；间距设为16px*
 
 <br/>
 
-<Image :width="300" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+<Image :width="300" :height="300" fit="cover" :gap="16" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
   <template #preview>
     <p class="u-pre">preview</p>
   </template>
@@ -173,7 +186,7 @@ const images = ref([
 
 ```vue
 <template>
-  <Image :width="300" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+  <Image :width="300" :height="300" fit="cover" :gap="16" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
     <template #preview>
       <p class="u-pre">preview</p>
     </template>
@@ -218,6 +231,7 @@ name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读
 width | 图像宽度，单位px | string &#124; number | 300 | false
 height | 图像高度，单位px | string &#124; number | '100%' | false
 bordered | 是否显示边框 | boolean | true | false
+gap | 展示图片间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] | 8 | false
 fit | 图像如何适应容器高度和宽度，可选 `fill`(填充)、`contain`(等比缩放包含)、`cover`(等比缩放覆盖) | 'contain' &#124; 'fill' &#124; 'cover' | 'contain' | false
 preview | 预览文本 | string &#124; slot | '预览' | false
 zoomRatio | 每次缩放比率 | number | 0.1 | false

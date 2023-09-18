@@ -15,6 +15,7 @@ interface Props {
   maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
   tip?: string // 上传描述文字 string | slot
   uploadingTip?: string // 上传中的文字描述
+  gap?: number|number[] // 展示文件间距大小，数组时表示: [水平间距, 垂直间距]
   fit?: 'fill'|'contain'|'cover' // 预览图片缩放规则，仅当上传文件为图片时生效
   errorInfo?: string // 上传中断时的错误提示信息
   beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传，通常用来现在用户上传的文件格式和大小
@@ -29,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   maxCount: 1,
   tip: 'Upload',
   uploadingTip: 'Uploading',
+  gap: 8,
   fit: 'contain', // 可选 fill(填充) | contain(等比缩放包含) | cover(等比缩放覆盖)
   errorInfo: '',
   beforeUpload: () => true,
@@ -197,7 +199,7 @@ function onError (content: any) {
 </script>
 <template>
   <div class="m-upload-list">
-    <Space>
+    <Space :size="gap">
       <div class="m-upload-item" v-for="n of showUpload" :key="n">
         <div class="m-upload">
           <div
