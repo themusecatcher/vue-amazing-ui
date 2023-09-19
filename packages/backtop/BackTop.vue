@@ -127,7 +127,7 @@ watch(show, (to) => {
   height: 44px;
   min-width: 44px;
   box-shadow: 0 2px 8px 0px rgba(0, 0, 0, .12);
-  background-color: #fff;
+  background-color: transparent;
   transition: all .3s cubic-bezier(.4, 0, .2, 1);
   &:hover {
     color: @themeColor;
@@ -138,20 +138,19 @@ watch(show, (to) => {
   }
   .m-icon {
     font-size: 26px;
-    transition: color .3s cubic-bezier(.4, 0, .2, 1);
     height: 1em;
     width: 1em;
     line-height: 1em;
     text-align: center;
     display: inline-block;
     position: relative;
-    fill: currentColor;
     transform: translateZ(0);
     .u-icon {
-      fill: rgba(0, 0, 0, .88);
       pointer-events: none;
       height: 1em;
       width: 1em;
+      fill: rgba(0, 0, 0, .88);
+      transition: fill .3s cubic-bezier(.4, 0, .2, 1);
     }
   }
 }
