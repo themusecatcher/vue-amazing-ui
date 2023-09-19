@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, nextTick } from 'vue'
+import { ref, computed, watch, watchEffect, nextTick, onBeforeUnmount } from 'vue'
 interface Props {
   bottom?: number|string // BackTop 距离页面底部的高度
   right?: number|string // BackTop 距离页面右侧的宽度
@@ -59,17 +59,20 @@ function observeElement (el: HTMLElement) {
   // 以上述配置开始观察目标节点
   observer.observe(el, config)
 }
+const target = ref()
 watchEffect(() => {
   // 渲染容器节点
   nextTick(() => {
-    var target = null
     if (typeof props.to === 'string') {
-      target = typeof document !== 'undefined' ? document.getElementsByTagName(props.to)[0] : null
+      target.value = typeof document !== 'undefined' ? document.getElementsByTagName(props.to)[0] : null
     } else if (props.to instanceof HTMLElement) {
-      target = props.to
+      target.value = props.to
     }
-    target && target.appendChild(backtop.value)
+    target.value && target.value.insertAdjacentElement('beforeend', backtop.value)
   })
+})
+onBeforeUnmount(() => {
+  backtop.value.remove()
 })
 const show = computed(() => {
   return scrollTop.value >= props.visibilityHeight
