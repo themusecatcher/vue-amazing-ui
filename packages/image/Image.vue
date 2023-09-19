@@ -410,6 +410,7 @@ function onSwitchRight () {
         }
         .u-pre {
           display: inline-block;
+          color: #fff;
         }
       }
     }
