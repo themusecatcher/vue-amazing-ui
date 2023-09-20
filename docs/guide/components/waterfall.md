@@ -97,7 +97,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 -- | -- | -- | -- | --
 images | 图片数组 | Image[] | [] | true
 columnCount | 要划分的列数 | number | 3 | false
-columnGap | 各列之间的间隙，单位px | number | 20 | false
+columnGap | 各列之间的间隙，单位`px` | number | 20 | false
 width | 瀑布流区域的总宽度 | string &#124; number | '100%' | false
 backgroundColor | 瀑布流区域背景填充色 | string | '#F2F4F8' | false
 mode | 瀑布流排列方式，可选：`JS` (js计算)、`CSS` (css布局) | string | 'JS' | false

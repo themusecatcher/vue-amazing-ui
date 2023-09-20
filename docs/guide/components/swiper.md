@@ -130,7 +130,7 @@ width | 图片宽度 | number &#124; string | '100%' | false
 height | 图片高度 | number &#124; string  | '100vh' | false
 type | `banner`: 轮播图模式；`carousel`: 走马灯模式 | 'banner' &#124; 'carousel' | 'banner' | false
 navigation | 是否显示导航 | boolean | true | false
-delay | 自动切换的时间间隔（`type: banner`时生效），单位ms | number | 3000 | false
+delay | 自动切换的时间间隔（`type: banner`时生效），单位`ms` | number | 3000 | false
 swipe | 是否可以鼠标拖动 | boolean | true | false
 preloaderColor | 预加载时的 `loading` 颜色 | 'theme' &#124; 'white' &#124; 'black' | 'theme' | false
 

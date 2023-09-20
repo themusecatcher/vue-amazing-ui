@@ -278,9 +278,9 @@ collapseData | 折叠面板数据，可使用 `v-slot` 替换对应索引的 `he
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | number[] &#124; number &#124; string[] &#124; string &#124; null | null | false
 copyable | 是否可复制面板内容 | boolean | false | false
 lang | 面板右上角固定内容，例如标识 language | string &#124; slot | '' | false
-fontSize | 面板标题和内容的字体大小，单位px | number | 14 | false
-headerFontSize | 面板标题字体大小，单位px，优先级高于 `fontSize` | number | 0 | false
-textFontSize | 面板内容字体大小，单位px，优先级高于 `fontSize` | number | 0 | false
+fontSize | 面板标题和内容的字体大小，单位`px` | number | 14 | false
+headerFontSize | 面板标题字体大小，单位`px`，优先级高于 `fontSize` | number | 0 | false
+textFontSize | 面板内容字体大小，单位`px`，优先级高于 `fontSize` | number | 0 | false
 showArrow | 是否展示面板上的箭头 | boolean | true | false
 
 ## Collapse Type

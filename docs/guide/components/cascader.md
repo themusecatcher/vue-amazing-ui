@@ -1092,9 +1092,9 @@ value | 下拉字典项的值字段名 | string | 'value' | false
 children | 下拉字典项的后代字段名 | string | 'children' | false
 placeholder | 三级下拉各自占位文本 | string &#124; string[] | '请选择' | false
 changeOnSelect | 当此项为 `true` 时，点选每级菜单选项值都会发生变化；否则只有选择第三级选项后选项值才会变化 | boolean | false | false
-gap | 级联下拉框相互间隙宽度，单位px | number | 8 | false
-width | 三级下拉各自宽度，单位px | number &#124; number[] | 120 | false
-height | 下拉框高度，单位px | number | 32 | false
+gap | 级联下拉框相互间隙宽度，单位`px` | number | 8 | false
+width | 三级下拉各自宽度，单位`px` | number &#124; number[] | 120 | false
+height | 下拉框高度，单位`px` | number | 32 | false
 disabled | 三级各自是否禁用 | boolean &#124; boolean[] | false | false
 allowClear | 是否支持清除 | boolean | false | false
 search | 是否支持搜索 | boolean | false | false
