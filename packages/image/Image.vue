@@ -353,7 +353,7 @@ function onSwitchRight () {
 }
 .preview-enter-from, .preview-leave-to {
   opacity: 0;
-  transform: scale(.01);
+  transform: scale(0);
 }
 .m-image-wrap {
   display: inline-block;
