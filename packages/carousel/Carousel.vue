@@ -10,7 +10,7 @@ interface Image {
 }
 interface Props {
   images: Image[] // 走马灯图片数组
-  interval?: number // 自动滑动轮播间隔
+  interval?: number // 自动滑动轮播间隔，单位ms
   width?: number|string // 走马灯宽度
   height?: number|string // 走马灯高度
   navigation?: boolean // 是否显示导航

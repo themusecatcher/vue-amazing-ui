@@ -212,7 +212,7 @@ const timelineData = ref([
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 timelineData | 时间轴内容数组 | Data[] | [] | true
-width | 时间轴区域总宽度，单位px | number | 360 | false
+width | 时间轴区域总宽度，单位`px` | number | 360 | false
 lineStyle | 时间线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid' | false
 
 ## Data Type

@@ -124,13 +124,13 @@ function onClick (value: string) { // 获取点击的标题
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 text | 滚动文字数组 | Text[] | [] | true
-width | 滚动区域宽度，单位px | number &#124; string | '100%' | false
-height | 滚动区域高度，单位px | number | 60 | false
+width | 滚动区域宽度，单位`px` | number &#124; string | '100%' | false
+height | 滚动区域高度，单位`px` | number | 60 | false
 backgroundColor | 滚动区域背景色 | string | '#FFF' | false
 amount | 滚动区域展示条数，水平滚动时生效 | number | 4 | false
-gap | 水平滚动文字各列间距或垂直滚动文字两边的边距，单位px |  number | 20 | false
+gap | 水平滚动文字各列间距或垂直滚动文字两边的边距，单位`px` |  number | 20 | false
 vertical | 是否垂直滚动 | boolean | false | false
-interval | 文字滚动时间间隔，垂直滚动时生效，单位ms | number | 3000 | false
+interval | 文字滚动时间间隔，垂直滚动时生效，单位`ms` | number | 3000 | false
 
 ## Text Type
 

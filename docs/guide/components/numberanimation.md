@@ -245,7 +245,7 @@ function onClick () {
 -- | -- | -- | -- | --
 from | 数值动画起始数值 | number | 0 | false
 to | 数值目标值 | number | 1000 | false
-duration | 数值动画持续时间，单位ms | number | 3000 | false
+duration | 数值动画持续时间，单位`ms` | number | 3000 | false
 autoplay | 是否自动开始动画 | boolean | true | false
 precision | 精度，保留小数点后几位 | number | 0 | false
 prefix | 前缀 | string | '' | false

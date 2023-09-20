@@ -168,7 +168,7 @@ function onFinish () {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 title | 倒计时标题 | string &#124; slot | Countdown | false
-value | 倒计时数值支持设置未来某时刻的时间戳或相对剩余时间，单位ms | number | 0 | false
+value | 倒计时数值支持设置未来某时刻的时间戳或相对剩余时间，单位`ms` | number | 0 | false
 format | 格式化倒计时展示，(`Y/YY`：年，`M/MM`：月，`D/DD`：日，`H/HH`：时，`m/mm`：分钟，`s/ss`：秒，`SSS`：毫秒) | string | 'HH:mm:ss' | false
 prefix | 倒计时数值的前缀 | string &#124; slot | '' | false
 suffix | 倒计时数值的后缀 | string &#124; slot | '' | false

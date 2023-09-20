@@ -265,7 +265,7 @@ const De = (l) => (U("data-v-22ff15ed"), l = l(), K(), l), ol = { class: "m-spin
 se.install = (l) => {
   l.component(se.__name, se);
 };
-const sa = (l) => (U("data-v-8e540165"), l = l(), K(), l), pl = ["href", "target"], fl = ["onLoad", "src", "alt"], hl = { key: 0, class: "m-image" }, ml = ["href", "target"], gl = ["src", "alt"], yl = [sa(() => t("path", { d: "M10.26 3.2a.75.75 0 0 1 .04 1.06L6.773 8l3.527 3.74a.75.75 0 1 1-1.1 1.02l-4-4.25a.75.75 0 0 1 0-1.02l4-4.25a.75.75 0 0 1 1.06-.04z" }, null, -1))], kl = [sa(() => t("path", { d: "M5.74 3.2a.75.75 0 0 0-.04 1.06L9.227 8L5.7 11.74a.75.75 0 1 0 1.1 1.02l4-4.25a.75.75 0 0 0 0-1.02l-4-4.25a.75.75 0 0 0-1.06-.04z" }, null, -1))], bl = { key: 1, class: "m-switch" }, wl = ["onClick"], Xe = I(V({ __name: "Carousel", props: { images: { default: () => [] }, interval: { default: 3e3 }, width: { default: "100%" }, height: { default: "100vh" }, navigation: { type: Boolean, default: !0 }, navColor: { default: "#FFF" }, navSize: { default: 36 }, pagination: { type: Boolean, default: !0 }, pageActiveColor: { default: "#1677FF" }, pageSize: { default: 10 }, pageStyle: { default: () => ({}) }, disableOnInteraction: { type: Boolean, default: !0 }, pauseOnMouseEnter: { type: Boolean, default: !0 } }, setup(l) {
+const sa = (l) => (U("data-v-9a59f428"), l = l(), K(), l), pl = ["href", "target"], fl = ["onLoad", "src", "alt"], hl = { key: 0, class: "m-image" }, ml = ["href", "target"], gl = ["src", "alt"], yl = [sa(() => t("path", { d: "M10.26 3.2a.75.75 0 0 1 .04 1.06L6.773 8l3.527 3.74a.75.75 0 1 1-1.1 1.02l-4-4.25a.75.75 0 0 1 0-1.02l4-4.25a.75.75 0 0 1 1.06-.04z" }, null, -1))], kl = [sa(() => t("path", { d: "M5.74 3.2a.75.75 0 0 0-.04 1.06L9.227 8L5.7 11.74a.75.75 0 1 0 1.1 1.02l4-4.25a.75.75 0 0 0 0-1.02l-4-4.25a.75.75 0 0 0-1.06-.04z" }, null, -1))], bl = { key: 1, class: "m-switch" }, wl = ["onClick"], Xe = I(V({ __name: "Carousel", props: { images: { default: () => [] }, interval: { default: 3e3 }, width: { default: "100%" }, height: { default: "100vh" }, navigation: { type: Boolean, default: !0 }, navColor: { default: "#FFF" }, navSize: { default: 36 }, pagination: { type: Boolean, default: !0 }, pageActiveColor: { default: "#1677FF" }, pageSize: { default: 10 }, pageStyle: { default: () => ({}) }, disableOnInteraction: { type: Boolean, default: !0 }, pauseOnMouseEnter: { type: Boolean, default: !0 } }, setup(l) {
   const a = l, e = m(!0), s = m(0), c = m(!1), u = m(), o = m(), n = m(), d = m(!1), f = m(), h = m(1), w = L(() => typeof a.width == "number" ? a.width + "px" : a.width), k = L(() => typeof a.height == "number" ? a.height + "px" : a.height), v = L(() => (a.images.length + 1) * _.value), p = L(() => a.images.length);
   Z(() => {
     (function() {
@@ -355,7 +355,7 @@ const sa = (l) => (U("data-v-8e540165"), l = l(), K(), l), pl = ["href", "target
       te < h.value && (h.value = te, Oe(ne)), te > h.value && (h.value = te, xe(ne));
     }
   }(G), class: C(["u-circle", { active: h.value === G }]), style: M([{ width: `${F.pageSize}px`, height: `${F.pageSize}px` }, F.pageStyle]), key: G }, null, 14, wl))), 128))])) : z("", !0)], 36));
-} }), [["__scopeId", "data-v-8e540165"]]);
+} }), [["__scopeId", "data-v-9a59f428"]]);
 Xe.install = (l) => {
   l.component(Xe.__name, Xe);
 };
