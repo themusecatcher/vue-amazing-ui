@@ -114,7 +114,7 @@ watch(show, (to) => {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
-  transform: scale(.75);
+  transform: scale(.5);
 }
 .m-backtop {
   position: fixed;
