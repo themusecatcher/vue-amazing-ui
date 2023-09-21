@@ -1290,10 +1290,10 @@ const k0 = ["href", "target"], b0 = ["src", "alt"], w0 = ["href", "target"], x0 
 C1.install = (l) => {
   l.component(C1.__name, C1);
 };
-const _0 = { class: "m-switch-wrap" }, $1 = I(V({ __name: "Switch", props: { checkedInfo: { default: "" }, uncheckedInfo: { default: "" }, disabled: { type: Boolean, default: !1 }, checked: { type: Boolean, default: !1 }, nodeStyle: { default: () => ({}) } }, emits: ["update:checked", "change"], setup(l, { emit: a }) {
+const _0 = { class: "m-switch-wrap" }, $1 = I(V({ __name: "Switch", props: { onInfo: { default: "" }, offInfo: { default: "" }, disabled: { type: Boolean, default: !1 }, checked: { type: Boolean, default: !1 }, nodeStyle: { default: () => ({}) } }, emits: ["update:checked", "change"], setup(l, { emit: a }) {
   const e = l;
-  return (s, c) => (i(), r("div", _0, [t("div", { onClick: c[0] || (c[0] = (u) => s.disabled ? () => !1 : (a("update:checked", !e.checked), void a("change", !e.checked))), class: C(["m-switch", { "switch-checked": s.checked, disabled: s.disabled }]) }, [t("div", { class: C(["u-switch-inner", s.checked ? "inner-checked" : "inner-unchecked"]) }, $(s.checked ? s.checkedInfo : s.uncheckedInfo), 3), t("div", { class: C(["u-node", { "node-checked": s.checked }]), style: M(s.nodeStyle) }, [B(s.$slots, "node", {}, void 0, !0)], 6)], 2)]));
-} }), [["__scopeId", "data-v-0884d406"]]);
+  return (s, c) => (i(), r("div", _0, [t("div", { onClick: c[0] || (c[0] = (u) => s.disabled ? () => !1 : (a("update:checked", !e.checked), void a("change", !e.checked))), class: C(["m-switch", { "switch-checked": s.checked, disabled: s.disabled }]) }, [t("div", { class: C(["u-switch-inner", s.checked ? "inner-checked" : "inner-unchecked"]) }, $(s.checked ? s.onInfo : s.offInfo), 3), t("div", { class: C(["u-node", { "node-checked": s.checked }]), style: M(s.nodeStyle) }, [B(s.$slots, "node", {}, void 0, !0)], 6)], 2)]));
+} }), [["__scopeId", "data-v-b0415d28"]]);
 $1.install = (l) => {
   l.component($1.__name, $1);
 };
