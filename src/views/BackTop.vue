@@ -6,9 +6,9 @@ function onShow (show: boolean) {
 const scrollContainer = ref()
 </script>
 <template>
-  <div>
+  <div style="height: 150vh;">
     <h1>BackTop 回到顶部</h1>
-    <h2 class="mt30 mb10" style="margin-top: 150vh;">基本使用</h2>
+    <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">BackTop 会找到首个可滚动的祖先元素并且监听它的滚动事件</h3>
     <BackTop :right="100" @show="onShow" />
     <h2 class="mt30 mb10">自定义可视高度</h2>
