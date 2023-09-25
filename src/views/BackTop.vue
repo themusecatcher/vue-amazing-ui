@@ -31,7 +31,10 @@ const scrollContainer = ref()
         指定目标
       </div>
     </BackTop>
-    <div ref="scrollContainer" style="overflow: auto; height: 72px; line-height: 1.5">
+    <div ref="scrollContainer" style="overflow: auto; width: 540px; height: 100px; line-height: 1.5">
+      这块应该写一个有意思的笑话。<br>
+      这块应该写一个有意思的笑话。<br>
+      这块应该写一个有意思的笑话。<br>
       这块应该写一个有意思的笑话。<br>
       这块应该写一个有意思的笑话。<br>
       这块应该写一个有意思的笑话。<br>

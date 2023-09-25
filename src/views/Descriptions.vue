@@ -19,6 +19,10 @@ const onChange = (value: any) => {
   console.log('size checked', value)
   size.value = value
 }
+const show = ref(true)
+const onClick = () => {
+  show.value = false
+}
 </script>
 <template>
   <div>
@@ -26,7 +30,7 @@ const onChange = (value: any) => {
     <h2 class="mt30 mb10">基本使用</h2>
     <Descriptions title="User Info">
       <template #extra>
-        <a href="#">more</a>
+        <a href="#" @click="onClick">more</a>
       </template>
       <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
       <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
@@ -62,6 +66,17 @@ const onChange = (value: any) => {
         <br />
         Region: East China 1
         <br />
+      </DescriptionsItem>
+    </Descriptions>
+    <h2 class="mt30 mb10">单列描述列表</h2>
+    <Descriptions title="User Info" :column="1">
+      <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
+      <DescriptionsItem label="Billing Mode">Prepaid</DescriptionsItem>
+      <DescriptionsItem label="Automatic Renewal">YES</DescriptionsItem>
+      <DescriptionsItem label="Order time">2018-04-24 18:00:00</DescriptionsItem>
+      <DescriptionsItem label="Usage Time" :span="2">2019-04-24 18:00:00</DescriptionsItem>
+      <DescriptionsItem label="Status" :span="3">
+        <Badge status="processing" text="Running" />
       </DescriptionsItem>
     </Descriptions>
     <h2 class="mt30 mb10">响应式描述列表</h2>
