@@ -68,17 +68,6 @@ const onClick = () => {
         <br />
       </DescriptionsItem>
     </Descriptions>
-    <h2 class="mt30 mb10">单列描述列表</h2>
-    <Descriptions title="User Info" :column="1">
-      <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
-      <DescriptionsItem label="Billing Mode">Prepaid</DescriptionsItem>
-      <DescriptionsItem label="Automatic Renewal">YES</DescriptionsItem>
-      <DescriptionsItem label="Order time">2018-04-24 18:00:00</DescriptionsItem>
-      <DescriptionsItem label="Usage Time" :span="2">2019-04-24 18:00:00</DescriptionsItem>
-      <DescriptionsItem label="Status" :span="3">
-        <Badge status="processing" text="Running" />
-      </DescriptionsItem>
-    </Descriptions>
     <h2 class="mt30 mb10">响应式描述列表</h2>
     <Descriptions
       title="Responsive Descriptions"
