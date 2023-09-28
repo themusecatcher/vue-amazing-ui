@@ -257,6 +257,37 @@ html.dark .VPHome {
     box-shadow: 0 0 3px 3px rgba(228, 195, 27, .12);
   }
 }
+.DocSearch-Modal {
+  border-radius: 12px;
+  .DocSearch-SearchBar {
+    padding: 20px 20px 0;
+  }
+  .DocSearch-Dropdown {
+    padding: 0 24px;
+    ul {
+      position: relative;
+      z-index: 11;
+    }
+  }
+  .DocSearch-Form {
+    border-radius: 12px;
+  }
+  .DocSearch-Footer {
+    border-radius: 0 0 12px 12px;
+  }
+  .DocSearch-Hit {
+    border-radius: 12px;
+    padding-bottom: 10px;
+    a {
+      border-radius: 12px;
+      transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28) !important;
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 3px 3px rgba(100, 108, 255, .12);
+      }
+    }
+  }
+}
 .DocSearch-Button {
   border-radius: 12px;
   background-color: rgba(0, 0, 0, .36);
