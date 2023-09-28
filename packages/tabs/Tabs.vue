@@ -30,14 +30,12 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
   getNavWidth()
 }, { flush: 'post' })
 watchEffect(() => { // 若想要侦听器回调中能访问被 Vue 更新之后的 DOM，你需要指明 flush: 'post' 选项
-  getBarPosition(props.activeKey)
+  const index = props.tabPages.findIndex(page => page.key === props.activeKey)
+  getBarPosition(index)
 }, { flush: 'post' })
 const emits = defineEmits(['update:activeKey', 'change'])
-function findElement (key: string|number) {
-  return tabs.value.find((element: any) => element.__vnode.key === key)
-}
-function getBarPosition (key: string|number) {
-  const el = findElement(key)
+function getBarPosition (index: number) {
+  const el = tabs.value[index]
   if (el) {
     left.value = el.offsetLeft
     width.value = el.offsetWidth
@@ -54,8 +52,8 @@ function getNavWidth () {
     scrollMax.value = navWidth - wrapWidth
   }
 }
-function onTab (key: string|number) {
-  getBarPosition(key)
+function onTab (key: string|number, index: number) {
+  getBarPosition(index)
   emits('update:activeKey', key)
   emits('change', key)
 }
@@ -99,8 +97,8 @@ function onWheel (e: WheelEvent) {
             ref="tabs"
             class="u-tab"
             :class="{'u-tab-active': activeKey === page.key, 'u-tab-disabled': page.disabled}"
-            @click="page.disabled ? () => false : onTab(page.key)"
-            v-for="page in tabPages" :key="page.key">
+            @click="page.disabled ? () => false : onTab(page.key, index)"
+            v-for="(page, index) in tabPages" :key="page.key">
             {{ page.tab }}
           </div>
           <div class="u-tab-bar" :style="`left: ${left}px; width: ${width}px;`"></div>
