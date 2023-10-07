@@ -44,6 +44,7 @@ const spinning = ref(true)
 .spin-content {
   display: inline-block;
   border: 1px solid #91d5ff;
+  border-radius: 6px;
   background-color: #e6f7ff;
   padding: 16px;
 }
@@ -245,6 +246,7 @@ const spinning = ref(true)
 }
 .spin-content {
   display: inline-block;
+  border-radius: 6px;
   border: 1px solid #91d5ff;
   background-color: #e6f7ff;
   padding: 16px;
