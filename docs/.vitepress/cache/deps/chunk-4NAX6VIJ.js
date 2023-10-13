@@ -1,4 +1,4 @@
-// node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@10.3.1/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === "object" && "constructor" in obj && obj.constructor === Object;
 }
@@ -148,7 +148,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/shared/utils.mjs
+// node_modules/.pnpm/swiper@10.3.1/node_modules/swiper/shared/utils.mjs
 function deleteProps(obj) {
   const object = obj;
   Object.keys(object).forEach((key) => {
@@ -444,4 +444,4 @@ export {
   elementTransitionEnd,
   elementOuterSize
 };
-//# sourceMappingURL=chunk-VGAOZ6JA.js.map
+//# sourceMappingURL=chunk-4NAX6VIJ.js.map

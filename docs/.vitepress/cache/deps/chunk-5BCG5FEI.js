@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@10.4.1_vue@3.3.4/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@10.5.0_vue@3.3.4/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -132,14 +132,36 @@ function createGlobalState(stateFactory) {
     return state;
   };
 }
-function createInjectionState(composable) {
-  const key = Symbol("InjectionState");
+var localProvidedStateMap = /* @__PURE__ */ new WeakMap();
+var provideLocal = (key, value) => {
+  var _a;
+  const instance = (_a = getCurrentInstance()) == null ? void 0 : _a.proxy;
+  if (instance == null)
+    throw new Error("provideLocal must be called in setup");
+  if (!localProvidedStateMap.has(instance))
+    localProvidedStateMap.set(instance, /* @__PURE__ */ Object.create(null));
+  const localProvidedState = localProvidedStateMap.get(instance);
+  localProvidedState[key] = value;
+  provide(key, value);
+};
+var injectLocal = (...args) => {
+  var _a;
+  const key = args[0];
+  const instance = (_a = getCurrentInstance()) == null ? void 0 : _a.proxy;
+  if (instance == null)
+    throw new Error("injectLocal must be called in setup");
+  if (localProvidedStateMap.has(instance) && key in localProvidedStateMap.get(instance))
+    return localProvidedStateMap.get(instance)[key];
+  return inject(...args);
+};
+function createInjectionState(composable, options) {
+  const key = (options == null ? void 0 : options.injectionKey) || Symbol("InjectionState");
   const useProvidingState = (...args) => {
     const state = composable(...args);
-    provide(key, state);
+    provideLocal(key, state);
     return state;
   };
-  const useInjectedState = () => inject(key);
+  const useInjectedState = () => injectLocal(key);
   return [useProvidingState, useInjectedState];
 }
 function createSharedComposable(composable) {
@@ -287,9 +309,7 @@ function reactiveComputed(fn) {
 function reactiveOmit(obj, ...keys) {
   const flatKeys = keys.flat();
   const predicate = flatKeys[0];
-  return reactiveComputed(
-    () => typeof predicate === "function" ? Object.fromEntries(Object.entries(toRefs(obj)).filter(([k, v]) => !predicate(toValue(v), k))) : Object.fromEntries(Object.entries(toRefs(obj)).filter((e) => !flatKeys.includes(e[0])))
-  );
+  return reactiveComputed(() => typeof predicate === "function" ? Object.fromEntries(Object.entries(toRefs(obj)).filter(([k, v]) => !predicate(toValue(v), k))) : Object.fromEntries(Object.entries(toRefs(obj)).filter((e) => !flatKeys.includes(e[0]))));
 }
 var isClient = typeof window !== "undefined" && typeof document !== "undefined";
 var isDef = (val) => typeof val !== "undefined";
@@ -441,9 +461,7 @@ function cacheStringFunction(fn) {
   };
 }
 var hyphenateRE = /\B([A-Z])/g;
-var hyphenate = cacheStringFunction(
-  (str) => str.replace(hyphenateRE, "-$1").toLowerCase()
-);
+var hyphenate = cacheStringFunction((str) => str.replace(hyphenateRE, "-$1").toLowerCase());
 var camelizeRE = /-(\w)/g;
 var camelize = cacheStringFunction((str) => {
   return str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : "");
@@ -927,11 +945,9 @@ function useArrayFilter(list, fn) {
   return computed(() => toValue(list).map((i) => toValue(i)).filter(fn));
 }
 function useArrayFind(list, fn) {
-  return computed(
-    () => toValue(
-      toValue(list).find((element, index, array) => fn(toValue(element), index, array))
-    )
-  );
+  return computed(() => toValue(
+    toValue(list).find((element, index, array) => fn(toValue(element), index, array))
+  ));
 }
 function useArrayFindIndex(list, fn) {
   return computed(() => toValue(list).findIndex((element, index, array) => fn(toValue(element), index, array)));
@@ -945,11 +961,9 @@ function findLast(arr, cb) {
   return void 0;
 }
 function useArrayFindLast(list, fn) {
-  return computed(
-    () => toValue(
-      !Array.prototype.findLast ? findLast(toValue(list), (element, index, array) => fn(toValue(element), index, array)) : toValue(list).findLast((element, index, array) => fn(toValue(element), index, array))
-    )
-  );
+  return computed(() => toValue(
+    !Array.prototype.findLast ? findLast(toValue(list), (element, index, array) => fn(toValue(element), index, array)) : toValue(list).findLast((element, index, array) => fn(toValue(element), index, array))
+  ));
 }
 function isArrayIncludesOptions(obj) {
   return isObject(obj) && containsProp(obj, "formIndex", "comparator");
@@ -969,11 +983,12 @@ function useArrayIncludes(...args) {
     comparator = (element, value2) => element[key] === toValue(value2);
   }
   comparator = comparator != null ? comparator : (element, value2) => element === toValue(value2);
-  return computed(
-    () => toValue(list).slice(formIndex).some(
-      (element, index, array) => comparator(toValue(element), toValue(value), index, toValue(array))
-    )
-  );
+  return computed(() => toValue(list).slice(formIndex).some((element, index, array) => comparator(
+    toValue(element),
+    toValue(value),
+    index,
+    toValue(array)
+  )));
 }
 function useArrayJoin(list, separator) {
   return computed(() => toValue(list).map((i) => toValue(i)).join(toValue(separator)));
@@ -1275,9 +1290,7 @@ function useToggle(initialValue = false, options = {}) {
     return [_value, toggle];
 }
 function watchArray(source, cb, options) {
-  let oldList = (options == null ? void 0 : options.immediate) ? [] : [
-    ...source instanceof Function ? source() : Array.isArray(source) ? source : toValue(source)
-  ];
+  let oldList = (options == null ? void 0 : options.immediate) ? [] : [...source instanceof Function ? source() : Array.isArray(source) ? source : toValue(source)];
   return watch(source, (newList, _, onCleanup) => {
     const oldListRemains = Array.from({ length: oldList.length });
     const added = [];
@@ -1504,6 +1517,8 @@ export {
   tryOnScopeDispose,
   createEventHook,
   createGlobalState,
+  provideLocal,
+  injectLocal,
   createInjectionState,
   createSharedComposable,
   extendRef,
@@ -1603,4 +1618,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-75PIGAAA.js.map
+//# sourceMappingURL=chunk-5BCG5FEI.js.map
