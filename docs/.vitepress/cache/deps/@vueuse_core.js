@@ -23,6 +23,7 @@ import {
   hyphenate,
   identity,
   increaseWithUnit,
+  injectLocal,
   invoke,
   isClient,
   isDef,
@@ -41,6 +42,7 @@ import {
   objectPick,
   pausableFilter,
   promiseTimeout,
+  provideLocal,
   rand,
   reactify,
   reactifyObject,
@@ -106,7 +108,7 @@ import {
   watchTriggerable,
   watchWithFilter,
   whenever
-} from "./chunk-75PIGAAA.js";
+} from "./chunk-5BCG5FEI.js";
 import {
   Fragment,
   TransitionGroup,
@@ -135,7 +137,7 @@ import {
 } from "./chunk-67UUJLDS.js";
 import "./chunk-UXIASGQL.js";
 
-// node_modules/.pnpm/@vueuse+core@10.4.1_vue@3.3.4/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@10.5.0_vue@3.3.4/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {
@@ -606,15 +608,21 @@ function useSupported(callback) {
 function useRafFn(fn, options = {}) {
   const {
     immediate = true,
+    fpsLimit = void 0,
     window: window2 = defaultWindow
   } = options;
   const isActive = ref(false);
+  const intervalLimit = fpsLimit ? 1e3 / fpsLimit : null;
   let previousFrameTimestamp = 0;
   let rafId = null;
   function loop(timestamp2) {
     if (!isActive.value || !window2)
       return;
     const delta = timestamp2 - (previousFrameTimestamp || timestamp2);
+    if (intervalLimit && delta < intervalLimit) {
+      rafId = window2.requestAnimationFrame(loop);
+      return;
+    }
     fn({ delta, timestamp: timestamp2 });
     previousFrameTimestamp = timestamp2;
     rafId = window2.requestAnimationFrame(loop);
@@ -1067,7 +1075,8 @@ function blobToBase64(blob) {
     fr.readAsDataURL(blob);
   });
 }
-function useBattery({ navigator = defaultNavigator } = {}) {
+function useBattery(options = {}) {
+  const { navigator = defaultNavigator } = options;
   const events2 = ["chargingchange", "chargingtimechange", "dischargingtimechange", "levelchange"];
   const isSupported = useSupported(() => navigator && "getBattery" in navigator);
   const charging = ref(false);
@@ -1208,6 +1217,7 @@ var breakpointsTailwind = {
   "2xl": 1536
 };
 var breakpointsBootstrapV5 = {
+  xs: 0,
   sm: 576,
   md: 768,
   lg: 992,
@@ -1379,7 +1389,8 @@ var WRITABLE_PROPERTIES = [
   "protocol",
   "search"
 ];
-function useBrowserLocation({ window: window2 = defaultWindow } = {}) {
+function useBrowserLocation(options = {}) {
+  const { window: window2 = defaultWindow } = options;
   const refs = Object.fromEntries(
     WRITABLE_PROPERTIES.map((key) => [key, ref()])
   );
@@ -1690,9 +1701,7 @@ function useColorMode(options = {}) {
   const preferredDark = usePreferredDark({ window: window2 });
   const system = computed(() => preferredDark.value ? "dark" : "light");
   const store = storageRef || (storageKey == null ? toRef(initialValue) : useStorage(storageKey, initialValue, storage, { window: window2, listenToStorageChanges }));
-  const state = computed(
-    () => store.value === "auto" ? system.value : store.value
-  );
+  const state = computed(() => store.value === "auto" ? system.value : store.value);
   const updateHTMLAttrs = getSSRHandler(
     "updateHTMLAttrs",
     (selector2, attribute2, value) => {
@@ -2139,22 +2148,23 @@ function useDeviceOrientation(options = {}) {
     gamma
   };
 }
-function useDevicePixelRatio({
-  window: window2 = defaultWindow
-} = {}) {
+function useDevicePixelRatio(options = {}) {
+  const {
+    window: window2 = defaultWindow
+  } = options;
   const pixelRatio = ref(1);
   if (window2) {
-    let observe = function() {
+    let observe2 = function() {
       pixelRatio.value = window2.devicePixelRatio;
-      cleanup();
+      cleanup2();
       media = window2.matchMedia(`(resolution: ${pixelRatio.value}dppx)`);
-      media.addEventListener("change", observe, { once: true });
-    }, cleanup = function() {
-      media == null ? void 0 : media.removeEventListener("change", observe);
+      media.addEventListener("change", observe2, { once: true });
+    }, cleanup2 = function() {
+      media == null ? void 0 : media.removeEventListener("change", observe2);
     };
     let media;
-    observe();
-    tryOnScopeDispose(cleanup);
+    observe2();
+    tryOnScopeDispose(cleanup2);
   }
   return { pixelRatio };
 }
@@ -2303,7 +2313,8 @@ function useDisplayMedia(options = {}) {
     enabled
   };
 }
-function useDocumentVisibility({ document: document2 = defaultDocument } = {}) {
+function useDocumentVisibility(options = {}) {
+  const { document: document2 = defaultDocument } = options;
   if (!document2)
     return ref("visible");
   const visibility = ref(document2.visibilityState);
@@ -2455,9 +2466,7 @@ function useResizeObserver(target, callback, options = {}) {
       observer = void 0;
     }
   };
-  const targets = computed(
-    () => Array.isArray(target) ? target.map((el) => unrefElement(el)) : [unrefElement(target)]
-  );
+  const targets = computed(() => Array.isArray(target) ? target.map((el) => unrefElement(el)) : [unrefElement(target)]);
   const stopWatch = watch(
     targets,
     (els) => {
@@ -2695,7 +2704,8 @@ function useIntersectionObserver(target, callback, options = {}) {
     stop
   };
 }
-function useElementVisibility(element, { window: window2 = defaultWindow, scrollTarget } = {}) {
+function useElementVisibility(element, options = {}) {
+  const { window: window2 = defaultWindow, scrollTarget } = options;
   const elementIsVisible = ref(false);
   useIntersectionObserver(
     element,
@@ -2816,7 +2826,18 @@ function useFavicon(newIcon = null, options = {}) {
   } = options;
   const favicon = toRef(newIcon);
   const applyIcon = (icon) => {
-    document2 == null ? void 0 : document2.head.querySelectorAll(`link[rel*="${rel}"]`).forEach((el) => el.href = `${baseUrl}${icon}`);
+    const elements = document2 == null ? void 0 : document2.head.querySelectorAll(`link[rel*="${rel}"]`);
+    if (!elements || elements.length === 0) {
+      const link = document2 == null ? void 0 : document2.createElement("link");
+      if (link) {
+        link.rel = rel;
+        link.href = `${baseUrl}${icon}`;
+        link.type = `image/${icon.split(".").pop()}`;
+        document2 == null ? void 0 : document2.head.append(link);
+      }
+      return;
+    }
+    elements == null ? void 0 : elements.forEach((el) => el.href = `${baseUrl}${icon}`);
   };
   watch(
     favicon,
@@ -3408,9 +3429,7 @@ function useFullscreen(target, options = {}) {
     "mozFullScreenElement",
     "msFullscreenElement"
   ].find((m) => document2 && m in document2);
-  const isSupported = useSupported(
-    () => targetRef.value && document2 && requestMethod.value !== void 0 && exitMethod.value !== void 0 && fullscreenEnabled.value !== void 0
-  );
+  const isSupported = useSupported(() => targetRef.value && document2 && requestMethod.value !== void 0 && exitMethod.value !== void 0 && fullscreenEnabled.value !== void 0);
   const isCurrentElementFullScreen = () => {
     if (fullscreenElementMethod)
       return (document2 == null ? void 0 : document2[fullscreenElementMethod]) === targetRef.value;
@@ -4468,6 +4487,7 @@ function useMousePressed(options = {}) {
   const {
     touch = true,
     drag = true,
+    capture = false,
     initialValue = false,
     window: window2 = defaultWindow
   } = options;
@@ -4488,18 +4508,18 @@ function useMousePressed(options = {}) {
     sourceType.value = null;
   };
   const target = computed(() => unrefElement(options.target) || window2);
-  useEventListener(target, "mousedown", onPressed("mouse"), { passive: true });
-  useEventListener(window2, "mouseleave", onReleased, { passive: true });
-  useEventListener(window2, "mouseup", onReleased, { passive: true });
+  useEventListener(target, "mousedown", onPressed("mouse"), { passive: true, capture });
+  useEventListener(window2, "mouseleave", onReleased, { passive: true, capture });
+  useEventListener(window2, "mouseup", onReleased, { passive: true, capture });
   if (drag) {
-    useEventListener(target, "dragstart", onPressed("mouse"), { passive: true });
-    useEventListener(window2, "drop", onReleased, { passive: true });
-    useEventListener(window2, "dragend", onReleased, { passive: true });
+    useEventListener(target, "dragstart", onPressed("mouse"), { passive: true, capture });
+    useEventListener(window2, "drop", onReleased, { passive: true, capture });
+    useEventListener(window2, "dragend", onReleased, { passive: true, capture });
   }
   if (touch) {
-    useEventListener(target, "touchstart", onPressed("touch"), { passive: true });
-    useEventListener(window2, "touchend", onReleased, { passive: true });
-    useEventListener(window2, "touchcancel", onReleased, { passive: true });
+    useEventListener(target, "touchstart", onPressed("touch"), { passive: true, capture });
+    useEventListener(window2, "touchend", onReleased, { passive: true, capture });
+    useEventListener(window2, "touchcancel", onReleased, { passive: true, capture });
   }
   return {
     pressed,
@@ -6396,8 +6416,14 @@ function useVModel(props, key, emit, options = {}) {
 }
 function useVModels(props, emit, options = {}) {
   const ret = {};
-  for (const key in props)
-    ret[key] = useVModel(props, key, emit, options);
+  for (const key in props) {
+    ret[key] = useVModel(
+      props,
+      key,
+      emit,
+      options
+    );
+  }
   return ret;
 }
 function useVibrate(options) {
@@ -6670,7 +6696,7 @@ function useWebNotification(options = {}) {
   const { on: onError, trigger: errorTrigger } = createEventHook();
   const { on: onClose, trigger: closeTrigger } = createEventHook();
   const show = async (overrides) => {
-    if (!isSupported.value && !permissionGranted.value)
+    if (!isSupported.value || !permissionGranted.value)
       return;
     const options2 = Object.assign({}, defaultWebNotificationOptions, overrides);
     notification.value = new Notification(options2.title || "", options2);
@@ -6748,7 +6774,7 @@ function useWebSocket(url, options = {}) {
     pongTimeoutWait = void 0;
   };
   const close = (code = 1e3, reason) => {
-    if (!wsRef.value)
+    if (!isClient || !wsRef.value)
       return;
     explicitlyClosed = true;
     resetHeartbeat();
@@ -6835,10 +6861,12 @@ function useWebSocket(url, options = {}) {
     heartbeatResume = resume;
   }
   if (autoClose) {
-    useEventListener(window, "beforeunload", () => close());
+    useEventListener("beforeunload", () => close());
     tryOnScopeDispose(close);
   }
   const open = () => {
+    if (!isClient)
+      return;
     close();
     explicitlyClosed = false;
     retried = 0;
@@ -6996,7 +7024,8 @@ function useWebWorkerFn(fn, options = {}) {
     workerTerminate
   };
 }
-function useWindowFocus({ window: window2 = defaultWindow } = {}) {
+function useWindowFocus(options = {}) {
+  const { window: window2 = defaultWindow } = options;
   if (!window2)
     return ref(false);
   const focused = ref(window2.document.hasFocus());
@@ -7008,7 +7037,8 @@ function useWindowFocus({ window: window2 = defaultWindow } = {}) {
   });
   return focused;
 }
-function useWindowScroll({ window: window2 = defaultWindow } = {}) {
+function useWindowScroll(options = {}) {
+  const { window: window2 = defaultWindow } = options;
   if (!window2) {
     return {
       x: ref(0),
@@ -7119,6 +7149,7 @@ export {
   identity,
   watchIgnorable as ignorableWatch,
   increaseWithUnit,
+  injectLocal,
   invoke,
   isClient,
   isDef,
@@ -7144,6 +7175,7 @@ export {
   pausableFilter,
   watchPausable as pausableWatch,
   promiseTimeout,
+  provideLocal,
   rand,
   reactify,
   reactifyObject,
