@@ -24,7 +24,7 @@ hero:
 features:
   - icon: 🛠️
     title: 开发依赖
-    details: 采用 Vue@3.3.4 + TypeScript@5.2.2 + Vite@4.4.9 + Less@4.2.0 实现
+    details: 采用 Vue@3.3.4 + TypeScript@5.2.2 + Vite@4.4.11 + Less@4.2.0 实现
   - icon: ⚡️
     title: border-box
     details: '所有组件 CSS 样式均使用 box-sizing: border-box; 模式'
