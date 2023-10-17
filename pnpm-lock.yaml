@@ -15,8 +15,8 @@ dependencies:
     specifier: ^10.5.0
     version: 10.5.0(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.3.4)
   ant-design-vue:
-    specifier: ^4.0.3
-    version: 4.0.3(vue@3.3.4)
+    specifier: ^4.0.4
+    version: 4.0.4(vue@3.3.4)
   core-js:
     specifier: ^3.33.0
     version: 3.33.0
@@ -50,8 +50,8 @@ devDependencies:
     specifier: ^1.5.1
     version: 1.5.1
   '@types/node':
-    specifier: ^20.8.5
-    version: 20.8.5
+    specifier: ^20.8.6
+    version: 20.8.6
   '@vitejs/plugin-vue':
     specifier: ^4.4.0
     version: 4.4.0(vite@4.4.11)(vue@3.3.4)
@@ -93,10 +93,10 @@ devDependencies:
     version: 0.25.2(vue@3.3.4)
   vite:
     specifier: ^4.4.11
-    version: 4.4.11(@types/node@20.8.5)(less@4.2.0)
+    version: 4.4.11(@types/node@20.8.6)(less@4.2.0)
   vitepress:
     specifier: 1.0.0-rc.21
-    version: 1.0.0-rc.21(@algolia/client-search@4.20.0)(@types/node@20.8.5)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.9.0)
+    version: 1.0.0-rc.21(@algolia/client-search@4.20.0)(@types/node@20.8.6)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.9.0)
   vue-tsc:
     specifier: ^1.8.19
     version: 1.8.19(typescript@5.2.2)
@@ -718,7 +718,7 @@ packages:
     dependencies:
       serialize-javascript: 6.0.1
       smob: 1.4.1
-      terser: 5.21.0
+      terser: 5.22.0
     dev: true
 
   /@rollup/pluginutils@5.0.5:
@@ -783,8 +783,8 @@ packages:
     resolution: {integrity: sha512-T5k6kTXak79gwmIOaDF2UUQXFbnBE0zBUzF20pz7wDYu0RQMzWg+Ml/Pz50214NsFHBITkoi5VtdjFZnJ2ijjA==}
     dev: true
 
-  /@types/node@20.8.5:
-    resolution: {integrity: sha512-SPlobFgbidfIeOYlzXiEjSYeIJiOCthv+9tSQVpvk4PAdIIc+2SmjNVzWXk9t0Y7dl73Zdf+OgXKHX9XtkqUpw==}
+  /@types/node@20.8.6:
+    resolution: {integrity: sha512-eWO4K2Ji70QzKUqRy6oyJWUeB7+g2cRagT3T/nxYibYcT4y2BDL8lqolRXjTHmkZCdJfIPaY73KbJAZmcryxTQ==}
     dependencies:
       undici-types: 5.25.3
     dev: true
@@ -933,7 +933,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.4.11(@types/node@20.8.5)(less@4.2.0)
+      vite: 4.4.11(@types/node@20.8.6)(less@4.2.0)
       vue: 3.3.4
     dev: true
 
@@ -1240,8 +1240,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /ant-design-vue@4.0.3(vue@3.3.4):
-    resolution: {integrity: sha512-fbgZbbirLx7rc19ytaGxApwS01CKLRzvEZmH0TVF06niQA9ekx7xkvfQGlmiSaCs4b8nWZi4Bo7gUzRNRt5YJA==}
+  /ant-design-vue@4.0.4(vue@3.3.4):
+    resolution: {integrity: sha512-AtGoIylQAU3bw4s3dKgYGrsI+CFobzGultkHiBEEoqmWLBVlblLlcSHagIjWpSqWwYLzJchwsIUgD6f5zXVeig==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'
@@ -1673,7 +1673,7 @@ packages:
       is-string: 1.0.7
       is-typed-array: 1.1.12
       is-weakref: 1.0.2
-      object-inspect: 1.12.3
+      object-inspect: 1.13.0
       object-keys: 1.1.1
       object.assign: 4.1.4
       regexp.prototype.flags: 1.5.1
@@ -2687,8 +2687,8 @@ packages:
       boolbase: 1.0.0
     dev: true
 
-  /object-inspect@1.12.3:
-    resolution: {integrity: sha512-geUvdk7c+eizMNUDkRpW1wJwgfOiOeHbxBR/hLXK1aT6zmVSO0jsQcs7fj6MGw89jC/cjGfLcNOrtMYtGqm81g==}
+  /object-inspect@1.13.0:
+    resolution: {integrity: sha512-HQ4J+ic8hKrgIt3mqk6cVOVrW2ozL4KdvHlqpBv9vDYWx9ysAgENAdvy4FoGF+KFdhR7nQTNm5J0ctAeOwn+3g==}
     dev: true
 
   /object-keys@1.1.1:
@@ -3147,7 +3147,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       get-intrinsic: 1.2.1
-      object-inspect: 1.12.3
+      object-inspect: 1.13.0
     dev: true
 
   /signal-exit@4.1.0:
@@ -3313,8 +3313,8 @@ packages:
   /tabbable@6.2.0:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
 
-  /terser@5.21.0:
-    resolution: {integrity: sha512-WtnFKrxu9kaoXuiZFSGrcAvvBqAdmKx0SFNmVNYdJamMu9yyN3I/QF0FbH4QcqJQ+y1CJnzxGIKH0cSj+FGYRw==}
+  /terser@5.22.0:
+    resolution: {integrity: sha512-hHZVLgRA2z4NWcN6aS5rQDc+7Dcy58HOf2zbYwmFcQ+ua3h6eEFf5lIDKTzbWwlazPyOZsFQO8V80/IjVNExEw==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -3499,7 +3499,7 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /vite@4.4.11(@types/node@20.8.5)(less@4.2.0):
+  /vite@4.4.11(@types/node@20.8.6)(less@4.2.0):
     resolution: {integrity: sha512-ksNZJlkcU9b0lBwAGZGGaZHCMqHsc8OpgtoYhsQ4/I2v5cnpmmmqe5pM4nv/4Hn6G/2GhTdj0DhZh2e+Er1q5A==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -3527,7 +3527,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.8.5
+      '@types/node': 20.8.6
       esbuild: 0.18.20
       less: 4.2.0
       postcss: 8.4.31
@@ -3536,7 +3536,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitepress@1.0.0-rc.21(@algolia/client-search@4.20.0)(@types/node@20.8.5)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.9.0):
+  /vitepress@1.0.0-rc.21(@algolia/client-search@4.20.0)(@types/node@20.8.6)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.9.0):
     resolution: {integrity: sha512-eHX057NgAqmrj6FIqh7Sqsbk/kftrFMBUpCKjuQIZ+c+bYTbmzXsXrHSbT5b4WWy4vLx1993a+H3wIRy2dHi8g==}
     hasBin: true
     peerDependencies:
@@ -3558,7 +3558,7 @@ packages:
       mark.js: 8.11.1
       minisearch: 6.1.0
       shiki: 0.14.5
-      vite: 4.4.11(@types/node@20.8.5)(less@4.2.0)
+      vite: 4.4.11(@types/node@20.8.6)(less@4.2.0)
       vue: 3.3.4
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -3610,7 +3610,7 @@ packages:
       '@vuepic/vue-datepicker': 6.1.0(vue@3.3.4)
       '@vueuse/core': 10.5.0(vue@3.3.4)
       '@vueuse/integrations': 10.5.0(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.3.4)
-      ant-design-vue: 4.0.3(vue@3.3.4)
+      ant-design-vue: 4.0.4(vue@3.3.4)
       core-js: 3.33.0
       date-fns: 2.30.0
       naive-ui: 2.35.0(vue@3.3.4)
