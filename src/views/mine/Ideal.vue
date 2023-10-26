@@ -8,6 +8,10 @@ const tabPages = ref([
   {
     key: 2,
     tab: '开卷八分钟'
+  },
+  {
+    key: 3,
+    tab: '一千零一夜'
   }
 ])
 const activeKey = ref(1)
@@ -22,6 +26,9 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
     </template>
     <template #2>
       <iframe class="m-iframe-ideal" src="https://www.vistopia.com.cn/detail/23"></iframe>
+    </template>
+    <template #3>
+      <iframe class="m-iframe-ideal" src="https://www.vistopia.com.cn/detail/6"></iframe>
     </template>
   </Tabs>
 </template>
