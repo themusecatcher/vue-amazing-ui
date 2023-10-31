@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { setDocumentTitle, webTitle } from '@/utils/util'
-import { rafTimeout } from '../../packages'
 import GlobalLayout from '@/layouts/GlobalLayout.vue'
 
 export const routes = [
