@@ -2,7 +2,7 @@
  * Colors
  * -------------------------------------------------------------------------- */
 
-:root {
+ :root {
   --vp-c-brand: #646cff;
   --vp-c-brand-light: #747bff;
   --vp-c-brand-lighter: #9499ff;
@@ -112,7 +112,6 @@
   opacity: 1;
 }
 .vp-doc a {
-  text-decoration: none;
   font-weight: normal;
 }
 .vp-doc p {
@@ -121,6 +120,16 @@
 /* Transition by color instead of opacity */
 .dark .vp-doc .custom-block a {
   transition: color .25s;
+}
+strong {
+  color: #00C1D4;
+}
+blockquote {
+  padding: 0 12px;
+  font-weight: 600;
+  border-left: 3px solid #6ee7b7 !important;
+  border-right: 3px solid #6ee7b7;
+  border-radius: 6px;
 }
 a:hover {
   text-decoration: none !important;
@@ -150,7 +159,7 @@ html:not(.dark) .VPHome {
   min-height: 100vh;
 }
 html.dark .VPHome {
-  background: url(/girl.jpg) no-repeat center;
+  background: url(/sea.jpg) no-repeat center;
   background-size: cover;
   min-height: 100vh;
 }
@@ -257,37 +266,6 @@ html.dark .VPHome {
     box-shadow: 0 0 3px 3px rgba(228, 195, 27, .12);
   }
 }
-.DocSearch-Modal {
-  border-radius: 12px;
-  .DocSearch-SearchBar {
-    padding: 20px 20px 0;
-  }
-  .DocSearch-Dropdown {
-    padding: 0 24px;
-    ul {
-      position: relative;
-      z-index: 11;
-    }
-  }
-  .DocSearch-Form {
-    border-radius: 12px;
-  }
-  .DocSearch-Footer {
-    border-radius: 0 0 12px 12px;
-  }
-  .DocSearch-Hit {
-    border-radius: 12px;
-    padding-bottom: 10px;
-    a {
-      border-radius: 12px;
-      transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28) !important;
-      &:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 3px 3px rgba(100, 108, 255, .12);
-      }
-    }
-  }
-}
 .DocSearch-Button {
   border-radius: 12px;
   background-color: rgba(0, 0, 0, .36);
@@ -318,15 +296,16 @@ html.dark .VPHome {
 .items {
   align-items: flex-start;
 }
-.grid-3 {
+.VPFeatures .container .items .item {
   cursor: pointer;
   transition: all .25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   .VPFeature {
-    border-radius: 20px;
+    border-radius: 36px;
     border: none;
     background-color: rgba(0, 0, 0, .36);
     transition: all .25s;
     .icon, .title, .details {
+      font-size: 18px;
       color: #FFF;
       transition: all .25s;
     }
@@ -334,8 +313,16 @@ html.dark .VPHome {
       color: rgba(255, 255, 255, .88);
     }
     .icon {
-      border-radius: 50%;
+      width: 72px;
+      height: 72px;
+      font-size: 20px;
+      font-weight: 700;
+      border-radius: 28px;
       background-image: radial-gradient(circle at 0%, #f669bb, #98e8de, #ffd666);
+      .logo {
+        width: 32px;
+        height: 32px;
+      }
     }
   }
   &:hover {
