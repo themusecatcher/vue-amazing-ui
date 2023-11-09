@@ -77,6 +77,7 @@ function getUrl (route: Route) {
       cursor: pointer;
       padding: 0 4px;
       border-radius: 4px;
+      text-decoration: none;
       transition: color .2s, background-color .2s;
       &:hover {
         background-color: rgba(0, 0, 0, .05);
