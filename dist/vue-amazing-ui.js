@@ -215,7 +215,7 @@ const Pa = { class: "u-status-text" }, Ya = ["title"], Ua = { key: 0, class: "m-
 Ge.install = (l) => {
   l.component(Ge.__name, Ge);
 };
-const ta = (l) => (U("data-v-d8af300c"), l = l(), K(), l), Ga = ["href", "title", "target"], Ja = { key: 0, class: "u-separator" }, Za = { key: 1, class: "u-arrow", viewBox: "64 64 896 896", "data-icon": "right", "aria-hidden": "true", focusable: "false" }, Xa = [ta(() => t("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1))], Qa = ta(() => t("div", { class: "assist" }, null, -1)), Je = I(V({ __name: "Breadcrumb", props: { routes: { default: () => [] }, fontSize: { default: 14 }, height: { default: 21 }, maxWidth: { default: 180 }, separator: { default: "" }, target: { default: "_self" } }, setup(l) {
+const ta = (l) => (U("data-v-48d2adb6"), l = l(), K(), l), Ga = ["href", "title", "target"], Ja = { key: 0, class: "u-separator" }, Za = { key: 1, class: "u-arrow", viewBox: "64 64 896 896", "data-icon": "right", "aria-hidden": "true", focusable: "false" }, Xa = [ta(() => t("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1))], Qa = ta(() => t("div", { class: "assist" }, null, -1)), Je = I(V({ __name: "Breadcrumb", props: { routes: { default: () => [] }, fontSize: { default: 14 }, height: { default: 21 }, maxWidth: { default: 180 }, separator: { default: "" }, target: { default: "_self" } }, setup(l) {
   const a = l, e = L(() => a.routes.length);
   function s(c) {
     var u = c.path;
@@ -228,7 +228,7 @@ const ta = (l) => (U("data-v-d8af300c"), l = l(), K(), l), Ga = ["href", "title"
     return u;
   }
   return (c, u) => (i(), r("div", { class: "m-breadcrumb", style: M(`height: ${c.height}px;`) }, [(i(!0), r(W, null, Y(c.routes, (o, n) => (i(), r("div", { class: "m-bread", key: n }, [t("a", { class: C(["u-route", { active: n === e.value - 1 }]), style: M(`font-size: ${c.fontSize}px; max-width: ${c.maxWidth}px;`), href: n === e.value - 1 ? "javascript:;" : s(o), title: o.name, target: n === e.value - 1 ? "_self" : c.target }, $(o.name || "--"), 15, Ga), n !== e.value - 1 ? (i(), r(W, { key: 0 }, [c.separator ? (i(), r("span", Ja, $(c.separator), 1)) : (i(), r("svg", Za, Xa))], 64)) : z("", !0)]))), 128)), Qa], 4));
-} }), [["__scopeId", "data-v-d8af300c"]]);
+} }), [["__scopeId", "data-v-48d2adb6"]]);
 Je.install = (l) => {
   l.component(Je.__name, Je);
 };
