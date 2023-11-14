@@ -92,7 +92,7 @@ const customGapSize = ref(8)
       <Radio :options="directionOptions" v-model:value="direction" />
       <Flex :vertical="direction === 'vertical'">
         <div
-          v-for="n in new Array(4)" :key="n"
+          v-for="n in 4" :key="n"
           :style="{ ...baseStyle, background: `${n % 2 ? '#1677ffbf' : '#1677ff'}` }"
         />
       </Flex>

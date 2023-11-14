@@ -183,7 +183,7 @@ const loading = ref(true)
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 name | 按钮文本 | string &#124; slot | '按钮' | false
-type | 按钮类型 | 'default' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' | 'default' | false
+type | 按钮类型 | 'default' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' | false
 effect | 悬浮变化效果，只有 `type` 为 `default` 时，`effect` 才生效 | 'fade' &#124; 'reverse' | 'fade' | false
 size | 按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 route | 跳转目标 `URL` 地址 | {path?: string&#44; query?: object} | {} | false
