@@ -12,7 +12,7 @@ interface Props {
   value?: any // 当前选中的值（v-model）
   gap?: number // 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距
   button?: boolean // 是否启用按钮样式
-  buttonStyle?: 'outline'|'solid' // RadioButton 的风格样式，目前有描边和填色两种风格
+  buttonStyle?: 'outline'|'solid' // 按钮样式风格
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],

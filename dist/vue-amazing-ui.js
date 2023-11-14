@@ -756,7 +756,7 @@ const r1 = I(j({ __name: "Flex", props: { width: { default: "auto" }, vertical: 
       --justify: ${c.justify};
       --align: ${c.align};
     `) }, [B(c.$slots, "default", {}, void 0, !0)], 6));
-} }), [["__scopeId", "data-v-a206dd2a"]]);
+} }), [["__scopeId", "data-v-145d6ac2"]]);
 r1.install = (l) => {
   l.component(r1.__name, r1);
 };
@@ -1176,7 +1176,7 @@ const z4 = ["onClick"], C4 = { class: "u-label" }, $4 = ["onClick"], B4 = { clas
     o !== e.value && (a("update:value", o), a("change", o));
   }
   return (o, n) => (i(), r("div", { class: z(["m-radio", { "m-radio-button-solid": o.buttonStyle === "solid" }]) }, [o.button ? (i(!0), r(R, { key: 1 }, Y(o.options, (u, f) => (i(), r("div", { class: z(["m-radio-button-wrap", { "m-radio-button-checked": o.value === u.value, "m-radio-button-disabled": o.disabled || u.disabled }]), key: f, onClick: (h) => o.disabled || u.disabled ? () => !1 : d(u.value) }, [t("span", B4, [B(o.$slots, "default", { label: u.label }, () => [D(C(u.label), 1)], !0)])], 10, $4))), 128)) : (i(!0), r(R, { key: 0 }, Y(o.options, (u, f) => (i(), r("div", { class: z(["m-radio-wrap", { vertical: o.vertical }]), style: M(s.value !== f + 1 ? c.value : ""), key: f }, [t("div", { class: z(["m-box", { "m-radio-disabled": o.disabled || u.disabled }]), onClick: (h) => o.disabled || u.disabled ? () => !1 : d(u.value) }, [t("span", { class: z(["u-radio", { "u-radio-checked": o.value === u.value }]) }, null, 2), t("span", C4, [B(o.$slots, "default", { label: u.label }, () => [D(C(u.label), 1)], !0)])], 10, z4)], 6))), 128))], 2));
-} }), [["__scopeId", "data-v-e45a41d2"]]);
+} }), [["__scopeId", "data-v-5a3af575"]]);
 b1.install = (l) => {
   l.component(b1.__name, b1);
 };

@@ -412,6 +412,8 @@ disabled | 是否禁用 | boolean | false | false
 vertical | 是否垂直排列 | boolean | false | false
 value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any | null | false
 gap | 多个单选框之间的间距，单位`px`，垂直排列时，间距即垂直间距 | number | 8 | false
+button | 是否启用按钮样式 | boolean | false | false
+buttonStyle | 按钮样式风格 | 'outline' &#124; 'solid' ｜ 'outline' | false
 
 ## Option Type
 

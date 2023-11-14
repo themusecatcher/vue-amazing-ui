@@ -35,7 +35,7 @@ function onClick (e: Event) {
       <Button size="large">Large</Button>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Button loading style="width: 140px; height: 40px;" size="large">
+    <Button style="width: 140px; height: 40px;" size="large">
       <p style="font-size: 18px;">自定义样式</p>
     </Button>
     <h2 class="mt30 mb10">加载中状态</h2>

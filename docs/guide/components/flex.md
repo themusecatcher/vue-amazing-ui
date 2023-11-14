@@ -102,9 +102,8 @@ const customGapSize = ref(8)
   <Radio :options="directionOptions" v-model:value="direction" />
   <Flex :vertical="direction === 'vertical'">
     <div
-      v-for="(item, index) in new Array(4)"
-      :key="item"
-      :style="{ ...baseStyle, background: `${index % 2 ? '#1677ff' : '#1677ffbf'}` }"
+      v-for="n in 4" :key="n"
+      :style="{ ...baseStyle, background: `${n % 2 ? '#1677ffbf' : '#1677ff'}` }"
     />
   </Flex>
 </Flex>
@@ -135,7 +134,7 @@ const baseStyle = {
     <Radio :options="directionOptions" v-model:value="direction" />
     <Flex :vertical="direction === 'vertical'">
       <div
-        v-for="n in new Array(4)" :key="n"
+        v-for="n in 4" :key="n"
         :style="{ ...baseStyle, background: `${n % 2 ? '#1677ffbf' : '#1677ff'}` }"
       />
     </Flex>
@@ -312,7 +311,8 @@ const customGapSize = ref(8)
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 区域总宽度 | string &#124; number | 'auto' | false
-align | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' | false
-direction | 间距方向 | 'horizontal' &#124; 'vertical' | 'horizontal' | false
-size | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
-wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | true | false
+vertical | `flex` 主轴的方向是否垂直，`vertical` 使用 `flex-direction: column` | boolean | false | false
+wrap | 设置元素单行显示还是多行显示；参考 [`flex-wrap`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex-wrap) | 'nowrap' &#124; 'wrap' &#124; 'wrap-reverse' | 'nowrap' | false
+justify | 设置元素在主轴方向上的对齐方式；参考 [`justify-content`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/justify-content) | string | 'normal' | false
+align | 设置元素在交叉轴方向上的对齐方式；参考 [`align-items`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/align-items) | string | 'normal' | false
+gap | 设置网格之间的间隙，数组时表示: [水平间距, 垂直间距] | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | undefined | false
