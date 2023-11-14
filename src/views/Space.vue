@@ -1,31 +1,51 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+const sizeNum = ref(8)
 const options = ref([
-      {
-        label: 'small',
-        value: 'small'
-      },
-      {
-        label: 'middle',
-        value: 'middle',
-      },
-      {
-        label: 'large',
-        value: 'large'
-      }
-    ])
+        {
+          label: 'Small',
+          value: 'small'
+        },
+        {
+          label: 'Middle',
+          value: 'middle',
+        },
+        {
+          label: 'Large',
+          value: 'large'
+        }
+      ])
 const size = ref('small')
 </script>
 <template>
   <div>
     <h1>Space 间距</h1>
-    <h2 class="mt30 mb10">水平间距</h2>
+    <h2 class="mt30 mb10">基本使用</h2>
+    <Space align="center">
+      Space
+      <Button type="primary">Button</Button>
+      <Popconfirm title="Are you sure delete this task?" ok-text="Yes" cancel-text="No">
+        <Button>Confirm</Button>
+      </Popconfirm>
+    </Space>
+    <h2 class="mt30 mb10">自定义间距</h2>
+    <Slider v-model:value="sizeNum" />
+    <br />
+    <br />
+    <Space :size="sizeNum">
+      <Button type="primary">Primary</Button>
+      <Button>Default</Button>
+      <Button type="dashed">Dashed</Button>
+      <Button type="link">Link</Button>
+    </Space>
+    <h2 class="mt30 mb10">预设间距</h2>
     <Radio :options="options" v-model:value="size" />
     <br/><br/>
     <Space :size="size">
       <Button type="primary">Primary</Button>
       <Button>Default</Button>
       <Button type="dashed">Dashed</Button>
+      <Button type="link">Link</Button>
     </Space>
     <h2 class="mt30 mb10">垂直间距</h2>
     <Space direction="vertical">

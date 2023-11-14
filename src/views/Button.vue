@@ -8,7 +8,7 @@ function onClick (e: Event) {
 <template>
   <div>
     <h1>Button 按钮</h1>
-    <h2 class="mt30 mb10">六种类型</h2>
+    <h2 class="mt30 mb10">七种类型</h2>
     <Space>
       <Button>Default Button</Button>
       <Button effect="reverse">Reverse Button</Button>
@@ -16,6 +16,7 @@ function onClick (e: Event) {
       <Button type="danger">Danger Button</Button>
       <Button type="dashed">Dashed Button</Button>
       <Button type="text">Text Button</Button>
+      <Button type="link">Link Button</Button>
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Space>
@@ -25,6 +26,7 @@ function onClick (e: Event) {
       <Button disabled type="danger">Danger Button</Button>
       <Button disabled type="dashed">Dashed Button</Button>
       <Button disabled type="text">Text Button</Button>
+      <Button disabled type="link">Link Button</Button>
     </Space>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space>
@@ -33,7 +35,7 @@ function onClick (e: Event) {
       <Button size="large">Large</Button>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Button style="width: 120px; height: 40px;" size="large">
+    <Button loading style="width: 140px; height: 40px;" size="large">
       <p style="font-size: 18px;">自定义样式</p>
     </Button>
     <h2 class="mt30 mb10">加载中状态</h2>
@@ -44,6 +46,7 @@ function onClick (e: Event) {
       <Button type="danger" :loading="loading">Danger Button</Button>
       <Button type="dashed" :loading="loading">Dashed Button</Button>
       <Button type="text" :loading="loading">Text Button</Button>
+      <Button type="link" :loading="loading">Link Button</Button>
     </Space>
     <br/>
     <Space align="center" style="margin-top: 10px;">

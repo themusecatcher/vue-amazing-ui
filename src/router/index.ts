@@ -139,6 +139,12 @@ export const routes = [
         component: () => import('@/views/Empty.vue')
       },
       {
+        path: '/flex',
+        name: 'Flex',
+        meta: { title: '弹性布局' },
+        component: () => import('@/views/Flex.vue')
+      },
+      {
         path: '/grid',
         name: 'Grid',
         meta: { title: '栅格' },

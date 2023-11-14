@@ -9,7 +9,7 @@ interface Route {
 }
 interface Props {
   name?: string // 按钮文本 string | slot
-  type?: 'default'|'primary'|'danger'|'dashed'|'text' // 按钮类型
+  type?: 'default'|'primary'|'danger'|'dashed'|'text'|'link' // 按钮类型
   effect?: 'fade'|'reverse' // 悬浮变化效果，只有 type 为 default 时，effect 才生效
   size?: 'small'|'middle'|'large' // 按钮尺寸
   route?: Route // 跳转目标URL地址
@@ -66,8 +66,8 @@ function getUrl (route: Route) {
       :disabled="disabled"
       class="m-btn"
       :class="[type, size, {[effect]: type === 'default', disabled: disabled, 'm-btn-loading': !isRoute && loading}]">
-      <span v-show="!isRoute" class="m-loading-icon" :class="{'show-spin': loading}">
-        <span class="u-spin-circle" v-show="loading"></span>
+      <span v-show="!isRoute" :class="[`m-loading-icon`, {[`loading-${size}`]: loading}]">
+        <span class="u-spin-circle" :class="`spin-${size}`"></span>
       </span>
       <span class="u-text">
         <slot>{{ name }}</slot>
@@ -82,7 +82,8 @@ function getUrl (route: Route) {
   display: inline-block;
   .m-btn {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     font-weight: 400;
     line-height: 1.5714285714285714;
     color: rgba(0, 0, 0, .88);
@@ -99,11 +100,9 @@ function getUrl (route: Route) {
       text-align: left;
       opacity: 0;
       width: 0;
+      height: 100%;
       transition: width .3s cubic-bezier(0.645, 0.045, 0.355, 1), opacity .3s cubic-bezier(0.645, 0.045, 0.355, 1);
       .u-spin-circle {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
         border-radius: 50%;
         border-width: 1px;
         border-style: solid;
@@ -112,14 +111,26 @@ function getUrl (route: Route) {
         animation: loadingCircle 1s infinite linear;
         -webkit-animation: loadingCircle 1s infinite linear;
       }
+      .spin-small, .spin-middle {
+        width: 14px;
+        height: 14px;
+      }
+      .spin-large {
+        width: 16px;
+        height: 16px;
+      }
       @keyframes loadingCircle {
         100% {
           transform: rotate(360deg);
         }
       }
     }
-    .show-spin {
-      width: 20px;
+    .loading-small, .loading-middle {
+      width: 22px;
+      opacity: 1;
+    }
+    .loading-large {
+      width: 24px;
       opacity: 1;
     }
     .u-text {
@@ -188,6 +199,15 @@ function getUrl (route: Route) {
       background-color: rgba(0, 0, 0, .15);
     }
   }
+  .link {
+    color: @primary;
+    &:hover {
+      color: fade(@primary, 80%);
+    }
+    &:active {
+      color: shade(@primary, 12%);
+    }
+  }
   .reverse {
     &:hover {
       color: #fff;
@@ -228,6 +248,10 @@ function getUrl (route: Route) {
       border-color: #d9d9d9;
       color: rgba(0, 0, 0, .25);
       background-color: rgba(0, 0, 0, .04);
+    }
+    &.text, &.link {
+      background-color: transparent;
+      border: none;
     }
   }
 }

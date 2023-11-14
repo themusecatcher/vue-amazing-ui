@@ -15,7 +15,7 @@ const loading = ref(true)
 
 ## 基本使用
 
-*六种类型*
+*七种类型*
 
 <br/>
 
@@ -26,6 +26,7 @@ const loading = ref(true)
   <Button type="danger">Danger Button</Button>
   <Button type="dashed">Dashed Button</Button>
   <Button type="text">Text Button</Button>
+  <Button type="link">Link Button</Button>
 </Space>
 
 ::: details Show Code
@@ -39,6 +40,7 @@ const loading = ref(true)
     <Button type="danger">Danger Button</Button>
     <Button type="dashed">Dashed Button</Button>
     <Button type="text">Text Button</Button>
+    <Button type="link">Link Button</Button>
   </Space>
 </template>
 ```
@@ -53,6 +55,7 @@ const loading = ref(true)
   <Button disabled type="danger">Danger Button</Button>
   <Button disabled type="dashed">Dashed Button</Button>
   <Button disabled type="text">Text Button</Button>
+  <Button disabled type="link">Link Button</Button>
 </Space>
 
 ::: details Show Code
@@ -66,6 +69,7 @@ const loading = ref(true)
     <Button disabled type="danger">Danger Button</Button>
     <Button disabled type="dashed">Dashed Button</Button>
     <Button disabled type="text">Text Button</Button>
+    <Button disabled type="link">Link Button</Button>
   </Space>
 </template>
 ```
@@ -126,6 +130,7 @@ function onClick (e: Event) {
   <Button type="danger" :loading="loading">Danger Button</Button>
   <Button type="dashed" :loading="loading">Dashed Button</Button>
   <Button type="text" :loading="loading">Text Button</Button>
+  <Button type="link" :loading="loading">Link Button</Button>
 </Space>
 <br/>
 <Space align="center" style="margin-top: 10px;">
@@ -148,6 +153,7 @@ const loading = ref(true)
     <Button type="danger" :loading="loading">Danger Button</Button>
     <Button type="dashed" :loading="loading">Dashed Button</Button>
     <Button type="text" :loading="loading">Text Button</Button>
+    <Button type="link" :loading="loading">Link Button</Button>
   </Space>
   <br/>
   <Space align="center" style="margin-top: 10px;">

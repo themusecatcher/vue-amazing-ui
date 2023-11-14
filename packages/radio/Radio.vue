@@ -11,13 +11,17 @@ interface Props {
   vertical?: boolean // 是否垂直排列
   value?: any // 当前选中的值（v-model）
   gap?: number // 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距
+  button?: boolean // 是否启用按钮样式
+  buttonStyle?: 'outline'|'solid' // RadioButton 的风格样式，目前有描边和填色两种风格
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
   disabled: false,
   vertical: false,
   value: null,
-  gap: 8
+  gap: 8,
+  button: false,
+  buttonStyle: 'outline'
 })
 const sum = computed(() => { // 选项总数
   return props.options.length
@@ -42,19 +46,35 @@ function onClick (value: any) {
 }
 </script>
 <template>
-  <div class="m-radio">
-    <div
-      class="m-radio-wrap"
-      :class="{'vertical': vertical}"
-      :style="sum !== index + 1 ? styleObject: ''"
-      v-for="(option, index) in options" :key="index">
-      <div class="m-box" :class="{'disabled': disabled || option.disabled}" @click="(disabled || option.disabled) ? () => false : onClick(option.value)">
-        <span class="u-radio" :class="{'u-radio-checked': value === option.value }"></span>
+  <div class="m-radio" :class="{'m-radio-button-solid': buttonStyle === 'solid'}">
+    <template v-if="!button">
+      <div
+        class="m-radio-wrap"
+        :class="{'vertical': vertical}"
+        :style="sum !== index + 1 ? styleObject: ''"
+        v-for="(option, index) in options" :key="index">
+        <div class="m-box" :class="{'m-radio-disabled': disabled || option.disabled}" @click="(disabled || option.disabled) ? () => false : onClick(option.value)">
+          <span class="u-radio" :class="{'u-radio-checked': value === option.value }"></span>
+          <span class="u-label">
+            <slot :label="option.label">{{ option.label }}</slot>
+          </span>
+        </div>
+      </div>
+    </template>
+    <template v-else>
+      <div
+        class="m-radio-button-wrap"
+        :class="{
+          'm-radio-button-checked': value === option.value,
+          'm-radio-button-disabled': disabled || option.disabled,
+        }"
+        v-for="(option, index) in options" :key="index"
+        @click="(disabled || option.disabled) ? () => false : onClick(option.value)">
         <span class="u-label">
           <slot :label="option.label">{{ option.label }}</slot>
         </span>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 <style lang="less" scoped>
@@ -70,7 +90,7 @@ function onClick (value: any) {
       display: inline-flex; // 设置为flex布局后，所有的子元素都会变成行内块元素
       align-items: flex-start;
       cursor: pointer;
-      &:hover {
+      &:not(.m-radio-disabled):hover {
         .u-radio {
           border-color: @themeColor;
         }
@@ -126,14 +146,9 @@ function onClick (value: any) {
         display: inline-block;
       }
     }
-    .disabled {
+    .m-radio-disabled {
       color: rgba(0, 0, 0, .25);
       cursor: not-allowed;
-      &:hover {
-        .u-radio {
-          border-color: #d9d9d9;
-        }
-      }
       .u-radio {
         background-color: rgba(0, 0, 0, .04);
         border-color: #d9d9d9;
@@ -145,8 +160,78 @@ function onClick (value: any) {
       }
     }
   }
+  .m-radio-button-wrap {
+    position: relative;
+    display: inline-block;
+    height: 32px;
+    margin: 0;
+    padding-inline: 15px;
+    padding-block: 0;
+    line-height: 30px;
+    background: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-block-start-width: 1.02px;
+    border-inline-start-width: 0;
+    border-inline-end-width: 1px;
+    cursor: pointer;
+    transition: color .2s, background .2s, border-color .2s;
+    &:first-child {
+      border-inline-start: 1px solid #d9d9d9;
+      border-start-start-radius: 6px;
+      border-end-start-radius: 6px;
+    }
+    &:not(:first-child)::before {
+      position: absolute;
+      inset-block-start: -1px;
+      inset-inline-start: -1px;
+      display: block;
+      box-sizing: content-box;
+      width: 1px;
+      height: 100%;
+      padding-block: 1px;
+      padding-inline: 0;
+      background-color: #d9d9d9;
+      transition: background-color .3s;
+      content: "";
+    }
+    &:last-child {
+      border-start-end-radius: 6px;
+      border-end-end-radius: 6px;
+    }
+    &:not(.m-radio-button-disabled):hover {
+      color: @themeColor;
+    }
+  }
+  .m-radio-button-checked:not(.m-radio-button-disabled) {
+    z-index: 1;
+    color: @themeColor;
+    background: #ffffff;
+    border-color: @themeColor;
+    &::before {
+      background-color: @themeColor;
+    }
+  }
+  .m-radio-button-disabled {
+    color: rgba(0, 0, 0, .25);
+    background-color: rgba(0, 0, 0, .04);
+    border-color: #d9d9d9;
+    cursor: not-allowed;
+  }
+  .m-radio-button-disabled.m-radio-button-checked {
+    background-color: rgba(0, 0, 0, .15);
+  }
   .vertical {
     display: block;
+  }
+}
+.m-radio-button-solid {
+  .m-radio-button-checked:not(.m-radio-button-disabled) {
+    color: #fff;
+    background: @themeColor;
+    border-color: @themeColor;
+    &:hover {
+      color: #fff;
+    }
   }
 }
 </style>
