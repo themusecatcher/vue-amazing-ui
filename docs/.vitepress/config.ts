@@ -171,6 +171,10 @@ export default defineConfig({
               link: '/guide/components/empty'
             },
             {
+              text: '弹性布局 Flex',
+              link: '/guide/components/flex'
+            },
+            {
               text: '栅格 Grid',
               link: '/guide/components/grid'
             },

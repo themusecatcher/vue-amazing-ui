@@ -34,6 +34,7 @@ import Divider from './divider'
 import Drawer from './drawer'
 import Ellipsis from './ellipsis'
 import Empty from './empty'
+import Flex from './flex'
 import Image from './image'
 import Input from './input'
 import InputNumber from './inputnumber'
@@ -91,6 +92,7 @@ const components = [
   Drawer,
   Ellipsis,
   Empty,
+  Flex,
   Image,
   Input,
   InputNumber,
@@ -174,6 +176,7 @@ export {
   Drawer,
   Ellipsis,
   Empty,
+  Flex,
   Image,
   Input,
   InputNumber,

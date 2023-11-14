@@ -15,8 +15,8 @@ dependencies:
     specifier: ^10.5.0
     version: 10.5.0(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.3.4)
   ant-design-vue:
-    specifier: ^4.0.6
-    version: 4.0.6(vue@3.3.4)
+    specifier: ^4.0.7
+    version: 4.0.7(vue@3.3.4)
   core-js:
     specifier: ^3.33.0
     version: 3.33.0
@@ -96,7 +96,7 @@ devDependencies:
     version: 4.4.11(@types/node@20.8.6)(less@4.2.0)
   vitepress:
     specifier: 1.0.0-rc.21
-    version: 1.0.0-rc.21(@algolia/client-search@4.20.0)(@types/node@20.8.6)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.9.0)
+    version: 1.0.0-rc.21(@algolia/client-search@4.20.0)(@types/node@20.8.6)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.10.0)
   vue-tsc:
     specifier: ^1.8.19
     version: 1.8.19(typescript@5.2.2)
@@ -108,10 +108,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /@algolia/autocomplete-core@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.9.0):
+  /@algolia/autocomplete-core@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.10.0):
     resolution: {integrity: sha512-009HdfugtGCdC4JdXUbVJClA0q0zh24yyePn+KUGk3rP7j8FEe/m5Yo/z65gn6nP/cM39PxpzqKrL7A6fP6PPw==}
     dependencies:
-      '@algolia/autocomplete-plugin-algolia-insights': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.9.0)
+      '@algolia/autocomplete-plugin-algolia-insights': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.10.0)
       '@algolia/autocomplete-shared': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -119,13 +119,13 @@ packages:
       - search-insights
     dev: true
 
-  /@algolia/autocomplete-plugin-algolia-insights@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.9.0):
+  /@algolia/autocomplete-plugin-algolia-insights@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.10.0):
     resolution: {integrity: sha512-a/yTUkcO/Vyy+JffmAnTWbr4/90cLzw+CC3bRbhnULr/EM0fGNvM13oQQ14f2moLMcVDyAx/leczLlAOovhSZg==}
     peerDependencies:
       search-insights: '>= 1 < 3'
     dependencies:
       '@algolia/autocomplete-shared': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)
-      search-insights: 2.9.0
+      search-insights: 2.10.0
     transitivePeerDependencies:
       - '@algolia/client-search'
       - algoliasearch
@@ -321,10 +321,10 @@ packages:
     resolution: {integrity: sha512-SPiDHaWKQZpwR2siD0KQUwlStvIAnEyK6tAE2h2Wuoq8ue9skzhlyVQ1ddzOxX6khULnAALDiR/isSF3bnuciA==}
     dev: true
 
-  /@docsearch/js@3.5.2(@algolia/client-search@4.20.0)(search-insights@2.9.0):
+  /@docsearch/js@3.5.2(@algolia/client-search@4.20.0)(search-insights@2.10.0):
     resolution: {integrity: sha512-p1YFTCDflk8ieHgFJYfmyHBki1D61+U9idwrLh+GQQMrBSP3DLGKpy0XUJtPjAOPltcVbqsTjiPFfH7JImjUNg==}
     dependencies:
-      '@docsearch/react': 3.5.2(@algolia/client-search@4.20.0)(search-insights@2.9.0)
+      '@docsearch/react': 3.5.2(@algolia/client-search@4.20.0)(search-insights@2.10.0)
       preact: 10.18.1
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -334,7 +334,7 @@ packages:
       - search-insights
     dev: true
 
-  /@docsearch/react@3.5.2(@algolia/client-search@4.20.0)(search-insights@2.9.0):
+  /@docsearch/react@3.5.2(@algolia/client-search@4.20.0)(search-insights@2.10.0):
     resolution: {integrity: sha512-9Ahcrs5z2jq/DcAvYtvlqEBHImbm4YJI8M9y0x6Tqg598P40HTEkX7hsMcIuThI+hTFxRGZ9hll0Wygm2yEjng==}
     peerDependencies:
       '@types/react': '>= 16.8.0 < 19.0.0'
@@ -351,11 +351,11 @@ packages:
       search-insights:
         optional: true
     dependencies:
-      '@algolia/autocomplete-core': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.9.0)
+      '@algolia/autocomplete-core': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.10.0)
       '@algolia/autocomplete-preset-algolia': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)
       '@docsearch/css': 3.5.2
       algoliasearch: 4.20.0
-      search-insights: 2.9.0
+      search-insights: 2.10.0
     transitivePeerDependencies:
       - '@algolia/client-search'
     dev: true
@@ -1240,8 +1240,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /ant-design-vue@4.0.6(vue@3.3.4):
-    resolution: {integrity: sha512-6kh3b8Ito9SAbOKTW0wyfcCnd859uhQQlttjo8RjMj6YjLK52yNO2TdgYRwed06scUm5RwEnQ2JKMxYYoeG1MA==}
+  /ant-design-vue@4.0.7(vue@3.3.4):
+    resolution: {integrity: sha512-oHTtc1GZkfENZTkt2aDvjaD4yoRsowYvCOmxA6+5AGqm5uz/datdJOXsq9nokIhC+vrAMhk6JQVFZ2hh7eU6Pw==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'
@@ -3062,8 +3062,8 @@ packages:
       compute-scroll-into-view: 1.0.20
     dev: false
 
-  /search-insights@2.9.0:
-    resolution: {integrity: sha512-bkWW9nIHOFkLwjQ1xqVaMbjjO5vhP26ERsH9Y3pKr8imthofEFIxlnOabkmGcw6ksRj9jWidcI65vvjJH/nTGg==}
+  /search-insights@2.10.0:
+    resolution: {integrity: sha512-pQGrOE56QuTRmq4NzliRZe9rv914hBMBjOviuDliDHoIhmBGoyZRlFsPd4RprGGNC4PKdD2Jz54YN4Cmkb44mA==}
     dev: true
 
   /seemly@0.3.6:
@@ -3536,7 +3536,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitepress@1.0.0-rc.21(@algolia/client-search@4.20.0)(@types/node@20.8.6)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.9.0):
+  /vitepress@1.0.0-rc.21(@algolia/client-search@4.20.0)(@types/node@20.8.6)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.10.0):
     resolution: {integrity: sha512-eHX057NgAqmrj6FIqh7Sqsbk/kftrFMBUpCKjuQIZ+c+bYTbmzXsXrHSbT5b4WWy4vLx1993a+H3wIRy2dHi8g==}
     hasBin: true
     peerDependencies:
@@ -3549,7 +3549,7 @@ packages:
         optional: true
     dependencies:
       '@docsearch/css': 3.5.2
-      '@docsearch/js': 3.5.2(@algolia/client-search@4.20.0)(search-insights@2.9.0)
+      '@docsearch/js': 3.5.2(@algolia/client-search@4.20.0)(search-insights@2.10.0)
       '@types/markdown-it': 13.0.2
       '@vue/devtools-api': 6.5.1
       '@vueuse/core': 10.5.0(vue@3.3.4)
@@ -3610,7 +3610,7 @@ packages:
       '@vuepic/vue-datepicker': 6.1.0(vue@3.3.4)
       '@vueuse/core': 10.5.0(vue@3.3.4)
       '@vueuse/integrations': 10.5.0(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.3.4)
-      ant-design-vue: 4.0.6(vue@3.3.4)
+      ant-design-vue: 4.0.7(vue@3.3.4)
       core-js: 3.33.0
       date-fns: 2.30.0
       naive-ui: 2.35.0(vue@3.3.4)

@@ -8,7 +8,7 @@ interface Props {
   value?: string // 扫描后的文本或地址
   size?: number // 二维码大小，单位px
   color?: string // 二维码颜色，Value must be in hex format (十六进制颜色值)
-  backgroundColor?: string // 二维码背景色，Value must be in hex format (十六进制颜色值)
+  bgColor?: string // 二维码背景色，Value must be in hex format (十六进制颜色值)
   bordered?: boolean // 是否有边框
   borderColor?: string // 边框颜色
   scale?: number // 每个black dots多少像素
@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: '',
   size: 160,
   color: '#000',
-  backgroundColor: '#FFF',
+  bgColor: '#FFF',
   bordered: true,
   borderColor: '#0505050f',
   scale: 8,
@@ -40,7 +40,7 @@ const qrcode = useQRCode(props.value, {
   scale: props.scale, // 8px per modules(black dots)
   color: {
     dark: props.color, // 像素点颜色
-    light: props.backgroundColor // 背景色
+    light: props.bgColor // 背景色
   }
 })
 </script>

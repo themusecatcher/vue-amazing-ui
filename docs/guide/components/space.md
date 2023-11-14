@@ -13,43 +13,124 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+const sizeNum = ref(8)
 const options = ref([
       {
-        label: 'small',
+        label: 'Small',
         value: 'small'
       },
       {
-        label: 'middle',
+        label: 'Middle',
         value: 'middle',
       },
       {
-        label: 'large',
+        label: 'Large',
         value: 'large'
       }
     ])
 const size = ref('small')
 </script>
 
-## 水平间距
+## 基本使用
 
-<Radio style="margin-bottom: 30px;" :options="options" v-model:value="size" />
-<br/>
-<Space :size="size">
-  <Button type="primary">Primary</Button>
-  <Button>Default</Button>
-  <Button type="dashed">Dashed</Button>
+<Space align="center">
+  Space
+  <Button type="primary">Button</Button>
+  <Popconfirm title="Are you sure delete this task?" ok-text="Yes" cancel-text="No">
+    <Button>Confirm</Button>
+  </Popconfirm>
 </Space>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Radio style="margin-bottom: 30px;" :options="options" v-model:value="size" />
-  <br/>
+  <Space align="center">
+    Space
+    <Button type="primary">Button</Button>
+    <Popconfirm title="Are you sure delete this task?" ok-text="Yes" cancel-text="No">
+      <Button>Confirm</Button>
+    </Popconfirm>
+  </Space>
+</template>
+```
+
+:::
+
+## 自定义间距
+
+<Slider v-model:value="sizeNum" />
+<br />
+<br />
+<Space :size="sizeNum">
+  <Button type="primary">Primary</Button>
+  <Button>Default</Button>
+  <Button type="dashed">Dashed</Button>
+  <Button type="link">Link</Button>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const sizeNum = ref(8)
+</script>
+<template>
+  <Slider v-model:value="sizeNum" />
+  <br />
+  <br />
+  <Space :size="sizeNum">
+    <Button type="primary">Primary</Button>
+    <Button>Default</Button>
+    <Button type="dashed">Dashed</Button>
+    <Button type="link">Link</Button>
+  </Space>
+</template>
+```
+
+:::
+
+## 预设间距
+
+<Radio :options="options" v-model:value="size" />
+<br/><br/>
+<Space :size="size">
+  <Button type="primary">Primary</Button>
+  <Button>Default</Button>
+  <Button type="dashed">Dashed</Button>
+  <Button type="link">Link</Button>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const options = ref([
+        {
+          label: 'Small',
+          value: 'small'
+        },
+        {
+          label: 'Middle',
+          value: 'middle',
+        },
+        {
+          label: 'Large',
+          value: 'large'
+        }
+      ])
+const size = ref('small')
+</script>
+<template>
+  <Radio :options="options" v-model:value="size" />
+  <br/><br/>
   <Space :size="size">
     <Button type="primary">Primary</Button>
     <Button>Default</Button>
     <Button type="dashed">Dashed</Button>
+    <Button type="link">Link</Button>
   </Space>
 </template>
 ```
