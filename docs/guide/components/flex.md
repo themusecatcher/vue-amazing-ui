@@ -293,6 +293,7 @@ const customGapSize = ref(8)
 <Flex wrap="wrap" :width="600" :gap="[8, 16]">
   <Button v-for="n in new Array(16)" :key="n" type="primary">Button</Button>
 </Flex>
+<br/>
 
 ::: details Show Code
 
