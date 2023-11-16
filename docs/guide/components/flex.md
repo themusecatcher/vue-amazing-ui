@@ -316,4 +316,4 @@ vertical | `flex` 主轴的方向是否垂直，`vertical` 使用 `flex-directio
 wrap | 设置元素单行显示还是多行显示；参考 [`flex-wrap`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex-wrap) | 'nowrap' &#124; 'wrap' &#124; 'wrap-reverse' | 'nowrap' | false
 justify | 设置元素在主轴方向上的对齐方式；参考 [`justify-content`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/justify-content) | string | 'normal' | false
 align | 设置元素在交叉轴方向上的对齐方式；参考 [`align-items`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/align-items) | string | 'normal' | false
-gap | 设置网格之间的间隙，数组时表示: [水平间距, 垂直间距] | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | undefined | false
+gap | 设置网格之间的间隙，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | undefined | false

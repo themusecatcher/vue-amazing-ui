@@ -94,7 +94,8 @@ const sizeNum = ref(8)
 ## 预设间距
 
 <Radio :options="options" v-model:value="size" />
-<br/><br/>
+<br/>
+<br/>
 <Space :size="size">
   <Button type="primary">Primary</Button>
   <Button>Default</Button>
@@ -285,8 +286,8 @@ const size = ref('small')
     <Button>Button</Button>
   </template>
 </Space>
-
-<br/><br/>
+<br/>
+<br/>
 
 ::: details Show Code
 
