@@ -4,7 +4,8 @@ import type { CSSProperties } from 'vue'
 import { requestAnimationFrame } from '../index'
 interface Props {
   title?: string // 倒计时标题 string | v-slot
-  value?: number // 倒计时数值，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间(ms)
+  value: number // 倒计时数值，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间戳(ms)
+  future?: boolean // 是否为未来某时刻；为 false 表示相对剩余时间戳
   format?: string // 格式化倒计时展示，(Y：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒)
   prefix?: string // 倒计时数值的前缀 string | v-slot
   suffix?: string // 倒计时数值的后缀 string | v-slot
@@ -15,6 +16,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   title: 'Countdown',
   value: undefined,
+  future: true,
   format: 'HH:mm:ss',
   prefix: '',
   suffix: '',
@@ -30,7 +32,7 @@ onMounted(() => {
   showPrefix.value = prefixRef.value.offsetWidth
   showSuffix.value = suffixRef.value.offsetWidth
 })
-const futureTime = ref() // 未来截止时间戳
+const futureTime = ref(0) // 未来截止时间戳
 const restTime = ref() // 剩余时间戳
 const showType = computed(() => {
   return {
@@ -108,11 +110,15 @@ function CountDown () {
 }
 watchEffect(() => {
   // 只有数值类型的值，且是有穷的（finite），才返回 true
-  if (Number.isFinite(props.value)) { //检测传入的参数是否是一个有穷数
-    if ((props.value as number) >= Date.now()) { // 未来某时刻的时间戳，单位ms
-      futureTime.value = props.value
+  if (Number.isFinite(props.value)) { // 检测传入的参数是否是一个有穷数
+    if (props.future) { // 未来某时刻的时间戳，单位ms
+      if (props.value >= Date.now()) {
+        futureTime.value = props.value
+      }
     } else { // 相对剩余时间，单位ms
-      futureTime.value = (props.value as number) + Date.now()
+      if (props.value >= 0) {
+        futureTime.value = (props.value as number) + Date.now()
+      }
     }
     requestAnimationFrame(CountDown)
   } else {
