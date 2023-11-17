@@ -522,12 +522,12 @@ const Il = { class: "m-collapse" }, Vl = ["onClick"], Tl = { key: 0, focusable: 
 l1.install = (l) => {
   l.component(l1.__name, l1);
 };
-const Ol = { class: "m-countdown" }, Nl = { class: "m-time" }, t1 = I(j({ __name: "Countdown", props: { title: { default: "Countdown" }, value: { default: void 0 }, format: { default: "HH:mm:ss" }, prefix: { default: "" }, suffix: { default: "" }, titleStyle: { default: () => ({}) }, valueStyle: { default: () => ({}) }, finishedText: { default: "Finished" } }, emits: ["finish"], setup(l, { emit: a }) {
+const Ol = { class: "m-countdown" }, Nl = { class: "m-time" }, t1 = I(j({ __name: "Countdown", props: { title: { default: "Countdown" }, value: { default: void 0 }, future: { type: Boolean, default: !0 }, format: { default: "HH:mm:ss" }, prefix: { default: "" }, suffix: { default: "" }, titleStyle: { default: () => ({}) }, valueStyle: { default: () => ({}) }, finishedText: { default: "Finished" } }, emits: ["finish"], setup(l, { emit: a }) {
   const e = l, s = m(), c = m(), d = m(1), o = m(1);
   Z(() => {
     d.value = s.value.offsetWidth, o.value = c.value.offsetWidth;
   });
-  const n = m(), u = m(), f = L(() => ({ showMillisecond: e.format.includes("SSS"), showYear: e.format.includes("Y"), showMonth: e.format.includes("M"), showDay: e.format.includes("D"), showHour: e.format.includes("H"), showMinute: e.format.includes("m"), showSecond: e.format.includes("s") }));
+  const n = m(0), u = m(), f = L(() => ({ showMillisecond: e.format.includes("SSS"), showYear: e.format.includes("Y"), showMonth: e.format.includes("M"), showDay: e.format.includes("D"), showHour: e.format.includes("H"), showMinute: e.format.includes("m"), showSecond: e.format.includes("s") }));
   function h(v) {
     return v < 10 ? "0" + v : String(v);
   }
@@ -578,9 +578,9 @@ const Ol = { class: "m-countdown" }, Nl = { class: "m-time" }, t1 = I(j({ __name
     n.value > Date.now() ? (u.value = n.value - Date.now(), de(k)) : (u.value = 0, a("finish"));
   }
   return ae(() => {
-    Number.isFinite(e.value) ? (e.value >= Date.now() ? n.value = e.value : n.value = e.value + Date.now(), de(k)) : u.value = null;
+    Number.isFinite(e.value) ? (e.future ? e.value >= Date.now() && (n.value = e.value) : e.value >= 0 && (n.value = e.value + Date.now()), de(k)) : u.value = null;
   }), (v, p) => (i(), r("div", Ol, [t("div", { class: "u-title", style: M(v.titleStyle) }, [B(v.$slots, "title", {}, () => [D(C(e.title), 1)], !0)], 4), t("div", Nl, [d.value ? (i(), r(R, { key: 0 }, [d.value || u.value > 0 || u.value === null ? (i(), r("span", { key: 0, ref_key: "prefixRef", ref: s, class: "u-prefix" }, [B(v.$slots, "prefix", {}, () => [D(C(v.prefix), 1)], !0)], 512)) : $("", !0)], 64)) : $("", !0), v.finishedText && u.value === 0 && u.value !== null ? (i(), r("span", { key: 1, class: "u-time-value", style: M(v.valueStyle) }, [B(v.$slots, "finish", {}, () => [D(C(v.finishedText), 1)], !0)], 4)) : $("", !0), Number.isFinite(u.value) && u.value > 0 ? (i(), r("span", { key: 2, class: "u-time-value", style: M(v.valueStyle) }, C(w(u.value)), 5)) : $("", !0), o.value ? (i(), r(R, { key: 3 }, [o.value || u.value > 0 || u.value === null ? (i(), r("span", { key: 0, ref_key: "suffixRef", ref: c, class: "u-suffix" }, [B(v.$slots, "suffix", {}, () => [D(C(v.suffix), 1)], !0)], 512)) : $("", !0)], 64)) : $("", !0)])]));
-} }), [["__scopeId", "data-v-8a3ac908"]]);
+} }), [["__scopeId", "data-v-497919f3"]]);
 t1.install = (l) => {
   l.component(t1.__name, t1);
 };
