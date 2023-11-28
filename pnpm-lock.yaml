@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.3.4
     version: 3.3.4
   vue-amazing-ui:
-    specifier: ^0.1.19
-    version: 0.1.19
+    specifier: ^0.1.20
+    version: 0.1.20(@algolia/client-search@4.20.0)(@types/node@20.8.6)(less@4.2.0)(search-insights@2.11.0)(typescript@5.2.2)
   vue-router:
     specifier: ^4.2.5
     version: 4.2.5(vue@3.3.4)
@@ -4418,8 +4418,8 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /vue-amazing-ui@0.1.19:
-    resolution: {integrity: sha512-BXXae+ZN3mRxdaVxzA8/vWB5slx7S8igBQUiYINTJiCSLMdmFNXrIGsAhO1R5jmNkhQaQUB6THDl2n3mSSt93g==}
+  /vue-amazing-ui@0.1.20(@algolia/client-search@4.20.0)(@types/node@20.8.6)(less@4.2.0)(search-insights@2.11.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-uSp37DjsjRqDVByWkkIhy3S2T1oUbR59iOxdL2e8qRLrpWhJsDKXmlZ8Sxz56iwyxmxi7/O9afRKgLzwhOavww==}
     dependencies:
       '@vuepic/vue-datepicker': 6.1.0(vue@3.3.4)
       '@vueuse/core': 10.5.0(vue@3.3.4)
@@ -4430,9 +4430,13 @@ packages:
       naive-ui: 2.35.0(vue@3.3.4)
       qrcode: 1.5.3
       swiper: 10.3.1
+      vitepress: 1.0.0-rc.31(@algolia/client-search@4.20.0)(@types/node@20.8.6)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.11.0)(typescript@5.2.2)
       vue: 3.3.4
       vue-router: 4.2.5(vue@3.3.4)
     transitivePeerDependencies:
+      - '@algolia/client-search'
+      - '@types/node'
+      - '@types/react'
       - '@vue/composition-api'
       - async-validator
       - axios
@@ -4442,8 +4446,20 @@ packages:
       - fuse.js
       - idb-keyval
       - jwt-decode
+      - less
+      - lightningcss
+      - markdown-it-mathjax3
       - nprogress
+      - postcss
+      - react
+      - react-dom
+      - sass
+      - search-insights
       - sortablejs
+      - stylus
+      - sugarss
+      - terser
+      - typescript
       - universal-cookie
     dev: false
 
