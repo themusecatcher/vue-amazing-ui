@@ -44,7 +44,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 /**
  * Base size of the canvas, 1 for parallel layout and 2 for alternate layout
- * Only alternate layout is currently supported
  */
 const BaseSize = 2
 const FontGap = 3
