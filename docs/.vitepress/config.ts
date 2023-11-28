@@ -305,6 +305,10 @@ export default defineConfig({
             {
               text: '瀑布流 Waterfall',
               link: '/guide/components/waterfall'
+            },
+            {
+              text: '水印 Watermark',
+              link: '/guide/components/watermark'
             }
           ]
         }

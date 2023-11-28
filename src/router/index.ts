@@ -341,6 +341,12 @@ export const routes = [
         name: 'Waterfall',
         meta: { title: '瀑布流' },
         component: () => import('@/views/Waterfall.vue')
+      },
+      {
+        path: '/watermark',
+        name: 'Watermark',
+        meta: { title: '水印' },
+        component: () => import('@/views/Watermark.vue')
       }
     ]
   },
