@@ -68,6 +68,7 @@ import Tooltip from './tooltip'
 import Upload from './upload'
 import Video from './video'
 import Waterfall from './waterfall'
+import Watermark from './watermark'
 
 // 所有组件列表
 const components = [
@@ -125,7 +126,8 @@ const components = [
   Tooltip,
   Upload,
   Video,
-  Waterfall
+  Waterfall,
+  Watermark
 ]
 
 // 定义 install 方法
@@ -209,7 +211,8 @@ export {
   Tooltip,
   Upload,
   Video,
-  Waterfall
+  Waterfall,
+  Watermark
 }
 
 const VueAmazingUI = {
