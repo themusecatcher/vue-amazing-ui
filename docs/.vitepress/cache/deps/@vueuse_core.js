@@ -32,6 +32,7 @@ import {
   isObject,
   isVue2,
   isVue3,
+  isWorker,
   makeDestructurable,
   noop,
   normalizeDate,
@@ -108,7 +109,7 @@ import {
   watchTriggerable,
   watchWithFilter,
   whenever
-} from "./chunk-5BCG5FEI.js";
+} from "./chunk-WEUSQXGP.js";
 import {
   Fragment,
   TransitionGroup,
@@ -131,13 +132,14 @@ import {
   ref,
   shallowReactive,
   shallowRef,
+  unref,
   version,
   watch,
   watchEffect
-} from "./chunk-67UUJLDS.js";
+} from "./chunk-FTNFVJB3.js";
 import "./chunk-LQ2VYIYD.js";
 
-// node_modules/.pnpm/@vueuse+core@10.5.0_vue@3.3.4/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@10.6.1_vue@3.3.9/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {
@@ -401,8 +403,7 @@ function onClickOutside(target, handler, options = {}) {
     useEventListener(window2, "click", listener, { passive: true, capture }),
     useEventListener(window2, "pointerdown", (e) => {
       const el = unrefElement(target);
-      if (el)
-        shouldListen = !e.composedPath().includes(el) && !shouldIgnore(e);
+      shouldListen = !shouldIgnore(e) && !!(el && !e.composedPath().includes(el));
     }, { passive: true }),
     detectIframe && useEventListener(window2, "blur", (event) => {
       setTimeout(() => {
@@ -499,8 +500,12 @@ function onLongPress(target, handler, options) {
     capture: (_a = options == null ? void 0 : options.modifiers) == null ? void 0 : _a.capture,
     once: (_b = options == null ? void 0 : options.modifiers) == null ? void 0 : _b.once
   };
-  useEventListener(elementRef, "pointerdown", onDown, listenerOptions);
-  useEventListener(elementRef, ["pointerup", "pointerleave"], clear, listenerOptions);
+  const cleanup = [
+    useEventListener(elementRef, "pointerdown", onDown, listenerOptions),
+    useEventListener(elementRef, ["pointerup", "pointerleave"], clear, listenerOptions)
+  ].filter(Boolean);
+  const stop = () => cleanup.forEach((fn) => fn());
+  return stop;
 }
 function isFocusedElementEditable() {
   const { activeElement, body } = document;
@@ -1430,6 +1435,44 @@ function useCached(refValue, comparator = (a, b) => a === b, watchOptions) {
   }, watchOptions);
   return cachedValue;
 }
+function usePermission(permissionDesc, options = {}) {
+  const {
+    controls = false,
+    navigator = defaultNavigator
+  } = options;
+  const isSupported = useSupported(() => navigator && "permissions" in navigator);
+  let permissionStatus;
+  const desc = typeof permissionDesc === "string" ? { name: permissionDesc } : permissionDesc;
+  const state = ref();
+  const onChange = () => {
+    if (permissionStatus)
+      state.value = permissionStatus.state;
+  };
+  const query = createSingletonPromise(async () => {
+    if (!isSupported.value)
+      return;
+    if (!permissionStatus) {
+      try {
+        permissionStatus = await navigator.permissions.query(desc);
+        useEventListener(permissionStatus, "change", onChange);
+        onChange();
+      } catch (e) {
+        state.value = "prompt";
+      }
+    }
+    return permissionStatus;
+  });
+  query();
+  if (controls) {
+    return {
+      state,
+      isSupported,
+      query
+    };
+  } else {
+    return state;
+  }
+}
 function useClipboard(options = {}) {
   const {
     navigator = defaultNavigator,
@@ -1439,12 +1482,14 @@ function useClipboard(options = {}) {
     legacy = false
   } = options;
   const isClipboardApiSupported = useSupported(() => navigator && "clipboard" in navigator);
+  const permissionRead = usePermission("clipboard-read");
+  const permissionWrite = usePermission("clipboard-write");
   const isSupported = computed(() => isClipboardApiSupported.value || legacy);
   const text = ref("");
   const copied = ref(false);
   const timeout = useTimeoutFn(() => copied.value = false, copiedDuring);
   function updateText() {
-    if (isClipboardApiSupported.value) {
+    if (isClipboardApiSupported.value && permissionRead.value !== "denied") {
       navigator.clipboard.readText().then((value) => {
         text.value = value;
       });
@@ -1456,7 +1501,7 @@ function useClipboard(options = {}) {
     useEventListener(["copy", "cut"], updateText);
   async function copy(value = toValue(source)) {
     if (isSupported.value && value != null) {
-      if (isClipboardApiSupported.value)
+      if (isClipboardApiSupported.value && permissionWrite.value !== "denied")
         await navigator.clipboard.writeText(value);
       else
         legacyCopy(value);
@@ -1482,6 +1527,41 @@ function useClipboard(options = {}) {
   return {
     isSupported,
     text,
+    copied,
+    copy
+  };
+}
+function useClipboardItems(options = {}) {
+  const {
+    navigator = defaultNavigator,
+    read = false,
+    source,
+    copiedDuring = 1500
+  } = options;
+  const isSupported = useSupported(() => navigator && "clipboard" in navigator);
+  const content = ref([]);
+  const copied = ref(false);
+  const timeout = useTimeoutFn(() => copied.value = false, copiedDuring);
+  function updateContent() {
+    if (isSupported.value) {
+      navigator.clipboard.read().then((items) => {
+        content.value = items;
+      });
+    }
+  }
+  if (isSupported.value && read)
+    useEventListener(["copy", "cut"], updateContent);
+  async function copy(value = toValue(source)) {
+    if (isSupported.value && value != null) {
+      await navigator.clipboard.write(value);
+      content.value = value;
+      copied.value = true;
+      timeout.start();
+    }
+  }
+  return {
+    isSupported,
+    content,
     copied,
     copy
   };
@@ -1577,9 +1657,10 @@ function useStorage(key, defaults2, storage, options = {}) {
     eventFilter,
     onError = (e) => {
       console.error(e);
-    }
+    },
+    initOnMounted
   } = options;
-  const data = (shallow ? shallowRef : ref)(defaults2);
+  const data = (shallow ? shallowRef : ref)(typeof defaults2 === "function" ? defaults2() : defaults2);
   if (!storage) {
     try {
       storage = getSSRHandler("getDefaultStorage", () => {
@@ -1601,10 +1682,15 @@ function useStorage(key, defaults2, storage, options = {}) {
     { flush, deep, eventFilter }
   );
   if (window2 && listenToStorageChanges) {
-    useEventListener(window2, "storage", update);
-    useEventListener(window2, customStorageEventName, updateFromCustomEvent);
+    tryOnMounted(() => {
+      useEventListener(window2, "storage", update);
+      useEventListener(window2, customStorageEventName, updateFromCustomEvent);
+      if (initOnMounted)
+        update();
+    });
   }
-  update();
+  if (!initOnMounted)
+    update();
   return data;
   function write(v) {
     try {
@@ -1811,6 +1897,9 @@ function useMutationObserver(target, callback, options = {}) {
     },
     { immediate: true }
   );
+  const takeRecords = () => {
+    return observer == null ? void 0 : observer.takeRecords();
+  };
   const stop = () => {
     cleanup();
     stopWatch();
@@ -1818,7 +1907,8 @@ function useMutationObserver(target, callback, options = {}) {
   tryOnScopeDispose(stop);
   return {
     isSupported,
-    stop
+    stop,
+    takeRecords
   };
 }
 function useCssVar(prop, target, options = {}) {
@@ -2168,44 +2258,6 @@ function useDevicePixelRatio(options = {}) {
   }
   return { pixelRatio };
 }
-function usePermission(permissionDesc, options = {}) {
-  const {
-    controls = false,
-    navigator = defaultNavigator
-  } = options;
-  const isSupported = useSupported(() => navigator && "permissions" in navigator);
-  let permissionStatus;
-  const desc = typeof permissionDesc === "string" ? { name: permissionDesc } : permissionDesc;
-  const state = ref();
-  const onChange = () => {
-    if (permissionStatus)
-      state.value = permissionStatus.state;
-  };
-  const query = createSingletonPromise(async () => {
-    if (!isSupported.value)
-      return;
-    if (!permissionStatus) {
-      try {
-        permissionStatus = await navigator.permissions.query(desc);
-        useEventListener(permissionStatus, "change", onChange);
-        onChange();
-      } catch (e) {
-        state.value = "prompt";
-      }
-    }
-    return permissionStatus;
-  });
-  query();
-  if (controls) {
-    return {
-      state,
-      isSupported,
-      query
-    };
-  } else {
-    return state;
-  }
-}
 function useDevicesList(options = {}) {
   const {
     navigator = defaultNavigator,
@@ -2360,11 +2412,12 @@ function useDraggable(target, options = {}) {
       return;
     if (toValue(exact) && e.target !== toValue(target))
       return;
-    const container = (_a2 = toValue(containerElement)) != null ? _a2 : toValue(target);
-    const rect = container.getBoundingClientRect();
+    const container = toValue(containerElement);
+    const containerRect = (_a2 = container == null ? void 0 : container.getBoundingClientRect) == null ? void 0 : _a2.call(container);
+    const targetRect = toValue(target).getBoundingClientRect();
     const pos = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      x: e.clientX - (container ? targetRect.left - containerRect.left : targetRect.left),
+      y: e.clientY - (container ? targetRect.top - containerRect.top : targetRect.top)
     };
     if ((onStart == null ? void 0 : onStart(pos, e)) === false)
       return;
@@ -2372,15 +2425,25 @@ function useDraggable(target, options = {}) {
     handleEvent(e);
   };
   const move = (e) => {
+    var _a2;
     if (!filterEvent(e))
       return;
     if (!pressedDelta.value)
       return;
+    const container = toValue(containerElement);
+    const containerRect = (_a2 = container == null ? void 0 : container.getBoundingClientRect) == null ? void 0 : _a2.call(container);
+    const targetRect = toValue(target).getBoundingClientRect();
     let { x, y } = position.value;
-    if (axis === "x" || axis === "both")
+    if (axis === "x" || axis === "both") {
       x = e.clientX - pressedDelta.value.x;
-    if (axis === "y" || axis === "both")
+      if (container)
+        x = Math.min(Math.max(0, x), containerRect.width - targetRect.width);
+    }
+    if (axis === "y" || axis === "both") {
       y = e.clientY - pressedDelta.value.y;
+      if (container)
+        y = Math.min(Math.max(0, y), containerRect.height - targetRect.height);
+    }
     position.value = {
       x,
       y
@@ -2416,6 +2479,7 @@ function useDropZone(target, options = {}) {
   const isOverDropZone = ref(false);
   const files = shallowRef(null);
   let counter = 0;
+  let isDataTypeIncluded = true;
   if (isClient) {
     const _options = typeof options === "function" ? { onDrop: options } : options;
     const getFiles = (event) => {
@@ -2425,6 +2489,12 @@ function useDropZone(target, options = {}) {
     };
     useEventListener(target, "dragenter", (event) => {
       var _a;
+      if (_options.dataTypes && event.dataTransfer) {
+        const dataTypes = unref(_options.dataTypes);
+        isDataTypeIncluded = typeof dataTypes === "function" ? dataTypes(event.dataTransfer.types) : dataTypes ? dataTypes.some((item) => event.dataTransfer.types.includes(item)) : true;
+        if (!isDataTypeIncluded)
+          return;
+      }
       event.preventDefault();
       counter += 1;
       isOverDropZone.value = true;
@@ -2432,11 +2502,15 @@ function useDropZone(target, options = {}) {
     });
     useEventListener(target, "dragover", (event) => {
       var _a;
+      if (!isDataTypeIncluded)
+        return;
       event.preventDefault();
       (_a = _options.onOver) == null ? void 0 : _a.call(_options, getFiles(event), event);
     });
     useEventListener(target, "dragleave", (event) => {
       var _a;
+      if (!isDataTypeIncluded)
+        return;
       event.preventDefault();
       counter -= 1;
       if (counter === 0)
@@ -2610,7 +2684,7 @@ function useElementSize(target, initialSize = { width: 0, height: 0 }, options =
   });
   const width = ref(initialSize.width);
   const height = ref(initialSize.height);
-  useResizeObserver(
+  const { stop: stop1 } = useResizeObserver(
     target,
     ([entry]) => {
       const boxSize = box === "border-box" ? entry.borderBoxSize : box === "content-box" ? entry.contentBoxSize : entry.devicePixelContentBoxSize;
@@ -2634,16 +2708,28 @@ function useElementSize(target, initialSize = { width: 0, height: 0 }, options =
     },
     options
   );
-  watch(
+  tryOnMounted(() => {
+    const ele = unrefElement(target);
+    if (ele) {
+      width.value = "offsetWidth" in ele ? ele.offsetWidth : initialSize.width;
+      height.value = "offsetHeight" in ele ? ele.offsetHeight : initialSize.height;
+    }
+  });
+  const stop2 = watch(
     () => unrefElement(target),
     (ele) => {
       width.value = ele ? initialSize.width : 0;
       height.value = ele ? initialSize.height : 0;
     }
   );
+  function stop() {
+    stop1();
+    stop2();
+  }
   return {
     width,
-    height
+    height,
+    stop
   };
 }
 function useIntersectionObserver(target, callback, options = {}) {
@@ -2987,6 +3073,7 @@ function useFetch(url, ...args) {
   };
   if (timeout)
     timer = useTimeoutFn(abort, timeout, { immediate: false });
+  let executeCounter = 0;
   const execute = async (throwOnFailed = false) => {
     var _a2;
     abort();
@@ -2994,6 +3081,8 @@ function useFetch(url, ...args) {
     error.value = null;
     statusCode.value = null;
     aborted.value = false;
+    executeCounter += 1;
+    const currentExecuteCounter = executeCounter;
     const defaultFetchOptions = {
       method: config.method,
       headers: {}
@@ -3073,7 +3162,8 @@ function useFetch(url, ...args) {
           return reject(fetchError);
         return resolve(null);
       }).finally(() => {
-        loading(false);
+        if (currentExecuteCounter === executeCounter)
+          loading(false);
         if (timer)
           timer.stop();
         finallyEvent.trigger(null);
@@ -3180,7 +3270,8 @@ function joinPaths(start, end) {
 var DEFAULT_OPTIONS = {
   multiple: true,
   accept: "*",
-  reset: false
+  reset: false,
+  directory: false
 };
 function useFileDialog(options = {}) {
   const {
@@ -3213,6 +3304,7 @@ function useFileDialog(options = {}) {
     };
     input.multiple = _options.multiple;
     input.accept = _options.accept;
+    input.webkitdirectory = _options.directory;
     if (hasOwn(_options, "capture"))
       input.capture = _options.capture;
     if (_options.reset)
@@ -3769,7 +3861,7 @@ function useScroll(element, options = {}) {
       return internalX.value;
     },
     set(x2) {
-      scrollTo(x2, void 0);
+      scrollTo2(x2, void 0);
     }
   });
   const y = computed({
@@ -3777,10 +3869,10 @@ function useScroll(element, options = {}) {
       return internalY.value;
     },
     set(y2) {
-      scrollTo(void 0, y2);
+      scrollTo2(void 0, y2);
     }
   });
-  function scrollTo(_x, _y) {
+  function scrollTo2(_x, _y) {
     var _a, _b, _c;
     if (!window2)
       return;
@@ -3868,6 +3960,12 @@ function useScroll(element, options = {}) {
     throttle ? useThrottleFn(onScrollHandler, throttle, true, false) : onScrollHandler,
     eventListenerOptions
   );
+  tryOnMounted(() => {
+    const _element = toValue(element);
+    if (!_element)
+      return;
+    setArrivedState(_element);
+  });
   useEventListener(
     element,
     "scrollend",
@@ -4427,6 +4525,7 @@ function useMouseInElement(target, options = {}) {
     handleOutside = true,
     window: window2 = defaultWindow
   } = options;
+  const type = options.type || "page";
   const { x, y, sourceType } = useMouse(options);
   const targetRef = ref(target != null ? target : window2 == null ? void 0 : window2.document.body);
   const elementX = ref(0);
@@ -4451,8 +4550,8 @@ function useMouseInElement(target, options = {}) {
           width,
           height
         } = el.getBoundingClientRect();
-        elementPositionX.value = left + window2.pageXOffset;
-        elementPositionY.value = top + window2.pageYOffset;
+        elementPositionX.value = left + (type === "page" ? window2.pageXOffset : 0);
+        elementPositionY.value = top + (type === "page" ? window2.pageYOffset : 0);
         elementHeight.value = height;
         elementWidth.value = width;
         const elX = x.value - elementPositionX.value;
@@ -5188,6 +5287,7 @@ function preventDefault(rawEvent) {
     e.preventDefault();
   return false;
 }
+var elInitialOverflow = /* @__PURE__ */ new WeakMap();
 function useScrollLock(element, initialState = false) {
   const isLocked = ref(initialState);
   let stopTouchMoveListener = null;
@@ -5196,7 +5296,8 @@ function useScrollLock(element, initialState = false) {
     const target = resolveElement(toValue(el));
     if (target) {
       const ele = target;
-      initialOverflow = ele.style.overflow;
+      if (!elInitialOverflow.get(ele))
+        elInitialOverflow.set(ele, initialOverflow);
       if (isLocked.value)
         ele.style.overflow = "hidden";
     }
@@ -5221,11 +5322,13 @@ function useScrollLock(element, initialState = false) {
     isLocked.value = true;
   };
   const unlock = () => {
+    var _a;
     const el = resolveElement(toValue(element));
     if (!el || !isLocked.value)
       return;
     isIOS && (stopTouchMoveListener == null ? void 0 : stopTouchMoveListener());
-    el.style.overflow = initialOverflow;
+    el.style.overflow = (_a = elInitialOverflow.get(el)) != null ? _a : "";
+    elInitialOverflow.delete(el);
     isLocked.value = false;
   };
   tryOnScopeDispose(unlock);
@@ -6463,10 +6566,10 @@ function useVibrate(options) {
   };
 }
 function useVirtualList(list, options) {
-  const { containerStyle, wrapperProps, scrollTo, calculateRange, currentList, containerRef } = "itemHeight" in options ? useVerticalVirtualList(options, list) : useHorizontalVirtualList(options, list);
+  const { containerStyle, wrapperProps, scrollTo: scrollTo2, calculateRange, currentList, containerRef } = "itemHeight" in options ? useVerticalVirtualList(options, list) : useHorizontalVirtualList(options, list);
   return {
     list: currentList,
-    scrollTo,
+    scrollTo: scrollTo2,
     containerProps: {
       ref: containerRef,
       onScroll: () => {
@@ -6584,7 +6687,7 @@ function useHorizontalVirtualList(options, list) {
   const offsetLeft = computed(() => getDistanceLeft(state.value.start));
   const totalWidth = createComputedTotalSize(itemWidth, source);
   useWatchForSizes(size, list, calculateRange);
-  const scrollTo = createScrollTo("horizontal", calculateRange, getDistanceLeft, containerRef);
+  const scrollTo2 = createScrollTo("horizontal", calculateRange, getDistanceLeft, containerRef);
   const wrapperProps = computed(() => {
     return {
       style: {
@@ -6596,7 +6699,7 @@ function useHorizontalVirtualList(options, list) {
     };
   });
   return {
-    scrollTo,
+    scrollTo: scrollTo2,
     calculateRange,
     wrapperProps,
     containerStyle,
@@ -6616,7 +6719,7 @@ function useVerticalVirtualList(options, list) {
   const offsetTop = computed(() => getDistanceTop(state.value.start));
   const totalHeight = createComputedTotalSize(itemHeight, source);
   useWatchForSizes(size, list, calculateRange);
-  const scrollTo = createScrollTo("vertical", calculateRange, getDistanceTop, containerRef);
+  const scrollTo2 = createScrollTo("vertical", calculateRange, getDistanceTop, containerRef);
   const wrapperProps = computed(() => {
     return {
       style: {
@@ -6628,7 +6731,7 @@ function useVerticalVirtualList(options, list) {
   });
   return {
     calculateRange,
-    scrollTo,
+    scrollTo: scrollTo2,
     containerStyle,
     wrapperProps,
     currentList,
@@ -6861,11 +6964,12 @@ function useWebSocket(url, options = {}) {
     heartbeatResume = resume;
   }
   if (autoClose) {
-    useEventListener("beforeunload", () => close());
+    if (isClient)
+      useEventListener("beforeunload", () => close());
     tryOnScopeDispose(close);
   }
   const open = () => {
-    if (!isClient)
+    if (!isClient && !isWorker)
       return;
     close();
     explicitlyClosed = false;
@@ -7038,21 +7142,37 @@ function useWindowFocus(options = {}) {
   return focused;
 }
 function useWindowScroll(options = {}) {
-  const { window: window2 = defaultWindow } = options;
+  const { window: window2 = defaultWindow, behavior = "auto" } = options;
   if (!window2) {
     return {
       x: ref(0),
       y: ref(0)
     };
   }
-  const x = ref(window2.scrollX);
-  const y = ref(window2.scrollY);
+  const internalX = ref(window2.scrollX);
+  const internalY = ref(window2.scrollY);
+  const x = computed({
+    get() {
+      return internalX.value;
+    },
+    set(x2) {
+      scrollTo({ left: x2, behavior });
+    }
+  });
+  const y = computed({
+    get() {
+      return internalY.value;
+    },
+    set(y2) {
+      scrollTo({ top: y2, behavior });
+    }
+  });
   useEventListener(
     window2,
     "scroll",
     () => {
-      x.value = window2.scrollX;
-      y.value = window2.scrollY;
+      internalX.value = window2.scrollX;
+      internalY.value = window2.scrollY;
     },
     {
       capture: false,
@@ -7156,6 +7276,7 @@ export {
   isDefined,
   isIOS,
   isObject,
+  isWorker,
   makeDestructurable,
   mapGamepadToXbox360Controller,
   noop,
@@ -7233,6 +7354,7 @@ export {
   useBrowserLocation,
   useCached,
   useClipboard,
+  useClipboardItems,
   useCloned,
   useColorMode,
   useConfirmDialog,
