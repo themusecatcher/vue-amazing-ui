@@ -7,8 +7,8 @@ const model = reactive({
   fontWeight: 400,
   zIndex: 9,
   rotate: -22,
-  gap: [100, 100] as [number, number],
-  offset: []
+  gap: [100, 100],
+  offset: [50, 50]
 })
 </script>
 <template>
@@ -88,13 +88,13 @@ const model = reactive({
         <Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" />
         <p>Gap</p>
         <Space style="display: flex" align="baseline">
-          <InputNumber v-model:value="model.gap[0]" placeholder="gapX" />
-          <InputNumber v-model:value="model.gap[1]" placeholder="gapY" />
+          <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
+          <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
         </Space>
         <p>Offset</p>
         <Space style="display: flex" align="baseline">
-          <InputNumber v-model:value="model.offset[0]" placeholder="offsetLeft" />
-          <InputNumber v-model:value="model.offset[1]" placeholder="offsetTop" />
+          <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
+          <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
         </Space>
       </Flex>
     </Flex>
