@@ -109,7 +109,7 @@ const appendWatermark = (base64Url: string, markWidth: number) => {
     })
   }
 }
-// converting camel-cased strings to be lowercase and link it with Separato
+// converting camel-cased strings to be lowercase and link it with Separator
 function toLowercaseSeparator(key: string) {
   return key.replace(/([A-Z])/g, '-$1').toLowerCase()
 }
