@@ -24,9 +24,9 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-67UUJLDS.js";
+} from "./chunk-FTNFVJB3.js";
 
-// node_modules/.pnpm/vue-demi@0.14.6_vue@3.3.4/node_modules/vue-demi/lib/index.mjs
+// node_modules/.pnpm/vue-demi@0.14.6_vue@3.3.9/node_modules/vue-demi/lib/index.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@10.5.0_vue@3.3.4/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@10.6.1_vue@3.3.9/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -112,7 +112,7 @@ function createEventHook() {
     };
   };
   const trigger = (param) => {
-    return Promise.all(Array.from(fns).map((fn) => fn(param)));
+    return Promise.all(Array.from(fns).map((fn) => param ? fn(param) : fn()));
   };
   return {
     on,
@@ -312,6 +312,7 @@ function reactiveOmit(obj, ...keys) {
   return reactiveComputed(() => typeof predicate === "function" ? Object.fromEntries(Object.entries(toRefs(obj)).filter(([k, v]) => !predicate(toValue(v), k))) : Object.fromEntries(Object.entries(toRefs(obj)).filter((e) => !flatKeys.includes(e[0]))));
 }
 var isClient = typeof window !== "undefined" && typeof document !== "undefined";
+var isWorker = typeof WorkerGlobalScope !== "undefined" && globalThis instanceof WorkerGlobalScope;
 var isDef = (val) => typeof val !== "undefined";
 var notNullish = (val) => val != null;
 var assert = (condition, ...infos) => {
@@ -699,18 +700,17 @@ function watchPausable(source, cb, options = {}) {
   );
   return { stop, pause, resume, isActive };
 }
-function syncRef(left, right, options = {}) {
-  var _a, _b;
+function syncRef(left, right, ...[options]) {
   const {
     flush = "sync",
     deep = false,
     immediate = true,
     direction = "both",
     transform = {}
-  } = options;
+  } = options || {};
   const watchers = [];
-  const transformLTR = (_a = transform.ltr) != null ? _a : (v) => v;
-  const transformRTL = (_b = transform.rtl) != null ? _b : (v) => v;
+  const transformLTR = "ltr" in transform && transform.ltr || ((v) => v);
+  const transformRTL = "rtl" in transform && transform.rtl || ((v) => v);
   if (direction === "both" || direction === "ltr") {
     watchers.push(watchPausable(
       left,
@@ -1040,12 +1040,17 @@ function useCounter(initialValue = 0, options = {}) {
   return { count, inc, dec, get: get2, set: set3, reset };
 }
 var REGEX_PARSE = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/;
-var REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a{1,2}|A{1,2}|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
+var REGEX_FORMAT = /[YMDHhms]o|\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a{1,2}|A{1,2}|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
 function defaultMeridiem(hours, minutes, isLowercase, hasPeriod) {
   let m = hours < 12 ? "AM" : "PM";
   if (hasPeriod)
     m = m.split("").reduce((acc, curr) => acc += `${curr}.`, "");
   return isLowercase ? m.toLowerCase() : m;
+}
+function formatOrdinal(num) {
+  const suffixes = ["th", "st", "nd", "rd"];
+  const v = num % 100;
+  return num + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
 }
 function formatDate(date, formatStr, options = {}) {
   var _a;
@@ -1059,21 +1064,28 @@ function formatDate(date, formatStr, options = {}) {
   const day = date.getDay();
   const meridiem = (_a = options.customMeridiem) != null ? _a : defaultMeridiem;
   const matches = {
+    Yo: () => formatOrdinal(years),
     YY: () => String(years).slice(-2),
     YYYY: () => years,
     M: () => month + 1,
+    Mo: () => formatOrdinal(month + 1),
     MM: () => `${month + 1}`.padStart(2, "0"),
     MMM: () => date.toLocaleDateString(options.locales, { month: "short" }),
     MMMM: () => date.toLocaleDateString(options.locales, { month: "long" }),
     D: () => String(days),
+    Do: () => formatOrdinal(days),
     DD: () => `${days}`.padStart(2, "0"),
     H: () => String(hours),
+    Ho: () => formatOrdinal(hours),
     HH: () => `${hours}`.padStart(2, "0"),
     h: () => `${hours % 12 || 12}`.padStart(1, "0"),
+    ho: () => formatOrdinal(hours % 12 || 12),
     hh: () => `${hours % 12 || 12}`.padStart(2, "0"),
     m: () => String(minutes),
+    mo: () => formatOrdinal(minutes),
     mm: () => `${minutes}`.padStart(2, "0"),
     s: () => String(seconds),
+    so: () => formatOrdinal(seconds),
     ss: () => `${seconds}`.padStart(2, "0"),
     SSS: () => `${milliseconds}`.padStart(3, "0"),
     d: () => day,
@@ -1439,6 +1451,7 @@ function watchOnce(source, cb, options) {
     nextTick(() => stop());
     return cb(...args);
   }, options);
+  return stop;
 }
 function watchThrottled(source, cb, options = {}) {
   const {
@@ -1533,6 +1546,7 @@ export {
   reactiveComputed,
   reactiveOmit,
   isClient,
+  isWorker,
   isDef,
   notNullish,
   assert,
@@ -1618,4 +1632,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-5BCG5FEI.js.map
+//# sourceMappingURL=chunk-WEUSQXGP.js.map
