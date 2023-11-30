@@ -106,6 +106,7 @@ const appendWatermark = (base64Url: string, markWidth: number) => {
     )
     if (props.fullscreen) {
       const html = document.documentElement
+      html.setAttribute('style', 'position: relative')
       html.append(watermarkRef.value)
     } else {
       containerRef.value?.append(watermarkRef.value)
