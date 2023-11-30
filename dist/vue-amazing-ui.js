@@ -1656,7 +1656,7 @@ const b6 = ["src", "alt", "onLoad"], w6 = ["src", "alt", "onLoad"], P1 = V(T({ _
 P1.install = (t) => {
   t.component(P1.__name, P1);
 };
-const Y1 = T({ __name: "Watermark", props: { width: { default: void 0 }, height: { default: void 0 }, rotate: { default: -22 }, zIndex: { default: 9 }, image: { default: void 0 }, content: { default: "" }, color: { default: "rgba(0,0,0,.15)" }, fontSize: { default: 16 }, fontWeight: { default: "normal" }, fontFamily: { default: "sans-serif" }, fontStyle: { default: "normal" }, gap: { default: () => [100, 100] }, offset: { default: () => [50, 50] } }, setup(t) {
+const Y1 = T({ __name: "Watermark", props: { width: { default: void 0 }, height: { default: void 0 }, rotate: { default: -22 }, zIndex: { default: 9 }, image: { default: void 0 }, content: { default: "" }, fullscreen: { type: Boolean, default: !1 }, color: { default: "rgba(0,0,0,.15)" }, fontSize: { default: 16 }, fontWeight: { default: "normal" }, fontFamily: { default: "sans-serif" }, fontStyle: { default: "normal" }, gap: { default: () => [100, 100] }, offset: { default: () => [50, 50] } }, setup(t) {
   const a = t, e = Qe(), o = Qe(), n = Qe(!1), d = D(() => {
     var z;
     return ((z = a.gap) == null ? void 0 : z[0]) ?? 100;
@@ -1677,12 +1677,12 @@ const Y1 = T({ __name: "Watermark", props: { width: { default: void 0 }, height:
     o.value && (o.value.remove(), o.value = void 0);
   }, M = (z, _) => {
     var E;
-    var S;
     e.value && o.value && (n.value = !0, o.value.setAttribute("style", (S = { ...b.value, backgroundImage: `url('${z}')`, backgroundSize: 2 * (d.value + _) + "px" }, Object.keys(S).map((H) => `${function(I) {
       return I.replace(/([A-Z])/g, "-$1").toLowerCase();
-    }(H)}: ${S[H]};`).join(" "))), (E = e.value) == null || E.append(o.value), setTimeout(() => {
+    }(H)}: ${S[H]};`).join(" "))), a.fullscreen ? document.documentElement.append(o.value) : (E = e.value) == null || E.append(o.value), setTimeout(() => {
       n.value = !1;
     }));
+    var S;
   };
   function s() {
     return window.devicePixelRatio || 1;

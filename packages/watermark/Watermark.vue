@@ -19,6 +19,7 @@ interface Props {
   zIndex?: number // 追加的水印元素的 z-index
   image?: string // 图片源，建议使用 2 倍或 3 倍图，优先级高于文字
   content?: string|string[] // 水印文字内容
+  fullscreen?: boolean // 是否展示全屏
   color?: string // 字体颜色
   fontSize?: number // 字体大小
   fontWeight?: 'normal'|'light'|'weight'|number // 	字体粗细
@@ -34,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   zIndex: 9,
   image: undefined,
   content: '',
+  fullscreen: false,
   color: 'rgba(0,0,0,.15)',
   fontSize: 16,
   fontWeight: 'normal',
@@ -102,7 +104,12 @@ const appendWatermark = (base64Url: string, markWidth: number) => {
         backgroundSize: `${(gapX.value + markWidth) * BaseSize}px`
       })
     )
-    containerRef.value?.append(watermarkRef.value)
+    if (props.fullscreen) {
+      const html = document.documentElement
+      html.append(watermarkRef.value)
+    } else {
+      containerRef.value?.append(watermarkRef.value)
+    }
     // Delayed execution
     setTimeout(() => {
       stopObservation.value = false
