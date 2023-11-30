@@ -10,7 +10,7 @@
 - 适用于防止信息盗用
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 const model = reactive({
   content: 'Vue Amazing UI',
   color: 'rgba(0,0,0,.15)',
@@ -21,6 +21,7 @@ const model = reactive({
   gap: [100, 100],
   offset: [50, 50]
 })
+const show = ref(false)
 </script>
 
 ## 基本使用
@@ -82,6 +83,26 @@ const model = reactive({
   image="https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*lkAoRbywo0oAAAAAAAAAAAAADrJ8AQ/original">
     <div style="height: 360px" />
   </Watermark>
+</template>
+```
+
+:::
+
+## 全屏幕水印
+
+<Watermark v-if="show" fullscreen content="Vue Amazing UI"></Watermark>
+<Switch v-model:checked="show" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const show = ref(false)
+</script>
+<template>
+  <Watermark v-if="show" fullscreen content="Vue Amazing UI"></Watermark>
+  <Switch v-model:checked="show" />
 </template>
 ```
 

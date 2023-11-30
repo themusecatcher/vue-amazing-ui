@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 const model = reactive({
   content: 'Vue Amazing UI',
   color: 'rgba(0,0,0,.15)',
@@ -10,6 +10,7 @@ const model = reactive({
   gap: [100, 100],
   offset: [50, 50]
 })
+const show = ref(false)
 </script>
 <template>
   <div>
@@ -31,6 +32,9 @@ const model = reactive({
       image="https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*lkAoRbywo0oAAAAAAAAAAAAADrJ8AQ/original">
       <div style="height: 360px" />
     </Watermark>
+    <h2 class="mt30 mb10">全屏幕水印</h2>
+    <Watermark v-if="show" fullscreen content="Vue Amazing UI"></Watermark>
+    <Switch v-model:checked="show" />
     <h2 class="mt30 mb10">自定义配置</h2>
     <h3 class="mb10">通过自定义参数配置预览水印效果。</h3>
     <Flex>
