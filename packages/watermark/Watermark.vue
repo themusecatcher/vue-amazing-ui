@@ -52,6 +52,7 @@ const FontGap = 3
 // 和 ref() 不同，浅层 ref 的内部值将会原样存储和暴露，并且不会被深层递归地转为响应式。只有对 .value 的访问是响应式的。
 const containerRef = shallowRef() // ref() 的浅层作用形式
 const watermarkRef = shallowRef()
+const htmlRef = shallowRef(document.documentElement) // <html></html>元素
 const stopObservation = shallowRef(false)
 const gapX = computed(() => props.gap?.[0] ?? 100)
 const gapY = computed(() => props.gap?.[1] ?? 100)
@@ -105,9 +106,8 @@ const appendWatermark = (base64Url: string, markWidth: number) => {
       })
     )
     if (props.fullscreen) {
-      const html = document.documentElement
-      html.setAttribute('style', 'position: relative')
-      html.append(watermarkRef.value)
+      htmlRef.value.setAttribute('style', 'position: relative')
+      htmlRef.value.append(watermarkRef.value)
     } else {
       containerRef.value?.append(watermarkRef.value)
     }
@@ -273,17 +273,6 @@ const reRendering = (mutation: MutationRecord, watermarkElement?: HTMLElement) =
   }
   return flag
 }
-const onMutate = (mutations: MutationRecord[]) => {
-  if (stopObservation.value) {
-    return
-  }
-  mutations.forEach(mutation => {
-    if (reRendering(mutation, watermarkRef.value)) {
-      destroyWatermark()
-      renderWatermark()
-    }
-  })
-}
 const defaultWindow = typeof window !== 'undefined' ? window : undefined
 type Fn = () => void
 function tryOnMounted(fn: Fn, sync = true) {
@@ -297,6 +286,19 @@ function useSupported(callback: () => unknown, sync = false) {
   update()
   tryOnMounted(update, sync)
   return isSupported
+}
+// 防止用户使用控制台隐藏、删除水印
+useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
+  subtree: true, // 监听以 target 为根节点的整个子树
+  childList: true, // 监听 target 节点中发生的节点的新增与删除
+  attributes: true // 观察所有监听的节点属性值的变化
+})
+function tryOnScopeDispose(fn: Fn) {
+  if (getCurrentScope()) {
+    onScopeDispose(fn)
+    return true
+  }
+  return false
 }
 function useMutationObserver(
   target: any,
@@ -339,16 +341,17 @@ function useMutationObserver(
     stop
   }
 }
-function tryOnScopeDispose(fn: Fn) {
-  if (getCurrentScope()) {
-    onScopeDispose(fn)
-    return true
+function onMutate (mutations: MutationRecord[]) {
+  if (stopObservation.value) {
+    return
   }
-  return false
+  mutations.forEach(mutation => {
+    if (reRendering(mutation, watermarkRef.value)) {
+      destroyWatermark()
+      renderWatermark()
+    }
+  })
 }
-useMutationObserver(containerRef, onMutate, {
-  attributes: true // 观察所有监听的节点属性值的变化
-})
 </script>
 <template>
   <div ref="containerRef" style="position: relative;">
