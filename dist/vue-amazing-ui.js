@@ -1729,17 +1729,17 @@ const Y1 = T({ __name: "Watermark", props: { width: { default: void 0 }, height:
   }, { deep: !0, flush: "post" }), sa(() => {
     _();
   });
-  const y = typeof window < "u" ? window : void 0;
-  function E(M, F = !1) {
+  function y(M, F = !1) {
     const A = We(), H = () => A.value = !!M();
     return H(), function(I, P = !0) {
       ga() ? X(I) : P ? I() : re(I);
     }(H, F), A;
   }
+  const E = typeof window < "u" ? window : void 0;
   return function(M, F, A) {
-    const { window: H = y, ...I } = A;
+    const { window: H = E, ...I } = A;
     let P;
-    const ee = E(() => H && "MutationObserver" in H), ce = () => {
+    const ee = y(() => H && "MutationObserver" in H), ce = () => {
       P && (P.disconnect(), P = void 0);
     }, me = le(() => Y(M), (ue) => {
       ce(), ee.value && H && ue && (P = new MutationObserver(F), P.observe(ue, I));
