@@ -286,6 +286,7 @@ function useSupported(callback: () => unknown, sync = false) {
   tryOnMounted(update, sync)
   return isSupported
 }
+const defaultWindow = typeof window !== 'undefined' ? window : undefined
 // 防止用户使用控制台隐藏、删除水印
 useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
   subtree: true, // 监听以 target 为根节点的整个子树
@@ -299,7 +300,6 @@ function tryOnScopeDispose(fn: Fn) {
   }
   return false
 }
-const defaultWindow = typeof window !== 'undefined' ? window : undefined
 function useMutationObserver(
   target: any,
   callback: MutationCallback,
