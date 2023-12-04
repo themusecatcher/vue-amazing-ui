@@ -4,17 +4,17 @@ const files = ref([])
 const fileList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
   }
 ])
 const imageList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
   }
 ])
 watchEffect(() => {
@@ -45,12 +45,12 @@ function onCustomRequest (file: File) {
       if (file.type === 'application/pdf') {
         var res = {
           name: 'Markdown.pdf',
-          url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Markdown.pdf"
+          url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf"
         }
       } else {
         var res = {
           name: '1.jpg',
-          url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+          url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
         }
       }
       if (res) {

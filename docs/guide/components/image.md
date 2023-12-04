@@ -13,23 +13,23 @@
 import { ref } from 'vue'
 const images = ref([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -37,13 +37,13 @@ const images = ref([
 
 ## 基本使用
 
-<Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
+<Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
+  <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
 </template>
 ```
 
@@ -64,23 +64,23 @@ const images = ref([
 import { ref } from 'vue'
 const images = ref([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -103,23 +103,23 @@ const images = ref([
 import { ref } from 'vue'
 const images = ref([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -142,23 +142,23 @@ const images = ref([
 import { ref } from 'vue'
 const images = ref([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -176,7 +176,7 @@ const images = ref([
 
 <br/>
 
-<Image :width="300" :height="300" fit="cover" :gap="16" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+<Image :width="300" :height="300" fit="cover" :gap="16" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg">
   <template #preview>
     <p class="u-pre">preview</p>
   </template>
@@ -186,7 +186,7 @@ const images = ref([
 
 ```vue
 <template>
-  <Image :width="300" :height="300" fit="cover" :gap="16" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg">
+  <Image :width="300" :height="300" fit="cover" :gap="16" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg">
     <template #preview>
       <p class="u-pre">preview</p>
     </template>
@@ -206,7 +206,7 @@ const images = ref([
   :zoom-ratio="0.2"
   :min-zoom-scale="0.5"
   :max-zoom-scale="2"
-  src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.1/1.jpg" />
+  src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
 
 ::: details Show Code
 
@@ -216,7 +216,7 @@ const images = ref([
     :zoom-ratio="0.2"
     :min-zoom-scale="0.5"
     :max-zoom-scale="2"
-    src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
+    src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
 </template>
 ```
 

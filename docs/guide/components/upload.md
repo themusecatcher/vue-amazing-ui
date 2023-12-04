@@ -16,17 +16,17 @@ const files = ref([])
 const fileList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
   }
 ])
 const imageList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
   }
 ])
 watchEffect(() => {
@@ -56,7 +56,7 @@ function onCustomRequest (file: File) {
     setTimeout(() => { // 模拟接口调用返回name和url
       const res = {
         name: '1.jpg',
-        url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg'
+        url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
       }
       if (res) {
         resolve(res)
@@ -111,7 +111,7 @@ import { ref } from 'vue'
 const imageList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
   }
 ])
 </script>
@@ -138,11 +138,11 @@ import { ref, watchEffect } from 'vue'
 const fileList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
   }
 ])
 watchEffect(() => {
@@ -172,11 +172,11 @@ import { ref, watchEffect } from 'vue'
 const fileList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
   }
 ])
 watchEffect(() => {
@@ -213,7 +213,7 @@ import { ref } from 'vue'
 const imageList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
   }
 ])
 const errorInfo = ref('') // 上传错误提示信息
@@ -274,11 +274,11 @@ import { ref } from 'vue'
 const fileList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
   }
 ])
 const errorInfo = ref('') // 上传错误提示信息
@@ -302,7 +302,7 @@ function onCustomRequest (file: File) {
     setTimeout(() => { // 模拟接口调用返回name和url
       const res = {
         name: '1.jpg',
-        url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg'
+        url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
       }
       if (res) {
         resolve(res)

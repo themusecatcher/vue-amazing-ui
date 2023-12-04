@@ -44,7 +44,7 @@ function downloadFile (url: string, name: string) {
 <script setup lang="ts">
 import { downloadFile } from 'vue-amazing-ui'
 
-donwloadFile('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/Markdown.pdf', 'Markdown')
+donwloadFile('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf', 'Markdown')
 </script>
 ```
 

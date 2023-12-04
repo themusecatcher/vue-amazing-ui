@@ -262,14 +262,14 @@ function onClose (e: MouseEvent) {
   <Alert
     message="Success"
     type="success"
-    icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
     show-icon>
   </Alert>
   <Alert
     message="Success Tips"
     description="Detailed description and advices about successful copywriting."
     type="success"
-    icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+    icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
     show-icon />
 </Space>
 
@@ -301,14 +301,14 @@ function onClose (e: MouseEvent) {
     <Alert
       message="Success"
       type="success"
-      icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+      icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
       show-icon>
     </Alert>
     <Alert
       message="Success Tips"
       description="Detailed description and advices about successful copywriting."
       type="success"
-      icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg"
+      icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
       show-icon />
   </Space>
 </template>
