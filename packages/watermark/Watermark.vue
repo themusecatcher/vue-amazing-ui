@@ -273,7 +273,6 @@ const reRendering = (mutation: MutationRecord, watermarkElement?: HTMLElement) =
   }
   return flag
 }
-const defaultWindow = typeof window !== 'undefined' ? window : undefined
 type Fn = () => void
 function tryOnMounted(fn: Fn, sync = true) {
   if (getCurrentInstance()) onMounted(fn)
@@ -300,6 +299,7 @@ function tryOnScopeDispose(fn: Fn) {
   }
   return false
 }
+const defaultWindow = typeof window !== 'undefined' ? window : undefined
 function useMutationObserver(
   target: any,
   callback: MutationCallback,
