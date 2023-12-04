@@ -131,7 +131,7 @@
     </Avatar>
     <Avatar>U</Avatar>
     <Avatar :size="40">USER</Avatar>
-    <Avatar :size="40" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
+    <Avatar :size="40" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
     <Avatar style="color: #f56a00; background-color: #fde3cf">U</Avatar>
     <Avatar style="background-color: #87d068">
       <template #icon>
@@ -153,7 +153,7 @@
     </Avatar>
     <Avatar>U</Avatar>
     <Avatar :size="40">USER</Avatar>
-    <Avatar :size="40" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg" />
+    <Avatar :size="40" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
     <Avatar style="color: #f56a00; background-color: #fde3cf">U</Avatar>
     <Avatar style="background-color: #87d068">
       <template #icon>

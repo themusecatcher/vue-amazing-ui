@@ -63,7 +63,7 @@ const show = ref(false)
         </p>
         <img
           style=" position: relative; z-index: 1; width: 100%; max-width: 800px;"
-          src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/6.jpg"
+          src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg"
           alt="示例图片"
         />
       </Watermark>

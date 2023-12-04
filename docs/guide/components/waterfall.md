@@ -14,7 +14,7 @@ function loadImages () {
     images.value.push({
       title: `image-${i}`,
       link: '',
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.1/${i}.jpg`
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
     })
   }
 }
@@ -44,7 +44,7 @@ function loadImages () {
     images.value.push({
       title: `image-${i}`,
       link: '',
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.1/${i}.jpg`
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
     })
   }
 }
@@ -76,7 +76,7 @@ function loadImages () {
     images.value.push({
       title: `image-${i}`,
       link: '',
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.1/${i}.jpg`
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
     })
   }
 }

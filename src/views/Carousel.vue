@@ -4,47 +4,47 @@ import { ref } from 'vue'
 const images = ref([
   {
     title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
     link: ''
   },
   {
     title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
     link: ''
   },
   {
     title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
     link: ''
   },
   {
     title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
     link: ''
   },
   {
     title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
     link: ''
   },
   {
     title: 'image-6',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/6.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg',
     link: ''
   },
   {
     title: 'image-7',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/7.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/7.jpg',
     link: ''
   },
   {
     title: 'image-8',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/8.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/8.jpg',
     link: ''
   },
   {
     title: 'image-9',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.3/9.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/9.jpg',
     link: ''
   }
 ])
