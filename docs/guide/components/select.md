@@ -686,7 +686,7 @@ modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目 | n
 label | 选项名 | string | false
 value | 选项值 | string &#124; number | false
 disabled | 是否禁用选项 | boolean | false
-[propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | -
+[propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | false
 
 ## Events
 
