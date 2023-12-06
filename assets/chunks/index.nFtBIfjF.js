@@ -1,0 +1,1 @@
+import{r as t,b as s}from"./index.p__L9ADO.js";function n(a){t(1,arguments);var e=s(a),r=e.getFullYear();return e.setFullYear(r+1,0,0),e.setHours(23,59,59,999),e}function l(a){t(1,arguments);var e=s(a),r=new Date(0);return r.setFullYear(e.getFullYear(),0,1),r.setHours(0,0,0,0),r}export{n as e,l as s};
