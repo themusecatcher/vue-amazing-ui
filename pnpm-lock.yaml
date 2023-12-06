@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.3.10
     version: 3.3.10(typescript@5.3.2)
   vue-amazing-ui:
-    specifier: ^0.1.23
-    version: 0.1.23(@algolia/client-search@4.20.0)(@types/node@20.10.3)(less@4.2.0)(search-insights@2.11.0)(typescript@5.3.2)
+    specifier: ^0.1.24
+    version: 0.1.24(@algolia/client-search@4.20.0)(@types/node@20.10.3)(less@4.2.0)(search-insights@2.11.0)(typescript@5.3.2)
   vue-router:
     specifier: ^4.2.5
     version: 4.2.5(vue@3.3.10)
@@ -1158,17 +1158,6 @@ packages:
   /@vue/tsconfig@0.4.0:
     resolution: {integrity: sha512-CPuIReonid9+zOG/CGTT05FXrPYATEqoDGNrEaqS4hwcw5BUNM2FguC0mOwJD4Jr16UpRVl9N0pY3P+srIbqmg==}
     dev: true
-
-  /@vuepic/vue-datepicker@6.1.0(vue@3.3.10):
-    resolution: {integrity: sha512-hma+oPTM7wgiVfJKdlp9yiXaiNZUIrSJANoAvwGr4sXBTNaa6udRMqmLkNcdSUgHGxrcV5hZkfI7g27s1dUtIQ==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      vue: '>=3.2.0'
-    dependencies:
-      date-fns: 2.30.0
-      date-fns-tz: 1.3.8(date-fns@2.30.0)
-      vue: 3.3.10(typescript@5.3.2)
-    dev: false
 
   /@vuepic/vue-datepicker@7.3.0(vue@3.3.10):
     resolution: {integrity: sha512-bPMMEShIcOJaoGVnR7QZO4CzNLVDS08XPZKdLNMRDTdHv6cbAtgBCCItTtrr62bkp2kkw3m63ED+duhd/9PoYA==}
@@ -3584,11 +3573,6 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /swiper@10.3.1:
-    resolution: {integrity: sha512-24Wk3YUdZHxjc9faID97GTu6xnLNia+adMt6qMTZG/HgdSUt4fS0REsGUXJOgpTED0Amh/j+gRGQxsLayJUlBQ==}
-    engines: {node: '>= 4.7.0'}
-    dev: false
-
   /swiper@11.0.5:
     resolution: {integrity: sha512-rhCwupqSyRnWrtNzWzemnBLMoyYuoDgGgspAm/8iBD3jCvAWycPLH4Z3TB0O5520DHLzMx94yUMH/B9Efpa48w==}
     engines: {node: '>= 4.7.0'}
@@ -3935,10 +3919,10 @@ packages:
       vue: 3.3.10(typescript@5.3.2)
     dev: false
 
-  /vue-amazing-ui@0.1.23(@algolia/client-search@4.20.0)(@types/node@20.10.3)(less@4.2.0)(search-insights@2.11.0)(typescript@5.3.2):
-    resolution: {integrity: sha512-PvSALNoMeR+DHGIVv/Zwjkce2k7llWFKqoSSSx6JiQmQLxBhL5Jv0MHx7HDTQPz+IkO14QsOrAMUsVZFQLAaqQ==}
+  /vue-amazing-ui@0.1.24(@algolia/client-search@4.20.0)(@types/node@20.10.3)(less@4.2.0)(search-insights@2.11.0)(typescript@5.3.2):
+    resolution: {integrity: sha512-HMr33oP2/C5mPOp+Nlou230d1/Lb4sl5L47Hu+seiIFwuM8Vzpk6qPqyKeBfXCaF/AZasxu5ZGlsyH/7UvYSgg==}
     dependencies:
-      '@vuepic/vue-datepicker': 6.1.0(vue@3.3.10)
+      '@vuepic/vue-datepicker': 7.3.0(vue@3.3.10)
       '@vueuse/core': 10.7.0(vue@3.3.10)
       '@vueuse/integrations': 10.7.0(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.3.10)
       ant-design-vue: 4.0.7(vue@3.3.10)
@@ -3946,7 +3930,7 @@ packages:
       date-fns: 2.30.0
       naive-ui: 2.35.0(vue@3.3.10)
       qrcode: 1.5.3
-      swiper: 10.3.1
+      swiper: 11.0.5
       vitepress: 1.0.0-rc.31(@algolia/client-search@4.20.0)(@types/node@20.10.3)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.11.0)(typescript@5.3.2)
       vue: 3.3.10(typescript@5.3.2)
       vue-router: 4.2.5(vue@3.3.10)
