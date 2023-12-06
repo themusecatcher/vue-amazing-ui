@@ -24,9 +24,9 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-FTNFVJB3.js";
+} from "./chunk-2KH7SWZ4.js";
 
-// node_modules/.pnpm/vue-demi@0.14.6_vue@3.3.9/node_modules/vue-demi/lib/index.mjs
+// node_modules/.pnpm/vue-demi@0.14.6_vue@3.3.10/node_modules/vue-demi/lib/index.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@10.6.1_vue@3.3.9/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@10.7.0_vue@3.3.10/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -111,8 +111,8 @@ function createEventHook() {
       off: offFn
     };
   };
-  const trigger = (param) => {
-    return Promise.all(Array.from(fns).map((fn) => param ? fn(param) : fn()));
+  const trigger = (...args) => {
+    return Promise.all(Array.from(fns).map((fn) => fn(...args)));
   };
   return {
     on,
@@ -334,8 +334,8 @@ var rand = (min, max) => {
 var hasOwn = (val, key) => Object.prototype.hasOwnProperty.call(val, key);
 var isIOS = getIsIOS();
 function getIsIOS() {
-  var _a;
-  return isClient && ((_a = window == null ? void 0 : window.navigator) == null ? void 0 : _a.userAgent) && /iP(ad|hone|od)/.test(window.navigator.userAgent);
+  var _a, _b;
+  return isClient && ((_a = window == null ? void 0 : window.navigator) == null ? void 0 : _a.userAgent) && (/iP(ad|hone|od)/.test(window.navigator.userAgent) || ((_b = window == null ? void 0 : window.navigator) == null ? void 0 : _b.maxTouchPoints) > 2 && /iPad|Macintosh/.test(window == null ? void 0 : window.navigator.userAgent));
 }
 function createFilterWrapper(filter, fn) {
   function wrapper(...args) {
@@ -526,6 +526,10 @@ function objectOmit(obj, keys, omitUndefined = false) {
 }
 function objectEntries(obj) {
   return Object.entries(obj);
+}
+function getLifeCycleTarget(target) {
+  const instance = target || getCurrentInstance();
+  return isVue3 ? instance : instance == null ? void 0 : instance.proxy;
 }
 function toRef2(...args) {
   if (args.length !== 1)
@@ -782,29 +786,33 @@ function toRefs2(objectRef, options = {}) {
   }
   return result;
 }
-function tryOnBeforeMount(fn, sync = true) {
-  if (getCurrentInstance())
-    onBeforeMount(fn);
+function tryOnBeforeMount(fn, sync = true, target) {
+  const instance = getLifeCycleTarget(target);
+  if (instance)
+    onBeforeMount(fn, instance);
   else if (sync)
     fn();
   else
     nextTick(fn);
 }
-function tryOnBeforeUnmount(fn) {
-  if (getCurrentInstance())
-    onBeforeUnmount(fn);
+function tryOnBeforeUnmount(fn, target) {
+  const instance = getLifeCycleTarget(target);
+  if (instance)
+    onBeforeUnmount(fn, instance);
 }
-function tryOnMounted(fn, sync = true) {
-  if (getCurrentInstance())
-    onMounted(fn);
+function tryOnMounted(fn, sync = true, target) {
+  const instance = getLifeCycleTarget(target);
+  if (instance)
+    onMounted(fn, instance);
   else if (sync)
     fn();
   else
     nextTick(fn);
 }
-function tryOnUnmounted(fn) {
-  if (getCurrentInstance())
-    onUnmounted(fn);
+function tryOnUnmounted(fn, target) {
+  const instance = getLifeCycleTarget(target);
+  if (instance)
+    onUnmounted(fn, instance);
 }
 function createUntil(r, isNot = false) {
   function toMatch(condition, { flush = "sync", deep = false, timeout, throwOnTimeout } = {}) {
@@ -1575,6 +1583,7 @@ export {
   objectPick,
   objectOmit,
   objectEntries,
+  getLifeCycleTarget,
   toRef2 as toRef,
   resolveRef,
   reactivePick,
@@ -1632,4 +1641,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-WEUSQXGP.js.map
+//# sourceMappingURL=chunk-5C4CTDHN.js.map
