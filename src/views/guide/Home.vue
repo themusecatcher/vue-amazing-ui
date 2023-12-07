@@ -47,14 +47,14 @@ const sum = computed(() => {
       <h1>Vue Amazing UI</h1>
       <Tag color="lime">{{ pkg.version }}</Tag>
     </Space>
-    <Descriptions class="mb10 mt30" title="生产环境依赖" :column="{md: 2, lg: 3, xl: 4}">
+    <Descriptions class="mb10 mt30" title="生产环境依赖 dependencies" :column="{md: 2, lg: 3, xl: 4}">
       <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
         <Tag color="volcano">{{ version }}</Tag>
       </DescriptionsItem>
     </Descriptions>
-    <Descriptions class="mb10 mt30" title="开发环境依赖" :column="{md: 2, lg: 3, xl: 4}">
+    <Descriptions class="mb10 mt30" title="开发环境依赖 devDependencies" :column="{md: 2, lg: 3, xl: 4}">
       <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.devDependencies" :key="dependency">
-        <Tag color="volcano">{{ version }}</Tag>
+        <Tag color="cyan">{{ version }}</Tag>
       </DescriptionsItem>
     </Descriptions>
     <p class="u-tip mb10">所有组件 <Tag color="magenta">CSS</Tag> 样式均使用 <Tag color="magenta">box-sizing: border-box;</Tag> 模式！</p>
@@ -73,17 +73,17 @@ const sum = computed(() => {
     </ul>
     <h2 class="mt30">常用工具函数：</h2>
     <ul class="m-list">
-      <li class="u-tip mb10 mt10"><Tag color="volcano">dateFormat</Tag>: 简单易用的日期格式化函数！</li>
-      <li class="u-tip mb10"><Tag color="volcano">requestAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
-      <li class="u-tip mb10"><Tag color="volcano">cancelAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
-      <li class="u-tip mb10"><Tag color="volcano">rafTimeout</Tag>: 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！</li>
-      <li class="u-tip mb10"><Tag color="volcano">cancelRaf</Tag>: 用于取消 rafTimeout 函数！</li>
-      <li class="u-tip mb10"><Tag color="volcano">throttle</Tag>: 使用 rafTimeout 实现的节流函数！</li>
-      <li class="u-tip mb10"><Tag color="volcano">debounce</Tag>: 使用 rafTimeout 实现的防抖函数！</li>
-      <li class="u-tip mb10"><Tag color="volcano">add</Tag>: 消除js加减精度问题的加法函数！</li>
-      <li class="u-tip mb10"><Tag color="volcano">downloadFile</Tag>: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
-      <li class="u-tip mb10"><Tag color="volcano">formatNumber</Tag>: 数字格式化函数！</li>
-      <li class="u-tip mb10"><Tag color="volcano">toggleDark</Tag>: 一键切换暗黑模式函数！</li>
+      <li class="u-tip mb10 mt10"><Tag color="geekblue">dateFormat</Tag>: 简单易用的日期格式化函数！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">requestAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">cancelAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">rafTimeout</Tag>: 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">cancelRaf</Tag>: 用于取消 rafTimeout 函数！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">throttle</Tag>: 使用 rafTimeout 实现的节流函数！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">debounce</Tag>: 使用 rafTimeout 实现的防抖函数！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">add</Tag>: 消除js加减精度问题的加法函数！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">downloadFile</Tag>: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">formatNumber</Tag>: 数字格式化函数！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">toggleDark</Tag>: 一键切换暗黑模式函数！</li>
     </ul>
     <Collapse
       lang="vue3"
