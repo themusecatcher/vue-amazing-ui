@@ -6,9 +6,6 @@ const formatValue = ref(1000)
 watchEffect(() => {
   console.log('value:', value.value)
 })
-function onChange (number: number) {
-  console.log('number:', number)
-}
 function formatter (num: string): string {
   return formatNumber(num, 2)
 }

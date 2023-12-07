@@ -12,7 +12,7 @@ export function dateFormat (value: number|string|Date = Date.now(), format = 'YY
   function fixedTwo (value: number): string {
     return value < 10 ? '0' + value : String(value)
   }
-  var showTime = format
+  let showTime = format
   if (showTime.includes('SSS')) {
     const S = date.getMilliseconds()
     showTime = showTime.replace('SSS', '0'.repeat(3 - String(S).length) + S)
@@ -34,11 +34,11 @@ export function dateFormat (value: number|string|Date = Date.now(), format = 'YY
     showTime = showTime.includes('HH') ? showTime.replace('HH', fixedTwo(H)) : showTime.replace('H', String(H))
   }
   if (showTime.includes('m')) {
-    var m = date.getMinutes()
+    const m = date.getMinutes()
     showTime = showTime.includes('mm') ? showTime.replace('mm', fixedTwo(m)) : showTime.replace('m', String(m))
   }
   if (showTime.includes('s')) {
-    var s = date.getSeconds()
+    const s = date.getSeconds()
     showTime = showTime.includes('ss') ? showTime.replace('ss', fixedTwo(s)) : showTime.replace('s', String(s))
   }
   return showTime
@@ -60,7 +60,7 @@ export const cancelAnimationFrame = typeof window !== 'undefined' ? (window.canc
 export function rafTimeout (fn: Function, delay = 0, interval = false): object {
   // @ts-ignore
   const requestAnimationFrame = typeof window !== 'undefined' ? (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame) : () => {}
-  var start: any = null
+  let start: any = null
   function timeElapse (timestamp: number) {
     /*
       timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame() 开始去执行回调函数的时刻
@@ -94,7 +94,7 @@ export function cancelRaf (raf: { id: number }): void {
 }
 // 节流函数throttle
 export function throttle (fn: Function, delay = 300): any {
-  var valid = true
+  let valid = true
   return function () {
     if (valid) {
       valid = false // 将函数置为无效
@@ -120,9 +120,9 @@ export function debounce (fn: Function, delay = 300): any {
 export function add (num1: number, num2: number): number {
   const num1DeciStr = String(num1).split('.')[1]
   const num2DeciStr = String(num2).split('.')[1]
-  let maxLen = Math.max(num1DeciStr?.length || 0, num2DeciStr?.length || 0) // 两数中最长的小数位长度
-  let num1Str = num1.toFixed(maxLen) // 补零，返回字符串
-  let num2Str = num2.toFixed(maxLen)
+  const maxLen = Math.max(num1DeciStr?.length || 0, num2DeciStr?.length || 0) // 两数中最长的小数位长度
+  const num1Str = num1.toFixed(maxLen) // 补零，返回字符串
+  const num2Str = num2.toFixed(maxLen)
   const result = +(num1Str.replace('.', '')) + +(num2Str.replace('.', '')) // 转换为整数相加
   return result / Math.pow(10, maxLen)
 }
@@ -132,14 +132,14 @@ export function add (num1: number, num2: number): number {
   name: 自定义文件名，未传时，从文件地址中自动获取文件名称
 */
 export function downloadFile (url: string, name: string) {
-  var fileName = ''
+  let fileName = ''
   if (name) {
     fileName = name
   } else {
     const res = url.split('?')[0].split('/')
     fileName = res[res.length - 1]
   }
-  var xhr = new XMLHttpRequest()
+  const xhr = new XMLHttpRequest()
   xhr.open('GET', url, true)
   xhr.responseType = 'blob'
   xhr.onload = function () {

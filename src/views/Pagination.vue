@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const hideOnSinglePage = ref(false)
 const total = ref(100)
 const pagination = ref({
   pageSize: 10,

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const tip = ref('加载中...')
 const spinning = ref(true)
 </script>
 <template>

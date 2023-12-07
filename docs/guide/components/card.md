@@ -87,8 +87,8 @@
 <Card
   title="Default size card"
   :width="300"
-  :headStyle="{ fontSize: '18px', color: '#fff', backgroundColor: '#52c41a'}"
-  :bodyStyle="{ fontSize: '16px', color: '#fff', backgroundColor: '#faad14'}">
+  :headStyle="{ fontSize: '18px', color: '#fff', backgroundColor: '#1677ff'}"
+  :bodyStyle="{ fontSize: '16px', color: '#fff', backgroundColor: '#52c41a'}">
   <template #extra><a href="#">more</a></template>
   <p>card content</p>
   <p>card content</p>
@@ -102,8 +102,8 @@
   <Card
     title="Default size card"
     :width="300"
-    :headStyle="{ fontSize: '18px', color: '#fff', backgroundColor: '#52c41a'}"
-    :bodyStyle="{ fontSize: '16px', color: '#fff', backgroundColor: '#faad14'}">
+    :headStyle="{ fontSize: '18px', color: '#fff', backgroundColor: '#1677ff'}"
+    :bodyStyle="{ fontSize: '16px', color: '#fff', backgroundColor: '#52c41a'}">
     <template #extra><a href="#">more</a></template>
     <p>card content</p>
     <p>card content</p>
