@@ -20,7 +20,7 @@ const collapseData = ref([
   {
     header: '以上工具函数 API 使用时直接引入即可:',
     text: `<script setup lang="ts">
-\import {
+import {
   dateFormat,
   requestAnimationFrame,
   cancelAnimationFrame,
@@ -48,12 +48,12 @@ const sum = computed(() => {
       <Tag color="lime">{{ pkg.version }}</Tag>
     </Space>
     <Descriptions class="mb10 mt30" title="生产环境依赖" :column="{md: 2, lg: 3, xl: 4}">
-      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies">
+      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
         <Tag color="volcano">{{ version }}</Tag>
       </DescriptionsItem>
     </Descriptions>
     <Descriptions class="mb10 mt30" title="开发环境依赖" :column="{md: 2, lg: 3, xl: 4}">
-      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.devDependencies">
+      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.devDependencies" :key="dependency">
         <Tag color="volcano">{{ version }}</Tag>
       </DescriptionsItem>
     </Descriptions>

@@ -130,13 +130,13 @@ function base64Upload (file: File, index: number) {
   reader.readAsDataURL(file) // 以base64方式读取文件
   reader.onloadstart = function (e) { // 当读取操作开始时触发
     // reader.abort() // 取消上传
-    // console.log('开始读取 onloadstart:', e)
+    console.log('开始读取 onloadstart:', e)
   }
   reader.onabort = function (e) { // 当读取操作被中断时触发
-    // console.log('读取中止 onabort:', e)
+    console.log('读取中止 onabort:', e)
   }
   reader.onerror = function (e) { // 当读取操作发生错误时触发
-    // console.log('读取错误 onerror:', e)
+    console.log('读取错误 onerror:', e)
   }
   reader.onprogress = function (e) { // 在读取Blob时触发，读取上传进度，50ms左右调用一次
     // console.log('读取中 onprogress:', e)
@@ -156,7 +156,7 @@ function base64Upload (file: File, index: number) {
     emits('change', uploadedFiles.value)
   }
   reader.onloadend = function (e) { // 当读取操作结束时触发（要么成功，要么失败）触发
-    // console.log('读取结束 onloadend:', e)
+    console.log('读取结束 onloadend:', e)
   }
 }
 function customUpload (file: File, index: number) {
