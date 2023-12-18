@@ -1,4 +1,7 @@
-# 文本省略 Ellipsis<BackTop />
+# 文本省略 Ellipsis
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

@@ -1,4 +1,7 @@
-# 播放器 Video<BackTop />
+# 播放器 Video
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

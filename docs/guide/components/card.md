@@ -1,4 +1,7 @@
-# 卡片 Card<BackTop />
+# 卡片 Card
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

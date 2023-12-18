@@ -1,4 +1,7 @@
-# 选择器 Select<BackTop />
+# 选择器 Select
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## 何时使用
 

@@ -1,4 +1,7 @@
-# 栅格 Grid<BackTop />
+# 栅格 Grid
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

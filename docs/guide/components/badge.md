@@ -1,4 +1,7 @@
-# 徽标数 Badge<BackTop />
+# 徽标数 Badge
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

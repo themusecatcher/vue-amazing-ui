@@ -1,4 +1,7 @@
-# 瀑布流 Waterfall<BackTop />
+# 瀑布流 Waterfall
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

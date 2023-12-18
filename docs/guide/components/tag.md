@@ -1,4 +1,7 @@
-# 标签 Tag<BackTop />
+# 标签 Tag
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

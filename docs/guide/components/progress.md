@@ -1,4 +1,7 @@
-# 进度条 Progress<BackTop />
+# 进度条 Progress
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

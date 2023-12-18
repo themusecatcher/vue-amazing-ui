@@ -1,4 +1,7 @@
-# 间距 Space<BackTop />
+# 间距 Space
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

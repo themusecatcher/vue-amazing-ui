@@ -1,4 +1,7 @@
-# 结果 Result<BackTop />
+# 结果 Result
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

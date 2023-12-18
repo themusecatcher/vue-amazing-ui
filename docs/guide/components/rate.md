@@ -1,4 +1,7 @@
-# 评分 Rate<BackTop />
+# 评分 Rate
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## 何时使用
 

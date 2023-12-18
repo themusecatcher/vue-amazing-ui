@@ -1,4 +1,7 @@
-# 分割线 Divider<BackTop />
+# 分割线 Divider
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

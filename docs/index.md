@@ -33,6 +33,8 @@ features:
     details: '所有组件 CSS 样式均使用 box-sizing: border-box; 模式'
 ---
 
+<Watermark fullscreen content="Vue Amazing UI" />
+
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { fetchVersion } from './.vitepress/utils/fetchVersion'

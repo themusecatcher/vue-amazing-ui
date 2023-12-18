@@ -1,4 +1,7 @@
-# 分页 Pagination<BackTop />
+# 分页 Pagination
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

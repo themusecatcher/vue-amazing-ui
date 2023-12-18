@@ -1,4 +1,7 @@
-# 步骤条 Steps<BackTop />
+# 步骤条 Steps
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

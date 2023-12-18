@@ -1,4 +1,7 @@
-# 按钮 Button<BackTop />
+# 按钮 Button
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

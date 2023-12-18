@@ -1,4 +1,7 @@
-# 信息提示 Modal<BackTop />
+# 信息提示 Modal
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

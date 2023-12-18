@@ -1,4 +1,7 @@
-# 空状态 Empty<BackTop />
+# 空状态 Empty
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

@@ -1,4 +1,7 @@
-# 加载中 Spin<BackTop />
+# 加载中 Spin
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

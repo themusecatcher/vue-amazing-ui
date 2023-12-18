@@ -1,4 +1,7 @@
-# 统计数值 Statistic<BackTop />
+# 统计数值 Statistic
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 
