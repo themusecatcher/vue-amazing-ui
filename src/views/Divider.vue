@@ -5,6 +5,14 @@
     <Divider>Center Text</Divider>
     <h2 class="mt30 mb10">中间无文字</h2>
     <Divider />
+    <h2 class="mt30 mb10">垂直分割线</h2>
+    <div>
+      Text
+      <Divider type="vertical" />
+      <a href="#">Link</a>
+      <Divider type="vertical" />
+      <a href="#">Link</a>
+    </div>
     <h2 class="mt30 mb10">指定文字位置</h2>
     <Divider orientation="left">Left Text</Divider>
     <Divider orientation="right">Right Text</Divider>
