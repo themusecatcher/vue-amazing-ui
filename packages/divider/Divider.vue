@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { computed, useSlots } from 'vue'
 interface Props {
   dashed?: boolean // 是否为虚线
   orientation?: 'left'|'center'|'right' // 分割线标题的位置
   orientationMargin?: string|number // 标题和最近 left/right 边框之间的距离，去除了分割线，同时 orientation 必须为 left 或 right
   borderWidth?: number // 分割线宽度
+  type?: 'horizontal'|'vertical' // 水平或者垂直类型
 }
 const props = withDefaults(defineProps<Props>(), {
   dashed: false,
   orientation: 'center', // 可选 left center right
   orientationMargin: '',
-  borderWidth: 1
+  borderWidth: 1,
+  type: 'horizontal'
 })
-const text = ref()
-const showText = ref(true)
 const margin = computed(() => {
   if (props.orientationMargin !== '') {
     if (typeof props.orientationMargin === 'number') {
@@ -23,15 +23,19 @@ const margin = computed(() => {
     }
   }
 })
-onMounted(() => {
-  if (!text.value.offsetHeight) {
-    showText.value = false
+const slots = useSlots()
+const showText = computed(() => {
+  const defaultSlots = slots.default?.()
+  if (defaultSlots) {
+    return Boolean(defaultSlots[0].children?.length)
   }
+  return false
 })
 </script>
 <template>
   <div
-    :class="[`m-divider ${orientation}`,
+    v-if="type==='horizontal'"
+    :class="[`m-divider-horizontal ${orientation}`,
       {
         dashed: dashed,
         margin24: !showText,
@@ -40,19 +44,20 @@ onMounted(() => {
       }
     ]"
     :style="`--border-width: ${borderWidth}px;`">
-    <span class="u-text" v-if="orientation === 'left'" :style="`margin-left: ${margin};`" ref="text" v-show="showText">
+    <span class="u-text" v-if="orientation === 'left'" :style="`margin-left: ${margin};`" v-show="showText">
       <slot></slot>
     </span>
-    <span class="u-text" v-else-if="orientation === 'right'" :style="`margin-right: ${margin};`" ref="text" v-show="showText">
+    <span class="u-text" v-else-if="orientation === 'right'" :style="`margin-right: ${margin};`" v-show="showText">
       <slot></slot>
     </span>
-    <span class="u-text" v-else ref="text" v-show="showText">
+    <span class="u-text" v-else v-show="showText">
       <slot></slot>
     </span>
   </div>
+  <div v-else class="m-divider-vertical"></div>
 </template>
 <style lang="less" scoped>
-.m-divider {
+.m-divider-horizontal {
   display: flex;
   align-items: center;
   margin: 16px 0;
@@ -77,6 +82,16 @@ onMounted(() => {
     text-align: center;
     padding: 0 16px;
   }
+}
+.m-divider-vertical {
+  position: relative;
+  top: -.06em;
+  display: inline-block;
+  height: .9em;
+  margin: 0 8px;
+  vertical-align: middle;
+  border-top: 0;
+  border-inline-start: 1px solid rgba(5, 5, 5, .06);
 }
 .dashed {
   &::before {
