@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, watchPostEffect, nextTick, useSlots, computed } from 'vue'
 interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot
@@ -19,15 +19,19 @@ const props = withDefaults(defineProps<Props>(), {
   showIcon: false
 })
 const alert = ref()
-const descRef = ref() // 声明一个同名的模板引用
-const showDesc = ref(1)
-onMounted(() => {
-  showDesc.value = descRef.value.offsetHeight
+const slots = useSlots()
+const showDesc = computed(() => {
+  const descriptionSlots = slots.description?.()
+  if (descriptionSlots) {
+    return Boolean(descriptionSlots[0].children?.length)
+  }
+  return false
+})
+
+watchPostEffect(() => {
   if (props.closable) {
-    nextTick(() => {
-      alert.value.style.height = alert.value.offsetHeight + 'px'
-      alert.value.style.opacity = 1
-    })
+    alert.value.style.height = alert.value.offsetHeight + 'px'
+    alert.value.style.opacity = 1
   }
 })
 const emit = defineEmits(['close'])
@@ -66,7 +70,7 @@ function onClose (e: MouseEvent):void {
         <div class="u-message">
           <slot name="message">{{ message }}</slot>
         </div>
-        <div class="u-description" v-if="showDesc" ref="descRef">
+        <div class="u-description">
           <slot name="description">{{ description }}</slot>
         </div>
       </div>
