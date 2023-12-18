@@ -1,4 +1,7 @@
-# 输入框 Input<BackTop />
+# 输入框 Input
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

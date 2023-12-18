@@ -1,4 +1,7 @@
-# 面包屑 Breadcrumb<BackTop />
+# 面包屑 Breadcrumb
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

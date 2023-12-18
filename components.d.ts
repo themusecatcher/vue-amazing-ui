@@ -7,14 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    ACol: typeof import('ant-design-vue/es')['Col']
-    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
-    AMenu: typeof import('ant-design-vue/es')['Menu']
-    AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
-    ARow: typeof import('ant-design-vue/es')['Row']
-    ATabPane: typeof import('ant-design-vue/es')['TabPane']
-    ATabs: typeof import('ant-design-vue/es')['Tabs']
-    ATag: typeof import('ant-design-vue/es')['Tag']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

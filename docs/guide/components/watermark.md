@@ -1,4 +1,7 @@
-# 水印 Watermark<BackTop />
+# 水印 Watermark
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

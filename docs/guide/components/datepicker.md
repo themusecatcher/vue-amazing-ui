@@ -1,4 +1,7 @@
-# 日期选择 DatePicker<BackTop />
+# 日期选择 DatePicker
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

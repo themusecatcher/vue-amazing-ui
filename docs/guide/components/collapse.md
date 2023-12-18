@@ -1,4 +1,7 @@
-# 折叠面板 Collapse<BackTop />
+# 折叠面板 Collapse
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

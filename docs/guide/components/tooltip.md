@@ -1,4 +1,7 @@
-# 文字提示 Tooltip<BackTop />
+# 文字提示 Tooltip
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

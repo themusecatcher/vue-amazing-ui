@@ -1,4 +1,7 @@
-# 头像 Avatar<BackTop />
+# 头像 Avatar
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

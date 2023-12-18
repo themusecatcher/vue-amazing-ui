@@ -1,4 +1,7 @@
-# 通知提醒 Notification<BackTop />
+# 通知提醒 Notification
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

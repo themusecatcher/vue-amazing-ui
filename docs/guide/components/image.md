@@ -1,4 +1,7 @@
-# 图片 Image<BackTop />
+# 图片 Image
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

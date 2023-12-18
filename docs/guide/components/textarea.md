@@ -1,4 +1,7 @@
-# 文本域 Textarea<BackTop />
+# 文本域 Textarea
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

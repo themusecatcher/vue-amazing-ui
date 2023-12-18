@@ -1,4 +1,7 @@
-# 标签页 Tabs<BackTop />
+# 标签页 Tabs
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

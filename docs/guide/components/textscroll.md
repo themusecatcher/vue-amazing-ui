@@ -1,4 +1,7 @@
-# 文字滚动 TextScroll<BackTop />
+# 文字滚动 TextScroll
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## 何时使用
 

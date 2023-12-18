@@ -1,4 +1,7 @@
-# 多选框 Checkbox<BackTop />
+# 多选框 Checkbox
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## 何时使用
 

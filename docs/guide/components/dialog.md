@@ -1,4 +1,7 @@
-# 对话框 Dialog<BackTop />
+# 对话框 Dialog
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## 何时使用
 

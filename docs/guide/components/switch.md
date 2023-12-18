@@ -1,4 +1,7 @@
-# 开关 Switch<BackTop />
+# 开关 Switch
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

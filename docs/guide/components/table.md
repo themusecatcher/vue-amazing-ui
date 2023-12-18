@@ -1,4 +1,7 @@
-# 表格 Table<BackTop />
+# 表格 Table
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

@@ -1,4 +1,7 @@
-# 单选框 Radio<BackTop />
+# 单选框 Radio
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## 何时使用
 

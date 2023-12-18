@@ -1,4 +1,7 @@
-# 全局提示 Message<BackTop />
+# 全局提示 Message
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

@@ -1,4 +1,7 @@
-# 倒计时 Countdown<BackTop />
+# 倒计时 Countdown
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## 何时使用
 

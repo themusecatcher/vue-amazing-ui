@@ -1,4 +1,7 @@
-# 警告提示 Alert<BackTop />
+# 警告提示 Alert
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

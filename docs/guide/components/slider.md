@@ -1,4 +1,7 @@
-# 滑动输入条 Slider<BackTop />
+# 滑动输入条 Slider
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 
