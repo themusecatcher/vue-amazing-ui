@@ -9,11 +9,5 @@
       "@/*": ["./src/*"],
       "images/*": ["./src/assets/images"]
     }
-  },
-
-  "references": [
-    {
-      "path": "./tsconfig.config.json"
-    }
-  ]
+  }
 }

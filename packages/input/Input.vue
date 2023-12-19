@@ -8,7 +8,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, useSlots } from 'vue'
 interface Props {
   width?: string|number // 输入框宽度
   addonBefore?: string // 设置前置标签 string | slot
@@ -51,20 +51,34 @@ const showCountNum = computed(() => {
   }
   return props.value.length
 })
-const showPassword = ref(false)
-const prefixRef = ref()
-const showPrefix = ref(1)
-const suffixRef = ref()
-const showSuffix = ref(1)
-const beforeRef = ref()
-const showBefore = ref(1)
-const afterRef = ref()
-const showAfter = ref(1)
-onMounted(() => {
-  showPrefix.value = prefixRef.value.offsetWidth
-  showSuffix.value = suffixRef.value.offsetWidth
-  showBefore.value = beforeRef.value.offsetWidth
-  showAfter.value = afterRef.value.offsetWidth
+const slots = useSlots()
+const showPrefix = computed(() => {
+  const prefixSlots = slots.prefix?.()
+  if (prefixSlots) {
+    return Boolean(prefixSlots[0].children !== 'v-if' && prefixSlots?.length)
+  }
+  return props.prefix
+})
+const showSuffix = computed(() => {
+  const suffixSlots = slots.suffix?.()
+  if (suffixSlots) {
+    return Boolean(suffixSlots[0].children !== 'v-if' && suffixSlots?.length)
+  }
+  return props.suffix
+})
+const showBefore = computed(() => {
+  const addonBeforeSlots = slots.addonBefore?.()
+  if (addonBeforeSlots) {
+    return Boolean(addonBeforeSlots[0].children !== 'v-if' && addonBeforeSlots?.length)
+  }
+  return props.addonBefore
+})
+const showAfter = computed(() => {
+  const addonAfterSlots = slots.addonAfter?.()
+  if (addonAfterSlots) {
+    return Boolean(addonAfterSlots[0].children !== 'v-if' && addonAfterSlots?.length)
+  }
+  return props.addonAfter
 })
 const emits = defineEmits(['update:value', 'change', 'enter'])
 function onInput (e: any) {
@@ -89,20 +103,21 @@ function onClear () {
   emits('update:value', '')
   input.value.focus()
 }
+const showPassword = ref(false)
 function onPassword () {
   showPassword.value = !showPassword.value
 }
 </script>
 <template>
   <div class="m-input-wrap" :style="`width: ${inputWidth};`">
-    <span class="m-addon" :class="{before: showBefore}" ref="beforeRef" v-if="showBefore!==23">
+    <span class="m-addon" :class="{before: showBefore}" v-if="showBefore">
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
       class="m-input"
-      :class="[`${size}`, {disabled: disabled, 'input-before': showBefore!==23, 'input-after': showAfter!==23}]"
+      :class="[`${size}`, {disabled: disabled, 'input-before': showBefore, 'input-after': showAfter}]"
       tabindex="1">
-      <span class="m-prefix" ref="prefixRef" v-if="showPrefix">
+      <span class="m-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
@@ -116,7 +131,7 @@ function onPassword () {
         @change="onChange"
         @keydown="onKeyboard"
         v-bind="$attrs" />
-      <span class="m-suffix" ref="suffixRef" v-if="showSuffix">
+      <span class="m-suffix" v-if="showSuffix">
         <span class="m-action" v-if="!disabled&&allowClear&&value" @click="onClear">
           <svg focusable="false" class="u-clear" data-icon="close-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
         </span>
@@ -128,7 +143,7 @@ function onPassword () {
         <slot name="suffix">{{ suffix }}</slot>
       </span>
     </div>
-    <span class="m-addon" :class="{after: showAfter}" ref="afterRef" v-if="showAfter!==23">
+    <span class="m-addon" :class="{after: showAfter}" v-if="showAfter">
       <slot name="addonAfter">{{ addonAfter }}</slot>
     </span>
   </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { useSlots, computed } from 'vue'
 interface Props {
   status?: 'success'|'error'|'info'|'warning'|'404'|'403'|'500' // 结果的状态，决定图标和颜色
   title?: string // 标题文字 string | slot
@@ -10,10 +10,13 @@ withDefaults(defineProps<Props>(), {
   title: '',
   subTitle: ''
 })
-const contentRef = ref() // 声明一个同名的模板引用
-const showContent = ref(1)
-onMounted(() => {
-  showContent.value = contentRef.value.offsetHeight
+const slots = useSlots()
+const showContent = computed(() => {
+  const defaultSlots = slots.default?.()
+  if (defaultSlots) {
+    return Boolean(defaultSlots[0].children !== 'v-if' && defaultSlots?.length) 
+  }
+  return false
 })
 </script>
 <template>
@@ -38,7 +41,7 @@ onMounted(() => {
     <div class="m-extra">
       <slot name="extra"></slot>
     </div>
-    <div class="m-content" v-if="showContent!==48" ref="contentRef">
+    <div class="m-content" v-if="showContent">
       <slot></slot>
     </div>
   </div>

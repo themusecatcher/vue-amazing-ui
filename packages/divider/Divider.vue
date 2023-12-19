@@ -27,7 +27,7 @@ const slots = useSlots()
 const showText = computed(() => {
   const defaultSlots = slots.default?.()
   if (defaultSlots) {
-    return Boolean(defaultSlots[0].children?.length)
+    return Boolean(defaultSlots[0].children !== 'v-if' && defaultSlots[0].children?.length)
   }
   return false
 })

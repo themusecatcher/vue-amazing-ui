@@ -30,8 +30,8 @@ import {
   provide,
   ref,
   watch
-} from "./chunk-2KH7SWZ4.js";
-import "./chunk-LQ2VYIYD.js";
+} from "./chunk-7D4OYBNS.js";
+import "./chunk-LNEMQRCO.js";
 
 // node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/shared/swiper-core.mjs
 var support;

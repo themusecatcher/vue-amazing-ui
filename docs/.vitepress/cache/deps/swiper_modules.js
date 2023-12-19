@@ -16,7 +16,7 @@ import {
   now,
   setCSSProperty
 } from "./chunk-PD6EYQQP.js";
-import "./chunk-LQ2VYIYD.js";
+import "./chunk-LNEMQRCO.js";
 
 // node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/modules/virtual.mjs
 function Virtual(_ref) {

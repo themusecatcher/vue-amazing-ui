@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, useSlots } from 'vue'
 import type { CSSProperties } from 'vue'
 interface Props {
   width?: number|string // 卡片宽度
@@ -25,10 +25,18 @@ const cardWidth = computed(() => {
   }
   return props.width
 })
-const headRef = ref() // 声明一个同名的模板引用
-const showHead = ref(1)
-onMounted(() => {
-  showHead.value = headRef.value.offsetHeight
+const slots = useSlots()
+const showTitle = computed(() => {
+  const titleSlots = slots.title?.()
+  const extraSlots = slots.extra?.()
+  let n = 0
+  if (titleSlots && titleSlots[0].children?.length) {
+    n++
+  }
+  if (extraSlots && extraSlots[0].children?.length) {
+    n++
+  }
+  return Boolean(n) || props.title || props.extra
 })
 </script>
 <template>
@@ -36,8 +44,8 @@ onMounted(() => {
     class="m-card"
     :class="{'bordered': bordered, 'm-small-card': size === 'small'}"
     :style="`width: ${cardWidth};`">
-    <div class="m-card-head" :style="headStyle" v-if="showHead">
-      <div class="m-head-wrapper" ref="headRef">
+    <div class="m-card-head" :style="headStyle" v-if="showTitle">
+      <div class="m-head-wrapper">
         <div class="u-title">
           <slot name="title">{{ title }}</slot>
         </div>

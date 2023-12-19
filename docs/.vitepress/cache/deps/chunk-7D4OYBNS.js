@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@vue+shared@3.3.10/node_modules/@vue/shared/dist/shared.esm-bundler.js
+// node_modules/.pnpm/@vue+shared@3.3.12/node_modules/@vue/shared/dist/shared.esm-bundler.js
 function makeMap(str, expectsLowerCase) {
   const map2 = /* @__PURE__ */ Object.create(null);
   const list = str.split(",");
@@ -179,7 +179,7 @@ var isKnownHtmlAttr = makeMap(
   `accept,accept-charset,accesskey,action,align,allow,alt,async,autocapitalize,autocomplete,autofocus,autoplay,background,bgcolor,border,buffered,capture,challenge,charset,checked,cite,class,code,codebase,color,cols,colspan,content,contenteditable,contextmenu,controls,coords,crossorigin,csp,data,datetime,decoding,default,defer,dir,dirname,disabled,download,draggable,dropzone,enctype,enterkeyhint,for,form,formaction,formenctype,formmethod,formnovalidate,formtarget,headers,height,hidden,high,href,hreflang,http-equiv,icon,id,importance,inert,integrity,ismap,itemprop,keytype,kind,label,lang,language,loading,list,loop,low,manifest,max,maxlength,minlength,media,min,multiple,muted,name,novalidate,open,optimum,pattern,ping,placeholder,poster,preload,radiogroup,readonly,referrerpolicy,rel,required,reversed,rows,rowspan,sandbox,scope,scoped,selected,shape,size,sizes,slot,span,spellcheck,src,srcdoc,srclang,srcset,start,step,style,summary,tabindex,target,title,translate,type,usemap,value,width,wrap`
 );
 var isKnownSvgAttr = makeMap(
-  `xmlns,accent-height,accumulate,additive,alignment-baseline,alphabetic,amplitude,arabic-form,ascent,attributeName,attributeType,azimuth,baseFrequency,baseline-shift,baseProfile,bbox,begin,bias,by,calcMode,cap-height,class,clip,clipPathUnits,clip-path,clip-rule,color,color-interpolation,color-interpolation-filters,color-profile,color-rendering,contentScriptType,contentStyleType,crossorigin,cursor,cx,cy,d,decelerate,descent,diffuseConstant,direction,display,divisor,dominant-baseline,dur,dx,dy,edgeMode,elevation,enable-background,end,exponent,fill,fill-opacity,fill-rule,filter,filterRes,filterUnits,flood-color,flood-opacity,font-family,font-size,font-size-adjust,font-stretch,font-style,font-variant,font-weight,format,from,fr,fx,fy,g1,g2,glyph-name,glyph-orientation-horizontal,glyph-orientation-vertical,glyphRef,gradientTransform,gradientUnits,hanging,height,href,hreflang,horiz-adv-x,horiz-origin-x,id,ideographic,image-rendering,in,in2,intercept,k,k1,k2,k3,k4,kernelMatrix,kernelUnitLength,kerning,keyPoints,keySplines,keyTimes,lang,lengthAdjust,letter-spacing,lighting-color,limitingConeAngle,local,marker-end,marker-mid,marker-start,markerHeight,markerUnits,markerWidth,mask,maskContentUnits,maskUnits,mathematical,max,media,method,min,mode,name,numOctaves,offset,opacity,operator,order,orient,orientation,origin,overflow,overline-position,overline-thickness,panose-1,paint-order,path,pathLength,patternContentUnits,patternTransform,patternUnits,ping,pointer-events,points,pointsAtX,pointsAtY,pointsAtZ,preserveAlpha,preserveAspectRatio,primitiveUnits,r,radius,referrerPolicy,refX,refY,rel,rendering-intent,repeatCount,repeatDur,requiredExtensions,requiredFeatures,restart,result,rotate,rx,ry,scale,seed,shape-rendering,slope,spacing,specularConstant,specularExponent,speed,spreadMethod,startOffset,stdDeviation,stemh,stemv,stitchTiles,stop-color,stop-opacity,strikethrough-position,strikethrough-thickness,string,stroke,stroke-dasharray,stroke-dashoffset,stroke-linecap,stroke-linejoin,stroke-miterlimit,stroke-opacity,stroke-width,style,surfaceScale,systemLanguage,tabindex,tableValues,target,targetX,targetY,text-anchor,text-decoration,text-rendering,textLength,to,transform,transform-origin,type,u1,u2,underline-position,underline-thickness,unicode,unicode-bidi,unicode-range,units-per-em,v-alphabetic,v-hanging,v-ideographic,v-mathematical,values,vector-effect,version,vert-adv-y,vert-origin-x,vert-origin-y,viewBox,viewTarget,visibility,width,widths,word-spacing,writing-mode,x,x-height,x1,x2,xChannelSelector,xlink:actuate,xlink:arcrole,xlink:href,xlink:role,xlink:show,xlink:title,xlink:type,xml:base,xml:lang,xml:space,y,y1,y2,yChannelSelector,z,zoomAndPan`
+  `xmlns,accent-height,accumulate,additive,alignment-baseline,alphabetic,amplitude,arabic-form,ascent,attributeName,attributeType,azimuth,baseFrequency,baseline-shift,baseProfile,bbox,begin,bias,by,calcMode,cap-height,class,clip,clipPathUnits,clip-path,clip-rule,color,color-interpolation,color-interpolation-filters,color-profile,color-rendering,contentScriptType,contentStyleType,crossorigin,cursor,cx,cy,d,decelerate,descent,diffuseConstant,direction,display,divisor,dominant-baseline,dur,dx,dy,edgeMode,elevation,enable-background,end,exponent,fill,fill-opacity,fill-rule,filter,filterRes,filterUnits,flood-color,flood-opacity,font-family,font-size,font-size-adjust,font-stretch,font-style,font-variant,font-weight,format,from,fr,fx,fy,g1,g2,glyph-name,glyph-orientation-horizontal,glyph-orientation-vertical,glyphRef,gradientTransform,gradientUnits,hanging,height,href,hreflang,horiz-adv-x,horiz-origin-x,id,ideographic,image-rendering,in,in2,intercept,k,k1,k2,k3,k4,kernelMatrix,kernelUnitLength,kerning,keyPoints,keySplines,keyTimes,lang,lengthAdjust,letter-spacing,lighting-color,limitingConeAngle,local,marker-end,marker-mid,marker-start,markerHeight,markerUnits,markerWidth,mask,maskContentUnits,maskUnits,mathematical,max,media,method,min,mode,name,numOctaves,offset,opacity,operator,order,orient,orientation,origin,overflow,overline-position,overline-thickness,panose-1,paint-order,path,pathLength,patternContentUnits,patternTransform,patternUnits,ping,pointer-events,points,pointsAtX,pointsAtY,pointsAtZ,preserveAlpha,preserveAspectRatio,primitiveUnits,r,radius,referrerPolicy,refX,refY,rel,rendering-intent,repeatCount,repeatDur,requiredExtensions,requiredFeatures,restart,result,rotate,rx,ry,scale,seed,shape-rendering,slope,spacing,specularConstant,specularExponent,speed,spreadMethod,startOffset,stdDeviation,stemh,stemv,stitchTiles,stop-color,stop-opacity,strikethrough-position,strikethrough-thickness,string,stroke,stroke-dasharray,stroke-dashoffset,stroke-linecap,stroke-linejoin,stroke-miterlimit,stroke-opacity,stroke-width,style,surfaceScale,systemLanguage,tabindex,tableValues,target,targetX,targetY,text-anchor,text-decoration,text-rendering,textLength,to,transform,transform-origin,type,u1,u2,underline-position,underline-thickness,unicode,unicode-bidi,unicode-range,units-per-em,v-alphabetic,v-hanging,v-ideographic,v-mathematical,values,vector-effect,version,vert-adv-y,vert-origin-x,vert-origin-y,viewBox,viewTarget,visibility,width,widths,word-spacing,writing-mode,x,x-height,x1,x2,xChannelSelector,xlink:actuate,xlink:arcrole,xlink:href,xlink:role,xlink:show,xlink:title,xlink:type,xmlns:xlink,xml:base,xml:lang,xml:space,y,y1,y2,yChannelSelector,z,zoomAndPan`
 );
 function looseCompareArrays(a, b) {
   if (a.length !== b.length)
@@ -240,22 +240,31 @@ var replacer = (_key, val) => {
     return replacer(_key, val.value);
   } else if (isMap(val)) {
     return {
-      [`Map(${val.size})`]: [...val.entries()].reduce((entries, [key, val2]) => {
-        entries[`${key} =>`] = val2;
-        return entries;
-      }, {})
+      [`Map(${val.size})`]: [...val.entries()].reduce(
+        (entries, [key, val2], i) => {
+          entries[stringifySymbol(key, i) + " =>"] = val2;
+          return entries;
+        },
+        {}
+      )
     };
   } else if (isSet(val)) {
     return {
-      [`Set(${val.size})`]: [...val.values()]
+      [`Set(${val.size})`]: [...val.values()].map((v) => stringifySymbol(v))
     };
+  } else if (isSymbol(val)) {
+    return stringifySymbol(val);
   } else if (isObject(val) && !isArray(val) && !isPlainObject(val)) {
     return String(val);
   }
   return val;
 };
+var stringifySymbol = (v, i = "") => {
+  var _a;
+  return isSymbol(v) ? `Symbol(${(_a = v.description) != null ? _a : i})` : v;
+};
 
-// node_modules/.pnpm/@vue+reactivity@3.3.10/node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js
+// node_modules/.pnpm/@vue+reactivity@3.3.12/node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js
 function warn(msg, ...args) {
   console.warn(`[Vue warn] ${msg}`, ...args);
 }
@@ -669,8 +678,13 @@ var BaseReactiveHandler = class {
       return isReadonly2;
     } else if (key === "__v_isShallow") {
       return shallow;
-    } else if (key === "__v_raw" && receiver === (isReadonly2 ? shallow ? shallowReadonlyMap : readonlyMap : shallow ? shallowReactiveMap : reactiveMap).get(target)) {
-      return target;
+    } else if (key === "__v_raw") {
+      if (receiver === (isReadonly2 ? shallow ? shallowReadonlyMap : readonlyMap : shallow ? shallowReactiveMap : reactiveMap).get(target) || // receiver is not the reactive proxy, but has the same prototype
+      // this means the reciever is a user proxy of the reactive proxy
+      Object.getPrototypeOf(target) === Object.getPrototypeOf(receiver)) {
+        return target;
+      }
+      return;
     }
     const targetIsArray = isArray(target);
     if (!isReadonly2) {
@@ -706,17 +720,19 @@ var MutableReactiveHandler = class extends BaseReactiveHandler {
   }
   set(target, key, value, receiver) {
     let oldValue = target[key];
-    if (isReadonly(oldValue) && isRef(oldValue) && !isRef(value)) {
-      return false;
-    }
     if (!this._shallow) {
+      const isOldValueReadonly = isReadonly(oldValue);
       if (!isShallow(value) && !isReadonly(value)) {
         oldValue = toRaw(oldValue);
         value = toRaw(value);
       }
       if (!isArray(target) && isRef(oldValue) && !isRef(value)) {
-        oldValue.value = value;
-        return true;
+        if (isOldValueReadonly) {
+          return false;
+        } else {
+          oldValue.value = value;
+          return true;
+        }
       }
     }
     const hadKey = isArray(target) && isIntegerKey(key) ? Number(key) < target.length : hasOwn(target, key);
@@ -1397,7 +1413,7 @@ function computed(getterOrOptions, debugOptions, isSSR = false) {
 }
 var tick = Promise.resolve();
 
-// node_modules/.pnpm/@vue+runtime-core@3.3.10/node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js
+// node_modules/.pnpm/@vue+runtime-core@3.3.12/node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js
 var stack = [];
 function pushWarningContext(vnode) {
   stack.push(vnode);
@@ -1687,13 +1703,16 @@ function queuePostFlushCb(cb) {
   }
   queueFlush();
 }
-function flushPreFlushCbs(seen, i = isFlushing ? flushIndex + 1 : 0) {
+function flushPreFlushCbs(instance, seen, i = isFlushing ? flushIndex + 1 : 0) {
   if (true) {
     seen = seen || /* @__PURE__ */ new Map();
   }
   for (; i < queue.length; i++) {
     const cb = queue[i];
     if (cb && cb.pre) {
+      if (instance && cb.id !== instance.uid) {
+        continue;
+      }
       if (checkRecursiveUpdates(seen, cb)) {
         continue;
       }
@@ -2799,7 +2818,7 @@ function createSuspenseBoundary(vnode, parentSuspense, parentComponent, containe
     timeout: typeof timeout === "number" ? timeout : -1,
     activeBranch: null,
     pendingBranch: null,
-    isInFallback: true,
+    isInFallback: !isHydrating,
     isHydrating,
     isUnmounted: false,
     effects: [],
@@ -2885,6 +2904,7 @@ function createSuspenseBoundary(vnode, parentSuspense, parentComponent, containe
       }
       const { vnode: vnode2, activeBranch, parentComponent: parentComponent2, container: container2, isSVG: isSVG2 } = suspense;
       triggerEvent(vnode2, "onFallback");
+      const anchor2 = next(activeBranch);
       const mountFallback = () => {
         if (!suspense.isInFallback) {
           return;
@@ -2893,7 +2913,7 @@ function createSuspenseBoundary(vnode, parentSuspense, parentComponent, containe
           null,
           fallbackVNode,
           container2,
-          next(activeBranch),
+          anchor2,
           parentComponent2,
           null,
           // fallback tree will not have suspense context
@@ -6130,6 +6150,16 @@ function createHydrationFunctions(rendererInternals) {
       if (dirs) {
         invokeDirectiveHook(vnode, null, parentComponent, "created");
       }
+      let needCallTransitionHooks = false;
+      if (isTemplateNode(el)) {
+        needCallTransitionHooks = needTransition(parentSuspense, transition) && parentComponent && parentComponent.vnode.props && parentComponent.vnode.props.appear;
+        const content = el.content.firstChild;
+        if (needCallTransitionHooks) {
+          transition.beforeEnter(content);
+        }
+        replaceNode(content, el, parentComponent);
+        vnode.el = el = content;
+      }
       if (props) {
         if (forcePatch || !optimized || patchFlag & (16 | 32)) {
           for (const key in props) {
@@ -6161,16 +6191,6 @@ function createHydrationFunctions(rendererInternals) {
       let vnodeHooks;
       if (vnodeHooks = props && props.onVnodeBeforeMount) {
         invokeVNodeHook(vnodeHooks, parentComponent, vnode);
-      }
-      let needCallTransitionHooks = false;
-      if (isTemplateNode(el)) {
-        needCallTransitionHooks = needTransition(parentSuspense, transition) && parentComponent && parentComponent.vnode.props && parentComponent.vnode.props.appear;
-        const content = el.content.firstChild;
-        if (needCallTransitionHooks) {
-          transition.beforeEnter(content);
-        }
-        replaceNode(content, el, parentComponent);
-        vnode.el = el = content;
       }
       if (dirs) {
         invokeDirectiveHook(vnode, null, parentComponent, "beforeMount");
@@ -7294,7 +7314,7 @@ function baseCreateRenderer(options, createHydrationFns) {
     updateProps(instance, nextVNode.props, prevProps, optimized);
     updateSlots(instance, nextVNode.children, optimized);
     pauseTracking();
-    flushPreFlushCbs();
+    flushPreFlushCbs(instance);
     resetTracking();
   };
   const patchChildren = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized = false) => {
@@ -9189,7 +9209,7 @@ function isMemoSame(cached, memo) {
   }
   return true;
 }
-var version = "3.3.10";
+var version = "3.3.12";
 var _ssrUtils = {
   createComponentInstance,
   setupComponent,
@@ -9202,7 +9222,7 @@ var ssrUtils = _ssrUtils;
 var resolveFilter = null;
 var compatUtils = null;
 
-// node_modules/.pnpm/@vue+runtime-dom@3.3.10/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js
+// node_modules/.pnpm/@vue+runtime-dom@3.3.12/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js
 var svgNS = "http://www.w3.org/2000/svg";
 var doc = typeof document !== "undefined" ? document : null;
 var templateContainer = doc && doc.createElement("template");
@@ -9596,6 +9616,68 @@ function initVShowForSSR() {
     }
   };
 }
+var CSS_VAR_TEXT = Symbol(true ? "CSS_VAR_TEXT" : "");
+function useCssVars(getter) {
+  const instance = getCurrentInstance();
+  if (!instance) {
+    warn2(`useCssVars is called without current active component instance.`);
+    return;
+  }
+  const updateTeleports = instance.ut = (vars = getter(instance.proxy)) => {
+    Array.from(
+      document.querySelectorAll(`[data-v-owner="${instance.uid}"]`)
+    ).forEach((node) => setVarsOnNode(node, vars));
+  };
+  const setVars = () => {
+    const vars = getter(instance.proxy);
+    setVarsOnVNode(instance.subTree, vars);
+    updateTeleports(vars);
+  };
+  watchPostEffect(setVars);
+  onMounted(() => {
+    const ob = new MutationObserver(setVars);
+    ob.observe(instance.subTree.el.parentNode, { childList: true });
+    onUnmounted(() => ob.disconnect());
+  });
+}
+function setVarsOnVNode(vnode, vars) {
+  if (vnode.shapeFlag & 128) {
+    const suspense = vnode.suspense;
+    vnode = suspense.activeBranch;
+    if (suspense.pendingBranch && !suspense.isHydrating) {
+      suspense.effects.push(() => {
+        setVarsOnVNode(suspense.activeBranch, vars);
+      });
+    }
+  }
+  while (vnode.component) {
+    vnode = vnode.component.subTree;
+  }
+  if (vnode.shapeFlag & 1 && vnode.el) {
+    setVarsOnNode(vnode.el, vars);
+  } else if (vnode.type === Fragment) {
+    vnode.children.forEach((c) => setVarsOnVNode(c, vars));
+  } else if (vnode.type === Static) {
+    let { el, anchor } = vnode;
+    while (el) {
+      setVarsOnNode(el, vars);
+      if (el === anchor)
+        break;
+      el = el.nextSibling;
+    }
+  }
+}
+function setVarsOnNode(el, vars) {
+  if (el.nodeType === 1) {
+    const style = el.style;
+    let cssText = "";
+    for (const key in vars) {
+      style.setProperty(`--${key}`, vars[key]);
+      cssText += `--${key}: ${vars[key]};`;
+    }
+    style[CSS_VAR_TEXT] = cssText;
+  }
+}
 function patchStyle(el, prev, next) {
   const style = el.style;
   const isCssString = isString(next);
@@ -9614,6 +9696,10 @@ function patchStyle(el, prev, next) {
     const currentDisplay = style.display;
     if (isCssString) {
       if (prev !== next) {
+        const cssVarText = style[CSS_VAR_TEXT];
+        if (cssVarText) {
+          next += ";" + cssVarText;
+        }
         style.cssText = next;
       }
     } else if (prev) {
@@ -9863,7 +9949,9 @@ function shouldSetAsProp(el, key, value, isSVG) {
   }
   if (key === "width" || key === "height") {
     const tag = el.tagName;
-    return !(tag === "IMG" || tag === "VIDEO" || tag === "CANVAS" || tag === "SOURCE");
+    if (tag === "IMG" || tag === "VIDEO" || tag === "CANVAS" || tag === "SOURCE") {
+      return false;
+    }
   }
   if (isNativeOn(key) && isString(value)) {
     return false;
@@ -10103,64 +10191,6 @@ function useCssModule(name = "$style") {
       return EMPTY_OBJ;
     }
     return mod;
-  }
-}
-function useCssVars(getter) {
-  const instance = getCurrentInstance();
-  if (!instance) {
-    warn2(`useCssVars is called without current active component instance.`);
-    return;
-  }
-  const updateTeleports = instance.ut = (vars = getter(instance.proxy)) => {
-    Array.from(
-      document.querySelectorAll(`[data-v-owner="${instance.uid}"]`)
-    ).forEach((node) => setVarsOnNode(node, vars));
-  };
-  const setVars = () => {
-    const vars = getter(instance.proxy);
-    setVarsOnVNode(instance.subTree, vars);
-    updateTeleports(vars);
-  };
-  watchPostEffect(setVars);
-  onMounted(() => {
-    const ob = new MutationObserver(setVars);
-    ob.observe(instance.subTree.el.parentNode, { childList: true });
-    onUnmounted(() => ob.disconnect());
-  });
-}
-function setVarsOnVNode(vnode, vars) {
-  if (vnode.shapeFlag & 128) {
-    const suspense = vnode.suspense;
-    vnode = suspense.activeBranch;
-    if (suspense.pendingBranch && !suspense.isHydrating) {
-      suspense.effects.push(() => {
-        setVarsOnVNode(suspense.activeBranch, vars);
-      });
-    }
-  }
-  while (vnode.component) {
-    vnode = vnode.component.subTree;
-  }
-  if (vnode.shapeFlag & 1 && vnode.el) {
-    setVarsOnNode(vnode.el, vars);
-  } else if (vnode.type === Fragment) {
-    vnode.children.forEach((c) => setVarsOnVNode(c, vars));
-  } else if (vnode.type === Static) {
-    let { el, anchor } = vnode;
-    while (el) {
-      setVarsOnNode(el, vars);
-      if (el === anchor)
-        break;
-      el = el.nextSibling;
-    }
-  }
-}
-function setVarsOnNode(el, vars) {
-  if (el.nodeType === 1) {
-    const style = el.style;
-    for (const key in vars) {
-      style.setProperty(`--${key}`, vars[key]);
-    }
   }
 }
 var positionMap = /* @__PURE__ */ new WeakMap();
@@ -10715,7 +10745,7 @@ var initDirectivesForSSR = () => {
   }
 };
 
-// node_modules/.pnpm/vue@3.3.10_typescript@5.3.2/node_modules/vue/dist/vue.runtime.esm-bundler.js
+// node_modules/.pnpm/vue@3.3.12_typescript@5.3.3/node_modules/vue/dist/vue.runtime.esm-bundler.js
 function initDev() {
   {
     initCustomFormatter();
@@ -10869,11 +10899,11 @@ export {
   compatUtils,
   Transition,
   vShow,
+  useCssVars,
   defineCustomElement,
   defineSSRCustomElement,
   VueElement,
   useCssModule,
-  useCssVars,
   TransitionGroup,
   vModelText,
   vModelCheckbox,
@@ -10897,4 +10927,4 @@ export {
 @vue/runtime-dom/dist/runtime-dom.esm-bundler.js:
   (*! #__NO_SIDE_EFFECTS__ *)
 */
-//# sourceMappingURL=chunk-2KH7SWZ4.js.map
+//# sourceMappingURL=chunk-7D4OYBNS.js.map

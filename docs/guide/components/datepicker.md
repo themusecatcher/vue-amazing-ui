@@ -1,4 +1,4 @@
-# 日期选择 DatePicker
+# 日期选择 DatePicker<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">7.4.0</Tag>
 
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />

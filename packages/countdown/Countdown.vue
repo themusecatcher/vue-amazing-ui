@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, onMounted } from 'vue'
+import { ref, computed, watchEffect, useSlots } from 'vue'
 import type { CSSProperties } from 'vue'
 import { requestAnimationFrame } from '../index'
 interface Props {
@@ -24,13 +24,20 @@ const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   valueStyle: () => ({}),
   finishedText: 'Finished'
 })
-const prefixRef = ref()
-const suffixRef = ref()
-const showPrefix = ref(1)
-const showSuffix = ref(1)
-onMounted(() => {
-  showPrefix.value = prefixRef.value.offsetWidth
-  showSuffix.value = suffixRef.value.offsetWidth
+const slots = useSlots()
+const showPrefix = computed(() => {
+  const prefixSlots = slots.prefix?.()
+  if (prefixSlots) {
+    return Boolean(prefixSlots[0].children !== 'v-if' && prefixSlots?.length)
+  }
+  return props.prefix
+})
+const showSuffix = computed(() => {
+  const suffixSlots = slots.suffix?.()
+  if (suffixSlots) {
+    return Boolean(suffixSlots[0].children !== 'v-if' && suffixSlots?.length)
+  }
+  return props.suffix
 })
 const futureTime = ref(0) // 未来截止时间戳
 const restTime = ref() // 剩余时间戳
@@ -133,7 +140,7 @@ watchEffect(() => {
     </div>
     <div class="m-time">
       <template v-if="showPrefix">
-        <span ref="prefixRef" class="u-prefix" v-if="showPrefix || restTime > 0 || restTime === null">
+        <span class="u-prefix" v-if="showPrefix || restTime > 0 || restTime === null">
           <slot name="prefix">{{ prefix }}</slot>
         </span>
       </template>
@@ -142,7 +149,7 @@ watchEffect(() => {
       </span>
       <span class="u-time-value" :style="valueStyle" v-if="Number.isFinite(restTime) && restTime > 0">{{ timeFormat(restTime) }}</span>
       <template v-if="showSuffix">
-        <span ref="suffixRef" class="u-suffix" v-if="showSuffix || restTime > 0 || restTime === null">
+        <span class="u-suffix" v-if="showSuffix || restTime > 0 || restTime === null">
           <slot name="suffix">{{ suffix }}</slot>
         </span>
       </template>

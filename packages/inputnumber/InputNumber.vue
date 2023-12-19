@@ -8,7 +8,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, useSlots } from 'vue'
 interface Props {
   width?: string|number // 输入框宽度
   min?: number // 最小值
@@ -41,6 +41,14 @@ const precision = computed(() => { // 数值精度取步长和精度中较大者
   const stepPrecision = String(props.step).split('.')[1]?.length || 0
   return Math.max(props.precision, stepPrecision)
 })
+const slots = useSlots()
+const showPrefix = computed(() => {
+  const prefixSlots = slots.prefix?.()
+  if (prefixSlots) {
+    return Boolean(prefixSlots[0].children !== 'v-if' && prefixSlots?.length)
+  }
+  return props.prefix
+})
 const numValue = ref(props.formatter(props.value?.toFixed(precision.value)))
 watch(
   () => props.value,
@@ -56,11 +64,6 @@ watch(
     }
   }
 )
-const prefixRef = ref() // 声明一个同名的模板引用
-const showPrefix = ref(1)
-onMounted(() => {
-  showPrefix.value = prefixRef.value.offsetWidth
-})
 const emits = defineEmits(['update:value', 'change'])
 function emitValue (value: any) {
   emits('change', value)
@@ -116,7 +119,7 @@ function onDown () {
 <template>
   <div class="m-input-number" tabindex="1" :style="`width: ${inputWidth};`">
     <div class="m-input-wrap">
-      <span class="u-input-prefix" ref="prefixRef" v-if="showPrefix">
+      <span class="u-input-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
@@ -178,6 +181,8 @@ function onDown () {
     .u-input-prefix {
       pointer-events: none;
       margin-inline-end: 4px;
+      display: inline-flex;
+      align-items: center;
     }
     .u-input-number {
       width: 100%;

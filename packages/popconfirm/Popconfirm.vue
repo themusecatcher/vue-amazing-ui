@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, useSlots } from 'vue'
 import type { Slot } from 'vue'
 interface Props {
   title?: string|Slot // 确认框的标题
@@ -33,12 +33,15 @@ const popMaxWidth = computed(() => {
   }
   return props.maxWidth
 })
-const visible = ref(false)
-const desc = ref()
-const showDesc = ref(1)
-onMounted(() => {
-  showDesc.value = desc.value.offsetHeight
+const slots = useSlots()
+const showDesc = computed(() => {
+  const descriptionSlots = slots.description?.()
+  if (descriptionSlots) {
+    return Boolean(descriptionSlots[0].children !== 'v-if' && descriptionSlots?.length)
+  }
+  return props.description
 })
+const visible = ref(false)
 const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const contentRef = ref() // 声明一个同名的模板引用
@@ -104,7 +107,7 @@ function onOk (e: Event) {
             <slot name="title">{{ title }}</slot>
           </div>
         </div>
-        <div class="m-pop-description" ref="desc" v-if="showDesc">
+        <div class="m-pop-description" v-if="showDesc">
           <slot name="description">{{ description }}</slot>
         </div>
         <div class="m-pop-buttons">
