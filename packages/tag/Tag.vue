@@ -88,14 +88,18 @@ const tagsIconRef = ref()
 const showTagsIcon = ref(Array(props.value.length).fill(1))
 watchEffect(() => {
   if (props.dynamic) {
-    showTagsIcon.value = Array(props.value.length).fill(1)
+    const len = props.value.length
+    showTagsIcon.value = Array(len).fill(1)
     nextTick(() => {
-      for (let n = 0; n < props.value.length; n++) {
-        showTagsIcon.value[n] = tagsIconRef.value[n].offsetWidth
+      console.log('tagsIconRef', tagsIconRef.value)
+      if (tagsIconRef.value) {
+        for (let n = 0; n < len; n++) {
+          showTagsIcon.value[n] = tagsIconRef.value[n].offsetWidth
+        }
       }
     })
   }
-})
+}, { flush: 'post'} )
 const emits = defineEmits(['update:value', 'close', 'dynamicClose'])
 function onClose (e: MouseEvent) {
   hidden.value = true
@@ -157,7 +161,7 @@ function onKeyboard (e: KeyboardEvent) {
         :class="[`tag-${tag.size || size}`, (tag.color || color) && presetColor.includes((tag.color || color)) ? 'tag-' + (tag.color || color):'', {'has-color': (tag.color || color) && !presetColor.includes((tag.color || color))}]"
         :style="`background-color: ${(tag.color || color) && !presetColor.includes((tag.color || color)) ? (tag.color || color) : ''};`"
         v-for="(tag, index) in tags" :key="index">
-        <span class="m-icon" ref="tagsIconRef" v-if="showTagsIcon[index]">
+        <span class="m-icon" ref="tagsIconRef" v-show="showTagsIcon[index]">
           <slot name="icon" :index="index">{{ tag.icon }}</slot>
         </span>
         <span class="u-tag">
