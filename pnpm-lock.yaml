@@ -33,14 +33,14 @@ dependencies:
     specifier: ^11.0.5
     version: 11.0.5
   vitepress:
-    specifier: 1.0.0-rc.32
-    version: 1.0.0-rc.32(@algolia/client-search@4.22.0)(@types/node@20.10.5)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.13.0)(typescript@5.3.3)
+    specifier: 1.0.0-rc.31
+    version: 1.0.0-rc.31(@algolia/client-search@4.22.0)(@types/node@20.10.5)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.13.0)(typescript@5.3.3)
   vue:
     specifier: ^3.3.12
     version: 3.3.12(typescript@5.3.3)
   vue-amazing-ui:
-    specifier: ^0.1.24
-    version: 0.1.24(@algolia/client-search@4.22.0)(@types/node@20.10.5)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3)
+    specifier: ^0.1.25
+    version: 0.1.25(@algolia/client-search@4.22.0)(@types/node@20.10.5)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3)
   vue-router:
     specifier: ^4.2.5
     version: 4.2.5(vue@3.3.12)
@@ -3985,19 +3985,19 @@ packages:
       vue: 3.3.12(typescript@5.3.3)
     dev: false
 
-  /vue-amazing-ui@0.1.24(@algolia/client-search@4.22.0)(@types/node@20.10.5)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-HMr33oP2/C5mPOp+Nlou230d1/Lb4sl5L47Hu+seiIFwuM8Vzpk6qPqyKeBfXCaF/AZasxu5ZGlsyH/7UvYSgg==}
+  /vue-amazing-ui@0.1.25(@algolia/client-search@4.22.0)(@types/node@20.10.5)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-KGdNF9hAde0u/lXOLOsFC/89FKFR1BXinzrN8x3uSqrl9oardFnx4Qltx/QL/Zlcq7c2By5/ogyjO7zVyY5CcA==}
     dependencies:
       '@vuepic/vue-datepicker': 7.4.0(vue@3.3.12)
       '@vueuse/core': 10.7.0(vue@3.3.12)
       '@vueuse/integrations': 10.7.0(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.3.12)
       ant-design-vue: 4.0.8(vue@3.3.12)
       core-js: 3.34.0
-      date-fns: 2.30.0
+      date-fns: 3.0.0
       naive-ui: 2.36.0(vue@3.3.12)
       qrcode: 1.5.3
       swiper: 11.0.5
-      vitepress: 1.0.0-rc.31(@algolia/client-search@4.22.0)(@types/node@20.10.5)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.13.0)(typescript@5.3.3)
+      vitepress: 1.0.0-rc.32(@algolia/client-search@4.22.0)(@types/node@20.10.5)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.13.0)(typescript@5.3.3)
       vue: 3.3.12(typescript@5.3.3)
       vue-router: 4.2.5(vue@3.3.12)
     transitivePeerDependencies:
