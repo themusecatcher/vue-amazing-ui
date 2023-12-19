@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import pkg from '/package.json'
 import { ref, watchEffect } from 'vue'
 import { format, endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, addDays, startOfWeek, endOfWeek, addHours, addMinutes, addSeconds } from 'date-fns'
 
@@ -74,7 +75,7 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <h1>参考文档</h1>
+    <h1>DatePicker 参考文档</h1>
     <ul class="m-list">
       <li>
         <a class="u-file" href="https://vue3datepicker.com/" target="_blank">Vue Datepicker</a>
@@ -83,7 +84,10 @@ watchEffect(() => {
         <a class="u-file" href="https://vue3datepicker.com/installation/" target="_blank">Vue Datepicker Documents</a>
       </li>
     </ul>
-    <h1 class="mt30">DatePicker 日期选择器</h1>
+    <Space align="top" class="mt30" :size="6">
+      <h1>DatePicker</h1>
+      <Tag color="volcano">{{ pkg.dependencies['@vuepic/vue-datepicker'] }}</Tag>
+    </Space>
     <h2 class="mt30 mb10">基本使用</h2>
     <DatePicker
       placeholder="请选择日期"

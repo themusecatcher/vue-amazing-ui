@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, useSlots } from 'vue'
 import type { CSSProperties } from 'vue'
 import { formatNumber } from '../index'
 interface Props {
@@ -25,13 +25,20 @@ const props = withDefaults(defineProps<Props>(), {
 const showValue = computed(() => {
   return props.formatter(formatNumber(props.value, props.precision, props.separator))
 })
-const prefixRef = ref() // 声明一个同名的模板引用
-const showPrefix = ref(1)
-const suffixRef = ref() // 声明一个同名的模板引用
-const showSuffix = ref(1)
-onMounted(() => {
-  showPrefix.value = prefixRef.value.offsetHeight
-  showSuffix.value = suffixRef.value.offsetHeight
+const slots = useSlots()
+const showPrefix = computed(() => {
+  const prefixSlots = slots.prefix?.()
+  if (prefixSlots) {
+    return Boolean(prefixSlots[0].children !== 'v-if' && prefixSlots?.length)
+  }
+  return props.prefix
+})
+const showSuffix = computed(() => {
+  const suffixSlots = slots.suffix?.()
+  if (suffixSlots) {
+    return Boolean(suffixSlots[0].children !== 'v-if' && suffixSlots?.length)
+  }
+  return props.suffix
 })
 </script>
 <template>
@@ -40,13 +47,13 @@ onMounted(() => {
       <slot name="title">{{ title }}</slot>
     </div>
     <div class="m-content" :style="valueStyle">
-      <span ref="prefixRef" class="u-prefix" v-if="showPrefix">
+      <span class="u-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <span class="u-content-value">
         <slot>{{ showValue }}</slot>
       </span>
-      <span ref="suffixRef" class="u-suffix" v-if="showSuffix">
+      <span class="u-suffix" v-if="showSuffix">
         <slot name="suffix">{{ suffix }}</slot>
       </span>
     </div>

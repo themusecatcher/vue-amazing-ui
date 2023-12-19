@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchPostEffect, nextTick, useSlots, computed } from 'vue'
+import { ref, watchPostEffect, useSlots, computed } from 'vue'
 interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot
@@ -23,11 +23,10 @@ const slots = useSlots()
 const showDesc = computed(() => {
   const descriptionSlots = slots.description?.()
   if (descriptionSlots) {
-    return Boolean(descriptionSlots[0].children?.length)
+    return Boolean(descriptionSlots[0].children !== 'v-if' && descriptionSlots?.length)
   }
-  return false
+  return props.description
 })
-
 watchPostEffect(() => {
   if (props.closable) {
     alert.value.style.height = alert.value.offsetHeight + 'px'
@@ -70,7 +69,7 @@ function onClose (e: MouseEvent):void {
         <div class="u-message">
           <slot name="message">{{ message }}</slot>
         </div>
-        <div class="u-description">
+        <div class="u-description" v-if="showDesc">
           <slot name="description">{{ description }}</slot>
         </div>
       </div>

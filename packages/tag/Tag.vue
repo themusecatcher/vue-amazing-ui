@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, nextTick, useSlots, watchEffect } from 'vue'
 import Space from '../space'
 interface Tag {
   label?: string // 标签文本名 string | slot
@@ -68,22 +68,32 @@ const tags = computed(() => {
   }
   return []
 })
+const slots = useSlots()
+const showIcon = computed(() => {
+  if (!props.dynamic) {
+    const iconSlots = slots.icon?.()
+    if (iconSlots) {
+      return Boolean(iconSlots[0].children !== 'v-if' && iconSlots?.length)
+    }
+    return props.icon
+  }
+  return false
+})
 const inputRef = ref()
 const showInput = ref(false)
 const inputValue = ref('')
 const presetColor = ['success', 'processing', 'error', 'warning', 'default', 'pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
 const hidden = ref(false)
-const iconRef = ref()
-const showIcon = ref(1)
 const tagsIconRef = ref()
 const showTagsIcon = ref(Array(props.value.length).fill(1))
-onMounted(() => {
+watchEffect(() => {
   if (props.dynamic) {
-    for (let n = 0; n < props.value.length; n++) {
-      showTagsIcon.value[n] = tagsIconRef.value[n].offsetWidth
-    }
-  } else {
-    showIcon.value = iconRef.value.offsetWidth
+    showTagsIcon.value = Array(props.value.length).fill(1)
+    nextTick(() => {
+      for (let n = 0; n < props.value.length; n++) {
+        showTagsIcon.value[n] = tagsIconRef.value[n].offsetWidth
+      }
+    })
   }
 })
 const emits = defineEmits(['update:value', 'close', 'dynamicClose'])
@@ -130,8 +140,8 @@ function onKeyboard (e: KeyboardEvent) {
     class="m-tag"
     :class="[`tag-${size}`, color && presetColor.includes(color) ? 'tag-' + color:'', {'has-color': color && !presetColor.includes(color), hidden: hidden}]"
     :style="`background-color: ${color && !presetColor.includes(color) ? color : ''};`">
-    <span class="m-icon" ref="iconRef" v-if="showIcon">
-      <slot name="icon"></slot>
+    <span class="m-icon" v-if="showIcon">
+      <slot name="icon">{{ icon }}</slot>
     </span>
     <span class="u-tag">
       <slot></slot>
@@ -189,14 +199,15 @@ function onKeyboard (e: KeyboardEvent) {
   text-align: start;
   .m-icon {
     margin-right: 5px;
+    height: 100%;
     display: inline-flex;
     align-items: center;
-    text-align: center;
-    vertical-align: -.125em;
   }
   .u-tag {
-    display: inline-block;
-    vertical-align: bottom;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: top;
   }
   .u-plus {
     display: inline-flex;
@@ -215,10 +226,11 @@ function onKeyboard (e: KeyboardEvent) {
     font-size: 12px;
     display: inline-flex;
     align-items: center;
+    height: 100%;
+    vertical-align: top;
     font-style: normal;
     line-height: 0;
     text-align: center;
-    vertical-align: -0.125em;
     cursor: pointer;
     .u-close {
       display: inline-block;

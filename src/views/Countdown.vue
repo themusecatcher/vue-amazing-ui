@@ -14,10 +14,7 @@ function onFinish () {
       :future="false"
       format="MM月 DD天 HH:mm:ss"
       finished-text="Finished"
-      @finish="onFinish">
-      <template #prefix>There's only</template>
-      <template #suffix>left for the end.</template>
-    </CountDown>
+      @finish="onFinish" />
     <h2 class="mt30 mb10">毫秒倒计时</h2>
     <h3 class="mb10">format: Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒</h3>
     <Countdown

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, useSlots, onUnmounted } from 'vue'
 import type { Slot } from 'vue'
 interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -24,20 +24,8 @@ const props = withDefaults(defineProps<Props>(), {
   icon: undefined
 })
 const clientWidth = ref(document.documentElement.clientWidth)
-const iconRef = ref()
-const showIcon = ref(1)
-const strRef = ref()
-const showStr = ref(1)
 onMounted(() => {
   window.addEventListener('resize', getBrowserSize)
-  if (!props.src) {
-    showIcon.value = iconRef.value.offsetHeight
-    nextTick(() => {
-      if (!showIcon.value) {
-        showStr.value = strRef.value.offsetHeight
-      }
-    })
-  }
 })
 onUnmounted(() => {
   window.removeEventListener('resize', getBrowserSize)
@@ -90,6 +78,25 @@ const avatarStyle = computed(() => {
     }
   }
 })
+const slots = useSlots()
+const showIcon = computed(() => {
+  if (!props.src) {
+    const iconSlots = slots.icon?.()
+    if (iconSlots) {
+      return Boolean(iconSlots[0].children !== 'v-if' && iconSlots?.length)
+    }
+  }
+  return false
+})
+const showStr = computed(() => {
+  if (!props.src && !showIcon.value) {
+    const defaultSlots = slots.default?.()
+    if (defaultSlots) {
+      return Boolean(defaultSlots[0].children !== 'v-if' && defaultSlots[0].children?.length)
+    }
+  }
+  return false
+})
 const strStyle = computed(() => {
   if (typeof props.size === 'string') {
     return {
@@ -111,10 +118,10 @@ const strStyle = computed(() => {
     :class="[avatarStyle === null ? 'avatar-' + size: '', 'avatar-' + shape, {'avatar-image': src}]"
     :style="avatarStyle || {}">
     <img class="u-image" :src="src" :alt="alt" v-if="src" />
-    <span class="m-icon" ref="iconRef" v-if="!src && showIcon">
+    <span class="m-icon" v-if="!src && showIcon">
       <slot name="icon"></slot>
     </span>
-    <span class="m-string" :style="strStyle" ref="strRef" v-if="!src && !showIcon && showStr">
+    <span class="m-string" :style="strStyle" v-if="!src && !showIcon && showStr">
       <slot></slot>
     </span>
   </div>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { ref, computed, onMounted } from 'vue'
+import { computed, useSlots } from 'vue'
 enum Status {
   success = 'success',
   process = 'processing',
@@ -41,15 +41,22 @@ const customStyle = computed(() => {
     } 
   }
 })
-const contentRef = ref()
-const showContent = ref(1)
-const countRef = ref()
-const showCount = ref(1)
-onMounted(() => {
+const slots = useSlots()
+const showContent = computed(() => {
   if (!props.status && !props.color) {
-    showContent.value = contentRef.value.offsetHeight
-    showCount.value = countRef.value.offsetHeight
+    const defaultSlots = slots.default?.()
+    if (defaultSlots) {
+      return Boolean(defaultSlots[0].children !== 'v-if' && defaultSlots?.length)
+    }
   }
+  return false
+})
+const showCount = computed(() => {
+  if (!props.status && !props.color) {
+    const countSlots = slots.count?.()
+    return Boolean(countSlots?.length)
+  }
+  return false
 })
 </script>
 <template>
@@ -61,11 +68,10 @@ onMounted(() => {
       </span>
     </template>
     <template v-else>
-      <span ref="contentRef" v-if="showContent">
+      <span v-if="showContent">
         <slot></slot>
       </span>
       <span
-        ref="countRef"
         v-if="showCount"
         class="m-count"
         :class="{'only-number': !showContent}">
@@ -114,8 +120,8 @@ onMounted(() => {
   }
 }
 .m-badge {
-  color: rgba(0, 0, 0, .88);
   font-size: 14px;
+  color: rgba(0, 0, 0, .88);
   line-height: 1;
   position: relative;
   display: inline-block;
