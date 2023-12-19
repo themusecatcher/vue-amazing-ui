@@ -91,7 +91,6 @@ watchEffect(() => {
     const len = props.value.length
     showTagsIcon.value = Array(len).fill(1)
     nextTick(() => {
-      console.log('tagsIconRef', tagsIconRef.value)
       if (tagsIconRef.value) {
         for (let n = 0; n < len; n++) {
           showTagsIcon.value[n] = tagsIconRef.value[n].offsetWidth
@@ -99,7 +98,7 @@ watchEffect(() => {
       }
     })
   }
-}, { flush: 'post'} )
+})
 const emits = defineEmits(['update:value', 'close', 'dynamicClose'])
 function onClose (e: MouseEvent) {
   hidden.value = true
