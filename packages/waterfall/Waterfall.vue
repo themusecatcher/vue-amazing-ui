@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, shallowRef, computed, watch, onMounted } from 'vue'
 import Spin from '../spin'
 /*
   mode: JS
@@ -38,7 +38,7 @@ const totalWidth = computed(() => {
 
 const imagesProperty = ref<any[]>([])
 const preColumnHeight = ref<number[]>([]) // 每列的高度
-const waterfall = ref()
+const waterfall = shallowRef() // ref() 的浅层作用形式
 const imageWidth = ref()
 const height = computed(() => {
   return Math.max(...preColumnHeight.value) + props.columnGap
