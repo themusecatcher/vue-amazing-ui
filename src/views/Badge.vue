@@ -26,7 +26,7 @@ const colors = [
         <span class="u-cube"></span>
       </Badge>
       <Badge :count="0" show-zero>
-        <span class="u-cube" v-if="false"></span>
+        <span class="u-cube"></span>
       </Badge>
       <Badge>
         <template #count>
