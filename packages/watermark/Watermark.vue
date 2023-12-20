@@ -1,16 +1,5 @@
 <script setup lang="ts">
-import {
-  unref,
-  shallowRef,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  nextTick,
-  getCurrentInstance,
-  getCurrentScope,
-  onScopeDispose
-} from 'vue'
+import { unref, shallowRef, computed, watch, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
 interface Props {
   width?: number // 水印的宽度，默认值为 content 自身的宽度
@@ -273,41 +262,8 @@ const reRendering = (mutation: MutationRecord, watermarkElement?: HTMLElement) =
   }
   return flag
 }
-type Fn = () => void
-function tryOnMounted(fn: Fn, sync = true) {
-  if (getCurrentInstance()) onMounted(fn)
-  else if (sync) fn()
-  else nextTick(fn)
-}
-function useSupported(callback: () => unknown, sync = false) {
-  const isSupported = shallowRef<boolean>()
-  const update = () => (isSupported.value = Boolean(callback()))
-  update()
-  tryOnMounted(update, sync)
-  return isSupported
-}
-const defaultWindow = typeof window !== 'undefined' ? window : undefined
-// 防止用户使用控制台隐藏、删除水印
-useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
-  subtree: true, // 监听以 target 为根节点的整个子树
-  childList: true, // 监听 target 节点中发生的节点的新增与删除
-  attributes: true // 观察所有监听的节点属性值的变化
-})
-function tryOnScopeDispose(fn: Fn) {
-  if (getCurrentScope()) {
-    onScopeDispose(fn)
-    return true
-  }
-  return false
-}
-function useMutationObserver(
-  target: any,
-  callback: MutationCallback,
-  options: any,
-) {
-  const { window = defaultWindow, ...mutationOptions } = options
+function useMutationObserver(target: any, callback: MutationCallback, options: any) {
   let observer: MutationObserver | undefined
-  const isSupported = useSupported(() => window && 'MutationObserver' in window)
 
   const cleanup = () => {
     if (observer) {
@@ -321,9 +277,9 @@ function useMutationObserver(
     el => {
       cleanup()
 
-      if (isSupported.value && window && el) {
+      if (window && el) {
         observer = new MutationObserver(callback)
-        observer!.observe(el, mutationOptions)
+        observer!.observe(el, options)
       }
     },
     { immediate: true }
@@ -333,11 +289,7 @@ function useMutationObserver(
     cleanup()
     stopWatch()
   }
-
-  tryOnScopeDispose(stop)
-
   return {
-    isSupported,
     stop
   }
 }
@@ -352,6 +304,15 @@ function onMutate (mutations: MutationRecord[]) {
     }
   })
 }
+// 防止用户使用控制台隐藏、修改水印
+const { stop } = useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
+  subtree: true, // 监听以 target 为根节点的整个子树
+  childList: true, // 监听 target 节点中发生的节点的新增与删除
+  attributes: true // 观察所有监听的节点属性值的变化
+})
+onUnmounted(() => {
+  stop()
+})
 </script>
 <template>
   <div ref="containerRef" style="position: relative;">
