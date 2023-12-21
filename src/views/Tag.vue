@@ -36,7 +36,7 @@ const onDynamicClose = (tag: any, index: number) => {
     <h1>Tag 标签</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space>
-      <a-tag color="magenta">pink</a-tag>
+      <Tag color="magenta">pink</Tag>
       <Tag>Tag 1</Tag>
       <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
       <Tag closable @close="onClose">Tag 2</Tag>
@@ -161,6 +161,31 @@ const onDynamicClose = (tag: any, index: number) => {
       v-model:value="strTags"
       closable
       @close="onDynamicClose" />
+    <h2 class="mt30 mb10">无边框</h2>
+    <Space>
+      <Tag :bordered="false">Tag 1</Tag>
+      <Tag :bordered="false">Tag 2</Tag>
+      <Tag :bordered="false" closable>Tag 3</Tag>
+      <Tag :bordered="false" closable>Tag 4</Tag>
+    </Space>
+    <Divider />
+    <Space>
+      <Tag :bordered="false" color="processing">processing</Tag>
+      <Tag :bordered="false" color="success">success</Tag>
+      <Tag :bordered="false" color="error">error</Tag>
+      <Tag :bordered="false" color="warning">warning</Tag>
+      <Tag :bordered="false" color="magenta">magenta</Tag>
+      <Tag :bordered="false" color="red">red</Tag>
+      <Tag :bordered="false" color="volcano">volcano</Tag>
+      <Tag :bordered="false" color="orange">orange</Tag>
+      <Tag :bordered="false" color="gold">gold</Tag>
+      <Tag :bordered="false" color="lime">lime</Tag>
+      <Tag :bordered="false" color="green">green</Tag>
+      <Tag :bordered="false" color="cyan">cyan</Tag>
+      <Tag :bordered="false" color="blue">blue</Tag>
+      <Tag :bordered="false" color="geekblue">geekblue</Tag>
+      <Tag :bordered="false" color="purple">purple</Tag>
+    </Space>
   </div>
 </template>
 <style lang="less" scoped>
