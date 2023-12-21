@@ -15,7 +15,7 @@ interface Image {
 interface Props {
   images: Image[] // 图片数组
   columnCount?: number // 要划分的列数
-  columnGap?: number // 各列之间的间隙
+  columnGap?: number // 各列之间的间隙，单位px
   width?: string|number // 瀑布流区域的总宽度
   backgroundColor?: string // 瀑布流区域背景填充色
   mode?: string // 瀑布流排列方式，可选：JS(js计算) CSS(css布局)
