@@ -463,6 +463,66 @@ const onDynamicClose = (tag: any, index: number) => {
 
 :::
 
+## 无边框
+
+<Space>
+  <Tag :bordered="false">Tag 1</Tag>
+  <Tag :bordered="false">Tag 2</Tag>
+  <Tag :bordered="false" closable>Tag 3</Tag>
+  <Tag :bordered="false" closable>Tag 4</Tag>
+</Space>
+<Divider />
+<Space>
+  <Tag :bordered="false" color="processing">processing</Tag>
+  <Tag :bordered="false" color="success">success</Tag>
+  <Tag :bordered="false" color="error">error</Tag>
+  <Tag :bordered="false" color="warning">warning</Tag>
+  <Tag :bordered="false" color="magenta">magenta</Tag>
+  <Tag :bordered="false" color="red">red</Tag>
+  <Tag :bordered="false" color="volcano">volcano</Tag>
+  <Tag :bordered="false" color="orange">orange</Tag>
+  <Tag :bordered="false" color="gold">gold</Tag>
+  <Tag :bordered="false" color="lime">lime</Tag>
+  <Tag :bordered="false" color="green">green</Tag>
+  <Tag :bordered="false" color="cyan">cyan</Tag>
+  <Tag :bordered="false" color="blue">blue</Tag>
+  <Tag :bordered="false" color="geekblue">geekblue</Tag>
+  <Tag :bordered="false" color="purple">purple</Tag>
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space>
+    <Tag :bordered="false">Tag 1</Tag>
+    <Tag :bordered="false">Tag 2</Tag>
+    <Tag :bordered="false" closable>Tag 3</Tag>
+    <Tag :bordered="false" closable>Tag 4</Tag>
+  </Space>
+  <Divider />
+  <Space>
+    <Tag :bordered="false" color="processing">processing</Tag>
+    <Tag :bordered="false" color="success">success</Tag>
+    <Tag :bordered="false" color="error">error</Tag>
+    <Tag :bordered="false" color="warning">warning</Tag>
+    <Tag :bordered="false" color="magenta">magenta</Tag>
+    <Tag :bordered="false" color="red">red</Tag>
+    <Tag :bordered="false" color="volcano">volcano</Tag>
+    <Tag :bordered="false" color="orange">orange</Tag>
+    <Tag :bordered="false" color="gold">gold</Tag>
+    <Tag :bordered="false" color="lime">lime</Tag>
+    <Tag :bordered="false" color="green">green</Tag>
+    <Tag :bordered="false" color="cyan">cyan</Tag>
+    <Tag :bordered="false" color="blue">blue</Tag>
+    <Tag :bordered="false" color="geekblue">geekblue</Tag>
+    <Tag :bordered="false" color="purple">purple</Tag>
+  </Space>
+</template>
+```
+
+:::
+
 <style lang="less" scoped>
 .u-svg {
   display: inline-block;
@@ -490,6 +550,7 @@ closable | 标签是否可以关闭 | boolean | false | false
 color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | '' | false
 icon | 设置图标 | string &#124; slot | '' | false
 size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
+bordered | 是否有边框 | boolean | true | false
 dynamic | 是否启用标签动态添加和删除 | boolean | false | false
 value <Tag color="cyan">v-model</Tag> | 动态标签数组，`dynamic` 为 `true` 时生效 | string[] &#124; Tag[] | [] | false
 spaceWidth | 间距区域总宽度 | string &#124; number | 'auto' | false
@@ -506,6 +567,7 @@ closable | 标签是否可以关闭，默认 `true` | boolean | false
 color | 标签颜色 | string | false
 icon | 设置图标 | string &#124; slot | false
 size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | false
+bordered | 是否有边框，默认为 `true` | boolean | false
 
 ## Events
 
