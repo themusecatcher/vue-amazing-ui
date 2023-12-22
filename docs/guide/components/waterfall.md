@@ -7,6 +7,10 @@
 
 *瀑布流展示图片列表*
 
+::: tip 说明
+宽度固定，图片等比例缩放；使用JS获取每张图片宽度和高度，结合 `relative` 和 `absolute` 定位计算每个图片的位置 `top`，`left`，保证每张新的图片都追加在当前高度最小的那列末尾
+:::
+
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
 
@@ -27,10 +31,6 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 </script>
 
 ## 基本使用
-
-*默认使用JS计算方式进行布局展示*
-
-<br/>
 
 <Waterfall :images="images" />
 
@@ -62,9 +62,9 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 
 :::
 
-## CSS布局方式
+## 自定义展示
 
-<Waterfall :images="images" mode="CSS" />
+<Waterfall :images="images" :column-count="4" :column-gap="10" background-color="#e1faeb" :border-radius="6" />
 
 ::: details Show Code
 
@@ -88,7 +88,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 })
 </script>
 <template>
-  <Waterfall :images="images" mode="CSS" />
+  <Waterfall :images="images" :column-count="4" :column-gap="10" background-color="#e1faeb" :border-radius="6" />
 </template>
 ```
 
@@ -102,8 +102,8 @@ images | 图片数组 | Image[] | [] | true
 columnCount | 要划分的列数 | number | 3 | false
 columnGap | 各列之间的间隙，单位`px` | number | 20 | false
 width | 瀑布流区域的总宽度 | string &#124; number | '100%' | false
+borderRadius | 瀑布流区域和图片圆角，单位`px` | number | 8 | false
 backgroundColor | 瀑布流区域背景填充色 | string | '#F2F4F8' | false
-mode | 瀑布流排列方式，可选：`JS` (js计算)、`CSS` (css布局) | string | 'JS' | false
 
 ## Image Type
 
@@ -111,13 +111,3 @@ mode | 瀑布流排列方式，可选：`JS` (js计算)、`CSS` (css布局) | st
 -- | -- | -- | --
 title | 图片名称 | string | false
 src | 图片地址 | string | true
-
-## 不同 mode 的区别
-
-**mode: JS**
-
-- 使用JS获取每张图片宽高，结合 `relative` 和 `absolute` 定位计算每个图片的位置 `top`，`left`，保证每张新的图片都追加在当前高度最小的那列末尾
-
-**mode: CSS**
-
-- 使用CSS的 `column-count` 和 `column-gap`，实现简单，但图片顺序是每列从上往下排列
