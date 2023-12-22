@@ -48,7 +48,7 @@
     "swiper": "^11.0.5",
     "vitepress": "^1.0.0-rc.32",
     "vue": "^3.3.12",
-    "vue-amazing-ui": "^0.1.27",
+    "vue-amazing-ui": "^0.1.28",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
