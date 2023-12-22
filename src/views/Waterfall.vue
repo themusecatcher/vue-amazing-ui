@@ -20,14 +20,14 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
   <div>
     <h1>Waterfall 瀑布流</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <h3 class="mb10">默认使用JS计算进行布局展示</h3>
-    <Waterfall
-      :images="images"
-      :width="1100" />
-    <h2 class="mt30 mb10">CSS布局方式</h2>
+    <Waterfall :images="images" :width="1100" />
+    <h2 class="mt30 mb10">自定义展示</h2>
     <Waterfall
       :images="images"
       :width="1100"
-      mode="CSS" />
+      :column-count="4"
+      :column-gap="10"
+      background-color="#e1faeb"
+      :border-radius="6" />
   </div>
 </template>
