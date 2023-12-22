@@ -689,7 +689,7 @@ const et = { class: "m-header" }, at = { class: "u-title" }, lt = { class: "u-ex
       x(s.value, d);
     });
   }), (d, b) => (r(), v("div", { class: B(["m-desc", `desc-${d.size}`]) }, [t("div", et, [t("div", at, [S(d.$slots, "title", {}, () => [j(F(d.title), 1)], !0)]), t("div", lt, [S(d.$slots, "extra", {}, () => [j(F(d.extra), 1)], !0)])]), R(t("div", { ref_key: "view", ref: c }, [S(d.$slots, "default", {}, void 0, !0)], 512), [[W, !1]]), t("div", { class: B(["m-desc-view", { "m-bordered": d.bordered }]) }, [t("table", null, [d.bordered ? (r(), v("tbody", st, [f.value ? (r(!0), v(N, { key: 0 }, U(f.value, (g) => (r(), v("tr", { ref_for: !0, ref_key: "rows", ref: p, class: "tr-bordered", key: g }))), 128)) : L("", !0)])) : (r(), v("tbody", tt, [(r(!0), v(N, null, U(i.value, (g, k) => (r(), v("tr", { key: k }, [(r(!0), v(N, null, U(g, (h, m) => (r(), v("td", { ref_for: !0, ref_key: "cols", ref: n, class: "u-item-td", colspan: h.span, key: m }, null, 8, ot))), 128))]))), 128))]))])], 2)], 2));
-} }), [["__scopeId", "data-v-50d36368"]]);
+} }), [["__scopeId", "data-v-d1848170"]]);
 fa.install = (l) => {
   l.component(fa.__name, fa);
 };

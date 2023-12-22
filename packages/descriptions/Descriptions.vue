@@ -76,7 +76,7 @@ watchEffect(() => {
   } else {
     children.value = Array.from(view.value.children).filter((element: any) => element.className === 'm-desc-item')
   }
-}, {flush: 'post'})
+}, { flush: 'post' })
 watch(children, (to) => {
   groupItems.value = []
   nextTick(() => {
@@ -163,7 +163,7 @@ function getTotalSpan (group: any): number {
 }
 // 为元素添加内联样式
 function setStyle(element: any, style: any) {
-  if (JSON.stringify(style) !== "{}") {
+  if (JSON.stringify(style) !== '{}') {
     Object.keys(style).forEach(key => {
       element.style[key] = style[key]
     })
