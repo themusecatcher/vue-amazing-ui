@@ -13,9 +13,14 @@
     <QRCode value="https://blog.csdn.net/Dandrose" error-level="M" />
     <h2 class="mt30 mb10">自定义样式</h2>
     <h3 class="mb10">自定义二维码颜色和背景色</h3>
-    <QRCode
-      value="https://blog.csdn.net/Dandrose"
-      color="#1677FF"
-      bg-color="f5f5f5"/>
+    <Space>
+      <QRCode
+        value="https://blog.csdn.net/Dandrose"
+        color="#52c41a" />
+      <QRCode
+        value="https://blog.csdn.net/Dandrose"
+        color="#1677FF"
+        bg-color="#f5f5f5" />
+    </Space>
   </div>
 </template>

@@ -61,13 +61,29 @@
 
 <br/>
 
-<QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" bg-color="f5f5f5" />
+<Space>
+  <QRCode
+    value="https://blog.csdn.net/Dandrose"
+    color="#52c41a" />
+  <QRCode
+    value="https://blog.csdn.net/Dandrose"
+    color="#1677FF"
+    bg-color="#f5f5f5" />
+</Space>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" bg-color="f5f5f5" />
+  <Space>
+    <QRCode
+      value="https://blog.csdn.net/Dandrose"
+      color="#52c41a" />
+    <QRCode
+      value="https://blog.csdn.net/Dandrose"
+      color="#1677FF"
+      bg-color="#f5f5f5" />
+  </Space>
 </template>
 ```
 
