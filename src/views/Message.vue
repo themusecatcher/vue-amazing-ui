@@ -33,6 +33,6 @@ function onClose () {
       <Button type="primary" @click="onWarning('This is a warning message')">Warning</Button>
       <Button type="primary" @click="onLoading('This is a loading message')">Loading</Button>
     </Space>
-    <Message ref="message" :duration="3000" :top="30" @close="onClose" />
+    <Message ref="message" @close="onClose" />
   </div>
 </template>

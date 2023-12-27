@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Props {
   duration?: number // 自动关闭的延时，单位ms
-  top?: number // 消息距离顶部的位置，单位px
+  top?: number|string // 消息距离顶部的位置，单位px
 }
 const props = withDefaults(defineProps<Props>(), {
   duration: 3000,
@@ -24,7 +24,12 @@ const resetTimer = ref()
 const showMessage = ref<boolean[]>([])
 const hideTimers = ref<any[]>([])
 const messageContent = ref<Message[]>([])
-
+const messTop = computed(() => {
+  if (typeof props.top === 'number') {
+    return props.top + 'px'
+  }
+  return props.top
+})
 const clear = computed(() => { // 所有提示是否已经全部变为false
   return showMessage.value.every(show => !show)
 })
@@ -99,7 +104,7 @@ function onHideMessage (index: number) {
 }
 </script>
 <template>
-  <div class="m-message-wrap" :style="`top: ${top}px;`">
+  <div class="m-message-wrap" :style="`top: ${messTop};`">
     <TransitionGroup name="slide-fade">
       <div class="m-message" v-show="showMessage[index]" v-for="(message, index) in messageContent" :key="index">
         <div class="m-message-content" @mouseenter="onEnter(index)" @mouseleave="onLeave(index)">

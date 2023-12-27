@@ -36,7 +36,7 @@ function onClose () {
 }
 </script>
 
-<Message ref="message" :duration="3000" :top="30" @close="onClose" />
+<Message ref="message" @close="onClose" />
 
 ## 基本使用
 
@@ -58,7 +58,7 @@ function onClose () {
 </script>
 <template>
   <Button type="primary" @click="onInfo('This is a normal message')">Info</Button>
-  <Message ref="message" :duration="3000" :top="30" @close="onClose" />
+  <Message ref="message" @close="onClose" />
 </template>
 ```
 
@@ -84,7 +84,7 @@ function onClose () {
 </script>
 <template>
   <Button type="primary" @click="onSuccess('This is a success message')">Success</Button>
-  <Message ref="message" :duration="3000" :top="30" @close="onClose" />
+  <Message ref="message" @close="onClose" />
 </template>
 ```
 
@@ -110,7 +110,7 @@ function onClose () {
 </script>
 <template>
   <Button type="primary" @click="onError('This is a error message')">Error</Button>
-  <Message ref="message" :duration="3000" :top="30" @close="onClose" />
+  <Message ref="message" @close="onClose" />
 </template>
 ```
 
@@ -136,7 +136,7 @@ function onClose () {
 </script>
 <template>
   <Button type="primary" @click="onWarning('This is a warning message')">Warning</Button>
-  <Message ref="message" :duration="3000" :top="30" @close="onClose" />
+  <Message ref="message" @close="onClose" />
 </template>
 ```
 
@@ -162,7 +162,7 @@ function onClose () {
 </script>
 <template>
   <Button type="primary" @click="onLoading('This is a loading message')">Loading</Button>
-  <Message ref="message" :duration="3000" :top="30" @close="onClose" />
+  <Message ref="message" @close="onClose" />
 </template>
 ```
 
@@ -173,9 +173,10 @@ function onClose () {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 duration | 自动关闭的延时，单位`ms` | number | 3000 | false
-top | 消息距离顶部的位置，单位`px` | number | 30 | false
+top | 消息距离顶部的位置，单位`px` | number &#124; string | 30 | false
+
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change | 关闭时触发的回调函数 | () => void
+close | 关闭时触发的回调函数 | () => void
