@@ -20,7 +20,7 @@ onMounted(() => {
   observer.value.observe(document.documentElement, config)
   themeDark.value = document.documentElement.classList.contains('dark')
   if (!themeDark.value) { // 默认开启暗黑模式
-    toggleDark()
+    // toggleDark()
   }
 })
 // 当观察到变动时执行的回调函数
