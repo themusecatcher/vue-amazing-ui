@@ -41,16 +41,16 @@ const timelineData = ref([
     <h2 class="mb10">使用虚线</h2>
     <Timeline :timeline-data="timelineData" line-style="dashed" />
     <h2 class="mb10">右侧时间轴点</h2>
-    <Timeline :timeline-data="timelineData" mode="right" :width="500" />
+    <Timeline :timeline-data="timelineData" mode="right" :width="540" />
     <h2 class="mb10">中间时间轴点</h2>
     <h3 class="mb10">内容从左边开始交替展现</h3>
-    <Timeline :timeline-data="timelineData" mode="center" :width="500">
+    <Timeline :timeline-data="timelineData" mode="center" :width="540">
       <template #dot="{ index }">
         <span class="big-dot" v-if="index===2"></span>
       </template>
     </Timeline>
     <h3 class="mb10">内容从右边开始交替展现</h3>
-    <Timeline :timeline-data="timelineData" mode="center" position="right" :width="500">
+    <Timeline :timeline-data="timelineData" mode="center" position="right" :width="640">
       <template #dot="{ index }">
         <span class="big-dot" v-if="index===2"></span>
       </template>
