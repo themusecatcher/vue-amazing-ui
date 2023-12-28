@@ -1,4 +1,4 @@
-// node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === "object" && "constructor" in obj && obj.constructor === Object;
 }
@@ -148,13 +148,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/shared/utils.mjs
-function classesToTokens(classes) {
-  if (classes === void 0) {
-    classes = "";
-  }
-  return classes.trim().split(" ").filter((c) => !!c.trim());
-}
+// node_modules/.pnpm/swiper@10.2.0/node_modules/swiper/shared/utils.mjs
 function deleteProps(obj) {
   const object = obj;
   Object.keys(object).forEach((key) => {
@@ -329,19 +323,12 @@ function elementChildren(element, selector) {
   }
   return [...element.children].filter((el) => el.matches(selector));
 }
-function showWarning(text) {
-  try {
-    console.warn(text);
-    return;
-  } catch (err) {
-  }
-}
 function createElement(tag, classes) {
   if (classes === void 0) {
     classes = [];
   }
   const el = document.createElement(tag);
-  el.classList.add(...Array.isArray(classes) ? classes : classesToTokens(classes));
+  el.classList.add(...Array.isArray(classes) ? classes : [classes]);
   return el;
 }
 function elementOffset(el) {
@@ -437,7 +424,6 @@ function elementOuterSize(el, size, includeMargins) {
 export {
   getDocument,
   getWindow,
-  classesToTokens,
   deleteProps,
   nextTick,
   now,
@@ -448,7 +434,6 @@ export {
   animateCSSModeScroll,
   getSlideTransformEl,
   elementChildren,
-  showWarning,
   createElement,
   elementOffset,
   elementPrevAll,
@@ -459,4 +444,4 @@ export {
   elementTransitionEnd,
   elementOuterSize
 };
-//# sourceMappingURL=chunk-PD6EYQQP.js.map
+//# sourceMappingURL=chunk-VGAOZ6JA.js.map

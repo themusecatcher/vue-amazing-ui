@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Pagination, Navigation, Autoplay, EffectFade } from 'swiper/modules'
+import { Pagination, Navigation, Autoplay, EffectFade, Mousewheel } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -15,7 +15,7 @@ interface Props {
   images: Image[] // 轮播图片数组
   width?: number|string // 图片宽度
   height?: number|string // 图片高度
-  type?: 'banner'|'carousel' // banner轮播图模式 | carousel走马灯模式
+  type?: 'banner'|'carousel'|'broadcast' // banner轮播图模式 | carousel走马灯模式
   navigation?: boolean // 是否显示导航
   delay?: number // 自动切换的时间间隔（type: banner时生效），单位ms
   swipe?: boolean // 是否可以鼠标拖动
@@ -46,10 +46,6 @@ const imgHeight = computed(() => {
   }
 })
 const modulesBanner = ref([Navigation, Pagination, Autoplay, EffectFade])
-const pagination = ref({
-  dynamicBullets: true,
-  clickable: true
-})
 const autoplayBanner = ref({
   delay: props.delay, 
   disableOnInteraction: false, // 用户操作swiper之后，是否禁止autoplay。默认为true：停止。
@@ -61,8 +57,11 @@ const autoplayCarousel = ref<object|boolean>({
   delay: 0,
   disableOnInteraction: false
 })
+const modulesBroadcast = ref([Navigation, Pagination, Mousewheel])
+const emits = defineEmits(['swiper', 'change'])
 function onSwiper (swiper: any) {
   // console.log(swiper)
+  emits('swiper', swiper)
   if (props.type === 'carousel') {
     swiper.el.onmouseenter = () => { // 移入暂停
       swiper.autoplay.stop()
@@ -75,15 +74,14 @@ function onSwiper (swiper: any) {
 </script>
 <template>
   <swiper
-    :class="{'swiper-no-swiping': !swipe}"
     v-if="type==='banner'"
+    :class="{'swiper-no-swiping': !swipe}"
     :modules="modulesBanner"
-    :lazy="true"
     :navigation="navigation"
-    :pagination="pagination"
     :slides-per-view="1"
     :autoplay="autoplayBanner"
-    :loop="true"
+    lazy
+    loop
     @swiper="onSwiper"
     @slideChange="$emit('change')"
     v-bind="$attrs">
@@ -100,12 +98,32 @@ function onSwiper (swiper: any) {
     </swiper-slide>
   </swiper>
   <swiper
-    class="swiper-no-swiping"
     v-if="type==='carousel'"
+    class="swiper-no-swiping"
     :modules="modulesCarousel"
-    :lazy="true"
     :autoplay="autoplayCarousel"
-    :loop="true"
+    lazy
+    loop
+    @swiper="onSwiper"
+    @slideChange="$emit('change')"
+    v-bind="$attrs">
+    <swiper-slide v-for="(image, index) in images" :key="index">
+      <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
+        <img
+          :src="image.src"
+          class="u-img"
+          :style="`width: ${imgWidth}; height: ${imgHeight};`"
+          :alt="image.title"
+          loading="lazy" />
+      </a>
+      <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
+    </swiper-slide>
+  </swiper>
+  <swiper
+    v-if="type==='broadcast'"
+    :modules="modulesBroadcast"
+    :navigation="navigation"
+    lazy
     @swiper="onSwiper"
     @slideChange="$emit('change')"
     v-bind="$attrs">
