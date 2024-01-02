@@ -66,6 +66,6 @@ const images = ref([
       nav-color="#13C2C2"
       :nav-size="48"
       page-active-color="#13C2C2"
-      :page-style="{ width: '20px', height: '12px', borderRadius: '12px', backgroundColor: '#DDD' }" />
+      :page-style="{ width: '24px', height: '5px', borderRadius: '5px', backgroundColor: '#FFF' }" />
   </div>
 </template>
