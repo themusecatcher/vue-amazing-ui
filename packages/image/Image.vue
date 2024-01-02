@@ -474,6 +474,7 @@ function onSwitchRight () {
         .u-preview-operation {
           line-height: 1;
           padding: 12px;
+          border-radius: 8px;
           cursor: pointer;
           transition: all .3s;
           &:not(:last-child) {
