@@ -246,9 +246,6 @@ watch(
     flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
   },
 )
-onBeforeUnmount(() => {
-  destroyWatermark()
-})
 // Whether to re-render the watermark
 const reRendering = (mutation: MutationRecord, watermarkElement?: HTMLElement) => {
   let flag = false
@@ -293,6 +290,9 @@ function useMutationObserver(target: any, callback: MutationCallback, options: a
     stop
   }
 }
+onBeforeUnmount(() => {
+  destroyWatermark()
+})
 function onMutate (mutations: MutationRecord[]) {
   if (stopObservation.value) {
     return
@@ -308,7 +308,8 @@ function onMutate (mutations: MutationRecord[]) {
 const { stop } = useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
   subtree: true, // 监听以 target 为根节点的整个子树
   childList: true, // 监听 target 节点中发生的节点的新增与删除
-  attributes: true // 观察所有监听的节点属性值的变化
+  attributes: true, // 观察所有监听的节点属性值的变化
+  attributeFilter: ['style', 'class'] // 声明哪些属性名会被监听的数组。如果不声明该属性，所有属性的变化都将触发通知。
 })
 onUnmounted(() => {
   stop()
