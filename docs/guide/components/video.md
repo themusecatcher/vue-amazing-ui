@@ -128,7 +128,7 @@ autoplay | 视频就绪后是否马上播放，优先级高于 `preload`，参�
 controls | 是否向用户显示控件，比如进度条，全屏等 | boolean | true | false
 loop | 视频播放完成后，是否循环播放 | boolean | false | false
 muted |  是否静音 | boolean | false | false
-preload | 是否在页面加载后载入视频，如果设置了 `autoplay` 属性，则 `preload` 将被忽略 | 'auto' &#124; 'metadata' &#124; 'none' | 'auto' | false
+preload | 是否在页面加载后载入视频，如果设置了 `autoplay` 属性，则 `preload` 将被忽略 | 'auto' &#124; 'metadata' &#124; 'none' | 'metadata' | false
 showPlay | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true | false
 fit | `video` 的 `poster` 默认图片和视频内容缩放规则 | 'none' &#124; 'fill' &#124; 'contain' &#124; 'cover' | 'contain' | false
 
