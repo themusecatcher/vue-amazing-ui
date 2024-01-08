@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
     metadata: 当页面加载后仅加载视频的元数据（例如长度），建议使用metadata，以便视频自动获取第一帧作为封面poster
     none: 页面加载后不应加载视频
   */
-  preload: 'auto',
+  preload: 'metadata',
   showPlay: true,
   /*
     fit可选属性：
@@ -66,7 +66,7 @@ const veo = ref()
   loadeddata 事件在媒体当前播放位置的视频帧（通常是第一帧）加载完成后触发
   preload为none时不会触发
 */
-function getPoster () { // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
+async function getPoster () { // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
   // 由于不少视频第一帧为黑屏，故设置视频开始播放时间为0.5s，即取该时刻帧作为封面图
   veo.value.currentTime = props.second
   // 创建canvas元素
@@ -125,7 +125,7 @@ onMounted(() => {
       :muted="autoplay || muted"
       :preload="preload"
       crossorigin="anonymous"
-      @loadeddata="poster ? () => false : getPoster()"
+      @loadedmetadata="poster ? () => false : getPoster()"
       @pause="showPlay ? onPause() : () => false"
       @playing="showPlay ? onPlaying() : () => false"
       @click.prevent.once="onPlay"
