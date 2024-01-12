@@ -305,14 +305,11 @@ function onMutate (mutations: MutationRecord[]) {
   })
 }
 // 防止用户使用控制台隐藏、修改水印
-const { stop } = useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
+useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
   subtree: true, // 监听以 target 为根节点的整个子树
   childList: true, // 监听 target 节点中发生的节点的新增与删除
   attributes: true, // 观察所有监听的节点属性值的变化
   attributeFilter: ['style', 'class'] // 声明哪些属性名会被监听的数组。如果不声明该属性，所有属性的变化都将触发通知。
-})
-onUnmounted(() => {
-  stop()
 })
 </script>
 <template>
