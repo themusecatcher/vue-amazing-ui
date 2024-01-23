@@ -2,6 +2,7 @@
 import { reactive, ref } from 'vue'
 const model = reactive({
   content: 'Vue Amazing UI',
+  layout: 'alternate',
   color: 'rgba(0,0,0,.15)',
   fontSize: 16,
   fontWeight: 400,
@@ -10,6 +11,16 @@ const model = reactive({
   gap: [100, 100],
   offset: [50, 50]
 })
+const layoutOptions = [
+  {
+    label: 'alternate',
+    value: 'alternate'
+  },
+  {
+    label: 'parallel',
+    value: 'parallel'
+  }
+]
 const show = ref(false)
 </script>
 <template>
@@ -17,6 +28,10 @@ const show = ref(false)
     <h1>Watermark 水印</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Watermark content="Vue Amazing UI">
+      <div style="height: 360px" />
+    </Watermark>
+    <h2 class="mt30 mb10">平行布局水印</h2>
+    <Watermark layout="parallel" content="Vue Amazing UI">
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">多行水印</h2>
@@ -80,6 +95,8 @@ const show = ref(false)
       >
         <p>Content</p>
         <Input v-model:value="model.content" />
+        <p>Layout</p>
+        <Radio :options="layoutOptions"  v-model:value="model.layout" />
         <p>Color</p>
         <Input v-model:value="model.color" />
         <p>FontSize</p>
