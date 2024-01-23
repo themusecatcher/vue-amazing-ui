@@ -283,7 +283,7 @@ const layoutOptions = [
       <p>Content</p>
       <Input v-model:value="model.content" />
       <p>Layout</p>
-      <Radio :options="layoutOptions"  v-model:value="model.layout" />
+      <Radio :options="layoutOptions" v-model:value="model.layout" />
       <p>Color</p>
       <Input v-model:value="model.color" />
       <p>FontSize</p>
