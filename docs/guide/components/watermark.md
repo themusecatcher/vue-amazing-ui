@@ -15,6 +15,7 @@
 import { reactive, ref } from 'vue'
 const model = reactive({
   content: 'Vue Amazing UI',
+  layout: 'alternate',
   color: 'rgba(0,0,0,.15)',
   fontSize: 16,
   fontWeight: 400,
@@ -23,6 +24,16 @@ const model = reactive({
   gap: [100, 100],
   offset: [50, 50]
 })
+const layoutOptions = [
+  {
+    label: 'alternate',
+    value: 'alternate'
+  },
+  {
+    label: 'parallel',
+    value: 'parallel'
+  }
+]
 const show = ref(false)
 </script>
 
@@ -37,6 +48,24 @@ const show = ref(false)
 ```vue
 <template>
   <Watermark content="Vue Amazing UI">
+    <div style="height: 360px" />
+  </Watermark>
+</template>
+```
+
+:::
+
+## 平行布局水印
+
+<Watermark layout="parallel" content="Vue Amazing UI">
+  <div style="height: 360px" />
+</Watermark>
+
+::: details Show Code
+
+```vue
+<template>
+  <Watermark layout="parallel" content="Vue Amazing UI">
     <div style="height: 360px" />
   </Watermark>
 </template>
@@ -157,6 +186,8 @@ const show = ref(false)
   >
     <p>Content</p>
     <Input v-model:value="model.content" />
+    <p>Layout</p>
+    <Radio :options="layoutOptions"  v-model:value="model.layout" />
     <p>Color</p>
     <Input v-model:value="model.color" />
     <p>FontSize</p>
@@ -184,9 +215,10 @@ const show = ref(false)
 
 ```vue
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 const model = reactive({
   content: 'Vue Amazing UI',
+  layout: 'alternate',
   color: 'rgba(0,0,0,.15)',
   fontSize: 16,
   fontWeight: 400,
@@ -195,6 +227,16 @@ const model = reactive({
   gap: [100, 100],
   offset: [50, 50]
 })
+const layoutOptions = [
+  {
+    label: 'alternate',
+    value: 'alternate'
+  },
+  {
+    label: 'parallel',
+    value: 'parallel'
+  }
+]
 </script>
 <template>
   <Flex>
@@ -240,6 +282,8 @@ const model = reactive({
     >
       <p>Content</p>
       <Input v-model:value="model.content" />
+      <p>Layout</p>
+      <Radio :options="layoutOptions"  v-model:value="model.layout" />
       <p>Color</p>
       <Input v-model:value="model.color" />
       <p>FontSize</p>
@@ -273,6 +317,7 @@ const model = reactive({
 -- | -- | -- | -- | --
 width | 水印的宽度，默认值为 `content` 自身的宽度 | number | undefined | false
 height | 水印的高度，默认值为 `content` 自身的高度 | number | undefined | false
+layout | 水印的布局方式：平行布局 `parallel`; 交替布局 `alternate` | 'parallel' &#124; 'alternate' | 'alternate' | false
 rotate | 水印绘制时，旋转的角度，单位 `°` | number | -22 | false
 zIndex | 追加的水印元素的 `z-index` | number| 9 | false
 image | 图片源，建议使用 `2` 倍或 `3` 倍图，优先级高于文字 | string | undefined | false
