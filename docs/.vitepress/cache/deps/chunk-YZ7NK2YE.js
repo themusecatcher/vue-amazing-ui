@@ -24,9 +24,9 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-7D4OYBNS.js";
+} from "./chunk-SFLLFODM.js";
 
-// node_modules/.pnpm/vue-demi@0.14.6_vue@3.3.12/node_modules/vue-demi/lib/index.mjs
+// node_modules/.pnpm/vue-demi@0.14.6_vue@3.4.15/node_modules/vue-demi/lib/index.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@10.7.0_vue@3.3.12/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@10.7.2_vue@3.4.15/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -528,8 +528,7 @@ function objectEntries(obj) {
   return Object.entries(obj);
 }
 function getLifeCycleTarget(target) {
-  const instance = target || getCurrentInstance();
-  return isVue3 ? instance : instance == null ? void 0 : instance.proxy;
+  return target || getCurrentInstance();
 }
 function toRef2(...args) {
   if (args.length !== 1)
@@ -789,7 +788,7 @@ function toRefs2(objectRef, options = {}) {
 function tryOnBeforeMount(fn, sync = true, target) {
   const instance = getLifeCycleTarget(target);
   if (instance)
-    onBeforeMount(fn, instance);
+    onBeforeMount(fn, target);
   else if (sync)
     fn();
   else
@@ -798,12 +797,12 @@ function tryOnBeforeMount(fn, sync = true, target) {
 function tryOnBeforeUnmount(fn, target) {
   const instance = getLifeCycleTarget(target);
   if (instance)
-    onBeforeUnmount(fn, instance);
+    onBeforeUnmount(fn, target);
 }
 function tryOnMounted(fn, sync = true, target) {
-  const instance = getLifeCycleTarget(target);
+  const instance = getLifeCycleTarget();
   if (instance)
-    onMounted(fn, instance);
+    onMounted(fn, target);
   else if (sync)
     fn();
   else
@@ -812,7 +811,7 @@ function tryOnMounted(fn, sync = true, target) {
 function tryOnUnmounted(fn, target) {
   const instance = getLifeCycleTarget(target);
   if (instance)
-    onUnmounted(fn, instance);
+    onUnmounted(fn, target);
 }
 function createUntil(r, isNot = false) {
   function toMatch(condition, { flush = "sync", deep = false, timeout, throwOnTimeout } = {}) {
@@ -1641,4 +1640,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-CM3LLAKT.js.map
+//# sourceMappingURL=chunk-YZ7NK2YE.js.map

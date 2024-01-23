@@ -110,7 +110,7 @@ import {
   watchTriggerable,
   watchWithFilter,
   whenever
-} from "./chunk-CM3LLAKT.js";
+} from "./chunk-YZ7NK2YE.js";
 import {
   Fragment,
   TransitionGroup,
@@ -137,10 +137,10 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-7D4OYBNS.js";
+} from "./chunk-SFLLFODM.js";
 import "./chunk-LQ2VYIYD.js";
 
-// node_modules/.pnpm/@vueuse+core@10.7.0_vue@3.3.12/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@10.7.2_vue@3.4.15/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {
@@ -371,7 +371,7 @@ var _iOSWorkaround = false;
 function onClickOutside(target, handler, options = {}) {
   const { window: window2 = defaultWindow, ignore = [], capture = true, detectIframe = false } = options;
   if (!window2)
-    return;
+    return noop;
   if (isIOS && !_iOSWorkaround) {
     _iOSWorkaround = true;
     Array.from(window2.document.body.children).forEach((el) => el.addEventListener("click", noop));
@@ -1108,7 +1108,7 @@ function blobToBase64(blob) {
 function useBattery(options = {}) {
   const { navigator = defaultNavigator } = options;
   const events2 = ["chargingchange", "chargingtimechange", "dischargingtimechange", "levelchange"];
-  const isSupported = useSupported(() => navigator && "getBattery" in navigator);
+  const isSupported = useSupported(() => navigator && "getBattery" in navigator && typeof navigator.getBattery === "function");
   const charging = ref(false);
   const chargingTime = ref(0);
   const dischargingTime = ref(0);
@@ -2450,8 +2450,8 @@ function useDraggable(target, options = {}) {
     const containerRect = (_a2 = container == null ? void 0 : container.getBoundingClientRect) == null ? void 0 : _a2.call(container);
     const targetRect = toValue(target).getBoundingClientRect();
     const pos = {
-      x: e.clientX - (container ? targetRect.left - containerRect.left : targetRect.left),
-      y: e.clientY - (container ? targetRect.top - containerRect.top : targetRect.top)
+      x: e.clientX - (container ? targetRect.left - containerRect.left + container.scrollLeft : targetRect.left),
+      y: e.clientY - (container ? targetRect.top - containerRect.top + container.scrollTop : targetRect.top)
     };
     if ((onStart == null ? void 0 : onStart(pos, e)) === false)
       return;
@@ -2471,12 +2471,12 @@ function useDraggable(target, options = {}) {
     if (axis === "x" || axis === "both") {
       x = e.clientX - pressedDelta.value.x;
       if (container)
-        x = Math.min(Math.max(0, x), containerRect.width - targetRect.width);
+        x = Math.min(Math.max(0, x), containerRect.width + container.scrollLeft - targetRect.width);
     }
     if (axis === "y" || axis === "both") {
       y = e.clientY - pressedDelta.value.y;
       if (container)
-        y = Math.min(Math.max(0, y), containerRect.height - targetRect.height);
+        y = Math.min(Math.max(0, y), containerRect.height + container.scrollTop - targetRect.height);
     }
     position.value = {
       x,
@@ -2640,6 +2640,9 @@ function useElementBounding(target, options = {}) {
   }
   useResizeObserver(target, update);
   watch(() => unrefElement(target), (ele) => !ele && update());
+  useMutationObserver(target, update, {
+    attributeFilter: ["style", "class"]
+  });
   if (windowScroll)
     useEventListener("scroll", update, { capture: true, passive: true });
   if (windowResize)
@@ -5715,7 +5718,7 @@ function useStorageAsync(key, initialValue, storage, options = {}) {
   const serializer = (_a = options.serializer) != null ? _a : StorageSerializers[type];
   if (!storage) {
     try {
-      storage = getSSRHandler("getDefaultStorage", () => {
+      storage = getSSRHandler("getDefaultStorageAsync", () => {
         var _a2;
         return (_a2 = defaultWindow) == null ? void 0 : _a2.localStorage;
       })();
@@ -7562,4 +7565,4 @@ export {
   watchWithFilter,
   whenever
 };
-//# sourceMappingURL=@vueuse_core.js.map
+//# sourceMappingURL=vitepress___@vueuse_core.js.map
