@@ -176,7 +176,7 @@ function startMove () {
     class="m-slider-vertical"
     @mouseenter="onStop"
     @mouseleave="onStart"
-    :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --color: ${color};`">
+    :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --fontWeight: ${fontWeight}; --color: ${color};`">
     <TransitionGroup name="slide">
       <div
         class="m-slider"
