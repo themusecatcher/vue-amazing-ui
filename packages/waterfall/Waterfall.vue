@@ -25,6 +25,10 @@ const props = withDefaults(defineProps<Props>(), {
   borderRadius: 8,
   backgroundColor: '#F2F4F8'
 })
+const imagesProperty = ref<any[]>([])
+const preColumnHeight = ref<number[]>(Array(props.columnCount).fill(0)) // 每列的高度
+const waterfall = shallowRef() // ref() 的浅层作用形式
+const imageWidth = ref()
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -32,10 +36,6 @@ const totalWidth = computed(() => {
     return props.width
   }
 })
-const imagesProperty = ref<any[]>([])
-const preColumnHeight = ref<number[]>(Array(props.columnCount).fill(0)) // 每列的高度
-const waterfall = shallowRef() // ref() 的浅层作用形式
-const imageWidth = ref()
 const height = computed(() => {
   return Math.max(...preColumnHeight.value) + props.columnGap
 })

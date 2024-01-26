@@ -26,12 +26,11 @@ const props = withDefaults(defineProps<Props>(), {
   textFontSize: 0,
   showArrow: true
 })
+const text = ref()
+const collapseHeight = ref<any[]>([])
 watchEffect(() => {
   getCollapseHeight(props.collapseData.length) // 获取各个面板内容高度
 }, { flush: 'post' })
-
-const text = ref()
-const collapseHeight = ref<any[]>([])
 function getCollapseHeight (len: number) {
   for (let n = 0; n < len; n++) {
     collapseHeight.value.push(text.value[n].offsetHeight)
@@ -50,7 +49,6 @@ function onClick (key: number|string) {
     } else {
       emitValue(null)
     }
-
   } else {
     if (Array.isArray(props.activeKey)) {
       emitValue([...props.activeKey, key])

@@ -25,15 +25,15 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipBackgroundColor: 'rgba(0, 0, 0, .85)',
   tooltipOverlayStyle: () => ({padding: '8px 12px', textAlign: 'justify'})
 })
+const showTooltip = ref()
+const ellipsis = ref()
+const defaultTooltipMaxWidth = ref()
 const textMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
     return props.maxWidth + 'px'
   }
   return props.maxWidth
 })
-const showTooltip = ref()
-const ellipsis = ref()
-const defaultTooltipMaxWidth = ref()
 watchEffect(() => {
   showTooltip.value = props.tooltip
 })
@@ -45,7 +45,7 @@ watchEffect(() => {
       defaultTooltipMaxWidth.value = ellipsis.value.offsetWidth + 24
     }
   }
-}, {flush: 'post'})
+}, { flush: 'post' })
 const emit = defineEmits(['expandChange'])
 function onExpand () {
   if (ellipsis.value.style['-webkit-line-clamp']) {

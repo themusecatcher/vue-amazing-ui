@@ -94,7 +94,6 @@ function initSelector () {
   }
 }
 function onBlur () {
-  // console.log('blur')
   if (showOptions.value) {
     showOptions.value = false
   }
@@ -104,7 +103,6 @@ function onBlur () {
   }
 }
 function onInputEnter () {
-  // console.log('input enter')
   if (props.allowClear && selectedName.value) {
     showArrow.value = false
     showClear.value = true
@@ -114,7 +112,6 @@ function onInputEnter () {
   }
 }
 function onInputLeave () {
-  // console.log('input leave')
   if (props.allowClear && showClear.value) {
     showClear.value = false
     if (!props.search) {

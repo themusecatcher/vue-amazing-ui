@@ -26,6 +26,7 @@ const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const contentRef = ref() // 声明一个同名的模板引用
 const tooltipRef = ref() // 声明一个同名的模板引用
+const emit = defineEmits(['openChange'])
 function getPosition () {
   const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
   const tooltipWidth = tooltipRef.value.offsetWidth // 提示文本宽度
@@ -33,7 +34,6 @@ function getPosition () {
   top.value = tooltipHeight + 4
   left.value = (tooltipWidth - contentWidth) / 2
 }
-const emit = defineEmits(['openChange'])
 function onShow () {
   getPosition()
   cancelRaf(hideTimer.value)

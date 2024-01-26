@@ -28,16 +28,6 @@ const props = withDefaults(defineProps<Props>(), {
   contentStyle: () => ({})
 })
 const clientWidth = ref(document.documentElement.clientWidth)
-onMounted(() => {
-  window.addEventListener('resize', getBrowserSize)
-})
-onUnmounted(() => {
-  window.removeEventListener('resize', getBrowserSize)
-})
-function getBrowserSize () {
-  // document.documentElement返回<html>元素
-  clientWidth.value = document.documentElement.clientWidth
-}
 const responsiveColumn = computed(() => {
   if (typeof props.column === 'object') {
     if (clientWidth.value >= 1600 && props.column.xxl) {
@@ -89,6 +79,16 @@ watch(responsiveColumn, (to) => {
     getGroupItems(children.value, to as number)
   })
 })
+onMounted(() => {
+  window.addEventListener('resize', getBrowserSize)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', getBrowserSize)
+})
+function getBrowserSize () {
+  // document.documentElement返回<html>元素
+  clientWidth.value = document.documentElement.clientWidth
+}
 // 根据不同 cloumn 处理 DescriptionsItems 节点
 function getGroupItems (children: any, responsiveColumn: number) {
   const len = children.length
