@@ -31,7 +31,6 @@ const slider = ref()
 const sliderWidth = ref()
 const leftHandle = ref() // left模板引用
 const rightHandle = ref() // right模板引用
-
 const pixelStep = computed(() => { // 滑块移动时的像素步长
   return fixedDigit(sliderWidth.value / (props.max - props.min) * props.step)
 })

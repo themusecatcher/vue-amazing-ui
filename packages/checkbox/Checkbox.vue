@@ -44,13 +44,6 @@ const maxHeight = computed(() => { // 选项总数
     return props.height
   }
 })
-const checkedValue = ref(props.value)
-watch(
-  () => props.value,
-  (to) => {
-    checkedValue.value = to
-  }
-)
 const styleObject = computed(() => {
   if (props.vertical) {
     return {
@@ -62,6 +55,13 @@ const styleObject = computed(() => {
     }
   }
 })
+const checkedValue = ref(props.value)
+watch(
+  () => props.value,
+  (to) => {
+    checkedValue.value = to
+  }
+)
 const emits = defineEmits(['update:value', 'update:checked', 'change'])
 function onClick (value: any) {
   if (props.value.includes(value)) { // 已选中

@@ -47,7 +47,6 @@ const targetMove = ref() // 目标移动位置
 const switched = ref(false) // 是否在进行跳转切换，用于区别箭头或自动切换（false）和跳转切换（true）
 const carousel = ref() // DOM引用
 const activeSwitcher = ref(1) // 当前展示图片标识
-
 const carouselWidth = computed(() => { // 走马灯区域宽度
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -67,17 +66,6 @@ const totalWidth = computed(() => { // 容器宽度：(图片数组长度+1) * �
 })
 const imageCount = computed(() => { // 图片数量
   return props.images.length
-})
-
-onMounted(() => {
-  getFPS() // 获取浏览器的刷新率
-  getImageSize() // 获取每张图片大小
-  // 监听键盘切换事件
-  document.addEventListener('keydown', keyboardSwitch)
-})
-onUnmounted(() => {
-  // 移除键盘切换事件
-  document.removeEventListener('keydown', keyboardSwitch)
 })
 const complete = ref(Array(imageCount.value).fill(false)) // 图片是否加载完成
 const fpsRaf = ref() // fps回调标识
@@ -136,6 +124,16 @@ function keyboardSwitch (e: KeyboardEvent) {
     }
   }
 }
+onMounted(() => {
+  getFPS() // 获取浏览器的刷新率
+  getImageSize() // 获取每张图片大小
+  // 监听键盘切换事件
+  document.addEventListener('keydown', keyboardSwitch)
+})
+onUnmounted(() => {
+  // 移除键盘切换事件
+  document.removeEventListener('keydown', keyboardSwitch)
+})
 function onStart () {
   if (imageCount.value > 1 && complete.value[0]) { // 超过一条时滑动
     toLeft.value = true // 重置左滑标志

@@ -66,7 +66,7 @@ const veo = ref()
   loadeddata 事件在媒体当前播放位置的视频帧（通常是第一帧）加载完成后触发
   preload为none时不会触发
 */
-async function getPoster () { // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
+function getPoster () { // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
   // 由于不少视频第一帧为黑屏，故设置视频开始播放时间为0.5s，即取该时刻帧作为封面图
   veo.value.currentTime = props.second
   // 创建canvas元素
