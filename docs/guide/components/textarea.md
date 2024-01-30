@@ -25,7 +25,6 @@ function onChange (e: Event) {
   console.log('change e:', e)
 }
 function onEnter (e: KeyboardEvent) {
-  e.preventDefault() // 消除enter键换行
   console.log('enter e:', e)
 }
 </script>
@@ -73,7 +72,6 @@ function onChange (e: Event) {
   console.log('change e:', e)
 }
 function onEnter (e: KeyboardEvent) {
-  e.preventDefault() // 消除enter键换行
   console.log('enter e:', e)
 }
 </script>

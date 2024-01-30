@@ -98,6 +98,7 @@ function onChange (e: any) {
 }
 function onKeyboard (e: any) {
   if (e.key === 'Enter') {
+    e.preventDefault()
     emits('enter', e)
   }
 }
