@@ -95,6 +95,7 @@ function onChange (e: any) {
 }
 function onKeyboard (e: any) {
   if (e.key === 'Enter') {
+    e.preventDefault() // 消除enter键换行
     emits('enter', e)
   }
 }
