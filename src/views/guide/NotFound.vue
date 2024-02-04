@@ -7,11 +7,11 @@ function goHome () {
 }
 </script>
 <template>
-  <a-result status="404" title="404" sub-title="Sorry, the page you visited does not exist.">
+  <Result status="404" title="404" sub-title="Sorry, the page you visited does not exist.">
     <template #extra>
-      <a-button type="primary" @click="goHome">Back Home</a-button>
+      <Button type="primary" @click="goHome">Back Home</Button>
     </template>
-  </a-result>
+  </Result>
 </template>
 <style lang="less" scoped>
 .m-not-found {
