@@ -16,10 +16,6 @@ const options = ref([
           {
             value: '112',
             label: '西城区'
-          },
-          {
-            value: '113',
-            label: '海淀区'
           }
         ]
       }
