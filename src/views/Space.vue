@@ -8,7 +8,7 @@ const options = ref([
         },
         {
           label: 'Middle',
-          value: 'middle',
+          value: 'middle'
         },
         {
           label: 'Large',

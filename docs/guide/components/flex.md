@@ -21,7 +21,7 @@ const directionOptions = ref([
         },
         {
           label: 'vertical',
-          value: 'vertical',
+          value: 'vertical'
         }
       ])
 const direction = ref('horizontal')
@@ -84,7 +84,7 @@ const gapOptions = ref([
         },
         {
           label: 'Middle',
-          value: 'middle',
+          value: 'middle'
         },
         {
           label: 'Large',
@@ -123,7 +123,7 @@ const directionOptions = ref([
         },
         {
           label: 'vertical',
-          value: 'vertical',
+          value: 'vertical'
         }
       ])
 const direction = ref('horizontal')
@@ -259,7 +259,7 @@ const gapOptions = ref([
         },
         {
           label: 'Middle',
-          value: 'middle',
+          value: 'middle'
         },
         {
           label: 'Large',
