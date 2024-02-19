@@ -13,6 +13,7 @@ interface Props {
   strokeColor?: string|Gradient // 进度条的色彩，传入 string 时为纯色，传入 object 时为渐变
   strokeWidth?: number // 进度条线的宽度，单位px
   showInfo?: boolean // 是否显示进度数值或状态图标
+  format?: Function // 内容的模板函数 function | slot
   type?: 'line'|'circle' // 进度条类型
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   strokeColor: '#1677FF',
   strokeWidth: 8,
   showInfo: true,
+  format: (percent: number) => percent + '%',
   type: 'line'
 })
 const totalWidth = computed(() => { // 进度条总宽度
@@ -46,6 +48,9 @@ const lineColor = computed(() => {
     return `linear-gradient(to ${props.strokeColor.direction || 'right'}, ${props.strokeColor['0%'] || props.strokeColor.from}, ${props.strokeColor['100%'] || props.strokeColor.to})`
   }
 })
+const showPercent = computed(() => {
+  return props.format(props.percent > 100 ? 100 : props.percent)
+})
 </script>
 <template>
   <div v-if="type==='line'" class="m-progress-line" :style="`width: ${totalWidth}; height: ${strokeWidth < 24 ? 24 : strokeWidth}px;`">
@@ -57,7 +62,9 @@ const lineColor = computed(() => {
         <span v-if="percent >= 100" class="m-success">
           <svg focusable="false" class="u-icon" data-icon="check-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"></path></svg>
         </span>
-        <p class="u-progress-text" v-else>{{ percent >= 100 ? 100 : percent }}%</p>
+        <p class="u-progress-text" v-else>
+          <slot name="format" :percent="percent">{{ showPercent }}</slot>
+        </p>
       </Transition>
     </template>
   </div>
@@ -69,7 +76,9 @@ const lineColor = computed(() => {
     <template v-if="showInfo">
       <Transition mode="out-in">
         <svg v-if="percent >= 100" class="u-icon" focusable="false" data-icon="check" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"></path></svg>
-        <p class="u-progress-text" v-else>{{ percent >= 100 ? 100 : percent }}%</p>
+        <p class="u-progress-text" v-else>
+          <slot name="format" :percent="percent">{{ showPercent }}</slot>
+        </p>
       </Transition>
     </template>
   </div>
@@ -129,8 +138,7 @@ const lineColor = computed(() => {
     text-align: center;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding-left: 4px;
+    padding-left: 8px;
     flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
     .u-icon {
       display: inline-block;
@@ -146,9 +154,8 @@ const lineColor = computed(() => {
     */
     flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
     width: 40px;
-    text-align: center;
     font-size: 14px;
-    padding-left: 4px;
+    padding-left: 8px;
     color: rgba(0, 0, 0, .88);
   }
 }
