@@ -76,7 +76,7 @@ pnpm dev
 Component name | Descriptions | Component name | Descriptions
 :-- | :-- | :-- | :--
 Alert | 警告提示 | Avatar | 头像
-BackTop | 回到顶部 | Badge | 徽标数
+BackTop | 回到顶部 | Badge | 徽标
 Breadcrumb | 面包屑 | Button | 按钮
 Card | 卡片 | Carousel | 走马灯
 Cascader | 级联选择 | Checkbox | 多选框

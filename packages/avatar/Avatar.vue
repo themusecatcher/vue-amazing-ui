@@ -11,7 +11,7 @@ interface Responsive {
 }
 interface Props {
   shape?: 'circle'|'square' // 指定头像的形状
-  size?: number|'large'|'small'|'default'|Responsive // 设置头像的大小
+  size?: number|'large'|'small'|'default'|Responsive // 设置头像的大小，number 类型时单位 px
   src?: string // 图片类头像资源地址
   alt?: string // 图片无法显示时的替代文本
   icon?: Slot // 设置头像的图标

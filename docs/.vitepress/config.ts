@@ -107,7 +107,7 @@ export default defineConfig({
               link: '/guide/components/backtop'
             },
             {
-              text: '徽标数 Badge',
+              text: '徽标 Badge',
               link: '/guide/components/badge'
             },
             {
