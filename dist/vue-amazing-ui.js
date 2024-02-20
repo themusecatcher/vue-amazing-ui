@@ -179,7 +179,7 @@ const J1 = ["src", "alt"], X1 = { key: 1, class: "m-icon" }, la = V(j({ __name: 
     }
   });
   return (u, h) => (r(), v("div", { class: $(["m-avatar", [i.value === null ? "avatar-" + u.size : "", "avatar-" + u.shape, { "avatar-image": u.src }]]), style: _(i.value || {}) }, [u.src ? (r(), v("img", { key: 0, class: "u-image", src: u.src, alt: u.alt }, null, 8, J1)) : L("", !0), !u.src && d.value ? (r(), v("span", X1, [A(u.$slots, "icon", {}, void 0, !0)])) : L("", !0), u.src || d.value || !s.value ? L("", !0) : (r(), v("span", { key: 2, class: "m-string", style: _(p.value) }, [A(u.$slots, "default", {}, void 0, !0)], 4))], 6));
-} }), [["__scopeId", "data-v-64afe26f"]]);
+} }), [["__scopeId", "data-v-cbcb60ab"]]);
 la.install = (l) => {
   l.component(la.__name, la);
 };

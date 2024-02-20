@@ -45,7 +45,7 @@ export const routes = [
       {
         path: '/badge',
         name: 'Badge',
-        meta: { title: '徽标数' },
+        meta: { title: '徽标' },
         component: () => import('@/views/Badge.vue')
       },
       {
