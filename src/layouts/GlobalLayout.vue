@@ -97,7 +97,7 @@ const routerViewRef = ref()
       </div>
     </a-col>
   </a-row>
-  <BackTop :listen-to="routerViewRef" />
+  <BackTop v-if="route.name !== 'BackTop'" :listen-to="routerViewRef" />
 </template>
 <style lang="less" scoped>
 .v-enter-active,
