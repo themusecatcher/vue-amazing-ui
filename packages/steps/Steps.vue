@@ -57,7 +57,7 @@ function onChange (index: number) { // 点击切换选择步骤
         v-for="(step, index) in steps" :key="index">
         <div class="m-info-wrap" @click="onChange(index + 1)">
           <div class="m-steps-icon">
-            <span class="u-num" v-if="currentStep<=index + 1">{{ index + 1 }}</span>
+            <span class="u-num" v-if="currentStep <= index + 1">{{ index + 1 }}</span>
             <svg class="u-icon" v-else viewBox="64 64 896 896" data-icon="check" aria-hidden="true" focusable="false"><path d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"></path></svg>
           </div>
           <div class="m-steps-content">
@@ -71,7 +71,7 @@ function onChange (index: number) { // 点击切换选择步骤
 </template>
 <style lang="less" scoped>
 .m-steps-area {
-  margin: 0px auto;
+  margin: 0 auto;
   .m-steps {
     display: flex;
     .m-steps-item {
@@ -107,14 +107,14 @@ function onChange (index: number) { // 点击切换选择步骤
           height: 32px;
           border-radius: 50%;
           text-align: center;
-          background: transparent;
-          border: 1px solid rgba(0,0,0,.25);
+          background-color: rgba(0, 0, 0, .06);
+          border: 1px solid transparent;
           transition: all .3s;
           .u-num {
             display: inline-block;
             font-size: 16px;
             line-height: 1;
-            color: rgba(0, 0, 0, .25);
+            color: rgba(0, 0, 0, .65);
             transition: all .3s;
           }
           .u-icon {
@@ -131,13 +131,13 @@ function onChange (index: number) { // 点击切换选择步骤
             position: relative;
             display: inline-block;
             padding-right: 16px;
-            color: rgba(0,0,0,.45);
+            color: rgba(0, 0, 0, .45);
             line-height: 32px;
             transition: all .3s;
           }
           .u-steps-description {
             font-size: 14px;
-            color: rgba(0,0,0,.45);
+            color: rgba(0, 0, 0, .45);
             line-height: 22px;
             word-wrap: break-word;
             transition: all .3s;
@@ -149,22 +149,24 @@ function onChange (index: number) { // 点击切换选择步骤
       .m-info-wrap {
         cursor: pointer;
         .m-steps-icon {
-          background: transparent;
-          border: 1px solid rgba(0,0,0,.25);
-          border-color: @themeColor;
+          background-color: #e6f4ff;
+          border-color: #e6f4ff;
         }
         .m-steps-content {
           .u-steps-title {
-            color: rgba(0, 0, 0, .85);;
+            color: rgba(0, 0, 0, .88);
             &::after {
               background: @themeColor;
             }
           }
           .u-steps-description {
-            color: rgba(0,0,0,.45);
+            color: rgba(0, 0, 0, .45);
           }
         }
         &:hover {
+          .m-steps-icon {
+            border-color: @themeColor;
+          }
           .m-steps-content {
             .u-steps-title {
               color: @themeColor;
@@ -180,7 +182,7 @@ function onChange (index: number) { // 点击切换选择步骤
       .m-info-wrap {
         .m-steps-icon {
           background: @themeColor;
-          border: 1px solid rgba(0,0,0,.25);
+          border: 1px solid rgba(0, 0, 0, .25);
           border-color: @themeColor;
           .u-num {
             color: #fff;
@@ -188,11 +190,10 @@ function onChange (index: number) { // 点击切换选择步骤
         }
         .m-steps-content {
           .u-steps-title {
-            font-weight: 500;
-            color: rgba(0, 0, 0, .85);;
+            color: rgba(0, 0, 0, .88);
           }
           .u-steps-description {
-            color: rgba(0, 0, 0, .85);;
+            color: rgba(0, 0, 0, .88);
           }
         }
       }
