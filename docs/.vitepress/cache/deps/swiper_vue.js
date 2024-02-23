@@ -1,17 +1,4 @@
 import {
-  computed,
-  h,
-  inject,
-  nextTick,
-  onBeforeUnmount,
-  onBeforeUpdate,
-  onMounted,
-  onUpdated,
-  provide,
-  ref,
-  watch
-} from "./chunk-SFLLFODM.js";
-import {
   animateCSSModeScroll,
   createElement,
   deleteProps,
@@ -30,10 +17,23 @@ import {
   now,
   setCSSProperty,
   showWarning
-} from "./chunk-PD6EYQQP.js";
+} from "./chunk-IUQD73CY.js";
+import {
+  computed,
+  h,
+  inject,
+  nextTick,
+  onBeforeUnmount,
+  onBeforeUpdate,
+  onMounted,
+  onUpdated,
+  provide,
+  ref,
+  watch
+} from "./chunk-5XUBXWZS.js";
 import "./chunk-LNEMQRCO.js";
 
-// node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@11.0.6/node_modules/swiper/shared/swiper-core.mjs
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -99,6 +99,7 @@ function getDevice(overrides) {
 var browser;
 function calcBrowser() {
   const window2 = getWindow();
+  const device = getDevice();
   let needPerspectiveFix = false;
   function isSafari() {
     const ua = window2.navigator.userAgent.toLowerCase();
@@ -111,10 +112,14 @@ function calcBrowser() {
       needPerspectiveFix = major < 16 || major === 16 && minor < 2;
     }
   }
+  const isWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(window2.navigator.userAgent);
+  const isSafariBrowser = isSafari();
+  const need3dFix = isSafariBrowser || isWebView && device.ios;
   return {
-    isSafari: needPerspectiveFix || isSafari(),
+    isSafari: needPerspectiveFix || isSafariBrowser,
     needPerspectiveFix,
-    isWebView: /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(window2.navigator.userAgent)
+    need3dFix,
+    isWebView
   };
 }
 function getBrowser() {
@@ -1430,7 +1435,7 @@ function slideTo(index, speed, runCallbacks, internal, initial) {
     wrapperEl,
     enabled
   } = swiper;
-  if (swiper.animating && params.preventInteractionOnTransition || !enabled && !internal && !initial) {
+  if (swiper.animating && params.preventInteractionOnTransition || !enabled && !internal && !initial || swiper.destroyed) {
     return false;
   }
   const skip = Math.min(swiper.params.slidesPerGroupSkip, slideIndex);
@@ -1570,6 +1575,8 @@ function slideToLoop(index, speed, runCallbacks, internal) {
     index = indexAsNumber;
   }
   const swiper = this;
+  if (swiper.destroyed)
+    return;
   const gridEnabled = swiper.grid && swiper.params.grid && swiper.params.grid.rows > 1;
   let newIndex = index;
   if (swiper.params.loop) {
@@ -1635,7 +1642,7 @@ function slideNext(speed, runCallbacks, internal) {
     params,
     animating
   } = swiper;
-  if (!enabled)
+  if (!enabled || swiper.destroyed)
     return swiper;
   let perGroup = params.slidesPerGroup;
   if (params.slidesPerView === "auto" && params.slidesPerGroup === 1 && params.slidesPerGroupAuto) {
@@ -1678,7 +1685,7 @@ function slidePrev(speed, runCallbacks, internal) {
     enabled,
     animating
   } = swiper;
-  if (!enabled)
+  if (!enabled || swiper.destroyed)
     return swiper;
   const isVirtual = swiper.virtual && params.virtual.enabled;
   if (params.loop) {
@@ -1738,6 +1745,8 @@ function slideReset(speed, runCallbacks, internal) {
     runCallbacks = true;
   }
   const swiper = this;
+  if (swiper.destroyed)
+    return;
   return swiper.slideTo(swiper.activeIndex, speed, runCallbacks, internal);
 }
 function slideToClosest(speed, runCallbacks, internal, threshold) {
@@ -1751,6 +1760,8 @@ function slideToClosest(speed, runCallbacks, internal, threshold) {
     threshold = 0.5;
   }
   const swiper = this;
+  if (swiper.destroyed)
+    return;
   let index = swiper.activeIndex;
   const skip = Math.min(swiper.params.slidesPerGroupSkip, index);
   const snapIndex = skip + Math.floor((index - skip) / swiper.params.slidesPerGroup);
@@ -1774,6 +1785,8 @@ function slideToClosest(speed, runCallbacks, internal, threshold) {
 }
 function slideToClickedSlide() {
   const swiper = this;
+  if (swiper.destroyed)
+    return;
   const {
     params,
     slidesEl
@@ -3095,6 +3108,7 @@ var defaults = {
   init: true,
   direction: "horizontal",
   oneWayMovement: false,
+  swiperElementNodeName: "SWIPER-CONTAINER",
   touchEventsTarget: "wrapper",
   initialSlide: 0,
   speed: 300,
@@ -3521,11 +3535,11 @@ var Swiper = class _Swiper {
     if (typeof params.slidesPerView === "number")
       return params.slidesPerView;
     if (params.centeredSlides) {
-      let slideSize = slides[activeIndex] ? slides[activeIndex].swiperSlideSize : 0;
+      let slideSize = slides[activeIndex] ? Math.ceil(slides[activeIndex].swiperSlideSize) : 0;
       let breakLoop;
       for (let i = activeIndex + 1; i < slides.length; i += 1) {
         if (slides[i] && !breakLoop) {
-          slideSize += slides[i].swiperSlideSize;
+          slideSize += Math.ceil(slides[i].swiperSlideSize);
           spv += 1;
           if (slideSize > swiperSize)
             breakLoop = true;
@@ -3662,7 +3676,7 @@ var Swiper = class _Swiper {
       return false;
     }
     el.swiper = swiper;
-    if (el.parentNode && el.parentNode.host && el.parentNode.host.nodeName === "SWIPER-CONTAINER") {
+    if (el.parentNode && el.parentNode.host && el.parentNode.host.nodeName === swiper.params.swiperElementNodeName.toUpperCase()) {
       swiper.isElement = true;
     }
     const getWrapperSelector = () => {
@@ -3824,7 +3838,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 });
 Swiper.use([Resize, Observer]);
 
-// node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@11.0.6/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -3833,6 +3847,7 @@ var paramsList = [
   "init",
   "_direction",
   "oneWayMovement",
+  "swiperElementNodeName",
   "touchEventsTarget",
   "initialSlide",
   "_speed",
@@ -4181,7 +4196,7 @@ function updateSwiper(_ref) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@11.0.6/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
     obj = {};
@@ -4314,7 +4329,7 @@ var updateOnVirtualData = (swiper) => {
   }
 };
 
-// node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@11.0.6/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots, slidesRef, oldSlidesRef) {
   if (originalSlots === void 0) {
     originalSlots = {};
@@ -4423,6 +4438,10 @@ var Swiper2 = {
     oneWayMovement: {
       type: Boolean,
       default: void 0
+    },
+    swiperElementNodeName: {
+      type: String,
+      default: "SWIPER-CONTAINER"
     },
     touchEventsTarget: {
       type: String,

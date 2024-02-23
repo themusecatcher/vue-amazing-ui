@@ -1,4 +1,4 @@
-// node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@11.0.6/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === "object" && "constructor" in obj && obj.constructor === Object;
 }
@@ -148,7 +148,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@11.0.5/node_modules/swiper/shared/utils.mjs
+// node_modules/.pnpm/swiper@11.0.6/node_modules/swiper/shared/utils.mjs
 function classesToTokens(classes) {
   if (classes === void 0) {
     classes = "";
@@ -433,6 +433,9 @@ function elementOuterSize(el, size, includeMargins) {
   }
   return el.offsetWidth;
 }
+function makeElementsArray(el) {
+  return (Array.isArray(el) ? el : [el]).filter((e) => !!e);
+}
 
 export {
   getDocument,
@@ -457,6 +460,7 @@ export {
   elementIndex,
   elementParents,
   elementTransitionEnd,
-  elementOuterSize
+  elementOuterSize,
+  makeElementsArray
 };
-//# sourceMappingURL=chunk-PD6EYQQP.js.map
+//# sourceMappingURL=chunk-IUQD73CY.js.map

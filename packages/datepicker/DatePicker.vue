@@ -32,7 +32,6 @@ const props = withDefaults(defineProps<Props>(), {
     Time picker: 'HH:mm'
     Time picker range: 'HH:mm - HH:mm'
   */
-  // format: 'MM/dd/yyyy',
   showTime: false,
   showToday: false,
   // multiCalendars: false,

@@ -5,8 +5,9 @@ import { format, endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, ad
 
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
-const rangeValue = ref<number[]>([Date.now(), addDays(new Date(), 1).getTime()])
+const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
 console.log(addHours(Date.now(), 1))
+console.log('rangeValue', rangeValue.value)
 
 const timeRangeValue = ref([
   {
@@ -20,14 +21,14 @@ const timeRangeValue = ref([
     seconds: addSeconds(Date.now(), 30).getSeconds()
   }
 ])
-const presetRanges = ref([
-  { label: 'Today', range: [new Date(), new Date()] },
-  { label: 'This month', range: [startOfMonth(new Date()), endOfMonth(new Date())] },
+const presetDates = ref([
+  { label: 'Today', value: [new Date(), new Date()] },
+  { label: 'This month', value: [startOfMonth(new Date()), endOfMonth(new Date())] },
   {
     label: 'Last month',
-    range: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
+    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
   },
-  { label: 'This year', range: [startOfYear(new Date()).getTime(), endOfYear(new Date()).getTime()] }
+  { label: 'This year', value: [startOfYear(new Date()).getTime(), endOfYear(new Date()).getTime()] }
 ])
 const timeValue = ref({
   hours: new Date().getHours(),
@@ -119,7 +120,7 @@ watchEffect(() => {
       placeholder="请选择日期范围"
       v-model="rangeValue"
       range
-      :preset-ranges="presetRanges"
+      :preset-dates="presetDates"
       format="yyyy-MM-dd"
       :width="280" />
     <h2 class="mt30 mb10">日期范围选择器，双日期面板</h2>
@@ -139,7 +140,7 @@ watchEffect(() => {
       format="yyyy-MM-dd"
       :width="280"
       range
-      :presetRanges="presetRanges"
+      :preset-dates="presetDates"
       multi-calendars
       v-model="rangeValue" />
     <h2 class="mt30 mb10">时分选择器</h2>

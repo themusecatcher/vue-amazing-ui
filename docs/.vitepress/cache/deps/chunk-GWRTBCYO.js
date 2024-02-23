@@ -24,9 +24,9 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-SFLLFODM.js";
+} from "./chunk-5XUBXWZS.js";
 
-// node_modules/.pnpm/vue-demi@0.14.6_vue@3.4.15/node_modules/vue-demi/lib/index.mjs
+// node_modules/.pnpm/vue-demi@0.14.7_vue@3.4.19/node_modules/vue-demi/lib/index.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@10.7.2_vue@3.4.15/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@10.8.0_vue@3.4.19/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -155,7 +155,7 @@ var injectLocal = (...args) => {
   return inject(...args);
 };
 function createInjectionState(composable, options) {
-  const key = (options == null ? void 0 : options.injectionKey) || Symbol("InjectionState");
+  const key = (options == null ? void 0 : options.injectionKey) || Symbol(composable.name || "InjectionState");
   const useProvidingState = (...args) => {
     const state = composable(...args);
     provideLocal(key, state);
@@ -389,12 +389,20 @@ function debounceFilter(ms, options = {}) {
   };
   return filter;
 }
-function throttleFilter(ms, trailing = true, leading = true, rejectOnCancel = false) {
+function throttleFilter(...args) {
   let lastExec = 0;
   let timer;
   let isLeading = true;
   let lastRejector = noop;
   let lastValue;
+  let ms;
+  let trailing;
+  let leading;
+  let rejectOnCancel;
+  if (!isRef(args[0]) && typeof args[0] === "object")
+    ({ delay: ms, trailing = true, leading = true, rejectOnCancel = false } = args[0]);
+  else
+    [ms, trailing = true, leading = true, rejectOnCancel = false] = args;
   const clear = () => {
     if (timer) {
       clearTimeout(timer);
@@ -1036,8 +1044,8 @@ function useCounter(initialValue = 0, options = {}) {
     max = Number.POSITIVE_INFINITY,
     min = Number.NEGATIVE_INFINITY
   } = options;
-  const inc = (delta = 1) => count.value = Math.min(max, count.value + delta);
-  const dec = (delta = 1) => count.value = Math.max(min, count.value - delta);
+  const inc = (delta = 1) => count.value = Math.max(Math.min(max, count.value + delta), min);
+  const dec = (delta = 1) => count.value = Math.min(Math.max(min, count.value - delta), max);
   const get2 = () => count.value;
   const set3 = (val) => count.value = Math.max(min, Math.min(max, val));
   const reset = (val = _initialValue) => {
@@ -1640,4 +1648,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-YZ7NK2YE.js.map
+//# sourceMappingURL=chunk-GWRTBCYO.js.map
