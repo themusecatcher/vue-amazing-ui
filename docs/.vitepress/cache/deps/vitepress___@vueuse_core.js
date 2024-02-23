@@ -110,7 +110,7 @@ import {
   watchTriggerable,
   watchWithFilter,
   whenever
-} from "./chunk-YZ7NK2YE.js";
+} from "./chunk-GWRTBCYO.js";
 import {
   Fragment,
   TransitionGroup,
@@ -137,10 +137,10 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-SFLLFODM.js";
+} from "./chunk-5XUBXWZS.js";
 import "./chunk-LNEMQRCO.js";
 
-// node_modules/.pnpm/@vueuse+core@10.7.2_vue@3.4.15/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@10.8.0_vue@3.4.19/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {
@@ -621,10 +621,11 @@ function useActiveElement(options = {}) {
 }
 function useMounted() {
   const isMounted = ref(false);
-  if (getCurrentInstance()) {
+  const instance = getCurrentInstance();
+  if (instance) {
     onMounted(() => {
       isMounted.value = true;
-    });
+    }, instance);
   }
   return isMounted;
 }
@@ -648,18 +649,21 @@ function useRafFn(fn, options = {}) {
   function loop(timestamp2) {
     if (!isActive.value || !window2)
       return;
-    const delta = timestamp2 - (previousFrameTimestamp || timestamp2);
+    if (!previousFrameTimestamp)
+      previousFrameTimestamp = timestamp2;
+    const delta = timestamp2 - previousFrameTimestamp;
     if (intervalLimit && delta < intervalLimit) {
       rafId = window2.requestAnimationFrame(loop);
       return;
     }
-    fn({ delta, timestamp: timestamp2 });
     previousFrameTimestamp = timestamp2;
+    fn({ delta, timestamp: timestamp2 });
     rafId = window2.requestAnimationFrame(loop);
   }
   function resume() {
     if (!isActive.value && window2) {
       isActive.value = true;
+      previousFrameTimestamp = 0;
       rafId = window2.requestAnimationFrame(loop);
     }
   }
@@ -828,7 +832,8 @@ function useAnimate(target, keyframes, options) {
     const el = unrefElement(target);
     if (!isSupported.value || !el)
       return;
-    animate.value = el.animate(toValue(keyframes), animateOptions);
+    if (!animate.value)
+      animate.value = el.animate(toValue(keyframes), animateOptions);
     if (commitStyles)
       animate.value.commitStyles();
     if (persist)
@@ -1254,12 +1259,22 @@ var breakpointsBootstrapV5 = {
   xl: 1200,
   xxl: 1400
 };
-var breakpointsVuetify = {
-  xs: 600,
-  sm: 960,
-  md: 1264,
-  lg: 1904
+var breakpointsVuetifyV2 = {
+  xs: 0,
+  sm: 600,
+  md: 960,
+  lg: 1264,
+  xl: 1904
 };
+var breakpointsVuetifyV3 = {
+  xs: 0,
+  sm: 600,
+  md: 960,
+  lg: 1280,
+  xl: 1920,
+  xxl: 2560
+};
+var breakpointsVuetify = breakpointsVuetifyV2;
 var breakpointsAntDesign = {
   xs: 480,
   sm: 576,
@@ -1269,10 +1284,11 @@ var breakpointsAntDesign = {
   xxl: 1600
 };
 var breakpointsQuasar = {
-  xs: 600,
-  sm: 1024,
-  md: 1440,
-  lg: 1920
+  xs: 0,
+  sm: 600,
+  md: 1024,
+  lg: 1440,
+  xl: 1920
 };
 var breakpointsSematic = {
   mobileS: 320,
@@ -1303,14 +1319,14 @@ var breakpointsPrimeFlex = {
 };
 function useBreakpoints(breakpoints, options = {}) {
   function getValue2(k, delta) {
-    let v = toValue(breakpoints[k]);
+    let v = toValue(breakpoints[toValue(k)]);
     if (delta != null)
       v = increaseWithUnit(v, delta);
     if (typeof v === "number")
       v = `${v}px`;
     return v;
   }
-  const { window: window2 = defaultWindow } = options;
+  const { window: window2 = defaultWindow, strategy = "min-width" } = options;
   function match(query) {
     if (!window2)
       return false;
@@ -1319,24 +1335,29 @@ function useBreakpoints(breakpoints, options = {}) {
   const greaterOrEqual = (k) => {
     return useMediaQuery(() => `(min-width: ${getValue2(k)})`, options);
   };
+  const smallerOrEqual = (k) => {
+    return useMediaQuery(() => `(max-width: ${getValue2(k)})`, options);
+  };
   const shortcutMethods = Object.keys(breakpoints).reduce((shortcuts, k) => {
     Object.defineProperty(shortcuts, k, {
-      get: () => greaterOrEqual(k),
+      get: () => strategy === "min-width" ? greaterOrEqual(k) : smallerOrEqual(k),
       enumerable: true,
       configurable: true
     });
     return shortcuts;
   }, {});
+  function current() {
+    const points = Object.keys(breakpoints).map((i) => [i, greaterOrEqual(i)]);
+    return computed(() => points.filter(([, v]) => v.value).map(([k]) => k));
+  }
   return Object.assign(shortcutMethods, {
+    greaterOrEqual,
+    smallerOrEqual,
     greater(k) {
       return useMediaQuery(() => `(min-width: ${getValue2(k, 0.1)})`, options);
     },
-    greaterOrEqual,
     smaller(k) {
       return useMediaQuery(() => `(max-width: ${getValue2(k, -0.1)})`, options);
-    },
-    smallerOrEqual(k) {
-      return useMediaQuery(() => `(max-width: ${getValue2(k)})`, options);
     },
     between(a, b) {
       return useMediaQuery(() => `(min-width: ${getValue2(a)}) and (max-width: ${getValue2(b, -0.1)})`, options);
@@ -1356,9 +1377,10 @@ function useBreakpoints(breakpoints, options = {}) {
     isInBetween(a, b) {
       return match(`(min-width: ${getValue2(a)}) and (max-width: ${getValue2(b, -0.1)})`);
     },
-    current() {
-      const points = Object.keys(breakpoints).map((i) => [i, greaterOrEqual(i)]);
-      return computed(() => points.filter(([, v]) => v.value).map(([k]) => k));
+    current,
+    active() {
+      const bps = current();
+      return computed(() => bps.value.length === 0 ? "" : bps.value.at(-1));
     }
   });
 }
@@ -1719,23 +1741,27 @@ function useStorage(key, defaults2, storage, options = {}) {
   return data;
   function write(v) {
     try {
+      const oldValue = storage.getItem(key);
+      const dispatchWriteEvent = (newValue) => {
+        if (window2) {
+          window2.dispatchEvent(new CustomEvent(customStorageEventName, {
+            detail: {
+              key,
+              oldValue,
+              newValue,
+              storageArea: storage
+            }
+          }));
+        }
+      };
       if (v == null) {
+        dispatchWriteEvent(null);
         storage.removeItem(key);
       } else {
         const serialized = serializer.write(v);
-        const oldValue = storage.getItem(key);
         if (oldValue !== serialized) {
           storage.setItem(key, serialized);
-          if (window2) {
-            window2.dispatchEvent(new CustomEvent(customStorageEventName, {
-              detail: {
-                key,
-                oldValue,
-                newValue: serialized,
-                storageArea: storage
-              }
-            }));
-          }
+          dispatchWriteEvent(serialized);
         }
       }
     } catch (e) {
@@ -1911,16 +1937,21 @@ function useMutationObserver(target, callback, options = {}) {
       observer = void 0;
     }
   };
+  const targets = computed(() => {
+    const value = toValue(target);
+    const items = (Array.isArray(value) ? value : [value]).map(unrefElement).filter(notNullish);
+    return new Set(items);
+  });
   const stopWatch = watch(
-    () => unrefElement(target),
-    (el) => {
+    () => targets.value,
+    (targets2) => {
       cleanup();
-      if (isSupported.value && window2 && el) {
+      if (isSupported.value && window2 && targets2.size) {
         observer = new MutationObserver(callback);
-        observer.observe(el, mutationOptions);
+        targets2.forEach((el) => observer.observe(el, mutationOptions));
       }
     },
-    { immediate: true }
+    { immediate: true, flush: "post" }
   );
   const takeRecords = () => {
     return observer == null ? void 0 : observer.takeRecords();
@@ -1973,11 +2004,11 @@ function useCssVar(prop, target, options = {}) {
   );
   return variable;
 }
-function useCurrentElement() {
+function useCurrentElement(rootComponent) {
   const vm = getCurrentInstance();
   const currentElement = computedWithControl(
     () => null,
-    () => vm.proxy.$el
+    () => rootComponent ? unrefElement(rootComponent) : vm.proxy.$el
   );
   onUpdated(currentElement.trigger);
   onMounted(currentElement.trigger);
@@ -2025,7 +2056,8 @@ function useCycleList(list, options) {
     state,
     index,
     next,
-    prev
+    prev,
+    go: set3
   };
 }
 function useDark(options = {}) {
@@ -2442,7 +2474,7 @@ function useDraggable(target, options = {}) {
   };
   const start = (e) => {
     var _a2;
-    if (!filterEvent(e))
+    if (toValue(options.disabled) || !filterEvent(e))
       return;
     if (toValue(exact) && e.target !== toValue(target))
       return;
@@ -2459,24 +2491,22 @@ function useDraggable(target, options = {}) {
     handleEvent(e);
   };
   const move = (e) => {
-    var _a2;
-    if (!filterEvent(e))
+    if (toValue(options.disabled) || !filterEvent(e))
       return;
     if (!pressedDelta.value)
       return;
     const container = toValue(containerElement);
-    const containerRect = (_a2 = container == null ? void 0 : container.getBoundingClientRect) == null ? void 0 : _a2.call(container);
     const targetRect = toValue(target).getBoundingClientRect();
     let { x, y } = position.value;
     if (axis === "x" || axis === "both") {
       x = e.clientX - pressedDelta.value.x;
       if (container)
-        x = Math.min(Math.max(0, x), containerRect.width + container.scrollLeft - targetRect.width);
+        x = Math.min(Math.max(0, x), container.scrollWidth - targetRect.width);
     }
     if (axis === "y" || axis === "both") {
       y = e.clientY - pressedDelta.value.y;
       if (container)
-        y = Math.min(Math.max(0, y), containerRect.height + container.scrollTop - targetRect.height);
+        y = Math.min(Math.max(0, y), container.scrollHeight - targetRect.height);
     }
     position.value = {
       x,
@@ -2486,7 +2516,7 @@ function useDraggable(target, options = {}) {
     handleEvent(e);
   };
   const end = (e) => {
-    if (!filterEvent(e))
+    if (toValue(options.disabled) || !filterEvent(e))
       return;
     if (!pressedDelta.value)
       return;
@@ -2586,7 +2616,7 @@ function useResizeObserver(target, callback, options = {}) {
           _el && observer.observe(_el, observerOptions);
       }
     },
-    { immediate: true, flush: "post", deep: true }
+    { immediate: true, flush: "post" }
   );
   const stop = () => {
     cleanup();
@@ -2829,7 +2859,7 @@ function useIntersectionObserver(target, callback, options = {}) {
   };
 }
 function useElementVisibility(element, options = {}) {
-  const { window: window2 = defaultWindow, scrollTarget } = options;
+  const { window: window2 = defaultWindow, scrollTarget, threshold = 0 } = options;
   const elementIsVisible = ref(false);
   useIntersectionObserver(
     element,
@@ -2847,7 +2877,7 @@ function useElementVisibility(element, options = {}) {
     {
       root: scrollTarget,
       window: window2,
-      threshold: 0
+      threshold
     }
   );
   return elementIsVisible;
@@ -2888,51 +2918,90 @@ function useEventBus(key) {
   }
   return { on, once, off, emit, reset };
 }
+function resolveNestedOptions$1(options) {
+  if (options === true)
+    return {};
+  return options;
+}
 function useEventSource(url, events2 = [], options = {}) {
   const event = ref(null);
   const data = ref(null);
   const status = ref("CONNECTING");
   const eventSource = ref(null);
   const error = shallowRef(null);
+  const urlRef = toRef(url);
+  let explicitlyClosed = false;
+  let retried = 0;
   const {
-    withCredentials = false
+    withCredentials = false,
+    immediate = true
   } = options;
   const close = () => {
-    if (eventSource.value) {
+    if (isClient && eventSource.value) {
       eventSource.value.close();
       eventSource.value = null;
       status.value = "CLOSED";
+      explicitlyClosed = true;
     }
   };
-  const es = new EventSource(url, { withCredentials });
-  eventSource.value = es;
-  es.onopen = () => {
-    status.value = "OPEN";
-    error.value = null;
+  const _init = () => {
+    if (explicitlyClosed || typeof urlRef.value === "undefined")
+      return;
+    const es = new EventSource(urlRef.value, { withCredentials });
+    status.value = "CONNECTING";
+    eventSource.value = es;
+    es.onopen = () => {
+      status.value = "OPEN";
+      error.value = null;
+    };
+    es.onerror = (e) => {
+      status.value = "CLOSED";
+      error.value = e;
+      if (es.readyState === 2 && !explicitlyClosed && options.autoReconnect) {
+        es.close();
+        const {
+          retries = -1,
+          delay = 1e3,
+          onFailed
+        } = resolveNestedOptions$1(options.autoReconnect);
+        retried += 1;
+        if (typeof retries === "number" && (retries < 0 || retried < retries))
+          setTimeout(_init, delay);
+        else if (typeof retries === "function" && retries())
+          setTimeout(_init, delay);
+        else
+          onFailed == null ? void 0 : onFailed();
+      }
+    };
+    es.onmessage = (e) => {
+      event.value = null;
+      data.value = e.data;
+    };
+    for (const event_name of events2) {
+      useEventListener(es, event_name, (e) => {
+        event.value = event_name;
+        data.value = e.data || null;
+      });
+    }
   };
-  es.onerror = (e) => {
-    status.value = "CLOSED";
-    error.value = e;
-  };
-  es.onmessage = (e) => {
-    event.value = null;
-    data.value = e.data;
-  };
-  for (const event_name of events2) {
-    useEventListener(es, event_name, (e) => {
-      event.value = event_name;
-      data.value = e.data || null;
-    });
-  }
-  tryOnScopeDispose(() => {
+  const open = () => {
+    if (!isClient)
+      return;
     close();
-  });
+    explicitlyClosed = false;
+    retried = 0;
+    _init();
+  };
+  if (immediate)
+    watch(urlRef, open, { immediate: true });
+  tryOnScopeDispose(close);
   return {
     eventSource,
     event,
     data,
     status,
     error,
+    open,
     close
   };
 }
@@ -2993,7 +3062,7 @@ function isAbsoluteURL(url) {
 }
 function headersToObject(headers) {
   if (typeof Headers !== "undefined" && headers instanceof Headers)
-    return Object.fromEntries([...headers.entries()]);
+    return Object.fromEntries(headers.entries());
   return headers;
 }
 function combineCallbacks(combination, ...callbacks) {
@@ -3223,12 +3292,12 @@ function useFetch(url, ...args) {
     { deep: true }
   );
   const shell = {
-    isFinished,
+    isFinished: readonly(isFinished),
+    isFetching: readonly(isFetching),
     statusCode,
     response,
     error,
     data,
-    isFetching,
     canAbort,
     aborted,
     abort,
@@ -3394,7 +3463,6 @@ function useFileSystemAccess(options = {}) {
       return;
     const [handle] = await window2.showOpenFilePicker({ ...toValue(options), ..._options });
     fileHandle.value = handle;
-    await updateFile();
     await updateData();
   }
   async function create(_options = {}) {
@@ -3402,7 +3470,6 @@ function useFileSystemAccess(options = {}) {
       return;
     fileHandle.value = await window2.showSaveFilePicker({ ...options, ..._options });
     data.value = void 0;
-    await updateFile();
     await updateData();
   }
   async function save(_options = {}) {
@@ -3434,6 +3501,7 @@ function useFileSystemAccess(options = {}) {
   }
   async function updateData() {
     var _a, _b;
+    await updateFile();
     const type = toValue(dataType);
     if (type === "Text")
       data.value = await ((_a = file.value) == null ? void 0 : _a.text());
@@ -3693,18 +3761,15 @@ function useGamepad(options = {}) {
       id: gamepad.id,
       hapticActuators,
       axes: gamepad.axes.map((axes) => axes),
-      buttons: gamepad.buttons.map((button) => ({ pressed: button.pressed, touched: button.touched, value: button.value }))
+      buttons: gamepad.buttons.map((button) => ({ pressed: button.pressed, touched: button.touched, value: button.value })),
+      index: gamepad.index
     };
   };
   const updateGamepadState = () => {
     const _gamepads = (navigator == null ? void 0 : navigator.getGamepads()) || [];
-    for (let i = 0; i < _gamepads.length; ++i) {
-      const gamepad = _gamepads[i];
-      if (gamepad) {
-        const index = gamepads.value.findIndex(({ index: index2 }) => index2 === gamepad.index);
-        if (index > -1)
-          gamepads.value[index] = stateFromGamepad(gamepad);
-      }
+    for (const gamepad of _gamepads) {
+      if (gamepad && gamepads.value[gamepad.index])
+        gamepads.value[gamepad.index] = stateFromGamepad(gamepad);
     }
   };
   const { isActive, pause, resume } = useRafFn(updateGamepadState);
@@ -3723,12 +3788,9 @@ function useGamepad(options = {}) {
   useEventListener("gamepaddisconnected", (e) => onGamepadDisconnected(e.gamepad));
   tryOnMounted(() => {
     const _gamepads = (navigator == null ? void 0 : navigator.getGamepads()) || [];
-    if (_gamepads) {
-      for (let i = 0; i < _gamepads.length; ++i) {
-        const gamepad = _gamepads[i];
-        if (gamepad)
-          onGamepadConnected(gamepad);
-      }
+    for (const gamepad of _gamepads) {
+      if (gamepad && gamepads.value[gamepad.index])
+        onGamepadConnected(gamepad);
     }
   });
   pause();
@@ -3897,7 +3959,10 @@ function useScroll(element, options = {}) {
       passive: true
     },
     behavior = "auto",
-    window: window2 = defaultWindow
+    window: window2 = defaultWindow,
+    onError = (e) => {
+      console.error(e);
+    }
   } = options;
   const internalX = ref(0);
   const internalY = ref(0);
@@ -3958,12 +4023,12 @@ function useScroll(element, options = {}) {
     var _a;
     if (!window2)
       return;
-    const el = target.document ? target.document.documentElement : (_a = target.documentElement) != null ? _a : target;
+    const el = ((_a = target == null ? void 0 : target.document) == null ? void 0 : _a.documentElement) || (target == null ? void 0 : target.documentElement) || unrefElement(target);
     const { display, flexDirection } = getComputedStyle(el);
     const scrollLeft = el.scrollLeft;
     directions.left = scrollLeft < internalX.value;
     directions.right = scrollLeft > internalX.value;
-    const left = Math.abs(scrollLeft) <= 0 + (offset.left || 0);
+    const left = Math.abs(scrollLeft) <= (offset.left || 0);
     const right = Math.abs(scrollLeft) + el.clientWidth >= el.scrollWidth - (offset.right || 0) - ARRIVED_STATE_THRESHOLD_PIXELS;
     if (display === "flex" && flexDirection === "row-reverse") {
       arrivedState.left = right;
@@ -3978,7 +4043,7 @@ function useScroll(element, options = {}) {
       scrollTop = window2.document.body.scrollTop;
     directions.top = scrollTop < internalY.value;
     directions.bottom = scrollTop > internalY.value;
-    const top = Math.abs(scrollTop) <= 0 + (offset.top || 0);
+    const top = Math.abs(scrollTop) <= (offset.top || 0);
     const bottom = Math.abs(scrollTop) + el.clientHeight >= el.scrollHeight - (offset.bottom || 0) - ARRIVED_STATE_THRESHOLD_PIXELS;
     if (display === "flex" && flexDirection === "column-reverse") {
       arrivedState.top = bottom;
@@ -4006,10 +4071,14 @@ function useScroll(element, options = {}) {
     eventListenerOptions
   );
   tryOnMounted(() => {
-    const _element = toValue(element);
-    if (!_element)
-      return;
-    setArrivedState(_element);
+    try {
+      const _element = toValue(element);
+      if (!_element)
+        return;
+      setArrivedState(_element);
+    } catch (e) {
+      onError(e);
+    }
   });
   useEventListener(
     element,
@@ -4863,6 +4932,37 @@ function usePageLeave(options = {}) {
   }
   return isLeft;
 }
+function useScreenOrientation(options = {}) {
+  const {
+    window: window2 = defaultWindow
+  } = options;
+  const isSupported = useSupported(() => window2 && "screen" in window2 && "orientation" in window2.screen);
+  const screenOrientation = isSupported.value ? window2.screen.orientation : {};
+  const orientation = ref(screenOrientation.type);
+  const angle = ref(screenOrientation.angle || 0);
+  if (isSupported.value) {
+    useEventListener(window2, "orientationchange", () => {
+      orientation.value = screenOrientation.type;
+      angle.value = screenOrientation.angle;
+    });
+  }
+  const lockOrientation = (type) => {
+    if (isSupported.value && typeof screenOrientation.lock === "function")
+      return screenOrientation.lock(type);
+    return Promise.reject(new Error("Not supported"));
+  };
+  const unlockOrientation = () => {
+    if (isSupported.value && typeof screenOrientation.unlock === "function")
+      screenOrientation.unlock();
+  };
+  return {
+    isSupported,
+    orientation,
+    angle,
+    lockOrientation,
+    unlockOrientation
+  };
+}
 function useParallax(target, options = {}) {
   const {
     deviceOrientationTiltAdjust = (i) => i,
@@ -4872,6 +4972,7 @@ function useParallax(target, options = {}) {
     window: window2 = defaultWindow
   } = options;
   const orientation = reactive(useDeviceOrientation({ window: window2 }));
+  const screenOrientation = reactive(useScreenOrientation({ window: window2 }));
   const {
     elementX: x,
     elementY: y,
@@ -4885,7 +4986,23 @@ function useParallax(target, options = {}) {
   });
   const roll = computed(() => {
     if (source.value === "deviceOrientation") {
-      const value = -orientation.beta / 90;
+      let value;
+      switch (screenOrientation.orientation) {
+        case "landscape-primary":
+          value = orientation.gamma / 90;
+          break;
+        case "landscape-secondary":
+          value = -orientation.gamma / 90;
+          break;
+        case "portrait-primary":
+          value = -orientation.beta / 90;
+          break;
+        case "portrait-secondary":
+          value = orientation.beta / 90;
+          break;
+        default:
+          value = -orientation.beta / 90;
+      }
       return deviceOrientationRollAdjust(value);
     } else {
       const value = -(y.value - height.value / 2) / height.value;
@@ -4894,7 +5011,23 @@ function useParallax(target, options = {}) {
   });
   const tilt = computed(() => {
     if (source.value === "deviceOrientation") {
-      const value = orientation.gamma / 90;
+      let value;
+      switch (screenOrientation.orientation) {
+        case "landscape-primary":
+          value = orientation.beta / 90;
+          break;
+        case "landscape-secondary":
+          value = -orientation.beta / 90;
+          break;
+        case "portrait-primary":
+          value = orientation.gamma / 90;
+          break;
+        case "portrait-secondary":
+          value = -orientation.gamma / 90;
+          break;
+        default:
+          value = orientation.gamma / 90;
+      }
       return deviceOrientationTiltAdjust(value);
     } else {
       const value = (x.value - width.value / 2) / width.value;
@@ -4978,7 +5111,7 @@ function usePointer(options = {}) {
   };
 }
 function usePointerLock(target, options = {}) {
-  const { document: document2 = defaultDocument, pointerLockOptions } = options;
+  const { document: document2 = defaultDocument } = options;
   const isSupported = useSupported(() => document2 && "pointerLockElement" in document2);
   const element = ref();
   const triggerElement = ref();
@@ -5002,7 +5135,7 @@ function usePointerLock(target, options = {}) {
       }
     });
   }
-  async function lock(e, options2) {
+  async function lock(e) {
     var _a;
     if (!isSupported.value)
       throw new Error("Pointer Lock API is not supported by your browser.");
@@ -5010,7 +5143,7 @@ function usePointerLock(target, options = {}) {
     targetElement = e instanceof Event ? (_a = unrefElement(target)) != null ? _a : triggerElement.value : unrefElement(e);
     if (!targetElement)
       throw new Error("Target element undefined.");
-    targetElement.requestPointerLock(options2 != null ? options2 : pointerLockOptions);
+    targetElement.requestPointerLock();
     return await until(element).toBe(targetElement);
   }
   async function unlock() {
@@ -5175,37 +5308,6 @@ function usePrevious(value, initialValue) {
     { flush: "sync" }
   );
   return readonly(previous);
-}
-function useScreenOrientation(options = {}) {
-  const {
-    window: window2 = defaultWindow
-  } = options;
-  const isSupported = useSupported(() => window2 && "screen" in window2 && "orientation" in window2.screen);
-  const screenOrientation = isSupported.value ? window2.screen.orientation : {};
-  const orientation = ref(screenOrientation.type);
-  const angle = ref(screenOrientation.angle || 0);
-  if (isSupported.value) {
-    useEventListener(window2, "orientationchange", () => {
-      orientation.value = screenOrientation.type;
-      angle.value = screenOrientation.angle;
-    });
-  }
-  const lockOrientation = (type) => {
-    if (isSupported.value && typeof screenOrientation.lock === "function")
-      return screenOrientation.lock(type);
-    return Promise.reject(new Error("Not supported"));
-  };
-  const unlockOrientation = () => {
-    if (isSupported.value && typeof screenOrientation.unlock === "function")
-      screenOrientation.unlock();
-  };
-  return {
-    isSupported,
-    orientation,
-    angle,
-    lockOrientation,
-    unlockOrientation
-  };
 }
 var topVarName = "--vueuse-safe-area-top";
 var rightVarName = "--vueuse-safe-area-right";
@@ -5999,21 +6101,23 @@ function useTextSelection(options = {}) {
   };
 }
 function useTextareaAutosize(options) {
+  var _a;
   const textarea = ref(options == null ? void 0 : options.element);
   const input = ref(options == null ? void 0 : options.input);
+  const styleProp = (_a = options == null ? void 0 : options.styleProp) != null ? _a : "height";
   const textareaScrollHeight = ref(1);
   function triggerResize() {
-    var _a, _b;
+    var _a2, _b;
     if (!textarea.value)
       return;
     let height = "";
-    textarea.value.style.height = "1px";
-    textareaScrollHeight.value = (_a = textarea.value) == null ? void 0 : _a.scrollHeight;
+    textarea.value.style[styleProp] = "1px";
+    textareaScrollHeight.value = (_a2 = textarea.value) == null ? void 0 : _a2.scrollHeight;
     if (options == null ? void 0 : options.styleTarget)
-      toValue(options.styleTarget).style.height = `${textareaScrollHeight.value}px`;
+      toValue(options.styleTarget).style[styleProp] = `${textareaScrollHeight.value}px`;
     else
       height = `${textareaScrollHeight.value}px`;
-    textarea.value.style.height = height;
+    textarea.value.style[styleProp] = height;
     (_b = options == null ? void 0 : options.onResize) == null ? void 0 : _b.call(options);
   }
   watch([input, textarea], () => nextTick(triggerResize), { immediate: true });
@@ -6505,6 +6609,9 @@ function useUserMedia(options = {}) {
     },
     { immediate: true }
   );
+  tryOnScopeDispose(() => {
+    stop();
+  });
   return {
     isSupported,
     stream,
@@ -6950,6 +7057,7 @@ function useWebSocket(url, options = {}) {
     resetHeartbeat();
     heartbeatPause == null ? void 0 : heartbeatPause();
     wsRef.value.close(code, reason);
+    wsRef.value = void 0;
   };
   const send = (data2, useBuffer = true) => {
     if (!wsRef.value || status.value !== "OPEN") {
@@ -6975,7 +7083,6 @@ function useWebSocket(url, options = {}) {
     };
     ws.onclose = (ev) => {
       status.value = "CLOSED";
-      wsRef.value = void 0;
       onDisconnected == null ? void 0 : onDisconnected(ws, ev);
       if (!explicitlyClosed && options.autoReconnect) {
         const {
@@ -7044,7 +7151,7 @@ function useWebSocket(url, options = {}) {
     _init();
   };
   if (immediate)
-    watch(urlRef, open, { immediate: true });
+    open();
   return {
     data,
     status,
@@ -7293,6 +7400,8 @@ export {
   breakpointsSematic,
   breakpointsTailwind,
   breakpointsVuetify,
+  breakpointsVuetifyV2,
+  breakpointsVuetifyV3,
   bypassFilter,
   camelize,
   clamp,
