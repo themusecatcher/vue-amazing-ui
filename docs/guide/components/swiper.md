@@ -1,4 +1,4 @@
-# 触摸滑动插件 Swiper<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">11.0.5</Tag>
+# 触摸滑动插件 Swiper<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">{{ pkg.dependencies.swiper }}</Tag>
 
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import { ref, shallowReactive, onBeforeMount } from 'vue'
+import pkg from '../../../package.json'
 
 const images = ref<any[]>([])
 function loadImages () {

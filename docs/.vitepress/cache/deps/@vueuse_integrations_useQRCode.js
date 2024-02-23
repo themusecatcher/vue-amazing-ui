@@ -9,7 +9,7 @@ import {
 import {
   __commonJS,
   __toESM
-} from "./chunk-LQ2VYIYD.js";
+} from "./chunk-LNEMQRCO.js";
 
 // node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/can-promise.js
 var require_can_promise = __commonJS({
