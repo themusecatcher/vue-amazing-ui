@@ -1,4 +1,4 @@
-# 日期选择 DatePicker<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">7.4.0</Tag>
+# 日期选择 DatePicker<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">{{ pkg.dependencies['@vuepic/vue-datepicker'] }}</Tag>
 
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { format, endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, addDays, startOfWeek, endOfWeek, addHours, addMinutes, addSeconds } from 'date-fns'
+import pkg from '../../../package.json'
 
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
