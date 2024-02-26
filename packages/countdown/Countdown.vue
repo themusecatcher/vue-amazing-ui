@@ -14,7 +14,7 @@ interface Props {
   finishedText?: string // 完成后的展示文本 string | v-slot
 }
 const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
-  title: 'Countdown',
+  title: '',
   value: undefined,
   future: true,
   format: 'HH:mm:ss',
