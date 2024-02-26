@@ -555,7 +555,7 @@ const Yl = { class: "m-collapse" }, Ul = ["onClick"], Kl = { key: 0, focusable: 
 ra.install = (l) => {
   l.component(ra.__name, ra);
 };
-const Jl = { class: "m-countdown" }, Xl = { class: "m-time" }, Ql = { key: 0, class: "u-prefix" }, et = { key: 0, class: "u-suffix" }, va = V(j({ __name: "Countdown", props: { title: { default: "Countdown" }, value: { default: void 0 }, future: { type: Boolean, default: !0 }, format: { default: "HH:mm:ss" }, prefix: { default: "" }, suffix: { default: "" }, titleStyle: { default: () => ({}) }, valueStyle: { default: () => ({}) }, finishedText: { default: "Finished" } }, emits: ["finish"], setup(l, { emit: a }) {
+const Jl = { class: "m-countdown" }, Xl = { class: "m-time" }, Ql = { key: 0, class: "u-prefix" }, et = { key: 0, class: "u-suffix" }, va = V(j({ __name: "Countdown", props: { title: { default: "" }, value: { default: void 0 }, future: { type: Boolean, default: !0 }, format: { default: "HH:mm:ss" }, prefix: { default: "" }, suffix: { default: "" }, titleStyle: { default: () => ({}) }, valueStyle: { default: () => ({}) }, finishedText: { default: "Finished" } }, emits: ["finish"], setup(l, { emit: a }) {
   const e = l, o = ye(), i = C(() => {
     var n;
     const m = (n = o.prefix) == null ? void 0 : n.call(o);
@@ -618,7 +618,7 @@ const Jl = { class: "m-countdown" }, Xl = { class: "m-time" }, Ql = { key: 0, cl
   return oe(() => {
     Number.isFinite(e.value) ? (e.future ? e.value >= Date.now() && (d.value = e.value) : e.value >= 0 && (d.value = e.value + Date.now()), pe(M)) : s.value = null;
   }), (m, n) => (r(), v("div", Jl, [t("div", { class: "u-title", style: _(m.titleStyle) }, [A(m.$slots, "title", {}, () => [T(F(e.title), 1)], !0)], 4), t("div", Xl, [i.value ? (r(), v(N, { key: 0 }, [i.value || s.value > 0 || s.value === null ? (r(), v("span", Ql, [A(m.$slots, "prefix", {}, () => [T(F(m.prefix), 1)], !0)])) : L("", !0)], 64)) : L("", !0), m.finishedText && s.value === 0 && s.value !== null ? (r(), v("span", { key: 1, class: "u-time-value", style: _(m.valueStyle) }, [A(m.$slots, "finish", {}, () => [T(F(m.finishedText), 1)], !0)], 4)) : L("", !0), Number.isFinite(s.value) && s.value > 0 ? (r(), v("span", { key: 2, class: "u-time-value", style: _(m.valueStyle) }, F(h(s.value)), 5)) : L("", !0), c.value ? (r(), v(N, { key: 3 }, [c.value || s.value > 0 || s.value === null ? (r(), v("span", et, [A(m.$slots, "suffix", {}, () => [T(F(m.suffix), 1)], !0)])) : L("", !0)], 64)) : L("", !0)])]));
-} }), [["__scopeId", "data-v-77cdeaee"]]);
+} }), [["__scopeId", "data-v-f26bc1e8"]]);
 va.install = (l) => {
   l.component(va.__name, va);
 };
