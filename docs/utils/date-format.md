@@ -51,19 +51,23 @@ function dateFormat (value: number|string|Date = Date.now(), format = 'YYYY-MM-D
 
 - 格式化日期时
 
+<script setup lang="ts">
+import { dateFormat } from 'vue-amazing-ui'
+</script>
+
 ## 基本使用
 
 *格式化时间戳*
 
 <br/>
 
-**2023-05-31 14:20:45**
+**{{ dateFormat(Date.now()) }}**
 
 ```vue
 <script setup lang="ts">
 import { dateFormat } from 'vue-amazing-ui'
 
-dateFormat(1685514045679) // 2023-05-31 14:20:45
+dateFormat(Date.now())
 </script>
 ```
 
@@ -85,13 +89,13 @@ dateFormat('2023-05-31', 'MM/DD/YYYY') // 05/31/2023
 
 <br/>
 
-**2023-05-31 14:20:45:679**
+**{{ dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS') }}**
 
 ```vue
 <script setup lang="ts">
 import { dateFormat } from 'vue-amazing-ui'
 
-dateFormat(1685514045679, 'YYYY-MM-DD HH:mm:ss:SSS') // 2023-05-31 14:20:45:679
+dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
 </script>
 ```
 
