@@ -141,7 +141,7 @@ function onChange (key: string|number) {
       @change="onChange" />
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Radio :options="options" v-model:value="size" />
-    <br/><br/>
+    <br/>
     <Tabs
       :size="size"
       :tab-pages="tabPages"
@@ -171,8 +171,7 @@ function onChange (key: string|number) {
     </Tabs>
     <h2 class="mt30 mb10">Ant Design Vue 标签页</h2>
     <a-tabs v-model:active-key="activeKey">
-      <a-tab-pane key="1" tab="Tab 1">Content of Tab Pane 1                                                           <template #tab></template>
-                                                           </a-tab-pane>
+      <a-tab-pane key="1" tab="Tab 1">Content of Tab Pane 1</a-tab-pane>
       <a-tab-pane key="2" tab="Tab 2" force-render>Content of Tab Pane 3</a-tab-pane>
       <a-tab-pane key="3" tab="Tab 3" disabled>Content of Tab Pane 3</a-tab-pane>
       <a-tab-pane key="4" tab="Tab 4" force-render>Content of Tab Pane 4</a-tab-pane>
