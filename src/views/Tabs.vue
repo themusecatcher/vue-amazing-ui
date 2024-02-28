@@ -69,6 +69,10 @@ const activeKey = ref('1')
 watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   console.log('activeKey:', activeKey.value)
 })
+const card = ref('line')
+setTimeout(() => {
+  card.value = 'card'
+}, 1000)
 const options = ref([
         {
           label: 'Small',
@@ -135,7 +139,7 @@ function onChange (key: string|number) {
     <br/>
     <Tabs
       style="width: 320px;"
-      type="card"
+      :type="card"
       :tab-pages="tabPages"
       v-model:active-key="activeKey"
       @change="onChange" />
@@ -170,7 +174,7 @@ function onChange (key: string|number) {
       </template>
     </Tabs>
     <h2 class="mt30 mb10">Ant Design Vue 标签页</h2>
-    <a-tabs v-model:active-key="activeKey">
+    <a-tabs v-model:active-key="activeKey" :tabBarGutter="60" type="card">
       <a-tab-pane key="1" tab="Tab 1">Content of Tab Pane 1</a-tab-pane>
       <a-tab-pane key="2" tab="Tab 2" force-render>Content of Tab Pane 3</a-tab-pane>
       <a-tab-pane key="3" tab="Tab 3" disabled>Content of Tab Pane 3</a-tab-pane>

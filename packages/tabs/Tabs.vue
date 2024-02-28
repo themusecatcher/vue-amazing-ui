@@ -11,6 +11,7 @@ interface Props {
   centered?: boolean // 标签是否居中展示
   size?: 'small'|'middle'|'large' // 标签页大小
   type?: 'line'|'card' // 标签页的样式
+  gutter?: number // tabs 之前的间隙大小，单位px
   activeKey?: string|number // (v-model)当前激活 tab 面板的 key
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -18,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   centered: false,
   size: 'middle',
   type: 'line',
+  gutter: undefined,
   activeKey: ''
 })
 const tabs = ref() // 所有tabs的ref模板引用
@@ -26,35 +28,35 @@ const width = ref(0)
 const wrap = ref()
 const wrapWidth = ref()
 const nav = ref()
+const navWidth = ref()
 const showWheel = ref(false) // 导航是否有滚动
 const scrollMax = ref(0) // 最大滚动距离
 const scrollLeft = ref(0) // 滚动距离
 watch(
-  () => props.tabPages,
-  () => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+  () => [props.tabPages, props.gutter, props.size, props.type],
+  () => {
     getNavWidth()
   },
   {
+    deep: true, // 强制转成深层侦听器
     flush: 'post'
   }
 )
 watch(
-  () => [props.activeKey, props.tabPages, props.size],
+  () => props.activeKey,
   () => {
-    const index = props.tabPages.findIndex(page => page.key === props.activeKey)
-    getBarPosition(index)
+    getBarPosition()
   },
   {
-    deep: true, // 强制转成深层侦听器
     flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
   }
 )
 onMounted(() => {
-  const index = props.tabPages.findIndex(page => page.key === props.activeKey)
-  getBarPosition(index)
+  getNavWidth()
 })
 const emits = defineEmits(['update:activeKey', 'change'])
-function getBarPosition (index: number) {
+function getBarPosition () {
+  const index = props.tabPages.findIndex(page => page.key === props.activeKey)
   const el = tabs.value[index]
   if (el) {
     left.value = el.offsetLeft
@@ -72,14 +74,14 @@ function getBarPosition (index: number) {
 }
 function getNavWidth () {
   wrapWidth.value = wrap.value.offsetWidth
-  const navWidth = nav.value.offsetWidth
-  if (navWidth > wrapWidth.value) {
+  navWidth.value = nav.value.offsetWidth
+  if (navWidth.value > wrapWidth.value) {
     showWheel.value = true
-    scrollMax.value = navWidth - wrapWidth.value
+    scrollMax.value = navWidth.value - wrapWidth.value
   }
+  getBarPosition()
 }
-function onTab (key: string|number, index: number) {
-  getBarPosition(index)
+function onTab (key: string|number) {
   emits('update:activeKey', key)
   emits('change', key)
 }
@@ -128,7 +130,8 @@ function onWheel (e: WheelEvent) {
               { 'u-tab-line-active': activeKey === page.key && type === 'line' },
               { 'u-tab-card-active': activeKey === page.key && type === 'card' }
             ]"
-            @click="page.disabled ? () => false : onTab(page.key, index)"
+            :style="`margin-left: ${index !== 0 ? gutter : null}px;`"
+            @click="page.disabled ? () => false : onTab(page.key)"
             v-for="(page, index) in tabPages" :key="page.key">
             {{ page.tab }}
           </div>
