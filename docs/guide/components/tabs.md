@@ -82,6 +82,21 @@ const activeKey = ref('1')
 watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   console.log('activeKey:', activeKey.value)
 })
+const options = ref([
+        {
+          label: 'Small',
+          value: 'small'
+        },
+        {
+          label: 'Middle',
+          value: 'middle'
+        },
+        {
+          label: 'Large',
+          value: 'large'
+        }
+      ])
+const size = ref('middle')
 function onChange (key: string|number) {
   console.log('key:', key)
 }
@@ -89,7 +104,9 @@ function onChange (key: string|number) {
 
 ## 基本使用
 
-<Tabs :tab-pages="tabPages" v-model:active-key="activeKey" />
+<Tabs
+  :tab-pages="tabPages"
+  v-model:active-key="activeKey" />
 
 ::: details Show Code
 
@@ -134,7 +151,68 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 })
 </script>
 <template>
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" />
+  <Tabs
+    :tab-pages="tabPages"
+    v-model:active-key="activeKey" />
+</template>
+```
+
+:::
+
+## 卡片式标签页
+
+<Tabs
+  type="card"
+  :tab-pages="tabPages"
+  v-model:active-key="activeKey" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const tabPages = ref([
+  {
+    key: '1',
+    tab: 'Tab 1',
+    content: 'Content of Tab Pane 1'
+  },
+  {
+    key: '2',
+    tab: 'Tab 2',
+    content: 'Content of Tab Pane 2'
+  },
+  {
+    key: '3',
+    tab: 'Tab 3',
+    content: 'Content of Tab Pane 3'
+  },
+  {
+    key: '4',
+    tab: 'Tab 4',
+    content: 'Content of Tab Pane 4'
+  },
+  {
+    key: '5',
+    tab: 'Tab 5',
+    content: 'Content of Tab Pane 5'
+  },
+  {
+    key: '6',
+    tab: 'Tab 6',
+    content: 'Content of Tab Pane 6'
+  }
+])
+const activeKey = ref('1')
+watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+  console.log('activeKey:', activeKey.value)
+})
+</script>
+<template>
+  <Tabs
+    type="card"
+    :tab-pages="tabPages"
+    v-model:active-key="activeKey" />
 </template>
 ```
 
@@ -146,7 +224,14 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 
 <br/>
 
-<Tabs :tab-pages="tabPagesDisabled" v-model:active-key="activeKey" />
+<Tabs
+  :tab-pages="tabPagesDisabled"
+  v-model:active-key="activeKey" />
+<br/>
+<Tabs
+  type="card"
+  :tab-pages="tabPagesDisabled"
+  v-model:active-key="activeKey" />
 
 ::: details Show Code
 
@@ -192,7 +277,14 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 })
 </script>
 <template>
-  <Tabs :tab-pages="tabPagesDisabled" v-model:active-key="activeKey" />
+  <Tabs
+    :tab-pages="tabPagesDisabled"
+    v-model:active-key="activeKey" />
+  <br/>
+  <Tabs
+    type="card"
+    :tab-pages="tabPagesDisabled"
+    v-model:active-key="activeKey" />
 </template>
 ```
 
@@ -200,7 +292,16 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 
 ## 居中展示
 
-<Tabs centered :tab-pages="tabPages" v-model:active-key="activeKey" />
+<Tabs
+  centered
+  :tab-pages="tabPages"
+  v-model:active-key="activeKey" />
+<br/>
+<Tabs
+  centered
+  type="card"
+  :tab-pages="tabPages"
+  v-model:active-key="activeKey" />
 
 ::: details Show Code
 
@@ -245,7 +346,16 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 })
 </script>
 <template>
-  <Tabs centered :tab-pages="tabPages" v-model:active-key="activeKey" />
+  <Tabs
+    centered
+    :tab-pages="tabPages"
+    v-model:active-key="activeKey" />
+  <br/>
+  <Tabs
+    centered
+    type="card"
+    :tab-pages="tabPages"
+    v-model:active-key="activeKey" />
 </template>
 ```
 
@@ -253,7 +363,16 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 
 ## 左右滑动，容纳更多标签
 
-<Tabs style="width: 320px;" :tab-pages="tabPages" v-model:active-key="activeKey" />
+<Tabs
+  style="width: 320px;"
+  :tab-pages="tabPages"
+  v-model:active-key="activeKey" />
+<br/>
+<Tabs
+  style="width: 320px;"
+  type="card"
+  :tab-pages="tabPages"
+  v-model:active-key="activeKey" />
 
 ::: details Show Code
 
@@ -298,15 +417,35 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 })
 </script>
 <template>
-  <Tabs style="width: 320px;" :tab-pages="tabPages" v-model:active-key="activeKey" />
+  <Tabs
+    style="width: 320px;"
+    :tab-pages="tabPages"
+    v-model:active-key="activeKey" />
+  <br/>
+  <Tabs
+    style="width: 320px;"
+    type="card"
+    :tab-pages="tabPages"
+    v-model:active-key="activeKey" />
 </template>
 ```
 
 :::
 
-## 大号标签页
+## 三种尺寸
 
-<Tabs size="large" :tab-pages="tabPages" v-model:active-key="activeKey" />
+<Radio :options="options" v-model:value="size" />
+<br/><br/>
+<Tabs
+  :size="size"
+  :tab-pages="tabPages"
+  v-model:active-key="activeKey" />
+<br/>
+<Tabs
+  type="card"
+  :size="size"
+  :tab-pages="tabPages"
+  v-model:active-key="activeKey" />
 
 ::: details Show Code
 
@@ -349,9 +488,35 @@ const activeKey = ref('1')
 watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   console.log('activeKey:', activeKey.value)
 })
+const options = ref([
+        {
+          label: 'Small',
+          value: 'small'
+        },
+        {
+          label: 'Middle',
+          value: 'middle'
+        },
+        {
+          label: 'Large',
+          value: 'large'
+        }
+      ])
+const size = ref('middle')
 </script>
 <template>
-  <Tabs size="large" :tab-pages="tabPages" v-model:active-key="activeKey" />
+  <Radio :options="options" v-model:value="size" />
+  <br/><br/>
+  <Tabs
+    :size="size"
+    :tab-pages="tabPages"
+    v-model:active-key="activeKey" />
+  <br/>
+  <Tabs
+    type="card"
+    :size="size"
+    :tab-pages="tabPages"
+    v-model:active-key="activeKey" />
 </template>
 ```
 
@@ -436,7 +601,8 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 -- | -- | -- | -- | --
 tabPages | 标签页数组 | Tab[] | [] | true
 centered | 标签是否居中展示 | boolean | false | false
-size | 标签页大小 | 'small' &#124; 'large' | 'small' | false
+size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
+type | 标签页的样式 |'line' &#124; 'card' | 'line' | false
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | '' | false
 
 ## Tab Type

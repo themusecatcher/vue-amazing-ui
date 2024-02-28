@@ -69,6 +69,21 @@ const activeKey = ref('1')
 watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   console.log('activeKey:', activeKey.value)
 })
+const options = ref([
+        {
+          label: 'Small',
+          value: 'small'
+        },
+        {
+          label: 'Middle',
+          value: 'middle'
+        },
+        {
+          label: 'Large',
+          value: 'large'
+        }
+      ])
+const size = ref('middle')
 function onChange (key: string|number) {
   console.log('key:', key)
 }
@@ -81,8 +96,20 @@ function onChange (key: string|number) {
       :tab-pages="tabPages"
       v-model:active-key="activeKey"
       @change="onChange" />
+    <h2 class="mt30 mb10">卡片式标签页</h2>
+    <Tabs
+      type="card"
+      :tab-pages="tabPages"
+      v-model:active-key="activeKey"
+      @change="onChange" />
     <h2 class="mt30 mb10">禁用某一项</h2>
     <Tabs
+      :tab-pages="tabPagesDisabled"
+      v-model:active-key="activeKey"
+      @change="onChange" />
+    <br/>
+    <Tabs
+      type="card"
       :tab-pages="tabPagesDisabled"
       v-model:active-key="activeKey"
       @change="onChange" />
@@ -92,15 +119,38 @@ function onChange (key: string|number) {
       :tab-pages="tabPages"
       v-model:active-key="activeKey"
       @change="onChange" />
+    <br/>
+    <Tabs
+      centered
+      type="card"
+      :tab-pages="tabPages"
+      v-model:active-key="activeKey"
+      @change="onChange" />
     <h2 class="mt30 mb10">左右滑动，容纳更多标签</h2>
     <Tabs
       style="width: 320px;"
       :tab-pages="tabPages"
       v-model:active-key="activeKey"
       @change="onChange" />
-    <h2 class="mt30 mb10">大号标签页</h2>
+    <br/>
     <Tabs
-      size="large"
+      style="width: 320px;"
+      type="card"
+      :tab-pages="tabPages"
+      v-model:active-key="activeKey"
+      @change="onChange" />
+    <h2 class="mt30 mb10">三种尺寸</h2>
+    <Radio :options="options" v-model:value="size" />
+    <br/><br/>
+    <Tabs
+      :size="size"
+      :tab-pages="tabPages"
+      v-model:active-key="activeKey"
+      @change="onChange" />
+    <br/>
+    <Tabs
+      type="card"
+      :size="size"
       :tab-pages="tabPages"
       v-model:active-key="activeKey"
       @change="onChange" />
@@ -121,7 +171,8 @@ function onChange (key: string|number) {
     </Tabs>
     <h2 class="mt30 mb10">Ant Design Vue 标签页</h2>
     <a-tabs v-model:active-key="activeKey">
-      <a-tab-pane key="1" tab="Tab 1">Content of Tab Pane 1</a-tab-pane>
+      <a-tab-pane key="1" tab="Tab 1">Content of Tab Pane 1                                                           <template #tab></template>
+                                                           </a-tab-pane>
       <a-tab-pane key="2" tab="Tab 2" force-render>Content of Tab Pane 3</a-tab-pane>
       <a-tab-pane key="3" tab="Tab 3" disabled>Content of Tab Pane 3</a-tab-pane>
       <a-tab-pane key="4" tab="Tab 4" force-render>Content of Tab Pane 4</a-tab-pane>

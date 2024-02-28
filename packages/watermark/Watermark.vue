@@ -244,7 +244,7 @@ watch(
   {
     deep: true, // 强制转成深层侦听器
     flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
-  },
+  }
 )
 // Whether to re-render the watermark
 function reRendering (mutation: MutationRecord, watermarkElement?: HTMLElement) {
