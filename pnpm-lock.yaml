@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.4.19
     version: 3.4.19(typescript@5.3.3)
   vue-amazing-ui:
-    specifier: ^0.1.33
-    version: 0.1.33(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3)
+    specifier: ^0.1.34
+    version: 0.1.34(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3)
   vue-router:
     specifier: ^4.3.0
     version: 4.3.0(vue@3.4.19)
@@ -3291,22 +3291,6 @@ packages:
       '@shikijs/core': 1.1.6
     dev: false
 
-  /shikiji-core@0.10.2:
-    resolution: {integrity: sha512-9Of8HMlF96usXJHmCL3Gd0Fcf0EcyJUF9m8EoAKKd98mHXi0La2AZl1h6PegSFGtiYcBDK/fLuKbDa1l16r1fA==}
-    dev: false
-
-  /shikiji-transformers@0.10.2:
-    resolution: {integrity: sha512-7IVTwl1af205ywYEq5bOAYOTOFW4V1dVX1EablP0nWKErqZeD1o93VMytxmtJomqS+YwbB8doY8SE3MFMn0aPQ==}
-    dependencies:
-      shikiji: 0.10.2
-    dev: false
-
-  /shikiji@0.10.2:
-    resolution: {integrity: sha512-wtZg3T0vtYV2PnqusWQs3mDaJBdCPWxFDrBM/SE5LfrX92gjUvfEMlc+vJnoKY6Z/S44OWaCRzNIsdBRWcTAiw==}
-    dependencies:
-      shikiji-core: 0.10.2
-    dev: false
-
   /side-channel@1.0.5:
     resolution: {integrity: sha512-QcgiIWV4WV7qWExbN5llt6frQB/lBven9pqliLXfGPB+K9ZYXxDozp0wLkHS24kWCm+6YXH/f0HhnObZnZOBnQ==}
     engines: {node: '>= 0.4'}
@@ -3705,61 +3689,6 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vitepress@1.0.0-rc.40(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.13.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-1x9PCrcsJwqhpccyTR93uD6jpiPDeRC98CBCAQLLBb44a3VSXYBPzhCahi+2kwAYylu49p0XhseMPVM4IVcWcw==}
-    hasBin: true
-    peerDependencies:
-      markdown-it-mathjax3: ^4.3.2
-      postcss: ^8.4.33
-    peerDependenciesMeta:
-      markdown-it-mathjax3:
-        optional: true
-      postcss:
-        optional: true
-    dependencies:
-      '@docsearch/css': 3.5.2
-      '@docsearch/js': 3.5.2(@algolia/client-search@4.22.1)(search-insights@2.13.0)
-      '@types/markdown-it': 13.0.7
-      '@vitejs/plugin-vue': 5.0.4(vite@5.1.4)(vue@3.4.19)
-      '@vue/devtools-api': 6.6.1
-      '@vueuse/core': 10.8.0(vue@3.4.19)
-      '@vueuse/integrations': 10.8.0(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.4.19)
-      focus-trap: 7.5.4
-      mark.js: 8.11.1
-      minisearch: 6.3.0
-      shikiji: 0.10.2
-      shikiji-core: 0.10.2
-      shikiji-transformers: 0.10.2
-      vite: 5.1.4(@types/node@20.11.20)(less@4.2.0)
-      vue: 3.4.19(typescript@5.3.3)
-    transitivePeerDependencies:
-      - '@algolia/client-search'
-      - '@types/node'
-      - '@types/react'
-      - '@vue/composition-api'
-      - async-validator
-      - axios
-      - change-case
-      - drauu
-      - fuse.js
-      - idb-keyval
-      - jwt-decode
-      - less
-      - lightningcss
-      - nprogress
-      - qrcode
-      - react
-      - react-dom
-      - sass
-      - search-insights
-      - sortablejs
-      - stylus
-      - sugarss
-      - terser
-      - typescript
-      - universal-cookie
-    dev: false
-
   /vitepress@1.0.0-rc.44(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.13.0)(typescript@5.3.3):
     resolution: {integrity: sha512-tO5taxGI7fSpBK1D8zrZTyJJERlyU9nnt0jHSt3fywfq3VKn977Hg0wUuTkEmwXlFYwuW26+6+3xorf4nD3XvA==}
     hasBin: true
@@ -3824,8 +3753,8 @@ packages:
       vue: 3.4.19(typescript@5.3.3)
     dev: false
 
-  /vue-amazing-ui@0.1.33(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-9QEEz0OXPE/eQCRpgF4zpaIYAjN37gjZmCEYWj++/9gISPc0WRKk6zT44kcm/CiN8o/PD0np4g7KGI56rGn4uA==}
+  /vue-amazing-ui@0.1.34(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-vrLIo5Yu0ElNb7vzEL+AEBA7524uVc/xFsqpMTF6iIZfwE8lJmLZrLVdRXhSvbznt9ZZ2Lxco7NpU9hyJQ9A4A==}
     dependencies:
       '@vuepic/vue-datepicker': 7.4.1(vue@3.4.19)
       '@vueuse/core': 10.8.0(vue@3.4.19)
@@ -3836,7 +3765,7 @@ packages:
       naive-ui: 2.38.0(vue@3.4.19)
       qrcode: 1.5.3
       swiper: 11.0.6
-      vitepress: 1.0.0-rc.40(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.13.0)(typescript@5.3.3)
+      vitepress: 1.0.0-rc.44(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(qrcode@1.5.3)(search-insights@2.13.0)(typescript@5.3.3)
       vue: 3.4.19(typescript@5.3.3)
       vue-router: 4.3.0(vue@3.4.19)
     transitivePeerDependencies:
