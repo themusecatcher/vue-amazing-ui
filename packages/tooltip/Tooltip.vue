@@ -82,8 +82,8 @@ function onHide (): void {
     pointer-events: none;
     opacity: 0;
     transform-origin: 50% 75%;
-    transform: scale(0);
-    transition: transform .2s, opacity .2s;
+    transform: scale(0.5);
+    transition: transform .15s, opacity .15s;
     .u-tooltip {
       min-width: 32px;
       min-height: 32px;
