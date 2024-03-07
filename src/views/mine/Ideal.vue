@@ -20,7 +20,7 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 })
 </script>
 <template>
-  <Tabs class="m-tabs" :tab-pages="tabPages" v-model:active-key="activeKey">
+  <Tabs class="m-tabs" centered :gutter="100" :tab-pages="tabPages" v-model:active-key="activeKey">
     <template #1>
       <iframe class="m-iframe-ideal" src="https://www.vistopia.com.cn/detail/11"></iframe>
     </template>

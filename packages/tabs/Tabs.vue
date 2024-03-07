@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
+import { rafTimeout } from '../index'
 interface Tab {
   key: string | number // 对应 activeKey
   tab: string // 标签页显示文字
@@ -32,10 +33,15 @@ const navWidth = ref()
 const showWheel = ref(false) // 导航是否有滚动
 const scrollMax = ref(0) // 最大滚动距离
 const scrollLeft = ref(0) // 滚动距离
+const activeIndex = computed(() => {
+  return props.tabPages.findIndex(page => page.key === props.activeKey)
+})
 watch(
   () => [props.tabPages, props.gutter, props.size, props.type],
   () => {
-    getNavWidth()
+    rafTimeout(() => {
+      getNavWidth()
+    }, 300)
   },
   {
     deep: true, // 强制转成深层侦听器
@@ -45,7 +51,9 @@ watch(
 watch(
   () => props.activeKey,
   () => {
-    getBarPosition()
+    if (props.type === 'line') {
+      getBarDisplay()
+    }
   },
   {
     flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
@@ -55,17 +63,18 @@ onMounted(() => {
   getNavWidth()
 })
 const emits = defineEmits(['update:activeKey', 'change'])
-function getBarPosition () {
-  const index = props.tabPages.findIndex(page => page.key === props.activeKey)
-  const el = tabs.value[index]
+function getBarDisplay () {
+  const el = tabs.value[activeIndex.value]
   if (el) {
     left.value = el.offsetLeft
     width.value = el.offsetWidth
-    if (left.value < scrollLeft.value) {
-      scrollLeft.value = left.value
-    }
-    if (left.value + width.value - wrapWidth.value > scrollLeft.value) {
-      scrollLeft.value = left.value + width.value - wrapWidth.value
+    if (showWheel.value) {
+      if (left.value < scrollLeft.value) {
+        scrollLeft.value = left.value
+      }
+      if (left.value + width.value - wrapWidth.value > scrollLeft.value) {
+        scrollLeft.value = left.value + width.value - wrapWidth.value
+      }
     }
   } else {
     left.value = 0
@@ -79,7 +88,9 @@ function getNavWidth () {
     showWheel.value = true
     scrollMax.value = navWidth.value - wrapWidth.value
   }
-  getBarPosition()
+  if (props.type === 'line') {
+    getBarDisplay()
+  }
 }
 function onTab (key: string|number) {
   emits('update:activeKey', key)
@@ -132,7 +143,7 @@ function onWheel (e: WheelEvent) {
             ]"
             :style="`margin-left: ${index !== 0 ? gutter : null}px;`"
             @click="page.disabled ? () => false : onTab(page.key)"
-            v-for="(page, index) in tabPages" :key="page.key">
+            v-for="(page, index) in tabPages" :key="index">
             {{ page.tab }}
           </div>
           <div class="u-tab-bar" :class="{ 'u-card-hidden': type === 'card' }" :style="`left: ${left}px; width: ${width}px;`"></div>
