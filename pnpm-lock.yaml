@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.4.19
     version: 3.4.19(typescript@5.3.3)
   vue-amazing-ui:
-    specifier: ^0.1.34
-    version: 0.1.34(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3)
+    specifier: ^0.1.35
+    version: 0.1.35(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3)
   vue-router:
     specifier: ^4.3.0
     version: 4.3.0(vue@3.4.19)
@@ -3753,8 +3753,8 @@ packages:
       vue: 3.4.19(typescript@5.3.3)
     dev: false
 
-  /vue-amazing-ui@0.1.34(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-vrLIo5Yu0ElNb7vzEL+AEBA7524uVc/xFsqpMTF6iIZfwE8lJmLZrLVdRXhSvbznt9ZZ2Lxco7NpU9hyJQ9A4A==}
+  /vue-amazing-ui@0.1.35(@algolia/client-search@4.22.1)(@types/node@20.11.20)(less@4.2.0)(search-insights@2.13.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-dw3Hv3avY5fnxCxTfFk88DInlzqD6LBJSA2uaaJG+M8Q2ketkS2FoIiPTEOhZPeVroDJ9WAVdmgFhD9JLcB2xQ==}
     dependencies:
       '@vuepic/vue-datepicker': 7.4.1(vue@3.4.19)
       '@vueuse/core': 10.8.0(vue@3.4.19)
