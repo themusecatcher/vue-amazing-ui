@@ -45,7 +45,7 @@ const sum = computed(() => {
   <div>
     <Space align="top" :size="6">
       <h1>Vue Amazing UI</h1>
-      <Tag color="lime">{{ pkg.version }}</Tag>
+      <Tag color="#FC5404">{{ pkg.version }}</Tag>
     </Space>
     <Descriptions class="mb10 mt30" title="生产环境依赖 dependencies" :column="{md: 2, lg: 3, xl: 4}">
       <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
