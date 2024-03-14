@@ -91,9 +91,9 @@ function onHide (): void {
       font-size: var(--tooltip-font-size);
       color: var(--tooltip-color);
       line-height: 1.5714285714285714;
-      text-align: start;
+      text-align: justify;
       text-decoration: none;
-      word-wrap: break-word;
+      word-break: break-all;
       background-color: var(--tooltip-background-color);
       border-radius: 6px;
       box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);

@@ -110,7 +110,7 @@ function onClose (e: MouseEvent):void {
   position: relative;
   display: flex;
   align-items: center;
-  word-wrap: break-word;
+  word-break: break-all;
   border-radius: 8px;
   .m-icon {
     margin-inline-end: 8px;

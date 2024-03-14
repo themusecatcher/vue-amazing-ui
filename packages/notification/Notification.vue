@@ -212,7 +212,7 @@ function onClose (index: number) {
       margin-inline-start: auto;
       padding: 20px 24px;
       line-height: 1.5714285714285714;
-      word-wrap: break-word;
+      word-break: break-all;
       .u-svg {
         position: absolute;
         display: inline-block;

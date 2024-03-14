@@ -139,7 +139,7 @@ function onChange (index: number) { // 点击切换选择步骤
             font-size: 14px;
             color: rgba(0, 0, 0, .45);
             line-height: 22px;
-            word-wrap: break-word;
+            word-break: break-all;
             transition: all .3s;
           }
         }

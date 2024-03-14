@@ -78,7 +78,7 @@ function onConfirm () {
         <div
           ref="dialog"
           :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']"
-          :style="`width: ${fullScreen ? '100%' : props.width + 'px'}; top: ${center ? '50%' : (fullScreen ? 0:top + 'px')};`">
+          :style="`width: ${fullScreen ? '100%' : props.width + 'px'}; top: ${center ? '50%' : (fullScreen ? 0 : top + 'px')};`">
           <div
             class="m-dialog-content"
             :class="{loading: loading}"
@@ -162,6 +162,7 @@ function onConfirm () {
   z-index: 1010;
   .m-dialog {
     margin: 0 auto;
+    transition: all .25s;
     .loading { // 加载过程背景虚化
       background: rgb(248, 248, 248) !important;
       pointer-events: none; // 屏蔽鼠标事件
@@ -175,6 +176,7 @@ function onConfirm () {
       border-radius: 8px;
       box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
       padding: 20px 24px;
+      transition: all .25s;
       .u-spin {
         position: absolute;
         inset: 0;
@@ -192,7 +194,7 @@ function onConfirm () {
           font-weight: 600;
           font-size: 16px;
           line-height: 1.5;
-          word-wrap: break-word;
+          word-break: break-all;
         }
       }
       .m-screen {
@@ -236,8 +238,9 @@ function onConfirm () {
         font-size: 14px;
         color: rgba(0, 0, 0, .88);
         line-height: 1.5714285714285714;
-        word-wrap: break-word;
+        word-break: break-all;
         overflow: auto;
+        transition: all .25s;
       }
       .m-dialog-footer {
         text-align: end;
