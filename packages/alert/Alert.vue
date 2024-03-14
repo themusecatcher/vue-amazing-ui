@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchPostEffect, useSlots, computed } from 'vue'
+import { ref, watch, useSlots, computed, onMounted } from 'vue'
 interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot
@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   showIcon: false
 })
 const alert = ref()
+const wrapper = ref()
 const slots = useSlots()
 const showDesc = computed(() => {
   const descriptionSlots = slots.description?.()
@@ -27,22 +28,37 @@ const showDesc = computed(() => {
   }
   return props.description
 })
-watchPostEffect(() => {
+const height = ref()
+watch(
+  () => [props.message, props.description],
+  () => {
+    if (props.closable) {
+      wrapper.value.style.height = alert.value.offsetHeight + 'px'
+      wrapper.value.style.opacity = 1
+    }
+  },
+  {
+    deep: true, // 强制转成深层侦听器
+    flush: 'post'
+  }
+)
+onMounted(() => {
   if (props.closable) {
-    alert.value.style.height = alert.value.offsetHeight + 'px'
-    alert.value.style.opacity = 1
+    wrapper.value.style.height = alert.value.offsetHeight + 'px'
+    wrapper.value.style.opacity = 1
   }
 })
 const emit = defineEmits(['close'])
 function onClose (e: MouseEvent):void {
-  alert.value.style.height = 0
-  alert.value.style.opacity = 0
+  wrapper.value.style.height = 0
+  wrapper.value.style.opacity = 0
   emit('close', e)
 }
 </script>
 <template>
-  <div ref="alert" class="m-alert-wrapper">
+  <div ref="wrapper" class="m-alert-wrapper">
     <div
+      ref="alert"
       class="m-alert"
       :class="[`${type}`, {'width-description': showDesc}]">
       <template v-if="showIcon">
