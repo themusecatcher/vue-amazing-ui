@@ -7,21 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    ACol: typeof import('ant-design-vue/es')['Col']
-    ACollapse: typeof import('ant-design-vue/es')['Collapse']
-    ACollapsePanel: typeof import('ant-design-vue/es')['CollapsePanel']
-    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
-    AMenu: typeof import('ant-design-vue/es')['Menu']
-    AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
-    AProgress: typeof import('ant-design-vue/es')['Progress']
-    ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
-    ARate: typeof import('ant-design-vue/es')['Rate']
-    ARow: typeof import('ant-design-vue/es')['Row']
-    ASelect: typeof import('ant-design-vue/es')['Select']
-    AStep: typeof import('ant-design-vue/es')['Step']
-    ASteps: typeof import('ant-design-vue/es')['Steps']
-    ATabPane: typeof import('ant-design-vue/es')['TabPane']
-    ATabs: typeof import('ant-design-vue/es')['Tabs']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
