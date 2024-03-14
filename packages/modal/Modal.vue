@@ -142,7 +142,6 @@ function onKnow () {
 }
 .top-center { // 相对定位，固定高度，始终距离视图顶端100px
   position: relative;
-  // top: 100px;
 }
 .m-modal-mask {
   position: fixed;
@@ -173,7 +172,7 @@ function onKnow () {
     line-height: 1.5714285714285714;
     .m-modal-body {
       position: relative;
-      word-wrap: break-word;
+      word-break: break-all;
       padding: 20px 24px;
       background-color: #fff;
       border-radius: 8px;

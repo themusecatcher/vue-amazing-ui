@@ -154,7 +154,7 @@ function onOk (e: Event) {
       line-height: 1.5714285714285714;
       text-align: start;
       text-decoration: none;
-      word-wrap: break-word;
+      word-break: break-all;
       cursor: auto;
       user-select: text;
       background-color: #FFF;
