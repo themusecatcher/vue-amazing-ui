@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { rafTimeout } from '../index'
 interface Collapse {
   key?: string|number // 对应activeKey，如果没有传入key属性，则默认使用数据索引(0,1,2...)绑定
@@ -28,14 +28,27 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const text = ref()
 const collapseHeight = ref<any[]>([])
-watchEffect(() => {
-  getCollapseHeight(props.collapseData.length) // 获取各个面板内容高度
-}, { flush: 'post' })
-function getCollapseHeight (len: number) {
-  for (let n = 0; n < len; n++) {
-    collapseHeight.value.push(text.value[n].offsetHeight)
+const len = computed(() => {
+  return props.collapseData.length
+})
+watch(
+  () => props.collapseData,
+  (to) => {
+    getCollapseHeight() // 获取各个面板内容高度
+  },
+  {
+    deep: true,
+    flush: 'post'
+  }
+)
+function getCollapseHeight () {
+  for (let n = 0; n < len.value; n++) {
+    collapseHeight.value[n] = text.value[n].offsetHeight
   }
 }
+onMounted(() => {
+  getCollapseHeight()
+})
 const emits = defineEmits(['update:activeKey', 'change'])
 function emitValue (value: any) {
   emits('update:activeKey', value)
@@ -144,7 +157,7 @@ function onCopy (index: number) {
       position: relative;
       overflow: hidden;
       background-color: #ffffff;
-      transition: height .2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity .2s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+      transition: height .2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity .2s cubic-bezier(0.645, 0.045, 0.355, 1);
       .u-lang {
         position: absolute;
         right: 10px;
