@@ -124,7 +124,7 @@ watchEffect(() => {
       }
     } else { // 相对剩余时间，单位ms
       if (props.value >= 0) {
-        futureTime.value = (props.value as number) + Date.now()
+        futureTime.value = props.value + Date.now()
       }
     }
     requestAnimationFrame(CountDown)

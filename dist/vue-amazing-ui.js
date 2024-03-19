@@ -623,7 +623,7 @@ const Jl = { class: "m-countdown" }, Xl = { class: "m-time" }, Ql = { key: 0, cl
   return se(() => {
     Number.isFinite(e.value) ? (e.future ? e.value >= Date.now() && (d.value = e.value) : e.value >= 0 && (d.value = e.value + Date.now()), fe(M)) : s.value = null;
   }), (k, u) => (r(), v("div", Jl, [t("div", { class: "u-title", style: _(k.titleStyle) }, [A(k.$slots, "title", {}, () => [T(F(e.title), 1)], !0)], 4), t("div", Xl, [n.value ? (r(), v(N, { key: 0 }, [n.value || s.value > 0 || s.value === null ? (r(), v("span", Ql, [A(k.$slots, "prefix", {}, () => [T(F(k.prefix), 1)], !0)])) : S("", !0)], 64)) : S("", !0), k.finishedText && s.value === 0 && s.value !== null ? (r(), v("span", { key: 1, class: "u-time-value", style: _(k.valueStyle) }, [A(k.$slots, "finish", {}, () => [T(F(k.finishedText), 1)], !0)], 4)) : S("", !0), Number.isFinite(s.value) && s.value > 0 ? (r(), v("span", { key: 2, class: "u-time-value", style: _(k.valueStyle) }, F(h(s.value)), 5)) : S("", !0), c.value ? (r(), v(N, { key: 3 }, [c.value || s.value > 0 || s.value === null ? (r(), v("span", et, [A(k.$slots, "suffix", {}, () => [T(F(k.suffix), 1)], !0)])) : S("", !0)], 64)) : S("", !0)])]));
-} }), [["__scopeId", "data-v-f26bc1e8"]]);
+} }), [["__scopeId", "data-v-8c15239b"]]);
 va.install = (l) => {
   l.component(va.__name, va);
 };

@@ -5,25 +5,25 @@
 
 ## 安装
 
-**With PNPM**
+::: code-group
 
-```bash
-$ pnpm i vue-amazing-ui
-# or
+```sh [npm]
+$ npm add vue-amazing-ui
+```
+
+```sh [pnpm]
 $ pnpm add vue-amazing-ui
 ```
 
-**With YARN**
-
-```bash
+```sh [yarn]
 $ yarn add vue-amazing-ui
 ```
 
-**With NPM**
-
-```bash
-$ npm i vue-amazing-ui
+```sh [bun]
+$ bun add vue-amazing-ui
 ```
+
+:::
 
 ## 使用
 
