@@ -68,7 +68,7 @@
     "typescript": "^5.3.3",
     "unplugin-vue-components": "^0.26.0",
     "vite": "^5.1.4",
-    "vitepress": "1.0.0-rc.45",
+    "vitepress": "^1.0.1",
     "vue-tsc": "^2.0.6"
   },
   "description": "An Amazing Vue3 UI Components Library.",
