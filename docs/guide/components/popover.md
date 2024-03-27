@@ -80,7 +80,7 @@ function openChange (visible: boolean) {
 <Popover
   title="TitleTitleTitleTitleTitleTitleTitleTitleTitle"
   :max-width="240"
-  :overlayStyle="{ backgroundColor: '#E3E3E3', padding: '12px 18px', borderRadius: '12px' }">
+  :overlayStyle="{ padding: '12px 18px', borderRadius: '12px' }">
   <template #content>
     <p>Content</p>
     <p>Content</p>
@@ -95,7 +95,7 @@ function openChange (visible: boolean) {
   <Popover
     title="TitleTitleTitleTitleTitleTitleTitleTitleTitle"
     :max-width="240"
-    :overlayStyle="{ backgroundColor: '#E3E3E3', padding: '12px 18px', borderRadius: '12px' }">
+    :overlayStyle="{ padding: '12px 18px', borderRadius: '12px' }">
     <template #content>
       <p>Content</p>
       <p>Content</p>
