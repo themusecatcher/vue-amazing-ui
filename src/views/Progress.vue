@@ -22,7 +22,7 @@ function onDecline (scale: number) {
 </script>
 <template>
   <div>
-    <h1>Progress 进度条</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Progress :width="900" :percent="percent" :stroke-width="10" />
     <h2 class="mt30 mb10">完成进度条</h2>

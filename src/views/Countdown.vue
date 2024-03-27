@@ -5,7 +5,7 @@ function onFinish () {
 </script>
 <template>
   <div>
-    <h1>Countdown 倒计时</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">format: MM月 DD天 HH:mm:ss</h3>
     <Countdown

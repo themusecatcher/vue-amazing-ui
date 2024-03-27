@@ -47,7 +47,7 @@ function onConfirm () { // “确定”,“知道了”按钮回调
 </script>
 <template>
   <div>
-    <h1>Dialog 对话框</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space :size="16">
       <Button type="primary" @click="showDialog">默认对话框</Button>

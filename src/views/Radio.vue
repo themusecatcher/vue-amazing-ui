@@ -63,7 +63,7 @@ function onChange (value: any) {
 </script>
 <template>
   <div>
-    <h1>Radio 单选框</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Radio :options="options" v-model:value="value" />
     <h2 class="mt30 mb10">按钮样式</h2>

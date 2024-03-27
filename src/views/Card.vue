@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Card 卡片</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Card title="Default size card" :width="300">
       <template #extra>

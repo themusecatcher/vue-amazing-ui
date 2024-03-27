@@ -141,9 +141,7 @@ function onOk (e: Event) {
     pointer-events: none;
     opacity: 0;
     transform-origin: 50% 75%;
-    transform: scale(.8); // 缩放变换
-    -ms-transform: scale(.8); /* IE 9 */
-    -webkit-transform: scale(.8); /* Safari and Chrome */
+    transform: scale(.8);
     transition: transform .25s, opacity .25s;
     .m-pop {
       min-width: 32px;
@@ -241,9 +239,7 @@ function onOk (e: Event) {
   .show-pop {
     pointer-events: auto;
     opacity: 1;
-    transform: scale(1); // 缩放变换
-    -ms-transform: scale(1); /* IE 9 */
-    -webkit-transform: scale(1); /* Safari and Chrome */
+    transform: scale(1);
   }
 }
 </style>

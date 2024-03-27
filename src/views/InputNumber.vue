@@ -15,7 +15,7 @@ function onAntChange (number: number) {
 </script>
 <template>
   <div>
-    <h1>InputNumber 数字输入框</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <InputNumber v-model:value="value" placeholder="请输入" />
     <h2 class="mt30 mb10">步数为小数</h2>

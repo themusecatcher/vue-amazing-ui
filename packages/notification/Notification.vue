@@ -157,8 +157,6 @@ function onClose (index: number) {
 }
 .right-enter-from {
   transform: translateX(100%);
-  -ms-transform: translateX(100%); /* IE 9 */
-  -webkit-transform: translateX(100%); /* Safari and Chrome */
   opacity: 0;
 }
 .right-leave-to,
@@ -174,8 +172,6 @@ function onClose (index: number) {
 }
 .left-enter-from {
   transform: translateX(-100%);
-  -ms-transform: translateX(-100%); /* IE 9 */
-  -webkit-transform: translateX(-100%); /* Safari and Chrome */
   opacity: 0;
 }
 .left-leave-active {

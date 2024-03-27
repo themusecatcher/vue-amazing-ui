@@ -205,6 +205,12 @@ export const routes = [
         component: () => import('@/views/Popconfirm.vue')
       },
       {
+        path: '/popover',
+        name: 'Popover',
+        meta: { title: '气泡卡片' },
+        component: () => import('@/views/Popover.vue')
+      },
+      {
         path: '/progress',
         name: 'Progress',
         meta: { title: '进度条' },

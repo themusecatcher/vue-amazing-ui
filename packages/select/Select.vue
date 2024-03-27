@@ -315,7 +315,6 @@ function onChange (value: string|number, label: string, index: number) { // é€‰ä
   }
   .rotate {
     transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
   }
   .close {
     .u-svg();

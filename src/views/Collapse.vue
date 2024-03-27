@@ -33,7 +33,7 @@ function onChange (key: any) {
 </script>
 <template>
   <div>
-    <h1>Collapse 折叠面板</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">activeKey 传入 number[] | string[]，所有面板可同时展开</h3>
     <Collapse

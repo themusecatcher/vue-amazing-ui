@@ -17,7 +17,7 @@ function onEnter (e: KeyboardEvent) {
 </script>
 <template>
   <div>
-    <h1>Textarea 文本域</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space direction="vertical">
       <Textarea

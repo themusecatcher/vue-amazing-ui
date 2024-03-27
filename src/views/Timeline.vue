@@ -25,7 +25,7 @@ const timelineData = ref([
 </script>
 <template>
   <div>
-    <h1>Timeline 时间轴</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Timeline :timeline-data="timelineData" />
     <h2 class="mb10">自定义样式</h2>

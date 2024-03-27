@@ -25,7 +25,7 @@ function onClick () {
 </script>
 <template>
   <div>
-    <h1>NumberAnimation 数值动画</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <br/>
     <br/>
     <Button type="primary" @click="onPlay">Play</Button>

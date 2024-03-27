@@ -86,7 +86,7 @@ const customGapSize = ref(8)
 </script>
 <template>
   <div>
-    <h1>Flex 弹性布局</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Flex gap="middle" vertical>
       <Radio :options="directionOptions" v-model:value="direction" />

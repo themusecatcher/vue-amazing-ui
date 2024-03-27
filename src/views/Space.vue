@@ -19,7 +19,7 @@ const size = ref('small')
 </script>
 <template>
   <div>
-    <h1>Space 间距</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space align="center">
       Space

@@ -44,6 +44,7 @@ import Notification from './notification'
 import NumberAnimation from './numberanimation'
 import Pagination from './pagination'
 import Popconfirm from './popconfirm'
+import Popover from './popover'
 import Progress from './progress'
 import QRCode from './qrcode'
 import Radio from './radio'
@@ -103,6 +104,7 @@ const components = [
   NumberAnimation,
   Pagination,
   Popconfirm,
+  Popover,
   Progress,
   QRCode,
   Radio,
@@ -188,6 +190,7 @@ export {
   NumberAnimation,
   Pagination,
   Popconfirm,
+  Popover,
   Progress,
   QRCode,
   Radio,

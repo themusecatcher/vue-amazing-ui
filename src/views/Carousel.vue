@@ -51,7 +51,7 @@ const images = ref([
 </script>
 <template>
   <div>
-    <h1>Carousel 走马灯</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">支持自动切换，导航切换，键盘上、下、左、右按键切换，分页切换</h3>
     <Carousel

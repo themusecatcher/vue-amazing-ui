@@ -7,7 +7,7 @@ function onClick (e: Event) {
 </script>
 <template>
   <div>
-    <h1>Button 按钮</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">七种类型</h2>
     <Space>
       <Button>Default Button</Button>

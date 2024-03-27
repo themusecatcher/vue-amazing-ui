@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Avatar 头像</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space :size="16" align="center">
       <Avatar :size="64">
