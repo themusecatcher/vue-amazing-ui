@@ -44,7 +44,7 @@ setTimeout(() => {
 </script>
 <template>
   <div>
-    <h1>Image 图片</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
     <h2 class="mt30 mb10">多张图片预览</h2>

@@ -81,7 +81,7 @@ function onChange (pagination: {page: number, pageSize: number}) {
 </script>
 <template>
   <div>
-    <h1>Table 表格</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"

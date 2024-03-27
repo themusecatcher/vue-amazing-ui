@@ -64,10 +64,6 @@ withDefaults(defineProps<Props>(), {
       position: relative;
       display: inline-block;
       transform: rotate(45deg);
-      -ms-transform: rotate(45deg); /* Internet Explorer */
-      -moz-transform: rotate(45deg); /* Firefox */
-      -webkit-transform: rotate(45deg); /* Safari 和 Chrome */
-      -o-transform: rotate(45deg); /* Opera */
       animation: loadingDot 1.2s infinite linear;
       -webkit-animation: loadingDot 1.2s infinite linear;
       @keyframes loadingDot {

@@ -16,7 +16,7 @@ const increase = () => {
 </script>
 <template>
   <div>
-    <h1>QRCode 二维码</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <QRCode value="https://blog.csdn.net/Dandrose"/>
     <h2 class="mt30 mb10">无边框</h2>

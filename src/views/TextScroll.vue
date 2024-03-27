@@ -28,7 +28,7 @@ function onClick (value: string) { // 获取点击的标题
 </script>
 <template>
   <div>
-    <h1>TextScroll 文字滚动</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">水平多条文字滚动</h2>
     <TextScroll :scrollText="scrollText" :height="50" @click="onClick" />
     <h2 class="mt30 mb10">单条文字滚动</h2>

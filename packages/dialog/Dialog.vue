@@ -132,8 +132,6 @@ function onConfirm () {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  -ms-transform: translateY(-50%);; /* IE 9 */
-  -webkit-transform: translateY(-50%); /* Safari and Chrome */
 }
 .top-center { // 相对定位，固定高度，始终距离视图顶端100px
   position: relative;

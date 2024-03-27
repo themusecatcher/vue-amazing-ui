@@ -188,7 +188,7 @@ function filter (inputValue: string, option: any) {
 </script>
 <template>
   <div>
-    <h1>Cascader 级联选择</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Cascader :options="options" v-model:selected-value="selectedValue" />
     <h2 class="mt30 mb10">禁用</h2>

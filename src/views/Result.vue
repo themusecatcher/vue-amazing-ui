@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Result 结果</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">成功的结果</h2>
     <Result
       status="success"

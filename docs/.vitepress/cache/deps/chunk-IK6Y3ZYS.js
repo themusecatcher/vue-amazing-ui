@@ -1,4 +1,9 @@
 import {
+  isVue2,
+  isVue3,
+  set
+} from "./chunk-3R4S7WOH.js";
+import {
   computed,
   customRef,
   effectScope,
@@ -25,26 +30,6 @@ import {
   watch,
   watchEffect
 } from "./chunk-5XUBXWZS.js";
-
-// node_modules/.pnpm/vue-demi@0.14.7_vue@3.4.19/node_modules/vue-demi/lib/index.mjs
-var isVue2 = false;
-var isVue3 = true;
-function set(target, key, val) {
-  if (Array.isArray(target)) {
-    target.length = Math.max(target.length, key);
-    target.splice(key, 1, val);
-    return val;
-  }
-  target[key] = val;
-  return val;
-}
-function del(target, key) {
-  if (Array.isArray(target)) {
-    target.splice(key, 1);
-    return;
-  }
-  delete target[key];
-}
 
 // node_modules/.pnpm/@vueuse+shared@10.8.0_vue@3.4.19/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
@@ -1536,10 +1521,6 @@ function whenever(source, cb, options) {
 }
 
 export {
-  isVue2,
-  isVue3,
-  set,
-  del,
   computedEager,
   computedWithControl,
   tryOnScopeDispose,
@@ -1602,7 +1583,7 @@ export {
   refThrottled,
   refWithControl,
   controlledRef,
-  set2,
+  set2 as set,
   watchWithFilter,
   watchPausable,
   syncRef,
@@ -1648,4 +1629,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-GWRTBCYO.js.map
+//# sourceMappingURL=chunk-IK6Y3ZYS.js.map

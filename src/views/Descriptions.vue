@@ -26,7 +26,7 @@ const onClick = () => {
 </script>
 <template>
   <div>
-    <h1>Descriptions 描述列表</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Descriptions title="User Info">
       <template #extra>

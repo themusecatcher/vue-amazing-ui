@@ -33,7 +33,7 @@ const onDynamicClose = (tag: any, index: number) => {
 </script>
 <template>
   <div>
-    <h1>Tag 标签</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space>
       <Tag color="magenta">pink</Tag>

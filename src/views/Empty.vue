@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Empty 空状态</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">预置风格1</h2>
     <Empty />
     <h2 class="mt30 mb10">预置风格2 (image: 2)</h2>

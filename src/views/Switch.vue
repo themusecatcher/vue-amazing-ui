@@ -11,7 +11,7 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <h1>Switch 开关</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Switch v-model:checked="checked" @change="onChange" />
     <h2 class="mt30 mb10">禁用开关</h2>

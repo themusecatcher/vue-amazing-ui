@@ -14,7 +14,7 @@ function onHoverChange (value: number) {
 </script>
 <template>
   <div>
-    <h1>Rate 评分</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Rate v-model:value="value"/>
     <h2 class="mt30 mb10">禁用</h2>

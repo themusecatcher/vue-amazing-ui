@@ -8,7 +8,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
 
 <template>
   <div>
-    <h1>Video 播放器</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Video :src="src" :poster="poster" />
     <h2 class="mt30 mb10">自动播放</h2>

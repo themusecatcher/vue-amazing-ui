@@ -28,7 +28,7 @@ function increase () {
 </script>
 <template>
   <div>
-    <h1>Badge 徽标</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space :size="20">
       <Badge :count="5">
