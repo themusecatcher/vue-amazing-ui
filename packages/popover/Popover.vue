@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { ref, computed, useSlots } from 'vue'
-import type { Slot } from 'vue'
+import type { Slot, CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Props {
   title?: string|Slot // 卡片标题
   content?: string|Slot // 卡片内容
   maxWidth?: string|number // 卡片内容最大宽度
   trigger?: 'hover'|'click' // 卡片触发方式
+  overlayStyle?: CSSProperties // 卡片样式
 }
 const props = withDefaults(defineProps<Props>(), {
   title: '',
   content: '',
   maxWidth: 'auto',
-  trigger: 'hover'
+  trigger: 'hover',
+  overlayStyle: () => ({})
 })
 const popMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
@@ -80,7 +82,7 @@ function onBlur () {
       @blur="trigger === 'click' && activeBlur ? onBlur() : () => false"
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
       @mouseleave="trigger === 'hover' ? onHide() : () => false">
-      <div class="m-pop">
+      <div class="m-pop" :style="overlayStyle">
         <div class="m-title">
           <slot name="title">{{ title }}</slot>
         </div>

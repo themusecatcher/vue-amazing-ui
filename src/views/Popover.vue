@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+function openChange (visible: boolean) {
+  console.log('visible:', visible)
+}
 </script>
 <template>
-  <div class="ml60" style="margin-left: 200px;">
+  <div class="ml60">
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Popover title="Title">
+    <Popover title="Title" @open-change="openChange">
       <template #content>
         <p>Content</p>
         <p>Content</p>
@@ -20,13 +22,16 @@ import { ref } from 'vue'
       </template>
       <Button type="primary">Click me</Button>
     </Popover>
-    <h2 class="mt30 mb10">设置内容最大宽度</h2>
-    <Popover title="TitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitle" :max-width="300">
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <Popover
+      title="TitleTitleTitleTitleTitleTitleTitleTitleTitle"
+      :max-width="240"
+      :overlayStyle="{ backgroundColor: '#E3E3E3', padding: '12px 18px', borderRadius: '12px' }">
       <template #content>
         <p>Content</p>
         <p>Content</p>
       </template>
-      <Button type="primary">Click me</Button>
+      <Button type="primary">Hover me</Button>
     </Popover>
   </div>
 </template>
