@@ -215,6 +215,10 @@ export default defineConfig({
               link: '/guide/components/popconfirm'
             },
             {
+              text: '气泡卡片 Popover',
+              link: '/guide/components/popover'
+            },
+            {
               text: '进度条 Progress',
               link: '/guide/components/progress'
             },
