@@ -40,19 +40,30 @@ const activeKey = ref(0)
 const sum = computed(() => {
   return (routes[0].children as Array<any>).length - 2
 })
+function onOpen () {
+  // 打开一个新的窗口，并导航到指定的URL
+  // let newWindow = window.open() // 在当前浏览器窗口中打开一个空的标签页
+  // let newWindow = window.open('http://localhost:9000/backtop') // 在当前浏览器窗口中打开新的标签页
+  // let newWindow = window.open('http://localhost:9000/backtop', 'Backtop') // 在当前浏览器窗口中打开新的标签页
+   // 使用弹窗形式打开新的标签页，不指定left，top时，默认紧靠电脑桌面左上角
+  let newWindow = window.open('http://localhost:9000/backtop', '_blank', 'popup,width=800,height=600')
+  // newWindow?.resizeTo(800, 600)
+  // newWindow?.moveTo(100, 100)
+}
 </script>
 <template>
   <div>
     <Space align="top" :size="6">
+      <Button @click="onOpen"></Button>
       <h1>Vue Amazing UI</h1>
       <Tag color="#FC5404">{{ pkg.version }}</Tag>
     </Space>
-    <Descriptions class="mb10 mt30" title="生产环境依赖 dependencies" :column="{md: 2, lg: 3, xl: 4}">
+    <Descriptions class="mb10 mt30" title="生产环境依赖 (dependencies)" :column="{md: 2, lg: 3, xl: 4}">
       <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
         <Tag color="volcano">{{ version }}</Tag>
       </DescriptionsItem>
     </Descriptions>
-    <Descriptions class="mb10 mt30" title="开发环境依赖 devDependencies" :column="{md: 2, lg: 3, xl: 4}">
+    <Descriptions class="mb10 mt30" title="开发环境依赖 (devDependencies)" :column="{md: 2, lg: 3, xl: 4}">
       <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.devDependencies" :key="dependency">
         <Tag color="cyan">{{ version }}</Tag>
       </DescriptionsItem>
