@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollText = ref([
+const scrollText = ref<any[]>([
       {
         title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
         link: 'https://blog.csdn.net/Dandrose?type=blog'

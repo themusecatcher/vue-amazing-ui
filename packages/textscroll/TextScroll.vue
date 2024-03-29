@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf } from '../index'
 interface Text {
   title: string // 文字标题
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   amount: 4,
   gap: 20,
   vertical: false,
-  interval: 3000,
+  interval: 3000
 })
 // horizon
 const left = ref(0)
@@ -62,6 +62,21 @@ const step = computed(() => { // 移动参数（120fps: 0.5, 60fps: 1）
     return 60 / fps.value
   }
 })
+watch(
+  () => [textData, props.width, props.amount, props.gap, props.vertical, props.interval],
+  () => {
+    if (props.vertical) {
+      timer.value && cancelRaf(timer.value)
+      onStart() // 启动垂直滚动
+    } else {
+      getFPS()
+    }
+  },
+  {
+    deep: true, // 强制转成深层侦听器
+    flush: 'post'
+  }
+)
 const horizonRef = ref()
 const distance = ref(0) // 每条滚动文字移动距离
 function getFPS () { // 获取屏幕刷新率
@@ -127,7 +142,7 @@ function onStart () {
 function onStop () {
   if (props.vertical) {
     if (len.value > 1) {
-      cancelRaf(timer)
+      cancelRaf(timer.value)
     }
   } else {
     cancelAnimationFrame(moveRaf.value) // 暂停动画
@@ -140,9 +155,9 @@ function onClick (title: string) { // 通知父组件点击的标题
 
 // vertical
 const actIndex = ref(0)
-var timer: any = null
+var timer = ref<any>(null)
 function startMove () {
-  timer = rafTimeout(() => {
+  timer.value = rafTimeout(() => {
     if (actIndex.value === len.value - 1) {
       actIndex.value = 0
     } else {
