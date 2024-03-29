@@ -10,6 +10,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 const size = ref(160)
+const value = ref('hello world')
 const decline = () => {
   size.value = size.value - 10
   if (size.value < 48) {
@@ -154,6 +155,30 @@ const increase = () => {
       value="https://blog.csdn.net/Dandrose"
       color="#1677FF"
       bg-color="#f5f5f5" />
+  </Space>
+</template>
+```
+
+:::
+
+## 自定义生成二维码
+
+<Space align="center" :size="20">
+  <QRCode :value="value" />
+  <Textarea v-model:value="value" :width="180" allowClear />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const value = ref('hello world')
+</script>
+<template>
+  <Space align="center" :size="20">
+    <QRCode :value="value" />
+    <Textarea v-model:value="value" :width="180" allowClear />
   </Space>
 </template>
 ```
