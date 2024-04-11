@@ -9,37 +9,34 @@ export function dateFormat (value: number|string|Date = Date.now(), format = 'YY
   } else {
     var date = value
   }
-  function fixedTwo (value: number): string {
-    return value < 10 ? '0' + value : String(value)
-  }
   let showTime = format
   if (showTime.includes('SSS')) {
-    const S = date.getMilliseconds()
-    showTime = showTime.replace('SSS', '0'.repeat(3 - String(S).length) + S)
+    const S = String(date.getMilliseconds())
+    showTime = showTime.replace('SSS', S.padStart(3, '0'))
   }
   if (showTime.includes('YY')) {
-    const Y = date.getFullYear()
-    showTime = showTime.includes('YYYY') ? showTime.replace('YYYY', String(Y)) : showTime.replace('YY', String(Y).slice(2, 4))
+    const Y = String(date.getFullYear())
+    showTime = showTime.includes('YYYY') ? showTime.replace('YYYY', Y) : showTime.replace('YY', Y.slice(2, 4))
   }
   if (showTime.includes('M')) {
-    const M = date.getMonth() + 1
-    showTime = showTime.includes('MM') ? showTime.replace('MM', fixedTwo(M)) : showTime.replace('M', String(M))
+    const M = String(date.getMonth() + 1)
+    showTime = showTime.includes('MM') ? showTime.replace('MM', M.padStart(2, '0')) : showTime.replace('M', M)
   }
   if (showTime.includes('D')) {
-    const D = date.getDate()
-    showTime = showTime.includes('DD') ? showTime.replace('DD', fixedTwo(D)) : showTime.replace('D', String(D))
+    const D = String(date.getDate())
+    showTime = showTime.includes('DD') ? showTime.replace('DD', D.padStart(2, '0')) : showTime.replace('D', D)
   }
   if (showTime.includes('H')) {
-    const H = date.getHours()
-    showTime = showTime.includes('HH') ? showTime.replace('HH', fixedTwo(H)) : showTime.replace('H', String(H))
+    const H = String(date.getHours())
+    showTime = showTime.includes('HH') ? showTime.replace('HH', H.padStart(2, '0')) : showTime.replace('H', H)
   }
   if (showTime.includes('m')) {
-    const m = date.getMinutes()
-    showTime = showTime.includes('mm') ? showTime.replace('mm', fixedTwo(m)) : showTime.replace('m', String(m))
+    const m = String(date.getMinutes())
+    showTime = showTime.includes('mm') ? showTime.replace('mm', m.padStart(2, '0')) : showTime.replace('m', m)
   }
   if (showTime.includes('s')) {
-    const s = date.getSeconds()
-    showTime = showTime.includes('ss') ? showTime.replace('ss', fixedTwo(s)) : showTime.replace('s', String(s))
+    const s = String(date.getSeconds())
+    showTime = showTime.includes('ss') ? showTime.replace('ss', s.padStart(2, '0')) : showTime.replace('s', s)
   }
   return showTime
 }
