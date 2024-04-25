@@ -18,8 +18,8 @@ importers:
         specifier: ^10.9.0
         version: 10.9.0(async-validator@4.2.5)(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.4.25(typescript@5.4.5))
       ant-design-vue:
-        specifier: ^4.2.0
-        version: 4.2.0(vue@3.4.25(typescript@5.4.5))
+        specifier: ^4.2.1
+        version: 4.2.1(vue@3.4.25(typescript@5.4.5))
       core-js:
         specifier: ^3.37.0
         version: 3.37.0
@@ -850,8 +850,8 @@ packages:
     resolution: {integrity: sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==}
     engines: {node: '>=12'}
 
-  ant-design-vue@4.2.0:
-    resolution: {integrity: sha512-tw20aZn5Qv/xtJze+BMPNueS8pETBeuO1UWqbBQmg2/wp9WmtetsbEcANBg1QERI6E9ikSrQ2Yr9xlIyIJEYdw==}
+  ant-design-vue@4.2.1:
+    resolution: {integrity: sha512-3u6fmfCEJ5AFTsYhogP8lJ/vcqiAJO16o+gGQkWYRGLl0NxmY4hje4cPyv+pcxpeJgcG0vNEmkb1vVHKcnxd+g==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'
@@ -3039,7 +3039,7 @@ snapshots:
 
   ansi-styles@6.2.1: {}
 
-  ant-design-vue@4.2.0(vue@3.4.25(typescript@5.4.5)):
+  ant-design-vue@4.2.1(vue@3.4.25(typescript@5.4.5)):
     dependencies:
       '@ant-design/colors': 6.0.0
       '@ant-design/icons-vue': 7.0.1(vue@3.4.25(typescript@5.4.5))
@@ -4527,7 +4527,7 @@ snapshots:
       '@vuepic/vue-datepicker': 7.4.1(vue@3.4.25(typescript@5.4.5))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       '@vueuse/integrations': 10.9.0(async-validator@4.2.5)(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.4.25(typescript@5.4.5))
-      ant-design-vue: 4.2.0(vue@3.4.25(typescript@5.4.5))
+      ant-design-vue: 4.2.1(vue@3.4.25(typescript@5.4.5))
       core-js: 3.37.0
       date-fns: 3.6.0
       naive-ui: 2.38.1(vue@3.4.25(typescript@5.4.5))
