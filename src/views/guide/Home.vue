@@ -54,10 +54,12 @@ function onOpen () {
 <template>
   <div>
     <Space align="top" :size="6">
-      <Button @click="onOpen"></Button>
       <h1>Vue Amazing UI</h1>
       <Tag color="#FC5404">{{ pkg.version }}</Tag>
     </Space>
+    <br/>
+    <br/>
+    <Button type="primary" @click="onOpen">Open New Window</Button>
     <Descriptions class="mb10 mt30" title="生产环境依赖 (dependencies)" :column="{md: 2, lg: 3, xl: 4}">
       <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
         <Tag color="volcano">{{ version }}</Tag>
