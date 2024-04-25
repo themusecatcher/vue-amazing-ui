@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 interface Option {
   label: string // 选项名
   value: any // 选项值
@@ -55,13 +55,10 @@ const styleObject = computed(() => {
     }
   }
 })
-const checkedValue = ref(props.value)
-watch(
-  () => props.value,
-  (to) => {
-    checkedValue.value = to
-  }
-)
+const checkedValue = ref<any[]>([])
+watchEffect(() => {
+  checkedValue.value = props.value
+})
 const emits = defineEmits(['update:value', 'update:checked', 'change'])
 function onClick (value: any) {
   if (props.value.includes(value)) { // 已选中

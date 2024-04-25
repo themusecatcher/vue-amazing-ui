@@ -69,7 +69,6 @@ watchEffect(() => {
 function onChange (value: any[]) {
   console.log('change:', value)
 }
-
 const checkAll = ref(false) // 全选v-model
 const indeterminate = computed(() => { // 全选样式控制
   if (value.value.length > 0 && value.value.length < options.value.length) {
