@@ -1,9 +1,4 @@
 import {
-  isVue2,
-  isVue3,
-  set
-} from "./chunk-DTYARQKX.js";
-import {
   computed,
   customRef,
   effectScope,
@@ -29,9 +24,29 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-5XUBXWZS.js";
+} from "./chunk-ASRQBPRV.js";
 
-// node_modules/.pnpm/@vueuse+shared@10.8.0_vue@3.4.19/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/vitepress@1.1.3_@algolia+client-search@4.23.3_@types+node@20.12.7_async-validator@4.2.5_less@_hrr43yh5c333s5jojk2mjzmqya/node_modules/vitepress/lib/vue-demi.mjs
+var isVue2 = false;
+var isVue3 = true;
+function set(target, key, val) {
+  if (Array.isArray(target)) {
+    target.length = Math.max(target.length, key);
+    target.splice(key, 1, val);
+    return val;
+  }
+  target[key] = val;
+  return val;
+}
+function del(target, key) {
+  if (Array.isArray(target)) {
+    target.splice(key, 1);
+    return;
+  }
+  delete target[key];
+}
+
+// node_modules/.pnpm/@vueuse+shared@10.9.0_vue@3.4.25_typescript@5.4.5_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -1510,17 +1525,28 @@ function getOldValue(source) {
   return Array.isArray(source) ? source.map(() => void 0) : void 0;
 }
 function whenever(source, cb, options) {
-  return watch(
+  const stop = watch(
     source,
     (v, ov, onInvalidate) => {
-      if (v)
+      if (v) {
+        if (options == null ? void 0 : options.once)
+          nextTick(() => stop());
         cb(v, ov, onInvalidate);
+      }
     },
-    options
+    {
+      ...options,
+      once: false
+    }
   );
+  return stop;
 }
 
 export {
+  isVue2,
+  isVue3,
+  set,
+  del,
   computedEager,
   computedWithControl,
   tryOnScopeDispose,
@@ -1583,7 +1609,7 @@ export {
   refThrottled,
   refWithControl,
   controlledRef,
-  set2 as set,
+  set2,
   watchWithFilter,
   watchPausable,
   syncRef,
@@ -1629,4 +1655,13 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-5OTW7A4S.js.map
+/*! Bundled license information:
+
+vitepress/lib/vue-demi.mjs:
+  (**
+   * vue-demi v0.14.7
+   * Copyright (c) 2020-present, Anthony Fu
+   * @license MIT
+   *)
+*/
+//# sourceMappingURL=chunk-BBOEICAD.js.map
