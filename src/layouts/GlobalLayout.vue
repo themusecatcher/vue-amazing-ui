@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { routes } from '@/router'
-import { toggleDark, BackTop } from '../../packages'
+import { toggleDark } from '../../packages'
 
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
@@ -94,10 +94,11 @@ const routerViewRef = ref()
             <component :is="Component" />
           </Transition>
         </RouterView>
+        <BackTop v-if="route.name !== 'BackTop'" />
       </div>
     </a-col>
   </a-row>
-  <BackTop v-if="route.name !== 'BackTop'" :listen-to="routerViewRef" />
+  
 </template>
 <style lang="less" scoped>
 .v-enter-active,
