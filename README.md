@@ -12,7 +12,7 @@
 ## Install & Use
 
 ```bash
-pnpm i vue-amazing-ui
+pnpm add vue-amazing-ui
 # or
 npm install vue-amazing-ui
 # or
