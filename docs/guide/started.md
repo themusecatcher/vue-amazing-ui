@@ -8,7 +8,7 @@
 ::: code-group
 
 ```sh [npm]
-$ npm add vue-amazing-ui
+$ npm install vue-amazing-ui
 ```
 
 ```sh [pnpm]
