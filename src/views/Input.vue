@@ -103,19 +103,19 @@ function onEnter (e: KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">带移除图标</h2>
     <Space>
-      <Input allow-clear v-model:value="value" placeholder="input with clear icon" suffix="RMB" />
+      <Input allow-clear v-model:value="value" placeholder="input with clear icon" />
     </Space>
     <h2 class="mt30 mb10">密码框</h2>
     <Space>
-      <Input password allow-clear v-model:value="value" suffix="RMB" placeholder="input password" />
+      <Input password v-model:value="value" placeholder="input password" />
     </Space>
     <h2 class="mt30 mb10">带数字提示</h2>
     <Space>
-      <Input show-count allow-clear v-model:value="value" suffix="RMB"/>
+      <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Space>
-      <Input disabled v-model:value="value" suffix="RMB"/>
+      <Input disabled v-model:value="value" />
     </Space>
   </div>
 </template>
