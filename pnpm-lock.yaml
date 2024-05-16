@@ -39,8 +39,8 @@ importers:
         specifier: ^3.4.25
         version: 3.4.25(typescript@5.4.5)
       vue-amazing-ui:
-        specifier: ^0.1.38
-        version: 0.1.38(async-validator@4.2.5)(focus-trap@7.5.4)(typescript@5.4.5)
+        specifier: ^0.1.39
+        version: 0.1.39(async-validator@4.2.5)(focus-trap@7.5.4)(typescript@5.4.5)
       vue-router:
         specifier: ^4.3.2
         version: 4.3.2(vue@3.4.25(typescript@5.4.5))
@@ -752,12 +752,6 @@ packages:
   '@vue/tsconfig@0.5.1':
     resolution: {integrity: sha512-VcZK7MvpjuTPx2w6blwnwZAu5/LgBUtejFOi3pPGQFXQN5Ela03FUtd2Qtg4yWGGissVL0dr6Ro1LfOFh+PCuQ==}
 
-  '@vuepic/vue-datepicker@7.4.1':
-    resolution: {integrity: sha512-sFdBMdFnvf6GMD5Ghaw6IQUbLqlVU1XYzMVJmjD34DggP5k/7866gDyH4CB+4oD6/FpYFL8y3z5sYgY0S8zHig==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      vue: '>=3.2.0'
-
   '@vuepic/vue-datepicker@8.5.0':
     resolution: {integrity: sha512-p8CHPJYJ1nQgrKzVBaDi1ZO9G9syuvOacPDNMF4uViHsXGdUyGLZbgrvvcmDTd0xYtyCUswiH6S27gb1E7qQ2Q==}
     engines: {node: '>=18.12.0'}
@@ -1003,11 +997,6 @@ packages:
   data-view-byte-offset@1.0.0:
     resolution: {integrity: sha512-t/Ygsytq+R995EJ5PZlD4Cu56sWa8InXySaViRzw9apusqsOO2bQP+SbYzAhR0pFKoB+43lYy8rWban9JSuXnA==}
     engines: {node: '>= 0.4'}
-
-  date-fns-tz@1.3.8:
-    resolution: {integrity: sha512-qwNXUFtMHTTU6CFSFjoJ80W8Fzzp24LntbjFFBgL/faqds4e5mo9mftoRLgr3Vi1trISsg4awSpYVsOQCRnapQ==}
-    peerDependencies:
-      date-fns: '>=2.0.0'
 
   date-fns-tz@2.0.1:
     resolution: {integrity: sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==}
@@ -2179,8 +2168,8 @@ packages:
     peerDependencies:
       vue: ^3.0.0
 
-  vue-amazing-ui@0.1.38:
-    resolution: {integrity: sha512-KtR3IiDLs8TQGvkDd1Q427ya4RRglRzdKPz8pkoZG4tXdoViDiq8lfNomo2BsJa2HqjhWjkk27BQNvjrFDUXuA==}
+  vue-amazing-ui@0.1.39:
+    resolution: {integrity: sha512-AqShJRxWCQIFnETRGxdsm8+ez69Uz66rdgZegcRbgHCrOm/uLkSkelq+y02wC5QUDLzRIcZ0MdIos0ohvOcsFg==}
 
   vue-demi@0.14.7:
     resolution: {integrity: sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==}
@@ -2951,12 +2940,6 @@ snapshots:
 
   '@vue/tsconfig@0.5.1': {}
 
-  '@vuepic/vue-datepicker@7.4.1(vue@3.4.25(typescript@5.4.5))':
-    dependencies:
-      date-fns: 2.30.0
-      date-fns-tz: 1.3.8(date-fns@2.30.0)
-      vue: 3.4.25(typescript@5.4.5)
-
   '@vuepic/vue-datepicker@8.5.0(vue@3.4.25(typescript@5.4.5))':
     dependencies:
       date-fns: 3.6.0
@@ -3234,10 +3217,6 @@ snapshots:
       call-bind: 1.0.7
       es-errors: 1.3.0
       is-data-view: 1.0.1
-
-  date-fns-tz@1.3.8(date-fns@2.30.0):
-    dependencies:
-      date-fns: 2.30.0
 
   date-fns-tz@2.0.1(date-fns@2.30.0):
     dependencies:
@@ -4522,9 +4501,9 @@ snapshots:
       evtd: 0.2.4
       vue: 3.4.25(typescript@5.4.5)
 
-  vue-amazing-ui@0.1.38(async-validator@4.2.5)(focus-trap@7.5.4)(typescript@5.4.5):
+  vue-amazing-ui@0.1.39(async-validator@4.2.5)(focus-trap@7.5.4)(typescript@5.4.5):
     dependencies:
-      '@vuepic/vue-datepicker': 7.4.1(vue@3.4.25(typescript@5.4.5))
+      '@vuepic/vue-datepicker': 8.5.0(vue@3.4.25(typescript@5.4.5))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       '@vueuse/integrations': 10.9.0(async-validator@4.2.5)(focus-trap@7.5.4)(qrcode@1.5.3)(vue@3.4.25(typescript@5.4.5))
       ant-design-vue: 4.2.1(vue@3.4.25(typescript@5.4.5))

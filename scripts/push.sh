@@ -10,8 +10,7 @@ commitDescInfo=$1
 git add .
 
 if [ -z ${commitDescInfo} ]; then
-  git cm -m 'update'    `c vbnmnb j
-  
+  git cm -m 'update'
 else
   git cm -m ${commitDescInfo}
 fi
