@@ -298,7 +298,7 @@ const value = ref('')
 ## 带移除图标
 
 <Space>
-  <Input allow-clear v-model:value="value" placeholder="input with clear icon" suffix="RMB" />
+  <Input allow-clear v-model:value="value" placeholder="input with clear icon" />
 </Space>
 
 ::: details Show Code
@@ -310,7 +310,7 @@ const value = ref('')
 </script>
 <template>
   <Space>
-    <Input allow-clear v-model:value="value" placeholder="input with clear icon" suffix="RMB" />
+    <Input allow-clear v-model:value="value" placeholder="input with clear icon" />
   </Space>
 </template>
 ```
@@ -320,7 +320,7 @@ const value = ref('')
 ## 密码框
 
 <Space>
-  <Input password allow-clear v-model:value="value" suffix="RMB" placeholder="input password" />
+  <Input password v-model:value="value" placeholder="input password" />
 </Space>
 
 ::: details Show Code
@@ -332,7 +332,7 @@ const value = ref('')
 </script>
 <template>
   <Space>
-    <Input password allow-clear v-model:value="value" suffix="RMB" placeholder="input password" />
+    <Input password v-model:value="value" placeholder="input password" />
   </Space>
 </template>
 ```
@@ -342,7 +342,7 @@ const value = ref('')
 ## 带数字提示
 
 <Space>
-  <Input show-count allow-clear v-model:value="value" suffix="RMB"/>
+  <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
 </Space>
 
 ::: details Show Code
@@ -354,7 +354,7 @@ const value = ref('')
 </script>
 <template>
   <Space>
-    <Input show-count allow-clear v-model:value="value" suffix="RMB"/>
+    <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
   </Space>
 </template>
 ```
@@ -364,7 +364,7 @@ const value = ref('')
 ## 禁用
 
 <Space>
-  <Input v-model:value="value" disabled suffix="RMB"/>
+  <Input disabled v-model:value="value" />
 </Space>
 
 ::: details Show Code
@@ -376,7 +376,7 @@ const value = ref('')
 </script>
 <template>
   <Space>
-    <Input v-model:value="value" disabled suffix="RMB"/>
+    <Input disabled v-model:value="value" />
   </Space>
 </template>
 ```
