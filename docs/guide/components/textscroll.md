@@ -76,7 +76,7 @@ function onClick (value: string) { // 获取点击的标题
 
 ## 单条文字滚动
 
-<TextScroll :scrollText="singleText" single :font-size="30" :font-weight="800" color="#d4380d" @click="onClick" />
+<TextScroll :scrollText="singleText" single :font-size="30" :font-weight="800" color="#FF5B29" @click="onClick" />
 
 ::: details Show Code
 
@@ -92,7 +92,7 @@ function onClick (value: string) { // 获取点击的标题
 }
 </script>
 <template>
-  <TextScroll :scrollText="singleText" single :font-size="30" :font-weight="800" color="#d4380d" @click="onClick" />
+  <TextScroll :scrollText="singleText" single :font-size="30" :font-weight="800" color="#FF5B29" @click="onClick" />
 </template>
 ```
 
