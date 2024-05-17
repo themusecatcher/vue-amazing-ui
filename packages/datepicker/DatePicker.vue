@@ -31,6 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
     Month picker: 'MM/yyyy'
     Time picker: 'HH:mm'
     Time picker range: 'HH:mm - HH:mm'
+    Week picker 'ww-yyyy'
   */
   showTime: false,
   showToday: false,

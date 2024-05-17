@@ -627,7 +627,7 @@ va.install = (l) => {
 const pa = V(j({ inheritAttrs: !1, __name: "DatePicker", props: { width: { default: 180 }, mode: { default: "date" }, showTime: { type: Boolean, default: !1 }, showToday: { type: Boolean, default: !1 }, modelType: { default: "format" } }, setup(l) {
   const a = l, e = C(() => a.mode === "time"), t = C(() => a.mode === "week"), u = C(() => a.mode === "month"), r = C(() => a.mode === "year");
   return (c, s) => (d(), v("div", { class: "m-datepicker", style: _(`width: ${c.width}px;`) }, [Y(P(b1), me({ locale: "zh-CN", "month-change-on-scroll": !1, "enable-time-picker": c.showTime, "time-picker": e.value, "week-picker": t.value, "month-picker": u.value, "year-picker": r.value, "now-button-label": "今天", "show-now-button": c.showToday, "auto-apply": "", "text-input": "", "model-type": c.modelType, "day-names": ["一", "二", "三", "四", "五", "六", "七"] }, c.$attrs), null, 16, ["enable-time-picker", "time-picker", "week-picker", "month-picker", "year-picker", "show-now-button", "model-type"])], 4));
-} }), [["__scopeId", "data-v-0d6eaa9a"]]);
+} }), [["__scopeId", "data-v-3475672f"]]);
 pa.install = (l) => {
   l.component(pa.__name, pa);
 };
