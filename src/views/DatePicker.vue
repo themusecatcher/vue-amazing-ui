@@ -39,7 +39,9 @@ const secondsValue = ref({
   minutes: new Date().getMinutes(),
   seconds: new Date().getSeconds()
 })
-const weekValue = ref([startOfWeek(new Date()), endOfWeek(new Date())])
+// startOfWeek & endOfWeek 默认以周日作为一周的开始，可以传递一个选项对象，以周一作为一周的开始：{ weekStartsOn: 1 }
+const options: any = { weekStartsOn: 1 }
+const weekValue = ref([startOfWeek(new Date(), options), endOfWeek(new Date(), options)])
 const monthValue = ref({
   year: new Date().getFullYear(),
   month: new Date().getMonth()
@@ -173,13 +175,13 @@ watchEffect(() => {
       mode-height="120"
       format="HH:mm:ss"
       :width="240" />
-    <h2 class="mt30 mb10">周选择器</h2>
+    <h2 class="mt30 mb10">周选择器 ({{ format(weekValue[0], 'yyyy-MM-dd') + ' - ' + format(weekValue[1], 'yyyy-MM-dd') }})</h2>
     <DatePicker
       placeholder="请选择周"
       v-model="weekValue"
       mode="week"
-      format="yyyy-MM-dd"
-      :width="280" />
+      format="yyyy年 第ww周"
+      :width="200" />
     <h2 class="mt30 mb10">月选择器</h2>
     <DatePicker
       placeholder="请选择月"
