@@ -51,9 +51,7 @@ watch(
 watch(
   () => props.activeKey,
   () => {
-    if (props.type === 'line') {
-      getBarDisplay()
-    }
+    getBarDisplay()
   },
   {
     flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
@@ -63,6 +61,7 @@ onMounted(() => {
   getNavWidth()
 })
 const emits = defineEmits(['update:activeKey', 'change'])
+const transition = ref(false)
 function getBarDisplay () {
   const el = tabs.value[activeIndex.value]
   if (el) {
@@ -70,10 +69,19 @@ function getBarDisplay () {
     width.value = el.offsetWidth
     if (showWheel.value) {
       if (left.value < scrollLeft.value) {
+        transition.value = true
         scrollLeft.value = left.value
+        rafTimeout(() => {
+          transition.value = false
+        }, 150)
       }
-      if (left.value + width.value - wrapWidth.value > scrollLeft.value) {
-        scrollLeft.value = left.value + width.value - wrapWidth.value
+      const targetScroll = left.value + width.value - wrapWidth.value
+      if (targetScroll > scrollLeft.value) {
+        transition.value = true
+        scrollLeft.value = targetScroll
+        rafTimeout(() => {
+          transition.value = false
+        }, 150)
       }
     }
   } else {
@@ -87,10 +95,12 @@ function getNavWidth () {
   if (navWidth.value > wrapWidth.value) {
     showWheel.value = true
     scrollMax.value = navWidth.value - wrapWidth.value
+    scrollLeft.value = scrollMax.value
+  } else {
+    showWheel.value = false
+    scrollLeft.value = 0
   }
-  if (props.type === 'line') {
-    getBarDisplay()
-  }
+  getBarDisplay()
 }
 function onTab (key: string|number) {
   emits('update:activeKey', key)
@@ -126,10 +136,10 @@ function onWheel (e: WheelEvent) {
       <div
         ref="wrap"
         class="m-tabs-nav-wrap"
-        :class="{'tabs-center': centered, 'before-shadow-active': scrollLeft > 0, 'after-shadow-active': scrollLeft < scrollMax}">
+        :class="{'tabs-center': centered, 'before-shadow-active': showWheel && scrollLeft > 0, 'after-shadow-active': showWheel && scrollLeft < scrollMax}">
         <div
           ref="nav"
-          class="m-tabs-nav-list"
+          :class="['m-tabs-nav-list', { transition: transition }]"
           @wheel="showWheel ? onWheel($event) : () => false"
           :style="`transform: translate(${-scrollLeft}px, 0)`">
           <div
@@ -209,6 +219,9 @@ function onWheel (e: WheelEvent) {
         .shadow();
         right: 0;
         box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, .08);
+      }
+      .transition {
+        transition: all .15s;
       }
       .m-tabs-nav-list {
         position: relative;
