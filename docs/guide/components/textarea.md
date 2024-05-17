@@ -41,7 +41,7 @@ function onEnter (e: KeyboardEvent) {
 
 :::
 
-<Space direction="vertical">
+<Space :width="480" direction="vertical">
   <Textarea
     v-model:value="value"
     placeholder="Basic usage rows 2"
@@ -76,7 +76,7 @@ function onEnter (e: KeyboardEvent) {
 }
 </script>
 <template>
-  <Space direction="vertical">
+  <Space :width="480" direction="vertical">
     <Textarea
       v-model:value="value"
       placeholder="Basic usage rows 2"
@@ -96,7 +96,7 @@ function onEnter (e: KeyboardEvent) {
 
 ## 适应文本高度的文本域
 
-<Space>
+<Space :width="480">
   <Textarea
     v-model:value="value"
     placeholder="Autosize height based on content lines"
@@ -112,7 +112,7 @@ import { ref } from 'vue'
 const value = ref('')
 </script>
 <template>
-  <Space>
+  <Space :width="480">
     <Textarea
       v-model:value="value"
       placeholder="Autosize height based on content lines"
@@ -126,7 +126,7 @@ const value = ref('')
 
 ## 设置行数
 
-<Space>
+<Space :width="480">
   <Textarea
     v-model:value="value"
     placeholder="Autosize height with minimum and maximum number of lines"
@@ -142,7 +142,7 @@ import { ref } from 'vue'
 const value = ref('')
 </script>
 <template>
-  <Space>
+  <Space :width="480">
     <Textarea
       v-model:value="value"
       placeholder="Autosize height with minimum and maximum number of lines"
@@ -156,7 +156,7 @@ const value = ref('')
 
 ## 带移除图标
 
-<Space>
+<Space :width="480">
   <Textarea v-model:value="value" placeholder="textarea with clear icon" allow-clear />
 </Space>
 
@@ -168,7 +168,7 @@ import { ref } from 'vue'
 const value = ref('')
 </script>
 <template>
-  <Space>
+  <Space :width="480">
     <Textarea v-model:value="value" placeholder="textarea with clear icon" allow-clear />
   </Space>
 </template>
@@ -178,7 +178,7 @@ const value = ref('')
 
 ## 带数字提示
 
-<Space>
+<Space :width="480">
   <Textarea v-model:value="value" show-count :maxlength="10" />
 </Space>
 
@@ -190,7 +190,7 @@ import { ref } from 'vue'
 const value = ref('')
 </script>
 <template>
-  <Space>
+  <Space :width="480">
     <Textarea v-model:value="value" show-count :maxlength="10" />
   </Space>
 </template>
@@ -200,7 +200,7 @@ const value = ref('')
 
 ## 禁用
 
-<Space>
+<Space :width="480">
   <Textarea v-model:value="value" disabled />
 </Space>
 
@@ -212,7 +212,7 @@ import { ref } from 'vue'
 const value = ref('')
 </script>
 <template>
-  <Space>
+  <Space :width="480">
     <Textarea v-model:value="value" disabled />
   </Space>
 </template>

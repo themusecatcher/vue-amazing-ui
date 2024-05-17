@@ -60,7 +60,7 @@ function onNext () {
 
 <br/>
 
-<Swiper :images="images" :height="420" @change="onChange" />
+<Swiper :images="images" :height="480" @change="onChange" />
 
 ::: details Show Code
 
@@ -86,7 +86,7 @@ function onChange () {
 }
 </script>
 <template>
-  <Swiper :images="images" :height="420" @change="onChange" />
+  <Swiper :images="images" :height="480" @change="onChange" />
 </template>
 ```
 
