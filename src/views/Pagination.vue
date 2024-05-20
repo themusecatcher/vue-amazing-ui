@@ -6,8 +6,13 @@ const pagination = ref({
   pageSize: 10,
   p: 1
 })
-function changePage (pager: object) { // 分页回调
-  console.log('pager:', pager)
+function changePage (page: number, pageSize: number) { // 分页回调
+  console.log('page:', page)
+  console.log('pageSize:', pageSize)
+}
+function pageSizeChange (page: number, pageSize: number) { // pageSize 变化的回调
+  console.log('change page:', page)
+  console.log('change pageSize:', pageSize)
 }
 </script>
 <template>
@@ -33,13 +38,22 @@ function changePage (pager: object) { // 分页回调
       :total="total"
       placement="right"
       @change="changePage" />
-    <h2 class="mt30 mb10">快速跳转和数据总量</h2>
+    <h2 class="mt30 mb10">快速跳转 & 数据总量</h2>
     <Pagination
       :current="pagination.p"
       :page-size="pagination.pageSize"
       :total="total"
       show-quick-jumper
       show-total
-      @change="changePage" />
+      @change="changePage"
+      @pageSizeChange="pageSizeChange" />
+    <h2 class="mt30 mb10">Ant Design 分页</h2>
+    <a-pagination
+      :current="pagination.p"
+      :page-size="pagination.pageSize"
+      :total="total"
+      show-quick-jumper
+      @change="changePage"
+      @showSizeChange="pageSizeChange" />
   </div>
 </template>

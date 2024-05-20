@@ -1,26 +1,32 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import Select from '../select'
 interface Props {
   current?: number // 当前页数
   pageSize?: number // 每页条数
+  pageSizeOptions?: string[]|number[] // 每页可以显示多少条
   total?: number // 数据总数
   pageListNum?: number // 显示的页码数组长度
   hideOnSinglePage?: boolean // 只有一页时是否隐藏分页
   showQuickJumper?: boolean // 是否可以快速跳转至某页
+  showSizeChanger?: boolean // 是否展示 pageSize 切换器，当 total 大于 50 时默认为 true
   showTotal?: boolean // 是否显示当前页数和数据总量
   placement?: 'left'|'center'|'right' // 分页展示位置，靠左left，居中center，靠右right
 }
 const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   current: 1,
   pageSize: 10,
+  pageSizeOptions: () => [10, 20, 50 ,100],
   total: 0,
   pageListNum: 5,
   hideOnSinglePage: false,
   showQuickJumper: false,
+  showSizeChanger: undefined,
   showTotal: false,
   placement: 'center'
 })
 const currentPage = ref(props.current) // 当前页数
+const currentPageSize = ref(props.pageSizeOptions[0]) // 当前 pageSize
 const jumpNumber = ref('') // 跳转的页码
 const forwardMore = ref(false) // 左省略号展示
 const backwardMore = ref(false) // 右省略号展示
@@ -32,14 +38,26 @@ const totalPage = computed(() => { // 总页数
 const pageList = computed(() => { // 获取显示的页码数组
   return dealPageList(currentPage.value).filter(n => n !== 1 && n !== totalPage.value)
 })
-const emit = defineEmits(['change'])
+const sizeChanger = computed(() => {
+  if (typeof props.showSizeChanger === 'boolean') {
+    return props.showSizeChanger
+  } else { // undefined
+    return props.total > 50
+  }
+})
+const options = computed(() => {
+  return props.pageSizeOptions.map((pageSize: string|number) => {
+    return {
+      label: pageSize + ' 条/页',
+      value: Number(pageSize)
+    }
+  })
+})
+const emits = defineEmits(['change', 'pageSizeChange'])
 watch(currentPage, (to: number): void => { // 通过更改当前页码，修改分页数据
   // loading,value = true
   console.log('change:', to)
-  emit('change', {
-    page: to,
-    pageSize: props.pageSize
-  })
+  emits('change', to, currentPageSize.value)
 })
 onMounted(() => {
   // 监听键盘Enter按键
@@ -114,6 +132,16 @@ function changePage (pageNum: number): boolean | void {
     currentPage.value = pageNum
   }
 }
+function onSizeChange (pageSize: number) {
+  const maxPage = Math.ceil(props.total / pageSize)
+  if (currentPage.value > maxPage) {
+    currentPage.value = maxPage
+    emits('pageSizeChange', currentPage.value, pageSize)
+  } else {
+    emits('pageSizeChange', currentPage.value, pageSize)
+    emits('change', currentPage.value, pageSize)
+  }
+}
 </script>
 <template>
   <div :class="[`m-pagination ${placement}`, { hidden: hideOnSinglePage && total<=pageSize }]">
@@ -156,6 +184,7 @@ function changePage (pageNum: number): boolean | void {
           ></path>
         </svg>
       </span>
+      <Select v-if="sizeChanger" class="u-pagesize-select" :options="options" @change="onSizeChange" v-model="currentPageSize" />
       <span class="u-jump-page" v-if="showQuickJumper">跳至<input type="text" v-model="jumpNumber" />页</span>
     </div>
   </div>
@@ -186,9 +215,10 @@ function changePage (pageNum: number): boolean | void {
       margin-right: 8px;
     }
     .u-item {
+      display: inline-block;
       min-width: 32px;
       height: 32px;
-      display: inline-block;
+      line-height: 30px;
       user-select: none; // 禁止选取文本
       border: 1px solid #d9d9d9;
       border-radius: 6px;
@@ -258,9 +288,9 @@ function changePage (pageNum: number): boolean | void {
         box-sizing: border-box;
         position: absolute;
         top: 0;
-        inset-inline-end: 0;
+        left: 0;
         bottom: 0;
-        inset-inline-start: 0;
+        right: 0;
         display: block;
         margin: auto;
         color: rgba(0, 0, 0, .25);
@@ -284,6 +314,11 @@ function changePage (pageNum: number): boolean | void {
         pointer-events: none;
         transition: all .2s;
       }
+    }
+    .u-pagesize-select {
+      margin-left: 8px;
+      line-height: 30px;
+      vertical-align: top;
     }
     .u-jump-page {
       margin-left: 8px;

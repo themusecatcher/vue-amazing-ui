@@ -107,7 +107,7 @@ const optionsCustom = ref([
         id: 8
       }
     ])
-const selectedValue = ref(1)
+const selectedValue = ref(5)
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
 })
@@ -146,6 +146,7 @@ function onAntChange (value: string|number, option: any) {
     <h2 class="mt30 mb10">支持搜索</h2>
     <Select
       :options="options"
+      allowClear
       search
       v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
@@ -176,11 +177,9 @@ function onAntChange (value: string|number, option: any) {
     <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除 (allowClear)</h2>
     <a-select
       :options="options"
-      style="width: 120px"
       placeholder="请选择城市"
       :disabled="false"
       allowClear
-      show-search
       v-model:value="selectedValue"
       @change="onAntChange" />
   </div>
