@@ -1,4 +1,17 @@
 import {
+  computed,
+  h,
+  inject,
+  nextTick,
+  onBeforeUnmount,
+  onBeforeUpdate,
+  onMounted,
+  onUpdated,
+  provide,
+  ref,
+  watch
+} from "./chunk-FHZO4SJ4.js";
+import {
   animateCSSModeScroll,
   createElement,
   deleteProps,
@@ -17,23 +30,10 @@ import {
   now,
   setCSSProperty,
   showWarning
-} from "./chunk-NUYM6GMD.js";
-import {
-  computed,
-  h,
-  inject,
-  nextTick,
-  onBeforeUnmount,
-  onBeforeUpdate,
-  onMounted,
-  onUpdated,
-  provide,
-  ref,
-  watch
-} from "./chunk-ASRQBPRV.js";
+} from "./chunk-HLK3GALD.js";
 import "./chunk-LNEMQRCO.js";
 
-// node_modules/.pnpm/swiper@11.1.1/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@11.1.3/node_modules/swiper/shared/swiper-core.mjs
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -643,8 +643,9 @@ function updateSlides() {
       allSlidesSize += slideSizeValue + (spaceBetween || 0);
     });
     allSlidesSize -= spaceBetween;
-    if (allSlidesSize < swiperSize) {
-      const allSlidesOffset = (swiperSize - allSlidesSize) / 2;
+    const offsetSize = (params.slidesOffsetBefore || 0) + (params.slidesOffsetAfter || 0);
+    if (allSlidesSize + offsetSize < swiperSize) {
+      const allSlidesOffset = (swiperSize - allSlidesSize - offsetSize) / 2;
       snapGrid.forEach((snap, snapIndex) => {
         snapGrid[snapIndex] = snap - allSlidesOffset;
       });
@@ -743,6 +744,13 @@ function updateSlidesOffset() {
     slides[i].swiperSlideOffset = (swiper.isHorizontal() ? slides[i].offsetLeft : slides[i].offsetTop) - minusOffset - swiper.cssOverflowAdjustment();
   }
 }
+var toggleSlideClasses$1 = (slideEl, condition, className) => {
+  if (condition && !slideEl.classList.contains(className)) {
+    slideEl.classList.add(className);
+  } else if (!condition && slideEl.classList.contains(className)) {
+    slideEl.classList.remove(className);
+  }
+};
 function updateSlidesProgress(translate2) {
   if (translate2 === void 0) {
     translate2 = this && this.translate || 0;
@@ -761,9 +769,6 @@ function updateSlidesProgress(translate2) {
   let offsetCenter = -translate2;
   if (rtl)
     offsetCenter = translate2;
-  slides.forEach((slideEl) => {
-    slideEl.classList.remove(params.slideVisibleClass, params.slideFullyVisibleClass);
-  });
   swiper.visibleSlidesIndexes = [];
   swiper.visibleSlides = [];
   let spaceBetween = params.spaceBetween;
@@ -787,11 +792,9 @@ function updateSlidesProgress(translate2) {
     if (isVisible) {
       swiper.visibleSlides.push(slide2);
       swiper.visibleSlidesIndexes.push(i);
-      slides[i].classList.add(params.slideVisibleClass);
     }
-    if (isFullyVisible) {
-      slides[i].classList.add(params.slideFullyVisibleClass);
-    }
+    toggleSlideClasses$1(slide2, isVisible, params.slideVisibleClass);
+    toggleSlideClasses$1(slide2, isFullyVisible, params.slideFullyVisibleClass);
     slide2.progress = rtl ? -slideProgress : slideProgress;
     slide2.originalProgress = rtl ? -originalSlideProgress : originalSlideProgress;
   }
@@ -2433,7 +2436,10 @@ function onTouchMove(event) {
     if (swiper.animating) {
       const evt = new window.CustomEvent("transitionend", {
         bubbles: true,
-        cancelable: true
+        cancelable: true,
+        detail: {
+          bySwiperTouchMove: true
+        }
       });
       swiper.wrapperEl.dispatchEvent(evt);
     }
@@ -3844,7 +3850,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 });
 Swiper.use([Resize, Observer]);
 
-// node_modules/.pnpm/swiper@11.1.1/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@11.1.3/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -4202,7 +4208,7 @@ function updateSwiper(_ref) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@11.1.1/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@11.1.3/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
     obj = {};
@@ -4335,7 +4341,7 @@ var updateOnVirtualData = (swiper) => {
   }
 };
 
-// node_modules/.pnpm/swiper@11.1.1/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@11.1.3/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots, slidesRef, oldSlidesRef) {
   if (originalSlots === void 0) {
     originalSlots = {};
@@ -4357,7 +4363,7 @@ function getChildren(originalSlots, slidesRef, oldSlidesRef) {
         slotName = "container-end";
       if (isFragment && vnode.children) {
         getSlidesFromElements(vnode.children, slotName);
-      } else if (vnode.type && (vnode.type.name === "SwiperSlide" || vnode.type.name === "AsyncComponentWrapper")) {
+      } else if (vnode.type && (vnode.type.name === "SwiperSlide" || vnode.type.name === "AsyncComponentWrapper") || vnode.componentOptions && vnode.componentOptions.tag === "SwiperSlide") {
         slides.push(vnode);
       } else if (slots[slotName]) {
         slots[slotName].push(vnode);
@@ -4413,9 +4419,15 @@ function renderVirtual(swiperRef, slides, virtualData) {
       slide2.props.style = {};
     slide2.props.swiperRef = swiperRef;
     slide2.props.style = style;
-    return h(slide2.type, {
-      ...slide2.props
-    }, slide2.children);
+    if (slide2.type) {
+      return h(slide2.type, {
+        ...slide2.props
+      }, slide2.children);
+    } else if (slide2.componentOptions) {
+      return h(slide2.componentOptions.Ctor, {
+        ...slide2.props
+      }, slide2.componentOptions.children);
+    }
   });
 }
 var Swiper2 = {

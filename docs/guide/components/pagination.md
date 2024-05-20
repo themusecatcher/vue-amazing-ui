@@ -174,10 +174,12 @@ function changePage (pager: object) { // 分页回调
 -- | -- | -- | -- | --
 current | 当前页数 | number | 1 | false
 pageSize | 每页条数 | number | 10 | false
+pageSizeOptions | 每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100] | false
 total | 数据总数 | number | 0 | false
 pageListNum | 显示的页码数组长度 | number | 5 | false
 hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false | false
 showQuickJumper | 是否可以快速跳转至某页 | boolean | false | false
+showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined | false
 showTotal | 是否显示当前页数和数据总量 | boolean | false | false
 placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'center' &#124; 'right' | 'center' | false
 
@@ -185,4 +187,5 @@ placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'cente
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change | 页码改变后的回调 | (pager: { page: number, pageSize: pageSize }) => void
+change | 页码改变后的回调 | (page: number, pageSize: number) => void
+pageSizeChange | `pageSize` 变化的回调 | (page: number, pageSize: number) => void
