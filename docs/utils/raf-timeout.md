@@ -2,7 +2,7 @@
 
 <br/>
 
-*使用 raf 动画帧模拟实现的定时器，等效替代 setTimeout() 和 setInterval()*
+*使用 `raf` 动画帧模拟实现的定时器，等效替代 `setTimeout()` 和 `setInterval()`*
 
 ::: details  Show Source Code
 
@@ -106,5 +106,5 @@ onUnmounted(() => {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 fn | 要执行的函数 | Function | - | true
-delay | 延时调用或间歇调用时间间隔，单位ms | number | 0 | false
+delay | 延时调用或间歇调用时间间隔，单位`ms` | number | 0 | false
 interval | 是否使用间歇调用 | false | false

@@ -103,7 +103,7 @@ dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-value | 13位时间戳；或者可以转化为Date类型的字符串日期；或者Date对象 | number &#124; string &#124; Date | Date.now() | false
+value | `13` 位时间戳；或者可以转化为 `Date` 类型的字符串日期；或者 `Date` 对象 | number &#124; string &#124; Date | Date.now() | false
 format | 格式化目标形式 | string | 'YYYY-MM-DD HH:mm:ss' | false
 
 ## format 支持的格式化占位符列表

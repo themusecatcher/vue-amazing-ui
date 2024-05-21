@@ -2,7 +2,7 @@
 
 <br/>
 
-*如果短时间内大量触发同一事件，那么在函数执行一次之后，该函数在指定的时间（delay）期限内不再工作，直至过了这段时间才重新生效*
+*如果短时间内大量触发同一事件，那么在函数执行一次之后，该函数在指定的时间 `delay` 期限内不再工作，直至过了这段时间才重新生效*
 
 ::: details  Show Source Code
 
@@ -26,7 +26,7 @@ function throttle (fn: Function, delay = 300): any {
 
 ## 何时使用
 
-- 短时间内大量触发同一事件时，每 delay ms 内函数只执行一次
+- 短时间内大量触发同一事件时，每 `delay` `ms` 内函数只执行一次
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
@@ -73,4 +73,4 @@ function showPosition () {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 fn | 要执行的函数 | Function | - | true
-delay | 函数失效时长，单位ms | number | 300 | false
+delay | 函数失效时长，单位`ms` | number | 300 | false

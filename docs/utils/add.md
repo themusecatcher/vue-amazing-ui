@@ -18,7 +18,7 @@ function add (num1: number, num2: number): number {
 
 ## 何时使用
 
-- 消除js加减精度问题时
+- 消除 `js` 加减精度问题时
 
 ## 基本使用
 
