@@ -15,22 +15,19 @@
 import { ref } from 'vue'
 
 const total = ref(100)
-const pagination = ref({
-  pageSize: 10,
-  p: 1
-})
-function changePage (pager: object) { // 分页回调
-  console.log('pager:', pager)
+function changePage (page: number, pageSize: number) { // 分页回调
+  console.log('page:', page)
+  console.log('pageSize:', pageSize)
+}
+function pageSizeChange (page: number, pageSize: number) { // pageSize 变化的回调
+  console.log('change page:', page)
+  console.log('change pageSize:', pageSize)
 }
 </script>
 
 ## 基本使用
 
-<Pagination
-  :current="pagination.p"
-  :page-size="pagination.pageSize"
-  :total="total"
-  @change="changePage" />
+<Pagination :total="total" @change="changePage" />
 
 ::: details Show Code
 
@@ -39,20 +36,13 @@ function changePage (pager: object) { // 分页回调
 import { ref } from 'vue'
 
 const total = ref(100)
-const pagination = ref({
-  pageSize: 10,
-  p: 1
-})
-function changePage (pager: object) { // 分页回调
-  console.log('pager:', pager)
+function changePage (page: number, pageSize: number) { // 分页回调
+  console.log('page:', page)
+  console.log('pageSize:', pageSize)
 }
 </script>
 <template>
-  <Pagination
-    :current="pagination.p"
-    :page-size="pagination.pageSize"
-    :total="total"
-    @change="changePage" />
+  <Pagination :total="total" @change="changePage" />
 </template>
 ```
 
@@ -60,12 +50,7 @@ function changePage (pager: object) { // 分页回调
 
 ## 靠左展示
 
-<Pagination
-  :current="pagination.p"
-  :page-size="pagination.pageSize"
-  :total="total"
-  placement="left"
-  @change="changePage" />
+<Pagination :total="total" placement="left" @change="changePage" />
 
 ::: details Show Code
 
@@ -74,21 +59,13 @@ function changePage (pager: object) { // 分页回调
 import { ref } from 'vue'
 
 const total = ref(100)
-const pagination = ref({
-  pageSize: 10,
-  p: 1
-})
-function changePage (pager: object) { // 分页回调
-  console.log('pager:', pager)
+function changePage (page: number, pageSize: number) { // 分页回调
+  console.log('page:', page)
+  console.log('pageSize:', pageSize)
 }
 </script>
 <template>
-  <Pagination
-    :current="pagination.p"
-    :page-size="pagination.pageSize"
-    :total="total"
-    placement="left"
-    @change="changePage" />
+  <Pagination :total="total" placement="left" @change="changePage" />
 </template>
 ```
 
@@ -96,12 +73,7 @@ function changePage (pager: object) { // 分页回调
 
 ## 靠右展示
 
-<Pagination
-  :current="pagination.p"
-  :page-size="pagination.pageSize"
-  :total="total"
-  placement="right"
-  @change="changePage" />
+<Pagination :total="total" placement="right" @change="changePage" />
 
 ::: details Show Code
 
@@ -110,35 +82,26 @@ function changePage (pager: object) { // 分页回调
 import { ref } from 'vue'
 
 const total = ref(100)
-const pagination = ref({
-  pageSize: 10,
-  p: 1
-})
-function changePage (pager: object) { // 分页回调
-  console.log('pager:', pager)
+function changePage (page: number, pageSize: number) { // 分页回调
+  console.log('page:', page)
+  console.log('pageSize:', pageSize)
 }
 </script>
 <template>
-  <Pagination
-    :current="pagination.p"
-    :page-size="pagination.pageSize"
-    :total="total"
-    placement="right"
-    @change="changePage" />
+  <Pagination :total="total" placement="right" @change="changePage" />
 </template>
 ```
 
 :::
 
-## 快速跳转和数据总量
+## 快速跳转 & 数据总量
 
 <Pagination
-  :current="pagination.p"
-  :page-size="pagination.pageSize"
   :total="total"
   show-quick-jumper
   show-total
-  @change="changePage" />
+  @change="changePage"
+  @pageSizeChange="pageSizeChange" />
 
 ::: details Show Code
 
@@ -147,22 +110,22 @@ function changePage (pager: object) { // 分页回调
 import { ref } from 'vue'
 
 const total = ref(100)
-const pagination = ref({
-  pageSize: 10,
-  p: 1
-})
-function changePage (pager: object) { // 分页回调
-  console.log('pager:', pager)
+function changePage (page: number, pageSize: number) { // 分页回调
+  console.log('page:', page)
+  console.log('pageSize:', pageSize)
+}
+function pageSizeChange (page: number, pageSize: number) { // pageSize 变化的回调
+  console.log('change page:', page)
+  console.log('change pageSize:', pageSize)
 }
 </script>
 <template>
   <Pagination
-    :current="pagination.p"
-    :page-size="pagination.pageSize"
     :total="total"
     show-quick-jumper
     show-total
-    @change="changePage" />
+    @change="changePage"
+    @pageSizeChange="pageSizeChange" />
 </template>
 ```
 
@@ -172,7 +135,7 @@ function changePage (pager: object) { // 分页回调
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-current | 当前页数 | number | 1 | false
+page | 当前页数 | number | 1 | false
 pageSize | 每页条数 | number | 10 | false
 pageSizeOptions | 每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100] | false
 total | 数据总数 | number | 0 | false

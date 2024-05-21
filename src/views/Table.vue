@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 const loading = ref(false)
-const total = ref(35)
-const queryParams = ref({
-        pageSize: 5,
+const total = ref(80)
+const queryParams = reactive({
+        pageSize: 10,
         page: 1
       })
 const columns = ref([
@@ -65,6 +65,9 @@ const tableData = ref([
           address: 'US'
         }
       ])
+onMounted(() => {
+  getData()
+})
 function getData () {
   loading.value = true
   // 模拟调用接口获取列表数据
@@ -72,10 +75,9 @@ function getData () {
     loading.value = false
   }, 500)
 }
-function onChange (pagination: {page: number, pageSize: number}) {
-  console.log('pagination:', pagination)
-  queryParams.value.page = pagination.page
-  queryParams.value.pageSize = pagination.pageSize
+function onChange (page: number, pageSize: number) {
+  queryParams.page = page
+  queryParams.pageSize = pageSize
   getData()
 }
 </script>
@@ -87,8 +89,10 @@ function onChange (pagination: {page: number, pageSize: number}) {
       :columns="columns"
       :dataSource="tableData"
       :pagination="{
-        page: queryParams.page,
-        pageSize: queryParams.pageSize
+        page: 1,
+        pageSize: 10,
+        showQuickJumper: true,
+        showTotal: true
       }"
       :total="total"
       :loading="loading"

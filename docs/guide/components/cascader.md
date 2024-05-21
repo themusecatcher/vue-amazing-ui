@@ -195,7 +195,7 @@ function filter (inputValue: string, option: any) {
 
 ## 基本使用
 
-<Cascader :options="options" v-model:selected-value="selectedValue" />
+<Cascader :options="options" v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -264,7 +264,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Cascader :options="options" v-model:selected-value="selectedValue" />
+  <Cascader :options="options" v-model="selectedValue" />
 </template>
 ```
 
@@ -274,7 +274,7 @@ watchEffect(() => {
 
 <Cascader
   :options="options"
-  v-model:selected-value="selectedValue"
+  v-model="selectedValue"
   disabled />
 
 ::: details Show Code
@@ -343,7 +343,7 @@ const selectedValue = ref(['2', '21', '212'])
 <template>
   <Cascader
     :options="options"
-    v-model:selected-value="selectedValue"
+    v-model="selectedValue"
     disabled />
 </template>
 ```
@@ -360,7 +360,7 @@ const selectedValue = ref(['2', '21', '212'])
 
 <Cascader
   :options="options"
-  v-model:selected-value="selectedValue"
+  v-model="selectedValue"
   :disabled="[true]"
   @change="onChange" />
 
@@ -437,7 +437,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="options"
-    v-model:selected-value="selectedValue"
+    v-model="selectedValue"
     :disabled="[true]"
     @change="onChange" />
 </template>
@@ -453,7 +453,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 <Cascader
   :options="optionsDisabled"
-  v-model:selected-value="selectedValue"
+  v-model="selectedValue"
   @change="onChange" />
 
 ::: details Show Code
@@ -530,7 +530,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="optionsDisabled"
-    v-model:selected-value="selectedValue"
+    v-model="selectedValue"
     @change="onChange" />
 </template>
 ```
@@ -541,7 +541,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 <Cascader
   :options="options"
-  v-model:selected-value="selectedValue"
+  v-model="selectedValue"
   change-on-select
   @change="onChange" />
 
@@ -618,7 +618,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="options"
-    v-model:selected-value="selectedValue"
+    v-model="selectedValue"
     change-on-select
     @change="onChange" />
 </template>
@@ -630,7 +630,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 <Cascader
   :options="options"
-  v-model:selected-value="selectedValue"
+  v-model="selectedValue"
   allow-clear
   @change="onChange" />
 
@@ -707,7 +707,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="options"
-    v-model:selected-value="selectedValue"
+    v-model="selectedValue"
     allow-clear
     @change="onChange" />
 </template>
@@ -719,7 +719,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 <Cascader
   :options="options"
-  v-model:selected-value="selectedValue"
+  v-model="selectedValue"
   search
   @change="onChange" />
 
@@ -796,7 +796,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="options"
-    v-model:selected-value="selectedValue"
+    v-model="selectedValue"
     search
     @change="onChange" />
 </template>
@@ -808,7 +808,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 <Cascader
   :options="options"
-  v-model:selected-value="selectedValue"
+  v-model="selectedValue"
   search
   :filter="filter"
   @change="onChange" />
@@ -890,7 +890,7 @@ function filter (inputValue: string, option: any) {
 <template>
   <Cascader
     :options="options"
-    v-model:selected-value="selectedValue"
+    v-model="selectedValue"
     search
     :filter="filter"
     @change="onChange" />
@@ -903,8 +903,8 @@ function filter (inputValue: string, option: any) {
 
 <Cascader
   :options="options"
-  v-model:selected-value="selectedValue"
-  :width="160"
+  v-model="selectedValue"
+  :width="120"
   :height="36"
   :gap="12"
   @change="onChange" />
@@ -982,8 +982,8 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="options"
-    v-model:selected-value="selectedValue"
-    :width="160"
+    v-model="selectedValue"
+    :width="120"
     :height="36"
     :gap="12"
     @change="onChange" />
@@ -996,7 +996,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 <Cascader
   :options="optionsCustom"
-  v-model:selected-value="selectedValue"
+  v-model="selectedValue"
   label="name"
   value="code"
   children="items"
@@ -1075,7 +1075,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 <template>
   <Cascader
     :options="optionsCustom"
-    v-model:selected-value="selectedValue"
+    v-model="selectedValue"
     label="name"
     value="code"
     children="items"
@@ -1096,14 +1096,14 @@ children | 下拉字典项的后代字段名 | string | 'children' | false
 placeholder | 三级下拉各自占位文本 | string &#124; string[] | '请选择' | false
 changeOnSelect | 当此项为 `true` 时，点选每级菜单选项值都会发生变化；否则只有选择第三级选项后选项值才会变化 | boolean | false | false
 gap | 级联下拉框相互间隙宽度，单位`px` | number | 8 | false
-width | 三级下拉各自宽度，单位`px` | number &#124; number[] | 120 | false
+width | 三级下拉各自宽度，单位`px` | 'auto' &#124; number &#124; number[] | 'auto' | false
 height | 下拉框高度，单位`px` | number | 32 | false
 disabled | 三级各自是否禁用 | boolean &#124; boolean[] | false | false
 allowClear | 是否支持清除 | boolean | false | false
 search | 是否支持搜索 | boolean | false | false
 filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true | false
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
-selectedValue <Tag color="cyan">v-model</Tag> | 级联选中项 | (number&#124;string)[] | [] | false
+modelValue <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; string[] | [] | false
 
 ## Option Type
 
@@ -1113,7 +1113,7 @@ label | 选项名 | string | false
 value | 选项值 | string &#124; number | false
 disabled | 是否禁用选项 | boolean | false
 children | 选项 `children` 数组 | Option[] | false
-[propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | -
+[propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | false
 
 ## Events
 

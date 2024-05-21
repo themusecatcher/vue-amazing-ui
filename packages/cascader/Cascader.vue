@@ -16,7 +16,7 @@ interface Props {
   placeholder?: string|string[] // 三级下拉各自占位文本
   changeOnSelect?: boolean // 当此项为 true 时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择第三级选项后选项值才会变化
   gap?: number // 级联下拉框相互间隙宽度，单位px
-  width?: number|number[] // 三级下拉各自宽度
+  width?: 'auto'|number|number[] // 三级下拉各自宽度
   height?: number // 下拉框高度
   disabled?: boolean|boolean[] // 三级各自是否禁用
   allowClear?: boolean // 是否支持清除
@@ -27,7 +27,7 @@ interface Props {
   */
   filter?: Function|true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
-  selectedValue?: (number|string)[] // （v-model）级联选中项
+  modelValue?: number[]|string[] // （v-model）级联选中项
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
@@ -37,14 +37,14 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: '请选择',
   changeOnSelect: false,
   gap: 8,
-  width: 120,
+  width: 'auto',
   height: 32,
   disabled: false,
   allowClear: false,
   search: false,
   filter: true,
   maxDisplay: 6,
-  selectedValue: () => [],
+  modelValue: () => [],
 })
 const values = ref<(string|number)[]>([]) // 级联value值数组
 const labels = ref<string[]>([]) // 级联label文本数组
@@ -55,7 +55,7 @@ watchEffect(() => {
   firstOptions.value = [...props.options]
 })
 watchEffect(() => {
-  values.value = [...props.selectedValue]
+  values.value = [...props.modelValue]
 })
 watchEffect(() => {
   initCascader(values.value)
@@ -95,10 +95,10 @@ function initLabels (values: (string|number)[]) {
     labels.value[2] = findLabel(thirdOptions.value, 2)
   }
 }
-const emits = defineEmits(['update:selectedValue', 'change'])
+const emits = defineEmits(['update:modelValue', 'change'])
 function onFirstChange (value: string|number, label: string) { // 一级下拉回调
   if (props.changeOnSelect) {
-    emits('update:selectedValue', [value])
+    emits('update:modelValue', [value])
     emits('change', [value], [label])
   } else {
     values.value = [value]
@@ -107,7 +107,7 @@ function onFirstChange (value: string|number, label: string) { // 一级下拉�
 }
 function onSecondChange (value: string|number, label: string) { // 二级下拉回调
   if (props.changeOnSelect) {
-    emits('update:selectedValue', [values.value[0], value])
+    emits('update:modelValue', [values.value[0], value])
     emits('change', [values.value[0], value], [labels.value[0], label])
   } else {
     values.value = [values.value[0], value]
@@ -115,7 +115,7 @@ function onSecondChange (value: string|number, label: string) { // 二级下拉�
   }
 }
 function onThirdChange (value: string|number, label: string) { // 三级下拉回调
-  emits('update:selectedValue', [...values.value.slice(0, 2), value])
+  emits('update:modelValue', [...values.value.slice(0, 2), value])
   emits('change', [...values.value.slice(0, 2), value], [...labels.value.slice(0, 2), label])
 }
 </script>
