@@ -339,7 +339,7 @@ export default defineConfig({
               link: '/utils/animation-frame'
             },
             {
-              text: 'date 日期格式化',
+              text: 'dateFormat 日期格式化',
               link: '/utils/date-format'
             },
             {
@@ -355,7 +355,7 @@ export default defineConfig({
               link: '/utils/format-number'
             },
             {
-              text: 'raf 定时器',
+              text: 'rafTimeout 定时器',
               link: '/utils/raf-timeout'
             },
             {
