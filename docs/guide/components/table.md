@@ -13,11 +13,11 @@
 - 当需要对数据进行排序、搜索、分页、自定义操作等复杂行为时
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 const loading = ref(false)
 const total = ref(80)
-const queryParams = ref({
-        pageSize: 5,
+const queryParams = reactive({
+        pageSize: 10,
         page: 1
       })
 const columns = ref([
@@ -79,6 +79,9 @@ const tableData = ref([
           address: 'US'
         }
       ])
+onMounted(() => {
+  getData()
+})
 function getData () {
   loading.value = true
   // 模拟调用接口获取列表数据
@@ -86,10 +89,9 @@ function getData () {
     loading.value = false
   }, 500)
 }
-function onChange (pagination: {page: number, pageSize: number}) {
-  console.log('pagination:', pagination)
-  queryParams.value.page = pagination.page
-  queryParams.value.pageSize = pagination.pageSize
+function onChange (page: number, pageSize: number) {
+  queryParams.page = page
+  queryParams.pageSize = pageSize
   getData()
 }
 </script>
@@ -100,6 +102,12 @@ function onChange (pagination: {page: number, pageSize: number}) {
   <Table
     :columns="columns"
     :data-source="tableData"
+    :pagination="{
+      page: 1,
+      pageSize: 10,
+      showQuickJumper: true,
+      showTotal: true
+    }"
     :total="total"
     :loading="loading"
     @change="onChange">
@@ -117,11 +125,11 @@ function onChange (pagination: {page: number, pageSize: number}) {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 const loading = ref(false)
 const total = ref(80)
-const queryParams = ref({
-        pageSize: 5,
+const queryParams = reactive({
+        pageSize: 10,
         page: 1
       })
 const columns = ref([
@@ -183,6 +191,9 @@ const tableData = ref([
           address: 'US'
         }
       ])
+onMounted(() => {
+  getData()
+})
 function getData () {
   loading.value = true
   // 模拟调用接口获取列表数据
@@ -190,10 +201,9 @@ function getData () {
     loading.value = false
   }, 500)
 }
-function onChange (pagination: {page: number, pageSize: number}) {
-  console.log('pagination:', pagination)
-  queryParams.value.page = pagination.page
-  queryParams.value.pageSize = pagination.pageSize
+function onChange (page: number, pageSize: number) {
+  queryParams.page = page
+  queryParams.pageSize = pageSize
   getData()
 }
 </script>
@@ -201,6 +211,12 @@ function onChange (pagination: {page: number, pageSize: number}) {
   <Table
     :columns="columns"
     :data-source="tableData"
+    :pagination="{
+      page: 1,
+      pageSize: 10,
+      showQuickJumper: true,
+      showTotal: true
+    }"
     :total="total"
     :loading="loading"
     @change="onChange">
@@ -319,9 +335,8 @@ const columns = ref([
 -- | -- | -- | -- | --
 columns | 表格列的配置项 | Column[] | [] | false
 dataSource | 表格数据数组 | any[] | [] | false
-pagination | 分页配置 | Pagination | { page: 1&#44; pageSize: 10 } | false
+pagination | 分页配置 | Pagination | {} | false
 showPagination | 是否显示分页 | boolean | true | false
-hideOnSinglePage | 只有 `1` 页时是否隐藏分页 | boolean | false
 total | 数据总数 | number | 0 | false
 loading | 是否加载中 | boolean | false | false
 
@@ -338,8 +353,16 @@ slot | 列插槽名称索引 | string | false
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
-page | 当前页码 | number | true
-pageSize | 每页条数 | number | true
+page | 当前页数 | number | false
+pageSize | 每页条数 | number | false
+pageSizeOptions | 每页可以显示多少条 | string[] &#124; number[] | false
+total | 数据总数 | number | false
+pageListNum | 显示的页码数组长度 | number | false
+hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false
+showQuickJumper | 是否可以快速跳转至某页 | boolean | false
+showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | false
+showTotal | 是否显示当前页数和数据总量 | boolean | false | false
+placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'center' &#124; 'right' | false
 
 ## Events
 

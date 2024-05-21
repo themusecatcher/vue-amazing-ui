@@ -8,31 +8,36 @@ interface Column {
   dataIndex: string // 列数据字符索引
   slot?: string // 列插槽名称索引
 }
-interface Pagination {
-  page: number // 当前页码
-  pageSize: number // 每页条数
+interface Pagination { // 具体可参考 Pagination 分页组件相关 APIs
+  page?: number // 当前页码
+  pageSize?: number // 每页条数
+  pageSizeOptions?: string[] | number[] // 每页可以显示多少条
+  pageListNum?: number // 显示的页码数组长度
+  hideOnSinglePage?: boolean // 只有一页时是否隐藏分页
+  showQuickJumper?: boolean // 是否可以快速跳转至某页
+  showSizeChanger?: boolean // 是否展示 pageSize 切换器，当 total 大于 50 时默认为 true
+  showTotal?: boolean // 是否显示当前页数和数据总量
+  placement?: 'left'|'center'|'right' // 分页展示位置：靠左、居中、靠右
 }
 interface Props {
   columns?: Column[] // 表格列的配置项
   dataSource?: any[] // 表格数据数组
   pagination?: Pagination // 分页配置
   showPagination?: boolean // 是否显示分页
-  hideOnSinglePage?: boolean // 只有一页时是否隐藏分页
   total?: number // 数据总数
   loading?: boolean // 是否加载中
 }
 withDefaults(defineProps<Props>(), {
   columns: () => [],
   dataSource: () => [],
-  pagination: () => { return { page: 1, pageSize: 10 } },
+  pagination: () => ({}),
   showPagination: true,
-  hideOnSinglePage: false,
   total: 0,
   loading: false
 })
 const emit = defineEmits(['change'])
-function changePage (pager: {page: number, pageSize: number}) { // 分页回调
-  emit('change', pager)
+function changePage (page: number, pageSize: number) { // 分页回调
+  emit('change', page, pageSize)
 }
 </script>
 <template>
@@ -65,13 +70,16 @@ function changePage (pager: {page: number, pageSize: number}) { // 分页回调
     <Pagination
       class="mt20"
       @change="changePage"
-      :current="pagination.page"
-      :pageSize="pagination.pageSize"
       :total="total"
-      :hideOnSinglePage="hideOnSinglePage"
-      :showQuickJumper="true"
-      :showTotal="true"
-      placement="right"
+      :page="pagination.page"
+      :pageSize="pagination.pageSize"
+      :pageSizeOptions="pagination.pageSizeOptions"
+      :pageListNum="pagination.pageListNum"
+      :hideOnSinglePage="pagination.hideOnSinglePage"
+      :showQuickJumper="pagination.showQuickJumper"
+      :showSizeChanger="pagination.showSizeChanger"
+      :showTotal="pagination.showTotal"
+      :placement="pagination.placement"
       v-if="showPagination && total" />
   </div>
 </template>

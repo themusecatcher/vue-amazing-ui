@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import Select from '../select'
 interface Props {
-  current?: number // 当前页数
+  page?: number // 当前页数
   pageSize?: number // 每页条数
   pageSizeOptions?: string[]|number[] // 每页可以显示多少条
   total?: number // 数据总数
@@ -14,7 +14,7 @@ interface Props {
   placement?: 'left'|'center'|'right' // 分页展示位置，靠左left，居中center，靠右right
 }
 const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
-  current: 1,
+  page: 1,
   pageSize: 10,
   pageSizeOptions: () => [10, 20, 50 ,100],
   total: 0,
@@ -25,15 +25,15 @@ const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
   showTotal: false,
   placement: 'center'
 })
-const currentPage = ref(props.current) // 当前页数
-const currentPageSize = ref(props.pageSizeOptions[0]) // 当前 pageSize
+const currentPage = ref(props.page) // 当前页数
+const currentPageSize = ref(Number(props.pageSizeOptions[0])) // 当前 pageSize
 const jumpNumber = ref('') // 跳转的页码
 const forwardMore = ref(false) // 左省略号展示
 const backwardMore = ref(false) // 右省略号展示
 const forwardArrow = ref(false) // 左箭头展示
 const backwardArrow = ref(false) // 右箭头展示
 const totalPage = computed(() => { // 总页数
-  return Math.ceil(props.total / props.pageSize) // 向上取整
+  return Math.ceil(props.total / currentPageSize.value) // 向上取整
 })
 const pageList = computed(() => { // 获取显示的页码数组
   return dealPageList(currentPage.value).filter(n => n !== 1 && n !== totalPage.value)
