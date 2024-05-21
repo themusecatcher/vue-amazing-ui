@@ -174,19 +174,19 @@ export function formatNumber (value: number|string, precision = 2, separator = '
   }
   value = Number(value).toFixed(precision)
   value += ''
-  const x = value.split('.')
-  let x1 = x[0]
-  const x2 = x.length > 1 ? decimal + x[1] : ''
-  const rgx = /(\d+)(\d{3})/
-  function isNumber (val: any) {
-    return Object.prototype.toString.call(val) === '[object Number]'
+  const nums = value.split('.')
+  let integer = nums[0]
+  const decimals = nums.length > 1 ? decimal + nums[1] : ''
+  const reg = /(\d+)(\d{3})/
+  function isNumber (value: any) {
+    return Object.prototype.toString.call(value) === '[object Number]'
   }
   if (separator && !isNumber(separator)) {
-    while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + separator + '$2')
+    while (reg.test(integer)) {
+      integer = integer.replace(reg, '$1' + separator + '$2')
     }
   }
-  return prefix + x1 + x2 + suffix
+  return prefix + integer + decimals + suffix
 }
 /*
   在 <html> 根元素上动态切换 dark 模式，只在根元素添加 dark 类值，具体样式需自行添加
