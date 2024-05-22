@@ -1392,12 +1392,12 @@ const $4 = { class: "m-statistic" }, B4 = { class: "u-title" }, F4 = { key: 0, c
 Ha.install = (l) => {
   l.component(Ha.__name, Ha);
 };
-const A4 = { class: "m-steps" }, D4 = ["onClick"], E4 = { class: "m-steps-icon" }, H4 = { key: 0, class: "u-num" }, I4 = { key: 1, class: "u-icon", viewBox: "64 64 896 896", "data-icon": "check", "aria-hidden": "true", focusable: "false" }, T4 = [((l) => (G("data-v-c696fb2e"), l = l(), J(), l))(() => o("path", { d: "M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z" }, null, -1))], j4 = { class: "m-steps-content" }, V4 = { class: "u-steps-title" }, Ia = V(j({ __name: "Steps", props: { steps: { default: () => [] }, current: { default: 1 }, width: { default: "100%" }, descMaxWidth: { default: 120 } }, emits: ["update:current", "change"], setup(l, { emit: a }) {
+const A4 = { class: "m-steps" }, D4 = ["onClick"], E4 = { class: "m-steps-icon" }, H4 = { key: 0, class: "u-num" }, I4 = { key: 1, class: "u-icon", viewBox: "64 64 896 896", "data-icon": "check", "aria-hidden": "true", focusable: "false" }, T4 = [((l) => (G("data-v-c1269361"), l = l(), J(), l))(() => o("path", { d: "M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z" }, null, -1))], j4 = { class: "m-steps-content" }, V4 = { class: "u-steps-title" }, Ia = V(j({ __name: "Steps", props: { steps: { default: () => [] }, current: { default: 1 }, width: { default: "100%" }, descMaxWidth: { default: 120 } }, emits: ["update:current", "change"], setup(l, { emit: a }) {
   const e = l, t = C(() => typeof e.width == "number" ? e.width + "px" : e.width), i = C(() => e.steps.length), d = C(() => e.current < 1 ? 1 : e.current > i.value + 1 ? i.value + 1 : e.current), c = a;
   return (s, p) => (r(), v("div", { class: "m-steps-area", style: _(`width: ${t.value};`) }, [o("div", A4, [(r(!0), v(N, null, K(s.steps, (u, h) => (r(), v("div", { class: F(["m-steps-item", { finish: d.value > h + 1, process: d.value === h + 1, wait: d.value < h + 1 }]), key: h }, [o("div", { class: "m-info-wrap", onClick: (g) => function(z) {
     d.value !== z && (c("update:current", z), c("change", z));
   }(h + 1) }, [o("div", E4, [d.value <= h + 1 ? (r(), v("span", H4, L(h + 1), 1)) : (r(), v("svg", I4, T4))]), o("div", j4, [o("div", V4, L(u.title), 1), R(o("div", { class: "u-steps-description", style: _(`max-width: ${s.descMaxWidth}px;`) }, L(u.description), 5), [[W, u.description]])])], 8, D4)], 2))), 128))])], 4));
-} }), [["__scopeId", "data-v-c696fb2e"]]);
+} }), [["__scopeId", "data-v-c1269361"]]);
 Ia.install = (l) => {
   l.component(Ia.__name, Ia);
 };

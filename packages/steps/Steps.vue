@@ -74,12 +74,13 @@ function onChange (index: number) { // 点击切换选择步骤
   margin: 0 auto;
   .m-steps {
     display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
     .m-steps-item {
       display: inline-block;
       overflow: hidden;
       font-size: 16px;
       &:not(:last-child) {
-        margin-right: 16px;
         flex: 1; // 弹性盒模型对象的子元素都有相同的长度，且忽略它们内部的内容
         .u-steps-title {
           &::after {
