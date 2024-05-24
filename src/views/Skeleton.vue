@@ -74,6 +74,8 @@ const avatarShapeOptions = ref([
         </p>
       </div>
     </Skeleton>
+    <h2 class="mt30 mb10">自定义标题和段落</h2>
+    <Skeleton avatar :title="{ width: '24%' }" :paragraph="{ rows: 4, width: ['48%', '72%', '96%', '60%'] }" />
     <h2 class="mt30 mb10">按钮 / 输入框 / 图像 / 头像</h2>
     <Flex :gap="32">
       <Flex vertical :gap="12" width="50%">

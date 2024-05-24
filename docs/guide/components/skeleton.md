@@ -148,6 +148,20 @@ const showSkeleton = () => {
 
 :::
 
+## 自定义标题和段落
+
+<Skeleton avatar :title="{ width: '24%' }" :paragraph="{ rows: 4, width: ['48%', '72%', '96%', '60%'] }" />
+
+::: details Show Code
+
+```vue
+<template>
+  <Skeleton avatar :title="{ width: '24%' }" :paragraph="{ rows: 4, width: ['48%', '72%', '96%', '60%'] }" />
+</template>
+```
+
+:::
+
 ## 按钮 / 输入框 / 图像 / 头像
 
 <Flex :gap="32">
