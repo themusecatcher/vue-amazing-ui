@@ -112,7 +112,7 @@ tooltip | 提示的文本 | string &#124; slot | '暂无提示' | false
 fontSize | 提示文本字体大小，单位`px`，优先级高于 `overlayStyle` | number | 14 | false
 color | 提示文本字体颜色，优先级高于 `overlayStyle` | string | '#FFF' | false
 backgroundColor | 提示框背景色，优先级高于 `overlayStyle` | string | 'rgba(0,0,0,.85)' | false
-overlayStyle | 提示框内容区域样式 | CSSProperties | {} | false
+overlayStyle | 提示框内容区域样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 
 ## Events
 

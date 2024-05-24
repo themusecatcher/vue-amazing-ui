@@ -219,7 +219,7 @@ function onNext () {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-images | 轮播图片数组 | Image[] | [] | true
+images | 轮播图片数组 | [Image](#image-type)[] | [] | true
 width | 图片宽度 | number &#124; string | '100%' | false
 height | 图片高度 | number &#124; string  | '100vh' | false
 type | `banner`: 轮播图模式；`carousel`: 走马灯模式；`broadcast`: 信息展播模式 | 'banner' &#124; 'carousel' &#124; 'broadcast' | 'banner' | false

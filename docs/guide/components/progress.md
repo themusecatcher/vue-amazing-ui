@@ -212,7 +212,7 @@ const percent = ref(60)
 -- | -- | -- | -- | --
 width | 进度条总宽度 | number &#124; string | '100%' | false
 percent | 当前进度百分比 | number | 0 | false
-strokeColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变 | string &#124; Gradient | '#1677FF' | false
+strokeColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变 | string &#124; [Gradient](#gradient-type) | '#1677FF' | false
 strokeWidth | 进度条线的宽度，单位`px` | number | 8 | false
 showInfo | 是否显示进度数值或状态图标 | boolean | true | false
 format | 内容的模板函数 | Function &#124; slot | (percent: number) => percent + '%' | false

@@ -318,7 +318,7 @@ function formatter (value: string): string {
 -- | -- | -- | -- | --
 title | 数值的标题 | string | '' | false
 value | 数值的内容 | string &#124; number &#124; slot | '' | false
-valueStyle | 设置数值的样式 | CSSProperties | {} | false
+valueStyle | 设置数值的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 precision | 数值精度 | number | 0 | false
 prefix | 设置数值的前缀 | string &#124; slot | '' | false
 suffix | 设置数值的后缀 | string &#124; slot | '' | false

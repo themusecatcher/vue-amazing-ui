@@ -333,9 +333,9 @@ const columns = ref([
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-columns | 表格列的配置项 | Column[] | [] | false
+columns | 表格列的配置项 | [Column](#column-type)[] | [] | false
 dataSource | 表格数据数组 | any[] | [] | false
-pagination | 分页配置 | Pagination | {} | false
+pagination | 分页配置 | [Pagination](#pagination-type) | {} | false
 showPagination | 是否显示分页 | boolean | true | false
 total | 数据总数 | number | 0 | false
 loading | 是否加载中 | boolean | false | false

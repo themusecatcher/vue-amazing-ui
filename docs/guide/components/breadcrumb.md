@@ -159,7 +159,7 @@ const routes = [
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-routes | 路由数组 | Route[] | [] | true
+routes | 路由数组 | [Route](#route-type)[] | [] | true
 fontSize | 字体大小，单位`px` | number | 14 | false
 height | 面包屑高度 | number | 36 | false
 maxWidth | 文本最大显示宽度，超出后显示省略号，单位`px` | number | 180 | false

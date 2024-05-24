@@ -229,7 +229,7 @@ const images = ref([
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-src | 图像地址 &#124; 图像地址数组 | string &#124; Image[] | '' | true
+src | 图像地址 &#124; 图像地址数组 | string &#124; [Image](#image-type)[] | '' | true
 name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | '' | false
 width | 图像宽度，单位`px` | string &#124; number | 300 | false
 height | 图像高度，单位`px` | string &#124; number | '100%' | false

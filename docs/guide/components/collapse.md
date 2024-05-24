@@ -277,7 +277,7 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-collapseData | 折叠面板数据，可使用 `v-slot` 替换对应索引的 `header` 和 `text` | Collapse[] | [] | true
+collapseData | 折叠面板数据，可使用 `v-slot` 替换对应索引的 `header` 和 `text` | [Collapse](#collapse-type)[] | [] | true
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | number[] &#124; number &#124; string[] &#124; string &#124; null | null | false
 copyable | 是否可复制面板内容 | boolean | false | false
 lang | 面板右上角固定内容，例如标识 language | string &#124; slot | '' | false

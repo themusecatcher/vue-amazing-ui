@@ -180,8 +180,8 @@ future | 是否为未来某时刻；为 `false` 表示相对剩余时间戳 | bo
 format | 格式化倒计时展示，(`Y/YY`：年，`M/MM`：月，`D/DD`：日，`H/HH`：时，`m/mm`：分钟，`s/ss`：秒，`SSS`：毫秒) | string | 'HH:mm:ss' | false
 prefix | 倒计时数值的前缀 | string &#124; slot | '' | false
 suffix | 倒计时数值的后缀 | string &#124; slot | '' | false
-titleStyle | 设置标题的样式 | CSSProperties | {} | false
-valueStyle | 设置数值的样式 | CSSProperties | {} | false
+titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+valueStyle | 设置数值的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 finishedText | 完成后的展示文本 | string &#124; slot | 'Finished' | false
 
 ## Events

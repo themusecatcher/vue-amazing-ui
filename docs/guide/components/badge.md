@@ -387,6 +387,6 @@ showZero | 当数值为 `0` 时，是否展示 `Badge` | boolean | false | false
 dot | 不展示数字，只有一个小红点 | boolean | false | false
 status | 设置 `Badge` 为状态点 | 'success' &#124; 'processing &#124; 'default' &#124; 'error' &#124; 'warning' | undefined | false
 text | 在设置了 `status` 的前提下有效，设置状态点的文本 | string &#124; slot | '' | false
-countStyle | 设置状态点的样式 | CSSProperties | {} | false
+countStyle | 设置状态点的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 title | 设置鼠标放在状态点上时显示的文字 | string | '' | false
 ripple | 是否开启涟漪动画效果 | boolean | true | false

@@ -150,7 +150,7 @@ const images = ref([
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-images | 走马灯图片数组 | Image[] | [] | true
+images | 走马灯图片数组 | [Image](#image-type)[] | [] | true
 interval | 自动滑动轮播间隔，单位`ms` | number | 3000 | false
 width | 走马灯宽度 | number &#124; string | '100%' | false
 height | 走马灯高度 | number &#124; string | '100vh' | false
@@ -160,7 +160,7 @@ navSize | 导航大小，单位`px` | number | 36 | false
 pagination | 是否显示分页 | boolean | true | false
 pageActiveColor | 分页选中颜色 | string | '#1677FF' | false
 pageSize | 分页大小，单位`px` | number | 10 | false
-pageStyle | 分页样式，优先级高于 `pageSize` | CSSProperties | {} | false
+pageStyle | 分页样式，优先级高于 `pageSize` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 disableOnInteraction | 用户操作导航或分页之后，是否禁止自动切换 | boolean | true | false
 pauseOnMouseEnter | 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换 | boolean | true | false
 

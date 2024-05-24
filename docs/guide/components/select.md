@@ -669,7 +669,7 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-options | 选项数据 | Option[] | [] | false
+options | 选项数据 | [Option](#option-type)[] | [] | false
 label | 选项的 `label` 文本字段名 | string | 'label' | false
 value | 选项的 `value` 值字段名 | string | 'value' | false
 placeholder | 选择框默认文字 | string | '请选择' | false

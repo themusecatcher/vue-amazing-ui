@@ -341,7 +341,7 @@ footer | 是否显示底部按钮，默认不显示 | boolean | false | false
 center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true | false
 top | 固定高度水平居中时，距顶部高度，单位`px` | number | 100 | false
 loading | 加载中 | boolean | false | false
-bodyStyle | 对话框 body 样式 | CSSProperties | {} | false
+bodyStyle | 对话框 body 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 visible | 是否可见 | boolean | false | false
 
 ## Events

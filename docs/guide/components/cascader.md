@@ -1089,7 +1089,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-options | 可选项数据源 | Option[] | [] | false
+options | 可选项数据源 | [Option](#option-type)[] | [] | false
 label | 下拉字典项的文本字段名 | string | 'label' | false
 value | 下拉字典项的值字段名 | string | 'value' | false
 children | 下拉字典项的后代字段名 | string | 'children' | false
@@ -1112,7 +1112,7 @@ modelValue <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; s
 label | 选项名 | string | false
 value | 选项值 | string &#124; number | false
 disabled | 是否禁用选项 | boolean | false
-children | 选项 `children` 数组 | Option[] | false
+children | 选项 `children` 数组 | [Option](#option-type)[] | false
 [propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | false
 
 ## Events
