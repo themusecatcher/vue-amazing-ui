@@ -1,0 +1,106 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const loading = ref<boolean>(false)
+
+const showSkeleton = () => {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+  }, 2000)
+}
+const animated = ref(false)
+const block = ref(false)
+const size = ref('default')
+const buttonShape = ref('default')
+const avatarShape = ref('circle')
+const sizeOptions = ref([
+  {
+    label: 'Default',
+    value: 'default'
+  },
+  {
+    label: 'Large',
+    value: 'large'
+  },
+  {
+    label: 'Small',
+    value: 'small'
+  }
+])
+const buttonShapeOptions = ref([
+  {
+    label: 'Default',
+    value: 'default'
+  },
+  {
+    label: 'Round',
+    value: 'round'
+  },
+  {
+    label: 'Circle',
+    value: 'circle'
+  }
+])
+const avatarShapeOptions = ref([
+  {
+    label: 'Square',
+    value: 'square'
+  },
+  {
+    label: 'Circle',
+    value: 'circle'
+  }
+])
+</script>
+<template>
+  <div>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <h2 class="mt30 mb10">基本使用</h2>
+    <Skeleton />
+    <h2 class="mt30 mb10">复杂的组合</h2>
+    <Skeleton avatar :paragraph="{ rows: 4 }" />
+    <h2 class="mt30 mb10">包含子组件</h2>
+    <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
+    <br/>
+    <br/>
+    <Skeleton :loading="loading">
+      <div>
+        <h4>Vue Amazing UI, a design language</h4>
+        <br/>
+        <p>
+          We supply a series of design principles, practical patterns and high quality design
+          resources, to help people create their product prototypes beautifully and efficiently.
+        </p>
+      </div>
+    </Skeleton>
+    <h2 class="mt30 mb10">按钮 / 输入框 / 图像 / 头像</h2>
+    <Flex :gap="32">
+      <Flex vertical :gap="12" width="50%">
+        <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block}" />
+        <Skeleton style="width: 200px" :animated="animated" :input="{ size: size }" />
+        <Skeleton :animated="animated" image />
+        <Skeleton :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
+      </Flex>
+      <Flex vertical :gap="36" width="50%">
+        <Space :size="32">
+          <Space align="center">
+            animated: <Switch v-model:checked="animated" />
+          </Space>
+          <Space align="center">
+            Button Block: <Switch v-model:checked="block" />
+          </Space>
+        </Space>
+        <Space align="center">
+          Size: <Radio :options="sizeOptions" v-model:value="size" />
+        </Space>
+        <Space align="center">
+          Button Shape: <Radio :options="buttonShapeOptions" v-model:value="buttonShape" />
+        </Space>
+        <Space align="center">
+          Avatar Shape: <Radio :options="avatarShapeOptions" v-model:value="avatarShape" />
+        </Space>
+      </Flex>
+    </Flex>
+  </div>
+</template>

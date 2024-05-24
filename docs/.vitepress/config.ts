@@ -243,6 +243,10 @@ export default defineConfig({
               link: '/guide/components/select'
             },
             {
+              text: '骨架屏 Skeleton',
+              link: '/guide/components/skeleton'
+            },
+            {
               text: '滑动输入条 Slider',
               link: '/guide/components/slider'
             },
