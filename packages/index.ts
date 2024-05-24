@@ -52,6 +52,7 @@ import Rate from './rate'
 import Result from './result'
 import Row from './row'
 import Select from './select'
+import Skeleton from './skeleton'
 import Slider from './slider'
 import Space from './space'
 import Spin from './spin'
@@ -112,6 +113,7 @@ const components = [
   Result,
   Row,
   Select,
+  Skeleton,
   Slider,
   Space,
   Spin,
@@ -198,6 +200,7 @@ export {
   Result,
   Row,
   Select,
+  Skeleton,
   Slider,
   Space,
   Spin,

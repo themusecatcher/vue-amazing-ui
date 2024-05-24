@@ -247,6 +247,12 @@ export const routes = [
         component: () => import('@/views/Select.vue')
       },
       {
+        path: '/skeleton',
+        name: 'Skeleton',
+        meta: { title: '骨架屏' },
+        component: () => import('@/views/Skeleton.vue')
+      },
+      {
         path: '/slider',
         name: 'Slider',
         meta: { title: '滑动输入条' },
