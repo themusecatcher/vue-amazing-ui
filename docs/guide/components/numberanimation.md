@@ -255,7 +255,7 @@ prefix | 前缀 | string | '' | false
 suffix | 后缀 | string | '' | false
 separator | 千分位分隔符 | string | ',' | false
 decimal | 小数点字符 | string | '.' | false
-valueStyle | 数值文本样式 | CSSProperties | {} | false
+valueStyle | 数值文本样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 transition | 动画过渡效果 | [TransitionFunc](https://vueuse.org/core/useTransition/#usetransition) | TransitionFunc['easeInOutCubic'] | false
 
 ## Methods

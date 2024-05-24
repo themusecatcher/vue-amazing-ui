@@ -410,7 +410,7 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-options | 单选元素数据 | Option[] | [] | true
+options | 单选元素数据 | [Option](#option-type)[] | [] | true
 disabled | 是否禁用 | boolean | false | false
 vertical | 是否垂直排列 | boolean | false | false
 value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any | null | false

@@ -246,5 +246,5 @@ bordered | 是否有边框 | boolean | true | false
 extra | 卡片右上角的操作区域 | string &#124; slot | '' | false
 size | 卡片的尺寸 | 'default' &#124; 'small' | 'default' | false
 title | 卡片标题 | string &#124; slot | '' | false
-headStyle | 标题区域自定义样式 | CSSProperties | {} | false
-bodyStyle | 内容区域自定义样式 | CSSProperties | {} | false
+headStyle | 标题区域自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+bodyStyle | 内容区域自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false

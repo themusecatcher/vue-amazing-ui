@@ -115,7 +115,7 @@ title | 卡片标题 | string &#124; slot | '' | false
 content | 卡片内容 | string &#124; slot | '' | false
 maxWidth | 卡片内容最大宽度 | string &#124; number | 'auto' | false
 trigger | 卡片触发方式 | 'hover' &#124; 'click' | 'hover' | false
-overlayStyle | 卡片样式 | CSSProperties | {} | false
+overlayStyle | 卡片样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 
 ## Events
 

@@ -599,7 +599,7 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-tabPages | 标签页数组 | Tab[] | [] | true
+tabPages | 标签页数组 | [Tab](#tab-type)[] | [] | true
 centered | 标签是否居中展示 | boolean | false | false
 size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 type | 标签页的样式 |'line' &#124; 'card' | 'line' | false

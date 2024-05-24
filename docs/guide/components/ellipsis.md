@@ -111,7 +111,7 @@ tooltipMaxWidth | 提示框内容最大宽度，单位`px`，默认不设置时�
 tooltipFontSize | 提示文本字体大小，单位`px`，优先级高于 `overlayStyle` | number | 14 | false
 tooltipColor | 提示文本字体颜色，优先级高于 `overlayStyle` | string | '#FFF' | false
 tooltipBackgroundColor | 提示框背景颜色，优先级高于 `overlayStyle` | string | 'rgba(0, 0, 0, .85)' | false
-tooltipOverlayStyle | 提示框内容区域样式 | CSSProperties | {padding: \'8px 12px', textAlign: 'justify'} | false
+tooltipOverlayStyle | 提示框内容区域样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {padding: \'8px 12px', textAlign: 'justify'} | false
 
 ## Events
 
