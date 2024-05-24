@@ -68,9 +68,6 @@ const titleTop = computed(() => {
   }
 })
 const titleWidth = computed(() => {
-  if (props.avatar) {
-    return '50%'
-  }
   if (typeof props.title === 'boolean') {
     return '38%'
   } else {
@@ -85,6 +82,25 @@ const paragraphRows = computed(() => {
     return 3
   }
   return props.paragraph.rows
+})
+const paragraphWidth = computed(() => {
+  if (typeof props.paragraph === 'boolean') {
+    return Array(paragraphRows.value)
+  } else {
+    if (Array.isArray(props.paragraph.width)) {
+      return props.paragraph.width.map((width: number|string) => {
+        if (typeof width === 'number') {
+          return width + 'px'
+        } else {
+          return width
+        }
+      })
+    } else if (typeof props.paragraph.width === 'number') {
+      return Array(paragraphRows.value).fill(props.paragraph.width + 'px')
+    } else {
+      return Array(paragraphRows.value).fill(props.paragraph.width)
+    }
+  }
 })
 </script>
 <template>
@@ -132,7 +148,7 @@ const paragraphRows = computed(() => {
       <div class="m-skeleton-content">
         <h3 class="u-skeleton-title" :style="{ width: titleWidth }"></h3>
         <ul class="u-skeleton-paragraph">
-          <li v-for="n in paragraphRows" :key="n"></li>
+          <li v-for="n in paragraphRows" :key="n" :style="`width: ${paragraphWidth[(n as number) - 1]};`"></li>
         </ul>
       </div>
     </template>
@@ -251,6 +267,7 @@ const paragraphRows = computed(() => {
     width: 100%;
     vertical-align: top;
     .u-skeleton-title {
+      margin: 0;
       height: 16px;
       background: rgba(0, 0, 0, .06);
       border-radius: 4px;
@@ -259,7 +276,6 @@ const paragraphRows = computed(() => {
       margin-top: 24px;
       padding: 0;
       li {
-        width: 100%;
         height: 16px;
         list-style: none;
         background: rgba(0, 0, 0, .06);
@@ -271,9 +287,6 @@ const paragraphRows = computed(() => {
           width: 61%;
         }
       }
-    }
-    .mt28 {
-      margin-top: 28px;
     }
   }
 }
