@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { requestAnimationFrame, cancelAnimationFrame, rafTimeout, cancelRaf } from '../index'
+import { rafTimeout, cancelRaf } from '../index'
 interface Text {
   title: string // 文字标题
   link?: string // 跳转链接
@@ -16,8 +16,10 @@ interface Props {
   backgroundColor?: string // 滚动区域背景色
   amount?: number // 滚动区域展示条数，水平滚动时生效
   gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距，单位px
+  step?: number // 水平滚动动画每次执行时移动距离，单位px，水平滚动时生效
+  interval?: number // 水平滚动动画执行时间间隔，单位ms，水平滚动时生效
   vertical?: boolean // 是否垂直滚动
-  interval?: number // 文字滚动时间间隔，单位ms，垂直滚动时生效
+  verticalInterval?: number // 垂直文字滚动时间间隔，单位ms，垂直滚动时生效
 }
 const props = withDefaults(defineProps<Props>(), {
   text: () => [],
@@ -30,14 +32,11 @@ const props = withDefaults(defineProps<Props>(), {
   backgroundColor:  '#FFF',
   amount: 4,
   gap: 20,
+  step: 1,
+  interval: 10,
   vertical: false,
-  interval: 3000
+  verticalInterval: 3000,
 })
-// horizon
-const left = ref(0)
-const fpsRaf = ref(0) // fps回调标识
-const moveRaf = ref() // 一个 long 整数，请求 ID ，是回调列表中唯一的标识。是个非零值，没别的意义
-const fps = ref(60)
 const textData = computed(() => {
   if (props.single) {
     return [props.scrollText, props.scrollText]
@@ -45,8 +44,15 @@ const textData = computed(() => {
     return [...(props.scrollText as Text[])]
   }
 })
-const len = computed(() => {
-  return textData.value.length
+const textAmount = computed(() => {
+  return textData.value.length || 0
+})
+const totalWidth = computed(() => { // 文字滚动区域总宽度
+  if (typeof props.width === 'number') {
+    return props.width + 'px'
+  } else {
+    return props.width
+  }
 })
 const displayAmount = computed(() => {
   if (props.single) {
@@ -55,116 +61,74 @@ const displayAmount = computed(() => {
     return props.amount
   }
 })
-const step = computed(() => { // 移动参数（120fps: 0.5, 60fps: 1）
-  if (fps.value === 60) {
-    return 1
-  } else {
-    return 60 / fps.value
-  }
-})
+// horizon
+const left = ref(0)
+const moveRaf = ref() // 水平滚动引用，一个 long 整数，请求 ID ，是回调列表中唯一的标识。是个非零值，没别的意义
+const verticalMoveRaf = ref() // 垂直滚动引用
+const horizonRef = ref()
+const distance = ref(0) // 每条滚动文字移动距离
 watch(
-  () => [textData, props.width, props.amount, props.gap, props.vertical, props.interval],
+  () => [textData, props.width, props.amount, props.gap, props.step, props.interval, props.vertical, props.verticalInterval],
   () => {
-    if (props.vertical) {
-      timer.value && cancelRaf(timer.value)
-      onStart() // 启动垂直滚动
-    } else {
-      getFPS()
+    if (!props.vertical) {
+      distance.value = getDistance() // 获取每列文字宽度
     }
+    startMove() // 开始滚动
   },
   {
     deep: true, // 强制转成深层侦听器
     flush: 'post'
   }
 )
-const horizonRef = ref()
-const distance = ref(0) // 每条滚动文字移动距离
-function getFPS () { // 获取屏幕刷新率
-  // @ts-ignore
-  const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
-  var start: any = null
-  function timeElapse (timestamp: number) {
-    /*
-      timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame() 开始去执行回调函数的时刻
-    */
-    if (!start) {
-      if (fpsRaf.value > 10) {
-        start = timestamp
-      }
-      fpsRaf.value = requestAnimationFrame(timeElapse)
-    } else {
-      fps.value = Math.floor(1000 / (timestamp - start))
-      console.log('fps', fps.value)
-      distance.value = getDistance() // 获取每列文字宽度
-      onStart() // 开始滚动
-      return
-    }
+onMounted(() => {
+  if (!props.vertical) {
+    distance.value = getDistance() // 获取每列文字宽度
   }
-  fpsRaf.value = requestAnimationFrame(timeElapse)
-}
+  startMove() // 开始滚动
+})
 function getDistance ():number {
   return parseFloat((horizonRef.value.offsetWidth / displayAmount.value).toFixed(2))
 }
-function moveLeft () {
-  if (left.value >= distance.value) {
-    textData.value.push(textData.value.shift() as Text) // 将第一条数据放到最后
-    left.value = 0
-  } else {
-    left.value += step.value // 每次移动step（px）
-  }
-  moveRaf.value = requestAnimationFrame(moveLeft)
-}
-const totalWidth = computed(() => { // 文字滚动区域总宽度
-  if (typeof props.width === 'number') {
-    return props.width + 'px'
-  } else {
-    return props.width
-  }
-})
-onMounted(() => {
+function startMove () {
   if (props.vertical) {
-    onStart() // 启动垂直滚动
-  } else {
-    getFPS()
-  }
-})
-function onStart () {
-  if (props.vertical) {
-    if (len.value > 1) {
-      startMove() // 开始滚动
+    if (textAmount.value > 1) {
+      verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
+      verticalMove() // 垂直滚动
     }
   } else {
-    if (textData.value.length > displayAmount.value) { // 超过amount条开始滚动
-      moveRaf.value = requestAnimationFrame(moveLeft) // 开始动画
+    if (textAmount.value > displayAmount.value) { // 超过 amount 条开始滚动
+      moveRaf.value && cancelRaf(moveRaf.value)
+      horizonMove() // 水平滚动
     }
   }
 }
-function onStop () {
-  if (props.vertical) {
-    if (len.value > 1) {
-      cancelRaf(timer.value)
+function horizonMove () {
+  moveRaf.value = rafTimeout(() => {
+    if (left.value >= distance.value) {
+      textData.value.push(textData.value.shift() as Text) // 将第一条数据放到最后
+      left.value = 0
+    } else {
+      left.value += props.step // 每次移动step（px）
     }
+  }, props.interval, true)
+}
+function stopMove () { // 暂停动画
+  if (props.vertical) {
+    verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
   } else {
-    cancelAnimationFrame(moveRaf.value) // 暂停动画
+    moveRaf.value && cancelRaf(moveRaf.value)
   }
 }
 const emit = defineEmits(['click'])
-function onClick (title: string) { // 通知父组件点击的标题
-  emit('click', title)
+function onClick (text: Text) { // 通知父组件点击的标题
+  emit('click', text)
 }
-
 // vertical
 const actIndex = ref(0)
-var timer = ref<any>(null)
-function startMove () {
-  timer.value = rafTimeout(() => {
-    if (actIndex.value === len.value - 1) {
-      actIndex.value = 0
-    } else {
-      actIndex.value++
-    }
-    startMove()
-  }, props.interval)
+function verticalMove () {
+  verticalMoveRaf.value = rafTimeout(() => {
+    actIndex.value = (actIndex.value + 1) % textAmount.value
+  }, props.verticalInterval, true)
 }
 </script>
 <template>
@@ -172,8 +136,8 @@ function startMove () {
     v-if="!vertical"
     ref="horizonRef"
     class="m-slider-horizon"
-    @mouseenter="onStop"
-    @mouseleave="onStart"
+    @mouseenter="stopMove"
+    @mouseleave="startMove"
     :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --fontWeight: ${fontWeight}; --color: ${color};`">
     <a
       :style="`will-change: transform; transform: translateX(${-left}px); width: ${distance - gap}px; margin-left: ${gap}px;`"
@@ -182,15 +146,15 @@ function startMove () {
       :title="text.title"
       :href="text.link ? text.link:'javascript:;'"
       :target="text.link ? '_blank':'_self'"
-      @click="onClick(text.title)">
+      @click="onClick(text)">
       {{ text.title || '--' }}
     </a>
   </div>
   <div
     v-else
     class="m-slider-vertical"
-    @mouseenter="onStop"
-    @mouseleave="onStart"
+    @mouseenter="stopMove"
+    @mouseleave="startMove"
     :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --fontWeight: ${fontWeight}; --color: ${color};`">
     <TransitionGroup name="slide">
       <div
@@ -203,7 +167,7 @@ function startMove () {
           :title="text.title"
           :href="text.link ? text.link:'javascript:;'"
           :target="text.link ? '_blank':'_self'"
-          @click="onClick(text.title)">
+          @click="onClick(text)">
           {{ text.title || '--' }}
         </a>
       </div>
