@@ -60,7 +60,14 @@ function onNext () {
 
 <br/>
 
-<Swiper :images="images" :height="480" @change="onChange" />
+<Swiper
+  :images="images"
+  :height="480"
+  :pagination="{
+    dynamicBullets: true,
+    clickable: true
+  }"
+  @change="onChange" />
 
 ::: details Show Code
 
@@ -86,7 +93,14 @@ function onChange () {
 }
 </script>
 <template>
-  <Swiper :images="images" :height="480" @change="onChange" />
+  <Swiper
+    :images="images"
+    :height="480"
+    :pagination="{
+      dynamicBullets: true,
+      clickable: true
+    }"
+    @change="onChange" />
 </template>
 ```
 

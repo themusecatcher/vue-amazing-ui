@@ -22,18 +22,20 @@ const singleText = {
         title: '请用一只玫瑰纪念我...',
         link: 'https://blog.csdn.net/Dandrose?type=blog'
       }
-function onClick (value: string) { // 获取点击的标题
-  console.log('value:', value)
+function onClick (text: any) { // 获取点击的标题
+  console.log('text:', text)
 }
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-    <h2 class="mt30 mb10">水平多条文字滚动</h2>
+    <h2 class="mt30 mb10">水平文字滚动</h2>
     <TextScroll :scrollText="scrollText" :height="50" @click="onClick" />
+    <h2 class="mt30 mb10">自定义滚动速度</h2>
+    <TextScroll :scrollText="scrollText" :height="50" :step="2" @click="onClick" />
     <h2 class="mt30 mb10">单条文字滚动</h2>
     <TextScroll :scrollText="singleText" single :width="300" :height="50" @click="onClick" />
-    <h2 class="mt30 mb10">垂直多条文字滚动</h2>
+    <h2 class="mt30 mb10">垂直文字滚动</h2>
     <TextScroll
       :scrollText="scrollText"
       vertical
