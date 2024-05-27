@@ -22,6 +22,7 @@ interface Props {
   pageStyle?: CSSProperties // 分页样式，优先级高于pageSize
   disableOnInteraction?: boolean // 用户操作导航或分页之后，是否禁止自动切换，默认为true：停止
   pauseOnMouseEnter?: boolean // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
+  move?: number // 滑动动画移动参数，数值越小，滑动动画越快
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
@@ -36,7 +37,8 @@ const props = withDefaults(defineProps<Props>(), {
   pageSize: 10,
   pageStyle: () => ({}),
   disableOnInteraction: true,
-  pauseOnMouseEnter:  true
+  pauseOnMouseEnter:  true,
+  move: 24
 })
 const toLeft = ref(true) // 左滑标志，默认左滑
 const left = ref(0) // 滑动偏移值
@@ -68,15 +70,6 @@ const imageCount = computed(() => { // 图片数量
   return props.images.length
 })
 const complete = ref(Array(imageCount.value).fill(false)) // 图片是否加载完成
-const fpsRaf = ref() // fps回调标识
-const fps = ref(60)
-const step = computed(() => { // 移动参数（120fps: 24, 60fps: 12）
-  if (fps.value === 60) {
-    return 12
-  } else {
-    return 12 * (fps.value / 60)
-  }
-})
 function onComplete (index: number) { // 图片加载完成
   complete.value[index] = true
 }
@@ -88,25 +81,6 @@ watch(
     }
   }
 )
-function getFPS () { // 获取屏幕刷新率
-  var start: any = null
-  function timeElapse (timestamp: number) {
-    /*
-      timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame() 开始去执行回调函数的时刻
-    */
-    // console.log('timestamp:', timestamp)
-    if (!start) {
-      if (fpsRaf.value > 10) {
-        start = timestamp
-      }
-      fpsRaf.value = requestAnimationFrame(timeElapse)
-    } else {
-      fps.value = Math.floor(1000 / (timestamp - start))
-      console.log('fps', fps.value)
-    }
-  }
-  fpsRaf.value = requestAnimationFrame(timeElapse)
-}
 const imageWidth = ref() // 图片宽度
 const imageHeight = ref() // 图片高度
 function getImageSize () {
@@ -125,7 +99,6 @@ function keyboardSwitch (e: KeyboardEvent) {
   }
 }
 onMounted(() => {
-  getFPS() // 获取浏览器的刷新率
   getImageSize() // 获取每张图片大小
   // 监听键盘切换事件
   document.addEventListener('keydown', keyboardSwitch)
@@ -203,7 +176,7 @@ function autoMoveLeftEffect () {
   if (left.value >= targetMove.value) {
     onAutoSlide() // 自动间隔切换下一张
   } else {
-    var move = Math.ceil((targetMove.value - left.value) / step.value) // 越来越慢的滑动过程
+    var move = Math.ceil((targetMove.value - left.value) / props.move) // 越来越慢的滑动过程
     left.value += move
     moveRaf.value = requestAnimationFrame(autoMoveLeftEffect)
   }
@@ -217,6 +190,7 @@ function autoMoveLeft (target: number) { // 自动切换，向左滑动效果
 }
 function moveLeftEffect () {
   if (left.value >= targetMove.value) {
+    left.value = targetMove.value
     if (switched.value) { // 跳转切换，完成后自动滑动
       switched.value = false
       if (!props.disableOnInteraction && !props.pauseOnMouseEnter) {
@@ -224,7 +198,7 @@ function moveLeftEffect () {
       }
     }
   } else {
-    var move = Math.ceil((targetMove.value - left.value) / step.value) // 越来越慢的滑动过程
+    var move = Math.ceil((targetMove.value - left.value) / props.move) // 越来越慢的滑动过程
     left.value += move
     moveRaf.value = requestAnimationFrame(moveLeftEffect)
   }
@@ -245,7 +219,7 @@ function moveRightEffect () {
       }
     }
   } else {
-    var move = Math.floor((targetMove.value - left.value) / step.value) // 越来越慢的滑动过程
+    var move = Math.floor((targetMove.value - left.value) / props.move) // 越来越慢的滑动过程
     left.value += move
     moveRaf.value = requestAnimationFrame(moveRightEffect)
   }

@@ -163,6 +163,7 @@ pageSize | 分页大小，单位`px` | number | 10 | false
 pageStyle | 分页样式，优先级高于 `pageSize` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 disableOnInteraction | 用户操作导航或分页之后，是否禁止自动切换 | boolean | true | false
 pauseOnMouseEnter | 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换 | boolean | true | false
+step | 滑动动画移动参数，数值越小，滑动动画越快 | number | 24 | false
 
 ## Image Type
 
