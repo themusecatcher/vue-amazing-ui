@@ -46,7 +46,7 @@ const images = ref([
 
 <br>
 
-<Carousel :images="images" :height="480" />
+<Carousel :images="images" :height="420" />
 
 ::: details Show Code
 
@@ -83,7 +83,7 @@ const images = ref([
 ])
 </script>
 <template>
-  <Carousel :images="images" :height="480" />
+  <Carousel :images="images" :height="420" />
 </template>
 ```
 
@@ -93,7 +93,7 @@ const images = ref([
 
 <Carousel
   :images="images"
-  :height="480"
+  :height="420"
   nav-color="#13C2C2"
   :nav-size="48"
   page-active-color="#13C2C2"
@@ -136,7 +136,7 @@ const images = ref([
 <template>
   <Carousel
     :images="images"
-    :height="480"
+    :height="420"
     nav-color="#13C2C2"
     :nav-size="48"
     page-active-color="#13C2C2"
