@@ -161,9 +161,8 @@ pagination | 是否显示分页 | boolean | true | false
 pageActiveColor | 分页选中颜色 | string | '#1677FF' | false
 pageSize | 分页大小，单位`px` | number | 10 | false
 pageStyle | 分页样式，优先级高于 `pageSize` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-disableOnInteraction | 用户操作导航或分页之后，是否禁止自动切换 | boolean | true | false
-pauseOnMouseEnter | 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换 | boolean | true | false
-move | 滑动动画移动参数，数值越小，滑动动画越快 | number | 24 | false
+animationDuration | 滑动动画持续时长，单位`ms` | number | 1000 | false
+animationFunction | 滑动动画函数，参考 [`<easing-function>`](https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function#easing_functions) | number[] | [0.65, 0, 0.35, 1] | false
 
 ## Image Type
 

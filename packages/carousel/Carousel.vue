@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf, requestAnimationFrame, cancelAnimationFrame } from '../index'
-import { useTransition, TransitionPresets } from '@vueuse/core'
+import { rafTimeout, cancelRaf, requestAnimationFrame } from '../index'
+import { useTransition } from '@vueuse/core'
 import Spin from '../spin'
 interface Image {
   title?: string // 图片名称
@@ -21,10 +21,8 @@ interface Props {
   pageActiveColor?: string // 分页选中颜色
   pageSize?: number // 分页大小
   pageStyle?: CSSProperties // 分页样式，优先级高于pageSize
-  disableOnInteraction?: boolean // 用户操作导航或分页之后，是否禁止自动切换，默认为true：停止
-  pauseOnMouseEnter?: boolean // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
   animationDuration?: number // 滑动动画持续时长，单位ms
-  animationFunction?: number[] // 滑动动画函数
+  animationFunction?: number[] // 滑动动画函数，参考 <easing-function> 写法：https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function#easing_functions
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
@@ -38,8 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
   pageActiveColor: '#1677FF',
   pageSize: 10,
   pageStyle: () => ({}),
-  disableOnInteraction: true,
-  pauseOnMouseEnter:  true,
   animationDuration: 1000,
   animationFunction: () => [0.65, 0, 0.35, 1]
 })
@@ -63,30 +59,27 @@ const totalWidth = computed(() => { // 容器宽度：(图片数组长度+1) * �
 const imageCount = computed(() => { // 图片数量
   return props.images.length
 })
-const toLeft = ref(true) // 左滑标志，默认左滑
 const left = ref(0) // 滑动偏移值
-const transition = ref(false) // 暂停时为完成滑动的过渡标志
 const slideTimer = ref() // 轮播切换定时器
-const naviPrevent = ref(false) // 在滑动切换过程中，禁用导航切换
-const moveRaf = ref() // 滑动效果回调标识
-const targetMove = ref() // 目标移动位置
-const switched = ref(false) // 是否在进行跳转切换，用于区别箭头或自动切换（false）和跳转切换（true）
+const stopCarousel = ref(false) // 鼠标悬浮时，停止切换标志
+const switchPrevent = ref(false) // 在滑动切换过程中，禁用其他所有切换操作
+const targetPosition = ref() // 目标移动位置
 const carousel = ref() // DOM引用
 const activeSwitcher = ref(1) // 当前展示图片标识
+const imageWidth = ref() // 图片宽度
+const imageHeight = ref() // 图片高度
 const complete = ref(Array(imageCount.value).fill(false)) // 图片是否加载完成
-function onComplete (index: number) { // 图片加载完成
-  complete.value[index] = true
-}
 watch(
   () => complete.value[0],
   (to) => {
-    if (to) {
-      onStart()
+    if (to && imageCount.value > 1) {
+      onAutoSlide() // 自动滑动轮播
     }
   }
 )
-const imageWidth = ref() // 图片宽度
-const imageHeight = ref() // 图片高度
+function onComplete (index: number) { // 图片加载完成
+  complete.value[index] = true
+}
 function getImageSize () {
   imageWidth.value = carousel.value.offsetWidth
   imageHeight.value = carousel.value.offsetHeight
@@ -113,170 +106,107 @@ onUnmounted(() => {
 })
 function onStart () {
   if (imageCount.value > 1 && complete.value[0]) { // 超过一条时滑动
-    toLeft.value = true // 重置左滑标志
-    transition.value = false
+    stopCarousel.value = false
     onAutoSlide() // 自动滑动轮播
-    console.log('Carousel start')
+    console.log('Carousel Start')
   }
 }
 function onStop () {
-  cancelRaf(slideTimer.value)
-  slideTimer.value = null
-  if (toLeft.value) { // 左滑箭头移出时
-    onStopLeft()
-  } else {
-    onStopRight()
-  }
-  console.log('Carousel stop')
-}
-function onStopLeft () { // 停止往左滑动
-  cancelAnimationFrame(moveRaf.value)
-  transition.value = true
-  left.value = Math.ceil(left.value / imageWidth.value) * imageWidth.value // ceil：向上取整，floor：向下取整
-}
-function onStopRight () { // 停止往右滑动
-  cancelAnimationFrame(moveRaf.value)
-  transition.value = true
-  left.value = Math.floor(left.value / imageWidth.value) * imageWidth.value // ceil：向上取整，floor：向下取整
+  slideTimer.value && cancelRaf(slideTimer.value)
+  stopCarousel.value = true
+  console.log('Carousel Stop')
 }
 function onAutoSlide () {
-  cancelRaf(slideTimer.value)
-  slideTimer.value = rafTimeout(() => {
-    naviPrevent.value = true // 禁用导航切换
-    const target = left.value % (imageCount.value * imageWidth.value) + imageWidth.value
-    activeSwitcher.value = activeSwitcher.value % imageCount.value + 1
-    autoMoveLeft(target)
-  }, props.interval)
-}
-function goLeft (target: number) { // 点击右箭头，往左滑动
-  if (toLeft.value) {
-    onStopLeft()
-  } else {
-    onStopRight()
-    toLeft.value = true // 向左滑动
+  if (!stopCarousel.value) {
+    slideTimer.value = rafTimeout(() => {
+      switchPrevent.value = true // 禁用导航切换
+      const target = left.value % (imageCount.value * imageWidth.value) + imageWidth.value
+      activeSwitcher.value = activeSwitcher.value % imageCount.value + 1
+      moveLeft(target)
+    }, props.interval)
   }
-  transition.value = false
-  moveLeft(target)
-}
-function goRight (target: number) { // 点击左箭头，往右滑动
-  if (toLeft.value) {
-    onStopLeft()
-    toLeft.value = false // 非向左滑动
-  } else {
-    onStopRight()
-  }
-  transition.value = false
-  moveRight(target)
 }
 function onLeftArrow () {
-  if (!naviPrevent.value) {
-    naviPrevent.value = true
+  if (!switchPrevent.value) {
+    switchPrevent.value = true
     slideTimer && cancelRaf(slideTimer.value)
     const target = (activeSwitcher.value + imageCount.value - 2) % imageCount.value * imageWidth.value
     activeSwitcher.value = (activeSwitcher.value - 1 > 0) ? activeSwitcher.value - 1 : imageCount.value
-    goRight(target)
+    moveRight(target)
   }
 }
 function onRightArrow () {
-  if (!naviPrevent.value) {
-    naviPrevent.value = true
+  if (!switchPrevent.value) {
+    switchPrevent.value = true
     slideTimer && cancelRaf(slideTimer.value)
     const target = activeSwitcher.value * imageWidth.value
     activeSwitcher.value = activeSwitcher.value % imageCount.value + 1
-    goLeft(target)
+    moveLeft(target)
   }
 }
 const baseNumber = ref(0)
-const originNumber = ref(0)
-const distance = ref(0)
+const originNumber = ref(0) // 初始位置
+const distance = ref(0) // 滑动距离
+// @ts-ignore
 const cubicBezierNumber = useTransition(baseNumber, {
   duration: props.animationDuration, // 过渡动画时长
-  transition: TransitionPresets.easeInOutCubic // 过渡动画函数
+  transition: props.animationFunction // 过渡动画函数
 })
-function toggleNumber () {
+function toggleNumber (target: number) {
+  targetPosition.value = target
   baseNumber.value = baseNumber.value ? 0 : 1
   originNumber.value = left.value // 初始位置
-  distance.value = targetMove.value - originNumber.value // 总距离
+  distance.value = target - originNumber.value // 总距离
 }
-function moveEffect () {
+function moveEffect () { // 滑动效果函数
   if (baseNumber.value) {
     left.value = originNumber.value + distance.value * cubicBezierNumber.value
   } else {
     left.value = originNumber.value + distance.value * (1 - cubicBezierNumber.value)
   }
 }
-function autoMoveLeftEffect () {
-  if (left.value >= targetMove.value) {
-    naviPrevent.value = false
+function moveLeftEffect () {
+  if (left.value >= targetPosition.value) {
+    switchPrevent.value = false
     onAutoSlide() // 自动间隔切换下一张
   } else {
     moveEffect()
-    moveRaf.value = requestAnimationFrame(autoMoveLeftEffect)
-  }
-}
-function autoMoveLeft (target: number) { // 自动切换，向左滑动效果
-  if (left.value === imageCount.value * imageWidth.value) { // 最后一张时，重置left
-    left.value = 0
-  }
-  targetMove.value = target
-  toggleNumber()
-  moveRaf.value = requestAnimationFrame(autoMoveLeftEffect)
-}
-function moveLeftEffect () {
-  if (left.value >= targetMove.value) {
-    naviPrevent.value = false
-    if (switched.value) { // 跳转切换，完成后自动滑动
-      switched.value = false
-      if (!props.disableOnInteraction && !props.pauseOnMouseEnter) {
-        onStart()
-      }
-    }
-  } else {
-    moveEffect()
-    moveRaf.value = requestAnimationFrame(moveLeftEffect)
+    requestAnimationFrame(moveLeftEffect)
   }
 }
 function moveLeft (target: number) { // 箭头切换或跳转切换，向左滑动效果
   if (left.value === imageCount.value * imageWidth.value) { // 最后一张时，重置left
     left.value = 0
   }
-  targetMove.value = target
-  toggleNumber()
-  moveRaf.value = requestAnimationFrame(moveLeftEffect)
+  toggleNumber(target)
+  requestAnimationFrame(moveLeftEffect)
 }
 function moveRightEffect () {
-  if (left.value <= targetMove.value) {
-    naviPrevent.value = false
-    if (switched.value) { // 跳转切换，完成后自动滑动
-      switched.value = false
-      if (!props.disableOnInteraction && !props.pauseOnMouseEnter) {
-        onStart()
-      }
-    }
+  if (left.value <= targetPosition.value) {
+    switchPrevent.value = false
   } else {
     moveEffect()
-    moveRaf.value = requestAnimationFrame(moveRightEffect)
+    requestAnimationFrame(moveRightEffect)
   }
 }
 function moveRight (target: number) { // 箭头切换或跳转切换，向右滑动效果
   if (left.value === 0) { // 第一张时，重置left
     left.value = imageCount.value * imageWidth.value
   }
-  targetMove.value = target
-  toggleNumber()
-  moveRaf.value = requestAnimationFrame(moveRightEffect)
+  toggleNumber(target)
+  requestAnimationFrame(moveRightEffect)
 }
 function onSwitch (n: number) { // 分页切换图片
-  if (activeSwitcher.value !== n) {
-    switched.value = true // 跳转切换标志
+  if (!switchPrevent.value && activeSwitcher.value !== n) {
+    switchPrevent.value = true
     const target = (n - 1) * imageWidth.value
     if (n < activeSwitcher.value) { // 往右滑动
       activeSwitcher.value = n
-      goRight(target)
+      moveRight(target)
     }
     if (n > activeSwitcher.value) { // 往左滑动
       activeSwitcher.value = n
-      goLeft(target)
+      moveLeft(target)
     }
   }
 }
@@ -286,9 +216,9 @@ function onSwitch (n: number) { // 分页切换图片
     class="m-slider"
     ref="carousel"
     :style="`--navColor: ${navColor}; --pageActiveColor: ${pageActiveColor}; width: ${carouselWidth}; height: ${carouselHeight};`"
-    @mouseenter="pauseOnMouseEnter ? onStop() : () => false"
-    @mouseleave="pauseOnMouseEnter ? onStart() : () => false">
-    <div :class="{'transition': transition}" :style="`width: ${totalWidth}px; height: 100%; will-change: transform; transform: translateX(${-left}px);`">
+    @mouseenter="onStop"
+    @mouseleave="onStart">
+    <div :style="`width: ${totalWidth}px; height: 100%; will-change: transform; transform: translateX(${-left}px);`">
       <div class="m-image" v-for="(image, index) in images" :key="index">
         <Spin :spinning="!complete[index]" indicator="dynamic-circle">
           <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">

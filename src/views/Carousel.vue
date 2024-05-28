@@ -57,9 +57,7 @@ const images = ref([
     <Carousel
       :images="images"
       :width="800"
-      :height="450"
-      :disableOnInteraction="false"
-      :pauseOnMouseEnter="false" />
+      :height="450" />
     <h2 class="mt30 mb10">自定义导航、分页样式</h2>
     <Carousel
       :images="images"
