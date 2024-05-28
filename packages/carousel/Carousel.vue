@@ -2,6 +2,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, requestAnimationFrame, cancelAnimationFrame } from '../index'
+import { useTransition, TransitionPresets } from '@vueuse/core'
 import Spin from '../spin'
 interface Image {
   title?: string // 图片名称
@@ -22,7 +23,8 @@ interface Props {
   pageStyle?: CSSProperties // 分页样式，优先级高于pageSize
   disableOnInteraction?: boolean // 用户操作导航或分页之后，是否禁止自动切换，默认为true：停止
   pauseOnMouseEnter?: boolean // 鼠标悬浮时暂停自动切换，鼠标离开时恢复自动切换，默认true
-  move?: number // 滑动动画移动参数，数值越小，滑动动画越快
+  animationDuration?: number // 滑动动画持续时长，单位ms
+  animationFunction?: number[] // 滑动动画函数
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
@@ -38,7 +40,8 @@ const props = withDefaults(defineProps<Props>(), {
   pageStyle: () => ({}),
   disableOnInteraction: true,
   pauseOnMouseEnter:  true,
-  move: 24
+  animationDuration: 1000,
+  animationFunction: () => [0.65, 0, 0.35, 1]
 })
 const carouselWidth = computed(() => { // 走马灯区域宽度
   if (typeof props.width === 'number') {
@@ -137,7 +140,9 @@ function onStopRight () { // 停止往右滑动
   left.value = Math.floor(left.value / imageWidth.value) * imageWidth.value // ceil：向上取整，floor：向下取整
 }
 function onAutoSlide () {
+  cancelRaf(slideTimer.value)
   slideTimer.value = rafTimeout(() => {
+    naviPrevent.value = true // 禁用导航切换
     const target = left.value % (imageCount.value * imageWidth.value) + imageWidth.value
     activeSwitcher.value = activeSwitcher.value % imageCount.value + 1
     autoMoveLeft(target)
@@ -166,6 +171,7 @@ function goRight (target: number) { // 点击左箭头，往右滑动
 function onLeftArrow () {
   if (!naviPrevent.value) {
     naviPrevent.value = true
+    slideTimer && cancelRaf(slideTimer.value)
     const target = (activeSwitcher.value + imageCount.value - 2) % imageCount.value * imageWidth.value
     activeSwitcher.value = (activeSwitcher.value - 1 > 0) ? activeSwitcher.value - 1 : imageCount.value
     goRight(target)
@@ -174,29 +180,37 @@ function onLeftArrow () {
 function onRightArrow () {
   if (!naviPrevent.value) {
     naviPrevent.value = true
+    slideTimer && cancelRaf(slideTimer.value)
     const target = activeSwitcher.value * imageWidth.value
     activeSwitcher.value = activeSwitcher.value % imageCount.value + 1
     goLeft(target)
   }
 }
-function moveEffect (direction: 'left'|'right') {
-  const distance = targetMove.value - left.value // 总距离
-  let step = 0
-  if (direction === 'left') { // 向左滑动
-    step = Math.ceil(distance / props.move) // 越来越慢的滑动过程
+const baseNumber = ref(0)
+const originNumber = ref(0)
+const distance = ref(0)
+const cubicBezierNumber = useTransition(baseNumber, {
+  duration: props.animationDuration, // 过渡动画时长
+  transition: TransitionPresets.easeInOutCubic // 过渡动画函数
+})
+function toggleNumber () {
+  baseNumber.value = baseNumber.value ? 0 : 1
+  originNumber.value = left.value // 初始位置
+  distance.value = targetMove.value - originNumber.value // 总距离
+}
+function moveEffect () {
+  if (baseNumber.value) {
+    left.value = originNumber.value + distance.value * cubicBezierNumber.value
+  } else {
+    left.value = originNumber.value + distance.value * (1 - cubicBezierNumber.value)
   }
-  if (direction === 'right') { // 向右滑动
-    step = Math.floor(distance / props.move) // 越来越慢的滑动过程
-  }
-  left.value += step
 }
 function autoMoveLeftEffect () {
   if (left.value >= targetMove.value) {
-    left.value = targetMove.value
     naviPrevent.value = false
     onAutoSlide() // 自动间隔切换下一张
   } else {
-    moveEffect('left')
+    moveEffect()
     moveRaf.value = requestAnimationFrame(autoMoveLeftEffect)
   }
 }
@@ -205,11 +219,11 @@ function autoMoveLeft (target: number) { // 自动切换，向左滑动效果
     left.value = 0
   }
   targetMove.value = target
+  toggleNumber()
   moveRaf.value = requestAnimationFrame(autoMoveLeftEffect)
 }
 function moveLeftEffect () {
   if (left.value >= targetMove.value) {
-    left.value = targetMove.value
     naviPrevent.value = false
     if (switched.value) { // 跳转切换，完成后自动滑动
       switched.value = false
@@ -218,7 +232,7 @@ function moveLeftEffect () {
       }
     }
   } else {
-    moveEffect('left')
+    moveEffect()
     moveRaf.value = requestAnimationFrame(moveLeftEffect)
   }
 }
@@ -227,11 +241,11 @@ function moveLeft (target: number) { // 箭头切换或跳转切换，向左滑�
     left.value = 0
   }
   targetMove.value = target
+  toggleNumber()
   moveRaf.value = requestAnimationFrame(moveLeftEffect)
 }
 function moveRightEffect () {
   if (left.value <= targetMove.value) {
-    left.value = targetMove.value
     naviPrevent.value = false
     if (switched.value) { // 跳转切换，完成后自动滑动
       switched.value = false
@@ -240,7 +254,7 @@ function moveRightEffect () {
       }
     }
   } else {
-    moveEffect('right')
+    moveEffect()
     moveRaf.value = requestAnimationFrame(moveRightEffect)
   }
 }
@@ -249,6 +263,7 @@ function moveRight (target: number) { // 箭头切换或跳转切换，向右滑
     left.value = imageCount.value * imageWidth.value
   }
   targetMove.value = target
+  toggleNumber()
   moveRaf.value = requestAnimationFrame(moveRightEffect)
 }
 function onSwitch (n: number) { // 分页切换图片
