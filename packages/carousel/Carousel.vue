@@ -40,15 +40,6 @@ const props = withDefaults(defineProps<Props>(), {
   pauseOnMouseEnter:  true,
   move: 24
 })
-const toLeft = ref(true) // 左滑标志，默认左滑
-const left = ref(0) // 滑动偏移值
-const transition = ref(false) // 暂停时为完成滑动的过渡标志
-const slideTimer = ref() // 轮播切换定时器
-const moveRaf = ref() // 滑动效果回调标识
-const targetMove = ref() // 目标移动位置
-const switched = ref(false) // 是否在进行跳转切换，用于区别箭头或自动切换（false）和跳转切换（true）
-const carousel = ref() // DOM引用
-const activeSwitcher = ref(1) // 当前展示图片标识
 const carouselWidth = computed(() => { // 走马灯区域宽度
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -69,6 +60,16 @@ const totalWidth = computed(() => { // 容器宽度：(图片数组长度+1) * �
 const imageCount = computed(() => { // 图片数量
   return props.images.length
 })
+const toLeft = ref(true) // 左滑标志，默认左滑
+const left = ref(0) // 滑动偏移值
+const transition = ref(false) // 暂停时为完成滑动的过渡标志
+const slideTimer = ref() // 轮播切换定时器
+const naviPrevent = ref(false) // 在滑动切换过程中，禁用导航切换
+const moveRaf = ref() // 滑动效果回调标识
+const targetMove = ref() // 目标移动位置
+const switched = ref(false) // 是否在进行跳转切换，用于区别箭头或自动切换（false）和跳转切换（true）
+const carousel = ref() // DOM引用
+const activeSwitcher = ref(1) // 当前展示图片标识
 const complete = ref(Array(imageCount.value).fill(false)) // 图片是否加载完成
 function onComplete (index: number) { // 图片加载完成
   complete.value[index] = true
@@ -123,7 +124,7 @@ function onStop () {
   } else {
     onStopRight()
   }
-  console.log('imageSlider stop')
+  console.log('Carousel stop')
 }
 function onStopLeft () { // 停止往左滑动
   cancelAnimationFrame(moveRaf.value)
@@ -163,21 +164,39 @@ function goRight (target: number) { // 点击左箭头，往右滑动
   moveRight(target)
 }
 function onLeftArrow () {
-  const target = (activeSwitcher.value + imageCount.value - 2) % imageCount.value * imageWidth.value
-  activeSwitcher.value = (activeSwitcher.value - 1 > 0) ? activeSwitcher.value - 1 : imageCount.value
-  goRight(target)
+  if (!naviPrevent.value) {
+    naviPrevent.value = true
+    const target = (activeSwitcher.value + imageCount.value - 2) % imageCount.value * imageWidth.value
+    activeSwitcher.value = (activeSwitcher.value - 1 > 0) ? activeSwitcher.value - 1 : imageCount.value
+    goRight(target)
+  }
 }
 function onRightArrow () {
-  const target = activeSwitcher.value * imageWidth.value
-  activeSwitcher.value = activeSwitcher.value % imageCount.value + 1
-  goLeft(target)
+  if (!naviPrevent.value) {
+    naviPrevent.value = true
+    const target = activeSwitcher.value * imageWidth.value
+    activeSwitcher.value = activeSwitcher.value % imageCount.value + 1
+    goLeft(target)
+  }
+}
+function moveEffect (direction: 'left'|'right') {
+  const distance = targetMove.value - left.value // 总距离
+  let step = 0
+  if (direction === 'left') { // 向左滑动
+    step = Math.ceil(distance / props.move) // 越来越慢的滑动过程
+  }
+  if (direction === 'right') { // 向右滑动
+    step = Math.floor(distance / props.move) // 越来越慢的滑动过程
+  }
+  left.value += step
 }
 function autoMoveLeftEffect () {
   if (left.value >= targetMove.value) {
+    left.value = targetMove.value
+    naviPrevent.value = false
     onAutoSlide() // 自动间隔切换下一张
   } else {
-    var move = Math.ceil((targetMove.value - left.value) / props.move) // 越来越慢的滑动过程
-    left.value += move
+    moveEffect('left')
     moveRaf.value = requestAnimationFrame(autoMoveLeftEffect)
   }
 }
@@ -191,6 +210,7 @@ function autoMoveLeft (target: number) { // 自动切换，向左滑动效果
 function moveLeftEffect () {
   if (left.value >= targetMove.value) {
     left.value = targetMove.value
+    naviPrevent.value = false
     if (switched.value) { // 跳转切换，完成后自动滑动
       switched.value = false
       if (!props.disableOnInteraction && !props.pauseOnMouseEnter) {
@@ -198,8 +218,7 @@ function moveLeftEffect () {
       }
     }
   } else {
-    var move = Math.ceil((targetMove.value - left.value) / props.move) // 越来越慢的滑动过程
-    left.value += move
+    moveEffect('left')
     moveRaf.value = requestAnimationFrame(moveLeftEffect)
   }
 }
@@ -212,6 +231,8 @@ function moveLeft (target: number) { // 箭头切换或跳转切换，向左滑�
 }
 function moveRightEffect () {
   if (left.value <= targetMove.value) {
+    left.value = targetMove.value
+    naviPrevent.value = false
     if (switched.value) { // 跳转切换，完成后自动滑动
       switched.value = false
       if (!props.disableOnInteraction && !props.pauseOnMouseEnter) {
@@ -219,8 +240,7 @@ function moveRightEffect () {
       }
     }
   } else {
-    var move = Math.floor((targetMove.value - left.value) / props.move) // 越来越慢的滑动过程
-    left.value += move
+    moveEffect('right')
     moveRaf.value = requestAnimationFrame(moveRightEffect)
   }
 }
