@@ -58,7 +58,7 @@ const images = ref([
       :images="images"
       :width="800"
       :height="450" />
-    <h2 class="mt30 mb10">自定义导航、分页样式</h2>
+    <h2 class="mt30 mb10">自定义样式</h2>
     <Carousel
       :images="images"
       :width="800"
@@ -66,6 +66,7 @@ const images = ref([
       nav-color="#13C2C2"
       :nav-size="48"
       page-active-color="#13C2C2"
-      :page-style="{ width: '24px', height: '5px', borderRadius: '5px', backgroundColor: '#FFF' }" />
+      :page-style="{ width: '24px', height: '5px', borderRadius: '5px', backgroundColor: '#FFF' }"
+      :spin-style="{ indicator: 'dot', color: '#13C2C2' }" />
   </div>
 </template>

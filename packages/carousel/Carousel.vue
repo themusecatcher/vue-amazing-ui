@@ -9,6 +9,12 @@ interface Image {
   src: string // 图片地址
   link?: string // 图片跳转链接
 }
+interface SpinProperties {
+  size?: 'small'|'default'|'large' // 尺寸大小
+  tip?: string // 描述文案
+  indicator?: 'dot'|'quarter-circle'|'three-quarters-circle'|'dynamic-circle' // 加载指示符
+  color?: string // 主题颜色
+}
 interface Props {
   images: Image[] // 走马灯图片数组
   interval?: number // 自动滑动轮播间隔，单位ms
@@ -21,6 +27,7 @@ interface Props {
   pageActiveColor?: string // 分页选中颜色
   pageSize?: number // 分页大小
   pageStyle?: CSSProperties // 分页样式，优先级高于pageSize
+  spinStyle?: SpinProperties // 加载样式配置
   animationDuration?: number // 滑动动画持续时长，单位ms
   animationFunction?: number[] // 滑动动画函数，参考 <easing-function> 写法：https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function#easing_functions
 }
@@ -36,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   pageActiveColor: '#1677FF',
   pageSize: 10,
   pageStyle: () => ({}),
+  spinStyle: () => ({}),
   animationDuration: 1000,
   animationFunction: () => [0.65, 0, 0.35, 1]
 })
@@ -220,14 +228,14 @@ function onSwitch (n: number) { // 分页切换图片
     @mouseleave="onStart">
     <div :style="`width: ${totalWidth}px; height: 100%; will-change: transform; transform: translateX(${-left}px);`">
       <div class="m-image" v-for="(image, index) in images" :key="index">
-        <Spin :spinning="!complete[index]" indicator="dynamic-circle">
+        <Spin :spinning="!complete[index]" indicator="dynamic-circle" v-bind="spinStyle">
           <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
             <img @load="onComplete(index)" :src="image.src" :key="image.src" :alt="image.title" class="u-img" :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"/>
           </a>
         </Spin>
       </div>
       <div class="m-image" v-if="imageCount">
-        <Spin :spinning="!complete[0]" indicator="dynamic-circle">
+        <Spin :spinning="!complete[0]" indicator="dynamic-circle" v-bind="spinStyle">
           <a :href="images[0].link ? images[0].link:'javascript:;'" :target="images[0].link ? '_blank':'_self'" class="m-link">
             <img @load="onComplete(0)" :src="images[0].src" :key="images[0].src" :alt="images[0].title" class="u-img"  :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"/>
           </a>
