@@ -112,7 +112,7 @@ function onStart () {
     toLeft.value = true // 重置左滑标志
     transition.value = false
     onAutoSlide() // 自动滑动轮播
-    console.log('imageSlider start')
+    console.log('Carousel start')
   }
 }
 function onStop () {
