@@ -89,7 +89,7 @@ const images = ref([
 
 :::
 
-## 自定义导航、分页样式
+## 自定义样式
 
 <Carousel
   :images="images"
@@ -97,7 +97,8 @@ const images = ref([
   nav-color="#13C2C2"
   :nav-size="48"
   page-active-color="#13C2C2"
-  :page-style="{ width: '24px', height: '5px', borderRadius: '5px', backgroundColor: '#FFF' }" />
+  :page-style="{ width: '24px', height: '5px', borderRadius: '5px', backgroundColor: '#FFF' }"
+  :spin-style="{ indicator: 'dot', color: '#13C2C2' }" />
 
 ::: details Show Code
 
@@ -140,7 +141,8 @@ const images = ref([
     nav-color="#13C2C2"
     :nav-size="48"
     page-active-color="#13C2C2"
-    :page-style="{ width: '24px', height: '5px', borderRadius: '5px', backgroundColor: '#FFF' }" />
+    :page-style="{ width: '24px', height: '5px', borderRadius: '5px', backgroundColor: '#FFF' }"
+    :spin-style="{ indicator: 'dot', color: '#13C2C2' }" />
 </template>
 ```
 
@@ -161,6 +163,7 @@ pagination | 是否显示分页 | boolean | true | false
 pageActiveColor | 分页选中颜色 | string | '#1677FF' | false
 pageSize | 分页大小，单位`px` | number | 10 | false
 pageStyle | 分页样式，优先级高于 `pageSize` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+spinStyle | 加载样式配置 | [SpinProperties](#spinproperties-type) | {} | false
 animationDuration | 滑动动画持续时长，单位`ms` | number | 1000 | false
 animationFunction | 滑动动画函数，参考 [`<easing-function>`](https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function#easing_functions) | number[] | [0.65, 0, 0.35, 1] | false
 
@@ -171,3 +174,12 @@ animationFunction | 滑动动画函数，参考 [`<easing-function>`](https://de
 title | 图片名称 | string | false
 src | 图片地址 | string | true
 link | 图片跳转链接 | string | false
+
+## SpinProperties Type
+
+名称 | 说明 | 类型 | 必传
+-- | -- | -- | --
+size | 尺寸大小 | 'small' &#124; 'default' &#124; 'large' | false
+tip | 描述文案 | string | false
+indicator | 加载指示符 | 'dot' &#124; 'quarter-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' | false
+color | 主题颜色 | string | false
