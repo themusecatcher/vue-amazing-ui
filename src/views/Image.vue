@@ -38,9 +38,6 @@ const images = ref([
     name: 'image-9.jpg'
   }
 ])
-setTimeout(() => {
-  
-}, 1000)
 </script>
 <template>
   <div>
