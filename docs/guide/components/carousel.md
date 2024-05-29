@@ -116,7 +116,7 @@ function clickImage (image: object) {
 
 ## 指示点位置
 
-<Radio :options="positionOptions" v-model:value="dotPosition" />
+<Radio :options="positionOptions" v-model:value="dotPosition" button />
 <br/>
 <br/>
 <Carousel
@@ -179,7 +179,7 @@ const positionOptions = ref([
 const dotPosition = ref('top')
 </script>
 <template>
-  <Radio :options="positionOptions" v-model:value="dotPosition" />
+  <Radio :options="positionOptions" v-model:value="dotPosition" button />
   <br/>
   <br/>
   <Carousel

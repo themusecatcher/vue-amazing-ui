@@ -434,7 +434,7 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 
 ## 三种尺寸
 
-<Radio :options="options" v-model:value="size" />
+<Radio :options="options" v-model:value="size" button />
 <br/>
 <Tabs
   :size="size"
@@ -505,7 +505,7 @@ const options = ref([
 const size = ref('middle')
 </script>
 <template>
-  <Radio :options="options" v-model:value="size" />
+  <Radio :options="options" v-model:value="size" button />
   <br/>
   <Tabs
     :size="size"
