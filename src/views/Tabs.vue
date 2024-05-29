@@ -140,7 +140,7 @@ function onChange (key: string|number) {
       v-model:active-key="activeKey"
       @change="onChange" />
     <h2 class="mt30 mb10">三种尺寸</h2>
-    <Radio :options="options" v-model:value="size" />
+    <Radio :options="options" v-model:value="size" button />
     <br/>
     <Tabs
       :size="size"

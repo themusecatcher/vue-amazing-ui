@@ -83,7 +83,7 @@ function clickImage (image: object) {
       :autoplay="false"
       @click="clickImage" />
     <h2 class="mt30 mb10">指示点位置</h2>
-    <Radio :options="positionOptions" v-model:value="dotPosition" />
+    <Radio :options="positionOptions" v-model:value="dotPosition" button />
     <br/>
     <br/>
     <Carousel
