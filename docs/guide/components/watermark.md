@@ -187,7 +187,7 @@ const show = ref(false)
     <p>Content</p>
     <Input v-model:value="model.content" />
     <p>Layout</p>
-    <Radio :options="layoutOptions" v-model:value="model.layout" />
+    <Radio :options="layoutOptions" v-model:value="model.layout" button />
     <p>Color</p>
     <Input v-model:value="model.color" />
     <p>FontSize</p>
@@ -283,7 +283,7 @@ const layoutOptions = [
       <p>Content</p>
       <Input v-model:value="model.content" />
       <p>Layout</p>
-      <Radio :options="layoutOptions" v-model:value="model.layout" />
+      <Radio :options="layoutOptions" v-model:value="model.layout" button />
       <p>Color</p>
       <Input v-model:value="model.color" />
       <p>FontSize</p>

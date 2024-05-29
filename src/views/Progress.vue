@@ -45,8 +45,8 @@ function onDecline (scale: number) {
         :width="120"
         :stroke-width="12"
         :percent="percent" />
-      <Button @click="onDecline(5)" size="large">Decline-</Button>
-      <Button @click="onIncrease(5)" size="large">Increase+</Button>
+      <Button @click="onDecline(5)" size="large">Decline -</Button>
+      <Button @click="onIncrease(5)" size="large">Increase +</Button>
     </Space>
     <h2 class="mt30 mb10">自定义文字格式</h2>
     <Space align="center" :size="30">
