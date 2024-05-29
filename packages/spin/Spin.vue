@@ -3,7 +3,7 @@ interface Props {
   spinning?: boolean // 是否为加载中状态
   size?: 'small'|'default'|'large' // 组件大小，可选 small default large
   tip?: string // 描述文案
-  indicator?: 'dot'|'quarter-circle'|'three-quarters-circle'|'dynamic-circle' // 加载指示符
+  indicator?: 'dot'|'quarter-circle'|'half-circle'|'three-quarters-circle'|'dynamic-circle' // 加载指示符
   color?: string // 主题颜色
 }
 withDefaults(defineProps<Props>(), {
@@ -25,9 +25,10 @@ withDefaults(defineProps<Props>(), {
           <span class="u-dot-item"></span>
         </div>
         <div v-if="indicator==='quarter-circle'" class="u-quarter-circle"></div>
+        <div v-if="indicator==='half-circle'" class="u-half-circle"></div>
         <div v-if="indicator==='three-quarters-circle'" class="u-three-quarters-circle"></div>
         <div v-if="indicator==='dynamic-circle'" class="m-dynamic-circle">
-          <svg  class="circular" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none"></circle></svg>
+          <svg class="circular" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none"></circle></svg>
         </div>
         <p class="u-tip" v-show="tip">{{ tip }}</p>
       </div>
@@ -69,7 +70,7 @@ withDefaults(defineProps<Props>(), {
       @keyframes loadingDot {
         100% {
           transform: rotate(405deg);
-        } // to {transform: rotate(405deg);}
+        } // to { transform: rotate(405deg); }
       }
       .u-dot-item { // 单个圆点样式
         position: absolute;
@@ -110,7 +111,17 @@ withDefaults(defineProps<Props>(), {
       border-radius: 50%;
       border-style: solid;
       border-color: transparent;
-      border-top-color: var(--color); // 显示1/4圆
+      border-top-color: var(--color); // 显示上1/4圆
+      animation: loading-circle 1s infinite linear;
+      -webkit-animation: loading-circle 1s infinite linear;
+    }
+    .u-half-circle {
+      display: inline-block;
+      border-radius: 50%;
+      border-style: solid;
+      border-color: transparent;
+      border-top-color: var(--color); // 显示上1/4圆
+      border-right-color: var(--color); // 显示右1/4圆
       animation: loading-circle 1s infinite linear;
       -webkit-animation: loading-circle 1s infinite linear;
     }
@@ -150,7 +161,6 @@ withDefaults(defineProps<Props>(), {
               stroke-dasharray: 1,200;
               stroke-dashoffset: 0;
             }
-
             50% {
               stroke-dasharray: 90,150;
               stroke-dashoffset: -40px;
@@ -180,6 +190,11 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .u-quarter-circle {
+      width: 40px;
+      height: 40px;
+      border-width: 4px;
+    }
+    .u-half-circle {
       width: 40px;
       height: 40px;
       border-width: 4px;
@@ -216,6 +231,11 @@ withDefaults(defineProps<Props>(), {
       height: 32px;
       border-width: 3px;
     }
+    .u-half-circle {
+      width: 32px;
+      height: 32px;
+      border-width: 3px;
+    }
     .u-three-quarters-circle {
       width: 32px;
       height: 32px;
@@ -244,6 +264,11 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .u-quarter-circle {
+      width: 24px;
+      height: 24px;
+      border-width: 2px;
+    }
+    .u-half-circle {
       width: 24px;
       height: 24px;
       border-width: 2px;

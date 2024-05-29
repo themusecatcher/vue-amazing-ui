@@ -76,6 +76,26 @@ const spinning = ref(true)
 
 :::
 
+## 二分之一圆形指示符
+
+<br/>
+<Spin :spinning="spinning" indicator="half-circle" />
+<br/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const spinning = ref(true)
+</script>
+<template>
+  <Spin :spinning="spinning" indicator="half-circle" />
+</template>
+```
+
+:::
+
 ## 四分之三圆形指示符
 
 <br/>
@@ -141,6 +161,7 @@ const spinning = ref(true)
 <Space>
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="quarter-circle" />
+  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="half-circle" />
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="three-quarters-circle" />
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
 </Space>
@@ -156,6 +177,7 @@ const spinning = ref(true)
   <Space>
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="quarter-circle" />
+    <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="half-circle" />
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="three-quarters-circle" />
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
   </Space>
@@ -176,22 +198,27 @@ const spinning = ref(true)
 <Space direction="vertical">
   <Space>
     <Spin class="u-spin" :spinning="spinning" size="small" />
-    <Spin class="u-spin" :spinning="spinning" />
+    <Spin class="u-spin" :spinning="spinning" size="default" />
     <Spin class="u-spin" :spinning="spinning" size="large" />
   </Space>
   <Space>
     <Spin class="u-spin" :spinning="spinning" size="small" indicator="quarter-circle" />
-    <Spin class="u-spin" :spinning="spinning" indicator="quarter-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="default"  indicator="quarter-circle" />
     <Spin class="u-spin" :spinning="spinning" size="large"  indicator="quarter-circle" />
   </Space>
   <Space>
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="half-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="default"  indicator="half-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="large"  indicator="half-circle" />
+  </Space>
+  <Space>
     <Spin class="u-spin" :spinning="spinning" size="small" indicator="three-quarters-circle" />
-    <Spin class="u-spin" :spinning="spinning" indicator="three-quarters-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="default"  indicator="three-quarters-circle" />
     <Spin class="u-spin" :spinning="spinning" size="large"  indicator="three-quarters-circle" />
   </Space>
   <Space>
     <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-    <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="default"  indicator="dynamic-circle" />
     <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
   </Space>
 </Space>
@@ -207,22 +234,27 @@ const spinning = ref(true)
   <Space direction="vertical">
     <Space>
       <Spin class="u-spin" :spinning="spinning" size="small" />
-      <Spin class="u-spin" :spinning="spinning" />
+      <Spin class="u-spin" :spinning="spinning" size="default" />
       <Spin class="u-spin" :spinning="spinning" size="large" />
     </Space>
     <Space>
       <Spin class="u-spin" :spinning="spinning" size="small" indicator="quarter-circle" />
-      <Spin class="u-spin" :spinning="spinning" indicator="quarter-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="default"  indicator="quarter-circle" />
       <Spin class="u-spin" :spinning="spinning" size="large"  indicator="quarter-circle" />
     </Space>
     <Space>
+      <Spin class="u-spin" :spinning="spinning" size="small" indicator="half-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="default"  indicator="half-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="large"  indicator="half-circle" />
+    </Space>
+    <Space>
       <Spin class="u-spin" :spinning="spinning" size="small" indicator="three-quarters-circle" />
-      <Spin class="u-spin" :spinning="spinning" indicator="three-quarters-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="default"  indicator="three-quarters-circle" />
       <Spin class="u-spin" :spinning="spinning" size="large"  indicator="three-quarters-circle" />
     </Space>
     <Space>
       <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-      <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="default"  indicator="dynamic-circle" />
       <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
     </Space>
   </Space>
@@ -268,5 +300,5 @@ const spinning = ref(true)
 spinning | 是否为加载中状态 | boolean | true | false
 size | 组件大小 | 'small' &#124; 'default' &#124; 'large' | 'default' | false
 tip | 描述文案 | string | '' | false
-indicator | 加载指示符 | 'dot' &#124; 'quarter-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' | 'dot' | false
+indicator | 加载指示符 | 'dot' &#124; 'quarter-circle' &#124; 'half-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' | 'dot' | false
 color | 主题颜色 | string | '#1677FF' | false
