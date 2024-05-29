@@ -109,8 +109,8 @@ const percent = ref(60)
     type="circle"
     :width="120"
     :percent="percent" />
-  <Button @click="onDecline(5)" size="large">Decline-</Button>
-  <Button @click="onIncrease(5)" size="large">Increase+</Button>
+  <Button @click="onDecline(5)" size="large">Decline -</Button>
+  <Button @click="onIncrease(5)" size="large">Increase +</Button>
 </Space>
 
 ::: details Show Code
@@ -143,8 +143,8 @@ function onDecline (scale: number) {
       type="circle"
       :width="120"
       :percent="percent" />
-    <Button @click="onDecline(5)" size="large">Decline-</Button>
-    <Button @click="onIncrease(5)" size="large">Increase+</Button>
+    <Button @click="onDecline(5)" size="large">Decline -</Button>
+    <Button @click="onIncrease(5)" size="large">Increase +</Button>
   </Space>
 </template>
 ```
