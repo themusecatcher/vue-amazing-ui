@@ -207,13 +207,3 @@ export function toggleDark () {
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
   document.documentElement.classList.toggle('dark')
 }
-
-import type { App, Plugin } from 'vue'
-export const withInstall = <T>(comp: T) => {
-  const c = comp as any
-  c.install = function (app: App) {
-    // @ts-ignore
-    app.component(c.__name, comp)
-  }
-  return comp as T & Plugin
-}
