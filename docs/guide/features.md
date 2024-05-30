@@ -6,7 +6,7 @@
 ## 简要介绍
 
 - 该组件库采用 `Vue@{{ getVersion('vue') }}` + `TypeScript@{{ getVersion('typescript') }}` + `Vite@{{ getVersion('vite') }}` + `Less@{{ getVersion('less') }}` 实现！
-- 所有组件，均采用单文件组件 `SFC` 形式，无需任何安装引入，直接使用源码！
+- 所有组件，均采用单文件组件 `SFC` 形式，无需任何安装引入，亦可直接使用源码！
 - 所有组件样式 `CSS` 均使用 `box-sizing: border-box;` 模式！
 - 部分组件样式尚未完美适配暗黑模式，可切换至 `light` 模式查看！
 - 开箱即用！
