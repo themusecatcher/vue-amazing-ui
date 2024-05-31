@@ -3,7 +3,7 @@ interface Props {
   spinning?: boolean // 是否为加载中状态
   size?: 'small'|'default'|'large' // 组件大小，可选 small default large
   tip?: string // 描述文案
-  indicator?: 'dot'|'quarter-circle'|'half-circle'|'three-quarters-circle'|'dynamic-circle' // 加载指示符
+  indicator?: 'dot'|'spin-dot'|'spin-line'|'quarter-circle'|'half-circle'|'three-quarters-circle'|'dynamic-circle' // 加载指示符
   color?: string // 主题颜色
 }
 withDefaults(defineProps<Props>(), {
@@ -18,11 +18,39 @@ withDefaults(defineProps<Props>(), {
   <div :class="`m-spin-wrap ${size}`" :style="`--color: ${color};`">
     <div class="m-spin" v-show="spinning">
       <div class="m-spin-box">
-        <div class="m-spin-dot" v-if="indicator==='dot'">
+        <div class="m-loading-dot" v-if="indicator==='dot'">
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
+        </div>
+        <div class="spin-wrap-box" v-if="indicator==='spin-dot'">
+          <div class="m-spin-dot">
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+          </div>
+          <div class="m-spin-dot spin-rotate">
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+          </div>
+        </div>
+        <div class="spin-wrap-box" v-if="indicator==='spin-line'">
+          <div class="m-spin-line">
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+          </div>
+          <div class="m-spin-line spin-rotate">
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+            <span class="u-spin-item"></span>
+          </div>
         </div>
         <div v-if="indicator==='quarter-circle'" class="u-quarter-circle"></div>
         <div v-if="indicator==='half-circle'" class="u-half-circle"></div>
@@ -46,7 +74,7 @@ withDefaults(defineProps<Props>(), {
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
+  // pointer-events: none;
 }
 .m-spin {
   position: absolute;
@@ -61,13 +89,13 @@ withDefaults(defineProps<Props>(), {
   .m-spin-box {
     text-align: center;
     line-height: 0;
-    .m-spin-dot {
+    .m-loading-dot {
       position: relative;
       display: inline-block;
       transform: rotate(45deg);
-      animation: loadingDot 1.2s infinite linear;
-      -webkit-animation: loadingDot 1.2s infinite linear;
-      @keyframes loadingDot {
+      animation: loading-dot 1.2s infinite linear;
+      -webkit-animation: loading-dot 1.2s infinite linear;
+      @keyframes loading-dot {
         100% {
           transform: rotate(405deg);
         } // to { transform: rotate(405deg); }
@@ -77,10 +105,10 @@ withDefaults(defineProps<Props>(), {
         background: var(--color);
         border-radius: 50%;
         opacity: .3;
-        animation: spinMove 1s linear infinite alternate;
-        -webkit-animation: spinMove 1s linear infinite alternate;
-        @keyframes spinMove {
-          100% {opacity: 1;}
+        animation: loading-dot-color 1s linear infinite alternate;
+        -webkit-animation: loading-dot-color 1s linear infinite alternate;
+        @keyframes loading-dot-color {
+          100% { opacity: 1; }
         }
       }
       .u-dot-item:first-child {
@@ -104,6 +132,123 @@ withDefaults(defineProps<Props>(), {
         left: 0;
         animation-delay: 1.2s;
         -webkit-animation-delay: 1.2s;
+      }
+    }
+    .spin-wrap-box {
+      text-align: center;
+      line-height: 0;
+      position: relative;
+      animation: spin-line 3s ease-in-out;
+      -webkit-animation: spin-line 3s ease-in-out;
+      @keyframes spin-line {
+        100% {
+          transform: rotate(720deg);
+        } // to { transform: rotate(720deg); }
+      }
+      .m-spin-dot {
+        position: relative;
+        display: inline-block;
+        transform: rotate(45deg);
+        .u-spin-item { // 单个圆点样式
+          position: absolute;
+          background: var(--color);
+          border-radius: 50%;
+          opacity: 1;
+          animation: spin-dot-color .8s linear infinite;
+          -webkit-animation: spin-dot-color .8s linear infinite;
+          @keyframes spin-dot-color {
+            100% { opacity: 0.2; }
+          }
+        }
+        .u-spin-item:first-child {
+          top: 0;
+          left: 0;
+        }
+        .u-spin-item:nth-child(2) {
+          top: 0;
+          right: 0;
+          animation-delay: .2s;
+          -webkit-animation-delay: .2s;
+        }
+        .u-spin-item:nth-child(3) {
+          bottom: 0;
+          right: 0;
+          animation-delay: .4s;
+          -webkit-animation-delay: .4s;
+        }
+        .u-spin-item:last-child {
+          bottom: 0;
+          left: 0;
+          animation-delay: .6s;
+          -webkit-animation-delay: .6s;
+        }
+      }
+      .m-spin-line {
+        position: relative;
+        display: inline-block;
+        transform: rotate(45deg);
+        .u-spin-item { // 单个圆点样式
+          position: absolute;
+          background: var(--color);
+          border-radius: 12px;
+          opacity: 1;
+          animation: spin-line-color .8s linear infinite;
+          -webkit-animation: spin-line-color .8s linear infinite;
+          @keyframes spin-line-color {
+            100% {opacity: 0.2;}
+          }
+        }
+        .u-spin-item:first-child {
+          top: 0;
+          left: 0;
+          transform-origin: 50% calc(1/6 * 100%); // x-offset 需等于 y-offset
+          transform: rotate(-45deg);
+        }
+        .u-spin-item:nth-child(2) {
+          top: 0;
+          right: 0;
+          transform-origin: 50% calc(1/6 * 100%);
+          transform: rotate(45deg);
+          animation-delay: .2s;
+          -webkit-animation-delay: .2s;
+        }
+        .u-spin-item:nth-child(3) {
+          bottom: 0;
+          right: 0;
+          transform-origin: 50% calc(5/6 * 100%);
+          transform: rotate(-45deg);
+          animation-delay: .4s;
+          -webkit-animation-delay: .4s;
+        }
+        .u-spin-item:last-child {
+          bottom: 0;
+          left: 0;
+          transform-origin: 50% calc(5/6 * 100%);
+          transform: rotate(45deg);
+          animation-delay: .6s;
+          -webkit-animation-delay: .6s;
+        }
+      }
+      .spin-rotate {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%) rotate(90deg);
+        .u-spin-item:first-child {
+          animation-delay: .1s;
+          -webkit-animation-delay: .1s;
+        }
+        .u-spin-item:nth-child(2) {
+          animation-delay: .3s;
+          -webkit-animation-delay: .3s;
+        }
+        .u-spin-item:nth-child(3) {
+          animation-delay: .5s;
+          -webkit-animation-delay: .5s;
+        }
+        .u-spin-item:last-child {
+          animation-delay: .7s;
+          -webkit-animation-delay: .7s;
+        }
       }
     }
     .u-quarter-circle {
@@ -181,12 +326,28 @@ withDefaults(defineProps<Props>(), {
 }
 .large {
   .m-spin .m-spin-box {
-    .m-spin-dot {
+    .m-loading-dot {
       width: 36px;
       height: 36px;
       .u-dot-item {
         width: 12px;
         height: 12px;
+      }
+    }
+    .m-spin-dot {
+      width: 36px;
+      height: 36px;
+      .u-spin-item {
+        width: 10px;
+        height: 10px;
+      }
+    }
+    .m-spin-line {
+      width: 36px;
+      height: 36px;
+      .u-spin-item {
+        width: 5px;
+        height: 15px;
       }
     }
     .u-quarter-circle {
@@ -218,12 +379,28 @@ withDefaults(defineProps<Props>(), {
 }
 .default {
   .m-spin .m-spin-box {
-    .m-spin-dot {
+    .m-loading-dot {
       width: 28px;
       height: 28px;
       .u-dot-item {
         width: 10px;
         height: 10px;
+      }
+    }
+    .m-spin-dot {
+      width: 28px;
+      height: 28px;
+      .u-spin-item {
+        width: 8px;
+        height: 8px;
+      }
+    }
+    .m-spin-line {
+      width: 28px;
+      height: 28px;
+      .u-spin-item {
+        width: 4px;
+        height: 12px;
       }
     }
     .u-quarter-circle {
@@ -255,12 +432,28 @@ withDefaults(defineProps<Props>(), {
 }
 .small {
   .m-spin .m-spin-box {
-    .m-spin-dot {
+    .m-loading-dot {
       width: 20px;
       height: 20px;
       .u-dot-item {
         width: 8px;
         height: 8px;
+      }
+    }
+    .m-spin-dot {
+      width: 20px;
+      height: 20px;
+      .u-spin-item {
+        width: 6px;
+        height: 6px;
+      }
+    }
+    .m-spin-line {
+      width: 20px;
+      height: 20px;
+      .u-spin-item {
+        width: 3px;
+        height: 9px;
       }
     }
     .u-quarter-circle {
