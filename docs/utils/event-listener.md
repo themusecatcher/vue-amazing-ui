@@ -60,3 +60,11 @@ const throttleScroll = throttle(scrollEvent)
 useEventListener(window, 'scroll', throttleScroll)
 </script>
 ```
+
+## Params
+
+参数 | 说明 | 类型 | 默认值 | 必传
+-- | -- | -- | -- | --
+target | 要添加监听事件的目标元素 | any | - | true
+event | 监听的事件类型（大小写敏感） | string | - | true
+callback | 监听事件触发时的回调函数 | Function | - | true

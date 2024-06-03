@@ -29,7 +29,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { debounce, useEventListener } from 'vue-amazing-ui'
 
 const scrollTop = ref(0)
-useEventListener(window, 'scroll', debounce(showPosition))
+useEventListener(window, 'scroll', debounce(showPosition, 100))
 function showPosition () {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
@@ -45,7 +45,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { debounce, useEventListener } from 'vue-amazing-ui'
 
 const scrollTop = ref(0)
-useEventListener(window, 'scroll', debounce(showPosition))
+useEventListener(window, 'scroll', debounce(showPosition, 100))
 function showPosition () {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }

@@ -213,7 +213,7 @@ import { onMounted, onUnmounted } from 'vue'
   在目标元素 target 上注册一个事件监听器
   target：要添加监听事件的目标元素
   event：监听的事件类型（大小写敏感）
-  callback：监听的事件类型触发时的回调函数
+  callback：监听事件触发时的回调函数
 
 */
 export function useEventListener (target: any, event: string, callback: Function) {
