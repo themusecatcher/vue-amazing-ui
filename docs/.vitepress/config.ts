@@ -355,6 +355,10 @@ export default defineConfig({
               link: '/utils/download-file'
             },
             {
+              text: 'addEventListener 监听事件',
+              link: '/utils/event-listener'
+            },
+            {
               text: 'formatNumber 数字格式化',
               link: '/utils/format-number'
             },

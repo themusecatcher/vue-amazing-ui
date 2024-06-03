@@ -1,6 +1,6 @@
 # 数字格式化<BackTop />
 
-::: details  Show Source Code
+::: details Show Source Code
 
 ```ts
 function formatNumber (value: number|string, precision = 2, separator = ',', decimal = '.', prefix = '', suffix = ''): string {

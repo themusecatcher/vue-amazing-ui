@@ -1,6 +1,6 @@
 # 动画帧<BackTop />
 
-::: details  Show Source Code
+::: details Show Source Code
 
 ```typescript
 // @ts-ignore 兼容性requestAnimationFrame
