@@ -32,7 +32,7 @@ function scrollEvent () {
   // 更新上一次滚动的位置
   lastScrollPosition = currentScrollPosition
 }
-const throttleScroll = throttle(scrollEvent)
+const throttleScroll = throttle(scrollEvent, 100)
 useEventListener(window, 'scroll', throttleScroll)
 </script>
 
@@ -56,7 +56,7 @@ function scrollEvent () {
   // 更新上一次滚动的位置
   lastScrollPosition = currentScrollPosition
 }
-const throttleScroll = throttle(scrollEvent)
+const throttleScroll = throttle(scrollEvent, 100)
 useEventListener(window, 'scroll', throttleScroll)
 </script>
 ```
