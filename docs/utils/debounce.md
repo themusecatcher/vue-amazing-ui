@@ -11,9 +11,9 @@ function debounce (fn: Function, delay = 300): any {
   let timer: any = null //借助闭包
   return function () {
     if (timer) {
-      cancelRaf(timer)
+      clearTimeout(timer)
     }
-    timer = rafTimeout(fn, delay)
+    timer = setTimeout(fn, delay)
   }
 }
 ```
@@ -25,41 +25,29 @@ function debounce (fn: Function, delay = 300): any {
 - 对于短时间内连续触发的事件，在 `delay` `ms` 内函数只执行最后一次
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { debounce } from 'vue-amazing-ui'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { debounce, useEventListener } from 'vue-amazing-ui'
 
-onMounted(() => {
-  document.onscroll = debounce(showPosition, 1000)
-})
-onUnmounted(() => {
-  // 移除键盘切换事件
-  document.onscroll = null
-})
+const scrollTop = ref(0)
+useEventListener(window, 'scroll', debounce(showPosition))
 function showPosition () {
-  const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
-  console.log('滚动条位置：' + scrollTop)
+  scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
 </script>
 
 ## 基本使用
 
-*打开控制台查看输出*
+<h3>滚动条位置：{{ scrollTop }}</h3>
 
 ```vue
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { debounce } from 'vue-amazing-ui'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { debounce, useEventListener } from 'vue-amazing-ui'
 
-onMounted(() => {
-  document.onscroll = debounce(showPosition, 1000)
-})
-onUnmounted(() => {
-  // 移除键盘切换事件
-  document.onscroll = null
-})
+const scrollTop = ref(0)
+useEventListener(window, 'scroll', debounce(showPosition))
 function showPosition () {
-  const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
-  console.log('滚动条位置：' + scrollTop)
+  scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
 </script>
 ```

@@ -3,7 +3,7 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-## 安装
+## Install
 
 ::: code-group
 
@@ -25,7 +25,7 @@ $ bun add vue-amazing-ui
 
 :::
 
-## 使用
+## Use Components
 
 > **Global**
 
@@ -53,4 +53,25 @@ import 'vue-amazing-ui/css'
 <template>
   <Button></Button>
 </template>
+```
+
+### Use Functions
+
+```vue
+<script setup lang="ts">
+import {
+  dateFormat,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+  rafTimeout,
+  cancelRaf,
+  throttle,
+  debounce,
+  add,
+  downloadFile,
+  formatNumber,
+  toggleDark,
+  useEventListener
+} from 'vue-amazing-ui'
+</script>
 ```

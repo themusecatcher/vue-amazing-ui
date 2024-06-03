@@ -31,7 +31,8 @@ import {
   add,
   downloadFile,
   formatNumber,
-  toggleDark
+  toggleDark,
+  useEventListener
 } from 'vue-amazing-ui'
 <\/script>`
   }
@@ -71,7 +72,7 @@ function onOpen () {
       </DescriptionsItem>
     </Descriptions>
     <p class="u-tip mb10">所有组件 <Tag color="magenta">CSS</Tag> 样式均使用 <Tag color="magenta">box-sizing: border-box;</Tag> 模式！</p>
-    <p class="u-tip mb10">目前共有 <Tag color="magenta">{{ sum }}</Tag> 个常用基础 <Tag color="magenta">UI</Tag> 组件，以及 <Tag color="magenta">11</Tag> 个常用工具函数，并且持续探索更新中...！</p>
+    <p class="u-tip mb10">目前共有 <Tag color="magenta">{{ sum }}</Tag> 个常用基础 <Tag color="magenta">UI</Tag> 组件，以及 <Tag color="magenta">12</Tag> 个常用工具函数，并且持续探索更新中...！</p>
     <p class="u-tip">开箱即用！</p>
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse
@@ -91,12 +92,13 @@ function onOpen () {
       <li class="u-tip mb10"><Tag color="geekblue">cancelAnimationFrame</Tag>: 针对不同浏览器进行兼容处理！</li>
       <li class="u-tip mb10"><Tag color="geekblue">rafTimeout</Tag>: 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！</li>
       <li class="u-tip mb10"><Tag color="geekblue">cancelRaf</Tag>: 用于取消 rafTimeout 函数！</li>
-      <li class="u-tip mb10"><Tag color="geekblue">throttle</Tag>: 使用 rafTimeout 实现的节流函数！</li>
-      <li class="u-tip mb10"><Tag color="geekblue">debounce</Tag>: 使用 rafTimeout 实现的防抖函数！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">throttle</Tag>: 节流函数！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">debounce</Tag>: 防抖函数！</li>
       <li class="u-tip mb10"><Tag color="geekblue">add</Tag>: 消除js加减精度问题的加法函数！</li>
       <li class="u-tip mb10"><Tag color="geekblue">downloadFile</Tag>: 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！</li>
       <li class="u-tip mb10"><Tag color="geekblue">formatNumber</Tag>: 数字格式化函数！</li>
       <li class="u-tip mb10"><Tag color="geekblue">toggleDark</Tag>: 一键切换暗黑模式函数！</li>
+      <li class="u-tip mb10"><Tag color="geekblue">useEventListener</Tag>: 自动添加和清除 DOM 事件监听器函数！</li>
     </ul>
     <Collapse
       lang="vue3"

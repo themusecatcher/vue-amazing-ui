@@ -10,7 +10,8 @@ import {
   add,
   downloadFile,
   formatNumber,
-  toggleDark
+  toggleDark,
+  useEventListener
 } from './utils'
 import type { App } from 'vue'
 import Alert from './alert'
@@ -158,7 +159,8 @@ export {
   add,
   downloadFile,
   formatNumber,
-  toggleDark
+  toggleDark,
+  useEventListener
 }
 export {
   Alert,
