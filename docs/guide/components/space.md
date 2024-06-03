@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const sizeNum = ref(8)
+const gapNum = ref(8)
 const options = ref([
       {
         label: 'Small',
@@ -31,7 +31,7 @@ const options = ref([
         value: 'large'
       }
     ])
-const size = ref('small')
+const gap = ref('small')
 </script>
 
 ## 基本使用
@@ -62,10 +62,10 @@ const size = ref('small')
 
 ## 自定义间距
 
-<Slider v-model:value="sizeNum" />
+<Slider v-model:value="gapNum" />
 <br />
 <br />
-<Space :size="sizeNum">
+<Space :gap="gapNum">
   <Button type="primary">Primary</Button>
   <Button>Default</Button>
   <Button type="dashed">Dashed</Button>
@@ -77,13 +77,13 @@ const size = ref('small')
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const sizeNum = ref(8)
+const gapNum = ref(8)
 </script>
 <template>
-  <Slider v-model:value="sizeNum" />
+  <Slider v-model:value="gapNum" />
   <br />
   <br />
-  <Space :size="sizeNum">
+  <Space :gap="gapNum">
     <Button type="primary">Primary</Button>
     <Button>Default</Button>
     <Button type="dashed">Dashed</Button>
@@ -96,10 +96,10 @@ const sizeNum = ref(8)
 
 ## 预设间距
 
-<Radio :options="options" v-model:value="size" />
+<Radio :options="options" v-model:value="gap" />
 <br/>
 <br/>
-<Space :size="size">
+<Space :gap="gap">
   <Button type="primary">Primary</Button>
   <Button>Default</Button>
   <Button type="dashed">Dashed</Button>
@@ -125,12 +125,12 @@ const options = ref([
           value: 'large'
         }
       ])
-const size = ref('small')
+const gap = ref('small')
 </script>
 <template>
-  <Radio :options="options" v-model:value="size" />
+  <Radio :options="options" v-model:value="gap" />
   <br/><br/>
-  <Space :size="size">
+  <Space :gap="gap">
     <Button type="primary">Primary</Button>
     <Button>Default</Button>
     <Button type="dashed">Dashed</Button>
@@ -284,7 +284,7 @@ const size = ref('small')
 
 ## 自动换行
 
-<Space :size="[8, 16]">
+<Space :gap="[8, 16]">
   <template v-for="n in 10" :key="n">
     <Button>Button</Button>
   </template>
@@ -296,7 +296,7 @@ const size = ref('small')
 
 ```vue
 <template>
-  <Space :size="[8, 16]">
+  <Space :gap="[8, 16]">
     <template v-for="n in 10" :key="n">
       <Button>Button</Button>
     </template>
@@ -313,5 +313,5 @@ const size = ref('small')
 width | 区域总宽度 | string &#124; number | 'auto' | false
 align | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' | false
 direction | 间距方向 | 'horizontal' &#124; 'vertical' | 'horizontal' | false
-size | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
+gap | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
 wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | true | false

@@ -30,10 +30,10 @@ import {
   now,
   setCSSProperty,
   showWarning
-} from "./chunk-HLK3GALD.js";
+} from "./chunk-XB24NNIK.js";
 import "./chunk-LNEMQRCO.js";
 
-// node_modules/.pnpm/swiper@11.1.3/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/swiper-core.mjs
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -2815,6 +2815,8 @@ var events = (swiper, method) => {
   const capture = !!params.nested;
   const domMethod = method === "on" ? "addEventListener" : "removeEventListener";
   const swiperMethod = method;
+  if (!el || typeof el === "string")
+    return;
   document2[domMethod]("touchstart", swiper.onDocumentTouchStart, {
     passive: false,
     capture
@@ -3077,6 +3079,8 @@ function removeClasses() {
     el,
     classNames
   } = swiper;
+  if (!el || typeof el === "string")
+    return;
   el.classList.remove(...classNames);
   swiper.emitContainerClasses();
 }
@@ -3796,8 +3800,12 @@ var Swiper = class _Swiper {
     }
     if (cleanStyles) {
       swiper.removeClasses();
-      el.removeAttribute("style");
-      wrapperEl.removeAttribute("style");
+      if (el && typeof el !== "string") {
+        el.removeAttribute("style");
+      }
+      if (wrapperEl) {
+        wrapperEl.removeAttribute("style");
+      }
       if (slides && slides.length) {
         slides.forEach((slideEl) => {
           slideEl.classList.remove(params.slideVisibleClass, params.slideFullyVisibleClass, params.slideActiveClass, params.slideNextClass, params.slidePrevClass);
@@ -3811,7 +3819,9 @@ var Swiper = class _Swiper {
       swiper.off(eventName);
     });
     if (deleteInstance !== false) {
-      swiper.el.swiper = null;
+      if (swiper.el && typeof swiper.el !== "string") {
+        swiper.el.swiper = null;
+      }
       deleteProps(swiper);
     }
     swiper.destroyed = true;
@@ -3850,7 +3860,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 });
 Swiper.use([Resize, Observer]);
 
-// node_modules/.pnpm/swiper@11.1.3/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -4208,7 +4218,7 @@ function updateSwiper(_ref) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@11.1.3/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
     obj = {};
@@ -4341,7 +4351,7 @@ var updateOnVirtualData = (swiper) => {
   }
 };
 
-// node_modules/.pnpm/swiper@11.1.3/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots, slidesRef, oldSlidesRef) {
   if (originalSlots === void 0) {
     originalSlots = {};
@@ -4408,7 +4418,7 @@ function renderVirtual(swiperRef, slides, virtualData) {
   const loopTo = swiperRef.value.params.loop ? slides.length * 2 : slides.length;
   const slidesToRender = [];
   for (let i = loopFrom; i < loopTo; i += 1) {
-    if (i >= from && i <= to) {
+    if (i >= from && i <= to && slidesToRender.length < slides.length) {
       slidesToRender.push(slides[getSlideIndex(i)]);
     }
   }

@@ -556,7 +556,7 @@ value <Tag color="cyan">v-model</Tag> | 动态标签数组，`dynamic` 为 `true
 spaceWidth | 间距区域总宽度 | string &#124; number | 'auto' | false
 spaceAlign | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' | false
 spaceDirection | 间距方向 | 'horizontal' &#124; 'vertical' | 'horizontal' | false
-spaceSize | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
+spaceGap | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
 
 ## Tag Type
 

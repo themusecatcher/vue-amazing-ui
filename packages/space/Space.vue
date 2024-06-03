@@ -4,14 +4,14 @@ interface Props {
   width?: string|number // 区域总宽度
   align?: 'stretch'|'start'|'end'|'center'|'baseline' // 垂直排列方式
   direction?: 'horizontal'|'vertical' // 间距方向
-  size?: number|number[]|'small'|'middle'|'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
+  gap?: number|number[]|'small'|'middle'|'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
   wrap?: boolean // 是否自动换行，仅在 horizontal 时有效
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
   align: 'start',
   direction: 'horizontal',
-  size: 'small',
+  gap: 'small',
   wrap: true
 })
 const spaceWidth = computed(() => {
@@ -20,28 +20,28 @@ const spaceWidth = computed(() => {
   }
   return props.width
 })
-const gap = computed(() => {
-  if (typeof props.size === 'number') {
-    return props.size + 'px'
+const gapValue = computed(() => {
+  if (typeof props.gap === 'number') {
+    return props.gap + 'px'
   }
-  if (Array.isArray(props.size)) {
-    return props.size[1] + 'px ' + props.size[0] + 'px '
+  if (Array.isArray(props.gap)) {
+    return props.gap[1] + 'px ' + props.gap[0] + 'px '
   }
-  if (['small', 'middle', 'large'].includes(props.size)) {
+  if (['small', 'middle', 'large'].includes(props.gap)) {
     const gapMap = {
       small: '8px',
       middle: '16px',
       large: '24px'
     }
-    return gapMap[props.size]
+    return gapMap[props.gap]
   }
 })
 </script>
 <template>
   <div
     class="m-space"
-    :class="[`${direction} ${align}`, {wrap: wrap}]"
-    :style="`width: ${spaceWidth}; gap: ${gap}; margin-bottom: -${Array.isArray(props.size) && wrap ? props.size[1] : 0}px;`">
+    :class="[`space-${direction} space-${align}`, {'space-wrap': wrap}]"
+    :style="`width: ${spaceWidth}; gap: ${gapValue}; margin-bottom: -${Array.isArray(props.gap) && wrap ? props.gap[1] : 0}px;`">
     <slot></slot>
   </div>
 </template>
@@ -52,28 +52,28 @@ const gap = computed(() => {
   color: rgba(0, 0, 0, .88);
   transition: all .3s;
 }
-.horizontal {
+.space-horizontal {
   flex-direction: row;
 }
-.vertical {
+.space-vertical {
   flex-direction: column;
 }
-.stretch {
+.space-stretch {
   align-items: stretch;
 }
-.start {
+.space-start {
   align-items: flex-start;
 }
-.end {
+.space-end {
   align-items: flex-end;
 }
-.center {
+.space-center {
   align-items: center;
 }
-.baseline {
+.space-baseline {
   align-items: baseline;
 }
-.wrap {
+.space-wrap {
   flex-wrap: wrap;
 }
 </style>

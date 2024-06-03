@@ -143,7 +143,7 @@ const onClose = () => {
 
 ## 自定义位置
 
-<Space align="center" :size="20">
+<Space align="center" :gap="20">
   <Radio v-model:value="placement" :options="options">
   </Radio>
   <Button type="primary" @click="showDrawer3">Open</Button>
@@ -193,7 +193,7 @@ const onClose = () => {
 }
 </script>
 <template>
-  <Space align="center" :size="20">
+  <Space align="center" :gap="20">
     <Radio v-model:value="placement" :options="options">
     </Radio>
     <Button type="primary" @click="showDrawer3">Open</Button>

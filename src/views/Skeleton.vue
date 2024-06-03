@@ -85,7 +85,7 @@ const avatarShapeOptions = ref([
         <Skeleton :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
       </Flex>
       <Flex vertical :gap="36" width="50%">
-        <Space :size="32">
+        <Space :gap="32">
           <Space align="center">
             animated: <Switch v-model:checked="animated" />
           </Space>

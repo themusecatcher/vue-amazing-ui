@@ -39,7 +39,7 @@ function onDecline (scale: number) {
         direction: 'right'
       }" />
     <h2 class="mt30 mb10">进度圈</h2>
-    <Space align="center" :size="30">
+    <Space align="center" :gap="30">
       <Progress
         type="circle"
         :width="120"
@@ -49,7 +49,7 @@ function onDecline (scale: number) {
       <Button @click="onIncrease(5)" size="large">Increase +</Button>
     </Space>
     <h2 class="mt30 mb10">自定义文字格式</h2>
-    <Space align="center" :size="30">
+    <Space align="center" :gap="30">
       <Progress
         type="circle"
         :width="160"

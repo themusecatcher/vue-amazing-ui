@@ -79,7 +79,7 @@ function onKnow () { // “我知道了”按钮回调
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space :size="30">
+    <Space :gap="30">
       <Button type="primary" @click="showConfirmModal('Some descriptions ...')">提交确认</Button>
       <Button type="primary" @click="showDeleteModal('Some descriptions ...')">删除确认</Button>
       <Button type="primary" @click="showInfoModal('Some descriptions ...')">Info</Button>
