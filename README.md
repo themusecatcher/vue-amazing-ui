@@ -2,24 +2,26 @@
 
 *该组件库采用 `Vue@3.4.27`+ `TypeScript@5.4.5` + `Vite@5.2.12` + `Less@4.2.0` 实现！*<br/>
 *所有组件样式 `CSS` 均使用 `box-sizing: border-box;` 模式！*<br/>
-*目前共有 `56` 个常用基础 `UI` 组件，以及 `11` 个常用工具函数，并且持续探索更新中...！*<br/>
+*目前共有 `56` 个常用基础 `UI` 组件，以及 `12` 个常用工具函数，并且持续探索更新中...！*<br/>
 *开箱即用！*
 
 ## Document & Online preview
 
 [Vue Amazing UI](https://themusecatcher.github.io/vue-amazing-ui/)
 
-## Install & Use
+## Install
 
 ```bash
-pnpm add vue-amazing-ui
-# or
 npm install vue-amazing-ui
 # or
+pnpm add vue-amazing-ui
+# or
 yarn add vue-amazing-ui
+# or
+bun add vue-amazing-ui
 ```
 
-Import and register component
+## Use Components
 
 **Global**
 
@@ -43,7 +45,28 @@ import 'vue-amazing-ui/css'
 </script>
 ```
 
-## Use CDN in Project
+## Use Functions
+
+```vue
+<script setup lang="ts">
+import {
+  dateFormat,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+  rafTimeout,
+  cancelRaf,
+  throttle,
+  debounce,
+  add,
+  downloadFile,
+  formatNumber,
+  toggleDark,
+  useEventListener
+} from 'vue-amazing-ui'
+</script>
+```
+
+## Use CDN
 
 ```html
 <script src="https://unpkg.com/vue-amazing-ui@latest"></script>
@@ -117,9 +140,10 @@ requestAnimationFrame | 针对不同浏览器进行兼容处理！ | 使用方�
 cancelAnimationFrame | 针对不同浏览器进行兼容处理！ | 使用方式不变
 rafTimeout | 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！ | (func: Function, delay = 0, interval = false) => object
 cancelRaf | 用于取消 rafTimeout 函数！ | (raf: { id: number }) => void
-throttle | 使用 rafTimeout 实现的节流函数！ | (fn: Function, delay = 300) => any
-debounce | 使用 rafTimeout 实现的防抖函数！ | (fn: Function, delay = 300) => any
+throttle | 节流函数！ | (fn: Function, delay = 300) => any
+debounce | 防抖函数！ | (fn: Function, delay = 300) => any
 add | 消除js加减精度问题的加法函数！ | (num1: number, num2: number) => number
 downloadFile | 下载文件并自定义文件名！ | (url: string, name: string) => void
 formatNumber | 数字格式化函数！ | (value: number &#124; string, precision = 2, separator = ',', decimal = '.', prefix = '', suffix = '') => string
 toggleDark | 一键切换暗黑模式函数！ | () => void
+useEventListener | 自动添加和清除 DOM 事件监听器！ | (target: any, event: string, callback: Function) => void

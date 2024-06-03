@@ -8,11 +8,11 @@
 
 ```ts
 function throttle (fn: Function, delay = 300): any {
-  var valid = true
+  let valid = true
   return function () {
     if (valid) {
       valid = false // 将函数置为无效
-      rafTimeout(() => {
+      setTimeout(() => {
         fn()
         valid = true
       }, delay)
@@ -29,41 +29,29 @@ function throttle (fn: Function, delay = 300): any {
 - 短时间内大量触发同一事件时，每 `delay` `ms` 内函数只执行一次
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { throttle } from 'vue-amazing-ui'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { throttle, useEventListener } from 'vue-amazing-ui'
 
-onMounted(() => {
-  document.onscroll = throttle(showPosition, 1000)
-})
-onUnmounted(() => {
-  // 移除键盘切换事件
-  document.onscroll = null
-})
+const scrollTop = ref(0)
+useEventListener(window, 'scroll', throttle(showPosition))
 function showPosition () {
-  const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
-  console.log('滚动条位置：' + scrollTop)
+  scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
 </script>
 
 ## 基本使用
 
-*打开控制台查看输出*
+<h3>滚动条位置：{{ scrollTop }}</h3>
 
 ```vue
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { throttle } from 'vue-amazing-ui'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { throttle, useEventListener } from 'vue-amazing-ui'
 
-onMounted(() => {
-  document.onscroll = throttle(showPosition, 1000)
-})
-onUnmounted(() => {
-  // 移除键盘切换事件
-  document.onscroll = null
-})
+const scrollTop = ref(0)
+useEventListener(window, 'scroll', throttle(showPosition))
 function showPosition () {
-  const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
-  console.log('滚动条位置：' + scrollTop)
+  scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
 </script>
 ```

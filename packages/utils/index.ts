@@ -95,7 +95,7 @@ export function throttle (fn: Function, delay = 300): any {
   return function () {
     if (valid) {
       valid = false // 将函数置为无效
-      rafTimeout(() => {
+      setTimeout(() => {
         fn()
         valid = true
       }, delay)
@@ -108,9 +108,9 @@ export function debounce (fn: Function, delay = 300): any {
   let timer: any = null //借助闭包
   return function () {
     if (timer) {
-      cancelRaf(timer)
+      clearTimeout(timer)
     }
-    timer = rafTimeout(fn, delay)
+    timer = setTimeout(fn, delay)
   }
 }
 // 消除js加减精度问题的加法函数
@@ -206,4 +206,19 @@ export function formatNumber (value: number|string, precision = 2, separator = '
 export function toggleDark () {
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
   document.documentElement.classList.toggle('dark')
+}
+// 定义组合式函数
+import { onMounted, onUnmounted } from 'vue'
+/*
+  在目标元素 target 上注册一个事件监听器
+  target：要添加监听事件的目标元素
+  event：监听的事件类型（大小写敏感）
+  callback：监听的事件类型触发时的回调函数
+
+*/
+export function useEventListener (target: any, event: string, callback: Function) {
+  // 如果你想的话，
+  // 也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素
+  onMounted(() => target.addEventListener(event, callback))
+  onUnmounted(() => target.removeEventListener(event, callback))
 }
