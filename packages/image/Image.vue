@@ -250,7 +250,7 @@ function onSwitchRight () {
 </script>
 <template>
   <div class="m-image-wrap">
-    <Space :size="gap">
+    <Space :gap="gap">
       <div
         class="m-image"
         :class="{bordered: bordered, 'image-hover-mask': complete[index]}"

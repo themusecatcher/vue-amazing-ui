@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const sizeNum = ref(8)
+const gapNum = ref(8)
 const options = ref([
         {
           label: 'Small',
@@ -15,7 +15,7 @@ const options = ref([
           value: 'large'
         }
       ])
-const size = ref('small')
+const gap = ref('small')
 </script>
 <template>
   <div>
@@ -29,19 +29,19 @@ const size = ref('small')
       </Popconfirm>
     </Space>
     <h2 class="mt30 mb10">自定义间距</h2>
-    <Slider v-model:value="sizeNum" />
+    <Slider v-model:value="gapNum" />
     <br />
     <br />
-    <Space :size="sizeNum">
+    <Space :gap="gapNum">
       <Button type="primary">Primary</Button>
       <Button>Default</Button>
       <Button type="dashed">Dashed</Button>
       <Button type="link">Link</Button>
     </Space>
     <h2 class="mt30 mb10">预设间距</h2>
-    <Radio :options="options" v-model:value="size" />
+    <Radio :options="options" v-model:value="gap" />
     <br/><br/>
-    <Space :size="size">
+    <Space :gap="gap">
       <Button type="primary">Primary</Button>
       <Button>Default</Button>
       <Button type="dashed">Dashed</Button>
@@ -90,7 +90,7 @@ const size = ref('small')
       </div>
     </div>
     <h2 class="mt30 mb10">自动换行</h2>
-    <Space :size="[8, 16]" style="width: 600px;">
+    <Space :gap="[8, 16]" style="width: 600px;">
       <template v-for="n in 10" :key="n">
         <Button>Button</Button>
       </template>

@@ -48,7 +48,7 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space :size="30">
+    <Space :gap="30">
       <Button type="primary" @click="onOpen('This is a normal notification')">Open</Button>
       <Button type="primary" @click="onInfo('This is a normal notification')">Info</Button>
       <Button type="primary" @click="onSuccess('This is a success notification')">Success</Button>
@@ -56,7 +56,7 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
       <Button type="primary" @click="onError('This is a error notification')">Error</Button>
     </Space>
     <h2 class="mt30 mb10">位置</h2>
-    <Space :size="30">
+    <Space :gap="30">
       <Button type="primary" @click="onOpenPlacement('topLeft')">topLeft</Button>
       <Button type="primary" @click="onOpenPlacement('topRight')">topRight</Button>
       <Button type="primary" @click="onOpenPlacement('bottomLeft')">bottomLeft</Button>

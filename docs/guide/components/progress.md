@@ -104,7 +104,7 @@ const percent = ref(60)
 
 ## 进度圈
 
-<Space align="center" :size="30">
+<Space align="center" :gap="30">
   <Progress
     type="circle"
     :width="120"
@@ -138,7 +138,7 @@ function onDecline (scale: number) {
 }
 </script>
 <template>
-  <Space align="center" :size="30">
+  <Space align="center" :gap="30">
     <Progress
       type="circle"
       :width="120"
@@ -153,7 +153,7 @@ function onDecline (scale: number) {
 
 ## 自定义文字格式
 
-<Space align="center" :size="30">
+<Space align="center" :gap="30">
   <Progress
     type="circle"
     :width="160"
@@ -182,7 +182,7 @@ import { ref } from 'vue'
 const percent = ref(60)
 </script>
 <template>
-  <Space align="center" :size="30">
+  <Space align="center" :gap="30">
     <Progress
       type="circle"
       :width="160"

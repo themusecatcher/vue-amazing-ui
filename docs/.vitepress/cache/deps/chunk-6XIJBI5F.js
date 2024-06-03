@@ -26,7 +26,7 @@ import {
   watchEffect
 } from "./chunk-FHZO4SJ4.js";
 
-// node_modules/.pnpm/vitepress@1.1.4_@algolia+client-search@4.23.3_@types+node@20.12.12_async-validator@4.2.5_less_dskl7aauge2ajn5zndpemmu3gy/node_modules/vitepress/lib/vue-demi.mjs
+// node_modules/.pnpm/vitepress@1.2.2_@algolia+client-search@4.23.3_@types+node@20.12.13_async-validator@4.2.5_less_r4obmegpe5otti6xh6bxmkutrq/node_modules/vitepress/lib/vue-demi.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@10.9.0_vue@3.4.27_typescript@5.4.5_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@10.10.0_vue@3.4.27_typescript@5.4.5_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -156,12 +156,13 @@ var injectLocal = (...args) => {
 };
 function createInjectionState(composable, options) {
   const key = (options == null ? void 0 : options.injectionKey) || Symbol(composable.name || "InjectionState");
+  const defaultValue = options == null ? void 0 : options.defaultValue;
   const useProvidingState = (...args) => {
     const state = composable(...args);
     provideLocal(key, state);
     return state;
   };
-  const useInjectedState = () => injectLocal(key);
+  const useInjectedState = () => injectLocal(key, defaultValue);
   return [useProvidingState, useInjectedState];
 }
 function createSharedComposable(composable) {
@@ -335,7 +336,7 @@ var hasOwn = (val, key) => Object.prototype.hasOwnProperty.call(val, key);
 var isIOS = getIsIOS();
 function getIsIOS() {
   var _a, _b;
-  return isClient && ((_a = window == null ? void 0 : window.navigator) == null ? void 0 : _a.userAgent) && (/iP(ad|hone|od)/.test(window.navigator.userAgent) || ((_b = window == null ? void 0 : window.navigator) == null ? void 0 : _b.maxTouchPoints) > 2 && /iPad|Macintosh/.test(window == null ? void 0 : window.navigator.userAgent));
+  return isClient && ((_a = window == null ? void 0 : window.navigator) == null ? void 0 : _a.userAgent) && (/iP(?:ad|hone|od)/.test(window.navigator.userAgent) || ((_b = window == null ? void 0 : window.navigator) == null ? void 0 : _b.maxTouchPoints) > 2 && /iPad|Macintosh/.test(window == null ? void 0 : window.navigator.userAgent));
 }
 function createFilterWrapper(filter, fn) {
   function wrapper(...args) {
@@ -511,7 +512,7 @@ function increaseWithUnit(target, delta) {
   var _a;
   if (typeof target === "number")
     return target + delta;
-  const value = ((_a = target.match(/^-?[0-9]+\.?[0-9]*/)) == null ? void 0 : _a[0]) || "";
+  const value = ((_a = target.match(/^-?\d+\.?\d*/)) == null ? void 0 : _a[0]) || "";
   const unit = target.slice(value.length);
   const result = Number.parseFloat(value) + delta;
   if (Number.isNaN(result))
@@ -1054,8 +1055,8 @@ function useCounter(initialValue = 0, options = {}) {
   };
   return { count, inc, dec, get: get2, set: set3, reset };
 }
-var REGEX_PARSE = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/;
-var REGEX_FORMAT = /[YMDHhms]o|\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a{1,2}|A{1,2}|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
+var REGEX_PARSE = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[T\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/i;
+var REGEX_FORMAT = /[YMDHhms]o|\[([^\]]+)\]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a{1,2}|A{1,2}|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
 function defaultMeridiem(hours, minutes, isLowercase, hasPeriod) {
   let m = hours < 12 ? "AM" : "PM";
   if (hasPeriod)
@@ -1664,4 +1665,4 @@ vitepress/lib/vue-demi.mjs:
    * @license MIT
    *)
 */
-//# sourceMappingURL=chunk-C7GLJMO3.js.map
+//# sourceMappingURL=chunk-6XIJBI5F.js.map

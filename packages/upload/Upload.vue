@@ -199,7 +199,7 @@ function onError (content: any) {
 </script>
 <template>
   <div class="m-upload-list">
-    <Space :size="gap">
+    <Space :gap="gap">
       <div class="m-upload-item" v-for="n of showUpload" :key="n">
         <div class="m-upload">
           <div

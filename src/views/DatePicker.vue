@@ -87,7 +87,7 @@ watchEffect(() => {
         <a class="u-file" href="https://vue3datepicker.com/installation/" target="_blank">Vue Datepicker Documents</a>
       </li>
     </ul>
-    <Space align="top" class="mt30" :size="6">
+    <Space align="top" class="mt30" :gap="6">
       <h1>DatePicker</h1>
       <Tag color="volcano">{{ pkg.dependencies['@vuepic/vue-datepicker'] }}</Tag>
     </Space>
