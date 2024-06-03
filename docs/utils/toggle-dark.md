@@ -1,6 +1,6 @@
 # 切换暗黑<BackTop />
 
-::: details  Show Source Code
+::: details Show Source Code
 
 ```ts
 function toggleDark () {

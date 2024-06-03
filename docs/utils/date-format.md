@@ -1,6 +1,6 @@
 # 日期格式化<BackTop />
 
-::: details  Show Source Code
+::: details Show Source Code
 
 ```ts
 function dateFormat (value: number|string|Date = Date.now(), format = 'YYYY-MM-DD HH:mm:ss'): string {

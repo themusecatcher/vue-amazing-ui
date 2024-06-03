@@ -1,6 +1,6 @@
 # 下载文件<BackTop />
 
-::: details  Show Source Code
+::: details Show Source Code
 
 ```ts
 function downloadFile (url: string, name: string) {

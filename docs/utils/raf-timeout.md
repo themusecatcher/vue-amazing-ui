@@ -4,7 +4,7 @@
 
 *使用 `raf` 动画帧模拟实现的定时器，等效替代 `setTimeout()` 和 `setInterval()`*
 
-::: details  Show Source Code
+::: details Show Source Code
 
 ```typescript
 function rafTimeout (fn: Function, delay = 0, interval = false): object {
