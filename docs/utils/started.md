@@ -19,7 +19,8 @@ import {
   add,
   downloadFile,
   formatNumber,
-  toggleDark
+  toggleDark,
+  useEventListener
 } from 'vue-amazing-ui'
 </script>
 ```
