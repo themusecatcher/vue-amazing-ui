@@ -47,7 +47,7 @@ const imgHeight = computed(() => {
 })
 const modulesBanner = ref([Navigation, Pagination, Autoplay, EffectFade])
 const autoplayBanner = ref({
-  delay: props.delay, 
+  delay: props.delay,
   disableOnInteraction: false, // 用户操作swiper之后，是否禁止autoplay。默认为true：停止。
   pauseOnMouseEnter: true // 鼠标置于swiper时暂停自动切换，鼠标离开时恢复自动切换，默认false
 })
