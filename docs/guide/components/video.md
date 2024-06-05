@@ -44,7 +44,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
 
 :::
 
-## 自动播放
+## [自动播放](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide)
 
 *据一般规则，媒体内容将在满足以下至少一个的条件下自动播放：*
 1. 音频被静音或其音量设置为 `0`
