@@ -83,7 +83,7 @@ function onSwiper (swiper: any) {
     lazy
     loop
     @swiper="onSwiper"
-    @slideChange="$emit('change')"
+    @slideChange="(swiper) => $emit('change', swiper)"
     v-bind="$attrs">
     <swiper-slide v-for="(image, index) in images" :key="index">
       <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
@@ -105,7 +105,7 @@ function onSwiper (swiper: any) {
     lazy
     loop
     @swiper="onSwiper"
-    @slideChange="$emit('change')"
+    @slideChange="(swiper) => $emit('change', swiper)"
     v-bind="$attrs">
     <swiper-slide v-for="(image, index) in images" :key="index">
       <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
@@ -125,7 +125,7 @@ function onSwiper (swiper: any) {
     :navigation="navigation"
     lazy
     @swiper="onSwiper"
-    @slideChange="$emit('change')"
+    @slideChange="(swiper) => $emit('change', swiper)"
     v-bind="$attrs">
     <swiper-slide v-for="(image, index) in images" :key="index">
       <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">

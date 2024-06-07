@@ -15,8 +15,8 @@ function loadImages () {
 onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
   loadImages()
 })
-function onChange () {
-  console.log('slider change')
+function onChange (swiper: any) {
+  console.log('slider change', swiper)
 }
 const navigation = shallowReactive<{[key: string]: any}>({})
 function onSwiper (swiper: any) {

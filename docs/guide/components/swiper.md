@@ -36,8 +36,8 @@ function loadImages () {
 onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
   loadImages()
 })
-function onChange () {
-  console.log('slider change')
+function onChange (swiper: any) {
+  console.log('slider change', swiper)
 }
 const navigation = shallowReactive<{[key: string]: any}>({})
 function onSwiper (swiper: any) {
@@ -88,8 +88,8 @@ function loadImages () {
 onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
   loadImages()
 })
-function onChange () {
-  console.log('slider change')
+function onChange (swiper: any) {
+  console.log('slider change', swiper)
 }
 </script>
 <template>
@@ -255,4 +255,4 @@ src | 图像地址 | string | true
 事件名称 | 说明 | 参数
 -- | -- | --
 swiper | `Swiper`初始化后的回调 | (swiper: any) => void
-change | 轮播图片变化时的回调 | () => void
+change | 轮播图片变化时的回调 | (swiper: any) => void
