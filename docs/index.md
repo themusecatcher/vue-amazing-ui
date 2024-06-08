@@ -23,14 +23,14 @@ hero:
       link: https://www.npmjs.com/package/vue-amazing-ui
 features:
   - icon: 🛠️
-    title: 开发依赖
-    details: 描述
+    title: 最新的依赖
+    details: '采用 Vue@3.4.27 + TypeScript@5.4.5 + Vite@5.2.12 + Less@4.2.0 实现'
   - icon: 🚀
-    title: 开箱即用
-    details: 目前共有 56 个常用基础 UI 组件，以及 12 个常用工具函数
+    title: 开箱即可用
+    details: 目前共有 56 个常用基础 UI 组件，以及 12 个常用工具函数，持续更新中...
   - icon: ⚡️
-    title: border-box
-    details: '所有组件 CSS 样式均使用 box-sizing: border-box; 模式'
+    title: 单文件组件
+    details: '所有组件均为 SFC，全部样式采用 box-sizing: border-box; 模式'
 ---
 
 <Watermark fullscreen content="Vue Amazing UI" />
