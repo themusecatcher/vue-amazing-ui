@@ -23,5 +23,5 @@ git push -f git@github.com:themusecatcher/vue-amazing-ui.git master:github-pages
 # 提交所有代码到github
 cd ../../../
 git add .
-git cm -m 'update'
+git commit -m 'update'
 git push
