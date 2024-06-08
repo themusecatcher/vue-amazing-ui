@@ -10,9 +10,9 @@ commitDescInfo=$1
 git add .
 
 if [ -z ${commitDescInfo} ]; then
-  git cm -m 'update'
+  git commit -m 'update'
 else
-  git cm -m ${commitDescInfo}
+  git commit -m ${commitDescInfo}
 fi
 
 git push

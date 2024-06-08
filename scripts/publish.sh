@@ -10,7 +10,7 @@ version=`jq -r .version package.json`
 pnpm build
 
 git add .
-git cm -m "update"
+git commit -m "update"
 git push
 
 # 发布到npm，pnpm(高性能的npm)
@@ -21,5 +21,5 @@ pnpm up vue-amazing-ui@$version
 
 # 提交版本更新代码到github
 git add .
-git cm -m "update $version"
+git commit -m "update $version"
 git push
