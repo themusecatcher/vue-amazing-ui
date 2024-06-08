@@ -23,7 +23,7 @@ hero:
       link: https://www.npmjs.com/package/vue-amazing-ui
 features:
   - icon: 🛠️
-    title: 最新的依赖
+    title: 最新的技术
     details: '采用 Vue@3.4.27 + TypeScript@5.4.5 + Vite@5.2.12 + Less@4.2.0 实现'
   - icon: 🚀
     title: 开箱即可用
