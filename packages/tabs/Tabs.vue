@@ -10,10 +10,10 @@ interface Tab {
 interface Props {
   tabPages: Array<Tab> // 标签页数组
   centered?: boolean // 标签是否居中展示
-  size?: 'small'|'middle'|'large' // 标签页大小
-  type?: 'line'|'card' // 标签页的样式
+  size?: 'small' | 'middle' | 'large' // 标签页大小
+  type?: 'line' | 'card' // 标签页的样式
   gutter?: number // tabs 之前的间隙大小，单位px
-  activeKey?: string|number // (v-model)当前激活 tab 面板的 key
+  activeKey?: string | number // (v-model)当前激活 tab 面板的 key
 }
 const props = withDefaults(defineProps<Props>(), {
   tabPages: () => [],
@@ -34,7 +34,7 @@ const showWheel = ref(false) // 导航是否有滚动
 const scrollMax = ref(0) // 最大滚动距离
 const scrollLeft = ref(0) // 滚动距离
 const activeIndex = computed(() => {
-  return props.tabPages.findIndex(page => page.key === props.activeKey)
+  return props.tabPages.findIndex((page) => page.key === props.activeKey)
 })
 watch(
   () => [props.tabPages, props.gutter, props.size, props.type],
@@ -62,7 +62,7 @@ onMounted(() => {
 })
 const emits = defineEmits(['update:activeKey', 'change'])
 const transition = ref(false)
-function getBarDisplay () {
+function getBarDisplay() {
   const el = tabs.value[activeIndex.value]
   if (el) {
     left.value = el.offsetLeft
@@ -89,7 +89,7 @@ function getBarDisplay () {
     width.value = 0
   }
 }
-function getNavWidth () {
+function getNavWidth() {
   wrapWidth.value = wrap.value.offsetWidth
   navWidth.value = nav.value.offsetWidth
   if (navWidth.value > wrapWidth.value) {
@@ -102,7 +102,7 @@ function getNavWidth () {
   }
   getBarDisplay()
 }
-function onTab (key: string|number) {
+function onTab(key: string | number) {
   emits('update:activeKey', key)
   emits('change', key)
 }
@@ -116,8 +116,9 @@ function onTab (key: string|number) {
   WheelEvent.deltaZ 只读：返回一个浮点数（double）表示 z 轴方向的滚动量。
   WheelEvent.deltaMode 只读：返回一个无符号长整型数（unsigned long），表示 delta* 值滚动量的单位。
 */
-function onWheel (e: WheelEvent) {
-  if (e.deltaX !== 0) { // 防止标签页处触摸板上下滚动不生效
+function onWheel(e: WheelEvent) {
+  if (e.deltaX !== 0) {
+    // 防止标签页处触摸板上下滚动不生效
     e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
     const scrollX = e.deltaX * 1 // 滚轮的横向滚动量
     if (scrollLeft.value + scrollX > scrollMax.value) {
@@ -136,12 +137,18 @@ function onWheel (e: WheelEvent) {
       <div
         ref="wrap"
         class="m-tabs-nav-wrap"
-        :class="{'tabs-center': centered, 'before-shadow-active': showWheel && scrollLeft > 0, 'after-shadow-active': showWheel && scrollLeft < scrollMax}">
+        :class="{
+          'tabs-center': centered,
+          'before-shadow-active': showWheel && scrollLeft > 0,
+          'after-shadow-active': showWheel && scrollLeft < scrollMax
+        }"
+      >
         <div
           ref="nav"
           :class="['m-tabs-nav-list', { transition: transition }]"
           @wheel="showWheel ? onWheel($event) : () => false"
-          :style="`transform: translate(${-scrollLeft}px, 0)`">
+          :style="`transform: translate(${-scrollLeft}px, 0)`"
+        >
           <div
             ref="tabs"
             class="u-tab"
@@ -153,18 +160,21 @@ function onWheel (e: WheelEvent) {
             ]"
             :style="`margin-left: ${index !== 0 ? gutter : null}px;`"
             @click="page.disabled ? () => false : onTab(page.key)"
-            v-for="(page, index) in tabPages" :key="index">
+            v-for="(page, index) in tabPages"
+            :key="index"
+          >
             {{ page.tab }}
           </div>
-          <div class="u-tab-bar" :class="{ 'u-card-hidden': type === 'card' }" :style="`left: ${left}px; width: ${width}px;`"></div>
+          <div
+            class="u-tab-bar"
+            :class="{ 'u-card-hidden': type === 'card' }"
+            :style="`left: ${left}px; width: ${width}px;`"
+          ></div>
         </div>
       </div>
     </div>
     <div class="m-tabs-page">
-      <div
-        class="m-tabs-content"
-        v-show="activeKey === page.key"
-        v-for="page in tabPages" :key="page.key">
+      <div class="m-tabs-content" v-show="activeKey === page.key" v-for="page in tabPages" :key="page.key">
         <slot :name="page.key">{{ page.content }}</slot>
       </div>
     </div>
@@ -173,7 +183,7 @@ function onWheel (e: WheelEvent) {
 <style lang="less" scoped>
 .m-tabs {
   display: flex;
-  color: rgba(0, 0, 0, .88);
+  color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
   flex-direction: column; // 子元素将垂直显示，正如一个列一样。
   .m-tabs-nav {
@@ -187,7 +197,7 @@ function onWheel (e: WheelEvent) {
       right: 0;
       left: 0;
       bottom: 0;
-      border-bottom: 1px solid rgba(5, 5, 5, .06);
+      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
       content: '';
     }
     .m-tabs-nav-wrap {
@@ -202,7 +212,7 @@ function onWheel (e: WheelEvent) {
         position: absolute;
         z-index: 1;
         opacity: 0;
-        transition: opacity .3s;
+        transition: opacity 0.3s;
         content: '';
         pointer-events: none;
         top: 0;
@@ -212,16 +222,15 @@ function onWheel (e: WheelEvent) {
       &::before {
         .shadow();
         left: 0;
-        box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, .08);
-        
+        box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.08);
       }
       &::after {
         .shadow();
         right: 0;
-        box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, .08);
+        box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
       }
       .transition {
-        transition: all .15s;
+        transition: all 0.15s;
       }
       .m-tabs-nav-list {
         position: relative;
@@ -236,7 +245,7 @@ function onWheel (e: WheelEvent) {
           border: 0;
           outline: none;
           cursor: pointer;
-          transition: all .3s;
+          transition: all 0.3s;
           &:not(:first-child) {
             margin-left: 32px;
           }
@@ -255,8 +264,8 @@ function onWheel (e: WheelEvent) {
         .u-tab-card {
           border-radius: 8px 8px 0 0;
           padding: 8px 16px;
-          background: rgba(0, 0, 0, .02);
-          border: 1px solid rgba(5, 5, 5, .06);
+          background: rgba(0, 0, 0, 0.02);
+          border: 1px solid rgba(5, 5, 5, 0.06);
           transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
           &:not(:first-child) {
             margin-left: 2px;
@@ -264,19 +273,19 @@ function onWheel (e: WheelEvent) {
         }
         .u-tab-line-active {
           color: @themeColor;
-          text-shadow: 0 0 .25px currentcolor;
+          text-shadow: 0 0 0.25px currentcolor;
         }
         .u-tab-card-active {
           border-bottom-color: #ffffff;
           color: @themeColor;
           background: #ffffff;
-          text-shadow: 0 0 .25px currentcolor;
+          text-shadow: 0 0 0.25px currentcolor;
         }
         .u-tab-disabled {
-          color: rgba(0, 0, 0, .25);
+          color: rgba(0, 0, 0, 0.25);
           cursor: not-allowed;
           &:hover {
-            color: rgba(0, 0, 0, .25);
+            color: rgba(0, 0, 0, 0.25);
           }
         }
         .u-tab-bar {
@@ -284,7 +293,10 @@ function onWheel (e: WheelEvent) {
           background: @themeColor;
           pointer-events: none;
           height: 2px;
-          transition: width .3s,left .3s,right .3s;
+          transition:
+            width 0.3s,
+            left 0.3s,
+            right 0.3s;
           bottom: 0;
         }
         .u-card-hidden {

@@ -6,9 +6,9 @@ interface Text {
   link?: string // 跳转链接
 }
 interface Props {
-  scrollText: Text[]|Text // 滚动文字数组，single 为 true 时，类型为 Text
+  scrollText: Text[] | Text // 滚动文字数组，single 为 true 时，类型为 Text
   single?: boolean // 是否启用单条文字滚动效果，只支持水平文字滚动，为 true 时，amount 自动设为 1
-  width?: number|string // 滚动区域宽度，单位px
+  width?: number | string // 滚动区域宽度，单位px
   height?: number // 滚动区域高度，单位px
   fontSize?: number // 字体大小
   fontWeight?: number // 字体粗细
@@ -29,13 +29,13 @@ const props = withDefaults(defineProps<Props>(), {
   fontSize: 16,
   fontWeight: 400,
   color: 'rgba(0, 0, 0, .88)',
-  backgroundColor:  '#FFF',
+  backgroundColor: '#FFF',
   amount: 4,
   gap: 20,
   step: 1,
   interval: 10,
   vertical: false,
-  verticalInterval: 3000,
+  verticalInterval: 3000
 })
 const textData = computed(() => {
   if (props.single) {
@@ -47,7 +47,8 @@ const textData = computed(() => {
 const textAmount = computed(() => {
   return textData.value.length || 0
 })
-const totalWidth = computed(() => { // 文字滚动区域总宽度
+const totalWidth = computed(() => {
+  // 文字滚动区域总宽度
   if (typeof props.width === 'number') {
     return props.width + 'px'
   } else {
@@ -68,7 +69,16 @@ const verticalMoveRaf = ref() // 垂直滚动引用
 const horizonRef = ref()
 const distance = ref(0) // 每条滚动文字移动距离
 watch(
-  () => [textData, props.width, props.amount, props.gap, props.step, props.interval, props.vertical, props.verticalInterval],
+  () => [
+    textData,
+    props.width,
+    props.amount,
+    props.gap,
+    props.step,
+    props.interval,
+    props.vertical,
+    props.verticalInterval
+  ],
   () => {
     if (!props.vertical) {
       distance.value = getDistance() // 获取每列文字宽度
@@ -86,33 +96,39 @@ onMounted(() => {
   }
   startMove() // 开始滚动
 })
-function getDistance ():number {
+function getDistance(): number {
   return parseFloat((horizonRef.value.offsetWidth / displayAmount.value).toFixed(2))
 }
-function startMove () {
+function startMove() {
   if (props.vertical) {
     if (textAmount.value > 1) {
       verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
       verticalMove() // 垂直滚动
     }
   } else {
-    if (textAmount.value > displayAmount.value) { // 超过 amount 条开始滚动
+    if (textAmount.value > displayAmount.value) {
+      // 超过 amount 条开始滚动
       moveRaf.value && cancelRaf(moveRaf.value)
       horizonMove() // 水平滚动
     }
   }
 }
-function horizonMove () {
-  moveRaf.value = rafTimeout(() => {
-    if (left.value >= distance.value) {
-      textData.value.push(textData.value.shift() as Text) // 将第一条数据放到最后
-      left.value = 0
-    } else {
-      left.value += props.step // 每次移动step（px）
-    }
-  }, props.interval, true)
+function horizonMove() {
+  moveRaf.value = rafTimeout(
+    () => {
+      if (left.value >= distance.value) {
+        textData.value.push(textData.value.shift() as Text) // 将第一条数据放到最后
+        left.value = 0
+      } else {
+        left.value += props.step // 每次移动step（px）
+      }
+    },
+    props.interval,
+    true
+  )
 }
-function stopMove () { // 暂停动画
+function stopMove() {
+  // 暂停动画
   if (props.vertical) {
     verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
   } else {
@@ -120,15 +136,20 @@ function stopMove () { // 暂停动画
   }
 }
 const emit = defineEmits(['click'])
-function onClick (text: Text) { // 通知父组件点击的标题
+function onClick(text: Text) {
+  // 通知父组件点击的标题
   emit('click', text)
 }
 // vertical
 const actIndex = ref(0)
-function verticalMove () {
-  verticalMoveRaf.value = rafTimeout(() => {
-    actIndex.value = (actIndex.value + 1) % textAmount.value
-  }, props.verticalInterval, true)
+function verticalMove() {
+  verticalMoveRaf.value = rafTimeout(
+    () => {
+      actIndex.value = (actIndex.value + 1) % textAmount.value
+    },
+    props.verticalInterval,
+    true
+  )
 }
 </script>
 <template>
@@ -138,15 +159,18 @@ function verticalMove () {
     class="m-slider-horizon"
     @mouseenter="stopMove"
     @mouseleave="startMove"
-    :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --fontWeight: ${fontWeight}; --color: ${color};`">
+    :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --fontWeight: ${fontWeight}; --color: ${color};`"
+  >
     <a
       :style="`will-change: transform; transform: translateX(${-left}px); width: ${distance - gap}px; margin-left: ${gap}px;`"
       class="u-slide-title"
-      v-for="(text, index) in <Text[]>textData" :key="index"
+      v-for="(text, index) in <Text[]>textData"
+      :key="index"
       :title="text.title"
-      :href="text.link ? text.link:'javascript:;'"
-      :target="text.link ? '_blank':'_self'"
-      @click="onClick(text)">
+      :href="text.link ? text.link : 'javascript:;'"
+      :target="text.link ? '_blank' : '_self'"
+      @click="onClick(text)"
+    >
       {{ text.title || '--' }}
     </a>
   </div>
@@ -155,19 +179,23 @@ function verticalMove () {
     class="m-slider-vertical"
     @mouseenter="stopMove"
     @mouseleave="startMove"
-    :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --fontWeight: ${fontWeight}; --color: ${color};`">
+    :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --fontWeight: ${fontWeight}; --color: ${color};`"
+  >
     <TransitionGroup name="slide">
       <div
         class="m-slider"
-        :style="`width: calc(${totalWidth} - ${2*gap}px); height: ${height}px;`"
-        v-for="(text, index) in <Text[]>textData" :key="index"
-        v-show="actIndex===index">
+        :style="`width: calc(${totalWidth} - ${2 * gap}px); height: ${height}px;`"
+        v-for="(text, index) in <Text[]>textData"
+        :key="index"
+        v-show="actIndex === index"
+      >
         <a
           class="u-slider"
           :title="text.title"
-          :href="text.link ? text.link:'javascript:;'"
-          :target="text.link ? '_blank':'_self'"
-          @click="onClick(text)">
+          :href="text.link ? text.link : 'javascript:;'"
+          :target="text.link ? '_blank' : '_self'"
+          @click="onClick(text)"
+        >
           {{ text.title || '--' }}
         </a>
       </div>
@@ -177,13 +205,14 @@ function verticalMove () {
 <style lang="less" scoped>
 // 水平滚动
 .m-slider-horizon {
-  box-shadow: 0px 0px 5px #D3D3D3;
+  box-shadow: 0px 0px 5px #d3d3d3;
   border-radius: 6px;
   white-space: nowrap;
   overflow: hidden;
   text-align: center; // 水平居中
   line-height: 1.5714285714285714;
-  &::after { // 垂直居中
+  &::after {
+    // 垂直居中
     content: '';
     height: 100%;
     display: inline-block;
@@ -206,15 +235,16 @@ function verticalMove () {
 }
 
 // 垂直滚动
-.slide-enter-active, .slide-leave-active {
+.slide-enter-active,
+.slide-leave-active {
   transition: all 1s ease;
 }
 .slide-enter-from {
-  transform: translateY(50px) scale(.5);
+  transform: translateY(50px) scale(0.5);
   opacity: 0;
 }
 .slide-leave-to {
-  transform: translateY(-50px) scale(.5);
+  transform: translateY(-50px) scale(0.5);
   opacity: 0;
 }
 .m-slider-vertical {
@@ -228,7 +258,8 @@ function verticalMove () {
     right: 0;
     margin: 0 auto;
     text-align: center; // 水平居中
-    &::after { // 垂直居中
+    &::after {
+      // 垂直居中
       content: '';
       height: 100%;
       display: inline-block;

@@ -13,21 +13,21 @@ interface Props {
   label?: string // 下拉字典项的文本字段名
   value?: string // 下拉字典项的值字段名
   children?: string // 下拉字典项的后代字段名
-  placeholder?: string|string[] // 三级下拉各自占位文本
+  placeholder?: string | string[] // 三级下拉各自占位文本
   changeOnSelect?: boolean // 当此项为 true 时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择第三级选项后选项值才会变化
   gap?: number // 级联下拉框相互间隙宽度，单位px
-  width?: 'auto'|number|number[] // 三级下拉各自宽度
+  width?: 'auto' | number | number[] // 三级下拉各自宽度
   height?: number // 下拉框高度
-  disabled?: boolean|boolean[] // 三级各自是否禁用
+  disabled?: boolean | boolean[] // 三级各自是否禁用
   allowClear?: boolean // 是否支持清除
   search?: boolean // 是否支持搜索
   /*
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
-  filter?: Function|true // 过滤条件函数，仅当支持搜索时生效
+  filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
-  modelValue?: number[]|string[] // （v-model）级联选中项
+  modelValue?: number[] | string[] // （v-model）级联选中项
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
@@ -44,9 +44,9 @@ const props = withDefaults(defineProps<Props>(), {
   search: false,
   filter: true,
   maxDisplay: 6,
-  modelValue: () => [],
+  modelValue: () => []
 })
-const values = ref<(string|number)[]>([]) // 级联value值数组
+const values = ref<(string | number)[]>([]) // 级联value值数组
 const labels = ref<string[]>([]) // 级联label文本数组
 const firstOptions = ref<Option[]>([])
 const secondOptions = ref<Option[]>([])
@@ -61,7 +61,7 @@ watchEffect(() => {
   initCascader(values.value)
   initLabels(values.value)
 })
-function findChildren (options: Option[], index: number): Option[] {
+function findChildren(options: Option[], index: number): Option[] {
   const len = options.length
   for (let i = 0; i < len; i++) {
     if (options[i][props.value] === values.value[index]) {
@@ -70,14 +70,15 @@ function findChildren (options: Option[], index: number): Option[] {
   }
   return []
 }
-function initCascader (values: (string|number)[]) { // 获取二级/三级下拉项
+function initCascader(values: (string | number)[]) {
+  // 获取二级/三级下拉项
   secondOptions.value = findChildren(firstOptions.value, 0)
   thirdOptions.value = []
   if (values.length > 1) {
     thirdOptions.value = findChildren(secondOptions.value, 1)
   }
 }
-function findLabel (options: Option[], index: number): any {
+function findLabel(options: Option[], index: number): any {
   const len = options.length
   for (let i = 0; i < len; i++) {
     if (options[i][props.value] === values.value[index]) {
@@ -86,7 +87,7 @@ function findLabel (options: Option[], index: number): any {
   }
   return values.value[index]
 }
-function initLabels (values: (string|number)[]) {
+function initLabels(values: (string | number)[]) {
   labels.value[0] = findLabel(firstOptions.value, 0)
   if (values.length > 1) {
     labels.value[1] = findLabel(secondOptions.value, 1)
@@ -96,7 +97,8 @@ function initLabels (values: (string|number)[]) {
   }
 }
 const emits = defineEmits(['update:modelValue', 'change'])
-function onFirstChange (value: string|number, label: string) { // 一级下拉回调
+function onFirstChange(value: string | number, label: string) {
+  // 一级下拉回调
   if (props.changeOnSelect) {
     emits('update:modelValue', [value])
     emits('change', [value], [label])
@@ -105,7 +107,8 @@ function onFirstChange (value: string|number, label: string) { // 一级下拉�
     labels.value = [label]
   }
 }
-function onSecondChange (value: string|number, label: string) { // 二级下拉回调
+function onSecondChange(value: string | number, label: string) {
+  // 二级下拉回调
   if (props.changeOnSelect) {
     emits('update:modelValue', [values.value[0], value])
     emits('change', [values.value[0], value], [labels.value[0], label])
@@ -114,7 +117,8 @@ function onSecondChange (value: string|number, label: string) { // 二级下拉�
     labels.value = [labels.value[0], label]
   }
 }
-function onThirdChange (value: string|number, label: string) { // 三级下拉回调
+function onThirdChange(value: string | number, label: string) {
+  // 三级下拉回调
   emits('update:modelValue', [...values.value.slice(0, 2), value])
   emits('change', [...values.value.slice(0, 2), value], [...labels.value.slice(0, 2), label])
 }
@@ -134,7 +138,8 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :height="height"
       :max-display="maxDisplay"
       v-model="values[0]"
-      @change="onFirstChange" />
+      @change="onFirstChange"
+    />
     <Select
       :options="secondOptions"
       :label="label"
@@ -148,12 +153,13 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :height="height"
       :max-display="maxDisplay"
       v-model="values[1]"
-      @change="onSecondChange" />
+      @change="onSecondChange"
+    />
     <Select
       :options="thirdOptions"
       :label="label"
       :value="value"
-      :placeholder="Array.isArray(placeholder) ? placeholder[2]:placeholder"
+      :placeholder="Array.isArray(placeholder) ? placeholder[2] : placeholder"
       :disabled="Array.isArray(disabled) ? disabled[2] : disabled"
       :allow-clear="allowClear"
       :search="search"
@@ -162,7 +168,8 @@ function onThirdChange (value: string|number, label: string) { // 三级下拉�
       :height="height"
       :max-display="maxDisplay"
       v-model="values[2]"
-      @change="onThirdChange" />
+      @change="onThirdChange"
+    />
   </div>
 </template>
 <style lang="less" scoped>

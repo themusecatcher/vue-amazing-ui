@@ -3,7 +3,7 @@ import pkg from '/package.json'
 import { ref, shallowReactive, onBeforeMount } from 'vue'
 
 const images = ref<any[]>([])
-function loadImages () {
+function loadImages() {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
       title: `image-${i}`,
@@ -12,23 +12,24 @@ function loadImages () {
     })
   }
 }
-onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
+onBeforeMount(() => {
+  // 组件已完成响应式状态设置，但未创建DOM节点
   loadImages()
 })
-function onChange (swiper: any) {
+function onChange(swiper: any) {
   console.log('slider change', swiper)
 }
-const navigation = shallowReactive<{[key: string]: any}>({})
-function onSwiper (swiper: any) {
+const navigation = shallowReactive<{ [key: string]: any }>({})
+function onSwiper(swiper: any) {
   navigation.prevEl = swiper.navigation.prevEl
   navigation.prevEl.style.display = 'none'
   navigation.nextEl = swiper.navigation.nextEl
   navigation.nextEl.style.display = 'none'
 }
-function onPrev () {
+function onPrev() {
   navigation.prevEl.click()
 }
-function onNext () {
+function onNext() {
   navigation.nextEl.click()
 }
 </script>
@@ -61,22 +62,17 @@ function onNext () {
         dynamicBullets: true,
         clickable: true
       }"
-      @change="onChange" />
+      @change="onChange"
+    />
     <h2 class="mt30 mb10">走马灯</h2>
-    <Swiper
-      :images="images"
-      type="carousel"
-      :height="240"
-      :slides-per-view="3"
-      :space-between="20"
-      :speed="2500" />
+    <Swiper :images="images" type="carousel" :height="240" :slides-per-view="3" :space-between="20" :speed="2500" />
     <h2 class="mt30 mb10">信息展播</h2>
     <Space>
       <Button @click="onPrev">Prev</Button>
       <Button @click="onNext">Next</Button>
     </Space>
-    <br/>
-    <br/>
+    <br />
+    <br />
     <Swiper
       :images="images"
       type="broadcast"
@@ -89,6 +85,7 @@ function onNext () {
       :space-between="30"
       loop
       mousewheel
-      @swiper="onSwiper" />
+      @swiper="onSwiper"
+    />
   </div>
 </template>

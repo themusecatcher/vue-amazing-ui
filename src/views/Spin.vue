@@ -6,32 +6,60 @@ const spinning = ref(true)
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Spin style="width: 800px;" :spinning="spinning">
-      <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+    <Spin style="width: 800px" :spinning="spinning">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
     </Spin>
     <h2 class="mt30 mb10">旋转的点</h2>
-    <Spin style="width: 800px;" :spinning="spinning" indicator="spin-dot">
-      <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+    <Spin style="width: 800px" :spinning="spinning" indicator="spin-dot">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
     </Spin>
     <h2 class="mt30 mb10">旋转的线</h2>
-    <Spin style="width: 800px;" :spinning="spinning" indicator="spin-line">
-      <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+    <Spin style="width: 800px" :spinning="spinning" indicator="spin-line">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
     </Spin>
     <h2 class="mt30 mb10">四分之一圆形指示符</h2>
-    <Spin style="width: 800px;" :spinning="spinning" indicator="quarter-circle">
-      <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+    <Spin style="width: 800px" :spinning="spinning" indicator="quarter-circle">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
     </Spin>
     <h2 class="mt30 mb10">二分之一圆形指示符</h2>
-    <Spin style="width: 800px;" :spinning="spinning" indicator="half-circle">
-      <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+    <Spin style="width: 800px" :spinning="spinning" indicator="half-circle">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
     </Spin>
     <h2 class="mt30 mb10">四分之三圆形指示符</h2>
-    <Spin style="width: 800px;" :spinning="spinning" indicator="three-quarters-circle">
-      <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+    <Spin style="width: 800px" :spinning="spinning" indicator="three-quarters-circle">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
     </Spin>
     <h2 class="mt30 mb10">动态圆形指示符</h2>
-    <Spin style="width: 800px;" :spinning="spinning" indicator="dynamic-circle">
-      <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+    <Spin style="width: 800px" :spinning="spinning" indicator="dynamic-circle">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
     </Spin>
     <h2 class="mt30 mb10">自定义描述文案</h2>
     <Space>
@@ -72,29 +100,36 @@ const spinning = ref(true)
       </Space>
       <Space>
         <Spin class="u-spin" :spinning="spinning" size="small" indicator="quarter-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="default"  indicator="quarter-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="large"  indicator="quarter-circle" />
+        <Spin class="u-spin" :spinning="spinning" size="default" indicator="quarter-circle" />
+        <Spin class="u-spin" :spinning="spinning" size="large" indicator="quarter-circle" />
       </Space>
       <Space>
         <Spin class="u-spin" :spinning="spinning" size="small" indicator="half-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="default"  indicator="half-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="large"  indicator="half-circle" />
+        <Spin class="u-spin" :spinning="spinning" size="default" indicator="half-circle" />
+        <Spin class="u-spin" :spinning="spinning" size="large" indicator="half-circle" />
       </Space>
       <Space>
         <Spin class="u-spin" :spinning="spinning" size="small" indicator="three-quarters-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="default"  indicator="three-quarters-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="large"  indicator="three-quarters-circle" />
+        <Spin class="u-spin" :spinning="spinning" size="default" indicator="three-quarters-circle" />
+        <Spin class="u-spin" :spinning="spinning" size="large" indicator="three-quarters-circle" />
       </Space>
       <Space>
         <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="default"  indicator="dynamic-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
+        <Spin class="u-spin" :spinning="spinning" size="default" indicator="dynamic-circle" />
+        <Spin class="u-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
       </Space>
     </Space>
-    <h3>Loading state: <Switch v-model:checked="spinning" /></h3>
+    <h3>
+      Loading state:
+      <Switch v-model:checked="spinning" />
+    </h3>
     <h2 class="mt30 mb10">Ant Design Vue 加载中</h2>
     <a-spin size="default" :spinning="spinning">
-      <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，延迟`delay`ms时间后，显示 loading 效果；如果 spinning 状态在 `delay` 时间内结束，则不显示 loading 状态；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，延迟`delay`ms时间后，显示 loading
+        效果；如果 spinning 状态在 `delay` 时间内结束，则不显示 loading 状态；如果不设置 tip 描述文案时，则只有 loading
+        效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      </p>
     </a-spin>
   </div>
 </template>

@@ -12,10 +12,10 @@ interface Data {
 }
 interface Props {
   timelineData: Data[] // 时间轴内容数组
-  width?: number|string // 时间轴区域总宽度，单位px
-  lineStyle?: 'solid'|'dashed'|'dotted' // 时间线样式
-  mode?: 'left'|'center'|'right' // 通过设置 mode 可以改变时间轴和内容的相对位置
-  position?: 'left'|'right' // 当 mode 为 center 时，内容交替展现，内容从左边（left）开始或者右边（right）开始展现
+  width?: number | string // 时间轴区域总宽度，单位px
+  lineStyle?: 'solid' | 'dashed' | 'dotted' // 时间线样式
+  mode?: 'left' | 'center' | 'right' // 通过设置 mode 可以改变时间轴和内容的相对位置
+  position?: 'left' | 'right' // 当 mode 为 center 时，内容交替展现，内容从左边（left）开始或者右边（right）开始展现
 }
 const props = withDefaults(defineProps<Props>(), {
   timelineData: () => [],
@@ -28,7 +28,7 @@ const desc = ref()
 const dotsHeight = ref<string[]>([])
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
-   return props.width + 'px'
+    return props.width + 'px'
   } else {
     return props.width
   }
@@ -36,48 +36,60 @@ const totalWidth = computed(() => {
 const len = computed(() => {
   return props.timelineData.length
 })
-function getDotsHeight () {
+function getDotsHeight() {
   for (let n = 0; n < len.value; n++) {
-    dotsHeight.value[n] = getComputedStyle(desc.value[n].firstElementChild || desc.value[n], null).getPropertyValue('line-height')
+    dotsHeight.value[n] = getComputedStyle(desc.value[n].firstElementChild || desc.value[n], null).getPropertyValue(
+      'line-height'
+    )
   }
 }
-watchEffect(() => {
-  getDotsHeight()
-}, { flush: 'post' })
-watchEffect(() => {
-  if (props.mode === 'center') {
-    for (let n = 0; n < len.value; n++) {
-      if ((n + 1) % 2) { // odd
-        if (props.position === 'left') {
-          desc.value[n].classList.add('alternate-left-desc')
+watchEffect(
+  () => {
+    getDotsHeight()
+  },
+  { flush: 'post' }
+)
+watchEffect(
+  () => {
+    if (props.mode === 'center') {
+      for (let n = 0; n < len.value; n++) {
+        if ((n + 1) % 2) {
+          // odd
+          if (props.position === 'left') {
+            desc.value[n].classList.add('alternate-left-desc')
+          } else {
+            desc.value[n].classList.add('alternate-right-desc')
+          }
         } else {
-          desc.value[n].classList.add('alternate-right-desc')
-        }
-      } else { // even
-        if (props.position === 'left') {
-          desc.value[n].classList.add('alternate-right-desc')
-        } else {
-          desc.value[n].classList.add('alternate-left-desc')
+          // even
+          if (props.position === 'left') {
+            desc.value[n].classList.add('alternate-right-desc')
+          } else {
+            desc.value[n].classList.add('alternate-left-desc')
+          }
         }
       }
     }
-  }
-}, { flush: 'post' })
+  },
+  { flush: 'post' }
+)
 </script>
 <template>
   <div class="m-timeline-area" :style="`width: ${totalWidth};`">
     <div class="m-timeline">
       <div
-        :class="['m-timeline-item', {'last': index === timelineData.length - 1}]"
-        v-for="(data, index) in timelineData" :key="index">
+        :class="['m-timeline-item', { last: index === timelineData.length - 1 }]"
+        v-for="(data, index) in timelineData"
+        :key="index"
+      >
         <span :class="`u-tail ${mode}-tail`" :style="`border-left-style: ${lineStyle};`"></span>
         <div :class="`m-dot ${mode}-dot`" :style="`height: ${dotsHeight[index]}`">
           <slot name="dot" :index="index">
-            <span class="u-dot" v-if="data.color === 'red'" :style="{borderColor: ColorStyle.red}"></span>
-            <span class="u-dot" v-else-if="data.color === 'gray'" :style="{borderColor: ColorStyle.gray}"></span>
-            <span class="u-dot" v-else-if="data.color === 'green'" :style="{borderColor: ColorStyle.green}"></span>
-            <span class="u-dot" v-else-if="data.color === 'blue'" :style="{borderColor: ColorStyle.blue}"></span>
-            <span class="u-dot" v-else :style="{borderColor: data.color || ColorStyle.blue}"></span>
+            <span class="u-dot" v-if="data.color === 'red'" :style="{ borderColor: ColorStyle.red }"></span>
+            <span class="u-dot" v-else-if="data.color === 'gray'" :style="{ borderColor: ColorStyle.gray }"></span>
+            <span class="u-dot" v-else-if="data.color === 'green'" :style="{ borderColor: ColorStyle.green }"></span>
+            <span class="u-dot" v-else-if="data.color === 'blue'" :style="{ borderColor: ColorStyle.blue }"></span>
+            <span class="u-dot" v-else :style="{ borderColor: data.color || ColorStyle.blue }"></span>
           </slot>
         </div>
         <div ref="desc" :class="`u-desc ${mode}-desc`">
@@ -123,7 +135,7 @@ watchEffect(() => {
           border-width: 2px;
           border-style: solid;
           border-radius: 50%;
-          background: #FFF;
+          background: #fff;
         }
       }
       .left-dot {

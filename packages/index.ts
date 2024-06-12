@@ -145,7 +145,7 @@ const install = function (app: App) {
     解决方式一：使用// @ts-ignore
     解决方式二：使用类型断言 尖括号语法(<string>component.__name) 或 as语法(component.__name as string)
   */
-  components.forEach(component => app.component(component.__name as string, component))
+  components.forEach((component) => app.component(component.__name as string, component))
 }
 
 export {

@@ -4,11 +4,12 @@ import Empty from '../empty'
 import Pagination from '../pagination'
 interface Column {
   title?: string // 列头显示文字
-  width: number|string // 列宽度
+  width: number | string // 列宽度
   dataIndex: string // 列数据字符索引
   slot?: string // 列插槽名称索引
 }
-interface Pagination { // 具体可参考 Pagination 分页组件相关 APIs
+interface Pagination {
+  // 具体可参考 Pagination 分页组件相关 APIs
   page?: number // 当前页码
   pageSize?: number // 每页条数
   pageSizeOptions?: string[] | number[] // 每页可以显示多少条
@@ -17,7 +18,7 @@ interface Pagination { // 具体可参考 Pagination 分页组件相关 APIs
   showQuickJumper?: boolean // 是否可以快速跳转至某页
   showSizeChanger?: boolean // 是否展示 pageSize 切换器，当 total 大于 50 时默认为 true
   showTotal?: boolean // 是否显示当前页数和数据总量
-  placement?: 'left'|'center'|'right' // 分页展示位置：靠左、居中、靠右
+  placement?: 'left' | 'center' | 'right' // 分页展示位置：靠左、居中、靠右
 }
 interface Props {
   columns?: Column[] // 表格列的配置项
@@ -36,7 +37,8 @@ withDefaults(defineProps<Props>(), {
   loading: false
 })
 const emit = defineEmits(['change'])
-function changePage (page: number, pageSize: number) { // 分页回调
+function changePage(page: number, pageSize: number) {
+  // 分页回调
   emit('change', page, pageSize)
 }
 </script>
@@ -45,7 +47,12 @@ function changePage (page: number, pageSize: number) { // 分页回调
     <table class="m-table">
       <thead>
         <tr class="m-tr">
-          <th class="m-th" :style="`width: ${typeof item.width === 'number' ? item.width + 'px' : item.width};`" v-for="(item, index) in columns" :key="index">
+          <th
+            class="m-th"
+            :style="`width: ${typeof item.width === 'number' ? item.width + 'px' : item.width};`"
+            v-for="(item, index) in columns"
+            :key="index"
+          >
             {{ item.title }}
           </th>
         </tr>
@@ -61,7 +68,9 @@ function changePage (page: number, pageSize: number) { // 分页回调
         </tr>
         <tr class="m-tr" v-for="(data, index) in dataSource" :key="index">
           <td class="m-td" v-for="(col, n) in columns" :key="n" :title="data[col.dataIndex as any]">
-            <slot v-if="col.slot" v-bind="data" :name="col.slot" :index="index">{{ data[col.dataIndex as any] || '--' }}</slot>
+            <slot v-if="col.slot" v-bind="data" :name="col.slot" :index="index">{{
+              data[col.dataIndex as any] || '--'
+            }}</slot>
             <span v-else>{{ data[col.dataIndex as any] || '--' }}</span>
           </td>
         </tr>
@@ -80,12 +89,13 @@ function changePage (page: number, pageSize: number) { // 分页回调
       :showSizeChanger="pagination.showSizeChanger"
       :showTotal="pagination.showTotal"
       :placement="pagination.placement"
-      v-if="showPagination && total" />
+      v-if="showPagination && total"
+    />
   </div>
 </template>
 <style lang="less" scoped>
 .m-table-wrap {
-  color: rgba(0, 0, 0, .65);
+  color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
   line-height: 1.5714285714285714;
   border-radius: 8px 8px 0 0;
@@ -100,13 +110,13 @@ function changePage (page: number, pageSize: number) { // 分页回调
     margin: 0;
     .m-th {
       padding: 16px;
-      color: rgba(0, 0, 0, .85);
+      color: rgba(0, 0, 0, 0.85);
       font-weight: 500;
       text-align: left;
       background: #fafafa;
       border: none;
-      border-bottom: 1px solid #f0f0f0;;
-      transition: background .3s ease;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.3s ease;
       &:first-child {
         border-top-left-radius: 8px;
       }
@@ -118,7 +128,7 @@ function changePage (page: number, pageSize: number) { // 分页回调
       position: relative;
       .m-tr-loading {
         border: none;
-        background-color: #FFF;
+        background-color: #fff;
         .m-loading {
           position: absolute;
           width: 100%;
@@ -127,14 +137,14 @@ function changePage (page: number, pageSize: number) { // 分页回调
       }
       .m-tr-empty {
         border: none;
-        background-color: #FFF;
+        background-color: #fff;
         &:hover {
-          background: #FFF;
+          background: #fff;
         }
         .m-td-empty {
           padding: 16px;
           border: none;
-          border-bottom: 1px solid #f0f0f0;;
+          border-bottom: 1px solid #f0f0f0;
           .empty {
             margin: 32px 0;
           }
@@ -143,13 +153,13 @@ function changePage (page: number, pageSize: number) { // 分页回调
     }
     .m-tr {
       border: none;
-      background-color: #FFF;
-      transition: background-color .3s;
+      background-color: #fff;
+      transition: background-color 0.3s;
       .m-td {
         padding: 16px;
         border: none;
-        border-bottom: 1px solid #f0f0f0;;
-        transition: background .3s;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.3s;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;

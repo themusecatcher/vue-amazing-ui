@@ -62,15 +62,15 @@ const avatarShapeOptions = ref([
     <Skeleton avatar :paragraph="{ rows: 4 }" />
     <h2 class="mt30 mb10">包含子组件</h2>
     <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
-    <br/>
-    <br/>
+    <br />
+    <br />
     <Skeleton :loading="loading">
       <div>
         <h4>Vue Amazing UI, a design language</h4>
-        <br/>
+        <br />
         <p>
-          We supply a series of design principles, practical patterns and high quality design
-          resources, to help people create their product prototypes beautifully and efficiently.
+          We supply a series of design principles, practical patterns and high quality design resources, to help people
+          create their product prototypes beautifully and efficiently.
         </p>
       </div>
     </Skeleton>
@@ -79,7 +79,7 @@ const avatarShapeOptions = ref([
     <h2 class="mt30 mb10">按钮 / 输入框 / 图像 / 头像</h2>
     <Flex :gap="32">
       <Flex vertical :gap="12" width="50%">
-        <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block}" />
+        <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block }" />
         <Skeleton style="width: 200px" :animated="animated" :input="{ size: size }" />
         <Skeleton :animated="animated" image />
         <Skeleton :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
@@ -87,20 +87,25 @@ const avatarShapeOptions = ref([
       <Flex vertical :gap="36" width="50%">
         <Space :gap="32">
           <Space align="center">
-            animated: <Switch v-model:checked="animated" />
+            animated:
+            <Switch v-model:checked="animated" />
           </Space>
           <Space align="center">
-            Button Block: <Switch v-model:checked="block" />
+            Button Block:
+            <Switch v-model:checked="block" />
           </Space>
         </Space>
         <Space align="center">
-          Size: <Radio :options="sizeOptions" v-model:value="size" button />
+          Size:
+          <Radio :options="sizeOptions" v-model:value="size" button />
         </Space>
         <Space align="center">
-          Button Shape: <Radio :options="buttonShapeOptions" v-model:value="buttonShape" button />
+          Button Shape:
+          <Radio :options="buttonShapeOptions" v-model:value="buttonShape" button />
         </Space>
         <Space align="center">
-          Avatar Shape: <Radio :options="avatarShapeOptions" v-model:value="avatarShape" button />
+          Avatar Shape:
+          <Radio :options="avatarShapeOptions" v-model:value="avatarShape" button />
         </Space>
       </Flex>
     </Flex>

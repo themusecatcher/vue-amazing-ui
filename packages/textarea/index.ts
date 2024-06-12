@@ -7,4 +7,3 @@ Textarea.install = (app: App) => {
 }
 
 export default Textarea
-

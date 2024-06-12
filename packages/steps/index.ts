@@ -7,4 +7,3 @@ Steps.install = (app: App) => {
 }
 
 export default Steps
-

@@ -1,18 +1,13 @@
 {
+  "$schema": "https://json.schemastore.org/prettierrc",
   "singleQuote": true,
   "semi": false,
-  "trailingComma": "all",
-  "endOfLine": "lf",
-  "printWidth": 140,
+  "tabWidth": 2,
+  "trailingComma": "none",
+  "endOfLine": "auto",
+  "printWidth": 120,
   "proseWrap": "never",
-  "arrowParens": "avoid",
-  "htmlWhitespaceSensitivity": "ignore",
-  "overrides": [
-    {
-      "files": ".prettierrc.json",
-      "options": {
-        "parser": "json"
-      }
-    }
-  ]
+  "arrowParens": "always",
+  "htmlWhitespaceSensitivity": "strict",
+  "embeddedLanguageFormatting": "auto"
 }

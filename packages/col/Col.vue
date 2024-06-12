@@ -3,13 +3,13 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 interface Props {
   span?: number // 栅格占位格数，为 0 时相当于 display: none，取0,1,2...24
   offset?: number // 栅格左侧的间隔格数，取0,1,2...24
-  flex?: string|number //	flex 布局填充
-  xs?: number|{span: number, offset?: number} // <576px 响应式栅格
-  sm?: number|{span: number, offset?: number} // ≥576px 响应式栅格
-  md?: number|{span: number, offset?: number} // ≥768px 响应式栅格
-  lg?: number|{span: number, offset?: number} // ≥992px 响应式栅格
-  xl?: number|{span: number, offset?: number} // ≥1200px 响应式栅格
-  xxl?: number|{span: number, offset?: number} // ≥1600px 响应式栅格
+  flex?: string | number //	flex 布局填充
+  xs?: number | { span: number; offset?: number } // <576px 响应式栅格
+  sm?: number | { span: number; offset?: number } // ≥576px 响应式栅格
+  md?: number | { span: number; offset?: number } // ≥768px 响应式栅格
+  lg?: number | { span: number; offset?: number } // ≥992px 响应式栅格
+  xl?: number | { span: number; offset?: number } // ≥1200px 响应式栅格
+  xxl?: number | { span: number; offset?: number } // ≥1600px 响应式栅格
 }
 const props = withDefaults(defineProps<Props>(), {
   span: undefined,
@@ -97,7 +97,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', getBrowserSize)
 })
-function getBrowserSize () {
+function getBrowserSize() {
   // document.documentElement返回<html>元素
   clientWidth.value = document.documentElement.clientWidth
 }
@@ -105,8 +105,9 @@ function getBrowserSize () {
 <template>
   <div
     :class="`m-col col-${responsiveProperty?.span || span} offset-${responsiveProperty?.offset || offset}`"
-    style="padding-left: var(--xGap); padding-right: var(--xGap);"
-    :style="`flex: ${flexValue}`">
+    style="padding-left: var(--xGap); padding-right: var(--xGap)"
+    :style="`flex: ${flexValue}`"
+  >
     <slot></slot>
   </div>
 </template>
@@ -116,9 +117,9 @@ function getBrowserSize () {
   max-width: 100%;
   min-height: 1px;
   font-size: 14px;
-  color: rgba(0, 0, 0, .88);
+  color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 .col-0 {
   display: none;

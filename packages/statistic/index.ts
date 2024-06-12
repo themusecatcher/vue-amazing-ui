@@ -7,4 +7,3 @@ Statistic.install = (app: App) => {
 }
 
 export default Statistic
-

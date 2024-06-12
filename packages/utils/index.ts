@@ -3,7 +3,7 @@
   console.log(dateFormat(1680227496788, 'YYYY-MM-DD HH:mm:ss'))
   format => YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
 */
-export function dateFormat (value: number|string|Date = Date.now(), format = 'YYYY-MM-DD HH:mm:ss'): string {
+export function dateFormat(value: number | string | Date = Date.now(), format = 'YYYY-MM-DD HH:mm:ss'): string {
   if (typeof value === 'number' || typeof value === 'string') {
     var date = new Date(value)
   } else {
@@ -41,9 +41,16 @@ export function dateFormat (value: number|string|Date = Date.now(), format = 'YY
   return showTime
 }
 // @ts-ignore 兼容性requestAnimationFrame
-export const requestAnimationFrame = typeof window !== 'undefined' ? (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame) : () => {}
+export const requestAnimationFrame =
+  typeof window !== 'undefined'
+    ? window.requestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.msRequestAnimationFrame
+    : () => {}
 // @ts-ignore 兼容性cancelAnimationFrame
-export const cancelAnimationFrame = typeof window !== 'undefined' ? (window.cancelAnimationFrame || window.mozCancelAnimationFrame) : () => {}
+export const cancelAnimationFrame =
+  typeof window !== 'undefined' ? window.cancelAnimationFrame || window.mozCancelAnimationFrame : () => {}
 /*
   使用 requestAnimationFrame 模拟 setTimeout 和 setInterval
   一共接收三个参数：
@@ -54,11 +61,17 @@ export const cancelAnimationFrame = typeof window !== 'undefined' ? (window.canc
   返回值（用于取消 rafTimeout）：（object）raf: { id: number }
   取消 rafTimeout 定时器：cancelRaf(raf) 或者 cancelAnimationFrame(raf.id)
 */
-export function rafTimeout (fn: Function, delay = 0, interval = false): object {
+export function rafTimeout(fn: Function, delay = 0, interval = false): object {
   // @ts-ignore
-  const requestAnimationFrame = typeof window !== 'undefined' ? (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame) : () => {}
+  const requestAnimationFrame =
+    typeof window !== 'undefined'
+      ? window.requestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.msRequestAnimationFrame
+      : () => {}
   let start: any = null
-  function timeElapse (timestamp: number) {
+  function timeElapse(timestamp: number) {
     /*
       timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame() 开始去执行回调函数的时刻
     */
@@ -68,7 +81,8 @@ export function rafTimeout (fn: Function, delay = 0, interval = false): object {
     const elapsed = timestamp - start
     if (elapsed >= delay) {
       fn() // 执行目标函数func
-      if (interval) { // 使用间歇调用
+      if (interval) {
+        // 使用间歇调用
         start = null
         raf.id = requestAnimationFrame(timeElapse)
       }
@@ -76,21 +90,23 @@ export function rafTimeout (fn: Function, delay = 0, interval = false): object {
       raf.id = requestAnimationFrame(timeElapse)
     }
   }
-  const raf = { // 引用类型保存，方便获取 requestAnimationFrame()方法返回的 ID.
+  const raf = {
+    // 引用类型保存，方便获取 requestAnimationFrame()方法返回的 ID.
     id: requestAnimationFrame(timeElapse)
   }
   return raf
 }
 // 用于取消 rafTimeout 函数
-export function cancelRaf (raf: { id: number }): void {
+export function cancelRaf(raf: { id: number }): void {
   // @ts-ignore
-  const cancelAnimationFrame = typeof window !== 'undefined' ? (window.cancelAnimationFrame || window.mozCancelAnimationFrame) : () => {}
+  const cancelAnimationFrame =
+    typeof window !== 'undefined' ? window.cancelAnimationFrame || window.mozCancelAnimationFrame : () => {}
   if (raf && raf.id) {
     cancelAnimationFrame(raf.id)
   }
 }
 // 节流函数throttle
-export function throttle (fn: Function, delay = 300): any {
+export function throttle(fn: Function, delay = 300): any {
   let valid = true
   return function () {
     if (valid) {
@@ -104,7 +120,7 @@ export function throttle (fn: Function, delay = 300): any {
   }
 }
 // 防抖函数debounce
-export function debounce (fn: Function, delay = 300): any {
+export function debounce(fn: Function, delay = 300): any {
   let timer: any = null //借助闭包
   return function () {
     if (timer) {
@@ -114,13 +130,13 @@ export function debounce (fn: Function, delay = 300): any {
   }
 }
 // 消除js加减精度问题的加法函数
-export function add (num1: number, num2: number): number {
+export function add(num1: number, num2: number): number {
   const num1DeciStr = String(num1).split('.')[1]
   const num2DeciStr = String(num2).split('.')[1]
   const maxLen = Math.max(num1DeciStr?.length || 0, num2DeciStr?.length || 0) // 两数中最长的小数位长度
   const num1Str = num1.toFixed(maxLen) // 补零，返回字符串
   const num2Str = num2.toFixed(maxLen)
-  const result = +(num1Str.replace('.', '')) + +(num2Str.replace('.', '')) // 转换为整数相加
+  const result = +num1Str.replace('.', '') + +num2Str.replace('.', '') // 转换为整数相加
   return result / Math.pow(10, maxLen)
 }
 /*
@@ -128,7 +144,7 @@ export function add (num1: number, num2: number): number {
   url: 文件地址
   name: 自定义文件名，未传时，从文件地址中自动获取文件名称
 */
-export function downloadFile (url: string, name: string) {
+export function downloadFile(url: string, name: string) {
   let fileName = ''
   if (name) {
     fileName = name
@@ -165,7 +181,14 @@ export function downloadFile (url: string, name: string) {
   suffix：后缀字符，默认''
   formatNumber(123456789.87654321, 2, ',') // 123,456,789.88
 */
-export function formatNumber (value: number|string, precision = 2, separator = ',', decimal = '.', prefix = '', suffix = ''): string {
+export function formatNumber(
+  value: number | string,
+  precision = 2,
+  separator = ',',
+  decimal = '.',
+  prefix = '',
+  suffix = ''
+): string {
   if (Number(value) === 0) {
     return Number(value).toFixed(precision)
   }
@@ -178,7 +201,7 @@ export function formatNumber (value: number|string, precision = 2, separator = '
   let integer = nums[0]
   const decimals = nums.length > 1 ? decimal + nums[1] : ''
   const reg = /(\d+)(\d{3})/
-  function isNumber (value: any) {
+  function isNumber(value: any) {
     return Object.prototype.toString.call(value) === '[object Number]'
   }
   if (separator && !isNumber(separator)) {
@@ -203,7 +226,7 @@ export function formatNumber (value: number|string, precision = 2, separator = '
     }
   }
 */
-export function toggleDark () {
+export function toggleDark() {
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
   document.documentElement.classList.toggle('dark')
 }
@@ -216,7 +239,7 @@ import { onMounted, onUnmounted } from 'vue'
   callback：监听事件触发时的回调函数
 
 */
-export function useEventListener (target: any, event: string, callback: Function) {
+export function useEventListener(target: any, event: string, callback: Function) {
   // 如果你想的话，
   // 也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素
   onMounted(() => target.addEventListener(event, callback))

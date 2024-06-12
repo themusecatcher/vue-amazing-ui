@@ -36,9 +36,9 @@ const onClick = () => {
       <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
       <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
       <DescriptionsItem label="Remark">empty</DescriptionsItem>
-      <DescriptionsItem label="Address">
-        No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
-      </DescriptionsItem>
+      <DescriptionsItem label="Address"
+        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</DescriptionsItem
+      >
     </Descriptions>
     <h2 class="mt30 mb10">带边框的</h2>
     <Descriptions title="User Info" bordered>
@@ -69,11 +69,7 @@ const onClick = () => {
       </DescriptionsItem>
     </Descriptions>
     <h2 class="mt30 mb10">响应式描述列表</h2>
-    <Descriptions
-      title="Responsive Descriptions"
-      bordered
-      :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }"
-    >
+    <Descriptions title="Responsive Descriptions" bordered :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
       <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
       <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
       <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
@@ -140,15 +136,18 @@ const onClick = () => {
     <Descriptions
       bordered
       title="Custom Style"
-      :labelStyle="{fontWeight: 800, color: '#faad14'}"
-      :contentStyle="{fontWeight: 600, color: '#1677ff'}">
+      :labelStyle="{ fontWeight: 800, color: '#faad14' }"
+      :contentStyle="{ fontWeight: 600, color: '#1677ff' }"
+    >
       <template #extra>
         <Button type="primary">Edit</Button>
       </template>
       <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
       <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
       <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
-      <DescriptionsItem label="Amount" :labelStyle="{color: '#52c41a'}" :contentStyle="{color: '#ff4d4f'}">$80.00</DescriptionsItem>
+      <DescriptionsItem label="Amount" :labelStyle="{ color: '#52c41a' }" :contentStyle="{ color: '#ff4d4f' }"
+        >$80.00</DescriptionsItem
+      >
       <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
       <DescriptionsItem label="Official">$60.00</DescriptionsItem>
       <DescriptionsItem label="Config Info">
@@ -170,15 +169,18 @@ const onClick = () => {
     <br />
     <Descriptions
       title="Custom Style"
-      :labelStyle="{fontWeight: 800, color: '#faad14'}"
-      :contentStyle="{fontWeight: 600, color: '#1677ff'}">
+      :labelStyle="{ fontWeight: 800, color: '#faad14' }"
+      :contentStyle="{ fontWeight: 600, color: '#1677ff' }"
+    >
       <template #extra>
         <Button type="primary">Edit</Button>
       </template>
       <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
       <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
       <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
-      <DescriptionsItem label="Amount" :labelStyle="{color: '#52c41a'}" :contentStyle="{color: '#ff4d4f'}">$80.00</DescriptionsItem>
+      <DescriptionsItem label="Amount" :labelStyle="{ color: '#52c41a' }" :contentStyle="{ color: '#ff4d4f' }"
+        >$80.00</DescriptionsItem
+      >
       <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
       <DescriptionsItem label="Official">$60.00</DescriptionsItem>
     </Descriptions>

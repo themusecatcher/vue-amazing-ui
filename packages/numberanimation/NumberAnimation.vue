@@ -58,32 +58,29 @@ const source = ref(props.from)
 watchEffect(() => {
   source.value = props.from
 })
-watch(
-  [() => props.from, () => props.to],
-  () => {
-    if (props.autoplay) {
-      play()
-    }
+watch([() => props.from, () => props.to], () => {
+  if (props.autoplay) {
+    play()
   }
-)
+})
 onMounted(() => {
   props.autoplay && play()
 })
 const outputValue = useTransition(source, {
-    duration: props.duration,
-    transition: TransitionPresets[props.transition],
-    onFinished: () => emits('finished'),
-    onStarted: () => emits('started')
-  })
-function play () {
+  duration: props.duration,
+  transition: TransitionPresets[props.transition],
+  onFinished: () => emits('finished'),
+  onStarted: () => emits('started')
+})
+function play() {
   source.value = props.to
 }
 const showValue = computed(() => formatNumber(outputValue.value))
-function isNumber (val: any) {
+function isNumber(val: any) {
   return Object.prototype.toString.call(val) === '[object Number]'
 }
 const emits = defineEmits(['started', 'finished'])
-function formatNumber (num: number | string) {
+function formatNumber(num: number | string) {
   const { precision, decimal, separator, suffix, prefix } = props
   if (num === 0) {
     return num.toFixed(precision)

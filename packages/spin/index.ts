@@ -7,4 +7,3 @@ Spin.install = (app: App) => {
 }
 
 export default Spin
-

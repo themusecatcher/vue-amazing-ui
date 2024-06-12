@@ -26,15 +26,16 @@ const current = ref(3)
 watchEffect(() => {
   console.log('current:', current.value)
 })
-function onChange (index: number) { // 父组件获取切换后的选中步骤
+function onChange(index: number) {
+  // 父组件获取切换后的选中步骤
   console.log('current:', index)
 }
-function onPrevious () {
+function onPrevious() {
   if (current.value > 1) {
     current.value--
   }
 }
-function onNext () {
+function onNext() {
   if (steps.value.length >= current.value) {
     current.value++
   }
@@ -44,20 +45,10 @@ function onNext () {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Steps
-      :steps="steps"
-      :width="'100%'"
-      :descMaxWidth="160"
-      :current="current"
-      @change="onChange" />
+    <Steps :steps="steps" :width="'100%'" :descMaxWidth="160" :current="current" @change="onChange" />
     <h2 class="mt30 mb10">可点击</h2>
     <h3 class="mb10">设置 v-model: current 后即可点击</h3>
-    <Steps
-      :steps="steps"
-      :width="'100%'"
-      :descMaxWidth="160"
-      v-model:current="current"
-      @change="onChange" />
+    <Steps :steps="steps" :width="'100%'" :descMaxWidth="160" v-model:current="current" @change="onChange" />
     <Button @click="onPrevious()" size="large" class="mt30 mr30">Previous</Button>
     <Button @click="onNext()" size="large">Next</Button>
     <h2 class="mt30 mb10">Ant Design Vue 步骤条</h2>

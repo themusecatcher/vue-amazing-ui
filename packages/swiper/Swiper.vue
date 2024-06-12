@@ -14,14 +14,14 @@ interface Image {
 }
 interface Props {
   images: Image[] // 轮播图片数组
-  width?: number|string // 图片宽度
-  height?: number|string // 图片高度
-  type?: 'banner'|'carousel'|'broadcast' // banner轮播图模式 | carousel走马灯模式
+  width?: number | string // 图片宽度
+  height?: number | string // 图片高度
+  type?: 'banner' | 'carousel' | 'broadcast' // banner轮播图模式 | carousel走马灯模式
   navigation?: boolean // 是否显示导航
   delay?: number // 自动切换的时间间隔（type: banner时生效），单位ms
   // speed?: number // 切换动画持续时间，单位ms
   swipe?: boolean // 是否可以鼠标拖动
-  preloaderColor?: 'theme'|'white'|'black' // 预加载时的loading颜色
+  preloaderColor?: 'theme' | 'white' | 'black' // 预加载时的loading颜色
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
@@ -56,20 +56,22 @@ const autoplayBanner = ref({
 })
 
 const modulesCarousel = ref([Autoplay])
-const autoplayCarousel = ref<object|boolean>({
+const autoplayCarousel = ref<object | boolean>({
   delay: 0,
   disableOnInteraction: false
 })
 const modulesBroadcast = ref([Navigation, Pagination, Mousewheel])
 const emits = defineEmits(['swiper', 'change'])
-function onSwiper (swiper: SwiperTypes) {
+function onSwiper(swiper: SwiperTypes) {
   // console.log(swiper)
   emits('swiper', swiper)
   if (props.type === 'carousel') {
-    swiper.el.onmouseenter = () => { // 移入暂停
+    swiper.el.onmouseenter = () => {
+      // 移入暂停
       swiper.autoplay.stop()
     }
-    swiper.el.onmouseleave = () => { // 移出启动
+    swiper.el.onmouseleave = () => {
+      // 移出启动
       swiper.autoplay.start()
     }
   }
@@ -77,8 +79,8 @@ function onSwiper (swiper: SwiperTypes) {
 </script>
 <template>
   <swiper
-    v-if="type==='banner'"
-    :class="{'swiper-no-swiping': !swipe}"
+    v-if="type === 'banner'"
+    :class="{ 'swiper-no-swiping': !swipe }"
     :modules="modulesBanner"
     :navigation="navigation"
     :slides-per-view="1"
@@ -87,21 +89,23 @@ function onSwiper (swiper: SwiperTypes) {
     loop
     @swiper="onSwiper"
     @slideChange="(swiper) => $emit('change', swiper)"
-    v-bind="$attrs">
+    v-bind="$attrs"
+  >
     <swiper-slide v-for="(image, index) in images" :key="index">
-      <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
+      <a :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'" class="m-link">
         <img
           :src="image.src"
           class="u-img"
           :style="`width: ${imgWidth}; height: ${imgHeight};`"
           :alt="image.title"
-          loading="lazy" />
+          loading="lazy"
+        />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </swiper-slide>
   </swiper>
   <swiper
-    v-if="type==='carousel'"
+    v-if="type === 'carousel'"
     class="swiper-no-swiping"
     :modules="modulesCarousel"
     :autoplay="autoplayCarousel"
@@ -109,35 +113,39 @@ function onSwiper (swiper: SwiperTypes) {
     loop
     @swiper="onSwiper"
     @slideChange="(swiper) => $emit('change', swiper)"
-    v-bind="$attrs">
+    v-bind="$attrs"
+  >
     <swiper-slide v-for="(image, index) in images" :key="index">
-      <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
+      <a :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'" class="m-link">
         <img
           :src="image.src"
           class="u-img"
           :style="`width: ${imgWidth}; height: ${imgHeight};`"
           :alt="image.title"
-          loading="lazy" />
+          loading="lazy"
+        />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </swiper-slide>
   </swiper>
   <swiper
-    v-if="type==='broadcast'"
+    v-if="type === 'broadcast'"
     :modules="modulesBroadcast"
     :navigation="navigation"
     lazy
     @swiper="onSwiper"
     @slideChange="(swiper) => $emit('change', swiper)"
-    v-bind="$attrs">
+    v-bind="$attrs"
+  >
     <swiper-slide v-for="(image, index) in images" :key="index">
-      <a :href="image.link ? image.link:'javascript:;'" :target="image.link ? '_blank':'_self'" class="m-link">
+      <a :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'" class="m-link">
         <img
           :src="image.src"
           class="u-img"
           :style="`width: ${imgWidth}; height: ${imgHeight};`"
           :alt="image.title"
-          loading="lazy" />
+          loading="lazy"
+        />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </swiper-slide>
@@ -155,7 +163,8 @@ function onSwiper (swiper: SwiperTypes) {
 .swiper {
   --swiper-theme-color: @themeColor;
 }
-:deep(.swiper-wrapper) { // 自动切换过渡效果设置
+:deep(.swiper-wrapper) {
+  // 自动切换过渡效果设置
   transition-timing-function: linear; // 线性过渡模拟走马灯效果
   -webkit-transition-timing-function: linear;
 }

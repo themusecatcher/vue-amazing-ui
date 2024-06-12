@@ -15,15 +15,20 @@ const props = withDefaults(defineProps<Props>(), {
   nodeStyle: () => ({})
 })
 const emit = defineEmits(['update:checked', 'change'])
-function onSwitch () {
+function onSwitch() {
   emit('update:checked', !props.checked)
   emit('change', !props.checked)
 }
 </script>
 <template>
   <div class="m-switch-wrap">
-    <div @click="disabled ? () => false : onSwitch()" :class="['m-switch', { 'switch-checked': checked, 'disabled': disabled }]">
-      <div :class="['u-switch-inner', checked ? 'inner-checked' : 'inner-unchecked' ]">{{ checked ? onInfo : offInfo }}</div>
+    <div
+      @click="disabled ? () => false : onSwitch()"
+      :class="['m-switch', { 'switch-checked': checked, disabled: disabled }]"
+    >
+      <div :class="['u-switch-inner', checked ? 'inner-checked' : 'inner-unchecked']">{{
+        checked ? onInfo : offInfo
+      }}</div>
       <div :class="['u-node', { 'node-checked': checked }]" :style="nodeStyle">
         <slot name="node"></slot>
       </div>
@@ -42,22 +47,22 @@ function onSwitch () {
     vertical-align: top;
     width: 100%;
     height: 100%;
-    color: rgba(0, 0, 0, .88);
+    color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 22px;
-    background: rgba(0, 0, 0, .25);
+    background: rgba(0, 0, 0, 0.25);
     border-radius: 100px;
     cursor: pointer;
-    transition: all .2s;
+    transition: all 0.2s;
     &:hover:not(.disabled) {
-      background: rgba(0, 0, 0, .45);
+      background: rgba(0, 0, 0, 0.45);
     }
     .u-switch-inner {
       color: #fff;
       font-size: 14px;
       line-height: 22px;
       padding: 0 8px;
-      transition: all .2s ease-in-out;
+      transition: all 0.2s ease-in-out;
     }
     .inner-checked {
       margin-right: 18px;
@@ -73,12 +78,13 @@ function onSwitch () {
       justify-content: center;
       width: 18px;
       height: 18px;
-      background: #FFF;
+      background: #fff;
       border-radius: 100%;
       cursor: pointer;
-      transition: all .2s ease-in-out;
+      transition: all 0.2s ease-in-out;
     }
-    .node-checked { // 结果等价于right: 2px; 为了滑动效果都以左边为基准进行偏移
+    .node-checked {
+      // 结果等价于right: 2px; 为了滑动效果都以左边为基准进行偏移
       left: 100%;
       margin-left: -2px;
       transform: translateX(-100%);
@@ -92,7 +98,7 @@ function onSwitch () {
   }
   .disabled {
     cursor: not-allowed;
-    opacity: .65;
+    opacity: 0.65;
     .u-node {
       cursor: not-allowed;
     }
