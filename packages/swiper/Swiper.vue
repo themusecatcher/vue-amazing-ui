@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Swiper as SwiperTypes } from 'swiper/types'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination, Navigation, Autoplay, EffectFade, Mousewheel } from 'swiper/modules'
 import 'swiper/css'
@@ -18,6 +19,7 @@ interface Props {
   type?: 'banner'|'carousel'|'broadcast' // banner轮播图模式 | carousel走马灯模式
   navigation?: boolean // 是否显示导航
   delay?: number // 自动切换的时间间隔（type: banner时生效），单位ms
+  // speed?: number // 切换动画持续时间，单位ms
   swipe?: boolean // 是否可以鼠标拖动
   preloaderColor?: 'theme'|'white'|'black' // 预加载时的loading颜色
 }
@@ -28,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'banner', // 可选 banner | carousel
   navigation: true,
   delay: 3000,
+  // speed: 300,
   swipe: true,
   preloaderColor: 'theme' // 可选 theme white black
 })
@@ -59,7 +62,7 @@ const autoplayCarousel = ref<object|boolean>({
 })
 const modulesBroadcast = ref([Navigation, Pagination, Mousewheel])
 const emits = defineEmits(['swiper', 'change'])
-function onSwiper (swiper: any) {
+function onSwiper (swiper: SwiperTypes) {
   // console.log(swiper)
   emits('swiper', swiper)
   if (props.type === 'carousel') {

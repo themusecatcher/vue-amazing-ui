@@ -317,26 +317,26 @@ withDefaults(defineProps<Props>(), {
     }
   }
 }
-.spin-large {
+.spin-small {
   .m-spin .m-spin-box {
     .m-loading-dot {
-      width: 36px;
-      height: 36px;
+      width: 20px;
+      height: 20px;
       .u-dot-item {
-        width: 12px;
-        height: 12px;
+        width: 8px;
+        height: 8px;
       }
     }
     .m-spin-dot {
-      width: 40px;
-      height: 40px;
+      width: 20px;
+      height: 20px;
       .u-spin-item {
-        width: 12px;
-        height: 12px;
+        width: 6px;
+        height: 6px;
       }
     }
     .m-spin-line {
-      @lineLength: 15px;
+      @lineLength: 9px;
       width: @lineLength * 3;
       height: @lineLength * 3;
       .u-spin-item {
@@ -347,29 +347,29 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .u-quarter-circle {
-      width: 40px;
-      height: 40px;
-      border-width: 4px;
+      width: 24px;
+      height: 24px;
+      border-width: 2px;
     }
     .u-half-circle {
-      width: 40px;
-      height: 40px;
-      border-width: 4px;
+      width: 24px;
+      height: 24px;
+      border-width: 2px;
     }
     .u-three-quarters-circle {
-      width: 40px;
-      height: 40px;
-      border-width: 4px;
+      width: 24px;
+      height: 24px;
+      border-width: 2px;
     }
     .m-dynamic-circle {
-      width: 40px;
-      height: 40px;
+      width: 26px;
+      height: 26px;
     }
     .u-tip {
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 20px;
-      margin-top: 14px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 16px;
+      margin-top: 6px;
     }
   }
 }
@@ -429,26 +429,26 @@ withDefaults(defineProps<Props>(), {
     }
   }
 }
-.spin-small {
+.spin-large {
   .m-spin .m-spin-box {
     .m-loading-dot {
-      width: 20px;
-      height: 20px;
+      width: 36px;
+      height: 36px;
       .u-dot-item {
-        width: 8px;
-        height: 8px;
+        width: 12px;
+        height: 12px;
       }
     }
     .m-spin-dot {
-      width: 20px;
-      height: 20px;
+      width: 40px;
+      height: 40px;
       .u-spin-item {
-        width: 6px;
-        height: 6px;
+        width: 12px;
+        height: 12px;
       }
     }
     .m-spin-line {
-      @lineLength: 9px;
+      @lineLength: 15px;
       width: @lineLength * 3;
       height: @lineLength * 3;
       .u-spin-item {
@@ -459,29 +459,29 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .u-quarter-circle {
-      width: 24px;
-      height: 24px;
-      border-width: 2px;
+      width: 40px;
+      height: 40px;
+      border-width: 4px;
     }
     .u-half-circle {
-      width: 24px;
-      height: 24px;
-      border-width: 2px;
+      width: 40px;
+      height: 40px;
+      border-width: 4px;
     }
     .u-three-quarters-circle {
-      width: 24px;
-      height: 24px;
-      border-width: 2px;
+      width: 40px;
+      height: 40px;
+      border-width: 4px;
     }
     .m-dynamic-circle {
-      width: 26px;
-      height: 26px;
+      width: 40px;
+      height: 40px;
     }
     .u-tip {
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 16px;
-      margin-top: 6px;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 20px;
+      margin-top: 14px;
     }
   }
 }
