@@ -10,9 +10,9 @@ export default {
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 interface Props {
-  width?: string|number // 文本域宽度
+  width?: string | number // 文本域宽度
   allowClear?: boolean // 可以点击清除图标删除内容
-  autoSize?: boolean|{minRows?:number, maxRows?:number} // 自适应内容高度
+  autoSize?: boolean | { minRows?: number; maxRows?: number } // 自适应内容高度
   disabled?: boolean // 是否禁用
   maxlength?: number // 最大长度
   showCount?: boolean // 是否展示字数
@@ -37,7 +37,7 @@ const areaWidth = computed(() => {
 })
 const autoSizeProperty = computed(() => {
   if (typeof props.autoSize === 'object') {
-    const style: {'min-height'?: string, 'max-height'?: string, [propName: string]: any} = {
+    const style: { 'min-height'?: string; 'max-height'?: string; [propName: string]: any } = {
       resize: 'none'
     }
     if ('minRows' in props.autoSize) {
@@ -80,29 +80,29 @@ const areaHeight = ref(32)
 onMounted(() => {
   getAreaHeight()
 })
-function getAreaHeight () {
+function getAreaHeight() {
   areaHeight.value = textarea.value.scrollHeight + 2
 }
 const emits = defineEmits(['update:value', 'change', 'enter'])
-function onInput (e: any) {
+function onInput(e: any) {
   if (!('lazy' in props.valueModifiers)) {
     emits('update:value', e.target.value)
     emits('change', e)
   }
 }
-function onChange (e: any) {
+function onChange(e: any) {
   if ('lazy' in props.valueModifiers) {
     emits('update:value', e.target.value)
     emits('change', e)
   }
 }
-function onKeyboard (e: any) {
+function onKeyboard(e: any) {
   if (e.key === 'Enter') {
     e.preventDefault()
     emits('enter', e)
   }
 }
-function onClear () {
+function onClear() {
   emits('update:value', '')
   textarea.value.focus()
 }
@@ -110,14 +110,15 @@ function onClear () {
 <template>
   <div
     class="m-textarea"
-    :class="{'show-count': showCount}"
+    :class="{ 'show-count': showCount }"
     :style="`width: ${areaWidth};`"
-    :data-count="showCountNum">
+    :data-count="showCountNum"
+  >
     <textarea
       ref="textarea"
       type="hidden"
       class="u-textarea"
-      :class="{disabled: disabled}"
+      :class="{ disabled: disabled }"
       :style="[`height: ${autoSize ? areaHeight : ''}px`, autoSizeProperty]"
       :value="value"
       :maxlength="maxlength"
@@ -125,9 +126,23 @@ function onClear () {
       @input="onInput"
       @change="onChange"
       @keydown="onKeyboard"
-      v-bind="$attrs" />
-    <span class="m-clear" v-if="!disabled&&allowClear&&value" @click="onClear">
-      <svg focusable="false" class="u-clear" data-icon="close-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
+      v-bind="$attrs"
+    />
+    <span class="m-clear" v-if="!disabled && allowClear && value" @click="onClear">
+      <svg
+        focusable="false"
+        class="u-clear"
+        data-icon="close-circle"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+        viewBox="64 64 896 896"
+      >
+        <path
+          d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+        ></path>
+      </svg>
     </span>
   </div>
 </template>
@@ -142,11 +157,13 @@ function onClear () {
     max-width: 100%;
     height: auto;
     padding: 4px 11px;
-    color: rgba(0, 0, 0, .88);
+    color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 1.5714285714285714;
     list-style: none;
-    transition: all .3s, height 0s;
+    transition:
+      all 0.3s,
+      height 0s;
     resize: vertical;
     position: relative;
     display: inline-block;
@@ -163,25 +180,25 @@ function onClear () {
     }
     &:focus-within {
       border-color: #4096ff;
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, .1);
+      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
       border-inline-end-width: 1px;
       outline: 0;
     }
   }
   textarea:disabled {
-    color: rgba(0, 0, 0, .25);
+    color: rgba(0, 0, 0, 0.25);
   }
   textarea::-webkit-input-placeholder {
-    color: rgba(0, 0, 0, .25);
+    color: rgba(0, 0, 0, 0.25);
   }
   textarea:-moz-placeholder {
-    color: rgba(0, 0, 0, .25);
+    color: rgba(0, 0, 0, 0.25);
   }
   textarea::-moz-placeholder {
-    color: rgba(0, 0, 0, .25);
+    color: rgba(0, 0, 0, 0.25);
   }
   textarea:-ms-input-placeholder {
-    color: rgba(0, 0, 0, .25);
+    color: rgba(0, 0, 0, 0.25);
   }
   .m-clear {
     position: absolute;
@@ -192,34 +209,34 @@ function onClear () {
     line-height: 0;
     .u-clear {
       display: inline-block;
-      fill: rgba(0, 0, 0, .25);
+      fill: rgba(0, 0, 0, 0.25);
       font-size: 12px;
       line-height: 1;
       vertical-align: -1px;
       cursor: pointer;
-      transition: color .3s;
-      transition: fill .3s;
+      transition: color 0.3s;
+      transition: fill 0.3s;
       &:hover {
-        fill: rgba(0, 0, 0, .45);
+        fill: rgba(0, 0, 0, 0.45);
       }
     }
   }
   .disabled {
-    color: rgba(0, 0, 0, .25);
-    background-color: rgba(0, 0, 0, .04);
+    color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.04);
     cursor: not-allowed;
     &:hover {
       border-color: #d9d9d9;
     }
     &:focus-within {
       border-color: #d9d9d9;
-      box-shadow: none
+      box-shadow: none;
     }
   }
 }
 .show-count {
   &::after {
-    color: rgba(0, 0, 0, .45);
+    color: rgba(0, 0, 0, 0.45);
     white-space: nowrap;
     content: attr(data-count);
     pointer-events: none;

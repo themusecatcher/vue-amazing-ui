@@ -14,7 +14,8 @@
       :image-style="{
         width: '100px',
         height: '60px'
-      }">
+      }"
+    >
       <template #description>
         <span>
           Customize

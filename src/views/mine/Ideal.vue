@@ -15,7 +15,8 @@ const tabPages = ref([
   }
 ])
 const activeKey = ref(1)
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+watchEffect(() => {
+  // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   console.log('activeKey:', activeKey.value)
 })
 </script>

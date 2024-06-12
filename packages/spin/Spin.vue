@@ -1,9 +1,16 @@
 <script setup lang="ts">
 interface Props {
   spinning?: boolean // 是否为加载中状态
-  size?: 'small'|'default'|'large' // 组件大小，可选 small default large
+  size?: 'small' | 'default' | 'large' // 组件大小，可选 small default large
   tip?: string // 描述文案
-  indicator?: 'dot'|'spin-dot'|'spin-line'|'quarter-circle'|'half-circle'|'three-quarters-circle'|'dynamic-circle' // 加载指示符
+  indicator?:
+    | 'dot'
+    | 'spin-dot'
+    | 'spin-line'
+    | 'quarter-circle'
+    | 'half-circle'
+    | 'three-quarters-circle'
+    | 'dynamic-circle' // 加载指示符
   color?: string // 主题颜色
 }
 withDefaults(defineProps<Props>(), {
@@ -18,50 +25,52 @@ withDefaults(defineProps<Props>(), {
   <div :class="`m-spin-wrap spin-${size}`" :style="`--color: ${color};`">
     <div class="m-spin" v-show="spinning">
       <div class="m-spin-box">
-        <div class="m-loading-dot" v-if="indicator==='dot'">
+        <div class="m-loading-dot" v-if="indicator === 'dot'">
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
         </div>
-        <div class="spin-wrap-box" v-if="indicator==='spin-dot'">
+        <div class="spin-wrap-box" v-if="indicator === 'spin-dot'">
           <div class="m-spin-dot">
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
           </div>
-          <div class="m-spin-dot spin-rotate" :class="{'spin-tip': tip}">
+          <div class="m-spin-dot spin-rotate" :class="{ 'spin-tip': tip }">
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
           </div>
         </div>
-        <div class="spin-wrap-box" v-if="indicator==='spin-line'">
+        <div class="spin-wrap-box" v-if="indicator === 'spin-line'">
           <div class="m-spin-line">
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
           </div>
-          <div class="m-spin-line spin-rotate" :class="{'spin-tip': tip}">
+          <div class="m-spin-line spin-rotate" :class="{ 'spin-tip': tip }">
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
           </div>
         </div>
-        <div v-if="indicator==='quarter-circle'" class="u-quarter-circle"></div>
-        <div v-if="indicator==='half-circle'" class="u-half-circle"></div>
-        <div v-if="indicator==='three-quarters-circle'" class="u-three-quarters-circle"></div>
-        <div v-if="indicator==='dynamic-circle'" class="m-dynamic-circle">
-          <svg class="circular" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none"></circle></svg>
+        <div v-if="indicator === 'quarter-circle'" class="u-quarter-circle"></div>
+        <div v-if="indicator === 'half-circle'" class="u-half-circle"></div>
+        <div v-if="indicator === 'three-quarters-circle'" class="u-three-quarters-circle"></div>
+        <div v-if="indicator === 'dynamic-circle'" class="m-dynamic-circle">
+          <svg class="circular" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
+          </svg>
         </div>
         <p class="u-tip" v-show="tip">{{ tip }}</p>
       </div>
     </div>
-    <div :class="['m-spin-content', {'m-spin-mask': spinning}]">
+    <div :class="['m-spin-content', { 'm-spin-mask': spinning }]">
       <slot></slot>
     </div>
   </div>
@@ -100,15 +109,18 @@ withDefaults(defineProps<Props>(), {
           transform: rotate(405deg);
         } // to { transform: rotate(405deg); }
       }
-      .u-dot-item { // 单个圆点样式
+      .u-dot-item {
+        // 单个圆点样式
         position: absolute;
         background: var(--color);
         border-radius: 50%;
-        opacity: .3;
+        opacity: 0.3;
         animation: loading-dot-color 1s linear infinite alternate;
         -webkit-animation: loading-dot-color 1s linear infinite alternate;
         @keyframes loading-dot-color {
-          100% { opacity: 1; }
+          100% {
+            opacity: 1;
+          }
         }
       }
       .u-dot-item:first-child {
@@ -118,14 +130,14 @@ withDefaults(defineProps<Props>(), {
       .u-dot-item:nth-child(2) {
         top: 0;
         right: 0;
-        animation-delay: .4s;
-        -webkit-animation-delay: .4s;
+        animation-delay: 0.4s;
+        -webkit-animation-delay: 0.4s;
       }
       .u-dot-item:nth-child(3) {
         bottom: 0;
         right: 0;
-        animation-delay: .8s;
-        -webkit-animation-delay: .8s;
+        animation-delay: 0.8s;
+        -webkit-animation-delay: 0.8s;
       }
       .u-dot-item:last-child {
         bottom: 0;
@@ -138,23 +150,24 @@ withDefaults(defineProps<Props>(), {
       text-align: center;
       line-height: 0;
       position: relative;
-      animation: spin-line 3s ease-in-out;
-      -webkit-animation: spin-line 3s ease-in-out;
-      @keyframes spin-line {
+      animation: spin-rotate 1.5s ease-in-out;
+      -webkit-animation: spin-rotate 1.5s ease-in-out;
+      @keyframes spin-rotate {
         100% {
-          transform: rotate(720deg);
-        } // to { transform: rotate(720deg); }
+          transform: rotate(360deg);
+        } // to { transform: rotate(360deg); }
       }
       .m-spin-dot {
         position: relative;
         display: inline-block;
-        .u-spin-item { // 单个圆点样式
+        .u-spin-item {
+          // 单个圆点样式
           position: absolute;
           background: var(--color);
           border-radius: 50%;
           opacity: 1;
-          animation: spin-dot-color .8s linear infinite;
-          -webkit-animation: spin-dot-color .8s linear infinite;
+          animation: spin-dot-color 0.8s linear infinite;
+          -webkit-animation: spin-dot-color 0.8s linear infinite;
           @keyframes spin-dot-color {
             100% {
               opacity: 0.1;
@@ -168,34 +181,35 @@ withDefaults(defineProps<Props>(), {
         .u-spin-item:nth-child(2) {
           top: 0;
           right: 0;
-          animation-delay: .2s;
-          -webkit-animation-delay: .2s;
+          animation-delay: 0.2s;
+          -webkit-animation-delay: 0.2s;
         }
         .u-spin-item:nth-child(3) {
           bottom: 0;
           right: 0;
-          animation-delay: .4s;
-          -webkit-animation-delay: .4s;
+          animation-delay: 0.4s;
+          -webkit-animation-delay: 0.4s;
         }
         .u-spin-item:last-child {
           bottom: 0;
           left: 0;
-          animation-delay: .6s;
-          -webkit-animation-delay: .6s;
+          animation-delay: 0.6s;
+          -webkit-animation-delay: 0.6s;
         }
       }
       .m-spin-line {
         position: relative;
         display: inline-block;
-        .u-spin-item { // 单个圆点样式
+        .u-spin-item {
+          // 单个圆点样式
           position: absolute;
           top: 0;
           left: 50%;
           transform: translateX(-50%);
           background-color: var(--color);
           opacity: 1;
-          animation: spin-line-color .8s linear infinite;
-          -webkit-animation: spin-line-color .8s linear infinite;
+          animation: spin-line-color 0.8s linear infinite;
+          -webkit-animation: spin-line-color 0.8s linear infinite;
           @keyframes spin-line-color {
             100% {
               opacity: 0.1;
@@ -204,18 +218,18 @@ withDefaults(defineProps<Props>(), {
         }
         .u-spin-item:nth-child(2) {
           transform: translateX(-50%) rotate(90deg);
-          animation-delay: .2s;
-          -webkit-animation-delay: .2s;
+          animation-delay: 0.2s;
+          -webkit-animation-delay: 0.2s;
         }
         .u-spin-item:nth-child(3) {
           transform: translateX(-50%) rotate(180deg);
-          animation-delay: .4s;
-          -webkit-animation-delay: .4s;
+          animation-delay: 0.4s;
+          -webkit-animation-delay: 0.4s;
         }
         .u-spin-item:last-child {
           transform: translateX(-50%) rotate(270deg);
-          animation-delay: .6s;
-          -webkit-animation-delay: .6s;
+          animation-delay: 0.6s;
+          -webkit-animation-delay: 0.6s;
         }
       }
       .spin-rotate {
@@ -223,20 +237,20 @@ withDefaults(defineProps<Props>(), {
         left: 0;
         transform: rotate(45deg);
         .u-spin-item:first-child {
-          animation-delay: .1s;
-          -webkit-animation-delay: .1s;
+          animation-delay: 0.1s;
+          -webkit-animation-delay: 0.1s;
         }
         .u-spin-item:nth-child(2) {
-          animation-delay: .3s;
-          -webkit-animation-delay: .3s;
+          animation-delay: 0.3s;
+          -webkit-animation-delay: 0.3s;
         }
         .u-spin-item:nth-child(3) {
-          animation-delay: .5s;
-          -webkit-animation-delay: .5s;
+          animation-delay: 0.5s;
+          -webkit-animation-delay: 0.5s;
         }
         .u-spin-item:last-child {
-          animation-delay: .7s;
-          -webkit-animation-delay: .7s;
+          animation-delay: 0.7s;
+          -webkit-animation-delay: 0.7s;
         }
       }
       .spin-tip {
@@ -288,7 +302,7 @@ withDefaults(defineProps<Props>(), {
           }
         }
         .path {
-          stroke-dasharray: 90,150;
+          stroke-dasharray: 90, 150;
           stroke-dashoffset: 0;
           stroke-width: 5;
           stroke: var(--color);
@@ -296,15 +310,15 @@ withDefaults(defineProps<Props>(), {
           animation: loading-dash 1.5s ease-in-out infinite;
           @keyframes loading-dash {
             0% {
-              stroke-dasharray: 1,200;
+              stroke-dasharray: 1, 200;
               stroke-dashoffset: 0;
             }
             50% {
-              stroke-dasharray: 90,150;
+              stroke-dasharray: 90, 150;
               stroke-dashoffset: -40px;
             }
             100% {
-              stroke-dasharray: 90,150;
+              stroke-dasharray: 90, 150;
               stroke-dashoffset: -120px;
             }
           }
@@ -486,11 +500,11 @@ withDefaults(defineProps<Props>(), {
   }
 }
 .m-spin-content {
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 }
 .m-spin-mask {
   user-select: none;
   pointer-events: none;
-  opacity: .4;
+  opacity: 0.4;
 }
 </style>

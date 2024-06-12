@@ -10,10 +10,10 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('doubleValue:', doubleValue.value)
 })
-function onChange (value: number|number[]) {
+function onChange(value: number | number[]) {
   console.log('change:', value)
 }
-function formatter (value: number) {
+function formatter(value: number) {
   return `${value}%`
 }
 </script>
@@ -21,27 +21,13 @@ function formatter (value: number) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Slider
-      width="80%"
-      v-model:value="singleValue"
-      @change="onChange" />
+    <Slider width="80%" v-model:value="singleValue" @change="onChange" />
     <h2 class="mt30 mb10">禁用</h2>
-    <Slider
-      width="80%"
-      v-model:value="singleValue"
-      disabled
-      @change="onChange" />
+    <Slider width="80%" v-model:value="singleValue" disabled @change="onChange" />
     <h2 class="mt30 mb10">双滑块</h2>
-    <Slider
-      width="80%"
-      range
-      v-model:value="doubleValue" />
+    <Slider width="80%" range v-model:value="doubleValue" />
     <h2 class="mt30 mb10">格式化提示内容</h2>
-    <Slider
-      width="80%"
-      range
-      :tip-formatter="formatter"
-      v-model:value="doubleValue" />
+    <Slider width="80%" range :tip-formatter="formatter" v-model:value="doubleValue" />
     <h2 class="mt30 mb10">自定义最大最小值</h2>
     <Slider :min="-10" :max="10" v-model:value="singleCustomValue" />
     <h2 class="mt30 mb10">自定义步长</h2>

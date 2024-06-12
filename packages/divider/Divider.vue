@@ -2,10 +2,10 @@
 import { computed, useSlots } from 'vue'
 interface Props {
   dashed?: boolean // 是否为虚线
-  orientation?: 'left'|'center'|'right' // 分割线标题的位置
-  orientationMargin?: string|number // 标题和最近 left/right 边框之间的距离，去除了分割线，同时 orientation 必须为 left 或 right
+  orientation?: 'left' | 'center' | 'right' // 分割线标题的位置
+  orientationMargin?: string | number // 标题和最近 left/right 边框之间的距离，去除了分割线，同时 orientation 必须为 left 或 right
   borderWidth?: number // 分割线宽度
-  type?: 'horizontal'|'vertical' // 水平或者垂直类型
+  type?: 'horizontal' | 'vertical' // 水平或者垂直类型
 }
 const props = withDefaults(defineProps<Props>(), {
   dashed: false,
@@ -34,8 +34,9 @@ const showText = computed(() => {
 </script>
 <template>
   <div
-    v-if="type==='horizontal'"
-    :class="[`m-divider-horizontal ${orientation}`,
+    v-if="type === 'horizontal'"
+    :class="[
+      `m-divider-horizontal ${orientation}`,
       {
         dashed: dashed,
         margin24: !showText,
@@ -43,7 +44,8 @@ const showText = computed(() => {
         marginRight: orientationMargin !== '' && orientation === 'right'
       }
     ]"
-    :style="`--border-width: ${borderWidth}px;`">
+    :style="`--border-width: ${borderWidth}px;`"
+  >
     <span class="u-text" v-if="orientation === 'left'" :style="`margin-left: ${margin};`" v-show="showText">
       <slot></slot>
     </span>
@@ -63,19 +65,20 @@ const showText = computed(() => {
   margin: 16px 0;
   width: 100%;
   min-width: 100%;
-  &::before, &::after {
+  &::before,
+  &::after {
     position: relative;
     width: 50%;
     border-top-width: var(--border-width);
     border-top-style: solid;
-    border-top-color: rgba(5, 5, 5, .06);
+    border-top-color: rgba(5, 5, 5, 0.06);
     transform: translateY(50%);
     content: '';
   }
   .u-text {
     display: inline-block;
     font-size: 16px;
-    color: rgba(0, 0, 0, .88);
+    color: rgba(0, 0, 0, 0.88);
     font-weight: 500;
     line-height: 1.5714285714285714;
     white-space: nowrap;
@@ -85,13 +88,13 @@ const showText = computed(() => {
 }
 .m-divider-vertical {
   position: relative;
-  top: -.06em;
+  top: -0.06em;
   display: inline-block;
-  height: .9em;
+  height: 0.9em;
   margin: 0 8px;
   vertical-align: middle;
   border-top: 0;
-  border-inline-start: 1px solid rgba(5, 5, 5, .06);
+  border-inline-start: 1px solid rgba(5, 5, 5, 0.06);
 }
 .dashed {
   &::before {

@@ -4,17 +4,17 @@ import type { CSSProperties } from 'vue'
 interface Props {
   width?: number // 水印的宽度，默认值为 content 自身的宽度
   height?: number // 水印的高度，默认值为 content 自身的高度
-  layout?: 'parallel'|'alternate' // 布局方式：平行布局，交替布局
+  layout?: 'parallel' | 'alternate' // 布局方式：平行布局，交替布局
   rotate?: number // 水印绘制时，旋转的角度，单位 °
   zIndex?: number // 追加的水印元素的 z-index
   image?: string // 图片源，建议使用 2 倍或 3 倍图，优先级高于文字
-  content?: string|string[] // 水印文字内容
+  content?: string | string[] // 水印文字内容
   fullscreen?: boolean // 是否展示全屏
   color?: string // 字体颜色
   fontSize?: number // 字体大小
-  fontWeight?: 'normal'|'light'|'weight'|number // 	字体粗细
+  fontWeight?: 'normal' | 'light' | 'weight' | number // 	字体粗细
   fontFamily?: string // 字体类型
-  fontStyle?: 'none'|'normal'|'italic'|'oblique' // 字体样式
+  fontStyle?: 'none' | 'normal' | 'italic' | 'oblique' // 字体样式
   gap?: [number, number] // 水印之间的间距
   offset?: [number, number] // 水印距离容器左上角的偏移量，默认为 gap/2
 }
@@ -47,7 +47,8 @@ const gapXCenter = computed(() => gapX.value / 2)
 const gapYCenter = computed(() => gapY.value / 2)
 const offsetLeft = computed(() => props.offset?.[0] ?? gapXCenter.value)
 const offsetTop = computed(() => props.offset?.[1] ?? gapYCenter.value)
-const BaseSize = computed(() => { // Base size of the canvas, 1 for parallel layout and 2 for alternate layout
+const BaseSize = computed(() => {
+  // Base size of the canvas, 1 for parallel layout and 2 for alternate layout
   const layoutMap = {
     parallel: 1,
     alternate: 2
@@ -81,13 +82,13 @@ const markStyle = computed(() => {
   markStyle.backgroundPosition = `${positionLeft}px ${positionTop}px`
   return markStyle
 })
-function destroyWatermark () {
+function destroyWatermark() {
   if (watermarkRef.value) {
     watermarkRef.value.remove()
     watermarkRef.value = undefined
   }
 }
-function appendWatermark (base64Url: string, markWidth: number) {
+function appendWatermark(base64Url: string, markWidth: number) {
   if (containerRef.value && watermarkRef.value) {
     stopObservation.value = true
     watermarkRef.value.setAttribute(
@@ -111,10 +112,10 @@ function appendWatermark (base64Url: string, markWidth: number) {
   }
 }
 // converting camel-cased strings to be lowercase and link it with Separator
-function toLowercaseSeparator (key: string) {
+function toLowercaseSeparator(key: string) {
   return key.replace(/([A-Z])/g, '-$1').toLowerCase()
 }
-function getStyleStr (style: CSSProperties): string {
+function getStyleStr(style: CSSProperties): string {
   return Object.keys(style)
     .map((key: any) => `${toLowercaseSeparator(key)}: ${style[key]};`)
     .join(' ')
@@ -123,7 +124,7 @@ function getStyleStr (style: CSSProperties): string {
   Get the width and height of the watermark. The default values are as follows
   Image: [120, 64]; Content: It's calculated by content
 */
-function getMarkSize (ctx: CanvasRenderingContext2D) {
+function getMarkSize(ctx: CanvasRenderingContext2D) {
   let defaultWidth = 120
   let defaultHeight = 64
   const content = props.content
@@ -135,23 +136,17 @@ function getMarkSize (ctx: CanvasRenderingContext2D) {
   if (!image && ctx.measureText) {
     ctx.font = `${Number(fontSize)}px ${fontFamily}`
     const contents = Array.isArray(content) ? content : [content]
-    const widths = contents.map(item => ctx.measureText(item!).width)
+    const widths = contents.map((item) => ctx.measureText(item!).width)
     defaultWidth = Math.ceil(Math.max(...widths))
     defaultHeight = Number(fontSize) * contents.length + (contents.length - 1) * FontGap
   }
   return [width ?? defaultWidth, height ?? defaultHeight] as const
 }
 // Returns the ratio of the device's physical pixel resolution to the css pixel resolution
-function getPixelRatio () {
+function getPixelRatio() {
   return window.devicePixelRatio || 1
 }
-function fillTexts (
-  ctx: CanvasRenderingContext2D,
-  drawX: number,
-  drawY: number,
-  drawWidth: number,
-  drawHeight: number,
-) {
+function fillTexts(ctx: CanvasRenderingContext2D, drawX: number, drawY: number, drawWidth: number, drawHeight: number) {
   const ratio = getPixelRatio()
   const content = props.content
   const fontSize = props.fontSize
@@ -170,7 +165,7 @@ function fillTexts (
     ctx.fillText(item ?? '', drawX, drawY + index * (mergedFontSize + FontGap * ratio))
   })
 }
-function renderWatermark () {
+function renderWatermark() {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
   const image = props.image
@@ -223,12 +218,7 @@ function renderWatermark () {
   }
 }
 // Rotate with the watermark as the center point
-function rotateWatermark(
-  ctx: CanvasRenderingContext2D,
-  rotateX: number,
-  rotateY: number,
-  rotate: number
-) {
+function rotateWatermark(ctx: CanvasRenderingContext2D, rotateX: number, rotateY: number, rotate: number) {
   ctx.translate(rotateX, rotateY)
   ctx.rotate((Math.PI / 180) * Number(rotate))
   ctx.translate(-rotateX, -rotateY)
@@ -247,11 +237,11 @@ watch(
   }
 )
 // Whether to re-render the watermark
-function reRendering (mutation: MutationRecord, watermarkElement?: HTMLElement) {
+function reRendering(mutation: MutationRecord, watermarkElement?: HTMLElement) {
   let flag = false
   // Whether to delete the watermark node
   if (mutation.removedNodes.length) {
-    flag = Array.from(mutation.removedNodes).some(node => node === watermarkElement)
+    flag = Array.from(mutation.removedNodes).some((node) => node === watermarkElement)
   }
   // Whether the watermark dom property value has been modified
   if (mutation.type === 'attributes' && mutation.target === watermarkElement) {
@@ -259,7 +249,7 @@ function reRendering (mutation: MutationRecord, watermarkElement?: HTMLElement) 
   }
   return flag
 }
-function useMutationObserver (target: any, callback: MutationCallback, options: any) {
+function useMutationObserver(target: any, callback: MutationCallback, options: any) {
   let observer: MutationObserver | undefined
   const cleanup = () => {
     if (observer) {
@@ -269,7 +259,7 @@ function useMutationObserver (target: any, callback: MutationCallback, options: 
   }
   const stopWatch = watch(
     () => unref(target),
-    el => {
+    (el) => {
       cleanup()
 
       if (window && el) {
@@ -290,11 +280,11 @@ function useMutationObserver (target: any, callback: MutationCallback, options: 
 onBeforeUnmount(() => {
   destroyWatermark()
 })
-function onMutate (mutations: MutationRecord[]) {
+function onMutate(mutations: MutationRecord[]) {
   if (stopObservation.value) {
     return
   }
-  mutations.forEach(mutation => {
+  mutations.forEach((mutation) => {
     if (reRendering(mutation, watermarkRef.value)) {
       destroyWatermark()
       renderWatermark()
@@ -302,7 +292,7 @@ function onMutate (mutations: MutationRecord[]) {
   })
 }
 // 防止用户使用控制台隐藏、修改水印
-useMutationObserver (props.fullscreen ? htmlRef : containerRef, onMutate, {
+useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
   subtree: true, // 监听以 target 为根节点的整个子树
   childList: true, // 监听 target 节点中发生的节点的新增与删除
   attributes: true, // 观察所有监听的节点属性值的变化
@@ -310,7 +300,7 @@ useMutationObserver (props.fullscreen ? htmlRef : containerRef, onMutate, {
 })
 </script>
 <template>
-  <div ref="containerRef" style="position: relative;">
+  <div ref="containerRef" style="position: relative">
     <slot></slot>
   </div>
 </template>

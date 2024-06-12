@@ -161,7 +161,7 @@
     </Row>
     <h2 class="mt30 mb10">对齐方式</h2>
     <Divider orientation="left">Align Top</Divider>
-    <Row class="row" style="background: rgba(128,128,128,.08);" justify="center" align="top">
+    <Row class="row" style="background: rgba(128, 128, 128, 0.08)" justify="center" align="top">
       <Col :span="4">
         <p class="height-100">col-4</p>
       </Col>
@@ -176,7 +176,7 @@
       </Col>
     </Row>
     <Divider orientation="left">Align Middle</Divider>
-    <Row class="row" style="background: rgba(128,128,128,.08);" justify="space-around" align="middle">
+    <Row class="row" style="background: rgba(128, 128, 128, 0.08)" justify="space-around" align="middle">
       <Col :span="4">
         <p class="height-100">col-4</p>
       </Col>
@@ -191,7 +191,7 @@
       </Col>
     </Row>
     <Divider orientation="left">Align Bottom</Divider>
-    <Row class="row" style="background: rgba(128,128,128,.08);" justify="space-between" align="bottom">
+    <Row class="row" style="background: rgba(128, 128, 128, 0.08)" justify="space-between" align="bottom">
       <Col :span="4">
         <p class="height-100">col-4</p>
       </Col>
@@ -253,7 +253,7 @@
     padding: 16px 0;
     background: #1677ff;
   }
-  :deep(>:nth-child(2n+1)) {
+  :deep(> :nth-child(2n + 1)) {
     background: #1677ffbf;
   }
 }

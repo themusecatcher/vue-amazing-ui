@@ -66,25 +66,26 @@ const tabPagesDisabled = ref([
   }
 ])
 const activeKey = ref('1')
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+watchEffect(() => {
+  // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   console.log('activeKey:', activeKey.value)
 })
 const options = ref([
-        {
-          label: 'Small',
-          value: 'small'
-        },
-        {
-          label: 'Middle',
-          value: 'middle'
-        },
-        {
-          label: 'Large',
-          value: 'large'
-        }
-      ])
+  {
+    label: 'Small',
+    value: 'small'
+  },
+  {
+    label: 'Middle',
+    value: 'middle'
+  },
+  {
+    label: 'Large',
+    value: 'large'
+  }
+])
 const size = ref('middle')
-function onChange (key: string|number) {
+function onChange(key: string | number) {
   console.log('key:', key)
 }
 </script>
@@ -92,73 +93,29 @@ function onChange (key: string|number) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Tabs
-      :tab-pages="tabPages"
-      v-model:active-key="activeKey"
-      @change="onChange" />
+    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">卡片式标签页</h2>
-    <Tabs
-      type="card"
-      :tab-pages="tabPages"
-      v-model:active-key="activeKey"
-      @change="onChange" />
+    <Tabs type="card" :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">禁用某一项</h2>
-    <Tabs
-      :tab-pages="tabPagesDisabled"
-      v-model:active-key="activeKey"
-      @change="onChange" />
-    <br/>
-    <Tabs
-      type="card"
-      :tab-pages="tabPagesDisabled"
-      v-model:active-key="activeKey"
-      @change="onChange" />
+    <Tabs :tab-pages="tabPagesDisabled" v-model:active-key="activeKey" @change="onChange" />
+    <br />
+    <Tabs type="card" :tab-pages="tabPagesDisabled" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">居中展示</h2>
-    <Tabs
-      centered
-      :tab-pages="tabPages"
-      v-model:active-key="activeKey"
-      @change="onChange" />
-    <br/>
-    <Tabs
-      centered
-      type="card"
-      :tab-pages="tabPages"
-      v-model:active-key="activeKey"
-      @change="onChange" />
+    <Tabs centered :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
+    <br />
+    <Tabs centered type="card" :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">左右滑动，容纳更多标签</h2>
-    <Tabs
-      style="width: 320px;"
-      :tab-pages="tabPages"
-      v-model:active-key="activeKey"
-      @change="onChange" />
-    <br/>
-    <Tabs
-      style="width: 320px;"
-      type="card"
-      :tab-pages="tabPages"
-      v-model:active-key="activeKey"
-      @change="onChange" />
+    <Tabs style="width: 320px" :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
+    <br />
+    <Tabs style="width: 320px" type="card" :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Radio :options="options" v-model:value="size" button />
-    <br/>
-    <Tabs
-      :size="size"
-      :tab-pages="tabPages"
-      v-model:active-key="activeKey"
-      @change="onChange" />
-    <br/>
-    <Tabs
-      type="card"
-      :size="size"
-      :tab-pages="tabPages"
-      v-model:active-key="activeKey"
-      @change="onChange" />
+    <br />
+    <Tabs :size="size" :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
+    <br />
+    <Tabs type="card" :size="size" :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">自定义内容</h2>
-    <Tabs
-      :tab-pages="tabPages"
-      v-model:active-key="activeKey"
-      @change="onChange">
+    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange">
       <template #1>
         <p>key: 1 的 slot 内容</p>
       </template>

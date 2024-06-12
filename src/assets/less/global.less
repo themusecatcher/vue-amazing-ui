@@ -6,21 +6,25 @@ body,
   padding: 0;
 }
 body {
-  background: #FFF;
+  background: #fff;
 }
 html {
-  transition: filter .3s ease-in-out;
+  transition: filter 0.3s ease-in-out;
 }
 /*
   invert(): 反转输入图像，1表示完全反转
   hue-rotate(): 在输入图像上应用色相旋转
 */
-html.dark { // 网站暗黑模式
+html.dark {
+  // 网站暗黑模式
   filter: invert(1) hue-rotate(180deg);
-  img, video { // 将图片和视频再次反转以恢复原本的颜色
+  img,
+  video {
+    // 将图片和视频再次反转以恢复原本的颜色
     filter: invert(1) hue-rotate(180deg);
   }
-  .ant-menu, .m-switch-wrap {
+  .ant-menu,
+  .m-switch-wrap {
     filter: invert(1) hue-rotate(180deg);
   }
 }
@@ -32,14 +36,35 @@ html.contrast {
   filter: contrast(2); // 调整颜色对比度
 }
 body {
-  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
-  color: rgba(0, 0, 0, .85);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  color: rgba(0, 0, 0, 0.85);
 }
-h1,h2,h3,h4,h5,h6,hr,a,span,p,div,ul,ol,li,button,input,textarea,th,td,img {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+a,
+span,
+p,
+div,
+ul,
+ol,
+li,
+button,
+input,
+textarea,
+th,
+td,
+img {
   margin: 0;
   padding: 0;
 }
-h1 { // h1 标签渐变色文本
+h1 {
+  // h1 标签渐变色文本
   display: inline-block;
   -webkit-background-clip: text;
   background-clip: text;

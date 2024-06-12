@@ -2,7 +2,7 @@
 import { ref, watch, computed, onMounted } from 'vue'
 import { rafTimeout } from '../index'
 interface Collapse {
-  key?: string|number // 对应activeKey，如果没有传入key属性，则默认使用数据索引(0,1,2...)绑定
+  key?: string | number // 对应activeKey，如果没有传入key属性，则默认使用数据索引(0,1,2...)绑定
   header?: string // 面板标题 string | slot
   text?: string // 面板内容 string | slot
 }
@@ -41,7 +41,7 @@ watch(
     flush: 'post'
   }
 )
-function getCollapseHeight () {
+function getCollapseHeight() {
   for (let n = 0; n < len.value; n++) {
     collapseHeight.value[n] = text.value[n].offsetHeight
   }
@@ -50,14 +50,14 @@ onMounted(() => {
   getCollapseHeight()
 })
 const emits = defineEmits(['update:activeKey', 'change'])
-function emitValue (value: any) {
+function emitValue(value: any) {
   emits('update:activeKey', value)
   emits('change', value)
 }
-function onClick (key: number|string) {
+function onClick(key: number | string) {
   if (activeJudge(key)) {
     if (Array.isArray(props.activeKey)) {
-      const res = (props.activeKey as any[]).filter(actKey => actKey!== key)
+      const res = (props.activeKey as any[]).filter((actKey) => actKey !== key)
       emitValue(res)
     } else {
       emitValue(null)
@@ -70,7 +70,7 @@ function onClick (key: number|string) {
     }
   }
 }
-function activeJudge (key: number|string): boolean {
+function activeJudge(key: number | string): boolean {
   if (Array.isArray(props.activeKey)) {
     return (props.activeKey as any[]).includes(key)
   } else {
@@ -78,32 +78,52 @@ function activeJudge (key: number|string): boolean {
   }
 }
 const copyTxt = ref('Copy')
-function onCopy (index: number) {
-  navigator.clipboard.writeText(text.value[index].innerText || '').then(() => {
-    /* clipboard successfully set */
-    copyTxt.value = 'Copied'
-    rafTimeout(() => {
-      copyTxt.value = 'Copy'
-    }, 3000)
-  }, (err) => {
-    /* clipboard write failed */
-    copyTxt.value = err
-  })
+function onCopy(index: number) {
+  navigator.clipboard.writeText(text.value[index].innerText || '').then(
+    () => {
+      /* clipboard successfully set */
+      copyTxt.value = 'Copied'
+      rafTimeout(() => {
+        copyTxt.value = 'Copy'
+      }, 3000)
+    },
+    (err) => {
+      /* clipboard write failed */
+      copyTxt.value = err
+    }
+  )
 }
 </script>
 <template>
   <div class="m-collapse">
     <div
       class="m-collapse-item"
-      :class="{'u-collapse-item-active': activeJudge(data.key || index)}"
-      v-for="(data, index) in collapseData" :key="index">
+      :class="{ 'u-collapse-item-active': activeJudge(data.key || index) }"
+      v-for="(data, index) in collapseData"
+      :key="index"
+    >
       <div class="u-collapse-header" @click="onClick(data.key || index)">
-        <svg focusable="false" v-if="showArrow" class="u-arrow" data-icon="right" aria-hidden="true" viewBox="64 64 896 896"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
-        <div class="u-header" :class="{ml24: showArrow}" :style="`font-size: ${headerFontSize || fontSize }px;`">
+        <svg
+          focusable="false"
+          v-if="showArrow"
+          class="u-arrow"
+          data-icon="right"
+          aria-hidden="true"
+          viewBox="64 64 896 896"
+        >
+          <path
+            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+          ></path>
+        </svg>
+        <div class="u-header" :class="{ ml24: showArrow }" :style="`font-size: ${headerFontSize || fontSize}px;`">
           <slot name="header" :header="data.header" :key="data.key || index">{{ data.header || '--' }}</slot>
         </div>
       </div>
-      <div class="u-collapse-content" :class="{'u-collapse-copyable': copyable}" :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index]:0}px; opacity: ${activeJudge(data.key || index) ? 1:0};`">
+      <div
+        class="u-collapse-content"
+        :class="{ 'u-collapse-copyable': copyable }"
+        :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index] : 0}px; opacity: ${activeJudge(data.key || index) ? 1 : 0};`"
+      >
         <div class="u-lang">
           <slot name="lang" :lang="lang" :key="data.key || index">{{ lang }}</slot>
         </div>
@@ -117,7 +137,7 @@ function onCopy (index: number) {
 </template>
 <style lang="less" scoped>
 .m-collapse {
-  background-color: rgba(0, 0, 0, .02);
+  background-color: rgba(0, 0, 0, 0.02);
   border: 1px solid #d9d9d9;
   border-bottom: 0;
   border-radius: 8px;
@@ -133,7 +153,7 @@ function onCopy (index: number) {
       position: relative;
       padding: 12px 16px;
       cursor: pointer;
-      transition: all .3s;
+      transition: all 0.3s;
       .u-arrow {
         position: absolute;
         width: 12px;
@@ -141,12 +161,12 @@ function onCopy (index: number) {
         top: 0;
         bottom: 0;
         margin: auto 0;
-        fill: rgba(0,0,0,.88);
-        transition: transform .3s;
+        fill: rgba(0, 0, 0, 0.88);
+        transition: transform 0.3s;
       }
       .u-header {
         display: inline-block;
-        color: rgba(0, 0, 0, .88);
+        color: rgba(0, 0, 0, 0.88);
         line-height: 1.5714285714285714;
       }
       .ml24 {
@@ -157,15 +177,17 @@ function onCopy (index: number) {
       position: relative;
       overflow: hidden;
       background-color: #ffffff;
-      transition: height .2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity .2s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition:
+        height 0.2s cubic-bezier(0.645, 0.045, 0.355, 1),
+        opacity 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
       .u-lang {
         position: absolute;
         right: 10px;
         top: 6px;
         font-size: 14px;
-        color: rgba(0, 0, 0, .38);
+        color: rgba(0, 0, 0, 0.38);
         opacity: 1;
-        transition: opacity .3s;
+        transition: opacity 0.3s;
       }
       .u-copy {
         position: absolute;
@@ -173,11 +195,11 @@ function onCopy (index: number) {
         top: 8px;
         opacity: 0;
         pointer-events: none;
-        transition: opacity .3s;
+        transition: opacity 0.3s;
       }
       .u-text {
         padding: 16px;
-        color: rgba(0, 0, 0, .88);
+        color: rgba(0, 0, 0, 0.88);
         white-space: pre-wrap;
       }
     }

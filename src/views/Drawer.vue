@@ -6,23 +6,23 @@ const open2 = ref<boolean>(false)
 const open3 = ref<boolean>(false)
 const open4 = ref<boolean>(false)
 const options = ref([
-    {
-      label: 'top',
-      value: 'top'
-    },
-    {
-      label: 'right',
-      value: 'right'
-    },
-    {
-      label: 'bottom',
-      value: 'bottom'
-    },
-    {
-      label: 'left',
-      value: 'left'
-    }
-  ])
+  {
+    label: 'top',
+    value: 'top'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  },
+  {
+    label: 'bottom',
+    value: 'bottom'
+  },
+  {
+    label: 'left',
+    value: 'left'
+  }
+])
 const placement = ref('right')
 
 const showDrawer1 = () => {
@@ -54,11 +54,7 @@ const onClose = () => {
     </Drawer>
     <h2 class="mt30 mb10">额外操作</h2>
     <Button type="primary" @click="showDrawer2">Open</Button>
-    <Drawer
-      :width="480"
-      title="Basic Drawer"
-      v-model:open="open2"
-      @close="onClose">
+    <Drawer :width="480" title="Basic Drawer" v-model:open="open2" @close="onClose">
       <template #extra>
         <Button style="margin-right: 8px" @click="onClose">Cancel</Button>
         <Button type="primary" @click="onClose">Submit</Button>
@@ -68,29 +64,19 @@ const onClose = () => {
       <p>Some contents...</p>
     </Drawer>
     <h2 class="mt30 mb10">自定义位置</h2>
-    <Radio v-model:value="placement" :options="options">
-    </Radio>
+    <Radio v-model:value="placement" :options="options"></Radio>
     <Button type="primary" @click="showDrawer3">Open</Button>
-    <Drawer
-      title="Basic Drawer"
-      :placement="placement"
-      :open="open3"
-      @close="onClose">
+    <Drawer title="Basic Drawer" :placement="placement" :open="open3" @close="onClose">
       <p>Some contents...</p>
       <p>Some contents...</p>
       <p>Some contents...</p>
     </Drawer>
     <h2 class="mt30 mb10">关闭时销毁子元素</h2>
     <Button type="primary" @click="showDrawer4">Open</Button>
-    <Drawer
-      destroyOnClose
-      title="Basic Drawer"
-      v-model:open="open4">
+    <Drawer destroyOnClose title="Basic Drawer" v-model:open="open4">
       <p>Some contents...</p>
       <p>Some contents...</p>
       <p>Some contents...</p>
     </Drawer>
   </div>
 </template>
-
-

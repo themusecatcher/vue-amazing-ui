@@ -6,22 +6,22 @@ interface Tag {
   closable?: boolean // 标签是否可以关闭，默认 true
   color?: string // 标签颜色
   icon?: string // 设置图标 string | slot
-  size?: 'small'|'middle'|'large' // 标签尺寸
+  size?: 'small' | 'middle' | 'large' // 标签尺寸
   bordered?: boolean // 是否有边框
 }
 interface Props {
   closable?: boolean // 标签是否可以关闭
   color?: string // 标签颜色
   icon?: string // 设置图标 string | slot
-  size?: 'small'|'middle'|'large' // 标签尺寸
+  size?: 'small' | 'middle' | 'large' // 标签尺寸
   bordered?: boolean // 是否有边框
   dynamic?: boolean // 是否启用标签动态添加和删除
-  value?: string[]|Tag[] // 动态标签数组，dynamic 为 true 时生效
+  value?: string[] | Tag[] // 动态标签数组，dynamic 为 true 时生效
   // 启用动态标签后，可设置以下 Space 相关属性
-  spaceWidth?: string|number // 间距区域总宽度
-  spaceAlign?: 'stretch'|'start'|'end'|'center'|'baseline' // 垂直排列方式
-  spaceDirection?: 'horizontal'|'vertical' // 间距方向
-  spaceGap?: number|number[]|'small'|'middle'|'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
+  spaceWidth?: string | number // 间距区域总宽度
+  spaceAlign?: 'stretch' | 'start' | 'end' | 'center' | 'baseline' // 垂直排列方式
+  spaceDirection?: 'horizontal' | 'vertical' // 间距方向
+  spaceGap?: number | number[] | 'small' | 'middle' | 'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
 }
 const props = withDefaults(defineProps<Props>(), {
   closable: false,
@@ -85,7 +85,26 @@ const showIcon = computed(() => {
 const inputRef = ref()
 const showInput = ref(false)
 const inputValue = ref('')
-const presetColor = ['success', 'processing', 'error', 'warning', 'default', 'pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
+const presetColor = [
+  'success',
+  'processing',
+  'error',
+  'warning',
+  'default',
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime'
+]
 const hidden = ref(false)
 const tagsIconRef = ref()
 const showTagsIcon = ref(Array(props.value.length).fill(1))
@@ -103,24 +122,24 @@ watchEffect(() => {
   }
 })
 const emits = defineEmits(['update:value', 'close', 'dynamicClose'])
-function onClose (e: MouseEvent) {
+function onClose(e: MouseEvent) {
   hidden.value = true
   emits('close', e)
 }
-function onCloseTags (tag: Tag, n: number) {
+function onCloseTags(tag: Tag, n: number) {
   const newValue = (props.value as any[]).filter((tag: any, index: number) => {
     return index !== n
   })
   emits('update:value', newValue)
   emits('dynamicClose', tag, n)
 }
-function onAdd () {
+function onAdd() {
   showInput.value = true
   nextTick(() => {
     inputRef.value.focus()
   })
 }
-function onChange () {
+function onChange() {
   if (isStrArray.value) {
     emits('update:value', [...props.value, inputValue.value])
   } else {
@@ -134,7 +153,7 @@ function onChange () {
   showInput.value = false
   inputRef.value = ''
 }
-function onKeyboard (e: KeyboardEvent) {
+function onKeyboard(e: KeyboardEvent) {
   if (e.key === 'Enter') {
     inputRef.value.blur()
   }
@@ -144,8 +163,13 @@ function onKeyboard (e: KeyboardEvent) {
   <div
     v-if="!dynamic"
     class="m-tag"
-    :class="[`tag-${size}`, color && presetColor.includes(color) ? 'tag-' + color:'', {'tag-borderless': !bordered, 'has-color': color && !presetColor.includes(color), hidden: hidden}]"
-    :style="`background-color: ${color && !presetColor.includes(color) ? color : ''};`">
+    :class="[
+      `tag-${size}`,
+      color && presetColor.includes(color) ? 'tag-' + color : '',
+      { 'tag-borderless': !bordered, 'has-color': color && !presetColor.includes(color), hidden: hidden }
+    ]"
+    :style="`background-color: ${color && !presetColor.includes(color) ? color : ''};`"
+  >
     <span class="m-icon" v-if="showIcon">
       <slot name="icon">{{ icon }}</slot>
     </span>
@@ -153,15 +177,37 @@ function onKeyboard (e: KeyboardEvent) {
       <slot></slot>
     </span>
     <span class="m-close" v-if="closable" @click="onClose">
-      <svg focusable="false" class="u-close" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg>
+      <svg
+        focusable="false"
+        class="u-close"
+        data-icon="close"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+        viewBox="64 64 896 896"
+      >
+        <path
+          d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+        ></path>
+      </svg>
     </span>
   </div>
   <Space v-else :width="spaceWidth" :align="spaceAlign" :direction="spaceDirection" :gap="spaceGap">
     <div
       class="m-tag"
-      :class="[`tag-${tag.size || size}`, (tag.color || color) && presetColor.includes((tag.color || color)) ? 'tag-' + (tag.color || color):'', {'tag-borderless': tag.bordered !== undefined && !tag.bordered, 'has-color': (tag.color || color) && !presetColor.includes((tag.color || color))}]"
-      :style="`background-color: ${(tag.color || color) && !presetColor.includes((tag.color || color)) ? (tag.color || color) : ''};`"
-      v-for="(tag, index) in tags" :key="index">
+      :class="[
+        `tag-${tag.size || size}`,
+        (tag.color || color) && presetColor.includes(tag.color || color) ? 'tag-' + (tag.color || color) : '',
+        {
+          'tag-borderless': tag.bordered !== undefined && !tag.bordered,
+          'has-color': (tag.color || color) && !presetColor.includes(tag.color || color)
+        }
+      ]"
+      :style="`background-color: ${(tag.color || color) && !presetColor.includes(tag.color || color) ? tag.color || color : ''};`"
+      v-for="(tag, index) in tags"
+      :key="index"
+    >
       <span class="m-icon" ref="tagsIconRef" v-show="showTagsIcon[index]">
         <slot name="icon" :index="index">{{ tag.icon }}</slot>
       </span>
@@ -169,11 +215,36 @@ function onKeyboard (e: KeyboardEvent) {
         <slot :label="tag.label" :index="index">{{ tag.label }}</slot>
       </span>
       <span class="m-close" v-if="tag.closable || closable" @click="onCloseTags(tag, index)">
-        <svg focusable="false" class="u-close" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg>
+        <svg
+          focusable="false"
+          class="u-close"
+          data-icon="close"
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          aria-hidden="true"
+          viewBox="64 64 896 896"
+        >
+          <path
+            d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+          ></path>
+        </svg>
       </span>
     </div>
-    <div v-if="!showInput" class="m-tag" :class="[`tag-${size}`, {'m-plus': dynamic}]" @click="onAdd">
-      <svg focusable="false" class="u-plus" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path></svg>
+    <div v-if="!showInput" class="m-tag" :class="[`tag-${size}`, { 'm-plus': dynamic }]" @click="onAdd">
+      <svg
+        focusable="false"
+        class="u-plus"
+        data-icon="plus"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+        viewBox="64 64 896 896"
+      >
+        <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path>
+        <path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path>
+      </svg>
     </div>
     <input
       v-show="showInput"
@@ -184,7 +255,8 @@ function onKeyboard (e: KeyboardEvent) {
       v-model="inputValue"
       @blur="showInput = false"
       @change="onChange"
-      @keydown="onKeyboard" />
+      @keydown="onKeyboard"
+    />
   </Space>
 </template>
 <style lang="less" scoped>
@@ -193,13 +265,13 @@ function onKeyboard (e: KeyboardEvent) {
   font-size: 14px;
   line-height: 22px;
   display: inline-block;
-  color: rgba(0, 0, 0, .88);
+  color: rgba(0, 0, 0, 0.88);
   padding-inline: 7px;
   white-space: nowrap;
-  background: rgba(0, 0, 0, .02);
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid #d9d9d9;
   border-radius: 6px;
-  transition: all .2s;
+  transition: all 0.2s;
   text-align: start;
   .m-icon {
     margin-right: 5px;
@@ -218,12 +290,12 @@ function onKeyboard (e: KeyboardEvent) {
     align-items: center;
     width: 14px;
     height: 14px;
-    fill: rgba(0, 0, 0, .88);
+    fill: rgba(0, 0, 0, 0.88);
     font-style: normal;
     line-height: 0;
     text-align: center;
     vertical-align: -0.175em;
-    transition: fill .2s;
+    transition: fill 0.2s;
   }
   .m-close {
     margin-inline-start: 3px;
@@ -239,10 +311,10 @@ function onKeyboard (e: KeyboardEvent) {
     .u-close {
       display: inline-block;
       line-height: 1;
-      fill: rgba(0, 0, 0, .45);
-      transition: all .2s;
+      fill: rgba(0, 0, 0, 0.45);
+      transition: all 0.2s;
       &:hover {
-        fill: rgba(0, 0, 0, .88);
+        fill: rgba(0, 0, 0, 0.88);
       }
     }
   }
@@ -283,7 +355,7 @@ function onKeyboard (e: KeyboardEvent) {
 }
 .u-input {
   width: 86px;
-  color: rgba(0, 0, 0, .88);
+  color: rgba(0, 0, 0, 0.88);
   height: 24px;
   font-size: 14px;
   line-height: 22px;
@@ -295,10 +367,10 @@ function onKeyboard (e: KeyboardEvent) {
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   outline: none;
-  transition: all .2s;
+  transition: all 0.2s;
   &:focus {
     border-color: #4096ff;
-    box-shadow: 0 0 0 2px rgba(5, 145, 255, .1);
+    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
     border-inline-end-width: 1px;
     outline: 0;
   }
@@ -459,7 +531,7 @@ function onKeyboard (e: KeyboardEvent) {
   color: #fff;
   border-color: transparent;
   .m-close .u-close {
-    fill: rgba(255, 255, 255, .85);
+    fill: rgba(255, 255, 255, 0.85);
     &:hover {
       fill: rgba(255, 255, 255, 1);
     }

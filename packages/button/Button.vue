@@ -9,11 +9,11 @@ interface Route {
 }
 interface Props {
   name?: string // 按钮文本 string | slot
-  type?: 'default'|'primary'|'danger'|'dashed'|'text'|'link' // 按钮类型
-  effect?: 'fade'|'reverse' // 悬浮变化效果，只有 type 为 default 时，effect 才生效
-  size?: 'small'|'middle'|'large' // 按钮尺寸
+  type?: 'default' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 按钮类型
+  effect?: 'fade' | 'reverse' // 悬浮变化效果，只有 type 为 default 时，effect 才生效
+  size?: 'small' | 'middle' | 'large' // 按钮尺寸
   route?: Route // 跳转目标URL地址
-  target?: '_self'|'_blank' // 如何打开目标URL，设置route时才起作用，与a标签的target属性一致
+  target?: '_self' | '_blank' // 如何打开目标URL，设置route时才起作用，与a标签的target属性一致
   disabled?: boolean // 是否禁用
   loading?: boolean // 是否加载中
   center?: boolean // 是否将按钮宽度调整为其父宽度并居中展示
@@ -37,12 +37,12 @@ const isRoute = computed(() => {
   }
 })
 const emit = defineEmits(['click'])
-function onClick (e: Event) {
+function onClick(e: Event) {
   if (!isRoute.value) {
     emit('click', e)
   }
 }
-function getUrl (route: Route) {
+function getUrl(route: Route) {
   var targetUrl = route.path
   if (route.query && JSON.stringify(route.query) !== '{}') {
     const query = route.query
@@ -58,15 +58,16 @@ function getUrl (route: Route) {
 }
 </script>
 <template>
-  <div :class="['m-btn-wrap', {'center': center}]">
+  <div :class="['m-btn-wrap', { center: center }]">
     <a
       @click="onClick"
       :href="getUrl(route)"
       :target="isRoute ? target : '_self'"
       :disabled="disabled"
       class="m-btn"
-      :class="[type, size, {[effect]: type === 'default', disabled: disabled, 'm-btn-loading': !isRoute && loading}]">
-      <span v-show="!isRoute" :class="[`m-loading-icon`, {[`loading-${size}`]: loading}]">
+      :class="[type, size, { [effect]: type === 'default', disabled: disabled, 'm-btn-loading': !isRoute && loading }]"
+    >
+      <span v-show="!isRoute" :class="[`m-loading-icon`, { [`loading-${size}`]: loading }]">
         <span class="u-spin-circle" :class="`spin-${size}`"></span>
       </span>
       <span class="u-text">
@@ -77,7 +78,7 @@ function getUrl (route: Route) {
 </template>
 <style lang="less" scoped>
 @primary: @themeColor;
-@danger: #FF4D4F;
+@danger: #ff4d4f;
 .m-btn-wrap {
   display: inline-block;
   .m-btn {
@@ -86,7 +87,7 @@ function getUrl (route: Route) {
     align-items: center;
     font-weight: 400;
     line-height: 1.5714285714285714;
-    color: rgba(0, 0, 0, .88);
+    color: rgba(0, 0, 0, 0.88);
     white-space: nowrap;
     text-align: center;
     background-color: transparent;
@@ -101,7 +102,9 @@ function getUrl (route: Route) {
       opacity: 0;
       width: 0;
       height: 100%;
-      transition: width .3s cubic-bezier(0.645, 0.045, 0.355, 1), opacity .3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition:
+        width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+        opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       .u-spin-circle {
         border-radius: 50%;
         border-width: 1px;
@@ -111,7 +114,8 @@ function getUrl (route: Route) {
         animation: loadingCircle 1s infinite linear;
         -webkit-animation: loadingCircle 1s infinite linear;
       }
-      .spin-small, .spin-middle {
+      .spin-small,
+      .spin-middle {
         width: 14px;
         height: 14px;
       }
@@ -125,7 +129,8 @@ function getUrl (route: Route) {
         }
       }
     }
-    .loading-small, .loading-middle {
+    .loading-small,
+    .loading-middle {
       width: 22px;
       opacity: 1;
     }
@@ -140,13 +145,13 @@ function getUrl (route: Route) {
     }
   }
   .m-btn-loading {
-    opacity: .65;
+    opacity: 0.65;
     pointer-events: none;
   }
   .fade {
     background-color: #ffffff;
     border-color: #d9d9d9;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, .02);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
     &:hover {
       color: fade(@primary, 80%);
       border-color: fade(@primary, 80%);
@@ -162,7 +167,7 @@ function getUrl (route: Route) {
   .primary {
     color: #fff;
     background-color: @primary;
-    box-shadow: 0 2px 0 rgba(5, 145, 255, .1);
+    box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
     &:hover {
       background-color: fade(@primary, 80%);
       border-color: fade(@primary, 80%);
@@ -193,10 +198,10 @@ function getUrl (route: Route) {
   }
   .text {
     &:hover {
-      background-color: rgba(0, 0, 0, .06);
+      background-color: rgba(0, 0, 0, 0.06);
     }
     &:active {
-      background-color: rgba(0, 0, 0, .15);
+      background-color: rgba(0, 0, 0, 0.15);
     }
   }
   .link {
@@ -240,16 +245,18 @@ function getUrl (route: Route) {
   }
   .disabled {
     border-color: #d9d9d9;
-    color: rgba(0, 0, 0, .25);
-    background-color: rgba(0, 0, 0, .04);
+    color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.04);
     box-shadow: none;
     cursor: not-allowed;
-    &:hover, &:active {
+    &:hover,
+    &:active {
       border-color: #d9d9d9;
-      color: rgba(0, 0, 0, .25);
-      background-color: rgba(0, 0, 0, .04);
+      color: rgba(0, 0, 0, 0.25);
+      background-color: rgba(0, 0, 0, 0.04);
     }
-    &.text, &.link {
+    &.text,
+    &.link {
       background-color: transparent;
       border: none;
     }

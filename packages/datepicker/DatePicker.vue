@@ -13,14 +13,14 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { computed } from 'vue'
 interface Props {
   width?: number // 日期选择器宽度
-  mode?: 'time'|'date'|'week'|'month'|'year' // 选择器模式，可选：时间time，日期date，周week，月month，年year
+  mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式，可选：时间time，日期date，周week，月month，年year
   // format?: string | (params: Date | Date[]) => string // 日期展示格式，(y: 年, M: 月, d: 天, H: 时, m: 分, s: 秒)
   showTime?: boolean // 是否增加时间选择
   showToday?: boolean // 是否展示”今天“按钮
   // multiCalendars?: boolean // 范围选择器是否使用双日期面板
   // flow?: any[] // 定义选择顺序 ("calendar" | "time" | "month" | "year" | "minutes" | "hours" | "seconds")[]
   // dark?: boolean // 样式主题是否使用黑色
-  modelType?: 'timestamp'|'format', // v-model 值类型，可选时间戳(timestamp)、字符串(format)，mode为week和year时，该配置不生效
+  modelType?: 'timestamp' | 'format' // v-model 值类型，可选时间戳(timestamp)、字符串(format)，mode为week和year时，该配置不生效
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 180,
@@ -75,15 +75,16 @@ const year = computed(() => {
       text-input
       :model-type="modelType"
       :day-names="['一', '二', '三', '四', '五', '六', '七']"
-      v-bind="$attrs">
-    </VueDatePicker>
+      v-bind="$attrs"
+    ></VueDatePicker>
   </div>
 </template>
 <style lang="less" scoped>
 .m-datepicker {
   display: inline-block;
 }
-.dp__theme_dark { // dark theme
+.dp__theme_dark {
+  // dark theme
   --dp-background-color: #212121;
   --dp-text-color: #ffffff;
   --dp-hover-color: #484848;
@@ -102,9 +103,10 @@ const year = computed(() => {
   --dp-success-color-disabled: #428f59;
   --dp-icon-color: #959595;
   --dp-danger-color: #e53935;
-  --dp-highlight-color: rgba(0, 92, 178, .2);
+  --dp-highlight-color: rgba(0, 92, 178, 0.2);
 }
-.dp__theme_light { // light theme
+.dp__theme_light {
+  // light theme
   --dp-background-color: #ffffff;
   --dp-text-color: #212121;
   --dp-hover-color: #f3f3f3;
@@ -123,6 +125,6 @@ const year = computed(() => {
   --dp-success-color-disabled: #a3d9b1;
   --dp-icon-color: #959595;
   --dp-danger-color: #ff6f60;
-  --dp-highlight-color: rgba(25, 118, 210, .1);
+  --dp-highlight-color: rgba(25, 118, 210, 0.1);
 }
 </style>

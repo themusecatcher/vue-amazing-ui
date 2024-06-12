@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const loading = ref(false)
-function onClick (e: Event) {
+function onClick(e: Event) {
   console.log('click', e)
 }
 </script>
@@ -35,8 +35,8 @@ function onClick (e: Event) {
       <Button size="large">Large</Button>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Button style="width: 140px; height: 40px;" size="large">
-      <p style="font-size: 18px;">自定义样式</p>
+    <Button style="width: 140px; height: 40px" size="large">
+      <p style="font-size: 18px">自定义样式</p>
     </Button>
     <h2 class="mt30 mb10">加载中状态</h2>
     <Space>
@@ -48,9 +48,9 @@ function onClick (e: Event) {
       <Button type="text" :loading="loading">Text Button</Button>
       <Button type="link" :loading="loading">Link Button</Button>
     </Space>
-    <br/>
-    <Space align="center" style="margin-top: 10px;">
-      <h3 style="margin-top: 0;">Loading state: </h3>
+    <br />
+    <Space align="center" style="margin-top: 10px">
+      <h3 style="margin-top: 0">Loading state:</h3>
       <Switch v-model:checked="loading" />
     </Space>
     <h2 class="mt30 mb10">居中展示</h2>

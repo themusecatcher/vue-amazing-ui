@@ -2,19 +2,19 @@
 import { ref } from 'vue'
 const gapNum = ref(8)
 const options = ref([
-        {
-          label: 'Small',
-          value: 'small'
-        },
-        {
-          label: 'Middle',
-          value: 'middle'
-        },
-        {
-          label: 'Large',
-          value: 'large'
-        }
-      ])
+  {
+    label: 'Small',
+    value: 'small'
+  },
+  {
+    label: 'Middle',
+    value: 'middle'
+  },
+  {
+    label: 'Large',
+    value: 'large'
+  }
+])
 const gap = ref('small')
 </script>
 <template>
@@ -40,7 +40,8 @@ const gap = ref('small')
     </Space>
     <h2 class="mt30 mb10">预设间距</h2>
     <Radio :options="options" v-model:value="gap" />
-    <br/><br/>
+    <br />
+    <br />
     <Space :gap="gap">
       <Button type="primary">Primary</Button>
       <Button>Default</Button>
@@ -90,7 +91,7 @@ const gap = ref('small')
       </div>
     </div>
     <h2 class="mt30 mb10">自动换行</h2>
-    <Space :gap="[8, 16]" style="width: 600px;">
+    <Space :gap="[8, 16]" style="width: 600px">
       <template v-for="n in 10" :key="n">
         <Button>Button</Button>
       </template>

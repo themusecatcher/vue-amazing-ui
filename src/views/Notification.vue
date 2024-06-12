@@ -3,44 +3,45 @@ import { ref } from 'vue'
 
 const notification = ref()
 
-function onOpen (info: string) {
+function onOpen(info: string) {
   notification.value.open({
     message: 'Notification Title',
     description: info
   }) // 默认使用
 }
-function onInfo (info: string) {
+function onInfo(info: string) {
   notification.value.info({
     message: 'Notification Title',
     description: info
   }) // info调用
 }
-function onSuccess (info: string) {
+function onSuccess(info: string) {
   notification.value.success({
     message: 'Notification Title',
     description: info
   }) // success调用
 }
-function onWarning (info: string) {
+function onWarning(info: string) {
   notification.value.warning({
     message: 'Notification Title',
     description: info
   }) // warning调用
 }
-function onError (info: string) {
+function onError(info: string) {
   notification.value.error({
     message: 'Notification Title',
     description: info
   }) // error调用
 }
-function onOpenPlacement (place: string) {
+function onOpenPlacement(place: string) {
   notification.value.info({
     message: 'Notification Title',
     description: 'This is the content of the notification.',
     placement: place
   })
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
+function onClose() {
+  // 点击默认关闭按钮时触发的回调函数
   console.log('关闭notification')
 }
 </script>
@@ -62,11 +63,6 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
       <Button type="primary" @click="onOpenPlacement('bottomLeft')">bottomLeft</Button>
       <Button type="primary" @click="onOpenPlacement('bottomRight')">bottomRight</Button>
     </Space>
-    <Notification
-      ref="notification"
-      placement="topRight"
-      :duration="3000"
-      :top="24"
-      @close="onClose" />
+    <Notification ref="notification" placement="topRight" :duration="3000" :top="24" @close="onClose" />
   </div>
 </template>

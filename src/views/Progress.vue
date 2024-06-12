@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 const percent = ref(60)
 
-function onIncrease (scale: number) {
+function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {
     percent.value = 100
@@ -11,7 +11,7 @@ function onIncrease (scale: number) {
     percent.value = res
   }
 }
-function onDecline (scale: number) {
+function onDecline(scale: number) {
   const res = percent.value - scale
   if (res < 0) {
     percent.value = 0
@@ -28,7 +28,10 @@ function onDecline (scale: number) {
     <h2 class="mt30 mb10">完成进度条</h2>
     <Progress width="100%" :percent="100" :stroke-width="10" />
     <h2 class="mt30">渐变进度条</h2>
-    <h3 class="mb10">strokeColor: { '0%': '#108ee9', '100%': '#87d068', direction: 'right' } 或 { from: '#108ee9', to: '#87d068', direction: 'right' }</h3>
+    <h3 class="mb10">
+      strokeColor: { '0%': '#108ee9', '100%': '#87d068', direction: 'right' } 或 { from: '#108ee9', to: '#87d068',
+      direction: 'right' }
+    </h3>
     <Progress
       :width="900"
       :percent="percent"
@@ -37,14 +40,11 @@ function onDecline (scale: number) {
         '0%': '#108ee9',
         '100%': '#87d068',
         direction: 'right'
-      }" />
+      }"
+    />
     <h2 class="mt30 mb10">进度圈</h2>
     <Space align="center" :gap="30">
-      <Progress
-        type="circle"
-        :width="120"
-        :stroke-width="12"
-        :percent="percent" />
+      <Progress type="circle" :width="120" :stroke-width="12" :percent="percent" />
       <Button @click="onDecline(5)" size="large">Decline -</Button>
       <Button @click="onIncrease(5)" size="large">Increase +</Button>
     </Space>
@@ -55,13 +55,9 @@ function onDecline (scale: number) {
         :width="160"
         :stroke-width="10"
         :percent="percent"
-        :format="(percent: number) => `${percent} Days`" />
-      <Progress
-        type="circle"
-        :width="160"
-        :stroke-width="10"
-        :percent="100"
-        :format="() => 'Done'" />
+        :format="(percent: number) => `${percent} Days`"
+      />
+      <Progress type="circle" :width="160" :stroke-width="10" :percent="100" :format="() => 'Done'" />
       <Progress type="circle" :width="160" :stroke-width="10" :percent="percent">
         <template #format="{ percent }">
           <span style="color: magenta">{{ percent }}%</span>
@@ -69,10 +65,6 @@ function onDecline (scale: number) {
       </Progress>
     </Space>
     <h2 class="mt30 mb10">Ant Design Vue 进度圈</h2>
-    <a-progress
-      type="circle"
-      :width="120"
-      :percent="percent"
-      :stroke-width="12" />
+    <a-progress type="circle" :width="120" :percent="percent" :stroke-width="12" />
   </div>
 </template>

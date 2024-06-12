@@ -27,7 +27,7 @@ const key = ref('1')
 watchEffect(() => {
   console.log('key:', key.value)
 })
-function onChange (key: any) {
+function onChange(key: any) {
   console.log('change:', key)
 }
 </script>
@@ -36,52 +36,36 @@ function onChange (key: any) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">activeKey 传入 number[] | string[]，所有面板可同时展开</h3>
-    <Collapse
-      :collapse-data="collapseData"
-      v-model:active-key="activeKey"
-      @change="onChange" />
+    <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">'手风琴'</h2>
     <h3 class="mb10">只允许单个内容区域展开，只需 activeKey 传入 number | string 即可</h3>
-    <Collapse
-      :collapse-data="collapseData"
-      v-model:active-key="key"
-      @change="onChange" />
+    <Collapse :collapse-data="collapseData" v-model:active-key="key" @change="onChange" />
     <h2 class="mt30 mb10">可复制</h2>
     <Collapse
       lang="template"
       copyable
       :collapse-data="collapseData"
       v-model:active-key="activeKey"
-      @change="onChange" />
+      @change="onChange"
+    />
     <h2 class="mt30 mb10">自定义内容</h2>
-    <Collapse
-      :collapse-data="collapseData"
-      v-model:active-key="activeKey"
-      @change="onChange">
+    <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" @change="onChange">
       <template #header="{ header, key }">
-        <span v-if="key==='1'" style="color: burlywood;">burlywood color {{ header }} (key = {{ key }})</span>
+        <span v-if="key === '1'" style="color: burlywood">burlywood color {{ header }} (key = {{ key }})</span>
       </template>
       <template #lang>typescript</template>
       <template #text="{ text, key }">
-        <span v-if="key==='1'" style="color: burlywood;">burlywood color {{ text }} (key = {{ key }})</span>
+        <span v-if="key === '1'" style="color: burlywood">burlywood color {{ text }} (key = {{ key }})</span>
       </template>
     </Collapse>
     <h2 class="mt30 mb10">隐藏箭头图标</h2>
-    <Collapse
-      :show-arrow="false"
-      :collapse-data="collapseData"
-      v-model:active-key="activeKey"
-      @change="onChange"/>
+    <Collapse :show-arrow="false" :collapse-data="collapseData" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">Ant Design Vue 折叠面板</h2>
     <a-collapse v-model:active-key="activeKey" @change="onChange">
-      <a-collapse-panel
-        v-for="(data, index) in collapseData" :key="index"
-        :header="data.header">
+      <a-collapse-panel v-for="(data, index) in collapseData" :key="index" :header="data.header">
         <p>{{ data.text }}</p>
       </a-collapse-panel>
     </a-collapse>
   </div>
 </template>
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

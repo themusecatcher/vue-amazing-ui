@@ -32,13 +32,27 @@ const props = withDefaults(defineProps<Props>(), {
   title: '',
   ripple: true
 })
-const presetColor = ['pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
+const presetColor = [
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime'
+]
 const customStyle = computed(() => {
   if (props.color && !presetColor.includes(props.color)) {
     return {
       color: props.color,
       backgroundColor: props.color
-    } 
+    }
   }
 })
 const slots = useSlots()
@@ -60,9 +74,13 @@ const showCount = computed(() => {
 })
 </script>
 <template>
-  <div class="m-badge" :class="{'badge-status': status}">
-    <template v-if="status||color">
-      <span class="u-status-dot" :class="[`status-${status||color}`, {'dot-ripple': ripple}]" :style="customStyle"></span>
+  <div class="m-badge" :class="{ 'badge-status': status }">
+    <template v-if="status || color">
+      <span
+        class="u-status-dot"
+        :class="[`status-${status || color}`, { 'dot-ripple': ripple }]"
+        :style="customStyle"
+      ></span>
       <span class="u-status-text">
         <slot>{{ text }}</slot>
       </span>
@@ -71,20 +89,18 @@ const showCount = computed(() => {
       <span v-if="showContent">
         <slot></slot>
       </span>
-      <span
-        v-if="showCount"
-        class="m-count"
-        :class="{'only-number': !showContent}">
+      <span v-if="showCount" class="m-count" :class="{ 'only-number': !showContent }">
         <slot name="count"></slot>
       </span>
       <Transition name="zoom" v-else>
         <div
           v-show="showZero || count !== 0 || dot"
           class="m-badge-count"
-          :class="{'small-num': count < 10, 'only-number': !showContent, 'only-dot': count === 0 && !showZero}"
+          :class="{ 'small-num': count < 10, 'only-number': !showContent, 'only-dot': count === 0 && !showZero }"
           :style="countStyle"
-          :title="title || String(count)">
-          <span v-if="!dot" class="m-number" style="transition: none 0s ease 0s;">
+          :title="title || String(count)"
+        >
+          <span v-if="!dot" class="m-number" style="transition: none 0s ease 0s">
             <span class="u-number">{{ count > max ? max + '+' : count }}</span>
           </span>
         </div>
@@ -94,11 +110,11 @@ const showCount = computed(() => {
 </template>
 <style lang="less" scoped>
 .zoom-enter-active {
-  animation: zoomBadgeIn .3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+  animation: zoomBadgeIn 0.3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
   animation-fill-mode: both;
 }
 .zoom-leave-active {
-  animation: zoomBadgeOut .3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+  animation: zoomBadgeOut 0.3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
   animation-fill-mode: both;
 }
 @keyframes zoomBadgeIn {
@@ -121,7 +137,7 @@ const showCount = computed(() => {
 }
 .m-badge {
   font-size: 14px;
-  color: rgba(0, 0, 0, .88);
+  color: rgba(0, 0, 0, 0.88);
   line-height: 1;
   position: relative;
   display: inline-block;
@@ -151,12 +167,12 @@ const showCount = computed(() => {
       animation-duration: 1.2s;
       animation-iteration-count: infinite;
       animation-timing-function: ease-in-out;
-      content: "";
+      content: '';
     }
     @keyframes dotRipple {
       0% {
-        transform: scale(.8);
-        opacity: .5;
+        transform: scale(0.8);
+        opacity: 0.5;
       }
       100% {
         transform: scale(2.4);
@@ -173,8 +189,8 @@ const showCount = computed(() => {
     background-color: #ff4d4f;
   }
   .status-default {
-    color: rgba(0, 0, 0, .25);
-    background-color: rgba(0, 0, 0, .25);
+    color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.25);
   }
   .status-processing {
     color: @themeColor;
@@ -186,7 +202,7 @@ const showCount = computed(() => {
   }
   .status-pink {
     color: #eb2f96;
-    background-color: #eb2f96;;
+    background-color: #eb2f96;
   }
   .status-red {
     color: #f5222d;
@@ -238,7 +254,7 @@ const showCount = computed(() => {
   }
   .u-status-text {
     margin-inline-start: 8px;
-    color: rgba(0, 0, 0, .88);
+    color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
   }
   .m-count {
@@ -264,12 +280,12 @@ const showCount = computed(() => {
     background: #ff4d4f;
     border-radius: 10px;
     box-shadow: 0 0 0 1px #ffffff;
-    transition: background .2s;
+    transition: background 0.2s;
     .m-number {
       position: relative;
       display: inline-block;
       height: 20px;
-      transition: all .3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+      transition: all 0.3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
       transform-style: preserve-3d;
       -webkit-transform-style: preserve-3d; // 设置元素的子元素是位于 3D 空间中还是平面中 flat | preserve-3d
       backface-visibility: hidden;
@@ -304,7 +320,7 @@ const showCount = computed(() => {
     border-radius: 100%;
     box-shadow: 0 0 0 1px #ffffff;
     padding: 0;
-    transition: background .3s;
+    transition: background 0.3s;
   }
 }
 .badge-status {

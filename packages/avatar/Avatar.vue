@@ -10,8 +10,8 @@ interface Responsive {
   xxl?: number // ≥1600px 响应式栅格
 }
 interface Props {
-  shape?: 'circle'|'square' // 指定头像的形状
-  size?: number|'large'|'small'|'default'|Responsive // 设置头像的大小，number 类型时单位 px
+  shape?: 'circle' | 'square' // 指定头像的形状
+  size?: number | 'large' | 'small' | 'default' | Responsive // 设置头像的大小，number 类型时单位 px
   src?: string // 图片类头像资源地址
   alt?: string // 图片无法显示时的替代文本
   icon?: Slot // 设置头像的图标
@@ -30,7 +30,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', getBrowserSize)
 })
-function getBrowserSize () {
+function getBrowserSize() {
   // document.documentElement返回<html>元素
   clientWidth.value = document.documentElement.clientWidth
 }
@@ -44,7 +44,7 @@ const avatarStyle = computed(() => {
         width: props.size + 'px',
         height: props.size + 'px',
         lineHeight: props.size + 'px',
-        fontSize: (props.size as number / 2) + 'px'
+        fontSize: (props.size as number) / 2 + 'px'
       }
     } else {
       return {
@@ -74,7 +74,7 @@ const avatarStyle = computed(() => {
       width: size + 'px',
       height: size + 'px',
       lineHeight: size + 'px',
-      fontSize: (size / 2) + 'px'
+      fontSize: size / 2 + 'px'
     }
   }
 })
@@ -104,7 +104,7 @@ const strStyle = computed(() => {
     }
   }
   if (typeof props.size === 'number') {
-    const scale = Math.min(1, Math.max(1/45, (1 + (props.size - 9) * 1) / 45))
+    const scale = Math.min(1, Math.max(1 / 45, (1 + (props.size - 9) * 1) / 45))
     return {
       lineHeight: props.size + 'px',
       transform: `scale(${scale}) translateX(-50%)`
@@ -115,8 +115,9 @@ const strStyle = computed(() => {
 <template>
   <div
     class="m-avatar"
-    :class="[avatarStyle === null ? 'avatar-' + size: '', 'avatar-' + shape, {'avatar-image': src}]"
-    :style="avatarStyle || {}">
+    :class="[avatarStyle === null ? 'avatar-' + size : '', 'avatar-' + shape, { 'avatar-image': src }]"
+    :style="avatarStyle || {}"
+  >
     <img class="u-image" :src="src" :alt="alt" v-if="src" />
     <span class="m-icon" v-if="!src && showIcon">
       <slot name="icon"></slot>
@@ -137,7 +138,7 @@ const strStyle = computed(() => {
   white-space: nowrap;
   text-align: center;
   vertical-align: middle;
-  background: rgba(0, 0, 0, .25);
+  background: rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
   width: 32px;
   height: 32px;

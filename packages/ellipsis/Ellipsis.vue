@@ -3,7 +3,7 @@ import Tooltip from '../tooltip'
 import { ref, computed, watchEffect, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 interface Props {
-  maxWidth?: number|string // 文本最大宽度
+  maxWidth?: number | string // 文本最大宽度
   line?: number // 最大行数
   expand?: boolean // 是否启用点击文本展开全部
   tooltip?: boolean // 是否启用文本提示框
@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipFontSize: 14,
   tooltipColor: '#FFF',
   tooltipBackgroundColor: 'rgba(0, 0, 0, .85)',
-  tooltipOverlayStyle: () => ({padding: '8px 12px', textAlign: 'justify'})
+  tooltipOverlayStyle: () => ({ padding: '8px 12px', textAlign: 'justify' })
 })
 const showTooltip = ref()
 const ellipsis = ref()
@@ -37,17 +37,20 @@ const textMaxWidth = computed(() => {
 watchEffect(() => {
   showTooltip.value = props.tooltip
 })
-watchEffect(() => {
-  if (props.tooltip) {
-    if (props.tooltipMaxWidth) {
-      defaultTooltipMaxWidth.value = props.tooltipMaxWidth
-    } else {
-      defaultTooltipMaxWidth.value = ellipsis.value.offsetWidth + 24
+watchEffect(
+  () => {
+    if (props.tooltip) {
+      if (props.tooltipMaxWidth) {
+        defaultTooltipMaxWidth.value = props.tooltipMaxWidth
+      } else {
+        defaultTooltipMaxWidth.value = ellipsis.value.offsetWidth + 24
+      }
     }
-  }
-}, { flush: 'post' })
+  },
+  { flush: 'post' }
+)
 const emit = defineEmits(['expandChange'])
-function onExpand () {
+function onExpand() {
   if (ellipsis.value.style['-webkit-line-clamp']) {
     if (props.tooltip) {
       showTooltip.value = false
@@ -74,7 +77,8 @@ function onExpand () {
     :fontSize="tooltipFontSize"
     :color="tooltipColor"
     :backgroundColor="tooltipBackgroundColor"
-    :overlayStyle="tooltipOverlayStyle">
+    :overlayStyle="tooltipOverlayStyle"
+  >
     <template #tooltip>
       <slot name="tooltip">
         <slot></slot>
@@ -83,10 +87,11 @@ function onExpand () {
     <div
       ref="ellipsis"
       class="m-ellipsis"
-      :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', {'cursor-pointer': expand}]"
+      :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'cursor-pointer': expand }]"
       :style="`-webkit-line-clamp: ${line}; max-width: ${textMaxWidth};`"
       @click="expand ? onExpand() : () => false"
-      v-bind="$attrs">
+      v-bind="$attrs"
+    >
       <slot></slot>
     </div>
   </Tooltip>
@@ -94,10 +99,11 @@ function onExpand () {
     v-else
     ref="ellipsis"
     class="m-ellipsis"
-    :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', {'cursor-pointer': expand}]"
+    :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'cursor-pointer': expand }]"
     :style="`-webkit-line-clamp: ${line}; max-width: ${textMaxWidth};`"
     @click="expand ? onExpand() : () => false"
-    v-bind="$attrs">
+    v-bind="$attrs"
+  >
     <slot></slot>
   </div>
 </template>

@@ -2,23 +2,23 @@
 import { ref } from 'vue'
 const message = ref()
 
-function onInfo (content: string) {
+function onInfo(content: string) {
   console.log('info')
   message.value.info(content) // info调用
 }
-function onSuccess (content: string) {
+function onSuccess(content: string) {
   message.value.success(content) // success调用
 }
-function onError (content: string) {
+function onError(content: string) {
   message.value.error(content) // error调用
 }
-function onWarning (content: string) {
+function onWarning(content: string) {
   message.value.warning(content) // warning调用
 }
-function onLoading (content: string) {
+function onLoading(content: string) {
   message.value.loading(content) // loading调用
 }
-function onClose () {
+function onClose() {
   console.log('close')
 }
 </script>

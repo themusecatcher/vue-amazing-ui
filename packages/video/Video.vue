@@ -10,9 +10,9 @@ interface Props {
   controls?: boolean // 是否向用户显示控件，比如进度条，全屏等
   loop?: boolean // 视频播放完成后，是否循环播放
   muted?: boolean // 是否静音
-  preload?: 'auto'|'metadata'|'none' // 是否在页面加载后载入视频，如果设置了autoplay属性，则preload将被忽略
+  preload?: 'auto' | 'metadata' | 'none' // 是否在页面加载后载入视频，如果设置了autoplay属性，则preload将被忽略
   showPlay?: boolean // 播放暂停时是否显示播放器中间的暂停图标
-  fit?: 'none'|'fill'|'contain'|'cover' // video的poster默认图片和视频内容缩放规则
+  fit?: 'none' | 'fill' | 'contain' | 'cover' // video的poster默认图片和视频内容缩放规则
 }
 const props = withDefaults(defineProps<Props>(), {
   src: '',
@@ -66,7 +66,8 @@ const veo = ref()
   loadeddata 事件在媒体当前播放位置的视频帧（通常是第一帧）加载完成后触发
   preload为none时不会触发
 */
-function getPoster () { // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
+function getPoster() {
+  // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
   // 由于不少视频第一帧为黑屏，故设置视频开始播放时间为0.5s，即取该时刻帧作为封面图
   veo.value.currentTime = props.second
   // 创建canvas元素
@@ -79,7 +80,7 @@ function getPoster () { // 在未设置封面时，自动截取视频0.5s对应�
   // 把canvas转成base64编码格式
   veoPoster.value = canvas.toDataURL('image/png')
 }
-function onPlay () {
+function onPlay() {
   if (originPlay.value) {
     veo.value.currentTime = 0
     originPlay.value = false
@@ -91,10 +92,10 @@ function onPlay () {
     veo.value?.play()
   }
 }
-function onPause () {
+function onPause() {
   hidden.value = false
 }
-function onPlaying () {
+function onPlaying() {
   hidden.value = true
 }
 onMounted(() => {
@@ -111,7 +112,7 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="m-video" :class="{'u-video-hover': !hidden}" :style="`width: ${width}px; height: ${height}px;`">
+  <div class="m-video" :class="{ 'u-video-hover': !hidden }" :style="`width: ${width}px; height: ${height}px;`">
     <video
       ref="veo"
       :style="`object-fit: ${fit};`"
@@ -120,7 +121,7 @@ onMounted(() => {
       :width="width"
       :height="height"
       :autoplay="autoplay"
-      :controls="!originPlay&&controls"
+      :controls="!originPlay && controls"
       :loop="loop"
       :muted="autoplay || muted"
       :preload="preload"
@@ -129,14 +130,17 @@ onMounted(() => {
       @pause="showPlay ? onPause() : () => false"
       @playing="showPlay ? onPlaying() : () => false"
       @click.prevent.once="onPlay"
-      v-bind="$attrs">
+      v-bind="$attrs"
+    >
       您的浏览器不支持video标签。
     </video>
-    <span v-show="originPlay || showPlay" class="m-icon-play" :class="{'hidden': hidden}">
+    <span v-show="originPlay || showPlay" class="m-icon-play" :class="{ hidden: hidden }">
       <svg class="u-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34">
-      <path d="M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039
-          C31.913,19.675,31.913,14.325,28.26,11.961z"></path>
-      </svg>        
+        <path
+          d="M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039
+          C31.913,19.675,31.913,14.325,28.26,11.961z"
+        ></path>
+      </svg>
     </span>
   </div>
 </template>
@@ -157,12 +161,12 @@ onMounted(() => {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, .6);
+    background-color: rgba(0, 0, 0, 0.6);
     pointer-events: none;
-    transition: background-color .3s;
+    transition: background-color 0.3s;
     .u-svg {
       display: inline-block;
-      fill: #FFF;
+      fill: #fff;
       width: 29px;
       height: 34px;
       margin-top: 23px;
@@ -176,7 +180,7 @@ onMounted(() => {
 .u-video-hover {
   &:hover {
     .m-icon-play {
-      background-color: rgba(0, 0, 0, .7);
+      background-color: rgba(0, 0, 0, 0.7);
     }
   }
 }

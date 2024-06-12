@@ -13,7 +13,8 @@ interface Props {
   valueStyle?: CSSProperties // 设置数值的样式
   finishedText?: string // 完成后的展示文本 string | v-slot
 }
-const props = withDefaults(defineProps<Props>(), { // 基于类型的声明
+const props = withDefaults(defineProps<Props>(), {
+  // 基于类型的声明
   title: '',
   value: undefined,
   future: true,
@@ -52,10 +53,10 @@ const showType = computed(() => {
     showSecond: props.format.includes('s')
   }
 })
-function fixedTwo (value: number): string {
+function fixedTwo(value: number): string {
   return value < 10 ? '0' + value : String(value)
 }
-function timeFormat (time: number|null): string {
+function timeFormat(time: number | null): string {
   if (time === null) {
     return '--'
   }
@@ -106,7 +107,7 @@ function timeFormat (time: number|null): string {
   return showTime
 }
 const emit = defineEmits(['finish'])
-function CountDown () {
+function CountDown() {
   if (futureTime.value > Date.now()) {
     restTime.value = futureTime.value - Date.now()
     requestAnimationFrame(CountDown)
@@ -117,12 +118,15 @@ function CountDown () {
 }
 watchEffect(() => {
   // 只有数值类型的值，且是有穷的（finite），才返回 true
-  if (Number.isFinite(props.value)) { // 检测传入的参数是否是一个有穷数
-    if (props.future) { // 未来某时刻的时间戳，单位ms
+  if (Number.isFinite(props.value)) {
+    // 检测传入的参数是否是一个有穷数
+    if (props.future) {
+      // 未来某时刻的时间戳，单位ms
       if (props.value >= Date.now()) {
         futureTime.value = props.value
       }
-    } else { // 相对剩余时间，单位ms
+    } else {
+      // 相对剩余时间，单位ms
       if (props.value >= 0) {
         futureTime.value = props.value + Date.now()
       }
@@ -147,7 +151,9 @@ watchEffect(() => {
       <span class="u-time-value" :style="valueStyle" v-if="finishedText && restTime === 0 && restTime !== null">
         <slot name="finish">{{ finishedText }}</slot>
       </span>
-      <span class="u-time-value" :style="valueStyle" v-if="Number.isFinite(restTime) && restTime > 0">{{ timeFormat(restTime) }}</span>
+      <span class="u-time-value" :style="valueStyle" v-if="Number.isFinite(restTime) && restTime > 0">{{
+        timeFormat(restTime)
+      }}</span>
       <template v-if="showSuffix">
         <span class="u-suffix" v-if="showSuffix || restTime > 0 || restTime === null">
           <slot name="suffix">{{ suffix }}</slot>
@@ -162,11 +168,11 @@ watchEffect(() => {
   line-height: 1.5714285714285714;
   .u-title {
     margin-bottom: 4px;
-    color: rgba(0, 0, 0, .45);
+    color: rgba(0, 0, 0, 0.45);
     font-size: 14px;
   }
   .m-time {
-    color: rgba(0, 0, 0, .88);
+    color: rgba(0, 0, 0, 0.88);
     font-size: 24px;
     font-family: 'Helvetica Neue'; // 保证数字等宽显示
     .u-prefix {

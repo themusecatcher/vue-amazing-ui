@@ -13,7 +13,7 @@ interface Props {
   images: Image[] // 图片数组
   columnCount?: number // 要划分的列数
   columnGap?: number // 各列之间的间隙，单位px
-  width?: string|number // 瀑布流区域的总宽度
+  width?: string | number // 瀑布流区域的总宽度
   borderRadius?: number // 瀑布流区域和图片圆角，单位px
   backgroundColor?: string // 瀑布流区域背景填充色
 }
@@ -61,7 +61,8 @@ watchPostEffect(() => {
     onPreload()
   }
 })
-async function onPreload () { // 计算图片宽高和位置（top，left）
+async function onPreload() {
+  // 计算图片宽高和位置（top，left）
   // 计算每列的图片宽度
   imageWidth.value = (waterfall.value.offsetWidth - (props.columnCount + 1) * props.columnGap) / props.columnCount
   imagesProperty.value.splice(0)
@@ -69,16 +70,18 @@ async function onPreload () { // 计算图片宽高和位置（top，left）
     await loadImage(props.images[i].src, i)
   }
 }
-function loadImage (url: string, n: number) {
+function loadImage(url: string, n: number) {
   return new Promise((resolve) => {
     const image = new Image()
     image.src = url
-    image.onload = function () { // 图片加载完成时执行，此时可通过image.width和image.height获取到图片原始宽高
+    image.onload = function () {
+      // 图片加载完成时执行，此时可通过image.width和image.height获取到图片原始宽高
       if (!rerender.value) {
         loaded.value[n] = false
       }
       var height = image.height / (image.width / imageWidth.value)
-      imagesProperty.value[n] = { // 存储图片宽高和位置信息
+      imagesProperty.value[n] = {
+        // 存储图片宽高和位置信息
         width: imageWidth.value,
         height: height,
         ...getPosition(n, height)
@@ -87,7 +90,8 @@ function loadImage (url: string, n: number) {
     }
   })
 }
-function getPosition (i: number, height: number) { // 获取图片位置信息（top，left）
+function getPosition(i: number, height: number) {
+  // 获取图片位置信息（top，left）
   if (i < props.columnCount) {
     preColumnHeight.value[i] = props.columnGap + height
     return {
@@ -110,25 +114,27 @@ function getPosition (i: number, height: number) { // 获取图片位置信息�
     }
   }
 }
-function onLoaded (index: number) {
+function onLoaded(index: number) {
   loaded.value[index] = true
 }
 </script>
 <template>
-  <div class="m-waterfall" ref="waterfall" :style="`--borderRadius: ${borderRadius}px; background-color: ${backgroundColor}; width: ${totalWidth}; height: ${height}px;`">
+  <div
+    class="m-waterfall"
+    ref="waterfall"
+    :style="`--borderRadius: ${borderRadius}px; background-color: ${backgroundColor}; width: ${totalWidth}; height: ${height}px;`"
+  >
     <Spin
-      v-show="loaded[index]!==undefined"
+      v-show="loaded[index] !== undefined"
       class="m-image"
       :style="`width: ${property.width}px; height: ${property.height}px; top: ${property && property.top}px; left: ${property && property.left}px;`"
       :spinning="!loaded[index]"
       size="small"
       indicator="dynamic-circle"
-      v-for="(property, index) in imagesProperty" :key="index">
-      <img
-        class="u-image"
-        :src="images[index].src"
-        :alt="images[index].title"
-        @load="onLoaded(index)" />
+      v-for="(property, index) in imagesProperty"
+      :key="index"
+    >
+      <img class="u-image" :src="images[index].src" :alt="images[index].title" @load="onLoaded(index)" />
     </Spin>
   </div>
 </template>

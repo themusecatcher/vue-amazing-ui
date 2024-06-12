@@ -40,11 +40,15 @@ const show = ref(false)
       <div style="height: 400px" />
     </Watermark>
     <h2 class="mt30 mb10">图片水印</h2>
-    <h3 class="mb10">通过 image 指定图片地址。为保证图片高清且不被拉伸，请设置 width 和 height, 并上传至少两倍的宽高的 logo 图片地址。</h3>
+    <h3 class="mb10"
+      >通过 image 指定图片地址。为保证图片高清且不被拉伸，请设置 width 和 height, 并上传至少两倍的宽高的 logo
+      图片地址。</h3
+    >
     <Watermark
       :height="30"
       :width="130"
-      image="https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*lkAoRbywo0oAAAAAAAAAAAAADrJ8AQ/original">
+      image="https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*lkAoRbywo0oAAAAAAAAAAAAADrJ8AQ/original"
+    >
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">全屏幕水印</h2>
@@ -55,41 +59,32 @@ const show = ref(false)
     <Flex>
       <Watermark v-bind="model">
         <p class="u-paragraph">
-          The light-speed iteration of the digital world makes products more complex. However, human
-          consciousness and attention resources are limited. Facing this design contradiction, the
-          pursuit of natural interaction will be the consistent direction of Ant Design.
+          The light-speed iteration of the digital world makes products more complex. However, human consciousness and
+          attention resources are limited. Facing this design contradiction, the pursuit of natural interaction will be
+          the consistent direction of Ant Design.
         </p>
         <p class="u-paragraph">
-          Natural user cognition: According to cognitive psychology, about 80% of external
-          information is obtained through visual channels. The most important visual elements in the
-          interface design, including layout, colors, illustrations, icons, etc., should fully
-          absorb the laws of nature, thereby reducing the user&apos;s cognitive cost and bringing
-          authentic and smooth feelings. In some scenarios, opportunely adding other sensory
-          channels such as hearing, touch can create a richer and more natural product experience.
+          Natural user cognition: According to cognitive psychology, about 80% of external information is obtained
+          through visual channels. The most important visual elements in the interface design, including layout, colors,
+          illustrations, icons, etc., should fully absorb the laws of nature, thereby reducing the user&apos;s cognitive
+          cost and bringing authentic and smooth feelings. In some scenarios, opportunely adding other sensory channels
+          such as hearing, touch can create a richer and more natural product experience.
         </p>
         <p class="u-paragraph">
-          Natural user behavior: In the interaction with the system, the designer should fully
-          understand the relationship between users, system roles, and task objectives, and also
-          contextually organize system functions and services. At the same time, a series of methods
-          such as behavior analysis, artificial intelligence and sensors could be applied to assist
-          users to make effective decisions and reduce extra operations of users, to save
-          users&apos; mental and physical resources and make human-computer interaction more
-          natural.
+          Natural user behavior: In the interaction with the system, the designer should fully understand the
+          relationship between users, system roles, and task objectives, and also contextually organize system functions
+          and services. At the same time, a series of methods such as behavior analysis, artificial intelligence and
+          sensors could be applied to assist users to make effective decisions and reduce extra operations of users, to
+          save users&apos; mental and physical resources and make human-computer interaction more natural.
         </p>
         <img
-          style=" position: relative; z-index: 1; width: 100%; max-width: 800px;"
+          style="position: relative; z-index: 1; width: 100%; max-width: 800px"
           src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg"
           alt="示例图片"
         />
       </Watermark>
       <Flex
-        style="
-          width: 25%;
-          flex-shrink: 0;
-          border-left: 1px solid #eee;
-          padding-left: 20px;
-          margin-left: 20px;
-        "
+        style="width: 25%; flex-shrink: 0; border-left: 1px solid #eee; padding-left: 20px; margin-left: 20px"
         vertical
         gap="middle"
       >
@@ -124,7 +119,7 @@ const show = ref(false)
 <style>
 .u-paragraph {
   margin-bottom: 1em;
-  color: rgba(0, 0, 0, .88);
+  color: rgba(0, 0, 0, 0.88);
   word-break: break-word;
   line-height: 1.5714285714285714;
 }

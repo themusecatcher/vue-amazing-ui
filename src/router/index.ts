@@ -367,7 +367,7 @@ export const routes = [
     // 如果你省略了最后的 `*`，在解析或跳转时，参数中的 `/` 字符将被编码
     // path: '/:pathMatch(.*)',
     name: 'not-found',
-    meta: { title: 'NotFound'},
+    meta: { title: 'NotFound' },
     component: () => import('@/views/guide/NotFound.vue')
   }
 ]
@@ -375,7 +375,8 @@ export const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 使用history模式，hash模式：createWebHashHistory
   routes, // `routes: routes` 的缩写
-  scrollBehavior (to, from, savedPosition) { // 滚动行为
+  scrollBehavior(to, from, savedPosition) {
+    // 滚动行为
     return { left: 0, top: 0, behavior: 'smooth' }
   }
 })

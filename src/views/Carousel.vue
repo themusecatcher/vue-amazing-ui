@@ -67,7 +67,7 @@ const positionOptions = ref([
   }
 ])
 const dotPosition = ref('top')
-function clickImage (image: object) {
+function clickImage(image: object) {
   console.log('image', image)
 }
 </script>
@@ -76,28 +76,20 @@ function clickImage (image: object) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">支持自动切换，导航切换，键盘上、下、左、右按键切换，点击指示点切换</h3>
-    <Carousel
-      :images="images"
-      :width="800"
-      :height="450"
-      :autoplay="false"
-      @click="clickImage" />
+    <Carousel :images="images" :width="800" :height="450" :autoplay="false" @click="clickImage" />
     <h2 class="mt30 mb10">指示点位置</h2>
     <Radio :options="positionOptions" v-model:value="dotPosition" button />
-    <br/>
-    <br/>
-    <Carousel
-      :images="images"
-      :width="800"
-      :height="450"
-      :dotPosition="dotPosition" />
+    <br />
+    <br />
+    <Carousel :images="images" :width="800" :height="450" :dotPosition="dotPosition" />
     <h2 class="mt30 mb10">自定义滑动动画</h2>
     <Carousel
       :images="images"
       :width="800"
       :height="450"
       :animation-duration="800"
-      :animation-function="[0.45, 1, 0.55, 1]" />
+      :animation-function="[0.45, 1, 0.55, 1]"
+    />
     <h2 class="mt30 mb10">自定义样式</h2>
     <Carousel
       :images="images"
@@ -107,6 +99,7 @@ function clickImage (image: object) {
       :nav-size="48"
       dot-active-color="#13C2C2"
       :dot-style="{ width: '24px', height: '5px', borderRadius: '5px', backgroundColor: '#FFF' }"
-      :spin-style="{ indicator: 'dot', color: '#13C2C2' }" />
+      :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
+    />
   </div>
 </template>

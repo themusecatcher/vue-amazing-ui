@@ -27,20 +27,20 @@ const left = ref(0) // 提示框left定位
 const contentRef = ref() // 声明一个同名的模板引用
 const tooltipRef = ref() // 声明一个同名的模板引用
 const emit = defineEmits(['openChange'])
-function getPosition () {
+function getPosition() {
   const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
   const tooltipWidth = tooltipRef.value.offsetWidth // 提示文本宽度
   const tooltipHeight = tooltipRef.value.offsetHeight // 提示文本高度
   top.value = tooltipHeight + 4
   left.value = (tooltipWidth - contentWidth) / 2
 }
-function onShow () {
+function onShow() {
   getPosition()
   cancelRaf(hideTimer.value)
   visible.value = true
   emit('openChange', visible.value)
 }
-function onHide (): void {
+function onHide(): void {
   hideTimer.value = rafTimeout(() => {
     visible.value = false
     emit('openChange', visible.value)
@@ -52,13 +52,12 @@ function onHide (): void {
     <div
       ref="tooltipRef"
       class="m-tooltip-content"
-      :class="{'show-tip': visible}"
+      :class="{ 'show-tip': visible }"
       :style="`--tooltip-font-size: ${fontSize}px; --tooltip-color: ${color}; --tooltip-background-color: ${backgroundColor}; max-width: ${maxWidth}px; top: ${-top}px; left: ${-left}px;`"
       @mouseenter="onShow"
-      @mouseleave="onHide">
-      <div
-        class="u-tooltip"
-        :style="overlayStyle">
+      @mouseleave="onHide"
+    >
+      <div class="u-tooltip" :style="overlayStyle">
         <slot name="tooltip">{{ tooltip }}</slot>
       </div>
       <div class="m-tooltip-arrow">
@@ -83,7 +82,9 @@ function onHide (): void {
     opacity: 0;
     transform-origin: 50% 75%;
     transform: scale(0.5);
-    transition: transform .15s, opacity .15s;
+    transition:
+      transform 0.15s,
+      opacity 0.15s;
     .u-tooltip {
       min-width: 32px;
       min-height: 32px;
@@ -96,7 +97,10 @@ function onHide (): void {
       word-break: break-all;
       background-color: var(--tooltip-background-color);
       border-radius: 6px;
-      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);
+      box-shadow:
+        0 6px 16px 0 rgba(0, 0, 0, 0.08),
+        0 3px 6px -4px rgba(0, 0, 0, 0.12),
+        0 9px 28px 8px rgba(0, 0, 0, 0.05);
     }
     .m-tooltip-arrow {
       position: absolute;
@@ -116,8 +120,10 @@ function onHide (): void {
         width: 16px;
         height: 8px;
         background-color: var(--tooltip-background-color);
-        clip-path: path('M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z');
-        content: "";
+        clip-path: path(
+          'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
+        );
+        content: '';
       }
       &::after {
         position: absolute;
@@ -131,7 +137,7 @@ function onHide (): void {
         box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.1);
         z-index: 0;
         background: transparent;
-        content: "";
+        content: '';
       }
     }
   }

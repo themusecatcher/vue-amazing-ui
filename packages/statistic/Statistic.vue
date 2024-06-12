@@ -4,7 +4,7 @@ import type { CSSProperties } from 'vue'
 import { formatNumber } from '../index'
 interface Props {
   title?: string // 数值的标题 string | slot
-  value?: string|number // 数值的内容 string | number | slot
+  value?: string | number // 数值的内容 string | number | slot
   valueStyle?: CSSProperties // 设置数值的样式
   precision?: number //	数值精度
   prefix?: string // 设置数值的前缀 string | slot
@@ -62,15 +62,15 @@ const showSuffix = computed(() => {
 <style lang="less" scoped>
 .m-statistic {
   font-size: 14px;
-  color: rgba(0, 0, 0, .88);
+  color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
   .u-title {
     margin-bottom: 4px;
-    color: rgba(0, 0, 0, .45);
+    color: rgba(0, 0, 0, 0.45);
     font-size: 14px;
   }
   .m-content {
-    color: rgba(0, 0, 0, .88);
+    color: rgba(0, 0, 0, 0.88);
     font-size: 24px;
     .u-prefix {
       display: inline-block;

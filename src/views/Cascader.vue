@@ -173,16 +173,16 @@ const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
 })
-function onChange (values: (number|string)[], labels: string[]) {
+function onChange(values: (number | string)[], labels: string[]) {
   console.log('values:', values)
   console.log('labels:', labels)
 }
-function onAntChange (values: (number|string)[], selectedOptions: any) {
+function onAntChange(values: (number | string)[], selectedOptions: any) {
   console.log('values:', values)
   console.log('selectedOptions:', selectedOptions)
 }
 // 自定义过滤函数，但选项的 value 值大于 输入项时返回 true
-function filter (inputValue: string, option: any) {
+function filter(inputValue: string, option: any) {
   return option.value > inputValue
 }
 </script>
@@ -196,50 +196,20 @@ function filter (inputValue: string, option: any) {
     <h2 class="mt30 mb10">禁用某一级</h2>
     <h3 class="mb10">只禁用第一级：disabled: [true]</h3>
     <h3 class="mb10">禁用前两级：disabled: [true, true]</h3>
-    <Cascader
-      :options="options"
-      v-model="selectedValue"
-      :disabled="[true]"
-      @change="onChange" />
+    <Cascader :options="options" v-model="selectedValue" :disabled="[true]" @change="onChange" />
     <h2 class="mt30 mb10">禁用选项</h2>
     <h3 class="mb10">只需指定 options 里的 disabled 字段</h3>
-    <Cascader
-      :options="optionsDisabled"
-      v-model="selectedValue"
-      @change="onChange" />
+    <Cascader :options="optionsDisabled" v-model="selectedValue" @change="onChange" />
     <h2 class="mt30 mb10">选择即改变</h2>
-    <Cascader
-      :options="options"
-      v-model="selectedValue"
-      change-on-select
-      @change="onChange" />
+    <Cascader :options="options" v-model="selectedValue" change-on-select @change="onChange" />
     <h2 class="mt30 mb10">支持清除</h2>
-    <Cascader
-      :options="options"
-      v-model="selectedValue"
-      allow-clear
-      @change="onChange" />
+    <Cascader :options="options" v-model="selectedValue" allow-clear @change="onChange" />
     <h2 class="mt30 mb10">支持搜索</h2>
-    <Cascader
-      :options="options"
-      v-model="selectedValue"
-      search
-      @change="onChange" />
+    <Cascader :options="options" v-model="selectedValue" search @change="onChange" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
-    <Cascader
-      :options="options"
-      v-model="selectedValue"
-      search
-      :filter="filter"
-      @change="onChange" />
+    <Cascader :options="options" v-model="selectedValue" search :filter="filter" @change="onChange" />
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Cascader
-      :options="options"
-      v-model="selectedValue"
-      :width="120"
-      :height="36"
-      :gap="12"
-      @change="onChange" />
+    <Cascader :options="options" v-model="selectedValue" :width="120" :height="36" :gap="12" @change="onChange" />
     <h2 class="mt30 mb10">自定义字段名</h2>
     <Cascader
       :options="optionsCustom"
@@ -247,15 +217,17 @@ function filter (inputValue: string, option: any) {
       label="name"
       value="code"
       children="items"
-      @change="onChange" />
+      @change="onChange"
+    />
     <h2 class="mt30 mb10">Ant Design Vue 级联选择</h2>
     <a-cascader
       :options="options"
-      style="width: 200px;"
+      style="width: 200px"
       placeholder="Please select"
       :disabled="false"
       allowClear
       v-model:value="selectedValue"
-      @change="onAntChange" />
+      @change="onAntChange"
+    />
   </div>
 </template>

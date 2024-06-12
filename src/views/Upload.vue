@@ -4,7 +4,7 @@ const files = ref([])
 const fileList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
     name: 'Markdown.pdf',
@@ -14,7 +14,7 @@ const fileList = ref([
 const imageList = ref([
   {
     name: '1.jpg',
-    url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   }
 ])
 watchEffect(() => {
@@ -27,30 +27,33 @@ watchEffect(() => {
   console.log('imageList:', imageList.value)
 })
 const errorInfo = ref('') // 上传错误提示信息
-function onBeforeUpload (file: File) {
+function onBeforeUpload(file: File) {
   const acceptTypes = ['image/jpg', 'image/jpeg', 'image/png', 'application/pdf']
-  if (file.size > 500 * 1024) { // 文件大于 500KB 时取消上传
+  if (file.size > 500 * 1024) {
+    // 文件大于 500KB 时取消上传
     errorInfo.value = '文件必须小于500KB'
     return false
   }
-  if (!acceptTypes.includes(file.type)) { // 继续上传
+  if (!acceptTypes.includes(file.type)) {
+    // 继续上传
     errorInfo.value = '只能上传jpg、jpeg、png、pdf格式的文件'
     return false // 停止上传
   }
   return true
 }
-function onCustomRequest (file: File) {
+function onCustomRequest(file: File) {
   return new Promise((resolve, reject) => {
-    setTimeout(() => { // 模拟接口调用返回name和url
+    setTimeout(() => {
+      // 模拟接口调用返回name和url
       if (file.type === 'application/pdf') {
         var res = {
           name: 'Markdown.pdf',
-          url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf"
+          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
         }
       } else {
         var res = {
           name: '1.jpg',
-          url: "https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
+          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
         }
       }
       if (res) {
@@ -66,10 +69,10 @@ interface FileType {
   url: any // 文件地址
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
-function onChange (files: FileType[]) {
+function onChange(files: FileType[]) {
   console.log('change:', files)
 }
-function onRemove (file: FileType) {
+function onRemove(file: FileType) {
   console.log('remove:', file)
 }
 </script>
@@ -96,7 +99,8 @@ function onRemove (file: FileType) {
       :before-upload="onBeforeUpload"
       v-model:fileList="imageList"
       @change="onChange"
-      @remove="onRemove" />
+      @remove="onRemove"
+    />
     <h2 class="mt30 mb10">自定义上传行为</h2>
     <Upload
       multiple
@@ -107,6 +111,7 @@ function onRemove (file: FileType) {
       :custom-request="onCustomRequest"
       v-model:fileList="fileList"
       @change="onChange"
-      @remove="onRemove" />
+      @remove="onRemove"
+    />
   </div>
 </template>

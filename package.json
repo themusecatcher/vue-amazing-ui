@@ -21,11 +21,11 @@
     }
   },
   "scripts": {
-    "dev": "vite",
     "docs:dev": "vitepress dev docs --port 8000 --open",
     "docs:build": "vitepress build docs",
     "docs:deploy": "sh scripts/deploy.sh",
-    "build": "run-s clean build:lib",
+    "dev": "vite",
+    "build": "run-s format clean build:lib",
     "clean": "rimraf ./dist",
     "build:lib": "run-p type-check build:es build:browser",
     "type-check": "vue-tsc --noEmit",
@@ -34,7 +34,8 @@
     "pub": "sh scripts/publish.sh",
     "push": "sh scripts/push.sh",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "format": "prettier --write src/ packages/"
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "8.8.0",
@@ -55,6 +56,7 @@
     "@rushstack/eslint-patch": "^1.10.3",
     "@types/node": "^20.14.2",
     "@vitejs/plugin-vue": "^5.0.5",
+    "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^9.4.0",

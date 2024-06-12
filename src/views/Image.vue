@@ -51,7 +51,12 @@ const images = ref([
     <Image loop :src="images" album />
     <h2 class="mt30 mb10">自定义样式</h2>
     <h3 class="mb10">自定义宽高，同时图片覆盖容器，预览文本设为 preview</h3>
-    <Image :width="300" :height="300" fit="cover" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg">
+    <Image
+      :width="300"
+      :height="300"
+      fit="cover"
+      src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
+    >
       <template #preview>
         <p class="u-pre">preview</p>
       </template>
@@ -62,7 +67,8 @@ const images = ref([
       :zoom-ratio="0.2"
       :min-zoom-scale="0.5"
       :max-zoom-scale="2"
-      src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+      src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
+    />
   </div>
 </template>
 <style lang="less" scoped>

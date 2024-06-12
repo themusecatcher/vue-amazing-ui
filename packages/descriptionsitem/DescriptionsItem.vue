@@ -14,7 +14,12 @@ withDefaults(defineProps<Props>(), {
 })
 </script>
 <template>
-  <div class="m-desc-item" :data-span="span" :data-label-style="JSON.stringify(labelStyle)" :data-content-style="JSON.stringify(contentStyle)">
+  <div
+    class="m-desc-item"
+    :data-span="span"
+    :data-label-style="JSON.stringify(labelStyle)"
+    :data-content-style="JSON.stringify(contentStyle)"
+  >
     <span class="u-label">
       <slot name="label">{{ label }}</slot>
     </span>
@@ -22,7 +27,12 @@ withDefaults(defineProps<Props>(), {
       <slot></slot>
     </span>
   </div>
-  <div class="m-desc-item-bordered" :data-span="span" :data-label-style="JSON.stringify(labelStyle)" :data-content-style="JSON.stringify(contentStyle)">
+  <div
+    class="m-desc-item-bordered"
+    :data-span="span"
+    :data-label-style="JSON.stringify(labelStyle)"
+    :data-content-style="JSON.stringify(contentStyle)"
+  >
     <th class="u-label-th">
       <slot name="label">{{ label }}</slot>
     </th>
@@ -37,15 +47,15 @@ withDefaults(defineProps<Props>(), {
   .u-label {
     display: inline-flex;
     align-items: baseline;
-    color: rgba(0, 0, 0, .88);
+    color: rgba(0, 0, 0, 0.88);
     font-weight: normal;
     font-size: 14px;
     line-height: 1.5714285714285714;
     text-align: start;
     &::after {
-      content: ":";
+      content: ':';
       position: relative;
-      top: -.5px;
+      top: -0.5px;
       margin-inline: 2px 8px;
     }
   }
@@ -53,7 +63,7 @@ withDefaults(defineProps<Props>(), {
     display: inline-flex;
     align-items: baseline;
     flex: 1;
-    color: rgba(0, 0, 0, .88);
+    color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 1.5714285714285714;
     word-break: break-word;

@@ -8,25 +8,26 @@ const visible4 = ref(false)
 const visible5 = ref(false)
 const visible6 = ref(false)
 const loading = ref(false)
-function showDialog () {
+function showDialog() {
   visible1.value = true
 }
-function showCustomHeightDialog () {
+function showCustomHeightDialog() {
   visible2.value = true
 }
-function showFooterDialog () {
+function showFooterDialog() {
   visible3.value = true
 }
-function showFixPositionDialog () {
+function showFixPositionDialog() {
   visible4.value = true
 }
-function showFullScreenDialog () {
+function showFullScreenDialog() {
   visible5.value = true
 }
-function showCustomHBodyDialog () {
+function showCustomHBodyDialog() {
   visible6.value = true
 }
-function onClose () { // 关闭回调
+function onClose() {
+  // 关闭回调
   visible1.value = false
   visible2.value = false
   visible3.value = false
@@ -34,10 +35,12 @@ function onClose () { // 关闭回调
   visible5.value = false
   visible6.value = false
 }
-function onCancel () { // “取消”按钮回调
+function onCancel() {
+  // “取消”按钮回调
   visible3.value = false
 }
-function onConfirm () { // “确定”,“知道了”按钮回调
+function onConfirm() {
+  // “确定”,“知道了”按钮回调
   loading.value = true // 开启加载状态
   setTimeout(() => {
     visible3.value = false
@@ -58,54 +61,35 @@ function onConfirm () { // “确定”,“知道了”按钮回调
         <p>Bla bla ...</p>
       </Dialog>
       <Button type="primary" @click="showCustomHeightDialog">内容高度自定义</Button>
-      <Dialog
-        :height="360"
-        @close="onClose"
-        :visible="visible2">
+      <Dialog :height="360" @close="onClose" :visible="visible2">
         <template #title>Title</template>
         <p>Bla bla ...</p>
         <p>Bla bla ...</p>
         <p>Bla bla ...</p>
       </Dialog>
       <Button type="primary" @click="showFooterDialog">有底部按钮</Button>
-      <Dialog
-        footer
-        @close="onClose"
-        @cancel="onCancel"
-        @ok="onConfirm"
-        :loading="loading"
-        :visible="visible3">
+      <Dialog footer @close="onClose" @cancel="onCancel" @ok="onConfirm" :loading="loading" :visible="visible3">
         <template #title>Title</template>
         <p>Bla bla ...</p>
         <p>Bla bla ...</p>
         <p>Bla bla ...</p>
       </Dialog>
       <Button type="primary" @click="showFixPositionDialog">位置高度自定义</Button>
-      <Dialog
-        :center="false"
-        :top="120"
-        @close="onClose"
-        :visible="visible4">
+      <Dialog :center="false" :top="120" @close="onClose" :visible="visible4">
         <template #title>Title</template>
         <p>Bla bla ...</p>
         <p>Bla bla ...</p>
         <p>Bla bla ...</p>
       </Dialog>
       <Button type="primary" @click="showFullScreenDialog">允许切换全屏</Button>
-      <Dialog
-        switch-fullscreen
-        @close="onClose"
-        :visible="visible5">
+      <Dialog switch-fullscreen @close="onClose" :visible="visible5">
         <template #title>Title</template>
         <p>Bla bla ...</p>
         <p>Bla bla ...</p>
         <p>Bla bla ...</p>
       </Dialog>
       <Button type="primary" @click="showCustomHBodyDialog">body 样式自定义</Button>
-      <Dialog
-        :body-style="{fontSize: '20px', color: '#eb2f96'}"
-        @close="onClose"
-        :visible="visible6">
+      <Dialog :body-style="{ fontSize: '20px', color: '#eb2f96' }" @close="onClose" :visible="visible6">
         <template #title>Title</template>
         <p>Bla bla ...</p>
         <p>Bla bla ...</p>

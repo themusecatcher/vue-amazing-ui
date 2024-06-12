@@ -12,7 +12,7 @@ interface Props {
   value?: any // 当前选中的值（v-model）
   gap?: number // 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距
   button?: boolean // 是否启用按钮样式
-  buttonStyle?: 'outline'|'solid' // 按钮样式风格
+  buttonStyle?: 'outline' | 'solid' // 按钮样式风格
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
@@ -23,7 +23,8 @@ const props = withDefaults(defineProps<Props>(), {
   button: false,
   buttonStyle: 'outline'
 })
-const sum = computed(() => { // 选项总数
+const sum = computed(() => {
+  // 选项总数
   return props.options.length
 })
 const styleObject = computed(() => {
@@ -38,7 +39,7 @@ const styleObject = computed(() => {
   }
 })
 const emits = defineEmits(['update:value', 'change'])
-function onClick (value: any) {
+function onClick(value: any) {
   if (value !== props.value) {
     emits('update:value', value)
     emits('change', value)
@@ -46,15 +47,21 @@ function onClick (value: any) {
 }
 </script>
 <template>
-  <div class="m-radio" :class="{'m-radio-button-solid': buttonStyle === 'solid'}">
+  <div class="m-radio" :class="{ 'm-radio-button-solid': buttonStyle === 'solid' }">
     <template v-if="!button">
       <div
         class="m-radio-wrap"
-        :class="{'vertical': vertical}"
-        :style="sum !== index + 1 ? styleObject: ''"
-        v-for="(option, index) in options" :key="index">
-        <div class="m-box" :class="{'m-radio-disabled': disabled || option.disabled}" @click="(disabled || option.disabled) ? () => false : onClick(option.value)">
-          <span class="u-radio" :class="{'u-radio-checked': value === option.value }"></span>
+        :class="{ vertical: vertical }"
+        :style="sum !== index + 1 ? styleObject : ''"
+        v-for="(option, index) in options"
+        :key="index"
+      >
+        <div
+          class="m-box"
+          :class="{ 'm-radio-disabled': disabled || option.disabled }"
+          @click="disabled || option.disabled ? () => false : onClick(option.value)"
+        >
+          <span class="u-radio" :class="{ 'u-radio-checked': value === option.value }"></span>
           <span class="u-label">
             <slot :label="option.label">{{ option.label }}</slot>
           </span>
@@ -66,10 +73,12 @@ function onClick (value: any) {
         class="m-radio-button-wrap"
         :class="{
           'm-radio-button-checked': value === option.value,
-          'm-radio-button-disabled': disabled || option.disabled,
+          'm-radio-button-disabled': disabled || option.disabled
         }"
-        v-for="(option, index) in options" :key="index"
-        @click="(disabled || option.disabled) ? () => false : onClick(option.value)">
+        v-for="(option, index) in options"
+        :key="index"
+        @click="disabled || option.disabled ? () => false : onClick(option.value)"
+      >
         <span class="u-label">
           <slot :label="option.label">{{ option.label }}</slot>
         </span>
@@ -80,7 +89,7 @@ function onClick (value: any) {
 <style lang="less" scoped>
 .m-radio {
   display: inline-block;
-  color: rgba(0, 0, 0, .88);
+  color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1;
   .m-radio-wrap {
@@ -108,7 +117,7 @@ function onClick (value: any) {
         background: transparent;
         border: 1px solid #d9d9d9;
         border-radius: 50%;
-        transition: all .3s;
+        transition: all 0.3s;
         &::after {
           box-sizing: border-box;
           position: absolute;
@@ -125,17 +134,17 @@ function onClick (value: any) {
           border-radius: 16px;
           transform: scale(0);
           opacity: 0;
-          transition: all .3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-          content: "";
+          transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+          content: '';
         }
       }
       .u-radio-checked {
         border-color: @themeColor;
         background-color: @themeColor;
         &::after {
-          transform: scale(.375);
+          transform: scale(0.375);
           opacity: 1;
-          transition: all .3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+          transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
         }
       }
       .u-label {
@@ -147,15 +156,15 @@ function onClick (value: any) {
       }
     }
     .m-radio-disabled {
-      color: rgba(0, 0, 0, .25);
+      color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
       .u-radio {
-        background-color: rgba(0, 0, 0, .04);
+        background-color: rgba(0, 0, 0, 0.04);
         border-color: #d9d9d9;
         cursor: not-allowed;
         &::after {
-          transform: scale(.5);
-          background-color: rgba(0, 0, 0, .25);
+          transform: scale(0.5);
+          background-color: rgba(0, 0, 0, 0.25);
         }
       }
     }
@@ -174,7 +183,10 @@ function onClick (value: any) {
     border-inline-start-width: 0;
     border-inline-end-width: 1px;
     cursor: pointer;
-    transition: color .2s, background .2s, border-color .2s;
+    transition:
+      color 0.2s,
+      background 0.2s,
+      border-color 0.2s;
     &:first-child {
       border-inline-start: 1px solid #d9d9d9;
       border-start-start-radius: 6px;
@@ -191,8 +203,8 @@ function onClick (value: any) {
       padding-block: 1px;
       padding-inline: 0;
       background-color: #d9d9d9;
-      transition: background-color .3s;
-      content: "";
+      transition: background-color 0.3s;
+      content: '';
     }
     &:last-child {
       border-start-end-radius: 6px;
@@ -212,13 +224,13 @@ function onClick (value: any) {
     }
   }
   .m-radio-button-disabled {
-    color: rgba(0, 0, 0, .25);
-    background-color: rgba(0, 0, 0, .04);
+    color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.04);
     border-color: #d9d9d9;
     cursor: not-allowed;
   }
   .m-radio-button-disabled.m-radio-button-checked {
-    background-color: rgba(0, 0, 0, .15);
+    background-color: rgba(0, 0, 0, 0.15);
   }
   .vertical {
     display: block;

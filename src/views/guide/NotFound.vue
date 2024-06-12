@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
-function goHome () {
+function goHome() {
   router.push({ path: '/' })
 }
 </script>

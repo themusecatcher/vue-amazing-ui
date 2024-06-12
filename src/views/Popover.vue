@@ -1,5 +1,5 @@
 <script setup lang="ts">
-function openChange (visible: boolean) {
+function openChange(visible: boolean) {
   console.log('visible:', visible)
 }
 </script>
@@ -26,7 +26,8 @@ function openChange (visible: boolean) {
     <Popover
       title="TitleTitleTitleTitleTitleTitleTitleTitleTitle"
       :max-width="240"
-      :overlayStyle="{ padding: '12px 18px', borderRadius: '12px' }">
+      :overlayStyle="{ padding: '12px 18px', borderRadius: '12px' }"
+    >
       <template #content>
         <p>Content</p>
         <p>Content</p>
