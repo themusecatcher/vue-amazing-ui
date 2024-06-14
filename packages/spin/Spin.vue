@@ -270,21 +270,6 @@ withDefaults(defineProps<Props>(), {
         14.3% {
           opacity: 1;
         }
-        28.6% {
-          opacity: 0.9;
-        }
-        42.8% {
-          opacity: 0.8;
-        }
-        57.1% {
-          opacity: 0.7;
-        }
-        71.4% {
-          opacity: 0.6;
-        }
-        85.7% {
-          opacity: 0.5;
-        }
         100% {
           opacity: 0.4;
         }
@@ -299,18 +284,6 @@ withDefaults(defineProps<Props>(), {
         28.6% {
           opacity: 1;
         }
-        42.8% {
-          opacity: 0.9;
-        }
-        57.1% {
-          opacity: 0.8;
-        }
-        71.4% {
-          opacity: 0.7;
-        }
-        85.7% {
-          opacity: 0.6;
-        }
         100% {
           opacity: 0.5;
         }
@@ -319,23 +292,11 @@ withDefaults(defineProps<Props>(), {
         0% {
           opacity: 0.5;
         }
-        14.3% {
-          opacity: 0.4;
-        }
         28.6% {
           opacity: 0.3;
         }
         42.8% {
           opacity: 1;
-        }
-        57.1% {
-          opacity: 0.9;
-        }
-        71.4% {
-          opacity: 0.8;
-        }
-        85.7% {
-          opacity: 0.7;
         }
         100% {
           opacity: 0.6;
@@ -345,23 +306,11 @@ withDefaults(defineProps<Props>(), {
         0% {
           opacity: 0.6;
         }
-        14.3% {
-          opacity: 0.5;
-        }
-        28.6% {
-          opacity: 0.4;
-        }
         42.8% {
           opacity: 0.3;
         }
         57.1% {
           opacity: 1;
-        }
-        71.4% {
-          opacity: 0.9;
-        }
-        85.7% {
-          opacity: 0.8;
         }
         100% {
           opacity: 0.7;
@@ -371,23 +320,11 @@ withDefaults(defineProps<Props>(), {
         0% {
           opacity: 0.7;
         }
-        14.3% {
-          opacity: 0.6;
-        }
-        28.6% {
-          opacity: 0.5;
-        }
-        42.8% {
-          opacity: 0.4;
-        }
         57.1% {
           opacity: 0.3;
         }
         71.4% {
           opacity: 1;
-        }
-        85.7% {
-          opacity: 0.9;
         }
         100% {
           opacity: 0.8;
@@ -396,18 +333,6 @@ withDefaults(defineProps<Props>(), {
       @keyframes spin-color-6 {
         0% {
           opacity: 0.8;
-        }
-        14.3% {
-          opacity: 0.7;
-        }
-        28.6% {
-          opacity: 0.6;
-        }
-        42.8% {
-          opacity: 0.5;
-        }
-        57.1% {
-          opacity: 0.4;
         }
         71.4% {
           opacity: 0.3;
@@ -423,21 +348,6 @@ withDefaults(defineProps<Props>(), {
         0% {
           opacity: 0.9;
         }
-        14.3% {
-          opacity: 0.8;
-        }
-        28.6% {
-          opacity: 0.7;
-        }
-        42.8% {
-          opacity: 0.6;
-        }
-        57.1% {
-          opacity: 0.5;
-        }
-        71.4% {
-          opacity: 0.4;
-        }
         85.7% {
           opacity: 0.3;
         }
@@ -448,24 +358,6 @@ withDefaults(defineProps<Props>(), {
       @keyframes spin-color-8 {
         0% {
           opacity: 1;
-        }
-        14.3% {
-          opacity: 0.9;
-        }
-        28.6% {
-          opacity: 0.8;
-        }
-        42.8% {
-          opacity: 0.7;
-        }
-        57.1% {
-          opacity: 0.6;
-        }
-        71.4% {
-          opacity: 0.5;
-        }
-        85.7% {
-          opacity: 0.4;
         }
         100% {
           opacity: 0.3;
