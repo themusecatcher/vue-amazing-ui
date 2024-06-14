@@ -12,17 +12,21 @@ interface Props {
     | 'three-quarters-circle'
     | 'dynamic-circle' // 加载指示符
   color?: string // 主题颜色
+  rotate?: boolean // spin-dot 或 spin-line 初始是否旋转，仅当 indicator: spin-dot | spin-line 时生效
+  speed?: number // spin-dot 或 spin-line 渐变旋转的动画速度，单位ms，仅当 indicator: spin-dot | spin-line 时生效
 }
 withDefaults(defineProps<Props>(), {
   spinning: true,
   size: 'default',
   tip: '',
   indicator: 'dot',
-  color: '#1677FF'
+  color: '#1677FF',
+  rotate: false,
+  speed: 600
 })
 </script>
 <template>
-  <div :class="`m-spin-wrap spin-${size}`" :style="`--color: ${color};`">
+  <div :class="`m-spin-wrap spin-${size}`" :style="`--color: ${color}; --speed: ${speed}ms;`">
     <div class="m-spin" v-show="spinning">
       <div class="m-spin-box">
         <div class="m-loading-dot" v-if="indicator === 'dot'">
@@ -31,7 +35,7 @@ withDefaults(defineProps<Props>(), {
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
         </div>
-        <div class="spin-wrap-box" v-if="indicator === 'spin-dot'">
+        <div class="spin-wrap-box" :class="{ 'spin-wrap-rotate': rotate }" v-if="indicator === 'spin-dot'">
           <div class="m-spin-dot">
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
@@ -45,7 +49,7 @@ withDefaults(defineProps<Props>(), {
             <span class="u-spin-item"></span>
           </div>
         </div>
-        <div class="spin-wrap-box" v-if="indicator === 'spin-line'">
+        <div class="spin-wrap-box" :class="{ 'spin-wrap-rotate': rotate }" v-if="indicator === 'spin-line'">
           <div class="m-spin-line">
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
@@ -146,90 +150,88 @@ withDefaults(defineProps<Props>(), {
         -webkit-animation-delay: 1.2s;
       }
     }
-    .spin-wrap-box {
-      text-align: center;
-      line-height: 0;
-      position: relative;
-      animation: spin-rotate 1.5s ease-in-out;
-      -webkit-animation: spin-rotate 1.5s ease-in-out;
+    .spin-wrap-rotate {
+      animation: spin-rotate 2.4s ease-in-out;
+      -webkit-animation: spin-rotate 2.4s ease-in-out;
       @keyframes spin-rotate {
         100% {
           transform: rotate(360deg);
         } // to { transform: rotate(360deg); }
       }
+    }
+    .spin-wrap-box {
+      text-align: center;
+      line-height: 0;
+      position: relative;
       .m-spin-dot {
         position: relative;
         display: inline-block;
         .u-spin-item {
-          // 单个圆点样式
           position: absolute;
           background: var(--color);
           border-radius: 50%;
-          opacity: 1;
-          animation: spin-dot-color 0.8s linear infinite;
-          -webkit-animation: spin-dot-color 0.8s linear infinite;
-          @keyframes spin-dot-color {
-            100% {
-              opacity: 0.1;
-            }
-          }
         }
         .u-spin-item:first-child {
           top: 0;
           left: 0;
+          opacity: 0.3;
+          animation: spin-color-1 var(--speed) linear infinite;
+          -webkit-animation: spin-color-1 var(--speed) linear infinite;
         }
         .u-spin-item:nth-child(2) {
           top: 0;
           right: 0;
-          animation-delay: 0.2s;
-          -webkit-animation-delay: 0.2s;
+          opacity: 0.5;
+          animation: spin-color-3 var(--speed) linear infinite;
+          -webkit-animation: spin-color-3 var(--speed) linear infinite;
         }
         .u-spin-item:nth-child(3) {
           bottom: 0;
           right: 0;
-          animation-delay: 0.4s;
-          -webkit-animation-delay: 0.4s;
+          opacity: 0.7;
+          animation: spin-color-5 var(--speed) linear infinite;
+          -webkit-animation: spin-color-5 var(--speed) linear infinite;
         }
         .u-spin-item:last-child {
           bottom: 0;
           left: 0;
-          animation-delay: 0.6s;
-          -webkit-animation-delay: 0.6s;
+          opacity: 0.9;
+          animation: spin-color-7 var(--speed) linear infinite;
+          -webkit-animation: spin-color-7 var(--speed) linear infinite;
         }
       }
       .m-spin-line {
         position: relative;
         display: inline-block;
         .u-spin-item {
-          // 单个圆点样式
           position: absolute;
           top: 0;
           left: 50%;
           transform: translateX(-50%);
           background-color: var(--color);
-          opacity: 1;
-          animation: spin-line-color 0.8s linear infinite;
-          -webkit-animation: spin-line-color 0.8s linear infinite;
-          @keyframes spin-line-color {
-            100% {
-              opacity: 0.1;
-            }
-          }
+        }
+        .u-spin-item:first-child {
+          opacity: 0.3;
+          animation: spin-color-1 var(--speed) linear infinite;
+          -webkit-animation: spin-color-1 var(--speed) linear infinite;
         }
         .u-spin-item:nth-child(2) {
+          opacity: 0.5;
           transform: translateX(-50%) rotate(90deg);
-          animation-delay: 0.2s;
-          -webkit-animation-delay: 0.2s;
+          animation: spin-color-3 var(--speed) linear infinite;
+          -webkit-animation: spin-color-3 var(--speed) linear infinite;
         }
         .u-spin-item:nth-child(3) {
+          opacity: 0.7;
           transform: translateX(-50%) rotate(180deg);
-          animation-delay: 0.4s;
-          -webkit-animation-delay: 0.4s;
+          animation: spin-color-5 var(--speed) linear infinite;
+          -webkit-animation: spin-color-5 var(--speed) linear infinite;
         }
         .u-spin-item:last-child {
+          opacity: 0.9;
           transform: translateX(-50%) rotate(270deg);
-          animation-delay: 0.6s;
-          -webkit-animation-delay: 0.6s;
+          animation: spin-color-7 var(--speed) linear infinite;
+          -webkit-animation: spin-color-7 var(--speed) linear infinite;
         }
       }
       .spin-rotate {
@@ -237,25 +239,237 @@ withDefaults(defineProps<Props>(), {
         left: 0;
         transform: rotate(45deg);
         .u-spin-item:first-child {
-          animation-delay: 0.1s;
-          -webkit-animation-delay: 0.1s;
+          opacity: 0.4;
+          animation: spin-color-2 var(--speed) linear infinite;
+          -webkit-animation: spin-color-2 var(--speed) linear infinite;
         }
         .u-spin-item:nth-child(2) {
-          animation-delay: 0.3s;
-          -webkit-animation-delay: 0.3s;
+          opacity: 0.6;
+          animation: spin-color-4 var(--speed) linear infinite;
+          -webkit-animation: spin-color-4 var(--speed) linear infinite;
         }
         .u-spin-item:nth-child(3) {
-          animation-delay: 0.5s;
-          -webkit-animation-delay: 0.5s;
+          opacity: 0.8;
+          animation: spin-color-6 var(--speed) linear infinite;
+          -webkit-animation: spin-color-6 var(--speed) linear infinite;
         }
         .u-spin-item:last-child {
-          animation-delay: 0.7s;
-          -webkit-animation-delay: 0.7s;
+          opacity: 1;
+          animation: spin-color-8 var(--speed) linear infinite;
+          -webkit-animation: spin-color-8 var(--speed) linear infinite;
         }
       }
       .spin-tip {
         left: 50%;
         transform: translateX(-50%) rotate(45deg);
+      }
+      @keyframes spin-color-1 {
+        0% {
+          opacity: 0.3;
+        }
+        14.3% {
+          opacity: 1;
+        }
+        28.6% {
+          opacity: 0.9;
+        }
+        42.8% {
+          opacity: 0.8;
+        }
+        57.1% {
+          opacity: 0.7;
+        }
+        71.4% {
+          opacity: 0.6;
+        }
+        85.7% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 0.4;
+        }
+      }
+      @keyframes spin-color-2 {
+        0% {
+          opacity: 0.4;
+        }
+        14.3% {
+          opacity: 0.3;
+        }
+        28.6% {
+          opacity: 1;
+        }
+        42.8% {
+          opacity: 0.9;
+        }
+        57.1% {
+          opacity: 0.8;
+        }
+        71.4% {
+          opacity: 0.7;
+        }
+        85.7% {
+          opacity: 0.6;
+        }
+        100% {
+          opacity: 0.5;
+        }
+      }
+      @keyframes spin-color-3 {
+        0% {
+          opacity: 0.5;
+        }
+        14.3% {
+          opacity: 0.4;
+        }
+        28.6% {
+          opacity: 0.3;
+        }
+        42.8% {
+          opacity: 1;
+        }
+        57.1% {
+          opacity: 0.9;
+        }
+        71.4% {
+          opacity: 0.8;
+        }
+        85.7% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 0.6;
+        }
+      }
+      @keyframes spin-color-4 {
+        0% {
+          opacity: 0.6;
+        }
+        14.3% {
+          opacity: 0.5;
+        }
+        28.6% {
+          opacity: 0.4;
+        }
+        42.8% {
+          opacity: 0.3;
+        }
+        57.1% {
+          opacity: 1;
+        }
+        71.4% {
+          opacity: 0.9;
+        }
+        85.7% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0.7;
+        }
+      }
+      @keyframes spin-color-5 {
+        0% {
+          opacity: 0.7;
+        }
+        14.3% {
+          opacity: 0.6;
+        }
+        28.6% {
+          opacity: 0.5;
+        }
+        42.8% {
+          opacity: 0.4;
+        }
+        57.1% {
+          opacity: 0.3;
+        }
+        71.4% {
+          opacity: 1;
+        }
+        85.7% {
+          opacity: 0.9;
+        }
+        100% {
+          opacity: 0.8;
+        }
+      }
+      @keyframes spin-color-6 {
+        0% {
+          opacity: 0.8;
+        }
+        14.3% {
+          opacity: 0.7;
+        }
+        28.6% {
+          opacity: 0.6;
+        }
+        42.8% {
+          opacity: 0.5;
+        }
+        57.1% {
+          opacity: 0.4;
+        }
+        71.4% {
+          opacity: 0.3;
+        }
+        85.7% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.9;
+        }
+      }
+      @keyframes spin-color-7 {
+        0% {
+          opacity: 0.9;
+        }
+        14.3% {
+          opacity: 0.8;
+        }
+        28.6% {
+          opacity: 0.7;
+        }
+        42.8% {
+          opacity: 0.6;
+        }
+        57.1% {
+          opacity: 0.5;
+        }
+        71.4% {
+          opacity: 0.4;
+        }
+        85.7% {
+          opacity: 0.3;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes spin-color-8 {
+        0% {
+          opacity: 1;
+        }
+        14.3% {
+          opacity: 0.9;
+        }
+        28.6% {
+          opacity: 0.8;
+        }
+        42.8% {
+          opacity: 0.7;
+        }
+        57.1% {
+          opacity: 0.6;
+        }
+        71.4% {
+          opacity: 0.5;
+        }
+        85.7% {
+          opacity: 0.4;
+        }
+        100% {
+          opacity: 0.3;
+        }
       }
     }
     .u-quarter-circle {
@@ -350,14 +564,14 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .m-spin-line {
-      @lineLength: 9px;
-      width: @lineLength * 3;
-      height: @lineLength * 3;
+      --line-length: 8px;
+      width: calc(var(--line-length) * 3);
+      height: calc(var(--line-length) * 3);
       .u-spin-item {
-        transform-origin: 50% calc(@lineLength * 1.5);
-        border-radius: @lineLength;
-        width: calc(@lineLength / 3);
-        height: @lineLength;
+        transform-origin: 50% calc(var(--line-length) * 1.5);
+        border-radius: var(--line-length);
+        width: calc(var(--line-length) / 2.5);
+        height: var(--line-length);
       }
     }
     .u-quarter-circle {
@@ -406,14 +620,14 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .m-spin-line {
-      @lineLength: 12px;
-      width: @lineLength * 3;
-      height: @lineLength * 3;
+      --line-length: 12px;
+      width: calc(var(--line-length) * 3);
+      height: calc(var(--line-length) * 3);
       .u-spin-item {
-        transform-origin: 50% calc(@lineLength * 1.5);
-        border-radius: @lineLength;
-        width: calc(@lineLength / 3);
-        height: @lineLength;
+        transform-origin: 50% calc(var(--line-length) * 1.5);
+        border-radius: var(--line-length);
+        width: calc(var(--line-length) / 3);
+        height: var(--line-length);
       }
     }
     .u-quarter-circle {
@@ -462,14 +676,14 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .m-spin-line {
-      @lineLength: 15px;
-      width: @lineLength * 3;
-      height: @lineLength * 3;
+      --line-length: 16px;
+      width: calc(var(--line-length) * 3);
+      height: calc(var(--line-length) * 3);
       .u-spin-item {
-        transform-origin: 50% calc(@lineLength * 1.5);
-        border-radius: @lineLength;
-        width: calc(@lineLength / 3);
-        height: @lineLength;
+        transform-origin: 50% calc(var(--line-length) * 1.5);
+        border-radius: var(--line-length);
+        width: calc(var(--line-length) / 3);
+        height: var(--line-length);
       }
     }
     .u-quarter-circle {

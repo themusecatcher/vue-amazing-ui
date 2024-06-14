@@ -409,3 +409,5 @@ size | 组件大小 | 'small' &#124; 'default' &#124; 'large' | 'default' | fals
 tip | 描述文案 | string | '' | false
 indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'quarter-circle' &#124; 'half-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' | 'dot' | false
 color | 主题颜色 | string | '#1677FF' | false
+rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: spin-dot \| spin-line` 时生效 | boolean | false | false
+speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位`ms`，仅当 `indicator: spin-dot \| spin-line` 时生效 | number | 600 | false
