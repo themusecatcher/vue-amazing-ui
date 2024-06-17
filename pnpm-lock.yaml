@@ -39,8 +39,8 @@ importers:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.4.5)
       vue-amazing-ui:
-        specifier: ^1.0.7
-        version: 1.0.7(async-validator@4.2.5)(focus-trap@7.5.4)(typescript@5.4.5)
+        specifier: ^1.0.8
+        version: 1.0.8(async-validator@4.2.5)(focus-trap@7.5.4)(typescript@5.4.5)
       vue-router:
         specifier: ^4.3.3
         version: 4.3.3(vue@3.4.27(typescript@5.4.5))
@@ -2217,8 +2217,8 @@ packages:
   vscode-uri@3.0.8:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
 
-  vue-amazing-ui@1.0.7:
-    resolution: {integrity: sha512-5J99c7StQ3y//v6VuY3uYSDL7VYejdN686o2IgJSyaK1npXZ4TK4Ars+iD2rwzSa4r1+JS0o/MX9KG+SlRZSsQ==}
+  vue-amazing-ui@1.0.8:
+    resolution: {integrity: sha512-nDebKogkNn3Mu8geKFRHVDPlzv4AGylr+pSKfGfmu/1Bvwo2YdON+KyaiJXpj1jXuwB3nVWn60PrZ4lCOzbe8Q==}
 
   vue-demi@0.14.8:
     resolution: {integrity: sha512-Uuqnk9YE9SsWeReYqK2alDI5YzciATE0r2SkA6iMAtuXvNTMNACJLJEXNXaEy94ECuBe4Sk6RzRU80kjdbIo1Q==}
@@ -4596,7 +4596,7 @@ snapshots:
 
   vscode-uri@3.0.8: {}
 
-  vue-amazing-ui@1.0.7(async-validator@4.2.5)(focus-trap@7.5.4)(typescript@5.4.5):
+  vue-amazing-ui@1.0.8(async-validator@4.2.5)(focus-trap@7.5.4)(typescript@5.4.5):
     dependencies:
       '@vuepic/vue-datepicker': 8.8.0(vue@3.4.27(typescript@5.4.5))
       '@vueuse/core': 10.10.1(vue@3.4.27(typescript@5.4.5))
