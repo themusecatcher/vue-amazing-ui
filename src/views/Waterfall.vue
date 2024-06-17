@@ -21,7 +21,7 @@ onBeforeMount(() => {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Waterfall :images="images" :width="1100" />
+    <Waterfall :images="images" />
     <h2 class="mt30 mb10">自定义展示</h2>
     <Waterfall
       :images="images"

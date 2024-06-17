@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, shallowRef, computed, watch, watchPostEffect } from 'vue'
+import { ref, shallowRef, computed, onMounted, watch } from 'vue'
 import Spin from '../spin'
+import { debounce, useEventListener } from '../index'
 /*
   宽度固定，图片等比例缩放；使用JS获取每张图片宽度和高度，结合 `relative` 和 `absolute` 定位
   计算每个图片的位置 `top`，`left`，保证每张新的图片都追加在当前高度最小的那列末尾
@@ -42,12 +43,13 @@ const height = computed(() => {
 const len = computed(() => {
   return props.images.length
 })
-const loaded = ref(Array(len.value)) // 图片是否加载完成
-const rerender = ref(false)
+const waterfallWidth = ref<number>()
+const loaded = ref(Array(len.value).fill(false)) // 图片是否加载完成
 watch(
-  () => [props.columnCount, props.columnGap, props.width],
+  () => [props.columnCount, props.columnGap, props.width, props.images],
   () => {
-    rerender.value = true
+    waterfallWidth.value = waterfall.value.offsetWidth
+    loaded.value = Array(len.value).fill(false)
     preColumnHeight.value = Array(props.columnCount).fill(0)
     onPreload()
   },
@@ -56,15 +58,25 @@ watch(
     flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
   }
 )
-watchPostEffect(() => {
-  if (props.images.length) {
+onMounted(() => {
+  waterfallWidth.value = waterfall.value.offsetWidth
+  onPreload()
+})
+function resizeEvent() {
+  const currentWidth = waterfall.value.offsetWidth
+  // 窗口宽度改变时重新计算瀑布流布局
+  if (props.images.length && currentWidth !== waterfallWidth.value) {
+    waterfallWidth.value = currentWidth
+    loaded.value = Array(len.value).fill(false)
     onPreload()
   }
-})
+}
+const debounceEvent = debounce(resizeEvent)
+useEventListener(window, 'resize', debounceEvent)
 async function onPreload() {
   // 计算图片宽高和位置（top，left）
   // 计算每列的图片宽度
-  imageWidth.value = (waterfall.value.offsetWidth - (props.columnCount + 1) * props.columnGap) / props.columnCount
+  imageWidth.value = ((waterfallWidth.value as number) - (props.columnCount + 1) * props.columnGap) / props.columnCount
   imagesProperty.value.splice(0)
   for (let i = 0; i < len.value; i++) {
     await loadImage(props.images[i].src, i)
@@ -76,10 +88,7 @@ function loadImage(url: string, n: number) {
     image.src = url
     image.onload = function () {
       // 图片加载完成时执行，此时可通过image.width和image.height获取到图片原始宽高
-      if (!rerender.value) {
-        loaded.value[n] = false
-      }
-      var height = image.height / (image.width / imageWidth.value)
+      const height = image.height / (image.width / imageWidth.value)
       imagesProperty.value[n] = {
         // 存储图片宽高和位置信息
         width: imageWidth.value,
@@ -125,7 +134,6 @@ function onLoaded(index: number) {
     :style="`--borderRadius: ${borderRadius}px; background-color: ${backgroundColor}; width: ${totalWidth}; height: ${height}px;`"
   >
     <Spin
-      v-show="loaded[index] !== undefined"
       class="m-image"
       :style="`width: ${property.width}px; height: ${property.height}px; top: ${property && property.top}px; left: ${property && property.left}px;`"
       :spinning="!loaded[index]"
