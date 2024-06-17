@@ -7,12 +7,24 @@
 ::: details Show Source Code
 
 ```ts
-function debounce (fn: Function, delay = 300): any {
-  let timer: any = null //借助闭包
+/**
+ * 防抖函数debounce
+ * 主要用于限制函数调用的频率，当频繁触发某个函数时，实际上只需要在最后一次触发后的一段时间内执行一次即可。
+ * 这对于诸如输入事件处理函数、窗口大小调整事件处理函数等可能会频繁触发的函数非常有用。
+ *
+ * @param fn 要执行的函数。
+ * @param delay 防抖的时间期限，单位ms，默认为300毫秒。
+ * @returns 返回一个新的防抖的函数
+ */
+export function debounce(fn: Function, delay = 300): any {
+  let timer: any = null // 使用闭包保存定时器的引用
   return function () {
+    // 返回一个包装函数
     if (timer) {
+      // 如果定时器存在，则清除之前的定时器
       clearTimeout(timer)
     }
+    // 设置新的定时器，延迟执行原函数
     timer = setTimeout(fn, delay)
   }
 }
@@ -57,4 +69,4 @@ function showPosition () {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 fn | 要执行的函数 | Function | - | true
-delay | 防抖时间期限，单位`ms` | number | 300 | false
+delay | 防抖的时间期限，单位`ms` | number | 300 | false

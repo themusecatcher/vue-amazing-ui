@@ -61,17 +61,17 @@ import 'vue-amazing-ui/css'
 <script setup lang="ts">
 import {
   dateFormat,
-  requestAnimationFrame,
-  cancelAnimationFrame,
+  formatNumber,
   rafTimeout,
   cancelRaf,
   throttle,
   debounce,
   add,
   downloadFile,
-  formatNumber,
   toggleDark,
-  useEventListener
+  useEventListener,
+  useScrollDirection,
+  useFps
 } from 'vue-amazing-ui'
 </script>
 ```

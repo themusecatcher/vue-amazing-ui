@@ -3,17 +3,27 @@
 ::: details Show Source Code
 
 ```ts
-function downloadFile (url: string, name: string) {
-  var fileName = ''
+/**
+ * 下载文件并自定义文件名
+ * @param url 文件的URL
+ * @param name 文件名；文件的命名，如果未提供，则从URL中尝试提取
+ */
+export function downloadFile(url: string, name: string): void {
+  url = encodeURI(url) // 对URL进行编码防止XSS攻击
+  let fileName = ''
   if (name) {
     fileName = name
   } else {
-    const res = url.split('?')[0].split('/')
-    fileName = res[res.length - 1]
+    // 提取文件名
+    const urlObj = new URL(url)
+    fileName = urlObj.pathname.split('/').pop() || 'download'
   }
-  var xhr = new XMLHttpRequest()
+  const xhr = new XMLHttpRequest() // 创建XMLHttpRequest对象用于文件下载
   xhr.open('GET', url, true)
-  xhr.responseType = 'blob'
+  xhr.responseType = 'blob' // 设置响应类型为blob，以便处理二进制数据
+  xhr.onerror = function () {
+    console.error('下载文件失败')
+  }
   xhr.onload = function () {
     if (xhr.status === 200) {
       const blob = xhr.response
@@ -24,11 +34,13 @@ function downloadFile (url: string, name: string) {
       link.style.display = 'none'
       body?.appendChild(link)
       link.click()
-      body?.removeChild(link)
+      body?.removeChild(link) // 下载完成后，移除链接并释放blob对象URL
       window.URL.revokeObjectURL(link.href)
+    } else {
+      console.error('请求文件失败，状态码：', xhr.status)
     }
   }
-  xhr.send()
+  xhr.send() // 发送请求
 }
 ```
 
@@ -53,4 +65,4 @@ donwloadFile('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdow
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 url | 文件地址 | string | - | true
-name | 自定义文件名，未传时，从文件地址中自动获取文件名称 | string | - | false
+name | 自定义文件名，未传时，从文件地址中自动提取文件名称 | string | - | false

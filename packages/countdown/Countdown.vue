@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, useSlots } from 'vue'
 import type { CSSProperties } from 'vue'
-import { requestAnimationFrame } from '../index'
 interface Props {
   title?: string // 倒计时标题 string | v-slot
   value: number // 倒计时数值，支持设置未来某时刻的时间戳(ms) 或 相对剩余时间戳(ms)

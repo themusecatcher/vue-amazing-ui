@@ -3,7 +3,7 @@
 ::: details Show Source Code
 
 ```ts
-function toggleDark () {
+export function toggleDark() {
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
   document.documentElement.classList.toggle('dark')
 }

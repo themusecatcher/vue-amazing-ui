@@ -7,17 +7,35 @@
 ::: details Show Source Code
 
 ```ts
-function throttle (fn: Function, delay = 300): any {
-  let valid = true
+/**
+ * 节流函数throttle
+ *
+ * 该函数用于生成一个节流函数，用于控制某个函数在给定时间间隔内只能被执行一次。
+ * 主要用于性能优化，例如限制事件处理函数的触发频率。
+ *
+ * @param fn 要被节流的函数。
+ * @param delay 节流的时间间隔，单位ms，默认为300毫秒。
+ * @returns 返回一个新的节流的函数。
+ */
+export function throttle(fn: Function, delay = 300): any {
+  let valid = true // 用于标记函数是否可以执行
   return function () {
+    // 返回一个新的函数，该函数负责执行节流逻辑
     if (valid) {
       valid = false // 将函数置为无效
       setTimeout(() => {
-        fn()
-        valid = true
+        try {
+          fn() // 执行原函数，并在执行后重新标记为可执行
+          valid = true
+        } catch (error) {
+          // 如果执行过程中发生错误，打印错误信息，并重新标记为可执行
+          console.error('Error executing throttled function:', error)
+          // 保证valid能被重置，避免后续调用永久失效
+          valid = true
+        }
       }, delay)
     }
-    return false // valid为false时，函数不执行
+    return false // 返回false，表示当前不执行函数
   }
 }
 ```
@@ -60,5 +78,5 @@ function showPosition () {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-fn | 要执行的函数 | Function | - | true
-delay | 函数失效时长，单位`ms` | number | 300 | false
+fn | 要被节流的函数 | Function | - | true
+delay | 节流的时间间隔，单位`ms` | number | 300 | false

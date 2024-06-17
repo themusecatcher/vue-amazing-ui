@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, onMounted, watch } from 'vue'
 import type { CSSProperties } from 'vue'
+import { formatNumber } from '../index'
 import { useTransition, TransitionPresets } from '@vueuse/core'
 enum TransitionFunc {
   linear = 'linear',
@@ -75,34 +76,11 @@ const outputValue = useTransition(source, {
 function play() {
   source.value = props.to
 }
-const showValue = computed(() => formatNumber(outputValue.value))
-function isNumber(val: any) {
-  return Object.prototype.toString.call(val) === '[object Number]'
-}
+const showValue = computed(() => {
+  const { precision, separator, decimal, prefix, suffix } = props
+  return formatNumber(outputValue.value, precision, separator, decimal, prefix, suffix)
+})
 const emits = defineEmits(['started', 'finished'])
-function formatNumber(num: number | string) {
-  const { precision, decimal, separator, suffix, prefix } = props
-  if (num === 0) {
-    return num.toFixed(precision)
-  }
-  if (!num) {
-    return ''
-  }
-  num = Number(num).toFixed(precision)
-  num += ''
-
-  const x = num.split('.')
-  let x1 = x[0]
-  const x2 = x.length > 1 ? decimal + x[1] : ''
-
-  const rgx = /(\d+)(\d{3})/
-  if (separator && !isNumber(separator)) {
-    while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + separator + '$2')
-    }
-  }
-  return prefix + x1 + x2 + suffix
-}
 defineExpose({
   play
 })

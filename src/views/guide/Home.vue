@@ -2,6 +2,8 @@
 import pkg from '/package.json'
 import { ref, computed } from 'vue'
 import { routes } from '@/router'
+import { useFps } from 'packages'
+const { fps } = useFps()
 const installData = ref([
   {
     header: 'Install',
@@ -22,17 +24,17 @@ const collapseData = ref([
     text: `<script setup lang="ts">
 import {
   dateFormat,
-  requestAnimationFrame,
-  cancelAnimationFrame,
+  formatNumber,
   rafTimeout,
   cancelRaf,
   throttle,
   debounce,
   add,
   downloadFile,
-  formatNumber,
   toggleDark,
-  useEventListener
+  useEventListener,
+  useScrollDirection,
+  useFps
 } from 'vue-amazing-ui'
 <\/script>`
   }
@@ -58,6 +60,9 @@ function onOpen() {
       <h1>Vue Amazing UI</h1>
       <Tag color="#FC5404">{{ pkg.version }}</Tag>
     </Space>
+    <br />
+    <br />
+    <Tag color="purple">FPS：{{ fps }}</Tag>
     <br />
     <br />
     <Button type="primary" @click="onOpen">Open New Window</Button>
@@ -98,51 +103,51 @@ function onOpen() {
     <ul class="m-list">
       <li class="u-tip mb10 mt10">
         <Tag color="geekblue">dateFormat</Tag>
-        : 简单易用的日期格式化函数！
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">requestAnimationFrame</Tag>
-        : 针对不同浏览器进行兼容处理！
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">cancelAnimationFrame</Tag>
-        : 针对不同浏览器进行兼容处理！
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">rafTimeout</Tag>
-        : 使用 requestAnimationFrame 实现的定时器函数，等效替代 (setTimeout 和 setInterval)！
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">cancelRaf</Tag>
-        : 用于取消 rafTimeout 函数！
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">throttle</Tag>
-        : 节流函数！
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">debounce</Tag>
-        : 防抖函数！
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">add</Tag>
-        : 消除js加减精度问题的加法函数！
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">downloadFile</Tag>
-        : 下载文件并自定义文件名，未传文件名时，从文件地址中自动获取文件名称！
+        : 格式化日期时间字符串函数
       </li>
       <li class="u-tip mb10">
         <Tag color="geekblue">formatNumber</Tag>
-        : 数字格式化函数！
+        : 数字格式化函数
+      </li>
+      <li class="u-tip mb10">
+        <Tag color="geekblue">rafTimeout</Tag>
+        : 使用 requestAnimationFrame 实现的延迟 setTimeout 或间隔 setInterval 调用函数
+      </li>
+      <li class="u-tip mb10">
+        <Tag color="geekblue">cancelRaf</Tag>
+        : 用于取消 rafTimeout 函数
+      </li>
+      <li class="u-tip mb10">
+        <Tag color="geekblue">throttle</Tag>
+        : 节流函数
+      </li>
+      <li class="u-tip mb10">
+        <Tag color="geekblue">debounce</Tag>
+        : 防抖函数
+      </li>
+      <li class="u-tip mb10">
+        <Tag color="geekblue">add</Tag>
+        : 消除js加减精度问题的加法函数
+      </li>
+      <li class="u-tip mb10">
+        <Tag color="geekblue">downloadFile</Tag>
+        : 下载文件并自定义文件名，未传文件名时，从文件地址中自动提取文件名称
       </li>
       <li class="u-tip mb10">
         <Tag color="geekblue">toggleDark</Tag>
-        : 一键切换暗黑模式函数！
+        : 一键切换暗黑模式函数
       </li>
       <li class="u-tip mb10">
         <Tag color="geekblue">useEventListener</Tag>
-        : 自动添加和清除 DOM 事件监听器函数！
+        : 使用Vue的生命周期钩子添加和移除事件监听器
+      </li>
+      <li class="u-tip mb10">
+        <Tag color="geekblue">useScrollDirection</Tag>
+        : 实时监测页面滚动方向
+      </li>
+      <li class="u-tip mb10">
+        <Tag color="geekblue">useFps</Tag>
+        : 实时监测浏览器刷新率FPS
       </li>
     </ul>
     <Collapse lang="vue3" :fontSize="16" :collapseData="collapseData" v-model:activeKey="activeKey" copyable />
