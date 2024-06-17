@@ -3,45 +3,65 @@
 ::: details Show Source Code
 
 ```ts
-function dateFormat (value: number|string|Date = Date.now(), format = 'YYYY-MM-DD HH:mm:ss'): string {
-  if (typeof value === 'number' || typeof value === 'string') {
-    var date = new Date(value)
-  } else {
-    var date = value
+/**
+ * 格式化日期时间字符串
+ *
+ * @param value 待格式化的日期时间值，支持数字、字符串和Date类型，默认为当前时间戳
+ * @param format 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
+ * @returns 返回格式化后的日期时间字符串
+ */
+export function dateFormat(value: number | string | Date = Date.now(), format = 'YYYY-MM-DD HH:mm:ss'): string {
+  try {
+    let date: Date
+    if (typeof value === 'number' || typeof value === 'string') {
+      date = new Date(value)
+      if (isNaN(date.getTime())) {
+        throw new Error('Invalid date')
+      }
+    } else {
+      date = value
+    }
+    function padZero(value: number, len: number = 2): string {
+      // 左侧补零函数
+      return String(value).padStart(len, '0')
+    }
+    function replacement(match: string) {
+      switch (match) {
+        case 'YYYY':
+          return padZero(date.getFullYear())
+        case 'YY':
+          return padZero(date.getFullYear()).slice(2, 4)
+        case 'MM':
+          return padZero(date.getMonth() + 1)
+        case 'M':
+          return String(date.getMonth() + 1)
+        case 'DD':
+          return padZero(date.getDate())
+        case 'D':
+          return String(date.getDate())
+        case 'HH':
+          return padZero(date.getHours())
+        case 'H':
+          return String(date.getHours())
+        case 'mm':
+          return padZero(date.getMinutes())
+        case 'm':
+          return String(date.getMinutes())
+        case 'ss':
+          return padZero(date.getSeconds())
+        case 's':
+          return String(date.getSeconds())
+        case 'SSS':
+          return padZero(date.getMilliseconds(), 3)
+        default:
+          return match
+      }
+    }
+    return format.replace(/(YYYY|YY|M{1,2}|D{1,2}|H{1,2}|m{1,2}|s{1,2}|SSS)/g, replacement)
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return ''
   }
-  function fixedTwo (value: number): string {
-    return value < 10 ? '0' + value : String(value)
-  }
-  var showTime = format
-  if (showTime.includes('SSS')) {
-    const S = date.getMilliseconds()
-    showTime = showTime.replace('SSS', '0'.repeat(3 - String(S).length) + S)
-  }
-  if (showTime.includes('YY')) {
-    const Y = date.getFullYear()
-    showTime = showTime.includes('YYYY') ? showTime.replace('YYYY', String(Y)) : showTime.replace('YY', String(Y).slice(2, 4))
-  }
-  if (showTime.includes('M')) {
-    const M = date.getMonth() + 1
-    showTime = showTime.includes('MM') ? showTime.replace('MM', fixedTwo(M)) : showTime.replace('M', String(M))
-  }
-  if (showTime.includes('D')) {
-    const D = date.getDate()
-    showTime = showTime.includes('DD') ? showTime.replace('DD', fixedTwo(D)) : showTime.replace('D', String(D))
-  }
-  if (showTime.includes('H')) {
-    const H = date.getHours()
-    showTime = showTime.includes('HH') ? showTime.replace('HH', fixedTwo(H)) : showTime.replace('H', String(H))
-  }
-  if (showTime.includes('m')) {
-    var m = date.getMinutes()
-    showTime = showTime.includes('mm') ? showTime.replace('mm', fixedTwo(m)) : showTime.replace('m', String(m))
-  }
-  if (showTime.includes('s')) {
-    var s = date.getSeconds()
-    showTime = showTime.includes('ss') ? showTime.replace('ss', fixedTwo(s)) : showTime.replace('s', String(s))
-  }
-  return showTime
 }
 ```
 
@@ -103,8 +123,8 @@ dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-value | `13` 位时间戳；或者可以转化为 `Date` 类型的字符串日期；或者 `Date` 对象 | number &#124; string &#124; Date | Date.now() | false
-format | 格式化目标形式 | string | 'YYYY-MM-DD HH:mm:ss' | false
+value | 待格式化的日期时间值，支持数字、字符串和Date类型，默认为当前时间戳 | number &#124; string &#124; Date | Date.now() | false
+format | 格式化字符串 | string | 'YYYY-MM-DD HH:mm:ss' | false
 
 ## format 支持的格式化占位符列表
 

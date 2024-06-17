@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf, requestAnimationFrame } from '../index'
+import { rafTimeout, cancelRaf } from '../index'
 import { useTransition } from '@vueuse/core'
 import Spin from '../spin'
 interface Image {

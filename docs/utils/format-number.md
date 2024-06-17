@@ -3,28 +3,51 @@
 ::: details Show Source Code
 
 ```ts
-function formatNumber (value: number|string, precision = 2, separator = ',', decimal = '.', prefix = '', suffix = ''): string {
-  if (Number(value) === 0) {
-    return Number(value).toFixed(precision)
+/**
+ * 数字格式化函数
+ * 
+ * 该函数提供了一种灵活的方式将数字格式化为字符串，包括设置精度、千位分隔符、小数点字符、前缀和后缀。
+ * 这样可以方便地根据不同的需求和地域习惯来显示数字。
+ * 
+ * @param value 要格式化的数字或数字字符串。
+ * @param precision 小数点后的位数，默认为2。
+ * @param separator 千分位分隔符，默认为","。
+ * @param decimal 小数点字符，默认为"."。
+ * @param prefix 数字前的字符串，默认为空。
+ * @param suffix 数字后的字符串，默认为空。
+ * @returns 格式化后的字符串。如果输入值不是数字或字符串，则抛出类型错误。
+ */
+export function formatNumber(
+  value: number | string,
+  precision = 2,
+  separator = ',',
+  decimal = '.',
+  prefix = '',
+  suffix = ''
+): string {
+  // 类型检查
+  if (typeof value !== 'number' && typeof value !== 'string') {
+    throw new TypeError('Expected value to be of type number or string')
   }
-  if (!value) {
+  if (typeof precision !== 'number') {
+    throw new TypeError('Expected precision to be of type number')
+  }
+  // 处理非数值或NaN的情况
+  const numValue = Number(value)
+  if (isNaN(numValue) || !isFinite(numValue)) {
     return ''
   }
-  value = Number(value).toFixed(precision)
-  value += ''
-  const nums = value.split('.')
-  let integer = nums[0]
-  const decimals = nums.length > 1 ? decimal + nums[1] : ''
-  const reg = /(\d+)(\d{3})/
-  function isNumber (value: any) {
-    return Object.prototype.toString.call(value) === '[object Number]'
+  if (numValue === 0) {
+    return numValue.toFixed(precision)
   }
-  if (separator && !isNumber(separator)) {
-    while (reg.test(integer)) {
-      integer = integer.replace(reg, '$1' + separator + '$2')
-    }
+  let formatValue = numValue.toFixed(precision)
+  // 如果separator是数值而非字符串，会导致错误，此处进行检查
+  if (typeof separator === 'string' && separator !== '') {
+    const [integerPart, decimalPart] = formatValue.split('.')
+    formatValue =
+      integerPart.replace(/(\d)(?=(\d{3})+$)/g, '$1' + separator) + (decimalPart ? decimal + decimalPart : '')
   }
-  return prefix + integer + decimals + suffix
+  return prefix + formatValue + suffix
 }
 ```
 
@@ -56,9 +79,9 @@ formatNumber(123456789.87654321, 2, ',') // 123,456,789.88
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-value | 需要格式化的目标数字 | number &#124; string | undefined | true
-precision | 精度，保留小数点后几位 | number | 2 | false
+value | 要格式化的数字或数字字符串 | number &#124; string | undefined | true
+precision | 小数点后的位数 | number | 2 | false
 separator | 千分位分隔符 | string | ',' | false
 decimal | 小数点字符 | string | '.' | false
-prefix | 前缀字符 | string | '' | false
-suffix | 后缀字符 | string | '' | false
+prefix | 数字前的字符串 | string | '' | false
+suffix | 数字后的字符串 | string | '' | false

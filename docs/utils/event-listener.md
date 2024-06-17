@@ -7,11 +7,23 @@
 ::: details Show Source Code
 
 ```ts
-function useEventListener (target: any, event: string, callback: Function) {
-  // 如果你想的话，
+/**
+ * 组合式函数
+ * 使用Vue的生命周期钩子添加和移除事件监听器。
+ * 
+ * 该函数旨在提供一种优雅的方式来管理事件监听器，避免在组件卸载后仍保留事件监听器，
+ * 从而可能导致内存泄漏的问题。通过结合Vue的`onMounted`和`onUnmounted`钩子，
+ * 在组件挂载时添加事件监听器，并在组件卸载时移除它，确保资源被妥善管理。
+ * 
+ * @param target 目标元素或对象。可以是DOM元素或其他支持addEventListener的对象。
+ * @param event 要监听的事件名称。
+ * @param callback 事件被触发时执行的回调函数。
+ */
+import { ref, onMounted, onUnmounted } from 'vue'
+export function useEventListener(target: HTMLElement | Window, event: string, callback: Function): void {
   // 也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素
-  onMounted(() => target.addEventListener(event, callback))
-  onUnmounted(() => target.removeEventListener(event, callback))
+  onMounted(() => target.addEventListener(event, callback as EventListenerOrEventListenerObject))
+  onUnmounted(() => target.removeEventListener(event, callback  as EventListenerOrEventListenerObject))
 }
 ```
 
@@ -65,6 +77,6 @@ useEventListener(window, 'scroll', throttleScroll)
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-target | 要添加监听事件的目标元素 | any | - | true
+target | 要添加监听事件的目标元素 | HTMLElement &#124; Window | - | true
 event | 监听的事件类型（大小写敏感） | string | - | true
 callback | 监听事件触发时的回调函数 | Function | - | true

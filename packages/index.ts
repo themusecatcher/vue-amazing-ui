@@ -1,17 +1,17 @@
 import './less/global.less'
 import {
   dateFormat,
-  requestAnimationFrame,
-  cancelAnimationFrame,
+  formatNumber,
   rafTimeout,
   cancelRaf,
   throttle,
   debounce,
   add,
   downloadFile,
-  formatNumber,
   toggleDark,
-  useEventListener
+  useEventListener,
+  useScrollDirection,
+  useFps
 } from './utils'
 import type { App } from 'vue'
 import Alert from './alert'
@@ -150,17 +150,17 @@ const install = function (app: App) {
 
 export {
   dateFormat,
-  requestAnimationFrame,
-  cancelAnimationFrame,
+  formatNumber,
   rafTimeout,
   cancelRaf,
   throttle,
   debounce,
   add,
   downloadFile,
-  formatNumber,
   toggleDark,
-  useEventListener
+  useEventListener,
+  useScrollDirection,
+  useFps
 }
 export {
   Alert,
