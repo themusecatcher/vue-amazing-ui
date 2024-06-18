@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, nextTick, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { throttle } from '../index'
 interface Props {
   bottom?: number | string // BackTop 距离页面底部的高度
@@ -27,65 +27,90 @@ const rightPosition = computed(() => {
   }
   return props.right
 })
-const backtop = ref<HTMLElement | null>(null)
-const scrollTop = ref(0)
-const scrollTarget = ref<HTMLElement | null>(null)
-watchEffect(() => {
-  // 监听滚动的元素
-  nextTick(() => {
-    if (props.listenTo === undefined) {
-      scrollTarget.value = getScrollParentElement(backtop.value?.parentElement)
-    } else if (typeof props.listenTo === 'string') {
-      scrollTarget.value = document.getElementsByTagName(props.listenTo)[0] as HTMLElement
-    } else if (props.listenTo instanceof HTMLElement) {
-      scrollTarget.value = props.listenTo
-    }
-    if (scrollTarget.value) {
-      observeElement(scrollTarget.value)
-      scrollTarget.value.addEventListener('scroll', throttleScroll)
-    }
-  })
-})
-const throttleScroll = throttle(scrollEvent)
-function scrollEvent (e: Event) {
-  scrollTop.value = (e.target as HTMLElement).scrollTop
-}
-function removeEventListener () {
-  if (scrollTarget.value) {
-    scrollTarget.value.removeEventListener('scroll', throttleScroll)
-  }
-}
-function observeElement(el: HTMLElement) {
-  // 当观察到变动时执行的回调函数
-  const callback = function (mutationsList: MutationRecord[], observer: MutationObserver) {
-    scrollTop.value = scrollTarget.value?.scrollTop ?? 0
-  }
-  // 观察器的配置（需要观察什么变动）
-  const config = { attributes: true, subtree: true }
-  // 创建一个观察器实例并传入回调函数
-  const observer = new MutationObserver(callback)
-  // 以上述配置开始观察目标节点
-  observer.observe(el, config)
-}
-const target = ref<HTMLElement | null>(null)
-watchEffect(() => {
-  // 渲染容器节点
-  nextTick(() => {
-    if (typeof props.to === 'string') {
-      target.value = document.getElementsByTagName(props.to)[0] as HTMLElement
-    } else if (props.to instanceof HTMLElement) {
-      target.value = props.to
-    }
-    target.value?.insertAdjacentElement('beforeend', backtop.value as Element)
-  })
-})
-onBeforeUnmount(() => {
-  removeEventListener()
-  backtop.value?.remove()
-})
 const show = computed(() => {
   return scrollTop.value >= props.visibilityHeight
 })
+const backtop = ref<HTMLElement | null>(null)
+const scrollTop = ref<number>(0)
+const scrollTarget = ref<HTMLElement | null>(null)
+const target = ref<HTMLElement | null>(null)
+const emits = defineEmits(['click', 'show'])
+// 当观察到变动时执行的回调函数
+const callback = function (mutationsList: MutationRecord[], observer: MutationObserver) {
+  scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+}
+// 观察器的配置（需要观察什么变动）
+const config = { childList: true, attributes: true, subtree: true }
+// 创建一个观察器实例并传入回调函数
+const observer = new MutationObserver(callback)
+watch(
+  () => props.listenTo,
+  () => {
+    observer.disconnect()
+    removeEventListener()
+    observeScroll()
+  },
+  {
+    flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
+  }
+)
+watch(
+  () => props.to,
+  () => {
+    insertElement()
+  },
+  {
+    flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
+  }
+)
+watch(show, (to) => {
+  emits('show', to)
+})
+onMounted(() => {
+  observeScroll()
+  insertElement()
+})
+onBeforeUnmount(() => {
+  observer.disconnect() // 停止观察
+  removeEventListener()
+  backtop.value?.remove()
+})
+const throttleScroll = throttle(scrollEvent, 100)
+const throttleResize = throttle(resizeEvent, 100)
+function scrollEvent (e: Event) {
+  scrollTop.value = (e.target as HTMLElement).scrollTop
+}
+function resizeEvent () {
+  scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+}
+function removeEventListener () { // 移除监听事件
+  if (scrollTarget.value) {
+    scrollTarget.value.removeEventListener('scroll', throttleScroll)
+    window.removeEventListener('resize', throttleResize)
+  }
+}
+function observeScroll () { // 监听滚动的元素
+  if (props.listenTo === undefined) {
+    scrollTarget.value = getScrollParentElement(backtop.value?.parentElement)
+  } else if (typeof props.listenTo === 'string') {
+    scrollTarget.value = document.getElementsByTagName(props.listenTo)[0] as HTMLElement
+  } else if (props.listenTo instanceof HTMLElement) {
+    scrollTarget.value = props.listenTo
+  }
+  if (scrollTarget.value) {
+    observer.observe(scrollTarget.value, config)
+    scrollTarget.value.addEventListener('scroll', throttleScroll)
+    window.addEventListener('resize', throttleResize)
+  }
+}
+function insertElement () { // 渲染容器节点
+  if (typeof props.to === 'string') {
+    target.value = document.getElementsByTagName(props.to)[0] as HTMLElement
+  } else if (props.to instanceof HTMLElement) {
+    target.value = props.to
+  }
+  target.value?.appendChild(backtop.value as Node) // 保证backtop节点只存在一个
+}
 function getScrollParentElement(el: any) {
   if (el) {
     if (el.scrollHeight > el.clientHeight) {
@@ -96,7 +121,6 @@ function getScrollParentElement(el: any) {
   }
   return null
 }
-const emits = defineEmits(['click', 'show'])
 function onBackTop() {
   scrollTarget.value &&
     scrollTarget.value.scrollTo({
@@ -105,9 +129,6 @@ function onBackTop() {
     })
   emits('click')
 }
-watch(show, (to) => {
-  emits('show', to)
-})
 </script>
 <template>
   <Transition>
