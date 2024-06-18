@@ -3,7 +3,7 @@
 # 确保脚本抛出遇到的错误
 set -e
 
-# 提交修改到github
+# 提交修改到 github
 
 commitDescInfo=$1
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, nextTick, onBeforeUnmount } from 'vue'
+import { throttle } from '../index'
 interface Props {
   bottom?: number | string // BackTop 距离页面底部的高度
   right?: number | string // BackTop 距离页面右侧的宽度
@@ -26,31 +27,38 @@ const rightPosition = computed(() => {
   }
   return props.right
 })
-const backtop = ref()
+const backtop = ref<HTMLElement | null>(null)
 const scrollTop = ref(0)
-const scrollTarget = ref<any>()
+const scrollTarget = ref<HTMLElement | null>(null)
 watchEffect(() => {
   // 监听滚动的元素
   nextTick(() => {
     if (props.listenTo === undefined) {
       scrollTarget.value = getScrollParentElement(backtop.value?.parentElement)
     } else if (typeof props.listenTo === 'string') {
-      scrollTarget.value = typeof document !== 'undefined' ? document.getElementsByTagName(props.listenTo)[0] : null
+      scrollTarget.value = document.getElementsByTagName(props.listenTo)[0] as HTMLElement
     } else if (props.listenTo instanceof HTMLElement) {
       scrollTarget.value = props.listenTo
     }
     if (scrollTarget.value) {
       observeElement(scrollTarget.value)
-      scrollTarget.value.addEventListener('scroll', (e: any) => {
-        scrollTop.value = e.target.scrollTop
-      })
+      scrollTarget.value.addEventListener('scroll', throttleScroll)
     }
   })
 })
+const throttleScroll = throttle(scrollEvent)
+function scrollEvent (e: Event) {
+  scrollTop.value = (e.target as HTMLElement).scrollTop
+}
+function removeEventListener () {
+  if (scrollTarget.value) {
+    scrollTarget.value.removeEventListener('scroll', throttleScroll)
+  }
+}
 function observeElement(el: HTMLElement) {
   // 当观察到变动时执行的回调函数
-  const callback = function (mutationsList: any, observer: any) {
-    scrollTop.value = scrollTarget.value.scrollTop
+  const callback = function (mutationsList: MutationRecord[], observer: MutationObserver) {
+    scrollTop.value = scrollTarget.value?.scrollTop ?? 0
   }
   // 观察器的配置（需要观察什么变动）
   const config = { attributes: true, subtree: true }
@@ -59,20 +67,21 @@ function observeElement(el: HTMLElement) {
   // 以上述配置开始观察目标节点
   observer.observe(el, config)
 }
-const target = ref()
+const target = ref<HTMLElement | null>(null)
 watchEffect(() => {
   // 渲染容器节点
   nextTick(() => {
     if (typeof props.to === 'string') {
-      target.value = typeof document !== 'undefined' ? document.getElementsByTagName(props.to)[0] : null
+      target.value = document.getElementsByTagName(props.to)[0] as HTMLElement
     } else if (props.to instanceof HTMLElement) {
       target.value = props.to
     }
-    target.value && target.value.insertAdjacentElement('beforeend', backtop.value)
+    target.value?.insertAdjacentElement('beforeend', backtop.value as Element)
   })
 })
 onBeforeUnmount(() => {
-  backtop.value.remove()
+  removeEventListener()
+  backtop.value?.remove()
 })
 const show = computed(() => {
   return scrollTop.value >= props.visibilityHeight

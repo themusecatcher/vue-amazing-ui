@@ -174,20 +174,13 @@ export function cancelRaf(raf: { id: number }): void {
  */
 export function throttle(fn: Function, delay = 300): any {
   let valid = true // 用于标记函数是否可以执行
-  return function () {
+  return function (...args: any[]) {
     // 返回一个新的函数，该函数负责执行节流逻辑
     if (valid) {
       valid = false // 将函数置为无效
       setTimeout(() => {
-        try {
-          fn() // 执行原函数，并在执行后重新标记为可执行
-          valid = true
-        } catch (error) {
-          // 如果执行过程中发生错误，打印错误信息，并重新标记为可执行
-          console.error('Error executing throttled function:', error)
-          // 保证valid能被重置，避免后续调用永久失效
-          valid = true
-        }
+        fn(...args) // 执行原函数，并在执行后重新标记为可执行
+        valid = true
       }, delay)
     }
     return false // 返回false，表示当前不执行函数
@@ -204,14 +197,14 @@ export function throttle(fn: Function, delay = 300): any {
  */
 export function debounce(fn: Function, delay = 300): any {
   let timer: any = null // 使用闭包保存定时器的引用
-  return function () {
+  return function (...args: any[]) {
     // 返回一个包装函数
     if (timer) {
       // 如果定时器存在，则清除之前的定时器
       clearTimeout(timer)
     }
     // 设置新的定时器，延迟执行原函数
-    timer = setTimeout(fn, delay)
+    timer = setTimeout(fn(...args), delay)
   }
 }
 /**
@@ -330,13 +323,13 @@ export function useEventListener(target: HTMLElement | Window, event: string, ca
  * @param throttleDelay 节流延迟时间，单位ms，默认为100毫秒。用于控制滚动事件触发的频率。
  * @returns 返回一个对象，其中包含一个名为scrollDown的响应式属性，表示滚动方向是否向下。
  */
-export function useScrollDirection(throttleDelay = 100): object {
+export function useScrollDirection(throttleDelay = 100) {
   // 使用ref定义一个响应式变量，指示当前滚动方向是否向下
   const scrollDown = ref<boolean>(false)
   // 记录上一次滚动的位置
   let lastScrollY = 0
   // 监听滚动事件的函数
-  const scrollEvent = () => {
+  function scrollEvent() {
     // 获取当前的滚动位置
     const currentScrollY = window.pageYOffset || document.documentElement.scrollTop
     // 比较当前位置和上一次记录的位置，来确定滚动方向
@@ -359,9 +352,9 @@ export function useScrollDirection(throttleDelay = 100): object {
  *
  * @returns {Object} 返回一个包含FPS值的对象。
  */
-export function useFps(): object {
-  const fps = ref(0)
-  const frameCount = ref(0)
+export function useFps() {
+  const fps = ref<number>(0)
+  const frameCount = ref<number>(0)
   let lastTime = performance.now()
   const every = 10
   function calculateFrameRate(currentTime: number) {

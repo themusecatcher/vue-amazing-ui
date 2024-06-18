@@ -19,20 +19,13 @@
  */
 export function throttle(fn: Function, delay = 300): any {
   let valid = true // 用于标记函数是否可以执行
-  return function () {
+  return function (...args: any[]) {
     // 返回一个新的函数，该函数负责执行节流逻辑
     if (valid) {
       valid = false // 将函数置为无效
       setTimeout(() => {
-        try {
-          fn() // 执行原函数，并在执行后重新标记为可执行
-          valid = true
-        } catch (error) {
-          // 如果执行过程中发生错误，打印错误信息，并重新标记为可执行
-          console.error('Error executing throttled function:', error)
-          // 保证valid能被重置，避免后续调用永久失效
-          valid = true
-        }
+        fn(...args) // 执行原函数，并在执行后重新标记为可执行
+        valid = true
       }, delay)
     }
     return false // 返回false，表示当前不执行函数

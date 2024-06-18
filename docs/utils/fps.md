@@ -16,9 +16,9 @@
  * 
  * @returns {Object} 返回一个包含FPS值的对象。
  */
-export function useFps(): object {
-  const fps = ref(0)
-  const frameCount = ref(0)
+export function useFps() {
+  const fps = ref<number>(0)
+  const frameCount = ref<number>(0)
   let lastTime = performance.now()
   const every = 10
   function calculateFrameRate (currentTime: number) {

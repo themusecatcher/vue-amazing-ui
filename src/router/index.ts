@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { setDocumentTitle, webTitle } from '@/utils/util'
+import { setDocumentTitle, webTitle } from '@/utils'
 import GlobalLayout from '@/layouts/GlobalLayout.vue'
 
 export const routes = [
@@ -14,7 +14,7 @@ export const routes = [
         name: 'Home',
         meta: { title: '首页' },
         // route level code-splitting
-        // this generates a separate chunk (About.[hash].js) for this route
+        // this generates a separate chunk (Home.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import('@/views/guide/Home.vue')
       },

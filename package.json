@@ -25,17 +25,17 @@
     "docs:build": "vitepress build docs",
     "docs:deploy": "sh scripts/deploy.sh",
     "dev": "vite",
+    "pub": "sh scripts/publish.sh",
+    "push": "sh scripts/push.sh",
     "build": "run-s format clean build:lib",
+    "format": "prettier --write src/ packages/",
     "clean": "rimraf ./dist",
     "build:lib": "run-p type-check build:es build:browser",
     "type-check": "vue-tsc --noEmit",
     "build:es": "vite build",
     "build:browser": "vite -f iife build",
-    "pub": "sh scripts/publish.sh",
-    "push": "sh scripts/push.sh",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/ packages/"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "8.8.0",
