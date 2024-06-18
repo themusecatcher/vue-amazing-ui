@@ -18,14 +18,14 @@
  */
 export function debounce(fn: Function, delay = 300): any {
   let timer: any = null // 使用闭包保存定时器的引用
-  return function () {
+  return function (...args: any[]) {
     // 返回一个包装函数
     if (timer) {
       // 如果定时器存在，则清除之前的定时器
       clearTimeout(timer)
     }
     // 设置新的定时器，延迟执行原函数
-    timer = setTimeout(fn, delay)
+    timer = setTimeout(fn(...args), delay)
   }
 }
 ```
