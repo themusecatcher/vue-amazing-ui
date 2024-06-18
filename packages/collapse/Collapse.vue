@@ -33,7 +33,7 @@ const len = computed(() => {
 })
 watch(
   () => props.collapseData,
-  (to) => {
+  () => {
     getCollapseHeight() // 获取各个面板内容高度
   },
   {
