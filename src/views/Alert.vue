@@ -16,15 +16,15 @@ function onClose(e: MouseEvent) {
     <h2 class="mt30 mb10">可关闭的警告提示</h2>
     <Space direction="vertical" style="width: 100%">
       <Alert
-        message="Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text"
-        type="warning"
+        message="Error Text"
+        description="Error Description Error Description Error Description Error Description Error Description Error Description"
+        type="error"
         closable
         @close="onClose"
       />
       <Alert
-        message="Error Text"
-        description="Error Description Error Description Error Description Error Description Error Description Error Description"
-        type="error"
+        message="Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text"
+        type="warning"
         closable
         @close="onClose"
       />

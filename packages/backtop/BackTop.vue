@@ -77,19 +77,21 @@ onBeforeUnmount(() => {
 })
 const throttleScroll = throttle(scrollEvent, 100)
 const throttleResize = throttle(resizeEvent, 100)
-function scrollEvent (e: Event) {
+function scrollEvent(e: Event) {
   scrollTop.value = (e.target as HTMLElement).scrollTop
 }
-function resizeEvent () {
+function resizeEvent() {
   scrollTop.value = scrollTarget.value?.scrollTop ?? 0
 }
-function removeEventListener () { // 移除监听事件
+function removeEventListener() {
+  // 移除监听事件
   if (scrollTarget.value) {
     scrollTarget.value.removeEventListener('scroll', throttleScroll)
     window.removeEventListener('resize', throttleResize)
   }
 }
-function observeScroll () { // 监听滚动的元素
+function observeScroll() {
+  // 监听滚动的元素
   if (props.listenTo === undefined) {
     scrollTarget.value = getScrollParentElement(backtop.value?.parentElement)
   } else if (typeof props.listenTo === 'string') {
@@ -103,7 +105,8 @@ function observeScroll () { // 监听滚动的元素
     window.addEventListener('resize', throttleResize)
   }
 }
-function insertElement () { // 渲染容器节点
+function insertElement() {
+  // 渲染容器节点
   if (typeof props.to === 'string') {
     target.value = document.getElementsByTagName(props.to)[0] as HTMLElement
   } else if (props.to instanceof HTMLElement) {
