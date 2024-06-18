@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import Spin from '../spin'
 import { debounce, useEventListener } from '../index'
 /*
@@ -26,10 +26,12 @@ const props = withDefaults(defineProps<Props>(), {
   borderRadius: 8,
   backgroundColor: '#F2F4F8'
 })
-const imagesProperty = ref<any[]>([])
+const waterfall = ref()
+const waterfallWidth = ref<number>()
+const loaded = ref(Array(props.images.length).fill(false)) // 图片是否加载完成
+const imageWidth = ref<number>()
+const imagesProperty = ref<{ width: number; height: number; top: number; left: number }[]>([])
 const preColumnHeight = ref<number[]>(Array(props.columnCount).fill(0)) // 每列的高度
-const waterfall = shallowRef() // ref() 的浅层作用形式
-const imageWidth = ref()
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -43,13 +45,11 @@ const height = computed(() => {
 const len = computed(() => {
   return props.images.length
 })
-const waterfallWidth = ref<number>()
-const loaded = ref(Array(len.value).fill(false)) // 图片是否加载完成
 watch(
   () => [props.columnCount, props.columnGap, props.width, props.images],
   () => {
     waterfallWidth.value = waterfall.value.offsetWidth
-    loaded.value = Array(len.value).fill(false)
+    loaded.value = Array(props.images.length).fill(false)
     preColumnHeight.value = Array(props.columnCount).fill(0)
     onPreload()
   },
@@ -88,10 +88,10 @@ function loadImage(url: string, n: number) {
     image.src = url
     image.onload = function () {
       // 图片加载完成时执行，此时可通过image.width和image.height获取到图片原始宽高
-      const height = image.height / (image.width / imageWidth.value)
+      const height = image.height / (image.width / (imageWidth.value as number))
       imagesProperty.value[n] = {
         // 存储图片宽高和位置信息
-        width: imageWidth.value,
+        width: imageWidth.value as number,
         height: height,
         ...getPosition(n, height)
       }
@@ -105,7 +105,7 @@ function getPosition(i: number, height: number) {
     preColumnHeight.value[i] = props.columnGap + height
     return {
       top: props.columnGap,
-      left: (imageWidth.value + props.columnGap) * i + props.columnGap
+      left: ((imageWidth.value as number) + props.columnGap) * i + props.columnGap
     }
   } else {
     const top = Math.min(...preColumnHeight.value)
@@ -119,7 +119,7 @@ function getPosition(i: number, height: number) {
     preColumnHeight.value[index] = top + props.columnGap + height
     return {
       top: top + props.columnGap,
-      left: (imageWidth.value + props.columnGap) * index + props.columnGap
+      left: ((imageWidth.value as number) + props.columnGap) * index + props.columnGap
     }
   }
 }
