@@ -43,7 +43,7 @@ watch(
 )
 function getCollapseHeight() {
   for (let n = 0; n < len.value; n++) {
-    collapseHeight.value[n] = text.value[n].offsetHeight
+    collapseHeight.value[n] = text.value[n].offsetHeight + 1 + 'px'
   }
 }
 onMounted(() => {
@@ -98,7 +98,6 @@ function onCopy(index: number) {
   <div class="m-collapse">
     <div
       class="m-collapse-item"
-      :class="{ 'u-collapse-item-active': activeJudge(data.key || index) }"
       v-for="(data, index) in collapseData"
       :key="index"
     >
@@ -107,6 +106,7 @@ function onCopy(index: number) {
           focusable="false"
           v-if="showArrow"
           class="u-arrow"
+          :class="{ 'arrow-rotate': activeJudge(data.key || index) }"
           data-icon="right"
           aria-hidden="true"
           viewBox="64 64 896 896"
@@ -122,7 +122,7 @@ function onCopy(index: number) {
       <div
         class="u-collapse-content"
         :class="{ 'u-collapse-copyable': copyable }"
-        :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index] : 0}px; opacity: ${activeJudge(data.key || index) ? 1 : 0};`"
+        :style="`height: ${activeJudge(data.key || index) ? collapseHeight[index] : 0}; opacity: ${activeJudge(data.key || index) ? 1 : 0};`"
       >
         <div class="u-lang">
           <slot name="lang" :lang="lang" :key="data.key || index">{{ lang }}</slot>
@@ -164,6 +164,9 @@ function onCopy(index: number) {
         fill: rgba(0, 0, 0, 0.88);
         transition: transform 0.3s;
       }
+      .arrow-rotate {
+        transform: rotate(90deg);
+      }
       .u-header {
         display: inline-block;
         color: rgba(0, 0, 0, 0.88);
@@ -175,8 +178,9 @@ function onCopy(index: number) {
     }
     .u-collapse-content {
       position: relative;
-      overflow: hidden;
       background-color: #ffffff;
+      border-top: 1px solid #d9d9d9;
+      overflow: hidden;
       transition:
         height 0.2s cubic-bezier(0.645, 0.045, 0.355, 1),
         opacity 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -214,14 +218,6 @@ function onCopy(index: number) {
           pointer-events: auto;
         }
       }
-    }
-  }
-  .u-collapse-item-active {
-    .u-arrow {
-      transform: rotate(90deg);
-    }
-    .u-collapse-content {
-      border-top: 1px solid #d9d9d9;
     }
   }
 }

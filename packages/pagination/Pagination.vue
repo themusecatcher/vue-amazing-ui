@@ -67,7 +67,7 @@ watch(currentPage, (to: number): void => {
 onMounted(() => {
   // 监听键盘Enter按键
   document.onkeydown = (e: KeyboardEvent) => {
-    if (e && e.key === 'Enter') {
+    if (e.key === 'Enter') {
       jumpPage()
     }
   }

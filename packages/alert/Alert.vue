@@ -40,7 +40,7 @@ function onClose(e: MouseEvent): void {
 }
 </script>
 <template>
-  <transition>
+  <Transition>
     <div
       v-if="!closeAlert"
       ref="alert"
@@ -225,7 +225,7 @@ function onClose(e: MouseEvent): void {
         </slot>
       </a>
     </div>
-  </transition>
+  </Transition>
 </template>
 <style lang="less" scoped>
 .v-enter-active,
