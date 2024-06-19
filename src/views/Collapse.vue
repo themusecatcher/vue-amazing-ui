@@ -19,7 +19,15 @@ const collapseData = ref([
     text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
+const nestCollapseData = ref([
+  {
+    key: '1',
+    header: 'This is panel header 1',
+    text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  }
+])
 const activeKey = ref(['1'])
+const nestActiveKey = ref(['1'])
 watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
@@ -40,6 +48,12 @@ function onChange(key: any) {
     <h2 class="mt30 mb10">'手风琴'</h2>
     <h3 class="mb10">只允许单个内容区域展开，只需 activeKey 传入 number | string 即可</h3>
     <Collapse :collapse-data="collapseData" v-model:active-key="key" @change="onChange" />
+    <h2 class="mt30 mb10">面板嵌套</h2>
+    <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" @change="onChange">
+      <template #text="{ text, key }">
+        <Collapse v-if="key === '1'" :collapse-data="nestCollapseData" v-model:active-key="nestActiveKey" @change="onChange" />
+      </template>
+    </Collapse>
     <h2 class="mt30 mb10">可复制</h2>
     <Collapse
       lang="template"
