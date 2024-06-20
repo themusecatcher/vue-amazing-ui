@@ -41,25 +41,19 @@ function xs(t = Date.now(), a = "YYYY-MM-DD HH:mm:ss") {
       }
     };
     if (typeof t == "number" || typeof t == "string") {
-      if (e = new Date(t), isNaN(e.getTime()))
-        throw new Error("Invalid date");
-    } else
-      e = t;
+      if (e = new Date(t), isNaN(e.getTime())) throw new Error("Invalid date");
+    } else e = t;
     return a.replace(/(YYYY|YY|M{1,2}|D{1,2}|H{1,2}|m{1,2}|s{1,2}|SSS)/g, c);
   } catch (e) {
     return console.error("Error formatting date:", e), "";
   }
 }
 function v1(t, a = 2, e = ",", s = ".", c = "", d = "") {
-  if (typeof t != "number" && typeof t != "string")
-    throw new TypeError("Expected value to be of type number or string");
-  if (typeof a != "number")
-    throw new TypeError("Expected precision to be of type number");
+  if (typeof t != "number" && typeof t != "string") throw new TypeError("Expected value to be of type number or string");
+  if (typeof a != "number") throw new TypeError("Expected precision to be of type number");
   const n = Number(t);
-  if (isNaN(n) || !isFinite(n))
-    return "";
-  if (n === 0)
-    return n.toFixed(a);
+  if (isNaN(n) || !isFinite(n)) return "";
+  if (n === 0) return n.toFixed(a);
   let o = n.toFixed(a);
   if (typeof e == "string" && e !== "") {
     const [v, r] = o.split(".");
@@ -77,8 +71,7 @@ function ce(t, a = 0, e = !1) {
         console.error("Error executing rafTimeout function:", o);
       }
       e && (s = n, c.id = requestAnimationFrame(d));
-    } else
-      c.id = requestAnimationFrame(d);
+    } else c.id = requestAnimationFrame(d);
   }) };
   return c;
 }
@@ -100,10 +93,8 @@ function B1(t, a = 300) {
   };
 }
 function u1(t, a) {
-  if (Number.isNaN(t) || Number.isNaN(a))
-    throw new Error("Both num1 and num2 must be valid numbers.");
-  if (t % 1 == 0 && a % 1 == 0)
-    return t + a;
+  if (Number.isNaN(t) || Number.isNaN(a)) throw new Error("Both num1 and num2 must be valid numbers.");
+  if (t % 1 == 0 && a % 1 == 0) return t + a;
   const e = String(t).split(".")[1] ?? "", s = String(a).split(".")[1] ?? "", c = Math.max(e.length, s.length), d = Math.pow(10, c), n = t.toFixed(c), o = a.toFixed(c);
   return (+n.replace(".", "") + +o.replace(".", "")) / d;
 }
@@ -118,8 +109,7 @@ function Ms(t, a) {
     if (s.status === 200) {
       const c = s.response, d = document.createElement("a"), n = document.querySelector("body");
       d.href = window.URL.createObjectURL(c), d.download = e, d.style.display = "none", n == null || n.appendChild(d), d.click(), n == null || n.removeChild(d), window.URL.revokeObjectURL(d.href);
-    } else
-      console.error("请求文件失败，状态码：", s.status);
+    } else console.error("请求文件失败，状态码：", s.status);
   }, s.send();
 }
 function zs() {
@@ -150,8 +140,7 @@ function Cs() {
 }
 const ye = (t) => (U("data-v-bd52b8be"), t = t(), G(), t), F1 = { key: 0, class: "m-alert-icon" }, L1 = ["src"], S1 = { key: 1, focusable: "false", class: "u-alert-icon", "data-icon": "info-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, A1 = [ye(() => l("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" }, null, -1))], E1 = { key: 2, focusable: "false", class: "u-alert-icon", "data-icon": "check-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, D1 = [ye(() => l("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z" }, null, -1))], H1 = { key: 3, focusable: "false", class: "u-alert-icon", "data-icon": "exclamation-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, T1 = [ye(() => l("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" }, null, -1))], I1 = { key: 4, focusable: "false", class: "u-alert-icon", "data-icon": "close-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, j1 = [ye(() => l("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z" }, null, -1))], V1 = { key: 1, class: "m-big-icon" }, W1 = ["src"], R1 = { key: 1, focusable: "false", class: "u-alert-icon", "data-icon": "info-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, N1 = [ye(() => l("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1)), ye(() => l("path", { d: "M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z" }, null, -1))], q1 = { key: 2, focusable: "false", class: "u-alert-icon", "data-icon": "check-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, O1 = [ye(() => l("path", { d: "M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0051.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z" }, null, -1)), ye(() => l("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1))], P1 = { key: 3, focusable: "false", class: "u-alert-icon", "data-icon": "exclamation-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, Y1 = [ye(() => l("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1)), ye(() => l("path", { d: "M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z" }, null, -1))], K1 = { key: 4, focusable: "false", class: "u-alert-icon", "data-icon": "close-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, U1 = [ye(() => l("path", { d: "M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 00-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z" }, null, -1)), ye(() => l("path", { d: "M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" }, null, -1))], G1 = { class: "m-alert-content" }, Z1 = { class: "u-alert-message" }, J1 = { key: 0, class: "u-alert-description" }, X1 = { key: 0 }, Q1 = { key: 1, focusable: "false", class: "u-alert-close", "data-icon": "close", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, et = [ye(() => l("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" }, null, -1))], j = (t, a) => {
   const e = t.__vccOpts || t;
-  for (const [s, c] of a)
-    e[s] = c;
+  for (const [s, c] of a) e[s] = c;
   return e;
 }, ea = j(I({ __name: "Alert", props: { message: { default: "" }, description: { default: "" }, type: { default: "info" }, closable: { type: Boolean, default: !1 }, closeText: { default: "" }, icon: { default: "" }, showIcon: { type: Boolean, default: !1 } }, emits: ["close"], setup(t, { emit: a }) {
   const e = t, s = w(), c = we(), d = $(() => {
@@ -180,10 +169,8 @@ const at = ["src", "alt"], tt = { key: 1, class: "m-icon" }, aa = j(I({ __name: 
     window.removeEventListener("resize", s);
   });
   const c = $(() => {
-    if (typeof a.size == "string")
-      return null;
-    if (typeof a.size == "number")
-      return n.value ? { width: a.size + "px", height: a.size + "px", lineHeight: a.size + "px", fontSize: a.size / 2 + "px" } : { width: a.size + "px", height: a.size + "px", lineHeight: a.size + "px", fontSize: "18px" };
+    if (typeof a.size == "string") return null;
+    if (typeof a.size == "number") return n.value ? { width: a.size + "px", height: a.size + "px", lineHeight: a.size + "px", fontSize: a.size / 2 + "px" } : { width: a.size + "px", height: a.size + "px", lineHeight: a.size + "px", fontSize: "18px" };
     if (typeof a.size == "object") {
       let r = 32;
       return e.value >= 1600 && a.size.xxl ? r = a.size.xxl : e.value >= 1200 && a.size.xl ? r = a.size.xl : e.value >= 992 && a.size.lg ? r = a.size.lg : e.value >= 768 && a.size.md ? r = a.size.md : e.value >= 576 && a.size.sm ? r = a.size.sm : e.value < 576 && a.size.xs && (r = a.size.xs), { width: r + "px", height: r + "px", lineHeight: r + "px", fontSize: r / 2 + "px" };
@@ -192,21 +179,18 @@ const at = ["src", "alt"], tt = { key: 1, class: "m-icon" }, aa = j(I({ __name: 
     var r;
     if (!a.src) {
       const h = (r = d.icon) == null ? void 0 : r.call(d);
-      if (h)
-        return !!(h[0].children !== "v-if" && (h != null && h.length));
+      if (h) return !!(h[0].children !== "v-if" && (h != null && h.length));
     }
     return !1;
   }), o = $(() => {
     var r, h;
     if (!a.src && !n.value) {
       const b = (r = d.default) == null ? void 0 : r.call(d);
-      if (b)
-        return !!(b[0].children !== "v-if" && ((h = b[0].children) != null && h.length));
+      if (b) return !!(b[0].children !== "v-if" && ((h = b[0].children) != null && h.length));
     }
     return !1;
   }), v = $(() => {
-    if (typeof a.size == "string")
-      return { transform: "scale(1) translateX(-50%)" };
+    if (typeof a.size == "string") return { transform: "scale(1) translateX(-50%)" };
     if (typeof a.size == "number") {
       const r = Math.min(1, Math.max(0.022222222222222223, (1 + 1 * (a.size - 9)) / 45));
       return { lineHeight: a.size + "px", transform: `scale(${r}) translateX(-50%)` };
@@ -264,14 +248,12 @@ ta.install = (t) => {
 };
 const ot = { class: "u-status-text" }, st = { key: 0 }, nt = ["title"], it = { key: 0, class: "m-number", style: { transition: "none 0s ease 0s" } }, ut = { class: "u-number" }, la = j(I({ __name: "Badge", props: { color: { default: "" }, count: { default: 0 }, max: { default: 99 }, showZero: { type: Boolean, default: !1 }, dot: { type: Boolean, default: !1 }, status: { default: void 0 }, text: { default: "" }, countStyle: { default: () => ({}) }, title: { default: "" }, ripple: { type: Boolean, default: !0 } }, setup(t) {
   const a = t, e = ["pink", "red", "yellow", "orange", "cyan", "green", "blue", "purple", "geekblue", "magenta", "volcano", "gold", "lime"], s = $(() => {
-    if (a.color && !e.includes(a.color))
-      return { color: a.color, backgroundColor: a.color };
+    if (a.color && !e.includes(a.color)) return { color: a.color, backgroundColor: a.color };
   }), c = we(), d = $(() => {
     var o;
     if (!a.status && !a.color) {
       const v = (o = c.default) == null ? void 0 : o.call(c);
-      if (v)
-        return !!(v[0].children !== "v-if" && (v != null && v.length));
+      if (v) return !!(v[0].children !== "v-if" && (v != null && v.length));
     }
     return !1;
   }), n = $(() => {
@@ -449,8 +431,7 @@ const a1 = (t) => (U("data-v-dfaf21c9"), t = t(), G(), t), Pt = { class: "m-sele
       if (e.modelValue) {
         const f = e.options.find((_) => _[e.value] === e.modelValue);
         f ? (d.value = f[e.label], o.value = f[e.value]) : (d.value = e.modelValue, o.value = null);
-      } else
-        d.value = null, o.value = null;
+      } else d.value = null, o.value = null;
       e.search && (n.value = d.value);
     })();
   }), ee(v, (f) => {
@@ -480,16 +461,12 @@ const Xt = I({ __name: "Cascader", props: { options: { default: () => [] }, labe
   const e = t, s = w([]), c = w([]), d = w([]), n = w([]), o = w([]);
   function v(i, m) {
     const z = i.length;
-    for (let M = 0; M < z; M++)
-      if (i[M][e.value] === s.value[m])
-        return i[M][e.children] || [];
+    for (let M = 0; M < z; M++) if (i[M][e.value] === s.value[m]) return i[M][e.children] || [];
     return [];
   }
   function r(i, m) {
     const z = i.length;
-    for (let M = 0; M < z; M++)
-      if (i[M][e.value] === s.value[m])
-        return i[M][e.label];
+    for (let M = 0; M < z; M++) if (i[M][e.value] === s.value[m]) return i[M][e.label];
     return s.value[m];
   }
   ie(() => {
@@ -613,8 +590,7 @@ const cl = { class: "m-countdown" }, dl = { class: "m-time" }, rl = { key: 0, cl
     return y < 10 ? "0" + y : String(y);
   }
   function h(y) {
-    if (y === null)
-      return "--";
+    if (y === null) return "--";
     let i = e.format;
     if (v.value.showMillisecond) {
       var m = y % 1e3;
@@ -623,32 +599,27 @@ const cl = { class: "m-countdown" }, dl = { class: "m-time" }, rl = { key: 0, cl
     if (y = Math.floor(y / 1e3), v.value.showYear) {
       var z = Math.floor(y / 31104e3);
       i = i.includes("YY") ? i.replace("YY", r(z)) : i.replace("Y", String(z));
-    } else
-      z = 0;
+    } else z = 0;
     if (v.value.showMonth) {
       y -= 60 * z * 60 * 24 * 30 * 12;
       var M = Math.floor(y / 2592e3);
       i = i.includes("MM") ? i.replace("MM", r(M)) : i.replace("M", String(M));
-    } else
-      M = 0;
+    } else M = 0;
     if (v.value.showDay) {
       y -= 60 * M * 60 * 24 * 30;
       var k = Math.floor(y / 86400);
       i = i.includes("DD") ? i.replace("DD", r(k)) : i.replace("D", String(k));
-    } else
-      k = 0;
+    } else k = 0;
     if (v.value.showHour) {
       y -= 60 * k * 60 * 24;
       var g = Math.floor(y / 3600);
       i = i.includes("HH") ? i.replace("HH", r(g)) : i.replace("H", String(g));
-    } else
-      g = 0;
+    } else g = 0;
     if (v.value.showMinute) {
       y -= 60 * g * 60;
       var f = Math.floor(y / 60);
       i = i.includes("mm") ? i.replace("mm", r(f)) : i.replace("m", String(f));
-    } else
-      f = 0;
+    } else f = 0;
     if (v.value.showSecond) {
       var _ = y - 60 * f;
       i = i.includes("ss") ? i.replace("ss", r(_)) : i.replace("s", String(_));
@@ -762,8 +733,7 @@ ha.install = (t) => {
 };
 const Tl = { key: 2, class: "u-text" }, Il = { key: 1, class: "m-divider-vertical" }, ma = j(I({ __name: "Divider", props: { dashed: { type: Boolean, default: !1 }, orientation: { default: "center" }, orientationMargin: { default: "" }, borderWidth: { default: 1 }, type: { default: "horizontal" } }, setup(t) {
   const a = t, e = $(() => {
-    if (a.orientationMargin !== "")
-      return typeof a.orientationMargin == "number" ? a.orientationMargin + "px" : a.orientationMargin;
+    if (a.orientationMargin !== "") return typeof a.orientationMargin == "number" ? a.orientationMargin + "px" : a.orientationMargin;
   }), s = we(), c = $(() => {
     var n, o;
     const d = (n = s.default) == null ? void 0 : n.call(s);
@@ -825,12 +795,9 @@ ya.install = (t) => {
 };
 const ka = j(I({ __name: "Flex", props: { width: { default: "auto" }, vertical: { type: Boolean, default: !1 }, wrap: { default: "nowrap" }, justify: { default: "normal" }, align: { default: "normal" }, gap: { default: void 0 } }, setup(t) {
   const a = t, e = $(() => typeof a.width == "number" ? a.width + "px" : a.width), s = $(() => {
-    if (a.gap === void 0)
-      return 0;
-    if (typeof a.gap == "number")
-      return a.gap + "px";
-    if (Array.isArray(a.gap))
-      return a.gap[1] + "px " + a.gap[0] + "px ";
+    if (a.gap === void 0) return 0;
+    if (typeof a.gap == "number") return a.gap + "px";
+    if (Array.isArray(a.gap)) return a.gap[1] + "px " + a.gap[0] + "px ";
     if (["small", "middle", "large"].includes(a.gap))
       return { small: "8px", middle: "16px", large: "24px" }[a.gap];
   });
@@ -848,10 +815,8 @@ ka.install = (t) => {
 };
 const He = j(I({ __name: "Space", props: { width: { default: "auto" }, align: { default: "start" }, direction: { default: "horizontal" }, gap: { default: "small" }, wrap: { type: Boolean, default: !0 } }, setup(t) {
   const a = t, e = $(() => typeof a.width == "number" ? a.width + "px" : a.width), s = $(() => {
-    if (typeof a.gap == "number")
-      return a.gap + "px";
-    if (Array.isArray(a.gap))
-      return a.gap[1] + "px " + a.gap[0] + "px ";
+    if (typeof a.gap == "number") return a.gap + "px";
+    if (Array.isArray(a.gap)) return a.gap[1] + "px " + a.gap[0] + "px ";
     if (["small", "middle", "large"].includes(a.gap))
       return { small: "8px", middle: "16px", large: "24px" }[a.gap];
   });
@@ -877,8 +842,7 @@ const be = (t) => (U("data-v-d2f6c1d7"), t = t(), G(), t), a2 = { class: "m-imag
   }
   function f(O) {
     if (O) {
-      if (O.name)
-        return O.name;
+      if (O.name) return O.name;
       {
         const ae = O.src.split("?")[0].split("/");
         return ae[ae.length - 1];
@@ -1010,13 +974,10 @@ const y1 = (t) => (U("data-v-67517f59"), t = t(), G(), t), E2 = { class: "m-inpu
   function h(m) {
     var M, k;
     const z = m.target.value.replace(/,/g, "");
-    if (Number.isNaN(parseFloat(z)))
-      o.value = (M = e.value) == null ? void 0 : M.toFixed(c.value);
+    if (Number.isNaN(parseFloat(z))) o.value = (M = e.value) == null ? void 0 : M.toFixed(c.value);
     else {
-      if (parseFloat(z) > e.max)
-        return void r(e.max);
-      if (parseFloat(z) < e.min)
-        return void r(e.min);
+      if (parseFloat(z) > e.max) return void r(e.max);
+      if (parseFloat(z) < e.min) return void r(e.min);
       parseFloat(z) !== e.value ? r(parseFloat(z)) : o.value = (k = e.value) == null ? void 0 : k.toFixed(c.value);
     }
   }
@@ -1179,8 +1140,7 @@ const We = (t) => (U("data-v-79e011df"), t = t(), G(), t), y4 = { class: "m-pagi
   const e = t, s = w(e.page), c = w(Number(e.pageSizeOptions[0])), d = w(""), n = w(!1), o = w(!1), v = w(!1), r = w(!1), h = $(() => Math.ceil(e.total / c.value)), b = $(() => function(f) {
     var _ = [], F = Math.floor(e.pageListNum / 2), S = { start: f - F, end: f + F };
     S.start < 1 && (S.end = S.end + (1 - S.start), S.start = 1), S.end > h.value && (S.start = S.start - (S.end - h.value), S.end = h.value), S.start < 1 && (S.start = 1), S.start > 1 ? n.value = !0 : n.value = !1, S.end < h.value ? o.value = !0 : o.value = !1;
-    for (let H = S.start; H <= S.end; H++)
-      _.push(H);
+    for (let H = S.start; H <= S.end; H++) _.push(H);
     return _;
   }(s.value).filter((f) => f !== 1 && f !== h.value)), x = $(() => typeof e.showSizeChanger == "boolean" ? e.showSizeChanger : e.total > 50), y = $(() => e.pageSizeOptions.map((f) => ({ label: f + " 条/页", value: Number(f) }))), i = a;
   function m() {
@@ -1193,8 +1153,7 @@ const We = (t) => (U("data-v-79e011df"), t = t(), G(), t), y4 = { class: "m-pagi
     f.key === "Enter" && k(_);
   }
   function k(f) {
-    if (f === 0 || f === h.value + 1)
-      return !1;
+    if (f === 0 || f === h.value + 1) return !1;
     s.value !== f && (s.value = f);
   }
   function g(f) {
@@ -1353,8 +1312,7 @@ Aa.install = (t) => {
 };
 const Vo = { key: 2, class: "m-skeleton-image" }, Wo = [((t) => (U("data-v-53e8ec49"), t = t(), G(), t))(() => l("svg", { viewBox: "0 0 1098 1024", xmlns: "http://www.w3.org/2000/svg", class: "m-skeleton-image-svg" }, [l("path", { class: "u-skeleton-image-path", d: "M365.714286 329.142857q0 45.714286-32.036571 77.677714t-77.677714 32.036571-77.677714-32.036571-32.036571-77.677714 32.036571-77.677714 77.677714-32.036571 77.677714 32.036571 32.036571 77.677714zM950.857143 548.571429l0 256-804.571429 0 0-109.714286 182.857143-182.857143 91.428571 91.428571 292.571429-292.571429zM1005.714286 146.285714l-914.285714 0q-7.460571 0-12.873143 5.412571t-5.412571 12.873143l0 694.857143q0 7.460571 5.412571 12.873143t12.873143 5.412571l914.285714 0q7.460571 0 12.873143-5.412571t5.412571-12.873143l0-694.857143q0-7.460571-5.412571-12.873143t-12.873143-5.412571zM1097.142857 164.571429l0 694.857143q0 37.741714-26.843429 64.585143t-64.585143 26.843429l-914.285714 0q-37.741714 0-64.585143-26.843429t-26.843429-64.585143l0-694.857143q0-37.741714 26.843429-64.585143t64.585143-26.843429l914.285714 0q37.741714 0 64.585143 26.843429t26.843429 64.585143z" })], -1))], Ro = { key: 3, class: "m-skeleton-header" }, No = { key: 4, class: "m-skeleton-content" }, qo = { class: "u-skeleton-paragraph" }, Ea = j(I({ __name: "Skeleton", props: { animated: { type: Boolean, default: !0 }, button: { type: [Boolean, Object], default: !1 }, avatar: { type: [Boolean, Object], default: !1 }, input: { type: [Boolean, Object], default: !1 }, image: { type: Boolean, default: !1 }, title: { type: [Boolean, Object], default: !0 }, paragraph: { type: [Boolean, Object], default: !0 }, loading: { type: Boolean, default: !0 } }, setup(t) {
   const a = t, e = $(() => {
-    if (typeof a.button == "object")
-      return a.button.size === "large" ? 40 : a.button.size === "small" ? 24 : 32;
+    if (typeof a.button == "object") return a.button.size === "large" ? 40 : a.button.size === "small" ? 24 : 32;
   }), s = $(() => typeof a.avatar == "boolean" ? 8 : typeof a.avatar.size == "number" ? (a.avatar.size - 16) / 2 : { default: 8, small: 4, large: 12 }[a.avatar.size || "default"]), c = $(() => typeof a.title == "boolean" ? "38%" : typeof a.title.width == "number" ? a.title.width + "px" : a.title.width || "38%"), d = $(() => typeof a.paragraph == "boolean" ? 3 : a.paragraph.rows), n = $(() => typeof a.paragraph == "boolean" ? Array(d.value) : Array.isArray(a.paragraph.width) ? a.paragraph.width.map((o) => typeof o == "number" ? o + "px" : o) : typeof a.paragraph.width == "number" ? Array(d.value).fill(a.paragraph.width + "px") : Array(d.value).fill(a.paragraph.width));
   return (o, v) => o.loading ? (u(), p("div", { key: 0, class: B(["m-skeleton", { "m-skeleton-avatar": o.avatar, "m-skeleton-animated": o.animated }]), style: C(`--button-size: ${e.value}px; --title-top: ${s.value}px;`) }, [o.button ? (u(), p("span", { key: 0, class: B(["u-skeleton-button", { "u-button-round": typeof o.button != "boolean" && o.button.shape === "round", "u-button-circle": typeof o.button != "boolean" && o.button.shape === "circle", "u-button-sm": typeof o.button != "boolean" && o.button.size === "small", "u-button-lg": typeof o.button != "boolean" && o.button.size === "large", "u-button-block": typeof o.button != "boolean" && o.button.shape !== "circle" && o.button.block }]) }, null, 2)) : L("", !0), o.input ? (u(), p("span", { key: 1, class: B(["u-skeleton-input", { "u-input-sm": typeof o.input != "boolean" && o.input.size === "small", "u-input-lg": typeof o.input != "boolean" && o.input.size === "large" }]) }, null, 2)) : L("", !0), o.image ? (u(), p("div", Vo, Wo)) : L("", !0), o.avatar ? (u(), p("div", Ro, [l("span", { class: B(["u-skeleton-avatar", { "u-avatar-sm": typeof o.avatar != "boolean" && o.avatar.size === "small", "u-avatar-lg": typeof o.avatar != "boolean" && o.avatar.size === "large", "u-avatar-square": typeof o.avatar != "boolean" && o.avatar.shape === "square" }]) }, null, 2)])) : L("", !0), o.button || o.image || o.input ? L("", !0) : (u(), p("div", No, [l("h3", { class: "u-skeleton-title", style: C({ width: c.value }) }, null, 4), l("ul", qo, [(u(!0), p(N, null, K(d.value, (r) => (u(), p("li", { key: r, style: C(`width: ${n.value[r - 1]};`) }, null, 4))), 128))])]))], 6)) : E(o.$slots, "default", { key: 1 }, void 0, !0);
 } }), [["__scopeId", "data-v-53e8ec49"]]);
@@ -1494,8 +1452,7 @@ const C0 = { class: "m-tabs" }, $0 = { class: "m-tabs-nav" }, B0 = ["onClick"], 
           m.value = !1;
         }, 150));
       }
-    } else
-      c.value = 0, d.value = 0;
+    } else c.value = 0, d.value = 0;
   }
   function M() {
     o.value = n.value.offsetWidth, r.value = v.value.offsetWidth, r.value > o.value ? (h.value = !0, b.value = r.value - o.value, x.value = b.value) : (h.value = !1, x.value = 0), z();
@@ -1517,10 +1474,8 @@ Wa.install = (t) => {
 const l1 = (t) => (U("data-v-fab61bdd"), t = t(), G(), t), S0 = { key: 0, class: "m-icon" }, A0 = { class: "u-tag" }, E0 = [l1(() => l("svg", { focusable: "false", class: "u-close", "data-icon": "close", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, [l("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" })], -1))], D0 = { class: "u-tag" }, H0 = ["onClick"], T0 = [l1(() => l("svg", { focusable: "false", class: "u-close", "data-icon": "close", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, [l("path", { d: "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" })], -1))], I0 = [l1(() => l("svg", { focusable: "false", class: "u-plus", "data-icon": "plus", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, [l("path", { d: "M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z" }), l("path", { d: "M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z" })], -1))], j0 = I({ __name: "Tag", props: { closable: { type: Boolean, default: !1 }, color: { default: "" }, icon: { default: "" }, size: { default: "middle" }, bordered: { type: Boolean, default: !0 }, dynamic: { type: Boolean, default: !1 }, value: { default: () => [] }, spaceWidth: { default: "auto" }, spaceAlign: { default: "start" }, spaceDirection: { default: "horizontal" }, spaceGap: { default: "small" } }, emits: ["update:value", "close", "dynamicClose"], setup(t, { emit: a }) {
   const e = t, s = $(() => {
     if (e.dynamic && e.value.length) {
-      if (typeof e.value[0] == "string")
-        return !0;
-      if (typeof e.value[0] == "object")
-        return !1;
+      if (typeof e.value[0] == "string") return !0;
+      if (typeof e.value[0] == "object") return !1;
     }
     return null;
   }), c = $(() => e.dynamic && e.value.length ? s.value ? e.value.map((g) => ({ label: g, closable: !0 })) : e.value.map((g) => ({ closable: !0, ...g })) : []), d = we(), n = $(() => {
@@ -1535,9 +1490,7 @@ const l1 = (t) => (U("data-v-fab61bdd"), t = t(), G(), t), S0 = { key: 0, class:
     if (e.dynamic) {
       const g = e.value.length;
       y.value = Array(g).fill(1), _e(() => {
-        if (x.value)
-          for (let f = 0; f < g; f++)
-            y.value[f] = x.value[f].offsetWidth;
+        if (x.value) for (let f = 0; f < g; f++) y.value[f] = x.value[f].offsetWidth;
       });
     }
   });
@@ -1570,8 +1523,7 @@ const V0 = ["data-count"], W0 = ["value", "maxlength", "disabled"], R0 = [((t) =
       const m = { resize: "none" };
       return "minRows" in e.autoSize && (m["min-height"] = 22 * e.autoSize.minRows + 10 + "px"), "maxRows" in e.autoSize && (m["max-height"] = 22 * e.autoSize.maxRows + 10 + "px"), m;
     }
-    if (typeof e.autoSize == "boolean")
-      return e.autoSize ? { "max-height": "9000000000000000px", resize: "none" } : {};
+    if (typeof e.autoSize == "boolean") return e.autoSize ? { "max-height": "9000000000000000px", resize: "none" } : {};
   }), d = $(() => e.maxlength ? e.value.length + " / " + e.maxlength : e.value.length), n = $(() => "lazy" in e.valueModifiers);
   ee(() => e.value, () => {
     JSON.stringify(c.value) !== "{}" && (v.value = 32, _e(() => {
@@ -1637,13 +1589,10 @@ const P0 = { class: "m-timeline" }, Y0 = I({ __name: "Timeline", props: { timeli
   const a = t, e = w(), s = w([]), c = $(() => typeof a.width == "number" ? a.width + "px" : a.width), d = $(() => a.timelineData.length);
   return ie(() => {
     (function() {
-      for (let n = 0; n < d.value; n++)
-        s.value[n] = getComputedStyle(e.value[n].firstElementChild || e.value[n], null).getPropertyValue("line-height");
+      for (let n = 0; n < d.value; n++) s.value[n] = getComputedStyle(e.value[n].firstElementChild || e.value[n], null).getPropertyValue("line-height");
     })();
   }, { flush: "post" }), ie(() => {
-    if (a.mode === "center")
-      for (let n = 0; n < d.value; n++)
-        (n + 1) % 2 ? a.position === "left" ? e.value[n].classList.add("alternate-left-desc") : e.value[n].classList.add("alternate-right-desc") : a.position === "left" ? e.value[n].classList.add("alternate-right-desc") : e.value[n].classList.add("alternate-left-desc");
+    if (a.mode === "center") for (let n = 0; n < d.value; n++) (n + 1) % 2 ? a.position === "left" ? e.value[n].classList.add("alternate-left-desc") : e.value[n].classList.add("alternate-right-desc") : a.position === "left" ? e.value[n].classList.add("alternate-right-desc") : e.value[n].classList.add("alternate-left-desc");
   }, { flush: "post" }), (n, o) => (u(), p("div", { class: "m-timeline-area", style: C(`width: ${c.value};`) }, [l("div", P0, [(u(!0), p(N, null, K(n.timelineData, (v, r) => (u(), p("div", { class: B(["m-timeline-item", { last: r === n.timelineData.length - 1 }]), key: r }, [l("span", { class: B(`u-tail ${n.mode}-tail`), style: C(`border-left-style: ${n.lineStyle};`) }, null, 6), l("div", { class: B(`m-dot ${n.mode}-dot`), style: C(`height: ${s.value[r]}`) }, [E(n.$slots, "dot", { index: r }, () => [v.color === "red" ? (u(), p("span", { key: 0, class: "u-dot", style: C({ borderColor: "#ff4d4f" }) }, null, 4)) : v.color === "gray" ? (u(), p("span", { key: 1, class: "u-dot", style: C({ borderColor: "#00000040" }) }, null, 4)) : v.color === "green" ? (u(), p("span", { key: 2, class: "u-dot", style: C({ borderColor: "#52c41a" }) }, null, 4)) : v.color === "blue" ? (u(), p("span", { key: 3, class: "u-dot", style: C({ borderColor: "#1677ff" }) }, null, 4)) : (u(), p("span", { key: 4, class: "u-dot", style: C({ borderColor: v.color || "#1677ff" }) }, null, 4))], !0)], 6), l("div", { ref_for: !0, ref_key: "desc", ref: e, class: B(`u-desc ${n.mode}-desc`) }, [E(n.$slots, "desc", { index: r }, () => [D(A(v.desc || "--"), 1)], !0)], 2)], 2))), 128))])], 4));
 } }), Oa = j(Y0, [["__scopeId", "data-v-818d20dd"]]);
 Oa.install = (t) => {
@@ -1700,8 +1649,7 @@ const Re = (t) => (U("data-v-dfc0a9cd"), t = t(), G(), t), K0 = { class: "m-uplo
       const f = (_ = k.dataTransfer) == null ? void 0 : _.files;
       if (f != null && f.length) {
         const F = f.length;
-        for (let S = 0; S < F && g + S <= e.maxCount; S++)
-          r(f[S], g + S);
+        for (let S = 0; S < F && g + S <= e.maxCount; S++) r(f[S], g + S);
         n.value[g].value = "";
       }
     }(M, m - 1), ["stop", "prevent"]), onClick: (M) => y.disabled ? () => !1 : function(k) {
@@ -1711,16 +1659,14 @@ const Re = (t) => (U("data-v-dfc0a9cd"), t = t(), G(), t), K0 = { class: "m-uplo
       const f = k.target.files;
       if (f != null && f.length) {
         const _ = f.length;
-        for (let F = 0; F < _ && g + F < e.maxCount; F++)
-          r(f[F], g + F);
+        for (let F = 0; F < _ && g + F < e.maxCount; F++) r(f[F], g + F);
         n.value[g].value = "";
       }
     }(M, m - 1), style: { display: "none" } }, null, 40, Z0), l("div", null, [J0, l("p", X0, [E(y.$slots, "default", {}, () => [D(A(y.tip), 1)], !0)])])], 42, G0), [[R, !d.value[m - 1] && !s.value[m - 1]]]), W(l("div", Q0, [Y(P(ge), { class: "u-spin", tip: y.uploadingTip, size: "small", indicator: "dynamic-circle" }, null, 8, ["tip"])], 512), [[R, d.value[m - 1]]]), s.value[m - 1] ? (u(), p("div", es, [o(s.value[m - 1].url) ? (u(), te(P(Pe), { key: 0, ref_for: !0, ref_key: "imageRef", ref: h, bordered: !1, width: 82, height: 82, src: s.value[m - 1].url, name: s.value[m - 1].name }, null, 8, ["src", "name"])) : (z = s.value[m - 1].url, /\.pdf$/i.test(z) || /^data:application\/pdf/.test(z) ? (u(), p("svg", as, ts)) : (u(), p("svg", ls, os))), l("div", ss, [l("a", { class: "m-icon", title: "预览", onClick: (M) => function(k, g) {
       if (console.log("isImage", o(g)), o(g)) {
         const f = s.value.slice(0, k).filter((_) => !o(_.url));
         h.value[k - f.length].onPreview(0);
-      } else
-        window.open(g);
+      } else window.open(g);
     }(m - 1, s.value[m - 1].url) }, is, 8, ns), W(l("a", { class: "m-icon", title: "删除", onClick: Q((M) => function(k) {
       s.value.length < e.maxCount && c.value--;
       const g = s.value.splice(k, 1);
@@ -1763,8 +1709,7 @@ const vs = ["src", "alt", "onLoad"], fs = I({ __name: "Waterfall", props: { imag
   });
   async function x() {
     d.value = (s.value - (a.columnCount + 1) * a.columnGap) / a.columnCount, n.value.splice(0);
-    for (let m = 0; m < h.value; m++)
-      await y(a.images[m].src, m);
+    for (let m = 0; m < h.value; m++) await y(a.images[m].src, m);
   }
   function y(m, z) {
     return new Promise((M) => {
@@ -1776,16 +1721,14 @@ const vs = ["src", "alt", "onLoad"], fs = I({ __name: "Waterfall", props: { imag
     });
   }
   function i(m, z) {
-    if (m < a.columnCount)
-      return o.value[m] = a.columnGap + z, { top: a.columnGap, left: (d.value + a.columnGap) * m + a.columnGap };
+    if (m < a.columnCount) return o.value[m] = a.columnGap + z, { top: a.columnGap, left: (d.value + a.columnGap) * m + a.columnGap };
     {
       const M = Math.min(...o.value);
       let k = 0;
-      for (let g = 0; g < a.columnCount; g++)
-        if (o.value[g] === M) {
-          k = g;
-          break;
-        }
+      for (let g = 0; g < a.columnCount; g++) if (o.value[g] === M) {
+        k = g;
+        break;
+      }
       return o.value[k] = M + a.columnGap + z, { top: M + a.columnGap, left: (d.value + a.columnGap) * k + a.columnGap };
     }
   }
@@ -1858,8 +1801,7 @@ const Ua = I({ __name: "Watermark", props: { width: { default: void 0 }, height:
         X.onload = () => {
           _.drawImage(X, xe, Me, ke, re), _.restore(), g(_, le, V, S), _.drawImage(X, ae, pe, ke, re), m(f.toDataURL(), T);
         }, X.crossOrigin = "anonymous", X.referrerPolicy = "no-referrer", X.src = F;
-      } else
-        M(_, xe, Me, ke, re), _.restore(), g(_, le, V, S), M(_, ae, pe, ke, re), m(f.toDataURL(), T);
+      } else M(_, xe, Me, ke, re), _.restore(), g(_, le, V, S), M(_, ae, pe, ke, re), m(f.toDataURL(), T);
     }
   }
   function g(f, _, F, S) {
