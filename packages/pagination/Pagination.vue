@@ -129,6 +129,11 @@ function jumpPage(): void {
   }
   jumpNumber.value = '' // 清空跳转输入框
 }
+function onKeyboard(e: KeyboardEvent, pageNum: number) {
+  if (e.key === 'Enter') {
+    changePage(pageNum)
+  }
+}
 function changePage(pageNum: number): boolean | void {
   if (pageNum === 0 || pageNum === totalPage.value + 1) {
     return false
@@ -153,7 +158,13 @@ function onSizeChange(pageSize: number) {
   <div :class="[`m-pagination ${placement}`, { hidden: hideOnSinglePage && total <= pageSize }]">
     <div class="m-pagination-wrap">
       <span class="mr8" v-if="showTotal">共 {{ totalPage }} 页 / {{ total }} 条</span>
-      <span class="u-item" :class="{ disabled: currentPage === 1 }" @click="changePage(currentPage - 1)">
+      <span
+        class="u-item"
+        :class="{ disabled: currentPage === 1 }"
+        tabindex="-1"
+        @keydown="onKeyboard($event, currentPage - 1)"
+        @click="changePage(currentPage - 1)"
+      >
         <svg class="u-arrow" viewBox="64 64 896 896" data-icon="left" aria-hidden="true" focusable="false">
           <path
             d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 0 0 0 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"
@@ -206,7 +217,13 @@ function onSizeChange(pageSize: number) {
       >
         {{ totalPage }}
       </span>
-      <span class="u-item" :class="{ disabled: currentPage === totalPage }" @click="changePage(currentPage + 1)">
+      <span
+        class="u-item"
+        :class="{ disabled: currentPage === totalPage }"
+        tabindex="-1"
+        @keydown="onKeyboard($event, currentPage + 1)"
+        @click="changePage(currentPage + 1)"
+      >
         <svg class="u-arrow" viewBox="64 64 896 896" data-icon="right" aria-hidden="true" focusable="false">
           <path
             d="M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z"
@@ -263,6 +280,7 @@ function onSizeChange(pageSize: number) {
       border-radius: 6px;
       background: #fff;
       cursor: pointer;
+      outline: none;
       transition: all 0.3s;
       &:hover {
         .active();
