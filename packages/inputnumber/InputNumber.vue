@@ -9,6 +9,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref, computed, watch, useSlots } from 'vue'
+import { add } from '../index'
 interface Props {
   width?: string | number // 输入框宽度
   min?: number // 最小值
@@ -54,7 +55,7 @@ const numValue = ref(props.formatter(props.value?.toFixed(precision.value)))
 watch(
   () => props.value,
   (to) => {
-    numValue.value = props.formatter(to?.toFixed(precision.value))
+    numValue.value = to === null ? null : props.formatter(to?.toFixed(precision.value))
   }
 )
 watch(numValue, (to) => {
@@ -63,12 +64,12 @@ watch(numValue, (to) => {
   }
 })
 const emits = defineEmits(['update:value', 'change'])
-function emitValue(value: any) {
+function emitValue(value: number | null) {
   emits('change', value)
   emits('update:value', value)
 }
-function onChange(e: any) {
-  const value = e.target.value.replaceAll(',', '')
+function onChange(e: Event) {
+  const value = (e.target as HTMLInputElement).value.replace(/,/g, '')
   if (!Number.isNaN(parseFloat(value))) {
     // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为 Number
     if (parseFloat(value) > props.max) {
@@ -89,16 +90,7 @@ function onChange(e: any) {
   }
 }
 // 消除js加减精度问题的加法函数
-function add(num1: number, num2: number) {
-  const num1DeciStr = String(num1).split('.')[1]
-  const num2DeciStr = String(num2).split('.')[1]
-  let maxLen = Math.max(num1DeciStr?.length || 0, num2DeciStr?.length || 0) // 两数中最长的小数位长度
-  let num1Str = num1.toFixed(maxLen) // 补零，返回字符串
-  let num2Str = num2.toFixed(maxLen)
-  const result = +num1Str.replace('.', '') + +num2Str.replace('.', '') // 转换为整数相加
-  return result / Math.pow(10, maxLen)
-}
-function onKeyboard(e: any) {
+function onKeyboard(e: KeyboardEvent) {
   if (e.key === 'ArrowUp') {
     onUp()
   }

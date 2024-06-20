@@ -25,14 +25,14 @@ watchEffect(() => {
 function formatter (num: string): string {
   return formatNumber(num, 2)
 }
-function onChange (number: number) {
+function onChange (number: number | null) {
   console.log('number:', number)
 }
 </script>
 
 ## 基本使用
 
-<InputNumber v-model:value="value" />
+<InputNumber v-model:value="value" @change="onchange" />
 
 ::: details Show Code
 
@@ -43,9 +43,12 @@ const value = ref(3)
 watchEffect(() => {
   console.log('value:', value.value)
 })
+function onChange (number: number | null) {
+  console.log('number:', number)
+}
 </script>
 <template>
-  <InputNumber v-model:value="value" />
+  <InputNumber v-model:value="value" @change="onchange" />
 </template>
 ```
 
@@ -178,4 +181,4 @@ value <Tag color="cyan">v-model</Tag> | 当前值 | number &#124; null | null | 
 
 事件名称 | 说明 | 参数
 -- | -- | --
-change | 变化回调 | (value: number) => void
+change | 变化回调 | (value: number &#124; null) => void

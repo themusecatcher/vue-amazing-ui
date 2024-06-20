@@ -64,6 +64,9 @@ const showCountNum = computed(() => {
   }
   return props.value.length
 })
+const lazyTextarea = computed(() => {
+  return 'lazy' in props.valueModifiers
+})
 watch(
   () => props.value,
   () => {
@@ -73,6 +76,9 @@ watch(
         getAreaHeight()
       })
     }
+  },
+  {
+    flush: 'post'
   }
 )
 const textarea = ref()
@@ -84,19 +90,19 @@ function getAreaHeight() {
   areaHeight.value = textarea.value.scrollHeight + 2
 }
 const emits = defineEmits(['update:value', 'change', 'enter'])
-function onInput(e: any) {
-  if (!('lazy' in props.valueModifiers)) {
-    emits('update:value', e.target.value)
+function onInput(e: InputEvent) {
+  if (!lazyTextarea.value) {
+    emits('update:value', (e.target as HTMLInputElement).value)
     emits('change', e)
   }
 }
-function onChange(e: any) {
-  if ('lazy' in props.valueModifiers) {
-    emits('update:value', e.target.value)
+function onChange(e: InputEvent) {
+  if (lazyTextarea.value) {
+    emits('update:value', (e.target as HTMLInputElement).value)
     emits('change', e)
   }
 }
-function onKeyboard(e: any) {
+function onKeyboard(e: KeyboardEvent) {
   if (e.key === 'Enter') {
     e.preventDefault()
     emits('enter', e)
