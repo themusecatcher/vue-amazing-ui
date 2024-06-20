@@ -1,23 +1,26 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { formatNumber } from '../../packages'
+import { formatNumber } from 'vue-amazing-ui'
 const value = ref(3)
 const formatValue = ref(1000)
 watchEffect(() => {
   console.log('value:', value.value)
 })
+watchEffect(() => {
+  console.log('formatValue:', formatValue.value)
+})
 function formatter(num: string): string {
   return formatNumber(num, 2)
 }
-function onAntChange(number: number) {
-  console.log('ant:', number)
+function onchange(number: number | null) {
+  console.log('change:', number)
 }
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <InputNumber v-model:value="value" placeholder="请输入" />
+    <InputNumber v-model:value="value" placeholder="请输入" @change="onchange" />
     <h2 class="mt30 mb10">步数为小数</h2>
     <InputNumber :step="0.1" v-model:value="value" />
     <h2 class="mt30 mb10">设置数值精度</h2>
@@ -28,7 +31,5 @@ function onAntChange(number: number) {
     <InputNumber :min="0" :max="10" v-model:value="value" />
     <h2 class="mt30 mb10">添加前缀图标 $</h2>
     <InputNumber prefix="$" v-model:value="value" />
-    <h2 class="mt30 mb10">Ant Design Vue 数字输入框</h2>
-    <a-input-number :min="-10" :max="10" :step="0.01" :precision="1" @change="onAntChange" v-model:value="value" />
   </div>
 </template>
