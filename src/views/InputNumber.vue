@@ -12,7 +12,7 @@ watchEffect(() => {
 function formatter(num: string): string {
   return formatNumber(num, 2)
 }
-function onchange(number: number | null) {
+function onChange(number: number | null) {
   console.log('change:', number)
 }
 </script>
@@ -20,7 +20,7 @@ function onchange(number: number | null) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <InputNumber v-model:value="value" placeholder="请输入" @change="onchange" />
+    <InputNumber v-model:value="value" placeholder="请输入" @change="onChange" />
     <h2 class="mt30 mb10">步数为小数</h2>
     <InputNumber :step="0.1" v-model:value="value" />
     <h2 class="mt30 mb10">设置数值精度</h2>

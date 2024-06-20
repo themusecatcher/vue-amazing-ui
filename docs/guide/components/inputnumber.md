@@ -32,7 +32,7 @@ function onChange (number: number | null) {
 
 ## 基本使用
 
-<InputNumber v-model:value="value" @change="onchange" />
+<InputNumber v-model:value="value" @change="onChange" />
 
 ::: details Show Code
 
