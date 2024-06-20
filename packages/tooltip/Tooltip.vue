@@ -53,7 +53,7 @@ function onHide(): void {
       ref="tooltipRef"
       class="m-tooltip-content"
       :class="{ 'show-tip': visible }"
-      :style="`--tooltip-font-size: ${fontSize}px; --tooltip-color: ${color}; --tooltip-background-color: ${backgroundColor}; max-width: ${maxWidth}px; top: ${-top}px; left: ${-left}px;`"
+      :style="`--tooltip-font-size: ${fontSize}px; --tooltip-color: ${color}; --tooltip-background-color: ${backgroundColor}; max-width: ${maxWidth}px; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
       @mouseenter="onShow"
       @mouseleave="onHide"
     >
@@ -79,12 +79,11 @@ function onHide(): void {
     width: max-content;
     padding-bottom: 12px;
     pointer-events: none;
+    transform: scale(0.8);
     opacity: 0;
-    transform-origin: 50% 75%;
-    transform: scale(0.5);
     transition:
-      transform 0.15s,
-      opacity 0.15s;
+      transform 0.1s cubic-bezier(0.78, 0.14, 0.15, 0.86),
+      opacity 0.1s cubic-bezier(0.78, 0.14, 0.15, 0.86);
     .u-tooltip {
       min-width: 32px;
       min-height: 32px;
@@ -143,8 +142,8 @@ function onHide(): void {
   }
   .show-tip {
     pointer-events: auto;
-    opacity: 1;
     transform: scale(1);
+    opacity: 1;
   }
 }
 </style>

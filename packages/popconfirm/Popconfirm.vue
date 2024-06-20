@@ -91,7 +91,7 @@ function onOk(e: Event) {
       tabindex="1"
       class="m-pop-content"
       :class="{ 'show-pop': visible }"
-      :style="`max-width: ${popMaxWidth}; top: ${-top}px; left: ${-left}px;`"
+      :style="`max-width: ${popMaxWidth}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
       @blur="activeBlur ? onBlur() : () => false"
     >
       <div class="m-pop">
@@ -189,14 +189,13 @@ function onOk(e: Event) {
     z-index: 999;
     width: max-content;
     padding-bottom: 12px;
-    outline: none;
     pointer-events: none;
-    opacity: 0;
-    transform-origin: 50% 75%;
     transform: scale(0.8);
+    opacity: 0;
     transition:
-      transform 0.25s,
-      opacity 0.25s;
+      transform 0.15s cubic-bezier(0.78, 0.14, 0.15, 0.86),
+      opacity 0.15s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+    outline: none;
     .m-pop {
       min-width: 32px;
       min-height: 32px;
@@ -297,8 +296,8 @@ function onOk(e: Event) {
   }
   .show-pop {
     pointer-events: auto;
-    opacity: 1;
     transform: scale(1);
+    opacity: 1;
   }
 }
 </style>
