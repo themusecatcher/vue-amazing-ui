@@ -340,8 +340,8 @@ function onRightSlide(source: number, place: string) {
       user-select: none;
       opacity: 0;
       transition:
-        transform 0.25s,
-        opacity 0.25s;
+        transform 0.25s cubic-bezier(0.78, 0.14, 0.15, 0.86),
+        opacity 0.25s cubic-bezier(0.78, 0.14, 0.15, 0.86);
       .m-arrow {
         position: absolute;
         z-index: 9;
@@ -392,8 +392,8 @@ function onRightSlide(source: number, place: string) {
       .hover-focus-handle();
       .m-handle-tooltip {
         pointer-events: auto;
-        opacity: 1;
         transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
       }
     }
     &:focus {
