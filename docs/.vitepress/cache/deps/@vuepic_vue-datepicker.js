@@ -41,10 +41,10 @@ import {
   withDirectives,
   withKeys,
   withModifiers
-} from "./chunk-FHZO4SJ4.js";
+} from "./chunk-MHLQE6UP.js";
 import {
   __publicField
-} from "./chunk-LNEMQRCO.js";
+} from "./chunk-EQCVQC35.js";
 
 // node_modules/.pnpm/date-fns@3.6.0/node_modules/date-fns/toDate.mjs
 function toDate(argument) {
@@ -70,8 +70,7 @@ function constructFrom(date, value) {
 // node_modules/.pnpm/date-fns@3.6.0/node_modules/date-fns/addDays.mjs
 function addDays(date, amount) {
   const _date = toDate(date);
-  if (isNaN(amount))
-    return constructFrom(date, NaN);
+  if (isNaN(amount)) return constructFrom(date, NaN);
   if (!amount) {
     return _date;
   }
@@ -82,8 +81,7 @@ function addDays(date, amount) {
 // node_modules/.pnpm/date-fns@3.6.0/node_modules/date-fns/addMonths.mjs
 function addMonths(date, amount) {
   const _date = toDate(date);
-  if (isNaN(amount))
-    return constructFrom(date, NaN);
+  if (isNaN(amount)) return constructFrom(date, NaN);
   if (!amount) {
     return _date;
   }
@@ -314,8 +312,7 @@ function eachDayOfInterval(interval, options) {
   const currentDate = reversed ? endDate : startDate;
   currentDate.setHours(0, 0, 0, 0);
   let step = (options == null ? void 0 : options.step) ?? 1;
-  if (!step)
-    return [];
+  if (!step) return [];
   if (step < 0) {
     step = -step;
     reversed = !reversed;
@@ -347,8 +344,7 @@ function eachQuarterOfInterval(interval, options) {
   const endTime = reversed ? +startOfQuarter(startDate) : +startOfQuarter(endDate);
   let currentDate = reversed ? startOfQuarter(endDate) : startOfQuarter(startDate);
   let step = (options == null ? void 0 : options.step) ?? 1;
-  if (!step)
-    return [];
+  if (!step) return [];
   if (step < 0) {
     step = -step;
     reversed = !reversed;
@@ -775,12 +771,10 @@ function findIndex(array, predicate) {
 function buildMatchPatternFn(args) {
   return (string, options = {}) => {
     const matchResult = string.match(args.matchPattern);
-    if (!matchResult)
-      return null;
+    if (!matchResult) return null;
     const matchedString = matchResult[0];
     const parseResult = string.match(args.parsePattern);
-    if (!parseResult)
-      return null;
+    if (!parseResult) return null;
     let value = args.valueCallback ? args.valueCallback(parseResult[0]) : parseResult[0];
     value = options.valueCallback ? options.valueCallback(value) : value;
     const rest = string.slice(matchedString.length);
@@ -1484,8 +1478,7 @@ var formatters = {
   h: function(date, token, localize2) {
     if (token === "ho") {
       let hours = date.getHours() % 12;
-      if (hours === 0)
-        hours = 12;
+      if (hours === 0) hours = 12;
       return localize2.ordinalNumber(hours, { unit: "hour" });
     }
     return lightFormatters.h(date, token);
@@ -1508,8 +1501,7 @@ var formatters = {
   // Hour [1-24]
   k: function(date, token, localize2) {
     let hours = date.getHours();
-    if (hours === 0)
-      hours = 24;
+    if (hours === 0) hours = 24;
     if (token === "ko") {
       return localize2.ordinalNumber(hours, { unit: "hour" });
     }
@@ -1698,8 +1690,7 @@ function isProtectedWeekYearToken(token) {
 function warnOrThrowProtectedError(token, format2, input) {
   const _message = message(token, format2, input);
   console.warn(_message);
-  if (throwTokens.includes(token))
-    throw new RangeError(_message);
+  if (throwTokens.includes(token)) throw new RangeError(_message);
 }
 function message(token, format2, input) {
   const subject = token[0] === "Y" ? "years" : "days of the month";
@@ -1756,8 +1747,7 @@ function format(date, formatStr, options) {
     locale
   };
   return parts.map((part) => {
-    if (!part.isToken)
-      return part.value;
+    if (!part.isToken) return part.value;
     const token = part.value;
     if (!(options == null ? void 0 : options.useAdditionalWeekYearTokens) && isProtectedWeekYearToken(token) || !(options == null ? void 0 : options.useAdditionalDayOfYearTokens) && isProtectedDayOfYearToken(token)) {
       warnOrThrowProtectedError(token, formatStr, String(date));
@@ -1913,8 +1903,7 @@ var DateToSystemTimezoneSetter = class extends Setter {
     __publicField(this, "subPriority", -1);
   }
   set(date, flags) {
-    if (flags.timestampIsSet)
-      return date;
+    if (flags.timestampIsSet) return date;
     return constructFrom(date, transpose(date, Date));
   }
 };
@@ -3416,8 +3405,7 @@ var ISOTimezoneWithZParser = class extends Parser {
     }
   }
   set(date, flags, value) {
-    if (flags.timestampIsSet)
-      return date;
+    if (flags.timestampIsSet) return date;
     return constructFrom(
       date,
       date.getTime() - getTimezoneOffsetInMilliseconds(date) - value
@@ -3457,8 +3445,7 @@ var ISOTimezoneParser = class extends Parser {
     }
   }
   set(date, flags, value) {
-    if (flags.timestampIsSet)
-      return date;
+    if (flags.timestampIsSet) return date;
     return constructFrom(
       date,
       date.getTime() - getTimezoneOffsetInMilliseconds(date) - value
@@ -3773,7 +3760,7 @@ function subYears(date, amount) {
   return addYears(date, -amount);
 }
 
-// node_modules/.pnpm/@vuepic+vue-datepicker@8.8.0_vue@3.4.27_typescript@5.4.5_/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
+// node_modules/.pnpm/@vuepic+vue-datepicker@8.8.0_vue@3.4.29_typescript@5.4.5_/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
 function Et() {
   return openBlock(), createElementBlock(
     "svg",

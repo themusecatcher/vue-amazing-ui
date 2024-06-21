@@ -47,7 +47,7 @@ function onClick(value: any) {
 }
 </script>
 <template>
-  <div class="m-radio" :class="{ 'm-radio-button-solid': buttonStyle === 'solid' }">
+  <div class="m-radio" :class="{ 'radio-button-solid': buttonStyle === 'solid' }">
     <template v-if="!button">
       <div
         class="m-radio-wrap"
@@ -57,12 +57,12 @@ function onClick(value: any) {
         :key="index"
       >
         <div
-          class="m-box"
-          :class="{ 'm-radio-disabled': disabled || option.disabled }"
+          class="m-radio-box"
+          :class="{ 'radio-disabled': disabled || option.disabled }"
           @click="disabled || option.disabled ? () => false : onClick(option.value)"
         >
-          <span class="u-radio" :class="{ 'u-radio-checked': value === option.value }"></span>
-          <span class="u-label">
+          <span class="u-radio" :class="{ 'radio-checked': value === option.value }"></span>
+          <span class="u-radio-label">
             <slot :label="option.label">{{ option.label }}</slot>
           </span>
         </div>
@@ -72,14 +72,14 @@ function onClick(value: any) {
       <div
         class="m-radio-button-wrap"
         :class="{
-          'm-radio-button-checked': value === option.value,
-          'm-radio-button-disabled': disabled || option.disabled
+          'radio-button-checked': value === option.value,
+          'radio-button-disabled': disabled || option.disabled
         }"
         v-for="(option, index) in options"
         :key="index"
         @click="disabled || option.disabled ? () => false : onClick(option.value)"
       >
-        <span class="u-label">
+        <span class="u-radio-label">
           <slot :label="option.label">{{ option.label }}</slot>
         </span>
       </div>
@@ -94,12 +94,12 @@ function onClick(value: any) {
   line-height: 1;
   .m-radio-wrap {
     display: inline-block;
-    .m-box {
+    .m-radio-box {
       height: 100%;
       display: inline-flex; // 设置为flex布局后，所有的子元素都会变成行内块元素
       align-items: flex-start;
       cursor: pointer;
-      &:not(.m-radio-disabled):hover {
+      &:not(.radio-disabled):hover {
         .u-radio {
           border-color: @themeColor;
         }
@@ -138,7 +138,7 @@ function onClick(value: any) {
           content: '';
         }
       }
-      .u-radio-checked {
+      .radio-checked {
         border-color: @themeColor;
         background-color: @themeColor;
         &::after {
@@ -147,7 +147,7 @@ function onClick(value: any) {
           transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
         }
       }
-      .u-label {
+      .u-radio-label {
         word-break: break-all;
         padding: 0 8px;
         font-size: 14px;
@@ -155,7 +155,7 @@ function onClick(value: any) {
         display: inline-block;
       }
     }
-    .m-radio-disabled {
+    .radio-disabled {
       color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
       .u-radio {
@@ -185,7 +185,7 @@ function onClick(value: any) {
     cursor: pointer;
     transition:
       color 0.2s,
-      background 0.2s,
+      background-color 0.2s,
       border-color 0.2s;
     &:first-child {
       border-inline-start: 1px solid #d9d9d9;
@@ -210,36 +210,36 @@ function onClick(value: any) {
       border-start-end-radius: 6px;
       border-end-end-radius: 6px;
     }
-    &:not(.m-radio-button-disabled):hover {
+    &:not(.radio-button-disabled):hover {
       color: @themeColor;
     }
   }
-  .m-radio-button-checked:not(.m-radio-button-disabled) {
+  .radio-button-checked:not(.radio-button-disabled) {
     z-index: 1;
     color: @themeColor;
-    background: #ffffff;
+    background-color: #ffffff;
     border-color: @themeColor;
     &::before {
       background-color: @themeColor;
     }
   }
-  .m-radio-button-disabled {
+  .radio-button-disabled {
     color: rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.04);
     border-color: #d9d9d9;
     cursor: not-allowed;
   }
-  .m-radio-button-disabled.m-radio-button-checked {
+  .radio-button-disabled.radio-button-checked {
     background-color: rgba(0, 0, 0, 0.15);
   }
   .vertical {
     display: block;
   }
 }
-.m-radio-button-solid {
-  .m-radio-button-checked:not(.m-radio-button-disabled) {
+.radio-button-solid {
+  .radio-button-checked:not(.radio-button-disabled) {
     color: #fff;
-    background: @themeColor;
+    background-color: @themeColor;
     border-color: @themeColor;
     &:hover {
       color: #fff;
