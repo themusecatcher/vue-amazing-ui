@@ -188,7 +188,7 @@ const carouselConfig = reactive({
           effect: <Radio :options="effectOptions" v-model:value="carouselConfig.effect" button button-style="solid" />
         </Space>
         <Space align="center">
-          interval: <Input v-model:value="carouselConfig.interval" placeholder="interval" />
+          interval: <InputNumber v-model:value="carouselConfig.interval" placeholder="interval" />
         </Space>
         <Space align="center"> width: <Input v-model:value="carouselConfig.width" placeholder="width" /> </Space>
         <Space align="center"> height: <Input v-model:value="carouselConfig.height" placeholder="height" /> </Space>
@@ -222,13 +222,13 @@ const carouselConfig = reactive({
         <Space align="center">
           slideDuration: <Slider v-model:value="carouselConfig.slideDuration" :min="100" :step="10" :max="10000" />
         </Space>
-        <Space align="center">
-          slideFunction:
+        <Flex vertical gap="small">
+          <p>slideFunction:</p>
           <Space>
             <InputNumber v-model:value="carouselConfig.x1" :min="0" placeholder="x1" />
             <InputNumber v-model:value="carouselConfig.y1" :min="0" placeholder="y1" />
           </Space>
-        </Space>
+        </Flex>
         <br />
         <br />
       </Flex>
