@@ -172,11 +172,24 @@ const carouselConfig = reactive({
       <Carousel
         :images="images"
         :autoplay="carouselConfig.autoplay"
+        :pause-on-mouse-enter="carouselConfig.pauseOnMouseEnter"
+        :effect="carouselConfig.effect"
+        :interval="carouselConfig.interval"
+        :width="carouselConfig.width"
+        :height="carouselConfig.height"
         :show-arrow="carouselConfig.showArrow"
-        :height="450"
-        arrow-color="#13C2C2"
-        :arrow-size="48"
-        dot-active-color="#13C2C2"
+        :arrow-color="carouselConfig.arrowColor"
+        :arrow-size="carouselConfig.arrowSize"
+        :dots="carouselConfig.dots"
+        :dot-size="carouselConfig.dotSize"
+        :dotColor="carouselConfig.dotColor"
+        :dotActiveColor="carouselConfig.dotActiveColor"
+        :dotPosition="carouselConfig.dotPosition"
+        :dotsTrigger="carouselConfig.dotsTrigger"
+        :fade-duration="carouselConfig.fadeDuration"
+        :fade-function="carouselConfig.fadeFunction"
+        :slide-duration="carouselConfig.slideDuration"
+        :slide-function="[carouselConfig.x1, carouselConfig.y1, carouselConfig.x2, carouselConfig.y2]"
         :dot-style="{ backgroundColor: '#FFF' }"
         :dot-active-style="{ width: '25px', backgroundColor: 'gold' }"
         :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
@@ -229,8 +242,6 @@ const carouselConfig = reactive({
             <InputNumber v-model:value="carouselConfig.y1" :min="0" placeholder="y1" />
           </Space>
         </Flex>
-        <br />
-        <br />
       </Flex>
     </Flex>
   </div>
