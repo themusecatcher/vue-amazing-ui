@@ -180,15 +180,16 @@ function onDown() {
       align-items: center;
     }
     .u-input-number {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.88);
       width: 100%;
       height: 28px;
       background: transparent;
       border: none;
       border-radius: 6px;
-      outline: 0;
+      outline: none;
       transition: all 0.2s linear;
       appearance: textfield;
-      color: rgba(0, 0, 0, 0.88);
     }
     input::-webkit-input-placeholder {
       color: rgba(0, 0, 0, 0.25);

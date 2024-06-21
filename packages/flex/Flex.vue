@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
   wrap: 'nowrap',
   justify: 'normal',
   align: 'normal',
-  gap: undefined
+  gap: 'small'
 })
 const flexWidth = computed(() => {
   if (typeof props.width === 'number') {
