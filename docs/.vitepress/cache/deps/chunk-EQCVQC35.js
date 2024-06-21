@@ -24,14 +24,11 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
 export {
   __commonJS,
   __toESM,
   __publicField
 };
-//# sourceMappingURL=chunk-LNEMQRCO.js.map
+//# sourceMappingURL=chunk-EQCVQC35.js.map

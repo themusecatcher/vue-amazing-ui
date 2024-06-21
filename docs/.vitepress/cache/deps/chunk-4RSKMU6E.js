@@ -10,8 +10,7 @@ function extend(target, src) {
     src = {};
   }
   Object.keys(src).forEach((key) => {
-    if (typeof target[key] === "undefined")
-      target[key] = src[key];
+    if (typeof target[key] === "undefined") target[key] = src[key];
     else if (isObject(src[key]) && isObject(target[key]) && Object.keys(src[key]).length > 0) {
       extend(target[key], src[key]);
     }
@@ -211,20 +210,14 @@ function getTranslate(el, axis) {
     matrix = transformMatrix.toString().split(",");
   }
   if (axis === "x") {
-    if (window2.WebKitCSSMatrix)
-      curTransform = transformMatrix.m41;
-    else if (matrix.length === 16)
-      curTransform = parseFloat(matrix[12]);
-    else
-      curTransform = parseFloat(matrix[4]);
+    if (window2.WebKitCSSMatrix) curTransform = transformMatrix.m41;
+    else if (matrix.length === 16) curTransform = parseFloat(matrix[12]);
+    else curTransform = parseFloat(matrix[4]);
   }
   if (axis === "y") {
-    if (window2.WebKitCSSMatrix)
-      curTransform = transformMatrix.m42;
-    else if (matrix.length === 16)
-      curTransform = parseFloat(matrix[13]);
-    else
-      curTransform = parseFloat(matrix[5]);
+    if (window2.WebKitCSSMatrix) curTransform = transformMatrix.m42;
+    else if (matrix.length === 16) curTransform = parseFloat(matrix[13]);
+    else curTransform = parseFloat(matrix[5]);
   }
   return curTransform || 0;
 }
@@ -363,10 +356,8 @@ function elementPrevAll(el, selector) {
   while (el.previousElementSibling) {
     const prev = el.previousElementSibling;
     if (selector) {
-      if (prev.matches(selector))
-        prevEls.push(prev);
-    } else
-      prevEls.push(prev);
+      if (prev.matches(selector)) prevEls.push(prev);
+    } else prevEls.push(prev);
     el = prev;
   }
   return prevEls;
@@ -376,10 +367,8 @@ function elementNextAll(el, selector) {
   while (el.nextElementSibling) {
     const next = el.nextElementSibling;
     if (selector) {
-      if (next.matches(selector))
-        nextEls.push(next);
-    } else
-      nextEls.push(next);
+      if (next.matches(selector)) nextEls.push(next);
+    } else nextEls.push(next);
     el = next;
   }
   return nextEls;
@@ -394,8 +383,7 @@ function elementIndex(el) {
   if (child) {
     i = 0;
     while ((child = child.previousSibling) !== null) {
-      if (child.nodeType === 1)
-        i += 1;
+      if (child.nodeType === 1) i += 1;
     }
     return i;
   }
@@ -406,8 +394,7 @@ function elementParents(el, selector) {
   let parent = el.parentElement;
   while (parent) {
     if (selector) {
-      if (parent.matches(selector))
-        parents.push(parent);
+      if (parent.matches(selector)) parents.push(parent);
     } else {
       parents.push(parent);
     }
@@ -417,8 +404,7 @@ function elementParents(el, selector) {
 }
 function elementTransitionEnd(el, callback) {
   function fireCallBack(e) {
-    if (e.target !== el)
-      return;
+    if (e.target !== el) return;
     callback.call(el, e);
     el.removeEventListener("transitionend", fireCallBack);
   }
@@ -463,4 +449,4 @@ export {
   elementOuterSize,
   makeElementsArray
 };
-//# sourceMappingURL=chunk-XB24NNIK.js.map
+//# sourceMappingURL=chunk-4RSKMU6E.js.map

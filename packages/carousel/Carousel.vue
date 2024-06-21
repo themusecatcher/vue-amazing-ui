@@ -19,39 +19,64 @@ interface SpinProperties {
 interface Props {
   images: Image[] // 走马灯图片数组
   autoplay?: boolean // 是否自动切换
-  interval?: number // 自动滑动轮播间隔，单位ms
+  pauseOnMouseEnter?: boolean // 当鼠标移入走马灯时，是否暂停自动轮播
+  effect?: 'slide' | 'fade' // 轮播图切换时的过渡效果
+  interval?: number // 自动轮播间隔，单位ms
   width?: number | string // 走马灯宽度
   height?: number | string // 走马灯高度
-  navigation?: boolean // 是否显示导航
-  navColor?: string // 导航颜色
-  navSize?: number // 导航大小
+  showArrow?: boolean // 是否显示箭头
+  arrowColor?: string // 箭头颜色
+  arrowSize?: number // 箭头大小，单位px
   dots?: boolean // 是否显示指示点
+  dotSize?: number // 指示点大小，单位px
+  dotColor?: string // 指示点颜色
   dotActiveColor?: string // 指示点选中颜色
-  dotSize?: number // 指示点大小
-  dotStyle?: CSSProperties // 指示点样式，优先级高于dotSize
-  dotPosition?: 'bottom' | 'top' | 'left' | 'right' // 指示点位置
-  spinStyle?: SpinProperties // 加载样式配置
-  animationDuration?: number // 滑动动画持续时长，单位ms
-  animationFunction?: number[] // 滑动动画函数，参考 useTransition 写法：https://vueuse.org/core/useTransition/#usage
+  dotStyle?: CSSProperties // 指示点样式，优先级高于 dotSize、dotColor
+  dotActiveStyle?: CSSProperties // 指示点选中样式，优先级高于 dotActiveColor
+  dotPosition?: 'bottom' | 'top' | 'left' | 'right' // 指示点位置，位置为 'left' | 'right' 时，effect: 'slide' 轮播自动变为垂直轮播
+  dotsTrigger?: 'click' | 'hover' // 指示点触发切换的方式
+  spinStyle?: SpinProperties // 图片加载中样式
+  fadeDuration?: number // 渐变动画持续时长，单位ms，仅当 effect 为 'fade' 时生效
+  fadeFunction?: string // 渐变动画函数，仅当 effect 为 'fade' 时生效，可参考 transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
+  slideDuration?: number // 滑动动画持续时长，单位ms，仅当 effect 为 'slide' 时生效
+  slideFunction?: string | number[] // 滑动动画函数，仅当 effect 为 'slide' 时生效，可参考 useTransition 写法：https://vueuse.org/core/useTransition/#usage
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
-  autoplay: true,
+  autoplay: false,
+  pauseOnMouseEnter: false,
+  effect: 'slide',
   interval: 3000,
   width: '100%',
   height: '100vh',
-  navigation: true,
-  navColor: '#FFF',
-  navSize: 36,
+  showArrow: true,
+  arrowColor: '#FFF',
+  arrowSize: 36,
   dots: true,
-  dotActiveColor: '#1677FF',
   dotSize: 10,
+  dotColor: 'rgba(255, 255, 255, 0.3)',
+  dotActiveColor: '#1677FF',
   dotStyle: () => ({}),
+  dotActiveStyle: () => ({}),
   dotPosition: 'bottom',
+  dotsTrigger: 'click',
   spinStyle: () => ({}),
-  animationDuration: 1000,
-  animationFunction: () => [0.65, 0, 0.35, 1]
+  fadeDuration: 500,
+  fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  slideDuration: 800,
+  slideFunction: () => [0.65, 0, 0.35, 1]
 })
+const offset = ref(0) // 滑动偏移值
+const slideTimer = ref() // 轮播切换定时器
+const stopCarousel = ref(false) // 鼠标悬浮时，停止切换标志
+const switchPrevent = ref(false) // 在滑动切换过程中，禁用其他所有切换操作
+const moveEffectRaf = ref() // 移动过程 requestAnimationFrame 的返回值，一个 long 整数，请求 ID，是回调列表中唯一的标识
+const targetPosition = ref() // 目标移动位置
+const carousel = ref() // carousel DOM引用
+const activeSwitcher = ref(1) // 当前展示图片标识
+const imageWidth = ref() // 图片宽度
+const imageHeight = ref() // 图片高度
+const complete = ref(Array(props.images.length).fill(false)) // 图片是否加载完成
 const carouselWidth = computed(() => {
   // 走马灯区域宽度
   if (typeof props.width === 'number') {
@@ -68,28 +93,61 @@ const carouselHeight = computed(() => {
     return props.height
   }
 })
-const totalWidth = computed(() => {
-  // 容器宽度：(图片数组长度+1) * 图片宽度
-  return (props.images.length + 1) * imageWidth.value
-})
 const imageCount = computed(() => {
-  // 图片数量
+  // 轮播图片数量
   return props.images.length
 })
-const left = ref(0) // 滑动偏移值
-const slideTimer = ref() // 轮播切换定时器
-const stopCarousel = ref(false) // 鼠标悬浮时，停止切换标志
-const switchPrevent = ref(false) // 在滑动切换过程中，禁用其他所有切换操作
-const targetPosition = ref() // 目标移动位置
-const carousel = ref() // DOM引用
-const activeSwitcher = ref(1) // 当前展示图片标识
-const imageWidth = ref() // 图片宽度
-const imageHeight = ref() // 图片高度
-const complete = ref(Array(imageCount.value).fill(false)) // 图片是否加载完成
+const verticalSlide = computed(() => {
+  // 是否垂直轮播
+  return ['left', 'right'].includes(props.dotPosition)
+})
+const moveUnitDistance = computed(() => {
+  // 每次移动的单位距离
+  if (verticalSlide.value) {
+    return imageHeight.value
+  } else {
+    return imageWidth.value
+  }
+})
+const carouselStyle = computed(() => {
+  if (props.effect === 'slide') {
+    return {
+      transform: (verticalSlide.value ? 'translateY' : 'translateX') + `(${-offset.value}px)`
+    }
+  } else {
+    return {}
+  }
+})
+const emits = defineEmits(['change', 'click'])
+watch(activeSwitcher, (to) => {
+  emits('change', to)
+})
+watch(verticalSlide, (to) => {
+  slideTimer.value && cancelRaf(slideTimer.value)
+  cancelAnimationFrame(moveEffectRaf.value)
+  switchPrevent.value = false
+  if (to) {
+    offset.value = ((originNumber.value + distance.value) / imageWidth.value) * moveUnitDistance.value
+  } else {
+    offset.value = ((originNumber.value + distance.value) / imageHeight.value) * moveUnitDistance.value
+  }
+  onStart()
+})
 watch(
-  () => [props.images, props.autoplay, props.interval, complete.value[0]],
+  () => props.effect,
+  (to) => {
+    slideTimer.value && cancelRaf(slideTimer.value)
+    switchPrevent.value = false
+    if (to === 'slide') {
+      offset.value = (activeSwitcher.value - 1) * moveUnitDistance.value
+    }
+    onStart()
+  }
+)
+watch(
+  () => [props.images, props.autoplay, props.interval, props.fadeDuration, props.fadeFunction, complete.value[0]],
   () => {
-    if (complete.value[0] && imageCount.value > 1) {
+    if (props.autoplay && complete.value[0] && imageCount.value > 1) {
       autoSlide() // 自动滑动轮播
     }
   },
@@ -143,15 +201,16 @@ function visibilityChange() {
   console.log('visibilityState', document.visibilityState)
   const visibility = document.visibilityState
   if (visibility === 'hidden') {
-    slideTimer && cancelRaf(slideTimer.value)
-    left.value = originNumber.value + distance.value
+    slideTimer.value && cancelRaf(slideTimer.value)
+    offset.value = originNumber.value + distance.value
+    switchPrevent.value = false
   } else {
     // visible
-    autoSlide()
+    onStart()
   }
 }
 function onStart() {
-  if (imageCount.value > 1 && complete.value[0]) {
+  if (props.autoplay && imageCount.value > 1 && complete.value[0]) {
     // 超过一条时滑动
     stopCarousel.value = false
     autoSlide() // 自动滑动轮播
@@ -164,32 +223,47 @@ function onStop() {
   console.log('Carousel Stop')
 }
 function autoSlide() {
-  if (props.autoplay && !stopCarousel.value) {
+  if (!stopCarousel.value) {
     slideTimer.value && cancelRaf(slideTimer.value)
     slideTimer.value = rafTimeout(() => {
       switchPrevent.value = true // 禁用导航切换
-      const target = (left.value % (imageCount.value * imageWidth.value)) + imageWidth.value
-      activeSwitcher.value = (activeSwitcher.value % imageCount.value) + 1
-      moveLeft(target)
+      if (props.effect === 'slide') {
+        const target = (offset.value % (imageCount.value * moveUnitDistance.value)) + moveUnitDistance.value
+        moveLeft(target)
+        activeSwitcher.value = (activeSwitcher.value % imageCount.value) + 1
+      } else {
+        // fade
+        moveFade('left')
+      }
     }, props.interval)
   }
 }
 function onLeftArrow() {
   if (!switchPrevent.value) {
     switchPrevent.value = true
-    slideTimer && cancelRaf(slideTimer.value)
-    const target = ((activeSwitcher.value + imageCount.value - 2) % imageCount.value) * imageWidth.value
-    activeSwitcher.value = activeSwitcher.value - 1 > 0 ? activeSwitcher.value - 1 : imageCount.value
-    moveRight(target)
+    slideTimer.value && cancelRaf(slideTimer.value)
+    if (props.effect === 'slide') {
+      const target = ((activeSwitcher.value + imageCount.value - 2) % imageCount.value) * moveUnitDistance.value
+      moveRight(target)
+      activeSwitcher.value = activeSwitcher.value - 1 > 0 ? activeSwitcher.value - 1 : imageCount.value
+    } else {
+      // fade
+      moveFade('right')
+    }
   }
 }
 function onRightArrow() {
   if (!switchPrevent.value) {
     switchPrevent.value = true
-    slideTimer && cancelRaf(slideTimer.value)
-    const target = activeSwitcher.value * imageWidth.value
-    activeSwitcher.value = (activeSwitcher.value % imageCount.value) + 1
-    moveLeft(target)
+    slideTimer.value && cancelRaf(slideTimer.value)
+    if (props.effect === 'slide') {
+      const target = activeSwitcher.value * moveUnitDistance.value
+      moveLeft(target)
+      activeSwitcher.value = (activeSwitcher.value % imageCount.value) + 1
+    } else {
+      // fade
+      moveFade('left')
+    }
   }
 }
 const baseNumber = ref(0)
@@ -197,90 +271,131 @@ const originNumber = ref(0) // 初始位置
 const distance = ref(0) // 滑动距离
 // @ts-ignore
 const cubicBezierNumber = useTransition(baseNumber, {
-  duration: props.animationDuration, // 过渡动画时长
-  transition: props.animationFunction // 过渡动画函数
+  duration: props.slideDuration, // 过渡动画时长
+  transition: props.slideFunction // 过渡动画函数
 })
+function moveFade(direction: 'left' | 'right' | 'switch', n?: number) {
+  if (direction === 'left') {
+    activeSwitcher.value = (activeSwitcher.value % imageCount.value) + 1
+  } else if (direction === 'right') {
+    activeSwitcher.value = activeSwitcher.value - 1 > 0 ? activeSwitcher.value - 1 : imageCount.value
+  } else {
+    activeSwitcher.value = n as number
+  }
+  rafTimeout(() => {
+    switchPrevent.value = false
+    if (props.autoplay) {
+      autoSlide()
+    }
+  }, props.fadeDuration)
+}
 function toggleNumber(target: number) {
   targetPosition.value = target
   baseNumber.value = baseNumber.value ? 0 : 1
-  originNumber.value = left.value // 初始位置
+  originNumber.value = offset.value // 初始位置
   distance.value = target - originNumber.value // 总距离
 }
 function moveEffect() {
   // 滑动效果函数
   if (baseNumber.value) {
-    left.value = originNumber.value + distance.value * cubicBezierNumber.value
+    offset.value = originNumber.value + distance.value * cubicBezierNumber.value
   } else {
-    left.value = originNumber.value + distance.value * (1 - cubicBezierNumber.value)
+    offset.value = originNumber.value + distance.value * (1 - cubicBezierNumber.value)
   }
 }
 function moveLeftEffect() {
-  if (left.value >= targetPosition.value) {
+  if (offset.value >= targetPosition.value) {
     switchPrevent.value = false
-    autoSlide() // 自动间隔切换下一张
+    if (props.autoplay) {
+      autoSlide() // 自动间隔切换下一张
+    }
   } else {
     moveEffect()
-    requestAnimationFrame(moveLeftEffect)
+    moveEffectRaf.value = requestAnimationFrame(moveLeftEffect)
   }
 }
 function moveLeft(target: number) {
   // 箭头切换或跳转切换，向左滑动效果
-  if (left.value === imageCount.value * imageWidth.value) {
+  if (offset.value === imageCount.value * moveUnitDistance.value) {
     // 最后一张时，重置left
-    left.value = 0
+    offset.value = 0
   }
   toggleNumber(target)
-  requestAnimationFrame(moveLeftEffect)
+  moveEffectRaf.value = requestAnimationFrame(moveLeftEffect)
 }
 function moveRightEffect() {
-  if (left.value <= targetPosition.value) {
+  if (offset.value <= targetPosition.value) {
     switchPrevent.value = false
+    if (props.autoplay) {
+      autoSlide()
+    }
   } else {
     moveEffect()
-    requestAnimationFrame(moveRightEffect)
+    moveEffectRaf.value = requestAnimationFrame(moveRightEffect)
   }
 }
 function moveRight(target: number) {
   // 箭头切换或跳转切换，向右滑动效果
-  if (left.value === 0) {
+  if (offset.value === 0) {
     // 第一张时，重置left
-    left.value = imageCount.value * imageWidth.value
+    offset.value = imageCount.value * moveUnitDistance.value
   }
   toggleNumber(target)
-  requestAnimationFrame(moveRightEffect)
+  moveEffectRaf.value = requestAnimationFrame(moveRightEffect)
 }
 function onSwitch(n: number) {
   // 分页切换图片
   if (!switchPrevent.value && activeSwitcher.value !== n) {
     switchPrevent.value = true
-    const target = (n - 1) * imageWidth.value
+    slideTimer.value && cancelRaf(slideTimer.value)
     if (n < activeSwitcher.value) {
       // 往右滑动
-      activeSwitcher.value = n
-      moveRight(target)
+      if (props.effect === 'slide') {
+        const target = (n - 1) * moveUnitDistance.value
+        moveRight(target)
+        activeSwitcher.value = n
+      } else {
+        // fade
+        moveFade('switch', n)
+      }
     }
     if (n > activeSwitcher.value) {
       // 往左滑动
-      activeSwitcher.value = n
-      moveLeft(target)
+      if (props.effect === 'slide') {
+        const target = (n - 1) * moveUnitDistance.value
+        moveLeft(target)
+        activeSwitcher.value = n
+      } else {
+        // fade
+        moveFade('switch', n)
+      }
     }
   }
 }
-const emit = defineEmits(['click'])
+function onMouseEnter(n: number) {
+  onSwitch(n)
+}
 function clickImage(image: Image) {
-  emit('click', image)
+  emits('click', image)
 }
 </script>
 <template>
   <div
-    class="m-slider"
     ref="carousel"
-    :style="`--navColor: ${navColor}; --dotActiveColor: ${dotActiveColor}; width: ${carouselWidth}; height: ${carouselHeight};`"
-    @mouseenter="onStop"
-    @mouseleave="onStart"
+    class="m-carousel"
+    :class="{ 'carousel-vertical': verticalSlide, 'carousel-fade': effect === 'fade' }"
+    :style="`--arrow-color: ${arrowColor}; --dot-size: ${dotSize}px; --dot-color: ${dotColor}; --fade-duration: ${props.fadeDuration}ms; --fade-function: ${props.fadeFunction}; width: ${carouselWidth}; height: ${carouselHeight};`"
+    @mouseenter="autoplay && pauseOnMouseEnter ? onStop() : () => false"
+    @mouseleave="autoplay && pauseOnMouseEnter ? onStart() : () => false"
   >
-    <div :style="`width: ${totalWidth}px; height: 100%; will-change: transform; transform: translateX(${-left}px);`">
-      <div class="m-image" @click="clickImage(image)" v-for="(image, index) in images" :key="index">
+    <div class="m-carousel-flex" :style="carouselStyle">
+      <div
+        class="m-image"
+        :class="{ 'image-active': effect === 'fade' && activeSwitcher === index + 1 }"
+        @click="clickImage(image)"
+        v-for="(image, index) in images"
+        :key="index"
+      >
         <Spin :spinning="!complete[index]" indicator="dynamic-circle" v-bind="spinStyle">
           <img
             @load="onComplete(index)"
@@ -292,7 +407,7 @@ function clickImage(image: Image) {
           />
         </Spin>
       </div>
-      <div class="m-image" @click="clickImage(images[0])" v-if="imageCount">
+      <div class="m-image" @click="clickImage(images[0])" v-if="imageCount && effect === 'slide'">
         <Spin :spinning="!complete[0]" indicator="dynamic-circle" v-bind="spinStyle">
           <img
             @load="onComplete(0)"
@@ -305,10 +420,10 @@ function clickImage(image: Image) {
         </Spin>
       </div>
     </div>
-    <template v-if="navigation">
+    <template v-if="showArrow">
       <svg
         class="arrow-left"
-        :style="`width: ${navSize}px; height: ${navSize}px;`"
+        :style="`width: ${arrowSize}px; height: ${arrowSize}px;`"
         @click="onLeftArrow"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"
@@ -319,7 +434,7 @@ function clickImage(image: Image) {
       </svg>
       <svg
         class="arrow-right"
-        :style="`width: ${navSize}px; height: ${navSize}px;`"
+        :style="`width: ${arrowSize}px; height: ${arrowSize}px;`"
         @click="onRightArrow"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"
@@ -331,31 +446,37 @@ function clickImage(image: Image) {
     </template>
     <div class="m-switch" :class="`switch-${dotPosition}`" v-if="dots">
       <div
-        @click="onSwitch(n)"
-        :class="['u-circle', { active: activeSwitcher === n }]"
-        :style="[{ width: `${dotSize}px`, height: `${dotSize}px` }, dotStyle]"
+        class="u-dot"
+        :style="[dotStyle, activeSwitcher === n ? { backgroundColor: dotActiveColor, ...dotActiveStyle } : {}]"
         v-for="n in imageCount"
         :key="n"
+        @click="dotsTrigger === 'click' ? onSwitch(n) : () => false"
+        @mouseenter="dotsTrigger === 'hover' ? onMouseEnter(n) : () => false"
       ></div>
     </div>
   </div>
 </template>
 <style lang="less" scoped>
-.m-slider {
+.m-carousel {
   display: inline-block;
   margin: 0 auto;
   position: relative;
   overflow: hidden;
-  .transition {
-    transition: transform 0.3s ease-out;
-  }
-  .m-image {
-    display: inline-block;
-    .u-image {
+  .m-carousel-flex {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    // will-change: transform;
+    .m-image {
+      // 指定了 flex 元素的收缩规则。flex 元素仅在默认宽度之和大于容器的时候才会发生收缩，其收缩的大小是依据 flex-shrink 的值
+      flex-shrink: 0; // 默认为 1，为 0 时不缩小
       display: inline-block;
-      object-fit: cover;
-      vertical-align: bottom; // 消除img标签底部的5px
       cursor: pointer;
+      .u-image {
+        display: inline-block;
+        object-fit: cover;
+        vertical-align: bottom; // 消除img标签底部的5px
+      }
     }
   }
   &:hover {
@@ -370,28 +491,28 @@ function clickImage(image: Image) {
   }
   .arrow-left {
     position: absolute;
-    left: 16px;
+    left: 6px;
     top: 50%;
     transform: translateY(-50%);
-    fill: var(--navColor);
+    fill: var(--arrow-color);
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.3s;
+    transition: opacity 0.3s;
     &:hover {
       opacity: 1;
     }
   }
   .arrow-right {
     position: absolute;
-    right: 16px;
+    right: 6px;
     top: 50%;
     transform: translateY(-50%);
-    fill: var(--navColor);
+    fill: var(--arrow-color);
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.3s;
+    transition: opacity 0.3s;
     &:hover {
       opacity: 1;
     }
@@ -406,15 +527,14 @@ function clickImage(image: Image) {
     left: 50%;
     transform: translateX(-50%);
     height: auto;
-    .u-circle {
+    .u-dot {
       // flex: 0 1 auto;
-      background-color: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
+      width: var(--dot-size);
+      height: var(--dot-size);
+      border-radius: var(--dot-size);
+      background-color: var(--dot-color);
       cursor: pointer;
-      transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .active {
-      background-color: var(--dotActiveColor) !important;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
   .switch-top {
@@ -436,6 +556,36 @@ function clickImage(image: Image) {
     bottom: auto;
     transform: translateY(-50%);
     flex-direction: column;
+  }
+}
+.carousel-vertical {
+  .m-carousel-flex {
+    flex-direction: column;
+  }
+  .arrow-left {
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+  }
+  .arrow-right {
+    top: auto;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+  }
+}
+.carousel-fade {
+  .m-image {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transition-property: opacity;
+    transition-duration: var(--fade-duration);
+    transition-timing-function: var(--fade-function);
+  }
+  .image-active {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 </style>

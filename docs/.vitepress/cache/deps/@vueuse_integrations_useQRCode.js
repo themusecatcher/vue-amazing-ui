@@ -1,15 +1,15 @@
 import {
   isClient,
   toRef
-} from "./chunk-LD33U5ZT.js";
+} from "./chunk-WCDTSTPR.js";
 import {
   ref,
   watch
-} from "./chunk-FHZO4SJ4.js";
+} from "./chunk-MHLQE6UP.js";
 import {
   __commonJS,
   __toESM
-} from "./chunk-LNEMQRCO.js";
+} from "./chunk-EQCVQC35.js";
 
 // node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/can-promise.js
 var require_can_promise = __commonJS({
@@ -69,10 +69,8 @@ var require_utils = __commonJS({
       3706
     ];
     exports.getSymbolSize = function getSymbolSize(version) {
-      if (!version)
-        throw new Error('"version" cannot be null or undefined');
-      if (version < 1 || version > 40)
-        throw new Error('"version" should be in range from 1 to 40');
+      if (!version) throw new Error('"version" cannot be null or undefined');
+      if (version < 1 || version > 40) throw new Error('"version" should be in range from 1 to 40');
       return version * 4 + 17;
     };
     exports.getSymbolTotalCodewords = function getSymbolTotalCodewords(version) {
@@ -195,8 +193,7 @@ var require_bit_matrix = __commonJS({
     BitMatrix.prototype.set = function(row, col, value, reserved) {
       const index = row * this.size + col;
       this.data[index] = value;
-      if (reserved)
-        this.reservedBit[index] = true;
+      if (reserved) this.reservedBit[index] = true;
     };
     BitMatrix.prototype.get = function(row, col) {
       return this.data[row * this.size + col];
@@ -216,8 +213,7 @@ var require_alignment_pattern = __commonJS({
   "node_modules/.pnpm/qrcode@1.5.3/node_modules/qrcode/lib/core/alignment-pattern.js"(exports) {
     var getSymbolSize = require_utils().getSymbolSize;
     exports.getRowColCoords = function getRowColCoords(version) {
-      if (version === 1)
-        return [];
+      if (version === 1) return [];
       const posCount = Math.floor(version / 7) + 2;
       const size = getSymbolSize(version);
       const intervals = size === 145 ? 26 : Math.ceil((size - 13) / (2 * posCount - 2)) * 2;
@@ -306,8 +302,7 @@ var require_mask_pattern = __commonJS({
           if (module2 === lastCol) {
             sameCountCol++;
           } else {
-            if (sameCountCol >= 5)
-              points += PenaltyScores.N1 + (sameCountCol - 5);
+            if (sameCountCol >= 5) points += PenaltyScores.N1 + (sameCountCol - 5);
             lastCol = module2;
             sameCountCol = 1;
           }
@@ -315,16 +310,13 @@ var require_mask_pattern = __commonJS({
           if (module2 === lastRow) {
             sameCountRow++;
           } else {
-            if (sameCountRow >= 5)
-              points += PenaltyScores.N1 + (sameCountRow - 5);
+            if (sameCountRow >= 5) points += PenaltyScores.N1 + (sameCountRow - 5);
             lastRow = module2;
             sameCountRow = 1;
           }
         }
-        if (sameCountCol >= 5)
-          points += PenaltyScores.N1 + (sameCountCol - 5);
-        if (sameCountRow >= 5)
-          points += PenaltyScores.N1 + (sameCountRow - 5);
+        if (sameCountCol >= 5) points += PenaltyScores.N1 + (sameCountCol - 5);
+        if (sameCountRow >= 5) points += PenaltyScores.N1 + (sameCountRow - 5);
       }
       return points;
     };
@@ -334,8 +326,7 @@ var require_mask_pattern = __commonJS({
       for (let row = 0; row < size - 1; row++) {
         for (let col = 0; col < size - 1; col++) {
           const last = data.get(row, col) + data.get(row, col + 1) + data.get(row + 1, col) + data.get(row + 1, col + 1);
-          if (last === 4 || last === 0)
-            points++;
+          if (last === 4 || last === 0) points++;
         }
       }
       return points * PenaltyScores.N2;
@@ -349,11 +340,9 @@ var require_mask_pattern = __commonJS({
         bitsCol = bitsRow = 0;
         for (let col = 0; col < size; col++) {
           bitsCol = bitsCol << 1 & 2047 | data.get(row, col);
-          if (col >= 10 && (bitsCol === 1488 || bitsCol === 93))
-            points++;
+          if (col >= 10 && (bitsCol === 1488 || bitsCol === 93)) points++;
           bitsRow = bitsRow << 1 & 2047 | data.get(col, row);
-          if (col >= 10 && (bitsRow === 1488 || bitsRow === 93))
-            points++;
+          if (col >= 10 && (bitsRow === 1488 || bitsRow === 93)) points++;
         }
       }
       return points * PenaltyScores.N3;
@@ -361,8 +350,7 @@ var require_mask_pattern = __commonJS({
     exports.getPenaltyN4 = function getPenaltyN4(data) {
       let darkCount = 0;
       const modulesCount = data.data.length;
-      for (let i = 0; i < modulesCount; i++)
-        darkCount += data.data[i];
+      for (let i = 0; i < modulesCount; i++) darkCount += data.data[i];
       const k = Math.abs(Math.ceil(darkCount * 100 / modulesCount / 5) - 10);
       return k * PenaltyScores.N4;
     };
@@ -392,8 +380,7 @@ var require_mask_pattern = __commonJS({
       const size = data.size;
       for (let col = 0; col < size; col++) {
         for (let row = 0; row < size; row++) {
-          if (data.isReserved(row, col))
-            continue;
+          if (data.isReserved(row, col)) continue;
           data.xor(row, col, getMaskAt(pattern, row, col));
         }
       }
@@ -798,16 +785,14 @@ var require_galois_field = __commonJS({
       }
     })();
     exports.log = function log(n) {
-      if (n < 1)
-        throw new Error("log(" + n + ")");
+      if (n < 1) throw new Error("log(" + n + ")");
       return LOG_TABLE[n];
     };
     exports.exp = function exp(n) {
       return EXP_TABLE[n];
     };
     exports.mul = function mul(x, y) {
-      if (x === 0 || y === 0)
-        return 0;
+      if (x === 0 || y === 0) return 0;
       return EXP_TABLE[LOG_TABLE[x] + LOG_TABLE[y]];
     };
   }
@@ -834,8 +819,7 @@ var require_polynomial = __commonJS({
           result[i] ^= GF.mul(divisor[i], coeff);
         }
         let offset = 0;
-        while (offset < result.length && result[offset] === 0)
-          offset++;
+        while (offset < result.length && result[offset] === 0) offset++;
         result = result.slice(offset);
       }
       return result;
@@ -857,8 +841,7 @@ var require_reed_solomon_encoder = __commonJS({
     function ReedSolomonEncoder(degree) {
       this.genPoly = void 0;
       this.degree = degree;
-      if (this.degree)
-        this.initialize(this.degree);
+      if (this.degree) this.initialize(this.degree);
     }
     ReedSolomonEncoder.prototype.initialize = function initialize(degree) {
       this.degree = degree;
@@ -949,30 +932,22 @@ var require_mode = __commonJS({
       bit: -1
     };
     exports.getCharCountIndicator = function getCharCountIndicator(mode, version) {
-      if (!mode.ccBits)
-        throw new Error("Invalid mode: " + mode);
+      if (!mode.ccBits) throw new Error("Invalid mode: " + mode);
       if (!VersionCheck.isValid(version)) {
         throw new Error("Invalid version: " + version);
       }
-      if (version >= 1 && version < 10)
-        return mode.ccBits[0];
-      else if (version < 27)
-        return mode.ccBits[1];
+      if (version >= 1 && version < 10) return mode.ccBits[0];
+      else if (version < 27) return mode.ccBits[1];
       return mode.ccBits[2];
     };
     exports.getBestModeForData = function getBestModeForData(dataStr) {
-      if (Regex.testNumeric(dataStr))
-        return exports.NUMERIC;
-      else if (Regex.testAlphanumeric(dataStr))
-        return exports.ALPHANUMERIC;
-      else if (Regex.testKanji(dataStr))
-        return exports.KANJI;
-      else
-        return exports.BYTE;
+      if (Regex.testNumeric(dataStr)) return exports.NUMERIC;
+      else if (Regex.testAlphanumeric(dataStr)) return exports.ALPHANUMERIC;
+      else if (Regex.testKanji(dataStr)) return exports.KANJI;
+      else return exports.BYTE;
     };
     exports.toString = function toString(mode) {
-      if (mode && mode.id)
-        return mode.id;
+      if (mode && mode.id) return mode.id;
       throw new Error("Invalid mode");
     };
     exports.isValid = function isValid(mode) {
@@ -1057,13 +1032,11 @@ var require_version = __commonJS({
       if (!VersionCheck.isValid(version)) {
         throw new Error("Invalid QR Code version");
       }
-      if (typeof mode === "undefined")
-        mode = Mode.BYTE;
+      if (typeof mode === "undefined") mode = Mode.BYTE;
       const totalCodewords = Utils.getSymbolTotalCodewords(version);
       const ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel);
       const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8;
-      if (mode === Mode.MIXED)
-        return dataTotalCodewordsBits;
+      if (mode === Mode.MIXED) return dataTotalCodewordsBits;
       const usableBits = dataTotalCodewordsBits - getReservedBitsCount(mode, version);
       switch (mode) {
         case Mode.NUMERIC:
@@ -1577,8 +1550,7 @@ var require_segments = __commonJS({
               graph[prevNodeId][key] = getSegmentBitsLength(table[prevNodeId].lastCount + node.length, node.mode) - getSegmentBitsLength(table[prevNodeId].lastCount, node.mode);
               table[prevNodeId].lastCount += node.length;
             } else {
-              if (table[prevNodeId])
-                table[prevNodeId].lastCount = node.length;
+              if (table[prevNodeId]) table[prevNodeId].lastCount = node.length;
               graph[prevNodeId][key] = getSegmentBitsLength(node.length, node.mode) + 4 + Mode.getCharCountIndicator(node.mode, version);
             }
           }
@@ -1663,11 +1635,9 @@ var require_qrcode = __commonJS({
         const row = pos[i][0];
         const col = pos[i][1];
         for (let r = -1; r <= 7; r++) {
-          if (row + r <= -1 || size <= row + r)
-            continue;
+          if (row + r <= -1 || size <= row + r) continue;
           for (let c = -1; c <= 7; c++) {
-            if (col + c <= -1 || size <= col + c)
-              continue;
+            if (col + c <= -1 || size <= col + c) continue;
             if (r >= 0 && r <= 6 && (c === 0 || c === 6) || c >= 0 && c <= 6 && (r === 0 || r === 6) || r >= 2 && r <= 4 && c >= 2 && c <= 4) {
               matrix.set(row + r, col + c, true, true);
             } else {
@@ -1743,8 +1713,7 @@ var require_qrcode = __commonJS({
       let bitIndex = 7;
       let byteIndex = 0;
       for (let col = size - 1; col > 0; col -= 2) {
-        if (col === 6)
-          col--;
+        if (col === 6) col--;
         while (true) {
           for (let c = 0; c < 2; c++) {
             if (!matrix.isReserved(row, col - c)) {
@@ -1923,8 +1892,7 @@ var require_utils2 = __commonJS({
           return [c, c];
         }));
       }
-      if (hexCode.length === 6)
-        hexCode.push("F", "F");
+      if (hexCode.length === 6) hexCode.push("F", "F");
       const hexValue = parseInt(hexCode.join(""), 16);
       return {
         r: hexValue >> 24 & 255,
@@ -1935,10 +1903,8 @@ var require_utils2 = __commonJS({
       };
     }
     exports.getOptions = function getOptions(options) {
-      if (!options)
-        options = {};
-      if (!options.color)
-        options.color = {};
+      if (!options) options = {};
+      if (!options.color) options.color = {};
       const margin = typeof options.margin === "undefined" || options.margin === null || options.margin < 0 ? 4 : options.margin;
       const width = options.width && options.width >= 21 ? options.width : void 0;
       const scale = options.scale || 4;
@@ -1993,8 +1959,7 @@ var require_canvas = __commonJS({
     var Utils = require_utils2();
     function clearCanvas(ctx, canvas, size) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (!canvas.style)
-        canvas.style = {};
+      if (!canvas.style) canvas.style = {};
       canvas.height = size;
       canvas.width = size;
       canvas.style.height = size + "px";
@@ -2032,8 +1997,7 @@ var require_canvas = __commonJS({
         opts = canvas;
         canvas = void 0;
       }
-      if (!opts)
-        opts = {};
+      if (!opts) opts = {};
       const canvasEl = exports.render(qrData, canvas, opts);
       const type = opts.type || "image/png";
       const rendererOpts = opts.rendererOpts || {};
@@ -2053,8 +2017,7 @@ var require_svg_tag = __commonJS({
     }
     function svgCmd(cmd, x, y) {
       let str = cmd + x;
-      if (typeof y !== "undefined")
-        str += " " + y;
+      if (typeof y !== "undefined") str += " " + y;
       return str;
     }
     function qrToPath(data, size, margin) {
@@ -2065,8 +2028,7 @@ var require_svg_tag = __commonJS({
       for (let i = 0; i < data.length; i++) {
         const col = Math.floor(i % size);
         const row = Math.floor(i / size);
-        if (!col && !newRow)
-          newRow = true;
+        if (!col && !newRow) newRow = true;
         if (data[i]) {
           lineLength++;
           if (!(i > 0 && col > 0 && data[i - 1])) {
@@ -2172,7 +2134,7 @@ var require_browser = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@vueuse+integrations@10.10.1_async-validator@4.2.5_focus-trap@7.5.4_qrcode@1.5.3_vue@3.4.27_typescript@5.4.5_/node_modules/@vueuse/integrations/useQRCode.mjs
+// node_modules/.pnpm/@vueuse+integrations@10.11.0_async-validator@4.2.5_focus-trap@7.5.4_qrcode@1.5.3_vue@3.4.29_typescript@5.4.5_/node_modules/@vueuse/integrations/useQRCode.mjs
 var import_qrcode = __toESM(require_browser(), 1);
 function useQRCode(text, options) {
   const src = toRef(text);
