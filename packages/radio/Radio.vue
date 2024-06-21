@@ -194,14 +194,11 @@ function onClick(value: any) {
     }
     &:not(:first-child)::before {
       position: absolute;
-      inset-block-start: -1px;
-      inset-inline-start: -1px;
+      top: -0.5px;
+      left: -1px;
       display: block;
-      box-sizing: content-box;
       width: 1px;
-      height: 100%;
-      padding-block: 1px;
-      padding-inline: 0;
+      height: 32px;
       background-color: #d9d9d9;
       transition: background-color 0.3s;
       content: '';
