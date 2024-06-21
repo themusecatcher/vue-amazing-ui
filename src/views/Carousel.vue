@@ -168,7 +168,7 @@ const carouselConfig = reactive({
       :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
     />
     <h2 class="mt30 mb10">自定义配置</h2>
-    <Flex gap="middle">
+    <Flex gap="large">
       <Carousel
         :images="images"
         :autoplay="carouselConfig.autoplay"
@@ -181,8 +181,7 @@ const carouselConfig = reactive({
         :dot-active-style="{ width: '25px', backgroundColor: 'gold' }"
         :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
       />
-      <Divider type="vertical" />
-      <Flex width="25%" vertical gap="middle">
+      <Flex width="30%" vertical gap="middle">
         <Space align="center"> autoplay: <Switch v-model:checked="carouselConfig.autoplay" /> </Space>
         <Space align="center"> pauseOnMouseEnter: <Switch v-model:checked="carouselConfig.pauseOnMouseEnter" /> </Space>
         <Space align="center">
@@ -225,8 +224,10 @@ const carouselConfig = reactive({
         </Space>
         <Space align="center">
           slideFunction:
-          <InputNumber v-model:value="carouselConfig.x1" :min="0" placeholder="x1" />
-          <InputNumber v-model:value="carouselConfig.y1" :min="0" placeholder="y1" />
+          <Space>
+            <InputNumber v-model:value="carouselConfig.x1" :min="0" placeholder="x1" />
+            <InputNumber v-model:value="carouselConfig.y1" :min="0" placeholder="y1" />
+          </Space>
         </Space>
         <br />
         <br />
