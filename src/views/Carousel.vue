@@ -202,7 +202,9 @@ const value = ref(10)
           </Space>
         </Col>
         <Col :span="6">
-          <Space direction="vertical"> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
+          <Space direction="vertical">
+            showArrow：<Switch v-model:checked="carouselConfig.showArrow" />
+          </Space>
         </Col>
         <Col :span="6">
           <Space direction="vertical">
@@ -212,13 +214,19 @@ const value = ref(10)
       </Row>
       <Row :gutter="24">
         <Col :span="6">
-          <Flex vertical gap="middle"> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
+          <Flex vertical gap="middle">
+            arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" />
+          </Flex>
         </Col>
         <Col :span="6">
-          <Space direction="vertical"> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
+          <Space direction="vertical">
+            dots：<Switch v-model:checked="carouselConfig.dots" />
+          </Space>
         </Col>
         <Col :span="6">
-          <Flex vertical gap="middle"> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="1" /> </Flex>
+          <Flex vertical gap="middle">
+            dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="1" />
+          </Flex>
         </Col>
         <Col :span="6">
           <Space direction="vertical">
@@ -234,7 +242,8 @@ const value = ref(10)
         </Col>
         <Col :span="6">
           <Space direction="vertical">
-            dotPosition：<Radio
+            dotPosition：
+            <Radio
               :options="positionOptions"
               v-model:value="carouselConfig.dotPosition"
               button
@@ -244,7 +253,8 @@ const value = ref(10)
         </Col>
         <Col :span="6">
           <Space direction="vertical">
-            dotsTrigger：<Radio
+            dotsTrigger：
+            <Radio
               :options="triggerOptions"
               v-model:value="carouselConfig.dotsTrigger"
               button
@@ -294,10 +304,10 @@ const value = ref(10)
         :arrow-size="carouselConfig.arrowSize"
         :dots="carouselConfig.dots"
         :dot-size="carouselConfig.dotSize"
-        :dotColor="carouselConfig.dotColor"
-        :dotActiveColor="carouselConfig.dotActiveColor"
-        :dotPosition="carouselConfig.dotPosition"
-        :dotsTrigger="carouselConfig.dotsTrigger"
+        :dot-color="carouselConfig.dotColor"
+        :dot-active-color="carouselConfig.dotActiveColor"
+        :dot-position="carouselConfig.dotPosition"
+        :dots-trigger="carouselConfig.dotsTrigger"
         :fade-duration="carouselConfig.fadeDuration"
         :fade-function="carouselConfig.fadeFunction"
         :slide-duration="carouselConfig.slideDuration"
