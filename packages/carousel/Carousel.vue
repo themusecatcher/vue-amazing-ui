@@ -18,12 +18,12 @@ interface SpinProperties {
 }
 interface Props {
   images: Image[] // 走马灯图片数组
+  width?: number | string // 走马灯宽度
+  height?: number | string // 走马灯高度
   autoplay?: boolean // 是否自动切换
   pauseOnMouseEnter?: boolean // 当鼠标移入走马灯时，是否暂停自动轮播
   effect?: 'slide' | 'fade' // 轮播图切换时的过渡效果
   interval?: number // 自动轮播间隔，单位ms
-  width?: number | string // 走马灯宽度
-  height?: number | string // 走马灯高度
   showArrow?: boolean // 是否显示箭头
   arrowColor?: string // 箭头颜色
   arrowSize?: number // 箭头大小，单位px
@@ -43,12 +43,12 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
+  width: '100%',
+  height: '100vh',
   autoplay: false,
   pauseOnMouseEnter: false,
   effect: 'slide',
   interval: 3000,
-  width: '100%',
-  height: '100vh',
   showArrow: true,
   arrowColor: '#FFF',
   arrowSize: 36,
@@ -147,6 +147,7 @@ watch(
 watch(
   () => [props.images, props.autoplay, props.interval, props.fadeDuration, props.fadeFunction, complete.value[0]],
   () => {
+    slideTimer.value && cancelRaf(slideTimer.value)
     if (props.autoplay && complete.value[0] && imageCount.value > 1) {
       autoSlide() // 自动滑动轮播
     }
@@ -169,12 +170,10 @@ watch(
 onMounted(() => {
   getImageSize() // 获取每张图片大小
   // 监听事件
-  document.addEventListener('keydown', keyboardSwitch)
   document.addEventListener('visibilitychange', visibilityChange)
 })
 onUnmounted(() => {
   // 移除事件
-  document.removeEventListener('keydown', keyboardSwitch)
   document.removeEventListener('visibilitychange', visibilityChange)
 })
 function onComplete(index: number) {
@@ -185,7 +184,7 @@ function getImageSize() {
   imageWidth.value = carousel.value.offsetWidth
   imageHeight.value = carousel.value.offsetHeight
 }
-function keyboardSwitch(e: KeyboardEvent) {
+function onKeyboard(e: KeyboardEvent) {
   e.preventDefault()
   if (imageCount.value > 1) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
@@ -378,6 +377,26 @@ function onMouseEnter(n: number) {
 function clickImage(image: Image) {
   emits('click', image)
 }
+function to(n: number): void {
+  if (n >= 1 && n <= imageCount.value) {
+    onSwitch(n)
+  }
+}
+function prev(): void {
+  onLeftArrow()
+}
+function next(): void {
+  onRightArrow()
+}
+function getCurrentIndex(): number {
+  return activeSwitcher.value
+}
+defineExpose({
+  to,
+  prev,
+  next,
+  getCurrentIndex
+})
 </script>
 <template>
   <div
@@ -391,7 +410,7 @@ function clickImage(image: Image) {
     <div class="m-carousel-flex" :style="carouselStyle">
       <div
         class="m-image"
-        :class="{ 'image-active': effect === 'fade' && activeSwitcher === index + 1 }"
+        :class="{ 'image-fade-active': effect === 'fade' && activeSwitcher === index + 1 }"
         @click="clickImage(image)"
         v-for="(image, index) in images"
         :key="index"
@@ -422,9 +441,11 @@ function clickImage(image: Image) {
     </div>
     <template v-if="showArrow">
       <svg
+        tabindex="0"
         class="arrow-left"
         :style="`width: ${arrowSize}px; height: ${arrowSize}px;`"
         @click="onLeftArrow"
+        @keydown="onKeyboard"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"
       >
@@ -433,9 +454,11 @@ function clickImage(image: Image) {
         ></path>
       </svg>
       <svg
+        tabindex="0"
         class="arrow-right"
         :style="`width: ${arrowSize}px; height: ${arrowSize}px;`"
         @click="onRightArrow"
+        @keydown="onKeyboard"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"
       >
@@ -446,12 +469,14 @@ function clickImage(image: Image) {
     </template>
     <div class="m-switch" :class="`switch-${dotPosition}`" v-if="dots">
       <div
+        tabindex="0"
         class="u-dot"
         :style="[dotStyle, activeSwitcher === n ? { backgroundColor: dotActiveColor, ...dotActiveStyle } : {}]"
         v-for="n in imageCount"
         :key="n"
         @click="dotsTrigger === 'click' ? onSwitch(n) : () => false"
         @mouseenter="dotsTrigger === 'hover' ? onMouseEnter(n) : () => false"
+        @keydown="onKeyboard"
       ></div>
     </div>
   </div>
@@ -498,6 +523,7 @@ function clickImage(image: Image) {
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
+    outline: none;
     transition: opacity 0.3s;
     &:hover {
       opacity: 1;
@@ -512,6 +538,7 @@ function clickImage(image: Image) {
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
+    outline: none;
     transition: opacity 0.3s;
     &:hover {
       opacity: 1;
@@ -534,6 +561,7 @@ function clickImage(image: Image) {
       border-radius: var(--dot-size);
       background-color: var(--dot-color);
       cursor: pointer;
+      outline: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
@@ -583,7 +611,7 @@ function clickImage(image: Image) {
     transition-duration: var(--fade-duration);
     transition-timing-function: var(--fade-function);
   }
-  .image-active {
+  .image-fade-active {
     opacity: 1;
     pointer-events: auto;
   }

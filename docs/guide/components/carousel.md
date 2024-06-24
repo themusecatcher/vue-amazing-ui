@@ -5,11 +5,12 @@
 
 ## 何时使用
 
-- 首页banner轮播展示
-- 轮播新闻展示
+- 当有一组平级的内容。
+- 当内容空间不足时，可以用走马灯的形式进行收纳，进行轮播展现。
+- 常用于一组图片或卡片轮播。
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 
 const images = ref([
   {
@@ -86,11 +87,34 @@ function clickImage(image: object) {
 function onChange(index: number) {
   console.log('change', index)
 }
+const carousel = ref()
+const toIndex = ref(1)
+const currentIndex = ref(1)
+function getCurrentIndex() {
+  currentIndex.value = carousel.value.getCurrentIndex()
+}
+const carouselConfig = reactive({
+  autoplay: true,
+  pauseOnMouseEnter: false,
+  effect: 'slide',
+  interval: 3000,
+  showArrow: true,
+  arrowColor: '#FFF',
+  arrowSize: 36,
+  dots: true,
+  dotSize: 10,
+  dotColor: 'rgba(255, 255, 255, 0.3)',
+  dotActiveColor: '#1677FF',
+  dotPosition: 'bottom',
+  dotsTrigger: 'click',
+  fadeDuration: 500,
+  fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
+})
 </script>
 
 ## 基本使用
 
-*支持导航切换，键盘上、下、左、右按键切换，点击指示点切换*
+*当焦点在 `Arrow` 或 `Dots` 上时，可以通过键盘上、下、左、右按键切换*
 
 <br>
 
@@ -656,19 +680,342 @@ const images = ref([
 
 :::
 
-<!-- ## 自定义配置 -->
+## 使用 Carousel Methods
+
+<Space>
+  <InputNumber :min="1" :max="images.length" v-model:value="toIndex" />
+  <Button @click="carousel.to(toIndex)">跳转到</Button>
+  <Button @click="carousel.prev()">前一页</Button>
+  <Button @click="carousel.next()">后一页</Button>
+  <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
+</Space>
+<br />
+<br />
+<Carousel ref="carousel" :images="images" :width="800" :height="450" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const images = ref([
+  {
+    title: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: ''
+  },
+  {
+    title: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: ''
+  },
+  {
+    title: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: ''
+  },
+  {
+    title: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    link: ''
+  },
+  {
+    title: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    link: ''
+  }
+])
+const carousel = ref()
+const toIndex = ref(1)
+const currentIndex = ref(1)
+function getCurrentIndex () {
+  currentIndex.value = carousel.value.getCurrentIndex()
+}
+</script>
+<template>
+  <Space>
+    <InputNumber :min="1" :max="images.length" v-model:value="toIndex" />
+    <Button @click="carousel.to(toIndex)">跳转到</Button>
+    <Button @click="carousel.prev()">前一页</Button>
+    <Button @click="carousel.next()">后一页</Button>
+    <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
+  </Space>
+  <br />
+  <br />
+  <Carousel ref="carousel" :images="images" :width="800" :height="450" />
+</template>
+```
+
+:::
+
+## 自定义配置
+
+<Flex gap="large" vertical>
+  <Row :gutter="24">
+    <Col :span="6">
+      <Space direction="vertical"> autoplay：<Switch v-model:checked="carouselConfig.autoplay" /> </Space>
+    </Col>
+    <Col :span="6">
+      <Space direction="vertical">
+        pauseOnMouseEnter：<Switch v-model:checked="carouselConfig.pauseOnMouseEnter" />
+      </Space>
+    </Col>
+    <Col :span="6">
+      <Space direction="vertical">
+        effect：<Radio :options="effectOptions" v-model:value="carouselConfig.effect" button button-style="solid" />
+      </Space>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="middle">
+        interval：<Slider v-model:value="carouselConfig.interval" :min="100" :step="10" :max="10000" />
+      </Flex>
+    </Col>
+  </Row>
+  <Row :gutter="24">
+    <Col :span="6">
+      <Space direction="vertical"> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
+    </Col>
+    <Col :span="6">
+      <Flex vertical>
+        arrowColor：<Input v-model:value="carouselConfig.arrowColor" placeholder="arrowColor" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="middle"> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
+    </Col>
+  </Row>
+  <Row :gutter="24">
+    <Col :span="6">
+      <Space direction="vertical"> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="middle"> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical>
+        dotActiveColor：<Input v-model:value="carouselConfig.dotActiveColor" placeholder="dotActiveColor" />
+      </Flex>
+    </Col>
+  </Row>
+  <Row :gutter="24">
+    <Col :span="12">
+      <Space direction="vertical">
+        dotPosition：
+        <Radio :options="positionOptions" v-model:value="carouselConfig.dotPosition" button button-style="solid" />
+      </Space>
+    </Col>
+    <Col :span="6">
+      <Space direction="vertical">
+        dotsTrigger：
+        <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
+      </Space>
+    </Col>
+  </Row>
+  <Row :gutter="24">
+    <Col :span="6">
+      <Flex vertical gap="middle">
+        fadeDuration：<Slider v-model:value="carouselConfig.fadeDuration" :min="100" :step="10" :max="10000" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical>
+        fadeFunction：<Input v-model:value="carouselConfig.fadeFunction" placeholder="fadeFunction" />
+      </Flex>
+    </Col>
+  </Row>
+  <Carousel
+    :images="images"
+    :width="800"
+    :height="450"
+    :autoplay="carouselConfig.autoplay"
+    :pause-on-mouse-enter="carouselConfig.pauseOnMouseEnter"
+    :effect="carouselConfig.effect"
+    :interval="carouselConfig.interval"
+    :show-arrow="carouselConfig.showArrow"
+    :arrow-color="carouselConfig.arrowColor"
+    :arrow-size="carouselConfig.arrowSize"
+    :dots="carouselConfig.dots"
+    :dot-size="carouselConfig.dotSize"
+    :dot-color="carouselConfig.dotColor"
+    :dot-active-color="carouselConfig.dotActiveColor"
+    :dot-position="carouselConfig.dotPosition"
+    :dots-trigger="carouselConfig.dotsTrigger"
+    :fade-duration="carouselConfig.fadeDuration"
+    :fade-function="carouselConfig.fadeFunction"
+    :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
+  />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+
+const images = ref([
+  {
+    title: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: ''
+  },
+  {
+    title: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: ''
+  },
+  {
+    title: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: ''
+  },
+  {
+    title: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    link: ''
+  },
+  {
+    title: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    link: ''
+  }
+])
+const carouselConfig = reactive({
+  autoplay: true,
+  pauseOnMouseEnter: false,
+  effect: 'slide',
+  interval: 3000,
+  showArrow: true,
+  arrowColor: '#FFF',
+  arrowSize: 36,
+  dots: true,
+  dotSize: 10,
+  dotColor: 'rgba(255, 255, 255, 0.3)',
+  dotActiveColor: '#1677FF',
+  dotPosition: 'bottom',
+  dotsTrigger: 'click',
+  fadeDuration: 500,
+  fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
+})
+</script>
+<template>
+  <Flex gap="large" vertical>
+    <Row :gutter="24">
+      <Col :span="6">
+        <Space direction="vertical"> autoplay：<Switch v-model:checked="carouselConfig.autoplay" /> </Space>
+      </Col>
+      <Col :span="6">
+        <Space direction="vertical">
+          pauseOnMouseEnter：<Switch v-model:checked="carouselConfig.pauseOnMouseEnter" />
+        </Space>
+      </Col>
+      <Col :span="6">
+        <Space direction="vertical">
+          effect：<Radio :options="effectOptions" v-model:value="carouselConfig.effect" button button-style="solid" />
+        </Space>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          interval：<Slider v-model:value="carouselConfig.interval" :min="100" :step="10" :max="10000" />
+        </Flex>
+      </Col>
+    </Row>
+    <Row :gutter="24">
+      <Col :span="6">
+        <Space direction="vertical"> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
+      </Col>
+      <Col :span="6">
+        <Flex vertical>
+          arrowColor：<Input v-model:value="carouselConfig.arrowColor" placeholder="arrowColor" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle"> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
+      </Col>
+    </Row>
+    <Row :gutter="24">
+      <Col :span="6">
+        <Space direction="vertical"> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle"> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical>
+          dotActiveColor：<Input v-model:value="carouselConfig.dotActiveColor" placeholder="dotActiveColor" />
+        </Flex>
+      </Col>
+    </Row>
+    <Row :gutter="24">
+      <Col :span="12">
+        <Space direction="vertical">
+          dotPosition：
+          <Radio :options="positionOptions" v-model:value="carouselConfig.dotPosition" button button-style="solid" />
+        </Space>
+      </Col>
+      <Col :span="6">
+        <Space direction="vertical">
+          dotsTrigger：
+          <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
+        </Space>
+      </Col>
+    </Row>
+    <Row :gutter="24">
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          fadeDuration：<Slider v-model:value="carouselConfig.fadeDuration" :min="100" :step="10" :max="10000" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical>
+          fadeFunction：<Input v-model:value="carouselConfig.fadeFunction" placeholder="fadeFunction" />
+        </Flex>
+      </Col>
+    </Row>
+    <Carousel
+      :images="images"
+      :width="800"
+      :height="450"
+      :autoplay="carouselConfig.autoplay"
+      :pause-on-mouse-enter="carouselConfig.pauseOnMouseEnter"
+      :effect="carouselConfig.effect"
+      :interval="carouselConfig.interval"
+      :show-arrow="carouselConfig.showArrow"
+      :arrow-color="carouselConfig.arrowColor"
+      :arrow-size="carouselConfig.arrowSize"
+      :dots="carouselConfig.dots"
+      :dot-size="carouselConfig.dotSize"
+      :dot-color="carouselConfig.dotColor"
+      :dot-active-color="carouselConfig.dotActiveColor"
+      :dot-position="carouselConfig.dotPosition"
+      :dots-trigger="carouselConfig.dotsTrigger"
+      :fade-duration="carouselConfig.fadeDuration"
+      :fade-function="carouselConfig.fadeFunction"
+      :spin-style="{ indicator: 'dot' }"
+    />
+  </Flex>
+</template>
+```
+
+:::
 
 ## APIs
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 images | 走马灯图片数组 | [Image](#image-type)[] | [] | true
+width | 走马灯宽度 | number &#124; string | '100%' | false
+height | 走马灯高度 | number &#124; string | '100vh' | false
 autoplay | 是否自动切换 | boolean | false | false
 pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播 | boolean | false | false
 effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide' | false
 interval | 自动轮播间隔，单位`ms` | number | 3000 | false
-width | 走马灯宽度 | number &#124; string | '100%' | false
-height | 走马灯高度 | number &#124; string | '100vh' | false
 showArrow | 是否显示箭头 | boolean | true | false
 arrowColor | 箭头颜色 | string | '#FFF' | false
 arrowSize | 箭头大小，单位`px` | number | 36 | false
@@ -702,6 +1049,15 @@ size | 尺寸大小 | 'small' &#124; 'default' &#124; 'large' | false
 tip | 描述文案 | string | false
 indicator | 加载指示符 | 'dot' &#124; 'quarter-circle' &#124; 'half-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' | false
 color | 主题颜色 | string | false
+
+## Methods
+
+事件名称 | 说明 | 参数
+-- | -- | --
+to | 切换至某一页，从 `1` 开始 | (n: number) => void
+prev | 切换至前一页 | () => void
+next | 切换至后一页 | () => void
+getCurrentIndex | 获取当前页，从 `1` 开始 | () => number
 
 ## Events
 

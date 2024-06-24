@@ -43,7 +43,12 @@ const totalWidth = computed(() => {
   }
 })
 const sliderValue = computed(() => {
-  const high = Math.round((right.value / pixelStep.value) * props.step + props.min)
+  let high
+  if (right.value === sliderWidth.value) {
+    high = props.max
+  } else {
+    high = Math.round((right.value / pixelStep.value) * props.step + props.min)
+  }
   if (props.range) {
     const low = Math.round((left.value / pixelStep.value) * props.step + props.min)
     return [low, high]
@@ -64,6 +69,15 @@ const rightValue = computed(() => {
 })
 const emits = defineEmits(['update:value', 'change'])
 watch(
+  () => props.width,
+  () => {
+    getSliderWidth()
+  },
+  {
+    flush: 'post'
+  }
+)
+watch(
   () => props.value,
   () => {
     getPosition()
@@ -77,6 +91,27 @@ onMounted(() => {
   getSliderWidth()
   getPosition()
 })
+function checkLow(value: number): number {
+  if (value < props.min) {
+    return props.min
+  }
+  return value
+}
+function checkHigh(value: number): number {
+  if (value > props.max) {
+    return props.max
+  }
+  return value
+}
+function checkValue(value: number): number {
+  if (value < props.min) {
+    return props.min
+  }
+  if (value > props.max) {
+    return props.max
+  }
+  return value
+}
 function fixedDigit(num: number) {
   return parseFloat(num.toFixed(2))
 }
@@ -86,10 +121,10 @@ function getSliderWidth() {
 function getPosition() {
   if (props.range) {
     // 双滑块模式
-    left.value = fixedDigit((((props.value as number[])[0] - props.min) / props.step) * pixelStep.value)
-    right.value = fixedDigit((((props.value as number[])[1] - props.min) / props.step) * pixelStep.value)
+    left.value = fixedDigit(((checkLow((props.value as number[])[0]) - props.min) / props.step) * pixelStep.value)
+    right.value = fixedDigit(((checkHigh((props.value as number[])[1]) - props.min) / props.step) * pixelStep.value)
   } else {
-    right.value = fixedDigit((((props.value as number) - props.min) / props.step) * pixelStep.value)
+    right.value = fixedDigit(((checkValue(props.value as number) - props.min) / props.step) * pixelStep.value)
   }
 }
 function onClickPoint(e: any) {
@@ -162,8 +197,10 @@ function onRightMouseDown() {
     } else {
       // targetX < left
       right.value = left.value
-      leftHandle.value.focus()
-      onLeftMouseDown()
+      if (props.range) {
+        leftHandle.value.focus()
+        onLeftMouseDown()
+      }
     }
   }
   document.onmouseup = () => {
@@ -223,7 +260,7 @@ function onRightSlide(source: number, place: string) {
       v-if="range"
       tabindex="0"
       ref="leftHandle"
-      class="u-slider-handle"
+      class="m-slider-handle"
       :class="{ handleTransition: transition }"
       :style="`left: ${left}px; right: auto; transform: translate(-50%, -50%);`"
       @keydown.left.prevent="disabled ? () => false : onLeftSlide(left, 'left')"
@@ -240,7 +277,7 @@ function onRightSlide(source: number, place: string) {
     <div
       tabindex="0"
       ref="rightHandle"
-      class="u-slider-handle"
+      class="m-slider-handle"
       :class="{ handleTransition: transition }"
       :style="`left: ${right}px; right: auto; transform: translate(-50%, -50%);`"
       @keydown.left.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
@@ -301,7 +338,7 @@ function onRightSlide(source: number, place: string) {
       background: @themeColor;
     }
   }
-  .u-slider-handle {
+  .m-slider-handle {
     // 滑块
     position: absolute;
     z-index: 999;
@@ -412,7 +449,7 @@ function onRightSlide(source: number, place: string) {
   .u-slider-track {
     background: rgba(0, 0, 0, 0.25);
   }
-  .u-slider-handle {
+  .m-slider-handle {
     border-color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
     &:hover {
