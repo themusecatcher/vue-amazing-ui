@@ -10,7 +10,7 @@ import {
   provide,
   ref,
   watch
-} from "./chunk-MHLQE6UP.js";
+} from "./chunk-W5EHFBPY.js";
 import {
   animateCSSModeScroll,
   createElement,
@@ -31,7 +31,7 @@ import {
   setCSSProperty,
   showWarning
 } from "./chunk-4RSKMU6E.js";
-import "./chunk-EQCVQC35.js";
+import "./chunk-DC5AMYBS.js";
 
 // node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/swiper-core.mjs
 var support;

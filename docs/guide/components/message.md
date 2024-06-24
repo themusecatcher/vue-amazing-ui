@@ -12,20 +12,32 @@
 - 可提供成功、警告和错误等反馈信息
 - 顶部居中显示并自动消失，是一种不打断用户操作的轻量级提示方式
 
+<br/>
+
+::: tip 使用
+
+- message.value.info(content: string) // info调用
+- message.value.success(content: string) // success调用
+- message.value.error(content: string) // error调用
+- message.value.warning(content: string) // warning调用
+- message.value.loading(content: string) // loading调用
+
+:::
+
 <script setup lang="ts">
 import { ref } from 'vue'
 const message = ref()
 
-function onInfo (content: any) {
+function onInfo (content: string) {
   message.value.info(content) // info调用
 }
-function onSuccess (content: any) {
+function onSuccess (content: string) {
   message.value.success(content) // success调用
 }
-function onError (content: any) {
+function onError (content: string) {
   message.value.error(content) // error调用
 }
-function onWarning (content: any) {
+function onWarning (content: string) {
   message.value.warning(content) // warning调用
 }
 function onLoading (content: string) {
@@ -49,7 +61,7 @@ function onClose () {
 import { ref } from 'vue'
 const message = ref()
 
-function onInfo (content: any) {
+function onInfo (content: string) {
   message.value.info(content) // info调用
 }
 function onClose () {
@@ -75,7 +87,7 @@ function onClose () {
 import { ref } from 'vue'
 const message = ref()
 
-function onSuccess (content: any) {
+function onSuccess (content: string) {
   message.value.success(content) // success调用
 }
 function onClose () {
@@ -101,7 +113,7 @@ function onClose () {
 import { ref } from 'vue'
 const message = ref()
 
-function onError (content: any) {
+function onError (content: string) {
   message.value.error(content) // error调用
 }
 function onClose () {
@@ -127,7 +139,7 @@ function onClose () {
 import { ref } from 'vue'
 const message = ref()
 
-function onWarning (content: any) {
+function onWarning (content: string) {
   message.value.warning(content) // warning调用
 }
 function onClose () {
@@ -174,6 +186,16 @@ function onClose () {
 -- | -- | -- | -- | --
 duration | 自动关闭的延时，单位`ms` | number | 3000 | false
 top | 消息距离顶部的位置，单位`px` | number &#124; string | 30 | false
+
+## Methods
+
+事件名称 | 说明 | 参数
+-- | -- | --
+info | 基本信息提示 | (content: string) => void
+success | 成功信息提示 | (content: string) => void
+error | 失败信息提示 | (content: string) => void
+warning | 警告信息提示 | (content: string) => void
+loading | 加载信息提示 | (content: string) => void
 
 ## Events
 

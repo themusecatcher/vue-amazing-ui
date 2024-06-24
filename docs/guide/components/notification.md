@@ -101,7 +101,7 @@ function onClose () {
 
 :::
 
-## info
+## 信息通知提醒
 
 <Button type="primary" @click="onInfo('This is a normal notification')">Info</Button>
 
@@ -129,7 +129,7 @@ function onClose () {
 
 :::
 
-## success
+## 成功通知提醒
 
 <Button type="primary" @click="onSuccess('This is a success notification')">Success</Button>
 
@@ -157,7 +157,7 @@ function onClose () {
 
 :::
 
-## error
+## 失败通知提醒
 
 <Button type="primary" @click="onError('This is a error notification')">Error</Button>
 
@@ -185,7 +185,7 @@ function onClose () {
 
 :::
 
-## warning
+## 警告通知提醒
 
 <Button type="primary" @click="onWarning('This is a warning notification')">Warning</Button>
 
@@ -320,6 +320,16 @@ message | 通知提醒标题 | string | false
 description | 通知提醒内容 | string | true
 mode | 通知提醒类型 | 'open' &#124; 'info' &#124; 'success' &#124; 'warning' &#124; 'error' | false
 placement | 通知提醒弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | false
+
+## Methods
+
+事件名称 | 说明 | 参数
+-- | -- | --
+open | 基本通知提醒 | (notification: Notification) => void
+info | 信息通知提醒 | (notification: Notification) => void
+success | 成功通知提醒 | (notification: Notification) => void
+error | 失败通知提醒 | (notification: Notification) => void
+warning | 警告通知提醒 | (notification: Notification) => void
 
 ## Events
 
