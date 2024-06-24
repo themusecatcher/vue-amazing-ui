@@ -48,7 +48,7 @@ function onChange (number: number | null) {
 }
 </script>
 <template>
-  <InputNumber v-model:value="value" @change="onchange" />
+  <InputNumber v-model:value="value" @change="onChange" />
 </template>
 ```
 
