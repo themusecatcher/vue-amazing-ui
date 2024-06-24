@@ -31,5 +31,7 @@ function onChange(number: number | null) {
     <InputNumber :min="0" :max="10" v-model:value="value" />
     <h2 class="mt30 mb10">添加前缀图标 $</h2>
     <InputNumber prefix="$" v-model:value="value" />
+    <h2 class="mt30 mb10">禁用</h2>
+    <InputNumber v-model:value="value" disabled />
   </div>
 </template>

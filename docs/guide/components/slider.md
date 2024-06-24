@@ -149,16 +149,10 @@ watchEffect(() => {
 
 ## 自定义步长
 
-*单滑块*
-
-<Slider :step="5" v-model:value="singleValue" />
-
-<br/>
-<br/>
-
-*双滑块*
-
-<Slider range :step="5" v-model:value="doubleValue" />
+<Flex vertical gap="large">
+  <Slider :step="5" v-model:value="singleValue" />
+  <Slider range :step="5" v-model:value="doubleValue" />
+</Flex>
 
 ::: details Show Code
 
@@ -176,8 +170,10 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Slider :step="5" v-model:value="singleValue" />
-  <Slider range :step="5" v-model:value="doubleValue" />
+  <Flex vertical gap="large">
+    <Slider :step="5" v-model:value="singleValue" />
+    <Slider range :step="5" v-model:value="doubleValue" />
+  </Flex>
 </template>
 ```
 

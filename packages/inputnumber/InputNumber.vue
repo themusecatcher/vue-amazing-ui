@@ -19,6 +19,7 @@ interface Props {
   prefix?: string // 前缀图标 string | slot
   formatter?: Function // 指定展示值的格式
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
+  disabled?: boolean // 是否禁用
   value?: number | null // 当前值(v-model)
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -30,6 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   prefix: '',
   formatter: (value: string) => value,
   keyboard: true,
+  disabled: false,
   value: null
 })
 const inputWidth = computed(() => {
@@ -108,32 +110,38 @@ function onDown() {
 }
 </script>
 <template>
-  <div class="m-input-number" tabindex="1" :style="`width: ${inputWidth};`">
+  <div
+    class="m-input-number"
+    :class="{ 'input-number-disabled': disabled }"
+    tabindex="1"
+    :style="`width: ${inputWidth};`"
+  >
     <div class="m-input-wrap">
       <span class="u-input-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
         v-if="keyboard"
-        autocomplete="off"
         class="u-input-number"
-        @change="onChange"
+        autocomplete="off"
+        :disabled="disabled"
         v-model="numValue"
         @keydown.up.prevent
         @keydown="onKeyboard"
+        @change="onChange"
         v-bind="$attrs"
       />
       <input v-else autocomplete="off" class="u-input-number" @change="onChange" v-model="numValue" v-bind="$attrs" />
     </div>
     <div class="m-handler-wrap">
-      <span class="u-up-arrow" :class="{ disabled: (value || 0) >= max }" @click="onUp">
+      <span class="m-arrow up-arrow" :class="{ disabled: (value || 0) >= max }" @click="onUp">
         <svg focusable="false" class="u-icon" data-icon="up" aria-hidden="true" viewBox="64 64 896 896">
           <path
             d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
           ></path>
         </svg>
       </span>
-      <span class="u-down-arrow" :class="{ disabled: (value || 0) <= min }" @click="onDown">
+      <span class="m-arrow down-arrow" :class="{ disabled: (value || 0) <= min }" @click="onDown">
         <svg focusable="false" class="u-icon" data-icon="down" aria-hidden="true" viewBox="64 64 896 896">
           <path
             d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
@@ -147,7 +155,7 @@ function onDown() {
 .m-input-number {
   position: relative;
   display: inline-block;
-  height: 30px;
+  height: 32px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
@@ -169,10 +177,8 @@ function onDown() {
     box-shadow: 0 0 0 2px fade(@themeColor, 20%);
   }
   .m-input-wrap {
-    width: 100%;
-    display: inline-flex;
-    vertical-align: top;
-    align-items: center;
+    height: 100%;
+    display: flex;
     .u-input-prefix {
       pointer-events: none;
       margin-inline-end: 4px;
@@ -183,13 +189,13 @@ function onDown() {
       font-size: 14px;
       color: rgba(0, 0, 0, 0.88);
       width: 100%;
-      height: 28px;
+      height: 100%;
       background: transparent;
-      border: none;
       border-radius: 6px;
-      outline: none;
       transition: all 0.2s linear;
       appearance: textfield;
+      border: none;
+      outline: none;
     }
     input::-webkit-input-placeholder {
       color: rgba(0, 0, 0, 0.25);
@@ -220,52 +226,57 @@ function onDown() {
     .u-icon {
       width: 7px;
       height: 7px;
-      fill: rgba(0, 0, 0, 0.25);
-      transition: all 0.2s linear;
+      fill: rgba(0, 0, 0, 0.45);
+      user-select: none;
     }
-    .u-up-arrow {
+    .m-arrow {
       display: flex;
       align-items: center;
       justify-content: center;
       flex: auto;
       height: 40%;
+      border-left: 1px solid #d9d9d9;
+      cursor: pointer;
+      transition: all 0.2s linear;
+      &:hover {
+        height: 60%;
+        .u-icon {
+          fill: @themeColor;
+        }
+      }
+    }
+    .up-arrow {
       border-top-right-radius: 6px;
-      border-left: 1px solid #d9d9d9;
-      cursor: pointer;
-      transition: all 0.2s linear;
-      &:hover {
-        height: 60%;
-        .u-icon {
-          fill: @themeColor;
-        }
-      }
     }
-    .u-down-arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: auto;
-      height: 40%;
+    .down-arrow {
       border-top: 1px solid #d9d9d9;
-      border-left: 1px solid #d9d9d9;
-      border-bottom-right-radius: 2px;
-      cursor: pointer;
-      transition: all 0.2s linear;
-      &:hover {
-        height: 60%;
-        .u-icon {
-          fill: @themeColor;
-        }
-      }
+      border-bottom-right-radius: 6px;
     }
     .disabled {
       cursor: not-allowed;
-      &:hover {
-        .u-icon {
-          fill: rgba(0, 0, 0, 0.25);
-        }
-      }
     }
+  }
+}
+.input-number-disabled {
+  color: rgba(0, 0, 0, 0.25);
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: #d9d9d9;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+  &:hover {
+    border-color: #d9d9d9;
+  }
+  &:focus-within {
+    // 激活时样式
+    border-color: #d9d9d9;
+    box-shadow: none;
+  }
+  .m-input-wrap .u-input-number {
+    cursor: not-allowed;
+  }
+  .m-handler-wrap {
+    display: none;
   }
 }
 </style>

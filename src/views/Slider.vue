@@ -31,9 +31,9 @@ function formatter(value: number) {
     <h2 class="mt30 mb10">自定义最大最小值</h2>
     <Slider :min="-10" :max="10" v-model:value="singleCustomValue" />
     <h2 class="mt30 mb10">自定义步长</h2>
-    <Slider :step="5" v-model:value="singleValue" />
-    <Slider range :step="5" v-model:value="doubleValue" />
-    <h2 class="mt30 mb10">Ant Design Slider</h2>
-    <a-slider v-model:value="doubleValue" range />
+    <Flex vertical gap="large">
+      <Slider :step="5" v-model:value="singleValue" />
+      <Slider range :step="5" v-model:value="doubleValue" />
+    </Flex>
   </div>
 </template>

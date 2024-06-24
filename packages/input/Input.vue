@@ -130,7 +130,6 @@ function onPassword() {
         ref="input"
         :type="password && !showPassword ? 'password' : 'text'"
         :value="value"
-        password
         :maxlength="maxlength"
         :disabled="disabled"
         @input="onInput"
