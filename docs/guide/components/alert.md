@@ -18,7 +18,7 @@ function onClose (e: MouseEvent) {
 }
 </script>
 
-## 共有四种样式 success、info、warning、error
+## 四种样式
 
 <Space direction="vertical" align="stretch" style="width: 100%">
   <Alert message="Info Text" />

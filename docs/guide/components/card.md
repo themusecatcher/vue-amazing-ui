@@ -11,6 +11,11 @@
 
 - 最基础的卡片容器，可承载文字、列表、图片、段落，常用于后台概览页面
 
+<script setup lang="ts">
+import { ref } from 'vue'
+const loading = ref(true)
+</script>
+
 ## 基本使用
 
 <Card title="Default size card" :width="300">
@@ -54,6 +59,60 @@
     <p>card content</p>
     <p>card content</p>
   </Card>
+</template>
+```
+
+:::
+
+## 简洁卡片
+
+<Card :width="300">
+  <p>Card content</p>
+  <p>Card content</p>
+  <p>Card content</p>
+</Card>
+
+::: details Show Code
+
+```vue
+<template>
+  <Card :width="300">
+    <p>Card content</p>
+    <p>Card content</p>
+    <p>Card content</p>
+  </Card>
+</template>
+```
+
+:::
+
+## 预加载卡片
+
+<Space direction="vertical" gap="middle">
+  <Card :loading="loading" title="Card title" :width="300">
+    <p>Card content</p>
+    <p>Card content</p>
+    <p>Card content</p>
+  </Card>
+  <Button :loading="loading" @click="loading = !loading">Toggle loading</Button>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const loading = ref(true)
+</script>
+<template>
+  <Space direction="vertical" gap="middle">
+    <Card :loading="loading" title="Card title" :width="300">
+      <p>Card content</p>
+      <p>Card content</p>
+      <p>Card content</p>
+    </Card>
+    <Button :loading="loading" @click="loading = !loading">Toggle loading</Button>
+  </Space>
 </template>
 ```
 
@@ -215,34 +274,13 @@
 
 :::
 
-## 简洁卡片
-
-<Card :width="300">
-  <p>Card content</p>
-  <p>Card content</p>
-  <p>Card content</p>
-</Card>
-
-::: details Show Code
-
-```vue
-<template>
-  <Card :width="300">
-    <p>Card content</p>
-    <p>Card content</p>
-    <p>Card content</p>
-  </Card>
-</template>
-```
-
-:::
-
 ## APIs
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 卡片宽度 | number &#124; string | 'auto' | false
 bordered | 是否有边框 | boolean | true | false
+loading | 当卡片内容还在加载中时，可以用 `loading` 展示一个占位 | boolean | false | false
 extra | 卡片右上角的操作区域 | string &#124; slot | '' | false
 size | 卡片的尺寸 | 'default' &#124; 'small' | 'default' | false
 title | 卡片标题 | string &#124; slot | '' | false

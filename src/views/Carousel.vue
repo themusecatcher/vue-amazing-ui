@@ -131,7 +131,7 @@ const carouselConfig = reactive({
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" :show-arrow="showArrow" @click="clickImage" />
-    <h2 class="mt30 mb10">自动播放</h2>
+    <h2 class="mt30 mb10">自动轮播</h2>
     <Carousel :images="images" :width="800" :height="450" autoplay @change="onChange" @click="clickImage" />
     <h2 class="mt30 mb10">指示点位置</h2>
     <Radio :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />

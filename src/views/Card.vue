@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+const loading = ref(true)
+</script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
@@ -19,6 +23,21 @@
       <p>card content</p>
       <p>card content</p>
     </Card>
+    <h2 class="mt30 mb10">简洁卡片</h2>
+    <Card :width="300">
+      <p>Card content</p>
+      <p>Card content</p>
+      <p>Card content</p>
+    </Card>
+    <h2 class="mt30 mb10">预加载卡片</h2>
+    <Space direction="vertical" gap="middle">
+      <Card :loading="loading" title="Card title" :width="300">
+        <p>Card content</p>
+        <p>Card content</p>
+        <p>Card content</p>
+      </Card>
+      <Button :loading="loading" @click="loading = !loading">Toggle loading</Button>
+    </Space>
     <h2 class="mt30 mb10">在灰色背景上使用无边框的卡片</h2>
     <div style="display: inline-block; background: #ececec; padding: 30px; border-radius: 8px">
       <Card title="Card title" :bordered="false" :width="300">
@@ -77,11 +96,5 @@
         </Col>
       </Row>
     </div>
-    <h2 class="mt30 mb10">简洁卡片</h2>
-    <Card :width="300">
-      <p>Card content</p>
-      <p>Card content</p>
-      <p>Card content</p>
-    </Card>
   </div>
 </template>
