@@ -223,7 +223,7 @@ function clickImage (image: object) {
 
 :::
 
-## 自动播放
+## 自动轮播
 
 <Carousel :images="images" :height="450" autoplay @change="onChange" @click="clickImage" />
 
@@ -1012,7 +1012,7 @@ const carouselConfig = reactive({
 images | 走马灯图片数组 | [Image](#image-type)[] | [] | true
 width | 走马灯宽度 | number &#124; string | '100%' | false
 height | 走马灯高度 | number &#124; string | '100vh' | false
-autoplay | 是否自动切换 | boolean | false | false
+autoplay | 是否自动轮播 | boolean | false | false
 pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播 | boolean | false | false
 effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide' | false
 interval | 自动轮播间隔，单位`ms` | number | 3000 | false

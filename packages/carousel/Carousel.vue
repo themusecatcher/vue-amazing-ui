@@ -20,7 +20,7 @@ interface Props {
   images: Image[] // 走马灯图片数组
   width?: number | string // 走马灯宽度
   height?: number | string // 走马灯高度
-  autoplay?: boolean // 是否自动切换
+  autoplay?: boolean // 是否自动轮播
   pauseOnMouseEnter?: boolean // 当鼠标移入走马灯时，是否暂停自动轮播
   effect?: 'slide' | 'fade' // 轮播图切换时的过渡效果
   interval?: number // 自动轮播间隔，单位ms

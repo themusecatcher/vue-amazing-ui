@@ -79,7 +79,11 @@ const titleWidth = computed(() => {
 })
 const paragraphRows = computed(() => {
   if (typeof props.paragraph === 'boolean') {
-    return 3
+    if (props.avatar) {
+      return 2
+    } else {
+      return 3
+    }
   }
   return props.paragraph.rows
 })
@@ -153,9 +157,9 @@ const paragraphWidth = computed(() => {
       ></span>
     </div>
     <template v-if="!button && !image && !input">
-      <div class="m-skeleton-content">
-        <h3 class="u-skeleton-title" :style="{ width: titleWidth }"></h3>
-        <ul class="u-skeleton-paragraph">
+      <div class="m-skeleton-content" v-if="title || paragraph">
+        <h3 class="u-skeleton-title" v-if="title" :style="{ width: titleWidth }"></h3>
+        <ul class="m-skeleton-paragraph" :class="{ mt24: title, mt28: title && avatar }" v-if="paragraph">
           <li v-for="n in paragraphRows" :key="n" :style="`width: ${paragraphWidth[(n as number) - 1]};`"></li>
         </ul>
       </div>
@@ -280,8 +284,8 @@ const paragraphWidth = computed(() => {
       background: rgba(0, 0, 0, 0.06);
       border-radius: 4px;
     }
-    .u-skeleton-paragraph {
-      margin-top: 24px;
+    .m-skeleton-paragraph {
+      margin: 0;
       padding: 0;
       li {
         height: 16px;
@@ -296,15 +300,18 @@ const paragraphWidth = computed(() => {
         }
       }
     }
+    .mt24 {
+      margin-top: 24px;
+    }
+    .mt28 {
+      margin-top: 28px;
+    }
   }
 }
 .m-skeleton-avatar {
   .m-skeleton-content {
     .u-skeleton-title {
       margin-top: var(--title-top);
-    }
-    .u-skeleton-paragraph {
-      margin-top: 28px;
     }
   }
 }
@@ -314,7 +321,7 @@ const paragraphWidth = computed(() => {
   .m-skeleton-image,
   .m-skeleton-header .u-skeleton-avatar,
   .m-skeleton-content .u-skeleton-title,
-  .m-skeleton-content .u-skeleton-paragraph li {
+  .m-skeleton-content .m-skeleton-paragraph li {
     position: relative;
     z-index: 0;
     overflow: hidden;
