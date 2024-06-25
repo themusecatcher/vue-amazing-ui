@@ -4,105 +4,99 @@ import { ref } from 'vue'
 const modal = ref()
 const center = ref(true)
 const loading = ref(false)
-const visible = ref(false)
-function showConfirmModal(content: string) {
-  modal.value.confirm({
-    title: 'Do you Want to submit these items ?',
-    content: content
-  })
-  center.value = true
-  visible.value = true
-}
-function showDeleteModal(content: string) {
-  modal.value.erase({
-    title: 'Do you Want to delete these items ?',
-    content: content
-  })
-  center.value = true
-  visible.value = true
-}
-function showInfoModal(content: string) {
+const show = ref(false)
+
+function showInfoModal() {
   modal.value.info({
     title: 'Do you See these items ?',
-    content: content
+    content: 'Some descriptions ...'
   })
   center.value = true
-  visible.value = true
 }
-function showSuccessModal(content: string) {
+function showSuccessModal() {
   modal.value.success({
     title: 'Do you See these items ?',
-    content: content
+    content: 'Some descriptions ...'
   })
   center.value = true
-  visible.value = true
 }
-function showErrorModal(content: string) {
+function showErrorModal() {
   modal.value.error({
     title: 'Do you See these items ?',
-    content: content
+    content: 'Some descriptions ...'
   })
   center.value = true
-  visible.value = true
 }
-function showWarnModal(content: string) {
+function showWarningModal() {
   modal.value.warning({
     title: 'Do you See these items ?',
-    content: content
+    content: 'Some descriptions ...'
   })
   center.value = true
-  visible.value = true
 }
-function showFixModal(content: string) {
+function showConfirmModal() {
+  modal.value.confirm({
+    title: 'Do you Want to submit these items ?',
+    content: 'Some descriptions ...'
+  })
+  center.value = true
+}
+function showEraseModal() {
+  modal.value.erase({
+    title: 'Do you Want to delete these items ?',
+    content: 'Some descriptions ...'
+  })
+  center.value = true
+}
+function showFixModal() {
   modal.value.info({
     title: 'Do you See these items ?',
-    content: content
+    content: 'Some descriptions ...'
   })
   center.value = false
-  visible.value = true
 }
 function onCancel() {
-  // “取消”按钮回调
-  visible.value = false
+  // 点击遮罩层或取消按钮的回调
+  console.log('cancel')
 }
-function onConfirm() {
+function onOk() {
   // “确定”按钮回调
   loading.value = true // 开启加载状态
   setTimeout(() => {
-    visible.value = false
+    show.value = false
     loading.value = false
-  }, 500)
+  }, 2000)
 }
 function onKnow() {
   // “我知道了”按钮回调
-  visible.value = false
+  console.log('know')
 }
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space :gap="30">
-      <Button type="primary" @click="showConfirmModal('Some descriptions ...')">提交确认</Button>
-      <Button type="primary" @click="showDeleteModal('Some descriptions ...')">删除确认</Button>
-      <Button type="primary" @click="showInfoModal('Some descriptions ...')">Info</Button>
-      <Button type="primary" @click="showSuccessModal('Some descriptions ...')">Success</Button>
-      <Button type="primary" @click="showErrorModal('Some descriptions ...')">Error</Button>
-      <Button type="primary" @click="showWarnModal('Some descriptions ...')">Warning</Button>
-      <Button type="primary" @click="showFixModal('Some descriptions ...')">高度固定</Button>
+    <Space>
+      <Button type="primary" @click="showInfoModal">Info Modal</Button>
+      <Button type="primary" @click="showSuccessModal">Success Modal</Button>
+      <Button type="primary" @click="showErrorModal">Error Modal</Button>
+      <Button type="primary" @click="showWarningModal">Warning Modal</Button>
+      <Button type="primary" @click="showConfirmModal">Confirm Modal</Button>
+      <Button type="primary" @click="showEraseModal">Erase Modal</Button>
+      <Button type="primary" @click="showFixModal">Height Fixed Modal</Button>
     </Space>
     <Modal
       ref="modal"
+      v-model:show="show"
       :width="420"
-      :top="120"
       cancelText="取消"
       okText="确认"
       noticeText="知道了"
       :center="center"
+      :top="120"
       :loading="loading"
-      :visible="visible"
       @cancel="onCancel"
-      @ok="onConfirm"
+      @ok="onOk"
       @know="onKnow"
     />
   </div>

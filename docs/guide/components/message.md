@@ -16,11 +16,11 @@
 
 ::: tip 使用
 
-- message.value.info(content: string) // info调用
-- message.value.success(content: string) // success调用
-- message.value.error(content: string) // error调用
-- message.value.warning(content: string) // warning调用
-- message.value.loading(content: string) // loading调用
+- message.value.info(content: string) // info 调用
+- message.value.success(content: string) // success 调用
+- message.value.error(content: string) // error 调用
+- message.value.warning(content: string) // warning 调用
+- message.value.loading(content: string) // loading 调用
 
 :::
 
