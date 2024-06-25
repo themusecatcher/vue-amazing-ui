@@ -82,7 +82,7 @@ function onKnow() {
     <Transition name="mask">
       <div v-show="visible" class="m-modal-mask"></div>
     </Transition>
-    <Transition>
+    <Transition name="zoom">
       <div v-show="visible" class="m-modal-wrap" @click.self="onClose">
         <div
           :class="['m-modal', center ? 'relative-hv-center' : 'top-center']"
@@ -177,22 +177,24 @@ function onKnow() {
   </div>
 </template>
 <style lang="less" scoped>
-.mask-enter-active,
-.mask-leave-active {
-  transition: opacity 0.25s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s linear;
 }
-.mask-enter-from,
-.mask-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
-.v-enter-active,
-.v-leave-active {
-  transition: all 0.25s;
+.zoom-enter-active {
+  transition: all 0.3s;
 }
-.v-enter-from,
-.v-leave-to {
+.zoom-leave-active {
+  transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+}
+.zoom-enter-from,
+.zoom-leave-to {
   opacity: 0;
-  transform: scale(0);
+  transform: scale(0.2);
 }
 .flex-hv-center {
   // 水平垂直居中方法①：弹性布局，随内容增大高度，并自适应水平垂直居中
