@@ -26,7 +26,6 @@ withDefaults(defineProps<Props>(), {
   loading: false,
   visible: false
 })
-
 // 弹窗类型：'info' 'success' 'error' 'warning' 'confirm' 'erase'
 const mode = ref('')
 const desc = ref<Desc>()

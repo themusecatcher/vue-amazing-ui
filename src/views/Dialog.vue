@@ -1,100 +1,121 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const visible1 = ref(false)
-const visible2 = ref(false)
-const visible3 = ref(false)
-const visible4 = ref(false)
-const visible5 = ref(false)
-const visible6 = ref(false)
+const show1 = ref(false)
+const show2 = ref(false)
+const show3 = ref(false)
+const show4 = ref(false)
+const show5 = ref(false)
+const show6 = ref(false)
+const show7 = ref(false)
+const show8 = ref(false)
+const show9 = ref(false)
 const loading = ref(false)
-function showDialog() {
-  visible1.value = true
-}
-function showCustomHeightDialog() {
-  visible2.value = true
-}
-function showFooterDialog() {
-  visible3.value = true
-}
-function showFixPositionDialog() {
-  visible4.value = true
-}
-function showFullScreenDialog() {
-  visible5.value = true
-}
-function showCustomHBodyDialog() {
-  visible6.value = true
-}
-function onClose() {
-  // 关闭回调
-  visible1.value = false
-  visible2.value = false
-  visible3.value = false
-  visible4.value = false
-  visible5.value = false
-  visible6.value = false
-}
 function onCancel() {
-  // “取消”按钮回调
-  visible3.value = false
+  // 点击遮罩层或右上角叉或取消按钮的回调
+  console.log('cancel')
 }
-function onConfirm() {
-  // “确定”,“知道了”按钮回调
+function onOk() {
+  // 点击确定回调
+  show1.value = false
+  show2.value = false
+  show3.value = false
+  show4.value = false
+  show5.value = false
+  show6.value = false
+  show7.value = false
+  show8.value = false
+  show9.value = false
+}
+function handleCancel() {
+  show4.value = false
+}
+function handleOk() {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+    show4.value = false
+  }, 2000)
+}
+function onLoadingOk() {
+  // 点击确定回调
   loading.value = true // 开启加载状态
   setTimeout(() => {
-    visible3.value = false
+    show8.value = false
     loading.value = false
-  }, 500)
+  }, 2000)
 }
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space :gap="16">
-      <Button type="primary" @click="showDialog">默认对话框</Button>
-      <Dialog :visible="visible1" @close="onClose">
-        <template #title>Title</template>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-      </Dialog>
-      <Button type="primary" @click="showCustomHeightDialog">内容高度自定义</Button>
-      <Dialog :height="360" @close="onClose" :visible="visible2">
-        <template #title>Title</template>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-      </Dialog>
-      <Button type="primary" @click="showFooterDialog">有底部按钮</Button>
-      <Dialog footer @close="onClose" @cancel="onCancel" @ok="onConfirm" :loading="loading" :visible="visible3">
-        <template #title>Title</template>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-      </Dialog>
-      <Button type="primary" @click="showFixPositionDialog">位置高度自定义</Button>
-      <Dialog :center="false" :top="120" @close="onClose" :visible="visible4">
-        <template #title>Title</template>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-      </Dialog>
-      <Button type="primary" @click="showFullScreenDialog">允许切换全屏</Button>
-      <Dialog switch-fullscreen @close="onClose" :visible="visible5">
-        <template #title>Title</template>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-      </Dialog>
-      <Button type="primary" @click="showCustomHBodyDialog">body 样式自定义</Button>
-      <Dialog :body-style="{ fontSize: '20px', color: '#eb2f96' }" @close="onClose" :visible="visible6">
-        <template #title>Title</template>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-        <p>Bla bla ...</p>
-      </Dialog>
-    </Space>
+    <Button type="primary" @click="show1 = true">Open Dialog</Button>
+    <Dialog v-model:show="show1" title="Title" @cancel="onCancel" @ok="onOk">
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+    </Dialog>
+    <h2 class="mt30 mb10">自定义宽高</h2>
+    <Button type="primary" @click="show2 = true">Open Dialog</Button>
+    <Dialog v-model:show="show2" :width="480" :height="180" @ok="onOk">
+      <template #title>Title</template>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+    </Dialog>
+    <h2 class="mt30 mb10">自定义按钮文字 & 类型</h2>
+    <Button type="primary" @click="show3 = true">Open Dialog</Button>
+    <Dialog v-model:show="show3" title="Title" cancelText="cancel" okText="ok" okType="danger" @ok="onOk">
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+    </Dialog>
+    <h2 class="mt30 mb10">自定义底部按钮</h2>
+    <Button type="primary" @click="show4 = true">Open Dialog</Button>
+    <Dialog v-model:show="show4" title="Title">
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <template #footer>
+        <Button @click="handleCancel">Return</Button>
+        <Button type="primary" style="margin-left: 8px" :loading="loading" @click="handleOk">Submit</Button>
+      </template>
+    </Dialog>
+    <h2 class="mt30 mb10">隐藏底部按钮</h2>
+    <Button type="primary" @click="show5 = true">Open Dialog</Button>
+    <Dialog v-model:show="show5" title="Title" :footer="false" @ok="onOk">
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+    </Dialog>
+    <h2 class="mt30 mb10">固定高度</h2>
+    <Button type="primary" @click="show6 = true">Open Dialog</Button>
+    <Dialog v-model:show="show6" title="Title" :center="false" :top="120" @ok="onOk">
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+    </Dialog>
+    <h2 class="mt30 mb10">切换全屏</h2>
+    <Button type="primary" @click="show7 = true">Open Dialog</Button>
+    <Dialog v-model:show="show7" title="Title" switch-fullscreen @ok="onOk">
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+    </Dialog>
+    <h2 class="mt30 mb10">提交 loading</h2>
+    <Button type="primary" @click="show8 = true">Open Dialog</Button>
+    <Dialog v-model:show="show8" title="Title" :loading="loading" @ok="onLoadingOk">
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+    </Dialog>
+    <h2 class="mt30 mb10">body 样式自定义</h2>
+    <Button type="primary" @click="show9 = true">Open Dialog</Button>
+    <Dialog v-model:show="show9" title="Title" :body-style="{ fontSize: '20px', color: '#eb2f96' }" @ok="onOk">
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+      <p>Bla bla ...</p>
+    </Dialog>
   </div>
 </template>

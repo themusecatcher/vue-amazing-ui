@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const loading = ref(false)
+const loading = ref(true)
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -38,6 +38,8 @@ function onClick(e: Event) {
     <Button style="width: 140px; height: 40px" size="large">
       <p style="font-size: 18px">自定义样式</p>
     </Button>
+    <h2 class="mt30 mb10">自定义跳转</h2>
+    <Button href="https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html" target="_blank">跳转按钮</Button>
     <h2 class="mt30 mb10">加载中状态</h2>
     <Space>
       <Button :loading="loading">Default Button</Button>
@@ -49,10 +51,8 @@ function onClick(e: Event) {
       <Button type="link" :loading="loading">Link Button</Button>
     </Space>
     <br />
-    <Space align="center" style="margin-top: 10px">
-      <h3 style="margin-top: 0">Loading state:</h3>
-      <Switch v-model:checked="loading" />
-    </Space>
+    <br />
+    <Space align="center"> Loading state:<Switch v-model:checked="loading" /> </Space>
     <h2 class="mt30 mb10">居中展示</h2>
     <Button center @click="onClick">Default Button</Button>
   </div>

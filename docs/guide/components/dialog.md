@@ -10,55 +10,87 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const visible1 = ref(false)
-const visible2 = ref(false)
-const visible3 = ref(false)
-const visible4 = ref(false)
-const visible5 = ref(false)
-const visible6 = ref(false)
+const show1 = ref(false)
+const show2 = ref(false)
+const show3 = ref(false)
+const show4 = ref(false)
+const show5 = ref(false)
+const show6 = ref(false)
+const show7 = ref(false)
+const show8 = ref(false)
+const show9 = ref(false)
 const loading = ref(false)
-function showDialog () {
-  visible1.value = true
+function onCancel() { // 点击遮罩层或右上角叉或取消按钮的回调
+  console.log('cancel')
 }
-function showCustomHeightDialog () {
-  visible2.value = true
+function onOk() { // 点击确定回调
+  show1.value = false
+  show2.value = false
+  show3.value = false
+  show4.value = false
+  show5.value = false
+  show6.value = false
+  show7.value = false
+  show8.value = false
+  show9.value = false
 }
-function showFooterDialog () {
-  visible3.value = true
+function handleCancel () {
+  show4.value = false
 }
-function showFixPositionDialog () {
-  visible4.value = true
+function handleOk () {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+    show4.value = false
+  }, 2000)
 }
-function showFullScreenDialog () {
-  visible5.value = true
-}
-function showCustomHBodyDialog () {
-  visible6.value = true
-}
-function onClose () { // 关闭回调
-  visible1.value = false
-  visible2.value = false
-  visible3.value = false
-  visible4.value = false
-  visible5.value = false
-  visible6.value = false
-}
-function onCancel () { // “取消”按钮回调
-  visible3.value = false
-}
-function onConfirm () { // “确定”,“知道了”按钮回调
+function onLoadingOk() { // 点击确定回调
   loading.value = true // 开启加载状态
   setTimeout(() => {
-    visible3.value = false
+    show8.value = false
     loading.value = false
-  }, 500)
+  }, 2000)
 }
 </script>
 
 ## 基本使用
 
-<Button type="primary" @click="showDialog">默认对话框</Button>
-<Dialog :visible="visible1" @close="onClose">
+<Button type="primary" @click="show1 = true">Open Dialog</Button>
+<Dialog v-model:show="show1" title="Title" @cancel="onCancel" @ok="onOk">
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const show = ref(false)
+function onCancel() {
+  console.log('cancel')
+}
+function onOk () {
+  show.value = false
+}
+</script>
+<template>
+  <Button type="primary" @click="show = true">Open Dialog</Button>
+  <Dialog v-model:show="show" title="Title" @cancel="onCancel" @ok="onOk">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+</template>
+```
+
+:::
+
+## 自定义宽高
+
+<Button type="primary" @click="show2 = true">Open Dialog</Button>
+<Dialog v-model:show="show2" :width="480" :height="180" @ok="onOk">
   <template #title>Title</template>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -70,17 +102,14 @@ function onConfirm () { // “确定”,“知道了”按钮回调
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const visible = ref(false)
-function showDialog () {
-  visible.value = true
-}
-function onClose () {
-  visible.value = false
+const show = ref(false)
+function onOk () {
+  show.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="showDialog">默认对话框</Button>
-  <Dialog :visible="visible" @close="onClose">
+  <Button type="primary" @click="show = true">Open Dialog</Button>
+  <Dialog v-model:show="show" :width="480" :height="180" @ok="onOk">
     <template #title>Title</template>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -91,14 +120,10 @@ function onClose () {
 
 :::
 
-## 内容高度自定义
+## 自定义按钮文字 & 类型
 
-<Button type="primary" @click="showCustomHeightDialog">内容高度自定义</Button>
-<Dialog
-  :height="360"
-  @close="onClose"
-  :visible="visible2">
-  <template #title>Title</template>
+<Button type="primary" @click="show3 = true">Open Dialog</Button>
+<Dialog v-model:show="show3" title="Title" cancelText="cancel" okText="ok" okType="danger" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -109,21 +134,14 @@ function onClose () {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const visible = ref(false)
-function showCustomHeightDialog (info: string) {
-  visible.value = true
-}
-function onClose () {
-  visible.value = false
+const show = ref(false)
+function onOk () {
+  show.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="showCustomHeightDialog">内容高度自定义</Button>
-  <Dialog
-    :height="360"
-    @close="onClose"
-    :visible="visible">
-    <template #title>Title</template>
+  <Button type="primary" @click="show = true">Open Dialog</Button>
+  <Dialog v-model:show="show" title="Title" cancelText="cancel" okText="ok" okType="danger" @ok="onOk">
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -133,17 +151,56 @@ function onClose () {
 
 :::
 
-## 有底部按钮
+## 自定义底部按钮
 
-<Button type="primary" @click="showFooterDialog">有底部按钮</Button>
-<Dialog
-  footer
-  @close="onClose"
-  @cancel="onCancel"
-  @ok="onConfirm"
-  :loading="loading"
-  :visible="visible3">
-  <template #title>Title</template>
+<Button type="primary" @click="show4 = true">Open Dialog</Button>
+<Dialog v-model:show="show4" title="Title">
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <template #footer>
+    <Button @click="handleCancel">Return</Button>
+    <Button type="primary" style="margin-left: 8px;" :loading="loading" @click="handleOk">Submit</Button>
+  </template>
+</Dialog>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const show = ref(false)
+function handleCancel () {
+  show.value = false
+}
+function handleOk () {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+    show.value = false
+  }, 2000)
+}
+</script>
+<template>
+  <Button type="primary" @click="show = true">Open Dialog</Button>
+  <Dialog v-model:show="show" title="Title">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <template #footer>
+      <Button @click="handleCancel">Return</Button>
+      <Button type="primary" style="margin-left: 8px;" :loading="loading" @click="handleOk">Submit</Button>
+    </template>
+  </Dialog>
+</template>
+```
+
+:::
+
+## 隐藏底部按钮
+
+<Button type="primary" @click="show5 = true">Open Dialog</Button>
+<Dialog v-model:show="show5" title="Title" :footer="false" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -154,121 +211,112 @@ function onClose () {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const visible = ref(false)
+const show = ref(false)
+function onOk () {
+  show.value = false
+}
+</script>
+<template>
+  <Button type="primary" @click="show = true">Open Dialog</Button>
+  <Dialog v-model:show="show" title="Title" :footer="false" @ok="onOk">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+</template>
+```
+
+:::
+
+## 固定高度
+
+<Button type="primary" @click="show6 = true">Open Dialog</Button>
+<Dialog v-model:show="show6" title="Title" :center="false" :top="120" @ok="onOk">
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const show = ref(false)
+function onOk () {
+  show.value = false
+}
+</script>
+<template>
+  <Button type="primary" @click="show = true">Open Dialog</Button>
+  <Dialog v-model:show="show" title="Title" :center="false" :top="120" @ok="onOk">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+</template>
+```
+
+:::
+
+## 切换全屏
+
+<Button type="primary" @click="show7 = true">Open Dialog</Button>
+<Dialog v-model:show="show7" title="Title" switch-fullscreen @ok="onOk">
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const show = ref(false)
+function onOk () {
+  show.value = false
+}
+</script>
+<template>
+  <Button type="primary" @click="show = true">Open Dialog</Button>
+  <Dialog v-model:show="show" title="Title" switch-fullscreen @ok="onOk">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+</template>
+```
+
+:::
+
+## 提交 loading
+
+<Button type="primary" @click="show8 = true">Open Dialog</Button>
+<Dialog v-model:show="show8" title="Title" :loading="loading" @ok="onLoadingOk">
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const show = ref(false)
 const loading = ref(false)
-function showFooterDialog () {
-  visible.value = true
-}
-function onClose () {
-  visible.value = false
-}
-function onCancel () { // “取消”按钮回调
-  visible.value = false
-}
-function onConfirm () { // “确定”按钮回调
+function onLoadingOk() { // 点击确定回调
   loading.value = true // 开启加载状态
   setTimeout(() => {
-    visible.value = false
+    show.value = false
     loading.value = false
-  }, 500)
+  }, 2000)
 }
 </script>
 <template>
-  <Button type="primary" @click="showFooterDialog">有底部按钮</Button>
-  <Dialog
-    footer
-    @close="onClose"
-    @cancel="onCancel"
-    @ok="onConfirm"
-    :loading="loading"
-    :visible="visible">
-    <template #title>Title</template>
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
-  </Dialog>
-</template>
-```
-
-:::
-
-## 位置高度自定义
-
-<Button type="primary" @click="showFixPositionDialog">位置高度自定义</Button>
-<Dialog
-  :center="false"
-  :top="120"
-  @close="onClose"
-  :visible="visible4">
-  <template #title>Title</template>
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
-</Dialog>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const visible = ref(false)
-function showFixPositionDialog () {
-  visible.value = true
-}
-function onClose () {
-  visible.value = false
-}
-</script>
-<template>
-  <Button type="primary" @click="showFixPositionDialog">位置高度自定义</Button>
-  <Dialog
-    :center="false"
-    :top="120"
-    @close="onClose"
-    :visible="visible">
-    <template #title>Title</template>
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
-  </Dialog>
-</template>
-```
-
-:::
-
-## 允许切换全屏
-
-<Button type="primary" @click="showFullScreenDialog">允许切换全屏</Button>
-<Dialog
-  switch-fullscreen
-  @close="onClose"
-  :visible="visible5">
-  <template #title>Title</template>
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
-</Dialog>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const visible = ref(false)
-function showFullScreenDialog () {
-  visible.value = true
-}
-function onClose () {
-  visible.value = false
-}
-</script>
-<template>
-  <Button type="primary" @click="showFullScreenDialog">允许切换全屏</Button>
-  <Dialog
-    switch-fullscreen
-    @close="onClose"
-    :visible="visible">
-    <template #title>Title</template>
+  <Button type="primary" @click="show = true">Open Dialog</Button>
+  <Dialog v-model:show="show" title="Title" :loading="loading" @ok="onLoadingOk">
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -280,12 +328,12 @@ function onClose () {
 
 ## body 样式自定义
 
-<Button type="primary" @click="showCustomHBodyDialog">body 样式自定义</Button>
+<Button type="primary" @click="show9 = true">Open Dialog</Button>
 <Dialog
-  :body-style="{fontSize: '20px', color: '#eb2f96'}"
-  @close="onClose"
-  :visible="visible6">
-  <template #title>Title</template>
+  v-model:show="show9"
+  title="Title"
+  :body-style="{ fontSize: '20px', color: '#eb2f96' }"
+  @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -296,21 +344,18 @@ function onClose () {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const visible = ref(false)
-function showCustomHBodyDialog () {
-  visible.value = true
-}
-function onClose () {
-  visible.value = false
+const show = ref(false)
+function onOk () {
+  show.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="showCustomHBodyDialog">body 样式自定义</Button>
+  <Button type="primary" @click="show = true">Open Dialog</Button>
   <Dialog
-    :body-style="{fontSize: '20px', color: '#eb2f96'}"
-    @close="onClose"
-    :visible="visible">
-    <template #title>Title</template>
+    v-model:show="show"
+    title="Title"
+    :body-style="{ fontSize: '20px', color: '#eb2f96' }"
+    @ok="onOk">
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -334,20 +379,20 @@ title | 标题 | string &#124; slot | '提示' | false
 content | 内容 | string &#124; slot | '' | false
 width | 宽度，单位`px` | number | 540 | false
 height | 高度，默认 `auto`，自适应内容高度 | number &#124; string | 'auto' | false
-switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false | false
 cancelText | 取消按钮文字 | string | '取消' | false
 okText | 确定按钮文字 | string | '确定' | false
-footer | 是否显示底部按钮，默认不显示 | boolean | false | false
+okType | 确定按钮类型 | 'primary' &#124; 'danger' | 'primary' | false | false
+footer | 是否显示底部按钮 | boolean &#124; slot | true | false
 center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true | false
-top | 固定高度水平居中时，距顶部高度，单位`px` | number | 100 | false
-loading | 加载中 | boolean | false | false
-bodyStyle | 对话框 body 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-visible | 是否可见 | boolean | false | false
+top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100 | false
+switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false | false
+loading | 确定按钮 `loading` | boolean | false | false
+bodyStyle | 对话框 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+show | 对话框是否可见 | boolean | false | false
 
 ## Events
 
 事件名称 | 说明 | 参数
 -- | -- | --
-close | 点击遮罩层或右上角叉的回调 | () => void
-cancel | 点击取消回调 | () => void
+cancel | 点击遮罩层或右上角叉或取消按钮的回调 | () => void
 ok | 点击确定回调 | () => void
