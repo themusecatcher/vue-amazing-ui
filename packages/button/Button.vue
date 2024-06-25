@@ -1,73 +1,48 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-interface Query {
-  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
-}
-interface Route {
-  path?: string // 路由地址
-  query?: Query // 路由查询参数
-}
 interface Props {
   name?: string // 按钮文本 string | slot
   type?: 'default' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 按钮类型
   effect?: 'fade' | 'reverse' // 悬浮变化效果，只有 type 为 default 时，effect 才生效
   size?: 'small' | 'middle' | 'large' // 按钮尺寸
-  route?: Route // 跳转目标URL地址
-  target?: '_self' | '_blank' // 如何打开目标URL，设置route时才起作用，与a标签的target属性一致
+  href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
+  target?: '_self' | '_blank' // 相当于 a 链接的 target 属性，href 存在时生效
   disabled?: boolean // 是否禁用
   loading?: boolean // 是否加载中
   center?: boolean // 是否将按钮宽度调整为其父宽度并居中展示
 }
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   name: '按钮',
   type: 'default',
   effect: 'fade',
   size: 'middle',
-  route: () => ({}),
+  href: '',
   target: '_self',
   disabled: false,
   loading: false,
   center: false
 })
-const isRoute = computed(() => {
-  if (JSON.stringify(props.route) === '{}') {
-    return false
-  } else {
-    return true
-  }
-})
 const emit = defineEmits(['click'])
 function onClick(e: Event) {
-  if (!isRoute.value) {
-    emit('click', e)
-  }
+  emit('click', e)
 }
-function getUrl(route: Route) {
-  var targetUrl = route.path
-  if (route.query && JSON.stringify(route.query) !== '{}') {
-    const query = route.query
-    Object.keys(query).forEach((param, index) => {
-      if (index === 0) {
-        targetUrl = targetUrl + '?' + param + '=' + query[param]
-      } else {
-        targetUrl = targetUrl + '&' + param + '=' + query[param]
-      }
-    })
+function onKeyboard(e: KeyboardEvent) {
+  e.preventDefault()
+  if (e.key === 'Enter') {
+    onClick(e)
   }
-  return targetUrl
 }
 </script>
 <template>
-  <div :class="['m-btn-wrap', { center: center }]">
+  <div :class="['m-btn-wrap', { center: center }]" tabindex="0" @keydown="onKeyboard">
     <a
-      @click="onClick"
-      :href="getUrl(route)"
-      :target="isRoute ? target : '_self'"
-      :disabled="disabled"
       class="m-btn"
-      :class="[type, size, { [effect]: type === 'default', disabled: disabled, 'm-btn-loading': !isRoute && loading }]"
+      :class="[type, size, { [effect]: type === 'default', disabled: disabled, 'm-btn-loading': !href && loading }]"
+      :disabled="disabled"
+      :href="href ? href : 'javascript:;'"
+      :target="href ? target : '_self'"
+      @click="onClick"
     >
-      <span v-show="!isRoute" :class="[`m-loading-icon`, { [`loading-${size}`]: loading }]">
+      <span v-show="!href" :class="[`m-loading-icon`, { [`loading-${size}`]: loading }]">
         <span class="u-spin-circle" :class="`spin-${size}`"></span>
       </span>
       <span class="u-text">
@@ -81,6 +56,7 @@ function getUrl(route: Route) {
 @danger: #ff4d4f;
 .m-btn-wrap {
   display: inline-block;
+  outline: none;
   .m-btn {
     position: relative;
     display: inline-flex;

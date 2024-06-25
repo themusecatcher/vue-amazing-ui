@@ -1,37 +1,38 @@
 <script setup lang="ts">
-import Spin from '../spin'
 import Button from '../button'
-import { ref, watch, computed } from 'vue'
+import { ref, computed, useSlots, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 interface Props {
   title?: string // 标题 string | slot
   content?: string // 内容 string | slot
   width?: number // 宽度，单位px
   height?: number | string // 高度，单位px，默认auto，自适应内容高度
-  switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
   cancelText?: string // 取消按钮文字
   okText?: string // 确定按钮文字
-  footer?: boolean // 是否显示底部按钮，默认不显示
+  okType?: 'primary' | 'danger' // 确定按钮类型
+  footer?: boolean // 是否显示底部按钮 boolean | slot
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
-  top?: number // 固定高度水平居中时，距顶部高度
-  loading?: boolean // 加载中
+  top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效
+  switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
+  loading?: boolean // 确定按钮 loading
   bodyStyle?: CSSProperties // 对话框 body 样式
-  visible?: boolean // 是否可见
+  show?: boolean // 对话框是否可见
 }
 const props = withDefaults(defineProps<Props>(), {
   title: '提示',
   content: '',
   width: 540,
   height: 'auto',
-  switchFullscreen: false,
   cancelText: '取消',
   okText: '确定',
-  footer: false,
+  okType: 'primary',
+  footer: true,
   center: true,
   top: 100,
+  switchFullscreen: false,
   loading: false,
   bodyStyle: () => ({}),
-  visible: false
+  show: false
 })
 const fullScreen = ref(false)
 const dialogHeight = computed(() => {
@@ -41,8 +42,13 @@ const dialogHeight = computed(() => {
     return props.height
   }
 })
+const slots = useSlots()
+const showFooter = computed(() => {
+  const footerSlots = slots.footer?.()
+  return footerSlots
+})
 watch(
-  () => props.visible,
+  () => props.show,
   (to) => {
     if (to) {
       // 重置全屏显示
@@ -50,43 +56,39 @@ watch(
     }
   }
 )
-const emits = defineEmits(['close', 'cancel', 'ok'])
+const emits = defineEmits(['update:show', 'cancel', 'ok'])
 function onBlur() {
-  if (!props.loading) {
-    emits('close')
-  }
+  emits('update:show', false)
+  emits('cancel')
 }
 function onFullScreen() {
   fullScreen.value = !fullScreen.value
 }
 function onClose() {
-  emits('close')
-}
-function onCancel() {
+  emits('update:show', false)
   emits('cancel')
 }
-function onConfirm() {
+function onCancel() {
+  emits('update:show', false)
+  emits('cancel')
+}
+function onOk() {
   emits('ok')
 }
 </script>
 <template>
   <div class="m-dialog-root">
     <Transition name="fade">
-      <div v-show="visible" class="m-dialog-mask"></div>
+      <div v-show="show" class="m-dialog-mask"></div>
     </Transition>
     <Transition name="zoom">
-      <div v-show="visible" class="m-dialog-wrap" @click.self="onBlur">
+      <div v-show="show" class="m-dialog-wrap" @click.self="onBlur">
         <div
           ref="dialog"
           :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']"
           :style="`width: ${fullScreen ? '100%' : props.width + 'px'}; top: ${center ? '50%' : fullScreen ? 0 : top + 'px'};`"
         >
-          <div
-            class="m-dialog-content"
-            :class="{ loading: loading }"
-            :style="`--height: ${fullScreen ? '100vh' : dialogHeight}`"
-          >
-            <Spin class="u-spin" :spinning="loading" size="small" />
+          <div class="m-dialog-content" :style="`--height: ${fullScreen ? '100vh' : dialogHeight}`">
             <div class="m-dialog-header">
               <p class="u-head">
                 <slot name="title">{{ title }}</slot>
@@ -129,8 +131,11 @@ function onConfirm() {
               <slot>{{ content }}</slot>
             </div>
             <div class="m-dialog-footer" v-show="footer">
-              <Button class="mr8" @click="onCancel">{{ cancelText }}</Button>
-              <Button type="primary" @click="onConfirm">{{ okText }}</Button>
+              <slot name="footer"></slot>
+              <template v-if="!showFooter">
+                <Button class="mr8" @click="onCancel">{{ cancelText }}</Button>
+                <Button :type="okType" :loading="loading" @click="onOk">{{ okText }}</Button>
+              </template>
             </div>
           </div>
         </div>
@@ -198,12 +203,6 @@ function onConfirm() {
   z-index: 1010;
   .m-dialog {
     margin: 0 auto;
-    transition: all 0.25s;
-    .loading {
-      // 加载过程背景虚化
-      background: rgb(248, 248, 248) !important;
-      pointer-events: none; // 屏蔽鼠标事件
-    }
     .m-dialog-content {
       display: flex;
       flex-direction: column;
@@ -216,12 +215,6 @@ function onConfirm() {
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
       padding: 20px 24px;
-      transition: all 0.25s;
-      .u-spin {
-        position: absolute;
-        inset: 0;
-        margin: auto;
-      }
       .m-dialog-header {
         color: rgba(0, 0, 0, 0.88);
         background: transparent;

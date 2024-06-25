@@ -189,8 +189,8 @@ name | 按钮文本 | string &#124; slot | '按钮' | false
 type | 按钮类型 | 'default' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' | false
 effect | 悬浮变化效果，只有 `type` 为 `default` 时，`effect` 才生效 | 'fade' &#124; 'reverse' | 'fade' | false
 size | 按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
-route | 跳转目标 `URL` 地址 | {path?: string&#44; query?: object} | {} | false
-target | 如何打开目标URL，设置 `route` 时生效 | '_self' &#124; '_blank' | '_self' | false
+href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | '' | false
+target | 相当于 `a` 链接的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self' | false
 disabled | 是否禁用 | boolean | false | false
 loading | 是否加载中 | boolean | false | false
 center | 是否将按钮宽度调整为其父宽度并居中展示 | boolean | false | false
@@ -199,4 +199,4 @@ center | 是否将按钮宽度调整为其父宽度并居中展示 | boolean | f
 
 事件名称 | 说明 | 参数
 -- | -- | --
-click | 点击按钮时的回调，未设置 `route` 时生效 | (e: Event) => void
+click | 点击按钮时的回调 | (e: Event) => void
