@@ -16,11 +16,11 @@
 
 ::: tip 使用
 
-- notification.value.open(notification: Notification) // 默认使用
-- notification.value.info(notification: Notification) // info调用
-- notification.value.success(notification: Notification) // success调用
-- notification.value.error(notification: Notification) // error调用
-- notification.value.warning(notification: Notification) // warning调用
+- notification.value.open(notification: Notification) // open 调用
+- notification.value.info(notification: Notification) // info 调用
+- notification.value.success(notification: Notification) // success 调用
+- notification.value.error(notification: Notification) // error 调用
+- notification.value.warning(notification: Notification) // warning 调用
 
 :::
 

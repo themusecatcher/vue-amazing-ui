@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Spin from '../spin'
 import Button from '../button'
 import { ref } from 'vue'
 interface Desc {
@@ -9,12 +8,12 @@ interface Desc {
 interface Props {
   width?: number // 提示框宽度
   cancelText?: string // 取消按钮文字
-  okText?: string // 确认按钮文字
+  okText?: string // 确定按钮文字
   noticeText?: string // 通知按钮文字
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
-  top?: number // 固定高度水平居中时，距顶部高度
-  loading?: boolean // 加载中
-  visible?: boolean // 提示框是否可见
+  top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
+  loading?: boolean // 确定按钮 loading
+  show?: boolean // 提示框是否可见
 }
 withDefaults(defineProps<Props>(), {
   width: 420,
@@ -24,35 +23,56 @@ withDefaults(defineProps<Props>(), {
   center: true,
   top: 100,
   loading: false,
-  visible: false
+  show: false
 })
 // 弹窗类型：'info' 'success' 'error' 'warning' 'confirm' 'erase'
 const mode = ref('')
 const desc = ref<Desc>()
-
+const emits = defineEmits(['update:show', 'cancel', 'ok', 'know'])
 function info(data: Desc) {
   mode.value = 'info'
   desc.value = data
+  emits('update:show', true)
 }
 function success(data: Desc) {
   mode.value = 'success'
   desc.value = data
+  emits('update:show', true)
 }
 function error(data: Desc) {
   mode.value = 'error'
   desc.value = data
+  emits('update:show', true)
 }
 function warning(data: Desc) {
   mode.value = 'warning'
   desc.value = data
+  emits('update:show', true)
 }
 function confirm(data: Desc) {
   mode.value = 'confirm'
   desc.value = data
+  emits('update:show', true)
 }
 function erase(data: Desc) {
   mode.value = 'erase'
   desc.value = data
+  emits('update:show', true)
+}
+function onBlur() {
+  emits('update:show', false)
+  emits('cancel')
+}
+function onCancel() {
+  emits('update:show', false)
+  emits('cancel')
+}
+function onOK() {
+  emits('ok')
+}
+function onKnow() {
+  emits('update:show', false)
+  emits('know')
 }
 defineExpose({
   info,
@@ -62,33 +82,19 @@ defineExpose({
   confirm,
   erase
 })
-const emits = defineEmits(['cancel', 'ok', 'know'])
-function onClose() {
-  emits('cancel')
-}
-function onCancel() {
-  emits('cancel')
-}
-function onConfirm() {
-  emits('ok')
-}
-function onKnow() {
-  emits('know')
-}
 </script>
 <template>
   <div class="m-modal-root">
-    <Transition name="mask">
-      <div v-show="visible" class="m-modal-mask"></div>
+    <Transition name="fade">
+      <div v-show="show" class="m-modal-mask"></div>
     </Transition>
     <Transition name="zoom">
-      <div v-show="visible" class="m-modal-wrap" @click.self="onClose">
+      <div v-show="show" class="m-modal-wrap" @click.self="onBlur">
         <div
           :class="['m-modal', center ? 'relative-hv-center' : 'top-center']"
           :style="`width: ${width}px; top: ${!center ? top + 'px' : '50%'};`"
         >
-          <div :class="['m-modal-body', { loading: loading }]">
-            <Spin class="u-spin" :spinning="loading" size="small" />
+          <div class="m-modal-body">
             <div class="m-body">
               <div class="m-title">
                 <template v-if="mode === 'confirm' || mode === 'erase'">
@@ -162,11 +168,11 @@ function onKnow() {
             <div class="m-btns">
               <template v-if="mode === 'confirm' || mode === 'erase'">
                 <Button class="mr8" @click="onCancel">{{ cancelText }}</Button>
-                <Button type="primary" @click="onConfirm" v-if="mode === 'confirm'">{{ okText }}</Button>
-                <Button type="danger" @click="onConfirm" v-if="mode === 'erase'">{{ okText }}</Button>
+                <Button type="primary" :loading="loading" @click="onOK" v-if="mode === 'confirm'">{{ okText }}</Button>
+                <Button type="danger" :loading="loading" @click="onOK" v-if="mode === 'erase'">{{ okText }}</Button>
               </template>
               <template v-if="['info', 'success', 'error', 'warning'].includes(mode)">
-                <Button type="primary" @click="onKnow">{{ noticeText }}</Button>
+                <Button type="primary" :loading="loading" @click="onKnow">{{ noticeText }}</Button>
               </template>
             </div>
           </div>
@@ -248,11 +254,6 @@ function onKnow() {
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
-      .u-spin {
-        position: absolute;
-        inset: 0;
-        margin: auto;
-      }
       .m-body {
         display: flex;
         flex-wrap: wrap;
@@ -306,11 +307,6 @@ function onKnow() {
           margin-right: 8px;
         }
       }
-    }
-    .loading {
-      // 加载过程背景虚化
-      background: rgb(248, 248, 248);
-      pointer-events: none; // 屏蔽鼠标事件
     }
   }
 }

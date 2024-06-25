@@ -39,7 +39,9 @@ function onClick(e: Event) {
       <p style="font-size: 18px">自定义样式</p>
     </Button>
     <h2 class="mt30 mb10">自定义跳转</h2>
-    <Button href="https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html" target="_blank">跳转按钮</Button>
+    <Button href="https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html" target="_blank"
+      >跳转按钮</Button
+    >
     <h2 class="mt30 mb10">加载中状态</h2>
     <Space>
       <Button :loading="loading">Default Button</Button>
