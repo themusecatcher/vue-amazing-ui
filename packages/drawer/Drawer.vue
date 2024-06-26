@@ -1,24 +1,32 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useSlots, type CSSProperties } from 'vue'
 interface Props {
-  title?: string // 标题 string | slot
   width?: string | number // 宽度，在 placement 为 right 或 left 时使用
   height?: string | number // 高度，在 placement 为 top 或 bottom 时使用
+  title?: string // 标题 string | slot
   closable?: boolean // 是否显示左上角的关闭按钮
-  destroyOnClose?: boolean // 关闭时是否销毁 Drawer 里的子元素
-  extra?: string // 抽屉右上角的操作区域 string | slot
   placement?: 'top' | 'right' | 'bottom' | 'left' // 抽屉的方向
+  headerStyle?: CSSProperties // 设置 Drawer 头部的样式
+  bodyStyle?: CSSProperties // 设置 Drawer 内容部分的样式
+  extra?: string // 抽屉右上角的操作区域 string | slot
+  footer?: string // 抽屉的页脚 string | slot
+  footerStyle?: CSSProperties // 抽屉页脚的样式
+  destroyOnClose?: boolean // 关闭时是否销毁 Drawer 里的子元素
   zIndex?: number // 设置 Drawer 的 z-index
   open?: boolean // (v-model) 抽屉是否可见
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '',
   width: 378,
   height: 378,
+  title: undefined,
   closable: true,
-  destroyOnClose: false,
-  extra: '',
   placement: 'right',
+  headerStyle: () => ({}),
+  bodyStyle: () => ({}),
+  extra: undefined,
+  footer: undefined,
+  footerStyle: () => ({}),
+  destroyOnClose: false,
   zIndex: 1000,
   open: false
 })
@@ -34,9 +42,27 @@ const drawerHeight = computed(() => {
   }
   return props.height
 })
+const slots = useSlots()
+const showHeader = computed(() => {
+  const titleSlots = slots.title?.()
+  const extraSlots = slots.extra?.()
+  let n = 0
+  if (titleSlots && titleSlots.length) {
+    n++
+  }
+  if (extraSlots && extraSlots.length) {
+    n++
+  }
+  return Boolean(n) || props.title || props.extra || props.closable
+})
+const showFooter = computed(() => {
+  const footerSlots = slots.footer?.()
+  return (footerSlots && footerSlots.length) || props.footer
+})
 const emits = defineEmits(['update:open', 'close'])
 function onBlur(e: Event) {
-  onClose(e)
+  emits('update:open', false)
+  emits('close', e)
 }
 function onClose(e: Event) {
   emits('update:open', false)
@@ -57,7 +83,7 @@ function onClose(e: Event) {
       >
         <div class="m-drawer-content">
           <div class="m-drawer-body-wrapper" v-if="!destroyOnClose">
-            <div class="m-drawer-header">
+            <div class="m-drawer-header" :style="headerStyle" v-show="showHeader">
               <div class="m-header-title">
                 <svg
                   v-if="closable"
@@ -83,12 +109,15 @@ function onClose(e: Event) {
                 <slot name="extra">{{ extra }}</slot>
               </div>
             </div>
-            <div class="m-drawer-body">
+            <div class="m-drawer-body" :style="bodyStyle">
               <slot></slot>
+            </div>
+            <div class="m-drawer-footer" :style="footerStyle" v-show="showFooter">
+              <slot name="footer">{{ footer }}</slot>
             </div>
           </div>
           <div class="m-drawer-body-wrapper" v-if="destroyOnClose && open">
-            <div class="m-drawer-header">
+            <div class="m-drawer-header" :style="headerStyle" v-show="showHeader">
               <div class="m-header-title">
                 <svg
                   focusable="false"
@@ -113,8 +142,11 @@ function onClose(e: Event) {
                 <slot name="extra">{{ extra }}</slot>
               </div>
             </div>
-            <div class="m-drawer-body">
+            <div class="m-drawer-body" :style="bodyStyle">
               <slot></slot>
+            </div>
+            <div class="m-drawer-footer" :style="footerStyle" v-show="showFooter">
+              <slot name="footer">{{ footer }}</slot>
             </div>
           </div>
         </div>
@@ -195,7 +227,7 @@ function onClose(e: Event) {
           align-items: center;
           padding: 16px 24px;
           font-size: 16px;
-          line-height: 1.5714285714285714;
+          line-height: 1.5;
           border-bottom: 1px solid rgba(5, 5, 5, 0.06);
           .m-header-title {
             display: flex;
@@ -221,11 +253,12 @@ function onClose(e: Event) {
               color: rgba(0, 0, 0, 0.88);
               font-weight: 600;
               font-size: 16px;
-              line-height: 1.5714285714285714;
+              line-height: 1.5;
             }
           }
           .m-drawer-extra {
             flex: none;
+            color: rgba(0, 0, 0, 0.88);
           }
         }
         .m-drawer-body {
@@ -235,42 +268,48 @@ function onClose(e: Event) {
           padding: 24px;
           overflow: auto;
         }
+        .m-drawer-footer {
+          flex-shrink: 0;
+          padding: 8px 16px;
+          border-top: 1px solid rgba(5, 5, 5, 0.06);
+          color: rgba(0, 0, 0, 0.88);
+        }
       }
     }
   }
-}
-.drawer-top {
-  top: 0;
-  inset-inline: 0;
-  box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
-}
-.drawer-right {
-  top: 0;
-  right: 0;
-  bottom: 0;
-  box-shadow:
-    -6px 0 16px 0 rgba(0, 0, 0, 0.08),
-    -3px 0 6px -4px rgba(0, 0, 0, 0.12),
-    -9px 0 28px 8px rgba(0, 0, 0, 0.05);
-}
-.drawer-bottom {
-  bottom: 0;
-  inset-inline: 0;
-  box-shadow:
-    0 -6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 -3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 -9px 28px 8px rgba(0, 0, 0, 0.05);
-}
-.drawer-left {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  box-shadow:
-    6px 0 16px 0 rgba(0, 0, 0, 0.08),
-    3px 0 6px -4px rgba(0, 0, 0, 0.12),
-    9px 0 28px 8px rgba(0, 0, 0, 0.05);
+  .drawer-top {
+    top: 0;
+    inset-inline: 0;
+    box-shadow:
+      0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 3px 6px -4px rgba(0, 0, 0, 0.12),
+      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  }
+  .drawer-right {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow:
+      -6px 0 16px 0 rgba(0, 0, 0, 0.08),
+      -3px 0 6px -4px rgba(0, 0, 0, 0.12),
+      -9px 0 28px 8px rgba(0, 0, 0, 0.05);
+  }
+  .drawer-bottom {
+    bottom: 0;
+    inset-inline: 0;
+    box-shadow:
+      0 -6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 -3px 6px -4px rgba(0, 0, 0, 0.12),
+      0 -9px 28px 8px rgba(0, 0, 0, 0.05);
+  }
+  .drawer-left {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    box-shadow:
+      6px 0 16px 0 rgba(0, 0, 0, 0.08),
+      3px 0 6px -4px rgba(0, 0, 0, 0.12),
+      9px 0 28px 8px rgba(0, 0, 0, 0.05);
+  }
 }
 </style>

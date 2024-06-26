@@ -17,51 +17,43 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const open1 = ref(false)
-const open2 = ref(false)
-const open3 = ref(false)
-const open4 = ref(false)
+const open1 = ref<boolean>(false)
+const open2 = ref<boolean>(false)
+const open3 = ref<boolean>(false)
+const open4 = ref<boolean>(false)
+const open5 = ref<boolean>(false)
 const options = ref([
-    {
-      label: 'top',
-      value: 'top'
-    },
-    {
-      label: 'right',
-      value: 'right'
-    },
-    {
-      label: 'bottom',
-      value: 'bottom'
-    },
-    {
-      label: 'left',
-      value: 'left'
-    }
-  ])
+  {
+    label: 'top',
+    value: 'top'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  },
+  {
+    label: 'bottom',
+    value: 'bottom'
+  },
+  {
+    label: 'left',
+    value: 'left'
+  }
+])
 const placement = ref('right')
-const showDrawer1 = () => {
-  open1.value = true
-}
-const showDrawer2 = () => {
-  open2.value = true
-}
-const showDrawer3 = () => {
-  open3.value = true
-}
-const showDrawer4 = () => {
-  open4.value = true
-}
-const onClose = () => {
+const extraPlacement = ref('right')
+const footerPlacement = ref('right')
+function onClose () { // 点击遮罩层或左上角叉或取消按钮的回调
   open3.value = false
+  open4.value = false
   console.log('close')
 }
 </script>
 
 ## 基本使用
 
-<Button type="primary" @click="showDrawer1">Open</Button>
-<Drawer v-model:open="open1" title="Basic Drawer">
+<Button type="primary" @click="open1 = true">Open</Button>
+<Drawer v-model:open="open1" title="Basic Drawer" @close="onClose">
   <p>Some contents...</p>
   <p>Some contents...</p>
   <p>Some contents...</p>
@@ -73,15 +65,64 @@ const onClose = () => {
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const open1 = ref(false)
-const placement = ref('right')
-const showDrawer1 = () => {
-  open1.value = true
+const open = ref(false)
+function onClose () { // 点击遮罩层或左上角叉或取消按钮的回调
+  console.log('close')
 }
 </script>
 <template>
-  <Button type="primary" @click="showDrawer1">Open</Button>
-  <Drawer v-model:open="open1" title="Basic Drawer">
+  <Button type="primary" @click="open = true">Open</Button>
+  <Drawer v-model:open="open" title="Basic Drawer" @close="onClose">
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+  </Drawer>
+</template>
+```
+
+:::
+
+## 自定义位置
+
+<Radio v-model:value="placement" :options="options" style="margin-right: 8px;" />
+<Button type="primary" @click="open2 = true">Open</Button>
+<Drawer v-model:open="open2" title="Basic Drawer" :closable="false" extra="extra" footer="footer" :placement="placement">
+  <p>Some contents...</p>
+  <p>Some contents...</p>
+  <p>Some contents...</p>
+</Drawer>
+
+::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const open = ref(false)
+const options = ref([
+  {
+    label: 'top',
+    value: 'top'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  },
+  {
+    label: 'bottom',
+    value: 'bottom'
+  },
+  {
+    label: 'left',
+    value: 'left'
+  }
+])
+const placement = ref('right')
+</script>
+<template>
+  <Radio v-model:value="placement" :options="options" style="margin-right: 8px;" />
+  <Button type="primary" @click="open = true">Open</Button>
+  <Drawer v-model:open="open" title="Basic Drawer" :closable="false" extra="extra" footer="footer" :placement="placement">
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
@@ -93,12 +134,9 @@ const showDrawer1 = () => {
 
 ## 额外操作
 
-<Button type="primary" @click="showDrawer2">Open</Button>
-<Drawer
-  :width="480"
-  title="Basic Drawer"
-  v-model:open="open2"
-  @close="onClose">
+<Radio v-model:value="extraPlacement" :options="options" style="margin-right: 8px;" />
+<Button type="primary" @click="open3 = true">Open</Button>
+<Drawer v-model:open="open3" title="Basic Drawer" :placement="extraPlacement">
   <template #extra>
     <Button style="margin-right: 8px" @click="onClose">Cancel</Button>
     <Button type="primary" @click="onClose">Submit</Button>
@@ -114,20 +152,35 @@ const showDrawer1 = () => {
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const open2 = ref(false)
-const showDrawer2 = () => {
-  open2.value = true
-}
-const onClose = () => {
+const open = ref(false)
+const options = ref([
+  {
+    label: 'top',
+    value: 'top'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  },
+  {
+    label: 'bottom',
+    value: 'bottom'
+  },
+  {
+    label: 'left',
+    value: 'left'
+  }
+])
+const extraPlacement = ref('right')
+function onClose () {
+  open.value = false
   console.log('close')
 }
 </script>
 <template>
-  <Drawer
-    :width="480"
-    title="Basic Drawer"
-    v-model:open="open2"
-    @close="onClose">
+  <Radio v-model:value="extraPlacement" :options="options" style="margin-right: 8px;" />
+  <Button type="primary" @click="open = true">Open</Button>
+  <Drawer v-model:open="open" title="Basic Drawer" :placement="extraPlacement">
     <template #extra>
       <Button style="margin-right: 8px" @click="onClose">Cancel</Button>
       <Button type="primary" @click="onClose">Submit</Button>
@@ -141,21 +194,18 @@ const onClose = () => {
 
 :::
 
-## 自定义位置
+## 抽屉页脚
 
-<Space align="center" :gap="20">
-  <Radio v-model:value="placement" :options="options">
-  </Radio>
-  <Button type="primary" @click="showDrawer3">Open</Button>
-</Space>
-<Drawer
-  title="Basic Drawer"
-  :placement="placement"
-  :open="open3"
-  @close="onClose">
+<Radio v-model:value="footerPlacement" :options="options" style="margin-right: 8px;" />
+<Button type="primary" @click="open4 = true">Open</Button>
+<Drawer v-model:open="open4" title="Basic Drawer" :placement="footerPlacement" :footer-style="{ textAlign: 'right' }">
   <p>Some contents...</p>
   <p>Some contents...</p>
   <p>Some contents...</p>
+  <template #footer>
+    <Button style="margin-right: 8px" @click="onClose">Cancel</Button>
+    <Button type="primary" @click="onClose">Submit</Button>
+  </template>
 </Drawer>
 
 ::: details Show Code
@@ -164,7 +214,7 @@ const onClose = () => {
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const open3 = ref(false)
+const open = ref(false)
 const options = ref([
     {
       label: 'top',
@@ -183,42 +233,39 @@ const options = ref([
       value: 'left'
     }
   ])
-const placement = ref('right')
-const showDrawer3 = () => {
-  open3.value = true
-}
-const onClose = () => {
-  open3.value = false
+const footerPlacement = ref('right')
+function onClose () {
+  open.value = false
   console.log('close')
 }
 </script>
 <template>
-  <Space align="center" :gap="20">
-    <Radio v-model:value="placement" :options="options">
-    </Radio>
-    <Button type="primary" @click="showDrawer3">Open</Button>
-  </Space>
-  <Drawer
-    title="Basic Drawer"
-    :placement="placement"
-    :open="open3"
-    @close="onClose">
+  <Radio v-model:value="footerPlacement" :options="options" style="margin-right: 8px;" />
+  <Button type="primary" @click="open = true">Open</Button>
+  <Drawer v-model:open="open" title="Basic Drawer" :placement="footerPlacement" :footer-style="{ textAlign: 'right' }">
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
+    <template #footer>
+      <Button style="margin-right: 8px" @click="onClose">Cancel</Button>
+      <Button type="primary" @click="onClose">Submit</Button>
+    </template>
   </Drawer>
 </template>
 ```
 
 :::
 
-## 关闭时销毁子元素
+## 自定义 header & body 样式
 
-<Button type="primary" @click="showDrawer4">Open</Button>
+<Button type="primary" @click="open5 = true">Open</Button>
 <Drawer
-  destroyOnClose
+  v-model:open="open5"
+  :closable="false"
   title="Basic Drawer"
-  v-model:open="open4">
+  :header-style="{ textAlign: 'center' }"
+  :body-style="{ textAlign: 'center' }"
+>
   <p>Some contents...</p>
   <p>Some contents...</p>
   <p>Some contents...</p>
@@ -230,17 +277,17 @@ const onClose = () => {
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const open4 = ref(false)
-const showDrawer4 = () => {
-  open4.value = true
-}
+const open = ref(false)
 </script>
 <template>
-  <Button type="primary" @click="showDrawer4">Open</Button>
+  <Button type="primary" @click="open = true">Open</Button>
   <Drawer
-    destroyOnClose
+    v-model:open="open"
+    :closable="false"
     title="Basic Drawer"
-    v-model:open="open4">
+    :header-style="{ textAlign: 'center' }"
+    :body-style="{ textAlign: 'center' }"
+  >
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
@@ -260,13 +307,17 @@ p {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-title | 标题 | string &#124; slot | '' | false
 width | 宽度，在 `placement` 为 `right` 或 `left` 时使用 | string &#124; number | 378 | false
 height | 高度，在 `placement` 为 `top` 或 `bottom` 时使用 | string &#124; number | 378 | false
+title | 标题 | string &#124; slot | undefined | false
 closable | 是否显示左上角的关闭按钮 | boolean | true | false
-destroyOnClose | 关闭时是否销毁 `Drawer` 里的子元素 | boolean | false | false
-extra | 抽屉右上角的操作区域 | string &#124; slot | '' | false
 placement | 抽屉的方向 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'right' | false
+headerStyle | 设置 `Drawer` 头部的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+bodyStyle | 设置 `Drawer` 内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+extra | 抽屉右上角的操作区域 | string &#124; slot | undefined | false
+footer | 抽屉的页脚 | string &#124; slot | undefined | false
+footerStyle | 抽屉页脚的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+destroyOnClose | 关闭时是否销毁 `Drawer` 里的子元素 | boolean | false | false
 zIndex | 设置 `Drawer` 的 `z-index` | number | 1000 | false
 open <Tag color="cyan">v-model</Tag> | 抽屉是否可见 | boolean | false | false
 
