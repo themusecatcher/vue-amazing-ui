@@ -143,73 +143,64 @@ const show = ref(false)
 
 #### 通过自定义参数配置预览水印效果
 
-<Flex>
-  <Watermark v-bind="model">
-    <p class="u-paragraph">
-      The light-speed iteration of the digital world makes products more complex. However, human
-      consciousness and attention resources are limited. Facing this design contradiction, the
-      pursuit of natural interaction will be the consistent direction of Ant Design.
-    </p>
-    <p class="u-paragraph">
-      Natural user cognition: According to cognitive psychology, about 80% of external
-      information is obtained through visual channels. The most important visual elements in the
-      interface design, including layout, colors, illustrations, icons, etc., should fully
-      absorb the laws of nature, thereby reducing the user&apos;s cognitive cost and bringing
-      authentic and smooth feelings. In some scenarios, opportunely adding other sensory
-      channels such as hearing, touch can create a richer and more natural product experience.
-    </p>
-    <p class="u-paragraph">
-      Natural user behavior: In the interaction with the system, the designer should fully
-      understand the relationship between users, system roles, and task objectives, and also
-      contextually organize system functions and services. At the same time, a series of methods
-      such as behavior analysis, artificial intelligence and sensors could be applied to assist
-      users to make effective decisions and reduce extra operations of users, to save
-      users&apos; mental and physical resources and make human-computer interaction more
-      natural.
-    </p>
-    <img
-      style=" position: relative; z-index: 1; width: 100%; max-width: 800px;"
-      src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg"
-      alt="示例图片"
-    />
-  </Watermark>
-  <Flex
-    style="
-      width: 25%;
-      flex-shrink: 0;
-      border-left: 1px solid #eee;
-      padding-left: 20px;
-      margin-left: 20px;
-    "
-    vertical
-    gap="middle"
-  >
-    <p>Content</p>
-    <Input v-model:value="model.content" />
-    <p>Layout</p>
-    <Radio :options="layoutOptions" v-model:value="model.layout" button />
-    <p>Color</p>
-    <Input v-model:value="model.color" />
-    <p>FontSize</p>
-    <Slider v-model:value="model.fontSize" :step="1" :min="0" :max="100" />
-    <p>FontWeight</p>
-    <InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
-    <p>zIndex</p>
-    <Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" />
-    <p>Rotate</p>
-    <Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" />
-    <p>Gap</p>
-    <Space style="display: flex" align="baseline">
-      <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
-      <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
-    </Space>
-    <p>Offset</p>
-    <Space style="display: flex" align="baseline">
-      <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
-      <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
-    </Space>
-  </Flex>
-</Flex>
+<Row :gutter="24">
+  <Col :span="18">
+    <Watermark v-bind="model">
+      <p class="u-paragraph">
+        Natural user cognition: According to cognitive psychology, about 80% of external information is obtained
+        through visual channels. The most important visual elements in the interface design, including layout,
+        colors, illustrations, icons, etc., should fully absorb the laws of nature, thereby reducing the user&apos;s
+        cognitive cost and bringing authentic and smooth feelings. In some scenarios, opportunely adding other
+        sensory channels such as hearing, touch can create a richer and more natural product experience.
+      </p>
+      <p class="u-paragraph">
+        Natural user behavior: In the interaction with the system, the designer should fully understand the
+        relationship between users, system roles, and task objectives, and also contextually organize system
+        functions and services. At the same time, a series of methods such as behavior analysis, artificial
+        intelligence and sensors could be applied to assist users to make effective decisions and reduce extra
+        operations of users, to save users&apos; mental and physical resources and make human-computer interaction
+        more natural.
+      </p>
+      <img
+        style="max-width: 100%"
+        src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg"
+        alt="示例图片"
+      />
+    </Watermark>
+  </Col>
+  <Col :span="6">
+    <Flex vertical gap="middle">
+      Content：<Input v-model:value="model.content" /> Layout：<Radio
+        :options="layoutOptions"
+        v-model:value="model.layout"
+        button
+      />
+      Color：<Input v-model:value="model.color" /> FontSize：<Slider
+        v-model:value="model.fontSize"
+        :step="1"
+        :min="0"
+        :max="100"
+      />
+      FontWeight：<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
+      zIndex：<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> Rotate：<Slider
+        v-model:value="model.rotate"
+        :step="1"
+        :min="-180"
+        :max="180"
+      />
+      Gap：
+      <Flex>
+        <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
+        <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
+      </Flex>
+      Offset：
+      <Flex>
+        <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
+        <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
+      </Flex>
+    </Flex>
+  </Col>
+</Row>
 
 ::: details Show Code
 
@@ -219,7 +210,7 @@ import { reactive, ref } from 'vue'
 const model = reactive({
   content: 'Vue Amazing UI',
   layout: 'alternate',
-  color: 'rgba(0,0,0,.15)',
+  color: 'rgba(0, 0, 0, 0.15)',
   fontSize: 16,
   fontWeight: 400,
   zIndex: 9,
@@ -239,73 +230,64 @@ const layoutOptions = [
 ]
 </script>
 <template>
-  <Flex>
-    <Watermark v-bind="model">
-      <p class="u-paragraph">
-        The light-speed iteration of the digital world makes products more complex. However, human
-        consciousness and attention resources are limited. Facing this design contradiction, the
-        pursuit of natural interaction will be the consistent direction of Ant Design.
-      </p>
-      <p class="u-paragraph">
-        Natural user cognition: According to cognitive psychology, about 80% of external
-        information is obtained through visual channels. The most important visual elements in the
-        interface design, including layout, colors, illustrations, icons, etc., should fully
-        absorb the laws of nature, thereby reducing the user&apos;s cognitive cost and bringing
-        authentic and smooth feelings. In some scenarios, opportunely adding other sensory
-        channels such as hearing, touch can create a richer and more natural product experience.
-      </p>
-      <p class="u-paragraph">
-        Natural user behavior: In the interaction with the system, the designer should fully
-        understand the relationship between users, system roles, and task objectives, and also
-        contextually organize system functions and services. At the same time, a series of methods
-        such as behavior analysis, artificial intelligence and sensors could be applied to assist
-        users to make effective decisions and reduce extra operations of users, to save
-        users&apos; mental and physical resources and make human-computer interaction more
-        natural.
-      </p>
-      <img
-        style=" position: relative; z-index: 1; width: 100%; max-width: 800px;"
-        src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg"
-        alt="示例图片"
-      />
-    </Watermark>
-    <Flex
-      style="
-        width: 25%;
-        flex-shrink: 0;
-        border-left: 1px solid #eee;
-        padding-left: 20px;
-        margin-left: 20px;
-      "
-      vertical
-      gap="middle"
-    >
-      <p>Content</p>
-      <Input v-model:value="model.content" />
-      <p>Layout</p>
-      <Radio :options="layoutOptions" v-model:value="model.layout" button />
-      <p>Color</p>
-      <Input v-model:value="model.color" />
-      <p>FontSize</p>
-      <Slider v-model:value="model.fontSize" :step="1" :min="0" :max="100" />
-      <p>FontWeight</p>
-      <InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
-      <p>zIndex</p>
-      <Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" />
-      <p>Rotate</p>
-      <Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" />
-      <p>Gap</p>
-      <Space style="display: flex" align="baseline">
-        <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
-        <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
-      </Space>
-      <p>Offset</p>
-      <Space style="display: flex" align="baseline">
-        <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
-        <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
-      </Space>
-    </Flex>
-  </Flex>
+  <Row :gutter="24">
+    <Col :span="18">
+      <Watermark v-bind="model">
+        <p class="u-paragraph">
+          Natural user cognition: According to cognitive psychology, about 80% of external information is obtained
+          through visual channels. The most important visual elements in the interface design, including layout,
+          colors, illustrations, icons, etc., should fully absorb the laws of nature, thereby reducing the user&apos;s
+          cognitive cost and bringing authentic and smooth feelings. In some scenarios, opportunely adding other
+          sensory channels such as hearing, touch can create a richer and more natural product experience.
+        </p>
+        <p class="u-paragraph">
+          Natural user behavior: In the interaction with the system, the designer should fully understand the
+          relationship between users, system roles, and task objectives, and also contextually organize system
+          functions and services. At the same time, a series of methods such as behavior analysis, artificial
+          intelligence and sensors could be applied to assist users to make effective decisions and reduce extra
+          operations of users, to save users&apos; mental and physical resources and make human-computer interaction
+          more natural.
+        </p>
+        <img
+          style="max-width: 100%"
+          src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg"
+          alt="示例图片"
+        />
+      </Watermark>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="middle">
+        Content：<Input v-model:value="model.content" /> Layout：<Radio
+          :options="layoutOptions"
+          v-model:value="model.layout"
+          button
+        />
+        Color：<Input v-model:value="model.color" /> FontSize：<Slider
+          v-model:value="model.fontSize"
+          :step="1"
+          :min="0"
+          :max="100"
+        />
+        FontWeight：<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
+        zIndex：<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> Rotate：<Slider
+          v-model:value="model.rotate"
+          :step="1"
+          :min="-180"
+          :max="180"
+        />
+        Gap：
+        <Flex>
+          <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
+          <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
+        </Flex>
+        Offset：
+        <Flex>
+          <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
+          <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
+        </Flex>
+      </Flex>
+    </Col>
+  </Row>
 </template>
 ```
 
