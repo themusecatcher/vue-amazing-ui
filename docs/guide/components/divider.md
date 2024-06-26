@@ -15,12 +15,14 @@
 ## 基本使用
 
 <Divider>Center Text</Divider>
+<Divider border-style="dashed">Center Text</Divider>
 
 ::: details Show Code
 
 ```vue
 <template>
   <Divider>Center Text</Divider>
+  <Divider border-style="dashed">Center Text</Divider>
 </template>
 ```
 
@@ -29,12 +31,32 @@
 ## 中间无文字
 
 <Divider />
+<Divider border-style="dashed" />
 
 ::: details Show Code
 
 ```vue
 <template>
   <Divider />
+  <Divider border-style="dashed" />
+</template>
+```
+
+:::
+
+## 指定文字位置
+
+<Divider>Center Text</Divider>
+<Divider orientation="left">Left Text</Divider>
+<Divider orientation="right">Right Text</Divider>
+
+::: details Show Code
+
+```vue
+<template>
+  <Divider>Center Text</Divider>
+  <Divider orientation="left">Left Text</Divider>
+  <Divider orientation="right">Right Text</Divider>
 </template>
 ```
 
@@ -44,32 +66,11 @@
 
 <div>
   Text
-  <Divider type="vertical" />
+  <Divider vertical />
   <a href="#">Link</a>
-  <Divider type="vertical" />
+  <Divider vertical />
   <a href="#">Link</a>
 </div>
-
-::: details Show Code
-
-```vue
-<template>
-  <div>
-    Text
-    <Divider type="vertical" />
-    <a href="#">Link</a>
-    <Divider type="vertical" />
-    <a href="#">Link</a>
-  </div>
-</template>
-```
-
-:::
-
-## 指定文字位置
-
-<Divider orientation="left">Left Text</Divider>
-<Divider orientation="right">Right Text</Divider>
 
 ::: details Show Code
 
@@ -82,7 +83,25 @@
 
 :::
 
-## 自定义文字位置
+## 自定义垂直线高度
+
+<Divider vertical :border-width="3" :height="60" />
+<Divider vertical :border-width="3" :height="60" border-style="dashed" />
+<Divider vertical :border-width="3" :height="60" border-style="dotted" />
+
+::: details Show Code
+
+```vue
+<template>
+  <Divider vertical :border-width="3" :height="60" />
+  <Divider vertical :border-width="3" :height="60" border-style="dashed" />
+  <Divider vertical :border-width="3" :height="60" border-style="dotted" />
+</template>
+```
+
+:::
+
+## 自定义文字边距
 
 *文字居左(右)并距左(右)边 120px*
 
@@ -100,31 +119,29 @@
 
 :::
 
-## 使用虚线
+## 自定义样式
 
-<Divider dashed>Center Text</Divider>
-
-::: details Show Code
-
-```vue
-<template>
-  <Divider dashed>Center Text</Divider>
-</template>
-```
-
-:::
-
-## 自定义线宽
-
-*线宽 3px*
-
-<Divider :borderWidth="3">Center Text</Divider>
+<Divider :border-width="3" border-color="orange" />
+<Divider :border-width="3" border-style="dashed" border-color="orange" />
+<Divider :border-width="3" border-style="dotted" border-color="orange" />
+<Flex style="height: 120px;">
+  <Divider vertical :border-width="3" border-color="orange" height="auto" />
+  <Divider vertical :border-width="3" border-style="dashed" border-color="orange" :height="120" />
+  <Divider vertical :border-width="3" border-style="dotted" border-color="orange" height="100%" />
+</Flex>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Divider :borderWidth="3">Center Text</Divider>
+  <Divider :border-width="3" border-color="orange" />
+  <Divider :border-width="3" border-style="dashed" border-color="orange" />
+  <Divider :border-width="3" border-style="dotted" border-color="orange" />
+  <Flex style="height: 120px;">
+    <Divider vertical :border-width="3" border-color="orange" height="auto" />
+    <Divider vertical :border-width="3" border-style="dashed" border-color="orange" :height="120" />
+    <Divider vertical :border-width="3" border-style="dotted" border-color="orange" height="100%" />
+  </Flex>
 </template>
 ```
 
@@ -134,8 +151,9 @@
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-dashed | 是否为虚线 | boolean | false | false
 orientation | 分割线标题的位置 | 'left' &#124; 'center' &#124; 'right' | 'center' | false
 orientationMargin | 标题和最近 `left` / `right` 边框之间的距离，去除了分割线，同时 `orientation` 必须为 `left` 或 `right` | string &#124; number | '' | false
 borderWidth | 分割线宽度，单位`px` | number | 1 | false
-type | 水平或者垂直类型 | 'horizontal' &#124; 'vertical' | 'horizontal' | false
+borderStyle | 分割线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' &#124; 'double' &#124; 'groove' &#124; 'ridge' &#124; 'inset' &#124; 'outset' | 'solid' | false
+borderColor | 分割线颜色 | string | 'rgba(5, 5, 5, 0.06)' | false
+vertical | 垂直分割线高度，仅当 `vertical: true` 时生效 | string &#124; number | '0.9em' | false
