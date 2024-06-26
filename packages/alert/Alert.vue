@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useSlots, computed, nextTick, watchPostEffect } from 'vue'
+import { ref, useSlots, computed, watchPostEffect } from 'vue'
 interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot
