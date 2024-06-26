@@ -250,3 +250,9 @@ ablum | 是否相册模式，即从一张展示图片点开相册 | boolean | fa
 -- | -- | -- | --
 src | 图像地址 | string | true
 name | 图像名称 | string | false
+
+## Methods
+
+事件名称 | 说明 | 参数
+-- | -- | --
+preview | 预览索引为 `index` 的图片，从 `0` 开始 | (index: number) => void
