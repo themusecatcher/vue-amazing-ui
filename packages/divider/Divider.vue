@@ -1,27 +1,34 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
 interface Props {
-  dashed?: boolean // 是否为虚线
   orientation?: 'left' | 'center' | 'right' // 分割线标题的位置
   orientationMargin?: string | number // 标题和最近 left/right 边框之间的距离，去除了分割线，同时 orientation 必须为 left 或 right
-  borderWidth?: number // 分割线宽度
-  type?: 'horizontal' | 'vertical' // 水平或者垂直类型
+  borderWidth?: number // 分割线宽度，单位 px
+  borderStyle?: 'solid' | 'dashed' | 'dotted' | 'double' | 'groove' | 'ridge' | 'inset' | 'outset' // 分割线样式
+  borderColor?: string // 分割线颜色
+  vertical?: boolean // 是否垂直分割
+  height?: string | number // 垂直分割线高度，仅当 vertical: true 时生效
 }
 const props = withDefaults(defineProps<Props>(), {
-  dashed: false,
-  orientation: 'center', // 可选 left center right
-  orientationMargin: '',
+  orientation: 'center',
+  orientationMargin: undefined,
   borderWidth: 1,
-  type: 'horizontal'
+  borderStyle: 'solid',
+  borderColor: 'rgba(5, 5, 5, 0.06)',
+  vertical: false,
+  height: '0.9em'
 })
 const margin = computed(() => {
-  if (props.orientationMargin !== '') {
-    if (typeof props.orientationMargin === 'number') {
-      return props.orientationMargin + 'px'
-    } else {
-      return props.orientationMargin
-    }
+  if (typeof props.orientationMargin === 'number') {
+    return props.orientationMargin + 'px'
   }
+  return props.orientationMargin
+})
+const lineHeight = computed(() => {
+  if (typeof props.height === 'number') {
+    return props.height + 'px'
+  }
+  return props.height
 })
 const slots = useSlots()
 const showText = computed(() => {
@@ -34,77 +41,93 @@ const showText = computed(() => {
 </script>
 <template>
   <div
-    v-if="type === 'horizontal'"
+    class="m-divider divider-style"
     :class="[
-      `m-divider-horizontal ${orientation}`,
+      vertical ? 'm-divider-vertical' : 'm-divider-horizontal',
       {
-        dashed: dashed,
-        margin24: !showText,
-        marginLeft: orientationMargin !== '' && orientation === 'left',
-        marginRight: orientationMargin !== '' && orientation === 'right'
+        'divider-with-text': showText,
+        'divider-with-text-center': showText && orientation === 'center',
+        'divider-with-text-left': showText && orientation === 'left',
+        'divider-with-text-right': showText && orientation === 'right',
+        'divider-orientation-margin-left': showText && orientation === 'left' && orientationMargin !== undefined,
+        'divider-orientation-margin-right': showText && orientation === 'right' && orientationMargin !== undefined
       }
     ]"
-    :style="`--border-width: ${borderWidth}px;`"
+    :style="`--border-width: ${borderWidth}px; --border-style: ${borderStyle}; --border-color: ${borderColor}; --margin: ${margin}; --line-height: ${lineHeight};`"
   >
-    <span class="u-text" v-if="orientation === 'left'" :style="`margin-left: ${margin};`" v-show="showText">
-      <slot></slot>
-    </span>
-    <span class="u-text" v-else-if="orientation === 'right'" :style="`margin-right: ${margin};`" v-show="showText">
-      <slot></slot>
-    </span>
-    <span class="u-text" v-else v-show="showText">
+    <span class="u-divider-text" v-show="showText">
       <slot></slot>
     </span>
   </div>
-  <div v-else class="m-divider-vertical"></div>
 </template>
 <style lang="less" scoped>
+.m-divider {
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  border-block-start: var(--border-width) var(--border-style) var(--border-color);
+  .u-divider-text {
+    display: inline-block;
+    padding: 0 1em;
+  }
+}
 .m-divider-horizontal {
   display: flex;
-  align-items: center;
-  margin: 16px 0;
+  clear: both;
   width: 100%;
   min-width: 100%;
-  &::before,
-  &::after {
-    position: relative;
-    width: 50%;
-    border-top-width: var(--border-width);
-    border-top-style: solid;
-    border-top-color: rgba(5, 5, 5, 0.06);
-    transform: translateY(50%);
-    content: '';
-  }
-  .u-text {
-    display: inline-block;
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.88);
-    font-weight: 500;
-    line-height: 1.5714285714285714;
-    white-space: nowrap;
-    text-align: center;
-    padding: 0 16px;
-  }
+  margin: 24px 0;
 }
 .m-divider-vertical {
   position: relative;
   top: -0.06em;
   display: inline-block;
-  height: 0.9em;
+  height: var(--line-height);
   margin: 0 8px;
   vertical-align: middle;
   border-top: 0;
-  border-inline-start: 1px solid rgba(5, 5, 5, 0.06);
+  border-inline-start: var(--border-width) var(--border-style) var(--border-color);
 }
-.dashed {
-  &::before {
-    border-top-style: dashed;
-  }
+.divider-style {
+  background: none;
+  border-color: var(--border-color);
+  border-style: var(--border-style);
+  border-width: var(--border-width) 0 0;
+}
+.m-divider-vertical.divider-style {
+  border-inline-start-width: var(--border-width);
+  border-inline-end: 0;
+  border-block-start: 0;
+  border-block-end: 0;
+}
+.divider-with-text {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+  color: rgba(0, 0, 0, 0.88);
+  font-weight: 500;
+  font-size: 16px;
+  white-space: nowrap;
+  text-align: center;
+  border-block-start: 0 var(--border-color);
+  &::before,
   &::after {
-    border-top-style: dashed;
+    position: relative;
+    width: 50%;
+    border-top-width: var(--border-width);
+    border-top-style: var(--border-style);
+    border-top-color: inherit;
+    transform: translateY(50%);
+    content: '';
   }
 }
-.left {
+.divider-with-text.divider-style {
+  &::before,
+  &::after {
+    border-style: var(--border-style) none none;
+  }
+}
+.divider-with-text-left {
   &::before {
     width: 5%;
   }
@@ -112,7 +135,7 @@ const showText = computed(() => {
     width: 95%;
   }
 }
-.right {
+.divider-with-text-right {
   &::before {
     width: 95%;
   }
@@ -120,23 +143,28 @@ const showText = computed(() => {
     width: 5%;
   }
 }
-.margin24 {
-  margin: 24px 0;
-}
-.marginLeft {
+.divider-orientation-margin-left {
   &::before {
     width: 0;
   }
   &::after {
     width: 100%;
   }
+  .u-divider-text {
+    margin-left: var(--margin);
+    padding-inline-start: 0;
+  }
 }
-.marginRight {
+.divider-orientation-margin-right {
   &::before {
     width: 100%;
   }
   &::after {
     width: 0;
+  }
+  .u-divider-text {
+    margin-right: var(--margin);
+    padding-inline-end: 0;
   }
 }
 </style>
