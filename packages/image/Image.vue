@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted, watchEffect } from 'vue'
+import { computed, ref, watchEffect, nextTick } from 'vue'
 import Spin from '../spin'
 import Space from '../space'
+import { add } from '../index'
 interface Image {
   src: string // 图像地址
   name?: string // 图像名称
@@ -71,16 +72,9 @@ function getImages() {
 const imageCount = computed(() => {
   return images.value.length
 })
-onMounted(() => {
-  // 监听键盘切换事件
-  document.addEventListener('keydown', keyboardSwitch)
-})
-onUnmounted(() => {
-  // 移除键盘切换事件
-  document.removeEventListener('keydown', keyboardSwitch)
-})
 const complete = ref(Array(imageCount.value).fill(false)) // 图片是否加载完成
 const loaded = ref(Array(imageCount.value).fill(false)) // 预览图片是否加载完成
+const previewRef = ref() // DOM 引用
 const previewIndex = ref(0) // 当前预览的图片索引
 const showPreview = ref(false) // 是否显示预览
 const rotate = ref(0) // 预览图片旋转角度
@@ -91,17 +85,6 @@ const sourceX = ref(0) // 拖动开始时位置
 const sourceY = ref(0) // 拖动开始时位置
 const dragX = ref(0) // 拖动横向距离
 const dragY = ref(0) // 拖动纵向距离
-function keyboardSwitch(e: KeyboardEvent) {
-  e.preventDefault()
-  if (showPreview.value && imageCount.value > 1) {
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      onSwitchLeft()
-    }
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      onSwitchRight()
-    }
-  }
-}
 function onComplete(n: number) {
   // 图片加载完成
   complete.value[n] = true
@@ -121,27 +104,30 @@ function getImageName(image: Image) {
     }
   }
 }
-function onPreview(n: number) {
+function onKeyboard(e: KeyboardEvent) {
+  if (showPreview.value && imageCount.value > 1) {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      onSwitchLeft()
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      onSwitchRight()
+    }
+  }
+}
+function onPreview(index: number) {
   scale.value = 1
   rotate.value = 0
   dragX.value = 0
   dragY.value = 0
   showPreview.value = true
-  previewIndex.value = n
+  previewIndex.value = index
+  nextTick(() => {
+    previewRef.value.focus()
+  })
 }
 defineExpose({
-  onPreview
+  preview: onPreview
 })
-// 消除js加减精度问题的加法函数
-function add(num1: number, num2: number) {
-  const num1DeciStr = String(num1).split('.')[1]
-  const num2DeciStr = String(num2).split('.')[1]
-  let maxLen = Math.max(num1DeciStr?.length || 0, num2DeciStr?.length || 0) // 两数中最长的小数位长度
-  let num1Str = num1.toFixed(maxLen) // 补零，返回字符串
-  let num2Str = num2.toFixed(maxLen)
-  const result = +num1Str.replace('.', '') + +num2Str.replace('.', '') // 转换为整数相加
-  return result / Math.pow(10, maxLen)
-}
 function onClose() {
   // 关闭
   showPreview.value = false
@@ -188,7 +174,6 @@ function onVerticalMirror() {
 function onWheel(e: WheelEvent) {
   // 鼠标滚轮缩放
   // e.preventDefault() // 禁止浏览器捕获滑动事件
-  console.log('e', e)
   const scrollZoom = e.deltaY * props.zoomRatio * 0.1 // 滚轮的纵向滚动量
   if (scale.value === props.minZoomScale && scrollZoom > 0) {
     return
@@ -298,11 +283,19 @@ function onSwitchRight() {
         </div>
       </div>
     </Space>
-    <Transition name="mask">
-      <div class="m-preview-mask" v-show="showPreview"></div>
+    <Transition name="fade">
+      <div v-show="showPreview" class="m-preview-mask"></div>
     </Transition>
-    <Transition name="preview">
-      <div class="m-preview-wrap" v-show="showPreview" @click.self="onClose" @wheel.prevent="onWheel">
+    <Transition name="zoom">
+      <div
+        v-show="showPreview"
+        ref="previewRef"
+        class="m-preview-wrap"
+        tabindex="-1"
+        @click.self="onClose"
+        @wheel.prevent="onWheel"
+        @keydown="onKeyboard"
+      >
         <div class="m-preview-body">
           <div class="m-preview-operations">
             <a
@@ -443,22 +436,24 @@ function onSwitchRight() {
   </div>
 </template>
 <style lang="less" scoped>
-.mask-enter-active,
-.mask-leave-active {
-  transition: opacity 0.25s ease-in-out;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s linear;
 }
-.mask-enter-from,
-.mask-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
-.preview-enter-active,
-.preview-leave-active {
-  transition: all 0.25s ease-in-out;
+.zoom-enter-active {
+  transition: all 0.3s;
 }
-.preview-enter-from,
-.preview-leave-to {
+.zoom-leave-active {
+  transition: all 0.2s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+}
+.zoom-enter-from,
+.zoom-leave-to {
   opacity: 0;
-  transform: scale(0);
+  transform: scale(0.2);
 }
 .m-image-wrap {
   display: inline-block;
@@ -534,7 +529,7 @@ function onSwitchRight() {
     bottom: 0;
     right: 0;
     overflow: auto;
-    outline: 0;
+    outline: none;
     z-index: 1080;
     height: 100%;
     text-align: center;
@@ -641,6 +636,7 @@ function onSwitchRight() {
         cursor: pointer;
         transition: all 0.3s;
         pointer-events: auto;
+        user-select: none;
         &:hover {
           background: rgba(0, 0, 0, 0.2);
         }

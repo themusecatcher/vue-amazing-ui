@@ -91,7 +91,6 @@ function onChange(e: Event) {
     numValue.value = props.value?.toFixed(precision.value)
   }
 }
-// 消除js加减精度问题的加法函数
 function onKeyboard(e: KeyboardEvent) {
   if (e.key === 'ArrowUp') {
     onUp()

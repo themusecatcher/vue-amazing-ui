@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { ref, watchEffect, nextTick } from 'vue'
 import Spin from '../spin'
 import Message from '../message'
 import Image from '../image'
 import Space from '../space'
-import { ref, watchEffect, nextTick } from 'vue'
 interface FileType {
   name?: string // 文件名
   url: any // 文件地址
@@ -200,7 +200,7 @@ function onPreview(n: number, url: string) {
   console.log('isImage', isImage(url))
   if (isImage(url)) {
     const files = uploadedFiles.value.slice(0, n).filter((file) => !isImage(file.url))
-    imageRef.value[n - files.length].onPreview(0)
+    imageRef.value[n - files.length].preview(0)
   } else {
     window.open(url)
   }
