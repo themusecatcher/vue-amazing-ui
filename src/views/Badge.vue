@@ -101,7 +101,7 @@ function increase() {
       <Badge status="warning" />
     </Space>
     <br />
-    <Space style="margin-top: 10px" direction="vertical" :gap="10">
+    <Space style="margin-top: 10px" vertical :gap="10">
       <Badge status="success" text="Success" />
       <Badge status="error" text="Error" />
       <Badge status="default" text="Default" />

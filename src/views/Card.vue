@@ -30,7 +30,7 @@ const loading = ref(true)
       <p>Card content</p>
     </Card>
     <h2 class="mt30 mb10">预加载卡片</h2>
-    <Space direction="vertical" gap="middle">
+    <Space vertical gap="middle">
       <Card :loading="loading" title="Card title" :width="300">
         <p>Card content</p>
         <p>Card content</p>

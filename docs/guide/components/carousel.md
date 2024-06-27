@@ -754,15 +754,15 @@ function getCurrentIndex () {
 <Flex gap="large" vertical>
   <Row :gutter="24">
     <Col :span="6">
-      <Space direction="vertical"> autoplay：<Switch v-model:checked="carouselConfig.autoplay" /> </Space>
+      <Space vertical> autoplay：<Switch v-model:checked="carouselConfig.autoplay" /> </Space>
     </Col>
     <Col :span="6">
-      <Space direction="vertical">
+      <Space vertical>
         pauseOnMouseEnter：<Switch v-model:checked="carouselConfig.pauseOnMouseEnter" />
       </Space>
     </Col>
     <Col :span="6">
-      <Space direction="vertical">
+      <Space vertical>
         effect：<Radio :options="effectOptions" v-model:value="carouselConfig.effect" button button-style="solid" />
       </Space>
     </Col>
@@ -774,7 +774,7 @@ function getCurrentIndex () {
   </Row>
   <Row :gutter="24">
     <Col :span="6">
-      <Space direction="vertical"> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
+      <Space vertical> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
     </Col>
     <Col :span="6">
       <Flex vertical>
@@ -787,7 +787,7 @@ function getCurrentIndex () {
   </Row>
   <Row :gutter="24">
     <Col :span="6">
-      <Space direction="vertical"> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
+      <Space vertical> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
     </Col>
     <Col :span="6">
       <Flex vertical gap="middle"> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
@@ -803,13 +803,13 @@ function getCurrentIndex () {
   </Row>
   <Row :gutter="24">
     <Col :span="12">
-      <Space direction="vertical">
+      <Space vertical>
         dotPosition：
         <Radio :options="positionOptions" v-model:value="carouselConfig.dotPosition" button button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
-      <Space direction="vertical">
+      <Space vertical>
         dotsTrigger：
         <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
       </Space>
@@ -905,15 +905,15 @@ const carouselConfig = reactive({
   <Flex gap="large" vertical>
     <Row :gutter="24">
       <Col :span="6">
-        <Space direction="vertical"> autoplay：<Switch v-model:checked="carouselConfig.autoplay" /> </Space>
+        <Space vertical> autoplay：<Switch v-model:checked="carouselConfig.autoplay" /> </Space>
       </Col>
       <Col :span="6">
-        <Space direction="vertical">
+        <Space vertical>
           pauseOnMouseEnter：<Switch v-model:checked="carouselConfig.pauseOnMouseEnter" />
         </Space>
       </Col>
       <Col :span="6">
-        <Space direction="vertical">
+        <Space vertical>
           effect：<Radio :options="effectOptions" v-model:value="carouselConfig.effect" button button-style="solid" />
         </Space>
       </Col>
@@ -925,7 +925,7 @@ const carouselConfig = reactive({
     </Row>
     <Row :gutter="24">
       <Col :span="6">
-        <Space direction="vertical"> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
+        <Space vertical> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
       </Col>
       <Col :span="6">
         <Flex vertical>
@@ -938,7 +938,7 @@ const carouselConfig = reactive({
     </Row>
     <Row :gutter="24">
       <Col :span="6">
-        <Space direction="vertical"> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
+        <Space vertical> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
       </Col>
       <Col :span="6">
         <Flex vertical gap="middle"> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
@@ -954,13 +954,13 @@ const carouselConfig = reactive({
     </Row>
     <Row :gutter="24">
       <Col :span="12">
-        <Space direction="vertical">
+        <Space vertical>
           dotPosition：
           <Radio :options="positionOptions" v-model:value="carouselConfig.dotPosition" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
-        <Space direction="vertical">
+        <Space vertical>
           dotsTrigger：
           <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
         </Space>

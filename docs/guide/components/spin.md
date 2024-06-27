@@ -20,14 +20,15 @@ const spinning = ref(true)
 
 ## 基本使用
 
+<Flex align="center">
+  Loading state:<Switch v-model:checked="spinning" />
+</Flex>
+
+<br/>
+
 <Spin :spinning="spinning">
   <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
 </Spin>
-<br/>
-<div class="m-flex">
-  <h3 class="u-h3">Loading state: </h3>
-  <Switch v-model:checked="spinning" />
-</div>
 
 ::: details Show Code
 
@@ -40,8 +41,6 @@ const spinning = ref(true)
   <Spin :spinning="spinning">
     <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
   </Spin>
-  <br/>
-  <h4>Loading state: <Switch v-model:checked="spinning" /></h4>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -73,8 +72,6 @@ const spinning = ref(true)
   <Spin :spinning="spinning" indicator="spin-dot">
     <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
   </Spin>
-  <br/>
-  <h4>Loading state: <Switch v-model:checked="spinning" /></h4>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -106,8 +103,6 @@ const spinning = ref(true)
   <Spin :spinning="spinning" indicator="spin-line">
     <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
   </Spin>
-  <br/>
-  <h4>Loading state: <Switch v-model:checked="spinning" /></h4>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -124,9 +119,9 @@ const spinning = ref(true)
 
 ## 四分之一圆形指示符
 
-<br/>
-<Spin :spinning="spinning" indicator="quarter-circle" />
-<br/>
+<Spin :spinning="spinning" indicator="quarter-circle">
+  <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+</Spin>
 
 ::: details Show Code
 
@@ -136,17 +131,28 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="quarter-circle" />
+  <Spin :spinning="spinning" indicator="quarter-circle">
+    <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+  </Spin>
 </template>
+<style lang="less" scoped>
+.spin-content {
+  display: inline-block;
+  border: 1px solid #91d5ff;
+  border-radius: 6px;
+  background-color: #e6f7ff;
+  padding: 16px;
+}
+</style>
 ```
 
 :::
 
 ## 二分之一圆形指示符
 
-<br/>
-<Spin :spinning="spinning" indicator="half-circle" />
-<br/>
+<Spin :spinning="spinning" indicator="half-circle">
+  <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+</Spin>
 
 ::: details Show Code
 
@@ -156,17 +162,28 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="half-circle" />
+  <Spin :spinning="spinning" indicator="half-circle">
+    <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+  </Spin>
 </template>
+<style lang="less" scoped>
+.spin-content {
+  display: inline-block;
+  border: 1px solid #91d5ff;
+  border-radius: 6px;
+  background-color: #e6f7ff;
+  padding: 16px;
+}
+</style>
 ```
 
 :::
 
 ## 四分之三圆形指示符
 
-<br/>
-<Spin :spinning="spinning" indicator="three-quarters-circle" />
-<br/>
+<Spin :spinning="spinning" indicator="three-quarters-circle">
+  <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+</Spin>
 
 ::: details Show Code
 
@@ -176,17 +193,28 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="three-quarters-circle" />
+  <Spin :spinning="spinning" indicator="three-quarters-circle">
+    <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+  </Spin>
 </template>
+<style lang="less" scoped>
+.spin-content {
+  display: inline-block;
+  border: 1px solid #91d5ff;
+  border-radius: 6px;
+  background-color: #e6f7ff;
+  padding: 16px;
+}
+</style>
 ```
 
 :::
 
 ## 动态圆形指示符
 
-<br/>
-<Spin :spinning="spinning" indicator="dynamic-circle" />
-<br/>
+<Spin :spinning="spinning" indicator="dynamic-circle">
+  <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+</Spin>
 
 ::: details Show Code
 
@@ -196,8 +224,50 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="dynamic-circle" />
+  <Spin :spinning="spinning" indicator="dynamic-circle">
+    <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+  </Spin>
 </template>
+<style lang="less" scoped>
+.spin-content {
+  display: inline-block;
+  border: 1px solid #91d5ff;
+  border-radius: 6px;
+  background-color: #e6f7ff;
+  padding: 16px;
+}
+</style>
+```
+
+:::
+
+## 魔法圆环指示符
+
+<Spin :spinning="spinning" indicator="magic-ring">
+  <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+</Spin>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const spinning = ref(true)
+</script>
+<template>
+  <Spin :spinning="spinning" indicator="magic-ring">
+    <p class="spin-content">当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。</p>
+  </Spin>
+</template>
+<style lang="less" scoped>
+.spin-content {
+  display: inline-block;
+  border: 1px solid #91d5ff;
+  border-radius: 6px;
+  background-color: #e6f7ff;
+  padding: 16px;
+}
+</style>
 ```
 
 :::
@@ -212,6 +282,7 @@ const spinning = ref(true)
   <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="half-circle" />
   <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="three-quarters-circle" />
   <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
+  <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="magic-ring" />
 </Space>
 
 ::: details Show Code
@@ -230,6 +301,7 @@ const spinning = ref(true)
     <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="half-circle" />
     <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="three-quarters-circle" />
     <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
+    <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="magic-ring" />
   </Space>
 </template>
 <style lang="less" scoped>
@@ -252,6 +324,7 @@ const spinning = ref(true)
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="half-circle" />
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="three-quarters-circle" />
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+  <Spin class="u-spin" color="#fadb14" ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
 </Space>
 
 ::: details Show Code
@@ -270,6 +343,7 @@ const spinning = ref(true)
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="half-circle" />
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="three-quarters-circle" />
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+    <Spin class="u-spin" color="#fadb14" ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
   </Space>
 </template>
 <style lang="less" scoped>
@@ -284,7 +358,7 @@ const spinning = ref(true)
 
 ## 各种大小
 
-<Space direction="vertical">
+<Space vertical>
   <Space>
     <Spin class="u-spin" :spinning="spinning" size="small" />
     <Spin class="u-spin" :spinning="spinning" size="default" />
@@ -302,23 +376,28 @@ const spinning = ref(true)
   </Space>
   <Space>
     <Spin class="u-spin" :spinning="spinning" size="small" indicator="quarter-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="default"  indicator="quarter-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="large"  indicator="quarter-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="default" indicator="quarter-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="quarter-circle" />
   </Space>
   <Space>
     <Spin class="u-spin" :spinning="spinning" size="small" indicator="half-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="default"  indicator="half-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="large"  indicator="half-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="default" indicator="half-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="half-circle" />
   </Space>
   <Space>
     <Spin class="u-spin" :spinning="spinning" size="small" indicator="three-quarters-circle" />
     <Spin class="u-spin" :spinning="spinning" size="default"  indicator="three-quarters-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="large"  indicator="three-quarters-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="three-quarters-circle" />
   </Space>
   <Space>
     <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="default"  indicator="dynamic-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="default" indicator="dynamic-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
+  </Space>
+  <Space>
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="magic-ring" />
+    <Spin class="u-spin" :spinning="spinning" size="default" indicator="magic-ring" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="magic-ring" />
   </Space>
 </Space>
 
@@ -330,7 +409,7 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Space direction="vertical">
+  <Space vertical>
     <Space>
       <Spin class="u-spin" :spinning="spinning" size="small" />
       <Spin class="u-spin" :spinning="spinning" size="default" />
@@ -348,23 +427,28 @@ const spinning = ref(true)
     </Space>
     <Space>
       <Spin class="u-spin" :spinning="spinning" size="small" indicator="quarter-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="default"  indicator="quarter-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="large"  indicator="quarter-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="default" indicator="quarter-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="quarter-circle" />
     </Space>
     <Space>
       <Spin class="u-spin" :spinning="spinning" size="small" indicator="half-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="default"  indicator="half-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="large"  indicator="half-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="default" indicator="half-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="half-circle" />
     </Space>
     <Space>
       <Spin class="u-spin" :spinning="spinning" size="small" indicator="three-quarters-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="default"  indicator="three-quarters-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="large"  indicator="three-quarters-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="default" indicator="three-quarters-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="three-quarters-circle" />
     </Space>
     <Space>
       <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="default"  indicator="dynamic-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="large"  indicator="dynamic-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="default" indicator="dynamic-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
+    </Space>
+    <Space>
+      <Spin class="u-spin" :spinning="spinning" size="small" indicator="magic-ring" />
+      <Spin class="u-spin" :spinning="spinning" size="default" indicator="magic-ring" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="magic-ring" />
     </Space>
   </Space>
 </template>
@@ -406,8 +490,9 @@ const spinning = ref(true)
 -- | -- | -- | -- | --
 spinning | 是否为加载中状态 | boolean | true | false
 size | 组件大小 | 'small' &#124; 'default' &#124; 'large' | 'default' | false
-tip | 描述文案 | string | '' | false
-indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'quarter-circle' &#124; 'half-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' | 'dot' | false
+tip | 描述文案 | string | undefined | false
+indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'quarter-circle' &#124; 'half-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' &#124; 'magic-ring' | 'dot' | false
 color | 主题颜色 | string | '#1677FF' | false
+ringColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | '#4096FF' | false
 rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: spin-dot \| spin-line` 时生效 | boolean | false | false
 speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位`ms`，仅当 `indicator: spin-dot \| spin-line` 时生效 | number | 600 | false

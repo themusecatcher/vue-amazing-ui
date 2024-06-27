@@ -6,6 +6,8 @@ const spinning = ref(true)
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
+    <Flex align="center"> Loading state:<Switch v-model:checked="spinning" /> </Flex>
+    <br />
     <Spin style="width: 800px" :spinning="spinning">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
@@ -61,6 +63,14 @@ const spinning = ref(true)
         描述文案一起水平垂直居中。
       </p>
     </Spin>
+    <h2 class="mt30 mb10">魔法圆环指示符</h2>
+    <Spin style="width: 800px" :spinning="spinning" indicator="magic-ring">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
+    </Spin>
     <h2 class="mt30 mb10">自定义描述文案</h2>
     <Space>
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" />
@@ -70,6 +80,7 @@ const spinning = ref(true)
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="half-circle" />
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="three-quarters-circle" />
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
+      <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="magic-ring" />
     </Space>
     <h2 class="mt30 mb10">自定义颜色</h2>
     <Space>
@@ -80,9 +91,10 @@ const spinning = ref(true)
       <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="half-circle" />
       <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="three-quarters-circle" />
       <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+      <Spin class="u-spin" color="#fadb14" ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
     </Space>
     <h2 class="mt30 mb10">各种大小</h2>
-    <Space direction="vertical">
+    <Space vertical>
       <Space>
         <Spin class="u-spin" :spinning="spinning" size="small" />
         <Spin class="u-spin" :spinning="spinning" size="default" />
@@ -118,11 +130,12 @@ const spinning = ref(true)
         <Spin class="u-spin" :spinning="spinning" size="default" indicator="dynamic-circle" />
         <Spin class="u-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
       </Space>
+      <Space>
+        <Spin class="u-spin" :spinning="spinning" size="small" indicator="magic-ring" />
+        <Spin class="u-spin" :spinning="spinning" size="default" indicator="magic-ring" />
+        <Spin class="u-spin" :spinning="spinning" size="large" indicator="magic-ring" />
+      </Space>
     </Space>
-    <h3>
-      Loading state:
-      <Switch v-model:checked="spinning" />
-    </h3>
     <h2 class="mt30 mb10">Ant Design Vue 加载中</h2>
     <a-spin size="default" :spinning="spinning">
       <p class="spin-content">
