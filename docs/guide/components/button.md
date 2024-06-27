@@ -14,6 +14,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const loading = ref(true)
+function onClick(e: Event) {
+  console.log('click', e)
+}
 </script>
 
 ## 基本使用
@@ -110,15 +113,24 @@ const loading = ref(true)
 ::: details Show Code
 
 ```vue
-<script setup lang="ts">
-function onClick (e: Event) {
-  console.log('click')
-}
-</script>
 <template>
   <Button style="width: 120px; height: 40px;" size="large">
     <p style="font-size: 18px;">自定义样式</p>
   </Button>
+</template>
+```
+
+:::
+
+## 自定义跳转
+
+<Button href="https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html" target="_blank">跳转按钮</Button>
+
+::: details Show Code
+
+```vue
+<template>
+  <Button href="https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html" target="_blank">跳转按钮</Button>
 </template>
 ```
 
@@ -136,9 +148,9 @@ function onClick (e: Event) {
   <Button type="link" :loading="loading">Link Button</Button>
 </Space>
 <br/>
-<Space align="center" style="margin-top: 10px;">
-  <h3 style="margin-top: 0;">Loading state: </h3>
-  <Switch v-model:checked="loading" />
+<br/>
+<Space align="center">
+  Loading state:<Switch v-model:checked="loading" />
 </Space>
 
 ::: details Show Code
@@ -159,9 +171,9 @@ const loading = ref(true)
     <Button type="link" :loading="loading">Link Button</Button>
   </Space>
   <br/>
-  <Space align="center" style="margin-top: 10px;">
-    <h3 style="margin-top: 0;">Loading state: </h3>
-    <Switch v-model:checked="loading" />
+  <br/>
+  <Space align="center">
+    Loading state:<Switch v-model:checked="loading" />
   </Space>
 </template>
 ```
@@ -170,13 +182,18 @@ const loading = ref(true)
 
 ## 居中展示
 
-<Button center>Default Button</Button>
+<Button center @click="onClick">Default Button</Button>
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+function onClick(e: Event) {
+  console.log('click', e)
+}
+</script>
 <template>
-  <Button center>Default Button</Button>
+  <Button center @click="onClick">Default Button</Button>
 </template>
 ```
 

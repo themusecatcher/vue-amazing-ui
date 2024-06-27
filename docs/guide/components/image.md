@@ -234,8 +234,8 @@ name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读
 width | 图像宽度，单位`px` | string &#124; number | 300 | false
 height | 图像高度，单位`px` | string &#124; number | '100%' | false
 bordered | 是否显示边框 | boolean | true | false
-gap | 展示图片间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] | 8 | false
-fit | 图像如何适应容器高度和宽度，可选 `fill`(填充)、`contain`(等比缩放包含)、`cover`(等比缩放覆盖) | 'contain' &#124; 'fill' &#124; 'cover' | 'contain' | false
+gap | 展示图片间距大小，单位`px`，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] | 8 | false
+fit | 图片在容器内的的适应类型，参考[object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' | false
 preview | 预览文本 | string &#124; slot | '预览' | false
 zoomRatio | 每次缩放比率 | number | 0.1 | false
 minZoomScale | 最小缩放比例 | number | 0.1 | false
