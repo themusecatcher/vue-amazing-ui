@@ -1,15 +1,7 @@
-<script setup lang="ts">
-import { useRouter } from 'vue-router'
-const router = useRouter()
-
-function goHome() {
-  router.push({ path: '/' })
-}
-</script>
 <template>
   <Result status="404" title="404" sub-title="Sorry, the page you visited does not exist.">
     <template #extra>
-      <Button type="primary" @click="goHome">Back Home</Button>
+      <Button type="primary" href="/">Back Home</Button>
     </template>
   </Result>
 </template>
