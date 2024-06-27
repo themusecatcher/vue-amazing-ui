@@ -44,23 +44,25 @@ const images = ref([
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
-    <h2 class="mt30 mb10">多张图片预览</h2>
-    <h3 class="mb10">可循环切换图片，并支持键盘 (left / right / up / down) 按键切换</h3>
-    <Image :src="images" loop />
-    <h2 class="mt30 mb10">相册模式</h2>
-    <Image loop :src="images" album />
     <h2 class="mt30 mb10">自定义样式</h2>
-    <h3 class="mb10">自定义宽高，同时图片覆盖容器，预览文本设为 preview</h3>
+    <h3 class="mb10">自定义宽高，同时图片等比缩放覆盖容器，预览文本设为 preview</h3>
     <Image
       :width="300"
       :height="300"
-      fit="cover"
-      src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
+      fit="scale-down"
+      src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg"
     >
       <template #preview>
         <p class="u-pre">preview</p>
       </template>
     </Image>
+    <h2 class="mt30 mb10">多张图片预览</h2>
+    <h3 class="mb10">可循环切换图片，并支持键盘 (left / right / up / down) 按键切换</h3>
+    <Image :src="images" loop />
+    <h2 class="mt30 mb10">隐藏边框</h2>
+    <Image :src="images" :bordered="false" fit="cover" loop />
+    <h2 class="mt30 mb10">相册模式</h2>
+    <Image :src="images" album loop />
     <h2 class="mt30 mb10">自定义预览配置</h2>
     <h3 class="mb10">更改缩放比率和最大最小缩放比例</h3>
     <Image

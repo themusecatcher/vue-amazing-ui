@@ -52,6 +52,45 @@ const images = ref([
 
 :::
 
+## 自定义样式
+
+*自定义宽高；同时图片覆盖容器；预览文本设为 preview；间距设为16px*
+
+<br/>
+
+<Image :width="300" :height="300" fit="scale-down" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg">
+  <template #preview>
+    <p class="u-pre">preview</p>
+  </template>
+</Image>
+
+<style lang="less" scoped>
+.u-pre {
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
+
+::: details Show Code
+
+```vue
+<template>
+  <Image :width="300" :height="300" fit="scale-down" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg">
+    <template #preview>
+      <p class="u-pre">preview</p>
+    </template>
+  </Image>
+</template>
+<style lang="less" scoped>
+.u-pre {
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
+```
+
+:::
+
 ## 多张图片预览
 
 *可循环切换图片，并支持键盘 (left / right / up / down) 按键切换*
@@ -95,48 +134,9 @@ const images = ref([
 
 :::
 
-## 相册模式
-
-<Image :src="images" loop album />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const images = ref([
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    name: 'image-1.jpg'
-  },
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    name: 'image-2.jpg'
-  },
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    name: 'image-3.jpg'
-  },
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
-    name: 'image-4.jpg'
-  },
-  {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
-    name: 'image-5.jpg'
-  }
-])
-</script>
-<template>
-  <Image :src="images" loop album />
-</template>
-```
-
-:::
-
 ## 隐藏边框
 
-<Image :bordered="false" fit="cover" :src="images" loop />
+<Image :src="images" :bordered="false" fit="cover" loop />
 
 ::: details Show Code
 
@@ -167,33 +167,46 @@ const images = ref([
 ])
 </script>
 <template>
-  <Image :bordered="false" fit="cover" :src="images" loop />
+  <Image :src="images" :bordered="false" fit="cover" loop />
 </template>
 ```
 
 :::
 
-## 自定义样式
+## 相册模式
 
-*自定义宽高；同时图片覆盖容器；预览文本设为 preview；间距设为16px*
-
-<br/>
-
-<Image :width="300" :height="300" fit="cover" :gap="16" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg">
-  <template #preview>
-    <p class="u-pre">preview</p>
-  </template>
-</Image>
+<Image :src="images" album loop />
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const images = ref([
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    name: 'image-1.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    name: 'image-2.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    name: 'image-3.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    name: 'image-4.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    name: 'image-5.jpg'
+  }
+])
+</script>
 <template>
-  <Image :width="300" :height="300" fit="cover" :gap="16" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg">
-    <template #preview>
-      <p class="u-pre">preview</p>
-    </template>
-  </Image>
+  <Image :src="images" album loop />
 </template>
 ```
 

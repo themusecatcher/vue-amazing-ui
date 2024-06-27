@@ -88,353 +88,363 @@ withDefaults(defineProps<Props>(), {
   align-items: center;
   justify-content: center;
   pointer-events: none;
-}
-.m-spin {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9;
-  .m-spin-box {
-    text-align: center;
-    line-height: 0;
-    .m-loading-dot {
-      position: relative;
-      display: inline-block;
-      transform: rotate(45deg);
-      animation: loading-dot 1.2s infinite linear;
-      -webkit-animation: loading-dot 1.2s infinite linear;
-      @keyframes loading-dot {
-        100% {
-          transform: rotate(405deg);
-        } // to { transform: rotate(405deg); }
+  .m-spin {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9;
+    .m-spin-box {
+      text-align: center;
+      line-height: 0;
+      .m-loading-dot {
+        position: relative;
+        display: inline-block;
+        transform: rotate(45deg);
+        animation: loading-dot 1.2s infinite linear;
+        -webkit-animation: loading-dot 1.2s infinite linear;
+        @keyframes loading-dot {
+          100% {
+            transform: rotate(405deg);
+          } // to { transform: rotate(405deg); }
+        }
+        .u-dot-item {
+          // 单个圆点样式
+          position: absolute;
+          background: var(--color);
+          border-radius: 50%;
+          opacity: 0.3;
+          animation: loading-dot-color 1s linear infinite alternate;
+          -webkit-animation: loading-dot-color 1s linear infinite alternate;
+          @keyframes loading-dot-color {
+            100% {
+              opacity: 1;
+            }
+          }
+        }
+        .u-dot-item:first-child {
+          top: 0;
+          left: 0;
+        }
+        .u-dot-item:nth-child(2) {
+          top: 0;
+          right: 0;
+          animation-delay: 0.4s;
+          -webkit-animation-delay: 0.4s;
+        }
+        .u-dot-item:nth-child(3) {
+          bottom: 0;
+          right: 0;
+          animation-delay: 0.8s;
+          -webkit-animation-delay: 0.8s;
+        }
+        .u-dot-item:last-child {
+          bottom: 0;
+          left: 0;
+          animation-delay: 1.2s;
+          -webkit-animation-delay: 1.2s;
+        }
       }
-      .u-dot-item {
-        // 单个圆点样式
-        position: absolute;
-        background: var(--color);
-        border-radius: 50%;
-        opacity: 0.3;
-        animation: loading-dot-color 1s linear infinite alternate;
-        -webkit-animation: loading-dot-color 1s linear infinite alternate;
-        @keyframes loading-dot-color {
+      .spin-wrap-rotate {
+        animation: spin-rotate 2.4s ease-in-out;
+        -webkit-animation: spin-rotate 2.4s ease-in-out;
+        @keyframes spin-rotate {
+          100% {
+            transform: rotate(360deg);
+          } // to { transform: rotate(360deg); }
+        }
+      }
+      .spin-wrap-box {
+        text-align: center;
+        line-height: 0;
+        position: relative;
+        .m-spin-dot {
+          position: relative;
+          display: inline-block;
+          .u-spin-item {
+            position: absolute;
+            background: var(--color);
+            border-radius: 50%;
+          }
+          .u-spin-item:first-child {
+            top: 0;
+            left: 0;
+            opacity: 0.3;
+            animation: spin-color-1 var(--speed) linear infinite;
+            -webkit-animation: spin-color-1 var(--speed) linear infinite;
+          }
+          .u-spin-item:nth-child(2) {
+            top: 0;
+            right: 0;
+            opacity: 0.5;
+            animation: spin-color-3 var(--speed) linear infinite;
+            -webkit-animation: spin-color-3 var(--speed) linear infinite;
+          }
+          .u-spin-item:nth-child(3) {
+            bottom: 0;
+            right: 0;
+            opacity: 0.7;
+            animation: spin-color-5 var(--speed) linear infinite;
+            -webkit-animation: spin-color-5 var(--speed) linear infinite;
+          }
+          .u-spin-item:last-child {
+            bottom: 0;
+            left: 0;
+            opacity: 0.9;
+            animation: spin-color-7 var(--speed) linear infinite;
+            -webkit-animation: spin-color-7 var(--speed) linear infinite;
+          }
+        }
+        .m-spin-line {
+          position: relative;
+          display: inline-block;
+          .u-spin-item {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--color);
+          }
+          .u-spin-item:first-child {
+            opacity: 0.3;
+            animation: spin-color-1 var(--speed) linear infinite;
+            -webkit-animation: spin-color-1 var(--speed) linear infinite;
+          }
+          .u-spin-item:nth-child(2) {
+            opacity: 0.5;
+            transform: translateX(-50%) rotate(90deg);
+            animation: spin-color-3 var(--speed) linear infinite;
+            -webkit-animation: spin-color-3 var(--speed) linear infinite;
+          }
+          .u-spin-item:nth-child(3) {
+            opacity: 0.7;
+            transform: translateX(-50%) rotate(180deg);
+            animation: spin-color-5 var(--speed) linear infinite;
+            -webkit-animation: spin-color-5 var(--speed) linear infinite;
+          }
+          .u-spin-item:last-child {
+            opacity: 0.9;
+            transform: translateX(-50%) rotate(270deg);
+            animation: spin-color-7 var(--speed) linear infinite;
+            -webkit-animation: spin-color-7 var(--speed) linear infinite;
+          }
+        }
+        .spin-rotate {
+          position: absolute;
+          left: 0;
+          transform: rotate(45deg);
+          .u-spin-item:first-child {
+            opacity: 0.4;
+            animation: spin-color-2 var(--speed) linear infinite;
+            -webkit-animation: spin-color-2 var(--speed) linear infinite;
+          }
+          .u-spin-item:nth-child(2) {
+            opacity: 0.6;
+            animation: spin-color-4 var(--speed) linear infinite;
+            -webkit-animation: spin-color-4 var(--speed) linear infinite;
+          }
+          .u-spin-item:nth-child(3) {
+            opacity: 0.8;
+            animation: spin-color-6 var(--speed) linear infinite;
+            -webkit-animation: spin-color-6 var(--speed) linear infinite;
+          }
+          .u-spin-item:last-child {
+            opacity: 1;
+            animation: spin-color-8 var(--speed) linear infinite;
+            -webkit-animation: spin-color-8 var(--speed) linear infinite;
+          }
+        }
+        .spin-tip {
+          left: 50%;
+          transform: translateX(-50%) rotate(45deg);
+        }
+        @keyframes spin-color-1 {
+          0% {
+            opacity: 0.3;
+          }
+          14.3% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0.4;
+          }
+        }
+        @keyframes spin-color-2 {
+          0% {
+            opacity: 0.4;
+          }
+          14.3% {
+            opacity: 0.3;
+          }
+          28.6% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0.5;
+          }
+        }
+        @keyframes spin-color-3 {
+          0% {
+            opacity: 0.5;
+          }
+          28.6% {
+            opacity: 0.3;
+          }
+          42.8% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0.6;
+          }
+        }
+        @keyframes spin-color-4 {
+          0% {
+            opacity: 0.6;
+          }
+          42.8% {
+            opacity: 0.3;
+          }
+          57.1% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0.7;
+          }
+        }
+        @keyframes spin-color-5 {
+          0% {
+            opacity: 0.7;
+          }
+          57.1% {
+            opacity: 0.3;
+          }
+          71.4% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0.8;
+          }
+        }
+        @keyframes spin-color-6 {
+          0% {
+            opacity: 0.8;
+          }
+          71.4% {
+            opacity: 0.3;
+          }
+          85.7% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0.9;
+          }
+        }
+        @keyframes spin-color-7 {
+          0% {
+            opacity: 0.9;
+          }
+          85.7% {
+            opacity: 0.3;
+          }
           100% {
             opacity: 1;
           }
         }
+        @keyframes spin-color-8 {
+          0% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0.3;
+          }
+        }
       }
-      .u-dot-item:first-child {
-        top: 0;
-        left: 0;
+      .u-quarter-circle {
+        display: inline-block;
+        border-radius: 50%;
+        border-style: solid;
+        border-color: transparent;
+        border-top-color: var(--color); // 显示上1/4圆
+        animation: loading-circle 1s infinite linear;
+        -webkit-animation: loading-circle 1s infinite linear;
       }
-      .u-dot-item:nth-child(2) {
-        top: 0;
-        right: 0;
-        animation-delay: 0.4s;
-        -webkit-animation-delay: 0.4s;
+      .u-half-circle {
+        display: inline-block;
+        border-radius: 50%;
+        border-style: solid;
+        border-color: transparent;
+        border-top-color: var(--color); // 显示上1/4圆
+        border-right-color: var(--color); // 显示右1/4圆
+        animation: loading-circle 1s infinite linear;
+        -webkit-animation: loading-circle 1s infinite linear;
       }
-      .u-dot-item:nth-child(3) {
-        bottom: 0;
-        right: 0;
-        animation-delay: 0.8s;
-        -webkit-animation-delay: 0.8s;
+      .u-three-quarters-circle {
+        display: inline-block;
+        border-radius: 50%;
+        border-style: solid;
+        border-color: var(--color);
+        border-top-color: transparent; // 隐藏1/4圆
+        animation: loading-circle 1s infinite linear;
+        -webkit-animation: loading-circle 1s infinite linear;
       }
-      .u-dot-item:last-child {
-        bottom: 0;
-        left: 0;
-        animation-delay: 1.2s;
-        -webkit-animation-delay: 1.2s;
-      }
-    }
-    .spin-wrap-rotate {
-      animation: spin-rotate 2.4s ease-in-out;
-      -webkit-animation: spin-rotate 2.4s ease-in-out;
-      @keyframes spin-rotate {
+      @keyframes loading-circle {
         100% {
           transform: rotate(360deg);
-        } // to { transform: rotate(360deg); }
+        }
       }
-    }
-    .spin-wrap-box {
-      text-align: center;
-      line-height: 0;
-      position: relative;
-      .m-spin-dot {
-        position: relative;
+      .m-dynamic-circle {
         display: inline-block;
-        .u-spin-item {
-          position: absolute;
-          background: var(--color);
-          border-radius: 50%;
-        }
-        .u-spin-item:first-child {
-          top: 0;
-          left: 0;
-          opacity: 0.3;
-          animation: spin-color-1 var(--speed) linear infinite;
-          -webkit-animation: spin-color-1 var(--speed) linear infinite;
-        }
-        .u-spin-item:nth-child(2) {
-          top: 0;
-          right: 0;
-          opacity: 0.5;
-          animation: spin-color-3 var(--speed) linear infinite;
-          -webkit-animation: spin-color-3 var(--speed) linear infinite;
-        }
-        .u-spin-item:nth-child(3) {
-          bottom: 0;
-          right: 0;
-          opacity: 0.7;
-          animation: spin-color-5 var(--speed) linear infinite;
-          -webkit-animation: spin-color-5 var(--speed) linear infinite;
-        }
-        .u-spin-item:last-child {
-          bottom: 0;
-          left: 0;
-          opacity: 0.9;
-          animation: spin-color-7 var(--speed) linear infinite;
-          -webkit-animation: spin-color-7 var(--speed) linear infinite;
-        }
-      }
-      .m-spin-line {
-        position: relative;
-        display: inline-block;
-        .u-spin-item {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: var(--color);
-        }
-        .u-spin-item:first-child {
-          opacity: 0.3;
-          animation: spin-color-1 var(--speed) linear infinite;
-          -webkit-animation: spin-color-1 var(--speed) linear infinite;
-        }
-        .u-spin-item:nth-child(2) {
-          opacity: 0.5;
-          transform: translateX(-50%) rotate(90deg);
-          animation: spin-color-3 var(--speed) linear infinite;
-          -webkit-animation: spin-color-3 var(--speed) linear infinite;
-        }
-        .u-spin-item:nth-child(3) {
-          opacity: 0.7;
-          transform: translateX(-50%) rotate(180deg);
-          animation: spin-color-5 var(--speed) linear infinite;
-          -webkit-animation: spin-color-5 var(--speed) linear infinite;
-        }
-        .u-spin-item:last-child {
-          opacity: 0.9;
-          transform: translateX(-50%) rotate(270deg);
-          animation: spin-color-7 var(--speed) linear infinite;
-          -webkit-animation: spin-color-7 var(--speed) linear infinite;
-        }
-      }
-      .spin-rotate {
-        position: absolute;
-        left: 0;
-        transform: rotate(45deg);
-        .u-spin-item:first-child {
-          opacity: 0.4;
-          animation: spin-color-2 var(--speed) linear infinite;
-          -webkit-animation: spin-color-2 var(--speed) linear infinite;
-        }
-        .u-spin-item:nth-child(2) {
-          opacity: 0.6;
-          animation: spin-color-4 var(--speed) linear infinite;
-          -webkit-animation: spin-color-4 var(--speed) linear infinite;
-        }
-        .u-spin-item:nth-child(3) {
-          opacity: 0.8;
-          animation: spin-color-6 var(--speed) linear infinite;
-          -webkit-animation: spin-color-6 var(--speed) linear infinite;
-        }
-        .u-spin-item:last-child {
-          opacity: 1;
-          animation: spin-color-8 var(--speed) linear infinite;
-          -webkit-animation: spin-color-8 var(--speed) linear infinite;
-        }
-      }
-      .spin-tip {
-        left: 50%;
-        transform: translateX(-50%) rotate(45deg);
-      }
-      @keyframes spin-color-1 {
-        0% {
-          opacity: 0.3;
-        }
-        14.3% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.4;
-        }
-      }
-      @keyframes spin-color-2 {
-        0% {
-          opacity: 0.4;
-        }
-        14.3% {
-          opacity: 0.3;
-        }
-        28.6% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.5;
-        }
-      }
-      @keyframes spin-color-3 {
-        0% {
-          opacity: 0.5;
-        }
-        28.6% {
-          opacity: 0.3;
-        }
-        42.8% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.6;
-        }
-      }
-      @keyframes spin-color-4 {
-        0% {
-          opacity: 0.6;
-        }
-        42.8% {
-          opacity: 0.3;
-        }
-        57.1% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.7;
-        }
-      }
-      @keyframes spin-color-5 {
-        0% {
-          opacity: 0.7;
-        }
-        57.1% {
-          opacity: 0.3;
-        }
-        71.4% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.8;
-        }
-      }
-      @keyframes spin-color-6 {
-        0% {
-          opacity: 0.8;
-        }
-        71.4% {
-          opacity: 0.3;
-        }
-        85.7% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.9;
-        }
-      }
-      @keyframes spin-color-7 {
-        0% {
-          opacity: 0.9;
-        }
-        85.7% {
-          opacity: 0.3;
-        }
-        100% {
-          opacity: 1;
-        }
-      }
-      @keyframes spin-color-8 {
-        0% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.3;
-        }
-      }
-    }
-    .u-quarter-circle {
-      display: inline-block;
-      border-radius: 50%;
-      border-style: solid;
-      border-color: transparent;
-      border-top-color: var(--color); // 显示上1/4圆
-      animation: loading-circle 1s infinite linear;
-      -webkit-animation: loading-circle 1s infinite linear;
-    }
-    .u-half-circle {
-      display: inline-block;
-      border-radius: 50%;
-      border-style: solid;
-      border-color: transparent;
-      border-top-color: var(--color); // 显示上1/4圆
-      border-right-color: var(--color); // 显示右1/4圆
-      animation: loading-circle 1s infinite linear;
-      -webkit-animation: loading-circle 1s infinite linear;
-    }
-    .u-three-quarters-circle {
-      display: inline-block;
-      border-radius: 50%;
-      border-style: solid;
-      border-color: var(--color);
-      border-top-color: transparent; // 隐藏1/4圆
-      animation: loading-circle 1s infinite linear;
-      -webkit-animation: loading-circle 1s infinite linear;
-    }
-    @keyframes loading-circle {
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-    .m-dynamic-circle {
-      display: inline-block;
-      .circular {
-        display: inline-block;
-        animation: loading-rotate 2s linear infinite;
-        @keyframes loading-rotate {
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-        .path {
-          stroke-dasharray: 90, 150;
-          stroke-dashoffset: 0;
-          stroke-width: 5;
-          stroke: var(--color);
-          stroke-linecap: round;
-          animation: loading-dash 1.5s ease-in-out infinite;
-          @keyframes loading-dash {
-            0% {
-              stroke-dasharray: 1, 200;
-              stroke-dashoffset: 0;
-            }
-            50% {
-              stroke-dasharray: 90, 150;
-              stroke-dashoffset: -40px;
-            }
+        .circular {
+          display: inline-block;
+          animation: loading-rotate 2s linear infinite;
+          @keyframes loading-rotate {
             100% {
-              stroke-dasharray: 90, 150;
-              stroke-dashoffset: -120px;
+              transform: rotate(360deg);
+            }
+          }
+          .path {
+            stroke-dasharray: 90, 150;
+            stroke-dashoffset: 0;
+            stroke-width: 5;
+            stroke: var(--color);
+            stroke-linecap: round;
+            animation: loading-dash 1.5s ease-in-out infinite;
+            @keyframes loading-dash {
+              0% {
+                stroke-dasharray: 1, 200;
+                stroke-dashoffset: 0;
+              }
+              50% {
+                stroke-dasharray: 90, 150;
+                stroke-dashoffset: -40px;
+              }
+              100% {
+                stroke-dasharray: 90, 150;
+                stroke-dashoffset: -120px;
+              }
             }
           }
         }
       }
+      .u-tip {
+        color: var(--color);
+        text-align: center;
+      }
     }
-    .u-tip {
-      color: var(--color);
-      text-align: center;
-    }
+  }
+  .m-spin-content {
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.3s;
+  }
+  .m-spin-mask {
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.5;
   }
 }
 .spin-small {
@@ -604,13 +614,5 @@ withDefaults(defineProps<Props>(), {
       margin-top: 14px;
     }
   }
-}
-.m-spin-content {
-  transition: opacity 0.3s;
-}
-.m-spin-mask {
-  user-select: none;
-  pointer-events: none;
-  opacity: 0.4;
 }
 </style>
