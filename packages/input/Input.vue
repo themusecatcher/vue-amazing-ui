@@ -97,10 +97,7 @@ function onChange(e: InputEvent) {
   }
 }
 function onKeyboard(e: KeyboardEvent) {
-  if (e.key === 'Enter') {
-    e.preventDefault() // 消除enter键换行
-    emits('enter', e)
-  }
+  emits('enter', e)
 }
 const input = ref()
 function onClear() {
@@ -134,7 +131,7 @@ function onPassword() {
         :disabled="disabled"
         @input="onInput"
         @change="onChange"
-        @keydown="onKeyboard"
+        @keydown.enter.prevent="onKeyboard"
         v-bind="$attrs"
       />
       <span class="m-suffix">
