@@ -88,7 +88,7 @@ const loading = ref(true)
 
 ## 预加载卡片
 
-<Space direction="vertical" gap="middle">
+<Space vertical gap="middle">
   <Card :loading="loading" title="Card title" :width="300">
     <p>Card content</p>
     <p>Card content</p>
@@ -105,7 +105,7 @@ import { ref } from 'vue'
 const loading = ref(true)
 </script>
 <template>
-  <Space direction="vertical" gap="middle">
+  <Space vertical gap="middle">
     <Card :loading="loading" title="Card title" :width="300">
       <p>Card content</p>
       <p>Card content</p>

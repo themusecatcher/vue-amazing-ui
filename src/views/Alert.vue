@@ -7,14 +7,14 @@ function onClose(e: MouseEvent) {
   <div style="width: 425px">
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">共有四种样式 success、info、warning、error</h2>
-    <Space direction="vertical" align="stretch" style="width: 100%">
+    <Space vertical align="stretch" style="width: 100%">
       <Alert message="Info Text" />
       <Alert message="Success Text" type="success" />
       <Alert message="Warning Text" type="warning" />
       <Alert message="Error Text" type="error" />
     </Space>
     <h2 class="mt30 mb10">可关闭的警告提示</h2>
-    <Space direction="vertical" style="width: 100%">
+    <Space vertical style="width: 100%">
       <Alert
         message="Error Text"
         description="Error Description Error Description Error Description Error Description Error Description Error Description"
@@ -30,7 +30,7 @@ function onClose(e: MouseEvent) {
       />
     </Space>
     <h2 class="mt30 mb10">辅助性文字介绍</h2>
-    <Space direction="vertical" style="width: 100%">
+    <Space vertical style="width: 100%">
       <Alert message="Success Text" type="success">
         <template #description>
           <p>
@@ -57,7 +57,7 @@ function onClose(e: MouseEvent) {
       />
     </Space>
     <h2 class="mt30 mb10">辅助图标</h2>
-    <Space direction="vertical" style="width: 100%">
+    <Space vertical style="width: 100%">
       <Alert message="Success Tips" type="success" show-icon />
       <Alert message="Informational Notes" type="info" show-icon />
       <Alert message="Warning" type="warning" show-icon />
@@ -80,7 +80,7 @@ function onClose(e: MouseEvent) {
     <h2 class="mt30 mb10">自定义关闭文字</h2>
     <Alert message="Info Text" type="info" closable close-text="Close Now" />
     <h2 class="mt30 mb10">自定义图标</h2>
-    <Space direction="vertical" style="width: 100%">
+    <Space vertical style="width: 100%">
       <Alert message="Success Tips" type="success" show-icon>
         <template #icon>
           <svg

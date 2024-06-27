@@ -41,7 +41,7 @@ function onEnter (e: KeyboardEvent) {
 
 :::
 
-<Space :width="480" direction="vertical">
+<Space :width="480" vertical>
   <Textarea
     v-model:value="value"
     placeholder="Basic usage rows 2"
@@ -76,7 +76,7 @@ function onEnter (e: KeyboardEvent) {
 }
 </script>
 <template>
-  <Space :width="480" direction="vertical">
+  <Space :width="480" vertical>
     <Textarea
       v-model:value="value"
       placeholder="Basic usage rows 2"

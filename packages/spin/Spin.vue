@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Props {
   spinning?: boolean // 是否为加载中状态
-  size?: 'small' | 'default' | 'large' // 组件大小，可选 small default large
+  size?: 'small' | 'default' | 'large' // 组件大小
   tip?: string // 描述文案
   indicator?:
     | 'dot'
@@ -10,23 +10,29 @@ interface Props {
     | 'quarter-circle'
     | 'half-circle'
     | 'three-quarters-circle'
-    | 'dynamic-circle' // 加载指示符
-  color?: string // 主题颜色
+    | 'dynamic-circle'
+    | 'magic-ring' // 加载指示符
+  color?: string // 主题颜色，当 indicator: 'magic-ring' 时为外环颜色
+  ringColor?: string // 内环颜色，仅当 indicator: 'magic-ring' 时生效
   rotate?: boolean // spin-dot 或 spin-line 初始是否旋转，仅当 indicator: spin-dot | spin-line 时生效
   speed?: number // spin-dot 或 spin-line 渐变旋转的动画速度，单位ms，仅当 indicator: spin-dot | spin-line 时生效
 }
 withDefaults(defineProps<Props>(), {
   spinning: true,
   size: 'default',
-  tip: '',
+  tip: undefined,
   indicator: 'dot',
   color: '#1677FF',
+  ringColor: '#4096FF',
   rotate: false,
   speed: 600
 })
 </script>
 <template>
-  <div :class="`m-spin-wrap spin-${size}`" :style="`--color: ${color}; --speed: ${speed}ms;`">
+  <div
+    :class="`m-spin-wrap spin-${size}`"
+    :style="`--color: ${color}; --ring-color: ${ringColor}; --speed: ${speed}ms;`"
+  >
     <div class="m-spin" v-show="spinning">
       <div class="m-spin-box">
         <div class="m-loading-dot" v-if="indicator === 'dot'">
@@ -71,6 +77,11 @@ withDefaults(defineProps<Props>(), {
             <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
           </svg>
         </div>
+        <div v-if="indicator === 'magic-ring'" class="m-magic-ring">
+          <div class="m-outer-ring">
+            <div class="u-inner-ring"></div>
+          </div>
+        </div>
         <p class="u-tip" v-show="tip">{{ tip }}</p>
       </div>
     </div>
@@ -87,7 +98,7 @@ withDefaults(defineProps<Props>(), {
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
+  // pointer-events: none;
   .m-spin {
     position: absolute;
     top: 0;
@@ -401,6 +412,7 @@ withDefaults(defineProps<Props>(), {
         .circular {
           display: inline-block;
           animation: loading-rotate 2s linear infinite;
+          -webkit-animation: loading-rotate 2s linear infinite;
           @keyframes loading-rotate {
             100% {
               transform: rotate(360deg);
@@ -409,10 +421,10 @@ withDefaults(defineProps<Props>(), {
           .path {
             stroke-dasharray: 90, 150;
             stroke-dashoffset: 0;
-            stroke-width: 5;
             stroke: var(--color);
             stroke-linecap: round;
             animation: loading-dash 1.5s ease-in-out infinite;
+            -webkit-animation: loading-dash 1.5s ease-in-out infinite;
             @keyframes loading-dash {
               0% {
                 stroke-dasharray: 1, 200;
@@ -425,6 +437,56 @@ withDefaults(defineProps<Props>(), {
               100% {
                 stroke-dasharray: 90, 150;
                 stroke-dashoffset: -120px;
+              }
+            }
+          }
+        }
+      }
+      .m-magic-ring {
+        display: inline-block;
+        position: relative;
+        transform: rotate(45deg);
+        animation: spin-rotate 3s linear infinite;
+        -webkit-animation: spin-rotate 3s linear infinite;
+        @keyframes spin-rotate {
+          100% {
+            transform: rotate(405deg);
+          }
+        }
+        .m-outer-ring {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-style: solid;
+          border-color: var(--color);
+          border-radius: 50%;
+          animation: spin-outer-ring 1s linear infinite alternate;
+          -webkit-animation: spin-outer-ring 1s linear infinite alternate;
+          @keyframes spin-outer-ring {
+            0% {
+              transform: rotateY(-60deg);
+            }
+            100% {
+              transform: rotateY(60deg);
+            }
+          }
+          .u-inner-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-style: solid;
+            border-color: var(--ring-color);
+            border-radius: 50%;
+            animation: spin-inner-ring 2s linear infinite;
+            -webkit-animation: spin-inner-ring 2s linear infinite;
+            @keyframes spin-inner-ring {
+              0% {
+                transform: rotateY(0deg);
+              }
+              100% {
+                transform: rotateY(360deg);
               }
             }
           }
@@ -479,21 +541,32 @@ withDefaults(defineProps<Props>(), {
     .u-quarter-circle {
       width: 24px;
       height: 24px;
-      border-width: 2px;
+      border-width: 3px;
     }
     .u-half-circle {
       width: 24px;
       height: 24px;
-      border-width: 2px;
+      border-width: 3px;
     }
     .u-three-quarters-circle {
       width: 24px;
       height: 24px;
-      border-width: 2px;
+      border-width: 3px;
     }
     .m-dynamic-circle {
       width: 26px;
       height: 26px;
+      .circular .path {
+        stroke-width: 5;
+      }
+    }
+    .m-magic-ring {
+      width: 24px;
+      height: 24px;
+      .m-outer-ring,
+      .u-inner-ring {
+        border-width: 3px;
+      }
     }
     .u-tip {
       font-size: 14px;
@@ -506,11 +579,11 @@ withDefaults(defineProps<Props>(), {
 .spin-default {
   .m-spin .m-spin-box {
     .m-loading-dot {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       .u-dot-item {
-        width: 10px;
-        height: 10px;
+        width: 11px;
+        height: 11px;
       }
     }
     .m-spin-dot {
@@ -533,23 +606,34 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .u-quarter-circle {
-      width: 32px;
-      height: 32px;
-      border-width: 3px;
+      width: 36px;
+      height: 36px;
+      border-width: 4px;
     }
     .u-half-circle {
-      width: 32px;
-      height: 32px;
-      border-width: 3px;
+      width: 36px;
+      height: 36px;
+      border-width: 4px;
     }
     .u-three-quarters-circle {
-      width: 32px;
-      height: 32px;
-      border-width: 3px;
+      width: 36px;
+      height: 36px;
+      border-width: 4px;
     }
     .m-dynamic-circle {
-      width: 34px;
-      height: 34px;
+      width: 38px;
+      height: 38px;
+      .circular .path {
+        stroke-width: 5;
+      }
+    }
+    .m-magic-ring {
+      width: 36px;
+      height: 36px;
+      .m-outer-ring,
+      .u-inner-ring {
+        border-width: 5px;
+      }
     }
     .u-tip {
       font-size: 14px;
@@ -562,11 +646,11 @@ withDefaults(defineProps<Props>(), {
 .spin-large {
   .m-spin .m-spin-box {
     .m-loading-dot {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       .u-dot-item {
-        width: 12px;
-        height: 12px;
+        width: 15px;
+        height: 15px;
       }
     }
     .m-spin-dot {
@@ -589,23 +673,34 @@ withDefaults(defineProps<Props>(), {
       }
     }
     .u-quarter-circle {
-      width: 40px;
-      height: 40px;
-      border-width: 4px;
+      width: 48px;
+      height: 48px;
+      border-width: 6px;
     }
     .u-half-circle {
-      width: 40px;
-      height: 40px;
-      border-width: 4px;
+      width: 48px;
+      height: 48px;
+      border-width: 6px;
     }
     .u-three-quarters-circle {
-      width: 40px;
-      height: 40px;
-      border-width: 4px;
+      width: 48px;
+      height: 48px;
+      border-width: 6px;
     }
     .m-dynamic-circle {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
+      .circular .path {
+        stroke-width: 7;
+      }
+    }
+    .m-magic-ring {
+      width: 48px;
+      height: 48px;
+      .m-outer-ring,
+      .u-inner-ring {
+        border-width: 7px;
+      }
     }
     .u-tip {
       font-size: 16px;

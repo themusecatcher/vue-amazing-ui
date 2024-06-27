@@ -19,12 +19,12 @@ function onEnter(e: KeyboardEvent) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space direction="vertical">
+    <Space vertical>
       <Input v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
       <Input v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" />
     </Space>
     <h2 class="mt30 mb10">前缀和后缀</h2>
-    <Space direction="vertical">
+    <Space vertical>
       <Input v-model:value="value" placeholder="Basic usage">
         <template #prefix>
           <svg
@@ -67,7 +67,7 @@ function onEnter(e: KeyboardEvent) {
       <Input v-model:value="value" prefix="￥" suffix="RMB" />
     </Space>
     <h2 class="mt30 mb10">三种大小</h2>
-    <Space direction="vertical">
+    <Space vertical>
       <Input
         size="large"
         :width="500"
@@ -108,7 +108,7 @@ function onEnter(e: KeyboardEvent) {
       />
     </Space>
     <h2 class="mt30 mb10">前置/后置标签</h2>
-    <Space direction="vertical">
+    <Space vertical>
       <Input
         :width="300"
         disabled

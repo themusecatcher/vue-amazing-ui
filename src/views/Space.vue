@@ -49,7 +49,7 @@ const gap = ref('small')
       <Button type="link">Link</Button>
     </Space>
     <h2 class="mt30 mb10">垂直间距</h2>
-    <Space direction="vertical">
+    <Space vertical>
       <Card title="Card" style="width: 300px">
         <p>Card content</p>
         <p>Card content</p>
