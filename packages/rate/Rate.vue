@@ -62,21 +62,18 @@ function resetTempValue() {
 function onLeave() {
   activeValue.value = props.value
 }
-function preventDefault(e: Event) {
-  e.preventDefault()
-}
 </script>
 <template>
   <div class="m-rate" :class="{ disabled: disabled }" :style="`--color: ${color};`" @mouseleave="onLeave">
     <div
       class="m-star"
-      :style="`margin-right: ${n !== count ? gap : 0}px;`"
       :class="{
         'u-star-half': allowHalf && activeValue >= n - 0.5 && activeValue < n,
         'u-star-full': activeValue >= n,
         'temp-gray': !allowHalf && tempValue === n
       }"
-      @click="!allowHalf ? onClick(n) : preventDefault($event)"
+      :style="`margin-right: ${n !== count ? gap : 0}px;`"
+      @click="allowHalf ? () => false : onClick(n)"
       v-for="n in count"
       :key="n"
     >

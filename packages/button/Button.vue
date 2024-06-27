@@ -26,14 +26,12 @@ function onClick(e: Event) {
   emit('click', e)
 }
 function onKeyboard(e: KeyboardEvent) {
-  e.preventDefault()
-  if (e.key === 'Enter') {
-    onClick(e)
-  }
+  // e.preventDefault()
+  onClick(e)
 }
 </script>
 <template>
-  <div :class="['m-btn-wrap', { center: center }]" tabindex="0" @keydown="onKeyboard">
+  <div :class="['m-btn-wrap', { center: center }]" tabindex="0" @keydown.enter.prevent="onKeyboard">
     <a
       class="m-btn"
       :class="[type, size, { [effect]: type === 'default', disabled: disabled, 'm-btn-loading': !href && loading }]"

@@ -238,7 +238,6 @@ const value = ref('')
 <Space vertical>
   <Input
     :width="300"
-    disabled
     show-count
     :maxlength="20"
     v-model:value="value"
@@ -265,7 +264,6 @@ const value = ref('')
   <Space vertical>
     <Input
       :width="300"
-      disabled
       show-count
       :maxlength="20"
       v-model:value="value"

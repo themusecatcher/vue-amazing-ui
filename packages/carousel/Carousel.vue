@@ -185,7 +185,7 @@ function getImageSize() {
   imageHeight.value = carousel.value.offsetHeight
 }
 function onKeyboard(e: KeyboardEvent) {
-  e.preventDefault()
+  // e.preventDefault()
   if (imageCount.value > 1) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       onLeftArrow()
@@ -445,7 +445,7 @@ defineExpose({
         class="arrow-left"
         :style="`width: ${arrowSize}px; height: ${arrowSize}px;`"
         @click="onLeftArrow"
-        @keydown="onKeyboard"
+        @keydown.prevent="onKeyboard"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"
       >
@@ -458,7 +458,7 @@ defineExpose({
         class="arrow-right"
         :style="`width: ${arrowSize}px; height: ${arrowSize}px;`"
         @click="onRightArrow"
-        @keydown="onKeyboard"
+        @keydown.prevent="onKeyboard"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"
       >
@@ -476,7 +476,7 @@ defineExpose({
         :key="n"
         @click="dotsTrigger === 'click' ? onSwitch(n) : () => false"
         @mouseenter="dotsTrigger === 'hover' ? onMouseEnter(n) : () => false"
-        @keydown="onKeyboard"
+        @keydown.prevent="onKeyboard"
       ></div>
     </div>
   </div>

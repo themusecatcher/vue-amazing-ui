@@ -119,7 +119,7 @@ function onTab(key: string | number) {
 function onWheel(e: WheelEvent) {
   if (e.deltaX !== 0) {
     // 防止标签页处触摸板上下滚动不生效
-    e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
+    // e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
     const scrollX = e.deltaX * 1 // 滚轮的横向滚动量
     if (scrollLeft.value + scrollX > scrollMax.value) {
       scrollLeft.value = scrollMax.value
@@ -146,7 +146,7 @@ function onWheel(e: WheelEvent) {
         <div
           ref="nav"
           :class="['m-tabs-nav-list', { transition: transition }]"
-          @wheel="showWheel ? onWheel($event) : () => false"
+          @wheel.prevent="showWheel ? onWheel($event) : () => false"
           :style="`transform: translate(${-scrollLeft}px, 0)`"
         >
           <div
