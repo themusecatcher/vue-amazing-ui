@@ -460,14 +460,14 @@ withDefaults(defineProps<Props>(), {
           border-style: solid;
           border-color: var(--color);
           border-radius: 50%;
-          animation: spin-outer-ring 1s linear infinite alternate;
-          -webkit-animation: spin-outer-ring 1s linear infinite alternate;
+          animation: spin-outer-ring 1s linear infinite;
+          -webkit-animation: spin-outer-ring 1s linear infinite;
           @keyframes spin-outer-ring {
             0% {
-              transform: rotateY(-60deg);
+              transform: rotateY(-75deg);
             }
             100% {
-              transform: rotateY(60deg);
+              transform: rotateY(75deg);
             }
           }
           .u-inner-ring {

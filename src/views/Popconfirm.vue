@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const message = ref()
+const openChange = (visible: boolean) => {
+  console.log('visible', visible)
+}
 const confirm = (e: MouseEvent) => {
   console.log(e)
   message.value.success('Click on Yes')
@@ -19,6 +22,7 @@ const cancel = (e: MouseEvent) => {
       description="This will have other effects..."
       @ok="confirm"
       @cancel="cancel"
+      @openChange="openChange"
     >
       <Button type="danger">Delete</Button>
     </Popconfirm>

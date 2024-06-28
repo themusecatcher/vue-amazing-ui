@@ -46,14 +46,8 @@ const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const contentRef = ref() // 声明一个同名的模板引用
 const popRef = ref() // 声明一个同名的模板引用
-function getPosition() {
-  const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
-  const popWidth = popRef.value.offsetWidth // 提示文本宽度
-  const popHeight = popRef.value.offsetHeight // 提示文本高度
-  top.value = popHeight + 4
-  left.value = (popWidth - contentWidth) / 2
-}
-const activeBlur = ref(false) // 是否激活 blur 事件
+const emits = defineEmits(['cancel', 'ok', 'openChange'])
+const activeBlur = ref(true) // 是否激活 blur 事件
 function onEnter() {
   activeBlur.value = false
 }
@@ -65,13 +59,20 @@ function onBlur() {
   visible.value = false
   emits('openChange', false)
 }
-const emits = defineEmits(['cancel', 'ok', 'openChange'])
 function onOpen() {
   visible.value = !visible.value
   if (visible.value) {
     getPosition()
+    popRef.value.focus()
   }
   emits('openChange', visible.value)
+}
+function getPosition() {
+  const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
+  const popWidth = popRef.value.offsetWidth // 提示文本宽度
+  const popHeight = popRef.value.offsetHeight // 提示文本高度
+  top.value = popHeight + 4
+  left.value = (popWidth - contentWidth) / 2
 }
 function onCancel(e: Event) {
   visible.value = false
@@ -85,14 +86,18 @@ function onOk(e: Event) {
 }
 </script>
 <template>
-  <div class="m-popconfirm">
+  <div
+    class="m-popconfirm"
+    @mouseenter="visible ? onEnter() : () => false"
+    @mouseleave="visible ? onLeave() : () => false">
     <div
       ref="popRef"
       tabindex="1"
       class="m-pop-content"
       :class="{ 'show-pop': visible }"
       :style="`max-width: ${popMaxWidth}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
-      @blur="activeBlur ? onBlur() : () => false"
+      @blur="visible && activeBlur ? onBlur() : () => false"
+      @keydown.esc="onCancel"
     >
       <div class="m-pop">
         <div class="m-pop-message">
@@ -175,7 +180,7 @@ function onOk(e: Event) {
         <span class="u-pop-arrow"></span>
       </div>
     </div>
-    <div ref="contentRef" @click="onOpen" @mouseenter="onEnter" @mouseleave="onLeave">
+    <div ref="contentRef" @click="onOpen">
       <slot>{{ content }}</slot>
     </div>
   </div>

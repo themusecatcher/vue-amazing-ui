@@ -27,13 +27,6 @@ const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const defaultRef = ref() // 声明一个同名的模板引用
 const popRef = ref() // 声明一个同名的模板引用
-function getPosition() {
-  const defaultWidth = defaultRef.value.offsetWidth // 展示文本宽度
-  const popWidth = popRef.value.offsetWidth // 提示文本宽度
-  const popHeight = popRef.value.offsetHeight // 提示文本高度
-  top.value = popHeight + 4
-  left.value = (popWidth - defaultWidth) / 2
-}
 const emit = defineEmits(['openChange'])
 const hideTimer = ref()
 function onShow() {
@@ -55,6 +48,13 @@ function onOpen() {
     getPosition()
   }
   emit('openChange', visible.value)
+}
+function getPosition() {
+  const defaultWidth = defaultRef.value.offsetWidth // 展示文本宽度
+  const popWidth = popRef.value.offsetWidth // 提示文本宽度
+  const popHeight = popRef.value.offsetHeight // 提示文本高度
+  top.value = popHeight + 4
+  left.value = (popWidth - defaultWidth) / 2
 }
 function onEnter() {
   activeBlur.value = false
@@ -99,8 +99,8 @@ function onBlur() {
     <div
       ref="defaultRef"
       @click="trigger === 'click' ? onOpen() : () => false"
-      @mouseenter="trigger === 'click' ? onEnter() : () => false"
-      @mouseleave="trigger === 'click' ? onLeave() : () => false"
+      @mouseenter="trigger === 'click' && visible ? onEnter() : () => false"
+      @mouseleave="trigger === 'click' && visible ? onLeave() : () => false"
     >
       <slot></slot>
     </div>

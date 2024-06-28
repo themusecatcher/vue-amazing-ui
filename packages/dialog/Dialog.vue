@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import Button from '../button'
-import { ref, computed, useSlots, watch } from 'vue'
+import { ref, computed, useSlots, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 interface Props {
   title?: string // 标题 string | slot
   content?: string // 内容 string | slot
-  width?: number // 宽度，单位px
+  width?: number // 宽度，单位p
   height?: number | string // 高度，单位px，默认auto，自适应内容高度
   cancelText?: string // 取消按钮文字
   okText?: string // 确定按钮文字
@@ -42,6 +42,7 @@ const dialogHeight = computed(() => {
     return props.height
   }
 })
+const dialogRef = ref() // DOM 引用
 const slots = useSlots()
 const showFooter = computed(() => {
   const footerSlots = slots.footer?.()
@@ -51,6 +52,9 @@ watch(
   () => props.show,
   (to) => {
     if (to) {
+      nextTick(() => {
+        dialogRef.value.focus()
+      })
       // 重置全屏显示
       fullScreen.value = false
     }
@@ -84,10 +88,12 @@ function onOk() {
     <Transition name="zoom">
       <div v-show="show" class="m-dialog-wrap" @click.self="onBlur">
         <div
-          ref="dialog"
+          ref="dialogRef"
+          tabindex="-1"
           :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']"
           :style="`width: ${fullScreen ? '100%' : props.width + 'px'}; top: ${center ? '50%' : fullScreen ? 0 : top + 'px'};`"
-        >
+           @keydown.esc="onClose"
+          >
           <div class="m-dialog-content" :style="`--height: ${fullScreen ? '100vh' : dialogHeight}`">
             <div class="m-dialog-header">
               <p class="u-head">
@@ -203,6 +209,7 @@ function onOk() {
   z-index: 1010;
   .m-dialog {
     margin: 0 auto;
+    outline: none;
     .m-dialog-content {
       display: flex;
       flex-direction: column;

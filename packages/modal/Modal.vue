@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Button from '../button'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 interface Desc {
   title: string // 标题
   content: string // 内容
@@ -28,36 +28,43 @@ withDefaults(defineProps<Props>(), {
 // 弹窗类型：'info' 'success' 'error' 'warning' 'confirm' 'erase'
 const mode = ref('')
 const desc = ref<Desc>()
+const modalRef = ref() // DOM引用
 const emits = defineEmits(['update:show', 'cancel', 'ok', 'know'])
 function info(data: Desc) {
   mode.value = 'info'
   desc.value = data
-  emits('update:show', true)
+  showModal()
 }
 function success(data: Desc) {
   mode.value = 'success'
   desc.value = data
-  emits('update:show', true)
+  showModal()
 }
 function error(data: Desc) {
   mode.value = 'error'
   desc.value = data
-  emits('update:show', true)
+  showModal()
 }
 function warning(data: Desc) {
   mode.value = 'warning'
   desc.value = data
-  emits('update:show', true)
+  showModal()
 }
 function confirm(data: Desc) {
   mode.value = 'confirm'
   desc.value = data
-  emits('update:show', true)
+  showModal()
 }
 function erase(data: Desc) {
   mode.value = 'erase'
   desc.value = data
+  showModal()
+}
+function showModal () {
   emits('update:show', true)
+  nextTick(() => {
+    modalRef.value.focus()
+  })
 }
 function onBlur() {
   emits('update:show', false)
@@ -91,8 +98,11 @@ defineExpose({
     <Transition name="zoom">
       <div v-show="show" class="m-modal-wrap" @click.self="onBlur">
         <div
+          ref="modalRef"
+          tabindex="-1"
           :class="['m-modal', center ? 'relative-hv-center' : 'top-center']"
           :style="`width: ${width}px; top: ${!center ? top + 'px' : '50%'};`"
+          @keydown.esc="onCancel"
         >
           <div class="m-modal-body">
             <div class="m-body">
@@ -244,6 +254,7 @@ defineExpose({
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 1.5714285714285714;
+    outline: none;
     .m-modal-body {
       position: relative;
       word-break: break-all;
