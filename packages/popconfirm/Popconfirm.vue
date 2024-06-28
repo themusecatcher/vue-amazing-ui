@@ -89,7 +89,8 @@ function onOk(e: Event) {
   <div
     class="m-popconfirm"
     @mouseenter="visible ? onEnter() : () => false"
-    @mouseleave="visible ? onLeave() : () => false">
+    @mouseleave="visible ? onLeave() : () => false"
+  >
     <div
       ref="popRef"
       tabindex="1"

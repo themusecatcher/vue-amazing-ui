@@ -60,7 +60,7 @@ function erase(data: Desc) {
   desc.value = data
   showModal()
 }
-function showModal () {
+function showModal() {
   emits('update:show', true)
   nextTick(() => {
     modalRef.value.focus()

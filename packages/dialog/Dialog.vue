@@ -92,8 +92,8 @@ function onOk() {
           tabindex="-1"
           :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']"
           :style="`width: ${fullScreen ? '100%' : props.width + 'px'}; top: ${center ? '50%' : fullScreen ? 0 : top + 'px'};`"
-           @keydown.esc="onClose"
-          >
+          @keydown.esc="onClose"
+        >
           <div class="m-dialog-content" :style="`--height: ${fullScreen ? '100vh' : dialogHeight}`">
             <div class="m-dialog-header">
               <p class="u-head">
