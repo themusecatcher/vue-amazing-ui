@@ -78,9 +78,8 @@ withDefaults(defineProps<Props>(), {
           </svg>
         </div>
         <div v-if="indicator === 'magic-ring'" class="m-magic-ring">
-          <div class="m-outer-ring">
-            <div class="u-inner-ring"></div>
-          </div>
+          <div class="m-outer-ring"></div>
+          <div class="u-inner-ring"></div>
         </div>
         <p class="u-tip" v-show="tip">{{ tip }}</p>
       </div>
@@ -98,7 +97,7 @@ withDefaults(defineProps<Props>(), {
   display: flex;
   align-items: center;
   justify-content: center;
-  // pointer-events: none;
+  pointer-events: none;
   .m-spin {
     position: absolute;
     top: 0;
@@ -460,34 +459,31 @@ withDefaults(defineProps<Props>(), {
           border-style: solid;
           border-color: var(--color);
           border-radius: 50%;
-          animation: spin-outer-ring 1s linear infinite;
-          -webkit-animation: spin-outer-ring 1s linear infinite;
+          transform: rotateY(-45deg);
+          animation: spin-outer-ring 1.5s linear infinite;
+          -webkit-animation: spin-outer-ring 1.5s linear infinite;
           @keyframes spin-outer-ring {
             0% {
-              transform: rotateY(-75deg);
+              transform: rotateY(0deg);
             }
             100% {
-              transform: rotateY(75deg);
+              transform: rotateY(360deg);
             }
           }
-          .u-inner-ring {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-style: solid;
-            border-color: var(--ring-color);
-            border-radius: 50%;
-            animation: spin-inner-ring 2s linear infinite;
-            -webkit-animation: spin-inner-ring 2s linear infinite;
-            @keyframes spin-inner-ring {
-              0% {
-                transform: rotateY(0deg);
-              }
-              100% {
-                transform: rotateY(360deg);
-              }
+        }
+        .u-inner-ring {
+          position: absolute;
+          border-style: solid;
+          border-color: var(--ring-color);
+          border-radius: 50%;
+          animation: spin-inner-ring 1.5s linear infinite;
+          -webkit-animation: spin-inner-ring 1.5s linear infinite;
+          @keyframes spin-inner-ring {
+            0% {
+              transform: rotateY(45deg);
+            }
+            100% {
+              transform: rotateY(405deg);
             }
           }
         }
@@ -567,6 +563,12 @@ withDefaults(defineProps<Props>(), {
       .u-inner-ring {
         border-width: 3px;
       }
+      .u-inner-ring {
+        top: 3px;
+        left: 3px;
+        width: calc(100% - 6px);
+        height: calc(100% - 6px);
+      }
     }
     .u-tip {
       font-size: 14px;
@@ -634,6 +636,12 @@ withDefaults(defineProps<Props>(), {
       .u-inner-ring {
         border-width: 5px;
       }
+      .u-inner-ring {
+        top: 5px;
+        left: 5px;
+        width: calc(100% - 10px);
+        height: calc(100% - 10px);
+      }
     }
     .u-tip {
       font-size: 14px;
@@ -700,6 +708,12 @@ withDefaults(defineProps<Props>(), {
       .m-outer-ring,
       .u-inner-ring {
         border-width: 7px;
+      }
+      .u-inner-ring {
+        top: 7px;
+        left: 7px;
+        width: calc(100% - 14px);
+        height: calc(100% - 14px);
       }
     }
     .u-tip {
