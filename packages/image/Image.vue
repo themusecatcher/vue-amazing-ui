@@ -295,6 +295,7 @@ function onSwitchRight() {
         @click.self="onClose"
         @wheel.prevent="onWheel"
         @keydown="onKeyboard"
+        @keydown.esc="onClose"
       >
         <div class="m-preview-body">
           <div class="m-preview-operations">

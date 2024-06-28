@@ -14,6 +14,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const message = ref()
+const openChange = (visible: boolean) => {
+  console.log('visible', visible)
+}
 const confirm = (e: MouseEvent) => {
   console.log(e)
   message.value.success('Click on Yes')
@@ -29,7 +32,8 @@ const cancel = (e: MouseEvent) => {
 <Popconfirm
   title="Are you sure delete this task?"
   @ok="confirm"
-  @cancel="cancel">
+  @cancel="cancel"
+  @openChange="openChange">
   <Button type="danger">Delete</Button>
 </Popconfirm>
 <Message ref="message" />
@@ -40,6 +44,9 @@ const cancel = (e: MouseEvent) => {
 <script setup lang="ts">
 import { ref } from 'vue'
 const message = ref()
+const openChange = (visible: boolean) => {
+  console.log('visible', visible)
+}
 const confirm = (e: MouseEvent) => {
   console.log(e)
   message.value.success('Click on Yes')
@@ -53,7 +60,8 @@ const cancel = (e: MouseEvent) => {
   <Popconfirm
     title="Are you sure delete this task?"
     @ok="confirm"
-    @cancel="cancel">
+    @cancel="cancel"
+    @openChange="openChange">
     <Button type="danger">Delete</Button>
   </Popconfirm>
   <Message ref="message" />
