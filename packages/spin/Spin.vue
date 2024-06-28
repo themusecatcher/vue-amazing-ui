@@ -459,7 +459,6 @@ withDefaults(defineProps<Props>(), {
           border-style: solid;
           border-color: var(--color);
           border-radius: 50%;
-          transform: rotateY(-45deg);
           animation: spin-outer-ring 1.5s linear infinite;
           -webkit-animation: spin-outer-ring 1.5s linear infinite;
           @keyframes spin-outer-ring {
