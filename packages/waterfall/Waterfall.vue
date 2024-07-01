@@ -45,13 +45,14 @@ const height = computed(() => {
 const len = computed(() => {
   return props.images.length
 })
+const flag = ref(0)
 watch(
   () => [props.columnCount, props.columnGap, props.width, props.images],
   () => {
     waterfallWidth.value = waterfall.value.offsetWidth
-    loaded.value = Array(props.images.length).fill(false)
     preColumnHeight.value = Array(props.columnCount).fill(0)
-    onPreload()
+    flag.value++
+    preloadImages(flag.value)
   },
   {
     deep: true, // 强制转成深层侦听器
@@ -60,26 +61,30 @@ watch(
 )
 onMounted(() => {
   waterfallWidth.value = waterfall.value.offsetWidth
-  onPreload()
+  preloadImages(flag.value)
 })
 function resizeEvent() {
   const currentWidth = waterfall.value.offsetWidth
   // 窗口宽度改变时重新计算瀑布流布局
   if (props.images.length && currentWidth !== waterfallWidth.value) {
     waterfallWidth.value = currentWidth
-    loaded.value = Array(len.value).fill(false)
-    onPreload()
+    flag.value++
+    preloadImages(flag.value)
   }
 }
 const debounceEvent = debounce(resizeEvent)
 useEventListener(window, 'resize', debounceEvent)
-async function onPreload() {
+async function preloadImages(symbol: number) {
   // 计算图片宽高和位置（top，left）
   // 计算每列的图片宽度
   imageWidth.value = ((waterfallWidth.value as number) - (props.columnCount + 1) * props.columnGap) / props.columnCount
   imagesProperty.value.splice(0)
   for (let i = 0; i < len.value; i++) {
-    await loadImage(props.images[i].src, i)
+    if (symbol === flag.value) {
+      await loadImage(props.images[i].src, i)
+    } else {
+      return false
+    }
   }
 }
 function loadImage(url: string, n: number) {
@@ -131,7 +136,7 @@ function onLoaded(index: number) {
   <div
     class="m-waterfall"
     ref="waterfall"
-    :style="`--borderRadius: ${borderRadius}px; background-color: ${backgroundColor}; width: ${totalWidth}; height: ${height}px;`"
+    :style="`--border-radius: ${borderRadius}px; background-color: ${backgroundColor}; width: ${totalWidth}; height: ${height}px;`"
   >
     <Spin
       class="m-image"
@@ -149,13 +154,13 @@ function onLoaded(index: number) {
 <style lang="less" scoped>
 .m-waterfall {
   position: relative;
-  border-radius: var(--borderRadius);
+  border-radius: var(--border-radius);
   .m-image {
     position: absolute;
     .u-image {
       width: 100%;
       height: 100%;
-      border-radius: var(--borderRadius);
+      border-radius: var(--border-radius);
       display: inline-block;
       vertical-align: bottom;
     }

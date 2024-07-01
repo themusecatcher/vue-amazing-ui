@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, reactive } from 'vue'
 
 const images = ref<any[]>([])
-
+const state = reactive({
+  columnCount: 3,
+  columnGap: 20,
+  backgroundColor: '#e1faeb',
+  borderRadius: 12
+})
 function loadImages() {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
@@ -22,14 +27,40 @@ onBeforeMount(() => {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Waterfall :images="images" />
-    <h2 class="mt30 mb10">自定义展示</h2>
+    <h2 class="mt30 mb10">瀑布流配置器</h2>
+    <Row :gutter="24">
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          columnCount:
+          <Slider :min="1" :max="6" v-model:value="state.columnCount" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          columnGap:
+          <Slider :min="10" :max="100" v-model:value="state.columnGap" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          borderRadius:
+          <Slider :min="0" :max="100" v-model:value="state.borderRadius" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical>
+          backgroundColor:
+          <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
+        </Flex>
+      </Col>
+    </Row>
     <Waterfall
+      class="mt30"
       :images="images"
-      :width="1100"
-      :column-count="4"
-      :column-gap="10"
-      background-color="#e1faeb"
-      :border-radius="6"
+      :column-count="state.columnCount"
+      :column-gap="state.columnGap"
+      :background-color="state.backgroundColor"
+      :border-radius="state.borderRadius"
     />
   </div>
 </template>
