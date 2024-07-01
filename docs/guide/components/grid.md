@@ -857,37 +857,39 @@ const state = reactive({
 
 ## 栅格配置器
 
-<Row :gutter="24">
-  <Col :span="8">
-    <Flex vertical gap="large" align="flex-start">
-      Horizontal Row Gutter:
-      <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
-    </Flex>
-  </Col>
-  <Col :span="8">
-    <Flex vertical gap="large" align="flex-start">
-      Vertical Row Gutter:
-      <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
-    </Flex>
-  </Col>
-  <Col :span="8">
-    <Flex vertical align="flex-start">
-      Col Count:
-      <Radio :options="colCountOptions" v-model:value="state.colCount" button />
-    </Flex>
-  </Col>
-</Row>
-<Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
-  <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-    <div class="gutter-box">Col</div>
-  </Col>
-  <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-    <div class="gutter-box">Col</div>
-  </Col>
-  <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-    <div class="gutter-box">Col</div>
-  </Col>
-</Row>
+<ClientOnly>
+  <Row :gutter="24">
+    <Col :span="8">
+      <Flex vertical gap="large" align="flex-start">
+        Horizontal Row Gutter:
+        <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
+      </Flex>
+    </Col>
+    <Col :span="8">
+      <Flex vertical gap="large" align="flex-start">
+        Vertical Row Gutter:
+        <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
+      </Flex>
+    </Col>
+    <Col :span="8">
+      <Flex vertical align="flex-start">
+        Col Count:
+        <Radio :options="colCountOptions" v-model:value="state.colCount" button />
+      </Flex>
+    </Col>
+  </Row>
+  <Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
+    <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+      <div class="gutter-box">Col</div>
+    </Col>
+    <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+      <div class="gutter-box">Col</div>
+    </Col>
+    <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+      <div class="gutter-box">Col</div>
+    </Col>
+  </Row>
+</ClientOnly>
 
 ::: details Show Code
 
