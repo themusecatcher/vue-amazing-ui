@@ -1,3 +1,42 @@
+<script setup lang="ts">
+import { reactive } from 'vue'
+
+const colCountOptions = [
+  {
+    label: 2,
+    value: 2
+  },
+  {
+    label: 3,
+    value: 3
+  },
+  {
+    label: 4,
+    value: 4
+  },
+  {
+    label: 6,
+    value: 6
+  },
+  {
+    label: 8,
+    value: 8
+  },
+  {
+    label: 12,
+    value: 12
+  },
+  {
+    label: 24,
+    value: 24
+  }
+]
+const state = reactive({
+  horizontalGutter: 16,
+  verticalGutter: 16,
+  colCount: 4
+})
+</script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
@@ -239,6 +278,38 @@
       <Col :xs="{ span: 11, offset: 1 }" :sm="{ span: 6, offset: 2 }">Col</Col>
       <Col :xs="{ span: 5, offset: 1 }" :sm="{ span: 6, offset: 2 }">Col</Col>
     </Row>
+    <h2 class="mt30 mb10">栅格配置器</h2>
+    <Row :gutter="24">
+      <Col :span="8">
+        <Flex vertical gap="large" align="flex-start">
+          Horizontal Row Gutter:
+          <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
+        </Flex>
+      </Col>
+      <Col :span="8">
+        <Flex vertical gap="large" align="flex-start">
+          Vertical Row Gutter:
+          <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
+        </Flex>
+      </Col>
+      <Col :span="8">
+        <Flex vertical align="flex-start">
+          Col Count:
+          <Radio :options="colCountOptions" v-model:value="state.colCount" button />
+        </Flex>
+      </Col>
+    </Row>
+    <Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
+      <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+        <div class="gutter-box">Col</div>
+      </Col>
+      <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+        <div class="gutter-box">Col</div>
+      </Col>
+      <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+        <div class="gutter-box">Col</div>
+      </Col>
+    </Row>
   </div>
 </template>
 <style lang="less" scoped>
@@ -260,8 +331,6 @@
 .gutter-row {
   .m-col {
     min-height: 30px;
-    margin-top: 8px;
-    margin-bottom: 8px;
     color: #fff;
     text-align: center;
     border-radius: 0;
@@ -269,10 +338,6 @@
   .gutter-box {
     background: #0092ff;
     padding: 8px 0;
-  }
-  .m-col {
-    margin-top: 0;
-    margin-bottom: 0;
   }
 }
 .height-50 {

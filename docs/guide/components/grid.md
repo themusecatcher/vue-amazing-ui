@@ -16,6 +16,46 @@
 - 栅格系统中的列是指 `1` 到 `24` 的值来表示其跨越的范围。例如，三个等宽的列可以使用 `:span="8"` 来创建
 - 如果一个 `row` 中的 `col` 总和超过 `24`，那么多余的 `col` 会作为一个整体另起一行排列
 
+<script setup lang="ts">
+import { reactive } from 'vue'
+
+const colCountOptions = [
+  {
+    label: 2,
+    value: 2
+  },
+  {
+    label: 3,
+    value: 3
+  },
+  {
+    label: 4,
+    value: 4
+  },
+  {
+    label: 6,
+    value: 6
+  },
+  {
+    label: 8,
+    value: 8
+  },
+  {
+    label: 12,
+    value: 12
+  },
+  {
+    label: 24,
+    value: 24
+  }
+]
+const state = reactive({
+  horizontalGutter: 16,
+  verticalGutter: 16,
+  colCount: 4
+})
+</script>
+
 ## 基本使用
 
 <ClientOnly>
@@ -62,6 +102,23 @@
     <Col :span="6">col-6</Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.row {
+  .m-col {
+    min-height: 30px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 16px 0;
+    background: #1677ff;
+  }
+  :deep(> :nth-child(2n + 1)) {
+    background: #1677ffbf;
+  }
+}
+</style>
 ```
 
 :::
@@ -104,6 +161,20 @@
     </Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.gutter-row {
+  .m-col {
+    min-height: 30px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+  }
+  .gutter-box {
+    background: #0092ff;
+    padding: 8px 0;
+  }
+}
+</style>
 ```
 
 :::
@@ -146,6 +217,20 @@
     </Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.gutter-row {
+  .m-col {
+    min-height: 30px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+  }
+  .gutter-box {
+    background: #0092ff;
+    padding: 8px 0;
+  }
+}
+</style>
 ```
 
 :::
@@ -212,6 +297,20 @@
     </Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.gutter-row {
+  .m-col {
+    min-height: 30px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+  }
+  .gutter-box {
+    background: #0092ff;
+    padding: 8px 0;
+  }
+}
+</style>
 ```
 
 :::
@@ -278,6 +377,20 @@
     </Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.gutter-row {
+  .m-col {
+    min-height: 30px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+  }
+  .gutter-box {
+    background: #0092ff;
+    padding: 8px 0;
+  }
+}
+</style>
 ```
 
 :::
@@ -314,6 +427,23 @@
     <Col :span="12" :offset="6">col-12 col-offset-6</Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.row {
+  .m-col {
+    min-height: 30px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 16px 0;
+    background: #1677ff;
+  }
+  :deep(> :nth-child(2n + 1)) {
+    background: #1677ffbf;
+  }
+}
+</style>
 ```
 
 :::
@@ -412,6 +542,23 @@
     <Col :span="4">col-4</Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.row {
+  .m-col {
+    min-height: 30px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 16px 0;
+    background: #1677ff;
+  }
+  :deep(> :nth-child(2n + 1)) {
+    background: #1677ffbf;
+  }
+}
+</style>
 ```
 
 :::
@@ -516,6 +663,39 @@
     </Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.row {
+  .m-col {
+    min-height: 30px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 16px 0;
+    background: #1677ff;
+  }
+  :deep(> :nth-child(2n + 1)) {
+    background: #1677ffbf;
+  }
+}
+.height-50 {
+  height: 50px;
+  line-height: 50px;
+}
+.height-80 {
+  height: 80px;
+  line-height: 80px;
+}
+.height-100 {
+  height: 100px;
+  line-height: 100px;
+}
+.height-120 {
+  height: 120px;
+  line-height: 120px;
+}
+</style>
 ```
 
 :::
@@ -572,6 +752,23 @@
     <Col flex="auto">auto with no-wrap</Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.row {
+  .m-col {
+    min-height: 30px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 16px 0;
+    background: #1677ff;
+  }
+  :deep(> :nth-child(2n + 1)) {
+    background: #1677ffbf;
+  }
+}
+</style>
 ```
 
 :::
@@ -596,6 +793,23 @@
     <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="10">Col</Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.row {
+  .m-col {
+    min-height: 30px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 16px 0;
+    background: #1677ff;
+  }
+  :deep(> :nth-child(2n + 1)) {
+    background: #1677ffbf;
+  }
+}
+</style>
 ```
 
 :::
@@ -620,6 +834,150 @@
     <Col :xs="{ span: 5, offset: 1 }" :sm="{ span: 6, offset: 2 }">Col</Col>
   </Row>
 </template>
+<style lang="less" scoped>
+.row {
+  .m-col {
+    min-height: 30px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 16px 0;
+    background: #1677ff;
+  }
+  :deep(> :nth-child(2n + 1)) {
+    background: #1677ffbf;
+  }
+}
+</style>
+```
+
+:::
+
+## 栅格配置器
+
+<Row :gutter="24">
+  <Col :span="8">
+    <Flex vertical gap="large" align="flex-start">
+      Horizontal Row Gutter:
+      <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
+    </Flex>
+  </Col>
+  <Col :span="8">
+    <Flex vertical gap="large" align="flex-start">
+      Vertical Row Gutter:
+      <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
+    </Flex>
+  </Col>
+  <Col :span="8">
+    <Flex vertical align="flex-start">
+      Col Count:
+      <Radio :options="colCountOptions" v-model:value="state.colCount" button />
+    </Flex>
+  </Col>
+</Row>
+<Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
+  <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+    <div class="gutter-box">Col</div>
+  </Col>
+  <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+    <div class="gutter-box">Col</div>
+  </Col>
+  <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+    <div class="gutter-box">Col</div>
+  </Col>
+</Row>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { reactive } from 'vue'
+
+const colCountOptions = [
+  {
+    label: 2,
+    value: 2
+  },
+  {
+    label: 3,
+    value: 3
+  },
+  {
+    label: 4,
+    value: 4
+  },
+  {
+    label: 6,
+    value: 6
+  },
+  {
+    label: 8,
+    value: 8
+  },
+  {
+    label: 12,
+    value: 12
+  },
+  {
+    label: 24,
+    value: 24
+  }
+]
+const state = reactive({
+  horizontalGutter: 16,
+  verticalGutter: 16,
+  colCount: 4
+})
+</script>
+<template>
+  <Row :gutter="24">
+    <Col :span="8">
+      <Flex vertical gap="large" align="flex-start">
+        Horizontal Row Gutter:
+        <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
+      </Flex>
+    </Col>
+    <Col :span="8">
+      <Flex vertical gap="large" align="flex-start">
+        Vertical Row Gutter:
+        <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
+      </Flex>
+    </Col>
+    <Col :span="8">
+      <Flex vertical align="flex-start">
+        Col Count:
+        <Radio :options="colCountOptions" v-model:value="state.colCount" button />
+      </Flex>
+    </Col>
+  </Row>
+  <Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
+    <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+      <div class="gutter-box">Col</div>
+    </Col>
+    <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+      <div class="gutter-box">Col</div>
+    </Col>
+    <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
+      <div class="gutter-box">Col</div>
+    </Col>
+  </Row>
+</template>
+<style lang="less" scoped>
+.gutter-row {
+  .m-col {
+    min-height: 30px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+  }
+  .gutter-box {
+    background: #0092ff;
+    padding: 8px 0;
+  }
+}
+</style>
 ```
 
 :::
@@ -643,8 +1001,6 @@
 .gutter-row {
   .m-col {
     min-height: 30px;
-    margin-top: 8px;
-    margin-bottom: 8px;
     color: #fff;
     text-align: center;
     border-radius: 0;
@@ -652,10 +1008,6 @@
   .gutter-box {
     background: #0092ff;
     padding: 8px 0;
-  }
-  .m-col {
-    margin-top: 0;
-    margin-bottom: 0;
   }
 }
 .height-50 {

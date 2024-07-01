@@ -749,7 +749,7 @@ function getCurrentIndex () {
 
 :::
 
-## 自定义配置
+## 走马灯配置器
 
 <Flex gap="large" vertical>
   <Row :gutter="24">

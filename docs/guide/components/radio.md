@@ -67,14 +67,30 @@ const value = ref(1)
 watchEffect(() => {
   console.log('value:', value.value)
 })
+const radioGap = ref(24)
 function onChange (value: any) {
   console.log('change:', value)
 }
+const sizeOptions = [
+  {
+    label: 'large',
+    value: 'large'
+  },
+  {
+    label: 'default',
+    value: 'default'
+  },
+  {
+    label: 'small',
+    value: 'small'
+  }
+]
+const buttonSize = ref('large')
 </script>
 
 ## 基本使用
 
-<Radio :options="options" v-model:value="value" />
+<Radio :options="options" v-model:value="value" @change="onChange" />
 
 ::: details Show Code
 
@@ -111,9 +127,12 @@ const value = ref(1)
 watchEffect(() => {
   console.log('value:', value.value)
 })
+function onChange(value: any) {
+  console.log('change:', value)
+}
 </script>
 <template>
-  <Radio :options="options" v-model:value="value" />
+  <Radio :options="options" v-model:value="value" @change="onChange" />
 </template>
 ```
 
@@ -209,10 +228,10 @@ const value = ref(1)
 
 ## 禁用
 
-<Radio :options="options" v-model:value="value" disabled />
-<br />
-<br />
-<Radio :options="options" v-model:value="value" button disabled />
+<Space vertical gap="middle">
+  <Radio :options="options" v-model:value="value" disabled />
+  <Radio :options="options" v-model:value="value" button disabled />
+</Space>
 
 ::: details Show Code
 
@@ -248,10 +267,10 @@ const options = ref([
 const value = ref(1)
 </script>
 <template>
-  <Radio :options="options" v-model:value="value" disabled />
-  <br />
-  <br />
-  <Radio :options="options" v-model:value="value" button disabled />
+  <Space vertical gap="middle">
+    <Radio :options="options" v-model:value="value" disabled />
+    <Radio :options="options" v-model:value="value" button disabled />
+  </Space>
 </template>
 ```
 
@@ -259,10 +278,11 @@ const value = ref(1)
 
 ## 禁用选项
 
-<Radio :options="optionsDisabled" v-model:value="value" />
-<br />
-<br />
-<Radio :options="optionsDisabled" v-model:value="value" button />
+<Space vertical gap="middle">
+  <Radio :options="optionsDisabled" v-model:value="value" />
+  <Radio :options="optionsDisabled" v-model:value="value" button />
+  <Radio :options="optionsDisabled" v-model:value="value" button button-style="solid" />
+</Space>
 
 ::: details Show Code
 
@@ -303,10 +323,11 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Radio :options="optionsDisabled" v-model:value="value" />
-  <br />
-  <br />
-  <Radio :options="optionsDisabled" v-model:value="value" button />
+  <Space vertical gap="middle">
+    <Radio :options="optionsDisabled" v-model:value="value" />
+    <Radio :options="optionsDisabled" v-model:value="value" button />
+    <Radio :options="optionsDisabled" v-model:value="value" button button-style="solid" />
+  </Space>
 </template>
 ```
 
@@ -361,7 +382,10 @@ watchEffect(() => {
 
 ## 自定义间距
 
-<Radio :gap="24" :options="options" v-model:value="value" />
+<Flex vertical gap="middle">
+  <Slider v-model:value="radioGap" width="50%" />
+  <Radio :gap="radioGap" :options="options" v-model:value="value" />
+</Flex>
 
 ::: details Show Code
 
@@ -398,9 +422,83 @@ const value = ref(1)
 watchEffect(() => {
   console.log('value:', value.value)
 })
+const radioGap = ref(24)
 </script>
 <template>
-  <Radio :gap="24" :options="options" v-model:value="value" />
+  <Flex vertical gap="middle">
+    <Slider v-model:value="radioGap" width="50%" />
+    <Radio :gap="radioGap" :options="options" v-model:value="value" />
+    </Flex>
+</template>
+```
+
+:::
+
+## 按钮大小
+
+<Space vertical gap="middle">
+  <Radio :options="sizeOptions" v-model:value="buttonSize" />
+  <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
+  <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+      {
+        label: '北京市',
+        value: 1
+      },
+      {
+        label: '纽约市',
+        value: 2
+      },
+      {
+        label: '布宜诺斯艾利斯',
+        value: 3
+      },
+      {
+        label: '伊斯坦布尔',
+        value: 4
+      },
+      {
+        label: '拜占庭',
+        value: 5
+      },
+      {
+        label: '君士坦丁堡',
+        value: 6
+      }
+    ])
+const value = ref(1)
+watchEffect(() => {
+  console.log('value:', value.value)
+})
+const sizeOptions = [
+  {
+    label: 'large',
+    value: 'large'
+  },
+  {
+    label: 'default',
+    value: 'default'
+  },
+  {
+    label: 'small',
+    value: 'small'
+  }
+]
+const buttonSize = ref('large')
+</script>
+<template>
+  <Space vertical gap="middle">
+    <Radio :options="sizeOptions" v-model:value="buttonSize" />
+    <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
+    <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />
+  </Space>
 </template>
 ```
 
@@ -412,11 +510,12 @@ watchEffect(() => {
 -- | -- | -- | -- | --
 options | 单选元素数据 | [Option](#option-type)[] | [] | true
 disabled | 是否禁用 | boolean | false | false
-vertical | 是否垂直排列 | boolean | false | false
+vertical | 是否垂直排列，仅当 `button: false` 时生效 | boolean | false | false
 value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any | null | false
-gap | 多个单选框之间的间距，单位`px`，垂直排列时，间距即垂直间距 | number | 8 | false
+gap | 多个单选框之间的间距，单位`px`，垂直排列时，间距即垂直间距，仅当 `button: false` 时生效 | number | 8 | false
 button | 是否启用按钮样式 | boolean | false | false
 buttonStyle | 按钮样式风格 | 'outline' &#124; 'solid' ｜ 'outline' | false
+buttonSize | 按钮大小，仅当 `button: true` 时生效 | 'default' &#124; 'large' &#124; 'small' | false
 
 ## Option Type
 
