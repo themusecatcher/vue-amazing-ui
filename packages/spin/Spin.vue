@@ -445,8 +445,8 @@ withDefaults(defineProps<Props>(), {
         display: inline-block;
         position: relative;
         transform: rotate(45deg);
-        animation: spin-rotate 3s linear infinite;
-        -webkit-animation: spin-rotate 3s linear infinite;
+        animation: spin-rotate 2.5s linear infinite;
+        -webkit-animation: spin-rotate 2.5s linear infinite;
         @keyframes spin-rotate {
           100% {
             transform: rotate(405deg);
