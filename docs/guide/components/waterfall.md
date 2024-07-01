@@ -12,10 +12,15 @@
 :::
 
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, reactive } from 'vue'
 
 const images = ref<any[]>([])
-
+const state = reactive({
+  columnCount: 3,
+  columnGap: 20,
+  backgroundColor: '#e1faeb',
+  borderRadius: 12
+})
 function loadImages () {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
@@ -62,18 +67,57 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 
 :::
 
-## 自定义展示
+## 瀑布流配置器
 
-<Waterfall :images="images" :column-count="4" :column-gap="10" background-color="#e1faeb" :border-radius="6" />
+<Row :gutter="24">
+  <Col :span="6">
+    <Flex vertical gap="middle">
+      columnCount:
+      <Slider :min="1" :max="6" v-model:value="state.columnCount" />
+    </Flex>
+  </Col>
+  <Col :span="6">
+    <Flex vertical gap="middle">
+      columnGap:
+      <Slider :min="10" :max="100" v-model:value="state.columnGap" />
+    </Flex>
+    
+  </Col>
+  <Col :span="6">
+    <Flex vertical gap="middle">
+      borderRadius:
+      <Slider :min="0" :max="100" v-model:value="state.borderRadius" />
+    </Flex>
+  </Col>
+  <Col :span="6">
+    <Flex vertical>
+      backgroundColor:
+      <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
+    </Flex>
+  </Col>
+</Row>
+<Waterfall
+  class="mt30"
+  :images="images"
+  :column-count="state.columnCount"
+  :column-gap="state.columnGap"
+  :background-color="state.backgroundColor"
+  :border-radius="state.borderRadius"
+/>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, reactive } from 'vue'
 
 const images = ref<any[]>([])
-
+const state = reactive({
+  columnCount: 3,
+  columnGap: 20,
+  backgroundColor: '#e1faeb',
+  borderRadius: 12
+})
 function loadImages () {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
@@ -88,11 +132,56 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 })
 </script>
 <template>
-  <Waterfall :images="images" :column-count="4" :column-gap="10" background-color="#e1faeb" :border-radius="6" />
+  <Row :gutter="24">
+    <Col :span="6">
+      <Flex vertical gap="middle">
+        columnCount:
+        <Slider :min="1" :max="6" v-model:value="state.columnCount" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="middle">
+        columnGap:
+        <Slider :min="10" :max="100" v-model:value="state.columnGap" />
+      </Flex>
+      
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="middle">
+        borderRadius:
+        <Slider :min="0" :max="100" v-model:value="state.borderRadius" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical>
+        backgroundColor:
+        <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
+      </Flex>
+    </Col>
+  </Row>
+  <Waterfall
+    class="mt30"
+    :images="images"
+    :column-count="state.columnCount"
+    :column-gap="state.columnGap"
+    :background-color="state.backgroundColor"
+    :border-radius="state.borderRadius"
+  />
 </template>
+<style lang="less" scoped>
+.mt30 {
+  margin-top: 30px;
+}
+</style>
 ```
 
 :::
+
+<style lang="less" scoped>
+.mt30 {
+  margin-top: 30px;
+}
+</style>
 
 ## APIs
 
