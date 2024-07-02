@@ -94,13 +94,13 @@ const show = ref(false)
             :min="0"
             :max="100"
           />
-          FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
-          zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> Rotate:<Slider
-            v-model:value="model.rotate"
+          FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" /> zIndex:<Slider
+            v-model:value="model.zIndex"
             :step="1"
-            :min="-180"
-            :max="180"
+            :min="0"
+            :max="100"
           />
+          Rotate:<Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" />
           Gap:
           <Flex>
             <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
