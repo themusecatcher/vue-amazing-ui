@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
@@ -27,6 +27,20 @@ function onClick(text: any) {
   // 获取点击的标题
   console.log('text:', text)
 }
+const state = reactive({
+  single: false,
+  height: 60,
+  fontSize: 16,
+  fontWeight: 400,
+  color: 'rgba(0, 0, 0, 0.88)',
+  backgroundColor: '#FFF',
+  amount: 4,
+  gap: 20,
+  interval: 10,
+  step: 1,
+  vertical: false,
+  verticalInterval: 3000
+})
 </script>
 <template>
   <div>
@@ -45,6 +59,98 @@ function onClick(text: any) {
       :font-size="18"
       :gap="60"
       :height="60"
+      @click="onClick"
+    />
+    <h2 class="mt30 mb10">文字滚动配置器</h2>
+    <Row :gutter="[24, 8]">
+      <Col :span="6">
+        <Space vertical>
+          single:
+          <Switch v-model:checked="state.single" />
+        </Space>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          height:
+          <Slider v-model:value="state.height" :min="state.fontSize" :max="180" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          fontSize:
+          <Slider v-model:value="state.fontSize" :min="6" :max="state.height" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical>
+          fontWeight:
+          <InputNumber v-model:value="state.fontWeight" :step="100" :min="100" :max="1000" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Space vertical>
+          color:
+          <Input v-model:value="state.color" placeholder="color" />
+        </Space>
+      </Col>
+      <Col :span="6">
+        <Flex vertical>
+          backgroundColor:
+          <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          amount:
+          <Slider v-model:value="state.amount" :min="1" :max="scrollText.length" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          gap:
+          <Slider v-model:value="state.gap" :min="10" :max="100" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          interval:
+          <Slider v-model:value="state.interval" :min="5" :max="100" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          step:
+          <Slider v-model:value="state.step" :min="0.1" :step="0.1" :max="20" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Space vertical>
+          vertical:
+          <Switch v-model:checked="state.vertical" />
+        </Space>
+      </Col>
+      <Col :span="6">
+        <Flex vertical gap="middle">
+          verticalInterval:
+          <Slider v-model:value="state.verticalInterval" :min="1000" :step="100" :max="10000" />
+        </Flex>
+      </Col>
+    </Row>
+    <TextScroll
+      class="mt30"
+      :scrollText="scrollText"
+      :single="state.single"
+      :height="state.height"
+      :font-size="state.fontSize"
+      :font-weight="state.fontWeight"
+      :color="state.color"
+      :background-color="state.backgroundColor"
+      :amount="state.amount"
+      :gap="state.gap"
+      :interval="state.interval"
+      :step="state.step"
+      :vertical="state.vertical"
+      :vertical-interval="state.verticalInterval"
       @click="onClick"
     />
   </div>

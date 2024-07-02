@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, type CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf } from '../index'
 interface Text {
   title: string // 文字标题
@@ -10,10 +10,8 @@ interface Props {
   single?: boolean // 是否启用单条文字滚动效果，只支持水平文字滚动，为 true 时，amount 自动设为 1
   width?: number | string // 滚动区域宽度，单位px
   height?: number // 滚动区域高度，单位px
-  fontSize?: number // 字体大小
-  fontWeight?: number // 字体粗细
-  color?: string // 字体颜色
-  backgroundColor?: string // 滚动区域背景色
+  boardStyle?: CSSProperties // 滚动区域样式，优先级低于 width、height
+  textStyle?: CSSProperties // 文字样式，优先级低于 fontSize、fontWeight、color
   amount?: number // 滚动区域展示条数，水平滚动时生效
   gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距，单位px
   step?: number // 水平滚动动画每次执行时移动距离，单位px，水平滚动时生效
@@ -22,14 +20,12 @@ interface Props {
   verticalInterval?: number // 垂直文字滚动时间间隔，单位ms，垂直滚动时生效
 }
 const props = withDefaults(defineProps<Props>(), {
-  text: () => [],
+  scrollText: () => [],
   single: false,
   width: '100%',
   height: 60,
-  fontSize: 16,
-  fontWeight: 400,
-  color: 'rgba(0, 0, 0, .88)',
-  backgroundColor: '#FFF',
+  boardStyle: () => ({}),
+  textStyle: () => ({}),
   amount: 4,
   gap: 20,
   step: 1,
@@ -62,9 +58,8 @@ const displayAmount = computed(() => {
     return props.amount
   }
 })
-// horizon
 const left = ref(0)
-const moveRaf = ref() // 水平滚动引用，一个 long 整数，请求 ID ，是回调列表中唯一的标识。是个非零值，没别的意义
+const horizontalMoveRaf = ref() // 水平滚动引用
 const verticalMoveRaf = ref() // 垂直滚动引用
 const horizonRef = ref()
 const distance = ref(0) // 每条滚动文字移动距离
@@ -108,13 +103,13 @@ function startMove() {
   } else {
     if (textAmount.value > displayAmount.value) {
       // 超过 amount 条开始滚动
-      moveRaf.value && cancelRaf(moveRaf.value)
+      horizontalMoveRaf.value && cancelRaf(horizontalMoveRaf.value)
       horizonMove() // 水平滚动
     }
   }
 }
 function horizonMove() {
-  moveRaf.value = rafTimeout(
+  horizontalMoveRaf.value = rafTimeout(
     () => {
       if (left.value >= distance.value) {
         textData.value.push(textData.value.shift() as Text) // 将第一条数据放到最后
@@ -132,7 +127,7 @@ function stopMove() {
   if (props.vertical) {
     verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
   } else {
-    moveRaf.value && cancelRaf(moveRaf.value)
+    horizontalMoveRaf.value && cancelRaf(horizontalMoveRaf.value)
   }
 }
 const emit = defineEmits(['click'])
@@ -159,11 +154,11 @@ function verticalMove() {
     class="m-slider-horizon"
     @mouseenter="stopMove"
     @mouseleave="startMove"
-    :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --fontWeight: ${fontWeight}; --color: ${color};`"
+    :style="[boardStyle, `height: ${height}px; width: ${totalWidth};`]"
   >
     <a
-      :style="`will-change: transform; transform: translateX(${-left}px); width: ${distance - gap}px; margin-left: ${gap}px;`"
       class="u-slide-title"
+      :style="[textStyle, `will-change: transform; transform: translateX(${-left}px); width: ${distance - gap}px; margin-left: ${gap}px;`]"
       v-for="(text, index) in <Text[]>textData"
       :key="index"
       :title="text.title"
@@ -179,12 +174,12 @@ function verticalMove() {
     class="m-slider-vertical"
     @mouseenter="stopMove"
     @mouseleave="startMove"
-    :style="`height: ${height}px; width: ${totalWidth}; background: ${backgroundColor}; --fontSize: ${fontSize}px; --fontWeight: ${fontWeight}; --color: ${color};`"
+    :style="[boardStyle, `height: ${height}px; width: ${totalWidth};`]"
   >
     <TransitionGroup name="slide">
       <div
         class="m-slider"
-        :style="`width: calc(${totalWidth} - ${2 * gap}px); height: ${height}px;`"
+        :style="[textStyle, `width: calc(${totalWidth} - ${2 * gap}px); height: ${height}px;`]"
         v-for="(text, index) in <Text[]>textData"
         :key="index"
         v-show="actIndex === index"
@@ -205,12 +200,13 @@ function verticalMove() {
 <style lang="less" scoped>
 // 水平滚动
 .m-slider-horizon {
-  box-shadow: 0px 0px 5px #d3d3d3;
-  border-radius: 6px;
   white-space: nowrap;
   overflow: hidden;
-  text-align: center; // 水平居中
+  text-align: center;
   line-height: 1.5714285714285714;
+  box-shadow: 0px 0px 5px #d3d3d3;
+  border-radius: 6px;
+  background-color: #FFF;
   &::after {
     // 垂直居中
     content: '';
@@ -221,19 +217,19 @@ function verticalMove() {
   .u-slide-title {
     display: inline-block;
     vertical-align: middle;
-    font-size: var(--fontSize);
-    font-weight: var(--fontWeight);
-    color: var(--color);
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.88);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
+    transition: color 0.3s;
     &:hover {
       color: @themeColor;
     }
   }
 }
-
 // 垂直滚动
 .slide-enter-active,
 .slide-leave-active {
@@ -250,8 +246,10 @@ function verticalMove() {
 .m-slider-vertical {
   position: relative;
   overflow: hidden;
-  border-radius: 6px;
+  box-shadow: 0px 0px 5px #d3d3d3;
   line-height: 1.5714285714285714;
+  border-radius: 6px;
+  background-color: #FFF;
   .m-slider {
     position: absolute;
     left: 0;
@@ -269,13 +267,14 @@ function verticalMove() {
       max-width: 100%;
       display: inline-block;
       vertical-align: middle;
-      font-size: var(--fontSize);
-      font-weight: var(--fontWeight);
-      color: var(--color);
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.88);
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       cursor: pointer;
+      transition: color 0.3s;
       &:hover {
         color: @themeColor;
       }
