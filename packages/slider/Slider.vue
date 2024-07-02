@@ -8,8 +8,8 @@ interface Props {
   disabled?: boolean // 是否禁用
   range?: boolean // 是否双滑块模式
   step?: number // 步长，取值必须大于0，并且可被 (max - min) 整除
-  tipFormatter?: Function // Slider 会把当前值传给 tipFormatter，并在 Tooltip 中显示 tipFormatter 的返回值
-  hideTip?: boolean // 是否隐藏 Tooltip
+  formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
+  tooltip?: boolean // 是否展示 Tooltip
   value?: number | number[] // (v-model)设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -19,8 +19,8 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   range: false,
   step: 1,
-  tipFormatter: (value: number) => value,
-  hideTip: false,
+  formatTooltip: (value: number) => value,
+  tooltip: true,
   value: 0
 })
 const transition = ref(false)
@@ -29,8 +29,10 @@ const left = ref(0) // 左滑块距离滑动条左端的距离
 const right = ref(0) // 右滑动距离滑动条左端的距离
 const slider = ref()
 const sliderWidth = ref()
-const leftHandle = ref() // left模板引用
-const rightHandle = ref() // right模板引用
+const leftHandle = ref() // left handle 模板引用
+const leftTooltip = ref() // left tooltip 模板应用
+const rightHandle = ref() // right handler 模板引用
+const rightTooltip = ref() // right tooltip 模板引用
 const pixelStep = computed(() => {
   // 滑块移动时的像素步长
   return fixedDigit((sliderWidth.value / (props.max - props.min)) * props.step, 2)
@@ -68,15 +70,15 @@ const sliderValue = computed(() => {
 })
 const leftValue = computed(() => {
   if (props.range) {
-    return props.tipFormatter((sliderValue.value as number[])[0])
+    return props.formatTooltip((sliderValue.value as number[])[0])
   }
   return null
 })
 const rightValue = computed(() => {
   if (props.range) {
-    return props.tipFormatter((sliderValue.value as number[])[1])
+    return props.formatTooltip((sliderValue.value as number[])[1])
   }
-  return props.tipFormatter(sliderValue.value)
+  return props.formatTooltip(sliderValue.value as number)
 })
 const emits = defineEmits(['update:value', 'change'])
 watch(
@@ -123,9 +125,6 @@ function checkValue(value: number): number {
   }
   return value
 }
-function fixedDigit(num: number, precision: number) {
-  return parseFloat(num.toFixed(precision))
-}
 function getSliderWidth() {
   sliderWidth.value = slider.value.offsetWidth
 }
@@ -136,6 +135,18 @@ function getPosition() {
     right.value = fixedDigit(((checkHigh((props.value as number[])[1]) - props.min) / props.step) * pixelStep.value, 2)
   } else {
     right.value = fixedDigit(((checkValue(props.value as number) - props.min) / props.step) * pixelStep.value, 2)
+  }
+}
+function fixedDigit(num: number, precision: number) {
+  return parseFloat(num.toFixed(precision))
+}
+function handlerBlur(tooltip: HTMLElement) {
+  tooltip.classList.remove('show-handle-tooltip')
+}
+function handlerFocus(handler: HTMLElement, tooltip: HTMLElement) {
+  handler.focus()
+  if (props.tooltip) {
+    tooltip.classList.add('show-handle-tooltip')
   }
 }
 function onClickPoint(e: any) {
@@ -150,36 +161,39 @@ function onClickPoint(e: any) {
     transition.value = false
   }, 300)
   // 元素是absolute时，e.layerX是相对于自身元素左上角的水平位置
-  const targetX = fixedDigit((e.layerX / pixelStep.value) * pixelStep.value, 2) // 鼠标点击位置距离滑动输入条左端的水平距离
+  const targetX = fixedDigit(Math.round(e.layerX / pixelStep.value) * pixelStep.value, 2) // 鼠标点击位置距离滑动输入条左端的水平距离
   if (props.range) {
     // 双滑块模式
     if (targetX <= left.value) {
       left.value = targetX
-      leftHandle.value.focus()
+      handlerFocus(leftHandle.value, leftTooltip.value)
     } else if (targetX >= right.value) {
       right.value = targetX
-      rightHandle.value.focus()
+      handlerFocus(rightHandle.value, rightTooltip.value)
     } else {
       if (targetX - left.value < right.value - targetX) {
         left.value = targetX
-        leftHandle.value.focus()
+        handlerFocus(leftHandle.value, leftTooltip.value)
       } else {
         right.value = targetX
-        rightHandle.value.focus()
+        handlerFocus(rightHandle.value, rightTooltip.value)
       }
     }
   } else {
     // 单滑块模式
     right.value = targetX
-    rightHandle.value.focus()
+    handlerFocus(rightHandle.value, rightTooltip.value)
   }
 }
 function onLeftMouseDown() {
   // 在滚动条上拖动左滑块
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
+    if (props.tooltip) {
+      leftTooltip.value.classList.add('show-handle-tooltip')
+    }
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const targetX = fixedDigit(((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2)
+    const targetX = fixedDigit(Math.round((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2)
     if (targetX < 0) {
       left.value = 0
     } else if (targetX >= 0 && targetX <= right.value) {
@@ -192,6 +206,9 @@ function onLeftMouseDown() {
     }
   }
   document.onmouseup = () => {
+    if (props.tooltip) {
+      leftTooltip.value.classList.remove('show-handle-tooltip')
+    }
     document.onmousemove = null
   }
 }
@@ -199,8 +216,11 @@ function onRightMouseDown() {
   // 在滚动条上拖动右滑块
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
+    if (props.tooltip) {
+      rightTooltip.value.classList.add('show-handle-tooltip')
+    }
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const targetX = fixedDigit(((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2)
+    const targetX = fixedDigit(Math.round((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2)
     if (targetX > sliderWidth.value) {
       right.value = sliderWidth.value
     } else if (left.value <= targetX && targetX <= sliderWidth.value) {
@@ -215,6 +235,9 @@ function onRightMouseDown() {
     }
   }
   document.onmouseup = () => {
+    if (props.tooltip) {
+      rightTooltip.value.classList.remove('show-handle-tooltip')
+    }
     document.onmousemove = null
   }
 }
@@ -279,8 +302,9 @@ function onRightSlide(source: number, place: string) {
       @keydown.down.prevent="disabled ? () => false : onLeftSlide(left, 'left')"
       @keydown.up.prevent="disabled ? () => false : onRightSlide(left, 'left')"
       @mousedown="disabled ? () => false : onLeftMouseDown()"
+      @blur="tooltip && !disabled ? handlerBlur(leftTooltip) : () => false"
     >
-      <div v-if="!hideTip" class="m-handle-tooltip">
+      <div v-if="tooltip" ref="leftTooltip" class="m-handle-tooltip">
         {{ leftValue }}
         <div class="m-arrow"></div>
       </div>
@@ -296,8 +320,9 @@ function onRightSlide(source: number, place: string) {
       @keydown.down.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
       @keydown.up.prevent="disabled ? () => false : onRightSlide(right, 'right')"
       @mousedown="disabled ? () => false : onRightMouseDown()"
+      @blur="tooltip && !disabled ? handlerBlur(rightTooltip) : () => false"
     >
-      <div v-if="!hideTip" class="m-handle-tooltip">
+      <div v-if="tooltip" ref="rightTooltip" class="m-handle-tooltip">
         {{ rightValue }}
         <div class="m-arrow"></div>
       </div>
@@ -360,6 +385,7 @@ function onRightSlide(source: number, place: string) {
     border: 2px solid lighten(fade(@themeColor, 54%), 10%);
     border-radius: 50%;
     cursor: pointer;
+    outline: none;
     transition:
       width 0.3s,
       height 0.3s,
@@ -386,6 +412,7 @@ function onRightSlide(source: number, place: string) {
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
       pointer-events: none;
       user-select: none;
+      outline: none;
       opacity: 0;
       transition:
         transform 0.25s cubic-bezier(0.78, 0.14, 0.15, 0.86),
@@ -434,18 +461,20 @@ function onRightSlide(source: number, place: string) {
       height: 20px;
       border-width: 4px;
       border-color: @themeColor;
-      outline: none; // 消除浏览器focus时的默认样式
     }
-    &:hover {
-      .hover-focus-handle();
-      .m-handle-tooltip {
-        pointer-events: auto;
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-      }
-    }
+    &:hover,
     &:focus {
       .hover-focus-handle();
+    }
+    .show-handle-tooltip {
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+    &:hover {
+      .m-handle-tooltip {
+        .show-handle-tooltip();
+      }
     }
   }
   .handleTransition {
