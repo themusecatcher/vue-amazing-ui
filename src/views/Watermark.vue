@@ -54,7 +54,7 @@ const show = ref(false)
     <h2 class="mt30 mb10">全屏幕水印</h2>
     <Watermark v-if="show" fullscreen content="Vue Amazing UI"></Watermark>
     <Switch v-model:checked="show" />
-    <h2 class="mt30 mb10">自定义配置</h2>
+    <h2 class="mt30 mb10">水印配置器</h2>
     <h3 class="mb10">通过自定义参数配置预览水印效果。</h3>
     <Row :gutter="24">
       <Col :span="18">
@@ -83,30 +83,30 @@ const show = ref(false)
       </Col>
       <Col :span="6">
         <Flex vertical gap="middle">
-          Content：<Input v-model:value="model.content" /> Layout：<Radio
+          Content:<Input v-model:value="model.content" /> Layout:<Radio
             :options="layoutOptions"
             v-model:value="model.layout"
             button
           />
-          Color：<Input v-model:value="model.color" /> FontSize：<Slider
+          Color:<Input v-model:value="model.color" /> FontSize:<Slider
             v-model:value="model.fontSize"
             :step="1"
             :min="0"
             :max="100"
           />
-          FontWeight：<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
-          zIndex：<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> Rotate：<Slider
+          FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
+          zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> Rotate:<Slider
             v-model:value="model.rotate"
             :step="1"
             :min="-180"
             :max="180"
           />
-          Gap：
+          Gap:
           <Flex>
             <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
             <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
           </Flex>
-          Offset：
+          Offset:
           <Flex>
             <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
             <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />

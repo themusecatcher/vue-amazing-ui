@@ -33,7 +33,11 @@ const leftHandle = ref() // left模板引用
 const rightHandle = ref() // right模板引用
 const pixelStep = computed(() => {
   // 滑块移动时的像素步长
-  return fixedDigit((sliderWidth.value / (props.max - props.min)) * props.step)
+  return fixedDigit((sliderWidth.value / (props.max - props.min)) * props.step, 2)
+})
+const precision = computed(() => { // 获取 step 数值精度
+  const strNumArr = props.step.toString().split('.')
+  return strNumArr[1]?.length ?? 0
 })
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -47,10 +51,16 @@ const sliderValue = computed(() => {
   if (right.value === sliderWidth.value) {
     high = props.max
   } else {
-    high = Math.round((right.value / pixelStep.value) * props.step + props.min)
+    high = fixedDigit((right.value / pixelStep.value) * props.step + props.min, precision.value)
+    if (props.step > 1) {
+      high = Math.round(high / props.step) * props.step
+    }
   }
   if (props.range) {
-    const low = Math.round((left.value / pixelStep.value) * props.step + props.min)
+    let low = fixedDigit((left.value / pixelStep.value) * props.step + props.min, precision.value)
+    if (props.step > 1) {
+      low = Math.round(low / props.step) * props.step
+    }
     return [low, high]
   }
   return high
@@ -112,8 +122,8 @@ function checkValue(value: number): number {
   }
   return value
 }
-function fixedDigit(num: number) {
-  return parseFloat(num.toFixed(2))
+function fixedDigit(num: number, precision: number) {
+  return parseFloat(num.toFixed(precision))
 }
 function getSliderWidth() {
   sliderWidth.value = slider.value.offsetWidth
@@ -121,10 +131,10 @@ function getSliderWidth() {
 function getPosition() {
   if (props.range) {
     // 双滑块模式
-    left.value = fixedDigit(((checkLow((props.value as number[])[0]) - props.min) / props.step) * pixelStep.value)
-    right.value = fixedDigit(((checkHigh((props.value as number[])[1]) - props.min) / props.step) * pixelStep.value)
+    left.value = fixedDigit(((checkLow((props.value as number[])[0]) - props.min) / props.step) * pixelStep.value, 2)
+    right.value = fixedDigit(((checkHigh((props.value as number[])[1]) - props.min) / props.step) * pixelStep.value, 2)
   } else {
-    right.value = fixedDigit(((checkValue(props.value as number) - props.min) / props.step) * pixelStep.value)
+    right.value = fixedDigit(((checkValue(props.value as number) - props.min) / props.step) * pixelStep.value, 2)
   }
 }
 function onClickPoint(e: any) {
@@ -139,7 +149,7 @@ function onClickPoint(e: any) {
     transition.value = false
   }, 300)
   // 元素是absolute时，e.layerX是相对于自身元素左上角的水平位置
-  const targetX = Math.round(e.layerX / pixelStep.value) * pixelStep.value // 鼠标点击位置距离滑动输入条左端的水平距离
+  const targetX = fixedDigit((e.layerX / pixelStep.value) * pixelStep.value, 2) // 鼠标点击位置距离滑动输入条左端的水平距离
   if (props.range) {
     // 双滑块模式
     if (targetX <= left.value) {
@@ -168,7 +178,7 @@ function onLeftMouseDown() {
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const targetX = fixedDigit(Math.round((e.clientX - leftX) / pixelStep.value) * pixelStep.value)
+    const targetX = fixedDigit((e.clientX - leftX) / pixelStep.value * pixelStep.value, 2)
     if (targetX < 0) {
       left.value = 0
     } else if (targetX >= 0 && targetX <= right.value) {
@@ -189,7 +199,7 @@ function onRightMouseDown() {
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const targetX = fixedDigit(Math.round((e.clientX - leftX) / pixelStep.value) * pixelStep.value)
+    const targetX = fixedDigit((e.clientX - leftX) / pixelStep.value * pixelStep.value, 2)
     if (targetX > sliderWidth.value) {
       right.value = sliderWidth.value
     } else if (left.value <= targetX && targetX <= sliderWidth.value) {
