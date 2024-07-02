@@ -46,39 +46,46 @@ const state = reactive({
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">水平文字滚动</h2>
-    <TextScroll :scrollText="scrollText" :height="50" @click="onClick" />
+    <TextScroll :scrollText="scrollText" @click="onClick" />
     <h2 class="mt30 mb10">自定义滚动速度</h2>
-    <TextScroll :scrollText="scrollText" :height="50" :step="2" @click="onClick" />
+    <TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
     <h2 class="mt30 mb10">单条文字滚动</h2>
-    <TextScroll :scrollText="singleText" single :width="300" :height="50" @click="onClick" />
+    <TextScroll
+      :scrollText="singleText"
+      single
+      :width="360"
+      :text-style="{ fontSize: '24px', fontWeight: 600, color: '#FF5B29' }"
+      @click="onClick"
+    />
     <h2 class="mt30 mb10">垂直文字滚动</h2>
     <TextScroll
       :scrollText="scrollText"
+      :board-style="{ backgroundColor: '#e6f4ff' }"
+      :text-style="{ fontSize: '20px' }"
       vertical
-      background-color="#e6f4ff"
-      :font-size="18"
-      :gap="60"
-      :height="60"
+      @click="onClick"
+    />
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <TextScroll
+      :scrollText="scrollText"
+      :board-style="{ backgroundColor: '#e6f4ff', borderRadius: '12px' }"
+      :text-style="{ fontSize: '28px', color: '#FF9800' }"
+      :gap="30"
+      :height="80"
       @click="onClick"
     />
     <h2 class="mt30 mb10">文字滚动配置器</h2>
     <Row :gutter="[24, 8]">
       <Col :span="6">
-        <Space vertical>
-          single:
-          <Switch v-model:checked="state.single" />
-        </Space>
-      </Col>
-      <Col :span="6">
         <Flex vertical gap="middle">
           height:
-          <Slider v-model:value="state.height" :min="state.fontSize" :max="180" />
+          <Slider v-model:value="state.height" :min="6" :max="180" />
         </Flex>
       </Col>
       <Col :span="6">
         <Flex vertical gap="middle">
           fontSize:
-          <Slider v-model:value="state.fontSize" :min="6" :max="state.height" />
+          <Slider v-model:value="state.fontSize" :min="6" :max="180" />
         </Flex>
       </Col>
       <Col :span="6">
@@ -138,13 +145,18 @@ const state = reactive({
     </Row>
     <TextScroll
       class="mt30"
+      style="margin-bottom: 100px"
       :scrollText="scrollText"
       :single="state.single"
       :height="state.height"
-      :font-size="state.fontSize"
-      :font-weight="state.fontWeight"
-      :color="state.color"
-      :background-color="state.backgroundColor"
+      :board-style="{
+        backgroundColor: state.backgroundColor
+      }"
+      :text-style="{
+        fontSize: state.fontSize + 'px',
+        fontWeight: state.fontWeight,
+        color: state.color
+      }"
       :amount="state.amount"
       :gap="state.gap"
       :interval="state.interval"

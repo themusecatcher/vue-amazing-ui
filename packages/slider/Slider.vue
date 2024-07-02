@@ -35,7 +35,8 @@ const pixelStep = computed(() => {
   // 滑块移动时的像素步长
   return fixedDigit((sliderWidth.value / (props.max - props.min)) * props.step, 2)
 })
-const precision = computed(() => { // 获取 step 数值精度
+const precision = computed(() => {
+  // 获取 step 数值精度
   const strNumArr = props.step.toString().split('.')
   return strNumArr[1]?.length ?? 0
 })
@@ -178,7 +179,7 @@ function onLeftMouseDown() {
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const targetX = fixedDigit((e.clientX - leftX) / pixelStep.value * pixelStep.value, 2)
+    const targetX = fixedDigit(((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2)
     if (targetX < 0) {
       left.value = 0
     } else if (targetX >= 0 && targetX <= right.value) {
@@ -199,7 +200,7 @@ function onRightMouseDown() {
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   document.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const targetX = fixedDigit((e.clientX - leftX) / pixelStep.value * pixelStep.value, 2)
+    const targetX = fixedDigit(((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2)
     if (targetX > sliderWidth.value) {
       right.value = sliderWidth.value
     } else if (left.value <= targetX && targetX <= sliderWidth.value) {

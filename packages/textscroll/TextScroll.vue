@@ -11,11 +11,11 @@ interface Props {
   width?: number | string // 滚动区域宽度，单位px
   height?: number // 滚动区域高度，单位px
   boardStyle?: CSSProperties // 滚动区域样式，优先级低于 width、height
-  textStyle?: CSSProperties // 文字样式，优先级低于 fontSize、fontWeight、color
+  textStyle?: CSSProperties // 滚动文字样式
   amount?: number // 滚动区域展示条数，水平滚动时生效
   gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距，单位px
-  step?: number // 水平滚动动画每次执行时移动距离，单位px，水平滚动时生效
   interval?: number // 水平滚动动画执行时间间隔，单位ms，水平滚动时生效
+  step?: number // 水平滚动动画每次执行时移动距离，单位px，水平滚动时生效，与 interval 配合控制滚动速度
   vertical?: boolean // 是否垂直滚动
   verticalInterval?: number // 垂直文字滚动时间间隔，单位ms，垂直滚动时生效
 }
@@ -23,13 +23,13 @@ const props = withDefaults(defineProps<Props>(), {
   scrollText: () => [],
   single: false,
   width: '100%',
-  height: 60,
+  height: 50,
   boardStyle: () => ({}),
   textStyle: () => ({}),
   amount: 4,
   gap: 20,
-  step: 1,
   interval: 10,
+  step: 1,
   vertical: false,
   verticalInterval: 3000
 })
@@ -61,6 +61,7 @@ const displayAmount = computed(() => {
 const left = ref(0)
 const horizontalMoveRaf = ref() // 水平滚动引用
 const verticalMoveRaf = ref() // 垂直滚动引用
+const origin = ref(true)
 const horizonRef = ref()
 const distance = ref(0) // 每条滚动文字移动距离
 watch(
@@ -77,7 +78,11 @@ watch(
   () => {
     if (!props.vertical) {
       distance.value = getDistance() // 获取每列文字宽度
+    } else {
+      origin.value = true
     }
+    horizontalMoveRaf.value && cancelRaf(horizontalMoveRaf.value)
+    verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
     startMove() // 开始滚动
   },
   {
@@ -135,15 +140,17 @@ function onClick(text: Text) {
   // 通知父组件点击的标题
   emit('click', text)
 }
-// vertical
 const actIndex = ref(0)
 function verticalMove() {
   verticalMoveRaf.value = rafTimeout(
     () => {
+      if (origin.value) {
+        origin.value = false
+      }
       actIndex.value = (actIndex.value + 1) % textAmount.value
+      verticalMove()
     },
-    props.verticalInterval,
-    true
+    origin.value ? props.verticalInterval : props.verticalInterval + 1000
   )
 }
 </script>
@@ -152,43 +159,43 @@ function verticalMove() {
     v-if="!vertical"
     ref="horizonRef"
     class="m-slider-horizon"
-    @mouseenter="stopMove"
-    @mouseleave="startMove"
-    :style="[boardStyle, `height: ${height}px; width: ${totalWidth};`]"
+    :style="[boardStyle, `height: ${height}px; width: ${totalWidth}; --gap: ${gap}px;`]"
   >
-    <a
-      class="u-slide-title"
-      :style="[textStyle, `will-change: transform; transform: translateX(${-left}px); width: ${distance - gap}px; margin-left: ${gap}px;`]"
-      v-for="(text, index) in <Text[]>textData"
-      :key="index"
-      :title="text.title"
-      :href="text.link ? text.link : 'javascript:;'"
-      :target="text.link ? '_blank' : '_self'"
-      @click="onClick(text)"
-    >
-      {{ text.title || '--' }}
-    </a>
+    <div class="m-scroll-view" :style="`will-change: transform; transform: translateX(${-left}px);`">
+      <a
+        class="u-slide-title"
+        :style="[textStyle, `width: ${distance - gap}px;`]"
+        v-for="(text, index) in <Text[]>textData"
+        :key="index"
+        :title="text.title"
+        :href="text.link ? text.link : 'javascript:;'"
+        :target="text.link ? '_blank' : '_self'"
+        @mouseenter="stopMove"
+        @mouseleave="startMove"
+        @click="onClick(text)"
+      >
+        {{ text.title || '--' }}
+      </a>
+    </div>
   </div>
   <div
     v-else
     class="m-slider-vertical"
-    @mouseenter="stopMove"
-    @mouseleave="startMove"
-    :style="[boardStyle, `height: ${height}px; width: ${totalWidth};`]"
+    :style="[
+      boardStyle,
+      `height: ${height}px; width: ${totalWidth}; --enter-move: ${height}px; --leave-move: ${-height}px; --gap: ${gap}px;`
+    ]"
   >
     <TransitionGroup name="slide">
-      <div
-        class="m-slider"
-        :style="[textStyle, `width: calc(${totalWidth} - ${2 * gap}px); height: ${height}px;`]"
-        v-for="(text, index) in <Text[]>textData"
-        :key="index"
-        v-show="actIndex === index"
-      >
+      <div class="m-scroll-view" v-for="(text, index) in <Text[]>textData" :key="index" v-show="actIndex === index">
         <a
           class="u-slider"
+          :style="textStyle"
           :title="text.title"
           :href="text.link ? text.link : 'javascript:;'"
           :target="text.link ? '_blank' : '_self'"
+          @mouseenter="stopMove"
+          @mouseleave="startMove"
           @click="onClick(text)"
         >
           {{ text.title || '--' }}
@@ -200,33 +207,29 @@ function verticalMove() {
 <style lang="less" scoped>
 // 水平滚动
 .m-slider-horizon {
-  white-space: nowrap;
   overflow: hidden;
-  text-align: center;
-  line-height: 1.5714285714285714;
   box-shadow: 0px 0px 5px #d3d3d3;
   border-radius: 6px;
-  background-color: #FFF;
-  &::after {
-    // 垂直居中
-    content: '';
+  background-color: #fff;
+  .m-scroll-view {
     height: 100%;
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .u-slide-title {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 16px;
-    font-weight: 400;
-    color: rgba(0, 0, 0, 0.88);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: color 0.3s;
-    &:hover {
-      color: @themeColor;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap);
+    padding-left: var(--gap);
+    .u-slide-title {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.88);
+      line-height: 1.57;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: color 0.3s;
+      &:hover {
+        color: @themeColor;
+      }
     }
   }
 }
@@ -236,40 +239,33 @@ function verticalMove() {
   transition: all 1s ease;
 }
 .slide-enter-from {
-  transform: translateY(50px) scale(0.5);
+  transform: translateY(var(--enter-move)) scale(0.5);
   opacity: 0;
 }
 .slide-leave-to {
-  transform: translateY(-50px) scale(0.5);
+  transform: translateY(var(--leave-move)) scale(0.5);
   opacity: 0;
 }
 .m-slider-vertical {
-  position: relative;
   overflow: hidden;
   box-shadow: 0px 0px 5px #d3d3d3;
-  line-height: 1.5714285714285714;
   border-radius: 6px;
-  background-color: #FFF;
-  .m-slider {
+  background-color: #fff;
+  position: relative;
+  .m-scroll-view {
     position: absolute;
     left: 0;
     right: 0;
-    margin: 0 auto;
-    text-align: center; // 水平居中
-    &::after {
-      // 垂直居中
-      content: '';
-      height: 100%;
-      display: inline-block;
-      vertical-align: middle;
-    }
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--gap);
     .u-slider {
-      max-width: 100%;
-      display: inline-block;
-      vertical-align: middle;
       font-size: 16px;
       font-weight: 400;
       color: rgba(0, 0, 0, 0.88);
+      line-height: 1.57;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
