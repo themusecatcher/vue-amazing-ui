@@ -47,7 +47,7 @@ const len = computed(() => {
 })
 const flag = ref(0)
 watch(
-  () => [props.columnCount, props.columnGap, props.width, props.images],
+  () => [props.images, props.columnCount, props.columnGap, props.width],
   () => {
     waterfallWidth.value = waterfall.value.offsetWidth
     preColumnHeight.value = Array(props.columnCount).fill(0)
