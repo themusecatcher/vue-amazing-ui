@@ -303,8 +303,8 @@ const showSuccess = computed(() => {
     left: 50%;
     transform: translate(-50%, -50%);
     display: inline-block;
-    width: 30px;
-    height: 30px;
+    width: 30%;
+    height: 30%;
     fill: @success;
   }
   .u-success-info {
