@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, useSlots, onUnmounted } from 'vue'
+import { ref, computed, useSlots } from 'vue'
 import type { Slot } from 'vue'
+import { throttle, useEventListener } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -24,16 +25,12 @@ const props = withDefaults(defineProps<Props>(), {
   icon: undefined
 })
 const clientWidth = ref(document.documentElement.clientWidth)
-onMounted(() => {
-  window.addEventListener('resize', getBrowserSize)
-})
-onUnmounted(() => {
-  window.removeEventListener('resize', getBrowserSize)
-})
 function getBrowserSize() {
   // document.documentElement返回<html>元素
   clientWidth.value = document.documentElement.clientWidth
 }
+const throttleEvent = throttle(getBrowserSize, 100)
+useEventListener(window, 'resize', throttleEvent)
 const avatarStyle = computed(() => {
   if (typeof props.size === 'string') {
     return null

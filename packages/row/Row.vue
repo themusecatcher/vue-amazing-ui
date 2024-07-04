@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
+import { throttle, useEventListener } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -114,16 +115,12 @@ const rowWidth = computed(() => {
   return props.width
 })
 const clientWidth = ref(document.documentElement.clientWidth)
-onMounted(() => {
-  window.addEventListener('resize', getBrowserSize)
-})
-onUnmounted(() => {
-  window.removeEventListener('resize', getBrowserSize)
-})
 function getBrowserSize() {
   // document.documentElement返回<html>元素
   clientWidth.value = document.documentElement.clientWidth
 }
+const throttleEvent = throttle(getBrowserSize, 100)
+useEventListener(window, 'resize', throttleEvent)
 </script>
 <template>
   <div

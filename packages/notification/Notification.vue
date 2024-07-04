@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import { rafTimeout, cancelRaf } from '../index'
+import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
   message?: string // 全局通知提醒标题，优先级低于 Notification 中的 message
   duration?: number | null // 自动关闭的延时时长，单位ms，默认4500ms；设置 null 时，不自动关闭

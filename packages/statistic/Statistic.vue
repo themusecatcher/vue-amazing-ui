@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
 import type { CSSProperties } from 'vue'
-import { formatNumber } from '../index'
+import { formatNumber } from '../utils'
 interface Props {
   title?: string // 数值的标题 string | slot
   value?: string | number // 数值的内容 string | number | slot

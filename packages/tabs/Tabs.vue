@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
-import { rafTimeout } from '../index'
+import { rafTimeout } from '../utils'
 interface Tab {
   key: string | number // 对应 activeKey
   tab: string // 标签页显示文字
