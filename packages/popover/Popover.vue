@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { Slot, CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf } from '../index'
+import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
   title?: string | Slot // 卡片标题
   content?: string | Slot // 卡片内容

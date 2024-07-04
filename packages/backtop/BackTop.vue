@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { throttle } from '../index'
+import { throttle } from '../utils'
 interface Props {
   bottom?: number | string // BackTop 距离页面底部的高度
   right?: number | string // BackTop 距离页面右侧的宽度

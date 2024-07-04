@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import Spin from '../spin'
-import { debounce, useEventListener } from '../index'
+import { throttle, useEventListener } from '../utils'
 /*
   宽度固定，图片等比例缩放；使用JS获取每张图片宽度和高度，结合 `relative` 和 `absolute` 定位
   计算每个图片的位置 `top`，`left`，保证每张新的图片都追加在当前高度最小的那列末尾
@@ -72,8 +72,8 @@ function resizeEvent() {
     preloadImages(flag.value)
   }
 }
-const debounceEvent = debounce(resizeEvent)
-useEventListener(window, 'resize', debounceEvent)
+const throttleEvent = throttle(resizeEvent, 100)
+useEventListener(window, 'resize', throttleEvent)
 async function preloadImages(symbol: number) {
   // 计算图片宽高和位置（top，left）
   // 计算每列的图片宽度

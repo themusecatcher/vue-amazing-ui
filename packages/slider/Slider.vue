@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { rafTimeout, cancelRaf } from '../index'
+import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
   width?: string | number // 宽度
   min?: number // 最小值

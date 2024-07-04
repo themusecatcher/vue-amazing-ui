@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf } from '../index'
+import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
   maxWidth?: number // 提示框内容最大宽度，单位px
   content?: string // 展示的文本 string | slot

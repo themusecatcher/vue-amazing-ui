@@ -9,7 +9,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref, computed, watch, useSlots } from 'vue'
-import { add } from '../index'
+import { add } from '../utils'
 interface Props {
   width?: string | number // 输入框宽度
   min?: number // 最小值

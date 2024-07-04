@@ -2,7 +2,7 @@
 import { computed, ref, watchEffect, nextTick } from 'vue'
 import Spin from '../spin'
 import Space from '../space'
-import { add } from '../index'
+import { add } from '../utils'
 interface Image {
   src: string // 图像地址
   name?: string // 图像名称

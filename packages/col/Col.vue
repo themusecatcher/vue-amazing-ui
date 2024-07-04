@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, computed } from 'vue'
+import { throttle, useEventListener } from '../utils'
 interface Props {
   span?: number // 栅格占位格数，为 0 时相当于 display: none，取0,1,2...24
   offset?: number // 栅格左侧的间隔格数，取0,1,2...24
@@ -91,16 +92,12 @@ const responsiveProperty = computed(() => {
   }
 })
 const clientWidth = ref(document.documentElement.clientWidth)
-onMounted(() => {
-  window.addEventListener('resize', getBrowserSize)
-})
-onUnmounted(() => {
-  window.removeEventListener('resize', getBrowserSize)
-})
 function getBrowserSize() {
   // document.documentElement返回<html>元素
   clientWidth.value = document.documentElement.clientWidth
 }
+const throttleEvent = throttle(getBrowserSize, 100)
+useEventListener(window, 'resize', throttleEvent)
 </script>
 <template>
   <div

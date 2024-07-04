@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { rafTimeout, cancelRaf } from '../index'
+import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
   duration?: number // 自动关闭的延时，单位ms
   top?: number | string // 消息距离顶部的位置，单位px

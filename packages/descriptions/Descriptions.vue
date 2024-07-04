@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, computed, nextTick, ref, watch, watchEffect } from 'vue'
+import { computed, nextTick, ref, watch, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
+import { throttle, useEventListener } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -15,6 +16,7 @@ interface Props {
   column?: number | Responsive // 一行的 DescriptionItems 数量，可以写成数值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24}
   extra?: string // 描述列表的操作区域，显示在右上方 string | slot
   size?: 'default' | 'middle' | 'small' // 设置列表的大小
+  vertical?: boolean // 是否使用垂直描述列表
   labelStyle?: CSSProperties // 自定义标签样式，优先级低于 DescriptionItems
   contentStyle?: CSSProperties // 自定义内容样式，优先级低于 DescriptionItems
 }
@@ -24,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   column: () => ({ xs: 1, sm: 2, md: 3 }),
   extra: '',
   size: 'default',
+  vertical: false,
   labelStyle: () => ({}),
   contentStyle: () => ({})
 })
@@ -84,16 +87,12 @@ watch(responsiveColumn, (to) => {
     getGroupItems(children.value, to as number)
   })
 })
-onMounted(() => {
-  window.addEventListener('resize', getBrowserSize)
-})
-onUnmounted(() => {
-  window.removeEventListener('resize', getBrowserSize)
-})
 function getBrowserSize() {
   // document.documentElement返回<html>元素
   clientWidth.value = document.documentElement.clientWidth
 }
+const throttleEvent = throttle(getBrowserSize, 100)
+useEventListener(window, 'resize', throttleEvent)
 // 根据不同 cloumn 处理 DescriptionsItems 节点
 function getGroupItems(children: any, responsiveColumn: number) {
   const len = children.length
