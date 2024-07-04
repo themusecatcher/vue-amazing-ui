@@ -122,8 +122,8 @@ function $0(t = 100) {
   const a = x(!1);
   let e = 0;
   const o = a1(function() {
-    const c = window.pageYOffset || document.documentElement.scrollTop;
-    a.value = c > e, e = c;
+    let c = window.pageYOffset || document.documentElement.scrollTop;
+    c = c < 0 ? 0 : c, a.value = c > e, e = c;
   }, t);
   return f1(window, "scroll", o), { scrollDown: a };
 }
