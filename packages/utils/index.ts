@@ -331,7 +331,9 @@ export function useScrollDirection(throttleDelay = 100) {
   // 监听滚动事件的函数
   function scrollEvent() {
     // 获取当前的滚动位置
-    const currentScrollY = window.pageYOffset || document.documentElement.scrollTop
+    // 注：在 safari 浏览器中 currentScrollY 会出现负值，可将负值统一处理为 0 来和 google 浏览器行为统一
+    let currentScrollY = window.pageYOffset || document.documentElement.scrollTop
+    currentScrollY = currentScrollY < 0 ? 0 : currentScrollY
     // 比较当前位置和上一次记录的位置，来确定滚动方向
     scrollDown.value = currentScrollY > lastScrollY
     // 更新上次滚动位置
