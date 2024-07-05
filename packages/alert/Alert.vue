@@ -40,7 +40,7 @@ function onClose(e: MouseEvent): void {
 }
 </script>
 <template>
-  <Transition>
+  <Transition name="alert-motion">
     <div
       v-if="!closeAlert"
       ref="alert"
@@ -228,15 +228,15 @@ function onClose(e: MouseEvent): void {
   </Transition>
 </template>
 <style lang="less" scoped>
-.v-enter-active,
-.v-leave-active {
+.alert-motion-enter-active,
+.alert-motion-leave-active {
   overflow: hidden;
   transition:
     height 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
     opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
     padding 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
-.v-leave-to {
+.alert-motion-leave-to {
   height: 0 !important;
   opacity: 0 !important;
   padding-block: 0 !important;
