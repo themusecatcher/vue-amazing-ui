@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch, watchEffect } from 'vue'
-import type { CSSProperties } from 'vue'
+import { useSlots, computed, nextTick, ref, watch, watchPostEffect } from 'vue'
+import type { CSSProperties, Slot } from 'vue'
 import { throttle, useEventListener } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -11,26 +11,54 @@ interface Responsive {
   xxl?: number // ≥1600px 响应式栅格
 }
 interface Props {
-  title?: string // 描述列表的标题，显示在最顶部 string | slot
+  title?: string | Slot // 描述列表的标题，显示在最顶部 string | slot
+  extra?: string | Slot // 描述列表的操作区域，显示在右上方 string | slot
   bordered?: boolean // 是否展示边框
-  column?: number | Responsive // 一行的 DescriptionItems 数量，可以写成数值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24}
-  extra?: string // 描述列表的操作区域，显示在右上方 string | slot
-  size?: 'default' | 'middle' | 'small' // 设置列表的大小
   vertical?: boolean // 是否使用垂直描述列表
-  labelStyle?: CSSProperties // 自定义标签样式，优先级低于 DescriptionItems
-  contentStyle?: CSSProperties // 自定义内容样式，优先级低于 DescriptionItems
+  size?: 'default' | 'middle' | 'small' // 设置列表的大小
+  column?: number | Responsive // 一行的 DescriptionItems 数量，可以写成数值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24 }
+  labelStyle?: CSSProperties // 自定义标签样式，优先级低于 DescriptionItems 的 labelStyle
+  contentStyle?: CSSProperties // 自定义内容样式，优先级低于 DescriptionItems 的 contentStyle
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '',
+  title: undefined,
+  extra: undefined,
   bordered: false,
-  column: () => ({ xs: 1, sm: 2, md: 3 }),
-  extra: '',
-  size: 'default',
   vertical: false,
+  size: 'default',
+  column: () => ({ xs: 1, sm: 2, md: 3 }),
   labelStyle: () => ({}),
   contentStyle: () => ({})
 })
+const defaultSlots = ref() // 所有渲染的 DescriptionsItems 节点引用
+const children = ref<any[]>() // DescriptionsItems 节点
+const cols = ref() // 放置 DescriptionsItems 节点的模板引用数组
+const thCols = ref() // 放置垂直列表的 DescriptionsItems 节点的 th 模板引用数组
+const tdCols = ref() // 放置垂直列表的 DescriptionsItems 节点的 td 模板引用数组
+const rows = ref() // 放置 DescriptionsItems 节点的模板引用数组（带边框）
+const thRows = ref() // 放置垂直列表的 DescriptionsItems 节点的 th 模板引用数组（带边框）
+const tdRows = ref() // 放置垂直列表的 DescriptionsItems 节点的 td 模板引用数组（带边框）
+const groupItems = ref<any[]>([]) // 处理后的 DescriptionsItems 节点数组
 const clientWidth = ref(document.documentElement.clientWidth)
+function getBrowserSize() {
+  // document.documentElement返回<html>元素
+  clientWidth.value = document.documentElement.clientWidth
+}
+const throttleEvent = throttle(getBrowserSize, 100)
+useEventListener(window, 'resize', throttleEvent)
+const slots = useSlots()
+const showHeader = computed(() => {
+  const titleSlots = slots.title?.()
+  const extraSlots = slots.extra?.()
+  let n = 0
+  if (titleSlots && titleSlots[0].children?.length) {
+    n++
+  }
+  if (extraSlots && extraSlots[0].children?.length) {
+    n++
+  }
+  return Boolean(n) || props.title || props.extra
+})
 const responsiveColumn = computed(() => {
   if (typeof props.column === 'object') {
     if (clientWidth.value >= 1600 && props.column.xxl) {
@@ -55,46 +83,35 @@ const responsiveColumn = computed(() => {
   }
   return props.column
 })
-const view = ref()
-const children = ref<any[]>() // DescriptionsItems 节点
-const cols = ref() // 放置 DescriptionsItems 节点的模板引用数组
-const rows = ref() // 放置 DescriptionsItems 节点的模板引用数组（带边框）
-const groupItems = ref<any[]>([]) // 处理后的 DescriptionsItems 节点数组
-const groupRows = computed(() => {
-  return groupItems.value.length
+watchPostEffect(() => {
+  if (props.bordered) {
+    children.value = Array.from(defaultSlots.value.children).filter(
+      (element: any) => element.className === 'm-desc-item-bordered'
+    )
+  } else {
+    children.value = Array.from(defaultSlots.value.children).filter(
+      (element: any) => element.className === 'm-desc-item'
+    )
+  }
 })
-watchEffect(
-  () => {
-    if (props.bordered) {
-      children.value = Array.from(view.value.children).filter(
-        (element: any) => element.className === 'm-desc-item-bordered'
-      )
-    } else {
-      children.value = Array.from(view.value.children).filter((element: any) => element.className === 'm-desc-item')
-    }
+watch(
+  () => [props.vertical, children.value, responsiveColumn.value, props.labelStyle, props.contentStyle],
+  async () => {
+    groupItems.value.splice(0) // 清空列表
+    await nextTick()
+    getGroupItems(children.value, responsiveColumn.value as number)
   },
-  { flush: 'post' }
+  {
+    deep: true,
+    flush: 'post'
+  }
 )
-watch(children, (to) => {
-  groupItems.value = []
-  nextTick(() => {
-    getGroupItems(to, responsiveColumn.value as number)
-  })
-})
-watch(responsiveColumn, (to) => {
-  groupItems.value = []
-  nextTick(() => {
-    getGroupItems(children.value, to as number)
-  })
-})
-function getBrowserSize() {
-  // document.documentElement返回<html>元素
-  clientWidth.value = document.documentElement.clientWidth
+// 计算当前 group 中所有 span 之和
+function getTotalSpan(group: any): number {
+  return group.reduce((accumulator: number, currentValue: any) => accumulator + currentValue.span, 0)
 }
-const throttleEvent = throttle(getBrowserSize, 100)
-useEventListener(window, 'resize', throttleEvent)
 // 根据不同 cloumn 处理 DescriptionsItems 节点
-function getGroupItems(children: any, responsiveColumn: number) {
+async function getGroupItems(children: any, responsiveColumn: number) {
   const len = children.length
   let group: any[] = []
   for (let n = 0; n < len; n++) {
@@ -105,82 +122,81 @@ function getGroupItems(children: any, responsiveColumn: number) {
     if (getTotalSpan(group) < responsiveColumn) {
       // 已有 items 的 totalSpan ＜ column
       item.span = Math.min(item.span, responsiveColumn - getTotalSpan(group))
-      if (n === len - 1) {
-        // 最后一个
-        item.span = responsiveColumn - getTotalSpan(group)
-      }
       group.push(item)
-      if (n === len - 1) {
-        groupItems.value.push(group)
-      }
     } else {
       groupItems.value.push(group)
       group = [item]
-      if (n === len - 1) {
-        // 最后一个
-        item.span = responsiveColumn
-        groupItems.value.push(group)
-      }
     }
   }
+  groupItems.value.push(group)
+  await nextTick()
   if (props.bordered) {
+    // 带边框列表
     // 带边框
-    nextTick(() => {
-      groupItems.value.forEach((items: any, index: number) => {
-        // 每一行 tr
-        items.forEach((item: any) => {
-          const itemChildren: any[] = Array.from(item.element.children)
-          // 创建节点副本，否则原节点将先被移除，后插入到新位置，影响后续响应式布局计算
-          const th = itemChildren[0].cloneNode(true)
+    groupItems.value.forEach((items: any, index: number) => {
+      // 每一行 tr
+      items.forEach((item: any) => {
+        const itemChildren: any[] = Array.from(item.element.children)
+        // 创建节点副本，否则原节点将先被移除，后插入到新位置，影响后续响应式布局计算
+        const th = itemChildren[0].cloneNode(true)
+        // 动态添加节点样式
+        setStyle(th, [props.labelStyle, JSON.parse(item.element.dataset.labelStyle)])
+        const td = itemChildren[1].cloneNode(true)
+        // 动态添加节点样式
+        setStyle(td, [props.contentStyle, JSON.parse(item.element.dataset.contentStyle)])
+        // 插入节点到指定位置
+        if (props.vertical) {
+          // 垂直列表
+          th.colSpan = item.span
+          td.colSpan = item.span
+          thRows.value[index].appendChild(th)
+          tdRows.value[index].appendChild(td)
+        } else {
           th.colSpan = 1
-          // 动态添加节点样式
-          setStyle(th, props.labelStyle)
-          setStyle(th, JSON.parse(item.element.dataset.labelStyle))
-          const td = itemChildren[1].cloneNode(true)
           td.colSpan = item.span * 2 - 1
-          // 动态添加节点样式
-          setStyle(td, props.contentStyle)
-          setStyle(td, JSON.parse(item.element.dataset.contentStyle))
-          // 插入节点到指定位置
           rows.value[index].appendChild(th)
           rows.value[index].appendChild(td)
-        })
+        }
       })
     })
   } else {
-    nextTick(() => {
-      children.forEach((element: any, index: number) => {
-        const elementChildren: any[] = Array.from(element.children)
-        const label = elementChildren[0]
-        // 动态添加节点样式
-        setStyle(label, props.labelStyle)
-        setStyle(label, JSON.parse(element.dataset.labelStyle))
-        const content = elementChildren[1]
-        // 动态添加节点样式
-        setStyle(content, props.contentStyle)
-        setStyle(content, JSON.parse(element.dataset.contentStyle))
-        // 插入节点到指定位置
-        cols.value[index].appendChild(element)
-      })
+    children.forEach((element: any, index: number) => {
+      const elementChildren: any[] = Array.from(element.children)
+      const label = elementChildren[0]
+      // 动态添加节点样式
+      setStyle(label, [props.labelStyle, JSON.parse(element.dataset.labelStyle)])
+      const content = elementChildren[1]
+      // 动态添加节点样式
+      setStyle(content, [props.contentStyle, JSON.parse(element.dataset.contentStyle)])
+      const cloneElement = element.cloneNode(true)
+      // 插入节点到指定位置
+      if (props.vertical) {
+        // 垂直列表
+        const cloneTdElement = element.cloneNode(true)
+        cloneElement.lastChild.remove() // cloneElement.removeChild(cloneElement.lastChild)
+        cloneTdElement.firstChild.remove() // cloneTdElement.removeChild(cloneTdElement.firstChild)
+        thCols.value[index].appendChild(cloneElement)
+        tdCols.value[index].appendChild(cloneTdElement)
+      } else {
+        cols.value[index].appendChild(cloneElement)
+      }
     })
   }
-}
-// 计算当前 group 中所有 span 之和
-function getTotalSpan(group: any): number {
-  return group.reduce((accumulator: number, currentValue: any) => accumulator + currentValue.span, 0)
 }
 // 为元素添加内联样式
-function setStyle(element: any, style: any) {
-  if (JSON.stringify(style) !== '{}') {
-    Object.keys(style).forEach((key) => {
-      element.style[key] = style[key]
-    })
-  }
+function setStyle(element: any, styles: any[]) {
+  styles.forEach((style: any) => {
+    if (JSON.stringify(style) !== '{}') {
+      Object.keys(style).forEach((key: string) => {
+        element.style[key] = style[key]
+      })
+    }
+  })
 }
 </script>
 <template>
   <div class="m-desc" :class="`desc-${size}`">
-    <div class="m-header">
+    <div class="m-desc-header" v-if="showHeader">
       <div class="u-title">
         <slot name="title">{{ title }}</slot>
       </div>
@@ -188,10 +204,10 @@ function setStyle(element: any, style: any) {
         <slot name="extra">{{ extra }}</slot>
       </div>
     </div>
-    <div ref="view" v-show="false">
+    <div ref="defaultSlots" v-show="false">
       <slot></slot>
     </div>
-    <div class="m-desc-view" :class="{ 'm-bordered': bordered }">
+    <div v-if="!vertical" class="m-desc-view" :class="{ 'm-bordered': bordered }">
       <table>
         <tbody v-if="!bordered">
           <tr v-for="(items, row) in groupItems" :key="row">
@@ -199,8 +215,38 @@ function setStyle(element: any, style: any) {
           </tr>
         </tbody>
         <tbody v-else>
-          <template v-if="groupRows">
-            <tr ref="rows" class="tr-bordered" v-for="row of groupRows" :key="row"></tr>
+          <tr ref="rows" class="tr-bordered" v-for="row of groupItems.length" :key="row"></tr>
+        </tbody>
+      </table>
+    </div>
+    <div v-else class="m-desc-view" :class="{ 'm-bordered': bordered }">
+      <table>
+        <tbody v-if="!bordered">
+          <template v-for="(items, row) in groupItems" :key="row">
+            <tr>
+              <th
+                ref="thCols"
+                class="u-item-td"
+                :colspan="item.span"
+                v-for="(item, col) in items"
+                :key="`th-${row}-${col}`"
+              ></th>
+            </tr>
+            <tr>
+              <td
+                ref="tdCols"
+                class="u-item-td"
+                :colspan="item.span"
+                v-for="(item, col) in items"
+                :key="`td-${row}-${col}`"
+              ></td>
+            </tr>
+          </template>
+        </tbody>
+        <tbody v-else>
+          <template v-for="row in groupItems.length" :key="row">
+            <tr ref="thRows" class="tr-bordered"></tr>
+            <tr ref="tdRows" class="tr-bordered"></tr>
           </template>
         </tbody>
       </table>
@@ -212,7 +258,7 @@ function setStyle(element: any, style: any) {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
-  .m-header {
+  .m-desc-header {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
@@ -238,7 +284,7 @@ function setStyle(element: any, style: any) {
     table {
       width: 100%;
       table-layout: fixed;
-      display: table; // 可选，只为兼容 vitepress 总 .vp-doc 的样式入侵，下同
+      display: table; // 可选，只为兼容 vitepress 中 .vp-doc 的样式入侵，下同
       border-collapse: separate; // 可选
       margin: 0; // 可选
       tr {
@@ -276,6 +322,10 @@ function setStyle(element: any, style: any) {
           background-color: rgba(0, 0, 0, 0.02);
           padding: 16px 24px;
           border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
+          &:last-child {
+            // 消除 vertical 列表最后一个 th 的边框
+            border-inline-end: none;
+          }
         }
         :deep(.u-content-td) {
           border: none; // 可选

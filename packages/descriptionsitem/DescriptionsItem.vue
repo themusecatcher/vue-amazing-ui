@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, Slot } from 'vue'
 interface Props {
-  label?: string // 内容的描述标签 string | slot
+  label?: string | Slot // 内容的描述标签 string | slot
   span?: number // 包含列的数量
-  labelStyle?: CSSProperties // 自定义标签样式，优先级高于 Description
-  contentStyle?: CSSProperties // 自定义内容样式，优先级高于 Description
+  labelStyle?: CSSProperties // 自定义标签样式，优先级高于 Description 的 labelStyle
+  contentStyle?: CSSProperties // 自定义内容样式，优先级高于 Description 的 contentStyle
 }
 withDefaults(defineProps<Props>(), {
-  label: '',
+  label: undefined,
   span: 1,
   labelStyle: () => ({}),
   contentStyle: () => ({})
