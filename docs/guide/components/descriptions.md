@@ -874,6 +874,6 @@ xxl | `≥1600px` 响应式栅格 | number | false
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 label | 内容的描述标签 | string &#124; Slot | undefined | false
-span | 包含列的数量 | number | 1 | false
+span | 包含列的数量，**未设置时等效于 `span: 1`，除了最后一行的最后一项，会将最后一行剩余的列数全部分配给该项** | number | undefined | false
 labelStyle | 自定义标签样式，优先级高于 `Description` 的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 contentStyle | 自定义内容样式，优先级高于 `Description` 的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
