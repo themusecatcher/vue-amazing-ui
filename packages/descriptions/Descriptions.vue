@@ -128,6 +128,11 @@ async function getGroupItems(children: any, responsiveColumn: number) {
       group = [item]
     }
   }
+  // 特殊处理，当使用水平列表时，
+  if (!props.vertical && getTotalSpan(group) < responsiveColumn) {
+    const groupLen = group.length
+    group[groupLen - 1].span = group[groupLen - 1].span + responsiveColumn - getTotalSpan(group)
+  }
   groupItems.value.push(group)
   await nextTick()
   if (props.bordered) {
