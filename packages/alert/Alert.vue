@@ -19,6 +19,8 @@ const props = withDefaults(defineProps<Props>(), {
   showIcon: false
 })
 const alert = ref()
+const closeAlert = ref(false)
+const emit = defineEmits(['close'])
 const slots = useSlots()
 const showDesc = computed(() => {
   const descriptionSlots = slots.description?.()
@@ -27,8 +29,6 @@ const showDesc = computed(() => {
   }
   return props.description
 })
-const emit = defineEmits(['close'])
-const closeAlert = ref(false)
 watchPostEffect(() => {
   if (props.closable && !closeAlert.value) {
     alert.value.style.height = alert.value.offsetHeight + 'px'
