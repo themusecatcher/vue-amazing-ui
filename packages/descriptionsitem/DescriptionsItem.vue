@@ -8,7 +8,7 @@ interface Props {
 }
 withDefaults(defineProps<Props>(), {
   label: undefined,
-  span: 1,
+  span: undefined, // 未设置时等效于 span: 1，除了最后一行的最后一项，会将最后一行剩余的列数全部分配给该项
   labelStyle: () => ({}),
   contentStyle: () => ({})
 })

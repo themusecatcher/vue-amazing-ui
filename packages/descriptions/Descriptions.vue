@@ -112,11 +112,12 @@ function getTotalSpan(group: any): number {
 }
 // 根据不同 cloumn 处理 DescriptionsItems 节点
 async function getGroupItems(children: any, responsiveColumn: number) {
+  console.log('children', children)
   const len = children.length
   let group: any[] = []
   for (let n = 0; n < len; n++) {
     const item = {
-      span: Math.min(children[n].dataset.span, responsiveColumn),
+      span: Math.min(children[n].dataset.span ?? 1, responsiveColumn),
       element: children[n]
     }
     if (getTotalSpan(group) < responsiveColumn) {
@@ -128,8 +129,8 @@ async function getGroupItems(children: any, responsiveColumn: number) {
       group = [item]
     }
   }
-  // 特殊处理，当使用水平列表时，
-  if (!props.vertical && getTotalSpan(group) < responsiveColumn) {
+  // 当使用水平列表，且未设置 span 时等效于 span: 1，除了最后一行的最后一项，会将最后一行剩余的列数全部分配给该项
+  if (!props.vertical && !children[len - 1].dataset.span && getTotalSpan(group) < responsiveColumn) {
     const groupLen = group.length
     group[groupLen - 1].span = group[groupLen - 1].span + responsiveColumn - getTotalSpan(group)
   }

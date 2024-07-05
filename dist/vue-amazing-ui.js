@@ -665,13 +665,14 @@ const yl = { key: 0, class: "m-desc-header" }, kl = { class: "u-title" }, wl = {
     a.bordered ? o.value = Array.from(e.value.children).filter((M) => M.className === "m-desc-item-bordered") : o.value = Array.from(e.value.children).filter((M) => M.className === "m-desc-item");
   }), ae(() => [a.vertical, o.value, w.value, a.labelStyle, a.contentStyle], async () => {
     k.value.splice(0), await $e(), async function(M, y) {
+      console.log("children", M);
       const p = M.length;
       let _ = [];
       for (let C = 0; C < p; C++) {
-        const D = { span: Math.min(M[C].dataset.span, y), element: M[C] };
+        const D = { span: Math.min(M[C].dataset.span ?? 1, y), element: M[C] };
         x(_) < y ? (D.span = Math.min(D.span, y - x(_)), _.push(D)) : (k.value.push(_), _ = [D]);
       }
-      if (!a.vertical && x(_) < y) {
+      if (!a.vertical && !M[p - 1].dataset.span && x(_) < y) {
         const C = _.length;
         _[C - 1].span = _[C - 1].span + y - x(_);
       }
@@ -693,11 +694,11 @@ const yl = { key: 0, class: "m-desc-header" }, kl = { class: "u-title" }, wl = {
       });
     }(o.value, w.value);
   }, { deep: !0, flush: "post" }), (M, y) => (u(), r("div", { class: S(["m-desc", `desc-${M.size}`]) }, [d.value ? (u(), r("div", yl, [l("div", kl, [A(M.$slots, "title", {}, () => [E(L(M.title), 1)], !0)]), l("div", wl, [A(M.$slots, "extra", {}, () => [E(L(M.extra), 1)], !0)])])) : F("", !0), q(l("div", { ref_key: "defaultSlots", ref: e }, [A(M.$slots, "default", {}, void 0, !0)], 512), [[O, !1]]), M.vertical ? (u(), r("div", { key: 2, class: S(["m-desc-view", { "m-bordered": M.bordered }]) }, [l("table", null, [M.bordered ? (u(), r("tbody", $l, [(u(!0), r(W, null, U(k.value.length, (p) => (u(), r(W, { key: p }, [l("tr", { ref_for: !0, ref_key: "thRows", ref: h, class: "tr-bordered" }, null, 512), l("tr", { ref_for: !0, ref_key: "tdRows", ref: v, class: "tr-bordered" }, null, 512)], 64))), 128))])) : (u(), r("tbody", _l, [(u(!0), r(W, null, U(k.value, (p, _) => (u(), r(W, { key: _ }, [l("tr", null, [(u(!0), r(W, null, U(p, (C, D) => (u(), r("th", { ref_for: !0, ref_key: "thCols", ref: s, class: "u-item-td", colspan: C.span, key: `th-${_}-${D}` }, null, 8, zl))), 128))]), l("tr", null, [(u(!0), r(W, null, U(p, (C, D) => (u(), r("td", { ref_for: !0, ref_key: "tdCols", ref: i, class: "u-item-td", colspan: C.span, key: `td-${_}-${D}` }, null, 8, Cl))), 128))])], 64))), 128))]))])], 2)) : (u(), r("div", { key: 1, class: S(["m-desc-view", { "m-bordered": M.bordered }]) }, [l("table", null, [M.bordered ? (u(), r("tbody", Ml, [(u(!0), r(W, null, U(k.value.length, (p) => (u(), r("tr", { ref_for: !0, ref_key: "rows", ref: n, class: "tr-bordered", key: p }))), 128))])) : (u(), r("tbody", bl, [(u(!0), r(W, null, U(k.value, (p, _) => (u(), r("tr", { key: _ }, [(u(!0), r(W, null, U(p, (C, D) => (u(), r("td", { ref_for: !0, ref_key: "cols", ref: c, class: "u-item-td", colspan: C.span, key: D }, null, 8, xl))), 128))]))), 128))]))])], 2))], 2));
-} }), ma = R(Bl, [["__scopeId", "data-v-17a7155b"]]);
+} }), ma = R(Bl, [["__scopeId", "data-v-05d18dd5"]]);
 ma.install = (t) => {
   t.component(ma.__name, ma);
 };
-const Sl = ["data-span", "data-label-style", "data-content-style"], Fl = { class: "u-label" }, Ll = { class: "u-content" }, Al = ["data-span", "data-label-style", "data-content-style"], Dl = { class: "u-label-th" }, El = { class: "u-content-td" }, ga = R(j({ __name: "DescriptionsItem", props: { label: { default: void 0 }, span: { default: 1 }, labelStyle: { default: () => ({}) }, contentStyle: { default: () => ({}) } }, setup: (t) => (a, e) => (u(), r(W, null, [l("div", { class: "m-desc-item", "data-span": a.span, "data-label-style": JSON.stringify(a.labelStyle), "data-content-style": JSON.stringify(a.contentStyle) }, [l("span", Fl, [A(a.$slots, "label", {}, () => [E(L(a.label), 1)], !0)]), l("span", Ll, [A(a.$slots, "default", {}, void 0, !0)])], 8, Sl), l("div", { class: "m-desc-item-bordered", "data-span": a.span, "data-label-style": JSON.stringify(a.labelStyle), "data-content-style": JSON.stringify(a.contentStyle) }, [l("th", Dl, [A(a.$slots, "label", {}, () => [E(L(a.label), 1)], !0)]), l("td", El, [A(a.$slots, "default", {}, void 0, !0)])], 8, Al)], 64)) }), [["__scopeId", "data-v-9ce3dcb6"]]);
+const Sl = ["data-span", "data-label-style", "data-content-style"], Fl = { class: "u-label" }, Ll = { class: "u-content" }, Al = ["data-span", "data-label-style", "data-content-style"], Dl = { class: "u-label-th" }, El = { class: "u-content-td" }, ga = R(j({ __name: "DescriptionsItem", props: { label: { default: void 0 }, span: { default: void 0 }, labelStyle: { default: () => ({}) }, contentStyle: { default: () => ({}) } }, setup: (t) => (a, e) => (u(), r(W, null, [l("div", { class: "m-desc-item", "data-span": a.span, "data-label-style": JSON.stringify(a.labelStyle), "data-content-style": JSON.stringify(a.contentStyle) }, [l("span", Fl, [A(a.$slots, "label", {}, () => [E(L(a.label), 1)], !0)]), l("span", Ll, [A(a.$slots, "default", {}, void 0, !0)])], 8, Sl), l("div", { class: "m-desc-item-bordered", "data-span": a.span, "data-label-style": JSON.stringify(a.labelStyle), "data-content-style": JSON.stringify(a.contentStyle) }, [l("th", Dl, [A(a.$slots, "label", {}, () => [E(L(a.label), 1)], !0)]), l("td", El, [A(a.$slots, "default", {}, void 0, !0)])], 8, Al)], 64)) }), [["__scopeId", "data-v-b0abb74a"]]);
 ga.install = (t) => {
   t.component(ga.__name, ga);
 };
