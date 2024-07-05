@@ -112,7 +112,6 @@ function getTotalSpan(group: any): number {
 }
 // 根据不同 cloumn 处理 DescriptionsItems 节点
 async function getGroupItems(children: any, responsiveColumn: number) {
-  console.log('children', children)
   const len = children.length
   let group: any[] = []
   for (let n = 0; n < len; n++) {
@@ -230,22 +229,10 @@ function setStyle(element: any, styles: any[]) {
         <tbody v-if="!bordered">
           <template v-for="(items, row) in groupItems" :key="row">
             <tr>
-              <th
-                ref="thCols"
-                class="u-item-td"
-                :colspan="item.span"
-                v-for="(item, col) in items"
-                :key="`th-${row}-${col}`"
-              ></th>
+              <th ref="thCols" class="u-item-th" :colspan="item.span" v-for="(item, col) in items" :key="col"></th>
             </tr>
             <tr>
-              <td
-                ref="tdCols"
-                class="u-item-td"
-                :colspan="item.span"
-                v-for="(item, col) in items"
-                :key="`td-${row}-${col}`"
-              ></td>
+              <td ref="tdCols" class="u-item-td" :colspan="item.span" v-for="(item, col) in items" :key="col"></td>
             </tr>
           </template>
         </tbody>
@@ -297,6 +284,13 @@ function setStyle(element: any, styles: any[]) {
         // 可选
         border: none;
         background: transparent;
+      }
+      .u-item-th {
+        padding: 0; // 可选
+        border: none; // 可选
+        padding-bottom: 16px;
+        vertical-align: top;
+        background: transparent; // 可选
       }
       .u-item-td {
         padding: 0; // 可选
