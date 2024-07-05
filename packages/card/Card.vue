@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, Slot } from 'vue'
 import Skeleton from '../skeleton'
 interface Props {
   width?: number | string // 卡片宽度
+  title?: string | Slot // 卡片标题 string | slot
+  extra?: string | Slot // 卡片右上角的操作区域 string | slot
   bordered?: boolean // 是否有边框
   loading?: boolean // 当卡片内容还在加载中时，可以用 loading 展示一个占位
-  extra?: string // 卡片右上角的操作区域 string | slot
   size?: 'default' | 'small' // 卡片的尺寸
-  title?: string // 卡片标题 string | slot
   headStyle?: CSSProperties //	标题区域自定义样式
   bodyStyle?: CSSProperties // 内容区域自定义样式
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
+  title: undefined,
+  extra: undefined,
   bordered: true,
   loading: false,
-  extra: '',
   size: 'default',
-  title: '',
   headStyle: () => ({}),
   bodyStyle: () => ({})
 })
@@ -29,7 +29,7 @@ const cardWidth = computed(() => {
   return props.width
 })
 const slots = useSlots()
-const showTitle = computed(() => {
+const showHeader = computed(() => {
   const titleSlots = slots.title?.()
   const extraSlots = slots.extra?.()
   let n = 0
@@ -44,7 +44,7 @@ const showTitle = computed(() => {
 </script>
 <template>
   <div class="m-card" :class="{ bordered: bordered, 'm-small-card': size === 'small' }" :style="`width: ${cardWidth};`">
-    <div class="m-card-head" :style="headStyle" v-if="showTitle">
+    <div class="m-card-head" :style="headStyle" v-if="showHeader">
       <div class="m-head-wrapper">
         <div class="u-title">
           <slot name="title">{{ title }}</slot>

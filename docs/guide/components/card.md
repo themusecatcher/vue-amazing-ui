@@ -279,10 +279,10 @@ const loading = ref(true)
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 卡片宽度 | number &#124; string | 'auto' | false
+title | 卡片标题 | string &#124; Slot | '' | false
+extra | 卡片右上角的操作区域 | string &#124; Slot | '' | false
 bordered | 是否有边框 | boolean | true | false
 loading | 当卡片内容还在加载中时，可以用 `loading` 展示一个占位 | boolean | false | false
-extra | 卡片右上角的操作区域 | string &#124; slot | '' | false
 size | 卡片的尺寸 | 'default' &#124; 'small' | 'default' | false
-title | 卡片标题 | string &#124; slot | '' | false
 headStyle | 标题区域自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 bodyStyle | 内容区域自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
