@@ -16,7 +16,7 @@ import { reactive, ref } from 'vue'
 const model = reactive({
   content: 'Vue Amazing UI',
   layout: 'alternate',
-  color: 'rgba(0,0,0,.15)',
+  color: 'rgba(0, 0, 0, 0.15)',
   fontSize: 16,
   fontWeight: 400,
   zIndex: 9,
@@ -305,7 +305,7 @@ zIndex | 追加的水印元素的 `z-index` | number| 9 | false
 image | 图片源，建议使用 `2` 倍或 `3` 倍图，优先级高于文字 | string | undefined | false
 content | 水印文字内容 | string &#124; string[] | '' | false
 fullscreen | 是否展示全屏 | boolean | false | false
-color | 字体颜色 | string | 'rgba(0,0,0,.15)' | false
+color | 字体颜色 | string | 'rgba(0, 0, 0, 0.15)' | false
 fontSize | 字体大小，单位`px` | number | 16 | false
 fontWeight | 字体粗细 | 'normal' &#124; 'light' &#124; 'weight' &#124; number | 'normal' | false
 fontFamily | 字体类型 | string | 'sans-serif' | false
