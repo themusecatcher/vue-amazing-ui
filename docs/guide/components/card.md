@@ -94,7 +94,7 @@ const loading = ref(true)
     <p>Card content</p>
     <p>Card content</p>
   </Card>
-  <Button :loading="loading" @click="loading = !loading">Toggle loading</Button>
+  <Button @click="loading = !loading">Toggle loading</Button>
 </Space>
 
 ::: details Show Code
@@ -111,7 +111,7 @@ const loading = ref(true)
       <p>Card content</p>
       <p>Card content</p>
     </Card>
-    <Button :loading="loading" @click="loading = !loading">Toggle loading</Button>
+    <Button @click="loading = !loading">Toggle loading</Button>
   </Space>
 </template>
 ```

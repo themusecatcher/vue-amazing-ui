@@ -36,7 +36,7 @@ const loading = ref(true)
         <p>Card content</p>
         <p>Card content</p>
       </Card>
-      <Button :loading="loading" @click="loading = !loading">Toggle loading</Button>
+      <Button @click="loading = !loading">Toggle loading</Button>
     </Space>
     <h2 class="mt30 mb10">在灰色背景上使用无边框的卡片</h2>
     <div style="display: inline-block; background: #ececec; padding: 30px; border-radius: 8px">
