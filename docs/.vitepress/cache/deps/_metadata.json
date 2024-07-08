@@ -1,49 +1,84 @@
 {
+<<<<<<< HEAD
   "hash": "d61e3464",
   "configHash": "464b6b1d",
   "lockfileHash": "f8a3f6a5",
   "browserHash": "c45ce3e7",
+=======
+  "hash": "76e7e8af",
+  "configHash": "b239f0d4",
+  "lockfileHash": "2838c8a0",
+  "browserHash": "fcd0f1fd",
+>>>>>>> 72dee75bbb941123497d9f5f09fa070a9152d2f4
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.4.29_typescript@5.4.5/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
+<<<<<<< HEAD
       "fileHash": "c04b725a",
+=======
+      "fileHash": "61cf2de4",
+>>>>>>> 72dee75bbb941123497d9f5f09fa070a9152d2f4
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/.pnpm/@vue+devtools-api@7.3.2/node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
+<<<<<<< HEAD
       "fileHash": "a1446cc2",
+=======
+      "fileHash": "e0ea0b38",
+>>>>>>> 72dee75bbb941123497d9f5f09fa070a9152d2f4
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../node_modules/.pnpm/@vueuse+core@10.11.0_vue@3.4.29_typescript@5.4.5_/node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
+<<<<<<< HEAD
       "fileHash": "d8502922",
+=======
+      "fileHash": "9acc1085",
+>>>>>>> 72dee75bbb941123497d9f5f09fa070a9152d2f4
       "needsInterop": false
     },
     "@vuepic/vue-datepicker": {
       "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@8.8.0_vue@3.4.29_typescript@5.4.5_/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
       "file": "@vuepic_vue-datepicker.js",
+<<<<<<< HEAD
       "fileHash": "c825e4ca",
+=======
+      "fileHash": "6e0bda22",
+>>>>>>> 72dee75bbb941123497d9f5f09fa070a9152d2f4
       "needsInterop": false
     },
     "@vueuse/integrations/useQRCode": {
       "src": "../../../../node_modules/.pnpm/@vueuse+integrations@10.11.0_async-validator@4.2.5_focus-trap@7.5.4_qrcode@1.5.3_vue@3.4.29_typescript@5.4.5_/node_modules/@vueuse/integrations/useQRCode.mjs",
       "file": "@vueuse_integrations_useQRCode.js",
+<<<<<<< HEAD
       "fileHash": "999439bc",
+=======
+      "fileHash": "56016c0e",
+>>>>>>> 72dee75bbb941123497d9f5f09fa070a9152d2f4
       "needsInterop": false
     },
     "swiper/vue": {
       "src": "../../../../node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/swiper-vue.mjs",
       "file": "swiper_vue.js",
+<<<<<<< HEAD
       "fileHash": "aaa43f2c",
+=======
+      "fileHash": "fe28857a",
+>>>>>>> 72dee75bbb941123497d9f5f09fa070a9152d2f4
       "needsInterop": false
     },
     "swiper/modules": {
       "src": "../../../../node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/index.mjs",
       "file": "swiper_modules.js",
+<<<<<<< HEAD
       "fileHash": "58f3a328",
+=======
+      "fileHash": "7c235b4e",
+>>>>>>> 72dee75bbb941123497d9f5f09fa070a9152d2f4
       "needsInterop": false
     }
   },
