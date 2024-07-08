@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { Slot } from 'vue'
 interface Props {
-  name?: string // 按钮文本 string | slot
-  type?: 'default' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 按钮类型
-  effect?: 'fade' | 'reverse' // 悬浮变化效果，只有 type 为 default 时，effect 才生效
+  name?: string | Slot // 按钮文本 string | slot
+  type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 按钮类型
   size?: 'small' | 'middle' | 'large' // 按钮尺寸
   href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
   target?: '_self' | '_blank' // 相当于 a 链接的 target 属性，href 存在时生效
@@ -13,7 +13,6 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   name: '按钮',
   type: 'default',
-  effect: 'fade',
   size: 'middle',
   href: '',
   target: '_self',
@@ -26,15 +25,14 @@ function onClick(e: Event) {
   emit('click', e)
 }
 function onKeyboard(e: KeyboardEvent) {
-  // e.preventDefault()
   onClick(e)
 }
 </script>
 <template>
-  <div :class="['m-btn-wrap', { center: center }]" tabindex="0" @keydown.enter.prevent="onKeyboard">
+  <div :class="['m-btn-wrap', { 'btn-center': center }]" tabindex="0" @keydown.enter.prevent="onKeyboard">
     <a
       class="m-btn"
-      :class="[type, size, { [effect]: type === 'default', disabled: disabled, 'm-btn-loading': !href && loading }]"
+      :class="[`btn-${type} btn-${size}`, { 'btn-disabled': disabled, 'btn-loading': !href && loading }]"
       :disabled="disabled"
       :href="href ? href : 'javascript:;'"
       :target="href ? target : '_self'"
@@ -50,7 +48,7 @@ function onKeyboard(e: KeyboardEvent) {
   </div>
 </template>
 <style lang="less" scoped>
-@primary: @themeColor;
+@primary: #1677ff;
 @danger: #ff4d4f;
 .m-btn-wrap {
   display: inline-block;
@@ -118,11 +116,11 @@ function onKeyboard(e: KeyboardEvent) {
       height: 100%;
     }
   }
-  .m-btn-loading {
+  .btn-loading {
     opacity: 0.65;
     pointer-events: none;
   }
-  .fade {
+  .btn-default {
     background-color: #ffffff;
     border-color: #d9d9d9;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
@@ -135,10 +133,20 @@ function onKeyboard(e: KeyboardEvent) {
       border-color: shade(@primary, 12%);
     }
   }
-  .default {
-    .fade();
+  .btn-reverse {
+    .btn-default();
+    &:hover {
+      color: #fff;
+      background-color: fade(@primary, 80%);
+      border-color: fade(@primary, 80%);
+    }
+    &:active {
+      color: #fff;
+      background-color: shade(@primary, 12%);
+      border-color: shade(@primary, 12%);
+    }
   }
-  .primary {
+  .btn-primary {
     color: #fff;
     background-color: @primary;
     box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
@@ -151,7 +159,7 @@ function onKeyboard(e: KeyboardEvent) {
       border-color: shade(@primary, 12%);
     }
   }
-  .danger {
+  .btn-danger {
     color: #fff;
     background-color: @danger;
     border-color: @danger;
@@ -166,11 +174,11 @@ function onKeyboard(e: KeyboardEvent) {
       border-color: shade(@danger, 12%);
     }
   }
-  .dashed {
-    .fade();
+  .btn-dashed {
+    .btn-default();
     border-style: dashed;
   }
-  .text {
+  .btn-text {
     &:hover {
       background-color: rgba(0, 0, 0, 0.06);
     }
@@ -178,7 +186,7 @@ function onKeyboard(e: KeyboardEvent) {
       background-color: rgba(0, 0, 0, 0.15);
     }
   }
-  .link {
+  .btn-link {
     color: @primary;
     &:hover {
       color: fade(@primary, 80%);
@@ -187,37 +195,25 @@ function onKeyboard(e: KeyboardEvent) {
       color: shade(@primary, 12%);
     }
   }
-  .reverse {
-    &:hover {
-      color: #fff;
-      background-color: fade(@primary, 80%);
-      border-color: fade(@primary, 80%);
-    }
-    &:active {
-      color: #fff;
-      background-color: shade(@primary, 12%);
-      border-color: shade(@primary, 12%);
-    }
-  }
-  .small {
+  .btn-small {
     font-size: 14px;
     height: 24px;
     padding: 0px 7px;
     border-radius: 4px;
   }
-  .middle {
+  .btn-middle {
     font-size: 14px;
     height: 32px;
     padding: 4px 15px;
     border-radius: 6px;
   }
-  .large {
+  .btn-large {
     font-size: 16px;
     height: 40px;
     padding: 6.428571428571429px 15px;
     border-radius: 8px;
   }
-  .disabled {
+  .btn-disabled {
     border-color: #d9d9d9;
     color: rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.04);
@@ -236,7 +232,7 @@ function onKeyboard(e: KeyboardEvent) {
     }
   }
 }
-.center {
+.btn-center {
   display: block;
   text-align: center;
 }

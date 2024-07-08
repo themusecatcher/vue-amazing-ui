@@ -11,7 +11,7 @@ function onClick(e: Event) {
     <h2 class="mt30 mb10">七种类型</h2>
     <Space>
       <Button>Default Button</Button>
-      <Button effect="reverse">Reverse Button</Button>
+      <Button type="reverse">Reverse Button</Button>
       <Button type="primary">Primary Button</Button>
       <Button type="danger">Danger Button</Button>
       <Button type="dashed">Dashed Button</Button>
@@ -21,7 +21,7 @@ function onClick(e: Event) {
     <h2 class="mt30 mb10">禁用</h2>
     <Space>
       <Button disabled>Default Button</Button>
-      <Button disabled effect="reverse">Reverse Button</Button>
+      <Button disabled type="reverse">Reverse Button</Button>
       <Button disabled type="primary">Primary Button</Button>
       <Button disabled type="danger">Danger Button</Button>
       <Button disabled type="dashed">Dashed Button</Button>
@@ -45,7 +45,7 @@ function onClick(e: Event) {
     <h2 class="mt30 mb10">加载中状态</h2>
     <Space>
       <Button :loading="loading">Default Button</Button>
-      <Button effect="reverse" :loading="loading">Reverse Button</Button>
+      <Button type="reverse" :loading="loading">Reverse Button</Button>
       <Button type="primary" :loading="loading">Primary Button</Button>
       <Button type="danger" :loading="loading">Danger Button</Button>
       <Button type="dashed" :loading="loading">Dashed Button</Button>

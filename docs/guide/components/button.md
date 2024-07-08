@@ -27,7 +27,7 @@ function onClick(e: Event) {
 
 <Space>
   <Button>Default Button</Button>
-  <Button effect="reverse">Reverse Button</Button>
+  <Button type="reverse">Reverse Button</Button>
   <Button type="primary">Primary Button</Button>
   <Button type="danger">Danger Button</Button>
   <Button type="dashed">Dashed Button</Button>
@@ -41,7 +41,7 @@ function onClick(e: Event) {
 <template>
   <Space>
     <Button>Default Button</Button>
-    <Button effect="reverse">Reverse Button</Button>
+    <Button type="reverse">Reverse Button</Button>
     <Button type="primary">Primary Button</Button>
     <Button type="danger">Danger Button</Button>
     <Button type="dashed">Dashed Button</Button>
@@ -56,7 +56,7 @@ function onClick(e: Event) {
 
 <Space>
   <Button disabled>Default Button</Button>
-  <Button disabled effect="reverse">Reverse Button</Button>
+  <Button disabled type="reverse">Reverse Button</Button>
   <Button disabled type="primary">Primary Button</Button>
   <Button disabled type="danger">Danger Button</Button>
   <Button disabled type="dashed">Dashed Button</Button>
@@ -70,7 +70,7 @@ function onClick(e: Event) {
 <template>
   <Space>
     <Button disabled>Default Button</Button>
-    <Button disabled effect="reverse">Reverse Button</Button>
+    <Button disabled type="reverse">Reverse Button</Button>
     <Button disabled type="primary">Primary Button</Button>
     <Button disabled type="danger">Danger Button</Button>
     <Button disabled type="dashed">Dashed Button</Button>
@@ -140,7 +140,7 @@ function onClick(e: Event) {
 
 <Space>
   <Button :loading="loading">Default Button</Button>
-  <Button effect="reverse" :loading="loading">Reverse Button</Button>
+  <Button type="reverse" :loading="loading">Reverse Button</Button>
   <Button type="primary" :loading="loading">Primary Button</Button>
   <Button type="danger" :loading="loading">Danger Button</Button>
   <Button type="dashed" :loading="loading">Dashed Button</Button>
@@ -163,7 +163,7 @@ const loading = ref(true)
 <template>
   <Space>
     <Button :loading="loading">Default Button</Button>
-    <Button effect="reverse" :loading="loading">Reverse Button</Button>
+    <Button type="reverse" :loading="loading">Reverse Button</Button>
     <Button type="primary" :loading="loading">Primary Button</Button>
     <Button type="danger" :loading="loading">Danger Button</Button>
     <Button type="dashed" :loading="loading">Dashed Button</Button>
@@ -203,8 +203,7 @@ function onClick(e: Event) {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 name | 按钮文本 | string &#124; slot | '按钮' | false
-type | 按钮类型 | 'default' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' | false
-effect | 悬浮变化效果，只有 `type` 为 `default` 时，`effect` 才生效 | 'fade' &#124; 'reverse' | 'fade' | false
+type | 按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' | false
 size | 按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | '' | false
 target | 相当于 `a` 链接的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self' | false
