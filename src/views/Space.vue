@@ -92,7 +92,7 @@ const gap = ref('small')
     </div>
     <h2 class="mt30 mb10">自动换行</h2>
     <Space :gap="[8, 16]" style="width: 600px">
-      <template v-for="n in 10" :key="n">
+      <template v-for="n in 12" :key="n">
         <Button>Button</Button>
       </template>
     </Space>
