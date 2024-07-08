@@ -82,7 +82,7 @@ const show = ref(false)
         </Watermark>
       </Col>
       <Col :span="6">
-        <Flex vertical gap="middle">
+        <Flex vertical :gap="12">
           Content:<Input v-model:value="model.content" /> Layout:<Radio
             :options="layoutOptions"
             v-model:value="model.layout"
