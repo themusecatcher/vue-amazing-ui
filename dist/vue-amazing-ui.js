@@ -290,7 +290,7 @@ const ht = ["onKeydown"], mt = ["disabled", "href", "target"], gt = { class: "u-
     o(s);
   }
   return (s, i) => (u(), r("div", { class: S(["m-btn-wrap", { "btn-center": s.center }]), tabindex: "0", onKeydown: ve(X(c, ["prevent"]), ["enter"]) }, [l("a", { class: S(["m-btn", [`btn-${s.type} btn-${s.size}`, { "btn-disabled": s.disabled, "btn-loading": !s.href && s.loading }]]), disabled: s.disabled, href: s.href ? s.href : "javascript:;", target: s.href ? s.target : "_self", onClick: o }, [q(l("span", { class: S(["m-loading-icon", { [`loading-${s.size}`]: s.loading }]) }, [l("span", { class: S(["u-spin-circle", `spin-${s.size}`]) }, null, 2)], 2), [[O, !s.href]]), l("span", gt, [A(s.$slots, "default", {}, () => [E(L(s.name), 1)], !0)])], 10, mt)], 42, ht));
-} }), [["__scopeId", "data-v-062e27b3"]]);
+} }), [["__scopeId", "data-v-8e4c3ade"]]);
 Fe.install = (t) => {
   t.component(Fe.__name, Fe);
 };

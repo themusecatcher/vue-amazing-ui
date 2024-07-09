@@ -163,7 +163,6 @@ function onKeyboard(e: KeyboardEvent) {
     color: #fff;
     background-color: @danger;
     border-color: @danger;
-    text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
     box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
     &:hover {
       background-color: fade(@danger, 80%);
