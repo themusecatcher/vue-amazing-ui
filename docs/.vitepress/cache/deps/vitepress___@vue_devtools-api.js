@@ -1,6 +1,6 @@
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/@vue+devtools-shared@7.3.2/node_modules/@vue/devtools-shared/dist/index.js
+// node_modules/.pnpm/@vue+devtools-shared@7.3.5/node_modules/@vue/devtools-shared/dist/index.js
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -30,7 +30,7 @@ var __toESM = (mod, isNodeMode, target2) => (target2 = mod != null ? __create(__
   mod
 ));
 var init_esm_shims = __esm({
-  "../../node_modules/.pnpm/tsup@8.1.0_@microsoft+api-extractor@7.43.0_@types+node@20.14.5__@swc+core@1.5.29_postcss@8.4.38_typescript@5.4.5/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.pnpm/tsup@8.1.0_@microsoft+api-extractor@7.43.0_@types+node@20.14.9__@swc+core@1.5.29_postcss@8.4.38_typescript@5.5.2/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
@@ -248,6 +248,10 @@ function basename(filename, ext) {
     return baseNameWithExt.substring(0, extIndex);
   }
   return "";
+}
+var HTTP_URL_RE = /^https?:\/\//;
+function isUrlString(str) {
+  return str.startsWith("/") || HTTP_URL_RE.test(str);
 }
 var deepClone = (0, import_rfdc.default)({ circles: true });
 init_esm_shims();
@@ -518,7 +522,7 @@ async function _applyPromised(fn, _this, args) {
 var { clearTimeout: clearTimeout2, setTimeout: setTimeout2 } = globalThis;
 var random = Math.random.bind(Math);
 
-// node_modules/.pnpm/@vue+devtools-kit@7.3.2/node_modules/@vue/devtools-kit/dist/index.js
+// node_modules/.pnpm/@vue+devtools-kit@7.3.5/node_modules/@vue/devtools-kit/dist/index.js
 var __create2 = Object.create;
 var __defProp2 = Object.defineProperty;
 var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -548,7 +552,7 @@ var __toESM2 = (mod, isNodeMode, target21) => (target21 = mod != null ? __create
   mod
 ));
 var init_esm_shims2 = __esm2({
-  "../../node_modules/.pnpm/tsup@8.1.0_@microsoft+api-extractor@7.43.0_@types+node@20.14.5__@swc+core@1.5.29_postcss@8.4.38_typescript@5.4.5/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.pnpm/tsup@8.1.0_@microsoft+api-extractor@7.43.0_@types+node@20.14.9__@swc+core@1.5.29_postcss@8.4.38_typescript@5.5.2/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
@@ -2641,18 +2645,38 @@ function onDevToolsConnected(fn) {
     });
   });
 }
+var resolveIcon = (icon) => {
+  if (!icon)
+    return;
+  if (icon.startsWith("baseline-")) {
+    return `custom-ic-${icon}`;
+  }
+  if (icon.startsWith("i-") || isUrlString(icon))
+    return icon;
+  return `custom-ic-baseline-${icon}`;
+};
 function addCustomTab(tab) {
   const tabs = target.__VUE_DEVTOOLS_KIT_CUSTOM_TABS__;
   if (tabs.some((t) => t.name === tab.name))
     return;
-  tabs.push(tab);
+  tabs.push({
+    ...tab,
+    icon: resolveIcon(tab.icon)
+  });
   updateAllStates();
 }
 function addCustomCommand(action) {
   const commands = target.__VUE_DEVTOOLS_KIT_CUSTOM_COMMANDS__;
   if (commands.some((t) => t.id === action.id))
     return;
-  commands.push(action);
+  commands.push({
+    ...action,
+    icon: resolveIcon(action.icon),
+    children: action.children ? action.children.map((child) => ({
+      ...child,
+      icon: resolveIcon(child.icon)
+    })) : void 0
+  });
   updateAllStates();
 }
 function removeCustomCommand(actionId) {
@@ -2709,7 +2733,7 @@ function getActiveInspectors() {
       id: options.id,
       label: options.label,
       logo: descriptor.logo,
-      icon: `i-ic-baseline-${(_a24 = options == null ? void 0 : options.icon) == null ? void 0 : _a24.replace(/_/g, "-")}`,
+      icon: `custom-ic-baseline-${(_a24 = options == null ? void 0 : options.icon) == null ? void 0 : _a24.replace(/_/g, "-")}`,
       packageName: descriptor.packageName,
       homepage: descriptor.homepage
     };
