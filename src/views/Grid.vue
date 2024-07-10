@@ -155,6 +155,10 @@ const state = reactive({
     <Row class="row">
       <Col :span="12" :offset="6">col-12 col-offset-6</Col>
     </Row>
+    <Row class="row">
+      <Col :span="6" :md="{ offset: 4 }" :xl="{ offset: 6 }">col-6 col-md-offset-4 col-xl-offset-6</Col>
+      <Col :span="6" :md="{ offset: 4 }" :xl="{ offset: 6 }">col-6 col-md-offset-4 col-xl-offset-6</Col>
+    </Row>
     <h2 class="mt30 mb10">排版方式</h2>
     <Divider orientation="left">sub-element align left</Divider>
     <Row class="row" justify="start">
@@ -301,13 +305,13 @@ const state = reactive({
     </Row>
     <Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
       <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-        <div class="gutter-box">Col</div>
+        <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
       </Col>
       <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-        <div class="gutter-box">Col</div>
+        <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
       </Col>
       <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-        <div class="gutter-box">Col</div>
+        <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
       </Col>
     </Row>
   </div>

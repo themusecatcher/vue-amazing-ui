@@ -2,20 +2,22 @@
 import { ref, computed } from 'vue'
 import { throttle, useEventListener } from '../utils'
 interface Props {
-  span?: number // 栅格占位格数，为 0 时相当于 display: none，取0,1,2...24
-  offset?: number // 栅格左侧的间隔格数，取0,1,2...24
+  span?: number // 栅格占位格数，取 0,1,2...24，为 0 时相当于 display: none，优先级低于 xs, sm, md, lg, xl, xxl
+  offset?: number // 栅格左侧的间隔格数，取 0,1,2...24
   flex?: string | number //	flex 布局填充
-  xs?: number | { span: number; offset?: number } // <576px 响应式栅格
-  sm?: number | { span: number; offset?: number } // ≥576px 响应式栅格
-  md?: number | { span: number; offset?: number } // ≥768px 响应式栅格
-  lg?: number | { span: number; offset?: number } // ≥992px 响应式栅格
-  xl?: number | { span: number; offset?: number } // ≥1200px 响应式栅格
-  xxl?: number | { span: number; offset?: number } // ≥1600px 响应式栅格
+  order?: number // 栅格顺序，取 0,1,2...
+  xs?: number | { span?: number; offset?: number } // <576px 响应式栅格
+  sm?: number | { span?: number; offset?: number } // ≥576px 响应式栅格
+  md?: number | { span?: number; offset?: number } // ≥768px 响应式栅格
+  lg?: number | { span?: number; offset?: number } // ≥992px 响应式栅格
+  xl?: number | { span?: number; offset?: number } // ≥1200px 响应式栅格
+  xxl?: number | { span?: number; offset?: number } // ≥1600px 响应式栅格
 }
 const props = withDefaults(defineProps<Props>(), {
   span: undefined,
   offset: 0,
-  flex: '',
+  flex: undefined,
+  order: 0,
   xs: undefined,
   sm: undefined,
   md: undefined,
@@ -29,67 +31,33 @@ const flexValue = computed(() => {
   }
   return props.flex
 })
-const responsiveProperty = computed(() => {
-  if (clientWidth.value >= 1600 && props.xxl) {
-    if (typeof props.xxl === 'object') {
-      return props.xxl
-    } else {
-      return {
-        span: props.xxl,
-        offset: undefined
-      }
+const responsiveProperties = computed(() => {
+  return [
+    {
+      width: 1600,
+      value: props.xxl
+    },
+    {
+      width: 1200,
+      value: props.xl
+    },
+    {
+      width: 992,
+      value: props.lg
+    },
+    {
+      width: 768,
+      value: props.md
+    },
+    {
+      width: 576,
+      value: props.sm
+    },
+    {
+      width: 0,
+      value: props.xs
     }
-  }
-  if (clientWidth.value >= 1200 && props.xl) {
-    if (typeof props.xl === 'object') {
-      return props.xl
-    } else {
-      return {
-        span: props.xl,
-        offset: undefined
-      }
-    }
-  }
-  if (clientWidth.value >= 992 && props.lg) {
-    if (typeof props.lg === 'object') {
-      return props.lg
-    } else {
-      return {
-        span: props.lg,
-        offset: undefined
-      }
-    }
-  }
-  if (clientWidth.value >= 768 && props.md) {
-    if (typeof props.md === 'object') {
-      return props.md
-    } else {
-      return {
-        span: props.md,
-        offset: undefined
-      }
-    }
-  }
-  if (clientWidth.value >= 576 && props.sm) {
-    if (typeof props.sm === 'object') {
-      return props.sm
-    } else {
-      return {
-        span: props.sm,
-        offset: undefined
-      }
-    }
-  }
-  if (clientWidth.value < 576 && props.xs) {
-    if (typeof props.xs === 'object') {
-      return props.xs
-    } else {
-      return {
-        span: props.xs,
-        offset: undefined
-      }
-    }
-  }
+  ]
 })
 const clientWidth = ref(document.documentElement.clientWidth)
 function getBrowserSize() {
@@ -98,12 +66,33 @@ function getBrowserSize() {
 }
 const throttleEvent = throttle(getBrowserSize, 100)
 useEventListener(window, 'resize', throttleEvent)
+const responsiveValue = computed(() => {
+  for (const responsive of responsiveProperties.value) {
+    if (responsive.value && clientWidth.value >= responsive.width) {
+      if (typeof responsive.value === 'object') {
+        return {
+          span: responsive.value.span || props.span,
+          offset: responsive.value.offset || props.offset
+        }
+      } else {
+        return {
+          span: responsive.value,
+          offset: props.offset
+        }
+      }
+    }
+  }
+  return {
+    span: props.span,
+    offset: props.offset
+  }
+})
 </script>
 <template>
   <div
-    :class="`m-col col-${responsiveProperty?.span || span} offset-${responsiveProperty?.offset || offset}`"
+    :class="`m-col col-${responsiveValue.span} offset-${responsiveValue.offset}`"
     style="padding-left: var(--xGap); padding-right: var(--xGap)"
-    :style="`flex: ${flexValue}`"
+    :style="`flex: ${flexValue}; order: ${order};`"
   >
     <slot></slot>
   </div>

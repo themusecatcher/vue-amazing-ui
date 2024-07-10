@@ -30,79 +30,32 @@ const alignProperties = {
   bottom: 'flex-end',
   stretch: 'stretch'
 }
+const clientWidth = ref(document.documentElement.clientWidth)
+function getBrowserSize() {
+  // document.documentElement返回<html>元素
+  clientWidth.value = document.documentElement.clientWidth
+}
+const throttleEvent = throttle(getBrowserSize, 100)
+useEventListener(window, 'resize', throttleEvent)
 const xGap = computed(() => {
   if (typeof props.gutter === 'number') {
     return props.gutter
   }
   if (Array.isArray(props.gutter)) {
     if (typeof props.gutter[0] === 'object') {
-      if (clientWidth.value >= 1600 && props.gutter[0].xxl) {
-        return props.gutter[0].xxl
-      }
-      if (clientWidth.value >= 1200 && props.gutter[0].xl) {
-        return props.gutter[0].xl
-      }
-      if (clientWidth.value >= 992 && props.gutter[0].lg) {
-        return props.gutter[0].lg
-      }
-      if (clientWidth.value >= 768 && props.gutter[0].md) {
-        return props.gutter[0].md
-      }
-      if (clientWidth.value >= 576 && props.gutter[0].sm) {
-        return props.gutter[0].sm
-      }
-      if (clientWidth.value < 576 && props.gutter[0].xs) {
-        return props.gutter[0].xs
-      }
-      return 16
+      return getResponsiveGap(props.gutter[0])
     }
     return props.gutter[0]
   }
   if (typeof props.gutter === 'object') {
-    if (clientWidth.value >= 1600 && props.gutter.xxl) {
-      return props.gutter.xxl
-    }
-    if (clientWidth.value >= 1200 && props.gutter.xl) {
-      return props.gutter.xl
-    }
-    if (clientWidth.value >= 992 && props.gutter.lg) {
-      return props.gutter.lg
-    }
-    if (clientWidth.value >= 768 && props.gutter.md) {
-      return props.gutter.md
-    }
-    if (clientWidth.value >= 576 && props.gutter.sm) {
-      return props.gutter.sm
-    }
-    if (clientWidth.value < 576 && props.gutter.xs) {
-      return props.gutter.xs
-    }
-    return 16
+    return getResponsiveGap(props.gutter)
   }
   return 0
 })
 const yGap = computed(() => {
   if (Array.isArray(props.gutter)) {
     if (typeof props.gutter[1] === 'object') {
-      if (clientWidth.value >= 1600 && props.gutter[1].xxl) {
-        return props.gutter[1].xxl
-      }
-      if (clientWidth.value >= 1200 && props.gutter[1].xl) {
-        return props.gutter[1].xl
-      }
-      if (clientWidth.value >= 992 && props.gutter[1].lg) {
-        return props.gutter[1].lg
-      }
-      if (clientWidth.value >= 768 && props.gutter[1].md) {
-        return props.gutter[1].md
-      }
-      if (clientWidth.value >= 576 && props.gutter[1].sm) {
-        return props.gutter[1].sm
-      }
-      if (clientWidth.value < 576 && props.gutter[1].xs) {
-        return props.gutter[1].xs
-      }
-      return 16
+      return getResponsiveGap(props.gutter[1])
     }
     return props.gutter[1]
   }
@@ -114,13 +67,27 @@ const rowWidth = computed(() => {
   }
   return props.width
 })
-const clientWidth = ref(document.documentElement.clientWidth)
-function getBrowserSize() {
-  // document.documentElement返回<html>元素
-  clientWidth.value = document.documentElement.clientWidth
+function getResponsiveGap(gutter: any) {
+  if (clientWidth.value >= 1600 && gutter.xxl) {
+    return gutter.xxl
+  }
+  if (clientWidth.value >= 1200 && gutter.xl) {
+    return gutter.xl
+  }
+  if (clientWidth.value >= 992 && gutter.lg) {
+    return gutter.lg
+  }
+  if (clientWidth.value >= 768 && gutter.md) {
+    return gutter.md
+  }
+  if (clientWidth.value >= 576 && gutter.sm) {
+    return gutter.sm
+  }
+  if (clientWidth.value < 576 && gutter.xs) {
+    return gutter.xs
+  }
+  return 0
 }
-const throttleEvent = throttle(getBrowserSize, 100)
-useEventListener(window, 'resize', throttleEvent)
 </script>
 <template>
   <div
