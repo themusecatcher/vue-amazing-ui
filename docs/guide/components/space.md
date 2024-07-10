@@ -285,8 +285,8 @@ const gap = ref('small')
 ## 自动换行
 
 <Space :gap="[8, 16]">
-  <template v-for="n in 12" :key="n">
-    <Button>Button</Button>
+  <template v-for="n in 16" :key="n">
+    <Button type="primary">Button</Button>
   </template>
 </Space>
 <br/>
@@ -297,8 +297,8 @@ const gap = ref('small')
 ```vue
 <template>
   <Space :gap="[8, 16]">
-    <template v-for="n in 12" :key="n">
-      <Button>Button</Button>
+    <template v-for="n in 16" :key="n">
+      <Button type="primary">Button</Button>
     </template>
   </Space>
 </template>

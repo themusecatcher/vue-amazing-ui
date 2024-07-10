@@ -13,7 +13,7 @@ const routeName = computed(() => {
 </script>
 <template>
   <a-config-provider :theme="theme">
-    <Watermark content="Vue Amazing UI" v-if="routeName !== 'Watermark'">
+    <Watermark v-if="routeName !== 'Watermark'" content="Vue Amazing UI">
       <RouterView />
     </Watermark>
     <RouterView v-else />

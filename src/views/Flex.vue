@@ -122,7 +122,7 @@ const customGapSize = ref(8)
     </Flex>
     <h2 class="mt30 mb10">自动换行</h2>
     <Flex wrap="wrap" :width="600" :gap="[8, 16]">
-      <Button v-for="n in new Array(16)" :key="n" type="primary">Button</Button>
+      <Button v-for="n in 16" :key="n" type="primary">Button</Button>
     </Flex>
   </div>
 </template>

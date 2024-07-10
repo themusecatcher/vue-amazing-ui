@@ -65,6 +65,7 @@ function onKeyboard(e: KeyboardEvent) {
     background-color: transparent;
     border: 1px solid transparent;
     user-select: none;
+    text-decoration: none;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     .m-loading-icon {

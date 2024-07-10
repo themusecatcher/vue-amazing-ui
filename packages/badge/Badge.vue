@@ -1,63 +1,92 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue'
 import { computed, useSlots } from 'vue'
+import type { Slot, CSSProperties } from 'vue'
+enum PresetColor {
+  pink = 'pink',
+  red = 'red',
+  yellow = 'yellow',
+  orange = 'orange',
+  cyan = 'cyan',
+  green = 'green',
+  blue = 'blue',
+  purple = 'purple',
+  geekblue = 'geekblue',
+  magenta = 'magenta',
+  volcano = 'volcano',
+  gold = 'gold',
+  lime = 'lime'
+}
 enum Status {
   success = 'success',
-  process = 'processing',
+  processing = 'processing',
   default = 'default',
   error = 'error',
   warning = 'warning'
 }
 interface Props {
-  color?: string // 自定义小圆点的颜色
-  count?: number // 展示的数字，大于 max 时显示为 max+，为 0 时隐藏；number | slot
+  color?: PresetColor | string // 自定义小圆点的颜色，优先级高于 status
+  value?: number | string | Slot // 展示的数字或文字，为数字时大于 max 显示为 max+，为 0 时隐藏
   max?: number // 展示封顶的数字值
   showZero?: boolean // 当数值为 0 时，是否展示 Badge
   dot?: boolean // 不展示数字，只有一个小红点
+  offset?: [number | string, number | string] // 设置状态点的位置偏移，距默认位置左侧、上方的偏移量 [x, y]: [水平偏移, 垂直偏移]
   status?: Status // 设置 Badge 为状态点
-  text?: string // 在设置了 status 的前提下有效，设置状态点的文本 string | slot
-  countStyle?: CSSProperties // 设置状态点的样式
+  text?: string | Slot // 在设置了 status 或 color 的前提下有效，设置状态点的文本
+  valueStyle?: CSSProperties // 设置徽标的样式
+  zIndex?: number // 设置徽标的 z-index
   title?: string // 设置鼠标放在状态点上时显示的文字
   ripple?: boolean // 是否开启涟漪动画效果
 }
 const props = withDefaults(defineProps<Props>(), {
   color: '',
-  count: 0,
+  value: undefined,
   max: 99,
   showZero: false,
   dot: false,
+  offset: undefined,
   status: undefined,
   text: '',
-  countStyle: () => ({}),
+  valueStyle: () => ({}),
+  zIndex: 9,
   title: '',
   ripple: true
 })
-const presetColor = [
-  'pink',
-  'red',
-  'yellow',
-  'orange',
-  'cyan',
-  'green',
-  'blue',
-  'purple',
-  'geekblue',
-  'magenta',
-  'volcano',
-  'gold',
-  'lime'
-]
 const customStyle = computed(() => {
-  if (props.color && !presetColor.includes(props.color)) {
-    return {
-      color: props.color,
-      backgroundColor: props.color
+  if (props.color && !Object.keys(PresetColor).includes(props.color)) {
+    if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
+      return {
+        backgroundColor: props.color
+      }
+    } else {
+      return {
+        color: props.color,
+        backgroundColor: props.color
+      }
     }
   }
 })
+const presetClass = computed(() => {
+  if (props.color) {
+    if (Object.keys(PresetColor).includes(props.color)) {
+      if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
+        return `color-${props.color} white`
+      } else {
+        return 'color-' + props.color
+      }
+    }
+  }
+  if (props.status) {
+    if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
+      return `status-${props.status} white`
+    } else {
+      return 'status-' + props.status
+    }
+  }
+  return
+})
 const slots = useSlots()
 const showContent = computed(() => {
-  if (!props.status && !props.color) {
+  if (props.value !== undefined || props.dot || (!props.color && !props.status)) {
     const defaultSlots = slots.default?.()
     if (defaultSlots) {
       return Boolean(defaultSlots[0].children !== 'v-if' && defaultSlots?.length)
@@ -65,43 +94,75 @@ const showContent = computed(() => {
   }
   return false
 })
-const showCount = computed(() => {
-  if (!props.status && !props.color) {
-    const countSlots = slots.count?.()
-    return Boolean(countSlots?.length)
+const showValue = computed(() => {
+  if (!props.color && !props.status) {
+    const valueSlots = slots.value?.()
+    return Boolean(valueSlots?.length)
   }
   return false
 })
+const showBadge = computed(() => {
+  if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0) || props.dot) {
+    return true
+  }
+  return false
+})
+const dotOffestStyle = computed(() => {
+  if (props.offset?.length) {
+    return {
+      right: isNumber(props.offset[0]) ? -props.offset[0] + 'px' : handleOffset(props.offset[0] as string),
+      marginTop: isNumber(props.offset[1]) ? props.offset[1] + 'px' : props.offset[1]
+    }
+  }
+  return {}
+})
+function isNumber(value: number | string): boolean {
+  return typeof value === 'number'
+}
+function handleOffset(value: string): string {
+  if (value.includes('-')) {
+    return value.replace('-', '')
+  } else {
+    return `-${value}`
+  }
+}
 </script>
 <template>
-  <div class="m-badge" :class="{ 'badge-status': status }">
-    <template v-if="status || color">
-      <span
-        class="u-status-dot"
-        :class="[`status-${status || color}`, { 'dot-ripple': ripple }]"
-        :style="customStyle"
-      ></span>
+  <div
+    class="m-badge"
+    :class="{ 'badge-status-color': value === undefined && (color || status) }"
+    :style="[`--z-index: ${zIndex}`, value === undefined && !dot ? dotOffestStyle : null]"
+  >
+    <template v-if="value === undefined && !dot && (color || status)">
+      <span class="u-status-dot" :class="[presetClass, { 'dot-ripple': ripple }]" :style="customStyle"></span>
       <span class="u-status-text">
         <slot>{{ text }}</slot>
       </span>
     </template>
     <template v-else>
-      <span v-if="showContent">
+      <template v-if="showContent">
         <slot></slot>
-      </span>
-      <span v-if="showCount" class="m-count" :class="{ 'only-number': !showContent }">
-        <slot name="count"></slot>
+      </template>
+      <span v-if="showValue" class="m-value" :class="{ 'only-number': !showContent }">
+        <slot name="value"></slot>
       </span>
       <Transition name="zoom" v-else>
         <div
-          v-show="showZero || count !== 0 || dot"
-          class="m-badge-count"
-          :class="{ 'small-num': count < 10, 'only-number': !showContent, 'only-dot': count === 0 && !showZero }"
-          :style="countStyle"
-          :title="title || String(count)"
+          v-show="showBadge"
+          class="m-badge-value"
+          :class="[
+            {
+              'small-num': typeof value === 'number' && value < 10,
+              'only-number': !showContent,
+              'only-dot': showBadge && (value === undefined || (value === 0 && !showZero) || dot)
+            },
+            presetClass
+          ]"
+          :style="[customStyle, dotOffestStyle, valueStyle]"
+          :title="title || (value !== undefined ? String(value) : '')"
         >
           <span v-if="!dot" class="m-number" style="transition: none 0s ease 0s">
-            <span class="u-number">{{ count > max ? max + '+' : count }}</span>
+            <span class="u-number">{{ typeof value === 'number' && value > max ? max + '+' : value }}</span>
           </span>
         </div>
       </Transition>
@@ -136,19 +197,19 @@ const showCount = computed(() => {
   }
 }
 .m-badge {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
-  line-height: 1;
   position: relative;
   display: inline-block;
   width: fit-content;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+  line-height: 1;
   .u-status-dot {
     position: relative;
     top: -1px;
     display: inline-block;
+    vertical-align: middle;
     width: 6px;
     height: 6px;
-    vertical-align: middle;
     border-radius: 50%;
   }
   .dot-ripple {
@@ -180,95 +241,23 @@ const showCount = computed(() => {
       }
     }
   }
-  .status-success {
-    color: #52c41a;
-    background-color: #52c41a;
-  }
-  .status-error {
-    color: #ff4d4f;
-    background-color: #ff4d4f;
-  }
-  .status-default {
-    color: rgba(0, 0, 0, 0.25);
-    background-color: rgba(0, 0, 0, 0.25);
-  }
-  .status-processing {
-    color: @themeColor;
-    background-color: @themeColor;
-  }
-  .status-warning {
-    color: #faad14;
-    background-color: #faad14;
-  }
-  .status-pink {
-    color: #eb2f96;
-    background-color: #eb2f96;
-  }
-  .status-red {
-    color: #f5222d;
-    background-color: #f5222d;
-  }
-  .status-yellow {
-    color: #fadb14;
-    background-color: #fadb14;
-  }
-  .status-orange {
-    color: #fa8c16;
-    background-color: #fa8c16;
-  }
-  .status-cyan {
-    color: #13c2c2;
-    background-color: #13c2c2;
-  }
-  .status-green {
-    color: #52c41a;
-    background-color: #52c41a;
-  }
-  .status-blue {
-    color: @themeColor;
-    background-color: @themeColor;
-  }
-  .status-purple {
-    color: #722ed1;
-    background-color: #722ed1;
-  }
-  .status-geekblue {
-    color: #2f54eb;
-    background-color: #2f54eb;
-  }
-  .status-magenta {
-    color: #eb2f96;
-    background-color: #eb2f96;
-  }
-  .status-volcano {
-    color: #fa541c;
-    background-color: #fa541c;
-  }
-  .status-gold {
-    color: #faad14;
-    background-color: #faad14;
-  }
-  .status-lime {
-    color: #a0d911;
-    background-color: #a0d911;
-  }
   .u-status-text {
     margin-inline-start: 8px;
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
   }
-  .m-count {
+  .m-value {
     position: absolute;
     top: 0;
+    z-index: var(--z-index);
     inset-inline-end: 0;
     transform: translate(50%, -50%);
     transform-origin: 100% 0%;
   }
-  .m-badge-count {
-    .m-count();
+  .m-badge-value {
+    .m-value();
     overflow: hidden;
     padding: 0 8px;
-    z-index: auto;
     min-width: 20px;
     height: 20px;
     color: #ffffff;
@@ -312,7 +301,6 @@ const showCount = computed(() => {
     transform: none;
   }
   .only-dot {
-    z-index: auto;
     width: 6px;
     min-width: 6px;
     height: 6px;
@@ -322,8 +310,83 @@ const showCount = computed(() => {
     padding: 0;
     transition: background 0.3s;
   }
+  .status-success {
+    color: #52c41a;
+    background-color: #52c41a;
+  }
+  .status-error {
+    color: #ff4d4f;
+    background-color: #ff4d4f;
+  }
+  .status-default {
+    color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+  .status-processing {
+    color: @themeColor;
+    background-color: @themeColor;
+  }
+  .status-warning {
+    color: #faad14;
+    background-color: #faad14;
+  }
+  .color-pink {
+    color: #eb2f96;
+    background-color: #eb2f96;
+  }
+  .color-red {
+    color: #f5222d;
+    background-color: #f5222d;
+  }
+  .color-yellow {
+    color: #fadb14;
+    background-color: #fadb14;
+  }
+  .color-orange {
+    color: #fa8c16;
+    background-color: #fa8c16;
+  }
+  .color-cyan {
+    color: #13c2c2;
+    background-color: #13c2c2;
+  }
+  .color-green {
+    color: #52c41a;
+    background-color: #52c41a;
+  }
+  .color-blue {
+    color: @themeColor;
+    background-color: @themeColor;
+  }
+  .color-purple {
+    color: #722ed1;
+    background-color: #722ed1;
+  }
+  .color-geekblue {
+    color: #2f54eb;
+    background-color: #2f54eb;
+  }
+  .color-magenta {
+    color: #eb2f96;
+    background-color: #eb2f96;
+  }
+  .color-volcano {
+    color: #fa541c;
+    background-color: #fa541c;
+  }
+  .color-gold {
+    color: #faad14;
+    background-color: #faad14;
+  }
+  .color-lime {
+    color: #a0d911;
+    background-color: #a0d911;
+  }
+  .white {
+    color: #ffffff;
+  }
 }
-.badge-status {
+.badge-status-color {
   line-height: inherit;
   vertical-align: baseline;
 }

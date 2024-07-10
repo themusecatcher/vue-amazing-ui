@@ -572,7 +572,38 @@ watchEffect(() => {
 -- | -- | -- | -- | --
 width | 日期选择器宽度，单位`px` | number | 180 | false
 mode | 选择器模式 | 'time' &#124; 'date' &#124; 'week' &#124; 'month' &#124; 'year' | 'date' | false
+[format](#format-支持的格式化占位符列表) | 日期展示格式 | string &#124; ((date: Date) => string) &#124; ((dates: Date[]) => string) | [DefaultFormat](#defaultformat-value) | false
 showTime | 是否增加时间选择 | boolean | false | false
 showToday | 是否展示”今天“按钮 | boolean | false | false
 modelValue <Tag color="cyan">v-model</Tag> | 双向绑定值 | number &#124; string &#124; object &#124; array | null | false
-modelType | `v-model` 值类型，可选时间戳(`timestamp`)、字符串(`format`) | 'timestamp' &#124; 'format' | 'format' | false
+modelType | `v-model` 值类型，可选 `timestamp`: 时间戳、`format`: 字符串，`mode` 为 `week` 或 `year` 时，该配置不生效 | 'timestamp' &#124; 'format' | 'format' | false
+
+## DefaultFormat Value
+
+类型 | 值
+--- | ---
+Single picker | 'MM/dd/yyyy HH:mm'
+Range picker | 'MM/dd/yyyy HH:mm - MM/dd/yyyy HH:mm'
+Month picker | 'MM/yyyy'
+Time picker | 'HH:mm'
+Time picker range | 'HH:mm - HH:mm'
+Week picker | 'ww-yyyy'
+
+## format 支持的格式化占位符列表
+
+标识 | 示例 | 描述
+-- | -- | --
+yy | 23 | 年，两位数
+yyyy | 2023 | 年，四位数
+M | 1-12 | 月
+MM | 01-12 | 月，两位数
+d | 1-31 | 日
+dd | 01-31 | 日，两位数
+H | 0-23 | 小时
+HH | 00-23 | 小时，两位数
+m | 0-59 | 分钟
+mm | 00-59 | 分钟，两位数
+s | 0-59 | 秒
+ss | 00-59 | 秒，两位数
+w | 1-52 | 第几周
+ww | 01-52 | 第几周，两位数
