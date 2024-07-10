@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "1.0.23",
+  "version": "1.0.234",
   "private": false,
   "type": "module",
   "files": [
@@ -38,7 +38,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@vuepic/vue-datepicker": "8.8.0",
+    "@vuepic/vue-datepicker": "8.8.1",
     "@vueuse/core": "^10.11.0",
     "@vueuse/integrations": "^10.11.0",
     "ant-design-vue": "^4.2.3",
@@ -47,31 +47,31 @@
     "naive-ui": "^2.38.2",
     "qrcode": "^1.5.3",
     "swiper": "^11.1.4",
-    "vue": "^3.4.29",
+    "vue": "^3.4.31",
     "vue-amazing-ui": "^1.0.23",
-    "vue-router": "^4.3.3"
+    "vue-router": "^4.4.0"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "@rushstack/eslint-patch": "^1.10.3",
-    "@types/node": "^20.14.6",
+    "@types/node": "^20.14.10",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
-    "eslint": "^9.5.0",
-    "eslint-plugin-vue": "^9.26.0",
+    "eslint": "^9.6.0",
+    "eslint-plugin-vue": "^9.27.0",
     "less": "^4.2.0",
     "minimist": "^1.2.8",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.3.2",
-    "rimraf": "^5.0.7",
+    "rimraf": "^6.0.0",
     "rollup-plugin-visualizer": "^5.12.0",
-    "typescript": "^5.4.5",
-    "unplugin-vue-components": "^0.27.0",
-    "vite": "^5.3.1",
-    "vitepress": "^1.2.3",
-    "vue-tsc": "^2.0.21"
+    "typescript": "^5.5.3",
+    "unplugin-vue-components": "^0.27.2",
+    "vite": "^5.3.3",
+    "vitepress": "^1.3.0",
+    "vue-tsc": "^2.0.26"
   },
   "description": "An Amazing Vue3 UI Components Library.",
   "repository": {

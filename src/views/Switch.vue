@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 
-const checked = ref(false)
+const checked = ref(true)
 function onChange(checked: boolean) {
   console.log('checked:', checked)
 }

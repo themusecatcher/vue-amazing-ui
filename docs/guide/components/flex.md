@@ -294,7 +294,7 @@ const customGapSize = ref(8)
 ## 自动换行
 
 <Flex wrap="wrap" :width="600" :gap="[8, 16]">
-  <Button v-for="n in new Array(16)" :key="n" type="primary">Button</Button>
+  <Button v-for="n in 16" :key="n" type="primary">Button</Button>
 </Flex>
 <br/>
 
@@ -303,7 +303,7 @@ const customGapSize = ref(8)
 ```vue
 <template>
   <Flex wrap="wrap" :width="600" :gap="[8, 16]">
-    <Button v-for="n in new Array(16)" :key="n" type="primary">Button</Button>
+    <Button v-for="n in 16" :key="n" type="primary">Button</Button>
   </Flex>
 </template>
 ```

@@ -4,6 +4,7 @@ import { throttle } from '../utils'
 interface Props {
   bottom?: number | string // BackTop 距离页面底部的高度
   right?: number | string // BackTop 距离页面右侧的宽度
+  zIndex?: number // 设置 BackTop 的 z-index
   visibilityHeight?: number // 滚动时触发显示回到顶部的高度
   to?: string | HTMLElement // BackTop 渲染的容器节点 可选 元素标签名(例如 'body') 或者 目标元素本身，下同
   listenTo?: string | HTMLElement // 监听滚动的元素，如果为 undefined 会监听距离最近的一个可滚动的祖先节点
@@ -11,6 +12,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   bottom: 40,
   right: 40,
+  zIndex: 9,
   visibilityHeight: 180,
   to: 'body',
   listenTo: undefined
@@ -134,13 +136,13 @@ function onBackTop() {
 }
 </script>
 <template>
-  <Transition>
+  <Transition name="zoom">
     <div
       ref="backtop"
       v-show="show"
       @click="onBackTop"
       class="m-backtop"
-      :style="`bottom: ${bottomPosition}; right: ${rightPosition};`"
+      :style="`bottom: ${bottomPosition}; right: ${rightPosition}; --z-index: ${zIndex};`"
     >
       <slot>
         <span class="m-icon">
@@ -178,13 +180,14 @@ function onBackTop() {
   </Transition>
 </template>
 <style lang="less" scoped>
-.v-enter-from,
-.v-leave-to {
+.zoom-enter-from,
+.zoom-leave-to {
   opacity: 0;
   transform: scale(0.5);
 }
 .m-backtop {
   position: fixed;
+  z-index: var(--z-index);
   cursor: pointer;
   display: flex;
   align-items: center;

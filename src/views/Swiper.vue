@@ -4,11 +4,11 @@ import { ref, shallowReactive, onBeforeMount } from 'vue'
 
 const images = ref<any[]>([])
 function loadImages() {
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 6; i++) {
     images.value.push({
       title: `image-${i}`,
-      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`,
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`,
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
   }
 }
@@ -19,8 +19,77 @@ onBeforeMount(() => {
 function onChange(swiper: any) {
   console.log('slider change', swiper)
 }
+const effects = ['slide', 'fade', 'cube', 'flip', 'coverflow', 'cards']
+const creativeEffects = [
+  {
+    prev: {
+      shadow: true,
+      translate: [0, 0, -400]
+    },
+    next: {
+      translate: ['100%', 0, 0]
+    }
+  },
+  {
+    prev: {
+      shadow: true,
+      translate: ['-120%', 0, -500]
+    },
+    next: {
+      shadow: true,
+      translate: ['120%', 0, -500]
+    }
+  },
+  {
+    prev: {
+      shadow: true,
+      translate: ['-20%', 0, -1]
+    },
+    next: {
+      translate: ['100%', 0, 0]
+    }
+  },
+  {
+    prev: {
+      shadow: true,
+      translate: [0, 0, -800],
+      rotate: [180, 0, 0]
+    },
+    next: {
+      shadow: true,
+      translate: [0, 0, -800],
+      rotate: [-180, 0, 0]
+    }
+  },
+  {
+    prev: {
+      shadow: true,
+      translate: ['-125%', 0, -800],
+      rotate: [0, 0, -90]
+    },
+    next: {
+      shadow: true,
+      translate: ['125%', 0, -800],
+      rotate: [0, 0, 90]
+    }
+  },
+  {
+    prev: {
+      shadow: true,
+      origin: 'left center',
+      translate: ['-5%', 0, -200],
+      rotate: [0, 100, 0]
+    },
+    next: {
+      origin: 'right center',
+      translate: ['5%', 0, -200],
+      rotate: [0, -100, 0]
+    }
+  }
+]
 const navigation = shallowReactive<{ [key: string]: any }>({})
-function onSwiper(swiper: any) {
+function onBroadcastSwiper(swiper: any) {
+  console.log('carousel', swiper)
   navigation.prevEl = swiper.navigation.prevEl
   navigation.prevEl.style.display = 'none'
   navigation.nextEl = swiper.navigation.nextEl
@@ -57,35 +126,72 @@ function onNext() {
     <h2 class="mt30 mb10">基本使用</h2>
     <Swiper
       :images="images"
-      :height="600"
+      :height="640"
       :pagination="{
         dynamicBullets: true,
         clickable: true
       }"
       @change="onChange"
     />
+    <h2 class="mt30 mb10">各种切换动画</h2>
+    <Flex :gap="48" wrap="wrap">
+      <Badge style="width: 30%" :value="effect" color="volcano" v-for="(effect, index) in effects" :key="index">
+        <Swiper
+          style="display: inline-block"
+          :images="images"
+          :height="240"
+          :pagination="{
+            dynamicBullets: true,
+            clickable: true
+          }"
+          :effect="effect"
+        />
+      </Badge>
+    </Flex>
+    <h2 class="mt30 mb10">自定义切换动画</h2>
+    <Flex :gap="48" wrap="wrap">
+      <Badge
+        style="width: 30%"
+        value="creative"
+        color="cyan"
+        v-for="(creativeEffect, index) in creativeEffects"
+        :key="index"
+      >
+        <Swiper
+          style="display: inline-block"
+          :images="images"
+          :height="240"
+          :pagination="{
+            dynamicBullets: true,
+            clickable: true
+          }"
+          effect="creative"
+          :creativeEffect="creativeEffect"
+        />
+      </Badge>
+    </Flex>
     <h2 class="mt30 mb10">走马灯</h2>
     <Swiper :images="images" type="carousel" :height="240" :slides-per-view="3" :space-between="20" :speed="2500" />
     <h2 class="mt30 mb10">信息展播</h2>
-    <Space>
-      <Button @click="onPrev">Prev</Button>
-      <Button @click="onNext">Next</Button>
-    </Space>
-    <br />
-    <br />
-    <Swiper
-      :images="images"
-      type="broadcast"
-      :pagination="{
-        dynamicBullets: true,
-        clickable: true
-      }"
-      :height="320"
-      :slides-per-view="3"
-      :space-between="30"
-      loop
-      mousewheel
-      @swiper="onSwiper"
-    />
+    <Flex vertical gap="middle">
+      <Space>
+        <Button type="primary" @click="onPrev">Prev</Button>
+        <Button type="primary" @click="onNext">Next</Button>
+      </Space>
+      <Swiper
+        :images="images"
+        type="broadcast"
+        :pagination="{
+          dynamicBullets: true,
+          clickable: true
+        }"
+        :height="320"
+        :slides-per-view="3"
+        :space-between="30"
+        navigation
+        mousewheel
+        @swiper="onBroadcastSwiper"
+      />
+    </Flex>
   </div>
 </template>

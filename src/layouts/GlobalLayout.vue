@@ -70,8 +70,8 @@ const routerViewRef = ref()
       @finish="onFinish"
     />
   </Transition>
-  <a-row style="width: 100%">
-    <a-col :xs="5" :xl="4" style="position: relative">
+  <Row style="width: 100%">
+    <Col :xs="5" :xl="4" style="position: relative">
       <Switch
         class="u-theme-switch"
         v-model:checked="themeDark"
@@ -132,8 +132,8 @@ const routerViewRef = ref()
           <router-link :to="menu.path">{{ menu.meta.title }} {{ menu.name }}</router-link>
         </a-menu-item>
       </a-menu>
-    </a-col>
-    <a-col :xs="19" :xl="20">
+    </Col>
+    <Col :xs="19" :xl="20">
       <div class="router-view" ref="routerViewRef">
         <RouterView v-slot="{ Component }">
           <Transition name="fade" mode="out-in">
@@ -142,15 +142,14 @@ const routerViewRef = ref()
         </RouterView>
         <BackTop v-if="route.name !== 'BackTop'" />
       </div>
-    </a-col>
-  </a-row>
+    </Col>
+  </Row>
 </template>
 <style lang="less" scoped>
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.3s ease-in-out;
 }
-
 .v-enter-from,
 .v-leave-to {
   opacity: 0;

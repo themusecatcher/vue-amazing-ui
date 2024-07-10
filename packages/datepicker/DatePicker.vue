@@ -14,13 +14,13 @@ import { computed } from 'vue'
 interface Props {
   width?: number // 日期选择器宽度
   mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式，可选：时间time，日期date，周week，月month，年year
-  // format?: string | (params: Date | Date[]) => string // 日期展示格式，(y: 年, M: 月, d: 天, H: 时, m: 分, s: 秒)
+  // format?: string | ((date: Date) => string) | ((dates: Date[]) => string) // 日期展示格式，(yy: 年, M: 月, d: 天, H: 时, m: 分, s: 秒, w: 周)
   showTime?: boolean // 是否增加时间选择
   showToday?: boolean // 是否展示”今天“按钮
   // multiCalendars?: boolean // 范围选择器是否使用双日期面板
   // flow?: any[] // 定义选择顺序 ("calendar" | "time" | "month" | "year" | "minutes" | "hours" | "seconds")[]
   // dark?: boolean // 样式主题是否使用黑色
-  modelType?: 'timestamp' | 'format' // v-model 值类型，可选时间戳(timestamp)、字符串(format)，mode为week和year时，该配置不生效
+  modelType?: 'timestamp' | 'format' // v-model 值类型，可选 timestamp: 时间戳、format: 字符串，mode 为 week 或 year 时，该配置不生效
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 180,
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
     Month picker: 'MM/yyyy'
     Time picker: 'HH:mm'
     Time picker range: 'HH:mm - HH:mm'
-    Week picker 'ww-yyyy'
+    Week picker: 'ww-yyyy'
   */
   showTime: false,
   showToday: false,
