@@ -9,12 +9,12 @@
 
 <br/>
 
-*布局的栅格化系统，我们是基于行（row）和列（col）来定义信息区块的外部框架，以保证页面的每个区域能够稳健地排布起来。下面简单介绍一下它的工作原理：*
+*布局的栅格化系统，我们是基于行（Row）和列（Col）来定义信息区块的外部框架，以保证页面的每个区域能够稳健地排布起来。下面简单介绍一下它的工作原理：*
 
-- 通过 `row` 在水平方向建立一组 `column`（简写 col）
-- 你的内容应当放置于 `col` 内，并且，只有 `col` 可以作为 `row` 的直接元素
+- 通过 `Row` 在水平方向建立一组 `Col`
+- 你的内容应当放置于 `Col` 内，并且，只有 `Col` 可以作为 `Row` 的直接元素
 - 栅格系统中的列是指 `1` 到 `24` 的值来表示其跨越的范围。例如，三个等宽的列可以使用 `:span="8"` 来创建
-- 如果一个 `row` 中的 `col` 总和超过 `24`，那么多余的 `col` 会作为一个整体另起一行排列
+- 如果一个 `Row` 中的 `Col` 总和超过 `24`，那么多余的 `Col` 会作为一个整体另起一行排列
 
 <script setup lang="ts">
 import { reactive } from 'vue'
@@ -409,6 +409,10 @@ const state = reactive({
   <Row class="row">
     <Col :span="12" :offset="6">col-12 col-offset-6</Col>
   </Row>
+  <Row class="row">
+    <Col :span="6" :md="{ offset: 4 }" :xl="{ offset: 6 }">col-6 col-md-offset-4 col-xl-offset-6</Col>
+    <Col :span="6" :md="{ offset: 4 }" :xl="{ offset: 6 }">col-6 col-md-offset-4 col-xl-offset-6</Col>
+  </Row>
 </ClientOnly>
 
 ::: details Show Code
@@ -425,6 +429,10 @@ const state = reactive({
   </Row>
   <Row class="row">
     <Col :span="12" :offset="6">col-12 col-offset-6</Col>
+  </Row>
+  <Row class="row">
+    <Col :span="6" :md="{ offset: 4 }" :xl="{ offset: 6 }">col-6 col-md-offset-4 col-xl-offset-6</Col>
+    <Col :span="6" :md="{ offset: 4 }" :xl="{ offset: 6 }">col-6 col-md-offset-4 col-xl-offset-6</Col>
   </Row>
 </template>
 <style lang="less" scoped>
@@ -858,23 +866,35 @@ const state = reactive({
 ## 栅格配置器
 
 <ClientOnly>
-  <Flex vertical gap="middle">
-    Horizontal Row Gutter:
-    <Slider width="50%" :step="8" :max="48" v-model:value="state.horizontalGutter" />
-    Vertical Row Gutter:
-    <Slider width="50%" :step="8" :max="48" v-model:value="state.verticalGutter" />
-    Col Count:
-    <Radio :options="colCountOptions" v-model:value="state.colCount" button button-style="solid" />
-  </Flex>
+  <Row :gutter="24">
+    <Col :span="6">
+      <Flex vertical gap="large" align="flex-start">
+        Horizontal Row Gutter:
+        <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="large" align="flex-start">
+        Vertical Row Gutter:
+        <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
+      </Flex>
+    </Col>
+    <Col :span="12">
+      <Flex vertical align="flex-start">
+        Col Count:
+        <Radio :options="colCountOptions" v-model:value="state.colCount" button />
+      </Flex>
+    </Col>
+  </Row>
   <Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
     <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-      <div class="gutter-box">Col</div>
+      <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
     </Col>
     <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-      <div class="gutter-box">Col</div>
+      <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
     </Col>
     <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-      <div class="gutter-box">Col</div>
+      <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
     </Col>
   </Row>
 </ClientOnly>
@@ -922,23 +942,35 @@ const state = reactive({
 })
 </script>
 <template>
-  <Flex vertical gap="middle">
-    Horizontal Row Gutter:
-    <Slider width="50%" :step="8" :max="48" v-model:value="state.horizontalGutter" />
-    Vertical Row Gutter:
-    <Slider width="50%" :step="8" :max="48" v-model:value="state.verticalGutter" />
-    Col Count:
-    <Radio :options="colCountOptions" v-model:value="state.colCount" button button-style="solid" />
-  </Flex>
+  <Row :gutter="24">
+    <Col :span="6">
+      <Flex vertical gap="large" align="flex-start">
+        Horizontal Row Gutter:
+        <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="large" align="flex-start">
+        Vertical Row Gutter:
+        <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
+      </Flex>
+    </Col>
+    <Col :span="12">
+      <Flex vertical align="flex-start">
+        Col Count:
+        <Radio :options="colCountOptions" v-model:value="state.colCount" button />
+      </Flex>
+    </Col>
+  </Row>
   <Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
     <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-      <div class="gutter-box">Col</div>
+      <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
     </Col>
     <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-      <div class="gutter-box">Col</div>
+      <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
     </Col>
     <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
-      <div class="gutter-box">Col</div>
+      <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
     </Col>
   </Row>
 </template>
@@ -954,6 +986,9 @@ const state = reactive({
     background: #0092ff;
     padding: 8px 0;
   }
+}
+.mt30 {
+  margin-top: 30px;
 }
 </style>
 ```
@@ -1036,12 +1071,13 @@ xxl | `≥1600px` 响应式栅格 | number | false
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-span | 栅格占位格数，取 `0,1,2...24`；为 `0` 时相当于 `display: none` | number | undefined | false
+span | 栅格占位格数，取 `0,1,2...24`，为 `0` 时相当于 `display: none`，优先级低于 `xs`, `sm`, `md`, `lg`, `xl`, `xxl` | number | undefined | false
 offset | 栅格左侧的间隔格数，取 `0,1,2...24` | number | 0 | false
-flex | `flex` 布局填充 | string &#124; number | '' | false
-xs | `<576px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-sm | `≥576px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-md | `≥768px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-lg | `≥992px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-xl | `≥1200px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
-xxl | `≥1600px` 响应式栅格 | number &#124; {span: number&#44; offset?: number} | undefined | false
+flex | `flex` 布局填充 | string &#124; number | undefined | false
+order | 栅格顺序，取 `0,1,2...` | number | 0 | false
+xs | `<576px` 响应式栅格 | number &#124; {span?: number&#44; offset?: number} | undefined | false
+sm | `≥576px` 响应式栅格 | number &#124; {span?: number&#44; offset?: number} | undefined | false
+md | `≥768px` 响应式栅格 | number &#124; {span?: number&#44; offset?: number} | undefined | false
+lg | `≥992px` 响应式栅格 | number &#124; {span?: number&#44; offset?: number} | undefined | false
+xl | `≥1200px` 响应式栅格 | number &#124; {span?: number&#44; offset?: number} | undefined | false
+xxl | `≥1600px` 响应式栅格 | number &#124; {span?: number&#44; offset?: number} | undefined | false
