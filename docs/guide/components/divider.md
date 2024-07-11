@@ -149,6 +149,8 @@
 
 ## APIs
 
+### Divider
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 orientation | 分割线标题的位置 | 'left' &#124; 'center' &#124; 'right' | 'center' | false

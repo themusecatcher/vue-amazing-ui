@@ -361,6 +361,8 @@ function onKnow () { // “我知道了”按钮回调
 
 ## APIs
 
+### Modal
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 提示框宽度，单位`px` | number | 420 | false

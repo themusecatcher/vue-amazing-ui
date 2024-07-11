@@ -516,6 +516,8 @@ watchEffect(() => {
 
 ## APIs
 
+### Collapse
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 collapseData | 折叠面板数据，可使用 `v-slot` 替换对应索引的 `header` 和 `text` | [Collapse](#collapse-type)[] | [] | true
@@ -530,7 +532,7 @@ showArrow | 是否展示所有箭头，优先级低于 `Collapse` 的 `showArrow
 arrowPlacement | 箭头位置 | 'left' &#124; 'right' | 'left' | false
 ghost | 使折叠面板透明且无边框 | boolean | false | false
 
-## Collapse Type
+### Collapse Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

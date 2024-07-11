@@ -276,6 +276,8 @@ const avatarShapeOptions = ref([
 
 ## APIs
 
+### Skeleton
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 animated | 是否展示动画效果 | boolean | true | false
@@ -287,7 +289,7 @@ title | 是否显示标题占位图 | boolean &#124; [SkeletonTitleProps](#skele
 paragraph | 是否显示段落占位图 | boolean &#124; [SkeletonParagraphProps](#skeletonparagraphprops-type) | true | false
 loading | 为 `true` 时，显示占位图，反之则直接展示子组件 | boolean | true | false
 
-## SkeletonButtonProps Type
+### SkeletonButtonProps Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
@@ -295,26 +297,26 @@ shape | 指定按钮的形状 | 'default' &#124; 'round' &#124; 'circle' | false
 size | 设置按钮的大小 | 'default' &#124; 'small' &#124; 'large' | false
 block | 将按钮宽度调整为其父宽度的选项 | boolean | false
 
-## SkeletonAvatarProps Type
+### SkeletonAvatarProps Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
 shape | 指定头像的形状 | 'circle' &#124; 'square' | false
 size | 设置头像占位图的大小 | number &#124; 'default' &#124; 'small' &#124; 'large' | false
 
-## SkeletonInputProps Type
+### SkeletonInputProps Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
 size | 设置输入框的大小 | 'default' &#124; 'small' &#124; 'large' | false
 
-## SkeletonTitleProps Type
+### SkeletonTitleProps Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
 width | 设置标题占位图的宽度 | number &#124; string | false
 
-## SkeletonParagraphProps Type
+### SkeletonParagraphProps Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

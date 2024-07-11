@@ -509,6 +509,8 @@ const state = reactive({
 
 ## APIs
 
+### TextScroll
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 scrollText | 滚动文字数组，`single` 为 `true` 时，类型为 `Text` | [Text](#text-type)[] &#124; [Text](#text-type) | [] | true
@@ -524,7 +526,7 @@ step | 水平滚动动画每次执行时移动距离，单位`px`，水平滚动
 vertical | 是否垂直滚动 | boolean | false | false
 verticalInterval | 垂直文字滚动时间间隔，单位`ms`，垂直滚动时生效 | number | 3000 | false
 
-## Text Type
+### Text Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

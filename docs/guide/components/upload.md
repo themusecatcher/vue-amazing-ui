@@ -340,6 +340,8 @@ function onRemove (file: object) {
 
 ## APIs
 
+### Upload
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 accept | 接受上传的文件类型，与`<input type="file" />`的 `accept` 属性一致，详见 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file) | string | '*' | false
@@ -356,7 +358,7 @@ customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会
 disabled | 是否禁用，只能预览，不能删除和上传 | boolean | false | false
 fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [FileType](#filetype-type)[] | [] | false
 
-## FileType Type
+### FileType Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

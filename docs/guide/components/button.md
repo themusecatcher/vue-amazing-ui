@@ -200,6 +200,8 @@ function onClick(e: Event) {
 :::
 ## APIs
 
+### Button
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 name | 按钮文本 | string &#124; slot | '按钮' | false

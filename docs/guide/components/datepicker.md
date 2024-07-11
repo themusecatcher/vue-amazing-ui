@@ -566,6 +566,10 @@ watchEffect(() => {
 
 ## APIs
 
+### DatePicker
+
+<br/>
+
 *更多使用 APIs 请参考 [官方文档](https://vue3datepicker.com/)*
 
 参数 | 说明 | 类型 | 默认值 | 必传
@@ -578,7 +582,7 @@ showToday | 是否展示”今天“按钮 | boolean | false | false
 modelValue <Tag color="cyan">v-model</Tag> | 双向绑定值 | number &#124; string &#124; object &#124; array | null | false
 modelType | `v-model` 值类型，可选 `timestamp`: 时间戳、`format`: 字符串，`mode` 为 `week` 或 `year` 时，该配置不生效 | 'timestamp' &#124; 'format' | 'format' | false
 
-## DefaultFormat Value
+### DefaultFormat Value
 
 类型 | 值
 --- | ---
@@ -589,7 +593,7 @@ Time picker | 'HH:mm'
 Time picker range | 'HH:mm - HH:mm'
 Week picker | 'ww-yyyy'
 
-## format 支持的格式化占位符列表
+### format 支持的格式化占位符列表
 
 标识 | 示例 | 描述
 -- | -- | --

@@ -845,7 +845,7 @@ const state = reactive({
 
 ## APIs
 
-## Descriptions
+### Descriptions
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
@@ -858,7 +858,7 @@ column | 一行的 `DescriptionItems` 数量，可以写成数值或支持响应
 labelStyle | 自定义标签样式，优先级低于 `DescriptionItems`  的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 contentStyle | 自定义内容样式，优先级低于 `DescriptionItems`  的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 
-## Responsive Type
+### Responsive Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
@@ -869,7 +869,7 @@ lg | `≥992px` 响应式栅格 | number | false
 xl | `≥1200px` 响应式栅格 | number | false
 xxl | `≥1600px` 响应式栅格 | number | false
 
-## DescriptionsItem
+### DescriptionsItem
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --

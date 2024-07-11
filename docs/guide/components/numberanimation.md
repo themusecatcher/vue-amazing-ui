@@ -244,6 +244,8 @@ function onClick () {
 
 ## APIs
 
+### NumberAnimation
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 from | 数值动画起始数值 | number | 0 | false

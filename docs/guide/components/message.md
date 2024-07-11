@@ -182,6 +182,8 @@ function onClose () {
 
 ## APIs
 
+### Message
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 duration | 自动关闭的延时，单位`ms` | number | 3000 | false

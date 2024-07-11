@@ -266,6 +266,8 @@
 
 ## APIs
 
+### Avatar
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle' | false
@@ -274,7 +276,7 @@ src | 图片类头像资源地址 | string | '' | false
 alt | 图片无法显示时的替代文本 | string | '' | false
 icon | 设置头像的图标 | slot | undefined | false
 
-## Responsive Type
+### Responsive Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

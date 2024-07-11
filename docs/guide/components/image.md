@@ -240,6 +240,8 @@ const images = ref([
 
 ## APIs
 
+### Image
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 src | 图像地址 &#124; 图像地址数组 | string &#124; [Image](#image-type)[] | '' | true
@@ -257,7 +259,7 @@ resetOnDbclick | 缩放移动旋转图片后，是否可以双击还原 | boolea
 loop | 是否可以循环切换图片 | boolean | false | false
 ablum | 是否相册模式，即从一张展示图片点开相册 | boolean | false | false
 
-## Image Type
+### Image Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

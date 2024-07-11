@@ -157,6 +157,8 @@ const routes = [
 
 ## APIs
 
+### Breadcrumb
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 routes | 路由数组 | [Route](#route-type)[] | [] | true
@@ -166,7 +168,7 @@ maxWidth | 文本最大显示宽度，超出后显示省略号，单位`px` | nu
 separator | 分隔符，默认 '' 时为箭头 | string | '' | false
 target | 如何打开目标URL | '_self' &#124; '_blank' | '_self' | false
 
-## Route Type
+### Route Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

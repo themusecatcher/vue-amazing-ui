@@ -101,6 +101,8 @@
 
 ## APIs
 
+### Ellipsis
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 maxWidth | 文本最大宽度 | number &#124; string | '100%' | false

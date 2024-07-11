@@ -321,6 +321,8 @@ function onClose (e: MouseEvent) {
 
 ## APIs
 
+### Alert
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 message | 警告提示内容 | string &#124; slot | '' | false

@@ -462,6 +462,8 @@ watchEffect(() => {
 
 ## APIs
 
+### Checkbox
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 options | 复选元素数据 | [Option](#option-type)[] | [] | false
@@ -474,7 +476,7 @@ height | 复选区域最大展示高度，超出后滚动 | string &#124; number
 indeterminate | 全选时的样式控制 | boolean | false | false
 checked <Tag color="cyan">v-model</Tag> | 是否全选 | boolean | false | false
 
-## Option Type
+### Option Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

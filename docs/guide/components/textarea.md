@@ -222,6 +222,8 @@ const value = ref('')
 
 ## APIs
 
+### Textarea
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 文本域宽度 | string &#124; number | '100%' | false

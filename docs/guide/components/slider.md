@@ -253,6 +253,8 @@ function formatter (value: number) {
 
 ## APIs
 
+### Slider
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 宽度 | string &#124; number | '100%' | false

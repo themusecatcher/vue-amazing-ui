@@ -486,6 +486,8 @@ const spinning = ref(true)
 
 ## APIs
 
+### Spin
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 spinning | 是否为加载中状态 | boolean | true | false

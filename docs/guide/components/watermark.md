@@ -295,6 +295,8 @@ const layoutOptions = [
 
 ## APIs
 
+### Watermark
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 水印的宽度，默认值为 `content` 自身的宽度 | number | undefined | false

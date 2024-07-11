@@ -1046,7 +1046,7 @@ const state = reactive({
 
 ## APIs
 
-## Row
+### Row
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
@@ -1056,7 +1056,7 @@ wrap | 是否自动换行 | boolean | false | false
 align | 垂直对齐方式 | 'top' &#124; 'middle' &#124; 'bottom' &#124; 'stretch' | 'top' | false
 justify | 水平排列方式 | 'start' &#124; 'end' &#124; 'center' &#124; 'space-around' &#124; 'space-between' &#124; 'space-evenly' | 'start' | false
 
-## Responsive Type
+### Responsive Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
@@ -1067,7 +1067,7 @@ lg | `≥992px` 响应式栅格 | number | false
 xl | `≥1200px` 响应式栅格 | number | false
 xxl | `≥1600px` 响应式栅格 | number | false
 
-## Col
+### Col
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --

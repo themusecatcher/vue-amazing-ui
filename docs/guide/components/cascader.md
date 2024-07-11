@@ -1087,6 +1087,8 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 ## APIs
 
+### Cascader
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 options | 可选项数据源 | [Option](#option-type)[] | [] | false
@@ -1105,7 +1107,7 @@ filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进�
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
 modelValue <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; string[] | [] | false
 
-## Option Type
+### Option Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
