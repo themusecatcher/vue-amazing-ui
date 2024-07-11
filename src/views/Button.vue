@@ -28,12 +28,6 @@ function onClick(e: Event) {
       <Button disabled type="text">Text Button</Button>
       <Button disabled type="link">Link Button</Button>
     </Space>
-    <h2 class="mt30 mb10">自定义颜色</h2>
-    <Space>
-      <n-button type="error" color="#8a2be2">#8a2be2</n-button>
-      <Button type="danger" color="#8a2be2">#8a2be2</Button>
-      <a-button type="primary">#8a2be2</a-button>
-    </Space>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space>
       <Button size="small">Small</Button>

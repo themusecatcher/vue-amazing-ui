@@ -292,7 +292,7 @@ const g1 = (t) => (X("data-v-42762479"), t = t(), ee(), t), ft = ["href", "title
 ia.install = (t) => {
   t.component(ia.__name, ia);
 };
-const kt = ["onKeydown"], bt = ["disabled", "href", "target"], xt = { class: "u-text" }, Se = R(V({ __name: "Button", props: { name: { default: "按钮" }, type: { default: "default" }, color: { default: void 0 }, size: { default: "middle" }, href: { default: "" }, target: { default: "_self" }, disabled: { type: Boolean, default: !1 }, loading: { type: Boolean, default: !1 }, center: { type: Boolean, default: !1 } }, emits: ["click"], setup(t, { emit: a }) {
+const kt = ["onKeydown"], bt = ["disabled", "href", "target"], xt = { class: "u-text" }, Se = R(V({ __name: "Button", props: { name: { default: "按钮" }, type: { default: "default" }, size: { default: "middle" }, href: { default: "" }, target: { default: "_self" }, disabled: { type: Boolean, default: !1 }, loading: { type: Boolean, default: !1 }, center: { type: Boolean, default: !1 } }, emits: ["click"], setup(t, { emit: a }) {
   const e = { default: "#1677ff", reverse: "#1677ff", primary: "#1677ff", danger: "#ff4d4f", dashed: "#1677ff", text: "transparent", link: "transparent" }, o = b(!1), u = a;
   function s(m) {
     u("click", m), o.value ? (o.value = !1, Me(() => {
@@ -305,8 +305,8 @@ const kt = ["onKeydown"], bt = ["disabled", "href", "target"], xt = { class: "u-
   function n() {
     o.value = !1;
   }
-  return (m, r) => (i(), d("div", { tabindex: "0", class: F(["m-btn-wrap", { "btn-color": m.color, "btn-center": m.center }]), style: B(`--ripple-color: ${m.color || e[m.type]}; --btn-color: ${m.color};`), onKeydown: ve(Q(c, ["prevent"]), ["enter"]) }, [l("a", { class: F(["m-btn", [`btn-${m.type} btn-${m.size}`, { "btn-disabled": m.disabled, "btn-loading": !m.href && m.loading }]]), disabled: m.disabled, href: m.href ? m.href : "javascript:;", target: m.href ? m.target : "_self", onClick: s }, [O(l("span", { class: F(["m-loading-icon", { [`loading-${m.size}`]: m.loading }]) }, [l("span", { class: F(["u-spin-circle", `spin-${m.size}`]) }, null, 2)], 2), [[q, !m.href]]), l("span", xt, [A(m.$slots, "default", {}, () => [E(L(m.name), 1)], !0)]), m.disabled ? S("", !0) : (i(), d("div", { key: 0, class: F(["m-button-wave", { "button-wave-active": o.value }]), onAnimationend: n }, null, 34))], 10, bt)], 46, kt));
-} }), [["__scopeId", "data-v-a5238495"]]);
+  return (m, r) => (i(), d("div", { tabindex: "0", class: F(["m-btn-wrap", { "btn-center": m.center }]), style: B(`--ripple-color: ${e[m.type]}`), onKeydown: ve(Q(c, ["prevent"]), ["enter"]) }, [l("a", { class: F(["m-btn", [`btn-${m.type} btn-${m.size}`, { "btn-disabled": m.disabled, "btn-loading": !m.href && m.loading }]]), disabled: m.disabled, href: m.href ? m.href : "javascript:;", target: m.href ? m.target : "_self", onClick: s }, [O(l("span", { class: F(["m-loading-icon", { [`loading-${m.size}`]: m.loading }]) }, [l("span", { class: F(["u-spin-circle", `spin-${m.size}`]) }, null, 2)], 2), [[q, !m.href]]), l("span", xt, [A(m.$slots, "default", {}, () => [E(L(m.name), 1)], !0)]), m.disabled ? S("", !0) : (i(), d("div", { key: 0, class: F(["m-button-wave", { "button-wave-active": o.value }]), onAnimationend: n }, null, 34))], 10, bt)], 46, kt));
+} }), [["__scopeId", "data-v-9e14a23f"]]);
 Se.install = (t) => {
   t.component(Se.__name, Se);
 };
