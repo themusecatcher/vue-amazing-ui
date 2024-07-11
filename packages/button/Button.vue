@@ -4,7 +4,6 @@ import type { Slot } from 'vue'
 interface Props {
   name?: string | Slot // 按钮文本 string | slot
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 按钮类型
-  color?: string // 按钮颜色
   size?: 'small' | 'middle' | 'large' // 按钮尺寸
   href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
   target?: '_self' | '_blank' // 相当于 a 链接的 target 属性，href 存在时生效
@@ -15,7 +14,6 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   name: '按钮',
   type: 'default',
-  color: undefined,
   size: 'middle',
   href: '',
   target: '_self',
@@ -55,8 +53,8 @@ function onWaveEnd() {
 <template>
   <div
     tabindex="0"
-    :class="['m-btn-wrap', { 'btn-color': color, 'btn-center': center }]"
-    :style="`--ripple-color: ${color || rippleColor[type]}; --btn-color: ${color};`"
+    :class="['m-btn-wrap', { 'btn-center': center }]"
+    :style="`--ripple-color: ${rippleColor[type]}`"
     @keydown.enter.prevent="onKeyboard"
   >
     <a
@@ -103,13 +101,6 @@ function onWaveEnd() {
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-    &:hover {
-      border-color: hsl(@primary, 100%, 50%);
-    }
-    &:active {
-      opacity: 1;
-      filter: brightness(90%);
-    }
     .m-loading-icon {
       display: inline-flex;
       align-items: center;
@@ -178,7 +169,6 @@ function onWaveEnd() {
           box-shadow: 0 0 0.5px 0 var(--ripple-color);
         }
         to {
-          // don't use exact 5px since chrome will display the animation with glitches
           box-shadow: 0 0 0.5px 4.5px var(--ripple-color);
         }
       }
@@ -201,54 +191,53 @@ function onWaveEnd() {
     border-color: #d9d9d9;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
     &:hover {
-      color: @primary;
-      border-color: @primary;
+      color: fade(@primary, 80%);
+      border-color: fade(@primary, 80%);
     }
     &:active {
-      color: @primary;
-      border-color: @primary;
+      color: shade(@primary, 12%);
+      border-color: shade(@primary, 12%);
     }
   }
   .btn-reverse {
     .btn-default();
     &:hover {
       color: #fff;
-      background-color: @primary;
-      border-color: @primary;
+      background-color: fade(@primary, 80%);
+      border-color: fade(@primary, 80%);
     }
     &:active {
       color: #fff;
-      background-color: @primary;
-      border-color: @primary;
+      background-color: shade(@primary, 12%);
+      border-color: shade(@primary, 12%);
     }
   }
   .btn-primary {
     color: #fff;
     background-color: @primary;
-    border-color: @primary;
     box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
-    // &:hover {
-    //   background-color: fade(@primary, 80%);
-    //   border-color: fade(@primary, 80%);
-    // }
-    // &:active {
-    //   background-color: shade(@primary, 12%);
-    //   border-color: shade(@primary, 12%);
-    // }
+    &:hover {
+      background-color: fade(@primary, 80%);
+      border-color: fade(@primary, 80%);
+    }
+    &:active {
+      background-color: shade(@primary, 12%);
+      border-color: shade(@primary, 12%);
+    }
   }
   .btn-danger {
     color: #fff;
     background-color: @danger;
     border-color: @danger;
     box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
-    // &:hover {
-    //   background-color: fade(@danger, 80%);
-    //   border-color: fade(@danger, 80%);
-    // }
-    // &:active {
-    //   background-color: shade(@danger, 12%);
-    //   border-color: shade(@danger, 12%);
-    // }
+    &:hover {
+      background-color: fade(@danger, 80%);
+      border-color: fade(@danger, 80%);
+    }
+    &:active {
+      background-color: shade(@danger, 12%);
+      border-color: shade(@danger, 12%);
+    }
   }
   .btn-dashed {
     .btn-default();
@@ -264,12 +253,12 @@ function onWaveEnd() {
   }
   .btn-link {
     color: @primary;
-    // &:hover {
-    //   color: fade(@primary, 80%);
-    // }
-    // &:active {
-    //   color: shade(@primary, 12%);
-    // }
+    &:hover {
+      color: fade(@primary, 80%);
+    }
+    &:active {
+      color: shade(@primary, 12%);
+    }
   }
   .btn-small {
     font-size: 14px;
@@ -306,12 +295,6 @@ function onWaveEnd() {
       background-color: transparent;
       border: none;
     }
-  }
-}
-.btn-color {
-  .m-btn {
-    background-color: var(--btn-color);
-    border-color: var(--btn-color);
   }
 }
 .btn-center {
