@@ -47,7 +47,7 @@
     "qrcode": "^1.5.3",
     "swiper": "^11.1.4",
     "vue": "^3.4.31",
-    "vue-amazing-ui": "^1.0.24",
+    "vue-amazing-ui": "^1.0.26",
     "vue-router": "^4.4.0"
   },
   "devDependencies": {
