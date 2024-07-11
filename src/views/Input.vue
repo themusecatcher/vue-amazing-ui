@@ -43,7 +43,7 @@ function onEnter(e: KeyboardEvent) {
           </svg>
         </template>
         <template #suffix>
-          <Tooltip :max-width="150" title="Extra information">
+          <Tooltip :max-width="150" tooltip="Extra information">
             <svg
               focusable="false"
               class="u-svg"
