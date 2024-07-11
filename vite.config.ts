@@ -3,9 +3,9 @@ import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// ant-desing按需引入
 import Components from 'unplugin-vue-components/vite'
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
+// ant-desing naive-ui 按需引入
+import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 // 打包体积可视化插件
 // import { visualizer } from 'rollup-plugin-visualizer'
 
@@ -25,10 +25,11 @@ export default defineConfig({
     //   open: true // 打包后自动打开分析图
     // }),
     Components({
-      resolvers: [ // ant design 自动按需引入
+      resolvers: [ // ant design, naive ui 自动按需引入
         AntDesignVueResolver({
           importStyle: false // css in js
-        })
+        }),
+        NaiveUiResolver()
       ]
     })
   ],
