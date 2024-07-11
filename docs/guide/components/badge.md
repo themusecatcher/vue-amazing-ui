@@ -569,6 +569,8 @@ const colors = [
 
 ## APIs
 
+### Badge
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 color | 自定义小圆点的颜色，优先级高于 `status` | [PresetColor](#presetcolor-enum-type) &#124; string | '' | false
@@ -584,7 +586,7 @@ zIndex | 设置徽标的 `z-index` | number | 9 | false
 title | 设置鼠标放在状态点上时显示的文字 | string | '' | false
 ripple | 是否开启涟漪动画效果 | boolean | true | false
 
-## PresetColor Enum Type
+### PresetColor Enum Type
 
 成员名 | 值
 -- | --
@@ -602,7 +604,7 @@ volcano | 'volcano'
 gold | 'gold'
 lime | 'lime
 
-## Status Enum Type
+### Status Enum Type
 
 成员名 | 值
 -- | --

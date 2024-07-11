@@ -494,6 +494,8 @@ function onNext () {
 
 ## APIs
 
+### Swiper
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 images | 轮播图片数组 | [Image](#image-type)[] | [] | true
@@ -509,7 +511,7 @@ pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播，仅
 swipe | 是否可以鼠标拖动 | boolean | true | false
 preloaderColor | 预加载时的 `loading` 颜色 | 'theme' &#124; 'white' &#124; 'black' | 'theme' | false
 
-## Image Type
+### Image Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

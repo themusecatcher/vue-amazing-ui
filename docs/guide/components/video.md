@@ -119,6 +119,8 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.
 
 ## APIs
 
+### Video
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | '' | true

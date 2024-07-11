@@ -373,6 +373,8 @@ p {
 
 ## APIs
 
+### Dialog
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 title | 标题 | string &#124; slot | '提示' | false

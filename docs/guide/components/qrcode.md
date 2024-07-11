@@ -194,6 +194,8 @@ const value = ref('hello world')
 
 ## APIs
 
+### QRCode
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 value | 扫描后的文本或地址 | string | '' | false

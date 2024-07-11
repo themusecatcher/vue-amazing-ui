@@ -544,6 +544,8 @@ const onDynamicClose = (tag: any, index: number) => {
 
 ## APIs
 
+### Tag
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 closable | 标签是否可以关闭 | boolean | false | false
@@ -558,7 +560,7 @@ spaceAlign | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; '
 spaceDirection | 间距方向 | 'horizontal' &#124; 'vertical' | 'horizontal' | false
 spaceGap | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
 
-## Tag Type
+### Tag Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

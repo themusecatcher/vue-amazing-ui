@@ -597,6 +597,8 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 
 ## APIs
 
+### Tabs
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 tabPages | 标签页数组 | [Tab](#tab-type)[] | [] | true
@@ -606,7 +608,7 @@ type | 标签页的样式 |'line' &#124; 'card' | 'line' | false
 gutter | `tabs` 之前的间隙大小，单位px | number | undefined | false
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | '' | false
 
-## Tab Type
+### Tab Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

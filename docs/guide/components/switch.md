@@ -160,6 +160,8 @@ watchEffect(() => {
 
 ## APIs
 
+### Switch
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 onInfo | 选中时的内容 | string | '' | false

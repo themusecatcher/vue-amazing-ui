@@ -1007,6 +1007,8 @@ const carouselConfig = reactive({
 
 ## APIs
 
+### Carousel
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 images | 走马灯图片数组 | [Image](#image-type)[] | [] | true
@@ -1033,7 +1035,7 @@ fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可
 slideDuration | 滑动动画持续时长，单位`ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800 | false
 slideFunction | 滑动动画函数，，仅当 `effect` 为 `'slide'` 时生效，可参考 [`useTransition`](https://vueuse.org/core/useTransition/#usage) | number[] | [0.65, 0, 0.35, 1] | false
 
-## Image Type
+### Image Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
@@ -1041,7 +1043,7 @@ title | 图片名称 | string | false
 src | 图片地址 | string | true
 link | 图片跳转链接 | string | false
 
-## SpinProperties Type
+### SpinProperties Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

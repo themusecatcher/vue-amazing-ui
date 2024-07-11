@@ -308,6 +308,8 @@ const gap = ref('small')
 
 ## APIs
 
+### Space
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 区域总宽度 | string &#124; number | 'auto' | false

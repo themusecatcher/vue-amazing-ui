@@ -299,6 +299,8 @@ watchEffect(() => {
 
 ## APIs
 
+### Rate
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 allowClear | 是否允许再次点击后清除 | boolean | true | false

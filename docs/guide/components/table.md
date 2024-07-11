@@ -331,6 +331,8 @@ const columns = ref([
 
 ## APIs
 
+### Table
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 columns | 表格列的配置项 | [Column](#column-type)[] | [] | false
@@ -340,7 +342,7 @@ showPagination | 是否显示分页 | boolean | true | false
 total | 数据总数 | number | 0 | false
 loading | 是否加载中 | boolean | false | false
 
-## Column Type
+### Column Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --
@@ -349,7 +351,7 @@ width | 列宽度 | number &#124; string | true
 dataIndex | 列数据字符索引 | string | true
 slot | 列插槽名称索引 | string | false
 
-## Pagination Type
+### Pagination Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

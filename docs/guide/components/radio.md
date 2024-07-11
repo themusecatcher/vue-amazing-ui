@@ -506,6 +506,8 @@ const buttonSize = ref('large')
 
 ## APIs
 
+### Radio
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 options | 单选元素数据 | [Option](#option-type)[] | [] | true
@@ -517,7 +519,7 @@ button | 是否启用按钮样式 | boolean | false | false
 buttonStyle | 按钮样式风格 | 'outline' &#124; 'solid' ｜ 'outline' | false
 buttonSize | 按钮大小，仅当 `button: true` 时生效 | 'default' &#124; 'large' &#124; 'small' | false
 
-## Option Type
+### Option Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

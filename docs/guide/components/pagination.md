@@ -133,6 +133,8 @@ function pageSizeChange (page: number, pageSize: number) { // pageSize 变化的
 
 ## APIs
 
+### Pagination
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 page | 当前页数 | number | 1 | false

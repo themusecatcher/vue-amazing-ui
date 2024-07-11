@@ -667,6 +667,8 @@ watchEffect(() => {
 
 ## APIs
 
+### Select
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 options | 选项数据 | [Option](#option-type)[] | [] | false
@@ -682,7 +684,7 @@ height | 高度，单位`px` | number | 32 | false
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
 modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目 | number &#124; string &#124; null | null | false
 
-## Option Type
+### Option Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

@@ -370,6 +370,8 @@ function onDecline (scale: number) {
 
 ## APIs
 
+### Progress
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 width | 进度条总宽度 | number &#124; string | '100%' | false
@@ -381,7 +383,7 @@ showInfo | 是否显示进度数值或状态图标 | boolean | true | false
 format | 内容的模板函数 | (percent: number) => (string &#124; number) &#124; Slot | (percent: number) => percent + '%' | false
 type | 进度条类型 | 'line' &#124; 'circle' | 'line' | false
 
-## Gradient Type
+### Gradient Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

@@ -104,6 +104,8 @@ function openChange (visible: boolean) {
 
 ## APIs
 
+### Tooltip
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 maxWidth | 提示框内容最大宽度，单位`px` | number | 120 | false

@@ -517,6 +517,8 @@ const state = reactive({
 
 ## APIs
 
+### Steps
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 steps | 步骤数组 | [Step](#step-type)[] | [] | true
@@ -527,7 +529,7 @@ labelPlacement | 标签放置位置，默认放图标右侧，可选 `bottom` �
 dotted | 是否使用点状步骤条，当 `dotted: true` 且 `vertical: false` 时，`labelPlacement` 将自动设为 `bottom` | boolean | false | false
 current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1 | false
 
-## Step Type
+### Step Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

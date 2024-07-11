@@ -185,6 +185,8 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 
 ## APIs
 
+### Waterfall
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 images | 图片数组 | [Image](#image-type)[] | [] | true
@@ -194,7 +196,7 @@ width | 瀑布流区域的总宽度 | string &#124; number | '100%' | false
 borderRadius | 瀑布流区域和图片圆角，单位`px` | number | 8 | false
 backgroundColor | 瀑布流区域背景填充色 | string | '#F2F4F8' | false
 
-## Image Type
+### Image Type
 
 名称 | 说明 | 类型 | 必传
 -- | -- | -- | --

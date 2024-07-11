@@ -134,6 +134,8 @@ const scrollContainer = ref()
 
 ## APIs
 
+### BackTop
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 bottom | `BackTop` 距离页面底部的高度 | number &#124; string | 40 | false

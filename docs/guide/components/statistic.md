@@ -314,6 +314,8 @@ function formatter (value: string): string {
 
 ## APIs
 
+### Statistic
+
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 title | 数值的标题 | string | '' | false
