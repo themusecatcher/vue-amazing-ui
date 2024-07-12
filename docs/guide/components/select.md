@@ -122,7 +122,7 @@ function onChange (value: string|number, label: string,  index: number) {
   console.log('label:', label)
   console.log('index:', index)
 }
-// 自定义过滤函数，但选项的 value 值大于 输入项时返回 true
+// 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter (inputValue: string, option: any) {
   return option.value > inputValue
 }
@@ -358,7 +358,7 @@ function onChange (value: string|number, label: string,  index: number) {
 
 ## 支持搜索
 
-<Select :options="options" allowClear search v-model="selectedValue" />
+<Select :width="150" :options="options" allowClear search v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -405,7 +405,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Select :options="options" search v-model="selectedValue" />
+  <Select :width="150" :options="options" search v-model="selectedValue" />
 </template>
 ```
 
@@ -414,6 +414,7 @@ watchEffect(() => {
 ## 自定义搜索过滤函数
 
 <Select
+  :width="150"
   :options="options"
   search
   :filter="filter"
@@ -462,13 +463,14 @@ const selectedValue = ref(5)
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
 })
-// 自定义过滤函数，但选项的 value 值大于 输入项时返回 true
+// 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter (inputValue: string, option: any) {
   return option.value > inputValue
 }
 </script>
 <template>
   <Select
+    :width="150"
     :options="options"
     search
     :filter="filter"
@@ -677,7 +679,7 @@ value | 选项的 `value` 值字段名 | string | 'value' | false
 placeholder | 选择框默认文字 | string | '请选择' | false
 disabled | 是否禁用 | boolean | false | false
 allowClear | 是否支持清除 | boolean | false | false
-search | 是否支持搜索 | boolean | false | false
+search | 是否支持搜索，使用搜索时请设置 `width` | boolean | false | false
 filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true | false
 width | 宽度，单位`px` | string &#124; number | 'auto' | false
 height | 高度，单位`px` | number | 32 | false
