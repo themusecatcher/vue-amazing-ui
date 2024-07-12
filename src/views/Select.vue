@@ -116,7 +116,7 @@ function onChange(value: string | number, label: string, index: number) {
   console.log('label:', label)
   console.log('index:', index)
 }
-// 自定义过滤函数，但选项的 value 值大于 输入项时返回 true
+// 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter(inputValue: string, option: any) {
   return option.value > inputValue
 }
@@ -137,9 +137,9 @@ function onAntChange(value: string | number, option: any) {
     <h2 class="mt30 mb10">支持清除</h2>
     <Select :options="options" allow-clear v-model="selectedValue" @change="onChange" />
     <h2 class="mt30 mb10">支持搜索</h2>
-    <Select :options="options" allowClear search v-model="selectedValue" />
+    <Select :options="options" search allowClear v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
-    <Select :options="options" search :filter="filter" v-model="selectedValue" />
+    <Select :width="100" :options="options" search :filter="filter" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义样式</h2>
     <Select :width="160" :height="36" search :options="options" v-model="selectedValue" @change="onChange" />
     <h2 class="mt30 mb10">自定义节点 lable、value 字段名</h2>

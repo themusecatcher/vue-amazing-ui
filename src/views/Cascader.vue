@@ -191,7 +191,7 @@ function filter(inputValue: string, option: any) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Cascader :options="options" v-model="selectedValue" />
-    <h2 class="mt30 mb10">禁用</h2>
+    <!-- <h2 class="mt30 mb10">禁用</h2>
     <Cascader :options="options" v-model="selectedValue" disabled />
     <h2 class="mt30 mb10">禁用某一级</h2>
     <h3 class="mb10">只禁用第一级：disabled: [true]</h3>
@@ -228,6 +228,6 @@ function filter(inputValue: string, option: any) {
       allowClear
       v-model:value="selectedValue"
       @change="onAntChange"
-    />
+    /> -->
   </div>
 </template>

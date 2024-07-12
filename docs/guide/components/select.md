@@ -358,7 +358,7 @@ function onChange (value: string|number, label: string,  index: number) {
 
 ## 支持搜索
 
-<Select :options="options" search v-model="selectedValue" />
+<Select :options="options" allowClear search v-model="selectedValue" />
 
 ::: details Show Code
 
