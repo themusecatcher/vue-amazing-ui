@@ -181,7 +181,7 @@ function onAntChange(values: (number | string)[], selectedOptions: any) {
   console.log('values:', values)
   console.log('selectedOptions:', selectedOptions)
 }
-// 自定义过滤函数，但选项的 value 值大于 输入项时返回 true
+// 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter(inputValue: string, option: any) {
   return option.value > inputValue
 }
@@ -191,7 +191,7 @@ function filter(inputValue: string, option: any) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Cascader :options="options" v-model="selectedValue" />
-    <!-- <h2 class="mt30 mb10">禁用</h2>
+    <h2 class="mt30 mb10">禁用</h2>
     <Cascader :options="options" v-model="selectedValue" disabled />
     <h2 class="mt30 mb10">禁用某一级</h2>
     <h3 class="mb10">只禁用第一级：disabled: [true]</h3>
@@ -205,9 +205,9 @@ function filter(inputValue: string, option: any) {
     <h2 class="mt30 mb10">支持清除</h2>
     <Cascader :options="options" v-model="selectedValue" allow-clear @change="onChange" />
     <h2 class="mt30 mb10">支持搜索</h2>
-    <Cascader :options="options" v-model="selectedValue" search @change="onChange" />
+    <Cascader :options="options" :width="100" v-model="selectedValue" search @change="onChange" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
-    <Cascader :options="options" v-model="selectedValue" search :filter="filter" @change="onChange" />
+    <Cascader :options="options" :width="100" v-model="selectedValue" search :filter="filter" @change="onChange" />
     <h2 class="mt30 mb10">自定义样式</h2>
     <Cascader :options="options" v-model="selectedValue" :width="120" :height="36" :gap="12" @change="onChange" />
     <h2 class="mt30 mb10">自定义字段名</h2>
@@ -228,6 +228,6 @@ function filter(inputValue: string, option: any) {
       allowClear
       v-model:value="selectedValue"
       @change="onAntChange"
-    /> -->
+    />
   </div>
 </template>

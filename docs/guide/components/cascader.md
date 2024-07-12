@@ -187,7 +187,7 @@ function onChange (values: (number|string)[], labels: string[]) {
   console.log('values:', values)
   console.log('labels:', labels)
 }
-// 自定义过滤函数，但选项的 value 值大于 输入项时返回 true
+// 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter (inputValue: string, option: any) {
   return option.value > inputValue
 }
@@ -718,6 +718,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 ## 支持搜索
 
 <Cascader
+  :width="100"
   :options="options"
   v-model="selectedValue"
   search
@@ -795,6 +796,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 </script>
 <template>
   <Cascader
+    :width="100"
     :options="options"
     v-model="selectedValue"
     search
@@ -807,6 +809,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 ## 自定义搜索过滤函数
 
 <Cascader
+  :width="100"
   :options="options"
   v-model="selectedValue"
   search
@@ -882,13 +885,14 @@ function onChange (values: (number|string)[], labels: string[]) {
   console.log('values:', values)
   console.log('labels:', labels)
 }
-// 自定义过滤函数，但选项的 value 值大于 输入项时返回 true
+// 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter (inputValue: string, option: any) {
   return option.value > inputValue
 }
 </script>
 <template>
   <Cascader
+    :width="100"
     :options="options"
     v-model="selectedValue"
     search
@@ -1102,7 +1106,7 @@ width | 三级下拉各自宽度，单位`px` | 'auto' &#124; number &#124; numb
 height | 下拉框高度，单位`px` | number | 32 | false
 disabled | 三级各自是否禁用 | boolean &#124; boolean[] | false | false
 allowClear | 是否支持清除 | boolean | false | false
-search | 是否支持搜索 | boolean | false | false
+search | 是否支持搜索，使用搜索时请设置 `width` | boolean | false | false
 filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true | false
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
 modelValue <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; string[] | [] | false
