@@ -45,25 +45,32 @@ const selectWidth = computed(() => {
   }
   return props.width
 })
-const filterOptions = ref<Option[]>()
-const selectedName = ref()
-const inputValue = ref()
-const hoverValue = ref() // 鼠标悬浮项的value值
-const showOptions = ref(false) // options面板
-const activeBlur = ref(true) // 是否激活blur事件
+const filterOptions = ref<Option[]>() // 过滤后的选项数组
+const selectedName = ref() // 当前选中选项的 label
+const inputRef = ref() // 输入框 DOM 引用
+const inputValue = ref() // 支持搜索时，用户输入内容
+const disabledBlur = ref(false) // 是否禁用 input 标签的 blur 事件
+const hideSelect = ref(false) // 用户输入时，隐藏 selectName 的展示
+const hoverValue = ref() // 鼠标悬浮项的 value 值
+const showOptions = ref(false) // options 面板
 const showArrow = ref(true) // 剪头图标显隐
 const showClear = ref(false) // 清除图标显隐
+const showCaret = ref(false) // 支持搜索时，输入光标的显隐
 const showSearch = ref(false) // 搜索图标显隐
-const selectRef = ref()
+const selectFocus = ref(false) /// select 是否聚焦
 watchEffect(() => {
   if (props.search) {
-    filterOptions.value = props.options.filter((option) => {
-      if (typeof props.filter === 'function') {
-        return props.filter(inputValue.value, option)
-      } else {
-        return option[props.label].includes(inputValue.value)
-      }
-    })
+    if (inputValue.value) {
+      filterOptions.value = props.options.filter((option) => {
+        if (typeof props.filter === 'function') {
+          return props.filter(inputValue.value, option)
+        } else {
+          return option[props.label].includes(inputValue.value)
+        }
+      })
+    } else {
+      filterOptions.value = [...props.options]
+    }
     if (filterOptions.value.length && inputValue.value) {
       hoverValue.value = filterOptions.value[0][props.value]
     } else {
@@ -78,8 +85,9 @@ watchEffect(() => {
   initSelector()
 })
 watch(showOptions, (to) => {
-  if (!to && props.search) {
-    inputValue.value = selectedName.value
+  if (props.search && !to) {
+    inputValue.value = undefined
+    hideSelect.value = false
   }
 })
 function initSelector() {
@@ -96,29 +104,33 @@ function initSelector() {
     selectedName.value = null
     hoverValue.value = null
   }
-  if (props.search) {
-    inputValue.value = selectedName.value
-  }
 }
 function onBlur() {
+  // console.log('blur')
+  selectFocus.value = false
   if (showOptions.value) {
     showOptions.value = false
   }
   if (props.search) {
     showSearch.value = false
     showArrow.value = true
+    hideSelect.value = false
   }
 }
-function onInputEnter() {
-  if (props.allowClear && selectedName.value) {
-    showArrow.value = false
-    showClear.value = true
-    if (props.search) {
-      showSearch.value = false
+function onEnter() {
+  disabledBlur.value = true
+  if (props.allowClear) {
+    if (selectedName.value || (props.search && inputValue.value)) {
+      showArrow.value = false
+      showClear.value = true
+      if (props.search) {
+        showSearch.value = false
+      }
     }
   }
 }
-function onInputLeave() {
+function onLeave() {
+  disabledBlur.value = false
   if (props.allowClear && showClear.value) {
     showClear.value = false
     if (!props.search) {
@@ -129,7 +141,6 @@ function onInputLeave() {
     if (showOptions.value) {
       showSearch.value = true
       showArrow.value = false
-      selectRef.value.focus()
     } else {
       showSearch.value = false
       showArrow.value = true
@@ -139,17 +150,13 @@ function onInputLeave() {
 function onHover(value: string | number) {
   hoverValue.value = value
 }
-function onEnter() {
-  activeBlur.value = false
-}
-function onLeave() {
-  hoverValue.value = null
-  activeBlur.value = true
-  selectRef.value.focus()
-}
 function openSelect() {
+  inputRef.value.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
+  selectFocus.value = true
+  if (!props.search) {
+    inputRef.value.style.opacity = 0
+  }
   showOptions.value = !showOptions.value
-  inputValue.value = ''
   if (!hoverValue.value && selectedName.value) {
     const target = props.options.find((option) => option[props.label] === selectedName.value)
     hoverValue.value = target ? target[props.value] : null
@@ -161,12 +168,20 @@ function openSelect() {
     }
   }
 }
+function onSearchInput(e: InputEvent) {
+  hideSelect.value = Boolean((e.target as HTMLInputElement)?.value)
+}
 const emits = defineEmits(['update:modelValue', 'change'])
 function onClear() {
+  if (selectFocus.value) {
+    inputRef.value.focus()
+    showCaret.value = true
+  }
   showClear.value = false
   selectedName.value = null
   hoverValue.value = null
   showOptions.value = false
+  showSearch.value = false
   showArrow.value = true
   emits('update:modelValue')
   emits('change')
@@ -179,6 +194,9 @@ function onChange(value: string | number, label: string, index: number) {
     emits('update:modelValue', value)
     emits('change', value, label, index)
   }
+  showCaret.value = false
+  inputRef.value.focus() // 选中选项后，确保 select 不会失焦
+  selectFocus.value = true
   showOptions.value = false
   if (props.search) {
     showSearch.value = false
@@ -187,39 +205,36 @@ function onChange(value: string | number, label: string, index: number) {
 }
 </script>
 <template>
-  <div class="m-select" :style="`width: ${selectWidth}; height: ${height}px;`">
-    <div
-      :class="['m-select-wrap', { hover: !disabled, focus: showOptions, disabled: disabled }]"
-      tabindex="1"
-      ref="selectRef"
-      @mouseenter="onInputEnter"
-      @mouseleave="onInputLeave"
-      @blur="activeBlur && !disabled ? onBlur() : () => false"
-      @click="disabled ? () => false : openSelect()"
-    >
-      <span class="m-select-search" v-show="search">
-        <input class="u-select-search" :style="`height: ${height - 2}px;`" autocomplete="off" />
+  <div
+    class="m-select"
+    :class="{ 'select-disabled': disabled }"
+    :style="`width: ${selectWidth}; height: ${height}px;`"
+    @click="disabled ? () => false : openSelect()"
+  >
+    <div class="m-select-wrap" @mouseenter="onEnter" @mouseleave="onLeave">
+      <span class="m-select-search">
+        <input
+          ref="inputRef"
+          class="u-select-search"
+          :class="{ 'caret-show': showOptions || showCaret }"
+          autocomplete="off"
+          :readonly="!search"
+          :disabled="disabled"
+          @input="onSearchInput"
+          v-model="inputValue"
+          @blur="!disabledBlur && showOptions && !disabled ? onBlur() : () => false"
+        />
       </span>
       <span
+        v-if="!hideSelect"
         :class="['u-select-item', { 'select-item-gray': !selectedName || showOptions }]"
-        :style="`height: ${height - 2}px; line-height: ${height - 2}px;`"
+        :style="`line-height: ${height - 2}px;`"
         :title="selectedName"
       >
         {{ selectedName || placeholder }}
       </span>
       <svg
-        focusable="false"
-        :class="['u-svg', { show: showSearch }]"
-        data-icon="search"
-        aria-hidden="true"
-        viewBox="64 64 896 896"
-      >
-        <path
-          d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"
-        ></path>
-      </svg>
-      <svg
-        :class="['u-svg', { rotate: showOptions, show: showArrow }]"
+        :class="['u-arrow', { rotate: showOptions, show: showArrow }]"
         viewBox="64 64 896 896"
         data-icon="down"
         aria-hidden="true"
@@ -230,8 +245,19 @@ function onChange(value: string | number, label: string, index: number) {
         ></path>
       </svg>
       <svg
+        focusable="false"
+        :class="['u-search', { show: showSearch }]"
+        data-icon="search"
+        aria-hidden="true"
+        viewBox="64 64 896 896"
+      >
+        <path
+          d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"
+        ></path>
+      </svg>
+      <svg
         @click.stop="onClear"
-        :class="['u-clear', { show: showClear }]"
+        :class="['u-clear', { show: showClear || inputValue }]"
         focusable="false"
         data-icon="close-circle"
         aria-hidden="true"
@@ -242,13 +268,10 @@ function onChange(value: string | number, label: string, index: number) {
         ></path>
       </svg>
     </div>
-    <TransitionGroup name="fade" tag="div">
+    <Transition name="slide-up">
       <div
-        v-show="showOptions && filterOptions && filterOptions.length"
+        v-if="showOptions && filterOptions && filterOptions.length"
         class="m-options-panel"
-        @mouseenter="onEnter"
-        @mouseleave="onLeave"
-        key="1"
         :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${maxDisplay * height + 9}px; width: 100%;`"
       >
         <p
@@ -264,195 +287,221 @@ function onChange(value: string | number, label: string, index: number) {
           ]"
           :title="option[label]"
           @mouseenter="onHover(option[value])"
-          @click="option.disabled ? () => false : onChange(option[value], option[label], index)"
+          @click.stop="option.disabled ? () => false : onChange(option[value], option[label], index)"
         >
           {{ option[label] }}
         </p>
       </div>
       <div
-        v-show="showOptions && filterOptions && !filterOptions.length"
-        key="2"
+        v-else-if="showOptions && filterOptions && !filterOptions.length"
         class="m-empty-wrap"
         :style="`top: ${height + 4}px; width: ${width}px;`"
       >
         <Empty image="2" key="2" />
       </div>
-    </TransitionGroup>
+    </Transition>
   </div>
 </template>
 <style lang="less" scoped>
+.slide-up-enter-active {
+  transform: scaleY(1);
+  transform-origin: 0% 0%;
+  opacity: 1;
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.slide-up-leave-active {
+  transform: scaleY(1);
+  transform-origin: 0% 0%;
+  opacity: 1;
+  transition: all 0.2s cubic-bezier(0.755, 0.05, 0.855, 0.06);
+}
+.slide-up-enter-from,
+.slide-up-leave-to {
+  transform: scaleY(0.8);
+  transform-origin: 0% 0%;
+  opacity: 0;
+}
 .m-select {
   position: relative;
   display: inline-block;
   font-size: 14px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.88);
-}
-.fade-enter-active,
-.fade-leave-active {
-  transform: scaleY(1);
-  transform-origin: 0 0;
-  opacity: 1;
-  transition: all 0.3s;
-}
-.fade-enter-from {
-  transform: scaleY(0.8);
-  transform-origin: 0 0;
-  opacity: 0;
-}
-.fade-leave-to {
-  transform: scaleY(1);
-  opacity: 0;
-}
-.m-select-wrap {
-  position: relative;
-  z-index: 8;
-  display: inline-block;
-  padding: 0 11px;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  background-color: #fff;
-  width: 100%;
   outline: none;
-  cursor: text;
-  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  .u-select-input {
-    display: block;
-    user-select: none;
-    text-align: left;
-    padding-right: 18px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .m-select-search {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 11px;
-    right: 11px;
-    .u-select-search {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      background: transparent;
-      border: none;
-      outline: none;
+  &:not(.select-disabled):hover {
+    // 悬浮时样式
+    .m-select-wrap {
+      border-color: @themeColor;
     }
   }
-  .u-select-item {
-    display: block;
-    padding-right: 18px;
-    user-select: none;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    transition: all 0.3s;
-  }
-  .select-item-gray {
-    color: rgba(0, 0, 0, 0.25);
-    transition: none;
-    pointer-events: none;
-  }
-  .u-svg {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto 0;
-    right: 11px;
-    width: 12px;
-    height: 12px;
-    fill: rgba(0, 0, 0, 0.25);
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s ease-in-out;
-  }
-  .rotate {
-    transform: rotate(180deg);
-  }
-  .u-clear {
-    .u-svg();
-    cursor: pointer;
-    fill: rgba(140, 140, 140, 0.6);
-    &:hover {
-      fill: rgba(100, 100, 100, 0.8);
+  &:not(.select-disabled):focus-within {
+    // 激活时样式
+    .m-select-wrap {
+      border-color: @themeColor;
+      box-shadow: 0 0 0 2px fade(@themeColor, 20%);
     }
   }
-  .show {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-.hover {
-  // 悬浮时样式
-  &:hover {
-    border-color: @themeColor;
-  }
-}
-.focus {
-  // 激活时样式
-  border-color: @themeColor;
-  box-shadow: 0 0 0 2px fade(@themeColor, 20%);
-}
-.disabled {
-  // 下拉禁用样式
-  color: rgba(0, 0, 0, 0.25);
-  background: #f5f5f5;
-  user-select: none;
-  cursor: not-allowed;
-}
-.m-options-panel {
-  position: absolute;
-  z-index: 9;
-  overflow: auto;
-  width: 100%;
-  background-color: #fff;
-  padding: 4px;
-  border-radius: 8px;
-  box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
-  .u-option {
-    // 下拉项默认样式
-    text-align: left;
+  .m-select-wrap {
     position: relative;
-    display: block;
-    padding: 5px 12px;
-    border-radius: 4px;
-    font-weight: 400;
-    line-height: inherit;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    z-index: 8;
+    display: inline-block;
+    padding: 0 11px;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    cursor: text;
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    .m-select-search {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 11px;
+      right: 11px;
+      padding-right: 15px;
+      .u-select-search {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        caret-color: transparent;
+        background: transparent;
+        border: none;
+        outline: none;
+        appearance: none;
+      }
+      .caret-show {
+        caret-color: auto;
+      }
+    }
+    .u-select-item {
+      position: relative;
+      display: block;
+      padding-right: 15px;
+      user-select: none;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      transition: all 0.3s;
+    }
+    .select-item-gray {
+      color: rgba(0, 0, 0, 0.25);
+      transition: none;
+      pointer-events: none;
+    }
+    .u-svg {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 11px;
+      margin: auto 0;
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      fill: rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      user-select: none;
+      pointer-events: none;
+    }
+    .u-arrow {
+      .u-svg();
+      transition:
+        transform 0.3s,
+        opacity 0.3s;
+    }
+    .rotate {
+      transform: rotate(180deg);
+    }
+    .u-search {
+      .u-svg();
+      transition: opacity 0.3s;
+    }
+    .u-clear {
+      .u-svg();
+      background: #fff;
+      cursor: pointer;
+      fill: rgba(140, 140, 140, 0.6);
+      transition:
+        fill 0.2s,
+        opacity 0.3s;
+      &:hover {
+        fill: rgba(100, 100, 100, 0.8);
+      }
+    }
+    .show {
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
-  .option-hover {
-    // 悬浮时的下拉项样式
-    background: rgba(0, 0, 0, 0.04);
+  .m-options-panel {
+    position: absolute;
+    z-index: 9;
+    overflow: auto;
+    width: 100%;
+    background-color: #fff;
+    padding: 4px;
+    border-radius: 8px;
+    outline: none;
+    box-shadow:
+      0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 3px 6px -4px rgba(0, 0, 0, 0.12),
+      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    .u-option {
+      // 下拉项默认样式
+      text-align: left;
+      position: relative;
+      display: block;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-weight: 400;
+      line-height: inherit;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .option-hover {
+      // 悬浮时的下拉项样式
+      background: rgba(0, 0, 0, 0.04);
+    }
+    .option-selected {
+      // 被选中的下拉项样式
+      font-weight: 600;
+      background: #e6f4ff;
+    }
+    .option-disabled {
+      // 禁用某个下拉选项时的样式
+      color: rgba(0, 0, 0, 0.25);
+      user-select: none;
+      cursor: not-allowed;
+    }
   }
-  .option-selected {
-    // 被选中的下拉项样式
-    font-weight: 600;
-    background: #e6f4ff;
+  .m-empty-wrap {
+    position: absolute;
+    z-index: 9;
+    height: 100px;
+    border-radius: 8px;
+    padding: 13px 20px;
+    background-color: #fff;
+    box-shadow:
+      0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 3px 6px -4px rgba(0, 0, 0, 0.12),
+      0 9px 28px 8px rgba(0, 0, 0, 0.05);
   }
-  .option-disabled {
-    // 禁用某个下拉选项时的样式
+}
+.select-disabled {
+  .m-select-wrap {
+    // 下拉禁用样式
     color: rgba(0, 0, 0, 0.25);
+    background: #f5f5f5;
     user-select: none;
     cursor: not-allowed;
+    .m-select-search .u-select-search {
+      cursor: not-allowed;
+    }
   }
-}
-.m-empty-wrap {
-  position: absolute;
-  z-index: 9;
-  height: 100px;
-  border-radius: 8px;
-  padding: 13px 20px;
-  background-color: #fff;
-  box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
 </style>
