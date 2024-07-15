@@ -6,7 +6,7 @@ interface Props {
   min?: number // 最小值
   max?: number // 最大值
   disabled?: boolean // 是否禁用
-  range?: boolean // 是否双滑块模式
+  range?: boolean // 是否使用双滑块模式
   step?: number // 步长，取值必须大于0，并且可被 (max - min) 整除
   formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
   tooltip?: boolean // 是否展示 Tooltip
@@ -33,10 +33,6 @@ const leftHandle = ref() // left handle 模板引用
 const leftTooltip = ref() // left tooltip 模板应用
 const rightHandle = ref() // right handler 模板引用
 const rightTooltip = ref() // right tooltip 模板引用
-const pixelStep = computed(() => {
-  // 滑块移动时的像素步长
-  return fixedDigit((sliderWidth.value / (props.max - props.min)) * props.step, 2)
-})
 const precision = computed(() => {
   // 获取 step 数值精度
   const strNumArr = props.step.toString().split('.')
@@ -54,13 +50,13 @@ const sliderValue = computed(() => {
   if (right.value === sliderWidth.value) {
     high = props.max
   } else {
-    high = fixedDigit((right.value / pixelStep.value) * props.step + props.min, precision.value)
+    high = fixedDigit(pixelStepOperation(right.value, '/') * props.step + props.min, precision.value)
     if (props.step > 1) {
       high = Math.round(high / props.step) * props.step
     }
   }
   if (props.range) {
-    let low = fixedDigit((left.value / pixelStep.value) * props.step + props.min, precision.value)
+    let low = fixedDigit(pixelStepOperation(left.value, '/') * props.step + props.min, precision.value)
     if (props.step > 1) {
       low = Math.round(low / props.step) * props.step
     }
@@ -131,10 +127,13 @@ function getSliderWidth() {
 function getPosition() {
   if (props.range) {
     // 双滑块模式
-    left.value = fixedDigit(((checkLow((props.value as number[])[0]) - props.min) / props.step) * pixelStep.value, 2)
-    right.value = fixedDigit(((checkHigh((props.value as number[])[1]) - props.min) / props.step) * pixelStep.value, 2)
+    const leftValue = pixelStepOperation((checkLow((props.value as number[])[0]) - props.min) / props.step, '*')
+    left.value = fixedDigit(leftValue, 2)
+    const rightValue = pixelStepOperation((checkHigh((props.value as number[])[1]) - props.min) / props.step, '*')
+    right.value = fixedDigit(rightValue, 2)
   } else {
-    right.value = fixedDigit(((checkValue(props.value as number) - props.min) / props.step) * pixelStep.value, 2)
+    const rightValue = pixelStepOperation((checkValue(props.value as number) - props.min) / props.step, '*')
+    right.value = fixedDigit(rightValue, 2)
   }
 }
 function fixedDigit(num: number, precision: number) {
@@ -161,7 +160,8 @@ function onClickPoint(e: any) {
     transition.value = false
   }, 300)
   // 元素是absolute时，e.layerX是相对于自身元素左上角的水平位置
-  const targetX = fixedDigit(Math.round(e.layerX / pixelStep.value) * pixelStep.value, 2) // 鼠标点击位置距离滑动输入条左端的水平距离
+  const value = Math.round(pixelStepOperation(e.layerX, '/'))
+  const targetX = fixedDigit(pixelStepOperation(value, '*'), 2) // 鼠标点击位置距离滑动输入条左端的水平距离
   if (props.range) {
     // 双滑块模式
     if (targetX <= left.value) {
@@ -188,12 +188,13 @@ function onClickPoint(e: any) {
 function onLeftMouseDown() {
   // 在滚动条上拖动左滑块
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
-  document.onmousemove = (e: MouseEvent) => {
+  window.onmousemove = (e: MouseEvent) => {
     if (props.tooltip) {
       leftTooltip.value.classList.add('show-handle-tooltip')
     }
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const targetX = fixedDigit(Math.round((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2)
+    const value = Math.round(pixelStepOperation(e.clientX - leftX, '/'))
+    const targetX = fixedDigit(pixelStepOperation(value, '*'), 2)
     if (targetX < 0) {
       left.value = 0
     } else if (targetX >= 0 && targetX <= right.value) {
@@ -205,22 +206,23 @@ function onLeftMouseDown() {
       onRightMouseDown()
     }
   }
-  document.onmouseup = () => {
+  window.onmouseup = () => {
     if (props.tooltip) {
       leftTooltip.value.classList.remove('show-handle-tooltip')
     }
-    document.onmousemove = null
+    window.onmousemove = null
   }
 }
 function onRightMouseDown() {
   // 在滚动条上拖动右滑块
   const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
-  document.onmousemove = (e: MouseEvent) => {
+  window.onmousemove = (e: MouseEvent) => {
     if (props.tooltip) {
       rightTooltip.value.classList.add('show-handle-tooltip')
     }
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const targetX = fixedDigit(Math.round((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2)
+    const value = Math.round(pixelStepOperation(e.clientX - leftX, '/'))
+    const targetX = fixedDigit(pixelStepOperation(value, '*'), 2)
     if (targetX > sliderWidth.value) {
       right.value = sliderWidth.value
     } else if (left.value <= targetX && targetX <= sliderWidth.value) {
@@ -234,15 +236,15 @@ function onRightMouseDown() {
       }
     }
   }
-  document.onmouseup = () => {
+  window.onmouseup = () => {
     if (props.tooltip) {
       rightTooltip.value.classList.remove('show-handle-tooltip')
     }
-    document.onmousemove = null
+    window.onmousemove = null
   }
 }
 function onLeftSlide(source: number, place: string) {
-  const targetX = source - pixelStep.value
+  const targetX = pixelStepOperation(source, '-')
   if (place === 'left') {
     // 左滑块左移
     if (targetX < 0) {
@@ -262,7 +264,7 @@ function onLeftSlide(source: number, place: string) {
   }
 }
 function onRightSlide(source: number, place: string) {
-  const targetX = source + pixelStep.value
+  const targetX = pixelStepOperation(source, '+')
   if (place === 'right') {
     // 右滑块右移
     if (targetX > sliderWidth.value) {
@@ -280,6 +282,21 @@ function onRightSlide(source: number, place: string) {
       rightHandle.value.focus()
     }
   }
+}
+function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): number {
+  if (operator === '+') {
+    return target + (sliderWidth.value * props.step) / (props.max - props.min)
+  }
+  if (operator === '-') {
+    return target - (sliderWidth.value * props.step) / (props.max - props.min)
+  }
+  if (operator === '*') {
+    return (target * sliderWidth.value * props.step) / (props.max - props.min)
+  }
+  if (operator === '/') {
+    return (target * (props.max - props.min)) / (sliderWidth.value * props.step)
+  }
+  return target
 }
 </script>
 <template>

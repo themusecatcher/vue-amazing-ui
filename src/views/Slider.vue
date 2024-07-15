@@ -5,17 +5,25 @@ const singleValue = ref(20)
 const singleCustomValue = ref(0)
 const doubleValue = ref([20, 80])
 const doubleCustomValue = ref([-5, 5])
+const singleCustomStepValue = ref(30)
+const doubleCustomStepValue = ref([30, 60])
 watchEffect(() => {
   console.log('singleValue:', singleValue.value)
-})
-watchEffect(() => {
-  console.log('singleCustomValue:', singleCustomValue.value)
 })
 watchEffect(() => {
   console.log('doubleValue:', doubleValue.value)
 })
 watchEffect(() => {
+  console.log('singleCustomValue:', singleCustomValue.value)
+})
+watchEffect(() => {
   console.log('doubleCustomValue:', doubleCustomValue.value)
+})
+watchEffect(() => {
+  console.log('singleCustomStepValue:', singleCustomStepValue.value)
+})
+watchEffect(() => {
+  console.log('doubleCustomStepValue:', doubleCustomStepValue.value)
 })
 function onChange(value: number | number[]) {
   console.log('change:', value)
@@ -43,8 +51,8 @@ function formatter(value: number) {
     </Flex>
     <h2 class="mt30 mb10">自定义步长</h2>
     <Flex vertical gap="large" width="80%">
-      <Slider :step="5" v-model:value="singleValue" />
-      <Slider range :step="5" v-model:value="doubleValue" />
+      <Slider :step="5" v-model:value="singleCustomStepValue" />
+      <Slider range :step="5" v-model:value="doubleCustomStepValue" />
     </Flex>
     <h2 class="mt30 mb10">隐藏 tooltip</h2>
     <Flex vertical gap="large" width="80%">
