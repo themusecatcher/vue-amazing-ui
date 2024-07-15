@@ -37,14 +37,12 @@ const scrollTop = ref<number>(0)
 const scrollTarget = ref<HTMLElement | null>(null)
 const target = ref<HTMLElement | null>(null)
 const emits = defineEmits(['click', 'show'])
-// 当观察到变动时执行的回调函数
-const callback = function (mutationsList: MutationRecord[], observer: MutationObserver) {
-  scrollTop.value = scrollTarget.value?.scrollTop ?? 0
-}
-// 观察器的配置（需要观察什么变动）
+// 观察器的配置
 const config = { childList: true, attributes: true, subtree: true }
 // 创建一个观察器实例并传入回调函数
-const observer = new MutationObserver(callback)
+const observer = new MutationObserver(() => {
+  scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+})
 watch(
   () => props.listenTo,
   () => {
