@@ -145,6 +145,12 @@ export const routes = [
         component: () => import('@/views/Flex.vue')
       },
       {
+        path: '/gradienttext',
+        name: 'GradientText',
+        meta: { title: '渐变文字' },
+        component: () => import('@/views/GradientText.vue')
+      },
+      {
         path: '/grid',
         name: 'Grid',
         meta: { title: '栅格' },

@@ -36,6 +36,7 @@ import Drawer from './drawer'
 import Ellipsis from './ellipsis'
 import Empty from './empty'
 import Flex from './flex'
+import GradientText from './gradienttext'
 import Image from './image'
 import Input from './input'
 import InputNumber from './inputnumber'
@@ -97,6 +98,7 @@ const components = [
   Ellipsis,
   Empty,
   Flex,
+  GradientText,
   Image,
   Input,
   InputNumber,
@@ -185,6 +187,7 @@ export {
   Ellipsis,
   Empty,
   Flex,
+  GradientText,
   Image,
   Input,
   InputNumber,
