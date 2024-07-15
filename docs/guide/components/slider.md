@@ -18,17 +18,25 @@ const singleValue = ref(20)
 const singleCustomValue = ref(0)
 const doubleValue = ref([20, 80])
 const doubleCustomValue = ref([-5, 5])
+const singleCustomStepValue = ref(30)
+const doubleCustomStepValue = ref([30, 60])
 watchEffect(() => {
   console.log('singleValue:', singleValue.value)
-})
-watchEffect(() => {
-  console.log('singleCustomValue:', singleCustomValue.value)
 })
 watchEffect(() => {
   console.log('doubleValue:', doubleValue.value)
 })
 watchEffect(() => {
+  console.log('singleCustomValue:', singleCustomValue.value)
+})
+watchEffect(() => {
   console.log('doubleCustomValue:', doubleCustomValue.value)
+})
+watchEffect(() => {
+  console.log('singleCustomStepValue:', singleCustomStepValue.value)
+})
+watchEffect(() => {
+  console.log('doubleCustomStepValue:', doubleCustomStepValue.value)
 })
 function onChange(value: number | number[]) {
   console.log('change:', value)
@@ -74,16 +82,10 @@ function onChange(value: number | number[]) {
 
 ```vue
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 
 const singleValue = ref(20)
 const doubleValue = ref([20, 80])
-watchEffect(() => {
-  console.log('singleValue:', singleValue.value)
-})
-watchEffect(() => {
-  console.log('doubleValue:', doubleValue.value)
-})
 </script>
 <template>
   <Flex vertical gap="large">
@@ -155,8 +157,8 @@ watchEffect(() => {
 ## 自定义步长
 
 <Flex vertical gap="large">
-  <Slider :step="5" v-model:value="singleValue" />
-  <Slider range :step="5" v-model:value="doubleValue" />
+  <Slider :step="5" v-model:value="singleCustomStepValue" />
+  <Slider range :step="5" v-model:value="doubleCustomStepValue" />
 </Flex>
 
 ::: details Show Code
@@ -165,19 +167,19 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 
-const singleValue = ref(20)
-const doubleValue = ref([20, 80])
+const singleCustomStepValue = ref(30)
+const doubleCustomStepValue = ref([30, 60])
 watchEffect(() => {
-  console.log('singleValue:', singleValue.value)
+  console.log('singleCustomStepValue:', singleCustomStepValue.value)
 })
 watchEffect(() => {
-  console.log('doubleValue:', doubleValue.value)
+  console.log('doubleCustomStepValue:', doubleCustomStepValue.value)
 })
 </script>
 <template>
   <Flex vertical gap="large">
-    <Slider :step="5" v-model:value="singleValue" />
-    <Slider range :step="5" v-model:value="doubleValue" />
+    <Slider :step="5" v-model:value="singleCustomStepValue" />
+    <Slider range :step="5" v-model:value="doubleCustomStepValue" />
   </Flex>
 </template>
 ```
@@ -261,7 +263,7 @@ width | 宽度 | string &#124; number | '100%' | false
 min | 最小值 | number | 0 | false
 max | 最大值 | number | 100 | false
 disabled | 是否禁用 | boolean | false | false
-range | 是否双滑块模式 | boolean | false | false
+range | 是否使用双滑块模式 | boolean | false | false
 step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除 | number | 1 | false
 formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value | false
 tooltip | 是否展示 `Tooltip` | boolean | true | false
