@@ -247,6 +247,12 @@ export const routes = [
         component: () => import('@/views/Result.vue')
       },
       {
+        path: '/scrollbar',
+        name: 'Scrollbar',
+        meta: { title: '滚动条' },
+        component: () => import('@/views/Scrollbar.vue')
+      },
+      {
         path: '/select',
         name: 'Select',
         meta: { title: '选择器' },

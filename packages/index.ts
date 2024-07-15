@@ -53,6 +53,7 @@ import Radio from './radio'
 import Rate from './rate'
 import Result from './result'
 import Row from './row'
+import Scrollbar from './scrollbar'
 import Select from './select'
 import Skeleton from './skeleton'
 import Slider from './slider'
@@ -115,6 +116,7 @@ const components = [
   Rate,
   Result,
   Row,
+  Scrollbar,
   Select,
   Skeleton,
   Slider,
@@ -204,6 +206,7 @@ export {
   Rate,
   Result,
   Row,
+  Scrollbar,
   Select,
   Skeleton,
   Slider,

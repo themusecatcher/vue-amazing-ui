@@ -42,7 +42,7 @@
           from: '#09c8ce',
           to: '#eb2f96'
         }"
-        >和标题一样</GradientText
+        >和标题一样的颜色</GradientText
       >
       <GradientText :size="24" gradient="linear-gradient(90deg, red 0%, green 50%, blue 100%)">瞎写的颜色</GradientText>
     </Space>
