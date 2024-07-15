@@ -175,6 +175,10 @@ export default defineConfig({
               link: '/guide/components/flex'
             },
             {
+              text: '渐变文字 GradientText',
+              link: '/guide/components/gradienttext'
+            },
+            {
               text: '栅格 Grid',
               link: '/guide/components/grid'
             },
