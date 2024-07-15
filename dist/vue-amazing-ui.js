@@ -780,7 +780,7 @@ const kt = (t) => (ee("data-v-5a6f31e2"), t = t(), ae(), t), to = { class: "m-dr
 ka.install = (t) => {
   t.component(ka.__name, ka);
 };
-const ho = ((t) => (ee("data-v-096a9b35"), t = t(), ae(), t))(() => o("div", { class: "m-tooltip-arrow" }, [o("span", { class: "u-tooltip-arrow" })], -1)), Ge = R(V({ __name: "Tooltip", props: { maxWidth: { default: 120 }, content: { default: "暂无内容" }, tooltip: { default: "暂无提示" }, fontSize: { default: 14 }, color: { default: "#FFF" }, backgroundColor: { default: "rgba(0, 0, 0, .85)" }, overlayStyle: { default: () => ({}) } }, emits: ["openChange"], setup(t, { emit: a }) {
+const ho = ((t) => (ee("data-v-fcf46125"), t = t(), ae(), t))(() => o("div", { class: "m-tooltip-arrow" }, [o("span", { class: "u-tooltip-arrow" })], -1)), Ge = R(V({ __name: "Tooltip", props: { maxWidth: { default: 120 }, content: { default: "暂无内容" }, tooltip: { default: "暂无提示" }, fontSize: { default: 14 }, color: { default: "#FFF" }, backgroundColor: { default: "rgba(0, 0, 0, .85)" }, overlayStyle: { default: () => ({}) } }, emits: ["openChange"], setup(t, { emit: a }) {
   const e = b(!1), l = b(), u = b(0), s = b(0), c = b(), n = b(), y = a;
   function r() {
     (function() {
@@ -794,7 +794,7 @@ const ho = ((t) => (ee("data-v-096a9b35"), t = t(), ae(), t))(() => o("div", { c
     }, 100);
   }
   return (p, m) => (i(), d("div", { class: "m-tooltip", onMouseenter: r, onMouseleave: w }, [o("div", { ref_key: "tooltipRef", ref: n, class: F(["m-tooltip-content", { "show-tip": e.value }]), style: B(`--tooltip-font-size: ${p.fontSize}px; --tooltip-color: ${p.color}; --tooltip-background-color: ${p.backgroundColor}; max-width: ${p.maxWidth}px; transform-origin: 50% ${u.value}px; top: ${-u.value}px; left: ${-s.value}px;`), onMouseenter: r, onMouseleave: w }, [o("div", { class: "u-tooltip", style: B(p.overlayStyle) }, [D(p.$slots, "tooltip", {}, () => [E(L(p.tooltip), 1)], !0)], 4), ho], 38), o("div", { ref_key: "contentRef", ref: c }, [D(p.$slots, "default", {}, () => [E(L(p.content), 1)], !0)], 512)], 32));
-} }), [["__scopeId", "data-v-096a9b35"]]);
+} }), [["__scopeId", "data-v-fcf46125"]]);
 Ge.install = (t) => {
   t.component(Ge.__name, Ge);
 };
