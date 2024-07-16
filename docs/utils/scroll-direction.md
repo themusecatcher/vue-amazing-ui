@@ -1,4 +1,4 @@
-# 滚动方向<BackTop />
+# 滚动方向 useScrollDirection<BackTop />
 
 <br/>
 
@@ -14,6 +14,8 @@
  * @param throttleDelay 节流延迟时间，单位ms，默认为100毫秒。用于控制滚动事件触发的频率。
  * @returns 返回一个对象，其中包含一个名为scrollDown的响应式属性，表示滚动方向是否向下。
  */
+import { ref } from 'vue'
+import { throttle, useEventListener } from 'vue-amazing-ui'
 export function useScrollDirection(throttleDelay = 100) {
   // 使用ref定义一个响应式变量，指示当前滚动方向是否向下
   const scrollDown = ref<boolean>(false)

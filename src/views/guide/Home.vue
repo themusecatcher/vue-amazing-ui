@@ -33,6 +33,7 @@ import {
   downloadFile,
   toggleDark,
   useEventListener,
+  useMutationObserver,
   useScrollDirection,
   useFps
 } from 'vue-amazing-ui'
@@ -139,7 +140,11 @@ function onOpen() {
       </li>
       <li class="u-tip mb10">
         <Tag color="geekblue">useEventListener</Tag>
-        : 使用Vue的生命周期钩子添加和移除事件监听器
+        : 使用 Vue 的生命周期钩子添加和移除事件监听器
+      </li>
+      <li class="u-tip mb10">
+        <Tag color="geekblue">useMutationObserver</Tag>
+        : 使用 MutationObserver 观察 DOM 元素的变化
       </li>
       <li class="u-tip mb10">
         <Tag color="geekblue">useScrollDirection</Tag>
@@ -147,7 +152,7 @@ function onOpen() {
       </li>
       <li class="u-tip mb10">
         <Tag color="geekblue">useFps</Tag>
-        : 实时监测浏览器刷新率FPS
+        : 实时监测浏览器刷新率 FPS
       </li>
     </ul>
     <Collapse lang="vue3" :fontSize="16" :collapseData="collapseData" v-model:activeKey="activeKey" copyable />

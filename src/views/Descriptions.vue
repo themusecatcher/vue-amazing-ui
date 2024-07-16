@@ -44,12 +44,28 @@ const state = reactive({
     fontWeight: 400
   }
 })
+const data = ref({})
+setTimeout(() => {
+  data.value = {
+    UserName: 'Zhou Maomao',
+    Telephone: '1810000000',
+    Live: 'Hangzhou, Zhejiang',
+    Remark: 'empty',
+    Address: 'No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China'
+  }
+}, 2000)
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Descriptions title="User Info">
+      <template #extra>
+        <a href="#" @click="onClick">more</a>
+      </template>
+      <DescriptionsItem :label="key" v-for="(val, key) in data" :key="key">{{ val }}</DescriptionsItem>
+    </Descriptions>
+    <!-- <Descriptions title="User Info">
       <template #extra>
         <a href="#" @click="onClick">more</a>
       </template>
@@ -374,6 +390,6 @@ const state = reactive({
           >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</DescriptionsItem
         >
       </Descriptions>
-    </Flex>
+    </Flex> -->
   </div>
 </template>

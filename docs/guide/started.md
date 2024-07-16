@@ -70,6 +70,7 @@ import {
   downloadFile,
   toggleDark,
   useEventListener,
+  useMutationObserver,
   useScrollDirection,
   useFps
 } from 'vue-amazing-ui'

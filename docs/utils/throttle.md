@@ -1,4 +1,4 @@
-# 节流<BackTop />
+# 节流 throttle<BackTop />
 
 <br/>
 

@@ -71,7 +71,7 @@ defineExpose({
       </div>
     </div>
     <div class="m-scrollbar-rail">
-      <div class="m-scrollbar-track" @mousedown.prevent.stop="onTrackMouseDown"></div>
+      <div class="m-scrollbar-track" :style="`height: 40px`" @mousedown.prevent.stop="onTrackMouseDown"></div>
     </div>
   </div>
 </template>
@@ -89,6 +89,13 @@ defineExpose({
     min-height: inherit;
     max-height: inherit;
     scrollbar-width: none;
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-track-piece,
+    &::-webkit-scrollbar-thumb {
+      width: 0;
+      height: 0;
+      display: none;
+    }
     .m-scrollbar-content {
       box-sizing: border-box;
       min-width: 100%;

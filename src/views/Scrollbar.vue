@@ -7,7 +7,7 @@ function onScroll(e: Event) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <n-scrollbar style="max-height: 120px" trigger="none">
+    <n-scrollbar style="max-height: 200px" trigger="none">
       我们在田野上面找猪<br />
       想象中已找到了三只<br />
       小鸟在白云上面追逐<br />
