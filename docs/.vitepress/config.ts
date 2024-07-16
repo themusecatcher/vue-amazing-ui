@@ -371,8 +371,12 @@ export default defineConfig({
               link: '/utils/toggle-dark'
             },
             {
-              text: 'useEventListener 监听事件',
+              text: 'useEventListener 事件监听',
               link: '/utils/event-listener'
+            },
+            {
+              text: 'useMutationObserver DOM监听',
+              link: '/utils/mutation-observer'
             },
             {
               text: 'useScrollDirection 滚动方向',

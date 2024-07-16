@@ -1,4 +1,4 @@
-# 刷新率<BackTop />
+# 刷新率 useFps<BackTop />
 
 <br/>
 
@@ -16,6 +16,7 @@
  * 
  * @returns {Object} 返回一个包含FPS值的对象。
  */
+import { ref } from 'vue'
 export function useFps() {
   const fps = ref<number>(0)
   const frameCount = ref<number>(0)

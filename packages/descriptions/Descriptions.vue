@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useSlots, computed, nextTick, ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useSlots, computed, nextTick, ref, watch, onMounted } from 'vue'
 import type { CSSProperties, Slot } from 'vue'
-import { throttle, useEventListener } from '../utils'
+import { throttle, useEventListener, useMutationObserver } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -107,18 +107,12 @@ watch(
     flush: 'post'
   }
 )
-// 监听 defaultSlotsRef DOM 变化，重新渲染 Descriptions
-const config = { childList: true, attributes: true, subtree: true }
-const observer = new MutationObserver(() => {
-  getChildren()
-})
 onMounted(() => {
   getChildren()
-  observer.observe(defaultSlotsRef.value, config)
 })
-onBeforeUnmount(() => {
-  observer.disconnect() // 停止观察
-})
+// 监听 defaultSlotsRef DOM 变化，重新渲染 Descriptions
+const options = { childList: true, attributes: true, subtree: true }
+useMutationObserver(defaultSlotsRef, getChildren, options)
 function getChildren() {
   if (defaultSlotsRef.value.children.length) {
     children.value = Array.from(defaultSlotsRef.value.children).filter((element: any) => {

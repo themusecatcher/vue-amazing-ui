@@ -10,6 +10,7 @@ import {
   downloadFile,
   toggleDark,
   useEventListener,
+  useMutationObserver,
   useScrollDirection,
   useFps
 } from './utils'
@@ -163,6 +164,7 @@ export {
   downloadFile,
   toggleDark,
   useEventListener,
+  useMutationObserver,
   useScrollDirection,
   useFps
 }

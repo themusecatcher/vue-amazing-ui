@@ -1,4 +1,4 @@
-# 数字格式化<BackTop />
+# 数字格式化 formatNumber<BackTop />
 
 ::: details Show Source Code
 

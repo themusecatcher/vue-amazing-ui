@@ -1,4 +1,4 @@
-# 定时器<BackTop />
+# 定时器 rafTimeout cancelRaf<BackTop />
 
 <br/>
 
