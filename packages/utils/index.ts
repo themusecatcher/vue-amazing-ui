@@ -324,15 +324,19 @@ export function useEventListener(target: HTMLElement | Window, event: string, ca
  * 该函数提供了一个便捷的方式来订阅 DOM 元素的变动，当元素发生指定的变化时，调用提供的回调函数。
  * 使用者可以指定要观察的一个或多个 DOM 元素，以及观察的选项和回调函数。
  *
- * @param target 要观察的DOM元素或元素数组。
- * @param callback 当观察到变化时调用的回调函数。
+ * @param target 要观察的DOM元素或元素数组，可以是 ref 引用，也可以是 DOM 元素本身
+ * @param callback 当观察到变化时调用的回调函数
  * @param options 观察选项，默认为空对象；例如:
  *  subtree: 是否监听以 target 为根节点的整个子树，包括子树中所有节点的属性
  *  childList: 是否监听 target 节点中发生的节点的新增与删除
  *  attributes: 是否观察所有监听的节点属性值的变化
  *  attributeFilter: 声明哪些属性名会被监听的数组；如果不声明该属性，所有属性的变化都将触发通知
  */
-export function useMutationObserver(target: Ref | Ref[], callback: MutationCallback, options = {}): void {
+export function useMutationObserver(
+  target: Ref | Ref[] | HTMLElement | HTMLElement[],
+  callback: MutationCallback,
+  options = {}
+): void {
   let observer: MutationObserver | undefined
   const targets = computed(() => {
     const targetValue = toValue(target)
