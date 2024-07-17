@@ -325,6 +325,6 @@ open <Tag color="cyan">v-model</Tag> | 抽屉是否可见 | boolean | false | fa
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 close | 点击遮罩层或左上角叉或取消按钮的回调 | (e: Event) => void

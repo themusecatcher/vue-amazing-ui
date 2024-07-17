@@ -172,6 +172,6 @@ nodeStyle | 节点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-type
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 变化时的回调 | (checked: boolean) => void

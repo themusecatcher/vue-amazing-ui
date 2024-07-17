@@ -44,6 +44,11 @@ const state = reactive({
     fontWeight: 400
   }
 })
+const info = ref({ name: '', sex: '1' })
+setTimeout(() => {
+  info.value.name = '张三'
+  info.value.sex = '2'
+}, 2000)
 </script>
 <template>
   <div>
@@ -57,10 +62,26 @@ const state = reactive({
       <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
       <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
       <DescriptionsItem label="Remark">empty</DescriptionsItem>
+      <DescriptionsItem label="Remark">{{ info.name }}</DescriptionsItem>
+      <DescriptionsItem label="Remark">{{ info.sex }}</DescriptionsItem>
       <DescriptionsItem label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</DescriptionsItem
       >
     </Descriptions>
+    <a-descriptions title="User Info">
+      <template #extra>
+        <a href="#" @click="onClick">more</a>
+      </template>
+      <a-descriptions-item label="UserName">Zhou Maomao</a-descriptions-item>
+      <a-descriptions-item label="Telephone">1810000000</a-descriptions-item>
+      <a-descriptions-item label="Live">Hangzhou, Zhejiang</a-descriptions-item>
+      <a-descriptions-item label="Remark">empty</a-descriptions-item>
+      <a-descriptions-item label="Remark">{{ info.name }}</a-descriptions-item>
+      <a-descriptions-item label="Remark">{{ info.sex }}</a-descriptions-item>
+      <a-descriptions-item label="Address"
+        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item
+      >
+    </a-descriptions>
     <h2 class="mt30 mb10">带边框的</h2>
     <Descriptions title="User Info" bordered>
       <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>

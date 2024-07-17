@@ -368,6 +368,6 @@ placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'cente
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 分页变化时的回调 | (pager: {page: number, pageSize: number}) => void

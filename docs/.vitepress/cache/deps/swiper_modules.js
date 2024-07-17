@@ -8,6 +8,7 @@ import {
   elementParents,
   elementTransitionEnd,
   getDocument,
+  getRotateFix,
   getSlideTransformEl,
   getTranslate,
   getWindow,
@@ -16,10 +17,10 @@ import {
   nextTick,
   now,
   setCSSProperty
-} from "./chunk-4RSKMU6E.js";
+} from "./chunk-JPMK2BQV.js";
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/virtual.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/virtual.mjs
 function Virtual(_ref) {
   let {
     swiper,
@@ -362,7 +363,7 @@ function Virtual(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/keyboard.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/keyboard.mjs
 function Keyboard(_ref) {
   let {
     swiper,
@@ -475,7 +476,7 @@ function Keyboard(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/mousewheel.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/mousewheel.mjs
 function Mousewheel(_ref) {
   let {
     swiper,
@@ -774,7 +775,7 @@ function Mousewheel(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/create-element-if-not-defined.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/shared/create-element-if-not-defined.mjs
 function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
   if (swiper.params.createElements) {
     Object.keys(checkProps).forEach((key) => {
@@ -793,7 +794,7 @@ function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
   return params;
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/navigation.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/navigation.mjs
 function Navigation(_ref) {
   let {
     swiper,
@@ -987,7 +988,7 @@ function Navigation(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/classes-to-selector.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/shared/classes-to-selector.mjs
 function classesToSelector(classes) {
   if (classes === void 0) {
     classes = "";
@@ -995,7 +996,7 @@ function classesToSelector(classes) {
   return `.${classes.trim().replace(/([\.:!+\/])/g, "\\$1").replace(/ /g, ".")}`;
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/pagination.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/pagination.mjs
 function Pagination(_ref) {
   let {
     swiper,
@@ -1427,7 +1428,7 @@ function Pagination(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/scrollbar.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/scrollbar.mjs
 function Scrollbar(_ref) {
   let {
     swiper,
@@ -1788,7 +1789,7 @@ function Scrollbar(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/parallax.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/parallax.mjs
 function Parallax(_ref) {
   let {
     swiper,
@@ -1910,7 +1911,7 @@ function Parallax(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/zoom.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/zoom.mjs
 function Zoom(_ref) {
   let {
     swiper,
@@ -2506,7 +2507,7 @@ function Zoom(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/controller.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/controller.mjs
 function Controller(_ref) {
   let {
     swiper,
@@ -2674,7 +2675,7 @@ function Controller(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/a11y.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/a11y.mjs
 function A11y(_ref) {
   let {
     swiper,
@@ -3028,7 +3029,7 @@ function A11y(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/history.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/history.mjs
 function History(_ref) {
   let {
     swiper,
@@ -3168,7 +3169,7 @@ function History(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/hash-navigation.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/hash-navigation.mjs
 function HashNavigation(_ref) {
   let {
     swiper,
@@ -3258,7 +3259,7 @@ function HashNavigation(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/autoplay.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/autoplay.mjs
 function Autoplay(_ref) {
   let {
     swiper,
@@ -3556,7 +3557,7 @@ function Autoplay(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/thumbs.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/thumbs.mjs
 function Thumb(_ref) {
   let {
     swiper,
@@ -3743,7 +3744,7 @@ function Thumb(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/free-mode.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/free-mode.mjs
 function freeMode(_ref) {
   let {
     swiper,
@@ -3966,7 +3967,7 @@ function freeMode(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/grid.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/grid.mjs
 function Grid(_ref) {
   let {
     swiper,
@@ -4120,7 +4121,7 @@ function Grid(_ref) {
   };
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/manipulation.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/manipulation.mjs
 function appendSlide(slides) {
   const swiper = this;
   const {
@@ -4306,7 +4307,7 @@ function Manipulation(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/effect-init.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/shared/effect-init.mjs
 function effectInit(params) {
   const {
     effect,
@@ -4362,7 +4363,7 @@ function effectInit(params) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/effect-target.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/shared/effect-target.mjs
 function effectTarget(effectParams, slideEl) {
   const transformEl = getSlideTransformEl(slideEl);
   if (transformEl !== slideEl) {
@@ -4372,7 +4373,7 @@ function effectTarget(effectParams, slideEl) {
   return transformEl;
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/effect-virtual-transition-end.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/shared/effect-virtual-transition-end.mjs
 function effectVirtualTransitionEnd(_ref) {
   let {
     swiper,
@@ -4417,7 +4418,7 @@ function effectVirtualTransitionEnd(_ref) {
   }
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/effect-fade.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/effect-fade.mjs
 function EffectFade(_ref) {
   let {
     swiper,
@@ -4478,7 +4479,7 @@ function EffectFade(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/effect-cube.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/effect-cube.mjs
 function EffectCube(_ref) {
   let {
     swiper,
@@ -4525,6 +4526,7 @@ function EffectCube(_ref) {
       size: swiperSize,
       browser
     } = swiper;
+    const r = getRotateFix(swiper);
     const params = swiper.params.cubeEffect;
     const isHorizontal = swiper.isHorizontal();
     const isVirtual = swiper.virtual && swiper.params.virtual.enabled;
@@ -4582,13 +4584,10 @@ function EffectCube(_ref) {
         ty = tx;
         tx = 0;
       }
-      const transform = `rotateX(${isHorizontal ? 0 : -slideAngle}deg) rotateY(${isHorizontal ? slideAngle : 0}deg) translate3d(${tx}px, ${ty}px, ${tz}px)`;
+      const transform = `rotateX(${r(isHorizontal ? 0 : -slideAngle)}deg) rotateY(${r(isHorizontal ? slideAngle : 0)}deg) translate3d(${tx}px, ${ty}px, ${tz}px)`;
       if (progress <= 1 && progress > -1) {
         wrapperRotate = slideIndex * 90 + progress * 90;
         if (rtl) wrapperRotate = -slideIndex * 90 - progress * 90;
-        if (swiper.browser && swiper.browser.need3dFix && Math.abs(wrapperRotate) / 90 % 2 === 1) {
-          wrapperRotate += 1e-3;
-        }
       }
       slideEl.style.transform = transform;
       if (params.slideShadows) {
@@ -4610,7 +4609,7 @@ function EffectCube(_ref) {
       }
     }
     const zFactor = (browser.isSafari || browser.isWebView) && browser.needPerspectiveFix ? -swiperSize / 2 : 0;
-    wrapperEl.style.transform = `translate3d(0px,0,${zFactor}px) rotateX(${swiper.isHorizontal() ? 0 : wrapperRotate}deg) rotateY(${swiper.isHorizontal() ? -wrapperRotate : 0}deg)`;
+    wrapperEl.style.transform = `translate3d(0px,0,${zFactor}px) rotateX(${r(swiper.isHorizontal() ? 0 : wrapperRotate)}deg) rotateY(${r(swiper.isHorizontal() ? -wrapperRotate : 0)}deg)`;
     wrapperEl.style.setProperty("--swiper-cube-translate-z", `${zFactor}px`);
   };
   const setTransition = (duration) => {
@@ -4650,7 +4649,7 @@ function EffectCube(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/create-shadow.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/shared/create-shadow.mjs
 function createShadow(suffix, slideEl, side) {
   const shadowClass = `swiper-slide-shadow${side ? `-${side}` : ""}${suffix ? ` swiper-slide-shadow-${suffix}` : ""}`;
   const shadowContainer = getSlideTransformEl(slideEl);
@@ -4662,7 +4661,7 @@ function createShadow(suffix, slideEl, side) {
   return shadowEl;
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/effect-flip.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/effect-flip.mjs
 function EffectFlip(_ref) {
   let {
     swiper,
@@ -4703,6 +4702,7 @@ function EffectFlip(_ref) {
       rtlTranslate: rtl
     } = swiper;
     const params = swiper.params.flipEffect;
+    const rotateFix = getRotateFix(swiper);
     for (let i = 0; i < slides.length; i += 1) {
       const slideEl = slides[i];
       let progress = slideEl.progress;
@@ -4723,19 +4723,11 @@ function EffectFlip(_ref) {
       } else if (rtl) {
         rotateY = -rotateY;
       }
-      if (swiper.browser && swiper.browser.need3dFix) {
-        if (Math.abs(rotateY) / 90 % 2 === 1) {
-          rotateY += 1e-3;
-        }
-        if (Math.abs(rotateX) / 90 % 2 === 1) {
-          rotateX += 1e-3;
-        }
-      }
       slideEl.style.zIndex = -Math.abs(Math.round(progress)) + slides.length;
       if (params.slideShadows) {
         createSlideShadows(slideEl, progress);
       }
-      const transform = `translate3d(${tx}px, ${ty}px, 0px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      const transform = `translate3d(${tx}px, ${ty}px, 0px) rotateX(${rotateFix(rotateX)}deg) rotateY(${rotateFix(rotateY)}deg)`;
       const targetEl = effectTarget(params, slideEl);
       targetEl.style.transform = transform;
     }
@@ -4773,7 +4765,7 @@ function EffectFlip(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/effect-coverflow.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/effect-coverflow.mjs
 function EffectCoverflow(_ref) {
   let {
     swiper,
@@ -4803,6 +4795,7 @@ function EffectCoverflow(_ref) {
     const center = isHorizontal ? -transform + swiperWidth / 2 : -transform + swiperHeight / 2;
     const rotate = isHorizontal ? params.rotate : -params.rotate;
     const translate = params.depth;
+    const r = getRotateFix(swiper);
     for (let i = 0, length = slides.length; i < length; i += 1) {
       const slideEl = slides[i];
       const slideSize = slidesSizesGrid[i];
@@ -4825,15 +4818,7 @@ function EffectCoverflow(_ref) {
       if (Math.abs(rotateY) < 1e-3) rotateY = 0;
       if (Math.abs(rotateX) < 1e-3) rotateX = 0;
       if (Math.abs(scale) < 1e-3) scale = 0;
-      if (swiper.browser && swiper.browser.need3dFix) {
-        if (Math.abs(rotateY) / 90 % 2 === 1) {
-          rotateY += 1e-3;
-        }
-        if (Math.abs(rotateX) / 90 % 2 === 1) {
-          rotateX += 1e-3;
-        }
-      }
-      const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)  rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
+      const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)  rotateX(${r(rotateX)}deg) rotateY(${r(rotateY)}deg) scale(${scale})`;
       const targetEl = effectTarget(params, slideEl);
       targetEl.style.transform = slideTransform;
       slideEl.style.zIndex = -Math.abs(Math.round(offsetMultiplier)) + 1;
@@ -4873,7 +4858,7 @@ function EffectCoverflow(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/effect-creative.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/effect-creative.mjs
 function EffectCreative(_ref) {
   let {
     swiper,
@@ -4915,6 +4900,7 @@ function EffectCreative(_ref) {
       progressMultiplier: multiplier
     } = params;
     const isCenteredSlides = swiper.params.centeredSlides;
+    const rotateFix = getRotateFix(swiper);
     if (isCenteredSlides) {
       const margin = slidesSizesGrid[0] / 2 - swiper.params.slidesOffsetBefore || 0;
       wrapperEl.style.transform = `translateX(calc(50% - ${margin}px))`;
@@ -4953,14 +4939,11 @@ function EffectCreative(_ref) {
       });
       r.forEach((value, index) => {
         let val = data.rotate[index] * Math.abs(progress * multiplier);
-        if (swiper.browser && swiper.browser.need3dFix && Math.abs(val) / 90 % 2 === 1) {
-          val += 1e-3;
-        }
         r[index] = val;
       });
       slideEl.style.zIndex = -Math.abs(Math.round(slideProgress)) + slides.length;
       const translateString = t.join(", ");
-      const rotateString = `rotateX(${r[0]}deg) rotateY(${r[1]}deg) rotateZ(${r[2]}deg)`;
+      const rotateString = `rotateX(${rotateFix(r[0])}deg) rotateY(${rotateFix(r[1])}deg) rotateZ(${rotateFix(r[2])}deg)`;
       const scaleString = originalProgress < 0 ? `scale(${1 + (1 - data.scale) * originalProgress * multiplier})` : `scale(${1 - (1 - data.scale) * originalProgress * multiplier})`;
       const opacityString = originalProgress < 0 ? 1 + (1 - data.opacity) * originalProgress * multiplier : 1 - (1 - data.opacity) * originalProgress * multiplier;
       const transform = `translate3d(${translateString}) ${rotateString} ${scaleString}`;
@@ -5011,7 +4994,7 @@ function EffectCreative(_ref) {
   });
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/modules/effect-cards.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/modules/effect-cards.mjs
 function EffectCards(_ref) {
   let {
     swiper,

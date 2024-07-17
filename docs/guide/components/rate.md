@@ -315,7 +315,7 @@ value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `1,2,3...` | numbe
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 选择时的回调 | (value: number) => void
 hoverChange | 鼠标经过时数值变化的回调 | (value: number) => void

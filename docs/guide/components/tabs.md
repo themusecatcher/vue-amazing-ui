@@ -619,6 +619,6 @@ disabled | 禁用对应标签页 | boolean | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 切换面板的回调 | (key: string &#124; number) => void

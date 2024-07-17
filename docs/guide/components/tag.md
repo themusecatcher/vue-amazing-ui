@@ -573,7 +573,7 @@ bordered | 是否有边框，默认为 `true` | boolean | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 close | 关闭时的回调 | (e: Event) => void
 dynamicClose | 启用标签动态添加和删除时关闭的回调 | (tag: Tag, index: number) => void

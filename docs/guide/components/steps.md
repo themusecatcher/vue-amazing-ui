@@ -538,6 +538,6 @@ description | 描述 | string | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 点击切换步骤时触发 | (index: number) => void

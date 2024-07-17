@@ -1,4 +1,4 @@
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === "object" && "constructor" in obj && obj.constructor === Object;
 }
@@ -147,7 +147,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@11.1.4/node_modules/swiper/shared/utils.mjs
+// node_modules/.pnpm/swiper@11.1.5/node_modules/swiper/shared/utils.mjs
 function classesToTokens(classes) {
   if (classes === void 0) {
     classes = "";
@@ -422,6 +422,14 @@ function elementOuterSize(el, size, includeMargins) {
 function makeElementsArray(el) {
   return (Array.isArray(el) ? el : [el]).filter((e) => !!e);
 }
+function getRotateFix(swiper) {
+  return (v) => {
+    if (Math.abs(v) > 0 && swiper.browser && swiper.browser.need3dFix && Math.abs(v) % 90 === 0) {
+      return v + 1e-3;
+    }
+    return v;
+  };
+}
 
 export {
   getDocument,
@@ -447,6 +455,7 @@ export {
   elementParents,
   elementTransitionEnd,
   elementOuterSize,
-  makeElementsArray
+  makeElementsArray,
+  getRotateFix
 };
-//# sourceMappingURL=chunk-4RSKMU6E.js.map
+//# sourceMappingURL=chunk-JPMK2BQV.js.map

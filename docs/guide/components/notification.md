@@ -325,7 +325,7 @@ placement | 通知提醒弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'botto
 
 ## Methods
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 open | 基本通知提醒 | (notification: Notification) => void
 info | 信息通知提醒 | (notification: Notification) => void
@@ -335,6 +335,6 @@ warning | 警告通知提醒 | (notification: Notification) => void
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 close | 关闭时的回调 | () => void

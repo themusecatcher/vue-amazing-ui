@@ -265,7 +265,7 @@ function onOk(e: Event) {
       position: absolute;
       z-index: 9;
       left: 50%;
-      bottom: 12px;
+      bottom: 12.5px;
       transform: translateX(-50%) translateY(100%) rotate(180deg);
       display: block;
       pointer-events: none;

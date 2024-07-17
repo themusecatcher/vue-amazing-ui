@@ -203,6 +203,6 @@ value <Tag color="cyan">v-model</Tag> | 当前值 | number &#124; null | null | 
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 变化回调 | (value: number &#124; null) => void

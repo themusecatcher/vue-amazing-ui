@@ -486,6 +486,6 @@ disabled | 是否禁用选项 | boolean | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 变化时回调函数 | (value: any[]) => void

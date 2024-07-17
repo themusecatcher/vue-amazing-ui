@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipMaxWidth: undefined,
   tooltipFontSize: 14,
   tooltipColor: '#FFF',
-  tooltipBackgroundColor: 'rgba(0, 0, 0, .85)',
+  tooltipBackgroundColor: 'rgba(0, 0, 0, 0.85)',
   tooltipOverlayStyle: () => ({ padding: '8px 12px', textAlign: 'justify' })
 })
 const showTooltip = ref()

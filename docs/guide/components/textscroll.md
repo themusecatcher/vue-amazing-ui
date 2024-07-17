@@ -535,6 +535,6 @@ link | 跳转链接 | string | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 click | 点击标题时的回调 | (text: [Text](#text-type)) => void

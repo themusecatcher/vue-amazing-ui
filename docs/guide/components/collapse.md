@@ -543,6 +543,6 @@ showArrow | 是否展示箭头 | boolean |false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 切换面板的回调 | (key: number &#124; string) => void

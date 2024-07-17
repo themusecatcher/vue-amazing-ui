@@ -529,6 +529,6 @@ disabled | 是否禁用单个单选器 | boolean | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 选项变化时的回调函数 | (value: any) => void

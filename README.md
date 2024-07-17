@@ -2,7 +2,7 @@
 
 *该组件库采用 `Vue@3.4.31`+ `TypeScript@5.5.3` + `Vite@5.3.3` + `Less@4.2.0` 实现！*<br/>
 *所有组件样式 `CSS` 均使用 `box-sizing: border-box;` 模式！*<br/>
-*目前共有 `57` 个常用基础 `UI` 组件，以及 `13` 个常用工具函数，并且持续探索优化更新中...！*<br/>
+*目前共有 `58` 个常用基础 `UI` 组件，以及 `13` 个常用工具函数，并且持续探索优化更新中...！*<br/>
 *开箱即用！*
 
 ## Document & Online preview
@@ -97,7 +97,7 @@ pnpm dev
 
 ## Components
 
-Component name | Descriptions | Component name | Descriptions
+Name | Description | Name | Description
 :-- | :-- | :-- | :--
 Alert | 警告提示 | Avatar | 头像
 BackTop | 回到顶部 | Badge | 徽标
@@ -117,17 +117,17 @@ NumberAnimation | 数值动画 | Pagination | 分页
 Popconfirm | 弹出确认 | Popover | 气泡卡片
 Progress | 进度条 | QRCode | 二维码
 Radio | 单选框 | Rate | 评分
-Result | 结果 | Select | 选择器
-Skeleton | 骨架屏 | Slider | 滑动输入条
-Space | 间距 | Spin | 加载中
-Statistic | 统计数值 | Steps | 步骤条
-Swiper | 触摸滑动插件 | Switch | 开关
-Table | 表格 | Tabs | 标签页
-Tag | 标签 | Textarea | 文本域
-TextScroll | 文字滚动 | Timeline | 时间轴
-Tooltip | 文字提示 | Upload | 上传
-Video | 播放器 | Waterfall | 瀑布流
-Watermark | 水印
+Result | 结果 | Scrollbar | 滚动条
+Select | 选择器 |  Skeleton | 骨架屏
+Slider | 滑动输入条 | Space | 间距
+Spin | 加载中 | Statistic | 统计数值
+Steps | 步骤条 | Swiper | 触摸滑动插件
+Switch | 开关 | Table | 表格
+Tabs | 标签页 | Tag | 标签
+Textarea | 文本域 | TextScroll | 文字滚动
+Timeline | 时间轴 | Tooltip | 文字提示
+Upload | 上传 | Video | 播放器
+Waterfall | 瀑布流 | Watermark | 水印
 
 ## Details
 
@@ -135,7 +135,7 @@ Watermark | 水印
 
 ## Functions
 
-Function name | Descriptions | Arguments
+Name | Description | Type
 :-- | :-- | :--
 dateFormat | 格式化日期时间字符串函数 | (timestamp: number &#124; string &#124; Date, format = 'YYYY-MM-DD HH:mm:ss') => string
 formatNumber | 数字格式化函数 | (value: number &#124; string, precision = 2, separator = ',', decimal = '.', prefix = '', suffix = '') => string
