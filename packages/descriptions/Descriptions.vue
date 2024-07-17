@@ -111,7 +111,7 @@ onMounted(() => {
   getChildren()
 })
 // 监听 defaultSlotsRef DOM 变化，重新渲染 Descriptions
-const options = { childList: true, attributes: true, subtree: true }
+const options = { childList: true, attributes: true, subtree: true, characterData: true }
 useMutationObserver(defaultSlotsRef, getChildren, options)
 function getChildren() {
   if (defaultSlotsRef.value.children.length) {
@@ -119,6 +119,7 @@ function getChildren() {
       return element.className === (props.bordered ? 'm-desc-item-bordered' : 'm-desc-item')
     })
   }
+  console.log('children', children.value)
 }
 // 计算当前 group 中所有 span 之和
 function getTotalSpan(group: any): number {
