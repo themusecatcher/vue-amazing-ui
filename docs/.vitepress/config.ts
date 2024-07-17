@@ -243,6 +243,10 @@ export default defineConfig({
               link: '/guide/components/result'
             },
             {
+              text: '滚动条 Scrollbar',
+              link: '/guide/components/scrollbar'
+            },
+            {
               text: '选择器 Select',
               link: '/guide/components/select'
             },

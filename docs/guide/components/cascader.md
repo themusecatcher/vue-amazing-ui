@@ -1123,6 +1123,6 @@ children | 选项 `children` 数组 | [Option](#option-type)[] | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 选择完成后的回调 | (values: (number&#124;string)[], labels: string[]) => void

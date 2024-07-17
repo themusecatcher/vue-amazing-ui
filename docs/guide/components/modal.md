@@ -376,7 +376,7 @@ show | 提示框是否可见 | boolean | false | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 cancel | 点击遮罩层或取消按钮的回调 | () => void
 ok | 点击确定回调 | () => void

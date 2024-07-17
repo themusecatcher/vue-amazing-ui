@@ -28,7 +28,7 @@ import {
 
 ## 常用工具函数
 
-Function name | Descriptions | Arguments
+Name | Description | Type
 --- | :--- | :---
 dateFormat | 格式化日期时间字符串函数 | (timestamp: number &#124; string &#124; Date, format = 'YYYY-MM-DD HH:mm:ss') => string
 formatNumber | 数字格式化函数 | (value: number &#124; string, decimal = 2, split = ',') => string

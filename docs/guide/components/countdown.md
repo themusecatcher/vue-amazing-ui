@@ -188,6 +188,6 @@ finishedText | 完成后的展示文本 | string &#124; slot | 'Finished' | fals
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 finish | 倒计时完成时触发 | () => void

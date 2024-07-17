@@ -191,7 +191,7 @@ top | 消息距离顶部的位置，单位`px` | number &#124; string | 30 | fal
 
 ## Methods
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 info | 基本信息提示 | (content: string) => void
 success | 成功信息提示 | (content: string) => void
@@ -201,6 +201,6 @@ loading | 加载信息提示 | (content: string) => void
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 close | 关闭时触发的回调函数 | () => void

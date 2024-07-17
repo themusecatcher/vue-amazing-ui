@@ -205,7 +205,7 @@ showCancel | 是否显示取消按钮 | boolean | true | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 cancel | 点击取消的回调 | (e: Event) => void
 ok | 点击确认的回调 | (e: Event) => void

@@ -55,7 +55,7 @@ import 'vue-amazing-ui/css'
 </template>
 ```
 
-### Use Functions
+## Use Functions
 
 ```vue
 <script setup lang="ts">

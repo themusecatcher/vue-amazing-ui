@@ -158,7 +158,7 @@ function onClickPoint(e: any) {
   }
   timer.value = rafTimeout(() => {
     transition.value = false
-  }, 300)
+  }, 200)
   // 元素是absolute时，e.layerX是相对于自身元素左上角的水平位置
   const value = Math.round(pixelStepOperation(e.layerX, '/'))
   const targetX = fixedDigit(pixelStepOperation(value, '*'), 2) // 鼠标点击位置距离滑动输入条左端的水平距离
@@ -359,10 +359,10 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     z-index: 99;
     height: 4px;
     width: 100%;
-    background-color: #f5f5f5;
+    background-color: rgba(0, 0, 0, 0.04);
     border-radius: 2px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .u-slider-track {
     // 蓝色已选择滑动条背景色
@@ -372,19 +372,19 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     border-radius: 4px;
     height: 4px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
   }
   .trackTransition {
     transition:
-      left 0.2s,
-      width 0.2s,
-      background 0.3s;
+      left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   &:hover {
     .u-slider-rail {
       // 灰色未选择滑动条背景色
-      background: #e3e3e3;
+      background: rgba(0, 0, 0, 0.1);
     }
     .u-slider-track {
       // 蓝色已选择滑动条背景色
@@ -404,11 +404,11 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     cursor: pointer;
     outline: none;
     transition:
-      width 0.3s,
-      height 0.3s,
-      border-color 0.3s,
-      border-width 0.3s,
-      transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      height 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      border-width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     .m-handle-tooltip {
       position: relative;
       display: inline-block;
@@ -432,8 +432,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       outline: none;
       opacity: 0;
       transition:
-        transform 0.25s cubic-bezier(0.78, 0.14, 0.15, 0.86),
-        opacity 0.25s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       .m-arrow {
         position: absolute;
         z-index: 9;
@@ -495,7 +495,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     }
   }
   .handleTransition {
-    transition: left 0.2s;
+    transition: left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 .disabled {

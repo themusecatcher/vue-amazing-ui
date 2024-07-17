@@ -521,7 +521,7 @@ src | 图片地址 | string | true
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 swiper | `Swiper`初始化后的回调 | (swiper: any) => void
 change | 轮播图片变化时的回调 | (swiper: any) => void

@@ -268,6 +268,6 @@ name | 图像名称 | string | false
 
 ## Methods
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 preview | 预览索引为 `index` 的图片，从 `0` 开始 | (index: number) => void

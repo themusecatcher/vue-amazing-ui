@@ -1054,7 +1054,7 @@ color | 主题颜色 | string | false
 
 ## Methods
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 to | 切换至某一页，从 `1` 开始 | (n: number) => void
 prev | 切换至前一页 | () => void
@@ -1063,7 +1063,7 @@ getCurrentIndex | 获取当前页，从 `1` 开始 | () => number
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 切换时的图片索引，从 `1` 开始 | (index: number) => void
 click | 点击图片时的回调 | (image: [Image](#image-type)) => void

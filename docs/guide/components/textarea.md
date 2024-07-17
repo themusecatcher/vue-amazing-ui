@@ -236,7 +236,7 @@ value <Tag color="cyan">v-model</Tag> | 文本域内容 | string | '' | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 文本域内容变化时的回调 | (e: Event) => void
 enter | 按下回车的回调 | (e: Event) => void

@@ -368,7 +368,7 @@ url | 文件地址 | string | true
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 上传文件改变时的回调 | (files: FileType[]) => void
 remove | 点击移除文件时的回调 | (files: FileType[]) => void

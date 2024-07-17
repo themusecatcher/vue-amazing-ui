@@ -121,6 +121,6 @@ overlayStyle | 卡片样式 | [CSSProperties](https://cn.vuejs.org/api/utility-t
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 openChange | 显示隐藏的回调 | (visible: boolean) => void

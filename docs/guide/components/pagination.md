@@ -150,7 +150,7 @@ placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'cente
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 页码改变后的回调 | (page: number, pageSize: number) => void
 pageSizeChange | `pageSize` 变化的回调 | (page: number, pageSize: number) => void

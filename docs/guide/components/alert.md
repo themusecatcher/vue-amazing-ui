@@ -335,6 +335,6 @@ showIcon | 是否显示辅助图标 | boolean | false | false
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 close | 关闭时触发的回调函数 | (e: MouseEvent) => void

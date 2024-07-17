@@ -262,13 +262,13 @@ transition | 动画过渡效果 | [TransitionFunc](https://vueuse.org/core/useTr
 
 ## Methods
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 play | 播放动画 | () => void
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 started | 动画开始播放 | () => void
 finished | 动画播放完成 | () => void

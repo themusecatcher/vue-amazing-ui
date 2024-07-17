@@ -271,6 +271,6 @@ value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `fa
 
 ## Events
 
-事件名称 | 说明 | 参数
+名称 | 说明 | 类型
 -- | -- | --
 change | 当前取值变化后的回调 | (value: number &#124; number[]) => void
