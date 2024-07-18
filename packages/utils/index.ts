@@ -16,11 +16,11 @@ export function dateFormat(value: number | string | Date = Date.now(), format = 
     } else {
       date = value
     }
-    function padZero(value: number, len: number = 2): string {
+    const padZero = (value: number, len: number = 2): string => {
       // 左侧补零函数
       return String(value).padStart(len, '0')
     }
-    function replacement(match: string) {
+    const replacement = (match: string) => {
       switch (match) {
         case 'YYYY':
           return padZero(date.getFullYear())
@@ -336,7 +336,7 @@ export function useMutationObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: MutationCallback,
   options = {}
-): void {
+): object {
   let observer: MutationObserver | undefined
   const targets = computed(() => {
     const targetValue = toValue(target)
@@ -352,23 +352,29 @@ export function useMutationObserver(
       observer = undefined
     }
   }
+  const observeElements = () => {
+    if (targets.value.length) {
+      observer = new MutationObserver(callback)
+      targets.value.forEach((element: HTMLElement) => observer!.observe(element, options))
+    }
+  }
   // 监听 targets 的变化，当 targets 变化时，重新建立 MutationObserver 观察
   watch(
     () => targets.value,
-    (newTargets) => {
+    () => {
       cleanup()
-      if (newTargets.length) {
-        observer = new MutationObserver(callback)
-        newTargets.forEach((element: HTMLElement) => observer!.observe(element, options))
-      }
+      observeElements()
     },
     {
-      immediate: true, // 立即触发回调，以便初始状态也被观察
-      flush: 'post'
+      immediate: true // 立即触发回调，以便初始状态也被观察
     }
   )
   // 在组件卸载前清理 MutationObserver
   onBeforeUnmount(() => cleanup())
+  return {
+    stop: cleanup,
+    start: observeElements
+  }
 }
 /**
  * 组合式函数

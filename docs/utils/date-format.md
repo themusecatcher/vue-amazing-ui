@@ -21,11 +21,11 @@ export function dateFormat(value: number | string | Date = Date.now(), format = 
     } else {
       date = value
     }
-    function padZero(value: number, len: number = 2): string {
+    const padZero = (value: number, len: number = 2): string => {
       // 左侧补零函数
       return String(value).padStart(len, '0')
     }
-    function replacement(match: string) {
+    const replacement = (match: string) => {
       switch (match) {
         case 'YYYY':
           return padZero(date.getFullYear())
