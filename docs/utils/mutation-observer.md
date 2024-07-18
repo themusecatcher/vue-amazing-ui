@@ -22,7 +22,11 @@
  *  attributes: 是否观察所有监听的节点属性值的变化
  *  attributeFilter: 声明哪些属性名会被监听的数组；如果不声明该属性，所有属性的变化都将触发通知
  */
-export function useMutationObserver(target: Ref | Ref[] | HTMLElement | HTMLElement[], callback: MutationCallback, options = {}): void {
+export function useMutationObserver(
+  target: Ref | Ref[] | HTMLElement | HTMLElement[],
+  callback: MutationCallback,
+  options = {}
+): object {
   let observer: MutationObserver | undefined
   const targets = computed(() => {
     const targetValue = toValue(target)
@@ -38,23 +42,29 @@ export function useMutationObserver(target: Ref | Ref[] | HTMLElement | HTMLElem
       observer = undefined
     }
   }
+  const observeElements = () => {
+    if (targets.value.length) {
+      observer = new MutationObserver(callback)
+      targets.value.forEach((element: HTMLElement) => observer!.observe(element, options))
+    }
+  }
   // 监听 targets 的变化，当 targets 变化时，重新建立 MutationObserver 观察
   watch(
     () => targets.value,
-    (newTargets) => {
+    () => {
       cleanup()
-      if (newTargets.length) {
-        observer = new MutationObserver(callback)
-        newTargets.forEach((element: HTMLElement) => observer!.observe(element, options))
-      }
+      observeElements()
     },
     {
-      immediate: true, // 立即触发回调，以便初始状态也被观察
-      flush: 'post'
+      immediate: true // 立即触发回调，以便初始状态也被观察
     }
   )
   // 在组件卸载前清理 MutationObserver
   onBeforeUnmount(() => cleanup())
+  return {
+    stop: cleanup,
+    start: observeElements
+  }
 }
 ```
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { unref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
+import { useMutationObserver } from '../utils'
 interface Props {
   width?: number // 水印的宽度，默认值为 content 自身的宽度
   height?: number // 水印的高度，默认值为 content 自身的高度
@@ -248,33 +249,6 @@ function reRendering(mutation: MutationRecord, watermarkElement?: HTMLElement) {
     flag = true
   }
   return flag
-}
-function useMutationObserver(target: any, callback: MutationCallback, options: any) {
-  let observer: MutationObserver | undefined
-  const cleanup = () => {
-    if (observer) {
-      observer.disconnect()
-      observer = undefined
-    }
-  }
-  const stopWatch = watch(
-    () => unref(target),
-    (el) => {
-      cleanup()
-      if (window && el) {
-        observer = new MutationObserver(callback)
-        observer!.observe(el, options)
-      }
-    },
-    { immediate: true }
-  )
-  const stop = () => {
-    cleanup()
-    stopWatch()
-  }
-  return {
-    stop
-  }
 }
 onBeforeUnmount(() => {
   destroyWatermark()
