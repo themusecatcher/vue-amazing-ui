@@ -261,7 +261,6 @@ function useMutationObserver(target: any, callback: MutationCallback, options: a
     () => unref(target),
     (el) => {
       cleanup()
-
       if (window && el) {
         observer = new MutationObserver(callback)
         observer!.observe(el, options)
