@@ -14,29 +14,19 @@ withDefaults(defineProps<Props>(), {
 })
 </script>
 <template>
-  <div
-    class="m-desc-item"
-    :data-span="span"
-    :data-label-style="JSON.stringify(labelStyle)"
-    :data-content-style="JSON.stringify(contentStyle)"
-  >
-    <span class="u-label">
+  <div class="m-desc-item" :data-span="span">
+    <span class="u-label" :style="labelStyle">
       <slot name="label">{{ label }}</slot>
     </span>
-    <span class="u-content">
+    <span class="u-content" :style="contentStyle">
       <slot></slot>
     </span>
   </div>
-  <div
-    class="m-desc-item-bordered"
-    :data-span="span"
-    :data-label-style="JSON.stringify(labelStyle)"
-    :data-content-style="JSON.stringify(contentStyle)"
-  >
-    <th class="u-label-th">
+  <div class="m-desc-item-bordered" :data-span="span">
+    <th class="u-label-th" :style="labelStyle">
       <slot name="label">{{ label }}</slot>
     </th>
-    <td class="u-content-td">
+    <td class="u-content-td" :style="contentStyle">
       <slot></slot>
     </td>
   </div>

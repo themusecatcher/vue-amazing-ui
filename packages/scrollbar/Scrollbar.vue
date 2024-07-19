@@ -1,12 +1,3 @@
-<script lang="ts">
-/*
-  一个根节点时，禁用组件根节点自动继承 attribute，必须使用这种写法！然后在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
-  多个根节点时，只需在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
-*/
-export default {
-  inheritAttrs: false
-}
-</script>
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
@@ -23,6 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
   trigger: 'hover',
   horizontal: false
 })
+const scrollbarRef = ref()
 const containerRef = ref()
 const contentRef = ref()
 const railVerticalRef = ref()
@@ -115,7 +107,6 @@ function updateScrollbarState() {
   containerScrollWidth.value = containerRef.value.scrollWidth
   containerClientHeight.value = containerRef.value.clientHeight
   containerClientWidth.value = containerRef.value.clientWidth
-
   containerHeight.value = containerRef.value.offsetHeight
   containerWidth.value = containerRef.value.offsetWidth
   contentHeight.value = contentRef.value.offsetHeight
@@ -129,7 +120,7 @@ function updateState() {
 }
 useEventListener(window, 'resize', updateState)
 const options = { childList: true, attributes: true, subtree: true }
-useMutationObserver(containerRef, updateState, options)
+useMutationObserver(scrollbarRef, updateState, options)
 function onScroll(e: Event) {
   emit('scroll', e)
   updateScrollState()
@@ -224,12 +215,13 @@ defineExpose({
 </script>
 <template>
   <div
+    ref="scrollbarRef"
     class="m-scrollbar"
     :style="`--scrollbar-size: ${size}px;`"
     @mouseenter="isScroll && trigger === 'hover' ? onMouseEnter() : () => false"
     @mouseleave="isScroll && trigger === 'hover' ? onMouseLeave() : () => false"
   >
-    <div ref="containerRef" class="m-scrollbar-container" @scroll="onScroll" v-bind="$attrs">
+    <div ref="containerRef" class="m-scrollbar-container" @scroll="onScroll">
       <div
         ref="contentRef"
         class="m-scrollbar-content"
