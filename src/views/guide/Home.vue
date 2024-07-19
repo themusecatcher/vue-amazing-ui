@@ -18,7 +18,69 @@ type Recordable<T = any> = Record<string, T>
 const dependencies = (modules as Recordable)[url].dependencies
 console.log('dependencies', dependencies)
 
-const collapseData = ref([
+const toolFunctions = [
+  {
+    name: 'dateFormat',
+    description: '格式化日期时间字符串函数'
+  },
+  {
+    name: 'formatNumber',
+    description: '数字格式化函数'
+  },
+  {
+    name: 'rafTimeout',
+    description: '使用 requestAnimationFrame 实现的延迟 setTimeout 或间隔 setInterval 调用函数'
+  },
+  {
+    name: 'cancelRaf',
+    description: '用于取消 rafTimeout 函数'
+  },
+  {
+    name: 'throttle',
+    description: '节流函数'
+  },
+  {
+    name: 'debounce',
+    description: '防抖函数'
+  },
+  {
+    name: 'add',
+    description: '消除 js 加减精度问题的加法函数'
+  },
+  {
+    name: 'downloadFile',
+    description: '下载文件并自定义文件名，未传文件名时，从文件地址中自动提取文件名称'
+  },
+  {
+    name: 'toggleDark',
+    description: '一键切换暗黑模式函数'
+  },
+  {
+    name: 'useEventListener',
+    description: '使用 Vue 的生命周期钩子添加和移除事件监听器'
+  },
+  {
+    name: 'useMutationObserver',
+    description: '使用 MutationObserver 观察 DOM 元素的变化'
+  },
+  {
+    name: 'useScrollDirection',
+    description: '实时监测页面滚动方向'
+  },
+  {
+    name: 'useFps',
+    description: '实时监测浏览器刷新率 FPS'
+  },
+  {
+    name: 'useMediaQuery',
+    description: '使用媒体查询来判断当前环境是否符合指定的媒体查询条件'
+  },
+  {
+    name: 'useResizeObserver',
+    description: '使用 ResizeObserver 观察 DOM 元素大小变化'
+  }
+]
+const collapseData = [
   {
     header: '以上工具函数 API 使用时直接引入即可:',
     text: `<script setup lang="ts">
@@ -35,11 +97,13 @@ import {
   useEventListener,
   useMutationObserver,
   useScrollDirection,
-  useFps
+  useFps,
+  useMediaQuery,
+  useResizeObserver
 } from 'vue-amazing-ui'
 <\/script>`
   }
-])
+]
 const activeKey = ref(0)
 const sum = computed(() => {
   return (routes[0].children as Array<any>).length - 2
@@ -90,7 +154,7 @@ function onOpen() {
       个常用基础
       <Tag color="magenta">UI</Tag>
       组件，以及
-      <Tag color="magenta">12</Tag>
+      <Tag color="magenta">{{ toolFunctions.length }}</Tag>
       个常用工具函数，并且持续探索更新中...！
     </p>
     <p class="u-tip">开箱即用！</p>
@@ -102,57 +166,9 @@ function onOpen() {
     </ul>
     <h2 class="mt30">常用工具函数：</h2>
     <ul class="m-list">
-      <li class="u-tip mb10 mt10">
-        <Tag color="geekblue">dateFormat</Tag>
-        : 格式化日期时间字符串函数
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">formatNumber</Tag>
-        : 数字格式化函数
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">rafTimeout</Tag>
-        : 使用 requestAnimationFrame 实现的延迟 setTimeout 或间隔 setInterval 调用函数
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">cancelRaf</Tag>
-        : 用于取消 rafTimeout 函数
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">throttle</Tag>
-        : 节流函数
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">debounce</Tag>
-        : 防抖函数
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">add</Tag>
-        : 消除js加减精度问题的加法函数
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">downloadFile</Tag>
-        : 下载文件并自定义文件名，未传文件名时，从文件地址中自动提取文件名称
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">toggleDark</Tag>
-        : 一键切换暗黑模式函数
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">useEventListener</Tag>
-        : 使用 Vue 的生命周期钩子添加和移除事件监听器
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">useMutationObserver</Tag>
-        : 使用 MutationObserver 观察 DOM 元素的变化
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">useScrollDirection</Tag>
-        : 实时监测页面滚动方向
-      </li>
-      <li class="u-tip mb10">
-        <Tag color="geekblue">useFps</Tag>
-        : 实时监测浏览器刷新率 FPS
+      <li class="u-tip mb10" :class="{ mt10: index === 0 }" v-for="(func, index) in toolFunctions" :key="index">
+        <Tag color="geekblue">{{ func.name }}</Tag>
+        : {{ func.description }}
       </li>
     </ul>
     <Collapse lang="vue3" :fontSize="16" :collapseData="collapseData" v-model:activeKey="activeKey" copyable />

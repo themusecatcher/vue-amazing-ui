@@ -348,51 +348,59 @@ export default defineConfig({
           items: [
             {
               text: 'dateFormat 日期格式化',
-              link: '/utils/date-format'
+              link: '/utils/functions/date-format'
             },
             {
               text: 'formatNumber 数字格式化',
-              link: '/utils/format-number'
+              link: '/utils/functions/format-number'
             },
             {
               text: 'rafTimeout 定时器',
-              link: '/utils/raf-timeout'
+              link: '/utils/functions/raf-timeout'
             },
             {
               text: 'throttle 节流',
-              link: '/utils/throttle'
+              link: '/utils/functions/throttle'
             },
             {
               text: 'debounce 防抖',
-              link: '/utils/debounce'
+              link: '/utils/functions/debounce'
             },
             {
               text: 'add 加法',
-              link: '/utils/add'
+              link: '/utils/functions/add'
             },
             {
               text: 'downloadFile 下载文件',
-              link: '/utils/download-file'
+              link: '/utils/functions/download-file'
             },
             {
               text: 'toggleDark 切换暗黑',
-              link: '/utils/toggle-dark'
+              link: '/utils/functions/toggle-dark'
             },
             {
               text: 'useEventListener 事件监听',
-              link: '/utils/event-listener'
+              link: '/utils/functions/event-listener'
             },
             {
               text: 'useMutationObserver DOM监听',
-              link: '/utils/mutation-observer'
+              link: '/utils/functions/mutation-observer'
             },
             {
               text: 'useScrollDirection 滚动方向',
-              link: '/utils/scroll-direction'
+              link: '/utils/functions/scroll-direction'
             },
             {
               text: 'useFps 刷新率',
-              link: '/utils/fps'
+              link: '/utils/functions/fps'
+            },
+            {
+               text: 'useMediaQuery 媒体查询',
+              link: '/utils/functions/media-query'
+            },
+            {
+               text: 'useResizeObserver 监听DOM尺寸',
+              link: '/utils/functions/resize-observer'
             }
           ]
         }

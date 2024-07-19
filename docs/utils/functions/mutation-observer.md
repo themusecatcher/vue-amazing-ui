@@ -59,7 +59,8 @@ export function useMutationObserver(
       observeElements()
     },
     {
-      immediate: true // 立即触发回调，以便初始状态也被观察
+      immediate: true, // 立即触发回调，以便初始状态也被观察
+      flush: 'post'
     }
   )
   const stop = () => {

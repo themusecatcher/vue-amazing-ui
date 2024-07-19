@@ -72,7 +72,8 @@ import {
   useEventListener,
   useMutationObserver,
   useScrollDirection,
-  useFps
+  useFps,
+  useMediaQuery
 } from 'vue-amazing-ui'
 </script>
 ```
