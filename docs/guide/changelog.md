@@ -11,3 +11,10 @@
 
 - 新增 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件
 - 新增 [DOM监听 useMutationObserver](https://themusecatcher.github.io/vue-amazing-ui/utils/mutation-observer.html) 工具函数
+
+<style lang="less" scoped>
+.m-tag {
+  vertical-align: top;
+  margin-top: 5px;
+}
+</style>

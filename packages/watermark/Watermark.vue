@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { unref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useMutationObserver } from '../utils'
 interface Props {
