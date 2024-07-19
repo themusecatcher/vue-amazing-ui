@@ -12,7 +12,8 @@ import {
   useEventListener,
   useMutationObserver,
   useScrollDirection,
-  useFps
+  useFps,
+  useMediaQuery
 } from './utils'
 import type { App } from 'vue'
 import Alert from './alert'
@@ -166,7 +167,8 @@ export {
   useEventListener,
   useMutationObserver,
   useScrollDirection,
-  useFps
+  useFps,
+  useMediaQuery
 }
 export {
   Alert,

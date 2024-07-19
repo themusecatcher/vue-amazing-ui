@@ -1,0 +1,62 @@
+# 媒体查询 useMediaQuery<BackTop />
+
+<br/>
+
+*根据 CSS media query 的不同结果动态地更新：是桌面端还是移动端*
+
+::: details Show Source Code
+
+```ts
+/**
+ * 组合式函数
+ * 使用媒体查询来判断当前环境是否符合指定的媒体查询条件
+ * 
+ * 该函数提供了一个响应式的媒体查询机制，根据查询的不同结果动态更新响应式变量
+ * 
+ * @param mediaQuery 媒体查询字符串，用于定义要查询的媒体条件。默认值是'(max-width: 768px)'。
+ * @returns 返回一个对象，其中包含一个名为 match 的响应式属性，表示当前是否为移动设备视口
+ */
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+export function useMediaQuery(mediaQuery = '(max-width: 768px)') {
+  // 检查传入的mediaQuery参数是否为空或非法
+  if (!mediaQuery || typeof mediaQuery !== 'string' || mediaQuery.trim() === '') {
+    throw new Error('Invalid mediaQuery parameter. It must be a non-empty string.')
+  }
+  const match = ref(window && window.matchMedia(mediaQuery).matches)
+  const mediaQueryList = window.matchMedia(mediaQuery)
+  // 处理媒体查询状态改变的事件
+  const updateChange = (e: MediaQueryListEvent) => {
+    match.value = e.matches // 一个布尔值，如果当前 document 与媒体查询列表相匹配，则返回 true，否则返回 false
+  }
+  onMounted(() => {
+    mediaQueryList.addEventListener('change', updateChange)
+  })
+  onBeforeUnmount(() => {
+    mediaQueryList.removeEventListener('change', updateChange)
+  })
+  return { match }
+}
+```
+
+:::
+
+<script setup lang="ts">
+import { useMediaQuery } from 'vue-amazing-ui'
+
+const { match: isMobile } = useMediaQuery()
+</script>
+
+## 基本使用
+
+<h3>{{ isMobile ? '移动端' : '桌面端' }}</h3>
+
+```vue
+<script setup lang="ts">
+import { useMediaQuery } from 'vue-amazing-ui'
+
+const { match: isMobile } = useMediaQuery()
+</script>
+<template>
+  <h3>{{ isMobile ? '移动端' : '桌面端' }}</h3>
+</template>
+```

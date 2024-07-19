@@ -58,5 +58,7 @@ import { useFps } from 'vue-amazing-ui'
 
 const { fps } = useFps()
 </script>
-<h3>帧率：{{ fps }}</h3>
+<template>
+  <h3>帧率：{{ fps }}</h3>
+</template>
 ```
