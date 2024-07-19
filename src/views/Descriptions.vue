@@ -44,22 +44,6 @@ const state = reactive({
     fontWeight: 400
   }
 })
-const data = ref({})
-const info = ref({
-  name: 'eee',
-  age: 1
-})
-setTimeout(() => {
-  data.value = {
-    mobile: '1234324',
-    name: 'curry'
-  }
-  info.value.name = 'safa'
-  info.value.age = 3
-}, 2000)
-function onClickMe() {
-  console.log('click me')
-}
 </script>
 <template>
   <div>
@@ -69,19 +53,13 @@ function onClickMe() {
       <template #extra>
         <a href="#" @click="onClick">more</a>
       </template>
-      <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
-      <DescriptionsItem label="Billing Mode">Prepaid</DescriptionsItem>
-      <DescriptionsItem :label="key" v-for="(val, key) in data" :key="key">{{ val }}</DescriptionsItem>
-    </Descriptions>
-    <Descriptions title="User Info">
-      <template #extra>
-        <a href="#" @click="onClick">more</a>
-      </template>
-      <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
-      <DescriptionsItem label="Billing Mode">Prepaid</DescriptionsItem>
-      <DescriptionsItem label="name">{{ info.name }}</DescriptionsItem>
-      <DescriptionsItem label="age">{{ info.age }}</DescriptionsItem>
-      <DescriptionsItem label="age"><div @click="onClickMe">dianwo</div></DescriptionsItem>
+      <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
+      <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
+      <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
+      <DescriptionsItem label="Remark">empty</DescriptionsItem>
+      <DescriptionsItem label="Address"
+        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</DescriptionsItem
+      >
     </Descriptions>
     <h2 class="mt30 mb10">带边框的</h2>
     <Descriptions title="User Info" bordered>
@@ -396,33 +374,6 @@ function onClickMe() {
           >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</DescriptionsItem
         >
       </Descriptions>
-      <!-- <a-descriptions title="User Info" :bordered="state.bordered" :layout="state.vertical ? 'vertical' : 'horizontal'">
-        <a-descriptions-item label="Product">Cloud Database</a-descriptions-item>
-        <a-descriptions-item label="Billing Mode">Prepaid</a-descriptions-item>
-        <a-descriptions-item label="Automatic Renewal">YES</a-descriptions-item>
-        <a-descriptions-item label="Order time">2018-04-24 18:00:00</a-descriptions-item>
-        <a-descriptions-item label="Usage Time" :span="2">2019-04-24 18:00:00</a-descriptions-item>
-        <a-descriptions-item label="Status" :span="3">
-          <a-badge status="processing" text="Running" />
-        </a-descriptions-item>
-        <a-descriptions-item label="Negotiated Amount">$80.00</a-descriptions-item>
-        <a-descriptions-item label="Discount">$20.00</a-descriptions-item>
-        <a-descriptions-item label="Official Receipts">$60.00</a-descriptions-item>
-        <a-descriptions-item label="Config Info">
-          Data disk type: MongoDB
-          <br />
-          Database version: 3.4
-          <br />
-          Package: dds.mongo.mid
-          <br />
-          Storage space: 10 GB
-          <br />
-          Replication factor: 3
-          <br />
-          Region: East China 1
-          <br />
-        </a-descriptions-item>
-      </a-descriptions> -->
     </Flex>
   </div>
 </template>

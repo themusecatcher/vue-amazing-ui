@@ -2,39 +2,31 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { routes } from '@/router'
-import { toggleDark } from 'packages'
+import { toggleDark, useMutationObserver } from 'packages'
 
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
 
 const showDuty = ref(false)
 const themeDark = ref()
-const observer = ref()
 
 onMounted(() => {
-  // 观察器的配置（需要观察什么变动）
-  const config = { attributes: true, childList: false, subtree: false }
-  // 创建一个观察器实例并传入回调函数
-  observer.value = new MutationObserver(callback)
-  // 以上述配置开始观察目标节点
-  observer.value.observe(document.documentElement, config)
   themeDark.value = document.documentElement.classList.contains('dark')
   if (!themeDark.value) {
     // 默认开启暗黑模式
     toggleDark()
   }
 })
-// 当观察到变动时执行的回调函数
-const callback = function () {
-  themeDark.value = document.documentElement.classList.contains('dark')
-}
+useMutationObserver(
+  document.documentElement,
+  () => {
+    themeDark.value = document.documentElement.classList.contains('dark')
+  },
+  { attributes: true }
+)
 function onThemeChange() {
   toggleDark()
 }
-// function toggleDark () {
-//   // 如果 dark 类值已存在，则移除它，否则添加它
-//   document.documentElement.classList.toggle('dark')
-// }
 const menus = ref(routes[0].children)
 const current = ref([route.name])
 function onClick(e: any): void {
@@ -121,27 +113,25 @@ const routerViewRef = ref()
           </svg>
         </template>
       </Switch>
-      <a-menu
-        class="m-menus"
-        v-model:selectedKeys="current"
-        mode="inline"
-        :theme="themeDark ? 'dark' : 'light'"
-        @click="onClick"
-      >
-        <a-menu-item v-for="menu in menus" :key="menu.name" :title="menu.meta.title">
-          <router-link :to="menu.path">{{ menu.meta.title }} {{ menu.name }}</router-link>
-        </a-menu-item>
-      </a-menu>
+      <Scrollbar style="height: 100vh">
+        <a-menu v-model:selectedKeys="current" mode="inline" :theme="themeDark ? 'dark' : 'light'" @click="onClick">
+          <a-menu-item v-for="menu in menus" :key="menu.name" :title="menu.meta.title">
+            <router-link :to="menu.path">{{ menu.meta.title }} {{ menu.name }}</router-link>
+          </a-menu-item>
+        </a-menu>
+      </Scrollbar>
     </Col>
     <Col :xs="19" :xl="20">
-      <div class="router-view" ref="routerViewRef">
-        <RouterView v-slot="{ Component }">
-          <Transition name="fade" mode="out-in">
-            <component :is="Component" />
-          </Transition>
-        </RouterView>
-        <BackTop v-if="route.name !== 'BackTop'" />
-      </div>
+      <Scrollbar style="height: 100vh">
+        <div class="router-view" ref="routerViewRef">
+          <RouterView v-slot="{ Component }">
+            <Transition name="fade" mode="out-in">
+              <component :is="Component" />
+            </Transition>
+          </RouterView>
+          <BackTop v-if="route.name !== 'BackTop'" />
+        </div>
+      </Scrollbar>
     </Col>
   </Row>
 </template>
@@ -194,14 +184,8 @@ const routerViewRef = ref()
   height: 12px;
   fill: rgba(60, 60, 67, 0.75);
 }
-.m-menus {
-  overflow-y: auto;
-  height: 100vh;
-}
 .router-view {
   padding: 36px;
-  overflow-y: auto;
-  height: 100vh;
 }
 .fade-enter-active,
 .fade-leave-active {
