@@ -150,3 +150,4 @@ useEventListener | 使用 `Vue` 的生命周期钩子添加和移除事件监听
 useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => void
 useScrollDirection | 实时监测页面滚动方向 | (throttleDelay: 100) => object
 useFps | 实时监测浏览器刷新率 `FPS` | () => object
+useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => void

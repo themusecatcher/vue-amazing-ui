@@ -13,7 +13,8 @@ import {
   useMutationObserver,
   useScrollDirection,
   useFps,
-  useMediaQuery
+  useMediaQuery,
+  useResizeObserver
 } from './utils'
 import type { App } from 'vue'
 import Alert from './alert'
@@ -168,7 +169,8 @@ export {
   useMutationObserver,
   useScrollDirection,
   useFps,
-  useMediaQuery
+  useMediaQuery,
+  useResizeObserver
 }
 export {
   Alert,
