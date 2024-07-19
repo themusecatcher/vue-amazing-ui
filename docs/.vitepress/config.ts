@@ -88,6 +88,10 @@ export default defineConfig({
             {
               text: '快速上手',
               link: '/guide/started'
+            },
+            {
+              text: '更新日志',
+              link: '/guide/changelog'
             }
           ]
         },
