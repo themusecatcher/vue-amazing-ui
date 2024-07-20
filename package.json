@@ -38,7 +38,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@vuepic/vue-datepicker": "9.0.0",
+    "@vuepic/vue-datepicker": "9.0.1",
     "@vueuse/core": "^10.11.0",
     "@vueuse/integrations": "^10.11.0",
     "ant-design-vue": "^4.2.3",
@@ -47,14 +47,14 @@
     "naive-ui": "^2.39.0",
     "qrcode": "^1.5.3",
     "swiper": "^11.1.5",
-    "vue": "^3.4.31",
+    "vue": "^3.4.33",
     "vue-amazing-ui": "^1.1.1",
     "vue-router": "^4.4.0"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "@rushstack/eslint-patch": "^1.10.3",
-    "@types/node": "^20.14.10",
+    "@types/node": "^20.14.11",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
@@ -68,8 +68,8 @@
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^5.12.0",
     "typescript": "^5.5.3",
-    "unplugin-vue-components": "^0.27.2",
-    "vite": "^5.3.3",
+    "unplugin-vue-components": "^0.27.3",
+    "vite": "^5.3.4",
     "vitepress": "^1.3.1",
     "vue-tsc": "^2.0.26"
   },
