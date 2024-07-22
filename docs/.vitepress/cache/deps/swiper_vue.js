@@ -10,7 +10,7 @@ import {
   provide,
   ref,
   watch
-} from "./chunk-Q5BS67JP.js";
+} from "./chunk-4OGJ2DNH.js";
 import {
   animateCSSModeScroll,
   createElement,
