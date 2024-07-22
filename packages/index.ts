@@ -43,6 +43,8 @@ import GradientText from './gradienttext'
 import Image from './image'
 import Input from './input'
 import InputNumber from './inputnumber'
+import Layout from './layout'
+import List from './list'
 import Message from './message'
 import Modal from './modal'
 import Notification from './notification'
@@ -72,6 +74,7 @@ import Tag from './tag'
 import Textarea from './textarea'
 import TextScroll from './textscroll'
 import Timeline from './timeline'
+import TimePicker from './timepicker'
 import Tooltip from './tooltip'
 import Upload from './upload'
 import Video from './video'
@@ -106,6 +109,8 @@ const components = [
   Image,
   Input,
   InputNumber,
+  Layout,
+  List,
   Message,
   Modal,
   Notification,
@@ -135,6 +140,7 @@ const components = [
   Textarea,
   TextScroll,
   Timeline,
+  TimePicker,
   Tooltip,
   Upload,
   Video,
@@ -199,6 +205,8 @@ export {
   Image,
   Input,
   InputNumber,
+  Layout,
+  List,
   Message,
   Modal,
   Notification,
@@ -228,6 +236,7 @@ export {
   Textarea,
   TextScroll,
   Timeline,
+  TimePicker,
   Tooltip,
   Upload,
   Video,

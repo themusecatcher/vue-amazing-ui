@@ -9,18 +9,56 @@
 - 对事物进行快速的评级操作
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, reactive } from 'vue'
 
 const value = ref(2.99)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
-function onChange (value: number) {
-  console.log('change value:', value)
+function onChange(value: number) {
+  console.log('change value', value)
 }
-function onHoverChange (value: number) {
-  console.log('hover value:', value)
+function onHoverChange(value: number) {
+  console.log('hover value', value)
 }
+const characterOptions = [
+  {
+    label: 'star-outlined',
+    value: 'star-outlined'
+  },
+  {
+    label: 'star-filled',
+    value: 'star-filled'
+  },
+  {
+    label: 'heart-outlined',
+    value: 'heart-outlined'
+  },
+  {
+    label: 'heart-filled',
+    value: 'heart-filled'
+  },
+  {
+    label: 'custom-character',
+    value: 'custom-character'
+  }
+]
+const state = reactive({
+  allowClear: true,
+  allowHalf: true,
+  count: 5,
+  character: 'star-filled',
+  customCharacter: 'S',
+  size: 36,
+  color: '#fadb14',
+  gap: 8,
+  disabled: false,
+  value: 3
+})
+const score = ref(2.5)
+watchEffect(() => {
+  console.log('score', score.value)
+})
 </script>
 
 ## 基本使用
@@ -297,6 +335,166 @@ watchEffect(() => {
 
 :::
 
+## 评分配置器
+
+<Row :gutter="[24, 12]">
+  <Col :span="6">
+    <Space vertical> allowClear:<Switch v-model:checked="state.allowClear" /> </Space>
+  </Col>
+  <Col :span="6">
+    <Space vertical> allowHalf:<Switch v-model:checked="state.allowHalf" /> </Space>
+  </Col>
+  <Col :span="6">
+    <Flex vertical gap="middle">
+      count:<Slider v-model:value="state.count" :min="3" :max="10" />
+    </Flex>
+  </Col>
+  <Col :span="6">
+    <Flex vertical gap="middle">
+      size:<Slider v-model:value="state.size" :min="10" :max="100" />
+    </Flex>
+  </Col>
+  <Col :span="6">
+    <Flex vertical>
+      color:<Input v-model:value="state.color" placeholder="color" />
+    </Flex>
+  </Col>
+  <Col :span="6">
+    <Flex vertical gap="middle">
+      gap:<Slider v-model:value="state.gap" :min="0" :max="100" />
+    </Flex>
+  </Col>
+  <Col :span="6">
+    <Space vertical> disabled:<Switch v-model:checked="state.disabled" /> </Space>
+  </Col>
+  <Col :span="18">
+    <Space vertical>
+      effect：<Radio :options="characterOptions" v-model:value="state.character" button button-style="solid" />
+    </Space>
+  </Col>
+  <Col :span="6" v-if="state.character === 'custom-character'">
+    <Flex vertical>
+      character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" />
+    </Flex>
+  </Col>
+</Row>
+<Badge :value="score" style="margin-top: 30px;">
+  <Rate
+    :allow-clear="state.allowClear"
+    :allow-half="state.allowHalf"
+    :count="state.count"
+    :character="state.character === 'custom-character' ? state.customCharacter : state.character"
+    :size="state.size"
+    :color="state.color"
+    :gap="state.gap"
+    :disabled="state.disabled"
+    v-model:value="score" />
+</Badge>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect, reactive } from 'vue'
+
+const characterOptions = [
+  {
+    label: 'star-outlined',
+    value: 'star-outlined'
+  },
+  {
+    label: 'star-filled',
+    value: 'star-filled'
+  },
+  {
+    label: 'heart-outlined',
+    value: 'heart-outlined'
+  },
+  {
+    label: 'heart-filled',
+    value: 'heart-filled'
+  },
+  {
+    label: 'custom-character',
+    value: 'custom-character'
+  }
+]
+const state = reactive({
+  allowClear: true,
+  allowHalf: true,
+  count: 5,
+  character: 'star-filled',
+  customCharacter: 'S',
+  size: 36,
+  color: '#fadb14',
+  gap: 8,
+  disabled: false,
+  value: 3
+})
+const score = ref(2.5)
+watchEffect(() => {
+  console.log('score', score.value)
+})
+</script>
+<template>
+  <Row :gutter="[24, 12]">
+    <Col :span="6">
+      <Space vertical> allowClear:<Switch v-model:checked="state.allowClear" /> </Space>
+    </Col>
+    <Col :span="6">
+      <Space vertical> allowHalf:<Switch v-model:checked="state.allowHalf" /> </Space>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="middle">
+        count:<Slider v-model:value="state.count" :min="3" :max="10" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="middle">
+        size:<Slider v-model:value="state.size" :min="10" :max="100" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical>
+        color:<Input v-model:value="state.color" placeholder="color" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex vertical gap="middle">
+        gap:<Slider v-model:value="state.gap" :min="0" :max="100" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Space vertical> disabled:<Switch v-model:checked="state.disabled" /> </Space>
+    </Col>
+    <Col :span="18">
+      <Space vertical>
+        effect：<Radio :options="characterOptions" v-model:value="state.character" button button-style="solid" />
+      </Space>
+    </Col>
+    <Col :span="6" v-if="state.character === 'custom-character'">
+      <Flex vertical>
+        character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" />
+      </Flex>
+    </Col>
+  </Row>
+  <Badge :value="score" style="margin-top: 30px;">
+    <Rate
+      :allow-clear="state.allowClear"
+      :allow-half="state.allowHalf"
+      :count="state.count"
+      :character="state.character === 'custom-character' ? state.customCharacter : state.character"
+      :size="state.size"
+      :color="state.color"
+      :gap="state.gap"
+      :disabled="state.disabled"
+      v-model:value="score" />
+  </Badge>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Rate
@@ -306,8 +504,8 @@ watchEffect(() => {
 allowClear | 是否允许再次点击后清除 | boolean | true | false
 allowHalf | 是否允许半选 | boolean | false | false
 count | `star` 总数 | number | 5 | false
-character | 自定义字符，预置 `'star-outlined'` `'star-filled'` `'heart-outlined'` `'heart-filled'` 四种svg图标 | string &#124; slot | 'star-filled' | false
-size | 字符时是字体高度，图标时是图片大小 | number | 20 | false
+character | 自定义字符，预置 `'star-outlined'` `'star-filled'` `'heart-outlined'` `'heart-filled'` 四种 `svg` 图标 | string &#124; Slot | 'star-filled' | false
+size | 字符时是字体高度，图标时是图片大小，单位 `px` | number | 20 | false
 color | 字符选中颜色 | string | '#fadb14' | false
 gap | 字符间距，单位`px` | number | 8 | false
 disabled | 只读，无法进行交互 | boolean | false | false
