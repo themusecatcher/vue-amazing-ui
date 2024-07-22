@@ -1,7 +1,7 @@
 # 弹性布局 Flex
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
 
 <br/>
 

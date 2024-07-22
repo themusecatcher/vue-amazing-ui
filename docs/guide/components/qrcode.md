@@ -1,7 +1,7 @@
 # 二维码 QRCode
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
 
 ## 何时使用
 
