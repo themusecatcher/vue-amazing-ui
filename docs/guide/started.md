@@ -73,7 +73,8 @@ import {
   useMutationObserver,
   useScrollDirection,
   useFps,
-  useMediaQuery
+  useMediaQuery,
+  useResizeObserver
 } from 'vue-amazing-ui'
 </script>
 ```

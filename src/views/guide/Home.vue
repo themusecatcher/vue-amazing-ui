@@ -77,7 +77,7 @@ const toolFunctions = [
   },
   {
     name: 'useResizeObserver',
-    description: '使用 ResizeObserver 观察 DOM 元素大小变化'
+    description: '使用 ResizeObserver 观察 DOM 元素尺寸变化'
   }
 ]
 const collapseData = [

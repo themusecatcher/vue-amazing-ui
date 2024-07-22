@@ -22,7 +22,8 @@ import {
   useMutationObserver,
   useScrollDirection,
   useFps,
-  useMediaQuery
+  useMediaQuery,
+  useResizeObserver
 } from 'vue-amazing-ui'
 </script>
 ```
@@ -41,7 +42,8 @@ add | 消除js加减精度问题的加法函数 | (num1: number, num2: number) =
 downloadFile | 下载文件并自定义文件名，未传 `name` 时，从文件地址中自动提取文件名称 | (url: string, name: string) => void
 toggleDark | 一键切换暗黑模式函数 | () => void
 useEventListener | 使用Vue的生命周期钩子添加和移除事件监听器 | (target: HTMLElement &#124; Window, event: string, callback: Function) => void
-useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => void
+useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object
 useScrollDirection | 实时监测页面滚动方向 | (throttleDelay: 100) => object
 useFps | 实时监测浏览器刷新率FPS | () => object
 useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery = '(max-width: 768px)') => object
+useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => object

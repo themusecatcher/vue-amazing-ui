@@ -36,7 +36,7 @@ function onScroll(e: Event) {
       </div>
     </Scrollbar>
     <h2 class="mt30 mb10">触发方式</h2>
-    <Scrollbar horizontal style="max-height: 120px" trigger="none">
+    <Scrollbar style="max-height: 130px" trigger="none">
       我们在田野上面找猪<br />
       想象中已找到了三只<br />
       小鸟在白云上面追逐<br />
