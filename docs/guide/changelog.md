@@ -1,7 +1,7 @@
 # 更新日志
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
 
 ## 1.1.2 <Tag color="volcano" size="small">2024-07-22</Tag>
 

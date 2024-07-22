@@ -1,7 +1,7 @@
 # 特性
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
 
 ## 简要介绍
 

@@ -1,7 +1,7 @@
 # 播放器 Video
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
 
 <br/>
 

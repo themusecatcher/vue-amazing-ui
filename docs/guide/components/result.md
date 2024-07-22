@@ -1,7 +1,7 @@
 # 结果 Result
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
 
 <br/>
 
