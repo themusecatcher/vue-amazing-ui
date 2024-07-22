@@ -175,6 +175,18 @@ export const routes = [
         component: () => import('@/views/InputNumber.vue')
       },
       {
+        path: '/layout',
+        name: 'Layout',
+        meta: { title: '布局' },
+        component: () => import('@/views/Layout.vue')
+      },
+      {
+        path: '/list',
+        name: 'List',
+        meta: { title: '列表' },
+        component: () => import('@/views/List.vue')
+      },
+      {
         path: '/message',
         name: 'Message',
         meta: { title: '全局提示' },
@@ -341,6 +353,12 @@ export const routes = [
         name: 'Timeline',
         meta: { title: '时间轴' },
         component: () => import('@/views/Timeline.vue')
+      },
+      {
+        path: '/timepicker',
+        name: 'TimePicker',
+        meta: { title: '时间选择框' },
+        component: () => import('@/views/TimePicker.vue')
       },
       {
         path: '/tooltip',

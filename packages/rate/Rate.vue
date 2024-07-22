@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import type { Slot } from 'vue'
 interface Props {
   allowClear?: boolean // 是否允许再次点击后清除
   allowHalf?: boolean // 是否允许半选
   count?: number // star 总数
-  character?: string // 自定义字符，string | slot，预置 'star-outlined' 'star-filled' 'heart-outlined' 'heart-filled' 四种svg图标
-  size?: number // 字符时是字体高度，图标时是图片大小
+  character?: string | Slot // 自定义字符，预置 'star-outlined' 'star-filled' 'heart-outlined' 'heart-filled' 四种 svg 图标
+  size?: number // 字符时是字体高度，图标时是图片大小，单位 px
   color?: string // 字符选中颜色
   gap?: number // 字符间距，单位px
   disabled?: boolean // 只读，无法进行交互
@@ -64,7 +65,12 @@ function onLeave() {
 }
 </script>
 <template>
-  <div class="m-rate" :class="{ disabled: disabled }" :style="`--color: ${color};`" @mouseleave="onLeave">
+  <div
+    class="m-rate"
+    :class="{ disabled: disabled }"
+    :style="`--star-color: ${color}; --star-gap: ${gap}px;`"
+    @mouseleave="onLeave"
+  >
     <div
       class="m-star"
       :class="{
@@ -72,7 +78,6 @@ function onLeave() {
         'u-star-full': activeValue >= n,
         'temp-gray': !allowHalf && tempValue === n
       }"
-      :style="`margin-right: ${n !== count ? gap : 0}px;`"
       @click="allowHalf ? () => false : onClick(n)"
       v-for="n in count"
       :key="n"
@@ -137,7 +142,11 @@ function onLeave() {
             d="M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9zM512 814.8S156 586.7 156 385.5C156 283.6 240.3 201 344.3 201c73.1 0 136.5 40.8 167.7 100.4C543.2 241.8 606.6 201 679.7 201c104 0 188.3 82.6 188.3 184.5 0 201.2-356 429.3-356 429.3z"
           ></path>
         </svg>
-        <span v-else class="u-star" :style="`font-size: ${0.66 * size}px; height: ${size}px;`">
+        <span
+          v-else
+          class="u-star"
+          :style="`font-size: ${(size * 2) / 3}px; height: ${size}px; line-height: ${size}px;`"
+        >
           <slot name="character">{{ character }}</slot>
         </span>
       </div>
@@ -209,7 +218,8 @@ function onLeave() {
 </template>
 <style lang="less" scoped>
 .m-rate {
-  display: inline-block;
+  display: inline-flex;
+  gap: var(--star-gap);
   .m-star {
     position: relative;
     display: inline-block;
@@ -238,8 +248,8 @@ function onLeave() {
       &:hover {
         opacity: 1;
         .u-star {
-          fill: var(--color);
-          color: var(--color);
+          fill: var(--star-color);
+          color: var(--star-color);
         }
       }
     }
@@ -247,8 +257,8 @@ function onLeave() {
       display: inline-block;
       &:hover {
         .u-star {
-          fill: var(--color);
-          color: var(--color);
+          fill: var(--star-color);
+          color: var(--star-color);
         }
       }
     }
@@ -274,16 +284,16 @@ function onLeave() {
     .u-star-first {
       opacity: 1;
       .u-star {
-        fill: var(--color);
-        color: var(--color);
+        fill: var(--star-color);
+        color: var(--star-color);
       }
     }
   }
   .u-star-full {
     .u-star-second {
       .u-star {
-        fill: var(--color);
-        color: var(--color);
+        fill: var(--star-color);
+        color: var(--star-color);
       }
     }
   }
