@@ -23,6 +23,8 @@
  *  attributes: 是否观察所有监听的节点属性值的变化
  *  attributeFilter: 声明哪些属性名会被监听的数组；如果不声明该属性，所有属性的变化都将触发通知
  */
+import { ref, toValue, computed, watch, onBeforeUnmount } from 'vue'
+import type { Ref } from 'vue'
 export function useMutationObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: MutationCallback,
@@ -111,4 +113,4 @@ useMutationObserver(defaultSlotsRef, callback, options)
 -- | -- | -- | -- | --
 target | 要观察的 `DOM` 元素或元素数组，可以是 `ref` 引用，也可以是 `DOM` 元素本身 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | - | true
 callback | 当观察到变化时调用的回调函数 | MutationCallback | - | true
-options | 观察选项，默认为空对象，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver/observe#attributes) | object | {} | true
+options | 观察选项，默认为空对象，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver/observe#attributes) | object | {} | false
