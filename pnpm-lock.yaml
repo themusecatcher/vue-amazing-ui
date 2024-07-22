@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@vuepic/vue-datepicker':
-        specifier: 9.0.1
+        specifier: ^9.0.1
         version: 9.0.1(vue@3.4.33(typescript@5.5.3))
       '@vueuse/core':
         specifier: ^10.11.0
