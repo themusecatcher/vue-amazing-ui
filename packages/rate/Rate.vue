@@ -74,8 +74,8 @@ function onLeave() {
     <div
       class="m-star"
       :class="{
-        'u-star-half': allowHalf && activeValue >= n - 0.5 && activeValue < n,
-        'u-star-full': activeValue >= n,
+        'star-half': allowHalf && activeValue >= n - 0.5 && activeValue < n,
+        'star-full': activeValue >= n,
         'temp-gray': !allowHalf && tempValue === n
       }"
       @click="allowHalf ? () => false : onClick(n)"
@@ -84,7 +84,7 @@ function onLeave() {
     >
       <div
         v-if="allowHalf"
-        class="u-star-first"
+        class="star-first"
         :class="{ 'temp-gray-first': tempValue === n - 0.5 }"
         @click.stop="onClick(n - 0.5)"
         @mouseenter="onFirstEnter(n - 0.5)"
@@ -151,7 +151,7 @@ function onLeave() {
         </span>
       </div>
       <div
-        class="u-star-second"
+        class="star-second"
         :class="{ 'temp-gray-second': tempValue === n }"
         @click.stop="onClick(n)"
         @mouseenter="onSecondEnter(n)"
@@ -237,7 +237,7 @@ function onLeave() {
       color: rgba(0, 0, 0, 0.06);
       transition: all 0.3s;
     }
-    .u-star-first {
+    .star-first {
       position: absolute;
       top: 0;
       width: 50%;
@@ -253,7 +253,7 @@ function onLeave() {
         }
       }
     }
-    .u-star-second {
+    .star-second {
       display: inline-block;
       &:hover {
         .u-star {
@@ -280,8 +280,8 @@ function onLeave() {
       }
     }
   }
-  .u-star-half {
-    .u-star-first {
+  .star-half {
+    .star-first {
       opacity: 1;
       .u-star {
         fill: var(--star-color);
@@ -289,8 +289,8 @@ function onLeave() {
       }
     }
   }
-  .u-star-full {
-    .u-star-second {
+  .star-full {
+    .star-second {
       .u-star {
         fill: var(--star-color);
         color: var(--star-color);
