@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Tooltip from '../tooltip'
-import { ref, computed, watchEffect, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 interface Props {
   maxWidth?: number | string // 文本最大宽度
@@ -25,8 +25,9 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipBackgroundColor: 'rgba(0, 0, 0, 0.85)',
   tooltipOverlayStyle: () => ({ padding: '8px 12px', textAlign: 'justify' })
 })
-const showTooltip = ref()
-const ellipsis = ref()
+const showTooltip = ref(false) // 是否显示提示框
+const showExpand = ref(false) // 是否可以启用点击展开
+const ellipsisRef = ref()
 const defaultTooltipMaxWidth = ref()
 const textMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
@@ -34,38 +35,62 @@ const textMaxWidth = computed(() => {
   }
   return props.maxWidth
 })
-watchEffect(() => {
-  showTooltip.value = props.tooltip
-})
-watchEffect(
+watch(
+  () => [props.maxWidth, props.line, props.tooltip],
   () => {
     if (props.tooltip) {
-      if (props.tooltipMaxWidth) {
-        defaultTooltipMaxWidth.value = props.tooltipMaxWidth
-      } else {
-        defaultTooltipMaxWidth.value = ellipsis.value.offsetWidth + 24
-      }
+      showTooltip.value = getTooltipShow()
     }
   },
-  { flush: 'post' }
+  {
+    deep: true,
+    flush: 'post'
+  }
 )
+onMounted(() => {
+  if (props.tooltip) {
+    showTooltip.value = getTooltipShow()
+  }
+})
+function getTooltipShow() {
+  const scrollWidth = ellipsisRef.value.scrollWidth
+  const scrollHeight = ellipsisRef.value.scrollHeight
+  const clientWidth = ellipsisRef.value.clientWidth
+  const clientHeight = ellipsisRef.value.clientHeight
+  if (scrollWidth > clientWidth || scrollHeight > clientHeight) {
+    if (props.tooltipMaxWidth) {
+      defaultTooltipMaxWidth.value = props.tooltipMaxWidth
+    } else {
+      defaultTooltipMaxWidth.value = ellipsisRef.value.offsetWidth + 24
+    }
+    if (props.expand) {
+      showExpand.value = true
+    }
+    return true
+  } else {
+    if (props.expand) {
+      showExpand.value = false
+    }
+    return false
+  }
+}
 const emit = defineEmits(['expandChange'])
 function onExpand() {
-  if (ellipsis.value.style['-webkit-line-clamp']) {
+  if (ellipsisRef.value.style['-webkit-line-clamp']) {
     if (props.tooltip) {
       showTooltip.value = false
       nextTick(() => {
-        ellipsis.value.style['-webkit-line-clamp'] = ''
+        ellipsisRef.value.style['-webkit-line-clamp'] = ''
       })
     } else {
-      ellipsis.value.style['-webkit-line-clamp'] = ''
+      ellipsisRef.value.style['-webkit-line-clamp'] = ''
     }
     emit('expandChange', true)
   } else {
     if (props.tooltip) {
       showTooltip.value = true
     }
-    ellipsis.value.style['-webkit-line-clamp'] = props.line
+    ellipsisRef.value.style['-webkit-line-clamp'] = props.line
     emit('expandChange', false)
   }
 }
@@ -85,11 +110,11 @@ function onExpand() {
       </slot>
     </template>
     <div
-      ref="ellipsis"
+      ref="ellipsisRef"
       class="m-ellipsis"
-      :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'cursor-pointer': expand }]"
+      :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'cursor-pointer': showExpand }]"
       :style="`-webkit-line-clamp: ${line}; max-width: ${textMaxWidth};`"
-      @click="expand ? onExpand() : () => false"
+      @click="showExpand ? onExpand() : () => false"
       v-bind="$attrs"
     >
       <slot></slot>
@@ -97,11 +122,11 @@ function onExpand() {
   </Tooltip>
   <div
     v-else
-    ref="ellipsis"
+    ref="ellipsisRef"
     class="m-ellipsis"
-    :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'cursor-pointer': expand }]"
+    :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'cursor-pointer': showExpand }]"
     :style="`-webkit-line-clamp: ${line}; max-width: ${textMaxWidth};`"
-    @click="expand ? onExpand() : () => false"
+    @click="showExpand ? onExpand() : () => false"
     v-bind="$attrs"
   >
     <slot></slot>

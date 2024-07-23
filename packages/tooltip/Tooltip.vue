@@ -36,7 +36,7 @@ function getPosition() {
 }
 function onShow() {
   getPosition()
-  cancelRaf(hideTimer.value)
+  hideTimer.value && cancelRaf(hideTimer.value)
   visible.value = true
   emit('openChange', visible.value)
 }
@@ -64,9 +64,9 @@ function onHide(): void {
         <span class="u-tooltip-arrow"></span>
       </div>
     </div>
-    <div ref="contentRef">
+    <span ref="contentRef">
       <slot>{{ content }}</slot>
-    </div>
+    </span>
   </div>
 </template>
 <style lang="less" scoped>
@@ -105,7 +105,7 @@ function onHide(): void {
       position: absolute;
       z-index: 9;
       left: 50%;
-      bottom: 12.5px;
+      bottom: 12px;
       transform: translateX(-50%) translateY(100%) rotate(180deg);
       display: block;
       pointer-events: none;
