@@ -121,7 +121,7 @@ const show = ref(false)
 
 ## 全屏幕水印
 
-<Watermark v-if="show" fullscreen content="Vue Amazing UI"></Watermark>
+<Watermark v-if="show" fullscreen content="Vue Amazing UI" :z-index="30"></Watermark>
 <Switch v-model:checked="show" />
 
 ::: details Show Code

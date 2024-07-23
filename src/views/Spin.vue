@@ -96,44 +96,34 @@ const spinning = ref(true)
     <h2 class="mt30 mb10">各种大小</h2>
     <Space vertical>
       <Space>
-        <Spin class="u-spin" :spinning="spinning" size="small" />
-        <Spin class="u-spin" :spinning="spinning" size="default" />
-        <Spin class="u-spin" :spinning="spinning" size="large" />
+        <Spin class="u-size-spin" :spinning="spinning" size="small" />
+        <Spin class="u-size-spin" :spinning="spinning" size="default" />
+        <Spin class="u-size-spin" :spinning="spinning" size="large" />
+        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="spin-dot" />
+        <Spin class="u-size-spin" :spinning="spinning" size="default" indicator="spin-dot" />
+        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="spin-dot" />
+        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="spin-line" />
+        <Spin class="u-size-spin" :spinning="spinning" size="default" indicator="spin-line" />
+        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="spin-line" />
       </Space>
       <Space>
-        <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-dot" />
-        <Spin class="u-spin" :spinning="spinning" size="default" indicator="spin-dot" />
-        <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-dot" />
+        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="quarter-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="default" indicator="quarter-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="quarter-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="half-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="default" indicator="half-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="half-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="three-quarters-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="default" indicator="three-quarters-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="three-quarters-circle" />
       </Space>
       <Space>
-        <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-line" />
-        <Spin class="u-spin" :spinning="spinning" size="default" indicator="spin-line" />
-        <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-line" />
-      </Space>
-      <Space>
-        <Spin class="u-spin" :spinning="spinning" size="small" indicator="quarter-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="default" indicator="quarter-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="large" indicator="quarter-circle" />
-      </Space>
-      <Space>
-        <Spin class="u-spin" :spinning="spinning" size="small" indicator="half-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="default" indicator="half-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="large" indicator="half-circle" />
-      </Space>
-      <Space>
-        <Spin class="u-spin" :spinning="spinning" size="small" indicator="three-quarters-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="default" indicator="three-quarters-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="large" indicator="three-quarters-circle" />
-      </Space>
-      <Space>
-        <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="default" indicator="dynamic-circle" />
-        <Spin class="u-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
-      </Space>
-      <Space>
-        <Spin class="u-spin" :spinning="spinning" size="small" indicator="magic-ring" />
-        <Spin class="u-spin" :spinning="spinning" size="default" indicator="magic-ring" />
-        <Spin class="u-spin" :spinning="spinning" size="large" indicator="magic-ring" />
+        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="default" indicator="dynamic-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="magic-ring" />
+        <Spin class="u-size-spin" :spinning="spinning" size="default" indicator="magic-ring" />
+        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="magic-ring" />
       </Space>
     </Space>
   </div>
@@ -148,5 +138,9 @@ const spinning = ref(true)
 .u-spin {
   width: 100px;
   height: 100px;
+}
+.u-size-spin {
+  width: 80px;
+  height: 80px;
 }
 </style>

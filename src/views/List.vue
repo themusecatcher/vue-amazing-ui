@@ -1,25 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const message = ref()
-
-function onInfo(content: string) {
-  message.value.info(content) // info调用
-}
-function onSuccess(content: string) {
-  message.value.success(content) // success调用
-}
-function onError(content: string) {
-  message.value.error(content) // error调用
-}
-function onWarning(content: string) {
-  message.value.warning(content) // warning调用
-}
-function onLoading(content: string) {
-  message.value.loading(content) // loading调用
-}
-function onClose() {
-  console.log('close')
-}
 </script>
 <template>
   <div>

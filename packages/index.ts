@@ -59,6 +59,7 @@ import Rate from './rate'
 import Result from './result'
 import Row from './row'
 import Scrollbar from './scrollbar'
+import Segmented from './segmented'
 import Select from './select'
 import Skeleton from './skeleton'
 import Slider from './slider'
@@ -125,6 +126,7 @@ const components = [
   Result,
   Row,
   Scrollbar,
+  Segmented,
   Select,
   Skeleton,
   Slider,
@@ -221,6 +223,7 @@ export {
   Result,
   Row,
   Scrollbar,
+  Segmented,
   Select,
   Skeleton,
   Slider,
