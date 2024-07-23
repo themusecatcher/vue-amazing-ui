@@ -7,9 +7,10 @@
 
 - 新增 [列表 List](https://themusecatcher.github.io/vue-amazing-ui/guide/components/list.html) 组件
 
-## 1.1.3 <Tag color="volcano" size="small">2024-07-23</Tag>
+## 1.2.0 <Tag color="volcano" size="small">2024-07-23</Tag>
 
-- 优化 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增相关属性
+- 优化 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，并新增相关功能
+- 优化 [评分 Rate](https://themusecatcher.github.io/vue-amazing-ui/guide/components/rate.html) 组件
 - 修复并优化 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件
 
 ## 1.1.2 <Tag color="volcano" size="small">2024-07-22</Tag>
