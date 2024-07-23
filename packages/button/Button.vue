@@ -1,30 +1,44 @@
+<script lang="ts">
+/*
+  一个根节点时，禁用组件根节点自动继承 attribute，必须使用这种写法！然后在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
+  多个根节点时，只需在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
+*/
+export default {
+  inheritAttrs: false
+}
+</script>
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
 import type { Slot } from 'vue'
 interface Props {
-  name?: string | Slot // 按钮文本 string | slot
+  name?: string | Slot // 按钮文本
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 按钮类型
   size?: 'small' | 'middle' | 'large' // 按钮尺寸
-  ghost?: boolean // 按钮背景是否透明
+  ghost?: boolean // 按钮背景是否透明，仅当 type: 'primary' | 'danger' 时生效
+  rippleColor?: string // 点击时的波纹颜色，一般不需要设置，默认会根据 type 自动匹配，主要用于自定义样式时且 type: 'default'
   href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
-  target?: '_self' | '_blank' // 相当于 a 链接的 target 属性，href 存在时生效
+  target?: '_self' | '_blank' // 如何打开目标链接，相当于 a 链接的 target 属性，href 存在时生效
   disabled?: boolean // 是否禁用
   loading?: boolean // 是否加载中
   loadingType?: 'static' | 'dynamic' // 加载指示符类型
+  loadingColor?: string // 加载指示符颜色，一般不需要设置，默认会根据 type 自动匹配，主要用于自定义样式时且 type: 'default'
   center?: boolean // 是否将按钮宽度调整为其父宽度并居中展示
 }
 withDefaults(defineProps<Props>(), {
   name: '按钮',
   type: 'default',
   size: 'middle',
-  href: '',
+  ghost: false,
+  rippleColor: undefined,
+  href: undefined,
   target: '_self',
   disabled: false,
   loading: false,
-  loadingType: 'static',
+  loadingType: 'dynamic',
+  loadingColor: 'rgba(0, 0, 0, 0.88)',
   center: false
 })
-const rippleColor = {
+const presetRippleColors = {
   default: '#1677ff',
   reverse: '#1677ff',
   primary: '#1677ff',
@@ -57,7 +71,7 @@ function onWaveEnd() {
   <div
     tabindex="0"
     :class="['m-btn-wrap', { 'btn-center': center }]"
-    :style="`--ripple-color: ${rippleColor[type]}`"
+    :style="`--ripple-color: ${rippleColor || presetRippleColors[type]}; --loading-color: ${loadingColor};`"
     @keydown.enter.prevent="onKeyboard"
   >
     <a
@@ -72,9 +86,10 @@ function onWaveEnd() {
         }
       ]"
       :disabled="disabled"
-      :href="href ? href : 'javascript:;'"
+      :href="href ? href : 'javascript:void(0);'"
       :target="href ? target : '_self'"
       @click="onClick"
+      v-bind="$attrs"
     >
       <div v-if="!href && loadingType === 'static'" class="m-static-circle">
         <span class="u-spin-circle"></span>
@@ -106,6 +121,7 @@ function onWaveEnd() {
     position: relative;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     font-weight: 400;
     line-height: 1.5714285714285714;
     color: rgba(0, 0, 0, 0.88);
@@ -151,6 +167,8 @@ function onWaveEnd() {
         width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
         opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       .circular {
+        width: 14px;
+        height: 14px;
         animation: loading-rotate 2s linear infinite;
         -webkit-animation: loading-rotate 2s linear infinite;
         @keyframes loading-rotate {
@@ -185,7 +203,6 @@ function onWaveEnd() {
     .u-text {
       display: inline-flex;
       align-items: center;
-      height: 100%;
     }
     .m-button-wave {
       position: absolute;
@@ -233,10 +250,6 @@ function onWaveEnd() {
     .m-dynamic-circle {
       width: 22px;
       opacity: 1;
-      .circular {
-        width: 14px;
-        height: 14px;
-      }
     }
   }
   .loading-large {
@@ -272,8 +285,11 @@ function onWaveEnd() {
       color: #0958d9;
       border-color: #0958d9;
     }
+    .m-static-circle .u-spin-circle {
+      border-top-color: var(--loading-color);
+    }
     .m-dynamic-circle .circular .path {
-      stroke: rgba(0, 0, 0, 0.88);
+      stroke: var(--loading-color);
     }
   }
   .btn-reverse {
