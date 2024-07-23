@@ -1,5 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+const customLoading = ref(false)
+const loadingOptions = [
+  {
+    label: 'static',
+    value: 'static'
+  },
+  {
+    label: 'dynamic',
+    value: 'dynamic'
+  }
+]
+const loadingType = ref('dynamic')
 const loading = ref(true)
 const sizeOptions = [
   {
@@ -72,13 +84,36 @@ function onClick(e: Event) {
         <Button :size="size" type="primary" ghost>Primary Button</Button>
         <Button :size="size" type="danger" ghost>Danger Button</Button>
         <Button :size="size" type="primary" ghost loading>Primary Ghost Button</Button>
-        <Button :size="size" type="danger" ghost loading loading-type="dynamic">Danger Ghost Button</Button>
+        <Button :size="size" type="danger" ghost loading>Danger Ghost Button</Button>
       </Space>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Button style="width: 140px; height: 40px; background:" size="large">
-      <p style="font-size: 18px">自定义样式</p>
-    </Button>
+    <Space vertical>
+      <Space align="center"> Loading state:<Switch v-model:checked="customLoading" /> </Space>
+      <Space align="center"> Loading Type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
+      <Space>
+        <Button
+          style="width: 150px; height: 40px; border-color: #faad14; color: #faad14"
+          ripple-color="#faad14"
+          loading-color="#faad14"
+          size="large"
+          :loading-type="loadingType"
+          :loading="customLoading"
+        >
+          <p style="font-size: 18px">自定义样式</p>
+        </Button>
+        <Button
+          style="width: 150px; height: 40px; font-size: 18px; background: #faad14; border-color: #faad14; color: #fff"
+          ripple-color="#faad14"
+          loading-color="#fff"
+          size="large"
+          :loading-type="loadingType"
+          :loading="customLoading"
+        >
+          自定义样式
+        </Button>
+      </Space>
+    </Space>
     <h2 class="mt30 mb10">自定义跳转</h2>
     <Button href="https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html" target="_blank"
       >跳转按钮</Button
@@ -102,19 +137,19 @@ function onClick(e: Event) {
         <Button type="danger" ghost :loading="loading">Danger Button</Button>
       </Space>
       <Space>
-        <Button :loading="loading" loading-type="dynamic">Default Button</Button>
-        <Button type="reverse" :loading="loading" loading-type="dynamic">Reverse Button</Button>
-        <Button type="primary" :loading="loading" loading-type="dynamic">Primary Button</Button>
-        <Button type="danger" :loading="loading" loading-type="dynamic">Danger Button</Button>
+        <Button :loading="loading" loading-type="static">Default Button</Button>
+        <Button type="reverse" :loading="loading" loading-type="static">Reverse Button</Button>
+        <Button type="primary" :loading="loading" loading-type="static">Primary Button</Button>
+        <Button type="danger" :loading="loading" loading-type="static">Danger Button</Button>
       </Space>
       <Space>
-        <Button type="dashed" :loading="loading" loading-type="dynamic">Dashed Button</Button>
-        <Button type="text" :loading="loading" loading-type="dynamic">Text Button</Button>
-        <Button type="link" :loading="loading" loading-type="dynamic">Link Button</Button>
+        <Button type="dashed" :loading="loading" loading-type="static">Dashed Button</Button>
+        <Button type="text" :loading="loading" loading-type="static">Text Button</Button>
+        <Button type="link" :loading="loading" loading-type="static">Link Button</Button>
       </Space>
       <Space>
-        <Button type="primary" ghost :loading="loading" loading-type="dynamic">Primary Button</Button>
-        <Button type="danger" ghost :loading="loading" loading-type="dynamic">Danger Button</Button>
+        <Button type="primary" ghost :loading="loading" loading-type="static">Primary Button</Button>
+        <Button type="danger" ghost :loading="loading" loading-type="static">Danger Button</Button>
       </Space>
     </Space>
     <h2 class="mt30 mb10">居中展示</h2>
