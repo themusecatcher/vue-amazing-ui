@@ -3,6 +3,8 @@
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "packages/**/*.ts", "packages/**/*.vue"],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
+    "removeComments": true,
+    "isolatedModules": true,
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
 

@@ -5,10 +5,12 @@ interface Props {
   name?: string | Slot // 按钮文本 string | slot
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 按钮类型
   size?: 'small' | 'middle' | 'large' // 按钮尺寸
+  ghost?: boolean // 按钮背景是否透明
   href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
   target?: '_self' | '_blank' // 相当于 a 链接的 target 属性，href 存在时生效
   disabled?: boolean // 是否禁用
   loading?: boolean // 是否加载中
+  loadingType?: 'static' | 'dynamic' // 加载指示符类型
   center?: boolean // 是否将按钮宽度调整为其父宽度并居中展示
 }
 withDefaults(defineProps<Props>(), {
@@ -19,6 +21,7 @@ withDefaults(defineProps<Props>(), {
   target: '_self',
   disabled: false,
   loading: false,
+  loadingType: 'static',
   center: false
 })
 const rippleColor = {
@@ -59,15 +62,28 @@ function onWaveEnd() {
   >
     <a
       class="m-btn"
-      :class="[`btn-${type} btn-${size}`, { 'btn-disabled': disabled, 'btn-loading': !href && loading }]"
+      :class="[
+        `btn-${type} btn-${size}`,
+        {
+          'btn-ghost': ghost,
+          [`loading-${size}`]: !href && loading,
+          'btn-loading': !href && loading,
+          'btn-disabled': disabled
+        }
+      ]"
       :disabled="disabled"
       :href="href ? href : 'javascript:;'"
       :target="href ? target : '_self'"
       @click="onClick"
     >
-      <span v-show="!href" :class="[`m-loading-icon`, { [`loading-${size}`]: loading }]">
-        <span class="u-spin-circle" :class="`spin-${size}`"></span>
-      </span>
+      <div v-if="!href && loadingType === 'static'" class="m-static-circle">
+        <span class="u-spin-circle"></span>
+      </div>
+      <div v-if="!href && loadingType === 'dynamic'" class="m-dynamic-circle">
+        <svg class="circular" viewBox="0 0 50 50" fill="currentColor">
+          <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
+        </svg>
+      </div>
       <span class="u-text">
         <slot>{{ name }}</slot>
       </span>
@@ -96,18 +112,18 @@ function onWaveEnd() {
     white-space: nowrap;
     text-align: center;
     background-color: transparent;
-    border: 1px solid transparent;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
     user-select: none;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-    .m-loading-icon {
+    .m-static-circle {
       display: inline-flex;
-      align-items: center;
-      text-align: left;
+      justify-content: start;
       opacity: 0;
       width: 0;
-      height: 100%;
       transition:
         width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
         opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -116,33 +132,55 @@ function onWaveEnd() {
         border-width: 1px;
         border-style: solid;
         border-color: transparent;
-        border-top-color: inherit; // 显示1/4圆
-        animation: loadingCircle 1s infinite linear;
-        -webkit-animation: loadingCircle 1s infinite linear;
+        border-top-color: inherit;
+        animation: loading-circle 1s linear infinite;
+        -webkit-animation: loading-circle 1s linear infinite;
       }
-      .spin-small,
-      .spin-middle {
-        width: 14px;
-        height: 14px;
-      }
-      .spin-large {
-        width: 16px;
-        height: 16px;
-      }
-      @keyframes loadingCircle {
+      @keyframes loading-circle {
         100% {
           transform: rotate(360deg);
         }
       }
     }
-    .loading-small,
-    .loading-middle {
-      width: 22px;
-      opacity: 1;
-    }
-    .loading-large {
-      width: 24px;
-      opacity: 1;
+    .m-dynamic-circle {
+      display: inline-flex;
+      justify-content: start;
+      opacity: 0;
+      width: 0;
+      transition:
+        width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+        opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      .circular {
+        animation: loading-rotate 2s linear infinite;
+        -webkit-animation: loading-rotate 2s linear infinite;
+        @keyframes loading-rotate {
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        .path {
+          stroke-dasharray: 90, 150;
+          stroke-dashoffset: 0;
+          stroke-width: 5;
+          stroke-linecap: round;
+          animation: loading-dash 1.5s ease-in-out infinite;
+          -webkit-animation: loading-dash 1.5s ease-in-out infinite;
+          @keyframes loading-dash {
+            0% {
+              stroke-dasharray: 1, 200;
+              stroke-dashoffset: 0;
+            }
+            50% {
+              stroke-dasharray: 90, 150;
+              stroke-dashoffset: -40px;
+            }
+            100% {
+              stroke-dasharray: 90, 150;
+              stroke-dashoffset: -120px;
+            }
+          }
+        }
+      }
     }
     .u-text {
       display: inline-flex;
@@ -169,7 +207,7 @@ function onWaveEnd() {
           box-shadow: 0 0 0.5px 0 var(--ripple-color);
         }
         to {
-          box-shadow: 0 0 0.5px 4.5px var(--ripple-color);
+          box-shadow: 0 0 0.5px 5.5px var(--ripple-color);
         }
       }
       @keyframes button-wave-opacity {
@@ -182,6 +220,43 @@ function onWaveEnd() {
       }
     }
   }
+  .loading-small,
+  .loading-middle {
+    .m-static-circle {
+      width: 22px;
+      opacity: 1;
+      .u-spin-circle {
+        width: 14px;
+        height: 14px;
+      }
+    }
+    .m-dynamic-circle {
+      width: 22px;
+      opacity: 1;
+      .circular {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+  .loading-large {
+    .m-static-circle {
+      width: 24px;
+      opacity: 1;
+      .u-spin-circle {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    .m-dynamic-circle {
+      width: 24px;
+      opacity: 1;
+      .circular {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
   .btn-loading {
     opacity: 0.65;
     pointer-events: none;
@@ -189,54 +264,60 @@ function onWaveEnd() {
   .btn-default {
     background-color: #ffffff;
     border-color: #d9d9d9;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
     &:hover {
-      color: fade(@primary, 80%);
-      border-color: fade(@primary, 80%);
+      color: #4096ff;
+      border-color: #4096ff;
     }
     &:active {
-      color: shade(@primary, 12%);
-      border-color: shade(@primary, 12%);
+      color: #0958d9;
+      border-color: #0958d9;
+    }
+    .m-dynamic-circle .circular .path {
+      stroke: rgba(0, 0, 0, 0.88);
     }
   }
   .btn-reverse {
     .btn-default();
     &:hover {
       color: #fff;
-      background-color: fade(@primary, 80%);
-      border-color: fade(@primary, 80%);
+      background-color: #4096ff;
+      border-color: #4096ff;
     }
     &:active {
       color: #fff;
-      background-color: shade(@primary, 12%);
-      border-color: shade(@primary, 12%);
+      background-color: #0958d9;
+      border-color: #0958d9;
     }
   }
   .btn-primary {
     color: #fff;
     background-color: @primary;
-    box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
     &:hover {
-      background-color: fade(@primary, 80%);
-      border-color: fade(@primary, 80%);
+      background-color: #4096ff;
+      border-color: #4096ff;
     }
     &:active {
-      background-color: shade(@primary, 12%);
-      border-color: shade(@primary, 12%);
+      background-color: #0958d9;
+      border-color: #0958d9;
+    }
+    .m-dynamic-circle .circular .path {
+      stroke: #fff;
     }
   }
   .btn-danger {
     color: #fff;
     background-color: @danger;
     border-color: @danger;
-    box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
     &:hover {
-      background-color: fade(@danger, 80%);
-      border-color: fade(@danger, 80%);
+      background-color: #ff7875;
+      border-color: #ff7875;
     }
     &:active {
-      background-color: shade(@danger, 12%);
-      border-color: shade(@danger, 12%);
+      background-color: #d9363e;
+      border-color: #d9363e;
+    }
+    .m-dynamic-circle .circular .path {
+      stroke: #fff;
     }
   }
   .btn-dashed {
@@ -250,14 +331,20 @@ function onWaveEnd() {
     &:active {
       background-color: rgba(0, 0, 0, 0.15);
     }
+    .m-dynamic-circle .circular .path {
+      stroke: rgba(0, 0, 0, 0.88);
+    }
   }
   .btn-link {
     color: @primary;
     &:hover {
-      color: fade(@primary, 80%);
+      color: #4096ff;
     }
     &:active {
-      color: shade(@primary, 12%);
+      color: #0958d9;
+    }
+    .m-dynamic-circle .circular .path {
+      stroke: @primary;
     }
   }
   .btn-small {
@@ -278,11 +365,42 @@ function onWaveEnd() {
     padding: 6.428571428571429px 15px;
     border-radius: 8px;
   }
+  .btn-primary.btn-ghost:not(.btn-disabled) {
+    color: @primary;
+    border-color: @primary;
+    background-color: transparent;
+    &:hover {
+      color: #4096ff;
+      border-color: #4096ff;
+    }
+    &:active {
+      color: #0958d9;
+      border-color: #0958d9;
+    }
+    .m-dynamic-circle .circular .path {
+      stroke: @primary;
+    }
+  }
+  .btn-danger.btn-ghost:not(.btn-disabled) {
+    color: @danger;
+    border-color: @danger;
+    background-color: transparent;
+    &:hover {
+      color: #ff7875;
+      border-color: #ff7875;
+    }
+    &:active {
+      color: #d9363e;
+      border-color: #d9363e;
+    }
+    .m-dynamic-circle .circular .path {
+      stroke: @danger;
+    }
+  }
   .btn-disabled {
     border-color: #d9d9d9;
     color: rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.04);
-    box-shadow: none;
     cursor: not-allowed;
     &:hover,
     &:active {

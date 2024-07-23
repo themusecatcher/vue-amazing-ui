@@ -265,6 +265,12 @@ export const routes = [
         component: () => import('@/views/Scrollbar.vue')
       },
       {
+        path: '/segmented',
+        name: 'Segmented',
+        meta: { title: '分段控制器' },
+        component: () => import('@/views/Segmented.vue')
+      },
+      {
         path: '/select',
         name: 'Select',
         meta: { title: '选择器' },
