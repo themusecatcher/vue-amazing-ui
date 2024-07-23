@@ -98,10 +98,8 @@ watchEffect(() => {
       <Col :span="6">
         <Space vertical> disabled:<Switch v-model:checked="state.disabled" /> </Space>
       </Col>
-      <Col :span="18">
-        <Space vertical>
-          effect：<Radio :options="characterOptions" v-model:value="state.character" button button-style="solid" />
-        </Space>
+      <Col :span="6">
+        <Flex vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
       </Col>
       <Col :span="6" v-if="state.character === 'custom-character'">
         <Flex vertical> character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" /> </Flex>
