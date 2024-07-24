@@ -89,7 +89,7 @@ useResizeObserver(horizonRef, () => {
 onMounted(() => {
   initScroll()
 })
-function initScroll () {
+function initScroll() {
   if (!props.vertical) {
     distance.value = getDistance() // 获取每列文字宽度
   } else {

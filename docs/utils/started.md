@@ -45,5 +45,5 @@ useEventListener | 使用Vue的生命周期钩子添加和移除事件监听器 
 useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object
 useScrollDirection | 实时监测页面滚动方向 | (throttleDelay: 100) => object
 useFps | 实时监测浏览器刷新率FPS | () => object
-useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery = '(max-width: 768px)') => object
+useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery: string) => object
 useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => object
