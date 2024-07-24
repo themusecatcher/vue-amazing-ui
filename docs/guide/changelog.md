@@ -10,6 +10,8 @@
 ## 1.2.1 <Tag color="volcano" size="small">2024-07-24</Tag>
 
 - 新增 [分段控制器 Segmented](https://themusecatcher.github.io/vue-amazing-ui/guide/components/segmented.html) 组件
+- 修复 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件：当文本区域宽高变化时，`tooltip` 显示的问题
+- 修复 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html)组件：滚动区域尺寸变化时的横向滚动问题
 
 ## 1.2.0 <Tag color="volcano" size="small">2024-07-23</Tag>
 

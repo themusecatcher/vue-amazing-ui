@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, type CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf } from '../utils'
+import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
 interface Text {
   title: string // 文字标题
   link?: string // 跳转链接
@@ -76,26 +76,29 @@ watch(
     props.verticalInterval
   ],
   () => {
-    if (!props.vertical) {
-      distance.value = getDistance() // 获取每列文字宽度
-    } else {
-      origin.value = true
-    }
-    horizontalMoveRaf.value && cancelRaf(horizontalMoveRaf.value)
-    verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
-    startMove() // 开始滚动
+    initScroll()
   },
   {
     deep: true, // 强制转成深层侦听器
     flush: 'post'
   }
 )
+useResizeObserver(horizonRef, () => {
+  initScroll()
+})
 onMounted(() => {
+  initScroll()
+})
+function initScroll () {
   if (!props.vertical) {
     distance.value = getDistance() // 获取每列文字宽度
+  } else {
+    origin.value = true
   }
+  horizontalMoveRaf.value && cancelRaf(horizontalMoveRaf.value)
+  verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
   startMove() // 开始滚动
-})
+}
 function getDistance(): number {
   return parseFloat((horizonRef.value.offsetWidth / displayAmount.value).toFixed(2))
 }
