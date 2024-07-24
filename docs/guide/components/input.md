@@ -1,7 +1,7 @@
 # 输入框 Input
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

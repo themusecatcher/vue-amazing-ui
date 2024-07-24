@@ -1955,7 +1955,7 @@ const Y4 = ["src", "alt", "onLoad"], U4 = R({ __name: "Waterfall", props: { imag
 ll.install = (l) => {
   l.component(ll.__name, ll);
 };
-const tl = R({ __name: "Watermark", props: { width: { default: void 0 }, height: { default: void 0 }, layout: { default: "alternate" }, rotate: { default: -22 }, zIndex: { default: 9 }, image: { default: void 0 }, content: { default: "" }, fullscreen: { type: Boolean, default: !1 }, color: { default: "rgba(0,0,0,.15)" }, fontSize: { default: 16 }, fontWeight: { default: "normal" }, fontFamily: { default: "sans-serif" }, fontStyle: { default: "normal" }, gap: { default: () => [100, 100] }, offset: { default: () => [50, 50] } }, setup(l) {
+const tl = R({ __name: "Watermark", props: { width: { default: void 0 }, height: { default: void 0 }, layout: { default: "alternate" }, rotate: { default: -22 }, zIndex: { default: 90 }, image: { default: void 0 }, content: { default: "" }, fullscreen: { type: Boolean, default: !1 }, color: { default: "rgba(0,0,0,.15)" }, fontSize: { default: 16 }, fontWeight: { default: "normal" }, fontFamily: { default: "sans-serif" }, fontStyle: { default: "normal" }, gap: { default: () => [100, 100] }, offset: { default: () => [50, 50] } }, setup(l) {
   const a = l, e = ta(), t = ta(), c = ta(document.documentElement), s = ta(!1), u = _(() => {
     var w;
     return ((w = a.gap) == null ? void 0 : w[0]) ?? 100;

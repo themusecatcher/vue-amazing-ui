@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   height: undefined,
   layout: 'alternate',
   rotate: -22,
-  zIndex: 9,
+  zIndex: 90,
   image: undefined,
   content: '',
   fullscreen: false,

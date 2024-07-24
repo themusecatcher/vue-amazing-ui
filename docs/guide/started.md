@@ -1,7 +1,7 @@
 # 快速上手
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## Install
 

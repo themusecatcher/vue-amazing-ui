@@ -1,9 +1,9 @@
 # 更新日志
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
+<Watermark fullscreen content="Vue Amazing UI" />
 
-## 1.2.2 <Tag color="volcano" size="small">future</Tag>
+## 1.4.0 <Tag color="volcano" size="small">future</Tag>
 
 - 新增 [列表 List](https://themusecatcher.github.io/vue-amazing-ui/guide/components/list.html) 组件
 
