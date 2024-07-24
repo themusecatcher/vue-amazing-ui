@@ -1,7 +1,7 @@
 # 分页 Pagination
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

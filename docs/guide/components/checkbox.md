@@ -1,7 +1,7 @@
 # 多选框 Checkbox
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## 何时使用
 

@@ -1,7 +1,7 @@
 # 面包屑 Breadcrumb
 
 <BackTop />
-<Watermark fullscreen content="Vue Amazing UI" :z-index="30" />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
 

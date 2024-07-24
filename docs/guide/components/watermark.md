@@ -303,7 +303,7 @@ width | 水印的宽度，默认值为 `content` 自身的宽度 | number | unde
 height | 水印的高度，默认值为 `content` 自身的高度 | number | undefined | false
 layout | 水印的布局方式：平行布局 `parallel`; 交替布局 `alternate` | 'parallel' &#124; 'alternate' | 'alternate' | false
 rotate | 水印绘制时，旋转的角度，单位 `°` | number | -22 | false
-zIndex | 追加的水印元素的 `z-index` | number| 9 | false
+zIndex | 追加的水印元素的 `z-index` | number| 90 | false
 image | 图片源，建议使用 `2` 倍或 `3` 倍图，优先级高于文字 | string | undefined | false
 content | 水印文字内容 | string &#124; string[] | '' | false
 fullscreen | 是否展示全屏 | boolean | false | false
