@@ -256,6 +256,35 @@ html.dark .VPHome {
     }
   }
 }
+@media (min-width: 960px) {
+  .VPLocalNav.has-sidebar {
+    background-color: transparent;
+    border: none;
+    .VPLocalNavOutlineDropdown {
+      padding: 0;
+      button {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border: 1px solid var(--vp-c-text-1);
+        border-left: none;
+        padding: 6px 12px;
+        color: var(--vp-c-text-1);
+        font-weight: 600;
+        transition: all 0.2s;
+        &:hover {
+          color: var(--vp-c-brand);
+          border-color: var(--vp-c-brand);
+        }
+      }
+      .outline-link {
+        transition: all 0.2s;
+        &:hover {
+          color: var(--vp-c-brand-1);
+        }
+      }
+    }
+  }
+}
 .VPNavBar:not(.has-sidebar):not(.top) {
   border: none;
   background-color: transparent !important;

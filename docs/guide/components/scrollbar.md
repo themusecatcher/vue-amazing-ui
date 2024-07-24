@@ -222,7 +222,7 @@ scrollBy | 滚动特定距离 | (options: { left?: number, top?: number, behavio
 
 ### ScrollBehavior Type
 
-名称 | 说明
+值 | 说明
 -- | --
 smooth | 平滑滚动并产生过渡效果
 instant | 滚动会直接跳转到目标位置，没有过渡效果
