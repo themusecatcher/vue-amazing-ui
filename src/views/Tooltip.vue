@@ -4,10 +4,10 @@ function openChange(visible: boolean) {
 }
 </script>
 <template>
-  <div class="ml60">
+  <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space :gap="30">
+    <Space :gap="30" class="ml60">
       <Tooltip :maxWidth="240" @open-change="openChange">
         <template #tooltip>
           特斯拉(Tesla)是美国一家电动汽车及能源公司，总部位于帕洛阿托(Palo
@@ -24,6 +24,7 @@ function openChange(visible: boolean) {
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Tooltip
+      class="ml60"
       :maxWidth="320"
       :fontSize="18"
       color="rgba(0, 0, 0, 0.85)"
