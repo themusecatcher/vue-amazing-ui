@@ -251,6 +251,10 @@ export default defineConfig({
               link: '/guide/components/scrollbar'
             },
             {
+              text: '分段控制器 Segmented',
+              link: '/guide/components/segmented'
+            },
+            {
               text: '选择器 Select',
               link: '/guide/components/select'
             },

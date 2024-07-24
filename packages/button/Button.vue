@@ -429,6 +429,9 @@ function onWaveEnd() {
       background-color: transparent;
       border: none;
     }
+    .m-dynamic-circle .circular .path {
+      stroke: rgba(0, 0, 0, 0.25);
+    }
   }
 }
 .btn-center {
