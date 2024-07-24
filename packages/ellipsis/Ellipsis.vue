@@ -2,6 +2,7 @@
 import Tooltip from '../tooltip'
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
+import { useResizeObserver } from '../utils'
 interface Props {
   maxWidth?: number | string // 文本最大宽度
   line?: number // 最大行数
@@ -47,6 +48,11 @@ watch(
     flush: 'post'
   }
 )
+useResizeObserver(ellipsisRef, () => {
+  if (props.tooltip) {
+    showTooltip.value = getTooltipShow()
+  }
+})
 onMounted(() => {
   if (props.tooltip) {
     showTooltip.value = getTooltipShow()

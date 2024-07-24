@@ -53,7 +53,6 @@ const state = reactive({
     <TextScroll
       :scrollText="singleText"
       single
-      :width="360"
       :text-style="{ fontSize: '24px', fontWeight: 600, color: '#FF5B29' }"
       @click="onClick"
     />
