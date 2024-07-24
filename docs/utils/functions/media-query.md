@@ -13,11 +13,11 @@
  * 
  * 该函数提供了一个响应式的媒体查询机制，根据查询的不同结果动态更新响应式变量
  * 
- * @param mediaQuery 媒体查询字符串，用于定义要查询的媒体条件。默认值是'(max-width: 768px)'。
+ * @param mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
  * @returns 返回一个对象，其中包含一个名为 match 的响应式属性，表示当前是否为移动设备视口
  */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-export function useMediaQuery(mediaQuery = '(max-width: 768px)') {
+export function useMediaQuery(mediaQuery: string) {
   // 检查传入的mediaQuery参数是否为空或非法
   if (!mediaQuery || typeof mediaQuery !== 'string' || mediaQuery.trim() === '') {
     throw new Error('Invalid mediaQuery parameter. It must be a non-empty string.')
@@ -43,7 +43,7 @@ export function useMediaQuery(mediaQuery = '(max-width: 768px)') {
 <script setup lang="ts">
 import { useMediaQuery } from 'vue-amazing-ui'
 
-const { match: isMobile } = useMediaQuery()
+const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 </script>
 
 ## 基本使用
@@ -54,7 +54,7 @@ const { match: isMobile } = useMediaQuery()
 <script setup lang="ts">
 import { useMediaQuery } from 'vue-amazing-ui'
 
-const { match: isMobile } = useMediaQuery()
+const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 </script>
 <template>
   <h3>{{ isMobile ? '移动端' : '桌面端' }}</h3>

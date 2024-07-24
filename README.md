@@ -2,7 +2,7 @@
 
 *该组件库采用 `Vue@3.4.33`+ `TypeScript@5.5.3` + `Vite@5.3.4` + `Less@4.2.0` 实现！*<br/>
 *所有组件样式 `CSS` 均使用 `box-sizing: border-box;` 模式！*<br/>
-*目前共有 `58` 个常用基础 `UI` 组件，以及 `15` 个常用工具函数，并且持续探索优化更新中...！*<br/>
+*目前共有 `59` 个常用基础 `UI` 组件，以及 `15` 个常用工具函数，并且持续探索优化更新中...！*<br/>
 *开箱即用！*
 
 ## Document & Online preview
@@ -62,7 +62,9 @@ import {
   useEventListener,
   useMutationObserver,
   useScrollDirection,
-  useFps
+  useFps,
+  useMediaQuery,
+  useResizeObserver
 } from 'vue-amazing-ui'
 </script>
 ```
@@ -118,16 +120,17 @@ Popconfirm | 弹出确认 | Popover | 气泡卡片
 Progress | 进度条 | QRCode | 二维码
 Radio | 单选框 | Rate | 评分
 Result | 结果 | Scrollbar | 滚动条
-Select | 选择器 |  Skeleton | 骨架屏
-Slider | 滑动输入条 | Space | 间距
-Spin | 加载中 | Statistic | 统计数值
-Steps | 步骤条 | Swiper | 触摸滑动插件
-Switch | 开关 | Table | 表格
-Tabs | 标签页 | Tag | 标签
-Textarea | 文本域 | TextScroll | 文字滚动
-Timeline | 时间轴 | Tooltip | 文字提示
-Upload | 上传 | Video | 播放器
-Waterfall | 瀑布流 | Watermark | 水印
+Segmented | 分段控制器 | Select | 选择器
+Skeleton | 骨架屏 | Slider | 滑动输入条
+Space | 间距 | Spin | 加载中
+Statistic | 统计数值 | Steps | 步骤条
+Swiper | 触摸滑动插件 | Switch | 开关
+Table | 表格 | Tabs | 标签页
+Tag | 标签 | Textarea | 文本域
+TextScroll | 文字滚动 | Timeline | 时间轴
+Tooltip | 文字提示 | Upload | 上传
+Video | 播放器 | Waterfall | 瀑布流
+Watermark | 水印
 
 ## Details
 
@@ -150,4 +153,5 @@ useEventListener | 使用 `Vue` 的生命周期钩子添加和移除事件监听
 useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object
 useScrollDirection | 实时监测页面滚动方向 | (throttleDelay: 100) => object
 useFps | 实时监测浏览器刷新率 `FPS` | () => object
+useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery: string) => object
 useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => object
