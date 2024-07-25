@@ -17,7 +17,7 @@ withDefaults(defineProps<Props>(), {
   tooltip: '暂无提示',
   fontSize: 14,
   color: '#FFF',
-  backgroundColor: 'rgba(0, 0, 0, .85)',
+  backgroundColor: 'rgba(0, 0, 0, 0.85)',
   overlayStyle: () => ({})
 })
 const visible = ref(false)
