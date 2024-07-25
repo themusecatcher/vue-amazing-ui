@@ -89,7 +89,7 @@ const state = reactive({
         <div class="gutter-box">col-6</div>
       </Col>
     </Row>
-    <br/>
+    <br />
     <a-row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
       <a-col class="gutter-row" :span="6">
         <div class="gutter-box">col-6</div>
