@@ -691,7 +691,7 @@ const images = ref([
 </Space>
 <br />
 <br />
-<Carousel ref="carousel" :images="images" :width="800" :height="450" />
+<Carousel ref="carousel" :images="images" :height="450" />
 
 ::: details Show Code
 
@@ -743,7 +743,7 @@ function getCurrentIndex () {
   </Space>
   <br />
   <br />
-  <Carousel ref="carousel" :images="images" :width="800" :height="450" />
+  <Carousel ref="carousel" :images="images" :height="450" />
 </template>
 ```
 
@@ -829,7 +829,6 @@ function getCurrentIndex () {
   </Row>
   <Carousel
     :images="images"
-    :width="800"
     :height="450"
     :autoplay="carouselConfig.autoplay"
     :pause-on-mouse-enter="carouselConfig.pauseOnMouseEnter"
@@ -980,7 +979,6 @@ const carouselConfig = reactive({
     </Row>
     <Carousel
       :images="images"
-      :width="800"
       :height="450"
       :autoplay="carouselConfig.autoplay"
       :pause-on-mouse-enter="carouselConfig.pauseOnMouseEnter"
