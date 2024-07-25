@@ -41,7 +41,7 @@ debounce | 防抖函数 | (fn: Function, delay = 300) => any
 add | 消除js加减精度问题的加法函数 | (num1: number, num2: number) => number
 downloadFile | 下载文件并自定义文件名，未传 `name` 时，从文件地址中自动提取文件名称 | (url: string, name: string) => void
 toggleDark | 一键切换暗黑模式函数 | () => void
-useEventListener | 使用Vue的生命周期钩子添加和移除事件监听器 | (target: HTMLElement &#124; Window, event: string, callback: Function) => void
+useEventListener | 使用 `Vue` 的生命周期钩子添加和移除事件监听器 | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void
 useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object
 useScrollDirection | 实时监测页面滚动方向 | (throttleDelay: 100) => object
 useFps | 实时监测浏览器刷新率FPS | () => object

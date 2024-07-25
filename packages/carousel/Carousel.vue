@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf } from '../utils'
+import { rafTimeout, cancelRaf, useEventListener, useResizeObserver } from '../utils'
 import { useTransition } from '@vueuse/core'
 import Spin from '../spin'
 interface Image {
@@ -72,7 +72,7 @@ const stopCarousel = ref(false) // 鼠标悬浮时，停止切换标志
 const switchPrevent = ref(false) // 在滑动切换过程中，禁用其他所有切换操作
 const moveEffectRaf = ref() // 移动过程 requestAnimationFrame 的返回值，一个 long 整数，请求 ID，是回调列表中唯一的标识
 const targetPosition = ref() // 目标移动位置
-const carousel = ref() // carousel DOM引用
+const carouselRef = ref() // carousel DOM 引用
 const activeSwitcher = ref(1) // 当前展示图片标识
 const imageWidth = ref() // 图片宽度
 const imageHeight = ref() // 图片高度
@@ -118,74 +118,53 @@ const carouselStyle = computed(() => {
     return {}
   }
 })
+watch(
+  () => [
+    verticalSlide.value,
+    props.effect,
+    props.images,
+    props.autoplay,
+    props.interval,
+    props.fadeDuration,
+    props.fadeFunction,
+    complete.value[0]
+  ],
+  () => {
+    initCarousel()
+  },
+  {
+    deep: true,
+    flush: 'post'
+  }
+)
 const emits = defineEmits(['change', 'click'])
 watch(activeSwitcher, (to) => {
   emits('change', to)
 })
-watch(verticalSlide, (to) => {
+useEventListener(document, 'visibilitychange', visibilityChange)
+useResizeObserver(carouselRef, () => {
+  getImageSize()
+  initCarousel()
+})
+function initCarousel() {
   slideTimer.value && cancelRaf(slideTimer.value)
-  cancelAnimationFrame(moveEffectRaf.value)
+  moveEffectRaf.value && cancelAnimationFrame(moveEffectRaf.value)
   switchPrevent.value = false
-  if (to) {
-    offset.value = ((originNumber.value + distance.value) / imageWidth.value) * moveUnitDistance.value
-  } else {
-    offset.value = ((originNumber.value + distance.value) / imageHeight.value) * moveUnitDistance.value
+  if (props.effect === 'slide') {
+    offset.value = (activeSwitcher.value - 1) * moveUnitDistance.value
   }
   onStart()
-})
-watch(
-  () => props.effect,
-  (to) => {
-    slideTimer.value && cancelRaf(slideTimer.value)
-    switchPrevent.value = false
-    if (to === 'slide') {
-      offset.value = (activeSwitcher.value - 1) * moveUnitDistance.value
-    }
-    onStart()
-  }
-)
-watch(
-  () => [props.images, props.autoplay, props.interval, props.fadeDuration, props.fadeFunction, complete.value[0]],
-  () => {
-    slideTimer.value && cancelRaf(slideTimer.value)
-    if (props.autoplay && complete.value[0] && imageCount.value > 1) {
-      autoSlide() // 自动滑动轮播
-    }
-  },
-  {
-    deep: true,
-    flush: 'post'
-  }
-)
-watch(
-  () => [props.width, props.height],
-  () => {
-    getImageSize() // 获取每张图片大小
-  },
-  {
-    deep: true,
-    flush: 'post'
-  }
-)
-onMounted(() => {
-  getImageSize() // 获取每张图片大小
-  // 监听事件
-  document.addEventListener('visibilitychange', visibilityChange)
-})
-onUnmounted(() => {
-  // 移除事件
-  document.removeEventListener('visibilitychange', visibilityChange)
-})
+}
 function onComplete(index: number) {
   // 图片加载完成
   complete.value[index] = true
 }
 function getImageSize() {
-  imageWidth.value = carousel.value.offsetWidth
-  imageHeight.value = carousel.value.offsetHeight
+  // 获取每张图片大小
+  imageWidth.value = carouselRef.value.offsetWidth
+  imageHeight.value = carouselRef.value.offsetHeight
 }
 function onKeyboard(e: KeyboardEvent) {
-  // e.preventDefault()
   if (imageCount.value > 1) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       onLeftArrow()
@@ -200,6 +179,7 @@ function visibilityChange() {
   console.log('visibilityState', document.visibilityState)
   const visibility = document.visibilityState
   if (visibility === 'hidden') {
+    // hidden
     slideTimer.value && cancelRaf(slideTimer.value)
     offset.value = originNumber.value + distance.value
     switchPrevent.value = false
@@ -400,7 +380,7 @@ defineExpose({
 </script>
 <template>
   <div
-    ref="carousel"
+    ref="carouselRef"
     class="m-carousel"
     :class="{ 'carousel-vertical': verticalSlide, 'carousel-fade': effect === 'fade' }"
     :style="`--arrow-color: ${arrowColor}; --dot-size: ${dotSize}px; --dot-color: ${dotColor}; --fade-duration: ${props.fadeDuration}ms; --fade-function: ${props.fadeFunction}; width: ${carouselWidth}; height: ${carouselHeight};`"

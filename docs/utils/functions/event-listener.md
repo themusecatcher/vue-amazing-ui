@@ -20,7 +20,7 @@
  * @param callback 事件被触发时执行的回调函数。
  */
 import { onMounted, onUnmounted } from 'vue'
-export function useEventListener(target: HTMLElement | Window, event: string, callback: Function): void {
+export function useEventListener(target: HTMLElement | Window | Document, event: string, callback: Function): void {
   // 也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素
   onMounted(() => target.addEventListener(event, callback as EventListenerOrEventListenerObject))
   onUnmounted(() => target.removeEventListener(event, callback  as EventListenerOrEventListenerObject))
@@ -77,6 +77,6 @@ useEventListener(window, 'scroll', throttleScroll)
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-target | 要添加监听事件的目标元素 | HTMLElement &#124; Window | - | true
+target | 要添加监听事件的目标元素 | HTMLElement &#124; Window &#124; Document | - | true
 event | 监听的事件类型（大小写敏感） | string | - | true
 callback | 监听事件触发时的回调函数 | Function | - | true
