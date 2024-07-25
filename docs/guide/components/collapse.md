@@ -525,9 +525,9 @@ activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` |
 bordered | 带边框风格的折叠面板 | boolean | true | false
 copyable | 是否可复制面板内容 | boolean | false | false
 lang | 面板右上角固定内容，例如标识 `language` | string &#124; slot | '' | false
-fontSize | 面板标题和内容的字体大小，单位`px` | number | 14 | false
-headerFontSize | 面板标题字体大小，单位`px`，优先级高于 `fontSize` | number | 0 | false
-textFontSize | 面板内容字体大小，单位`px`，优先级高于 `fontSize` | number | 0 | false
+fontSize | 面板标题和内容的字体大小，单位 `px` | number | 14 | false
+headerFontSize | 面板标题字体大小，单位 `px`，优先级高于 `fontSize` | number | 0 | false
+textFontSize | 面板内容字体大小，单位 `px`，优先级高于 `fontSize` | number | 0 | false
 showArrow | 是否展示所有箭头，优先级低于 `Collapse` 的 `showArrow` | boolean | true | false
 arrowPlacement | 箭头位置 | 'left' &#124; 'right' | 'left' | false
 ghost | 使折叠面板透明且无边框 | boolean | false | false

@@ -308,7 +308,7 @@ image | 图片源，建议使用 `2` 倍或 `3` 倍图，优先级高于文字 |
 content | 水印文字内容 | string &#124; string[] | '' | false
 fullscreen | 是否展示全屏 | boolean | false | false
 color | 字体颜色 | string | 'rgba(0, 0, 0, 0.15)' | false
-fontSize | 字体大小，单位`px` | number | 16 | false
+fontSize | 字体大小，单位 `px` | number | 16 | false
 fontWeight | 字体粗细 | 'normal' &#124; 'light' &#124; 'weight' &#124; number | 'normal' | false
 fontFamily | 字体类型 | string | 'sans-serif' | false
 fontStyle | 字体样式 | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal' | false

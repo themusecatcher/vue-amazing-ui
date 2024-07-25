@@ -271,7 +271,7 @@
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle' | false
-size | 设置头像的大小，`number`类型时单位`px` | number &#124; 'large' &#124; 'small' &#124; 'default' &#124; [Responsive](#responsive-type) | 'default' | false
+size | 设置头像的大小，`number`类型时单位 `px` | number &#124; 'large' &#124; 'small' &#124; 'default' &#124; [Responsive](#responsive-type) | 'default' | false
 src | 图片类头像资源地址 | string | '' | false
 alt | 图片无法显示时的替代文本 | string | '' | false
 icon | 设置头像的图标 | slot | undefined | false

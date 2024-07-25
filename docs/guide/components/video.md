@@ -126,8 +126,8 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.
 src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | '' | true
 poster | 视频封面地址，支持网络地址 `https` 和相对地址 | string | '' | false
 second | 在未设置封面时，自动截取视频第 `second` 秒对应帧作为视频封面 | number | 0.5 | false
-width | 视频播放器宽度，单位`px` | number | 800 | false
-height | 视频播放器高度，单位`px` | number | 450 | false
+width | 视频播放器宽度，单位 `px` | number | 800 | false
+height | 视频播放器高度，单位 `px` | number | 450 | false
 autoplay | 视频就绪后是否马上播放，优先级高于 `preload`，参考 [MDN 自动播放指南](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide) | boolean | false | false
 controls | 是否向用户显示控件，比如进度条，全屏等 | boolean | true | false
 loop | 视频播放完成后，是否循环播放 | boolean | false | false
