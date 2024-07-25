@@ -10,4 +10,4 @@ DescriptionsItem.install = (app: App): void => {
   app.component(DescriptionsItem.__name as string, DescriptionsItem)
 }
 
-export { Descriptions, DescriptionsItem } 
+export { Descriptions, DescriptionsItem }
