@@ -24,12 +24,11 @@ const props = withDefaults(defineProps<Props>(), {
   alt: '',
   icon: undefined
 })
-const clientWidth = ref(document.documentElement.clientWidth)
-function getBrowserSize() {
-  // document.documentElement返回<html>元素
-  clientWidth.value = document.documentElement.clientWidth
+const viewportWidth = ref(window.innerWidth)
+function getViewportWidth() {
+  viewportWidth.value = window.innerWidth
 }
-const throttleEvent = throttle(getBrowserSize, 100)
+const throttleEvent = throttle(getViewportWidth, 100)
 useEventListener(window, 'resize', throttleEvent)
 const avatarStyle = computed(() => {
   if (typeof props.size === 'string') {
@@ -54,17 +53,17 @@ const avatarStyle = computed(() => {
   }
   if (typeof props.size === 'object') {
     let size = 32
-    if (clientWidth.value >= 1600 && props.size.xxl) {
+    if (viewportWidth.value >= 1600 && props.size.xxl) {
       size = props.size.xxl
-    } else if (clientWidth.value >= 1200 && props.size.xl) {
+    } else if (viewportWidth.value >= 1200 && props.size.xl) {
       size = props.size.xl
-    } else if (clientWidth.value >= 992 && props.size.lg) {
+    } else if (viewportWidth.value >= 992 && props.size.lg) {
       size = props.size.lg
-    } else if (clientWidth.value >= 768 && props.size.md) {
+    } else if (viewportWidth.value >= 768 && props.size.md) {
       size = props.size.md
-    } else if (clientWidth.value >= 576 && props.size.sm) {
+    } else if (viewportWidth.value >= 576 && props.size.sm) {
       size = props.size.sm
-    } else if (clientWidth.value < 576 && props.size.xs) {
+    } else if (viewportWidth.value < 576 && props.size.xs) {
       size = props.size.xs
     }
     return {

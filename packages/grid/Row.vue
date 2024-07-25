@@ -30,12 +30,11 @@ const alignProperties = {
   bottom: 'flex-end',
   stretch: 'stretch'
 }
-const clientWidth = ref(document.documentElement.clientWidth)
-function getBrowserSize() {
-  // document.documentElement返回<html>元素
-  clientWidth.value = document.documentElement.clientWidth
+const viewportWidth = ref(window.innerWidth)
+function getViewportWidth() {
+  viewportWidth.value = window.innerWidth
 }
-const throttleEvent = throttle(getBrowserSize, 100)
+const throttleEvent = throttle(getViewportWidth, 100)
 useEventListener(window, 'resize', throttleEvent)
 const xGap = computed(() => {
   if (typeof props.gutter === 'number') {
@@ -68,22 +67,22 @@ const rowWidth = computed(() => {
   return props.width
 })
 function getResponsiveGap(gutter: any) {
-  if (clientWidth.value >= 1600 && gutter.xxl) {
+  if (viewportWidth.value >= 1600 && gutter.xxl) {
     return gutter.xxl
   }
-  if (clientWidth.value >= 1200 && gutter.xl) {
+  if (viewportWidth.value >= 1200 && gutter.xl) {
     return gutter.xl
   }
-  if (clientWidth.value >= 992 && gutter.lg) {
+  if (viewportWidth.value >= 992 && gutter.lg) {
     return gutter.lg
   }
-  if (clientWidth.value >= 768 && gutter.md) {
+  if (viewportWidth.value >= 768 && gutter.md) {
     return gutter.md
   }
-  if (clientWidth.value >= 576 && gutter.sm) {
+  if (viewportWidth.value >= 576 && gutter.sm) {
     return gutter.sm
   }
-  if (clientWidth.value < 576 && gutter.xs) {
+  if (viewportWidth.value < 576 && gutter.xs) {
     return gutter.xs
   }
   return 0
