@@ -89,6 +89,21 @@ const state = reactive({
         <div class="gutter-box">col-6</div>
       </Col>
     </Row>
+    <br/>
+    <a-row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+      <a-col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </a-col>
+      <a-col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </a-col>
+      <a-col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </a-col>
+      <a-col class="gutter-row" :span="6">
+        <div class="gutter-box">col-6</div>
+      </a-col>
+    </a-row>
     <h2 class="mt30 mb10">垂直区块间隔</h2>
     <Row :gutter="[16, 24]">
       <Col class="gutter-row" :span="6">
