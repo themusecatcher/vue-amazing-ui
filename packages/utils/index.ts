@@ -312,7 +312,7 @@ export function toggleDark() {
  */
 import { ref, toValue, computed, watch, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
 import type { Ref } from 'vue'
-export function useEventListener(target: HTMLElement | Window, event: string, callback: Function): void {
+export function useEventListener(target: HTMLElement | Window | Document, event: string, callback: Function): void {
   // 也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素
   onMounted(() => target.addEventListener(event, callback as EventListenerOrEventListenerObject))
   onUnmounted(() => target.removeEventListener(event, callback as EventListenerOrEventListenerObject))
