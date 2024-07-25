@@ -387,13 +387,13 @@ const loading = ref(true)
 
 :::
 
-## 居中展示
+## block 按钮
 
-<Flex vertical>
-  <Button center @click="onClick">Default Button</Button>
-  <Button center type="primary" ghost>Primary Button</Button>
-  <Button center type="danger" ghost>Danger Button</Button>
-</Flex>
+<Space>
+  <Button block @click="onClick">Default Button</Button>
+  <Button block type="primary" ghost>Primary Button</Button>
+  <Button block type="danger" ghost>Danger Button</Button>
+</Space>
 
 ::: details Show Code
 
@@ -404,11 +404,11 @@ function onClick(e: Event) {
 }
 </script>
 <template>
-  <Flex vertical>
-    <Button center @click="onClick">Default Button</Button>
-    <Button center type="primary" ghost>Primary Button</Button>
-    <Button center type="danger" ghost>Danger Button</Button>
-  </Flex>
+  <Space>
+    <Button block @click="onClick">Default Button</Button>
+    <Button block type="primary" ghost>Primary Button</Button>
+    <Button block type="danger" ghost>Danger Button</Button>
+  </Space>
 </template>
 ```
 
@@ -419,7 +419,6 @@ function onClick(e: Event) {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-name | 按钮文本 | string &#124; Slot | '按钮' | false
 type | 按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' | false
 size | 按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 ghost | 按钮背景是否透明，仅当 `type: 'primary'` &#124; `'danger'` 时生效 | boolean | false | false
@@ -430,7 +429,7 @@ disabled | 是否禁用 | boolean | false | false
 loading | 是否加载中 | boolean | false | false
 loadingType | 加载指示符类型 | 'static' &#124; 'dynamic' | 'dynamic' | false
 loadingColor | 加载指示符颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | 'rgba(0, 0, 0, 0.88)' | false
-center | 是否将按钮宽度调整为其父宽度并居中展示 | boolean | false | false
+block | 是否将按钮宽度调整为其父宽度 | boolean | false | false
 
 ## Events
 

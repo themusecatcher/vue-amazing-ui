@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import Button from '../button'
 import { rafTimeout } from '../utils'
 interface Collapse {
   key?: string | number // 对应activeKey，如果没有传入key属性，则默认使用数据索引(0,1,2...)绑定

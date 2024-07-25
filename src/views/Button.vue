@@ -152,11 +152,11 @@ function onClick(e: Event) {
         <Button type="danger" ghost :loading="loading" loading-type="static">Danger Button</Button>
       </Space>
     </Space>
-    <h2 class="mt30 mb10">居中展示</h2>
-    <Flex vertical>
-      <Button center @click="onClick">Default Button</Button>
-      <Button center type="primary" ghost>Primary Button</Button>
-      <Button center type="danger" ghost>Danger Button</Button>
-    </Flex>
+    <h2 class="mt30 mb10">block 按钮</h2>
+    <Space>
+      <Button block @click="onClick">Default Button</Button>
+      <Button block type="primary" ghost>Primary Button</Button>
+      <Button block type="danger" ghost>Danger Button</Button>
+    </Space>
   </div>
 </template>

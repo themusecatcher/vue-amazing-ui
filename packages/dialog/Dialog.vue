@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import Button from '../button'
 import { ref, computed, useSlots, watch, nextTick } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { Slot, CSSProperties } from 'vue'
+import Button from '../button'
 interface Props {
-  title?: string // 标题 string | slot
-  content?: string // 内容 string | slot
+  title?: string | Slot // 标题
+  content?: string | Slot // 内容
   width?: number // 宽度，单位p
   height?: number | string // 高度，单位px，默认auto，自适应内容高度
   cancelText?: string // 取消按钮文字
   okText?: string // 确定按钮文字
   okType?: 'primary' | 'danger' // 确定按钮类型
-  footer?: boolean // 是否显示底部按钮 boolean | slot
+  footer?: boolean | Slot // 是否显示底部按钮
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
   top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效
   switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
