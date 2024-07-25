@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
-import { rafTimeout } from '../utils'
+import type { Slot } from 'vue'
+import { useResizeObserver, rafTimeout, cancelRaf } from '../utils'
 interface Tab {
   key: string | number // 对应 activeKey
   tab: string // 标签页显示文字
-  content?: string // 标签页内容 string | slot
+  content?: string | Slot // 标签页内容
   disabled?: boolean // 禁用对应标签页
 }
 interface Props {
-  tabPages: Array<Tab> // 标签页数组
+  tabPages?: Tab[] // 标签页数组
   centered?: boolean // 标签是否居中展示
   size?: 'small' | 'middle' | 'large' // 标签页大小
   type?: 'line' | 'card' // 标签页的样式
@@ -30,6 +31,7 @@ const wrap = ref()
 const wrapWidth = ref()
 const nav = ref()
 const navWidth = ref()
+const rafId = ref()
 const showWheel = ref(false) // 导航是否有滚动
 const scrollMax = ref(0) // 最大滚动距离
 const scrollLeft = ref(0) // 滚动距离
@@ -37,26 +39,17 @@ const activeIndex = computed(() => {
   return props.tabPages.findIndex((page) => page.key === props.activeKey)
 })
 watch(
-  () => [props.tabPages, props.gutter, props.size, props.type],
-  () => {
-    rafTimeout(() => {
-      getNavWidth()
-    }, 300)
-  },
-  {
-    deep: true, // 强制转成深层侦听器
-    flush: 'post'
-  }
-)
-watch(
   () => props.activeKey,
   () => {
     getBarDisplay()
   },
   {
-    flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
+    flush: 'post'
   }
 )
+useResizeObserver([wrap, nav], () => {
+  getNavWidth()
+})
 onMounted(() => {
   getNavWidth()
 })
@@ -71,7 +64,8 @@ function getBarDisplay() {
       if (left.value < scrollLeft.value) {
         transition.value = true
         scrollLeft.value = left.value
-        rafTimeout(() => {
+        rafId.value && cancelRaf(rafId.value)
+        rafId.value = rafTimeout(() => {
           transition.value = false
         }, 150)
       }
@@ -79,7 +73,8 @@ function getBarDisplay() {
       if (targetScroll > scrollLeft.value) {
         transition.value = true
         scrollLeft.value = targetScroll
-        rafTimeout(() => {
+        rafId.value && cancelRaf(rafId.value)
+        rafId.value = rafTimeout(() => {
           transition.value = false
         }, 150)
       }
@@ -146,7 +141,7 @@ function onWheel(e: WheelEvent) {
         <div
           ref="nav"
           :class="['m-tabs-nav-list', { transition: transition }]"
-          @wheel.prevent="showWheel ? onWheel($event) : () => false"
+          @wheel.stop.prevent="showWheel ? onWheel($event) : () => false"
           :style="`transform: translate(${-scrollLeft}px, 0)`"
         >
           <div

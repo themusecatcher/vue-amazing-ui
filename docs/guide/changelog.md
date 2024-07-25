@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.3.1 <Tag color="volcano" size="small">2024-07-25</Tag>
+
+- 优化 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件实现
+
 ## 1.3.0 <Tag color="volcano" size="small">2024-07-24</Tag>
 
 - 新增 [分段控制器 Segmented](https://themusecatcher.github.io/vue-amazing-ui/guide/components/segmented.html) 组件
@@ -41,6 +45,7 @@
 - 分段控制器 Segmented 组件，选项切换效果优化
 - 表格 Table 组件，功能扩展
 - 级联选择 Cascader 组件，重构
+- 修复需要监听 DOM 尺寸变化或 DOM 更新的组件
 
 <style lang="less" scoped>
 .m-tag {
