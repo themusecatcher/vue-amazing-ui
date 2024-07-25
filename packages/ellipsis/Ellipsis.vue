@@ -9,8 +9,8 @@ interface Props {
   expand?: boolean // 是否启用点击文本展开全部
   tooltip?: boolean // 是否启用文本提示框
   // 以下均为 tooltip 组件属性
-  tooltipMaxWidth?: number // 提示框内容最大宽度，单位px，默认不设置时，提示文本内容自动与展示文本宽度保持一致
-  tooltipFontSize?: number // 提示文本字体大小，单位px，优先级高于 overlayStyle
+  tooltipMaxWidth?: number // 提示框内容最大宽度，单位 px，默认不设置时，提示文本内容自动与展示文本宽度保持一致
+  tooltipFontSize?: number // 提示文本字体大小，单位 px，优先级高于 overlayStyle
   tooltipColor?: string // 提示文本字体颜色，优先级高于 overlayStyle
   tooltipBackgroundColor?: string // 提示框背景颜色，优先级高于 overlayStyle
   tooltipOverlayStyle?: CSSProperties // 提示框内容区域样式

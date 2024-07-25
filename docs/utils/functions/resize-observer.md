@@ -24,9 +24,13 @@ export function useResizeObserver(target: Ref | Ref[] | HTMLElement | HTMLElemen
   let observer: ResizeObserver | undefined
   const stopObservation = ref(false)
   const targets = computed(() => {
-    const targetValue = toValue(target)
-    if (targetValue) {
-      return Array.isArray(targetValue) ? targetValue : [targetValue]
+    const targetsValue = toValue(target)
+    if (targetsValue) {
+      if (Array.isArray(targetsValue)) {
+        return targetsValue.map((el: any) => toValue(el)).filter((el: any) => el)
+      } else {
+        return [targetsValue]
+      }
     }
     return []
   })

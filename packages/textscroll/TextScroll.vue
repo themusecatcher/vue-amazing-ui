@@ -61,7 +61,7 @@ const displayAmount = computed(() => {
 const left = ref(0)
 const horizontalMoveRaf = ref() // 水平滚动引用
 const verticalMoveRaf = ref() // 垂直滚动引用
-const origin = ref(true)
+const origin = ref(true) // 垂直滚动初始状态
 const horizonRef = ref()
 const distance = ref(0) // 每条滚动文字移动距离
 watch(

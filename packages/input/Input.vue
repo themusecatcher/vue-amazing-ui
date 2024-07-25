@@ -1,13 +1,7 @@
-<script lang="ts">
-/*
-  一个根节点时，禁用组件根节点自动继承 attribute，必须使用这种写法！然后在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
-  多个根节点时，只需在要继承 attribute 的节点上绑定 v-bind="$attrs" 即可
-*/
-export default {
-  inheritAttrs: false
-}
-</script>
 <script setup lang="ts">
+defineOptions({
+  inheritAttrs: false
+})
 import { ref, computed, useSlots } from 'vue'
 interface Props {
   width?: string | number // 输入框宽度
