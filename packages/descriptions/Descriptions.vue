@@ -110,7 +110,7 @@ observer.value = useMutationObserver(
       }
     }
   },
-  { childList: true, attributes: true, subtree: true, characterData: true }
+  { childList: true, attributes: true, subtree: true }
 )
 onMounted(() => {
   getGroupItems()
