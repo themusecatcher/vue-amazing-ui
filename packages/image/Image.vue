@@ -197,18 +197,18 @@ function onMouseDown(event: MouseEvent) {
   const bottom = imageRect.bottom // 图片下边缘距浏览器窗口上边界的距离
   const right = imageRect.right // 图片右边缘距浏览器窗口左边界的距离
   const left = imageRect.left // 图片左边缘距浏览器窗口左边界的距离
-  const viewportWidth = document.documentElement.clientWidth
-  const viewportHeight = document.documentElement.clientHeight
+  const viewportWidth = window.innerWidth // 视口宽度
+  const viewportHeight = window.innerHeight // 视口高度
   sourceX.value = event.clientX // 鼠标按下时相对于视口左边缘的X坐标
   sourceY.value = event.clientY // 鼠标按下时相对于视口上边缘的Y坐标
   const sourceDragX = dragX.value // 鼠标按下时图片的X轴偏移量
   const sourceDragY = dragY.value // 鼠标按下时图片的Y轴偏移量
-  document.onmousemove = (e: MouseEvent) => {
+  window.onmousemove = (e: MouseEvent) => {
     // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
     dragX.value = sourceDragX + e.clientX - sourceX.value
     dragY.value = sourceDragY + e.clientY - sourceY.value
   }
-  document.onmouseup = () => {
+  window.onmouseup = () => {
     if (dragX.value > sourceDragX + viewportWidth - right) {
       // 溢出视口右边缘
       dragX.value = sourceDragX + viewportWidth - right
@@ -225,7 +225,7 @@ function onMouseDown(event: MouseEvent) {
       // 溢出视口上边缘
       dragY.value = sourceDragY - top
     }
-    document.onmousemove = null
+    window.onmousemove = null
   }
 }
 function onSwitchLeft() {

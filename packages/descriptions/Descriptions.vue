@@ -42,12 +42,11 @@ const trBorderedRows = ref() // 放置 DescriptionsItems 节点的模板引用�
 const thVerticalBorderedRows = ref() // 放置垂直列表的 DescriptionsItems 节点的 th 模板引用数组（带边框）
 const tdVerticalBorderedRows = ref() // 放置垂直列表的 DescriptionsItems 节点的 td 模板引用数组（带边框）
 const groupItems = ref<any[]>([]) // 处理后的 DescriptionsItems 节点数组
-const clientWidth = ref(document.documentElement.clientWidth)
-function getBrowserSize() {
-  // document.documentElement返回<html>元素
-  clientWidth.value = document.documentElement.clientWidth
+const viewportWidth = ref(window.innerWidth)
+function getViewportWidth() {
+  viewportWidth.value = window.innerWidth
 }
-const throttleEvent = throttle(getBrowserSize, 100)
+const throttleEvent = throttle(getViewportWidth, 100)
 useEventListener(window, 'resize', throttleEvent)
 const slots = useSlots()
 const showHeader = computed(() => {
@@ -64,22 +63,22 @@ const showHeader = computed(() => {
 })
 const responsiveColumn = computed(() => {
   if (typeof props.column === 'object') {
-    if (clientWidth.value >= 1600 && props.column.xxl) {
+    if (viewportWidth.value >= 1600 && props.column.xxl) {
       return props.column.xxl
     }
-    if (clientWidth.value >= 1200 && props.column.xl) {
+    if (viewportWidth.value >= 1200 && props.column.xl) {
       return props.column.xl
     }
-    if (clientWidth.value >= 992 && props.column.lg) {
+    if (viewportWidth.value >= 992 && props.column.lg) {
       return props.column.lg
     }
-    if (clientWidth.value >= 768 && props.column.md) {
+    if (viewportWidth.value >= 768 && props.column.md) {
       return props.column.md
     }
-    if (clientWidth.value >= 576 && props.column.sm) {
+    if (viewportWidth.value >= 576 && props.column.sm) {
       return props.column.sm
     }
-    if (clientWidth.value < 576 && props.column.xs) {
+    if (viewportWidth.value < 576 && props.column.xs) {
       return props.column.xs
     }
     return 1

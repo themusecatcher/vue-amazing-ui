@@ -59,16 +59,15 @@ const responsiveProperties = computed(() => {
     }
   ]
 })
-const clientWidth = ref(document.documentElement.clientWidth)
-function getBrowserSize() {
-  // document.documentElement返回<html>元素
-  clientWidth.value = document.documentElement.clientWidth
+const viewportWidth = ref(window.innerWidth)
+function getViewportWidth() {
+  viewportWidth.value = window.innerWidth
 }
-const throttleEvent = throttle(getBrowserSize, 100)
+const throttleEvent = throttle(getViewportWidth, 100)
 useEventListener(window, 'resize', throttleEvent)
 const responsiveValue = computed(() => {
   for (const responsive of responsiveProperties.value) {
-    if (responsive.value && clientWidth.value >= responsive.width) {
+    if (responsive.value && viewportWidth.value >= responsive.width) {
       if (typeof responsive.value === 'object') {
         return {
           span: responsive.value.span || props.span,
