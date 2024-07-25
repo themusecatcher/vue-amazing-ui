@@ -70,19 +70,61 @@ const cancel = (e: MouseEvent) => {
 
 :::
 
-## 自定义按钮文字
+## 自定义按钮
 
-<Popconfirm title="Are you sure？" ok-text="Yes" cancel-text="No">
-  <Button type="danger">Delete</Button>
-</Popconfirm>
+<Space>
+  <Popconfirm title="Are you sure？" ok-text="Yes" cancel-text="No" @ok="confirm" @cancel="cancel">
+    <Button type="danger">Delete</Button>
+  </Popconfirm>
+  <Popconfirm
+    title="Are you sure？"
+    ok-text="Yes"
+    :ok-props="{ ghost: true }"
+    cancel-text="No"
+    :cancel-props="{ type: 'danger', ghost: true }"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="danger">Delete</Button>
+  </Popconfirm>
+</Space>
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const message = ref()
+const openChange = (visible: boolean) => {
+  console.log('visible', visible)
+}
+const confirm = (e: MouseEvent) => {
+  console.log(e)
+  message.value.success('Click on Yes')
+}
+const cancel = (e: MouseEvent) => {
+  console.log(e)
+  message.value.error('Click on No')
+}
+</script>
 <template>
-  <Popconfirm title="Are you sure？" ok-text="Yes" cancel-text="No">
-    <Button type="danger">Delete</Button>
-  </Popconfirm>
+  <Space>
+    <Popconfirm title="Are you sure？" ok-text="Yes" cancel-text="No" @ok="confirm" @cancel="cancel">
+      <Button type="danger">Delete</Button>
+    </Popconfirm>
+    <Popconfirm
+      title="Are you sure？"
+      ok-text="Yes"
+      :ok-props="{ ghost: true }"
+      cancel-text="No"
+      :cancel-props="{ type: 'danger', ghost: true }"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="danger">Delete</Button>
+    </Popconfirm>
+  </Space>
+  <Message ref="message" />
 </template>
 ```
 
@@ -191,16 +233,18 @@ const cancel = (e: MouseEvent) => {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-title | 确认框的标题 | string &#124; slot | '' | false
-description | 确认框的内容描述 | string &#124; slot | '' | false
-content | 展示的文本 | string &#124; slot | '' | false
+title | 确认框的标题 | string &#124; Slot | '' | false
+description | 确认框的内容描述 | string &#124; Slot | '' | false
+content | 展示的文本 | string &#124; Slot | '' | false
 icon | 自定义弹出确认框 `Icon` 图标 | string &#124; slot | '' | false
 iconType | 弹出确认框 `Icon` 图标类型 | 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'warning' | false
 maxWidth | 弹出确认框内容最大宽度 | string &#124; number | 'auto' | false
-cancelText | 取消按钮文字 | string &#124; slot | '取消' | false
-cancelType | 取消按钮类型 | string | 'default' | false
-okText | 确认按钮文字 | string &#124; slot | '确定' | false
-okType | 确认按钮类型 | string | 'primary' | false
+cancelText | 取消按钮文字 | string &#124; Slot | '取消' | false
+cancelType | 取消按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' | false
+cancelProps | 取消按钮 `props`，优先级高于 `cancelType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} | false
+okText | 确认按钮文字 | string &#124; Slot | '确定' | false
+okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary' | false
+okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} | false
 showCancel | 是否显示取消按钮 | boolean | true | false
 
 ## Events

@@ -24,12 +24,26 @@ const cancel = (e: MouseEvent) => {
       @cancel="cancel"
       @openChange="openChange"
     >
+      <template #okText> nihao </template>
       <Button type="danger">Delete</Button>
     </Popconfirm>
-    <h2 class="mt30 mb10">自定义按钮文字</h2>
-    <Popconfirm title="Are you sure？" ok-text="Yes" cancel-text="No">
-      <Button type="danger">Delete</Button>
-    </Popconfirm>
+    <h2 class="mt30 mb10">自定义按钮</h2>
+    <Space>
+      <Popconfirm title="Are you sure？" ok-text="Yes" cancel-text="No" @ok="confirm" @cancel="cancel">
+        <Button type="danger">Delete</Button>
+      </Popconfirm>
+      <Popconfirm
+        title="Are you sure？"
+        ok-text="Yes"
+        :ok-props="{ ghost: true }"
+        cancel-text="No"
+        :cancel-props="{ type: 'danger', ghost: true }"
+        @ok="confirm"
+        @cancel="cancel"
+      >
+        <Button type="danger">Delete</Button>
+      </Popconfirm>
+    </Space>
     <h2 class="mt30 mb10">预置四种 Icon 图标</h2>
     <Space>
       <Popconfirm title="Are you sure delete this task?">

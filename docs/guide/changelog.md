@@ -6,6 +6,9 @@
 ## 1.3.1 <Tag color="volcano" size="small">2024-07-25</Tag>
 
 - 优化 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件实现
+- 优化 [走马灯 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件实现
+- 优化更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件
+- 优化更新 [弹出确认 Popconfirm](https://themusecatcher.github.io/vue-amazing-ui/guide/components/popconfirm.html) 组件
 - 组件库及文档日常代码优化
 
 ## 1.3.0 <Tag color="volcano" size="small">2024-07-24</Tag>

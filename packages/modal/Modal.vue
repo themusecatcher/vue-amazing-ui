@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Button from '../button'
 import { ref, nextTick } from 'vue'
+import Button from '../button'
 interface Desc {
   title: string // 标题
   content: string // 内容
