@@ -470,7 +470,7 @@ options | 复选元素数据 | [Option](#option-type)[] | [] | false
 disabled | 是否禁用所有复选框 | boolean | false | false
 vertical | 是否垂直排列 | boolean | false | false
 value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any[] | [] | false
-gap | 多个单选框之间的间距，单位`px`，垂直排列时，间距即垂直间距 | number | 8 | false
+gap | 多个单选框之间的间距，单位 `px`，垂直排列时，间距即垂直间距 | number | 8 | false
 width | 复选区域最大展示宽度，超出后折行 | string &#124; number | 'auto' | false
 height | 复选区域最大展示高度，超出后滚动 | string &#124; number | 'auto' | false
 indeterminate | 全选时的样式控制 | boolean | false | false

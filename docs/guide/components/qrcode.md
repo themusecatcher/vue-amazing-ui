@@ -199,7 +199,7 @@ const value = ref('hello world')
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 value | 扫描后的文本或地址 | string | '' | false
-size | 二维码大小，单位`px` | number | 160 | false
+size | 二维码大小，单位 `px` | number | 160 | false
 color | 二维码颜色，Value must be in `hex format` (十六进制颜色值) | string | '#000' | false
 bgColor | 二维码背景色，Value must be in `hex format` (十六进制颜色值) | string | '#FFF' | false
 bordered | 是否有边框 | boolean | true | false

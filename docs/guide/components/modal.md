@@ -365,12 +365,12 @@ function onKnow () { // “我知道了”按钮回调
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-width | 提示框宽度，单位`px` | number | 420 | false
+width | 提示框宽度，单位 `px` | number | 420 | false
 cancelText | 取消按钮文字 | string | '取消' | false
 okText | 确认按钮文字 | string | '确定' | false
 noticeText | 通知按钮文字 | string | '知道了' | false
 center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true | false
-top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位`px` | number | 100 | false
+top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100 | false
 loading | 确定按钮 `loading` | boolean | false | false
 show | 提示框是否可见 | boolean | false | false
 

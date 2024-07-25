@@ -6,6 +6,7 @@
 ## 1.3.1 <Tag color="volcano" size="small">2024-07-25</Tag>
 
 - 优化 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件实现
+- 组件库及文档日常代码优化
 
 ## 1.3.0 <Tag color="volcano" size="small">2024-07-24</Tag>
 

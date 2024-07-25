@@ -574,7 +574,7 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-width | 日期选择器宽度，单位`px` | number | 180 | false
+width | 日期选择器宽度，单位 `px` | number | 180 | false
 mode | 选择器模式 | 'time' &#124; 'date' &#124; 'week' &#124; 'month' &#124; 'year' | 'date' | false
 [format](#format-支持的格式化占位符列表) | 日期展示格式 | string &#124; ((date: Date) => string) &#124; ((dates: Date[]) => string) | [DefaultFormat](#defaultformat-value) | false
 showTime | 是否增加时间选择 | boolean | false | false

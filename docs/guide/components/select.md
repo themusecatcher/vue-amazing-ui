@@ -681,8 +681,8 @@ disabled | 是否禁用 | boolean | false | false
 allowClear | 是否支持清除 | boolean | false | false
 search | 是否支持搜索，使用搜索时请设置 `width` | boolean | false | false
 filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true | false
-width | 宽度，单位`px` | string &#124; number | 'auto' | false
-height | 高度，单位`px` | number | 32 | false
+width | 宽度，单位 `px` | string &#124; number | 'auto' | false
+height | 高度，单位 `px` | number | 32 | false
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
 modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目 | number &#124; string &#124; null | null | false
 

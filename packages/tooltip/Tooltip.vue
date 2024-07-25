@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { Slot, CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
   maxWidth?: number // 提示框内容最大宽度，单位px
-  content?: string // 展示的文本 string | slot
-  tooltip?: string // 提示的文本 string | slot
+  content?: string | Slot // 展示的文本
+  tooltip?: string | Slot // 提示的文本
   fontSize?: number // 提示文本字体大小，单位px，优先级高于 overlayStyle
   color?: string // 提示文本字体颜色，优先级高于 overlayStyle
   backgroundColor?: string // 提示框背景颜色，优先级高于 overlayStyle

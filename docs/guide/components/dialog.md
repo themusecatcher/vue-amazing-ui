@@ -379,7 +379,7 @@ p {
 -- | -- | -- | -- | --
 title | 标题 | string &#124; slot | '提示' | false
 content | 内容 | string &#124; slot | '' | false
-width | 宽度，单位`px` | number | 540 | false
+width | 宽度，单位 `px` | number | 540 | false
 height | 高度，默认 `auto`，自适应内容高度 | number &#124; string | 'auto' | false
 cancelText | 取消按钮文字 | string | '取消' | false
 okText | 确定按钮文字 | string | '确定' | false

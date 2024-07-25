@@ -246,10 +246,10 @@ const images = ref([
 -- | -- | -- | -- | --
 src | 图像地址 &#124; 图像地址数组 | string &#124; [Image](#image-type)[] | '' | true
 name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | '' | false
-width | 图像宽度，单位`px` | string &#124; number | 300 | false
-height | 图像高度，单位`px` | string &#124; number | '100%' | false
+width | 图像宽度，单位 `px` | string &#124; number | 300 | false
+height | 图像高度，单位 `px` | string &#124; number | '100%' | false
 bordered | 是否显示边框 | boolean | true | false
-gap | 展示图片间距大小，单位`px`，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] | 8 | false
+gap | 展示图片间距大小，单位 `px`，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] | 8 | false
 fit | 图片在容器内的的适应类型，参考[object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' | false
 preview | 预览文本 | string &#124; slot | '预览' | false
 zoomRatio | 每次缩放比率 | number | 0.1 | false

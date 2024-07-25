@@ -507,7 +507,7 @@ count | `star` 总数 | number | 5 | false
 character | 自定义字符，预置 `'star-outlined'` `'star-filled'` `'heart-outlined'` `'heart-filled'` 四种 `svg` 图标 | string &#124; Slot | 'star-filled' | false
 size | 字符时是字体高度，图标时是图片大小，单位 `px` | number | 20 | false
 color | 字符选中颜色 | string | '#fadb14' | false
-gap | 字符间距，单位`px` | number | 8 | false
+gap | 字符间距，单位 `px` | number | 8 | false
 disabled | 只读，无法进行交互 | boolean | false | false
 value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `1,2,3...` | number | 0 | false
 

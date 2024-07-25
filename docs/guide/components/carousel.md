@@ -1020,9 +1020,9 @@ effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide' | f
 interval | 自动轮播间隔，单位`ms` | number | 3000 | false
 showArrow | 是否显示箭头 | boolean | true | false
 arrowColor | 箭头颜色 | string | '#FFF' | false
-arrowSize | 箭头大小，单位`px` | number | 36 | false
+arrowSize | 箭头大小，单位 `px` | number | 36 | false
 dots | 是否显示指示点 | boolean | true | false
-dotSize | 指示点大小，单位`px` | number | 10 | false
+dotSize | 指示点大小，单位 `px` | number | 10 | false
 dotColor | 指示点颜色 | string | 'rgba(255, 255, 255, 0.3)' | false
 dotActiveColor | 指示点选中颜色 | string | '#1677FF' | false
 dotStyle | 指示点样式，优先级高于 `dotSize`、`dotColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
