@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import type { Slot } from 'vue'
 interface Gradient {
   '0%'?: string
   '100%'?: string
@@ -15,8 +14,8 @@ interface Props {
   strokeColor?: string | Gradient // 进度条的色彩，传入 string 时为纯色，传入 Gradient 时为渐变，进度圈时 direction: 'left' 为逆时针，direction: 'right' 为顺时针
   strokeLinecap?: 'round' | 'butt' | 'square' // 进度条的样式
   showInfo?: boolean // 是否显示进度数值或状态图标
-  success?: string | Slot // 进度完成时的信息 string | slot
-  format?: (percent: number) => (string | number) | Slot // 内容的模板函数
+  success?: string // 进度完成时的信息 string | slot
+  format?: (percent: number) => string | number // 内容的模板函数 function | slot
   type?: 'line' | 'circle' // 进度条类型
 }
 const props = withDefaults(defineProps<Props>(), {

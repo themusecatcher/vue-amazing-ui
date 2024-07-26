@@ -614,7 +614,7 @@ activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` |
 -- | -- | -- | --
 key | 对应 `activeKey` | string &#124; number | true
 tab | 标签页显示文字 | string | true
-content | 标签页内容 | string &#124; Slot | false
+content | 标签页内容 | string &#124; slot | false
 disabled | 禁用对应标签页 | boolean | false
 
 ## Events

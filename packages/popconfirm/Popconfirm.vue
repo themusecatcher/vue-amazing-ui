@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, useSlots } from 'vue'
-import type { Slot } from 'vue'
 import Button from '../button'
 interface Props {
-  title?: string | Slot // 确认框的标题
-  description?: string | Slot // 确认框的内容描述
-  content?: string | Slot // 展示的文本
-  icon?: string | Slot // 自定义弹出确认框 Icon 图标
+  title?: string // 确认框的标题 string | slot
+  description?: string // 确认框的内容描述 string | slot
+  content?: string // 展示的文本 string | slot
+  icon?: string // 自定义弹出确认框 Icon 图标 string | slot
   iconType?: 'success' | 'info' | 'warning' | 'error' // 弹出确认框 Icon 图标类型
   maxWidth?: string | number // 弹出确认框内容最大宽度
-  cancelText?: string | Slot // 取消按钮文字
+  cancelText?: string // 取消按钮文字 string | slot
   cancelType?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 取消按钮类型
   cancelProps?: object // 取消按钮 props，优先级高于 cancelType，参考 Button 组件 props
-  okText?: string | Slot // 确认按钮文字
+  okText?: string // 确认按钮文字 string | slot
   okType?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 确认按钮类型
   okProps?: object // 确认按钮 props，优先级高于 okType，参考 Button 组件 props
   showCancel?: boolean // 是否显示取消按钮

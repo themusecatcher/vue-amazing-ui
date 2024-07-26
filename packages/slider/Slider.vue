@@ -27,7 +27,7 @@ const transition = ref(false)
 const timer = ref()
 const left = ref(0) // 左滑块距离滑动条左端的距离
 const right = ref(0) // 右滑动距离滑动条左端的距离
-const slider = ref()
+const sliderRef = ref() // slider DOM 引用
 const sliderWidth = ref()
 const leftHandle = ref() // left handle 模板引用
 const leftTooltip = ref() // left tooltip 模板应用
@@ -78,15 +78,6 @@ const rightValue = computed(() => {
 })
 const emits = defineEmits(['update:value', 'change'])
 watch(
-  () => props.width,
-  () => {
-    getSliderWidth()
-  },
-  {
-    flush: 'post'
-  }
-)
-watch(
   () => props.value,
   () => {
     getPosition()
@@ -95,6 +86,10 @@ watch(
 watch(sliderValue, (to) => {
   emits('update:value', to)
   emits('change', to)
+})
+useResizeObserver(sliderRef, () => {
+  getSliderWidth()
+  getPosition()
 })
 onMounted(() => {
   getSliderWidth()
@@ -122,7 +117,7 @@ function checkValue(value: number): number {
   return value
 }
 function getSliderWidth() {
-  sliderWidth.value = slider.value.offsetWidth
+  sliderWidth.value = sliderRef.value.offsetWidth
 }
 function getPosition() {
   if (props.range) {
@@ -187,7 +182,7 @@ function onClickPoint(e: any) {
 }
 function onLeftMouseDown() {
   // 在滚动条上拖动左滑块
-  const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
+  const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   window.onmousemove = (e: MouseEvent) => {
     if (props.tooltip) {
       leftTooltip.value.classList.add('show-handle-tooltip')
@@ -215,7 +210,7 @@ function onLeftMouseDown() {
 }
 function onRightMouseDown() {
   // 在滚动条上拖动右滑块
-  const leftX = slider.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
+  const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
   window.onmousemove = (e: MouseEvent) => {
     if (props.tooltip) {
       rightTooltip.value.classList.add('show-handle-tooltip')
@@ -300,7 +295,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
 }
 </script>
 <template>
-  <div :class="['m-slider', { disabled: disabled }]" ref="slider" :style="`width: ${totalWidth};`">
+  <div ref="sliderRef" :class="['m-slider', { disabled: disabled }]" :style="`width: ${totalWidth};`">
     <div class="u-slider-rail" @click.self="disabled ? () => false : onClickPoint($event)"></div>
     <div
       class="u-slider-track"

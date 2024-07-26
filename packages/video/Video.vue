@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 interface Props {
   src: string // 视频文件地址，支持网络地址 https 和相对地址
   poster?: string // 视频封面地址，支持网络地址 https 和相对地址
   second?: number // 在未设置封面时，自动截取视频第 second 秒对应帧作为视频封面
-  width?: number // 视频播放器宽度，单位px
-  height?: number // 视频播放器高度，单位px
+  width?: string | number // 视频播放器宽度，单位 px
+  height?: string | number // 视频播放器高度，单位 px
   autoplay?: boolean // 视频就绪后是否马上播放，优先级高于preload
   controls?: boolean // 是否向用户显示控件，比如进度条，全屏等
   loop?: boolean // 视频播放完成后，是否循环播放
@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   /*
     preload可选属性：
     auto: 一旦页面加载，则开始加载视频;
-    metadata: 当页面加载后仅加载视频的元数据（例如长度），建议使用metadata，以便视频自动获取第一帧作为封面poster
+    metadata: 当页面加载后仅加载视频的元数据（例如长度），建议使用 metadata，以便视频自动获取第一帧作为封面 poster
     none: 页面加载后不应加载视频
   */
   preload: 'metadata',
@@ -54,50 +54,23 @@ const props = withDefaults(defineProps<Props>(), {
   */
   fit: 'contain'
 })
+const veoWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return props.width + 'px'
+  }
+  return props.width
+})
+const veoHeight = computed(() => {
+  if (typeof props.height === 'number') {
+    return props.height + 'px'
+  }
+  return props.height
+})
+const veoRef = ref()
 // 参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
 const veoPoster = ref(props.poster)
 const originPlay = ref(true)
 const hidden = ref(false) // 是否隐藏播放器中间的播放按钮
-// 为模板引用标注类型
-const veo = ref()
-// const veo = ref<HTMLVideoElement | null>(null) // 声明一个同名的模板引用
-
-/*
-  loadeddata 事件在媒体当前播放位置的视频帧（通常是第一帧）加载完成后触发
-  preload为none时不会触发
-*/
-function getPoster() {
-  // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
-  // 由于不少视频第一帧为黑屏，故设置视频开始播放时间为0.5s，即取该时刻帧作为封面图
-  veo.value.currentTime = props.second
-  // 创建canvas元素
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-  // canvas画图
-  canvas.width = veo.value.videoWidth
-  canvas.height = veo.value.videoHeight
-  ctx?.drawImage(veo.value, 0, 0, canvas.width, canvas.height)
-  // 把canvas转成base64编码格式
-  veoPoster.value = canvas.toDataURL('image/png')
-}
-function onPlay() {
-  if (originPlay.value) {
-    veo.value.currentTime = 0
-    originPlay.value = false
-  }
-  if (props.autoplay) {
-    veo.value?.pause()
-  } else {
-    hidden.value = true
-    veo.value?.play()
-  }
-}
-function onPause() {
-  hidden.value = false
-}
-function onPlaying() {
-  hidden.value = true
-}
 onMounted(() => {
   if (props.autoplay) {
     hidden.value = true
@@ -110,16 +83,53 @@ onMounted(() => {
   */
   // veo.value.defaultPlaybackRate = 2
 })
+/*
+  loadedmetadata 事件在元数据（metadata）被加载完成后触发
+  loadeddata 事件在媒体当前播放位置的视频帧（通常是第一帧）加载完成后触发
+    若在移动/平板设备的浏览器设置中开启了流量节省（data-saver）模式，该事件则不会被触发。
+  preload 为 none 时不会触发
+*/
+function getPoster() {
+  // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
+  // 由于不少视频第一帧为黑屏，故设置视频开始播放时间为0.5s，即取该时刻帧作为封面图
+  veoRef.value.currentTime = props.second
+  // 创建canvas元素
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  // canvas画图
+  canvas.width = veoRef.value.videoWidth
+  canvas.height = veoRef.value.videoHeight
+  ctx?.drawImage(veoRef.value, 0, 0, canvas.width, canvas.height)
+  // 把canvas转成base64编码格式
+  veoPoster.value = canvas.toDataURL('image/png')
+}
+function onPlay() {
+  if (originPlay.value) {
+    veoRef.value.currentTime = 0
+    originPlay.value = false
+  }
+  if (props.autoplay) {
+    veoRef.value?.pause()
+  } else {
+    hidden.value = true
+    veoRef.value?.play()
+  }
+}
+function onPause() {
+  hidden.value = false
+}
+function onPlaying() {
+  hidden.value = true
+}
 </script>
 <template>
-  <div class="m-video" :class="{ 'u-video-hover': !hidden }" :style="`width: ${width}px; height: ${height}px;`">
+  <div class="m-video" :class="{ 'video-hover': !hidden }" :style="`width: ${veoWidth}; height: ${veoHeight};`">
     <video
-      ref="veo"
+      ref="veoRef"
+      class="u-video"
       :style="`object-fit: ${fit};`"
       :src="src"
       :poster="veoPoster"
-      :width="width"
-      :height="height"
       :autoplay="autoplay"
       :controls="!originPlay && controls"
       :loop="loop"
@@ -146,10 +156,15 @@ onMounted(() => {
 </template>
 <style lang="less" scoped>
 .m-video {
-  display: inline-block;
   position: relative;
   background: #000;
   cursor: pointer;
+  .u-video {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    vertical-align: bottom;
+  }
   .m-icon-play {
     display: inline-block;
     position: absolute;
@@ -177,7 +192,7 @@ onMounted(() => {
     opacity: 0;
   }
 }
-.u-video-hover {
+.video-hover {
   &:hover {
     .m-icon-play {
       background-color: rgba(0, 0, 0, 0.7);

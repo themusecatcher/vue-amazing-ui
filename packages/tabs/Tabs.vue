@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
-import type { Slot } from 'vue'
 import { useResizeObserver, rafTimeout, cancelRaf } from '../utils'
 interface Tab {
   key: string | number // 对应 activeKey
   tab: string // 标签页显示文字
-  content?: string | Slot // 标签页内容
+  content?: string // 标签页内容 string | slot
   disabled?: boolean // 禁用对应标签页
 }
 interface Props {
@@ -13,8 +12,8 @@ interface Props {
   centered?: boolean // 标签是否居中展示
   size?: 'small' | 'middle' | 'large' // 标签页大小
   type?: 'line' | 'card' // 标签页的样式
-  gutter?: number // tabs 之前的间隙大小，单位px
-  activeKey?: string | number // (v-model)当前激活 tab 面板的 key
+  gutter?: number // tabs 之前的间隙大小，单位 px
+  activeKey?: string | number // v-model 当前激活 tab 面板的 key
 }
 const props = withDefaults(defineProps<Props>(), {
   tabPages: () => [],
@@ -24,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   gutter: undefined,
   activeKey: ''
 })
-const tabs = ref() // 所有tabs的ref模板引用
+const tabs = ref() // 所有 tabs 的 ref 模板引用
 const left = ref(0)
 const width = ref(0)
 const wrap = ref()
