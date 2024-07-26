@@ -73,6 +73,9 @@
     "vitepress": "^1.3.1",
     "vue-tsc": "^2.0.26"
   },
+  "sideEffects": [
+    "dist/*"
+  ],
   "description": "An Amazing Vue3 UI Components Library.",
   "repository": {
     "type": "git",
