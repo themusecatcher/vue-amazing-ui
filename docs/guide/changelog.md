@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.3.2 <Tag color="volcano" size="small">2024-07-26</Tag>
+
+- 优化 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件
+- 优化 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件
+
 ## 1.3.1 <Tag color="volcano" size="small">2024-07-25</Tag>
 
 - 优化 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件实现
