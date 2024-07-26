@@ -83,6 +83,39 @@ const markStyle = computed(() => {
   markStyle.backgroundPosition = `${positionLeft}px ${positionTop}px`
   return markStyle
 })
+watch(
+  () => [props],
+  () => {
+    renderWatermark()
+  },
+  {
+    deep: true, // 强制转成深层侦听器
+    flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
+  }
+)
+onMounted(() => {
+  renderWatermark()
+})
+onBeforeUnmount(() => {
+  destroyWatermark()
+})
+// 防止用户修改/隐藏水印
+useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
+  subtree: true, // 监听以 target 为根节点的整个子树
+  childList: true, // 监听 target 节点中发生的节点的新增与删除
+  attributes: true, // 观察所有监听的节点属性值的变化
+  attributeFilter: ['style', 'class'] // 声明哪些属性名会被监听的数组。如果不声明该属性，所有属性的变化都将触发通知。
+})
+function onMutate(mutations: MutationRecord[]) {
+  if (!stopObservation.value) {
+    mutations.forEach((mutation: MutationRecord) => {
+      if (reRendering(mutation, watermarkRef.value)) {
+        destroyWatermark()
+        renderWatermark()
+      }
+    })
+  }
+}
 function destroyWatermark() {
   if (watermarkRef.value) {
     watermarkRef.value.remove()
@@ -224,19 +257,6 @@ function rotateWatermark(ctx: CanvasRenderingContext2D, rotateX: number, rotateY
   ctx.rotate((Math.PI / 180) * Number(rotate))
   ctx.translate(-rotateX, -rotateY)
 }
-onMounted(() => {
-  renderWatermark()
-})
-watch(
-  () => [props],
-  () => {
-    renderWatermark()
-  },
-  {
-    deep: true, // 强制转成深层侦听器
-    flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
-  }
-)
 // Whether to re-render the watermark
 function reRendering(mutation: MutationRecord, watermarkElement?: HTMLElement) {
   let flag = false
@@ -250,27 +270,6 @@ function reRendering(mutation: MutationRecord, watermarkElement?: HTMLElement) {
   }
   return flag
 }
-onBeforeUnmount(() => {
-  destroyWatermark()
-})
-function onMutate(mutations: MutationRecord[]) {
-  if (stopObservation.value) {
-    return
-  }
-  mutations.forEach((mutation) => {
-    if (reRendering(mutation, watermarkRef.value)) {
-      destroyWatermark()
-      renderWatermark()
-    }
-  })
-}
-// 防止用户使用控制台隐藏、修改水印
-useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
-  subtree: true, // 监听以 target 为根节点的整个子树
-  childList: true, // 监听 target 节点中发生的节点的新增与删除
-  attributes: true, // 观察所有监听的节点属性值的变化
-  attributeFilter: ['style', 'class'] // 声明哪些属性名会被监听的数组。如果不声明该属性，所有属性的变化都将触发通知。
-})
 </script>
 <template>
   <div ref="containerRef" style="position: relative">
