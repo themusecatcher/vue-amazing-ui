@@ -2,23 +2,36 @@
 import { ref, computed, watch } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
-  duration?: number // 自动关闭的延时，单位ms
-  top?: number | string // 消息距离顶部的位置，单位px
+  bordered?: boolean // 是否展示边框
+  dataSource?: any[] // 列表数据源
+  header?: string // 列表头部 string | slot
+  footer?: string // 列表底部 string | slot
+  grid?: object // 	列表栅格配置
+  vertical?: boolean // 是否使用竖直样式
+  loading?: boolean // 是否加载中
+  loadMore?: string // 加载更多 string | slot
+  pagination?: boolean | object // 对应的 pagination 配置, 设置 false 不显示
+  rowKey?: (item: any) => string | number // 各项 key 的取值，可以是字符串或一个函数
+  size?: 'small' | 'middle' | 'large' // 列表尺寸
+  split?: boolean // 是否展示分割线
 }
 const props = withDefaults(defineProps<Props>(), {
-  duration: 3000,
-  top: 30
+  bordered: false,
+  dataSource: () => [],
+  header: undefined,
+  footer: undefined,
+  grid: () => ({}),
+  vertical: false,
+  loading: false,
+  loadMore: undefined,
+  pagination: false,
+  rowKey: undefined,
+  size: 'middle',
+  split: true
 })
-enum ColorStyle { // 颜色主题对象
-  info = '#1677FF',
-  success = '#52c41a',
-  error = '#ff4d4f',
-  warning = '#faad14',
-  loading = '#1677FF'
-}
 </script>
 <template>
-  <div class="m-list"> </div>
+  <div class="m-list"></div>
 </template>
 <style lang="less" scoped>
 .m-list {
