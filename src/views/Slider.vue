@@ -36,7 +36,7 @@ function formatter(value: number) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Slider width="80%" v-model:value="singleValue" @change="onChange" />
+    <Slider v-model:value="singleValue" @change="onChange" />
     <h2 class="mt30 mb10">禁用</h2>
     <Flex vertical gap="large" width="80%">
       <Slider v-model:value="singleValue" disabled />

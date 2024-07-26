@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { rafTimeout, cancelRaf } from '../utils'
+import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
 interface Props {
   width?: string | number // 宽度
   min?: number // 最小值
@@ -10,7 +10,7 @@ interface Props {
   step?: number // 步长，取值必须大于0，并且可被 (max - min) 整除
   formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
   tooltip?: boolean // 是否展示 Tooltip
-  value?: number | number[] // (v-model)设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
+  value?: number | number[] // v-model 设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
