@@ -93,14 +93,14 @@ function onClick(e: Event) {
       <Space align="center"> Loading Type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
       <Space>
         <Button
-          style="width: 150px; height: 40px; border-color: #faad14; color: #faad14"
+          style="width: 150px; height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
           ripple-color="#faad14"
           loading-color="#faad14"
           size="large"
           :loading-type="loadingType"
           :loading="customLoading"
         >
-          <p style="font-size: 18px">自定义样式</p>
+          自定义样式
         </Button>
         <Button
           style="width: 150px; height: 40px; font-size: 18px; background: #faad14; border-color: #faad14; color: #fff"
