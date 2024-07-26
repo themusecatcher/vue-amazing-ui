@@ -849,8 +849,8 @@ const state = reactive({
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-title | 描述列表的标题，显示在最顶部 | string &#124; Slot | undefined | false
-extra | 描述列表的操作区域，显示在右上方 | string &#124; Slot | undefined | false
+title | 描述列表的标题，显示在最顶部 | string &#124; slot | undefined | false
+extra | 描述列表的操作区域，显示在右上方 | string &#124; slot | undefined | false
 bordered | 是否展示边框 | boolean | false | false
 vertical | 是否使用垂直描述列表 | boolean | false | false
 size | 设置列表的大小 | 'default' &#124; 'middle' &#124; 'small' | 'default' | false
@@ -873,7 +873,7 @@ xxl | `≥1600px` 响应式栅格 | number | false
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-label | 内容的描述标签 | string &#124; Slot | undefined | false
+label | 内容的描述标签 | string &#124; slot | undefined | false
 span | 包含列的数量，**未设置时等效于 `span: 1`，除了最后一行的最后一项，会将最后一行剩余的列数全部分配给该项** | number | undefined | false
 labelStyle | 自定义标签样式，优先级高于 `Description` 的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 contentStyle | 自定义内容样式，优先级高于 `Description` 的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false

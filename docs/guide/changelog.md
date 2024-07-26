@@ -49,7 +49,6 @@
 - 分段控制器 Segmented 组件，选项切换效果优化
 - 表格 Table 组件，功能扩展
 - 级联选择 Cascader 组件，重构
-- 修复需要监听 DOM 尺寸变化或 DOM 更新的组件
 
 <style lang="less" scoped>
 .m-tag {

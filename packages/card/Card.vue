@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import type { CSSProperties, Slot } from 'vue'
+import type { CSSProperties } from 'vue'
 import Skeleton from '../skeleton'
 interface Props {
   width?: number | string // 卡片宽度
-  title?: string | Slot // 卡片标题 string | slot
-  extra?: string | Slot // 卡片右上角的操作区域 string | slot
+  title?: string // 卡片标题 string | slot
+  extra?: string // 卡片右上角的操作区域 string | slot
   bordered?: boolean // 是否有边框
   loading?: boolean // 当卡片内容还在加载中时，可以用 loading 展示一个占位
   size?: 'default' | 'small' // 卡片的尺寸

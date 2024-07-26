@@ -5,7 +5,7 @@ const images = ref<any[]>([])
 const state = reactive({
   columnCount: 3,
   columnGap: 20,
-  backgroundColor: '#e1faeb',
+  backgroundColor: '#e6f4ff',
   borderRadius: 12
 })
 function loadImages() {

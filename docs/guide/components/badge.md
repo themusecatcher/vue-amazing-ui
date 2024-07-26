@@ -574,13 +574,13 @@ const colors = [
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 color | 自定义小圆点的颜色，优先级高于 `status` | [PresetColor](#presetcolor-enum-type) &#124; string | '' | false
-value | 展示的数字或文字，为数字时大于 `max` 显示为 `max+`，为 `0` 时隐藏 | number &#124; string &#124; Slot | undefined | false
+value | 展示的数字或文字，为数字时大于 `max` 显示为 `max+`，为 `0` 时隐藏 | number &#124; string &#124; slot | undefined | false
 max | 展示封顶的数字值 | number | 99 | false
 showZero | 当数值为 `0` 时，是否展示 `Badge` | boolean | false | false
 dot | 不展示数字，只有一个小红点 | boolean | false | false
 offset | 设置状态点的位置偏移，距默认位置左侧、上方的偏移量 `[x, y]: [水平偏移, 垂直偏移]` | [number &#124; string, number &#124; string] | undefined | false
 status | 设置 `Badge` 为状态点 | [Status](#status-enum-type) | undefined | false
-text | 在设置了 `status` 的前提下有效，设置状态点的文本 | string &#124; Slot | '' | false
+text | 在设置了 `status` 的前提下有效，设置状态点的文本 | string &#124; slot | '' | false
 valueStyle | 设置徽标的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 zIndex | 设置徽标的 `z-index` | number | 9 | false
 title | 设置鼠标放在状态点上时显示的文字 | string | '' | false

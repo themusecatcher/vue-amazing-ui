@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useSlots, computed, nextTick, ref, watch, onMounted } from 'vue'
-import type { CSSProperties, Slot } from 'vue'
+import type { CSSProperties } from 'vue'
 import { throttle, useEventListener, useMutationObserver } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -11,8 +11,8 @@ interface Responsive {
   xxl?: number // ≥1600px 响应式栅格
 }
 interface Props {
-  title?: string | Slot // 描述列表的标题，显示在最顶部 string | slot
-  extra?: string | Slot // 描述列表的操作区域，显示在右上方 string | slot
+  title?: string // 描述列表的标题，显示在最顶部 string | slot
+  extra?: string // 描述列表的操作区域，显示在右上方 string | slot
   bordered?: boolean // 是否展示边框
   vertical?: boolean // 是否使用垂直描述列表
   size?: 'default' | 'middle' | 'small' // 设置列表的大小
