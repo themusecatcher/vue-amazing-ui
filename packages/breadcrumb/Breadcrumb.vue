@@ -87,7 +87,7 @@ function getUrl(route: Route) {
         color 0.2s,
         background-color 0.2s;
       &:hover {
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: rgba(0, 0, 0, 0.06);
         color: rgba(0, 0, 0, 0.88);
       }
     }

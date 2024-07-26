@@ -352,7 +352,7 @@ function onChange(value: string | number, label: string, index: number) {
     width: 100%;
     height: 100%;
     outline: none;
-    cursor: text;
+    cursor: pointer;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     .m-select-search {
       position: absolute;
@@ -422,12 +422,11 @@ function onChange(value: string | number, label: string, index: number) {
       .u-svg();
       background: #fff;
       cursor: pointer;
-      fill: rgba(140, 140, 140, 0.6);
       transition:
         fill 0.2s,
         opacity 0.3s;
       &:hover {
-        fill: rgba(100, 100, 100, 0.8);
+        fill: rgba(0, 0, 0, 0.45);
       }
     }
     .show {

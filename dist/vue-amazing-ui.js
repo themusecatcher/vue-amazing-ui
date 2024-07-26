@@ -322,7 +322,7 @@ const ua = W(R({ __name: "Badge", props: { color: { default: "" }, value: { defa
 ua.install = (l) => {
   l.component(ua.__name, ua);
 };
-const _l = (l) => (oe("data-v-42762479"), l = l(), se(), l), zt = ["href", "title", "target"], Ct = { key: 0, class: "u-separator" }, $t = { key: 1, class: "u-arrow", viewBox: "64 64 896 896", "data-icon": "right", "aria-hidden": "true", focusable: "false" }, Bt = [_l(() => o("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1))], Ft = _l(() => o("div", { class: "assist" }, null, -1)), St = R({ __name: "Breadcrumb", props: { routes: { default: () => [] }, fontSize: { default: 14 }, height: { default: 21 }, maxWidth: { default: 180 }, separator: { default: "" }, target: { default: "_self" } }, setup(l) {
+const _l = (l) => (oe("data-v-4d1baca3"), l = l(), se(), l), zt = ["href", "title", "target"], Ct = { key: 0, class: "u-separator" }, $t = { key: 1, class: "u-arrow", viewBox: "64 64 896 896", "data-icon": "right", "aria-hidden": "true", focusable: "false" }, Bt = [_l(() => o("path", { d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z" }, null, -1))], Ft = _l(() => o("div", { class: "assist" }, null, -1)), St = R({ __name: "Breadcrumb", props: { routes: { default: () => [] }, fontSize: { default: 14 }, height: { default: 21 }, maxWidth: { default: 180 }, separator: { default: "" }, target: { default: "_self" } }, setup(l) {
   const a = l, e = _(() => a.routes.length);
   function t(c) {
     var s = c.path;
@@ -335,7 +335,7 @@ const _l = (l) => (oe("data-v-42762479"), l = l(), se(), l), zt = ["href", "titl
     return s;
   }
   return (c, s) => (i(), d("div", { class: "m-breadcrumb", style: C(`height: ${c.height}px;`) }, [(i(!0), d(q, null, X(c.routes, (u, n) => (i(), d("div", { class: "m-bread", key: n }, [o("a", { class: S(["u-route", { active: n === e.value - 1 }]), style: C(`font-size: ${c.fontSize}px; max-width: ${c.maxWidth}px;`), href: n === e.value - 1 ? "javascript:;" : t(u), title: u.name, target: n === e.value - 1 ? "_self" : c.target }, D(u.name || "--"), 15, zt), n !== e.value - 1 ? (i(), d(q, { key: 0 }, [c.separator ? (i(), d("span", Ct, D(c.separator), 1)) : (i(), d("svg", $t, Bt))], 64)) : F("", !0)]))), 128)), Ft], 4));
-} }), ca = W(St, [["__scopeId", "data-v-42762479"]]);
+} }), ca = W(St, [["__scopeId", "data-v-4d1baca3"]]);
 ca.install = (l) => {
   l.component(ca.__name, ca);
 };
