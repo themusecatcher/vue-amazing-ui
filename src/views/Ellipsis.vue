@@ -38,5 +38,16 @@
         </div>
       </template>
     </Ellipsis>
+    <h2 class="mt30 mb10">自定义 Tooltip 样式</h2>
+    <Ellipsis
+      :max-width="240"
+      :tooltip-props="{
+        fontSize: 16,
+        backgroundColor: '#4096ff',
+        overlayStyle: { padding: '12px 16px', borderRadius: '12px' }
+      }"
+    >
+      住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
+    </Ellipsis>
   </div>
 </template>

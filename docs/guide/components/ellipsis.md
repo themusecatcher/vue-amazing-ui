@@ -99,6 +99,36 @@
 
 :::
 
+## 自定义 Tooltip 样式
+
+<Ellipsis
+  :max-width="240"
+  :tooltip-props="{
+    fontSize: 16,
+    backgroundColor: '#4096ff',
+    overlayStyle: { padding: '12px 16px', borderRadius: '12px' }
+  }">
+  住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
+</Ellipsis>
+
+::: details Show Code
+
+```vue
+<template>
+  <Ellipsis
+    :max-width="240"
+    :tooltip-props="{
+      fontSize: 16,
+      backgroundColor: '#4096ff',
+      overlayStyle: { padding: '12px 16px', borderRadius: '12px' }
+    }">
+    住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
+  </Ellipsis>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Ellipsis
@@ -109,11 +139,7 @@ maxWidth | 文本最大宽度 | number &#124; string | '100%' | false
 line | 最大行数 | number | undefined | false
 expand | 是否启用点击文本展开全部 | boolean | false | false
 tooltip | 是否启用文本提示框 | boolean | true | false
-tooltipMaxWidth | 提示框内容最大宽度，单位 `px`，默认不设置时，提示文本内容自动与展示文本宽度保持一致 | number | undefined | false
-tooltipFontSize | 提示文本字体大小，单位 `px`，优先级高于 `overlayStyle` | number | 14 | false
-tooltipColor | 提示文本字体颜色，优先级高于 `overlayStyle` | string | '#FFF' | false
-tooltipBackgroundColor | 提示框背景颜色，优先级高于 `overlayStyle` | string | 'rgba(0, 0, 0, 0.85)' | false
-tooltipOverlayStyle | 提示框内容区域样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {padding: \'8px 12px', textAlign: 'justify'} | false
+tooltipProps | `tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {} | false
 
 ## Events
 
