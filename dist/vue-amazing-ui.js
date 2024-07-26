@@ -1872,7 +1872,7 @@ const Oe = (l) => (oe("data-v-5c2a8bc9"), l = l(), se(), l), z4 = { class: "m-up
 al.install = (l) => {
   l.component(al.__name, al);
 };
-const N4 = ["src", "poster", "autoplay", "controls", "loop", "muted", "preload"], P4 = [((l) => (oe("data-v-4b9dcf19"), l = l(), se(), l))(() => o("svg", { class: "u-svg", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 34 34" }, [o("path", { d: `M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039
+const N4 = ["src", "poster", "autoplay", "controls", "loop", "muted", "preload"], P4 = [((l) => (oe("data-v-f77bbfbf"), l = l(), se(), l))(() => o("svg", { class: "u-svg", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 34 34" }, [o("path", { d: `M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039
           C31.913,19.675,31.913,14.325,28.26,11.961z` })], -1))], ll = W(R({ __name: "Video", props: { src: { default: "" }, poster: { default: "" }, second: { default: 0.5 }, width: { default: 800 }, height: { default: 450 }, autoplay: { type: Boolean, default: !1 }, controls: { type: Boolean, default: !0 }, loop: { type: Boolean, default: !1 }, muted: { type: Boolean, default: !1 }, preload: { default: "metadata" }, showPlay: { type: Boolean, default: !0 }, fit: { default: "contain" } }, setup(l) {
   const a = l, e = _(() => typeof a.width == "number" ? a.width + "px" : a.width), t = _(() => typeof a.height == "number" ? a.height + "px" : a.height), c = y(), s = y(a.poster), u = y(!0), n = y(!1);
   function m() {
@@ -1886,7 +1886,7 @@ const N4 = ["src", "poster", "autoplay", "controls", "loop", "muted", "preload"]
     const g = document.createElement("canvas"), f = g.getContext("2d");
     g.width = c.value.videoWidth, g.height = c.value.videoHeight, f == null || f.drawImage(c.value, 0, 0, g.width, g.height), s.value = g.toDataURL("image/png");
   }()), onPause: w[1] || (w[1] = (p) => r.showPlay ? void (n.value = !1) : () => !1), onPlaying: w[2] || (w[2] = (p) => r.showPlay ? void (n.value = !0) : () => !1), onClickOnce: ee(m, ["prevent"]) }, r.$attrs), " 您的浏览器不支持video标签。 ", 16, N4), K(o("span", { class: S(["m-icon-play", { hidden: n.value }]) }, P4, 2), [[Z, u.value || r.showPlay]])], 6));
-} }), [["__scopeId", "data-v-4b9dcf19"]]);
+} }), [["__scopeId", "data-v-f77bbfbf"]]);
 ll.install = (l) => {
   l.component(ll.__name, ll);
 };
@@ -2002,11 +2002,11 @@ const ol = R({ __name: "Watermark", props: { width: { default: void 0 }, height:
   function k(x, z, $, L) {
     x.translate(z, $), x.rotate(Math.PI / 180 * Number(L)), x.translate(-z, -$);
   }
-  return xe(() => {
+  return ie(() => [a], () => {
     B();
-  }), ie(() => [a], () => {
+  }, { deep: !0, flush: "post" }), xe(() => {
     B();
-  }, { deep: !0, flush: "post" }), ea(() => {
+  }), ea(() => {
     v();
   }), pl(a.fullscreen ? c : e, function(x) {
     s.value || x.forEach((z) => {

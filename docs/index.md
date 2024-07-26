@@ -7,7 +7,7 @@ titleTemplate: Amazing UI Components Library
 hero:
   name: Vue Amazing UI
   text: Amazing UI 组件库
-  tagline: 基于 Vue3 + TS + Vite 开发
+  tagline: 基于 Vue3 + TypeScript + Vite 开发
   image:
     src: /amazing-logo.svg
     alt: Vue Amazing UI
@@ -24,7 +24,7 @@ hero:
 features:
   - icon: 🛠️
     title: 最新的技术
-    details: '采用 Vue@3.4.33 + TypeScript@5.5.3 + Vite@5.3.4 + Less@4.2.0'
+    details: '采用 Vue@3.4.34 + TypeScript@5.5.4 + Vite@5.3.5 + Less@4.2.0'
   - icon: 🚀
     title: 开箱即可用
     details: 共有 59 个常用基础 UI 组件以及 15 个常用工具函数，持续探索优化中...

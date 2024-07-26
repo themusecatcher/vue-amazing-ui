@@ -78,10 +78,10 @@ onMounted(() => {
   }
   /*
     自定义设置播放速度，经测试：
-    在vue2中需设置：this.$refs.veo.playbackRate = 2
-    在vue3中需设置：veo.value.defaultPlaybackRate = 2
+    在vue2中需设置：this.$refs.veoRef.playbackRate = 2
+    在vue3中需设置：veoRef.value.defaultPlaybackRate = 2
   */
-  // veo.value.defaultPlaybackRate = 2
+  // veoRef.value.defaultPlaybackRate = 2
 })
 /*
   loadedmetadata 事件在元数据（metadata）被加载完成后触发
