@@ -123,8 +123,8 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | '' | true
-poster | 视频封面地址，支持网络地址 `https` 和相对地址 | string | '' | false
+src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | undefined | true
+poster | 视频封面地址，支持网络地址 `https` 和相对地址 | string | undefined | false
 second | 在未设置封面时，自动截取视频第 `second` 秒对应帧作为视频封面 | number | 0.5 | false
 width | 视频播放器宽度，单位 `px` | number | 800 | false
 height | 视频播放器高度，单位 `px` | number | 450 | false

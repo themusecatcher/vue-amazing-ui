@@ -1872,21 +1872,21 @@ const Oe = (l) => (oe("data-v-1e917e9a"), l = l(), se(), l), zn = { class: "m-up
 al.install = (l) => {
   l.component(al.__name, al);
 };
-const Nn = ["src", "poster", "autoplay", "controls", "loop", "muted", "preload"], Pn = [((l) => (oe("data-v-af48f673"), l = l(), se(), l))(() => o("svg", { class: "u-svg", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 34 34" }, [o("path", { d: `M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039\r
-          C31.913,19.675,31.913,14.325,28.26,11.961z` })], -1))], ll = W(R({ __name: "Video", props: { src: { default: "" }, poster: { default: "" }, second: { default: 0.5 }, width: { default: 800 }, height: { default: 450 }, autoplay: { type: Boolean, default: !1 }, controls: { type: Boolean, default: !0 }, loop: { type: Boolean, default: !1 }, muted: { type: Boolean, default: !1 }, preload: { default: "metadata" }, showPlay: { type: Boolean, default: !0 }, fit: { default: "contain" } }, setup(l) {
-  const a = l, e = _(() => typeof a.width == "number" ? a.width + "px" : a.width), t = _(() => typeof a.height == "number" ? a.height + "px" : a.height), d = y(), s = y(a.poster), u = y(!0), n = y(!1);
+const Nn = ["src", "poster", "autoplay", "controls", "loop", "muted", "preload"], Pn = [((l) => (oe("data-v-0c583064"), l = l(), se(), l))(() => o("svg", { class: "u-svg", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 34 34" }, [o("path", { d: `M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039\r
+          C31.913,19.675,31.913,14.325,28.26,11.961z` })], -1))], ll = W(R({ __name: "Video", props: { src: { default: void 0 }, poster: { default: void 0 }, second: { default: 0.5 }, width: { default: 800 }, height: { default: 450 }, autoplay: { type: Boolean, default: !1 }, controls: { type: Boolean, default: !0 }, loop: { type: Boolean, default: !1 }, muted: { type: Boolean, default: !1 }, preload: { default: "metadata" }, showPlay: { type: Boolean, default: !0 }, fit: { default: "contain" } }, setup(l) {
+  const a = l, e = _(() => typeof a.width == "number" ? a.width + "px" : a.width), t = _(() => typeof a.height == "number" ? a.height + "px" : a.height), d = y(), s = y(), u = y(!0), n = y(!1);
   function m() {
     var r, w;
     u.value && (d.value.currentTime = 0, u.value = !1), a.autoplay ? (r = d.value) == null || r.pause() : (n.value = !0, (w = d.value) == null || w.play());
   }
   return xe(() => {
     a.autoplay && (n.value = !0, u.value = !1);
-  }), (r, w) => (i(), c("div", { class: S(["m-video", { "video-hover": !n.value }]), style: C(`width: ${e.value}; height: ${t.value};`) }, [o("video", fe({ ref_key: "veoRef", ref: d, class: "u-video", style: `object-fit: ${r.fit};`, src: r.src, poster: s.value, autoplay: r.autoplay, controls: !u.value && r.controls, loop: r.loop, muted: r.autoplay || r.muted, preload: r.preload, crossorigin: "anonymous", onLoadedmetadata: w[0] || (w[0] = (p) => r.poster ? () => !1 : function() {
+  }), (r, w) => (i(), c("div", { class: S(["m-video", { "video-hover": !n.value }]), style: C(`width: ${e.value}; height: ${t.value};`) }, [o("video", fe({ ref_key: "veoRef", ref: d, class: "u-video", style: `object-fit: ${r.fit};`, src: r.src, poster: r.poster ? r.poster : s.value, autoplay: r.autoplay, controls: !u.value && r.controls, loop: r.loop, muted: r.autoplay || r.muted, preload: r.preload, crossorigin: "anonymous", onLoadedmetadata: w[0] || (w[0] = (p) => r.poster ? () => !1 : function() {
     d.value.currentTime = a.second;
     const g = document.createElement("canvas"), f = g.getContext("2d");
     g.width = d.value.videoWidth, g.height = d.value.videoHeight, f == null || f.drawImage(d.value, 0, 0, g.width, g.height), s.value = g.toDataURL("image/png");
   }()), onPause: w[1] || (w[1] = (p) => r.showPlay ? void (n.value = !1) : () => !1), onPlaying: w[2] || (w[2] = (p) => r.showPlay ? void (n.value = !0) : () => !1), onClickOnce: ee(m, ["prevent"]) }, r.$attrs), " 您的浏览器不支持video标签。 ", 16, Nn), K(o("span", { class: S(["m-icon-play", { hidden: n.value }]) }, Pn, 2), [[Z, u.value || r.showPlay]])], 6));
-} }), [["__scopeId", "data-v-af48f673"]]);
+} }), [["__scopeId", "data-v-0c583064"]]);
 ll.install = (l) => {
   l.component(ll.__name, ll);
 };

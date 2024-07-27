@@ -6,17 +6,17 @@ interface Props {
   second?: number // 在未设置封面时，自动截取视频第 second 秒对应帧作为视频封面
   width?: string | number // 视频播放器宽度，单位 px
   height?: string | number // 视频播放器高度，单位 px
-  autoplay?: boolean // 视频就绪后是否马上播放，优先级高于preload
+  autoplay?: boolean // 视频就绪后是否马上播放，优先级高于 preload
   controls?: boolean // 是否向用户显示控件，比如进度条，全屏等
   loop?: boolean // 视频播放完成后，是否循环播放
   muted?: boolean // 是否静音
-  preload?: 'auto' | 'metadata' | 'none' // 是否在页面加载后载入视频，如果设置了autoplay属性，则preload将被忽略
+  preload?: 'auto' | 'metadata' | 'none' // 是否在页面加载后载入视频，如果设置了 autoplay 属性，则 preload 将被忽略
   showPlay?: boolean // 播放暂停时是否显示播放器中间的暂停图标
-  fit?: 'none' | 'fill' | 'contain' | 'cover' // video的poster默认图片和视频内容缩放规则
+  fit?: 'none' | 'fill' | 'contain' | 'cover' // video 的 poster 默认图片和视频内容缩放规则
 }
 const props = withDefaults(defineProps<Props>(), {
-  src: '',
-  poster: '',
+  src: undefined,
+  poster: undefined,
   second: 0.5,
   width: 800,
   height: 450,
@@ -68,7 +68,7 @@ const veoHeight = computed(() => {
 })
 const veoRef = ref()
 // 参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
-const veoPoster = ref(props.poster)
+const veoPoster = ref()
 const originPlay = ref(true)
 const hidden = ref(false) // 是否隐藏播放器中间的播放按钮
 onMounted(() => {
@@ -129,7 +129,7 @@ function onPlaying() {
       class="u-video"
       :style="`object-fit: ${fit};`"
       :src="src"
-      :poster="veoPoster"
+      :poster="poster ? poster : veoPoster"
       :autoplay="autoplay"
       :controls="!originPlay && controls"
       :loop="loop"
