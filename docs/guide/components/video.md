@@ -22,8 +22,8 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
 <Video
   :src="src"
   :poster="poster"
-  :width="784"
-  :height="441" />
+  width="100%"
+  :height="400" />
 
 ::: details Show Code
 
@@ -37,8 +37,8 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
   <Video
     :src="src"
     :poster="poster"
-    :width="784"
-    :height="441" />
+    width="100%"
+    :height="400" />
 </template>
 ```
 
@@ -64,8 +64,8 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
   autoplay
   :src="src"
   :poster="poster"
-  :width="784"
-  :height="441" />
+  width="100%"
+  :height="400" />
 
 ::: details Show Code
 
@@ -80,8 +80,8 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
     autoplay
     :src="src"
     :poster="poster"
-    :width="784"
-    :height="441" />
+    width="100%"
+    :height="400" />
 </template>
 ```
 
@@ -95,8 +95,8 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
 
 <Video
   :src="src"
-  :width="784"
-  :height="441"
+  width="100%"
+  :height="400"
   :second="3" />
 
 ::: details Show Code
@@ -109,8 +109,8 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.
 <template>
   <Video
     :src="src"
-    :width="784"
-    :height="441"
+    width="100%"
+    :height="400"
     :second="3" />
 </template>
 ```
