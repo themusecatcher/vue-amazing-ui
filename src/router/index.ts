@@ -145,6 +145,12 @@ export const routes = [
         component: () => import('@/views/Flex.vue')
       },
       {
+        path: '/floatbutton',
+        name: 'FloatButton',
+        meta: { title: '悬浮按钮' },
+        component: () => import('@/views/FloatButton.vue')
+      },
+      {
         path: '/gradienttext',
         name: 'GradientText',
         meta: { title: '渐变文字' },

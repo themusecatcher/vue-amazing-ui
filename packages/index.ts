@@ -37,12 +37,13 @@ import Drawer from './drawer'
 import Ellipsis from './ellipsis'
 import Empty from './empty'
 import Flex from './flex'
+import FloatButton from './floatbutton'
 import GradientText from './gradienttext'
 import { Row, Col } from './grid'
 import Image from './image'
 import Input from './input'
 import InputNumber from './inputnumber'
-import Layout from './layout'
+import { Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter } from './layout'
 import List from './list'
 import Message from './message'
 import Modal from './modal'
@@ -92,7 +93,6 @@ const components = [
   Carousel,
   Cascader,
   Checkbox,
-  Col,
   Collapse,
   Countdown,
   DatePicker,
@@ -104,11 +104,18 @@ const components = [
   Ellipsis,
   Empty,
   Flex,
+  FloatButton,
   GradientText,
+  Row,
+  Col,
   Image,
   Input,
   InputNumber,
   Layout,
+  LayoutHeader,
+  LayoutSider,
+  LayoutContent,
+  LayoutFooter,
   List,
   Message,
   Modal,
@@ -122,7 +129,6 @@ const components = [
   Radio,
   Rate,
   Result,
-  Row,
   Scrollbar,
   Segmented,
   Select,
@@ -189,7 +195,6 @@ export {
   Carousel,
   Cascader,
   Checkbox,
-  Col,
   Collapse,
   Countdown,
   DatePicker,
@@ -201,11 +206,18 @@ export {
   Ellipsis,
   Empty,
   Flex,
+  FloatButton,
   GradientText,
+  Row,
+  Col,
   Image,
   Input,
   InputNumber,
   Layout,
+  LayoutHeader,
+  LayoutSider,
+  LayoutContent,
+  LayoutFooter,
   List,
   Message,
   Modal,
@@ -219,7 +231,6 @@ export {
   Radio,
   Rate,
   Result,
-  Row,
   Scrollbar,
   Segmented,
   Select,

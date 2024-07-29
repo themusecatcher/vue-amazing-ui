@@ -2,12 +2,11 @@ import type { App } from 'vue'
 import Row from './Row.vue'
 import Col from './Col.vue'
 
-// 使用install方法，在app.use挂载
-Row.install = (app: App): void => {
-  app.component(Row.__name as string, Row)
-}
-Col.install = (app: App): void => {
-  app.component(Col.__name as string, Col)
-}
+[Row, Col].forEach((component: any) => {
+  // 使用install方法，在app.use挂载
+  component.install = (app: App): void => {
+    app.component(component.__name as string, component)
+  }
+})
 
 export { Row, Col }
