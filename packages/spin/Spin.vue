@@ -25,7 +25,7 @@ withDefaults(defineProps<Props>(), {
   color: '#1677FF',
   ringColor: '#4096FF',
   rotate: false,
-  speed: 600
+  speed: 800
 })
 </script>
 <template>

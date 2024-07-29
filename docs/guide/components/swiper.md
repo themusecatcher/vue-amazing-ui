@@ -504,8 +504,8 @@ height | 轮播区域高度 | number &#124; string  | '100%' | false
 type | `banner`: 轮播图模式; `carousel`: 走马灯模式; `broadcast`: 信息展播模式 | 'banner' &#124; 'carousel' &#124; 'broadcast' | 'banner' | false
 navigation | 是否显示导航 | boolean | false | false
 effect | 切换动画效果 | 'slide' &#124; 'fade' &#124; 'cube' &#124; 'flip' &#124; 'coverflow' &#124; 'cards' &#124; 'creative' | 'slide' | false
-delay | 自动切换的时间间隔，仅当 `type: banner` 时生效，单位`ms` | number | 3000 | false
-speed | 切换过渡的动画持续时间，单位`ms` | number | 300 | false
+delay | 自动切换的时间间隔，仅当 `type: banner` 时生效，单位 `ms` | number | 3000 | false
+speed | 切换过渡的动画持续时间，单位 `ms` | number | 300 | false
 loop | 是否循环切换 | boolean | true | false
 pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播，仅当 `type: banner` 或 `type: carousel` 时生效 | boolean | false | false
 swipe | 是否可以鼠标拖动 | boolean | true | false

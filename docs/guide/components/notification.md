@@ -307,7 +307,7 @@ function onClose () {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 message | 全局通知提醒标题，优先级低于 `Notification` 中的 `message` | string | '温馨提示' | false
-duration | 自动关闭的延时时长，单位`ms`，默认 `4500ms`；设置 `null` 时，不自动关闭 | number &#124; null | 4500 | false
+duration | 自动关闭的延时时长，单位 `ms`，默认 `4500ms`；设置 `null` 时，不自动关闭 | number &#124; null | 4500 | false
 top | 消息从顶部弹出时，距离顶部的位置，单位 `px` | number | 24 | false
 bottom | 消息从底部弹出时，距离底部的位置，单位 `px` | number | 24 | false
 placement | 消息弹出位置，优先级低于 `Notification` 中的 `placement` | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | 'topRight' | false

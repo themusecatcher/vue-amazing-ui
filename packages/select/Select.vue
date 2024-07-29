@@ -50,17 +50,18 @@ const selectedName = ref() // 当前选中选项的 label
 const inputRef = ref() // 输入框 DOM 引用
 const inputValue = ref() // 支持搜索时，用户输入内容
 const disabledBlur = ref(false) // 是否禁用 input 标签的 blur 事件
-const hideSelect = ref(false) // 用户输入时，隐藏 selectName 的展示
+const hideSelectName = ref(false) // 用户输入时，隐藏 selectName 的展示
 const hoverValue = ref() // 鼠标悬浮项的 value 值
 const showOptions = ref(false) // options 面板
 const showArrow = ref(true) // 剪头图标显隐
 const showClear = ref(false) // 清除图标显隐
 const showCaret = ref(false) // 支持搜索时，输入光标的显隐
 const showSearch = ref(false) // 搜索图标显隐
-const selectFocus = ref(false) /// select 是否聚焦
+const selectFocused = ref(false) /// select 是否聚焦
 watchEffect(() => {
   if (props.search) {
     if (inputValue.value) {
+      showOptions.value = true
       filterOptions.value = props.options.filter((option) => {
         if (typeof props.filter === 'function') {
           return props.filter(inputValue.value, option)
@@ -87,7 +88,7 @@ watchEffect(() => {
 watch(showOptions, (to) => {
   if (props.search && !to) {
     inputValue.value = undefined
-    hideSelect.value = false
+    hideSelectName.value = false
   }
 })
 function initSelector() {
@@ -106,15 +107,14 @@ function initSelector() {
   }
 }
 function onBlur() {
-  // console.log('blur')
-  selectFocus.value = false
+  selectFocused.value = false
   if (showOptions.value) {
     showOptions.value = false
   }
   if (props.search) {
     showSearch.value = false
     showArrow.value = true
-    hideSelect.value = false
+    hideSelectName.value = false
   }
 }
 function onEnter() {
@@ -147,12 +147,12 @@ function onLeave() {
     }
   }
 }
-function onHover(value: string | number) {
+function onHover(value: string | number, disabled: boolean | undefined) {
+  disabledBlur.value = Boolean(disabled)
   hoverValue.value = value
 }
 function openSelect() {
-  inputRef.value.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
-  selectFocus.value = true
+  selectFocus()
   if (!props.search) {
     inputRef.value.style.opacity = 0
   }
@@ -169,12 +169,12 @@ function openSelect() {
   }
 }
 function onSearchInput(e: InputEvent) {
-  hideSelect.value = Boolean((e.target as HTMLInputElement)?.value)
+  hideSelectName.value = Boolean((e.target as HTMLInputElement)?.value)
 }
 const emits = defineEmits(['update:modelValue', 'change'])
 function onClear() {
-  if (selectFocus.value) {
-    inputRef.value.focus()
+  if (selectFocused.value) {
+    selectFocus()
     showCaret.value = true
   }
   showClear.value = false
@@ -186,6 +186,10 @@ function onClear() {
   emits('update:modelValue')
   emits('change')
 }
+function selectFocus () {
+  inputRef.value.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
+  selectFocused.value = true
+}
 function onChange(value: string | number, label: string, index: number) {
   // 选中下拉项后的回调
   if (props.modelValue !== value) {
@@ -195,19 +199,12 @@ function onChange(value: string | number, label: string, index: number) {
     emits('change', value, label, index)
   }
   showCaret.value = false
-  inputRef.value.focus() // 选中选项后，确保 select 不会失焦
-  selectFocus.value = true
-  showOptions.value = false
-  if (props.search) {
-    showSearch.value = false
-    showArrow.value = true
-  }
 }
 </script>
 <template>
   <div
     class="m-select"
-    :class="{ 'select-disabled': disabled }"
+    :class="{ 'select-focused': selectFocused, 'search-select': search, 'select-disabled': disabled }"
     :style="`width: ${selectWidth}; height: ${height}px;`"
     @click="disabled ? () => false : openSelect()"
   >
@@ -217,6 +214,7 @@ function onChange(value: string | number, label: string, index: number) {
           ref="inputRef"
           class="u-select-search"
           :class="{ 'caret-show': showOptions || showCaret }"
+          type="text"
           autocomplete="off"
           :readonly="!search"
           :disabled="disabled"
@@ -226,8 +224,8 @@ function onChange(value: string | number, label: string, index: number) {
         />
       </span>
       <span
-        v-if="!hideSelect"
-        :class="['u-select-item', { 'select-item-gray': !selectedName || showOptions }]"
+        v-if="!hideSelectName"
+        :class="['u-select-item', { 'select-placeholder': !selectedName || showOptions }]"
         :style="`line-height: ${height - 2}px;`"
         :title="selectedName"
       >
@@ -257,7 +255,7 @@ function onChange(value: string | number, label: string, index: number) {
       </svg>
       <svg
         @click.stop="onClear"
-        :class="['u-clear', { show: showClear || inputValue }]"
+        :class="['u-clear', { show: showClear }]"
         focusable="false"
         data-icon="close-circle"
         aria-hidden="true"
@@ -273,7 +271,8 @@ function onChange(value: string | number, label: string, index: number) {
         v-if="showOptions && filterOptions && filterOptions.length"
         class="m-options-panel"
         :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${maxDisplay * height + 9}px; width: 100%;`"
-      >
+        @mouseleave="disabledBlur = false"
+        >
         <p
           v-for="(option, index) in filterOptions"
           :key="index"
@@ -286,8 +285,8 @@ function onChange(value: string | number, label: string, index: number) {
             }
           ]"
           :title="option[label]"
-          @mouseenter="onHover(option[value])"
-          @click.stop="option.disabled ? () => false : onChange(option[value], option[label], index)"
+          @mouseenter="onHover(option[value], option.disabled)"
+          @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
         >
           {{ option[label] }}
         </p>
@@ -328,23 +327,16 @@ function onChange(value: string | number, label: string, index: number) {
   font-weight: 400;
   color: rgba(0, 0, 0, 0.88);
   outline: none;
+  cursor: pointer;
   &:not(.select-disabled):hover {
     // 悬浮时样式
     .m-select-wrap {
       border-color: @themeColor;
     }
   }
-  &:not(.select-disabled):focus-within {
-    // 激活时样式
-    .m-select-wrap {
-      border-color: @themeColor;
-      box-shadow: 0 0 0 2px fade(@themeColor, 20%);
-    }
-  }
   .m-select-wrap {
     position: relative;
-    z-index: 8;
-    display: inline-block;
+    display: flex;
     padding: 0 11px;
     border: 1px solid #d9d9d9;
     border-radius: 6px;
@@ -352,7 +344,6 @@ function onChange(value: string | number, label: string, index: number) {
     width: 100%;
     height: 100%;
     outline: none;
-    cursor: pointer;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     .m-select-search {
       position: absolute;
@@ -360,7 +351,6 @@ function onChange(value: string | number, label: string, index: number) {
       bottom: 0;
       left: 11px;
       right: 11px;
-      padding-right: 15px;
       .u-select-search {
         height: 100%;
         margin: 0;
@@ -371,6 +361,8 @@ function onChange(value: string | number, label: string, index: number) {
         border: none;
         outline: none;
         appearance: none;
+        opacity: 0;
+        cursor: pointer;
       }
       .caret-show {
         caret-color: auto;
@@ -378,15 +370,15 @@ function onChange(value: string | number, label: string, index: number) {
     }
     .u-select-item {
       position: relative;
-      display: block;
-      padding-right: 15px;
+      padding-right: 18px;
+      flex: 1;
       user-select: none;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       transition: all 0.3s;
     }
-    .select-item-gray {
+    .select-placeholder {
       color: rgba(0, 0, 0, 0.25);
       transition: none;
       pointer-events: none;
@@ -420,6 +412,7 @@ function onChange(value: string | number, label: string, index: number) {
     }
     .u-clear {
       .u-svg();
+      z-index: 1;
       background: #fff;
       cursor: pointer;
       transition:
@@ -474,7 +467,6 @@ function onChange(value: string | number, label: string, index: number) {
     .option-disabled {
       // 禁用某个下拉选项时的样式
       color: rgba(0, 0, 0, 0.25);
-      user-select: none;
       cursor: not-allowed;
     }
   }
@@ -489,6 +481,25 @@ function onChange(value: string | number, label: string, index: number) {
       0 6px 16px 0 rgba(0, 0, 0, 0.08),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  }
+}
+.select-focused:not(.select-disabled) {
+  // 激活时样式
+  .m-select-wrap {
+    border-color: @themeColor;
+    box-shadow: 0 0 0 2px fade(@themeColor, 20%);
+  }
+}
+.search-select {
+  .m-select-wrap {
+    cursor: text;
+    .m-select-search {
+      .u-select-search {
+        cursor: auto;
+        color: inherit;
+        opacity: 1;
+      }
+    }
   }
 }
 .select-disabled {
