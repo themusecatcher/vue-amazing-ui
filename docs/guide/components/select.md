@@ -667,6 +667,61 @@ watchEffect(() => {
 
 :::
 
+## 自定义下拉面板滚动条
+
+<Select :options="options" v-model="selectedValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+      {
+        label: '北京市',
+        value: 1
+      },
+      {
+        label: '上海市',
+        value: 2
+      },
+      {
+        label: '纽约市',
+        value: 3
+      },
+      {
+        label: '旧金山',
+        value: 4
+      },
+      {
+        label: '布宜诺斯艾利斯',
+        value: 5
+      },
+      {
+        label: '伊斯坦布尔',
+        value: 6
+      },
+      {
+        label: '拜占庭',
+        value: 7
+      },
+      {
+        label: '君士坦丁堡',
+        value: 8
+      }
+    ])
+const selectedValue = ref(5)
+watchEffect(() => {
+  console.log('selectedValue:', selectedValue.value)
+})
+</script>
+<template>
+  <Select :options="options" v-model="selectedValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Select
@@ -683,6 +738,7 @@ search | 是否支持搜索，使用搜索时请设置 `width` | boolean | false
 filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true | false
 width | 宽度，单位 `px` | string &#124; number | 'auto' | false
 height | 高度，单位 `px` | number | 32 | false
+scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar) | object | {} | false
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
 modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目 | number &#124; string &#124; null | null | false
 

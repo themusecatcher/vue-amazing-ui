@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch } from 'vue'
 import Empty from '../empty'
+import Scrollbar from '../scrollbar'
 interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
@@ -20,9 +21,10 @@ interface Props {
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
   filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
-  width?: string | number // 宽度
-  height?: number // 高度
+  width?: string | number // 宽度，单位 px
+  height?: number // 高度，单位 px
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
+  scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number | string | null // （v-model）当前选中的option条目
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -37,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
   height: 32,
   maxDisplay: 6,
+  scrollbarProps: () => ({}),
   modelValue: null
 })
 const selectWidth = computed(() => {
@@ -267,10 +270,11 @@ function onChange(value: string | number, label: string, index: number) {
       </svg>
     </div>
     <Transition name="slide-up">
-      <div
+      <Scrollbar
         v-if="showOptions && filterOptions && filterOptions.length"
         class="m-options-panel"
-        :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${maxDisplay * height + 9}px; width: 100%;`"
+        :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${maxDisplay * height + 9}px;`"
+        v-bind="scrollbarProps"
         @mouseleave="disabledBlur = false"
       >
         <p
@@ -290,7 +294,7 @@ function onChange(value: string | number, label: string, index: number) {
         >
           {{ option[label] }}
         </p>
-      </div>
+      </Scrollbar>
       <div
         v-else-if="showOptions && filterOptions && !filterOptions.length"
         class="m-empty-wrap"
@@ -430,8 +434,8 @@ function onChange(value: string | number, label: string, index: number) {
   .m-options-panel {
     position: absolute;
     z-index: 9;
-    overflow: auto;
     width: 100%;
+    height: auto;
     background-color: #fff;
     padding: 4px;
     border-radius: 8px;

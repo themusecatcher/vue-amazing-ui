@@ -5,7 +5,8 @@
 
 ## 1.3.4 <Tag color="volcano" size="small">2024-07-29</Tag>
 
-- 优化 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件
+- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `autoHide` `delay` 属性
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `scrollbarProps` 属性
 
 ## 1.3.3 <Tag color="volcano" size="small">2024-07-26</Tag>
 
