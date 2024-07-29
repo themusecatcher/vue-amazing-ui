@@ -120,10 +120,6 @@ function onChange(value: string | number, label: string, index: number) {
 function filter(inputValue: string, option: any) {
   return option.value > inputValue
 }
-function onAntChange(value: string | number, option: any) {
-  console.log('value:', value)
-  console.log('option:', option)
-}
 </script>
 <template>
   <div>
@@ -137,15 +133,7 @@ function onAntChange(value: string | number, option: any) {
     <h2 class="mt30 mb10">支持清除</h2>
     <Select :options="options" allow-clear v-model="selectedValue" @change="onChange" />
     <h2 class="mt30 mb10">支持搜索</h2>
-    <Select :width="150" :options="options" search allowClear placeholder="" v-model="selectedValue" />
-    <a-select
-      style="width: 150px"
-      :options="options"
-      allow-clear
-      show-search
-      v-model:value="selectedValue"
-      @change="onChange"
-    />
+    <Select :width="150" :options="options" search allowClear v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
     <Select :width="150" :options="options" search :filter="filter" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义样式</h2>
@@ -154,14 +142,5 @@ function onAntChange(value: string | number, option: any) {
     <Select :options="optionsCustom" label="name" value="id" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义下拉面板数</h2>
     <Select :options="options" :max-display="8" v-model="selectedValue" />
-    <!-- <h2 class="mt30 mb10">Ant Design Vue 选择器支持清除 (allowClear)</h2>
-    <a-select
-      :options="options"
-      placeholder="请选择城市"
-      :disabled="false"
-      allowClear
-      v-model:value="selectedValue"
-      @change="onAntChange"
-    /> -->
   </div>
 </template>
