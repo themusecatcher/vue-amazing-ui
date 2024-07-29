@@ -138,7 +138,14 @@ function onAntChange(value: string | number, option: any) {
     <Select :options="options" allow-clear v-model="selectedValue" @change="onChange" />
     <h2 class="mt30 mb10">支持搜索</h2>
     <Select :width="150" :options="options" search allowClear placeholder="" v-model="selectedValue" />
-    <a-select style="width: 150px;" :options="options" allow-clear show-search v-model:value="selectedValue" @change="onChange" />
+    <a-select
+      style="width: 150px"
+      :options="options"
+      allow-clear
+      show-search
+      v-model:value="selectedValue"
+      @change="onChange"
+    />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
     <Select :width="150" :options="options" search :filter="filter" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义样式</h2>

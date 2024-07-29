@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.3.4 <Tag color="volcano" size="small">2024-07-29</Tag>
+
+- 优化 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件
+
 ## 1.3.3 <Tag color="volcano" size="small">2024-07-26</Tag>
 
 - 优化 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件，新增 `tooltipProps` 属性
