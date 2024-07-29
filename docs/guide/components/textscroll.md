@@ -521,10 +521,10 @@ boardStyle | 滚动区域样式，优先级低于 `width`、`height` | [CSSPrope
 textStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 amount | 滚动区域展示条数，水平滚动时生效 | number | 4 | false
 gap | 水平滚动文字各列间距或垂直滚动文字两边的边距，单位 `px` |  number | 20 | false
-interval | 水平滚动动画执行时间间隔，单位`ms`，水平滚动时生效 | number | 10 | false
+interval | 水平滚动动画执行时间间隔，单位 `ms`，水平滚动时生效 | number | 10 | false
 step | 水平滚动动画每次执行时移动距离，单位 `px`，水平滚动时生效，与 `interval` 配合控制滚动速度 | number | 1 | false
 vertical | 是否垂直滚动 | boolean | false | false
-verticalInterval | 垂直文字滚动时间间隔，单位`ms`，垂直滚动时生效 | number | 3000 | false
+verticalInterval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000 | false
 
 ### Text Type
 

@@ -497,4 +497,4 @@ indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 
 color | 主题颜色 | string | '#1677FF' | false
 ringColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | '#4096FF' | false
 rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: spin-dot \| spin-line` 时生效 | boolean | false | false
-speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位`ms`，仅当 `indicator: spin-dot \| spin-line` 时生效 | number | 600 | false
+speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位 `ms`，仅当 `indicator: spin-dot \| spin-line` 时生效 | number | 800 | false

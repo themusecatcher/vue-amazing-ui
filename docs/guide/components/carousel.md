@@ -1015,7 +1015,7 @@ height | 走马灯高度 | number &#124; string | '100vh' | false
 autoplay | 是否自动轮播 | boolean | false | false
 pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播 | boolean | false | false
 effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide' | false
-interval | 自动轮播间隔，单位`ms` | number | 3000 | false
+interval | 自动轮播间隔，单位 `ms` | number | 3000 | false
 showArrow | 是否显示箭头 | boolean | true | false
 arrowColor | 箭头颜色 | string | '#FFF' | false
 arrowSize | 箭头大小，单位 `px` | number | 36 | false
@@ -1028,9 +1028,9 @@ dotActiveStyle | 指示点选中样式，优先级高于 `dotActiveColor` | [CSS
 dotPosition | 指示点位置，位置为 `left` &#124; `right` 时，`effect: 'slide'` 轮播自动变为垂直轮播 | 'bottom' &#124; 'top' &#124; 'left' &#124; 'right' | 'bottom' | false
 dotsTrigger | 指示点触发切换的方式 | 'click' &#124; 'hover' | 'click' | false
 spinStyle | 图片加载中样式 | [SpinProperties](#spinproperties-type) | {} | false
-fadeDuration | 渐变动画持续时长，单位`ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500 | false
+fadeDuration | 渐变动画持续时长，单位 `ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500 | false
 fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可参考 [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) | string | 'cubic-bezier(0.4, 0, 0.2, 1)' | false
-slideDuration | 滑动动画持续时长，单位`ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800 | false
+slideDuration | 滑动动画持续时长，单位 `ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800 | false
 slideFunction | 滑动动画函数，，仅当 `effect` 为 `'slide'` 时生效，可参考 [`useTransition`](https://vueuse.org/core/useTransition/#usage) | number[] | [0.65, 0, 0.35, 1] | false
 
 ### Image Type
