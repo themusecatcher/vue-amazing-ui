@@ -129,5 +129,5 @@ onUnmounted(() => {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 fn | 要执行的函数 | Function | - | true
-delay | 延时调用或间歇调用时间间隔，单位`ms` | number | 0 | false
+delay | 延时调用或间歇调用时间间隔，单位 `ms` | number | 0 | false
 interval | 是否使用间歇调用 | boolean | false | false

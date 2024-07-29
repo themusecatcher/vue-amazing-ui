@@ -142,5 +142,7 @@ function filter(inputValue: string, option: any) {
     <Select :options="optionsCustom" label="name" value="id" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义下拉面板数</h2>
     <Select :options="options" :max-display="8" v-model="selectedValue" />
+    <h2 class="mt30 mb10">自定义下拉面板滚动条</h2>
+    <Select :options="options" v-model="selectedValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
   </div>
 </template>

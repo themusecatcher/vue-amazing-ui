@@ -25,7 +25,9 @@ export function debounce(fn: Function, delay = 300): any {
       clearTimeout(timer)
     }
     // 设置新的定时器，延迟执行原函数
-    timer = setTimeout(fn(...args), delay)
+    timer = setTimeout(() => {
+      fn(...args)
+    }, delay)
   }
 }
 ```
@@ -69,4 +71,4 @@ function showPosition () {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 fn | 要执行的函数 | Function | - | true
-delay | 防抖的时间期限，单位`ms` | number | 300 | false
+delay | 防抖的时间期限，单位 `ms` | number | 300 | false

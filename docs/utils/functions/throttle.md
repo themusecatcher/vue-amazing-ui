@@ -72,4 +72,4 @@ function showPosition () {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 fn | 要被节流的函数 | Function | - | true
-delay | 节流的时间间隔，单位`ms` | number | 300 | false
+delay | 节流的时间间隔，单位 `ms` | number | 300 | false

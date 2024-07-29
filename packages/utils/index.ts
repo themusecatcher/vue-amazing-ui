@@ -204,7 +204,9 @@ export function debounce(fn: Function, delay = 300): any {
       clearTimeout(timer)
     }
     // 设置新的定时器，延迟执行原函数
-    timer = setTimeout(fn(...args), delay)
+    timer = setTimeout(() => {
+      fn(...args)
+    }, delay)
   }
 }
 /**

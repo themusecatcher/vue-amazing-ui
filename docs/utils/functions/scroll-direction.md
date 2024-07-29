@@ -69,4 +69,4 @@ const { scrollDown } = useScrollDirection()
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-throttleDelay | 节流延迟时间，单位`ms` | number | 100 | false
+throttleDelay | 节流延迟时间，单位 `ms` | number | 100 | false

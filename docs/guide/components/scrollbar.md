@@ -96,6 +96,56 @@ function onScroll(e: Event) {
 
 :::
 
+## hover 时不自动隐藏
+
+<Scrollbar style="max-height: 120px" :auto-hide="false">
+  我们在田野上面找猪<br />
+  想象中已找到了三只<br />
+  小鸟在白云上面追逐<br />
+  它们在树底下跳舞<br />
+  啦啦啦啦啦啦啦啦咧<br />
+  啦啦啦啦咧<br />
+  我们在想象中度过了许多年<br />
+  想象中我们是如此的疯狂<br />
+  我们在城市里面找猪<br />
+  想象中已找到了几百万只<br />
+  小鸟在公园里面唱歌<br />
+  它们独自在想象里跳舞<br />
+  啦啦啦啦啦啦啦啦咧<br />
+  啦啦啦啦咧<br />
+  我们在想象中度过了许多年<br />
+  许多年之后我们又开始想象<br />
+  啦啦啦啦啦啦啦啦咧
+</Scrollbar>
+
+::: details Show Code
+
+```vue
+<template>
+  <Scrollbar style="max-height: 120px" :auto-hide="false">
+    我们在田野上面找猪<br />
+    想象中已找到了三只<br />
+    小鸟在白云上面追逐<br />
+    它们在树底下跳舞<br />
+    啦啦啦啦啦啦啦啦咧<br />
+    啦啦啦啦咧<br />
+    我们在想象中度过了许多年<br />
+    想象中我们是如此的疯狂<br />
+    我们在城市里面找猪<br />
+    想象中已找到了几百万只<br />
+    小鸟在公园里面唱歌<br />
+    它们独自在想象里跳舞<br />
+    啦啦啦啦啦啦啦啦咧<br />
+    啦啦啦啦咧<br />
+    我们在想象中度过了许多年<br />
+    许多年之后我们又开始想象<br />
+    啦啦啦啦啦啦啦啦咧
+  </Scrollbar>
+</template>
+```
+
+:::
+
 ## 触发方式
 
 <Scrollbar style="max-height: 120px;" trigger="none">
@@ -211,6 +261,8 @@ function onScroll(e: Event) {
 contentStyle | 内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
 size | 滚动条的大小，单位 `px` | number | 5 | false
 trigger | 显示滚动条的时机，`'none'` 表示一直显示 | 'hover' &#124; 'none' | 'hover' | false
+autoHide | 是否自动隐藏滚动条，仅当 `trigger: 'hover'` 时生效，`true`: `hover`且不滚动时自动隐藏，滚动时自动显示；`false`: `hover`时始终显示 | boolean | true | false
+delay | 滚动条自动隐藏的延迟时间，单位 `ms` | number | 1000 | false
 horizontal | 是否使用横向滚动 | boolean | false | false
 
 ## Methods
