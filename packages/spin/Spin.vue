@@ -14,8 +14,8 @@ interface Props {
     | 'magic-ring' // 加载指示符
   color?: string // 主题颜色，当 indicator: 'magic-ring' 时为外环颜色
   ringColor?: string // 内环颜色，仅当 indicator: 'magic-ring' 时生效
-  rotate?: boolean // spin-dot 或 spin-line 初始是否旋转，仅当 indicator: spin-dot | spin-line 时生效
-  speed?: number // spin-dot 或 spin-line 渐变旋转的动画速度，单位ms，仅当 indicator: spin-dot | spin-line 时生效
+  rotate?: boolean // spin-dot 或 spin-line 初始是否旋转，仅当 indicator: 'spin-dot' | 'spin-line' 时生效
+  speed?: number // spin-dot 或 spin-line 渐变旋转的动画速度，单位 ms，仅当 indicator: 'spin-dot' | 'spin-line' 时生效
 }
 withDefaults(defineProps<Props>(), {
   spinning: true,
