@@ -186,7 +186,7 @@ function onClear() {
   emits('update:modelValue')
   emits('change')
 }
-function selectFocus () {
+function selectFocus() {
   inputRef.value.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
   selectFocused.value = true
 }
@@ -272,7 +272,7 @@ function onChange(value: string | number, label: string, index: number) {
         class="m-options-panel"
         :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${maxDisplay * height + 9}px; width: 100%;`"
         @mouseleave="disabledBlur = false"
-        >
+      >
         <p
           v-for="(option, index) in filterOptions"
           :key="index"
