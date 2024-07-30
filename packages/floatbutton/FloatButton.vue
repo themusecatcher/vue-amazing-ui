@@ -23,8 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['click'])
 </script>
 <template>
-  <span class="m-float-button">
-  </span>
+  <span class="m-float-button"> </span>
 </template>
 <style lang="less" scoped>
 .m-float-button {

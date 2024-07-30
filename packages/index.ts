@@ -45,6 +45,7 @@ import Input from './input'
 import InputNumber from './inputnumber'
 import { Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter } from './layout'
 import List from './list'
+import LoadingBar from './loadingbar'
 import Message from './message'
 import Modal from './modal'
 import Notification from './notification'
@@ -117,6 +118,7 @@ const components = [
   LayoutContent,
   LayoutFooter,
   List,
+  LoadingBar,
   Message,
   Modal,
   Notification,
@@ -219,6 +221,7 @@ export {
   LayoutContent,
   LayoutFooter,
   List,
+  LoadingBar,
   Message,
   Modal,
   Notification,

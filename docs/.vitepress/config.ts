@@ -199,6 +199,10 @@ export default defineConfig({
               link: '/guide/components/inputnumber'
             },
             {
+              text: '加载条 LoadingBar',
+              link: '/guide/components/loadingbar'
+            },
+            {
               text: '全局提示 Message',
               link: '/guide/components/message'
             },

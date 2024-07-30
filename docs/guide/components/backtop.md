@@ -204,7 +204,7 @@ bottom | `BackTop` 距离页面底部的高度 | number &#124; string | 40 | fal
 right | `BackTop` 距离页面右侧的宽度 | number &#124; string | 40 | false
 zIndex | 设置 `BackTop` 的 `z-index` | number | 9 | false
 visibilityHeight | 滚动时触发显示回到顶部的高度 | number | 180 | false
-to | `BackTop` 渲染的容器节点 可选 元素标签名 例如 `body` 或者 元素本身，下同 | string &#124; HTMLElement | 'body' | false
+to | `BackTop` 渲染的容器节点，可选：元素标签名（例如 `body`）或者元素本身，下同 | string &#124; HTMLElement | 'body' | false
 listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近的一个可滚动的祖先节点 | string &#124; HTMLElement | undefined | false
 
 ## Events
