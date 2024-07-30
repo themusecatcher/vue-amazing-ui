@@ -7,7 +7,7 @@ const { fps } = useFps()
 const installData = ref([
   {
     header: 'Install',
-    text: `pnpm i vue-amazing-ui\n# or\nyarn add vue-amazing-ui\n# or\nnpm i vue-amazing-ui`
+    text: `npm install vue-amazing-ui\n# or\npnpm add vue-amazing-ui\n# or\nyarn add vue-amazing-ui\n# or\nbun add vue-amazing-ui`
   }
 ])
 // import.meta.glob 都支持以字符串形式导入文件，类似于 以字符串形式导入资源
@@ -131,20 +131,8 @@ function onOpen() {
     <br />
     <br />
     <Button type="primary" @click="onOpen">Open New Window</Button>
-    <Descriptions class="mb10 mt30" title="生产环境依赖 (dependencies)" :column="{ md: 2, lg: 3, xl: 4 }">
-      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
-        <Tag color="volcano">{{ version }}</Tag>
-      </DescriptionsItem>
-    </Descriptions>
-    <Descriptions class="mb10 mt30" title="开发环境依赖 (devDependencies)" :column="{ md: 2, lg: 3, xl: 4 }">
-      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.devDependencies" :key="dependency">
-        <Tag color="cyan">{{ version }}</Tag>
-      </DescriptionsItem>
-    </Descriptions>
     <p class="u-tip mb10">
-      所有组件
-      <Tag color="magenta">CSS</Tag>
-      样式均使用
+      所有组件样式均使用
       <Tag color="magenta">box-sizing: border-box;</Tag>
       模式！
     </p>
@@ -155,14 +143,15 @@ function onOpen() {
       <Tag color="magenta">UI</Tag>
       组件，以及
       <Tag color="magenta">{{ toolFunctions.length }}</Tag>
-      个常用工具函数，并且持续探索更新中...！
+      个常用工具函数，并且持续探索更新优化中...！
     </p>
     <p class="u-tip">开箱即用！</p>
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse lang="bash" :fontSize="16" :collapseData="installData" v-model:activeKey="activeKey" copyable />
     <ul class="m-list">
       <li class="u-tip mb10 mt10">全局引入并注册所有组件</li>
-      <li class="u-tip mb10">按需引入并注册部分组件</li>
+      <li class="u-tip mb10 mt10">按需引入并注册部分组件</li>
+      <li class="u-tip mb10">无需任何安装引入注册，直接使用单文件组件 SFC</li>
     </ul>
     <h2 class="mt30">常用工具函数：</h2>
     <ul class="m-list">
@@ -171,7 +160,17 @@ function onOpen() {
         : {{ func.description }}
       </li>
     </ul>
-    <Collapse lang="vue3" :fontSize="16" :collapseData="collapseData" v-model:activeKey="activeKey" copyable />
+    <Collapse lang="typescript" :fontSize="16" :collapseData="collapseData" v-model:activeKey="activeKey" copyable />
+    <Descriptions class="mb10 mt30" title="生产环境依赖 (dependencies)" :column="{ md: 2, lg: 3, xl: 4 }">
+      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
+        <Tag color="volcano">{{ version }}</Tag>
+      </DescriptionsItem>
+    </Descriptions>
+    <Descriptions class="mb10 mt30" title="开发环境依赖 (devDependencies)" :column="{ md: 2, lg: 3, xl: 4 }">
+      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.devDependencies" :key="dependency">
+        <Tag color="cyan">{{ version }}</Tag>
+      </DescriptionsItem>
+    </Descriptions>
   </div>
 </template>
 <style lang="less">

@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.4.0 <Tag color="volcano" size="small">2024-07-30</Tag>
+
+- 新增 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html) 组件
+
 ## 1.3.4 <Tag color="volcano" size="small">2024-07-29</Tag>
 
 - 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `autoHide` `delay` 属性

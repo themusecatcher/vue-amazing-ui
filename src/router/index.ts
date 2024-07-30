@@ -193,6 +193,12 @@ export const routes = [
         component: () => import('@/views/List.vue')
       },
       {
+        path: '/loadingbar',
+        name: 'LoadingBar',
+        meta: { title: ' 加载条' },
+        component: () => import('@/views/LoadingBar.vue')
+      },
+      {
         path: '/message',
         name: 'Message',
         meta: { title: '全局提示' },
