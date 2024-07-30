@@ -341,7 +341,7 @@ const zl = (l) => (le("data-v-4d1baca3"), l = l(), te(), l), Ht = ["href", "titl
 pa.install = (l) => {
   l.component(pa.__name, pa);
 };
-const Cl = (l) => (le("data-v-291bfcad"), l = l(), te(), l), Nt = ["disabled", "href", "target", "onKeydown"], Pt = { key: 0, class: "m-static-circle" }, qt = [Cl(() => o("span", { class: "u-spin-circle" }, null, -1))], Ot = { key: 1, class: "m-dynamic-circle" }, Kt = [Cl(() => o("svg", { class: "circular", viewBox: "0 0 50 50", fill: "currentColor" }, [o("circle", { class: "path", cx: "25", cy: "25", r: "20", fill: "none" })], -1))], Yt = { class: "u-text" }, Be = W(R({ __name: "Button", props: { type: { default: "default" }, size: { default: "middle" }, ghost: { type: Boolean, default: !1 }, rippleColor: { default: void 0 }, href: { default: void 0 }, target: { default: "_self" }, disabled: { type: Boolean, default: !1 }, loading: { type: Boolean, default: !1 }, loadingType: { default: "dynamic" }, loadingColor: { default: "rgba(0, 0, 0, 0.88)" }, block: { type: Boolean, default: !1 } }, emits: ["click"], setup(l, { emit: a }) {
+const Cl = (l) => (le("data-v-16a5a10b"), l = l(), te(), l), Nt = ["disabled", "href", "target", "onKeydown"], Pt = { key: 0, class: "m-static-circle" }, qt = [Cl(() => o("span", { class: "u-spin-circle" }, null, -1))], Ot = { key: 1, class: "m-dynamic-circle" }, Kt = [Cl(() => o("svg", { class: "circular", viewBox: "0 0 50 50", fill: "currentColor" }, [o("circle", { class: "path", cx: "25", cy: "25", r: "20", fill: "none" })], -1))], Yt = { class: "u-text" }, Be = W(R({ __name: "Button", props: { type: { default: "default" }, size: { default: "middle" }, ghost: { type: Boolean, default: !1 }, rippleColor: { default: void 0 }, href: { default: void 0 }, target: { default: "_self" }, disabled: { type: Boolean, default: !1 }, loading: { type: Boolean, default: !1 }, loadingType: { default: "dynamic" }, loadingColor: { default: "rgba(0, 0, 0, 0.88)" }, block: { type: Boolean, default: !1 } }, emits: ["click"], setup(l, { emit: a }) {
   const e = { default: "#1677ff", reverse: "#1677ff", primary: "#1677ff", danger: "#ff4d4f", dashed: "#1677ff", text: "transparent", link: "transparent" }, t = y(!1), c = a;
   function s(h) {
     c("click", h), t.value ? (t.value = !1, ge(() => {
@@ -355,7 +355,7 @@ const Cl = (l) => (le("data-v-291bfcad"), l = l(), te(), l), Nt = ["disabled", "
     t.value = !1;
   }
   return (h, r) => (i(), d("a", he({ tabindex: "0", class: ["m-btn", [`btn-${h.type} btn-${h.size}`, { "btn-block": h.block, "btn-ghost": h.ghost, [`loading-${h.size}`]: !h.href && h.loading, "btn-loading": !h.href && h.loading, "btn-disabled": h.disabled }]], style: `--ripple-color: ${h.rippleColor || e[h.type]}; --loading-color: ${h.loadingColor};`, disabled: h.disabled, href: h.href ? h.href : "javascript:void(0);", target: h.href ? h.target : "_self", onClick: s, onKeydown: me(J(u, ["prevent"]), ["enter"]) }, h.$attrs), [h.href || h.loadingType !== "static" ? L("", !0) : (i(), d("div", Pt, qt)), h.href || h.loadingType !== "dynamic" ? L("", !0) : (i(), d("div", Ot, Kt)), o("span", Yt, [A(h.$slots, "default", {}, void 0, !0)]), h.disabled ? L("", !0) : (i(), d("div", { key: 2, class: F(["m-button-wave", { "button-wave-active": t.value }]), onAnimationend: n }, null, 34))], 16, Nt));
-} }), [["__scopeId", "data-v-291bfcad"]]);
+} }), [["__scopeId", "data-v-16a5a10b"]]);
 Be.install = (l) => {
   l.component(Be.__name, Be);
 };

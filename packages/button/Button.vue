@@ -287,10 +287,12 @@ function onWaveEnd() {
   color: #fff;
   background-color: @primary;
   &:hover {
+    color: #fff;
     background-color: #4096ff;
     border-color: #4096ff;
   }
   &:active {
+    color: #fff;
     background-color: #0958d9;
     border-color: #0958d9;
   }
@@ -303,10 +305,12 @@ function onWaveEnd() {
   background-color: @danger;
   border-color: @danger;
   &:hover {
+    color: #fff;
     background-color: #ff7875;
     border-color: #ff7875;
   }
   &:active {
+    color: #fff;
     background-color: #d9363e;
     border-color: #d9363e;
   }
