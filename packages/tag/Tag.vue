@@ -16,12 +16,8 @@ interface Props {
   size?: 'small' | 'middle' | 'large' // 标签尺寸
   bordered?: boolean // 是否有边框
   dynamic?: boolean // 是否启用标签动态添加和删除
-  value?: string[] | Tag[] // 动态标签数组，dynamic 为 true 时生效
-  // 启用动态标签后，可设置以下 Space 相关属性
-  spaceWidth?: string | number // 间距区域总宽度
-  spaceAlign?: 'stretch' | 'start' | 'end' | 'center' | 'baseline' // 垂直排列方式
-  spaceDirection?: 'horizontal' | 'vertical' // 间距方向
-  spaceGap?: number | number[] | 'small' | 'middle' | 'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
+  value?: string[] | Tag[] // 动态标签数组，仅当 dynamic: true 时生效
+  spaceProps?: object // Space 组件属性配置，仅当 dynamic: true 时生效
 }
 const props = withDefaults(defineProps<Props>(), {
   closable: false,
@@ -31,10 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   bordered: true,
   dynamic: false,
   value: () => [],
-  spaceWidth: 'auto',
-  spaceAlign: 'start',
-  spaceDirection: 'horizontal',
-  spaceGap: 'small'
+  spaceProps: () => ({})
 })
 const isStrArray = computed(() => {
   if (props.dynamic) {
@@ -193,7 +186,7 @@ function onKeyboard(e: KeyboardEvent) {
       </svg>
     </span>
   </div>
-  <Space v-else :width="spaceWidth" :align="spaceAlign" :direction="spaceDirection" :gap="spaceGap">
+  <Space v-else v-bind="spaceProps">
     <div
       class="m-tag"
       :class="[

@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.4.1 <Tag color="volcano" size="small">2024-07-31</Tag>
+
+- 优化 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件
+- 优化并更新 [标签 Tag](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tag.html) 组件，新增 `spaceProps` 属性
+
 ## 1.4.0 <Tag color="volcano" size="small">2024-07-30</Tag>
 
 - 新增 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html) 组件
