@@ -1750,7 +1750,7 @@ const gl = (l) => (le("data-v-c001d013"), l = l(), te(), l), z4 = { key: 0, clas
 Za.install = (l) => {
   l.component(Za.__name, Za);
 };
-const D4 = ["data-count"], E4 = ["value", "maxlength", "disabled", "onKeydown"], T4 = [((l) => (le("data-v-9f1d14be"), l = l(), te(), l))(() => o("svg", { focusable: "false", class: "u-clear", "data-icon": "close-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, [o("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z" })], -1))], Qa = W(R({ inheritAttrs: !1, __name: "Textarea", props: { width: { default: "100%" }, allowClear: { type: Boolean, default: !1 }, autoSize: { type: [Boolean, Object], default: !1 }, disabled: { type: Boolean, default: !1 }, maxlength: { default: void 0 }, showCount: { type: Boolean, default: !1 }, value: { default: "" }, valueModifiers: { default: () => ({}) } }, emits: ["update:value", "change", "enter"], setup(l, { emit: a }) {
+const D4 = ["data-count"], E4 = ["value", "maxlength", "disabled", "onKeydown"], T4 = [((l) => (le("data-v-f262e99b"), l = l(), te(), l))(() => o("svg", { focusable: "false", class: "u-clear", "data-icon": "close-circle", width: "1em", height: "1em", fill: "currentColor", "aria-hidden": "true", viewBox: "64 64 896 896" }, [o("path", { d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z" })], -1))], Qa = W(R({ inheritAttrs: !1, __name: "Textarea", props: { width: { default: "100%" }, allowClear: { type: Boolean, default: !1 }, autoSize: { type: [Boolean, Object], default: !1 }, disabled: { type: Boolean, default: !1 }, maxlength: { default: void 0 }, showCount: { type: Boolean, default: !1 }, value: { default: "" }, valueModifiers: { default: () => ({}) } }, emits: ["update:value", "change", "enter"], setup(l, { emit: a }) {
   const e = l, t = _(() => typeof e.width == "number" ? e.width + "px" : e.width), c = _(() => {
     if (typeof e.autoSize == "object") {
       const m = { resize: "none" };
@@ -1784,7 +1784,7 @@ const D4 = ["data-count"], E4 = ["value", "maxlength", "disabled", "onKeydown"],
     w("update:value", ""), n.value.focus();
   }
   return (m, b) => (i(), d("div", { class: F(["m-textarea", { "show-count": m.showCount }]), style: C(`width: ${t.value};`), "data-count": s.value }, [o("textarea", fe({ ref_key: "textarea", ref: n, type: "hidden", class: ["u-textarea", { disabled: m.disabled }], style: [`height: ${m.autoSize ? h.value : ""}px`, c.value], value: m.value, maxlength: m.maxlength, disabled: m.disabled, onInput: p, onChange: g, onKeydown: me(J(f, ["prevent"]), ["enter"]) }, m.$attrs), null, 16, E4), !m.disabled && m.allowClear && m.value ? (i(), d("span", { key: 0, class: "m-clear", onClick: v }, T4)) : L("", !0)], 14, D4));
-} }), [["__scopeId", "data-v-9f1d14be"]]);
+} }), [["__scopeId", "data-v-f262e99b"]]);
 Qa.install = (l) => {
   l.component(Qa.__name, Qa);
 };
