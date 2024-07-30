@@ -62,10 +62,10 @@ function onWaveEnd() {
     :class="[
       `btn-${type} btn-${size}`,
       {
-        'btn-block': block,
-        'btn-ghost': ghost,
         [`loading-${size}`]: !href && loading,
         'btn-loading': !href && loading,
+        'btn-ghost': ghost,
+        'btn-block': block,
         'btn-disabled': disabled
       }
     ]"
@@ -119,9 +119,12 @@ function onWaveEnd() {
     opacity: 0;
     width: 0;
     transition:
+      padding-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
       width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
       opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     .u-spin-circle {
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       border-width: 1px;
       border-style: solid;
@@ -142,6 +145,7 @@ function onWaveEnd() {
     opacity: 0;
     width: 0;
     transition:
+      padding-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
       width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
       opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     .circular {
@@ -214,43 +218,6 @@ function onWaveEnd() {
       }
     }
   }
-}
-.loading-small,
-.loading-middle {
-  .m-static-circle {
-    width: 22px;
-    opacity: 1;
-    .u-spin-circle {
-      width: 14px;
-      height: 14px;
-    }
-  }
-  .m-dynamic-circle {
-    width: 22px;
-    opacity: 1;
-  }
-}
-.loading-large {
-  .m-static-circle {
-    width: 24px;
-    opacity: 1;
-    .u-spin-circle {
-      width: 16px;
-      height: 16px;
-    }
-  }
-  .m-dynamic-circle {
-    width: 24px;
-    opacity: 1;
-    .circular {
-      width: 16px;
-      height: 16px;
-    }
-  }
-}
-.btn-loading {
-  opacity: 0.65;
-  pointer-events: none;
 }
 .btn-default {
   background-color: #ffffff;
@@ -362,6 +329,32 @@ function onWaveEnd() {
   height: 40px;
   padding: 6.428571428571429px 15px;
   border-radius: 8px;
+  .m-static-circle .u-spin-circle,
+  .m-dynamic-circle .circular {
+    width: 16px;
+    height: 16px;
+  }
+}
+.loading-small,
+.loading-middle {
+  .m-static-circle,
+  .m-dynamic-circle {
+    padding-right: 8px;
+    width: 22px;
+    opacity: 1;
+  }
+}
+.loading-large {
+  .m-static-circle,
+  .m-dynamic-circle {
+    padding-right: 8px;
+    width: 24px;
+    opacity: 1;
+  }
+}
+.btn-loading {
+  opacity: 0.65;
+  pointer-events: none;
 }
 .btn-primary.btn-ghost:not(.btn-disabled) {
   color: @primary;
@@ -395,6 +388,9 @@ function onWaveEnd() {
     stroke: @danger;
   }
 }
+.btn-block {
+  width: 100%;
+}
 .btn-disabled {
   border-color: #d9d9d9;
   color: rgba(0, 0, 0, 0.25);
@@ -414,8 +410,5 @@ function onWaveEnd() {
   .m-dynamic-circle .circular .path {
     stroke: rgba(0, 0, 0, 0.25);
   }
-}
-.btn-block {
-  width: 100%;
 }
 </style>
