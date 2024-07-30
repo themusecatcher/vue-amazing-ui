@@ -421,17 +421,17 @@ const onDynamicClose = (tag: any, index: number) => {
 
 :::
 
-## 自定义动态标签排列方式
+## 自定义动态标签排列
 
 <Tag
-  space-direction="vertical"
-  :space-size="12"
+  closable
+  dynamic
   color="blue"
   size="large"
-  dynamic
+  :space-props="{ vertical: true, gap: 12 }"
   v-model:value="strTags"
-  closable
-  @close="onDynamicClose" />
+  @close="onDynamicClose"
+/>
 
 ::: details Show Code
 
@@ -450,14 +450,14 @@ const onDynamicClose = (tag: any, index: number) => {
 </script>
 <template>
   <Tag
-    space-direction="vertical"
-    :space-size="12"
+    closable
+    dynamic
     color="blue"
     size="large"
-    dynamic
+    :space-props="{ vertical: true, gap: 12 }"
     v-model:value="strTags"
-    closable
-    @close="onDynamicClose" />
+    @close="onDynamicClose"
+  />
 </template>
 ```
 
@@ -554,11 +554,8 @@ icon | 设置图标 | string &#124; slot | '' | false
 size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 bordered | 是否有边框 | boolean | true | false
 dynamic | 是否启用标签动态添加和删除 | boolean | false | false
-value <Tag color="cyan">v-model</Tag> | 动态标签数组，`dynamic` 为 `true` 时生效 | string[] &#124; [Tag](#tag-type)[] | [] | false
-spaceWidth | 间距区域总宽度 | string &#124; number | 'auto' | false
-spaceAlign | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' | false
-spaceDirection | 间距方向 | 'horizontal' &#124; 'vertical' | 'horizontal' | false
-spaceGap | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
+value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Tag](#tag-type)[] | [] | false
+spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space) ，仅当 `dynamic: true` 时生效 | object | {} | false
 
 ### Tag Type
 
