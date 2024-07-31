@@ -131,7 +131,7 @@ function onOpen() {
     <br />
     <br />
     <Button type="primary" @click="onOpen">Open New Window</Button>
-    <p class="u-tip mb10">
+    <p class="u-tip mt30 mb10">
       所有组件样式均使用
       <Tag color="magenta">box-sizing: border-box;</Tag>
       模式！
