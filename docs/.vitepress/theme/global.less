@@ -375,20 +375,10 @@ html.dark .VPHome {
         background-color: rgba(255, 255, 255, 0.45) !important;
         transition: all 0.25s;
       }
-      &:nth-child(2) {
-        .VPButton.alt {
-          &:hover {
-            border-color: #41d1ff !important;
-            box-shadow: 0 0 3px 3px rgba(65, 209, 255, 0.12);
-          }
-        }
-      }
-      &:nth-child(3) {
-        .VPButton.alt {
-          &:hover {
-            border-color: #eb2f96 !important;
-            box-shadow: 0 0 3px 3px rgba(235, 47, 150, 0.12);
-          }
+      .VPButton.alt {
+        &:hover {
+          border-color: #eb2f96 !important;
+          box-shadow: 0 0 3px 3px rgba(235, 47, 150, 0.12);
         }
       }
     }
@@ -402,6 +392,9 @@ html.dark .VPHome {
       }
       .VPButton.alt {
         background-color: rgba(0, 0, 0, 0.45) !important;
+        &:hover {
+          border-color: #09c8ce !important;
+        }
       }
     }
   }
