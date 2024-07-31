@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect, nextTick } from 'vue'
+import { ref, watchEffect } from 'vue'
 import Spin from '../spin'
 import Message from '../message'
 import Image from '../image'
@@ -9,15 +9,21 @@ interface FileType {
   url: any // 文件地址
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
+interface MessageType {
+  upload?: string // 上传成功的消息提示，没有设置该属性时即不显示上传消息提示
+  remove?: string // 删除成功的消息提示，没有设置该属性时即不显示删除消息提示
+}
 interface Props {
-  accept?: string // 接受上传的文件类型，与<input type="file">的accept属性一致，详见 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file
+  accept?: string // 接受上传的文件类型，与 <input type="file" /> 的 accept 属性一致，参考 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file
   multiple?: boolean // 是否支持多选文件
   maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
   tip?: string // 上传描述文字 string | slot
-  uploadingTip?: string // 上传中的文字描述
-  gap?: number | number[] // 展示文件间距大小，数组时表示: [水平间距, 垂直间距]
-  fit?: 'fill' | 'contain' | 'cover' // 预览图片缩放规则，仅当上传文件为图片时生效
-  errorInfo?: string // 上传中断时的错误提示信息
+  fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 预览图片缩放规则，仅当上传文件为图片时生效
+  spaceProps?: object // Space 组件属性配置，用于配置多个文件时的排列方式
+  spinProps?: object // Spin 组件属性配置，用于配置上传中样式
+  imageProps?: object // Image 组件属性配置，用于配置图片预览
+  messageProps?: object // Message 组件属性配置，用于配置操作消息提示
+  actionMessage?: MessageType // 操作成功的消息提示，传 {} 即可不显示任何消息提示
   beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传，通常用来现在用户上传的文件格式和大小
   uploadMode?: 'base64' | 'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
   customRequest?: Function // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
@@ -29,10 +35,12 @@ const props = withDefaults(defineProps<Props>(), {
   multiple: false,
   maxCount: 1,
   tip: 'Upload',
-  uploadingTip: 'Uploading',
-  gap: 8,
-  fit: 'contain', // 可选 fill(填充) | contain(等比缩放包含) | cover(等比缩放覆盖)
-  errorInfo: '',
+  fit: 'contain',
+  spaceProps: () => ({}),
+  spinProps: () => ({}),
+  imageProps: () => ({}),
+  messageProps: () => ({}),
+  actionMessage: () => ({ upload: '上传成功', remove: '删除成功' }),
   beforeUpload: () => true,
   uploadMode: 'base64',
   customRequest: () => {},
@@ -111,16 +119,11 @@ function onUpload(e: any, index: number) {
   }
 }
 const emits = defineEmits(['update:fileList', 'change', 'remove'])
-const uploadFile = function (file: File, index: number) {
+const uploadFile = (file: File, index: number) => {
   // 统一上传文件方法
   // console.log('开始上传 upload-event files:', file)
-  if (!props.beforeUpload(file)) {
+  if (props.beforeUpload(file)) {
     // 使用用户钩子进行上传前文件判断，例如大小、类型限制
-    nextTick(() => {
-      // 获取更新后的errorInfo 否则无法立即获取props更新
-      onError(props.errorInfo)
-    })
-  } else {
     if (props.maxCount > showUpload.value) {
       showUpload.value++
     }
@@ -142,15 +145,15 @@ function base64Upload(file: File, index: number) {
   reader.onloadstart = function (e) {
     // 当读取操作开始时触发
     // reader.abort() // 取消上传
-    console.log('开始读取 onloadstart:', e)
+    // console.log('开始读取 onloadstart:', e)
   }
   reader.onabort = function (e) {
     // 当读取操作被中断时触发
-    console.log('读取中止 onabort:', e)
+    // console.log('读取中止 onabort:', e)
   }
   reader.onerror = function (e) {
     // 当读取操作发生错误时触发
-    console.log('读取错误 onerror:', e)
+    // console.log('读取错误 onerror:', e)
   }
   reader.onprogress = function (e) {
     // 在读取Blob时触发，读取上传进度，50ms左右调用一次
@@ -169,12 +172,13 @@ function base64Upload(file: File, index: number) {
       name: file.name,
       url: e.target?.result
     })
+    props.actionMessage.upload && messageRef.value.success(props.actionMessage.upload)
     emits('update:fileList', uploadedFiles.value)
     emits('change', uploadedFiles.value)
   }
   reader.onloadend = function (e) {
     // 当读取操作结束时触发（要么成功，要么失败）触发
-    console.log('读取结束 onloadend:', e)
+    // console.log('读取结束 onloadend:', e)
   }
 }
 function customUpload(file: File, index: number) {
@@ -182,6 +186,7 @@ function customUpload(file: File, index: number) {
     .customRequest(file)
     .then((res: any) => {
       uploadedFiles.value.push(res)
+      props.actionMessage.upload && messageRef.value.success(props.actionMessage.upload)
       emits('update:fileList', uploadedFiles.value)
       emits('change', uploadedFiles.value)
     })
@@ -189,7 +194,7 @@ function customUpload(file: File, index: number) {
       if (props.maxCount > 1) {
         showUpload.value = uploadedFiles.value.length + 1
       }
-      onError(err)
+      messageRef.value.error(err)
     })
     .finally(() => {
       uploading.value[index] = false
@@ -197,7 +202,6 @@ function customUpload(file: File, index: number) {
 }
 const imageRef = ref()
 function onPreview(n: number, url: string) {
-  console.log('isImage', isImage(url))
   if (isImage(url)) {
     const files = uploadedFiles.value.slice(0, n).filter((file) => !isImage(file.url))
     imageRef.value[n - files.length].preview(0)
@@ -210,18 +214,38 @@ function onRemove(index: number) {
     showUpload.value--
   }
   const removeFile = uploadedFiles.value.splice(index, 1)
+  props.actionMessage.remove && messageRef.value.success(props.actionMessage.remove)
   emits('remove', removeFile)
   emits('update:fileList', uploadedFiles.value)
   emits('change', uploadedFiles.value)
 }
-const message = ref()
-function onError(content: any) {
-  message.value.error(content) // error调用
+const messageRef = ref()
+function onInfo(content: string) {
+  messageRef.value.info(content)
 }
+function onSuccess(content: string) {
+  messageRef.value.success(content)
+}
+function onError(content: string) {
+  messageRef.value.error(content)
+}
+function onWarning(content: string) {
+  messageRef.value.warning(content)
+}
+function onLoading(content: string) {
+  messageRef.value.loading(content)
+}
+defineExpose({
+  info: onInfo,
+  success: onSuccess,
+  error: onError,
+  warning: onWarning,
+  loading: onLoading
+})
 </script>
 <template>
   <div class="m-upload-list">
-    <Space :gap="gap">
+    <Space v-bind="spaceProps">
       <div class="m-upload-item" v-for="n of showUpload" :key="n">
         <div class="m-upload">
           <div
@@ -263,7 +287,7 @@ function onError(content: any) {
             </div>
           </div>
           <div class="m-file-uploading" v-show="uploading[n - 1]">
-            <Spin class="u-spin" :tip="uploadingTip" size="small" indicator="dynamic-circle" />
+            <Spin class="u-spin" tip="uploading" size="small" indicator="spin-line" v-bind="spinProps" />
           </div>
           <div class="m-file-preview" v-if="uploadedFiles[n - 1]">
             <Image
@@ -274,8 +298,8 @@ function onError(content: any) {
               :height="82"
               :src="uploadedFiles[n - 1].url"
               :name="uploadedFiles[n - 1].name"
+              v-bind="imageProps"
             />
-            <!-- <img class="m-image"  :style="`object-fit: ${fit};`"  /> -->
             <svg
               class="u-file"
               v-else-if="isPDF(uploadedFiles[n - 1].url)"
@@ -314,7 +338,7 @@ function onError(content: any) {
         </div>
       </div>
     </Space>
-    <Message ref="message" :duration="3000" :top="30" />
+    <Message ref="messageRef" v-bind="messageProps" />
   </div>
 </template>
 <style lang="less" scoped>

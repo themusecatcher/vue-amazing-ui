@@ -9,12 +9,12 @@ interface Props {
   options?: Array<Option> // 复选元素数据
   disabled?: boolean // 是否禁用所有复选框
   vertical?: boolean // 是否垂直排列
-  value?: any[] // 当前选中的值（v-model）
-  gap?: number // 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距
+  value?: any[] // (v-model) 当前选中的值
+  gap?: number // 多个单选框之间的间距，单位 px，垂直排列时，间距即垂直间距
   width?: string | number // 复选区域最大展示宽度，超出后折行
   height?: string | number // 复选区域最大展示高度，超出后滚动
   indeterminate?: boolean // 全选时的样式控制
-  checked?: boolean // 是否全选（v-model）
+  checked?: boolean // (v-model) 是否全选
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
@@ -86,17 +86,17 @@ function onCheckAll() {
     <template v-if="sum">
       <div
         class="m-checkbox-wrap"
-        :class="{ vertical: vertical }"
+        :class="{ 'checkbox-vertical': vertical }"
         :style="sum !== index + 1 ? styleObject : ''"
         v-for="(option, index) in options"
         :key="index"
       >
         <div
-          class="m-box"
-          :class="{ disabled: disabled || option.disabled }"
+          class="m-checkbox-box"
+          :class="{ 'checkbox-disabled': disabled || option.disabled }"
           @click="disabled || option.disabled ? () => false : onClick(option.value)"
         >
-          <span class="u-checkbox" :class="{ 'u-checkbox-checked': checkedValue.includes(option.value) }"></span>
+          <span class="u-checkbox" :class="{ 'checkbox-checked': checkedValue.includes(option.value) }"></span>
           <span class="u-label">
             <slot :label="option.label">{{ option.label }}</slot>
           </span>
@@ -104,10 +104,10 @@ function onCheckAll() {
       </div>
     </template>
     <div v-else class="m-checkbox-wrap">
-      <div class="m-box" :class="{ disabled: disabled }" @click="onCheckAll">
+      <div class="m-checkbox-box" :class="{ 'checkbox-disabled': disabled }" @click="onCheckAll">
         <span
           class="u-checkbox"
-          :class="{ 'u-checkbox-checked': checked && !indeterminate, indeterminate: indeterminate }"
+          :class="{ 'checkbox-checked': checked && !indeterminate, indeterminate: indeterminate }"
         ></span>
         <span class="u-label">
           <slot>Check all</slot>
@@ -125,7 +125,7 @@ function onCheckAll() {
   overflow: auto;
   .m-checkbox-wrap {
     display: inline-block;
-    .m-box {
+    .m-checkbox-box {
       height: 100%;
       display: inline-flex; // 设置为flex布局后，所有的子元素都会变成行内块元素
       align-items: flex-start;
@@ -168,7 +168,7 @@ function onCheckAll() {
             opacity 0.1s;
         }
       }
-      .u-checkbox-checked {
+      .checkbox-checked {
         background-color: @themeColor;
         border-color: @themeColor;
         &::after {
@@ -196,7 +196,7 @@ function onCheckAll() {
         line-height: 22px;
       }
     }
-    .disabled {
+    .checkbox-disabled {
       color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
       &:hover {

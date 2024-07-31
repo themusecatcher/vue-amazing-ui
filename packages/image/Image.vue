@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, nextTick } from 'vue'
-import Spin from '../spin'
 import Space from '../space'
+import Spin from '../spin'
 import { add } from '../utils'
 interface Image {
   src: string // 图像地址
@@ -10,12 +10,13 @@ interface Image {
 interface Props {
   src: string | Image[] // 图像地址 | 图像地址数组
   name?: string // 图像名称，没有传入图片名时自动从图像地址 src 中读取
-  width?: string | number // 图像宽度
-  height?: string | number // 图像高度
+  width?: string | number | (string | number)[] // 图像宽度，单位 px
+  height?: string | number | (string | number)[] // 图像高度，单位 px
   bordered?: boolean // 是否显示边框
-  gap?: number | number[] // 展示图片间距大小，单位 px，数组时表示: [水平间距, 垂直间距]
   fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 图片在容器内的的适应类型
   preview?: string // 预览文本 string | slot
+  spaceProps?: object // Space 组件属性配置，用于配置多张展示图片时的排列方式
+  spinProps?: object // Spin 组件属性配置，用于配置图片加载中样式
   zoomRatio?: number // 每次缩放比率
   minZoomScale?: number // 最小缩放比例
   maxZoomScale?: number // 最大缩放比例
@@ -26,32 +27,19 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   src: '',
   name: '',
-  width: 200,
-  height: 200,
+  width: 100,
+  height: 100,
   bordered: true,
-  gap: 8,
   fit: 'contain',
   preview: '预览',
+  spaceProps: () => ({}),
+  spinProps: () => ({}),
   zoomRatio: 0.1,
   minZoomScale: 0.1,
   maxZoomScale: 10,
   resetOnDbclick: true,
   loop: false,
   album: false
-})
-const imageWidth = computed(() => {
-  if (typeof props.width === 'number') {
-    return props.width + 'px'
-  } else {
-    return props.width
-  }
-})
-const imageHeight = computed(() => {
-  if (typeof props.height === 'number') {
-    return props.height + 'px'
-  } else {
-    return props.height
-  }
 })
 const images = ref<Image[]>([])
 watchEffect(() => {
@@ -102,6 +90,19 @@ function getImageName(image: Image) {
       const res = image.src.split('?')[0].split('/')
       return res[res.length - 1]
     }
+  }
+}
+function getImageSize(size: string | number | (string | number)[], index: number): string {
+  if (Array.isArray(size)) {
+    if (typeof size[index] === 'number') {
+      return size[index] + 'px'
+    }
+    return size[index]
+  } else {
+    if (typeof size === 'number') {
+      return size + 'px'
+    }
+    return size
   }
 }
 function onKeyboard(e: KeyboardEvent) {
@@ -251,16 +252,16 @@ function onSwitchRight() {
 </script>
 <template>
   <div class="m-image-wrap">
-    <Space :gap="gap">
+    <Space v-bind="spaceProps">
       <div
         class="m-image"
         :class="{ bordered: bordered, 'image-hover-mask': complete[index] }"
-        :style="`width: ${imageWidth}; height: ${imageHeight};`"
+        :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
         v-for="(image, index) in images"
         :key="index"
         v-show="!album || (album && index === 0)"
       >
-        <Spin :spinning="!complete[index]" indicator="dynamic-circle">
+        <Spin :spinning="!complete[index]" indicator="dynamic-circle" size="small" v-bind="spinProps">
           <img
             class="u-image"
             :style="`object-fit: ${fit};`"
@@ -317,8 +318,8 @@ function onSwitchRight() {
             </div>
             <div
               class="u-preview-operation"
+              :class="{ 'operation-disabled': scale === maxZoomScale }"
               title="放大"
-              :class="{ 'u-operation-disabled': scale === maxZoomScale }"
               @click="onZoomin"
             >
               <svg class="u-icon" focusable="false" data-icon="zoom-in" aria-hidden="true" viewBox="64 64 896 896">
@@ -329,8 +330,8 @@ function onSwitchRight() {
             </div>
             <div
               class="u-preview-operation"
+              :class="{ 'operation-disabled': scale === minZoomScale }"
               title="缩小"
-              :class="{ 'u-operation-disabled': scale === minZoomScale }"
               @click="onZoomout"
             >
               <svg class="u-icon" focusable="false" data-icon="zoom-out" aria-hidden="true" viewBox="64 64 896 896">
@@ -410,7 +411,7 @@ function onSwitchRight() {
           <template v-if="imageCount > 1">
             <div
               class="m-switch-left"
-              :class="{ 'u-switch-disabled': previewIndex === 0 && !loop }"
+              :class="{ 'switch-disabled': previewIndex === 0 && !loop }"
               @click="onSwitchLeft"
             >
               <svg focusable="false" class="u-switch" data-icon="left" aria-hidden="true" viewBox="64 64 896 896">
@@ -421,7 +422,7 @@ function onSwitchRight() {
             </div>
             <div
               class="m-switch-right"
-              :class="{ 'u-switch-disabled': previewIndex === imageCount - 1 && !loop }"
+              :class="{ 'switch-disabled': previewIndex === imageCount - 1 && !loop }"
               @click="onSwitchRight"
             >
               <svg focusable="false" class="u-switch" data-icon="right" aria-hidden="true" viewBox="64 64 896 896">
@@ -592,7 +593,7 @@ function onSwitchRight() {
             fill: #fff;
           }
         }
-        .u-operation-disabled {
+        .operation-disabled {
           color: rgba(255, 255, 255, 0.25);
           pointer-events: none;
           .u-icon {
@@ -674,7 +675,7 @@ function onSwitchRight() {
           fill: #fff;
         }
       }
-      .u-switch-disabled {
+      .switch-disabled {
         color: rgba(255, 255, 255, 0.25);
         background: transparent;
         cursor: not-allowed;

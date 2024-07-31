@@ -52,45 +52,6 @@ const images = ref([
 
 :::
 
-## 自定义样式
-
-*自定义宽高；同时图片覆盖容器；预览文本设为 preview；间距设为16px*
-
-<br/>
-
-<Image :width="300" :height="300" fit="scale-down" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg">
-  <template #preview>
-    <p class="u-pre">preview</p>
-  </template>
-</Image>
-
-<style lang="less" scoped>
-.u-pre {
-  display: inline-block;
-  font-size: 16px;
-}
-</style>
-
-::: details Show Code
-
-```vue
-<template>
-  <Image :width="300" :height="300" fit="scale-down" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg">
-    <template #preview>
-      <p class="u-pre">preview</p>
-    </template>
-  </Image>
-</template>
-<style lang="less" scoped>
-.u-pre {
-  display: inline-block;
-  font-size: 16px;
-}
-</style>
-```
-
-:::
-
 ## 多张图片预览
 
 *可循环切换图片，并支持键盘 (left / right / up / down) 按键切换*
@@ -134,7 +95,132 @@ const images = ref([
 
 :::
 
-## 隐藏边框
+## 自定义样式
+
+*自定义宽高；同时图片覆盖容器；预览文本设为 preview*
+
+<br/>
+
+<Image
+  :src="images"
+  :width="[100, 200, 100, 200, 100]"
+  :space-props="{ width: 416 }"
+  fit="cover"
+  loop
+>
+  <template #preview>
+    <p class="u-pre">preview</p>
+  </template>
+</Image>
+
+<style lang="less" scoped>
+.u-pre {
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const images = ref([
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    name: 'image-1.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    name: 'image-2.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    name: 'image-3.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    name: 'image-4.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    name: 'image-5.jpg'
+  }
+])
+</script>
+<template>
+  <Image
+    :src="images"
+    :width="[100, 200, 100, 200, 100]"
+    :space-props="{ width: 416 }"
+    fit="cover"
+    loop
+  >
+    <template #preview>
+      <p class="u-pre">preview</p>
+    </template>
+  </Image>
+</template>
+<style lang="less" scoped>
+.u-pre {
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
+```
+
+:::
+
+## 自定义排列方式 & 加载中样式
+
+<Image
+  :src="images"
+  :space-props="{ width: 632, gap: 16 }"
+  :spin-props="{ tip: 'loading', indicator: 'spin-line', color: '#fadb14' }"
+  loop
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const images = ref([
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    name: 'image-1.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    name: 'image-2.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    name: 'image-3.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    name: 'image-4.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    name: 'image-5.jpg'
+  }
+])
+</script>
+<template>
+  <Image
+    :src="images"
+    :space-props="{ width: 632, gap: 16 }"
+    :spin-props="{ tip: 'loading', indicator: 'spin-line', color: '#fadb14' }"
+    loop
+  />
+</template>
+```
+
+:::
+
+## 无边框
 
 <Image :src="images" :bordered="false" fit="cover" loop />
 
@@ -246,12 +332,13 @@ const images = ref([
 -- | -- | -- | -- | --
 src | 图像地址 &#124; 图像地址数组 | string &#124; [Image](#image-type)[] | '' | true
 name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | '' | false
-width | 图像宽度，单位 `px` | string &#124; number | 300 | false
-height | 图像高度，单位 `px` | string &#124; number | '100%' | false
+width | 图像宽度，单位 `px` | string &#124; number &#124; (string&#124;number)[] | 100 | false
+height | 图像高度，单位 `px` | string &#124; number &#124; (string&#124;number)[] | 100 | false
 bordered | 是否显示边框 | boolean | true | false
-gap | 展示图片间距大小，单位 `px`，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] | 8 | false
-fit | 图片在容器内的的适应类型，参考[object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' | false
+fit | 图片在容器内的的适应类型，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' | false
 preview | 预览文本 | string &#124; slot | '预览' | false
+spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多张展示图片时的排列方式 | object | {} | false
+spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置图片加载中样式 | object | {} | false
 zoomRatio | 每次缩放比率 | number | 0.1 | false
 minZoomScale | 最小缩放比例 | number | 0.1 | false
 maxZoomScale | 最大缩放比例 | number | 10 | false

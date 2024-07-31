@@ -44,13 +44,13 @@ watch(clear, (to, from) => {
   }
 })
 function onEnter(index: number) {
-  cancelRaf(hideTimers.value[index])
+  hideTimers.value[index] && cancelRaf(hideTimers.value[index])
 }
 function onLeave(index: number) {
   onHideMessage(index)
 }
 function show() {
-  cancelRaf(resetTimer.value)
+  resetTimer.value && cancelRaf(resetTimer.value)
   const index = messageContent.value.length - 1
   showMessage.value[index] = true
   onHideMessage(index)
@@ -111,8 +111,8 @@ function onHideMessage(index: number) {
       <div class="m-message" v-show="showMessage[index]" v-for="(message, index) in messageContent" :key="index">
         <div class="m-message-content" @mouseenter="onEnter(index)" @mouseleave="onLeave(index)">
           <svg
-            class="u-svg"
             v-if="message.mode === 'info'"
+            class="u-svg"
             :style="{ fill: ColorStyle[message.mode] }"
             viewBox="64 64 896 896"
             data-icon="info-circle"
@@ -124,8 +124,8 @@ function onHideMessage(index: number) {
             ></path>
           </svg>
           <svg
-            class="u-svg"
             v-if="message.mode === 'success'"
+            class="u-svg"
             :style="{ fill: ColorStyle[message.mode] }"
             viewBox="64 64 896 896"
             data-icon="check-circle"
@@ -137,8 +137,8 @@ function onHideMessage(index: number) {
             ></path>
           </svg>
           <svg
-            class="u-svg"
             v-if="message.mode === 'error'"
+            class="u-svg"
             :style="{ fill: ColorStyle[message.mode] }"
             viewBox="64 64 896 896"
             data-icon="close-circle"
@@ -150,8 +150,8 @@ function onHideMessage(index: number) {
             ></path>
           </svg>
           <svg
-            class="u-svg"
             v-if="message.mode === 'warning'"
+            class="u-svg"
             :style="{ fill: ColorStyle[message.mode] }"
             viewBox="64 64 896 896"
             data-icon="exclamation-circle"
@@ -163,8 +163,8 @@ function onHideMessage(index: number) {
             ></path>
           </svg>
           <svg
-            class="u-svg circular"
             v-if="message.mode === 'loading'"
+            class="u-svg circular"
             :style="{ stroke: ColorStyle[message.mode] }"
             viewBox="0 0 50 50"
             focusable="false"

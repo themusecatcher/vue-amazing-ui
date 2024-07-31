@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+const uploadRef = ref()
 const files = ref([])
 const fileList = ref([
   {
@@ -26,20 +27,19 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('imageList:', imageList.value)
 })
-const errorInfo = ref('') // 上传错误提示信息
 function onBeforeUpload(file: File) {
   const acceptTypes = ['image/jpg', 'image/jpeg', 'image/png', 'application/pdf']
   if (file.size > 500 * 1024) {
     // 文件大于 500KB 时取消上传
-    errorInfo.value = '文件必须小于500KB'
-    return false
+    uploadRef.value.warning('文件必须小于500KB')
+    return false // 停止上传
   }
   if (!acceptTypes.includes(file.type)) {
     // 继续上传
-    errorInfo.value = '只能上传jpg、jpeg、png、pdf格式的文件'
+    uploadRef.value.error('只能上传jpg、jpeg、png、pdf格式的文件')
     return false // 停止上传
   }
-  return true
+  return true // 继续上传
 }
 function onCustomRequest(file: File) {
   return new Promise((resolve, reject) => {
@@ -86,16 +86,16 @@ function onRemove(file: FileType) {
     <Upload disabled v-model:fileList="fileList" />
     <h2 class="mt30 mb10">多文件上传</h2>
     <h3 class="mb10">限制上传数量为3</h3>
-    <Upload multiple :maxCount="3" v-model:fileList="fileList" />
+    <Upload multiple :max-count="3" v-model:fileList="fileList" />
     <h2 class="mt30 mb10">自定义样式</h2>
     <h3 class="mb10">缩略图等比覆盖，上传描述文字使用：上传</h3>
-    <Upload :maxCount="3" tip="上传" fit="cover" v-model:fileList="fileList" />
+    <Upload :max-count="3" tip="上传" fit="cover" v-model:fileList="fileList" />
     <h2 class="mt30 mb10">限制文件大小和类型</h2>
     <h3 class="mb10">上传文件最大500KB，同时文件类型只能是图片</h3>
     <Upload
+      ref="uploadRef"
       accept="image/*,application/pdf"
-      :maxCount="3"
-      :error-info="errorInfo"
+      :max-count="3"
       :before-upload="onBeforeUpload"
       v-model:fileList="imageList"
       @change="onChange"
@@ -104,9 +104,7 @@ function onRemove(file: FileType) {
     <h2 class="mt30 mb10">自定义上传行为</h2>
     <Upload
       multiple
-      :maxCount="5"
-      :error-info="errorInfo"
-      :before-upload="onBeforeUpload"
+      :max-count="5"
       upload-mode="custom"
       :custom-request="onCustomRequest"
       v-model:fileList="fileList"
