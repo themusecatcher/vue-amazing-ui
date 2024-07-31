@@ -230,14 +230,21 @@ html.dark .VPHome {
       display: inline-block;
       transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
       .message, .copyright {
-        color: var(--vp-c-text-1);
+        color: rgba(0, 0, 0, 0.68);
       }
       &:hover {
-        transform: scale(1.25);
+        transform: scale(1.05);
         .message, .copyright {
           font-weight: 600;
         }
       }
+    }
+  }
+}
+.dark {
+  .VPFooter {
+    .message, .copyright {
+      color: rgba(255, 255, 255, 0.6) !important;
     }
   }
 }
