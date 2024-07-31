@@ -23,3 +23,6 @@ pnpm up vue-amazing-ui@$version
 git add .
 git commit -m "update $version"
 git push
+
+# 重新部署文档
+pnpm docs:deploy
