@@ -57,7 +57,6 @@ function handleError() {
   position: relative;
   display: flex;
   align-items: center;
-  width: 50%;
   height: 200px;
   padding: 16px 24px;
   border: 1px solid #d9d9d9;
