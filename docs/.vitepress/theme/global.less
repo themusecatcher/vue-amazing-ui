@@ -309,7 +309,6 @@ html.dark .VPHome {
     }
   }
 }
-
 .VPNavBar:not(.has-sidebar):not(.top) {
   border: none;
   background-color: transparent !important;
@@ -331,6 +330,7 @@ html.dark .VPHome {
   }
 }
 .VPNavBarTitle .title {
+  color: rgba(0, 0, 0, 0.72);
   transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   .VPImage {
     transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
@@ -339,7 +339,15 @@ html.dark .VPHome {
     transform: scale(1.1);
     color: #bd34fe;
     .VPImage {
-      transform: scale(1.25);
+      transform: scale(1.1);
+    }
+  }
+}
+.dark {
+  .VPNavBarTitle .title {
+    color: rgba(255, 255, 255, 0.88);
+    &:hover {
+      color: #09c8ce;
     }
   }
 }
@@ -429,6 +437,13 @@ html.dark .VPHome {
       &::after {
         color: #FFF;
       }
+    }
+  }
+}
+.dark {
+  .DocSearch-Button {
+    &:hover {
+      border-color: #09c8ce;
     }
   }
 }
