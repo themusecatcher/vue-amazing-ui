@@ -161,12 +161,12 @@ h1 { // h1 标签渐变色文本
   margin-bottom: 20px;
 }
 html:not(.dark) .VPHome {
-  background: url(/waterfall.jpg) no-repeat center;
+  background: url(/light-sea.jpeg) no-repeat center;
   background-size: cover;
   min-height: 100vh;
 }
 html.dark .VPHome {
-  background: url(/sea.jpg) no-repeat center;
+  background: url(/dark-sea.jpg) no-repeat center;
   background-size: cover;
   min-height: 100vh;
 }
@@ -174,47 +174,22 @@ html.dark .VPHome {
   margin-bottom: 0 !important;
   padding-bottom: 104px !important;
 }
-@-webkit-keyframes pulsate {
-  0% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  50% {
-    -webkit-transform: scale(1.2);
-            transform: scale(1.2);
-  }
-  100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-}
-@keyframes pulsate {
-  0% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  50% {
-    -webkit-transform: scale(1.2);
-            transform: scale(1.2);
-  }
-  100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-}
 .VPHero {
   .name {
     font-size: 64px;
   }
   .text {
     font-size: 52px;
+    color: rgba(0, 0, 0, 0.72) !important;
     padding-top: 16px;
+  }
+  .tagline {
+    color: rgba(0, 0, 0, 0.6) !important;
   }
   .name { // 标题悬浮动画效果
     transition: all 0.3s ease-in-out;
     &:hover {
-      -webkit-animation: pulsate 0.5s ease-in-out infinite both;
-	        animation: pulsate 0.5s ease-in-out infinite both;
+      transform: scale(1.02);
     }
   }
   .text {
@@ -224,6 +199,16 @@ html.dark .VPHome {
     transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     &:hover {
       transform: translate(-50%, -50%) scale(1.2);
+    }
+  }
+}
+.dark {
+  .VPHero {
+    .text {
+      color: rgba(255, 255, 255, 0.88) !important;
+    }
+    .tagline {
+      color: rgba(255, 255, 255, 0.5) !important;
     }
   }
 }
@@ -351,25 +336,59 @@ html.dark .VPHome {
     }
   }
 }
-.VPButton {
-  border-color: transparent !important;
-  border-radius: 12px !important;
-}
-.VPButton.brand {
-  font-weight: 700;
-  border: none;
-  background: linear-gradient(to right, #09c8ce, #e4c31b, #eb2f96);
-  transition: all 0.25s;
-  &:hover {
-    background: linear-gradient(to right, #eb2f96, #09c8ce, #e4c31b);
+.VPHero {
+  .actions {
+    .action {
+      .VPButton {
+        color: rgba(0, 0, 0, 0.88);
+        border-color: transparent !important;
+        border-radius: 12px !important;
+      }
+      .VPButton.brand {
+        font-weight: 700;
+        border: none;
+        background: linear-gradient(to right, #09c8ce, #eb2f96);
+        transition: all 0.25s;
+        &:hover {
+          background: linear-gradient(to right, #eb2f96, #09c8ce);
+          box-shadow: 0 0 3px 3px rgba(65, 209, 255, 0.12);
+        }
+      }
+    }
+    .action {
+      .VPButton.alt {
+        background-color: rgba(255, 255, 255, 0.45) !important;
+        transition: all 0.25s;
+      }
+      &:nth-child(2) {
+        .VPButton.alt {
+          &:hover {
+            border-color: #41d1ff !important;
+            box-shadow: 0 0 3px 3px rgba(65, 209, 255, 0.12);
+          }
+        }
+      }
+      &:nth-child(3) {
+        .VPButton.alt {
+          &:hover {
+            border-color: #eb2f96 !important;
+            box-shadow: 0 0 3px 3px rgba(235, 47, 150, 0.12);
+          }
+        }
+      }
+    }
   }
 }
-.VPButton.alt {
-  background-color: transparent !important;
-  transition: all 0.25s;
-  &:hover {
-    border-color: #41d1ff !important;
-    box-shadow: 0 0 3px 3px rgba(65, 209, 255, 0.12);
+.dark {
+  .VPHero {
+    .actions .action {
+      .VPButton {
+        color: rgba(255, 255, 255, 0.88);
+      }
+      .VPButton.alt {
+        background-color: rgba(0, 0, 0, 0.45) !important;
+      }
+    }
   }
 }
 .VPSwitch {
@@ -406,48 +425,57 @@ html.dark .VPHome {
     }
   }
 }
-.items {
-  align-items: flex-start;
-}
-.VPFeatures .container .items .item {
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  .VPFeature {
-    border-radius: 36px;
-    border: none;
-    background-color: rgba(0, 0, 0, 0.36);
-    transition: all 0.25s;
-    .icon, .title, .details {
-      font-size: 18px;
-      color: #FFF;
-      transition: all 0.25s;
-    }
-    .details {
-      color: rgba(255, 255, 255, 0.88);
-    }
-    .icon {
-      width: 72px;
-      height: 72px;
-      font-size: 20px;
-      font-weight: 700;
-      border-radius: 28px;
-      background-image: radial-gradient(circle at 0%, #f669bb, #98e8de, #ffd666);
-      .logo {
-        width: 32px;
-        height: 32px;
+.VPFeatures .container {
+  .items {
+    align-items: flex-start;
+    .item {
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      .VPFeature {
+        border-radius: 32px;
+        border: none;
+        background-color: rgba(255, 255, 255, 0.45);
+        transition: all 0.25s;
+        .icon, .title {
+          font-size: 18px;
+          color: rgba(0, 0, 0, 0.8);
+          transition: all 0.25s;
+        }
+        .details {
+          font-size: 16px;
+          color: rgba(0, 0, 0, 0.68);
+        }
+        .icon {
+          width: 72px;
+          height: 72px;
+          font-size: 20px;
+          font-weight: 700;
+          border-radius: 24px;
+          background-color: rgba(0, 0, 0, 0.1);
+          .logo {
+            width: 32px;
+            height: 32px;
+          }
+        }
+      }
+      &:hover {
+        transform: scale(1.02);
+        transform-origin: 50%, 50%;
+        .VPFeature {
+          box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+        }
       }
     }
   }
-  &:hover {
-    transform: scale(1.2);
-    transform-origin: 50%, 50%;
-    .VPFeature {
-      border-color: #fbdf93;
-      background: linear-gradient(to right, #09c8ce, #e4c31b, #eb2f96);
-      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-      .icon {
-        background-image: radial-gradient(circle at 0%, #ffd666, #f669bb, #98e8de);
-      }
+}
+.dark {
+  .VPFeature {
+    background-color: rgba(0, 0, 0, 0.45) !important;
+    .title {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+    .details {
+      color: rgba(255, 255, 255, 0.6) !important;
     }
   }
 }
