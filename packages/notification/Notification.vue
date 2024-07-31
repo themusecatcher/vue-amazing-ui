@@ -47,7 +47,7 @@ watch(clear, (to, from) => {
   }
 })
 function onEnter(index: number) {
-  cancelRaf(hideTimers.value[index])
+  hideTimers.value[index] && cancelRaf(hideTimers.value[index])
   hideTimers.value[index] = null
 }
 function onLeave(index: number) {
@@ -58,7 +58,7 @@ function onLeave(index: number) {
   }
 }
 function show() {
-  cancelRaf(resetTimer.value)
+  resetTimer.value && cancelRaf(resetTimer.value)
   hideTimers.value.push(null)
   const index = notificationData.value.length - 1
   nextTick(() => {

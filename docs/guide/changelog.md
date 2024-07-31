@@ -6,7 +6,15 @@
 ## 1.4.1 <Tag color="volcano" size="small">2024-07-31</Tag>
 
 - 优化 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件
+- 优化 [多选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件代码
+- 优化 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件代码
+- 优化 [通知提醒 Notification](https://themusecatcher.github.io/vue-amazing-ui/guide/components/notification.html) 组件代码
+- 优化 [通知提醒 Notification](https://themusecatcher.github.io/vue-amazing-ui/guide/components/notification.html) 组件代码
+- 优化 [气泡卡片 Popover](https://themusecatcher.github.io/vue-amazing-ui/guide/components/popover.html) 组件代码
+- 优化 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件代码
 - 优化并更新 [标签 Tag](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tag.html) 组件，新增 `spaceProps` 属性
+- 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，新增 `spaceProps` `spinProps` 属性，同时删除了部分属性
+- 优化并更新 [上传 Upload](https://themusecatcher.github.io/vue-amazing-ui/guide/components/upload.html) 组件，新增 `spaceProps` `spinProps` `imageProps` `messageProps` `actionMessage` 属性，同时删除了部分属性
 
 ## 1.4.0 <Tag color="volcano" size="small">2024-07-30</Tag>
 

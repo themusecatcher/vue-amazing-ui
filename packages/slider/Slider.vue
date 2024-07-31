@@ -146,7 +146,7 @@ function handlerFocus(handler: HTMLElement, tooltip: HTMLElement) {
 function onClickPoint(e: any) {
   // 点击滑动条，移动滑块
   if (transition.value) {
-    cancelRaf(timer.value)
+    timer.value && cancelRaf(timer.value)
     timer.value = null
   } else {
     transition.value = true

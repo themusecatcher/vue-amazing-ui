@@ -106,10 +106,5 @@ watch(checkAll, (to) => {
     <Checkbox :gap="24" :options="options" v-model:value="value" />
     <h2 class="mt30 mb10">自定义展示区域宽高</h2>
     <Checkbox vertical :width="120" :height="150" :options="options" v-model:value="value" />
-    <a-divider />
-    <h2 class="mt30 mb10">Ant Design Vue 多选框组件</h2>
-    <a-checkbox :indeterminate="indeterminate" v-model:checked="checkAll">Check all</a-checkbox>
-    <br />
-    <a-checkbox-group v-model:value="value" @change="onChange" :options="options" />
   </div>
 </template>

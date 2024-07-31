@@ -31,7 +31,7 @@ const emit = defineEmits(['openChange'])
 const hideTimer = ref()
 function onShow() {
   getPosition()
-  cancelRaf(hideTimer.value)
+  hideTimer.value && cancelRaf(hideTimer.value)
   visible.value = true
   emit('openChange', visible.value)
 }
