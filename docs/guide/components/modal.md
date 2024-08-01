@@ -11,8 +11,6 @@
 
 - 在当前页面正中打开一个浮层，承载相应的操作或者提示内容
 
-<br/>
-
 ::: tip 使用
 
 - modal.value.info(content: string) // info 调用
