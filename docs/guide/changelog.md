@@ -3,6 +3,12 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.4.3 <Tag color="volcano" size="small">2024-08-02</Tag>
+
+- 优化 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件代码
+- 优化 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件代码
+- 优化 [文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件代码
+
 ## 1.4.2 <Tag color="volcano" size="small">2024-08-01</Tag>
 
 - 优化 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件

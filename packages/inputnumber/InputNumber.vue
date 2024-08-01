@@ -14,7 +14,7 @@ interface Props {
   formatter?: Function // 指定展示值的格式
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   disabled?: boolean // 是否禁用
-  value?: number | null // 当前值(v-model)
+  value?: number | null // (v-model) 当前值
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 90,
@@ -104,13 +104,13 @@ function onDown() {
 </script>
 <template>
   <div
+    tabindex="1"
     class="m-input-number"
     :class="{ 'input-number-disabled': disabled }"
-    tabindex="1"
     :style="`width: ${inputWidth};`"
   >
     <div class="m-input-wrap">
-      <span class="u-input-prefix" v-if="showPrefix">
+      <span class="input-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
@@ -127,14 +127,14 @@ function onDown() {
       <input v-else autocomplete="off" class="u-input-number" @change="onChange" v-model="numValue" v-bind="$attrs" />
     </div>
     <div class="m-handler-wrap">
-      <span class="m-arrow up-arrow" :class="{ disabled: (value || 0) >= max }" @click="onUp">
+      <span class="m-arrow up-arrow" :class="{ 'arrow-disabled': (value || 0) >= max }" @click="onUp">
         <svg focusable="false" class="u-icon" data-icon="up" aria-hidden="true" viewBox="64 64 896 896">
           <path
             d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
           ></path>
         </svg>
       </span>
-      <span class="m-arrow down-arrow" :class="{ disabled: (value || 0) <= min }" @click="onDown">
+      <span class="m-arrow down-arrow" :class="{ 'arrow-disabled': (value || 0) <= min }" @click="onDown">
         <svg focusable="false" class="u-icon" data-icon="down" aria-hidden="true" viewBox="64 64 896 896">
           <path
             d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
@@ -172,7 +172,7 @@ function onDown() {
   .m-input-wrap {
     height: 100%;
     display: flex;
-    .u-input-prefix {
+    .input-prefix {
       pointer-events: none;
       margin-inline-end: 4px;
       display: inline-flex;
@@ -245,7 +245,7 @@ function onDown() {
       border-top: 1px solid #d9d9d9;
       border-bottom-right-radius: 6px;
     }
-    .disabled {
+    .arrow-disabled {
       cursor: not-allowed;
     }
   }

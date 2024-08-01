@@ -1,29 +1,43 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
-enum ColorStyle { // 颜色主题对象
-  blue = '#1677ff',
-  green = '#52c41a',
-  red = '#ff4d4f',
-  gray = '#00000040'
-}
-interface Data {
-  desc: string // 文字描述 string | slot
-  color?: string // 圆圈颜色，可选四种预置颜色：blue | green | red | gray 或者 使用颜色值，默认值 blue
+interface DisabledTime {
+  disabledHours?: () => number[]
+  disabledMinutes?: (selectedHour: number) => number[]
+  disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]
 }
 interface Props {
-  timelineData: Data[] // 时间轴内容数组
-  width?: number | string // 时间轴区域总宽度，单位px
-  lineStyle?: 'solid' | 'dashed' | 'dotted' // 时间线样式
-  mode?: 'left' | 'center' | 'right' // 通过设置 mode 可以改变时间轴和内容的相对位置
-  position?: 'left' | 'right' // 当 mode 为 center 时，内容交替展现，内容从左边（left）开始或者右边（right）开始展现
+  allowClear?: boolean // 是否展示清除按钮
+  bordered?: boolean // 是否有边框
+  disabled?: boolean // 是否禁用
+  disabledTime?: DisabledTime // 不可选择的时间
+  format?: string // 展示的时间格式
+  hideDisabledOptions?: boolean // 是否隐藏禁用选项
+  hourStep?: number // 小时选项间隔
+  minuteStep?: number // 分钟选项间隔
+  secondStep?: number // 秒选项间隔
+  placeholder?: string | [string, string] // 没有值时的占位文本
+  showNow?: boolean // 是否显示 "此刻" 时间
+  use12Hours?: boolean // 是否使用 12 小时制
+  value?: string | null // (v-model) 当前时间
+  valueFormat?: string // 绑定值的格式
 }
 const props = withDefaults(defineProps<Props>(), {
-  timelineData: () => [],
-  width: '100%',
-  lineStyle: 'solid',
-  mode: 'left',
-  position: 'left'
+  allowClear: true,
+  bordered: true,
+  disabled: false,
+  disabledTime: undefined,
+  format: 'HH:mm:ss',
+  hideDisabledOptions: false,
+  hourStep: 1,
+  minuteStep: 1,
+  secondStep: 1,
+  placeholder: '请选择时间',
+  showNow: false,
+  use12Hours: false,
+  value: null,
+  valueFormat: 'HH:mm:ss'
 })
+const emit = defineEmits(['update:value', 'change'])
 </script>
 <template>
   <div class="m-timepicker"> </div>
