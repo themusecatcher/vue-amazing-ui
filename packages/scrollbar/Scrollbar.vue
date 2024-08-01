@@ -3,7 +3,8 @@ import { ref, computed, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import { debounce, useEventListener, useMutationObserver } from '../utils'
 interface Props {
-  contentStyle?: CSSProperties // 内容样式
+  contentClass?: string // 内容 div 的类名
+  contentStyle?: CSSProperties // 内容 div 的样式
   size?: number // 滚动条的大小，单位 px
   trigger?: 'hover' | 'none' // 显示滚动条的时机，'none' 表示一直显示
   autoHide?: boolean // 是否自动隐藏滚动条，仅当 trigger: 'hover' 时生效，true: hover且不滚动时自动隐藏，滚动时自动显示；false: hover时始终显示
@@ -11,6 +12,7 @@ interface Props {
   horizontal?: boolean // 是否使用横向滚动
 }
 const props = withDefaults(defineProps<Props>(), {
+  contentClass: undefined,
   contentStyle: () => ({}),
   size: 5,
   trigger: 'hover',
@@ -255,6 +257,7 @@ defineExpose({
       <div
         ref="contentRef"
         class="m-scrollbar-content"
+        :class="contentClass"
         :style="[horizontal ? { ...horizontalContentStyle, ...contentStyle } : contentStyle]"
       >
         <slot></slot>

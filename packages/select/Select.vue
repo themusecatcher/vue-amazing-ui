@@ -270,31 +270,36 @@ function onChange(value: string | number, label: string, index: number) {
       </svg>
     </div>
     <Transition name="slide-up">
-      <Scrollbar
+      <div
         v-if="showOptions && filterOptions && filterOptions.length"
         class="m-options-panel"
-        :style="`top: ${height + 4}px; line-height: ${height - 10}px; max-height: ${maxDisplay * height + 9}px;`"
-        v-bind="scrollbarProps"
+        :style="`top: ${height + 4}px;`"
         @mouseleave="disabledBlur = false"
       >
-        <p
-          v-for="(option, index) in filterOptions"
-          :key="index"
-          :class="[
-            'u-option',
-            {
-              'option-hover': !option.disabled && option[value] === hoverValue,
-              'option-selected': option[label] === selectedName,
-              'option-disabled': option.disabled
-            }
-          ]"
-          :title="option[label]"
-          @mouseenter="onHover(option[value], option.disabled)"
-          @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
+        <Scrollbar
+          :content-style="{ padding: '4px' }"
+          :style="`max-height: ${maxDisplay * height}px;`"
+          v-bind="scrollbarProps"
         >
-          {{ option[label] }}
-        </p>
-      </Scrollbar>
+          <p
+            v-for="(option, index) in filterOptions"
+            :key="index"
+            :class="[
+              'u-option',
+              {
+                'option-hover': !option.disabled && option[value] === hoverValue,
+                'option-selected': option[label] === selectedName,
+                'option-disabled': option.disabled
+              }
+            ]"
+            :title="option[label]"
+            @mouseenter="onHover(option[value], option.disabled)"
+            @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
+          >
+            {{ option[label] }}
+          </p>
+        </Scrollbar>
+      </div>
       <div
         v-else-if="showOptions && filterOptions && !filterOptions.length"
         class="m-empty-wrap"
@@ -433,11 +438,9 @@ function onChange(value: string | number, label: string, index: number) {
   }
   .m-options-panel {
     position: absolute;
-    z-index: 9;
+    z-index: 1000;
     width: 100%;
-    height: auto;
     background-color: #fff;
-    padding: 4px;
     border-radius: 8px;
     outline: none;
     box-shadow:
@@ -446,17 +449,18 @@ function onChange(value: string | number, label: string, index: number) {
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
     .u-option {
       // 下拉项默认样式
-      text-align: left;
-      position: relative;
+      min-height: 32px;
       display: block;
       padding: 5px 12px;
       border-radius: 4px;
+      color: rgba(0, 0, 0, 0.88);
       font-weight: 400;
-      line-height: inherit;
+      font-size: 14px;
+      line-height: 1.5714285714285714;
+      cursor: pointer;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      cursor: pointer;
       transition: background 0.3s ease;
     }
     .option-hover {
