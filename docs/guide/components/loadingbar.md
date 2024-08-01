@@ -9,8 +9,6 @@
 - 显示整个页面加载的进度
 - 显示上传图片或文件的上传进度
 
-<br/>
-
 ::: tip 使用
 
 - loadingBar.value.start(from = 0, to = 80)  // 开始加载调用

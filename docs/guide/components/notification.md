@@ -12,8 +12,6 @@
 - 在系统四个角显示通知提醒信息
 - 系统主动推送
 
-<br/>
-
 ::: tip 使用
 
 - notification.value.open(notification: Notification) // open 调用
