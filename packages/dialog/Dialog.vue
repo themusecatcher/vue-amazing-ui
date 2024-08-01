@@ -10,12 +10,12 @@ interface Props {
   cancelText?: string // 取消按钮文字
   okText?: string // 确定按钮文字
   okType?: 'primary' | 'danger' // 确定按钮类型
+  bodyStyle?: CSSProperties // 对话框 body 样式
   footer?: boolean // 是否显示底部按钮 boolean | slot
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
   top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效
   switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
   loading?: boolean // 确定按钮 loading
-  bodyStyle?: CSSProperties // 对话框 body 样式
   show?: boolean // 对话框是否可见
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -26,12 +26,12 @@ const props = withDefaults(defineProps<Props>(), {
   cancelText: '取消',
   okText: '确定',
   okType: 'primary',
+  bodyStyle: () => ({}),
   footer: true,
   center: true,
   top: 100,
   switchFullscreen: false,
   loading: false,
-  bodyStyle: () => ({}),
   show: false
 })
 const fullScreen = ref(false)
@@ -42,12 +42,12 @@ const dialogHeight = computed(() => {
     return props.height
   }
 })
-const dialogRef = ref() // DOM 引用
 const slots = useSlots()
 const showFooter = computed(() => {
   const footerSlots = slots.footer?.()
   return footerSlots
 })
+const dialogRef = ref() // DOM 引用
 watch(
   () => props.show,
   (to) => {
@@ -86,13 +86,17 @@ function onOk() {
       <div v-show="show" class="m-dialog-mask"></div>
     </Transition>
     <Transition name="zoom">
-      <div v-show="show" class="m-dialog-wrap" @click.self="onBlur">
+      <div
+        v-show="show"
+        ref="dialogRef"
+        tabindex="-1"
+        class="m-dialog-wrap"
+        @click.self="onBlur"
+        @keydown.esc="onClose"
+      >
         <div
-          ref="dialogRef"
-          tabindex="-1"
           :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']"
           :style="`width: ${fullScreen ? '100%' : props.width + 'px'}; top: ${center ? '50%' : fullScreen ? 0 : top + 'px'};`"
-          @keydown.esc="onClose"
         >
           <div class="m-dialog-content" :style="`--height: ${fullScreen ? '100vh' : dialogHeight}`">
             <div class="m-dialog-header">
@@ -209,7 +213,6 @@ function onOk() {
   z-index: 1010;
   .m-dialog {
     margin: 0 auto;
-    outline: none;
     .m-dialog-content {
       display: flex;
       flex-direction: column;

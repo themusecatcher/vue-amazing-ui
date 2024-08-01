@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { computed, useSlots, type CSSProperties } from 'vue'
+import { ref, computed, useSlots, watch, nextTick } from 'vue'
+import type { CSSProperties } from 'vue'
+import Scrollbar from '../scrollbar'
 interface Props {
-  width?: string | number // 宽度，在 placement 为 right 或 left 时使用
-  height?: string | number // 高度，在 placement 为 top 或 bottom 时使用
+  width?: string | number // 宽度，在 placement 为 right 或 left 时使用，单位 px
+  height?: string | number // 高度，在 placement 为 top 或 bottom 时使用，单位 px
   title?: string // 标题 string | slot
   closable?: boolean // 是否显示左上角的关闭按钮
   placement?: 'top' | 'right' | 'bottom' | 'left' // 抽屉的方向
+  headerClass?: string // 设置 Drawer 头部的类名
   headerStyle?: CSSProperties // 设置 Drawer 头部的样式
+  scrollbarProps?: object // Scrollbar 组件属性配置，用于设置内容滚动条的样式
+  bodyClass?: string // 设置 Drawer 内容部分的类名
   bodyStyle?: CSSProperties // 设置 Drawer 内容部分的样式
   extra?: string // 抽屉右上角的操作区域 string | slot
   footer?: string // 抽屉的页脚 string | slot
-  footerStyle?: CSSProperties // 抽屉页脚的样式
+  footerClass?: string // 设置 Drawer 页脚的类名
+  footerStyle?: CSSProperties // 设置 Drawer 页脚的样式
   destroyOnClose?: boolean // 关闭时是否销毁 Drawer 里的子元素
   zIndex?: number // 设置 Drawer 的 z-index
   open?: boolean // (v-model) 抽屉是否可见
@@ -21,10 +27,14 @@ const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   closable: true,
   placement: 'right',
+  headerClass: undefined,
   headerStyle: () => ({}),
+  scrollbarProps: () => ({}),
+  bodyClass: undefined,
   bodyStyle: () => ({}),
   extra: undefined,
   footer: undefined,
+  footerClass: undefined,
   footerStyle: () => ({}),
   destroyOnClose: false,
   zIndex: 1000,
@@ -59,6 +69,17 @@ const showFooter = computed(() => {
   const footerSlots = slots.footer?.()
   return (footerSlots && footerSlots.length) || props.footer
 })
+const drawerRef = ref()
+watch(
+  () => props.open,
+  (to) => {
+    if (to) {
+      nextTick(() => {
+        drawerRef.value.focus()
+      })
+    }
+  }
+)
 const emits = defineEmits(['update:open', 'close'])
 function onBlur(e: Event) {
   emits('update:open', false)
@@ -70,7 +91,7 @@ function onClose(e: Event) {
 }
 </script>
 <template>
-  <div class="m-drawer" tabindex="-1">
+  <div ref="drawerRef" tabindex="-1" class="m-drawer" @keydown.esc="onClose">
     <Transition name="fade">
       <div v-show="open" class="m-drawer-mask" @click.self="onBlur"></div>
     </Transition>
@@ -83,7 +104,7 @@ function onClose(e: Event) {
       >
         <div class="m-drawer-content">
           <div class="m-drawer-body-wrapper" v-if="!destroyOnClose">
-            <div class="m-drawer-header" :style="headerStyle" v-show="showHeader">
+            <div class="m-drawer-header" :class="headerClass" :style="headerStyle" v-show="showHeader">
               <div class="m-header-title">
                 <svg
                   v-if="closable"
@@ -109,15 +130,17 @@ function onClose(e: Event) {
                 <slot name="extra">{{ extra }}</slot>
               </div>
             </div>
-            <div class="m-drawer-body" :style="bodyStyle">
-              <slot></slot>
-            </div>
-            <div class="m-drawer-footer" :style="footerStyle" v-show="showFooter">
+            <Scrollbar :content-style="{ height: '100%' }" v-bind="scrollbarProps">
+              <div class="m-drawer-body" :class="bodyClass" :style="bodyStyle">
+                <slot></slot>
+              </div>
+            </Scrollbar>
+            <div class="m-drawer-footer" :class="footerClass" :style="footerStyle" v-show="showFooter">
               <slot name="footer">{{ footer }}</slot>
             </div>
           </div>
           <div class="m-drawer-body-wrapper" v-if="destroyOnClose && open">
-            <div class="m-drawer-header" :style="headerStyle" v-show="showHeader">
+            <div class="m-drawer-header" :class="headerClass" :style="headerStyle" v-show="showHeader">
               <div class="m-header-title">
                 <svg
                   focusable="false"
@@ -142,10 +165,12 @@ function onClose(e: Event) {
                 <slot name="extra">{{ extra }}</slot>
               </div>
             </div>
-            <div class="m-drawer-body" :style="bodyStyle">
-              <slot></slot>
-            </div>
-            <div class="m-drawer-footer" :style="footerStyle" v-show="showFooter">
+            <Scrollbar :content-style="{ height: '100%' }" v-bind="scrollbarProps">
+              <div class="m-drawer-body" :class="bodyClass" :style="bodyStyle">
+                <slot></slot>
+              </div>
+            </Scrollbar>
+            <div class="m-drawer-footer" :class="footerClass" :style="footerStyle" v-show="showFooter">
               <slot name="footer">{{ footer }}</slot>
             </div>
           </div>
@@ -200,6 +225,7 @@ function onClose(e: Event) {
   inset: 0;
   z-index: 1000;
   pointer-events: none;
+  outline: none;
   .m-drawer-mask {
     position: absolute;
     inset: 0;
@@ -262,11 +288,9 @@ function onClose(e: Event) {
           }
         }
         .m-drawer-body {
-          flex: 1;
-          min-width: 0;
-          min-height: 0;
+          height: 100%;
           padding: 24px;
-          overflow: auto;
+          word-break: break-all;
         }
         .m-drawer-footer {
           flex-shrink: 0;

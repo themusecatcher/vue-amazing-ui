@@ -5,8 +5,10 @@
 
 ## 1.4.2 <Tag color="volcano" size="small">2024-08-01</Tag>
 
-- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `contentClass` 属性
 - 优化 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件
+- 优化 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件
+- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `contentClass` 属性
+- 优化 [抽屉 Drawer](https://themusecatcher.github.io/vue-amazing-ui/guide/components/drawer.html) 组件，新增 `headerClass` `scrollbarProps` `bodyClass` `footerClass` 属性
 
 ## 1.4.1 <Tag color="volcano" size="small">2024-07-31</Tag>
 
