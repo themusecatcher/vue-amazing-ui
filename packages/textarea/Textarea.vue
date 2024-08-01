@@ -10,8 +10,8 @@ interface Props {
   disabled?: boolean // 是否禁用
   maxlength?: number // 文字最大长度
   showCount?: boolean // 是否展示字数
-  value?: string // 文本域内容(v-model)
-  valueModifiers?: object // 用于访问组件的v-model上添加的修饰符
+  value?: string // (v-model) 文本域内容
+  valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
@@ -116,7 +116,7 @@ function onClear() {
       ref="textarea"
       type="hidden"
       class="u-textarea"
-      :class="{ disabled: disabled }"
+      :class="{ 'textarea-disabled': disabled }"
       :style="[`height: ${autoSize ? areaHeight : ''}px`, autoSizeProperty]"
       :value="value"
       :maxlength="maxlength"
@@ -128,8 +128,8 @@ function onClear() {
     />
     <span class="m-clear" v-if="!disabled && allowClear && value" @click="onClear">
       <svg
-        focusable="false"
         class="u-clear"
+        focusable="false"
         data-icon="close-circle"
         width="1em"
         height="1em"
@@ -219,7 +219,7 @@ function onClear() {
       }
     }
   }
-  .disabled {
+  .textarea-disabled {
     color: rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.04);
     cursor: not-allowed;

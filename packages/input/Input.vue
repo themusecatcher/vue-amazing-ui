@@ -15,8 +15,8 @@ interface Props {
   size?: 'large' | 'middle' | 'small' // 输入框大小
   prefix?: string // 前缀图标 string | slot
   suffix?: string // 后缀图标 string | slot
-  value?: string // 输入框内容(v-model)
-  valueModifiers?: object // 用于访问组件的v-model上添加的修饰符
+  value?: string // (v-model) 输入框内容
+  valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
@@ -105,20 +105,20 @@ function onPassword() {
 </script>
 <template>
   <div class="m-input-wrap" :style="`width: ${inputWidth};`">
-    <span class="m-addon" :class="{ before: showBefore }" v-if="showBefore">
+    <span class="m-addon" :class="{ 'addon-before': showBefore }" v-if="showBefore">
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
-      class="m-input"
-      :class="[`${size}`, { disabled: disabled, 'input-before': showBefore, 'input-after': showAfter }]"
       tabindex="1"
+      class="m-input"
+      :class="[`${size}`, { 'input-disabled': disabled, 'input-before': showBefore, 'input-after': showAfter }]"
     >
       <span class="m-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
-        class="u-input"
         ref="input"
+        class="u-input"
         :type="password && !showPassword ? 'password' : 'text'"
         :value="value"
         :maxlength="maxlength"
@@ -131,8 +131,8 @@ function onPassword() {
       <span class="m-suffix">
         <span class="m-action" v-if="!disabled && allowClear && value" @click="onClear">
           <svg
-            focusable="false"
             class="u-clear"
+            focusable="false"
             data-icon="close-circle"
             width="1em"
             height="1em"
@@ -147,9 +147,9 @@ function onPassword() {
         </span>
         <span class="m-action" v-if="password" @click="onPassword">
           <svg
-            focusable="false"
             v-show="showPassword"
             class="u-eye"
+            focusable="false"
             data-icon="eye"
             width="1em"
             height="1em"
@@ -162,9 +162,9 @@ function onPassword() {
             ></path>
           </svg>
           <svg
-            focusable="false"
             v-show="!showPassword"
             class="u-eye"
+            focusable="false"
             data-icon="eye-invisible"
             width="1em"
             height="1em"
@@ -184,7 +184,7 @@ function onPassword() {
         <slot name="suffix" v-if="showSuffix">{{ suffix }}</slot>
       </span>
     </div>
-    <span class="m-addon" :class="{ after: showAfter }" v-if="showAfter">
+    <span class="m-addon" :class="{ 'addon-after': showAfter }" v-if="showAfter">
       <slot name="addonAfter">{{ addonAfter }}</slot>
     </span>
   </div>
@@ -215,12 +215,12 @@ function onPassword() {
     white-space: nowrap;
     vertical-align: middle;
   }
-  .before {
+  .addon-before {
     border-start-end-radius: 0;
     border-end-end-radius: 0;
     border-inline-end: 0;
   }
-  .after {
+  .addon-after {
     border-start-start-radius: 0;
     border-end-start-radius: 0;
     border-inline-start: 0;
@@ -341,7 +341,7 @@ function onPassword() {
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
-  .disabled {
+  .input-disabled {
     color: rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.04);
     cursor: not-allowed;

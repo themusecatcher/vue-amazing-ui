@@ -153,7 +153,7 @@ function onEnter(e: KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Space>
-      <Input disabled v-model:value="value" />
+      <Input disabled v-model:value="value" placeholder="please input" />
     </Space>
   </div>
 </template>
