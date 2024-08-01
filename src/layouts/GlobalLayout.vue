@@ -114,7 +114,13 @@ const routerViewRef = ref()
         </template>
       </Switch>
       <Scrollbar style="height: 100vh">
-        <a-menu style="height: 100vh;" v-model:selectedKeys="current" mode="inline" :theme="themeDark ? 'dark' : 'light'" @click="onClick">
+        <a-menu
+          style="height: 100vh"
+          v-model:selectedKeys="current"
+          mode="inline"
+          :theme="themeDark ? 'dark' : 'light'"
+          @click="onClick"
+        >
           <a-menu-item v-for="menu in menus" :key="menu.name" :title="menu.meta.title">
             <router-link :to="menu.path">{{ menu.meta.title }} {{ menu.name }}</router-link>
           </a-menu-item>
