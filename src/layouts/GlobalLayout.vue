@@ -115,7 +115,7 @@ const routerViewRef = ref()
       </Switch>
       <Scrollbar style="height: 100vh">
         <a-menu
-          style="height: 100vh"
+          style="min-height: 100vh"
           v-model:selectedKeys="current"
           mode="inline"
           :theme="themeDark ? 'dark' : 'light'"
