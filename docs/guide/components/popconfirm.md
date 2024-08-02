@@ -233,10 +233,10 @@ const cancel = (e: MouseEvent) => {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-title | 确认框的标题 | string &#124; slot | '' | false
-description | 确认框的内容描述 | string &#124; slot | '' | false
-content | 展示的文本 | string &#124; slot | '' | false
-icon | 自定义弹出确认框 `Icon` 图标 | string &#124; slot | '' | false
+title | 确认框的标题 | string &#124; slot | undefined | false
+description | 确认框的内容描述 | string &#124; slot | undefined | false
+content | 展示的文本 | string &#124; slot | undefined | false
+icon | 自定义弹出确认框 `Icon` 图标 | string &#124; slot | undefined | false
 iconType | 弹出确认框 `Icon` 图标类型 | 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'warning' | false
 maxWidth | 弹出确认框内容最大宽度 | string &#124; number | 'auto' | false
 cancelText | 取消按钮文字 | string &#124; slot | '取消' | false

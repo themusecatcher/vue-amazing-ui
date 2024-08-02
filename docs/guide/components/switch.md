@@ -164,8 +164,8 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-onInfo | 选中时的内容 | string | '' | false
-offInfo | 未选中时的内容 | string | '' | false
+onInfo | 选中时的内容 | string | undefined | false
+offInfo | 未选中时的内容 | string | undefined | false
 disabled | 是否禁用 | boolean | false | false
 checked <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean | false | false
 nodeStyle | 节点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false

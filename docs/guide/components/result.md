@@ -116,20 +116,6 @@
   </div>
 </Result>
 
-<style lang="less" scoped>
-.desc p {
-  margin-bottom: 1em;
-  line-height: 1;
-}
-.u-icon {
-  display: inline-block;
-  vertical-align: top;
-  width: 14px;
-  height: 14px;
-  fill: #ff4d4f;
-}
-</style>
-
 ::: details Show Code
 
 ```vue
@@ -276,9 +262,37 @@
     </template>
   </Result>
 </template>
+<style lang="less" scoped>
+.u-svg {
+  display: inline-block;
+  vertical-align: bottom;
+  width: 72px;
+  height: 72px;
+}
+</style>
 ```
 
 :::
+
+<style lang="less" scoped>
+.desc p {
+  margin-bottom: 1em;
+  line-height: 1;
+}
+.u-icon {
+  display: inline-block;
+  vertical-align: top;
+  width: 14px;
+  height: 14px;
+  fill: #ff4d4f;
+}
+.u-svg {
+  display: inline-block;
+  vertical-align: bottom;
+  width: 72px;
+  height: 72px;
+}
+</style>
 
 ## APIs
 

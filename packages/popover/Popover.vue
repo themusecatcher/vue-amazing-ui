@@ -10,8 +10,8 @@ interface Props {
   overlayStyle?: CSSProperties // 卡片样式
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '',
-  content: '',
+  title: undefined,
+  content: undefined,
   maxWidth: 'auto',
   trigger: 'hover',
   overlayStyle: () => ({})

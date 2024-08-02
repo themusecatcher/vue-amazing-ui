@@ -38,7 +38,6 @@ const presetRippleColors = {
 const wave = ref(false)
 const emit = defineEmits(['click'])
 function onClick(e: Event) {
-  emit('click', e)
   if (wave.value) {
     wave.value = false
     nextTick(() => {
@@ -47,6 +46,7 @@ function onClick(e: Event) {
   } else {
     wave.value = true
   }
+  emit('click', e)
 }
 function onKeyboard(e: KeyboardEvent) {
   onClick(e)
@@ -88,7 +88,7 @@ function onWaveEnd() {
     <span class="u-text">
       <slot></slot>
     </span>
-    <div v-if="!disabled" class="m-button-wave" :class="{ 'button-wave-active': wave }" @animationend="onWaveEnd"></div>
+    <div v-if="!disabled" class="m-button-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
   </a>
 </template>
 <style lang="less" scoped>
@@ -198,10 +198,10 @@ function onWaveEnd() {
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1), cubic-bezier(0, 0, 0.2, 1);
     border-radius: inherit;
   }
-  .button-wave-active {
+  .wave-active {
     z-index: 1;
-    animation-name: button-wave-spread, button-wave-opacity;
-    @keyframes button-wave-spread {
+    animation-name: wave-spread, wave-opacity;
+    @keyframes wave-spread {
       from {
         box-shadow: 0 0 0.5px 0 var(--ripple-color);
       }
@@ -209,7 +209,7 @@ function onWaveEnd() {
         box-shadow: 0 0 0.5px 5.5px var(--ripple-color);
       }
     }
-    @keyframes button-wave-opacity {
+    @keyframes wave-opacity {
       from {
         opacity: 0.6;
       }
