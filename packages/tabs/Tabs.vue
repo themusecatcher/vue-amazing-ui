@@ -13,7 +13,7 @@ interface Props {
   size?: 'small' | 'middle' | 'large' // 标签页大小
   type?: 'line' | 'card' // 标签页的样式
   gutter?: number // tabs 之前的间隙大小，单位 px
-  activeKey?: string | number // v-model 当前激活 tab 面板的 key
+  activeKey?: string | number // (v-model) 当前激活 tab 面板的 key
 }
 const props = withDefaults(defineProps<Props>(), {
   tabPages: () => [],
@@ -23,12 +23,12 @@ const props = withDefaults(defineProps<Props>(), {
   gutter: undefined,
   activeKey: ''
 })
-const tabs = ref() // 所有 tabs 的 ref 模板引用
+const tabsRef = ref() // 所有 tabs 的 ref 模板引用
 const left = ref(0)
 const width = ref(0)
-const wrap = ref()
+const wrapRef = ref()
 const wrapWidth = ref()
-const nav = ref()
+const navRef = ref()
 const navWidth = ref()
 const rafId = ref()
 const showWheel = ref(false) // 导航是否有滚动
@@ -46,7 +46,7 @@ watch(
     flush: 'post'
   }
 )
-useResizeObserver([wrap, nav], () => {
+useResizeObserver([wrapRef, navRef], () => {
   getNavWidth()
 })
 onMounted(() => {
@@ -55,7 +55,7 @@ onMounted(() => {
 const emits = defineEmits(['update:activeKey', 'change'])
 const transition = ref(false)
 function getBarDisplay() {
-  const el = tabs.value[activeIndex.value]
+  const el = tabsRef.value[activeIndex.value]
   if (el) {
     left.value = el.offsetLeft
     width.value = el.offsetWidth
@@ -84,8 +84,8 @@ function getBarDisplay() {
   }
 }
 function getNavWidth() {
-  wrapWidth.value = wrap.value.offsetWidth
-  navWidth.value = nav.value.offsetWidth
+  wrapWidth.value = wrapRef.value.offsetWidth
+  navWidth.value = navRef.value.offsetWidth
   if (navWidth.value > wrapWidth.value) {
     showWheel.value = true
     scrollMax.value = navWidth.value - wrapWidth.value
@@ -129,7 +129,7 @@ function onWheel(e: WheelEvent) {
   <div class="m-tabs">
     <div class="m-tabs-nav">
       <div
-        ref="wrap"
+        ref="wrapRef"
         class="m-tabs-nav-wrap"
         :class="{
           'tabs-center': centered,
@@ -138,19 +138,22 @@ function onWheel(e: WheelEvent) {
         }"
       >
         <div
-          ref="nav"
-          :class="['m-tabs-nav-list', { transition: transition }]"
+          ref="navRef"
+          :class="['m-tabs-nav-list', { 'nav-transition': transition }]"
           @wheel.stop.prevent="showWheel ? onWheel($event) : () => false"
           :style="`transform: translate(${-scrollLeft}px, 0)`"
         >
           <div
-            ref="tabs"
+            ref="tabsRef"
             class="u-tab"
             :class="[
               `u-tab-${size}`,
-              { 'u-tab-card': type === 'card', 'u-tab-disabled': page.disabled },
-              { 'u-tab-line-active': activeKey === page.key && type === 'line' },
-              { 'u-tab-card-active': activeKey === page.key && type === 'card' }
+              {
+                'tab-card': type === 'card',
+                'tab-disabled': page.disabled,
+                'tab-line-active': activeKey === page.key && type === 'line',
+                'tab-card-active': activeKey === page.key && type === 'card'
+              }
             ]"
             :style="`margin-left: ${index !== 0 ? gutter : null}px;`"
             @click="page.disabled ? () => false : onTab(page.key)"
@@ -161,7 +164,7 @@ function onWheel(e: WheelEvent) {
           </div>
           <div
             class="u-tab-bar"
-            :class="{ 'u-card-hidden': type === 'card' }"
+            :class="{ 'card-hidden': type === 'card' }"
             :style="`left: ${left}px; width: ${width}px;`"
           ></div>
         </div>
@@ -223,9 +226,6 @@ function onWheel(e: WheelEvent) {
         right: 0;
         box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
       }
-      .transition {
-        transition: all 0.15s;
-      }
       .m-tabs-nav-list {
         position: relative;
         display: flex;
@@ -255,7 +255,7 @@ function onWheel(e: WheelEvent) {
           font-size: 16px;
           padding: 16px 0;
         }
-        .u-tab-card {
+        .tab-card {
           border-radius: 8px 8px 0 0;
           padding: 8px 16px;
           background: rgba(0, 0, 0, 0.02);
@@ -265,17 +265,17 @@ function onWheel(e: WheelEvent) {
             margin-left: 2px;
           }
         }
-        .u-tab-line-active {
+        .tab-line-active {
           color: @themeColor;
           text-shadow: 0 0 0.25px currentcolor;
         }
-        .u-tab-card-active {
+        .tab-card-active {
           border-bottom-color: #ffffff;
           color: @themeColor;
           background: #ffffff;
           text-shadow: 0 0 0.25px currentcolor;
         }
-        .u-tab-disabled {
+        .tab-disabled {
           color: rgba(0, 0, 0, 0.25);
           cursor: not-allowed;
           &:hover {
@@ -293,9 +293,12 @@ function onWheel(e: WheelEvent) {
             right 0.3s;
           bottom: 0;
         }
-        .u-card-hidden {
+        .card-hidden {
           visibility: hidden;
         }
+      }
+      .nav-transition {
+        transition: all 0.15s;
       }
     }
     .tabs-center {

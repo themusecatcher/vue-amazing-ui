@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 interface Props {
-  description?: string // 自定义描述内容 string | slot
-  image?: string // 显示图片的链接，或者 选择预置的两种风格图片，可选 '1' | '2'
+  description?: string | null // 自定义描述内容 string | slot
+  image?: 'outlined' | 'filled' | string // 显示图片的链接，或者 选择两种预置风格图片 string | slot
   imageStyle?: CSSProperties // 图片样式
 }
 withDefaults(defineProps<Props>(), {
   description: '暂无数据',
-  image: '1',
+  image: 'filled',
   imageStyle: () => ({})
 })
 </script>
 <template>
   <div class="m-empty">
     <svg
-      class="u-empty-1"
+      v-if="image === 'filled'"
+      class="empty-filled"
       :style="imageStyle"
-      v-if="image === '1'"
       viewBox="0 0 184 152"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -52,9 +52,9 @@ withDefaults(defineProps<Props>(), {
       </g>
     </svg>
     <svg
-      class="u-empty-2"
+      v-else-if="image === 'outlined'"
+      class="empty-outlined"
       :style="imageStyle"
-      v-else-if="image === '2'"
       viewBox="0 0 64 41"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -74,7 +74,7 @@ withDefaults(defineProps<Props>(), {
     <slot v-else>
       <img class="u-empty" :src="image" :style="imageStyle" alt="image" />
     </slot>
-    <p class="u-description" v-if="description" :class="{ gray: image === '2' }">
+    <p v-if="description" class="u-description" :class="{ gray: image === 'outlined' }">
       <slot name="description">{{ description }}</slot>
     </p>
   </div>
@@ -86,13 +86,13 @@ withDefaults(defineProps<Props>(), {
     display: inline-block;
     vertical-align: bottom;
   }
-  .u-empty-1 {
+  .empty-filled {
     display: inline-block;
     vertical-align: bottom;
     width: 184px;
     height: 100px;
   }
-  .u-empty-2 {
+  .empty-outlined {
     display: inline-block;
     vertical-align: bottom;
     width: 64px;

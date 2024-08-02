@@ -28,7 +28,7 @@ interface Props {
   uploadMode?: 'base64' | 'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
   customRequest?: Function // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
   disabled?: boolean // 是否禁用，只能预览，不能删除和上传
-  fileList?: FileType[] // (v-model)已上传的文件列表
+  fileList?: FileType[] // (v-model) 已上传的文件列表
 }
 const props = withDefaults(defineProps<Props>(), {
   accept: '*', // 默认支持所有类型
@@ -301,8 +301,8 @@ defineExpose({
               v-bind="imageProps"
             />
             <svg
-              class="u-file"
               v-else-if="isPDF(uploadedFiles[n - 1].url)"
+              class="u-file"
               focusable="false"
               data-icon="file-pdf"
               aria-hidden="true"

@@ -8,16 +8,16 @@ interface Text {
 interface Props {
   scrollText: Text[] | Text // 滚动文字数组，single 为 true 时，类型为 Text
   single?: boolean // 是否启用单条文字滚动效果，只支持水平文字滚动，为 true 时，amount 自动设为 1
-  width?: number | string // 滚动区域宽度，单位px
-  height?: number // 滚动区域高度，单位px
+  width?: number | string // 滚动区域宽度，单位 px
+  height?: number // 滚动区域高度，单位 px
   boardStyle?: CSSProperties // 滚动区域样式，优先级低于 width、height
   textStyle?: CSSProperties // 滚动文字样式
   amount?: number // 滚动区域展示条数，水平滚动时生效
-  gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距，单位px
-  interval?: number // 水平滚动动画执行时间间隔，单位ms，水平滚动时生效
-  step?: number // 水平滚动动画每次执行时移动距离，单位px，水平滚动时生效，与 interval 配合控制滚动速度
+  gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距，单位 px
+  interval?: number // 水平滚动动画执行时间间隔，单位 ms，水平滚动时生效
+  step?: number // 水平滚动动画每次执行时移动距离，单位 px，水平滚动时生效，与 interval 配合控制滚动速度
   vertical?: boolean // 是否垂直滚动
-  verticalInterval?: number // 垂直文字滚动时间间隔，单位ms，垂直滚动时生效
+  verticalInterval?: number // 垂直文字滚动时间间隔，单位 ms，垂直滚动时生效
 }
 const props = withDefaults(defineProps<Props>(), {
   scrollText: () => [],

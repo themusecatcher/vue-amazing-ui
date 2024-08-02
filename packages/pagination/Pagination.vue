@@ -11,7 +11,7 @@ interface Props {
   showQuickJumper?: boolean // 是否可以快速跳转至某页
   showSizeChanger?: boolean // 是否展示 pageSize 切换器，当 total 大于 50 时默认为 true
   showTotal?: boolean // 是否显示当前页数和数据总量
-  placement?: 'left' | 'center' | 'right' // 分页展示位置，靠左left，居中center，靠右right
+  placement?: 'left' | 'center' | 'right' // 分页展示位置，靠左 left，居中 center，靠右 right
 }
 const props = withDefaults(defineProps<Props>(), {
   // 基于类型的声明
@@ -155,13 +155,15 @@ function onSizeChange(pageSize: number) {
 }
 </script>
 <template>
-  <div :class="[`m-pagination ${placement}`, { hidden: hideOnSinglePage && total <= pageSize }]">
+  <div
+    :class="[`m-pagination pagination-${placement}`, { 'pagination-hidden': hideOnSinglePage && total <= pageSize }]"
+  >
     <div class="m-pagination-wrap">
       <span class="mr8" v-if="showTotal">共 {{ totalPage }} 页 / {{ total }} 条</span>
       <span
-        class="u-item"
-        :class="{ disabled: currentPage === 1 }"
         tabindex="-1"
+        class="u-item"
+        :class="{ 'item-disabled': currentPage === 1 }"
         @keydown="onKeyboard($event, currentPage - 1)"
         @click="changePage(currentPage - 1)"
       >
@@ -171,7 +173,7 @@ function onSizeChange(pageSize: number) {
           ></path>
         </svg>
       </span>
-      <span :class="['u-item', { active: currentPage === 1 }]" @click="changePage(1)">1</span>
+      <span :class="['u-item', { 'item-active': currentPage === 1 }]" @click="changePage(1)">1</span>
       <span
         class="m-arrow"
         ref="forward"
@@ -188,7 +190,7 @@ function onSizeChange(pageSize: number) {
         </svg>
       </span>
       <span
-        :class="['u-item', { active: currentPage === page }]"
+        :class="['u-item', { 'item-active': currentPage === page }]"
         v-for="(page, index) in pageList"
         :key="index"
         @click="changePage(page)"
@@ -212,15 +214,15 @@ function onSizeChange(pageSize: number) {
       </span>
       <span
         v-show="totalPage !== 1"
-        :class="['u-item', { active: currentPage === totalPage }]"
+        :class="['u-item', { 'item-active': currentPage === totalPage }]"
         @click="changePage(totalPage)"
       >
         {{ totalPage }}
       </span>
       <span
-        class="u-item"
-        :class="{ disabled: currentPage === totalPage }"
         tabindex="-1"
+        class="u-item"
+        :class="{ 'item-disabled': currentPage === totalPage }"
         @keydown="onKeyboard($event, currentPage + 1)"
         @click="changePage(currentPage + 1)"
       >
@@ -246,18 +248,6 @@ function onSizeChange(pageSize: number) {
   </div>
 </template>
 <style lang="less" scoped>
-.hidden {
-  display: none;
-}
-.left {
-  text-align: left;
-}
-.center {
-  text-align: center;
-}
-.right {
-  text-align: right;
-}
 .m-pagination {
   margin: 16px 0;
   .m-pagination-wrap {
@@ -283,7 +273,7 @@ function onSizeChange(pageSize: number) {
       outline: none;
       transition: all 0.3s;
       &:hover {
-        .active();
+        .item-active();
       }
       .u-arrow {
         display: inline-block;
@@ -296,7 +286,7 @@ function onSizeChange(pageSize: number) {
         margin-right: 8px;
       }
     }
-    .active {
+    .item-active {
       // 悬浮/选中样式
       font-weight: 600;
       color: @themeColor;
@@ -305,7 +295,7 @@ function onSizeChange(pageSize: number) {
         fill: @themeColor;
       }
     }
-    .disabled {
+    .item-disabled {
       // pointer-events: none; // 禁用鼠标事件
       color: rgba(0, 0, 0, 0.25);
       background: #fff;
@@ -404,5 +394,17 @@ function onSizeChange(pageSize: number) {
       }
     }
   }
+}
+.pagination-left {
+  text-align: left;
+}
+.pagination-center {
+  text-align: center;
+}
+.pagination-right {
+  text-align: right;
+}
+.pagination-hidden {
+  display: none;
 }
 </style>

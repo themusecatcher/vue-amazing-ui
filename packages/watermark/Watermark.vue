@@ -6,7 +6,7 @@ interface Props {
   width?: number // 水印的宽度，默认值为 content 自身的宽度
   height?: number // 水印的高度，默认值为 content 自身的高度
   layout?: 'parallel' | 'alternate' // 布局方式：平行布局，交替布局
-  rotate?: number // 水印绘制时，旋转的角度，单位 °
+  rotate?: number // 水印绘制时，旋转的角度，单位 deg
   zIndex?: number // 追加的水印元素的 z-index
   image?: string // 图片源，建议使用 2 倍或 3 倍图，优先级高于文字
   content?: string | string[] // 水印文字内容
@@ -67,7 +67,6 @@ const markStyle = computed(() => {
     pointerEvents: 'none',
     backgroundRepeat: 'repeat'
   }
-  /** Calculate the style of the offset */
   let positionLeft = offsetLeft.value - gapXCenter.value
   let positionTop = offsetTop.value - gapYCenter.value
   if (positionLeft > 0) {
@@ -139,7 +138,6 @@ function appendWatermark(base64Url: string, markWidth: number) {
     } else {
       containerRef.value?.append(watermarkRef.value)
     }
-    // Delayed execution
     setTimeout(() => {
       stopObservation.value = false
     })

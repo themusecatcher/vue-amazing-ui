@@ -5,7 +5,7 @@ interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
   disabled?: boolean // 是否禁用选项
-  children?: Option[] // 选项children数组
+  children?: Option[] // 选项 children 数组
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
 interface Props {

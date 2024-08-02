@@ -6,10 +6,14 @@ interface Desc {
   content: string // 内容
 }
 interface Props {
-  width?: number // 提示框宽度
+  width?: number // 提示框宽度，单位 px
   cancelText?: string // 取消按钮文字
+  cancelProps?: object // 取消按钮 props 配置，参考 Button 组件 Props
   okText?: string // 确定按钮文字
+  okType?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 确认按钮类型
+  okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   noticeText?: string // 通知按钮文字
+  noticeProps?: object // 通知按钮 props 配置，参考 Button 组件 Props
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
   top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
   loading?: boolean // 确定按钮 loading
@@ -18,8 +22,12 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   width: 420,
   cancelText: '取消',
+  cancelProps: () => ({}),
   okText: '确定',
+  okType: 'primary',
+  okProps: () => ({}),
   noticeText: '知道了',
+  noticeProps: () => ({}),
   center: true,
   top: 100,
   loading: false,
@@ -109,8 +117,8 @@ defineExpose({
               <div class="m-title">
                 <template v-if="mode === 'confirm' || mode === 'erase'">
                   <svg
+                    class="u-icon icon-confirm"
                     focusable="false"
-                    class="u-icon confirm"
                     data-icon="exclamation-circle"
                     aria-hidden="true"
                     viewBox="64 64 896 896"
@@ -124,9 +132,9 @@ defineExpose({
                   </svg>
                 </template>
                 <svg
-                  focusable="false"
-                  class="u-icon info"
                   v-if="mode === 'info'"
+                  class="u-icon icon-info"
+                  focusable="false"
                   data-icon="info-circle"
                   aria-hidden="true"
                   viewBox="64 64 896 896"
@@ -136,9 +144,9 @@ defineExpose({
                   ></path>
                 </svg>
                 <svg
-                  focusable="false"
-                  class="u-icon success"
                   v-if="mode === 'success'"
+                  class="u-icon icon-success"
+                  focusable="false"
                   data-icon="check-circle"
                   aria-hidden="true"
                   viewBox="64 64 896 896"
@@ -148,9 +156,9 @@ defineExpose({
                   ></path>
                 </svg>
                 <svg
-                  focusable="false"
-                  class="u-icon error"
                   v-if="mode === 'error'"
+                  class="u-icon icon-error"
+                  focusable="false"
                   data-icon="close-circle"
                   aria-hidden="true"
                   viewBox="64 64 896 896"
@@ -160,9 +168,9 @@ defineExpose({
                   ></path>
                 </svg>
                 <svg
-                  focusable="false"
-                  class="u-icon warning"
                   v-if="mode === 'warning'"
+                  class="u-icon icon-warning"
+                  focusable="false"
                   data-icon="exclamation-circle"
                   aria-hidden="true"
                   viewBox="64 64 896 896"
@@ -177,12 +185,11 @@ defineExpose({
             </div>
             <div class="m-btns">
               <template v-if="mode === 'confirm' || mode === 'erase'">
-                <Button class="mr8" @click="onCancel">{{ cancelText }}</Button>
-                <Button type="primary" :loading="loading" @click="onOK" v-if="mode === 'confirm'">{{ okText }}</Button>
-                <Button type="danger" :loading="loading" @click="onOK" v-if="mode === 'erase'">{{ okText }}</Button>
+                <Button class="mr8" @click="onCancel" v-bind="cancelProps">{{ cancelText }}</Button>
+                <Button :type="okType" :loading="loading" v-bind="okProps" @click="onOK">{{ okText }}</Button>
               </template>
               <template v-if="['info', 'success', 'error', 'warning'].includes(mode)">
-                <Button type="primary" :loading="loading" @click="onKnow">{{ noticeText }}</Button>
+                <Button type="primary" :loading="loading" v-bind="noticeProps" @click="onKnow">{{ noticeText }}</Button>
               </template>
             </div>
           </div>
@@ -279,19 +286,19 @@ defineExpose({
             height: 22px;
             vertical-align: top;
           }
-          .confirm {
+          .icon-confirm {
             fill: #faad14;
           }
-          .info {
+          .icon-info {
             fill: @themeColor;
           }
-          .success {
+          .icon-success {
             fill: #52c41a;
           }
-          .error {
+          .icon-error {
             fill: #ff4d4f;
           }
-          .warning {
+          .icon-warning {
             fill: #faad14;
           }
           .u-title {

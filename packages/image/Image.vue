@@ -255,7 +255,7 @@ function onSwitchRight() {
     <Space v-bind="spaceProps">
       <div
         class="m-image"
-        :class="{ bordered: bordered, 'image-hover-mask': complete[index] }"
+        :class="{ 'image-bordered': bordered, 'image-hover-mask': complete[index] }"
         :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
         v-for="(image, index) in images"
         :key="index"
@@ -271,7 +271,7 @@ function onSwitchRight() {
           />
         </Spin>
         <div class="m-image-mask" @click="onPreview(index)">
-          <div class="m-image-mask-info">
+          <div class="image-mask-info">
             <svg class="u-eye" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896">
               <path
                 d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"
@@ -467,9 +467,6 @@ function onSwitchRight() {
       }
     }
   }
-  .bordered {
-    border: 1px solid #d9d9d9;
-  }
   .m-image {
     position: relative;
     display: inline-block;
@@ -496,7 +493,7 @@ function onSwitchRight() {
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s;
-      .m-image-mask-info {
+      .image-mask-info {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -516,6 +513,9 @@ function onSwitchRight() {
         }
       }
     }
+  }
+  .image-bordered {
+    border: 1px solid #d9d9d9;
   }
   .m-preview-mask {
     position: fixed;

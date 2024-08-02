@@ -111,7 +111,7 @@ const strStyle = computed(() => {
 <template>
   <div
     class="m-avatar"
-    :class="[avatarStyle === null ? 'avatar-' + size : '', 'avatar-' + shape, { 'avatar-image': src }]"
+    :class="[avatarStyle === null ? `avatar-${size}` : '', `avatar-${shape}`, { 'avatar-image': src }]"
     :style="avatarStyle || {}"
   >
     <img class="u-image" :src="src" :alt="alt" v-if="src" />

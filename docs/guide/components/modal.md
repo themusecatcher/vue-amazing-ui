@@ -26,6 +26,7 @@
 import { ref } from 'vue'
 
 const modal = ref()
+const okType = ref('primary')
 const center = ref(true)
 const loading = ref(false)
 const show = ref(false)
@@ -63,6 +64,7 @@ function showConfirmModal() {
     title: 'Do you Want to submit these items ?',
     content: 'Some descriptions ...'
   })
+  okType.value = 'primary'
   center.value = true
 }
 function showEraseModal() {
@@ -70,6 +72,7 @@ function showEraseModal() {
     title: 'Do you Want to delete these items ?',
     content: 'Some descriptions ...'
   })
+  okType.value = 'danger'
   center.value = true
 }
 function showFixModal() {
@@ -101,9 +104,10 @@ function onKnow() {
   ref="modal"
   v-model:show="show"
   :width="420"
-  cancelText="取消"
-  okText="确认"
-  noticeText="知道了"
+  cancel-text="取消"
+  ok-text="确认"
+  :ok-type="okType"
+  notice-text="知道了"
   :center="center"
   :top="120"
   :loading="loading"
@@ -313,6 +317,7 @@ function onOk() {
   <Button type="primary" @click="showEraseModal">Erase Modal</Button>
   <Modal
     ref="modal"
+    ok-type="danger"
     v-model:show="show"
     :loading="loading"
     @cancel="onCancel"
@@ -365,8 +370,12 @@ function onKnow () { // “我知道了”按钮回调
 -- | -- | -- | -- | --
 width | 提示框宽度，单位 `px` | number | 420 | false
 cancelText | 取消按钮文字 | string | '取消' | false
+cancelProps | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} | false
 okText | 确认按钮文字 | string | '确定' | false
+okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary' | false
+okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} | false
 noticeText | 通知按钮文字 | string | '知道了' | false
+noticeProps | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} | false
 center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true | false
 top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100 | false
 loading | 确定按钮 `loading` | boolean | false | false

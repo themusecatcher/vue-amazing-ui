@@ -25,9 +25,8 @@ const showContent = computed(() => {
       <slot name="image">
         <svg
           v-if="status === 'info'"
+          class="u-svg svg-info"
           focusable="false"
-          class="u-svg"
-          :style="`fill: #1677ff;`"
           data-icon="exclamation-circle"
           aria-hidden="true"
           viewBox="64 64 896 896"
@@ -38,9 +37,8 @@ const showContent = computed(() => {
         </svg>
         <svg
           v-if="status === 'success'"
+          class="u-svg svg-success"
           focusable="false"
-          class="u-svg"
-          :style="`fill: #52c41a;`"
           data-icon="check-circle"
           aria-hidden="true"
           viewBox="64 64 896 896"
@@ -51,9 +49,8 @@ const showContent = computed(() => {
         </svg>
         <svg
           v-if="status === 'warning'"
+          class="u-svg svg-warning"
           focusable="false"
-          class="u-svg"
-          :style="`fill: #faad14;`"
           data-icon="warning"
           aria-hidden="true"
           viewBox="64 64 896 896"
@@ -64,9 +61,8 @@ const showContent = computed(() => {
         </svg>
         <svg
           v-if="status === 'error'"
+          class="u-svg svg-error"
           focusable="false"
-          class="u-svg"
-          :style="`fill: #ff4d4f;`"
           data-icon="close-circle"
           aria-hidden="true"
           viewBox="64 64 896 896"
@@ -944,11 +940,23 @@ const showContent = computed(() => {
   .m-image {
     margin-bottom: 24px;
     text-align: center;
-    :deep(.u-svg) {
+    .u-svg {
       display: inline-block;
       vertical-align: bottom;
       width: 72px;
       height: 72px;
+    }
+    .svg-info {
+      fill: @themeColor;
+    }
+    .svg-success {
+      fill: #52c41a;
+    }
+    .svg-warning {
+      fill: #faad14;
+    }
+    .svg-error {
+      fill: #ff4d4f;
     }
     .u-image {
       display: inline-block;

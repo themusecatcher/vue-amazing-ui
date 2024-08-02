@@ -78,7 +78,7 @@ function onWaveEnd() {
     v-bind="$attrs"
   >
     <div v-if="!href && loadingType === 'static'" class="m-static-circle">
-      <span class="u-spin-circle"></span>
+      <span class="spin-circle"></span>
     </div>
     <div v-if="!href && loadingType === 'dynamic'" class="m-dynamic-circle">
       <svg class="circular" viewBox="0 0 50 50" fill="currentColor">
@@ -122,7 +122,7 @@ function onWaveEnd() {
       padding-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
       width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
       opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-    .u-spin-circle {
+    .spin-circle {
       width: 14px;
       height: 14px;
       border-radius: 50%;
@@ -230,7 +230,7 @@ function onWaveEnd() {
     color: #0958d9;
     border-color: #0958d9;
   }
-  .m-static-circle .u-spin-circle {
+  .m-static-circle .spin-circle {
     border-top-color: var(--loading-color);
   }
   .m-dynamic-circle .circular .path {
@@ -329,7 +329,7 @@ function onWaveEnd() {
   height: 40px;
   padding: 6.428571428571429px 15px;
   border-radius: 8px;
-  .m-static-circle .u-spin-circle,
+  .m-static-circle .spin-circle,
   .m-dynamic-circle .circular {
     width: 16px;
     height: 16px;

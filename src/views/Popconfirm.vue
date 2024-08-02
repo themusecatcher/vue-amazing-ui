@@ -24,7 +24,6 @@ const cancel = (e: MouseEvent) => {
       @cancel="cancel"
       @openChange="openChange"
     >
-      <template #okText> nihao </template>
       <Button type="danger">Delete</Button>
     </Popconfirm>
     <h2 class="mt30 mb10">自定义按钮</h2>

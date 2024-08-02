@@ -11,7 +11,7 @@ interface Props {
   vertical?: boolean // 是否使用垂直步骤条，当 vertical: true 时，labelPlacement 自动设为 right
   labelPlacement?: 'right' | 'bottom' // 标签放置位置，默认放图标右侧，可选 bottom 放图标下方
   dotted?: boolean // 是否使用点状步骤条，当 dotted: true 且 vertical: false 时，labelPlacement 将自动设为 bottom
-  current?: number // 当前选中的步骤（v-model），设置 v-model 后，Steps 变为可点击状态。从 1 开始计数
+  current?: number // (v-model) 当前选中的步骤，设置 v-model 后，Steps 变为可点击状态。从 1 开始计数
 }
 const props = withDefaults(defineProps<Props>(), {
   steps: () => [],

@@ -7,10 +7,10 @@ interface Props {
   max?: number // 最大值
   disabled?: boolean // 是否禁用
   range?: boolean // 是否使用双滑块模式
-  step?: number // 步长，取值必须大于0，并且可被 (max - min) 整除
+  step?: number // 步长，取值必须大于 0，并且可被 (max - min) 整除
   formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
   tooltip?: boolean // 是否展示 Tooltip
-  value?: number | number[] // v-model 设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
+  value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
@@ -295,11 +295,11 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
 }
 </script>
 <template>
-  <div ref="sliderRef" :class="['m-slider', { disabled: disabled }]" :style="`width: ${totalWidth};`">
+  <div ref="sliderRef" :class="['m-slider', { 'slider-disabled': disabled }]" :style="`width: ${totalWidth};`">
     <div class="u-slider-rail" @click.self="disabled ? () => false : onClickPoint($event)"></div>
     <div
       class="u-slider-track"
-      :class="{ trackTransition: transition }"
+      :class="{ 'track-transition': transition }"
       :style="`left: ${left}px; right: auto; width: ${right - left}px;`"
     ></div>
     <div
@@ -307,7 +307,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       tabindex="0"
       ref="leftHandle"
       class="m-slider-handle"
-      :class="{ handleTransition: transition }"
+      :class="{ 'handle-transition': transition }"
       :style="`left: ${left}px; right: auto; transform: translate(-50%, -50%);`"
       @keydown.left.prevent="disabled ? () => false : onLeftSlide(left, 'left')"
       @keydown.right.prevent="disabled ? () => false : onRightSlide(left, 'left')"
@@ -318,14 +318,14 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     >
       <div v-if="tooltip" ref="leftTooltip" class="m-handle-tooltip">
         {{ leftValue }}
-        <div class="m-arrow"></div>
+        <div class="u-arrow"></div>
       </div>
     </div>
     <div
       tabindex="0"
       ref="rightHandle"
       class="m-slider-handle"
-      :class="{ handleTransition: transition }"
+      :class="{ 'handle-transition': transition }"
       :style="`left: ${right}px; right: auto; transform: translate(-50%, -50%);`"
       @keydown.left.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
       @keydown.right.prevent="disabled ? () => false : onRightSlide(right, 'right')"
@@ -336,7 +336,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     >
       <div v-if="tooltip" ref="rightTooltip" class="m-handle-tooltip">
         {{ rightValue }}
-        <div class="m-arrow"></div>
+        <div class="u-arrow"></div>
       </div>
     </div>
   </div>
@@ -370,7 +370,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
   }
-  .trackTransition {
+  .track-transition {
     transition:
       left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
       width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
@@ -429,7 +429,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       transition:
         transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      .m-arrow {
+      .u-arrow {
         position: absolute;
         z-index: 9;
         left: 50%;
@@ -489,11 +489,11 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       }
     }
   }
-  .handleTransition {
+  .handle-transition {
     transition: left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
-.disabled {
+.slider-disabled {
   .u-slider-rail {
     cursor: not-allowed;
     background: rgba(0, 0, 0, 0.06);

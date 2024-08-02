@@ -235,7 +235,7 @@ function onChange(value: string | number, label: string, index: number) {
         {{ selectedName || placeholder }}
       </span>
       <svg
-        :class="['u-arrow', { rotate: showOptions, show: showArrow }]"
+        :class="['u-arrow', { 'arrow-rotate': showOptions, show: showArrow }]"
         viewBox="64 64 896 896"
         data-icon="down"
         aria-hidden="true"
@@ -412,7 +412,7 @@ function onChange(value: string | number, label: string, index: number) {
         transform 0.3s,
         opacity 0.3s;
     }
-    .rotate {
+    .arrow-rotate {
       transform: rotate(180deg);
     }
     .u-search {

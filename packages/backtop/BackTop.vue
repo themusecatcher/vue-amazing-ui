@@ -136,11 +136,11 @@ function onBackTop() {
 <template>
   <Transition name="zoom">
     <div
-      ref="backtop"
       v-show="show"
-      @click="onBackTop"
+      ref="backtop"
       class="m-backtop"
       :style="`bottom: ${bottomPosition}; right: ${rightPosition}; --z-index: ${zIndex};`"
+      @click="onBackTop"
     >
       <slot>
         <span class="m-icon">

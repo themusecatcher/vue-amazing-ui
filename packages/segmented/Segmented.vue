@@ -10,7 +10,7 @@ interface Props {
   disabled?: boolean // 是否禁用
   options?: string[] | number[] | SegmentedOption[] // 选项数据
   size?: 'large' | 'middle' | 'small' // 控件尺寸
-  value?: string | number // v-model 当前选中的值
+  value?: string | number // (v-model) 当前选中的值
 }
 const props = withDefaults(defineProps<Props>(), {
   block: false,
@@ -67,8 +67,8 @@ function getOptionLabel(option: string | number | SegmentedOption) {
         @click="disabled || getOptionDisabled(option) ? () => false : onSelected(getOptionValue(option))"
       >
         <input
-          class="segmented-item-input"
           type="radio"
+          class="segmented-item-input"
           :checked="value === getOptionValue(option)"
           :disabled="disabled || getOptionDisabled(option)"
         />

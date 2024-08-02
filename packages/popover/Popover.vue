@@ -78,7 +78,7 @@ function onBlur() {
       ref="popRef"
       tabindex="1"
       class="m-pop-content"
-      :class="{ 'show-pop': visible }"
+      :class="{ 'pop-visible': visible }"
       :style="`max-width: ${popMaxWidth}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
       @blur="trigger === 'click' && activeBlur ? onBlur() : () => false"
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
@@ -189,7 +189,7 @@ function onBlur() {
       }
     }
   }
-  .show-pop {
+  .pop-visible {
     pointer-events: auto;
     transform: scale(1);
     opacity: 1;

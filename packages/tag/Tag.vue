@@ -158,8 +158,8 @@ function onKeyboard(e: KeyboardEvent) {
     class="m-tag"
     :class="[
       `tag-${size}`,
-      color && presetColor.includes(color) ? 'tag-' + color : '',
-      { 'tag-borderless': !bordered, 'has-color': color && !presetColor.includes(color), hidden: hidden }
+      color && presetColor.includes(color) ? `tag-${color}` : '',
+      { 'tag-borderless': !bordered, 'has-color': color && !presetColor.includes(color), 'tag-hidden': hidden }
     ]"
     :style="`background-color: ${color && !presetColor.includes(color) ? color : ''};`"
   >
@@ -191,7 +191,7 @@ function onKeyboard(e: KeyboardEvent) {
       class="m-tag"
       :class="[
         `tag-${tag.size || size}`,
-        (tag.color || color) && presetColor.includes(tag.color || color) ? 'tag-' + (tag.color || color) : '',
+        (tag.color || color) && presetColor.includes(tag.color || color) ? `tag-${tag.color || color}` : '',
         {
           'tag-borderless': tag.bordered !== undefined && !tag.bordered,
           'has-color': (tag.color || color) && !presetColor.includes(tag.color || color)
@@ -201,13 +201,13 @@ function onKeyboard(e: KeyboardEvent) {
       v-for="(tag, index) in tags"
       :key="index"
     >
-      <span class="m-icon" ref="tagsIconRef" v-show="showTagsIcon[index]">
+      <span ref="tagsIconRef" class="m-icon" v-show="showTagsIcon[index]">
         <slot name="icon" :index="index">{{ tag.icon }}</slot>
       </span>
       <span class="u-tag">
         <slot :label="tag.label" :index="index">{{ tag.label }}</slot>
       </span>
-      <span class="m-close" v-if="tag.closable || closable" @click="onCloseTags(tag, index)">
+      <span v-if="tag.closable || closable" class="m-close" @click="onCloseTags(tag, index)">
         <svg
           focusable="false"
           class="u-close"
@@ -224,7 +224,7 @@ function onKeyboard(e: KeyboardEvent) {
         </svg>
       </span>
     </div>
-    <div v-if="!showInput" class="m-tag" :class="[`tag-${size}`, { 'm-plus': dynamic }]" @click="onAdd">
+    <div v-if="!showInput" class="m-tag" :class="[`tag-${size}`, { 'tag-plus': dynamic }]" @click="onAdd">
       <svg
         focusable="false"
         class="u-plus"
@@ -333,7 +333,7 @@ function onKeyboard(e: KeyboardEvent) {
     vertical-align: -0.16em;
   }
 }
-.m-plus {
+.tag-plus {
   background: rgb(255, 255, 255);
   border-style: dashed;
   padding-inline: 10px;
@@ -530,7 +530,7 @@ function onKeyboard(e: KeyboardEvent) {
     }
   }
 }
-.hidden {
+.tag-hidden {
   display: none;
 }
 </style>

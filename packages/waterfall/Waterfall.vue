@@ -133,8 +133,8 @@ function onLoaded(index: number) {
 </script>
 <template>
   <div
-    class="m-waterfall"
     ref="waterfallRef"
+    class="m-waterfall"
     :style="`--border-radius: ${borderRadius}px; background-color: ${backgroundColor}; width: ${totalWidth}; height: ${height}px;`"
   >
     <Spin

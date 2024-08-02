@@ -3,9 +3,9 @@ import { ref, computed, watch, nextTick } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
   message?: string // 全局通知提醒标题，优先级低于 Notification 中的 message
-  duration?: number | null // 自动关闭的延时时长，单位ms，默认4500ms；设置 null 时，不自动关闭
-  top?: number // 消息从顶部弹出时，距离顶部的位置，单位px
-  bottom?: number // 消息从底部弹出时，距离底部的位置，单位px
+  duration?: number | null // 自动关闭的延时时长，单位 ms；设置 null 时，不自动关闭
+  top?: number // 消息从顶部弹出时，距离顶部的位置，单位 px
+  bottom?: number // 消息从底部弹出时，距离底部的位置，单位 px
   placement?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' // 消息弹出位置，优先级低于 Notification 中的 placement
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -129,9 +129,9 @@ function onClose(index: number) {
   >
     <TransitionGroup :name="['topRight', 'bottomRight'].includes(place) ? 'right' : 'left'">
       <div
+        v-show="!hideIndex.includes(index)"
         ref="notification"
         class="m-notification"
-        v-show="!hideIndex.includes(index)"
         @mouseenter="onEnter(index)"
         @mouseleave="onLeave(index)"
         v-for="(data, index) in notificationData"
@@ -224,7 +224,7 @@ function onClose(index: number) {
   </div>
 </template>
 <style lang="less" scoped>
-.right-move, /* 对移动中的元素应用的过渡 */
+.right-move, // 对移动中的元素应用的过渡
 .right-enter-active,
 .right-leave-active,
 .left-move,

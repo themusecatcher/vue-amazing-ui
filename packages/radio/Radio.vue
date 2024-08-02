@@ -8,7 +8,7 @@ interface Props {
   options: Array<Option> // 单选元素数据
   disabled?: boolean // 是否禁用
   vertical?: boolean // 是否垂直排列，仅当 button: false 时生效
-  value?: any // 当前选中的值（v-model）
+  value?: any // (v-model) 当前选中的值
   gap?: number // 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距，仅当 button: false 时生效
   button?: boolean // 是否启用按钮样式
   buttonStyle?: 'outline' | 'solid' // 按钮样式风格
@@ -46,9 +46,9 @@ function onClick(value: any) {
     <div
       v-if="!button"
       class="m-radio-wrap"
+      :class="{ 'radio-disabled': disabled || option.disabled }"
       v-for="(option, index) in options"
       :key="index"
-      :class="{ 'radio-disabled': disabled || option.disabled }"
       @click="disabled || option.disabled ? () => false : onClick(option.value)"
     >
       <span class="u-radio" :class="{ 'radio-checked': value === option.value }"></span>
