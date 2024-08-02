@@ -81,6 +81,10 @@ export function useResizeObserver(target: Ref | Ref[] | HTMLElement | HTMLElemen
 
 ## 基本使用
 
+*请缩放下面的盒子来观察变化*
+
+<br/>
+
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useResizeObserver } from 'vue-amazing-ui'
@@ -123,7 +127,6 @@ useResizeObserver(el, (entries, observer) => {
 })
 </script>
 
-<h3>Resize the box to see changes</h3>
 <div class="m-size-wrap">
   <textarea ref="el" class="resizer" disabled />
   <div class="m-size">
