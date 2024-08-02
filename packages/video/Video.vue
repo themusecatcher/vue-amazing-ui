@@ -144,7 +144,7 @@ function onPlaying() {
     >
       您的浏览器不支持video标签。
     </video>
-    <span v-show="originPlay || showPlay" class="m-icon-play" :class="{ hidden: hidden }">
+    <span v-show="originPlay || showPlay" class="m-icon-play" :class="{ 'icon-hidden': hidden }">
       <svg class="u-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34">
         <path
           d="M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039
@@ -188,7 +188,7 @@ function onPlaying() {
       margin-left: 27px;
     }
   }
-  .hidden {
+  .icon-hidden {
     opacity: 0;
   }
 }

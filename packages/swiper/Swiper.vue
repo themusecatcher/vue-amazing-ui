@@ -87,7 +87,7 @@ const modulesBanner = computed(() => {
 })
 const autoplayBanner = ref({
   delay: props.delay,
-  disableOnInteraction: false, // 用户操作swiper之后，是否禁止 autoplay。默认为 true：停止。
+  disableOnInteraction: false, // 用户操作 swiper 之后，是否禁止 autoplay。默认为 true：停止。
   pauseOnMouseEnter: props.pauseOnMouseEnter // 鼠标置于 swiper 时暂停自动切换，鼠标离开时恢复自动切换，默认 false
 })
 const modulesCarousel = ref([Autoplay])
@@ -138,7 +138,7 @@ function getImageTitle(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <a :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'" class="m-link">
+      <a class="m-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
         <img class="u-image" :src="image.src" :alt="getImageTitle(image)" loading="lazy" />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
@@ -158,7 +158,7 @@ function getImageTitle(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <a :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'" class="m-link">
+      <a class="m-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
         <img class="u-image" :src="image.src" :alt="getImageTitle(image)" loading="lazy" />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>

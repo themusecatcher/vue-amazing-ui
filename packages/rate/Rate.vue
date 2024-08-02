@@ -4,12 +4,12 @@ interface Props {
   allowClear?: boolean // 是否允许再次点击后清除
   allowHalf?: boolean // 是否允许半选
   count?: number // star 总数
-  character?: string // 自定义字符，预置 'star-outlined' 'star-filled' 'heart-outlined' 'heart-filled' 四种 svg 图标 string | slot
+  character?: 'star-outlined' | 'star-filled' | 'heart-outlined' | 'heart-filled' | string // 自定义字符，预置四种 svg 图标 string | slot
   size?: number // 字符时是字体高度，图标时是图片大小，单位 px
   color?: string // 字符选中颜色
   gap?: number // 字符间距，单位 px
   disabled?: boolean // 只读，无法进行交互
-  value?: number // v-model 当前数，受控值 1,2,3...
+  value?: number // (v-model) 当前数，受控值 1,2,3...
 }
 const props = withDefaults(defineProps<Props>(), {
   allowClear: true,

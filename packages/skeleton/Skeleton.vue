@@ -110,7 +110,7 @@ const paragraphWidth = computed(() => {
 <template>
   <div
     v-if="loading"
-    :class="['m-skeleton', { 'm-skeleton-avatar': avatar, 'm-skeleton-animated': animated }]"
+    :class="['m-skeleton', { 'skeleton-avatar': avatar, 'skeleton-animated': animated }]"
     :style="`--button-size: ${buttonSize}px; --title-top: ${titleTop}px;`"
   >
     <span
@@ -118,11 +118,11 @@ const paragraphWidth = computed(() => {
       :class="[
         'u-skeleton-button',
         {
-          'u-button-round': typeof button !== 'boolean' && button.shape === 'round',
-          'u-button-circle': typeof button !== 'boolean' && button.shape === 'circle',
-          'u-button-sm': typeof button !== 'boolean' && button.size === 'small',
-          'u-button-lg': typeof button !== 'boolean' && button.size === 'large',
-          'u-button-block': typeof button !== 'boolean' && button.shape !== 'circle' && button.block
+          'button-round': typeof button !== 'boolean' && button.shape === 'round',
+          'button-circle': typeof button !== 'boolean' && button.shape === 'circle',
+          'button-sm': typeof button !== 'boolean' && button.size === 'small',
+          'button-lg': typeof button !== 'boolean' && button.size === 'large',
+          'button-block': typeof button !== 'boolean' && button.shape !== 'circle' && button.block
         }
       ]"
     ></span>
@@ -130,16 +130,16 @@ const paragraphWidth = computed(() => {
       :class="[
         'u-skeleton-input',
         {
-          'u-input-sm': typeof input !== 'boolean' && input.size === 'small',
-          'u-input-lg': typeof input !== 'boolean' && input.size === 'large'
+          'input-sm': typeof input !== 'boolean' && input.size === 'small',
+          'input-lg': typeof input !== 'boolean' && input.size === 'large'
         }
       ]"
       v-if="input"
     ></span>
     <div class="m-skeleton-image" v-if="image">
-      <svg viewBox="0 0 1098 1024" xmlns="http://www.w3.org/2000/svg" class="m-skeleton-image-svg">
+      <svg class="m-skeleton-image-svg" viewBox="0 0 1098 1024" xmlns="http://www.w3.org/2000/svg">
         <path
-          class="u-skeleton-image-path"
+          class="skeleton-image-path"
           d="M365.714286 329.142857q0 45.714286-32.036571 77.677714t-77.677714 32.036571-77.677714-32.036571-32.036571-77.677714 32.036571-77.677714 77.677714-32.036571 77.677714 32.036571 32.036571 77.677714zM950.857143 548.571429l0 256-804.571429 0 0-109.714286 182.857143-182.857143 91.428571 91.428571 292.571429-292.571429zM1005.714286 146.285714l-914.285714 0q-7.460571 0-12.873143 5.412571t-5.412571 12.873143l0 694.857143q0 7.460571 5.412571 12.873143t12.873143 5.412571l914.285714 0q7.460571 0 12.873143-5.412571t5.412571-12.873143l0-694.857143q0-7.460571-5.412571-12.873143t-12.873143-5.412571zM1097.142857 164.571429l0 694.857143q0 37.741714-26.843429 64.585143t-64.585143 26.843429l-914.285714 0q-37.741714 0-64.585143-26.843429t-26.843429-64.585143l0-694.857143q0-37.741714 26.843429-64.585143t64.585143-26.843429l914.285714 0q37.741714 0 64.585143 26.843429t26.843429 64.585143z"
         ></path>
       </svg>
@@ -149,9 +149,9 @@ const paragraphWidth = computed(() => {
         :class="[
           'u-skeleton-avatar',
           {
-            'u-avatar-sm': typeof avatar !== 'boolean' && avatar.size === 'small',
-            'u-avatar-lg': typeof avatar !== 'boolean' && avatar.size === 'large',
-            'u-avatar-square': typeof avatar !== 'boolean' && avatar.shape === 'square'
+            'avatar-sm': typeof avatar !== 'boolean' && avatar.size === 'small',
+            'avatar-lg': typeof avatar !== 'boolean' && avatar.size === 'large',
+            'avatar-square': typeof avatar !== 'boolean' && avatar.shape === 'square'
           }
         ]"
       ></span>
@@ -181,27 +181,27 @@ const paragraphWidth = computed(() => {
     height: 32px;
     line-height: 32px;
   }
-  .u-button-sm {
+  .button-sm {
     width: 48px;
     min-width: 48px;
     height: 24px;
     line-height: 24px;
   }
-  .u-button-lg {
+  .button-lg {
     width: 80px;
     min-width: 80px;
     height: 40px;
     line-height: 40px;
   }
-  .u-button-round {
+  .button-round {
     border-radius: var(--button-size);
   }
-  .u-button-circle {
+  .button-circle {
     width: var(--button-size);
     min-width: var(--button-size);
     border-radius: 50%;
   }
-  .u-button-block {
+  .button-block {
     width: 100%;
   }
   .u-skeleton-input {
@@ -214,13 +214,13 @@ const paragraphWidth = computed(() => {
     height: 32px;
     line-height: 32px;
   }
-  .u-input-sm {
+  .input-sm {
     width: 120px;
     min-width: 120px;
     height: 24px;
     line-height: 24px;
   }
-  .u-input-lg {
+  .input-lg {
     width: 200px;
     min-width: 200px;
     height: 40px;
@@ -242,7 +242,7 @@ const paragraphWidth = computed(() => {
       line-height: 48px;
       max-width: 192px;
       max-height: 192px;
-      .u-skeleton-image-path {
+      .skeleton-image-path {
         fill: #bfbfbf;
       }
     }
@@ -260,17 +260,17 @@ const paragraphWidth = computed(() => {
       line-height: 32px;
       border-radius: 50%;
     }
-    .u-avatar-sm {
+    .avatar-sm {
       width: 24px;
       height: 24px;
       line-height: 24px;
     }
-    .u-avatar-lg {
+    .avatar-lg {
       width: 40px;
       height: 40px;
       line-height: 40px;
     }
-    .u-avatar-square {
+    .avatar-square {
       border-radius: 6px;
     }
   }
@@ -308,14 +308,14 @@ const paragraphWidth = computed(() => {
     }
   }
 }
-.m-skeleton-avatar {
+.skeleton-avatar {
   .m-skeleton-content {
     .u-skeleton-title {
       margin-top: var(--title-top);
     }
   }
 }
-.m-skeleton-animated {
+.skeleton-animated {
   .u-skeleton-button,
   .u-skeleton-input,
   .m-skeleton-image,

@@ -43,7 +43,7 @@ const showText = computed(() => {
   <div
     class="m-divider divider-style"
     :class="[
-      vertical ? 'm-divider-vertical' : 'm-divider-horizontal',
+      vertical ? 'divider-vertical' : 'divider-horizontal',
       {
         'divider-with-text': showText,
         'divider-with-text-center': showText && orientation === 'center',
@@ -55,7 +55,7 @@ const showText = computed(() => {
     ]"
     :style="`--border-width: ${borderWidth}px; --border-style: ${borderStyle}; --border-color: ${borderColor}; --margin: ${margin}; --line-height: ${lineHeight};`"
   >
-    <span class="u-divider-text" v-show="showText">
+    <span class="m-divider-text" v-show="showText">
       <slot></slot>
     </span>
   </div>
@@ -66,19 +66,19 @@ const showText = computed(() => {
   font-size: 14px;
   line-height: 1.5714285714285714;
   border-block-start: var(--border-width) var(--border-style) var(--border-color);
-  .u-divider-text {
+  .m-divider-text {
     display: inline-block;
     padding: 0 1em;
   }
 }
-.m-divider-horizontal {
+.divider-horizontal {
   display: flex;
   clear: both;
   width: 100%;
   min-width: 100%;
   margin: 24px 0;
 }
-.m-divider-vertical {
+.divider-vertical {
   position: relative;
   top: -0.06em;
   display: inline-block;
@@ -94,7 +94,7 @@ const showText = computed(() => {
   border-style: var(--border-style);
   border-width: var(--border-width) 0 0;
 }
-.m-divider-vertical.divider-style {
+.divider-vertical.divider-style {
   border-inline-start-width: var(--border-width);
   border-inline-end: 0;
   border-block-start: 0;
@@ -150,7 +150,7 @@ const showText = computed(() => {
   &::after {
     width: 100%;
   }
-  .u-divider-text {
+  .m-divider-text {
     margin-left: var(--margin);
     padding-inline-start: 0;
   }
@@ -162,7 +162,7 @@ const showText = computed(() => {
   &::after {
     width: 0;
   }
-  .u-divider-text {
+  .m-divider-text {
     margin-right: var(--margin);
     padding-inline-end: 0;
   }

@@ -43,7 +43,11 @@ const showHeader = computed(() => {
 })
 </script>
 <template>
-  <div class="m-card" :class="{ bordered: bordered, 'm-small-card': size === 'small' }" :style="`width: ${cardWidth};`">
+  <div
+    class="m-card"
+    :class="{ 'card-bordered': bordered, 'card-small': size === 'small' }"
+    :style="`width: ${cardWidth};`"
+  >
     <div class="m-card-head" :style="headStyle" v-if="showHeader">
       <div class="m-head-wrapper">
         <div class="u-title">
@@ -62,9 +66,6 @@ const showHeader = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.bordered {
-  border: 1px solid #f0f0f0;
-}
 .m-card {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
@@ -109,7 +110,10 @@ const showHeader = computed(() => {
     border-radius: 0 0 8px 8px;
   }
 }
-.m-small-card {
+.card-bordered {
+  border: 1px solid #f0f0f0;
+}
+.card-small {
   .m-card-head {
     min-height: 38px;
     padding: 0 12px;

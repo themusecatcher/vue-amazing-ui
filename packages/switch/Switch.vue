@@ -4,7 +4,7 @@ interface Props {
   onInfo?: string // 选中时的内容
   offInfo?: string // 未选中时的内容
   disabled?: boolean // 是否禁用
-  checked?: boolean // （v-model）指定当前是否选中
+  checked?: boolean // (v-model) 指定当前是否选中
   nodeStyle?: CSSProperties // 节点样式
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -24,7 +24,7 @@ function onSwitch() {
   <div class="m-switch-wrap">
     <div
       @click="disabled ? () => false : onSwitch()"
-      :class="['m-switch', { 'switch-checked': checked, disabled: disabled }]"
+      :class="['m-switch', { 'switch-checked': checked, 'switch-disabled': disabled }]"
     >
       <div :class="['u-switch-inner', checked ? 'inner-checked' : 'inner-unchecked']">{{
         checked ? onInfo : offInfo
@@ -96,7 +96,7 @@ function onSwitch() {
       background: #4096ff;
     }
   }
-  .disabled {
+  .switch-disabled {
     cursor: not-allowed;
     opacity: 0.65;
     .u-node {

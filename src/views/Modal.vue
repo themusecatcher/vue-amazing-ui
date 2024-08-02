@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 
 const modal = ref()
+const okType = ref('primary')
 const center = ref(true)
 const loading = ref(false)
 const show = ref(false)
@@ -39,6 +40,7 @@ function showConfirmModal() {
     title: 'Do you Want to submit these items ?',
     content: 'Some descriptions ...'
   })
+  okType.value = 'primary'
   center.value = true
 }
 function showEraseModal() {
@@ -46,6 +48,7 @@ function showEraseModal() {
     title: 'Do you Want to delete these items ?',
     content: 'Some descriptions ...'
   })
+  okType.value = 'danger'
   center.value = true
 }
 function showFixModal() {
@@ -76,7 +79,7 @@ function onKnow() {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space>
+    <Space vertical gap="middle">
       <Button type="primary" @click="showInfoModal">Info Modal</Button>
       <Button type="primary" @click="showSuccessModal">Success Modal</Button>
       <Button type="primary" @click="showErrorModal">Error Modal</Button>
@@ -89,9 +92,10 @@ function onKnow() {
       ref="modal"
       v-model:show="show"
       :width="420"
-      cancelText="取消"
-      okText="确认"
-      noticeText="知道了"
+      cancel-text="取消"
+      ok-text="确认"
+      :ok-type="okType"
+      notice-text="知道了"
       :center="center"
       :top="120"
       :loading="loading"

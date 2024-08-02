@@ -52,7 +52,7 @@ function onHide(): void {
     <div
       ref="tooltipRef"
       class="m-tooltip-content"
-      :class="{ 'show-tip': visible }"
+      :class="{ 'tip-visible': visible }"
       :style="`--tooltip-font-size: ${fontSize}px; --tooltip-color: ${color}; --tooltip-background-color: ${backgroundColor}; max-width: ${maxWidth}px; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
       @mouseenter="onShow"
       @mouseleave="onHide"
@@ -140,7 +140,7 @@ function onHide(): void {
       }
     }
   }
-  .show-tip {
+  .tip-visible {
     pointer-events: auto;
     transform: scale(1);
     opacity: 1;

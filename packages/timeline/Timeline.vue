@@ -12,7 +12,7 @@ interface Data {
 }
 interface Props {
   timelineData: Data[] // 时间轴内容数组
-  width?: number | string // 时间轴区域总宽度，单位px
+  width?: number | string // 时间轴区域总宽度，单位 px
   lineStyle?: 'solid' | 'dashed' | 'dotted' // 时间线样式
   mode?: 'left' | 'center' | 'right' // 通过设置 mode 可以改变时间轴和内容的相对位置
   position?: 'left' | 'right' // 当 mode 为 center 时，内容交替展现，内容从左边（left）开始或者右边（right）开始展现
@@ -78,7 +78,7 @@ watchEffect(
   <div class="m-timeline-area" :style="`width: ${totalWidth};`">
     <div class="m-timeline">
       <div
-        :class="['m-timeline-item', { last: index === timelineData.length - 1 }]"
+        :class="['m-timeline-item', { 'item-last': index === timelineData.length - 1 }]"
         v-for="(data, index) in timelineData"
         :key="index"
       >
@@ -172,7 +172,7 @@ watchEffect(
         text-align: end;
       }
     }
-    .last {
+    .item-last {
       .u-tail {
         display: none;
       }

@@ -107,8 +107,8 @@ const showSuccess = computed(() => {
         <span v-if="percent >= 100" class="m-success">
           <svg
             v-if="showSuccess === undefined"
-            focusable="false"
             class="u-icon"
+            focusable="false"
             data-icon="check-circle"
             width="1em"
             height="1em"
@@ -141,7 +141,7 @@ const showSuccess = computed(() => {
       <path
         :d="path"
         :stroke-linecap="strokeLinecap"
-        class="u-progress-circle-trail"
+        class="progress-circle-trail"
         :stroke-width="strokeWidth"
         :style="`stroke-dasharray: ${perimeter}px, ${perimeter}px;`"
         fill-opacity="0"
@@ -149,7 +149,7 @@ const showSuccess = computed(() => {
       <path
         :d="path"
         :stroke-linecap="strokeLinecap"
-        class="u-progress-circle-path"
+        class="progress-circle-path"
         :class="{ 'circle-success': percent >= 100 && !gradientColor }"
         :stroke-width="strokeWidth"
         :stroke="gradientColor ? 'url(#circleGradient)' : lineColor"
@@ -273,7 +273,7 @@ const showSuccess = computed(() => {
   display: inline-block;
   position: relative;
   .u-progress-circle {
-    .u-progress-circle-trail {
+    .progress-circle-trail {
       stroke: rgba(0, 0, 0, 0.06);
       stroke-dashoffset: 0;
       transition:
@@ -283,7 +283,7 @@ const showSuccess = computed(() => {
         stroke-width 0.06s ease 0.3s,
         opacity 0.3s ease 0s;
     }
-    .u-progress-circle-path {
+    .progress-circle-path {
       stroke-dashoffset: 0;
       transition:
         stroke-dashoffset 0.3s ease 0s,

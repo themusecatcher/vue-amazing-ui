@@ -49,7 +49,7 @@ const qrcode = computed(() => {
 <template>
   <div
     class="m-qrcode"
-    :class="{ bordered: bordered }"
+    :class="{ 'qrcode-bordered': bordered }"
     :style="`width: ${size}px; height: ${size}px; border-color: ${borderColor};`"
   >
     <img :src="qrcode.value" class="u-qrcode" alt="QRCode" />
@@ -65,7 +65,7 @@ const qrcode = computed(() => {
     height: 100%;
   }
 }
-.bordered {
+.qrcode-bordered {
   border-width: 1px;
   border-style: solid;
 }

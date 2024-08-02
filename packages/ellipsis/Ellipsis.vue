@@ -91,7 +91,7 @@ function onExpand() {
   <Tooltip
     v-if="showTooltip"
     :max-width="defaultTooltipMaxWidth"
-    :overlayStyle="{ padding: '8px 12px', textAlign: 'justify' }"
+    :overlay-style="{ padding: '8px 12px', textAlign: 'justify' }"
     v-bind="tooltipProps"
   >
     <template #tooltip>

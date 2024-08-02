@@ -2,8 +2,8 @@
 import { ref, computed, watch } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
-  duration?: number // 自动关闭的延时，单位ms
-  top?: number | string // 消息距离顶部的位置，单位px
+  duration?: number // 自动关闭的延时，单位 ms
+  top?: number | string // 消息距离顶部的位置，单位 px
 }
 const props = withDefaults(defineProps<Props>(), {
   duration: 3000,

@@ -5,9 +5,9 @@
 
 ## 1.4.3 <Tag color="volcano" size="small">2024-08-02</Tag>
 
-- 优化 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件代码
-- 优化 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件代码
-- 优化 [文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件代码
+- 优化并更新 [空状态 Empty](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html) 组件
+- 优化并更新 [信息提示 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增 `cancelProps` `okType` `okProps` `noticeProps` 属性
+- 组件库及文档代码优化
 
 ## 1.4.2 <Tag color="volcano" size="small">2024-08-01</Tag>
 
@@ -19,15 +19,10 @@
 ## 1.4.1 <Tag color="volcano" size="small">2024-07-31</Tag>
 
 - 优化 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件
-- 优化 [多选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件代码
-- 优化 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件代码
-- 优化 [通知提醒 Notification](https://themusecatcher.github.io/vue-amazing-ui/guide/components/notification.html) 组件代码
-- 优化 [通知提醒 Notification](https://themusecatcher.github.io/vue-amazing-ui/guide/components/notification.html) 组件代码
-- 优化 [气泡卡片 Popover](https://themusecatcher.github.io/vue-amazing-ui/guide/components/popover.html) 组件代码
-- 优化 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件代码
 - 优化并更新 [标签 Tag](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tag.html) 组件，新增 `spaceProps` 属性
 - 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，新增 `spaceProps` `spinProps` 属性，同时删除了部分属性
 - 优化并更新 [上传 Upload](https://themusecatcher.github.io/vue-amazing-ui/guide/components/upload.html) 组件，新增 `spaceProps` `spinProps` `imageProps` `messageProps` `actionMessage` 属性，同时删除了部分属性
+- 组件库及文档代码优化
 
 ## 1.4.0 <Tag color="volcano" size="small">2024-07-30</Tag>
 
@@ -53,7 +48,7 @@
 - 优化 [走马灯 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件实现
 - 优化更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件
 - 优化更新 [弹出确认 Popconfirm](https://themusecatcher.github.io/vue-amazing-ui/guide/components/popconfirm.html) 组件
-- 组件库及文档日常代码优化
+- 组件库及文档代码优化
 
 ## 1.3.0 <Tag color="volcano" size="small">2024-07-24</Tag>
 

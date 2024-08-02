@@ -17,16 +17,18 @@ interface Props {
   showCancel?: boolean // 是否显示取消按钮
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '',
-  description: '',
-  content: '',
-  icon: '',
+  title: undefined,
+  description: undefined,
+  content: undefined,
+  icon: undefined,
   iconType: 'warning',
   maxWidth: 'auto',
   cancelText: '取消',
   cancelType: 'default',
+  cancelProps: () => ({}),
   okText: '确定',
   okType: 'primary',
+  okProps: () => ({}),
   showCancel: true
 })
 const popMaxWidth = computed(() => {
@@ -97,7 +99,7 @@ function onOk(e: Event) {
       ref="popRef"
       tabindex="1"
       class="m-pop-content"
-      :class="{ 'show-pop': visible }"
+      :class="{ 'pop-visible': visible }"
       :style="`max-width: ${popMaxWidth}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
       @blur="visible && activeBlur ? onBlur() : () => false"
       @keydown.esc="onCancel"
@@ -107,11 +109,12 @@ function onOk(e: Event) {
           <span class="m-icon">
             <slot name="icon">
               <svg
-                focusable="false"
-                class="u-icon"
                 v-if="iconType === 'info'"
+                class="u-icon icon-info"
+                focusable="false"
                 width="1em"
                 height="1em"
+                fill="currentColor"
                 viewBox="64 64 896 896"
                 data-icon="info-circle"
                 aria-hidden="true"
@@ -121,12 +124,12 @@ function onOk(e: Event) {
                 ></path>
               </svg>
               <svg
-                focusable="false"
-                class="u-icon"
                 v-if="iconType === 'success'"
+                class="u-icon icon-success"
+                focusable="false"
                 width="1em"
                 height="1em"
-                style="fill: #52c41a"
+                fill="currentColor"
                 viewBox="64 64 896 896"
                 data-icon="check-circle"
                 aria-hidden="true"
@@ -136,12 +139,12 @@ function onOk(e: Event) {
                 ></path>
               </svg>
               <svg
-                focusable="false"
-                class="u-icon"
                 v-if="iconType === 'error'"
+                class="u-icon icon-error"
+                focusable="false"
                 width="1em"
                 height="1em"
-                style="fill: #ff4d4f"
+                fill="currentColor"
                 viewBox="64 64 896 896"
                 data-icon="close-circle"
                 aria-hidden="true"
@@ -151,12 +154,12 @@ function onOk(e: Event) {
                 ></path>
               </svg>
               <svg
-                focusable="false"
-                class="u-icon"
                 v-if="iconType === 'warning'"
+                class="u-icon icon-warning"
+                focusable="false"
                 width="1em"
                 height="1em"
-                style="fill: #faad14"
+                fill="currentColor"
                 viewBox="64 64 896 896"
                 data-icon="exclamation-circle"
                 aria-hidden="true"
@@ -234,7 +237,7 @@ function onOk(e: Event) {
         flex-wrap: nowrap;
         align-items: start;
         .m-icon {
-          content: '\f8f5';
+          content: '';
           flex: none;
           line-height: 1;
           padding-top: 4px;
@@ -243,7 +246,22 @@ function onOk(e: Event) {
           .u-icon {
             display: inline-block;
             line-height: 1;
+          }
+          .icon-info {
+            color: @themeColor;
             fill: @themeColor;
+          }
+          .icon-success {
+            color: #52c41a;
+            fill: #52c41a;
+          }
+          .icon-warning {
+            color: #faad14;
+            fill: #faad14;
+          }
+          .icon-error {
+            color: #ff4d4f;
+            fill: #ff4d4f;
           }
         }
         .m-title {
@@ -306,7 +324,7 @@ function onOk(e: Event) {
       }
     }
   }
-  .show-pop {
+  .pop-visible {
     pointer-events: auto;
     transform: scale(1);
     opacity: 1;
