@@ -119,4 +119,10 @@
   height: 14px;
   fill: #ff4d4f;
 }
+.u-svg {
+  display: inline-block;
+  vertical-align: bottom;
+  width: 72px;
+  height: 72px;
+}
 </style>

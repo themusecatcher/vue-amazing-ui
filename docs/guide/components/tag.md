@@ -549,8 +549,8 @@ const onDynamicClose = (tag: any, index: number) => {
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 closable | 标签是否可以关闭 | boolean | false | false
-color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | '' | false
-icon | 设置图标 | string &#124; slot | '' | false
+color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | undefined | false
+icon | 设置图标 | string &#124; slot | undefined | false
 size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 bordered | 是否有边框 | boolean | true | false
 dynamic | 是否启用标签动态添加和删除 | boolean | false | false

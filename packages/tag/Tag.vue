@@ -21,8 +21,8 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   closable: false,
-  color: '',
-  icon: '',
+  color: undefined,
+  icon: undefined,
   size: 'middle',
   bordered: true,
   dynamic: false,

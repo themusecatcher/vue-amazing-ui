@@ -113,8 +113,8 @@ function openChange (visible: boolean) {
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-title | 卡片标题 | string &#124; slot | '' | false
-content | 卡片内容 | string &#124; slot | '' | false
+title | 卡片标题 | string &#124; slot | undefined | false
+content | 卡片内容 | string &#124; slot | undefined | false
 maxWidth | 卡片内容最大宽度 | string &#124; number | 'auto' | false
 trigger | 卡片触发方式 | 'hover' &#124; 'click' | 'hover' | false
 overlayStyle | 卡片样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
