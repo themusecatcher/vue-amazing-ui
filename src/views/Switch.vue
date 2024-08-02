@@ -17,7 +17,17 @@ watchEffect(() => {
     <h2 class="mt30 mb10">禁用开关</h2>
     <Switch v-model:checked="checked" disabled />
     <h2 class="mt30 mb10">带文字的开关</h2>
-    <Switch v-model:checked="checked" onInfo="开" offInfo="关" />
+    <Space>
+      <Switch v-model:checked="checked" on-info="开" off-info="关" />
+      <Switch v-model:checked="checked" on-info="1" off-info="0" />
+      <Switch v-model:checked="checked" on-info="yes" off-info="no" />
+    </Space>
+    <h2 class="mt30 mb10">三种大小</h2>
+    <Space align="center">
+      <Switch v-model:checked="checked" size="small" />
+      <Switch v-model:checked="checked" />
+      <Switch v-model:checked="checked" size="large" />
+    </Space>
     <h2 class="mt30 mb10">自定义图标和样式</h2>
     <Switch class="u-theme-switch" v-model:checked="checked" :node-style="{ background: checked ? '#001529' : '#fff' }">
       <template #node>
@@ -66,12 +76,10 @@ watchEffect(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.u-theme-switch {
-  :deep(.switch-checked) {
-    background: #faad14;
-    &:hover:not(.disabled) {
-      background: #e8b339;
-    }
+.u-theme-switch.switch-checked {
+  background: #faad14;
+  &:hover:not(.disabled) {
+    background: #e8b339;
   }
 }
 .u-dark-svg {

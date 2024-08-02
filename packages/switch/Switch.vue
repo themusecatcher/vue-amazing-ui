@@ -4,6 +4,7 @@ import type { CSSProperties } from 'vue'
 interface Props {
   onInfo?: string // 选中时的内容
   offInfo?: string // 未选中时的内容
+  size?: 'small' | 'middle' | 'large' // 开关大小
   nodeStyle?: CSSProperties // 节点样式
   disabled?: boolean // 是否禁用
   checked?: boolean // (v-model) 指定当前是否选中
@@ -11,6 +12,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   onInfo: undefined,
   offInfo: undefined,
+  size: 'middle',
   nodeStyle: () => ({}),
   disabled: false,
   checked: false
@@ -36,13 +38,19 @@ function onWaveEnd() {
 <template>
   <div
     class="m-switch"
-    :class="{ 'switch-checked': checked, 'switch-disabled': disabled }"
+    :class="{
+      'switch-small': size === 'small',
+      'switch-large': size === 'large',
+      'switch-checked': checked,
+      'switch-disabled': disabled
+    }"
     @click="disabled ? () => false : onSwitch()"
   >
-    <div :class="['u-switch-inner', checked ? 'inner-checked' : 'inner-unchecked']">{{
-      checked ? onInfo : offInfo
-    }}</div>
-    <div :class="['u-node', { 'node-checked': checked }]" :style="nodeStyle">
+    <div class="m-switch-inner">
+      <span class="inner-checked">{{ onInfo }}</span>
+      <span class="inner-unchecked">{{ offInfo }}</span>
+    </div>
+    <div class="u-switch-node" :style="nodeStyle">
       <slot name="node"></slot>
     </div>
     <div v-if="!disabled" class="m-switch-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
@@ -67,25 +75,42 @@ function onWaveEnd() {
   &:hover:not(.switch-disabled) {
     background: rgba(0, 0, 0, 0.45);
   }
-  .u-switch-inner {
-    color: #fff;
-    font-size: 14px;
-    line-height: 22px;
-    padding: 0 8px;
-    transition: all 0.2s ease-in-out;
+  .m-switch-inner {
+    display: block;
+    overflow: hidden;
+    border-radius: 100px;
+    height: 100%;
+    padding-left: 24px;
+    padding-right: 9px;
+    transition: padding-left 0.2s ease-in-out, padding-right 0.2s ease-in-out;
+    .inner-checked {
+      margin-left: calc(-100% + 22px - 48px);
+      margin-right: calc(100% - 22px + 48px);
+      display: block;
+      text-align: center;
+      color: #fff;
+      font-size: 14px;
+      transition: margin-left 0.2s ease-in-out, margin-right 0.2s ease-in-out;
+      pointer-events: none;
+    }
+    .inner-unchecked {
+      margin-top: -22px;
+      margin-left: 0;
+      margin-right: 0;
+      display: block;
+      text-align: center;
+      color: #fff;
+      font-size: 14px;
+      transition: margin-left 0.2s ease-in-out, margin-right 0.2s ease-in-out;
+      pointer-events: none;
+    }
   }
-  .inner-checked {
-    margin-right: 18px;
-  }
-  .inner-unchecked {
-    margin-left: 18px;
-  }
-  .u-node {
-    position: absolute;
-    left: 2px;
+  .u-switch-node {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    left: 2px;
     width: 18px;
     height: 18px;
     background: #fff;
@@ -93,11 +118,49 @@ function onWaveEnd() {
     cursor: pointer;
     transition: all 0.2s ease-in-out;
   }
-  .node-checked {
-    // 结果等价于right: 2px; 为了滑动效果都以左边为基准进行偏移
-    left: 100%;
-    margin-left: -2px;
-    transform: translateX(-100%);
+}
+.switch-small {
+  min-width: 28px;
+  height: 16px;
+  line-height: 16px;
+  .m-switch-inner {
+    padding-left: 18px;
+    padding-right: 6px;
+    .inner-checked {
+      font-size: 12px;
+      margin-left: calc(-100% + 16px - 36px);
+      margin-right: calc(100% - 16px + 36px);
+    }
+    .inner-unchecked {
+      font-size: 12px;
+      margin-top: -16px;
+    }
+  }
+  .u-switch-node {
+    width: 12px;
+    height: 12px;
+  }
+}
+.switch-large {
+  min-width: 60px;
+  height: 28px;
+  line-height: 28px;
+  .m-switch-inner {
+    padding-left: 30px;
+    padding-right: 12px;
+    .inner-checked {
+      font-size: 18px;
+      margin-left: calc(-100% + 28px - 60px);
+      margin-right: calc(100% - 28px + 60px);
+    }
+    .inner-unchecked {
+      font-size: 18px;
+      margin-top: -28px;
+    }
+  }
+  .u-switch-node {
+    width: 24px;
+    height: 24px;
   }
 }
 .switch-checked {
@@ -105,11 +168,52 @@ function onWaveEnd() {
   &:hover:not(.switch-disabled) {
     background: #4096ff;
   }
+  .m-switch-inner {
+    padding-left: 9px;
+    padding-right: 24px;
+    .inner-checked {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    .inner-unchecked {
+      margin-left: calc(100% - 22px + 48px);
+      margin-right: calc(-100% + 22px - 48px);
+    }
+  }
+  .u-switch-node {
+    left: calc(100% - 20px);
+  }
+}
+.switch-small.switch-checked {
+  .m-switch-inner {
+    padding-left: 6px;
+    padding-right: 18px;
+    .inner-unchecked {
+      margin-left: calc(100% - 16px + 36px);
+      margin-right: calc(-100% + 16px - 36px);
+    }
+  }
+  .u-switch-node {
+    left: calc(100% - 14px);
+  }
+}
+.switch-large.switch-checked {
+  .m-switch-inner {
+    padding-left: 12px;
+    padding-right: 30px;
+    .inner-unchecked {
+      margin-left: calc(100% - 28px + 60px);
+      margin-right: calc(-100% + 28px - 60px);
+    }
+  }
+  .u-switch-node {
+    left: calc(100% - 26px);
+  }
 }
 .switch-disabled {
   cursor: not-allowed;
   opacity: 0.65;
-  .u-node {
+  .u-switch-node {
     cursor: not-allowed;
   }
 }
@@ -133,7 +237,7 @@ function onWaveEnd() {
       box-shadow: 0 0 0.5px 0 @themeColor;
     }
     to {
-      box-shadow: 0 0 0.5px 5.5px @themeColor;
+      box-shadow: 0 0 0.5px 5px @themeColor;
     }
   }
   @keyframes wave-opacity {
