@@ -40,14 +40,15 @@ export function useMediaQuery(mediaQuery: string) {
 
 :::
 
+## 基本使用
+
+*请缩放浏览器查看效果*
+
 <script setup lang="ts">
 import { useMediaQuery } from 'vue-amazing-ui'
 
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 </script>
-
-## 基本使用
-
 <h3>{{ isMobile ? '移动端' : '桌面端' }}</h3>
 
 ```vue
