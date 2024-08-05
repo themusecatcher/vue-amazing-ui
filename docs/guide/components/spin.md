@@ -21,7 +21,7 @@ const spinning = ref(true)
 ## 基本使用
 
 <Flex align="center">
-  Loading state:<Switch v-model:checked="spinning" />
+  Loading state:<Switch v-model="spinning" />
 </Flex>
 
 <br/>

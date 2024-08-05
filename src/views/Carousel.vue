@@ -127,7 +127,7 @@ const carouselConfig = reactive({
     <h3 class="mb10">当焦点在 Arrow 或 Dots 上时，可以通过键盘上、下、左、右按键切换</h3>
     <Carousel :images="images" :width="800" :height="450" @click="clickImage" />
     <h2 class="mt30 mb10">箭头</h2>
-    <Space align="center"> showArrow: <Switch v-model:checked="showArrow" /> </Space>
+    <Space align="center"> showArrow: <Switch v-model="showArrow" /> </Space>
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" :show-arrow="showArrow" @click="clickImage" />
@@ -181,10 +181,10 @@ const carouselConfig = reactive({
     <Flex gap="large" vertical>
       <Row :gutter="24">
         <Col :span="6">
-          <Space vertical> autoplay：<Switch v-model:checked="carouselConfig.autoplay" /> </Space>
+          <Space vertical> autoplay：<Switch v-model="carouselConfig.autoplay" /> </Space>
         </Col>
         <Col :span="6">
-          <Space vertical> pauseOnMouseEnter：<Switch v-model:checked="carouselConfig.pauseOnMouseEnter" /> </Space>
+          <Space vertical> pauseOnMouseEnter：<Switch v-model="carouselConfig.pauseOnMouseEnter" /> </Space>
         </Col>
         <Col :span="6">
           <Space vertical>
@@ -199,7 +199,7 @@ const carouselConfig = reactive({
       </Row>
       <Row :gutter="24">
         <Col :span="6">
-          <Space vertical> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
+          <Space vertical> showArrow：<Switch v-model="carouselConfig.showArrow" /> </Space>
         </Col>
         <Col :span="6">
           <Flex vertical>
@@ -212,7 +212,7 @@ const carouselConfig = reactive({
       </Row>
       <Row :gutter="24">
         <Col :span="6">
-          <Space vertical> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
+          <Space vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
         </Col>
         <Col :span="6">
           <Flex vertical gap="middle">

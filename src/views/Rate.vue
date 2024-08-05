@@ -78,10 +78,10 @@ watchEffect(() => {
     <h2 class="mt30 mb10">评分配置器</h2>
     <Row :gutter="[24, 12]">
       <Col :span="6">
-        <Space vertical> allowClear:<Switch v-model:checked="state.allowClear" /> </Space>
+        <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
       </Col>
       <Col :span="6">
-        <Space vertical> allowHalf:<Switch v-model:checked="state.allowHalf" /> </Space>
+        <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
       </Col>
       <Col :span="6">
         <Flex vertical gap="middle"> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
@@ -96,7 +96,7 @@ watchEffect(() => {
         <Flex vertical gap="middle"> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
       </Col>
       <Col :span="6">
-        <Space vertical> disabled:<Switch v-model:checked="state.disabled" /> </Space>
+        <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
       </Col>
       <Col :span="6">
         <Flex vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>

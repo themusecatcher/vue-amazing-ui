@@ -167,7 +167,7 @@ function clickImage (image: object) {
 ## 箭头
 
 <Space align="center">
-  showArrow: <Switch v-model:checked="showArrow" />
+  showArrow: <Switch v-model="showArrow" />
 </Space>
 <br />
 <br />
@@ -213,7 +213,7 @@ function clickImage (image: object) {
 </script>
 <template>
   <Space align="center">
-    showArrow: <Switch v-model:checked="showArrow" />
+    showArrow: <Switch v-model="showArrow" />
   </Space>
   <br />
   <br />
@@ -754,11 +754,11 @@ function getCurrentIndex () {
 <Flex gap="large" vertical>
   <Row :gutter="24">
     <Col :span="6">
-      <Space vertical> autoplay：<Switch v-model:checked="carouselConfig.autoplay" /> </Space>
+      <Space vertical> autoplay：<Switch v-model="carouselConfig.autoplay" /> </Space>
     </Col>
     <Col :span="6">
       <Space vertical>
-        pauseOnMouseEnter：<Switch v-model:checked="carouselConfig.pauseOnMouseEnter" />
+        pauseOnMouseEnter：<Switch v-model="carouselConfig.pauseOnMouseEnter" />
       </Space>
     </Col>
     <Col :span="6">
@@ -774,7 +774,7 @@ function getCurrentIndex () {
   </Row>
   <Row :gutter="24">
     <Col :span="6">
-      <Space vertical> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
+      <Space vertical> showArrow：<Switch v-model="carouselConfig.showArrow" /> </Space>
     </Col>
     <Col :span="6">
       <Flex vertical>
@@ -787,7 +787,7 @@ function getCurrentIndex () {
   </Row>
   <Row :gutter="24">
     <Col :span="6">
-      <Space vertical> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
+      <Space vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
     </Col>
     <Col :span="6">
       <Flex vertical gap="middle"> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
@@ -904,11 +904,11 @@ const carouselConfig = reactive({
   <Flex gap="large" vertical>
     <Row :gutter="24">
       <Col :span="6">
-        <Space vertical> autoplay：<Switch v-model:checked="carouselConfig.autoplay" /> </Space>
+        <Space vertical> autoplay：<Switch v-model="carouselConfig.autoplay" /> </Space>
       </Col>
       <Col :span="6">
         <Space vertical>
-          pauseOnMouseEnter：<Switch v-model:checked="carouselConfig.pauseOnMouseEnter" />
+          pauseOnMouseEnter：<Switch v-model="carouselConfig.pauseOnMouseEnter" />
         </Space>
       </Col>
       <Col :span="6">
@@ -924,7 +924,7 @@ const carouselConfig = reactive({
     </Row>
     <Row :gutter="24">
       <Col :span="6">
-        <Space vertical> showArrow：<Switch v-model:checked="carouselConfig.showArrow" /> </Space>
+        <Space vertical> showArrow：<Switch v-model="carouselConfig.showArrow" /> </Space>
       </Col>
       <Col :span="6">
         <Flex vertical>
@@ -937,7 +937,7 @@ const carouselConfig = reactive({
     </Row>
     <Row :gutter="24">
       <Col :span="6">
-        <Space vertical> dots：<Switch v-model:checked="carouselConfig.dots" /> </Space>
+        <Space vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
       </Col>
       <Col :span="6">
         <Flex vertical gap="middle"> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>

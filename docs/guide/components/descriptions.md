@@ -531,13 +531,13 @@ const options = ref([
       <Col :span="6">
         <Space vertical>
           bordered:
-          <Switch v-model:checked="state.bordered" />
+          <Switch v-model="state.bordered" />
         </Space>
       </Col>
       <Col :span="6">
         <Space vertical>
           vertical:
-          <Switch v-model:checked="state.vertical" />
+          <Switch v-model="state.vertical" />
         </Space>
       </Col>
       <Col :span="12">
@@ -717,13 +717,13 @@ const state = reactive({
       <Col :span="6">
         <Space vertical>
           bordered:
-          <Switch v-model:checked="state.bordered" />
+          <Switch v-model="state.bordered" />
         </Space>
       </Col>
       <Col :span="6">
         <Space vertical>
           vertical:
-          <Switch v-model:checked="state.vertical" />
+          <Switch v-model="state.vertical" />
         </Space>
       </Col>
       <Col :span="12">

@@ -88,11 +88,11 @@ const avatarShapeOptions = ref([
         <Space :gap="32">
           <Space align="center">
             animated:
-            <Switch v-model:checked="animated" />
+            <Switch v-model="animated" />
           </Space>
           <Space align="center">
             Button Block:
-            <Switch v-model:checked="block" />
+            <Switch v-model="block" />
           </Space>
         </Space>
         <Space align="center">

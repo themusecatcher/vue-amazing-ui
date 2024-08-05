@@ -174,10 +174,10 @@ const showSkeleton = () => {
   <Flex vertical :gap="36" width="50%">
     <Space :gap="32">
       <Space align="center">
-        animated: <Switch v-model:checked="animated" />
+        animated: <Switch v-model="animated" />
       </Space>
       <Space align="center">
-        Button Block: <Switch v-model:checked="block" />
+        Button Block: <Switch v-model="block" />
       </Space>
     </Space>
     <Space align="center">
@@ -252,10 +252,10 @@ const avatarShapeOptions = ref([
     <Flex vertical :gap="32" width="50%">
       <Space :gap="32">
         <Space align="center">
-          animated: <Switch v-model:checked="animated" />
+          animated: <Switch v-model="animated" />
         </Space>
         <Space align="center">
-          Button Block: <Switch v-model:checked="block" />
+          Button Block: <Switch v-model="block" />
         </Space>
       </Space>
       <Space align="center">
