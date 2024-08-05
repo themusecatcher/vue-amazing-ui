@@ -405,7 +405,7 @@ function increase() {
     <Badge :dot="dot">
       <Avatar shape="square" size="large" />
     </Badge>
-    <Switch v-model:checked="dot" />
+    <Switch v-model="dot" />
   </Space>
 </Flex>
 
@@ -465,7 +465,7 @@ function increase () {
       <Badge :dot="dot">
         <Avatar shape="square" size="large" />
       </Badge>
-      <Switch v-model:checked="dot" />
+      <Switch v-model="dot" />
     </Space>
   </Flex>
 </template>

@@ -339,10 +339,10 @@ watchEffect(() => {
 
 <Row :gutter="[24, 12]">
   <Col :span="6">
-    <Space vertical> allowClear:<Switch v-model:checked="state.allowClear" /> </Space>
+    <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
   </Col>
   <Col :span="6">
-    <Space vertical> allowHalf:<Switch v-model:checked="state.allowHalf" /> </Space>
+    <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
   </Col>
   <Col :span="6">
     <Flex vertical gap="middle">
@@ -365,7 +365,7 @@ watchEffect(() => {
     </Flex>
   </Col>
   <Col :span="6">
-    <Space vertical> disabled:<Switch v-model:checked="state.disabled" /> </Space>
+    <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
   </Col>
   <Col :span="6">
     <Flex vertical>
@@ -439,10 +439,10 @@ watchEffect(() => {
 <template>
   <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Space vertical> allowClear:<Switch v-model:checked="state.allowClear" /> </Space>
+      <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
     </Col>
     <Col :span="6">
-      <Space vertical> allowHalf:<Switch v-model:checked="state.allowHalf" /> </Space>
+      <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
     </Col>
     <Col :span="6">
       <Flex vertical gap="middle">
@@ -465,7 +465,7 @@ watchEffect(() => {
       </Flex>
     </Col>
     <Col :span="6">
-      <Space vertical> disabled:<Switch v-model:checked="state.disabled" /> </Space>
+      <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
     </Col>
     <Col :span="6">
       <Flex vertical>

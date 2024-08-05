@@ -134,7 +134,7 @@ const state = reactive({
       <Col :span="6">
         <Space vertical>
           vertical:
-          <Switch v-model:checked="state.vertical" />
+          <Switch v-model="state.vertical" />
         </Space>
       </Col>
       <Col :span="6">
@@ -146,7 +146,7 @@ const state = reactive({
       <Col :span="6">
         <Space vertical>
           dotted:
-          <Switch v-model:checked="state.dotted" />
+          <Switch v-model="state.dotted" />
         </Space>
       </Col>
     </Row>

@@ -215,7 +215,7 @@ const size = ref('middle')
 ## 自定义样式
 
 <Space vertical>
-  <Space align="center"> Loading state:<Switch v-model:checked="customLoading" /> </Space>
+  <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
   <Space align="center"> Loading Type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
   <Space>
     <Button
@@ -261,7 +261,7 @@ const loadingType = ref('dynamic')
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Loading state:<Switch v-model:checked="customLoading" /> </Space>
+    <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
     <Space align="center"> Loading Type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
     <Space>
       <Button
@@ -308,7 +308,7 @@ const loadingType = ref('dynamic')
 ## 加载中状态
 
 <Space vertical>
-  <Space align="center"> Loading state:<Switch v-model:checked="loading" /> </Space>
+  <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
   <Space>
     <Button :loading="loading">Default Button</Button>
     <Button type="reverse" :loading="loading">Reverse Button</Button>
@@ -350,7 +350,7 @@ const loading = ref(true)
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Loading state:<Switch v-model:checked="loading" /> </Space>
+    <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
     <Space>
       <Button :loading="loading">Default Button</Button>
       <Button type="reverse" :loading="loading">Reverse Button</Button>

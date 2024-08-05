@@ -6,7 +6,7 @@ const spinning = ref(true)
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Flex align="center"> Loading state:<Switch v-model:checked="spinning" /> </Flex>
+    <Flex align="center"> Loading state:<Switch v-model="spinning" /> </Flex>
     <br />
     <Spin style="width: 800px" :spinning="spinning">
       <p class="spin-content">

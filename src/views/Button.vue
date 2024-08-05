@@ -89,7 +89,7 @@ function onClick(e: Event) {
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space vertical>
-      <Space align="center"> Loading state:<Switch v-model:checked="customLoading" /> </Space>
+      <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
       <Space align="center"> Loading Type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
       <Space>
         <Button
@@ -120,7 +120,7 @@ function onClick(e: Event) {
     >
     <h2 class="mt30 mb10">加载中状态</h2>
     <Space vertical>
-      <Space align="center"> Loading state:<Switch v-model:checked="loading" /> </Space>
+      <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
       <Space>
         <Button :loading="loading">Default Button</Button>
         <Button type="reverse" :loading="loading">Reverse Button</Button>

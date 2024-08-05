@@ -182,7 +182,7 @@ function increase() {
         <Badge :dot="dot">
           <Avatar shape="square" size="large" />
         </Badge>
-        <Switch v-model:checked="dot" />
+        <Switch v-model="dot" />
       </Space>
     </Flex>
     <h2 class="mt30 mb10">自定义悬浮状态点的显示文字</h2>
