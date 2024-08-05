@@ -282,7 +282,7 @@ export function downloadFile(url: string, name: string): void {
 }
 /*
   一键切换暗黑模式函数
-  在 <html> 根元素上动态切换 dark 模式，只在根元素添加 dark 类值，具体样式需自行添加
+  在 <html> 根元素上动态切换 dark 模式，在根元素添加 dark 类值，同时样式添加 color-scheme: dark，具体样式需自行添加
   // dark 主题样式参考如下：
   html {
     transition: filter .3s ease-in-out;
@@ -297,8 +297,14 @@ export function downloadFile(url: string, name: string): void {
   }
 */
 export function toggleDark() {
+  const html = document.documentElement
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
-  document.documentElement.classList.toggle('dark')
+  html.classList.toggle('dark')
+  if (html.classList.contains('dark')) {
+    html.style.colorScheme = 'dark'
+  } else {
+    html.style.colorScheme = 'light'
+  }
 }
 /**
  * 组合式函数

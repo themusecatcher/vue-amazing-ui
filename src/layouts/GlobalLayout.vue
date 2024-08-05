@@ -49,7 +49,7 @@ const countdown = computed(() => {
 const routerViewRef = ref()
 </script>
 <template>
-  <Switch v-model:checked="showDuty" class="u-duty-switch" />
+  <Switch v-model="showDuty" class="u-duty-switch" />
   <Transition>
     <Countdown
       v-show="showDuty"
@@ -66,9 +66,10 @@ const routerViewRef = ref()
     <Col :xs="5" :xl="4" style="position: relative">
       <Switch
         class="u-theme-switch"
-        v-model:checked="themeDark"
+        v-model="themeDark"
         @change="onThemeChange"
-        :node-style="{ background: themeDark ? '#001529' : '#fff' }"
+        ripple-color="#faad14"
+        :circle-style="{ background: themeDark ? '#001529' : '#fff' }"
       >
         <template #node>
           <svg
@@ -155,12 +156,6 @@ const routerViewRef = ref()
   top: 36px;
   right: 36px;
   z-index: 3;
-  :deep(.switch-checked) {
-    background: #faad14 !important;
-    &:hover {
-      background: #e8b339 !important;
-    }
-  }
 }
 .u-duty-countdown {
   position: fixed;
@@ -173,7 +168,7 @@ const routerViewRef = ref()
   top: 13px;
   right: 13px;
   z-index: 3;
-  :deep(.switch-checked) {
+  :deep(&.switch-checked) {
     background: #faad14 !important;
     &:hover {
       background: #e8b339 !important;

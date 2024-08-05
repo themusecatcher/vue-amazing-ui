@@ -5,7 +5,8 @@
 
 ## 1.4.4 <Tag color="volcano" size="small">2024-08-05</Tag>
 
-- 优化并更新 [开关 Switch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/switch.html) 组件，新增 `size` 属性
+- 重构并优化 [开关 Switch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/switch.html) 组件
+- 优化并更新 [水印 Watermark](https://themusecatcher.github.io/vue-amazing-ui/guide/components/watermark.html) 组件
 - 组件库及文档代码优化
 
 ## 1.4.3 <Tag color="volcano" size="small">2024-08-02</Tag>

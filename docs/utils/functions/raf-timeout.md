@@ -1,6 +1,7 @@
-# 定时器 rafTimeout cancelRaf<BackTop />
+# 定时器 rafTimeout cancelRaf
 
-<br/>
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 *使用 `raf` 动画帧模拟实现的定时器，等效替代 `setTimeout()` 和 `setInterval()`*
 

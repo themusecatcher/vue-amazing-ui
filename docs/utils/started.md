@@ -1,4 +1,7 @@
-# 快速上手<BackTop />
+# 快速上手
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ## 简要介绍
 

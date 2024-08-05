@@ -1,6 +1,7 @@
-# 刷新率 useFps<BackTop />
+# 刷新率 useFps
 
-<br/>
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 *实时监测浏览器刷新率FPS的组合式函数*
 

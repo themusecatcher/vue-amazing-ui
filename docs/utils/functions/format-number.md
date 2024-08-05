@@ -1,4 +1,7 @@
-# 数字格式化 formatNumber<BackTop />
+# 数字格式化 formatNumber
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ::: details Show Source Code
 

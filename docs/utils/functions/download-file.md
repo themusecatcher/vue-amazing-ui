@@ -1,4 +1,7 @@
-# 下载文件 downloadFile<BackTop />
+# 下载文件 downloadFile
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ::: details Show Source Code
 

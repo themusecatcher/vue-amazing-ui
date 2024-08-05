@@ -1,6 +1,7 @@
-# DOM监听 useMutationObserver<BackTop />
+# DOM监听 useMutationObserver
 
-<br/>
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 *使用 `MutationObserver` 观察 `DOM` 元素的变化的组合式函数*
 
