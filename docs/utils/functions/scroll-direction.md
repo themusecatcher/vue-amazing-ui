@@ -1,6 +1,7 @@
-# 滚动方向 useScrollDirection<BackTop />
+# 滚动方向 useScrollDirection
 
-<br/>
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 *实时监测页面滚动方向的组合式函数*
 

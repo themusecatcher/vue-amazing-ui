@@ -1,6 +1,7 @@
-# 事件监听 useEventListener<BackTop />
+# 事件监听 useEventListener
 
-<br/>
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 *添加和清除 `DOM` 事件监听器的组合式函数*
 

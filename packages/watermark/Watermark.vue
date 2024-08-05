@@ -17,7 +17,7 @@ interface Props {
   fontFamily?: string // 字体类型
   fontStyle?: 'none' | 'normal' | 'italic' | 'oblique' // 字体样式
   gap?: [number, number] // 水印之间的间距
-  offset?: [number, number] // 水印距离容器左上角的偏移量，默认为 gap/2
+  offset?: [number, number] // 水印距离容器左上角的偏移量，默认为 gap / 2
 }
 const props = withDefaults(defineProps<Props>(), {
   width: undefined,
@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   image: undefined,
   content: '',
   fullscreen: false,
-  color: 'rgba(0,0,0,.15)',
+  color: 'rgba(0, 0, 0, 0.15)',
   fontSize: 16,
   fontWeight: 'normal',
   fontFamily: 'sans-serif',
@@ -106,14 +106,15 @@ useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
   attributeFilter: ['style', 'class'] // 声明哪些属性名会被监听的数组。如果不声明该属性，所有属性的变化都将触发通知。
 })
 function onMutate(mutations: MutationRecord[]) {
-  if (!stopObservation.value) {
-    mutations.forEach((mutation: MutationRecord) => {
-      if (reRendering(mutation, watermarkRef.value)) {
-        destroyWatermark()
-        renderWatermark()
-      }
-    })
+  if (stopObservation.value) {
+    return
   }
+  mutations.forEach((mutation: MutationRecord) => {
+    if (reRendering(mutation, watermarkRef.value)) {
+      destroyWatermark()
+      renderWatermark()
+    }
+  })
 }
 function destroyWatermark() {
   if (watermarkRef.value) {

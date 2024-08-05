@@ -2,6 +2,8 @@
 import { ref, watchEffect } from 'vue'
 
 const checked = ref(true)
+const customValue1 = ref('no')
+const customValue2 = ref(2)
 function onChange(checked: boolean) {
   console.log('checked:', checked)
 }
@@ -13,24 +15,35 @@ watchEffect(() => {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Switch v-model:checked="checked" @change="onChange" />
+    <Switch v-model="checked" @change="onChange" />
     <h2 class="mt30 mb10">禁用开关</h2>
-    <Switch v-model:checked="checked" disabled />
-    <h2 class="mt30 mb10">带文字的开关</h2>
-    <Space>
-      <Switch v-model:checked="checked" on-info="开" off-info="关" />
-      <Switch v-model:checked="checked" on-info="1" off-info="0" />
-      <Switch v-model:checked="checked" on-info="yes" off-info="no" />
-    </Space>
+    <Switch v-model="checked" disabled />
     <h2 class="mt30 mb10">三种大小</h2>
-    <Space align="center">
-      <Switch v-model:checked="checked" size="small" />
-      <Switch v-model:checked="checked" />
-      <Switch v-model:checked="checked" size="large" />
+    <Space>
+      <Switch v-model="checked" size="small" />
+      <Switch v-model="checked" />
+      <Switch v-model="checked" size="large" />
+    </Space>
+    <h2 class="mt30 mb10">加载中</h2>
+    <Space>
+      <Switch v-model="checked" size="small" loading />
+      <Switch v-model="checked" loading />
+      <Switch v-model="checked" size="large" loading />
+    </Space>
+    <h2 class="mt30 mb10">带 文字 / 数字 / 字母 的开关</h2>
+    <Space>
+      <Switch v-model="checked" checked="开" unchecked="关" />
+      <Switch v-model="checked" checked="1" unchecked="0" />
+      <Switch v-model="checked" checked="yes" unchecked="no" />
     </Space>
     <h2 class="mt30 mb10">自定义图标和样式</h2>
-    <Switch class="u-theme-switch" v-model:checked="checked" :node-style="{ background: checked ? '#001529' : '#fff' }">
-      <template #node>
+    <Switch
+      class="u-theme-switch"
+      v-model="checked"
+      ripple-color="#faad14"
+      :circle-style="{ background: checked ? '#001529' : '#fff' }"
+    >
+      <template #node="{ checked }">
         <svg
           v-if="checked"
           xmlns="http://www.w3.org/2000/svg"
@@ -73,6 +86,23 @@ watchEffect(() => {
         </svg>
       </template>
     </Switch>
+    <h2 class="mt30 mb10">自定义选中的值</h2>
+    <Space :gap="30">
+      <Space vertical align="center">
+        <Switch v-model="customValue1" checked-value="on" unchecked-value="off">
+          <template #checked>on</template>
+          <template #unchecked>off</template>
+        </Switch>
+        Current Value: {{ customValue1 }}
+      </Space>
+      <Space vertical align="center">
+        <Switch v-model="customValue2" :checked-value="1" :unchecked-value="2">
+          <template #checked>yes</template>
+          <template #unchecked>no</template>
+        </Switch>
+        Current Value: {{ customValue2 }}
+      </Space>
+    </Space>
   </div>
 </template>
 <style lang="less" scoped>

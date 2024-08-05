@@ -1,6 +1,7 @@
-# 媒体查询 useMediaQuery<BackTop />
+# 媒体查询 useMediaQuery
 
-<br/>
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 *根据 CSS media query 的不同结果动态地更新：是桌面端还是移动端*
 

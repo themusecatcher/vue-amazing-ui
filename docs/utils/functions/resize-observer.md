@@ -1,6 +1,7 @@
-# 监听DOM尺寸 useResizeObserver<BackTop />
+# 监听DOM尺寸 useResizeObserver
 
-<br/>
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 *使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化的组合式函数*
 

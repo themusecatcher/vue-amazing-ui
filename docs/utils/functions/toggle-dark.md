@@ -1,22 +1,47 @@
-# 切换暗黑 toggleDark<BackTop />
+# 切换暗黑 toggleDark
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ::: details Show Source Code
 
 ```ts
+/*
+  一键切换暗黑模式函数
+  在 <html> 根元素上动态切换 dark 模式，在根元素添加 dark 类值，同时样式添加 color-scheme: dark，具体样式需自行添加
+  // dark 主题样式参考如下：
+  html {
+    transition: filter 0.3s ease-in-out;
+  }
+  · invert(): 反转输入图像，1表示完全反转
+  · hue-rotate(): 在输入图像上应用色相旋转
+  html.dark { // 暗黑模式
+    filter: invert(1) hue-rotate(180deg);
+    img, video { // 将图片和视频再次反转以恢复原本的颜色
+      filter: invert(1) hue-rotate(180deg);
+    }
+  }
+*/
 export function toggleDark() {
+  const html = document.documentElement
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
-  document.documentElement.classList.toggle('dark')
+  html.classList.toggle('dark')
+  if (html.classList.contains('dark')) {
+    html.style.colorScheme = 'dark'
+  } else {
+    html.style.colorScheme = 'light'
+  }
 }
 ```
 
 :::
 
-**一键切换暗黑模式：在 `<html>` 根元素上动态切换 `dark` 模式，只在根元素添加 `dark` 类值，具体样式需自行添加**
+**一键切换暗黑模式：在 `<html>` 根元素上动态切换 `dark` 模式，只在根元素添加 `dark` 类值，同时样式添加 color-scheme: dark，具体样式需自行添加**
 
 ```less
 // dark 主题样式参考如下：
 html {
-  transition: filter .3s ease-in-out;
+  transition: filter 0.3s ease-in-out;
 }
 · invert(): 反转输入图像，1表示完全反转
 · hue-rotate(): 在输入图像上应用色相旋转
@@ -30,23 +55,16 @@ html.dark { // 暗黑模式
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { toggleDark } from 'vue-amazing-ui'
+import { toggleDark, useMutationObserver } from 'vue-amazing-ui'
 
 const themeDark = ref()
-const observer = ref()
 onMounted(() => {
   themeDark.value = document.documentElement.classList.contains('dark')
-  // 观察器的配置（需要观察什么变动）
   const config = { attributes: true, childList: false, subtree: false }
-  // 创建一个观察器实例并传入回调函数
-  observer.value = new MutationObserver(callback)
-  // 以上述配置开始观察目标节点
-  observer.value.observe(document.documentElement, config)
+  useMutationObserver(document.documentElement, () => {
+    themeDark.value = document.documentElement.classList.contains('dark')
+  }, config)
 })
-// 当观察到变动时执行的回调函数
-const callback = function () {
-  themeDark.value = document.documentElement.classList.contains('dark')
-}
 function onThemeChange () {
   toggleDark()
 }
@@ -64,11 +82,15 @@ function onThemeChange () {
 ```vue
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { toggleDark } from 'vue-amazing-ui'
+import { toggleDark, useMutationObserver } from 'vue-amazing-ui'
 
 const themeDark = ref()
 onMounted(() => {
   themeDark.value = document.documentElement.classList.contains('dark')
+  const config = { attributes: true, childList: false, subtree: false }
+  useMutationObserver(document.documentElement, () => {
+    themeDark.value = document.documentElement.classList.contains('dark')
+  }, config)
 })
 function onThemeChange () {
   toggleDark()

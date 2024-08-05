@@ -160,26 +160,17 @@ h1 { // h1 标签渐变色文本
   background-image: linear-gradient(to right, #09c8ce, #eb2f96);
   margin-bottom: 20px;
 }
-html:not(.dark) .VPHome {
-  background: url(/light-sea.jpeg) no-repeat center;
-  background-size: cover;
-  min-height: 100vh;
-}
-html.dark .VPHome {
-  background: url(/dark-sea.jpg) no-repeat center;
-  background-size: cover;
-  min-height: 100vh;
-}
 .VPHome {
   margin-bottom: 0 !important;
   padding-bottom: 104px !important;
 }
 .VPHero {
   .name {
-    font-size: 64px;
+    font-size: 60px;
+    line-height: 72px;
   }
   .text {
-    font-size: 52px;
+    font-size: 54px;
     color: rgba(0, 0, 0, 0.72) !important;
     padding-top: 16px;
   }
@@ -449,7 +440,7 @@ html.dark .VPHome {
       .VPFeature {
         border-radius: 32px;
         border: none;
-        background-color: rgba(255, 255, 255, 0.45);
+        background-color: #f9f9f9;
         transition: all 0.25s;
         .icon, .title {
           font-size: 18px;
@@ -485,7 +476,10 @@ html.dark .VPHome {
 }
 .dark {
   .VPFeature {
-    background-color: rgba(0, 0, 0, 0.45) !important;
+    background-color: rgba(32, 33, 39, 0.6) !important;
+    .icon {
+      background-color: rgba(101, 117, 133, 0.24) !important;
+    }
     .title {
       color: rgba(255, 255, 255, 0.8) !important;
     }

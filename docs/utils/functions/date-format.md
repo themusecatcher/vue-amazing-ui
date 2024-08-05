@@ -1,4 +1,7 @@
-# 日期格式化 dateFormat<BackTop />
+# 日期格式化 dateFormat
+
+<BackTop />
+<Watermark fullscreen content="Vue Amazing UI" />
 
 ::: details Show Source Code
 
