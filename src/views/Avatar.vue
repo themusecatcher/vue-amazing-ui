@@ -2,7 +2,7 @@
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space :gap="16" align="center">
+    <Space align="center">
       <Avatar :size="64">
         <template #icon>
           <svg
@@ -78,7 +78,7 @@
     </Space>
     <br />
     <br />
-    <Space :gap="16" align="center">
+    <Space align="center">
       <Avatar shape="square" :size="64">
         <template #icon>
           <svg
@@ -153,7 +153,7 @@
       </Avatar>
     </Space>
     <h2 class="mt30 mb10">三种类型：图片、Icon 以及字符</h2>
-    <Space :gap="16" align="center">
+    <Space align="center">
       <Avatar>
         <template #icon>
           <svg
@@ -196,7 +196,7 @@
       </Avatar>
     </Space>
     <h2 class="mt30 mb10">带徽标的头像</h2>
-    <Space :gap="16">
+    <Space>
       <Badge :count="1">
         <Avatar shape="square">
           <template #icon>
