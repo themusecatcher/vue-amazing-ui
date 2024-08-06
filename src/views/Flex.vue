@@ -65,37 +65,37 @@ const boxStyle = {
 }
 const gapOptions = ref([
   {
-    label: 'Small',
+    label: 'small',
     value: 'small'
   },
   {
-    label: 'Middle',
+    label: 'middle',
     value: 'middle'
   },
   {
-    label: 'Large',
+    label: 'large',
     value: 'large'
   },
   {
-    label: 'Customize',
+    label: 'customize',
     value: 'customize'
   }
 ])
-const gapSize = ref('small')
-const customGapSize = ref(8)
+const gapSize = ref('middle')
+const customGapSize = ref(16)
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Flex gap="middle" vertical>
+    <Flex vertical>
       <Radio :options="directionOptions" v-model:value="direction" />
       <Flex :vertical="direction === 'vertical'">
         <div v-for="n in 4" :key="n" :style="{ ...baseStyle, background: `${n % 2 ? '#1677ffbf' : '#1677ff'}` }" />
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">对齐方式</h2>
-    <Flex gap="middle" align="start" vertical>
+    <Flex align="start" vertical>
       <p>Select justify :</p>
       <Radio v-model:value="justify" button :options="justifyOptions" />
       <p>Select align :</p>
@@ -108,11 +108,9 @@ const customGapSize = ref(8)
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">设置间隙</h2>
-    <Flex gap="middle" vertical>
+    <Flex vertical>
       <Radio :options="gapOptions" v-model:value="gapSize" />
-      <template v-if="gapSize === 'customize'">
-        <Slider v-model:value="customGapSize" />
-      </template>
+      <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
       <Flex :gap="gapSize !== 'customize' ? gapSize : customGapSize">
         <Button type="primary">Primary</Button>
         <Button>Default</Button>

@@ -16,22 +16,26 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const gapNum = ref(8)
-const options = ref([
-      {
-        label: 'Small',
-        value: 'small'
-      },
-      {
-        label: 'Middle',
-        value: 'middle'
-      },
-      {
-        label: 'Large',
-        value: 'large'
-      }
-    ])
-const gap = ref('small')
+const gapOptions = ref([
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  },
+  {
+    label: 'customize',
+    value: 'customize'
+  }
+])
+const gapSize = ref('middle')
+const customGapSize = ref(16)
 </script>
 
 ## 基本使用
@@ -60,82 +64,56 @@ const gap = ref('small')
 
 :::
 
-## 自定义间距
+## 设置间距
 
-<Slider v-model:value="gapNum" />
-<br />
-<br />
-<Space :gap="gapNum">
-  <Button type="primary">Primary</Button>
-  <Button>Default</Button>
-  <Button type="dashed">Dashed</Button>
-  <Button type="link">Link</Button>
-</Space>
+<Flex vertical>
+  <Radio :options="gapOptions" v-model:value="gapSize" />
+  <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
+  <Space :gap="gapSize !== 'customize' ? gapSize : customGapSize">
+    <Button type="primary">Primary</Button>
+    <Button>Default</Button>
+    <Button type="dashed">Dashed</Button>
+    <Button type="link">Link</Button>
+  </Space>
+</Flex>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const gapNum = ref(8)
+const gapOptions = ref([
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  },
+  {
+    label: 'customize',
+    value: 'customize'
+  }
+])
+const gapSize = ref('middle')
+const customGapSize = ref(16)
 </script>
 <template>
-  <Slider v-model:value="gapNum" />
-  <br />
-  <br />
-  <Space :gap="gapNum">
-    <Button type="primary">Primary</Button>
-    <Button>Default</Button>
-    <Button type="dashed">Dashed</Button>
-    <Button type="link">Link</Button>
-  </Space>
-</template>
-```
-
-:::
-
-## 预设间距
-
-<Radio :options="options" v-model:value="gap" />
-<br/>
-<br/>
-<Space :gap="gap">
-  <Button type="primary">Primary</Button>
-  <Button>Default</Button>
-  <Button type="dashed">Dashed</Button>
-  <Button type="link">Link</Button>
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const options = ref([
-        {
-          label: 'Small',
-          value: 'small'
-        },
-        {
-          label: 'Middle',
-          value: 'middle'
-        },
-        {
-          label: 'Large',
-          value: 'large'
-        }
-      ])
-const gap = ref('small')
-</script>
-<template>
-  <Radio :options="options" v-model:value="gap" />
-  <br/><br/>
-  <Space :gap="gap">
-    <Button type="primary">Primary</Button>
-    <Button>Default</Button>
-    <Button type="dashed">Dashed</Button>
-    <Button type="link">Link</Button>
-  </Space>
+  <Flex vertical>
+    <Radio :options="gapOptions" v-model:value="gapSize" />
+    <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
+    <Space :gap="gapSize !== 'customize' ? gapSize : customGapSize">
+      <Button type="primary">Primary</Button>
+      <Button>Default</Button>
+      <Button type="dashed">Dashed</Button>
+      <Button type="link">Link</Button>
+    </Space>
+  </Flex>
 </template>
 ```
 
@@ -312,8 +290,8 @@ const gap = ref('small')
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-width | 区域总宽度 | string &#124; number | 'auto' | false
+width | 区域总宽度，单位 `px` | string &#124; number | 'auto' | false
 align | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' | false
 vertical | 是否为垂直布局 | boolean | false | false
-gap | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'small' | false
+gap | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
 wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | true | false

@@ -42,7 +42,7 @@ function increase() {
 
 ## 基本使用
 
-<Space :gap="20">
+<Space>
   <Badge :value="5">
     <Avatar shape="square" size="large" />
   </Badge>
@@ -77,7 +77,7 @@ function increase() {
 
 ```vue
 <template>
-  <Space :gap="20">
+  <Space>
     <Badge :value="5">
       <Avatar shape="square" size="large" />
     </Badge>
@@ -119,7 +119,7 @@ function increase() {
 
 ## 独立使用
 
-<Space :gap="20">
+<Space>
   <Badge :value="25" />
   <Badge
     :value="4"
@@ -136,7 +136,7 @@ function increase() {
 
 ```vue
 <template>
-  <Space :gap="20">
+  <Space>
     <Badge :value="25" />
     <Badge
       :value="4"
@@ -155,7 +155,7 @@ function increase() {
 
 ## 封顶数字
 
-<Space :gap="30">
+<Space gap="large">
   <Badge :value="99">
     <Avatar shape="square" size="large" />
   </Badge>
@@ -174,7 +174,7 @@ function increase() {
 
 ```vue
 <template>
-  <Space :gap="30">
+  <Space gap="large">
     <Badge :value="99">
       <Avatar shape="square" size="large" />
     </Badge>
@@ -195,7 +195,7 @@ function increase() {
 
 ## 自定义内容
 
-<Space :gap="30">
+<Space gap="large">
   <Badge value="hello" :value-style="{ backgroundColor: '#1677FF' }">
     <Avatar shape="square" size="large" />
   </Badge>
@@ -211,7 +211,7 @@ function increase() {
 
 ```vue
 <template>
-  <Space :gap="30">
+  <Space gap="large">
     <Badge value="hello" :value-style="{ backgroundColor: '#1677FF' }">
       <Avatar shape="square" size="large" />
     </Badge>
@@ -240,7 +240,7 @@ function increase() {
 
 ## 自定义徽标样式
 
-<Space :gap="30">
+<Space gap="large">
   <Badge :value="99" :value-style="{ backgroundColor: 'magenta' }">
     <Avatar shape="square" size="large" />
   </Badge>
@@ -256,7 +256,7 @@ function increase() {
 
 ```vue
 <template>
-  <Space :gap="30">
+  <Space gap="large">
     <Badge :value="99" :value-style="{ backgroundColor: 'magenta' }">
       <Avatar shape="square" size="large" />
     </Badge>
@@ -274,7 +274,7 @@ function increase() {
 
 ## 徽标偏移
 
-<Space :gap="30">
+<Space gap="large">
   <Badge value="9" :offset="[-20, 10]">
     <Avatar shape="square" size="large" />
   </Badge>
@@ -290,7 +290,7 @@ function increase() {
 
 ```vue
 <template>
-  <Space :gap="30">
+  <Space gap="large">
     <Badge value="9" :offset="[-20, 10]">
       <Avatar shape="square" size="large" />
     </Badge>
@@ -326,7 +326,7 @@ function increase() {
 
 ## 状态点
 
-<Space :gap="10">
+<Space>
   <Badge status="success" />
   <Badge status="error" />
   <Badge status="default" />
@@ -334,7 +334,7 @@ function increase() {
   <Badge status="warning" />
 </Space>
 <br/>
-<Space style="margin-top: 10px;" vertical :gap="10">
+<Space style="margin-top: 10px;" vertical>
   <Badge status="success" text="Success" />
   <Badge status="error" text="Error" />
   <Badge status="default" text="Default" />
@@ -346,7 +346,7 @@ function increase() {
 
 ```vue
 <template>
-  <Space :gap="10">
+  <Space>
     <Badge status="success" />
     <Badge status="error" />
     <Badge status="default" />
@@ -354,7 +354,7 @@ function increase() {
     <Badge status="warning" />
   </Space>
   <br/>
-  <Space style="margin-top: 10px;" vertical :gap="10">
+  <Space style="margin-top: 10px;" vertical>
     <Badge status="success" text="Success" />
     <Badge status="error" text="Error" />
     <Badge status="default" text="Default" />
@@ -368,13 +368,14 @@ function increase() {
 
 ## 动态
 
-<Flex gap="middle" vertical>
-  <Space :gap="20" align="center">
+<Flex vertical>
+  <Space gap="large" align="center">
     <Badge :value="value">
       <Avatar shape="square" size="large" />
     </Badge>
     <Button @click="decline">
       <svg
+        class="u-icon"
         focusable="false"
         data-icon="minus"
         width="1em"
@@ -388,6 +389,7 @@ function increase() {
     </Button>
     <Button @click="increase">
       <svg
+        class="u-icon"
         focusable="false"
         data-icon="plus"
         width="1em"
@@ -401,7 +403,7 @@ function increase() {
       </svg>
     </Button>
   </Space>
-  <Space :gap="20" align="center">
+  <Space gap="large" align="center">
     <Badge :dot="dot">
       <Avatar shape="square" size="large" />
     </Badge>
@@ -425,16 +427,14 @@ function increase () {
 }
 </script>
 <template>
-  <Flex gap="middle" vertical>
-    <Space :gap="20" align="center">
+  <Flex vertical>
+    <Space gap="large" align="center">
       <Badge :value="value">
         <Avatar shape="square" size="large" />
       </Badge>
-      <a-badge :count="value">
-        <Avatar shape="square" size="large" />
-      </a-badge>
       <Button @click="decline">
         <svg
+          class="u-icon"
           focusable="false"
           data-icon="minus"
           width="1em"
@@ -448,6 +448,7 @@ function increase () {
       </Button>
       <Button @click="increase">
         <svg
+          class="u-icon"
           focusable="false"
           data-icon="plus"
           width="1em"
@@ -461,7 +462,7 @@ function increase () {
         </svg>
       </Button>
     </Space>
-    <Space :gap="20" align="center">
+    <Space gap="large" align="center">
       <Badge :dot="dot">
         <Avatar shape="square" size="large" />
       </Badge>
@@ -469,6 +470,11 @@ function increase () {
     </Space>
   </Flex>
 </template>
+<style lang="less" scoped>
+.u-icon {
+  fill: rgba(0, 0, 0, 0.88);
+}
+</style>
 ```
 
 :::
@@ -495,7 +501,7 @@ function increase () {
 
 ### Presets
 
-<Space :gap="20">
+<Space>
   <Badge v-for="color in colors" :key="color" :color="color" :text="color" />
 </Space>
 
@@ -520,7 +526,7 @@ const colors = [
 ]
 </script>
 <template>
-  <Space :gap="20">
+  <Space>
     <Badge v-for="color in colors" :key="color" :color="color" :text="color" />
   </Space>
 </template>
@@ -530,7 +536,7 @@ const colors = [
 
 ### Custom
 
-<Space :gap="20">
+<Space>
   <Badge color="#f50" text="#f50" />
   <Badge color="#2db7f5" text="#2db7f5" />
   <Badge color="#87d068" text="#87d068" />
@@ -541,7 +547,7 @@ const colors = [
 
 ```vue
 <template>
-  <Space :gap="20">
+  <Space>
     <Badge color="#f50" text="#f50" />
     <Badge color="#2db7f5" text="#2db7f5" />
     <Badge color="#87d068" text="#87d068" />
@@ -564,6 +570,9 @@ const colors = [
 }
 .u-svg {
   fill: #f5222d;
+}
+.u-icon {
+  fill: rgba(0, 0, 0, 0.88);
 }
 </style>
 

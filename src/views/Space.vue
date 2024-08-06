@@ -1,21 +1,25 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const gapNum = ref(8)
-const options = ref([
+const gapOptions = ref([
   {
-    label: 'Small',
+    label: 'small',
     value: 'small'
   },
   {
-    label: 'Middle',
+    label: 'middle',
     value: 'middle'
   },
   {
-    label: 'Large',
+    label: 'large',
     value: 'large'
+  },
+  {
+    label: 'customize',
+    value: 'customize'
   }
 ])
-const gap = ref('small')
+const gapSize = ref('middle')
+const customGapSize = ref(16)
 </script>
 <template>
   <div>
@@ -28,26 +32,17 @@ const gap = ref('small')
         <Button>Confirm</Button>
       </Popconfirm>
     </Space>
-    <h2 class="mt30 mb10">自定义间距</h2>
-    <Slider v-model:value="gapNum" />
-    <br />
-    <br />
-    <Space :gap="gapNum">
-      <Button type="primary">Primary</Button>
-      <Button>Default</Button>
-      <Button type="dashed">Dashed</Button>
-      <Button type="link">Link</Button>
-    </Space>
-    <h2 class="mt30 mb10">预设间距</h2>
-    <Radio :options="options" v-model:value="gap" />
-    <br />
-    <br />
-    <Space :gap="gap">
-      <Button type="primary">Primary</Button>
-      <Button>Default</Button>
-      <Button type="dashed">Dashed</Button>
-      <Button type="link">Link</Button>
-    </Space>
+    <h2 class="mt30 mb10">设置间距</h2>
+    <Flex vertical>
+      <Radio :options="gapOptions" v-model:value="gapSize" />
+      <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
+      <Space :gap="gapSize !== 'customize' ? gapSize : customGapSize">
+        <Button type="primary">Primary</Button>
+        <Button>Default</Button>
+        <Button type="dashed">Dashed</Button>
+        <Button type="link">Link</Button>
+      </Space>
+    </Flex>
     <h2 class="mt30 mb10">垂直间距</h2>
     <Space vertical>
       <Card title="Card" style="width: 300px">

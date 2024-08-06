@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 interface Props {
-  width?: string | number // 区域总宽度
+  width?: string | number // 区域总宽度，单位 px
   align?: 'stretch' | 'start' | 'end' | 'center' | 'baseline' // 垂直排列方式
   vertical?: boolean // 是否为垂直布局
   gap?: number | number[] | 'small' | 'middle' | 'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
   align: 'start',
   vertical: false,
-  gap: 'small',
+  gap: 'middle',
   wrap: true
 })
 const spaceWidth = computed(() => {
