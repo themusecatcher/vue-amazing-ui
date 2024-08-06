@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.4.5 <Tag color="volcano" size="small">2024-08-06</Tag>
+
+- 优化 [倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html) 组件
+
 ## 1.4.4 <Tag color="volcano" size="small">2024-08-05</Tag>
 
 - 重构并优化 [开关 Switch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/switch.html) 组件

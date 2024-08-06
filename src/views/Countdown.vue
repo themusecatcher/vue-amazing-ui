@@ -48,6 +48,9 @@ function onFinish() {
       <template #title>2048年 十一 Countdown</template>
     </Countdown>
     <h2 class="mt30 mb10">倒计时已完成</h2>
-    <Countdown :value="0" :future="false" @finish="onFinish" />
+    <Space vertical>
+      <Countdown />
+      <Countdown finished-text="Finished" />
+    </Space>
   </div>
 </template>
