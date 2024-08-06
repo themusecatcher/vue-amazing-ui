@@ -5,7 +5,7 @@
 
 ## 1.4.5 <Tag color="volcano" size="small">2024-08-06</Tag>
 
-- 优化 [倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html) 组件
+- 优化并更新 [倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html) 组件
 
 ## 1.4.4 <Tag color="volcano" size="small">2024-08-05</Tag>
 
