@@ -20,8 +20,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   shape: 'circle',
   size: 'default',
-  src: '',
-  alt: '',
+  src: undefined,
+  alt: undefined,
   icon: undefined
 })
 const viewportWidth = ref(window.innerWidth)
