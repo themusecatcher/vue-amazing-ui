@@ -44,7 +44,7 @@ import Image from './image'
 import Input from './input'
 import InputNumber from './inputnumber'
 import { Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter } from './layout'
-import List from './list'
+import { List, ListItem } from './list'
 import LoadingBar from './loadingbar'
 import Message from './message'
 import Modal from './modal'
@@ -118,6 +118,7 @@ const components = [
   LayoutContent,
   LayoutFooter,
   List,
+  ListItem,
   LoadingBar,
   Message,
   Modal,
@@ -221,6 +222,7 @@ export {
   LayoutContent,
   LayoutFooter,
   List,
+  ListItem,
   LoadingBar,
   Message,
   Modal,

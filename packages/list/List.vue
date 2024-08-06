@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { rafTimeout, cancelRaf } from '../utils'
+import { computed, useSlots } from 'vue'
 interface Props {
   bordered?: boolean // 是否展示边框
   dataSource?: any[] // 列表数据源
@@ -29,11 +28,86 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   split: true
 })
+const slots = useSlots()
+const showHeader = computed(() => {
+  const headerSlots = slots.header?.()
+  if (headerSlots && headerSlots?.length) {
+    return true
+  }
+  return false
+})
+const showFooter = computed(() => {
+  const footerSlots = slots.footer?.()
+  if (footerSlots && footerSlots?.length) {
+    return true
+  }
+  return false
+})
 </script>
 <template>
-  <div class="m-list"></div>
+  <div
+    class="m-list"
+    :class="{
+      'list-bordered': bordered,
+      'list-split': split,
+      'list-small': size === 'small',
+      'list-large': size === 'large'
+    }"
+  >
+    <div class="m-list-header" v-if="showHeader">
+      <slot name="header"></slot>
+    </div>
+    <slot></slot>
+    <div class="m-list-footer" v-if="showFooter">
+      <slot name="footer"></slot>
+    </div>
+  </div>
 </template>
 <style lang="less" scoped>
 .m-list {
+  margin: 0;
+  position: relative;
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  .m-list-header,
+  .m-list-footer {
+    background: transparent;
+    padding-block: 12px;
+    transition: all 0.3s;
+  }
+}
+.list-bordered {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  .m-list-header,
+  :deep(.m-list-item),
+  .m-list-footer {
+    padding-inline: 24px;
+  }
+}
+.list-split {
+  .m-list-header {
+    border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+  }
+  :deep(.m-list-item) {
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+    }
+  }
+}
+.list-small {
+  .m-list-header,
+  :deep(.m-list-item),
+  .m-list-footer {
+    padding: 8px 16px;
+  }
+}
+.list-large {
+  .m-list-header,
+  :deep(.m-list-item),
+  .m-list-footer {
+    padding: 16px 24px;
+  }
 }
 </style>
