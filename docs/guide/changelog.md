@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.4.6 <Tag color="volcano" size="small">2024-08-08</Tag>
+
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textScroll.html) 组件，优化滚动逻辑
+
 ## 1.4.5 <Tag color="volcano" size="small">2024-08-07</Tag>
 
 - 优化并更新 [倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html) 组件

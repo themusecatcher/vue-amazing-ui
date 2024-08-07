@@ -14,10 +14,10 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界'
-  },
-  {
-    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
   }
+  // {
+  //   title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
+  // }
 ])
 const singleText = {
   title: '请用一只玫瑰纪念我...',
@@ -46,9 +46,9 @@ const state = reactive({
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">水平文字滚动</h2>
-    <TextScroll :scrollText="scrollText" @click="onClick" />
+    <TextScroll :width="800" :scrollText="scrollText" @click="onClick" />
     <h2 class="mt30 mb10">自定义滚动速度</h2>
-    <TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
+    <!-- <TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
     <h2 class="mt30 mb10">单条文字滚动</h2>
     <TextScroll
       :scrollText="singleText"
@@ -163,6 +163,6 @@ const state = reactive({
       :vertical="state.vertical"
       :vertical-interval="state.verticalInterval"
       @click="onClick"
-    />
+    /> -->
   </div>
 </template>
