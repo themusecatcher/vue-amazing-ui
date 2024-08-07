@@ -64,7 +64,8 @@ const displayAmount = computed(() => {
     return props.amount
   }
 })
-const horizonRef = ref() // 水平滚动 DOM 引用
+const horizontalRef = ref() // 水平滚动 DOM 引用
+const verticalRef = ref() // 垂直滚动 DOM 引用
 const left = ref(0)
 const distance = ref(0) // 每条滚动文字移动距离
 const horizontalMoveRaf = ref()
@@ -89,14 +90,12 @@ watch(
     flush: 'post'
   }
 )
-useResizeObserver(horizonRef, () => {
-  console.log('resize')
+useResizeObserver([horizontalRef, verticalRef], () => {
   initScroll()
 })
 function initScroll() {
   if (!props.vertical) {
     distance.value = getDistance() // 获取每列文字宽度
-    console.log('distance', distance.value)
   } else {
     origin.value = true
   }
@@ -105,7 +104,7 @@ function initScroll() {
   startMove() // 开始滚动
 }
 function getDistance(): number {
-  return parseFloat((horizonRef.value.offsetWidth / displayAmount.value).toFixed(2))
+  return parseFloat((horizontalRef.value.offsetWidth / displayAmount.value).toFixed(2))
 }
 function startMove() {
   if (props.vertical) {
@@ -165,7 +164,7 @@ function verticalMove() {
 <template>
   <div
     v-if="!vertical"
-    ref="horizonRef"
+    ref="horizontalRef"
     class="m-slider-horizon"
     :style="[boardStyle, `--text-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`]"
   >
@@ -188,6 +187,7 @@ function verticalMove() {
   </div>
   <div
     v-else
+    ref="verticalRef"
     class="m-slider-vertical"
     :style="[
       boardStyle,
