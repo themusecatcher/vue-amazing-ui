@@ -31,17 +31,11 @@ const props = withDefaults(defineProps<Props>(), {
 const slots = useSlots()
 const showHeader = computed(() => {
   const headerSlots = slots.header?.()
-  if (headerSlots && headerSlots?.length) {
-    return true
-  }
-  return false
+  return Boolean(headerSlots && headerSlots?.length)
 })
 const showFooter = computed(() => {
   const footerSlots = slots.footer?.()
-  if (footerSlots && footerSlots?.length) {
-    return true
-  }
-  return false
+  return Boolean(footerSlots && footerSlots?.length)
 })
 </script>
 <template>

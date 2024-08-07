@@ -63,7 +63,7 @@ function changePage(page: number, pageSize: number) {
         </tr>
         <tr class="m-tr-empty" v-show="!total">
           <td class="m-td-empty" :colspan="columns.length">
-            <Empty class="empty" image="2" />
+            <Empty class="empty" image="outlined" />
           </td>
         </tr>
         <tr class="m-tr" v-for="(data, index) in dataSource" :key="index">

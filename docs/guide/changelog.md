@@ -6,6 +6,7 @@
 ## 1.4.6 <Tag color="volcano" size="small">2024-08-08</Tag>
 
 - 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textScroll.html) 组件，优化滚动逻辑
+- 优化并更新 [空状态 Empty](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html) 组件，新增 `descriptionStyle` 属性
 
 ## 1.4.5 <Tag color="volcano" size="small">2024-08-07</Tag>
 
