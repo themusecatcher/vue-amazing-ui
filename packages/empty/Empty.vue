@@ -1,20 +1,29 @@
 <script setup lang="ts">
+import { useSlots, computed } from 'vue'
 import type { CSSProperties } from 'vue'
 interface Props {
   description?: string | null // 自定义描述内容 string | slot
-  image?: 'outlined' | 'filled' | string // 显示图片的链接，或者 选择两种预置风格图片 string | slot
-  imageStyle?: CSSProperties // 图片样式
+  descriptionStyle?: CSSProperties // 设置描述文本的样式
+  image?: 'filled' | 'outlined' | string // 显示图片的链接，或者 选择两种预置风格图片 string | slot
+  imageStyle?: CSSProperties // 设置图片的样式
 }
 withDefaults(defineProps<Props>(), {
   description: '暂无数据',
+  descriptionStyle: () => ({}),
   image: 'filled',
   imageStyle: () => ({})
+})
+const slots = useSlots()
+const showDefault = computed(() => {
+  const defaultSlots = slots.default?.()
+  return Boolean(defaultSlots && defaultSlots?.length)
 })
 </script>
 <template>
   <div class="m-empty">
+    <slot v-if="showDefault"></slot>
     <svg
-      v-if="image === 'filled'"
+      v-else-if="image === 'filled'"
       class="empty-filled"
       :style="imageStyle"
       viewBox="0 0 184 152"
@@ -71,10 +80,8 @@ withDefaults(defineProps<Props>(), {
         </g>
       </g>
     </svg>
-    <slot v-else>
-      <img class="u-empty" :src="image" :style="imageStyle" alt="image" />
-    </slot>
-    <p v-if="description" class="u-description" :class="{ gray: image === 'outlined' }">
+    <img v-else-if="image" class="u-empty" :src="image" :style="imageStyle" alt="image" />
+    <p v-if="description" class="u-description" :style="descriptionStyle">
       <slot name="description">{{ description }}</slot>
     </p>
   </div>
@@ -101,11 +108,8 @@ withDefaults(defineProps<Props>(), {
   .u-description {
     margin-top: 8px;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.88);
-    line-height: 1.5714285714285714;
-  }
-  .gray {
     color: rgba(0, 0, 0, 0.25);
+    line-height: 1.5714285714285714;
   }
 }
 </style>

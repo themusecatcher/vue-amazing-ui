@@ -305,7 +305,7 @@ function onChange(value: string | number, label: string, index: number) {
         class="m-empty-wrap"
         :style="`top: ${height + 4}px; width: ${width}px;`"
       >
-        <Empty image="2" key="2" />
+        <Empty image="outlined" />
       </div>
     </Transition>
   </div>

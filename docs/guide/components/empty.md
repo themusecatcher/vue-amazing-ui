@@ -13,7 +13,7 @@
 
 ## 基本使用
 
-- **预置风格 1**
+*预置风格: filled*
 
 <Empty />
 
@@ -27,15 +27,15 @@
 
 :::
 
-- **预置风格 2**
+*预置风格: outlined*
 
-<Empty image="2" />
+<Empty image="outlined" />
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Empty image="2" />
+  <Empty image="outlined" />
 </template>
 ```
 
@@ -55,7 +55,7 @@
 
 :::
 
-## 自定义
+## 自定义风格
 
 *自定义图片地址、描述内容和样式*
 
@@ -97,6 +97,45 @@
 
 :::
 
+## 插槽自定义
+
+<Empty :description-style="{ color: 'rgb(169, 174, 184)' }">
+  <svg class="u-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter"><path d="M24 5v6m7 1 4-4m-18 4-4-4m28.5 22H28s-1 3-4 3-4-3-4-3H6.5M40 41H8a2 2 0 0 1-2-2v-8.46a2 2 0 0 1 .272-1.007l6.15-10.54A2 2 0 0 1 14.148 18H33.85a2 2 0 0 1 1.728.992l6.149 10.541A2 2 0 0 1 42 30.541V39a2 2 0 0 1-2 2Z"></path></svg>
+</Empty>
+
+<style lang="less" scoped>
+.u-svg {
+  display: inline-block;
+  vertical-align: bottom;
+  width: 48px;
+  height: 48px;
+  fill: none;
+  stroke: rgb(169, 174, 184);
+}
+</style>
+
+::: details Show Code
+
+```vue
+<template>
+  <Empty :description-style="{ color: 'rgb(169, 174, 184)' }">
+    <svg class="u-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter"><path d="M24 5v6m7 1 4-4m-18 4-4-4m28.5 22H28s-1 3-4 3-4-3-4-3H6.5M40 41H8a2 2 0 0 1-2-2v-8.46a2 2 0 0 1 .272-1.007l6.15-10.54A2 2 0 0 1 14.148 18H33.85a2 2 0 0 1 1.728.992l6.149 10.541A2 2 0 0 1 42 30.541V39a2 2 0 0 1-2 2Z"></path></svg>
+  </Empty>
+</template>
+<style lang="less" scoped>
+.u-svg {
+  display: inline-block;
+  vertical-align: bottom;
+  width: 48px;
+  height: 48px;
+  fill: none;
+  stroke: rgb(169, 174, 184);
+}
+</style>
+```
+
+:::
+
 ## APIs
 
 ### Empty
@@ -104,5 +143,6 @@
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
 description | 自定义描述内容 | string &#124; slot | '暂无数据' | false
-image | 显示图片的链接，或者 选择预置的两种风格图片，可选 `'1'` &#124; `'2'` | string | '1' | false
-imageStyle | 图片样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+descriptionStyle | 设置描述文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+image | 显示图片的链接，或者选择两种预置风格图片 | 'filled' &#124; 'outlined' &#124; string &#124; slot  | 'filled' | false
+imageStyle | 设置图片的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
