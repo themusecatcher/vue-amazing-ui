@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, type CSSProperties } from 'vue'
+import { ref, computed, watch } from 'vue'
+import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
 interface Text {
   title: string // 文字标题
   link?: string // 跳转链接
 }
 interface Props {
-  scrollText: Text[] | Text // 滚动文字数组，single 为 true 时，类型为 Text
+  scrollText: Text[] | Text // 滚动文字数组，single 为 true 时，类型为 Text；多条文字滚动时，数组长度必须大于等于 amount 才能滚动
   single?: boolean // 是否启用单条文字滚动效果，只支持水平文字滚动，为 true 时，amount 自动设为 1
   width?: number | string // 滚动区域宽度，单位 px
   height?: number // 滚动区域高度，单位 px
@@ -37,7 +38,12 @@ const textData = computed(() => {
   if (props.single) {
     return [props.scrollText, props.scrollText]
   } else {
-    return [...(props.scrollText as Text[])]
+    const text = props.scrollText as Text[]
+    if (text.length === props.amount) {
+      return [...text, ...text]
+    } else {
+      return [...text]
+    }
   }
 })
 const textAmount = computed(() => {
@@ -58,12 +64,12 @@ const displayAmount = computed(() => {
     return props.amount
   }
 })
+const horizonRef = ref() // 水平滚动 DOM 引用
 const left = ref(0)
-const horizontalMoveRaf = ref() // 水平滚动引用
-const verticalMoveRaf = ref() // 垂直滚动引用
-const origin = ref(true) // 垂直滚动初始状态
-const horizonRef = ref()
 const distance = ref(0) // 每条滚动文字移动距离
+const horizontalMoveRaf = ref()
+const verticalMoveRaf = ref()
+const origin = ref(true) // 垂直滚动初始状态
 watch(
   () => [
     textData,
@@ -84,14 +90,13 @@ watch(
   }
 )
 useResizeObserver(horizonRef, () => {
-  initScroll()
-})
-onMounted(() => {
+  console.log('resize')
   initScroll()
 })
 function initScroll() {
   if (!props.vertical) {
     distance.value = getDistance() // 获取每列文字宽度
+    console.log('distance', distance.value)
   } else {
     origin.value = true
   }
@@ -143,14 +148,14 @@ function onClick(text: Text) {
   // 通知父组件点击的标题
   emit('click', text)
 }
-const actIndex = ref(0)
+const activeIndex = ref(0)
 function verticalMove() {
   verticalMoveRaf.value = rafTimeout(
     () => {
       if (origin.value) {
         origin.value = false
       }
-      actIndex.value = (actIndex.value + 1) % textAmount.value
+      activeIndex.value = (activeIndex.value + 1) % textAmount.value
       verticalMove()
     },
     origin.value ? props.verticalInterval : props.verticalInterval + 1000
@@ -162,11 +167,11 @@ function verticalMove() {
     v-if="!vertical"
     ref="horizonRef"
     class="m-slider-horizon"
-    :style="[boardStyle, `height: ${height}px; width: ${totalWidth}; --gap: ${gap}px;`]"
+    :style="[boardStyle, `--text-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`]"
   >
     <div class="m-scroll-view" :style="`will-change: transform; transform: translateX(${-left}px);`">
       <a
-        class="u-slide-title"
+        class="slide-text"
         :style="[textStyle, `width: ${distance - gap}px;`]"
         v-for="(text, index) in <Text[]>textData"
         :key="index"
@@ -186,13 +191,13 @@ function verticalMove() {
     class="m-slider-vertical"
     :style="[
       boardStyle,
-      `height: ${height}px; width: ${totalWidth}; --enter-move: ${height}px; --leave-move: ${-height}px; --gap: ${gap}px;`
+      ` --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
     ]"
   >
     <TransitionGroup name="slide">
-      <div class="m-scroll-view" v-for="(text, index) in <Text[]>textData" :key="index" v-show="actIndex === index">
+      <div class="m-scroll-view" v-for="(text, index) in <Text[]>textData" :key="index" v-show="activeIndex === index">
         <a
-          class="u-slider"
+          class="slide-text"
           :style="textStyle"
           :title="text.title"
           :href="text.link ? text.link : 'javascript:;'"
@@ -218,9 +223,8 @@ function verticalMove() {
     height: 100%;
     display: inline-flex;
     align-items: center;
-    gap: var(--gap);
-    padding-left: var(--gap);
-    .u-slide-title {
+    gap: var(--text-gap);
+    .slide-text {
       font-size: 16px;
       font-weight: 400;
       color: rgba(0, 0, 0, 0.88);
@@ -263,8 +267,8 @@ function verticalMove() {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 var(--gap);
-    .u-slider {
+    padding: 0 var(--tex-gap);
+    .slide-text {
       font-size: 16px;
       font-weight: 400;
       color: rgba(0, 0, 0, 0.88);
