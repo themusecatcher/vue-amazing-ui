@@ -24,13 +24,13 @@ hero:
 features:
   - icon: 🛠️
     title: 最新的技术
-    details: '采用 Vue@3.4.34 + TypeScript@5.5.4 + Vite@5.3.5 + Less@4.2.0'
+    details: '采用 Vue@3.4.34 + TypeScript@5.5.4 + Vite@5.3.5 + Less@4.2.0 开发'
   - icon: 🚀
     title: 开箱即可用
-    details: 目前已有 60 个基础 UI 组件以及 15 个常用工具函数，持续探索更新中...
+    details: 目前包含 60 个基础 UI 组件以及 15 个常用工具函数，持续探索更新中...
   - icon: ⚡️
     title: 单文件组件
-    details: '所有组件均为 SFC，样式全部采用 box-sizing: border-box; 模式'
+    details: '组件库所有组件均为 SFC，样式全部采用 border-box 模式'
 ---
 
 <Watermark fullscreen content="Vue Amazing UI" />
@@ -57,7 +57,7 @@ function getVersion (target: string): string {
 }
 function fetchDesc () {
   const featureDetails: any = document.querySelector('div.VPFeatures.VPHomeFeatures > div.container > div.items :first-child > div.VPLink.no-icon.VPFeature .box > p.details')
-  const developDesc = `采用 Vue@${getVersion('vue')} + TypeScript@${getVersion('typescript')} + Vite@${getVersion('vite')} + Less@${getVersion('less')}`
+  const developDesc = `采用 Vue@${getVersion('vue')} + TypeScript@${getVersion('typescript')} + Vite@${getVersion('vite')} + Less@${getVersion('less')} 开发`
   featureDetails.textContent = developDesc
 }
 onMounted(() => {
