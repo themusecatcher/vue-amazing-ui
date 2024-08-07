@@ -87,12 +87,12 @@ const buttonSize = ref('large')
     <h2 class="mt30 mb10">填底的按钮样式</h2>
     <Radio :options="options" v-model:value="value" button button-style="solid" />
     <h2 class="mt30 mb10">禁用</h2>
-    <Space vertical gap="middle">
+    <Space vertical>
       <Radio :options="options" v-model:value="value" disabled />
       <Radio :options="options" v-model:value="value" button disabled />
     </Space>
     <h2 class="mt30 mb10">禁用选项</h2>
-    <Space vertical gap="middle">
+    <Space vertical>
       <Radio :options="optionsDisabled" v-model:value="value" />
       <Radio :options="optionsDisabled" v-model:value="value" button />
       <Radio :options="optionsDisabled" v-model:value="value" button button-style="solid" />
@@ -100,12 +100,12 @@ const buttonSize = ref('large')
     <h2 class="mt30 mb10">垂直排列</h2>
     <Radio vertical :options="options" v-model:value="value" />
     <h2 class="mt30 mb10">自定义间距</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Slider v-model:value="radioGap" width="50%" />
       <Radio :gap="radioGap" :options="options" v-model:value="value" />
     </Flex>
     <h2 class="mt30 mb10">按钮大小</h2>
-    <Space vertical gap="middle">
+    <Space vertical>
       <Radio :options="sizeOptions" v-model:value="buttonSize" />
       <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
       <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />

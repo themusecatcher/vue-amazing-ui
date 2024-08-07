@@ -2,7 +2,7 @@
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space vertical>
+    <Space gap="small" vertical>
       <GradientText>basic</GradientText>
       <GradientText type="info">info</GradientText>
       <GradientText type="success">success</GradientText>
@@ -10,14 +10,14 @@
       <GradientText type="error">error</GradientText>
     </Space>
     <h2 class="mt30 mb10">文字大小</h2>
-    <Space vertical>
+    <Space gap="small" vertical>
       <GradientText :size="36" type="info">Live Forever</GradientText>
       <GradientText :size="36" type="error">Live Forever</GradientText>
       <GradientText :size="24" type="warning">Married with Children</GradientText>
       <GradientText :size="24" type="success">Back in the USSR</GradientText>
     </Space>
     <h2 class="mt30 mb10">自定义颜色</h2>
-    <Space vertical>
+    <Space gap="small" vertical>
       <GradientText
         :size="24"
         :gradient="{

@@ -48,7 +48,7 @@ const onDynamicClose = (tag: any, index: number) => {
 
 ## 基本使用
 
-<Space>
+<Space gap="small">
   <Tag>Tag 1</Tag>
   <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
   <Tag closable @close="onClose">Tag 2</Tag>
@@ -63,7 +63,7 @@ const onClose = (e: MouseEvent) => {
 }
 </script>
 <template>
-  <Space>
+  <Space gap="small">
     <Tag>Tag 1</Tag>
     <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
     <Tag closable @close="onClose">Tag 2</Tag>
@@ -75,7 +75,7 @@ const onClose = (e: MouseEvent) => {
 
 ## 多彩标签
 
-<Space>
+<Space gap="small">
   <Tag color="pink">pink</Tag>
   <Tag color="red">red</Tag>
   <Tag color="yellow">yellow</Tag>
@@ -92,7 +92,7 @@ const onClose = (e: MouseEvent) => {
 </Space>
 <br/>
 <br/>
-<Space>
+<Space gap="small">
   <Tag color="#f50">#f50</Tag>
   <Tag color="#2db7f5">#2db7f5</Tag>
   <Tag color="#87d068">#87d068</Tag>
@@ -103,7 +103,7 @@ const onClose = (e: MouseEvent) => {
 
 ```vue
 <template>
-  <Space>
+  <Space gap="small">
     <Tag color="pink">pink</Tag>
     <Tag color="red">red</Tag>
     <Tag color="yellow">yellow</Tag>
@@ -120,7 +120,7 @@ const onClose = (e: MouseEvent) => {
   </Space>
   <br/>
   <br/>
-  <Space>
+  <Space gap="small">
     <Tag color="#f50">#f50</Tag>
     <Tag color="#2db7f5">#2db7f5</Tag>
     <Tag color="#87d068">#87d068</Tag>
@@ -134,7 +134,7 @@ const onClose = (e: MouseEvent) => {
 ## 预设状态的标签
 
 <Divider orientation="left">Without icon</Divider>
-<Space>
+<Space gap="small">
   <Tag color="success">success</Tag>
   <Tag color="processing">processing</Tag>
   <Tag color="error">error</Tag>
@@ -142,7 +142,7 @@ const onClose = (e: MouseEvent) => {
   <Tag color="default">default</Tag>
 </Space>
 <Divider orientation="left">With icon</Divider>
-<Space>
+<Space gap="small">
   <Tag color="success">
     <template #icon>
       <svg focusable="false" class="u-svg" data-icon="check-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0051.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
@@ -186,7 +186,7 @@ const onClose = (e: MouseEvent) => {
 ```vue
 <template>
   <Divider orientation="left">Without icon</Divider>
-  <Space>
+  <Space gap="small">
     <Tag color="success">success</Tag>
     <Tag color="processing">processing</Tag>
     <Tag color="error">error</Tag>
@@ -194,7 +194,7 @@ const onClose = (e: MouseEvent) => {
     <Tag color="default">default</Tag>
   </Space>
   <Divider orientation="left">With icon</Divider>
-  <Space>
+  <Space gap="small">
     <Tag color="success">
       <template #icon>
         <svg focusable="false" class="u-svg" data-icon="check-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0051.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z"></path><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg>
@@ -261,7 +261,7 @@ const onClose = (e: MouseEvent) => {
 
 <br/>
 
-<Space>
+<Space gap="small">
   <Tag dynamic v-model:value="strTags" @dynamic-close="onDynamicClose" />
 </Space>
 
@@ -281,7 +281,7 @@ const onDynamicClose = (tag: any, index: number) => {
 }
 </script>
 <template>
-  <Space>
+  <Space gap="small">
     <Tag dynamic v-model:value="strTags" @dynamic-close="onDynamicClose" />
   </Space>
 </template>
@@ -293,7 +293,7 @@ const onDynamicClose = (tag: any, index: number) => {
 
 <br/>
 
-<Space>
+<Space gap="small">
   <Tag dynamic v-model:value="objTags" @dynamic-close="onDynamicClose">
     <template #default="{ label, index }">
       <template v-if="index===1">
@@ -338,7 +338,7 @@ const onDynamicClose = (tag: any, index: number) => {
 }
 </script>
 <template>
-  <Space>
+  <Space gap="small">
     <Tag dynamic v-model:value="objTags" @dynamic-close="onDynamicClose">
       <template #default="{ label, index }">
         <template v-if="index===1">
@@ -366,7 +366,7 @@ const onDynamicClose = (tag: any, index: number) => {
 
 ## 三种尺寸
 
-<Space>
+<Space gap="small">
   <Tag closable size="small" @close="onClose">
     爱在西元前
   </Tag>
@@ -401,7 +401,7 @@ const onDynamicClose = (tag: any, index: number) => {
 }
 </script>
 <template>
-  <Space>
+  <Space gap="small">
     <Tag closable size="small" @close="onClose">
       爱在西元前
     </Tag>
@@ -465,14 +465,14 @@ const onDynamicClose = (tag: any, index: number) => {
 
 ## 无边框
 
-<Space>
+<Space gap="small">
   <Tag :bordered="false">Tag 1</Tag>
   <Tag :bordered="false">Tag 2</Tag>
   <Tag :bordered="false" closable>Tag 3</Tag>
   <Tag :bordered="false" closable>Tag 4</Tag>
 </Space>
 <Divider />
-<Space>
+<Space gap="small">
   <Tag :bordered="false" color="processing">processing</Tag>
   <Tag :bordered="false" color="success">success</Tag>
   <Tag :bordered="false" color="error">error</Tag>
@@ -494,14 +494,14 @@ const onDynamicClose = (tag: any, index: number) => {
 
 ```vue
 <template>
-  <Space>
+  <Space gap="small">
     <Tag :bordered="false">Tag 1</Tag>
     <Tag :bordered="false">Tag 2</Tag>
     <Tag :bordered="false" closable>Tag 3</Tag>
     <Tag :bordered="false" closable>Tag 4</Tag>
   </Space>
   <Divider />
-  <Space>
+  <Space gap="small">
     <Tag :bordered="false" color="processing">processing</Tag>
     <Tag :bordered="false" color="success">success</Tag>
     <Tag :bordered="false" color="error">error</Tag>

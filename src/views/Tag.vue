@@ -35,14 +35,14 @@ const onDynamicClose = (tag: any, index: number) => {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space>
+    <Space gap="small">
       <Tag color="magenta">pink</Tag>
       <Tag>Tag 1</Tag>
       <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
       <Tag closable @close="onClose">Tag 2</Tag>
     </Space>
     <h2 class="mt30 mb10">多彩标签</h2>
-    <Space>
+    <Space gap="small">
       <Tag color="pink">pink</Tag>
       <Tag color="red">red</Tag>
       <Tag color="yellow">yellow</Tag>
@@ -59,7 +59,7 @@ const onDynamicClose = (tag: any, index: number) => {
     </Space>
     <br />
     <br />
-    <Space>
+    <Space gap="small">
       <Tag color="#f50">#f50</Tag>
       <Tag color="#2db7f5">#2db7f5</Tag>
       <Tag color="#87d068">#87d068</Tag>
@@ -67,7 +67,7 @@ const onDynamicClose = (tag: any, index: number) => {
     </Space>
     <h2 class="mt30 mb10">预设状态的标签</h2>
     <Divider orientation="left">Without icon</Divider>
-    <Space>
+    <Space gap="small">
       <Tag color="success">success</Tag>
       <Tag color="processing">processing</Tag>
       <Tag color="error">error</Tag>
@@ -75,7 +75,7 @@ const onDynamicClose = (tag: any, index: number) => {
       <Tag color="default">default</Tag>
     </Space>
     <Divider orientation="left">With icon</Divider>
-    <Space>
+    <Space gap="small">
       <Tag color="success">
         <template #icon>
           <svg
@@ -206,9 +206,7 @@ const onDynamicClose = (tag: any, index: number) => {
     </Space>
     <h2 class="mt30 mb10">动态添加和删除</h2>
     <h3 class="mb10">使用字符串格式数组</h3>
-    <Space>
-      <Tag dynamic v-model:value="strTags" @dynamic-close="onDynamicClose" />
-    </Space>
+    <Tag dynamic v-model:value="strTags" @dynamic-close="onDynamicClose" />
     <br />
     <br />
     <h3 class="mb10">使用对象格式数组</h3>
@@ -241,7 +239,7 @@ const onDynamicClose = (tag: any, index: number) => {
       </Tag>
     </Space>
     <h2 class="mt30 mb10">三种尺寸</h2>
-    <Space>
+    <Space gap="small">
       <Tag closable size="small" @close="onClose">爱在西元前</Tag>
       <Tag color="warning" closable @close="onClose">超人不会飞</Tag>
       <Tag color="blue" size="large" dynamic v-model:value="strTags" closable @close="onDynamicClose" />
@@ -257,14 +255,14 @@ const onDynamicClose = (tag: any, index: number) => {
       @close="onDynamicClose"
     />
     <h2 class="mt30 mb10">无边框</h2>
-    <Space>
+    <Space gap="small">
       <Tag :bordered="false">Tag 1</Tag>
       <Tag :bordered="false">Tag 2</Tag>
       <Tag :bordered="false" closable>Tag 3</Tag>
       <Tag :bordered="false" closable>Tag 4</Tag>
     </Space>
     <Divider />
-    <Space>
+    <Space gap="small">
       <Tag :bordered="false" color="processing">processing</Tag>
       <Tag :bordered="false" color="success">success</Tag>
       <Tag :bordered="false" color="error">error</Tag>

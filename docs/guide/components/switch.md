@@ -302,7 +302,7 @@ watchEffect(() => {
 
 ## 自定义选中的值
 
-<Space :gap="30">
+<Space gap="large">
   <Space vertical align="center">
     <Switch v-model="customValue1" checked-value="on" unchecked-value="off">
       <template #checked>on</template>
@@ -329,7 +329,7 @@ const customValue1 = ref('no')
 const customValue2 = ref(2)
 </script>
 <template>
-  <Space :gap="30">
+  <Space gap="large">
     <Space vertical align="center">
       <Switch v-model="customValue1" checked-value="on" unchecked-value="off">
         <template #checked>on</template>

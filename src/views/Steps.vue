@@ -69,7 +69,7 @@ function onChange(index: number) {
   // 父组件获取切换后的选中步骤
   console.log('change:', index)
 }
-function onPrevious() {
+function onPrev() {
   if (current.value > 1) {
     current.value--
   }
@@ -93,12 +93,12 @@ const state = reactive({
     <h2 class="mt30 mb10">基本使用</h2>
     <Steps :steps="steps" :current="current" @change="onChange" />
     <h2 class="mt30 mb10">标签放置位置</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Radio :options="placeOptions" v-model:value="place" button button-style="solid" />
       <Steps :steps="steps" :label-placement="place" :current="current" />
     </Flex>
     <h2 class="mt30 mb10">迷你版</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Steps :steps="minSteps" :size="size" :current="current" />
     </Flex>
@@ -115,7 +115,7 @@ const state = reactive({
     <h2 class="mt30 mb10">可点击</h2>
     <h3 class="mb10">设置 v-model:current 后即可点击</h3>
     <Space>
-      <Button @click="onPrevious">Previous</Button>
+      <Button @click="onPrev">Prev</Button>
       <Button @click="onNext">Next</Button>
     </Space>
     <br />
@@ -126,25 +126,25 @@ const state = reactive({
     <h2 class="mt30 mb10">步骤条配置器</h2>
     <Row :gutter="24">
       <Col :span="6">
-        <Space vertical>
+        <Space gap="small" vertical>
           size:
           <Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
-        <Space vertical>
+        <Space gap="small" vertical>
           vertical:
           <Switch v-model="state.vertical" />
         </Space>
       </Col>
       <Col :span="6">
-        <Space vertical>
+        <Space gap="small" vertical>
           labelPlacement:
           <Radio :options="placeOptions" v-model:value="state.labelPlacement" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
-        <Space vertical>
+        <Space gap="small" vertical>
           dotted:
           <Switch v-model="state.dotted" />
         </Space>

@@ -3,7 +3,7 @@ import { computed, useSlots } from 'vue'
 import type { CSSProperties } from 'vue'
 import Skeleton from '../skeleton'
 interface Props {
-  width?: number | string // 卡片宽度
+  width?: number | string // 卡片宽度，单位 px
   title?: string // 卡片标题 string | slot
   extra?: string // 卡片右上角的操作区域 string | slot
   bordered?: boolean // 是否有边框

@@ -132,7 +132,7 @@ const cancel = (e: MouseEvent) => {
 
 ## 预置四种 Icon 图标
 
-<Space :gap="24">
+<Space>
   <Popconfirm title="Are you sure delete this task?">
     <Button type="primary">Warning</Button>
   </Popconfirm>

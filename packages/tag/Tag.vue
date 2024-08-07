@@ -186,7 +186,7 @@ function onKeyboard(e: KeyboardEvent) {
       </svg>
     </span>
   </div>
-  <Space v-else v-bind="spaceProps">
+  <Space v-else gap="small" v-bind="spaceProps">
     <div
       class="m-tag"
       :class="[

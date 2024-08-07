@@ -7,14 +7,14 @@ function onClose(e: MouseEvent) {
   <div style="width: 425px">
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">共有四种样式 success、info、warning、error</h2>
-    <Space vertical align="stretch" style="width: 100%">
+    <Flex vertical>
       <Alert message="Info Text" />
       <Alert message="Success Text" type="success" />
       <Alert message="Warning Text" type="warning" />
       <Alert message="Error Text" type="error" />
-    </Space>
+    </Flex>
     <h2 class="mt30 mb10">可关闭的警告提示</h2>
-    <Space vertical style="width: 100%">
+    <Flex vertical>
       <Alert
         message="Error Text"
         description="Error Description Error Description Error Description Error Description Error Description Error Description"
@@ -28,9 +28,9 @@ function onClose(e: MouseEvent) {
         closable
         @close="onClose"
       />
-    </Space>
+    </Flex>
     <h2 class="mt30 mb10">辅助性文字介绍</h2>
-    <Space vertical style="width: 100%">
+    <Flex vertical>
       <Alert message="Success Text" type="success">
         <template #description>
           <p>
@@ -55,9 +55,9 @@ function onClose(e: MouseEvent) {
         description="Error Description Error Description Error Description Error Description"
         type="error"
       />
-    </Space>
+    </Flex>
     <h2 class="mt30 mb10">辅助图标</h2>
-    <Space vertical style="width: 100%">
+    <Flex vertical>
       <Alert message="Success Tips" type="success" show-icon />
       <Alert message="Informational Notes" type="info" show-icon />
       <Alert message="Warning" type="warning" show-icon />
@@ -76,11 +76,11 @@ function onClose(e: MouseEvent) {
       />
       <Alert message="Warning" description="This is a warning notice about copywriting." type="warning" show-icon />
       <Alert message="Error" description="This is an error message about copywriting." type="error" show-icon />
-    </Space>
+    </Flex>
     <h2 class="mt30 mb10">自定义关闭文字</h2>
     <Alert message="Info Text" type="info" closable close-text="Close Now" />
     <h2 class="mt30 mb10">自定义图标</h2>
-    <Space vertical style="width: 100%">
+    <Flex vertical>
       <Alert message="Success Tips" type="success" show-icon>
         <template #icon>
           <svg
@@ -166,6 +166,6 @@ function onClose(e: MouseEvent) {
         icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
         show-icon
       />
-    </Space>
+    </Flex>
   </div>
 </template>

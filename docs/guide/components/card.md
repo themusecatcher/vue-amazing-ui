@@ -88,7 +88,7 @@ const loading = ref(true)
 
 ## 预加载卡片
 
-<Space vertical gap="middle">
+<Space vertical>
   <Card :loading="loading" title="Card title" :width="300">
     <p>Card content</p>
     <p>Card content</p>
@@ -105,7 +105,7 @@ import { ref } from 'vue'
 const loading = ref(true)
 </script>
 <template>
-  <Space vertical gap="middle">
+  <Space vertical>
     <Card :loading="loading" title="Card title" :width="300">
       <p>Card content</p>
       <p>Card content</p>
@@ -280,9 +280,9 @@ const loading = ref(true)
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-width | 卡片宽度 | number &#124; string | 'auto' | false
-title | 卡片标题 | string &#124; slot | '' | false
-extra | 卡片右上角的操作区域 | string &#124; slot | '' | false
+width | 卡片宽度，单位 `px` | number &#124; string | 'auto' | false
+title | 卡片标题 | string &#124; slot | undefined | false
+extra | 卡片右上角的操作区域 | string &#124; slot | undefined | false
 bordered | 是否有边框 | boolean | true | false
 loading | 当卡片内容还在加载中时，可以用 `loading` 展示一个占位 | boolean | false | false
 size | 卡片的尺寸 | 'default' &#124; 'small' | 'default' | false

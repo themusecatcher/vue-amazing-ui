@@ -119,7 +119,7 @@ function onNext() {
         <a class="u-file" href="https://swiperjs.com/demos" target="_blank">Swiper Demos</a>
       </li>
     </ul>
-    <Space align="top" class="mt30" :size="6">
+    <Space class="mt30" gap="small">
       <h1>Swiper</h1>
       <Tag color="volcano">{{ pkg.dependencies.swiper }}</Tag>
     </Space>

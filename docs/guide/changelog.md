@@ -9,6 +9,8 @@
 - 优化并更新 [弹性布局 Flex](https://themusecatcher.github.io/vue-amazing-ui/guide/components/flex.html) 组件
 - 优化并更新 [间距 Space](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html) 组件
 - 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html) 组件
+- 优化并更新 [卡片 Card](https://themusecatcher.github.io/vue-amazing-ui/guide/components/card.html) 组件
+- 组件库及文档代码优化
 
 ## 1.4.4 <Tag color="volcano" size="small">2024-08-05</Tag>
 

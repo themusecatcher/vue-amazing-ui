@@ -72,7 +72,7 @@ const increase = () => {
       <QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" bg-color="#f5f5f5" />
     </Space>
     <h2 class="mt30 mb10">自定义生成二维码</h2>
-    <Space align="center" :size="20">
+    <Space align="center" gap="large">
       <QRCode :value="value" />
       <Textarea v-model:value="value" :width="180" allowClear />
     </Space>

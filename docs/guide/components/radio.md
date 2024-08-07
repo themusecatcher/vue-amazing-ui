@@ -228,7 +228,7 @@ const value = ref(1)
 
 ## 禁用
 
-<Space vertical gap="middle">
+<Space vertical>
   <Radio :options="options" v-model:value="value" disabled />
   <Radio :options="options" v-model:value="value" button disabled />
 </Space>
@@ -267,7 +267,7 @@ const options = ref([
 const value = ref(1)
 </script>
 <template>
-  <Space vertical gap="middle">
+  <Space vertical>
     <Radio :options="options" v-model:value="value" disabled />
     <Radio :options="options" v-model:value="value" button disabled />
   </Space>
@@ -278,7 +278,7 @@ const value = ref(1)
 
 ## 禁用选项
 
-<Space vertical gap="middle">
+<Space vertical>
   <Radio :options="optionsDisabled" v-model:value="value" />
   <Radio :options="optionsDisabled" v-model:value="value" button />
   <Radio :options="optionsDisabled" v-model:value="value" button button-style="solid" />
@@ -323,7 +323,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Space vertical gap="middle">
+  <Space vertical>
     <Radio :options="optionsDisabled" v-model:value="value" />
     <Radio :options="optionsDisabled" v-model:value="value" button />
     <Radio :options="optionsDisabled" v-model:value="value" button button-style="solid" />
@@ -436,7 +436,7 @@ const radioGap = ref(24)
 
 ## 按钮大小
 
-<Space vertical gap="middle">
+<Space vertical>
   <Radio :options="sizeOptions" v-model:value="buttonSize" />
   <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
   <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />
@@ -494,7 +494,7 @@ const sizeOptions = [
 const buttonSize = ref('large')
 </script>
 <template>
-  <Space vertical gap="middle">
+  <Space vertical>
     <Radio :options="sizeOptions" v-model:value="buttonSize" />
     <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
     <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />

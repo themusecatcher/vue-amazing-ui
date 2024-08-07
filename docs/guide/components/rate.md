@@ -339,46 +339,34 @@ watchEffect(() => {
 
 <Row :gutter="[24, 12]">
   <Col :span="6">
-    <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
+    <Space gap="small" vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
   </Col>
   <Col :span="6">
-    <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
+    <Space gap="small" vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
   </Col>
   <Col :span="6">
-    <Flex vertical gap="middle">
-      count:<Slider v-model:value="state.count" :min="3" :max="10" />
-    </Flex>
+    <Flex vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical gap="middle">
-      size:<Slider v-model:value="state.size" :min="10" :max="100" />
-    </Flex>
+    <Flex vertical> size:<Slider v-model:value="state.size" :min="10" :max="100" /> </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical>
-      color:<Input v-model:value="state.color" placeholder="color" />
-    </Flex>
+    <Flex gap="small" vertical> color:<Input v-model:value="state.color" placeholder="color" /> </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical gap="middle">
-      gap:<Slider v-model:value="state.gap" :min="0" :max="100" />
-    </Flex>
+    <Flex vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
   </Col>
   <Col :span="6">
-    <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
+    <Space gap="small" vertical> disabled:<Switch v-model="state.disabled" /> </Space>
   </Col>
   <Col :span="6">
-    <Flex vertical>
-      effect：<Select :options="characterOptions" v-model="state.character" />
-    </Flex>
+    <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
   </Col>
   <Col :span="6" v-if="state.character === 'custom-character'">
-    <Flex vertical>
-      character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" />
-    </Flex>
+    <Flex gap="small" vertical> character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" /> </Flex>
   </Col>
 </Row>
-<Badge :value="score" style="margin-top: 30px;">
+<Badge :value="score" style="margin-top: 30px">
   <Rate
     :allow-clear="state.allowClear"
     :allow-half="state.allowHalf"
@@ -388,7 +376,8 @@ watchEffect(() => {
     :color="state.color"
     :gap="state.gap"
     :disabled="state.disabled"
-    v-model:value="score" />
+    v-model:value="score"
+  />
 </Badge>
 
 ::: details Show Code
@@ -439,46 +428,34 @@ watchEffect(() => {
 <template>
   <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
+      <Space gap="small" vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
     </Col>
     <Col :span="6">
-      <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
+      <Space gap="small" vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
-        count:<Slider v-model:value="state.count" :min="3" :max="10" />
-      </Flex>
+      <Flex vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
-        size:<Slider v-model:value="state.size" :min="10" :max="100" />
-      </Flex>
+      <Flex vertical> size:<Slider v-model:value="state.size" :min="10" :max="100" /> </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical>
-        color:<Input v-model:value="state.color" placeholder="color" />
-      </Flex>
+      <Flex gap="small" vertical> color:<Input v-model:value="state.color" placeholder="color" /> </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
-        gap:<Slider v-model:value="state.gap" :min="0" :max="100" />
-      </Flex>
+      <Flex vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
     </Col>
     <Col :span="6">
-      <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
+      <Space gap="small" vertical> disabled:<Switch v-model="state.disabled" /> </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical>
-        effect：<Select :options="characterOptions" v-model="state.character" />
-      </Flex>
+      <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
     </Col>
     <Col :span="6" v-if="state.character === 'custom-character'">
-      <Flex vertical>
-        character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" />
-      </Flex>
+      <Flex gap="small" vertical> character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" /> </Flex>
     </Col>
   </Row>
-  <Badge :value="score" style="margin-top: 30px;">
+  <Badge :value="score" style="margin-top: 30px">
     <Rate
       :allow-clear="state.allowClear"
       :allow-half="state.allowHalf"
@@ -488,7 +465,8 @@ watchEffect(() => {
       :color="state.color"
       :gap="state.gap"
       :disabled="state.disabled"
-      v-model:value="score" />
+      v-model:value="score"
+    />
   </Badge>
 </template>
 ```

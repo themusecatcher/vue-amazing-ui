@@ -170,7 +170,7 @@ const increase = () => {
 
 ## 自定义生成二维码
 
-<Space align="center" :gap="20">
+<Space align="center" gap="large">
   <QRCode :value="value" />
   <Textarea v-model:value="value" :width="180" allowClear />
 </Space>
@@ -183,7 +183,7 @@ import { ref } from 'vue'
 const value = ref('hello world')
 </script>
 <template>
-  <Space align="center" :gap="20">
+  <Space align="center" gap="large">
     <QRCode :value="value" />
     <Textarea v-model:value="value" :width="180" allowClear />
   </Space>

@@ -25,7 +25,7 @@ function onClose() {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space vertical gap="middle">
+    <Space vertical>
       <Button type="primary" @click="onInfo('This is a normal message')">Info</Button>
       <Button type="primary" @click="onSuccess('This is a success message')">Success</Button>
       <Button type="primary" @click="onError('This is a error message')">Error</Button>

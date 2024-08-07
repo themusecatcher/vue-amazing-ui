@@ -79,7 +79,7 @@ function onKnow() {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space vertical gap="middle">
+    <Space vertical>
       <Button type="primary" @click="showInfoModal">Info Modal</Button>
       <Button type="primary" @click="showSuccessModal">Success Modal</Button>
       <Button type="primary" @click="showErrorModal">Error Modal</Button>

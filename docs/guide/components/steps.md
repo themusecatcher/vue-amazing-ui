@@ -68,7 +68,7 @@ function onChange(index: number) {
   // 父组件获取切换后的选中步骤
   console.log('change:', index)
 }
-function onPrevious() {
+function onPrev() {
   if (current.value > 1) {
     current.value--
   }
@@ -128,7 +128,7 @@ function onChange(index: number) {
 
 ## 标签放置位置
 
-<Flex vertical gap="middle">
+<Flex vertical>
   <Radio :options="placeOptions" v-model:value="place" button button-style="solid" />
   <Steps :steps="steps" :label-placement="place" :current="current" />
 </Flex>
@@ -169,7 +169,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Flex vertical gap="middle">
+  <Flex vertical>
     <Radio :options="placeOptions" v-model:value="place" button button-style="solid" />
     <Steps :steps="steps" :label-placement="place" :current="current" />
   </Flex>
@@ -180,7 +180,7 @@ watchEffect(() => {
 
 ## 迷你版
 
-<Flex vertical gap="middle">
+<Flex vertical>
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Steps :steps="minSteps" :size="size" :current="current" />
 </Flex>
@@ -218,7 +218,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Flex vertical gap="middle">
+  <Flex vertical>
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Steps :steps="minSteps" :size="size" :current="current" />
   </Flex>
@@ -316,7 +316,7 @@ watchEffect(() => {
 <br/>
 
 <Space>
-  <Button @click="onPrevious">Previous</Button>
+  <Button @click="onPrev">Prev</Button>
   <Button @click="onNext">Next</Button>
 </Space>
 <br/>
@@ -348,7 +348,7 @@ const current = ref(2)
 watchEffect(() => {
   console.log('current:', current.value)
 })
-function onPrevious () {
+function onPrev () {
   if (current.value > 1) {
     current.value--
   }
@@ -361,7 +361,7 @@ function onNext () {
 </script>
 <template>
   <Space>
-    <Button @click="onPrevious">Previous</Button>
+    <Button @click="onPrev">Prev</Button>
     <Button @click="onNext">Next</Button>
   </Space>
   <br/>
@@ -378,25 +378,25 @@ function onNext () {
 
 <Row :gutter="24">
   <Col :span="6">
-    <Space vertical>
+    <Space gap="small" vertical>
       size:
       <Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
     </Space>
   </Col>
   <Col :span="6">
-    <Space vertical>
+    <Space gap="small" vertical>
       vertical:
       <Switch v-model="state.vertical" />
     </Space>
   </Col>
   <Col :span="6">
-    <Space vertical>
+    <Space gap="small" vertical>
       labelPlacement:
       <Radio :options="placeOptions" v-model:value="state.labelPlacement" button button-style="solid" />
     </Space>
   </Col>
   <Col :span="6">
-    <Space vertical>
+    <Space gap="small" vertical>
       dotted:
       <Switch v-model="state.dotted" />
     </Space>
@@ -466,25 +466,25 @@ const state = reactive({
 <template>
   <Row :gutter="24">
     <Col :span="6">
-      <Space vertical>
+      <Space gap="small" vertical>
         size:
         <Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
-      <Space vertical>
+      <Space gap="small" vertical>
         vertical:
         <Switch v-model="state.vertical" />
       </Space>
     </Col>
     <Col :span="6">
-      <Space vertical>
+      <Space gap="small" vertical>
         labelPlacement:
         <Radio :options="placeOptions" v-model:value="state.labelPlacement" button button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
-      <Space vertical>
+      <Space gap="small" vertical>
         dotted:
         <Switch v-model="state.dotted" />
       </Space>
