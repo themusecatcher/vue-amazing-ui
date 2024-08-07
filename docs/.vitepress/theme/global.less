@@ -170,12 +170,7 @@ h1 { // h1 标签渐变色文本
     line-height: 72px;
   }
   .text {
-    font-size: 54px;
-    color: rgba(0, 0, 0, 0.72) !important;
     padding-top: 16px;
-  }
-  .tagline {
-    color: rgba(0, 0, 0, 0.6) !important;
   }
   .name { // 标题悬浮动画效果
     transition: all 0.3s ease-in-out;
@@ -183,23 +178,10 @@ h1 { // h1 标签渐变色文本
       transform: scale(1.02);
     }
   }
-  .text {
-    color: var(--vp-c-text-1);
-  }
   .image-src {
     transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     &:hover {
       transform: translate(-50%, -50%) scale(1.2);
-    }
-  }
-}
-.dark {
-  .VPHero {
-    .text {
-      color: rgba(255, 255, 255, 0.88) !important;
-    }
-    .tagline {
-      color: rgba(255, 255, 255, 0.5) !important;
     }
   }
 }
@@ -346,7 +328,6 @@ h1 { // h1 标签渐变色文本
   .actions {
     .action {
       .VPButton {
-        color: rgba(0, 0, 0, 0.88);
         border-color: transparent !important;
         border-radius: 12px !important;
       }
@@ -363,7 +344,7 @@ h1 { // h1 标签渐变色文本
     }
     .action {
       .VPButton.alt {
-        background-color: rgba(255, 255, 255, 0.45) !important;
+        background-color: rgba(235, 235, 235, 0.85) !important;
         transition: all 0.25s;
       }
       .VPButton.alt {
@@ -378,9 +359,6 @@ h1 { // h1 标签渐变色文本
 .dark {
   .VPHero {
     .actions .action {
-      .VPButton {
-        color: rgba(255, 255, 255, 0.88);
-      }
       .VPButton.alt {
         background-color: rgba(0, 0, 0, 0.45) !important;
         &:hover {
@@ -440,16 +418,13 @@ h1 { // h1 标签渐变色文本
       .VPFeature {
         border-radius: 32px;
         border: none;
-        background-color: #f9f9f9;
         transition: all 0.25s;
         .icon, .title {
           font-size: 18px;
-          color: rgba(0, 0, 0, 0.8);
           transition: all 0.25s;
         }
         .details {
           font-size: 16px;
-          color: rgba(0, 0, 0, 0.68);
         }
         .icon {
           width: 72px;
@@ -457,7 +432,6 @@ h1 { // h1 标签渐变色文本
           font-size: 20px;
           font-weight: 700;
           border-radius: 24px;
-          background-color: rgba(0, 0, 0, 0.1);
           .logo {
             width: 32px;
             height: 32px;
@@ -474,20 +448,6 @@ h1 { // h1 标签渐变色文本
     }
   }
 }
-// .dark {
-//   .VPFeature {
-//     background-color: rgba(32, 33, 39, 0.6) !important;
-//     .icon {
-//       background-color: rgba(101, 117, 133, 0.24) !important;
-//     }
-//     .title {
-//       color: rgba(255, 255, 255, 0.8) !important;
-//     }
-//     .details {
-//       color: rgba(255, 255, 255, 0.6) !important;
-//     }
-//   }
-// }
 .VPLink .text {
   transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   transform-origin: 0% 50%;
