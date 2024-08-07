@@ -48,7 +48,7 @@ const state = reactive({
     <h2 class="mt30 mb10">水平文字滚动</h2>
     <TextScroll :width="800" :scrollText="scrollText" @click="onClick" />
     <h2 class="mt30 mb10">自定义滚动速度</h2>
-    <!-- <TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
+    <TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
     <h2 class="mt30 mb10">单条文字滚动</h2>
     <TextScroll
       :scrollText="singleText"
@@ -163,6 +163,6 @@ const state = reactive({
       :vertical="state.vertical"
       :vertical-interval="state.verticalInterval"
       @click="onClick"
-    /> -->
+    />
   </div>
 </template>
