@@ -372,40 +372,27 @@ h1 { // h1 标签渐变色文本
   background-color: transparent !important;
   &:hover {
     border-color: #e4c31b !important;
-    box-shadow: 0 0 0.5px 3.5px rgba(228, 195, 27, 0.3);
+    box-shadow: 0 0 1.5px 3px rgba(228, 195, 27, 0.24);
   }
 }
 .DocSearch-Button {
   border-radius: 12px;
-  background-color: rgba(0, 0, 0, 0.36);
+  background-color: rgba(235, 235, 235, 0.6);
   transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     border-color: #bd34fe;
-    background-color: rgba(0, 0, 0, 0.36);
+    background-color: rgba(235, 235, 235, 0.6);
     box-shadow: 0 0 3px 3px rgba(189, 52, 254, 0.12);
-    .DocSearch-Search-Icon,
-    .DocSearch-Button-Placeholder {
-      color: #FFF;
-    }
-  }
-  .DocSearch-Search-Icon,
-  .DocSearch-Button-Placeholder {
-    color: #FFF;
-  }
-  .DocSearch-Button-Keys {
-    .DocSearch-Button-Key {
-      color: #FFF;
-      &::after {
-        color: #FFF;
-      }
-    }
   }
 }
 .dark {
   .DocSearch-Button {
+    background-color: rgba(22, 22, 22, 0.6);
     &:hover {
       border-color: #09c8ce;
+      background-color: rgba(22, 22, 22, 0.6);
+      box-shadow: 0 0 3px 3px rgba(9, 200, 206, 0.12);
     }
   }
 }
