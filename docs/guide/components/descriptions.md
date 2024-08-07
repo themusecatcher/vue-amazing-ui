@@ -513,146 +513,157 @@ const options = ref([
 
 ## 描述列表配置器
 
-<ClientOnly>
-  <Flex vertical gap="middle">
-    <Row :gutter="[24, 12]">
-      <Col :span="6">
-        <Flex vertical>
-          title:
-          <Input v-model:value="state.title" placeholder="title" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          extra:
-          <Input v-model:value="state.extra" placeholder="extra" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Space vertical>
-          bordered:
-          <Switch v-model="state.bordered" />
-        </Space>
-      </Col>
-      <Col :span="6">
-        <Space vertical>
-          vertical:
-          <Switch v-model="state.vertical" />
-        </Space>
-      </Col>
-      <Col :span="12">
-        <Space vertical>
-          size:
-          <Radio :options="options" v-model:value="state.size" button button-style="solid" />
-        </Space>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          Column xs:
-          <InputNumber v-model:value="state.column.xs" :min="1" placeholder="xs" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          Column sm:
-          <InputNumber v-model:value="state.column.sm" :min="1" :max="9" placeholder="sm" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          Column md:
-          <InputNumber v-model:value="state.column.md" :min="1" :max="9" placeholder="md" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          Column lg:
-          <InputNumber v-model:value="state.column.lg" :min="1" :max="9" placeholder="lg" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          Column xl:
-          <InputNumber v-model:value="state.column.xl" :min="1" :max="9" placeholder="xl" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          Column xxl:
-          <InputNumber v-model:value="state.column.xxl" :min="1" :max="9" placeholder="xxl" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          labelStyle fontSize:
-          <Input v-model:value="state.labelStyle.fontSize" placeholder="labelStyle fontSize" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          labelStyle color:
-          <Input v-model:value="state.labelStyle.color" placeholder="labelStyle color" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          labelStyle fontWeight:
-          <InputNumber v-model:value="state.labelStyle.fontWeight" :step="100" :min="100" :max="1000" placeholder="labelStyle fontWeight" />
-        </Flex>
-      </Col>
-      <Col :span="6"></Col>
-      <Col :span="6">
-        <Flex vertical>
-          contentStyle fontSize:
-          <Input v-model:value="state.contentStyle.fontSize" placeholder="contentStyle fontSize" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          contentStyle color:
-          <Input v-model:value="state.contentStyle.color" placeholder="contentStyle color" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex vertical>
-          contentStyle fontWeight:
-          <InputNumber v-model:value="state.contentStyle.fontWeight" :step="100" :min="100" :max="1000" placeholder="contentStyle fontWeight" />
-        </Flex>
-      </Col>
-    </Row>
-    <Descriptions
-      :title="state.title"
-      :extra="state.extra"
-      :bordered="state.bordered"
-      :vertical="state.vertical"
-      :size="state.size"
-      :column="{
-        xs: state.column.xs,
-        sm: state.column.sm,
-        md: state.column.md,
-        lg: state.column.lg,
-        xl: state.column.xl,
-        xxl: state.column.xxl
-      }"
-      :label-style="state.labelStyle"
-      :content-style="state.contentStyle"
+<Flex vertical>
+  <Row :gutter="[24, 12]">
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        title:
+        <Input v-model:value="state.title" placeholder="title" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        extra:
+        <Input v-model:value="state.extra" placeholder="extra" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Space gap="small" vertical>
+        bordered:
+        <Switch v-model="state.bordered" />
+      </Space>
+    </Col>
+    <Col :span="6">
+      <Space gap="small" vertical>
+        vertical:
+        <Switch v-model="state.vertical" />
+      </Space>
+    </Col>
+    <Col :span="6">
+      <Space gap="small" vertical>
+        size:
+        <Radio :options="options" v-model:value="state.size" button button-style="solid" />
+      </Space>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        Column xs:
+        <InputNumber v-model:value="state.column.xs" :min="1" placeholder="xs" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        Column sm:
+        <InputNumber v-model:value="state.column.sm" :min="1" :max="9" placeholder="sm" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        Column md:
+        <InputNumber v-model:value="state.column.md" :min="1" :max="9" placeholder="md" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        Column lg:
+        <InputNumber v-model:value="state.column.lg" :min="1" :max="9" placeholder="lg" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        Column xl:
+        <InputNumber v-model:value="state.column.xl" :min="1" :max="9" placeholder="xl" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        Column xxl:
+        <InputNumber v-model:value="state.column.xxl" :min="1" :max="9" placeholder="xxl" />
+      </Flex>
+    </Col>
+    <Col :span="6"></Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        labelStyle fontSize:
+        <Input v-model:value="state.labelStyle.fontSize" placeholder="labelStyle fontSize" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        labelStyle color:
+        <Input v-model:value="state.labelStyle.color" placeholder="labelStyle color" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        labelStyle fontWeight:
+        <InputNumber
+          v-model:value="state.labelStyle.fontWeight"
+          :step="100"
+          :min="100"
+          :max="1000"
+          placeholder="labelStyle fontWeight"
+        />
+      </Flex>
+    </Col>
+    <Col :span="6"></Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        contentStyle fontSize:
+        <Input v-model:value="state.contentStyle.fontSize" placeholder="contentStyle fontSize" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        contentStyle color:
+        <Input v-model:value="state.contentStyle.color" placeholder="contentStyle color" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        contentStyle fontWeight:
+        <InputNumber
+          v-model:value="state.contentStyle.fontWeight"
+          :step="100"
+          :min="100"
+          :max="1000"
+          placeholder="contentStyle fontWeight"
+        />
+      </Flex>
+    </Col>
+  </Row>
+  <Descriptions
+    :title="state.title"
+    :extra="state.extra"
+    :bordered="state.bordered"
+    :vertical="state.vertical"
+    :size="state.size"
+    :column="{
+      xs: state.column.xs,
+      sm: state.column.sm,
+      md: state.column.md,
+      lg: state.column.lg,
+      xl: state.column.xl,
+      xxl: state.column.xxl
+    }"
+    :label-style="state.labelStyle"
+    :content-style="state.contentStyle"
+  >
+    <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
+    <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
+    <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
+    <DescriptionsItem label="Amount">$80.00</DescriptionsItem>
+    <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
+    <DescriptionsItem label="Official">$60.00</DescriptionsItem>
+    <DescriptionsItem label="Status" :span="1">
+      <Badge status="processing" text="Running" />
+    </DescriptionsItem>
+    <DescriptionsItem label="Usage Time" :span="2">2030-04-24 18:00:00</DescriptionsItem>
+    <DescriptionsItem label="Address" :span="3"
+      >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</DescriptionsItem
     >
-      <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
-      <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
-      <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
-      <DescriptionsItem label="Amount">$80.00</DescriptionsItem>
-      <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
-      <DescriptionsItem label="Official">$60.00</DescriptionsItem>
-      <DescriptionsItem label="Status" :span="1">
-        <Badge status="processing" text="Running" />
-      </DescriptionsItem>
-      <DescriptionsItem label="Usage Time" :span="2">2030-04-24 18:00:00</DescriptionsItem>
-      <DescriptionsItem label="Address" :span="3"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</DescriptionsItem
-      >
-    </Descriptions>
-  </Flex>
-</ClientOnly>
+  </Descriptions>
+</Flex>
 
 ::: details Show Code
 
@@ -700,109 +711,122 @@ const state = reactive({
 })
 </script>
 <template>
-  <Flex vertical gap="middle">
+  <Flex vertical>
     <Row :gutter="[24, 12]">
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           title:
           <Input v-model:value="state.title" placeholder="title" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           extra:
           <Input v-model:value="state.extra" placeholder="extra" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Space vertical>
+        <Space gap="small" vertical>
           bordered:
           <Switch v-model="state.bordered" />
         </Space>
       </Col>
       <Col :span="6">
-        <Space vertical>
+        <Space gap="small" vertical>
           vertical:
           <Switch v-model="state.vertical" />
         </Space>
       </Col>
-      <Col :span="12">
-        <Space vertical>
+      <Col :span="6">
+        <Space gap="small" vertical>
           size:
           <Radio :options="options" v-model:value="state.size" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           Column xs:
           <InputNumber v-model:value="state.column.xs" :min="1" placeholder="xs" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           Column sm:
           <InputNumber v-model:value="state.column.sm" :min="1" :max="9" placeholder="sm" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           Column md:
           <InputNumber v-model:value="state.column.md" :min="1" :max="9" placeholder="md" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           Column lg:
           <InputNumber v-model:value="state.column.lg" :min="1" :max="9" placeholder="lg" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           Column xl:
           <InputNumber v-model:value="state.column.xl" :min="1" :max="9" placeholder="xl" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           Column xxl:
           <InputNumber v-model:value="state.column.xxl" :min="1" :max="9" placeholder="xxl" />
         </Flex>
       </Col>
+      <Col :span="6"></Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           labelStyle fontSize:
           <Input v-model:value="state.labelStyle.fontSize" placeholder="labelStyle fontSize" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           labelStyle color:
           <Input v-model:value="state.labelStyle.color" placeholder="labelStyle color" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           labelStyle fontWeight:
-          <InputNumber v-model:value="state.labelStyle.fontWeight" :step="100" :min="100" :max="1000" placeholder="labelStyle fontWeight" />
+          <InputNumber
+            v-model:value="state.labelStyle.fontWeight"
+            :step="100"
+            :min="100"
+            :max="1000"
+            placeholder="labelStyle fontWeight"
+          />
         </Flex>
       </Col>
       <Col :span="6"></Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           contentStyle fontSize:
           <Input v-model:value="state.contentStyle.fontSize" placeholder="contentStyle fontSize" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           contentStyle color:
           <Input v-model:value="state.contentStyle.color" placeholder="contentStyle color" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           contentStyle fontWeight:
-          <InputNumber v-model:value="state.contentStyle.fontWeight" :step="100" :min="100" :max="1000" placeholder="contentStyle fontWeight" />
+          <InputNumber
+            v-model:value="state.contentStyle.fontWeight"
+            :step="100"
+            :min="100"
+            :max="1000"
+            placeholder="contentStyle fontWeight"
+          />
         </Flex>
       </Col>
     </Row>

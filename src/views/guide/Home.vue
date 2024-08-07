@@ -121,7 +121,7 @@ function onOpen() {
 </script>
 <template>
   <div>
-    <Space align="top" :gap="6">
+    <Space gap="small">
       <h1>Vue Amazing UI</h1>
       <Tag color="#FC5404">{{ pkg.version }}</Tag>
     </Space>

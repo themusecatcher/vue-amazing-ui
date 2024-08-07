@@ -245,7 +245,7 @@ defineExpose({
 </script>
 <template>
   <div class="m-upload-list">
-    <Space v-bind="spaceProps">
+    <Space gap="small" v-bind="spaceProps">
       <div class="m-upload-item" v-for="n of showUpload" :key="n">
         <div class="m-upload">
           <div

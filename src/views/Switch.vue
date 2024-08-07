@@ -87,7 +87,7 @@ watchEffect(() => {
       </template>
     </Switch>
     <h2 class="mt30 mb10">自定义选中的值</h2>
-    <Space :gap="30">
+    <Space gap="large">
       <Space vertical align="center">
         <Switch v-model="customValue1" checked-value="on" unchecked-value="off">
           <template #checked>on</template>

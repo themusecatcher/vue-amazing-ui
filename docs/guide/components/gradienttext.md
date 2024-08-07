@@ -9,7 +9,7 @@
 
 ## 基本使用
 
-<Space vertical>
+<Space gap="small" vertical>
   <GradientText>basic</GradientText>
   <GradientText type="info">info</GradientText>
   <GradientText type="success">success</GradientText>
@@ -21,7 +21,7 @@
 
 ```vue
 <template>
-  <Space vertical>
+  <Space gap="small" vertical>
     <GradientText>basic</GradientText>
     <GradientText type="info">info</GradientText>
     <GradientText type="success">success</GradientText>
@@ -35,7 +35,7 @@
 
 ## 文字大小
 
-<Space vertical>
+<Space gap="small" vertical>
   <GradientText :size="36" type="info">Live Forever</GradientText>
   <GradientText :size="36" type="error">Live Forever</GradientText>
   <GradientText :size="24" type="warning">Married with Children</GradientText>
@@ -46,7 +46,7 @@
 
 ```vue
 <template>
-  <Space vertical>
+  <Space gap="small" vertical>
     <GradientText :size="36" type="info">Live Forever</GradientText>
     <GradientText :size="36" type="error">Live Forever</GradientText>
     <GradientText :size="24" type="warning">Married with Children</GradientText>
@@ -59,7 +59,7 @@
 
 ## 自定义颜色
 
-<Space vertical>
+<Space gap="small" vertical>
   <GradientText
     :size="24"
     :gradient="{
@@ -93,7 +93,7 @@
 
 ```vue
 <template>
-  <Space vertical>
+  <Space gap="small" vertical>
     <GradientText
       :size="24"
       :gradient="{

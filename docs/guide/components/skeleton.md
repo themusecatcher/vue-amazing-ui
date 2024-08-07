@@ -32,39 +32,39 @@ const buttonShape = ref('default')
 const avatarShape = ref('circle')
 const sizeOptions = ref([
   {
-    label: 'Default',
+    label: 'default',
     value: 'default'
   },
   {
-    label: 'Large',
+    label: 'large',
     value: 'large'
   },
   {
-    label: 'Small',
+    label: 'small',
     value: 'small'
   }
 ])
 const buttonShapeOptions = ref([
   {
-    label: 'Default',
+    label: 'default',
     value: 'default'
   },
   {
-    label: 'Round',
+    label: 'round',
     value: 'round'
   },
   {
-    label: 'Circle',
+    label: 'circle',
     value: 'circle'
   }
 ])
 const avatarShapeOptions = ref([
   {
-    label: 'Square',
+    label: 'square',
     value: 'square'
   },
   {
-    label: 'Circle',
+    label: 'circle',
     value: 'circle'
   }
 ])
@@ -114,6 +114,11 @@ const avatarShapeOptions = ref([
   </div>
 </Skeleton>
 
+<style lang="less" scoped>
+h4 {
+  margin: 0;
+}
+</style>
 ::: details Show Code
 
 ```vue
@@ -166,28 +171,33 @@ const showSkeleton = () => {
 
 <Flex :gap="32">
   <Flex vertical :gap="12" width="50%">
-    <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block}" />
+    <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block }" />
     <Skeleton style="width: 200px" :animated="animated" :input="{ size: size }" />
     <Skeleton :animated="animated" image />
     <Skeleton :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
   </Flex>
-  <Flex vertical :gap="36" width="50%">
-    <Space :gap="32">
+  <Flex vertical gap="large" width="50%">
+    <Space gap="large">
       <Space align="center">
-        animated: <Switch v-model="animated" />
+        animated:
+        <Switch v-model="animated" />
       </Space>
       <Space align="center">
-        Button Block: <Switch v-model="block" />
+        Button Block:
+        <Switch v-model="block" />
       </Space>
     </Space>
     <Space align="center">
-      Size: <Radio :options="sizeOptions" v-model:value="size" button />
+      Size:
+      <Radio :options="sizeOptions" v-model:value="size" button />
     </Space>
     <Space align="center">
-      Button Shape: <Radio :options="buttonShapeOptions" v-model:value="buttonShape" button />
+      Button Shape:
+      <Radio :options="buttonShapeOptions" v-model:value="buttonShape" button />
     </Space>
     <Space align="center">
-      Avatar Shape: <Radio :options="avatarShapeOptions" v-model:value="avatarShape" button />
+      Avatar Shape:
+      <Radio :options="avatarShapeOptions" v-model:value="avatarShape" button />
     </Space>
   </Flex>
 </Flex>
@@ -205,67 +215,73 @@ const buttonShape = ref('default')
 const avatarShape = ref('circle')
 const sizeOptions = ref([
   {
-    label: 'Default',
+    label: 'default',
     value: 'default'
   },
   {
-    label: 'Large',
+    label: 'large',
     value: 'large'
   },
   {
-    label: 'Small',
+    label: 'small',
     value: 'small'
   }
 ])
 const buttonShapeOptions = ref([
   {
-    label: 'Default',
+    label: 'default',
     value: 'default'
   },
   {
-    label: 'Round',
+    label: 'round',
     value: 'round'
   },
   {
-    label: 'Circle',
+    label: 'circle',
     value: 'circle'
   }
 ])
 const avatarShapeOptions = ref([
   {
-    label: 'Square',
+    label: 'square',
     value: 'square'
   },
   {
-    label: 'Circle',
+    label: 'circle',
     value: 'circle'
   }
 ])
 </script>
 <template>
   <Flex :gap="32">
-    <Flex vertical :gap="24" width="50%">
-      <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block}" />
+    <Flex vertical :gap="12" width="50%">
+      <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block }" />
       <Skeleton style="width: 200px" :animated="animated" :input="{ size: size }" />
       <Skeleton :animated="animated" image />
+      <Skeleton :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
     </Flex>
-    <Flex vertical :gap="32" width="50%">
-      <Space :gap="32">
+    <Flex vertical gap="large" width="50%">
+      <Space gap="large">
         <Space align="center">
-          animated: <Switch v-model="animated" />
+          animated:
+          <Switch v-model="animated" />
         </Space>
         <Space align="center">
-          Button Block: <Switch v-model="block" />
+          Button Block:
+          <Switch v-model="block" />
         </Space>
       </Space>
       <Space align="center">
-        Size: <Radio :options="sizeOptions" v-model:value="size" button />
+        Size:
+        <Radio :options="sizeOptions" v-model:value="size" button />
       </Space>
       <Space align="center">
-        Button Shape: <Radio :options="buttonShapeOptions" v-model:value="buttonShape" button />
+        Button Shape:
+        <Radio :options="buttonShapeOptions" v-model:value="buttonShape" button />
       </Space>
       <Space align="center">
-        Avatar Shape: <Radio :options="avatarShapeOptions" v-model:value="avatarShape" button />
+        Avatar Shape:
+        <Radio :options="avatarShapeOptions" v-model:value="avatarShape" button />
       </Space>
     </Flex>
   </Flex>

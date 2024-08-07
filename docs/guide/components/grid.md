@@ -869,7 +869,7 @@ const state = reactive({
   <Row :gutter="24">
     <Col :span="6">
       <Flex vertical gap="large" align="flex-start">
-        Horizontal Row Gutter:
+        Horizontal Column Gutter:
         <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
       </Flex>
     </Col>
@@ -945,7 +945,7 @@ const state = reactive({
   <Row :gutter="24">
     <Col :span="6">
       <Flex vertical gap="large" align="flex-start">
-        Horizontal Row Gutter:
+        Horizontal Column Gutter:
         <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
       </Flex>
     </Col>

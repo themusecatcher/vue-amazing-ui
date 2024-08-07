@@ -56,7 +56,7 @@ const percent = ref(80)
 
 ## 进度圈
 
-<Space align="center" gap="middle">
+<Space align="center">
   <Progress type="circle" :width="120" :stroke-width="12" :percent="percent" />
   <Button @click="onDecline(5)" size="large">Decline -</Button>
   <Button @click="onIncrease(5)" size="large">Increase +</Button>
@@ -87,7 +87,7 @@ function onDecline (scale: number) {
 }
 </script>
 <template>
-  <Space align="center" gap="middle">
+  <Space align="center">
     <Progress type="circle" :width="120" :stroke-width="12" :percent="percent" />
     <Button @click="onDecline(5)" size="large">Decline -</Button>
     <Button @click="onIncrease(5)" size="large">Increase +</Button>
@@ -133,7 +133,7 @@ function onDecline (scale: number) {
     }"
     :percent="percent"
   />
-  <Space align="center" gap="middle">
+  <Space align="center">
     <Progress
       type="circle"
       :width="120"
@@ -185,7 +185,7 @@ function onDecline (scale: number) {
       }"
       :percent="percent"
     />
-    <Space align="center" gap="middle">
+    <Space align="center">
       <Progress
         type="circle"
         :width="120"
@@ -219,7 +219,7 @@ function onDecline (scale: number) {
     stroke-linecap="butt"
     :percent="percent"
   />
-  <Space align="center" gap="middle">
+  <Space align="center">
     <Progress
       type="circle"
       :width="180"
@@ -273,7 +273,7 @@ function onDecline (scale: number) {
       stroke-linecap="butt"
       :percent="percent"
     />
-    <Space align="center" gap="middle">
+    <Space align="center">
       <Progress
         type="circle"
         :width="180"
@@ -297,7 +297,7 @@ function onDecline (scale: number) {
 
 ## 自定义文字
 
-<Space align="center" gap="middle">
+<Space align="center">
   <Progress
     type="circle"
     :width="160"
@@ -343,7 +343,7 @@ function onDecline (scale: number) {
 }
 </script>
 <template>
-  <Space align="center" gap="middle">
+  <Space align="center">
     <Progress
       type="circle"
       :width="160"

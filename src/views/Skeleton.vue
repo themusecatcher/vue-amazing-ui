@@ -16,39 +16,39 @@ const buttonShape = ref('default')
 const avatarShape = ref('circle')
 const sizeOptions = ref([
   {
-    label: 'Default',
+    label: 'default',
     value: 'default'
   },
   {
-    label: 'Large',
+    label: 'large',
     value: 'large'
   },
   {
-    label: 'Small',
+    label: 'small',
     value: 'small'
   }
 ])
 const buttonShapeOptions = ref([
   {
-    label: 'Default',
+    label: 'default',
     value: 'default'
   },
   {
-    label: 'Round',
+    label: 'round',
     value: 'round'
   },
   {
-    label: 'Circle',
+    label: 'circle',
     value: 'circle'
   }
 ])
 const avatarShapeOptions = ref([
   {
-    label: 'Square',
+    label: 'square',
     value: 'square'
   },
   {
-    label: 'Circle',
+    label: 'circle',
     value: 'circle'
   }
 ])
@@ -84,8 +84,8 @@ const avatarShapeOptions = ref([
         <Skeleton :animated="animated" image />
         <Skeleton :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
       </Flex>
-      <Flex vertical :gap="36" width="50%">
-        <Space :gap="32">
+      <Flex vertical gap="large" width="50%">
+        <Space gap="large">
           <Space align="center">
             animated:
             <Switch v-model="animated" />

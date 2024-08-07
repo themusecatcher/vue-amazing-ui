@@ -48,7 +48,7 @@ function onFinish() {
       <template #title>2048年 十一 Countdown</template>
     </Countdown>
     <h2 class="mt30 mb10">倒计时已完成</h2>
-    <Space vertical>
+    <Space gap="small" vertical>
       <Countdown />
       <Countdown finished-text="Finished" />
     </Space>

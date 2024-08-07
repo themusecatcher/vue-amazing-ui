@@ -7,7 +7,7 @@ function openChange(visible: boolean) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space :gap="30" class="ml60">
+    <Space gap="large" class="ml60">
       <Tooltip :maxWidth="240" @open-change="openChange">
         <template #tooltip>
           特斯拉(Tesla)是美国一家电动汽车及能源公司，总部位于帕洛阿托(Palo

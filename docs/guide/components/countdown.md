@@ -153,7 +153,7 @@ function onFinish () {
 
 ## 倒计时已完成
 
-<Space vertical>
+<Space gap="small" vertical>
   <Countdown />
   <Countdown finished-text="Finished" />
 </Space>
@@ -162,7 +162,7 @@ function onFinish () {
 
 ```vue
 <template>
-  <Space vertical>
+  <Space gap="small" vertical>
     <Countdown />
     <Countdown finished-text="Finished" />
   </Space>

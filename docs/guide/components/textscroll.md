@@ -268,69 +268,69 @@ function onClick (text: any) { // 获取点击的标题
 
 ## 文字滚动配置器
 
-<Row :gutter="[24, 8]">
+<Row :gutter="[24, 12]">
   <Col :span="6">
-    <Flex vertical gap="middle">
+    <Flex vertical>
       height:
       <Slider v-model:value="state.height" :min="6" :max="180" />
     </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical gap="middle">
+    <Flex vertical>
       fontSize:
       <Slider v-model:value="state.fontSize" :min="6" :max="180" />
     </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical>
+    <Flex gap="small" vertical>
       fontWeight:
       <InputNumber v-model:value="state.fontWeight" :step="100" :min="100" :max="1000" />
     </Flex>
   </Col>
   <Col :span="6">
-    <Space vertical>
+    <Space gap="small" vertical>
       color:
       <Input v-model:value="state.color" placeholder="color" />
     </Space>
   </Col>
   <Col :span="6">
-    <Flex vertical>
+    <Flex gap="small" vertical>
       backgroundColor:
       <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
     </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical gap="middle">
+    <Flex vertical>
       amount:
       <Slider v-model:value="state.amount" :min="1" :max="scrollText.length" />
     </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical gap="middle">
+    <Flex vertical>
       gap:
       <Slider v-model:value="state.gap" :min="10" :max="100" />
     </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical gap="middle">
+    <Flex vertical>
       interval:
       <Slider v-model:value="state.interval" :min="5" :max="100" />
     </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical gap="middle">
+    <Flex vertical>
       step:
       <Slider v-model:value="state.step" :min="0.1" :step="0.1" :max="20" />
     </Flex>
   </Col>
   <Col :span="6">
-    <Space vertical>
+    <Space gap="small" vertical>
       vertical:
       <Switch v-model="state.vertical" />
     </Space>
   </Col>
   <Col :span="6">
-    <Flex vertical gap="middle">
+    <Flex vertical>
       verticalInterval:
       <Slider v-model:value="state.verticalInterval" :min="1000" :step="100" :max="10000" />
     </Flex>
@@ -402,69 +402,69 @@ const state = reactive({
 })
 </script>
 <template>
-  <Row :gutter="[24, 8]">
+  <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Flex vertical gap="middle">
+      <Flex vertical>
         height:
         <Slider v-model:value="state.height" :min="6" :max="180" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
+      <Flex vertical>
         fontSize:
         <Slider v-model:value="state.fontSize" :min="6" :max="180" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical>
+      <Flex gap="small" vertical>
         fontWeight:
         <InputNumber v-model:value="state.fontWeight" :step="100" :min="100" :max="1000" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Space vertical>
+      <Space gap="small" vertical>
         color:
         <Input v-model:value="state.color" placeholder="color" />
       </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical>
+      <Flex gap="small" vertical>
         backgroundColor:
         <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
+      <Flex vertical>
         amount:
         <Slider v-model:value="state.amount" :min="1" :max="scrollText.length" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
+      <Flex vertical>
         gap:
         <Slider v-model:value="state.gap" :min="10" :max="100" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
+      <Flex vertical>
         interval:
         <Slider v-model:value="state.interval" :min="5" :max="100" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
+      <Flex vertical>
         step:
         <Slider v-model:value="state.step" :min="0.1" :step="0.1" :max="20" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Space vertical>
+      <Space gap="small" vertical>
         vertical:
         <Switch v-model="state.vertical" />
       </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
+      <Flex vertical>
         verticalInterval:
         <Slider v-model:value="state.verticalInterval" :min="1000" :step="100" :max="10000" />
       </Flex>

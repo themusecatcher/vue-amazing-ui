@@ -20,17 +20,17 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
-  addonBefore: '',
-  addonAfter: '',
+  addonBefore: undefined,
+  addonAfter: undefined,
   allowClear: false,
   password: false,
   disabled: false,
   maxlength: undefined,
   showCount: false,
   size: 'middle',
-  prefix: '',
-  suffix: '',
-  value: '',
+  prefix: undefined,
+  suffix: undefined,
+  value: undefined,
   valueModifiers: () => ({})
 })
 const inputWidth = computed(() => {
@@ -41,9 +41,9 @@ const inputWidth = computed(() => {
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
-    return props.value.length + ' / ' + props.maxlength
+    return (props.value ? props.value.length : 0) + ' / ' + props.maxlength
   }
-  return props.value.length
+  return props.value ? props.value.length : 0
 })
 const slots = useSlots()
 const showPrefix = computed(() => {

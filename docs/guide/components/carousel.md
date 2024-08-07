@@ -752,77 +752,71 @@ function getCurrentIndex () {
 ## 走马灯配置器
 
 <Flex gap="large" vertical>
-  <Row :gutter="24">
+  <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Space vertical> autoplay：<Switch v-model="carouselConfig.autoplay" /> </Space>
+      <Space gap="small" vertical> autoplay：<Switch v-model="carouselConfig.autoplay" /> </Space>
     </Col>
     <Col :span="6">
-      <Space vertical>
+      <Space gap="small" vertical>
         pauseOnMouseEnter：<Switch v-model="carouselConfig.pauseOnMouseEnter" />
       </Space>
     </Col>
     <Col :span="6">
-      <Space vertical>
+      <Space gap="small" vertical>
         effect：<Radio :options="effectOptions" v-model:value="carouselConfig.effect" button button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
+      <Flex vertical>
         interval：<Slider v-model:value="carouselConfig.interval" :min="100" :step="10" :max="10000" />
       </Flex>
     </Col>
-  </Row>
-  <Row :gutter="24">
     <Col :span="6">
-      <Space vertical> showArrow：<Switch v-model="carouselConfig.showArrow" /> </Space>
+      <Space gap="small" vertical> showArrow：<Switch v-model="carouselConfig.showArrow" /> </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical>
+      <Flex gap="small" vertical>
         arrowColor：<Input v-model:value="carouselConfig.arrowColor" placeholder="arrowColor" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical gap="middle"> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
+      <Flex vertical> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
     </Col>
-  </Row>
-  <Row :gutter="24">
+    <Col :span="6"></Col>
     <Col :span="6">
-      <Space vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
-    </Col>
-    <Col :span="6">
-      <Flex vertical gap="middle"> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
+      <Space gap="small" vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
+      <Flex vertical> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical>
+      <Flex gap="small" vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
         dotActiveColor：<Input v-model:value="carouselConfig.dotActiveColor" placeholder="dotActiveColor" />
       </Flex>
     </Col>
-  </Row>
-  <Row :gutter="24">
     <Col :span="12">
-      <Space vertical>
+      <Space gap="small" vertical>
         dotPosition：
         <Radio :options="positionOptions" v-model:value="carouselConfig.dotPosition" button button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
-      <Space vertical>
+      <Space gap="small" vertical>
         dotsTrigger：
         <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
       </Space>
     </Col>
-  </Row>
-  <Row :gutter="24">
+    <Col :span="6"></Col>
     <Col :span="6">
-      <Flex vertical gap="middle">
+      <Flex vertical>
         fadeDuration：<Slider v-model:value="carouselConfig.fadeDuration" :min="100" :step="10" :max="10000" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical>
+      <Flex gap="small" vertical>
         fadeFunction：<Input v-model:value="carouselConfig.fadeFunction" placeholder="fadeFunction" />
       </Flex>
     </Col>
@@ -902,77 +896,71 @@ const carouselConfig = reactive({
 </script>
 <template>
   <Flex gap="large" vertical>
-    <Row :gutter="24">
+    <Row :gutter="[24, 12]">
       <Col :span="6">
-        <Space vertical> autoplay：<Switch v-model="carouselConfig.autoplay" /> </Space>
+        <Space gap="small" vertical> autoplay：<Switch v-model="carouselConfig.autoplay" /> </Space>
       </Col>
       <Col :span="6">
-        <Space vertical>
+        <Space gap="small" vertical>
           pauseOnMouseEnter：<Switch v-model="carouselConfig.pauseOnMouseEnter" />
         </Space>
       </Col>
       <Col :span="6">
-        <Space vertical>
+        <Space gap="small" vertical>
           effect：<Radio :options="effectOptions" v-model:value="carouselConfig.effect" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
-        <Flex vertical gap="middle">
+        <Flex vertical>
           interval：<Slider v-model:value="carouselConfig.interval" :min="100" :step="10" :max="10000" />
         </Flex>
       </Col>
-    </Row>
-    <Row :gutter="24">
       <Col :span="6">
-        <Space vertical> showArrow：<Switch v-model="carouselConfig.showArrow" /> </Space>
+        <Space gap="small" vertical> showArrow：<Switch v-model="carouselConfig.showArrow" /> </Space>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           arrowColor：<Input v-model:value="carouselConfig.arrowColor" placeholder="arrowColor" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical gap="middle"> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
+        <Flex vertical> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
       </Col>
-    </Row>
-    <Row :gutter="24">
+      <Col :span="6"></Col>
       <Col :span="6">
-        <Space vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
-      </Col>
-      <Col :span="6">
-        <Flex vertical gap="middle"> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
+        <Space gap="small" vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
       </Col>
       <Col :span="6">
-        <Flex vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
+        <Flex vertical> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
           dotActiveColor：<Input v-model:value="carouselConfig.dotActiveColor" placeholder="dotActiveColor" />
         </Flex>
       </Col>
-    </Row>
-    <Row :gutter="24">
       <Col :span="12">
-        <Space vertical>
+        <Space gap="small" vertical>
           dotPosition：
           <Radio :options="positionOptions" v-model:value="carouselConfig.dotPosition" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
-        <Space vertical>
+        <Space gap="small" vertical>
           dotsTrigger：
           <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
         </Space>
       </Col>
-    </Row>
-    <Row :gutter="24">
+      <Col :span="6"></Col>
       <Col :span="6">
-        <Flex vertical gap="middle">
+        <Flex vertical>
           fadeDuration：<Slider v-model:value="carouselConfig.fadeDuration" :min="100" :step="10" :max="10000" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           fadeFunction：<Input v-model:value="carouselConfig.fadeFunction" placeholder="fadeFunction" />
         </Flex>
       </Col>
@@ -995,7 +983,7 @@ const carouselConfig = reactive({
       :dots-trigger="carouselConfig.dotsTrigger"
       :fade-duration="carouselConfig.fadeDuration"
       :fade-function="carouselConfig.fadeFunction"
-      :spin-style="{ indicator: 'dot' }"
+      :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
     />
   </Flex>
 </template>
