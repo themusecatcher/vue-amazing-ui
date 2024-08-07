@@ -165,13 +165,13 @@ function verticalMove() {
   <div
     v-if="!vertical"
     ref="horizontalRef"
-    class="m-slider-horizon"
+    class="m-slider-horizontal"
     :style="[boardStyle, `--text-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`]"
   >
     <div class="m-scroll-view" :style="`will-change: transform; transform: translateX(${-left}px);`">
       <a
         class="slide-text"
-        :style="[textStyle, `width: ${distance - gap}px;`]"
+        :style="[textStyle, `width: ${distance}px;`]"
         v-for="(text, index) in <Text[]>textData"
         :key="index"
         :title="text.title"
@@ -214,7 +214,7 @@ function verticalMove() {
 </template>
 <style lang="less" scoped>
 // 水平滚动
-.m-slider-horizon {
+.m-slider-horizontal {
   overflow: hidden;
   box-shadow: 0px 0px 5px #d3d3d3;
   border-radius: 6px;
@@ -223,8 +223,8 @@ function verticalMove() {
     height: 100%;
     display: inline-flex;
     align-items: center;
-    gap: var(--text-gap);
     .slide-text {
+      padding-left: var(--text-gap);
       font-size: 16px;
       font-weight: 400;
       color: rgba(0, 0, 0, 0.88);

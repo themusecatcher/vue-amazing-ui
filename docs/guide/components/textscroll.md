@@ -513,7 +513,7 @@ const state = reactive({
 
 参数 | 说明 | 类型 | 默认值 | 必传
 -- | -- | -- | -- | --
-scrollText | 滚动文字数组，`single` 为 `true` 时，类型为 `Text` | [Text](#text-type)[] &#124; [Text](#text-type) | [] | true
+scrollText | 滚动文字数组，`single: true` 时，类型为 `Text`；多条文字滚动时，数组长度必须大于等于 `amount` 才能滚动 | [Text](#text-type)[] &#124; [Text](#text-type) | [] | true
 single | 是否启用单条文字滚动效果，只支持水平文字滚动，为 `true` `时，amount` 自动设为 `1` | boolean | false | false
 width | 滚动区域宽度，单位 `px` | number &#124; string | '100%' | false
 height | 滚动区域高度，单位 `px` | number | 50 | false
