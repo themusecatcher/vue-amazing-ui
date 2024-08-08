@@ -9,8 +9,8 @@ lerna-debug.log*
 
 node_modules
 .DS_Store
+# components
 dist
-# packages
 *.mp4
 dist-ssr
 coverage

@@ -23,9 +23,9 @@ export function throttle(fn: Function, delay = 300): any {
   return function (...args: any[]) {
     // 返回一个新的函数，该函数负责执行节流逻辑
     if (valid) {
+      fn(...args) // 执行原函数
       valid = false // 将函数置为无效
       setTimeout(() => {
-        fn(...args) // 执行原函数，并在执行后重新标记为可执行
         valid = true
       }, delay)
     }

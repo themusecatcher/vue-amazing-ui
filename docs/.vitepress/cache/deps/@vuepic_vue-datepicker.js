@@ -42,7 +42,7 @@ import {
   withDirectives,
   withKeys,
   withModifiers
-} from "./chunk-JJNTIHXZ.js";
+} from "./chunk-XXCW3MZS.js";
 import {
   __publicField
 } from "./chunk-EQCVQC35.js";
@@ -3761,7 +3761,7 @@ function subYears(date, amount) {
   return addYears(date, -amount);
 }
 
-// node_modules/.pnpm/@vuepic+vue-datepicker@9.0.1_vue@3.4.34_typescript@5.5.4_/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
+// node_modules/.pnpm/@vuepic+vue-datepicker@9.0.1_vue@3.4.36_typescript@5.5.4_/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
 function Et() {
   const e = useAttrs();
   return openBlock(), createElementBlock(

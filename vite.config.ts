@@ -38,7 +38,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       'images': fileURLToPath(new URL('./src/assets/images', import.meta.url)),
       'less': fileURLToPath(new URL('./src/assets/less', import.meta.url)),
-      'packages': fileURLToPath(new URL('./packages/index', import.meta.url))
+      'components': fileURLToPath(new URL('./components/index', import.meta.url))
     }
   },
   css: {
@@ -58,7 +58,7 @@ export default defineConfig({
     lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
       formats: f === 'iife' ? ['iife'] : ['es', 'umd'],
       // __dirname 的值是 vite.config.ts 文件所在目录
-      entry: resolve(__dirname, 'packages', 'index.ts'),  // entry 是必需的，因为库不能使用HTML作为入口。
+      entry: resolve(__dirname, 'components', 'index.ts'),  // entry 是必需的，因为库不能使用HTML作为入口。
       name: 'VueAmazingUI', // 暴露的全局变量
       fileName: 'vue-amazing-ui' // 输出的包文件名，默认是 package.json 的 name 选项
     },

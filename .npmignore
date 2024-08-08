@@ -3,9 +3,9 @@
 .vite/
 .DS_Store
 .vscode/
+components/
 docs/
 node_modules
-packages/
 public/
 scripts/
 src/
