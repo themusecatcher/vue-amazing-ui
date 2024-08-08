@@ -107,7 +107,7 @@
 - 滑动输入条 Slider 组件，扩展垂直方向的功能
 - 分段控制器 Segmented 组件，选项切换效果优化
 - 表格 Table 组件，功能扩展
-- 级联选择 Cascader 组件，重构
+- 重构级联选择 Cascader 组件
 
 <style lang="less" scoped>
 .m-tag {

@@ -2,7 +2,7 @@
 import pkg from '/package.json'
 import { ref, computed } from 'vue'
 import { routes } from '@/router'
-import { useFps } from 'packages'
+import { useFps } from 'components'
 const { fps } = useFps()
 const installData = ref([
   {

@@ -1,4 +1,4 @@
-// node_modules/.pnpm/swiper@11.1.7/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@11.1.9/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === "object" && "constructor" in obj && obj.constructor === Object;
 }
@@ -147,7 +147,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@11.1.7/node_modules/swiper/shared/utils.mjs
+// node_modules/.pnpm/swiper@11.1.9/node_modules/swiper/shared/utils.mjs
 function classesToTokens(classes) {
   if (classes === void 0) {
     classes = "";
@@ -316,13 +316,13 @@ function animateCSSModeScroll(_ref) {
 function getSlideTransformEl(slideEl) {
   return slideEl.querySelector(".swiper-slide-transform") || slideEl.shadowRoot && slideEl.shadowRoot.querySelector(".swiper-slide-transform") || slideEl;
 }
-function elementChildren(element2, selector) {
+function elementChildren(element, selector) {
   if (selector === void 0) {
     selector = "";
   }
-  const children = [...element2.children];
-  if (element2 instanceof HTMLSlotElement) {
-    children.push(...element2.assignedElements());
+  const children = [...element.children];
+  if (element instanceof HTMLSlotElement) {
+    children.push(...element.assignedElements());
   }
   if (!selector) {
     return children;
@@ -332,7 +332,7 @@ function elementChildren(element2, selector) {
 function elementIsChildOf(el, parent) {
   const isChild = parent.contains(el);
   if (!isChild && parent instanceof HTMLSlotElement) {
-    const children = [...element.assignedElements()];
+    const children = [...parent.assignedElements()];
     return children.includes(el);
   }
   return isChild;
@@ -474,4 +474,4 @@ export {
   makeElementsArray,
   getRotateFix
 };
-//# sourceMappingURL=chunk-GDN5JX2T.js.map
+//# sourceMappingURL=chunk-NXYPBAOQ.js.map
