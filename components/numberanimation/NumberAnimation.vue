@@ -32,7 +32,7 @@ enum TransitionFunc {
 interface Props {
   from?: number // 数值动画起始数值
   to?: number // 数值目标值
-  duration?: number // 数值动画持续时间，单位ms
+  duration?: number // 数值动画持续时间，单位 ms
   autoplay?: boolean // 是否自动开始动画
   precision?: number // 精度，保留小数点后几位
   prefix?: string // 前缀
@@ -48,8 +48,8 @@ const props = withDefaults(defineProps<Props>(), {
   duration: 3000,
   autoplay: true,
   precision: 0,
-  prefix: '',
-  suffix: '',
+  prefix: undefined,
+  suffix: undefined,
   separator: ',',
   decimal: '.',
   valueStyle: () => ({}),

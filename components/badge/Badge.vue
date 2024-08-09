@@ -38,17 +38,17 @@ interface Props {
   ripple?: boolean // 是否开启涟漪动画效果
 }
 const props = withDefaults(defineProps<Props>(), {
-  color: '',
+  color: undefined,
   value: undefined,
   max: 99,
   showZero: false,
   dot: false,
   offset: undefined,
   status: undefined,
-  text: '',
+  text: undefined,
   valueStyle: () => ({}),
   zIndex: 9,
-  title: '',
+  title: undefined,
   ripple: true
 })
 const customStyle = computed(() => {

@@ -140,9 +140,9 @@
 
 ### Empty
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-description | 自定义描述内容 | string &#124; slot | '暂无数据' | false
-descriptionStyle | 设置描述文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-image | 显示图片的链接，或者选择两种预置风格图片 | 'filled' &#124; 'outlined' &#124; string &#124; slot  | 'filled' | false
-imageStyle | 设置图片的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+description | 自定义描述内容 | string &#124; slot | '暂无数据'
+descriptionStyle | 设置描述文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+image | 显示图片的链接，或者选择两种预置风格图片 | 'filled' &#124; 'outlined' &#124; string &#124; slot  | 'filled'
+imageStyle | 设置图片的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

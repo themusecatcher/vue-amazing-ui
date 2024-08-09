@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   type: 'line',
   gutter: undefined,
-  activeKey: ''
+  activeKey: undefined
 })
 const tabsRef = ref() // 所有 tabs 的 ref 模板引用
 const left = ref(0)

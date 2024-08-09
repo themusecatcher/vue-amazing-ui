@@ -6,10 +6,10 @@ interface Collapse {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   header?: string // 面板标题 string | slot
   text?: string // 面板内容 string | slot
-  showArrow?: boolean // 是否展示箭头
+  showArrow?: boolean // 是否展示箭头，默认 true
 }
 interface Props {
-  collapseData: Collapse[] // 折叠面板数据，可使用 v-slot 替换对应索引的 header 和 text
+  collapseData?: Collapse[] // 折叠面板数据，可使用 slot 替换对应索引的 header 和 text
   activeKey?: number[] | number | string[] | string | null // (v-model) 当前激活 tab 面板的 key
   bordered?: boolean // 带边框风格的折叠面板
   copyable?: boolean // 是否可复制面板内容
@@ -26,10 +26,10 @@ const props = withDefaults(defineProps<Props>(), {
   activeKey: null,
   bordered: true,
   copyable: false,
-  lang: '',
+  lang: undefined,
   fontSize: 14,
-  headerFontSize: 0,
-  textFontSize: 0,
+  headerFontSize: undefined,
+  textFontSize: undefined,
   showArrow: true,
   arrowPlacement: 'left',
   ghost: false

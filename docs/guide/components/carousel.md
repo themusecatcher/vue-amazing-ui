@@ -995,48 +995,39 @@ const carouselConfig = reactive({
 
 ### Carousel
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-images | 走马灯图片数组 | [Image](#image-type)[] | [] | true
-width | 走马灯宽度 | number &#124; string | '100%' | false
-height | 走马灯高度 | number &#124; string | '100vh' | false
-autoplay | 是否自动轮播 | boolean | false | false
-pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播 | boolean | false | false
-effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide' | false
-interval | 自动轮播间隔，单位 `ms` | number | 3000 | false
-showArrow | 是否显示箭头 | boolean | true | false
-arrowColor | 箭头颜色 | string | '#FFF' | false
-arrowSize | 箭头大小，单位 `px` | number | 36 | false
-dots | 是否显示指示点 | boolean | true | false
-dotSize | 指示点大小，单位 `px` | number | 10 | false
-dotColor | 指示点颜色 | string | 'rgba(255, 255, 255, 0.3)' | false
-dotActiveColor | 指示点选中颜色 | string | '#1677FF' | false
-dotStyle | 指示点样式，优先级高于 `dotSize`、`dotColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-dotActiveStyle | 指示点选中样式，优先级高于 `dotActiveColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-dotPosition | 指示点位置，位置为 `left` &#124; `right` 时，`effect: 'slide'` 轮播自动变为垂直轮播 | 'bottom' &#124; 'top' &#124; 'left' &#124; 'right' | 'bottom' | false
-dotsTrigger | 指示点触发切换的方式 | 'click' &#124; 'hover' | 'click' | false
-spinStyle | 图片加载中样式 | [SpinProperties](#spinproperties-type) | {} | false
-fadeDuration | 渐变动画持续时长，单位 `ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500 | false
-fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可参考 [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) | string | 'cubic-bezier(0.4, 0, 0.2, 1)' | false
-slideDuration | 滑动动画持续时长，单位 `ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800 | false
-slideFunction | 滑动动画函数，，仅当 `effect` 为 `'slide'` 时生效，可参考 [`useTransition`](https://vueuse.org/core/useTransition/#usage) | number[] | [0.65, 0, 0.35, 1] | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+images | 走马灯图片数组 | [Image](#image-type)[] | []
+width | 走马灯宽度，单位 `px` | number &#124; string | '100%'
+height | 走马灯高度，单位 `px` | number &#124; string | '100vh'
+autoplay | 是否自动轮播 | boolean | false
+pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播 | boolean | false
+effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide'
+interval | 自动轮播间隔，单位 `ms` | number | 3000
+showArrow | 是否显示箭头 | boolean | true
+arrowColor | 箭头颜色 | string | '#FFF'
+arrowSize | 箭头大小，单位 `px` | number | 36
+dots | 是否显示指示点 | boolean | true
+dotSize | 指示点大小，单位 `px` | number | 10
+dotColor | 指示点颜色 | string | 'rgba(255, 255, 255, 0.3)'
+dotActiveColor | 指示点选中颜色 | string | '#1677FF'
+dotStyle | 指示点样式，优先级高于 `dotSize`、`dotColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+dotActiveStyle | 指示点选中样式，优先级高于 `dotActiveColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+dotPosition | 指示点位置，位置为 `left` &#124; `right` 时，`effect: 'slide'` 轮播自动变为垂直轮播 | 'bottom' &#124; 'top' &#124; 'left' &#124; 'right' | 'bottom'
+dotsTrigger | 指示点触发切换的方式 | 'click' &#124; 'hover' | 'click'
+spinProps | 图片加载中样式，`Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin) | object | {}
+fadeDuration | 渐变动画持续时长，单位 `ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500
+fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可参考 [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) | string | 'cubic-bezier(0.4, 0, 0.2, 1)'
+slideDuration | 滑动动画持续时长，单位 `ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800
+slideFunction | 滑动动画函数，，仅当 `effect` 为 `'slide'` 时生效，可参考 [`useTransition`](https://vueuse.org/core/useTransition/#usage) | number[] | [0.65, 0, 0.35, 1]
 
 ### Image Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-title | 图片名称 | string | false
-src | 图片地址 | string | true
-link | 图片跳转链接 | string | false
-
-### SpinProperties Type
-
-名称 | 说明 | 类型 | 必传
--- | -- | -- | --
-size | 尺寸大小 | 'small' &#124; 'default' &#124; 'large' | false
-tip | 描述文案 | string | false
-indicator | 加载指示符 | 'dot' &#124; 'quarter-circle' &#124; 'half-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' | false
-color | 主题颜色 | string | false
+title? | 图片名称 | string | undefined
+src | 图片地址 | string | undefined
+link? | 图片跳转链接 | string | undefined
 
 ## Methods
 

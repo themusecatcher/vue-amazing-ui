@@ -3,7 +3,7 @@ import { computed } from 'vue'
 interface Gradient {
   from: string
   to: string
-  deg?: number | string // 渐变角度，默认 252deg
+  deg?: number | string // 渐变角度，默认 252，单位 deg
 }
 interface Props {
   gradient?: string | Gradient // 文字渐变色参数

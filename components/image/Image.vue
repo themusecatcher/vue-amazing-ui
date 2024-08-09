@@ -8,7 +8,7 @@ interface Image {
   name?: string // 图像名称
 }
 interface Props {
-  src: string | Image[] // 图像地址 | 图像地址数组
+  src?: string | Image[] // 图像地址 | 图像地址数组
   name?: string // 图像名称，没有传入图片名时自动从图像地址 src 中读取
   width?: string | number | (string | number)[] // 图像宽度，单位 px
   height?: string | number | (string | number)[] // 图像高度，单位 px
@@ -25,8 +25,8 @@ interface Props {
   album?: boolean // 是否相册模式，即从一张展示图片点开相册
 }
 const props = withDefaults(defineProps<Props>(), {
-  src: '',
-  name: '',
+  src: undefined,
+  name: undefined,
   width: 100,
   height: 100,
   bordered: true,
@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
   loop: false,
   album: false
 })
-const images = ref<Image[]>([])
+const images = ref<any[]>([])
 watchEffect(() => {
   images.value = getImages()
 })
@@ -267,7 +267,7 @@ function onSwitchRight() {
             :style="`object-fit: ${fit};`"
             @load="onComplete(index)"
             :src="image.src"
-            :alt="image.name"
+            :alt="getImageName(image)"
           />
         </Spin>
         <div class="m-image-mask" @click="onPreview(index)">
@@ -401,7 +401,7 @@ function onSwitchRight() {
                 class="u-preview-image"
                 :style="`transform: scale3d(${swapX * scale}, ${swapY * scale}, 1) rotate(${rotate}deg);`"
                 :src="image.src"
-                :alt="image.name"
+                :alt="getImageName(image)"
                 @mousedown.prevent="onMouseDown($event)"
                 @load="onLoaded(index)"
                 @dblclick="resetOnDbclick ? onResetOrigin() : () => false"

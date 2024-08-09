@@ -7,16 +7,17 @@ import { useResizeObserver } from '../utils'
   计算每个图片的位置 `top`，`left`，保证每张新的图片都追加在当前高度最小的那列末尾
 */
 interface Image {
+  name?: string // 图片名称
   src: string // 图片地址
-  title?: string // 图片名称
 }
 interface Props {
-  images: Image[] // 图片数组
+  images?: Image[] // 图片数组
   columnCount?: number // 要划分的列数
   columnGap?: number // 各列之间的间隙，单位 px
-  width?: string | number // 瀑布流区域的总宽度
+  width?: string | number // 瀑布流区域的总宽度，单位 px
   borderRadius?: number // 瀑布流区域和图片圆角，单位 px
   backgroundColor?: string // 瀑布流区域背景填充色
+  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置图片加载中样式
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
@@ -24,7 +25,8 @@ const props = withDefaults(defineProps<Props>(), {
   columnGap: 20,
   width: '100%',
   borderRadius: 8,
-  backgroundColor: '#F2F4F8'
+  backgroundColor: '#F2F4F8',
+  spinProps: () => ({})
 })
 const waterfallRef = ref()
 const waterfallWidth = ref<number>()
@@ -130,6 +132,17 @@ function getPosition(i: number, height: number) {
 function onLoaded(index: number) {
   loaded.value[index] = true
 }
+function getImageName(image: Image) {
+  // 从图像地址src中获取图像名称
+  if (image) {
+    if (image.name) {
+      return image.name
+    } else {
+      const res = image.src.split('?')[0].split('/')
+      return res[res.length - 1]
+    }
+  }
+}
 </script>
 <template>
   <div
@@ -143,10 +156,11 @@ function onLoaded(index: number) {
       :spinning="!loaded[index]"
       size="small"
       indicator="dynamic-circle"
+      v-bind="spinProps"
       v-for="(property, index) in imagesProperty"
       :key="index"
     >
-      <img class="u-image" :src="images[index].src" :alt="images[index].title" @load="onLoaded(index)" />
+      <img class="u-image" :src="images[index].src" :alt="getImageName(images[index])" @load="onLoaded(index)" />
     </Spin>
   </div>
 </template>

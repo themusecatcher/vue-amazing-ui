@@ -323,15 +323,15 @@ function onClose (e: MouseEvent) {
 
 ### Alert
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-message | 警告提示内容 | string &#124; slot | '' | false
-description | 警告提示的辅助性文字介绍 | string &#124; slot | '' | false
-type | 指定警告提示的样式，有四种选择 `success`、`info`、`warning`、`error` | 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'info' | false
-closable | 是否显示关闭按钮 | boolean | false | false
-closeText | 自定义关闭按钮 |  string &#124; slot | '' | false
-icon | 自定义图标，`showIcon` 为 `true` 时有效 |  string &#124; slot | '' | false
-showIcon | 是否显示辅助图标 | boolean | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+message | 警告提示内容 | string &#124; slot | undefined
+description | 警告提示的辅助性文字介绍 | string &#124; slot | undefined
+type | 指定警告提示的样式，有四种选择 `success`、`info`、`warning`、`error` | 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'info'
+closable | 是否显示关闭按钮 | boolean | false
+closeText | 自定义关闭按钮 |  string &#124; slot | undefined
+icon | 自定义图标，`showIcon` 为 `true` 时有效 |  string &#124; slot | undefined
+showIcon | 是否显示辅助图标 | boolean | false
 
 ## Events
 

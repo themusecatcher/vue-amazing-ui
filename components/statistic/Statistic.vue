@@ -13,17 +13,17 @@ interface Props {
   formatter?: Function // 自定义数值展示
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '',
-  value: '',
+  title: undefined,
+  value: undefined,
   valueStyle: () => ({}),
   precision: 0,
-  prefix: '',
-  suffix: '',
+  prefix: undefined,
+  suffix: undefined,
   separator: ',',
   formatter: (value: string) => value
 })
 const showValue = computed(() => {
-  return props.formatter(formatNumber(props.value, props.precision, props.separator))
+  return props.formatter(formatNumber(props.value || '', props.precision, props.separator))
 })
 const slots = useSlots()
 const showPrefix = computed(() => {

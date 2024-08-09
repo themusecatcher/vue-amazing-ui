@@ -546,27 +546,27 @@ const onDynamicClose = (tag: any, index: number) => {
 
 ### Tag
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-closable | 标签是否可以关闭 | boolean | false | false
-color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | undefined | false
-icon | 设置图标 | string &#124; slot | undefined | false
-size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
-bordered | 是否有边框 | boolean | true | false
-dynamic | 是否启用标签动态添加和删除 | boolean | false | false
-value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Tag](#tag-type)[] | [] | false
-spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space) ，仅当 `dynamic: true` 时生效 | object | {} | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+closable | 标签是否可以关闭 | boolean | false
+color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | undefined
+icon | 设置图标 | string &#124; slot | undefined
+size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+bordered | 是否有边框 | boolean | true
+dynamic | 是否启用标签动态添加和删除 | boolean | false
+value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Tag](#tag-type)[] | []
+spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space) ，仅当 `dynamic: true` 时生效 | object | {}
 
 ### Tag Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-label | 标签文本名 | string &#124; slot | false
-closable | 标签是否可以关闭，默认 `true` | boolean | false
-color | 标签颜色 | string | false
-icon | 设置图标 | string &#124; slot | false
-size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | false
-bordered | 是否有边框，默认为 `true` | boolean | false
+label? | 标签文本名 | string &#124; slot | undefined
+closable? | 标签是否可以关闭 | boolean | true
+color? | 标签颜色 | string | undefined
+icon? | 设置图标 | string &#124; slot | undefined
+size? | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+bordered? | 是否有边框 | boolean | true
 
 ## Events
 

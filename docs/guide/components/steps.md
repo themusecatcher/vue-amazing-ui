@@ -519,22 +519,22 @@ const state = reactive({
 
 ### Steps
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-steps | 步骤数组 | [Step](#step-type)[] | [] | true
-width | 步骤条总宽度，单位 `px` | number &#124; string | 'auto' | false
-size | 步骤条大小 | 'default' &#124; 'small' | 'default' | false
-vertical | 是否使用垂直步骤条，当 `vertical: true` `时，labelPlacement` 自动设为 `right` | boolean | false | false
-labelPlacement | 标签放置位置，默认放图标右侧，可选 `bottom` 放图标下方 | 'right' &#124; 'bottom' | 'right' | false
-dotted | 是否使用点状步骤条，当 `dotted: true` 且 `vertical: false` 时，`labelPlacement` 将自动设为 `bottom` | boolean | false | false
-current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1 | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+steps | 步骤数组 | [Step](#step-type)[] | []
+width | 步骤条总宽度，单位 `px` | number &#124; string | 'auto'
+size | 步骤条大小 | 'default' &#124; 'small' | 'default'
+vertical | 是否使用垂直步骤条，当 `vertical: true` `时，labelPlacement` 自动设为 `right` | boolean | false
+labelPlacement | 标签放置位置，默认放图标右侧，可选 `bottom` 放图标下方 | 'right' &#124; 'bottom' | 'right'
+dotted | 是否使用点状步骤条，当 `dotted: true` 且 `vertical: false` 时，`labelPlacement` 将自动设为 `bottom` | boolean | false
+current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1
 
 ### Step Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-title | 标题 | string | false
-description | 描述 | string | false
+title? | 标题 | string | undefined
+description? | 描述 | string | undefined
 
 ## Events
 

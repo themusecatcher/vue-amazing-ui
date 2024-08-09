@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
+import Pagination from '../pagination'
+interface Grid {
+  column: number // 列数，number of 1, 2, 3...24
+  gutter: number // 栅格间隔
+}
 interface Props {
   bordered?: boolean // 是否展示边框
   dataSource?: any[] // 列表数据源
   header?: string // 列表头部 string | slot
   footer?: string // 列表底部 string | slot
-  grid?: object // 	列表栅格配置
+  grid?: Grid // 	列表栅格配置
   vertical?: boolean // 是否使用竖直样式
   loading?: boolean // 是否加载中
   loadMore?: string // 加载更多 string | slot
-  pagination?: boolean | object // 对应的 pagination 配置, 设置 false 不显示
+  showPagination?: boolean // 是否显示分页
+  pagination?: object // Pagination 组件属性配置，参考 Pagination Props
   rowKey?: (item: any) => string | number // 各项 key 的取值，可以是字符串或一个函数
   size?: 'small' | 'middle' | 'large' // 列表尺寸
   split?: boolean // 是否展示分割线
@@ -23,7 +29,8 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   loading: false,
   loadMore: undefined,
-  pagination: false,
+  showPagination: false,
+  pagination: () => ({}),
   rowKey: undefined,
   size: 'middle',
   split: true
@@ -43,6 +50,7 @@ const showFooter = computed(() => {
     class="m-list"
     :class="{
       'list-bordered': bordered,
+      'list-vertical': vertical,
       'list-split': split,
       'list-small': size === 'small',
       'list-large': size === 'large'
@@ -54,6 +62,9 @@ const showFooter = computed(() => {
     <slot></slot>
     <div class="m-list-footer" v-if="showFooter">
       <slot name="footer"></slot>
+    </div>
+    <div class="m-list-pagination" v-if="showPagination">
+      <Pagination v-bind="pagination" />
     </div>
   </div>
 </template>
@@ -67,8 +78,12 @@ const showFooter = computed(() => {
   .m-list-header,
   .m-list-footer {
     background: transparent;
-    padding-block: 12px;
+    padding: 12px 0;
     transition: all 0.3s;
+  }
+  .m-list-pagination {
+    margin-block-start: 24px;
+    text-align: end;
   }
 }
 .list-bordered {
@@ -78,6 +93,39 @@ const showFooter = computed(() => {
   :deep(.m-list-item),
   .m-list-footer {
     padding-inline: 24px;
+  }
+}
+.list-vertical {
+  :deep(.m-list-item) {
+    align-items: initial;
+    .m-list-item-main {
+      display: block;
+      flex: 1;
+      .m-list-item-meta {
+        margin-bottom: 16px;
+        .m-list-item-content {
+          .list-item-title {
+            margin-bottom: 12px;
+            color: rgba(0, 0, 0, 0.88);
+            font-size: 16px;
+            line-height: 1.5;
+          }
+        }
+      }
+      .list-item-actions {
+        margin-top: 16px;
+        margin-left: auto;
+        & > * {
+          padding: 0 16px;
+          &:first-child {
+            padding-left: 0;
+          }
+        }
+      }
+    }
+    .list-item-extra {
+      margin-left: 24px;
+    }
   }
 }
 .list-split {
@@ -98,6 +146,11 @@ const showFooter = computed(() => {
   }
 }
 .list-large {
+  :deep(.m-list-item) {
+    padding: 16px 24px;
+  }
+}
+.list-bordered.list-large {
   .m-list-header,
   :deep(.m-list-item),
   .m-list-footer {

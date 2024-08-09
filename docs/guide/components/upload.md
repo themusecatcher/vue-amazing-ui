@@ -352,38 +352,38 @@ function onRemove (file: object) {
 
 ### Upload
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-accept | 接受上传的文件类型，与`<input type="file" />`的 `accept` 属性一致，参考 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file) | string | '*' | false
-multiple | 是否支持多选文件 | boolean | false | false
-maxCount | 限制上传数量。当为 `1` 时，始终用最新上传的文件代替当前文件 | number | 1 | false
-tip | 上传描述文字 | string | 'Upload' | false
-fit | 预览图片缩放规则，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit)，仅当上传文件为图片时生效 | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' | false
-spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多个文件时的排列方式 | object | {} | false
-spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置上传中样式 | object | {} | false
-imageProps | `Image` 组件属性配置，参考 [Image Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html#image)，用于配置图片预览 | object | {} | false
-messageProps | `Message` 组件属性配置，参考 [Message Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html#message)，用于配置操作消息提示 | object | {} | false
-actionMessage | 操作成功的消息提示，传 `{}` 即可不显示任何消息提示 | [MessageType](#messagetype-type) | \{ upload: '上传成功', remove: '删除成功' } | false
-beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 继续上传，通常用来现在用户上传的文件格式和大小 | Function | () => true | false
-uploadMode | 上传文件的方式，可选 `'base64'` &#124; `'custom'` | 'base64' &#124; 'custom' | 'base64' | false
-customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为 | Function | () => {} | false
-disabled | 是否禁用，只能预览，不能删除和上传 | boolean | false | false
-fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [FileType](#filetype-type)[] | [] | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+accept | 接受上传的文件类型，与`<input type="file" />`的 `accept` 属性一致，参考 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file) | string | '*'
+multiple | 是否支持多选文件 | boolean | false
+maxCount | 限制上传数量。当为 `1` 时，始终用最新上传的文件代替当前文件 | number | 1
+tip | 上传描述文字 | string | 'Upload'
+fit | 预览图片缩放规则，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit)，仅当上传文件为图片时生效 | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain'
+spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多个文件时的排列方式 | object | {}
+spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置上传中样式 | object | {}
+imageProps | `Image` 组件属性配置，参考 [Image Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html#image)，用于配置图片预览 | object | {}
+messageProps | `Message` 组件属性配置，参考 [Message Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html#message)，用于配置操作消息提示 | object | {}
+actionMessage | 操作成功的消息提示，传 `{}` 即可不显示任何消息提示 | [MessageType](#messagetype-type) | \{ upload: '上传成功', remove: '删除成功' }
+beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 继续上传，通常用来现在用户上传的文件格式和大小 | Function | () => true
+uploadMode | 上传文件的方式，可选 `'base64'` &#124; `'custom'` | 'base64' &#124; 'custom' | 'base64'
+customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为 | Function | () => {}
+disabled | 是否禁用，只能预览，不能删除和上传 | boolean | false
+fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [FileType](#filetype-type)[] | []
 
 ### FileType Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-name | 文件名 | string | false
-url | 文件地址 | string | true
-[propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | false
+name? | 文件名 | string | undefined
+url | 文件地址 | string | undefined
+[propName: string] | 用于包含带有任意数量的其他属性 | any | undefined
 
 ### MessageType Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-upload | 上传成功的消息提示，没有设置该属性时即不显示上传消息提示 | string | false
-remove | 删除成功的消息提示，没有设置该属性时即不显示删除消息提示 | string | false
+upload? | 上传成功的消息提示，没有设置该属性时即不显示上传消息提示 | string | '上传成功'
+remove? | 删除成功的消息提示，没有设置该属性时即不显示删除消息提示 | string | '删除成功'
 
 ## Methods
 

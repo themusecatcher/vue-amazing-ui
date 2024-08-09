@@ -366,20 +366,20 @@ function onKnow () { // “我知道了”按钮回调
 
 ### Modal
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-width | 提示框宽度，单位 `px` | number | 420 | false
-cancelText | 取消按钮文字 | string | '取消' | false
-cancelProps | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} | false
-okText | 确认按钮文字 | string | '确定' | false
-okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary' | false
-okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} | false
-noticeText | 通知按钮文字 | string | '知道了' | false
-noticeProps | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} | false
-center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true | false
-top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100 | false
-loading | 确定按钮 `loading` | boolean | false | false
-show | 提示框是否可见 | boolean | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+width | 提示框宽度，单位 `px` | number | 420
+cancelText | 取消按钮文字 | string | '取消'
+cancelProps | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
+okText | 确认按钮文字 | string | '确定'
+okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary'
+okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
+noticeText | 通知按钮文字 | string | '知道了'
+noticeProps | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
+center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true
+top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100
+loading | 确定按钮 `loading` | boolean | false
+show | 提示框是否可见 | boolean | false
 
 ## Events
 

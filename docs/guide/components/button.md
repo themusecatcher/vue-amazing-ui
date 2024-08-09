@@ -418,19 +418,19 @@ function onClick(e: Event) {
 
 ### Button
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-type | 按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' | false
-size | 按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
-ghost | 按钮背景是否透明，仅当 `type: 'primary'` &#124; `'danger'` 时生效 | boolean | false | false
-rippleColor | 点击时的波纹颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | undefined | false
-href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | '' | false
-target | 如何打开目标链接，相当于 `a` 链接的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self' | false
-disabled | 是否禁用 | boolean | false | false
-loading | 是否加载中 | boolean | false | false
-loadingType | 加载指示符类型 | 'static' &#124; 'dynamic' | 'dynamic' | false
-loadingColor | 加载指示符颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | 'rgba(0, 0, 0, 0.88)' | false
-block | 是否将按钮宽度调整为其父宽度 | boolean | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+type | 按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
+size | 按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+ghost | 按钮背景是否透明，仅当 `type: 'primary'` &#124; `'danger'` 时生效 | boolean | false
+rippleColor | 点击时的波纹颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | undefined
+href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | undefined
+target | 如何打开目标链接，相当于 `a` 链接的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self'
+disabled | 是否禁用 | boolean | false
+loading | 是否加载中 | boolean | false
+loadingType | 加载指示符类型 | 'static' &#124; 'dynamic' | 'dynamic'
+loadingColor | 加载指示符颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | 'rgba(0, 0, 0, 0.88)'
+block | 是否将按钮宽度调整为其父宽度 | boolean | false
 
 ## Events
 

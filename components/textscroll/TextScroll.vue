@@ -7,7 +7,7 @@ interface Text {
   link?: string // 跳转链接
 }
 interface Props {
-  scrollText: Text[] | Text // 滚动文字数组，single 为 true 时，类型为 Text；多条文字滚动时，数组长度必须大于等于 amount 才能滚动
+  scrollText?: Text[] | Text // 滚动文字数组，single 为 true 时，类型为 Text；多条文字滚动时，数组长度必须大于等于 amount 才能滚动
   single?: boolean // 是否启用单条文字滚动效果，只支持水平文字滚动，为 true 时，amount 自动设为 1
   width?: number | string // 滚动区域宽度，单位 px
   height?: number // 滚动区域高度，单位 px

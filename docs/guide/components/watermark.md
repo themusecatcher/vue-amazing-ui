@@ -297,20 +297,20 @@ const layoutOptions = [
 
 ### Watermark
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-width | 水印的宽度，默认值为 `content` 自身的宽度 | number | undefined | false
-height | 水印的高度，默认值为 `content` 自身的高度 | number | undefined | false
-layout | 水印的布局方式：平行布局 `parallel`; 交替布局 `alternate` | 'parallel' &#124; 'alternate' | 'alternate' | false
-rotate | 水印绘制时，旋转的角度，单位 `°` | number | -22 | false
-zIndex | 追加的水印元素的 `z-index` | number| 90 | false
-image | 图片源，建议使用 `2` 倍或 `3` 倍图，优先级高于文字 | string | undefined | false
-content | 水印文字内容 | string &#124; string[] | '' | false
-fullscreen | 是否展示全屏 | boolean | false | false
-color | 字体颜色 | string | 'rgba(0, 0, 0, 0.15)' | false
-fontSize | 字体大小，单位 `px` | number | 16 | false
-fontWeight | 字体粗细 | 'normal' &#124; 'light' &#124; 'weight' &#124; number | 'normal' | false
-fontFamily | 字体类型 | string | 'sans-serif' | false
-fontStyle | 字体样式 | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal' | false
-gap | 水印之间的间距 | [number, number] | [100, 100] | false
-offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | [number, number] | [50, 50] | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+width | 水印的宽度，默认值为 `content` 自身的宽度 | number | undefined
+height | 水印的高度，默认值为 `content` 自身的高度 | number | undefined
+layout | 水印的布局方式：平行布局 `parallel`; 交替布局 `alternate` | 'parallel' &#124; 'alternate' | 'alternate'
+rotate | 水印绘制时，旋转的角度，单位 `°` | number | -22
+zIndex | 追加的水印元素的 `z-index` | number| 90
+image | 图片源，建议使用 `2` 倍或 `3` 倍图，优先级高于文字 | string | undefined
+content | 水印文字内容 | string &#124; string[] | undefined
+fullscreen | 是否展示全屏 | boolean | false
+color | 字体颜色 | string | 'rgba(0, 0, 0, 0.15)'
+fontSize | 字体大小，单位 `px` | number | 16
+fontWeight | 字体粗细 | 'normal' &#124; 'light' &#124; 'weight' &#124; number | 'normal'
+fontFamily | 字体类型 | string | 'sans-serif'
+fontStyle | 字体样式 | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal'
+gap | 水印之间的间距 | [number, number] | [100, 100]
+offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | [number, number] | [50, 50]

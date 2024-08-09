@@ -7,12 +7,12 @@ import { useQRCode } from '@vueuse/integrations/useQRCode'
 */
 interface Props {
   value?: string // 扫描后的文本或地址
-  size?: number // 二维码大小，单位px
+  size?: number // 二维码大小，单位 px
   color?: string // 二维码颜色，Value must be in hex format (十六进制颜色值)
   bgColor?: string // 二维码背景色，Value must be in hex format (十六进制颜色值)
   bordered?: boolean // 是否有边框
   borderColor?: string // 边框颜色
-  scale?: number // 每个black dots多少像素
+  scale?: number // 每个 black dots 多少像素
   /*
     纠错等级也叫纠错率，就是指二维码可以被遮挡后还能正常扫描，而这个能被遮挡的最大面积就是纠错率。
     通常情况下二维码分为 4 个纠错级别：L级 可纠正约 7% 错误、M级 可纠正约 15% 错误、Q级 可纠正约 25% 错误、H级 可纠正约30% 错误。
@@ -22,7 +22,7 @@ interface Props {
   errorLevel?: 'L' | 'M' | 'Q' | 'H' // 二维码纠错等级
 }
 const props = withDefaults(defineProps<Props>(), {
-  value: '',
+  value: undefined,
   size: 160,
   color: '#000',
   bgColor: '#FFF',
@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const qrcode = computed(() => {
   // `qrcode` will be a ref of data URL
-  return useQRCode(props.value, {
+  return useQRCode(props.value || '', {
     errorCorrectionLevel: props.errorLevel,
     type: 'image/png',
     quality: 1,

@@ -511,27 +511,27 @@ const state = reactive({
 
 ### TextScroll
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-scrollText | 滚动文字数组，`single: true` 时，类型为 `Text`；多条文字滚动时，数组长度必须大于等于 `amount` 才能滚动 | [Text](#text-type)[] &#124; [Text](#text-type) | [] | true
-single | 是否启用单条文字滚动效果，只支持水平文字滚动，为 `true` `时，amount` 自动设为 `1` | boolean | false | false
-width | 滚动区域宽度，单位 `px` | number &#124; string | '100%' | false
-height | 滚动区域高度，单位 `px` | number | 50 | false
-boardStyle | 滚动区域样式，优先级低于 `width`、`height` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-textStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-amount | 滚动区域展示条数，水平滚动时生效 | number | 4 | false
-gap | 水平滚动文字各列间距或垂直滚动文字两边的边距，单位 `px` |  number | 20 | false
-interval | 水平滚动动画执行时间间隔，单位 `ms`，水平滚动时生效 | number | 10 | false
-step | 水平滚动动画每次执行时移动距离，单位 `px`，水平滚动时生效，与 `interval` 配合控制滚动速度 | number | 1 | false
-vertical | 是否垂直滚动 | boolean | false | false
-verticalInterval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000 | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+scrollText | 滚动文字数组，`single: true` 时，类型为 `Text`；多条文字滚动时，数组长度必须大于等于 `amount` 才能滚动 | [Text](#text-type)[] &#124; [Text](#text-type) | []
+single | 是否启用单条文字滚动效果，只支持水平文字滚动，为 `true` `时，amount` 自动设为 `1` | boolean | false
+width | 滚动区域宽度，单位 `px` | number &#124; string | '100%'
+height | 滚动区域高度，单位 `px` | number | 50
+boardStyle | 滚动区域样式，优先级低于 `width`、`height` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+textStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+amount | 滚动区域展示条数，水平滚动时生效 | number | 4
+gap | 水平滚动文字各列间距或垂直滚动文字两边的边距，单位 `px` |  number | 20
+interval | 水平滚动动画执行时间间隔，单位 `ms`，水平滚动时生效 | number | 10
+step | 水平滚动动画每次执行时移动距离，单位 `px`，水平滚动时生效，与 `interval` 配合控制滚动速度 | number | 1
+vertical | 是否垂直滚动 | boolean | false
+verticalInterval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000
 
 ### Text Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认
 -- | -- | -- | --
-title | 文字标题 | string | true
-link | 跳转链接 | string | false
+title | 文字标题 | string | undefined
+link? | 跳转链接 | string | undefined
 
 ## Events
 

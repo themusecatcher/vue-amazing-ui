@@ -8,37 +8,30 @@ interface Image {
   title?: string // 图片名称
   src: string // 图片地址
   link?: string // 图片跳转链接
-  [key: string]: any
-}
-interface SpinProperties {
-  size?: 'small' | 'default' | 'large' // 尺寸大小
-  tip?: string // 描述文案
-  indicator?: 'dot' | 'quarter-circle' | 'half-circle' | 'three-quarters-circle' | 'dynamic-circle' // 加载指示符
-  color?: string // 主题颜色
 }
 interface Props {
-  images: Image[] // 走马灯图片数组
-  width?: number | string // 走马灯宽度
-  height?: number | string // 走马灯高度
+  images?: Image[] // 走马灯图片数组
+  width?: number | string // 走马灯宽度，单位 px
+  height?: number | string // 走马灯高度，单位 px
   autoplay?: boolean // 是否自动轮播
   pauseOnMouseEnter?: boolean // 当鼠标移入走马灯时，是否暂停自动轮播
   effect?: 'slide' | 'fade' // 轮播图切换时的过渡效果
-  interval?: number // 自动轮播间隔，单位ms
+  interval?: number // 自动轮播间隔，单位 ms
   showArrow?: boolean // 是否显示箭头
   arrowColor?: string // 箭头颜色
-  arrowSize?: number // 箭头大小，单位px
+  arrowSize?: number // 箭头大小，单位 px
   dots?: boolean // 是否显示指示点
-  dotSize?: number // 指示点大小，单位px
+  dotSize?: number // 指示点大小，单位 px
   dotColor?: string // 指示点颜色
   dotActiveColor?: string // 指示点选中颜色
   dotStyle?: CSSProperties // 指示点样式，优先级高于 dotSize、dotColor
   dotActiveStyle?: CSSProperties // 指示点选中样式，优先级高于 dotActiveColor
   dotPosition?: 'bottom' | 'top' | 'left' | 'right' // 指示点位置，位置为 'left' | 'right' 时，effect: 'slide' 轮播自动变为垂直轮播
   dotsTrigger?: 'click' | 'hover' // 指示点触发切换的方式
-  spinStyle?: SpinProperties // 图片加载中样式
-  fadeDuration?: number // 渐变动画持续时长，单位ms，仅当 effect 为 'fade' 时生效
+  spinProps?: object // 图片加载中样式，Spin 组件属性配置，参考 Spin Props
+  fadeDuration?: number // 渐变动画持续时长，单位 ms，仅当 effect 为 'fade' 时生效
   fadeFunction?: string // 渐变动画函数，仅当 effect 为 'fade' 时生效，可参考 transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
-  slideDuration?: number // 滑动动画持续时长，单位ms，仅当 effect 为 'slide' 时生效
+  slideDuration?: number // 滑动动画持续时长，单位 ms，仅当 effect 为 'slide' 时生效
   slideFunction?: string | number[] // 滑动动画函数，仅当 effect 为 'slide' 时生效，可参考 useTransition 写法：https://vueuse.org/core/useTransition/#usage
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -60,7 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
   dotActiveStyle: () => ({}),
   dotPosition: 'bottom',
   dotsTrigger: 'click',
-  spinStyle: () => ({}),
+  spinProps: () => ({}),
   fadeDuration: 500,
   fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
   slideDuration: 800,
@@ -395,7 +388,7 @@ defineExpose({
         v-for="(image, index) in images"
         :key="index"
       >
-        <Spin :spinning="!complete[index]" indicator="dynamic-circle" v-bind="spinStyle">
+        <Spin :spinning="!complete[index]" indicator="dynamic-circle" v-bind="spinProps">
           <img
             @load="onComplete(index)"
             :src="image.src"
@@ -407,7 +400,7 @@ defineExpose({
         </Spin>
       </div>
       <div class="m-image" @click="clickImage(images[0])" v-if="imageCount && effect === 'slide'">
-        <Spin :spinning="!complete[0]" indicator="dynamic-circle" v-bind="spinStyle">
+        <Spin :spinning="!complete[0]" indicator="dynamic-circle" v-bind="spinProps">
           <img
             @load="onComplete(0)"
             :src="images[0].src"

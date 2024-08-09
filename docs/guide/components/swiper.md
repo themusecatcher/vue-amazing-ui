@@ -496,28 +496,28 @@ function onNext () {
 
 ### Swiper
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-images | 轮播图片数组 | [Image](#image-type)[] | [] | true
-width | 轮播区域宽度 | number &#124; string | '100%' | false
-height | 轮播区域高度 | number &#124; string  | '100%' | false
-type | `banner`: 轮播图模式; `carousel`: 走马灯模式; `broadcast`: 信息展播模式 | 'banner' &#124; 'carousel' &#124; 'broadcast' | 'banner' | false
-navigation | 是否显示导航 | boolean | false | false
-effect | 切换动画效果 | 'slide' &#124; 'fade' &#124; 'cube' &#124; 'flip' &#124; 'coverflow' &#124; 'cards' &#124; 'creative' | 'slide' | false
-delay | 自动切换的时间间隔，仅当 `type: banner` 时生效，单位 `ms` | number | 3000 | false
-speed | 切换过渡的动画持续时间，单位 `ms` | number | 300 | false
-loop | 是否循环切换 | boolean | true | false
-pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播，仅当 `type: banner` 或 `type: carousel` 时生效 | boolean | false | false
-swipe | 是否可以鼠标拖动 | boolean | true | false
-preloaderColor | 预加载时的 `loading` 颜色 | 'theme' &#124; 'white' &#124; 'black' | 'theme' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+images | 轮播图片数组 | [Image](#image-type)[] | []
+width | 轮播区域宽度 | number &#124; string | '100%'
+height | 轮播区域高度 | number &#124; string  | '100%'
+type | `banner`: 轮播图模式; `carousel`: 走马灯模式; `broadcast`: 信息展播模式 | 'banner' &#124; 'carousel' &#124; 'broadcast' | 'banner'
+navigation | 是否显示导航 | boolean | false
+effect | 切换动画效果 | 'slide' &#124; 'fade' &#124; 'cube' &#124; 'flip' &#124; 'coverflow' &#124; 'cards' &#124; 'creative' | 'slide'
+delay | 自动切换的时间间隔，仅当 `type: banner` 时生效，单位 `ms` | number | 3000
+speed | 切换过渡的动画持续时间，单位 `ms` | number | 300
+loop | 是否循环切换 | boolean | true
+pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播，仅当 `type: banner` 或 `type: carousel` 时生效 | boolean | false
+swipe | 是否可以鼠标拖动 | boolean | true
+preloaderColor | 预加载时的 `loading` 颜色 | 'theme' &#124; 'white' &#124; 'black' | 'theme'
 
 ### Image Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-title | 图片名称 | string | false
-link | 图片跳转链接 | string | false
-src | 图片地址 | string | true
+name? | 图片名称 | string | undefined
+src | 图片地址 | string | undefined
+link? | 图片跳转链接 | string | undefined
 
 ## Events
 

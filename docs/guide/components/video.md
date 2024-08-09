@@ -121,20 +121,20 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.
 
 ### Video
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | undefined | true
-poster | 视频封面地址，支持网络地址 `https` 和相对地址 | string | undefined | false
-second | 在未设置封面时，自动截取视频第 `second` 秒对应帧作为视频封面 | number | 0.5 | false
-width | 视频播放器宽度，单位 `px` | number | 800 | false
-height | 视频播放器高度，单位 `px` | number | 450 | false
-autoplay | 视频就绪后是否马上播放，优先级高于 `preload`，参考 [MDN 自动播放指南](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide) | boolean | false | false
-controls | 是否向用户显示控件，比如进度条，全屏等 | boolean | true | false
-loop | 视频播放完成后，是否循环播放 | boolean | false | false
-muted |  是否静音 | boolean | false | false
-preload | 是否在页面加载后载入视频，如果设置了 `autoplay` 属性，则 `preload` 将被忽略 | 'auto' &#124; 'metadata' &#124; 'none' | 'metadata' | false
-showPlay | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true | false
-fit | `video` 的 `poster` 默认图片和视频内容缩放规则 | 'none' &#124; 'fill' &#124; 'contain' &#124; 'cover' | 'contain' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | undefined
+poster | 视频封面地址，支持网络地址 `https` 和相对地址 | string | undefined
+second | 在未设置封面时，自动截取视频第 `second` 秒对应帧作为视频封面 | number | 0.5
+width | 视频播放器宽度，单位 `px` | number | 800
+height | 视频播放器高度，单位 `px` | number | 450
+autoplay | 视频就绪后是否马上播放，优先级高于 `preload`，参考 [MDN 自动播放指南](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide) | boolean | false
+controls | 是否向用户显示控件，比如进度条，全屏等 | boolean | true
+loop | 视频播放完成后，是否循环播放 | boolean | false
+muted |  是否静音 | boolean | false
+preload | 是否在页面加载后载入视频，如果设置了 `autoplay` 属性，则 `preload` 将被忽略 | 'auto' &#124; 'metadata' &#124; 'none' | 'metadata'
+showPlay | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true
+fit | `video` 的 `poster` 默认图片和视频内容缩放规则 | 'none' &#124; 'fill' &#124; 'contain' &#124; 'cover' | 'contain'
 
 *preload可选属性：*
 

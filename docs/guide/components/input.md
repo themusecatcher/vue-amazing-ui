@@ -396,20 +396,20 @@ const value = ref('')
 
 ### Input
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-width | 输入框宽度 | string &#124; number | '100%' | false
-addonBefore | 设置前置标签 | string &#124; slot | undefined | false
-addonAfter | 设置后置标签 | string &#124; slot | undefined | false
-allowClear | 可以点击清除图标删除内容 | boolean | false | false
-password | 是否启用密码框 | boolean | false | false
-disabled | 是否禁用 | boolean | false | false
-maxlength | 最大长度 | number | undefined | false
-showCount | 是否展示字数 | boolean | false | false
-size | 输入框大小 | 'large' &#124; 'middle' &#124; 'small' | 'middle' | false
-prefix | 前缀图标 | string | undefined | false
-suffix | 后缀图标 | string | undefined | false
-value <Tag color="cyan">v-model</Tag> | 输入框内容 | string | undefined | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+width | 输入框宽度 | string &#124; number | '100%'
+addonBefore | 设置前置标签 | string &#124; slot | undefined
+addonAfter | 设置后置标签 | string &#124; slot | undefined
+allowClear | 可以点击清除图标删除内容 | boolean | false
+password | 是否启用密码框 | boolean | false
+disabled | 是否禁用 | boolean | false
+maxlength | 最大长度 | number | undefined
+showCount | 是否展示字数 | boolean | false
+size | 输入框大小 | 'large' &#124; 'middle' &#124; 'small' | 'middle'
+prefix | 前缀图标 | string | undefined
+suffix | 后缀图标 | string | undefined
+value <Tag color="cyan">v-model</Tag> | 输入框内容 | string | undefined
 
 ## Events
 

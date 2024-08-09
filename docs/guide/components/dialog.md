@@ -375,22 +375,22 @@ p {
 
 ### Dialog
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-title | 标题 | string &#124; slot | '提示' | false
-content | 内容 | string &#124; slot | '' | false
-width | 宽度，单位 `px` | number | 540 | false
-height | 高度，默认 `auto`，自适应内容高度 | number &#124; string | 'auto' | false
-cancelText | 取消按钮文字 | string | '取消' | false
-okText | 确定按钮文字 | string | '确定' | false
-okType | 确定按钮类型 | 'primary' &#124; 'danger' | 'primary' | false | false
-footer | 是否显示底部按钮 | boolean &#124; slot | true | false
-center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true | false
-top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100 | false
-switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false | false
-loading | 确定按钮 `loading` | boolean | false | false
-bodyStyle | 对话框 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-show | 对话框是否可见 | boolean | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+title | 标题 | string &#124; slot | '提示'
+content | 内容 | string &#124; slot | undefined
+width | 宽度，单位 `px` | number | 540
+height | 高度，默认 `auto`，自适应内容高度 | number &#124; string | 'auto'
+cancelText | 取消按钮文字 | string | '取消'
+okText | 确定按钮文字 | string | '确定'
+okType | 确定按钮类型 | 'primary' &#124; 'danger' | 'primary'
+footer | 是否显示底部按钮 | boolean &#124; slot | true
+center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true
+top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100
+switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false
+loading | 确定按钮 `loading` | boolean | false
+bodyStyle | 对话框 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+show | 对话框是否可见 | boolean | false
 
 ## Events
 

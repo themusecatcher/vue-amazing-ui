@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@ant-design/icons-vue':
+        specifier: ^7.0.1
+        version: 7.0.1(vue@3.4.36(typescript@5.5.4))
       '@vuepic/vue-datepicker':
         specifier: ^9.0.1
         version: 9.0.1(vue@3.4.36(typescript@5.5.4))

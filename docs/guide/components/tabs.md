@@ -599,23 +599,23 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 
 ### Tabs
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-tabPages | 标签页数组 | [Tab](#tab-type)[] | [] | false
-centered | 标签是否居中展示 | boolean | false | false
-size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
-type | 标签页的样式 |'line' &#124; 'card' | 'line' | false
-gutter | `tabs` 之前的间隙大小，单位 `px` | number | undefined | false
-activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | '' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+tabPages | 标签页数组 | [Tab](#tab-type)[] | []
+centered | 标签是否居中展示 | boolean | false
+size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+type | 标签页的样式 |'line' &#124; 'card' | 'line'
+gutter | `tabs` 之前的间隙大小，单位 `px` | number | undefined
+activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | undefined
 
 ### Tab Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-key | 对应 `activeKey` | string &#124; number | true
-tab | 标签页显示文字 | string | true
-content | 标签页内容 | string &#124; slot | false
-disabled | 禁用对应标签页 | boolean | false
+key | 对应 `activeKey` | string &#124; number | undefined
+tab | 标签页显示文字 | string | undefined
+content? | 标签页内容 | string &#124; slot | undefined
+disabled? | 禁用对应标签页 | boolean | false
 
 ## Events
 

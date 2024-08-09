@@ -372,23 +372,23 @@ function onDecline (scale: number) {
 
 ### Progress
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-width | 进度条总宽度 | number &#124; string | '100%' | false
-percent | 当前进度百分比 | number | 0 | false
-strokeWidth | 进度条线的宽度，单位 `px`，当 `type: 'circle'` 时，单位是进度圈画布宽度的百分比 | number | 8 | false
-strokeColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变，进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | '#1677FF' | false
-strokeLinecap | 进度条的样式 | 'round' &#124; 'butt' &#124; 'square' | 'round' | false
-showInfo | 是否显示进度数值或状态图标 | boolean | true | false
-format | 内容的模板函数 | (percent: number) => (string &#124; number) &#124; Slot | (percent: number) => percent + '%' | false
-type | 进度条类型 | 'line' &#124; 'circle' | 'line' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+width | 进度条总宽度 | number &#124; string | '100%'
+percent | 当前进度百分比 | number | 0
+strokeWidth | 进度条线的宽度，单位 `px`，当 `type: 'circle'` 时，单位是进度圈画布宽度的百分比 | number | 8
+strokeColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变，进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | '#1677FF'
+strokeLinecap | 进度条的样式 | 'round' &#124; 'butt' &#124; 'square' | 'round'
+showInfo | 是否显示进度数值或状态图标 | boolean | true
+format | 内容的模板函数 | (percent: number) => (string &#124; number) &#124; Slot | (percent: number) => percent + '%'
+type | 进度条类型 | 'line' &#124; 'circle' | 'line'
 
 ### Gradient Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-'0%' | 起始值 | string | false
-'100%' | 终点值 | string | false
-from | 起始值 | string | false
-to | 终点值 | string | false
-direction | 渐变方向 | 'right' &#124; 'left' | false
+'0%'? | 起始值 | string | undefined
+'100%'? | 终点值 | string | undefined
+from? | 起始值 | string | undefined
+to? | 终点值 | string | undefined
+direction? | 渐变方向 | 'right' &#124; 'left' | 'right'

@@ -1093,33 +1093,33 @@ function onChange (values: (number|string)[], labels: string[]) {
 
 ### Cascader
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-options | 可选项数据源 | [Option](#option-type)[] | [] | false
-label | 下拉字典项的文本字段名 | string | 'label' | false
-value | 下拉字典项的值字段名 | string | 'value' | false
-children | 下拉字典项的后代字段名 | string | 'children' | false
-placeholder | 三级下拉各自占位文本 | string &#124; string[] | '请选择' | false
-changeOnSelect | 当此项为 `true` 时，点选每级菜单选项值都会发生变化；否则只有选择第三级选项后选项值才会变化 | boolean | false | false
-gap | 级联下拉框相互间隙宽度，单位 `px` | number | 8 | false
-width | 三级下拉各自宽度，单位 `px` | 'auto' &#124; number &#124; number[] | 'auto' | false
-height | 下拉框高度，单位 `px` | number | 32 | false
-disabled | 三级各自是否禁用 | boolean &#124; boolean[] | false | false
-allowClear | 是否支持清除 | boolean | false | false
-search | 是否支持搜索，使用搜索时请设置 `width` | boolean | false | false
-filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true | false
-maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 | false
-modelValue <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; string[] | [] | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+options | 可选项数据源 | [Option](#option-type)[] | []
+label | 下拉字典项的文本字段名 | string | 'label'
+value | 下拉字典项的值字段名 | string | 'value'
+children | 下拉字典项的后代字段名 | string | 'children'
+placeholder | 三级下拉各自占位文本 | string &#124; string[] | '请选择'
+changeOnSelect | 当此项为 `true` 时，点选每级菜单选项值都会发生变化；否则只有选择第三级选项后选项值才会变化 | boolean | false
+gap | 级联下拉框相互间隙宽度，单位 `px` | number | 8
+width | 三级下拉各自宽度，单位 `px` | 'auto' &#124; number &#124; number[] | 'auto'
+height | 下拉框高度，单位 `px` | number | 32
+disabled | 三级各自是否禁用 | boolean &#124; boolean[] | false
+allowClear | 是否支持清除 | boolean | false
+search | 是否支持搜索，使用搜索时请设置 `width` | boolean | false
+filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true
+maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6
+modelValue <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; string[] | []
 
 ### Option Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-label | 选项名 | string | false
-value | 选项值 | string &#124; number | false
-disabled | 是否禁用选项 | boolean | false
-children | 选项 `children` 数组 | [Option](#option-type)[] | false
-[propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | false
+label? | 选项名 | string | undefined
+value? | 选项值 | string &#124; number | undefined
+disabled? | 是否禁用选项 | boolean | false
+children? | 选项 `children` 数组 | [Option](#option-type)[] | undefined
+[propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any | undefined
 
 ## Events
 

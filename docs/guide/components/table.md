@@ -333,38 +333,23 @@ const columns = ref([
 
 ### Table
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-columns | 表格列的配置项 | [Column](#column-type)[] | [] | false
-dataSource | 表格数据数组 | any[] | [] | false
-pagination | 分页配置 | [Pagination](#pagination-type) | {} | false
-showPagination | 是否显示分页 | boolean | true | false
-total | 数据总数 | number | 0 | false
-loading | 是否加载中 | boolean | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+columns | 表格列的配置项 | [Column](#column-type)[] | []
+dataSource | 表格数据数组 | any[] | []
+pagination | 分页配置 | [Pagination](#pagination-type) | {}
+showPagination | 是否显示分页 | boolean | true
+total | 数据总数 | number | 0
+loading | 是否加载中 | boolean | false
 
 ### Column Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-title | 列头显示文字 | string | false
-width | 列宽度 | number &#124; string | true
-dataIndex | 列数据字符索引 | string | true
-slot | 列插槽名称索引 | string | false
-
-### Pagination Type
-
-名称 | 说明 | 类型 | 必传
--- | -- | -- | --
-page | 当前页数 | number | false
-pageSize | 每页条数 | number | false
-pageSizeOptions | 每页可以显示多少条 | string[] &#124; number[] | false
-total | 数据总数 | number | false
-pageListNum | 显示的页码数组长度 | number | false
-hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false
-showQuickJumper | 是否可以快速跳转至某页 | boolean | false
-showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | false
-showTotal | 是否显示当前页数和数据总量 | boolean | false | false
-placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'center' &#124; 'right' | false
+title? | 列头显示文字 | string | undefined
+width? | 列宽度，单位 `px` | number &#124; string | undefined
+dataIndex | 列数据字符索引 | string | undefined
+slot? | 列插槽名称索引 | string | undefined
 
 ## Events
 

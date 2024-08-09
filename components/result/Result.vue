@@ -7,8 +7,8 @@ interface Props {
 }
 withDefaults(defineProps<Props>(), {
   status: 'info',
-  title: '',
-  subTitle: ''
+  title: undefined,
+  subTitle: undefined
 })
 const slots = useSlots()
 const showContent = computed(() => {

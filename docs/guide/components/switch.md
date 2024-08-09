@@ -354,18 +354,18 @@ const customValue2 = ref(2)
 
 ### Switch
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-checked | 选中时的内容 | string &#124; slot | undefined | false
-checkedValue | 选中时的值 | boolean &#124; string &#124; number | true | false
-unchecked | 未选中时的内容 | string &#124; slot | undefined | false
-uncheckedValue | 未选中时的值 | boolean &#124; string &#124; number | false | false
-loading | 是否加载中 | boolean | false | false
-disabled | 是否禁用 | boolean | false | false
-size | 开关大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' | false
-rippleColor | 点击时的波纹颜色，当自定义选中颜色时需要设置 | string | '#1677ff' | false
-circleStyle | 圆点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-modelValue <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean &#124; string &#124; number | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+checked | 选中时的内容 | string &#124; slot | undefined
+checkedValue | 选中时的值 | boolean &#124; string &#124; number | true
+unchecked | 未选中时的内容 | string &#124; slot | undefined
+uncheckedValue | 未选中时的值 | boolean &#124; string &#124; number | false
+loading | 是否加载中 | boolean | false
+disabled | 是否禁用 | boolean | false
+size | 开关大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+rippleColor | 点击时的波纹颜色，当自定义选中颜色时需要设置 | string | '#1677ff'
+circleStyle | 圆点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+modelValue <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean &#124; string &#124; number | false
 
 ## Events
 

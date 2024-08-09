@@ -488,13 +488,13 @@ const spinning = ref(true)
 
 ### Spin
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-spinning | 是否为加载中状态 | boolean | true | false
-size | 组件大小 | 'small' &#124; 'default' &#124; 'large' | 'default' | false
-tip | 描述文案 | string | undefined | false
-indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'quarter-circle' &#124; 'half-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' &#124; 'magic-ring' | 'dot' | false
-color | 主题颜色 | string | '#1677FF' | false
-ringColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | '#4096FF' | false
-rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: spin-dot \| spin-line` 时生效 | boolean | false | false
-speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位 `ms`，仅当 `indicator: spin-dot \| spin-line` 时生效 | number | 800 | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+spinning | 是否为加载中状态 | boolean | true
+size | 组件大小 | 'small' &#124; 'default' &#124; 'large' | 'default'
+tip | 描述文案 | string | undefined
+indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'quarter-circle' &#124; 'half-circle' &#124; 'three-quarters-circle' &#124; 'dynamic-circle' &#124; 'magic-ring' | 'dot'
+color | 主题颜色 | string | '#1677FF'
+ringColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | '#4096FF'
+rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: spin-dot \| spin-line` 时生效 | boolean | false
+speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位 `ms`，仅当 `indicator: spin-dot \| spin-line` 时生效 | number | 800

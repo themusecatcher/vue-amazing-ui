@@ -10,12 +10,12 @@ interface Props {
   showIcon?: boolean // 是否显示辅助图标
 }
 const props = withDefaults(defineProps<Props>(), {
-  message: '',
-  description: '',
+  message: undefined,
+  description: undefined,
   type: 'info',
   closable: false,
-  closeText: '',
-  icon: '',
+  closeText: undefined,
+  icon: undefined,
   showIcon: false
 })
 const alert = ref()

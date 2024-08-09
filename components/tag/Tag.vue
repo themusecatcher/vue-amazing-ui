@@ -7,7 +7,7 @@ interface Tag {
   color?: string // 标签颜色
   icon?: string // 设置图标 string | slot
   size?: 'small' | 'middle' | 'large' // 标签尺寸
-  bordered?: boolean // 是否有边框
+  bordered?: boolean // 是否有边框，默认 true
 }
 interface Props {
   closable?: boolean // 标签是否可以关闭

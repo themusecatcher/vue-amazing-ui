@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   rotate: -22,
   zIndex: 90,
   image: undefined,
-  content: '',
+  content: undefined,
   fullscreen: false,
   color: 'rgba(0, 0, 0, 0.15)',
   fontSize: 16,

@@ -3,11 +3,11 @@ import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import Tooltip from '../tooltip'
 import { useResizeObserver } from '../utils'
 interface Props {
-  maxWidth?: number | string // 文本最大宽度
+  maxWidth?: number | string // 文本最大宽度，单位 px
   line?: number // 最大行数
   expand?: boolean // 是否启用点击文本展开全部
   tooltip?: boolean // 是否启用文本提示框
-  tooltipProps?: object // tooltip 组件属性配置
+  tooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props
 }
 const props = withDefaults(defineProps<Props>(), {
   maxWidth: '100%',

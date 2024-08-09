@@ -256,15 +256,15 @@ function onScroll(e: Event) {
 
 ### Scrollbar
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-contentClass | 内容 `div` 的类名 | string | undefined | false
-contentStyle | 内容 `div` 的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-size | 滚动条的大小，单位 `px` | number | 5 | false
-trigger | 显示滚动条的时机，`'none'` 表示一直显示 | 'hover' &#124; 'none' | 'hover' | false
-autoHide | 是否自动隐藏滚动条，仅当 `trigger: 'hover'` 时生效，`true`: `hover`且不滚动时自动隐藏，滚动时自动显示；`false`: `hover`时始终显示 | boolean | true | false
-delay | 滚动条自动隐藏的延迟时间，单位 `ms` | number | 1000 | false
-horizontal | 是否使用横向滚动 | boolean | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+contentClass | 内容 `div` 的类名 | string | undefined
+contentStyle | 内容 `div` 的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+size | 滚动条的大小，单位 `px` | number | 5
+trigger | 显示滚动条的时机，`'none'` 表示一直显示 | 'hover' &#124; 'none' | 'hover'
+autoHide | 是否自动隐藏滚动条，仅当 `trigger: 'hover'` 时生效，`true`: `hover`且不滚动时自动隐藏，滚动时自动显示；`false`: `hover`时始终显示 | boolean | true
+delay | 滚动条自动隐藏的延迟时间，单位 `ms` | number | 1000
+horizontal | 是否使用横向滚动 | boolean | false
 
 ## Methods
 

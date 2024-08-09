@@ -4,7 +4,7 @@ import { ref, watchEffect } from 'vue'
 interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
-  disabled?: boolean // 是否禁用选项
+  disabled?: boolean // 是否禁用选项，默认 false
   children?: Option[] // 选项 children 数组
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
@@ -15,7 +15,7 @@ interface Props {
   children?: string // 下拉字典项的后代字段名
   placeholder?: string | string[] // 三级下拉各自占位文本
   changeOnSelect?: boolean // 当此项为 true 时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择第三级选项后选项值才会变化
-  gap?: number // 级联下拉框相互间隙宽度，单位px
+  gap?: number // 级联下拉框相互间隙宽度，单位 px
   width?: 'auto' | number | number[] // 三级下拉各自宽度
   height?: number // 下拉框高度
   disabled?: boolean | boolean[] // 三级各自是否禁用
@@ -27,7 +27,7 @@ interface Props {
   */
   filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
-  modelValue?: number[] | string[] // （v-model）级联选中项
+  modelValue?: number[] | string[] //（v-model）级联选中项
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],

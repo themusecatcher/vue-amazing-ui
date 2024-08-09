@@ -224,15 +224,15 @@ const value = ref('')
 
 ### Textarea
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-width | 文本域宽度 | string &#124; number | '100%' | false
-allowClear | 可以点击清除图标删除内容 | boolean | false | false
-autoSize | 自适应内容高度 | boolean &#124; {minRows\?: number, maxRows?: number} | false | false
-disabled | 是否禁用 | boolean | false | false
-maxlength | 文字最大长度 | number | undefined | false
-showCount | 是否展示字数 | boolean | false | false
-value <Tag color="cyan">v-model</Tag> | 文本域内容 | string | '' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+width | 文本域宽度，单位 `px` | string &#124; number | '100%'
+allowClear | 可以点击清除图标删除内容 | boolean | false
+autoSize | 自适应内容高度 | boolean &#124; {minRows\?: number, maxRows?: number} | false
+disabled | 是否禁用 | boolean | false
+maxlength | 文字最大长度 | number | undefined
+showCount | 是否展示字数 | boolean | false
+value <Tag color="cyan">v-model</Tag> | 文本域内容 | string | undefined
 
 ## Events
 

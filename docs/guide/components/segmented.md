@@ -411,22 +411,22 @@ const value = ref(options[0])
 
 ### Segmented
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-block | 是否将宽度调整为父元素宽度，同时所有选项占据相同的宽度 | boolean | false | false
-disabled | 是否禁用 | boolean | false | false
-options | 选项数据 | string[] &#124; number[] &#124; SegmentedOption[] | [] | false
-size | 控件尺寸 | 'large' &#124; 'middle' &#124; 'small' | 'middle' | false
-value <Tag color="cyan">v-model</Tag> | 当前选中的值 | string &#124; number | undefined | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+block | 是否将宽度调整为父元素宽度，同时所有选项占据相同的宽度 | boolean | false
+disabled | 是否禁用 | boolean | false
+options | 选项数据 | string[] &#124; number[] &#124; SegmentedOption[] | []
+size | 控件尺寸 | 'large' &#124; 'middle' &#124; 'small' | 'middle'
+value <Tag color="cyan">v-model</Tag> | 当前选中的值 | string &#124; number | undefined
 
 ### SegmentedOption Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-label | 选项名 | string | false
-value | 选项值 | string &#124; number | true
-disabled | 是否禁用选项 | boolean | false
-payload | 自定义数据载体 | any | false
+label? | 选项名 | string | undefined
+value | 选项值 | string &#124; number | undefined
+disabled? | 是否禁用选项 | boolean | undefined
+payload? | 自定义数据载体 | any | undefined
 
 ## Events
 

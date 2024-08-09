@@ -75,7 +75,7 @@ const sizeOptions = [
     value: 'small'
   }
 ]
-const buttonSize = ref('large')
+const buttonSize = ref('default')
 </script>
 <template>
   <div>

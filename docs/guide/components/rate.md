@@ -477,17 +477,17 @@ watchEffect(() => {
 
 ### Rate
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-allowClear | 是否允许再次点击后清除 | boolean | true | false
-allowHalf | 是否允许半选 | boolean | false | false
-count | `star` 总数 | number | 5 | false
-character | 自定义字符，预置四种 `svg` 图标 | 'star-outlined' &#124; 'star-filled' &#124; 'heart-outlined' &#124; 'heart-filled' &#124; string &#124; slot | 'star-filled' | false
-size | 字符时是字体高度，图标时是图片大小，单位 `px` | number | 20 | false
-color | 字符选中颜色 | string | '#fadb14' | false
-gap | 字符间距，单位 `px` | number | 8 | false
-disabled | 只读，无法进行交互 | boolean | false | false
-value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `1,2,3...` | number | 0 | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+allowClear | 是否允许再次点击后清除 | boolean | true
+allowHalf | 是否允许半选 | boolean | false
+count | `star` 总数 | number | 5
+character | 自定义字符，预置四种 `svg` 图标 | 'star-outlined' &#124; 'star-filled' &#124; 'heart-outlined' &#124; 'heart-filled' &#124; string &#124; slot | 'star-filled'
+size | 字符时是字体高度，图标时是图片大小，单位 `px` | number | 20
+color | 字符选中颜色 | string | '#fadb14'
+gap | 字符间距，单位 `px` | number | 8
+disabled | 只读，无法进行交互 | boolean | false
+value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `1,2,3...` | number | 0
 
 ## Events
 
