@@ -337,10 +337,11 @@ const columns = ref([
 -- | -- | -- | --
 columns | 表格列的配置项 | [Column](#column-type)[] | []
 dataSource | 表格数据数组 | any[] | []
-pagination | 分页配置 | [Pagination](#pagination-type) | {}
-showPagination | 是否显示分页 | boolean | true
-total | 数据总数 | number | 0
 loading | 是否加载中 | boolean | false
+spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置数据加载中样式 | object | {}
+emptyProps | `Empty` 组件属性配置，参考 [Empty Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html#empty)，用于配置暂无数据样式 | object | {}
+showPagination | 是否显示分页 | boolean | true
+pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html#pagination)，用于配置分页功能 | object | {}
 
 ### Column Type
 
