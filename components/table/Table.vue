@@ -12,10 +12,10 @@ interface Props {
   columns?: Column[] // 表格列的配置项
   dataSource?: any[] // 表格数据数组
   loading?: boolean // 是否加载中
-  spinProps?: object // Spin 组件属性配置，参考 Spin Props
-  emptyProps?: object // Empty 组件属性配置，参考 Empty Props
+  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置数据加载中样式
+  emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
   showPagination?: boolean // 是否显示分页
-  pagination?: object // Pagination 组件属性配置，参考 Pagination Props
+  pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
 }
 withDefaults(defineProps<Props>(), {
   columns: () => [],
