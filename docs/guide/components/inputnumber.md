@@ -188,18 +188,18 @@ watchEffect(() => {
 
 ### InputNumber
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-width | 输入框宽度，单位 `px` | string &#124; number | 90 | false
-min | 最小值 | number | -Infinity | false
-max | 最大值 | number | Infinity | false
-step | 每次改变步数，可以为小数 | number | 1 | false
-precision | 数值精度 | number | 0 | false
-prefix | 前缀图标 | string &#124; slot | '' | false
-formatter | 指定展示值的格式 | Funtion | (value: string) => value | false
-keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true | false
-disabled | 是否禁用 | boolean | false | false
-value <Tag color="cyan">v-model</Tag> | 当前值 | number &#124; null | null | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+width | 输入框宽度，单位 `px` | string &#124; number | 90
+min | 最小值 | number | -Infinity
+max | 最大值 | number | Infinity
+step | 每次改变步数，可以为小数 | number | 1
+precision | 数值精度 | number | 0
+prefix | 前缀图标 | string &#124; slot | undefined
+formatter | 指定展示值的格式 | Funtion | (value: string) => value
+keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true
+disabled | 是否禁用 | boolean | false
+value <Tag color="cyan">v-model</Tag> | 当前值 | number &#124; null | null
 
 ## Events
 

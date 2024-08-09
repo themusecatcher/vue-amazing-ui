@@ -133,13 +133,13 @@
 
 ### Ellipsis
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-maxWidth | 文本最大宽度 | number &#124; string | '100%' | false
-line | 最大行数 | number | undefined | false
-expand | 是否启用点击文本展开全部 | boolean | false | false
-tooltip | 是否启用文本提示框 | boolean | true | false
-tooltipProps | `tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {} | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+maxWidth | 文本最大宽度 | number &#124; string | '100%'
+line | 最大行数 | number | undefined
+expand | 是否启用点击文本展开全部 | boolean | false
+tooltip | 是否启用文本提示框 | boolean | true
+tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
 
 ## Events
 

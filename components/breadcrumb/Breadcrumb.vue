@@ -11,8 +11,8 @@ interface Route {
 interface Props {
   routes?: Route[] // router 路由数组
   fontSize?: number // 字体大小
-  height?: number // 面包屑高度
-  maxWidth?: number // 文本最大显示宽度，超出后显示省略号
+  height?: number // 面包屑高度，单位 px
+  maxWidth?: number // 文本最大显示宽度，超出后显示省略号，单位 px
   separator?: string // 自定义分隔符
   target?: '_self' | '_blank' // 如何打开目标URL，当前窗口或新窗口
 }
@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   fontSize: 14,
   height: 21,
   maxWidth: 180,
-  separator: '',
+  separator: undefined,
   target: '_self'
 })
 const len = computed(() => {

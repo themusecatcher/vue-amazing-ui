@@ -302,24 +302,25 @@ function onClose () {
 
 ### Notification
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-message | 全局通知提醒标题，优先级低于 `Notification` 中的 `message` | string | '温馨提示' | false
-duration | 自动关闭的延时时长，单位 `ms`，默认 `4500ms`；设置 `null` 时，不自动关闭 | number &#124; null | 4500 | false
-top | 消息从顶部弹出时，距离顶部的位置，单位 `px` | number | 24 | false
-bottom | 消息从底部弹出时，距离底部的位置，单位 `px` | number | 24 | false
-placement | 消息弹出位置，优先级低于 `Notification` 中的 `placement` | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | 'topRight' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+message | 全局通知提醒标题，优先级低于 `Notification` 中的 `message` | string | '温馨提示'
+duration | 自动关闭的延时时长，单位 `ms`，默认 `4500ms`；设置 `null` 时，不自动关闭 | number &#124; null | 4500
+top | 消息从顶部弹出时，距离顶部的位置，单位 `px` | number | 24
+bottom | 消息从底部弹出时，距离底部的位置，单位 `px` | number | 24
+placement | 消息弹出位置，优先级低于 `Notification` 中的 `placement` | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | 'topRight'
 
 ### Notification Type
 
+<br/>
+
 *调用时传入的 Notification 参数*
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-message | 通知提醒标题 | string | false
-description | 通知提醒内容 | string | true
-mode | 通知提醒类型 | 'open' &#124; 'info' &#124; 'success' &#124; 'warning' &#124; 'error' | false
-placement | 通知提醒弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | false
+message? | 通知提醒标题 | string | undefined
+description | 通知提醒内容 | string | undefined
+placement? | 通知提醒弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | undefined
 
 ## Methods
 

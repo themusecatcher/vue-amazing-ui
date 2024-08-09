@@ -3,9 +3,18 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.5.0
+
+- 新增 [列表 List](https://themusecatcher.github.io/vue-amazing-ui/guide/components/list.html) 组件
+
+## 1.4.7 <Tag color="volcano" size="small">2024-08-09</Tag>
+
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `spinProps` `emptyProps` 属性
+- 组件库及文档代码优化
+
 ## 1.4.6 <Tag color="volcano" size="small">2024-08-08</Tag>
 
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textScroll.html) 组件，优化滚动逻辑
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，优化滚动逻辑
 - 优化并更新 [空状态 Empty](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html) 组件，新增 `descriptionStyle` 属性
 
 ## 1.4.5 <Tag color="volcano" size="small">2024-08-07</Tag>
@@ -93,11 +102,10 @@
 ## 1.1.0 <Tag color="volcano" size="small">2024-07-18</Tag>
 
 - 新增 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件
-- 新增 [DOM监听 useMutationObserver](https://themusecatcher.github.io/vue-amazing-ui/utils/mutation-observer.html) 工具函数
+- 新增 [DOM监听 useMutationObserver](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/mutation-observer.html) 工具函数
 
 ## future
 
-- 新增 列表 List 组件
 - 新增 时间选择器 TimePicker 组件
 - 新增 布局 Layout 组件
 - 新增 菜单 Menu 组件

@@ -24,14 +24,14 @@ import 'swiper/less/effect-cards'
 import 'swiper/less/effect-creative'
 import { ref, computed } from 'vue'
 interface Image {
-  title?: string // 图片名称
-  link?: string // 图片跳转链接
+  name?: string // 图片名称
   src: string // 图片地址
+  link?: string // 图片跳转链接
 }
 interface Props {
-  images: Image[] // 轮播图片数组
-  width?: number | string // 轮播区域宽度
-  height?: number | string // 轮播区域高度
+  images?: Image[] // 轮播图片数组
+  width?: number | string // 轮播区域宽度，单位 px
+  height?: number | string // 轮播区域高度，单位 px
   type?: 'banner' | 'carousel' | 'broadcast' // banner: 轮播图模式; carousel: 走马灯模式; broadcast: 信息展播模式
   navigation?: boolean // 是否显示导航
   effect?: 'slide' | 'fade' | 'cube' | 'flip' | 'coverflow' | 'cards' | 'creative' // 切换动画效果
@@ -110,10 +110,10 @@ function onSwiper(swiper: SwiperTypes) {
     }
   }
 }
-function getImageTitle(image: Image) {
+function getImageName(image: Image) {
   // 从图片地址 src 中获取图片名称
-  if (image.title) {
-    return image.title
+  if (image.name) {
+    return image.name
   } else {
     const res = image.src.split('?')[0].split('/')
     return res[res.length - 1]
@@ -139,7 +139,7 @@ function getImageTitle(image: Image) {
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
       <a class="m-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
-        <img class="u-image" :src="image.src" :alt="getImageTitle(image)" loading="lazy" />
+        <img class="u-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </SwiperSlide>
@@ -159,7 +159,7 @@ function getImageTitle(image: Image) {
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
       <a class="m-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
-        <img class="u-image" :src="image.src" :alt="getImageTitle(image)" loading="lazy" />
+        <img class="u-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </SwiperSlide>
@@ -178,7 +178,7 @@ function getImageTitle(image: Image) {
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
       <a :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'" class="m-link">
-        <img class="u-image" :src="image.src" :alt="getImageTitle(image)" loading="lazy" />
+        <img class="u-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </SwiperSlide>

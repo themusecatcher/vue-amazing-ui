@@ -135,18 +135,18 @@ function pageSizeChange (page: number, pageSize: number) { // pageSize 变化的
 
 ### Pagination
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-page | 当前页数 | number | 1 | false
-pageSize | 每页条数 | number | 10 | false
-pageSizeOptions | 每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100] | false
-total | 数据总数 | number | 0 | false
-pageListNum | 显示的页码数组长度 | number | 5 | false
-hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false | false
-showQuickJumper | 是否可以快速跳转至某页 | boolean | false | false
-showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined | false
-showTotal | 是否显示当前页数和数据总量 | boolean | false | false
-placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'center' &#124; 'right' | 'center' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+page | 当前页数 | number | 1
+pageSize | 每页条数 | number | 10
+pageSizeOptions | 每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100]
+total | 数据总数 | number | 0
+pageListNum | 显示的页码数组长度 | number | 5
+hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false
+showQuickJumper | 是否可以快速跳转至某页 | boolean | false
+showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined
+showTotal | 是否显示当前页数和数据总量 | boolean | false
+placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'center' &#124; 'right' | 'center'
 
 ## Events
 

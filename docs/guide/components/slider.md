@@ -257,17 +257,17 @@ function formatter (value: number) {
 
 ### Slider
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-width | 宽度 | string &#124; number | '100%' | false
-min | 最小值 | number | 0 | false
-max | 最大值 | number | 100 | false
-disabled | 是否禁用 | boolean | false | false
-range | 是否使用双滑块模式 | boolean | false | false
-step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除 | number | 1 | false
-formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value | false
-tooltip | 是否展示 `Tooltip` | boolean | true | false
-value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `false` 时，使用 `number`，否则用 `[number, number]` | number &#124; number[] | 0 | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+width | 宽度 | string &#124; number | '100%'
+min | 最小值 | number | 0
+max | 最大值 | number | 100
+disabled | 是否禁用 | boolean | false
+range | 是否使用双滑块模式 | boolean | false
+step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除 | number | 1
+formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value
+tooltip | 是否展示 `Tooltip` | boolean | true
+value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `false` 时，使用 `number`，否则用 `[number, number]` | number &#124; number[] | 0
 
 ## Events
 

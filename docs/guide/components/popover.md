@@ -111,13 +111,13 @@ function openChange (visible: boolean) {
 
 ### Popover
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-title | 卡片标题 | string &#124; slot | undefined | false
-content | 卡片内容 | string &#124; slot | undefined | false
-maxWidth | 卡片内容最大宽度 | string &#124; number | 'auto' | false
-trigger | 卡片触发方式 | 'hover' &#124; 'click' | 'hover' | false
-overlayStyle | 卡片样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+title | 卡片标题 | string &#124; slot | undefined
+content | 卡片内容 | string &#124; slot | undefined
+maxWidth | 卡片内容最大宽度 | string &#124; number | 'auto'
+trigger | 卡片触发方式 | 'hover' &#124; 'click' | 'hover'
+overlayStyle | 卡片样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 
 ## Events
 

@@ -24,7 +24,6 @@ enum ColorStyle { // 颜色主题对象
 interface Notification {
   message?: string // 通知提醒标题
   description: string // 通知提醒内容
-  mode?: 'open' | 'info' | 'success' | 'warning' | 'error' // 通知提醒类型
   placement?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' // 通知提醒弹出位置
 }
 const resetTimer = ref()

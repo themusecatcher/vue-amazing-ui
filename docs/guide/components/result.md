@@ -298,8 +298,8 @@
 
 ### Result
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-status | 结果的状态，决定图标和颜色 | 'success' &#124; 'error' &#124; 'info' &#124; 'warning' &#124; '404' &#124; '403' &#124; '500' | 'info' | false
-title | 标题文字 | string &#124; slot | '' | false
-subTitle | 副标题文字 | string &#124; slot | '' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+status | 结果的状态，决定图标和颜色 | 'success' &#124; 'error' &#124; 'info' &#124; 'warning' &#124; '404' &#124; '403' &#124; '500' | 'info'
+title | 标题文字 | string &#124; slot | undefined
+subTitle | 副标题文字 | string &#124; slot | undefined

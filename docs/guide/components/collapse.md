@@ -518,28 +518,28 @@ watchEffect(() => {
 
 ### Collapse
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-collapseData | 折叠面板数据，可使用 `v-slot` 替换对应索引的 `header` 和 `text` | [Collapse](#collapse-type)[] | [] | true
-activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | number[] &#124; number &#124; string[] &#124; string &#124; null | null | false
-bordered | 带边框风格的折叠面板 | boolean | true | false
-copyable | 是否可复制面板内容 | boolean | false | false
-lang | 面板右上角固定内容，例如标识 `language` | string &#124; slot | '' | false
-fontSize | 面板标题和内容的字体大小，单位 `px` | number | 14 | false
-headerFontSize | 面板标题字体大小，单位 `px`，优先级高于 `fontSize` | number | 0 | false
-textFontSize | 面板内容字体大小，单位 `px`，优先级高于 `fontSize` | number | 0 | false
-showArrow | 是否展示所有箭头，优先级低于 `Collapse` 的 `showArrow` | boolean | true | false
-arrowPlacement | 箭头位置 | 'left' &#124; 'right' | 'left' | false
-ghost | 使折叠面板透明且无边框 | boolean | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+collapseData | 折叠面板数据，可使用 `v-slot` 替换对应索引的 `header` 和 `text` | [Collapse](#collapse-type)[] | []
+activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | number[] &#124; number &#124; string[] &#124; string &#124; null | null
+bordered | 带边框风格的折叠面板 | boolean | true
+copyable | 是否可复制面板内容 | boolean | false
+lang | 面板右上角固定内容，例如标识 `language` | string &#124; slot | undefined
+fontSize | 面板标题和内容的字体大小，单位 `px` | number | 14
+headerFontSize | 面板标题字体大小，单位 `px`，优先级高于 `fontSize` | number | undefined
+textFontSize | 面板内容字体大小，单位 `px`，优先级高于 `fontSize` | number | undefined
+showArrow | 是否展示所有箭头，优先级低于 `Collapse` 的 `showArrow` | boolean | true
+arrowPlacement | 箭头位置 | 'left' &#124; 'right' | 'left'
+ghost | 使折叠面板透明且无边框 | boolean | false
 
 ### Collapse Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-key | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 (`0,1,2...`) 绑定 | string &#124; number | false
-header | 面板标题 | string &#124; slot | false
-text | 面板内容 | string &#124; slot | false
-showArrow | 是否展示箭头 | boolean |false
+key | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 (`0,1,2...`) 绑定 | string &#124; number | undefined
+header | 面板标题 | string &#124; slot | undefined
+text | 面板内容 | string &#124; slot | undefined
+showArrow | 是否展示箭头 | boolean | true
 
 ## Events
 

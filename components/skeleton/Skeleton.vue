@@ -2,23 +2,23 @@
 import { computed } from 'vue'
 
 interface SkeletonButtonProps {
-  shape?: 'default' | 'round' | 'circle' // 指定按钮的形状
-  size?: 'default' | 'small' | 'large' // 设置按钮的大小
-  block?: boolean // 将按钮宽度调整为其父宽度的选项
+  shape?: 'default' | 'round' | 'circle' // 指定按钮的形状，默认 'default'
+  size?: 'default' | 'small' | 'large' // 设置按钮的大小，默认 'default'
+  block?: boolean // 将按钮宽度调整为其父宽度的选项，默认 false
 }
 interface SkeletonAvatarProps {
-  shape?: 'circle' | 'square' // 指定头像的形状
-  size?: number | 'default' | 'small' | 'large' // 设置头像占位图的大小
+  shape?: 'circle' | 'square' // 指定头像的形状，默认 'circle'
+  size?: number | 'default' | 'small' | 'large' // 设置头像占位图的大小，默认 'default'
 }
 interface SkeletonInputProps {
-  size: 'default' | 'small' | 'large' // 设置输入框的大小
+  size: 'default' | 'small' | 'large' // 设置输入框的大小，默认 'default'
 }
 interface SkeletonTitleProps {
-  width?: number | string // 设置标题占位图的宽度
+  width?: number | string // 设置标题占位图的宽度，默认 '38%'
 }
 interface SkeletonParagraphProps {
-  rows?: number | string // 设置段落占位图的行数
-  width?: number | string | Array<number | string> // 设置段落占位图的宽度，若为数组时则为对应的每行宽度，反之则是最后一行的宽度
+  rows?: number | string // 设置段落占位图的行数，默认 avatar ? 2 : 3
+  width?: number | string | Array<number | string> // 设置段落占位图的宽度，若为数组时则为对应的每行宽度，反之则是最后一行的宽度，默认 '61%'
 }
 interface Props {
   animated?: boolean // 是否展示动画效果
@@ -84,13 +84,16 @@ const paragraphRows = computed(() => {
     } else {
       return 3
     }
+  } else {
+    if (props.avatar) {
+      return props.paragraph.rows || 2
+    } else {
+      return props.paragraph.rows || 3
+    }
   }
-  return props.paragraph.rows
 })
 const paragraphWidth = computed(() => {
-  if (typeof props.paragraph === 'boolean') {
-    return Array(paragraphRows.value)
-  } else {
+  if (typeof props.paragraph === 'object') {
     if (Array.isArray(props.paragraph.width)) {
       return props.paragraph.width.map((width: number | string) => {
         if (typeof width === 'number') {
@@ -101,10 +104,11 @@ const paragraphWidth = computed(() => {
       })
     } else if (typeof props.paragraph.width === 'number') {
       return Array(paragraphRows.value).fill(props.paragraph.width + 'px')
-    } else {
+    } else if (typeof props.paragraph.width === 'string') {
       return Array(paragraphRows.value).fill(props.paragraph.width)
     }
   }
+  return Array(paragraphRows.value)
 })
 </script>
 <template>

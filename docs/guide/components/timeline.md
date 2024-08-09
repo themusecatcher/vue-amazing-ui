@@ -353,17 +353,17 @@ const timelineData = ref([
 
 ### Timeline
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-timelineData | 时间轴内容数组 | [Data](#data-type)[] | [] | true
-width | 时间轴区域总宽度，单位 `px` | number &#124; string | '100%' | false
-lineStyle | 时间线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid' | false
-mode | 通过设置 `mode` 可以改变时间轴和内容的相对位置 | 'left' &#124; 'center' &#124; 'right' | 'left' | false
-position | 当 `mode` 为 `center` 时，内容交替展现，内容从左边（`left`）开始或者右边（`right`）开始展现 | 'left' &#124; 'right' | 'left' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+timelineData | 时间轴内容数组 | [Data](#data-type)[] | []
+width | 时间轴区域总宽度，单位 `px` | number &#124; string | '100%'
+lineStyle | 时间线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid'
+mode | 通过设置 `mode` 可以改变时间轴和内容的相对位置 | 'left' &#124; 'center' &#124; 'right' | 'left'
+position | 当 `mode` 为 `center` 时，内容交替展现，内容从左边（`left`）开始或者右边（`right`）开始展现 | 'left' &#124; 'right' | 'left'
 
 ### Data Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-desc | 文字描述 | string &#124; slot | true
-color | 圆圈颜色，可选四种预置颜色：`blue`、`green`、`red`、`gray` 或者使用颜色值 | string | false
+desc | 文字描述 | string &#124; slot | undefined
+color? | 圆圈颜色 | 'blue' &#124; 'green' &#124; 'red' &#124; 'gray' &#124; string | 'blue'

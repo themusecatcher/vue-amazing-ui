@@ -871,33 +871,33 @@ const state = reactive({
 
 ### Descriptions
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-title | 描述列表的标题，显示在最顶部 | string &#124; slot | undefined | false
-extra | 描述列表的操作区域，显示在右上方 | string &#124; slot | undefined | false
-bordered | 是否展示边框 | boolean | false | false
-vertical | 是否使用垂直描述列表 | boolean | false | false
-size | 设置列表的大小 | 'default' &#124; 'middle' &#124; 'small' | 'default' | false
-column | 一行的 `DescriptionItems` 数量，可以写成数值或支持响应式的对象写法 `{ xs: 8, sm: 16, md: 24 }` | number &#124; [Responsive](#responsive-type) | {xs: 1, sm: 2, md\: 3} | false
-labelStyle | 自定义标签样式，优先级低于 `DescriptionItems`  的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-contentStyle | 自定义内容样式，优先级低于 `DescriptionItems`  的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+title | 描述列表的标题，显示在最顶部 | string &#124; slot | undefined
+extra | 描述列表的操作区域，显示在右上方 | string &#124; slot | undefined
+bordered | 是否展示边框 | boolean | false
+vertical | 是否使用垂直描述列表 | boolean | false
+size | 设置列表的大小 | 'default' &#124; 'middle' &#124; 'small' | 'default'
+column | 一行的 `DescriptionItems` 数量，可以写成数值或支持响应式的对象写法 `{ xs: 8, sm: 16, md: 24 }` | number &#124; [Responsive](#responsive-type) | {xs: 1, sm: 2, md\: 3}
+labelStyle | 自定义标签样式，优先级低于 `DescriptionItems`  的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+contentStyle | 自定义内容样式，优先级低于 `DescriptionItems`  的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 
 ### Responsive Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-xs | `<576px` 响应式栅格 | number | false
-sm | `≥576px` 响应式栅格 | number | false
-md | `≥768px` 响应式栅格 | number | false
-lg | `≥992px` 响应式栅格 | number | false
-xl | `≥1200px` 响应式栅格 | number | false
-xxl | `≥1600px` 响应式栅格 | number | false
+xs | `<576px` 响应式栅格 | number | undefined
+sm | `≥576px` 响应式栅格 | number | undefined
+md | `≥768px` 响应式栅格 | number | undefined
+lg | `≥992px` 响应式栅格 | number | undefined
+xl | `≥1200px` 响应式栅格 | number | undefined
+xxl | `≥1600px` 响应式栅格 | number | undefined
 
 ### DescriptionsItem
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-label | 内容的描述标签 | string &#124; slot | undefined | false
-span | 包含列的数量，**未设置时等效于 `span: 1`，除了最后一行的最后一项，会将最后一行剩余的列数全部分配给该项** | number | undefined | false
-labelStyle | 自定义标签样式，优先级高于 `Description` 的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-contentStyle | 自定义内容样式，优先级高于 `Description` 的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+label | 内容的描述标签 | string &#124; slot | undefined
+span | 包含列的数量，**未设置时等效于 `span: 1`，除了最后一行的最后一项，会将最后一行剩余的列数全部分配给该项** | number | undefined
+labelStyle | 自定义标签样式，优先级高于 `Description` 的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+contentStyle | 自定义内容样式，优先级高于 `Description` 的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

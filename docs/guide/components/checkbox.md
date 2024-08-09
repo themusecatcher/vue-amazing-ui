@@ -464,25 +464,25 @@ watchEffect(() => {
 
 ### Checkbox
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-options | 复选元素数据 | [Option](#option-type)[] | [] | false
-disabled | 是否禁用所有复选框 | boolean | false | false
-vertical | 是否垂直排列 | boolean | false | false
-value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any[] | [] | false
-gap | 多个单选框之间的间距，单位 `px`，垂直排列时，间距即垂直间距 | number | 8 | false
-width | 复选区域最大展示宽度，超出后折行 | string &#124; number | 'auto' | false
-height | 复选区域最大展示高度，超出后滚动 | string &#124; number | 'auto' | false
-indeterminate | 全选时的样式控制 | boolean | false | false
-checked <Tag color="cyan">v-model</Tag> | 是否全选 | boolean | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+options | 复选元素数据 | [Option](#option-type)[] | []
+disabled | 是否禁用所有复选框 | boolean | false
+vertical | 是否垂直排列 | boolean | false
+value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any[] | []
+gap | 多个单选框之间的间距，单位 `px`，垂直排列时，间距即垂直间距 | number | 8
+width | 复选区域最大展示宽度，超出后折行 | string &#124; number | 'auto'
+height | 复选区域最大展示高度，超出后滚动 | string &#124; number | 'auto'
+indeterminate | 全选时的样式控制 | boolean | false
+checked <Tag color="cyan">v-model</Tag> | 是否全选 | boolean | false
 
 ### Option Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-label | 选项名 | string | true
-value | 选项值 | any | true
-disabled | 是否禁用选项 | boolean | false
+label | 选项名 | string | undefined
+value | 选项值 | any | undefined
+disabled? | 是否禁用选项 | boolean | undefined
 
 ## Events
 

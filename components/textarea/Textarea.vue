@@ -4,7 +4,7 @@ defineOptions({
 })
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 interface Props {
-  width?: string | number // 文本域宽度
+  width?: string | number // 文本域宽度，单位 px
   allowClear?: boolean // 可以点击清除图标删除内容
   autoSize?: boolean | { minRows?: number; maxRows?: number } // 自适应内容高度
   disabled?: boolean // 是否禁用

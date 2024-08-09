@@ -5,7 +5,7 @@ defineOptions({
 import { ref, computed, watch, useSlots } from 'vue'
 import { add } from '../utils'
 interface Props {
-  width?: string | number // 输入框宽度
+  width?: string | number // 输入框宽度，单位 px
   min?: number // 最小值
   max?: number // 最大值
   step?: number // 每次改变步数，可以为小数
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   max: Infinity,
   step: 1,
   precision: 0,
-  prefix: '',
+  prefix: undefined,
   formatter: (value: string) => value,
   keyboard: true,
   disabled: false,

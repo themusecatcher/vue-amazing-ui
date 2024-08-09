@@ -187,18 +187,19 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 
 ### Waterfall
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-images | 图片数组 | [Image](#image-type)[] | [] | true
-columnCount | 要划分的列数 | number | 3 | false
-columnGap | 各列之间的间隙，单位 `px` | number | 20 | false
-width | 瀑布流区域的总宽度 | string &#124; number | '100%' | false
-borderRadius | 瀑布流区域和图片圆角，单位 `px` | number | 8 | false
-backgroundColor | 瀑布流区域背景填充色 | string | '#F2F4F8' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+images | 图片数组 | [Image](#image-type)[] | []
+columnCount | 要划分的列数 | number | 3
+columnGap | 各列之间的间隙，单位 `px` | number | 20
+width | 瀑布流区域的总宽度 | string &#124; number | '100%'
+borderRadius | 瀑布流区域和图片圆角，单位 `px` | number | 8
+backgroundColor | 瀑布流区域背景填充色 | string | '#F2F4F8'
+spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html)，用于配置图片加载中样式 | object | {}
 
 ### Image Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-title | 图片名称 | string | false
-src | 图片地址 | string | true
+name? | 图片名称 | string | undefined
+src | 图片地址 | string | undefined

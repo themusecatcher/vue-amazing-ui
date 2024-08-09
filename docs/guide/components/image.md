@@ -328,30 +328,30 @@ const images = ref([
 
 ### Image
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-src | 图像地址 &#124; 图像地址数组 | string &#124; [Image](#image-type)[] | '' | true
-name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | '' | false
-width | 图像宽度，单位 `px` | string &#124; number &#124; (string&#124;number)[] | 100 | false
-height | 图像高度，单位 `px` | string &#124; number &#124; (string&#124;number)[] | 100 | false
-bordered | 是否显示边框 | boolean | true | false
-fit | 图片在容器内的的适应类型，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' | false
-preview | 预览文本 | string &#124; slot | '预览' | false
-spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多张展示图片时的排列方式 | object | {} | false
-spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置图片加载中样式 | object | {} | false
-zoomRatio | 每次缩放比率 | number | 0.1 | false
-minZoomScale | 最小缩放比例 | number | 0.1 | false
-maxZoomScale | 最大缩放比例 | number | 10 | false
-resetOnDbclick | 缩放移动旋转图片后，是否可以双击还原 | boolean | true | false
-loop | 是否可以循环切换图片 | boolean | false | false
-ablum | 是否相册模式，即从一张展示图片点开相册 | boolean | false | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+src | 图像地址 &#124; 图像地址数组 | string &#124; [Image](#image-type)[] | undefined
+name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | undefined
+width | 图像宽度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100
+height | 图像高度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100
+bordered | 是否显示边框 | boolean | true
+fit | 图片在容器内的的适应类型，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain'
+preview | 预览文本 | string &#124; slot | '预览'
+spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多张展示图片时的排列方式 | object | {}
+spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置图片加载中样式 | object | {}
+zoomRatio | 每次缩放比率 | number | 0.1
+minZoomScale | 最小缩放比例 | number | 0.1
+maxZoomScale | 最大缩放比例 | number | 10
+resetOnDbclick | 缩放移动旋转图片后，是否可以双击还原 | boolean | true
+loop | 是否可以循环切换图片 | boolean | false
+ablum | 是否相册模式，即从一张展示图片点开相册 | boolean | false
 
 ### Image Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-src | 图像地址 | string | true
-name | 图像名称 | string | false
+src | 图像地址 | string | undefined
+name? | 图像名称 | string | undefined
 
 ## Methods
 

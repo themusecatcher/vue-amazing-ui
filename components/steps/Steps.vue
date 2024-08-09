@@ -5,8 +5,8 @@ interface Step {
   description?: string // 描述
 }
 interface Props {
-  steps: Step[] // 步骤数组
-  width?: number | string // 步骤条总宽度
+  steps?: Step[] // 步骤数组
+  width?: number | string // 步骤条总宽度，单位 px
   size?: 'default' | 'small' // 步骤条大小
   vertical?: boolean // 是否使用垂直步骤条，当 vertical: true 时，labelPlacement 自动设为 right
   labelPlacement?: 'right' | 'bottom' // 标签放置位置，默认放图标右侧，可选 bottom 放图标下方

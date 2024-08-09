@@ -2,10 +2,10 @@
 interface Option {
   label: string // 选项名
   value: any // 选项值
-  disabled?: boolean // 是否禁用单个单选器
+  disabled?: boolean // 是否禁用单个单选器，默认 false
 }
 interface Props {
-  options: Array<Option> // 单选元素数据
+  options?: Option[] // 单选元素数据
   disabled?: boolean // 是否禁用
   vertical?: boolean // 是否垂直排列，仅当 button: false 时生效
   value?: any // (v-model) 当前选中的值

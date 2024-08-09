@@ -151,11 +151,11 @@
 
 ### Divider
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-orientation | 分割线标题的位置 | 'left' &#124; 'center' &#124; 'right' | 'center' | false
-orientationMargin | 标题和最近 `left` / `right` 边框之间的距离，去除了分割线，同时 `orientation` 必须为 `left` 或 `right` | string &#124; number | '' | false
-borderWidth | 分割线宽度，单位 `px` | number | 1 | false
-borderStyle | 分割线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' &#124; 'double' &#124; 'groove' &#124; 'ridge' &#124; 'inset' &#124; 'outset' | 'solid' | false
-borderColor | 分割线颜色 | string | 'rgba(5, 5, 5, 0.06)' | false
-vertical | 垂直分割线高度，仅当 `vertical: true` 时生效 | string &#124; number | '0.9em' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+orientation | 分割线标题的位置 | 'left' &#124; 'center' &#124; 'right' | 'center'
+orientationMargin | 标题和最近 `left` / `right` 边框之间的距离，去除了分割线，同时 `orientation` 必须为 `left` 或 `right` | string &#124; number | undefined
+borderWidth | 分割线宽度，单位 `px` | number | 1
+borderStyle | 分割线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' &#124; 'double' &#124; 'groove' &#124; 'ridge' &#124; 'inset' &#124; 'outset' | 'solid'
+borderColor | 分割线颜色 | string | 'rgba(5, 5, 5, 0.06)'
+vertical | 垂直分割线高度，仅当 `vertical: true` 时生效 | string &#124; number | '0.9em'

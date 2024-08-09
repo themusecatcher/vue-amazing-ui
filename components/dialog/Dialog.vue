@@ -6,21 +6,21 @@ interface Props {
   title?: string // 标题 string | slot
   content?: string // 内容 string | slot
   width?: number // 宽度，单位 px
-  height?: number | string // 高度，单位 px，默认auto，自适应内容高度
+  height?: number | string // 高度，单位 px，默认 auto，自适应内容高度
   cancelText?: string // 取消按钮文字
   okText?: string // 确定按钮文字
   okType?: 'primary' | 'danger' // 确定按钮类型
   bodyStyle?: CSSProperties // 对话框 body 样式
   footer?: boolean // 是否显示底部按钮 boolean | slot
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
-  top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效
+  top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
   switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
   loading?: boolean // 确定按钮 loading
   show?: boolean // 对话框是否可见
 }
 const props = withDefaults(defineProps<Props>(), {
   title: '提示',
-  content: '',
+  content: undefined,
   width: 540,
   height: 'auto',
   cancelText: '取消',

@@ -85,7 +85,7 @@ const sizeOptions = [
     value: 'small'
   }
 ]
-const buttonSize = ref('large')
+const buttonSize = ref('default')
 </script>
 
 ## 基本使用
@@ -491,7 +491,7 @@ const sizeOptions = [
     value: 'small'
   }
 ]
-const buttonSize = ref('large')
+const buttonSize = ref('default')
 </script>
 <template>
   <Space vertical>
@@ -508,24 +508,24 @@ const buttonSize = ref('large')
 
 ### Radio
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-options | 单选元素数据 | [Option](#option-type)[] | [] | true
-disabled | 是否禁用 | boolean | false | false
-vertical | 是否垂直排列，仅当 `button: false` 时生效 | boolean | false | false
-value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any | null | false
-gap | 多个单选框之间的间距，单位 `px`，垂直排列时，间距即垂直间距，仅当 `button: false` 时生效 | number | 8 | false
-button | 是否启用按钮样式 | boolean | false | false
-buttonStyle | 按钮样式风格 | 'outline' &#124; 'solid' ｜ 'outline' | false
-buttonSize | 按钮大小，仅当 `button: true` 时生效 | 'default' &#124; 'large' &#124; 'small' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+options | 单选元素数据 | [Option](#option-type)[] | []
+disabled | 是否禁用 | boolean | false
+vertical | 是否垂直排列，仅当 `button: false` 时生效 | boolean | false
+value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any | null
+gap | 多个单选框之间的间距，单位 `px`，垂直排列时，间距即垂直间距，仅当 `button: false` 时生效 | number | 8
+button | 是否启用按钮样式 | boolean | false
+buttonStyle | 按钮样式风格 | 'outline' &#124; 'solid' ｜ 'outline' | 'outline'
+buttonSize | 按钮大小，仅当 `button: true` 时生效 | 'default' &#124; 'large' &#124; 'small' | 'default'
 
 ### Option Type
 
-名称 | 说明 | 类型 | 必传
+名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-label | 选项名 | string | true
-value | 选项值 | any | true
-disabled | 是否禁用单个单选器 | boolean | false
+label | 选项名 | string | undefined
+value | 选项值 | any | undefined
+disabled? | 是否禁用单个单选器 | boolean | false
 
 ## Events
 

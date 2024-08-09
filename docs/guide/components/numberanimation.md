@@ -246,19 +246,19 @@ function onClick () {
 
 ### NumberAnimation
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-from | 数值动画起始数值 | number | 0 | false
-to | 数值目标值 | number | 1000 | false
-duration | 数值动画持续时间，单位 `ms` | number | 3000 | false
-autoplay | 是否自动开始动画 | boolean | true | false
-precision | 精度，保留小数点后几位 | number | 0 | false
-prefix | 前缀 | string | '' | false
-suffix | 后缀 | string | '' | false
-separator | 千分位分隔符 | string | ',' | false
-decimal | 小数点字符 | string | '.' | false
-valueStyle | 数值文本样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} | false
-transition | 动画过渡效果 | [TransitionFunc](https://vueuse.org/core/useTransition/#usetransition) | TransitionFunc['easeInOutCubic'] | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+from | 数值动画起始数值 | number | 0
+to | 数值目标值 | number | 1000
+duration | 数值动画持续时间，单位 `ms` | number | 3000
+autoplay | 是否自动开始动画 | boolean | true
+precision | 精度，保留小数点后几位 | number | 0
+prefix | 前缀 | string | undefined
+suffix | 后缀 | string | undefined
+separator | 千分位分隔符 | string | ','
+decimal | 小数点字符 | string | '.'
+valueStyle | 数值文本样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+transition | 动画过渡效果 | [TransitionFunc](https://vueuse.org/core/useTransition/#usetransition) | TransitionFunc['easeInOutCubic']
 
 ## Methods
 
