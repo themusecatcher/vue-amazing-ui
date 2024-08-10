@@ -135,7 +135,7 @@
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-maxWidth | 文本最大宽度 | number &#124; string | '100%'
+maxWidth | 文本最大宽度，单位 `px` | number &#124; string | '100%'
 line | 最大行数 | number | undefined
 expand | 是否启用点击文本展开全部 | boolean | false
 tooltip | 是否启用文本提示框 | boolean | true

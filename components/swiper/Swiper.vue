@@ -32,13 +32,13 @@ interface Props {
   images?: Image[] // 轮播图片数组
   width?: number | string // 轮播区域宽度，单位 px
   height?: number | string // 轮播区域高度，单位 px
-  type?: 'banner' | 'carousel' | 'broadcast' // banner: 轮播图模式; carousel: 走马灯模式; broadcast: 信息展播模式
+  mode?: 'banner' | 'carousel' | 'broadcast' // banner: 轮播图模式; carousel: 走马灯模式; broadcast: 信息展播模式
   navigation?: boolean // 是否显示导航
   effect?: 'slide' | 'fade' | 'cube' | 'flip' | 'coverflow' | 'cards' | 'creative' // 切换动画效果
-  delay?: number // 自动切换的时间间隔，仅当 type: banner 时生效，单位ms
-  speed?: number // 切换过渡的动画持续时间，单位ms
+  delay?: number // 自动切换的时间间隔，仅当 mode: 'banner' 时生效，单位 ms
+  speed?: number // 切换过渡的动画持续时间，单位 ms
   loop?: boolean // 是否循环切换
-  pauseOnMouseEnter?: boolean // 当鼠标移入走马灯时，是否暂停自动轮播，仅当 type: banner 或 type: carousel 时生效
+  pauseOnMouseEnter?: boolean // 当鼠标移入走马灯时，是否暂停自动轮播，仅当 mode: 'banner' 或 mode: 'carousel' 时生效
   swipe?: boolean // 是否可以鼠标拖动
   preloaderColor?: 'theme' | 'white' | 'black' // 预加载时的 loading 颜色
 }
@@ -46,7 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
   images: () => [],
   width: '100%',
   height: '100%',
-  type: 'banner',
+  mode: 'banner',
   navigation: false,
   effect: 'slide',
   delay: 3000,
@@ -99,7 +99,7 @@ const modulesBroadcast = ref([Navigation, Pagination, Mousewheel])
 const emits = defineEmits(['swiper', 'change'])
 function onSwiper(swiper: SwiperTypes) {
   emits('swiper', swiper)
-  if (props.type === 'carousel' && props.pauseOnMouseEnter) {
+  if (props.mode === 'carousel' && props.pauseOnMouseEnter) {
     swiper.el.onmouseenter = () => {
       // 移入暂停
       swiper.autoplay.stop()
@@ -122,7 +122,7 @@ function getImageName(image: Image) {
 </script>
 <template>
   <Swiper
-    v-if="type === 'banner'"
+    v-if="mode === 'banner'"
     :class="{ 'swiper-no-swiping': !swipe }"
     :style="`width: ${swiperWidth}; height: ${swiperHeight};`"
     :modules="modulesBanner"
@@ -145,7 +145,7 @@ function getImageName(image: Image) {
     </SwiperSlide>
   </Swiper>
   <Swiper
-    v-if="type === 'carousel'"
+    v-if="mode === 'carousel'"
     class="swiper-no-swiping"
     :style="`width: ${swiperWidth}; height: ${swiperHeight};`"
     :modules="modulesCarousel"
@@ -165,7 +165,7 @@ function getImageName(image: Image) {
     </SwiperSlide>
   </Swiper>
   <Swiper
-    v-if="type === 'broadcast'"
+    v-if="mode === 'broadcast'"
     :style="`width: ${swiperWidth}; height: ${swiperHeight};`"
     :modules="modulesBroadcast"
     :navigation="navigation"

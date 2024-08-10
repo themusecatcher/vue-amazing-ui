@@ -2,13 +2,13 @@
 import type { CSSProperties } from 'vue'
 interface Props {
   label?: string // 内容的描述标签 string | slot
-  span?: number // 包含列的数量
+  span?: number // 包含列的数量；当使用水平列表且未设置 span 时等效于 span: 1，但最后一行的最后一项，会包含该行剩余的所有列数
   labelStyle?: CSSProperties // 自定义标签样式，优先级高于 Description 的 labelStyle
   contentStyle?: CSSProperties // 自定义内容样式，优先级高于 Description 的 contentStyle
 }
 withDefaults(defineProps<Props>(), {
   label: undefined,
-  span: undefined, // 未设置时等效于 span: 1，除了最后一行的最后一项，会将最后一行剩余的列数全部分配给该项
+  span: undefined,
   labelStyle: () => ({}),
   contentStyle: () => ({})
 })

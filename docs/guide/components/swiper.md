@@ -371,7 +371,7 @@ const creativeEffects = [
 
 <Swiper
   :images="images"
-  type="carousel"
+  mode="carousel"
   :height="200"
   :slides-per-view="3"
   :space-between="20"
@@ -400,7 +400,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 <template>
   <Swiper
     :images="images"
-    type="carousel"
+    mode="carousel"
     :height="200"
     :slides-per-view="3"
     :space-between="20"
@@ -419,7 +419,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
   </Space>
   <Swiper
     :images="images"
-    type="broadcast"
+    mode="broadcast"
     :pagination="{
       dynamicBullets: true,
       clickable: true
@@ -474,7 +474,7 @@ function onNext () {
     </Space>
     <Swiper
       :images="images"
-      type="broadcast"
+      mode="broadcast"
       :pagination="{
         dynamicBullets: true,
         clickable: true
@@ -499,15 +499,15 @@ function onNext () {
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 images | 轮播图片数组 | [Image](#image-type)[] | []
-width | 轮播区域宽度 | number &#124; string | '100%'
-height | 轮播区域高度 | number &#124; string  | '100%'
-type | `banner`: 轮播图模式; `carousel`: 走马灯模式; `broadcast`: 信息展播模式 | 'banner' &#124; 'carousel' &#124; 'broadcast' | 'banner'
+width | 轮播区域宽度，单位 `px` | number &#124; string | '100%'
+height | 轮播区域高度，单位 `px` | number &#124; string  | '100%'
+mode | `banner`: 轮播图模式; `carousel`: 走马灯模式; `broadcast`: 信息展播模式 | 'banner' &#124; 'carousel' &#124; 'broadcast' | 'banner'
 navigation | 是否显示导航 | boolean | false
 effect | 切换动画效果 | 'slide' &#124; 'fade' &#124; 'cube' &#124; 'flip' &#124; 'coverflow' &#124; 'cards' &#124; 'creative' | 'slide'
-delay | 自动切换的时间间隔，仅当 `type: banner` 时生效，单位 `ms` | number | 3000
+delay | 自动切换的时间间隔，仅当 `mode: 'banner'` 时生效，单位 `ms` | number | 3000
 speed | 切换过渡的动画持续时间，单位 `ms` | number | 300
 loop | 是否循环切换 | boolean | true
-pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播，仅当 `type: banner` 或 `type: carousel` 时生效 | boolean | false
+pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播，仅当 `mode: 'banner'` 或 `mode: 'carousel'` 时生效 | boolean | false
 swipe | 是否可以鼠标拖动 | boolean | true
 preloaderColor | 预加载时的 `loading` 颜色 | 'theme' &#124; 'white' &#124; 'black' | 'theme'
 
