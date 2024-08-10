@@ -103,12 +103,12 @@ function onChange (page: number, pageSize: number) {
     :columns="columns"
     :data-source="tableData"
     :pagination="{
+      total: total,
       page: 1,
       pageSize: 10,
       showQuickJumper: true,
       showTotal: true
     }"
-    :total="total"
     :loading="loading"
     @change="onChange">
   <!-- 配置指定列数据 -->
@@ -212,12 +212,12 @@ function onChange (page: number, pageSize: number) {
     :columns="columns"
     :data-source="tableData"
     :pagination="{
+      total: total,
       page: 1,
       pageSize: 10,
       showQuickJumper: true,
       showTotal: true
     }"
-    :total="total"
     :loading="loading"
     @change="onChange">
   <!-- 配置指定列数据 -->
@@ -284,7 +284,7 @@ const columns = ref([
 ## 暂无数据
 
 <ClientOnly>
-  <Table :columns="columns" :total="0" />
+  <Table :columns="columns" />
 </ClientOnly>
 
 ::: details Show Code
@@ -323,7 +323,7 @@ const columns = ref([
       ])
 </script>
 <template>
-  <Table :columns="columns" :total="0" />
+  <Table :columns="columns" />
 </template>
 ```
 

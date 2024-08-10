@@ -186,10 +186,10 @@ defineExpose({
             <div class="m-btns">
               <template v-if="mode === 'confirm' || mode === 'erase'">
                 <Button class="mr8" @click="onCancel" v-bind="cancelProps">{{ cancelText }}</Button>
-                <Button :type="okType" :loading="loading" v-bind="okProps" @click="onOK">{{ okText }}</Button>
+                <Button :type="okType" :loading="loading" @click="onOK" v-bind="okProps">{{ okText }}</Button>
               </template>
               <template v-if="['info', 'success', 'error', 'warning'].includes(mode)">
-                <Button type="primary" :loading="loading" v-bind="noticeProps" @click="onKnow">{{ noticeText }}</Button>
+                <Button type="primary" :loading="loading" @click="onKnow" v-bind="noticeProps">{{ noticeText }}</Button>
               </template>
             </div>
           </div>
