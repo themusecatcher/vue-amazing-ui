@@ -49,7 +49,7 @@ function changePage(page: number, pageSize: number) {
       </thead>
       <tbody class="m-body">
         <tr class="m-tr-loading" v-show="loading">
-          <Spin class="m-loading" size="small" v-bind="spinProps" :colspan="columns.length" />
+          <Spin class="m-loading" size="small" :colspan="columns.length" v-bind="spinProps" />
         </tr>
         <tr class="m-tr-empty" v-show="!dataSource.length">
           <td class="m-td-empty" :colspan="columns.length">
@@ -66,7 +66,7 @@ function changePage(page: number, pageSize: number) {
         </tr>
       </tbody>
     </table>
-    <Pagination class="mt20" v-bind="pagination" @change="changePage" v-if="showPagination" />
+    <Pagination v-if="showPagination" class="mt20" @change="changePage" v-bind="pagination" />
   </div>
 </template>
 <style lang="less" scoped>

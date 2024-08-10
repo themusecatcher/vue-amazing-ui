@@ -156,7 +156,10 @@ function onSizeChange(pageSize: number) {
 </script>
 <template>
   <div
-    :class="[`m-pagination pagination-${placement}`, { 'pagination-hidden': hideOnSinglePage && total <= pageSize }]"
+    :class="[
+      `m-pagination pagination-${placement}`,
+      { 'pagination-hidden': !total || (hideOnSinglePage && total <= pageSize) }
+    ]"
   >
     <div class="m-pagination-wrap">
       <span class="mr8" v-if="showTotal">共 {{ totalPage }} 页 / {{ total }} 条</span>
