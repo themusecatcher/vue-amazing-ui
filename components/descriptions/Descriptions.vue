@@ -149,7 +149,7 @@ async function getGroupItems() {
         group = [item]
       }
     }
-    // 当使用水平列表，且未设置 span 时等效于 span: 1，除了最后一行的最后一项，会将最后一行剩余的列数全部分配给该项
+    // 当使用水平列表且未设置 span 时等效于 span: 1，但最后一行的最后一项，会包含该行剩余的所有列数
     if (!props.vertical && !children.value[len - 1].dataset.span && getTotalSpan(group) < responsiveColumn.value) {
       const groupLen = group.length
       group[groupLen - 1].span = group[groupLen - 1].span + responsiveColumn.value - getTotalSpan(group)

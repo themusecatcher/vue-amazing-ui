@@ -425,7 +425,7 @@ value <Tag color="cyan">v-model</Tag> | 当前选中的值 | string &#124; numbe
 -- | -- | -- | --
 label? | 选项名 | string | undefined
 value | 选项值 | string &#124; number | undefined
-disabled? | 是否禁用选项 | boolean | undefined
+disabled? | 是否禁用选项 | boolean | false
 payload? | 自定义数据载体 | any | undefined
 
 ## Events

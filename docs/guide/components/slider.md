@@ -259,7 +259,7 @@ function formatter (value: number) {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-width | 宽度 | string &#124; number | '100%'
+width | 宽度，单位 `px` | string &#124; number | '100%'
 min | 最小值 | number | 0
 max | 最大值 | number | 100
 disabled | 是否禁用 | boolean | false
