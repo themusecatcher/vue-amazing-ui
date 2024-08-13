@@ -48,7 +48,7 @@ const size = ref('middle')
 
 const listData1: Record<string, string>[] = []
 
-for (let i = 0; i < 6; i++) {
+for (let i = 0; i < 8; i++) {
   listData1.push({
     href: 'https://www.antdv.com/',
     title: `ant design vue part ${i}`,
@@ -63,6 +63,8 @@ const pagination = {
   onChange: (page: number) => {
     console.log(page)
   },
+  total: 8,
+  p: 1,
   pageSize: 3
 }
 const actions: Record<string, any>[] = [
@@ -192,7 +194,6 @@ const data = [
         <template #actions>
           <a>edit</a>
           <a>more</a>
-          <!-- <a>delete</a> -->
         </template>
       </ListItem>
     </List>
@@ -213,6 +214,9 @@ const data = [
           <template #actions>
             <a key="list-loadmore-edit">edit</a>
             <a key="list-loadmore-more">more</a>
+          </template>
+          <template #extra>
+            <img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />
           </template>
         </a-list-item>
       </template>
@@ -250,7 +254,7 @@ const data = [
         </div>
       </template>
       <template #renderItem="{ item }">
-        <a-list-item key="item.title">
+        <a-list-item :key="item.title">
           <template #actions>
             <span v-for="{ icon, text } in actions" :key="icon">
               <component :is="icon" style="margin-right: 8px" />
@@ -271,7 +275,7 @@ const data = [
       </template>
     </a-list>
     <br />
-    <List vertical size="large" show-pagination :pagination="{ total: 6, p: 1, pageSize: 3 }">
+    <List vertical size="large" show-pagination :pagination="pagination">
       <ListItem v-for="(data, index) in listData1" :key="index" :title="data.title">
         <template #avatar>
           <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
@@ -301,19 +305,6 @@ const data = [
           footer part
         </div>
       </template>
-    </List>
-    <h2 class="mt30 mb10">栅格列表</h2>
-    <a-list :grid="{ gutter: 16, column: 6 }" :data-source="data">
-      <template #renderItem="{ item }">
-        <a-list-item>
-          <a-card :title="item.title">Card content</a-card>
-        </a-list-item>
-      </template>
-    </a-list>
-    <List :grid="{ gutter: 16, column: 4 }">
-      <ListItem v-for="(item, index) in data" :key="index">
-        <Card :title="item.title">Card content</Card>
-      </ListItem>
     </List>
   </div>
 </template>

@@ -7,9 +7,12 @@
 
 - 新增 [列表 List](https://themusecatcher.github.io/vue-amazing-ui/guide/components/list.html) 组件
 
-## 1.4.7 <Tag color="volcano" size="small">2024-08-09</Tag>
+## 1.4.7 <Tag color="volcano" size="small">2024-08-13</Tag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `spinProps` `emptyProps` 属性
+- 优化并更新 [表格 Pagination](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `disabled` `pageAmount` 属性，更新 `showTotal` 属性
+- 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件
+- 优化并更新 [文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件
 - 组件库及文档代码优化
 
 ## 1.4.6 <Tag color="volcano" size="small">2024-08-08</Tag>

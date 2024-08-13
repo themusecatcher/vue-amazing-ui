@@ -97,7 +97,6 @@ function onChange(e: InputEvent) {
   }
 }
 function onKeyboard(e: KeyboardEvent) {
-  // e.preventDefault() // 消除enter键换行
   emits('enter', e)
 }
 function onClear() {
@@ -123,7 +122,7 @@ function onClear() {
       :disabled="disabled"
       @input="onInput"
       @change="onChange"
-      @keydown.enter.prevent="onKeyboard"
+      @keydown.enter="onKeyboard"
       v-bind="$attrs"
     />
     <span class="m-clear" v-if="!disabled && allowClear && value" @click="onClear">

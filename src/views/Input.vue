@@ -20,8 +20,19 @@ function onEnter(e: KeyboardEvent) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space gap="small" vertical>
-      <Input v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
-      <Input v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" />
+      <Alert>
+        <template #message>
+          .lazy:
+          <br />
+          默认情况下，v-model 会在每次 input 事件后更新数据 (IME 拼字阶段的状态例外)。
+          <br />
+          你可以添加 lazy 修饰符来改为在每次 change 事件后更新数据：
+          <br />
+          {{ '<Input v-model.lazy="msg" />' }}
+        </template>
+      </Alert>
+      <Input :width="200" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
+      <Input :width="200" v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
     </Space>
     <h2 class="mt30 mb10">前缀和后缀</h2>
     <Space gap="small" vertical>
@@ -64,7 +75,7 @@ function onEnter(e: KeyboardEvent) {
           </Tooltip>
         </template>
       </Input>
-      <Input v-model:value="value" prefix="￥" suffix="RMB" />
+      <Input v-model:value="value" placeholder="Basic usage" prefix="￥" suffix="RMB" />
     </Space>
     <h2 class="mt30 mb10">三种大小</h2>
     <Space gap="small" vertical>
@@ -107,7 +118,7 @@ function onEnter(e: KeyboardEvent) {
         addon-after=".com"
       />
     </Space>
-    <h2 class="mt30 mb10">前置/后置标签</h2>
+    <h2 class="mt30 mb10">前置 / 后置标签</h2>
     <Space gap="small" vertical>
       <Input
         :width="300"
@@ -120,7 +131,7 @@ function onEnter(e: KeyboardEvent) {
         addon-before="Http://"
         addon-after=".com"
       />
-      <Input v-model:value="value">
+      <Input v-model:value="value" placeholder="Basic usage">
         <template #addonAfter>
           <svg
             focusable="false"
@@ -153,7 +164,7 @@ function onEnter(e: KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Space>
-      <Input disabled v-model:value="value" placeholder="please input" />
+      <Input disabled v-model:value="value" placeholder="disabled input" />
     </Space>
   </div>
 </template>
