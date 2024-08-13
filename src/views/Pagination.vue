@@ -52,7 +52,7 @@ function pageSizeChange(page: number, pageSize: number) {
     <h2 class="mt30 mb10">隐藏 pageSize 切换器</h2>
     <Pagination v-model:page="page" :total="total" :show-size-changer="false" @change="onChange" />
     <h2 class="mt30 mb10">快速跳转</h2>
-    <Pagination v-model:page="page" :total="total" :show-size-changer="false" show-quick-jumper @change="onChange" />
+    <Pagination v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
     <h2 class="mt30 mb10">数据总数</h2>
     <Space vertical>
       <Pagination v-model:page="page" :total="total" show-total @change="onChange" />

@@ -181,14 +181,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或 每页�
 
 ## 快速跳转
 
-<Pagination
-  v-model:page="page"
-  :total="total"
-  :show-size-changer="false"
-  show-quick-jumper
-  @change="onChange"
-  @pageSizeChange="pageSizeChange"
-/>
+<Pagination v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
 
 ::: details Show Code
 
@@ -204,13 +197,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或 每页�
 }
 </script>
 <template>
-  <Pagination
-    v-model:page="page"
-    :total="total"
-    :show-size-changer="false"
-    show-quick-jumper
-    @change="onChange"
-  />
+  <Pagination v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
 </template>
 ```
 
