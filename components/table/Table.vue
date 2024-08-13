@@ -27,7 +27,7 @@ withDefaults(defineProps<Props>(), {
   pagination: () => ({})
 })
 const emit = defineEmits(['change'])
-function changePage(page: number, pageSize: number) {
+function onChange(page: number, pageSize: number) {
   // 分页回调
   emit('change', page, pageSize)
 }
@@ -66,7 +66,7 @@ function changePage(page: number, pageSize: number) {
         </tr>
       </tbody>
     </table>
-    <Pagination v-if="showPagination" class="mt20" @change="changePage" v-bind="pagination" />
+    <Pagination v-if="showPagination" class="mt16" @change="onChange" v-bind="pagination" />
   </div>
 </template>
 <style lang="less" scoped>
@@ -144,6 +144,9 @@ function changePage(page: number, pageSize: number) {
         background-color: #fafafa;
       }
     }
+  }
+  .mt16 {
+    margin-top: 16px;
   }
 }
 </style>

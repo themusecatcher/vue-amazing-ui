@@ -31,28 +31,25 @@ function onEnter (e: KeyboardEvent) {
 
 ## 基本使用
 
-::: tip .lazy
-默认情况下，v-model 会在每次 input 事件后更新数据 (IME 拼字阶段的状态例外)。你可以添加 lazy 修饰符来改为在每次 change 事件后更新数据
+::: tip `.lazy`
+默认情况下，`v-model` 会在每次 `input` 事件后更新数据 (`IME` 拼字阶段的状态例外)。你可以添加 `lazy` 修饰符来改为在每次 `change` 事件后更新数据
 
 ```vue
 <!-- 在 "change" 事件后同步更新而不是 "input" -->
-<input v-model.lazy="msg" />
+<Textarea v-model.lazy="msg" />
 ```
 
 :::
 
-<Space :width="480" vertical>
-  <Textarea
-    v-model:value="value"
-    placeholder="Basic usage rows 2"
-    :rows="2"
-    @change="onChange"
-    @enter="onEnter" />
+<Space vertical :width="480">
+  <Textarea v-model:value="value" placeholder="Basic usage rows 2" :rows="2" @change="onChange" @enter="onEnter" />
   <Textarea
     v-model:value.lazy="lazyValue"
     placeholder="Lazy usage rows 2"
     :rows="2"
-    @change="onChange" />
+    @change="onChange"
+    @enter="onEnter"
+  />
 </Space>
 
 ::: details Show Code
@@ -76,18 +73,15 @@ function onEnter (e: KeyboardEvent) {
 }
 </script>
 <template>
-  <Space :width="480" vertical>
-    <Textarea
-      v-model:value="value"
-      placeholder="Basic usage rows 2"
-      :rows="2"
-      @change="onChange"
-      @enter="onEnter" />
+  <Space vertical :width="480">
+    <Textarea v-model:value="value" placeholder="Basic usage rows 2" :rows="2" @change="onChange" @enter="onEnter" />
     <Textarea
       v-model:value.lazy="lazyValue"
       placeholder="Lazy usage rows 2"
       :rows="2"
-      @change="onChange" />
+      @change="onChange"
+      @enter="onEnter"
+    />
   </Space>
 </template>
 ```

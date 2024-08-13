@@ -1,19 +1,12 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
 import Pagination from '../pagination'
-interface Grid {
-  column: number // 列数，number of 1, 2, 3...24
-  gutter: number // 栅格间隔
-}
 interface Props {
   bordered?: boolean // 是否展示边框
-  dataSource?: any[] // 列表数据源
   header?: string // 列表头部 string | slot
   footer?: string // 列表底部 string | slot
-  grid?: Grid // 	列表栅格配置
   vertical?: boolean // 是否使用竖直样式
   loading?: boolean // 是否加载中
-  loadMore?: string // 加载更多 string | slot
   showPagination?: boolean // 是否显示分页
   pagination?: object // Pagination 组件属性配置，参考 Pagination Props
   rowKey?: (item: any) => string | number // 各项 key 的取值，可以是字符串或一个函数
@@ -22,15 +15,12 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   bordered: false,
-  dataSource: () => [],
   header: undefined,
   footer: undefined,
-  grid: () => ({}),
+  grid: undefined,
   vertical: false,
   loading: false,
-  loadMore: undefined,
   showPagination: false,
-  pagination: () => ({}),
   rowKey: undefined,
   size: 'middle',
   split: true
@@ -64,7 +54,7 @@ const showFooter = computed(() => {
       <slot name="footer"></slot>
     </div>
     <div class="m-list-pagination" v-if="showPagination">
-      <Pagination v-bind="pagination" />
+      <Pagination placement="right" v-bind="pagination" />
     </div>
   </div>
 </template>
@@ -82,7 +72,7 @@ const showFooter = computed(() => {
     transition: all 0.3s;
   }
   .m-list-pagination {
-    margin-block-start: 24px;
+    margin-top: 24px;
     text-align: end;
   }
 }

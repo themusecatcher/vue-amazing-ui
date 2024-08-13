@@ -91,6 +91,7 @@ function onChange(e: InputEvent) {
   }
 }
 function onKeyboard(e: KeyboardEvent) {
+  emits('update:value', (e.target as HTMLInputElement).value)
   emits('enter', e)
 }
 const input = ref()
@@ -255,6 +256,7 @@ function onPassword() {
     }
     .u-input {
       font-size: 14px;
+      color: inherit;
       line-height: 1.5714285714285714;
       position: relative;
       display: inline-block;

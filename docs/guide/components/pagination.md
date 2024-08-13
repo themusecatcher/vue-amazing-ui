@@ -14,20 +14,39 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const total = ref(100)
-function changePage (page: number, pageSize: number) { // 分页回调
-  console.log('page:', page)
-  console.log('pageSize:', pageSize)
-}
-function pageSizeChange (page: number, pageSize: number) { // pageSize 变化的回调
+const page = ref(1)
+const pageSize = ref(10)
+const total = ref(98)
+const placementOptions = [
+  {
+    label: 'left',
+    value: 'left'
+  },
+  {
+    label: 'center',
+    value: 'center'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  }
+]
+const placement = ref('left')
+function onChange(page: number, pageSize: number) {
+  // 页码 page 或 每页条数 pageSize 改变的回调
   console.log('change page:', page)
   console.log('change pageSize:', pageSize)
+}
+function pageSizeChange(page: number, pageSize: number) {
+  // 每页条数 pageSize 变化的回调
+  console.log('pageSizeChange page:', page)
+  console.log('pageSizeChange pageSize:', pageSize)
 }
 </script>
 
 ## 基本使用
 
-<Pagination :total="total" @change="changePage" />
+<Pagination v-model:page="page" :total="50" @change="onChange" />
 
 ::: details Show Code
 
@@ -35,22 +54,25 @@ function pageSizeChange (page: number, pageSize: number) { // pageSize 变化的
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const total = ref(100)
-function changePage (page: number, pageSize: number) { // 分页回调
-  console.log('page:', page)
-  console.log('pageSize:', pageSize)
+const page = ref(1)
+function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
+  console.log('change page:', page)
+  console.log('change pageSize:', pageSize)
 }
 </script>
 <template>
-  <Pagination :total="total" @change="changePage" />
+  <Pagination v-model:page="page" :total="50" @change="onChange" />
 </template>
 ```
 
 :::
 
-## 靠左展示
+## 自定义位置
 
-<Pagination :total="total" placement="left" @change="changePage" />
+<Flex vertical>
+  <Radio :options="placementOptions" v-model:value="placement" button button-style="solid" />
+  <Pagination v-model:page="page" :total="total" :placement="placement" @change="onChange" />
+</Flex>
 
 ::: details Show Code
 
@@ -58,50 +80,48 @@ function changePage (page: number, pageSize: number) { // 分页回调
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const total = ref(100)
-function changePage (page: number, pageSize: number) { // 分页回调
-  console.log('page:', page)
-  console.log('pageSize:', pageSize)
+const page = ref(1)
+const total = ref(98)
+const placementOptions = [
+  {
+    label: 'left',
+    value: 'left'
+  },
+  {
+    label: 'center',
+    value: 'center'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  }
+]
+const placement = ref('left')
+function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
+  console.log('change page:', page)
+  console.log('change pageSize:', pageSize)
 }
 </script>
 <template>
-  <Pagination :total="total" placement="left" @change="changePage" />
+  <Flex vertical>
+    <Radio :options="placementOptions" v-model:value="placement" button button-style="solid" />
+    <Pagination v-model:page="page" :total="total" :placement="placement" @change="onChange" />
+  </Flex>
 </template>
 ```
 
 :::
 
-## 靠右展示
-
-<Pagination :total="total" placement="right" @change="changePage" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-
-const total = ref(100)
-function changePage (page: number, pageSize: number) { // 分页回调
-  console.log('page:', page)
-  console.log('pageSize:', pageSize)
-}
-</script>
-<template>
-  <Pagination :total="total" placement="right" @change="changePage" />
-</template>
-```
-
-:::
-
-## 快速跳转 & 数据总量
+## 自定义 pageSize 切换选项
 
 <Pagination
+  v-model:page="page"
+  v-model:page-size="pageSize"
   :total="total"
-  show-quick-jumper
-  show-total
-  @change="changePage"
-  @pageSizeChange="pageSizeChange" />
+  :page-size-options="[10, 20, 30, 40, 50]"
+  @change="onChange"
+  @pageSizeChange="pageSizeChange"
+/>
 
 ::: details Show Code
 
@@ -109,23 +129,164 @@ function changePage (page: number, pageSize: number) { // 分页回调
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const total = ref(100)
-function changePage (page: number, pageSize: number) { // 分页回调
-  console.log('page:', page)
-  console.log('pageSize:', pageSize)
+const page = ref(1)
+const pageSize = ref(10)
+const total = ref(98)
+function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
+  console.log('change page:', page)
+  console.log('change pageSize:', pageSize)
 }
-function pageSizeChange (page: number, pageSize: number) { // pageSize 变化的回调
+function pageSizeChange (page: number, pageSize: number) { // 每页条数 pageSize 变化的回调
+  console.log('pageSizeChange page:', page)
+  console.log('pageSizeChange pageSize:', pageSize)
+}
+</script>
+<template>
+  <Pagination
+    v-model:page="page"
+    v-model:page-size="pageSize"
+    :total="total"
+    :page-size-options="[10, 20, 30, 40, 50]"
+    @change="onChange"
+    @pageSizeChange="pageSizeChange"
+  />
+</template>
+```
+
+:::
+
+## 隐藏 pageSize 切换器
+
+<Pagination v-model:page="page" :total="total" :show-size-changer="false" @change="onChange" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const page = ref(1)
+const total = ref(98)
+function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
+  console.log('change page:', page)
+  console.log('change pageSize:', pageSize)
+}
+</script>
+<template>
+  <Pagination v-model:page="page" :total="total" :show-size-changer="false" @change="onChange" />
+</template>
+```
+
+:::
+
+## 快速跳转
+
+<Pagination
+  v-model:page="page"
+  :total="total"
+  :show-size-changer="false"
+  show-quick-jumper
+  @change="onChange"
+  @pageSizeChange="pageSizeChange"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const page = ref(1)
+const total = ref(98)
+function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
   console.log('change page:', page)
   console.log('change pageSize:', pageSize)
 }
 </script>
 <template>
   <Pagination
+    v-model:page="page"
     :total="total"
+    :show-size-changer="false"
     show-quick-jumper
-    show-total
-    @change="changePage"
-    @pageSizeChange="pageSizeChange" />
+    @change="onChange"
+  />
+</template>
+```
+
+:::
+
+## 数据总数
+
+<Space vertical>
+  <Pagination v-model:page="page" :total="total" show-total @change="onChange" />
+  <Pagination
+    v-model:page="page"
+    :total="total"
+    :show-total="(total: number) => `Total ${total} items`"
+    @change="onChange"
+  />
+  <Pagination
+    v-model:page="page"
+    :total="total"
+    :show-total="(total: number, range: number[]) => `${range[0]}-${range[1]} of ${total} items`"
+    @change="onChange"
+  />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const page = ref(1)
+const total = ref(98)
+function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
+  console.log('change page:', page)
+  console.log('change pageSize:', pageSize)
+}
+</script>
+<template>
+  <Space vertical>
+    <Pagination v-model:page="page" :total="total" show-total @change="onChange" />
+    <Pagination
+      v-model:page="page"
+      :total="total"
+      :show-total="(total: number) => `Total ${total} items`"
+      @change="onChange"
+    />
+    <Pagination
+      v-model:page="page"
+      :total="total"
+      :show-total="(total: number, range: number[]) => `${range[0]}-${range[1]} of ${total} items`"
+      @change="onChange"
+    />
+  </Space>
+</template>
+```
+
+:::
+
+## 禁用
+
+<Pagination v-model:page="page" disabled :total="total" show-quick-jumper @change="onChange" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const page = ref(1)
+const total = ref(98)
+function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
+  console.log('change page:', page)
+  console.log('change pageSize:', pageSize)
+}
+</script>
+<template>
+  <Pagination disabled v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
 </template>
 ```
 
@@ -137,20 +298,21 @@ function pageSizeChange (page: number, pageSize: number) { // pageSize 变化的
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-page | 当前页数 | number | 1
-pageSize | 每页条数 | number | 10
-pageSizeOptions | 每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100]
+page <Tag color="cyan">v-model</Tag> | 当前页数 | number | 1
+pageSize <Tag color="cyan">v-model</Tag> | 每页条数 | number | 10
 total | 数据总数 | number | 0
-pageListNum | 显示的页码数组长度 | number | 5
+disabled | 是否禁用 | boolean | false
+pageAmount | 显示的页码数 | number | 5
 hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false
 showQuickJumper | 是否可以快速跳转至某页 | boolean | false
 showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined
-showTotal | 是否显示当前页数和数据总量 | boolean | false
-placement | 分页展示位置：靠左、居中、靠右 | 'left' &#124; 'center' &#124; 'right' | 'center'
+pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100]
+showTotal | 用于显示数据总量和当前数据顺序 | boolean &#124; ((total: number, range: number[]) => string) | false
+placement | 分页展示位置 | 'left' &#124; 'center' &#124; 'right' | 'center'
 
 ## Events
 
 名称 | 说明 | 类型
 -- | -- | --
-change | 页码改变后的回调 | (page: number, pageSize: number) => void
-pageSizeChange | `pageSize` 变化的回调 | (page: number, pageSize: number) => void
+change | 页码 `page` 或 每页条数 `pageSize` 改变的回调 | (page: number, pageSize: number) => void
+pageSizeChange | 每页条数 `pageSize` 变化的回调 | (page: number, pageSize: number) => void
