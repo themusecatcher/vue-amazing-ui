@@ -16,7 +16,6 @@ interface Props {
   placement?: 'left' | 'center' | 'right' // 分页展示位置，靠左 left，居中 center，靠右 right
 }
 const props = withDefaults(defineProps<Props>(), {
-  // 基于类型的声明
   page: 1,
   pageSize: 10,
   total: 0,
@@ -499,6 +498,7 @@ function onPageSizeChange(pageSize: number) {
     }
   }
   .m-pagination-options {
+    color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
   }
 }

@@ -13,7 +13,7 @@ interface Props {
   size?: 'small' | 'middle' | 'large' // 列表尺寸
   split?: boolean // 是否展示分割线
 }
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   bordered: false,
   header: undefined,
   footer: undefined,
