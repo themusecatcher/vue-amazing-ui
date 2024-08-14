@@ -199,6 +199,10 @@ export default defineConfig({
               link: '/guide/components/inputnumber'
             },
             {
+              text: '列表 List',
+              link: '/guide/components/list'
+            },
+            {
               text: '加载条 LoadingBar',
               link: '/guide/components/loadingbar'
             },
