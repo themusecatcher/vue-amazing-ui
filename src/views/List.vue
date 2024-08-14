@@ -45,27 +45,31 @@ const sizeOptions = [
   }
 ]
 const size = ref('middle')
-
+const bordered = ref(true)
 const listData1: Record<string, string>[] = []
 
-for (let i = 0; i < 8; i++) {
+for (let i = 1; i <= 8; i++) {
   listData1.push({
-    href: 'https://www.antdv.com/',
-    title: `ant design vue part ${i}`,
+    href: 'https://themusecatcher.github.io/vue-amazing-ui/',
+    title: `Vue Amazing UI part ${i}`,
     avatar: 'https://joeschmoe.io/api/v1/random',
-    description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
     content:
-      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
+      'Vue Amazing UI supplies streamline web development, incredible Vue components for modern web design and transform your Vue interface completely.'
   })
 }
-
+const paginationListData = ref(listData1.slice(0, 3))
 const pagination = {
-  onChange: (page: number) => {
-    console.log(page)
-  },
-  total: 8,
   p: 1,
-  pageSize: 3
+  pageSize: 3,
+  total: 8,
+  onChange: (page: number, pageSize: number) => {
+    console.log('change page', page)
+    console.log('change pageSize', pageSize)
+    const start = (page - 1) * pageSize + 1
+    const end = page * pageSize > 8 ? 8 : page * pageSize
+    paginationListData.value = listData1.slice(start - 1, end)
+  }
 }
 const actions: Record<string, any>[] = [
   { icon: StarOutlined, text: '156' },
@@ -130,97 +134,61 @@ const data = [
         <div>Footer</div>
       </template>
     </List>
-    <br />
-    <a-list bordered item-layout="horizontal" :data-source="listData">
-      <template #header>
-        <div>Header</div>
-      </template>
-      <template #renderItem="{ item }">
-        <a-list-item>
-          <a-list-item-meta
-            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-          >
-            <template #title>
-              <a href="https://www.antdv.com/">{{ item.title }}</a>
-            </template>
-            <template #avatar>
-              <a-avatar src="https://joeschmoe.io/api/v1/random" />
-            </template>
-          </a-list-item-meta>
-        </a-list-item>
-      </template>
-      <template #footer>
-        <div>Footer</div>
-      </template>
-    </a-list>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Flex vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-      <List bordered :size="size">
-        <template #header>
-          <div>Header</div>
-        </template>
-        <ListItem v-for="(data, index) in simpleList" :key="index">
-          {{ data }}
-        </ListItem>
-        <template #footer>
-          <div>Footer</div>
-        </template>
-      </List>
-      <List :size="size">
-        <ListItem v-for="(data, index) in listData" :key="index">
+      <Row :gutter="32">
+        <Col :span="12">
+          <List :size="size">
+            <ListItem v-for="(data, index) in listData" :key="index">
+              <template #avatar>
+                <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+              </template>
+              <template #title>
+                <a href="https://themusecatcher.github.io/vue-amazing-ui/">{{ data.title }}</a>
+              </template>
+              <template #description>
+                {{ data.description }}
+              </template>
+            </ListItem>
+          </List>
+        </Col>
+        <Col :span="12">
+          <List bordered :size="size">
+            <template #header>
+              <div>Header</div>
+            </template>
+            <ListItem v-for="(data, index) in simpleList" :key="index">
+              {{ data }}
+            </ListItem>
+            <template #footer>
+              <div>Footer</div>
+            </template>
+          </List>
+        </Col>
+      </Row>
+    </Flex>
+    <h2 class="mt30 mb10">列表添加操作项</h2>
+    <Flex vertical>
+      <Space>
+        <Switch v-model="bordered" />
+      </Space>
+      <List :bordered="bordered">
+        <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
           <template #avatar>
             <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
-          </template>
-          <template #title>
-            <a href="https://themusecatcher.github.io/vue-amazing-ui/">{{ data.title }}</a>
           </template>
           <template #description>
             {{ data.description }}
           </template>
+          {{ data.content }}
+          <template #actions>
+            <a>edit</a>
+            <a>more</a>
+          </template>
         </ListItem>
       </List>
     </Flex>
-    <h2 class="mt30 mb10">列表添加操作项</h2>
-    <List bordered>
-      <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
-        <template #avatar>
-          <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
-        </template>
-        <template #description>
-          {{ data.description }}
-        </template>
-        {{ data.content }}
-        <template #actions>
-          <a>edit</a>
-          <a>more</a>
-        </template>
-      </ListItem>
-    </List>
-    <a-list bordered item-layout="horizontal" :data-source="listData">
-      <template #renderItem="{ item }">
-        <a-list-item>
-          <a-list-item-meta
-            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-          >
-            <template #title>
-              <a href="https://www.antdv.com/">{{ item.title }}</a>
-            </template>
-            <template #avatar>
-              <a-avatar src="https://joeschmoe.io/api/v1/random" />
-            </template>
-          </a-list-item-meta>
-          <div>content</div>
-          <template #actions>
-            <a key="list-loadmore-edit">edit</a>
-            <a key="list-loadmore-more">more</a>
-          </template>
-          <template #extra>
-            <img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />
-          </template>
-        </a-list-item>
-      </template>
-    </a-list>
     <h2 class="mt30 mb10">自定义样式</h2>
     <List>
       <ListItem
@@ -245,38 +213,12 @@ const data = [
         </template>
       </ListItem>
     </List>
-    <h2 class="mt30 mb10">竖排列表</h2>
-    <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="listData1">
-      <template #footer>
-        <div>
-          <b>ant design vue</b>
-          footer part
-        </div>
-      </template>
-      <template #renderItem="{ item }">
-        <a-list-item :key="item.title">
-          <template #actions>
-            <span v-for="{ icon, text } in actions" :key="icon">
-              <component :is="icon" style="margin-right: 8px" />
-              {{ text }}
-            </span>
-          </template>
-          <template #extra>
-            <img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />
-          </template>
-          <a-list-item-meta :description="item.description">
-            <template #title>
-              <a :href="item.href">{{ item.title }}</a>
-            </template>
-            <template #avatar><a-avatar :src="item.avatar" /></template>
-          </a-list-item-meta>
-          {{ item.content }}
-        </a-list-item>
-      </template>
-    </a-list>
-    <br />
+    <h2 class="mt30 mb10">竖排分页列表</h2>
     <List vertical size="large" show-pagination :pagination="pagination">
-      <ListItem v-for="(data, index) in listData1" :key="index" :title="data.title">
+      <ListItem v-for="(data, index) in paginationListData" :key="index">
+        <template #title>
+          <a :href="data.href">{{ data.title }}</a>
+        </template>
         <template #avatar>
           <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
         </template>
