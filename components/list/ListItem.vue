@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, Slot } from 'vue'
+import Avatar from '../avatar'
 interface Props {
   avatar?: string // 列表元素的图标 string | slot
+  avatarProps?: object // Avatar 组件属性配置，参考 Avatar Props，用于配置列表图标样式
   title?: string // 列表元素的标题 string | slot
   description?: string // 列表元素的描述内容 string | slot
-  extra?: string // 额外内容，在 vertical 的情况下, 展示右侧内容; horizontal 展示在列表元素最右侧 string | slot
+  actions?: Slot // 列表操作组 slot
+  extra?: string // 额外内容，额外内容，展示在列表右侧 string | slot
   avatarStyle?: CSSProperties // 设置图标的样式
   titleStyle?: CSSProperties // 设置标题的样式
   descriptionStyle?: CSSProperties // 设置描述内容的样式
@@ -15,8 +18,10 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   avatar: undefined,
+  avatarProps: () => ({}),
   title: undefined,
   description: undefined,
+  actions: undefined,
   extra: undefined,
   avatarStyle: () => ({}),
   titleStyle: () => ({}),
@@ -28,16 +33,16 @@ const props = withDefaults(defineProps<Props>(), {
 const slots = useSlots()
 const showAvatar = computed(() => {
   const avatarSlots = slots.avatar?.()
-  return Boolean(avatarSlots && avatarSlots?.length)
+  return Boolean(avatarSlots && avatarSlots?.length) || props.avatar
 })
 const showContent = computed(() => {
   const titleSlots = slots.title?.()
   const descriptionSlots = slots.description?.()
   let n = 0
-  if (titleSlots && titleSlots[0].children?.length) {
+  if (titleSlots && titleSlots?.length) {
     n++
   }
-  if (descriptionSlots && descriptionSlots[0].children?.length) {
+  if (descriptionSlots && descriptionSlots?.length) {
     n++
   }
   return Boolean(n) || props.title || props.description
@@ -52,7 +57,7 @@ const showActions = computed(() => {
 })
 const showExtra = computed(() => {
   const extraSlots = slots.extra?.()
-  return Boolean(extraSlots && extraSlots?.length)
+  return Boolean(extraSlots && extraSlots?.length) || props.extra
 })
 </script>
 <template>
@@ -60,12 +65,14 @@ const showExtra = computed(() => {
     <div class="m-list-item-main">
       <div class="m-list-item-meta" v-if="showAvatar || showContent">
         <div class="m-list-item-avatar" v-if="showAvatar" :style="avatarStyle">
-          <slot name="avatar"></slot>
+          <slot name="avatar">
+            <Avatar v-bind="avatarProps">{{ avatar }}</Avatar>
+          </slot>
         </div>
         <div class="m-list-item-content" v-if="showContent">
-          <h4 class="list-item-title" :style="titleStyle">
+          <p class="list-item-title" :style="titleStyle">
             <slot name="title">{{ title }}</slot>
-          </h4>
+          </p>
           <div class="list-item-description" :style="descriptionStyle">
             <slot name="description">{{ description }}</slot>
           </div>
@@ -79,7 +86,7 @@ const showExtra = computed(() => {
       </div>
     </div>
     <div class="list-item-extra" v-if="showExtra" :style="extraStyle">
-      <slot name="extra"></slot>
+      <slot name="extra">{{ extra }}</slot>
     </div>
   </div>
 </template>
@@ -112,8 +119,10 @@ const showExtra = computed(() => {
           margin-bottom: 4px;
           color: rgba(0, 0, 0, 0.88);
           font-size: 14px;
+          font-weight: 700;
           line-height: 1.5714285714285714;
           :deep(a) {
+            font-weight: 700;
             color: rgba(0, 0, 0, 0.88);
             transition: all 0.3s;
             &:hover {
@@ -131,10 +140,12 @@ const showExtra = computed(() => {
     .list-item-actions {
       flex: 0 0 auto;
       margin-left: 48px;
+      font-size: 0;
       & > * {
         // 选择所有直接子元素，不包括深层的后代
         position: relative;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         padding: 0 8px;
         color: rgba(0, 0, 0, 0.45);
         font-size: 14px;
@@ -157,6 +168,7 @@ const showExtra = computed(() => {
         }
       }
       & > :deep(a) {
+        // 选择所有直接子元素且是 a 标签
         color: @themeColor;
         transition: color 0.3s;
         &:hover {
@@ -164,6 +176,9 @@ const showExtra = computed(() => {
         }
       }
     }
+  }
+  .list-item-extra {
+    margin-left: 24px;
   }
 }
 </style>

@@ -3,9 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-## 1.5.0
+## 1.5.0 <Tag color="volcano" size="small">2024-08-14</Tag>
 
 - 新增 [列表 List](https://themusecatcher.github.io/vue-amazing-ui/guide/components/list.html) 组件
+- 优化并更新 [空状态 Empty](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html) 组件，新增 `footer` 属性
+- 组件库代码优化
 
 ## 1.4.7 <Tag color="volcano" size="small">2024-08-13</Tag>
 

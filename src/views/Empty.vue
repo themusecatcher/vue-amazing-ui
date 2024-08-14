@@ -12,19 +12,21 @@
     <Empty
       image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
       :image-style="{
-        width: '100px',
         height: '60px'
       }"
     >
       <template #description>
         <span>
           Customize
-          <a href="#API">Description</a>
+          <a href="#api">Description</a>
         </span>
+      </template>
+      <template #footer>
+        <Button type="primary">Create Now</Button>
       </template>
     </Empty>
     <h2>插槽自定义</h2>
-    <Empty :description-style="{ color: 'rgb(169, 174, 184)' }">
+    <Empty :image-style="{ height: '48px' }" :description-style="{ color: 'rgb(169, 174, 184)' }">
       <svg
         class="u-svg"
         viewBox="0 0 48 48"
