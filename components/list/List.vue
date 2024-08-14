@@ -1,62 +1,78 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
+import Spin from '../spin'
+import Empty from '../empty'
 import Pagination from '../pagination'
 interface Props {
   bordered?: boolean // 是否展示边框
+  vertical?: boolean // 是否使用竖直样式
+  split?: boolean // 是否展示分割线
+  size?: 'small' | 'middle' | 'large' // 列表尺寸
+  loading?: boolean // 是否加载中
+  hoverable?: boolean // 是否显示悬浮样式
   header?: string // 列表头部 string | slot
   footer?: string // 列表底部 string | slot
-  vertical?: boolean // 是否使用竖直样式
-  loading?: boolean // 是否加载中
+  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置列表加载中样式
+  emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
   showPagination?: boolean // 是否显示分页
-  pagination?: object // Pagination 组件属性配置，参考 Pagination Props
-  rowKey?: (item: any) => string | number // 各项 key 的取值，可以是字符串或一个函数
-  size?: 'small' | 'middle' | 'large' // 列表尺寸
-  split?: boolean // 是否展示分割线
+  pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   bordered: false,
+  vertical: false,
+  split: true,
+  size: 'middle',
+  loading: false,
+  hoverable: false,
   header: undefined,
   footer: undefined,
-  grid: undefined,
-  vertical: false,
-  loading: false,
+  spinProps: () => ({}),
+  emptyProps: () => ({}),
   showPagination: false,
-  rowKey: undefined,
-  size: 'middle',
-  split: true
+  pagination: () => ({})
 })
 const slots = useSlots()
 const showHeader = computed(() => {
   const headerSlots = slots.header?.()
-  return Boolean(headerSlots && headerSlots?.length)
+  return Boolean(headerSlots && headerSlots?.length) || props.header
+})
+const showDefault = computed(() => {
+  const defaultSlots = slots.default?.()
+  return Boolean(defaultSlots && defaultSlots?.length)
 })
 const showFooter = computed(() => {
   const footerSlots = slots.footer?.()
-  return Boolean(footerSlots && footerSlots?.length)
+  return Boolean(footerSlots && footerSlots?.length) || props.footer
 })
 </script>
 <template>
-  <div
-    class="m-list"
-    :class="{
-      'list-bordered': bordered,
-      'list-vertical': vertical,
-      'list-split': split,
-      'list-small': size === 'small',
-      'list-large': size === 'large'
-    }"
-  >
-    <div class="m-list-header" v-if="showHeader">
-      <slot name="header"></slot>
+  <Spin :spinning="loading" size="small" v-bind="spinProps">
+    <div
+      class="m-list"
+      :class="{
+        'list-bordered': bordered,
+        'list-vertical': vertical,
+        'list-split': split,
+        'list-small': size === 'small',
+        'list-large': size === 'large',
+        'list-hoverable': hoverable
+      }"
+    >
+      <div class="m-list-header" v-if="showHeader">
+        <slot name="header">{{ header }}</slot>
+      </div>
+      <slot v-if="showDefault"></slot>
+      <div class="m-list-empty" v-else>
+        <Empty image="outlined" v-bind="emptyProps" />
+      </div>
+      <div class="m-list-footer" v-if="showFooter">
+        <slot name="footer">{{ footer }}</slot>
+      </div>
+      <div class="m-list-pagination" v-if="showPagination">
+        <Pagination placement="right" v-bind="pagination" />
+      </div>
     </div>
-    <slot></slot>
-    <div class="m-list-footer" v-if="showFooter">
-      <slot name="footer"></slot>
-    </div>
-    <div class="m-list-pagination" v-if="showPagination">
-      <Pagination placement="right" v-bind="pagination" />
-    </div>
-  </div>
+  </Spin>
 </template>
 <style lang="less" scoped>
 .m-list {
@@ -71,9 +87,11 @@ const showFooter = computed(() => {
     padding: 12px 0;
     transition: all 0.3s;
   }
+  .m-list-empty {
+    padding: 16px;
+  }
   .m-list-pagination {
     margin-top: 24px;
-    text-align: end;
   }
 }
 .list-bordered {
@@ -98,6 +116,7 @@ const showFooter = computed(() => {
             margin-bottom: 12px;
             color: rgba(0, 0, 0, 0.88);
             font-size: 16px;
+            font-weight: 700;
             line-height: 1.5;
           }
         }
@@ -113,9 +132,6 @@ const showFooter = computed(() => {
         }
       }
     }
-    .list-item-extra {
-      margin-left: 24px;
-    }
   }
 }
 .list-split {
@@ -129,6 +145,11 @@ const showFooter = computed(() => {
   }
 }
 .list-small {
+  :deep(.m-list-item) {
+    padding: 8px 16px;
+  }
+}
+.list-bordered.list-small {
   .m-list-header,
   :deep(.m-list-item),
   .m-list-footer {
@@ -145,6 +166,13 @@ const showFooter = computed(() => {
   :deep(.m-list-item),
   .m-list-footer {
     padding: 16px 24px;
+  }
+}
+.list-hoverable {
+  :deep(.m-list-item) {
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
   }
 }
 </style>

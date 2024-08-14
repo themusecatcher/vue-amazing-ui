@@ -15,7 +15,7 @@ interface Props {
   size?: number | 'large' | 'small' | 'default' | Responsive // 设置头像的大小，number 类型时单位 px
   src?: string // 图片类头像资源地址
   alt?: string // 图片无法显示时的替代文本
-  icon?: Slot // 设置头像的图标
+  icon?: Slot // 设置头像的图标 slot
 }
 const props = withDefaults(defineProps<Props>(), {
   shape: 'circle',

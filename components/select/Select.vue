@@ -480,15 +480,21 @@ function onChange(value: string | number, label: string, index: number) {
   }
   .m-empty-wrap {
     position: absolute;
-    z-index: 9;
-    height: 100px;
+    z-index: 1000;
     border-radius: 8px;
-    padding: 13px 20px;
+    padding: 9px 16px;
     background-color: #fff;
+    outline: none;
     box-shadow:
       0 6px 16px 0 rgba(0, 0, 0, 0.08),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    .m-empty {
+      margin-block: 8px;
+      :deep(.m-empty-image) {
+        height: 35px;
+      }
+    }
   }
 }
 .select-focused:not(.select-disabled) {

@@ -84,7 +84,7 @@ withDefaults(defineProps<Props>(), {
         <p class="u-tip" v-show="tip">{{ tip }}</p>
       </div>
     </div>
-    <div :class="['m-spin-content', { 'm-spin-mask': spinning }]">
+    <div :class="['m-spin-content', { 'spin-blur': spinning }]">
       <slot></slot>
     </div>
   </div>
@@ -97,7 +97,6 @@ withDefaults(defineProps<Props>(), {
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
   .m-spin {
     position: absolute;
     top: 0;
@@ -498,10 +497,10 @@ withDefaults(defineProps<Props>(), {
     height: 100%;
     transition: opacity 0.3s;
   }
-  .m-spin-mask {
+  .spin-blur {
+    opacity: 0.5;
     user-select: none;
     pointer-events: none;
-    opacity: 0.5;
   }
 }
 .spin-small {

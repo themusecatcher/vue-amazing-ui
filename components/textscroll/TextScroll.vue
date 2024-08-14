@@ -235,7 +235,7 @@ function verticalMove() {
       cursor: pointer;
       transition: color 0.3s;
       &:hover {
-        color: @themeColor;
+        color: @themeColor !important;
       }
     }
   }

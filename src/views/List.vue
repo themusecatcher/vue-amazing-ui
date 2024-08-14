@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue'
 const listData = [
   {
     title: 'Vue Amazing UI Title 1',
@@ -23,6 +22,7 @@ const listData = [
     content: 'content'
   }
 ]
+const bordered = ref(true)
 const simpleList = [
   'Vue Amazing UI is developed using TypeScript',
   'An Amazing Vue3 UI Components Library',
@@ -45,20 +45,20 @@ const sizeOptions = [
   }
 ]
 const size = ref('middle')
-const bordered = ref(true)
-const listData1: Record<string, string>[] = []
-
+const loading = ref(true)
+const allListData: any[] = []
 for (let i = 1; i <= 8; i++) {
-  listData1.push({
+  allListData.push({
     href: 'https://themusecatcher.github.io/vue-amazing-ui/',
     title: `Vue Amazing UI part ${i}`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
+    avatar: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
     description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
     content:
       'Vue Amazing UI supplies streamline web development, incredible Vue components for modern web design and transform your Vue interface completely.'
   })
 }
-const paginationListData = ref(listData1.slice(0, 3))
+const paginationListData = ref<any[]>([])
+paginationListData.value = allListData.slice(0, 3)
 const pagination = {
   p: 1,
   pageSize: 3,
@@ -68,46 +68,42 @@ const pagination = {
     console.log('change pageSize', pageSize)
     const start = (page - 1) * pageSize + 1
     const end = page * pageSize > 8 ? 8 : page * pageSize
-    paginationListData.value = listData1.slice(start - 1, end)
+    paginationListData.value = allListData.slice(start - 1, end)
   }
 }
-const actions: Record<string, any>[] = [
-  { icon: StarOutlined, text: '156' },
-  { icon: LikeOutlined, text: '156' },
-  { icon: MessageOutlined, text: '2' }
-]
-const data = [
-  {
-    title: 'Title 1'
-  },
-  {
-    title: 'Title 2'
-  },
-  {
-    title: 'Title 3'
-  },
-  {
-    title: 'Title 4'
-  },
-  {
-    title: 'Title 5'
-  },
-  {
-    title: 'Title 6'
-  },
-  {
-    title: 'Title 7'
-  },
-  {
-    title: 'Title 8'
-  }
-]
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <List>
+    <List header="header" footer="footer">
+      <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+        <template #avatar>
+          <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+        </template>
+        <template #description>
+          {{ data.description }}
+        </template>
+      </ListItem>
+    </List>
+    <a-list header="header" footer="footer" item-layout="horizontal" :data-source="listData">
+      <template #renderItem="{ item }">
+        <a-list-item>
+          <a-list-item-meta
+            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+          >
+            <template #title>
+              <a href="https://www.antdv.com/">{{ item.title }}</a>
+            </template>
+            <template #avatar>
+              <a-avatar src="https://joeschmoe.io/api/v1/random" />
+            </template>
+          </a-list-item-meta>
+        </a-list-item>
+      </template>
+    </a-list>
+    <h2 class="mt30 mb10">隐藏分割线</h2>
+    <List :split="false">
       <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
         <template #avatar>
           <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
@@ -118,28 +114,33 @@ const data = [
       </ListItem>
     </List>
     <h2 class="mt30 mb10">带边框列表</h2>
-    <List bordered>
-      <template #header>
-        <div>Header</div>
-      </template>
-      <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
-        <template #avatar>
-          <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+    <Flex vertical>
+      <Space>
+        <Switch v-model="bordered" />
+      </Space>
+      <List :bordered="bordered">
+        <template #header>
+          <div>Header</div>
         </template>
-        <template #description>
-          {{ data.description }}
+        <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+          <template #avatar>
+            <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+          </template>
+          <template #description>
+            {{ data.description }}
+          </template>
+        </ListItem>
+        <template #footer>
+          <div>Footer</div>
         </template>
-      </ListItem>
-      <template #footer>
-        <div>Footer</div>
-      </template>
-    </List>
+      </List>
+    </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Flex vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Row :gutter="32">
         <Col :span="12">
-          <List :size="size">
+          <List bordered :size="size">
             <ListItem v-for="(data, index) in listData" :key="index">
               <template #avatar>
                 <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
@@ -168,27 +169,85 @@ const data = [
         </Col>
       </Row>
     </Flex>
-    <h2 class="mt30 mb10">列表添加操作项</h2>
+    <h2 class="mt30 mb10">加载中</h2>
     <Flex vertical>
-      <Space>
-        <Switch v-model="bordered" />
-      </Space>
-      <List :bordered="bordered">
-        <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
-          <template #avatar>
-            <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
-          </template>
-          <template #description>
-            {{ data.description }}
-          </template>
-          {{ data.content }}
-          <template #actions>
-            <a>edit</a>
-            <a>more</a>
-          </template>
-        </ListItem>
-      </List>
+      <Space> Loading state:<Switch v-model="loading" /> </Space>
+      <Row :gutter="32">
+        <Col :span="12">
+          <List bordered :loading="loading">
+            <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+              <template #avatar>
+                <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+              </template>
+              <template #description>
+                {{ data.description }}
+              </template>
+            </ListItem>
+          </List>
+        </Col>
+        <Col :span="12">
+          <List bordered :loading="loading">
+            <template #header>
+              <div>Header</div>
+            </template>
+            <ListItem v-for="(data, index) in simpleList" :key="index">
+              {{ data }}
+            </ListItem>
+            <template #footer>
+              <div>Footer</div>
+            </template>
+          </List>
+        </Col>
+      </Row>
     </Flex>
+    <h2 class="mt30 mb10">暂无数据</h2>
+    <List>
+      <ListItem v-for="(data, index) in []" :key="index"></ListItem>
+    </List>
+    <h2 class="mt30 mb10">显示悬浮样式</h2>
+    <Row :gutter="32">
+      <Col :span="12">
+        <List bordered hoverable>
+          <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+            <template #avatar>
+              <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+            </template>
+            <template #description>
+              {{ data.description }}
+            </template>
+          </ListItem>
+        </List>
+      </Col>
+      <Col :span="12">
+        <List bordered hoverable>
+          <template #header>
+            <div>Header</div>
+          </template>
+          <ListItem v-for="(data, index) in simpleList" :key="index">
+            {{ data }}
+          </ListItem>
+          <template #footer>
+            <div>Footer</div>
+          </template>
+        </List>
+      </Col>
+    </Row>
+    <h2 class="mt30 mb10">列表添加操作项</h2>
+    <List>
+      <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+        <template #avatar>
+          <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+        </template>
+        <template #description>
+          {{ data.description }}
+        </template>
+        {{ data.content }}
+        <template #actions>
+          <a>edit</a>
+          <a>more</a>
+        </template>
+      </ListItem>
+    </List>
     <h2 class="mt30 mb10">自定义样式</h2>
     <List>
       <ListItem
@@ -217,7 +276,7 @@ const data = [
     <List vertical size="large" show-pagination :pagination="pagination">
       <ListItem v-for="(data, index) in paginationListData" :key="index">
         <template #title>
-          <a :href="data.href">{{ data.title }}</a>
+          <a :href="data.href" target="_blank">{{ data.title }}</a>
         </template>
         <template #avatar>
           <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
@@ -227,9 +286,56 @@ const data = [
         </template>
         {{ data.content }}
         <template #actions>
-          <span v-for="{ icon, text } in actions" :key="icon">
-            <component :is="icon" style="margin-right: 8px" />
-            {{ text }}
+          <span>
+            <svg
+              class="u-svg"
+              focusable="false"
+              data-icon="star"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+              viewBox="64 64 896 896"
+            >
+              <path
+                d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3zM664.8 561.6l36.1 210.3L512 672.7 323.1 772l36.1-210.3-152.8-149L417.6 382 512 190.7 606.4 382l211.2 30.7-152.8 148.9z"
+              ></path>
+            </svg>
+            156
+          </span>
+          <span>
+            <svg
+              class="u-svg"
+              focusable="false"
+              data-icon="like"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+              viewBox="64 64 896 896"
+            >
+              <path
+                d="M885.9 533.7c16.8-22.2 26.1-49.4 26.1-77.7 0-44.9-25.1-87.4-65.5-111.1a67.67 67.67 0 00-34.3-9.3H572.4l6-122.9c1.4-29.7-9.1-57.9-29.5-79.4A106.62 106.62 0 00471 99.9c-52 0-98 35-111.8 85.1l-85.9 311H144c-17.7 0-32 14.3-32 32v364c0 17.7 14.3 32 32 32h601.3c9.2 0 18.2-1.8 26.5-5.4 47.6-20.3 78.3-66.8 78.3-118.4 0-12.6-1.8-25-5.4-37 16.8-22.2 26.1-49.4 26.1-77.7 0-12.6-1.8-25-5.4-37 16.8-22.2 26.1-49.4 26.1-77.7-.2-12.6-2-25.1-5.6-37.1zM184 852V568h81v284h-81zm636.4-353l-21.9 19 13.9 25.4a56.2 56.2 0 016.9 27.3c0 16.5-7.2 32.2-19.6 43l-21.9 19 13.9 25.4a56.2 56.2 0 016.9 27.3c0 16.5-7.2 32.2-19.6 43l-21.9 19 13.9 25.4a56.2 56.2 0 016.9 27.3c0 22.4-13.2 42.6-33.6 51.8H329V564.8l99.5-360.5a44.1 44.1 0 0142.2-32.3c7.6 0 15.1 2.2 21.1 6.7 9.9 7.4 15.2 18.6 14.6 30.5l-9.6 198.4h314.4C829 418.5 840 436.9 840 456c0 16.5-7.2 32.1-19.6 43z"
+              ></path>
+            </svg>
+            156
+          </span>
+          <span>
+            <svg
+              class="u-svg"
+              focusable="false"
+              data-icon="message"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+              viewBox="64 64 896 896"
+            >
+              <path
+                d="M464 512a48 48 0 1096 0 48 48 0 10-96 0zm200 0a48 48 0 1096 0 48 48 0 10-96 0zm-400 0a48 48 0 1096 0 48 48 0 10-96 0zm661.2-173.6c-22.6-53.7-55-101.9-96.3-143.3a444.35 444.35 0 00-143.3-96.3C630.6 75.7 572.2 64 512 64h-2c-60.6.3-119.3 12.3-174.5 35.9a445.35 445.35 0 00-142 96.5c-40.9 41.3-73 89.3-95.2 142.8-23 55.4-34.6 114.3-34.3 174.9A449.4 449.4 0 00112 714v152a46 46 0 0046 46h152.1A449.4 449.4 0 00510 960h2.1c59.9 0 118-11.6 172.7-34.3a444.48 444.48 0 00142.8-95.2c41.3-40.9 73.8-88.7 96.5-142 23.6-55.2 35.6-113.9 35.9-174.5.3-60.9-11.5-120-34.8-175.6zm-151.1 438C704 845.8 611 884 512 884h-1.7c-60.3-.3-120.2-15.3-173.1-43.5l-8.4-4.5H188V695.2l-4.5-8.4C155.3 633.9 140.3 574 140 513.7c-.4-99.7 37.7-193.3 107.6-263.8 69.8-70.5 163.1-109.5 262.8-109.9h1.7c50 0 98.5 9.7 144.2 28.9 44.6 18.7 84.6 45.6 119 80 34.3 34.3 61.3 74.4 80 119 19.4 46.2 29.1 95.2 28.9 145.8-.6 99.6-39.7 192.9-110.1 262.7z"
+              ></path>
+            </svg>
+            6
           </span>
         </template>
         <template #extra>
@@ -254,5 +360,9 @@ const data = [
 .u-img {
   display: inline-block;
   vertical-align: bottom;
+}
+.u-svg {
+  margin-right: 8px;
+  fill: rgba(0, 0, 0, 0.45);
 }
 </style>

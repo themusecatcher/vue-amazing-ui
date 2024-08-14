@@ -141,7 +141,7 @@ function onChange(page: number, pageSize: number) {
         text-overflow: ellipsis;
       }
       &:hover {
-        background-color: #fafafa;
+        background-color: rgba(0, 0, 0, 0.02);
       }
     }
   }
