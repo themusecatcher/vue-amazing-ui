@@ -17,6 +17,41 @@
 - 按需引入并注册部分组件
 - **无需任何安装引入注册，使用单文件组件 `SFC`，亦可一步到位**
 
+  *使用 `SFC` 时，需设置如下所示全局样式：*
+
+  ::: details Show Global Styles
+
+  ```less
+  // 全局样式定义
+  @themeColor: #1677ff; // 全局主题色
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    caret-color: transparent; // 消除 win 系统点击后出现插入光标闪烁的问题
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  }
+  input,
+  textarea {
+    caret-color: auto;
+  }
+  a {
+    color: @themeColor;
+    text-decoration: none;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    &:hover {
+      color: #4096ff;
+    }
+  }
+  ```
+  
+  :::
+
 <script setup lang="ts">
 import pkg from '../../package.json'
 
