@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.5.1 <Tag color="volcano" size="small">soon</Tag>
+
+- 组件库代码优化
+
 ## 1.5.0 <Tag color="volcano" size="small">2024-08-14</Tag>
 
 - 新增 [列表 List](https://themusecatcher.github.io/vue-amazing-ui/guide/components/list.html) 组件
