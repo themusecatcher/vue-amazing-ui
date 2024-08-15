@@ -36,6 +36,28 @@ const listData = ref([
   }
 ])
 const bordered = ref(true)
+const simpleListData = ref([
+  {
+    title: 'Vue Amazing UI Title 1',
+    description: 'An Amazing Vue3 UI Components Library.',
+    content: 'content'
+  },
+  {
+    title: 'Vue Amazing UI Title 2',
+    description: 'An Amazing Vue3 UI Components Library.',
+    content: 'content'
+  },
+  {
+    title: 'Vue Amazing UI Title 3',
+    description: 'An Amazing Vue3 UI Components Library.',
+    content: 'content'
+  },
+  {
+    title: 'Vue Amazing UI Title 4',
+    description: 'An Amazing Vue3 UI Components Library.',
+    content: 'content'
+  }
+])
 const simpleList = ref([
   'Vue Amazing UI is developed using TypeScript',
   'An Amazing Vue3 UI Components Library',
@@ -243,8 +265,8 @@ const listData = ref([
 ## 带边框列表
 
 <Flex vertical>
-  <Space>
-    <Switch v-model="bordered" />
+  <Space align="center">
+    bordered:<Switch v-model="bordered" />
   </Space>
   <List :bordered="bordered">
     <template #header>
@@ -296,8 +318,8 @@ const bordered = ref(true)
 </script>
 <template>
   <Flex vertical>
-    <Space>
-      <Switch v-model="bordered" />
+    <Space align="center">
+      bordered:<Switch v-model="bordered" />
     </Space>
     <List :bordered="bordered">
       <template #header>
@@ -328,7 +350,7 @@ const bordered = ref(true)
   <Row :gutter="32">
     <Col :span="12">
       <List bordered :size="size">
-        <ListItem v-for="(data, index) in listData" :key="index">
+        <ListItem v-for="(data, index) in simpleListData" :key="index">
           <template #avatar>
             <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
           </template>
@@ -363,25 +385,25 @@ const bordered = ref(true)
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const listData = ref([
+const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   }
 ])
@@ -414,7 +436,7 @@ const size = ref('middle')
     <Row :gutter="32">
       <Col :span="12">
         <List bordered :size="size">
-          <ListItem v-for="(data, index) in listData" :key="index">
+          <ListItem v-for="(data, index) in simpleListData" :key="index">
             <template #avatar>
               <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
             </template>
@@ -450,11 +472,11 @@ const size = ref('middle')
 ## 加载中
 
 <Flex vertical>
-  <Space> Loading state:<Switch v-model="loading" /> </Space>
+  <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
   <Row :gutter="32">
     <Col :span="12">
       <List bordered :loading="loading">
-        <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+        <ListItem v-for="(data, index) in simpleListData" :key="index" :title="data.title">
           <template #avatar>
             <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
           </template>
@@ -486,25 +508,25 @@ const size = ref('middle')
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const listData = ref([
+const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   }
 ])
@@ -519,11 +541,11 @@ const loading = ref(true)
 </script>
 <template>
   <Flex vertical>
-    <Space> Loading state:<Switch v-model="loading" /> </Space>
+    <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
     <Row :gutter="32">
       <Col :span="12">
         <List bordered :loading="loading">
-          <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+          <ListItem v-for="(data, index) in simpleListData" :key="index" :title="data.title">
             <template #avatar>
               <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
             </template>
@@ -576,7 +598,7 @@ const loading = ref(true)
 <Row :gutter="32">
   <Col :span="12">
     <List bordered hoverable>
-      <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+      <ListItem v-for="(data, index) in simpleListData" :key="index" :title="data.title">
         <template #avatar>
           <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
         </template>
@@ -607,25 +629,25 @@ const loading = ref(true)
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const listData = ref([
+const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue3 UI Components Library.',
     content: 'content'
   }
 ])
@@ -641,7 +663,7 @@ const simpleList = ref([
   <Row :gutter="32">
     <Col :span="12">
       <List bordered hoverable>
-        <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+        <ListItem v-for="(data, index) in simpleListData" :key="index" :title="data.title">
           <template #avatar>
             <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
           </template>
@@ -744,7 +766,7 @@ const listData = ref([
   <ListItem
     :avatar-props="{
       src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-      size: 60
+      size: 56
     }"
     :avatar-style="{ alignSelf: 'center' }"
     :title-style="{ fontSize: '20px' }"
@@ -808,7 +830,7 @@ const listData = ref([
     <ListItem
       :avatar-props="{
         src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-        size: 60
+        size: 56
       }"
       :avatar-style="{ alignSelf: 'center' }"
       :title-style="{ fontSize: '20px' }"
