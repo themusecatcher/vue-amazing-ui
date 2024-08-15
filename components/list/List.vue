@@ -102,13 +102,15 @@ const showFooter = computed(() => {
   .m-list-footer {
     padding-inline: 24px;
   }
+  .m-list-pagination {
+    margin: 16px 24px;
+  }
 }
 .list-vertical {
   :deep(.m-list-item) {
     align-items: initial;
     .m-list-item-main {
       display: block;
-      flex: 1;
       .m-list-item-meta {
         margin-bottom: 16px;
         .m-list-item-content {
