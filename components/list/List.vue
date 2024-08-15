@@ -38,7 +38,7 @@ const showHeader = computed(() => {
 })
 const showDefault = computed(() => {
   const defaultSlots = slots.default?.()
-  return Boolean(defaultSlots && defaultSlots?.length)
+  return Boolean(defaultSlots && defaultSlots?.length && defaultSlots[0].children?.length)
 })
 const showFooter = computed(() => {
   const footerSlots = slots.footer?.()

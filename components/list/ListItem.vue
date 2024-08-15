@@ -3,7 +3,7 @@ import { computed, useSlots } from 'vue'
 import type { CSSProperties, Slot } from 'vue'
 import Avatar from '../avatar'
 interface Props {
-  avatar?: string // 列表元素的图标 string | slot
+  avatar?: string // 列表元素的图标字符 string | slot
   avatarProps?: object // Avatar 组件属性配置，参考 Avatar Props，用于配置列表图标样式
   title?: string // 列表元素的标题 string | slot
   description?: string // 列表元素的描述内容 string | slot
@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
 const slots = useSlots()
 const showAvatar = computed(() => {
   const avatarSlots = slots.avatar?.()
-  return Boolean(avatarSlots && avatarSlots?.length) || props.avatar
+  return Boolean(avatarSlots && avatarSlots?.length) || props.avatar || JSON.stringify(props.avatarProps) !== '{}'
 })
 const showContent = computed(() => {
   const titleSlots = slots.title?.()
