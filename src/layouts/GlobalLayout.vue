@@ -9,24 +9,21 @@ const route = useRoute() // 返回当前路由地址，相当于在模板中使�
 
 const showDuty = ref(false)
 const themeDark = ref()
-
+const html = document.documentElement
 onMounted(() => {
-  themeDark.value = document.documentElement.classList.contains('dark')
+  themeDark.value = html.classList.contains('dark')
   if (!themeDark.value) {
     // 默认开启暗黑模式
     toggleDark()
   }
 })
 useMutationObserver(
-  document.documentElement,
+  html,
   () => {
-    themeDark.value = document.documentElement.classList.contains('dark')
+    themeDark.value = html.classList.contains('dark')
   },
   { attributes: true }
 )
-function onThemeChange() {
-  toggleDark()
-}
 const menus = ref(routes[0].children)
 const current = ref<string[]>([route.name as string])
 function onClick(e: any): void {
@@ -67,7 +64,7 @@ const routerViewRef = ref()
       <Switch
         class="u-theme-switch"
         v-model="themeDark"
-        @change="onThemeChange"
+        @change="toggleDark"
         ripple-color="#faad14"
         :circle-style="{ background: themeDark ? '#001529' : '#fff' }"
       >
