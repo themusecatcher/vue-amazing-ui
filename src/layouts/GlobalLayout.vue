@@ -133,7 +133,7 @@ const routerViewRef = ref()
               <component :is="Component" />
             </Transition>
           </RouterView>
-          <!-- <BackTop v-if="route.name !== 'BackTop'" /> -->
+          <BackTop v-if="route.name !== 'BackTop'" />
         </div>
       </Scrollbar>
     </Col>

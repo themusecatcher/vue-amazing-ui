@@ -41,6 +41,7 @@ const FontGap = 3
 const containerRef = shallowRef() // ref() 的浅层作用形式
 const watermarkRef = shallowRef()
 const htmlRef = shallowRef(document.documentElement) // <html></html>元素
+const isDark = shallowRef(htmlRef.value.classList.contains('dark')) // 是否开启暗黑模式
 const stopObservation = shallowRef(false)
 const gapX = computed(() => props.gap?.[0] ?? 100)
 const gapY = computed(() => props.gap?.[1] ?? 100)
@@ -66,6 +67,9 @@ const markStyle = computed(() => {
     height: '100%',
     pointerEvents: 'none',
     backgroundRepeat: 'repeat'
+  }
+  if (isDark.value) {
+    markStyle.filter = 'invert(1) hue-rotate(180deg)'
   }
   let positionLeft = offsetLeft.value - gapXCenter.value
   let positionTop = offsetTop.value - gapYCenter.value
@@ -98,6 +102,16 @@ onMounted(() => {
 onBeforeUnmount(() => {
   destroyWatermark()
 })
+// 监听是否开启暗黑模式，自动反转水印颜色
+useMutationObserver(
+  htmlRef,
+  () => {
+    isDark.value = htmlRef.value.classList.contains('dark')
+    destroyWatermark()
+    renderWatermark()
+  },
+  { attributeFilter: ['class'] }
+)
 // 防止用户修改/隐藏水印
 useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
   subtree: true, // 监听以 target 为根节点的整个子树
@@ -154,8 +168,9 @@ function getStyleStr(style: CSSProperties): string {
     .join(' ')
 }
 /*
-  Get the width and height of the watermark. The default values are as follows
-  Image: [120, 64]; Content: It's calculated by content
+  获取水印宽高
+  图片时默认宽高: [120, 64]
+  文本时宽高: 由文本内容的宽高计算得出
 */
 function getMarkSize(ctx: CanvasRenderingContext2D) {
   let defaultWidth = 120
@@ -175,7 +190,7 @@ function getMarkSize(ctx: CanvasRenderingContext2D) {
   }
   return [width ?? defaultWidth, height ?? defaultHeight] as const
 }
-// Returns the ratio of the device's physical pixel resolution to the css pixel resolution
+// 当前显示设备的物理像素分辨率与 CSS 像素分辨率之比
 function getPixelRatio() {
   return window.devicePixelRatio || 1
 }
@@ -220,7 +235,7 @@ function renderWatermark() {
     const drawHeight = markHeight * ratio
     const rotateX = (drawWidth + gapX.value * ratio) / 2
     const rotateY = (drawHeight + gapY.value * ratio) / 2
-    /** Alternate drawing parameters */
+    // Alternate drawing parameters
     const alternateDrawX = drawX + canvasWidth
     const alternateDrawY = drawY + canvasHeight
     const alternateRotateX = rotateX + canvasWidth
@@ -231,7 +246,7 @@ function renderWatermark() {
       const img = new Image()
       img.onload = () => {
         ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight)
-        /** Draw interleaved pictures after rotation */
+        // Draw interleaved pictures after rotation
         ctx.restore()
         rotateWatermark(ctx, alternateRotateX, alternateRotateY, rotate)
         ctx.drawImage(img, alternateDrawX, alternateDrawY, drawWidth, drawHeight)
@@ -242,7 +257,7 @@ function renderWatermark() {
       img.src = image
     } else {
       fillTexts(ctx, drawX, drawY, drawWidth, drawHeight)
-      /** Fill the interleaved text after rotation */
+      // Fill the interleaved text after rotation
       ctx.restore()
       rotateWatermark(ctx, alternateRotateX, alternateRotateY, rotate)
       fillTexts(ctx, alternateDrawX, alternateDrawY, drawWidth, drawHeight)
