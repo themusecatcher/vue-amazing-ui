@@ -11,7 +11,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "images/*": ["./src/assets/images"]
+      "images/*": ["./src/assets/images/*"],
+      "less/*": ["./src/assets/less/*"],
+      "components/*": ["./components/*"]
     }
   }
 }

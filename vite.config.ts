@@ -38,7 +38,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       'images': fileURLToPath(new URL('./src/assets/images', import.meta.url)),
       'less': fileURLToPath(new URL('./src/assets/less', import.meta.url)),
-      'components': fileURLToPath(new URL('./components/index', import.meta.url))
+      'components': fileURLToPath(new URL('./components', import.meta.url))
     }
   },
   css: {

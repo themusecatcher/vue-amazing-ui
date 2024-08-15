@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { routes } from '@/router'
-import { toggleDark, useMutationObserver } from 'components'
+import { toggleDark, useMutationObserver } from 'components/index'
 
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
@@ -28,7 +28,7 @@ function onThemeChange() {
   toggleDark()
 }
 const menus = ref(routes[0].children)
-const current = ref([route.name])
+const current = ref<string[]>([route.name as string])
 function onClick(e: any): void {
   console.log(`${e.item.title} ${e.key}`)
   // console.log(e.keyPath)
@@ -136,7 +136,7 @@ const routerViewRef = ref()
               <component :is="Component" />
             </Transition>
           </RouterView>
-          <BackTop v-if="route.name !== 'BackTop'" />
+          <!-- <BackTop v-if="route.name !== 'BackTop'" /> -->
         </div>
       </Scrollbar>
     </Col>

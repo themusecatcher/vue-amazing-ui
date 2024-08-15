@@ -76,7 +76,7 @@ const pagination = {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <List header="header" footer="footer">
+    <List>
       <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
         <template #avatar>
           <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
@@ -86,22 +86,6 @@ const pagination = {
         </template>
       </ListItem>
     </List>
-    <a-list header="header" footer="footer" item-layout="horizontal" :data-source="listData">
-      <template #renderItem="{ item }">
-        <a-list-item>
-          <a-list-item-meta
-            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-          >
-            <template #title>
-              <a href="https://www.antdv.com/">{{ item.title }}</a>
-            </template>
-            <template #avatar>
-              <a-avatar src="https://joeschmoe.io/api/v1/random" />
-            </template>
-          </a-list-item-meta>
-        </a-list-item>
-      </template>
-    </a-list>
     <h2 class="mt30 mb10">隐藏分割线</h2>
     <List :split="false">
       <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">

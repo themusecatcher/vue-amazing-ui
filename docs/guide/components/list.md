@@ -5,7 +5,7 @@
 
 <br/>
 
-*区隔内容的分割线*
+*通用列表*
 
 ## 何时使用
 
@@ -1017,7 +1017,7 @@ pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https:/
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-avatar | 列表元素的图标 | string &#124; slot | undefined
+avatar | 列表元素的图标字符 | string &#124; slot | undefined
 avatarProps | `Avatar` 组件属性配置，参考 [Avatar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html#avatar)，用于配置列表图标样式 | object | {}
 title | 列表元素的标题 | string &#124; slot | undefined
 description | 列表元素的描述内容 | string &#124; slot | undefined
