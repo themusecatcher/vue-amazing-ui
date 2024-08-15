@@ -107,8 +107,10 @@ useMutationObserver(
   htmlRef,
   () => {
     isDark.value = htmlRef.value.classList.contains('dark')
-    destroyWatermark()
-    renderWatermark()
+    if (!props.fullscreen) {
+      destroyWatermark()
+      renderWatermark()
+    }
   },
   { attributeFilter: ['class'] }
 )
