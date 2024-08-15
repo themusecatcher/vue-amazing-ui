@@ -465,7 +465,7 @@ const size = ref('middle')
       </List>
     </Col>
     <Col :span="12">
-      <List bordered :loading="loading">
+      <List bordered :loading="loading" :spin-props="{ indicator: 'dynamic-circle' }">
         <template #header>
           <div>Header</div>
         </template>
@@ -534,7 +534,7 @@ const loading = ref(true)
         </List>
       </Col>
       <Col :span="12">
-        <List bordered :loading="loading">
+        <List bordered :loading="loading" :spin-props="{ indicator: 'dynamic-circle' }">
           <template #header>
             <div>Header</div>
           </template>
