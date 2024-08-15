@@ -23,6 +23,28 @@ const listData = ref([
   }
 ])
 const bordered = ref(true)
+const simpleListData = ref([
+  {
+    title: 'Vue Amazing UI Title 1',
+    description: 'An Amazing Vue3 UI Components Library.',
+    content: 'content'
+  },
+  {
+    title: 'Vue Amazing UI Title 2',
+    description: 'An Amazing Vue3 UI Components Library.',
+    content: 'content'
+  },
+  {
+    title: 'Vue Amazing UI Title 3',
+    description: 'An Amazing Vue3 UI Components Library.',
+    content: 'content'
+  },
+  {
+    title: 'Vue Amazing UI Title 4',
+    description: 'An Amazing Vue3 UI Components Library.',
+    content: 'content'
+  }
+])
 const simpleList = ref([
   'Vue Amazing UI is developed using TypeScript',
   'An Amazing Vue3 UI Components Library',
@@ -137,9 +159,7 @@ const state = reactive({
     </List>
     <h2 class="mt30 mb10">带边框列表</h2>
     <Flex vertical>
-      <Space>
-        <Switch v-model="bordered" />
-      </Space>
+      <Space align="center"> bordered:<Switch v-model="bordered" /> </Space>
       <List :bordered="bordered">
         <template #header>
           <div>Header</div>
@@ -163,7 +183,7 @@ const state = reactive({
       <Row :gutter="32">
         <Col :span="12">
           <List bordered :size="size">
-            <ListItem v-for="(data, index) in listData" :key="index">
+            <ListItem v-for="(data, index) in simpleListData" :key="index">
               <template #avatar>
                 <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
               </template>
@@ -193,11 +213,11 @@ const state = reactive({
     </Flex>
     <h2 class="mt30 mb10">加载中</h2>
     <Flex vertical>
-      <Space> Loading state:<Switch v-model="loading" /> </Space>
+      <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
       <Row :gutter="32">
         <Col :span="12">
           <List bordered :loading="loading">
-            <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+            <ListItem v-for="(data, index) in simpleListData" :key="index" :title="data.title">
               <template #avatar>
                 <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
               </template>
@@ -230,7 +250,7 @@ const state = reactive({
     <Row :gutter="32">
       <Col :span="12">
         <List bordered hoverable>
-          <ListItem v-for="(data, index) in listData" :key="index" :title="data.title">
+          <ListItem v-for="(data, index) in simpleListData" :key="index" :title="data.title">
             <template #avatar>
               <Avatar src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
             </template>
@@ -275,7 +295,7 @@ const state = reactive({
       <ListItem
         :avatar-props="{
           src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-          size: 60
+          size: 56
         }"
         :avatar-style="{ alignSelf: 'center' }"
         :title-style="{ fontSize: '20px' }"
