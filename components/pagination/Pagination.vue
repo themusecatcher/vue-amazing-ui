@@ -54,7 +54,7 @@ const pageList = computed(() => {
   // 获取显示的页码数组
   return dealPageList(currentPage.value).filter((n) => n !== 1 && n !== totalPage.value)
 })
-const pageSizeChanger = computed(() => {
+const showPageSizeChanger = computed(() => {
   if (typeof props.showSizeChanger === 'boolean') {
     return props.showSizeChanger
   } else {
@@ -262,9 +262,9 @@ function onPageSizeChange(pageSize: number) {
         ></path>
       </svg>
     </span>
-    <span class="m-pagination-options">
+    <span class="m-pagination-options" v-if="showPageSizeChanger || showQuickJumper">
       <Select
-        v-if="pageSizeChanger"
+        v-if="showPageSizeChanger"
         :class="{ mr8: showQuickJumper }"
         :disabled="disabled"
         :options="selectOptions"

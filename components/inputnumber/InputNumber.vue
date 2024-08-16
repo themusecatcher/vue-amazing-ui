@@ -158,7 +158,7 @@ function onDown() {
   border: 1px solid #d9d9d9;
   transition: all 0.2s;
   &:hover {
-    border-color: @themeColor;
+    border-color: #4096ff;
     .m-handler-wrap {
       background: #fff;
       opacity: 1;
@@ -166,8 +166,8 @@ function onDown() {
   }
   &:focus-within {
     // 激活时样式
-    border-color: @themeColor;
-    box-shadow: 0 0 0 2px fade(@themeColor, 20%);
+    border-color: #4096ff;
+    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
   }
   .m-input-wrap {
     height: 100%;

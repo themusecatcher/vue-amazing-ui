@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, useSlots, computed, watchPostEffect } from 'vue'
+import type { Slot } from 'vue'
 interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot
@@ -8,6 +9,7 @@ interface Props {
   closeText?: string // 自定义关闭按钮 string | slot
   icon?: string // 自定义图标，showIcon 为 true 时有效 string | slot
   showIcon?: boolean // 是否显示辅助图标
+  actions?: Slot // 自定义操作项 slot
 }
 const props = withDefaults(defineProps<Props>(), {
   message: undefined,
@@ -16,7 +18,8 @@ const props = withDefaults(defineProps<Props>(), {
   closable: false,
   closeText: undefined,
   icon: undefined,
-  showIcon: false
+  showIcon: false,
+  actions: undefined
 })
 const alert = ref()
 const closeAlert = ref(false)
@@ -52,7 +55,7 @@ function onClose(e: MouseEvent): void {
       <template v-if="showIcon">
         <span v-if="!showDesc" class="m-alert-icon">
           <slot name="icon">
-            <img v-if="icon" :src="icon" class="u-icon-img" />
+            <img v-if="icon" :src="icon" class="icon-img" />
             <svg
               v-else-if="type === 'info'"
               class="alert-icon"
@@ -117,7 +120,7 @@ function onClose(e: MouseEvent): void {
         </span>
         <span class="m-big-icon" v-else>
           <slot name="icon">
-            <img v-if="icon" :src="icon" class="u-big-icon-img" />
+            <img v-if="icon" :src="icon" class="big-icon-img" />
             <svg
               v-else-if="type === 'info'"
               class="alert-icon"
@@ -194,19 +197,22 @@ function onClose(e: MouseEvent): void {
         </span>
       </template>
       <div class="m-alert-content">
-        <div class="u-alert-message">
+        <div class="alert-message">
           <slot name="message">{{ message }}</slot>
         </div>
-        <div class="u-alert-description" v-if="showDesc">
+        <div class="alert-description" v-if="showDesc">
           <slot name="description">{{ description }}</slot>
         </div>
       </div>
-      <a class="m-alert-close" @click="onClose" v-if="closable">
+      <div class="m-alert-actions">
+        <slot name="actions"></slot>
+      </div>
+      <a v-if="closable" tabindex="0" class="m-alert-close" @click="onClose" @keydown.enter.prevent="onClose">
         <slot name="closeText">
           <span v-if="closeText">{{ closeText }}</span>
           <svg
             v-else
-            class="u-alert-close"
+            class="alert-close"
             focusable="false"
             data-icon="close"
             width="1em"
@@ -249,20 +255,21 @@ function onClose(e: MouseEvent): void {
   word-break: break-all;
   border-radius: 8px;
   .m-alert-icon {
-    margin-inline-end: 8px;
+    display: inline-block;
+    margin-right: 8px;
     line-height: 0;
   }
   .m-big-icon {
-    margin-inline-end: 12px;
+    margin-right: 12px;
     font-size: 24px;
     line-height: 0;
   }
-  .u-icon-img {
+  .icon-img {
     display: inline-block;
     width: 14px;
     height: 14px;
   }
-  .u-big-icon-img {
+  .big-icon-img {
     display: inline-block;
     width: 24px;
     height: 24px;
@@ -274,17 +281,21 @@ function onClose(e: MouseEvent): void {
     flex: 1;
     min-width: 0;
   }
+  .m-alert-actions {
+    margin-left: 8px;
+  }
   .m-alert-close {
-    margin-inline-start: 8px;
+    margin-left: 8px;
     font-size: 12px;
     color: rgba(0, 0, 0, 0.45);
     line-height: 12px;
     cursor: pointer;
+    outline: none;
     transition: color 0.2s;
     &:hover {
       color: rgba(0, 0, 0, 0.88);
     }
-    .u-alert-close {
+    .alert-close {
       display: inline-block;
       vertical-align: bottom;
       fill: rgba(0, 0, 0, 0.45);
@@ -300,8 +311,9 @@ function onClose(e: MouseEvent): void {
   border: 1px solid #91caff;
   .m-alert-icon,
   .m-big-icon {
-    .alert-icon {
-      color: @themeColor;
+    color: @themeColor;
+    .alert-icon,
+    :deep(svg) {
       fill: @themeColor; // 可选，用于防止 vitepress 文档样式覆盖，下同
     }
   }
@@ -311,8 +323,9 @@ function onClose(e: MouseEvent): void {
   border: 1px solid #b7eb8f;
   .m-alert-icon,
   .m-big-icon {
-    .alert-icon {
-      color: #52c41a;
+    color: #52c41a;
+    .alert-icon,
+    :deep(svg) {
       fill: #52c41a;
     }
   }
@@ -322,8 +335,9 @@ function onClose(e: MouseEvent): void {
   border: 1px solid #ffe58f;
   .m-alert-icon,
   .m-big-icon {
-    .alert-icon {
-      color: #faad14;
+    color: #faad14;
+    .alert-icon,
+    :deep(svg) {
       fill: #faad14;
     }
   }
@@ -333,8 +347,9 @@ function onClose(e: MouseEvent): void {
   border: 1px solid #ffccc7;
   .m-alert-icon,
   .m-big-icon {
-    .alert-icon {
-      color: #ff4d4f;
+    color: #ff4d4f;
+    .alert-icon,
+    :deep(svg) {
       fill: #ff4d4f;
     }
   }
@@ -342,13 +357,13 @@ function onClose(e: MouseEvent): void {
 .alert-width-description {
   align-items: flex-start;
   padding: 20px 24px;
-  .u-alert-message {
+  .alert-message {
     display: block;
     margin-bottom: 8px;
     color: rgba(0, 0, 0, 0.88);
     font-size: 16px;
   }
-  .u-alert-description {
+  .alert-description {
     display: block;
   }
 }

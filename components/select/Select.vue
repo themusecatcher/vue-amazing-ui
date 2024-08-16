@@ -340,7 +340,7 @@ function onChange(value: string | number, label: string, index: number) {
   &:not(.select-disabled):hover {
     // 悬浮时样式
     .m-select-wrap {
-      border-color: @themeColor;
+      border-color: #4096ff;
     }
   }
   .m-select-wrap {
@@ -500,8 +500,8 @@ function onChange(value: string | number, label: string, index: number) {
 .select-focused:not(.select-disabled) {
   // 激活时样式
   .m-select-wrap {
-    border-color: @themeColor;
-    box-shadow: 0 0 0 2px fade(@themeColor, 20%);
+    border-color: #4096ff;
+    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
   }
 }
 .search-select {
