@@ -287,6 +287,7 @@ function onWheel(e: WheelEvent) {
           background: @themeColor;
           pointer-events: none;
           height: 2px;
+          border-radius: 2px;
           transition:
             width 0.3s,
             left 0.3s,
