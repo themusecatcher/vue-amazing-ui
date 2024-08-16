@@ -163,9 +163,9 @@ const routes = [
 -- | -- | -- | --
 routes | 路由数组 | [Route](#route-type)[] | []
 fontSize | 字体大小，单位 `px` | number | 14
-height | 面包屑高度 | number | 36
+height | 面包屑高度，单位 `px` | number | 36
 maxWidth | 文本最大显示宽度，超出后显示省略号，单位 `px` | number | 180
-separator | 分隔符，默认 '' 时为箭头 | string | undefined
+separator | 自定义分隔符，默认为 `>` | string | undefined
 target | 如何打开目标URL | '_self' &#124; '_blank' | '_self'
 
 ### Route Type
