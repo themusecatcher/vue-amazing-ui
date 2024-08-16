@@ -15,12 +15,6 @@ const props = withDefaults(defineProps<Props>(), {
   bottom: 24,
   placement: 'topRight'
 })
-enum ColorStyle { // 颜色主题对象
-  info = '#1677FF',
-  success = '#52c41a',
-  error = '#ff4d4f',
-  warning = '#faad14'
-}
 interface Notification {
   message?: string // 通知提醒标题
   description: string // 通知提醒内容
@@ -139,8 +133,7 @@ function onClose(index: number) {
         <div class="m-notification-content">
           <svg
             v-if="data.mode === 'info'"
-            class="u-svg"
-            :style="`fill: ${ColorStyle[data.mode]}`"
+            class="u-icon icon-info"
             viewBox="64 64 896 896"
             data-icon="info-circle"
             aria-hidden="true"
@@ -155,8 +148,7 @@ function onClose(index: number) {
           </svg>
           <svg
             v-if="data.mode === 'success'"
-            class="u-svg"
-            :style="`fill: ${ColorStyle[data.mode]}`"
+            class="u-icon icon-success"
             viewBox="64 64 896 896"
             data-icon="check-circle"
             aria-hidden="true"
@@ -171,8 +163,7 @@ function onClose(index: number) {
           </svg>
           <svg
             v-if="data.mode === 'warning'"
-            class="u-svg"
-            :style="`fill: ${ColorStyle[data.mode]}`"
+            class="u-icon icon-warning"
             viewBox="64 64 896 896"
             data-icon="exclamation-circle"
             aria-hidden="true"
@@ -187,8 +178,7 @@ function onClose(index: number) {
           </svg>
           <svg
             v-if="data.mode === 'error'"
-            class="u-svg"
-            :style="`fill: ${ColorStyle[data.mode]}`"
+            class="u-icon icon-error"
             viewBox="64 64 896 896"
             data-icon="close-circle"
             aria-hidden="true"
@@ -288,11 +278,23 @@ function onClose(index: number) {
       padding: 20px 24px;
       line-height: 1.5714285714285714;
       word-break: break-all;
-      .u-svg {
+      .u-icon {
         position: absolute;
         display: inline-block;
         width: 24px;
         height: 24px;
+      }
+      .icon-info {
+        fill: @themeColor;
+      }
+      .icon-success {
+        fill: #52c41a;
+      }
+      .icon-warning {
+        fill: #faad14;
+      }
+      .icon-error {
+        fill: #ff4d4f;
       }
       .u-title {
         padding-right: 24px;

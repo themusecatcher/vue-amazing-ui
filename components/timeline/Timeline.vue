@@ -1,11 +1,5 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
-enum ColorStyle { // 颜色主题对象
-  blue = '#1677ff',
-  green = '#52c41a',
-  red = '#ff4d4f',
-  gray = '#00000040'
-}
 interface Data {
   desc: string // 文字描述 string | slot
   color?: 'blue' | 'green' | 'red' | 'gray' | string // 圆圈颜色，默认值 blue
@@ -24,6 +18,12 @@ const props = withDefaults(defineProps<Props>(), {
   mode: 'left',
   position: 'left'
 })
+enum ColorStyle { // 颜色主题对象
+  blue = '#1677ff',
+  green = '#52c41a',
+  red = '#ff4d4f',
+  gray = '#00000040'
+}
 const desc = ref()
 const dotsHeight = ref<string[]>([])
 const totalWidth = computed(() => {
@@ -56,16 +56,16 @@ watchEffect(
         if ((n + 1) % 2) {
           // odd
           if (props.position === 'left') {
-            desc.value[n].classList.add('alternate-left-desc')
+            desc.value[n].classList.add('desc-alternate-left')
           } else {
-            desc.value[n].classList.add('alternate-right-desc')
+            desc.value[n].classList.add('desc-alternate-right')
           }
         } else {
           // even
           if (props.position === 'left') {
-            desc.value[n].classList.add('alternate-right-desc')
+            desc.value[n].classList.add('desc-alternate-right')
           } else {
-            desc.value[n].classList.add('alternate-left-desc')
+            desc.value[n].classList.add('desc-alternate-left')
           }
         }
       }
@@ -82,8 +82,8 @@ watchEffect(
         v-for="(data, index) in timelineData"
         :key="index"
       >
-        <span :class="`u-tail ${mode}-tail`" :style="`border-left-style: ${lineStyle};`"></span>
-        <div :class="`m-dot ${mode}-dot`" :style="`height: ${dotsHeight[index]}`">
+        <span :class="`u-tail tail-${mode}`" :style="`border-left-style: ${lineStyle};`"></span>
+        <div :class="`m-dot dot-${mode}`" :style="`height: ${dotsHeight[index]}`">
           <slot name="dot" :index="index">
             <span class="u-dot" v-if="data.color === 'red'" :style="{ borderColor: ColorStyle.red }"></span>
             <span class="u-dot" v-else-if="data.color === 'gray'" :style="{ borderColor: ColorStyle.gray }"></span>
@@ -92,7 +92,7 @@ watchEffect(
             <span class="u-dot" v-else :style="{ borderColor: data.color || ColorStyle.blue }"></span>
           </slot>
         </div>
-        <div ref="desc" :class="`u-desc ${mode}-desc`">
+        <div ref="desc" :class="`u-desc desc-${mode}`">
           <slot name="desc" :index="index">{{ data.desc || '--' }}</slot>
         </div>
       </div>
@@ -113,15 +113,15 @@ watchEffect(
         border-left-width: 2px;
         border-left-color: #e8e8e8;
       }
-      .left-tail {
+      .tail-left {
         left: 5px;
       }
-      .center-tail {
+      .tail-center {
         left: 0;
         right: 0;
         margin: 0 auto;
       }
-      .right-tail {
+      .tail-right {
         right: 5px;
       }
       .m-dot {
@@ -138,15 +138,15 @@ watchEffect(
           background: #fff;
         }
       }
-      .left-dot {
+      .dot-left {
         left: 6px;
         transform: translateX(-50%);
       }
-      .center-dot {
+      .dot-center {
         left: 50%;
         transform: translateX(-50%);
       }
-      .right-dot {
+      .dot-right {
         right: 6px;
         transform: translateX(50%);
       }
@@ -155,19 +155,19 @@ watchEffect(
         line-height: 1.5714285714285714;
         word-break: break-all;
       }
-      .left-desc {
+      .desc-left {
         margin-left: 25px;
       }
-      .center-desc {
+      .desc-center {
         width: calc(50% - 12px);
       }
-      .alternate-left-desc {
+      .desc-alternate-left {
         text-align: end;
       }
-      .alternate-right-desc {
+      .desc-alternate-right {
         margin-left: calc(50% + 12px);
       }
-      .right-desc {
+      .desc-right {
         margin-right: 25px;
         text-align: end;
       }

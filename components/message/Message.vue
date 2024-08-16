@@ -9,13 +9,6 @@ const props = withDefaults(defineProps<Props>(), {
   duration: 3000,
   top: 30
 })
-enum ColorStyle { // 颜色主题对象
-  info = '#1677FF',
-  success = '#52c41a',
-  error = '#ff4d4f',
-  warning = '#faad14',
-  loading = '#1677FF'
-}
 interface Message {
   content: string
   mode: string
@@ -112,8 +105,7 @@ function onHideMessage(index: number) {
         <div class="m-message-content" @mouseenter="onEnter(index)" @mouseleave="onLeave(index)">
           <svg
             v-if="message.mode === 'info'"
-            class="u-svg"
-            :style="{ fill: ColorStyle[message.mode] }"
+            class="u-icon icon-info"
             viewBox="64 64 896 896"
             data-icon="info-circle"
             aria-hidden="true"
@@ -125,8 +117,7 @@ function onHideMessage(index: number) {
           </svg>
           <svg
             v-if="message.mode === 'success'"
-            class="u-svg"
-            :style="{ fill: ColorStyle[message.mode] }"
+            class="u-icon icon-success"
             viewBox="64 64 896 896"
             data-icon="check-circle"
             aria-hidden="true"
@@ -138,8 +129,7 @@ function onHideMessage(index: number) {
           </svg>
           <svg
             v-if="message.mode === 'error'"
-            class="u-svg"
-            :style="{ fill: ColorStyle[message.mode] }"
+            class="u-icon icon-error"
             viewBox="64 64 896 896"
             data-icon="close-circle"
             aria-hidden="true"
@@ -151,8 +141,7 @@ function onHideMessage(index: number) {
           </svg>
           <svg
             v-if="message.mode === 'warning'"
-            class="u-svg"
-            :style="{ fill: ColorStyle[message.mode] }"
+            class="u-icon icon-warning"
             viewBox="64 64 896 896"
             data-icon="exclamation-circle"
             aria-hidden="true"
@@ -164,8 +153,7 @@ function onHideMessage(index: number) {
           </svg>
           <svg
             v-if="message.mode === 'loading'"
-            class="u-svg circular"
-            :style="{ stroke: ColorStyle[message.mode] }"
+            class="u-icon icon-loading circular"
             viewBox="0 0 50 50"
             focusable="false"
           >
@@ -220,11 +208,26 @@ function onHideMessage(index: number) {
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
       pointer-events: auto; // 保证内容区域部分可以正常响应鼠标事件
-      .u-svg {
+      .u-icon {
         display: inline-block;
         width: 16px;
         height: 16px;
         margin-right: 8px;
+      }
+      .icon-info {
+        fill: @themeColor;
+      }
+      .icon-success {
+        fill: #52c41a;
+      }
+      .icon-warning {
+        fill: #faad14;
+      }
+      .icon-error {
+        fill: #ff4d4f;
+      }
+      .icon-loading {
+        stroke: @themeColor;
       }
       .circular {
         display: inline-block;

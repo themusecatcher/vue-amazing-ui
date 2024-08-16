@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 interface Props {
   spinning?: boolean // 是否为加载中状态
-  size?: 'small' | 'default' | 'large' // 组件大小
+  size?: 'small' | 'middle' | 'large' // 加载中尺寸
   tip?: string // 描述文案
   indicator?:
     | 'dot'
@@ -10,28 +11,52 @@ interface Props {
     | 'quarter-circle'
     | 'half-circle'
     | 'three-quarters-circle'
+    | 'ring-circle'
     | 'dynamic-circle'
     | 'magic-ring' // 加载指示符
-  color?: string // 主题颜色，当 indicator: 'magic-ring' 时为外环颜色
-  ringColor?: string // 内环颜色，仅当 indicator: 'magic-ring' 时生效
+  color?: string // 指示符颜色，当 indicator: 'magic-ring' 时为外环颜色
+  magicRingColor?: string // 内环颜色，仅当 indicator: 'magic-ring' 时生效
+  ringCirclePercent?: number // 内环长度百分比 (0～100)，仅当 indicator: 'ring-circle' 时生效
+  ringCircleColor?: string // 圆形轨道颜色，仅当 indicator: 'ring-circle' 时生效
   rotate?: boolean // spin-dot 或 spin-line 初始是否旋转，仅当 indicator: 'spin-dot' | 'spin-line' 时生效
   speed?: number // spin-dot 或 spin-line 渐变旋转的动画速度，单位 ms，仅当 indicator: 'spin-dot' | 'spin-line' 时生效
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   spinning: true,
-  size: 'default',
+  size: 'middle',
   tip: undefined,
   indicator: 'dot',
-  color: '#1677FF',
-  ringColor: '#4096FF',
+  color: '#1677ff',
+  magicRingColor: '#4096ff',
+  ringCirclePercent: 33,
+  ringCircleColor: 'rgba(0, 0, 0, 0.12)',
   rotate: false,
   speed: 800
+})
+const perimeter = computed(() => {
+  // 圆环周长
+  return (100 - ringCircleWidth.value) * Math.PI
+})
+const ringCircleWidth = computed(() => {
+  const ringCircleWidthMap = {
+    small: 12,
+    middle: 14,
+    large: 16
+  }
+  return ringCircleWidthMap[props.size]
+})
+const ringCirclePath = computed(() => {
+  // 圆条轨道路径指令
+  const long = 100 - ringCircleWidth.value
+  return `M 50,50 m 0,-${long / 2}
+   a ${long / 2},${long / 2} 0 1 1 0,${long}
+   a ${long / 2},${long / 2} 0 1 1 0,-${long}`
 })
 </script>
 <template>
   <div
     :class="`m-spin-wrap spin-${size}`"
-    :style="`--color: ${color}; --ring-color: ${ringColor}; --speed: ${speed}ms;`"
+    :style="`--color: ${color}; --magic-ring-color: ${magicRingColor}; --ring-circle-width: ${ringCircleWidth}; --speed: ${speed}ms;`"
   >
     <div class="m-spin" v-show="spinning">
       <div class="m-spin-box">
@@ -69,9 +94,41 @@ withDefaults(defineProps<Props>(), {
             <span class="u-spin-item"></span>
           </div>
         </div>
-        <div v-if="indicator === 'quarter-circle'" class="u-quarter-circle"></div>
-        <div v-if="indicator === 'half-circle'" class="u-half-circle"></div>
-        <div v-if="indicator === 'three-quarters-circle'" class="u-three-quarters-circle"></div>
+        <div class="m-ring-circle" v-if="indicator === 'ring-circle'">
+          <svg class="ring-circle" viewBox="0 0 100 100">
+            <path
+              :d="ringCirclePath"
+              :stroke="ringCircleColor"
+              stroke-linecap="round"
+              class="ring-trail"
+              :style="`stroke-dasharray: ${perimeter}px, ${perimeter}px;`"
+              fill-opacity="0"
+            ></path>
+            <path
+              :d="ringCirclePath"
+              stroke-linecap="round"
+              class="ring-path"
+              :style="`stroke-dasharray: ${(ringCirclePercent / 100) * perimeter}px, ${perimeter}px;`"
+              opacity="1"
+              fill-opacity="0"
+            ></path>
+          </svg>
+        </div>
+        <div v-if="indicator === 'quarter-circle'" class="m-quarter-circle part-circle">
+          <svg class="circular" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
+          </svg>
+        </div>
+        <div v-if="indicator === 'half-circle'" class="m-half-circle part-circle">
+          <svg class="circular" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
+          </svg>
+        </div>
+        <div v-if="indicator === 'three-quarters-circle'" class="m-three-quarters-circle part-circle">
+          <svg class="circular" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
+          </svg>
+        </div>
         <div v-if="indicator === 'dynamic-circle'" class="m-dynamic-circle">
           <svg class="circular" viewBox="0 0 50 50">
             <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
@@ -119,7 +176,7 @@ withDefaults(defineProps<Props>(), {
         @keyframes loading-dot {
           100% {
             transform: rotate(405deg);
-          } // to { transform: rotate(405deg); }
+          }
         }
         .u-dot-item {
           // 单个圆点样式
@@ -164,7 +221,7 @@ withDefaults(defineProps<Props>(), {
         @keyframes spin-rotate {
           100% {
             transform: rotate(360deg);
-          } // to { transform: rotate(360deg); }
+          }
         }
       }
       .spin-wrap-box {
@@ -372,33 +429,69 @@ withDefaults(defineProps<Props>(), {
           }
         }
       }
-      .u-quarter-circle {
+      .m-ring-circle {
         display: inline-block;
-        border-radius: 50%;
-        border-style: solid;
-        border-color: transparent;
-        border-top-color: var(--color); // 显示上1/4圆
+        overflow: hidden;
         animation: loading-circle 1s infinite linear;
         -webkit-animation: loading-circle 1s infinite linear;
+        .ring-circle {
+          .ring-trail {
+            stroke-width: var(--ring-circle-width);
+            stroke-dashoffset: 0;
+            transition:
+              stroke-dashoffset 0.3s ease 0s,
+              stroke-dasharray 0.3s ease 0s,
+              stroke 0.3s ease 0s,
+              stroke-width 0.06s ease 0.3s,
+              opacity 0.3s ease 0s;
+          }
+          .ring-path {
+            stroke: var(--color);
+            stroke-width: var(--ring-circle-width);
+            stroke-dashoffset: 0;
+            transition:
+              stroke-dashoffset 0.3s ease 0s,
+              stroke-dasharray 0.3s ease 0s,
+              stroke 0.3s ease 0s,
+              stroke-width 0.06s ease 0.3s,
+              opacity 0.3s ease 0s;
+          }
+        }
       }
-      .u-half-circle {
+      .part-circle {
         display: inline-block;
-        border-radius: 50%;
-        border-style: solid;
-        border-color: transparent;
-        border-top-color: var(--color); // 显示上1/4圆
-        border-right-color: var(--color); // 显示右1/4圆
         animation: loading-circle 1s infinite linear;
         -webkit-animation: loading-circle 1s infinite linear;
+        .circular {
+          display: inline-block;
+          .path {
+            stroke-dasharray: 31.42, 125.66;
+            stroke-dashoffset: 0;
+            stroke: var(--color);
+            stroke-linecap: round;
+          }
+        }
       }
-      .u-three-quarters-circle {
-        display: inline-block;
-        border-radius: 50%;
-        border-style: solid;
-        border-color: var(--color);
-        border-top-color: transparent; // 隐藏1/4圆
-        animation: loading-circle 1s infinite linear;
-        -webkit-animation: loading-circle 1s infinite linear;
+      .m-quarter-circle {
+        .circular {
+          .path {
+            stroke-dasharray: 31.42, 125.66;
+          }
+        }
+      }
+      .m-half-circle {
+        .circular {
+          .path {
+            stroke-dasharray: 62.83, 125.66;
+          }
+        }
+      }
+      .m-three-quarters-circle {
+        .circular {
+          .path {
+            stroke-dasharray: 94.25, 125.66;
+          }
+        }
       }
       @keyframes loading-circle {
         100% {
@@ -472,7 +565,7 @@ withDefaults(defineProps<Props>(), {
         .u-inner-ring {
           position: absolute;
           border-style: solid;
-          border-color: var(--ring-color);
+          border-color: var(--magic-ring-color);
           border-radius: 50%;
           animation: spin-inner-ring 1.5s linear infinite;
           -webkit-animation: spin-inner-ring 1.5s linear infinite;
@@ -532,21 +625,13 @@ withDefaults(defineProps<Props>(), {
         height: var(--line-length);
       }
     }
-    .u-quarter-circle {
+    .m-ring-circle {
       width: 24px;
       height: 24px;
-      border-width: 3px;
     }
-    .u-half-circle {
-      width: 24px;
-      height: 24px;
-      border-width: 3px;
-    }
-    .u-three-quarters-circle {
-      width: 24px;
-      height: 24px;
-      border-width: 3px;
-    }
+    .m-quarter-circle,
+    .m-half-circle,
+    .m-three-quarters-circle,
     .m-dynamic-circle {
       width: 26px;
       height: 26px;
@@ -576,7 +661,7 @@ withDefaults(defineProps<Props>(), {
     }
   }
 }
-.spin-default {
+.spin-middle {
   .m-spin .m-spin-box {
     .m-loading-dot {
       width: 30px;
@@ -605,21 +690,13 @@ withDefaults(defineProps<Props>(), {
         height: var(--line-length);
       }
     }
-    .u-quarter-circle {
+    .m-ring-circle {
       width: 36px;
       height: 36px;
-      border-width: 4px;
     }
-    .u-half-circle {
-      width: 36px;
-      height: 36px;
-      border-width: 4px;
-    }
-    .u-three-quarters-circle {
-      width: 36px;
-      height: 36px;
-      border-width: 4px;
-    }
+    .m-quarter-circle,
+    .m-half-circle,
+    .m-three-quarters-circle,
     .m-dynamic-circle {
       width: 38px;
       height: 38px;
@@ -678,26 +755,18 @@ withDefaults(defineProps<Props>(), {
         height: var(--line-length);
       }
     }
-    .u-quarter-circle {
+    .m-ring-circle {
       width: 48px;
       height: 48px;
-      border-width: 6px;
     }
-    .u-half-circle {
-      width: 48px;
-      height: 48px;
-      border-width: 6px;
-    }
-    .u-three-quarters-circle {
-      width: 48px;
-      height: 48px;
-      border-width: 6px;
-    }
+    .m-quarter-circle,
+    .m-half-circle,
+    .m-three-quarters-circle,
     .m-dynamic-circle {
       width: 50px;
       height: 50px;
       .circular .path {
-        stroke-width: 7;
+        stroke-width: 6;
       }
     }
     .m-magic-ring {
@@ -705,13 +774,13 @@ withDefaults(defineProps<Props>(), {
       height: 48px;
       .m-outer-ring,
       .u-inner-ring {
-        border-width: 7px;
+        border-width: 6px;
       }
       .u-inner-ring {
-        top: 7px;
-        left: 7px;
-        width: calc(100% - 14px);
-        height: calc(100% - 14px);
+        top: 6px;
+        left: 6px;
+        width: calc(100% - 12px);
+        height: calc(100% - 12px);
       }
     }
     .u-tip {
