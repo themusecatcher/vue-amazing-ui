@@ -3,9 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-## 1.5.2 <Tag color="volcano" size="small">soon</Tag>
+## 1.5.2 <Tag color="volcano" size="small">2024-08-16</Tag>
 
 - 优化并更新 [水印 Watermark](https://themusecatcher.github.io/vue-amazing-ui/guide/components/watermark.html) 组件，新增浏览器暗黑模式下水印颜色自动反转
+- 优化并更新 [警告提示 Alert](https://themusecatcher.github.io/vue-amazing-ui/guide/components/alert.html)，新增 `actions` 属性
+- 组件库代码及效果优化
 
 ## 1.5.1 <Tag color="volcano" size="small">2024-08-15</Tag>
 

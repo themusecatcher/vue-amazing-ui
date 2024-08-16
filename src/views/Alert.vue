@@ -85,7 +85,6 @@ function onClose(e: MouseEvent) {
         <template #icon>
           <svg
             focusable="false"
-            class="u-icon"
             data-icon="smile"
             width="1em"
             height="1em"
@@ -103,7 +102,6 @@ function onClose(e: MouseEvent) {
         <template #icon>
           <svg
             focusable="false"
-            class="u-icon"
             data-icon="smile"
             width="1em"
             height="1em"
@@ -121,7 +119,6 @@ function onClose(e: MouseEvent) {
         <template #icon>
           <svg
             focusable="false"
-            class="u-icon"
             data-icon="smile"
             width="1em"
             height="1em"
@@ -139,7 +136,6 @@ function onClose(e: MouseEvent) {
         <template #icon>
           <svg
             focusable="false"
-            class="u-icon"
             data-icon="smile"
             width="1em"
             height="1em"
@@ -166,6 +162,42 @@ function onClose(e: MouseEvent) {
         icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
         show-icon
       />
+    </Flex>
+    <h2 class="mt30 mb10">自定义操作项</h2>
+    <Flex vertical>
+      <Alert message="Success Tips" type="success" show-icon closable>
+        <template #actions>
+          <Button size="small" type="text">UNDO</Button>
+        </template>
+      </Alert>
+      <Alert
+        message="Error Text"
+        show-icon
+        description="Error Description Error Description Error Description Error Description"
+        type="error"
+      >
+        <template #actions>
+          <Button size="small" type="danger" ghost>Detail</Button>
+        </template>
+      </Alert>
+      <Alert message="Warning Text" type="warning" closable>
+        <template #actions>
+          <Button size="small" type="text">Done</Button>
+        </template>
+      </Alert>
+      <Alert
+        message="Info Text"
+        description="Info Description Info Description Info Description Info Description"
+        type="info"
+        closable
+      >
+        <template #actions>
+          <Space vertical gap="small" align="center">
+            <Button size="small" type="primary">Accept</Button>
+            <Button size="small" type="danger" ghost>Decline</Button>
+          </Space>
+        </template>
+      </Alert>
     </Flex>
   </div>
 </template>

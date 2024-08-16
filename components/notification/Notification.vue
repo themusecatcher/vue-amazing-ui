@@ -29,7 +29,7 @@ interface Notification {
 const resetTimer = ref()
 const hideIndex = ref<number[]>([])
 const hideTimers = ref<any[]>([])
-const notificationData = ref<Array<Notification>>([])
+const notificationData = ref<any[]>([])
 const place = ref<any>(props.placement)
 const notification = ref()
 const clear = computed(() => {
