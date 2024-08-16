@@ -131,7 +131,7 @@ const showSuccess = computed(() => {
     </template>
   </div>
   <div v-else class="m-progress-circle" :style="`width: ${totalWidth}; height: ${totalWidth};`">
-    <svg class="u-progress-circle" viewBox="0 0 100 100">
+    <svg class="progress-circle" viewBox="0 0 100 100">
       <defs v-if="gradientColor">
         <linearGradient id="circleGradient" x1="100%" y1="0%" x2="0%" y2="0%">
           <stop offset="0%" :stop-color="circleColorFrom as string"></stop>
@@ -141,7 +141,7 @@ const showSuccess = computed(() => {
       <path
         :d="path"
         :stroke-linecap="strokeLinecap"
-        class="progress-circle-trail"
+        class="circle-trail"
         :stroke-width="strokeWidth"
         :style="`stroke-dasharray: ${perimeter}px, ${perimeter}px;`"
         fill-opacity="0"
@@ -149,8 +149,8 @@ const showSuccess = computed(() => {
       <path
         :d="path"
         :stroke-linecap="strokeLinecap"
-        class="progress-circle-path"
-        :class="{ 'circle-success': percent >= 100 && !gradientColor }"
+        class="circle-path"
+        :class="{ 'circle-path-success': percent >= 100 && !gradientColor }"
         :stroke-width="strokeWidth"
         :stroke="gradientColor ? 'url(#circleGradient)' : lineColor"
         :style="`stroke-dasharray: ${(percent / 100) * perimeter}px, ${perimeter}px;`"
@@ -272,8 +272,8 @@ const showSuccess = computed(() => {
 .m-progress-circle {
   display: inline-block;
   position: relative;
-  .u-progress-circle {
-    .progress-circle-trail {
+  .progress-circle {
+    .circle-trail {
       stroke: rgba(0, 0, 0, 0.06);
       stroke-dashoffset: 0;
       transition:
@@ -283,7 +283,7 @@ const showSuccess = computed(() => {
         stroke-width 0.06s ease 0.3s,
         opacity 0.3s ease 0s;
     }
-    .progress-circle-path {
+    .circle-path {
       stroke-dashoffset: 0;
       transition:
         stroke-dashoffset 0.3s ease 0s,
@@ -292,7 +292,7 @@ const showSuccess = computed(() => {
         stroke-width 0.06s ease 0.3s,
         opacity 0.3s ease 0s;
     }
-    .circle-success {
+    .circle-path-success {
       stroke: @success !important;
     }
   }

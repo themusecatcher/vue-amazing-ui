@@ -7,7 +7,8 @@
 
 - 优化并更新 [水印 Watermark](https://themusecatcher.github.io/vue-amazing-ui/guide/components/watermark.html) 组件，新增浏览器暗黑模式下水印颜色自动反转
 - 优化并更新 [警告提示 Alert](https://themusecatcher.github.io/vue-amazing-ui/guide/components/alert.html)，新增 `actions` 属性
-- 组件库代码及效果优化
+- 优化并更新 [加载中 Spin](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html)，新增 `indicator: 'ring-circle'` 加载中类型，并新增 `ringCirclePercent` `ringCircleColor` 属性，优化整体效果
+- 组件库优化
 
 ## 1.5.1 <Tag color="volcano" size="small">2024-08-15</Tag>
 
