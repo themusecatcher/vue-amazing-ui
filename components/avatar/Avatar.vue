@@ -78,18 +78,14 @@ const slots = useSlots()
 const showIcon = computed(() => {
   if (!props.src) {
     const iconSlots = slots.icon?.()
-    if (iconSlots) {
-      return Boolean(iconSlots[0].children !== 'v-if' && iconSlots?.length)
-    }
+    return Boolean(iconSlots && iconSlots?.length)
   }
   return false
 })
 const showStr = computed(() => {
   if (!props.src && !showIcon.value) {
     const defaultSlots = slots.default?.()
-    if (defaultSlots) {
-      return Boolean(defaultSlots[0].children !== 'v-if' && defaultSlots[0].children?.length)
-    }
+    return Boolean(defaultSlots && defaultSlots?.length)
   }
   return false
 })
@@ -114,49 +110,48 @@ const strStyle = computed(() => {
     :class="[avatarStyle === null ? `avatar-${size}` : '', `avatar-${shape}`, { 'avatar-image': src }]"
     :style="avatarStyle || {}"
   >
-    <img class="u-image" :src="src" :alt="alt" v-if="src" />
-    <span class="m-icon" v-if="!src && showIcon">
+    <img class="avatar-image" :src="src" :alt="alt" v-if="src" />
+    <span class="avatar-icon" v-if="!src && showIcon">
       <slot name="icon"></slot>
     </span>
-    <span class="m-string" :style="strStyle" v-if="!src && !showIcon && showStr">
+    <span class="avatar-string" :style="strStyle" v-if="!src && !showIcon && showStr">
       <slot></slot>
     </span>
   </div>
 </template>
 <style lang="less" scoped>
 .m-avatar {
-  color: #fff;
-  font-size: 14px;
-  line-height: 30px;
   position: relative;
-  display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-align: center;
-  vertical-align: middle;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid transparent;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   width: 32px;
   height: 32px;
   border-radius: 50%;
+  font-size: 14px;
+  color: #fff;
+  line-height: 30px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid transparent;
+  overflow: hidden;
+  white-space: nowrap;
   &.avatar-square {
     border-radius: 6px;
   }
-  .u-image {
+  .avatar-image {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .m-icon {
+  .avatar-icon {
     display: inline-flex;
+    justify-content: center;
     align-items: center;
     color: inherit;
     line-height: 0;
-    text-align: center;
-    vertical-align: -0.125em;
   }
-  .m-string {
+  .avatar-string {
     position: absolute;
     left: 50%;
     transform-origin: 0 center;
@@ -168,7 +163,7 @@ const strStyle = computed(() => {
   height: 40px;
   line-height: 38px;
   border-radius: 50%;
-  .m-icon {
+  .avatar-icon {
     font-size: 24px;
   }
   &.avatar-square {
@@ -176,7 +171,7 @@ const strStyle = computed(() => {
   }
 }
 .avatar-default {
-  .m-icon {
+  .avatar-icon {
     font-size: 18px;
   }
 }
@@ -186,7 +181,7 @@ const strStyle = computed(() => {
   height: 24px;
   line-height: 22px;
   border-radius: 50%;
-  .m-icon {
+  .avatar-icon {
     font-size: 14px;
   }
   &.avatar-square {
