@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.5.3 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [面包屑 Breadcrumb](https://themusecatcher.github.io/vue-amazing-ui/guide/components/breadcrumb.html) 组件，新增 `breadcrumbStyle` 属性
+
 ## 1.5.2 <Tag color="volcano" size="small">2024-08-16</Tag>
 
 - 优化并更新 [水印 Watermark](https://themusecatcher.github.io/vue-amazing-ui/guide/components/watermark.html) 组件，新增浏览器暗黑模式下水印颜色自动反转
