@@ -40,7 +40,7 @@ const perimeter = computed(() => {
 const ringCircleWidth = computed(() => {
   const ringCircleWidthMap = {
     small: 12,
-    middle: 14,
+    middle: 12,
     large: 16
   }
   return ringCircleWidthMap[props.size]
