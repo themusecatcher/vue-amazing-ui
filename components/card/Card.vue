@@ -33,10 +33,10 @@ const showHeader = computed(() => {
   const titleSlots = slots.title?.()
   const extraSlots = slots.extra?.()
   let n = 0
-  if (titleSlots && titleSlots[0].children?.length) {
+  if (titleSlots && titleSlots?.length) {
     n++
   }
-  if (extraSlots && extraSlots[0].children?.length) {
+  if (extraSlots && extraSlots?.length) {
     n++
   }
   return Boolean(n) || props.title || props.extra

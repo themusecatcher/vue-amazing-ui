@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ref, computed, useSlots, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import Button from '../button'
 interface Props {
   title?: string // 标题 string | slot
   content?: string // 内容 string | slot
-  width?: number // 宽度，单位 px
-  height?: number | string // 高度，单位 px，默认 auto，自适应内容高度
+  width?: number // 对话框宽度，单位 px
+  height?: number | string // 对话框高度，单位 px，默认 auto，自适应内容高度
   cancelText?: string // 取消按钮文字
+  cancelProps?: object // 取消按钮 props 配置，参考 Button 组件 Props
   okText?: string // 确定按钮文字
   okType?: 'primary' | 'danger' // 确定按钮类型
-  bodyStyle?: CSSProperties // 对话框 body 样式
+  okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
+  bodyStyle?: CSSProperties // 设置对话框 body 样式
   footer?: boolean // 是否显示底部按钮 boolean | slot
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
   top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
@@ -19,13 +21,15 @@ interface Props {
   show?: boolean // 对话框是否可见
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '提示',
+  title: undefined,
   content: undefined,
   width: 540,
   height: 'auto',
   cancelText: '取消',
+  cancelProps: () => ({}),
   okText: '确定',
   okType: 'primary',
+  okProps: () => ({}),
   bodyStyle: () => ({}),
   footer: true,
   center: true,
@@ -41,11 +45,6 @@ const dialogHeight = computed(() => {
   } else {
     return props.height
   }
-})
-const slots = useSlots()
-const showFooter = computed(() => {
-  const footerSlots = slots.footer?.()
-  return footerSlots
 })
 const dialogRef = ref() // DOM 引用
 watch(
@@ -140,12 +139,11 @@ function onOk() {
             <div class="m-dialog-body" :style="bodyStyle">
               <slot>{{ content }}</slot>
             </div>
-            <div class="m-dialog-footer" v-show="footer">
-              <slot name="footer"></slot>
-              <template v-if="!showFooter">
-                <Button class="mr8" @click="onCancel">{{ cancelText }}</Button>
-                <Button :type="okType" :loading="loading" @click="onOk">{{ okText }}</Button>
-              </template>
+            <div class="m-dialog-footer" v-if="footer">
+              <slot name="footer">
+                <Button class="mr8" @click="onCancel" v-bind="cancelProps">{{ cancelText }}</Button>
+                <Button :type="okType" :loading="loading" @click="onOk" v-bind="okProps">{{ okText }}</Button>
+              </slot>
             </div>
           </div>
         </div>

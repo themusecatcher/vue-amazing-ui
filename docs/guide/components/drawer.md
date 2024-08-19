@@ -309,8 +309,8 @@ p {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-width | 宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px` | string &#124; number | 378
-height | 高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px` | string &#124; number | 378
+width | 抽屉宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px` | string &#124; number | 378
+height | 抽屉高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px` | string &#124; number | 378
 title | 标题 | string &#124; slot | undefined
 closable | 是否显示左上角的关闭按钮 | boolean | true
 placement | 抽屉的方向 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'right'

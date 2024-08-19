@@ -3,8 +3,8 @@ import { ref, computed, useSlots, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import Scrollbar from '../scrollbar'
 interface Props {
-  width?: string | number // 宽度，在 placement 为 right 或 left 时使用，单位 px
-  height?: string | number // 高度，在 placement 为 top 或 bottom 时使用，单位 px
+  width?: string | number // 抽屉宽度，在 placement 为 right 或 left 时使用，单位 px
+  height?: string | number // 抽屉高度，在 placement 为 top 或 bottom 时使用，单位 px
   title?: string // 标题 string | slot
   closable?: boolean // 是否显示左上角的关闭按钮
   placement?: 'top' | 'right' | 'bottom' | 'left' // 抽屉的方向
@@ -57,17 +57,17 @@ const showHeader = computed(() => {
   const titleSlots = slots.title?.()
   const extraSlots = slots.extra?.()
   let n = 0
-  if (titleSlots && titleSlots.length) {
+  if (titleSlots && titleSlots?.length) {
     n++
   }
-  if (extraSlots && extraSlots.length) {
+  if (extraSlots && extraSlots?.length) {
     n++
   }
   return Boolean(n) || props.title || props.extra || props.closable
 })
 const showFooter = computed(() => {
   const footerSlots = slots.footer?.()
-  return (footerSlots && footerSlots.length) || props.footer
+  return Boolean(footerSlots && footerSlots?.length) || props.footer
 })
 const drawerRef = ref()
 watch(
