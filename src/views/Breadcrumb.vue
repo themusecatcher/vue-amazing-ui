@@ -75,20 +75,19 @@ const longNameRoutes = ref([
     </Flex>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Flex vertical>
-      <Breadcrumb
-        :routes="longNameRoutes"
-        breadcrumb-class="custom-breadcrumb-class"
-        :max-width="210" />
+      <Breadcrumb :routes="longNameRoutes" breadcrumb-class="custom-breadcrumb-class" :max-width="210" />
       <Breadcrumb
         :routes="longNameRoutes"
         :breadcrumb-style="{ fontSize: '20px', height: '40px' }"
         :separator-style="{ fontSize: '18px' }"
-        :max-width="210" />
+        :max-width="210"
+      />
       <Breadcrumb
         :routes="longNameRoutes"
         :breadcrumb-style="{ fontSize: '20px', height: '40px' }"
         :separator-style="{ fontSize: '18px' }"
-        :max-width="210">
+        :max-width="210"
+      >
         <template #separator>
           <svg
             class="svg-icon"
@@ -110,7 +109,8 @@ const longNameRoutes = ref([
         :routes="longNameRoutes"
         :breadcrumb-style="{ fontSize: '20px', height: '40px' }"
         :separator-style="{ fontSize: '18px' }"
-        :max-width="210">
+        :max-width="210"
+      >
         <template #separator="{ index }">
           <svg
             v-if="index === 0"

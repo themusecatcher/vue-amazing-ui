@@ -5,7 +5,7 @@
 
 ## 1.5.3 <Tag color="volcano" size="small">soon</Tag>
 
-- 优化并更新 [面包屑 Breadcrumb](https://themusecatcher.github.io/vue-amazing-ui/guide/components/breadcrumb.html) 组件，新增 `breadcrumbStyle` 属性
+- 优化并更新 [面包屑 Breadcrumb](https://themusecatcher.github.io/vue-amazing-ui/guide/components/breadcrumb.html) 组件，新增 `breadcrumbClass` `breadcrumbStyle` `separatorStyle` 属性
 
 ## 1.5.2 <Tag color="volcano" size="small">2024-08-16</Tag>
 

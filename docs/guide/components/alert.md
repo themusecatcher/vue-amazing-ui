@@ -227,13 +227,18 @@ function onClose (e: Event) {
 
 ## 自定义关闭文字
 
-<Alert message="Info Text" type="info" closable close-text="Close Now" />
+<Alert message="Info Text" type="info" closable close-text="Close Now" @close="onClose" />
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+function onClose (e: Event) {
+  console.log(e, 'I was closed.')
+}
+</script>
 <template>
-  <Alert message="Info Text" type="info" closable close-text="Close Now" />
+  <Alert message="Info Text" type="info" closable close-text="Close Now" @close="onClose" />
 </template>
 ```
 
@@ -332,7 +337,7 @@ function onClose (e: Event) {
 ## 自定义操作项
 
 <Flex vertical>
-  <Alert message="Success Tips" type="success" show-icon closable>
+  <Alert message="Success Tips" type="success" show-icon closable @close="onClose">
     <template #actions>
       <Button size="small" type="text">UNDO</Button>
     </template>
@@ -347,7 +352,7 @@ function onClose (e: Event) {
       <Button size="small" type="danger" ghost>Detail</Button>
     </template>
   </Alert>
-  <Alert message="Warning Text" type="warning" closable>
+  <Alert message="Warning Text" type="warning" closable @close="onClose">
     <template #actions>
       <Button size="small" type="text">Done</Button>
     </template>
@@ -357,6 +362,7 @@ function onClose (e: Event) {
     description="Info Description Info Description Info Description Info Description"
     type="info"
     closable
+    @close="onClose"
   >
     <template #actions>
       <Space vertical gap="small" align="center">
@@ -370,9 +376,14 @@ function onClose (e: Event) {
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+function onClose (e: Event) {
+  console.log(e, 'I was closed.')
+}
+</script>
 <template>
   <Flex vertical>
-    <Alert message="Success Tips" type="success" show-icon closable>
+    <Alert message="Success Tips" type="success" show-icon closable @close="onClose">
       <template #actions>
         <Button size="small" type="text">UNDO</Button>
       </template>
@@ -387,7 +398,7 @@ function onClose (e: Event) {
         <Button size="small" type="danger" ghost>Detail</Button>
       </template>
     </Alert>
-    <Alert message="Warning Text" type="warning" closable>
+    <Alert message="Warning Text" type="warning" closable @close="onClose">
       <template #actions>
         <Button size="small" type="text">Done</Button>
       </template>
@@ -397,6 +408,7 @@ function onClose (e: Event) {
       description="Info Description Info Description Info Description Info Description"
       type="info"
       closable
+      @close="onClose"
     >
       <template #actions>
         <Space vertical gap="small" align="center">
