@@ -21,7 +21,7 @@ export function rafTimeout(fn: Function, delay = 0, interval = false): object {
   function timeElapse(timestamp: number) {
     // 定义动画帧回调函数
     /*
-      timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame() 开始去执行回调函数的时刻
+      timestamp参数：与performance.now()的返回值相同，它表示requestAnimationFrame()开始去执行回调函数的时刻
     */
     if (!start) {
       // 如果还没有开始时间，则以当前时间为开始时间
