@@ -369,31 +369,27 @@ const spinning = ref(true)
 
 <Space vertical>
   <Space>
-    <Spin class="u-size-spin" :spinning="spinning" size="small" />
-    <Spin class="u-size-spin" :spinning="spinning" />
-    <Spin class="u-size-spin" :spinning="spinning" size="large" />
-    <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="spin-dot" />
-    <Spin class="u-size-spin" :spinning="spinning" indicator="spin-dot" />
-    <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="spin-dot" />
-    <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="spin-line" />
-    <Spin class="u-size-spin" :spinning="spinning" indicator="spin-line" />
-    <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="spin-line" />
-  </Space>
-  <Space>
-    <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="ring-circle" />
-    <Spin class="u-size-spin" :spinning="spinning" indicator="ring-circle" />
-    <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="ring-circle" />
-    <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="ring-rail" />
-    <Spin class="u-size-spin" :spinning="spinning" indicator="ring-rail" />
-    <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="ring-rail" />
-    <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-    <Spin class="u-size-spin" :spinning="spinning" indicator="dynamic-circle" />
-    <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
-  </Space>
-  <Space>
-    <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="magic-ring" />
-    <Spin class="u-size-spin" :spinning="spinning" indicator="magic-ring" />
-    <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="magic-ring" />
+    <Spin class="u-spin" :spinning="spinning" size="small" />
+    <Spin class="u-spin" :spinning="spinning" />
+    <Spin class="u-spin" :spinning="spinning" size="large" />
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-dot" />
+    <Spin class="u-spin" :spinning="spinning" indicator="spin-dot" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-dot" />
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-line" />
+    <Spin class="u-spin" :spinning="spinning" indicator="spin-line" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-line" />
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="ring-circle" />
+    <Spin class="u-spin" :spinning="spinning" indicator="ring-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="ring-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="ring-rail" />
+    <Spin class="u-spin" :spinning="spinning" indicator="ring-rail" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="ring-rail" />
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
+    <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
+    <Spin class="u-spin" :spinning="spinning" size="small" indicator="magic-ring" />
+    <Spin class="u-spin" :spinning="spinning" indicator="magic-ring" />
+    <Spin class="u-spin" :spinning="spinning" size="large" indicator="magic-ring" />
   </Space>
 </Space>
 
@@ -407,31 +403,27 @@ const spinning = ref(true)
 <template>
   <Space vertical>
     <Space>
-      <Spin class="u-size-spin" :spinning="spinning" size="small" />
-      <Spin class="u-size-spin" :spinning="spinning" />
-      <Spin class="u-size-spin" :spinning="spinning" size="large" />
-      <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="spin-dot" />
-      <Spin class="u-size-spin" :spinning="spinning" indicator="spin-dot" />
-      <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="spin-dot" />
-      <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="spin-line" />
-      <Spin class="u-size-spin" :spinning="spinning" indicator="spin-line" />
-      <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="spin-line" />
-    </Space>
-    <Space>
-      <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="ring-circle" />
-      <Spin class="u-size-spin" :spinning="spinning" indicator="ring-circle" />
-      <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="ring-circle" />
-      <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="ring-rail" />
-      <Spin class="u-size-spin" :spinning="spinning" indicator="ring-rail" />
-      <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="ring-rail" />
-      <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-      <Spin class="u-size-spin" :spinning="spinning" indicator="dynamic-circle" />
-      <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
-    </Space>
-    <Space>
-      <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="magic-ring" />
-      <Spin class="u-size-spin" :spinning="spinning" indicator="magic-ring" />
-      <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="magic-ring" />
+      <Spin class="u-spin" :spinning="spinning" size="small" />
+      <Spin class="u-spin" :spinning="spinning" />
+      <Spin class="u-spin" :spinning="spinning" size="large" />
+      <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-dot" />
+      <Spin class="u-spin" :spinning="spinning" indicator="spin-dot" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-dot" />
+      <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-line" />
+      <Spin class="u-spin" :spinning="spinning" indicator="spin-line" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-line" />
+      <Spin class="u-spin" :spinning="spinning" size="small" indicator="ring-circle" />
+      <Spin class="u-spin" :spinning="spinning" indicator="ring-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="ring-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="small" indicator="ring-rail" />
+      <Spin class="u-spin" :spinning="spinning" indicator="ring-rail" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="ring-rail" />
+      <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
+      <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
+      <Spin class="u-spin" :spinning="spinning" size="small" indicator="magic-ring" />
+      <Spin class="u-spin" :spinning="spinning" indicator="magic-ring" />
+      <Spin class="u-spin" :spinning="spinning" size="large" indicator="magic-ring" />
     </Space>
   </Space>
 </template>
