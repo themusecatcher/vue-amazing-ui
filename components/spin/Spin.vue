@@ -45,13 +45,13 @@ const circlePath = computed(() => {
   >
     <div class="m-spin" v-show="spinning">
       <div class="m-spin-box">
-        <div class="m-loading-dot" v-if="indicator === 'dot'">
+        <div v-if="indicator === 'dot'" class="m-loading-dot">
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
           <span class="u-dot-item"></span>
         </div>
-        <div class="spin-wrap-box" :class="{ 'spin-wrap-rotate': rotate }" v-if="indicator === 'spin-dot'">
+        <div v-if="indicator === 'spin-dot'" class="spin-wrap-box" :class="{ 'spin-wrap-rotate': rotate }">
           <div class="m-spin-dot">
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
@@ -65,7 +65,7 @@ const circlePath = computed(() => {
             <span class="u-spin-item"></span>
           </div>
         </div>
-        <div class="spin-wrap-box" :class="{ 'spin-wrap-rotate': rotate }" v-if="indicator === 'spin-line'">
+        <div v-if="indicator === 'spin-line'" class="spin-wrap-box" :class="{ 'spin-wrap-rotate': rotate }">
           <div class="m-spin-line">
             <span class="u-spin-item"></span>
             <span class="u-spin-item"></span>
@@ -91,7 +91,7 @@ const circlePath = computed(() => {
             ></path>
           </svg>
         </div>
-        <div class="m-ring-rail" v-if="indicator === 'ring-rail'">
+        <div v-if="indicator === 'ring-rail'" class="m-ring-rail">
           <svg class="circle" viewBox="0 0 100 100">
             <path
               :d="circlePath"

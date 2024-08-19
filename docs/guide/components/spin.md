@@ -317,11 +317,11 @@ const spinning = ref(true)
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
   <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-line" />
-  <Spin class="u-spin" color="#fadb14" :spinning="spinning" :ring-circle-percent="50" indicator="ring-circle" />
+  <Spin class="u-spin" color="#fadb14" :spinning="spinning" :spin-circle-percent="50" indicator="ring-circle" />
   <Spin
     class="u-spin"
     color="#fadb14"
-    :ring-circle-percent="50"
+    :spin-circle-percent="50"
     ring-rail-color="rgba(212, 136, 6, 0.6)"
     :spinning="spinning"
     indicator="ring-rail"
@@ -342,11 +342,11 @@ const spinning = ref(true)
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
     <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-line" />
-    <Spin class="u-spin" color="#fadb14" :spinning="spinning" :ring-circle-percent="50" indicator="ring-circle" />
+    <Spin class="u-spin" color="#fadb14" :spinning="spinning" :spin-circle-percent="50" indicator="ring-circle" />
     <Spin
       class="u-spin"
       color="#fadb14"
-      :ring-circle-percent="50"
+      :spin-circle-percent="50"
       ring-rail-color="rgba(212, 136, 6, 0.6)"
       :spinning="spinning"
       indicator="ring-rail"
