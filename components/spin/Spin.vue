@@ -4,20 +4,12 @@ interface Props {
   spinning?: boolean // 是否为加载中状态
   size?: 'small' | 'middle' | 'large' // 加载中尺寸
   tip?: string // 描述文案
-  indicator?:
-    | 'dot'
-    | 'spin-dot'
-    | 'spin-line'
-    | 'quarter-circle'
-    | 'half-circle'
-    | 'three-quarters-circle'
-    | 'ring-circle'
-    | 'dynamic-circle'
-    | 'magic-ring' // 加载指示符
+  indicator?: 'dot' | 'spin-dot' | 'spin-line' | 'ring-circle' | 'ring-rail' | 'dynamic-circle' | 'magic-ring' // 加载指示符
   color?: string // 指示符颜色，当 indicator: 'magic-ring' 时为外环颜色
+  spinCircleWidth?: number // 圆环宽度，单位是加载指示符宽度的百分比，仅当 indicator: 'ring-circle' | 'ring-rail' 时生效
+  spinCirclePercent?: number // 圆环长度百分比 (0～100)，单位是圆环周长的百分比，仅当 indicator: 'ring-circle' | 'ring-rail' 时生效
+  ringRailColor?: string // 圆环轨道颜色，仅当 indicator: 'ring-rail' 时生效
   magicRingColor?: string // 内环颜色，仅当 indicator: 'magic-ring' 时生效
-  ringCirclePercent?: number // 内环长度百分比 (0～100)，仅当 indicator: 'ring-circle' 时生效
-  ringCircleColor?: string // 圆形轨道颜色，仅当 indicator: 'ring-circle' 时生效
   rotate?: boolean // spin-dot 或 spin-line 初始是否旋转，仅当 indicator: 'spin-dot' | 'spin-line' 时生效
   speed?: number // spin-dot 或 spin-line 渐变旋转的动画速度，单位 ms，仅当 indicator: 'spin-dot' | 'spin-line' 时生效
 }
@@ -27,27 +19,20 @@ const props = withDefaults(defineProps<Props>(), {
   tip: undefined,
   indicator: 'dot',
   color: '#1677ff',
+  spinCircleWidth: 12,
+  spinCirclePercent: 33,
+  ringRailColor: 'rgba(0, 0, 0, 0.12)',
   magicRingColor: '#4096ff',
-  ringCirclePercent: 33,
-  ringCircleColor: 'rgba(0, 0, 0, 0.12)',
   rotate: false,
   speed: 800
 })
-const perimeter = computed(() => {
+const circlePerimeter = computed(() => {
   // 圆环周长
-  return (100 - ringCircleWidth.value) * Math.PI
+  return (100 - props.spinCircleWidth) * Math.PI
 })
-const ringCircleWidth = computed(() => {
-  const ringCircleWidthMap = {
-    small: 12,
-    middle: 12,
-    large: 16
-  }
-  return ringCircleWidthMap[props.size]
-})
-const ringCirclePath = computed(() => {
-  // 圆条轨道路径指令
-  const long = 100 - ringCircleWidth.value
+const circlePath = computed(() => {
+  // 圆环轨道路径指令
+  const long = 100 - props.spinCircleWidth
   return `M 50,50 m 0,-${long / 2}
    a ${long / 2},${long / 2} 0 1 1 0,${long}
    a ${long / 2},${long / 2} 0 1 1 0,-${long}`
@@ -56,7 +41,7 @@ const ringCirclePath = computed(() => {
 <template>
   <div
     :class="`m-spin-wrap spin-${size}`"
-    :style="`--color: ${color}; --magic-ring-color: ${magicRingColor}; --ring-circle-width: ${ringCircleWidth}; --speed: ${speed}ms;`"
+    :style="`--color: ${color}; --magic-ring-color: ${magicRingColor}; --spin-circle-width: ${spinCircleWidth}; --speed: ${speed}ms;`"
   >
     <div class="m-spin" v-show="spinning">
       <div class="m-spin-box">
@@ -94,44 +79,47 @@ const ringCirclePath = computed(() => {
             <span class="u-spin-item"></span>
           </div>
         </div>
-        <div class="m-ring-circle" v-if="indicator === 'ring-circle'">
-          <svg class="ring-circle" viewBox="0 0 100 100">
+        <div v-if="indicator === 'ring-circle'" class="m-ring-circle">
+          <svg class="circle" viewBox="0 0 100 100">
             <path
-              :d="ringCirclePath"
-              :stroke="ringCircleColor"
+              :d="circlePath"
               stroke-linecap="round"
-              class="ring-trail"
-              :style="`stroke-dasharray: ${perimeter}px, ${perimeter}px;`"
-              fill-opacity="0"
-            ></path>
-            <path
-              :d="ringCirclePath"
-              stroke-linecap="round"
-              class="ring-path"
-              :style="`stroke-dasharray: ${(ringCirclePercent / 100) * perimeter}px, ${perimeter}px;`"
+              class="path"
+              :style="`stroke-dasharray: ${(spinCirclePercent / 100) * circlePerimeter}px, ${circlePerimeter}px;`"
               opacity="1"
               fill-opacity="0"
             ></path>
           </svg>
         </div>
-        <div v-if="indicator === 'quarter-circle'" class="m-quarter-circle part-circle">
-          <svg class="circular" viewBox="0 0 50 50">
-            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
-          </svg>
-        </div>
-        <div v-if="indicator === 'half-circle'" class="m-half-circle part-circle">
-          <svg class="circular" viewBox="0 0 50 50">
-            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
-          </svg>
-        </div>
-        <div v-if="indicator === 'three-quarters-circle'" class="m-three-quarters-circle part-circle">
-          <svg class="circular" viewBox="0 0 50 50">
-            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
+        <div class="m-ring-rail" v-if="indicator === 'ring-rail'">
+          <svg class="circle" viewBox="0 0 100 100">
+            <path
+              :d="circlePath"
+              :stroke="ringRailColor"
+              stroke-linecap="round"
+              class="trail"
+              :style="`stroke-dasharray: ${circlePerimeter}px, ${circlePerimeter}px;`"
+              fill-opacity="0"
+            ></path>
+            <path
+              :d="circlePath"
+              stroke-linecap="round"
+              class="path"
+              :style="`stroke-dasharray: ${(spinCirclePercent / 100) * circlePerimeter}px, ${circlePerimeter}px;`"
+              opacity="1"
+              fill-opacity="0"
+            ></path>
           </svg>
         </div>
         <div v-if="indicator === 'dynamic-circle'" class="m-dynamic-circle">
-          <svg class="circular" viewBox="0 0 50 50">
-            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
+          <svg class="circle" viewBox="0 0 100 100">
+            <path
+              d="M 50,50 m 0,-44 a 44,44 0 1 1 0,88 a 44,44 0 1 1 0,-88"
+              stroke-linecap="round"
+              class="path"
+              opacity="1"
+              fill-opacity="0"
+            ></path>
           </svg>
         </div>
         <div v-if="indicator === 'magic-ring'" class="m-magic-ring">
@@ -171,8 +159,8 @@ const ringCirclePath = computed(() => {
         position: relative;
         display: inline-block;
         transform: rotate(45deg);
-        animation: loading-dot 1.2s infinite linear;
-        -webkit-animation: loading-dot 1.2s infinite linear;
+        animation: loading-dot 1.2s linear infinite;
+        -webkit-animation: loading-dot 1.2s linear infinite;
         @keyframes loading-dot {
           100% {
             transform: rotate(405deg);
@@ -429,108 +417,55 @@ const ringCirclePath = computed(() => {
           }
         }
       }
-      .m-ring-circle {
+      .m-ring-circle,
+      .m-ring-rail {
         display: inline-block;
         overflow: hidden;
-        animation: loading-circle 1s infinite linear;
-        -webkit-animation: loading-circle 1s infinite linear;
-        .ring-circle {
-          .ring-trail {
-            stroke-width: var(--ring-circle-width);
-            stroke-dashoffset: 0;
-            transition:
-              stroke-dashoffset 0.3s ease 0s,
-              stroke-dasharray 0.3s ease 0s,
-              stroke 0.3s ease 0s,
-              stroke-width 0.06s ease 0.3s,
-              opacity 0.3s ease 0s;
-          }
-          .ring-path {
-            stroke: var(--color);
-            stroke-width: var(--ring-circle-width);
-            stroke-dashoffset: 0;
-            transition:
-              stroke-dashoffset 0.3s ease 0s,
-              stroke-dasharray 0.3s ease 0s,
-              stroke 0.3s ease 0s,
-              stroke-width 0.06s ease 0.3s,
-              opacity 0.3s ease 0s;
-          }
-        }
+        animation: spin-circle 0.8s linear infinite;
+        -webkit-animation: spin-circle 0.8s linear infinite;
       }
-      .part-circle {
-        display: inline-block;
-        animation: loading-circle 1s infinite linear;
-        -webkit-animation: loading-circle 1s infinite linear;
-        .circular {
-          display: inline-block;
-          .path {
-            stroke-dasharray: 31.42, 125.66;
-            stroke-dashoffset: 0;
-            stroke: var(--color);
-            stroke-linecap: round;
-          }
+      .circle {
+        .trail {
+          stroke-width: var(--spin-circle-width);
+          stroke-dashoffset: 0;
         }
-      }
-      .m-quarter-circle {
-        .circular {
-          .path {
-            stroke-dasharray: 31.42, 125.66;
-          }
-        }
-      }
-      .m-half-circle {
-        .circular {
-          .path {
-            stroke-dasharray: 62.83, 125.66;
-          }
-        }
-      }
-      .m-three-quarters-circle {
-        .circular {
-          .path {
-            stroke-dasharray: 94.25, 125.66;
-          }
-        }
-      }
-      @keyframes loading-circle {
-        100% {
-          transform: rotate(360deg);
+        .path {
+          stroke: var(--color);
+          stroke-width: var(--spin-circle-width);
+          stroke-dashoffset: 0;
         }
       }
       .m-dynamic-circle {
         display: inline-block;
-        .circular {
-          display: inline-block;
-          animation: loading-rotate 2s linear infinite;
-          -webkit-animation: loading-rotate 2s linear infinite;
-          @keyframes loading-rotate {
-            100% {
-              transform: rotate(360deg);
-            }
-          }
+        overflow: hidden;
+        animation: spin-circle 2s linear infinite;
+        -webkit-animation: spin-circle 2s linear infinite;
+        .circle {
           .path {
-            stroke-dasharray: 90, 150;
-            stroke-dashoffset: 0;
-            stroke: var(--color);
-            stroke-linecap: round;
+            stroke-width: 12;
+            stroke-dasharray: 180, 300;
             animation: loading-dash 1.5s ease-in-out infinite;
             -webkit-animation: loading-dash 1.5s ease-in-out infinite;
             @keyframes loading-dash {
               0% {
-                stroke-dasharray: 1, 200;
+                stroke-dasharray: 2, 400;
                 stroke-dashoffset: 0;
               }
               50% {
-                stroke-dasharray: 90, 150;
-                stroke-dashoffset: -40px;
+                stroke-dasharray: 180, 300;
+                stroke-dashoffset: -80px;
               }
               100% {
-                stroke-dasharray: 90, 150;
-                stroke-dashoffset: -120px;
+                stroke-dasharray: 180, 300;
+                stroke-dashoffset: -272px;
               }
             }
           }
+        }
+      }
+      @keyframes spin-circle {
+        100% {
+          transform: rotate(360deg);
         }
       }
       .m-magic-ring {
@@ -554,9 +489,6 @@ const ringCirclePath = computed(() => {
           animation: spin-outer-ring 1.5s linear infinite;
           -webkit-animation: spin-outer-ring 1.5s linear infinite;
           @keyframes spin-outer-ring {
-            0% {
-              transform: rotateY(0deg);
-            }
             100% {
               transform: rotateY(360deg);
             }
@@ -625,19 +557,11 @@ const ringCirclePath = computed(() => {
         height: var(--line-length);
       }
     }
-    .m-ring-circle {
+    .m-ring-circle,
+    .m-ring-rail,
+    .m-dynamic-circle {
       width: 24px;
       height: 24px;
-    }
-    .m-quarter-circle,
-    .m-half-circle,
-    .m-three-quarters-circle,
-    .m-dynamic-circle {
-      width: 26px;
-      height: 26px;
-      .circular .path {
-        stroke-width: 5;
-      }
     }
     .m-magic-ring {
       width: 24px;
@@ -690,19 +614,11 @@ const ringCirclePath = computed(() => {
         height: var(--line-length);
       }
     }
-    .m-ring-circle {
+    .m-ring-circle,
+    .m-ring-rail,
+    .m-dynamic-circle {
       width: 36px;
       height: 36px;
-    }
-    .m-quarter-circle,
-    .m-half-circle,
-    .m-three-quarters-circle,
-    .m-dynamic-circle {
-      width: 38px;
-      height: 38px;
-      .circular .path {
-        stroke-width: 5;
-      }
     }
     .m-magic-ring {
       width: 36px;
@@ -755,19 +671,11 @@ const ringCirclePath = computed(() => {
         height: var(--line-length);
       }
     }
-    .m-ring-circle {
+    .m-ring-circle,
+    .m-ring-rail,
+    .m-dynamic-circle {
       width: 48px;
       height: 48px;
-    }
-    .m-quarter-circle,
-    .m-half-circle,
-    .m-three-quarters-circle,
-    .m-dynamic-circle {
-      width: 50px;
-      height: 50px;
-      .circular .path {
-        stroke-width: 6;
-      }
     }
     .m-magic-ring {
       width: 48px;
