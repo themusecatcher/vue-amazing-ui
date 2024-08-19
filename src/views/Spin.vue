@@ -31,31 +31,7 @@ const spinning = ref(true)
         描述文案一起水平垂直居中。
       </p>
     </Spin>
-    <h2 class="mt30 mb10">四分之一圆形指示符</h2>
-    <Spin style="width: 800px" :spinning="spinning" indicator="quarter-circle">
-      <p class="spin-content">
-        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-        描述文案一起水平垂直居中。
-      </p>
-    </Spin>
-    <h2 class="mt30 mb10">二分之一圆形指示符</h2>
-    <Spin style="width: 800px" :spinning="spinning" indicator="half-circle">
-      <p class="spin-content">
-        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-        描述文案一起水平垂直居中。
-      </p>
-    </Spin>
-    <h2 class="mt30 mb10">四分之三圆形指示符</h2>
-    <Spin style="width: 800px" :spinning="spinning" indicator="three-quarters-circle">
-      <p class="spin-content">
-        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-        描述文案一起水平垂直居中。
-      </p>
-    </Spin>
-    <h2 class="mt30 mb10">圆环圆形指示符</h2>
+    <h2 class="mt30 mb10">圆环指示符</h2>
     <Spin style="width: 800px" :spinning="spinning" indicator="ring-circle">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
@@ -63,7 +39,15 @@ const spinning = ref(true)
         描述文案一起水平垂直居中。
       </p>
     </Spin>
-    <h2 class="mt30 mb10">动态圆形指示符</h2>
+    <h2 class="mt30 mb10">圆环轨道指示符</h2>
+    <Spin style="width: 800px" :spinning="spinning" indicator="ring-rail">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
+    </Spin>
+    <h2 class="mt30 mb10">动态圆环指示符</h2>
     <Spin style="width: 800px" :spinning="spinning" indicator="dynamic-circle">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
@@ -71,7 +55,7 @@ const spinning = ref(true)
         描述文案一起水平垂直居中。
       </p>
     </Spin>
-    <h2 class="mt30 mb10">魔法圆环指示符</h2>
+    <h2 class="mt30 mb10">双圆环指示符</h2>
     <Spin style="width: 800px" :spinning="spinning" indicator="magic-ring">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
@@ -84,10 +68,8 @@ const spinning = ref(true)
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" />
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="spin-dot" />
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="spin-line" />
-      <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="quarter-circle" />
-      <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="half-circle" />
-      <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="three-quarters-circle" />
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
+      <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
       <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="magic-ring" />
     </Space>
@@ -96,16 +78,14 @@ const spinning = ref(true)
       <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
       <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
       <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-line" />
-      <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="quarter-circle" />
-      <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="half-circle" />
-      <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="three-quarters-circle" />
+      <Spin class="u-spin" color="#fadb14" :spinning="spinning" :ring-circle-percent="50" indicator="ring-circle" />
       <Spin
         class="u-spin"
         color="#fadb14"
         :ring-circle-percent="50"
-        ring-circle-color="rgba(212, 136, 6, 0.6)"
+        ring-rail-color="rgba(212, 136, 6, 0.6)"
         :spinning="spinning"
-        indicator="ring-circle"
+        indicator="ring-rail"
       />
       <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
       <Spin class="u-spin" color="#fadb14" magic-ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
@@ -124,23 +104,17 @@ const spinning = ref(true)
         <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="spin-line" />
       </Space>
       <Space>
-        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="quarter-circle" />
-        <Spin class="u-size-spin" :spinning="spinning" indicator="quarter-circle" />
-        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="quarter-circle" />
-        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="half-circle" />
-        <Spin class="u-size-spin" :spinning="spinning" indicator="half-circle" />
-        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="half-circle" />
-        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="three-quarters-circle" />
-        <Spin class="u-size-spin" :spinning="spinning" indicator="three-quarters-circle" />
-        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="three-quarters-circle" />
-      </Space>
-      <Space>
         <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="ring-circle" />
         <Spin class="u-size-spin" :spinning="spinning" indicator="ring-circle" />
         <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="ring-circle" />
+        <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="ring-rail" />
+        <Spin class="u-size-spin" :spinning="spinning" indicator="ring-rail" />
+        <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="ring-rail" />
         <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
         <Spin class="u-size-spin" :spinning="spinning" indicator="dynamic-circle" />
         <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
+      </Space>
+      <Space>
         <Spin class="u-size-spin" :spinning="spinning" size="small" indicator="magic-ring" />
         <Spin class="u-size-spin" :spinning="spinning" indicator="magic-ring" />
         <Spin class="u-size-spin" :spinning="spinning" size="large" indicator="magic-ring" />
