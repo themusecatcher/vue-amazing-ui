@@ -34,7 +34,7 @@ watchPostEffect(() => {
     alert.value.style.height = alert.value.offsetHeight + 'px'
   }
 })
-function onClose(e: MouseEvent): void {
+function onClose(e: Event): void {
   closeAlert.value = true
   emit('close', e)
 }

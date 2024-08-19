@@ -1,5 +1,5 @@
 <script setup lang="ts">
-function onClose(e: MouseEvent) {
+function onClose(e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>
@@ -149,19 +149,21 @@ function onClose(e: MouseEvent) {
           </svg>
         </template>
       </Alert>
+      <Alert message="Success" type="success" show-icon>
+        <template #icon>
+          <Avatar size="small" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+        </template>
+      </Alert>
       <Alert
-        message="Success"
-        type="success"
-        icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
-        show-icon
-      ></Alert>
-      <Alert
-        message="Success Tips"
+        message="Info Tips"
         description="Detailed description and advices about successful copywriting."
-        type="success"
-        icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
+        type="info"
         show-icon
-      />
+      >
+        <template #icon>
+          <Avatar size="large" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg" />
+        </template>
+      </Alert>
     </Flex>
     <h2 class="mt30 mb10">自定义操作项</h2>
     <Flex vertical>

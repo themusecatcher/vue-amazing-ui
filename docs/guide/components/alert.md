@@ -13,7 +13,7 @@
 - 非浮层的静态展现形式，始终展现，不会自动消失，用户可以点击关闭
 
 <script setup lang="ts">
-function onClose (e: MouseEvent) {
+function onClose (e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>
@@ -64,7 +64,7 @@ function onClose (e: MouseEvent) {
 
 ```vue
 <script setup lang="ts">
-function onClose (e: MouseEvent) {
+function onClose (e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>
@@ -265,15 +265,20 @@ function onClose (e: MouseEvent) {
   <Alert
     message="Success"
     type="success"
-    icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
     show-icon>
+    <template #icon>
+      <Avatar size="small" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+    </template>
   </Alert>
   <Alert
-    message="Success Tips"
+    message="Info Tips"
     description="Detailed description and advices about successful copywriting."
-    type="success"
-    icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
-    show-icon />
+    type="info"
+    show-icon>
+    <template #icon>
+      <Avatar size="large" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg" />
+    </template>
+  </Alert>
 </Flex>
 
 ::: details Show Code
@@ -304,15 +309,20 @@ function onClose (e: MouseEvent) {
     <Alert
       message="Success"
       type="success"
-      icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
       show-icon>
+      <template #icon>
+        <Avatar size="small" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+      </template>
     </Alert>
     <Alert
-      message="Success Tips"
+      message="Info Tips"
       description="Detailed description and advices about successful copywriting."
-      type="success"
-      icon="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
-      show-icon />
+      type="info"
+      show-icon>
+      <template #icon>
+        <Avatar size="large" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg" />
+      </template>
+    </Alert>
   </Flex>
 </template>
 ```
@@ -420,4 +430,4 @@ actions | 自定义操作项 | slot | undefined
 
 名称 | 说明 | 类型
 -- | -- | --
-close | 关闭时触发的回调函数 | (e: MouseEvent) => void
+close | 关闭时触发的回调函数 | (e: Event) => void
