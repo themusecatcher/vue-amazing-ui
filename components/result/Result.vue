@@ -13,10 +13,7 @@ withDefaults(defineProps<Props>(), {
 const slots = useSlots()
 const showContent = computed(() => {
   const defaultSlots = slots.default?.()
-  if (defaultSlots) {
-    return Boolean(defaultSlots[0].children !== 'v-if' && defaultSlots?.length)
-  }
-  return false
+  return Boolean(defaultSlots && defaultSlots?.length)
 })
 </script>
 <template>

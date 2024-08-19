@@ -60,7 +60,7 @@ const loading = ref(true)
       <p>card content</p>
       <p>card content</p>
     </Card>
-    <h2 class="mt30 mb10">内部卡片</h2>
+    <h2 class="mt30 mb10">内部嵌套卡片</h2>
     <Card title="Card title" :width="360">
       <p style="font-size: 14px; color: rgba(0, 0, 0, 0.85); margin-bottom: 16px; font-weight: 500">Group title</p>
       <Card title="Inner card title">

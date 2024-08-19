@@ -40,10 +40,7 @@ const popMaxWidth = computed(() => {
 const slots = useSlots()
 const showDesc = computed(() => {
   const descriptionSlots = slots.description?.()
-  if (descriptionSlots) {
-    return Boolean(descriptionSlots[0].children !== 'v-if' && descriptionSlots?.length)
-  }
-  return props.description
+  return Boolean(descriptionSlots && descriptionSlots?.length) || props.description
 })
 const visible = ref(false)
 const top = ref(0) // 提示框top定位

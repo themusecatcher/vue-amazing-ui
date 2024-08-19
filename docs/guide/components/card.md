@@ -176,7 +176,7 @@ const loading = ref(true)
 
 :::
 
-## 内部卡片
+## 内部嵌套卡片
 
 <Card title="Card title" :width="360">
   <p style="font-size: 14px; color: rgba(0, 0, 0, 0.85); margin-bottom: 16px; font-weight: 500;">

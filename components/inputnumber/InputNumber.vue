@@ -5,7 +5,7 @@ defineOptions({
 import { ref, computed, watch, useSlots } from 'vue'
 import { add } from '../utils'
 interface Props {
-  width?: string | number // 输入框宽度，单位 px
+  width?: string | number // 数字输入框宽度，单位 px
   min?: number // 最小值
   max?: number // 最大值
   step?: number // 每次改变步数，可以为小数
@@ -42,10 +42,7 @@ const precision = computed(() => {
 const slots = useSlots()
 const showPrefix = computed(() => {
   const prefixSlots = slots.prefix?.()
-  if (prefixSlots) {
-    return Boolean(prefixSlots[0].children !== 'v-if' && prefixSlots?.length)
-  }
-  return props.prefix
+  return Boolean(prefixSlots && prefixSlots?.length) || props.prefix
 })
 const numValue = ref(props.formatter(props.value?.toFixed(precision.value)))
 watch(

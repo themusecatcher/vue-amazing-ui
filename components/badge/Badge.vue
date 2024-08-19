@@ -88,16 +88,14 @@ const slots = useSlots()
 const showContent = computed(() => {
   if (props.value !== undefined || props.dot || (!props.color && !props.status)) {
     const defaultSlots = slots.default?.()
-    if (defaultSlots) {
-      return Boolean(defaultSlots[0].children !== 'v-if' && defaultSlots?.length)
-    }
+    return Boolean(defaultSlots && defaultSlots?.length)
   }
   return false
 })
 const showValue = computed(() => {
   if (!props.color && !props.status) {
     const valueSlots = slots.value?.()
-    return Boolean(valueSlots?.length)
+    return Boolean(valueSlots && valueSlots?.length)
   }
   return false
 })

@@ -68,10 +68,7 @@ const slots = useSlots()
 const showIcon = computed(() => {
   if (!props.dynamic) {
     const iconSlots = slots.icon?.()
-    if (iconSlots) {
-      return Boolean(iconSlots[0].children !== 'v-if' && iconSlots?.length)
-    }
-    return props.icon
+    return Boolean(iconSlots && iconSlots?.length) || props.icon
   }
   return false
 })
@@ -159,7 +156,11 @@ function onKeyboard(e: KeyboardEvent) {
     :class="[
       `tag-${size}`,
       color && presetColor.includes(color) ? `tag-${color}` : '',
-      { 'tag-borderless': !bordered, 'has-color': color && !presetColor.includes(color), 'tag-hidden': hidden }
+      {
+        'tag-borderless': !bordered,
+        'tag-has-color': color && !presetColor.includes(color),
+        'tag-hidden': hidden
+      }
     ]"
     :style="`background-color: ${color && !presetColor.includes(color) ? color : ''};`"
   >
@@ -194,7 +195,7 @@ function onKeyboard(e: KeyboardEvent) {
         (tag.color || color) && presetColor.includes(tag.color || color) ? `tag-${tag.color || color}` : '',
         {
           'tag-borderless': tag.bordered !== undefined && !tag.bordered,
-          'has-color': (tag.color || color) && !presetColor.includes(tag.color || color)
+          'tag-has-color': (tag.color || color) && !presetColor.includes(tag.color || color)
         }
       ]"
       :style="`background-color: ${(tag.color || color) && !presetColor.includes(tag.color || color) ? tag.color || color : ''};`"
@@ -254,10 +255,10 @@ function onKeyboard(e: KeyboardEvent) {
 </template>
 <style lang="less" scoped>
 .m-tag {
+  display: inline-flex;
+  align-items: center;
   height: 24px;
   font-size: 14px;
-  line-height: 22px;
-  display: inline-block;
   color: rgba(0, 0, 0, 0.88);
   padding-inline: 7px;
   white-space: nowrap;
@@ -276,7 +277,6 @@ function onKeyboard(e: KeyboardEvent) {
     height: 100%;
     display: inline-flex;
     align-items: center;
-    vertical-align: top;
   }
   .u-plus {
     display: inline-flex;
@@ -303,7 +303,8 @@ function onKeyboard(e: KeyboardEvent) {
     cursor: pointer;
     .u-close {
       display: inline-block;
-      line-height: 1;
+      width: 1em;
+      height: 1em;
       fill: rgba(0, 0, 0, 0.45);
       transition: all 0.2s;
       &:hover {
@@ -520,7 +521,7 @@ function onKeyboard(e: KeyboardEvent) {
 .tag-borderless {
   border-color: transparent;
 }
-.has-color {
+.tag-has-color {
   color: #fff;
   border-color: transparent;
   .m-close .u-close {

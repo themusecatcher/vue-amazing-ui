@@ -73,14 +73,18 @@ function onLoadingOk() {
     </Dialog>
     <h2 class="mt30 mb10">自定义底部按钮</h2>
     <Button type="primary" @click="show4 = true">Open Dialog</Button>
-    <Dialog v-model:show="show4" title="Title">
+    <Dialog
+      v-model:show="show4"
+      title="Title"
+      cancel-text="Return"
+      :cancel-props="{ type: 'danger', ghost: true }"
+      ok-text="Submit"
+      :ok-props="{ type: 'primary', ghost: true, loading: loading }"
+      @ok="handleOk"
+    >
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
-      <template #footer>
-        <Button @click="handleCancel">Return</Button>
-        <Button type="primary" style="margin-left: 8px" :loading="loading" @click="handleOk">Submit</Button>
-      </template>
     </Dialog>
     <h2 class="mt30 mb10">隐藏底部按钮</h2>
     <Button type="primary" @click="show5 = true">Open Dialog</Button>

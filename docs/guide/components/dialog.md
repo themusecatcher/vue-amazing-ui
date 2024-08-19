@@ -154,14 +154,18 @@ function onOk () {
 ## 自定义底部按钮
 
 <Button type="primary" @click="show4 = true">Open Dialog</Button>
-<Dialog v-model:show="show4" title="Title">
+<Dialog
+  v-model:show="show4"
+  title="Title"
+  cancel-text="Return"
+  :cancel-props="{ type: 'danger', ghost: true }"
+  ok-text="Submit"
+  :ok-props="{ type: 'primary', ghost: true,loading: loading }"
+  @ok="handleOk"
+>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
-  <template #footer>
-    <Button @click="handleCancel">Return</Button>
-    <Button type="primary" style="margin-left: 8px;" :loading="loading" @click="handleOk">Submit</Button>
-  </template>
 </Dialog>
 
 ::: details Show Code
@@ -183,14 +187,18 @@ function handleOk () {
 </script>
 <template>
   <Button type="primary" @click="show = true">Open Dialog</Button>
-  <Dialog v-model:show="show" title="Title">
+  <Dialog
+    v-model:show="show4"
+    title="Title"
+    cancel-text="Return"
+    :cancel-props="{ type: 'danger', ghost: true }"
+    ok-text="Submit"
+    :ok-props="{ type: 'primary', ghost: true,loading: loading }"
+    @ok="handleOk"
+  >
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
-    <template #footer>
-      <Button @click="handleCancel">Return</Button>
-      <Button type="primary" style="margin-left: 8px;" :loading="loading" @click="handleOk">Submit</Button>
-    </template>
   </Dialog>
 </template>
 ```
@@ -377,19 +385,21 @@ p {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-title | 标题 | string &#124; slot | '提示'
+title | 标题 | string &#124; slot | undefined
 content | 内容 | string &#124; slot | undefined
-width | 宽度，单位 `px` | number | 540
-height | 高度，默认 `auto`，自适应内容高度 | number &#124; string | 'auto'
+width | 对话框宽度，单位 `px` | number | 540
+height | 对话框高度，默认 `auto`，自适应内容高度 | number &#124; string | 'auto'
 cancelText | 取消按钮文字 | string | '取消'
+cancelProps | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
 okText | 确定按钮文字 | string | '确定'
 okType | 确定按钮类型 | 'primary' &#124; 'danger' | 'primary'
+okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
+bodyStyle | 设置对话框 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 footer | 是否显示底部按钮 | boolean &#124; slot | true
 center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true
 top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100
 switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false
 loading | 确定按钮 `loading` | boolean | false
-bodyStyle | 对话框 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 show | 对话框是否可见 | boolean | false
 
 ## Events

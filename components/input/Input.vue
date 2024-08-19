@@ -4,7 +4,7 @@ defineOptions({
 })
 import { ref, computed, useSlots } from 'vue'
 interface Props {
-  width?: string | number // 输入框宽度
+  width?: string | number // 输入框宽度，单位 px
   addonBefore?: string // 设置前置标签 string | slot
   addonAfter?: string // 设置后置标签 string | slot
   allowClear?: boolean // 可以点击清除图标删除内容
@@ -48,31 +48,19 @@ const showCountNum = computed(() => {
 const slots = useSlots()
 const showPrefix = computed(() => {
   const prefixSlots = slots.prefix?.()
-  if (prefixSlots) {
-    return Boolean(prefixSlots[0].children !== 'v-if' && prefixSlots?.length)
-  }
-  return props.prefix
+  return Boolean(prefixSlots && prefixSlots?.length) || props.prefix
 })
 const showSuffix = computed(() => {
   const suffixSlots = slots.suffix?.()
-  if (suffixSlots) {
-    return Boolean(suffixSlots[0].children !== 'v-if' && suffixSlots?.length)
-  }
-  return props.suffix
+  return Boolean(suffixSlots && suffixSlots?.length) || props.suffix
 })
 const showBefore = computed(() => {
   const addonBeforeSlots = slots.addonBefore?.()
-  if (addonBeforeSlots) {
-    return Boolean(addonBeforeSlots[0].children !== 'v-if' && addonBeforeSlots?.length)
-  }
-  return props.addonBefore
+  return Boolean(addonBeforeSlots && addonBeforeSlots?.length) || props.addonBefore
 })
 const showAfter = computed(() => {
   const addonAfterSlots = slots.addonAfter?.()
-  if (addonAfterSlots) {
-    return Boolean(addonAfterSlots[0].children !== 'v-if' && addonAfterSlots?.length)
-  }
-  return props.addonAfter
+  return Boolean(addonAfterSlots && addonAfterSlots?.length) || props.addonAfter
 })
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers

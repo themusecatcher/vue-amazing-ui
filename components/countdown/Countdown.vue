@@ -26,17 +26,11 @@ const props = withDefaults(defineProps<Props>(), {
 const slots = useSlots()
 const showPrefix = computed(() => {
   const prefixSlots = slots.prefix?.()
-  if (prefixSlots) {
-    return Boolean(prefixSlots[0].children !== 'v-if' && prefixSlots?.length)
-  }
-  return props.prefix
+  return Boolean(prefixSlots && prefixSlots?.length) || props.prefix
 })
 const showSuffix = computed(() => {
   const suffixSlots = slots.suffix?.()
-  if (suffixSlots) {
-    return Boolean(suffixSlots[0].children !== 'v-if' && suffixSlots?.length)
-  }
-  return props.suffix
+  return Boolean(suffixSlots && suffixSlots?.length) || props.suffix
 })
 const showType = computed(() => {
   return {
