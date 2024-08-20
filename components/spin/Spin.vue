@@ -86,7 +86,6 @@ const circlePath = computed(() => {
               stroke-linecap="round"
               class="path"
               :style="`stroke-dasharray: ${(spinCirclePercent / 100) * circlePerimeter}px, ${circlePerimeter}px;`"
-              opacity="1"
               fill-opacity="0"
             ></path>
           </svg>
@@ -106,20 +105,13 @@ const circlePath = computed(() => {
               stroke-linecap="round"
               class="path"
               :style="`stroke-dasharray: ${(spinCirclePercent / 100) * circlePerimeter}px, ${circlePerimeter}px;`"
-              opacity="1"
               fill-opacity="0"
             ></path>
           </svg>
         </div>
         <div v-if="indicator === 'dynamic-circle'" class="m-dynamic-circle">
-          <svg class="circle" viewBox="0 0 100 100">
-            <path
-              d="M 50,50 m 0,-44 a 44,44 0 1 1 0,88 a 44,44 0 1 1 0,-88"
-              stroke-linecap="round"
-              class="path"
-              opacity="1"
-              fill-opacity="0"
-            ></path>
+          <svg class="circle" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
           </svg>
         </div>
         <div v-if="indicator === 'magic-ring'" class="m-magic-ring">
@@ -204,13 +196,8 @@ const circlePath = computed(() => {
         }
       }
       .spin-wrap-rotate {
-        animation: spin-rotate 2.4s ease-in-out;
-        -webkit-animation: spin-rotate 2.4s ease-in-out;
-        @keyframes spin-rotate {
-          100% {
-            transform: rotate(360deg);
-          }
-        }
+        animation: spin-circle 2.4s ease-in-out;
+        -webkit-animation: spin-circle 2.4s ease-in-out;
       }
       .spin-wrap-box {
         text-align: center;
@@ -437,27 +424,29 @@ const circlePath = computed(() => {
       }
       .m-dynamic-circle {
         display: inline-block;
-        overflow: hidden;
         animation: spin-circle 2s linear infinite;
         -webkit-animation: spin-circle 2s linear infinite;
         .circle {
           .path {
-            stroke-width: 12;
-            stroke-dasharray: 180, 300;
+            stroke-width: 5;
+            stroke-dasharray: 90, 150;
+            stroke-dashoffset: 0;
+            stroke: var(--color);
+            stroke-linecap: round;
             animation: loading-dash 1.5s ease-in-out infinite;
             -webkit-animation: loading-dash 1.5s ease-in-out infinite;
             @keyframes loading-dash {
               0% {
-                stroke-dasharray: 2, 400;
+                stroke-dasharray: 1, 200;
                 stroke-dashoffset: 0;
               }
               50% {
-                stroke-dasharray: 180, 300;
-                stroke-dashoffset: -80px;
+                stroke-dasharray: 90, 150;
+                stroke-dashoffset: -40px;
               }
               100% {
-                stroke-dasharray: 180, 300;
-                stroke-dashoffset: -272px;
+                stroke-dasharray: 90, 150;
+                stroke-dashoffset: -124px;
               }
             }
           }
@@ -558,10 +547,13 @@ const circlePath = computed(() => {
       }
     }
     .m-ring-circle,
-    .m-ring-rail,
-    .m-dynamic-circle {
+    .m-ring-rail {
       width: 24px;
       height: 24px;
+    }
+    .m-dynamic-circle {
+      width: 26px;
+      height: 26px;
     }
     .m-magic-ring {
       width: 24px;
@@ -615,10 +607,13 @@ const circlePath = computed(() => {
       }
     }
     .m-ring-circle,
-    .m-ring-rail,
-    .m-dynamic-circle {
+    .m-ring-rail {
       width: 36px;
       height: 36px;
+    }
+    .m-dynamic-circle {
+      width: 38px;
+      height: 38px;
     }
     .m-magic-ring {
       width: 36px;
@@ -672,10 +667,13 @@ const circlePath = computed(() => {
       }
     }
     .m-ring-circle,
-    .m-ring-rail,
-    .m-dynamic-circle {
+    .m-ring-rail {
       width: 48px;
       height: 48px;
+    }
+    .m-dynamic-circle {
+      width: 50px;
+      height: 50px;
     }
     .m-magic-ring {
       width: 48px;
