@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, useSlots, computed } from 'vue'
+import type { Slot } from 'vue'
 interface Props {
-  type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 按钮类型
-  size?: 'small' | 'middle' | 'large' // 按钮尺寸
+  type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
+  shape?: 'default' | 'circle' | 'round' // 设置按钮形状
+  icon?: Slot // 设置按钮图标
+  size?: 'small' | 'middle' | 'large' // 设置按钮尺寸
   ghost?: boolean // 按钮背景是否透明，仅当 type: 'primary' | 'danger' 时生效
   rippleColor?: string // 点击时的波纹颜色，一般不需要设置，默认会根据 type 自动匹配，主要用于自定义样式时且 type: 'default'
   href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
@@ -15,6 +18,8 @@ interface Props {
 }
 withDefaults(defineProps<Props>(), {
   type: 'default',
+  shape: 'default',
+  icon: undefined,
   size: 'middle',
   ghost: false,
   rippleColor: undefined,
@@ -37,6 +42,18 @@ const presetRippleColors = {
 }
 const wave = ref(false)
 const emit = defineEmits(['click'])
+const slots = useSlots()
+const showIcon = computed(() => {
+  const iconSlots = slots.icon?.()
+  return Boolean(iconSlots && iconSlots?.length)
+})
+const showDefault = computed(() => {
+  const defaultSlots = slots.default?.()
+  return Boolean(defaultSlots && defaultSlots?.length)
+})
+const showIconOnly = computed(() => {
+  return showIcon && !showDefault.value
+})
 function onClick(e: Event) {
   if (wave.value) {
     wave.value = false
@@ -63,6 +80,9 @@ function onWaveEnd() {
       `btn-${type} btn-${size}`,
       {
         [`loading-${size}`]: !href && loading,
+        'btn-icon-only': showIconOnly,
+        'btn-circle': shape === 'circle',
+        'btn-round': shape === 'round',
         'btn-loading': !href && loading,
         'btn-ghost': ghost,
         'btn-block': block,
@@ -77,18 +97,25 @@ function onWaveEnd() {
     @keydown.enter.prevent="onKeyboard"
     v-bind="$attrs"
   >
-    <div v-if="!href && loadingType === 'static'" class="m-static-circle">
-      <span class="spin-circle"></span>
-    </div>
-    <div v-if="!href && loadingType === 'dynamic'" class="m-dynamic-circle">
-      <svg class="circular" viewBox="0 0 50 50" fill="currentColor">
-        <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
-      </svg>
-    </div>
-    <span class="u-text">
+    <Transition :name="['small', 'middle'].includes(size) ? 'loading-small-middle' : 'loading-large'">
+      <div v-if="!href && loadingType === 'static' && loading" class="m-static-circle">
+        <span class="spin-circle"></span>
+      </div>
+    </Transition>
+    <Transition :name="['small', 'middle'].includes(size) ? 'loading-small-middle' : 'loading-large'">
+      <div v-if="!href && loadingType === 'dynamic' && loading" class="m-dynamic-circle">
+        <svg class="circular" viewBox="0 0 50 50" fill="currentColor">
+          <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
+        </svg>
+      </div>
+    </Transition>
+    <span class="btn-icon" v-if="showIcon && (!loading || !showIconOnly)">
+      <slot name="icon"></slot>
+    </span>
+    <span class="btn-content" v-if="showDefault">
       <slot></slot>
     </span>
-    <div v-if="!disabled" class="m-button-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
+    <div v-if="!disabled" class="button-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
   </a>
 </template>
 <style lang="less" scoped>
@@ -105,23 +132,18 @@ function onWaveEnd() {
   white-space: nowrap;
   text-align: center;
   background-color: transparent;
-  border-width: 1px;
-  border-style: solid;
-  border-color: transparent;
+  border: 1px solid transparent;
   outline: none;
   user-select: none;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  .m-static-circle {
+  .m-static-circle,
+  .m-dynamic-circle {
     display: inline-flex;
     justify-content: start;
-    opacity: 0;
-    width: 0;
-    transition:
-      padding-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-      width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-      opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  .m-static-circle {
     .spin-circle {
       width: 14px;
       height: 14px;
@@ -140,28 +162,20 @@ function onWaveEnd() {
     }
   }
   .m-dynamic-circle {
-    display: inline-flex;
-    justify-content: start;
-    opacity: 0;
-    width: 0;
-    transition:
-      padding-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-      width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-      opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     .circular {
       width: 14px;
       height: 14px;
-      animation: loading-rotate 2s linear infinite;
-      -webkit-animation: loading-rotate 2s linear infinite;
-      @keyframes loading-rotate {
+      animation: spin-circle 2s linear infinite;
+      -webkit-animation: spin-circle 2s linear infinite;
+      @keyframes spin-circle {
         100% {
           transform: rotate(360deg);
         }
       }
       .path {
+        stroke-width: 5;
         stroke-dasharray: 90, 150;
         stroke-dashoffset: 0;
-        stroke-width: 5;
         stroke-linecap: round;
         animation: loading-dash 1.5s ease-in-out infinite;
         -webkit-animation: loading-dash 1.5s ease-in-out infinite;
@@ -176,17 +190,18 @@ function onWaveEnd() {
           }
           100% {
             stroke-dasharray: 90, 150;
-            stroke-dashoffset: -120px;
+            stroke-dashoffset: -124px;
           }
         }
       }
     }
   }
-  .u-text {
+  .btn-icon,
+  .btn-content {
     display: inline-flex;
     align-items: center;
   }
-  .m-button-wave {
+  .button-wave {
     position: absolute;
     pointer-events: none;
     top: 0;
@@ -217,6 +232,9 @@ function onWaveEnd() {
         opacity: 0;
       }
     }
+  }
+  & > .btn-icon + .btn-content {
+    margin-left: 8px;
   }
 }
 .btn-default {
@@ -315,7 +333,7 @@ function onWaveEnd() {
 .btn-small {
   font-size: 14px;
   height: 24px;
-  padding: 0px 7px;
+  padding: 0 7px;
   border-radius: 4px;
 }
 .btn-middle {
@@ -323,6 +341,15 @@ function onWaveEnd() {
   height: 32px;
   padding: 4px 15px;
   border-radius: 6px;
+}
+.btn-small,
+.btn-middle {
+  .m-static-circle,
+  .m-dynamic-circle {
+    margin-right: 8px;
+    width: 14px;
+    opacity: 1;
+  }
 }
 .btn-large {
   font-size: 16px;
@@ -335,22 +362,86 @@ function onWaveEnd() {
     height: 16px;
   }
 }
-.loading-small,
-.loading-middle {
+.btn-large {
   .m-static-circle,
   .m-dynamic-circle {
-    padding-right: 8px;
-    width: 22px;
+    margin-right: 8px;
+    width: 16px;
     opacity: 1;
   }
 }
-.loading-large {
-  .m-static-circle,
-  .m-dynamic-circle {
-    padding-right: 8px;
-    width: 24px;
-    opacity: 1;
+// .loading-small,
+// .loading-middle {
+//   .m-static-circle,
+//   .m-dynamic-circle {
+//     margin-right: 8px;
+//     width: 14px;
+//     opacity: 1;
+//   }
+// }
+// .loading-large {
+//   .m-static-circle,
+//   .m-dynamic-circle {
+//     margin-right: 8px;
+//     width: 16px;
+//     opacity: 1;
+//   }
+// }
+.btn-icon-only {
+  width: 32px;
+  padding-left: 0;
+  padding-right: 0;
+  .btn-icon {
+    transform: scale(1.143);
   }
+}
+.btn-small.btn-icon-only {
+  width: 24px;
+  padding-left: 0;
+  padding-right: 0;
+}
+.btn-large.btn-icon-only {
+  width: 40px;
+  padding-left: 0;
+  padding-right: 0;
+}
+.btn-circle {
+  min-width: 32px;
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 50%;
+}
+.btn-small.btn-circle {
+  min-width: 24px;
+  padding-left: 0;
+  padding-left: 0;
+  border-radius: 50%;
+}
+.btn-large.btn-circle {
+  min-width: 40px;
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 50%;
+}
+.btn-round {
+  border-radius: 32px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.btn-small.btn-round {
+  border-radius: 24px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.btn-large.btn-round {
+  border-radius: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.btn-icon-only.btn-round,
+.btn-small.btn-icon-only.btn-round,
+.btn-large.btn-icon-only.btn-round {
+  width: auto;
 }
 .btn-loading {
   opacity: 0.65;
@@ -410,5 +501,35 @@ function onWaveEnd() {
   .m-dynamic-circle .circular .path {
     stroke: rgba(0, 0, 0, 0.25);
   }
+}
+
+.loading-small-middle-enter-active,
+.loading-small-middle-leave-active {
+  transition:
+    margin-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+    width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+    opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.loading-small-middle-enter-from,
+.loading-small-middle-leave-to {
+  margin-right: 0;
+  opacity: 0;
+  width: 0;
+}
+.loading-large-enter-active,
+.loading-large-leave-active {
+  margin-right: 8px;
+  width: 16px;
+  opacity: 1;
+  transition:
+    margin-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+    width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+    opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.loading-large-enter-from,
+.loading-large-leave-to {
+  margin-right: 0;
+  opacity: 0;
+  width: 0;
 }
 </style>

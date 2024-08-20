@@ -420,8 +420,8 @@ function onClick(e: Event) {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-type | 按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
-size | 按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+type | 设置按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
+size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 ghost | 按钮背景是否透明，仅当 `type: 'primary'` &#124; `'danger'` 时生效 | boolean | false
 rippleColor | 点击时的波纹颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | undefined
 href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | undefined
