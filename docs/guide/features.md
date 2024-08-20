@@ -17,7 +17,7 @@
 - 按需引入并注册部分组件
 - **无需任何安装引入注册，使用单文件组件 `SFC`，亦可一步到位**
 
-  *使用单文件组件 `SFC` 时，需设置如下所示全局样式：*
+  *使用单文件组件 `SFC` 时，请按需引入如下所示组件库全局样式：*
 
   ::: details Show Global Styles
 
@@ -32,7 +32,7 @@
   }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
-      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   }
   input,
   textarea {
