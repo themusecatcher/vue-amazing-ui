@@ -83,7 +83,7 @@ function onWaveEnd() {
         'btn-icon-only': showIconOnly,
         'btn-circle': shape === 'circle',
         'btn-round': shape === 'round',
-        'btn-loading': !href && loading,
+        'btn-loading-blur': !href && loading,
         'btn-ghost': ghost,
         'btn-block': block,
         'btn-disabled': disabled
@@ -95,24 +95,28 @@ function onWaveEnd() {
     :target="href ? target : '_self'"
     @click="onClick"
     @keydown.enter.prevent="onKeyboard"
-    v-bind="$attrs"
   >
-    <Transition :name="['small', 'middle'].includes(size) ? 'loading-small-middle' : 'loading-large'">
-      <div v-if="!href && loadingType === 'static' && loading" class="m-static-circle">
-        <span class="spin-circle"></span>
+    <div v-if="loading || !showIcon" class="btn-loading">
+      <div v-if="!href && loadingType === 'static'" class="m-ring-circle">
+        <svg class="circle" viewBox="0 0 100 100">
+          <path
+            d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+            stroke-linecap="round"
+            class="path"
+            fill-opacity="0"
+          ></path>
+        </svg>
       </div>
-    </Transition>
-    <Transition :name="['small', 'middle'].includes(size) ? 'loading-small-middle' : 'loading-large'">
-      <div v-if="!href && loadingType === 'dynamic' && loading" class="m-dynamic-circle">
-        <svg class="circular" viewBox="0 0 50 50" fill="currentColor">
+      <div v-if="!href && loadingType === 'dynamic'" class="m-dynamic-circle">
+        <svg class="circle" viewBox="0 0 50 50" fill="currentColor">
           <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
         </svg>
       </div>
-    </Transition>
-    <span class="btn-icon" v-if="showIcon && (!loading || !showIconOnly)">
+    </div>
+    <span v-else class="btn-icon">
       <slot name="icon"></slot>
     </span>
-    <span class="btn-content" v-if="showDefault">
+    <span v-if="showDefault" class="btn-content">
       <slot></slot>
     </span>
     <div v-if="!disabled" class="button-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
@@ -138,61 +142,67 @@ function onWaveEnd() {
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  .m-static-circle,
-  .m-dynamic-circle {
+  .btn-loading {
     display: inline-flex;
-    justify-content: start;
-  }
-  .m-static-circle {
-    .spin-circle {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border-width: 1px;
-      border-style: solid;
-      border-color: transparent;
-      border-top-color: inherit;
-      animation: loading-circle 1s linear infinite;
-      -webkit-animation: loading-circle 1s linear infinite;
+    align-items: center;
+    overflow: hidden;
+    opacity: 0;
+    width: 0;
+    transition:
+      margin-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+      width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+      opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    .m-ring-circle,
+    .m-dynamic-circle {
+      display: inline-flex;
+      justify-content: start;
+      .circle {
+        width: 14px;
+        height: 14px;
+      }
     }
-    @keyframes loading-circle {
+    .m-ring-circle {
+      .circle {
+        animation: spin-circle 0.8s linear infinite;
+        -webkit-animation: spin-circle 0.8s linear infinite;
+        .path {
+          stroke-width: 10;
+          stroke-dashoffset: 0;
+          stroke-dasharray: 84.82px, 282.74px;
+        }
+      }
+    }
+    .m-dynamic-circle {
+      .circle {
+        animation: spin-circle 2s linear infinite;
+        -webkit-animation: spin-circle 2s linear infinite;
+        .path {
+          stroke-width: 5;
+          stroke-dasharray: 90, 150;
+          stroke-dashoffset: 0;
+          stroke-linecap: round;
+          animation: loading-dash 1.5s ease-in-out infinite;
+          -webkit-animation: loading-dash 1.5s ease-in-out infinite;
+          @keyframes loading-dash {
+            0% {
+              stroke-dasharray: 1, 200;
+              stroke-dashoffset: 0;
+            }
+            50% {
+              stroke-dasharray: 90, 150;
+              stroke-dashoffset: -40px;
+            }
+            100% {
+              stroke-dasharray: 90, 150;
+              stroke-dashoffset: -124px;
+            }
+          }
+        }
+      }
+    }
+    @keyframes spin-circle {
       100% {
         transform: rotate(360deg);
-      }
-    }
-  }
-  .m-dynamic-circle {
-    .circular {
-      width: 14px;
-      height: 14px;
-      animation: spin-circle 2s linear infinite;
-      -webkit-animation: spin-circle 2s linear infinite;
-      @keyframes spin-circle {
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      .path {
-        stroke-width: 5;
-        stroke-dasharray: 90, 150;
-        stroke-dashoffset: 0;
-        stroke-linecap: round;
-        animation: loading-dash 1.5s ease-in-out infinite;
-        -webkit-animation: loading-dash 1.5s ease-in-out infinite;
-        @keyframes loading-dash {
-          0% {
-            stroke-dasharray: 1, 200;
-            stroke-dashoffset: 0;
-          }
-          50% {
-            stroke-dasharray: 90, 150;
-            stroke-dashoffset: -40px;
-          }
-          100% {
-            stroke-dasharray: 90, 150;
-            stroke-dashoffset: -124px;
-          }
-        }
       }
     }
   }
@@ -248,11 +258,18 @@ function onWaveEnd() {
     color: #0958d9;
     border-color: #0958d9;
   }
-  .m-static-circle .spin-circle {
-    border-top-color: var(--loading-color);
+  .btn-loading {
+    .m-ring-circle,
+    .m-dynamic-circle {
+      .circle .path {
+        stroke: var(--loading-color);
+      }
+    }
   }
-  .m-dynamic-circle .circular .path {
-    stroke: var(--loading-color);
+  .btn-icon {
+    :deep(svg) {
+      fill: var(--loading-color);
+    }
   }
 }
 .btn-reverse {
@@ -281,8 +298,18 @@ function onWaveEnd() {
     background-color: #0958d9;
     border-color: #0958d9;
   }
-  .m-dynamic-circle .circular .path {
-    stroke: #fff;
+  .btn-loading {
+    .m-ring-circle,
+    .m-dynamic-circle {
+      .circle .path {
+        stroke: #fff;
+      }
+    }
+  }
+  .btn-icon {
+    :deep(svg) {
+      fill: #fff;
+    }
   }
 }
 .btn-danger {
@@ -299,8 +326,18 @@ function onWaveEnd() {
     background-color: #d9363e;
     border-color: #d9363e;
   }
-  .m-dynamic-circle .circular .path {
-    stroke: #fff;
+  .btn-loading {
+    .m-ring-circle,
+    .m-dynamic-circle {
+      .circle .path {
+        stroke: #fff;
+      }
+    }
+  }
+  .btn-icon {
+    :deep(svg) {
+      fill: #fff;
+    }
   }
 }
 .btn-dashed {
@@ -314,8 +351,18 @@ function onWaveEnd() {
   &:active {
     background-color: rgba(0, 0, 0, 0.15);
   }
-  .m-dynamic-circle .circular .path {
-    stroke: rgba(0, 0, 0, 0.88);
+  .btn-loading {
+    .m-ring-circle,
+    .m-dynamic-circle {
+      .circle .path {
+        stroke: rgba(0, 0, 0, 0.88);
+      }
+    }
+  }
+  .btn-icon {
+    :deep(svg) {
+      fill: rgba(0, 0, 0, 0.88);
+    }
   }
 }
 .btn-link {
@@ -326,8 +373,18 @@ function onWaveEnd() {
   &:active {
     color: #0958d9;
   }
-  .m-dynamic-circle .circular .path {
-    stroke: @primary;
+  .btn-loading {
+    .m-ring-circle,
+    .m-dynamic-circle {
+      .circle .path {
+        stroke: @primary;
+      }
+    }
+  }
+  .btn-icon {
+    :deep(svg) {
+      fill: @primary;
+    }
   }
 }
 .btn-small {
@@ -342,57 +399,46 @@ function onWaveEnd() {
   padding: 4px 15px;
   border-radius: 6px;
 }
-.btn-small,
-.btn-middle {
-  .m-static-circle,
-  .m-dynamic-circle {
-    margin-right: 8px;
-    width: 14px;
-    opacity: 1;
-  }
-}
 .btn-large {
   font-size: 16px;
   height: 40px;
   padding: 6.428571428571429px 15px;
   border-radius: 8px;
-  .m-static-circle .spin-circle,
-  .m-dynamic-circle .circular {
-    width: 16px;
-    height: 16px;
+  .btn-loading {
+    .m-ring-circle,
+    .m-dynamic-circle {
+      .circle {
+        width: 16px;
+        height: 16px;
+      }
+    }
   }
 }
-.btn-large {
-  .m-static-circle,
-  .m-dynamic-circle {
+.loading-small,
+.loading-middle {
+  .btn-loading {
+    margin-right: 8px;
+    width: 14px;
+    opacity: 1;
+  }
+}
+.loading-large {
+  .btn-loading {
     margin-right: 8px;
     width: 16px;
     opacity: 1;
   }
 }
-// .loading-small,
-// .loading-middle {
-//   .m-static-circle,
-//   .m-dynamic-circle {
-//     margin-right: 8px;
-//     width: 14px;
-//     opacity: 1;
-//   }
-// }
-// .loading-large {
-//   .m-static-circle,
-//   .m-dynamic-circle {
-//     margin-right: 8px;
-//     width: 16px;
-//     opacity: 1;
-//   }
-// }
 .btn-icon-only {
   width: 32px;
   padding-left: 0;
   padding-right: 0;
+  .btn-loading,
   .btn-icon {
     transform: scale(1.143);
+  }
+  .btn-loading {
+    margin-right: 0;
   }
 }
 .btn-small.btn-icon-only {
@@ -443,7 +489,7 @@ function onWaveEnd() {
 .btn-large.btn-icon-only.btn-round {
   width: auto;
 }
-.btn-loading {
+.btn-loading-blur {
   opacity: 0.65;
   pointer-events: none;
 }
@@ -459,8 +505,18 @@ function onWaveEnd() {
     color: #0958d9;
     border-color: #0958d9;
   }
-  .m-dynamic-circle .circular .path {
-    stroke: @primary;
+  .btn-loading {
+    .m-ring-circle,
+    .m-dynamic-circle {
+      .circle .path {
+        stroke: @primary;
+      }
+    }
+  }
+  .btn-icon {
+    :deep(svg) {
+      fill: @primary;
+    }
   }
 }
 .btn-danger.btn-ghost:not(.btn-disabled) {
@@ -475,8 +531,18 @@ function onWaveEnd() {
     color: #d9363e;
     border-color: #d9363e;
   }
-  .m-dynamic-circle .circular .path {
-    stroke: @danger;
+  .btn-loading {
+    .m-ring-circle,
+    .m-dynamic-circle {
+      .circle .path {
+        stroke: @danger;
+      }
+    }
+  }
+  .btn-icon {
+    :deep(svg) {
+      fill: @danger;
+    }
   }
 }
 .btn-block {
@@ -498,38 +564,18 @@ function onWaveEnd() {
     background-color: transparent;
     border: none;
   }
-  .m-dynamic-circle .circular .path {
-    stroke: rgba(0, 0, 0, 0.25);
+  .btn-loading {
+    .m-ring-circle,
+    .m-dynamic-circle {
+      .circle .path {
+        stroke: rgba(0, 0, 0, 0.25);
+      }
+    }
   }
-}
-
-.loading-small-middle-enter-active,
-.loading-small-middle-leave-active {
-  transition:
-    margin-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-    width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-    opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-}
-.loading-small-middle-enter-from,
-.loading-small-middle-leave-to {
-  margin-right: 0;
-  opacity: 0;
-  width: 0;
-}
-.loading-large-enter-active,
-.loading-large-leave-active {
-  margin-right: 8px;
-  width: 16px;
-  opacity: 1;
-  transition:
-    margin-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-    width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-    opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-}
-.loading-large-enter-from,
-.loading-large-leave-to {
-  margin-right: 0;
-  opacity: 0;
-  width: 0;
+  .btn-icon {
+    :deep(svg) {
+      fill: rgba(0, 0, 0, 0.25);
+    }
+  }
 }
 </style>

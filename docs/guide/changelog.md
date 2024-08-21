@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.5.4 <Tag color="volcano" size="small">2024-08-21</Tag>
+
+- 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增 `shape` `icon` 属性
+
 ## 1.5.3 <Tag color="volcano" size="small">2024-08-19</Tag>
 
 - 优化并更新 [面包屑 Breadcrumb](https://themusecatcher.github.io/vue-amazing-ui/guide/components/breadcrumb.html) 组件，新增 `breadcrumbClass` `breadcrumbStyle` `separatorStyle` 属性
