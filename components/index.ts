@@ -14,7 +14,8 @@ import {
   useScrollDirection,
   useFps,
   useMediaQuery,
-  useResizeObserver
+  useResizeObserver,
+  useSlotsExist
 } from './utils'
 import type { App } from 'vue'
 import Alert from './alert'
@@ -43,6 +44,7 @@ import { Row, Col } from './grid'
 import Image from './image'
 import Input from './input'
 import InputNumber from './inputnumber'
+import InputSearch from './inputsearch'
 import { Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter } from './layout'
 import { List, ListItem } from './list'
 import LoadingBar from './loadingbar'
@@ -112,6 +114,7 @@ const components = [
   Image,
   Input,
   InputNumber,
+  InputSearch,
   Layout,
   LayoutHeader,
   LayoutSider,
@@ -185,7 +188,8 @@ export {
   useScrollDirection,
   useFps,
   useMediaQuery,
-  useResizeObserver
+  useResizeObserver,
+  useSlotsExist
 }
 export {
   Alert,
@@ -216,6 +220,7 @@ export {
   Image,
   Input,
   InputNumber,
+  InputSearch,
   Layout,
   LayoutHeader,
   LayoutSider,

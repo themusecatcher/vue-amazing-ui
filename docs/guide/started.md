@@ -74,7 +74,8 @@ import {
   useScrollDirection,
   useFps,
   useMediaQuery,
-  useResizeObserver
+  useResizeObserver,
+  useSlotsExist
 } from 'vue-amazing-ui'
 </script>
 ```

@@ -171,11 +171,8 @@ watchEffect(() => {
 
 ```vue
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 const value = ref(3)
-watchEffect(() => {
-  console.log('value:', value.value)
-})
 </script>
 <template>
   <InputNumber v-model:value="value" disabled />

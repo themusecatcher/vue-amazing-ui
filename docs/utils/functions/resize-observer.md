@@ -11,9 +11,9 @@
 /**
  * 组合式函数
  * 使用 ResizeObserver 观察 DOM 元素尺寸变化
- * 
- * 该函数提供了一种方便的方式来观察一个或多个元素的尺寸变化，并在变化时执行指定的回调函数。
- * 
+ *
+ * 该函数提供了一种方便的方式来观察一个或多个元素的尺寸变化，并在变化时执行指定的回调函数
+ *
  * @param target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
  * @param callback 当元素尺寸变化时调用的回调函数
  * @param options ResizeObserver 选项，用于定制观察行为
@@ -21,7 +21,11 @@
  */
 import { ref, toValue, computed, watch, onBeforeUnmount } from 'vue'
 import type { Ref } from 'vue'
-export function useResizeObserver(target: Ref | Ref[] | HTMLElement | HTMLElement[], callback: ResizeObserverCallback, options = {} ) {
+export function useResizeObserver(
+  target: Ref | Ref[] | HTMLElement | HTMLElement[],
+  callback: ResizeObserverCallback,
+  options: object = {}
+) {
   let observer: ResizeObserver | undefined
   const stopObservation = ref(false)
   const targets = computed(() => {
@@ -291,8 +295,8 @@ useResizeObserver(el, (entries, observer) => {
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-target | 要观察的目标，可以是 `Ref` 对象、`Ref` 数组、`HTMLElement` 或 `HTMLElement` 数组 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | - | true
-callback | 当元素尺寸变化时调用的回调函数 | ResizeObserverCallback | - | true
-options | `ResizeObserver` 选项，用于定制观察行为，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver/observe) | object | {} | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+target | 要观察的目标，可以是 `Ref` 对象、`Ref` 数组、`HTMLElement` 或 `HTMLElement` 数组 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined
+callback | 当元素尺寸变化时调用的回调函数 | ResizeObserverCallback | undefined
+options | `ResizeObserver` 选项，用于定制观察行为，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver/observe) | object | {}
