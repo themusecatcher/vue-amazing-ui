@@ -3,9 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-## 1.5.4 <Tag color="volcano" size="small">2024-08-21</Tag>
+## 1.5.4 <Tag color="volcano" size="small">2024-08-22</Tag>
 
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增 `shape` `icon` 属性
+- 新增工具函数 [监听插槽存在 useSlotsExist](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/slots-exist.html)，用于监听 Vue 组件中插槽是否存在
 
 ## 1.5.3 <Tag color="volcano" size="small">2024-08-19</Tag>
 

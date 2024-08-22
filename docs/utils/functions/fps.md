@@ -11,11 +11,10 @@
 /**
  * 组合式函数
  * 实时监测浏览器刷新率FPS
- * 
- * 该函数提供了一个用于监测帧率的钩子。它通过计算每秒渲染的帧数（FPS）来评估动画或渲染性能。
- * FPS值可以帮助开发者识别性能瓶颈，以优化应用的性能。
- * 
- * @returns {Object} 返回一个包含FPS值的对象。
+ *
+ * FPS值可以帮助开发者识别性能瓶颈，以优化应用的性能
+ *
+ * @returns {Object} 返回一个包含 FPS 值的 ref 对象
  */
 import { ref } from 'vue'
 export function useFps() {
@@ -23,9 +22,10 @@ export function useFps() {
   const frameCount = ref<number>(0)
   let lastTime = performance.now()
   const every = 10
-  function calculateFrameRate (currentTime: number) {
+  const calculateFrameRate = (currentTime: number) => {
     frameCount.value++
-    if (frameCount.value >= every) { // 每 every 帧进行一次FPS计算
+    if (frameCount.value >= every) {
+      // 每 every 帧进行一次 FPS 计算
       const timeDiff = currentTime - lastTime
       fps.value = Math.round(1000 / (timeDiff / every))
       lastTime = currentTime
@@ -34,7 +34,7 @@ export function useFps() {
     requestAnimationFrame(calculateFrameRate)
   }
   requestAnimationFrame(calculateFrameRate)
-  // 返回帧率状态    
+  // 返回帧率状态
   return { fps }
 }
 ```

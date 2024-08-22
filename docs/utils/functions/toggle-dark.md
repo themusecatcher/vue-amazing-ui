@@ -11,7 +11,7 @@
   在 <html> 根元素上动态切换 dark 模式，在根元素添加 dark 类值，同时样式添加 color-scheme: dark，具体样式需自行添加
   // dark 主题样式参考如下：
   html {
-    transition: filter 0.3s ease-in-out;
+    transition: filter .3s ease-in-out;
   }
   · invert(): 反转输入图像，1表示完全反转
   · hue-rotate(): 在输入图像上应用色相旋转

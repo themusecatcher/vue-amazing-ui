@@ -181,6 +181,12 @@ export const routes = [
         component: () => import('@/views/InputNumber.vue')
       },
       {
+        path: '/inputsearch',
+        name: 'InputSearch',
+        meta: { title: '搜索框' },
+        component: () => import('@/views/InputSearch.vue')
+      },
+      {
         path: '/layout',
         name: 'Layout',
         meta: { title: '布局' },

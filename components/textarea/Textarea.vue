@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: '',
   valueModifiers: () => ({})
 })
-const areaWidth = computed(() => {
+const textareaWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
   }
@@ -51,6 +51,9 @@ const autoSizeProperty = computed(() => {
     }
     return {}
   }
+})
+const showClear = computed(() => {
+  return !props.disabled && props.allowClear && props.value
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
@@ -108,7 +111,7 @@ function onClear() {
   <div
     class="m-textarea"
     :class="{ 'show-count': showCount }"
-    :style="`width: ${areaWidth};`"
+    :style="`width: ${textareaWidth};`"
     :data-count="showCountNum"
   >
     <textarea
@@ -125,9 +128,9 @@ function onClear() {
       @keydown.enter="onKeyboard"
       v-bind="$attrs"
     />
-    <span class="m-clear" v-if="!disabled && allowClear && value" @click="onClear">
+    <span v-if="showClear" class="m-clear" @click="onClear">
       <svg
-        class="u-clear"
+        class="clear-svg"
         focusable="false"
         data-icon="close-circle"
         width="1em"
@@ -204,7 +207,7 @@ function onClear() {
     z-index: 1;
     display: inline-block;
     line-height: 0;
-    .u-clear {
+    .clear-svg {
       display: inline-block;
       fill: rgba(0, 0, 0, 0.25);
       font-size: 12px;

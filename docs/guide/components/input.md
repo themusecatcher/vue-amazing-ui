@@ -126,8 +126,11 @@ function onEnter (e: KeyboardEvent) {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value:', value.value)
+})
 </script>
 <template>
   <Space gap="small" vertical>
@@ -234,8 +237,11 @@ const value = ref('')
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value:', value.value)
+})
 </script>
 <template>
   <Space gap="small" vertical>
@@ -321,8 +327,11 @@ const value = ref('')
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value:', value.value)
+})
 </script>
 <template>
   <Space gap="small" vertical>
@@ -381,8 +390,11 @@ const value = ref('')
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value:', value.value)
+})
 </script>
 <template>
   <Space>
@@ -403,8 +415,11 @@ const value = ref('')
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value:', value.value)
+})
 </script>
 <template>
   <Space>
@@ -415,9 +430,10 @@ const value = ref('')
 
 :::
 
-## 带数字提示
+## 带字数提示
 
 <Space>
+  <Input show-count allow-clear v-model:value="value" placeholder="please input" />
   <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
 </Space>
 
@@ -425,11 +441,15 @@ const value = ref('')
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value:', value.value)
+})
 </script>
 <template>
   <Space>
+    <Input show-count allow-clear v-model:value="value" placeholder="please input" />
     <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
   </Space>
 </template>
@@ -484,7 +504,7 @@ password | 是否启用密码框 | boolean | false
 disabled | 是否禁用 | boolean | false
 maxlength | 最大长度 | number | undefined
 showCount | 是否展示字数 | boolean | false
-size | 输入框大小 | 'large' &#124; 'middle' &#124; 'small' | 'middle'
+size | 输入框大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 prefix | 前缀图标 | string | undefined
 suffix | 后缀图标 | string | undefined
 value <Tag color="cyan">v-model</Tag> | 输入框内容 | string | undefined

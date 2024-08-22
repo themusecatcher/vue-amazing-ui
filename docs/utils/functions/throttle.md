@@ -9,16 +9,16 @@
 
 ```ts
 /**
- * 节流函数throttle
+ * 节流函数 throttle
  *
- * 该函数用于生成一个节流函数，用于控制某个函数在给定时间间隔内只能被执行一次。
- * 主要用于性能优化，例如限制事件处理函数的触发频率。
+ * 该函数用于生成一个节流函数，用于控制某个函数在给定时间间隔内只能被执行一次
+ * 主要用于性能优化，例如限制事件处理函数的触发频率
  *
- * @param fn 要被节流的函数。
- * @param delay 节流的时间间隔，单位ms，默认为300毫秒。
- * @returns 返回一个新的节流的函数。
+ * @param fn 要被节流的函数
+ * @param delay 节流的时间间隔，单位 ms，默认为 300ms
+ * @returns 返回一个新的节流的函数
  */
-export function throttle(fn: Function, delay = 300): any {
+export function throttle(fn: Function, delay: number = 300): any {
   let valid = true // 用于标记函数是否可以执行
   return function (...args: any[]) {
     // 返回一个新的函数，该函数负责执行节流逻辑
@@ -70,7 +70,7 @@ function showPosition () {
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-fn | 要被节流的函数 | Function | - | true
-delay | 节流的时间间隔，单位 `ms` | number | 300 | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+fn | 要被节流的函数 | Function | undefined
+delay | 节流的时间间隔，单位 `ms` | number | 300

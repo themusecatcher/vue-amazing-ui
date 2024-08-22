@@ -107,12 +107,12 @@ function onDown() {
     :style="`width: ${inputWidth};`"
   >
     <div class="m-input-wrap">
-      <span class="input-prefix" v-if="showPrefix">
+      <span v-if="showPrefix" class="input-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
         v-if="keyboard"
-        class="u-input-number"
+        class="input-number"
         autocomplete="off"
         :disabled="disabled"
         v-model="numValue"
@@ -121,18 +121,18 @@ function onDown() {
         @change="onChange"
         v-bind="$attrs"
       />
-      <input v-else autocomplete="off" class="u-input-number" @change="onChange" v-model="numValue" v-bind="$attrs" />
+      <input v-else autocomplete="off" class="input-number" @change="onChange" v-model="numValue" v-bind="$attrs" />
     </div>
     <div class="m-handler-wrap">
       <span class="m-arrow up-arrow" :class="{ 'arrow-disabled': (value || 0) >= max }" @click="onUp">
-        <svg focusable="false" class="u-icon" data-icon="up" aria-hidden="true" viewBox="64 64 896 896">
+        <svg focusable="false" class="icon-svg" data-icon="up" aria-hidden="true" viewBox="64 64 896 896">
           <path
             d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
           ></path>
         </svg>
       </span>
       <span class="m-arrow down-arrow" :class="{ 'arrow-disabled': (value || 0) <= min }" @click="onDown">
-        <svg focusable="false" class="u-icon" data-icon="down" aria-hidden="true" viewBox="64 64 896 896">
+        <svg focusable="false" class="icon-svg" data-icon="down" aria-hidden="true" viewBox="64 64 896 896">
           <path
             d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
           ></path>
@@ -175,7 +175,7 @@ function onDown() {
       display: inline-flex;
       align-items: center;
     }
-    .u-input-number {
+    .input-number {
       font-size: 14px;
       color: rgba(0, 0, 0, 0.88);
       width: 100%;
@@ -213,7 +213,7 @@ function onDown() {
     flex-direction: column;
     align-items: stretch; // 默认值，元素被拉伸以适应容器
     transition: all 0.2s linear 0.2s;
-    .u-icon {
+    .icon-svg {
       width: 7px;
       height: 7px;
       fill: rgba(0, 0, 0, 0.45);
@@ -230,7 +230,7 @@ function onDown() {
       transition: all 0.2s linear;
       &:hover {
         height: 60%;
-        .u-icon {
+        .icon-svg {
           fill: @themeColor;
         }
       }
@@ -262,7 +262,7 @@ function onDown() {
     border-color: #d9d9d9;
     box-shadow: none;
   }
-  .m-input-wrap .u-input-number {
+  .m-input-wrap .input-number {
     cursor: not-allowed;
   }
   .m-handler-wrap {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, nextTick, useSlots, computed } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import type { Slot } from 'vue'
+import { useSlotsExist } from '../utils'
 interface Props {
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
   shape?: 'default' | 'circle' | 'round' // 设置按钮形状
@@ -42,17 +43,9 @@ const presetRippleColors = {
 }
 const wave = ref(false)
 const emit = defineEmits(['click'])
-const slots = useSlots()
-const showIcon = computed(() => {
-  const iconSlots = slots.icon?.()
-  return Boolean(iconSlots && iconSlots?.length)
-})
-const showDefault = computed(() => {
-  const defaultSlots = slots.default?.()
-  return Boolean(defaultSlots && defaultSlots?.length)
-})
+const slotsExist = useSlotsExist(['icon', 'default'])
 const showIconOnly = computed(() => {
-  return showIcon && !showDefault.value
+  return slotsExist.icon && !slotsExist.default
 })
 function onClick(e: Event) {
   if (wave.value) {
@@ -96,7 +89,7 @@ function onWaveEnd() {
     @click="onClick"
     @keydown.enter.prevent="onKeyboard"
   >
-    <div v-if="loading || !showIcon" class="btn-loading">
+    <div v-if="loading || !slotsExist.icon" class="btn-loading">
       <div v-if="!href && loadingType === 'static'" class="m-ring-circle">
         <svg class="circle" viewBox="0 0 100 100">
           <path
@@ -116,7 +109,7 @@ function onWaveEnd() {
     <span v-else class="btn-icon">
       <slot name="icon"></slot>
     </span>
-    <span v-if="showDefault" class="btn-content">
+    <span v-if="slotsExist.default" class="btn-content">
       <slot></slot>
     </span>
     <div v-if="!disabled" class="button-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>

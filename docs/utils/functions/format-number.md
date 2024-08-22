@@ -8,25 +8,24 @@
 ```ts
 /**
  * 数字格式化函数
- * 
- * 该函数提供了一种灵活的方式将数字格式化为字符串，包括设置精度、千位分隔符、小数点字符、前缀和后缀。
- * 这样可以方便地根据不同的需求和地域习惯来显示数字。
- * 
- * @param value 要格式化的数字或数字字符串。
- * @param precision 小数点后的位数，默认为2。
- * @param separator 千分位分隔符，默认为","。
- * @param decimal 小数点字符，默认为"."。
- * @param prefix 数字前的字符串，默认为空。
- * @param suffix 数字后的字符串，默认为空。
- * @returns 格式化后的字符串。如果输入值不是数字或字符串，则抛出类型错误。
+ *
+ * 该函数提供了一种灵活的方式将数字格式化为字符串，包括设置精度、千位分隔符、小数点字符、前缀和后缀
+ *
+ * @param value 要格式化的数字或数字字符串
+ * @param precision 小数点后的位数，默认为 2
+ * @param separator 千分位分隔符，默认为 ','
+ * @param decimal 小数点字符，默认为 '.'
+ * @param prefix 数字前的字符串，默认为 undefined
+ * @param suffix 数字后的字符串，默认为 undefined
+ * @returns 格式化后的字符串；如果输入值不是数字或字符串，则抛出类型错误
  */
 export function formatNumber(
   value: number | string,
-  precision = 2,
-  separator = ',',
-  decimal = '.',
-  prefix = '',
-  suffix = ''
+  precision: number = 2,
+  separator: string = ',',
+  decimal: string = '.',
+  prefix: string,
+  suffix: string
 ): string {
   // 类型检查
   if (typeof value !== 'number' && typeof value !== 'string') {
@@ -80,11 +79,11 @@ formatNumber(123456789.87654321, 2, ',') // 123,456,789.88
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-value | 要格式化的数字或数字字符串 | number &#124; string | undefined | true
-precision | 小数点后的位数 | number | 2 | false
-separator | 千分位分隔符 | string | ',' | false
-decimal | 小数点字符 | string | '.' | false
-prefix | 数字前的字符串 | string | '' | false
-suffix | 数字后的字符串 | string | '' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+value | 要格式化的数字或数字字符串 | number &#124; string | undefined
+precision | 小数点后的位数 | number | 2
+separator | 千分位分隔符 | string | ','
+decimal | 小数点字符 | string | '.'
+prefix | 数字前的字符串 | string | undefined
+suffix | 数字后的字符串 | string | undefined

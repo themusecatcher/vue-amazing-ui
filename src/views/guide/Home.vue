@@ -78,6 +78,10 @@ const toolFunctions = [
   {
     name: 'useResizeObserver',
     description: '使用 ResizeObserver 观察 DOM 元素尺寸变化'
+  },
+  {
+    name: 'useSlotsExist',
+    description: '监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在'
   }
 ]
 const collapseData = [
@@ -99,7 +103,8 @@ import {
   useScrollDirection,
   useFps,
   useMediaQuery,
-  useResizeObserver
+  useResizeObserver,
+  useSlotsExist
 } from 'vue-amazing-ui'
 <\/script>`
   }

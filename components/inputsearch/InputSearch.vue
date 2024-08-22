@@ -3,27 +3,30 @@ defineOptions({
   inheritAttrs: false
 })
 import { ref, computed, useSlots } from 'vue'
+import Button from '../button'
 interface Props {
-  width?: string | number // 输入框宽度，单位 px
+  width?: string | number // 搜索框宽度，单位 px
   addonBefore?: string // 设置前置标签 string | slot
-  addonAfter?: string // 设置后置标签 string | slot
+  search?: string // 搜索按钮，默认时为搜索图标 string | slot
+  buttonProps?: object // 设置搜索按钮的属性
   allowClear?: boolean // 可以点击清除图标删除内容
-  password?: boolean // 是否启用密码框
+  loading?: boolean // 是否搜索中
   disabled?: boolean // 是否禁用
   maxlength?: number // 最大长度
   showCount?: boolean // 是否展示字数
-  size?: 'small' | 'middle' | 'large' // 输入框大小
+  size?: 'small' | 'middle' | 'large' // 搜索框大小
   prefix?: string // 前缀图标 string | slot
   suffix?: string // 后缀图标 string | slot
-  value?: string // (v-model) 输入框内容
+  value?: string // (v-model) 搜索框内容
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
   addonBefore: undefined,
-  addonAfter: undefined,
+  search: undefined,
+  buttonProps: () => ({}),
   allowClear: false,
-  password: false,
+  loading: false,
   disabled: false,
   maxlength: undefined,
   showCount: false,
@@ -33,7 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
-const inputWidth = computed(() => {
+const inputSearchWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
   }
@@ -58,15 +61,15 @@ const showSuffix = computed(() => {
   return Boolean(suffixSlots && suffixSlots?.length) || props.suffix
 })
 const showInputSuffix = computed(() => {
-  return showClear.value || props.password || props.showCount || showSuffix.value
+  return showClear.value || props.showCount || showSuffix.value
 })
 const showBefore = computed(() => {
   const addonBeforeSlots = slots.addonBefore?.()
   return Boolean(addonBeforeSlots && addonBeforeSlots?.length) || props.addonBefore
 })
-const showAfter = computed(() => {
+const showSearch = computed(() => {
   const addonAfterSlots = slots.addonAfter?.()
-  return Boolean(addonAfterSlots && addonAfterSlots?.length) || props.addonAfter
+  return Boolean(addonAfterSlots && addonAfterSlots?.length) || props.search
 })
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
@@ -93,35 +96,31 @@ function onClear() {
   emits('update:value', '')
   input.value.focus()
 }
-const showPassword = ref(false)
-function onPassword() {
-  showPassword.value = !showPassword.value
-}
 </script>
 <template>
-  <div class="m-input-wrap" :style="`width: ${inputWidth};`">
-    <span v-if="showBefore" class="m-addon" :class="{ 'addon-before': showBefore }">
+  <div class="m-input-search-wrap" :style="`width: ${inputSearchWidth};`">
+    <span class="m-addon-before" :class="{ 'addon-before': showBefore }" v-if="showBefore">
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
       tabindex="1"
-      class="m-input"
+      class="m-input-search"
       :class="[
-        `input-${size}`,
+        `input-search-${size}`,
         {
-          'input-before': showBefore,
-          'input-after': showAfter,
-          'input-disabled': disabled
+          'input-search-before': showBefore,
+          'input-search-button': showSearch,
+          'input-search-disabled': disabled
         }
       ]"
     >
-      <span v-if="showPrefix" class="input-prefix">
+      <span class="m-prefix" v-if="showPrefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
         ref="input"
-        class="u-input"
-        :type="password && !showPassword ? 'password' : 'text'"
+        class="input-search"
+        type="text"
         :value="value"
         :maxlength="maxlength"
         :disabled="disabled"
@@ -130,7 +129,7 @@ function onPassword() {
         @keydown.enter.prevent="onKeyboard"
         v-bind="$attrs"
       />
-      <span v-if="showInputSuffix" class="input-suffix">
+      <span v-if="showInputSuffix" class="input-search-suffix">
         <span v-if="showClear" class="m-actions" @click="onClear">
           <svg
             class="clear-svg"
@@ -147,60 +146,42 @@ function onPassword() {
             ></path>
           </svg>
         </span>
-        <span v-if="password" class="m-actions" @click="onPassword">
-          <svg
-            v-show="showPassword"
-            class="eye-svg"
-            focusable="false"
-            data-icon="eye"
-            width="1em"
-            height="1em"
-            fill="currentColor"
-            aria-hidden="true"
-            viewBox="64 64 896 896"
-          >
-            <path
-              d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"
-            ></path>
-          </svg>
-          <svg
-            v-show="!showPassword"
-            class="eye-svg"
-            focusable="false"
-            data-icon="eye-invisible"
-            width="1em"
-            height="1em"
-            fill="currentColor"
-            aria-hidden="true"
-            viewBox="64 64 896 896"
-          >
-            <path
-              d="M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z"
-            ></path>
-            <path
-              d="M508 624c-3.46 0-6.87-.16-10.25-.47l-52.82 52.82a176.09 176.09 0 00227.42-227.42l-52.82 52.82c.31 3.38.47 6.79.47 10.25a111.94 111.94 0 01-112 112z"
-            ></path>
-          </svg>
-        </span>
         <span v-if="showCount" class="input-count">{{ showCountNum }}</span>
         <slot v-if="showSuffix" name="suffix">{{ suffix }}</slot>
       </span>
     </div>
-    <span v-if="showAfter" class="m-addon" :class="{ 'addon-after': showAfter }">
-      <slot name="addonAfter">{{ addonAfter }}</slot>
+    <span class="m-search-button">
+      <slot name="search">
+        <Button :size="size" v-bind="buttonProps">
+          <template #icon>
+            <svg
+              class="search-svg"
+              focusable="false"
+              data-icon="search"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+              viewBox="64 64 896 896"
+            >
+              <path
+                d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"
+              ></path>
+            </svg>
+          </template>
+          {{ search }}
+        </Button>
+      </slot>
     </span>
   </div>
 </template>
 <style lang="less" scoped>
-.m-input-wrap {
+.m-input-search-wrap {
   width: 100%;
-  text-align: start;
-  vertical-align: top;
   position: relative;
-  display: inline-table;
-  border-collapse: separate;
-  border-spacing: 0;
-  .m-addon {
+  display: inline-flex;
+  align-items: center;
+  .m-addon-before {
     position: relative;
     padding: 0 11px;
     color: rgba(0, 0, 0, 0.88);
@@ -212,22 +193,18 @@ function onPassword() {
     border-radius: 6px;
     transition: all 0.3s;
     line-height: 1;
-    display: table-cell;
-    width: 1px;
-    white-space: nowrap;
-    vertical-align: middle;
   }
   .addon-before {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right: 0;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    border-inline-end: 0;
   }
   .addon-after {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+    border-inline-start: 0;
   }
-  .m-input {
+  .m-input-search {
     font-size: 14px;
     color: rgba(0, 0, 0, 0.88);
     line-height: 1.5714285714285714;
@@ -240,22 +217,22 @@ function onPassword() {
     transition: all 0.2s;
     &:hover {
       border-color: #4096ff;
-      border-right-width: 1px;
+      border-inline-end-width: 1px;
       z-index: 1;
     }
     &:focus-within {
       border-color: #4096ff;
       box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
-      border-right-width: 1px;
+      border-inline-end-width: 1px;
       outline: 0;
     }
-    .input-prefix {
+    .m-prefix {
       margin-right: 4px;
       display: flex;
       flex: none;
       align-items: center;
     }
-    .u-input {
+    .input-search {
       font-size: 14px;
       color: inherit;
       line-height: 1.5714285714285714;
@@ -284,13 +261,13 @@ function onPassword() {
     input:-ms-input-placeholder {
       color: rgba(0, 0, 0, 0.25);
     }
-    .input-suffix {
+    .input-search-suffix {
       margin-left: 4px;
       display: flex;
       flex: none;
       gap: 4px;
       align-items: center;
-      .m-actions {
+      .m-action {
         cursor: pointer;
         .clear-svg {
           font-size: 12px;
@@ -304,47 +281,41 @@ function onPassword() {
             fill: rgba(0, 0, 0, 0.45);
           }
         }
-        .eye-svg {
-          font-size: 14px;
-          display: inline-block;
-          fill: rgba(0, 0, 0, 0.45);
-          text-align: center;
-          line-height: 1;
-          vertical-align: -0.125em;
-          transition: fill 0.3s;
-          &:hover {
-            fill: rgba(0, 0, 0, 0.85);
-          }
-        }
       }
-      .input-count {
+      .input-search-count {
         color: rgba(0, 0, 0, 0.45);
       }
     }
   }
-  .input-small {
+  .input-search-small {
     padding: 0px 7px;
     border-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
-  .input-middle {
+  .input-search-middle {
     padding: 4px 11px;
     border-radius: 6px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
-  .input-large {
+  .input-search-large {
     padding: 7px 11px;
     font-size: 16px;
     line-height: 1.5714285714285714;
     border-radius: 8px;
-  }
-  .input-before {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  .input-after {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-  .input-disabled {
+  .input-search-before {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+  .input-search-button {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+  .input-search-disabled {
     color: rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.04);
     cursor: not-allowed;
@@ -355,10 +326,24 @@ function onPassword() {
       border-color: #d9d9d9;
       box-shadow: none;
     }
-    .u-input {
+    .input-search {
       background-color: transparent;
       cursor: not-allowed;
     }
+  }
+  .m-search-button {
+    position: relative;
+    left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    color: rgba(0, 0, 0, 0.88);
+    font-weight: normal;
+    font-size: 14px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+    transition: all 0.3s;
+    line-height: 1;
   }
 }
 </style>

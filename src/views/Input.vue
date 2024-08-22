@@ -158,8 +158,9 @@ function onEnter(e: KeyboardEvent) {
     <Space>
       <Input password v-model:value="value" placeholder="input password" />
     </Space>
-    <h2 class="mt30 mb10">带数字提示</h2>
+    <h2 class="mt30 mb10">带字数提示</h2>
     <Space>
+      <Input show-count allow-clear v-model:value="value" placeholder="please input" />
       <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
     </Space>
     <h2 class="mt30 mb10">禁用</h2>

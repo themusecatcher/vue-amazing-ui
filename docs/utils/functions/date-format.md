@@ -9,11 +9,11 @@
 /**
  * 格式化日期时间字符串
  *
- * @param value 待格式化的日期时间值，支持数字、字符串和Date类型，默认为当前时间戳
+ * @param value 待格式化的日期时间值，支持数字、字符串和 Date 类型，默认为当前时间戳
  * @param format 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
  * @returns 返回格式化后的日期时间字符串
  */
-export function dateFormat(value: number | string | Date = Date.now(), format = 'YYYY-MM-DD HH:mm:ss'): string {
+export function dateFormat(value: number | string | Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss'): string {
   try {
     let date: Date
     if (typeof value === 'number' || typeof value === 'string') {
@@ -124,10 +124,10 @@ dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值 | 必传
--- | -- | -- | -- | --
-value | 待格式化的日期时间值，支持数字、字符串和Date类型，默认为当前时间戳 | number &#124; string &#124; Date | Date.now() | false
-format | 格式化字符串 | string | 'YYYY-MM-DD HH:mm:ss' | false
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+value | 待格式化的日期时间值，支持数字、字符串和 `Date` 类型，默认为当前时间戳 | number &#124; string &#124; Date | Date.now()
+format | 格式化字符串 | string | 'YYYY-MM-DD HH:mm:ss'
 
 ## format 支持的格式化占位符列表
 

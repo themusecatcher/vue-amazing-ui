@@ -413,6 +413,10 @@ export default defineConfig({
             {
                text: 'useResizeObserver 监听DOM尺寸',
               link: '/utils/functions/resize-observer'
+            },
+            {
+               text: 'useSlotsExist 监听插槽存在',
+              link: '/utils/functions/slots-exist'
             }
           ]
         }
