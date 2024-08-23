@@ -296,18 +296,21 @@ function onSearch() {
     }
   }
   .input-search-small {
+    height: 24px;
     padding: 0 7px;
     border-radius: 4px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
   .input-search-middle {
+    height: 32px;
     padding: 4px 11px;
     border-radius: 6px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
   .input-search-large {
+    height: 40px;
     padding: 7px 11px;
     font-size: 16px;
     line-height: 1.5;

@@ -257,7 +257,7 @@ function onSearch(searchValue: string) {
   />
   <InputSearch v-model:value="value" :size="size" placeholder="input search text" @search="onSearch">
     <template #search>
-      <Button type="primary">
+      <Button type="primary" :size="size">
         <template #icon>
           <SearchOutlined />
         </template>
@@ -317,7 +317,7 @@ function onSearch(searchValue: string) {
     />
     <InputSearch v-model:value="value" :size="size" placeholder="input search text" @search="onSearch">
       <template #search>
-        <Button type="primary">
+        <Button type="primary" :size="size">
           <template #icon>
             <SearchOutlined />
           </template>
@@ -635,7 +635,7 @@ function onSearch(searchValue: string) {
     :search-props="{ type: 'primary' }"
     @search="onSearch"
   />
-  <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
+  <InputSearch v-model:value="value" :disabled="disabled" placeholder="input search text" @search="onSearch">
     <template #search>
       <Button type="primary" :disabled="disabled">
         <template #icon>
@@ -681,7 +681,7 @@ function onSearch(searchValue: string) {
       :search-props="{ type: 'primary' }"
       @search="onSearch"
     />
-    <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
+    <InputSearch v-model:value="value" :disabled="disabled" placeholder="input search text" @search="onSearch">
       <template #search>
         <Button type="primary" :disabled="disabled">
           <template #icon>

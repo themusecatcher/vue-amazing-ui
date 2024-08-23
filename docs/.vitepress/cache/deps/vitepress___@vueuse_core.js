@@ -14,6 +14,7 @@ import {
   createSharedComposable,
   createSingletonPromise,
   debounceFilter,
+  del,
   directiveHooks,
   extendRef,
   formatDate,
@@ -30,6 +31,8 @@ import {
   isDefined,
   isIOS,
   isObject,
+  isVue2,
+  isVue3,
   isWorker,
   makeDestructurable,
   noop,
@@ -55,7 +58,8 @@ import {
   refWithControl,
   resolveRef,
   resolveUnref,
-  set as set2,
+  set,
+  set2,
   syncRef,
   syncRefs,
   throttleFilter,
@@ -106,13 +110,7 @@ import {
   watchTriggerable,
   watchWithFilter,
   whenever
-} from "./chunk-GIGPVLHA.js";
-import {
-  del,
-  isVue2,
-  isVue3,
-  set
-} from "./chunk-QDN3Q5GG.js";
+} from "./chunk-LJSXV4H7.js";
 import {
   Fragment,
   TransitionGroup,

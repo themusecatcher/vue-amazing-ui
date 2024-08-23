@@ -1,8 +1,7 @@
 import {
   isClient,
   toRef
-} from "./chunk-GIGPVLHA.js";
-import "./chunk-QDN3Q5GG.js";
+} from "./chunk-LJSXV4H7.js";
 import {
   ref,
   watch
