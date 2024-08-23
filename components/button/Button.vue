@@ -246,10 +246,20 @@ function onWaveEnd() {
   &:hover {
     color: #4096ff;
     border-color: #4096ff;
+    .btn-icon {
+      :deep(svg) {
+        fill: #4096ff;
+      }
+    }
   }
   &:active {
     color: #0958d9;
     border-color: #0958d9;
+    .btn-icon {
+      :deep(svg) {
+        fill: #0958d9;
+      }
+    }
   }
   .btn-loading {
     .m-ring-circle,
@@ -262,6 +272,7 @@ function onWaveEnd() {
   .btn-icon {
     :deep(svg) {
       fill: var(--loading-color);
+      transition: fill 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
 }
@@ -271,11 +282,21 @@ function onWaveEnd() {
     color: #fff;
     background-color: #4096ff;
     border-color: #4096ff;
+    .btn-icon {
+      :deep(svg) {
+        fill: #fff;
+      }
+    }
   }
   &:active {
     color: #fff;
     background-color: #0958d9;
     border-color: #0958d9;
+    .btn-icon {
+      :deep(svg) {
+        fill: #fff;
+      }
+    }
   }
 }
 .btn-primary {
@@ -362,9 +383,19 @@ function onWaveEnd() {
   color: @primary;
   &:hover {
     color: #4096ff;
+    .btn-icon {
+      :deep(svg) {
+        fill: #4096ff;
+      }
+    }
   }
   &:active {
     color: #0958d9;
+    .btn-icon {
+      :deep(svg) {
+        fill: #0958d9;
+      }
+    }
   }
   .btn-loading {
     .m-ring-circle,
@@ -377,6 +408,7 @@ function onWaveEnd() {
   .btn-icon {
     :deep(svg) {
       fill: @primary;
+      transition: fill 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
 }
@@ -493,10 +525,20 @@ function onWaveEnd() {
   &:hover {
     color: #4096ff;
     border-color: #4096ff;
+    .btn-icon {
+      :deep(svg) {
+        fill: #4096ff;
+      }
+    }
   }
   &:active {
     color: #0958d9;
     border-color: #0958d9;
+    .btn-icon {
+      :deep(svg) {
+        fill: #0958d9;
+      }
+    }
   }
   .btn-loading {
     .m-ring-circle,
@@ -509,6 +551,7 @@ function onWaveEnd() {
   .btn-icon {
     :deep(svg) {
       fill: @primary;
+      transition: fill 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
 }
@@ -519,10 +562,20 @@ function onWaveEnd() {
   &:hover {
     color: #ff7875;
     border-color: #ff7875;
+    .btn-icon {
+      :deep(svg) {
+        fill: #ff7875;
+      }
+    }
   }
   &:active {
     color: #d9363e;
     border-color: #d9363e;
+    .btn-icon {
+      :deep(svg) {
+        fill: #d9363e;
+      }
+    }
   }
   .btn-loading {
     .m-ring-circle,
@@ -535,6 +588,7 @@ function onWaveEnd() {
   .btn-icon {
     :deep(svg) {
       fill: @danger;
+      transition: fill 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
 }
