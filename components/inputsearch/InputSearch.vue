@@ -2,37 +2,40 @@
 defineOptions({
   inheritAttrs: false
 })
-import { ref, computed, useSlots } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import Button from '../button'
+import { useSlotsExist } from '../utils'
 interface Props {
   width?: string | number // 搜索框宽度，单位 px
-  addonBefore?: string // 设置前置标签 string | slot
+  icon?: boolean // 搜索图标 boolean | slot
   search?: string // 搜索按钮，默认时为搜索图标 string | slot
-  buttonProps?: object // 设置搜索按钮的属性
-  allowClear?: boolean // 可以点击清除图标删除内容
-  loading?: boolean // 是否搜索中
-  disabled?: boolean // 是否禁用
-  maxlength?: number // 最大长度
-  showCount?: boolean // 是否展示字数
+  searchProps?: object // 设置搜索按钮的属性，参考 Button Props
   size?: 'small' | 'middle' | 'large' // 搜索框大小
+  allowClear?: boolean // 可以点击清除图标删除搜索框内容
+  addonBefore?: string // 设置前置标签 string | slot
   prefix?: string // 前缀图标 string | slot
   suffix?: string // 后缀图标 string | slot
+  loading?: boolean // 是否搜索中
+  disabled?: boolean // 是否禁用
+  maxlength?: number // 文本最大长度
+  showCount?: boolean // 是否展示字数
   value?: string // (v-model) 搜索框内容
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
-  addonBefore: undefined,
+  icon: true,
   search: undefined,
-  buttonProps: () => ({}),
+  searchProps: () => ({}),
+  size: 'middle',
+  addonBefore: undefined,
+  prefix: undefined,
+  suffix: undefined,
   allowClear: false,
   loading: false,
   disabled: false,
   maxlength: undefined,
   showCount: false,
-  size: 'middle',
-  prefix: undefined,
-  suffix: undefined,
   value: undefined,
   valueModifiers: () => ({})
 })
@@ -51,30 +54,23 @@ const showCountNum = computed(() => {
   }
   return props.value ? props.value.length : 0
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
 const showPrefix = computed(() => {
-  const prefixSlots = slots.prefix?.()
-  return Boolean(prefixSlots && prefixSlots?.length) || props.prefix
+  return slotsExist.prefix || props.prefix
 })
 const showSuffix = computed(() => {
-  const suffixSlots = slots.suffix?.()
-  return Boolean(suffixSlots && suffixSlots?.length) || props.suffix
+  return slotsExist.suffix || props.suffix
 })
 const showInputSuffix = computed(() => {
   return showClear.value || props.showCount || showSuffix.value
 })
 const showBefore = computed(() => {
-  const addonBeforeSlots = slots.addonBefore?.()
-  return Boolean(addonBeforeSlots && addonBeforeSlots?.length) || props.addonBefore
-})
-const showSearch = computed(() => {
-  const addonAfterSlots = slots.addonAfter?.()
-  return Boolean(addonAfterSlots && addonAfterSlots?.length) || props.search
+  return slotsExist.addonBefore || props.addonBefore
 })
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
-const emits = defineEmits(['update:value', 'change', 'enter'])
+const emits = defineEmits(['update:value', 'change', 'search'])
 function onInput(e: InputEvent) {
   if (!lazyInput.value) {
     emits('update:value', (e.target as HTMLInputElement).value)
@@ -87,19 +83,30 @@ function onChange(e: InputEvent) {
     emits('change', e)
   }
 }
-function onKeyboard(e: KeyboardEvent) {
-  emits('update:value', (e.target as HTMLInputElement).value)
-  emits('enter', e)
-}
 const input = ref()
 function onClear() {
   emits('update:value', '')
   input.value.focus()
 }
+async function onInputSearch(e: KeyboardEvent) {
+  if (!lazyInput.value) {
+    onSearch()
+  } else {
+    if (lazyInput.value) {
+      input.value.blur()
+      await nextTick()
+      input.value.focus()
+    }
+    emits('search', props.value)
+  }
+}
+function onSearch() {
+  emits('search', props.value)
+}
 </script>
 <template>
   <div class="m-input-search-wrap" :style="`width: ${inputSearchWidth};`">
-    <span class="m-addon-before" :class="{ 'addon-before': showBefore }" v-if="showBefore">
+    <span class="m-addon-before" :class="`addon-before-${size}`" v-if="showBefore">
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
@@ -109,7 +116,6 @@ function onClear() {
         `input-search-${size}`,
         {
           'input-search-before': showBefore,
-          'input-search-button': showSearch,
           'input-search-disabled': disabled
         }
       ]"
@@ -126,7 +132,7 @@ function onClear() {
         :disabled="disabled"
         @input="onInput"
         @change="onChange"
-        @keydown.enter.prevent="onKeyboard"
+        @keydown.enter.prevent="onInputSearch"
         v-bind="$attrs"
       />
       <span v-if="showInputSuffix" class="input-search-suffix">
@@ -150,12 +156,11 @@ function onClear() {
         <slot v-if="showSuffix" name="suffix">{{ suffix }}</slot>
       </span>
     </div>
-    <span class="m-search-button">
+    <span class="m-search-button" @click="onSearch" @keydown.enter.prevent="onSearch">
       <slot name="search">
-        <Button :size="size" v-bind="buttonProps">
-          <template #icon>
+        <Button class="search-btn" :size="size" :disabled="disabled" :loading="loading" v-bind="searchProps">
+          <template v-if="icon" #icon>
             <svg
-              class="search-svg"
               focusable="false"
               data-icon="search"
               width="1em"
@@ -182,27 +187,32 @@ function onClear() {
   display: inline-flex;
   align-items: center;
   .m-addon-before {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
     padding: 0 11px;
     color: rgba(0, 0, 0, 0.88);
     font-weight: normal;
     font-size: 14px;
+    line-height: 1.5714285714285714;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.02);
     border: 1px solid #d9d9d9;
     border-radius: 6px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
     transition: all 0.3s;
-    line-height: 1;
   }
-  .addon-before {
-    border-start-end-radius: 0;
-    border-end-end-radius: 0;
-    border-inline-end: 0;
+  .addon-before-small {
+    height: 24px;
   }
-  .addon-after {
-    border-start-start-radius: 0;
-    border-end-start-radius: 0;
-    border-inline-start: 0;
+  .addon-before-middle {
+    height: 32px;
+  }
+  .addon-before-small {
+    height: 40px;
   }
   .m-input-search {
     font-size: 14px;
@@ -217,14 +227,15 @@ function onClear() {
     transition: all 0.2s;
     &:hover {
       border-color: #4096ff;
-      border-inline-end-width: 1px;
+      border-right-width: 1px;
       z-index: 1;
     }
     &:focus-within {
       border-color: #4096ff;
       box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
-      border-inline-end-width: 1px;
+      border-right-width: 1px;
       outline: 0;
+      z-index: 1;
     }
     .m-prefix {
       margin-right: 4px;
@@ -245,9 +256,6 @@ function onClear() {
       outline: none;
       text-overflow: ellipsis;
       transition: all 0.2s;
-    }
-    input:disabled {
-      color: rgba(0, 0, 0, 0.25);
     }
     input::-webkit-input-placeholder {
       color: rgba(0, 0, 0, 0.25);
@@ -288,7 +296,7 @@ function onClear() {
     }
   }
   .input-search-small {
-    padding: 0px 7px;
+    padding: 0 7px;
     border-radius: 4px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -302,18 +310,18 @@ function onClear() {
   .input-search-large {
     padding: 7px 11px;
     font-size: 16px;
-    line-height: 1.5714285714285714;
+    line-height: 1.5;
     border-radius: 8px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    .input-search {
+      font-size: 16px;
+      line-height: 1.5;
+    }
   }
   .input-search-before {
-    border-start-start-radius: 0;
-    border-end-start-radius: 0;
-  }
-  .input-search-button {
-    border-start-end-radius: 0;
-    border-end-end-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
   .input-search-disabled {
     color: rgba(0, 0, 0, 0.25);
@@ -327,6 +335,7 @@ function onClear() {
       box-shadow: none;
     }
     .input-search {
+      color: rgba(0, 0, 0, 0.25);
       background-color: transparent;
       cursor: not-allowed;
     }
@@ -334,25 +343,50 @@ function onClear() {
   .m-search-button {
     position: relative;
     left: -1px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
     border-left: 0;
     color: rgba(0, 0, 0, 0.88);
     font-weight: normal;
     font-size: 14px;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.02);
-    border-radius: 6px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 0;
     transition: all 0.3s;
     line-height: 1;
-    .m-btn {
-      color: rgba(0, 0, 0, 0.45);
+    :deep(.m-btn) {
       padding-top: 0;
       padding-bottom: 0;
       border-top-left-radius: 0;
       border-top-right-radius: 6px;
       border-bottom-right-radius: 6px;
       border-bottom-left-radius: 0;
+      &:not(.btn-primary):not(.btn-danger):not(.btn-link):not(.btn-disabled) {
+        color: rgba(0, 0, 0, 0.45);
+        .btn-icon {
+          svg {
+            fill: rgba(0, 0, 0, 0.45);
+          }
+        }
+      }
+    }
+    :deep(.search-btn):not(.btn-primary):not(.btn-danger):not(.btn-link):not(.btn-disabled) {
+      color: rgba(0, 0, 0, 0.45);
+      &:hover {
+        .btn-icon {
+          svg {
+            fill: #4096ff;
+          }
+        }
+      }
+      &:active {
+        .btn-icon {
+          svg {
+            fill: #0958d9;
+          }
+        }
+      }
       .btn-icon {
         svg {
           fill: rgba(0, 0, 0, 0.45);

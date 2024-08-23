@@ -37,7 +37,7 @@ function onEnter (e: KeyboardEvent) {
 
 ```vue
 <!-- 在 "change" 事件后同步更新而不是 "input" -->
-<Input v-model.lazy="msg" />
+<Input v-model:value.lazy="msg" />
 ```
 
 :::
@@ -380,7 +380,7 @@ watchEffect(() => {
 
 :::
 
-## 带移除图标
+## 带清除图标
 
 <Space>
   <Input allow-clear v-model:value="value" placeholder="input with clear icon" />

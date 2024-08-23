@@ -2,7 +2,7 @@
 defineOptions({
   inheritAttrs: false
 })
-import { ref, computed, useSlots } from 'vue'
+import { ref, computed, useSlots, nextTick } from 'vue'
 interface Props {
   width?: string | number // 输入框宽度，单位 px
   addonBefore?: string // 设置前置标签 string | slot
@@ -85,8 +85,13 @@ function onChange(e: InputEvent) {
   }
 }
 function onKeyboard(e: KeyboardEvent) {
-  emits('update:value', (e.target as HTMLInputElement).value)
   emits('enter', e)
+  if (lazyInput.value) {
+    input.value.blur()
+    nextTick(() => {
+      input.value.focus()
+    })
+  }
 }
 const input = ref()
 function onClear() {
@@ -257,7 +262,7 @@ function onPassword() {
     }
     .u-input {
       font-size: 14px;
-      color: inherit;
+      color: rgba(0, 0, 0, 0.88);
       line-height: 1.5714285714285714;
       position: relative;
       display: inline-block;
@@ -268,9 +273,6 @@ function onPassword() {
       outline: none;
       text-overflow: ellipsis;
       transition: all 0.2s;
-    }
-    input:disabled {
-      color: rgba(0, 0, 0, 0.25);
     }
     input::-webkit-input-placeholder {
       color: rgba(0, 0, 0, 0.25);
@@ -323,7 +325,7 @@ function onPassword() {
     }
   }
   .input-small {
-    padding: 0px 7px;
+    padding: 0 7px;
     border-radius: 4px;
   }
   .input-middle {
@@ -333,8 +335,12 @@ function onPassword() {
   .input-large {
     padding: 7px 11px;
     font-size: 16px;
-    line-height: 1.5714285714285714;
+    line-height: 1.5;
     border-radius: 8px;
+    .u-input {
+      font-size: 16px;
+      line-height: 1.5;
+    }
   }
   .input-before {
     border-top-left-radius: 0;
@@ -356,6 +362,7 @@ function onPassword() {
       box-shadow: none;
     }
     .u-input {
+      color: rgba(0, 0, 0, 0.25);
       background-color: transparent;
       cursor: not-allowed;
     }

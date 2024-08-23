@@ -44,16 +44,8 @@ function onClick(e: Event) {
       <Button type="primary">Primary Button</Button>
       <Button type="danger">Danger Button</Button>
       <Button type="dashed">Dashed Button</Button>
-      <Button type="text"
-        ><template #icon>
-          <SearchOutlined /> </template
-        >Text Button</Button
-      >
-      <Button type="link"
-        ><template #icon>
-          <SearchOutlined /> </template
-        >Link Button</Button
-      >
+      <Button type="text">Text Button</Button>
+      <Button type="link">Link Button</Button>
     </Space>
     <h2 class="mt30 mb10">按钮形状 & 图标</h2>
     <Space vertical>

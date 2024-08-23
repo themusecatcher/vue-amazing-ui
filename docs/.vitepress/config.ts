@@ -199,6 +199,10 @@ export default defineConfig({
               link: '/guide/components/inputnumber'
             },
             {
+              text: '搜索框 InputSearch',
+              link: '/guide/components/inputsearch'
+            },
+            {
               text: '列表 List',
               link: '/guide/components/list'
             },

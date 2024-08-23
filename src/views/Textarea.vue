@@ -28,7 +28,7 @@ function onEnter(e: KeyboardEvent) {
           <br />
           你可以添加 lazy 修饰符来改为在每次 change 事件后更新数据：
           <br />
-          {{ '<Textarea v-model.lazy="msg" />' }}
+          {{ '<Textarea v-model:value.lazy="msg" />' }}
         </template>
       </Alert>
       <Textarea v-model:value="value" placeholder="Basic usage rows 2" :rows="2" @change="onChange" @enter="onEnter" />
@@ -52,7 +52,7 @@ function onEnter(e: KeyboardEvent) {
         :auto-size="{ minRows: 2, maxRows: 5 }"
       />
     </Space>
-    <h2 class="mt30 mb10">带移除图标</h2>
+    <h2 class="mt30 mb10">带清除图标</h2>
     <Space vertical :width="300">
       <Textarea v-model:value="value" placeholder="textarea with clear icon" allow-clear />
     </Space>

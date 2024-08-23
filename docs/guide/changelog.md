@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.6.0 <Tag color="volcano" size="small">2024-08-22</Tag>
+
+- 新增 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件
+- 组件库代码优化
+
 ## 1.5.4 <Tag color="volcano" size="small">2024-08-22</Tag>
 
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增 `shape` `icon` 属性

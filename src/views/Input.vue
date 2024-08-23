@@ -28,7 +28,7 @@ function onEnter(e: KeyboardEvent) {
           <br />
           你可以添加 lazy 修饰符来改为在每次 change 事件后更新数据：
           <br />
-          {{ '<Input v-model.lazy="msg" />' }}
+          {{ '<Input v-model:value.lazy="msg" />' }}
         </template>
       </Alert>
       <Input :width="200" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
@@ -150,7 +150,7 @@ function onEnter(e: KeyboardEvent) {
         </template>
       </Input>
     </Space>
-    <h2 class="mt30 mb10">带移除图标</h2>
+    <h2 class="mt30 mb10">带清除图标</h2>
     <Space>
       <Input allow-clear v-model:value="value" placeholder="input with clear icon" />
     </Space>
