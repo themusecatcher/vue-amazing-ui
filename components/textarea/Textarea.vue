@@ -101,6 +101,12 @@ function onChange(e: InputEvent) {
 }
 function onKeyboard(e: KeyboardEvent) {
   emits('enter', e)
+  if (lazyTextarea.value) {
+    textarea.value.blur()
+    nextTick(() => {
+      textarea.value.focus()
+    })
+  }
 }
 function onClear() {
   emits('update:value', '')

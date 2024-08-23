@@ -36,7 +36,7 @@ function onEnter (e: KeyboardEvent) {
 
 ```vue
 <!-- 在 "change" 事件后同步更新而不是 "input" -->
-<Textarea v-model.lazy="msg" />
+<Textarea v-model:value.lazy="msg" />
 ```
 
 :::
@@ -148,7 +148,7 @@ const value = ref('')
 
 :::
 
-## 带移除图标
+## 带清除图标
 
 <Space :width="480">
   <Textarea v-model:value="value" placeholder="textarea with clear icon" allow-clear />
