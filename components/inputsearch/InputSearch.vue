@@ -142,7 +142,7 @@ function onClear() {
             viewBox="64 64 896 896"
           >
             <path
-               d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
             ></path>
           </svg>
         </span>
@@ -336,6 +336,7 @@ function onClear() {
     left: -1px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    border-left: 0;
     color: rgba(0, 0, 0, 0.88);
     font-weight: normal;
     font-size: 14px;
@@ -344,6 +345,20 @@ function onClear() {
     border-radius: 6px;
     transition: all 0.3s;
     line-height: 1;
+    .m-btn {
+      color: rgba(0, 0, 0, 0.45);
+      padding-top: 0;
+      padding-bottom: 0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+      border-bottom-left-radius: 0;
+      .btn-icon {
+        svg {
+          fill: rgba(0, 0, 0, 0.45);
+        }
+      }
+    }
   }
 }
 </style>
