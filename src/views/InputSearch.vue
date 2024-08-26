@@ -185,6 +185,11 @@ function onSearch(searchValue: string) {
           <EnvironmentOutlined />
         </template>
       </InputSearch>
+      <a-input-search v-model:value="value" placeholder="input search text" @search="onSearch">
+        <template #prefix>
+          <EnvironmentOutlined />
+        </template>
+      </a-input-search>
     </Space>
     <h2 class="mt30 mb10">搜索中</h2>
     <Space vertical>
