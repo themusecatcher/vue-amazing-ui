@@ -204,6 +204,9 @@ function onSearch() {
     border-bottom-right-radius: 0;
     border-right: 0;
     transition: all 0.3s;
+    :deep(svg) {
+      fill: rgba(0, 0, 0, 0.88);
+    }
   }
   .addon-before-small {
     height: 24px;
