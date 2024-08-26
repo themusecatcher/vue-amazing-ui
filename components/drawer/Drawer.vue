@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, useSlots, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import Scrollbar from '../scrollbar'
+import { useSlotsExist } from '../utils'
 interface Props {
   width?: string | number // 抽屉宽度，在 placement 为 right 或 left 时使用，单位 px
   height?: string | number // 抽屉高度，在 placement 为 top 或 bottom 时使用，单位 px
@@ -52,22 +53,12 @@ const drawerHeight = computed(() => {
   }
   return props.height
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['title', 'extra', 'footer'])
 const showHeader = computed(() => {
-  const titleSlots = slots.title?.()
-  const extraSlots = slots.extra?.()
-  let n = 0
-  if (titleSlots && titleSlots?.length) {
-    n++
-  }
-  if (extraSlots && extraSlots?.length) {
-    n++
-  }
-  return Boolean(n) || props.title || props.extra || props.closable
+  return slotsExist.title || slotsExist.extra || props.title || props.extra || props.closable
 })
 const showFooter = computed(() => {
-  const footerSlots = slots.footer?.()
-  return Boolean(footerSlots && footerSlots?.length) || props.footer
+  return slotsExist.footer || props.footer
 })
 const drawerRef = ref()
 watch(

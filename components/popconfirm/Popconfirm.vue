@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, useSlots } from 'vue'
+import { ref, computed } from 'vue'
 import Button from '../button'
+import { useSlotsExist } from '../utils'
 interface Props {
   title?: string // 确认框的标题 string | slot
   description?: string // 确认框的内容描述 string | slot
@@ -37,10 +38,9 @@ const popMaxWidth = computed(() => {
   }
   return props.maxWidth
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['description'])
 const showDesc = computed(() => {
-  const descriptionSlots = slots.description?.()
-  return Boolean(descriptionSlots && descriptionSlots?.length) || props.description
+  return slotsExist.description || props.description
 })
 const visible = ref(false)
 const top = ref(0) // 提示框top定位

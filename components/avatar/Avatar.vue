@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, useSlots } from 'vue'
+import { ref, computed } from 'vue'
 import type { Slot } from 'vue'
-import { throttle, useEventListener } from '../utils'
+import { throttle, useEventListener, useSlotsExist } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -74,18 +74,16 @@ const avatarStyle = computed(() => {
     }
   }
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['default', 'icon'])
 const showIcon = computed(() => {
   if (!props.src) {
-    const iconSlots = slots.icon?.()
-    return Boolean(iconSlots && iconSlots?.length)
+    return slotsExist.icon
   }
   return false
 })
 const showStr = computed(() => {
   if (!props.src && !showIcon.value) {
-    const defaultSlots = slots.default?.()
-    return Boolean(defaultSlots && defaultSlots?.length)
+    return slotsExist.default
   }
   return false
 })

@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf } from '../utils'
+import { useSlotsExist, rafTimeout, cancelRaf } from '../utils'
 interface Props {
   title?: string // 卡片标题 string | slot
+  titleStyle?: CSSProperties // 卡片标题样式
   content?: string // 卡片内容 string | slot
+  contentStyle?: CSSProperties // 卡片内容样式
+  overlayStyle?: CSSProperties // 卡片容器样式
   maxWidth?: string | number // 卡片内容最大宽度
   trigger?: 'hover' | 'click' // 卡片触发方式
-  overlayStyle?: CSSProperties // 卡片样式
 }
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
+  titleStyle: () => ({}),
   content: undefined,
+  contentStyle: () => ({}),
+  overlayStyle: () => ({}),
   maxWidth: 'auto',
-  trigger: 'hover',
-  overlayStyle: () => ({})
+  trigger: 'hover'
 })
 const popMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
@@ -29,6 +33,13 @@ const defaultRef = ref() // 声明一个同名的模板引用
 const popRef = ref() // 声明一个同名的模板引用
 const emit = defineEmits(['openChange'])
 const hideTimer = ref()
+const slotsExist = useSlotsExist(['title', 'content'])
+const showTitle = computed(() => {
+  return slotsExist.title || props.title
+})
+const showContent = computed(() => {
+  return slotsExist.content || props.content
+})
 function onShow() {
   getPosition()
   hideTimer.value && cancelRaf(hideTimer.value)
@@ -70,7 +81,7 @@ function onBlur() {
 </script>
 <template>
   <div
-    class="m-popover"
+    class="m-popover-wrap"
     @mouseenter="trigger === 'hover' ? onShow() : () => false"
     @mouseleave="trigger === 'hover' ? onHide() : () => false"
   >
@@ -84,16 +95,16 @@ function onBlur() {
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
       @mouseleave="trigger === 'hover' ? onHide() : () => false"
     >
-      <div class="m-pop" :style="overlayStyle">
-        <div class="m-title">
+      <div class="m-popover" :style="overlayStyle">
+        <div v-if="showTitle" class="popover-title" :style="titleStyle">
           <slot name="title">{{ title }}</slot>
         </div>
-        <div class="m-content">
+        <div v-if="showContent" class="popover-content" :style="contentStyle">
           <slot name="content">{{ content }}</slot>
         </div>
       </div>
-      <div class="m-pop-arrow">
-        <span class="u-pop-arrow"></span>
+      <div class="popover-arrow">
+        <span></span>
       </div>
     </div>
     <div
@@ -107,7 +118,7 @@ function onBlur() {
   </div>
 </template>
 <style lang="less" scoped>
-.m-popover {
+.m-popover-wrap {
   position: relative;
   display: inline-block;
   .m-pop-content {
@@ -122,9 +133,7 @@ function onBlur() {
       transform 0.15s cubic-bezier(0.78, 0.14, 0.15, 0.86),
       opacity 0.15s cubic-bezier(0.78, 0.14, 0.15, 0.86);
     outline: none;
-    .m-pop {
-      min-width: 32px;
-      min-height: 32px;
+    .m-popover {
       padding: 12px;
       font-size: 14px;
       color: rgba(0, 0, 0, 0.88);
@@ -140,17 +149,19 @@ function onBlur() {
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
-      .m-title {
+      .popover-title {
         min-width: 176px;
-        margin-bottom: 8px;
         color: rgba(0, 0, 0, 0.88);
         font-weight: 600;
+        &:not(:last-child) {
+          margin-bottom: 8px;
+        }
       }
-      .m-content {
+      .popover-content {
         color: rgba(0, 0, 0, 0.88);
       }
     }
-    .m-pop-arrow {
+    .popover-arrow {
       position: absolute;
       z-index: 9;
       left: 50%;

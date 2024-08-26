@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, useSlots, computed, watchPostEffect } from 'vue'
+import { ref, computed, watchPostEffect } from 'vue'
 import type { Slot } from 'vue'
+import { useSlotsExist } from '../utils'
 interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot
@@ -24,10 +25,9 @@ const props = withDefaults(defineProps<Props>(), {
 const alert = ref()
 const closeAlert = ref(false)
 const emit = defineEmits(['close'])
-const slots = useSlots()
+const slotsExist = useSlotsExist(['description'])
 const showDesc = computed(() => {
-  const descriptionSlots = slots.description?.()
-  return Boolean(descriptionSlots && descriptionSlots?.length) || props.description
+  return slotsExist.description || props.description
 })
 watchPostEffect(() => {
   if (props.closable && !closeAlert.value) {

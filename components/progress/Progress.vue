@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import { computed } from 'vue'
+import { useSlotsExist } from '../utils'
 interface Gradient {
   '0%'?: string
   '100%'?: string
@@ -84,10 +85,9 @@ const circleColorTo = computed(() => {
 const showPercent = computed(() => {
   return props.format(props.percent > 100 ? 100 : props.percent)
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['success'])
 const showSuccess = computed(() => {
-  const successSlots = slots.success?.()
-  return (successSlots && successSlots.length) || props.success
+  return slotsExist.success || props.success
 })
 </script>
 <template>

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import { computed } from 'vue'
 import type { CSSProperties, Slot } from 'vue'
 import Avatar from '../avatar'
+import { useSlotsExist } from '../utils'
 interface Props {
   avatar?: string // 列表元素的图标字符 string | slot
   avatarProps?: object // Avatar 组件属性配置，参考 Avatar Props，用于配置列表图标样式
@@ -30,34 +31,12 @@ const props = withDefaults(defineProps<Props>(), {
   actionsStyle: () => ({}),
   extraStyle: () => ({})
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['avatar', 'title', 'description', 'default', 'actions', 'extra'])
 const showAvatar = computed(() => {
-  const avatarSlots = slots.avatar?.()
-  return Boolean(avatarSlots && avatarSlots?.length) || props.avatar || JSON.stringify(props.avatarProps) !== '{}'
+  return slotsExist.avatar || props.avatar || JSON.stringify(props.avatarProps) !== '{}'
 })
 const showContent = computed(() => {
-  const titleSlots = slots.title?.()
-  const descriptionSlots = slots.description?.()
-  let n = 0
-  if (titleSlots && titleSlots?.length) {
-    n++
-  }
-  if (descriptionSlots && descriptionSlots?.length) {
-    n++
-  }
-  return Boolean(n) || props.title || props.description
-})
-const showDefault = computed(() => {
-  const defaultSlots = slots.default?.()
-  return Boolean(defaultSlots && defaultSlots?.length)
-})
-const showActions = computed(() => {
-  const actionsSlots = slots.actions?.()
-  return Boolean(actionsSlots && actionsSlots?.length)
-})
-const showExtra = computed(() => {
-  const extraSlots = slots.extra?.()
-  return Boolean(extraSlots && extraSlots?.length) || props.extra
+  return slotsExist.title || slotsExist.description || props.title || props.description
 })
 </script>
 <template>
@@ -78,14 +57,14 @@ const showExtra = computed(() => {
           </div>
         </div>
       </div>
-      <div v-if="showDefault" :style="contentStyle">
+      <div v-if="slotsExist.default" :style="contentStyle">
         <slot></slot>
       </div>
-      <div class="list-item-actions" v-if="showActions" :style="actionsStyle">
+      <div class="list-item-actions" v-if="slotsExist.actions" :style="actionsStyle">
         <slot name="actions"></slot>
       </div>
     </div>
-    <div class="list-item-extra" v-if="showExtra" :style="extraStyle">
+    <div class="list-item-extra" v-if="slotsExist.extra || props.extra" :style="extraStyle">
       <slot name="extra">{{ extra }}</slot>
     </div>
   </div>

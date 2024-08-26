@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, nextTick, useSlots, watchEffect } from 'vue'
+import { ref, computed, nextTick, watchEffect } from 'vue'
 import Space from '../space'
+import { useSlotsExist } from '../utils'
 interface Tag {
   label?: string // 标签文本名 string | slot
   closable?: boolean // 标签是否可以关闭，默认 true
@@ -64,11 +65,10 @@ const tags = computed(() => {
   }
   return []
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['icon'])
 const showIcon = computed(() => {
   if (!props.dynamic) {
-    const iconSlots = slots.icon?.()
-    return Boolean(iconSlots && iconSlots?.length) || props.icon
+    return slotsExist.icon || props.icon
   }
   return false
 })

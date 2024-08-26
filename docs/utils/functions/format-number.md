@@ -24,8 +24,8 @@ export function formatNumber(
   precision: number = 2,
   separator: string = ',',
   decimal: string = '.',
-  prefix: string,
-  suffix: string
+  prefix?: string,
+  suffix?: string
 ): string {
   // 类型检查
   if (typeof value !== 'number' && typeof value !== 'string') {
@@ -85,5 +85,5 @@ value | 要格式化的数字或数字字符串 | number &#124; string | undefin
 precision | 小数点后的位数 | number | 2
 separator | 千分位分隔符 | string | ','
 decimal | 小数点字符 | string | '.'
-prefix | 数字前的字符串 | string | undefined
-suffix | 数字后的字符串 | string | undefined
+prefix? | 数字前的字符串 | string | undefined
+suffix? | 数字后的字符串 | string | undefined

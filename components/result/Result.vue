@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useSlots, computed } from 'vue'
+import { useSlotsExist } from '../utils'
 interface Props {
   status?: 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500' // 结果的状态，决定图标和颜色
   title?: string // 标题文字 string | slot
@@ -10,11 +10,7 @@ withDefaults(defineProps<Props>(), {
   title: undefined,
   subTitle: undefined
 })
-const slots = useSlots()
-const showContent = computed(() => {
-  const defaultSlots = slots.default?.()
-  return Boolean(defaultSlots && defaultSlots?.length)
-})
+const slotsExist = useSlotsExist(['default'])
 </script>
 <template>
   <div class="m-result">
@@ -924,7 +920,7 @@ const showContent = computed(() => {
     <div class="m-extra">
       <slot name="extra"></slot>
     </div>
-    <div class="m-content" v-if="showContent">
+    <div class="m-content" v-if="slotsExist.default">
       <slot></slot>
     </div>
   </div>

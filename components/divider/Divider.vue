@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import { computed } from 'vue'
+import { useSlotsExist } from '../utils'
 interface Props {
   orientation?: 'left' | 'center' | 'right' // 分割线标题的位置
   orientationMargin?: string | number // 标题和最近 left/right 边框之间的距离，去除了分割线，同时 orientation 必须为 left 或 right
@@ -30,10 +31,9 @@ const lineHeight = computed(() => {
   }
   return props.height
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['default'])
 const showText = computed(() => {
-  const defaultSlots = slots.default?.()
-  return Boolean(defaultSlots && defaultSlots?.length)
+  return slotsExist.default
 })
 </script>
 <template>
