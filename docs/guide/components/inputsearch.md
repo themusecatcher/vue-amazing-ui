@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { SearchOutlined, CompassOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, CompassOutlined, EnvironmentOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 const lazyValue = ref('')
 const sizeOptions = [
@@ -451,6 +451,7 @@ function onSearch(searchValue: string) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { CompassOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 watchEffect(() => {
   console.log('value:', value.value)

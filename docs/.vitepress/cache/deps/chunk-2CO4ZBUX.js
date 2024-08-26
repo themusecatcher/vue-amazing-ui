@@ -24,9 +24,9 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-XXCW3MZS.js";
+} from "./chunk-HBGG36HX.js";
 
-// node_modules/.pnpm/vitepress@1.3.2_@algolia+client-search@4.24.0_@types+node@22.1.0_async-validator@4.2.5_less@4_rjb5c4smgojumnaq654lk3zhpe/node_modules/vitepress/lib/vue-demi.mjs
+// node_modules/.pnpm/vitepress@1.3.3_@algolia+client-search@5.1.1_@types+node@22.5.0_async-validator@4.2.5_less@4._tbnss7da56esax6r6zb673yfza/node_modules/vitepress/lib/vue-demi.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@10.11.0_vue@3.4.36_typescript@5.5.4_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@11.0.1_vue@3.4.38_typescript@5.5.4_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -76,7 +76,7 @@ function computedWithControl(source, fn) {
     return {
       get() {
         if (dirty.value) {
-          v = get2();
+          v = get2(v);
           dirty.value = false;
         }
         track();
@@ -830,7 +830,10 @@ function createUntil(r, isNot = false) {
         r,
         (v) => {
           if (condition(v) !== isNot) {
-            stop == null ? void 0 : stop();
+            if (stop)
+              stop();
+            else
+              nextTick(() => stop == null ? void 0 : stop());
             resolve(v);
           }
         },
@@ -859,7 +862,10 @@ function createUntil(r, isNot = false) {
         [r, value],
         ([v1, v2]) => {
           if (isNot !== (v1 === v2)) {
-            stop == null ? void 0 : stop();
+            if (stop)
+              stop();
+            else
+              nextTick(() => stop == null ? void 0 : stop());
             resolve(v1);
           }
         },
@@ -1086,8 +1092,8 @@ function formatDate(date, formatStr, options = {}) {
     M: () => month + 1,
     Mo: () => formatOrdinal(month + 1),
     MM: () => `${month + 1}`.padStart(2, "0"),
-    MMM: () => date.toLocaleDateString(options.locales, { month: "short" }),
-    MMMM: () => date.toLocaleDateString(options.locales, { month: "long" }),
+    MMM: () => date.toLocaleDateString(toValue(options.locales), { month: "short" }),
+    MMMM: () => date.toLocaleDateString(toValue(options.locales), { month: "long" }),
     D: () => String(days),
     Do: () => formatOrdinal(days),
     DD: () => `${days}`.padStart(2, "0"),
@@ -1105,9 +1111,9 @@ function formatDate(date, formatStr, options = {}) {
     ss: () => `${seconds}`.padStart(2, "0"),
     SSS: () => `${milliseconds}`.padStart(3, "0"),
     d: () => day,
-    dd: () => date.toLocaleDateString(options.locales, { weekday: "narrow" }),
-    ddd: () => date.toLocaleDateString(options.locales, { weekday: "short" }),
-    dddd: () => date.toLocaleDateString(options.locales, { weekday: "long" }),
+    dd: () => date.toLocaleDateString(toValue(options.locales), { weekday: "narrow" }),
+    ddd: () => date.toLocaleDateString(toValue(options.locales), { weekday: "short" }),
+    dddd: () => date.toLocaleDateString(toValue(options.locales), { weekday: "long" }),
     A: () => meridiem(hours, minutes),
     AA: () => meridiem(hours, minutes, false, true),
     a: () => meridiem(hours, minutes, true),
@@ -1665,4 +1671,4 @@ vitepress/lib/vue-demi.mjs:
    * @license MIT
    *)
 */
-//# sourceMappingURL=chunk-LJSXV4H7.js.map
+//# sourceMappingURL=chunk-2CO4ZBUX.js.map

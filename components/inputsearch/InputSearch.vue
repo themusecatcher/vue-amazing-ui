@@ -46,7 +46,7 @@ const inputSearchWidth = computed(() => {
   return props.width
 })
 const showClear = computed(() => {
-  return !props.disabled && props.allowClear && props.value
+  return !props.disabled && props.allowClear
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
@@ -136,7 +136,7 @@ function onSearch() {
         v-bind="$attrs"
       />
       <span v-if="showInputSuffix" class="input-search-suffix">
-        <span v-if="showClear" class="m-actions" @click="onClear">
+        <span v-if="showClear" class="m-clear" :class="{ 'clear-hidden': !value }" @click="onClear">
           <svg
             class="clear-svg"
             focusable="false"
@@ -152,7 +152,7 @@ function onSearch() {
             ></path>
           </svg>
         </span>
-        <span v-if="showCount" class="input-count">{{ showCountNum }}</span>
+        <span v-if="showCount" class="input-search-count">{{ showCountNum }}</span>
         <slot v-if="showSuffix" name="suffix">{{ suffix }}</slot>
       </span>
     </div>
@@ -273,9 +273,9 @@ function onSearch() {
       margin-left: 4px;
       display: flex;
       flex: none;
-      gap: 4px;
+      gap: 8px;
       align-items: center;
-      .m-action {
+      .m-clear {
         cursor: pointer;
         .clear-svg {
           font-size: 12px;
@@ -289,6 +289,9 @@ function onSearch() {
             fill: rgba(0, 0, 0, 0.45);
           }
         }
+      }
+      .clear-hidden {
+        visibility: hidden;
       }
       .input-search-count {
         color: rgba(0, 0, 0, 0.45);
