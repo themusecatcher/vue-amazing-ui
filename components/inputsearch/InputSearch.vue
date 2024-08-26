@@ -242,6 +242,9 @@ function onSearch() {
       display: flex;
       flex: none;
       align-items: center;
+      :deep(svg) {
+        fill: rgba(0, 0, 0, 0.88);
+      }
     }
     .input-search {
       font-size: 14px;
