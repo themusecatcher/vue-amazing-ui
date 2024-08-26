@@ -2,34 +2,35 @@
 defineOptions({
   inheritAttrs: false
 })
-import { ref, computed, useSlots, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
+import { useSlotsExist } from '../utils'
 interface Props {
   width?: string | number // 输入框宽度，单位 px
+  size?: 'small' | 'middle' | 'large' // 输入框大小
   addonBefore?: string // 设置前置标签 string | slot
   addonAfter?: string // 设置后置标签 string | slot
+  prefix?: string // 前缀图标 string | slot
+  suffix?: string // 后缀图标 string | slot
   allowClear?: boolean // 可以点击清除图标删除内容
   password?: boolean // 是否启用密码框
   disabled?: boolean // 是否禁用
   maxlength?: number // 最大长度
   showCount?: boolean // 是否展示字数
-  size?: 'small' | 'middle' | 'large' // 输入框大小
-  prefix?: string // 前缀图标 string | slot
-  suffix?: string // 后缀图标 string | slot
   value?: string // (v-model) 输入框内容
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
+  size: 'middle',
   addonBefore: undefined,
   addonAfter: undefined,
+  prefix: undefined,
+  suffix: undefined,
   allowClear: false,
   password: false,
   disabled: false,
   maxlength: undefined,
   showCount: false,
-  size: 'middle',
-  prefix: undefined,
-  suffix: undefined,
   value: undefined,
   valueModifiers: () => ({})
 })
@@ -40,7 +41,7 @@ const inputWidth = computed(() => {
   return props.width
 })
 const showClear = computed(() => {
-  return !props.disabled && props.allowClear && props.value
+  return !props.disabled && props.allowClear
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
@@ -48,25 +49,21 @@ const showCountNum = computed(() => {
   }
   return props.value ? props.value.length : 0
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const showPrefix = computed(() => {
-  const prefixSlots = slots.prefix?.()
-  return Boolean(prefixSlots && prefixSlots?.length) || props.prefix
+  return slotsExist.prefix || props.prefix
 })
 const showSuffix = computed(() => {
-  const suffixSlots = slots.suffix?.()
-  return Boolean(suffixSlots && suffixSlots?.length) || props.suffix
+  return slotsExist.suffix || props.suffix
 })
 const showInputSuffix = computed(() => {
   return showClear.value || props.password || props.showCount || showSuffix.value
 })
 const showBefore = computed(() => {
-  const addonBeforeSlots = slots.addonBefore?.()
-  return Boolean(addonBeforeSlots && addonBeforeSlots?.length) || props.addonBefore
+  return slotsExist.addonBefore || props.addonBefore
 })
 const showAfter = computed(() => {
-  const addonAfterSlots = slots.addonAfter?.()
-  return Boolean(addonAfterSlots && addonAfterSlots?.length) || props.addonAfter
+  return slotsExist.addonAfter || props.addonAfter
 })
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
@@ -136,7 +133,7 @@ function onPassword() {
         v-bind="$attrs"
       />
       <span v-if="showInputSuffix" class="input-suffix">
-        <span v-if="showClear" class="m-actions" @click="onClear">
+        <span v-if="showClear" class="m-actions" :class="{ 'clear-hidden': !value }" @click="onClear">
           <svg
             class="clear-svg"
             focusable="false"
@@ -188,7 +185,9 @@ function onPassword() {
           </svg>
         </span>
         <span v-if="showCount" class="input-count">{{ showCountNum }}</span>
-        <slot v-if="showSuffix" name="suffix">{{ suffix }}</slot>
+        <span v-if="showSuffix" class="m-suffix">
+          <slot name="suffix">{{ suffix }}</slot>
+        </span>
       </span>
     </div>
     <span v-if="showAfter" class="m-addon" :class="{ 'addon-after': showAfter }">
@@ -215,12 +214,15 @@ function onPassword() {
     background-color: rgba(0, 0, 0, 0.02);
     border: 1px solid #d9d9d9;
     border-radius: 6px;
-    transition: all 0.3s;
     line-height: 1;
     display: table-cell;
     width: 1px;
     white-space: nowrap;
     vertical-align: middle;
+    transition: all 0.3s;
+    :deep(svg) {
+      fill: rgba(0, 0, 0, 0.88);
+    }
   }
   .addon-before {
     border-top-right-radius: 0;
@@ -259,6 +261,9 @@ function onPassword() {
       display: flex;
       flex: none;
       align-items: center;
+      :deep(svg) {
+        fill: rgba(0, 0, 0, 0.88);
+      }
     }
     .u-input {
       font-size: 14px;
@@ -319,8 +324,19 @@ function onPassword() {
           }
         }
       }
+      .clear-hidden {
+        visibility: hidden;
+      }
       .input-count {
         color: rgba(0, 0, 0, 0.45);
+      }
+      .m-suffix {
+        display: flex;
+        flex: none;
+        align-items: center;
+        :deep(svg) {
+          fill: rgba(0, 0, 0, 0.88);
+        }
       }
     }
   }

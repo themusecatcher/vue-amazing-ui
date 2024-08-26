@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { SearchOutlined, CompassOutlined, EnvironmentOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, CompassOutlined, EnvironmentOutlined, InfoCircleOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 const lazyValue = ref('')
 const sizeOptions = [
@@ -144,12 +144,7 @@ function onSearch(searchValue: string) {
     </Space>
     <h2 class="mt30 mb10">带清除图标</h2>
     <Space>
-      <InputSearch
-        v-model:value="value"
-        allow-clear
-        placeholder="input search text input search text"
-        @search="onSearch"
-      />
+      <InputSearch v-model:value="value" allow-clear placeholder="input search text" @search="onSearch" />
     </Space>
     <h2 class="mt30 mb10">带字数提示</h2>
     <Space :width="300">
@@ -179,17 +174,17 @@ function onSearch(searchValue: string) {
     </Space>
     <h2 class="mt30 mb10">前缀和后缀</h2>
     <Space :width="300">
-      <InputSearch v-model:value="value" prefix="¥" suffix="元" placeholder="input search text" @search="onSearch" />
+      <InputSearch v-model:value="value" prefix="¥" suffix="RMB" placeholder="input search text" @search="onSearch" />
       <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
         <template #prefix>
           <EnvironmentOutlined />
         </template>
-      </InputSearch>
-      <a-input-search v-model:value="value" placeholder="input search text" @search="onSearch">
-        <template #prefix>
-          <EnvironmentOutlined />
+        <template #suffix>
+          <Tooltip :max-width="150" tooltip="Extra information">
+            <InfoCircleOutlined />
+          </Tooltip>
         </template>
-      </a-input-search>
+      </InputSearch>
     </Space>
     <h2 class="mt30 mb10">搜索中</h2>
     <Space vertical>
