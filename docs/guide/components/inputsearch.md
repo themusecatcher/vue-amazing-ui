@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { SearchOutlined, CompassOutlined, EnvironmentOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, CompassOutlined, EnvironmentOutlined, InfoCircleOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 const lazyValue = ref('')
 const sizeOptions = [
@@ -487,16 +487,15 @@ function onSearch(searchValue: string) {
 ## 前缀和后缀
 
 <Space :width="300">
-  <InputSearch
-    v-model:value="value"
-    prefix="¥"
-    suffix="元"
-    placeholder="input search text"
-    @search="onSearch"
-  />
+  <InputSearch v-model:value="value" prefix="¥" suffix="元" placeholder="input search text" @search="onSearch" />
   <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
     <template #prefix>
       <EnvironmentOutlined />
+    </template>
+    <template #suffix>
+      <Tooltip :max-width="150" tooltip="Extra information">
+        <InfoCircleOutlined />
+      </Tooltip>
     </template>
   </InputSearch>
 </Space>
@@ -506,7 +505,7 @@ function onSearch(searchValue: string) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { EnvironmentOutlined } from '@ant-design/icons-vue'
+import { EnvironmentOutlined, InfoCircleOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 watchEffect(() => {
   console.log('value:', value.value)
@@ -517,16 +516,15 @@ function onSearch(searchValue: string) {
 </script>
 <template>
   <Space :width="300">
-    <InputSearch
-      v-model:value="value"
-      prefix="¥"
-      suffix="元"
-      placeholder="input search text"
-      @search="onSearch"
-    />
+    <InputSearch v-model:value="value" prefix="¥" suffix="元" placeholder="input search text" @search="onSearch" />
     <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
       <template #prefix>
         <EnvironmentOutlined />
+      </template>
+      <template #suffix>
+        <Tooltip :max-width="150" tooltip="Extra information">
+          <InfoCircleOutlined />
+        </Tooltip>
       </template>
     </InputSearch>
   </Space>
