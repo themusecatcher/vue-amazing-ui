@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { SearchOutlined, CompassOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, CompassOutlined, EnvironmentOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 const lazyValue = ref('')
 const sizeOptions = [
@@ -144,11 +144,16 @@ function onSearch(searchValue: string) {
     </Space>
     <h2 class="mt30 mb10">带清除图标</h2>
     <Space>
-      <InputSearch v-model:value="value" allow-clear placeholder="input search text" @search="onSearch" />
+      <InputSearch
+        v-model:value="value"
+        allow-clear
+        placeholder="input search text input search text"
+        @search="onSearch"
+      />
     </Space>
     <h2 class="mt30 mb10">带字数提示</h2>
     <Space :width="300">
-      <InputSearch v-model:value="value" allow-clear show-count placeholder="input search text" @search="onSearch" />
+      <InputSearch v-model:value="value" show-count placeholder="input search text" @search="onSearch" />
       <InputSearch
         v-model:value="value"
         allow-clear
@@ -177,7 +182,7 @@ function onSearch(searchValue: string) {
       <InputSearch v-model:value="value" prefix="¥" suffix="元" placeholder="input search text" @search="onSearch" />
       <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
         <template #prefix>
-          <CompassOutlined />
+          <EnvironmentOutlined />
         </template>
       </InputSearch>
     </Space>
