@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
-import { formatNumber } from '../utils'
+import { formatNumber, useSlotsExist } from '../utils'
 interface Props {
   title?: string // 数值的标题 string | slot
   value?: string | number // 数值的内容 string | number | slot
@@ -25,14 +25,12 @@ const props = withDefaults(defineProps<Props>(), {
 const showValue = computed(() => {
   return props.formatter(formatNumber(props.value || '', props.precision, props.separator))
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['prefix', 'suffix'])
 const showPrefix = computed(() => {
-  const prefixSlots = slots.prefix?.()
-  return Boolean(prefixSlots && prefixSlots?.length) || props.prefix
+  return slotsExist.prefix || props.prefix
 })
 const showSuffix = computed(() => {
-  const suffixSlots = slots.suffix?.()
-  return Boolean(suffixSlots && suffixSlots?.length) || props.suffix
+  return slotsExist.suffix || props.suffix
 })
 </script>
 <template>

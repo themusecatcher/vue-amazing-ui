@@ -12,7 +12,7 @@
  * @param url 文件的 URL
  * @param fileName 文件名；文件的命名，如果未提供，则从 URL 中尝试提取
  */
-export function downloadFile(url: string, fileName: string): void {
+export function downloadFile(url: string, fileName?: string): void {
   url = encodeURI(url) // 对 URL 进行编码防止 XSS 攻击
   let name = ''
   if (fileName) {
@@ -69,4 +69,4 @@ donwloadFile('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdow
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 url | 文件的 `URL` | string | undefined
-fileName | 文件的命名，如果未提供，则从 `URL` 中尝试提取 | string | undefined
+fileName? | 文件的命名，如果未提供，则从 `URL` 中尝试提取 | string | undefined

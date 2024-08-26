@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
+import { useSlotsExist } from '../utils'
 enum PresetColor {
   pink = 'pink',
   red = 'red',
@@ -84,18 +85,16 @@ const presetClass = computed(() => {
   }
   return
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['default', 'value'])
 const showContent = computed(() => {
   if (props.value !== undefined || props.dot || (!props.color && !props.status)) {
-    const defaultSlots = slots.default?.()
-    return Boolean(defaultSlots && defaultSlots?.length)
+    return slotsExist.default
   }
   return false
 })
 const showValue = computed(() => {
   if (!props.color && !props.status) {
-    const valueSlots = slots.value?.()
-    return Boolean(valueSlots && valueSlots?.length)
+    return slotsExist.value
   }
   return false
 })

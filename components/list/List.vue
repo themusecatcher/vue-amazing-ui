@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
 import Spin from '../spin'
 import Empty from '../empty'
 import Pagination from '../pagination'
+import { useSlotsExist } from '../utils'
 interface Props {
   bordered?: boolean // 是否展示边框
   vertical?: boolean // 是否使用竖直样式
@@ -31,19 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   showPagination: false,
   pagination: () => ({})
 })
-const slots = useSlots()
-const showHeader = computed(() => {
-  const headerSlots = slots.header?.()
-  return Boolean(headerSlots && headerSlots?.length) || props.header
-})
-const showDefault = computed(() => {
-  const defaultSlots = slots.default?.()
-  return Boolean(defaultSlots && defaultSlots?.length && defaultSlots[0].children?.length)
-})
-const showFooter = computed(() => {
-  const footerSlots = slots.footer?.()
-  return Boolean(footerSlots && footerSlots?.length) || props.footer
-})
+const slotsExist = useSlotsExist(['header', 'default', 'footer'])
 </script>
 <template>
   <Spin :spinning="loading" size="small" v-bind="spinProps">
@@ -58,14 +46,14 @@ const showFooter = computed(() => {
         'list-hoverable': hoverable
       }"
     >
-      <div class="m-list-header" v-if="showHeader">
+      <div class="m-list-header" v-if="slotsExist.header || props.header">
         <slot name="header">{{ header }}</slot>
       </div>
-      <slot v-if="showDefault"></slot>
+      <slot v-if="slotsExist.default"></slot>
       <div class="m-list-empty" v-else>
         <Empty image="outlined" v-bind="emptyProps" />
       </div>
-      <div class="m-list-footer" v-if="showFooter">
+      <div class="m-list-footer" v-if="slotsExist.footer || props.footer">
         <slot name="footer">{{ footer }}</slot>
       </div>
       <div class="m-list-pagination" v-if="showPagination">

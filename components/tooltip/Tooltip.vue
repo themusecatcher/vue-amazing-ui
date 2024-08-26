@@ -48,7 +48,7 @@ function onHide(): void {
 }
 </script>
 <template>
-  <div class="m-tooltip" @mouseenter="onShow" @mouseleave="onHide">
+  <div class="m-tooltip-wrap" @mouseenter="onShow" @mouseleave="onHide">
     <div
       ref="tooltipRef"
       class="m-tooltip-content"
@@ -57,11 +57,11 @@ function onHide(): void {
       @mouseenter="onShow"
       @mouseleave="onHide"
     >
-      <div class="u-tooltip" :style="overlayStyle">
+      <div class="m-tooltip" :style="overlayStyle">
         <slot name="tooltip">{{ tooltip }}</slot>
       </div>
-      <div class="m-tooltip-arrow">
-        <span class="u-tooltip-arrow"></span>
+      <div class="tooltip-arrow">
+        <span></span>
       </div>
     </div>
     <span ref="contentRef">
@@ -70,7 +70,7 @@ function onHide(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-tooltip {
+.m-tooltip-wrap {
   position: relative;
   display: inline-block;
   .m-tooltip-content {
@@ -84,7 +84,7 @@ function onHide(): void {
     transition:
       transform 0.1s cubic-bezier(0.78, 0.14, 0.15, 0.86),
       opacity 0.1s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-    .u-tooltip {
+    .m-tooltip {
       min-width: 32px;
       min-height: 32px;
       padding: 6px 8px;
@@ -101,7 +101,7 @@ function onHide(): void {
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
     }
-    .m-tooltip-arrow {
+    .tooltip-arrow {
       position: absolute;
       z-index: 9;
       left: 50%;

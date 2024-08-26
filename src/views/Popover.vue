@@ -24,13 +24,14 @@ function openChange(visible: boolean) {
     </Popover>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Popover
-      title="TitleTitleTitleTitleTitleTitleTitleTitleTitle"
       :max-width="240"
+      :title-style="{ fontSize: '16px', fontWeight: 'bold', color: '#1677ff' }"
       :overlayStyle="{ padding: '12px 18px', borderRadius: '12px' }"
     >
+      <template #title> Custom Title </template>
       <template #content>
-        <p>Content</p>
-        <p>Content</p>
+        <p>Custom Content</p>
+        <p>Custom Content</p>
       </template>
       <Button type="primary">Hover me</Button>
     </Popover>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { useSlots, computed } from 'vue'
-import type { CSSProperties, Slot } from 'vue'
+import { computed } from 'vue'
+import type { CSSProperties } from 'vue'
+import { useSlotsExist } from '../utils'
 interface Props {
   description?: string // 自定义描述内容 string | slot
   descriptionStyle?: CSSProperties // 设置描述文本的样式
@@ -15,24 +16,18 @@ const props = withDefaults(defineProps<Props>(), {
   imageStyle: () => ({}),
   footer: undefined
 })
-const slots = useSlots()
-const showDefault = computed(() => {
-  const defaultSlots = slots.default?.()
-  return Boolean(defaultSlots && defaultSlots?.length)
-})
+const slotsExist = useSlotsExist(['default', 'description', 'footer'])
 const showDescription = computed(() => {
-  const descriptionSlots = slots.description?.()
-  return Boolean(descriptionSlots && descriptionSlots?.length) || props.description
+  return slotsExist.description || props.description
 })
 const showFooter = computed(() => {
-  const footerSlots = slots.footer?.()
-  return Boolean(footerSlots && footerSlots?.length) || props.footer
+  return slotsExist.footer || props.footer
 })
 </script>
 <template>
   <div class="m-empty" :class="{ 'empty-image-outlined': image === 'outlined' }">
     <div class="m-empty-image" :style="imageStyle">
-      <slot v-if="showDefault"></slot>
+      <slot v-if="slotsExist.default"></slot>
       <svg
         v-else-if="image === 'filled'"
         class="empty-filled"

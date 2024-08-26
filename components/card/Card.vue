@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import Skeleton from '../skeleton'
+import { useSlotsExist } from '../utils'
 interface Props {
   width?: number | string // 卡片宽度，单位 px
   title?: string // 卡片标题 string | slot
@@ -28,18 +29,9 @@ const cardWidth = computed(() => {
   }
   return props.width
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['title', 'extra'])
 const showHeader = computed(() => {
-  const titleSlots = slots.title?.()
-  const extraSlots = slots.extra?.()
-  let n = 0
-  if (titleSlots && titleSlots?.length) {
-    n++
-  }
-  if (extraSlots && extraSlots?.length) {
-    n++
-  }
-  return Boolean(n) || props.title || props.extra
+  return slotsExist.title || slotsExist.extra || props.title || props.extra
 })
 </script>
 <template>

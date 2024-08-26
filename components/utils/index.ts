@@ -76,8 +76,8 @@ export function formatNumber(
   precision: number = 2,
   separator: string = ',',
   decimal: string = '.',
-  prefix: string,
-  suffix: string
+  prefix?: string,
+  suffix?: string
 ): string {
   // 类型检查
   if (typeof value !== 'number' && typeof value !== 'string') {
@@ -247,7 +247,7 @@ export function add(num1: number, num2: number): number {
  * @param url 文件的 URL
  * @param fileName 文件名；文件的命名，如果未提供，则从 URL 中尝试提取
  */
-export function downloadFile(url: string, fileName: string): void {
+export function downloadFile(url: string, fileName?: string): void {
   url = encodeURI(url) // 对 URL 进行编码防止 XSS 攻击
   let name = ''
   if (fileName) {
@@ -408,7 +408,7 @@ export function useMutationObserver(
  * @param throttleDelay 节流延迟时间，单位 ms，默认为 100ms，用于控制滚动事件触发的频率
  * @returns 返回一个对象，其中包含一个名为 scrollDown 的 ref 对象，表示滚动方向是否向下
  */
-export function useScrollDirection(throttleDelay = 100) {
+export function useScrollDirection(throttleDelay: number = 100) {
   // 使用 ref 定义一个响应式变量，指示当前滚动方向是否向下
   const scrollDown = ref<boolean>(false)
   // 记录上一次滚动的位置

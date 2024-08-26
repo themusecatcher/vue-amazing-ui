@@ -2,8 +2,8 @@
 defineOptions({
   inheritAttrs: false
 })
-import { ref, computed, watch, useSlots } from 'vue'
-import { add } from '../utils'
+import { ref, computed, watch } from 'vue'
+import { useSlotsExist, add } from '../utils'
 interface Props {
   width?: string | number // 数字输入框宽度，单位 px
   min?: number // 最小值
@@ -39,10 +39,9 @@ const precision = computed(() => {
   const stepPrecision = String(props.step).split('.')[1]?.length || 0
   return Math.max(props.precision, stepPrecision)
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['prefix'])
 const showPrefix = computed(() => {
-  const prefixSlots = slots.prefix?.()
-  return Boolean(prefixSlots && prefixSlots?.length) || props.prefix
+  return slotsExist.prefix || props.prefix
 })
 const numValue = ref(props.formatter(props.value?.toFixed(precision.value)))
 watch(

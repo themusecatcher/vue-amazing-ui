@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, useSlots } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
+import { useSlotsExist } from '../utils'
 interface Props {
   title?: string // 倒计时标题 string | slot
   titleStyle?: CSSProperties // 设置标题的样式
@@ -23,14 +24,12 @@ const props = withDefaults(defineProps<Props>(), {
   value: 0,
   valueStyle: () => ({})
 })
-const slots = useSlots()
+const slotsExist = useSlotsExist(['prefix', 'suffix'])
 const showPrefix = computed(() => {
-  const prefixSlots = slots.prefix?.()
-  return Boolean(prefixSlots && prefixSlots?.length) || props.prefix
+  return slotsExist.prefix || props.prefix
 })
 const showSuffix = computed(() => {
-  const suffixSlots = slots.suffix?.()
-  return Boolean(suffixSlots && suffixSlots?.length) || props.suffix
+  return slotsExist.suffix || props.suffix
 })
 const showType = computed(() => {
   return {

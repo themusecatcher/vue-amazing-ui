@@ -78,12 +78,16 @@ function openChange (visible: boolean) {
 ## 自定义样式
 
 <Popover
-  title="TitleTitleTitleTitleTitleTitleTitleTitleTitle"
   :max-width="240"
-  :overlayStyle="{ padding: '12px 18px', borderRadius: '12px' }">
+  :title-style="{ fontSize: '16px', fontWeight: 'bold', color: '#1677ff' }"
+  :overlayStyle="{ padding: '12px 18px', borderRadius: '12px' }"
+>
+  <template #title>
+    Custom Title
+  </template>
   <template #content>
-    <p>Content</p>
-    <p>Content</p>
+    <p>Custom Content</p>
+    <p>Custom Content</p>
   </template>
   <Button type="primary">Hover me</Button>
 </Popover>
@@ -93,12 +97,16 @@ function openChange (visible: boolean) {
 ```vue
 <template>
   <Popover
-    title="TitleTitleTitleTitleTitleTitleTitleTitleTitle"
     :max-width="240"
-    :overlayStyle="{ padding: '12px 18px', borderRadius: '12px' }">
+    :title-style="{ fontSize: '16px', fontWeight: 'bold', color: '#1677ff' }"
+    :overlayStyle="{ padding: '12px 18px', borderRadius: '12px' }"
+  >
+    <template #title>
+      Custom Title
+    </template>
     <template #content>
-      <p>Content</p>
-      <p>Content</p>
+      <p>Custom Content</p>
+      <p>Custom Content</p>
     </template>
     <Button type="primary">Hover me</Button>
   </Popover>
@@ -114,10 +122,12 @@ function openChange (visible: boolean) {
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 title | 卡片标题 | string &#124; slot | undefined
+titleStyle | 卡片标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 content | 卡片内容 | string &#124; slot | undefined
+contentStyle | 卡片内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+overlayStyle | 卡片容器样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 maxWidth | 卡片内容最大宽度 | string &#124; number | 'auto'
 trigger | 卡片触发方式 | 'hover' &#124; 'click' | 'hover'
-overlayStyle | 卡片样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 
 ## Events
 
