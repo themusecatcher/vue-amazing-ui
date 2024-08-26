@@ -290,7 +290,7 @@ function onPassword() {
       margin-left: 4px;
       display: flex;
       flex: none;
-      gap: 4px;
+      gap: 8px;
       align-items: center;
       .m-actions {
         cursor: pointer;
