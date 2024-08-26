@@ -272,7 +272,7 @@ function onSearch(searchValue: string) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { SearchOutlined, CompassOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 const sizeOptions = [
   {
@@ -496,7 +496,7 @@ function onSearch(searchValue: string) {
   />
   <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
     <template #prefix>
-      <CompassOutlined />
+      <EnvironmentOutlined />
     </template>
   </InputSearch>
 </Space>
@@ -506,6 +506,7 @@ function onSearch(searchValue: string) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { EnvironmentOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 watchEffect(() => {
   console.log('value:', value.value)
@@ -525,7 +526,7 @@ function onSearch(searchValue: string) {
     />
     <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
       <template #prefix>
-        <CompassOutlined />
+        <EnvironmentOutlined />
       </template>
     </InputSearch>
   </Space>
@@ -571,6 +572,7 @@ function onSearch(searchValue: string) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { SearchOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 const loading = ref(true)
 watchEffect(() => {
@@ -653,6 +655,7 @@ function onSearch(searchValue: string) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { SearchOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 const disabled = ref(true)
 watchEffect(() => {
