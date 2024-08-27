@@ -1,71 +1,99 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, watch, watchEffect, computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useSlotsExist, rafTimeout, cancelRaf } from '../utils'
 interface Props {
+  maxWidth?: string | number // 弹出卡片最大宽度
   title?: string // 卡片标题 string | slot
   titleStyle?: CSSProperties // 卡片标题样式
   content?: string // 卡片内容 string | slot
   contentStyle?: CSSProperties // 卡片内容样式
-  overlayStyle?: CSSProperties // 卡片容器样式
-  maxWidth?: string | number // 卡片内容最大宽度
-  trigger?: 'hover' | 'click' // 卡片触发方式
+  bgColor?: string // 弹出卡片背景颜色
+  popoverStyle?: CSSProperties // 卡片容器样式
+  arrow?: boolean // 是否显示箭头
+  trigger?: 'hover' | 'click' // 弹出卡片触发方式
+  showDelay?: number // 弹出卡片显示的延迟时间，单位 ms
+  hideDelay?: number // 弹出卡片隐藏的延迟时间，单位 ms
+  show?: boolean // (v-model) 弹出卡片是否显示
 }
 const props = withDefaults(defineProps<Props>(), {
+  maxWidth: 'auto',
   title: undefined,
   titleStyle: () => ({}),
   content: undefined,
   contentStyle: () => ({}),
-  overlayStyle: () => ({}),
-  maxWidth: 'auto',
-  trigger: 'hover'
-})
-const popMaxWidth = computed(() => {
-  if (typeof props.maxWidth === 'number') {
-    return props.maxWidth + 'px'
-  }
-  return props.maxWidth
+  bgColor: '#fff',
+  popoverStyle: () => ({}),
+  arrow: true,
+  trigger: 'hover',
+  showDelay: 100,
+  hideDelay: 100,
+  show: false
 })
 const visible = ref(false)
 const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const defaultRef = ref() // 声明一个同名的模板引用
 const popRef = ref() // 声明一个同名的模板引用
-const emit = defineEmits(['openChange'])
 const hideTimer = ref()
+const activeBlur = ref(false) // 是否激活 blur 事件
+const emits = defineEmits(['update:show', 'openChange'])
 const slotsExist = useSlotsExist(['title', 'content'])
+const popoverMaxWidth = computed(() => {
+  if (typeof props.maxWidth === 'number') {
+    return props.maxWidth + 'px'
+  }
+  return props.maxWidth
+})
 const showTitle = computed(() => {
   return slotsExist.title || props.title
 })
 const showContent = computed(() => {
   return slotsExist.content || props.content
 })
-function onShow() {
-  getPosition()
-  hideTimer.value && cancelRaf(hideTimer.value)
-  visible.value = true
-  emit('openChange', visible.value)
-}
-function onHide(): void {
-  hideTimer.value = rafTimeout(() => {
-    visible.value = false
-    emit('openChange', visible.value)
-  }, 100)
-}
-const activeBlur = ref(false) // 是否激活 blur 事件
-function onOpen() {
-  visible.value = !visible.value
-  if (visible.value) {
+watch(
+  popoverMaxWidth,
+  () => {
     getPosition()
+  },
+  {
+    flush: 'post'
   }
-  emit('openChange', visible.value)
-}
+)
+watchEffect(() => {
+  visible.value = props.show
+})
 function getPosition() {
   const defaultWidth = defaultRef.value.offsetWidth // 展示文本宽度
   const popWidth = popRef.value.offsetWidth // 提示文本宽度
   const popHeight = popRef.value.offsetHeight // 提示文本高度
-  top.value = popHeight + 4
+  top.value = popHeight + (props.arrow ? 4 : 6)
   left.value = (popWidth - defaultWidth) / 2
+}
+function onShow() {
+  hideTimer.value && cancelRaf(hideTimer.value)
+  if (!visible.value) {
+    getPosition()
+    rafTimeout(() => {
+      visible.value = true
+      emits('update:show', true)
+      emits('openChange', true)
+    }, props.showDelay)
+  }
+}
+function onHide(): void {
+  hideTimer.value = rafTimeout(() => {
+    visible.value = false
+    emits('update:show', false)
+    emits('openChange', false)
+  }, props.hideDelay)
+}
+function toggleVisible() {
+  if (!visible.value) {
+    onShow()
+  } else {
+    onHide()
+  }
 }
 function onEnter() {
   activeBlur.value = false
@@ -76,7 +104,8 @@ function onLeave() {
 }
 function onBlur() {
   visible.value = false
-  emit('openChange', false)
+  emits('update:show', false)
+  emits('openChange', false)
 }
 </script>
 <template>
@@ -89,13 +118,13 @@ function onBlur() {
       ref="popRef"
       tabindex="1"
       class="m-pop-content"
-      :class="{ 'pop-visible': visible }"
-      :style="`max-width: ${popMaxWidth}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
+      :class="{ 'popover-padding': arrow, 'popover-visible': visible }"
+      :style="`max-width: ${popoverMaxWidth}; --popover-background-color: ${bgColor}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
       @blur="trigger === 'click' && activeBlur ? onBlur() : () => false"
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
       @mouseleave="trigger === 'hover' ? onHide() : () => false"
     >
-      <div class="m-popover" :style="overlayStyle">
+      <div class="m-popover" :style="popoverStyle">
         <div v-if="showTitle" class="popover-title" :style="titleStyle">
           <slot name="title">{{ title }}</slot>
         </div>
@@ -103,13 +132,11 @@ function onBlur() {
           <slot name="content">{{ content }}</slot>
         </div>
       </div>
-      <div class="popover-arrow">
-        <span></span>
-      </div>
+      <div v-if="arrow" class="popover-arrow"></div>
     </div>
     <div
       ref="defaultRef"
-      @click="trigger === 'click' ? onOpen() : () => false"
+      @click="trigger === 'click' ? toggleVisible() : () => false"
       @mouseenter="trigger === 'click' && visible ? onEnter() : () => false"
       @mouseleave="trigger === 'click' && visible ? onLeave() : () => false"
     >
@@ -125,7 +152,6 @@ function onBlur() {
     position: absolute;
     z-index: 999;
     width: max-content;
-    padding-bottom: 12px;
     pointer-events: none;
     transform: scale(0.8);
     opacity: 0;
@@ -143,7 +169,7 @@ function onBlur() {
       word-break: break-all;
       cursor: auto;
       user-select: text;
-      background-color: #fff;
+      background-color: var(--popover-background-color);
       border-radius: 8px;
       box-shadow:
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
@@ -178,7 +204,7 @@ function onBlur() {
         inset-inline-start: 0;
         width: 16px;
         height: 8px;
-        background-color: #fff;
+        background-color: var(--popover-background-color);
         clip-path: path(
           'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
         );
@@ -200,7 +226,10 @@ function onBlur() {
       }
     }
   }
-  .pop-visible {
+  .popover-padding {
+    padding-bottom: 12px;
+  }
+  .popover-visible {
     pointer-events: auto;
     transform: scale(1);
     opacity: 1;

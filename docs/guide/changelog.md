@@ -3,10 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-## 1.6.1 <Tag color="volcano" size="small">2024-08-26</Tag>
+## 1.6.1 <Tag color="volcano" size="small">2024-08-27</Tag>
 
 - 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件
-- 优化并更新 [气泡卡片 Popover](https://themusecatcher.github.io/vue-amazing-ui/guide/components/popover.html) 组件，新增 `titleStyle` `contentStyle` 属性
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `bgColor` `tooltipStyle` `arrow` `trigger` `showDelay` `hideDelay` `show` 属性
+- 优化并更新 [气泡卡片 Popover](https://themusecatcher.github.io/vue-amazing-ui/guide/components/popover.html) 组件，新增 `titleStyle` `contentStyle` `bgColor` `popoverStyle` `arrow` `trigger` `showDelay` `hideDelay` `show` 属性
 - 组件库代码优化
 
 ## 1.6.0 <Tag color="volcano" size="small">2024-08-23</Tag>

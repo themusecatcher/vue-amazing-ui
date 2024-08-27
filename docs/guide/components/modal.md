@@ -379,7 +379,7 @@ noticeProps | 通知按钮 `props` 配置，参考 [Button Props](https://themus
 center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true
 top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100
 loading | 确定按钮 `loading` | boolean | false
-show | 提示框是否可见 | boolean | false
+show <Tag color="cyan">v-model</Tag> | 提示框是否可见 | boolean | false
 
 ## Events
 
