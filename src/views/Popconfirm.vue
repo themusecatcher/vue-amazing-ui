@@ -57,7 +57,7 @@ const cancel = (e: MouseEvent) => {
     <h2 class="mt30 mb10">自定义按钮</h2>
     <Space>
       <Popconfirm title="Are you sure ?" ok-text="Yes" cancel-text="No" @ok="confirm" @cancel="cancel">
-        <Button type="danger">Delete</Button>
+        <Button type="danger">Delete Confirm</Button>
       </Popconfirm>
       <Popconfirm
         title="Are you sure ?"

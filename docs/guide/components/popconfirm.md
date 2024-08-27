@@ -197,7 +197,7 @@ const cancel = (e: MouseEvent) => {
     @ok="confirm"
     @cancel="cancel"
   >
-    <Button type="danger">Delete</Button>
+    <Button type="danger">Delete Confirm</Button>
   </Popconfirm>
   <Popconfirm
     title="Are you sure ?"
@@ -236,7 +236,7 @@ const cancel = (e: MouseEvent) => {
       @ok="confirm"
       @cancel="cancel"
     >
-      <Button type="danger">Delete</Button>
+      <Button type="danger">Delete Confirm</Button>
     </Popconfirm>
     <Popconfirm
       title="Are you sure ?"

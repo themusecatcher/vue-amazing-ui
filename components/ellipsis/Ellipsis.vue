@@ -91,7 +91,7 @@ function onExpand() {
   <Tooltip
     v-if="showTooltip"
     :max-width="defaultTooltipMaxWidth"
-    :overlay-style="{ padding: '8px 12px', textAlign: 'justify' }"
+    :tooltip-style="{ padding: '8px 12px', textAlign: 'justify' }"
     v-bind="tooltipProps"
   >
     <template #tooltip>
@@ -102,7 +102,7 @@ function onExpand() {
     <div
       ref="ellipsisRef"
       class="m-ellipsis"
-      :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'cursor-pointer': showExpand }]"
+      :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'ellipsis-cursor-pointer': showExpand }]"
       :style="`-webkit-line-clamp: ${line}; max-width: ${textMaxWidth};`"
       @click="showExpand ? onExpand() : () => false"
       v-bind="$attrs"
@@ -114,7 +114,7 @@ function onExpand() {
     v-else
     ref="ellipsisRef"
     class="m-ellipsis"
-    :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'cursor-pointer': showExpand }]"
+    :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'ellipsis-cursor-pointer': showExpand }]"
     :style="`-webkit-line-clamp: ${line}; max-width: ${textMaxWidth};`"
     @click="showExpand ? onExpand() : () => false"
     v-bind="$attrs"
@@ -137,7 +137,7 @@ function onExpand() {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.cursor-pointer {
+.ellipsis-cursor-pointer {
   cursor: pointer;
 }
 </style>
