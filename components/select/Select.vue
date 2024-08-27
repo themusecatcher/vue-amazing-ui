@@ -42,12 +42,6 @@ const props = withDefaults(defineProps<Props>(), {
   scrollbarProps: () => ({}),
   modelValue: null
 })
-const selectWidth = computed(() => {
-  if (typeof props.width === 'number') {
-    return props.width + 'px'
-  }
-  return props.width
-})
 const filterOptions = ref<Option[]>() // 过滤后的选项数组
 const selectedName = ref() // 当前选中选项的 label
 const inputRef = ref() // 输入框 DOM 引用
@@ -61,6 +55,12 @@ const showClear = ref(false) // 清除图标显隐
 const showCaret = ref(false) // 支持搜索时，输入光标的显隐
 const showSearch = ref(false) // 搜索图标显隐
 const selectFocused = ref(false) /// select 是否聚焦
+const selectWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return props.width + 'px'
+  }
+  return props.width
+})
 watchEffect(() => {
   if (props.search) {
     if (inputValue.value) {

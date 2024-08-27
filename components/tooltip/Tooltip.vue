@@ -1,24 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, watchEffect, computed } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf } from '../utils'
+import { useSlotsExist, rafTimeout, cancelRaf } from '../utils'
 interface Props {
-  maxWidth?: number // 提示框内容最大宽度，单位 px
+  maxWidth?: string | number // 弹出提示最大宽度，单位 px
   content?: string // 展示的文本 string | slot
-  tooltip?: string // 提示的文本 string | slot
-  fontSize?: number // 提示文本字体大小，单位 px，优先级高于 overlayStyle
-  color?: string // 提示文本字体颜色，优先级高于 overlayStyle
-  backgroundColor?: string // 提示框背景颜色，优先级高于 overlayStyle
-  overlayStyle?: CSSProperties // 提示框内容区域样式
+  tooltip?: string // 弹出提示文本 string | slot
+  bgColor?: string // 弹出提示框背景颜色
+  tooltipStyle?: CSSProperties // 弹出提示样式
+  arrow?: boolean // 是否显示箭头
+  trigger?: 'hover' | 'click' // 弹出提示触发方式
+  showDelay?: number // 弹出提示显示的延迟时间，单位 ms
+  hideDelay?: number // 弹出提示隐藏的延迟时间，单位 ms
+  show?: boolean // (v-model) 弹出提示是否显示
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   maxWidth: 120,
-  content: '暂无内容',
-  tooltip: '暂无提示',
-  fontSize: 14,
-  color: '#FFF',
-  backgroundColor: 'rgba(0, 0, 0, 0.85)',
-  overlayStyle: () => ({})
+  content: undefined,
+  tooltip: undefined,
+  bgColor: 'rgba(0, 0, 0, 0.85)',
+  tooltipStyle: () => ({}),
+  arrow: true,
+  trigger: 'hover',
+  showDelay: 100,
+  hideDelay: 100,
+  show: false
 })
 const visible = ref(false)
 const hideTimer = ref()
@@ -26,45 +32,102 @@ const top = ref(0) // 提示框 top 定位
 const left = ref(0) // 提示框 left 定位
 const contentRef = ref() // 声明一个同名的模板引用
 const tooltipRef = ref() // 声明一个同名的模板引用
-const emit = defineEmits(['openChange'])
+const activeBlur = ref(false) // 是否激活 blur 事件
+const emits = defineEmits(['update:show', 'openChange'])
+const slotsExist = useSlotsExist(['tooltip'])
+const tooltipMaxWidth = computed(() => {
+  if (typeof props.maxWidth === 'number') {
+    return props.maxWidth + 'px'
+  }
+  return props.maxWidth
+})
+const showTooltip = computed(() => {
+  return slotsExist.tooltip || props.tooltip
+})
+watch(
+  tooltipMaxWidth,
+  () => {
+    getPosition()
+  },
+  {
+    flush: 'post'
+  }
+)
+watchEffect(() => {
+  visible.value = props.show
+})
 function getPosition() {
   const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
   const tooltipWidth = tooltipRef.value.offsetWidth // 提示文本宽度
   const tooltipHeight = tooltipRef.value.offsetHeight // 提示文本高度
-  top.value = tooltipHeight + 4
+  top.value = tooltipHeight + (props.arrow ? 4 : 6)
   left.value = (tooltipWidth - contentWidth) / 2
 }
 function onShow() {
-  getPosition()
   hideTimer.value && cancelRaf(hideTimer.value)
-  visible.value = true
-  emit('openChange', visible.value)
+  if (!visible.value) {
+    getPosition()
+    rafTimeout(() => {
+      visible.value = true
+      emits('update:show', true)
+      emits('openChange', true)
+    }, props.showDelay)
+  }
 }
 function onHide(): void {
   hideTimer.value = rafTimeout(() => {
     visible.value = false
-    emit('openChange', visible.value)
-  }, 100)
+    emits('update:show', false)
+    emits('openChange', false)
+  }, props.hideDelay)
+}
+function toggleVisible() {
+  if (!visible.value) {
+    onShow()
+  } else {
+    onHide()
+  }
+}
+function onEnter() {
+  activeBlur.value = false
+}
+function onLeave() {
+  activeBlur.value = true
+  tooltipRef.value.focus()
+}
+function onBlur() {
+  visible.value = false
+  emits('update:show', false)
+  emits('openChange', false)
 }
 </script>
 <template>
-  <div class="m-tooltip-wrap" @mouseenter="onShow" @mouseleave="onHide">
+  <div
+    class="m-tooltip-wrap"
+    @mouseenter="trigger === 'hover' ? onShow() : () => false"
+    @mouseleave="trigger === 'hover' ? onHide() : () => false"
+  >
     <div
       ref="tooltipRef"
+      tabindex="1"
       class="m-tooltip-content"
-      :class="{ 'tip-visible': visible }"
-      :style="`--tooltip-font-size: ${fontSize}px; --tooltip-color: ${color}; --tooltip-background-color: ${backgroundColor}; max-width: ${maxWidth}px; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
-      @mouseenter="onShow"
-      @mouseleave="onHide"
+      :class="{ 'tooltip-padding': arrow, 'tooltip-visible': visible && showTooltip }"
+      :style="`max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
+      @blur="trigger === 'click' && activeBlur ? onBlur() : () => false"
+      @mouseenter="trigger === 'hover' ? onShow() : () => false"
+      @mouseleave="trigger === 'hover' ? onHide() : () => false"
     >
-      <div class="m-tooltip" :style="overlayStyle">
+      <div class="m-tooltip" :style="tooltipStyle">
         <slot name="tooltip">{{ tooltip }}</slot>
       </div>
-      <div class="tooltip-arrow">
-        <span></span>
-      </div>
+      <div v-if="arrow" class="tooltip-arrow"></div>
     </div>
-    <span ref="contentRef">
+    <span
+      ref="contentRef"
+      @click="trigger === 'click' ? toggleVisible() : () => false"
+      @mouseenter="trigger === 'click' && visible ? onEnter() : () => false"
+      @mouseleave="trigger === 'click' && visible ? onLeave() : () => false"
+    >
       <slot>{{ content }}</slot>
     </span>
   </div>
@@ -77,7 +140,6 @@ function onHide(): void {
     position: absolute;
     z-index: 999;
     width: max-content;
-    padding-bottom: 12px;
     pointer-events: none;
     transform: scale(0.8);
     opacity: 0;
@@ -88,8 +150,8 @@ function onHide(): void {
       min-width: 32px;
       min-height: 32px;
       padding: 6px 8px;
-      font-size: var(--tooltip-font-size);
-      color: var(--tooltip-color);
+      font-size: 14px;
+      color: #fff;
       line-height: 1.5714285714285714;
       text-align: justify;
       text-decoration: none;
@@ -140,7 +202,10 @@ function onHide(): void {
       }
     }
   }
-  .tip-visible {
+  .tooltip-padding {
+    padding-bottom: 12px;
+  }
+  .tooltip-visible {
     pointer-events: auto;
     transform: scale(1);
     opacity: 1;

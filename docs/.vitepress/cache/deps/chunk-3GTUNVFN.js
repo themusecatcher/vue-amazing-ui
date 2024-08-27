@@ -26,7 +26,7 @@ import {
   watchEffect
 } from "./chunk-HBGG36HX.js";
 
-// node_modules/.pnpm/vitepress@1.3.3_@algolia+client-search@5.1.1_@types+node@22.5.0_async-validator@4.2.5_less@4._tbnss7da56esax6r6zb673yfza/node_modules/vitepress/lib/vue-demi.mjs
+// node_modules/.pnpm/vitepress@1.3.4_@algolia+client-search@5.1.1_@types+node@22.5.0_async-validator@4.2.5_less@4._rvy2flpofrsnatr3llqnueoiby/node_modules/vitepress/lib/vue-demi.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@11.0.1_vue@3.4.38_typescript@5.5.4_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@11.0.3_vue@3.4.38_typescript@5.5.4_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -179,7 +179,7 @@ function createSharedComposable(composable) {
   };
   return (...args) => {
     subscribers += 1;
-    if (!state) {
+    if (!scope) {
       scope = effectScope(true);
       state = scope.run(() => composable(...args));
     }
@@ -1671,4 +1671,4 @@ vitepress/lib/vue-demi.mjs:
    * @license MIT
    *)
 */
-//# sourceMappingURL=chunk-2CO4ZBUX.js.map
+//# sourceMappingURL=chunk-3GTUNVFN.js.map

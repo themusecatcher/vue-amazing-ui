@@ -20,12 +20,10 @@ function openChange (visible: boolean) {
 ## 基本使用
 
 <Space gap="large">
-  <Tooltip :max-width="240" @open-change="openChange">
-    <template #tooltip>特斯拉(Tesla)是美国一家电动汽车及能源公司，总部位于帕洛阿托(Palo Alto)，市值达2100亿美元，产销电动汽车、太阳能板、及储能设备</template>
+  <Tooltip tooltip="Tesla" @open-change="openChange">
     <Button type="primary">特斯拉</Button>
   </Tooltip>
-  <Tooltip :max-width="380" @open-change="openChange">
-    <template #tooltip>《哥斯拉》由传奇影业、华纳兄弟影业公司等联合出品。该片讲述了世界各地异常自然灾害的发生频率的上升，被隐瞒了几十年的秘密逐渐浮出水面，人类即将面临一场来自远古的浩劫，三只强大怪兽也将轮番登场掀起层层高潮，这场混战也将在怪兽与人类之间打响的故事</template>
+  <Tooltip tooltip="Godzilla" @open-change="openChange">
     <Button type="primary">哥斯拉</Button>
   </Tooltip>
 </Space>
@@ -40,12 +38,10 @@ function openChange (visible: boolean) {
 </script>
 <template>
   <Space gap="large">
-    <Tooltip :max-width="240" @open-change="openChange">
-      <template #tooltip>特斯拉(Tesla)是美国一家电动汽车及能源公司，总部位于帕洛阿托(Palo Alto)，市值达2100亿美元，产销电动汽车、太阳能板、及储能设备</template>
+    <Tooltip tooltip="Tesla" @open-change="openChange">
       <Button type="primary">特斯拉</Button>
     </Tooltip>
-    <Tooltip :max-width="380" @open-change="openChange">
-      <template #tooltip>《哥斯拉》由传奇影业、华纳兄弟影业公司等联合出品。该片讲述了世界各地异常自然灾害的发生频率的上升，被隐瞒了几十年的秘密逐渐浮出水面，人类即将面临一场来自远古的浩劫，三只强大怪兽也将轮番登场掀起层层高潮，这场混战也将在怪兽与人类之间打响的故事</template>
+    <Tooltip tooltip="Godzilla" @open-change="openChange">
       <Button type="primary">哥斯拉</Button>
     </Tooltip>
   </Space>
@@ -57,12 +53,16 @@ function openChange (visible: boolean) {
 ## 自定义样式
 
 <Tooltip
-  :max-width="320"
-  :font-size="18"
-  color="rgba(0, 0, 0, 0.85)"
-  background-color="#FFF"
-  :overlay-style="{padding: '12px 18px', borderRadius: '12px'}">
-  <template #tooltip>《哥斯拉大战金刚》是由美国传奇影业公司出品。该片讲述了人类计划将所有巨兽从地球上抹去，而传说中哥斯拉和金刚两个王者被设计进行了对决，最终两大巨兽联手破坏人类计划的故事。</template>
+  :max-width="180"
+  bg-color="#fff"
+  :tooltip-style="{
+    padding: '12px 18px',
+    borderRadius: '12px',
+    fontSize: '18px',
+    color: '#1677ff'
+  }"
+>
+  <template #tooltip>Godzilla VS Kong</template>
   <Button type="primary">哥斯拉大战金刚</Button>
 </Tooltip>
 
@@ -71,12 +71,16 @@ function openChange (visible: boolean) {
 ```vue
 <template>
   <Tooltip
-    :max-width="320"
-    :font-size="18"
-    color="rgba(0, 0, 0, 0.85)"
-    background-color="#FFF"
-    :overlay-style="{padding: '12px 18px', borderRadius: '12px'}">
-    <template #tooltip>《哥斯拉大战金刚》是由美国传奇影业公司出品。该片讲述了人类计划将所有巨兽从地球上抹去，而传说中哥斯拉和金刚两个王者被设计进行了对决，最终两大巨兽联手破坏人类计划的故事。</template>
+    :max-width="180"
+    bg-color="#fff"
+    :tooltip-style="{
+      padding: '12px 18px',
+      borderRadius: '12px',
+      fontSize: '18px',
+      color: '#1677ff'
+    }"
+  >
+    <template #tooltip>Godzilla VS Kong</template>
     <Button type="primary">哥斯拉大战金刚</Button>
   </Tooltip>
 </template>
@@ -84,18 +88,98 @@ function openChange (visible: boolean) {
 
 :::
 
-## 暂无数据
+## 不同的触发方式
 
-<Tooltip>
-  <Button type="primary">暂无数据</Button>
+<Space gap="large">
+  <Tooltip>
+    <template #tooltip>Vue Amazing UI</template>
+    <Button type="primary">Hover Me</Button>
+  </Tooltip>
+  <Tooltip trigger="click">
+    <template #tooltip>Vue Amazing UI</template>
+    <Button type="primary">Click Me</Button>
+  </Tooltip>
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space gap="large">
+    <Tooltip>
+      <template #tooltip>Vue Amazing UI</template>
+      <Button type="primary">Hover Me</Button>
+    </Tooltip>
+    <Tooltip trigger="click">
+      <template #tooltip>Vue Amazing UI</template>
+      <Button type="primary">Click Me</Button>
+    </Tooltip>
+  </Space>
+</template>
+```
+
+:::
+
+## 延迟显示隐藏
+
+<Space gap="large">
+  <Tooltip
+    :show-delay="300"
+    :hide-delay="300"
+    tooltip="Vue Amazing UI (delay 300ms)"
+    :tooltip-style="{ textAlign: 'center' }"
+  >
+    <Button type="primary">Delay 300ms Tooltip</Button>
+  </Tooltip>
+  <Tooltip
+    :show-delay="500"
+    :hide-delay="500"
+    tooltip="Vue Amazing UI (delay 500ms)"
+    :tooltip-style="{ textAlign: 'center' }"
+  >
+    <Button type="primary">Delay 500ms Tooltip</Button>
+  </Tooltip>
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space gap="large">
+    <Tooltip
+      :show-delay="300"
+      :hide-delay="300"
+      tooltip="Vue Amazing UI (delay 300ms)"
+      :tooltip-style="{ textAlign: 'center' }"
+    >
+      <Button type="primary">Delay 300ms Tooltip</Button>
+    </Tooltip>
+    <Tooltip
+      :show-delay="500"
+      :hide-delay="500"
+      tooltip="Vue Amazing UI (delay 500ms)"
+      :tooltip-style="{ textAlign: 'center' }"
+    >
+      <Button type="primary">Delay 500ms Tooltip</Button>
+    </Tooltip>
+  </Space>
+</template>
+```
+
+:::
+
+## 隐藏箭头
+
+<Tooltip :arrow="false" tooltip="Vue Amazing UI">
+  <Button type="primary">Hide Arrow</Button>
 </Tooltip>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Tooltip>
-    <Button type="primary">暂无数据</Button>
+  <Tooltip :arrow="false" tooltip="Vue Amazing UI">
+    <Button type="primary">Hide Arrow</Button>
   </Tooltip>
 </template>
 ```
@@ -108,13 +192,16 @@ function openChange (visible: boolean) {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-maxWidth | 提示框内容最大宽度，单位 `px` | number | 120
-content | 展示的文本 | string &#124; slot | '暂无内容'
-tooltip | 提示的文本 | string &#124; slot | '暂无提示'
-fontSize | 提示文本字体大小，单位 `px`，优先级高于 `overlayStyle` | number | 14
-color | 提示文本字体颜色，优先级高于 `overlayStyle` | string | '#FFF'
-backgroundColor | 提示框背景色，优先级高于 `overlayStyle` | string | 'rgba(0, 0, 0, 0.85)'
-overlayStyle | 提示框内容区域样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+maxWidth | 弹出提示最大宽度，单位 `px` | string &#124; number | 120
+content | 展示的文本 | string &#124; slot | undefined
+tooltip | 弹出提示文本 | string &#124; slot | undefined
+bgColor | string | 弹出提示框背景颜色 | 'rgba(0, 0, 0, 0.85)'
+tooltipStyle | 弹出提示样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+arrow | 是否显示箭头 | boolean | true
+trigger | 弹出提示触发方式 | 'hover' &#124; 'click' | 'hover'
+showDelay | 弹出提示显示的延迟时间，单位 `ms` | number | 100
+hideDelay |弹出提示隐藏的延迟时间，单位 `ms` | number | 100
+show <Tag color="cyan">v-model</Tag> | 弹出提示是否显示 | boolean | false
 
 ## Events
 

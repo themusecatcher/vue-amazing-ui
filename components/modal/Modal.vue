@@ -17,7 +17,7 @@ interface Props {
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
   top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
   loading?: boolean // 确定按钮 loading
-  show?: boolean // 提示框是否可见
+  show?: boolean // (v-model) 提示框是否可见
 }
 withDefaults(defineProps<Props>(), {
   width: 420,
