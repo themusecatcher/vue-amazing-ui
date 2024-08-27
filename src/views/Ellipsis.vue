@@ -42,9 +42,13 @@
     <Ellipsis
       :max-width="240"
       :tooltip-props="{
-        fontSize: 16,
-        backgroundColor: '#4096ff',
-        overlayStyle: { padding: '12px 16px', borderRadius: '12px' }
+        bgColor: '#4096ff',
+        tooltipStyle: {
+          padding: '12px 16px',
+          borderRadius: '12px',
+          fontSize: '16px',
+          backgroundColor: '#4096ff'
+        }
       }"
     >
       住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪

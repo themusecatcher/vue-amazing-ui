@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import Button from '../button'
-import { useSlotsExist } from '../utils'
+import type { CSSProperties } from 'vue'
+import { useSlotsExist, rafTimeout, cancelRaf } from '../utils'
 interface Props {
-  title?: string // 确认框的标题 string | slot
-  description?: string // 确认框的内容描述 string | slot
+  maxWidth?: string | number // 弹出确认框最大宽度，单位 px
+  title?: string // 弹出确认框的标题 string | slot
+  titleStyle?: CSSProperties // 设置标题的样式
+  description?: string // 弹出确认框的内容描述 string | slot
+  descriptionStyle?: CSSProperties // 设置内容描述的样式
+  bgColor?: string // 弹出确认框背景颜色
+  popconfirmStyle?: CSSProperties // 弹出确认框容器样式
   content?: string // 展示的文本 string | slot
   icon?: string // 自定义弹出确认框 Icon 图标 string | slot
-  iconType?: 'success' | 'info' | 'warning' | 'error' // 弹出确认框 Icon 图标类型
-  maxWidth?: string | number // 弹出确认框内容最大宽度
+  iconType?: 'success' | 'info' | 'warning' | 'danger' // 弹出确认框 Icon 图标类型
+  iconStyle?: CSSProperties // 设置 Icon 图标的样式，一般不需要设置，主要用于自定义 Icon 图标时
   cancelText?: string // 取消按钮文字 string | slot
   cancelType?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 取消按钮类型
   cancelProps?: object // 取消按钮 props，优先级高于 cancelType，参考 Button 组件 props
@@ -16,98 +22,135 @@ interface Props {
   okType?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 确认按钮类型
   okProps?: object // 确认按钮 props，优先级高于 okType，参考 Button 组件 props
   showCancel?: boolean // 是否显示取消按钮
+  arrow?: boolean // 是否显示箭头
+  trigger?: 'hover' | 'click' // 弹出确认触发方式
+  showDelay?: number // 弹出确认显示的延迟时间，单位 ms
+  hideDelay?: number // 弹出确认隐藏的延迟时间，单位 ms
+  show?: boolean // (v-model) 弹出确认是否显示
 }
 const props = withDefaults(defineProps<Props>(), {
+  maxWidth: 'auto',
   title: undefined,
+  titleStyle: () => ({}),
   description: undefined,
+  descriptionStyle: () => ({}),
+  bgColor: '#fff',
+  popconfirmStyle: () => ({}),
   content: undefined,
   icon: undefined,
   iconType: 'warning',
-  maxWidth: 'auto',
   cancelText: '取消',
   cancelType: 'default',
   cancelProps: () => ({}),
   okText: '确定',
   okType: 'primary',
   okProps: () => ({}),
-  showCancel: true
-})
-const popMaxWidth = computed(() => {
-  if (typeof props.maxWidth === 'number') {
-    return props.maxWidth + 'px'
-  }
-  return props.maxWidth
-})
-const slotsExist = useSlotsExist(['description'])
-const showDesc = computed(() => {
-  return slotsExist.description || props.description
+  showCancel: true,
+  arrow: true,
+  trigger: 'click',
+  showDelay: 100,
+  hideDelay: 100,
+  show: false
 })
 const visible = ref(false)
 const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const contentRef = ref() // 声明一个同名的模板引用
-const popRef = ref() // 声明一个同名的模板引用
-const emits = defineEmits(['cancel', 'ok', 'openChange'])
+const popconfirmRef = ref() // 声明一个同名的模板引用
+const hideTimer = ref() // 延迟调用 ID
 const activeBlur = ref(true) // 是否激活 blur 事件
+const emits = defineEmits(['update:show', 'cancel', 'ok', 'openChange'])
+const slotsExist = useSlotsExist(['description'])
+const popconfirmMaxWidth = computed(() => {
+  if (typeof props.maxWidth === 'number') {
+    return props.maxWidth + 'px'
+  }
+  return props.maxWidth
+})
+watch(
+  popconfirmMaxWidth,
+  () => {
+    getPosition()
+  },
+  {
+    flush: 'post'
+  }
+)
+const showDesc = computed(() => {
+  return slotsExist.description || props.description
+})
+function getPosition() {
+  const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
+  const popWidth = popconfirmRef.value.offsetWidth // 提示文本宽度
+  const popHeight = popconfirmRef.value.offsetHeight // 提示文本高度
+  top.value = popHeight + (props.arrow ? 4 : 6)
+  left.value = (popWidth - contentWidth) / 2
+}
+function onShow() {
+  hideTimer.value && cancelRaf(hideTimer.value)
+  if (!visible.value) {
+    getPosition()
+    rafTimeout(() => {
+      visible.value = true
+      emits('update:show', true)
+      emits('openChange', true)
+    }, props.showDelay)
+  }
+}
+function onHide(): void {
+  hideTimer.value = rafTimeout(() => {
+    visible.value = false
+    emits('update:show', false)
+    emits('openChange', false)
+  }, props.hideDelay)
+}
+function toggleVisible() {
+  if (!visible.value) {
+    onShow()
+  } else {
+    onHide()
+  }
+}
 function onEnter() {
   activeBlur.value = false
 }
 function onLeave() {
   activeBlur.value = true
-  popRef.value.focus()
-}
-function onBlur() {
-  visible.value = false
-  emits('openChange', false)
-}
-function onOpen() {
-  visible.value = !visible.value
-  if (visible.value) {
-    getPosition()
-    popRef.value.focus()
-  }
-  emits('openChange', visible.value)
-}
-function getPosition() {
-  const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
-  const popWidth = popRef.value.offsetWidth // 提示文本宽度
-  const popHeight = popRef.value.offsetHeight // 提示文本高度
-  top.value = popHeight + 4
-  left.value = (popWidth - contentWidth) / 2
+  popconfirmRef.value.focus()
 }
 function onCancel(e: Event) {
-  visible.value = false
-  emits('openChange', false)
   emits('cancel', e)
+  onHide()
 }
 function onOk(e: Event) {
-  visible.value = false
-  emits('openChange', false)
   emits('ok', e)
+  onHide()
 }
 </script>
 <template>
   <div
-    class="m-popconfirm"
-    @mouseenter="visible ? onEnter() : () => false"
-    @mouseleave="visible ? onLeave() : () => false"
+    class="m-popconfirm-wrap"
+    @mouseenter="trigger === 'hover' ? onShow() : onEnter()"
+    @mouseleave="trigger === 'hover' ? onHide() : onLeave()"
   >
     <div
-      ref="popRef"
+      ref="popconfirmRef"
       tabindex="1"
-      class="m-pop-content"
-      :class="{ 'pop-visible': visible }"
-      :style="`max-width: ${popMaxWidth}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
-      @blur="visible && activeBlur ? onBlur() : () => false"
+      class="m-popconfirm-content"
+      :class="{ 'popconfirm-padding': arrow, 'popconfirm-visible': visible }"
+      :style="`max-width: ${popconfirmMaxWidth}; --popover-background-color: ${bgColor}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
+      @blur="trigger === 'click' && activeBlur ? onHide() : () => false"
+      @mouseenter="trigger === 'hover' ? onShow() : () => false"
+      @mouseleave="trigger === 'hover' ? onHide() : () => false"
       @keydown.esc="onCancel"
     >
-      <div class="m-pop">
-        <div class="m-pop-message">
-          <span class="m-icon">
+      <div class="m-popconfirm" :style="popconfirmStyle">
+        <div class="m-popconfirm-message">
+          <span class="m-popconfirm-icon" :class="`icon-${iconType}`" :style="iconStyle">
             <slot name="icon">
               <svg
                 v-if="iconType === 'info'"
-                class="u-icon icon-info"
+                class="icon-svg"
                 focusable="false"
                 width="1em"
                 height="1em"
@@ -122,7 +165,7 @@ function onOk(e: Event) {
               </svg>
               <svg
                 v-if="iconType === 'success'"
-                class="u-icon icon-success"
+                class="icon-svg"
                 focusable="false"
                 width="1em"
                 height="1em"
@@ -136,8 +179,8 @@ function onOk(e: Event) {
                 ></path>
               </svg>
               <svg
-                v-if="iconType === 'error'"
-                class="u-icon icon-error"
+                v-if="iconType === 'danger'"
+                class="icon-svg"
                 focusable="false"
                 width="1em"
                 height="1em"
@@ -152,7 +195,7 @@ function onOk(e: Event) {
               </svg>
               <svg
                 v-if="iconType === 'warning'"
-                class="u-icon icon-warning"
+                class="icon-svg"
                 focusable="false"
                 width="1em"
                 height="1em"
@@ -167,40 +210,42 @@ function onOk(e: Event) {
               </svg>
             </slot>
           </span>
-          <div class="m-title" :class="{ 'font-weight': showDesc }">
+          <div class="popconfirm-title" :class="{ 'title-font-weight': showDesc }" :style="titleStyle">
             <slot name="title">{{ title }}</slot>
           </div>
         </div>
-        <div class="m-pop-description" v-if="showDesc">
+        <div v-if="showDesc" class="popconfirm-description" :style="descriptionStyle">
           <slot name="description">{{ description }}</slot>
         </div>
-        <div class="m-pop-buttons">
-          <Button v-if="showCancel" @click="onCancel" size="small" :type="cancelType" v-bind="cancelProps">
+        <div class="popconfirm-buttons">
+          <Button v-if="showCancel" size="small" :type="cancelType" @click="onCancel" v-bind="cancelProps">
             <slot name="cancelText">{{ cancelText }}</slot>
           </Button>
-          <Button @click="onOk" size="small" :type="okType" v-bind="okProps">
+          <Button size="small" :type="okType" @click="onOk" v-bind="okProps">
             <slot name="okText">{{ okText }}</slot>
           </Button>
         </div>
       </div>
-      <div class="m-pop-arrow">
-        <span class="u-pop-arrow"></span>
-      </div>
+      <div v-if="arrow" class="popconfirm-arrow"></div>
     </div>
-    <div ref="contentRef" @click="onOpen">
+    <div
+      ref="contentRef"
+      @click="trigger === 'click' ? toggleVisible() : () => false"
+      @mouseenter="trigger === 'click' && visible ? onEnter() : () => false"
+      @mouseleave="trigger === 'click' && visible ? onLeave() : () => false"
+    >
       <slot>{{ content }}</slot>
     </div>
   </div>
 </template>
 <style lang="less" scoped>
-.m-popconfirm {
+.m-popconfirm-wrap {
   position: relative;
   display: inline-block;
-  .m-pop-content {
+  .m-popconfirm-content {
     position: absolute;
     z-index: 999;
     width: max-content;
-    padding-bottom: 12px;
     pointer-events: none;
     transform: scale(0.8);
     opacity: 0;
@@ -208,7 +253,7 @@ function onOk(e: Event) {
       transform 0.15s cubic-bezier(0.78, 0.14, 0.15, 0.86),
       opacity 0.15s cubic-bezier(0.78, 0.14, 0.15, 0.86);
     outline: none;
-    .m-pop {
+    .m-popconfirm {
       min-width: 32px;
       min-height: 32px;
       padding: 12px;
@@ -220,69 +265,68 @@ function onOk(e: Event) {
       word-break: break-all;
       cursor: auto;
       user-select: text;
-      background-color: #fff;
+      background-color: var(--popover-background-color);
       border-radius: 8px;
       box-shadow:
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
-      .m-pop-message {
+      .m-popconfirm-message {
         position: relative;
         margin-bottom: 8px;
         font-size: 14px;
         display: flex;
         flex-wrap: nowrap;
         align-items: start;
-        .m-icon {
-          content: '';
+        .m-popconfirm-icon {
           flex: none;
           line-height: 1;
           padding-top: 4px;
           display: inline-block;
           text-align: center;
-          .u-icon {
+          .icon-svg {
             display: inline-block;
             line-height: 1;
           }
-          .icon-info {
-            color: @themeColor;
-            fill: @themeColor;
-          }
-          .icon-success {
-            color: #52c41a;
-            fill: #52c41a;
-          }
-          .icon-warning {
-            color: #faad14;
-            fill: #faad14;
-          }
-          .icon-error {
-            color: #ff4d4f;
-            fill: #ff4d4f;
-          }
         }
-        .m-title {
+        .icon-warning :deep(svg) {
+          color: #faad14;
+          fill: #faad14;
+        }
+        .icon-info :deep(svg) {
+          color: @themeColor;
+          fill: @themeColor;
+        }
+        .icon-success :deep(svg) {
+          color: #52c41a;
+          fill: #52c41a;
+        }
+        .icon-danger :deep(svg) {
+          color: #ff4d4f;
+          fill: #ff4d4f;
+        }
+        .popconfirm-title {
           flex: auto;
           margin-inline-start: 8px;
         }
-        .font-weight {
+        .title-font-weight {
           font-weight: 600;
         }
       }
-      .m-pop-description {
+      .popconfirm-description {
         position: relative;
         margin-inline-start: 22px;
         margin-bottom: 8px;
         font-size: 14px;
       }
-      .m-pop-buttons {
+      .popconfirm-buttons {
         text-align: end;
         .m-btn {
           margin-inline-start: 8px;
         }
       }
     }
-    .m-pop-arrow {
+    .popconfirm-arrow {
       position: absolute;
       z-index: 9;
       left: 50%;
@@ -299,7 +343,7 @@ function onOk(e: Event) {
         inset-inline-start: 0;
         width: 16px;
         height: 8px;
-        background-color: #fff;
+        background-color: var(--popover-background-color);
         clip-path: path(
           'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
         );
@@ -321,7 +365,10 @@ function onOk(e: Event) {
       }
     }
   }
-  .pop-visible {
+  .popconfirm-padding {
+    padding-bottom: 12px;
+  }
+  .popconfirm-visible {
     pointer-events: auto;
     transform: scale(1);
     opacity: 1;

@@ -104,10 +104,15 @@
 <Ellipsis
   :max-width="240"
   :tooltip-props="{
-    fontSize: 16,
-    backgroundColor: '#4096ff',
-    overlayStyle: { padding: '12px 16px', borderRadius: '12px' }
-  }">
+    bgColor: '#4096ff',
+    tooltipStyle: {
+      padding: '12px 16px',
+      borderRadius: '12px',
+      fontSize: '16px',
+      backgroundColor: '#4096ff'
+    }
+  }"
+>
   住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
 </Ellipsis>
 
@@ -118,10 +123,15 @@
   <Ellipsis
     :max-width="240"
     :tooltip-props="{
-      fontSize: 16,
-      backgroundColor: '#4096ff',
-      overlayStyle: { padding: '12px 16px', borderRadius: '12px' }
-    }">
+      bgColor: '#4096ff',
+      tooltipStyle: {
+        padding: '12px 16px',
+        borderRadius: '12px',
+        fontSize: '16px',
+        backgroundColor: '#4096ff'
+      }
+    }"
+  >
     住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
   </Ellipsis>
 </template>
@@ -135,7 +145,7 @@
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-maxWidth | 文本最大宽度，单位 `px` | number &#124; string | '100%'
+maxWidth | 文本最大宽度，单位 `px` | string &#124; number | '100%'
 line | 最大行数 | number | undefined
 expand | 是否启用点击文本展开全部 | boolean | false
 tooltip | 是否启用文本提示框 | boolean | true
