@@ -19,7 +19,7 @@ function openChange (visible: boolean) {
 
 ## 基本使用
 
-<Space gap="large">
+<Space>
   <Tooltip tooltip="Tesla" @open-change="openChange">
     <Button type="primary">特斯拉</Button>
   </Tooltip>
@@ -37,7 +37,7 @@ function openChange (visible: boolean) {
 }
 </script>
 <template>
-  <Space gap="large">
+  <Space>
     <Tooltip tooltip="Tesla" @open-change="openChange">
       <Button type="primary">特斯拉</Button>
     </Tooltip>
@@ -90,7 +90,7 @@ function openChange (visible: boolean) {
 
 ## 不同的触发方式
 
-<Space gap="large">
+<Space>
   <Tooltip>
     <template #tooltip>Vue Amazing UI</template>
     <Button type="primary">Hover Me</Button>
@@ -105,7 +105,7 @@ function openChange (visible: boolean) {
 
 ```vue
 <template>
-  <Space gap="large">
+  <Space>
     <Tooltip>
       <template #tooltip>Vue Amazing UI</template>
       <Button type="primary">Hover Me</Button>
@@ -122,7 +122,7 @@ function openChange (visible: boolean) {
 
 ## 延迟显示隐藏
 
-<Space gap="large">
+<Space>
   <Tooltip
     :show-delay="300"
     :hide-delay="300"
@@ -145,7 +145,7 @@ function openChange (visible: boolean) {
 
 ```vue
 <template>
-  <Space gap="large">
+  <Space>
     <Tooltip
       :show-delay="300"
       :hide-delay="300"

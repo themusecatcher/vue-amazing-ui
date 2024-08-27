@@ -91,7 +91,7 @@ function openChange (visible: boolean) {
 
 ## 不同的触发方式
 
-<Space gap="large">
+<Space>
   <Popover title="Hover Title">
     <template #content>
       <p>Content</p>
@@ -112,7 +112,7 @@ function openChange (visible: boolean) {
 
 ```vue
 <template>
-  <Space gap="large">
+  <Space>
     <Popover title="Hover Title">
       <template #content>
         <p>Content</p>
@@ -135,7 +135,7 @@ function openChange (visible: boolean) {
 
 ## 延迟显示隐藏
 
-<Space gap="large">
+<Space>
   <Popover
     :show-delay="300"
     :hide-delay="300"
@@ -158,7 +158,7 @@ function openChange (visible: boolean) {
 
 ```vue
 <template>
-  <Space gap="large">
+  <Space>
     <Popover
       :show-delay="300"
       :hide-delay="300"
