@@ -30,7 +30,7 @@ function openChange(visible: boolean) {
       <Button type="primary">Hover me</Button>
     </Popover>
     <h2 class="mt30 mb10">不同的触发方式</h2>
-    <Space gap="large">
+    <Space>
       <Popover title="Hover Title">
         <template #content>
           <p>Content</p>
@@ -47,7 +47,7 @@ function openChange(visible: boolean) {
       </Popover>
     </Space>
     <h2 class="mt30 mb10">延迟显示隐藏</h2>
-    <Space gap="large">
+    <Space>
       <Popover :show-delay="300" :hide-delay="300" title="delay 300ms" content="Vue Amazing UI">
         <Button type="primary">Delay 300ms Popover</Button>
       </Popover>

@@ -6,8 +6,8 @@ interface Props {
   maxWidth?: string | number // 弹出提示最大宽度，单位 px
   content?: string // 展示的文本 string | slot
   tooltip?: string // 弹出提示文本 string | slot
+  tooltipStyle?: CSSProperties // 设置弹出提示的样式
   bgColor?: string // 弹出提示框背景颜色
-  tooltipStyle?: CSSProperties // 弹出提示样式
   arrow?: boolean // 是否显示箭头
   trigger?: 'hover' | 'click' // 弹出提示触发方式
   showDelay?: number // 弹出提示显示的延迟时间，单位 ms
@@ -18,8 +18,8 @@ const props = withDefaults(defineProps<Props>(), {
   maxWidth: 120,
   content: undefined,
   tooltip: undefined,
-  bgColor: 'rgba(0, 0, 0, 0.85)',
   tooltipStyle: () => ({}),
+  bgColor: 'rgba(0, 0, 0, 0.85)',
   arrow: true,
   trigger: 'hover',
   showDelay: 100,

@@ -205,13 +205,14 @@ function openChange (visible: boolean) {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-maxWidth | 弹出卡片最大宽度 | string &#124; number | 'auto'
+maxWidth | 弹出卡片最大宽度，单位 `px` | string &#124; number | 'auto'
 title | 卡片标题 | string &#124; slot | undefined
 titleStyle | 卡片标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 content | 卡片内容 | string &#124; slot | undefined
 contentStyle | 卡片内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bgColor | 弹出卡片背景颜色 | string | '#fff'
 popoverStyle | 卡片容器样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+arrow | 是否显示箭头 | boolean | true
 trigger | 弹出卡片触发方式 | 'hover' &#124; 'click' | 'hover'
 showDelay | 弹出卡片显示的延迟时间，单位 `ms` | number | 100
 hideDelay | 弹出卡片隐藏的延迟时间，单位 `ms` | number | 100

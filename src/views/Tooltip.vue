@@ -7,7 +7,7 @@ function openChange(visible: boolean) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space gap="large">
+    <Space>
       <Tooltip tooltip="Tesla" @open-change="openChange">
         <Button type="primary">特斯拉</Button>
       </Tooltip>
@@ -30,7 +30,7 @@ function openChange(visible: boolean) {
       <Button type="primary">哥斯拉大战金刚</Button>
     </Tooltip>
     <h2 class="mt30 mb10">不同的触发方式</h2>
-    <Space gap="large">
+    <Space>
       <Tooltip>
         <template #tooltip>Vue Amazing UI</template>
         <Button type="primary">Hover Me</Button>
@@ -41,7 +41,7 @@ function openChange(visible: boolean) {
       </Tooltip>
     </Space>
     <h2 class="mt30 mb10">延迟显示隐藏</h2>
-    <Space gap="large">
+    <Space>
       <Tooltip
         :show-delay="300"
         :hide-delay="300"

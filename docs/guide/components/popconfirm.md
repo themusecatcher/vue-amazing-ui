@@ -13,30 +13,34 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { FireFilled, QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
 const message = ref()
 const openChange = (visible: boolean) => {
   console.log('visible', visible)
 }
 const confirm = (e: MouseEvent) => {
-  console.log(e)
+  console.log('confirm', e)
   message.value.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
-  console.log(e)
+  console.log('cancel', e)
   message.value.error('Click on No')
 }
 </script>
 
+<Message ref="message" />
+
 ## 基本使用
 
 <Popconfirm
-  title="Are you sure delete this task?"
+  title="Are you sure delete this task ?"
+  description="This will have other effects..."
   @ok="confirm"
   @cancel="cancel"
-  @openChange="openChange">
-  <Button type="danger">Delete</Button>
+  @openChange="openChange"
+>
+  <Button type="danger">Delete Confirm</Button>
 </Popconfirm>
-<Message ref="message" />
 
 ::: details Show Code
 
@@ -48,21 +52,134 @@ const openChange = (visible: boolean) => {
   console.log('visible', visible)
 }
 const confirm = (e: MouseEvent) => {
-  console.log(e)
+  console.log('confirm', e)
   message.value.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
-  console.log(e)
+  console.log('cancel', e)
   message.value.error('Click on No')
 }
 </script>
 <template>
   <Popconfirm
-    title="Are you sure delete this task?"
+    title="Are you sure delete this task ?"
+    description="This will have other effects..."
     @ok="confirm"
     @cancel="cancel"
-    @openChange="openChange">
-    <Button type="danger">Delete</Button>
+    @openChange="openChange"
+  >
+    <Button type="danger">Delete Confirm</Button>
+  </Popconfirm>
+  <Message ref="message" />
+</template>
+```
+
+:::
+
+## 隐藏取消按钮
+
+<Popconfirm
+  title="It's friendly reminder ..."
+  :show-cancel="false"
+  icon-type="info"
+  @ok="confirm"
+>
+  <Button type="primary">Hidden Cancel Btn</Button>
+</Popconfirm>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const message = ref()
+const confirm = (e: MouseEvent) => {
+  console.log('confirm', e)
+  message.value.success('Click on Yes')
+}
+</script>
+<template>
+  <Popconfirm
+    title="It's friendly reminder ..."
+    :show-cancel="false"
+    icon-type="info"
+    @ok="confirm"
+  >
+    <Button type="primary">Hidden Cancel Btn</Button>
+  </Popconfirm>
+  <Message ref="message" />
+</template>
+```
+
+:::
+
+## 自定义样式
+
+<Popconfirm
+  :max-width="280"
+  :show-cancel="false"
+  :title-style="{ fontSize: '16px', fontWeight: 'bold', color: '#1677ff' }"
+  :description-style="{ color: '#fff' }"
+  bg-color="rgba(0, 0, 0.8)"
+  :popconfirm-style="{ padding: '12px 18px', borderRadius: '12px' }"
+  :icon-style="{ fontSize: '16px', paddingTop: '5px' }"
+  ok-text="Awesome"
+  :ok-props="{ shape: 'round' }"
+  @ok="confirm"
+  @cancel="cancel"
+>
+  <template #title>
+    <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">Vue Amazing UI</a>
+  </template>
+  <template #description>
+    An Amazing Vue3 UI Components Library
+  </template>
+  <template #icon>
+    <FireFilled />
+  </template>
+  <Button type="primary">Vue Amazing UI</Button>
+</Popconfirm>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FireFilled } from '@ant-design/icons-vue'
+const message = ref()
+const confirm = (e: MouseEvent) => {
+  console.log('confirm', e)
+  message.value.success('Click on Yes')
+}
+const cancel = (e: MouseEvent) => {
+  console.log('cancel', e)
+  message.value.error('Click on No')
+}
+</script>
+<template>
+  <Popconfirm
+    :max-width="280"
+    :show-cancel="false"
+    :title-style="{ fontSize: '16px', fontWeight: 'bold', color: '#1677ff' }"
+    :description-style="{ color: '#fff' }"
+    bg-color="rgba(0, 0, 0.8)"
+    :popconfirm-style="{ padding: '12px 18px', borderRadius: '12px' }"
+    :icon-style="{ fontSize: '16px', paddingTop: '5px' }"
+    ok-text="Awesome"
+    :ok-props="{ shape: 'round' }"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <template #title>
+      <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">Vue Amazing UI</a>
+    </template>
+    <template #description>
+      An Amazing Vue3 UI Components Library
+    </template>
+    <template #icon>
+      <FireFilled />
+    </template>
+    <Button type="primary">Vue Amazing UI</Button>
   </Popconfirm>
   <Message ref="message" />
 </template>
@@ -73,11 +190,17 @@ const cancel = (e: MouseEvent) => {
 ## 自定义按钮
 
 <Space>
-  <Popconfirm title="Are you sure？" ok-text="Yes" cancel-text="No" @ok="confirm" @cancel="cancel">
+  <Popconfirm
+    title="Are you sure ?"
+    ok-text="Yes"
+    cancel-text="No"
+    @ok="confirm"
+    @cancel="cancel"
+  >
     <Button type="danger">Delete</Button>
   </Popconfirm>
   <Popconfirm
-    title="Are you sure？"
+    title="Are you sure ?"
     ok-text="Yes"
     :ok-props="{ ghost: true }"
     cancel-text="No"
@@ -85,7 +208,7 @@ const cancel = (e: MouseEvent) => {
     @ok="confirm"
     @cancel="cancel"
   >
-    <Button type="danger">Delete</Button>
+    <Button type="danger">Delete Confirm</Button>
   </Popconfirm>
 </Space>
 
@@ -95,25 +218,28 @@ const cancel = (e: MouseEvent) => {
 <script setup lang="ts">
 import { ref } from 'vue'
 const message = ref()
-const openChange = (visible: boolean) => {
-  console.log('visible', visible)
-}
 const confirm = (e: MouseEvent) => {
-  console.log(e)
+  console.log('confirm', e)
   message.value.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
-  console.log(e)
+  console.log('cancel', e)
   message.value.error('Click on No')
 }
 </script>
 <template>
   <Space>
-    <Popconfirm title="Are you sure？" ok-text="Yes" cancel-text="No" @ok="confirm" @cancel="cancel">
+    <Popconfirm
+      title="Are you sure ?"
+      ok-text="Yes"
+      cancel-text="No"
+      @ok="confirm"
+      @cancel="cancel"
+    >
       <Button type="danger">Delete</Button>
     </Popconfirm>
     <Popconfirm
-      title="Are you sure？"
+      title="Are you sure ?"
       ok-text="Yes"
       :ok-props="{ ghost: true }"
       cancel-text="No"
@@ -121,7 +247,7 @@ const cancel = (e: MouseEvent) => {
       @ok="confirm"
       @cancel="cancel"
     >
-      <Button type="danger">Delete</Button>
+      <Button type="danger">Delete Confirm</Button>
     </Popconfirm>
   </Space>
   <Message ref="message" />
@@ -133,38 +259,89 @@ const cancel = (e: MouseEvent) => {
 ## 预置四种 Icon 图标
 
 <Space>
-  <Popconfirm title="Are you sure delete this task?">
-    <Button type="primary">Warning</Button>
+  <Popconfirm
+    title="Are you sure delete this task ?"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Warning Confirm</Button>
   </Popconfirm>
-  <Popconfirm title="Are you sure delete this task?" icon-type="info">
-    <Button type="primary">Info</Button>
+  <Popconfirm
+    title="Are you sure delete this task ?"
+    icon-type="info"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Info Confirm</Button>
   </Popconfirm>
-  <Popconfirm title="Are you sure delete this task?" icon-type="success">
-    <Button type="primary">Success</Button>
+  <Popconfirm
+    title="Are you sure delete this task ?"
+    icon-type="success"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Success Confirm</Button>
   </Popconfirm>
-  <Popconfirm title="Are you sure delete this task?" icon-type="error">
-    <Button type="danger">Error</Button>
+  <Popconfirm
+    title="Are you sure delete this task ?"
+    icon-type="danger"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Danger Confirm</Button>
   </Popconfirm>
 </Space>
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const message = ref()
+const confirm = (e: MouseEvent) => {
+  console.log('confirm', e)
+  message.value.success('Click on Yes')
+}
+const cancel = (e: MouseEvent) => {
+  console.log('cancel', e)
+  message.value.error('Click on No')
+}
+</script>
 <template>
   <Space>
-    <Popconfirm title="Are you sure delete this task?">
-      <Button type="primary">Warning</Button>
+    <Popconfirm
+      title="Are you sure delete this task ?"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Warning Confirm</Button>
     </Popconfirm>
-    <Popconfirm title="Are you sure delete this task?" icon-type="info">
-      <Button type="primary">Info</Button>
+    <Popconfirm
+      title="Are you sure delete this task ?"
+      icon-type="info"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Info Confirm</Button>
     </Popconfirm>
-    <Popconfirm title="Are you sure delete this task?" icon-type="success">
-      <Button type="primary">Success</Button>
+    <Popconfirm
+      title="Are you sure delete this task ?"
+      icon-type="success"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Success Confirm</Button>
     </Popconfirm>
-    <Popconfirm title="Are you sure delete this task?" icon-type="error">
-      <Button type="danger">Error</Button>
+    <Popconfirm
+      title="Are you sure delete this task ?"
+      icon-type="danger"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Danger Confirm</Button>
     </Popconfirm>
   </Space>
+  <Message ref="message" />
 </template>
 ```
 
@@ -172,60 +349,244 @@ const cancel = (e: MouseEvent) => {
 
 ## 自定义 Icon 图标
 
-<Popconfirm title="Are you sure？">
-  <template #icon>
-    <svg focusable="false" class="u-svg" data-icon="question-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M623.6 316.7C593.6 290.4 554 276 512 276s-81.6 14.5-111.6 40.7C369.2 344 352 380.7 352 420v7.6c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V420c0-44.1 43.1-80 96-80s96 35.9 96 80c0 31.1-22 59.6-56.1 72.7-21.2 8.1-39.2 22.3-52.1 40.9-13.1 19-19.9 41.8-19.9 64.9V620c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-22.7a48.3 48.3 0 0130.9-44.8c59-22.7 97.1-74.7 97.1-132.5.1-39.3-17.1-76-48.3-103.3zM472 732a40 40 0 1080 0 40 40 0 10-80 0z"></path></svg>
-  </template>
-  <Button type="danger">Delete</Button>
-</Popconfirm>
+<Space>
+  <Popconfirm
+    title="Are you sure ?"
+    icon-type="danger"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <template #icon>
+      <QuestionCircleFilled />
+    </template>
+    <Button type="danger">Delete Confirm</Button>
+  </Popconfirm>
+  <Popconfirm
+    title="Are you sure ?"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <template #icon>
+      <SoundFilled />
+    </template>
+    <Button type="danger">Delete Confirm</Button>
+  </Popconfirm>
+</Space>
 
 ::: details Show Code
 
 ```vue
-<template>
-  <Popconfirm title="Are you sure？">
-    <template #icon>
-      <svg focusable="false" class="u-svg" data-icon="question-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M623.6 316.7C593.6 290.4 554 276 512 276s-81.6 14.5-111.6 40.7C369.2 344 352 380.7 352 420v7.6c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V420c0-44.1 43.1-80 96-80s96 35.9 96 80c0 31.1-22 59.6-56.1 72.7-21.2 8.1-39.2 22.3-52.1 40.9-13.1 19-19.9 41.8-19.9 64.9V620c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-22.7a48.3 48.3 0 0130.9-44.8c59-22.7 97.1-74.7 97.1-132.5.1-39.3-17.1-76-48.3-103.3zM472 732a40 40 0 1080 0 40 40 0 10-80 0z"></path></svg>
-    </template>
-    <Button type="danger">Delete</Button>
-  </Popconfirm>
-</template>
-<style lang="less" scoped>
-.u-svg {
-  fill: #ff4d4f;
+<script setup lang="ts">
+import { ref } from 'vue'
+import { QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
+const message = ref()
+const confirm = (e: MouseEvent) => {
+  console.log('confirm', e)
+  message.value.success('Click on Yes')
 }
-</style>
+const cancel = (e: MouseEvent) => {
+  console.log('cancel', e)
+  message.value.error('Click on No')
+}
+</script>
+<template>
+  <Space>
+    <Popconfirm
+      title="Are you sure ?"
+      icon-type="danger"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <template #icon>
+        <QuestionCircleFilled />
+      </template>
+      <Button type="danger">Delete Confirm</Button>
+    </Popconfirm>
+    <Popconfirm
+      title="Are you sure ?"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <template #icon>
+        <SoundFilled />
+      </template>
+      <Button type="danger">Delete Confirm</Button>
+    </Popconfirm>
+  </Space>
+  <Message ref="message" />
+</template>
 ```
 
 :::
 
-## 隐藏取消按钮
+## 不同的触发方式
+
+<Space>
+  <Popconfirm
+    title="It's friendly reminder ..."
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Click Me Confirm</Button>
+  </Popconfirm>
+  <Popconfirm
+    title="It's friendly reminder ..."
+    trigger="hover"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Hover Me Confirm</Button>
+  </Popconfirm>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const message = ref()
+const confirm = (e: MouseEvent) => {
+  console.log('confirm', e)
+  message.value.success('Click on Yes')
+}
+const cancel = (e: MouseEvent) => {
+  console.log('cancel', e)
+  message.value.error('Click on No')
+}
+</script>
+<template>
+  <Space>
+    <Popconfirm
+      title="It's friendly reminder ..."
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Click Me Confirm</Button>
+    </Popconfirm>
+    <Popconfirm
+      title="It's friendly reminder ..."
+      trigger="hover"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Hover Me Confirm</Button>
+    </Popconfirm>
+  </Space>
+  <Message ref="message" />
+</template>
+```
+
+:::
+
+## 延迟显示隐藏
+
+<Space>
+  <Popconfirm
+    :show-delay="300"
+    :hide-delay="300"
+    title="Are you confirm ?"
+    description="delay 300ms"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Delay 300ms Confirm</Button>
+  </Popconfirm>
+  <Popconfirm
+    :show-delay="500"
+    :hide-delay="500"
+    title="Are you confirm ?"
+    description="delay 500ms"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Delay 500ms Confirm</Button>
+  </Popconfirm>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const message = ref()
+const confirm = (e: MouseEvent) => {
+  console.log('confirm', e)
+  message.value.success('Click on Yes')
+}
+const cancel = (e: MouseEvent) => {
+  console.log('cancel', e)
+  message.value.error('Click on No')
+}
+</script>
+<template>
+  <Space>
+    <Popconfirm
+      :show-delay="300"
+      :hide-delay="300"
+      title="Are you confirm ?"
+      description="delay 300ms"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Delay 300ms Confirm</Button>
+    </Popconfirm>
+    <Popconfirm
+      :show-delay="500"
+      :hide-delay="500"
+      title="Are you confirm ?"
+      description="delay 500ms"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Delay 500ms Confirm</Button>
+    </Popconfirm>
+  </Space>
+  <Message ref="message" />
+</template>
+```
+
+:::
+
+## 隐藏箭头
 
 <Popconfirm
-  title="friendly reminder ..."
-  :show-cancel="false">
-  <Button type="primary">Hidden Cancel Btn</Button>
+  :arrow="false"
+  title="My arrow is hidden"
+  @ok="confirm"
+  @cancel="cancel"
+>
+  <Button type="primary">Hide Arrow Confirm</Button>
 </Popconfirm>
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const message = ref()
+const confirm = (e: MouseEvent) => {
+  console.log('confirm', e)
+  message.value.success('Click on Yes')
+}
+const cancel = (e: MouseEvent) => {
+  console.log('cancel', e)
+  message.value.error('Click on No')
+}
+</script>
 <template>
   <Popconfirm
-    title="friendly reminder ..."
-    :show-cancel="false">
-    <Button type="primary">Hidden Cancel Btn</Button>
+    :arrow="false"
+    title="My arrow is hidden"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Hide Arrow Confirm</Button>
   </Popconfirm>
+  <Message ref="message" />
 </template>
 ```
 
 :::
-
-<style lang="less" scoped>
-.u-svg {
-  fill: #ff4d4f;
-}
-</style>
 
 ## APIs
 
@@ -233,12 +594,17 @@ const cancel = (e: MouseEvent) => {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-title | 确认框的标题 | string &#124; slot | undefined
-description | 确认框的内容描述 | string &#124; slot | undefined
+maxWidth | 弹出确认框最大宽度，单位 `px` | string &#124; number | 'auto'
+title | 弹出确认框的标题 | string &#124; slot | undefined
+titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+description | 弹出确认框的内容描述 | string &#124; slot | undefined
+descriptionStyle | 设置内容描述的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+bgColor | 弹出确认框背景颜色 | string | '#fff'
+popconfirmStyle | 弹出确认框容器样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 content | 展示的文本 | string &#124; slot | undefined
 icon | 自定义弹出确认框 `Icon` 图标 | string &#124; slot | undefined
 iconType | 弹出确认框 `Icon` 图标类型 | 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'warning'
-maxWidth | 弹出确认框内容最大宽度 | string &#124; number | 'auto'
+iconStyle | 设置 `Icon` 图标的样式，一般不需要设置，主要用于自定义 `Icon` 图标时 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 cancelText | 取消按钮文字 | string &#124; slot | '取消'
 cancelType | 取消按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
 cancelProps | 取消按钮 `props`，优先级高于 `cancelType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
@@ -246,6 +612,11 @@ okText | 确认按钮文字 | string &#124; slot | '确定'
 okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary'
 okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
 showCancel | 是否显示取消按钮 | boolean | true
+arrow | 是否显示箭头 | boolean | true
+trigger | 弹出确认触发方式 | 'hover' &#124; 'click' | 'click'
+showDelay | 弹出确认显示的延迟时间，单位 `ms` | number | 100
+hideDelay | 弹出确认隐藏的延迟时间，单位 `ms` | number | 100
+show <Tag color="cyan">v-model</Tag> | 弹出确认是否显示 | boolean | false
 
 ## Events
 

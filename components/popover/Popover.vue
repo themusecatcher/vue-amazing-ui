@@ -3,7 +3,7 @@ import { ref, watch, watchEffect, computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useSlotsExist, rafTimeout, cancelRaf } from '../utils'
 interface Props {
-  maxWidth?: string | number // 弹出卡片最大宽度
+  maxWidth?: string | number // 弹出卡片最大宽度，单位 px
   title?: string // 卡片标题 string | slot
   titleStyle?: CSSProperties // 卡片标题样式
   content?: string // 卡片内容 string | slot
@@ -34,8 +34,8 @@ const visible = ref(false)
 const top = ref(0) // 提示框top定位
 const left = ref(0) // 提示框left定位
 const defaultRef = ref() // 声明一个同名的模板引用
-const popRef = ref() // 声明一个同名的模板引用
-const hideTimer = ref()
+const popoverRef = ref() // 声明一个同名的模板引用
+const hideTimer = ref() // 延迟调用 ID
 const activeBlur = ref(false) // 是否激活 blur 事件
 const emits = defineEmits(['update:show', 'openChange'])
 const slotsExist = useSlotsExist(['title', 'content'])
@@ -65,8 +65,8 @@ watchEffect(() => {
 })
 function getPosition() {
   const defaultWidth = defaultRef.value.offsetWidth // 展示文本宽度
-  const popWidth = popRef.value.offsetWidth // 提示文本宽度
-  const popHeight = popRef.value.offsetHeight // 提示文本高度
+  const popWidth = popoverRef.value.offsetWidth // 提示文本宽度
+  const popHeight = popoverRef.value.offsetHeight // 提示文本高度
   top.value = popHeight + (props.arrow ? 4 : 6)
   left.value = (popWidth - defaultWidth) / 2
 }
@@ -100,7 +100,7 @@ function onEnter() {
 }
 function onLeave() {
   activeBlur.value = true
-  popRef.value.focus()
+  popoverRef.value.focus()
 }
 function onBlur() {
   visible.value = false
@@ -115,7 +115,7 @@ function onBlur() {
     @mouseleave="trigger === 'hover' ? onHide() : () => false"
   >
     <div
-      ref="popRef"
+      ref="popoverRef"
       tabindex="1"
       class="m-pop-content"
       :class="{ 'popover-padding': arrow, 'popover-visible': visible }"
