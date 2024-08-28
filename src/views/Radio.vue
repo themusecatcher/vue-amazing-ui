@@ -63,19 +63,19 @@ function onChange(value: any) {
 }
 const sizeOptions = [
   {
-    label: 'large',
-    value: 'large'
-  },
-  {
-    label: 'default',
-    value: 'default'
-  },
-  {
     label: 'small',
     value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
   }
 ]
-const buttonSize = ref('default')
+const buttonSize = ref('middle')
 </script>
 <template>
   <div>

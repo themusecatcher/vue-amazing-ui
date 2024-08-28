@@ -164,16 +164,16 @@ function onKeyboard(e: KeyboardEvent) {
     ]"
     :style="`background-color: ${color && !presetColor.includes(color) ? color : ''};`"
   >
-    <span class="m-icon" v-if="showIcon">
+    <span v-if="showIcon" class="tag-icon">
       <slot name="icon">{{ icon }}</slot>
     </span>
-    <span class="u-tag">
+    <span class="tag-content">
       <slot></slot>
     </span>
-    <span class="m-close" v-if="closable" @click="onClose">
+    <span v-if="closable" class="tag-close" @click="onClose">
       <svg
         focusable="false"
-        class="u-close"
+        class="close-svg"
         data-icon="close"
         width="1em"
         height="1em"
@@ -202,16 +202,16 @@ function onKeyboard(e: KeyboardEvent) {
       v-for="(tag, index) in tags"
       :key="index"
     >
-      <span ref="tagsIconRef" class="m-icon" v-show="showTagsIcon[index]">
+      <span v-if="showTagsIcon[index]" ref="tagsIconRef" class="tag-icon">
         <slot name="icon" :index="index">{{ tag.icon }}</slot>
       </span>
-      <span class="u-tag">
+      <span class="tag-content">
         <slot :label="tag.label" :index="index">{{ tag.label }}</slot>
       </span>
-      <span v-if="tag.closable || closable" class="m-close" @click="onCloseTags(tag, index)">
+      <span v-if="tag.closable || closable" class="tag-close" @click="onCloseTags(tag, index)">
         <svg
           focusable="false"
-          class="u-close"
+          class="close-svg"
           data-icon="close"
           width="1em"
           height="1em"
@@ -228,7 +228,7 @@ function onKeyboard(e: KeyboardEvent) {
     <div v-if="!showInput" class="m-tag" :class="[`tag-${size}`, { 'tag-plus': dynamic }]" @click="onAdd">
       <svg
         focusable="false"
-        class="u-plus"
+        class="plus-svg"
         data-icon="plus"
         width="1em"
         height="1em"
@@ -241,9 +241,9 @@ function onKeyboard(e: KeyboardEvent) {
       </svg>
     </div>
     <input
-      v-show="showInput"
+      v-if="showInput"
       ref="inputRef"
-      class="u-input"
+      class="tag-input"
       :class="`input-${size}`"
       type="text"
       v-model="inputValue"
@@ -267,18 +267,18 @@ function onKeyboard(e: KeyboardEvent) {
   border-radius: 6px;
   transition: all 0.2s;
   text-align: start;
-  .m-icon {
+  .tag-icon {
     margin-right: 5px;
     height: 100%;
     display: inline-flex;
     align-items: center;
   }
-  .u-tag {
+  .tag-content {
     height: 100%;
     display: inline-flex;
     align-items: center;
   }
-  .u-plus {
+  .plus-svg {
     display: inline-flex;
     align-items: center;
     width: 14px;
@@ -290,7 +290,7 @@ function onKeyboard(e: KeyboardEvent) {
     vertical-align: -0.175em;
     transition: fill 0.2s;
   }
-  .m-close {
+  .tag-close {
     margin-inline-start: 3px;
     font-size: 12px;
     display: inline-flex;
@@ -301,7 +301,7 @@ function onKeyboard(e: KeyboardEvent) {
     line-height: 0;
     text-align: center;
     cursor: pointer;
-    .u-close {
+    .close-svg {
       display: inline-block;
       width: 1em;
       height: 1em;
@@ -318,18 +318,18 @@ function onKeyboard(e: KeyboardEvent) {
   font-size: 12px;
   line-height: 20px;
   border-radius: 4px;
-  .u-plus {
+  .plus-svg {
     width: 12px;
     height: 12px;
   }
-  .m-close {
+  .tag-close {
     font-size: 10px;
   }
 }
 .tag-large {
   height: 28px;
   line-height: 26px;
-  .m-close {
+  .tag-close {
     font-size: 14px;
     vertical-align: -0.16em;
   }
@@ -342,12 +342,12 @@ function onKeyboard(e: KeyboardEvent) {
   cursor: pointer;
   &:hover {
     border-color: @themeColor;
-    .u-plus {
+    .plus-svg {
       fill: @themeColor;
     }
   }
 }
-.u-input {
+.tag-input {
   width: 86px;
   color: rgba(0, 0, 0, 0.88);
   height: 24px;
@@ -524,7 +524,7 @@ function onKeyboard(e: KeyboardEvent) {
 .tag-has-color {
   color: #fff;
   border-color: transparent;
-  .m-close .u-close {
+  .tag-close .close-svg {
     fill: rgba(255, 255, 255, 0.85);
     &:hover {
       fill: rgba(255, 255, 255, 1);

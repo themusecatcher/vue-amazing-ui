@@ -58,7 +58,7 @@ function onClose(e: Event): void {
             <img v-if="icon" :src="icon" class="icon-img" />
             <svg
               v-else-if="type === 'info'"
-              class="alert-icon"
+              class="icon-svg"
               focusable="false"
               data-icon="info-circle"
               width="1em"
@@ -73,7 +73,7 @@ function onClose(e: Event): void {
             </svg>
             <svg
               v-else-if="type === 'success'"
-              class="alert-icon"
+              class="icon-svg"
               focusable="false"
               data-icon="check-circle"
               width="1em"
@@ -88,7 +88,7 @@ function onClose(e: Event): void {
             </svg>
             <svg
               v-else-if="type === 'warning'"
-              class="alert-icon"
+              class="icon-svg"
               focusable="false"
               data-icon="exclamation-circle"
               width="1em"
@@ -103,7 +103,7 @@ function onClose(e: Event): void {
             </svg>
             <svg
               v-else-if="type === 'error'"
-              class="alert-icon"
+              class="icon-svg"
               focusable="false"
               data-icon="close-circle"
               width="1em"
@@ -123,7 +123,7 @@ function onClose(e: Event): void {
             <img v-if="icon" :src="icon" class="big-icon-img" />
             <svg
               v-else-if="type === 'info'"
-              class="alert-icon"
+              class="icon-svg"
               focusable="false"
               data-icon="info-circle"
               width="1em"
@@ -141,7 +141,7 @@ function onClose(e: Event): void {
             </svg>
             <svg
               v-else-if="type === 'success'"
-              class="alert-icon"
+              class="icon-svg"
               focusable="false"
               data-icon="check-circle"
               width="1em"
@@ -159,7 +159,7 @@ function onClose(e: Event): void {
             </svg>
             <svg
               v-else-if="type === 'warning'"
-              class="alert-icon"
+              class="icon-svg"
               focusable="false"
               data-icon="exclamation-circle"
               width="1em"
@@ -177,7 +177,7 @@ function onClose(e: Event): void {
             </svg>
             <svg
               v-else-if="type === 'error'"
-              class="alert-icon"
+              class="icon-svg"
               focusable="false"
               data-icon="close-circle"
               width="1em"
@@ -274,7 +274,7 @@ function onClose(e: Event): void {
     width: 24px;
     height: 24px;
   }
-  .alert-icon {
+  .icon-svg {
     display: inline-block;
   }
   .m-alert-content {
@@ -312,7 +312,7 @@ function onClose(e: Event): void {
   .m-alert-icon,
   .m-big-icon {
     color: @themeColor;
-    .alert-icon,
+    .icon-svg,
     :deep(svg) {
       fill: @themeColor; // 可选，用于防止 vitepress 文档样式覆盖，下同
     }
@@ -324,7 +324,7 @@ function onClose(e: Event): void {
   .m-alert-icon,
   .m-big-icon {
     color: #52c41a;
-    .alert-icon,
+    .icon-svg,
     :deep(svg) {
       fill: #52c41a;
     }
@@ -336,7 +336,7 @@ function onClose(e: Event): void {
   .m-alert-icon,
   .m-big-icon {
     color: #faad14;
-    .alert-icon,
+    .icon-svg,
     :deep(svg) {
       fill: #faad14;
     }
@@ -348,7 +348,7 @@ function onClose(e: Event): void {
   .m-alert-icon,
   .m-big-icon {
     color: #ff4d4f;
-    .alert-icon,
+    .icon-svg,
     :deep(svg) {
       fill: #ff4d4f;
     }

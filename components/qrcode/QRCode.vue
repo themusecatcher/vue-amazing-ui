@@ -52,7 +52,7 @@ const qrcode = computed(() => {
     :class="{ 'qrcode-bordered': bordered }"
     :style="`width: ${size}px; height: ${size}px; border-color: ${borderColor};`"
   >
-    <img :src="qrcode.value" class="u-qrcode" alt="QRCode" />
+    <img :src="qrcode.value" class="qrcode-image" alt="QRCode" />
   </div>
 </template>
 <style lang="less" scoped>
@@ -60,7 +60,7 @@ const qrcode = computed(() => {
   display: inline-block;
   border-radius: 8px;
   overflow: hidden;
-  .u-qrcode {
+  .qrcode-image {
     width: 100%;
     height: 100%;
   }

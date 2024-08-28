@@ -1,24 +1,31 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useSlotsExist } from '../utils'
 interface Props {
   status?: 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500' // 结果的状态，决定图标和颜色
   title?: string // 标题文字 string | slot
   subTitle?: string // 副标题文字 string | slot
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   status: 'info',
   title: undefined,
   subTitle: undefined
 })
-const slotsExist = useSlotsExist(['default'])
+const slotsExist = useSlotsExist(['title', 'subTitle', 'extra', 'default'])
+const showTitle = computed(() => {
+  return slotsExist.title || props.title
+})
+const showSubTitle = computed(() => {
+  return slotsExist.subTitle || props.subTitle
+})
 </script>
 <template>
   <div class="m-result">
-    <div class="m-image">
+    <div class="result-image">
       <slot name="image">
         <svg
           v-if="status === 'info'"
-          class="u-svg svg-info"
+          class="icon-svg icon-info"
           focusable="false"
           data-icon="exclamation-circle"
           aria-hidden="true"
@@ -30,7 +37,7 @@ const slotsExist = useSlotsExist(['default'])
         </svg>
         <svg
           v-if="status === 'success'"
-          class="u-svg svg-success"
+          class="icon-svg icon-success"
           focusable="false"
           data-icon="check-circle"
           aria-hidden="true"
@@ -42,7 +49,7 @@ const slotsExist = useSlotsExist(['default'])
         </svg>
         <svg
           v-if="status === 'warning'"
-          class="u-svg svg-warning"
+          class="icon-svg icon-warning"
           focusable="false"
           data-icon="warning"
           aria-hidden="true"
@@ -54,7 +61,7 @@ const slotsExist = useSlotsExist(['default'])
         </svg>
         <svg
           v-if="status === 'error'"
-          class="u-svg svg-error"
+          class="icon-svg icon-error"
           focusable="false"
           data-icon="close-circle"
           aria-hidden="true"
@@ -911,16 +918,16 @@ const slotsExist = useSlotsExist(['default'])
         </svg>
       </slot>
     </div>
-    <div class="m-title">
+    <div v-if="showTitle" class="result-title">
       <slot name="title">{{ title }}</slot>
     </div>
-    <div class="m-subtitle">
+    <div v-if="showSubTitle" class="result-subtitle">
       <slot name="subTitle">{{ subTitle }}</slot>
     </div>
-    <div class="m-extra">
+    <div v-if="slotsExist.extra" class="result-extra">
       <slot name="extra"></slot>
     </div>
-    <div class="m-content" v-if="slotsExist.default">
+    <div v-if="slotsExist.default" class="result-content">
       <slot></slot>
     </div>
   </div>
@@ -930,25 +937,25 @@ const slotsExist = useSlotsExist(['default'])
   padding: 48px 32px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
-  .m-image {
+  .result-image {
     margin-bottom: 24px;
     text-align: center;
-    .u-svg {
+    .icon-svg {
       display: inline-block;
       vertical-align: bottom;
       width: 72px;
       height: 72px;
     }
-    .svg-info {
+    .icon-info {
       fill: @themeColor;
     }
-    .svg-success {
+    .icon-success {
       fill: #52c41a;
     }
-    .svg-warning {
+    .icon-warning {
       fill: #faad14;
     }
-    .svg-error {
+    .icon-error {
       fill: #ff4d4f;
     }
     .u-image {
@@ -956,30 +963,30 @@ const slotsExist = useSlotsExist(['default'])
       vertical-align: bottom;
     }
   }
-  .m-title {
+  .result-title {
     color: rgba(0, 0, 0, 0.88);
     font-size: 24px;
     line-height: 1.3333333333333333;
-    margin-block: 8px;
+    margin: 8px 0;
     text-align: center;
   }
-  .m-subtitle {
+  .result-subtitle {
     color: rgba(0, 0, 0, 0.45);
     font-size: 14px;
     line-height: 1.5714285714285714;
     text-align: center;
   }
-  .m-extra {
-    margin: 24px 0 0 0;
+  .result-extra {
+    margin-top: 24px;
     text-align: center;
   }
-  :deep(.m-extra > *) {
-    margin-inline-end: 8px;
+  :deep(.result-extra > *) {
+    margin-right: 8px;
     &:last-child {
-      margin-inline-end: 0;
+      margin-right: 0;
     }
   }
-  .m-content {
+  .result-content {
     margin-top: 24px;
     padding: 24px 40px;
     background-color: rgba(0, 0, 0, 0.02);

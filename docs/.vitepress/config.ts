@@ -59,15 +59,27 @@ export default defineConfig({
           {
             items: [
               {
-                text: 'vue',
+                text: 'Vue',
                 link: 'https://cn.vuejs.org/'
               },
               {
-                text: 'vitepress',
+                text: 'TypeScript',
+                link: 'https://ts.nodejs.cn/docs/'
+              },
+              {
+                text: 'Vite',
+                link: 'https://cn.vitejs.dev/'
+              },
+              {
+                text: 'Less',
+                link: 'https://less.bootcss.com/'
+              },
+              {
+                text: 'VitePress',
                 link: 'https://vitepress.dev/'
               },
               {
-                text: 'markdown',
+                text: 'Markdown',
                 link: 'https://markdown.com.cn/'
               }
             ]

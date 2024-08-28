@@ -27,21 +27,21 @@ const showSkeleton = () => {
 }
 const animated = ref(false)
 const block = ref(false)
-const size = ref('default')
+const size = ref('middle')
 const buttonShape = ref('default')
 const avatarShape = ref('circle')
 const sizeOptions = ref([
   {
-    label: 'default',
-    value: 'default'
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
   },
   {
     label: 'large',
     value: 'large'
-  },
-  {
-    label: 'small',
-    value: 'small'
   }
 ])
 const buttonShapeOptions = ref([
@@ -210,21 +210,21 @@ import { ref } from 'vue'
 
 const animated = ref(false)
 const block = ref(false)
-const size = ref('default')
+const size = ref('middle')
 const buttonShape = ref('default')
 const avatarShape = ref('circle')
 const sizeOptions = ref([
   {
-    label: 'default',
-    value: 'default'
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
   },
   {
     label: 'large',
     value: 'large'
-  },
-  {
-    label: 'small',
-    value: 'small'
   }
 ])
 const buttonShapeOptions = ref([
@@ -310,7 +310,7 @@ loading | 为 `true` 时，显示占位图，反之则直接展示子组件 | bo
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 shape? | 指定按钮的形状 | 'default' &#124; 'round' &#124; 'circle' | 'default'
-size? | 设置按钮的大小 | 'default' &#124; 'small' &#124; 'large' | 'default'
+size? | 设置按钮的大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 block? | 将按钮宽度调整为其父宽度的选项 | boolean | false
 
 ### SkeletonAvatarProps Type
@@ -318,13 +318,13 @@ block? | 将按钮宽度调整为其父宽度的选项 | boolean | false
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle'
-size | 设置头像占位图的大小 | number &#124; 'default' &#124; 'small' &#124; 'large' | 'default'
+size | 设置头像占位图的大小 | number &#124; 'small' &#124; 'middle' &#124; 'large' | 'middle'
 
 ### SkeletonInputProps Type
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-size | 设置输入框的大小 | 'default' &#124; 'small' &#124; 'large' | 'default'
+size | 设置输入框的大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 
 ### SkeletonTitleProps Type
 

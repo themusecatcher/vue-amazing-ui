@@ -3,15 +3,15 @@ import { computed } from 'vue'
 
 interface SkeletonButtonProps {
   shape?: 'default' | 'round' | 'circle' // 指定按钮的形状，默认 'default'
-  size?: 'default' | 'small' | 'large' // 设置按钮的大小，默认 'default'
+  size?: 'small' | 'middle' | 'large' // 设置按钮的大小，默认 'middle'
   block?: boolean // 将按钮宽度调整为其父宽度的选项，默认 false
 }
 interface SkeletonAvatarProps {
   shape?: 'circle' | 'square' // 指定头像的形状，默认 'circle'
-  size?: number | 'default' | 'small' | 'large' // 设置头像占位图的大小，默认 'default'
+  size?: number | 'small' | 'middle' | 'large' // 设置头像占位图的大小，默认 'middle'
 }
 interface SkeletonInputProps {
-  size: 'default' | 'small' | 'large' // 设置输入框的大小，默认 'default'
+  size: 'small' | 'middle' | 'large' // 设置输入框的大小，默认 'middle'
 }
 interface SkeletonTitleProps {
   width?: number | string // 设置标题占位图的宽度，默认 '38%'
@@ -59,11 +59,11 @@ const titleTop = computed(() => {
       return (props.avatar.size - 16) / 2
     } else {
       const topMap = {
-        default: 8,
         small: 4,
+        middle: 8,
         large: 12
       }
-      return topMap[props.avatar.size || 'default']
+      return topMap[props.avatar.size || 'middle']
     }
   }
 })
@@ -114,56 +114,51 @@ const paragraphWidth = computed(() => {
 <template>
   <div
     v-if="loading"
-    :class="['m-skeleton', { 'skeleton-avatar': avatar, 'skeleton-animated': animated }]"
+    class="m-skeleton"
+    :class="{ 'skeleton-avatar': avatar, 'skeleton-animated': animated }"
     :style="`--button-size: ${buttonSize}px; --title-top: ${titleTop}px;`"
   >
     <span
       v-if="button"
-      :class="[
-        'u-skeleton-button',
-        {
-          'button-round': typeof button !== 'boolean' && button.shape === 'round',
-          'button-circle': typeof button !== 'boolean' && button.shape === 'circle',
-          'button-sm': typeof button !== 'boolean' && button.size === 'small',
-          'button-lg': typeof button !== 'boolean' && button.size === 'large',
-          'button-block': typeof button !== 'boolean' && button.shape !== 'circle' && button.block
-        }
-      ]"
+      class="skeleton-button"
+      :class="{
+        'button-round': typeof button !== 'boolean' && button.shape === 'round',
+        'button-circle': typeof button !== 'boolean' && button.shape === 'circle',
+        'button-sm': typeof button !== 'boolean' && button.size === 'small',
+        'button-lg': typeof button !== 'boolean' && button.size === 'large',
+        'button-block': typeof button !== 'boolean' && button.shape !== 'circle' && button.block
+      }"
     ></span>
     <span
-      :class="[
-        'u-skeleton-input',
-        {
-          'input-sm': typeof input !== 'boolean' && input.size === 'small',
-          'input-lg': typeof input !== 'boolean' && input.size === 'large'
-        }
-      ]"
       v-if="input"
+      class="skeleton-input"
+      :class="{
+        'input-sm': typeof input !== 'boolean' && input.size === 'small',
+        'input-lg': typeof input !== 'boolean' && input.size === 'large'
+      }"
     ></span>
-    <div class="m-skeleton-image" v-if="image">
-      <svg class="m-skeleton-image-svg" viewBox="0 0 1098 1024" xmlns="http://www.w3.org/2000/svg">
+    <div v-if="image" class="skeleton-image">
+      <svg class="image-svg" viewBox="0 0 1098 1024" xmlns="http://www.w3.org/2000/svg">
         <path
-          class="skeleton-image-path"
+          class="svg-path"
           d="M365.714286 329.142857q0 45.714286-32.036571 77.677714t-77.677714 32.036571-77.677714-32.036571-32.036571-77.677714 32.036571-77.677714 77.677714-32.036571 77.677714 32.036571 32.036571 77.677714zM950.857143 548.571429l0 256-804.571429 0 0-109.714286 182.857143-182.857143 91.428571 91.428571 292.571429-292.571429zM1005.714286 146.285714l-914.285714 0q-7.460571 0-12.873143 5.412571t-5.412571 12.873143l0 694.857143q0 7.460571 5.412571 12.873143t12.873143 5.412571l914.285714 0q7.460571 0 12.873143-5.412571t5.412571-12.873143l0-694.857143q0-7.460571-5.412571-12.873143t-12.873143-5.412571zM1097.142857 164.571429l0 694.857143q0 37.741714-26.843429 64.585143t-64.585143 26.843429l-914.285714 0q-37.741714 0-64.585143-26.843429t-26.843429-64.585143l0-694.857143q0-37.741714 26.843429-64.585143t64.585143-26.843429l914.285714 0q37.741714 0 64.585143 26.843429t26.843429 64.585143z"
         ></path>
       </svg>
     </div>
-    <div class="m-skeleton-header" v-if="avatar">
+    <div v-if="avatar" class="skeleton-header">
       <span
-        :class="[
-          'u-skeleton-avatar',
-          {
-            'avatar-sm': typeof avatar !== 'boolean' && avatar.size === 'small',
-            'avatar-lg': typeof avatar !== 'boolean' && avatar.size === 'large',
-            'avatar-square': typeof avatar !== 'boolean' && avatar.shape === 'square'
-          }
-        ]"
+        class="skeleton-avatar"
+        :class="{
+          'avatar-sm': typeof avatar !== 'boolean' && avatar.size === 'small',
+          'avatar-lg': typeof avatar !== 'boolean' && avatar.size === 'large',
+          'avatar-square': typeof avatar !== 'boolean' && avatar.shape === 'square'
+        }"
       ></span>
     </div>
     <template v-if="!button && !image && !input">
-      <div class="m-skeleton-content" v-if="title || paragraph">
-        <h3 class="u-skeleton-title" v-if="title" :style="{ width: titleWidth }"></h3>
-        <ul class="m-skeleton-paragraph" :class="{ mt24: title, mt28: title && avatar }" v-if="paragraph">
+      <div v-if="title || paragraph" class="skeleton-content">
+        <h3 v-if="title" class="skeleton-title" :style="{ width: titleWidth }"></h3>
+        <ul v-if="paragraph" class="skeleton-paragraph" :class="{ mt24: title, mt28: title && avatar }">
           <li v-for="n in paragraphRows" :key="n" :style="`width: ${paragraphWidth[(n as number) - 1]};`"></li>
         </ul>
       </div>
@@ -175,7 +170,7 @@ const paragraphWidth = computed(() => {
 .m-skeleton {
   display: table;
   width: 100%;
-  .u-skeleton-button {
+  .skeleton-button {
     display: inline-block;
     vertical-align: top;
     background: rgba(0, 0, 0, 0.06);
@@ -208,7 +203,7 @@ const paragraphWidth = computed(() => {
   .button-block {
     width: 100%;
   }
-  .u-skeleton-input {
+  .skeleton-input {
     display: inline-block;
     vertical-align: top;
     background: rgba(0, 0, 0, 0.06);
@@ -230,7 +225,7 @@ const paragraphWidth = computed(() => {
     height: 40px;
     line-height: 40px;
   }
-  .m-skeleton-image {
+  .skeleton-image {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -240,22 +235,22 @@ const paragraphWidth = computed(() => {
     width: 96px;
     height: 96px;
     line-height: 96px;
-    .m-skeleton-image-svg {
+    .image-svg {
       width: 48px;
       height: 48px;
       line-height: 48px;
       max-width: 192px;
       max-height: 192px;
-      .skeleton-image-path {
+      .svg-path {
         fill: #bfbfbf;
       }
     }
   }
-  .m-skeleton-header {
+  .skeleton-header {
     display: table-cell;
     padding-right: 16px;
     vertical-align: top;
-    .u-skeleton-avatar {
+    .skeleton-avatar {
       display: inline-block;
       vertical-align: top;
       background: rgba(0, 0, 0, 0.06);
@@ -278,17 +273,17 @@ const paragraphWidth = computed(() => {
       border-radius: 6px;
     }
   }
-  .m-skeleton-content {
+  .skeleton-content {
     display: table-cell;
     width: 100%;
     vertical-align: top;
-    .u-skeleton-title {
+    .skeleton-title {
       margin: 0;
       height: 16px;
       background: rgba(0, 0, 0, 0.06);
       border-radius: 4px;
     }
-    .m-skeleton-paragraph {
+    .skeleton-paragraph {
       margin: 0;
       padding: 0;
       li {
@@ -313,19 +308,19 @@ const paragraphWidth = computed(() => {
   }
 }
 .skeleton-avatar {
-  .m-skeleton-content {
-    .u-skeleton-title {
+  .skeleton-content {
+    .skeleton-title {
       margin-top: var(--title-top);
     }
   }
 }
 .skeleton-animated {
-  .u-skeleton-button,
-  .u-skeleton-input,
-  .m-skeleton-image,
-  .m-skeleton-header .u-skeleton-avatar,
-  .m-skeleton-content .u-skeleton-title,
-  .m-skeleton-content .m-skeleton-paragraph li {
+  .skeleton-button,
+  .skeleton-input,
+  .skeleton-image,
+  .skeleton-header .skeleton-avatar,
+  .skeleton-content .skeleton-title,
+  .skeleton-content .skeleton-paragraph li {
     position: relative;
     z-index: 0;
     overflow: hidden;

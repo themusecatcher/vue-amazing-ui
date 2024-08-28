@@ -215,7 +215,7 @@ function onChange(value: string | number, label: string, index: number) {
       <span class="m-select-search">
         <input
           ref="inputRef"
-          class="u-select-search"
+          class="select-search"
           :class="{ 'caret-show': showOptions || showCaret }"
           type="text"
           autocomplete="off"
@@ -228,14 +228,14 @@ function onChange(value: string | number, label: string, index: number) {
       </span>
       <span
         v-if="!hideSelectName"
-        :class="['u-select-item', { 'select-placeholder': !selectedName || showOptions }]"
+        :class="['select-item', { 'select-placeholder': !selectedName || showOptions }]"
         :style="`line-height: ${height - 2}px;`"
         :title="selectedName"
       >
         {{ selectedName || placeholder }}
       </span>
       <svg
-        :class="['u-arrow', { 'arrow-rotate': showOptions, show: showArrow }]"
+        :class="['arrow-svg', { 'arrow-rotate': showOptions, show: showArrow }]"
         viewBox="64 64 896 896"
         data-icon="down"
         aria-hidden="true"
@@ -247,7 +247,7 @@ function onChange(value: string | number, label: string, index: number) {
       </svg>
       <svg
         focusable="false"
-        :class="['u-search', { show: showSearch }]"
+        :class="['search-svg', { show: showSearch }]"
         data-icon="search"
         aria-hidden="true"
         viewBox="64 64 896 896"
@@ -258,7 +258,7 @@ function onChange(value: string | number, label: string, index: number) {
       </svg>
       <svg
         @click.stop="onClear"
-        :class="['u-clear', { show: showClear }]"
+        :class="['clear-svg', { show: showClear }]"
         focusable="false"
         data-icon="close-circle"
         aria-hidden="true"
@@ -285,7 +285,7 @@ function onChange(value: string | number, label: string, index: number) {
             v-for="(option, index) in filterOptions"
             :key="index"
             :class="[
-              'u-option',
+              'select-option',
               {
                 'option-hover': !option.disabled && option[value] === hoverValue,
                 'option-selected': option[label] === selectedName,
@@ -302,7 +302,7 @@ function onChange(value: string | number, label: string, index: number) {
       </div>
       <div
         v-else-if="showOptions && filterOptions && !filterOptions.length"
-        class="m-empty-wrap"
+        class="options-empty"
         :style="`top: ${height + 4}px; width: ${width}px;`"
       >
         <Empty image="outlined" />
@@ -360,7 +360,7 @@ function onChange(value: string | number, label: string, index: number) {
       bottom: 0;
       left: 11px;
       right: 11px;
-      .u-select-search {
+      .select-search {
         height: 100%;
         margin: 0;
         padding: 0;
@@ -377,7 +377,7 @@ function onChange(value: string | number, label: string, index: number) {
         caret-color: auto;
       }
     }
-    .u-select-item {
+    .select-item {
       position: relative;
       padding-right: 18px;
       flex: 1;
@@ -406,7 +406,7 @@ function onChange(value: string | number, label: string, index: number) {
       user-select: none;
       pointer-events: none;
     }
-    .u-arrow {
+    .arrow-svg {
       .u-svg();
       transition:
         transform 0.3s,
@@ -415,11 +415,11 @@ function onChange(value: string | number, label: string, index: number) {
     .arrow-rotate {
       transform: rotate(180deg);
     }
-    .u-search {
+    .search-svg {
       .u-svg();
       transition: opacity 0.3s;
     }
-    .u-clear {
+    .clear-svg {
       .u-svg();
       z-index: 1;
       background: #fff;
@@ -447,7 +447,7 @@ function onChange(value: string | number, label: string, index: number) {
       0 6px 16px 0 rgba(0, 0, 0, 0.08),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
-    .u-option {
+    .select-option {
       // 下拉项默认样式
       min-height: 32px;
       display: block;
@@ -478,7 +478,7 @@ function onChange(value: string | number, label: string, index: number) {
       cursor: not-allowed;
     }
   }
-  .m-empty-wrap {
+  .options-empty {
     position: absolute;
     z-index: 1000;
     border-radius: 8px;
@@ -508,7 +508,7 @@ function onChange(value: string | number, label: string, index: number) {
   .m-select-wrap {
     cursor: text;
     .m-select-search {
-      .u-select-search {
+      .select-search {
         cursor: auto;
         color: inherit;
         opacity: 1;
@@ -523,7 +523,7 @@ function onChange(value: string | number, label: string, index: number) {
     background: #f5f5f5;
     user-select: none;
     cursor: not-allowed;
-    .m-select-search .u-select-search {
+    .m-select-search .select-search {
       cursor: not-allowed;
     }
   }

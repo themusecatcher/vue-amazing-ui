@@ -64,35 +64,33 @@ function onChange(index: number) {
     :style="`width: ${totalWidth};`"
   >
     <div
-      :class="[
-        'm-steps-item',
-        {
-          'steps-finish': currentStep > index + 1,
-          'steps-process': currentStep === index + 1,
-          'steps-wait': currentStep < index + 1
-        }
-      ]"
+      class="m-steps-item"
+      :class="{
+        'steps-finish': currentStep > index + 1,
+        'steps-process': currentStep === index + 1,
+        'steps-wait': currentStep < index + 1
+      }"
       v-for="(step, index) in steps"
       :key="index"
     >
-      <div tabindex="0" class="m-steps-info-wrap" @click="onChange(index + 1)">
-        <div class="m-steps-tail"></div>
-        <div class="m-steps-icon">
+      <div tabindex="0" class="steps-info-wrap" @click="onChange(index + 1)">
+        <div class="steps-tail"></div>
+        <div class="steps-icon">
           <template v-if="!dotted">
-            <span class="u-num" v-if="currentStep <= index + 1">{{ index + 1 }}</span>
-            <svg class="u-icon" v-else viewBox="64 64 896 896" data-icon="check" aria-hidden="true" focusable="false">
+            <span v-if="currentStep <= index + 1" class="steps-num">{{ index + 1 }}</span>
+            <svg v-else class="icon-svg" viewBox="64 64 896 896" data-icon="check" aria-hidden="true" focusable="false">
               <path
                 d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
               ></path>
             </svg>
           </template>
           <template v-else>
-            <span class="u-dot"></span>
+            <span class="steps-dot"></span>
           </template>
         </div>
         <div class="m-steps-content">
-          <div class="u-steps-title">{{ step.title }}</div>
-          <div class="u-steps-description" v-show="step.description">{{ step.description }}</div>
+          <div class="steps-title">{{ step.title }}</div>
+          <div v-if="step.description" class="steps-description">{{ step.description }}</div>
         </div>
       </div>
     </div>
@@ -104,8 +102,8 @@ function onChange(index: number) {
   gap: 16px;
   transition: all 0.3s;
   &:not(.steps-label-bottom) {
-    .m-steps-item .m-steps-info-wrap {
-      .m-steps-tail {
+    .m-steps-item .steps-info-wrap {
+      .steps-tail {
         display: none;
       }
     }
@@ -117,23 +115,23 @@ function onChange(index: number) {
     vertical-align: top;
     &:last-child {
       flex: none;
-      .m-steps-info-wrap {
-        .m-steps-content .u-steps-title {
+      .steps-info-wrap {
+        .m-steps-content .steps-title {
           padding-right: 0;
           &::after {
             display: none;
           }
         }
-        .m-steps-tail {
+        .steps-tail {
           display: none;
         }
       }
     }
-    .m-steps-info-wrap {
+    .steps-info-wrap {
       display: inline-block;
       vertical-align: top;
       outline: none;
-      .m-steps-tail {
+      .steps-tail {
         height: 9px;
         position: absolute;
         top: 12px;
@@ -151,7 +149,7 @@ function onChange(index: number) {
           content: '';
         }
       }
-      .m-steps-icon {
+      .steps-icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -163,21 +161,21 @@ function onChange(index: number) {
         background-color: rgba(0, 0, 0, 0.06);
         border: 1px solid transparent;
         transition: all 0.3s;
-        .u-num {
+        .steps-num {
           display: inline-block;
           font-size: 16px;
           line-height: 1;
           color: rgba(0, 0, 0, 0.65);
           transition: all 0.3s;
         }
-        .u-icon {
+        .icon-svg {
           display: inline-block;
           fill: @themeColor;
           width: 16px;
           height: 16px;
           transition: all 0.3s;
         }
-        .u-dot {
+        .steps-dot {
           width: 100%;
           height: 100%;
           border-radius: 50%;
@@ -188,7 +186,7 @@ function onChange(index: number) {
         display: inline-block;
         vertical-align: top;
         transition: all 0.3s;
-        .u-steps-title {
+        .steps-title {
           position: relative;
           display: inline-block;
           color: rgba(0, 0, 0, 0.45);
@@ -209,7 +207,7 @@ function onChange(index: number) {
             transition: all 0.3s;
           }
         }
-        .u-steps-description {
+        .steps-description {
           max-width: 140px;
           font-size: 14px;
           color: rgba(0, 0, 0, 0.45);
@@ -221,40 +219,40 @@ function onChange(index: number) {
     }
   }
   .steps-finish {
-    .m-steps-info-wrap {
+    .steps-info-wrap {
       cursor: pointer;
-      .m-steps-tail {
+      .steps-tail {
         &::after {
           background-color: @themeColor;
         }
       }
-      .m-steps-icon {
+      .steps-icon {
         background-color: #e6f4ff;
         border-color: #e6f4ff;
-        .u-dot {
+        .steps-dot {
           background: @themeColor;
         }
       }
       .m-steps-content {
-        .u-steps-title {
+        .steps-title {
           color: rgba(0, 0, 0, 0.88);
           &::after {
             background-color: @themeColor;
           }
         }
-        .u-steps-description {
+        .steps-description {
           color: rgba(0, 0, 0, 0.45);
         }
       }
       &:hover {
-        .m-steps-icon {
+        .steps-icon {
           border-color: @themeColor;
         }
         .m-steps-content {
-          .u-steps-title {
+          .steps-title {
             color: @themeColor;
           }
-          .u-steps-description {
+          .steps-description {
             color: @themeColor;
           }
         }
@@ -262,49 +260,49 @@ function onChange(index: number) {
     }
   }
   .steps-process {
-    .m-steps-info-wrap {
-      .m-steps-icon {
+    .steps-info-wrap {
+      .steps-icon {
         background-color: @themeColor;
         border: 1px solid rgba(0, 0, 0, 0.25);
         border-color: @themeColor;
-        .u-num {
+        .steps-num {
           color: #fff;
         }
-        .u-dot {
+        .steps-dot {
           background: @themeColor;
         }
       }
       .m-steps-content {
-        .u-steps-title {
+        .steps-title {
           color: rgba(0, 0, 0, 0.88);
         }
-        .u-steps-description {
+        .steps-description {
           color: rgba(0, 0, 0, 0.88);
         }
       }
     }
   }
   .steps-wait {
-    .m-steps-info-wrap {
+    .steps-info-wrap {
       cursor: pointer;
       &:hover {
-        .m-steps-icon {
+        .steps-icon {
           border-color: @themeColor;
-          .u-num {
+          .steps-num {
             color: @themeColor;
           }
         }
         .m-steps-content {
-          .u-steps-title {
+          .steps-title {
             color: @themeColor;
           }
-          .u-steps-description {
+          .steps-description {
             color: @themeColor;
           }
         }
       }
-      .m-steps-icon {
-        .u-dot {
+      .steps-icon {
+        .steps-dot {
           background: rgba(0, 0, 0, 0.25);
         }
       }
@@ -314,20 +312,20 @@ function onChange(index: number) {
 .steps-small {
   gap: 12px;
   .m-steps-item {
-    .m-steps-info-wrap {
-      .m-steps-icon {
+    .steps-info-wrap {
+      .steps-icon {
         width: 24px;
         height: 24px;
-        .u-num {
+        .steps-num {
           font-size: 12px;
         }
-        .u-icon {
+        .icon-svg {
           width: 12px;
           height: 12px;
         }
       }
       .m-steps-content {
-        .u-steps-title {
+        .steps-title {
           font-size: 14px;
           line-height: 24px;
           padding-right: 12px;
@@ -343,12 +341,12 @@ function onChange(index: number) {
   gap: 0;
   .m-steps-item {
     overflow: visible;
-    .m-steps-info-wrap {
-      .m-steps-tail {
+    .steps-info-wrap {
+      .steps-tail {
         margin-inline-start: 56px;
         padding: 4px 24px;
       }
-      .m-steps-icon {
+      .steps-icon {
         margin-inline-start: 40px;
       }
       .m-steps-content {
@@ -356,7 +354,7 @@ function onChange(index: number) {
         width: 112px;
         margin-top: 12px;
         text-align: center;
-        .u-steps-title {
+        .steps-title {
           padding-right: 0;
           &::after {
             display: none;
@@ -369,8 +367,8 @@ function onChange(index: number) {
 .steps-dotted {
   .m-steps-item {
     overflow: visible;
-    .m-steps-info-wrap {
-      .m-steps-tail {
+    .steps-info-wrap {
+      .steps-tail {
         height: 3px;
         top: 2.5px;
         width: 100%;
@@ -384,7 +382,7 @@ function onChange(index: number) {
           margin-inline-start: 12px;
         }
       }
-      .m-steps-icon {
+      .steps-icon {
         position: absolute;
         width: 8px;
         height: 8px;
@@ -398,14 +396,14 @@ function onChange(index: number) {
       .m-steps-content {
         width: 140px;
         margin-top: 20px;
-        .u-steps-title {
+        .steps-title {
           line-height: 1.5714285714285714;
         }
       }
     }
   }
   .steps-process {
-    .m-steps-info-wrap .m-steps-icon {
+    .steps-info-wrap .steps-icon {
       top: -1px;
       width: 10px;
       height: 10px;
@@ -425,12 +423,12 @@ function onChange(index: number) {
       flex: 1 0 auto;
     }
     &:not(:last-child) {
-      .m-steps-info-wrap {
-        .m-steps-tail {
+      .steps-info-wrap {
+        .steps-tail {
           display: block;
         }
         .m-steps-content {
-          .u-steps-title {
+          .steps-title {
             &::after {
               display: none;
             }
@@ -438,8 +436,8 @@ function onChange(index: number) {
         }
       }
     }
-    .m-steps-info-wrap {
-      .m-steps-tail {
+    .steps-info-wrap {
+      .steps-tail {
         top: 0;
         inset-inline-start: 15px;
         width: 1px;
@@ -450,7 +448,7 @@ function onChange(index: number) {
           height: 100%;
         }
       }
-      .m-steps-icon {
+      .steps-icon {
         float: left;
         margin-right: 16px;
       }
@@ -458,10 +456,10 @@ function onChange(index: number) {
         display: block;
         min-height: 48px;
         overflow: hidden;
-        .u-steps-title {
+        .steps-title {
           line-height: 32px;
         }
-        .u-steps-description {
+        .steps-description {
           padding-bottom: 12px;
         }
       }
@@ -470,13 +468,13 @@ function onChange(index: number) {
 }
 .steps-small.steps-vertical {
   .m-steps-item {
-    .m-steps-info-wrap {
-      .m-steps-tail {
+    .steps-info-wrap {
+      .steps-tail {
         inset-inline-start: 11px;
         padding: 30px 0 6px;
       }
       .m-steps-content {
-        .u-steps-title {
+        .steps-title {
           line-height: 24px;
         }
       }
@@ -485,8 +483,8 @@ function onChange(index: number) {
 }
 .steps-vertical.steps-dotted {
   .m-steps-item {
-    .m-steps-info-wrap {
-      .m-steps-tail {
+    .steps-info-wrap {
+      .steps-tail {
         top: 12px;
         inset-inline-start: 0;
         margin: 0;
@@ -495,7 +493,7 @@ function onChange(index: number) {
           margin-inline-start: 3.5px;
         }
       }
-      .m-steps-icon {
+      .steps-icon {
         position: static;
         margin-top: 12px;
         margin-inline-start: 0;
@@ -508,8 +506,8 @@ function onChange(index: number) {
     }
   }
   .steps-process {
-    .m-steps-info-wrap {
-      .m-steps-icon {
+    .steps-info-wrap {
+      .steps-icon {
         position: relative;
         margin-top: 11px;
         top: 0;
@@ -520,18 +518,18 @@ function onChange(index: number) {
 }
 .steps-small.steps-vertical.steps-dotted {
   .m-steps-item {
-    .m-steps-info-wrap {
-      .m-steps-tail {
+    .steps-info-wrap {
+      .steps-tail {
         top: 8px;
       }
-      .m-steps-icon {
+      .steps-icon {
         margin-top: 8px;
       }
     }
   }
   .steps-process {
-    .m-steps-info-wrap {
-      .m-steps-icon {
+    .steps-info-wrap {
+      .steps-icon {
         margin-top: 7px;
       }
     }

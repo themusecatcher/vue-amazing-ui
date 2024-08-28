@@ -299,8 +299,8 @@ const layoutOptions = [
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-width | 水印的宽度，默认值为 `content` 自身的宽度 | number | undefined
-height | 水印的高度，默认值为 `content` 自身的高度 | number | undefined
+width | 水印的宽度，默认为 `content` 自身的宽度，单位 `px` | number | undefined
+height | 水印的高度，默认为 `content` 自身的高度，单位 `px` | number | undefined
 layout | 水印的布局方式：平行布局 `parallel`; 交替布局 `alternate` | 'parallel' &#124; 'alternate' | 'alternate'
 rotate | 水印绘制时，旋转的角度，单位 `°` | number | -22
 zIndex | 追加的水印元素的 `z-index` | number| 90

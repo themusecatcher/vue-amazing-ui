@@ -90,7 +90,7 @@ function getResponsiveGap(gutter: any) {
 </script>
 <template>
   <div
-    class="m-row"
+    class="m-grid-row"
     :class="{ 'gutter-row': gutter }"
     :style="`--xGap: ${(xGap as number) / 2}px; --justify: ${justify}; --align: ${alignProperties[align]}; width: ${rowWidth}; margin-left: -${(xGap as number) / 2}px; margin-right: -${(xGap as number) / 2}px; row-gap: ${yGap}px;`"
   >
@@ -98,7 +98,7 @@ function getResponsiveGap(gutter: any) {
   </div>
 </template>
 <style lang="less" scoped>
-.m-row {
+.m-grid-row {
   display: flex;
   flex-flow: row wrap;
   justify-content: var(--justify);

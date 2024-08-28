@@ -96,8 +96,8 @@ function onCheckAll() {
           :class="{ 'checkbox-disabled': disabled || option.disabled }"
           @click="disabled || option.disabled ? () => false : onClick(option.value)"
         >
-          <span class="u-checkbox" :class="{ 'checkbox-checked': checkedValue.includes(option.value) }"></span>
-          <span class="u-label">
+          <span class="checkbox-box" :class="{ 'checkbox-checked': checkedValue.includes(option.value) }"></span>
+          <span class="checkbox-label">
             <slot :label="option.label">{{ option.label }}</slot>
           </span>
         </div>
@@ -106,10 +106,10 @@ function onCheckAll() {
     <div v-else class="m-checkbox-wrap">
       <div class="m-checkbox-box" :class="{ 'checkbox-disabled': disabled }" @click="onCheckAll">
         <span
-          class="u-checkbox"
+          class="checkbox-box"
           :class="{ 'checkbox-checked': checked && !indeterminate, indeterminate: indeterminate }"
         ></span>
-        <span class="u-label">
+        <span class="checkbox-label">
           <slot>Check all</slot>
         </span>
       </div>
@@ -131,11 +131,11 @@ function onCheckAll() {
       align-items: flex-start;
       cursor: pointer;
       &:hover {
-        .u-checkbox {
+        .checkbox-box {
           border-color: @themeColor;
         }
       }
-      .u-checkbox {
+      .checkbox-box {
         position: relative;
         /*
           如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小
@@ -189,7 +189,7 @@ function onCheckAll() {
           opacity: 1;
         }
       }
-      .u-label {
+      .checkbox-label {
         word-break: break-all;
         padding: 0 8px;
         font-size: 14px;
@@ -200,11 +200,11 @@ function onCheckAll() {
       color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
       &:hover {
-        .u-checkbox {
+        .checkbox-box {
           border-color: #d9d9d9;
         }
       }
-      .u-checkbox {
+      .checkbox-box {
         border-color: #d9d9d9;
         background-color: rgba(0, 0, 0, 0.04);
         &::after {

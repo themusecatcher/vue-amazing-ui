@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import Spin from '../spin'
 import Empty from '../empty'
 import Pagination from '../pagination'
@@ -32,9 +33,15 @@ const props = withDefaults(defineProps<Props>(), {
   pagination: () => ({})
 })
 const slotsExist = useSlotsExist(['header', 'default', 'footer'])
+const showHeader = computed(() => {
+  return slotsExist.header || props.header
+})
+const showFooter = computed(() => {
+  return slotsExist.footer || props.footer
+})
 </script>
 <template>
-  <Spin :spinning="loading" size="small" v-bind="spinProps">
+  <Spin size="small" :spinning="loading" v-bind="spinProps">
     <div
       class="m-list"
       :class="{
@@ -46,17 +53,17 @@ const slotsExist = useSlotsExist(['header', 'default', 'footer'])
         'list-hoverable': hoverable
       }"
     >
-      <div class="m-list-header" v-if="slotsExist.header || props.header">
+      <div v-if="showHeader" class="list-header">
         <slot name="header">{{ header }}</slot>
       </div>
       <slot v-if="slotsExist.default"></slot>
-      <div class="m-list-empty" v-else>
+      <div v-else class="list-empty">
         <Empty image="outlined" v-bind="emptyProps" />
       </div>
-      <div class="m-list-footer" v-if="slotsExist.footer || props.footer">
+      <div v-if="showFooter" class="list-footer">
         <slot name="footer">{{ footer }}</slot>
       </div>
-      <div class="m-list-pagination" v-if="showPagination">
+      <div v-if="showPagination" class="list-pagination">
         <Pagination placement="right" v-bind="pagination" />
       </div>
     </div>
@@ -69,28 +76,28 @@ const slotsExist = useSlotsExist(['header', 'default', 'footer'])
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1.5714285714285714;
-  .m-list-header,
-  .m-list-footer {
+  .list-header,
+  .list-footer {
     background: transparent;
     padding: 12px 0;
     transition: all 0.3s;
   }
-  .m-list-empty {
+  .list-empty {
     padding: 16px;
   }
-  .m-list-pagination {
+  .list-pagination {
     margin-top: 24px;
   }
 }
 .list-bordered {
   border: 1px solid #d9d9d9;
   border-radius: 8px;
-  .m-list-header,
+  .list-header,
   :deep(.m-list-item),
-  .m-list-footer {
+  .list-footer {
     padding-inline: 24px;
   }
-  .m-list-pagination {
+  .list-pagination {
     margin: 16px 24px;
   }
 }
@@ -125,7 +132,7 @@ const slotsExist = useSlotsExist(['header', 'default', 'footer'])
   }
 }
 .list-split {
-  .m-list-header {
+  .list-header {
     border-bottom: 1px solid rgba(5, 5, 5, 0.06);
   }
   :deep(.m-list-item) {
@@ -140,9 +147,9 @@ const slotsExist = useSlotsExist(['header', 'default', 'footer'])
   }
 }
 .list-bordered.list-small {
-  .m-list-header,
+  .list-header,
   :deep(.m-list-item),
-  .m-list-footer {
+  .list-footer {
     padding: 8px 16px;
   }
 }
@@ -152,9 +159,9 @@ const slotsExist = useSlotsExist(['header', 'default', 'footer'])
   }
 }
 .list-bordered.list-large {
-  .m-list-header,
+  .list-header,
   :deep(.m-list-item),
-  .m-list-footer {
+  .list-footer {
     padding: 16px 24px;
   }
 }

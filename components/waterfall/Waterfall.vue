@@ -151,7 +151,7 @@ function getImageName(image: Image) {
     :style="`--border-radius: ${borderRadius}px; background-color: ${backgroundColor}; width: ${totalWidth}; height: ${height}px;`"
   >
     <Spin
-      class="m-image"
+      class="waterfall-image"
       :style="`width: ${property.width}px; height: ${property.height}px; top: ${property && property.top}px; left: ${property && property.left}px;`"
       :spinning="!loaded[index]"
       size="small"
@@ -168,7 +168,7 @@ function getImageName(image: Image) {
 .m-waterfall {
   position: relative;
   border-radius: var(--border-radius);
-  .m-image {
+  .waterfall-image {
     position: absolute;
     .u-image {
       width: 100%;

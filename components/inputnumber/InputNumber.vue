@@ -105,7 +105,7 @@ function onDown() {
     :class="{ 'input-number-disabled': disabled }"
     :style="`width: ${inputWidth};`"
   >
-    <div class="m-input-wrap">
+    <div class="m-input-number-wrap">
       <span v-if="showPrefix" class="input-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
@@ -165,7 +165,7 @@ function onDown() {
     border-color: #4096ff;
     box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
   }
-  .m-input-wrap {
+  .m-input-number-wrap {
     height: 100%;
     display: flex;
     .input-prefix {
@@ -261,7 +261,7 @@ function onDown() {
     border-color: #d9d9d9;
     box-shadow: none;
   }
-  .m-input-wrap .input-number {
+  .m-input-number-wrap .input-number {
     cursor: not-allowed;
   }
   .m-handler-wrap {

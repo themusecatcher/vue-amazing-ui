@@ -49,7 +49,7 @@ export function formatNumber(
     formatValue =
       integerPart.replace(/(\d)(?=(\d{3})+$)/g, '$1' + separator) + (decimalPart ? decimal + decimalPart : '')
   }
-  return prefix + formatValue + suffix
+  return (prefix || '') + formatValue + (suffix || '')
 }
 ```
 

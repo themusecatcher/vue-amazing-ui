@@ -3,8 +3,8 @@ import { shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useMutationObserver } from '../utils'
 interface Props {
-  width?: number // 水印的宽度，默认值为 content 自身的宽度
-  height?: number // 水印的高度，默认值为 content 自身的高度
+  width?: number // 水印的宽度，默认为 content 自身的宽度，单位 px
+  height?: number // 水印的高度，默认为 content 自身的高度，单位 px
   layout?: 'parallel' | 'alternate' // 布局方式：平行布局，交替布局
   rotate?: number // 水印绘制时，旋转的角度，单位 deg
   zIndex?: number // 追加的水印元素的 z-index

@@ -131,8 +131,8 @@ function handleOffset(value: string): string {
     :style="[`--z-index: ${zIndex}`, value === undefined && !dot ? dotOffestStyle : null]"
   >
     <template v-if="value === undefined && !dot && (color || status)">
-      <span class="u-status-dot" :class="[presetClass, { 'dot-ripple': ripple }]" :style="customStyle"></span>
-      <span class="u-status-text">
+      <span class="status-dot" :class="[presetClass, { 'dot-ripple': ripple }]" :style="customStyle"></span>
+      <span class="status-text">
         <slot>{{ text }}</slot>
       </span>
     </template>
@@ -200,7 +200,7 @@ function handleOffset(value: string): string {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1;
-  .u-status-dot {
+  .status-dot {
     position: relative;
     top: -1px;
     display: inline-block;
@@ -238,7 +238,7 @@ function handleOffset(value: string): string {
       }
     }
   }
-  .u-status-text {
+  .status-text {
     margin-inline-start: 8px;
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;

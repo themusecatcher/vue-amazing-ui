@@ -9,7 +9,7 @@ interface Props {
   block?: boolean // 是否将宽度调整为父元素宽度，同时所有选项占据相同的宽度
   disabled?: boolean // 是否禁用
   options?: string[] | number[] | SegmentedOption[] // 选项数据
-  size?: 'large' | 'middle' | 'small' // 控件尺寸
+  size?: 'small' | 'middle' | 'large' // 控件尺寸
   value?: string | number // (v-model) 当前选中的值
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -80,8 +80,9 @@ function getOptionLabel(option: string | number | SegmentedOption) {
             name="label"
             :label="getOptionLabel(option)"
             :payload="typeof option === 'object' ? option.payload : {}"
-            >{{ getOptionLabel(option) }}</slot
           >
+            {{ getOptionLabel(option) }}
+          </slot>
         </div>
       </div>
     </div>

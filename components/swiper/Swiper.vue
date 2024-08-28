@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import type { Swiper as SwiperTypes } from 'swiper/types'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import {
@@ -22,7 +23,6 @@ import 'swiper/less/effect-flip'
 import 'swiper/less/effect-coverflow'
 import 'swiper/less/effect-cards'
 import 'swiper/less/effect-creative'
-import { ref, computed } from 'vue'
 interface Image {
   name?: string // 图片名称
   src: string // 图片地址
@@ -138,7 +138,7 @@ function getImageName(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <a class="m-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
+      <a class="image-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
         <img class="u-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
@@ -158,7 +158,7 @@ function getImageName(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <a class="m-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
+      <a class="image-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
         <img class="u-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
@@ -177,7 +177,7 @@ function getImageName(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <a :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'" class="m-link">
+      <a :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'" class="image-link">
         <img class="u-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
       </a>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
@@ -185,15 +185,15 @@ function getImageName(image: Image) {
   </Swiper>
 </template>
 <style lang="less" scoped>
-.m-link {
+.image-link {
   display: block;
   height: 100%;
-}
-.u-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  cursor: pointer;
+  .u-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+  }
 }
 .swiper {
   --swiper-theme-color: @themeColor;

@@ -130,7 +130,7 @@ function onWheel(e: WheelEvent) {
     <div class="m-tabs-nav">
       <div
         ref="wrapRef"
-        class="m-tabs-nav-wrap"
+        class="tabs-nav-wrap"
         :class="{
           'tabs-center': centered,
           'before-shadow-active': showWheel && scrollLeft > 0,
@@ -139,15 +139,16 @@ function onWheel(e: WheelEvent) {
       >
         <div
           ref="navRef"
-          :class="['m-tabs-nav-list', { 'nav-transition': transition }]"
-          @wheel.stop.prevent="showWheel ? onWheel($event) : () => false"
+          class="tabs-nav-list"
+          :class="{ 'nav-transition': transition }"
           :style="`transform: translate(${-scrollLeft}px, 0)`"
+          @wheel.stop.prevent="showWheel ? onWheel($event) : () => false"
         >
           <div
             ref="tabsRef"
-            class="u-tab"
+            class="tab-item"
             :class="[
-              `u-tab-${size}`,
+              `tab-${size}`,
               {
                 'tab-card': type === 'card',
                 'tab-disabled': page.disabled,
@@ -163,7 +164,7 @@ function onWheel(e: WheelEvent) {
             {{ page.tab }}
           </div>
           <div
-            class="u-tab-bar"
+            class="tab-bar"
             :class="{ 'card-hidden': type === 'card' }"
             :style="`left: ${left}px; width: ${width}px;`"
           ></div>
@@ -171,7 +172,7 @@ function onWheel(e: WheelEvent) {
       </div>
     </div>
     <div class="m-tabs-page">
-      <div class="m-tabs-content" v-show="activeKey === page.key" v-for="page in tabPages" :key="page.key">
+      <div class="tabs-content" v-show="activeKey === page.key" v-for="page in tabPages" :key="page.key">
         <slot :name="page.key">{{ page.content }}</slot>
       </div>
     </div>
@@ -197,7 +198,7 @@ function onWheel(e: WheelEvent) {
       border-bottom: 1px solid rgba(5, 5, 5, 0.06);
       content: '';
     }
-    .m-tabs-nav-wrap {
+    .tabs-nav-wrap {
       position: relative;
       display: flex;
       flex: auto;
@@ -226,10 +227,10 @@ function onWheel(e: WheelEvent) {
         right: 0;
         box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
       }
-      .m-tabs-nav-list {
+      .tabs-nav-list {
         position: relative;
         display: flex;
-        .u-tab {
+        .tab-item {
           position: relative;
           display: inline-flex;
           align-items: center;
@@ -247,11 +248,11 @@ function onWheel(e: WheelEvent) {
             color: @themeColor;
           }
         }
-        .u-tab-small {
+        .tab-small {
           font-size: 14px;
           padding: 8px 0;
         }
-        .u-tab-large {
+        .tab-large {
           font-size: 16px;
           padding: 16px 0;
         }
@@ -282,7 +283,7 @@ function onWheel(e: WheelEvent) {
             color: rgba(0, 0, 0, 0.25);
           }
         }
-        .u-tab-bar {
+        .tab-bar {
           position: absolute;
           background: @themeColor;
           pointer-events: none;
@@ -321,7 +322,7 @@ function onWheel(e: WheelEvent) {
     flex: auto;
     min-width: 0;
     min-height: 0;
-    .m-tabs-content {
+    .tabs-content {
       position: relative;
       width: 100%;
       height: 100%;

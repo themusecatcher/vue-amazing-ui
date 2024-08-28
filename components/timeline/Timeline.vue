@@ -75,24 +75,24 @@ watchEffect(
 )
 </script>
 <template>
-  <div class="m-timeline-area" :style="`width: ${totalWidth};`">
+  <div class="m-timeline-wrap" :style="`width: ${totalWidth};`">
     <div class="m-timeline">
       <div
-        :class="['m-timeline-item', { 'item-last': index === timelineData.length - 1 }]"
+        :class="['timeline-item', { 'item-last': index === timelineData.length - 1 }]"
         v-for="(data, index) in timelineData"
         :key="index"
       >
-        <span :class="`u-tail tail-${mode}`" :style="`border-left-style: ${lineStyle};`"></span>
-        <div :class="`m-dot dot-${mode}`" :style="`height: ${dotsHeight[index]}`">
+        <span class="timeline-tail" :class="`tail-${mode}`" :style="`border-left-style: ${lineStyle};`"></span>
+        <div class="timeline-dot" :class="`dot-${mode}`" :style="`height: ${dotsHeight[index]}`">
           <slot name="dot" :index="index">
-            <span class="u-dot" v-if="data.color === 'red'" :style="{ borderColor: ColorStyle.red }"></span>
-            <span class="u-dot" v-else-if="data.color === 'gray'" :style="{ borderColor: ColorStyle.gray }"></span>
-            <span class="u-dot" v-else-if="data.color === 'green'" :style="{ borderColor: ColorStyle.green }"></span>
-            <span class="u-dot" v-else-if="data.color === 'blue'" :style="{ borderColor: ColorStyle.blue }"></span>
-            <span class="u-dot" v-else :style="{ borderColor: data.color || ColorStyle.blue }"></span>
+            <span class="dot-item" v-if="data.color === 'red'" :style="{ borderColor: ColorStyle.red }"></span>
+            <span class="dot-item" v-else-if="data.color === 'gray'" :style="{ borderColor: ColorStyle.gray }"></span>
+            <span class="dot-item" v-else-if="data.color === 'green'" :style="{ borderColor: ColorStyle.green }"></span>
+            <span class="dot-item" v-else-if="data.color === 'blue'" :style="{ borderColor: ColorStyle.blue }"></span>
+            <span class="dot-item" v-else :style="{ borderColor: data.color || ColorStyle.blue }"></span>
           </slot>
         </div>
-        <div ref="desc" :class="`u-desc desc-${mode}`">
+        <div ref="desc" :class="`timeline-desc desc-${mode}`">
           <slot name="desc" :index="index">{{ data.desc || '--' }}</slot>
         </div>
       </div>
@@ -100,12 +100,12 @@ watchEffect(
   </div>
 </template>
 <style lang="less" scoped>
-.m-timeline-area {
+.m-timeline-wrap {
   .m-timeline {
-    .m-timeline-item {
+    .timeline-item {
       position: relative;
       padding-bottom: 30px;
-      .u-tail {
+      .timeline-tail {
         position: absolute;
         top: 12px;
         width: 0;
@@ -124,11 +124,11 @@ watchEffect(
       .tail-right {
         right: 5px;
       }
-      .m-dot {
+      .timeline-dot {
         position: absolute;
         display: flex;
         align-items: center;
-        .u-dot {
+        .dot-item {
           display: inline-block;
           width: 12px;
           height: 12px;
@@ -150,7 +150,7 @@ watchEffect(
         right: 6px;
         transform: translateX(50%);
       }
-      .u-desc {
+      .timeline-desc {
         font-size: 14px;
         line-height: 1.5714285714285714;
         word-break: break-all;
@@ -173,7 +173,7 @@ watchEffect(
       }
     }
     .item-last {
-      .u-tail {
+      .timeline-tail {
         display: none;
       }
     }

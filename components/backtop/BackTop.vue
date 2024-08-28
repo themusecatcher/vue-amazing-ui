@@ -2,10 +2,10 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { throttle } from '../utils'
 interface Props {
-  bottom?: number | string // BackTop 距离页面底部的高度
-  right?: number | string // BackTop 距离页面右侧的宽度
+  bottom?: number | string // BackTop 距离页面底部的高度，单位 px
+  right?: number | string // BackTop 距离页面右侧的宽度，单位 px
   zIndex?: number // 设置 BackTop 的 z-index
-  visibilityHeight?: number // 滚动时触发显示回到顶部的高度
+  visibilityHeight?: number // 滚动时触发显示回到顶部的高度，单位 px
   to?: string | HTMLElement // BackTop 渲染的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，下同
   listenTo?: string | HTMLElement // 监听滚动的元素，如果为 undefined 会监听距离最近的一个可滚动的祖先节点
 }

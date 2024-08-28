@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.6.2 <Tag color="volcano" size="small">2024-08-28</Tag>
+
+- 优化并更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件，`top` 属性新增 `string` 类型
+- 组件库及文档代码优化
+
 ## 1.6.1 <Tag color="volcano" size="small">2024-08-27</Tag>
 
 - 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件

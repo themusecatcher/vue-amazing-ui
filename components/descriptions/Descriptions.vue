@@ -117,7 +117,7 @@ function getTotalSpan(group: any): number {
 // 根据不同 cloumn 处理 DescriptionsItems 节点
 async function getGroupItems() {
   children.value = Array.from(defaultSlotsRef.value.children).filter((element: any) => {
-    return element.className === (props.bordered ? 'm-desc-item-bordered' : 'm-desc-item')
+    return element.className === (props.bordered ? 'descriptions-item-bordered' : 'descriptions-item')
   })
   if (groupItems.value.length) {
     groupItems.value.splice(0) // 清空列表
@@ -215,47 +215,53 @@ function setStyle(element: any, styles: any) {
 }
 </script>
 <template>
-  <div class="m-desc" :class="`desc-${size}`">
-    <div class="m-desc-header" v-if="showHeader">
-      <div class="u-title">
+  <div class="m-descriptions" :class="`descriptions-${size}`">
+    <div class="m-descriptions-header" v-if="showHeader">
+      <div class="descriptions-title">
         <slot name="title">{{ title }}</slot>
       </div>
-      <div class="u-extra">
+      <div class="descriptions-extra">
         <slot name="extra">{{ extra }}</slot>
       </div>
     </div>
-    <div v-if="!vertical" class="m-desc-view" :class="{ 'm-bordered': bordered }">
+    <div v-if="!vertical" class="m-descriptions-view" :class="{ 'descriptions-bordered': bordered }">
       <table>
         <tbody v-if="!bordered">
           <tr v-for="(items, row) in groupItems" :key="row">
-            <td ref="tdCols" class="u-item-td" :colspan="item.span" v-for="(item, col) in items" :key="col"></td>
+            <td
+              ref="tdCols"
+              class="descriptions-item-td"
+              :colspan="item.span"
+              v-for="(item, col) in items"
+              :key="col"
+            ></td>
           </tr>
         </tbody>
         <tbody v-else>
-          <tr ref="trBorderedRows" class="tr-bordered" v-for="row of groupItems.length" :key="row"></tr>
+          <tr ref="trBorderedRows" class="descriptions-bordered-tr" v-for="row of groupItems.length" :key="row"></tr>
         </tbody>
       </table>
     </div>
-    <div v-else class="m-desc-view" :class="{ 'm-bordered': bordered }">
+    <div v-else class="m-descriptions-view" :class="{ 'descriptions-bordered': bordered }">
       <table>
         <tbody v-if="!bordered">
           <template v-for="(items, row) in groupItems" :key="row">
             <tr>
-              <th class="u-item-th" :colspan="item.span" v-for="(item, col) in items" :key="col">
-                <div ref="thVerticalCols" class="m-desc-item"></div>
+              <th class="descriptions-item-th" :colspan="item.span" v-for="(item, col) in items" :key="col">
+                <div ref="thVerticalCols" class="descriptions-item"></div>
               </th>
             </tr>
             <tr>
-              <td class="u-item-td" :colspan="item.span" v-for="(item, col) in items" :key="col">
-                <div ref="tdVerticalCols" class="m-desc-item"></div>
+              <td class="descriptions-item-td" :colspan="item.span" v-for="(item, col) in items" :key="col">
+                <div ref="tdVerticalCols" class="descriptions-item"></div>
               </td>
             </tr>
           </template>
         </tbody>
         <tbody v-else>
           <template v-for="row in groupItems.length" :key="row">
-            <tr ref="thVerticalBorderedRows" class="tr-bordered"></tr>
-            <tr ref="tdVerticalBorderedRows" class="tr-bordered"></tr>
+            <tr ref="thVerticalBorderedRows" class="descriptions-bordered-tr"></tr>
+            <tr ref="tdVerticalBorderedRows" class="descriptions-bordered-tr"></tr>
           </template>
         </tbody>
       </table>
@@ -267,15 +273,15 @@ function setStyle(element: any, styles: any) {
   </div>
 </template>
 <style lang="less" scoped>
-.m-desc {
+.m-descriptions {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
-  .m-desc-header {
+  .m-descriptions-header {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-    .u-title {
+    .descriptions-title {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -285,13 +291,13 @@ function setStyle(element: any, styles: any) {
       color: rgba(0, 0, 0, 0.88);
       line-height: 1.5714285714285714;
     }
-    .u-extra {
+    .descriptions-extra {
       margin-inline-start: auto;
       color: rgba(0, 0, 0, 0.88);
       font-size: 14px;
     }
   }
-  .m-desc-view {
+  .m-descriptions-view {
     width: 100%;
     border-radius: 8px;
     table {
@@ -305,37 +311,37 @@ function setStyle(element: any, styles: any) {
         border: none;
         background: transparent;
       }
-      .u-item-th {
+      .descriptions-item-th {
         padding: 0; // 可选
         border: none; // 可选
         padding-bottom: 16px;
         vertical-align: top;
         background: transparent; // 可选
       }
-      .u-item-td {
+      .descriptions-item-td {
         padding: 0; // 可选
         border: none; // 可选
         padding-bottom: 16px;
         vertical-align: top;
       }
-      .m-desc-item {
+      .descriptions-item {
         display: flex;
       }
     }
   }
-  .m-bordered {
+  .descriptions-bordered {
     border: 1px solid rgba(5, 5, 5, 0.06);
     table {
       table-layout: auto;
       border-collapse: collapse;
       display: table; // 可选
       margin: 0; // 可选
-      .tr-bordered {
+      .descriptions-bordered-tr {
         border-bottom: 1px solid rgba(5, 5, 5, 0.06);
         &:last-child {
           border-bottom: none;
         }
-        :deep(.u-label-th) {
+        :deep(.descriptions-label-th) {
           border: none; // 可选
           color: rgba(0, 0, 0, 0.88);
           font-weight: normal;
@@ -350,7 +356,7 @@ function setStyle(element: any, styles: any) {
             border-inline-end: none;
           }
         }
-        :deep(.u-content-td) {
+        :deep(.descriptions-content-td) {
           border: none; // 可选
           display: table-cell;
           flex: 1;
@@ -369,32 +375,32 @@ function setStyle(element: any, styles: any) {
     }
   }
 }
-.desc-middle {
-  .m-desc-view {
-    .u-item-td {
+.descriptions-middle {
+  .m-descriptions-view {
+    .descriptions-item-td {
       padding-bottom: 12px !important;
     }
   }
-  .m-bordered {
-    :deep(.u-label-th) {
+  .descriptions-bordered {
+    :deep(.descriptions-label-th) {
       padding: 12px 24px !important;
     }
-    :deep(.u-content-td) {
+    :deep(.descriptions-content-td) {
       padding: 12px 24px !important;
     }
   }
 }
-.desc-small {
-  .m-desc-view {
-    .u-item-td {
+.descriptions-small {
+  .m-descriptions-view {
+    .descriptions-item-td {
       padding-bottom: 8px !important;
     }
   }
-  .m-bordered {
-    :deep(.u-label-th) {
+  .descriptions-bordered {
+    :deep(.descriptions-label-th) {
       padding: 8px 16px !important;
     }
-    :deep(.u-content-td) {
+    :deep(.descriptions-content-td) {
       padding: 8px 16px !important;
     }
   }

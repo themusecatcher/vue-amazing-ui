@@ -91,7 +91,7 @@ const showFooter = computed(() => {
     <p v-if="showDescription" class="empty-description" :style="descriptionStyle">
       <slot name="description">{{ description }}</slot>
     </p>
-    <div class="empty-footer" v-if="showFooter">
+    <div v-if="showFooter" class="empty-footer">
       <slot name="footer">{{ footer }}</slot>
     </div>
   </div>

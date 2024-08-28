@@ -61,7 +61,7 @@ function onWaveEnd() {
     :style="`--ripple-color: ${rippleColor};`"
     @click="disabled || loading ? () => false : onSwitch()"
   >
-    <div class="m-switch-inner">
+    <div class="switch-inner">
       <span class="inner-checked">
         <slot name="checked">{{ checked }}</slot>
       </span>
@@ -69,13 +69,13 @@ function onWaveEnd() {
         <slot name="unchecked">{{ unchecked }}</slot>
       </span>
     </div>
-    <div class="u-switch-circle" :style="circleStyle">
+    <div class="switch-circle" :style="circleStyle">
       <svg v-if="loading" class="circular" viewBox="0 0 50 50">
         <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
       </svg>
       <slot name="node" :checked="modelValue"></slot>
     </div>
-    <div v-if="!disabled" class="m-switch-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
+    <div v-if="!disabled" class="switch-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
   </div>
 </template>
 <style lang="less" scoped>
@@ -97,7 +97,7 @@ function onWaveEnd() {
   &:hover:not(.switch-disabled) {
     background: rgba(0, 0, 0, 0.45);
   }
-  .m-switch-inner {
+  .switch-inner {
     display: block;
     overflow: hidden;
     border-radius: 100px;
@@ -133,7 +133,7 @@ function onWaveEnd() {
       pointer-events: none;
     }
   }
-  .u-switch-circle {
+  .switch-circle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -187,8 +187,8 @@ function onWaveEnd() {
 .switch-loading {
   cursor: not-allowed;
   opacity: 0.65;
-  .m-switch-inner,
-  .u-switch-circle {
+  .switch-inner,
+  .switch-circle {
     box-shadow: none;
     cursor: not-allowed;
   }
@@ -197,7 +197,7 @@ function onWaveEnd() {
   min-width: 28px;
   height: 16px;
   line-height: 16px;
-  .m-switch-inner {
+  .switch-inner {
     padding-left: 18px;
     padding-right: 6px;
     .inner-checked {
@@ -210,7 +210,7 @@ function onWaveEnd() {
       margin-top: -16px;
     }
   }
-  .u-switch-circle {
+  .switch-circle {
     width: 12px;
     height: 12px;
     .circular {
@@ -226,7 +226,7 @@ function onWaveEnd() {
   min-width: 60px;
   height: 28px;
   line-height: 28px;
-  .m-switch-inner {
+  .switch-inner {
     padding-left: 30px;
     padding-right: 12px;
     .inner-checked {
@@ -239,7 +239,7 @@ function onWaveEnd() {
       margin-top: -28px;
     }
   }
-  .u-switch-circle {
+  .switch-circle {
     width: 24px;
     height: 24px;
     .circular {
@@ -256,7 +256,7 @@ function onWaveEnd() {
   &:hover:not(.switch-disabled) {
     background: #4096ff;
   }
-  .m-switch-inner {
+  .switch-inner {
     padding-left: 9px;
     padding-right: 24px;
     .inner-checked {
@@ -268,12 +268,12 @@ function onWaveEnd() {
       margin-right: calc(-100% + 22px - 48px);
     }
   }
-  .u-switch-circle {
+  .switch-circle {
     left: calc(100% - 20px);
   }
 }
 .switch-small.switch-checked {
-  .m-switch-inner {
+  .switch-inner {
     padding-left: 6px;
     padding-right: 18px;
     .inner-unchecked {
@@ -281,12 +281,12 @@ function onWaveEnd() {
       margin-right: calc(-100% + 16px - 36px);
     }
   }
-  .u-switch-circle {
+  .switch-circle {
     left: calc(100% - 14px);
   }
 }
 .switch-large.switch-checked {
-  .m-switch-inner {
+  .switch-inner {
     padding-left: 12px;
     padding-right: 30px;
     .inner-unchecked {
@@ -294,18 +294,18 @@ function onWaveEnd() {
       margin-right: calc(-100% + 28px - 60px);
     }
   }
-  .u-switch-circle {
+  .switch-circle {
     left: calc(100% - 26px);
   }
 }
 .switch-disabled {
   cursor: not-allowed;
   opacity: 0.65;
-  .u-switch-circle {
+  .switch-circle {
     cursor: not-allowed;
   }
 }
-.m-switch-wave {
+.switch-wave {
   position: absolute;
   pointer-events: none;
   top: 0;

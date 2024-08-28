@@ -101,7 +101,7 @@ export function formatNumber(
     formatValue =
       integerPart.replace(/(\d)(?=(\d{3})+$)/g, '$1' + separator) + (decimalPart ? decimal + decimalPart : '')
   }
-  return prefix + formatValue + suffix
+  return (prefix || '') + formatValue + (suffix || '')
 }
 /**
  * 使用 requestAnimationFrame 实现的延迟 setTimeout 或间隔 setInterval 调用函数

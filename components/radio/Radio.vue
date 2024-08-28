@@ -12,7 +12,7 @@ interface Props {
   gap?: number // 多个单选框之间的间距，单位px，垂直排列时，间距即垂直间距，仅当 button: false 时生效
   button?: boolean // 是否启用按钮样式
   buttonStyle?: 'outline' | 'solid' // 按钮样式风格
-  buttonSize?: 'default' | 'large' | 'small' // 按钮大小，仅当 button: true 时生效
+  buttonSize?: 'small' | 'middle' | 'large' // 按钮大小，仅当 button: true 时生效
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   gap: 8,
   button: false,
   buttonStyle: 'outline',
-  buttonSize: 'default'
+  buttonSize: 'middle'
 })
 const emits = defineEmits(['update:value', 'change'])
 function onClick(value: any) {
@@ -51,8 +51,8 @@ function onClick(value: any) {
       :key="index"
       @click="disabled || option.disabled ? () => false : onClick(option.value)"
     >
-      <span class="u-radio" :class="{ 'radio-checked': value === option.value }"></span>
-      <span class="u-radio-label">
+      <span class="radio-handle" :class="{ 'radio-checked': value === option.value }"></span>
+      <span class="radio-label">
         <slot :label="option.label">{{ option.label }}</slot>
       </span>
     </div>
@@ -68,7 +68,7 @@ function onClick(value: any) {
         :key="index"
         @click="disabled || option.disabled ? () => false : onClick(option.value)"
       >
-        <span class="u-radio-label">
+        <span class="radio-label">
           <slot :label="option.label">{{ option.label }}</slot>
         </span>
       </div>
@@ -87,11 +87,11 @@ function onClick(value: any) {
     align-items: flex-start;
     cursor: pointer;
     &:not(.radio-disabled):hover {
-      .u-radio {
+      .radio-handle {
         border-color: @themeColor;
       }
     }
-    .u-radio {
+    .radio-handle {
       position: relative;
       /*
         如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小
@@ -134,7 +134,7 @@ function onClick(value: any) {
         transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
       }
     }
-    .u-radio-label {
+    .radio-label {
       word-break: break-all;
       padding: 0 8px;
       font-size: 14px;
@@ -145,7 +145,7 @@ function onClick(value: any) {
   .radio-disabled {
     color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
-    .u-radio {
+    .radio-handle {
       background-color: rgba(0, 0, 0, 0.04);
       border-color: #d9d9d9;
       cursor: not-allowed;
