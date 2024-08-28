@@ -1,15 +1,16 @@
 import {
   isClient,
   toRef
-} from "./chunk-3GTUNVFN.js";
+} from "./chunk-IGVR4WZU.js";
+import "./chunk-XGB5GUMN.js";
 import {
   ref,
   watch
-} from "./chunk-HBGG36HX.js";
+} from "./chunk-EJFAB46I.js";
 import {
   __commonJS,
   __toESM
-} from "./chunk-EQCVQC35.js";
+} from "./chunk-DC5AMYBS.js";
 
 // node_modules/.pnpm/qrcode@1.5.4/node_modules/qrcode/lib/can-promise.js
 var require_can_promise = __commonJS({

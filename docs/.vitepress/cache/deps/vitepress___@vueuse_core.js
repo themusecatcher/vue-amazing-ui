@@ -14,7 +14,6 @@ import {
   createSharedComposable,
   createSingletonPromise,
   debounceFilter,
-  del,
   directiveHooks,
   extendRef,
   formatDate,
@@ -31,8 +30,6 @@ import {
   isDefined,
   isIOS,
   isObject,
-  isVue2,
-  isVue3,
   isWorker,
   makeDestructurable,
   noop,
@@ -58,8 +55,7 @@ import {
   refWithControl,
   resolveRef,
   resolveUnref,
-  set,
-  set2,
+  set as set2,
   syncRef,
   syncRefs,
   throttleFilter,
@@ -110,7 +106,13 @@ import {
   watchTriggerable,
   watchWithFilter,
   whenever
-} from "./chunk-3GTUNVFN.js";
+} from "./chunk-IGVR4WZU.js";
+import {
+  del,
+  isVue2,
+  isVue3,
+  set
+} from "./chunk-XGB5GUMN.js";
 import {
   Fragment,
   TransitionGroup,
@@ -138,8 +140,8 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-HBGG36HX.js";
-import "./chunk-EQCVQC35.js";
+} from "./chunk-EJFAB46I.js";
+import "./chunk-DC5AMYBS.js";
 
 // node_modules/.pnpm/@vueuse+core@11.0.3_vue@3.4.38_typescript@5.5.4_/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {

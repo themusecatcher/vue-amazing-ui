@@ -14,27 +14,27 @@ withDefaults(defineProps<Props>(), {
 })
 </script>
 <template>
-  <div class="m-desc-item" :data-span="span">
-    <span class="u-label" :style="labelStyle">
+  <div class="descriptions-item" :data-span="span">
+    <span class="descriptions-label" :style="labelStyle">
       <slot name="label">{{ label }}</slot>
     </span>
-    <span class="u-content" :style="contentStyle">
+    <span class="descriptions-content" :style="contentStyle">
       <slot></slot>
     </span>
   </div>
-  <div class="m-desc-item-bordered" :data-span="span">
-    <th class="u-label-th" :style="labelStyle">
+  <div class="descriptions-item-bordered" :data-span="span">
+    <th class="descriptions-label-th" :style="labelStyle">
       <slot name="label">{{ label }}</slot>
     </th>
-    <td class="u-content-td" :style="contentStyle">
+    <td class="descriptions-content-td" :style="contentStyle">
       <slot></slot>
     </td>
   </div>
 </template>
 <style lang="less" scoped>
-.m-desc-item {
+.descriptions-item {
   display: flex;
-  .u-label {
+  .descriptions-label {
     display: inline-flex;
     align-items: baseline;
     color: rgba(0, 0, 0, 0.88);
@@ -49,7 +49,7 @@ withDefaults(defineProps<Props>(), {
       margin-inline: 2px 8px;
     }
   }
-  .u-content {
+  .descriptions-content {
     display: inline-flex;
     align-items: baseline;
     flex: 1;

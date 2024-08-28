@@ -15,7 +15,7 @@ interface Props {
   bodyStyle?: CSSProperties // 设置对话框 body 样式
   footer?: boolean // 是否显示底部按钮 boolean | slot
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
-  top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
+  top?: string | number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
   switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
   loading?: boolean // 确定按钮 loading
   show?: boolean // 对话框是否可见
@@ -44,6 +44,12 @@ const dialogHeight = computed(() => {
     return props.height + 'px'
   } else {
     return props.height
+  }
+})
+const dialogStyle = computed(() => {
+  return {
+    width: fullScreen.value ? '100%' : props.width + 'px',
+    top: props.center ? '50%' : fullScreen.value ? 0 : typeof props.top === 'number' ? props.top + 'px' : props.top
   }
 })
 const dialogRef = ref() // DOM 引用
@@ -80,7 +86,7 @@ function onOk() {
 }
 </script>
 <template>
-  <div class="m-dialog-root">
+  <div>
     <Transition name="fade">
       <div v-show="show" class="m-dialog-mask"></div>
     </Transition>
@@ -94,19 +100,19 @@ function onOk() {
         @keydown.esc="onClose"
       >
         <div
-          :class="['m-dialog', center ? 'relative-hv-center' : 'top-center']"
-          :style="`width: ${fullScreen ? '100%' : props.width + 'px'}; top: ${center ? '50%' : fullScreen ? 0 : top + 'px'};`"
+          :class="['m-dialog', center ? 'horizontal-vertical-centered' : 'fix-height-centered']"
+          :style="dialogStyle"
         >
           <div class="m-dialog-content" :style="`--height: ${fullScreen ? '100vh' : dialogHeight}`">
             <div class="m-dialog-header">
-              <p class="u-head">
+              <p class="dialog-head">
                 <slot name="title">{{ title }}</slot>
               </p>
             </div>
-            <span class="m-screen" @click="onFullScreen" v-if="switchFullscreen">
+            <span v-if="switchFullscreen" class="m-fullscreen-action" @click="onFullScreen">
               <svg
                 v-show="!fullScreen"
-                class="u-svg"
+                class="icon-svg"
                 viewBox="64 64 896 896"
                 data-icon="fullscreen"
                 aria-hidden="true"
@@ -118,7 +124,7 @@ function onOk() {
               </svg>
               <svg
                 v-show="fullScreen"
-                class="u-svg"
+                class="icon-svg"
                 viewBox="64 64 896 896"
                 data-icon="fullscreen-exit"
                 aria-hidden="true"
@@ -129,8 +135,8 @@ function onOk() {
                 ></path>
               </svg>
             </span>
-            <span class="m-close" @click="onClose">
-              <svg class="u-svg" viewBox="64 64 896 896" data-icon="close" aria-hidden="true" focusable="false">
+            <span class="m-close-action" @click="onClose">
+              <svg class="icon-svg" viewBox="64 64 896 896" data-icon="close" aria-hidden="true" focusable="false">
                 <path
                   d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
                 ></path>
@@ -177,13 +183,13 @@ function onOk() {
   justify-content: center;
   align-items: center;
 }
-.relative-hv-center {
+.horizontal-vertical-centered {
   // 水平垂直居中方法②：相对定位，随内容增大高度，并自适应水平垂直居中
   position: relative;
   top: 50%;
   transform: translateY(-50%);
 }
-.top-center {
+.fix-height-centered {
   // 相对定位，固定高度，始终距离视图顶端100px
   position: relative;
   // top: 100px;
@@ -229,7 +235,7 @@ function onOk() {
         border-radius: 8px 8px 0 0;
         margin-bottom: 8px;
         max-width: calc(100% - 54px);
-        .u-head {
+        .dialog-head {
           margin: 0;
           color: rgba(0, 0, 0, 0.88);
           font-weight: 600;
@@ -238,11 +244,11 @@ function onOk() {
           word-break: break-all;
         }
       }
-      .m-screen {
-        .m-close();
+      .m-fullscreen-action {
+        .m-close-action();
         inset-inline-end: 48px;
       }
-      .m-close {
+      .m-close-action {
         position: absolute;
         top: 17px;
         inset-inline-end: 17px;
@@ -258,7 +264,7 @@ function onOk() {
         display: flex;
         align-items: center;
         justify-content: center;
-        .u-svg {
+        .icon-svg {
           display: inline-block;
           width: 16px;
           height: 16px;
@@ -269,7 +275,7 @@ function onOk() {
         }
         &:hover {
           background: rgba(0, 0, 0, 0.06);
-          .u-svg {
+          .icon-svg {
             fill: rgba(0, 0, 0, 0.88);
           }
         }

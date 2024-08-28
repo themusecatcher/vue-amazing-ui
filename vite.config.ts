@@ -120,11 +120,12 @@ export default defineConfig({
     //     comments: false // 删除注释comments
     //   }
     // },
-    // cssCodeSplit: true, // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在其被加载时一并获取。如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
+    // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在其被加载时一并获取。如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
+    // cssCodeSplit: true, // 默认 true，如果指定了 build.lib，build.cssCodeSplit 会默认为 false
     // cssMinify: 'esbuild', // boolean | 'esbuild' | 'lightningcss'，默认: 与 build.minify 一致，允许用户覆盖 CSS 最小化压缩的配置，而不是使用默认的 build.minify
     reportCompressedSize: false, // 默认 true，启用/禁用 gzip 压缩大小报告。压缩大型输出文件可能会很慢，因此禁用该功能可能会提高大型项目的构建性能。
     chunkSizeWarningLimit: 1000, // 默认 500，规定触发警告的 chunk 大小，单位kbs
-    sourcemap: false // boolean | 'inline' | 'hidden'，构建后是否生成 source map 文件
+    sourcemap: false // boolean | 'inline' | 'hidden'，构建后是否生成 source map 文件。默认 false
   },
   server: {
     host: true, // 指定服务器应该监听哪个 IP 地址。 如果将此设置为 0.0.0.0 或者 true 将监听所有地址，包括局域网和公网地址。

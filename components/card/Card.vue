@@ -42,10 +42,10 @@ const showHeader = computed(() => {
   >
     <div class="m-card-head" :style="headStyle" v-if="showHeader">
       <div class="m-head-wrapper">
-        <div class="u-title">
+        <div class="head-title">
           <slot name="title">{{ title }}</slot>
         </div>
-        <div class="u-extra">
+        <div class="head-extra">
           <slot name="extra">{{ extra }}</slot>
         </div>
       </div>
@@ -83,14 +83,14 @@ const showHeader = computed(() => {
       width: 100%;
       display: flex;
       align-items: center;
-      .u-title {
+      .head-title {
         display: inline-block;
         flex: 1;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
       }
-      .u-extra {
+      .head-extra {
         margin-inline-start: auto;
         font-weight: normal;
         font-size: 14px;

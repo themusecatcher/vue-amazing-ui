@@ -11,21 +11,21 @@ const showSkeleton = () => {
 }
 const animated = ref(false)
 const block = ref(false)
-const size = ref('default')
+const size = ref('middle')
 const buttonShape = ref('default')
 const avatarShape = ref('circle')
 const sizeOptions = ref([
   {
-    label: 'default',
-    value: 'default'
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
   },
   {
     label: 'large',
     value: 'large'
-  },
-  {
-    label: 'small',
-    value: 'small'
   }
 ])
 const buttonShapeOptions = ref([

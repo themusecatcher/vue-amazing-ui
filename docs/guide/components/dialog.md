@@ -397,7 +397,7 @@ okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Butto
 bodyStyle | 设置对话框 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 footer | 是否显示底部按钮 | boolean &#124; slot | true
 center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true
-top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100
+top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | string &#124; number | 100
 switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false
 loading | 确定按钮 `loading` | boolean | false
 show | 对话框是否可见 | boolean | false

@@ -122,10 +122,10 @@ function onCopy(index: number) {
         @click="onClick(data.key || index, index)"
         @keydown="onKeyboard($event, data.key || index, index)"
       >
-        <div class="m-arrow" v-if="data.showArrow !== undefined ? data.showArrow : showArrow">
+        <div class="collapse-arrow" v-if="data.showArrow !== undefined ? data.showArrow : showArrow">
           <svg
             focusable="false"
-            class="u-arrow"
+            class="arrow-svg"
             :class="{ 'arrow-rotate': activeJudge(data.key || index) }"
             data-icon="right"
             aria-hidden="true"
@@ -136,7 +136,7 @@ function onCopy(index: number) {
             ></path>
           </svg>
         </div>
-        <div class="u-header" :style="`font-size: ${headerFontSize || fontSize}px;`">
+        <div class="collapse-header" :style="`font-size: ${headerFontSize || fontSize}px;`">
           <slot name="header" :header="data.header" :key="data.key || index">{{ data.header || '--' }}</slot>
         </div>
       </div>
@@ -150,13 +150,13 @@ function onCopy(index: number) {
         <div
           v-show="activeJudge(data.key || index)"
           class="m-collapse-content"
-          :class="{ 'u-collapse-copyable': copyable }"
+          :class="{ 'collapse-copyable': copyable }"
         >
-          <div class="u-lang">
+          <div class="collapse-lang">
             <slot name="lang" :lang="lang" :key="data.key || index">{{ lang }}</slot>
           </div>
-          <Button size="small" class="u-copy" type="primary" @click="onCopy(index)">{{ copyTxt }}</Button>
-          <div ref="text" class="u-text" :style="`font-size: ${textFontSize || fontSize}px;`">
+          <Button class="collapse-copy" size="small" type="primary" @click="onCopy(index)">{{ copyTxt }}</Button>
+          <div ref="text" class="collapse-text" :style="`font-size: ${textFontSize || fontSize}px;`">
             <slot name="text" :text="data.text" :key="data.key || index">{{ data.text }}</slot>
           </div>
         </div>
@@ -201,12 +201,12 @@ function onCopy(index: number) {
       &:focus {
         outline: none;
       }
-      .m-arrow {
+      .collapse-arrow {
         height: 22px;
         display: flex;
         align-items: center;
         padding-inline-end: 12px;
-        .u-arrow {
+        .arrow-svg {
           display: inline-block;
           width: 12px;
           height: 12px;
@@ -217,7 +217,7 @@ function onCopy(index: number) {
           transform: rotate(90deg);
         }
       }
-      .u-header {
+      .collapse-header {
         // 元素会根据自身的宽度与高度来确定尺寸，但是会伸长并吸收 flex 容器中额外的自由空间，也会缩短自身来适应 flex 容器
         flex: auto; // 相当于 flex: 1 1 auto
         margin-inline-end: auto;
@@ -236,7 +236,7 @@ function onCopy(index: number) {
       position: relative;
       background-color: #ffffff;
       border-top: 1px solid #d9d9d9;
-      .u-lang {
+      .collapse-lang {
         position: absolute;
         right: 10px;
         top: 6px;
@@ -245,7 +245,7 @@ function onCopy(index: number) {
         opacity: 1;
         transition: opacity 0.3s;
       }
-      .u-copy {
+      .collapse-copy {
         position: absolute;
         right: 8px;
         top: 8px;
@@ -253,19 +253,19 @@ function onCopy(index: number) {
         pointer-events: none;
         transition: opacity 0.3s;
       }
-      .u-text {
+      .collapse-text {
         padding: 16px;
         color: rgba(0, 0, 0, 0.88);
         white-space: pre-wrap;
       }
     }
-    .u-collapse-copyable {
+    .collapse-copyable {
       &:hover {
-        .u-lang {
+        .collapse-lang {
           opacity: 0;
           pointer-events: none;
         }
-        .u-copy {
+        .collapse-copy {
           opacity: 1;
           pointer-events: auto;
         }
@@ -290,7 +290,7 @@ function onCopy(index: number) {
   }
 }
 .collapse-arrow-right {
-  .m-collapse-item .m-collapse-header .m-arrow {
+  .m-collapse-item .m-collapse-header .collapse-arrow {
     order: 1; // order 属性定义项目的排列顺序。数值越小，排列越靠前，默认为 0
     padding-inline-end: 0;
     padding-inline-start: 12px;

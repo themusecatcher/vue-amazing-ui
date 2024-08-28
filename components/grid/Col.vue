@@ -89,7 +89,7 @@ const responsiveValue = computed(() => {
 </script>
 <template>
   <div
-    :class="`m-col col-${responsiveValue.span} offset-${responsiveValue.offset}`"
+    :class="`grid-col col-${responsiveValue.span} offset-${responsiveValue.offset}`"
     style="padding-left: var(--xGap); padding-right: var(--xGap)"
     :style="`flex: ${flexValue}; order: ${order};`"
   >
@@ -97,7 +97,7 @@ const responsiveValue = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-col {
+.grid-col {
   position: relative;
   max-width: 100%;
   min-height: 1px;

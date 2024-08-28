@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, watchEffect, nextTick } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
   message?: string // 全局通知提醒标题，优先级低于 Notification 中的 message
@@ -24,10 +24,26 @@ const resetTimer = ref()
 const hideIndex = ref<number[]>([])
 const hideTimers = ref<any[]>([])
 const notificationData = ref<any[]>([])
-const place = ref<any>(props.placement)
+const place = ref()
 const notification = ref()
+const topStyle = computed(() => {
+  if (['topRight', 'topLeft'].includes(place.value)) {
+    return {
+      top: props.top + 'px'
+    }
+  }
+  return {}
+})
+const bottomStyle = computed(() => {
+  if (['bottomRight', 'bottomLeft'].includes(place.value)) {
+    return {
+      bottom: props.bottom + 'px'
+    }
+  }
+  return {}
+})
 const clear = computed(() => {
-  // 所有提示是否已经全部变为false
+  // 所有提示是否已经全部变为 false
   return hideIndex.value.length === notificationData.value.length
 })
 watch(clear, (to, from) => {
@@ -38,6 +54,9 @@ watch(clear, (to, from) => {
       notificationData.value.splice(0)
     }, 300)
   }
+})
+watchEffect(() => {
+  place.value = props.placement
 })
 function onEnter(index: number) {
   hideTimers.value[index] && cancelRaf(hideTimers.value[index])
@@ -116,24 +135,21 @@ function onClose(index: number) {
 }
 </script>
 <template>
-  <div
-    :class="['m-notification-wrapper', place]"
-    :style="`top: ${['topRight', 'topLeft'].includes(place) ? top : 'auto'}px; bottom: ${['bottomRight', 'bottomLeft'].includes(place) ? bottom : ''}px;`"
-  >
+  <div class="m-notification-wrap" :class="`notification-${place}`" :style="{ ...topStyle, ...bottomStyle }">
     <TransitionGroup :name="['topRight', 'bottomRight'].includes(place) ? 'right' : 'left'">
       <div
         v-show="!hideIndex.includes(index)"
         ref="notification"
         class="m-notification"
-        @mouseenter="onEnter(index)"
-        @mouseleave="onLeave(index)"
         v-for="(data, index) in notificationData"
         :key="index"
+        @mouseenter="onEnter(index)"
+        @mouseleave="onLeave(index)"
       >
         <div class="m-notification-content">
           <svg
             v-if="data.mode === 'info'"
-            class="u-icon icon-info"
+            class="icon-svg icon-info"
             viewBox="64 64 896 896"
             data-icon="info-circle"
             aria-hidden="true"
@@ -148,7 +164,7 @@ function onClose(index: number) {
           </svg>
           <svg
             v-if="data.mode === 'success'"
-            class="u-icon icon-success"
+            class="icon-svg icon-success"
             viewBox="64 64 896 896"
             data-icon="check-circle"
             aria-hidden="true"
@@ -163,7 +179,7 @@ function onClose(index: number) {
           </svg>
           <svg
             v-if="data.mode === 'warning'"
-            class="u-icon icon-warning"
+            class="icon-svg icon-warning"
             viewBox="64 64 896 896"
             data-icon="exclamation-circle"
             aria-hidden="true"
@@ -178,7 +194,7 @@ function onClose(index: number) {
           </svg>
           <svg
             v-if="data.mode === 'error'"
-            class="u-icon icon-error"
+            class="icon-svg icon-error"
             viewBox="64 64 896 896"
             data-icon="close-circle"
             aria-hidden="true"
@@ -191,17 +207,17 @@ function onClose(index: number) {
               d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
             ></path>
           </svg>
-          <div :class="['u-title', { mb4: data.mode !== 'open', ml36: data.mode !== 'open' }]">{{
-            data.message || message
-          }}</div>
-          <p :class="['u-description', { ml36: data.mode !== 'open' }]">{{ data.description || '--' }}</p>
+          <div :class="['notification-title', { mb4: data.mode !== 'open', ml36: data.mode !== 'open' }]">
+            {{ data.message || message }}
+          </div>
+          <p :class="['notification-description', { ml36: data.mode !== 'open' }]">{{ data.description || '--' }}</p>
           <svg
-            class="u-close"
-            @click="onClose(index)"
+            class="close-svg"
             viewBox="64 64 896 896"
             data-icon="close"
             aria-hidden="true"
             focusable="false"
+            @click="onClose(index)"
           >
             <path
               d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
@@ -244,17 +260,7 @@ function onClose(index: number) {
   position: absolute;
   left: 0;
 }
-.topRight,
-.bottomRight {
-  margin-right: 24px;
-  right: 0;
-}
-.topLeft,
-.bottomLeft {
-  margin-left: 24px;
-  left: 0;
-}
-.m-notification-wrapper {
+.m-notification-wrap {
   position: fixed;
   z-index: 999; // 突出显示该层级
   color: rgba(0, 0, 0, 0.88);
@@ -278,7 +284,7 @@ function onClose(index: number) {
       padding: 20px 24px;
       line-height: 1.5714285714285714;
       word-break: break-all;
-      .u-icon {
+      .icon-svg {
         position: absolute;
         display: inline-block;
         width: 24px;
@@ -296,14 +302,14 @@ function onClose(index: number) {
       .icon-error {
         fill: #ff4d4f;
       }
-      .u-title {
+      .notification-title {
         padding-right: 24px;
         margin-bottom: 8px;
         font-size: 16px;
         color: rgba(0, 0, 0, 0.88);
         line-height: 1.5;
       }
-      .u-description {
+      .notification-description {
         font-size: 14px;
       }
       .mb4 {
@@ -312,7 +318,7 @@ function onClose(index: number) {
       .ml36 {
         margin-left: 36px;
       }
-      .u-close {
+      .close-svg {
         display: inline-block;
         position: absolute;
         top: 25px;
@@ -328,5 +334,15 @@ function onClose(index: number) {
       }
     }
   }
+}
+.notification-topRight,
+.notification-bottomRight {
+  margin-right: 24px;
+  right: 0;
+}
+.notification-topLeft,
+.notification-bottomLeft {
+  margin-left: 24px;
+  left: 0;
 }
 </style>

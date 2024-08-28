@@ -25,7 +25,10 @@ const props = withDefaults(defineProps<Props>(), {
 const showValue = computed(() => {
   return props.formatter(formatNumber(props.value || '', props.precision, props.separator))
 })
-const slotsExist = useSlotsExist(['prefix', 'suffix'])
+const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
+const showTitle = computed(() => {
+  return slotsExist.title || props.title
+})
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
 })
@@ -35,17 +38,17 @@ const showSuffix = computed(() => {
 </script>
 <template>
   <div class="m-statistic">
-    <div class="u-title">
+    <div v-if="showTitle" class="statistic-title">
       <slot name="title">{{ title }}</slot>
     </div>
-    <div class="m-content" :style="valueStyle">
-      <span class="u-prefix" v-if="showPrefix">
+    <div class="statistic-content" :style="valueStyle">
+      <span v-if="showPrefix" class="statistic-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
-      <span class="u-content-value">
+      <span class="statistic-value">
         <slot>{{ showValue }}</slot>
       </span>
-      <span class="u-suffix" v-if="showSuffix">
+      <span v-if="showSuffix" class="statistic-suffix">
         <slot name="suffix">{{ suffix }}</slot>
       </span>
     </div>
@@ -56,23 +59,23 @@ const showSuffix = computed(() => {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
-  .u-title {
+  .statistic-title {
     margin-bottom: 4px;
     color: rgba(0, 0, 0, 0.45);
     font-size: 14px;
   }
-  .m-content {
+  .statistic-content {
     color: rgba(0, 0, 0, 0.88);
     font-size: 24px;
-    .u-prefix {
+    .statistic-prefix {
       display: inline-block;
       margin-inline-end: 4px;
     }
-    .u-content-value {
+    .statistic-value {
       display: inline-block;
       direction: ltr;
     }
-    .u-suffix {
+    .statistic-suffix {
       display: inline-block;
       margin-inline-start: 4px;
     }

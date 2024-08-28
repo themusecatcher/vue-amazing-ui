@@ -112,12 +112,12 @@ defineExpose({
           :style="`width: ${width}px; top: ${!center ? top + 'px' : '50%'};`"
           @keydown.esc="onCancel"
         >
-          <div class="m-modal-body">
-            <div class="m-body">
-              <div class="m-title">
+          <div class="m-modal-body-wrap">
+            <div class="m-modal-body">
+              <div class="modal-header">
                 <template v-if="mode === 'confirm' || mode === 'erase'">
                   <svg
-                    class="u-icon icon-confirm"
+                    class="icon-svg icon-confirm"
                     focusable="false"
                     data-icon="exclamation-circle"
                     aria-hidden="true"
@@ -133,7 +133,7 @@ defineExpose({
                 </template>
                 <svg
                   v-if="mode === 'info'"
-                  class="u-icon icon-info"
+                  class="icon-svg icon-info"
                   focusable="false"
                   data-icon="info-circle"
                   aria-hidden="true"
@@ -145,7 +145,7 @@ defineExpose({
                 </svg>
                 <svg
                   v-if="mode === 'success'"
-                  class="u-icon icon-success"
+                  class="icon-svg icon-success"
                   focusable="false"
                   data-icon="check-circle"
                   aria-hidden="true"
@@ -157,7 +157,7 @@ defineExpose({
                 </svg>
                 <svg
                   v-if="mode === 'error'"
-                  class="u-icon icon-error"
+                  class="icon-svg icon-error"
                   focusable="false"
                   data-icon="close-circle"
                   aria-hidden="true"
@@ -169,7 +169,7 @@ defineExpose({
                 </svg>
                 <svg
                   v-if="mode === 'warning'"
-                  class="u-icon icon-warning"
+                  class="icon-svg icon-warning"
                   focusable="false"
                   data-icon="exclamation-circle"
                   aria-hidden="true"
@@ -179,11 +179,11 @@ defineExpose({
                     d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
                   ></path>
                 </svg>
-                <div class="u-title">{{ desc?.title }}</div>
+                <div class="modal-title">{{ desc?.title }}</div>
               </div>
-              <div class="u-content">{{ desc?.content }}</div>
+              <div class="modal-content">{{ desc?.content }}</div>
             </div>
-            <div class="m-btns">
+            <div class="modal-btns">
               <template v-if="mode === 'confirm' || mode === 'erase'">
                 <Button class="mr8" @click="onCancel" v-bind="cancelProps">{{ cancelText }}</Button>
                 <Button :type="okType" :loading="loading" @click="onOK" v-bind="okProps">{{ okText }}</Button>
@@ -262,7 +262,7 @@ defineExpose({
     font-size: 14px;
     line-height: 1.5714285714285714;
     outline: none;
-    .m-modal-body {
+    .m-modal-body-wrap {
       position: relative;
       word-break: break-all;
       padding: 20px 24px;
@@ -272,13 +272,13 @@ defineExpose({
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
-      .m-body {
+      .m-modal-body {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        .m-title {
+        .modal-header {
           width: 100%;
-          .u-icon {
+          .icon-svg {
             display: inline-block;
             margin-right: 12px;
             margin-top: 1px;
@@ -301,7 +301,7 @@ defineExpose({
           .icon-warning {
             fill: #faad14;
           }
-          .u-title {
+          .modal-title {
             display: inline-block;
             vertical-align: top;
             font-size: 16px;
@@ -310,7 +310,7 @@ defineExpose({
             max-width: calc(100% - 34px);
           }
         }
-        .u-content {
+        .modal-content {
           flex-basis: 100%;
           margin-left: 34px;
           margin-top: 8px;
@@ -318,7 +318,7 @@ defineExpose({
           max-width: calc(100% - 34px);
         }
       }
-      .m-btns {
+      .modal-btns {
         margin-top: 12px;
         text-align: right;
         .mr8 {

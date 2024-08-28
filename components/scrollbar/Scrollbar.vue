@@ -253,30 +253,30 @@ defineExpose({
     @mouseenter="isScroll && trigger === 'hover' ? onMouseEnter() : () => false"
     @mouseleave="isScroll && trigger === 'hover' ? onMouseLeave() : () => false"
   >
-    <div ref="containerRef" class="m-scrollbar-container" @scroll="onScroll">
+    <div ref="containerRef" class="scrollbar-container" @scroll="onScroll">
       <div
         ref="contentRef"
-        class="m-scrollbar-content"
+        class="scrollbar-content"
         :class="contentClass"
         :style="[horizontal ? { ...horizontalContentStyle, ...contentStyle } : contentStyle]"
       >
         <slot></slot>
       </div>
     </div>
-    <div ref="railVerticalRef" class="m-scrollbar-rail rail-vertical">
+    <div ref="railVerticalRef" class="scrollbar-rail rail-vertical">
       <div
-        class="m-scrollbar-track"
-        :class="{ 'show-track': trigger === 'none' || showTrack }"
+        class="scrollbar-track"
+        :class="{ 'track-visible': trigger === 'none' || showTrack }"
         :style="`top: ${trackTop}px; height: ${trackHeight}px;`"
         @mouseenter="autoShowTrack ? onEnterTrack() : () => false"
         @mouseleave="autoShowTrack ? onLeaveTrack() : () => false"
         @mousedown.prevent.stop="onTrackVerticalMouseDown"
       ></div>
     </div>
-    <div ref="railHorizontalRef" v-show="horizontal" class="m-scrollbar-rail rail-horizontal">
+    <div ref="railHorizontalRef" v-show="horizontal" class="scrollbar-rail rail-horizontal">
       <div
-        class="m-scrollbar-track"
-        :class="{ 'show-track': trigger === 'none' || showTrack }"
+        class="scrollbar-track"
+        :class="{ 'track-visible': trigger === 'none' || showTrack }"
         :style="`left: ${trackLeft}px; width: ${trackWidth}px;`"
         @mouseenter="autoShowTrack ? onEnterTrack() : () => false"
         @mouseleave="autoShowTrack ? onLeaveTrack() : () => false"
@@ -292,7 +292,7 @@ defineExpose({
   z-index: auto;
   height: 100%;
   width: 100%;
-  .m-scrollbar-container {
+  .scrollbar-container {
     width: 100%;
     overflow: scroll;
     height: 100%;
@@ -306,18 +306,18 @@ defineExpose({
       height: 0;
       display: none;
     }
-    .m-scrollbar-content {
+    .scrollbar-content {
       box-sizing: border-box;
       min-width: 100%;
     }
   }
-  .m-scrollbar-rail {
+  .scrollbar-rail {
     position: absolute;
     pointer-events: none;
     user-select: none;
     background: transparent;
     -webkit-user-select: none;
-    .m-scrollbar-track {
+    .scrollbar-track {
       z-index: 1;
       position: absolute;
       cursor: pointer;
@@ -331,7 +331,7 @@ defineExpose({
         background-color: rgba(0, 0, 0, 0.4);
       }
     }
-    .show-track {
+    .track-visible {
       opacity: 1;
       pointer-events: all;
     }
@@ -339,7 +339,7 @@ defineExpose({
   .rail-vertical {
     inset: 2px 4px 2px auto;
     width: var(--scrollbar-size);
-    .m-scrollbar-track {
+    .scrollbar-track {
       width: var(--scrollbar-size);
       border-radius: var(--scrollbar-size);
       bottom: 0;
@@ -348,7 +348,7 @@ defineExpose({
   .rail-horizontal {
     inset: auto 2px 4px 2px;
     height: var(--scrollbar-size);
-    .m-scrollbar-track {
+    .scrollbar-track {
       height: var(--scrollbar-size);
       border-radius: var(--scrollbar-size);
       right: 0;

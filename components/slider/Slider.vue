@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
 interface Props {
-  width?: string | number // 宽度
+  width?: string | number // 滑动输入条宽度，单位 px
   min?: number // 最小值
   max?: number // 最大值
   disabled?: boolean // 是否禁用
@@ -295,10 +295,10 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
 }
 </script>
 <template>
-  <div ref="sliderRef" :class="['m-slider', { 'slider-disabled': disabled }]" :style="`width: ${totalWidth};`">
-    <div class="u-slider-rail" @click.self="disabled ? () => false : onClickPoint($event)"></div>
+  <div ref="sliderRef" class="m-slider" :class="{ 'slider-disabled': disabled }" :style="`width: ${totalWidth};`">
+    <div class="slider-rail" @click.self="disabled ? () => false : onClickPoint($event)"></div>
     <div
-      class="u-slider-track"
+      class="slider-track"
       :class="{ 'track-transition': transition }"
       :style="`left: ${left}px; right: auto; width: ${right - left}px;`"
     ></div>
@@ -306,7 +306,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       v-if="range"
       tabindex="0"
       ref="leftHandle"
-      class="m-slider-handle"
+      class="slider-handle"
       :class="{ 'handle-transition': transition }"
       :style="`left: ${left}px; right: auto; transform: translate(-50%, -50%);`"
       @keydown.left.prevent="disabled ? () => false : onLeftSlide(left, 'left')"
@@ -316,15 +316,15 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       @mousedown="disabled ? () => false : onLeftMouseDown()"
       @blur="tooltip && !disabled ? handlerBlur(leftTooltip) : () => false"
     >
-      <div v-if="tooltip" ref="leftTooltip" class="m-handle-tooltip">
+      <div v-if="tooltip" ref="leftTooltip" class="handle-tooltip">
         {{ leftValue }}
-        <div class="u-arrow"></div>
+        <div class="tooltip-arrow"></div>
       </div>
     </div>
     <div
       tabindex="0"
       ref="rightHandle"
-      class="m-slider-handle"
+      class="slider-handle"
       :class="{ 'handle-transition': transition }"
       :style="`left: ${right}px; right: auto; transform: translate(-50%, -50%);`"
       @keydown.left.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
@@ -334,9 +334,9 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       @mousedown="disabled ? () => false : onRightMouseDown()"
       @blur="tooltip && !disabled ? handlerBlur(rightTooltip) : () => false"
     >
-      <div v-if="tooltip" ref="rightTooltip" class="m-handle-tooltip">
+      <div v-if="tooltip" ref="rightTooltip" class="handle-tooltip">
         {{ rightValue }}
-        <div class="u-arrow"></div>
+        <div class="tooltip-arrow"></div>
       </div>
     </div>
   </div>
@@ -348,7 +348,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   position: relative;
   z-index: 9;
   touch-action: none; // 禁用元素上的所有手势,使用自己的拖动和缩放api
-  .u-slider-rail {
+  .slider-rail {
     // 灰色未选择滑动条背景色
     position: absolute;
     z-index: 99;
@@ -359,7 +359,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     cursor: pointer;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .u-slider-track {
+  .slider-track {
     // 蓝色已选择滑动条背景色
     position: absolute;
     z-index: 99;
@@ -377,16 +377,16 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   &:hover {
-    .u-slider-rail {
+    .slider-rail {
       // 灰色未选择滑动条背景色
       background: rgba(0, 0, 0, 0.1);
     }
-    .u-slider-track {
+    .slider-track {
       // 蓝色已选择滑动条背景色
       background: @themeColor;
     }
   }
-  .m-slider-handle {
+  .slider-handle {
     // 滑块
     position: absolute;
     z-index: 999;
@@ -404,7 +404,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
       border-width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    .m-handle-tooltip {
+    .handle-tooltip {
       position: relative;
       display: inline-block;
       padding: 6px 8px;
@@ -429,7 +429,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       transition:
         transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      .u-arrow {
+      .tooltip-arrow {
         position: absolute;
         z-index: 9;
         left: 50%;
@@ -484,7 +484,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       opacity: 1;
     }
     &:hover {
-      .m-handle-tooltip {
+      .handle-tooltip {
         .show-handle-tooltip();
       }
     }
@@ -494,14 +494,14 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   }
 }
 .slider-disabled {
-  .u-slider-rail {
+  .slider-rail {
     cursor: not-allowed;
     background: rgba(0, 0, 0, 0.06);
   }
-  .u-slider-track {
+  .slider-track {
     background: rgba(0, 0, 0, 0.25);
   }
-  .m-slider-handle {
+  .slider-handle {
     border-color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
     &:hover {
@@ -518,10 +518,10 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     }
   }
   &:hover {
-    .u-slider-rail {
+    .slider-rail {
       background: rgba(0, 0, 0, 0.06);
     }
-    .u-slider-track {
+    .slider-track {
       background: rgba(0, 0, 0, 0.25);
     }
   }

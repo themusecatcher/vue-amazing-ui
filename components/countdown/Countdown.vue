@@ -129,23 +129,23 @@ function timeFormat(time: number): string {
 </script>
 <template>
   <div class="m-countdown">
-    <div class="u-title" :style="titleStyle">
+    <div class="countdown-title" :style="titleStyle">
       <slot name="title">{{ props.title }}</slot>
     </div>
-    <div class="m-time">
+    <div class="countdown-time">
       <template v-if="showPrefix">
-        <span class="u-prefix" v-if="showPrefix || restTime > 0">
+        <span class="time-prefix" v-if="showPrefix || restTime > 0">
           <slot name="prefix">{{ prefix }}</slot>
         </span>
       </template>
-      <span class="u-time-value" :style="valueStyle" v-if="finishedText && restTime === 0">
+      <span v-if="finishedText && restTime === 0" class="time-value" :style="valueStyle">
         <slot name="finish">{{ finishedText }}</slot>
       </span>
-      <span class="u-time-value" :style="valueStyle" v-else-if="Number.isFinite(restTime) && restTime >= 0">{{
-        timeFormat(restTime)
-      }}</span>
+      <span v-else-if="Number.isFinite(restTime) && restTime >= 0" class="time-value" :style="valueStyle">
+        {{ timeFormat(restTime) }}
+      </span>
       <template v-if="showSuffix">
-        <span class="u-suffix" v-if="showSuffix || restTime > 0">
+        <span class="time-suffix" v-if="showSuffix || restTime > 0">
           <slot name="suffix">{{ suffix }}</slot>
         </span>
       </template>
@@ -156,24 +156,24 @@ function timeFormat(time: number): string {
 .m-countdown {
   display: inline-block;
   line-height: 1.5714285714285714;
-  .u-title {
+  .countdown-title {
     margin-bottom: 4px;
     color: rgba(0, 0, 0, 0.45);
     font-size: 14px;
   }
-  .m-time {
+  .countdown-time {
     color: rgba(0, 0, 0, 0.88);
     font-size: 24px;
     font-family: 'Helvetica Neue'; // 保证数字等宽显示
-    .u-prefix {
+    .time-prefix {
       display: inline-block;
       margin-inline-end: 4px;
     }
-    .u-time-value {
+    .time-value {
       display: inline-block;
       direction: ltr;
     }
-    .u-suffix {
+    .time-suffix {
       display: inline-block;
       margin-inline-start: 4px;
     }

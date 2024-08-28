@@ -38,17 +38,20 @@ const showAvatar = computed(() => {
 const showContent = computed(() => {
   return slotsExist.title || slotsExist.description || props.title || props.description
 })
+const showExtra = computed(() => {
+  return slotsExist.extra || props.extra
+})
 </script>
 <template>
   <div class="m-list-item">
     <div class="m-list-item-main">
-      <div class="m-list-item-meta" v-if="showAvatar || showContent">
-        <div class="m-list-item-avatar" v-if="showAvatar" :style="avatarStyle">
+      <div v-if="showAvatar || showContent" class="m-list-item-meta">
+        <div v-if="showAvatar" class="m-list-item-avatar" :style="avatarStyle">
           <slot name="avatar">
             <Avatar v-bind="avatarProps">{{ avatar }}</Avatar>
           </slot>
         </div>
-        <div class="m-list-item-content" v-if="showContent">
+        <div v-if="showContent" class="m-list-item-content">
           <p class="list-item-title" :style="titleStyle">
             <slot name="title">{{ title }}</slot>
           </p>
@@ -60,11 +63,11 @@ const showContent = computed(() => {
       <div v-if="slotsExist.default" :style="contentStyle">
         <slot></slot>
       </div>
-      <div class="list-item-actions" v-if="slotsExist.actions" :style="actionsStyle">
+      <div v-if="slotsExist.actions" class="list-item-actions" :style="actionsStyle">
         <slot name="actions"></slot>
       </div>
     </div>
-    <div class="list-item-extra" v-if="slotsExist.extra || props.extra" :style="extraStyle">
+    <div v-if="showExtra" class="list-item-extra" :style="extraStyle">
       <slot name="extra">{{ extra }}</slot>
     </div>
   </div>

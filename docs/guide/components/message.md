@@ -185,7 +185,7 @@ function onClose () {
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 duration | 自动关闭的延时，单位 `ms` | number | 3000
-top | 消息距离顶部的位置，单位 `px` | number &#124; string | 30
+top | 消息距离顶部的位置，单位 `px` | string &#124; number | 30
 
 ## Methods
 

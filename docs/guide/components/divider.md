@@ -62,6 +62,24 @@
 
 :::
 
+## 自定义文字边距
+
+*文字居左(右)并距左(右)边 120px*
+
+<Divider orientation="left" :orientation-margin="120">Left Text</Divider>
+<Divider orientation="right" :orientation-margin="120">Right Text</Divider>
+
+::: details Show Code
+
+```vue
+<template>
+  <Divider orientation="left" :orientation-margin="120">Left Text</Divider>
+  <Divider orientation="right" :orientation-margin="120">Right Text</Divider>
+</template>
+```
+
+:::
+
 ## 垂直分割线
 
 <div>
@@ -96,24 +114,6 @@
   <Divider vertical :border-width="3" :height="60" />
   <Divider vertical :border-width="3" :height="60" border-style="dashed" />
   <Divider vertical :border-width="3" :height="60" border-style="dotted" />
-</template>
-```
-
-:::
-
-## 自定义文字边距
-
-*文字居左(右)并距左(右)边 120px*
-
-<Divider orientation="left" :orientation-margin="120">Left Text</Divider>
-<Divider orientation="right" :orientation-margin="120">Right Text</Divider>
-
-::: details Show Code
-
-```vue
-<template>
-  <Divider orientation="left" :orientation-margin="120">Left Text</Divider>
-  <Divider orientation="right" :orientation-margin="120">Right Text</Divider>
 </template>
 ```
 

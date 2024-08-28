@@ -144,8 +144,8 @@ function onPlaying() {
     >
       您的浏览器不支持video标签。
     </video>
-    <span v-show="originPlay || showPlay" class="m-icon-play" :class="{ 'icon-hidden': hidden }">
-      <svg class="u-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34">
+    <span v-show="originPlay || showPlay" class="icon-play" :class="{ 'icon-hidden': hidden }">
+      <svg class="play-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34">
         <path
           d="M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039
           C31.913,19.675,31.913,14.325,28.26,11.961z"
@@ -165,7 +165,7 @@ function onPlaying() {
     height: 100%;
     vertical-align: bottom;
   }
-  .m-icon-play {
+  .icon-play {
     display: inline-block;
     position: absolute;
     top: 0;
@@ -179,7 +179,7 @@ function onPlaying() {
     background-color: rgba(0, 0, 0, 0.6);
     pointer-events: none;
     transition: background-color 0.3s;
-    .u-svg {
+    .play-svg {
       display: inline-block;
       fill: #fff;
       width: 29px;
@@ -194,7 +194,7 @@ function onPlaying() {
 }
 .video-hover {
   &:hover {
-    .m-icon-play {
+    .icon-play {
       background-color: rgba(0, 0, 0, 0.7);
     }
   }

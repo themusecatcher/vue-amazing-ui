@@ -98,16 +98,16 @@ const showSuccess = computed(() => {
   >
     <div class="m-progress-inner">
       <div
-        :class="['u-progress-bg', { 'line-success': percent >= 100 && !gradientColor }]"
+        :class="['progress-bg', { 'line-success': percent >= 100 && !gradientColor }]"
         :style="`background: ${lineColor}; width: ${percent >= 100 ? 100 : percent}%; height: ${strokeWidth}px; --border-radius: ${strokeLinecap === 'round' ? '100px' : 0};`"
       ></div>
     </div>
     <template v-if="showInfo">
       <Transition name="fade" mode="out-in">
-        <span v-if="percent >= 100" class="m-success">
+        <span v-if="percent >= 100" class="progress-success">
           <svg
             v-if="showSuccess === undefined"
-            class="u-icon"
+            class="icon-svg"
             focusable="false"
             data-icon="check-circle"
             width="1em"
@@ -120,11 +120,11 @@ const showSuccess = computed(() => {
               d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
             ></path>
           </svg>
-          <p v-else class="u-success-info">
+          <p v-else class="progress-success-info">
             <slot name="success">{{ success }}</slot>
           </p>
         </span>
-        <p v-else class="u-progress-text">
+        <p v-else class="progress-text">
           <slot name="format" :percent="percent">{{ showPercent }}</slot>
         </p>
       </Transition>
@@ -162,7 +162,7 @@ const showSuccess = computed(() => {
       <Transition name="fade" mode="out-in">
         <svg
           v-if="showSuccess === undefined && percent >= 100"
-          class="u-icon"
+          class="icon-svg"
           focusable="false"
           data-icon="check"
           width="1em"
@@ -175,10 +175,10 @@ const showSuccess = computed(() => {
             d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
           ></path>
         </svg>
-        <p v-else-if="percent >= 100" class="u-success-info">
+        <p v-else-if="percent >= 100" class="progress-success-info">
           <slot name="success">{{ success }}</slot>
         </p>
-        <p v-else class="u-progress-text">
+        <p v-else class="progress-text">
           <slot name="format" :percent="percent">{{ showPercent }}</slot>
         </p>
       </Transition>
@@ -203,7 +203,7 @@ const showSuccess = computed(() => {
     background: rgba(0, 0, 0, 0.06);
     border-radius: 100px;
     overflow: hidden;
-    .u-progress-bg {
+    .progress-bg {
       position: relative;
       background-color: @themeColor;
       border-radius: var(--border-radius);
@@ -236,20 +236,20 @@ const showSuccess = computed(() => {
       background: @success !important;
     }
   }
-  .m-success {
+  .progress-success {
     width: 40px;
     text-align: center;
     display: inline-flex;
     align-items: center;
     padding-left: 8px;
     flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
-    .u-icon {
+    .icon-svg {
       display: inline-block;
       width: 16px;
       height: 16px;
       fill: @success;
     }
-    .u-success-info {
+    .progress-success-info {
       flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
       width: 40px;
       font-size: 14px;
@@ -257,7 +257,7 @@ const showSuccess = computed(() => {
       color: @success;
     }
   }
-  .u-progress-text {
+  .progress-text {
     /*
       如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小
       如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
@@ -296,7 +296,7 @@ const showSuccess = computed(() => {
       stroke: @success !important;
     }
   }
-  .u-icon {
+  .icon-svg {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -306,7 +306,7 @@ const showSuccess = computed(() => {
     height: 30%;
     fill: @success;
   }
-  .u-success-info {
+  .progress-success-info {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -317,7 +317,7 @@ const showSuccess = computed(() => {
     text-align: center;
     color: @success;
   }
-  .u-progress-text {
+  .progress-text {
     position: absolute;
     top: 50%;
     left: 50%;

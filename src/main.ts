@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import 'less/global.less'
 
-import VueAmazingUI from 'components'
+import VueAmazingUI from 'components/index'
 // import VueAmazingUI from '../dist/vue-amazing-ui.js'
 // import '../dist/style.css'
 

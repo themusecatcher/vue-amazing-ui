@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
   duration?: number // 自动关闭的延时，单位 ms
-  top?: number | string // 消息距离顶部的位置，单位 px
+  top?: string | number // 消息距离顶部的位置，单位 px
 }
 const props = withDefaults(defineProps<Props>(), {
   duration: 3000,
@@ -17,7 +17,7 @@ const resetTimer = ref()
 const showMessage = ref<boolean[]>([])
 const hideTimers = ref<any[]>([])
 const messageContent = ref<Message[]>([])
-const messTop = computed(() => {
+const messageTop = computed(() => {
   if (typeof props.top === 'number') {
     return props.top + 'px'
   }
@@ -99,13 +99,13 @@ function onHideMessage(index: number) {
 }
 </script>
 <template>
-  <div class="m-message-wrap" :style="`top: ${messTop};`">
+  <div class="m-message-wrap" :style="`top: ${messageTop};`">
     <TransitionGroup name="slide-fade">
       <div class="m-message" v-show="showMessage[index]" v-for="(message, index) in messageContent" :key="index">
         <div class="m-message-content" @mouseenter="onEnter(index)" @mouseleave="onLeave(index)">
           <svg
             v-if="message.mode === 'info'"
-            class="u-icon icon-info"
+            class="icon-svg icon-info"
             viewBox="64 64 896 896"
             data-icon="info-circle"
             aria-hidden="true"
@@ -117,7 +117,7 @@ function onHideMessage(index: number) {
           </svg>
           <svg
             v-if="message.mode === 'success'"
-            class="u-icon icon-success"
+            class="icon-svg icon-success"
             viewBox="64 64 896 896"
             data-icon="check-circle"
             aria-hidden="true"
@@ -129,7 +129,7 @@ function onHideMessage(index: number) {
           </svg>
           <svg
             v-if="message.mode === 'error'"
-            class="u-icon icon-error"
+            class="icon-svg icon-error"
             viewBox="64 64 896 896"
             data-icon="close-circle"
             aria-hidden="true"
@@ -141,7 +141,7 @@ function onHideMessage(index: number) {
           </svg>
           <svg
             v-if="message.mode === 'warning'"
-            class="u-icon icon-warning"
+            class="icon-svg icon-warning"
             viewBox="64 64 896 896"
             data-icon="exclamation-circle"
             aria-hidden="true"
@@ -153,13 +153,13 @@ function onHideMessage(index: number) {
           </svg>
           <svg
             v-if="message.mode === 'loading'"
-            class="u-icon icon-loading circular"
+            class="icon-svg icon-loading circular"
             viewBox="0 0 50 50"
             focusable="false"
           >
             <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
           </svg>
-          <p class="u-content">{{ message.content }}</p>
+          <p class="message-content">{{ message.content }}</p>
         </div>
       </div>
     </TransitionGroup>
@@ -208,7 +208,7 @@ function onHideMessage(index: number) {
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
       pointer-events: auto; // 保证内容区域部分可以正常响应鼠标事件
-      .u-icon {
+      .icon-svg {
         display: inline-block;
         width: 16px;
         height: 16px;
@@ -260,8 +260,7 @@ function onHideMessage(index: number) {
           }
         }
       }
-
-      .u-content {
+      .message-content {
         display: inline-block;
         font-size: 14px;
         color: rgba(0, 0, 0, 0.88);

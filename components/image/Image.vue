@@ -254,12 +254,12 @@ function onSwitchRight() {
   <div class="m-image-wrap">
     <Space gap="small" v-bind="spaceProps">
       <div
+        v-show="!album || (album && index === 0)"
         class="m-image"
         :class="{ 'image-bordered': bordered, 'image-hover-mask': complete[index] }"
         :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
         v-for="(image, index) in images"
         :key="index"
-        v-show="!album || (album && index === 0)"
       >
         <Spin :spinning="!complete[index]" indicator="dynamic-circle" size="small" v-bind="spinProps">
           <img
@@ -272,12 +272,12 @@ function onSwitchRight() {
         </Spin>
         <div class="m-image-mask" @click="onPreview(index)">
           <div class="image-mask-info">
-            <svg class="u-eye" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896">
+            <svg class="eye-svg" focusable="false" data-icon="eye" aria-hidden="true" viewBox="64 64 896 896">
               <path
                 d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"
               ></path>
             </svg>
-            <p class="u-pre">
+            <p class="mask-pre">
               <slot name="preview">{{ preview }}</slot>
             </p>
           </div>
@@ -301,54 +301,60 @@ function onSwitchRight() {
         <div class="m-preview-body">
           <div class="m-preview-operations">
             <a
-              class="u-name"
+              class="previe-name"
               :href="images[previewIndex].src"
               target="_blank"
               :title="getImageName(images[previewIndex])"
             >
               {{ getImageName(images[previewIndex]) }}
             </a>
-            <p class="u-preview-progress" v-show="Array.isArray(src)">{{ previewIndex + 1 }} / {{ imageCount }}</p>
-            <div class="u-preview-operation" title="关闭" @click="onClose">
-              <svg class="u-icon" focusable="false" data-icon="close" aria-hidden="true" viewBox="64 64 896 896">
+            <p class="preview-progress" v-show="Array.isArray(src)">{{ previewIndex + 1 }} / {{ imageCount }}</p>
+            <div class="preview-operation" title="关闭" @click="onClose">
+              <svg class="icon-svg" focusable="false" data-icon="close" aria-hidden="true" viewBox="64 64 896 896">
                 <path
                   d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
                 ></path>
               </svg>
             </div>
             <div
-              class="u-preview-operation"
+              class="preview-operation"
               :class="{ 'operation-disabled': scale === maxZoomScale }"
               title="放大"
               @click="onZoomin"
             >
-              <svg class="u-icon" focusable="false" data-icon="zoom-in" aria-hidden="true" viewBox="64 64 896 896">
+              <svg class="icon-svg" focusable="false" data-icon="zoom-in" aria-hidden="true" viewBox="64 64 896 896">
                 <path
                   d="M637 443H519V309c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v134H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h118v134c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V519h118c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8zm284 424L775 721c122.1-148.9 113.6-369.5-26-509-148-148.1-388.4-148.1-537 0-148.1 148.6-148.1 389 0 537 139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11zM696 696c-118.8 118.7-311.2 118.7-430 0-118.7-118.8-118.7-311.2 0-430 118.8-118.7 311.2-118.7 430 0 118.7 118.8 118.7 311.2 0 430z"
                 ></path>
               </svg>
             </div>
             <div
-              class="u-preview-operation"
+              class="preview-operation"
               :class="{ 'operation-disabled': scale === minZoomScale }"
               title="缩小"
               @click="onZoomout"
             >
-              <svg class="u-icon" focusable="false" data-icon="zoom-out" aria-hidden="true" viewBox="64 64 896 896">
+              <svg class="icon-svg" focusable="false" data-icon="zoom-out" aria-hidden="true" viewBox="64 64 896 896">
                 <path
                   d="M637 443H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h312c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8zm284 424L775 721c122.1-148.9 113.6-369.5-26-509-148-148.1-388.4-148.1-537 0-148.1 148.6-148.1 389 0 537 139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11zM696 696c-118.8 118.7-311.2 118.7-430 0-118.7-118.8-118.7-311.2 0-430 118.8-118.7 311.2-118.7 430 0 118.7 118.8 118.7 311.2 0 430z"
                 ></path>
               </svg>
             </div>
-            <div class="u-preview-operation" title="还原" @click="onResetOrigin">
-              <svg class="u-icon" focusable="false" data-icon="expand" aria-hidden="true" viewBox="64 64 896 896">
+            <div class="preview-operation" title="还原" @click="onResetOrigin">
+              <svg class="icon-svg" focusable="false" data-icon="expand" aria-hidden="true" viewBox="64 64 896 896">
                 <path
                   d="M342 88H120c-17.7 0-32 14.3-32 32v224c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V168h174c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm578 576h-48c-8.8 0-16 7.2-16 16v176H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h222c17.7 0 32-14.3 32-32V680c0-8.8-7.2-16-16-16zM342 856H168V680c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v224c0 17.7 14.3 32 32 32h222c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM904 88H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h174v176c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V120c0-17.7-14.3-32-32-32z"
                 ></path>
               </svg>
             </div>
-            <div class="u-preview-operation" title="向右旋转" @click="onClockwiseRotate">
-              <svg class="u-icon" focusable="false" data-icon="rotate-right" aria-hidden="true" viewBox="64 64 896 896">
+            <div class="preview-operation" title="向右旋转" @click="onClockwiseRotate">
+              <svg
+                class="icon-svg"
+                focusable="false"
+                data-icon="rotate-right"
+                aria-hidden="true"
+                viewBox="64 64 896 896"
+              >
                 <path
                   d="M480.5 251.2c13-1.6 25.9-2.4 38.8-2.5v63.9c0 6.5 7.5 10.1 12.6 6.1L660 217.6c4-3.2 4-9.2 0-12.3l-128-101c-5.1-4-12.6-.4-12.6 6.1l-.2 64c-118.6.5-235.8 53.4-314.6 154.2A399.75 399.75 0 00123.5 631h74.9c-.9-5.3-1.7-10.7-2.4-16.1-5.1-42.1-2.1-84.1 8.9-124.8 11.4-42.2 31-81.1 58.1-115.8 27.2-34.7 60.3-63.2 98.4-84.3 37-20.6 76.9-33.6 119.1-38.8z"
                 ></path>
@@ -357,8 +363,14 @@ function onSwitchRight() {
                 ></path>
               </svg>
             </div>
-            <div class="u-preview-operation" title="向左旋转" @click="onAnticlockwiseRotate">
-              <svg class="u-icon" focusable="false" data-icon="rotate-left" aria-hidden="true" viewBox="64 64 896 896">
+            <div class="preview-operation" title="向左旋转" @click="onAnticlockwiseRotate">
+              <svg
+                class="icon-svg"
+                focusable="false"
+                data-icon="rotate-left"
+                aria-hidden="true"
+                viewBox="64 64 896 896"
+              >
                 <path
                   d="M672 418H144c-17.7 0-32 14.3-32 32v414c0 17.7 14.3 32 32 32h528c17.7 0 32-14.3 32-32V450c0-17.7-14.3-32-32-32zm-44 402H188V494h440v326z"
                 ></path>
@@ -367,16 +379,16 @@ function onSwitchRight() {
                 ></path>
               </svg>
             </div>
-            <div class="u-preview-operation" title="水平镜像" @click="onHorizontalMirror">
-              <svg class="u-icon" focusable="false" data-icon="swap" aria-hidden="true" viewBox="64 64 896 896">
+            <div class="preview-operation" title="水平镜像" @click="onHorizontalMirror">
+              <svg class="icon-svg" focusable="false" data-icon="swap" aria-hidden="true" viewBox="64 64 896 896">
                 <path
                   d="M847.9 592H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h605.2L612.9 851c-4.1 5.2-.4 13 6.3 13h72.5c4.9 0 9.5-2.2 12.6-6.1l168.8-214.1c16.5-21 1.6-51.8-25.2-51.8zM872 356H266.8l144.3-183c4.1-5.2.4-13-6.3-13h-72.5c-4.9 0-9.5 2.2-12.6 6.1L150.9 380.2c-16.5 21-1.6 51.8 25.1 51.8h696c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8z"
                 ></path>
               </svg>
             </div>
-            <div class="u-preview-operation" title="垂直镜像" @click="onVerticalMirror">
+            <div class="preview-operation" title="垂直镜像" @click="onVerticalMirror">
               <svg
-                class="u-icon"
+                class="icon-svg"
                 style="transform: rotate(90deg)"
                 focusable="false"
                 data-icon="swap"
@@ -398,7 +410,7 @@ function onSwitchRight() {
               :key="index"
             >
               <img
-                class="u-preview-image"
+                class="preview-image"
                 :style="`transform: scale3d(${swapX * scale}, ${swapY * scale}, 1) rotate(${rotate}deg);`"
                 :src="image.src"
                 :alt="getImageName(image)"
@@ -409,23 +421,19 @@ function onSwitchRight() {
             </Spin>
           </div>
           <template v-if="imageCount > 1">
-            <div
-              class="m-switch-left"
-              :class="{ 'switch-disabled': previewIndex === 0 && !loop }"
-              @click="onSwitchLeft"
-            >
-              <svg focusable="false" class="u-switch" data-icon="left" aria-hidden="true" viewBox="64 64 896 896">
+            <div class="switch-left" :class="{ 'switch-disabled': previewIndex === 0 && !loop }" @click="onSwitchLeft">
+              <svg focusable="false" class="switch-svg" data-icon="left" aria-hidden="true" viewBox="64 64 896 896">
                 <path
                   d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"
                 ></path>
               </svg>
             </div>
             <div
-              class="m-switch-right"
+              class="switch-right"
               :class="{ 'switch-disabled': previewIndex === imageCount - 1 && !loop }"
               @click="onSwitchRight"
             >
-              <svg focusable="false" class="u-switch" data-icon="right" aria-hidden="true" viewBox="64 64 896 896">
+              <svg focusable="false" class="switch-svg" data-icon="right" aria-hidden="true" viewBox="64 64 896 896">
                 <path
                   d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
                 ></path>
@@ -498,7 +506,7 @@ function onSwitchRight() {
         white-space: nowrap;
         text-overflow: ellipsis;
         padding: 0 4px;
-        .u-eye {
+        .eye-svg {
           display: inline-flex;
           align-items: center;
           margin-right: 4px;
@@ -507,7 +515,7 @@ function onSwitchRight() {
           height: 14px;
           fill: #fff;
         }
-        .u-pre {
+        .mask-pre {
           display: inline-block;
           color: #fff;
         }
@@ -550,7 +558,7 @@ function onSwitchRight() {
         background: rgba(0, 0, 0, 0.1);
         height: 42px;
         pointer-events: auto;
-        .u-name {
+        .previe-name {
           position: absolute;
           left: 12px;
           font-size: 14px;
@@ -565,7 +573,7 @@ function onSwitchRight() {
             color: @themeColor;
           }
         }
-        .u-preview-progress {
+        .preview-progress {
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
@@ -573,7 +581,7 @@ function onSwitchRight() {
           color: rgb(255, 255, 255);
           line-height: 1.57;
         }
-        .u-preview-operation {
+        .preview-operation {
           line-height: 1;
           padding: 12px;
           border-radius: 8px;
@@ -585,7 +593,7 @@ function onSwitchRight() {
           &:hover {
             background: rgba(0, 0, 0, 0.25);
           }
-          .u-icon {
+          .icon-svg {
             display: inline-block;
             width: 18px;
             height: 18px;
@@ -596,7 +604,7 @@ function onSwitchRight() {
         .operation-disabled {
           color: rgba(255, 255, 255, 0.25);
           pointer-events: none;
-          .u-icon {
+          .icon-svg {
             fill: rgba(255, 255, 255, 0.25);
           }
         }
@@ -609,7 +617,7 @@ function onSwitchRight() {
         display: flex;
         justify-content: center;
         align-items: center;
-        .u-preview-image {
+        .preview-image {
           display: inline-block;
           vertical-align: middle;
           max-width: 100%;
@@ -620,7 +628,7 @@ function onSwitchRight() {
           pointer-events: auto;
         }
       }
-      .m-switch-left {
+      .switch-left {
         inset-inline-start: 12px;
         position: fixed;
         inset-block-start: 50%;
@@ -642,13 +650,13 @@ function onSwitchRight() {
         &:hover {
           background: rgba(0, 0, 0, 0.2);
         }
-        .u-switch {
+        .switch-svg {
           width: 18px;
           height: 18px;
           fill: #fff;
         }
       }
-      .m-switch-right {
+      .switch-right {
         inset-inline-end: 12px;
         position: fixed;
         inset-block-start: 50%;
@@ -669,7 +677,7 @@ function onSwitchRight() {
         &:hover {
           background: rgba(0, 0, 0, 0.2);
         }
-        .u-switch {
+        .switch-svg {
           width: 18px;
           height: 18px;
           fill: #fff;
@@ -682,7 +690,7 @@ function onSwitchRight() {
         &:hover {
           background: transparent;
         }
-        .u-switch {
+        .switch-svg {
           fill: rgba(255, 255, 255, 0.25);
         }
       }

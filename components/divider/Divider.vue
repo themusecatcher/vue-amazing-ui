@@ -38,7 +38,7 @@ const showText = computed(() => {
 </script>
 <template>
   <div
-    class="m-divider divider-style"
+    class="m-divider"
     :class="[
       vertical ? 'divider-vertical' : 'divider-horizontal',
       {
@@ -52,7 +52,7 @@ const showText = computed(() => {
     ]"
     :style="`--border-width: ${borderWidth}px; --border-style: ${borderStyle}; --border-color: ${borderColor}; --margin: ${margin}; --line-height: ${lineHeight};`"
   >
-    <span class="m-divider-text" v-show="showText">
+    <span v-if="showText" class="divider-text">
       <slot></slot>
     </span>
   </div>
@@ -63,7 +63,7 @@ const showText = computed(() => {
   font-size: 14px;
   line-height: 1.5714285714285714;
   border-block-start: var(--border-width) var(--border-style) var(--border-color);
-  .m-divider-text {
+  .divider-text {
     display: inline-block;
     padding: 0 1em;
   }
@@ -85,18 +85,6 @@ const showText = computed(() => {
   border-top: 0;
   border-inline-start: var(--border-width) var(--border-style) var(--border-color);
 }
-.divider-style {
-  background: none;
-  border-color: var(--border-color);
-  border-style: var(--border-style);
-  border-width: var(--border-width) 0 0;
-}
-.divider-vertical.divider-style {
-  border-inline-start-width: var(--border-width);
-  border-inline-end: 0;
-  border-block-start: 0;
-  border-block-end: 0;
-}
 .divider-with-text {
   display: flex;
   align-items: center;
@@ -116,12 +104,6 @@ const showText = computed(() => {
     border-top-color: inherit;
     transform: translateY(50%);
     content: '';
-  }
-}
-.divider-with-text.divider-style {
-  &::before,
-  &::after {
-    border-style: var(--border-style) none none;
   }
 }
 .divider-with-text-left {
@@ -147,7 +129,7 @@ const showText = computed(() => {
   &::after {
     width: 100%;
   }
-  .m-divider-text {
+  .divider-text {
     margin-left: var(--margin);
     padding-inline-start: 0;
   }
@@ -159,7 +141,7 @@ const showText = computed(() => {
   &::after {
     width: 0;
   }
-  .m-divider-text {
+  .divider-text {
     margin-right: var(--margin);
     padding-inline-end: 0;
   }

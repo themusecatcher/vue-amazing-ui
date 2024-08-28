@@ -36,9 +36,9 @@ function onChange(page: number, pageSize: number) {
   <div class="m-table-wrap">
     <table class="m-table">
       <thead>
-        <tr class="m-tr">
+        <tr class="table-tr">
           <th
-            class="m-th"
+            class="table-th"
             :style="`width: ${typeof item.width === 'number' ? item.width + 'px' : item.width};`"
             v-for="(item, index) in columns"
             :key="index"
@@ -47,16 +47,16 @@ function onChange(page: number, pageSize: number) {
           </th>
         </tr>
       </thead>
-      <tbody class="m-body">
-        <tr class="m-tr-loading" v-show="loading">
-          <Spin class="m-loading" size="small" :colspan="columns.length" v-bind="spinProps" />
+      <tbody class="m-table-body">
+        <tr class="table-loading" v-show="loading">
+          <Spin class="loading" size="small" :colspan="columns.length" v-bind="spinProps" />
         </tr>
-        <tr class="m-tr-empty" v-show="!dataSource.length">
-          <td class="m-td-empty" :colspan="columns.length">
+        <tr class="table-empty-wrap" v-show="!dataSource.length">
+          <td class="table-empty" :colspan="columns.length">
             <Empty class="empty" image="outlined" v-bind="emptyProps" />
           </td>
         </tr>
-        <tr class="m-tr" v-for="(data, index) in dataSource" :key="index">
+        <tr class="table-tr" v-for="(data, index) in dataSource" :key="index">
           <td class="m-td" v-for="(col, n) in columns" :key="n" :title="data[col.dataIndex as any]">
             <slot v-if="col.slot" v-bind="data" :name="col.slot" :index="index">{{
               data[col.dataIndex as any] || '--'
@@ -84,7 +84,7 @@ function onChange(page: number, pageSize: number) {
     border-collapse: separate;
     border-spacing: 0;
     margin: 0;
-    .m-th {
+    .table-th {
       padding: 16px;
       color: rgba(0, 0, 0, 0.85);
       font-weight: 500;
@@ -100,24 +100,24 @@ function onChange(page: number, pageSize: number) {
         border-top-right-radius: 8px;
       }
     }
-    .m-body {
+    .m-table-body {
       position: relative;
-      .m-tr-loading {
+      .table-loading {
         border: none;
         background-color: #fff;
-        .m-loading {
+        .loading {
           position: absolute;
           width: 100%;
           height: 100%;
         }
       }
-      .m-tr-empty {
+      .table-empty-wrap {
         border: none;
         background-color: #fff;
         &:hover {
           background: #fff;
         }
-        .m-td-empty {
+        .table-empty {
           padding: 16px;
           border: none;
           border-bottom: 1px solid #f0f0f0;
@@ -127,7 +127,7 @@ function onChange(page: number, pageSize: number) {
         }
       }
     }
-    .m-tr {
+    .table-tr {
       border: none;
       background-color: #fff;
       transition: background-color 0.3s;
