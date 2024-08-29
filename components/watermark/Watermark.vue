@@ -2,6 +2,13 @@
 import { shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useMutationObserver } from '../utils'
+interface Font {
+  color?: string // 字体颜色，默认 'rgba(0, 0, 0, 0.15)'
+  fontSize?: number // 字体大小，单位 px，默认 16
+  fontWeight?: 'normal' | 'light' | 'weight' | number // 字体粗细，默认 'normal'
+  fontFamily?: string // 字体类型，默认 'sans-serif'
+  fontStyle?: 'none' | 'normal' | 'italic' | 'oblique' // 字体样式，默认 'normal'
+}
 interface Props {
   width?: number // 水印的宽度，默认为 content 自身的宽度，单位 px
   height?: number // 水印的高度，默认为 content 自身的高度，单位 px
@@ -11,11 +18,7 @@ interface Props {
   image?: string // 图片源，建议使用 2 倍或 3 倍图，优先级高于文字
   content?: string | string[] // 水印文字内容
   fullscreen?: boolean // 是否展示全屏
-  color?: string // 字体颜色
-  fontSize?: number // 字体大小
-  fontWeight?: 'normal' | 'light' | 'weight' | number // 	字体粗细
-  fontFamily?: string // 字体类型
-  fontStyle?: 'none' | 'normal' | 'italic' | 'oblique' // 字体样式
+  textStyle?: Font // 水印文字样式
   gap?: [number, number] // 水印之间的间距
   offset?: [number, number] // 水印距离容器左上角的偏移量，默认为 gap / 2
 }
@@ -28,11 +31,13 @@ const props = withDefaults(defineProps<Props>(), {
   image: undefined,
   content: undefined,
   fullscreen: false,
-  color: 'rgba(0, 0, 0, 0.15)',
-  fontSize: 16,
-  fontWeight: 'normal',
-  fontFamily: 'sans-serif',
-  fontStyle: 'normal',
+  textStyle: () => ({
+    color: 'rgba(0, 0, 0, 0.15)',
+    fontSize: 16,
+    fontWeight: 'normal',
+    fontFamily: 'sans-serif',
+    fontStyle: 'normal'
+  }),
   gap: () => [100, 100],
   offset: () => [50, 50]
 })
@@ -179,8 +184,8 @@ function getMarkSize(ctx: CanvasRenderingContext2D) {
   const image = props.image
   const width = props.width
   const height = props.height
-  const fontSize = props.fontSize
-  const fontFamily = props.fontFamily
+  const fontSize = props.textStyle.fontSize ?? 16
+  const fontFamily = props.textStyle.fontFamily ?? 'sans-serif'
   if (!image && ctx.measureText) {
     ctx.font = `${Number(fontSize)}px ${fontFamily}`
     const contents = Array.isArray(content) ? content : [content]
@@ -197,11 +202,11 @@ function getPixelRatio() {
 function fillTexts(ctx: CanvasRenderingContext2D, drawX: number, drawY: number, drawWidth: number, drawHeight: number) {
   const ratio = getPixelRatio()
   const content = props.content
-  const fontSize = props.fontSize
-  const fontWeight = props.fontWeight
-  const fontFamily = props.fontFamily
-  const fontStyle = props.fontStyle
-  const color = props.color
+  const fontSize = props.textStyle.fontSize ?? 16
+  const fontWeight = props.textStyle.fontWeight ?? 'normal'
+  const fontFamily = props.textStyle.fontFamily ?? 'sans-serif'
+  const fontStyle = props.textStyle.fontStyle ?? 'normal'
+  const color = props.textStyle.color ?? 'rgba(0, 0, 0, 0.15)'
   const mergedFontSize = Number(fontSize) * ratio
   ctx.font = `${fontStyle} normal ${fontWeight} ${mergedFontSize}px/${drawHeight}px ${fontFamily}`
   ctx.fillStyle = color

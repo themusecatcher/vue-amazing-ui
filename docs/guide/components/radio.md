@@ -516,7 +516,7 @@ vertical | 是否垂直排列，仅当 `button: false` 时生效 | boolean | fal
 value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any | null
 gap | 多个单选框之间的间距，单位 `px`，垂直排列时，间距即垂直间距，仅当 `button: false` 时生效 | number | 8
 button | 是否启用按钮样式 | boolean | false
-buttonStyle | 按钮样式风格 | 'outline' &#124; 'solid' ｜ 'outline' | 'outline'
+buttonStyle | 按钮样式风格 | 'outline' &#124; 'solid' | 'outline'
 buttonSize | 按钮大小，仅当 `button: true` 时生效 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 
 ### Option Type

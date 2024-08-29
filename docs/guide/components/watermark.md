@@ -307,10 +307,16 @@ zIndex | 追加的水印元素的 `z-index` | number| 90
 image | 图片源，建议使用 `2` 倍或 `3` 倍图，优先级高于文字 | string | undefined
 content | 水印文字内容 | string &#124; string[] | undefined
 fullscreen | 是否展示全屏 | boolean | false
+textStyle | 水印文字样式 | [Font](#font-type) | {<br/>&nbsp;&nbsp;color: 'rgba(0, 0, 0, 0.15)',<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>}
+gap | 水印之间的间距 | [number, number] | [100, 100]
+offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | [number, number] | [50, 50]
+
+### Font Type
+
+名称 | 说明 | 类型 | 默认值
+-- | -- | -- | --
 color | 字体颜色 | string | 'rgba(0, 0, 0, 0.15)'
 fontSize | 字体大小，单位 `px` | number | 16
 fontWeight | 字体粗细 | 'normal' &#124; 'light' &#124; 'weight' &#124; number | 'normal'
 fontFamily | 字体类型 | string | 'sans-serif'
 fontStyle | 字体样式 | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal'
-gap | 水印之间的间距 | [number, number] | [100, 100]
-offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | [number, number] | [50, 50]

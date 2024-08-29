@@ -6,6 +6,7 @@
 ## 1.6.2 <Tag color="volcano" size="small">2024-08-28</Tag>
 
 - 优化并更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件，`top` 属性新增 `string` 类型
+- 优化并更新 [水印 Watermark](https://themusecatcher.github.io/vue-amazing-ui/guide/components/watermark.html) 组件，新增 `textStyle` 类型，删除 `color` `fontSize` `fontWeight` `fontFamily` `fontStyle` 属性
 - 组件库及文档代码优化
 
 ## 1.6.1 <Tag color="volcano" size="small">2024-08-27</Tag>
