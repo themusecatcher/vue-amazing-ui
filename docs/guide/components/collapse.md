@@ -223,6 +223,50 @@ function onChange(key: number | string) {
 
 :::
 
+## 手风琴
+
+*只允许单个内容区域展开，只需 `activeKey` 传入 `number` | `string` 即可*
+
+<br/>
+
+<Collapse :collapse-data="collapseData" v-model:active-key="key" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const collapseData = ref([
+  {
+    key: '1',
+    header: 'This is panel header 1',
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  },
+  {
+    key: '2',
+    header: 'This is panel header 2',
+    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+  },
+  {
+    key: '3',
+    header: 'This is panel header 3',
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  }
+])
+const key = ref('1')
+watchEffect(() => {
+  console.log('key:', key.value)
+})
+</script>
+<template>
+  <Collapse :collapse-data="collapseData" v-model:active-key="key" />
+</template>
+```
+
+:::
+
 ## 禁用
 
 <Flex vertical>
@@ -284,50 +328,6 @@ watchEffect(() => {
     <Collapse disabled :collapse-data="collapseData" v-model:active-key="activeKey" />
     <Collapse :collapse-data="disabledCollapseData" v-model:active-key="activeKey" />
   </Flex>
-</template>
-```
-
-:::
-
-## 手风琴
-
-*只允许单个内容区域展开，只需 `activeKey` 传入 `number` | `string` 即可*
-
-<br/>
-
-<Collapse :collapse-data="collapseData" v-model:active-key="key" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-const collapseData = ref([
-  {
-    key: '1',
-    header: 'This is panel header 1',
-    content:
-      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
-  },
-  {
-    key: '2',
-    header: 'This is panel header 2',
-    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
-  },
-  {
-    key: '3',
-    header: 'This is panel header 3',
-    content:
-      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
-  }
-])
-const key = ref('1')
-watchEffect(() => {
-  console.log('key:', key.value)
-})
-</script>
-<template>
-  <Collapse :collapse-data="collapseData" v-model:active-key="key" />
 </template>
 ```
 

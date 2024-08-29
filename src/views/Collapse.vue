@@ -128,14 +128,14 @@ function handleClick(event: Event, key: string | number) {
     <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">activeKey 传入 number[] | string[]，所有面板可同时展开</h3>
     <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" @change="onChange" />
+    <h2 class="mt30 mb10">'手风琴'</h2>
+    <h3 class="mb10">只允许单个内容区域展开，只需 activeKey 传入 number | string 即可</h3>
+    <Collapse :collapse-data="collapseData" v-model:active-key="key" />
     <h2 class="mt30 mb10">禁用</h2>
     <Flex vertical>
       <Collapse disabled :collapse-data="collapseData" v-model:active-key="activeKey" />
       <Collapse :collapse-data="disabledCollapseData" v-model:active-key="activeKey" />
     </Flex>
-    <h2 class="mt30 mb10">'手风琴'</h2>
-    <h3 class="mb10">只允许单个内容区域展开，只需 activeKey 传入 number | string 即可</h3>
-    <Collapse :collapse-data="collapseData" v-model:active-key="key" />
     <h2 class="mt30 mb10">面板嵌套</h2>
     <Collapse :collapse-data="collapseData" v-model:active-key="activeKey">
       <template #content="{ key }">
