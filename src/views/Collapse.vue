@@ -1,63 +1,108 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
+import { DoubleRightOutlined, RightCircleFilled, StarOutlined, StarFilled } from '@ant-design/icons-vue'
 const collapseData = ref([
   {
     key: '1',
     header: 'This is panel header 1',
-    text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   },
   {
     key: '2',
     header: 'This is panel header 2',
-    text: `  A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.
-  A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
   },
   {
     key: '3',
     header: 'This is panel header 3',
-    text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  }
+])
+const disabledCollapseData = ref([
+  {
+    key: '1',
+    header: 'This is panel header 1',
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  },
+  {
+    key: '2',
+    header: 'This is panel header 2',
+    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+  },
+  {
+    key: '3',
+    disabled: true,
+    header: 'This is panel header 3',
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
 const nestCollapseData = ref([
   {
     key: '1',
     header: 'This is panel header 1',
-    text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  }
+])
+const extraCollapseData = ref([
+  {
+    key: '1',
+    header: 'This is panel header 1',
+    extra: 'Extra',
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  },
+  {
+    key: '2',
+    header: 'This is panel header 2',
+    extra: 'Extra',
+    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+  },
+  {
+    key: '3',
+    header: 'This is panel header 3',
+    extra: 'Extra',
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
 const arrowCollapseData = ref([
   {
     key: '1',
     header: 'This is panel header 1',
-    text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   },
   {
     key: '2',
     showArrow: false,
     header: 'This is panel header 2',
-    text: `  A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.
-  A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
   },
   {
     key: '3',
     header: 'This is panel header 3',
-    text: 'A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
 const activeKey = ref(['1'])
 const nestActiveKey = ref(['1'])
-const arrowPlacement = ref('left')
 const positionOptions = ref([
   {
-    label: 'Left',
+    label: 'left',
     value: 'left'
   },
   {
-    label: 'Right',
+    label: 'right',
     value: 'right'
   }
 ])
+const arrowPlacement = ref('left')
 watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
@@ -71,6 +116,11 @@ watchEffect(() => {
 function onChange(key: number | string) {
   console.log('change:', key)
 }
+function handleClick(event: Event, key: string | number) {
+  event.stopPropagation() // 阻止事件冒泡
+  console.log('event', event)
+  console.log('key', key)
+}
 </script>
 <template>
   <div>
@@ -78,12 +128,17 @@ function onChange(key: number | string) {
     <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">activeKey 传入 number[] | string[]，所有面板可同时展开</h3>
     <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" @change="onChange" />
+    <h2 class="mt30 mb10">禁用</h2>
+    <Flex vertical>
+      <Collapse disabled :collapse-data="collapseData" v-model:active-key="activeKey" />
+      <Collapse :collapse-data="disabledCollapseData" v-model:active-key="activeKey" />
+    </Flex>
     <h2 class="mt30 mb10">'手风琴'</h2>
     <h3 class="mb10">只允许单个内容区域展开，只需 activeKey 传入 number | string 即可</h3>
     <Collapse :collapse-data="collapseData" v-model:active-key="key" />
     <h2 class="mt30 mb10">面板嵌套</h2>
     <Collapse :collapse-data="collapseData" v-model:active-key="activeKey">
-      <template #text="{ key }">
+      <template #content="{ key }">
         <Collapse v-if="key === '1'" :collapse-data="nestCollapseData" v-model:active-key="nestActiveKey" />
       </template>
     </Collapse>
@@ -91,23 +146,47 @@ function onChange(key: number | string) {
     <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" :bordered="false" />
     <h2 class="mt30 mb10">可复制</h2>
     <Collapse copyable lang="template" :collapse-data="collapseData" v-model:active-key="activeKey" />
-    <h2 class="mt30 mb10">自定义内容</h2>
-    <Collapse :collapse-data="collapseData" v-model:active-key="activeKey">
-      <template #header="{ header, key }">
-        <span v-if="key === '1'" style="color: burlywood">burlywood color {{ header }} (key = {{ key }})</span>
-      </template>
-      <template #lang>typescript</template>
-      <template #text="{ text, key }">
-        <span v-if="key === '1'" style="color: burlywood">burlywood color {{ text }} (key = {{ key }})</span>
-      </template>
-    </Collapse>
     <h2 class="mt30 mb10">隐藏箭头</h2>
     <Collapse :collapse-data="arrowCollapseData" v-model:active-key="activeKey" />
     <h2 class="mt30 mb10">箭头位置</h2>
-    <Radio :options="positionOptions" v-model:value="arrowPlacement" button />
-    <br />
-    <br />
-    <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" :arrow-placement="arrowPlacement" />
+    <Flex vertical>
+      <Radio :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
+      <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" :arrow-placement="arrowPlacement" />
+    </Flex>
+    <h2 class="mt30 mb10">自定义面板</h2>
+    <h3 class="mb10">自定义各个面板的背景色、圆角、边距和箭头图标</h3>
+    <Collapse
+      :collapse-data="collapseData"
+      v-model:active-key="activeKey"
+      :bordered="false"
+      :collapse-style="{ backgroundColor: '#fff' }"
+      :item-style="{
+        backgroundColor: '#f7f7f7',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        border: 0
+      }"
+    >
+      <template #arrow="{ key, active }">
+        <DoubleRightOutlined v-if="key === '2'" :rotate="active ? 90 : 0" />
+        <RightCircleFilled v-else :rotate="active ? 90 : 0" />
+      </template>
+    </Collapse>
+    <h2 class="mt30 mb10">自定义面板样式</h2>
+    <Collapse
+      :collapse-data="collapseData"
+      v-model:active-key="activeKey"
+      :arrow-style="{ fontSize: '14px', height: '25px' }"
+      :header-style="{ fontSize: '16px', color: '#ff6900' }"
+      :content-style="{ padding: '16px 24px', color: 'rgba(0, 0, 0, 0.65)' }"
+    />
+    <h2 class="mt30 mb10">面板额外内容</h2>
+    <Collapse :collapse-data="extraCollapseData" v-model:active-key="activeKey">
+      <template #extra="{ key }">
+        <StarFilled @click="handleClick($event, key)" v-if="key === '1'" />
+        <StarOutlined @click="handleClick($event, key)" v-if="key === '3'" />
+      </template>
+    </Collapse>
     <h2 class="mt30 mb10">幽灵折叠面板</h2>
     <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" ghost />
   </div>

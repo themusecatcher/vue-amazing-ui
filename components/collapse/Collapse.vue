@@ -1,44 +1,57 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { CSSProperties, Slot } from 'vue'
 import Button from '../button'
 import { rafTimeout } from '../utils'
 interface Collapse {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   header?: string // 面板标题 string | slot
-  text?: string // 面板内容 string | slot
+  content?: string // 面板内容 string | slot
+  disabled?: boolean // 是否禁用展开，默认 false
   showArrow?: boolean // 是否展示箭头，默认 true
+  extra?: string // 面板标题右侧的额外内容 string | slot
 }
 interface Props {
-  collapseData?: Collapse[] // 折叠面板数据，可使用 slot 替换对应索引的 header 和 text
+  collapseData?: Collapse[] // 折叠面板数据，可使用 slot 替换指定 key 的 header、content、arrow、extra、lang
   activeKey?: number[] | number | string[] | string | null // (v-model) 当前激活 tab 面板的 key
+  disabled?: boolean // 是否禁用，优先级低于 Collapse 的 disabled
+  collapseStyle?: CSSProperties // 设置面板的样式
   bordered?: boolean // 带边框风格的折叠面板
   copyable?: boolean // 是否可复制面板内容
   lang?: string // 面板右上角固定内容，例如标识 language string | slot
-  fontSize?: number // 面板标题和内容的字体大小，单位 px
-  headerFontSize?: number // 面板标题字体大小，单位 px，优先级高于 fontSize
-  textFontSize?: number // 面板内容字体大小，单位 px，优先级高于 fontSize
-  showArrow?: boolean // 是否展示所有箭头，优先级低于 Collapse 的 showArrow
+  itemStyle?: CSSProperties // 设置面板容器的样式
+  headerStyle?: CSSProperties // 设置面板标题的样式
+  contentStyle?: CSSProperties // 设置面板内容的样式
+  arrow?: Slot // 自定义箭头切换图标 slot
+  showArrow?: boolean // 是否展示箭头，优先级低于 Collapse 的 showArrow
   arrowPlacement?: 'left' | 'right' // 箭头位置
+  arrowStyle?: CSSProperties // 设置面板箭头的样式
+  extra?: string // 面板标题右侧的额外内容 string | slot
   ghost?: boolean // 使折叠面板透明且无边框
 }
 const props = withDefaults(defineProps<Props>(), {
   collapseData: () => [],
   activeKey: null,
+  disabled: false,
+  collapseStyle: () => ({}),
   bordered: true,
   copyable: false,
   lang: undefined,
-  fontSize: 14,
-  headerFontSize: undefined,
-  textFontSize: undefined,
+  itemStyle: () => ({}),
+  headerStyle: () => ({}),
+  contentStyle: () => ({}),
+  arrow: undefined,
   showArrow: true,
   arrowPlacement: 'left',
+  arrowStyle: () => ({}),
+  extra: undefined,
   ghost: false
 })
-const text = ref()
+const contentRef = ref()
 const clickIndex = ref<number>(0)
 function onEnter(el: Element) {
   ;(el as HTMLElement).style.height =
-    text.value[clickIndex.value].offsetHeight + (props.bordered && !props.ghost ? 1 : 0) + 'px'
+    contentRef.value[clickIndex.value].offsetHeight + (props.bordered && !props.ghost ? 1 : 0) + 'px'
   ;(el as HTMLElement).style.opacity = '1'
 }
 function onAfterEnter(el: Element) {
@@ -47,7 +60,7 @@ function onAfterEnter(el: Element) {
 }
 function onLeave(el: Element) {
   ;(el as HTMLElement).style.height =
-    text.value[clickIndex.value].offsetHeight + (props.bordered && !props.ghost ? 1 : 0) + 'px'
+    contentRef.value[clickIndex.value].offsetHeight + (props.bordered && !props.ghost ? 1 : 0) + 'px'
   ;(el as HTMLElement).style.opacity = '1'
 }
 function onAfterLeave(el: Element) {
@@ -61,7 +74,7 @@ function emitValue(value: any) {
 }
 function onClick(key: number | string, index: number) {
   clickIndex.value = index
-  if (activeJudge(key)) {
+  if (activeCheck(key)) {
     if (Array.isArray(props.activeKey)) {
       const res = (props.activeKey as any[]).filter((actKey: number | string) => actKey !== key)
       emitValue(res)
@@ -81,7 +94,7 @@ function onKeyboard(e: KeyboardEvent, key: number | string, index: number) {
     onClick(key, index)
   }
 }
-function activeJudge(key: number | string): boolean {
+function activeCheck(key: number | string): boolean {
   if (Array.isArray(props.activeKey)) {
     return (props.activeKey as any[]).includes(key)
   } else {
@@ -90,7 +103,7 @@ function activeJudge(key: number | string): boolean {
 }
 const copyTxt = ref('Copy')
 function onCopy(index: number) {
-  navigator.clipboard.writeText(text.value[index].innerText || '').then(
+  navigator.clipboard.writeText(contentRef.value[index].innerText || '').then(
     () => {
       /* clipboard successfully set */
       copyTxt.value = 'Copied'
@@ -113,31 +126,57 @@ function onCopy(index: number) {
       'collapse-arrow-right': arrowPlacement === 'right',
       'collapse-ghost': ghost
     }"
+    :style="collapseStyle"
   >
-    <div class="m-collapse-item" v-for="(data, index) in collapseData" :key="index">
+    <div
+      class="m-collapse-item"
+      :class="{ 'collapse-item-disabled': data.disabled === undefined ? disabled : data.disabled }"
+      :style="itemStyle"
+      v-for="(data, index) in collapseData"
+      :key="index"
+    >
       <div
+        tabindex="0"
         class="m-collapse-header"
         :class="{ 'collapse-header-no-arrow': data.showArrow !== undefined ? !data.showArrow : !showArrow }"
-        tabindex="0"
-        @click="onClick(data.key || index, index)"
+        :style="headerStyle"
+        @click="
+          (data.disabled === undefined ? disabled : data.disabled) ? () => false : onClick(data.key || index, index)
+        "
         @keydown="onKeyboard($event, data.key || index, index)"
       >
-        <div class="collapse-arrow" v-if="data.showArrow !== undefined ? data.showArrow : showArrow">
-          <svg
-            focusable="false"
-            class="arrow-svg"
-            :class="{ 'arrow-rotate': activeJudge(data.key || index) }"
-            data-icon="right"
-            aria-hidden="true"
-            viewBox="64 64 896 896"
-          >
-            <path
-              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-            ></path>
-          </svg>
+        <div
+          v-if="data.showArrow !== undefined ? data.showArrow : showArrow"
+          class="collapse-arrow"
+          :style="arrowStyle"
+        >
+          <slot name="arrow" :key="data.key || index" :active="activeCheck(data.key || index)">
+            <svg
+              class="arrow-svg"
+              :class="{ 'arrow-rotate': activeCheck(data.key || index) }"
+              focusable="false"
+              data-icon="right"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+              viewBox="64 64 896 896"
+            >
+              <path
+                d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+              ></path>
+            </svg>
+          </slot>
         </div>
-        <div class="collapse-header" :style="`font-size: ${headerFontSize || fontSize}px;`">
-          <slot name="header" :header="data.header" :key="data.key || index">{{ data.header || '--' }}</slot>
+        <div class="collapse-header">
+          <slot name="header" :header="data.header" :key="data.key || index" :active="activeCheck(data.key || index)">
+            {{ data.header || '--' }}
+          </slot>
+        </div>
+        <div class="collapse-extra">
+          <slot name="extra" :extra="data.extra" :key="data.key || index" :active="activeCheck(data.key || index)">
+            {{ data.extra || extra }}
+          </slot>
         </div>
       </div>
       <Transition
@@ -148,16 +187,25 @@ function onCopy(index: number) {
         @after-leave="onAfterLeave"
       >
         <div
-          v-show="activeJudge(data.key || index)"
+          v-show="activeCheck(data.key || index)"
           class="m-collapse-content"
           :class="{ 'collapse-copyable': copyable }"
         >
           <div class="collapse-lang">
-            <slot name="lang" :lang="lang" :key="data.key || index">{{ lang }}</slot>
+            <slot name="lang" :lang="lang" :key="data.key || index" :active="activeCheck(data.key || index)">
+              {{ lang }}
+            </slot>
           </div>
           <Button class="collapse-copy" size="small" type="primary" @click="onCopy(index)">{{ copyTxt }}</Button>
-          <div ref="text" class="collapse-text" :style="`font-size: ${textFontSize || fontSize}px;`">
-            <slot name="text" :text="data.text" :key="data.key || index">{{ data.text }}</slot>
+          <div ref="contentRef" class="collapse-content" :style="contentStyle">
+            <slot
+              name="content"
+              :content="data.content"
+              :key="data.key || index"
+              :active="activeCheck(data.key || index)"
+            >
+              {{ data.content }}
+            </slot>
           </div>
         </div>
       </Transition>
@@ -178,6 +226,9 @@ function onCopy(index: number) {
   opacity: 0 !important;
 }
 .m-collapse {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+  line-height: 1.5714285714285714;
   background-color: rgba(0, 0, 0, 0.02);
   border: 1px solid #d9d9d9;
   border-bottom: 0;
@@ -192,48 +243,52 @@ function onCopy(index: number) {
       }
     }
     .m-collapse-header {
+      position: relative;
       display: flex;
       flex-wrap: nowrap;
       align-items: flex-start;
       padding: 12px 16px;
+      color: rgba(0, 0, 0, 0.88);
+      line-height: 1.5714285714285714;
       cursor: pointer;
       transition: all 0.3s;
       &:focus {
         outline: none;
       }
       .collapse-arrow {
+        font-size: 12px;
         height: 22px;
         display: flex;
         align-items: center;
-        padding-inline-end: 12px;
-        .arrow-svg {
-          display: inline-block;
-          width: 12px;
-          height: 12px;
-          fill: rgba(0, 0, 0, 0.88);
-          transition: transform 0.3s;
-        }
+        padding-right: 12px;
         .arrow-rotate {
           transform: rotate(90deg);
+        }
+        :deep(svg) {
+          fill: currentColor;
+          transition: transform 0.3s;
         }
       }
       .collapse-header {
         // 元素会根据自身的宽度与高度来确定尺寸，但是会伸长并吸收 flex 容器中额外的自由空间，也会缩短自身来适应 flex 容器
         flex: auto; // 相当于 flex: 1 1 auto
-        margin-inline-end: auto;
+        margin-right: auto;
         display: inline-block;
-        color: rgba(0, 0, 0, 0.88);
-        line-height: 1.5714285714285714;
       }
-      .ml24 {
-        margin-left: 24px;
+      .collapse-extra {
+        display: flex;
+        align-items: center;
+        :deep(svg) {
+          fill: currentColor;
+        }
       }
     }
     .collapse-header-no-arrow {
-      padding-inline-start: 12px;
+      padding-left: 12px;
     }
     .m-collapse-content {
       position: relative;
+      color: rgba(0, 0, 0, 0.88);
       background-color: #ffffff;
       border-top: 1px solid #d9d9d9;
       .collapse-lang {
@@ -253,9 +308,8 @@ function onCopy(index: number) {
         pointer-events: none;
         transition: opacity 0.3s;
       }
-      .collapse-text {
+      .collapse-content {
         padding: 16px;
-        color: rgba(0, 0, 0, 0.88);
         white-space: pre-wrap;
       }
     }
@@ -270,6 +324,12 @@ function onCopy(index: number) {
           pointer-events: auto;
         }
       }
+    }
+  }
+  .collapse-item-disabled {
+    .m-collapse-header {
+      color: rgba(0, 0, 0, 0.25);
+      cursor: not-allowed;
     }
   }
 }
@@ -292,8 +352,8 @@ function onCopy(index: number) {
 .collapse-arrow-right {
   .m-collapse-item .m-collapse-header .collapse-arrow {
     order: 1; // order 属性定义项目的排列顺序。数值越小，排列越靠前，默认为 0
-    padding-inline-end: 0;
-    padding-inline-start: 12px;
+    padding-right: 0;
+    padding-left: 12px;
   }
 }
 .collapse-ghost {

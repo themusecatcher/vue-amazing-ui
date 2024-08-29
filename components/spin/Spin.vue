@@ -58,7 +58,7 @@ const circlePath = computed(() => {
             <span class="spin-item"></span>
             <span class="spin-item"></span>
           </div>
-          <div class="m-spin-dot spin-rotate" :class="{ 'has-spin-tip': tip }">
+          <div class="m-spin-dot spin-rotate" :class="{ 'has-tip': tip }">
             <span class="spin-item"></span>
             <span class="spin-item"></span>
             <span class="spin-item"></span>
@@ -72,7 +72,7 @@ const circlePath = computed(() => {
             <span class="spin-item"></span>
             <span class="spin-item"></span>
           </div>
-          <div class="m-spin-line spin-rotate" :class="{ 'has-spin-tip': tip }">
+          <div class="m-spin-line spin-rotate" :class="{ 'has-tip': tip }">
             <span class="spin-item"></span>
             <span class="spin-item"></span>
             <span class="spin-item"></span>
@@ -299,7 +299,7 @@ const circlePath = computed(() => {
             -webkit-animation: spin-color-8 var(--speed) linear infinite;
           }
         }
-        .has-spin-tip {
+        .has-tip {
           left: 50%;
           transform: translateX(-50%) rotate(45deg);
         }
