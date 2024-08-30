@@ -194,6 +194,7 @@ function openChange (visible: boolean) {
 -- | -- | -- | --
 maxWidth | 弹出提示最大宽度，单位 `px` | string &#124; number | 120
 content | 展示的文本 | string &#124; slot | undefined
+contentStyle | 设置展示文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 tooltip | 弹出提示文本 | string &#124; slot | undefined
 tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bgColor | string | 弹出提示框背景颜色 | 'rgba(0, 0, 0, 0.85)'

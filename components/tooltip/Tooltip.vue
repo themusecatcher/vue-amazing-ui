@@ -5,6 +5,7 @@ import { useSlotsExist, rafTimeout, cancelRaf } from '../utils'
 interface Props {
   maxWidth?: string | number // 弹出提示最大宽度，单位 px
   content?: string // 展示的文本 string | slot
+  contentStyle?: CSSProperties // 设置展示文本的样式
   tooltip?: string // 弹出提示文本 string | slot
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
   bgColor?: string // 弹出提示框背景颜色
@@ -17,6 +18,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   maxWidth: 120,
   content: undefined,
+  contentStyle: () => ({}),
   tooltip: undefined,
   tooltipStyle: () => ({}),
   bgColor: 'rgba(0, 0, 0, 0.85)',
@@ -110,20 +112,22 @@ function onBlur() {
     <div
       ref="tooltipRef"
       tabindex="1"
-      class="m-tooltip-content"
+      class="m-tooltip-card"
       :class="{ 'tooltip-padding': arrow, 'tooltip-visible': visible && showTooltip }"
       :style="`max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
       @blur="trigger === 'click' && activeBlur ? onBlur() : () => false"
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
       @mouseleave="trigger === 'hover' ? onHide() : () => false"
     >
-      <div class="m-tooltip" :style="tooltipStyle">
+      <div class="tooltip-card" :style="tooltipStyle">
         <slot name="tooltip">{{ tooltip }}</slot>
       </div>
       <div v-if="arrow" class="tooltip-arrow"></div>
     </div>
     <span
       ref="contentRef"
+      class="tooltip-content"
+      :style="contentStyle"
       @click="trigger === 'click' ? toggleVisible() : () => false"
       @mouseenter="trigger === 'click' && visible ? onEnter() : () => false"
       @mouseleave="trigger === 'click' && visible ? onLeave() : () => false"
@@ -136,7 +140,7 @@ function onBlur() {
 .m-tooltip-wrap {
   position: relative;
   display: inline-block;
-  .m-tooltip-content {
+  .m-tooltip-card {
     position: absolute;
     z-index: 999;
     width: max-content;
@@ -146,7 +150,7 @@ function onBlur() {
     transition:
       transform 0.1s cubic-bezier(0.78, 0.14, 0.15, 0.86),
       opacity 0.1s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-    .m-tooltip {
+    .tooltip-card {
       min-width: 32px;
       min-height: 32px;
       padding: 6px 8px;
@@ -209,6 +213,9 @@ function onBlur() {
     pointer-events: auto;
     transform: scale(1);
     opacity: 1;
+  }
+  .tooltip-content {
+    display: inline-block;
   }
 }
 </style>

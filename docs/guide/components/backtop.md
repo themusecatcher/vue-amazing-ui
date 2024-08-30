@@ -1,4 +1,4 @@
-# 回到顶部 backtop
+# 回到顶部 BackTop
 
 <Watermark fullscreen content="Vue Amazing UI" />
 
@@ -13,7 +13,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-function onShow (show: boolean) {
+import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@ant-design/icons-vue'
+function onShow(show: boolean) {
   console.log('show', show)
 }
 const scrollContainer = ref()
@@ -23,7 +24,7 @@ const scrollContainer = ref()
 
 *BackTop 会找到首个可滚动的祖先元素并且监听它的滚动事件*
 
-<BackTop :right="100" @show="onShow" />
+<BackTop @show="onShow" />
 
 ::: details Show Code
 
@@ -34,7 +35,132 @@ function onShow (show: boolean) {
 }
 </script>
 <template>
-  <BackTop :right="100" @show="onShow" />
+  <BackTop @show="onShow" />
+</template>
+```
+
+:::
+
+## 自定义图标
+
+<BackTop :right="100">
+  <template #icon>
+    <DoubleLeftOutlined :rotate="90" />
+  </template>
+</BackTop>
+<BackTop :right="160">
+  <template #icon>
+    <VerticalAlignTopOutlined />
+  </template>
+</BackTop>
+<BackTop :right="220">
+  <template #icon>
+    <ArrowUpOutlined />
+  </template>
+</BackTop>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@ant-design/icons-vue'
+</script>
+<template>
+  <BackTop :right="100">
+    <template #icon>
+      <DoubleLeftOutlined :rotate="90" />
+    </template>
+  </BackTop>
+  <BackTop :right="160">
+    <template #icon>
+      <VerticalAlignTopOutlined />
+    </template>
+  </BackTop>
+  <BackTop :right="220">
+    <template #icon>
+      <ArrowUpOutlined />
+    </template>
+  </BackTop>
+</template>
+```
+
+:::
+
+## 自定义类型和形状
+
+<BackTop shape="square" :right="100" :bottom="100" />
+<BackTop shape="square" description="顶部" :right="160" :bottom="100" />
+<BackTop type="primary" :right="220" :bottom="100" />
+<BackTop type="primary" shape="square" :right="280" :bottom="100" />
+<BackTop type="primary" shape="square" description="顶部" :right="340" :bottom="100" />
+
+::: details Show Code
+
+```vue
+<template>
+  <BackTop shape="square" :right="100" :bottom="100" />
+  <BackTop shape="square" description="顶部" :right="160" :bottom="100" />
+  <BackTop type="primary" :right="220" :bottom="100" />
+  <BackTop type="primary" shape="square" :right="280" :bottom="100" />
+  <BackTop type="primary" shape="square" description="顶部" :right="340" :bottom="100" />
+</template>
+```
+
+:::
+
+## 文字描述
+
+<BackTop description="顶部" :right="100" :bottom="160" />
+
+::: details Show Code
+
+```vue
+<template>
+  <BackTop description="顶部" :right="100" :bottom="160" />
+</template>
+```
+
+:::
+
+## 悬浮提示
+
+<BackTop tooltip="回到顶部" :right="160" :bottom="160" />
+<BackTop
+  tooltip="回到顶部"
+  :tooltip-props="{
+    bgColor: '#fff',
+    tooltipStyle: {
+      padding: '8px 12px',
+      borderRadius: '12px',
+      fontSize: '16px',
+      color: 'rgba(0, 0, 0, 0.88)',
+      fontWeight: 500
+    }
+  }"
+  :right="220"
+  :bottom="160"
+/>
+
+::: details Show Code
+
+```vue
+<template>
+  <BackTop tooltip="回到顶部" :right="160" :bottom="160" />
+  <BackTop
+    tooltip="回到顶部"
+    :tooltip-props="{
+      bgColor: '#fff',
+      tooltipStyle: {
+        padding: '8px 12px',
+        borderRadius: '12px',
+        fontSize: '16px',
+        color: 'rgba(0, 0, 0, 0.88)',
+        fontWeight: 500
+      }
+    }"
+    :right="220"
+    :bottom="160"
+  />
 </template>
 ```
 
@@ -44,8 +170,8 @@ function onShow (show: boolean) {
 
 *自定义滚动时触发显示回到顶部的高度*
 
-<BackTop :bottom="100" :visibility-height="300">
-  <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px;">
+<BackTop :bottom="270" :visibility-height="300">
+  <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
     可视高度：300px
   </div>
 </BackTop>
@@ -54,8 +180,8 @@ function onShow (show: boolean) {
 
 ```vue
 <template>
-  <BackTop :bottom="100" :visibility-height="300">
-    <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px;">
+  <BackTop :bottom="270" :visibility-height="300">
+    <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
       可视高度：300px
     </div>
   </BackTop>
@@ -66,20 +192,16 @@ function onShow (show: boolean) {
 
 ## 自定义位置
 
-<BackTop :right="40" :bottom="160">
-  <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px;">
-    改变位置
-  </div>
+<BackTop :right="260" :bottom="270">
+  <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">改变位置</div>
 </BackTop>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <BackTop :right="40" :bottom="160">
-    <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px;">
-      改变位置
-    </div>
+  <BackTop :right="260" :bottom="270">
+    <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">改变位置</div>
   </BackTop>
 </template>
 ```
@@ -92,7 +214,7 @@ function onShow (show: boolean) {
 
 <br/>
 
-<BackTop :listen-to="scrollContainer" :bottom="220" :visibility-height="10">
+<BackTop :listen-to="scrollContainer" :bottom="330" :visibility-height="10">
   <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
 </BackTop>
 <div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
@@ -115,8 +237,10 @@ function onShow (show: boolean) {
 <br/>
 
 <Scrollbar style="width: 600px; height: 100px">
-  <BackTop :bottom="280" :visibility-height="10">
-    <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">监听 Scrollbar</div>
+  <BackTop :bottom="330" :right="260" :visibility-height="10">
+    <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
+      监听 Scrollbar
+    </div>
   </BackTop>
   这块应该写一个有意思的笑话。
   <br />
@@ -148,7 +272,7 @@ import { ref } from 'vue'
 const scrollContainer = ref()
 </script>
 <template>
-  <BackTop :listen-to="scrollContainer" :bottom="220" :visibility-height="10">
+  <BackTop :listen-to="scrollContainer" :bottom="330" :visibility-height="10">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
   </BackTop>
   <div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
@@ -165,8 +289,10 @@ const scrollContainer = ref()
   </div>
   <br />
   <Scrollbar style="width: 600px; height: 100px">
-    <BackTop :bottom="280" :visibility-height="10">
-      <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">监听 Scrollbar</div>
+    <BackTop :bottom="330" :right="260" :visibility-height="10">
+      <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
+        监听 Scrollbar
+      </div>
     </BackTop>
     这块应该写一个有意思的笑话。
     <br />
@@ -200,6 +326,12 @@ const scrollContainer = ref()
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
+icon | 自定义图标 | slot | undefined
+description | 文字描述 | string &#124; slot | undefined
+tooltip | 文字提示内容 | string &#124; slot | undefined
+tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
+type | 设置按钮类型 | 'default' &#124; 'primary' | 'default'
+shape | 设置按钮形状 | 'circle' &#124; 'square' | 'circle'
 bottom | `BackTop` 距离页面底部的高度，单位 `px` | number &#124; string | 40
 right | `BackTop` 距离页面右侧的宽度，单位 `px` | number &#124; string | 40
 zIndex | 设置 `BackTop` 的 `z-index` | number | 9

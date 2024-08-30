@@ -578,8 +578,10 @@ export function useSlotsExist(slotsName: string | string[] = 'default') {
         }
         return firstSlot.children.trim() !== ''
       } else {
-        if (firstSlot.children === null && typeof firstSlot.type !== 'string') {
-          return true
+        if (firstSlot.children === null) {
+          if (firstSlot.type === 'img' || typeof firstSlot.type !== 'string') {
+            return true
+          }
         } else {
           return Boolean(firstSlot.children)
         }

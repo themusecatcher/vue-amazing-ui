@@ -3,6 +3,13 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.6.3 <Tag color="volcano" size="small">2024-08-30</Tag>
+
+- 优化并更新 [回到顶部 Backtop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件，新增 `icon` `description` `tooltip` `tooltipProps` `type` `shape`
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `contentStyle` 属性
+- 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `buttonClass` 属性，删除 `loadingColor`	 属性
+- 组件库及文档代码优化
+
 ## 1.6.2 <Tag color="volcano" size="small">2024-08-29</Tag>
 
 - 优化并更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件，`top` 属性新增 `string` 类型
