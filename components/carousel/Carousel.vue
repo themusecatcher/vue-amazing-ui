@@ -492,7 +492,8 @@ defineExpose({
     left: 6px;
     top: 50%;
     transform: translateY(-50%);
-    fill: var(--arrow-color);
+    color: var(--arrow-color);
+    fill: currentColor;
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
@@ -507,7 +508,8 @@ defineExpose({
     right: 6px;
     top: 50%;
     transform: translateY(-50%);
-    fill: var(--arrow-color);
+    color: var(--arrow-color);
+    fill: currentColor;
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
