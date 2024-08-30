@@ -325,28 +325,21 @@ function onClick(e: Event) {
     <Space vertical>
       <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
       <Space>
+        <Button button-class="custom-btn-class1" ripple-color="#faad14" size="large" :loading="customLoading">
+          自定义样式
+        </Button>
         <Button
-          style="width: 150px; height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
+          button-class="custom-btn-class2"
           ripple-color="#faad14"
-          loading-color="#faad14"
+          type="primary"
           size="large"
           :loading="customLoading"
         >
           自定义样式
         </Button>
         <Button
-          style="width: 150px; height: 40px; font-size: 18px; background: #faad14; border-color: #faad14; color: #fff"
+          button-class="custom-btn-class1"
           ripple-color="#faad14"
-          loading-color="#fff"
-          size="large"
-          :loading="customLoading"
-        >
-          自定义样式
-        </Button>
-        <Button
-          style="height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
-          ripple-color="#faad14"
-          loading-color="#faad14"
           shape="circle"
           size="large"
           :loading="customLoading"
@@ -356,9 +349,9 @@ function onClick(e: Event) {
           </template>
         </Button>
         <Button
-          style="width: 150px; height: 40px; font-size: 18px; background: #faad14; border-color: #faad14; color: #fff"
+          button-class="custom-btn-class2"
           ripple-color="#faad14"
-          loading-color="#fff"
+          type="primary"
           shape="round"
           size="large"
           :loading="customLoading"
@@ -369,9 +362,8 @@ function onClick(e: Event) {
           Search
         </Button>
         <Button
-          style="height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
+          button-class="custom-btn-class1"
           ripple-color="#faad14"
-          loading-color="#faad14"
           shape="round"
           size="large"
           :loading="customLoading"
@@ -386,7 +378,7 @@ function onClick(e: Event) {
     <Space>
       <Button type="primary" ghost href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">
         <template #icon>
-          <img class="icon-img" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
+          <img style="width: 1em; height: 1em" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
         </template>
         Vue Amazing UI
       </Button>
@@ -476,8 +468,32 @@ function onClick(e: Event) {
   </div>
 </template>
 <style lang="less" scoped>
-.icon-img {
-  width: 1em;
-  height: 1em;
+.custom-btn-class1 {
+  height: 40px;
+  font-size: 18px;
+  border-color: #faad14;
+  color: #faad14;
+  &:hover {
+    color: #ffc53d !important;
+    border-color: #ffc53d;
+  }
+  &:active {
+    color: #d48806 !important;
+    border-color: #d48806;
+  }
+}
+.custom-btn-class2 {
+  height: 40px;
+  font-size: 18px;
+  background: #faad14;
+  border-color: #faad14;
+  &:hover {
+    background: #ffc53d;
+    border-color: #ffc53d;
+  }
+  &:active {
+    background: #d48806;
+    border-color: #d48806;
+  }
 }
 </style>

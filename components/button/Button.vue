@@ -8,13 +8,13 @@ interface Props {
   icon?: Slot // 设置按钮图标
   size?: 'small' | 'middle' | 'large' // 设置按钮尺寸
   ghost?: boolean // 按钮背景是否透明，仅当 type: 'primary' | 'danger' 时生效
+  buttonClass?: string // 设置按钮类名
   rippleColor?: string // 点击时的波纹颜色，一般不需要设置，默认会根据 type 自动匹配，主要用于自定义样式时且 type: 'default'
   href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
   target?: '_self' | '_blank' // 如何打开目标链接，相当于 a 链接的 target 属性，href 存在时生效
   disabled?: boolean // 是否禁用
   loading?: boolean // 是否加载中
   loadingType?: 'static' | 'dynamic' // 加载指示符类型
-  loadingColor?: string // 加载指示符颜色，一般不需要设置，默认会根据 type 自动匹配，主要用于自定义样式时且 type: 'default'
   block?: boolean // 是否将按钮宽度调整为其父宽度
 }
 withDefaults(defineProps<Props>(), {
@@ -24,12 +24,12 @@ withDefaults(defineProps<Props>(), {
   size: 'middle',
   ghost: false,
   rippleColor: undefined,
+  buttonClass: undefined,
   href: undefined,
   target: '_self',
   disabled: false,
   loading: false,
   loadingType: 'dynamic',
-  loadingColor: 'rgba(0, 0, 0, 0.88)',
   block: false
 })
 const presetRippleColors = {
@@ -80,9 +80,10 @@ function onWaveEnd() {
         'btn-ghost': ghost,
         'btn-block': block,
         'btn-disabled': disabled
-      }
+      },
+      buttonClass
     ]"
-    :style="`--ripple-color: ${rippleColor || presetRippleColors[type]}; --loading-color: ${loadingColor};`"
+    :style="`--ripple-color: ${rippleColor || presetRippleColors[type]};`"
     :disabled="disabled"
     :href="href ? href : 'javascript:void(0);'"
     :target="href ? target : '_self'"
@@ -91,7 +92,7 @@ function onWaveEnd() {
   >
     <div v-if="loading || !slotsExist.icon" class="btn-loading">
       <div v-if="!href && loadingType === 'static'" class="m-ring-circle">
-        <svg class="circle" viewBox="0 0 100 100">
+        <svg class="circle" width="1em" height="1em" fill="currentColor" viewBox="0 0 100 100">
           <path
             d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
             stroke-linecap="round"
@@ -101,12 +102,12 @@ function onWaveEnd() {
         </svg>
       </div>
       <div v-if="!href && loadingType === 'dynamic'" class="m-dynamic-circle">
-        <svg class="circle" viewBox="0 0 50 50" fill="currentColor">
+        <svg class="circle" viewBox="0 0 50 50" width="1em" height="1em" fill="currentColor">
           <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
         </svg>
       </div>
     </div>
-    <span v-else class="btn-icon">
+    <span v-if="!loading && slotsExist.icon" class="btn-icon">
       <slot name="icon"></slot>
     </span>
     <span v-if="slotsExist.default" class="btn-content">
@@ -150,8 +151,7 @@ function onWaveEnd() {
       display: inline-flex;
       justify-content: start;
       .circle {
-        width: 14px;
-        height: 14px;
+        fill: currentColor;
       }
     }
     .m-ring-circle {
@@ -170,6 +170,7 @@ function onWaveEnd() {
         animation: spin-circle 2s linear infinite;
         -webkit-animation: spin-circle 2s linear infinite;
         .path {
+          stroke: currentColor;
           stroke-width: 5;
           stroke-dasharray: 90, 150;
           stroke-dashoffset: 0;
@@ -203,6 +204,9 @@ function onWaveEnd() {
   .btn-content {
     display: inline-flex;
     align-items: center;
+    :deep(svg) {
+      fill: currentColor;
+    }
   }
   .button-wave {
     position: absolute;
@@ -246,33 +250,14 @@ function onWaveEnd() {
   &:hover {
     color: #4096ff !important;
     border-color: #4096ff;
-    .btn-icon {
-      :deep(svg) {
-        fill: #4096ff !important;
-      }
-    }
   }
   &:active {
     color: #0958d9 !important;
     border-color: #0958d9;
-    .btn-icon {
-      :deep(svg) {
-        fill: #0958d9 !important;
-      }
-    }
-  }
-  .btn-loading {
-    .m-ring-circle,
-    .m-dynamic-circle {
-      .circle .path {
-        stroke: var(--loading-color);
-      }
-    }
   }
   .btn-icon {
     :deep(svg) {
-      fill: var(--loading-color);
-      transition: fill 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
 }
@@ -282,48 +267,24 @@ function onWaveEnd() {
     color: #fff !important;
     background-color: #4096ff;
     border-color: #4096ff;
-    .btn-icon {
-      :deep(svg) {
-        fill: #fff !important;
-      }
-    }
   }
   &:active {
     color: #fff !important;
     background-color: #0958d9;
     border-color: #0958d9;
-    .btn-icon {
-      :deep(svg) {
-        fill: #fff !important;
-      }
-    }
   }
 }
 .btn-primary {
   color: #fff;
   background-color: @primary;
+  border-color: @primary;
   &:hover {
-    color: #fff;
     background-color: #4096ff;
     border-color: #4096ff;
   }
   &:active {
-    color: #fff;
     background-color: #0958d9;
     border-color: #0958d9;
-  }
-  .btn-loading {
-    .m-ring-circle,
-    .m-dynamic-circle {
-      .circle .path {
-        stroke: #fff;
-      }
-    }
-  }
-  .btn-icon {
-    :deep(svg) {
-      fill: #fff;
-    }
   }
 }
 .btn-danger {
@@ -331,27 +292,12 @@ function onWaveEnd() {
   background-color: @danger;
   border-color: @danger;
   &:hover {
-    color: #fff;
     background-color: #ff7875;
     border-color: #ff7875;
   }
   &:active {
-    color: #fff;
     background-color: #d9363e;
     border-color: #d9363e;
-  }
-  .btn-loading {
-    .m-ring-circle,
-    .m-dynamic-circle {
-      .circle .path {
-        stroke: #fff;
-      }
-    }
-  }
-  .btn-icon {
-    :deep(svg) {
-      fill: #fff;
-    }
   }
 }
 .btn-dashed {
@@ -367,50 +313,18 @@ function onWaveEnd() {
     color: rgba(0, 0, 0, 0.88);
     background-color: rgba(0, 0, 0, 0.15);
   }
-  .btn-loading {
-    .m-ring-circle,
-    .m-dynamic-circle {
-      .circle .path {
-        stroke: rgba(0, 0, 0, 0.88);
-      }
-    }
-  }
-  .btn-icon {
-    :deep(svg) {
-      fill: rgba(0, 0, 0, 0.88);
-    }
-  }
 }
 .btn-link {
   color: @primary;
   &:hover {
     color: #4096ff;
-    .btn-icon {
-      :deep(svg) {
-        fill: #4096ff;
-      }
-    }
   }
   &:active {
     color: #0958d9;
-    .btn-icon {
-      :deep(svg) {
-        fill: #0958d9;
-      }
-    }
-  }
-  .btn-loading {
-    .m-ring-circle,
-    .m-dynamic-circle {
-      .circle .path {
-        stroke: @primary;
-      }
-    }
   }
   .btn-icon {
     :deep(svg) {
-      fill: @primary;
-      transition: fill 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
 }
@@ -431,28 +345,19 @@ function onWaveEnd() {
   height: 40px;
   padding: 6.428571428571429px 15px;
   border-radius: 8px;
-  .btn-loading {
-    .m-ring-circle,
-    .m-dynamic-circle {
-      .circle {
-        width: 16px;
-        height: 16px;
-      }
-    }
-  }
 }
 .loading-small,
 .loading-middle {
   .btn-loading {
     margin-right: 8px;
-    width: 14px;
+    width: 1em;
     opacity: 1;
   }
 }
 .loading-large {
   .btn-loading {
     margin-right: 8px;
-    width: 16px;
+    width: 1em;
     opacity: 1;
   }
 }
@@ -527,33 +432,14 @@ function onWaveEnd() {
   &:hover {
     color: #4096ff;
     border-color: #4096ff;
-    .btn-icon {
-      :deep(svg) {
-        fill: #4096ff;
-      }
-    }
   }
   &:active {
     color: #0958d9;
     border-color: #0958d9;
-    .btn-icon {
-      :deep(svg) {
-        fill: #0958d9;
-      }
-    }
-  }
-  .btn-loading {
-    .m-ring-circle,
-    .m-dynamic-circle {
-      .circle .path {
-        stroke: @primary;
-      }
-    }
   }
   .btn-icon {
     :deep(svg) {
-      fill: @primary;
-      transition: fill 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
 }
@@ -564,33 +450,14 @@ function onWaveEnd() {
   &:hover {
     color: #ff7875;
     border-color: #ff7875;
-    .btn-icon {
-      :deep(svg) {
-        fill: #ff7875;
-      }
-    }
   }
   &:active {
     color: #d9363e;
     border-color: #d9363e;
-    .btn-icon {
-      :deep(svg) {
-        fill: #d9363e;
-      }
-    }
-  }
-  .btn-loading {
-    .m-ring-circle,
-    .m-dynamic-circle {
-      .circle .path {
-        stroke: @danger;
-      }
-    }
   }
   .btn-icon {
     :deep(svg) {
-      fill: @danger;
-      transition: fill 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
 }
@@ -607,29 +474,11 @@ function onWaveEnd() {
     border-color: #d9d9d9;
     color: rgba(0, 0, 0, 0.25) !important;
     background-color: rgba(0, 0, 0, 0.04);
-    .btn-icon {
-      :deep(svg) {
-        fill: rgba(0, 0, 0, 0.25) !important;
-      }
-    }
   }
   &.btn-text,
   &.btn-link {
     background-color: transparent;
     border: none;
-  }
-  .btn-loading {
-    .m-ring-circle,
-    .m-dynamic-circle {
-      .circle .path {
-        stroke: rgba(0, 0, 0, 0.25);
-      }
-    }
-  }
-  .btn-icon {
-    :deep(svg) {
-      fill: rgba(0, 0, 0, 0.25) !important;
-    }
   }
 }
 </style>

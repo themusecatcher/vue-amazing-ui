@@ -711,27 +711,25 @@ const size = ref('middle')
   <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
   <Space>
     <Button
-      style="width: 150px; height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
+      button-class="custom-btn-class1"
       ripple-color="#faad14"
-      loading-color="#faad14"
       size="large"
       :loading="customLoading"
     >
       自定义样式
     </Button>
     <Button
-      style="width: 150px; height: 40px; font-size: 18px; background: #faad14; border-color: #faad14; color: #fff"
+      button-class="custom-btn-class2"
       ripple-color="#faad14"
-      loading-color="#fff"
+      type="primary"
       size="large"
       :loading="customLoading"
     >
       自定义样式
     </Button>
     <Button
-      style="height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
+      button-class="custom-btn-class1"
       ripple-color="#faad14"
-      loading-color="#faad14"
       shape="circle"
       size="large"
       :loading="customLoading"
@@ -741,9 +739,9 @@ const size = ref('middle')
       </template>
     </Button>
     <Button
-      style="width: 150px; height: 40px; font-size: 18px; background: #faad14; border-color: #faad14; color: #fff"
+      button-class="custom-btn-class2"
       ripple-color="#faad14"
-      loading-color="#fff"
+      type="primary"
       shape="round"
       size="large"
       :loading="customLoading"
@@ -754,9 +752,8 @@ const size = ref('middle')
       Search
     </Button>
     <Button
-      style="height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
+      button-class="custom-btn-class1"
       ripple-color="#faad14"
-      loading-color="#faad14"
       shape="round"
       size="large"
       :loading="customLoading"
@@ -773,6 +770,7 @@ const size = ref('middle')
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 const customLoading = ref(false)
 </script>
 <template>
@@ -780,27 +778,25 @@ const customLoading = ref(false)
     <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
     <Space>
       <Button
-        style="width: 150px; height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
+        button-class="custom-btn-class1"
         ripple-color="#faad14"
-        loading-color="#faad14"
         size="large"
         :loading="customLoading"
       >
         自定义样式
       </Button>
       <Button
-        style="width: 150px; height: 40px; font-size: 18px; background: #faad14; border-color: #faad14; color: #fff"
+        button-class="custom-btn-class2"
         ripple-color="#faad14"
-        loading-color="#fff"
+        type="primary"
         size="large"
         :loading="customLoading"
       >
         自定义样式
       </Button>
       <Button
-        style="height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
+        button-class="custom-btn-class1"
         ripple-color="#faad14"
-        loading-color="#faad14"
         shape="circle"
         size="large"
         :loading="customLoading"
@@ -810,9 +806,9 @@ const customLoading = ref(false)
         </template>
       </Button>
       <Button
-        style="width: 150px; height: 40px; font-size: 18px; background: #faad14; border-color: #faad14; color: #fff"
+        button-class="custom-btn-class2"
         ripple-color="#faad14"
-        loading-color="#fff"
+        type="primary"
         shape="round"
         size="large"
         :loading="customLoading"
@@ -823,9 +819,8 @@ const customLoading = ref(false)
         Search
       </Button>
       <Button
-        style="height: 40px; font-size: 18px; border-color: #faad14; color: #faad14"
+        button-class="custom-btn-class1"
         ripple-color="#faad14"
-        loading-color="#faad14"
         shape="round"
         size="large"
         :loading="customLoading"
@@ -837,6 +832,36 @@ const customLoading = ref(false)
     </Space>
   </Space>
 </template>
+<style lang="less" scoped>
+.custom-btn-class1 {
+  height: 40px;
+  font-size: 18px;
+  border-color: #faad14;
+  color: #faad14;
+  &:hover {
+    color: #ffc53d !important;
+    border-color: #ffc53d;
+  }
+  &:active {
+    color: #d48806 !important;
+    border-color: #d48806;
+  }
+}
+.custom-btn-class2 {
+  height: 40px;
+  font-size: 18px;
+  background: #faad14;
+  border-color: #faad14;
+  &:hover {
+    background: #ffc53d;
+    border-color: #ffc53d;
+  }
+  &:active {
+    background: #d48806;
+    border-color: #d48806;
+  }
+}
+</style>
 ```
 
 :::
@@ -846,7 +871,10 @@ const customLoading = ref(false)
 <Space>
   <Button type="primary" ghost href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">
     <template #icon>
-      <img class="icon-img" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
+      <img
+        style="width: 1em; height: 1em"
+        src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg"
+      />
     </template>
     Vue Amazing UI
   </Button>
@@ -862,13 +890,6 @@ const customLoading = ref(false)
   </Button>
 </Space>
 
-<style lang="less" scoped>
-.icon-img {
-  width: 1em;
-  height: 1em;
-}
-</style>
-
 ::: details Show Code
 
 ```vue
@@ -876,7 +897,10 @@ const customLoading = ref(false)
   <Space>
     <Button type="primary" ghost href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">
       <template #icon>
-        <img class="icon-img" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
+        <img
+          style="width: 1em; height: 1em"
+          src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg"
+        />
       </template>
       Vue Amazing UI
     </Button>
@@ -892,12 +916,6 @@ const customLoading = ref(false)
     </Button>
   </Space>
 </template>
-<style lang="less" scoped>
-.icon-img {
-  width: 1em;
-  height: 1em;
-}
-</style>
 ```
 
 :::
@@ -1087,6 +1105,37 @@ function onClick(e: Event) {
 
 :::
 
+<style lang="less" scoped>
+.custom-btn-class1 {
+  height: 40px;
+  font-size: 18px;
+  border-color: #faad14;
+  color: #faad14;
+  &:hover {
+    color: #ffc53d !important;
+    border-color: #ffc53d;
+  }
+  &:active {
+    color: #d48806 !important;
+    border-color: #d48806;
+  }
+}
+.custom-btn-class2 {
+  height: 40px;
+  font-size: 18px;
+  background: #faad14;
+  border-color: #faad14;
+  &:hover {
+    background: #ffc53d;
+    border-color: #ffc53d;
+  }
+  &:active {
+    background: #d48806;
+    border-color: #d48806;
+  }
+}
+</style>
+
 ## APIs
 
 ### Button
@@ -1098,13 +1147,13 @@ shape | 设置按钮形状 | 'default' &#124; 'circle' &#124; 'round' | 'default
 icon | 设置按钮图标 | slot | undefined
 size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 ghost | 按钮背景是否透明，仅当 `type: 'primary' \| 'danger'` 时生效 | boolean | false
+buttonClass | 设置按钮类名 | string | undefined
 rippleColor | 点击时的波纹颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | undefined
 href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | undefined
 target | 如何打开目标链接，相当于 `a` 链接的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self'
 disabled | 是否禁用 | boolean | false
 loading | 是否加载中 | boolean | false
 loadingType | 加载指示符类型 | 'static' &#124; 'dynamic' | 'dynamic'
-loadingColor | 加载指示符颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | 'rgba(0, 0, 0, 0.88)'
 block | 是否将按钮宽度调整为其父宽度 | boolean | false
 
 ## Events

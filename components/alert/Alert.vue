@@ -314,7 +314,7 @@ function onClose(e: Event): void {
     color: @themeColor;
     .icon-svg,
     :deep(svg) {
-      fill: @themeColor; // 可选，用于防止 vitepress 文档样式覆盖，下同
+      fill: currentColor;
     }
   }
 }
@@ -326,7 +326,7 @@ function onClose(e: Event): void {
     color: #52c41a;
     .icon-svg,
     :deep(svg) {
-      fill: #52c41a;
+      fill: currentColor;
     }
   }
 }
@@ -338,7 +338,7 @@ function onClose(e: Event): void {
     color: #faad14;
     .icon-svg,
     :deep(svg) {
-      fill: #faad14;
+      fill: currentColor;
     }
   }
 }
@@ -350,7 +350,7 @@ function onClose(e: Event): void {
     color: #ff4d4f;
     .icon-svg,
     :deep(svg) {
-      fill: #ff4d4f;
+      fill: currentColor;
     }
   }
 }
