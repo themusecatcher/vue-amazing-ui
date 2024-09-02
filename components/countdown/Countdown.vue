@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useSlotsExist } from '../utils'
 interface Props {
   title?: string // 倒计时标题 string | slot
   titleStyle?: CSSProperties // 设置标题的样式
-  prefix?: string // 倒计时数值的前缀 string | slot
-  suffix?: string // 倒计时数值的后缀 string | slot
+  prefix?: string // 倒计时的前缀 string | slot
+  suffix?: string // 倒计时的后缀 string | slot
   finishedText?: string // 完成后的展示文本 string | slot
-  future?: boolean // 是否为未来某时刻；为 false 表示相对剩余时间戳
-  format?: string // 格式化倒计时展示，(Y/YY：年，M/MM：月，D/DD：日，H/HH：时，m/mm：分钟，s/ss：秒，SSS：毫秒)
-  value?: number // 倒计时数值，支持设置未来某时刻的时间戳 (ms) 或 相对剩余时间戳 (ms)
-  valueStyle?: CSSProperties // 设置数值的样式
+  future?: boolean // value 是否为未来某时刻的时间戳；为 false 表示相对剩余时间戳
+  format?: string // 倒计时展示格式，(Y/YY：年，M/MM：月，D/DD：日，H/HH：时，m/mm：分钟，s/ss：秒，SSS：毫秒)
+  value?: number // 倒计时数值，支持设置未来某时刻的时间戳 (ms) 或 相对剩余时间 (ms)
+  valueStyle?: CSSProperties // 设置倒计时的样式
+  active?: boolean // 是否处于计时状态，仅当 future: false 时生效
 }
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
@@ -22,9 +23,17 @@ const props = withDefaults(defineProps<Props>(), {
   future: true,
   format: 'HH:mm:ss',
   value: 0,
-  valueStyle: () => ({})
+  valueStyle: () => ({}),
+  active: true
 })
-const slotsExist = useSlotsExist(['prefix', 'suffix'])
+const futureTime = ref(0) // 未来截止时间戳
+const remainingTime = ref(0) // 剩余时间戳
+const rafID = ref<number | null>(null) // requestAnimationFrame 返回的请求 ID 是一个 long 类型整数值，是在回调列表里的唯一标识符
+const emit = defineEmits(['finish'])
+const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
+const showTitle = computed(() => {
+  return slotsExist.title || props.title
+})
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
 })
@@ -42,38 +51,71 @@ const showType = computed(() => {
     showSecond: props.format.includes('s')
   }
 })
-const futureTime = ref(0) // 未来截止时间戳
-const restTime = ref(0) // 剩余时间戳
-const emit = defineEmits(['finish'])
-function CountDown() {
-  if (futureTime.value > Date.now()) {
-    restTime.value = futureTime.value - Date.now()
-    requestAnimationFrame(CountDown)
-  } else {
-    restTime.value = 0
-    emit('finish')
+watch(
+  () => props.active,
+  (to: boolean) => {
+    if (!props.future) {
+      if (to) {
+        futureTime.value = remainingTime.value + Date.now()
+        rafID.value = requestAnimationFrame(CountDown)
+      } else {
+        rafID.value && cancelAnimationFrame(rafID.value)
+        rafID.value = null
+      }
+    }
   }
-}
-watchEffect(() => {
+)
+watch(
+  () => [props.value, props.future],
+  () => {
+    initCountdown()
+  },
+  {
+    deep: true
+  }
+)
+onMounted(() => {
+  initCountdown()
+})
+function initCountdown() {
   // 只有数值类型的值，且是有穷的（finite），才返回 true
   if (Number.isFinite(props.value)) {
     // 检测传入的参数是否是一个有穷数
     if (props.future) {
       // 未来某时刻的时间戳，单位ms
-      if (props.value >= Date.now()) {
+      if (props.value > Date.now()) {
         futureTime.value = props.value
+      } else {
+        finish()
       }
     } else {
       // 相对剩余时间，单位 ms
-      if (props.value >= 0) {
+      if (props.value > 0) {
         futureTime.value = props.value + Date.now()
+      } else {
+        finish()
       }
     }
-    requestAnimationFrame(CountDown)
+    remainingTime.value = futureTime.value - Date.now()
+    if (props.future || (!props.future && props.active)) {
+      rafID.value = requestAnimationFrame(CountDown)
+    }
   } else {
-    restTime.value = 0
+    remainingTime.value = 0
   }
-})
+}
+function finish() {
+  remainingTime.value = 0
+  emit('finish')
+}
+function CountDown() {
+  if (futureTime.value > Date.now()) {
+    remainingTime.value = futureTime.value - Date.now()
+    rafID.value = requestAnimationFrame(CountDown)
+  } else {
+    finish()
+  }
+}
 // 前置补 0
 function padZero(value: number, targetLength: number = 2): string {
   // 左侧补零函数
@@ -126,26 +168,34 @@ function timeFormat(time: number): string {
   }
   return showTime
 }
+defineExpose({
+  reset: resetCountdown
+})
+function resetCountdown() {
+  // 重置倒计时
+  console.log('reset')
+  initCountdown()
+}
 </script>
 <template>
   <div class="m-countdown">
-    <div class="countdown-title" :style="titleStyle">
+    <div v-if="showTitle" class="countdown-title" :style="titleStyle">
       <slot name="title">{{ props.title }}</slot>
     </div>
     <div class="countdown-time">
       <template v-if="showPrefix">
-        <span class="time-prefix" v-if="showPrefix || restTime > 0">
+        <span class="time-prefix" v-if="showPrefix || remainingTime > 0">
           <slot name="prefix">{{ prefix }}</slot>
         </span>
       </template>
-      <span v-if="finishedText && restTime === 0" class="time-value" :style="valueStyle">
+      <span v-if="finishedText && remainingTime === 0" class="time-value" :style="valueStyle">
         <slot name="finish">{{ finishedText }}</slot>
       </span>
-      <span v-else-if="Number.isFinite(restTime) && restTime >= 0" class="time-value" :style="valueStyle">
-        {{ timeFormat(restTime) }}
+      <span v-else class="time-value" :style="valueStyle">
+        {{ timeFormat(remainingTime) }}
       </span>
       <template v-if="showSuffix">
-        <span class="time-suffix" v-if="showSuffix || restTime > 0">
+        <span class="time-suffix" v-if="showSuffix || remainingTime > 0">
           <slot name="suffix">{{ suffix }}</slot>
         </span>
       </template>
