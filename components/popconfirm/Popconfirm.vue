@@ -280,34 +280,34 @@ function onOk(e: Event) {
         align-items: start;
         .m-popconfirm-icon {
           flex: none;
+          font-size: 14px;
           line-height: 1;
           padding-top: 4px;
           display: inline-block;
           text-align: center;
           .icon-svg {
             display: inline-block;
-            line-height: 1;
+            fill: currentColor;
+          }
+          :deep(svg) {
+            fill: currentColor;
           }
         }
         .icon-warning :deep(svg) {
           color: #faad14;
-          fill: #faad14;
         }
         .icon-info :deep(svg) {
           color: @themeColor;
-          fill: @themeColor;
         }
         .icon-success :deep(svg) {
           color: #52c41a;
-          fill: #52c41a;
         }
         .icon-danger :deep(svg) {
           color: #ff4d4f;
-          fill: #ff4d4f;
         }
         .popconfirm-title {
           flex: auto;
-          margin-inline-start: 8px;
+          margin-left: 8px;
         }
         .title-font-weight {
           font-weight: 600;
@@ -315,14 +315,14 @@ function onOk(e: Event) {
       }
       .popconfirm-description {
         position: relative;
-        margin-inline-start: 22px;
+        margin-left: 22px;
         margin-bottom: 8px;
         font-size: 14px;
       }
       .popconfirm-buttons {
         text-align: end;
         .m-btn {
-          margin-inline-start: 8px;
+          margin-left: 8px;
         }
       }
     }

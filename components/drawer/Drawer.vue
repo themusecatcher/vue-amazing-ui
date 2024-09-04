@@ -70,6 +70,12 @@ const slotsExist = useSlotsExist(['title', 'extra', 'footer'])
 const showHeader = computed(() => {
   return slotsExist.title || slotsExist.extra || props.title || props.extra || props.closable
 })
+const showTitle = computed(() => {
+  return slotsExist.title || props.title
+})
+const showExtra = computed(() => {
+  return slotsExist.extra || props.extra
+})
 const showFooter = computed(() => {
   return slotsExist.footer || props.footer
 })
@@ -108,7 +114,6 @@ function onClose(e: Event) {
                 <svg
                   v-if="closable"
                   focusable="false"
-                  @click="onClose"
                   class="svg-close"
                   data-icon="close"
                   width="1em"
@@ -116,16 +121,17 @@ function onClose(e: Event) {
                   fill="currentColor"
                   aria-hidden="true"
                   viewBox="64 64 896 896"
+                  @click="onClose"
                 >
                   <path
                     d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
                   ></path>
                 </svg>
-                <p class="header-title">
+                <div v-if="showTitle" class="header-title">
                   <slot name="title">{{ title }}</slot>
-                </p>
+                </div>
               </div>
-              <div class="header-extra">
+              <div v-if="showExtra" class="header-extra">
                 <slot name="extra">{{ extra }}</slot>
               </div>
             </div>
@@ -134,7 +140,7 @@ function onClose(e: Event) {
                 <slot></slot>
               </div>
             </Scrollbar>
-            <div v-show="showFooter" class="m-drawer-footer" :class="footerClass" :style="footerStyle">
+            <div v-if="showFooter" class="m-drawer-footer" :class="footerClass" :style="footerStyle">
               <slot name="footer">{{ footer }}</slot>
             </div>
           </div>
@@ -142,8 +148,8 @@ function onClose(e: Event) {
             <div v-show="showHeader" class="m-drawer-header" :class="headerClass" :style="headerStyle">
               <div class="m-header-title">
                 <svg
+                  v-if="closable"
                   focusable="false"
-                  @click="onClose"
                   class="svg-close"
                   data-icon="close"
                   width="1em"
@@ -151,16 +157,17 @@ function onClose(e: Event) {
                   fill="currentColor"
                   aria-hidden="true"
                   viewBox="64 64 896 896"
+                  @click="onClose"
                 >
                   <path
                     d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
                   ></path>
                 </svg>
-                <p class="header-title">
+                <div v-if="showTitle" class="header-title">
                   <slot name="title">{{ title }}</slot>
-                </p>
+                </div>
               </div>
-              <div class="header-extra">
+              <div v-if="showExtra" class="header-extra">
                 <slot name="extra">{{ extra }}</slot>
               </div>
             </div>
@@ -169,7 +176,7 @@ function onClose(e: Event) {
                 <slot></slot>
               </div>
             </Scrollbar>
-            <div v-show="showFooter" class="m-drawer-footer" :class="footerClass" :style="footerStyle">
+            <div v-if="showFooter" class="m-drawer-footer" :class="footerClass" :style="footerStyle">
               <slot name="footer">{{ footer }}</slot>
             </div>
           </div>
@@ -262,14 +269,15 @@ function onClose(e: Event) {
             min-height: 0;
             .svg-close {
               display: inline-block;
-              margin-inline-end: 12px;
-              width: 16px;
-              height: 16px;
-              fill: rgba(0, 0, 0, 0.45);
+              margin-right: 12px;
+              font-size: 16px;
+              font-weight: 600;
+              color: rgba(0, 0, 0, 0.45);
+              fill: currentColor;
               cursor: pointer;
-              transition: fill 0.2s;
+              transition: color 0.2s;
               &:hover {
-                fill: rgba(0, 0, 0, 0.88);
+                color: rgba(0, 0, 0, 0.88);
               }
             }
             .header-title {

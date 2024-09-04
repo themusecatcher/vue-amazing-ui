@@ -1,31 +1,41 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, nextTick } from 'vue'
+import type { VNode, CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
-  message?: string // 全局通知提醒标题，优先级低于 Notification 中的 message
-  duration?: number | null // 自动关闭的延时时长，单位 ms；设置 null 时，不自动关闭
+  title?: string // 通知提醒标题，优先级低于 Notification 中的 title
+  description?: string // 通知提醒内容，优先级低于 Notification 中的 description
+  duration?: number | null // 自动关闭的延时时长，单位 ms；设置 null 时，不自动关闭，优先级低于 Notification 中的 duration
   top?: number // 消息从顶部弹出时，距离顶部的位置，单位 px
   bottom?: number // 消息从底部弹出时，距离底部的位置，单位 px
   placement?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' // 消息弹出位置，优先级低于 Notification 中的 placement
 }
 const props = withDefaults(defineProps<Props>(), {
-  message: '温馨提示',
+  title: undefined,
+  description: undefined,
   duration: 4500,
   top: 24,
   bottom: 24,
   placement: 'topRight'
 })
 interface Notification {
-  message?: string // 通知提醒标题
-  description: string // 通知提醒内容
+  title?: string // 通知提醒标题
+  description?: string // 通知提醒内容
+  icon?: VNode // 自定义图标
+  class?: string // 自定义类名
+  style?: CSSProperties // 自定义样式
+  duration?: number | null // 自动关闭的延时时长，单位 ms；设置 null 时，不自动关闭
   placement?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' // 通知提醒弹出位置
+  onClose?: Function // 关闭时的回调函数
 }
 const resetTimer = ref()
 const hideIndex = ref<number[]>([])
 const hideTimers = ref<any[]>([])
 const notificationData = ref<any[]>([])
+const closeDuration = ref(null) // 自动关闭延时
 const place = ref()
 const notification = ref()
+const emit = defineEmits(['close'])
 const topStyle = computed(() => {
   if (['topRight', 'topLeft'].includes(place.value)) {
     return {
@@ -46,77 +56,96 @@ const clear = computed(() => {
   // 所有提示是否已经全部变为 false
   return hideIndex.value.length === notificationData.value.length
 })
-watch(clear, (to, from) => {
-  // 所有提示都消失后重置
-  if (!from && to) {
-    resetTimer.value = rafTimeout(() => {
-      hideIndex.value.splice(0)
-      notificationData.value.splice(0)
-    }, 300)
+watch(
+  clear,
+  (to, from) => {
+    // 所有提示都消失后重置
+    if (!from && to) {
+      resetTimer.value = rafTimeout(() => {
+        hideIndex.value.splice(0)
+        notificationData.value.splice(0)
+      }, 300)
+    }
+  },
+  {
+    flush: 'post'
   }
-})
+)
 watchEffect(() => {
   place.value = props.placement
 })
 function onEnter(index: number) {
+  stopAutoClose(index)
+}
+function onLeave(index: number) {
+  if (!hideIndex.value.includes(index)) {
+    autoClose(index)
+  }
+}
+function stopAutoClose(index: number) {
   hideTimers.value[index] && cancelRaf(hideTimers.value[index])
   hideTimers.value[index] = null
 }
-function onLeave(index: number) {
-  if (props.duration) {
+function autoClose(index: number) {
+  if (closeDuration.value !== null) {
     hideTimers.value[index] = rafTimeout(() => {
       onClose(index)
-    }, props.duration)
+    }, closeDuration.value)
   }
+}
+async function onClose(index: number) {
+  notification.value[index].style.maxHeight = notification.value[index].offsetHeight + 'px'
+  await nextTick()
+  hideIndex.value.push(index)
+  notificationData.value[index].onClose && notificationData.value[index].onClose()
+  emit('close')
 }
 function show() {
   resetTimer.value && cancelRaf(resetTimer.value)
   hideTimers.value.push(null)
   const index = notificationData.value.length - 1
-  nextTick(() => {
-    notification.value[index].style.height = notification.value[index].offsetHeight + 'px'
-    notification.value[index].style.opacity = 1
-  })
-  if (notificationData.value[index].placement) {
-    place.value = notificationData.value[index].placement
+  const last = notificationData.value[index]
+  if (last.placement) {
+    place.value = last.placement
   }
-  if (props.duration) {
-    hideTimers.value[index] = rafTimeout(() => {
-      onClose(index)
-    }, props.duration)
+  if (last.duration !== null) {
+    closeDuration.value = last.duration || props.duration
+    autoClose(index)
+  } else {
+    closeDuration.value = null
   }
 }
-function open(data: Notification) {
+function open(notification: Notification) {
   notificationData.value.push({
-    ...data,
+    ...notification,
     mode: 'open'
   })
   show()
 }
-function info(data: Notification) {
+function info(notification: Notification) {
   notificationData.value.push({
-    ...data,
+    ...notification,
     mode: 'info'
   })
   show()
 }
-function success(data: Notification) {
+function success(notification: Notification) {
   notificationData.value.push({
-    ...data,
+    ...notification,
     mode: 'success'
   })
   show()
 }
-function error(data: Notification) {
+function error(notification: Notification) {
   notificationData.value.push({
-    ...data,
+    ...notification,
     mode: 'error'
   })
   show()
 }
-function warning(data: Notification) {
+function warning(notification: Notification) {
   notificationData.value.push({
-    ...data,
+    ...notification,
     mode: 'warning'
   })
   show()
@@ -128,11 +157,6 @@ defineExpose({
   error,
   warning
 })
-const emit = defineEmits(['close'])
-function onClose(index: number) {
-  hideIndex.value.push(index)
-  emit('close')
-}
 </script>
 <template>
   <div class="m-notification-wrap" :class="`notification-${place}`" :style="{ ...topStyle, ...bottomStyle }">
@@ -140,90 +164,107 @@ function onClose(index: number) {
       <div
         v-show="!hideIndex.includes(index)"
         ref="notification"
-        class="m-notification"
-        v-for="(data, index) in notificationData"
+        class="m-notification-content"
+        :class="[`icon-${notification.mode}`, notification.class]"
+        :style="notification.style"
+        v-for="(notification, index) in notificationData"
         :key="index"
         @mouseenter="onEnter(index)"
         @mouseleave="onLeave(index)"
       >
-        <div class="m-notification-content">
-          <svg
-            v-if="data.mode === 'info'"
-            class="icon-svg icon-info"
-            viewBox="64 64 896 896"
-            data-icon="info-circle"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
-            ></path>
-            <path
-              d="M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
-            ></path>
-          </svg>
-          <svg
-            v-if="data.mode === 'success'"
-            class="icon-svg icon-success"
-            viewBox="64 64 896 896"
-            data-icon="check-circle"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0 0 51.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z"
-            ></path>
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
-            ></path>
-          </svg>
-          <svg
-            v-if="data.mode === 'warning'"
-            class="icon-svg icon-warning"
-            viewBox="64 64 896 896"
-            data-icon="exclamation-circle"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
-            ></path>
-            <path
-              d="M464 688a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"
-            ></path>
-          </svg>
-          <svg
-            v-if="data.mode === 'error'"
-            class="icon-svg icon-error"
-            viewBox="64 64 896 896"
-            data-icon="close-circle"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z"
-            ></path>
-            <path
-              d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
-            ></path>
-          </svg>
-          <div :class="['notification-title', { mb4: data.mode !== 'open', ml36: data.mode !== 'open' }]">
-            {{ data.message || message }}
-          </div>
-          <p :class="['notification-description', { ml36: data.mode !== 'open' }]">{{ data.description || '--' }}</p>
+        <component v-if="notification.icon" :is="notification.icon" class="icon-svg" />
+        <svg
+          v-else-if="notification.mode === 'info'"
+          class="icon-svg"
+          viewBox="64 64 896 896"
+          data-icon="info-circle"
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+          ></path>
+          <path
+            d="M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+          ></path>
+        </svg>
+        <svg
+          v-else-if="notification.mode === 'success'"
+          class="icon-svg"
+          viewBox="64 64 896 896"
+          data-icon="check-circle"
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0 0 51.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z"
+          ></path>
+          <path
+            d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+          ></path>
+        </svg>
+        <svg
+          v-else-if="notification.mode === 'warning'"
+          class="icon-svg"
+          viewBox="64 64 896 896"
+          data-icon="exclamation-circle"
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+          ></path>
+          <path
+            d="M464 688a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"
+          ></path>
+        </svg>
+        <svg
+          v-else-if="notification.mode === 'error'"
+          class="icon-svg"
+          viewBox="64 64 896 896"
+          data-icon="close-circle"
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z"
+          ></path>
+          <path
+            d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+          ></path>
+        </svg>
+        <div class="notification-content">
+          <div class="notification-title">{{ notification.title || title }}</div>
+          <div class="notification-description">{{ notification.description || description }}</div>
+        </div>
+        <a tabindex="0" class="notification-close" @click="onClose(index)">
           <svg
             class="close-svg"
             viewBox="64 64 896 896"
             data-icon="close"
+            width="1em"
+            height="1em"
+            fill="currentColor"
             aria-hidden="true"
             focusable="false"
-            @click="onClose(index)"
           >
             <path
               d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
             ></path>
           </svg>
-        </div>
+        </a>
       </div>
     </TransitionGroup>
   </div>
@@ -235,16 +276,19 @@ function onClose(index: number) {
 .left-move,
 .left-enter-active,
 .left-leave-active {
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.right-leave-to,
+.left-leave-to {
+  max-height: 0 !important;
+  opacity: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 .right-enter-from {
   transform: translateX(100%);
   opacity: 0;
-}
-.right-leave-to,
-.left-leave-to {
-  height: 0 !important;
-  opacity: 0 !important;
 }
 /* 确保将离开的元素从布局流中删除
   以便能够正确地计算移动的动画。 */
@@ -266,42 +310,35 @@ function onClose(index: number) {
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1.5714285714285714;
-  margin-inline-end: 24px;
-  .m-notification {
-    overflow: hidden;
+  margin-right: 24px;
+  .m-notification-content {
+    position: relative;
+    display: flex;
+    width: 384px;
+    max-width: calc(100vw - 48px);
     margin-bottom: 16px;
+    margin-left: auto;
+    padding: 20px 24px;
+    overflow: hidden;
+    line-height: 1.5714285714285714;
+    word-break: break-all;
     background: #fff;
     border-radius: 8px;
     box-shadow:
       0 6px 16px 0 rgba(0, 0, 0, 0.08),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
-    .m-notification-content {
-      position: relative;
-      width: 384px;
-      max-width: calc(100vw - 48px);
-      margin-inline-start: auto;
-      padding: 20px 24px;
-      line-height: 1.5714285714285714;
-      word-break: break-all;
-      .icon-svg {
-        position: absolute;
-        display: inline-block;
-        width: 24px;
-        height: 24px;
+    :deep(.icon-svg) {
+      display: inline-block;
+      font-size: 24px;
+      fill: currentColor;
+      margin-right: 12px;
+      svg {
+        fill: currentColor;
       }
-      .icon-info {
-        fill: @themeColor;
-      }
-      .icon-success {
-        fill: #52c41a;
-      }
-      .icon-warning {
-        fill: #faad14;
-      }
-      .icon-error {
-        fill: #ff4d4f;
-      }
+    }
+    .notification-content {
+      width: 100%;
       .notification-title {
         padding-right: 24px;
         margin-bottom: 8px;
@@ -312,26 +349,54 @@ function onClose(index: number) {
       .notification-description {
         font-size: 14px;
       }
-      .mb4 {
-        margin-bottom: 4px;
-      }
-      .ml36 {
-        margin-left: 36px;
-      }
+    }
+    .notification-close {
+      position: absolute;
+      top: 20px;
+      inset-inline-end: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(0, 0, 0, 0.45);
+      outline: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      transition:
+        background-color 0.2s,
+        color 0.2s;
       .close-svg {
         display: inline-block;
-        position: absolute;
-        top: 25px;
-        right: 24px;
-        width: 14px;
-        height: 14px;
-        fill: rgba(0, 0, 0, 0.45);
-        cursor: pointer;
-        transition: fill 0.3s;
-        &:hover {
-          fill: rgba(0, 0, 0, 0.75);
+        font-size: 14px;
+        fill: currentColor;
+        transition: color 0.2s;
+      }
+      &:hover {
+        background: rgba(0, 0, 0, 0.06);
+        .close-svg {
+          color: rgba(0, 0, 0, 0.88);
         }
       }
+    }
+  }
+  .icon-info {
+    :deep(.icon-svg) {
+      color: @themeColor;
+    }
+  }
+  .icon-success {
+    :deep(.icon-svg) {
+      color: #52c41a;
+    }
+  }
+  .icon-warning {
+    :deep(.icon-svg) {
+      color: #faad14;
+    }
+  }
+  .icon-error {
+    :deep(.icon-svg) {
+      color: #ff4d4f;
     }
   }
 }

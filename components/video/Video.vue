@@ -181,7 +181,8 @@ function onPlaying() {
     transition: background-color 0.3s;
     .play-svg {
       display: inline-block;
-      fill: #fff;
+      color: #fff;
+      fill: currentColor;
       width: 29px;
       height: 34px;
       margin-top: 23px;
