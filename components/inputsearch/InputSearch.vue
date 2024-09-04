@@ -207,7 +207,7 @@ function onSearch() {
     border-right: 0;
     transition: all 0.3s;
     :deep(svg) {
-      fill: rgba(0, 0, 0, 0.88);
+      fill: currentColor;
     }
   }
   .addon-before-small {
@@ -248,7 +248,7 @@ function onSearch() {
       flex: none;
       align-items: center;
       :deep(svg) {
-        fill: rgba(0, 0, 0, 0.88);
+        fill: currentColor;
       }
     }
     .input-search {
@@ -284,17 +284,18 @@ function onSearch() {
       gap: 8px;
       align-items: center;
       .m-clear {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
         cursor: pointer;
         .clear-svg {
-          font-size: 12px;
           display: inline-block;
-          fill: rgba(0, 0, 0, 0.25);
-          text-align: center;
-          line-height: 0;
-          vertical-align: -0.08em;
-          transition: fill 0.3s;
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.25);
+          fill: currentColor;
+          transition: color 0.3s;
           &:hover {
-            fill: rgba(0, 0, 0, 0.45);
+            color: rgba(0, 0, 0, 0.45);
           }
         }
       }
@@ -309,7 +310,7 @@ function onSearch() {
         flex: none;
         align-items: center;
         :deep(svg) {
-          fill: rgba(0, 0, 0, 0.88);
+          fill: currentColor;
         }
       }
     }
@@ -386,33 +387,6 @@ function onSearch() {
       border-bottom-left-radius: 0;
       &:not(.btn-primary):not(.btn-danger):not(.btn-link):not(.btn-disabled) {
         color: rgba(0, 0, 0, 0.45);
-        .btn-icon {
-          svg {
-            fill: rgba(0, 0, 0, 0.45);
-          }
-        }
-      }
-    }
-    :deep(.search-btn):not(.btn-primary):not(.btn-danger):not(.btn-link):not(.btn-disabled) {
-      color: rgba(0, 0, 0, 0.45);
-      &:hover {
-        .btn-icon {
-          svg {
-            fill: #4096ff;
-          }
-        }
-      }
-      &:active {
-        .btn-icon {
-          svg {
-            fill: #0958d9;
-          }
-        }
-      }
-      .btn-icon {
-        svg {
-          fill: rgba(0, 0, 0, 0.45);
-        }
       }
     }
   }

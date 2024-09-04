@@ -245,9 +245,9 @@ const showSuccess = computed(() => {
     flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
     .icon-svg {
       display: inline-block;
-      width: 16px;
-      height: 16px;
-      fill: @success;
+      font-size: 16px;
+      fill: currentColor;
+      color: @success;
     }
     .progress-success-info {
       flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
@@ -304,7 +304,8 @@ const showSuccess = computed(() => {
     display: inline-block;
     width: 30%;
     height: 30%;
-    fill: @success;
+    fill: currentColor;
+    color: @success;
   }
   .progress-success-info {
     position: absolute;

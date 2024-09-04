@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
+import type { VNode } from 'vue'
 import Button from '../button'
-interface Desc {
-  title: string // 标题
-  content: string // 内容
-}
 interface Props {
   width?: number // 提示框宽度，单位 px
   cancelText?: string // 取消按钮文字
@@ -17,7 +14,7 @@ interface Props {
   center?: boolean // 水平垂直居中：true  固定高度水平居中：false
   top?: number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
   loading?: boolean // 确定按钮 loading
-  show?: boolean // (v-model) 提示框是否可见
+  open?: boolean // (v-model) 提示框是否可见
 }
 withDefaults(defineProps<Props>(), {
   width: 420,
@@ -31,62 +28,67 @@ withDefaults(defineProps<Props>(), {
   center: true,
   top: 100,
   loading: false,
-  show: false
+  open: false
 })
+interface ModalInfo {
+  title: string // 提示框标题
+  content: string // 提示框内容
+  icon?: VNode // 自定义图标 vnode | slot
+}
+const ModalInfo = ref<ModalInfo>()
 // 弹窗类型：'info' 'success' 'error' 'warning' 'confirm' 'erase'
 const mode = ref('')
-const desc = ref<Desc>()
 const modalRef = ref() // DOM引用
-const emits = defineEmits(['update:show', 'cancel', 'ok', 'know'])
+const emits = defineEmits(['update:open', 'cancel', 'ok', 'know'])
 function info(data: Desc) {
   mode.value = 'info'
-  desc.value = data
-  showModal()
+  ModalInfo.value = data
+  openModal()
 }
 function success(data: Desc) {
   mode.value = 'success'
-  desc.value = data
-  showModal()
+  ModalInfo.value = data
+  openModal()
 }
 function error(data: Desc) {
   mode.value = 'error'
-  desc.value = data
-  showModal()
+  ModalInfo.value = data
+  openModal()
 }
 function warning(data: Desc) {
   mode.value = 'warning'
-  desc.value = data
-  showModal()
+  ModalInfo.value = data
+  openModal()
 }
 function confirm(data: Desc) {
   mode.value = 'confirm'
-  desc.value = data
-  showModal()
+  ModalInfo.value = data
+  openModal()
 }
 function erase(data: Desc) {
   mode.value = 'erase'
-  desc.value = data
-  showModal()
+  ModalInfo.value = data
+  openModal()
 }
-function showModal() {
-  emits('update:show', true)
+function openModal() {
+  emits('update:open', true)
   nextTick(() => {
     modalRef.value.focus()
   })
 }
 function onBlur() {
-  emits('update:show', false)
+  emits('update:open', false)
   emits('cancel')
 }
 function onCancel() {
-  emits('update:show', false)
+  emits('update:open', false)
   emits('cancel')
 }
 function onOK() {
   emits('ok')
 }
 function onKnow() {
-  emits('update:show', false)
+  emits('update:open', false)
   emits('know')
 }
 defineExpose({
@@ -101,10 +103,10 @@ defineExpose({
 <template>
   <div class="m-modal-root">
     <Transition name="fade">
-      <div v-show="show" class="m-modal-mask"></div>
+      <div v-show="open" class="m-modal-mask"></div>
     </Transition>
     <Transition name="zoom">
-      <div v-show="show" class="m-modal-wrap" @click.self="onBlur">
+      <div v-show="open" class="m-modal-wrap" @click.self="onBlur">
         <div
           ref="modalRef"
           tabindex="-1"
@@ -114,28 +116,33 @@ defineExpose({
         >
           <div class="m-modal-body-wrap">
             <div class="m-modal-body">
-              <div class="modal-header">
-                <template v-if="mode === 'confirm' || mode === 'erase'">
-                  <svg
-                    class="icon-svg icon-confirm"
-                    focusable="false"
-                    data-icon="exclamation-circle"
-                    aria-hidden="true"
-                    viewBox="64 64 896 896"
-                  >
-                    <path
-                      d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
-                    ></path>
-                    <path
-                      d="M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"
-                    ></path>
-                  </svg>
-                </template>
+              <div class="modal-header" :class="`icon-${mode}`">
+                <svg
+                  v-if="mode === 'confirm' || mode === 'erase'"
+                  class="icon-svg"
+                  focusable="false"
+                  data-icon="exclamation-circle"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  viewBox="64 64 896 896"
+                >
+                  <path
+                    d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                  ></path>
+                  <path
+                    d="M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"
+                  ></path>
+                </svg>
                 <svg
                   v-if="mode === 'info'"
-                  class="icon-svg icon-info"
+                  class="icon-svg"
                   focusable="false"
                   data-icon="info-circle"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
                   aria-hidden="true"
                   viewBox="64 64 896 896"
                 >
@@ -145,9 +152,12 @@ defineExpose({
                 </svg>
                 <svg
                   v-if="mode === 'success'"
-                  class="icon-svg icon-success"
+                  class="icon-svg"
                   focusable="false"
                   data-icon="check-circle"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
                   aria-hidden="true"
                   viewBox="64 64 896 896"
                 >
@@ -157,21 +167,28 @@ defineExpose({
                 </svg>
                 <svg
                   v-if="mode === 'error'"
-                  class="icon-svg icon-error"
+                  class="icon-svg"
                   focusable="false"
                   data-icon="close-circle"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
                   aria-hidden="true"
+                  fill-rule="evenodd"
                   viewBox="64 64 896 896"
                 >
                   <path
-                    d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+                    d="M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z"
                   ></path>
                 </svg>
                 <svg
                   v-if="mode === 'warning'"
-                  class="icon-svg icon-warning"
+                  class="icon-svg"
                   focusable="false"
                   data-icon="exclamation-circle"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
                   aria-hidden="true"
                   viewBox="64 64 896 896"
                 >
@@ -179,9 +196,9 @@ defineExpose({
                     d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
                   ></path>
                 </svg>
-                <div class="modal-title">{{ desc?.title }}</div>
+                <div class="modal-title">{{ ModalInfo?.title }}</div>
               </div>
-              <div class="modal-content">{{ desc?.content }}</div>
+              <div class="modal-content">{{ ModalInfo?.content }}</div>
             </div>
             <div class="modal-btns">
               <template v-if="mode === 'confirm' || mode === 'erase'">
@@ -278,37 +295,40 @@ defineExpose({
         align-items: center;
         .modal-header {
           width: 100%;
+          display: inline-flex;
+          align-items: center;
           .icon-svg {
             display: inline-block;
             margin-right: 12px;
             margin-top: 1px;
-            width: 22px;
-            height: 22px;
-            vertical-align: top;
-          }
-          .icon-confirm {
-            fill: #faad14;
-          }
-          .icon-info {
-            fill: @themeColor;
-          }
-          .icon-success {
-            fill: #52c41a;
-          }
-          .icon-error {
-            fill: #ff4d4f;
-          }
-          .icon-warning {
-            fill: #faad14;
+            font-size: 22px;
+            fill: currentColor;
+            flex-shrink: 0;
+            align-self: flex-start;
           }
           .modal-title {
             display: inline-block;
-            vertical-align: top;
             font-size: 16px;
+            color: rgba(0, 0, 0, 0.88);
             line-height: 1.5;
             font-weight: 600;
-            max-width: calc(100% - 34px);
           }
+        }
+        .icon-confirm,
+        .icon-erase {
+          color: #faad14;
+        }
+        .icon-info {
+          color: @themeColor;
+        }
+        .icon-success {
+          color: #52c41a;
+        }
+        .icon-error {
+          color: #ff4d4f;
+        }
+        .icon-warning {
+          color: #faad14;
         }
         .modal-content {
           flex-basis: 100%;

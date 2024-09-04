@@ -10,17 +10,9 @@
 
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
+import { ThunderboltFilled, LikeFilled, FireFilled } from '@ant-design/icons-vue'
 
 const value = ref(2.99)
-watchEffect(() => {
-  console.log('value', value.value)
-})
-function onChange(value: number) {
-  console.log('change value', value)
-}
-function onHoverChange(value: number) {
-  console.log('hover value', value)
-}
 const characterOptions = [
   {
     label: 'star-outlined',
@@ -57,13 +49,22 @@ const state = reactive({
 })
 const score = ref(2.5)
 watchEffect(() => {
+  console.log('value', value.value)
+})
+watchEffect(() => {
   console.log('score', score.value)
 })
+function onChange(value: number) {
+  console.log('change value', value)
+}
+function onHoverChange(value: number) {
+  console.log('hover value', value)
+}
 </script>
 
 ## 基本使用
 
-<Rate v-model:value="value" />
+<Rate v-model:value="value" @change="onChange" @hoverChange="onHoverChange" />
 
 ::: details Show Code
 
@@ -75,9 +76,15 @@ const value = ref(2.99)
 watchEffect(() => {
   console.log('value:', value.value)
 })
+function onChange(value: number) {
+  console.log('change value', value)
+}
+function onHoverChange(value: number) {
+  console.log('hover value', value)
+}
 </script>
 <template>
-  <Rate v-model:value="value" />
+  <Rate v-model:value="value" @change="onChange" @hoverChange="onHoverChange" />
 </template>
 ```
 
@@ -105,31 +112,13 @@ watchEffect(() => {
 
 :::
 
-## 空心星型
+## 预置图标
 
-<Rate character="star-outlined" :size="30" v-model:value="value" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-
-const value = ref(2.99)
-watchEffect(() => {
-  console.log('value:', value.value)
-})
-</script>
-<template>
-  <Rate character="star-outlined" :size="30" v-model:value="value" />
-</template>
-```
-
-:::
-
-## 实心心型
-
-<Rate character="heart-filled" :size="30" v-model:value="value" />
+<Space vertical>
+  <Rate v-model:value="value" character="star-outlined" :size="24" />
+  <Rate v-model:value="value" character="heart-filled" :size="24" />
+  <Rate v-model:value="value" character="heart-outlined" :size="24" />
+</Space>
 
 ::: details Show Code
 
@@ -143,29 +132,11 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Rate character="heart-filled" :size="30" v-model:value="value" />
-</template>
-```
-
-:::
-
-## 空心心型
-
-<Rate character="heart-outlined" :size="30" v-model:value="value" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-
-const value = ref(2.99)
-watchEffect(() => {
-  console.log('value:', value.value)
-})
-</script>
-<template>
-  <Rate character="heart-outlined" :size="30" v-model:value="value" />
+  <Space vertical>
+    <Rate v-model:value="value" character="star-outlined" :size="24" />
+    <Rate v-model:value="value" character="heart-filled" :size="24" />
+    <Rate v-model:value="value" character="heart-outlined" :size="24" />
+  </Space>
 </template>
 ```
 
@@ -187,97 +158,30 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Rate v-model:value="value" allow-half />
+  <Rate v-model:value="value" :size="30" allow-half />
 </template>
 ```
 
 :::
 
-## 使用中文文字: 好
+## 自定义字符
 
-<Rate
-  character="好"
-  :size="36"
-  v-model:value="value"
-  @change="onChange"
-  @hover-change="onHoverChange" />
+<Space vertical>
+  <Rate v-model:value="value" character="好" :size="32" allow-half />
+  <Rate v-model:value="value" character="A" :size="48" allow-half />
+  <Rate v-model:value="value" :size="32" allow-half>
+    <template #character>
+      <ThunderboltFilled />
+    </template>
+  </Rate>
+</Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
-const value = ref(2.99)
-watchEffect(() => {
-  console.log('value:', value.value)
-})
-function onChange (value: number) {
-  console.log('change value:', value)
-}
-function onHoverChange (value: number) {
-  console.log('hover value:', value)
-}
-</script>
-<template>
-  <Rate
-    character="好"
-    :size="36"
-    v-model:value="value"
-    @change="onChange"
-    @hover-change="onHoverChange" />
-</template>
-```
-
-:::
-
-## 使用英文字母: A
-
-<Rate
-  character="A"
-  :size="48"
-  v-model:value="value"
-  @change="onChange"
-  @hover-change="onHoverChange" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-
-const value = ref(2.99)
-watchEffect(() => {
-  console.log('value:', value.value)
-})
-function onChange (value: number) {
-  console.log('change value:', value)
-}
-function onHoverChange (value: number) {
-  console.log('hover value:', value)
-}
-</script>
-<template>
-  <Rate
-    character="A"
-    :size="48"
-    v-model:value="value"
-    @change="onChange"
-    @hover-change="onHoverChange" />
-</template>
-```
-
-:::
-
-## 自定义选中颜色
-
-<Rate color="#1677FF" :size="30" v-model:value="value" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ThunderboltFilled } from '@ant-design/icons-vue'
 
 const value = ref(2.99)
 watchEffect(() => {
@@ -285,7 +189,63 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Rate color="#1677FF" :size="30" v-model:value="value" />
+  <Space vertical>
+    <Rate v-model:value="value" character="好" :size="32" allow-half />
+    <Rate v-model:value="value" character="A" :size="48" allow-half />
+    <Rate v-model:value="value" :size="32" allow-half>
+      <template #character>
+        <ThunderboltFilled />
+      </template>
+    </Rate>
+  </Space>
+</template>
+```
+
+:::
+
+## 自定义颜色
+
+<Space vertical>
+  <Rate v-model:value="value" color="#1677FF" :size="32" allow-half />
+  <Rate v-model:value="value" color="#ff6900" :size="32" allow-half>
+    <template #character>
+      <LikeFilled />
+    </template>
+  </Rate>
+  <Rate v-model:value="value" color="#d4380d" :size="32" allow-half>
+    <template #character>
+      <FireFilled />
+    </template>
+  </Rate>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { LikeFilled, FireFilled } from '@ant-design/icons-vue'
+
+
+const value = ref(2.99)
+watchEffect(() => {
+  console.log('value:', value.value)
+})
+</script>
+<template>
+  <Space vertical>
+    <Rate v-model:value="value" color="#1677FF" :size="32" allow-half />
+    <Rate v-model:value="value" color="#ff6900" :size="32" allow-half>
+      <template #character>
+        <LikeFilled />
+      </template>
+    </Rate>
+    <Rate v-model:value="value" color="#d4380d" :size="32" allow-half>
+      <template #character>
+        <FireFilled />
+      </template>
+    </Rate>
+  </Space>
 </template>
 ```
 
@@ -293,7 +253,7 @@ watchEffect(() => {
 
 ## 自定义间距
 
-<Rate :size="30" :gap="16" v-model:value="value" />
+<Rate v-model:value="value" :size="32" :gap="16" />
 
 ::: details Show Code
 
@@ -307,7 +267,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Rate :size="30" :gap="16" v-model:value="value" />
+  <Rate v-model:value="value" :size="32" :gap="16" />
 </template>
 ```
 
@@ -315,7 +275,7 @@ watchEffect(() => {
 
 ## 自定义 star 总数
 
-<Rate :size="30" :count="10" v-model:value="value" />
+<Rate v-model:value="value" :size="32" :count="10" />
 
 ::: details Show Code
 
@@ -329,7 +289,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Rate :size="30" :count="10" v-model:value="value" />
+  <Rate v-model:value="value" :size="32" :count="10" />
 </template>
 ```
 
@@ -363,11 +323,14 @@ watchEffect(() => {
     <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
   </Col>
   <Col :span="6" v-if="state.character === 'custom-character'">
-    <Flex gap="small" vertical> character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" /> </Flex>
+    <Flex gap="small" vertical>
+      character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" />
+    </Flex>
   </Col>
 </Row>
 <Badge :value="score" style="margin-top: 30px">
   <Rate
+    v-model:value="score"
     :allow-clear="state.allowClear"
     :allow-half="state.allowHalf"
     :count="state.count"
@@ -376,7 +339,6 @@ watchEffect(() => {
     :color="state.color"
     :gap="state.gap"
     :disabled="state.disabled"
-    v-model:value="score"
   />
 </Badge>
 
@@ -452,11 +414,14 @@ watchEffect(() => {
       <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
     </Col>
     <Col :span="6" v-if="state.character === 'custom-character'">
-      <Flex gap="small" vertical> character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" /> </Flex>
+      <Flex gap="small" vertical>
+        character:<Input v-model:value="state.customCharacter" placeholder="customCharacter" />
+      </Flex>
     </Col>
   </Row>
   <Badge :value="score" style="margin-top: 30px">
     <Rate
+      v-model:value="score"
       :allow-clear="state.allowClear"
       :allow-half="state.allowHalf"
       :count="state.count"
@@ -465,7 +430,6 @@ watchEffect(() => {
       :color="state.color"
       :gap="state.gap"
       :disabled="state.disabled"
-      v-model:value="score"
     />
   </Badge>
 </template>
@@ -482,12 +446,12 @@ watchEffect(() => {
 allowClear | 是否允许再次点击后清除 | boolean | true
 allowHalf | 是否允许半选 | boolean | false
 count | `star` 总数 | number | 5
-character | 自定义字符，预置四种 `svg` 图标 | 'star-outlined' &#124; 'star-filled' &#124; 'heart-outlined' &#124; 'heart-filled' &#124; string &#124; slot | 'star-filled'
-size | 字符时是字体高度，图标时是图片大小，单位 `px` | number | 20
+character | 自定义字符，预置四种图标 | 'star-outlined' &#124; 'star-filled' &#124; 'heart-outlined' &#124; 'heart-filled' &#124; string &#124; slot | 'star-filled'
+size | 字符大小，单位 `px` | number | 20
 color | 字符选中颜色 | string | '#fadb14'
 gap | 字符间距，单位 `px` | number | 8
 disabled | 只读，无法进行交互 | boolean | false
-value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `1,2,3...` | number | 0
+value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `0,1,2,3...` | number | 0
 
 ## Events
 

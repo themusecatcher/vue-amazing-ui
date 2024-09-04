@@ -241,8 +241,9 @@ const paragraphWidth = computed(() => {
       line-height: 48px;
       max-width: 192px;
       max-height: 192px;
+      color: #bfbfbf;
       .svg-path {
-        fill: #bfbfbf;
+        fill: currentColor;
       }
     }
   }

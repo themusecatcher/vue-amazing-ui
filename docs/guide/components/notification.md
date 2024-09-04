@@ -23,49 +23,100 @@
 :::
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
+import { CloudFilled, FireFilled } from '@ant-design/icons-vue'
 
 const notification = ref()
-
-function onOpen (info: string) {
+function onOpen(description: string) {
   notification.value.open({
-    message: 'Notification Title',
-    description: info
-  }) // 默认使用
+    title: 'Notification Title',
+    description
+  }) // open 调用
 }
-function onInfo (info: string) {
+function onInfo(description: string) {
   notification.value.info({
-    message: 'Notification Title',
-    description: info
-  }) // info调用
+    title: 'Notification Title',
+    description
+  }) // info 调用
 }
-function onSuccess (info: string) {
+function onSuccess(description: string) {
   notification.value.success({
-    message: 'Notification Title',
-    description: info
-  }) // success调用
+    title: 'Notification Title',
+    description
+  }) // success 调用
 }
-function onWarning (info: string) {
+function onWarning(description: string) {
   notification.value.warning({
-    message: 'Notification Title',
-    description: info
-  }) // warning调用
+    title: 'Notification Title',
+    description
+  }) // warning 调用
 }
-function onError (info: string) {
+function onError(description: string) {
   notification.value.error({
-    message: 'Notification Title',
-    description: info
-  }) // error调用
+    title: 'Notification Title',
+    description
+  }) // error 调用
 }
-function onOpenPlacement (place: string) {
+function onInfoCustom(description: string) {
   notification.value.info({
-    message: 'Notification Title',
-    description: 'This is the content of the notification.',
-    placement: place
+    title: 'Notification Title',
+    icon: h(CloudFilled),
+    description
   })
 }
-function onClose () { // 点击默认关闭按钮时触发的回调函数
-  console.log('关闭notification')
+function onOpenCustom(description: string) {
+  notification.value.open({
+    title: 'Notification Title',
+    icon: h(FireFilled, { style: 'color: gold' }),
+    description
+  })
+}
+function onClassCustom(description: string) {
+  notification.value.open({
+    title: 'Notification Title',
+    description,
+    icon: h(FireFilled),
+    class: 'custom-class'
+  })
+}
+function onStyleCustom(description: string) {
+  notification.value.open({
+    title: 'Notification Title',
+    description,
+    icon: h(CloudFilled),
+    style: {
+      width: '500px',
+      color: '#ff6900'
+    }
+  })
+}
+function onOpenPlacement(placement: string) {
+  notification.value.info({
+    title: 'Notification Title',
+    description: 'This is the content of the notification.',
+    placement
+  })
+}
+function onCustomClose() {
+  notification.value.info({
+    title: 'Notification Title',
+    description: 'The notification will automatically turn off after 3 seconds.',
+    duration: 3000
+  })
+}
+function onNeverAutoClose() {
+  notification.value.info({
+    title: 'Notification Title',
+    description: 'This notification will not automatically turn off.',
+    duration: null,
+    onClose: () => {
+      console.log('custom notification closed')
+    }
+  })
+}
+function onClose() {
+  // 通知提醒关闭时的回调函数
+  console.log('notification closed')
 }
 </script>
 
@@ -81,14 +132,15 @@ function onClose () { // 点击默认关闭按钮时触发的回调函数
 <script setup lang="ts">
 import { ref } from 'vue'
 const notification = ref()
-function onOpen (info: string) {
+function onOpen(description: string) {
   notification.value.open({
-    message: 'Notification Title',
-    description: info
-  }) // 默认使用
+    title: 'Notification Title',
+    description
+  }) // open 调用
 }
-function onClose () {
-  console.log('关闭notification')
+function onClose() {
+  // 通知提醒关闭时的回调函数
+  console.log('notification closed')
 }
 </script>
 <template>
@@ -99,121 +151,14 @@ function onClose () {
 
 :::
 
-## 信息通知提醒
+## 不同类型的通知提醒
 
-<Button type="primary" @click="onInfo('This is a normal notification')">Info</Button>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const notification = ref()
-function onInfo (info: string) {
-  notification.value.info({
-    message: 'Notification Title',
-    description: info
-  }) // info调用
-}
-function onClose () {
-  console.log('关闭notification')
-}
-</script>
-<template>
+<Space>
   <Button type="primary" @click="onInfo('This is a normal notification')">Info</Button>
-  <Notification ref="notification" @close="onClose" />
-</template>
-```
-
-:::
-
-## 成功通知提醒
-
-<Button type="primary" @click="onSuccess('This is a success notification')">Success</Button>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const notification = ref()
-function onSuccess (info: string) {
-  notification.value.success({
-    message: 'Notification Title',
-    description: info
-  }) // success调用
-}
-function onClose () {
-  console.log('关闭notification')
-}
-</script>
-<template>
   <Button type="primary" @click="onSuccess('This is a success notification')">Success</Button>
-  <Notification ref="notification" @close="onClose" />
-</template>
-```
-
-:::
-
-## 失败通知提醒
-
-<Button type="primary" @click="onError('This is a error notification')">Error</Button>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const notification = ref()
-function onError (info: string) {
-  notification.value.error({
-    message: 'Notification Title',
-    description: info
-  }) // error调用
-}
-function onClose () {
-  console.log('关闭notification')
-}
-</script>
-<template>
-  <Button type="primary" @click="onError('This is a error notification')">Error</Button>
-  <Notification ref="notification" @close="onClose" />
-</template>
-```
-
-:::
-
-## 警告通知提醒
-
-<Button type="primary" @click="onWarning('This is a warning notification')">Warning</Button>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const notification = ref()
-function onWarning (info: string) {
-  notification.value.warning({
-    message: 'Notification Title',
-    description: info
-  }) // warning调用
-}
-function onClose () {
-  console.log('关闭notification')
-}
-</script>
-<template>
   <Button type="primary" @click="onWarning('This is a warning notification')">Warning</Button>
-  <Notification ref="notification" @close="onClose" />
-</template>
-```
-
-:::
-
-## 左上角弹出
-
-<Button type="primary" @click="onOpenPlacement('topLeft')">topLeft</Button>
+  <Button type="primary" @click="onError('This is a error notification')">Error</Button>
+</Space>
 
 ::: details Show Code
 
@@ -221,77 +166,238 @@ function onClose () {
 <script setup lang="ts">
 import { ref } from 'vue'
 const notification = ref()
-function onOpenPlacement (place: string) {
+function onInfo(description: string) {
   notification.value.info({
-    message: 'Notification Title',
-    description: 'This is the content of the notification.',
-    placement: place
-  })
+    title: 'Notification Title',
+    description
+  }) // info 调用
 }
-function onClose () {
-  console.log('关闭notification')
+function onSuccess(description: string) {
+  notification.value.success({
+    title: 'Notification Title',
+    description
+  }) // success 调用
+}
+function onWarning(description: string) {
+  notification.value.warning({
+    title: 'Notification Title',
+    description
+  }) // warning 调用
+}
+function onError(description: string) {
+  notification.value.error({
+    title: 'Notification Title',
+    description
+  }) // error 调用
+}
+function onClose() {
+  // 通知提醒关闭时的回调函数
+  console.log('notification closed')
 }
 </script>
 <template>
+  <Space>
+    <Button type="primary" @click="onInfo('This is a normal notification')">Info</Button>
+    <Button type="primary" @click="onSuccess('This is a success notification')">Success</Button>
+    <Button type="primary" @click="onWarning('This is a warning notification')">Warning</Button>
+    <Button type="primary" @click="onError('This is a error notification')">Error</Button>
+  </Space>
+  <Notification ref="notification" @close="onClose" />
+</template>
+```
+
+:::
+
+## 自定义图标
+
+<Space>
+  <Button type="primary" @click="onInfoCustom('This is a custom icon notification')">Custom Info Icon</Button>
+  <Button type="primary" @click="onOpenCustom('This is a custom icon notification')">Custom Icon</Button>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, h } from 'vue'
+import { CloudFilled, FireFilled } from '@ant-design/icons-vue'
+const notification = ref()
+function onInfoCustom(description: string) {
+  notification.value.info({
+    title: 'Notification Title',
+    icon: h(CloudFilled),
+    description
+  })
+}
+function onOpenCustom(description: string) {
+  notification.value.open({
+    title: 'Notification Title',
+    icon: h(FireFilled, { style: 'color: gold' }),
+    description
+  })
+}
+function onClose() {
+  // 通知提醒关闭时的回调函数
+  console.log('notification closed')
+}
+</script>
+<template>
+  <Space>
+    <Button type="primary" @click="onInfoCustom('This is a custom icon notification')">Custom Info Icon</Button>
+    <Button type="primary" @click="onOpenCustom('This is a custom icon notification')">Custom Icon</Button>
+  </Space>
+  <Notification ref="notification" @close="onClose" />
+</template>
+```
+
+:::
+
+## 自定义样式
+
+<Space>
+  <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
+  <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
+</Space>
+
+<style lang="less" scoped>
+:deep(.custom-class) {
+  color: #d4380d;
+  .notification-title {
+    font-weight: 500;
+  }
+}
+</style>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, h } from 'vue'
+import { CloudFilled, FireFilled } from '@ant-design/icons-vue'
+const notification = ref()
+function onClassCustom(description: string) {
+  notification.value.open({
+    title: 'Notification Title',
+    description,
+    icon: h(FireFilled),
+    class: 'custom-class'
+  })
+}
+function onStyleCustom(description: string) {
+  notification.value.open({
+    title: 'Notification Title',
+    description,
+    icon: h(CloudFilled),
+    style: {
+      width: '500px',
+      color: '#ff6900'
+    }
+  })
+}
+function onClose() {
+  // 通知提醒关闭时的回调函数
+  console.log('notification closed')
+}
+</script>
+<template>
+  <Space>
+    <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
+    <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
+  </Space>
+  <Notification ref="notification" @close="onClose" />
+</template>
+<style lang="less" scoped>
+:deep(.custom-class) {
+  color: #d4380d;
+  .notification-title {
+    font-weight: 500;
+  }
+}
+</style>
+```
+
+:::
+
+## 弹出位置
+
+<Space>
   <Button type="primary" @click="onOpenPlacement('topLeft')">topLeft</Button>
-  <Notification ref="notification" @close="onClose" />
-</template>
-```
-
-:::
-
-## 右下角弹出
-
-<Button type="primary" @click="onOpenPlacement('bottomRight')">bottomRight</Button>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const notification = ref()
-function onOpenPlacement (place: string) {
-  notification.value.info({
-    message: 'Notification Title',
-    description: 'This is the content of the notification.',
-    placement: place
-  })
-}
-function onClose () {
-  console.log('关闭notification')
-}
-</script>
-<template>
-  <Button type="primary" @click="onOpenPlacement('bottomRight')">bottomRight</Button>
-  <Notification ref="notification" @close="onClose" />
-</template>
-```
-
-:::
-
-## 左下角弹出
-
-<Button type="primary" @click="onOpenPlacement('bottomLeft')">bottomLeft</Button>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const notification = ref()
-function onOpenPlacement (place: string) {
-  notification.value.info({
-    message: 'Notification Title',
-    description: 'This is the content of the notification.',
-    placement: place
-  })
-}
-function onClose () {
-  console.log('关闭notification')
-}
-</script>
-<template>
+  <Button type="primary" @click="onOpenPlacement('topRight')">topRight</Button>
   <Button type="primary" @click="onOpenPlacement('bottomLeft')">bottomLeft</Button>
+  <Button type="primary" @click="onOpenPlacement('bottomRight')">bottomRight</Button>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const notification = ref()
+function onOpenPlacement(placement: string) {
+  notification.value.info({
+    title: 'Notification Title',
+    description: 'This is the content of the notification.',
+    placement
+  })
+}
+function onClose() {
+  // 通知提醒关闭时的回调函数
+  console.log('notification closed')
+}
+</script>
+<template>
+  <Space>
+    <Button type="primary" @click="onOpenPlacement('topLeft')">topLeft</Button>
+    <Button type="primary" @click="onOpenPlacement('topRight')">topRight</Button>
+    <Button type="primary" @click="onOpenPlacement('bottomLeft')">bottomLeft</Button>
+    <Button type="primary" @click="onOpenPlacement('bottomRight')">bottomRight</Button>
+  </Space>
+  <Notification ref="notification" @close="onClose" />
+</template>
+```
+
+:::
+
+## 自定义关闭延时
+
+<Space>
+  <Button type="primary" @click="onCustomClose">Custom Close</Button>
+  <Button type="primary" @click="onNeverAutoClose">Never Auto Close</Button>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const notification = ref()
+function onCustomClose() {
+  notification.value.info({
+    title: 'Notification Title',
+    description: 'The notification will automatically turn off after 3 seconds.',
+    duration: 3000
+  })
+}
+function onNeverAutoClose() {
+  notification.value.info({
+    title: 'Notification Title',
+    description: 'This notification will not automatically turn off.',
+    duration: null,
+    onClose: () => {
+      console.log('custom notification closed')
+    }
+  })
+}
+function onClose() {
+  // 通知提醒关闭时的回调函数
+  console.log('notification closed')
+}
+</script>
+<template>
+  <Space>
+    <Button type="primary" @click="onCustomClose">Custom Close</Button>
+    <Button type="primary" @click="onNeverAutoClose">Never Auto Close</Button>
+  </Space>
   <Notification ref="notification" @close="onClose" />
 </template>
 ```
@@ -304,23 +410,29 @@ function onClose () {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-message | 全局通知提醒标题，优先级低于 `Notification` 中的 `message` | string | '温馨提示'
-duration | 自动关闭的延时时长，单位 `ms`，默认 `4500ms`；设置 `null` 时，不自动关闭 | number &#124; null | 4500
+title | 通知提醒标题，优先级低于 [Notification](#notification-type) 中的 `title` | string | undefined
+description | 通知提醒内容，优先级低于 [Notification](#notification-type) 中的 `description` | string | undefined
+duration | 自动关闭的延时时长，单位 `ms`，默认 `4500ms`；设置 `null` 时，不自动关闭，优先级低于 [Notification](#notification-type) 中的 `duration` | number &#124; null | 4500
 top | 消息从顶部弹出时，距离顶部的位置，单位 `px` | number | 24
 bottom | 消息从底部弹出时，距离底部的位置，单位 `px` | number | 24
-placement | 消息弹出位置，优先级低于 `Notification` 中的 `placement` | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | 'topRight'
+placement | 消息弹出位置，优先级低于 [Notification](#notification-type) 中的 `placement` | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | 'topRight'
 
 ### Notification Type
 
 <br/>
 
-*调用时传入的 Notification 参数*
+*调用时传入的 `Notification` 参数*
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-message? | 通知提醒标题 | string | undefined
-description | 通知提醒内容 | string | undefined
+title? | 通知提醒标题 | string | undefined
+description? | 通知提醒内容 | string | undefined
+icon? | 自定义图标 | VNode | undefined
+class? | 自定义类名 | string | undefined
+style? | 自定义样式 | string | undefined
+duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null | undefined
 placement? | 通知提醒弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | undefined
+onClose | 关闭时的回调函数 | Function | undefined
 
 ## Methods
 
@@ -336,4 +448,4 @@ warning | 警告通知提醒 | (notification: Notification) => void
 
 名称 | 说明 | 类型
 -- | -- | --
-close | 关闭时的回调 | () => void
+close | 通知提醒关闭时的回调 | () => void

@@ -272,6 +272,9 @@ function onKeyboard(e: KeyboardEvent) {
     height: 100%;
     display: inline-flex;
     align-items: center;
+    :deep(svg) {
+      fill: currentColor;
+    }
   }
   .tag-content {
     height: 100%;
@@ -281,18 +284,17 @@ function onKeyboard(e: KeyboardEvent) {
   .plus-svg {
     display: inline-flex;
     align-items: center;
-    width: 14px;
-    height: 14px;
-    fill: rgba(0, 0, 0, 0.88);
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.88);
+    fill: currentColor;
     font-style: normal;
     line-height: 0;
     text-align: center;
     vertical-align: -0.175em;
-    transition: fill 0.2s;
+    transition: color 0.2s;
   }
   .tag-close {
-    margin-inline-start: 3px;
-    font-size: 12px;
+    margin-left: 3px;
     display: inline-flex;
     align-items: center;
     height: 100%;
@@ -303,12 +305,12 @@ function onKeyboard(e: KeyboardEvent) {
     cursor: pointer;
     .close-svg {
       display: inline-block;
-      width: 1em;
-      height: 1em;
-      fill: rgba(0, 0, 0, 0.45);
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.45);
+      fill: currentColor;
       transition: all 0.2s;
       &:hover {
-        fill: rgba(0, 0, 0, 0.88);
+        color: rgba(0, 0, 0, 0.88);
       }
     }
   }
@@ -319,8 +321,7 @@ function onKeyboard(e: KeyboardEvent) {
   line-height: 20px;
   border-radius: 4px;
   .plus-svg {
-    width: 12px;
-    height: 12px;
+    font-size: 12px;
   }
   .tag-close {
     font-size: 10px;
@@ -343,7 +344,7 @@ function onKeyboard(e: KeyboardEvent) {
   &:hover {
     border-color: @themeColor;
     .plus-svg {
-      fill: @themeColor;
+      color: @themeColor;
     }
   }
 }
@@ -387,7 +388,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #f6ffed;
   border-color: #b7eb8f;
   :deep(svg) {
-    fill: #52c41a;
+    color: #52c41a;
+    fill: currentColor;
   }
 }
 .tag-processing {
@@ -395,7 +397,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #e6f4ff;
   border-color: #91caff;
   :deep(svg) {
-    fill: @themeColor;
+    color: @themeColor;
+    fill: currentColor;
   }
 }
 .tag-error {
@@ -403,7 +406,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #fff2f0;
   border-color: #ffccc7;
   :deep(svg) {
-    fill: #ff4d4f;
+    color: #ff4d4f;
+    fill: currentColor;
   }
 }
 .tag-warning {
@@ -411,7 +415,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #fffbe6;
   border-color: #ffe58f;
   :deep(svg) {
-    fill: #faad14;
+    color: #faad14;
+    fill: currentColor;
   }
 }
 .tag-pink {
@@ -419,7 +424,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #fff0f6;
   border-color: #ffadd2;
   :deep(svg) {
-    fill: #c41d7f;
+    color: #c41d7f;
+    fill: currentColor;
   }
 }
 .tag-red {
@@ -427,7 +433,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #fff1f0;
   border-color: #ffa39e;
   :deep(svg) {
-    fill: #cf1322;
+    color: #cf1322;
+    fill: currentColor;
   }
 }
 .tag-yellow {
@@ -435,7 +442,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #feffe6;
   border-color: #fffb8f;
   :deep(svg) {
-    fill: #d4b106;
+    color: #d4b106;
+    fill: currentColor;
   }
 }
 .tag-orange {
@@ -443,7 +451,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #fff7e6;
   border-color: #ffd591;
   :deep(svg) {
-    fill: #d46b08;
+    color: #d46b08;
+    fill: currentColor;
   }
 }
 .tag-green {
@@ -451,7 +460,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #f6ffed;
   border-color: #b7eb8f;
   :deep(svg) {
-    fill: #389e0d;
+    color: #389e0d;
+    fill: currentColor;
   }
 }
 .tag-cyan {
@@ -459,7 +469,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #e6fffb;
   border-color: #87e8de;
   :deep(svg) {
-    fill: #08979c;
+    color: #08979c;
+    fill: currentColor;
   }
 }
 .tag-blue {
@@ -467,7 +478,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #e6f4ff;
   border-color: #91caff;
   :deep(svg) {
-    fill: #0958d9;
+    color: #0958d9;
+    fill: currentColor;
   }
 }
 .tag-purple {
@@ -475,7 +487,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #f9f0ff;
   border-color: #d3adf7;
   :deep(svg) {
-    fill: #531dab;
+    color: #531dab;
+    fill: currentColor;
   }
 }
 .tag-geekblue {
@@ -483,7 +496,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #f0f5ff;
   border-color: #adc6ff;
   :deep(svg) {
-    fill: #1d39c4;
+    color: #1d39c4;
+    fill: currentColor;
   }
 }
 .tag-magenta {
@@ -491,7 +505,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #fff0f6;
   border-color: #ffadd2;
   :deep(svg) {
-    fill: #eb2f96;
+    color: #eb2f96;
+    fill: currentColor;
   }
 }
 .tag-volcano {
@@ -499,7 +514,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #fff2e8;
   border-color: #ffbb96;
   :deep(svg) {
-    fill: #d4380d;
+    color: #d4380d;
+    fill: currentColor;
   }
 }
 .tag-gold {
@@ -507,7 +523,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #fffbe6;
   border-color: #ffe58f;
   :deep(svg) {
-    fill: #d48806;
+    color: #d48806;
+    fill: currentColor;
   }
 }
 .tag-lime {
@@ -515,7 +532,8 @@ function onKeyboard(e: KeyboardEvent) {
   background: #fcffe6;
   border-color: #eaff8f;
   :deep(svg) {
-    fill: #7cb305;
+    color: #7cb305;
+    fill: currentColor;
   }
 }
 .tag-borderless {
@@ -525,9 +543,9 @@ function onKeyboard(e: KeyboardEvent) {
   color: #fff;
   border-color: transparent;
   .tag-close .close-svg {
-    fill: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.85);
     &:hover {
-      fill: rgba(255, 255, 255, 1);
+      color: rgba(255, 255, 255, 1);
     }
   }
 }

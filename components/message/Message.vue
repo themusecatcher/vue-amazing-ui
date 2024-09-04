@@ -1,17 +1,26 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
 interface Props {
-  duration?: number // 自动关闭的延时，单位 ms
+  content?: string // 提示内容 string | slot
+  icon?: VNode // 自定义图标 vnode | slot
+  duration?: number // 自动关闭的延时，单位 ms，设为 null 时不自动关闭
   top?: string | number // 消息距离顶部的位置，单位 px
 }
 const props = withDefaults(defineProps<Props>(), {
+  content: undefined,
+  icon: undefined,
   duration: 3000,
   top: 30
 })
 interface Message {
-  content: string
-  mode: string
+  content?: string // 提示内容
+  icon?: VNode // 自定义图标
+  duration?: number // 自动关闭的延时，单位 ms，为 0 时不自动关闭
+  mode?: string // 提示类型 'open' | 'info' | 'success' | 'error' | 'warning' | 'loading'
+  class?: string // 自定义类名
+  style?: CSSProperties // 自定义样式
 }
 const resetTimer = ref()
 const showMessage = ref<boolean[]>([])
@@ -48,118 +57,199 @@ function show() {
   showMessage.value[index] = true
   onHideMessage(index)
 }
-function info(content: string) {
-  messageContent.value.push({
-    content,
-    mode: 'info'
-  })
+function open(message: string | Message) {
+  if (typeof message === 'string') {
+    messageContent.value.push({
+      content: message,
+      mode: 'open'
+    })
+  } else {
+    messageContent.value.push({
+      ...message,
+      mode: 'open'
+    })
+  }
   show()
 }
-function success(content: string) {
-  messageContent.value.push({
-    content,
-    mode: 'success'
-  })
+function info(message: string | Message) {
+  if (typeof message === 'string') {
+    messageContent.value.push({
+      content: message,
+      mode: 'info'
+    })
+  } else {
+    messageContent.value.push({
+      ...message,
+      mode: 'info'
+    })
+  }
   show()
 }
-function error(content: string) {
-  messageContent.value.push({
-    content,
-    mode: 'error'
-  })
+function success(message: string | Message) {
+  if (typeof message === 'string') {
+    messageContent.value.push({
+      content: message,
+      mode: 'success'
+    })
+  } else {
+    messageContent.value.push({
+      ...message,
+      mode: 'success'
+    })
+  }
   show()
 }
-function warning(content: string) {
-  messageContent.value.push({
-    content,
-    mode: 'warning'
-  })
+function error(message: string | Message) {
+  if (typeof message === 'string') {
+    messageContent.value.push({
+      content: message,
+      mode: 'error'
+    })
+  } else {
+    messageContent.value.push({
+      ...message,
+      mode: 'error'
+    })
+  }
   show()
 }
-function loading(content: string) {
-  messageContent.value.push({
-    content,
-    mode: 'loading'
-  })
+function warning(message: string | Message) {
+  if (typeof message === 'string') {
+    messageContent.value.push({
+      content: message,
+      mode: 'warning'
+    })
+  } else {
+    messageContent.value.push({
+      ...message,
+      mode: 'warning'
+    })
+  }
+  show()
+}
+function loading(message: string | Message) {
+  if (typeof message === 'string') {
+    messageContent.value.push({
+      content: message,
+      mode: 'loading'
+    })
+  } else {
+    messageContent.value.push({
+      ...message,
+      mode: 'loading'
+    })
+  }
   show()
 }
 defineExpose({
+  open,
   info,
   success,
   error,
   warning,
   loading
 })
-const emit = defineEmits(['close'])
+const emits = defineEmits(['click', 'close'])
+function onClick(e: Event) {
+  emits('click', e)
+}
 function onHideMessage(index: number) {
-  hideTimers.value[index] = rafTimeout(() => {
-    showMessage.value[index] = false
-    emit('close')
-  }, props.duration)
+  if (props.duration !== null) {
+    hideTimers.value[index] = rafTimeout(() => {
+      showMessage.value[index] = false
+      emits('close')
+    }, props.duration)
+  }
 }
 </script>
 <template>
   <div class="m-message-wrap" :style="`top: ${messageTop};`">
     <TransitionGroup name="slide-fade">
       <div class="m-message" v-show="showMessage[index]" v-for="(message, index) in messageContent" :key="index">
-        <div class="m-message-content" @mouseenter="onEnter(index)" @mouseleave="onLeave(index)">
-          <svg
-            v-if="message.mode === 'info'"
-            class="icon-svg icon-info"
-            viewBox="64 64 896 896"
-            data-icon="info-circle"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z"
-            ></path>
-          </svg>
-          <svg
-            v-if="message.mode === 'success'"
-            class="icon-svg icon-success"
-            viewBox="64 64 896 896"
-            data-icon="check-circle"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 0 1-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
-            ></path>
-          </svg>
-          <svg
-            v-if="message.mode === 'error'"
-            class="icon-svg icon-error"
-            viewBox="64 64 896 896"
-            data-icon="close-circle"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 0 1-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-            ></path>
-          </svg>
-          <svg
-            v-if="message.mode === 'warning'"
-            class="icon-svg icon-warning"
-            viewBox="64 64 896 896"
-            data-icon="exclamation-circle"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z"
-            ></path>
-          </svg>
-          <svg
-            v-if="message.mode === 'loading'"
-            class="icon-svg icon-loading circular"
-            viewBox="0 0 50 50"
-            focusable="false"
-          >
-            <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
-          </svg>
-          <p class="message-content">{{ message.content }}</p>
+        <div
+          class="m-message-content"
+          :class="`icon-${message.mode}`"
+          @click="onClick"
+          @mouseenter="onEnter(index)"
+          @mouseleave="onLeave(index)"
+        >
+          <slot name="icon">
+            <component v-if="message.icon || icon" :is="message.icon || icon" class="icon-img" />
+            <svg
+              v-else-if="message.mode === 'info'"
+              class="icon-svg"
+              focusable="false"
+              data-icon="info-circle"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+              viewBox="64 64 896 896"
+            >
+              <path
+                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+              ></path>
+            </svg>
+            <svg
+              v-else-if="message.mode === 'success'"
+              class="icon-svg"
+              focusable="false"
+              data-icon="check-circle"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+              viewBox="64 64 896 896"
+            >
+              <path
+                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+              ></path>
+            </svg>
+            <svg
+              v-else-if="message.mode === 'error'"
+              class="icon-svg"
+              focusable="false"
+              data-icon="close-circle"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+              fill-rule="evenodd"
+              viewBox="64 64 896 896"
+            >
+              <path
+                d="M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z"
+              ></path>
+            </svg>
+            <svg
+              v-else-if="message.mode === 'warning'"
+              class="icon-svg"
+              focusable="false"
+              data-icon="exclamation-circle"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+              viewBox="64 64 896 896"
+            >
+              <path
+                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+              ></path>
+            </svg>
+            <svg
+              v-else-if="message.mode === 'loading'"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              class="icon-svg circle"
+              viewBox="0 0 50 50"
+            >
+              <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
+            </svg>
+          </slot>
+          <p class="message-content">
+            <slot name="content">{{ message.content || content }}</slot>
+          </p>
         </div>
       </div>
     </TransitionGroup>
@@ -199,6 +289,7 @@ function onHideMessage(index: number) {
     }
     .m-message-content {
       display: inline-flex;
+      gap: 8px;
       align-items: center;
       padding: 9px 12px;
       background: #fff;
@@ -208,29 +299,19 @@ function onHideMessage(index: number) {
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
       pointer-events: auto; // 保证内容区域部分可以正常响应鼠标事件
-      .icon-svg {
+      .icon-img {
         display: inline-block;
         width: 16px;
         height: 16px;
-        margin-right: 8px;
       }
-      .icon-info {
-        fill: @themeColor;
-      }
-      .icon-success {
-        fill: #52c41a;
-      }
-      .icon-warning {
-        fill: #faad14;
-      }
-      .icon-error {
-        fill: #ff4d4f;
-      }
-      .icon-loading {
-        stroke: @themeColor;
-      }
-      .circular {
+      .icon-svg {
         display: inline-block;
+        font-size: 16px;
+        fill: currentColor;
+      }
+      .circle {
+        display: inline-block;
+        stroke: currentColor;
         animation: loading-rotate 2s linear infinite;
         @keyframes loading-rotate {
           100% {
@@ -265,6 +346,41 @@ function onHideMessage(index: number) {
         font-size: 14px;
         color: rgba(0, 0, 0, 0.88);
         line-height: 22px;
+      }
+    }
+    .icon-open {
+      :deep(svg) {
+        fill: currentColor;
+      }
+    }
+    .icon-info {
+      color: @themeColor;
+      :deep(svg) {
+        fill: currentColor;
+      }
+    }
+    .icon-success {
+      color: #52c41a;
+      :deep(svg) {
+        fill: currentColor;
+      }
+    }
+    .icon-warning {
+      color: #faad14;
+      :deep(svg) {
+        fill: currentColor;
+      }
+    }
+    .icon-error {
+      color: #ff4d4f;
+      :deep(svg) {
+        fill: currentColor;
+      }
+    }
+    .icon-loading {
+      color: @themeColor;
+      :deep(svg) {
+        fill: currentColor;
       }
     }
   }

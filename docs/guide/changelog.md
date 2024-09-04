@@ -6,6 +6,7 @@
 ## 1.6.4 <Tag color="volcano" size="small">soon</Tag>
 
 - 优化并更新 [倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html) 组件，新增随时暂停和重置倒计时功能
+- 优化并更新 [通知提醒 Notification](https://themusecatcher.github.io/vue-amazing-ui/guide/components/notification.html) 组件，新增自定义图标、自定义类名、自定义样式等功能
 - 组件库及文档代码优化
 
 ## 1.6.3 <Tag color="volcano" size="small">2024-08-30</Tag>

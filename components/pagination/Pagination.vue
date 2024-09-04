@@ -191,7 +191,16 @@ function onPageSizeChange(pageSize: number) {
       @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage - 1)"
       @click="disabled || currentPage === 1 ? () => false : onPageChange(currentPage - 1)"
     >
-      <svg class="u-arrow" viewBox="64 64 896 896" data-icon="left" aria-hidden="true" focusable="false">
+      <svg
+        class="arrow-svg"
+        viewBox="64 64 896 896"
+        data-icon="left"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+        focusable="false"
+      >
         <path
           d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 0 0 0 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"
         ></path>
@@ -256,7 +265,16 @@ function onPageSizeChange(pageSize: number) {
       @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage + 1)"
       @click="disabled || currentPage === totalPage ? () => false : onPageChange(currentPage + 1)"
     >
-      <svg class="u-arrow" viewBox="64 64 896 896" data-icon="right" aria-hidden="true" focusable="false">
+      <svg
+        class="arrow-svg"
+        viewBox="64 64 896 896"
+        data-icon="right"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+        focusable="false"
+      >
         <path
           d="M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z"
         ></path>
@@ -329,17 +347,17 @@ function onPageSizeChange(pageSize: number) {
     outline: none;
     user-select: none; // 禁止选取文本
     transition: all 0.2s;
-    .u-arrow {
+    .arrow-svg {
       display: inline-block;
-      width: 12px;
-      height: 12px;
-      fill: rgba(0, 0, 0, 0.65);
-      transition: all 0.2s;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.65);
+      fill: currentColor;
+      transition: color 0.2s;
     }
     &:hover {
       border-color: @themeColor;
-      .u-arrow {
-        fill: @themeColor;
+      .arrow-svg {
+        color: @themeColor;
       }
     }
   }
@@ -361,12 +379,12 @@ function onPageSizeChange(pageSize: number) {
       font-weight: 400;
       color: rgba(0, 0, 0, 0.65);
       border-color: #d9d9d9;
-      .u-arrow {
-        fill: rgba(0, 0, 0, 0.25);
+      .arrow-svg {
+        color: rgba(0, 0, 0, 0.25);
       }
     }
-    .u-arrow {
-      fill: rgba(0, 0, 0, 0.25);
+    .arrow-svg {
+      color: rgba(0, 0, 0, 0.25);
     }
   }
   .pagintion-item-link {
@@ -453,13 +471,13 @@ function onPageSizeChange(pageSize: number) {
     color: rgba(0, 0, 0, 0.25);
     border-color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
-    .u-arrow {
-      fill: rgba(0, 0, 0, 0.25);
+    .arrow-svg {
+      color: rgba(0, 0, 0, 0.25);
     }
     &:hover {
       border-color: rgba(0, 0, 0, 0.25);
-      .u-arrow {
-        fill: rgba(0, 0, 0, 0.25);
+      .arrow-svg {
+        color: rgba(0, 0, 0, 0.25);
       }
     }
   }

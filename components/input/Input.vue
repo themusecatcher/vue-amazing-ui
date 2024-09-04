@@ -221,7 +221,7 @@ function onPassword() {
     vertical-align: middle;
     transition: all 0.3s;
     :deep(svg) {
-      fill: rgba(0, 0, 0, 0.88);
+      fill: currentColor;
     }
   }
   .addon-before {
@@ -262,7 +262,7 @@ function onPassword() {
       flex: none;
       align-items: center;
       :deep(svg) {
-        fill: rgba(0, 0, 0, 0.88);
+        fill: currentColor;
       }
     }
     .u-input {
@@ -298,29 +298,27 @@ function onPassword() {
       gap: 8px;
       align-items: center;
       .m-actions {
+        display: inline-flex;
+        align-items: center;
         cursor: pointer;
         .clear-svg {
-          font-size: 12px;
           display: inline-block;
-          fill: rgba(0, 0, 0, 0.25);
-          text-align: center;
-          line-height: 0;
-          vertical-align: -0.08em;
-          transition: fill 0.3s;
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.25);
+          fill: currentColor;
+          transition: color 0.3s;
           &:hover {
-            fill: rgba(0, 0, 0, 0.45);
+            color: rgba(0, 0, 0, 0.45);
           }
         }
         .eye-svg {
-          font-size: 14px;
           display: inline-block;
-          fill: rgba(0, 0, 0, 0.45);
-          text-align: center;
-          line-height: 1;
-          vertical-align: -0.125em;
-          transition: fill 0.3s;
+          font-size: 14px;
+          color: rgba(0, 0, 0, 0.45);
+          fill: currentColor;
+          transition: color 0.3s;
           &:hover {
-            fill: rgba(0, 0, 0, 0.85);
+            color: rgba(0, 0, 0, 0.85);
           }
         }
       }
@@ -335,7 +333,7 @@ function onPassword() {
         flex: none;
         align-items: center;
         :deep(svg) {
-          fill: rgba(0, 0, 0, 0.88);
+          fill: currentColor;
         }
       }
     }

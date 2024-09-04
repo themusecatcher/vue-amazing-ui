@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { Slot } from 'vue'
+import type { VNode, Slot } from 'vue'
 import { throttle, useEventListener, useSlotsExist } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -15,7 +15,7 @@ interface Props {
   size?: number | 'large' | 'small' | 'default' | Responsive // 设置头像的大小，number 类型时单位 px
   src?: string // 图片类头像资源地址
   alt?: string // 图片无法显示时的替代文本
-  icon?: Slot // 设置头像的图标 slot
+  icon?: VNode | Slot // 设置头像的图标
 }
 const props = withDefaults(defineProps<Props>(), {
   shape: 'circle',
@@ -77,7 +77,7 @@ const avatarStyle = computed(() => {
 const slotsExist = useSlotsExist(['default', 'icon'])
 const showIcon = computed(() => {
   if (!props.src) {
-    return slotsExist.icon
+    return slotsExist.icon || props.icon
   }
   return false
 })
@@ -110,7 +110,9 @@ const strStyle = computed(() => {
   >
     <img class="avatar-image" :src="src" :alt="alt" v-if="src" />
     <span class="avatar-icon" v-if="!src && showIcon">
-      <slot name="icon"></slot>
+      <slot name="icon">
+        <component :is="icon" />
+      </slot>
     </span>
     <span class="avatar-string" :style="strStyle" v-if="!src && !showIcon && showStr">
       <slot></slot>
@@ -147,7 +149,9 @@ const strStyle = computed(() => {
     justify-content: center;
     align-items: center;
     color: inherit;
-    line-height: 0;
+    :deep(svg) {
+      fill: currentColor;
+    }
   }
   .avatar-string {
     position: absolute;
