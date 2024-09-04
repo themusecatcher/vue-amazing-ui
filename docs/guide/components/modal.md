@@ -29,37 +29,37 @@ const modal = ref()
 const okType = ref('primary')
 const center = ref(true)
 const loading = ref(false)
-const show = ref(false)
+const open = ref(false)
 
-function showInfoModal() {
+function openInfoModal() {
   modal.value.info({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
   })
   center.value = true
 }
-function showSuccessModal() {
+function openSuccessModal() {
   modal.value.success({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
   })
   center.value = true
 }
-function showErrorModal() {
+function openErrorModal() {
   modal.value.error({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
   })
   center.value = true
 }
-function showWarningModal() {
+function openWarningModal() {
   modal.value.warning({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
   })
   center.value = true
 }
-function showConfirmModal() {
+function openConfirmModal() {
   modal.value.confirm({
     title: 'Do you Want to submit these items ?',
     content: 'Some descriptions ...'
@@ -67,7 +67,7 @@ function showConfirmModal() {
   okType.value = 'primary'
   center.value = true
 }
-function showEraseModal() {
+function openEraseModal() {
   modal.value.erase({
     title: 'Do you Want to delete these items ?',
     content: 'Some descriptions ...'
@@ -75,7 +75,7 @@ function showEraseModal() {
   okType.value = 'danger'
   center.value = true
 }
-function showFixModal() {
+function openFixModal() {
   modal.value.info({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
@@ -90,7 +90,7 @@ function onOk() {
   // “确定”按钮回调
   loading.value = true // 开启加载状态
   setTimeout(() => {
-    show.value = false
+    open.value = false
     loading.value = false
   }, 2000)
 }
@@ -102,7 +102,7 @@ function onKnow() {
 
 <Modal
   ref="modal"
-  v-model:show="show"
+  v-model:open="open"
   :width="420"
   cancel-text="取消"
   ok-text="确认"
@@ -118,7 +118,7 @@ function onKnow() {
 
 ## Info Modal
 
-<Button type="primary" @click="showInfoModal">Info Modal</Button>
+<Button type="primary" @click="openInfoModal">Info Modal</Button>
 
 ::: details Show Code
 
@@ -127,8 +127,8 @@ function onKnow() {
 import { ref } from 'vue'
 
 const modal = ref()
-const show = ref(false)
-function showInfoModal() {
+const open = ref(false)
+function openInfoModal() {
   modal.value.info({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
@@ -139,10 +139,10 @@ function onKnow () { // “我知道了”按钮回调
 }
 </script>
 <template>
-  <Button type="primary" @click="showInfoModal">Info Modal</Button>
+  <Button type="primary" @click="openInfoModal">Info Modal</Button>
   <Modal
     ref="modal"
-    v-model:show="show"
+    v-model:open="open"
     @know="onKnow" />
 </template>
 ```
@@ -151,7 +151,7 @@ function onKnow () { // “我知道了”按钮回调
 
 ## Success Modal
 
-<Button type="primary" @click="showSuccessModal">Success Modal</Button>
+<Button type="primary" @click="openSuccessModal">Success Modal</Button>
 
 ::: details Show Code
 
@@ -160,8 +160,8 @@ function onKnow () { // “我知道了”按钮回调
 import { ref } from 'vue'
 
 const modal = ref()
-const show = ref(false)
-function showSuccessModal() {
+const open = ref(false)
+function openSuccessModal() {
   modal.value.success({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
@@ -172,10 +172,10 @@ function onKnow () { // “我知道了”按钮回调
 }
 </script>
 <template>
-  <Button type="primary" @click="showSuccessModal">Success Modal</Button>
+  <Button type="primary" @click="openSuccessModal">Success Modal</Button>
   <Modal
     ref="modal"
-    v-model:show="show"
+    v-model:open="open"
     @know="onKnow" />
 </template>
 ```
@@ -184,7 +184,7 @@ function onKnow () { // “我知道了”按钮回调
 
 ## Error Modal
 
-<Button type="primary" @click="showErrorModal">Error Modal</Button>
+<Button type="primary" @click="openErrorModal">Error Modal</Button>
 
 ::: details Show Code
 
@@ -193,8 +193,8 @@ function onKnow () { // “我知道了”按钮回调
 import { ref } from 'vue'
 
 const modal = ref()
-const show = ref(false)
-function showErrorModal() {
+const open = ref(false)
+function openErrorModal() {
   modal.value.error({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
@@ -205,10 +205,10 @@ function onKnow () { // “我知道了”按钮回调
 }
 </script>
 <template>
-  <Button type="primary" @click="showErrorModal">Error Modal</Button>
+  <Button type="primary" @click="openErrorModal">Error Modal</Button>
   <Modal
     ref="modal"
-    v-model:show="show"
+    v-model:open="open"
     @know="onKnow" />
 </template>
 ```
@@ -217,7 +217,7 @@ function onKnow () { // “我知道了”按钮回调
 
 ## Warning Modal
 
-<Button type="primary" @click="showWarningModal">Warning Modal</Button>
+<Button type="primary" @click="openWarningModal">Warning Modal</Button>
 
 ::: details Show Code
 
@@ -226,8 +226,8 @@ function onKnow () { // “我知道了”按钮回调
 import { ref } from 'vue'
 
 const modal = ref()
-const show = ref(false)
-function showWarningModal() {
+const open = ref(false)
+function openWarningModal() {
   modal.value.warning({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
@@ -238,10 +238,10 @@ function onKnow () { // “我知道了”按钮回调
 }
 </script>
 <template>
-  <Button type="primary" @click="showWarningModal">Warning Modal</Button>
+  <Button type="primary" @click="openWarningModal">Warning Modal</Button>
   <Modal
     ref="modal"
-    v-model:show="show"
+    v-model:open="open"
     @know="onKnow" />
 </template>
 ```
@@ -250,7 +250,7 @@ function onKnow () { // “我知道了”按钮回调
 
 ## Confirm Modal
 
-<Button type="primary" @click="showConfirmModal">Confirm Modal</Button>
+<Button type="primary" @click="openConfirmModal">Confirm Modal</Button>
 
 ::: details Show Code
 
@@ -259,8 +259,8 @@ function onKnow () { // “我知道了”按钮回调
 import { ref } from 'vue'
 
 const modal = ref()
-const show = ref(false)
-function showConfirmModal() {
+const open = ref(false)
+function openConfirmModal() {
   modal.value.confirm({
     title: 'Do you Want to submit these items ?',
     content: 'Some descriptions ...'
@@ -271,10 +271,10 @@ function onKnow () { // “我知道了”按钮回调
 }
 </script>
 <template>
-  <Button type="primary" @click="showConfirmModal">Confirm Modal</Button>
+  <Button type="primary" @click="openConfirmModal">Confirm Modal</Button>
   <Modal
     ref="modal"
-    v-model:show="show"
+    v-model:open="open"
     @know="onKnow" />
 </template>
 ```
@@ -283,7 +283,7 @@ function onKnow () { // “我知道了”按钮回调
 
 ## Erase Modal
 
-<Button type="primary" @click="showEraseModal">Erase Modal</Button>
+<Button type="primary" @click="openEraseModal">Erase Modal</Button>
 
 ::: details Show Code
 
@@ -293,8 +293,8 @@ import { ref } from 'vue'
 
 const modal = ref()
 const loading = ref(false)
-const show = ref(false)
-function showEraseModal() {
+const open = ref(false)
+function openEraseModal() {
   modal.value.erase({
     title: 'Do you Want to delete these items ?',
     content: 'Some descriptions ...'
@@ -308,17 +308,17 @@ function onOk() {
   // “确定”按钮回调
   loading.value = true // 开启加载状态
   setTimeout(() => {
-    show.value = false
+    open.value = false
     loading.value = false
   }, 2000)
 }
 </script>
 <template>
-  <Button type="primary" @click="showEraseModal">Erase Modal</Button>
+  <Button type="primary" @click="openEraseModal">Erase Modal</Button>
   <Modal
     ref="modal"
     ok-type="danger"
-    v-model:show="show"
+    v-model:open="open"
     :loading="loading"
     @cancel="onCancel"
     @ok="onOk" />
@@ -329,7 +329,7 @@ function onOk() {
 
 ## Height Fixed Modal
 
-<Button type="primary" @click="showFixModal">Height Fixed Modal</Button>
+<Button type="primary" @click="openFixModal">Height Fixed Modal</Button>
 
 ::: details Show Code
 
@@ -338,8 +338,8 @@ function onOk() {
 import { ref } from 'vue'
 
 const modal = ref()
-const show = ref(false)
-function showFixModal() {
+const open = ref(false)
+function openFixModal() {
   modal.value.info({
     title: 'Do you See these items ?',
     content: 'Some descriptions ...'
@@ -350,10 +350,10 @@ function onKnow () { // “我知道了”按钮回调
 }
 </script>
 <template>
-  <Button type="primary" @click="showFixModal">Height Fixed Modal</Button>
+  <Button type="primary" @click="openFixModal">Height Fixed Modal</Button>
   <Modal
     ref="modal"
-    v-model:show="show"
+    v-model:open="open"
     :center="false"
     :top="120"
     @know="onKnow" />
@@ -379,7 +379,7 @@ noticeProps | 通知按钮 `props` 配置，参考 [Button Props](https://themus
 center | `true`: 水平垂直居中；`false`: 固定高度水平居中 | boolean | true
 top | 固定高度水平居中时，距顶部高度，仅当 `center: false` 时生效，单位 `px` | number | 100
 loading | 确定按钮 `loading` | boolean | false
-show <Tag color="cyan">v-model</Tag> | 提示框是否可见 | boolean | false
+open <Tag color="cyan">v-model</Tag> | 提示框是否可见 | boolean | false
 
 ## Events
 
