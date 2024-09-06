@@ -29,10 +29,10 @@ export function formatNumber(
 ): string {
   // 类型检查
   if (typeof value !== 'number' && typeof value !== 'string') {
-    throw new TypeError('Expected value to be of type number or string')
+    console.warn('Expected value to be of type number or string')
   }
   if (typeof precision !== 'number') {
-    throw new TypeError('Expected precision to be of type number')
+    console.warn('Expected precision to be of type number')
   }
   // 处理非数值或NaN的情况
   const numValue = Number(value)
@@ -43,7 +43,7 @@ export function formatNumber(
     return numValue.toFixed(precision)
   }
   let formatValue = numValue.toFixed(precision)
-  // 如果separator是数值而非字符串，会导致错误，此处进行检查
+  // 如果 separator 是数值而非字符串，会导致错误，此处进行检查
   if (typeof separator === 'string' && separator !== '') {
     const [integerPart, decimalPart] = formatValue.split('.')
     formatValue =
