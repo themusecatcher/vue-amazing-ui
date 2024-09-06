@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { setDocumentTitle, webTitle } from '@/utils'
 import GlobalLayout from '@/layouts/GlobalLayout.vue'
 
 export const routes = [
@@ -436,8 +435,8 @@ const router = createRouter({
 })
 // 注册全局前置守卫
 router.beforeEach((to, from) => {
-  const domTitle = to.meta.title + ' ' + String(to.name) + ' - ' + webTitle
-  setDocumentTitle(domTitle)
+  const domTitle = to.meta.title + ' ' + String(to.name) + ' - Vue Amazing UI'
+  document.title = domTitle
 })
 
 export default router
