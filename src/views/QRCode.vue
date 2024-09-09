@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const size = ref(160)
 const value = ref('hello world')
 const decline = () => {
@@ -31,40 +32,19 @@ const increase = () => {
     </h3>
     <QRCode value="https://blog.csdn.net/Dandrose" error-level="M" />
     <h2 class="mt30 mb10">自定义尺寸</h2>
-    <Space>
-      <Button @click="decline">
-        <svg
-          focusable="false"
-          data-icon="minus"
-          width="1em"
-          height="1em"
-          fill="#000000E0"
-          aria-hidden="true"
-          viewBox="64 64 896 896"
-        >
-          <path d="M872 474H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h720c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8z"></path>
-        </svg>
-        <span style="margin-inline-start: 8px">small</span>
-      </Button>
-      <Button @click="increase">
-        <svg
-          focusable="false"
-          data-icon="plus"
-          width="1em"
-          height="1em"
-          fill="#000000E0"
-          aria-hidden="true"
-          viewBox="64 64 896 896"
-        >
-          <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path>
-          <path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path>
-        </svg>
-        <span style="margin-inline-start: 8px">large</span>
-      </Button>
+    <Space vertical>
+      <Space>
+        <Button @click="decline">
+          <MinusOutlined />
+          <span style="margin-inline-start: 8px">small</span>
+        </Button>
+        <Button @click="increase">
+          <PlusOutlined />
+          <span style="margin-inline-start: 8px">large</span>
+        </Button>
+      </Space>
+      <QRCode :size="size" value="https://blog.csdn.net/Dandrose" />
     </Space>
-    <br />
-    <br />
-    <QRCode :size="size" value="https://blog.csdn.net/Dandrose" />
     <h2 class="mt30 mb10">自定义样式</h2>
     <h3 class="mb10">自定义二维码颜色和背景色</h3>
     <Space>

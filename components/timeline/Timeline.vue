@@ -75,107 +75,110 @@ watchEffect(
 )
 </script>
 <template>
-  <div class="m-timeline-wrap" :style="`width: ${totalWidth};`">
-    <div class="m-timeline">
-      <div
-        :class="['timeline-item', { 'item-last': index === timelineData.length - 1 }]"
-        v-for="(data, index) in timelineData"
-        :key="index"
-      >
-        <span class="timeline-tail" :class="`tail-${mode}`" :style="`border-left-style: ${lineStyle};`"></span>
-        <div class="timeline-dot" :class="`dot-${mode}`" :style="`height: ${dotsHeight[index]}`">
-          <slot name="dot" :index="index">
-            <span class="dot-item" v-if="data.color === 'red'" :style="{ borderColor: ColorStyle.red }"></span>
-            <span class="dot-item" v-else-if="data.color === 'gray'" :style="{ borderColor: ColorStyle.gray }"></span>
-            <span class="dot-item" v-else-if="data.color === 'green'" :style="{ borderColor: ColorStyle.green }"></span>
-            <span class="dot-item" v-else-if="data.color === 'blue'" :style="{ borderColor: ColorStyle.blue }"></span>
-            <span class="dot-item" v-else :style="{ borderColor: data.color || ColorStyle.blue }"></span>
-          </slot>
-        </div>
-        <div ref="desc" :class="`timeline-desc desc-${mode}`">
-          <slot name="desc" :index="index">{{ data.desc || '--' }}</slot>
-        </div>
+  <div class="m-timeline" :style="`width: ${totalWidth};`">
+    <div
+      class="timeline-item"
+      :class="{ 'item-last': index === timelineData.length - 1 }"
+      v-for="(data, index) in timelineData"
+      :key="index"
+    >
+      <span class="timeline-tail" :class="`tail-${mode}`" :style="`border-left-style: ${lineStyle};`"></span>
+      <div class="timeline-dot" :class="`dot-${mode}`" :style="`height: ${dotsHeight[index]}`">
+        <slot name="dot" :index="index">
+          <span class="dot-item" v-if="data.color === 'red'" :style="{ borderColor: ColorStyle.red }"></span>
+          <span class="dot-item" v-else-if="data.color === 'gray'" :style="{ borderColor: ColorStyle.gray }"></span>
+          <span class="dot-item" v-else-if="data.color === 'green'" :style="{ borderColor: ColorStyle.green }"></span>
+          <span class="dot-item" v-else-if="data.color === 'blue'" :style="{ borderColor: ColorStyle.blue }"></span>
+          <span class="dot-item" v-else :style="{ borderColor: data.color || ColorStyle.blue }"></span>
+        </slot>
+      </div>
+      <div ref="desc" :class="`timeline-desc desc-${mode}`">
+        <slot name="desc" :index="index">{{ data.desc || '--' }}</slot>
       </div>
     </div>
   </div>
 </template>
 <style lang="less" scoped>
-.m-timeline-wrap {
-  .m-timeline {
-    .timeline-item {
-      position: relative;
-      padding-bottom: 30px;
-      .timeline-tail {
-        position: absolute;
-        top: 12px;
-        width: 0;
-        height: 100%;
-        border-left-width: 2px;
-        border-left-color: #e8e8e8;
+.m-timeline {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+  line-height: 1.5714285714285714;
+  .timeline-item {
+    position: relative;
+    padding-bottom: 30px;
+    .timeline-tail {
+      position: absolute;
+      top: 12px;
+      width: 0;
+      height: 100%;
+      border-left-width: 2px;
+      border-left-color: #e8e8e8;
+    }
+    .tail-left {
+      left: 5px;
+    }
+    .tail-center {
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+    }
+    .tail-right {
+      right: 5px;
+    }
+    .timeline-dot {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      :deep(svg) {
+        fill: currentColor;
       }
-      .tail-left {
-        left: 5px;
-      }
-      .tail-center {
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-      }
-      .tail-right {
-        right: 5px;
-      }
-      .timeline-dot {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        .dot-item {
-          display: inline-block;
-          width: 12px;
-          height: 12px;
-          border-width: 2px;
-          border-style: solid;
-          border-radius: 50%;
-          background: #fff;
-        }
-      }
-      .dot-left {
-        left: 6px;
-        transform: translateX(-50%);
-      }
-      .dot-center {
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .dot-right {
-        right: 6px;
-        transform: translateX(50%);
-      }
-      .timeline-desc {
-        font-size: 14px;
-        line-height: 1.5714285714285714;
-        word-break: break-all;
-      }
-      .desc-left {
-        margin-left: 25px;
-      }
-      .desc-center {
-        width: calc(50% - 12px);
-      }
-      .desc-alternate-left {
-        text-align: end;
-      }
-      .desc-alternate-right {
-        margin-left: calc(50% + 12px);
-      }
-      .desc-right {
-        margin-right: 25px;
-        text-align: end;
+      .dot-item {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-width: 2px;
+        border-style: solid;
+        border-radius: 50%;
+        background: #fff;
       }
     }
-    .item-last {
-      .timeline-tail {
-        display: none;
-      }
+    .dot-left {
+      left: 6px;
+      transform: translateX(-50%);
+    }
+    .dot-center {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .dot-right {
+      right: 6px;
+      transform: translateX(50%);
+    }
+    .timeline-desc {
+      font-size: 14px;
+      line-height: 1.5714285714285714;
+      word-break: break-all;
+    }
+    .desc-left {
+      margin-left: 25px;
+    }
+    .desc-center {
+      width: calc(50% - 12px);
+    }
+    .desc-alternate-left {
+      text-align: end;
+    }
+    .desc-alternate-right {
+      margin-left: calc(50% + 12px);
+    }
+    .desc-right {
+      margin-right: 25px;
+      text-align: end;
+    }
+  }
+  .item-last {
+    .timeline-tail {
+      display: none;
     }
   }
 }
