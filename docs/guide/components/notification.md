@@ -101,17 +101,17 @@ function onCustomClose() {
   notification.value.info({
     title: 'Notification Title',
     description: 'The notification will automatically turn off after 3 seconds.',
-    duration: 3000
+    duration: 3000,
+    onClose: () => {
+      console.log('custom notification closed')
+    }
   })
 }
 function onNeverAutoClose() {
   notification.value.info({
     title: 'Notification Title',
     description: 'This notification will not automatically turn off.',
-    duration: null,
-    onClose: () => {
-      console.log('custom notification closed')
-    }
+    duration: null
   })
 }
 function onClose() {
@@ -375,17 +375,17 @@ function onCustomClose() {
   notification.value.info({
     title: 'Notification Title',
     description: 'The notification will automatically turn off after 3 seconds.',
-    duration: 3000
+    duration: 3000,
+    onClose: () => {
+      console.log('custom notification closed')
+    }
   })
 }
 function onNeverAutoClose() {
   notification.value.info({
     title: 'Notification Title',
     description: 'This notification will not automatically turn off.',
-    duration: null,
-    onClose: () => {
-      console.log('custom notification closed')
-    }
+    duration: null
   })
 }
 function onClose() {
