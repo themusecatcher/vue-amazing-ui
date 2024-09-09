@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.6.5 <Tag color="volcano" size="small">soon</Tag>
+
+- 组件库及文档代码优化
+
 ## 1.6.4 <Tag color="volcano" size="small">2024-09-06</Tag>
 
 - 优化并更新 [倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html) 组件，新增随时暂停和重置倒计时功能

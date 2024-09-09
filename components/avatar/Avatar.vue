@@ -125,6 +125,7 @@ const strStyle = computed(() => {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  vertical-align: middle;
   width: 32px;
   height: 32px;
   border-radius: 50%;
