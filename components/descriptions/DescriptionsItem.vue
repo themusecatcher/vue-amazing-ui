@@ -22,14 +22,14 @@ withDefaults(defineProps<Props>(), {
       <slot></slot>
     </span>
   </div>
-  <div class="descriptions-item-bordered" :data-span="span">
+  <tr class="descriptions-item-bordered" :data-span="span">
     <th class="descriptions-label-th" :style="labelStyle">
       <slot name="label">{{ label }}</slot>
     </th>
     <td class="descriptions-content-td" :style="contentStyle">
       <slot></slot>
     </td>
-  </div>
+  </tr>
 </template>
 <style lang="less" scoped>
 .descriptions-item {

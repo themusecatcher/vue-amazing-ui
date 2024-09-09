@@ -10,7 +10,7 @@ import {
   provide,
   ref,
   watch
-} from "./chunk-HBGG36HX.js";
+} from "./chunk-T4VKWHV5.js";
 import {
   animateCSSModeScroll,
   createElement,
@@ -31,10 +31,10 @@ import {
   now,
   setCSSProperty,
   showWarning
-} from "./chunk-EEWTRMFF.js";
+} from "./chunk-ME5IFAZH.js";
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/swiper@11.1.10/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@11.1.12/node_modules/swiper/shared/swiper-core.mjs
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -593,7 +593,7 @@ function updateSlides() {
       allSlidesSize += slideSizeValue + (spaceBetween || 0);
     });
     allSlidesSize -= spaceBetween;
-    const maxSnap = allSlidesSize - swiperSize;
+    const maxSnap = allSlidesSize > swiperSize ? allSlidesSize - swiperSize : 0;
     snapGrid = snapGrid.map((snap) => {
       if (snap <= 0) return -offsetBefore;
       if (snap > maxSnap) return maxSnap + offsetAfter;
@@ -1402,7 +1402,9 @@ function slideTo(index, speed, runCallbacks, internal, initial) {
   if (slideIndex > activeIndex) direction = "next";
   else if (slideIndex < activeIndex) direction = "prev";
   else direction = "reset";
-  if (rtl && -translate2 === swiper.translate || !rtl && translate2 === swiper.translate) {
+  const isVirtual = swiper.virtual && swiper.params.virtual.enabled;
+  const isInitialVirtual = isVirtual && initial;
+  if (!isInitialVirtual && (rtl && -translate2 === swiper.translate || !rtl && translate2 === swiper.translate)) {
     swiper.updateActiveIndex(slideIndex);
     if (params.autoHeight) {
       swiper.updateAutoHeight();
@@ -1421,7 +1423,6 @@ function slideTo(index, speed, runCallbacks, internal, initial) {
     const isH = swiper.isHorizontal();
     const t = rtl ? translate2 : -translate2;
     if (speed === 0) {
-      const isVirtual = swiper.virtual && swiper.params.virtual.enabled;
       if (isVirtual) {
         swiper.wrapperEl.style.scrollSnapType = "none";
         swiper._immediateVirtual = true;
@@ -3705,7 +3706,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 });
 Swiper.use([Resize, Observer]);
 
-// node_modules/.pnpm/swiper@11.1.10/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@11.1.12/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -4050,7 +4051,7 @@ function updateSwiper(_ref) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@11.1.10/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@11.1.12/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
     obj = {};
@@ -4174,7 +4175,7 @@ var updateOnVirtualData = (swiper) => {
   }
 };
 
-// node_modules/.pnpm/swiper@11.1.10/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@11.1.12/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots, slidesRef, oldSlidesRef) {
   if (originalSlots === void 0) {
     originalSlots = {};
