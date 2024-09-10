@@ -48,6 +48,7 @@
     "naive-ui": "^2.39.0",
     "qrcode": "^1.5.4",
     "swiper": "^11.1.12",
+    "unplugin-auto-import": "^0.18.2",
     "vue": "^3.5.3",
     "vue-amazing-ui": "^1.6.5",
     "vue-router": "^4.4.3"

@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-
+import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 // ant-desing naive-ui 按需引入
 import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
@@ -20,6 +20,15 @@ const { f } = minimist(process.argv.slice(2))
 export default defineConfig({
   plugins: [
     vue(),
+    AutoImport({
+      dts: 'src/auto-imports.d.ts',
+      imports: ['vue', 'vue-router'],
+      eslintrc: {
+        enabled: true,
+        filepath: './.eslintrc-auto-import.json',
+        globalsPropValue: true
+      }
+    }),
     // visualizer({ // 生成的分析图文件名，默认stats.html
     //   // file: 'stats.html',
     //   open: true // 打包后自动打开分析图
