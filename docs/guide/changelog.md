@@ -5,6 +5,8 @@
 
 ## 1.6.5 <Tag color="volcano" size="small">soon</Tag>
 
+- 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，新增自定义图标、自定义类名、自定义样式等功能
+- 优化并更新 [信息提示 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增自定义图标、自定义类型、自定义样式等功能
 - 组件库及文档代码优化
 
 ## 1.6.4 <Tag color="volcano" size="small">2024-09-06</Tag>

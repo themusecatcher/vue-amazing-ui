@@ -14,8 +14,8 @@ interface Props {
   okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   bodyStyle?: CSSProperties // 设置对话框 body 样式
   footer?: boolean // 是否显示底部按钮 boolean | slot
-  center?: boolean // 水平垂直居中：true  固定高度水平居中：false
-  top?: string | number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
+  centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
+  top?: string | number // 固定高度水平居中时，距顶部高度，仅当 centered: false 时生效，单位 px
   switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
   loading?: boolean // 确定按钮 loading
   show?: boolean // 对话框是否可见
@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   okProps: () => ({}),
   bodyStyle: () => ({}),
   footer: true,
-  center: true,
+  centered: true,
   top: 100,
   switchFullscreen: false,
   loading: false,
@@ -49,7 +49,7 @@ const dialogHeight = computed(() => {
 const dialogStyle = computed(() => {
   return {
     width: fullScreen.value ? '100%' : props.width + 'px',
-    top: props.center ? '50%' : fullScreen.value ? 0 : typeof props.top === 'number' ? props.top + 'px' : props.top
+    top: props.centered ? '50%' : fullScreen.value ? 0 : typeof props.top === 'number' ? props.top + 'px' : props.top
   }
 })
 const dialogRef = ref() // DOM 引用
@@ -100,7 +100,8 @@ function onOk() {
         @keydown.esc="onClose"
       >
         <div
-          :class="['m-dialog', center ? 'horizontal-vertical-centered' : 'fix-height-centered']"
+          class="m-dialog"
+          :class="[centered ? 'horizontal-vertical-centered' : 'fix-height-centered']"
           :style="dialogStyle"
         >
           <div class="m-dialog-content" :style="`--height: ${fullScreen ? '100vh' : dialogHeight}`">

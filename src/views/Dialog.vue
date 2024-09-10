@@ -95,7 +95,7 @@ function onLoadingOk() {
     </Dialog>
     <h2 class="mt30 mb10">固定高度</h2>
     <Button type="primary" @click="show6 = true">Open Dialog</Button>
-    <Dialog v-model:show="show6" title="Title" :center="false" :top="120" @ok="onOk">
+    <Dialog v-model:show="show6" title="Title" :centered="false" :top="120" @ok="onOk">
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>

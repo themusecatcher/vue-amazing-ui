@@ -421,7 +421,7 @@ placement | 消息弹出位置，优先级低于 [Notification](#notification-ty
 
 <br/>
 
-*调用时传入的 `Notification` 参数*
+*调用时传入的 `Notification` 类型，以下属性均具有更高优先级*
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
