@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
-
 const message = ref()
 function onOpen(content: string) {
   message.value.open(content) // open 调用

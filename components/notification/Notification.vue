@@ -33,11 +33,11 @@ const hideIndex = ref<number[]>([])
 const hideTimers = ref<any[]>([])
 const notificationData = ref<any[]>([])
 const closeDuration = ref<number | null>(null) // 自动关闭延时
-const place = ref()
-const notification = ref()
+const notificationPlace = ref() // 弹出位置
+const notificationRef = ref() // notificationData 数组的 DOM 引用
 const emit = defineEmits(['close'])
 const topStyle = computed(() => {
-  if (['topRight', 'topLeft'].includes(place.value)) {
+  if (['topRight', 'topLeft'].includes(notificationPlace.value)) {
     return {
       top: props.top + 'px'
     }
@@ -45,7 +45,7 @@ const topStyle = computed(() => {
   return {}
 })
 const bottomStyle = computed(() => {
-  if (['bottomRight', 'bottomLeft'].includes(place.value)) {
+  if (['bottomRight', 'bottomLeft'].includes(notificationPlace.value)) {
     return {
       bottom: props.bottom + 'px'
     }
@@ -72,7 +72,7 @@ watch(
   }
 )
 watchEffect(() => {
-  place.value = props.placement
+  notificationPlace.value = props.placement
 })
 function onEnter(index: number) {
   stopAutoClose(index)
@@ -94,7 +94,7 @@ function autoClose(index: number) {
   }
 }
 async function onClose(index: number) {
-  notification.value[index].style.maxHeight = notification.value[index].offsetHeight + 'px'
+  notificationRef.value[index].style.maxHeight = notificationRef.value[index].offsetHeight + 'px'
   await nextTick()
   hideIndex.value.push(index)
   notificationData.value[index].onClose && notificationData.value[index].onClose()
@@ -106,7 +106,7 @@ function show() {
   const index = notificationData.value.length - 1
   const last = notificationData.value[index]
   if (last.placement) {
-    place.value = last.placement
+    notificationPlace.value = last.placement
   }
   if (last.duration !== null) {
     closeDuration.value = last.duration || props.duration
@@ -159,11 +159,15 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-notification-wrap" :class="`notification-${place}`" :style="{ ...topStyle, ...bottomStyle }">
-    <TransitionGroup :name="['topRight', 'bottomRight'].includes(place) ? 'right' : 'left'">
+  <div
+    class="m-notification-wrap"
+    :class="`notification-${notificationPlace}`"
+    :style="{ ...topStyle, ...bottomStyle }"
+  >
+    <TransitionGroup :name="['topRight', 'bottomRight'].includes(notificationPlace) ? 'right' : 'left'">
       <div
         v-show="!hideIndex.includes(index)"
-        ref="notification"
+        ref="notificationRef"
         class="m-notification-content"
         :class="[`icon-${notification.mode}`, notification.class]"
         :style="notification.style"
@@ -329,6 +333,7 @@ defineExpose({
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
     :deep(.icon-svg) {
+      flex-shrink: 0;
       display: inline-block;
       font-size: 24px;
       fill: currentColor;

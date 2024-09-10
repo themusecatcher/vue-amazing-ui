@@ -16,11 +16,11 @@ interface Message {
   content?: string // 提示内容
   icon?: VNode // 自定义图标
   duration?: number | null // 自动关闭的延时时长，单位 ms；设置 null 时，不自动关闭
-  mode?: 'open' | 'info' | 'success' | 'error' | 'warning' | 'loading' // 提示类型
   class?: string // 自定义类名
   style?: CSSProperties // 自定义样式
   onClick?: Function // 点击 message 时的回调函数
   onClose?: Function // 关闭时的回调函数
+  [key: string]: any // 额外属性
 }
 const resetTimer = ref()
 const showMessage = ref<boolean[]>([])
@@ -189,7 +189,7 @@ defineExpose({
           @mouseleave="onLeave(index)"
           @click="onClick($event, index)"
         >
-          <component v-if="message.icon" :is="message.icon" class="icon-img" />
+          <component v-if="message.icon" :is="message.icon" class="icon-svg" />
           <svg
             v-else-if="message.mode === 'info'"
             class="icon-svg"
@@ -261,9 +261,9 @@ defineExpose({
           >
             <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
           </svg>
-          <p class="message-content">
+          <div class="message-content">
             {{ message.content || content }}
-          </p>
+          </div>
         </div>
       </div>
     </TransitionGroup>
@@ -316,12 +316,7 @@ defineExpose({
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
       pointer-events: auto; // 保证内容区域部分可以正常响应鼠标事件
-      .icon-img {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-      }
-      .icon-svg {
+      :deep(.icon-svg) {
         display: inline-block;
         font-size: 16px;
         fill: currentColor;
