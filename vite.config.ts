@@ -20,7 +20,7 @@ const { f } = minimist(process.argv.slice(2))
 export default defineConfig({
   plugins: [
     vue(),
-    AutoImport({
+    AutoImport({ // 自动引入所需 apis
       dts: 'src/auto-imports.d.ts',
       imports: ['vue', 'vue-router'],
       eslintrc: {

@@ -3,7 +3,7 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-## 1.6.5 <Tag color="volcano" size="small">soon</Tag>
+## 1.6.5 <Tag color="volcano" size="small">2024-09-10</Tag>
 
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，新增自定义图标、自定义类名、自定义样式等功能
 - 优化并更新 [信息提示 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增自定义图标、自定义类型、自定义样式等功能
