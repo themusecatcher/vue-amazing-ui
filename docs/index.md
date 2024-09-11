@@ -29,8 +29,8 @@ features:
     title: 开箱即可用
     details: 目前包含 62 个基础 UI 组件以及 16 个常用工具函数，持续探索更新中...
   - icon: ⚡️
-    title: 单文件组件
-    details: '组件库所有组件均为 SFC，样式全部采用 border-box 模式'
+    title: 最大的特色
+    details: '所有组件均为单文件组件 SFC，单独使用，也没问题！'
 ---
 
 <Watermark fullscreen content="Vue Amazing UI" />
