@@ -1,7 +1,22 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "components/**/*.ts", "components/**/*.vue"],
-  "exclude": ["src/**/__tests__/*"],
+  "include": [
+    "types/env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "types/**/*.d.ts",
+    "types/**/*.ts",
+    "components/*.ts",
+    "components/**/*.ts",
+    "components/**/*.vue",
+    "components.d.ts",
+    "vite.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+  ],
   "compilerOptions": {
     "removeComments": true,
     "isolatedModules": true,
@@ -10,10 +25,12 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "images/*": ["./src/assets/images/*"],
-      "less/*": ["./src/assets/less/*"],
-      "components/*": ["./components/*"]
+      "@/*": ["src/*"],
+      "#/*": ["types/*"],
+      "components/*": ["components/*"],
+      "images/*": ["src/assets/images/*"],
+      "less/*": ["src/assets/less/*"],
+      "utils/*": ["src/utils/*"]
     }
   }
 }
