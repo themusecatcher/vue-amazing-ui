@@ -3,7 +3,7 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-## 1.6.6 <Tag color="volcano" size="small">soon</Tag>
+## 1.6.6 <Tag color="volcano" size="small">2024-09-13</Tag>
 
 - 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增垂直模式
 - 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件
