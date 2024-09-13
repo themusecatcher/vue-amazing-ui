@@ -390,6 +390,7 @@ suffix | 后缀图标 | string &#124; slot | undefined
 allowClear | 可以点击清除图标删除内容 | boolean | false
 password | 是否启用密码框 | boolean | false
 disabled | 是否禁用 | boolean | false
+placeholder | 文本输入的占位符 | string | undefined
 maxlength | 最大长度 | number | undefined
 showCount | 是否展示字数 | boolean | false
 value <Tag color="cyan">v-model</Tag> | 输入框内容 | string | undefined

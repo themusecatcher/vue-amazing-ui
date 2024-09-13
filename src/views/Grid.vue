@@ -318,7 +318,7 @@ const state = reactive({
 </template>
 <style lang="less" scoped>
 .row {
-  .m-col {
+  .grid-col {
     min-height: 30px;
     margin-top: 8px;
     margin-bottom: 8px;
@@ -333,7 +333,7 @@ const state = reactive({
   }
 }
 .gutter-row {
-  .m-col {
+  .grid-col {
     min-height: 30px;
     color: #fff;
     text-align: center;

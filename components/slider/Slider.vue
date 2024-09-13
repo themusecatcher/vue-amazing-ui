@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
+import { useResizeObserver } from '../utils'
 interface Props {
-  width?: string | number // 滑动输入条宽度，单位 px
+  width?: string | number // 滑动输入条宽度，单位 px，水平模式时生效
+  height?: string | number // 滑动输入条高度，单位 px，垂直模式时生效
+  vertical?: boolean // 是否启用垂直模式
   min?: number // 最小值
   max?: number // 最大值
   disabled?: boolean // 是否禁用
@@ -14,6 +16,8 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
+  height: '100%',
+  vertical: false,
   min: 0,
   max: 100,
   disabled: false,
@@ -23,64 +27,122 @@ const props = withDefaults(defineProps<Props>(), {
   tooltip: true,
   value: 0
 })
-const transition = ref(false)
-const timer = ref()
-const left = ref(0) // 左滑块距离滑动条左端的距离
-const right = ref(0) // 右滑动距离滑动条左端的距离
 const sliderRef = ref() // slider DOM 引用
-const sliderWidth = ref()
-const leftHandle = ref() // left handle 模板引用
-const leftTooltip = ref() // left tooltip 模板应用
-const rightHandle = ref() // right handler 模板引用
-const rightTooltip = ref() // right tooltip 模板引用
+const sliderWidth = ref() // 滑动输入条宽度
+const sliderHeight = ref() // 滑动输入条高度
+const low = ref(0) // 左/下滑块距离滑动条左/上端的距离
+const high = ref(0) // 右/上滑动距离滑动条左/上端的距离
+const lowHandle = ref() // low handle 模板引用
+const lowTooltip = ref() // low tooltip 模板应用
+const highHandle = ref() // high handle 模板引用
+const highTooltip = ref() // high tooltip 模板引用
+const emits = defineEmits(['update:value', 'change'])
+const sliderSize = computed(() => {
+  if (!props.vertical) {
+    return sliderWidth.value
+  } else {
+    return sliderHeight.value
+  }
+})
+const sliderStyle = computed(() => {
+  if (!props.vertical) {
+    return {
+      width: typeof props.width === 'number' ? props.width + 'px' : props.width
+    }
+  } else {
+    return {
+      height: typeof props.height === 'number' ? props.height + 'px' : props.height
+    }
+  }
+})
+const trackStyle = computed(() => {
+  if (!props.vertical) {
+    return {
+      left: low.value + 'px',
+      right: 'auto',
+      width: high.value - low.value + 'px'
+    }
+  } else {
+    return {
+      bottom: low.value + 'px',
+      top: 'auto',
+      height: high.value - low.value + 'px'
+    }
+  }
+})
+const lowHandleStyle = computed(() => {
+  if (!props.vertical) {
+    return {
+      left: low.value + 'px',
+      right: 'auto',
+      transform: 'translate(-50%, -50%)'
+    }
+  } else {
+    return {
+      bottom: low.value + 'px',
+      top: 'auto',
+      transform: 'translate(-50%, 50%)'
+    }
+  }
+})
+const highHandleStyle = computed(() => {
+  if (!props.vertical) {
+    return {
+      left: high.value + 'px',
+      right: 'auto',
+      transform: 'translate(-50%, -50%)'
+    }
+  } else {
+    return {
+      bottom: high.value + 'px',
+      top: 'auto',
+      transform: 'translate(-50%, 50%)'
+    }
+  }
+})
 const precision = computed(() => {
   // 获取 step 数值精度
   const strNumArr = props.step.toString().split('.')
   return strNumArr[1]?.length ?? 0
 })
-const totalWidth = computed(() => {
-  if (typeof props.width === 'number') {
-    return props.width + 'px'
-  } else {
-    return props.width
-  }
-})
 const sliderValue = computed(() => {
-  let high
-  if (right.value === sliderWidth.value) {
-    high = props.max
+  let highValue
+  if (high.value === sliderSize.value) {
+    highValue = props.max
   } else {
-    high = fixedDigit(pixelStepOperation(right.value, '/') * props.step + props.min, precision.value)
+    highValue = fixedDigit(pixelStepOperation(high.value, '/') * props.step + props.min, precision.value)
     if (props.step > 1) {
-      high = Math.round(high / props.step) * props.step
+      highValue = Math.round(highValue / props.step) * props.step
     }
   }
   if (props.range) {
-    let low = fixedDigit(pixelStepOperation(left.value, '/') * props.step + props.min, precision.value)
+    let lowValue = fixedDigit(pixelStepOperation(low.value, '/') * props.step + props.min, precision.value)
     if (props.step > 1) {
-      low = Math.round(low / props.step) * props.step
+      lowValue = Math.round(lowValue / props.step) * props.step
     }
-    return [low, high]
+    return [lowValue, highValue]
   }
-  return high
+  return highValue
 })
-const leftValue = computed(() => {
+const lowTooltipValue = computed(() => {
   if (props.range) {
     return props.formatTooltip((sliderValue.value as number[])[0])
   }
   return null
 })
-const rightValue = computed(() => {
+const highTooltipValue = computed(() => {
   if (props.range) {
     return props.formatTooltip((sliderValue.value as number[])[1])
   }
   return props.formatTooltip(sliderValue.value as number)
 })
-const emits = defineEmits(['update:value', 'change'])
 watch(
-  () => props.value,
+  () => [props.min, props.max, props.step, props.vertical, props.value],
   () => {
-    getPosition()
+    getSliderPosition()
+  },
+  {
+    deep: true
   }
 )
 watch(sliderValue, (to) => {
@@ -88,13 +150,29 @@ watch(sliderValue, (to) => {
   emits('change', to)
 })
 useResizeObserver(sliderRef, () => {
-  getSliderWidth()
-  getPosition()
+  getSliderSize()
+  getSliderPosition()
 })
 onMounted(() => {
-  getSliderWidth()
-  getPosition()
+  getSliderSize()
+  getSliderPosition()
 })
+function getSliderSize() {
+  sliderWidth.value = sliderRef.value.offsetWidth
+  sliderHeight.value = sliderRef.value.offsetHeight
+}
+function getSliderPosition() {
+  if (props.range) {
+    // 双滑块模式
+    const lowValue = pixelStepOperation((checkLow((props.value as number[])[0]) - props.min) / props.step, '*')
+    low.value = fixedDigit(lowValue, 2)
+    const highValue = pixelStepOperation((checkHigh((props.value as number[])[1]) - props.min) / props.step, '*')
+    high.value = fixedDigit(highValue, 2)
+  } else {
+    const highValue = pixelStepOperation((checkValue(props.value as number) - props.min) / props.step, '*')
+    high.value = fixedDigit(highValue, 2)
+  }
+}
 function checkLow(value: number): number {
   if (value < props.min) {
     return props.min
@@ -116,21 +194,6 @@ function checkValue(value: number): number {
   }
   return value
 }
-function getSliderWidth() {
-  sliderWidth.value = sliderRef.value.offsetWidth
-}
-function getPosition() {
-  if (props.range) {
-    // 双滑块模式
-    const leftValue = pixelStepOperation((checkLow((props.value as number[])[0]) - props.min) / props.step, '*')
-    left.value = fixedDigit(leftValue, 2)
-    const rightValue = pixelStepOperation((checkHigh((props.value as number[])[1]) - props.min) / props.step, '*')
-    right.value = fixedDigit(rightValue, 2)
-  } else {
-    const rightValue = pixelStepOperation((checkValue(props.value as number) - props.min) / props.step, '*')
-    right.value = fixedDigit(rightValue, 2)
-  }
-}
 function fixedDigit(num: number, precision: number) {
   return parseFloat(num.toFixed(precision))
 }
@@ -143,199 +206,233 @@ function handlerFocus(handler: HTMLElement, tooltip: HTMLElement) {
     tooltip.classList.add('show-handle-tooltip')
   }
 }
-function onClickPoint(e: any) {
-  // 点击滑动条，移动滑块
-  if (transition.value) {
-    timer.value && cancelRaf(timer.value)
-    timer.value = null
+function onClickSliderPoint(e: MouseEvent) {
+  let targetDistance // 目标移动距离
+  if (!props.vertical) {
+    // horizontal
+    const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
+    // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+    const value = Math.round(pixelStepOperation(e.clientX - leftX, '/'))
+    targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
   } else {
-    transition.value = true
+    const bottomY = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
+    // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
+    const value = Math.round(pixelStepOperation(bottomY - e.clientY, '/'))
+    targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
   }
-  timer.value = rafTimeout(() => {
-    transition.value = false
-  }, 200)
-  // 元素是absolute时，e.layerX是相对于自身元素左上角的水平位置
-  const value = Math.round(pixelStepOperation(e.layerX, '/'))
-  const targetX = fixedDigit(pixelStepOperation(value, '*'), 2) // 鼠标点击位置距离滑动输入条左端的水平距离
   if (props.range) {
     // 双滑块模式
-    if (targetX <= left.value) {
-      left.value = targetX
-      handlerFocus(leftHandle.value, leftTooltip.value)
-    } else if (targetX >= right.value) {
-      right.value = targetX
-      handlerFocus(rightHandle.value, rightTooltip.value)
+    if (targetDistance <= low.value) {
+      low.value = targetDistance
+      handlerFocus(lowHandle.value, lowTooltip.value)
+    } else if (targetDistance >= high.value) {
+      high.value = targetDistance
+      handlerFocus(highHandle.value, highTooltip.value)
     } else {
-      if (targetX - left.value < right.value - targetX) {
-        left.value = targetX
-        handlerFocus(leftHandle.value, leftTooltip.value)
+      if (targetDistance - low.value < high.value - targetDistance) {
+        low.value = targetDistance
+        handlerFocus(lowHandle.value, lowTooltip.value)
       } else {
-        right.value = targetX
-        handlerFocus(rightHandle.value, rightTooltip.value)
+        high.value = targetDistance
+        handlerFocus(highHandle.value, highTooltip.value)
       }
     }
   } else {
     // 单滑块模式
-    right.value = targetX
-    handlerFocus(rightHandle.value, rightTooltip.value)
+    high.value = targetDistance
+    handlerFocus(highHandle.value, highTooltip.value)
   }
 }
-function onLeftMouseDown() {
-  // 在滚动条上拖动左滑块
-  const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
+function onLowMouseDown() {
+  // 在滑动输入条上拖动较小数值滑块
+  let originalDistance
+  if (!props.vertical) {
+    // horizontal
+    originalDistance = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
+  } else {
+    originalDistance = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
+  }
   window.onmousemove = (e: MouseEvent) => {
     if (props.tooltip) {
-      leftTooltip.value.classList.add('show-handle-tooltip')
+      lowTooltip.value.classList.add('show-handle-tooltip')
     }
-    // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const value = Math.round(pixelStepOperation(e.clientX - leftX, '/'))
-    const targetX = fixedDigit(pixelStepOperation(value, '*'), 2)
-    if (targetX < 0) {
-      left.value = 0
-    } else if (targetX >= 0 && targetX <= right.value) {
-      left.value = targetX
+    let targetDistance // 目标移动距离
+    if (!props.vertical) {
+      // horizontal
+      // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+      const value = Math.round(pixelStepOperation(e.clientX - originalDistance, '/'))
+      targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
     } else {
-      // targetX > right
-      left.value = right.value
-      rightHandle.value.focus()
-      onRightMouseDown()
+      // vertical
+      // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
+      const value = Math.round(pixelStepOperation(originalDistance - e.clientY, '/'))
+      targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
+    }
+    if (targetDistance < 0) {
+      low.value = 0
+    } else if (targetDistance >= 0 && targetDistance <= high.value) {
+      low.value = targetDistance
+    } else {
+      // targetDistance > high
+      low.value = high.value
+      highHandle.value.focus()
+      onHighMouseDown()
     }
   }
   window.onmouseup = () => {
     if (props.tooltip) {
-      leftTooltip.value.classList.remove('show-handle-tooltip')
+      lowTooltip.value.classList.remove('show-handle-tooltip')
     }
     window.onmousemove = null
   }
 }
-function onRightMouseDown() {
-  // 在滚动条上拖动右滑块
-  const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
+function onHighMouseDown() {
+  // 在滑动输入条上拖动较大数值滑块
+  let originalDistance
+  if (!props.vertical) {
+    // horizontal
+    originalDistance = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
+  } else {
+    originalDistance = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
+  }
   window.onmousemove = (e: MouseEvent) => {
     if (props.tooltip) {
-      rightTooltip.value.classList.add('show-handle-tooltip')
+      highTooltip.value.classList.add('show-handle-tooltip')
     }
-    // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    const value = Math.round(pixelStepOperation(e.clientX - leftX, '/'))
-    const targetX = fixedDigit(pixelStepOperation(value, '*'), 2)
-    if (targetX > sliderWidth.value) {
-      right.value = sliderWidth.value
-    } else if (left.value <= targetX && targetX <= sliderWidth.value) {
-      right.value = targetX
+    let targetDistance // 目标移动距离
+    if (!props.vertical) {
+      // horizontal
+      // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+      const value = Math.round(pixelStepOperation(e.clientX - originalDistance, '/'))
+      targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
     } else {
-      // targetX < left
-      right.value = left.value
+      // vertical
+      // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
+      const value = Math.round(pixelStepOperation(originalDistance - e.clientY, '/'))
+      targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
+    }
+    if (targetDistance > sliderSize.value) {
+      high.value = sliderSize.value
+    } else if (low.value <= targetDistance && targetDistance <= sliderSize.value) {
+      high.value = targetDistance
+    } else {
+      // targetDistance < low
+      high.value = low.value
       if (props.range) {
-        leftHandle.value.focus()
-        onLeftMouseDown()
+        lowHandle.value.focus()
+        onLowMouseDown()
       }
     }
   }
   window.onmouseup = () => {
     if (props.tooltip) {
-      rightTooltip.value.classList.remove('show-handle-tooltip')
+      highTooltip.value.classList.remove('show-handle-tooltip')
     }
     window.onmousemove = null
   }
 }
-function onLeftSlide(source: number, place: string) {
-  const targetX = pixelStepOperation(source, '-')
-  if (place === 'left') {
-    // 左滑块左移
-    if (targetX < 0) {
-      left.value = 0
+function onLowSlide(source: number, place: string) {
+  const targetDistance = pixelStepOperation(source, '-')
+  if (place === 'low') {
+    // 左/下滑块左/下移
+    if (targetDistance < 0) {
+      low.value = 0
     } else {
-      left.value = targetX
+      low.value = targetDistance
     }
   } else {
-    // 右滑块左移
-    if (targetX >= left.value) {
-      right.value = targetX
+    // 右/上滑块左/下移
+    if (targetDistance >= low.value) {
+      high.value = targetDistance
     } else {
-      right.value = left.value
-      left.value = targetX
-      leftHandle.value.focus()
+      high.value = low.value
+      low.value = targetDistance
+      lowHandle.value.focus()
     }
   }
 }
-function onRightSlide(source: number, place: string) {
-  const targetX = pixelStepOperation(source, '+')
-  if (place === 'right') {
-    // 右滑块右移
-    if (targetX > sliderWidth.value) {
-      right.value = sliderWidth.value
+function onHighSlide(source: number, place: string) {
+  const targetDistance = pixelStepOperation(source, '+')
+  if (place === 'high') {
+    // 右/上滑块右/上移
+    if (targetDistance > sliderSize.value) {
+      high.value = sliderSize.value
     } else {
-      right.value = targetX
+      high.value = targetDistance
     }
   } else {
-    // 左滑块右移
-    if (targetX <= right.value) {
-      left.value = targetX
+    // 左/下滑块右/上移
+    if (targetDistance <= high.value) {
+      low.value = targetDistance
     } else {
-      left.value = right.value
-      right.value = targetX
-      rightHandle.value.focus()
+      low.value = high.value
+      high.value = targetDistance
+      highHandle.value.focus()
     }
   }
 }
 function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): number {
   if (operator === '+') {
-    return target + (sliderWidth.value * props.step) / (props.max - props.min)
+    return target + (sliderSize.value * props.step) / (props.max - props.min)
   }
   if (operator === '-') {
-    return target - (sliderWidth.value * props.step) / (props.max - props.min)
+    return target - (sliderSize.value * props.step) / (props.max - props.min)
   }
   if (operator === '*') {
-    return (target * sliderWidth.value * props.step) / (props.max - props.min)
+    return (target * sliderSize.value * props.step) / (props.max - props.min)
   }
   if (operator === '/') {
-    return (target * (props.max - props.min)) / (sliderWidth.value * props.step)
+    return (target * (props.max - props.min)) / (sliderSize.value * props.step)
   }
   return target
 }
 </script>
 <template>
-  <div ref="sliderRef" class="m-slider" :class="{ 'slider-disabled': disabled }" :style="`width: ${totalWidth};`">
-    <div class="slider-rail" @click.self="disabled ? () => false : onClickPoint($event)"></div>
-    <div
-      class="slider-track"
-      :class="{ 'track-transition': transition }"
-      :style="`left: ${left}px; right: auto; width: ${right - left}px;`"
-    ></div>
+  <div
+    ref="sliderRef"
+    class="m-slider"
+    :class="{
+      'slider-horizontal': !vertical,
+      'slider-vertical': vertical,
+      'slider-disabled': disabled
+    }"
+    :style="sliderStyle"
+    @click="disabled ? () => false : onClickSliderPoint($event)"
+  >
+    <div class="slider-rail"></div>
+    <div class="slider-track" :style="trackStyle"></div>
     <div
       v-if="range"
       tabindex="0"
-      ref="leftHandle"
+      ref="lowHandle"
       class="slider-handle"
-      :class="{ 'handle-transition': transition }"
-      :style="`left: ${left}px; right: auto; transform: translate(-50%, -50%);`"
-      @keydown.left.prevent="disabled ? () => false : onLeftSlide(left, 'left')"
-      @keydown.right.prevent="disabled ? () => false : onRightSlide(left, 'left')"
-      @keydown.down.prevent="disabled ? () => false : onLeftSlide(left, 'left')"
-      @keydown.up.prevent="disabled ? () => false : onRightSlide(left, 'left')"
-      @mousedown="disabled ? () => false : onLeftMouseDown()"
-      @blur="tooltip && !disabled ? handlerBlur(leftTooltip) : () => false"
+      :style="lowHandleStyle"
+      @keydown.left.prevent="disabled ? () => false : onLowSlide(low, 'low')"
+      @keydown.right.prevent="disabled ? () => false : onHighSlide(low, 'low')"
+      @keydown.down.prevent="disabled ? () => false : onLowSlide(low, 'low')"
+      @keydown.up.prevent="disabled ? () => false : onHighSlide(low, 'low')"
+      @mousedown="disabled ? () => false : onLowMouseDown()"
+      @blur="tooltip && !disabled ? handlerBlur(lowTooltip) : () => false"
     >
-      <div v-if="tooltip" ref="leftTooltip" class="handle-tooltip">
-        {{ leftValue }}
+      <div v-if="tooltip" ref="lowTooltip" class="handle-tooltip">
+        {{ lowTooltipValue }}
         <div class="tooltip-arrow"></div>
       </div>
     </div>
     <div
       tabindex="0"
-      ref="rightHandle"
+      ref="highHandle"
       class="slider-handle"
-      :class="{ 'handle-transition': transition }"
-      :style="`left: ${right}px; right: auto; transform: translate(-50%, -50%);`"
-      @keydown.left.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
-      @keydown.right.prevent="disabled ? () => false : onRightSlide(right, 'right')"
-      @keydown.down.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
-      @keydown.up.prevent="disabled ? () => false : onRightSlide(right, 'right')"
-      @mousedown="disabled ? () => false : onRightMouseDown()"
-      @blur="tooltip && !disabled ? handlerBlur(rightTooltip) : () => false"
+      :style="highHandleStyle"
+      @keydown.left.prevent="disabled ? () => false : onLowSlide(high, 'high')"
+      @keydown.right.prevent="disabled ? () => false : onHighSlide(high, 'high')"
+      @keydown.down.prevent="disabled ? () => false : onLowSlide(high, 'high')"
+      @keydown.up.prevent="disabled ? () => false : onHighSlide(high, 'high')"
+      @mousedown="disabled ? () => false : onHighMouseDown()"
+      @blur="tooltip && !disabled ? handlerBlur(highTooltip) : () => false"
     >
-      <div v-if="tooltip" ref="rightTooltip" class="handle-tooltip">
-        {{ rightValue }}
+      <div v-if="tooltip" ref="highTooltip" class="handle-tooltip">
+        {{ highTooltipValue }}
         <div class="tooltip-arrow"></div>
       </div>
     </div>
@@ -343,38 +440,22 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
 </template>
 <style lang="less" scoped>
 .m-slider {
-  display: inline-block;
-  height: 4px;
   position: relative;
-  z-index: 9;
+  cursor: pointer;
   touch-action: none; // 禁用元素上的所有手势,使用自己的拖动和缩放api
   .slider-rail {
     // 灰色未选择滑动条背景色
     position: absolute;
-    z-index: 99;
-    height: 4px;
-    width: 100%;
     background-color: rgba(0, 0, 0, 0.04);
     border-radius: 2px;
-    cursor: pointer;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .slider-track {
     // 蓝色已选择滑动条背景色
     position: absolute;
-    z-index: 99;
-    background: lighten(fade(@themeColor, 54%), 10%);
-    border-radius: 4px;
-    height: 4px;
-    cursor: pointer;
-    transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-  }
-  .track-transition {
-    transition:
-      left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: #91caff;
+    border-radius: 2px;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   &:hover {
     .slider-rail {
@@ -389,34 +470,52 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   .slider-handle {
     // 滑块
     position: absolute;
-    z-index: 999;
-    width: 14px;
-    height: 14px;
-    top: 50%;
+    width: 10px;
+    height: 10px;
     background: #fff;
-    border: 2px solid lighten(fade(@themeColor, 54%), 10%);
+    box-shadow: 0 0 0 2px #91caff;
     border-radius: 50%;
-    cursor: pointer;
     outline: none;
     transition:
       width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
       height 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      border-width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    &::before {
+      content: '';
+      position: absolute;
+      inset-inline-start: -2px;
+      inset-block-start: -2px;
+      width: 14px;
+      height: 14px;
+      background-color: transparent;
+    }
+    .hover-focus-handle {
+      width: 12px;
+      height: 12px;
+      box-shadow: 0 0 0 4px @themeColor;
+    }
+    &:hover,
+    &:focus {
+      .hover-focus-handle();
+      &::before {
+        inset-inline-start: -5px;
+        inset-block-start: -5px;
+        width: 20px;
+        height: 20px;
+      }
+    }
     .handle-tooltip {
       position: relative;
       display: inline-block;
+      min-width: 32px;
+      max-width: 250px;
       padding: 6px 8px;
+      height: 32px;
       font-size: 14px;
       color: #fff;
       line-height: 20px;
       text-align: center;
-      min-width: 32px;
       border-radius: 6px;
-      transform: translate(-50%, -50%) scale(0.8);
-      top: -32px;
-      left: 50%;
       background: rgba(0, 0, 0, 0.85);
       box-shadow:
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
@@ -432,9 +531,6 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       .tooltip-arrow {
         position: absolute;
         z-index: 9;
-        left: 50%;
-        bottom: 0;
-        transform: translateX(-50%) translateY(100%) rotate(180deg);
         display: block;
         pointer-events: none;
         width: 16px;
@@ -468,15 +564,30 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         }
       }
     }
-    .hover-focus-handle {
-      width: 20px;
-      height: 20px;
-      border-width: 4px;
-      border-color: @themeColor;
-    }
-    &:hover,
-    &:focus {
-      .hover-focus-handle();
+  }
+}
+.slider-horizontal {
+  padding-block: 4px;
+  height: 12px;
+  margin: 10px 5px;
+  .slider-rail {
+    height: 4px;
+    width: 100%;
+  }
+  .slider-track {
+    height: 4px;
+  }
+  .slider-handle {
+    top: 50%;
+    .handle-tooltip {
+      top: -32px;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      .tooltip-arrow {
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%) translateY(100%) rotate(180deg);
+      }
     }
     .show-handle-tooltip {
       pointer-events: auto;
@@ -489,32 +600,57 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       }
     }
   }
-  .handle-transition {
-    transition: left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slider-vertical {
+  padding-inline: 4px;
+  width: 12px;
+  margin: 5px 10px;
+  .slider-rail {
+    width: 4px;
+    height: 100%;
+  }
+  .slider-track {
+    width: 4px;
+  }
+  .slider-handle {
+    left: 50%;
+    .handle-tooltip {
+      left: 100%;
+      top: 50%;
+      transform: translate(16px, -50%) scale(0.8);
+      .tooltip-arrow {
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%) translateX(-100%) rotate(-90deg);
+      }
+    }
+    .show-handle-tooltip {
+      pointer-events: auto;
+      transform: translate(16px, -50%) scale(1);
+      opacity: 1;
+    }
+    &:hover {
+      .handle-tooltip {
+        .show-handle-tooltip();
+      }
+    }
   }
 }
 .slider-disabled {
+  cursor: not-allowed;
   .slider-rail {
-    cursor: not-allowed;
     background: rgba(0, 0, 0, 0.06);
   }
   .slider-track {
     background: rgba(0, 0, 0, 0.25);
   }
   .slider-handle {
-    border-color: rgba(0, 0, 0, 0.25);
-    cursor: not-allowed;
-    &:hover {
-      width: 14px;
-      height: 14px;
-      border-width: 2px;
-      border-color: rgba(0, 0, 0, 0.25);
-    }
+    box-shadow: 0 0 0 2px #bfbfbf;
+    &:hover,
     &:focus {
-      width: 14px;
-      height: 14px;
-      border-width: 2px;
-      border-color: rgba(0, 0, 0, 0.25);
+      width: 10px;
+      height: 10px;
+      box-shadow: 0 0 0 2px #bfbfbf;
     }
   }
   &:hover {

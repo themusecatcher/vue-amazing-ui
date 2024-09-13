@@ -3,6 +3,12 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.6.6 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增垂直模式
+- 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件
+- 组件库及文档代码优化
+
 ## 1.6.5 <Tag color="volcano" size="small">2024-09-10</Tag>
 
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，新增自定义图标、自定义类名、自定义样式等功能
@@ -181,7 +187,6 @@
 - 新增 穿梭框 Transfer 组件
 - 新增 浮动按钮 FloatButton 组件
 - 文字提示 tooltip 组件，弹出提示位置自适应
-- 滑动输入条 Slider 组件，扩展垂直方向的功能
 - 分段控制器 Segmented 组件，选项切换效果优化
 - 表格 Table 组件，功能扩展
 - 重构级联选择 Cascader 组件

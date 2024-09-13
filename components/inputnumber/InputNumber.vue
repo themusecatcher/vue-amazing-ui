@@ -1,7 +1,4 @@
 <script setup lang="ts">
-defineOptions({
-  inheritAttrs: false
-})
 import { ref, computed, watch } from 'vue'
 import { useSlotsExist, add } from '../utils'
 interface Props {
@@ -14,7 +11,9 @@ interface Props {
   formatter?: Function // 指定展示值的格式
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   disabled?: boolean // 是否禁用
-  value?: number | null // (v-model) 当前值
+  placeholder?: string // 数字输入的占位符
+  value?: number // (v-model) 当前值
+  valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 90,
@@ -26,7 +25,9 @@ const props = withDefaults(defineProps<Props>(), {
   formatter: (value: string) => value,
   keyboard: true,
   disabled: false,
-  value: null
+  placeholder: undefined,
+  value: undefined,
+  valueModifiers: () => ({})
 })
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -43,6 +44,9 @@ const slotsExist = useSlotsExist(['prefix'])
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
 })
+const lazyInput = computed(() => {
+  return 'lazy' in props.valueModifiers
+})
 const numValue = ref(props.formatter(props.value?.toFixed(precision.value)))
 watch(
   () => props.value,
@@ -52,16 +56,15 @@ watch(
 )
 watch(numValue, (to) => {
   if (!to) {
-    emitValue(null)
+    emitValue(undefined)
   }
 })
 const emits = defineEmits(['update:value', 'change'])
-function emitValue(value: number | null) {
+function emitValue(value: number | undefined) {
   emits('change', value)
   emits('update:value', value)
 }
-function onChange(e: Event) {
-  const value = (e.target as HTMLInputElement).value.replace(/,/g, '')
+function updateValue(value: string) {
   if (!Number.isNaN(parseFloat(value))) {
     // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为 Number
     if (parseFloat(value) > props.max) {
@@ -79,6 +82,18 @@ function onChange(e: Event) {
     }
   } else {
     numValue.value = props.value?.toFixed(precision.value)
+  }
+}
+function onInput(e: InputEvent) {
+  if (!lazyInput.value) {
+    const value = (e.target as HTMLInputElement).value.replace(/,/g, '')
+    updateValue(value)
+  }
+}
+function onChange(e: Event) {
+  if (lazyInput.value) {
+    const value = (e.target as HTMLInputElement).value.replace(/,/g, '')
+    updateValue(value)
   }
 }
 function onKeyboard(e: KeyboardEvent) {
@@ -114,11 +129,12 @@ function onDown() {
         class="input-number"
         autocomplete="off"
         :disabled="disabled"
+        :placeholder="placeholder"
         v-model="numValue"
+        @input="onInput"
+        @change="onChange"
         @keydown.up.prevent
         @keydown="onKeyboard"
-        @change="onChange"
-        v-bind="$attrs"
       />
       <input v-else autocomplete="off" class="input-number" @change="onChange" v-model="numValue" v-bind="$attrs" />
     </div>
