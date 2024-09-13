@@ -716,6 +716,7 @@ suffix | 后缀图标 | string | undefined
 allowClear | 可以点击清除图标删除搜索框内容 | boolean | false
 loading | 是否搜索中 | boolean | false
 disabled | 是否禁用 | boolean | false
+placeholder | 搜索框输入的占位符 | string | undefined
 maxlength | 文本最大长度 | number | undefined
 showCount | 是否展示字数 | boolean | false
 value <Tag color="cyan">v-model</Tag> | 搜索框内容 | string | undefined

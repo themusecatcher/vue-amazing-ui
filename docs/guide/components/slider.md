@@ -15,6 +15,7 @@
 import { ref, watchEffect } from 'vue'
 
 const singleValue = ref(20)
+const smallSingleValue = ref(0.5)
 const singleCustomValue = ref(0)
 const doubleValue = ref([20, 80])
 const doubleCustomValue = ref([-5, 5])
@@ -24,10 +25,13 @@ watchEffect(() => {
   console.log('singleValue:', singleValue.value)
 })
 watchEffect(() => {
-  console.log('doubleValue:', doubleValue.value)
+  console.log('smallSingleValue:', smallSingleValue.value)
 })
 watchEffect(() => {
   console.log('singleCustomValue:', singleCustomValue.value)
+})
+watchEffect(() => {
+  console.log('doubleValue:', doubleValue.value)
 })
 watchEffect(() => {
   console.log('doubleCustomValue:', doubleCustomValue.value)
@@ -186,12 +190,12 @@ watchEffect(() => {
 
 :::
 
-## 隐藏 tooltip
+## 垂直模式
 
-<Flex vertical gap="large">
-  <Slider :tooltip="false" v-model:value="singleValue" />
-  <Slider range :tooltip="false" v-model:value="doubleValue" />
-</Flex>
+<Space gap="large" style="height: 300px">
+  <Slider vertical v-model:value="singleValue" />
+  <Slider range vertical v-model:value="doubleValue" />
+</Space>
 
 ::: details Show Code
 
@@ -209,10 +213,62 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Flex vertical gap="large">
-    <Slider :tooltip="false" v-model:value="singleValue" />
-    <Slider range :tooltip="false" v-model:value="doubleValue" />
-  </Flex>
+  <Space gap="large" style="height: 300px">
+    <Slider vertical v-model:value="singleValue" />
+    <Slider range vertical v-model:value="doubleValue" />
+  </Space>
+</template>
+```
+
+:::
+
+## 带输入框的滑块
+
+<Row :gutter="[24, 16]">
+  <Col :span="18">
+    <Slider v-model:value="singleValue" />
+  </Col>
+  <Col :span="6">
+    <InputNumber v-model:value="singleValue" :min="0" :max="100" />
+  </Col>
+  <Col :span="18">
+    <Slider v-model:value="smallSingleValue" :min="0" :max="1" :step="0.01" />
+  </Col>
+  <Col :span="6">
+    <InputNumber v-model:value="smallSingleValue" :min="0" :max="1" :step="0.01" />
+  </Col>
+</Row>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const singleValue = ref(20)
+const smallSingleValue = ref(0.5)
+watchEffect(() => {
+  console.log('singleValue:', singleValue.value)
+})
+watchEffect(() => {
+  console.log('smallSingleValue:', smallSingleValue.value)
+})
+</script>
+<template>
+  <Row :gutter="[24, 16]">
+    <Col :span="18">
+      <Slider v-model:value="singleValue" />
+    </Col>
+    <Col :span="6">
+      <InputNumber v-model:value="singleValue" :min="0" :max="100" />
+    </Col>
+    <Col :span="18">
+      <Slider v-model:value="smallSingleValue" :min="0" :max="1" :step="0.01" />
+    </Col>
+    <Col :span="6">
+      <InputNumber v-model:value="smallSingleValue" :min="0" :max="1" :step="0.01" />
+    </Col>
+  </Row>
 </template>
 ```
 
@@ -253,13 +309,47 @@ function formatter (value: number) {
 
 :::
 
+## 隐藏 tooltip
+
+<Flex vertical gap="large">
+  <Slider :tooltip="false" v-model:value="singleValue" />
+  <Slider range :tooltip="false" v-model:value="doubleValue" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+const singleValue = ref(20)
+const doubleValue = ref([20, 80])
+watchEffect(() => {
+  console.log('singleValue:', singleValue.value)
+})
+watchEffect(() => {
+  console.log('doubleValue:', doubleValue.value)
+})
+</script>
+<template>
+  <Flex vertical gap="large">
+    <Slider :tooltip="false" v-model:value="singleValue" />
+    <Slider range :tooltip="false" v-model:value="doubleValue" />
+  </Flex>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Slider
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-width | 滑动输入条宽度，单位 `px` | string &#124; number | '100%'
+width | 滑动输入条宽度，单位 `px`，水平模式时生效 | string &#124; number | '100%'
+height | 滑动输入条高度，单位 `px`，垂直模式时生效 | string &#124; number | '100%'
+vertical | 是否启用垂直模式 | boolean | false
 min | 最小值 | number | 0
 max | 最大值 | number | 100
 disabled | 是否禁用 | boolean | false

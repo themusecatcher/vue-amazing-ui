@@ -1,7 +1,4 @@
 <script setup lang="ts">
-defineOptions({
-  inheritAttrs: false
-})
 import { ref, computed, nextTick } from 'vue'
 import Button from '../button'
 import { useSlotsExist } from '../utils'
@@ -17,6 +14,7 @@ interface Props {
   suffix?: string // 后缀图标 string | slot
   loading?: boolean // 是否搜索中
   disabled?: boolean // 是否禁用
+  placeholder?: string // 搜索框输入的占位符
   maxlength?: number // 文本最大长度
   showCount?: boolean // 是否展示字数
   value?: string // (v-model) 搜索框内容
@@ -34,6 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
   loading: false,
   disabled: false,
+  placeholder: undefined,
   maxlength: undefined,
   showCount: false,
   value: undefined,
@@ -128,12 +127,12 @@ function onSearch() {
         class="input-search"
         type="text"
         :value="value"
+        :placeholder="placeholder"
         :maxlength="maxlength"
         :disabled="disabled"
         @input="onInput"
         @change="onChange"
         @keydown.enter.prevent="onInputSearch"
-        v-bind="$attrs"
       />
       <span v-if="showInputSuffix" class="input-search-suffix">
         <span v-if="showClear" class="m-clear" :class="{ 'clear-hidden': !value }" @click="onClear">

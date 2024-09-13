@@ -1,7 +1,4 @@
 <script setup lang="ts">
-defineOptions({
-  inheritAttrs: false
-})
 import { ref, computed, nextTick } from 'vue'
 import { useSlotsExist } from '../utils'
 interface Props {
@@ -14,6 +11,7 @@ interface Props {
   allowClear?: boolean // 可以点击清除图标删除内容
   password?: boolean // 是否启用密码框
   disabled?: boolean // 是否禁用
+  placeholder?: string // 文本输入的占位符
   maxlength?: number // 最大长度
   showCount?: boolean // 是否展示字数
   value?: string // (v-model) 输入框内容
@@ -29,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
   password: false,
   disabled: false,
+  placeholder: undefined,
   maxlength: undefined,
   showCount: false,
   value: undefined,
@@ -125,12 +124,12 @@ function onPassword() {
         class="u-input"
         :type="password && !showPassword ? 'password' : 'text'"
         :value="value"
+        :placeholder="placeholder"
         :maxlength="maxlength"
         :disabled="disabled"
         @input="onInput"
         @change="onChange"
         @keydown.enter.prevent="onKeyboard"
-        v-bind="$attrs"
       />
       <span v-if="showInputSuffix" class="input-suffix">
         <span v-if="showClear" class="m-actions" :class="{ 'clear-hidden': !value }" @click="onClear">

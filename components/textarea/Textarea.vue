@@ -1,13 +1,11 @@
 <script setup lang="ts">
-defineOptions({
-  inheritAttrs: false
-})
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 interface Props {
   width?: string | number // 文本域宽度，单位 px
   allowClear?: boolean // 可以点击清除图标删除内容
   autoSize?: boolean | { minRows?: number; maxRows?: number } // 自适应内容高度
   disabled?: boolean // 是否禁用
+  placeholder?: string // 文本域输入的占位符
   maxlength?: number // 文字最大长度
   showCount?: boolean // 是否展示字数
   value?: string // (v-model) 文本域内容
@@ -18,6 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
   autoSize: false,
   disabled: false,
+  placeholder: undefined,
   maxlength: undefined,
   showCount: false,
   value: '',
@@ -127,12 +126,12 @@ function onClear() {
       :class="{ 'textarea-disabled': disabled }"
       :style="[`height: ${autoSize ? areaHeight : ''}px`, autoSizeProperty]"
       :value="value"
+      :placeholder="placeholder"
       :maxlength="maxlength"
       :disabled="disabled"
       @input="onInput"
       @change="onChange"
       @keydown.enter="onKeyboard"
-      v-bind="$attrs"
     />
     <svg
       v-if="showClear"

@@ -25,14 +25,37 @@ watchEffect(() => {
 function formatter (num: string): string {
   return formatNumber(num, 2)
 }
-function onChange (number: number | null) {
+function onChange (number: number) {
   console.log('number:', number)
 }
 </script>
 
 ## 基本使用
 
-<InputNumber v-model:value="value" @change="onChange" />
+::: tip `.lazy`
+默认情况下，`v-model` 会在每次 `input` 事件后更新数据 (`IME` 拼字阶段的状态例外)。你可以添加 `lazy` 修饰符来改为在每次 `change` 事件后更新数据
+
+```vue
+<!-- 在 "change" 事件后同步更新而不是 "input" -->
+<InputNumber v-model:value.lazy="value" />
+```
+
+:::
+
+<Space gap="small" vertical>
+  <InputNumber
+    :width="120"
+    v-model:value="value"
+    placeholder="Basic usage"
+    @change="onChange"
+  />
+  <InputNumber
+  :width="120"
+    v-model:value.lazy="value"
+    placeholder="Lazy usage"
+    @change="onChange"
+  />
+</Space>
 
 ::: details Show Code
 
@@ -43,12 +66,25 @@ const value = ref(3)
 watchEffect(() => {
   console.log('value:', value.value)
 })
-function onChange (number: number | null) {
+function onChange (number: number) {
   console.log('number:', number)
 }
 </script>
 <template>
-  <InputNumber v-model:value="value" @change="onChange" />
+  <Space gap="small" vertical>
+    <InputNumber
+      :width="120"
+      v-model:value="value"
+      placeholder="Basic usage"
+      @change="onChange"
+    />
+    <InputNumber
+    :width="120"
+      v-model:value.lazy="value"
+      placeholder="Lazy usage"
+      @change="onChange"
+    />
+  </Space>
 </template>
 ```
 
@@ -196,10 +232,11 @@ prefix | 前缀图标 | string &#124; slot | undefined
 formatter | 指定展示值的格式 | Funtion | (value: string) => value
 keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true
 disabled | 是否禁用 | boolean | false
-value <Tag color="cyan">v-model</Tag> | 当前值 | number &#124; null | null
+placeholder | 数字输入的占位符 | string | undefined
+value <Tag color="cyan">v-model</Tag> | 当前值 | number | undefined
 
 ## Events
 
 名称 | 说明 | 类型
 -- | -- | --
-change | 变化回调 | (value: number &#124; null) => void
+change | 变化回调 | (value: number) => void
