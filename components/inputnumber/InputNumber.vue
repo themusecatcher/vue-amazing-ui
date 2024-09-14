@@ -8,7 +8,8 @@ interface Props {
   step?: number // 每次改变步数，可以为小数
   precision?: number // 数值精度
   prefix?: string // 前缀图标 string | slot
-  formatter?: Function // 指定展示值的格式
+  formatter?: (value: number | string) => string // 指定展示值的格式
+  parser?: (value: string) => number // 指定从 formatter 里转换回数字的方式，和 formatter 搭配使用
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   disabled?: boolean // 是否禁用
   placeholder?: string // 数字输入的占位符
@@ -22,13 +23,17 @@ const props = withDefaults(defineProps<Props>(), {
   step: 1,
   precision: 0,
   prefix: undefined,
-  formatter: (value: string) => value,
+  formatter: undefined,
+  parser: undefined,
   keyboard: true,
   disabled: false,
   placeholder: undefined,
   value: undefined,
   valueModifiers: () => ({})
 })
+const numValue = ref()
+const emits = defineEmits(['update:value', 'change'])
+const slotsExist = useSlotsExist(['prefix'])
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -40,59 +45,86 @@ const precision = computed(() => {
   const stepPrecision = String(props.step).split('.')[1]?.length || 0
   return Math.max(props.precision, stepPrecision)
 })
-const slotsExist = useSlotsExist(['prefix'])
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
 })
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
-const numValue = ref(props.formatter(props.value?.toFixed(precision.value)))
 watch(
-  () => props.value,
-  (to) => {
-    numValue.value = to === null ? null : props.formatter(to?.toFixed(precision.value))
+  () => [props.value, precision.value, props.formatter],
+  () => {
+    if (!props.value) {
+      if (props.formatter) {
+        numValue.value = props.formatter('')
+      }
+    } else {
+      numValue.value = getFormatValue()
+    }
+  },
+  {
+    immediate: true,
+    deep: true
   }
 )
 watch(numValue, (to) => {
-  if (!to) {
+  if (!to || (props.parser && to && !props.parser(to))) {
     emitValue(undefined)
   }
 })
-const emits = defineEmits(['update:value', 'change'])
 function emitValue(value: number | undefined) {
   emits('change', value)
   emits('update:value', value)
 }
+function getFormatValue() {
+  if (props.formatter) {
+    return props.formatter(parseFloat(props.value?.toFixed(precision.value) as string))
+  } else {
+    return props.value?.toFixed(precision.value)
+  }
+}
+function getNumberValue(value: string) {
+  let numberValue = parseFloat(value)
+  if (numberValue > props.max) {
+    numberValue = props.max
+  }
+  if (numberValue < props.min) {
+    numberValue = props.min
+  }
+  return numberValue
+}
 function updateValue(value: string) {
   if (!Number.isNaN(parseFloat(value))) {
-    // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为 Number
-    if (parseFloat(value) > props.max) {
-      emitValue(props.max)
-      return
-    }
-    if (parseFloat(value) < props.min) {
-      emitValue(props.min)
-      return
-    }
-    if (parseFloat(value) !== props.value) {
-      emitValue(parseFloat(value))
+    // Number.isNaN() 判断传递的值是否为 NaN，并检测器类型是否为 Number
+    const numberValue = getNumberValue(value)
+    if (numberValue !== props.value) {
+      emitValue(numberValue)
     } else {
-      numValue.value = props.value?.toFixed(precision.value)
+      numValue.value = getFormatValue()
     }
   } else {
-    numValue.value = props.value?.toFixed(precision.value)
+    if (!props.value) {
+      if (props.formatter) {
+        numValue.value = props.formatter(value)
+      }
+    } else {
+      numValue.value = getFormatValue()
+    }
   }
 }
 function onInput(e: InputEvent) {
   if (!lazyInput.value) {
-    const value = (e.target as HTMLInputElement).value.replace(/,/g, '')
-    updateValue(value)
+    const target = e.target as HTMLInputElement
+    const value = props.parser ? String(props.parser(target.value)) : target.value
+    if (value && getNumberValue(value) !== props.value) {
+      updateValue(value)
+    }
   }
 }
 function onChange(e: Event) {
-  if (lazyInput.value) {
-    const value = (e.target as HTMLInputElement).value.replace(/,/g, '')
+  if (lazyInput.value || props.formatter) {
+    const target = e.target as HTMLInputElement
+    const value = props.parser ? String(props.parser(target.value)) : target.value
     updateValue(value)
   }
 }

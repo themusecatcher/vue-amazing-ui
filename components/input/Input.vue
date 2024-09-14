@@ -33,6 +33,10 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
+const inputRef = ref() // input 元素引用
+const showPassword = ref(false)
+const emits = defineEmits(['update:value', 'change', 'enter'])
+const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -48,7 +52,6 @@ const showCountNum = computed(() => {
   }
   return props.value ? props.value.length : 0
 })
-const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
 })
@@ -67,7 +70,7 @@ const showAfter = computed(() => {
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
-const emits = defineEmits(['update:value', 'change', 'enter'])
+
 function onInput(e: InputEvent) {
   if (!lazyInput.value) {
     emits('update:value', (e.target as HTMLInputElement).value)
@@ -83,18 +86,16 @@ function onChange(e: InputEvent) {
 function onKeyboard(e: KeyboardEvent) {
   emits('enter', e)
   if (lazyInput.value) {
-    input.value.blur()
+    inputRef.value.blur()
     nextTick(() => {
-      input.value.focus()
+      inputRef.value.focus()
     })
   }
 }
-const input = ref()
 function onClear() {
   emits('update:value', '')
-  input.value.focus()
+  inputRef.value.focus()
 }
-const showPassword = ref(false)
 function onPassword() {
   showPassword.value = !showPassword.value
 }
@@ -120,7 +121,7 @@ function onPassword() {
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
-        ref="input"
+        ref="inputRef"
         class="u-input"
         :type="password && !showPassword ? 'password' : 'text'"
         :value="value"
