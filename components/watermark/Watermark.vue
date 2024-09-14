@@ -17,7 +17,7 @@ interface Props {
   zIndex?: number // 追加的水印元素的 z-index
   image?: string // 图片源，建议使用 2 倍或 3 倍图，优先级高于文字
   content?: string | string[] // 水印文字内容
-  fullscreen?: boolean // 是否展示全屏
+  fullscreen?: boolean // 是否启用全屏水印
   textStyle?: Font // 水印文字样式
   gap?: [number, number] // 水印之间的间距
   offset?: [number, number] // 水印距离容器左上角的偏移量，默认为 gap / 2
