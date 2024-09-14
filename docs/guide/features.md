@@ -5,8 +5,9 @@
 
 ## 简要介绍
 
-- 该组件库采用 `Vue@{{ getVersion('vue') }}` + `TypeScript@{{ getVersion('typescript') }}` + `Vite@{{ getVersion('vite') }}` + `Less@{{ getVersion('less') }}` 实现！
-- 所有组件，均采用单文件组件 `SFC` 形式，无需任何安装引入，亦可直接使用源码！
+- 组件库采用 `Vue@{{ getVersion('vue') }}` + `TypeScript@{{ getVersion('typescript') }}` + `Vite@{{ getVersion('vite') }}` + `Less@{{ getVersion('less') }}` 实现！
+- 目前包含 `62` 个基础 `UI` 组件以及 `16` 个常用工具函数，并且持续探索更新中...
+- 所有组件均为单文件组件 `SFC`，无需安装，直接使用！
 - 所有组件样式均使用 `box-sizing: border-box;` 模式！
 - 部分组件样式尚未完美适配暗黑模式，可切换至 `light` 模式查看！
 - 开箱即用，不墨迹！
@@ -15,9 +16,9 @@
 
 - 全局引入并注册所有组件
 - 按需引入并注册部分组件
-- **无需任何安装引入注册，使用单文件组件 `SFC`，亦可一步到位**
+- **无需任何安装，直接使用单文件组件 `SFC`，亦可一步到位**
 
-  *使用单文件组件 `SFC` 时，请按需引入如下所示组件库全局样式：*
+  *使用单文件组件 `SFC` 时，请按需引入如下所示组件库默认全局样式：*
 
   ::: details Show Global Styles
 
