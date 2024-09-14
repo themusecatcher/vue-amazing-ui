@@ -25,3 +25,5 @@ cd ../../../
 git add .
 git commit -m 'update'
 git push
+
+echo 当前日期和时间: ${date}
