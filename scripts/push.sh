@@ -17,4 +17,4 @@ fi
 
 git push
 
-echo "⏰: $(date)"
+echo "⏰: $(date '+%Y-%m-%d %H:%M:%S')"
