@@ -507,6 +507,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     .handle-tooltip {
       position: relative;
       display: inline-block;
+      width: max-content;
       min-width: 32px;
       max-width: 250px;
       padding: 6px 8px;
