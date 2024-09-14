@@ -16,3 +16,5 @@ else
 fi
 
 git push
+
+echo "⏰: $(date)"
