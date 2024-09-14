@@ -7,7 +7,7 @@ function onShow(show: boolean) {
 const scrollContainer = ref()
 </script>
 <template>
-  <div style="margin-top: 150vh">
+  <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">BackTop 会找到首个可滚动的祖先元素并且监听它的滚动事件</h3>
