@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { throttle, useEventListener, useMutationObserver, useSlotsExist } from '../utils'
+import { useEventListener, useMutationObserver, useSlotsExist } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -46,8 +46,7 @@ const viewportWidth = ref(window.innerWidth)
 function getViewportWidth() {
   viewportWidth.value = window.innerWidth
 }
-const throttleEvent = throttle(getViewportWidth, 100)
-useEventListener(window, 'resize', throttleEvent)
+useEventListener(window, 'resize', getViewportWidth)
 const slotsExist = useSlotsExist(['title', 'extra'])
 const showHeader = computed(() => {
   return slotsExist.title || slotsExist.extra || props.title || props.extra

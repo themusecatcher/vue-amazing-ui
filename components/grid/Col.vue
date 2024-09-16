@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { throttle, useEventListener } from '../utils'
+import { useEventListener } from '../utils'
 interface Props {
   span?: number // 栅格占位格数，取 0,1,2...24，为 0 时相当于 display: none，优先级低于 xs, sm, md, lg, xl, xxl
   offset?: number // 栅格左侧的间隔格数，取 0,1,2...24
@@ -63,8 +63,7 @@ const viewportWidth = ref(window.innerWidth)
 function getViewportWidth() {
   viewportWidth.value = window.innerWidth
 }
-const throttleEvent = throttle(getViewportWidth, 100)
-useEventListener(window, 'resize', throttleEvent)
+useEventListener(window, 'resize', getViewportWidth)
 const responsiveValue = computed(() => {
   for (const responsive of responsiveProperties.value) {
     if (responsive.value && viewportWidth.value >= responsive.width) {
