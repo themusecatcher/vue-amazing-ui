@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { throttle, useEventListener } from '../utils'
+import { useEventListener } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -34,8 +34,7 @@ const viewportWidth = ref(window.innerWidth)
 function getViewportWidth() {
   viewportWidth.value = window.innerWidth
 }
-const throttleEvent = throttle(getViewportWidth, 100)
-useEventListener(window, 'resize', throttleEvent)
+useEventListener(window, 'resize', getViewportWidth)
 const xGap = computed(() => {
   if (typeof props.gutter === 'number') {
     return props.gutter

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watchPostEffect } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import type { Slot } from 'vue'
 import { useSlotsExist } from '../utils'
 interface Props {
@@ -22,19 +22,16 @@ const props = withDefaults(defineProps<Props>(), {
   showIcon: false,
   actions: undefined
 })
-const alert = ref()
+const alertRef = ref() // alert 模板引用
 const closeAlert = ref(false)
 const emit = defineEmits(['close'])
 const slotsExist = useSlotsExist(['description'])
 const showDesc = computed(() => {
   return slotsExist.description || props.description
 })
-watchPostEffect(() => {
-  if (props.closable && !closeAlert.value) {
-    alert.value.style.height = alert.value.offsetHeight + 'px'
-  }
-})
-function onClose(e: Event): void {
+async function onClose(e: Event) {
+  alertRef.value.style.maxHeight = alertRef.value.offsetHeight + 'px'
+  await nextTick()
   closeAlert.value = true
   emit('close', e)
 }
@@ -43,7 +40,7 @@ function onClose(e: Event): void {
   <Transition name="alert-motion">
     <div
       v-if="!closeAlert"
-      ref="alert"
+      ref="alertRef"
       class="m-alert"
       :class="[
         `alert-${type}`,
@@ -235,12 +232,12 @@ function onClose(e: Event): void {
 .alert-motion-leave-active {
   overflow: hidden;
   transition:
-    height 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
+    max-height 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
     opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
     padding 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 .alert-motion-leave-to {
-  height: 0 !important;
+  max-height: 0 !important;
   opacity: 0 !important;
   padding-block: 0 !important;
 }

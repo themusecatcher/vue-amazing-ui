@@ -126,7 +126,7 @@ import { UserOutlined } from '@ant-design/icons-vue'
 ## 自定义图标类型
 
 <Space align="center">
-  <Avatar :icon="h(TeamOutlined)" />
+  <Avatar :icon="() => h(TeamOutlined)" />
   <Avatar>
     <template #icon>
       <UserOutlined />
@@ -152,7 +152,7 @@ import { UserOutlined, TeamOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
   <Space align="center">
-    <Avatar :icon="h(TeamOutlined)" />
+    <Avatar :icon="() => h(TeamOutlined)" />
     <Avatar>
       <template #icon>
         <UserOutlined />
@@ -228,7 +228,6 @@ import { UserOutlined } from '@ant-design/icons-vue'
   </template>
 </Avatar>
 
-
 ::: details Show Code
 
 ```vue
@@ -253,7 +252,7 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle'
-size | 设置头像的大小，`number`类型时单位 `px` | number &#124; 'large' &#124; 'small' &#124; 'default' &#124; [Responsive](#responsive-type) | 'default'
+size | 设置头像的大小，`number`类型时单位 `px` | number &#124; 'small' &#124; 'default' &#124; 'large' &#124; [Responsive](#responsive-type) | 'default'
 src | 图片类头像资源地址 | string | undefined
 alt | 图片无法显示时的替代文本 | string | undefined
 icon | 设置头像的图标 | VNode &#124; slot | undefined

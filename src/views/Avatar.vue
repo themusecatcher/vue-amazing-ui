@@ -54,7 +54,7 @@ import { UserOutlined, TeamOutlined, SketchOutlined } from '@ant-design/icons-vu
     </Space>
     <h2 class="mt30 mb10">自定义图标类型</h2>
     <Space align="center">
-      <Avatar :icon="h(TeamOutlined)" />
+      <Avatar :icon="() => h(TeamOutlined)" />
       <Avatar>
         <template #icon>
           <UserOutlined />

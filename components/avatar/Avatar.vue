@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { VNode, Slot } from 'vue'
-import { throttle, useEventListener, useSlotsExist } from '../utils'
+import { useEventListener, useSlotsExist } from '../utils'
 interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -12,7 +12,7 @@ interface Responsive {
 }
 interface Props {
   shape?: 'circle' | 'square' // 指定头像的形状
-  size?: number | 'large' | 'small' | 'default' | Responsive // 设置头像的大小，number 类型时单位 px
+  size?: number | 'small' | 'default' | 'large' | Responsive // 设置头像的大小，number 类型时单位 px
   src?: string // 图片类头像资源地址
   alt?: string // 图片无法显示时的替代文本
   icon?: VNode | Slot // 设置头像的图标
@@ -28,19 +28,22 @@ const viewportWidth = ref(window.innerWidth)
 function getViewportWidth() {
   viewportWidth.value = window.innerWidth
 }
-const throttleEvent = throttle(getViewportWidth, 100)
-useEventListener(window, 'resize', throttleEvent)
-const avatarStyle = computed(() => {
-  if (typeof props.size === 'string') {
-    return null
+useEventListener(window, 'resize', getViewportWidth)
+const slotsExist = useSlotsExist(['default', 'icon'])
+const showIcon = computed(() => {
+  if (!props.src) {
+    return Boolean(slotsExist.icon || props.icon)
   }
+  return false
+})
+const avatarStyle = computed(() => {
   if (typeof props.size === 'number') {
     if (showIcon.value) {
       return {
         width: props.size + 'px',
         height: props.size + 'px',
         lineHeight: props.size + 'px',
-        fontSize: (props.size as number) / 2 + 'px'
+        fontSize: props.size / 2 + 'px'
       }
     } else {
       return {
@@ -73,13 +76,7 @@ const avatarStyle = computed(() => {
       fontSize: size / 2 + 'px'
     }
   }
-})
-const slotsExist = useSlotsExist(['default', 'icon'])
-const showIcon = computed(() => {
-  if (!props.src) {
-    return slotsExist.icon || props.icon
-  }
-  return false
+  return {}
 })
 const showStr = computed(() => {
   if (!props.src && !showIcon.value) {
@@ -100,21 +97,26 @@ const strStyle = computed(() => {
       transform: `scale(${scale}) translateX(-50%)`
     }
   }
+  return {}
 })
 </script>
 <template>
   <div
     class="m-avatar"
-    :class="[avatarStyle === null ? `avatar-${size}` : '', `avatar-${shape}`, { 'avatar-image': src }]"
-    :style="avatarStyle || {}"
+    :class="[
+      `avatar-${shape}`,
+      {
+        [`avatar-${size}`]: typeof size === 'string',
+        'avatar-image': src
+      }
+    ]"
+    :style="avatarStyle"
   >
-    <img class="avatar-image" :src="src" :alt="alt" v-if="src" />
-    <span class="avatar-icon" v-if="!src && showIcon">
-      <slot name="icon">
-        <component :is="icon" />
-      </slot>
-    </span>
-    <span class="avatar-string" :style="strStyle" v-if="!src && !showIcon && showStr">
+    <img v-if="src" class="avatar-image" :src="src" :alt="alt" />
+    <slot name="icon" v-if="!src && showIcon">
+      <component :is="icon" />
+    </slot>
+    <span v-if="!src && !showIcon && showStr" class="avatar-string" :style="strStyle">
       <slot></slot>
     </span>
   </div>
@@ -145,14 +147,8 @@ const strStyle = computed(() => {
     height: 100%;
     object-fit: cover;
   }
-  .avatar-icon {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    color: inherit;
-    :deep(svg) {
-      fill: currentColor;
-    }
+  :deep(svg) {
+    fill: currentColor;
   }
   .avatar-string {
     position: absolute;
