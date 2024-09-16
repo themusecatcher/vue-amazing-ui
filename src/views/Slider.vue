@@ -59,7 +59,7 @@ function formatter(value: number) {
       <Slider range :step="5" v-model:value="doubleCustomStepValue" />
     </Flex>
     <h2 class="mt30 mb10">垂直模式</h2>
-    <Space gap="large" style="height: 300px">
+    <Space :gap="36" style="height: 300px">
       <Slider vertical v-model:value="singleValue" />
       <Slider range vertical v-model:value="doubleValue" />
     </Space>
