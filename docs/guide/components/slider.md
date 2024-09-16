@@ -192,7 +192,7 @@ watchEffect(() => {
 
 ## 垂直模式
 
-<Space gap="large" style="height: 300px">
+<Space :gap="36" style="height: 300px">
   <Slider vertical v-model:value="singleValue" />
   <Slider range vertical v-model:value="doubleValue" />
 </Space>
@@ -213,7 +213,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Space gap="large" style="height: 300px">
+  <Space :gap="36" style="height: 300px">
     <Slider vertical v-model:value="singleValue" />
     <Slider range vertical v-model:value="doubleValue" />
   </Space>

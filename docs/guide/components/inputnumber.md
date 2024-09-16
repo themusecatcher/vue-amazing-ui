@@ -22,8 +22,11 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('formatValue:', formatValue.value)
 })
-function formatter (num: string): string {
-  return formatNumber(num, 2)
+function formatter(num: string): string {
+  return formatNumber(num, 2) + '%'
+}
+function parser(value: string): number {
+  return Number(value.replace(/[,%]/g, ''))
 }
 function onChange (number: number) {
   console.log('number:', number)
@@ -134,7 +137,14 @@ watchEffect(() => {
 
 ## 格式化展示
 
-<InputNumber :width="120" :step="10" :formatter="formatter" v-model:value="formatValue" />
+<InputNumber
+  :width="120"
+  v-model:value="formatValue"
+  :step="10"
+  :max="10000"
+  :formatter="formatter"
+  :parser="parser"
+/>
 
 ::: details Show Code
 
@@ -146,12 +156,22 @@ const formatValue = ref(1000)
 watchEffect(() => {
   console.log('formatValue:', formatValue.value)
 })
-function formatter (num: string): string {
-  return formatNumber(num, 2)
+function formatter(num: string): string {
+  return formatNumber(num, 2) + '%'
+}
+function parser(value: string): number {
+  return Number(value.replace(/[,%]/g, ''))
 }
 </script>
 <template>
-  <InputNumber :width="120" :step="10" :formatter="formatter" v-model:value="formatValue" />
+  <InputNumber
+    :width="120"
+    v-model:value="formatValue"
+    :step="10"
+    :max="10000"
+    :formatter="formatter"
+    :parser="parser"
+  />
 </template>
 ```
 
@@ -229,7 +249,8 @@ max | 最大值 | number | Infinity
 step | 每次改变步数，可以为小数 | number | 1
 precision | 数值精度 | number | 0
 prefix | 前缀图标 | string &#124; slot | undefined
-formatter | 指定展示值的格式 | Funtion | (value: string) => value
+formatter | 指定展示值的格式 | (value: number \| string) => string | undefined
+parser | 指定从 `formatter` 里转换回数字的方式，和 `formatter` 搭配使用 | (value: string) => number | undefined
 keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true
 disabled | 是否禁用 | boolean | false
 placeholder | 数字输入的占位符 | string | undefined

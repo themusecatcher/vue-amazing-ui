@@ -16,6 +16,9 @@ watchEffect(() => {
 function formatter(num: string): string {
   return formatNumber(num, 2) + '%'
 }
+function parser(value: string): number {
+  return Number(value.replace(/[,%]/g, ''))
+}
 function onChange(number: number) {
   console.log('change:', number)
 }
@@ -53,14 +56,13 @@ function onChange(number: number) {
       @change="onChange"
     /> -->
     <InputNumber
-      v-model:value="value2"
-      :min="0"
-      :max="100"
-      :formatter="(value: number) => `${value}%`"
-      :parser="(value: string) => value.replace('%', '')"
-      @change="onChange"
+      :width="120"
+      v-model:value="formatValue"
+      :step="10"
+      :max="10000"
+      :formatter="formatter"
+      :parser="parser"
     />
-    <InputNumber :width="120" :step="10" :max="10000" :formatter="formatter" v-model:value="formatValue" />
     <h2 class="mt30 mb10">自定义最大最小值</h2>
     <InputNumber :min="0" :max="10" v-model:value="value" />
     <h2 class="mt30 mb10">添加前缀图标 $</h2>
