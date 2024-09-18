@@ -2,19 +2,19 @@
 import { ref, watchEffect } from 'vue'
 import { formatNumber } from 'vue-amazing-ui'
 const value = ref(3)
-const value2 = ref(3)
-const formatValue = ref(1000)
+const formatValue1 = ref(1000)
+const formatValue2 = ref(100)
 watchEffect(() => {
   console.log('value:', value.value)
 })
 watchEffect(() => {
-  console.log('value2:', value2.value)
+  console.log('formatValue1:', formatValue1.value)
 })
 watchEffect(() => {
-  console.log('formatValue:', formatValue.value)
+  console.log('formatValue2:', formatValue2.value)
 })
-function formatter(num: string): string {
-  return formatNumber(num, 2) + '%'
+function formatter(value: number): string {
+  return formatNumber(value, 2) + '%'
 }
 function parser(value: string): number {
   return Number(value.replace(/[,%]/g, ''))
@@ -47,22 +47,15 @@ function onChange(number: number) {
     <h2 class="mt30 mb10">设置数值精度</h2>
     <InputNumber :min="-10" :max="10" :step="0.6" :precision="2" v-model:value="value" />
     <h2 class="mt30 mb10">格式化展示</h2>
-    <!-- <a-input-number
-      v-model:value="value2"
-      :min="0"
-      :max="100"
-      :formatter="(value) => `${value}%`"
-      :parser="(value) => value.replace('%', '')"
-      @change="onChange"
-    /> -->
-    <InputNumber
-      :width="120"
-      v-model:value="formatValue"
-      :step="10"
-      :max="10000"
-      :formatter="formatter"
-      :parser="parser"
-    />
+    <Space>
+      <InputNumber
+        :width="120"
+        v-model:value="formatValue1"
+        :formatter="(value: number) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+        :parser="(value: string) => value.replace(/\$\s?|(,*)/g, '')"
+      />
+      <InputNumber :width="120" v-model:value="formatValue2" :formatter="formatter" :parser="parser" />
+    </Space>
     <h2 class="mt30 mb10">自定义最大最小值</h2>
     <InputNumber :min="0" :max="10" v-model:value="value" />
     <h2 class="mt30 mb10">添加前缀图标 $</h2>
