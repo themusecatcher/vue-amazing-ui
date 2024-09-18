@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { useSlotsExist, add } from '../utils'
 interface Props {
   width?: string | number // 数字输入框宽度，单位 px
@@ -8,7 +8,7 @@ interface Props {
   step?: number // 每次改变步数，可以为小数
   precision?: number // 数值精度
   prefix?: string // 前缀图标 string | slot
-  formatter?: (value: number | string) => string // 指定展示值的格式
+  formatter?: (value: string | number) => string // 指定展示值的格式
   parser?: (value: string) => number // 指定从 formatter 里转换回数字的方式，和 formatter 搭配使用
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   disabled?: boolean // 是否禁用
@@ -31,7 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
-const numValue = ref()
+const inputRef = ref() // input 模板引用
+const numValue = ref<string>()
 const emits = defineEmits(['update:value', 'change'])
 const slotsExist = useSlotsExist(['prefix'])
 const inputWidth = computed(() => {
@@ -53,32 +54,49 @@ const lazyInput = computed(() => {
 })
 watch(
   () => [props.value, precision.value, props.formatter],
-  () => {
-    if (!props.value) {
-      if (props.formatter) {
-        numValue.value = props.formatter('')
+  async () => {
+    if (props.value) {
+      if (inputRef.value) {
+        const { selectionStart: start, selectionEnd: end, value } = inputRef.value
+        const beforeTxt = value.slice(0, start)
+        const afterTxt = value.slice(end)
+        numValue.value = getFormatValue() // 获取格式化后的值
+        await nextTick()
+        restoreCursor(start, beforeTxt, afterTxt)
+      } else {
+        numValue.value = getFormatValue()
       }
-    } else {
-      numValue.value = getFormatValue()
     }
   },
   {
     immediate: true,
+    flush: 'post',
     deep: true
   }
 )
-watch(numValue, (to) => {
-  if (!to || (props.parser && to && !props.parser(to))) {
-    emitValue(undefined)
+function restoreCursor(start: number, beforeTxt: string, afterTxt: string) {
+  const { value: inputValue } = inputRef.value
+  let startPos = inputValue.length
+  if (inputValue.endsWith(afterTxt)) {
+    startPos = inputValue.length - afterTxt.length
+  } else if (inputValue.startsWith(beforeTxt)) {
+    startPos = beforeTxt.length
+  } else {
+    const beforeLastChar = beforeTxt[start - 1]
+    const newIndex = inputValue.indexOf(beforeLastChar, start - 1)
+    if (newIndex !== -1) {
+      startPos = newIndex + 1
+    }
   }
-})
+  inputRef.value.setSelectionRange(startPos, startPos)
+}
 function emitValue(value: number | undefined) {
   emits('change', value)
   emits('update:value', value)
 }
 function getFormatValue() {
   if (props.formatter) {
-    return props.formatter(parseFloat(props.value?.toFixed(precision.value) as string))
+    return props.formatter(props.value?.toFixed(precision.value) as string)
   } else {
     return props.value?.toFixed(precision.value)
   }
@@ -94,8 +112,8 @@ function getNumberValue(value: string) {
   return numberValue
 }
 function updateValue(value: string) {
+  // Number.isNaN() 判断传递的值是否为 NaN，并检测器类型是否为 Number
   if (!Number.isNaN(parseFloat(value))) {
-    // Number.isNaN() 判断传递的值是否为 NaN，并检测器类型是否为 Number
     const numberValue = getNumberValue(value)
     if (numberValue !== props.value) {
       emitValue(numberValue)
@@ -116,8 +134,11 @@ function onInput(e: InputEvent) {
   if (!lazyInput.value) {
     const target = e.target as HTMLInputElement
     const value = props.parser ? String(props.parser(target.value)) : target.value
-    if (value && getNumberValue(value) !== props.value) {
+    if (value && !Number.isNaN(getNumberValue(value)) && getNumberValue(value) !== props.value) {
       updateValue(value)
+    }
+    if (!value && props.value !== undefined) {
+      emitValue(undefined)
     }
   }
 }
@@ -157,7 +178,7 @@ function onDown() {
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
-        v-if="keyboard"
+        ref="inputRef"
         class="input-number"
         autocomplete="off"
         :disabled="disabled"
@@ -166,9 +187,8 @@ function onDown() {
         @input="onInput"
         @change="onChange"
         @keydown.up.prevent
-        @keydown="onKeyboard"
+        @keydown="keyboard ? onKeyboard($event) : () => false"
       />
-      <input v-else autocomplete="off" class="input-number" @change="onChange" v-model="numValue" v-bind="$attrs" />
     </div>
     <div class="m-handler-wrap">
       <span class="m-arrow up-arrow" :class="{ 'arrow-disabled': (value || 0) >= max }" @click="onUp">

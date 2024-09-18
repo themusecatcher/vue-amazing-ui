@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.6.7 <Tag color="volcano" size="small">2024-09-18</Tag>
+
+- 组件库代码优化
+
 ## 1.6.6 <Tag color="volcano" size="small">2024-09-13</Tag>
 
 - 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增垂直模式

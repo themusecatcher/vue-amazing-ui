@@ -15,21 +15,25 @@
 import { ref, watchEffect } from 'vue'
 import { formatNumber } from 'vue-amazing-ui'
 const value = ref(3)
-const formatValue = ref(1000)
+const formatValue1 = ref(1000)
+const formatValue2 = ref(100)
 watchEffect(() => {
   console.log('value:', value.value)
 })
 watchEffect(() => {
-  console.log('formatValue:', formatValue.value)
+  console.log('formatValue1:', formatValue1.value)
 })
-function formatter(num: string): string {
-  return formatNumber(num, 2) + '%'
+watchEffect(() => {
+  console.log('formatValue2:', formatValue2.value)
+})
+function formatter(value: number): string {
+  return formatNumber(value, 2) + '%'
 }
 function parser(value: string): number {
   return Number(value.replace(/[,%]/g, ''))
 }
-function onChange (number: number) {
-  console.log('number:', number)
+function onChange(number: number) {
+  console.log('change:', number)
 }
 </script>
 
@@ -137,14 +141,20 @@ watchEffect(() => {
 
 ## 格式化展示
 
-<InputNumber
-  :width="120"
-  v-model:value="formatValue"
-  :step="10"
-  :max="10000"
-  :formatter="formatter"
-  :parser="parser"
-/>
+<Space>
+  <InputNumber
+    :width="120"
+    v-model:value="formatValue1"
+    :formatter="(value: string) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+    :parser="(value: string) => value.replace(/\$\s?|(,*)/g, '')"
+  />
+  <InputNumber
+    :width="120"
+    v-model:value="formatValue2"
+    :formatter="formatter"
+    :parser="parser"
+  />
+</Space>
 
 ::: details Show Code
 
@@ -152,26 +162,36 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { formatNumber } from 'vue-amazing-ui'
-const formatValue = ref(1000)
+const formatValue1 = ref(1000)
+const formatValue2 = ref(100)
 watchEffect(() => {
-  console.log('formatValue:', formatValue.value)
+  console.log('formatValue1:', formatValue1.value)
 })
-function formatter(num: string): string {
-  return formatNumber(num, 2) + '%'
+watchEffect(() => {
+  console.log('formatValue2:', formatValue2.value)
+})
+function formatter(value: number): string {
+  return formatNumber(value, 2) + '%'
 }
 function parser(value: string): number {
   return Number(value.replace(/[,%]/g, ''))
 }
 </script>
 <template>
-  <InputNumber
-    :width="120"
-    v-model:value="formatValue"
-    :step="10"
-    :max="10000"
-    :formatter="formatter"
-    :parser="parser"
-  />
+  <Space>
+    <InputNumber
+      :width="120"
+      v-model:value="formatValue1"
+      :formatter="(value: string) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+      :parser="(value: string) => value.replace(/\$\s?|(,*)/g, '')"
+    />
+    <InputNumber
+      :width="120"
+      v-model:value="formatValue2"
+      :formatter="formatter"
+      :parser="parser"
+    />
+  </Space>
 </template>
 ```
 
