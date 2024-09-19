@@ -143,11 +143,9 @@ function onInput(e: InputEvent) {
   }
 }
 function onChange(e: Event) {
-  if (lazyInput.value || props.formatter) {
-    const target = e.target as HTMLInputElement
-    const value = props.parser ? String(props.parser(target.value)) : target.value
-    updateValue(value)
-  }
+  const target = e.target as HTMLInputElement
+  const value = props.parser ? String(props.parser(target.value)) : target.value
+  updateValue(value)
 }
 function onKeyboard(e: KeyboardEvent) {
   if (e.key === 'ArrowUp') {
