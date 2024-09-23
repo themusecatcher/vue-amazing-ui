@@ -10,7 +10,7 @@ import {
   provide,
   ref,
   watch
-} from "./chunk-T4VKWHV5.js";
+} from "./chunk-CEJHBX7F.js";
 import {
   animateCSSModeScroll,
   createElement,
@@ -31,10 +31,10 @@ import {
   now,
   setCSSProperty,
   showWarning
-} from "./chunk-ME5IFAZH.js";
+} from "./chunk-3CICESJC.js";
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/swiper@11.1.12/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/shared/swiper-core.mjs
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -2167,7 +2167,7 @@ function onTouchStart(event) {
       data.isTouched = false;
     }
   }
-  if (document2.activeElement && document2.activeElement.matches(data.focusableElements) && document2.activeElement !== targetEl) {
+  if (document2.activeElement && document2.activeElement.matches(data.focusableElements) && document2.activeElement !== targetEl && (e.pointerType === "mouse" || e.pointerType !== "mouse" && !targetEl.matches(data.focusableElements))) {
     document2.activeElement.blur();
   }
   const shouldPreventDefault = preventDefault && swiper.allowTouchMove && params.touchStartPreventDefault;
@@ -2243,6 +2243,9 @@ function onTouchMove(event) {
     } else if (pageX < touches.startX && swiper.translate <= swiper.maxTranslate() || pageX > touches.startX && swiper.translate >= swiper.minTranslate()) {
       return;
     }
+  }
+  if (document2.activeElement && document2.activeElement.matches(data.focusableElements) && document2.activeElement !== e.target && e.pointerType !== "mouse") {
+    document2.activeElement.blur();
   }
   if (document2.activeElement) {
     if (e.target === document2.activeElement && e.target.matches(data.focusableElements)) {
@@ -3706,7 +3709,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 });
 Swiper.use([Resize, Observer]);
 
-// node_modules/.pnpm/swiper@11.1.12/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -4051,7 +4054,7 @@ function updateSwiper(_ref) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@11.1.12/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
     obj = {};
@@ -4175,7 +4178,7 @@ var updateOnVirtualData = (swiper) => {
   }
 };
 
-// node_modules/.pnpm/swiper@11.1.12/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots, slidesRef, oldSlidesRef) {
   if (originalSlots === void 0) {
     originalSlots = {};

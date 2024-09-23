@@ -24,9 +24,9 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-T4VKWHV5.js";
+} from "./chunk-CEJHBX7F.js";
 
-// node_modules/.pnpm/vitepress@1.3.4_@algolia+client-search@5.3.0_@types+node@22.5.4_async-validator@4.2.5_less@4._hk6m52nimlnz6ldyljwkd5t6bq/node_modules/vitepress/lib/vue-demi.mjs
+// node_modules/.pnpm/vitepress@1.3.4_@algolia+client-search@5.5.3_@types+node@22.5.5_async-validator@4.2.5_less@4._e42tol4pdjtkzq3b6i6zf2anea/node_modules/vitepress/lib/vue-demi.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@11.0.3_vue@3.5.3_typescript@5.5.4_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@11.1.0_vue@3.5.8_typescript@5.6.2_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -133,6 +133,16 @@ function createGlobalState(stateFactory) {
   };
 }
 var localProvidedStateMap = /* @__PURE__ */ new WeakMap();
+var injectLocal = (...args) => {
+  var _a;
+  const key = args[0];
+  const instance = (_a = getCurrentInstance()) == null ? void 0 : _a.proxy;
+  if (instance == null)
+    throw new Error("injectLocal must be called in setup");
+  if (localProvidedStateMap.has(instance) && key in localProvidedStateMap.get(instance))
+    return localProvidedStateMap.get(instance)[key];
+  return inject(...args);
+};
 var provideLocal = (key, value) => {
   var _a;
   const instance = (_a = getCurrentInstance()) == null ? void 0 : _a.proxy;
@@ -143,16 +153,6 @@ var provideLocal = (key, value) => {
   const localProvidedState = localProvidedStateMap.get(instance);
   localProvidedState[key] = value;
   provide(key, value);
-};
-var injectLocal = (...args) => {
-  var _a;
-  const key = args[0];
-  const instance = (_a = getCurrentInstance()) == null ? void 0 : _a.proxy;
-  if (instance == null)
-    throw new Error("injectLocal must be called in setup");
-  if (localProvidedStateMap.has(instance) && key in localProvidedStateMap.get(instance))
-    return localProvidedStateMap.get(instance)[key];
-  return inject(...args);
 };
 function createInjectionState(composable, options) {
   const key = (options == null ? void 0 : options.injectionKey) || Symbol(composable.name || "InjectionState");
@@ -312,6 +312,11 @@ function reactiveOmit(obj, ...keys) {
   const predicate = flatKeys[0];
   return reactiveComputed(() => typeof predicate === "function" ? Object.fromEntries(Object.entries(toRefs(obj)).filter(([k, v]) => !predicate(toValue(v), k))) : Object.fromEntries(Object.entries(toRefs(obj)).filter((e) => !flatKeys.includes(e[0]))));
 }
+var directiveHooks = {
+  mounted: isVue3 ? "mounted" : "inserted",
+  updated: isVue3 ? "updated" : "componentUpdated",
+  unmounted: isVue3 ? "unmounted" : "unbind"
+};
 var isClient = typeof window !== "undefined" && typeof document !== "undefined";
 var isWorker = typeof WorkerGlobalScope !== "undefined" && globalThis instanceof WorkerGlobalScope;
 var isDef = (val) => typeof val !== "undefined";
@@ -458,11 +463,6 @@ function pausableFilter(extendFilter = bypassFilter) {
   };
   return { isActive: readonly(isActive), pause, resume, eventFilter };
 }
-var directiveHooks = {
-  mounted: isVue3 ? "mounted" : "inserted",
-  updated: isVue3 ? "updated" : "componentUpdated",
-  unmounted: isVue3 ? "unmounted" : "unbind"
-};
 function cacheStringFunction(fn) {
   const cache = /* @__PURE__ */ Object.create(null);
   return (str) => {
@@ -1559,8 +1559,8 @@ export {
   tryOnScopeDispose,
   createEventHook,
   createGlobalState,
-  provideLocal,
   injectLocal,
+  provideLocal,
   createInjectionState,
   createSharedComposable,
   extendRef,
@@ -1574,6 +1574,7 @@ export {
   toReactive,
   reactiveComputed,
   reactiveOmit,
+  directiveHooks,
   isClient,
   isWorker,
   isDef,
@@ -1592,7 +1593,6 @@ export {
   debounceFilter,
   throttleFilter,
   pausableFilter,
-  directiveHooks,
   hyphenate,
   camelize,
   promiseTimeout,
@@ -1671,4 +1671,4 @@ vitepress/lib/vue-demi.mjs:
    * @license MIT
    *)
 */
-//# sourceMappingURL=chunk-35NWQCE3.js.map
+//# sourceMappingURL=chunk-ESWP4A2O.js.map

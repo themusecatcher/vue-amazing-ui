@@ -39,7 +39,7 @@ function onClick(text: any) {
 const state = reactive({
   single: false,
   height: 60,
-  fontSize: 16,
+  fontSize: 18,
   fontWeight: 400,
   color: 'rgba(0, 0, 0, 0.88)',
   backgroundColor: '#FFF',
@@ -220,7 +220,7 @@ function onClick (text: any) { // 获取点击的标题
   :scrollText="scrollText"
   :board-style="{ backgroundColor: '#e6f4ff', borderRadius: '12px' }"
   :text-style="{ fontSize: '28px', color: '#FF9800' }"
-  :gap="30"
+  :amount="3"
   :height="80"
   @click="onClick"
 />
@@ -257,7 +257,7 @@ function onClick (text: any) { // 获取点击的标题
     :scrollText="scrollText"
     :board-style="{ backgroundColor: '#e6f4ff', borderRadius: '12px' }"
     :text-style="{ fontSize: '28px', color: '#FF9800' }"
-    :gap="30"
+    :amount="3"
     :height="80"
     @click="onClick"
   />
@@ -389,7 +389,7 @@ function onClick(text: any) {
 const state = reactive({
   single: false,
   height: 60,
-  fontSize: 16,
+  fontSize: 18,
   fontWeight: 400,
   color: 'rgba(0, 0, 0, 0.88)',
   backgroundColor: '#FFF',

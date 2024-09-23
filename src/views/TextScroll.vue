@@ -30,7 +30,7 @@ function onClick(text: any) {
 const state = reactive({
   single: false,
   height: 60,
-  fontSize: 16,
+  fontSize: 18,
   fontWeight: 400,
   color: 'rgba(0, 0, 0, 0.88)',
   backgroundColor: '#FFF',
