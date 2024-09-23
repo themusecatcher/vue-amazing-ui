@@ -5,14 +5,14 @@ set -e
 
 # 提交修改到 github
 
-commitDescInfo=$1
+commitDesc=$1
 
 git add .
 
-if [ -z ${commitDescInfo} ]; then
+if [ -z ${commitDesc} ]; then
   git commit -m 'update'
 else
-  git commit -m ${commitDescInfo}
+  git commit -m ${commitDesc}
 fi
 
 git push
