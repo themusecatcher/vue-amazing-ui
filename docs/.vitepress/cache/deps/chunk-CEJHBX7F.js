@@ -1,7 +1,8 @@
-// node_modules/.pnpm/@vue+shared@3.5.3/node_modules/@vue/shared/dist/shared.esm-bundler.js
-function makeMap(str, expectsLowerCase) {
-  const set2 = new Set(str.split(","));
-  return expectsLowerCase ? (val) => set2.has(val.toLowerCase()) : (val) => set2.has(val);
+// node_modules/.pnpm/@vue+shared@3.5.8/node_modules/@vue/shared/dist/shared.esm-bundler.js
+function makeMap(str) {
+  const map2 = /* @__PURE__ */ Object.create(null);
+  for (const key of str.split(",")) map2[key] = 1;
+  return (val) => val in map2;
 }
 var EMPTY_OBJ = true ? Object.freeze({}) : {};
 var EMPTY_ARR = true ? Object.freeze([]) : [];
@@ -197,6 +198,9 @@ var isKnownHtmlAttr = makeMap(
 var isKnownSvgAttr = makeMap(
   `xmlns,accent-height,accumulate,additive,alignment-baseline,alphabetic,amplitude,arabic-form,ascent,attributeName,attributeType,azimuth,baseFrequency,baseline-shift,baseProfile,bbox,begin,bias,by,calcMode,cap-height,class,clip,clipPathUnits,clip-path,clip-rule,color,color-interpolation,color-interpolation-filters,color-profile,color-rendering,contentScriptType,contentStyleType,crossorigin,cursor,cx,cy,d,decelerate,descent,diffuseConstant,direction,display,divisor,dominant-baseline,dur,dx,dy,edgeMode,elevation,enable-background,end,exponent,fill,fill-opacity,fill-rule,filter,filterRes,filterUnits,flood-color,flood-opacity,font-family,font-size,font-size-adjust,font-stretch,font-style,font-variant,font-weight,format,from,fr,fx,fy,g1,g2,glyph-name,glyph-orientation-horizontal,glyph-orientation-vertical,glyphRef,gradientTransform,gradientUnits,hanging,height,href,hreflang,horiz-adv-x,horiz-origin-x,id,ideographic,image-rendering,in,in2,intercept,k,k1,k2,k3,k4,kernelMatrix,kernelUnitLength,kerning,keyPoints,keySplines,keyTimes,lang,lengthAdjust,letter-spacing,lighting-color,limitingConeAngle,local,marker-end,marker-mid,marker-start,markerHeight,markerUnits,markerWidth,mask,maskContentUnits,maskUnits,mathematical,max,media,method,min,mode,name,numOctaves,offset,opacity,operator,order,orient,orientation,origin,overflow,overline-position,overline-thickness,panose-1,paint-order,path,pathLength,patternContentUnits,patternTransform,patternUnits,ping,pointer-events,points,pointsAtX,pointsAtY,pointsAtZ,preserveAlpha,preserveAspectRatio,primitiveUnits,r,radius,referrerPolicy,refX,refY,rel,rendering-intent,repeatCount,repeatDur,requiredExtensions,requiredFeatures,restart,result,rotate,rx,ry,scale,seed,shape-rendering,slope,spacing,specularConstant,specularExponent,speed,spreadMethod,startOffset,stdDeviation,stemh,stemv,stitchTiles,stop-color,stop-opacity,strikethrough-position,strikethrough-thickness,string,stroke,stroke-dasharray,stroke-dashoffset,stroke-linecap,stroke-linejoin,stroke-miterlimit,stroke-opacity,stroke-width,style,surfaceScale,systemLanguage,tabindex,tableValues,target,targetX,targetY,text-anchor,text-decoration,text-rendering,textLength,to,transform,transform-origin,type,u1,u2,underline-position,underline-thickness,unicode,unicode-bidi,unicode-range,units-per-em,v-alphabetic,v-hanging,v-ideographic,v-mathematical,values,vector-effect,version,vert-adv-y,vert-origin-x,vert-origin-y,viewBox,viewTarget,visibility,width,widths,word-spacing,writing-mode,x,x-height,x1,x2,xChannelSelector,xlink:actuate,xlink:arcrole,xlink:href,xlink:role,xlink:show,xlink:title,xlink:type,xmlns:xlink,xml:base,xml:lang,xml:space,y,y1,y2,yChannelSelector,z,zoomAndPan`
 );
+var isKnownMathMLAttr = makeMap(
+  `accent,accentunder,actiontype,align,alignmentscope,altimg,altimg-height,altimg-valign,altimg-width,alttext,bevelled,close,columnsalign,columnlines,columnspan,denomalign,depth,dir,display,displaystyle,encoding,equalcolumns,equalrows,fence,fontstyle,fontweight,form,frame,framespacing,groupalign,height,href,id,indentalign,indentalignfirst,indentalignlast,indentshift,indentshiftfirst,indentshiftlast,indextype,justify,largetop,largeop,lquote,lspace,mathbackground,mathcolor,mathsize,mathvariant,maxsize,minlabelspacing,mode,other,overflow,position,rowalign,rowlines,rowspan,rquote,rspace,scriptlevel,scriptminsize,scriptsizemultiplier,selection,separator,separators,shift,side,src,stackalign,stretchy,subscriptshift,superscriptshift,symmetric,voffset,width,widths,xlink:href,xlink:show,xlink:type,xmlns`
+);
 function isRenderableAttrValue(value) {
   if (value == null) {
     return false;
@@ -299,7 +303,7 @@ var stringifySymbol = (v, i = "") => {
   );
 };
 
-// node_modules/.pnpm/@vue+reactivity@3.5.3/node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js
+// node_modules/.pnpm/@vue+reactivity@3.5.8/node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js
 function warn(msg, ...args) {
   console.warn(`[Vue warn] ${msg}`, ...args);
 }
@@ -430,7 +434,7 @@ var ReactiveEffect = class {
     this.deps = void 0;
     this.depsTail = void 0;
     this.flags = 1 | 4;
-    this.nextEffect = void 0;
+    this.next = void 0;
     this.cleanup = void 0;
     this.scheduler = void 0;
     if (activeEffectScope && activeEffectScope.active) {
@@ -457,9 +461,7 @@ var ReactiveEffect = class {
       return;
     }
     if (!(this.flags & 8)) {
-      this.flags |= 8;
-      this.nextEffect = batchedEffect;
-      batchedEffect = this;
+      batch(this);
     }
   }
   run() {
@@ -520,7 +522,12 @@ var ReactiveEffect = class {
   }
 };
 var batchDepth = 0;
-var batchedEffect;
+var batchedSub;
+function batch(sub) {
+  sub.flags |= 8;
+  sub.next = batchedSub;
+  batchedSub = sub;
+}
 function startBatch() {
   batchDepth++;
 }
@@ -529,15 +536,16 @@ function endBatch() {
     return;
   }
   let error;
-  while (batchedEffect) {
-    let e = batchedEffect;
-    batchedEffect = void 0;
+  while (batchedSub) {
+    let e = batchedSub;
+    batchedSub = void 0;
     while (e) {
-      const next = e.nextEffect;
-      e.nextEffect = void 0;
+      const next = e.next;
+      e.next = void 0;
       e.flags &= ~8;
       if (e.flags & 1) {
         try {
+          ;
           e.trigger();
         } catch (err) {
           if (!error) error = err;
@@ -555,26 +563,29 @@ function prepareDeps(sub) {
     link.dep.activeLink = link;
   }
 }
-function cleanupDeps(sub) {
+function cleanupDeps(sub, fromComputed = false) {
   let head;
   let tail = sub.depsTail;
-  for (let link = tail; link; link = link.prevDep) {
+  let link = tail;
+  while (link) {
+    const prev = link.prevDep;
     if (link.version === -1) {
-      if (link === tail) tail = link.prevDep;
-      removeSub(link);
+      if (link === tail) tail = prev;
+      removeSub(link, fromComputed);
       removeDep(link);
     } else {
       head = link;
     }
     link.dep.activeLink = link.prevActiveLink;
     link.prevActiveLink = void 0;
+    link = prev;
   }
   sub.deps = head;
   sub.depsTail = tail;
 }
 function isDirty(sub) {
   for (let link = sub.deps; link; link = link.nextDep) {
-    if (link.dep.version !== link.version || link.dep.computed && refreshComputed(link.dep.computed) === false || link.dep.version !== link.version) {
+    if (link.dep.version !== link.version || link.dep.computed && (refreshComputed(link.dep.computed) || link.dep.version !== link.version)) {
       return true;
     }
   }
@@ -584,9 +595,6 @@ function isDirty(sub) {
   return false;
 }
 function refreshComputed(computed3) {
-  if (computed3.flags & 2) {
-    return false;
-  }
   if (computed3.flags & 4 && !(computed3.flags & 16)) {
     return;
   }
@@ -597,7 +605,7 @@ function refreshComputed(computed3) {
   computed3.globalVersion = globalVersion;
   const dep = computed3.dep;
   computed3.flags |= 2;
-  if (dep.version > 0 && !computed3.isSSR && !isDirty(computed3)) {
+  if (dep.version > 0 && !computed3.isSSR && computed3.deps && !isDirty(computed3)) {
     computed3.flags &= ~2;
     return;
   }
@@ -618,11 +626,11 @@ function refreshComputed(computed3) {
   } finally {
     activeSub = prevSub;
     shouldTrack = prevShouldTrack;
-    cleanupDeps(computed3);
+    cleanupDeps(computed3, true);
     computed3.flags &= ~2;
   }
 }
-function removeSub(link) {
+function removeSub(link, fromComputed = false) {
   const { dep, prevSub, nextSub } = link;
   if (prevSub) {
     prevSub.nextSub = nextSub;
@@ -635,10 +643,18 @@ function removeSub(link) {
   if (dep.subs === link) {
     dep.subs = prevSub;
   }
-  if (!dep.subs && dep.computed) {
-    dep.computed.flags &= ~4;
-    for (let l = dep.computed.deps; l; l = l.nextDep) {
-      removeSub(l);
+  if (dep.subsHead === link) {
+    dep.subsHead = nextSub;
+  }
+  if (!dep.subs) {
+    if (dep.computed) {
+      dep.computed.flags &= ~4;
+      for (let l = dep.computed.deps; l; l = l.nextDep) {
+        removeSub(l, true);
+      }
+    } else if (dep.map && !fromComputed) {
+      dep.map.delete(dep.key);
+      if (!dep.map.size) targetMap.delete(dep.target);
     }
   }
 }
@@ -698,12 +714,23 @@ function cleanupEffect(e) {
   }
 }
 var globalVersion = 0;
+var Link = class {
+  constructor(sub, dep) {
+    this.sub = sub;
+    this.dep = dep;
+    this.version = dep.version;
+    this.nextDep = this.prevDep = this.nextSub = this.prevSub = this.prevActiveLink = void 0;
+  }
+};
 var Dep = class {
   constructor(computed3) {
     this.computed = computed3;
     this.version = 0;
     this.activeLink = void 0;
     this.subs = void 0;
+    this.target = void 0;
+    this.map = void 0;
+    this.key = void 0;
     if (true) {
       this.subsHead = void 0;
     }
@@ -714,16 +741,7 @@ var Dep = class {
     }
     let link = this.activeLink;
     if (link === void 0 || link.sub !== activeSub) {
-      link = this.activeLink = {
-        dep: this,
-        sub: activeSub,
-        version: this.version,
-        nextDep: void 0,
-        prevDep: void 0,
-        nextSub: void 0,
-        prevSub: void 0,
-        prevActiveLink: void 0
-      };
+      link = this.activeLink = new Link(activeSub, this);
       if (!activeSub.deps) {
         activeSub.deps = activeSub.depsTail = link;
       } else {
@@ -786,7 +804,10 @@ var Dep = class {
         }
       }
       for (let link = this.subs; link; link = link.prevSub) {
-        link.sub.notify();
+        if (link.sub.notify()) {
+          ;
+          link.sub.dep.notify();
+        }
       }
     } finally {
       endBatch();
@@ -830,6 +851,9 @@ function track(target, type, key) {
     let dep = depsMap.get(key);
     if (!dep) {
       depsMap.set(key, dep = new Dep());
+      dep.target = target;
+      dep.map = depsMap;
+      dep.key = key;
     }
     if (true) {
       dep.track({
@@ -848,9 +872,25 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
     globalVersion++;
     return;
   }
-  let deps = [];
+  const run = (dep) => {
+    if (dep) {
+      if (true) {
+        dep.trigger({
+          target,
+          type,
+          key,
+          newValue,
+          oldValue,
+          oldTarget
+        });
+      } else {
+        dep.trigger();
+      }
+    }
+  };
+  startBatch();
   if (type === "clear") {
-    deps = [...depsMap.values()];
+    depsMap.forEach(run);
   } else {
     const targetIsArray = isArray(target);
     const isArrayIndex = targetIsArray && isIntegerKey(key);
@@ -858,57 +898,41 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
       const newLength = Number(newValue);
       depsMap.forEach((dep, key2) => {
         if (key2 === "length" || key2 === ARRAY_ITERATE_KEY || !isSymbol(key2) && key2 >= newLength) {
-          deps.push(dep);
+          run(dep);
         }
       });
     } else {
-      const push = (dep) => dep && deps.push(dep);
       if (key !== void 0) {
-        push(depsMap.get(key));
+        run(depsMap.get(key));
       }
       if (isArrayIndex) {
-        push(depsMap.get(ARRAY_ITERATE_KEY));
+        run(depsMap.get(ARRAY_ITERATE_KEY));
       }
       switch (type) {
         case "add":
           if (!targetIsArray) {
-            push(depsMap.get(ITERATE_KEY));
+            run(depsMap.get(ITERATE_KEY));
             if (isMap(target)) {
-              push(depsMap.get(MAP_KEY_ITERATE_KEY));
+              run(depsMap.get(MAP_KEY_ITERATE_KEY));
             }
           } else if (isArrayIndex) {
-            push(depsMap.get("length"));
+            run(depsMap.get("length"));
           }
           break;
         case "delete":
           if (!targetIsArray) {
-            push(depsMap.get(ITERATE_KEY));
+            run(depsMap.get(ITERATE_KEY));
             if (isMap(target)) {
-              push(depsMap.get(MAP_KEY_ITERATE_KEY));
+              run(depsMap.get(MAP_KEY_ITERATE_KEY));
             }
           }
           break;
         case "set":
           if (isMap(target)) {
-            push(depsMap.get(ITERATE_KEY));
+            run(depsMap.get(ITERATE_KEY));
           }
           break;
       }
-    }
-  }
-  startBatch();
-  for (const dep of deps) {
-    if (true) {
-      dep.trigger({
-        target,
-        type,
-        key,
-        newValue,
-        oldValue,
-        oldTarget
-      });
-    } else {
-      dep.trigger();
     }
   }
   endBatch();
@@ -1644,7 +1668,7 @@ function toRaw(observed) {
   return raw ? toRaw(raw) : observed;
 }
 function markRaw(value) {
-  if (Object.isExtensible(value)) {
+  if (!hasOwn(value, "__v_skip") && Object.isExtensible(value)) {
     def(value, "__v_skip", true);
   }
   return value;
@@ -1709,15 +1733,17 @@ var RefImpl = class {
   }
 };
 function triggerRef(ref2) {
-  if (true) {
-    ref2.dep.trigger({
-      target: ref2,
-      type: "set",
-      key: "value",
-      newValue: ref2._value
-    });
-  } else {
-    ref2.dep.trigger();
+  if (ref2.dep) {
+    if (true) {
+      ref2.dep.trigger({
+        target: ref2,
+        type: "set",
+        key: "value",
+        newValue: ref2._value
+      });
+    } else {
+      ref2.dep.trigger();
+    }
   }
 }
 function unref(ref2) {
@@ -1834,9 +1860,11 @@ var ComputedRefImpl = class {
    * @internal
    */
   notify() {
-    if (activeSub !== this) {
-      this.flags |= 16;
-      this.dep.notify();
+    this.flags |= 16;
+    if (!(this.flags & 8) && // avoid infinite self recursion
+    activeSub !== this) {
+      batch(this);
+      return true;
     } else if (true) ;
   }
   get value() {
@@ -1982,20 +2010,12 @@ function watch(source, cb, options = EMPTY_OBJ) {
       remove(scope.effects, effect2);
     }
   };
-  if (once) {
-    if (cb) {
-      const _cb = cb;
-      cb = (...args) => {
-        _cb(...args);
-        watchHandle();
-      };
-    } else {
-      const _getter = getter;
-      getter = () => {
-        _getter();
-        watchHandle();
-      };
-    }
+  if (once && cb) {
+    const _cb = cb;
+    cb = (...args) => {
+      _cb(...args);
+      watchHandle();
+    };
   }
   let oldValue = isMultiSource ? new Array(source.length).fill(INITIAL_WATCHER_VALUE) : INITIAL_WATCHER_VALUE;
   const job = (immediateFirstRun) => {
@@ -2100,7 +2120,7 @@ function traverse(value, depth = Infinity, seen) {
   return value;
 }
 
-// node_modules/.pnpm/@vue+runtime-core@3.5.3/node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js
+// node_modules/.pnpm/@vue+runtime-core@3.5.8/node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js
 var stack = [];
 function pushWarningContext(vnode) {
   stack.push(vnode);
@@ -2448,7 +2468,9 @@ function flushPreFlushCbs(instance, seen, i = isFlushing ? flushIndex + 1 : 0) {
         cb.flags &= ~1;
       }
       cb();
-      cb.flags &= ~1;
+      if (!(cb.flags & 4)) {
+        cb.flags &= ~1;
+      }
     }
   }
 }
@@ -2504,7 +2526,9 @@ function flushJobs(seen) {
           job.i,
           job.i ? 15 : 14
         );
-        job.flags &= ~1;
+        if (!(job.flags & 4)) {
+          job.flags &= ~1;
+        }
       }
     }
   } finally {
@@ -2525,23 +2549,19 @@ function flushJobs(seen) {
   }
 }
 function checkRecursiveUpdates(seen, fn) {
-  if (!seen.has(fn)) {
-    seen.set(fn, 1);
-  } else {
-    const count = seen.get(fn);
-    if (count > RECURSION_LIMIT) {
-      const instance = fn.i;
-      const componentName = instance && getComponentName(instance.type);
-      handleError(
-        `Maximum recursive updates exceeded${componentName ? ` in component <${componentName}>` : ``}. This means you have a reactive effect that is mutating its own dependencies and thus recursively triggering itself. Possible sources include component template, render function, updated hook or watcher source function.`,
-        null,
-        10
-      );
-      return true;
-    } else {
-      seen.set(fn, count + 1);
-    }
+  const count = seen.get(fn) || 0;
+  if (count > RECURSION_LIMIT) {
+    const instance = fn.i;
+    const componentName = instance && getComponentName(instance.type);
+    handleError(
+      `Maximum recursive updates exceeded${componentName ? ` in component <${componentName}>` : ``}. This means you have a reactive effect that is mutating its own dependencies and thus recursively triggering itself. Possible sources include component template, render function, updated hook or watcher source function.`,
+      null,
+      10
+    );
+    return true;
   }
+  seen.set(fn, count + 1);
+  return false;
 }
 var isHmrUpdating = false;
 var hmrDirtyComponents = /* @__PURE__ */ new Map();
@@ -2621,7 +2641,9 @@ function reload(id, newComp) {
       dirtyInstances.delete(instance);
     } else if (instance.parent) {
       queueJob(() => {
+        isHmrUpdating = true;
         instance.parent.update();
+        isHmrUpdating = false;
         dirtyInstances.delete(instance);
       });
     } else if (instance.appContext.reload) {
@@ -2919,6 +2941,9 @@ var TeleportImpl = {
       insert(mainAnchor, container, anchor);
       const mount = (container2, anchor2) => {
         if (shapeFlag & 16) {
+          if (parentComponent && parentComponent.isCE) {
+            parentComponent.ce._teleportTarget = container2;
+          }
           mountChildren(
             children,
             container2,
@@ -3946,7 +3971,11 @@ Server rendered element contains more child nodes than client vdom.`
           remove2(cur);
         }
       } else if (shapeFlag & 8) {
-        if (el.textContent !== vnode.children) {
+        let clientText = vnode.children;
+        if (clientText[0] === "\n" && (el.tagName === "PRE" || el.tagName === "TEXTAREA")) {
+          clientText = clientText.slice(1);
+        }
+        if (el.textContent !== clientText) {
           if (!isMismatchAllowed(
             el,
             0
@@ -4168,7 +4197,7 @@ Server rendered element contains fewer child nodes than client vdom.`
     }
   };
   const isTemplateNode = (node) => {
-    return node.nodeType === 1 && node.tagName.toLowerCase() === "template";
+    return node.nodeType === 1 && node.tagName === "TEMPLATE";
   };
   return [hydrate2, hydrateNode];
 }
@@ -4338,6 +4367,11 @@ var hydrateOnIdle = (timeout = 1e4) => (hydrate2) => {
   const id = requestIdleCallback(hydrate2, { timeout });
   return () => cancelIdleCallback(id);
 };
+function elementIsVisibleInViewport(el) {
+  const { top, left, bottom, right } = el.getBoundingClientRect();
+  const { innerHeight, innerWidth } = window;
+  return (top > 0 && top < innerHeight || bottom > 0 && bottom < innerHeight) && (left > 0 && left < innerWidth || right > 0 && right < innerWidth);
+}
 var hydrateOnVisible = (opts) => (hydrate2, forEach) => {
   const ob = new IntersectionObserver((entries) => {
     for (const e of entries) {
@@ -4347,7 +4381,15 @@ var hydrateOnVisible = (opts) => (hydrate2, forEach) => {
       break;
     }
   }, opts);
-  forEach((el) => ob.observe(el));
+  forEach((el) => {
+    if (!(el instanceof Element)) return;
+    if (elementIsVisibleInViewport(el)) {
+      hydrate2();
+      ob.disconnect();
+      return false;
+    }
+    ob.observe(el);
+  });
   return () => ob.disconnect();
 };
 var hydrateOnMediaQuery = (query) => (hydrate2) => {
@@ -4392,7 +4434,10 @@ function forEachElement(node, cb) {
     let next = node.nextSibling;
     while (next) {
       if (next.nodeType === 1) {
-        cb(next);
+        const result = cb(next);
+        if (result === false) {
+          break;
+        }
       } else if (isComment(next)) {
         if (next.data === "]") {
           if (--depth === 0) break;
@@ -4531,7 +4576,7 @@ function defineAsyncComponent(source) {
       load().then(() => {
         loaded.value = true;
         if (instance.parent && isKeepAlive(instance.parent.vnode)) {
-          queueJob(instance.parent.update);
+          instance.parent.update();
         }
       }).catch((err) => {
         onError(err);
@@ -4928,13 +4973,15 @@ function renderList(source, renderItem, cache, index) {
   const sourceIsArray = isArray(source);
   if (sourceIsArray || isString(source)) {
     const sourceIsReactiveArray = sourceIsArray && isReactive(source);
+    let needsWrap = false;
     if (sourceIsReactiveArray) {
+      needsWrap = !isShallow(source);
       source = shallowReadArray(source);
     }
     ret = new Array(source.length);
     for (let i = 0, l = source.length; i < l; i++) {
       ret[i] = renderItem(
-        sourceIsReactiveArray ? toReactive(source[i]) : source[i],
+        needsWrap ? toReactive(source[i]) : source[i],
         i,
         void 0,
         cached && cached[i]
@@ -7249,6 +7296,7 @@ function baseCreateRenderer(options, createHydrationFns) {
       }
     }
     if (instance.asyncDep) {
+      if (isHmrUpdating) initialVNode.el = null;
       parentSuspense && parentSuspense.registerDep(instance, setupRenderEffect, optimized);
       if (!initialVNode.el) {
         const placeholder = instance.subTree = createVNode(Comment);
@@ -8209,11 +8257,12 @@ function doWatch(source, cb, options = EMPTY_OBJ) {
     } else if (!cb || immediate) {
       baseWatchOptions.once = true;
     } else {
-      return {
-        stop: NOOP,
-        resume: NOOP,
-        pause: NOOP
+      const watchStopHandle = () => {
       };
+      watchStopHandle.stop = NOOP;
+      watchStopHandle.resume = NOOP;
+      watchStopHandle.pause = NOOP;
+      return watchStopHandle;
     }
   }
   const instance = currentInstance;
@@ -10401,7 +10450,7 @@ function isMemoSame(cached, memo) {
   }
   return true;
 }
-var version = "3.5.3";
+var version = "3.5.8";
 var warn2 = true ? warn$1 : NOOP;
 var ErrorTypeStrings = ErrorTypeStrings$1;
 var devtools = true ? devtools$1 : void 0;
@@ -10423,7 +10472,7 @@ var resolveFilter = null;
 var compatUtils = null;
 var DeprecationTypes = null;
 
-// node_modules/.pnpm/@vue+runtime-dom@3.5.3/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js
+// node_modules/.pnpm/@vue+runtime-dom@3.5.8/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js
 var policy = void 0;
 var tt = typeof window !== "undefined" && window.trustedTypes;
 if (tt) {
@@ -10700,7 +10749,7 @@ function whenTransitionEnds(el, expectedType, explicitTimeout, resolve2) {
       resolve2();
     }
   };
-  if (explicitTimeout) {
+  if (explicitTimeout != null) {
     return setTimeout(resolveIfNotStale, explicitTimeout);
   }
   const { type, timeout, propCount } = getTransitionInfo(el, expectedType);
@@ -11280,6 +11329,7 @@ var VueElement = class _VueElement extends BaseClass {
     }
   }
   connectedCallback() {
+    if (!this.isConnected) return;
     if (!this.shadowRoot) {
       this._parseSlots();
     }
@@ -11322,7 +11372,7 @@ var VueElement = class _VueElement extends BaseClass {
           this._ob = null;
         }
         this._app && this._app.unmount();
-        this._instance.ce = void 0;
+        if (this._instance) this._instance.ce = void 0;
         this._app = this._instance = null;
       }
     });
@@ -11541,7 +11591,7 @@ var VueElement = class _VueElement extends BaseClass {
     }
   }
   /**
-   * Only called when shaddowRoot is false
+   * Only called when shadowRoot is false
    */
   _parseSlots() {
     const slots = this._slots = {};
@@ -11553,10 +11603,10 @@ var VueElement = class _VueElement extends BaseClass {
     }
   }
   /**
-   * Only called when shaddowRoot is false
+   * Only called when shadowRoot is false
    */
   _renderSlots() {
-    const outlets = this.querySelectorAll("slot");
+    const outlets = (this._teleportTarget || this).querySelectorAll("slot");
     const scopeId = this._instance.type.__scopeId;
     for (let i = 0; i < outlets.length; i++) {
       const o = outlets[i];
@@ -11733,7 +11783,7 @@ var TransitionGroupImpl = decorate({
             child,
             resolveTransitionHooks(child, cssTransitionProps, state, instance)
           );
-        } else if (true) {
+        } else if (child.type !== Text) {
           warn2(`<TransitionGroup> children must be keyed.`);
         }
       }
@@ -12236,7 +12286,7 @@ var initDirectivesForSSR = () => {
   }
 };
 
-// node_modules/.pnpm/vue@3.5.3_typescript@5.5.4/node_modules/vue/dist/vue.runtime.esm-bundler.js
+// node_modules/.pnpm/vue@3.5.8_typescript@5.6.2/node_modules/vue/dist/vue.runtime.esm-bundler.js
 function initDev() {
   {
     initCustomFormatter();
@@ -12428,7 +12478,7 @@ export {
 
 @vue/shared/dist/shared.esm-bundler.js:
   (**
-  * @vue/shared v3.5.3
+  * @vue/shared v3.5.8
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
@@ -12436,14 +12486,14 @@ export {
 
 @vue/reactivity/dist/reactivity.esm-bundler.js:
   (**
-  * @vue/reactivity v3.5.3
+  * @vue/reactivity v3.5.8
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
 
 @vue/runtime-core/dist/runtime-core.esm-bundler.js:
   (**
-  * @vue/runtime-core v3.5.3
+  * @vue/runtime-core v3.5.8
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
@@ -12451,7 +12501,7 @@ export {
 
 @vue/runtime-dom/dist/runtime-dom.esm-bundler.js:
   (**
-  * @vue/runtime-dom v3.5.3
+  * @vue/runtime-dom v3.5.8
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
@@ -12459,9 +12509,9 @@ export {
 
 vue/dist/vue.runtime.esm-bundler.js:
   (**
-  * vue v3.5.3
+  * vue v3.5.8
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
 */
-//# sourceMappingURL=chunk-T4VKWHV5.js.map
+//# sourceMappingURL=chunk-CEJHBX7F.js.map
