@@ -310,11 +310,9 @@ function onWaveEnd() {
 }
 .btn-text {
   &:hover {
-    color: rgba(0, 0, 0, 0.88);
     background-color: rgba(0, 0, 0, 0.06);
   }
   &:active {
-    color: rgba(0, 0, 0, 0.88);
     background-color: rgba(0, 0, 0, 0.15);
   }
 }
@@ -469,20 +467,25 @@ function onWaveEnd() {
   width: 100%;
 }
 .btn-disabled {
-  border-color: #d9d9d9;
   color: rgba(0, 0, 0, 0.25);
-  background-color: rgba(0, 0, 0, 0.04);
   cursor: not-allowed;
-  &:hover,
-  &:active {
+  &:not(.btn-text, .btn-link) {
+    border-color: #d9d9d9;
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  &:not(.btn-text, .btn-link):hover,
+  &:not(.btn-text, .btn-link):active {
     border-color: #d9d9d9;
     color: rgba(0, 0, 0, 0.25) !important;
     background-color: rgba(0, 0, 0, 0.04);
   }
-  &.btn-text,
-  &.btn-link {
+  &.btn-text:hover,
+  &.btn-text:active {
     background-color: transparent;
-    border: none;
+  }
+  &.btn-link:hover,
+  &.btn-link:active {
+    color: rgba(0, 0, 0, 0.25);
   }
 }
 </style>

@@ -104,6 +104,9 @@ const showBadge = computed(() => {
   }
   return false
 })
+const showDot = computed(() => {
+  return props.value === undefined || (props.value === 0 && !props.showZero) || props.dot
+})
 const dotOffestStyle = computed(() => {
   if (props.offset?.length) {
     return {
@@ -145,13 +148,13 @@ function handleOffset(value: string): string {
       </span>
       <Transition name="zoom" v-else>
         <div
-          v-show="showBadge"
+          v-if="showBadge"
           class="m-badge-value"
           :class="[
             {
               'small-num': typeof value === 'number' && value < 10,
               'only-number': !showContent,
-              'only-dot': showBadge && (value === undefined || (value === 0 && !showZero) || dot)
+              'only-dot': showDot
             },
             presetClass
           ]"

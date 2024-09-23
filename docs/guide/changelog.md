@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.6.8 <Tag color="volcano" size="small">2024-09-23</Tag>
+
+- 优化 [徽标 Badge](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html) 组件实现
+- 组件库及文档代码优化
+
 ## 1.6.7 <Tag color="volcano" size="small">2024-09-18</Tag>
 
 - 组件库代码优化
