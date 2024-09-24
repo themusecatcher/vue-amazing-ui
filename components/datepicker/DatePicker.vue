@@ -76,6 +76,11 @@ const year = computed(() => {
 <style lang="less" scoped>
 .m-datepicker {
   display: inline-block;
+  :deep(.dp__input_wrap) {
+    svg {
+      fill: currentColor;
+    }
+  }
 }
 .dp__theme_dark {
   // dark theme
