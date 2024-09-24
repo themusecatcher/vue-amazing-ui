@@ -98,6 +98,7 @@ function initCountdown() {
     }
     remainingTime.value = futureTime.value - Date.now()
     if (props.future || (!props.future && props.active)) {
+      rafID.value && cancelAnimationFrame(rafID.value)
       rafID.value = requestAnimationFrame(CountDown)
     }
   } else {
@@ -173,7 +174,6 @@ defineExpose({
 })
 function resetCountdown() {
   // 重置倒计时
-  console.log('reset')
   initCountdown()
 }
 </script>

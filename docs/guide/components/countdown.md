@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const active = ref(true)
+const resetActive = ref(true)
 const countdownRef = ref()
 function onFinish() {
   console.log('countdown finished')
@@ -196,12 +197,12 @@ const active = ref(true)
 
 <Space vertical>
   <Space align="center">
-    <Switch v-model="active" />
+    <Switch v-model="resetActive" />
     <Button type="primary" @click="onReset">Reset</Button>
   </Space>
   <Countdown
     ref="countdownRef"
-    :active="active"
+    :active="resetActive"
     :value="24 * 60 * 60 * 1000"
     :future="false"
     format="HH:mm:ss:SSS"
@@ -213,7 +214,7 @@ const active = ref(true)
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const active = ref(true)
+const resetActive = ref(true)
 const countdownRef = ref()
 function onReset() {
   countdownRef.value.reset()
@@ -222,12 +223,12 @@ function onReset() {
 <template>
   <Space vertical>
     <Space align="center">
-      <Switch v-model="active" />
+      <Switch v-model="resetActive" />
       <Button type="primary" @click="onReset">Reset</Button>
     </Space>
     <Countdown
       ref="countdownRef"
-      :active="active"
+      :active="resetActive"
       :value="24 * 60 * 60 * 1000"
       :future="false"
       format="HH:mm:ss:SSS"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const active = ref(true)
+const resetActive = ref(true)
 const countdownRef = ref()
 function onFinish() {
   console.log('countdown finished')
@@ -63,12 +64,12 @@ function onReset() {
     <h2 class="mt30 mb10">重置倒计时</h2>
     <Space vertical>
       <Space align="center">
-        <Switch v-model="active" />
+        <Switch v-model="resetActive" />
         <Button type="primary" @click="onReset">Reset</Button>
       </Space>
       <Countdown
         ref="countdownRef"
-        :active="active"
+        :active="resetActive"
         :value="24 * 60 * 60 * 1000"
         :future="false"
         format="HH:mm:ss:SSS"
