@@ -6,7 +6,7 @@ interface Option {
   disabled?: boolean // 是否禁用选项
 }
 interface Props {
-  options?: Array<Option> // 复选元素数据
+  options?: Array<Option> // 复选框选项数据
   disabled?: boolean // 是否禁用所有复选框
   vertical?: boolean // 是否垂直排列
   value?: any[] // (v-model) 当前选中的值

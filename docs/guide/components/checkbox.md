@@ -466,7 +466,7 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-options | 复选元素数据 | [Option](#option-type)[] | []
+options | 复选框选项数据 | [Option](#option-type)[] | []
 disabled | 是否禁用所有复选框 | boolean | false
 vertical | 是否垂直排列 | boolean | false
 value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any[] | []
