@@ -11,7 +11,8 @@ const collapseData = ref([
   {
     key: '2',
     header: 'This is panel header 2',
-    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   },
   {
     key: '3',
@@ -30,7 +31,8 @@ const disabledCollapseData = ref([
   {
     key: '2',
     header: 'This is panel header 2',
-    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   },
   {
     key: '3',
@@ -60,7 +62,8 @@ const extraCollapseData = ref([
     key: '2',
     header: 'This is panel header 2',
     extra: 'Extra',
-    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   },
   {
     key: '3',
@@ -81,7 +84,8 @@ const arrowCollapseData = ref([
     key: '2',
     showArrow: false,
     header: 'This is panel header 2',
-    content: `A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world. A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   },
   {
     key: '3',
