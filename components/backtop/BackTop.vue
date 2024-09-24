@@ -210,7 +210,7 @@ function onBackTop() {
       :deep(svg) {
         pointer-events: none;
         fill: currentColor;
-        transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: fill 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
     }
     .icon-description {
