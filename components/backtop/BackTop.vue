@@ -228,7 +228,7 @@ function onBackTop() {
   }
   .backtop-default {
     color: rgba(0, 0, 0, 0.88);
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
     &:hover {
       color: @themeColor;
@@ -244,7 +244,7 @@ function onBackTop() {
     background-color: @themeColor;
     box-shadow: 0 2px 8px 0 rgba(9, 88, 217, 0.32);
     &:hover {
-      background-color: rgb(64, 150, 255);
+      background-color: #4096ff;
       box-shadow: 0 2px 8px 3px rgba(9, 88, 217, 0.32);
     }
   }

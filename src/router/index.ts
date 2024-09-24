@@ -435,8 +435,9 @@ const router = createRouter({
 })
 // 注册全局前置守卫
 router.beforeEach((to, from) => {
-  const domTitle = to.meta.title + ' ' + String(to.name) + ' - Vue Amazing UI'
-  document.title = domTitle
+  const domTitle = to.meta.title
+  const appTitle = import.meta.env.VITE_GLOB_APP_TITLE
+  document.title = `${domTitle} - ${appTitle}`
 })
 
 export default router
