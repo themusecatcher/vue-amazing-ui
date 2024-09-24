@@ -808,6 +808,7 @@ activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` |
 disabled | 是否禁用，优先级低于 `Collapse` 的 `disabled` | boolean | false
 bordered | 带边框风格的折叠面板 | boolean | true
 copyable | 是否可复制面板内容 | boolean | false
+copyProps | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
 lang | 面板右上角固定内容，例如标识 `language` | string &#124; slot | undefined
 itemStyle | 设置面板容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 headerStyle | 设置面板标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
