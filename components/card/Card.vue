@@ -5,21 +5,25 @@ import Skeleton from '../skeleton'
 import { useSlotsExist } from '../utils'
 interface Props {
   width?: number | string // 卡片宽度，单位 px
+  bordered?: boolean // 是否有边框
+  size?: 'small' | 'middle' | 'large' // 卡片的尺寸
+  hoverable?: boolean // 鼠标移过时可浮起
+  loading?: boolean // 当卡片内容还在加载中时，可以用 loading 展示一个占位
+  skeletonProps?: object // 加载中时，骨架屏的属性配置，参考 Skeleton Props
   title?: string // 卡片标题 string | slot
   extra?: string // 卡片右上角的操作区域 string | slot
-  bordered?: boolean // 是否有边框
-  loading?: boolean // 当卡片内容还在加载中时，可以用 loading 展示一个占位
-  size?: 'default' | 'small' // 卡片的尺寸
-  headStyle?: CSSProperties //	标题区域自定义样式
-  bodyStyle?: CSSProperties // 内容区域自定义样式
+  headStyle?: CSSProperties // 自定义标题区域样式
+  bodyStyle?: CSSProperties // 自定义内容区域样式
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
+  bordered: true,
+  size: 'middle',
+  hoverable: false,
+  loading: false,
+  skeletonProps: () => ({}),
   title: undefined,
   extra: undefined,
-  bordered: true,
-  loading: false,
-  size: 'default',
   headStyle: () => ({}),
   bodyStyle: () => ({})
 })
@@ -33,25 +37,37 @@ const slotsExist = useSlotsExist(['title', 'extra'])
 const showHeader = computed(() => {
   return slotsExist.title || slotsExist.extra || props.title || props.extra
 })
+const showTitle = computed(() => {
+  return Boolean(slotsExist.title || props.title)
+})
+const showExtra = computed(() => {
+  return Boolean(slotsExist.extra || props.extra)
+})
 </script>
 <template>
   <div
     class="m-card"
-    :class="{ 'card-bordered': bordered, 'card-small': size === 'small' }"
+    :class="{
+      'card-bordered': bordered,
+      'card-small': size === 'small',
+      'card-middle': size === 'middle',
+      'card-large': size === 'large',
+      'card-hoverable': hoverable
+    }"
     :style="`width: ${cardWidth};`"
   >
     <div class="m-card-head" :style="headStyle" v-if="showHeader">
       <div class="m-head-wrapper">
-        <div class="head-title">
+        <div v-if="showTitle" class="head-title">
           <slot name="title">{{ title }}</slot>
         </div>
-        <div class="head-extra">
+        <div v-if="showExtra" class="head-extra">
           <slot name="extra">{{ extra }}</slot>
         </div>
       </div>
     </div>
     <div class="m-card-body" :style="bodyStyle">
-      <Skeleton :title="false" :loading="loading">
+      <Skeleton :title="false" :loading="loading" v-bind="skeletonProps">
         <slot></slot>
       </Skeleton>
     </div>
@@ -66,23 +82,23 @@ const showHeader = computed(() => {
   background: #ffffff;
   border-radius: 8px;
   text-align: left;
+  transition: width 0.2s;
   .m-card-head {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    min-height: 56px;
     margin-bottom: -1px;
-    padding: 0 24px;
     color: rgba(0, 0, 0, 0.88);
     font-weight: 600;
-    font-size: 16px;
     background: transparent;
     border-bottom: 1px solid #f0f0f0;
     border-radius: 8px 8px 0 0;
+    transition: all 0.2s;
     .m-head-wrapper {
       width: 100%;
       display: flex;
       align-items: center;
+      gap: 8px;
       .head-title {
         display: inline-block;
         flex: 1;
@@ -91,15 +107,16 @@ const showHeader = computed(() => {
         text-overflow: ellipsis;
       }
       .head-extra {
-        margin-inline-start: auto;
+        margin-left: auto;
         font-weight: normal;
         font-size: 14px;
+        transition: font-size 0.2s;
       }
     }
   }
   .m-card-body {
-    padding: 24px;
     border-radius: 0 0 8px 8px;
+    transition: padding 0.2s;
   }
 }
 .card-bordered {
@@ -113,6 +130,42 @@ const showHeader = computed(() => {
   }
   .m-card-body {
     padding: 12px;
+  }
+}
+.card-middle {
+  .m-card-head {
+    min-height: 56px;
+    padding: 0 24px;
+    font-size: 16px;
+  }
+  .m-card-body {
+    padding: 24px;
+  }
+}
+.card-large {
+  font-size: 16px;
+  .m-card-head {
+    min-height: 74px;
+    padding: 0 36px;
+    font-size: 18px;
+    .m-head-wrapper .head-extra {
+      font-size: 16px;
+    }
+  }
+  .m-card-body {
+    padding: 36px;
+  }
+}
+.card-hoverable {
+  cursor: pointer;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
+  &:hover {
+    box-shadow:
+      0 1px 2px -2px rgba(0, 0, 0, 0.16),
+      0 3px 6px 0 rgba(0, 0, 0, 0.12),
+      0 5px 12px 4px rgba(0, 0, 0, 0.09);
   }
 }
 </style>

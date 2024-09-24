@@ -61,19 +61,19 @@ const avatarShapeOptions = ref([
     <h2 class="mt30 mb10">复杂的组合</h2>
     <Skeleton avatar :paragraph="{ rows: 4 }" />
     <h2 class="mt30 mb10">包含子组件</h2>
-    <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
-    <br />
-    <br />
-    <Skeleton :loading="loading">
-      <div>
-        <h4>Vue Amazing UI, a design language</h4>
-        <br />
-        <p>
-          We supply a series of design principles, practical patterns and high quality design resources, to help people
-          create their product prototypes beautifully and efficiently.
-        </p>
-      </div>
-    </Skeleton>
+    <Space vertical>
+      <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
+      <Skeleton :loading="loading">
+        <div>
+          <h4>Vue Amazing UI, a design language</h4>
+          <br />
+          <p>
+            We supply a series of design principles, practical patterns and high quality design resources, to help
+            people create their product prototypes beautifully and efficiently.
+          </p>
+        </div>
+      </Skeleton>
+    </Space>
     <h2 class="mt30 mb10">自定义标题和段落</h2>
     <Skeleton avatar :title="{ width: '24%' }" :paragraph="{ rows: 4, width: ['48%', '72%', '96%', '60%'] }" />
     <h2 class="mt30 mb10">按钮 / 输入框 / 图像 / 头像</h2>
