@@ -7,6 +7,7 @@
 
 - 优化 [徽标 Badge](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html) 组件实现
 - 优化并更新 [卡片 Card](https://themusecatcher.github.io/vue-amazing-ui/guide/components/card.html) 组件，新增 `hoverable` `skeletonProps` 属性，并调整卡片尺寸 `size` 功能
+- 优化并更新 [折叠面板 Collapse](https://themusecatcher.github.io/vue-amazing-ui/guide/components/collapse.html) 组件，新增 `copyProps` 属性
 - 组件库及文档代码优化
 
 ## 1.6.7 <Tag color="volcano" size="small">2024-09-18</Tag>

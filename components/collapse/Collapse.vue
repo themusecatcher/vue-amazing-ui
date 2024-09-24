@@ -13,11 +13,12 @@ interface Collapse {
 }
 interface Props {
   collapseData?: Collapse[] // 折叠面板数据，可使用 slot 替换指定 key 的 header、content、arrow、extra、lang
-  activeKey?: number[] | number | string[] | string | null // (v-model) 当前激活 tab 面板的 key
+  activeKey?: string[] | string | number[] | number | null // (v-model) 当前激活 tab 面板的 key，传入 string | number 类型时，即为手风琴模式
   disabled?: boolean // 是否禁用，优先级低于 Collapse 的 disabled
   collapseStyle?: CSSProperties // 设置面板的样式
   bordered?: boolean // 带边框风格的折叠面板
   copyable?: boolean // 是否可复制面板内容
+  copyProps?: object // 复制按钮属性配置，参考 Button Props
   lang?: string // 面板右上角固定内容，例如标识 language string | slot
   itemStyle?: CSSProperties // 设置面板容器的样式
   headerStyle?: CSSProperties // 设置面板标题的样式
@@ -36,6 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
   collapseStyle: () => ({}),
   bordered: true,
   copyable: false,
+  copyProps: () => ({}),
   lang: undefined,
   itemStyle: () => ({}),
   headerStyle: () => ({}),
@@ -47,23 +49,13 @@ const props = withDefaults(defineProps<Props>(), {
   extra: undefined,
   ghost: false
 })
-const contentRef = ref()
-const clickIndex = ref<number>(0)
-function onEnter(el: Element) {
+const contentRef = ref() // 面板内容的模板引用
+function setProperties(el: Element) {
   ;(el as HTMLElement).style.height =
-    contentRef.value[clickIndex.value].offsetHeight + (props.bordered && !props.ghost ? 1 : 0) + 'px'
+    (el.lastElementChild as HTMLElement).offsetHeight + (props.bordered && !props.ghost ? 1 : 0) + 'px'
   ;(el as HTMLElement).style.opacity = '1'
 }
-function onAfterEnter(el: Element) {
-  ;(el as HTMLElement).style.removeProperty('height')
-  ;(el as HTMLElement).style.removeProperty('opacity')
-}
-function onLeave(el: Element) {
-  ;(el as HTMLElement).style.height =
-    contentRef.value[clickIndex.value].offsetHeight + (props.bordered && !props.ghost ? 1 : 0) + 'px'
-  ;(el as HTMLElement).style.opacity = '1'
-}
-function onAfterLeave(el: Element) {
+function removeProperties(el: Element) {
   ;(el as HTMLElement).style.removeProperty('height')
   ;(el as HTMLElement).style.removeProperty('opacity')
 }
@@ -72,8 +64,7 @@ function emitValue(value: any) {
   emits('update:activeKey', value)
   emits('change', value)
 }
-function onClick(key: number | string, index: number) {
-  clickIndex.value = index
+function onClick(key: number | string) {
   if (activeCheck(key)) {
     if (Array.isArray(props.activeKey)) {
       const res = (props.activeKey as any[]).filter((actKey: number | string) => actKey !== key)
@@ -87,11 +78,6 @@ function onClick(key: number | string, index: number) {
     } else {
       emitValue(key)
     }
-  }
-}
-function onKeyboard(e: KeyboardEvent, key: number | string, index: number) {
-  if (e.key === 'Enter') {
-    onClick(key, index)
   }
 }
 function activeCheck(key: number | string): boolean {
@@ -140,10 +126,8 @@ function onCopy(index: number) {
         class="m-collapse-header"
         :class="{ 'collapse-header-no-arrow': data.showArrow !== undefined ? !data.showArrow : !showArrow }"
         :style="headerStyle"
-        @click="
-          (data.disabled === undefined ? disabled : data.disabled) ? () => false : onClick(data.key || index, index)
-        "
-        @keydown="onKeyboard($event, data.key || index, index)"
+        @click="(data.disabled === undefined ? disabled : data.disabled) ? () => false : onClick(data.key || index)"
+        @keydown.enter="onClick(data.key || index)"
       >
         <div
           v-if="data.showArrow !== undefined ? data.showArrow : showArrow"
@@ -181,10 +165,10 @@ function onCopy(index: number) {
       </div>
       <Transition
         name="collapse"
-        @enter="onEnter"
-        @after-enter="onAfterEnter"
-        @leave="onLeave"
-        @after-leave="onAfterLeave"
+        @enter="setProperties"
+        @after-enter="removeProperties"
+        @leave="setProperties"
+        @after-leave="removeProperties"
       >
         <div
           v-show="activeCheck(data.key || index)"
@@ -196,7 +180,9 @@ function onCopy(index: number) {
               {{ lang }}
             </slot>
           </div>
-          <Button class="collapse-copy" size="small" type="primary" @click="onCopy(index)">{{ copyTxt }}</Button>
+          <Button class="collapse-copy" size="small" type="primary" @click="onCopy(index)" v-bind="copyProps">{{
+            copyTxt
+          }}</Button>
           <div ref="contentRef" class="collapse-content" :style="contentStyle">
             <slot
               name="content"
