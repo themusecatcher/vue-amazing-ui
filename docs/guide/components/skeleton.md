@@ -18,7 +18,6 @@
 import { ref } from 'vue'
 
 const loading = ref<boolean>(false)
-
 const showSkeleton = () => {
   loading.value = true
   setTimeout(() => {
@@ -100,19 +99,19 @@ const avatarShapeOptions = ref([
 
 ## 包含子组件
 
-<Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
-<br/>
-<br/>
-<Skeleton :loading="loading">
-  <div>
-    <h4>Vue Amazing UI, a design language</h4>
-    <br/>
-    <p>
-      We supply a series of design principles, practical patterns and high quality design
-      resources, to help people create their product prototypes beautifully and efficiently.
-    </p>
-  </div>
-</Skeleton>
+<Space vertical>
+  <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
+  <Skeleton :loading="loading">
+    <div>
+      <h4>Vue Amazing UI, a design language</h4>
+      <br/>
+      <p>
+        We supply a series of design principles, practical patterns and high quality design
+        resources, to help people create their product prototypes beautifully and efficiently.
+      </p>
+    </div>
+  </Skeleton>
+</Space>
 
 <style lang="less" scoped>
 h4 {
@@ -126,7 +125,6 @@ h4 {
 import { ref } from 'vue'
 
 const loading = ref<boolean>(false)
-
 const showSkeleton = () => {
   loading.value = true
   setTimeout(() => {
@@ -135,19 +133,19 @@ const showSkeleton = () => {
 }
 </script>
 <template>
-  <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
-  <br/>
-  <br/>
-  <Skeleton :loading="loading">
-    <div>
-      <h4>Vue Amazing UI, a design language</h4>
-      <br/>
-      <p>
-        We supply a series of design principles, practical patterns and high quality design
-        resources, to help people create their product prototypes beautifully and efficiently.
-      </p>
-    </div>
-  </Skeleton>
+  <Space vertical>
+    <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
+    <Skeleton :loading="loading">
+      <div>
+        <h4>Vue Amazing UI, a design language</h4>
+        <br/>
+        <p>
+          We supply a series of design principles, practical patterns and high quality design
+          resources, to help people create their product prototypes beautifully and efficiently.
+        </p>
+      </div>
+    </Skeleton>
+  </Space>
 </template>
 ```
 
