@@ -17,7 +17,7 @@ function openChange(visible: boolean) {
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Tooltip
-      :max-width="180"
+      :max-width="300"
       bg-color="#fff"
       :tooltip-style="{
         padding: '12px 18px',
@@ -26,7 +26,7 @@ function openChange(visible: boolean) {
         color: '#1677ff'
       }"
     >
-      <template #tooltip>Godzilla VS Kong</template>
+      <template #tooltip>Godzilla VS Kong：电影讲述传说中的王者哥斯拉和金刚对决的故事</template>
       <Button type="primary">哥斯拉大战金刚</Button>
     </Tooltip>
     <h2 class="mt30 mb10">不同的触发方式</h2>
