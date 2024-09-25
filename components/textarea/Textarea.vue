@@ -123,7 +123,7 @@ function onClear() {
       ref="textarea"
       type="hidden"
       class="u-textarea"
-      :class="{ 'textarea-disabled': disabled }"
+      :class="{ 'clear-class': showClear, 'textarea-disabled': disabled }"
       :style="[`height: ${autoSize ? areaHeight : ''}px`, autoSizeProperty]"
       :value="value"
       :placeholder="placeholder"
@@ -162,7 +162,6 @@ function onClear() {
     max-width: 100%;
     height: auto;
     padding: 4px 11px;
-    padding-right: 24px;
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 1.5714285714285714;
@@ -191,6 +190,9 @@ function onClear() {
       border-inline-end-width: 1px;
       outline: 0;
     }
+  }
+  .clear-class {
+    padding-right: 24px;
   }
   textarea:disabled {
     color: rgba(0, 0, 0, 0.25);

@@ -285,13 +285,13 @@ const state = reactive({
     <h2 class="mt30 mb10">栅格配置器</h2>
     <Row :gutter="24">
       <Col :span="8">
-        <Flex vertical gap="large" align="flex-start">
+        <Flex vertical align="flex-start">
           Horizontal Column Gutter:
           <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
         </Flex>
       </Col>
       <Col :span="8">
-        <Flex vertical gap="large" align="flex-start">
+        <Flex vertical align="flex-start">
           Vertical Row Gutter:
           <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
         </Flex>
