@@ -16,7 +16,7 @@ interface Props {
   show?: boolean // (v-model) 弹出提示是否显示
 }
 const props = withDefaults(defineProps<Props>(), {
-  maxWidth: 120,
+  maxWidth: 240,
   content: undefined,
   contentStyle: () => ({}),
   tooltip: undefined,
@@ -114,7 +114,7 @@ function onBlur() {
       tabindex="1"
       class="m-tooltip-card"
       :class="{ 'tooltip-padding': arrow, 'tooltip-visible': visible && showTooltip }"
-      :style="`max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
+      :style="`--tooltip-max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
       @blur="trigger === 'click' && activeBlur ? onBlur() : () => false"
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
       @mouseleave="trigger === 'hover' ? onHide() : () => false"
@@ -144,6 +144,7 @@ function onBlur() {
     position: absolute;
     z-index: 999;
     width: max-content;
+    max-width: var(--tooltip-max-width);
     pointer-events: none;
     transform: scale(0.8);
     opacity: 0;
