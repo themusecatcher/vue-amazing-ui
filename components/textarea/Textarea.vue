@@ -165,6 +165,7 @@ function onClear() {
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 1.5714285714285714;
+    text-align: justify;
     list-style: none;
     transition:
       all 0.3s,
