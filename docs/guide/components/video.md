@@ -54,9 +54,9 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
 
 否则，播放可能会被阻止。导致播放被阻塞的确切情况以及将网站列入白名单的具体方法因浏览器而异，但最好是遵循以上的原则。
 
-*autoplay：由于目前在最新版的Chrome浏览器（以及所有以Chromium为内核的浏览器）中，已不再允许自动播放音频和视频。就算你为video或audio标签设置了autoplay属性也一样不能自动播放！*
+**`autoplay`：由于目前在最新版的 `Chrome` 浏览器（以及所有以 `Chromium` 为内核的浏览器）中，已不再允许自动播放音频和视频。就算你为 `video` 或 `audio` 标签设置了 `autoplay` 属性也一样不能自动播放！**
 
-*解决方法：设置视频 autoplay 时，视频必须设置为静音 muted: true 即可实现自动播放，然后用户可以使用控制栏开启声音，类似某宝商品自动播放的宣传视频逻辑*
+**解决方法：设置视频 `autoplay` 时，视频必须设置为静音 `muted: true` 即可实现自动播放，然后用户可以使用控制栏开启声音，类似某宝商品自动播放的宣传视频逻辑**
 
 <br/>
 
@@ -89,7 +89,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
 
 ## 自动截取视频指定帧作为封面图
 
-*在未设置封面时，自动截取视频第 second 秒指定帧作为封面图*
+*在未设置封面时，自动截取视频第 `second` 秒指定帧作为封面图*
 
 <br/>
 
@@ -125,7 +125,7 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.
 -- | -- | -- | --
 src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | undefined
 poster | 视频封面地址，支持网络地址 `https` 和相对地址 | string | undefined
-second | 在未设置封面时，自动截取视频第 `second` 秒对应帧作为视频封面 | number | 0.5
+second | 在未设置封面时，自动截取视频第 `second` 秒对应帧作为视频封面，单位 `s` | number | 0.5
 width | 视频播放器宽度，单位 `px` | number | 800
 height | 视频播放器高度，单位 `px` | number | 450
 autoplay | 视频就绪后是否马上播放，优先级高于 `preload`，参考 [MDN 自动播放指南](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide) | boolean | false
