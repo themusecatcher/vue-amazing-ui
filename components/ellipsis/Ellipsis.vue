@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 const showTooltip = ref(false) // 是否显示提示框
 const showExpand = ref(false) // 是否可以启用点击展开
 const ellipsisRef = ref()
+const stopObservation = ref(false)
 const defaultTooltipMaxWidth = ref()
 const textMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
@@ -29,9 +30,7 @@ const textMaxWidth = computed(() => {
 watch(
   () => [props.maxWidth, props.line, props.tooltip],
   () => {
-    if (props.tooltip) {
-      showTooltip.value = getTooltipShow()
-    }
+    updateTooltipShow()
   },
   {
     deep: true,
@@ -39,50 +38,51 @@ watch(
   }
 )
 useResizeObserver(ellipsisRef, () => {
-  if (props.tooltip) {
-    showTooltip.value = getTooltipShow()
+  if (stopObservation.value) {
+    setTimeout(() => {
+      stopObservation.value = false
+    })
+  } else {
+    updateTooltipShow()
   }
 })
 onMounted(() => {
-  if (props.tooltip) {
-    showTooltip.value = getTooltipShow()
-  }
+  updateTooltipShow()
 })
-function getTooltipShow() {
-  const scrollWidth = ellipsisRef.value.scrollWidth
-  const scrollHeight = ellipsisRef.value.scrollHeight
-  const clientWidth = ellipsisRef.value.clientWidth
-  const clientHeight = ellipsisRef.value.clientHeight
-  if (scrollWidth > clientWidth || scrollHeight > clientHeight) {
-    defaultTooltipMaxWidth.value = ellipsisRef.value.offsetWidth + 24
-    if (props.expand) {
-      showExpand.value = true
+function updateTooltipShow() {
+  if (props.tooltip) {
+    const scrollWidth = ellipsisRef.value.scrollWidth
+    const scrollHeight = ellipsisRef.value.scrollHeight
+    const clientWidth = ellipsisRef.value.clientWidth
+    const clientHeight = ellipsisRef.value.clientHeight
+    if (scrollWidth > clientWidth || scrollHeight > clientHeight) {
+      defaultTooltipMaxWidth.value = ellipsisRef.value.offsetWidth + 24
+      if (props.expand) {
+        showExpand.value = true
+      }
+      showTooltip.value = true
+    } else {
+      if (props.expand) {
+        showExpand.value = false
+      }
+      showTooltip.value = false
     }
-    return true
-  } else {
-    if (props.expand) {
-      showExpand.value = false
-    }
-    return false
   }
 }
 const emit = defineEmits(['expandChange'])
-function onExpand() {
+async function onExpand() {
   if (ellipsisRef.value.style['-webkit-line-clamp']) {
-    if (props.tooltip) {
+    if (props.tooltip && showTooltip.value) {
+      stopObservation.value = true
       showTooltip.value = false
-      nextTick(() => {
-        ellipsisRef.value.style['-webkit-line-clamp'] = ''
-      })
-    } else {
-      ellipsisRef.value.style['-webkit-line-clamp'] = ''
+      await nextTick()
     }
+    ellipsisRef.value.style.removeProperty('-webkit-line-clamp')
     emit('expandChange', true)
   } else {
-    if (props.tooltip) {
+    if (props.tooltip && !showTooltip.value) {
       showTooltip.value = true
     }
-    ellipsisRef.value.style['-webkit-line-clamp'] = props.line
     emit('expandChange', false)
   }
 }
@@ -90,7 +90,9 @@ function onExpand() {
 <template>
   <Tooltip
     v-if="showTooltip"
+    :style="`max-width: ${textMaxWidth}`"
     :max-width="defaultTooltipMaxWidth"
+    :content-style="{ maxWidth: textMaxWidth }"
     :tooltip-style="{ padding: '8px 12px', textAlign: 'justify' }"
     v-bind="tooltipProps"
   >
@@ -130,6 +132,8 @@ function onExpand() {
 .ellipsis-line {
   display: -webkit-inline-box;
   -webkit-box-orient: vertical;
+  // display: inline-flex;
+  // flex-direction: column;
 }
 .not-ellipsis-line {
   display: inline-block;
