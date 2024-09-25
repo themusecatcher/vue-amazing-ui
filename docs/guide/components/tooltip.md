@@ -192,7 +192,7 @@ function openChange (visible: boolean) {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-maxWidth | 弹出提示最大宽度，单位 `px` | string &#124; number | 120
+maxWidth | 弹出提示最大宽度，单位 `px` | string &#124; number | 240
 content | 展示的文本 | string &#124; slot | undefined
 contentStyle | 设置展示文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 tooltip | 弹出提示文本 | string &#124; slot | undefined
