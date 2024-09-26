@@ -118,7 +118,7 @@ const value = ref('')
 
 :::
 
-## 设置行数
+## 自定义行数
 
 <Space :width="480">
   <Textarea

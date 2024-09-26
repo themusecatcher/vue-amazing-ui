@@ -44,7 +44,7 @@ function onEnter(e: KeyboardEvent) {
     <Space vertical :width="300">
       <Textarea v-model:value="value" placeholder="Autosize height based on content lines" auto-size />
     </Space>
-    <h2 class="mt30 mb10">设置行数</h2>
+    <h2 class="mt30 mb10">自定义行数</h2>
     <Space vertical :width="300">
       <Textarea
         v-model:value="value"
