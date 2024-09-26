@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, Teleport } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { Slot } from 'vue'
 import Tooltip from '../tooltip'
 import { useSlotsExist } from '../utils'
