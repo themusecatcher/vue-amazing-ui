@@ -108,6 +108,16 @@ const arrowCollapseData = ref([
   }
 ])
 const activeKey = ref(['1'])
+const activeKey1 = ref(['1'])
+const activeKey2 = ref(['1'])
+const activeKey3 = ref(['1'])
+const activeKey4 = ref(['1'])
+const activeKey5 = ref(['1'])
+const activeKey6 = ref(['1'])
+const activeKey7 = ref(['1'])
+const activeKey8 = ref(['1'])
+const activeKey9 = ref(['1'])
+const activeKey10 = ref(['1'])
 const nestActiveKey = ref(['1'])
 const positionOptions = ref([
   {
@@ -122,6 +132,36 @@ const positionOptions = ref([
 const arrowPlacement = ref('left')
 watchEffect(() => {
   console.log('activeKey:', activeKey.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey1.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey2.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey3.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey4.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey5.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey6.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey7.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey8.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey9.value)
+})
+watchEffect(() => {
+  console.log('activeKey:', activeKey10.value)
 })
 watchEffect(() => {
   console.log('nestActiveKey:', nestActiveKey.value)
