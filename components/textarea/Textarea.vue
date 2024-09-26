@@ -28,9 +28,10 @@ const textareaWidth = computed(() => {
   }
   return props.width
 })
-const autoSizeProperty = computed(() => {
+const autoSizeStyle = computed(() => {
   if (typeof props.autoSize === 'object') {
     const style: { 'min-height'?: string; 'max-height'?: string; [propName: string]: any } = {
+      height: areaHeight.value + 'px',
       resize: 'none'
     }
     if ('minRows' in props.autoSize) {
@@ -44,7 +45,7 @@ const autoSizeProperty = computed(() => {
   if (typeof props.autoSize === 'boolean') {
     if (props.autoSize) {
       return {
-        'max-height': '9000000000000000px',
+        height: areaHeight.value + 'px',
         resize: 'none'
       }
     }
@@ -66,7 +67,7 @@ const lazyTextarea = computed(() => {
 watch(
   () => props.value,
   () => {
-    if (JSON.stringify(autoSizeProperty.value) !== '{}') {
+    if (JSON.stringify(autoSizeStyle.value) !== '{}') {
       areaHeight.value = 32
       nextTick(() => {
         getAreaHeight()
@@ -124,7 +125,7 @@ function onClear() {
       type="hidden"
       class="u-textarea"
       :class="{ 'clear-class': showClear, 'textarea-disabled': disabled }"
-      :style="[`height: ${autoSize ? areaHeight : ''}px`, autoSizeProperty]"
+      :style="autoSizeStyle"
       :value="value"
       :placeholder="placeholder"
       :maxlength="maxlength"
@@ -165,7 +166,6 @@ function onClear() {
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 1.5714285714285714;
-    text-align: justify;
     list-style: none;
     transition:
       all 0.3s,
@@ -182,13 +182,11 @@ function onClear() {
     outline: none;
     &:hover {
       border-color: #4096ff;
-      border-inline-end-width: 1px;
       z-index: 1;
     }
     &:focus-within {
       border-color: #4096ff;
       box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
-      border-inline-end-width: 1px;
       outline: 0;
     }
   }
