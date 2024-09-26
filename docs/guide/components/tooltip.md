@@ -197,7 +197,7 @@ content | 展示的文本 | string &#124; slot | undefined
 contentStyle | 设置展示文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 tooltip | 弹出提示文本 | string &#124; slot | undefined
 tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-bgColor | string | 弹出提示框背景颜色 | 'rgba(0, 0, 0, 0.85)'
+bgColor | 弹出提示框背景颜色 | string | 'rgba(0, 0, 0, 0.85)'
 arrow | 是否显示箭头 | boolean | true
 trigger | 弹出提示触发方式 | 'hover' &#124; 'click' | 'hover'
 showDelay | 弹出提示显示的延迟时间，单位 `ms` | number | 100
