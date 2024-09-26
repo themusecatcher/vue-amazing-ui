@@ -22,7 +22,7 @@ const scrollContainer = ref()
 
 ## 基本使用
 
-*BackTop 会找到首个可滚动的祖先元素并且监听它的滚动事件*
+*`BackTop` 会找到首个可滚动的祖先元素并且监听它的滚动事件*
 
 <BackTop @show="onShow" />
 
@@ -210,7 +210,7 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 
 ## 自定义监听目标
 
-*自定义设定监听哪个元素来触发 BackTop*
+*自定义设定监听哪个元素来触发 `BackTop`*
 
 <br/>
 
@@ -232,7 +232,7 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 
 <br/>
 
-*自动监听 Scrollbar 来触发 BackTop*
+*自动监听 `Scrollbar` 来触发 `BackTop`*
 
 <br/>
 
