@@ -130,7 +130,7 @@ function onBackTop() {
 }
 </script>
 <template>
-  <Teleport :disabled="teleportDisabled" :to="to">
+  <Teleport defer :disabled="teleportDisabled" :to="to">
     <Transition name="zoom">
       <div v-show="backTopShow" ref="backtop" class="m-backtop-wrap" :style="backTopStyle" @click="onBackTop">
         <Tooltip style="border-radius: 22px" :content-style="{ borderRadius: '22px' }" v-bind="tooltipProps">
