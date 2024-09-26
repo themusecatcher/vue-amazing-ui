@@ -374,7 +374,7 @@ function onDecline (scale: number) {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-width | 进度条总宽度 | string &#124; number | '100%'
+width | 进度条总宽度，单位 `px` | string &#124; number | '100%'
 percent | 当前进度百分比 | number | 0
 strokeWidth | 进度条线的宽度，单位 `px`，当 `type: 'circle'` 时，单位是进度圈画布宽度的百分比 | number | 8
 strokeColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变，进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | '#1677FF'

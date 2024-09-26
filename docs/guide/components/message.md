@@ -362,12 +362,12 @@ onClose? | 关闭时的回调函数 | Function | undefined
 
 名称 | 说明 | 类型
 -- | -- | --
-open | 基本全局提示 ｜ (content: string) => void
-info | 信息全局提示 | (content: string) => void
-success | 成功全局提示 | (content: string) => void
-error | 失败全局提示 | (content: string) => void
-warning | 警告全局提示 | (content: string) => void
-loading | 加载全局提示 | (content: string) => void
+open | 基本全局提示 | (content: string &#124; [Message](#message-type)) => void
+info | 信息全局提示 | (content: string &#124; [Message](#message-type)) => void
+success | 成功全局提示 | (content: string &#124; [Message](#message-type)) => void
+error | 失败全局提示 | (content: string &#124; [Message](#message-type)) => void
+warning | 警告全局提示 | (content: string &#124; [Message](#message-type)) => void
+loading | 加载全局提示 | (content: string &#124; [Message](#message-type)) => void
 
 ## Events
 

@@ -69,7 +69,10 @@ const showSuffix = computed(() => {
     font-size: 24px;
     .statistic-prefix {
       display: inline-block;
-      margin-inline-end: 4px;
+      margin-right: 4px;
+      :deep(svg) {
+        fill: currentColor;
+      }
     }
     .statistic-value {
       display: inline-block;
@@ -77,7 +80,10 @@ const showSuffix = computed(() => {
     }
     .statistic-suffix {
       display: inline-block;
-      margin-inline-start: 4px;
+      margin-left: 4px;
+      :deep(svg) {
+        fill: currentColor;
+      }
     }
   }
 }

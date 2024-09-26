@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.6.9 <Tag color="volcano" size="small">2024-09-26</Tag>
+
+- 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件，新增带图标的标签页功能
+- 组件库及文档代码优化
+
 ## 1.6.8 <Tag color="volcano" size="small">2024-09-24</Tag>
 
 - 优化 [徽标 Badge](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html) 组件实现
