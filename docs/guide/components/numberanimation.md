@@ -1,6 +1,6 @@
 # 数值动画 NumberAnimation
 
-<BackTop />
+<!-- <BackTop /> -->
 <Watermark fullscreen content="Vue Amazing UI" />
 
 <br/>
