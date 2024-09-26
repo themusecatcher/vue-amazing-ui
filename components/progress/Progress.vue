@@ -9,7 +9,7 @@ interface Gradient {
   direction?: 'left' | 'right' // 默认 'right'
 }
 interface Props {
-  width?: number | string // 进度条总宽度
+  width?: number | string // 进度条总宽度，单位 px
   percent?: number // 当前进度百分比
   strokeWidth?: number // 进度条线的宽度，单位 px，当 type: 'circle' 时，单位是进度圈画布宽度的百分比
   strokeColor?: string | Gradient // 进度条的色彩，传入 string 时为纯色，传入 Gradient 时为渐变，进度圈时 direction: 'left' 为逆时针，direction: 'right' 为顺时针

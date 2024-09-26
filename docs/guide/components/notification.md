@@ -14,11 +14,11 @@
 
 ::: tip 使用
 
-- notification.value.open(notification: Notification) // open 调用
-- notification.value.info(notification: Notification) // info 调用
-- notification.value.success(notification: Notification) // success 调用
-- notification.value.error(notification: Notification) // error 调用
-- notification.value.warning(notification: Notification) // warning 调用
+- notification.value.open(data: [Notification](#notification-type)) // open 调用
+- notification.value.info(data: [Notification](#notification-type)) // info 调用
+- notification.value.success(data: [Notification](#notification-type)) // success 调用
+- notification.value.error(data: [Notification](#notification-type)) // error 调用
+- notification.value.warning(data: [Notification](#notification-type)) // warning 调用
 
 :::
 
@@ -438,11 +438,11 @@ onClose | 关闭时的回调函数 | Function | undefined
 
 名称 | 说明 | 类型
 -- | -- | --
-open | 基本通知提醒 | (notification: Notification) => void
-info | 信息通知提醒 | (notification: Notification) => void
-success | 成功通知提醒 | (notification: Notification) => void
-error | 失败通知提醒 | (notification: Notification) => void
-warning | 警告通知提醒 | (notification: Notification) => void
+open | 基本通知提醒 | (data: [Notification](#notification-type)) => void
+info | 信息通知提醒 | (data: [Notification](#notification-type)) => void
+success | 成功通知提醒 | (data: [Notification](#notification-type)) => void
+error | 失败通知提醒 | (data: [Notification](#notification-type)) => void
+warning | 警告通知提醒 | (data: [Notification](#notification-type)) => void
 
 ## Events
 

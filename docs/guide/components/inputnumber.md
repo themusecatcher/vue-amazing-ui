@@ -263,7 +263,7 @@ const value = ref(3)
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-width | 输入框宽度，单位 `px` | string &#124; number | 90
+width | 数字输入框宽度，单位 `px` | string &#124; number | 90
 min | 最小值 | number | -Infinity
 max | 最大值 | number | Infinity
 step | 每次改变步数，可以为小数 | number | 1

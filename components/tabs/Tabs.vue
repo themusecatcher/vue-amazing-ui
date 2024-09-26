@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
-import { useResizeObserver, rafTimeout, cancelRaf } from '../utils'
+import type { VNode } from 'vue'
+import { useResizeObserver } from '../utils'
 interface Tab {
-  key: string | number // 对应 activeKey
-  tab: string // 标签页显示文字
+  key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
+  tab?: string // 标签页显示文字 string | slot
+  icon?: VNode // 标签页图标
   content?: string // 标签页内容 string | slot
   disabled?: boolean // 禁用对应标签页
 }
@@ -35,7 +37,7 @@ const showWheel = ref(false) // 导航是否有滚动
 const scrollMax = ref(0) // 最大滚动距离
 const scrollLeft = ref(0) // 滚动距离
 const activeIndex = computed(() => {
-  return props.tabPages.findIndex((page) => page.key === props.activeKey)
+  return props.tabPages.findIndex((page, index) => getPageKey(page.key, index) === props.activeKey)
 })
 watch(
   () => props.activeKey,
@@ -63,19 +65,11 @@ function getBarDisplay() {
       if (left.value < scrollLeft.value) {
         transition.value = true
         scrollLeft.value = left.value
-        rafId.value && cancelRaf(rafId.value)
-        rafId.value = rafTimeout(() => {
-          transition.value = false
-        }, 150)
       }
       const targetScroll = left.value + width.value - wrapWidth.value
       if (targetScroll > scrollLeft.value) {
         transition.value = true
         scrollLeft.value = targetScroll
-        rafId.value && cancelRaf(rafId.value)
-        rafId.value = rafTimeout(() => {
-          transition.value = false
-        }, 150)
       }
     }
   } else {
@@ -96,6 +90,13 @@ function getNavWidth() {
   }
   getBarDisplay()
 }
+function getPageKey(key: string | number | undefined, index: number) {
+  if (key === undefined) {
+    return index
+  } else {
+    return key
+  }
+}
 function onTab(key: string | number) {
   emits('update:activeKey', key)
   emits('change', key)
@@ -111,10 +112,10 @@ function onTab(key: string | number) {
   WheelEvent.deltaMode 只读：返回一个无符号长整型数（unsigned long），表示 delta* 值滚动量的单位。
 */
 function onWheel(e: WheelEvent) {
-  if (e.deltaX !== 0) {
+  if (e.deltaX || e.deltaY) {
     // 防止标签页处触摸板上下滚动不生效
     // e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
-    const scrollX = e.deltaX * 1 // 滚轮的横向滚动量
+    const scrollX = (e.deltaX || e.deltaY) * 1 // 滚轮的横向滚动量
     if (scrollLeft.value + scrollX > scrollMax.value) {
       scrollLeft.value = scrollMax.value
     } else if (scrollLeft.value + scrollX < 0) {
@@ -141,6 +142,7 @@ function onWheel(e: WheelEvent) {
           ref="navRef"
           class="tabs-nav-list"
           :class="{ 'nav-transition': transition }"
+          @transitionend="transition = false"
           :style="`transform: translate(${-scrollLeft}px, 0)`"
           @wheel.stop.prevent="showWheel ? onWheel($event) : () => false"
         >
@@ -152,16 +154,19 @@ function onWheel(e: WheelEvent) {
               {
                 'tab-card': type === 'card',
                 'tab-disabled': page.disabled,
-                'tab-line-active': activeKey === page.key && type === 'line',
-                'tab-card-active': activeKey === page.key && type === 'card'
+                'tab-line-active': activeKey === getPageKey(page.key, index) && type === 'line',
+                'tab-card-active': activeKey === getPageKey(page.key, index) && type === 'card'
               }
             ]"
             :style="`margin-left: ${index !== 0 ? gutter : null}px;`"
-            @click="page.disabled ? () => false : onTab(page.key)"
+            @click="page.disabled ? () => false : onTab(getPageKey(page.key, index))"
             v-for="(page, index) in tabPages"
             :key="index"
           >
-            {{ page.tab }}
+            <slot name="tab" :key="getPageKey(page.key, index)" :tab="page.tab">
+              <component v-if="page.icon" :is="page.icon" />
+              {{ page.tab }}
+            </slot>
           </div>
           <div
             class="tab-bar"
@@ -172,8 +177,13 @@ function onWheel(e: WheelEvent) {
       </div>
     </div>
     <div class="m-tabs-page">
-      <div class="tabs-content" v-show="activeKey === page.key" v-for="page in tabPages" :key="page.key">
-        <slot :name="page.key">{{ page.content }}</slot>
+      <div
+        class="tabs-content"
+        v-show="activeKey === getPageKey(page.key, index)"
+        v-for="(page, index) in tabPages"
+        :key="page.key || index"
+      >
+        <slot name="content" :key="getPageKey(page.key, index)" :content="page.content">{{ page.content }}</slot>
       </div>
     </div>
   </div>
@@ -234,6 +244,7 @@ function onWheel(e: WheelEvent) {
           position: relative;
           display: inline-flex;
           align-items: center;
+          gap: 8px;
           padding: 12px 0;
           font-size: 14px;
           background: transparent;
@@ -246,6 +257,9 @@ function onWheel(e: WheelEvent) {
           }
           &:hover {
             color: @themeColor;
+          }
+          :deep(svg) {
+            fill: currentColor;
           }
         }
         .tab-small {

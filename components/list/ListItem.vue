@@ -123,6 +123,9 @@ const showExtra = computed(() => {
       flex: 0 0 auto;
       margin-left: 48px;
       font-size: 0;
+      :deep(svg) {
+        fill: currentColor;
+      }
       & > * {
         // 选择所有直接子元素，不包括深层的后代
         position: relative;

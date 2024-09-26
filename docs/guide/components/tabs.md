@@ -12,7 +12,8 @@
 - 提供平级的区域将大块内容进行收纳和展现，保持界面整洁
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, h, watchEffect } from 'vue'
+import { AppleOutlined, AndroidOutlined } from '@ant-design/icons-vue'
 const tabPages = ref([
   {
     key: '1',
@@ -78,26 +79,58 @@ const tabPagesDisabled = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
+const iconTabPages = ref([
+  {
+    tab: 'Tab 1',
+    icon: h(AppleOutlined),
+    content: 'Content of Tab Pane 1'
+  },
+  {
+    tab: 'Tab 2',
+    icon: h(AndroidOutlined),
+    content: 'Content of Tab Pane 2'
+  },
+  {
+    tab: 'Tab 3',
+    content: 'Content of Tab Pane 3'
+  },
+  {
+    tab: 'Tab 4',
+    content: 'Content of Tab Pane 4'
+  },
+  {
+    tab: 'Tab 5',
+    content: 'Content of Tab Pane 5'
+  },
+  {
+    tab: 'Tab 6',
+    content: 'Content of Tab Pane 6'
+  }
+])
 const activeKey = ref('1')
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+const iconActiveKey = ref(0)
+watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
+watchEffect(() => {
+  console.log('iconActiveKey:', iconActiveKey.value)
+})
 const options = ref([
-        {
-          label: 'Small',
-          value: 'small'
-        },
-        {
-          label: 'Middle',
-          value: 'middle'
-        },
-        {
-          label: 'Large',
-          value: 'large'
-        }
-      ])
+  {
+    label: 'Small',
+    value: 'small'
+  },
+  {
+    label: 'Middle',
+    value: 'middle'
+  },
+  {
+    label: 'Large',
+    value: 'large'
+  }
+])
 const size = ref('middle')
-function onChange (key: string|number) {
+function onChange(key: string | number) {
   console.log('key:', key)
 }
 </script>
@@ -106,7 +139,9 @@ function onChange (key: string|number) {
 
 <Tabs
   :tab-pages="tabPages"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+  @change="onChange"
+/>
 
 ::: details Show Code
 
@@ -146,14 +181,19 @@ const tabPages = ref([
   }
 ])
 const activeKey = ref('1')
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
+function onChange(key: string | number) {
+  console.log('key:', key)
+}
 </script>
 <template>
   <Tabs
     :tab-pages="tabPages"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+    @change="onChange"
+  />
 </template>
 ```
 
@@ -164,7 +204,9 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 <Tabs
   type="card"
   :tab-pages="tabPages"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+  @change="onChange"
+/>
 
 ::: details Show Code
 
@@ -204,15 +246,20 @@ const tabPages = ref([
   }
 ])
 const activeKey = ref('1')
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
+function onChange(key: string | number) {
+  console.log('key:', key)
+}
 </script>
 <template>
   <Tabs
     type="card"
     :tab-pages="tabPages"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+    @change="onChange"
+  />
 </template>
 ```
 
@@ -226,12 +273,14 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 
 <Tabs
   :tab-pages="tabPagesDisabled"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+/>
 <br/>
 <Tabs
   type="card"
   :tab-pages="tabPagesDisabled"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+/>
 
 ::: details Show Code
 
@@ -272,19 +321,21 @@ const tabPagesDisabled = ref([
   }
 ])
 const activeKey = ref('1')
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
 </script>
 <template>
   <Tabs
     :tab-pages="tabPagesDisabled"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+  />
   <br/>
   <Tabs
     type="card"
     :tab-pages="tabPagesDisabled"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+  />
 </template>
 ```
 
@@ -295,13 +346,15 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 <Tabs
   centered
   :tab-pages="tabPages"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+/>
 <br/>
 <Tabs
   centered
   type="card"
   :tab-pages="tabPages"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+/>
 
 ::: details Show Code
 
@@ -341,7 +394,7 @@ const tabPages = ref([
   }
 ])
 const activeKey = ref('1')
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
 </script>
@@ -349,13 +402,83 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
   <Tabs
     centered
     :tab-pages="tabPages"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+  />
   <br/>
   <Tabs
     centered
     type="card"
     :tab-pages="tabPages"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+  />
+</template>
+```
+
+:::
+
+## 带图标的标签页
+
+<Tabs :tab-pages="iconTabPages" v-model:active-key="iconActiveKey" />
+<br />
+<Tabs type="card" :tab-pages="iconTabPages" v-model:active-key="iconActiveKey">
+  <template #tab="{ key, tab }">
+    <AppleOutlined v-if="key === 0" />
+    <AndroidOutlined v-if="key === 1" />
+    {{ tab }}
+  </template>
+</Tabs>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, h, watchEffect } from 'vue'
+import { AppleOutlined, AndroidOutlined } from '@ant-design/icons-vue'
+const iconTabPages = ref([
+  {
+    tab: 'Tab 1',
+    icon: h(AppleOutlined),
+    content: 'Content of Tab Pane 1'
+  },
+  {
+    tab: 'Tab 2',
+    icon: h(AndroidOutlined),
+    content: 'Content of Tab Pane 2'
+  },
+  {
+    tab: 'Tab 3',
+    content: 'Content of Tab Pane 3'
+  },
+  {
+    tab: 'Tab 4',
+    content: 'Content of Tab Pane 4'
+  },
+  {
+    tab: 'Tab 5',
+    content: 'Content of Tab Pane 5'
+  },
+  {
+    tab: 'Tab 6',
+    content: 'Content of Tab Pane 6'
+  }
+])
+const iconActiveKey = ref(0)
+watchEffect(() => {
+  console.log('iconActiveKey:', iconActiveKey.value)
+})
+</script>
+<template>
+  <Tabs
+    centered
+    :tab-pages="iconTabPages"
+    v-model:active-key="iconActiveKey"
+  />
+  <br/>
+  <Tabs
+    type="card"
+    :tab-pages="iconTabPages"
+    v-model:active-key="iconActiveKey"
+  />
 </template>
 ```
 
@@ -366,13 +489,15 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 <Tabs
   style="width: 320px;"
   :tab-pages="tabPages"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+/>
 <br/>
 <Tabs
   style="width: 320px;"
   type="card"
   :tab-pages="tabPages"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+/>
 
 ::: details Show Code
 
@@ -412,7 +537,7 @@ const tabPages = ref([
   }
 ])
 const activeKey = ref('1')
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
 </script>
@@ -420,13 +545,15 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
   <Tabs
     style="width: 320px;"
     :tab-pages="tabPages"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+  />
   <br/>
   <Tabs
     style="width: 320px;"
     type="card"
     :tab-pages="tabPages"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+  />
 </template>
 ```
 
@@ -439,13 +566,15 @@ watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中
 <Tabs
   :size="size"
   :tab-pages="tabPages"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+/>
 <br/>
 <Tabs
   type="card"
   :size="size"
   :tab-pages="tabPages"
-  v-model:active-key="activeKey" />
+  v-model:active-key="activeKey"
+/>
 
 ::: details Show Code
 
@@ -485,7 +614,7 @@ const tabPages = ref([
   }
 ])
 const activeKey = ref('1')
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
 const options = ref([
@@ -510,13 +639,15 @@ const size = ref('middle')
   <Tabs
     :size="size"
     :tab-pages="tabPages"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+  />
   <br/>
   <Tabs
     type="card"
     :size="size"
     :tab-pages="tabPages"
-    v-model:active-key="activeKey" />
+    v-model:active-key="activeKey"
+  />
 </template>
 ```
 
@@ -525,14 +656,10 @@ const size = ref('middle')
 ## 自定义内容
 
 <Tabs :tab-pages="tabPages" v-model:active-key="activeKey">
-  <template #1>
-    <p>key: 1 的 slot 内容</p>
-  </template>
-  <template #2>
-    <p>key: 2 的 slot 内容</p>
-  </template>
-  <template #3>
-    <p>key: 3 的 slot 内容</p>
+  <template #content="{ key, content }">
+    <p v-if="key === '1'">key: 1 的 slot 内容</p>
+    <p v-if="key === '2'">key: 2 的 slot 内容</p>
+    <p v-if="key === '3'">key: 3 的 slot 内容</p>
   </template>
 </Tabs>
 
@@ -574,20 +701,16 @@ const tabPages = ref([
   }
 ])
 const activeKey = ref('1')
-watchEffect(() => { // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
+watchEffect(() => {
   console.log('activeKey:', activeKey.value)
 })
 </script>
 <template>
   <Tabs :tab-pages="tabPages" v-model:active-key="activeKey">
-    <template #1>
-      <p>key: 1 的 slot 内容</p>
-    </template>
-    <template #2>
-      <p>key: 2 的 slot 内容</p>
-    </template>
-    <template #3>
-      <p>key: 3 的 slot 内容</p>
+    <template #content="{ key, content }">
+      <p v-if="key === '1'">key: 1 的 slot 内容</p>
+      <p v-if="key === '2'">key: 2 的 slot 内容</p>
+      <p v-if="key === '3'">key: 3 的 slot 内容</p>
     </template>
   </Tabs>
 </template>
@@ -612,8 +735,9 @@ activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` |
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-key | 对应 `activeKey` | string &#124; number | undefined
-tab | 标签页显示文字 | string | undefined
+key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number | undefined
+tab? | 标签页显示文字 | string | undefined
+icon? | 标签页图标 | VNode | undefined
 content? | 标签页内容 | string &#124; slot | undefined
 disabled? | 禁用对应标签页 | boolean | false
 

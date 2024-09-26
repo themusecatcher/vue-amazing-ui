@@ -703,11 +703,11 @@ onCancel? | 点击遮罩层或取消按钮的回调 | Function | undefined
 
 名称 | 说明 | 类型
 -- | -- | --
-info | 信息通知提示 | (data: Modal) => void
-success | 成功通知提示 | (data: Modal) => void
-error | 错误通知提示 | (data: Modal) => void
-warning | 警告通知提示 | (data: Modal) => void
- erase | 删除通知提示 | (data: Modal) => void
+info | 信息通知提示 | (data: [Modal](#modal-type)) => void
+success | 成功通知提示 | (data: [Modal](#modal-type)) => void
+error | 错误通知提示 | (data: [Modal](#modal-type)) => void
+warning | 警告通知提示 | (data: [Modal](#modal-type)) => void
+ erase | 删除通知提示 | (data: [Modal](#modal-type)) => void
 
 ## Events
 
