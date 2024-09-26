@@ -1,6 +1,6 @@
 # 特性
 
-<!-- <BackTop /> -->
+<BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
 ## 简要介绍
