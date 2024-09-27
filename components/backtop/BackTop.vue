@@ -226,7 +226,7 @@ function onBackTop() {
       :deep(svg) {
         pointer-events: none;
         fill: currentColor;
-        transition: fill 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
     }
     .icon-description {
@@ -246,6 +246,10 @@ function onBackTop() {
     color: rgba(0, 0, 0, 0.88);
     background-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
+    .backtop-icon,
+    .backtop-description {
+      color: rgba(0, 0, 0, 0.88);
+    }
     &:hover {
       color: @themeColor;
       background-color: rgba(255, 255, 255);
