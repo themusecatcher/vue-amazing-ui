@@ -244,7 +244,7 @@ function onBackTop() {
   }
   .backtop-default {
     color: rgba(0, 0, 0, 0.88);
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.88);
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
     .backtop-icon,
     .backtop-description {
