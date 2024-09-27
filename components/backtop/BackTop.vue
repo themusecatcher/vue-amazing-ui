@@ -248,6 +248,7 @@ function onBackTop() {
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
     &:hover {
       color: @themeColor;
+      background-color: rgba(255, 255, 255);
       box-shadow: 0 2px 8px 3px rgba(0, 0, 0, 0.12);
       .backtop-icon,
       .backtop-description {
