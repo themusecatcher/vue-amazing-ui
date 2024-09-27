@@ -181,7 +181,7 @@ const positionOptions = ref([
     value: 'right'
   }
 ])
-const position = ref('top')
+const position = ref('left')
 function onChange(key: string | number) {
   console.log('key:', key)
 }
@@ -251,11 +251,16 @@ function onChange(key: string | number) {
       <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :size="size" type="card" />
     </Flex>
     <h2 class="mt30 mb10">自定义位置</h2>
-    <Flex vertical>
-      <Radio :options="positionOptions" v-model:value="position" button button-style="solid" />
-      <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" />
-      <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" type="card" />
-    </Flex>
+    <a-tabs v-model:activeKey="activeKey" tab-position="left" size="small" animated>
+      <a-tab-pane key="1" tab="Tab 1">Content of Tab 1</a-tab-pane>
+      <a-tab-pane key="2" tab="Tab 2">Content of Tab 2</a-tab-pane>
+      <a-tab-pane key="3" tab="Tab 3">Content of Tab 3</a-tab-pane>
+    </a-tabs>
+    <!-- <Flex vertical> -->
+    <Radio :options="positionOptions" v-model:value="position" button button-style="solid" />
+    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" />
+    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" type="card" />
+    <!-- </Flex> -->
     <h2 class="mt30 mb10">自定义 Tab & Content 样式</h2>
     <Flex vertical>
       <Tabs

@@ -38,15 +38,20 @@ const props = withDefaults(defineProps<Props>(), {
   activeKey: undefined
 })
 const tabsRef = ref() // 所有 tabs 的 ref 模板引用
-const left = ref(0) // tabBar 的偏移量
-const width = ref(0) // tabBar 的宽度
+const tabBarLeft = ref(0) // tabBar 的水平偏移量
+const tabBarTop = ref(0) // tabBar 的垂直偏移量
+const tabBarWidth = ref(0) // tabBar 的宽度
+const tabBarHeight = ref(0) // tabBar 的高度
 const wrapRef = ref()
 const wrapWidth = ref()
+const wrapHeight = ref()
 const navRef = ref()
 const navWidth = ref()
-const showWheel = ref(false) // 导航是否有滚动
+const navHeight = ref()
+const showWheel = ref(false) // 标签页是否存在滚动
 const scrollMax = ref(0) // 最大滚动距离
-const scrollLeft = ref(0) // 滚动距离
+const scrollLeft = ref(0) // 水平滚动距离
+const scrollTop = ref(0) // 垂直滚动距离
 const transition = ref(false)
 const emits = defineEmits(['update:activeKey', 'change'])
 const slotsExist = useSlotsExist(['prefix', 'suffix'])
@@ -59,18 +64,58 @@ const showPrefix = computed(() => {
 const showSuffix = computed(() => {
   return Boolean(slotsExist.suffix || props.suffix)
 })
-const tabBarStyle = computed(() => {
-  return {
-    left: left.value + 'px',
-    width: width.value + 'px'
+const navStyle = computed(() => {
+  if (['top', 'bottom'].includes(props.tabPosition)) {
+    return {
+      transform: `translate(${-scrollLeft.value}px, 0)`
+    }
+  } else {
+    return {
+      transform: `translate(0, ${-scrollTop.value}px)`
+    }
   }
+})
+const tabBarStyle = computed(() => {
+  if (['top', 'bottom'].includes(props.tabPosition)) {
+    return {
+      left: tabBarLeft.value + 'px',
+      width: tabBarWidth.value + 'px'
+    }
+  } else {
+    return {
+      top: tabBarTop.value + 'px',
+      height: tabBarHeight.value + 'px'
+    }
+  }
+})
+const animatedStyle = computed(() => {
+  if (props.animated) {
+    if (['top', 'bottom'].includes(props.tabPosition)) {
+      return {
+        marginLeft: `${-100 * activeIndex.value}%`
+      }
+    } else {
+      return {
+        marginTop: `${-100 * activeIndex.value}%`
+      }
+    }
+  }
+  return {}
 })
 const hiddenStyle = computed(() => {
   if (props.animated) {
-    return {
-      visibility: 'hidden',
-      height: '0px',
-      overflowY: 'hidden'
+    if (['top', 'bottom'].includes(props.tabPosition)) {
+      return {
+        visibility: 'hidden',
+        height: '0px',
+        overflowY: 'hidden'
+      }
+    } else {
+      return {
+        visibility: 'hidden',
+        width: '0px',
+        overflowX: 'hidden'
+      }
     }
   } else {
     return {
@@ -88,33 +133,19 @@ watch(
   }
 )
 useResizeObserver([wrapRef, navRef], () => {
-  getNavWidth()
+  getNavSize()
 })
 onMounted(() => {
-  getNavWidth()
+  getNavSize()
 })
-function getBarDisplay() {
-  const el = tabsRef.value[activeIndex.value]
-  if (el) {
-    left.value = el.offsetLeft
-    width.value = el.offsetWidth
-    if (showWheel.value) {
-      if (left.value < scrollLeft.value) {
-        transition.value = true
-        scrollLeft.value = left.value
-      }
-      const targetScroll = left.value + width.value - wrapWidth.value
-      if (targetScroll > scrollLeft.value) {
-        transition.value = true
-        scrollLeft.value = targetScroll
-      }
-    }
+function getNavSize() {
+  if (['top', 'bottom'].includes(props.tabPosition)) {
+    getNavHorizontalSize()
   } else {
-    left.value = 0
-    width.value = 0
+    getNavVerticalSize()
   }
 }
-function getNavWidth() {
+function getNavHorizontalSize() {
   wrapWidth.value = wrapRef.value.offsetWidth
   navWidth.value = navRef.value.offsetWidth
   if (navWidth.value > wrapWidth.value) {
@@ -126,6 +157,68 @@ function getNavWidth() {
     scrollLeft.value = 0
   }
   getBarDisplay()
+}
+function getNavVerticalSize() {
+  wrapHeight.value = wrapRef.value.offsetHeight
+  navHeight.value = navRef.value.offsetHeight
+  if (navHeight.value > wrapHeight.value) {
+    showWheel.value = true
+    scrollMax.value = navHeight.value - wrapHeight.value
+    scrollTop.value = scrollMax.value
+  } else {
+    showWheel.value = false
+    scrollTop.value = 0
+  }
+  getBarDisplay()
+}
+function getBarDisplay() {
+  if (['top', 'bottom'].includes(props.tabPosition)) {
+    getBarHorizontalDisplay()
+  } else {
+    getBarVerticalDisplay()
+  }
+}
+function getBarHorizontalDisplay() {
+  const el = tabsRef.value[activeIndex.value]
+  if (el) {
+    tabBarLeft.value = el.offsetLeft
+    tabBarWidth.value = el.offsetWidth
+    if (showWheel.value) {
+      if (tabBarLeft.value < scrollLeft.value) {
+        transition.value = true
+        scrollLeft.value = tabBarLeft.value
+      }
+      const targetScroll = tabBarLeft.value + tabBarWidth.value - wrapWidth.value
+      if (targetScroll > scrollLeft.value) {
+        transition.value = true
+        scrollLeft.value = targetScroll
+      }
+    }
+  } else {
+    tabBarLeft.value = 0
+    tabBarWidth.value = 0
+  }
+}
+function getBarVerticalDisplay() {
+  const el = tabsRef.value[activeIndex.value]
+  if (el) {
+    tabBarTop.value = el.offsetTop
+    tabBarHeight.value = el.offsetHeight
+    if (showWheel.value) {
+      if (tabBarTop.value < scrollTop.value) {
+        transition.value = true
+        scrollTop.value = tabBarTop.value
+      }
+      const targetScroll = tabBarTop.value + tabBarHeight.value - wrapHeight.value
+      if (targetScroll > scrollTop.value) {
+        transition.value = true
+        scrollTop.value = targetScroll
+      }
+    }
+  } else {
+    tabBarTop.value = 0
+    tabBarHeight.value = 0
+  }
 }
 function getPageKey(key: string | number | undefined, index: number) {
   if (key === undefined) {
@@ -184,8 +277,8 @@ function onWheel(e: WheelEvent) {
         class="tabs-nav-wrap"
         :class="{
           'tabs-center': centered,
-          'before-shadow-active': showWheel && scrollLeft > 0,
-          'after-shadow-active': showWheel && scrollLeft < scrollMax
+          'before-shadow-active': showWheel && (scrollLeft > 0 || scrollTop > 0),
+          'after-shadow-active': showWheel && (scrollLeft < scrollMax || scrollTop < scrollMax)
         }"
       >
         <div
@@ -193,7 +286,7 @@ function onWheel(e: WheelEvent) {
           class="tabs-nav-list"
           :class="{ 'nav-transition': transition }"
           @transitionend="transition = false"
-          :style="`transform: translate(${-scrollLeft}px, 0)`"
+          :style="navStyle"
           @wheel="showWheel ? onWheel($event) : () => false"
         >
           <div
@@ -232,7 +325,7 @@ function onWheel(e: WheelEvent) {
       <div
         class="tabs-content-wrap"
         :class="{ 'tabs-content-animated': animated }"
-        :style="animated ? { marginLeft: `${-100 * activeIndex}%` } : {}"
+        :style="animatedStyle"
       >
         <div
           class="tabs-content"
@@ -257,12 +350,8 @@ function onWheel(e: WheelEvent) {
     display: flex;
     flex: none;
     align-items: center;
-    margin: 0 0 16px 0;
     &::before {
       position: absolute;
-      right: 0;
-      left: 0;
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
       content: '';
     }
     .tabs-prefix {
@@ -308,9 +397,6 @@ function onWheel(e: WheelEvent) {
           outline: none;
           cursor: pointer;
           transition: all 0.3s;
-          &:not(:first-child) {
-            margin-left: 32px;
-          }
           &:hover {
             color: @themeColor;
           }
@@ -333,12 +419,12 @@ function onWheel(e: WheelEvent) {
           position: absolute;
           background-color: @themeColor;
           pointer-events: none;
-          height: 2px;
           border-radius: 2px;
           transition:
             width 0.3s,
             left 0.3s,
-            right 0.3s,
+            height 0.3s,
+            top 0.3s,
             background-color;
         }
         .tab-bar-disabled {
@@ -373,11 +459,9 @@ function onWheel(e: WheelEvent) {
     .tabs-content-wrap {
       position: relative;
       display: flex;
-      width: 100%;
       .tabs-content {
         outline: none;
         flex: none;
-        width: 100%;
       }
     }
     .tabs-content-animated {
@@ -388,9 +472,12 @@ function onWheel(e: WheelEvent) {
 .tabs-top {
   flex-direction: column;
   .m-tabs-nav {
-    margin: 0 0 16px 0;
+    margin-bottom: 16px;
     &::before {
+      right: 0;
+      left: 0;
       bottom: 0;
+      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
     }
     .tabs-nav-wrap {
       &::before {
@@ -408,9 +495,23 @@ function onWheel(e: WheelEvent) {
         box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
       }
       .tabs-nav-list {
+        .tab-item {
+          &:not(:first-child) {
+            margin-left: 32px;
+          }
+        }
         .tab-bar {
+          height: 2px;
           bottom: 0;
         }
+      }
+    }
+  }
+  .m-tabs-page {
+    .tabs-content-wrap {
+      width: 100%;
+      .tabs-content  {
+        width: 100%;
       }
     }
   }
@@ -444,9 +545,11 @@ function onWheel(e: WheelEvent) {
   .m-tabs-nav {
     order: 1;
     margin-top: 16px;
-    margin-bottom: 0;
     &::before {
+      right: 0;
+      left: 0;
       top: 0;
+      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
     }
     .tabs-nav-wrap {
       &::before {
@@ -464,7 +567,13 @@ function onWheel(e: WheelEvent) {
         box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
       }
       .tabs-nav-list {
+        .tab-item {
+          &:not(:first-child) {
+            margin-left: 32px;
+          }
+        }
         .tab-bar {
+          height: 2px;
           top: 0;
         }
       }
@@ -472,6 +581,12 @@ function onWheel(e: WheelEvent) {
   }
   .m-tabs-page {
     order: 0;
+    .tabs-content-wrap {
+      width: 100%;
+      .tabs-content  {
+        width: 100%;
+      }
+    }
   }
   &.tabs-card {
     .m-tabs-nav {
@@ -498,13 +613,127 @@ function onWheel(e: WheelEvent) {
     }
   }
 }
+.tabs-left {
+  .m-tabs-nav {
+    flex-direction: column;
+    min-width: 40px;
+    margin-right: 24px;
+    &::before {
+      top: 0;
+      bottom: 0;
+      right: 0;
+      border-left: 1px solid rgba(5, 5, 5, 0.06);
+    }
+    .tabs-nav-wrap {
+      flex-direction: column;
+      &::before {
+        right: 0;
+        left: 0;
+        height: 32px;
+        top: 0;
+        box-shadow: inset 0 10px 8px -8px rgba(0, 0, 0, 0.08);
+      }
+      &::after {
+        right: 0;
+        left: 0;
+        height: 32px;
+        bottom: 0;
+        box-shadow: inset 0 -10px 8px -8px rgba(0, 0, 0, 0.08);
+      }
+      .tabs-nav-list {
+        flex: 1 0 auto;
+        flex-direction: column;
+        .tab-item {
+          padding: 8px 24px;
+          text-align: center;
+          &:not(:first-child) {
+            margin-top: 16px;
+          }
+        }
+        .tab-bar {
+          width: 2px;
+          right: 0;
+        }
+      }
+    }
+  }
+  .m-tabs-page {
+    .tabs-content-wrap {
+      flex-direction: column;
+      height: 100%;
+      .tabs-content  {
+        height: 100%;
+      }
+    }
+  }
+}
+.tabs-right {
+  .m-tabs-nav {
+    order: 1;
+    flex-direction: column;
+    min-width: 40px;
+    margin-left: 24px;
+    &::before {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      border-left: 1px solid rgba(5, 5, 5, 0.06);
+    }
+    .tabs-nav-wrap {
+      flex-direction: column;
+      &::before {
+        right: 0;
+        left: 0;
+        height: 32px;
+        top: 0;
+        box-shadow: inset 0 10px 8px -8px rgba(0, 0, 0, 0.08);
+      }
+      &::after {
+        right: 0;
+        left: 0;
+        height: 32px;
+        bottom: 0;
+        box-shadow: inset 0 -10px 8px -8px rgba(0, 0, 0, 0.08);
+      }
+      .tabs-nav-list {
+        flex: 1 0 auto;
+        flex-direction: column;
+        .tab-item {
+          padding: 8px 24px;
+          text-align: center;
+          &:not(:first-child) {
+            margin-top: 16px;
+          }
+        }
+        .tab-bar {
+          width: 2px;
+          left: 0;
+        }
+      }
+    }
+  }
+  .m-tabs-page {
+    .tabs-content-wrap {
+      flex-direction: column;
+      height: 100%;
+      .tabs-content  {
+        height: 100%;
+      }
+    }
+  }
+}
 .tabs-small {
   .m-tabs-nav {
     font-size: 14px;
-    .tabs-nav-wrap {
-      .tabs-nav-list {
-        .tab-item {
-          padding: 8px 0;
+  }
+  &.tabs-top:not(.tabs-card),
+  &.tabs-bottom:not(.tabs-card) {
+    .m-tabs-nav {
+      .tabs-nav-wrap {
+        .tabs-nav-list {
+          .tab-item {
+            padding: 8px 0;
+          }
         }
       }
     }
@@ -513,10 +742,15 @@ function onWheel(e: WheelEvent) {
 .tabs-middle {
   .m-tabs-nav {
     font-size: 14px;
-    .tabs-nav-wrap {
-      .tabs-nav-list {
-        .tab-item {
-          padding: 12px 0;
+  }
+  &.tabs-top:not(.tabs-card),
+  &.tabs-bottom:not(.tabs-card) {
+    .m-tabs-nav {
+      .tabs-nav-wrap {
+        .tabs-nav-list {
+          .tab-item {
+            padding: 12px 0;
+          }
         }
       }
     }
@@ -525,10 +759,15 @@ function onWheel(e: WheelEvent) {
 .tabs-large {
   .m-tabs-nav {
     font-size: 16px;
-    .tabs-nav-wrap {
-      .tabs-nav-list {
-        .tab-item {
-          padding: 16px 0;
+  }
+  &.tabs-top:not(.tabs-card),
+  &.tabs-bottom:not(.tabs-card) {
+    .m-tabs-nav {
+      .tabs-nav-wrap {
+        .tabs-nav-list {
+          .tab-item {
+            padding: 16px 0;
+          }
         }
       }
     }
