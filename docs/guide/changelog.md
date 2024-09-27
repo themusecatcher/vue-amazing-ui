@@ -3,6 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.7.0 <Tag color="volcano" size="small">2024-09-27</Tag>
+
+- 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件，新增 `prefix` `suffix` `animated` `tabGutter` `tabStyle` `tabPosition` `contentStyle` 属性
+
 ## 1.6.9 <Tag color="volcano" size="small">2024-09-26</Tag>
 
 - 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件，新增带图标的标签页功能
@@ -39,7 +43,7 @@
 
 ## 1.6.3 <Tag color="volcano" size="small">2024-08-30</Tag>
 
-- 优化并更新 [回到顶部 Backtop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件，新增 `icon` `description` `tooltip` `tooltipProps` `type` `shape`
+- 优化并更新 [回到顶部 Backtop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件，新增 `icon` `description` `tooltip` `tooltipProps` `type` `shape` 属性
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `contentStyle` 属性
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增 `buttonClass` 属性，删除 `loadingColor` 属性
 - 组件库及文档代码优化
