@@ -1087,11 +1087,6 @@ const loadingType = ref('dynamic')
 ::: details Show Code
 
 ```vue
-<script setup lang="ts">
-function onClick(e: Event) {
-  console.log('click', e)
-}
-</script>
 <template>
   <Space>
     <Button block>Default Button</Button>
