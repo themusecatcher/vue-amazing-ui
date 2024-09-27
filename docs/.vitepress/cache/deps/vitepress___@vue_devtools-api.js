@@ -1,6 +1,6 @@
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/@vue+devtools-shared@7.4.5/node_modules/@vue/devtools-shared/dist/index.js
+// node_modules/.pnpm/@vue+devtools-shared@7.4.6/node_modules/@vue/devtools-shared/dist/index.js
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -30,7 +30,7 @@ var __toESM = (mod, isNodeMode, target2) => (target2 = mod != null ? __create(__
   mod
 ));
 var init_esm_shims = __esm({
-  "../../node_modules/.pnpm/tsup@8.2.4_@microsoft+api-extractor@7.43.0_@types+node@20.16.5__@swc+core@1.5.29_jiti@1.21.6__hrrjfaj2jdrhlrlzgjkczhq5ey/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.pnpm/tsup@8.3.0_@microsoft+api-extractor@7.43.0_@types+node@20.16.5__@swc+core@1.5.29_jiti@1.21.6__ldnw4a7r4ccknnz6q542psuydy/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
@@ -522,7 +522,7 @@ function createHooks() {
 var { clearTimeout: clearTimeout2, setTimeout: setTimeout2 } = globalThis;
 var random = Math.random.bind(Math);
 
-// node_modules/.pnpm/@vue+devtools-kit@7.4.5/node_modules/@vue/devtools-kit/dist/index.js
+// node_modules/.pnpm/@vue+devtools-kit@7.4.6/node_modules/@vue/devtools-kit/dist/index.js
 var __create2 = Object.create;
 var __defProp2 = Object.defineProperty;
 var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -552,7 +552,7 @@ var __toESM2 = (mod, isNodeMode, target22) => (target22 = mod != null ? __create
   mod
 ));
 var init_esm_shims2 = __esm2({
-  "../../node_modules/.pnpm/tsup@8.2.4_@microsoft+api-extractor@7.43.0_@types+node@20.16.5__@swc+core@1.5.29_jiti@1.21.6__hrrjfaj2jdrhlrlzgjkczhq5ey/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.pnpm/tsup@8.3.0_@microsoft+api-extractor@7.43.0_@types+node@20.16.5__@swc+core@1.5.29_jiti@1.21.6__ldnw4a7r4ccknnz6q542psuydy/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
@@ -2704,7 +2704,8 @@ function getActiveInspectors() {
       logo: descriptor.logo,
       icon: `custom-ic-baseline-${(_a25 = options == null ? void 0 : options.icon) == null ? void 0 : _a25.replace(/_/g, "-")}`,
       packageName: descriptor.packageName,
-      homepage: descriptor.homepage
+      homepage: descriptor.homepage,
+      pluginId: descriptor.id
     };
   });
 }
@@ -3062,10 +3063,12 @@ function getPluginLocalKey(pluginId) {
   return `__VUE_DEVTOOLS_NEXT_PLUGIN_SETTINGS__${pluginId}__`;
 }
 function getPluginSettingsOptions(pluginId) {
-  var _a25, _b25, _c, _d;
-  const descriptor = (_a25 = getInspector(pluginId)) == null ? void 0 : _a25.descriptor;
-  const item = (_c = (_b25 = devtoolsPluginBuffer.find((item2) => item2[0].id === (descriptor == null ? void 0 : descriptor.id))) == null ? void 0 : _b25[0]) != null ? _c : null;
-  return (_d = item == null ? void 0 : item.settings) != null ? _d : null;
+  var _a25, _b25, _c;
+  const item = (_b25 = (_a25 = devtoolsPluginBuffer.find((item2) => {
+    var _a26;
+    return item2[0].id === pluginId && !!((_a26 = item2[0]) == null ? void 0 : _a26.settings);
+  })) == null ? void 0 : _a25[0]) != null ? _b25 : null;
+  return (_c = item == null ? void 0 : item.settings) != null ? _c : null;
 }
 function getPluginSettings(pluginId, fallbackValue) {
   var _a25, _b25, _c;
@@ -3245,8 +3248,7 @@ var DevToolsV6PluginAPI = class {
   }
   // settings
   getSettings(pluginId) {
-    const inspector = getActiveInspectors().find((i) => i.packageName === this.plugin.descriptor.packageName);
-    return getPluginSettings(pluginId != null ? pluginId : inspector == null ? void 0 : inspector.id, this.plugin.descriptor.settings);
+    return getPluginSettings(pluginId != null ? pluginId : this.plugin.descriptor.id, this.plugin.descriptor.settings);
   }
   // utilities
   getComponentInstances(app) {
@@ -3316,13 +3318,6 @@ function callDevToolsPluginSetupFn(plugin, app) {
     });
   }
   setupFn(api);
-  if (pluginDescriptor.settings) {
-    const inspector = devtoolsInspector.find((inspector2) => inspector2.descriptor.id === pluginDescriptor.id);
-    if (inspector) {
-      inspector.descriptor.settings = pluginDescriptor.settings;
-      initPluginSettings(inspector.options.id, pluginDescriptor.settings);
-    }
-  }
 }
 function registerDevToolsPlugin(app) {
   if (target.__VUE_DEVTOOLS_KIT__REGISTERED_PLUGIN_APPS__.has(app))
