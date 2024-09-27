@@ -345,6 +345,7 @@ function onWheel(e: WheelEvent) {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
+  list-style: none;
   .m-tabs-nav {
     position: relative;
     display: flex;
