@@ -12,7 +12,7 @@
 - 提供平级的区域将大块内容进行收纳和展现，保持界面整洁
 
 <script setup lang="ts">
-import { ref, h, watchEffect } from 'vue'
+import { ref, h, watchEffect, computed } from 'vue'
 import { AppleOutlined, AndroidOutlined, WindowsOutlined } from '@ant-design/icons-vue'
 const tabPages = ref([
   {
@@ -195,6 +195,18 @@ const positionOptions = ref([
   }
 ])
 const position = ref('top')
+const morePosition = ref('top')
+const positionStyle = computed(() => {
+  if (['top', 'bottom'].includes(morePosition.value)) {
+    return {
+      width: '360px'
+    }
+  } else {
+    return {
+      height: '200px'
+    }
+  }
+})
 function onChange(key: string | number) {
   console.log('key:', key)
 }
@@ -505,75 +517,6 @@ watchEffect(() => {
 
 :::
 
-## 左右滑动，容纳更多标签
-
-<Flex vertical>
-  <Tabs style="width: 360px" :tab-pages="moreTabPages" v-model:active-key="moreActiveKey" />
-  <Tabs style="width: 360px" :tab-pages="moreTabPages" v-model:active-key="moreActiveKey" type="card" />
-</Flex>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-const moreTabPages = ref([
-  {
-    key: '1',
-    tab: 'Tab 1',
-    content: 'Content of Tab Pane 1'
-  },
-  {
-    key: '2',
-    tab: 'Tab 2',
-    content: 'Content of Tab Pane 2'
-  },
-  {
-    key: '3',
-    tab: 'Tab 3',
-    content: 'Content of Tab Pane 3'
-  },
-  {
-    key: '4',
-    tab: 'Tab 4',
-    content: 'Content of Tab Pane 4'
-  },
-  {
-    key: '5',
-    tab: 'Tab 5',
-    content: 'Content of Tab Pane 5'
-  },
-  {
-    key: '6',
-    tab: 'Tab 6',
-    content: 'Content of Tab Pane 6'
-  },
-  {
-    key: '7',
-    tab: 'Tab 7',
-    content: 'Content of Tab Pane 7'
-  },
-  {
-    key: '8',
-    tab: 'Tab 8',
-    content: 'Content of Tab Pane 8'
-  }
-])
-const moreActiveKey = ref('1')
-watchEffect(() => {
-  console.log('moreActiveKey:', moreActiveKey.value)
-})
-</script>
-<template>
-  <Flex vertical>
-    <Tabs style="width: 360px" :tab-pages="moreTabPages" v-model:active-key="moreActiveKey" />
-    <Tabs style="width: 360px" :tab-pages="moreTabPages" v-model:active-key="moreActiveKey" type="card" />
-  </Flex>
-</template>
-```
-
-:::
-
 ## 前缀 & 后缀
 
 <Flex vertical>
@@ -803,6 +746,129 @@ const position = ref('top')
 
 :::
 
+## 左右滑动，容纳更多标签
+
+<Flex vertical>
+  <Radio :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
+  <Tabs
+    :style="positionStyle"
+    :tab-pages="moreTabPages"
+    v-model:active-key="moreActiveKey"
+    :tab-position="morePosition"
+  />
+  <Tabs
+    :style="positionStyle"
+    :tab-pages="moreTabPages"
+    v-model:active-key="moreActiveKey"
+    :tab-position="morePosition"
+    type="card"
+  />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect, computed } from 'vue'
+const moreTabPages = ref([
+  {
+    key: '1',
+    tab: 'Tab 1',
+    content: 'Content of Tab Pane 1'
+  },
+  {
+    key: '2',
+    tab: 'Tab 2',
+    content: 'Content of Tab Pane 2'
+  },
+  {
+    key: '3',
+    tab: 'Tab 3',
+    content: 'Content of Tab Pane 3'
+  },
+  {
+    key: '4',
+    tab: 'Tab 4',
+    content: 'Content of Tab Pane 4'
+  },
+  {
+    key: '5',
+    tab: 'Tab 5',
+    content: 'Content of Tab Pane 5'
+  },
+  {
+    key: '6',
+    tab: 'Tab 6',
+    content: 'Content of Tab Pane 6'
+  },
+  {
+    key: '7',
+    tab: 'Tab 7',
+    content: 'Content of Tab Pane 7'
+  },
+  {
+    key: '8',
+    tab: 'Tab 8',
+    content: 'Content of Tab Pane 8'
+  }
+])
+const moreActiveKey = ref('1')
+const positionOptions = ref([
+  {
+    label: 'top',
+    value: 'top'
+  },
+  {
+    label: 'bottom',
+    value: 'bottom'
+  },
+  {
+    label: 'left',
+    value: 'left'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  }
+])
+const morePosition = ref('top')
+const positionStyle = computed(() => {
+  if (['top', 'bottom'].includes(morePosition.value)) {
+    return {
+      width: '360px'
+    }
+  } else {
+    return {
+      height: '200px'
+    }
+  }
+})
+watchEffect(() => {
+  console.log('moreActiveKey:', moreActiveKey.value)
+})
+</script>
+<template>
+  <Flex vertical>
+    <Radio :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
+    <Tabs
+      :style="positionStyle"
+      :tab-pages="moreTabPages"
+      v-model:active-key="moreActiveKey"
+      :tab-position="morePosition"
+    />
+    <Tabs
+      :style="positionStyle"
+      :tab-pages="moreTabPages"
+      v-model:active-key="moreActiveKey"
+      :tab-position="morePosition"
+      type="card"
+    />
+  </Flex>
+</template>
+```
+
+:::
+
 ## 自定义 Tab & Content 样式
 
 <Flex vertical>
@@ -992,7 +1058,7 @@ watchEffect(() => {
 tabPages | 标签页数组 | [Tab](#tab-type)[] | []
 prefix | 标签页前缀 | string &#124; slot | undefined
 suffix | 标签页后缀 | string &#124; slot | undefined
-animated | 是否启用切换动画 | boolean | true
+animated | 是否启用切换动画，在 `tabPosition: 'top' \| 'bottom'` 时有效 | boolean | true
 centered | 标签是否居中展示 | boolean | false
 size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 type | 标签页的类型 |'line' &#124; 'card' | 'line'
