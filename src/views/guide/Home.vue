@@ -7,7 +7,7 @@ const { fps } = useFps()
 const installData = ref([
   {
     header: 'Install',
-    text: `npm install vue-amazing-ui\n# or\npnpm add vue-amazing-ui\n# or\nyarn add vue-amazing-ui\n# or\nbun add vue-amazing-ui`
+    content: `npm install vue-amazing-ui\n# or\npnpm add vue-amazing-ui\n# or\nyarn add vue-amazing-ui\n# or\nbun add vue-amazing-ui`
   }
 ])
 // import.meta.glob 都支持以字符串形式导入文件，类似于 以字符串形式导入资源
@@ -87,7 +87,7 @@ const toolFunctions = [
 const collapseData = [
   {
     header: '以上工具函数 API 使用时直接引入即可:',
-    text: `<script setup lang="ts">
+    content: `<script setup lang="ts">
 import {
   dateFormat,
   formatNumber,
