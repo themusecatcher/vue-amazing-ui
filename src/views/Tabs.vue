@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, h, watchEffect } from 'vue'
+import { ref, h, watchEffect, computed } from 'vue'
 import { AppleOutlined, AndroidOutlined, WindowsOutlined } from '@ant-design/icons-vue'
 const tabPages = ref([
   {
@@ -181,7 +181,19 @@ const positionOptions = ref([
     value: 'right'
   }
 ])
-const position = ref('left')
+const position = ref('top')
+const morePosition = ref('top')
+const positionStyle = computed(() => {
+  if (['top', 'bottom'].includes(morePosition.value)) {
+    return {
+      width: '360px'
+    }
+  } else {
+    return {
+      height: '200px'
+    }
+  }
+})
 function onChange(key: string | number) {
   console.log('key:', key)
 }
@@ -189,18 +201,6 @@ function onChange(key: string | number) {
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-    <!-- <a-tabs
-      v-model:activeKey="activeKey"
-      type="card"
-      size="small"
-      :tabBarGutter="10"
-      :tabBarStyle="{ fontSize: '20px' }"
-      tabPosition="top"
-    >
-      <a-tab-pane key="1" tab="Tab 1">Content of Tab Pane 1</a-tab-pane>
-      <a-tab-pane key="2" tab="Tab 2" disabled>Content of Tab Pane 2</a-tab-pane>
-      <a-tab-pane key="3" tab="Tab 3">Content of Tab Pane 3</a-tab-pane>
-    </a-tabs> -->
     <h2 class="mt30 mb10">基本使用</h2>
     <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">卡片式标签页</h2>
@@ -227,11 +227,6 @@ function onChange(key: string | number) {
         </template>
       </Tabs>
     </Flex>
-    <h2 class="mt30 mb10">左右滑动，容纳更多标签</h2>
-    <Flex vertical>
-      <Tabs style="width: 360px" :tab-pages="moreTabPages" v-model:active-key="moreActiveKey" />
-      <Tabs style="width: 360px" :tab-pages="moreTabPages" v-model:active-key="moreActiveKey" type="card" />
-    </Flex>
     <h2 class="mt30 mb10">前缀 & 后缀</h2>
     <Flex vertical>
       <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" prefix="prefix" suffix="suffix" />
@@ -251,16 +246,28 @@ function onChange(key: string | number) {
       <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :size="size" type="card" />
     </Flex>
     <h2 class="mt30 mb10">自定义位置</h2>
-    <a-tabs v-model:activeKey="activeKey" tab-position="left" size="small" animated>
-      <a-tab-pane key="1" tab="Tab 1">Content of Tab 1</a-tab-pane>
-      <a-tab-pane key="2" tab="Tab 2">Content of Tab 2</a-tab-pane>
-      <a-tab-pane key="3" tab="Tab 3">Content of Tab 3</a-tab-pane>
-    </a-tabs>
-    <!-- <Flex vertical> -->
-    <Radio :options="positionOptions" v-model:value="position" button button-style="solid" />
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" />
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" type="card" />
-    <!-- </Flex> -->
+    <Flex vertical>
+      <Radio :options="positionOptions" v-model:value="position" button button-style="solid" />
+      <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" />
+      <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" type="card" />
+    </Flex>
+    <h2 class="mt30 mb10">左右滑动，容纳更多标签</h2>
+    <Flex vertical>
+      <Radio :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
+      <Tabs
+        :style="positionStyle"
+        :tab-pages="moreTabPages"
+        v-model:active-key="moreActiveKey"
+        :tab-position="morePosition"
+      />
+      <Tabs
+        :style="positionStyle"
+        :tab-pages="moreTabPages"
+        v-model:active-key="moreActiveKey"
+        :tab-position="morePosition"
+        type="card"
+      />
+    </Flex>
     <h2 class="mt30 mb10">自定义 Tab & Content 样式</h2>
     <Flex vertical>
       <Tabs

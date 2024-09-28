@@ -13,7 +13,7 @@ interface Props {
   tabPages?: Tab[] // 标签页数组
   prefix?: string // 标签页前缀 string | slot
   suffix?: string // 标签页后缀 string | slot
-  animated?: boolean // 是否启用切换动画
+  animated?: boolean // 是否启用切换动画，在 tabPosition: 'top' | 'bottom' 时有效
   centered?: boolean // 标签是否居中展示
   size?: 'small' | 'middle' | 'large' // 标签页大小
   type?: 'line' | 'card' // 标签页的类型
@@ -64,6 +64,24 @@ const showPrefix = computed(() => {
 const showSuffix = computed(() => {
   return Boolean(slotsExist.suffix || props.suffix)
 })
+const beforeShadowShow = computed(() => {
+  if (['top', 'bottom'].includes(props.tabPosition)) {
+    // 水平位置
+    return showWheel.value && scrollLeft.value > 0
+  } else {
+    // 垂直位置
+    return showWheel.value && scrollTop.value > 0
+  }
+})
+const afterShadowShow = computed(() => {
+  if (['top', 'bottom'].includes(props.tabPosition)) {
+    // 水平位置
+    return showWheel.value && scrollLeft.value < scrollMax.value
+  } else {
+    // 垂直位置
+    return showWheel.value && scrollTop.value < scrollMax.value
+  }
+})
 const navStyle = computed(() => {
   if (['top', 'bottom'].includes(props.tabPosition)) {
     return {
@@ -75,52 +93,48 @@ const navStyle = computed(() => {
     }
   }
 })
-const tabBarStyle = computed(() => {
+const tabGutterStyle = computed(() => {
   if (['top', 'bottom'].includes(props.tabPosition)) {
     return {
-      left: tabBarLeft.value + 'px',
-      width: tabBarWidth.value + 'px'
+      marginLeft: `${props.tabGutter}px`
     }
   } else {
     return {
-      top: tabBarTop.value + 'px',
-      height: tabBarHeight.value + 'px'
+      marginTop: `${props.tabGutter}px`
+    }
+  }
+})
+const tabBarStyle = computed(() => {
+  if (['top', 'bottom'].includes(props.tabPosition)) {
+    return {
+      left: `${tabBarLeft.value}px`,
+      width: `${tabBarWidth.value}px`
+    }
+  } else {
+    return {
+      top: `${tabBarTop.value}px`,
+      height: `${tabBarHeight.value}px`
     }
   }
 })
 const animatedStyle = computed(() => {
-  if (props.animated) {
-    if (['top', 'bottom'].includes(props.tabPosition)) {
-      return {
-        marginLeft: `${-100 * activeIndex.value}%`
-      }
-    } else {
-      return {
-        marginTop: `${-100 * activeIndex.value}%`
-      }
+  if (props.animated && ['top', 'bottom'].includes(props.tabPosition)) {
+    return {
+      marginLeft: `-${100 * activeIndex.value}%`
     }
   }
   return {}
 })
 const hiddenStyle = computed(() => {
-  if (props.animated) {
-    if (['top', 'bottom'].includes(props.tabPosition)) {
-      return {
-        visibility: 'hidden',
-        height: '0px',
-        overflowY: 'hidden'
-      }
-    } else {
-      return {
-        visibility: 'hidden',
-        width: '0px',
-        overflowX: 'hidden'
-      }
-    }
-  } else {
+  if (props.animated && ['top', 'bottom'].includes(props.tabPosition)) {
     return {
-      display: 'none'
+      visibility: 'hidden',
+      height: '0px',
+      overflowY: 'hidden'
     }
+  }
+  return {
+    display: 'none'
   }
 })
 watch(
@@ -139,6 +153,8 @@ onMounted(() => {
   getNavSize()
 })
 function getNavSize() {
+  console.log('getnavsize')
+
   if (['top', 'bottom'].includes(props.tabPosition)) {
     getNavHorizontalSize()
   } else {
@@ -227,12 +243,12 @@ function getPageKey(key: string | number | undefined, index: number) {
     return key
   }
 }
-function onTab(key: string | number, index: number) {
+function onTab(key: string | number) {
   emits('update:activeKey', key)
   emits('change', key)
 }
 /*
-  （触摸板滑动也会触发）监听滚轮事件，结合 transform: translate(${scrollLeft}px, 0) 模拟滚动效果
+  （触摸板滑动也会触发）监听滚轮事件，结合 transform: translate(-${scrollLeft}px, 0) 模拟滚动效果
   参考文档：https://developer.mozilla.org/zh-CN/docs/Web/API/Element/wheel_event
   WheelEvent:
   事件属性：
@@ -243,19 +259,44 @@ function onTab(key: string | number, index: number) {
 */
 function onWheel(e: WheelEvent) {
   e.stopPropagation()
-  e.preventDefault()
+  e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
   if (e.deltaX || e.deltaY) {
-    // 防止标签页处触摸板上下滚动不生效
-    // e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
-    const scrollX = (e.deltaX || e.deltaY) * 1 // 滚轮的横向滚动量
-    if (scrollLeft.value + scrollX > scrollMax.value) {
-      scrollLeft.value = scrollMax.value
-    } else if (scrollLeft.value + scrollX < 0) {
-      scrollLeft.value = 0
+    if (['top', 'bottom'].includes(props.tabPosition)) {
+      // 水平滚动
+      getHorizontalScroll(e)
     } else {
-      scrollLeft.value += scrollX
+      getVerticalScroll(e)
     }
   }
+}
+function getHorizontalScroll(e: WheelEvent) {
+  const scrollX = (e.deltaX || e.deltaY) * 1 // 滚轮的水平滚动量
+  if (scrollLeft.value + scrollX > scrollMax.value) {
+    scrollLeft.value = scrollMax.value
+  } else if (scrollLeft.value + scrollX < 0) {
+    scrollLeft.value = 0
+  } else {
+    scrollLeft.value += scrollX
+  }
+}
+function getVerticalScroll(e: WheelEvent) {
+  const scrollY = (e.deltaX || e.deltaY) * 1 // 滚轮的垂直滚动量
+  if (scrollTop.value + scrollY > scrollMax.value) {
+    scrollTop.value = scrollMax.value
+  } else if (scrollTop.value + scrollY < 0) {
+    scrollTop.value = 0
+  } else {
+    scrollTop.value += scrollY
+  }
+  console.log('scrollLeft', scrollLeft.value)
+  console.log('scrollTop', scrollTop.value)
+  console.log('scrollMax', scrollMax.value)
+}
+function getContentStyle(key: string | number | undefined, index: number) {
+  if (props.activeKey !== getPageKey(key, index)) {
+    return hiddenStyle.value
+  }
+  return {}
 }
 </script>
 <template>
@@ -277,8 +318,8 @@ function onWheel(e: WheelEvent) {
         class="tabs-nav-wrap"
         :class="{
           'tabs-center': centered,
-          'before-shadow-active': showWheel && (scrollLeft > 0 || scrollTop > 0),
-          'after-shadow-active': showWheel && (scrollLeft < scrollMax || scrollTop < scrollMax)
+          'before-shadow-active': beforeShadowShow,
+          'after-shadow-active': afterShadowShow
         }"
       >
         <div
@@ -297,8 +338,8 @@ function onWheel(e: WheelEvent) {
               'tab-card-active': type === 'card' && activeKey === getPageKey(page.key, index),
               'tab-disabled': page.disabled
             }"
-            :style="index > 0 && tabGutter ? { marginLeft: `${tabGutter}px` } : {}"
-            @click="page.disabled ? () => false : onTab(getPageKey(page.key, index), index)"
+            :style="index > 0 && tabGutter !== undefined ? tabGutterStyle : {}"
+            @click="page.disabled ? () => false : onTab(getPageKey(page.key, index))"
             v-for="(page, index) in tabPages"
             :key="index"
           >
@@ -324,12 +365,12 @@ function onWheel(e: WheelEvent) {
     <div class="m-tabs-page" :style="contentStyle">
       <div
         class="tabs-content-wrap"
-        :class="{ 'tabs-content-animated': animated }"
+        :class="{ 'tabs-content-animated': animated && ['top', 'bottom'].includes(tabPosition) }"
         :style="animatedStyle"
       >
         <div
           class="tabs-content"
-          :style="activeKey === getPageKey(page.key, index) ? {} : hiddenStyle"
+          :style="getContentStyle(page.key, index)"
           v-for="(page, index) in tabPages"
           :key="page.key || index"
         >
@@ -357,11 +398,9 @@ function onWheel(e: WheelEvent) {
     }
     .tabs-prefix {
       flex: none;
-      padding-right: 16px;
     }
     .tabs-suffix {
       flex: none;
-      padding-left: 16px;
     }
     .tabs-nav-wrap {
       position: relative;
@@ -460,9 +499,11 @@ function onWheel(e: WheelEvent) {
     .tabs-content-wrap {
       position: relative;
       display: flex;
+      width: 100%;
       .tabs-content {
         outline: none;
         flex: none;
+        width: 100%;
       }
     }
     .tabs-content-animated {
@@ -474,6 +515,12 @@ function onWheel(e: WheelEvent) {
   flex-direction: column;
   .m-tabs-nav {
     margin-bottom: 16px;
+    .tabs-prefix {
+      padding-right: 12px;
+    }
+    .tabs-suffix {
+      padding-left: 12px;
+    }
     &::before {
       right: 0;
       left: 0;
@@ -508,14 +555,6 @@ function onWheel(e: WheelEvent) {
       }
     }
   }
-  .m-tabs-page {
-    .tabs-content-wrap {
-      width: 100%;
-      .tabs-content  {
-        width: 100%;
-      }
-    }
-  }
   &.tabs-card {
     .m-tabs-nav {
       border-radius: 8px 8px 0 0;
@@ -546,6 +585,12 @@ function onWheel(e: WheelEvent) {
   .m-tabs-nav {
     order: 1;
     margin-top: 16px;
+    .tabs-prefix {
+      padding-right: 12px;
+    }
+    .tabs-suffix {
+      padding-left: 12px;
+    }
     &::before {
       right: 0;
       left: 0;
@@ -582,12 +627,6 @@ function onWheel(e: WheelEvent) {
   }
   .m-tabs-page {
     order: 0;
-    .tabs-content-wrap {
-      width: 100%;
-      .tabs-content  {
-        width: 100%;
-      }
-    }
   }
   &.tabs-card {
     .m-tabs-nav {
@@ -619,6 +658,12 @@ function onWheel(e: WheelEvent) {
     flex-direction: column;
     min-width: 40px;
     margin-right: 24px;
+    .tabs-prefix {
+      padding-bottom: 12px;
+    }
+    .tabs-suffix {
+      padding-top: 12px;
+    }
     &::before {
       top: 0;
       bottom: 0;
@@ -658,12 +703,27 @@ function onWheel(e: WheelEvent) {
       }
     }
   }
-  .m-tabs-page {
-    .tabs-content-wrap {
-      flex-direction: column;
-      height: 100%;
-      .tabs-content  {
-        height: 100%;
+  &.tabs-card {
+    .m-tabs-nav {
+      border-radius: 8px 0 0 8px;
+      .tabs-nav-wrap {
+        .tabs-nav-list {
+          .tab-item {
+            border-radius: 8px 0 0 8px;
+          }
+        }
+      }
+    }
+  }
+  &.tabs-card.tabs-small {
+    .m-tabs-nav {
+      border-radius: 6px 0 0 6px;
+      .tabs-nav-wrap {
+        .tabs-nav-list {
+          .tab-item {
+            border-radius: 6px 0 0 6px;
+          }
+        }
       }
     }
   }
@@ -674,6 +734,12 @@ function onWheel(e: WheelEvent) {
     flex-direction: column;
     min-width: 40px;
     margin-left: 24px;
+    .tabs-prefix {
+      padding-bottom: 12px;
+    }
+    .tabs-suffix {
+      padding-top: 12px;
+    }
     &::before {
       top: 0;
       bottom: 0;
@@ -702,9 +768,6 @@ function onWheel(e: WheelEvent) {
         .tab-item {
           padding: 8px 24px;
           text-align: center;
-          &:not(:first-child) {
-            margin-top: 16px;
-          }
         }
         .tab-bar {
           width: 2px;
@@ -713,12 +776,27 @@ function onWheel(e: WheelEvent) {
       }
     }
   }
-  .m-tabs-page {
-    .tabs-content-wrap {
-      flex-direction: column;
-      height: 100%;
-      .tabs-content  {
-        height: 100%;
+  &.tabs-card {
+    .m-tabs-nav {
+      border-radius: 0 8px 8px 0;
+      .tabs-nav-wrap {
+        .tabs-nav-list {
+          .tab-item {
+            border-radius: 0 8px 8px 0;
+          }
+        }
+      }
+    }
+  }
+  &.tabs-card.tabs-small {
+    .m-tabs-nav {
+      border-radius: 0 6px 6px 0;
+      .tabs-nav-wrap {
+        .tabs-nav-list {
+          .tab-item {
+            border-radius: 0 6px 6px 0;
+          }
+        }
       }
     }
   }
@@ -783,9 +861,6 @@ function onWheel(e: WheelEvent) {
           background: rgba(0, 0, 0, 0.02);
           border: 1px solid rgba(5, 5, 5, 0.06);
           transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-          &:not(:first-child) {
-            margin-left: 2px;
-          }
         }
         .tab-card-active {
           color: @themeColor;
@@ -806,6 +881,11 @@ function onWheel(e: WheelEvent) {
     .m-tabs-nav {
       .tabs-nav-wrap {
         .tabs-nav-list {
+          .tab-item {
+            &:not(:first-child) {
+              margin-left: 2px;
+            }
+          }
           .tab-card-active {
             border-bottom-color: #ffffff;
           }
@@ -817,8 +897,45 @@ function onWheel(e: WheelEvent) {
     .m-tabs-nav {
       .tabs-nav-wrap {
         .tabs-nav-list {
+          .tab-item {
+            &:not(:first-child) {
+              margin-left: 2px;
+            }
+          }
           .tab-card-active {
             border-top-color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+  &.tabs-left {
+    .m-tabs-nav {
+      .tabs-nav-wrap {
+        .tabs-nav-list {
+          .tab-item {
+            &:not(:first-child) {
+              margin-top: 2px;
+            }
+          }
+          .tab-card-active {
+            border-right-color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+  &.tabs-right {
+    .m-tabs-nav {
+      .tabs-nav-wrap {
+        .tabs-nav-list {
+          .tab-item {
+            &:not(:first-child) {
+              margin-top: 2px;
+            }
+          }
+          .tab-card-active {
+            border-left-color: #ffffff;
           }
         }
       }
