@@ -1073,10 +1073,10 @@ activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` |
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number | undefined
-tab? | 标签页显示文字 | string | undefined
-icon? | 标签页图标 | VNode | undefined
+tab? | 页签显示文字 | string | undefined
+icon? | 页签图标 | VNode | undefined
 content? | 标签页内容 | string &#124; slot | undefined
-disabled? | 禁用对应标签页 | boolean | false
+disabled? | 是否禁用页签 | boolean | false
 
 ## Events
 

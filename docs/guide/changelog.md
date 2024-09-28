@@ -3,7 +3,7 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-## 1.7.0 <Tag color="volcano" size="small">2024-09-27</Tag>
+## 1.7.0 <Tag color="volcano" size="small">2024-09-28</Tag>
 
 - 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件，新增 `prefix` `suffix` `animated` `tabGutter` `tabStyle` `tabPosition` `contentStyle` 属性
 
