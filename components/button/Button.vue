@@ -87,8 +87,8 @@ function onWaveEnd() {
     :disabled="disabled"
     :href="href ? href : 'javascript:void(0);'"
     :target="href ? target : '_self'"
-    @click="onClick"
-    @keydown.enter.prevent="onKeyboard"
+    @click="disabled ? () => false : onClick($event)"
+    @keydown.enter.prevent="disabled ? () => false : onKeyboard($event)"
   >
     <div v-if="loading || !slotsExist.icon" class="btn-loading">
       <div v-if="!href && loadingType === 'static'" class="m-static-circle">
