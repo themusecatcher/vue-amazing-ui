@@ -355,9 +355,7 @@ watchEffect(() => {
 
 ## 禁用
 
-<Space>
-  <Input disabled v-model:value="value" placeholder="disabled input" />
-</Space>
+<Input disabled v-model:value="value" placeholder="disabled input" />
 
 ::: details Show Code
 
@@ -367,9 +365,7 @@ import { ref } from 'vue'
 const value = ref('')
 </script>
 <template>
-  <Space>
-    <Input disabled v-model:value="value" placeholder="disabled input" />
-  </Space>
+  <Input disabled v-model:value="value" placeholder="disabled input" />
 </template>
 ```
 

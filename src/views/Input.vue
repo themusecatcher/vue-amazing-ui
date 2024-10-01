@@ -114,8 +114,6 @@ function onEnter(e: KeyboardEvent) {
       <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
-    <Space>
-      <Input disabled v-model:value="value" placeholder="disabled input" />
-    </Space>
+    <Input disabled v-model:value="value" placeholder="disabled input" />
   </div>
 </template>

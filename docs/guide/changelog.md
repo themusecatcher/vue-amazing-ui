@@ -7,6 +7,7 @@
 
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件
 - 优化并更新 [选择框 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件
+- 组件库及文档代码优化
 
 ## 1.7.0 <Tag color="volcano" size="small">2024-09-28</Tag>
 
