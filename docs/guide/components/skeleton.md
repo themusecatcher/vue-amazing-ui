@@ -16,7 +16,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const loading = ref<boolean>(false)
 const showSkeleton = () => {
   loading.value = true
@@ -99,19 +98,19 @@ const avatarShapeOptions = ref([
 
 ## 包含子组件
 
-<Space vertical>
-  <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
-  <Skeleton :loading="loading">
-    <div>
-      <h4>Vue Amazing UI, a design language</h4>
-      <br/>
-      <p>
-        We supply a series of design principles, practical patterns and high quality design
-        resources, to help people create their product prototypes beautifully and efficiently.
-      </p>
-    </div>
-  </Skeleton>
-</Space>
+<Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
+<br/>
+<br/>
+<Skeleton :loading="loading">
+  <div>
+    <h4>Vue Amazing UI, a design language</h4>
+    <br/>
+    <p>
+      We supply a series of design principles, practical patterns and high quality design
+      resources, to help people create their product prototypes beautifully and efficiently.
+    </p>
+  </div>
+</Skeleton>
 
 <style lang="less" scoped>
 h4 {
@@ -133,19 +132,19 @@ const showSkeleton = () => {
 }
 </script>
 <template>
-  <Space vertical>
-    <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
-    <Skeleton :loading="loading">
-      <div>
-        <h4>Vue Amazing UI, a design language</h4>
-        <br/>
-        <p>
-          We supply a series of design principles, practical patterns and high quality design
-          resources, to help people create their product prototypes beautifully and efficiently.
-        </p>
-      </div>
-    </Skeleton>
-  </Space>
+  <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
+  <br/>
+  <br/>
+  <Skeleton :loading="loading">
+    <div>
+      <h4>Vue Amazing UI, a design language</h4>
+      <br/>
+      <p>
+        We supply a series of design principles, practical patterns and high quality design
+        resources, to help people create their product prototypes beautifully and efficiently.
+      </p>
+    </div>
+  </Skeleton>
 </template>
 ```
 
@@ -172,7 +171,7 @@ const showSkeleton = () => {
     <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block }" />
     <Skeleton style="width: 200px" :animated="animated" :input="{ size: size }" />
     <Skeleton :animated="animated" image />
-    <Skeleton :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
+    <Skeleton :animated="animated" :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
   </Flex>
   <Flex vertical gap="large" width="50%">
     <Space gap="large">
@@ -256,7 +255,7 @@ const avatarShapeOptions = ref([
       <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block }" />
       <Skeleton style="width: 200px" :animated="animated" :input="{ size: size }" />
       <Skeleton :animated="animated" image />
-      <Skeleton :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
+      <Skeleton :animated="animated" :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
     </Flex>
     <Flex vertical gap="large" width="50%">
       <Space gap="large">
