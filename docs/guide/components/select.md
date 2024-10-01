@@ -610,7 +610,7 @@ watchEffect(() => {
 
 <Select
   :options="options"
-  :max-display="8"
+  :max-display="5"
   v-model="selectedValue" />
 
 ::: details Show Code
@@ -660,7 +660,7 @@ watchEffect(() => {
 <template>
   <Select
     :options="options"
-    :max-display="8"
+    :max-display="5"
     v-model="selectedValue" />
 </template>
 ```
