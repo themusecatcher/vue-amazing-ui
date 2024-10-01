@@ -61,6 +61,11 @@ const selectWidth = computed(() => {
   }
   return props.width
 })
+const optionsStyle = computed(() => {
+  return {
+    maxHeight: props.maxDisplay * props.height + 8 + 'px'
+  }
+})
 watchEffect(() => {
   if (props.search) {
     if (inputValue.value) {
@@ -290,11 +295,7 @@ function onChange(value: string | number, label: string, index: number) {
         :style="`top: ${height + 4}px;`"
         @mouseleave="disabledBlur = false"
       >
-        <Scrollbar
-          :content-style="{ padding: '4px' }"
-          :style="`max-height: ${maxDisplay * height}px;`"
-          v-bind="scrollbarProps"
-        >
+        <Scrollbar :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
           <p
             v-for="(option, index) in filterOptions"
             :key="index"
