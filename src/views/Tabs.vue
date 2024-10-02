@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, h, watchEffect, computed } from 'vue'
+import { ref, h, watchEffect, computed, reactive } from 'vue'
 import { AppleOutlined, AndroidOutlined, WindowsOutlined } from '@ant-design/icons-vue'
 const tabPages = ref([
   {
@@ -148,7 +148,17 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('moreActiveKey:', moreActiveKey.value)
 })
-const sizeOptions = ref([
+const typeOptions = [
+  {
+    label: 'line',
+    value: 'line'
+  },
+  {
+    label: 'card',
+    value: 'card'
+  }
+]
+const sizeOptions = [
   {
     label: 'small',
     value: 'small'
@@ -161,9 +171,9 @@ const sizeOptions = ref([
     label: 'large',
     value: 'large'
   }
-])
+]
 const size = ref('middle')
-const positionOptions = ref([
+const positionOptions = [
   {
     label: 'top',
     value: 'top'
@@ -180,7 +190,7 @@ const positionOptions = ref([
     label: 'right',
     value: 'right'
   }
-])
+]
 const position = ref('top')
 const morePosition = ref('top')
 const positionStyle = computed(() => {
@@ -193,6 +203,16 @@ const positionStyle = computed(() => {
       height: '200px'
     }
   }
+})
+const state = reactive({
+  prefix: '',
+  suffix: '',
+  animated: true,
+  centered: false,
+  size: 'middle',
+  type: 'line',
+  tabGutter: 24,
+  tabPosition: 'top'
 })
 function onChange(key: string | number) {
   console.log('key:', key)
@@ -309,5 +329,48 @@ function onChange(key: string | number) {
         <p v-if="key === '3'">key: 3 的 slot 内容</p>
       </template>
     </Tabs>
+    <h2 class="mt30 mb10">标签页配置器</h2>
+    <Flex gap="large" vertical>
+      <Row :gutter="[24, 12]">
+        <Col :span="6">
+          <Space gap="small" vertical> prefix：<Input v-model:value="state.prefix" placeholder="prefix" /> </Space>
+        </Col>
+        <Col :span="6">
+          <Space gap="small" vertical> suffix：<Input v-model:value="state.suffix" placeholder="suffix" /> </Space>
+        </Col>
+        <Col :span="6">
+          <Space gap="small" vertical> animated：<Switch v-model="state.animated" /> </Space>
+        </Col>
+        <Col :span="6">
+          <Space gap="small" vertical> centered：<Switch v-model="state.centered" /> </Space>
+        </Col>
+        <Col :span="12">
+          <Space gap="small" vertical>
+            size：<Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
+          </Space>
+        </Col>
+        <Col :span="6">
+          <Space gap="small" vertical>
+            type：<Radio :options="typeOptions" v-model:value="state.type" button button-style="solid" />
+          </Space>
+        </Col>
+        <Col :span="6">
+          <Flex gap="small" vertical>
+            tabGutter：<Slider v-model:value="state.tabGutter" :min="0" :step="1" :max="100" />
+          </Flex>
+        </Col>
+        <Col :span="12">
+          <Space gap="small" vertical>
+            tabPosition：<Radio
+              :options="positionOptions"
+              v-model:value="state.tabPosition"
+              button
+              button-style="solid"
+            />
+          </Space>
+        </Col>
+      </Row>
+      <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" v-bind="state" />
+    </Flex>
   </div>
 </template>
