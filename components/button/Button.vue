@@ -84,7 +84,6 @@ function onWaveEnd() {
       buttonClass
     ]"
     :style="`--ripple-color: ${rippleColor || presetRippleColors[type]};`"
-    :disabled="disabled"
     :href="href ? href : 'javascript:void(0);'"
     :target="href ? target : '_self'"
     @click="disabled || loading ? () => false : onClick($event)"
