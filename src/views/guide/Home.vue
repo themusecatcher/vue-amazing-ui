@@ -145,9 +145,7 @@ function onOpen() {
       <Tag color="magenta">{{ toolFunctions.length }}</Tag>
       个常用工具函数，并且持续探索更新优化中...
     </p>
-    <p class="u-tip mb10">
-      所有组件均为单文件组件 <Tag color="magenta">SFC</Tag>，无需安装，直接使用！
-    </p>
+    <p class="u-tip mb10"> 所有组件均为单文件组件 <Tag color="magenta">SFC</Tag>，无需安装，直接使用！ </p>
     <p class="u-tip mb10">
       所有组件样式均使用
       <Tag color="magenta">box-sizing: border-box;</Tag>
