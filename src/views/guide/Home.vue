@@ -110,8 +110,8 @@ import {
   }
 ]
 const activeKey = ref(0)
-const sum = computed(() => {
-  return (routes[0].children as Array<any>).length - 2
+const componentsTotal = computed(() => {
+  return (routes[0].children as Array<any>).length - 1
 })
 function onOpen() {
   // 打开一个新的窗口，并导航到指定的URL
@@ -137,20 +137,23 @@ function onOpen() {
     <br />
     <Button type="primary" @click="onOpen">Open New Window</Button>
     <p class="u-tip mt30 mb10">
-      所有组件样式均使用
-      <Tag color="magenta">box-sizing: border-box;</Tag>
-      模式！
-    </p>
-    <p class="u-tip mb10">
       目前共有
-      <Tag color="magenta">{{ sum }}</Tag>
+      <Tag color="magenta">{{ componentsTotal }}</Tag>
       个常用基础
       <Tag color="magenta">UI</Tag>
       组件，以及
       <Tag color="magenta">{{ toolFunctions.length }}</Tag>
-      个常用工具函数，并且持续探索更新优化中...！
+      个常用工具函数，并且持续探索更新优化中...
     </p>
-    <p class="u-tip">开箱即用！</p>
+    <p class="u-tip mb10">
+      所有组件均为单文件组件 <Tag color="magenta">SFC</Tag>，无需安装，直接使用！
+    </p>
+    <p class="u-tip mb10">
+      所有组件样式均使用
+      <Tag color="magenta">box-sizing: border-box;</Tag>
+      模式！
+    </p>
+    <p class="u-tip">开箱即用，不墨迹！</p>
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse lang="bash" :fontSize="16" :collapseData="installData" v-model:activeKey="activeKey" copyable />
     <ul class="m-list">
