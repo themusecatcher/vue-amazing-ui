@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.7.2 <Tag color="volcano" size="small">2024-10-08</Tag>
+
+- 优化并更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件，将属性 `show` 重命名为 `open`
+- 组件库及文档代码优化
+
 ## 1.7.1 <Tag color="volcano" size="small">2024-10-01</Tag>
 
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件

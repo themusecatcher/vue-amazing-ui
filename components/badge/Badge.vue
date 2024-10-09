@@ -217,7 +217,7 @@ function handleOffset(value: string): string {
       box-sizing: border-box;
       position: absolute;
       top: 0;
-      inset-inline-start: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       border-width: 1px;
@@ -242,7 +242,7 @@ function handleOffset(value: string): string {
     }
   }
   .status-text {
-    margin-inline-start: 8px;
+    margin-left: 8px;
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
   }
@@ -250,7 +250,7 @@ function handleOffset(value: string): string {
     position: absolute;
     top: 0;
     z-index: var(--z-index);
-    inset-inline-end: 0;
+    right: 0;
     transform: translate(50%, -50%);
     transform-origin: 100% 0%;
   }

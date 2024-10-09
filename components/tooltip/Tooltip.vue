@@ -182,7 +182,7 @@ function onBlur() {
       &::before {
         position: absolute;
         bottom: 0;
-        inset-inline-start: 0;
+        left: 0;
         width: 16px;
         height: 8px;
         background-color: var(--tooltip-background-color);

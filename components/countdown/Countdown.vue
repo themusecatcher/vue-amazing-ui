@@ -217,7 +217,7 @@ function resetCountdown() {
     font-family: 'Helvetica Neue'; // 保证数字等宽显示
     .time-prefix {
       display: inline-block;
-      margin-inline-end: 4px;
+      margin-right: 4px;
     }
     .time-value {
       display: inline-block;
@@ -225,7 +225,7 @@ function resetCountdown() {
     }
     .time-suffix {
       display: inline-block;
-      margin-inline-start: 4px;
+      margin-left: 4px;
     }
   }
 }

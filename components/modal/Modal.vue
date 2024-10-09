@@ -339,9 +339,9 @@ defineExpose({
 .m-modal-wrap {
   position: fixed;
   top: 0;
-  inset-inline-end: 0;
+  right: 0;
   bottom: 0;
-  inset-inline-start: 0;
+  left: 0;
   overflow: auto;
   outline: 0;
   inset: 0;

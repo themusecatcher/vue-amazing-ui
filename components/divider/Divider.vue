@@ -62,7 +62,7 @@ const showText = computed(() => {
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1.5714285714285714;
-  border-block-start: var(--border-width) var(--border-style) var(--border-color);
+  border-top: var(--border-width) var(--border-style) var(--border-color);
   .divider-text {
     display: inline-block;
     padding: 0 1em;
@@ -83,7 +83,7 @@ const showText = computed(() => {
   margin: 0 8px;
   vertical-align: middle;
   border-top: 0;
-  border-inline-start: var(--border-width) var(--border-style) var(--border-color);
+  border-left: var(--border-width) var(--border-style) var(--border-color);
 }
 .divider-with-text {
   display: flex;
@@ -94,7 +94,7 @@ const showText = computed(() => {
   font-size: 16px;
   white-space: nowrap;
   text-align: center;
-  border-block-start: 0 var(--border-color);
+  border-top: 0 var(--border-color);
   &::before,
   &::after {
     position: relative;
@@ -131,7 +131,7 @@ const showText = computed(() => {
   }
   .divider-text {
     margin-left: var(--margin);
-    padding-inline-start: 0;
+    padding-left: 0;
   }
 }
 .divider-orientation-margin-right {
@@ -143,7 +143,7 @@ const showText = computed(() => {
   }
   .divider-text {
     margin-right: var(--margin);
-    padding-inline-end: 0;
+    padding-right: 0;
   }
 }
 </style>

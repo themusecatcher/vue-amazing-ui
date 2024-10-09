@@ -291,7 +291,7 @@ function setStyle(element: any, styles: any) {
       line-height: 1.5714285714285714;
     }
     .descriptions-extra {
-      margin-inline-start: auto;
+      margin-left: auto;
       color: rgba(0, 0, 0, 0.88);
       font-size: 14px;
     }
@@ -349,10 +349,10 @@ function setStyle(element: any, styles: any) {
           text-align: start;
           background-color: rgba(0, 0, 0, 0.02);
           padding: 16px 24px;
-          border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
+          border-right: 1px solid rgba(5, 5, 5, 0.06);
           &:last-child {
             // 消除 vertical 列表最后一个 th 的边框
-            border-inline-end: none;
+            border-right: none;
           }
         }
         :deep(.descriptions-content-td) {
@@ -360,14 +360,14 @@ function setStyle(element: any, styles: any) {
           display: table-cell;
           flex: 1;
           padding: 16px 24px;
-          border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
+          border-right: 1px solid rgba(5, 5, 5, 0.06);
           color: rgba(0, 0, 0, 0.88);
           font-size: 14px;
           line-height: 1.5714285714285714;
           word-break: break-word;
           overflow-wrap: break-word;
           &:last-child {
-            border-inline-end: none;
+            border-right: none;
           }
         }
       }

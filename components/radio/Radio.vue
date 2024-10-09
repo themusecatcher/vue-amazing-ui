@@ -108,16 +108,16 @@ function onClick(value: any) {
       &::after {
         box-sizing: border-box;
         position: absolute;
-        inset-block-start: 50%;
-        inset-inline-start: 50%;
+        top: 50%;
+        left: 50%;
         display: block;
         width: 16px;
         height: 16px;
-        margin-block-start: -8px;
-        margin-inline-start: -8px;
+        margin-top: -8px;
+        margin-left: -8px;
         background-color: #fff;
-        border-block-start: 0;
-        border-inline-start: 0;
+        border-top: 0;
+        border-left: 0;
         border-radius: 16px;
         transform: scale(0);
         opacity: 0;
@@ -162,9 +162,9 @@ function onClick(value: any) {
     line-height: 30px;
     background: #ffffff;
     border: 1px solid #d9d9d9;
-    border-block-start-width: 1px;
-    border-inline-start-width: 0;
-    border-inline-end-width: 1px;
+    border-top-width: 1px;
+    border-left-width: 0;
+    border-right-width: 1px;
     cursor: pointer;
     transition:
       all 0.2s,
@@ -173,7 +173,7 @@ function onClick(value: any) {
       box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
     }
     &:first-child {
-      border-inline-start: 1px solid #d9d9d9;
+      border-left: 1px solid #d9d9d9;
       border-start-start-radius: 6px;
       border-end-start-radius: 6px;
     }

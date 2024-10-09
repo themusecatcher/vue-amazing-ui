@@ -114,7 +114,7 @@ const responsiveValue = computed(() => {
   max-width: 4.16666666666666%;
 }
 .offset-1 {
-  margin-inline-start: 4.16666666666666%;
+  margin-left: 4.16666666666666%;
 }
 .col-2 {
   display: block;
@@ -122,7 +122,7 @@ const responsiveValue = computed(() => {
   max-width: 8.33333333333333%;
 }
 .offset-2 {
-  margin-inline-start: 8.33333333333333%;
+  margin-left: 8.33333333333333%;
 }
 .col-3 {
   display: block;
@@ -130,7 +130,7 @@ const responsiveValue = computed(() => {
   max-width: 12.5%;
 }
 .offset-3 {
-  margin-inline-start: 12.5%;
+  margin-left: 12.5%;
 }
 .col-4 {
   display: block;
@@ -138,7 +138,7 @@ const responsiveValue = computed(() => {
   max-width: 16.66666666666666%;
 }
 .offset-4 {
-  margin-inline-start: 16.66666666666666%;
+  margin-left: 16.66666666666666%;
 }
 .col-5 {
   display: block;
@@ -146,7 +146,7 @@ const responsiveValue = computed(() => {
   max-width: 20.83333333333333%;
 }
 .offset-5 {
-  margin-inline-start: 20.83333333333333%;
+  margin-left: 20.83333333333333%;
 }
 .col-6 {
   display: block;
@@ -154,7 +154,7 @@ const responsiveValue = computed(() => {
   max-width: 25%;
 }
 .offset-6 {
-  margin-inline-start: 25%;
+  margin-left: 25%;
 }
 .col-7 {
   display: block;
@@ -162,7 +162,7 @@ const responsiveValue = computed(() => {
   max-width: 29.16666666666666%;
 }
 .offset-7 {
-  margin-inline-start: 29.16666666666666%;
+  margin-left: 29.16666666666666%;
 }
 .col-8 {
   display: block;
@@ -170,7 +170,7 @@ const responsiveValue = computed(() => {
   max-width: 33.33333333333333%;
 }
 .offset-8 {
-  margin-inline-start: 33.33333333333333%;
+  margin-left: 33.33333333333333%;
 }
 .col-9 {
   display: block;
@@ -178,7 +178,7 @@ const responsiveValue = computed(() => {
   max-width: 37.5%;
 }
 .offset-9 {
-  margin-inline-start: 37.5%;
+  margin-left: 37.5%;
 }
 .col-10 {
   display: block;
@@ -186,7 +186,7 @@ const responsiveValue = computed(() => {
   max-width: 41.66666666666666%;
 }
 .offset-10 {
-  margin-inline-start: 41.66666666666666%;
+  margin-left: 41.66666666666666%;
 }
 .col-11 {
   display: block;
@@ -194,7 +194,7 @@ const responsiveValue = computed(() => {
   max-width: 45.83333333333333%;
 }
 .offset-11 {
-  margin-inline-start: 45.83333333333333%;
+  margin-left: 45.83333333333333%;
 }
 .col-12 {
   display: block;
@@ -202,7 +202,7 @@ const responsiveValue = computed(() => {
   max-width: 50%;
 }
 .offset-12 {
-  margin-inline-start: 50%;
+  margin-left: 50%;
 }
 .col-13 {
   display: block;
@@ -210,7 +210,7 @@ const responsiveValue = computed(() => {
   max-width: 54.16666666666666%;
 }
 .offset-13 {
-  margin-inline-start: 54.16666666666666%;
+  margin-left: 54.16666666666666%;
 }
 .col-14 {
   display: block;
@@ -218,7 +218,7 @@ const responsiveValue = computed(() => {
   max-width: 58.33333333333333%;
 }
 .offset-14 {
-  margin-inline-start: 58.33333333333333%;
+  margin-left: 58.33333333333333%;
 }
 .col-15 {
   display: block;
@@ -226,7 +226,7 @@ const responsiveValue = computed(() => {
   max-width: 62.5%;
 }
 .offset-15 {
-  margin-inline-start: 62.5%;
+  margin-left: 62.5%;
 }
 .col-16 {
   display: block;
@@ -234,7 +234,7 @@ const responsiveValue = computed(() => {
   max-width: 66.66666666666666%;
 }
 .offset-16 {
-  margin-inline-start: 66.6666666666666%;
+  margin-left: 66.6666666666666%;
 }
 .col-17 {
   display: block;
@@ -242,7 +242,7 @@ const responsiveValue = computed(() => {
   max-width: 70.83333333333333%;
 }
 .offset-17 {
-  margin-inline-start: 70.83333333333333%;
+  margin-left: 70.83333333333333%;
 }
 .col-18 {
   display: block;
@@ -250,7 +250,7 @@ const responsiveValue = computed(() => {
   max-width: 75%;
 }
 .offset-18 {
-  margin-inline-start: 75%;
+  margin-left: 75%;
 }
 .col-19 {
   display: block;
@@ -258,7 +258,7 @@ const responsiveValue = computed(() => {
   max-width: 79.16666666666666%;
 }
 .offset-19 {
-  margin-inline-start: 79.16666666666666%;
+  margin-left: 79.16666666666666%;
 }
 .col-20 {
   display: block;
@@ -266,7 +266,7 @@ const responsiveValue = computed(() => {
   max-width: 83.33333333333333%;
 }
 .offset-20 {
-  margin-inline-start: 83.33333333333333%;
+  margin-left: 83.33333333333333%;
 }
 .col-21 {
   display: block;
@@ -274,7 +274,7 @@ const responsiveValue = computed(() => {
   max-width: 87.5%;
 }
 .offset-21 {
-  margin-inline-start: 87.5%;
+  margin-left: 87.5%;
 }
 .col-22 {
   display: block;
@@ -282,7 +282,7 @@ const responsiveValue = computed(() => {
   max-width: 91.66666666666666%;
 }
 .offset-22 {
-  margin-inline-start: 91.66666666666666%;
+  margin-left: 91.66666666666666%;
 }
 .col-23 {
   display: block;
@@ -290,7 +290,7 @@ const responsiveValue = computed(() => {
   max-width: 95.83333333333333%;
 }
 .offset-23 {
-  margin-inline-start: 95.83333333333333%;
+  margin-left: 95.83333333333333%;
 }
 .col-24 {
   display: block;
@@ -298,6 +298,6 @@ const responsiveValue = computed(() => {
   max-width: 100%;
 }
 .offset-24 {
-  margin-inline-start: 100%;
+  margin-left: 100%;
 }
 </style>

@@ -18,7 +18,7 @@ interface Props {
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 centered: false 时生效，单位 px
   switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
   loading?: boolean // 确定按钮 loading
-  show?: boolean // 对话框是否可见
+  open?: boolean // 对话框是否可见
 }
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
   top: 100,
   switchFullscreen: false,
   loading: false,
-  show: false
+  open: false
 })
 const fullScreen = ref(false)
 const dialogHeight = computed(() => {
@@ -54,7 +54,7 @@ const dialogStyle = computed(() => {
 })
 const dialogRef = ref() // DOM 引用
 watch(
-  () => props.show,
+  () => props.open,
   (to) => {
     if (to) {
       nextTick(() => {
@@ -65,20 +65,20 @@ watch(
     }
   }
 )
-const emits = defineEmits(['update:show', 'cancel', 'ok'])
+const emits = defineEmits(['update:open', 'cancel', 'ok'])
 function onBlur() {
-  emits('update:show', false)
+  emits('update:open', false)
   emits('cancel')
 }
 function onFullScreen() {
   fullScreen.value = !fullScreen.value
 }
 function onClose() {
-  emits('update:show', false)
+  emits('update:open', false)
   emits('cancel')
 }
 function onCancel() {
-  emits('update:show', false)
+  emits('update:open', false)
   emits('cancel')
 }
 function onOk() {
@@ -88,11 +88,11 @@ function onOk() {
 <template>
   <div>
     <Transition name="fade">
-      <div v-show="show" class="m-dialog-mask"></div>
+      <div v-show="open" class="m-dialog-mask"></div>
     </Transition>
     <Transition name="zoom">
       <div
-        v-show="show"
+        v-show="open"
         ref="dialogRef"
         tabindex="-1"
         class="m-dialog-wrap"
@@ -221,9 +221,9 @@ function onOk() {
 .m-dialog-wrap {
   position: fixed;
   top: 0;
-  inset-inline-end: 0;
+  right: 0;
   bottom: 0;
-  inset-inline-start: 0;
+  left: 0;
   overflow: auto;
   outline: 0;
   inset: 0;
@@ -259,12 +259,12 @@ function onOk() {
       }
       .m-fullscreen-action {
         .m-close-action();
-        inset-inline-end: 48px;
+        right: 48px;
       }
       .m-close-action {
         position: absolute;
         top: 17px;
-        inset-inline-end: 17px;
+        right: 17px;
         z-index: 1010;
         font-weight: 600;
         line-height: 1;
@@ -304,7 +304,7 @@ function onOk() {
         background: transparent;
         margin-top: 12px;
         .mr8 {
-          margin-inline-end: 8px;
+          margin-right: 8px;
         }
       }
     }

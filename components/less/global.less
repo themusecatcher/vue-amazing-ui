@@ -1,4 +1,6 @@
 // 组件库全局样式定义
+// @themeColor: #1677ff; // 全局主题色
+// @themeHoverColor: #4096ff; // 主题色悬浮态
 *,
 *::before,
 *::after {
@@ -34,6 +36,6 @@ a {
   outline: none;
   cursor: pointer;
   &:hover {
-    color: #4096ff;
+    color: @themeHoverColor;
   }
 }

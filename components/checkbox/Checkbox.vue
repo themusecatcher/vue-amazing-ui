@@ -153,13 +153,13 @@ function onCheckAll() {
           box-sizing: border-box;
           position: absolute;
           top: 50%;
-          inset-inline-start: 21.5%;
+          left: 21.5%;
           display: table;
           width: 5.7142857142857135px;
           height: 9.142857142857142px;
           border: 2px solid #fff;
           border-top: 0;
-          border-inline-start: 0;
+          border-left: 0;
           transform: rotate(45deg) scale(0) translate(-50%, -50%);
           opacity: 0;
           content: '';

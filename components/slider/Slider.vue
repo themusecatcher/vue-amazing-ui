@@ -483,8 +483,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     &::before {
       content: '';
       position: absolute;
-      inset-inline-start: -2px;
-      inset-block-start: -2px;
+      left: -2px;
+      top: -2px;
       width: 14px;
       height: 14px;
       background-color: transparent;
@@ -498,8 +498,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     &:focus {
       .hover-focus-handle();
       &::before {
-        inset-inline-start: -5px;
-        inset-block-start: -5px;
+        left: -5px;
+        top: -5px;
         width: 20px;
         height: 20px;
       }
@@ -540,7 +540,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         &::before {
           position: absolute;
           bottom: 0;
-          inset-inline-start: 0;
+          left: 0;
           width: 16px;
           height: 8px;
           background-color: rgba(0, 0, 0, 0.85);
