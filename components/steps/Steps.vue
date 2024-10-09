@@ -145,7 +145,7 @@ function onChange(index: number) {
         height: 9px;
         position: absolute;
         top: 12px;
-        inset-inline-start: 0;
+        left: 0;
         width: 100%;
         transition: all 0.3s;
         &::after {
@@ -388,7 +388,7 @@ function onChange(index: number) {
         width: 8px;
         height: 8px;
         margin-left: 66px;
-        padding-inline-end: 0;
+        padding-right: 0;
         line-height: 8px;
         background: transparent;
         border: 0;
@@ -440,7 +440,7 @@ function onChange(index: number) {
     .steps-info-wrap {
       .steps-tail {
         top: 0;
-        inset-inline-start: 15px;
+        left: 15px;
         width: 1px;
         height: 100%;
         padding: 38px 0 6px;
@@ -471,7 +471,7 @@ function onChange(index: number) {
   .m-steps-item {
     .steps-info-wrap {
       .steps-tail {
-        inset-inline-start: 11px;
+        left: 11px;
         padding: 30px 0 6px;
       }
       .m-steps-content {
@@ -487,7 +487,7 @@ function onChange(index: number) {
     .steps-info-wrap {
       .steps-tail {
         top: 12px;
-        inset-inline-start: 0;
+        left: 0;
         margin: 0;
         padding: 16px 0 8px;
         &::after {
@@ -512,7 +512,7 @@ function onChange(index: number) {
         position: relative;
         margin-top: 11px;
         top: 0;
-        inset-inline-start: -1px;
+        left: -1px;
       }
     }
   }

@@ -7,6 +7,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
+    AFloatButton: typeof import('ant-design-vue/es')['FloatButton']
+    AFloatButtonGroup: typeof import('ant-design-vue/es')['FloatButtonGroup']
+    AMenu: typeof import('ant-design-vue/es')['Menu']
+    AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
+    NFloatButton: typeof import('naive-ui')['NFloatButton']
+    NIcon: typeof import('naive-ui')['NIcon']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -210,8 +210,8 @@ function onClear() {
   }
   .clear-svg {
     position: absolute;
-    inset-block-start: 9px;
-    inset-inline-end: 8px;
+    top: 9px;
+    right: 8px;
     z-index: 99;
     display: inline-block;
     font-size: 12px;

@@ -358,7 +358,7 @@ defineExpose({
     .notification-close {
       position: absolute;
       top: 20px;
-      inset-inline-end: 24px;
+      right: 24px;
       display: flex;
       align-items: center;
       justify-content: center;

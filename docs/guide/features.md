@@ -23,9 +23,9 @@
   ::: details Show Global Styles
 
   ```less
-  // 全局样式定义
-  @themeColor: #1677ff; // 全局主题色
   // 组件库全局样式定义
+  @themeColor: #1677ff; // 全局主题色
+  @themeHoverColor: #4096ff; // 主题色悬浮态
   *,
   *::before,
   *::after {

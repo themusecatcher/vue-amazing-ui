@@ -711,9 +711,9 @@ function onSwitchRight() {
         }
       }
       .switch-left {
-        inset-inline-start: 12px;
+        left: 12px;
         position: fixed;
-        inset-block-start: 50%;
+        top: 50%;
         z-index: 1081;
         display: flex;
         align-items: center;
@@ -739,9 +739,9 @@ function onSwitchRight() {
         }
       }
       .switch-right {
-        inset-inline-end: 12px;
+        right: 12px;
         position: fixed;
-        inset-block-start: 50%;
+        top: 50%;
         z-index: 1081;
         display: flex;
         align-items: center;

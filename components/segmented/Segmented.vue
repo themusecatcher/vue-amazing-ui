@@ -123,7 +123,7 @@ function getOptionLabel(option: string | number | SegmentedOption) {
         width: 100%;
         height: 100%;
         top: 0;
-        inset-inline-start: 0;
+        left: 0;
         border-radius: inherit;
         transition: background-color 0.2s;
         pointer-events: none;
@@ -131,8 +131,8 @@ function getOptionLabel(option: string | number | SegmentedOption) {
       }
       .segmented-item-input {
         position: absolute;
-        inset-block-start: 0;
-        inset-inline-start: 0;
+        top: 0;
+        left: 0;
         width: 0;
         height: 0;
         opacity: 0;

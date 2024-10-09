@@ -254,7 +254,7 @@ function onDown() {
     display: flex;
     .input-prefix {
       pointer-events: none;
-      margin-inline-end: 4px;
+      margin-right: 4px;
       display: inline-flex;
       align-items: center;
     }

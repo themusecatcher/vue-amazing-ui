@@ -366,7 +366,7 @@ function onKeyboard(e: KeyboardEvent) {
   &:focus {
     border-color: #4096ff;
     box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
-    border-inline-end-width: 1px;
+    border-right-width: 1px;
     outline: 0;
   }
 }
