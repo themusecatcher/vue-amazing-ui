@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@vue+shared@3.5.8/node_modules/@vue/shared/dist/shared.esm-bundler.js
+// node_modules/.pnpm/@vue+shared@3.5.11/node_modules/@vue/shared/dist/shared.esm-bundler.js
 function makeMap(str) {
   const map2 = /* @__PURE__ */ Object.create(null);
   for (const key of str.split(",")) map2[key] = 1;
@@ -303,7 +303,7 @@ var stringifySymbol = (v, i = "") => {
   );
 };
 
-// node_modules/.pnpm/@vue+reactivity@3.5.8/node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js
+// node_modules/.pnpm/@vue+reactivity@3.5.11/node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js
 function warn(msg, ...args) {
   console.warn(`[Vue warn] ${msg}`, ...args);
 }
@@ -523,8 +523,14 @@ var ReactiveEffect = class {
 };
 var batchDepth = 0;
 var batchedSub;
-function batch(sub) {
+var batchedComputed;
+function batch(sub, isComputed = false) {
   sub.flags |= 8;
+  if (isComputed) {
+    sub.next = batchedComputed;
+    batchedComputed = sub;
+    return;
+  }
   sub.next = batchedSub;
   batchedSub = sub;
 }
@@ -534,6 +540,16 @@ function startBatch() {
 function endBatch() {
   if (--batchDepth > 0) {
     return;
+  }
+  if (batchedComputed) {
+    let e = batchedComputed;
+    batchedComputed = void 0;
+    while (e) {
+      const next = e.next;
+      e.next = void 0;
+      e.flags &= ~8;
+      e = next;
+    }
   }
   let error;
   while (batchedSub) {
@@ -563,7 +579,7 @@ function prepareDeps(sub) {
     link.dep.activeLink = link;
   }
 }
-function cleanupDeps(sub, fromComputed = false) {
+function cleanupDeps(sub) {
   let head;
   let tail = sub.depsTail;
   let link = tail;
@@ -571,7 +587,7 @@ function cleanupDeps(sub, fromComputed = false) {
     const prev = link.prevDep;
     if (link.version === -1) {
       if (link === tail) tail = prev;
-      removeSub(link, fromComputed);
+      removeSub(link);
       removeDep(link);
     } else {
       head = link;
@@ -626,11 +642,11 @@ function refreshComputed(computed3) {
   } finally {
     activeSub = prevSub;
     shouldTrack = prevShouldTrack;
-    cleanupDeps(computed3, true);
+    cleanupDeps(computed3);
     computed3.flags &= ~2;
   }
 }
-function removeSub(link, fromComputed = false) {
+function removeSub(link, soft = false) {
   const { dep, prevSub, nextSub } = link;
   if (prevSub) {
     prevSub.nextSub = nextSub;
@@ -646,16 +662,14 @@ function removeSub(link, fromComputed = false) {
   if (dep.subsHead === link) {
     dep.subsHead = nextSub;
   }
-  if (!dep.subs) {
-    if (dep.computed) {
-      dep.computed.flags &= ~4;
-      for (let l = dep.computed.deps; l; l = l.nextDep) {
-        removeSub(l, true);
-      }
-    } else if (dep.map && !fromComputed) {
-      dep.map.delete(dep.key);
-      if (!dep.map.size) targetMap.delete(dep.target);
+  if (!dep.subs && dep.computed) {
+    dep.computed.flags &= ~4;
+    for (let l = dep.computed.deps; l; l = l.nextDep) {
+      removeSub(l, true);
     }
+  }
+  if (!soft && !--dep.sc && dep.map) {
+    dep.map.delete(dep.key);
   }
 }
 function removeDep(link) {
@@ -728,9 +742,9 @@ var Dep = class {
     this.version = 0;
     this.activeLink = void 0;
     this.subs = void 0;
-    this.target = void 0;
     this.map = void 0;
     this.key = void 0;
+    this.sc = 0;
     if (true) {
       this.subsHead = void 0;
     }
@@ -749,9 +763,7 @@ var Dep = class {
         activeSub.depsTail.nextDep = link;
         activeSub.depsTail = link;
       }
-      if (activeSub.flags & 4) {
-        addSub(link);
-      }
+      addSub(link);
     } else if (link.version === -1) {
       link.version = this.version;
       if (link.nextDep) {
@@ -815,22 +827,25 @@ var Dep = class {
   }
 };
 function addSub(link) {
-  const computed3 = link.dep.computed;
-  if (computed3 && !link.dep.subs) {
-    computed3.flags |= 4 | 16;
-    for (let l = computed3.deps; l; l = l.nextDep) {
-      addSub(l);
+  link.dep.sc++;
+  if (link.sub.flags & 4) {
+    const computed3 = link.dep.computed;
+    if (computed3 && !link.dep.subs) {
+      computed3.flags |= 4 | 16;
+      for (let l = computed3.deps; l; l = l.nextDep) {
+        addSub(l);
+      }
     }
+    const currentTail = link.dep.subs;
+    if (currentTail !== link) {
+      link.prevSub = currentTail;
+      if (currentTail) currentTail.nextSub = link;
+    }
+    if (link.dep.subsHead === void 0) {
+      link.dep.subsHead = link;
+    }
+    link.dep.subs = link;
   }
-  const currentTail = link.dep.subs;
-  if (currentTail !== link) {
-    link.prevSub = currentTail;
-    if (currentTail) currentTail.nextSub = link;
-  }
-  if (link.dep.subsHead === void 0) {
-    link.dep.subsHead = link;
-  }
-  link.dep.subs = link;
 }
 var targetMap = /* @__PURE__ */ new WeakMap();
 var ITERATE_KEY = Symbol(
@@ -851,7 +866,6 @@ function track(target, type, key) {
     let dep = depsMap.get(key);
     if (!dep) {
       depsMap.set(key, dep = new Dep());
-      dep.target = target;
       dep.map = depsMap;
       dep.key = key;
     }
@@ -938,8 +952,8 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
   endBatch();
 }
 function getDepFromReactive(object, key) {
-  var _a;
-  return (_a = targetMap.get(object)) == null ? void 0 : _a.get(key);
+  const depMap = targetMap.get(object);
+  return depMap && depMap.get(key);
 }
 function reactiveReadArray(array) {
   const raw = toRaw(array);
@@ -1852,6 +1866,7 @@ var ComputedRefImpl = class {
     this.depsTail = void 0;
     this.flags = 16;
     this.globalVersion = globalVersion - 1;
+    this.next = void 0;
     this.effect = this;
     this["__v_isReadonly"] = !setter;
     this.isSSR = isSSR;
@@ -1863,7 +1878,7 @@ var ComputedRefImpl = class {
     this.flags |= 16;
     if (!(this.flags & 8) && // avoid infinite self recursion
     activeSub !== this) {
-      batch(this);
+      batch(this, true);
       return true;
     } else if (true) ;
   }
@@ -2120,7 +2135,7 @@ function traverse(value, depth = Infinity, seen) {
   return value;
 }
 
-// node_modules/.pnpm/@vue+runtime-core@3.5.8/node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js
+// node_modules/.pnpm/@vue+runtime-core@3.5.11/node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js
 var stack = [];
 function pushWarningContext(vnode) {
   stack.push(vnode);
@@ -2387,10 +2402,8 @@ function logError(err, type, contextVNode, throwInDev = true, throwInProd = fals
     console.error(err);
   }
 }
-var isFlushing = false;
-var isFlushPending = false;
 var queue = [];
-var flushIndex = 0;
+var flushIndex = -1;
 var pendingPostFlushCbs = [];
 var activePostFlushCbs = null;
 var postFlushIndex = 0;
@@ -2402,7 +2415,7 @@ function nextTick(fn) {
   return fn ? p2.then(this ? fn.bind(this) : fn) : p2;
 }
 function findInsertionIndex(id) {
-  let start = isFlushing ? flushIndex + 1 : 0;
+  let start = flushIndex + 1;
   let end = queue.length;
   while (start < end) {
     const middle = start + end >>> 1;
@@ -2431,8 +2444,7 @@ function queueJob(job) {
   }
 }
 function queueFlush() {
-  if (!isFlushing && !isFlushPending) {
-    isFlushPending = true;
+  if (!currentFlushPromise) {
     currentFlushPromise = resolvedPromise.then(flushJobs);
   }
 }
@@ -2449,7 +2461,7 @@ function queuePostFlushCb(cb) {
   }
   queueFlush();
 }
-function flushPreFlushCbs(instance, seen, i = isFlushing ? flushIndex + 1 : 0) {
+function flushPreFlushCbs(instance, seen, i = flushIndex + 1) {
   if (true) {
     seen = seen || /* @__PURE__ */ new Map();
   }
@@ -2505,8 +2517,6 @@ function flushPostFlushCbs(seen) {
 }
 var getId = (job) => job.id == null ? job.flags & 2 ? -1 : Infinity : job.id;
 function flushJobs(seen) {
-  isFlushPending = false;
-  isFlushing = true;
   if (true) {
     seen = seen || /* @__PURE__ */ new Map();
   }
@@ -2538,10 +2548,9 @@ function flushJobs(seen) {
         job.flags &= ~1;
       }
     }
-    flushIndex = 0;
+    flushIndex = -1;
     queue.length = 0;
     flushPostFlushCbs(seen);
-    isFlushing = false;
     currentFlushPromise = null;
     if (queue.length || pendingPostFlushCbs.length) {
       flushJobs(seen);
@@ -3571,6 +3580,7 @@ function useId() {
       `useId() is called when there is no active component instance to be associated with.`
     );
   }
+  return "";
 }
 function markAsyncBoundary(instance) {
   instance.ids = [instance.ids[0] + instance.ids[2]++ + "-", 0, 0];
@@ -8046,7 +8056,7 @@ function baseCreateRenderer(options, createHydrationFns) {
     const teleportEnd = el && el[TeleportEndKey];
     return teleportEnd ? hostNextSibling(teleportEnd) : el;
   };
-  let isFlushing2 = false;
+  let isFlushing = false;
   const render2 = (vnode, container, namespace) => {
     if (vnode == null) {
       if (container._vnode) {
@@ -8064,11 +8074,11 @@ function baseCreateRenderer(options, createHydrationFns) {
       );
     }
     container._vnode = vnode;
-    if (!isFlushing2) {
-      isFlushing2 = true;
+    if (!isFlushing) {
+      isFlushing = true;
       flushPreFlushCbs();
       flushPostFlushCbs();
-      isFlushing2 = false;
+      isFlushing = false;
     }
   };
   const internals = {
@@ -9697,7 +9707,7 @@ function normalizeVNode(child) {
       // #3666, avoid reference pollution when reusing vnode
       child.slice()
     );
-  } else if (typeof child === "object") {
+  } else if (isVNode(child)) {
     return cloneIfMounted(child);
   } else {
     return createVNode(Text, null, String(child));
@@ -10450,7 +10460,7 @@ function isMemoSame(cached, memo) {
   }
   return true;
 }
-var version = "3.5.8";
+var version = "3.5.11";
 var warn2 = true ? warn$1 : NOOP;
 var ErrorTypeStrings = ErrorTypeStrings$1;
 var devtools = true ? devtools$1 : void 0;
@@ -10472,7 +10482,7 @@ var resolveFilter = null;
 var compatUtils = null;
 var DeprecationTypes = null;
 
-// node_modules/.pnpm/@vue+runtime-dom@3.5.8/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js
+// node_modules/.pnpm/@vue+runtime-dom@3.5.11/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js
 var policy = void 0;
 var tt = typeof window !== "undefined" && window.trustedTypes;
 if (tt) {
@@ -11229,6 +11239,11 @@ var patchProp = (el, key, prevValue, nextValue, namespace, parentComponent) => {
     if (!el.tagName.includes("-") && (key === "value" || key === "checked" || key === "selected")) {
       patchAttr(el, key, nextValue, isSVG, parentComponent, key !== "value");
     }
+  } else if (
+    // #11081 force set props for possible async custom element
+    el._isVueCE && (/[A-Z]/.test(key) || !isString(nextValue))
+  ) {
+    patchDOMProp(el, camelize(key), nextValue);
   } else {
     if (key === "true-value") {
       el._trueValue = nextValue;
@@ -11269,13 +11284,7 @@ function shouldSetAsProp(el, key, value, isSVG) {
   if (isNativeOn(key) && isString(value)) {
     return false;
   }
-  if (key in el) {
-    return true;
-  }
-  if (el._isVueCE && (/[A-Z]/.test(key) || !isString(value))) {
-    return true;
-  }
-  return false;
+  return key in el;
 }
 var REMOVAL = {};
 function defineCustomElement(options, extraOptions, _createApp) {
@@ -11936,7 +11945,7 @@ var vModelCheckbox = {
     setChecked(el, binding, vnode);
   }
 };
-function setChecked(el, { value, oldValue }, vnode) {
+function setChecked(el, { value }, vnode) {
   el._modelValue = value;
   let checked;
   if (isArray(value)) {
@@ -11986,19 +11995,19 @@ var vModelSelect = {
   },
   // set value in mounted & updated because <select> relies on its children
   // <option>s.
-  mounted(el, { value, modifiers: { number } }) {
+  mounted(el, { value }) {
     setSelected(el, value);
   },
   beforeUpdate(el, _binding, vnode) {
     el[assignKey] = getModelAssigner(vnode);
   },
-  updated(el, { value, modifiers: { number } }) {
+  updated(el, { value }) {
     if (!el._assigning) {
       setSelected(el, value);
     }
   }
 };
-function setSelected(el, value, number) {
+function setSelected(el, value) {
   const isMultiple = el.multiple;
   const isArrayValue = isArray(value);
   if (isMultiple && !isArrayValue && !isSet(value)) {
@@ -12286,7 +12295,7 @@ var initDirectivesForSSR = () => {
   }
 };
 
-// node_modules/.pnpm/vue@3.5.8_typescript@5.6.2/node_modules/vue/dist/vue.runtime.esm-bundler.js
+// node_modules/.pnpm/vue@3.5.11_typescript@5.6.3/node_modules/vue/dist/vue.runtime.esm-bundler.js
 function initDev() {
   {
     initCustomFormatter();
@@ -12478,7 +12487,7 @@ export {
 
 @vue/shared/dist/shared.esm-bundler.js:
   (**
-  * @vue/shared v3.5.8
+  * @vue/shared v3.5.11
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
@@ -12486,14 +12495,14 @@ export {
 
 @vue/reactivity/dist/reactivity.esm-bundler.js:
   (**
-  * @vue/reactivity v3.5.8
+  * @vue/reactivity v3.5.11
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
 
 @vue/runtime-core/dist/runtime-core.esm-bundler.js:
   (**
-  * @vue/runtime-core v3.5.8
+  * @vue/runtime-core v3.5.11
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
@@ -12501,7 +12510,7 @@ export {
 
 @vue/runtime-dom/dist/runtime-dom.esm-bundler.js:
   (**
-  * @vue/runtime-dom v3.5.8
+  * @vue/runtime-dom v3.5.11
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
@@ -12509,9 +12518,9 @@ export {
 
 vue/dist/vue.runtime.esm-bundler.js:
   (**
-  * vue v3.5.8
+  * vue v3.5.11
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **)
 */
-//# sourceMappingURL=chunk-CEJHBX7F.js.map
+//# sourceMappingURL=chunk-PKJ4PO5W.js.map
