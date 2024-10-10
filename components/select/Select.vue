@@ -25,7 +25,7 @@ interface Props {
   height?: number // 高度，单位 px
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
   scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
-  modelValue?: number | string | null // （v-model）当前选中的option条目
+  modelValue?: number | string // (v-model) 当前选中的 option 条目值
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   height: 32,
   maxDisplay: 6,
   scrollbarProps: () => ({}),
-  modelValue: null
+  modelValue: undefined
 })
 const filterOptions = ref<Option[]>() // 过滤后的选项数组
 const selectedName = ref() // 当前选中选项的 label
@@ -55,6 +55,7 @@ const showClear = ref(false) // 清除图标显隐
 const showCaret = ref(false) // 支持搜索时，输入光标的显隐
 const showSearch = ref(false) // 搜索图标显隐
 const selectFocused = ref(false) /// select 是否聚焦
+const emits = defineEmits(['update:modelValue', 'change', 'openChange'])
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -94,6 +95,7 @@ watchEffect(() => {
   initSelector()
 })
 watch(showOptions, (to) => {
+  emits('openChange', to)
   if (props.search && !to) {
     inputValue.value = undefined
     hideSelectName.value = false
@@ -179,7 +181,6 @@ function openSelect() {
 function onSearchInput(e: InputEvent) {
   hideSelectName.value = Boolean((e.target as HTMLInputElement)?.value)
 }
-const emits = defineEmits(['update:modelValue', 'change'])
 function onClear() {
   if (selectFocused.value) {
     selectFocus()
@@ -242,7 +243,7 @@ function onChange(value: string | number, label: string, index: number) {
       </span>
       <svg
         class="arrow-svg"
-        :class="{ 'arrow-rotate': showOptions, show: showArrow }"
+        :class="{ 'arrow-rotate': showOptions, 'show-svg': showArrow }"
         focusable="false"
         data-icon="down"
         width="1em"
@@ -257,7 +258,7 @@ function onChange(value: string | number, label: string, index: number) {
       </svg>
       <svg
         class="search-svg"
-        :class="{ show: showSearch }"
+        :class="{ 'show-svg': showSearch }"
         focusable="false"
         data-icon="search"
         width="1em"
@@ -272,7 +273,7 @@ function onChange(value: string | number, label: string, index: number) {
       </svg>
       <svg
         class="clear-svg"
-        :class="{ show: showClear }"
+        :class="{ 'show-svg': showClear }"
         focusable="false"
         data-icon="close-circle"
         width="1em"
@@ -446,7 +447,7 @@ function onChange(value: string | number, label: string, index: number) {
         color: rgba(0, 0, 0, 0.45);
       }
     }
-    .show {
+    .show-svg {
       opacity: 1;
       pointer-events: auto;
     }
