@@ -122,6 +122,9 @@ function onChange (value: string|number, label: string,  index: number) {
   console.log('label:', label)
   console.log('index:', index)
 }
+function onOpenChange(open: boolean) {
+  console.log('openChange', open)
+}
 // 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter (inputValue: string, option: any) {
   return option.value > inputValue
@@ -130,7 +133,7 @@ function filter (inputValue: string, option: any) {
 
 ## 基本使用
 
-<Select :options="options" v-model="selectedValue" />
+<Select :options="options" v-model="selectedValue" @change="onChange" @openChange="onOpenChange" />
 
 ::: details Show Code
 
@@ -175,9 +178,17 @@ const selectedValue = ref(5)
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
 })
+function onChange (value: string|number, label: string,  index: number) {
+  console.log('value:', value)
+  console.log('label:', label)
+  console.log('index:', index)
+}
+function onOpenChange(open: boolean) {
+  console.log('openChange', open)
+}
 </script>
 <template>
-  <Select :options="options" v-model="selectedValue" />
+  <Select :options="options" v-model="selectedValue" @change="onChange" @openChange="onOpenChange" />
 </template>
 ```
 
@@ -290,11 +301,7 @@ const selectedValue = ref(5)
 
 ## 支持清除
 
-<Select
-  :options="options"
-  allow-clear
-  v-model="selectedValue"
-  @change="onChange" />
+<Select :options="options" allow-clear v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -339,18 +346,9 @@ const selectedValue = ref(5)
 watchEffect(() => {
   console.log('selectedValue:', selectedValue.value)
 })
-function onChange (value: string|number, label: string,  index: number) {
-  console.log('value:', value)
-  console.log('label:', label)
-  console.log('index:', index)
-}
 </script>
 <template>
-  <Select
-    :options="options"
-    allow-clear
-    v-model="selectedValue"
-    @change="onChange" />
+  <Select :options="options" allow-clear v-model="selectedValue" />
 </template>
 ```
 
@@ -740,7 +738,7 @@ width | 宽度，单位 `px` | string &#124; number | 'auto'
 height | 高度，单位 `px` | number | 32
 scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar) | object | {}
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6
-modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目 | number &#124; string &#124; null | null
+modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值 | number &#124; string | undefined
 
 ### Option Type
 
@@ -756,3 +754,4 @@ disabled? | 是否禁用选项 | boolean | false
 名称 | 说明 | 类型
 -- | -- | --
 change | 选项值改变后的回调 | (value: string &#124; number, label: string,  index: number) => void
+openChange | 下拉菜单展开收起的回调 | (open: boolean) => void

@@ -116,6 +116,9 @@ function onChange(value: string | number, label: string, index: number) {
   console.log('label:', label)
   console.log('index:', index)
 }
+function onOpenChange(open: boolean) {
+  console.log('openChange', open)
+}
 // 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter(inputValue: string, option: any) {
   return option.value > inputValue
@@ -125,19 +128,19 @@ function filter(inputValue: string, option: any) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Select :options="options" v-model="selectedValue" />
+    <Select :options="options" v-model="selectedValue" @change="onChange" @openChange="onOpenChange" />
     <h2 class="mt30 mb10">禁用</h2>
     <Select :options="options" disabled v-model="selectedValue" />
     <h2 class="mt30 mb10">禁用选项</h2>
     <Select :options="optionsDisabled" v-model="selectedValue" />
     <h2 class="mt30 mb10">支持清除</h2>
-    <Select :options="options" allow-clear v-model="selectedValue" @change="onChange" />
+    <Select :options="options" allow-clear v-model="selectedValue" />
     <h2 class="mt30 mb10">支持搜索</h2>
     <Select :width="150" :options="options" search allowClear v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
     <Select :width="150" :options="options" search :filter="filter" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Select :width="160" :height="36" search :options="options" v-model="selectedValue" @change="onChange" />
+    <Select :width="160" :height="36" search :options="options" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义节点 lable、value 字段名</h2>
     <Select :options="optionsCustom" label="name" value="id" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义下拉面板数</h2>
