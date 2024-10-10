@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.8.1 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `openChange` 事件
+- 组件库及文档代码优化
+
 ## 1.8.0 <Tag color="volcano" size="small">2024-10-10</Tag>
 
 - 新增 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件
