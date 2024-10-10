@@ -191,6 +191,10 @@ export default defineConfig({
               link: '/guide/components/flex'
             },
             {
+              text: '浮动按钮 FloatButton',
+              link: '/guide/components/floatbutton'
+            },
+            {
               text: '渐变文字 GradientText',
               link: '/guide/components/gradienttext'
             },

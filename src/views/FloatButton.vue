@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import {
-  FileTextOutlined,
+  GlobalOutlined,
   QuestionCircleOutlined,
   CustomerServiceOutlined,
+  StarFilled,
+  SettingOutlined,
   SketchOutlined,
   MessageOutlined,
   CommentOutlined
 } from '@ant-design/icons-vue'
 function onClick(e: Event) {
   console.log('click', e)
+}
+function onOpenChange(open: boolean) {
+  console.log('openChange', open)
 }
 </script>
 <template>
@@ -19,7 +23,43 @@ function onClick(e: Event) {
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton @click="onClick">
         <template #icon>
-          <FileTextOutlined />
+          <GlobalOutlined />
+        </template>
+      </FloatButton>
+    </Card>
+    <h2 class="mt30 mb10">位置</h2>
+    <Card width="50%" style="height: 300px; transform: translate(0)">
+      <FloatButton>
+        <template #icon>
+          <MessageOutlined />
+        </template>
+      </FloatButton>
+      <FloatButton shape="square" :top="48">
+        <template #icon>
+          <CommentOutlined />
+        </template>
+      </FloatButton>
+      <FloatButton type="primary" :left="24">
+        <template #icon>
+          <MessageOutlined />
+        </template>
+      </FloatButton>
+      <FloatButton type="primary" shape="square" :left="24" :top="48">
+        <template #icon>
+          <CommentOutlined />
+        </template>
+      </FloatButton>
+    </Card>
+    <h2 class="mt30 mb10">尺寸</h2>
+    <Card width="50%" style="height: 300px; transform: translate(0)">
+      <FloatButton :width="56" :height="56" :right="120">
+        <template #icon>
+          <MessageOutlined style="font-size: 24px" />
+        </template>
+      </FloatButton>
+      <FloatButton type="primary" shape="square" :width="56" :height="56">
+        <template #icon>
+          <CommentOutlined style="font-size: 24px" />
         </template>
       </FloatButton>
     </Card>
@@ -43,9 +83,22 @@ function onClick(e: Event) {
           <CustomerServiceOutlined />
         </template>
       </FloatButton>
-      <FloatButton shape="square" type="primary">
+      <FloatButton type="primary" shape="square">
         <template #icon>
           <CustomerServiceOutlined />
+        </template>
+      </FloatButton>
+    </Card>
+    <h2 class="mt30 mb10">图标</h2>
+    <Card width="50%" style="height: 300px; transform: translate(0)">
+      <FloatButton type="primary" :right="80">
+        <template #icon>
+          <StarFilled spin style="color: gold" />
+        </template>
+      </FloatButton>
+      <FloatButton shape="square">
+        <template #icon>
+          <SettingOutlined style="color: #1677ff" />
         </template>
       </FloatButton>
     </Card>
@@ -53,13 +106,65 @@ function onClick(e: Event) {
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton shape="square" description="HELP" :right="136">
         <template #icon>
-          <FileTextOutlined />
+          <GlobalOutlined />
         </template>
       </FloatButton>
       <FloatButton shape="square" description="HELP INFO" :right="80" />
-      <FloatButton shape="square" type="primary" description="客服">
+      <FloatButton type="primary" shape="square" description="客服">
         <template #icon>
           <CustomerServiceOutlined />
+        </template>
+      </FloatButton>
+    </Card>
+    <h2 class="mt30 mb10">链接跳转</h2>
+    <Card width="50%" style="height: 300px; transform: translate(0)">
+      <FloatButton href="https://themusecatcher.github.io/vue-amazing-ui/" :right="80">
+        <template #icon>
+          <img style="width: 1em; height: 1em" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
+        </template>
+      </FloatButton>
+      <FloatButton
+        type="primary"
+        shape="square"
+        description="CSDN"
+        href="https://blog.csdn.net/Dandrose"
+        target="_blank"
+      />
+    </Card>
+    <h2 class="mt30 mb10">菜单模式</h2>
+    <Card width="50%" style="height: 300px; transform: translate(0)">
+      <FloatButton shape="square" description="HELP" :right="80" menu-trigger="click" @openChange="onOpenChange">
+        <template #icon>
+          <CustomerServiceOutlined />
+        </template>
+        <template #menu>
+          <FloatButton shape="square">
+            <template #icon>
+              <MessageOutlined />
+            </template>
+          </FloatButton>
+          <FloatButton>
+            <template #icon>
+              <CommentOutlined />
+            </template>
+          </FloatButton>
+        </template>
+      </FloatButton>
+      <FloatButton type="primary" menu-trigger="hover" @openChange="onOpenChange">
+        <template #icon>
+          <CustomerServiceOutlined />
+        </template>
+        <template #menu>
+          <FloatButton>
+            <template #icon>
+              <MessageOutlined />
+            </template>
+          </FloatButton>
+          <FloatButton>
+            <template #icon>
+              <CommentOutlined />
+            </template>
+          </FloatButton>
         </template>
       </FloatButton>
     </Card>
@@ -83,43 +188,6 @@ function onClick(e: Event) {
       >
         <template #icon>
           <SketchOutlined />
-        </template>
-      </FloatButton>
-    </Card>
-    <h2 class="mt30 mb10">菜单模式</h2>
-    <Card width="50%" style="height: 300px; transform: translate(0)">
-      <FloatButton menu-trigger="click" type="primary">
-        <template #icon>
-          <CustomerServiceOutlined />
-        </template>
-        <template #menu>
-          <FloatButton>
-            <template #icon>
-              <MessageOutlined />
-            </template>
-          </FloatButton>
-          <FloatButton>
-            <template #icon>
-              <CommentOutlined />
-            </template>
-          </FloatButton>
-        </template>
-      </FloatButton>
-      <FloatButton menu-trigger="click" shape="square" description="INFO" :right="80">
-        <template #icon>
-          <CustomerServiceOutlined />
-        </template>
-        <template #menu>
-          <FloatButton shape="square" type="primary">
-            <template #icon>
-              <MessageOutlined />
-            </template>
-          </FloatButton>
-          <FloatButton>
-            <template #icon>
-              <CommentOutlined />
-            </template>
-          </FloatButton>
         </template>
       </FloatButton>
     </Card>

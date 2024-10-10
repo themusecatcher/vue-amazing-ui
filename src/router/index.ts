@@ -140,7 +140,7 @@ export const routes = [
       {
         path: '/floatbutton',
         name: 'FloatButton',
-        meta: { title: '悬浮按钮' },
+        meta: { title: '浮动按钮' },
         component: () => import('@/views/FloatButton.vue')
       },
       {
