@@ -30,6 +30,7 @@ export function useMutationObserver(
   callback: MutationCallback,
   options = {}
 ) {
+  const isSupported = useSupported(() => window && 'MutationObserver' in window)
   const stopObservation = ref(false)
   let observer: MutationObserver | undefined
   const targets = computed(() => {
@@ -52,7 +53,7 @@ export function useMutationObserver(
   }
   // 初始化 MutationObserver，开始观察目标元素
   const observeElements = () => {
-    if (targets.value.length && !stopObservation.value) {
+    if (isSupported.value && targets.value.length && !stopObservation.value) {
       observer = new MutationObserver(callback)
       targets.value.forEach((element: HTMLElement) => observer!.observe(element, options))
     }
@@ -93,7 +94,7 @@ export function useMutationObserver(
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useMutationObserver } from '../../../dist/vue-amazing-ui'
+import { useMutationObserver } from 'vue-amazing-ui'
 
 const defaultSlotsRef = ref()
 // 监听 defaultSlotsRef DOM 变化
