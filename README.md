@@ -8,7 +8,7 @@
 
 ## Document & Online Preview
 
-[Vue Amazing UI](https://themusecatcher.github.io/vue-amazing-ui/)
+### [Vue Amazing UI](https://themusecatcher.github.io/vue-amazing-ui/)
 
 ## Install
 
