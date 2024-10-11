@@ -5,7 +5,7 @@
 
 ## 何时使用
 
-- 当需要公告消息滚动展示时
+- 当需要公告消息水平或垂直滚动展示时
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
@@ -32,9 +32,24 @@ const singleText = {
   title: '请用一只玫瑰纪念我...',
   link: 'https://blog.csdn.net/Dandrose?type=blog'
 }
+const textScroll = ref()
+const disabled = ref(true)
+const vertical = ref(false)
 function onClick(text: any) {
   // 获取点击的标题
   console.log('text:', text)
+}
+function handleStart() {
+  textScroll.value.start()
+  disabled.value = true
+}
+function handleStop() {
+  textScroll.value.stop()
+  disabled.value = false
+}
+function handleReset() {
+  textScroll.value.reset()
+  disabled.value = true
 }
 const state = reactive({
   single: false,
@@ -261,6 +276,85 @@ function onClick (text: any) { // 获取点击的标题
     :height="80"
     @click="onClick"
   />
+</template>
+```
+
+:::
+
+## 使用 TextScroll Methods
+
+<Flex vertical>
+  <Space vertical>
+    <Space align="center">
+      vertical:
+      <Switch v-model="vertical" />
+    </Space>
+    <Space>
+      <Button type="primary" :disabled="disabled" @click="handleStart">开始</Button>
+      <Button @click="handleStop">暂停</Button>
+      <Button type="primary" ghost @click="handleReset">重置</Button>
+    </Space>
+  </Space>
+  <TextScroll :vertical="vertical" ref="textScroll" :scrollText="scrollText" @click="onClick" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const scrollText = ref([
+      {
+        title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
+        link: 'https://blog.csdn.net/Dandrose?type=blog'
+      },
+      {
+        title: '首次出版于1951年'
+      },
+      {
+        title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
+      },
+      {
+        title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界'
+      },
+      {
+        title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
+      }
+    ])
+const textScroll = ref()
+const disabled = ref(true)
+const vertical = ref(false)
+function handleStart() {
+  textScroll.value.start()
+  disabled.value = true
+}
+function handleStop() {
+  textScroll.value.stop()
+  disabled.value = false
+}
+function handleReset() {
+  textScroll.value.reset()
+  disabled.value = true
+}
+function onClick (text: any) { // 获取点击的标题
+  console.log('text:', text)
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space vertical>
+      <Space align="center">
+        vertical:
+        <Switch v-model="vertical" />
+      </Space>
+      <Space>
+        <Button type="primary" :disabled="disabled" @click="handleStart">开始</Button>
+        <Button @click="handleStop">暂停</Button>
+        <Button type="primary" ghost @click="handleReset">重置</Button>
+      </Space>
+    </Space>
+    <TextScroll :vertical="vertical" ref="textScroll" :scrollText="scrollText" @click="onClick" />
+  </Flex>
 </template>
 ```
 
@@ -532,6 +626,14 @@ verticalInterval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动�
 -- | -- | -- | --
 title | 文字标题 | string | undefined
 link? | 跳转链接 | string | undefined
+
+## Methods
+
+名称 | 说明 | 类型
+-- | -- | --
+start | 开始滚动 | () => void
+stop | 暂停滚动 | () => void
+reset | 重置滚动 | () => void
 
 ## Events
 
