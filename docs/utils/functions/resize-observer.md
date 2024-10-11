@@ -19,7 +19,7 @@
  * @param options ResizeObserver 选项，用于定制观察行为
  * @returns 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
  */
-import { ref, toValue, computed, watch, onBeforeUnmount } from 'vue'
+import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 import type { Ref } from 'vue'
 export function useResizeObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
@@ -80,6 +80,26 @@ export function useResizeObserver(
     stop,
     start
   }
+}
+// 辅助函数
+export function useSupported(callback: () => unknown) {
+  const isMounted = useMounted()
+  return computed(() => {
+    // to trigger the ref
+    isMounted.value
+    return Boolean(callback())
+  })
+}
+export function useMounted() {
+  const isMounted = ref(false)
+  // 获取当前组件的实例
+  const instance = getCurrentInstance()
+  if (instance) {
+    onMounted(() => {
+      isMounted.value = true
+    }, instance)
+  }
+  return isMounted
 }
 ```
 

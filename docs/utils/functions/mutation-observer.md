@@ -24,7 +24,7 @@
  *          attributeFilter: 声明哪些属性名会被监听的数组；如果不声明该属性，所有属性的变化都将触发通知
  * @returns 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
  */
-import { ref, toValue, computed, watch, onBeforeUnmount } from 'vue'
+import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 export function useMutationObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: MutationCallback,
@@ -84,6 +84,26 @@ export function useMutationObserver(
     stop,
     start
   }
+}
+// 辅助函数
+export function useSupported(callback: () => unknown) {
+  const isMounted = useMounted()
+  return computed(() => {
+    // to trigger the ref
+    isMounted.value
+    return Boolean(callback())
+  })
+}
+export function useMounted() {
+  const isMounted = ref(false)
+  // 获取当前组件的实例
+  const instance = getCurrentInstance()
+  if (instance) {
+    onMounted(() => {
+      isMounted.value = true
+    }, instance)
+  }
+  return isMounted
 }
 ```
 

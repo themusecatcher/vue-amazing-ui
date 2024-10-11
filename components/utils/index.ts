@@ -320,8 +320,17 @@ import {
   reactive
 } from 'vue'
 import type { Ref } from 'vue'
+/**
+ * 用于判断组件是否已挂载的自定义钩子
+ *
+ * 在组件的生命周期中，我们经常需要知道组件是否已经挂载，特别是在异步操作或者动态渲染的场景中
+ * 此钩子通过在组件挂载时设置一个Ref对象的状态来帮助我们进行判断
+ *
+ * @returns {Ref<boolean>} 返回一个Ref对象，用于指示组件是否已挂载
+ */
 export function useMounted() {
   const isMounted = ref(false)
+  // 获取当前组件的实例
   const instance = getCurrentInstance()
   if (instance) {
     onMounted(() => {
@@ -330,6 +339,14 @@ export function useMounted() {
   }
   return isMounted
 }
+/**
+ * 检查 api 是否支持
+ *
+ * 用于检查给定的回调函数是否在组件挂载期间被支持
+ *
+ * @param callback 回调函数，用于执行某些操作，并返回用于计算的值
+ * @returns 返回一个计算属性，该属性在组件挂载时会触发回调函数，并根据回调函数的返回值计算支持状态
+ */
 export function useSupported(callback: () => unknown) {
   const isMounted = useMounted()
   return computed(() => {
