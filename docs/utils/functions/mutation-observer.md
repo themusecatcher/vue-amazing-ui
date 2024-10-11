@@ -93,7 +93,7 @@ export function useMutationObserver(
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useMutationObserver } from 'vue-amazing-ui'
+import { useMutationObserver } from '../../../dist/vue-amazing-ui'
 
 const defaultSlotsRef = ref()
 // 监听 defaultSlotsRef DOM 变化
