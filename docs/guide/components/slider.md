@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *滑动型输入器，展示当前值和可选范围*
 
 ## 何时使用

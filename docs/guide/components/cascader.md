@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*级联选择框*
+
 ## 何时使用
 
 - 需要从一组相关联的数据集合进行选择，例如省市区，公司层级，事物分类等

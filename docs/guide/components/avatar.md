@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *用来代表用户或事物，支持图片、图标或字符展示*
 
 <script setup lang="ts">

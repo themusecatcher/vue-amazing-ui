@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*评分*
+
 ## 何时使用
 
 - 对评价进行展示

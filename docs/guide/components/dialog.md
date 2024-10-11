@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*弹出的对话框*
+
 ## 何时使用
 
 - 在当前页面正中打开一个浮层，承载相应的操作或者展示内容

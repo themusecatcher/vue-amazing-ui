@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *引导用户按照流程完成任务的导航条*
 
 ## 何时使用

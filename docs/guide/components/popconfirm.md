@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *点击元素，弹出气泡式的确认框*
 
 ## 何时使用

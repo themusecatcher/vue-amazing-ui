@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *图标右上角的圆形徽标数字或文本前的状态小圆点*
 
 ## 何时使用

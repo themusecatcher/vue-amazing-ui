@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *通过鼠标或键盘输入内容，是最基础的表单域的包装*
 
 ## 何时使用

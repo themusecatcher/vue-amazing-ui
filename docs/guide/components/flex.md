@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *设置组件之间的间距，设置各种水平、垂直对齐方式*
 
 ## 与 Space 组件的区别

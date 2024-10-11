@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *输入或选择日期的控件*
 
 ## 何时使用
@@ -570,7 +568,7 @@ watchEffect(() => {
 
 <br/>
 
-*更多使用 APIs 请参考 [官方文档](https://vue3datepicker.com/)*
+*更多使用 `API` 请参考 [官方文档](https://vue3datepicker.com/)*
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --

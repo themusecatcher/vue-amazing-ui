@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*文字滚动*
+
 ## 何时使用
 
 - 当需要公告消息水平或垂直滚动展示时

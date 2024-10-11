@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *这个东西看起来没啥用，实际上也确实没啥用😁😁*
 
 ## 基本使用

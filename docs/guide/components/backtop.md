@@ -2,8 +2,6 @@
 
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *返回页面顶部的操作按钮*
 
 ## 何时使用

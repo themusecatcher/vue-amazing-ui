@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*二维码*
+
 ## 何时使用
 
 - 当需要将链接转换成为二维码时使用

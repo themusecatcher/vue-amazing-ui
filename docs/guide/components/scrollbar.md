@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *看起来好看点，但是我能保证这个没有原生滚动条可靠*
 
 <script setup lang="ts">

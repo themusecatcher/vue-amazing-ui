@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*触摸滑动组件*
+
 ## 何时使用
 
 - 创建触摸滑块和可滑动内容的区域
