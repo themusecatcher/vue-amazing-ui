@@ -532,6 +532,7 @@ export function useResizeObserver(
   callback: ResizeObserverCallback,
   options: object = {}
 ) {
+  const isSupported = useSupported(() => window && 'ResizeObserver' in window)
   let observer: ResizeObserver | undefined
   const stopObservation = ref(false)
   const targets = computed(() => {
@@ -554,7 +555,7 @@ export function useResizeObserver(
   }
   // 初始化 ResizeObserver，开始观察目标元素
   const observeElements = () => {
-    if (targets.value.length && !stopObservation.value) {
+    if (isSupported.value && targets.value.length && !stopObservation.value) {
       observer = new ResizeObserver(callback)
       targets.value.forEach((element: HTMLElement) => observer!.observe(element, options))
     }
