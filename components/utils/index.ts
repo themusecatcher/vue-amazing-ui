@@ -307,6 +307,37 @@ export function toggleDark() {
     html.style.colorScheme = 'light'
   }
 }
+import {
+  ref,
+  getCurrentInstance,
+  onMounted,
+  toValue,
+  computed,
+  watch,
+  onBeforeUnmount,
+  onUnmounted,
+  useSlots,
+  reactive
+} from 'vue'
+import type { Ref } from 'vue'
+export function useMounted() {
+  const isMounted = ref(false)
+  const instance = getCurrentInstance()
+  if (instance) {
+    onMounted(() => {
+      isMounted.value = true
+    }, instance)
+  }
+  return isMounted
+}
+export function useSupported(callback: () => unknown) {
+  const isMounted = useMounted()
+  return computed(() => {
+    // to trigger the ref
+    isMounted.value
+    return Boolean(callback())
+  })
+}
 /**
  * 组合式函数
  * 使用 Vue 的生命周期钩子添加和移除事件监听器
@@ -319,8 +350,6 @@ export function toggleDark() {
  * @param event 要监听的事件名称
  * @param callback 事件被触发时执行的回调函数
  */
-import { ref, toValue, computed, watch, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
-import type { Ref } from 'vue'
 export function useEventListener(target: HTMLElement | Window | Document, event: string, callback: Function): void {
   // 也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素
   onMounted(() => target.addEventListener(event, callback as EventListenerOrEventListenerObject))
@@ -347,6 +376,7 @@ export function useMutationObserver(
   callback: MutationCallback,
   options = {}
 ) {
+  const isSupported = useSupported(() => window && 'MutationObserver' in window)
   const stopObservation = ref(false)
   let observer: MutationObserver | undefined
   const targets = computed(() => {
@@ -369,7 +399,7 @@ export function useMutationObserver(
   }
   // 初始化 MutationObserver，开始观察目标元素
   const observeElements = () => {
-    if (targets.value.length && !stopObservation.value) {
+    if (isSupported.value && targets.value.length && !stopObservation.value) {
       observer = new MutationObserver(callback)
       targets.value.forEach((element: HTMLElement) => observer!.observe(element, options))
     }
@@ -564,7 +594,6 @@ export function useResizeObserver(
  * @returns 如果是单个插槽名称，则返回一个计算属性，表示该插槽是否存在
  *          如果是插槽名称数组，则返回一个 reactive 对象，其中的每个属性对应该插槽是否存在
  */
-import { useSlots, reactive } from 'vue'
 export function useSlotsExist(slotsName: string | string[] = 'default') {
   const slots = useSlots() // 获取当前组件的所有插槽
   // 检查特定名称的插槽是否存在且不为空
