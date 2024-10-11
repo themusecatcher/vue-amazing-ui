@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *文本过长自动处理省略号，支持按照文本长度和最大行数两种方式截取*
 
 ## 何时使用

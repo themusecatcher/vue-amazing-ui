@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *在需要等待加载内容的位置提供一个占位图形组合*
 
 ## 何时使用

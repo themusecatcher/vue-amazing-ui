@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *文件选择上传和拖拽上传控件*
 
 ## 何时使用

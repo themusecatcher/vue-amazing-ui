@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *可以折叠/展开的内容区域*
 
 ## 何时使用

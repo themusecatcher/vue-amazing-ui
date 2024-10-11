@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*一组轮播的区域*
+
 ## 何时使用
 
 - 当有一组平级的内容。

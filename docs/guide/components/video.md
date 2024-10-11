@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *简易封装的播放器*
 
 ## 何时使用

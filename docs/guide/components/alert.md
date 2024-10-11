@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *警告提示，展现需要关注的信息*
 
 ## 何时使用

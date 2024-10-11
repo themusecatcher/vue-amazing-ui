@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*多选框*
+
 ## 何时使用
 
 - 在一组可选项中进行多项选择时

@@ -3,8 +3,6 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-<br/>
-
 *屏幕边缘滑出的浮层面板*
 
 ## 何时使用

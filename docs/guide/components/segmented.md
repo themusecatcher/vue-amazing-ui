@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*分段控制器*
+
 ## 何时使用
 
 - 用于展示多个选项并允许用户选择其中单个选项

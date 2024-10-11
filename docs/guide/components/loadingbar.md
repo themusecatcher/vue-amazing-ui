@@ -3,6 +3,8 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+*加载进度条*
+
 ## 何时使用
 
 - 加载数据时，显示加载条，提示用户正在加载
