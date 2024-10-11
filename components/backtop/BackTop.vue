@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { Slot } from 'vue'
 import Tooltip from '../tooltip'
-import { useSlotsExist } from '../utils'
+import { useMutationObserver, useSlotsExist } from '../utils'
 interface Props {
   icon?: Slot // 自定义图标 slot
   description?: string // 文字描述 string | slot
@@ -37,12 +37,7 @@ const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
 const targetElement = ref<HTMLElement | null>(null) // 渲染容器元素
 const emits = defineEmits(['click', 'show'])
 const slotsExist = useSlotsExist(['tooltip', 'icon', 'description'])
-// 观察器的配置
-const config = { childList: true, attributes: true, subtree: true }
-// 创建一个观察器实例并传入回调函数
-const observer = new MutationObserver(() => {
-  scrollTop.value = scrollTarget.value?.scrollTop ?? 0
-})
+const observer = ref<any | null>(null) // 监听器
 const backTopStyle = computed(() => {
   return {
     bottom: typeof props.bottom === 'number' ? props.bottom + 'px' : props.bottom,
@@ -62,7 +57,6 @@ const showDescription = computed(() => {
 watch(
   () => props.listenTo,
   () => {
-    observer.disconnect()
     removeEventListener()
     observeScroll()
   },
@@ -87,7 +81,6 @@ onMounted(() => {
   appendBackTop()
 })
 onBeforeUnmount(() => {
-  observer.disconnect() // 停止观察
   removeEventListener()
   backtopRef.value?.remove()
 })
@@ -105,6 +98,7 @@ function removeEventListener() {
   }
 }
 function observeScroll() {
+  observer.value && observer.value.stop() && (observer.value = null)
   // 监听滚动的元素
   if (props.listenTo === undefined) {
     scrollTarget.value = getScrollParentElement(backtopRef.value?.parentElement)
@@ -114,7 +108,13 @@ function observeScroll() {
     scrollTarget.value = props.listenTo
   }
   if (scrollTarget.value) {
-    observer.observe(scrollTarget.value, config)
+    observer.value = useMutationObserver(
+      scrollTarget,
+      () => {
+        scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+      },
+      { childList: true, attributes: true, subtree: true }
+    )
     scrollTarget.value.addEventListener('scroll', scrollEvent)
     window.addEventListener('resize', resizeEvent)
   }
