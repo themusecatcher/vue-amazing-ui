@@ -16,9 +16,6 @@
 
 ## 基本使用
 
-<template>
-</template>
-
 ::: details Show Code
 
 ```vue
