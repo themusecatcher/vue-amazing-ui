@@ -3,9 +3,10 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-## 1.8.1 <Tag color="volcano" size="small">soon</Tag>
+## 1.8.1 <Tag color="volcano" size="small">2024-10-11</Tag>
 
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `openChange` 事件
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，新增 `start` `stop` `reset` 方法，支持手动控制开始、暂停、重置滚动
 - 组件库及文档代码优化
 
 ## 1.8.0 <Tag color="volcano" size="small">2024-10-10</Tag>

@@ -23,9 +23,24 @@ const singleText = {
   title: '请用一只玫瑰纪念我...',
   link: 'https://blog.csdn.net/Dandrose?type=blog'
 }
+const textScroll = ref()
+const disabled = ref(true)
+const vertical = ref(false)
 function onClick(text: any) {
   // 获取点击的标题
   console.log('text:', text)
+}
+function handleStart() {
+  textScroll.value.start()
+  disabled.value = true
+}
+function handleStop() {
+  textScroll.value.stop()
+  disabled.value = false
+}
+function handleReset() {
+  textScroll.value.reset()
+  disabled.value = true
 }
 const state = reactive({
   single: false,
@@ -74,6 +89,21 @@ const state = reactive({
       :height="80"
       @click="onClick"
     />
+    <h2 class="mt30 mb10">使用 TextScroll Methods</h2>
+    <Flex vertical>
+      <Space vertical>
+        <Space align="center">
+          vertical:
+          <Switch v-model="vertical" />
+        </Space>
+        <Space>
+          <Button type="primary" :disabled="disabled" @click="handleStart">开始</Button>
+          <Button @click="handleStop">暂停</Button>
+          <Button type="primary" ghost @click="handleReset">重置</Button>
+        </Space>
+      </Space>
+      <TextScroll :vertical="vertical" ref="textScroll" :scrollText="scrollText" @click="onClick" />
+    </Flex>
     <h2 class="mt30 mb10">文字滚动配置器</h2>
     <Row :gutter="[24, 12]">
       <Col :span="6">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
 interface Text {
@@ -34,20 +34,18 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   verticalInterval: 3000
 })
-const textData = computed(() => {
-  if (props.single) {
-    return [props.scrollText, props.scrollText]
-  } else {
-    const text = props.scrollText as Text[]
-    if (text.length === props.amount) {
-      return [...text, ...text]
-    } else {
-      return [...text]
-    }
-  }
-})
+const horizontalRef = ref() // 水平滚动 DOM 引用
+const verticalRef = ref() // 垂直滚动 DOM 引用
+const left = ref(0) // 水平滚动偏移距离
+const distance = ref(0) // 每条滚动文字移动距离
+const activeIndex = ref(0) // 垂直滚动当前索引
+const horizontalMoveRaf = ref()
+const verticalMoveRaf = ref()
+const origin = ref(true) // 垂直滚动初始状态
+const emit = defineEmits(['click'])
+const textData = ref<Text[]>([])
 const textAmount = computed(() => {
-  return textData.value.length || 0
+  return textData.value.length
 })
 const totalWidth = computed(() => {
   // 文字滚动区域总宽度
@@ -64,16 +62,9 @@ const displayAmount = computed(() => {
     return props.amount
   }
 })
-const horizontalRef = ref() // 水平滚动 DOM 引用
-const verticalRef = ref() // 垂直滚动 DOM 引用
-const left = ref(0)
-const distance = ref(0) // 每条滚动文字移动距离
-const horizontalMoveRaf = ref()
-const verticalMoveRaf = ref()
-const origin = ref(true) // 垂直滚动初始状态
 watch(
   () => [
-    textData,
+    textData.value,
     props.width,
     props.amount,
     props.gap,
@@ -90,9 +81,26 @@ watch(
     flush: 'post'
   }
 )
+watchEffect(() => {
+  initScrollText()
+})
 useResizeObserver([horizontalRef, verticalRef], () => {
   initScroll()
 })
+function initScrollText() {
+  left.value = 0
+  activeIndex.value = 0
+  if (props.single) {
+    textData.value = [props.scrollText, props.scrollText] as Text[]
+  } else {
+    const text = props.scrollText as Text[]
+    if (text.length === props.amount) {
+      textData.value = [...text, ...text]
+    } else {
+      textData.value = [...text]
+    }
+  }
+}
 function initScroll() {
   if (!props.vertical) {
     distance.value = getDistance() // 获取每列文字宽度
@@ -120,6 +128,14 @@ function startMove() {
     }
   }
 }
+function stopMove() {
+  // 暂停动画
+  if (props.vertical) {
+    verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
+  } else {
+    horizontalMoveRaf.value && cancelRaf(horizontalMoveRaf.value)
+  }
+}
 function horizonMove() {
   horizontalMoveRaf.value = rafTimeout(
     () => {
@@ -134,20 +150,6 @@ function horizonMove() {
     true
   )
 }
-function stopMove() {
-  // 暂停动画
-  if (props.vertical) {
-    verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
-  } else {
-    horizontalMoveRaf.value && cancelRaf(horizontalMoveRaf.value)
-  }
-}
-const emit = defineEmits(['click'])
-function onClick(text: Text) {
-  // 通知父组件点击的标题
-  emit('click', text)
-}
-const activeIndex = ref(0)
 function verticalMove() {
   verticalMoveRaf.value = rafTimeout(
     () => {
@@ -160,6 +162,15 @@ function verticalMove() {
     origin.value ? props.verticalInterval : props.verticalInterval + 1000
   )
 }
+function onClick(text: Text) {
+  // 通知父组件点击的标题
+  emit('click', text)
+}
+defineExpose({
+  start: startMove,
+  stop: stopMove,
+  reset: initScrollText
+})
 </script>
 <template>
   <div
@@ -175,7 +186,7 @@ function verticalMove() {
         v-for="(text, index) in <Text[]>textData"
         :key="index"
         :title="text.title"
-        :href="text.link ? text.link : 'javascript:;'"
+        :href="text.link ? text.link : 'javascript:void(0);'"
         :target="text.link ? '_blank' : '_self'"
         @mouseenter="stopMove"
         @mouseleave="startMove"
