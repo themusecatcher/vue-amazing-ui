@@ -1,11 +1,12 @@
 # vue-amazing-ui
 
-*该组件库采用 `Vue@3.5.11`+ `TypeScript@5.6.3` + `Vite@5.4.8` + `Less@4.2.0` 实现！*<br/>
-*所有组件样式 `CSS` 均使用 `box-sizing: border-box;` 模式！*<br/>
-*目前共有 `63` 个常用基础 `UI` 组件，以及 `16` 个常用工具函数，并且持续探索优化更新中...！*<br/>
-*开箱即用！*
+*组件库采用 `Vue@3.5.11`+ `TypeScript@5.6.3` + `Vite@5.4.8` + `Less@4.2.0` 实现！*<br/>
+*目前共包含 `63` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...！*<br/>
+*所有组件均采用单文件组件 `SFC` 形式，无需安装，直接使用！*<br/>
+*所有组件样式均使用 `box-sizing: border-box;` 模式！*<br/>
+*开箱即用，不墨迹！*
 
-## Document & Online preview
+## Document & Online Preview
 
 [Vue Amazing UI](https://themusecatcher.github.io/vue-amazing-ui/)
 

@@ -2,9 +2,6 @@
 import { ref } from 'vue'
 import { FireFilled, QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
 const message = ref()
-const openChange = (visible: boolean) => {
-  console.log('visible', visible)
-}
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
   message.value.success('Click on Yes')
@@ -12,6 +9,9 @@ const confirm = (e: MouseEvent) => {
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
   message.value.error('Click on No')
+}
+const openChange = (open: boolean) => {
+  console.log('open', open)
 }
 </script>
 <template>

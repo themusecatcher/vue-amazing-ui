@@ -1,6 +1,6 @@
 <script setup lang="ts">
-function openChange(visible: boolean) {
-  console.log('visible:', visible)
+function openChange(open: boolean) {
+  console.log('open:', open)
 }
 </script>
 <template>

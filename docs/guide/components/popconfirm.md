@@ -15,9 +15,6 @@
 import { ref } from 'vue'
 import { FireFilled, QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
 const message = ref()
-const openChange = (visible: boolean) => {
-  console.log('visible', visible)
-}
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
   message.value.success('Click on Yes')
@@ -25,6 +22,9 @@ const confirm = (e: MouseEvent) => {
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
   message.value.error('Click on No')
+}
+const openChange = (open: boolean) => {
+  console.log('open', open)
 }
 </script>
 
@@ -48,9 +48,6 @@ const cancel = (e: MouseEvent) => {
 <script setup lang="ts">
 import { ref } from 'vue'
 const message = ref()
-const openChange = (visible: boolean) => {
-  console.log('visible', visible)
-}
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
   message.value.success('Click on Yes')
@@ -58,6 +55,9 @@ const confirm = (e: MouseEvent) => {
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
   message.value.error('Click on No')
+}
+const openChange = (open: boolean) => {
+  console.log('open', open)
 }
 </script>
 <template>
@@ -624,4 +624,4 @@ show <Tag color="cyan">v-model</Tag> | 弹出确认是否显示 | boolean | fals
 -- | -- | --
 cancel | 点击取消的回调 | (e: Event) => void
 ok | 点击确认的回调 | (e: Event) => void
-openChange | 显示隐藏的回调 | (visible: boolean) => void
+openChange | 显示隐藏的回调 | (open: boolean) => void
