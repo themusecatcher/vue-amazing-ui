@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import src from '@/assets/files/Bao.mp4'
-
-// const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.mp4')
+const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.mp4')
 const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/bao.jpg')
 </script>
 
