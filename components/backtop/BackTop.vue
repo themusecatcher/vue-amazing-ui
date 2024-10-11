@@ -102,7 +102,7 @@ function removeEventListener() {
   // 移除监听事件
   if (scrollTarget.value) {
     scrollTarget.value.removeEventListener('scroll', scrollEvent)
-    window.removeEventListener('resize', resizeEvent)
+    window && window.removeEventListener('resize', resizeEvent)
   }
 }
 function observeScroll() {
@@ -115,9 +115,9 @@ function observeScroll() {
     scrollTarget.value = props.listenTo
   }
   if (scrollTarget.value) {
-    observer.observe(scrollTarget.value, config)
+    observer.observe(scrollTarget.value, { childList: true, attributes: true, subtree: true })
     scrollTarget.value.addEventListener('scroll', scrollEvent)
-    window.addEventListener('resize', resizeEvent)
+    window && window.addEventListener('resize', resizeEvent)
   }
 }
 function appendBackTop() {
