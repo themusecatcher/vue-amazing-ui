@@ -12,8 +12,8 @@
 - 当某个页面需要向用户显示警告的信息时
 
 <script setup lang="ts">
-function openChange (visible: boolean) {
-  console.log('visible:', visible)
+function openChange (open: boolean) {
+  console.log('open:', open)
 }
 </script>
 
@@ -32,8 +32,8 @@ function openChange (visible: boolean) {
 
 ```vue
 <script setup lang="ts">
-function openChange (visible: boolean) {
-  console.log('visible:', visible)
+function openChange (open: boolean) {
+  console.log('open:', open)
 }
 </script>
 <template>
@@ -208,4 +208,4 @@ show <Tag color="cyan">v-model</Tag> | 弹出提示是否显示 | boolean | fals
 
 名称 | 说明 | 类型
 -- | -- | --
-openChange | 显示隐藏的回调 | (visible: boolean) => void
+openChange | 显示隐藏的回调 | (open: boolean) => void

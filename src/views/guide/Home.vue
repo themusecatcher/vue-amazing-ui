@@ -137,15 +137,15 @@ function onOpen() {
     <br />
     <Button type="primary" @click="onOpen">Open New Window</Button>
     <p class="u-tip mt30 mb10">
-      目前共有
+      目前共包含
       <Tag color="magenta">{{ componentsTotal }}</Tag>
-      个常用基础
+      个基础
       <Tag color="magenta">UI</Tag>
-      组件，以及
+      组件以及
       <Tag color="magenta">{{ toolFunctions.length }}</Tag>
-      个常用工具函数，并且持续探索更新优化中...
+      个工具函数，并且持续探索更新中...
     </p>
-    <p class="u-tip mb10"> 所有组件均为单文件组件 <Tag color="magenta">SFC</Tag>，无需安装，直接使用！ </p>
+    <p class="u-tip mb10"> 所有组件均采用单文件组件 <Tag color="magenta">SFC</Tag> 形式，无需安装，直接使用！ </p>
     <p class="u-tip mb10">
       所有组件样式均使用
       <Tag color="magenta">box-sizing: border-box;</Tag>

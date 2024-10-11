@@ -13,8 +13,8 @@
 - 和 Tooltip 的区别是，用户可以对浮层上的元素进行操作，因此它可以承载更复杂的内容，比如链接或按钮等。
 
 <script setup lang="ts">
-function openChange (visible: boolean) {
-  console.log('visible:', visible)
+function openChange (open: boolean) {
+  console.log('open:', open)
 }
 </script>
 
@@ -32,8 +32,8 @@ function openChange (visible: boolean) {
 
 ```vue
 <script setup lang="ts">
-function openChange (visible: boolean) {
-  console.log('visible:', visible)
+function openChange (open: boolean) {
+  console.log('open:', open)
 }
 </script>
 <template>
@@ -222,4 +222,4 @@ show <Tag color="cyan">v-model</Tag> | 弹出卡片是否显示 | boolean | fals
 
 名称 | 说明 | 类型
 -- | -- | --
-openChange | 显示隐藏的回调 | (visible: boolean) => void
+openChange | 显示隐藏的回调 | (open: boolean) => void
