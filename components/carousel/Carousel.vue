@@ -86,7 +86,7 @@ const carouselHeight = computed(() => {
     return props.height
   }
 })
-const imageCount = computed(() => {
+const imageAmount = computed(() => {
   // 轮播图片数量
   return props.images.length
 })
@@ -158,7 +158,7 @@ function getImageSize() {
   imageHeight.value = carouselRef.value.offsetHeight
 }
 function onKeyboard(e: KeyboardEvent) {
-  if (imageCount.value > 1) {
+  if (imageAmount.value > 1) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       onLeftArrow()
     }
@@ -182,7 +182,7 @@ function visibilityChange() {
   }
 }
 function onStart() {
-  if (props.autoplay && imageCount.value > 1 && complete.value[0]) {
+  if (props.autoplay && imageAmount.value > 1 && complete.value[0]) {
     // 超过一条时滑动
     stopCarousel.value = false
     autoSlide() // 自动滑动轮播
@@ -200,9 +200,9 @@ function autoSlide() {
     slideTimer.value = rafTimeout(() => {
       switchPrevent.value = true // 禁用导航切换
       if (props.effect === 'slide') {
-        const target = (offset.value % (imageCount.value * moveUnitDistance.value)) + moveUnitDistance.value
+        const target = (offset.value % (imageAmount.value * moveUnitDistance.value)) + moveUnitDistance.value
         moveLeft(target)
-        activeSwitcher.value = (activeSwitcher.value % imageCount.value) + 1
+        activeSwitcher.value = (activeSwitcher.value % imageAmount.value) + 1
       } else {
         // fade
         moveFade('left')
@@ -215,9 +215,9 @@ function onLeftArrow() {
     switchPrevent.value = true
     slideTimer.value && cancelRaf(slideTimer.value)
     if (props.effect === 'slide') {
-      const target = ((activeSwitcher.value + imageCount.value - 2) % imageCount.value) * moveUnitDistance.value
+      const target = ((activeSwitcher.value + imageAmount.value - 2) % imageAmount.value) * moveUnitDistance.value
       moveRight(target)
-      activeSwitcher.value = activeSwitcher.value - 1 > 0 ? activeSwitcher.value - 1 : imageCount.value
+      activeSwitcher.value = activeSwitcher.value - 1 > 0 ? activeSwitcher.value - 1 : imageAmount.value
     } else {
       // fade
       moveFade('right')
@@ -231,7 +231,7 @@ function onRightArrow() {
     if (props.effect === 'slide') {
       const target = activeSwitcher.value * moveUnitDistance.value
       moveLeft(target)
-      activeSwitcher.value = (activeSwitcher.value % imageCount.value) + 1
+      activeSwitcher.value = (activeSwitcher.value % imageAmount.value) + 1
     } else {
       // fade
       moveFade('left')
@@ -248,9 +248,9 @@ const cubicBezierNumber = useTransition(baseNumber, {
 })
 function moveFade(direction: 'left' | 'right' | 'switch', n?: number) {
   if (direction === 'left') {
-    activeSwitcher.value = (activeSwitcher.value % imageCount.value) + 1
+    activeSwitcher.value = (activeSwitcher.value % imageAmount.value) + 1
   } else if (direction === 'right') {
-    activeSwitcher.value = activeSwitcher.value - 1 > 0 ? activeSwitcher.value - 1 : imageCount.value
+    activeSwitcher.value = activeSwitcher.value - 1 > 0 ? activeSwitcher.value - 1 : imageAmount.value
   } else {
     activeSwitcher.value = n as number
   }
@@ -288,7 +288,7 @@ function moveLeftEffect() {
 }
 function moveLeft(target: number) {
   // 箭头切换或跳转切换，向左滑动效果
-  if (offset.value === imageCount.value * moveUnitDistance.value) {
+  if (offset.value === imageAmount.value * moveUnitDistance.value) {
     // 最后一张时，重置left
     offset.value = 0
   }
@@ -310,7 +310,7 @@ function moveRight(target: number) {
   // 箭头切换或跳转切换，向右滑动效果
   if (offset.value === 0) {
     // 第一张时，重置left
-    offset.value = imageCount.value * moveUnitDistance.value
+    offset.value = imageAmount.value * moveUnitDistance.value
   }
   toggleNumber(target)
   moveEffectRaf.value = requestAnimationFrame(moveRightEffect)
@@ -351,7 +351,7 @@ function clickImage(image: Image) {
   emits('click', image)
 }
 function to(n: number): void {
-  if (n >= 1 && n <= imageCount.value) {
+  if (n >= 1 && n <= imageAmount.value) {
     onSwitch(n)
   }
 }
@@ -399,7 +399,7 @@ defineExpose({
           />
         </Spin>
       </div>
-      <div class="m-image" @click="clickImage(images[0])" v-if="imageCount && effect === 'slide'">
+      <div class="m-image" @click="clickImage(images[0])" v-if="imageAmount && effect === 'slide'">
         <Spin :spinning="!complete[0]" indicator="dynamic-circle" v-bind="spinProps">
           <img
             @load="onComplete(0)"
@@ -445,7 +445,7 @@ defineExpose({
         tabindex="0"
         class="u-dot"
         :style="[dotStyle, activeSwitcher === n ? { backgroundColor: dotActiveColor, ...dotActiveStyle } : {}]"
-        v-for="n in imageCount"
+        v-for="n in imageAmount"
         :key="n"
         @click="dotsTrigger === 'click' ? onSwitch(n) : () => false"
         @mouseenter="dotsTrigger === 'hover' ? onMouseEnter(n) : () => false"
