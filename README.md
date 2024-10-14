@@ -107,7 +107,7 @@ Alert | 警告提示 | Avatar | 头像
 BackTop | 回到顶部 | Badge | 徽标
 Breadcrumb | 面包屑 | Button | 按钮
 Card | 卡片 | Carousel | 走马灯
-Cascader | 级联选择 | Checkbox | 多选框
+Cascader | 级联选择 | Checkbox | 复选框
 Collapse | 折叠面板 | Countdown | 倒计时
 DatePicker | 日期选择 | Descriptions | 描述列表
 Dialog | 对话框 | Divider | 分割线

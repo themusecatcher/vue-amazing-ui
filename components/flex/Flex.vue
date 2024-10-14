@@ -27,10 +27,10 @@ const gapValue = computed(() => {
     return 0
   }
   if (typeof props.gap === 'number') {
-    return props.gap + 'px'
+    return `${props.gap}px`
   }
   if (Array.isArray(props.gap)) {
-    return props.gap[1] + 'px ' + props.gap[0] + 'px '
+    return `${props.gap[1]}px ${props.gap[0]}px`
   }
   if (['small', 'middle', 'large'].includes(props.gap)) {
     const gapMap = {
