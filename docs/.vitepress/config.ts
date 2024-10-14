@@ -147,7 +147,7 @@ export default defineConfig({
               link: '/guide/components/cascader'
             },
             {
-              text: '多选框 Checkbox',
+              text: '复选框 Checkbox',
               link: '/guide/components/checkbox'
             },
             {

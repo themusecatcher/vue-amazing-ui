@@ -74,7 +74,7 @@ export const routes = [
       {
         path: '/checkbox',
         name: 'Checkbox',
-        meta: { title: '多选框' },
+        meta: { title: '复选框' },
         component: () => import('@/views/Checkbox.vue')
       },
       {
