@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   separatorStyle: () => ({}),
   target: '_self'
 })
-const len = computed(() => {
+const breadcrumbAmount = computed(() => {
   return props.routes.length
 })
 function getUrl(route: Route) {
@@ -51,7 +51,7 @@ function getUrl(route: Route) {
       <a
         v-if="route.path"
         class="breadcrumb-link link-hover"
-        :class="{ 'link-active': index === len - 1 }"
+        :class="{ 'link-active': index === breadcrumbAmount - 1 }"
         :style="`max-width: ${maxWidth}px;`"
         :href="getUrl(route)"
         :target="target"
@@ -62,13 +62,13 @@ function getUrl(route: Route) {
       <span
         v-else
         class="breadcrumb-link"
-        :class="{ 'link-active': index === len - 1 }"
+        :class="{ 'link-active': index === breadcrumbAmount - 1 }"
         :style="`max-width: ${maxWidth}px;`"
         :title="route.name"
       >
         {{ route.name }}
       </span>
-      <span v-if="index < len - 1" class="breadcrumb-separator" :style="separatorStyle">
+      <span v-if="index < breadcrumbAmount - 1" class="breadcrumb-separator" :style="separatorStyle">
         <slot name="separator" :index="index">
           <span v-if="separator">{{ separator }}</span>
           <svg
