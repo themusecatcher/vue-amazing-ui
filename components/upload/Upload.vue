@@ -50,7 +50,10 @@ const props = withDefaults(defineProps<Props>(), {
 const uploadedFiles = ref<FileType[]>([]) // 上传文件列表
 const showUpload = ref(1)
 const uploading = ref<boolean[]>(Array(props.maxCount).fill(false))
-const uploadInput = ref()
+const uploadInputRef = ref()
+const imageRef = ref()
+const messageRef = ref()
+const emits = defineEmits(['update:fileList', 'change', 'remove'])
 watchEffect(() => {
   // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   initUpload()
@@ -96,11 +99,11 @@ function onDrop(e: DragEvent, index: number) {
       }
     }
     // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
-    uploadInput.value[index].value = ''
+    uploadInputRef.value[index].value = ''
   }
 }
 function onClick(index: number) {
-  uploadInput.value[index].click()
+  uploadInputRef.value[index].click()
 }
 function onUpload(e: any, index: number) {
   // 点击上传
@@ -115,10 +118,9 @@ function onUpload(e: any, index: number) {
       }
     }
     // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
-    uploadInput.value[index].value = ''
+    uploadInputRef.value[index].value = ''
   }
 }
-const emits = defineEmits(['update:fileList', 'change', 'remove'])
 const uploadFile = (file: File, index: number) => {
   // 统一上传文件方法
   // console.log('开始上传 upload-event files:', file)
@@ -200,7 +202,6 @@ function customUpload(file: File, index: number) {
       uploading.value[index] = false
     })
 }
-const imageRef = ref()
 function onPreview(n: number, url: string) {
   if (isImage(url)) {
     const files = uploadedFiles.value.slice(0, n).filter((file) => !isImage(file.url))
@@ -219,7 +220,6 @@ function onRemove(index: number) {
   emits('update:fileList', uploadedFiles.value)
   emits('change', uploadedFiles.value)
 }
-const messageRef = ref()
 function onInfo(content: string) {
   messageRef.value.info(content)
 }
@@ -258,7 +258,7 @@ defineExpose({
             @click="disabled ? () => false : onClick(n - 1)"
           >
             <input
-              ref="uploadInput"
+              ref="uploadInputRef"
               type="file"
               @click.stop
               :accept="accept"

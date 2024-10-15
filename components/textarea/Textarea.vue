@@ -22,6 +22,8 @@ const props = withDefaults(defineProps<Props>(), {
   value: '',
   valueModifiers: () => ({})
 })
+const textareaRef = ref()
+const areaHeight = ref(32)
 const textareaWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -78,13 +80,11 @@ watch(
     flush: 'post'
   }
 )
-const textarea = ref()
-const areaHeight = ref(32)
 onMounted(() => {
   getAreaHeight()
 })
 function getAreaHeight() {
-  areaHeight.value = textarea.value.scrollHeight + 2
+  areaHeight.value = textareaRef.value.scrollHeight + 2
 }
 const emits = defineEmits(['update:value', 'change', 'enter'])
 function onInput(e: InputEvent) {
@@ -99,18 +99,17 @@ function onChange(e: InputEvent) {
     emits('change', e)
   }
 }
-function onKeyboard(e: KeyboardEvent) {
+async function onKeyboard(e: KeyboardEvent) {
   emits('enter', e)
   if (lazyTextarea.value) {
-    textarea.value.blur()
-    nextTick(() => {
-      textarea.value.focus()
-    })
+    textareaRef.value.blur()
+    await nextTick()
+    textareaRef.value.focus()
   }
 }
 function onClear() {
   emits('update:value', '')
-  textarea.value.focus()
+  textareaRef.value.focus()
 }
 </script>
 <template>
@@ -121,7 +120,7 @@ function onClear() {
     :data-count="showCountNum"
   >
     <textarea
-      ref="textarea"
+      ref="textareaRef"
       type="hidden"
       class="u-textarea"
       :class="{ 'clear-class': showClear, 'textarea-disabled': disabled }"

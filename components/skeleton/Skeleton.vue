@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-
 interface SkeletonButtonProps {
   shape?: 'default' | 'round' | 'circle' // 指定按钮的形状，默认 'default'
   size?: 'small' | 'middle' | 'large' // 设置按钮的大小，默认 'middle'

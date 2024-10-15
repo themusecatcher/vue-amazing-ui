@@ -22,10 +22,10 @@ const props = withDefaults(defineProps<Props>(), {
   separator: ',',
   formatter: (value: string) => value
 })
+const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
 const showValue = computed(() => {
   return props.formatter(formatNumber(props.value || '', props.precision, props.separator))
 })
-const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
 const showTitle = computed(() => {
   return slotsExist.title || props.title
 })

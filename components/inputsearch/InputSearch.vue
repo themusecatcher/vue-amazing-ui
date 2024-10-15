@@ -38,6 +38,9 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
+const inputRef = ref()
+const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
+const emits = defineEmits(['update:value', 'change', 'search'])
 const inputSearchWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -53,7 +56,6 @@ const showCountNum = computed(() => {
   }
   return props.value ? props.value.length : 0
 })
-const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
 })
@@ -69,7 +71,6 @@ const showBefore = computed(() => {
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
-const emits = defineEmits(['update:value', 'change', 'search'])
 function onInput(e: InputEvent) {
   if (!lazyInput.value) {
     emits('update:value', (e.target as HTMLInputElement).value)
@@ -82,19 +83,18 @@ function onChange(e: InputEvent) {
     emits('change', e)
   }
 }
-const input = ref()
 function onClear() {
   emits('update:value', '')
-  input.value.focus()
+  inputRef.value.focus()
 }
 async function onInputSearch(e: KeyboardEvent) {
   if (!lazyInput.value) {
     onSearch()
   } else {
     if (lazyInput.value) {
-      input.value.blur()
+      inputRef.value.blur()
       await nextTick()
-      input.value.focus()
+      inputRef.value.focus()
     }
     emits('search', props.value)
   }
@@ -123,7 +123,7 @@ function onSearch() {
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
-        ref="input"
+        ref="inputRef"
         class="input-search"
         type="text"
         :value="value"

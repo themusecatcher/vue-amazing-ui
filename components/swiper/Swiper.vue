@@ -56,6 +56,18 @@ const props = withDefaults(defineProps<Props>(), {
   swipe: true,
   preloaderColor: 'theme'
 })
+const autoplayBanner = ref({
+  delay: props.delay,
+  disableOnInteraction: false, // 用户操作 swiper 之后，是否禁止 autoplay。默认为 true：停止。
+  pauseOnMouseEnter: props.pauseOnMouseEnter // 鼠标置于 swiper 时暂停自动切换，鼠标离开时恢复自动切换，默认 false
+})
+const modulesCarousel = ref([Autoplay])
+const autoplayCarousel = ref<object | boolean>({
+  delay: 0,
+  disableOnInteraction: false
+})
+const modulesBroadcast = ref([Navigation, Pagination, Mousewheel])
+const emits = defineEmits(['swiper', 'change'])
 const swiperWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -85,18 +97,6 @@ const modulesBanner = computed(() => {
   }
   return modules
 })
-const autoplayBanner = ref({
-  delay: props.delay,
-  disableOnInteraction: false, // 用户操作 swiper 之后，是否禁止 autoplay。默认为 true：停止。
-  pauseOnMouseEnter: props.pauseOnMouseEnter // 鼠标置于 swiper 时暂停自动切换，鼠标离开时恢复自动切换，默认 false
-})
-const modulesCarousel = ref([Autoplay])
-const autoplayCarousel = ref<object | boolean>({
-  delay: 0,
-  disableOnInteraction: false
-})
-const modulesBroadcast = ref([Navigation, Pagination, Mousewheel])
-const emits = defineEmits(['swiper', 'change'])
 function onSwiper(swiper: SwiperTypes) {
   emits('swiper', swiper)
   if (props.mode === 'carousel' && props.pauseOnMouseEnter) {

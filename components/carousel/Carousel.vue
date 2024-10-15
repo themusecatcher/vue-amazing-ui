@@ -70,6 +70,7 @@ const activeSwitcher = ref(1) // 当前展示图片标识
 const imageWidth = ref() // 图片宽度
 const imageHeight = ref() // 图片高度
 const complete = ref(Array(props.images.length).fill(false)) // 图片是否加载完成
+const emits = defineEmits(['change', 'click'])
 const carouselWidth = computed(() => {
   // 走马灯区域宽度
   if (typeof props.width === 'number') {
@@ -130,7 +131,6 @@ watch(
     flush: 'post'
   }
 )
-const emits = defineEmits(['change', 'click'])
 watch(activeSwitcher, (to) => {
   emits('change', to)
 })

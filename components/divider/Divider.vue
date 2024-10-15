@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   height: '0.9em'
 })
+const slotsExist = useSlotsExist(['default'])
 const margin = computed(() => {
   if (typeof props.orientationMargin === 'number') {
     return props.orientationMargin + 'px'
@@ -31,7 +32,6 @@ const lineHeight = computed(() => {
   }
   return props.height
 })
-const slotsExist = useSlotsExist(['default'])
 const showText = computed(() => {
   return slotsExist.default
 })

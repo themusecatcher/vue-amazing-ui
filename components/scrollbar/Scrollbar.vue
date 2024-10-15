@@ -239,7 +239,6 @@ function scrollTo(...args: any[]) {
 function scrollBy(...args: any[]) {
   containerRef.value?.scrollBy(...args)
 }
-
 defineExpose({
   scrollTo,
   scrollBy

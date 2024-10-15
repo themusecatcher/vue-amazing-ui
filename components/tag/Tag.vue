@@ -30,6 +30,34 @@ const props = withDefaults(defineProps<Props>(), {
   value: () => [],
   spaceProps: () => ({})
 })
+const inputRef = ref()
+const showInput = ref(false)
+const inputValue = ref('')
+const presetColor = [
+  'success',
+  'processing',
+  'error',
+  'warning',
+  'default',
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime'
+]
+const hidden = ref(false)
+const tagsIconRef = ref()
+const showTagsIcon = ref(Array(props.value.length).fill(1))
+const slotsExist = useSlotsExist(['icon'])
+const emits = defineEmits(['update:value', 'close', 'dynamicClose'])
 const isStrArray = computed(() => {
   if (props.dynamic) {
     if (props.value.length) {
@@ -65,39 +93,12 @@ const tags = computed(() => {
   }
   return []
 })
-const slotsExist = useSlotsExist(['icon'])
 const showIcon = computed(() => {
   if (!props.dynamic) {
     return slotsExist.icon || props.icon
   }
   return false
 })
-const inputRef = ref()
-const showInput = ref(false)
-const inputValue = ref('')
-const presetColor = [
-  'success',
-  'processing',
-  'error',
-  'warning',
-  'default',
-  'pink',
-  'red',
-  'yellow',
-  'orange',
-  'cyan',
-  'green',
-  'blue',
-  'purple',
-  'geekblue',
-  'magenta',
-  'volcano',
-  'gold',
-  'lime'
-]
-const hidden = ref(false)
-const tagsIconRef = ref()
-const showTagsIcon = ref(Array(props.value.length).fill(1))
 watchEffect(() => {
   if (props.dynamic) {
     const len = props.value.length
@@ -111,7 +112,6 @@ watchEffect(() => {
     })
   }
 })
-const emits = defineEmits(['update:value', 'close', 'dynamicClose'])
 function onClose(e: MouseEvent) {
   hidden.value = true
   emits('close', e)

@@ -30,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   format: (percent: number) => percent + '%',
   type: 'line'
 })
+const slotsExist = useSlotsExist(['success'])
 const totalWidth = computed(() => {
   // 进度条总宽度
   if (typeof props.width === 'number') {
@@ -85,7 +86,6 @@ const circleColorTo = computed(() => {
 const showPercent = computed(() => {
   return props.format(props.percent > 100 ? 100 : props.percent)
 })
-const slotsExist = useSlotsExist(['success'])
 const showSuccess = computed(() => {
   return slotsExist.success || props.success
 })

@@ -39,6 +39,8 @@ const props = withDefaults(defineProps<Props>(), {
   open: false
 })
 const fullScreen = ref(false)
+const dialogRef = ref() // DOM 引用
+const emits = defineEmits(['update:open', 'cancel', 'ok'])
 const dialogHeight = computed(() => {
   if (typeof props.height === 'number') {
     return props.height + 'px'
@@ -52,7 +54,6 @@ const dialogStyle = computed(() => {
     top: props.centered ? '50%' : fullScreen.value ? 0 : typeof props.top === 'number' ? props.top + 'px' : props.top
   }
 })
-const dialogRef = ref() // DOM 引用
 watch(
   () => props.open,
   (to) => {
@@ -65,7 +66,6 @@ watch(
     }
   }
 )
-const emits = defineEmits(['update:open', 'cancel', 'ok'])
 function onBlur() {
   emits('update:open', false)
   emits('cancel')
