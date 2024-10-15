@@ -367,7 +367,6 @@ const options = ref([
     value: 6
   }
 ])
-
 const value = ref([2])
 watchEffect(() => {
   console.log('value:', value.value)
@@ -429,7 +428,6 @@ const options = ref([
     value: 6
   }
 ])
-
 const value = ref([2])
 watchEffect(() => {
   console.log('value:', value.value)
@@ -458,7 +456,7 @@ const verticalGap = ref(8)
 
 :::
 
-## 自定义复选框区域宽高
+## 自定义复选区域宽高
 
 <Checkbox vertical :width="110" :height="150" :options="options" v-model:value="value" />
 
@@ -493,7 +491,6 @@ const options = ref([
     value: 6
   }
 ])
-
 const value = ref([2])
 watchEffect(() => {
   console.log('value:', value.value)
@@ -516,7 +513,7 @@ options | 复选框选项数据 | [Option](#option-type)[] | []
 disabled | 是否禁用 | boolean | false
 vertical | 是否垂直排列 | boolean | false
 value <Tag color="cyan">v-model</Tag> | 当前选中的值，配合 `options` 使用 | (string &#124; number)[] | []
-gap | 多个复选框之间的间距；垂直排列时，间距即垂直间距，单位 `px`；数组用于水平排列折行时：`[水平间距, 垂直间距]` | number | 8
+gap | 多个复选框之间的间距；垂直排列时为垂直间距，单位 `px`；数组间距用于水平排列折行时：`[水平间距, 垂直间距]` | number | 8
 width | 复选区域最大宽度，超出后折行，单位 `px` | string &#124; number | 'auto'
 height | 复选区域最大高度，超出后滚动，单位 `px` | string &#124; number | 'auto'
 indeterminate | 全选时的样式控制 | boolean | false
@@ -534,4 +531,4 @@ disabled? | 是否禁用选项 | boolean | undefined
 
 名称 | 说明 | 类型
 -- | -- | --
-change | 变化时回调函数 | (value: boolean \| any[]) => void
+change | 变化时回调函数 | (value: boolean \| (string \| number)[]) => void

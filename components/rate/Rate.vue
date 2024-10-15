@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 interface Props {
   allowClear?: boolean // 是否允许再次点击后清除
   allowHalf?: boolean // 是否允许半选
@@ -9,6 +9,7 @@ interface Props {
   color?: string // 字符选中颜色
   gap?: number // 字符间距，单位 px
   disabled?: boolean // 只读，无法进行交互
+  tooltips?: string[] // 自定义每项的提示信息
   value?: number // (v-model) 当前数，受控值 0,1,2,3...
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -20,25 +21,29 @@ const props = withDefaults(defineProps<Props>(), {
   color: '#fadb14',
   gap: 8,
   disabled: false,
+  tooltips: () => [],
   value: 0
 })
-const activeValue = ref(props.value)
+const activeValue = ref()
+const hoverValue = ref()
 const tempValue = ref() // 清除时保存点击value
-watch(
-  () => props.value,
-  (to) => {
-    activeValue.value = to
-  }
-)
+watchEffect(() => {
+  activeValue.value = props.value
+})
+watchEffect(() => {
+  hoverValue.value = activeValue.value
+})
 const emits = defineEmits(['update:value', 'change', 'hoverChange'])
 function onClick(value: number) {
   tempValue.value = null
-  if (value !== props.value) {
+  if (value !== activeValue.value) {
+    activeValue.value = value
     emits('change', value) // 选择时的回调
     emits('update:value', value)
   } else {
     if (props.allowClear) {
       tempValue.value = value
+      activeValue.value = 0
       emits('change', 0)
       emits('update:value', 0)
     } else {
@@ -48,11 +53,11 @@ function onClick(value: number) {
   }
 }
 function onFirstEnter(value: number) {
-  activeValue.value = value
+  hoverValue.value = value
   emits('hoverChange', value) // 鼠标经过时数值变化的回调
 }
 function onSecondEnter(value: number) {
-  activeValue.value = value
+  hoverValue.value = value
   emits('hoverChange', value)
 }
 function resetTempValue() {
@@ -60,7 +65,7 @@ function resetTempValue() {
   tempValue.value = null
 }
 function onLeave() {
-  activeValue.value = props.value
+  hoverValue.value = activeValue.value
 }
 </script>
 <template>
@@ -73,8 +78,8 @@ function onLeave() {
     <div
       class="rate-star"
       :class="{
-        'star-half': allowHalf && activeValue >= n - 0.5 && activeValue < n,
-        'star-full': activeValue >= n,
+        'star-half': allowHalf && hoverValue >= n - 0.5 && hoverValue < n,
+        'star-full': hoverValue >= n,
         'temp-gray': !allowHalf && tempValue === n
       }"
       @click="allowHalf ? () => false : onClick(n)"

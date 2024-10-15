@@ -53,13 +53,18 @@ const optionsDisabled = ref([
     value: 6
   }
 ])
+const checked = ref(false)
 const value = ref(2)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('checked', checked.value)
 })
-const radioGap = ref(24)
-function onChange(value: any) {
-  console.log('change:', value)
+watchEffect(() => {
+  console.log('value', value.value)
+})
+const horizontalGap = ref(16)
+const verticalGap = ref(8)
+function onChange(value: string | number | boolean) {
+  console.log('change', value)
 }
 const sizeOptions = [
   {
@@ -81,13 +86,22 @@ const buttonSize = ref('middle')
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
+    <Radio v-model:checked="checked" @change="onChange">Radio</Radio>
+    <h2 class="mt30 mb10">选项列表</h2>
     <Radio :options="options" v-model:value="value" @change="onChange" />
     <h2 class="mt30 mb10">按钮样式</h2>
-    <Radio :options="options" v-model:value="value" button />
+    <Space vertical>
+      <Radio v-model:checked="checked" button>Radio Button</Radio>
+      <Radio :options="options" v-model:value="value" button />
+    </Space>
     <h2 class="mt30 mb10">填底的按钮样式</h2>
-    <Radio :options="options" v-model:value="value" button button-style="solid" />
+    <Space vertical>
+      <Radio v-model:checked="checked" button button-style="solid">Radio Button Solid</Radio>
+      <Radio :options="options" v-model:value="value" button button-style="solid" />
+    </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Space vertical>
+      <Radio v-model:checked="checked" disabled>Radio</Radio>
       <Radio :options="options" v-model:value="value" disabled />
       <Radio :options="options" v-model:value="value" button disabled />
     </Space>
@@ -101,12 +115,22 @@ const buttonSize = ref('middle')
     <Radio vertical :options="options" v-model:value="value" />
     <h2 class="mt30 mb10">自定义间距</h2>
     <Flex vertical>
-      <Slider v-model:value="radioGap" width="50%" />
-      <Radio :gap="radioGap" :options="options" v-model:value="value" />
+      <Row :gutter="24">
+        <Col :span="12">
+          <Flex gap="small" vertical> horizontal gap: <Slider v-model:value="horizontalGap" /> </Flex>
+        </Col>
+        <Col :span="12">
+          <Flex gap="small" vertical> vertical gap: <Slider v-model:value="verticalGap" /> </Flex>
+        </Col>
+      </Row>
+      <Radio :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="value" />
     </Flex>
+    <h2 class="mt30 mb10">自定义单选区域宽高</h2>
+    <Radio vertical :width="110" :height="150" :options="options" v-model:value="value" />
     <h2 class="mt30 mb10">按钮大小</h2>
     <Space vertical>
       <Radio :options="sizeOptions" v-model:value="buttonSize" />
+      <Radio v-model:checked="checked" button :button-size="buttonSize">Radio Button</Radio>
       <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
       <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />
     </Space>

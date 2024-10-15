@@ -13,7 +13,6 @@
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
 import { ThunderboltFilled, LikeFilled, FireFilled } from '@ant-design/icons-vue'
-
 const value = ref(2.99)
 const characterOptions = [
   {
@@ -57,10 +56,10 @@ watchEffect(() => {
   console.log('score', score.value)
 })
 function onChange(value: number) {
-  console.log('change value', value)
+  console.log('change', value)
 }
 function onHoverChange(value: number) {
-  console.log('hover value', value)
+  console.log('hover change', value)
 }
 </script>
 
@@ -73,16 +72,15 @@ function onHoverChange(value: number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const value = ref(2.99)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 function onChange(value: number) {
-  console.log('change value', value)
+  console.log('change', value)
 }
 function onHoverChange(value: number) {
-  console.log('hover value', value)
+  console.log('hover change', value)
 }
 </script>
 <template>
@@ -101,7 +99,6 @@ function onHoverChange(value: number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const value = ref(2.99)
 watchEffect(() => {
   console.log('value:', value.value)
@@ -127,10 +124,9 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const value = ref(2.99)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -144,7 +140,7 @@ watchEffect(() => {
 
 :::
 
-## 支持选中半星
+## 半星
 
 <Rate v-model:value="value" :size="30" allow-half />
 
@@ -153,10 +149,9 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const value = ref(2.99)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -184,10 +179,9 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
-
 const value = ref(2.99)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -227,11 +221,9 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { LikeFilled, FireFilled } from '@ant-design/icons-vue'
-
-
 const value = ref(2.99)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -262,10 +254,9 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const value = ref(2.99)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -284,10 +275,9 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const value = ref(2.99)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -349,7 +339,6 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
-
 const characterOptions = [
   {
     label: 'star-outlined',
