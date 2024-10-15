@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
 import { ThunderboltFilled, LikeFilled, FireFilled } from '@ant-design/icons-vue'
-const value = ref(2.99)
+const value = ref(3)
+const tooltipsChinese = ['极差', '失望', '一般', '满意', '惊喜']
+const tooltipsEnglish = ['terrible', 'bad', 'normal', 'good', 'wonderful']
 const characterOptions = [
   {
     label: 'star-outlined',
@@ -33,15 +35,10 @@ const state = reactive({
   size: 36,
   color: '#fadb14',
   gap: 8,
-  disabled: false,
-  value: 3
+  disabled: false
 })
-const score = ref(2.5)
 watchEffect(() => {
   console.log('value', value.value)
-})
-watchEffect(() => {
-  console.log('score', score.value)
 })
 function onChange(value: number) {
   console.log('change', value)
@@ -55,6 +52,31 @@ function onHoverChange(value: number) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Rate v-model:value="value" @change="onChange" @hoverChange="onHoverChange" />
+    <h2 class="mt30 mb10">文案提示</h2>
+    <Space vertical>
+      <Space align="center">
+        <Rate v-model:value="value" :tooltips="tooltipsChinese" />
+        <Tag color="blue" :bordered="false">
+          {{ tooltipsChinese[value - 1] }}
+        </Tag>
+      </Space>
+      <Space align="center">
+        <Rate
+          v-model:value="value"
+          :tooltips="tooltipsEnglish"
+          :tooltip-props="{
+            bgColor: '#fff',
+            tooltipStyle: {
+              fontWeight: 500,
+              color: 'rgba(0, 0, 0, 0.88)'
+            }
+          }"
+        />
+        <Tag color="red" :bordered="false">
+          {{ tooltipsEnglish[value - 1] }}
+        </Tag>
+      </Space>
+    </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Rate v-model:value="value" disabled />
     <h2 class="mt30 mb10">预置图标</h2>
@@ -125,11 +147,11 @@ function onHoverChange(value: number) {
         </Flex>
       </Col>
     </Row>
-    <Badge :value="state.value" style="margin-top: 30px">
+    <Badge :value="value" style="margin-top: 30px">
       <Rate
         v-bind="state"
         :character="state.character === 'custom-character' ? state.customCharacter : state.character"
-        v-model:value="state.value"
+        v-model:value="value"
       />
     </Badge>
   </div>

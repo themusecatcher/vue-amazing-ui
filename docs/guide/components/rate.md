@@ -13,7 +13,9 @@
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
 import { ThunderboltFilled, LikeFilled, FireFilled } from '@ant-design/icons-vue'
-const value = ref(2.99)
+const value = ref(3)
+const tooltipsChinese = ['极差', '失望', '一般', '满意', '惊喜']
+const tooltipsEnglish = ['terrible', 'bad', 'normal', 'good', 'wonderful']
 const characterOptions = [
   {
     label: 'star-outlined',
@@ -48,12 +50,8 @@ const state = reactive({
   disabled: false,
   value: 3
 })
-const score = ref(2.5)
 watchEffect(() => {
   console.log('value', value.value)
-})
-watchEffect(() => {
-  console.log('score', score.value)
 })
 function onChange(value: number) {
   console.log('change', value)
@@ -72,7 +70,7 @@ function onHoverChange(value: number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const value = ref(2.99)
+const value = ref(3)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -90,6 +88,75 @@ function onHoverChange(value: number) {
 
 :::
 
+## 文案提示
+
+<Space vertical>
+  <Space align="center">
+    <Rate v-model:value="value" :tooltips="tooltipsChinese" />
+    <Tag color="blue" :bordered="false">
+      {{ tooltipsChinese[value - 1] }}
+    </Tag>
+  </Space>
+  <Space align="center">
+    <Rate
+      v-model:value="value"
+      :tooltips="tooltipsEnglish"
+      :tooltip-props="{
+        bgColor: '#fff',
+        tooltipStyle: {
+          fontWeight: 500,
+          color: 'rgba(0, 0, 0, 0.88)'
+        }
+      }"
+    />
+    <Tag color="red" :bordered="false">
+      {{ tooltipsEnglish[value - 1] }}
+    </Tag>
+  </Space>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const value = ref(3)
+const tooltipsChinese = ['极差', '失望', '一般', '满意', '惊喜']
+const tooltipsEnglish = ['terrible', 'bad', 'normal', 'good', 'wonderful']
+watchEffect(() => {
+  console.log('value', value.value)
+})
+</script>
+<template>
+  <Space vertical>
+    <Space align="center">
+      <Rate v-model:value="value" :tooltips="tooltipsChinese" />
+      <Tag color="blue" :bordered="false">
+        {{ tooltipsChinese[value - 1] }}
+      </Tag>
+    </Space>
+    <Space align="center">
+      <Rate
+        v-model:value="value"
+        :tooltips="tooltipsEnglish"
+        :tooltip-props="{
+          bgColor: '#fff',
+          tooltipStyle: {
+            fontWeight: 500,
+            color: 'rgba(0, 0, 0, 0.88)'
+          }
+        }"
+      />
+      <Tag color="red" :bordered="false">
+        {{ tooltipsEnglish[value - 1] }}
+      </Tag>
+    </Space>
+  </Space>
+</template>
+```
+
+:::
+
 ## 禁用
 
 <Rate v-model:value="value" disabled />
@@ -99,9 +166,9 @@ function onHoverChange(value: number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const value = ref(2.99)
+const value = ref(3)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -124,7 +191,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const value = ref(2.99)
+const value = ref(3)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -149,7 +216,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const value = ref(2.99)
+const value = ref(3)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -179,7 +246,7 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
-const value = ref(2.99)
+const value = ref(3)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -221,7 +288,7 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { LikeFilled, FireFilled } from '@ant-design/icons-vue'
-const value = ref(2.99)
+const value = ref(3)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -254,7 +321,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const value = ref(2.99)
+const value = ref(3)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -275,7 +342,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const value = ref(2.99)
+const value = ref(3)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -320,17 +387,11 @@ watchEffect(() => {
     </Flex>
   </Col>
 </Row>
-<Badge :value="score" style="margin-top: 30px">
+<Badge :value="state.value" style="margin-top: 30px">
   <Rate
-    v-model:value="score"
-    :allow-clear="state.allowClear"
-    :allow-half="state.allowHalf"
-    :count="state.count"
+    v-bind="state"
     :character="state.character === 'custom-character' ? state.customCharacter : state.character"
-    :size="state.size"
-    :color="state.color"
-    :gap="state.gap"
-    :disabled="state.disabled"
+    v-model:value="state.value"
   />
 </Badge>
 
@@ -361,6 +422,7 @@ const characterOptions = [
     value: 'custom-character'
   }
 ]
+const value = ref(3)
 const state = reactive({
   allowClear: true,
   allowHalf: true,
@@ -370,12 +432,7 @@ const state = reactive({
   size: 36,
   color: '#fadb14',
   gap: 8,
-  disabled: false,
-  value: 3
-})
-const score = ref(2.5)
-watchEffect(() => {
-  console.log('score', score.value)
+  disabled: false
 })
 </script>
 <template>
@@ -410,17 +467,11 @@ watchEffect(() => {
       </Flex>
     </Col>
   </Row>
-  <Badge :value="score" style="margin-top: 30px">
+  <Badge :value="value" style="margin-top: 30px">
     <Rate
-      v-model:value="score"
-      :allow-clear="state.allowClear"
-      :allow-half="state.allowHalf"
-      :count="state.count"
+      v-bind="state"
       :character="state.character === 'custom-character' ? state.customCharacter : state.character"
-      :size="state.size"
-      :color="state.color"
-      :gap="state.gap"
-      :disabled="state.disabled"
+      v-model:value="value"
     />
   </Badge>
 </template>
@@ -442,6 +493,8 @@ size | 字符大小，单位 `px` | number | 20
 color | 字符选中颜色 | string | '#fadb14'
 gap | 字符间距，单位 `px` | number | 8
 disabled | 只读，无法进行交互 | boolean | false
+tooltips | 自定义每项的提示信息 | string[] | []
+tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
 value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `0,1,2,3...` | number | 0
 
 ## Events

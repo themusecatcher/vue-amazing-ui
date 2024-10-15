@@ -6,7 +6,7 @@
 ## 1.8.3 <Tag color="volcano" size="small">2024-10-15</Tag>
 
 - 优化并更新 [单选框 Radio](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html) 组件，新增 `checked` `width` `height` 属性，调整 `gap` 属性相关功能
-- 优化并更新 [评分 Rate](https://themusecatcher.github.io/vue-amazing-ui/guide/components/rate.html) 组件
+- 优化并更新 [评分 Rate](https://themusecatcher.github.io/vue-amazing-ui/guide/components/rate.html) 组件，新增 `tooltips` `tooltipProps` 属性，支持设置文案提示
 - 组件库及文档代码优化
 
 ## 1.8.2 <Tag color="volcano" size="small">2024-10-14</Tag>
