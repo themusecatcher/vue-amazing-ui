@@ -13,65 +13,70 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const options = ref([
-      {
-        label: '北京市',
-        value: 1
-      },
-      {
-        label: '纽约市',
-        value: 2
-      },
-      {
-        label: '布宜诺斯艾利斯',
-        value: 3
-      },
-      {
-        label: '伊斯坦布尔',
-        value: 4
-      },
-      {
-        label: '拜占庭',
-        value: 5
-      },
-      {
-        label: '君士坦丁堡',
-        value: 6
-      }
-    ])
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
 const optionsDisabled = ref([
-      {
-        label: '北京市',
-        value: 1
-      },
-      {
-        label: '纽约市',
-        value: 2,
-        disabled: true
-      },
-      {
-        label: '布宜诺斯艾利斯',
-        value: 3
-      },
-      {
-        label: '伊斯坦布尔',
-        value: 4
-      },
-      {
-        label: '拜占庭',
-        value: 5
-      },
-      {
-        label: '君士坦丁堡',
-        value: 6
-      }
-    ])
-const value = ref(1)
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2,
+    disabled: true
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const checked = ref(false)
+const value = ref(2)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('checked', checked.value)
 })
-const radioGap = ref(24)
-function onChange (value: any) {
-  console.log('change:', value)
+watchEffect(() => {
+  console.log('value', value.value)
+})
+const horizontalGap = ref(16)
+const verticalGap = ref(8)
+function onChange(value: string | number | boolean) {
+  console.log('change', value)
 }
 const sizeOptions = [
   {
@@ -92,6 +97,30 @@ const buttonSize = ref('middle')
 
 ## 基本使用
 
+<Radio v-model:checked="checked" @change="onChange">Radio</Radio>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const checked = ref(false)
+watchEffect(() => {
+  console.log('checked', checked.value)
+})
+function onChange(value: string | number | boolean) {
+  console.log('change', value)
+}
+</script>
+<template>
+  <Radio v-model:checked="checked" @change="onChange">Radio</Radio>
+</template>
+```
+
+:::
+
+## 选项列表
+
 <Radio :options="options" v-model:value="value" @change="onChange" />
 
 ::: details Show Code
@@ -100,37 +129,37 @@ const buttonSize = ref('middle')
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const options = ref([
-      {
-        label: '北京市',
-        value: 1
-      },
-      {
-        label: '纽约市',
-        value: 2
-      },
-      {
-        label: '布宜诺斯艾利斯',
-        value: 3
-      },
-      {
-        label: '伊斯坦布尔',
-        value: 4
-      },
-      {
-        label: '拜占庭',
-        value: 5
-      },
-      {
-        label: '君士坦丁堡',
-        value: 6
-      }
-    ])
-const value = ref(1)
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const value = ref(2)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
-function onChange(value: any) {
-  console.log('change:', value)
+function onChange(value: string | number | boolean) {
+  console.log('change', value)
 }
 </script>
 <template>
@@ -142,43 +171,56 @@ function onChange(value: any) {
 
 ## 按钮样式
 
-<Radio :options="options" v-model:value="value" button />
+<Space vertical>
+  <Radio v-model:checked="checked" button>Radio Button</Radio>
+  <Radio :options="options" v-model:value="value" button />
+</Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 const options = ref([
-        {
-          label: '北京市',
-          value: 1
-        },
-        {
-          label: '纽约市',
-          value: 2
-        },
-        {
-          label: '布宜诺斯艾利斯',
-          value: 3
-        },
-        {
-          label: '伊斯坦布尔',
-          value: 4
-        },
-        {
-          label: '拜占庭',
-          value: 5
-        },
-        {
-          label: '君士坦丁堡',
-          value: 6
-        }
-      ])
-const value = ref(1)
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const checked = ref(false)
+const value = ref(2)
+watchEffect(() => {
+  console.log('checked', checked.value)
+})
+watchEffect(() => {
+  console.log('value', value.value)
+})
 </script>
 <template>
-  <Radio :options="options" v-model:value="value" button />
+  <Space vertical>
+    <Radio v-model:checked="checked" button>Radio Button</Radio>
+    <Radio :options="options" v-model:value="value" button />
+  </Space>
 </template>
 ```
 
@@ -186,7 +228,10 @@ const value = ref(1)
 
 ## 填底的按钮样式
 
-<Radio :options="options" v-model:value="value" button button-style="solid" />
+<Space vertical>
+  <Radio v-model:checked="checked" button button-style="solid">Radio Button Solid</Radio>
+  <Radio :options="options" v-model:value="value" button button-style="solid" />
+</Space>
 
 ::: details Show Code
 
@@ -194,35 +239,45 @@ const value = ref(1)
 <script setup lang="ts">
 import { ref } from 'vue'
 const options = ref([
-        {
-          label: '北京市',
-          value: 1
-        },
-        {
-          label: '纽约市',
-          value: 2
-        },
-        {
-          label: '布宜诺斯艾利斯',
-          value: 3
-        },
-        {
-          label: '伊斯坦布尔',
-          value: 4
-        },
-        {
-          label: '拜占庭',
-          value: 5
-        },
-        {
-          label: '君士坦丁堡',
-          value: 6
-        }
-      ])
-const value = ref(1)
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const checked = ref(false)
+const value = ref(2)
+watchEffect(() => {
+  console.log('checked', checked.value)
+})
+watchEffect(() => {
+  console.log('value', value.value)
+})
 </script>
 <template>
-  <Radio :options="options" v-model:value="value" button button-style="solid" />
+  <Space vertical>
+    <Radio v-model:checked="checked" button button-style="solid">Radio Button Solid</Radio>
+    <Radio :options="options" v-model:value="value" button button-style="solid" />
+  </Space>
 </template>
 ```
 
@@ -231,6 +286,7 @@ const value = ref(1)
 ## 禁用
 
 <Space vertical>
+  <Radio v-model:checked="checked" disabled>Radio</Radio>
   <Radio :options="options" v-model:value="value" disabled />
   <Radio :options="options" v-model:value="value" button disabled />
 </Space>
@@ -241,35 +297,37 @@ const value = ref(1)
 <script setup lang="ts">
 import { ref } from 'vue'
 const options = ref([
-        {
-          label: '北京市',
-          value: 1
-        },
-        {
-          label: '纽约市',
-          value: 2
-        },
-        {
-          label: '布宜诺斯艾利斯',
-          value: 3
-        },
-        {
-          label: '伊斯坦布尔',
-          value: 4
-        },
-        {
-          label: '拜占庭',
-          value: 5
-        },
-        {
-          label: '君士坦丁堡',
-          value: 6
-        }
-      ])
-const value = ref(1)
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const checked = ref(false)
+const value = ref(2)
 </script>
 <template>
   <Space vertical>
+    <Radio v-model:checked="checked" disabled>Radio</Radio>
     <Radio :options="options" v-model:value="value" disabled />
     <Radio :options="options" v-model:value="value" button disabled />
   </Space>
@@ -292,36 +350,35 @@ const value = ref(1)
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const optionsDisabled = ref([
-      {
-        label: '北京市',
-        value: 1
-      },
-      {
-        label: '纽约市',
-        value: 2,
-        disabled: true
-      },
-      {
-        label: '布宜诺斯艾利斯',
-        value: 3
-      },
-      {
-        label: '伊斯坦布尔',
-        value: 4
-      },
-      {
-        label: '拜占庭',
-        value: 5
-      },
-      {
-        label: '君士坦丁堡',
-        value: 6
-      }
-    ])
-
-const value = ref(1)
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2,
+    disabled: true
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const value = ref(2)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -345,34 +402,34 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const options = ref([
-      {
-        label: '北京市',
-        value: 1
-      },
-      {
-        label: '纽约市',
-        value: 2
-      },
-      {
-        label: '布宜诺斯艾利斯',
-        value: 3
-      },
-      {
-        label: '伊斯坦布尔',
-        value: 4
-      },
-      {
-        label: '拜占庭',
-        value: 5
-      },
-      {
-        label: '君士坦丁堡',
-        value: 6
-      }
-    ])
-const value = ref(1)
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const value = ref(2)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -384,9 +441,16 @@ watchEffect(() => {
 
 ## 自定义间距
 
-<Flex vertical gap="middle">
-  <Slider v-model:value="radioGap" width="50%" />
-  <Radio :gap="radioGap" :options="options" v-model:value="value" />
+<Flex vertical>
+  <Row :gutter="24">
+    <Col :span="12">
+      <Flex gap="small" vertical> horizontal gap: <Slider v-model:value="horizontalGap" /> </Flex>
+    </Col>
+    <Col :span="12">
+      <Flex gap="small" vertical> vertical gap: <Slider v-model:value="verticalGap" /> </Flex>
+    </Col>
+  </Row>
+  <Radio :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="value" />
 </Flex>
 
 ::: details Show Code
@@ -395,42 +459,97 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const options = ref([
-      {
-        label: '北京市',
-        value: 1
-      },
-      {
-        label: '纽约市',
-        value: 2
-      },
-      {
-        label: '布宜诺斯艾利斯',
-        value: 3
-      },
-      {
-        label: '伊斯坦布尔',
-        value: 4
-      },
-      {
-        label: '拜占庭',
-        value: 5
-      },
-      {
-        label: '君士坦丁堡',
-        value: 6
-      }
-    ])
-const value = ref(1)
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const value = ref(2)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
-const radioGap = ref(24)
+const horizontalGap = ref(16)
+const verticalGap = ref(8)
 </script>
 <template>
-  <Flex vertical gap="middle">
-    <Slider v-model:value="radioGap" width="50%" />
-    <Radio :gap="radioGap" :options="options" v-model:value="value" />
-    </Flex>
+  <Flex vertical>
+    <Row :gutter="24">
+      <Col :span="12">
+        <Flex gap="small" vertical> horizontal gap: <Slider v-model:value="horizontalGap" /> </Flex>
+      </Col>
+      <Col :span="12">
+        <Flex gap="small" vertical> vertical gap: <Slider v-model:value="verticalGap" /> </Flex>
+      </Col>
+    </Row>
+    <Radio :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="value" />
+  </Flex>
+</template>
+```
+
+:::
+
+## 自定义单选区域宽高
+
+<Radio vertical :width="110" :height="150" :options="options" v-model:value="value" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const value = ref(2)
+watchEffect(() => {
+  console.log('value', value.value)
+})
+</script>
+<template>
+  <Radio vertical :width="110" :height="150" :options="options" v-model:value="value" />
 </template>
 ```
 
@@ -440,6 +559,7 @@ const radioGap = ref(24)
 
 <Space vertical>
   <Radio :options="sizeOptions" v-model:value="buttonSize" />
+  <Radio v-model:checked="checked" button :button-size="buttonSize">Radio Button</Radio>
   <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
   <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />
 </Space>
@@ -450,34 +570,38 @@ const radioGap = ref(24)
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const options = ref([
-      {
-        label: '北京市',
-        value: 1
-      },
-      {
-        label: '纽约市',
-        value: 2
-      },
-      {
-        label: '布宜诺斯艾利斯',
-        value: 3
-      },
-      {
-        label: '伊斯坦布尔',
-        value: 4
-      },
-      {
-        label: '拜占庭',
-        value: 5
-      },
-      {
-        label: '君士坦丁堡',
-        value: 6
-      }
-    ])
-const value = ref(1)
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const checked = ref(false)
+const value = ref(2)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('checked', checked.value)
+})
+watchEffect(() => {
+  console.log('value', value.value)
 })
 const sizeOptions = [
   {
@@ -497,6 +621,7 @@ const buttonSize = ref('middle')
 </script>
 <template>
   <Space vertical>
+    <Radio v-model:checked="checked" button :button-size="buttonSize">Radio Button</Radio>
     <Radio :options="sizeOptions" v-model:value="buttonSize" />
     <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
     <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />
@@ -515,22 +640,25 @@ const buttonSize = ref('middle')
 options | 单选框选项数据 | [Option](#option-type)[] | []
 disabled | 是否禁用 | boolean | false
 vertical | 是否垂直排列，仅当 `button: false` 时生效 | boolean | false
-value <Tag color="cyan">v-model</Tag> | 当前选中的值 | any | null
-gap | 多个单选框之间的间距，单位 `px`，垂直排列时，间距即垂直间距，仅当 `button: false` 时生效 | number | 8
+checked <Tag color="cyan">v-model</Tag> | 当前是否选中 | boolean | false
+gap | 多个单选框之间的间距；垂直排列时为垂直间距，单位 `px`；数组间距用于水平排列折行时：`[水平间距, 垂直间距]`；仅当 `button: false` 时生效 | number &#124; number[] | 8
+width | 单选区域最大宽度，超出后折行，单位 `px`；仅当 `button: false` 时生效 | string &#124; number | 'auto'
+height | 单选区域最大高度，超出后滚动，单位 `px`；仅当 `button: false` 时生效 | string &#124; number | 'auto'
 button | 是否启用按钮样式 | boolean | false
 buttonStyle | 按钮样式风格 | 'outline' &#124; 'solid' | 'outline'
-buttonSize | 按钮大小，仅当 `button: true` 时生效 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+buttonSize | 按钮大小；仅当 `button: true` 时生效 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+value <Tag color="cyan">v-model</Tag> | 当前选中的值 | string &#124; number &#124; boolean | undefined
 
 ### Option Type
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 label | 选项名 | string | undefined
-value | 选项值 | any | undefined
-disabled? | 是否禁用单个单选器 | boolean | false
+value | 选项值 | string &#124; number &#124; boolean | undefined
+disabled? | 是否禁用选项 | boolean | undefined
 
 ## Events
 
 名称 | 说明 | 类型
 -- | -- | --
-change | 选项变化时的回调函数 | (value: any) => void
+change | 选项变化时的回调函数 | (value: string \| number \| boolean) => void

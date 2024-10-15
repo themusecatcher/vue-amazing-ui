@@ -10,7 +10,7 @@ interface Props {
   disabled?: boolean // 是否禁用
   vertical?: boolean // 是否垂直排列
   value?: (string | number)[] // (v-model) 当前选中的值，配合 options 使用
-  gap?: number | number[] // 多个复选框之间的间距；垂直排列时，间距即垂直间距，单位 px；数组用于水平排列折行时：[水平间距, 垂直间距]
+  gap?: number | number[] // 多个复选框之间的间距；垂直排列时为垂直间距，单位 px；数组间距用于水平排列折行时：[水平间距, 垂直间距]
   width?: string | number // 复选区域最大宽度，超出后折行，单位 px
   height?: string | number // 复选区域最大高度，超出后滚动，单位 px
   indeterminate?: boolean // 全选时的样式控制
@@ -62,15 +62,24 @@ watchEffect(() => {
 watchEffect(() => {
   optionsCheckedValue.value = props.value
 })
-function onClick(value: any) {
-  if (props.value.includes(value)) {
+function checkDisabled(disabled: boolean | undefined) {
+  if (disabled === undefined) {
+    return props.disabled
+  } else {
+    return disabled
+  }
+}
+function onClick(value: string | number) {
+  if (optionsCheckedValue.value.includes(value)) {
     // 已选中
     const newVal = optionsCheckedValue.value.filter((target) => target !== value)
+    optionsCheckedValue.value = newVal
     emits('update:value', newVal)
     emits('change', newVal)
   } else {
     // 未选中
     const newVal = [...optionsCheckedValue.value, value]
+    optionsCheckedValue.value = newVal
     emits('update:value', newVal)
     emits('change', newVal)
   }
@@ -85,14 +94,14 @@ function onChecked() {
   <div
     class="m-checkbox"
     :class="{ 'checkbox-vertical': vertical }"
-    :style="`max-width: ${maxWidth}; max-height: ${maxHeight}; --checkbox-gap: ${gapValue};`"
+    :style="`--checkbox-gap: ${gapValue}; --checkbox-max-width: ${maxWidth}; --checkbox-max-height: ${maxHeight};`"
   >
     <template v-if="optionsAmount">
       <div class="m-checkbox-wrap" v-for="(option, index) in options" :key="index">
         <div
           class="m-checkbox-box"
-          :class="{ 'checkbox-disabled': disabled || option.disabled }"
-          @click="disabled || option.disabled ? () => false : onClick(option.value)"
+          :class="{ 'checkbox-disabled': checkDisabled(option.disabled) }"
+          @click="checkDisabled(option.disabled) ? () => false : onClick(option.value)"
         >
           <span class="checkbox-box" :class="{ 'checkbox-checked': optionsCheckedValue.includes(option.value) }"></span>
           <span class="checkbox-label">
@@ -102,7 +111,11 @@ function onChecked() {
       </div>
     </template>
     <div v-else class="m-checkbox-wrap">
-      <div class="m-checkbox-box" :class="{ 'checkbox-disabled': disabled }" @click="onChecked">
+      <div
+        class="m-checkbox-box"
+        :class="{ 'checkbox-disabled': disabled }"
+        @click="disabled ? () => false : onChecked()"
+      >
         <span
           class="checkbox-box"
           :class="{
@@ -125,13 +138,15 @@ function onChecked() {
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1;
+  max-width: var(--checkbox-max-width);
+  max-height: var(--checkbox-max-height);
   overflow: auto;
   .m-checkbox-wrap {
     .m-checkbox-box {
       display: inline-flex;
       align-items: flex-start;
       cursor: pointer;
-      &:hover {
+      &:not(.checkbox-disabled):hover {
         .checkbox-box {
           border-color: @themeColor;
         }
@@ -199,11 +214,6 @@ function onChecked() {
     .checkbox-disabled {
       color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
-      &:hover {
-        .checkbox-box {
-          border-color: #d9d9d9;
-        }
-      }
       .checkbox-box {
         border-color: #d9d9d9;
         background-color: rgba(0, 0, 0, 0.04);

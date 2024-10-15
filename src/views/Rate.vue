@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
 import { ThunderboltFilled, LikeFilled, FireFilled } from '@ant-design/icons-vue'
-
 const value = ref(2.99)
 const characterOptions = [
   {
@@ -45,10 +44,10 @@ watchEffect(() => {
   console.log('score', score.value)
 })
 function onChange(value: number) {
-  console.log('change value', value)
+  console.log('change', value)
 }
 function onHoverChange(value: number) {
-  console.log('hover value', value)
+  console.log('hover change', value)
 }
 </script>
 <template>
@@ -64,7 +63,7 @@ function onHoverChange(value: number) {
       <Rate v-model:value="value" character="heart-filled" :size="24" />
       <Rate v-model:value="value" character="heart-outlined" :size="24" />
     </Space>
-    <h2 class="mt30 mb10">支持选中半星</h2>
+    <h2 class="mt30 mb10">半星</h2>
     <Rate v-model:value="value" :size="24" allow-half />
     <h2 class="mt30 mb10">自定义字符</h2>
     <Space vertical>
@@ -126,17 +125,11 @@ function onHoverChange(value: number) {
         </Flex>
       </Col>
     </Row>
-    <Badge :value="score" style="margin-top: 30px">
+    <Badge :value="state.value" style="margin-top: 30px">
       <Rate
-        v-model:value="score"
-        :allow-clear="state.allowClear"
-        :allow-half="state.allowHalf"
-        :count="state.count"
+        v-bind="state"
         :character="state.character === 'custom-character' ? state.customCharacter : state.character"
-        :size="state.size"
-        :color="state.color"
-        :gap="state.gap"
-        :disabled="state.disabled"
+        v-model:value="state.value"
       />
     </Badge>
   </div>

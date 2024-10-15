@@ -114,7 +114,7 @@ const verticalGap = ref(8)
       </Row>
       <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="value" />
     </Flex>
-    <h2 class="mt30 mb10">自定义复选框区域宽高</h2>
+    <h2 class="mt30 mb10">自定义复选区域宽高</h2>
     <Checkbox vertical :width="110" :height="150" :options="options" v-model:value="value" />
   </div>
 </template>
