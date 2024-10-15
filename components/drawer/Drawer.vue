@@ -41,6 +41,8 @@ const props = withDefaults(defineProps<Props>(), {
   zIndex: 1000,
   open: false
 })
+const slotsExist = useSlotsExist(['title', 'extra', 'footer'])
+const emits = defineEmits(['update:open', 'close'])
 const drawerWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -66,7 +68,6 @@ const drawerStyle = computed(() => {
     }
   }
 })
-const slotsExist = useSlotsExist(['title', 'extra', 'footer'])
 const showHeader = computed(() => {
   return slotsExist.title || slotsExist.extra || props.title || props.extra || props.closable
 })
@@ -90,7 +91,6 @@ watch(
     }
   }
 )
-const emits = defineEmits(['update:open', 'close'])
 function onBlur(e: Event) {
   emits('update:open', false)
   emits('close', e)

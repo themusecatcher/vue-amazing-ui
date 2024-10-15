@@ -51,6 +51,7 @@ const labels = ref<string[]>([]) // 级联label文本数组
 const firstOptions = ref<Option[]>([])
 const secondOptions = ref<Option[]>([])
 const thirdOptions = ref<Option[]>([])
+const emits = defineEmits(['update:modelValue', 'change'])
 watchEffect(() => {
   firstOptions.value = [...props.options]
 })
@@ -96,7 +97,6 @@ function initLabels(values: (string | number)[]) {
     labels.value[2] = findLabel(thirdOptions.value, 2)
   }
 }
-const emits = defineEmits(['update:modelValue', 'change'])
 function onFirstChange(value: string | number, label: string) {
   // 一级下拉回调
   if (props.changeOnSelect) {

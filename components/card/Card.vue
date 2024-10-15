@@ -27,13 +27,13 @@ const props = withDefaults(defineProps<Props>(), {
   headStyle: () => ({}),
   bodyStyle: () => ({})
 })
+const slotsExist = useSlotsExist(['title', 'extra'])
 const cardWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
   }
   return props.width
 })
-const slotsExist = useSlotsExist(['title', 'extra'])
 const showHeader = computed(() => {
   return slotsExist.title || slotsExist.extra || props.title || props.extra
 })

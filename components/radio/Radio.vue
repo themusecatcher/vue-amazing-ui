@@ -31,6 +31,9 @@ const props = withDefaults(defineProps<Props>(), {
   buttonSize: 'middle',
   value: undefined
 })
+const radioChecked = ref<boolean>()
+const optionsCheckedValue = ref<string | number | boolean>()
+const emits = defineEmits(['update:checked', 'update:value', 'change'])
 const optionsAmount = computed(() => {
   // 选项总数
   return props.options.length
@@ -69,9 +72,6 @@ const gapValue = computed(() => {
     return 0
   }
 })
-const radioChecked = ref<boolean>()
-const optionsCheckedValue = ref<string | number | boolean>()
-const emits = defineEmits(['update:checked', 'update:value', 'change'])
 watchEffect(() => {
   radioChecked.value = props.checked
 })

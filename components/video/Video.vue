@@ -54,6 +54,12 @@ const props = withDefaults(defineProps<Props>(), {
   */
   fit: 'contain'
 })
+const veoRef = ref()
+// 参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
+const veoPoster = ref()
+const originPlay = ref(true)
+const hidden = ref(false) // 是否隐藏播放器中间的播放按钮
+const emits = defineEmits(['play', 'pause'])
 const veoWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -66,11 +72,6 @@ const veoHeight = computed(() => {
   }
   return props.height
 })
-const veoRef = ref()
-// 参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
-const veoPoster = ref()
-const originPlay = ref(true)
-const hidden = ref(false) // 是否隐藏播放器中间的播放按钮
 onMounted(() => {
   if (props.autoplay) {
     hidden.value = true
@@ -110,9 +111,11 @@ function onPlay() {
   }
   if (props.autoplay) {
     veoRef.value?.pause()
+    emits('pause')
   } else {
     hidden.value = true
     veoRef.value?.play()
+    emits('play')
   }
 }
 function onPause() {

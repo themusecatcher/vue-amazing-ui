@@ -169,13 +169,13 @@ function timeFormat(time: number): string {
   }
   return showTime
 }
-defineExpose({
-  reset: resetCountdown
-})
 function resetCountdown() {
   // 重置倒计时
   initCountdown()
 }
+defineExpose({
+  reset: resetCountdown
+})
 </script>
 <template>
   <div class="m-countdown">

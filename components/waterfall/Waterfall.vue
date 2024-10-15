@@ -34,6 +34,7 @@ const loaded = ref(Array(props.images.length).fill(false)) // 图片是否加载
 const imageWidth = ref<number>()
 const imagesProperty = ref<{ width: number; height: number; top: number; left: number }[]>([])
 const preColumnHeight = ref<number[]>(Array(props.columnCount).fill(0)) // 每列的高度
+const flag = ref(0)
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -47,7 +48,6 @@ const height = computed(() => {
 const len = computed(() => {
   return props.images.length
 })
-const flag = ref(0)
 watch(
   () => [props.images, props.columnCount, props.columnGap, props.width],
   () => {

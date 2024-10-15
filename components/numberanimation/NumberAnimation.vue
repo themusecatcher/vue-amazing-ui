@@ -56,6 +56,7 @@ const props = withDefaults(defineProps<Props>(), {
   transition: TransitionFunc['easeInOutCubic']
 })
 const source = ref(props.from)
+const emits = defineEmits(['started', 'finished'])
 watchEffect(() => {
   source.value = props.from
 })
@@ -80,7 +81,6 @@ const showValue = computed(() => {
   const { precision, separator, decimal, prefix, suffix } = props
   return formatNumber(outputValue.value, precision, separator, decimal, prefix, suffix)
 })
-const emits = defineEmits(['started', 'finished'])
 defineExpose({
   play
 })

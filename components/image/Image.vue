@@ -42,6 +42,22 @@ const props = withDefaults(defineProps<Props>(), {
   album: false
 })
 const images = ref<any[]>([])
+const previewRef = ref() // DOM 引用
+const previewIndex = ref(0) // 当前预览的图片索引
+const showPreview = ref(false) // 是否显示预览
+const rotate = ref(0) // 预览图片旋转角度
+const scale = ref(1) // 缩放比例
+const swapX = ref(1) // 水平镜像数值符号
+const swapY = ref(1) // 垂直镜像数值符号
+const sourceX = ref(0) // 拖动开始时位置
+const sourceY = ref(0) // 拖动开始时位置
+const dragX = ref(0) // 拖动横向距离
+const dragY = ref(0) // 拖动纵向距离
+const imageAmount = computed(() => {
+  return images.value.length
+})
+const complete = ref(Array(imageAmount.value).fill(false)) // 图片是否加载完成
+const loaded = ref(Array(imageAmount.value).fill(false)) // 预览图片是否加载完成
 watchEffect(() => {
   images.value = getImages()
 })
@@ -57,22 +73,6 @@ function getImages() {
     ]
   }
 }
-const imageCount = computed(() => {
-  return images.value.length
-})
-const complete = ref(Array(imageCount.value).fill(false)) // 图片是否加载完成
-const loaded = ref(Array(imageCount.value).fill(false)) // 预览图片是否加载完成
-const previewRef = ref() // DOM 引用
-const previewIndex = ref(0) // 当前预览的图片索引
-const showPreview = ref(false) // 是否显示预览
-const rotate = ref(0) // 预览图片旋转角度
-const scale = ref(1) // 缩放比例
-const swapX = ref(1) // 水平镜像数值符号
-const swapY = ref(1) // 垂直镜像数值符号
-const sourceX = ref(0) // 拖动开始时位置
-const sourceY = ref(0) // 拖动开始时位置
-const dragX = ref(0) // 拖动横向距离
-const dragY = ref(0) // 拖动纵向距离
 function onComplete(n: number) {
   // 图片加载完成
   complete.value[n] = true
@@ -106,7 +106,7 @@ function getImageSize(size: string | number | (string | number)[], index: number
   }
 }
 function onKeyboard(e: KeyboardEvent) {
-  if (showPreview.value && imageCount.value > 1) {
+  if (showPreview.value && imageAmount.value > 1) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       onSwitchLeft()
     }
@@ -231,7 +231,7 @@ function onMouseDown(event: MouseEvent) {
 }
 function onSwitchLeft() {
   if (props.loop) {
-    previewIndex.value = (previewIndex.value - 1 + imageCount.value) % imageCount.value
+    previewIndex.value = (previewIndex.value - 1 + imageAmount.value) % imageAmount.value
   } else {
     if (previewIndex.value > 0) {
       previewIndex.value--
@@ -241,9 +241,9 @@ function onSwitchLeft() {
 }
 function onSwitchRight() {
   if (props.loop) {
-    previewIndex.value = (previewIndex.value + 1) % imageCount.value
+    previewIndex.value = (previewIndex.value + 1) % imageAmount.value
   } else {
-    if (previewIndex.value < imageCount.value - 1) {
+    if (previewIndex.value < imageAmount.value - 1) {
       previewIndex.value++
     }
   }
@@ -317,7 +317,7 @@ function onSwitchRight() {
             >
               {{ getImageName(images[previewIndex]) }}
             </a>
-            <p class="preview-progress" v-show="Array.isArray(src)">{{ previewIndex + 1 }} / {{ imageCount }}</p>
+            <p class="preview-progress" v-show="Array.isArray(src)">{{ previewIndex + 1 }} / {{ imageAmount }}</p>
             <div class="preview-operation" title="关闭" @click="onClose">
               <svg
                 class="icon-svg"
@@ -483,7 +483,7 @@ function onSwitchRight() {
               />
             </Spin>
           </div>
-          <template v-if="imageCount > 1">
+          <template v-if="imageAmount > 1">
             <div class="switch-left" :class="{ 'switch-disabled': previewIndex === 0 && !loop }" @click="onSwitchLeft">
               <svg
                 class="switch-svg"
@@ -502,7 +502,7 @@ function onSwitchRight() {
             </div>
             <div
               class="switch-right"
-              :class="{ 'switch-disabled': previewIndex === imageCount - 1 && !loop }"
+              :class="{ 'switch-disabled': previewIndex === imageAmount - 1 && !loop }"
               @click="onSwitchRight"
             >
               <svg

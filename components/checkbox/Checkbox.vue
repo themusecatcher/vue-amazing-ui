@@ -27,6 +27,9 @@ const props = withDefaults(defineProps<Props>(), {
   indeterminate: false,
   checked: false
 })
+const checkboxChecked = ref<boolean>()
+const optionsCheckedValue = ref<any[]>([])
+const emits = defineEmits(['update:value', 'update:checked', 'change'])
 const optionsAmount = computed(() => {
   // 选项总数
   return props.options.length
@@ -53,9 +56,6 @@ const gapValue = computed(() => {
   }
   return `${props.gap}px`
 })
-const checkboxChecked = ref<boolean>()
-const optionsCheckedValue = ref<any[]>([])
-const emits = defineEmits(['update:value', 'update:checked', 'change'])
 watchEffect(() => {
   checkboxChecked.value = props.checked
 })

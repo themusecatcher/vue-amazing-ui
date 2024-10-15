@@ -33,6 +33,7 @@ const currentPageSize = ref(props.pageSize) // 当前 pageSize
 const jumpNumber = ref() // 跳转的页码
 const forwardMore = ref(false) // 左省略号展示
 const backwardMore = ref(false) // 右省略号展示
+const emits = defineEmits(['update:page', 'update:pageSize', 'change', 'pageSizeChange'])
 const totalPage = computed(() => {
   // 总页数
   return Math.ceil(props.total / currentPageSize.value) // 向上取整
@@ -87,7 +88,6 @@ watch(
     currentPageSize.value = to
   }
 )
-const emits = defineEmits(['update:page', 'update:pageSize', 'change', 'pageSizeChange'])
 function dealPageList(curPage: number): number[] {
   var resList = []
   var offset = Math.floor(props.pageAmount / 2) // 向下取整
@@ -133,7 +133,7 @@ function onPageBackward(): void {
   emits('update:page', currentPage.value)
   emits('change', currentPage.value, currentPageSize.value)
 }
-function onPageJump(): void {
+async function onPageJump() {
   let num = Number(jumpNumber.value) // 转换为数字
   if (jumpNumber.value && Number.isInteger(num)) {
     // 是否为整数
@@ -145,9 +145,8 @@ function onPageJump(): void {
     }
     onPageChange(num)
   }
-  nextTick(() => {
-    jumpNumber.value = undefined // 清空跳转输入框
-  })
+  await nextTick()
+  jumpNumber.value = undefined // 清空跳转输入框
 }
 function onPageChange(page: number): boolean | void {
   if (page === 0 || page === totalPage.value + 1) {

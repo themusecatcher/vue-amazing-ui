@@ -50,6 +50,8 @@ const props = withDefaults(defineProps<Props>(), {
   ghost: false
 })
 const contentRef = ref() // 面板内容的模板引用
+const copyTxt = ref('Copy')
+const emits = defineEmits(['update:activeKey', 'change'])
 function setProperties(el: Element) {
   ;(el as HTMLElement).style.height =
     (el.lastElementChild as HTMLElement).offsetHeight + (props.bordered && !props.ghost ? 1 : 0) + 'px'
@@ -59,7 +61,6 @@ function removeProperties(el: Element) {
   ;(el as HTMLElement).style.removeProperty('height')
   ;(el as HTMLElement).style.removeProperty('opacity')
 }
-const emits = defineEmits(['update:activeKey', 'change'])
 function emitValue(value: any) {
   emits('update:activeKey', value)
   emits('change', value)
@@ -87,7 +88,6 @@ function activeCheck(key: number | string): boolean {
     return props.activeKey === key
   }
 }
-const copyTxt = ref('Copy')
 function onCopy(index: number) {
   navigator.clipboard.writeText(contentRef.value[index].innerText || '').then(
     () => {

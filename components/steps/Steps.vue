@@ -22,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   dotted: false,
   current: 1
 })
+const emits = defineEmits(['update:current', 'change'])
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
     return props.width + 'px'
@@ -42,8 +43,6 @@ const currentStep = computed(() => {
     return props.current
   }
 })
-// 若当前选中步骤超过总步骤数，则默认选择步骤1
-const emits = defineEmits(['update:current', 'change'])
 function onChange(index: number) {
   // 点击切换选择步骤
   if (currentStep.value !== index) {

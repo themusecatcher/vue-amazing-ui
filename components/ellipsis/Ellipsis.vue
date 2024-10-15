@@ -21,6 +21,7 @@ const showExpand = ref(false) // 是否可以启用点击展开
 const ellipsisRef = ref()
 const stopObservation = ref(false)
 const defaultTooltipMaxWidth = ref()
+const emit = defineEmits(['expandChange'])
 const textMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
     return props.maxWidth + 'px'
@@ -69,7 +70,6 @@ function updateTooltipShow() {
     }
   }
 }
-const emit = defineEmits(['expandChange'])
 async function onExpand() {
   if (ellipsisRef.value.style['-webkit-line-clamp']) {
     if (props.tooltip && showTooltip.value) {

@@ -52,6 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   ripple: true
 })
+const slotsExist = useSlotsExist(['default', 'value'])
 const customStyle = computed(() => {
   if (props.color && !Object.keys(PresetColor).includes(props.color)) {
     if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
@@ -85,7 +86,6 @@ const presetClass = computed(() => {
   }
   return
 })
-const slotsExist = useSlotsExist(['default', 'value'])
 const showContent = computed(() => {
   if (props.value !== undefined || props.dot || (!props.color && !props.status)) {
     return slotsExist.default
