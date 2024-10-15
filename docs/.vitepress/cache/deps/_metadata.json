@@ -2,48 +2,54 @@
   "hash": "71946387",
   "configHash": "9971f6d9",
   "lockfileHash": "1f1024d1",
-  "browserHash": "87ba9eac",
+  "browserHash": "c8ff9f0f",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.5.11_typescript@5.6.3/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "28408f05",
+      "fileHash": "a2a6b0b3",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/.pnpm/@vue+devtools-api@7.4.6/node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "020c0580",
+      "fileHash": "a21220ed",
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../node_modules/.pnpm/@vueuse+core@11.1.0_vue@3.5.11_typescript@5.6.3_/node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
-      "fileHash": "9321a7a3",
+      "fileHash": "d4407e83",
       "needsInterop": false
     },
     "@vuepic/vue-datepicker": {
       "src": "../../../../node_modules/.pnpm/@vuepic+vue-datepicker@9.0.3_vue@3.5.11_typescript@5.6.3_/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js",
       "file": "@vuepic_vue-datepicker.js",
-      "fileHash": "71e6d175",
+      "fileHash": "9a4bfa96",
       "needsInterop": false
     },
     "@vueuse/integrations/useQRCode": {
       "src": "../../../../node_modules/.pnpm/@vueuse+integrations@11.1.0_async-validator@4.2.5_focus-trap@7.6.0_qrcode@1.5.4_vue@3.5.11_typescript@5.6.3_/node_modules/@vueuse/integrations/useQRCode.mjs",
       "file": "@vueuse_integrations_useQRCode.js",
-      "fileHash": "99f7d0e5",
+      "fileHash": "88a4e221",
       "needsInterop": false
     },
     "swiper/vue": {
       "src": "../../../../node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/swiper-vue.mjs",
       "file": "swiper_vue.js",
-      "fileHash": "f168bafc",
+      "fileHash": "461b25a5",
       "needsInterop": false
     },
     "swiper/modules": {
       "src": "../../../../node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/modules/index.mjs",
       "file": "swiper_modules.js",
-      "fileHash": "e0bde34b",
+      "fileHash": "b0f2551b",
+      "needsInterop": false
+    },
+    "@ant-design/icons-vue": {
+      "src": "../../../../node_modules/.pnpm/@ant-design+icons-vue@7.0.1_vue@3.5.11_typescript@5.6.3_/node_modules/@ant-design/icons-vue/es/index.js",
+      "file": "@ant-design_icons-vue.js",
+      "fileHash": "d74e471e",
       "needsInterop": false
     }
   },
@@ -51,11 +57,11 @@
     "chunk-LYLAKMFN": {
       "file": "chunk-LYLAKMFN.js"
     },
-    "chunk-PKJ4PO5W": {
-      "file": "chunk-PKJ4PO5W.js"
-    },
     "chunk-3CICESJC": {
       "file": "chunk-3CICESJC.js"
+    },
+    "chunk-PKJ4PO5W": {
+      "file": "chunk-PKJ4PO5W.js"
     },
     "chunk-EQCVQC35": {
       "file": "chunk-EQCVQC35.js"
