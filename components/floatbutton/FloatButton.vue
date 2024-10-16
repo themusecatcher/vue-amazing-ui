@@ -208,6 +208,7 @@ function onClick(e: Event) {
   width: var(--float-btn-width);
   height: var(--float-btn-height);
   cursor: pointer;
+  outline: none;
   box-shadow:
     0 6px 16px 0 rgba(0, 0, 0, 0.08),
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
