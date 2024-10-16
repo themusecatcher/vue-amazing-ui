@@ -5,13 +5,13 @@ const value = ref(3)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 watchEffect(() => {
-  console.log('formatValue1:', formatValue1.value)
+  console.log('formatValue1', formatValue1.value)
 })
 watchEffect(() => {
-  console.log('formatValue2:', formatValue2.value)
+  console.log('formatValue2', formatValue2.value)
 })
 function formatter(value: number): string {
   return formatNumber(value, 2) + '%'
@@ -20,7 +20,7 @@ function parser(value: string): number {
   return Number(value.replace(/[,%]/g, ''))
 }
 function onChange(number: number) {
-  console.log('change:', number)
+  console.log('change', number)
 }
 </script>
 <template>
@@ -39,7 +39,6 @@ function onChange(number: number) {
           {{ '<InputNumber v-model:value.lazy="value" />' }}
         </template>
       </Alert>
-      <a-input-number id="inputNumber" v-model:value="value" :min="-10" :max="10" />
       <InputNumber :width="120" v-model:value="value" placeholder="Basic usage" @change="onChange" />
       <InputNumber :width="120" v-model:value.lazy="value" placeholder="Lazy usage" @change="onChange" />
     </Space>
