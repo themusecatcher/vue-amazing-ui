@@ -5,6 +5,7 @@
 
 ## 1.8.4 <Tag color="volcano" size="small">2024-10-16</Tag>
 
+- 优化并更新 [评分 Rate](https://themusecatcher.github.io/vue-amazing-ui/guide/components/rate.html) 组件，支持键盘左/右按键操作评分功能
 - 组件库及文档代码优化
 
 ## 1.8.3 <Tag color="volcano" size="small">2024-10-15</Tag>
