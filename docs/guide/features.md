@@ -58,6 +58,7 @@
     color: @themeColor;
     text-decoration: none;
     background-color: transparent;
+    -webkit-tap-highlight-color: transparent;
     outline: none;
     cursor: pointer;
     &:hover {
