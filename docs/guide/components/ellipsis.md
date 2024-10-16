@@ -7,7 +7,7 @@
 
 ## 何时使用
 
-- 当文本长度超过展示区域，需要自动处理省略号时
+- 当文本长度超过展示区域，需要自动展示省略号时
 
 <script setup lang="ts">
 function expandChange(open: boolean) {
