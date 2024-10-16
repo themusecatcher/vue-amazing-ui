@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watch } from 'vue'
 import Tooltip from '../tooltip'
 interface Props {
   allowClear?: boolean // 是否允许再次点击后清除
@@ -31,12 +31,24 @@ const activeValue = ref()
 const hoverValue = ref()
 const tempValue = ref() // 清除时保存点击value
 const emits = defineEmits(['update:value', 'change', 'hoverChange'])
-watchEffect(() => {
-  activeValue.value = props.value
-})
-watchEffect(() => {
-  hoverValue.value = activeValue.value
-})
+watch(
+  () => props.value,
+  (to) => {
+    activeValue.value = to
+  },
+  {
+    immediate: true
+  }
+)
+watch(
+  activeValue,
+  (to) => {
+    hoverValue.value = to
+  },
+  {
+    immediate: true
+  }
+)
 function onClick(value: number) {
   tempValue.value = null
   if (value !== activeValue.value) {
@@ -64,11 +76,27 @@ function onSecondEnter(value: number) {
   emits('hoverChange', value)
 }
 function resetTempValue() {
-  // 重置点击value
+  // 重置点击 value
   tempValue.value = null
 }
 function onLeave() {
   hoverValue.value = activeValue.value
+}
+function onUp() {
+  tempValue.value = null
+  if (activeValue.value < props.count) {
+    activeValue.value++
+    emits('change', activeValue.value)
+    emits('update:value', activeValue.value)
+  }
+}
+function onDown() {
+  tempValue.value = null
+  if (activeValue.value > 0) {
+    activeValue.value--
+    emits('change', activeValue.value)
+    emits('update:value', activeValue.value)
+  }
 }
 </script>
 <template>
@@ -84,6 +112,7 @@ function onLeave() {
           <slot name="tooltip" :value="n">{{ tooltips[n - 1] }}</slot>
         </template>
         <div
+          tabindex="0"
           class="rate-star"
           :class="{
             'star-half': allowHalf && hoverValue >= n - 0.5 && hoverValue < n,
@@ -91,6 +120,8 @@ function onLeave() {
             'temp-gray': !allowHalf && tempValue === n
           }"
           @click="allowHalf ? () => false : onClick(n)"
+          @keydown.prevent.right="onUp"
+          @keydown.prevent.left="onDown"
         >
           <div
             v-if="allowHalf"
@@ -249,11 +280,16 @@ function onLeave() {
   display: inline-flex;
   gap: var(--star-gap);
   line-height: normal;
+  outline: none;
   .rate-star {
     position: relative;
     display: inline-block;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
+    &:focus-visible {
+      outline: 1px dashed var(--star-color);
+      transform: scale(1.1);
+    }
     :deep(svg) {
       font-size: var(--star-size);
       color: rgba(0, 0, 0, 0.06);
@@ -281,21 +317,10 @@ function onLeave() {
       overflow: hidden;
       transition: all 0.2s;
       user-select: none;
-      &:hover {
-        opacity: 1;
-        .icon-character {
-          color: var(--star-color);
-        }
-      }
     }
     .star-second {
       display: inline-block;
       user-select: none;
-      &:hover {
-        .icon-character {
-          color: var(--star-color);
-        }
-      }
     }
     .temp-gray-first {
       &:hover {
