@@ -107,13 +107,13 @@ const state = reactive({
     <h2 class="mt30 mb10">文字滚动配置器</h2>
     <Row :gutter="[24, 12]">
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           height:
           <Slider v-model:value="state.height" :min="6" :max="180" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           fontSize:
           <Slider v-model:value="state.fontSize" :min="6" :max="180" />
         </Flex>
@@ -137,25 +137,25 @@ const state = reactive({
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           amount:
           <Slider v-model:value="state.amount" :min="1" :max="scrollText.length" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           gap:
           <Slider v-model:value="state.gap" :min="10" :max="100" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           interval:
           <Slider v-model:value="state.interval" :min="5" :max="100" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           step:
           <Slider v-model:value="state.step" :min="0.1" :step="0.1" :max="20" />
         </Flex>
@@ -167,7 +167,7 @@ const state = reactive({
         </Space>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           verticalInterval:
           <Slider v-model:value="state.verticalInterval" :min="1000" :step="100" :max="10000" />
         </Flex>
