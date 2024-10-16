@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.8.5 <Tag color="volcano" size="small">2024-10-17</Tag>
+
+- 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件
+- 组件库及文档代码优化
+
 ## 1.8.4 <Tag color="volcano" size="small">2024-10-16</Tag>
 
 - 优化并更新 [评分 Rate](https://themusecatcher.github.io/vue-amazing-ui/guide/components/rate.html) 组件，支持键盘左/右按键操作评分
