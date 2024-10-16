@@ -85,7 +85,7 @@ function onLeave() {
 function onUp() {
   tempValue.value = null
   if (activeValue.value < props.count) {
-    activeValue.value++
+    activeValue.value += props.allowHalf ? 0.5 : 1
     emits('change', activeValue.value)
     emits('update:value', activeValue.value)
   }
@@ -93,7 +93,7 @@ function onUp() {
 function onDown() {
   tempValue.value = null
   if (activeValue.value > 0) {
-    activeValue.value--
+    activeValue.value -= props.allowHalf ? 0.5 : 1
     emits('change', activeValue.value)
     emits('update:value', activeValue.value)
   }
