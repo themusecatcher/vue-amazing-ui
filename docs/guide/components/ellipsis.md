@@ -9,6 +9,12 @@
 
 - 当文本长度超过展示区域，需要自动处理省略号时
 
+<script setup lang="ts">
+function expandChange(open: boolean) {
+  console.log('open', open)
+}
+</script>
+
 ## 基本使用
 
 <Ellipsis :max-width="240">
@@ -49,7 +55,7 @@
 
 ## 点击展开
 
-<Ellipsis expand :line="2">
+<Ellipsis expand :line="2" @expandChange="expandChange">
   电灯熄灭 物换星移 泥牛入海<br>黑暗好像 一颗巨石 按在胸口<br>独脚大盗
   百万富翁 摸爬滚打<br>黑暗好像 一颗巨石 按在胸口
 </Ellipsis>
@@ -57,8 +63,13 @@
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+function expandChange(open: boolean) {
+  console.log('open', open)
+}
+</script>
 <template>
-  <Ellipsis expand :line="2">
+  <Ellipsis expand :line="2" @expandChange="expandChange">
     电灯熄灭 物换星移 泥牛入海<br>黑暗好像 一颗巨石 按在胸口<br>独脚大盗
     百万富翁 摸爬滚打<br>黑暗好像 一颗巨石 按在胸口
   </Ellipsis>
