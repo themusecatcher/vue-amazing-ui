@@ -1,5 +1,5 @@
 <script setup lang="ts">
-function expandChange (open: boolean) {
+function expandChange(open: boolean) {
   console.log('open', open)
 }
 </script>
@@ -7,7 +7,7 @@ function expandChange (open: boolean) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Ellipsis>住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪</Ellipsis>
+    <Ellipsis :max-width="240">住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪</Ellipsis>
     <h2 class="mt30 mb10">多行省略</h2>
     <Ellipsis :line="2">
       电灯熄灭 物换星移 泥牛入海
