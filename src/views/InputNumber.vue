@@ -39,6 +39,7 @@ function onChange(number: number) {
           {{ '<InputNumber v-model:value.lazy="value" />' }}
         </template>
       </Alert>
+      <a-input-number id="inputNumber" v-model:value="value" :min="-10" :max="10" />
       <InputNumber :width="120" v-model:value="value" placeholder="Basic usage" @change="onChange" />
       <InputNumber :width="120" v-model:value.lazy="value" placeholder="Lazy usage" @change="onChange" />
     </Space>
