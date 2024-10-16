@@ -538,10 +538,10 @@ const options = ref([
       </Space>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical>
+      <Flex gap="small" vertical>
         size:
-        <Radio :options="options" v-model:value="state.size" button button-style="solid" />
-      </Space>
+        <Select :options="options" v-model="state.size" />
+      </Flex>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
@@ -736,10 +736,10 @@ const state = reactive({
         </Space>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical>
+        <Flex gap="small" vertical>
           size:
-          <Radio :options="options" v-model:value="state.size" button button-style="solid" />
-        </Space>
+          <Select :options="options" v-model="state.size" />
+        </Flex>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>

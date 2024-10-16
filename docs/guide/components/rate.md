@@ -358,25 +358,25 @@ watchEffect(() => {
 
 <Row :gutter="[24, 12]">
   <Col :span="6">
-    <Space gap="small" vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
+    <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
   </Col>
   <Col :span="6">
-    <Space gap="small" vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
+    <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
   </Col>
   <Col :span="6">
-    <Flex vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
+    <Flex gap="small" vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical> size:<Slider v-model:value="state.size" :min="10" :max="100" /> </Flex>
+    <Flex gap="small" vertical> size:<Slider v-model:value="state.size" :min="10" :max="100" /> </Flex>
   </Col>
   <Col :span="6">
     <Flex gap="small" vertical> color:<Input v-model:value="state.color" placeholder="color" /> </Flex>
   </Col>
   <Col :span="6">
-    <Flex vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
+    <Flex gap="small" vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
   </Col>
   <Col :span="6">
-    <Space gap="small" vertical> disabled:<Switch v-model="state.disabled" /> </Space>
+    <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
   </Col>
   <Col :span="6">
     <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
@@ -438,25 +438,25 @@ const state = reactive({
 <template>
   <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Space gap="small" vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
+      <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
+      <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
+      <Flex gap="small" vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical> size:<Slider v-model:value="state.size" :min="10" :max="100" /> </Flex>
+      <Flex gap="small" vertical> size:<Slider v-model:value="state.size" :min="10" :max="100" /> </Flex>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical> color:<Input v-model:value="state.color" placeholder="color" /> </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
+      <Flex gap="small" vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> disabled:<Switch v-model="state.disabled" /> </Space>
+      <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>

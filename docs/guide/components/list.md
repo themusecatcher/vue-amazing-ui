@@ -1009,9 +1009,9 @@ const pagination = {
       <Space gap="small" vertical> split:<Switch v-model="state.split" /> </Space>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical>
-        size:<Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
-      </Space>
+      <Flex gap="small" vertical>
+        size:<Select :options="sizeOptions" v-model="state.size" />
+      </Flex>
     </Col>
     <Col :span="6">
       <Space gap="small" vertical> loading:<Switch v-model="state.loading" /> </Space>
@@ -1123,9 +1123,9 @@ const state = reactive({
         <Space gap="small" vertical> split:<Switch v-model="state.split" /> </Space>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical>
-          size:<Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
-        </Space>
+        <Flex gap="small" vertical>
+          size:<Select :options="sizeOptions" v-model="state.size" />
+        </Flex>
       </Col>
       <Col :span="6">
         <Space gap="small" vertical> loading:<Switch v-model="state.loading" /> </Space>
