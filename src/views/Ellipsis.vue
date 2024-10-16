@@ -1,8 +1,13 @@
+<script setup lang="ts">
+function expandChange (open: boolean) {
+  console.log('open', open)
+}
+</script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Ellipsis :max-width="240">住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪</Ellipsis>
+    <Ellipsis>住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪</Ellipsis>
     <h2 class="mt30 mb10">多行省略</h2>
     <Ellipsis :line="2">
       电灯熄灭 物换星移 泥牛入海
@@ -14,7 +19,7 @@
       黑暗好像 一颗巨石 按在胸口
     </Ellipsis>
     <h2 class="mt30 mb10">点击展开</h2>
-    <Ellipsis expand :line="2">
+    <Ellipsis expand :line="2" @expandChange="expandChange">
       电灯熄灭 物换星移 泥牛入海
       <br />
       黑暗好像 一颗巨石 按在胸口
