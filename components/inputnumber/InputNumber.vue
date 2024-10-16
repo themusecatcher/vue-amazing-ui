@@ -55,7 +55,7 @@ const lazyInput = computed(() => {
 watch(
   () => [props.value, precision.value, props.formatter],
   async () => {
-    if (props.value) {
+    if (props.value !== undefined) {
       if (inputRef.value) {
         const { selectionStart: start, selectionEnd: end, value } = inputRef.value
         const beforeTxt = value.slice(0, start)
@@ -156,12 +156,12 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 function onUp() {
-  const res = parseFloat(Math.min(props.max, add(props.value || 0, +props.step)).toFixed(precision.value))
-  emitValue(res)
+  const res = Math.min(props.max, add(props.value || 0, +props.step)).toFixed(precision.value)
+  emitValue(getNumberValue(res))
 }
 function onDown() {
-  const res = parseFloat(Math.max(props.min, add(props.value || 0, -props.step)).toFixed(precision.value))
-  emitValue(res)
+  const res = Math.max(props.min, add(props.value || 0, -props.step)).toFixed(precision.value)
+  emitValue(getNumberValue(res))
 }
 </script>
 <template>
@@ -189,7 +189,11 @@ function onDown() {
       />
     </div>
     <div class="m-handler-wrap">
-      <span class="m-arrow up-arrow" :class="{ 'arrow-disabled': (value || 0) >= max }" @click="onUp">
+      <span
+        class="m-arrow up-arrow"
+        :class="{ 'arrow-disabled': (value || 0) >= max }"
+        @click="(value || 0) >= max ? () => false : onUp()"
+      >
         <svg
           class="icon-svg"
           focusable="false"
@@ -205,7 +209,11 @@ function onDown() {
           ></path>
         </svg>
       </span>
-      <span class="m-arrow down-arrow" :class="{ 'arrow-disabled': (value || 0) <= min }" @click="onDown">
+      <span
+        class="m-arrow down-arrow"
+        :class="{ 'arrow-disabled': (value || 0) <= min }"
+        @click="(value || 0) <= min ? () => false : onDown()"
+      >
         <svg
           class="icon-svg"
           focusable="false"
