@@ -61,6 +61,7 @@
     -webkit-tap-highlight-color: transparent;
     outline: none;
     cursor: pointer;
+    transition: color 0.3s;
     &:hover {
       color: #4096ff;
     }
