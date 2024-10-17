@@ -11,15 +11,17 @@ interface Responsive {
   xxl?: number // ≥1600px 响应式栅格
 }
 interface Props {
+  color?: string // 头像的背景色
   shape?: 'circle' | 'square' // 指定头像的形状
-  size?: number | 'small' | 'default' | 'large' | Responsive // 设置头像的大小，number 类型时单位 px
+  size?: number | 'small' | 'middle' | 'large' | Responsive // 设置头像的大小，number 类型时单位 px
   src?: string // 图片类头像资源地址
   alt?: string // 图片无法显示时的替代文本
   icon?: VNode | Slot // 设置头像的图标
 }
 const props = withDefaults(defineProps<Props>(), {
+  color: 'rgba(0, 0, 0, 0.25)',
   shape: 'circle',
-  size: 'default',
+  size: 'middle',
   src: undefined,
   alt: undefined,
   icon: undefined
@@ -40,16 +42,18 @@ const avatarStyle = computed(() => {
   if (typeof props.size === 'number') {
     if (showIcon.value) {
       return {
-        width: props.size + 'px',
-        height: props.size + 'px',
-        lineHeight: props.size + 'px',
-        fontSize: props.size / 2 + 'px'
+        backgroundColor: props.color,
+        width: `${props.size}px`,
+        height: `${props.size}px`,
+        lineHeight: `${props.size}px`,
+        fontSize: `${props.size / 2}px`
       }
     } else {
       return {
-        width: props.size + 'px',
-        height: props.size + 'px',
-        lineHeight: props.size + 'px',
+        backgroundColor: props.color,
+        width: `${props.size}px`,
+        height: `${props.size}px`,
+        lineHeight: `${props.size}px`,
         fontSize: '18px'
       }
     }
@@ -70,13 +74,16 @@ const avatarStyle = computed(() => {
       size = props.size.xs
     }
     return {
-      width: size + 'px',
-      height: size + 'px',
-      lineHeight: size + 'px',
-      fontSize: size / 2 + 'px'
+      backgroundColor: props.color,
+      width: `${size}px`,
+      height: `${size}px`,
+      lineHeight: `${size}px`,
+      fontSize: `${size / 2}px`
     }
   }
-  return {}
+  return {
+    backgroundColor: props.color
+  }
 })
 const showStr = computed(() => {
   if (!props.src && !showIcon.value) {
@@ -87,13 +94,13 @@ const showStr = computed(() => {
 const strStyle = computed(() => {
   if (typeof props.size === 'string') {
     return {
-      transform: `scale(1) translateX(-50%)`
+      transform: 'scale(1) translateX(-50%)'
     }
   }
   if (typeof props.size === 'number') {
     const scale = Math.min(1, Math.max(1 / 45, (1 + (props.size - 9) * 1) / 45))
     return {
-      lineHeight: props.size + 'px',
+      lineHeight: `${props.size}px`,
       transform: `scale(${scale}) translateX(-50%)`
     }
   }
@@ -106,14 +113,14 @@ const strStyle = computed(() => {
     :class="[
       `avatar-${shape}`,
       {
-        [`avatar-${size}`]: typeof size === 'string',
+        [`avatar-${size}`]: typeof size === 'string' && ['small', 'middle', 'large'].includes(size),
         'avatar-image': src
       }
     ]"
     :style="avatarStyle"
   >
     <img v-if="src" class="avatar-image" :src="src" :alt="alt" />
-    <slot name="icon" v-if="!src && showIcon">
+    <slot v-if="!src && showIcon" name="icon">
       <component :is="icon" />
     </slot>
     <span v-if="!src && !showIcon && showStr" class="avatar-string" :style="strStyle">
@@ -127,14 +134,12 @@ const strStyle = computed(() => {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  vertical-align: middle;
   width: 32px;
   height: 32px;
   border-radius: 50%;
   font-size: 14px;
   color: #fff;
   line-height: 30px;
-  background: rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
   overflow: hidden;
   white-space: nowrap;
@@ -156,24 +161,6 @@ const strStyle = computed(() => {
     transform-origin: 0 center;
   }
 }
-.avatar-large {
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
-  line-height: 38px;
-  border-radius: 50%;
-  .avatar-icon {
-    font-size: 24px;
-  }
-  &.avatar-square {
-    border-radius: 8px;
-  }
-}
-.avatar-default {
-  .avatar-icon {
-    font-size: 18px;
-  }
-}
 .avatar-small {
   font-size: 14px;
   width: 24px;
@@ -185,6 +172,24 @@ const strStyle = computed(() => {
   }
   &.avatar-square {
     border-radius: 4px;
+  }
+}
+.avatar-middle {
+  .avatar-icon {
+    font-size: 18px;
+  }
+}
+.avatar-large {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  border-radius: 50%;
+  .avatar-icon {
+    font-size: 24px;
+  }
+  &.avatar-square {
+    border-radius: 8px;
   }
 }
 .avatar-image {
