@@ -52,6 +52,24 @@ import { UserOutlined, TeamOutlined, SketchOutlined } from '@ant-design/icons-vu
         </Avatar>
       </Space>
     </Space>
+    <h2 class="mt30 mb10">自定义背景色</h2>
+    <Space>
+      <Avatar color="#1677ff">
+        <template #icon>
+          <UserOutlined />
+        </template>
+      </Avatar>
+      <Avatar color="#ff6900" shape="square">
+        <template #icon>
+          <UserOutlined />
+        </template>
+      </Avatar>
+      <Avatar color="#87d068">
+        <template #icon>
+          <UserOutlined />
+        </template>
+      </Avatar>
+    </Space>
     <h2 class="mt30 mb10">自定义图标类型</h2>
     <Space align="center">
       <Avatar :icon="() => h(TeamOutlined)" />
@@ -64,15 +82,10 @@ import { UserOutlined, TeamOutlined, SketchOutlined } from '@ant-design/icons-vu
       <Avatar :size="40">USER</Avatar>
       <Avatar :size="40" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
       <Avatar style="color: #f56a00; background-color: #fde3cf">U</Avatar>
-      <Avatar style="background-color: #87d068">
-        <template #icon>
-          <UserOutlined />
-        </template>
-      </Avatar>
     </Space>
     <h2 class="mt30 mb10">带徽标的头像</h2>
     <Space>
-      <Badge :count="1">
+      <Badge :value="1">
         <Avatar shape="square">
           <template #icon>
             <UserOutlined />

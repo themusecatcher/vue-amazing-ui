@@ -12,7 +12,7 @@ import { UserOutlined, TeamOutlined, SketchOutlined } from '@ant-design/icons-vu
 
 ## 基本使用
 
-*三种尺寸，两种形状*
+*三种尺寸，两种形状可选*
 
 <br/>
 
@@ -121,6 +121,55 @@ import { UserOutlined } from '@ant-design/icons-vue'
 
 :::
 
+## 自定义背景色
+
+<Space>
+  <Avatar color="#1677ff">
+    <template #icon>
+      <UserOutlined />
+    </template>
+  </Avatar>
+  <Avatar color="#ff6900" shape="square">
+    <template #icon>
+      <UserOutlined />
+    </template>
+  </Avatar>
+  <Avatar color="#87d068">
+    <template #icon>
+      <UserOutlined />
+    </template>
+  </Avatar>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { UserOutlined } from '@ant-design/icons-vue'
+</script>
+<template>
+  <Space>
+    <Avatar color="#1677ff">
+      <template #icon>
+        <UserOutlined />
+      </template>
+    </Avatar>
+    <Avatar color="#ff6900" shape="square">
+      <template #icon>
+        <UserOutlined />
+      </template>
+    </Avatar>
+    <Avatar color="#87d068">
+      <template #icon>
+        <UserOutlined />
+      </template>
+    </Avatar>
+  </Space>
+</template>
+```
+
+:::
+
 ## 自定义图标类型
 
 <Space align="center">
@@ -134,11 +183,6 @@ import { UserOutlined } from '@ant-design/icons-vue'
   <Avatar :size="40">USER</Avatar>
   <Avatar :size="40" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
   <Avatar style="color: #f56a00; background-color: #fde3cf">U</Avatar>
-  <Avatar style="background-color: #87d068">
-    <template #icon>
-      <UserOutlined />
-    </template>
-  </Avatar>
 </Space>
 
 ::: details Show Code
@@ -160,11 +204,6 @@ import { UserOutlined, TeamOutlined } from '@ant-design/icons-vue'
     <Avatar :size="40">USER</Avatar>
     <Avatar :size="40" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
     <Avatar style="color: #f56a00; background-color: #fde3cf">U</Avatar>
-    <Avatar style="background-color: #87d068">
-      <template #icon>
-        <UserOutlined />
-      </template>
-    </Avatar>
   </Space>
 </template>
 ```
@@ -174,7 +213,7 @@ import { UserOutlined, TeamOutlined } from '@ant-design/icons-vue'
 ## 带徽标的头像
 
 <Space>
-  <Badge :count="1">
+  <Badge :value="1">
     <Avatar shape="square">
       <template #icon>
         <UserOutlined />
@@ -198,7 +237,7 @@ import { UserOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
   <Space>
-    <Badge :count="1">
+    <Badge :value="1">
       <Avatar shape="square">
         <template #icon>
           <UserOutlined />
@@ -249,8 +288,9 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
+color | 头像的背景色 | string | 'rgba(0, 0, 0, 0.25)'
 shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle'
-size | 设置头像的大小，`number`类型时单位 `px` | number &#124; 'small' &#124; 'default' &#124; 'large' &#124; [Responsive](#responsive-type) | 'default'
+size | 设置头像的大小，`number`类型时单位 `px` | number &#124; 'small' &#124; 'middle' &#124; 'large' &#124; [Responsive](#responsive-type) | 'middle'
 src | 图片类头像资源地址 | string | undefined
 alt | 图片无法显示时的替代文本 | string | undefined
 icon | 设置头像的图标 | VNode &#124; slot | undefined
