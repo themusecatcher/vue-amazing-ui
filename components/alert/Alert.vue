@@ -5,7 +5,8 @@ import { useSlotsExist } from '../utils'
 interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot
-  type?: 'success' | 'info' | 'warning' | 'error' // 指定警告提示的样式
+  type?: 'default' | 'success' | 'info' | 'warning' | 'error' // 警告提示的类型
+  bordered?: boolean // 是否显示边框
   closable?: boolean // 是否显示关闭按钮
   closeText?: string // 自定义关闭按钮 string | slot
   icon?: string // 自定义图标，showIcon 为 true 时有效 string | slot
@@ -15,7 +16,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   message: undefined,
   description: undefined,
-  type: 'info',
+  type: 'default',
+  bordered: true,
   closable: false,
   closeText: undefined,
   icon: undefined,
@@ -25,7 +27,10 @@ const props = withDefaults(defineProps<Props>(), {
 const alertRef = ref() // alert 模板引用
 const closeAlert = ref(false)
 const emit = defineEmits(['close'])
-const slotsExist = useSlotsExist(['description'])
+const slotsExist = useSlotsExist(['icon', 'description', 'actions'])
+const showSlotsIcon = computed(() => {
+  return slotsExist.icon || props.icon || ['success', 'info', 'warning', 'error'].includes(props.type)
+})
 const showDesc = computed(() => {
   return slotsExist.description || props.description
 })
@@ -45,11 +50,12 @@ async function onClose(e: Event) {
       :class="[
         `alert-${type}`,
         {
+          'alert-borderless': !bordered,
           'alert-width-description': showDesc
         }
       ]"
     >
-      <template v-if="showIcon">
+      <template v-if="showIcon && showSlotsIcon">
         <span v-if="!showDesc" class="m-alert-icon">
           <slot name="icon">
             <img v-if="icon" :src="icon" class="icon-img" />
@@ -115,7 +121,7 @@ async function onClose(e: Event) {
             </svg>
           </slot>
         </span>
-        <span class="m-big-icon" v-else>
+        <span v-else class="m-big-icon">
           <slot name="icon">
             <img v-if="icon" :src="icon" class="big-icon-img" />
             <svg
@@ -195,13 +201,13 @@ async function onClose(e: Event) {
       </template>
       <div class="m-alert-content">
         <div class="alert-message">
-          <slot name="message">{{ message }}</slot>
+          <slot>{{ message }}</slot>
         </div>
-        <div class="alert-description" v-if="showDesc">
+        <div v-if="showDesc" class="alert-description">
           <slot name="description">{{ description }}</slot>
         </div>
       </div>
-      <div class="m-alert-actions">
+      <div v-if="slotsExist.actions" class="m-alert-actions">
         <slot name="actions"></slot>
       </div>
       <a v-if="closable" tabindex="0" class="m-alert-close" @click="onClose" @keydown.enter.prevent="onClose">
@@ -303,6 +309,18 @@ async function onClose(e: Event) {
     }
   }
 }
+.alert-default {
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid #d9d9d9;
+  .m-alert-icon,
+  .m-big-icon {
+    color: rgba(0, 0, 0, 0.88);
+    .icon-svg,
+    :deep(svg) {
+      fill: currentColor;
+    }
+  }
+}
 .alert-info {
   background-color: #e6f4ff;
   border: 1px solid #91caff;
@@ -350,6 +368,9 @@ async function onClose(e: Event) {
       fill: currentColor;
     }
   }
+}
+.alert-borderless {
+  border: none;
 }
 .alert-width-description {
   align-items: flex-start;
