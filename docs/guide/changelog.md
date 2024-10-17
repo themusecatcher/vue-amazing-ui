@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.8.6 <Tag color="volcano" size="small">2024-10-18</Tag>
+
+- 优化并更新 [警告提示 Alert](https://themusecatcher.github.io/vue-amazing-ui/guide/components/alert.html) 组件，新增 `type: 'default'` 类型，以及 `bordered` 属性
+- 组件库及文档代码优化
+
 ## 1.8.5 <Tag color="volcano" size="small">2024-10-17</Tag>
 
 - 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件
