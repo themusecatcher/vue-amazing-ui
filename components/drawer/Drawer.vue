@@ -135,7 +135,7 @@ function onClose(e: Event) {
                 <slot name="extra">{{ extra }}</slot>
               </div>
             </div>
-            <Scrollbar :content-style="{ height: '100%' }" v-bind="scrollbarProps">
+            <Scrollbar v-bind="scrollbarProps">
               <div class="m-drawer-body" :class="bodyClass" :style="bodyStyle">
                 <slot></slot>
               </div>
@@ -171,7 +171,7 @@ function onClose(e: Event) {
                 <slot name="extra">{{ extra }}</slot>
               </div>
             </div>
-            <Scrollbar :content-style="{ height: '100%' }" v-bind="scrollbarProps">
+            <Scrollbar v-bind="scrollbarProps">
               <div class="m-drawer-body" :class="bodyClass" :style="bodyStyle">
                 <slot></slot>
               </div>

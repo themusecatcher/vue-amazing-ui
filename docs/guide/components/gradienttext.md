@@ -31,13 +31,13 @@
 
 :::
 
-## 文字大小
+## 文字样式
 
 <Space gap="small" vertical>
-  <GradientText :size="36" type="info">Live Forever</GradientText>
-  <GradientText :size="36" type="error">Live Forever</GradientText>
-  <GradientText :size="24" type="warning">Married with Children</GradientText>
-  <GradientText :size="24" type="success">Back in the USSR</GradientText>
+  <GradientText type="info" :size="36" :weight="500">Live Forever</GradientText>
+  <GradientText type="error" :size="36" :weight="600">Live Forever</GradientText>
+  <GradientText type="warning" :size="24" :weight="700">Married with Children</GradientText>
+  <GradientText type="success" :size="24" :weight="800">Back in the USSR</GradientText>
 </Space>
 
 ::: details Show Code
@@ -45,10 +45,10 @@
 ```vue
 <template>
   <Space gap="small" vertical>
-    <GradientText :size="36" type="info">Live Forever</GradientText>
-    <GradientText :size="36" type="error">Live Forever</GradientText>
-    <GradientText :size="24" type="warning">Married with Children</GradientText>
-    <GradientText :size="24" type="success">Back in the USSR</GradientText>
+    <GradientText type="info" :size="36" :weight="500">Live Forever</GradientText>
+    <GradientText type="error" :size="36" :weight="600">Live Forever</GradientText>
+    <GradientText type="warning" :size="24" :weight="700">Married with Children</GradientText>
+    <GradientText type="success" :size="24" :weight="800">Back in the USSR</GradientText>
   </Space>
 </template>
 ```
@@ -60,6 +60,7 @@
 <Space gap="small" vertical>
   <GradientText
     :size="24"
+    :weight="500"
     :gradient="{
       from: 'rgb(85, 85, 85)',
       to: 'rgb(170, 170, 170)'
@@ -68,6 +69,7 @@
   >
   <GradientText
     :size="24"
+    :weight="500"
     :gradient="{
       deg: 180,
       from: 'rgb(85, 85, 85)',
@@ -77,6 +79,7 @@
   >
   <GradientText
     :size="28"
+    :weight="500"
     :gradient="{
       deg: '90deg',
       from: '#09c8ce',
@@ -84,7 +87,7 @@
     }"
     >和标题一样的颜色</GradientText
   >
-  <GradientText :size="24" gradient="linear-gradient(90deg, red 0%, green 50%, blue 100%)">瞎写的颜色</GradientText>
+  <GradientText :size="24" :weight="500" gradient="linear-gradient(90deg, #1677ff 0%, lime 50%, #ff6900 100%)">瞎写的颜色</GradientText>
 </Space>
 
 ::: details Show Code
@@ -94,6 +97,7 @@
   <Space gap="small" vertical>
     <GradientText
       :size="24"
+      :weight="500"
       :gradient="{
         from: 'rgb(85, 85, 85)',
         to: 'rgb(170, 170, 170)'
@@ -102,6 +106,7 @@
     >
     <GradientText
       :size="24"
+      :weight="500"
       :gradient="{
         deg: 180,
         from: 'rgb(85, 85, 85)',
@@ -111,6 +116,7 @@
     >
     <GradientText
       :size="28"
+      :weight="500"
       :gradient="{
         deg: '90deg',
         from: '#09c8ce',
@@ -118,7 +124,7 @@
       }"
       >和标题一样的颜色</GradientText
     >
-    <GradientText :size="24" gradient="linear-gradient(90deg, red 0%, green 50%, blue 100%)">瞎写的颜色</GradientText>
+    <GradientText :size="24" :weight="500" gradient="linear-gradient(90deg, #1677ff 0%, lime 50%, #ff6900 100%)">瞎写的颜色</GradientText>
   </Space>
 </template>
 ```
@@ -133,6 +139,7 @@
 -- | -- | -- | --
 gradient | 文字渐变色参数 | string &#124; [Gradient](#gradient-type) | undefined
 size | 文字大小，不指定单位时，默认单位 `px` | number &#124; string | 14
+weight | 文字粗细 | number | 400
 type | 渐变文字的类型 | 'primary' &#124; 'info' &#124; 'success' &#124; 'warning' &#124; 'error' | 'primary'
 
 ### Gradient Type

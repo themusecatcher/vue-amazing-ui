@@ -187,7 +187,8 @@ watchEffect(() => {
   :width="240"
   show-time
   enable-seconds
-  v-model="dateTimeValue" />
+  v-model="dateTimeValue"
+/>
 
 ::: details Show Code
 
@@ -208,7 +209,8 @@ watchEffect(() => {
     :width="240"
     show-time
     enable-seconds
-    v-model="dateTimeValue" />
+    v-model="dateTimeValue"
+  />
 </template>
 ```
 
@@ -221,7 +223,8 @@ watchEffect(() => {
   range
   format="yyyy-MM-dd"
   :width="280"
-  v-model="rangeValue" />
+  v-model="rangeValue"
+/>
 
 ::: details Show Code
 
@@ -240,7 +243,8 @@ watchEffect(() => {
     range
     format="yyyy-MM-dd"
     :width="280"
-    v-model="rangeValue" />
+    v-model="rangeValue"
+  />
 </template>
 ```
 
@@ -255,7 +259,8 @@ watchEffect(() => {
   :width="280"
   range
   multi-calendars
-  v-model="rangeValue" />
+  v-model="rangeValue"
+/>
 
 ::: details Show Code
 
@@ -276,7 +281,8 @@ watchEffect(() => {
     :width="280"
     range
     multi-calendars
-    v-model="rangeValue" />
+    v-model="rangeValue"
+  />
 </template>
 ```
 
@@ -296,7 +302,8 @@ watchEffect(() => {
   range
   :preset-dates="presetDates"
   multi-calendars
-  v-model="rangeValue" />
+  v-model="rangeValue"
+/>
 
 ::: details Show Code
 
@@ -327,7 +334,8 @@ watchEffect(() => {
     range
     :preset-dates="presetDates"
     multi-calendars
-    v-model="rangeValue" />
+    v-model="rangeValue"
+  />
 </template>
 ```
 
@@ -342,7 +350,8 @@ watchEffect(() => {
   mode-height="120"
   format="HH:mm"
   :width="120"
-  v-model="timeValue" />
+  v-model="timeValue"
+/>
 
 ::: details Show Code
 
@@ -365,7 +374,8 @@ watchEffect(() => {
     mode-height="120"
     format="HH:mm"
     :width="120"
-    v-model="timeValue" />
+    v-model="timeValue"
+  />
 </template>
 ```
 
@@ -381,7 +391,8 @@ watchEffect(() => {
   mode-height="120"
   format="HH:mm:ss"
   :width="150"
-  v-model="secondsValue" />
+  v-model="secondsValue"
+/>
 
 ::: details Show Code
 
@@ -406,7 +417,8 @@ watchEffect(() => {
     mode-height="120"
     format="HH:mm:ss"
     :width="150"
-    v-model="secondsValue" />
+    v-model="secondsValue"
+  />
 </template>
 ```
 
@@ -423,7 +435,8 @@ watchEffect(() => {
   mode-height="120"
   format="HH:mm:ss"
   :width="240"
-  v-model="timeRangeValue" />
+  v-model="timeRangeValue"
+/>
 
 ::: details Show Code
 
@@ -457,20 +470,35 @@ watchEffect(() => {
     mode-height="120"
     format="HH:mm:ss"
     :width="240"
-    v-model="timeRangeValue" />
+    v-model="timeRangeValue"
+  />
 </template>
 ```
 
 :::
 
-## 周选择器 ({{ format(weekValue[0], 'yyyy-MM-dd') + ' - ' + format(weekValue[1], 'yyyy-MM-dd') }})
+## 周选择器
 
-<DatePicker
-  placeholder="请选择周"
-  v-model="weekValue"
-  mode="week"
-  format="yyyy年 第ww周"
-  :width="200" />
+<Space vertical>
+  <GradientText
+    :size="24"
+    :weight="600"
+    :gradient="{
+      deg: '90deg',
+      from: '#09c8ce',
+      to: '#eb2f96'
+    }"
+  >
+    {{ format(weekValue[0], 'yyyy-MM-dd') + ' ~ ' + format(weekValue[1], 'yyyy-MM-dd') }}
+  </GradientText>
+  <DatePicker
+    placeholder="请选择周"
+    v-model="weekValue"
+    mode="week"
+    format="yyyy年 第ww周"
+    :width="200"
+  />
+</Space>
 
 ::: details Show Code
 
@@ -486,12 +514,26 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <DatePicker
-    placeholder="请选择周"
-    v-model="weekValue"
-    mode="week"
-    format="yyyy年 第ww周"
-    :width="200" />
+  <Space vertical>
+    <GradientText
+      :size="24"
+      :weight="600"
+      :gradient="{
+        deg: '90deg',
+        from: '#09c8ce',
+        to: '#eb2f96'
+      }"
+    >
+      {{ format(weekValue[0], 'yyyy-MM-dd') + ' ~ ' + format(weekValue[1], 'yyyy-MM-dd') }}
+    </GradientText>
+    <DatePicker
+      placeholder="请选择周"
+      v-model="weekValue"
+      mode="week"
+      format="yyyy年 第ww周"
+      :width="200"
+    />
+  </Space>
 </template>
 ```
 
@@ -504,7 +546,8 @@ watchEffect(() => {
   mode="month"
   format="yyyy-MM"
   :width="150"
-  v-model="monthValue" />
+  v-model="monthValue"
+/>
 
 ::: details Show Code
 
@@ -525,7 +568,8 @@ watchEffect(() => {
     mode="month"
     format="yyyy-MM"
     :width="150"
-    v-model="monthValue" />
+    v-model="monthValue"
+  />
 </template>
 ```
 
@@ -538,7 +582,8 @@ watchEffect(() => {
   mode="year"
   format="yyyy"
   :width="120"
-  v-model="yearValue" />
+  v-model="yearValue"
+/>
 
 ::: details Show Code
 
@@ -556,7 +601,8 @@ watchEffect(() => {
     mode="year"
     format="yyyy"
     :width="120"
-    v-model="yearValue" />
+    v-model="yearValue"
+  />
 </template>
 ```
 

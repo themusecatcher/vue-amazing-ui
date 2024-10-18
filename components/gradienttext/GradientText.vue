@@ -8,11 +8,13 @@ interface Gradient {
 interface Props {
   gradient?: string | Gradient // 文字渐变色参数
   size?: number | string // 文字大小，不指定单位时，默认单位 px
+  weight?: number // 文字粗细
   type?: 'primary' | 'info' | 'success' | 'warning' | 'error' // 渐变文字的类型
 }
 const props = withDefaults(defineProps<Props>(), {
   gradient: undefined,
   size: 14,
+  weight: 400,
   type: 'primary'
 })
 enum TypeStartColor {
@@ -73,7 +75,7 @@ function isNumber(value: string | number): boolean {
   <span
     class="m-gradient-text"
     :style="[
-      `--rotate: ${rotate}; --color-start: ${colorStart}; --color-end: ${colorEnd}; --font-size: ${fontSize};`,
+      `--rotate: ${rotate}; --color-start: ${colorStart}; --color-end: ${colorEnd}; --font-size: ${fontSize}; --font-weight: ${weight};`,
       gradientText
     ]"
   >
@@ -84,7 +86,7 @@ function isNumber(value: string | number): boolean {
 .m-gradient-text {
   display: inline-block;
   font-size: var(--font-size);
-  font-weight: 500;
+  font-weight: var(--font-weight);
   line-height: 1.5714285714285714;
   -webkit-background-clip: text;
   background-clip: text;
