@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import Scrollbar from '../scrollbar'
 import { useSlotsExist } from '../utils'
@@ -41,6 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
   zIndex: 1000,
   open: false
 })
+const drawerRef = ref()
 const slotsExist = useSlotsExist(['title', 'extra', 'footer'])
 const emits = defineEmits(['update:open', 'close'])
 const drawerWidth = computed(() => {
@@ -80,17 +81,29 @@ const showExtra = computed(() => {
 const showFooter = computed(() => {
   return slotsExist.footer || props.footer
 })
-const drawerRef = ref()
 watch(
   () => props.open,
   (to) => {
     if (to) {
-      nextTick(() => {
-        drawerRef.value.focus()
-      })
+      drawerRef.value.focus()
+      // 锁定滚动
+      document.documentElement.style.overflowY = 'hidden'
+      document.body.style.overflowY = 'hidden'
+    } else {
+      // 解锁滚动
+      document.documentElement.style.removeProperty('overflow-y')
+      document.body.style.removeProperty('overflow-y')
     }
+  },
+  {
+    flush: 'post'
   }
 )
+onMounted(() => {
+  if (props.open) {
+    drawerRef.value.focus()
+  }
+})
 function onBlur(e: Event) {
   emits('update:open', false)
   emits('close', e)
