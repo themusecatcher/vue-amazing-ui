@@ -128,7 +128,7 @@ watchEffect(() => {
       format="yyyy-MM-dd"
       :width="280"
     />
-    <h2 class="mt30 mb10">日期范围选择器，双日期面板</h2>
+    <h2 class="mt30 mb10">双日期面板</h2>
     <DatePicker
       placeholder="请选择日期范围"
       v-model="rangeValue"
@@ -183,10 +183,21 @@ watchEffect(() => {
       format="HH:mm:ss"
       :width="240"
     />
-    <h2 class="mt30 mb10"
-      >周选择器 ({{ format(weekValue[0], 'yyyy-MM-dd') + ' - ' + format(weekValue[1], 'yyyy-MM-dd') }})</h2
-    >
-    <DatePicker placeholder="请选择周" v-model="weekValue" mode="week" format="yyyy年 第ww周" :width="200" />
+    <h2 class="mt30 mb10">周选择器</h2>
+    <Space vertical>
+      <GradientText
+        :size="24"
+        :weight="600"
+        :gradient="{
+          deg: '90deg',
+          from: '#09c8ce',
+          to: '#eb2f96'
+        }"
+      >
+        {{ format(weekValue[0], 'yyyy-MM-dd') + ' ~ ' + format(weekValue[1], 'yyyy-MM-dd') }}
+      </GradientText>
+      <DatePicker placeholder="请选择周" v-model="weekValue" mode="week" format="yyyy年 第ww周" :width="200" />
+    </Space>
     <h2 class="mt30 mb10">月选择器</h2>
     <DatePicker placeholder="请选择月" v-model="monthValue" mode="month" format="yyyy-MM" :width="150" />
     <h2 class="mt30 mb10">年选择器</h2>

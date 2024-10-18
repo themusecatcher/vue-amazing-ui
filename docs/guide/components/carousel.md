@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
@@ -769,7 +768,7 @@ function getCurrentIndex () {
       </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical>
+      <Flex gap="small" vertical>
         interval：<Slider v-model:value="carouselConfig.interval" :min="100" :step="10" :max="10000" />
       </Flex>
     </Col>
@@ -782,14 +781,14 @@ function getCurrentIndex () {
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex vertical> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
+      <Flex gap="small" vertical> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
     </Col>
     <Col :span="6"></Col>
     <Col :span="6">
       <Space gap="small" vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
     </Col>
     <Col :span="6">
-      <Flex vertical> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
+      <Flex gap="small" vertical> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
@@ -799,11 +798,11 @@ function getCurrentIndex () {
         dotActiveColor：<Input v-model:value="carouselConfig.dotActiveColor" placeholder="dotActiveColor" />
       </Flex>
     </Col>
-    <Col :span="12">
-      <Space gap="small" vertical>
+    <Col :span="6">
+      <Flex gap="small" vertical>
         dotPosition：
-        <Radio :options="positionOptions" v-model:value="carouselConfig.dotPosition" button button-style="solid" />
-      </Space>
+        <Select :options="positionOptions" v-model="carouselConfig.dotPosition" />
+      </Flex>
     </Col>
     <Col :span="6">
       <Space gap="small" vertical>
@@ -811,9 +810,8 @@ function getCurrentIndex () {
         <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
       </Space>
     </Col>
-    <Col :span="6"></Col>
     <Col :span="6">
-      <Flex vertical>
+      <Flex gap="small" vertical>
         fadeDuration：<Slider v-model:value="carouselConfig.fadeDuration" :min="100" :step="10" :max="10000" />
       </Flex>
     </Col>
@@ -850,7 +848,6 @@ function getCurrentIndex () {
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
@@ -913,7 +910,7 @@ const carouselConfig = reactive({
         </Space>
       </Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           interval：<Slider v-model:value="carouselConfig.interval" :min="100" :step="10" :max="10000" />
         </Flex>
       </Col>
@@ -926,14 +923,14 @@ const carouselConfig = reactive({
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
+        <Flex gap="small" vertical> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
       </Col>
       <Col :span="6"></Col>
       <Col :span="6">
         <Space gap="small" vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
       </Col>
       <Col :span="6">
-        <Flex vertical> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
+        <Flex gap="small" vertical> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
@@ -943,11 +940,11 @@ const carouselConfig = reactive({
           dotActiveColor：<Input v-model:value="carouselConfig.dotActiveColor" placeholder="dotActiveColor" />
         </Flex>
       </Col>
-      <Col :span="12">
-        <Space gap="small" vertical>
+      <Col :span="6">
+        <Flex gap="small" vertical>
           dotPosition：
-          <Radio :options="positionOptions" v-model:value="carouselConfig.dotPosition" button button-style="solid" />
-        </Space>
+          <Select :options="positionOptions" v-model="carouselConfig.dotPosition" />
+        </Flex>
       </Col>
       <Col :span="6">
         <Space gap="small" vertical>
@@ -955,9 +952,8 @@ const carouselConfig = reactive({
           <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
         </Space>
       </Col>
-      <Col :span="6"></Col>
       <Col :span="6">
-        <Flex vertical>
+        <Flex gap="small" vertical>
           fadeDuration：<Slider v-model:value="carouselConfig.fadeDuration" :min="100" :step="10" :max="10000" />
         </Flex>
       </Col>
