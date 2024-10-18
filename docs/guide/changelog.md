@@ -8,7 +8,7 @@
 - 优化并更新 [警告提示 Alert](https://themusecatcher.github.io/vue-amazing-ui/guide/components/alert.html) 组件，新增 `type: 'default'` 类型，以及 `bordered` 属性
 - 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html) 组件，新增 `color` 属性
 - 优化并更新 [渐变文字 GradientText](https://themusecatcher.github.io/vue-amazing-ui/guide/components/gradienttext.html) 组件，新增 `weight` 属性
-- 优化并更新 [抽屉 Drawer](https://themusecatcher.github.io/vue-amazing-ui/guide/components/gradienttext.html) 组件：开启抽屉时，禁止背景滚动
+- 优化并更新 [抽屉 Drawer](https://themusecatcher.github.io/vue-amazing-ui/guide/components/drawer.html) 组件：开启抽屉时，禁止背景滚动
 - 组件库及文档代码优化
 
 ## 1.8.5 <Tag color="volcano" size="small">2024-10-17</Tag>
