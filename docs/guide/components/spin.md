@@ -12,6 +12,21 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const spinning = ref(true)
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('middle')
 </script>
 
 ## 基本使用
@@ -269,100 +284,6 @@ const spinning = ref(true)
 
 :::
 
-## 自定义描述文案
-
-<Space>
-  <Spin class="u-spin" tip="加载中..." :spinning="spinning" />
-  <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="spin-dot" />
-  <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="spin-line" />
-  <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
-  <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
-  <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
-  <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="magic-ring" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const spinning = ref(true)
-</script>
-<template>
-  <Space>
-    <Spin class="u-spin" tip="加载中..." :spinning="spinning" />
-    <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="spin-dot" />
-    <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="spin-line" />
-    <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
-    <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
-    <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
-    <Spin class="u-spin" tip="加载中..." :spinning="spinning" indicator="magic-ring" />
-  </Space>
-</template>
-<style lang="less" scoped>
-.u-spin {
-  width: 100px !important;
-  height: 100px !important;
-}
-</style>
-```
-
-:::
-
-## 自定义样式
-
-<Space>
-  <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
-  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
-  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-line" />
-  <Spin class="u-spin" color="#fadb14" :spinning="spinning" :spin-circle-percent="50" indicator="ring-circle" />
-  <Spin
-    class="u-spin"
-    color="#fadb14"
-    :spin-circle-percent="50"
-    ring-rail-color="rgba(212, 136, 6, 0.6)"
-    :spinning="spinning"
-    indicator="ring-rail"
-  />
-  <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
-  <Spin class="u-spin" color="#fadb14" magic-ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const spinning = ref(true)
-</script>
-<template>
-  <Space>
-    <Spin class="u-spin" color="#fadb14" :spinning="spinning" />
-    <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
-    <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="spin-line" />
-    <Spin class="u-spin" color="#fadb14" :spinning="spinning" :spin-circle-percent="50" indicator="ring-circle" />
-    <Spin
-      class="u-spin"
-      color="#fadb14"
-      :spin-circle-percent="50"
-      ring-rail-color="rgba(212, 136, 6, 0.6)"
-      :spinning="spinning"
-      indicator="ring-rail"
-    />
-    <Spin class="u-spin" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
-    <Spin class="u-spin" color="#fadb14" magic-ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
-  </Space>
-</template>
-<style lang="less" scoped>
-.u-spin {
-  width: 100px !important;
-  height: 100px !important;
-}
-</style>
-```
-
-:::
-
 ## 各种大小
 
 <Space vertical>
@@ -422,6 +343,144 @@ const spinning = ref(true)
       <Spin class="u-spin" :spinning="spinning" size="small" indicator="magic-ring" />
       <Spin class="u-spin" :spinning="spinning" indicator="magic-ring" />
       <Spin class="u-spin" :spinning="spinning" size="large" indicator="magic-ring" />
+    </Space>
+  </Space>
+</template>
+<style lang="less" scoped>
+.u-spin {
+  width: 100px !important;
+  height: 100px !important;
+}
+</style>
+```
+
+:::
+
+## 自定义描述文案
+
+<Space vertical>
+  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <Space>
+    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" />
+    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-dot" />
+    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-line" />
+    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
+    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
+    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
+    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="magic-ring" />
+  </Space>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const spinning = ref(true)
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('middle')
+</script>
+<template>
+  <Space vertical>
+    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <Space>
+      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" />
+      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-dot" />
+      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-line" />
+      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
+      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
+      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
+      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="magic-ring" />
+    </Space>
+  </Space>
+</template>
+<style lang="less" scoped>
+.u-spin {
+  width: 100px !important;
+  height: 100px !important;
+}
+</style>
+```
+
+:::
+
+## 自定义样式
+
+<Space vertical>
+  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <Space>
+    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" />
+    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
+    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-line" />
+    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" :spin-circle-percent="50" indicator="ring-circle" />
+    <Spin
+      class="u-spin"
+      :size="size"
+      color="#fadb14"
+      :spin-circle-percent="50"
+      ring-rail-color="rgba(212, 136, 6, 0.6)"
+      :spinning="spinning"
+      indicator="ring-rail"
+    />
+    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+    <Spin class="u-spin" :size="size" color="#fadb14" magic-ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
+  </Space>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const spinning = ref(true)
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('middle')
+</script>
+<template>
+  <Space vertical>
+    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <Space>
+      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" />
+      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
+      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-line" />
+      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" :spin-circle-percent="50" indicator="ring-circle" />
+      <Spin
+        class="u-spin"
+        :size="size"
+        color="#fadb14"
+        :spin-circle-percent="50"
+        ring-rail-color="rgba(212, 136, 6, 0.6)"
+        :spinning="spinning"
+        indicator="ring-rail"
+      />
+      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+      <Spin class="u-spin" :size="size" color="#fadb14" magic-ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
     </Space>
   </Space>
 </template>

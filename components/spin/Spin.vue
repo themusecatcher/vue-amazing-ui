@@ -118,10 +118,10 @@ const circlePath = computed(() => {
           <div class="outer-ring"></div>
           <div class="inner-ring"></div>
         </div>
-        <p class="spin-tip" v-show="tip">{{ tip }}</p>
+        <p v-if="tip" class="spin-tip" :class="{ 'dot-tip': ['dot', 'spin-dot'].includes(indicator) }">{{ tip }}</p>
       </div>
     </div>
-    <div :class="['spin-content', { 'spin-blur': spinning }]">
+    <div class="spin-content" :class="{ 'spin-blur': spinning }">
       <slot></slot>
     </div>
   </div>
@@ -573,7 +573,10 @@ const circlePath = computed(() => {
       font-size: 14px;
       font-weight: 400;
       line-height: 16px;
-      margin-top: 6px;
+      margin-top: 8px;
+    }
+    .dot-tip {
+      margin-top: 12px;
     }
   }
 }
@@ -633,7 +636,10 @@ const circlePath = computed(() => {
       font-size: 14px;
       font-weight: 500;
       line-height: 18px;
-      margin-top: 10px;
+      margin-top: 12px;
+    }
+    .dot-tip {
+      margin-top: 16px;
     }
   }
 }
@@ -693,7 +699,10 @@ const circlePath = computed(() => {
       font-size: 16px;
       font-weight: 500;
       line-height: 20px;
-      margin-top: 14px;
+      margin-top: 16px;
+    }
+    .dot-tip {
+      margin-top: 22px;
     }
   }
 }
