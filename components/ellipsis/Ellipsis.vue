@@ -25,7 +25,7 @@ const defaultTooltipMaxWidth = ref()
 const emit = defineEmits(['expandChange'])
 const textMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
-    return props.maxWidth + 'px'
+    return `${props.maxWidth}px`
   }
   return props.maxWidth
 })

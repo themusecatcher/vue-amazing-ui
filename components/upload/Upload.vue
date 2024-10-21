@@ -14,28 +14,29 @@ interface MessageType {
   remove?: string // 删除成功的消息提示，没有设置该属性时即不显示删除消息提示
 }
 interface Props {
-  accept?: string // 接受上传的文件类型，与 <input type="file" /> 的 accept 属性一致，参考 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file
-  multiple?: boolean // 是否支持多选文件
+  accept?: string // 接受上传的文件类型，与 <input type="file" /> 的 accept 属性一致，参考 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept
+  multiple?: boolean // 是否支持多选文件，开启后可选择多个文件
   maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
   tip?: string // 上传描述文字 string | slot
   fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 预览图片缩放规则，仅当上传文件为图片时生效
+  disabled?: boolean // 是否禁用，只能预览，不能删除和上传
   spaceProps?: object // Space 组件属性配置，用于配置多个文件时的排列方式
   spinProps?: object // Spin 组件属性配置，用于配置上传中样式
   imageProps?: object // Image 组件属性配置，用于配置图片预览
   messageProps?: object // Message 组件属性配置，用于配置操作消息提示
-  actionMessage?: MessageType // 操作成功的消息提示，传 {} 即可不显示任何消息提示
-  beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 继续上传，通常用来现在用户上传的文件格式和大小
+  actionMessage?: MessageType // 操作完成的消息提示，传 {} 即可不显示任何消息提示
+  beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 开始上传；支持返回一个 Promise 对象（如服务端校验等），Promise 对象 reject 时停止上传，resolve 时开始上传；通常用来校验用户上传的文件格式和大小
   uploadMode?: 'base64' | 'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
   customRequest?: Function // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
-  disabled?: boolean // 是否禁用，只能预览，不能删除和上传
   fileList?: FileType[] // (v-model) 已上传的文件列表
 }
 const props = withDefaults(defineProps<Props>(), {
   accept: '*', // 默认支持所有类型
   multiple: false,
-  maxCount: 1,
+  maxCount: undefined,
   tip: 'Upload',
   fit: 'contain',
+  disabled: false,
   spaceProps: () => ({}),
   spinProps: () => ({}),
   imageProps: () => ({}),
@@ -44,44 +45,48 @@ const props = withDefaults(defineProps<Props>(), {
   beforeUpload: () => true,
   uploadMode: 'base64',
   customRequest: () => {},
-  disabled: false,
   fileList: () => []
 })
 const uploadedFiles = ref<FileType[]>([]) // 上传文件列表
-const showUpload = ref(1)
-const uploading = ref<boolean[]>(Array(props.maxCount).fill(false))
-const uploadInputRef = ref()
+const showUpload = ref(1) // 展示的上传框
+const uploading = ref<boolean[]>([]) // 上传中
+const uploadInputRef = ref() // 上传文件控件引用
 const imageRef = ref()
 const messageRef = ref()
-const emits = defineEmits(['update:fileList', 'change', 'remove'])
+const emits = defineEmits(['update:fileList', 'drop', 'change', 'preview', 'remove'])
+const maxFileCount = computed(() => {
+  if (props.maxCount === undefined) {
+    return Infinity
+  }
+  return props.maxCount
+})
 watchEffect(() => {
-  // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   initUpload()
 })
 function initUpload() {
   uploadedFiles.value = [...props.fileList]
-  if (uploadedFiles.value.length > props.maxCount) {
-    uploadedFiles.value.splice(props.maxCount)
+  if (uploadedFiles.value.length > maxFileCount.value) {
+    uploadedFiles.value.splice(maxFileCount.value)
   }
   if (props.disabled) {
     // 禁用
     showUpload.value = uploadedFiles.value.length
   } else {
-    if (uploadedFiles.value.length < props.maxCount) {
+    if (uploadedFiles.value.length < maxFileCount.value) {
       showUpload.value = props.fileList.length + 1
     } else {
-      showUpload.value = props.maxCount
+      showUpload.value = maxFileCount.value
     }
   }
 }
 function isImage(url: string) {
-  // 检查url是否为图片
+  // 检查 url 是否为图片
   const imageUrlReg = /\.(jpg|jpeg|png|gif)$/i
   const base64Reg = /^data:image/
   return imageUrlReg.test(url) || base64Reg.test(url)
 }
 function isPDF(url: string) {
-  // 检查url是否为pdf
+  // 检查 url 是否为pdf
   const pdfUrlReg = /\.pdf$/i
   const base64Reg = /^data:application\/pdf/
   return pdfUrlReg.test(url) || base64Reg.test(url)
@@ -92,7 +97,7 @@ function onDrop(e: DragEvent, index: number) {
   if (files?.length) {
     const len = files.length
     for (let n = 0; n < len; n++) {
-      if (index + n <= props.maxCount) {
+      if (index + n <= maxFileCount.value) {
         uploadFile(files[n], index + n)
       } else {
         break
@@ -101,6 +106,7 @@ function onDrop(e: DragEvent, index: number) {
     // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
     uploadInputRef.value[index].value = ''
   }
+  emits('drop', e)
 }
 function onClick(index: number) {
   uploadInputRef.value[index].click()
@@ -111,7 +117,7 @@ function onUpload(e: any, index: number) {
   if (files?.length) {
     const len = files.length
     for (let n = 0; n < len; n++) {
-      if (index + n < props.maxCount) {
+      if (index + n < maxFileCount.value) {
         uploadFile(files[n], index + n)
       } else {
         break
@@ -121,25 +127,54 @@ function onUpload(e: any, index: number) {
     uploadInputRef.value[index].value = ''
   }
 }
-const uploadFile = (file: File, index: number) => {
+const uploadFile = async (file: File, index: number) => {
   // 统一上传文件方法
   // console.log('开始上传 upload-event files:', file)
-  if (props.beforeUpload(file)) {
-    // 使用用户钩子进行上传前文件判断，例如大小、类型限制
-    if (props.maxCount > showUpload.value) {
-      showUpload.value++
-    }
-    if (props.uploadMode === 'base64') {
-      // 以base64方式读取文件
-      uploading.value[index] = true
-      base64Upload(file, index)
-    }
-    if (props.uploadMode === 'custom') {
-      // 自定义上传行为，需配合 customRequest 属性
-      uploading.value[index] = true
-      customUpload(file, index)
-    }
+  const promiseFunction = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        // 尝试执行传入的函数，并获取返回值
+        const result = props.beforeUpload(file)
+        // 检查返回值是否是 Promise
+        if (result instanceof Promise) {
+          // 如果是 Promise，则等待其 resolve 或 reject
+          result.then(resolve, reject)
+        } else {
+          // 检查返回值是否为布尔值
+          if (typeof result === 'boolean') {
+            // 如果是布尔值，根据值resolve或reject
+            result ? resolve(result) : reject(new Error('Function returned false'))
+          } else {
+            // 否则，直接resolve返回值
+            resolve(result)
+          }
+        }
+      } catch (error) {
+        // 如果执行过程中抛出错误，则 reject 错误
+        reject(error)
+      }
+    })
   }
+  promiseFunction()
+    .then(() => {
+      // 使用用户钩子进行上传前文件判断，例如大小、类型限制
+      if (maxFileCount.value > showUpload.value) {
+        showUpload.value++
+      }
+      if (props.uploadMode === 'base64') {
+        // 以base64方式读取文件
+        uploading.value[index] = true
+        base64Upload(file, index)
+      }
+      if (props.uploadMode === 'custom') {
+        // 自定义上传行为，需配合 customRequest 属性
+        uploading.value[index] = true
+        customUpload(file, index)
+      }
+    })
+    .catch((error: any) => {
+      console.log('beforeUpload error:', error)
+    })
 }
 function base64Upload(file: File, index: number) {
   var reader = new FileReader()
@@ -193,7 +228,7 @@ function customUpload(file: File, index: number) {
       emits('change', uploadedFiles.value)
     })
     .catch((err: any) => {
-      if (props.maxCount > 1) {
+      if (maxFileCount.value > 1) {
         showUpload.value = uploadedFiles.value.length + 1
       }
       messageRef.value.error(err)
@@ -202,21 +237,22 @@ function customUpload(file: File, index: number) {
       uploading.value[index] = false
     })
 }
-function onPreview(n: number, url: string) {
+function onPreview(index: number, url: string) {
   if (isImage(url)) {
-    const files = uploadedFiles.value.slice(0, n).filter((file) => !isImage(file.url))
-    imageRef.value[n - files.length].preview(0)
+    const files = uploadedFiles.value.slice(0, index).filter((file) => !isImage(file.url))
+    imageRef.value[index - files.length].preview(0)
   } else {
     window.open(url)
   }
+  emits('preview', uploadedFiles.value[index])
 }
 function onRemove(index: number) {
-  if (uploadedFiles.value.length < props.maxCount) {
+  if (uploadedFiles.value.length < maxFileCount.value) {
     showUpload.value--
   }
   const removeFile = uploadedFiles.value.splice(index, 1)
   props.actionMessage.remove && messageRef.value.success(props.actionMessage.remove)
-  emits('remove', removeFile)
+  emits('remove', removeFile[0])
   emits('update:fileList', uploadedFiles.value)
   emits('change', uploadedFiles.value)
 }
@@ -296,6 +332,7 @@ defineExpose({
               :bordered="false"
               :width="82"
               :height="82"
+              :fit="fit"
               :src="uploadedFiles[n - 1].url"
               :name="uploadedFiles[n - 1].name"
               v-bind="imageProps"
