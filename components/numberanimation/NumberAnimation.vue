@@ -60,11 +60,17 @@ const emits = defineEmits(['started', 'finished'])
 watchEffect(() => {
   source.value = props.from
 })
-watch([() => props.from, () => props.to], () => {
-  if (props.autoplay) {
-    play()
+watch(
+  () => [props.from, props.to],
+  () => {
+    if (props.autoplay) {
+      play()
+    }
+  },
+  {
+    deep: true
   }
-})
+)
 onMounted(() => {
   props.autoplay && play()
 })
