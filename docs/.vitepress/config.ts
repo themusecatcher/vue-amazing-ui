@@ -51,6 +51,9 @@ export default defineConfig({
       { text: '组件', link: '/guide/features', activeMatch: '/guide/' },
       { text: '工具', link: '/utils/started', activeMatch: '/utils/' },
       {
+        text: '✨ 赞助', link: '/sponsor/personal',
+      },
+      {
         text: '链接',
         items: [
           { text: 'My Github', link: 'https://github.com/themusecatcher' },
