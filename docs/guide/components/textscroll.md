@@ -14,11 +14,11 @@ import { ref, reactive } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '首次出版于1951年',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
@@ -26,16 +26,16 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 const singleText = {
   title: '请用一只玫瑰纪念我...',
-  link: 'https://blog.csdn.net/Dandrose?type=blog'
+  href: 'https://blog.csdn.net/Dandrose?type=blog'
 }
 const textScroll = ref()
 const disabled = ref(true)
@@ -84,11 +84,11 @@ import { ref } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '首次出版于1951年',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
@@ -96,11 +96,11 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 function onClick (text: string) { // 获取点击的标题
@@ -131,7 +131,7 @@ function onClick (text: string) { // 获取点击的标题
 import { ref } from 'vue'
 const singleText = {
   title: '请用一只玫瑰纪念我...',
-  link: 'https://blog.csdn.net/Dandrose?type=blog'
+  href: 'https://blog.csdn.net/Dandrose?type=blog'
 }
 function onClick (text: string) { // 获取点击的标题
   console.log('text', text)
@@ -168,11 +168,11 @@ import { ref } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '首次出版于1951年',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
@@ -180,11 +180,11 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 function onClick (text: string) { // 获取点击的标题
@@ -206,7 +206,7 @@ function onClick (text: string) { // 获取点击的标题
 
 ## 自定义链接悬浮样式
 
-<TextScroll :scrollText="scrollText" link-hover-color="#ff6900" @click="onClick" />
+<TextScroll :scrollText="scrollText" href-hover-color="#ff6900" @click="onClick" />
 
 ::: details Show Code
 
@@ -216,11 +216,11 @@ import { ref } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '首次出版于1951年',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
@@ -228,11 +228,11 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 function onClick (text: string) { // 获取点击的标题
@@ -240,7 +240,7 @@ function onClick (text: string) { // 获取点击的标题
 }
 </script>
 <template>
-  <TextScroll :scrollText="scrollText" link-hover-color="#ff6900" @click="onClick" />
+  <TextScroll :scrollText="scrollText" href-hover-color="#ff6900" @click="onClick" />
 </template>
 ```
 
@@ -265,11 +265,11 @@ import { ref } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '首次出版于1951年',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
@@ -277,11 +277,11 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 function onClick (text: string) { // 获取点击的标题
@@ -327,11 +327,11 @@ import { ref } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '首次出版于1951年',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
@@ -339,11 +339,11 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 const textScroll = ref()
@@ -397,11 +397,11 @@ import { ref } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '首次出版于1951年',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
@@ -409,11 +409,11 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 function onClick (text: string) { // 获取点击的标题
@@ -527,11 +527,11 @@ import { ref, reactive } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '首次出版于1951年',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
@@ -539,11 +539,11 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 function onClick(text: any) {
@@ -683,6 +683,7 @@ width | 滚动区域宽度，单位 `px` | number &#124; string | '100%'
 height | 滚动区域高度，单位 `px` | number | 50
 boardStyle | 滚动区域样式，优先级低于 `width`、`height` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 textStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+hrefHoverColor | 链接文字鼠标悬浮颜色；仅当 `href` 存在时生效 | string | '#1677ff'
 amount | 滚动区域展示条数，水平滚动时生效 | number | 4
 gap | 水平滚动文字各列间距或垂直滚动文字两边的边距，单位 `px` |  number | 20
 interval | 水平滚动动画执行时间间隔，单位 `ms`，水平滚动时生效 | number | 10
@@ -695,7 +696,8 @@ verticalInterval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动�
 名称 | 说明 | 类型 | 默认
 -- | -- | -- | --
 title | 文字标题 | string | undefined
-link? | 跳转链接 | string | undefined
+href? | 跳转链接 | string | undefined
+target? | 跳转链接打开方式，`href` 存在时生效 | '_self' &#124; '_blank' | undefined
 
 ## Methods
 

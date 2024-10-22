@@ -66,7 +66,8 @@ function onWaveEnd() {
 }
 </script>
 <template>
-  <a
+  <component
+    :is="href ? 'a' : 'div'"
     tabindex="0"
     class="m-btn"
     :class="[
@@ -84,8 +85,8 @@ function onWaveEnd() {
       buttonClass
     ]"
     :style="`--ripple-color: ${rippleColor || presetRippleColors[type]};`"
-    :href="href ? href : 'javascript:void(0);'"
-    :target="href ? target : '_self'"
+    :href="href"
+    :target="target"
     @click="disabled || loading ? () => false : onClick($event)"
     @keydown.enter.prevent="disabled || loading ? () => false : onKeyboard($event)"
   >
@@ -113,7 +114,7 @@ function onWaveEnd() {
       <slot></slot>
     </span>
     <div v-if="!disabled" class="button-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
-  </a>
+  </component>
 </template>
 <style lang="less" scoped>
 @primary: #1677ff;

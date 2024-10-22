@@ -138,9 +138,9 @@ function getImageName(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <a class="image-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
-        <img class="u-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
-      </a>
+      <component :is="image.link ? 'a' : 'div'" class="swiper-link" :href="image.link" target="_blank">
+        <img class="swiper-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
+      </component>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </SwiperSlide>
   </Swiper>
@@ -158,9 +158,9 @@ function getImageName(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <a class="image-link" :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'">
-        <img class="u-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
-      </a>
+      <component :is="image.link ? 'a' : 'div'" class="swiper-link" :href="image.link" target="_blank">
+        <img class="swiper-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
+      </component>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </SwiperSlide>
   </Swiper>
@@ -177,18 +177,18 @@ function getImageName(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <a :href="image.link ? image.link : 'javascript:;'" :target="image.link ? '_blank' : '_self'" class="image-link">
-        <img class="u-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
-      </a>
+      <component :is="image.link ? 'a' : 'div'" class="swiper-link" :href="image.link" target="_blank">
+        <img class="swiper-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
+      </component>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
     </SwiperSlide>
   </Swiper>
 </template>
 <style lang="less" scoped>
-.image-link {
+.swiper-link {
   display: block;
   height: 100%;
-  .u-image {
+  .swiper-image {
     width: 100%;
     height: 100%;
     object-fit: cover;

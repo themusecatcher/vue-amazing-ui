@@ -103,7 +103,8 @@ function onClick(e: Event) {
 }
 </script>
 <template>
-  <a
+  <component
+    :is="href ? 'a' : 'div'"
     tabindex="0"
     class="m-float-btn"
     :class="`float-btn-${type} float-btn-${shape}`"
@@ -115,8 +116,8 @@ function onClick(e: Event) {
       --float-btn-top: ${floatBtnTop};
       --float-btn-bottom: ${floatBtnBottom}
     `"
-    :href="href ? href : 'javascript:void(0);'"
-    :target="href ? target : '_self'"
+    :href="href"
+    :target="target"
     @click="onClick"
     @blur="menuTrigger === 'click' ? (showMenu = false) : null"
     @mouseenter="menuTrigger === 'hover' ? (showMenu = true) : null"
@@ -162,7 +163,7 @@ function onClick(e: Event) {
         <slot name="menu"></slot>
       </div>
     </Transition>
-  </a>
+  </component>
 </template>
 <style lang="less" scoped>
 .fade-move,

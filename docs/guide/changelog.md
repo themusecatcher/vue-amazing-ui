@@ -5,7 +5,8 @@
 
 ## 1.8.8 <Tag color="volcano" size="small">2024-10-22</Tag>
 
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，新增 `linkHoverColor` 属性，支持自定义链接悬浮颜色
+- 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html) 组件，新增 `href` `target` 属性，支持链接跳转功能
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，新增 `hrefHoverColor` 属性，支持自定义链接悬浮颜色
 - 组件库及文档代码优化
 
 ## 1.8.7 <Tag color="volcano" size="small">2024-10-21</Tag>
