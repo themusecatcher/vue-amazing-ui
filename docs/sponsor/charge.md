@@ -9,6 +9,8 @@
 import { ref } from 'vue'
 import { HeartFilled, HeartOutlined } from '@ant-design/icons-vue'
 import { useMediaQuery } from 'vue-amazing-ui'
+import WeChat from '/wechat.jpg'
+import Alipay from '/alipay.jpg'
 
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 const sponsorText = {
@@ -18,11 +20,13 @@ const sponsorOptions = ['WeChat', 'Alipay']
 const sponsorType = ref('WeChat')
 const QRCodes = [
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/wechat.jpg',
+    src: WeChat,
+    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/wechat.jpg',
     name: 'WeChat'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/alipay.jpg',
+    src: Alipay,
+    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/alipay.jpg',
     name: 'Alipay'
   }
 ]
@@ -45,8 +49,8 @@ const QRCodes = [
   <br/>
   <br/>
   <Card :width="248">
-    <img v-show="sponsorType === 'WeChat'" class="qrcode-image" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/wechat.jpg" />
-    <img v-show="sponsorType === 'Alipay'" class="qrcode-image" src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/alipay.jpg" />
+    <img v-show="sponsorType === 'WeChat'" class="qrcode-image" :src="WeChat" />
+    <img v-show="sponsorType === 'Alipay'" class="qrcode-image" :src="Alipay" />
   </Card>
 </template>
 <Card v-else :body-style="{ position: 'relative' }">
