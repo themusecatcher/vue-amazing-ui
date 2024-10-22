@@ -4,7 +4,8 @@ import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
 interface Text {
   title: string // 文字标题
-  link?: string // 跳转链接
+  href?: string // 跳转链接
+  target?: '_self' | '_blank' // 跳转链接打开方式，href 存在时生效
 }
 interface Props {
   scrollText?: Text[] | Text // 滚动文字数组，single 为 true 时，类型为 Text；多条文字滚动时，数组长度必须大于等于 amount 才能滚动
@@ -13,7 +14,7 @@ interface Props {
   height?: number // 滚动区域高度，单位 px
   boardStyle?: CSSProperties // 滚动区域样式，优先级低于 width、height
   textStyle?: CSSProperties // 滚动文字样式
-  linkHoverColor?: string // 链接文字鼠标悬浮颜色；仅当 link 存在时生效
+  hrefHoverColor?: string // 链接文字鼠标悬浮颜色；仅当 href 存在时生效
   amount?: number // 滚动区域展示条数，水平滚动时生效
   gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距，单位 px
   interval?: number // 水平滚动动画执行时间间隔，单位 ms，水平滚动时生效
@@ -28,7 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
   height: 50,
   boardStyle: () => ({}),
   textStyle: () => ({}),
-  linkHoverColor: '#1677ff',
+  hrefHoverColor: '#1677ff',
   amount: 4,
   gap: 20,
   interval: 10,
@@ -181,25 +182,26 @@ defineExpose({
     class="m-slider-horizontal"
     :style="[
       boardStyle,
-      `--link-hover-color: ${linkHoverColor}; --text-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
+      `--href-hover-color: ${hrefHoverColor}; --text-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
     ]"
   >
     <div class="m-scroll-view" :style="`will-change: transform; transform: translateX(${-left}px);`">
-      <a
+      <component
+        :is="text.href ? 'a' : 'div'"
         class="slide-text"
-        :class="{ 'link-text': text.link }"
+        :class="{ 'href-text': text.href }"
         :style="[textStyle, `width: ${distance}px;`]"
         v-for="(text, index) in <Text[]>textData"
         :key="index"
         :title="text.title"
-        :href="text.link ? text.link : 'javascript:void(0);'"
-        :target="text.link ? '_blank' : '_self'"
+        :href="text.href"
+        :target="text.target"
         @mouseenter="stopMove"
         @mouseleave="startMove"
         @click="onClick(text)"
       >
         {{ text.title || '--' }}
-      </a>
+      </component>
     </div>
   </div>
   <div
@@ -208,24 +210,25 @@ defineExpose({
     class="m-slider-vertical"
     :style="[
       boardStyle,
-      `--link-hover-color: ${linkHoverColor}; --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
+      `--href-hover-color: ${hrefHoverColor}; --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
     ]"
   >
     <TransitionGroup name="slide">
       <div class="m-scroll-view" v-for="(text, index) in <Text[]>textData" :key="index" v-show="activeIndex === index">
-        <a
+        <component
+          :is="text.href ? 'a' : 'div'"
           class="slide-text"
-          :class="{ 'link-text': text.link }"
+          :class="{ 'href-text': text.href }"
           :style="textStyle"
           :title="text.title"
-          :href="text.link ? text.link : 'javascript:;'"
-          :target="text.link ? '_blank' : '_self'"
+          :href="text.href"
+          :target="text.target"
           @mouseenter="stopMove"
           @mouseleave="startMove"
           @click="onClick(text)"
         >
           {{ text.title || '--' }}
-        </a>
+        </component>
       </div>
     </TransitionGroup>
   </div>
@@ -251,11 +254,11 @@ defineExpose({
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .link-text {
+    .href-text {
       cursor: pointer;
       transition: color 0.3s;
       &:hover {
-        color: var(--link-hover-color) !important;
+        color: var(--href-hover-color) !important;
       }
     }
   }
@@ -297,11 +300,11 @@ defineExpose({
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-    .link-text {
+    .href-text {
       cursor: pointer;
       transition: color 0.3s;
       &:hover {
-        color: var(--link-hover-color) !important;
+        color: var(--href-hover-color) !important;
       }
     }
   }

@@ -31,7 +31,10 @@ const breadcrumbAmount = computed(() => {
   return props.routes.length
 })
 function getUrl(route: Route) {
-  var targetUrl = route.path
+  let targetUrl: string = ''
+  if (route.path) {
+    targetUrl = route.path
+  }
   if (route.query && JSON.stringify(route.query) !== '{}') {
     const query = route.query
     Object.keys(query).forEach((param, index) => {
@@ -48,26 +51,20 @@ function getUrl(route: Route) {
 <template>
   <div class="m-breadcrumb" :class="breadcrumbClass" :style="breadcrumbStyle">
     <div class="m-breadcrumb-item" v-for="(route, index) in routes" :key="index">
-      <a
-        v-if="route.path"
-        class="breadcrumb-link link-hover"
-        :class="{ 'link-active': index === breadcrumbAmount - 1 }"
+      <component
+        :is="route.path ? 'a' : 'span'"
+        class="breadcrumb-link"
+        :class="{
+          'link-hover': route.path,
+          'link-active': index === breadcrumbAmount - 1
+        }"
         :style="`max-width: ${maxWidth}px;`"
         :href="getUrl(route)"
         :target="target"
         :title="route.name"
       >
         {{ route.name }}
-      </a>
-      <span
-        v-else
-        class="breadcrumb-link"
-        :class="{ 'link-active': index === breadcrumbAmount - 1 }"
-        :style="`max-width: ${maxWidth}px;`"
-        :title="route.name"
-      >
-        {{ route.name }}
-      </span>
+      </component>
       <span v-if="index < breadcrumbAmount - 1" class="breadcrumb-separator" :style="separatorStyle">
         <slot name="separator" :index="index">
           <span v-if="separator">{{ separator }}</span>

@@ -106,5 +106,14 @@ import { UserOutlined, TeamOutlined, SketchOutlined } from '@ant-design/icons-vu
         <SketchOutlined />
       </template>
     </Avatar>
+    <h2 class="mt30 mb10">链接跳转</h2>
+    <Tooltip tooltip="themusecatcher@github">
+      <Avatar
+        :size="36"
+        src="https://github.com/themusecatcher.png"
+        href="https://github.com/themusecatcher"
+        target="_blank"
+      />
+    </Tooltip>
   </div>
 </template>

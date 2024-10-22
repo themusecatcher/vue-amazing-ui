@@ -617,7 +617,7 @@ loading | 加载中信息提示 | (content: string) => void
 
 名称 | 说明 | 类型
 -- | -- | --
-drop | 当文件被拖入上传区域时的回调 | (e: DragEvent) => void
-change | 上传文件改变时的回调 | (files: FileType[]) => void
-preview | 点击预览时的回调 | (file: FileType) => void
-remove | 点击移除文件时的回调 | (files: FileType) => void
+drop | 当文件被拖入上传区域时的回调 | (e: [DragEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/DragEvent/DragEvent)) => void
+change | 上传文件改变时的回调 | (files: [FileType](#filetype-type)[]) => void
+preview | 点击预览时的回调 | (file: [FileType](#filetype-type)) => void
+remove | 点击移除文件时的回调 | (files: [FileType](#filetype-type)) => void

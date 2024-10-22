@@ -17,6 +17,8 @@ interface Props {
   src?: string // 图片类头像资源地址
   alt?: string // 图片无法显示时的替代文本
   icon?: VNode | Slot // 设置头像的图标
+  href?: string // 点击跳转的地址，指定此属性按钮的行为和 a 链接一致
+  target?: '_self' | '_blank' // 相当于 a 标签的 target 属性，href 存在时生效
 }
 const props = withDefaults(defineProps<Props>(), {
   color: 'rgba(0, 0, 0, 0.25)',
@@ -24,7 +26,9 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   src: undefined,
   alt: undefined,
-  icon: undefined
+  icon: undefined,
+  href: undefined,
+  target: '_self'
 })
 const viewportWidth = ref(window.innerWidth)
 function getViewportWidth() {
@@ -108,25 +112,29 @@ const strStyle = computed(() => {
 })
 </script>
 <template>
-  <div
+  <component
+    :is="href ? 'a' : 'div'"
     class="m-avatar"
     :class="[
       `avatar-${shape}`,
       {
         [`avatar-${size}`]: typeof size === 'string' && ['small', 'middle', 'large'].includes(size),
-        'avatar-image': src
+        'avatar-image': src,
+        'avatar-link': href
       }
     ]"
     :style="avatarStyle"
+    :href="href"
+    :target="target"
   >
-    <img v-if="src" class="avatar-image" :src="src" :alt="alt" />
+    <img v-if="src" class="image-item" :src="src" :alt="alt" />
     <slot v-if="!src && showIcon" name="icon">
       <component :is="icon" />
     </slot>
-    <span v-if="!src && !showIcon && showStr" class="avatar-string" :style="strStyle">
+    <span v-if="!src && !showIcon && showStr" class="string-item" :style="strStyle">
       <slot></slot>
     </span>
-  </div>
+  </component>
 </template>
 <style lang="less" scoped>
 .m-avatar {
@@ -143,19 +151,26 @@ const strStyle = computed(() => {
   border: 1px solid transparent;
   overflow: hidden;
   white-space: nowrap;
+  cursor: auto;
+  outline: none;
+  &:hover {
+    color: #fff;
+  }
   &.avatar-square {
     border-radius: 6px;
   }
-  .avatar-image {
+  .image-item {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
   :deep(svg) {
+    width: 1em;
+    height: 1em;
     fill: currentColor;
   }
-  .avatar-string {
+  .string-item {
     position: absolute;
     left: 50%;
     transform-origin: 0 center;
@@ -194,5 +209,8 @@ const strStyle = computed(() => {
 }
 .avatar-image {
   background: transparent;
+}
+.avatar-link {
+  cursor: pointer;
 }
 </style>

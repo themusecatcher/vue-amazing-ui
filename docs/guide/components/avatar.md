@@ -282,6 +282,34 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 
 :::
 
+## 链接跳转
+
+<Tooltip tooltip="themusecatcher@github">
+  <Avatar
+    :size="36"
+    src="https://github.com/themusecatcher.png"
+    href="https://github.com/themusecatcher"
+    target="_blank"
+  />
+</Tooltip>
+
+::: details Show Code
+
+```vue
+<template>
+  <Tooltip tooltip="themusecatcher@github">
+    <Avatar
+      :size="36"
+      src="https://github.com/themusecatcher.png"
+      href="https://github.com/themusecatcher"
+      target="_blank"
+    />
+  </Tooltip>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Avatar
@@ -294,6 +322,8 @@ size | 设置头像的大小，`number`类型时单位 `px` | number &#124; 'sma
 src | 图片类头像资源地址 | string | undefined
 alt | 图片无法显示时的替代文本 | string | undefined
 icon | 设置头像的图标 | VNode &#124; slot | undefined
+href | 点击跳转的地址，指定此属性按钮的行为和 `a` 链接一致 | string | undefined
+target | 相当于 `a` 标签的 `target` `属性，href` 存在时生效 | 'self' &#124; '_blank' | 'self'
 
 ### Responsive Type
 

@@ -3,11 +3,11 @@ import { ref, reactive } from 'vue'
 const scrollText = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '首次出版于1951年',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
@@ -15,16 +15,16 @@ const scrollText = ref<any[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    link: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 const singleText = {
   title: '请用一只玫瑰纪念我...',
-  link: 'https://blog.csdn.net/Dandrose?type=blog'
+  href: 'https://blog.csdn.net/Dandrose?type=blog'
 }
 const textScroll = ref()
 const disabled = ref(true)
@@ -82,7 +82,7 @@ const state = reactive({
       @click="onClick"
     />
     <h2 class="mt30 mb10">自定义链接悬浮样式</h2>
-    <TextScroll :scrollText="scrollText" link-hover-color="#ff6900" @click="onClick" />
+    <TextScroll :scrollText="scrollText" href-hover-color="#ff6900" @click="onClick" />
     <h2 class="mt30 mb10">自定义样式</h2>
     <TextScroll
       :scrollText="scrollText"
