@@ -17,17 +17,20 @@ const scrollText = ref<any[]>([
     link: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年'
+    title: '首次出版于1951年',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
       '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
-    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界'
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 const singleText = {
@@ -37,9 +40,9 @@ const singleText = {
 const textScroll = ref()
 const disabled = ref(true)
 const vertical = ref(false)
-function onClick(text: any) {
+function onClick(text: string) {
   // 获取点击的标题
-  console.log('text:', text)
+  console.log('text', text)
 }
 function handleStart() {
   textScroll.value.start()
@@ -78,68 +81,34 @@ const state = reactive({
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollText = ref([
-      {
-        title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-        link: 'https://blog.csdn.net/Dandrose?type=blog'
-      },
-      {
-        title: '首次出版于1951年'
-      },
-      {
-        title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
-      },
-      {
-        title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界'
-      },
-      {
-        title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
-      }
-    ])
-function onClick (text: any) { // 获取点击的标题
-  console.log('text:', text)
+const scrollText = ref<any[]>([
+  {
+    title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '首次出版于1951年',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title:
+      '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
+  },
+  {
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  }
+])
+function onClick (text: string) { // 获取点击的标题
+  console.log('text', text)
 }
 </script>
 <template>
   <TextScroll :scrollText="scrollText" @click="onClick" />
-</template>
-```
-
-:::
-
-## 自定义滚动速度
-
-<TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const scrollText = ref([
-      {
-        title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-        link: 'https://blog.csdn.net/Dandrose?type=blog'
-      },
-      {
-        title: '首次出版于1951年'
-      },
-      {
-        title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
-      },
-      {
-        title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界'
-      },
-      {
-        title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
-      }
-    ])
-function onClick (text: any) { // 获取点击的标题
-  console.log('text:', text)
-}
-</script>
-<template>
-  <TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
 </template>
 ```
 
@@ -161,11 +130,11 @@ function onClick (text: any) { // 获取点击的标题
 <script setup lang="ts">
 import { ref } from 'vue'
 const singleText = {
-        title: '请用一只玫瑰纪念我...',
-        link: 'https://blog.csdn.net/Dandrose?type=blog'
-      }
-function onClick (text: any) { // 获取点击的标题
-  console.log('text:', text)
+  title: '请用一只玫瑰纪念我...',
+  link: 'https://blog.csdn.net/Dandrose?type=blog'
+}
+function onClick (text: string) { // 获取点击的标题
+  console.log('text', text)
 }
 </script>
 <template>
@@ -196,26 +165,30 @@ function onClick (text: any) { // 获取点击的标题
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollText = ref([
-      {
-        title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-        link: 'https://blog.csdn.net/Dandrose?type=blog'
-      },
-      {
-        title: '首次出版于1951年'
-      },
-      {
-        title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
-      },
-      {
-        title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界'
-      },
-      {
-        title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
-      }
-    ])
-function onClick (text: any) { // 获取点击的标题
-  console.log('text:', text)
+const scrollText = ref<any[]>([
+  {
+    title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '首次出版于1951年',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title:
+      '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
+  },
+  {
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  }
+])
+function onClick (text: string) { // 获取点击的标题
+  console.log('text', text)
 }
 </script>
 <template>
@@ -226,6 +199,48 @@ function onClick (text: any) { // 获取点击的标题
     vertical
     @click="onClick"
   />
+</template>
+```
+
+:::
+
+## 自定义链接悬浮样式
+
+<TextScroll :scrollText="scrollText" link-hover-color="#ff6900" @click="onClick" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const scrollText = ref<any[]>([
+  {
+    title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '首次出版于1951年',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title:
+      '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
+  },
+  {
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  }
+])
+function onClick (text: string) { // 获取点击的标题
+  console.log('text', text)
+}
+</script>
+<template>
+  <TextScroll :scrollText="scrollText" link-hover-color="#ff6900" @click="onClick" />
 </template>
 ```
 
@@ -247,26 +262,30 @@ function onClick (text: any) { // 获取点击的标题
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollText = ref([
-      {
-        title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-        link: 'https://blog.csdn.net/Dandrose?type=blog'
-      },
-      {
-        title: '首次出版于1951年'
-      },
-      {
-        title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
-      },
-      {
-        title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界'
-      },
-      {
-        title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
-      }
-    ])
-function onClick (text: any) { // 获取点击的标题
-  console.log('text:', text)
+const scrollText = ref<any[]>([
+  {
+    title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '首次出版于1951年',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title:
+      '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
+  },
+  {
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  }
+])
+function onClick (text: string) { // 获取点击的标题
+  console.log('text', text)
 }
 </script>
 <template>
@@ -305,24 +324,28 @@ function onClick (text: any) { // 获取点击的标题
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollText = ref([
-      {
-        title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-        link: 'https://blog.csdn.net/Dandrose?type=blog'
-      },
-      {
-        title: '首次出版于1951年'
-      },
-      {
-        title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
-      },
-      {
-        title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界'
-      },
-      {
-        title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
-      }
-    ])
+const scrollText = ref<any[]>([
+  {
+    title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '首次出版于1951年',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title:
+      '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
+  },
+  {
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  }
+])
 const textScroll = ref()
 const disabled = ref(true)
 const vertical = ref(false)
@@ -338,8 +361,8 @@ function handleReset() {
   textScroll.value.reset()
   disabled.value = true
 }
-function onClick (text: any) { // 获取点击的标题
-  console.log('text:', text)
+function onClick (text: string) { // 获取点击的标题
+  console.log('text', text)
 }
 </script>
 <template>
@@ -357,6 +380,48 @@ function onClick (text: any) { // 获取点击的标题
     </Space>
     <TextScroll :vertical="vertical" ref="textScroll" :scrollText="scrollText" @click="onClick" />
   </Flex>
+</template>
+```
+
+:::
+
+## 自定义滚动速度
+
+<TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const scrollText = ref<any[]>([
+  {
+    title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '首次出版于1951年',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title:
+      '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
+  },
+  {
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  },
+  {
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
+  }
+])
+function onClick (text: string) { // 获取点击的标题
+  console.log('text', text)
+}
+</script>
+<template>
+  <TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
 </template>
 ```
 
@@ -465,22 +530,25 @@ const scrollText = ref<any[]>([
     link: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年'
+    title: '首次出版于1951年',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
     title:
       '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内,塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
-    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界'
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣'
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    link: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
 function onClick(text: any) {
   // 获取点击的标题
-  console.log('text:', text)
+  costringle.log('text', text)
 }
 const state = reactive({
   single: false,

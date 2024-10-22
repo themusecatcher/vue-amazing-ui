@@ -13,6 +13,7 @@ interface Props {
   height?: number // 滚动区域高度，单位 px
   boardStyle?: CSSProperties // 滚动区域样式，优先级低于 width、height
   textStyle?: CSSProperties // 滚动文字样式
+  linkHoverColor?: string // 链接文字鼠标悬浮颜色；仅当 link 存在时生效
   amount?: number // 滚动区域展示条数，水平滚动时生效
   gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距，单位 px
   interval?: number // 水平滚动动画执行时间间隔，单位 ms，水平滚动时生效
@@ -27,6 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   height: 50,
   boardStyle: () => ({}),
   textStyle: () => ({}),
+  linkHoverColor: '#1677ff',
   amount: 4,
   gap: 20,
   interval: 10,
@@ -50,7 +52,7 @@ const textAmount = computed(() => {
 const totalWidth = computed(() => {
   // 文字滚动区域总宽度
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   } else {
     return props.width
   }
@@ -177,11 +179,15 @@ defineExpose({
     v-if="!vertical"
     ref="horizontalRef"
     class="m-slider-horizontal"
-    :style="[boardStyle, `--text-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`]"
+    :style="[
+      boardStyle,
+      `--link-hover-color: ${linkHoverColor}; --text-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
+    ]"
   >
     <div class="m-scroll-view" :style="`will-change: transform; transform: translateX(${-left}px);`">
       <a
         class="slide-text"
+        :class="{ 'link-text': text.link }"
         :style="[textStyle, `width: ${distance}px;`]"
         v-for="(text, index) in <Text[]>textData"
         :key="index"
@@ -202,13 +208,14 @@ defineExpose({
     class="m-slider-vertical"
     :style="[
       boardStyle,
-      ` --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
+      `--link-hover-color: ${linkHoverColor}; --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
     ]"
   >
     <TransitionGroup name="slide">
       <div class="m-scroll-view" v-for="(text, index) in <Text[]>textData" :key="index" v-show="activeIndex === index">
         <a
           class="slide-text"
+          :class="{ 'link-text': text.link }"
           :style="textStyle"
           :title="text.title"
           :href="text.link ? text.link : 'javascript:;'"
@@ -243,10 +250,12 @@ defineExpose({
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    .link-text {
       cursor: pointer;
       transition: color 0.3s;
       &:hover {
-        color: @themeColor !important;
+        color: var(--link-hover-color) !important;
       }
     }
   }
@@ -287,10 +296,12 @@ defineExpose({
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+    .link-text {
       cursor: pointer;
       transition: color 0.3s;
       &:hover {
-        color: @themeColor;
+        color: var(--link-hover-color) !important;
       }
     }
   }
