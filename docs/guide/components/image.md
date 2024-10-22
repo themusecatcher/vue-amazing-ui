@@ -7,7 +7,7 @@
 
 ## 何时使用
 
-- 需要展示图片时
+- 需要展示图片和预览时
 - 加载图片时显示 loading
 
 <script setup lang="ts">
@@ -52,7 +52,7 @@ const images = ref([
 
 ## 多张图片预览
 
-*可循环切换图片，并支持键盘 (left / right / up / down) 按键切换*
+*可循环切换图片，并支持键盘 (`left` / `right` / `up` / `down`) 按键切换*
 
 <br/>
 
@@ -95,7 +95,7 @@ const images = ref([
 
 ## 自定义样式
 
-*自定义宽高；同时图片覆盖容器；预览文本设为 preview*
+*自定义宽高；同时图片覆盖容器；预览文本设为 `preview`*
 
 <br/>
 

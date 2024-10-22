@@ -3,6 +3,11 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
+## 1.8.8 <Tag color="volcano" size="small">2024-10-22</Tag>
+
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，新增 `linkHoverColor` 属性，支持自定义链接悬浮颜色
+- 组件库及文档代码优化
+
 ## 1.8.7 <Tag color="volcano" size="small">2024-10-21</Tag>
 
 - 优化并更新 [上传 Upload](https://themusecatcher.github.io/vue-amazing-ui/guide/components/upload.html) 组件，新增 `drop` `preview` 事件回调，调整 `beforeUpload` 属性，支持返回一个 `Promise` 对象，用于控制上传

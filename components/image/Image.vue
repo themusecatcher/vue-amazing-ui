@@ -464,24 +464,22 @@ function onSwitchRight() {
               </svg>
             </div>
           </div>
-          <div class="m-preview-image" :style="`transform: translate3d(${dragX}px, ${dragY}px, 0px);`">
-            <Spin
-              :spinning="!loaded[index]"
-              indicator="dynamic-circle"
-              v-show="previewIndex === index"
-              v-for="(image, index) in images"
-              :key="index"
-            >
-              <img
-                class="preview-image"
-                :style="`transform: scale3d(${swapX * scale}, ${swapY * scale}, 1) rotate(${rotate}deg);`"
-                :src="image.src"
-                :alt="getImageName(image)"
-                @mousedown.prevent="onMouseDown($event)"
-                @load="onLoaded(index)"
-                @dblclick="resetOnDbclick ? onResetOrigin() : () => false"
-              />
-            </Spin>
+          <div
+            class="m-preview-image"
+            :style="`transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
+            v-show="previewIndex === index"
+            v-for="(image, index) in images"
+            :key="index"
+          >
+            <img
+              class="preview-image"
+              :style="`transform: scale3d(${swapX * scale}, ${swapY * scale}, 1) rotate(${rotate}deg);`"
+              :src="image.src"
+              :alt="getImageName(image)"
+              @mousedown.prevent="onMouseDown($event)"
+              @load="onLoaded(index)"
+              @dblclick="resetOnDbclick ? onResetOrigin() : () => false"
+            />
           </div>
           <template v-if="imageAmount > 1">
             <div class="switch-left" :class="{ 'switch-disabled': previewIndex === 0 && !loop }" @click="onSwitchLeft">

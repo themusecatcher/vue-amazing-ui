@@ -48,11 +48,9 @@ export default defineConfig({
     },
 
     nav: [
-      { text: '组件', link: '/guide/features', activeMatch: '/guide/' },
-      { text: '工具', link: '/utils/started', activeMatch: '/utils/' },
-      {
-        text: '✨ 赞助', link: '/sponsor/personal',
-      },
+      { text: '🔥 组件', link: '/guide/features', activeMatch: '/guide/' },
+      { text: '🛠️ 工具', link: '/utils/started', activeMatch: '/utils/' },
+      { text: '✨ 赞助', link: '/sponsor/charge', activeMatch: '/sponsor/' },
       {
         text: '链接',
         items: [
@@ -440,6 +438,17 @@ export default defineConfig({
             {
                text: 'useSlotsExist 监听插槽存在',
               link: '/utils/functions/slots-exist'
+            }
+          ]
+        }
+      ],
+      '/sponsor/': [
+        {
+          text: '赞助',
+          items: [
+            {
+              text: '充电 Charge Me 🔋',
+              link: '/sponsor/charge'
             }
           ]
         }
