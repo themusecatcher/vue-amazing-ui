@@ -14,7 +14,7 @@ import Alipay from '/alipay.jpg'
 
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 const sponsorText = {
-  title: '如果您 Vue Amazing UI 有用，您可以请作者喝杯茶表示支持，非常感谢❤️🙏❤️'
+  title: '如果您觉得 Vue Amazing UI 有用，您可以请作者喝杯茶表示支持，非常感谢❤️🙏❤️'
 }
 const sponsorOptions = ['WeChat', 'Alipay']
 const sponsorType = ref('WeChat')
