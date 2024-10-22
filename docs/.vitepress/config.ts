@@ -54,8 +54,8 @@ export default defineConfig({
       {
         text: '链接',
         items: [
-          { text: 'My Github', link: 'https://github.com/themusecatcher' },
-          { text: 'My CSDN', link: 'https://blog.csdn.net/Dandrose?type=blog' },
+          { text: 'Github', link: 'https://github.com/themusecatcher' },
+          { text: 'CSDN', link: 'https://blog.csdn.net/Dandrose?type=blog' },
           { text: 'Front-end Notes', link: 'https://themusecatcher.github.io/front-end-notes/' },
           {
             items: [
