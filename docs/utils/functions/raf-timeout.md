@@ -125,10 +125,18 @@ onUnmounted(() => {
 </script>
 ```
 
-## rafTimeout Params
+## Params
+
+### rafTimeout
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 fn | 要执行的函数 | Function | undefined
 delay | 延时调用或间歇调用时间间隔，单位 `ms` | number | 0
 interval | 是否使用间歇调用 | boolean | false
+
+### cancelRaf
+
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+raf | 包含请求动画帧 `ID` 的对象；该 `ID` 是由 `requestAnimationFrame` 返回的 | object | undefined

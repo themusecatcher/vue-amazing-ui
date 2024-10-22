@@ -62,3 +62,9 @@ const { match: isMobile } = useMediaQuery('(max-width: 768px)')
   <h3>{{ isMobile ? '移动端' : '桌面端' }}</h3>
 </template>
 ```
+
+## Params
+
+参数 | 说明 | 类型 | 默认值
+-- | -- | -- | --
+mediaQuery | 媒体查询字符串，用于定义要查询的媒体条件 | string | undefined
