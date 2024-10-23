@@ -2,6 +2,11 @@
 
 <GlobalElement />
 
+## 1.8.9 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件
+- 组件库及文档代码优化
+
 ## 1.8.8 <Tag color="volcano" size="small">2024-10-22</Tag>
 
 - 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html) 组件，新增 `href` `target` 属性，支持链接跳转功能
