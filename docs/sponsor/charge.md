@@ -1,4 +1,4 @@
-# 充电 Charge Me
+# ✨ 成为赞助者
 
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />

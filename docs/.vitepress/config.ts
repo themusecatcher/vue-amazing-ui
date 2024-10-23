@@ -29,7 +29,7 @@ export default defineConfig({
         timeStyle: 'short'
       }
     },
-    
+
     // 默认支持icon包括：'discord'|'facebook'|'github'|'instagram'|'linkedin'|'mastodon'|'slack'|'twitter'|'youtube'
     socialLinks: [
       { icon: 'github', link: 'https://github.com/themusecatcher/vue-amazing-ui' },
@@ -451,7 +451,7 @@ export default defineConfig({
           text: '赞助',
           items: [
             {
-              text: '充电 Charge Me 🔋',
+              text: '✨ 成为赞助者',
               link: '/sponsor/charge'
             }
           ]
