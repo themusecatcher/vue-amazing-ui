@@ -38,6 +38,7 @@ const QRCodes = [
   :scrollText="sponsorText"
   single
   :height="54"
+  :gap="10"
   :board-style="{ backgroundColor: '#e6f4ff' }"
   :text-style="{ fontSize: '20px', fontWeight: 500, color: 'rgba(0, 0, 0, 0.88)' }"
 />
