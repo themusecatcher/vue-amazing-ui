@@ -1,10 +1,7 @@
 # 日期选择 DatePicker<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">{{ pkg.dependencies['@vuepic/vue-datepicker'] }}</Tag>
 
 <FloatButton
-  :width="44"
-  :height="44"
   :bottom="96"
-  :right="40"
   type="primary"
   tooltip="成为赞助者✨"
   :tooltip-props="{

@@ -1,10 +1,7 @@
 # 触摸滑动插件 Swiper<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">{{ pkg.dependencies.swiper }}</Tag>
 
 <FloatButton
-  :width="44"
-  :height="44"
   :bottom="96"
-  :right="40"
   type="primary"
   tooltip="成为赞助者✨"
   :tooltip-props="{
