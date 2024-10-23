@@ -34,17 +34,17 @@ function onOpenChange(open: boolean) {
           <MessageOutlined />
         </template>
       </FloatButton>
-      <FloatButton shape="square" :top="48">
+      <FloatButton shape="square" :top="40">
         <template #icon>
           <CommentOutlined />
         </template>
       </FloatButton>
-      <FloatButton type="primary" :left="24">
+      <FloatButton type="primary" :left="40">
         <template #icon>
           <MessageOutlined />
         </template>
       </FloatButton>
-      <FloatButton type="primary" shape="square" :left="24" :top="48">
+      <FloatButton type="primary" shape="square" :top="40" :left="40">
         <template #icon>
           <CommentOutlined />
         </template>
@@ -65,7 +65,7 @@ function onOpenChange(open: boolean) {
     </Card>
     <h2 class="mt30 mb10">类型</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
-      <FloatButton :right="80">
+      <FloatButton :right="96">
         <template #icon>
           <QuestionCircleOutlined />
         </template>
@@ -78,7 +78,7 @@ function onOpenChange(open: boolean) {
     </Card>
     <h2 class="mt30 mb10">形状</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
-      <FloatButton type="primary" :right="80">
+      <FloatButton type="primary" :right="96">
         <template #icon>
           <CustomerServiceOutlined />
         </template>
@@ -91,7 +91,7 @@ function onOpenChange(open: boolean) {
     </Card>
     <h2 class="mt30 mb10">图标</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
-      <FloatButton type="primary" :right="80">
+      <FloatButton type="primary" :right="96">
         <template #icon>
           <StarFilled spin style="color: gold" />
         </template>
@@ -104,12 +104,12 @@ function onOpenChange(open: boolean) {
     </Card>
     <h2 class="mt30 mb10">文字描述信息</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
-      <FloatButton shape="square" description="HELP" :right="136">
+      <FloatButton shape="square" description="HELP" :right="152">
         <template #icon>
           <GlobalOutlined />
         </template>
       </FloatButton>
-      <FloatButton shape="square" description="HELP INFO" :right="80" />
+      <FloatButton shape="square" description="HELP INFO" :right="96" />
       <FloatButton type="primary" shape="square" description="客服">
         <template #icon>
           <CustomerServiceOutlined />
@@ -118,7 +118,7 @@ function onOpenChange(open: boolean) {
     </Card>
     <h2 class="mt30 mb10">链接跳转</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
-      <FloatButton href="https://themusecatcher.github.io/vue-amazing-ui/" :right="80">
+      <FloatButton href="https://themusecatcher.github.io/vue-amazing-ui/" :right="96">
         <template #icon>
           <img style="width: 1em; height: 1em" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
         </template>
@@ -133,7 +133,7 @@ function onOpenChange(open: boolean) {
     </Card>
     <h2 class="mt30 mb10">菜单模式</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
-      <FloatButton shape="square" description="HELP" :right="80" menu-trigger="click" @openChange="onOpenChange">
+      <FloatButton shape="square" description="HELP" :right="96" menu-trigger="click" @openChange="onOpenChange">
         <template #icon>
           <CustomerServiceOutlined />
         </template>
@@ -170,7 +170,7 @@ function onOpenChange(open: boolean) {
     </Card>
     <h2 class="mt30 mb10">气泡卡片</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
-      <FloatButton tooltip="Diamond" :right="80">
+      <FloatButton tooltip="Diamond" :right="96">
         <template #icon>
           <SketchOutlined />
         </template>
@@ -193,12 +193,12 @@ function onOpenChange(open: boolean) {
     </Card>
     <h2 class="mt30 mb10">徽标数</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
-      <FloatButton shape="circle" :badge-props="{ dot: true }" :right="136">
+      <FloatButton :badge-props="{ dot: true }" :right="152">
         <template #icon>
           <MessageOutlined />
         </template>
       </FloatButton>
-      <FloatButton :badge-props="{ value: 5, color: 'blue' }" :bottom="104">
+      <FloatButton :badge-props="{ value: 5, color: 'blue' }" :bottom="100">
         <template #icon>
           <CommentOutlined />
         </template>
@@ -208,7 +208,7 @@ function onOpenChange(open: boolean) {
           <CommentOutlined />
         </template>
       </FloatButton>
-      <FloatButton :badge-props="{ value: 123 }" :right="80">
+      <FloatButton :badge-props="{ value: 123 }" :right="96">
         <template #icon>
           <CommentOutlined />
         </template>

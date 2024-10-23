@@ -4,10 +4,10 @@ import Tooltip from '../tooltip'
 import Badge from '../badge'
 import { useSlotsExist } from '../utils'
 interface Props {
-  left?: number | string // 按钮定位的左边距，单位 px
-  right?: number | string // 按钮定位的右边距，单位 px
   top?: number | string // 按钮定位的上边距，单位 px
   bottom?: number | string // 按钮定位的下边距，单位 px
+  left?: number | string // 按钮定位的左边距，单位 px
+  right?: number | string // 按钮定位的右边距，单位 px
   width?: number | string // 浮动按钮宽度，单位 px
   height?: number | string // 浮动按钮高度，单位 px
   type?: 'default' | 'primary' // 浮动按钮类型
@@ -22,12 +22,12 @@ interface Props {
   badgeProps?: object // 带徽标的浮动按钮（不支持 status 以及相关属性），参考 Badge Props
 }
 const props = withDefaults(defineProps<Props>(), {
-  left: undefined,
-  right: 24,
   top: undefined,
-  bottom: 48,
-  width: 40,
-  height: 40,
+  bottom: 40,
+  left: undefined,
+  right: 40,
+  width: 44,
+  height: 44,
   type: 'default',
   shape: 'circle',
   icon: undefined,
@@ -44,19 +44,19 @@ const emits = defineEmits(['click', 'openChange'])
 const slotsExist = useSlotsExist(['icon', 'description', 'tooltip', 'menu'])
 const floatBtnWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })
 const floatBtnHeight = computed(() => {
   if (typeof props.height === 'number') {
-    return props.height + 'px'
+    return `${props.height}px`
   }
   return props.height
 })
 const floatBtnLeft = computed(() => {
   if (typeof props.left === 'number') {
-    return props.left + 'px'
+    return `${props.left}px`
   }
   return props.left
 })
@@ -65,14 +65,14 @@ const floatBtnRight = computed(() => {
     return null
   } else {
     if (typeof props.right === 'number') {
-      return props.right + 'px'
+      return `${props.right}px`
     }
     return props.right
   }
 })
 const floatBtnTop = computed(() => {
   if (typeof props.top === 'number') {
-    return props.top + 'px'
+    return `${props.top}px`
   }
   return props.top
 })
@@ -81,7 +81,7 @@ const floatBtnBottom = computed(() => {
     return null
   } else {
     if (typeof props.bottom === 'number') {
-      return props.bottom + 'px'
+      return `${props.bottom}px`
     }
     return props.bottom
   }
@@ -224,6 +224,12 @@ function onClick(e: Event) {
         vertical-align: top;
         width: 100%;
         height: 100%;
+        .m-badge-value:not(.only-dot) {
+          transform: translate(0, 0);
+          transform-origin: center;
+          top: -6px;
+          right: -6px;
+        }
       }
     }
   }
@@ -245,8 +251,6 @@ function onClick(e: Event) {
       align-items: center;
       padding: 2px 4px;
       .float-btn-icon {
-        text-align: center;
-        margin: auto;
         font-size: 18px;
         line-height: 1;
         .close-svg {
@@ -327,8 +331,8 @@ function onClick(e: Event) {
 }
 .float-btn-circle {
   border-radius: 50%;
-  .m-badge {
-    :deep(.only-dot) {
+  :deep(.m-badge) {
+    .only-dot {
       top: 5.857864376269049px;
       right: 5.857864376269049px;
     }
@@ -343,6 +347,12 @@ function onClick(e: Event) {
   height: auto;
   min-height: var(--float-btn-height);
   border-radius: 8px;
+  :deep(.m-badge) {
+    .only-dot {
+      top: 2.3431457505076194px;
+      right: 2.3431457505076194px;
+    }
+  }
   & > .float-btn-tooltip {
     .float-btn-body {
       height: auto;
