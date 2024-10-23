@@ -20,6 +20,16 @@ export default defineConfig({
       pattern: 'https://github.com/themusecatcher/vue-amazing-ui/tree/master/docs/:path',
       text: 'Suggest changes to this page'
     },
+
+    // lastUpdated: true, // 最后更新时间戳
+    lastUpdated: {
+      text: 'Last updated',
+      formatOptions: {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      }
+    },
+    
     // 默认支持icon包括：'discord'|'facebook'|'github'|'instagram'|'linkedin'|'mastodon'|'slack'|'twitter'|'youtube'
     socialLinks: [
       { icon: 'github', link: 'https://github.com/themusecatcher/vue-amazing-ui' },
