@@ -23,7 +23,7 @@ export default defineConfig({
 
     // lastUpdated: true, // 最后更新时间戳
     lastUpdated: {
-      text: '最后更新于: ',
+      text: '最后更新于',
       formatOptions: {
         dateStyle: 'short',
         timeStyle: 'short'
