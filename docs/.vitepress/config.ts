@@ -18,12 +18,12 @@ export default defineConfig({
 
     editLink: {
       pattern: 'https://github.com/themusecatcher/vue-amazing-ui/tree/master/docs/:path',
-      text: 'Suggest changes to this page'
+      text: '在 GitHub 上编辑此页面'
     },
 
     // lastUpdated: true, // 最后更新时间戳
     lastUpdated: {
-      text: 'Last updated',
+      text: '最后更新于: ',
       formatOptions: {
         dateStyle: 'short',
         timeStyle: 'short'
