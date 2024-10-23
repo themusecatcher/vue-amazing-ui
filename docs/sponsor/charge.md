@@ -14,7 +14,7 @@ import Alipay from '/alipay.jpg'
 
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 const sponsorText = {
-  title: '如果您觉得 Vue Amazing UI 有用，您可以请作者喝杯茶表示支持，非常感谢❤️🙏❤️'
+  title: '如果您觉得 Vue Amazing UI 有用，您可以请作者喝杯茶表示支持，非常感谢 ❤️🙏❤️'
 }
 const sponsorOptions = ['WeChat', 'Alipay']
 const sponsorType = ref('WeChat')
@@ -132,12 +132,21 @@ const QRCodes = [
 }
 </style>
 
-## 赞助者
+## 赞助者 🫡
 
-<!-- 虚位以待... -->
+*所有赞助者都将出现在此处，感谢你们的支持与赞助！❤️❤️*
+
+<br/>
 
 <Space gap="small">
-  <Tooltip tooltip="themusecatcher@github">
+  <Tooltip>
+    <template #tooltip>
+      <div style="text-align: center">
+        GitHub
+        <br/>
+        themusecatcher
+      </div>
+    </template>
     <Avatar :size="36" src="https://github.com/themusecatcher.png" href="https://github.com/themusecatcher" target="_blank" />
   </Tooltip>
 </Space>
