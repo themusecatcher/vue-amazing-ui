@@ -1,10 +1,7 @@
 # 瀑布流 Waterfall
 
 <FloatButton
-  :width="44"
-  :height="44"
   :bottom="96"
-  :right="40"
   type="primary"
   tooltip="成为赞助者✨"
   :tooltip-props="{

@@ -12,7 +12,7 @@
       fontWeight: 500
     }
   }"
-  href="<https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html>l>l>l>l>l>"
+  href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
   target="_blank"
 >
   <template #description>
