@@ -16,11 +16,8 @@ hero:
       text: Get Started
       link: /guide/features
     - theme: alt
-      text: View on GitHub
-      link: https://github.com/themusecatcher/vue-amazing-ui
-    - theme: alt
-      text: View on NPM
-      link: https://www.npmjs.com/package/vue-amazing-ui
+      text: Become a Sponsor !
+      link: https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html
 features:
   - icon: 💡
     title: 最新技术

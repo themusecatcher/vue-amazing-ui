@@ -22,14 +22,8 @@ export default defineConfig({
     },
     // 默认支持icon包括：'discord'|'facebook'|'github'|'instagram'|'linkedin'|'mastodon'|'slack'|'twitter'|'youtube'
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/themusecatcher/vue-amazing-ui' }
-      // 自定义icon
-      // {
-      //   icon: {
-      //     svg: '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Dribbble</title><path d="M12...6.38z"/></svg>'
-      //   },
-      //   link: 'https://www.npmjs.com/package/vue-amazing-ui'
-      // }
+      { icon: 'github', link: 'https://github.com/themusecatcher/vue-amazing-ui' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/vue-amazing-ui' }
     ],
 
     // search: { // vitepress 内置 search
@@ -52,7 +46,7 @@ export default defineConfig({
       { text: '🛠️ 工具', link: '/utils/started', activeMatch: '/utils/' },
       { text: '✨ 赞助', link: '/sponsor/charge', activeMatch: '/sponsor/' },
       {
-        text: '链接',
+        text: '🔗 链接',
         items: [
           { text: 'Github', link: 'https://github.com/themusecatcher' },
           { text: 'CSDN', link: 'https://blog.csdn.net/Dandrose?type=blog' },
