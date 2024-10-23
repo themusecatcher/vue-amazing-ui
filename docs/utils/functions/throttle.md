@@ -1,23 +1,6 @@
 # 节流 throttle
 
-<FloatButton
-  :bottom="96"
-  type="primary"
-  tooltip="成为赞助者✨"
-  :tooltip-props="{
-    tooltipStyle: {
-      fontWeight: 500
-    }
-  }"
-  href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
-  target="_blank"
->
-  <template #description>
-    <span style="font-size: 14px; font-weight: 600;">赞助</span>
-  </template>
-</FloatButton>
-<BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<GlobalElement />
 
 *如果短时间内大量触发同一事件，那么在函数执行一次之后，该函数在指定的时间 `delay` 期限内不再工作，直至过了这段时间才重新生效*
 

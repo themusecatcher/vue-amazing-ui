@@ -1,23 +1,6 @@
 # 监听插槽存在 useSlotsExist
 
-<FloatButton
-  :bottom="96"
-  type="primary"
-  tooltip="成为赞助者✨"
-  :tooltip-props="{
-    tooltipStyle: {
-      fontWeight: 500
-    }
-  }"
-  href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
-  target="_blank"
->
-  <template #description>
-    <span style="font-size: 14px; font-weight: 600;">赞助</span>
-  </template>
-</FloatButton>
-<BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<GlobalElement />
 
 *监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在*
 
