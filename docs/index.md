@@ -13,10 +13,10 @@ hero:
     alt: Vue Amazing UI
   actions:
     - theme: brand
-      text: Get Started
+      text: 开始使用
       link: /guide/features
     - theme: alt
-      text: Become a Sponsor !
+      text: 成为赞助者 !
       link: https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html
 features:
   - icon: 💡
