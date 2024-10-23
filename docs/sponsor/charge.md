@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { HeartFilled, HeartOutlined } from '@ant-design/icons-vue'
+import { HeartFilled, WechatOutlined, AlipayOutlined } from '@ant-design/icons-vue'
 import { useMediaQuery } from 'vue-amazing-ui'
 import WeChat from '/wechat.jpg'
 import Alipay from '/alipay.jpg'
@@ -45,18 +45,35 @@ const QRCodes = [
 
 <br/>
 
-<template v-if="isMobile">
-  <Segmented size="large" v-model:value="sponsorType" :options="sponsorOptions" />
-  <br/>
-  <br/>
-  <Card :width="248">
+<div v-if="isMobile">
+  <Segmented size="large" style="padding: 4px; margin: auto;" v-model:value="sponsorType" :options="sponsorOptions">
+    <template #label="{ label }">
+      <span v-if="label === 'WeChat'" style="color: #07c160;">
+        <WechatOutlined style="fill: currentColor;" /> {{ label }}
+      </span>
+      <span v-if="label === 'Alipay'" style="color: #1677ff;">
+        <AlipayOutlined style="fill: currentColor;" /> {{ label }}
+      </span>
+    </template>
+  </Segmented>
+  <Card :width="248" style="margin: 24px auto 32px;">
     <img v-show="sponsorType === 'WeChat'" class="qrcode-image" :src="WeChat" />
     <img v-show="sponsorType === 'Alipay'" class="qrcode-image" :src="Alipay" />
   </Card>
-</template>
-<Card v-else :body-style="{ position: 'relative' }">
-  <Tag class="wechat-tag" color="#07c160" size="large" :bordered="false">WeChat</Tag>
-  <Tag class="alipay-tag" color="#1677ff" size="large" :bordered="false">Alipay</Tag>
+</div>
+<Card v-else :body-style="{ position: 'relative' }" style="margin-bottom: 32px;">
+  <Tag class="wechat-tag" color="#07c160" size="large" :bordered="false">
+    <template #icon>
+      <WechatOutlined />
+    </template>
+    WeChat
+  </Tag>
+  <Tag class="alipay-tag" color="#1677ff" size="large" :bordered="false">
+    <template #icon>
+      <AlipayOutlined />
+    </template>
+    Alipay
+  </Tag>
   <Image
     class="sponsor-image"
     :src="QRCodes"
@@ -73,11 +90,9 @@ const QRCodes = [
   />
 </Card>
 
-<br/>
-
 <Alert type="info" :bordered="false" show-icon>
   <template #icon>
-    <HeartFilled style="font-size: 32px; color: #d4380d;" />
+    <HeartFilled style="font-size: 32px; color: #cf1322;" />
   </template>
   <span style="font-size: 20px; font-weight: 600;">Vue Amazing UI to YOU ：</span>
   <template #description>
