@@ -1,5 +1,24 @@
 # 回到顶部 BackTop
 
+<FloatButton
+  :width="44"
+  :height="44"
+  :bottom="96"
+  :right="40"
+  type="primary"
+  tooltip="✨ 成为赞助者 !"
+  :tooltip-props="{
+    tooltipStyle: {
+      fontWeight: 500
+    }
+  }"
+  href="<https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html>"
+  target="_blank"
+>
+  <template #description>
+    <span style="font-size: 14px; font-weight: 600;">赞助</span>
+  </template>
+</FloatButton>
 <Watermark fullscreen content="Vue Amazing UI" />
 
 *返回页面顶部的操作按钮*

@@ -30,6 +30,7 @@ features:
     details: '所有组件均采用单文件组件 SFC，单独使用，也没问题！'
 ---
 
+<BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
 <script setup lang="ts">
