@@ -145,6 +145,9 @@ function getOptionLabel(option: string | number | SegmentedOption) {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        :deep(svg) {
+          fill: currentColor;
+        }
       }
     }
     .segmented-item-selected {

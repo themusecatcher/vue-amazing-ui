@@ -1,5 +1,6 @@
 # 浮动按钮 FloatButton
 
+<FloatButton :width="44" :height="44" :bottom="96" :right="40" type="primary" description="赞助"></FloatButton>
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
