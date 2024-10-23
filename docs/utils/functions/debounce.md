@@ -1,23 +1,6 @@
 # 防抖 debounce
 
-<FloatButton
-  :bottom="96"
-  type="primary"
-  tooltip="成为赞助者✨"
-  :tooltip-props="{
-    tooltipStyle: {
-      fontWeight: 500
-    }
-  }"
-  href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
-  target="_blank"
->
-  <template #description>
-    <span style="font-size: 14px; font-weight: 600;">赞助</span>
-  </template>
-</FloatButton>
-<BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<GlobalElement />
 
 *对于短时间内连续触发的事件，防抖就是让某个时间 `delay` 期限内，事件处理函数只执行一次*
 

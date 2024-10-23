@@ -1,23 +1,6 @@
 # 触摸滑动插件 Swiper<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">{{ pkg.dependencies.swiper }}</Tag>
 
-<FloatButton
-  :bottom="96"
-  type="primary"
-  tooltip="成为赞助者✨"
-  :tooltip-props="{
-    tooltipStyle: {
-      fontWeight: 500
-    }
-  }"
-  href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
-  target="_blank"
->
-  <template #description>
-    <span style="font-size: 14px; font-weight: 600;">赞助</span>
-  </template>
-</FloatButton>
-<BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<GlobalElement />
 
 *触摸滑动组件*
 
