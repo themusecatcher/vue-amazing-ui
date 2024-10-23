@@ -38,7 +38,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2023-present The Muse Catcher'
+      copyright: 'Copyright © 2023-present the Muse Catcher'
     },
 
     nav: [
