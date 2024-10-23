@@ -21,7 +21,7 @@
     }
   },
   "scripts": {
-    "docs:dev": "vitepress dev docs --port 8000 --open",
+    "docs:dev": "vitepress dev docs --port 8000 --open --host 0.0.0.0",
     "docs:build": "vitepress build docs",
     "docs:deploy": "sh scripts/deploy.sh",
     "dev": "vite",

@@ -46,7 +46,7 @@ const QRCodes = [
 <br/>
 
 <div v-if="isMobile">
-  <Segmented size="large" style="padding: 4px; margin: auto;" v-model:value="sponsorType" :options="sponsorOptions">
+  <Segmented size="large" block style="padding: 4px; margin: 0 auto;" v-model:value="sponsorType" :options="sponsorOptions">
     <template #label="{ label }">
       <span v-if="label === 'WeChat'" style="color: #07c160;">
         <WechatOutlined style="fill: currentColor;" /> {{ label }}
