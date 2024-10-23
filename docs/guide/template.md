@@ -6,13 +6,13 @@
   :bottom="96"
   :right="40"
   type="primary"
-  tooltip="成为赞助者 !"
+  tooltip="成为赞助者✨"
   :tooltip-props="{
     tooltipStyle: {
       fontWeight: 500
     }
   }"
-  href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
+  href="<https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html>l>"
   target="_blank"
 >
   <template #description>

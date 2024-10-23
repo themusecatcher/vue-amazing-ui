@@ -6,7 +6,7 @@
   :bottom="96"
   :right="40"
   type="primary"
-  tooltip="✨ 成为赞助者 !"
+  tooltip="成为赞助者✨"
   :tooltip-props="{
     tooltipStyle: {
       fontWeight: 500
