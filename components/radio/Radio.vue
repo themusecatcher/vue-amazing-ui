@@ -42,7 +42,7 @@ const maxWidth = computed(() => {
   // 单选区域最大宽度
   if (!props.button) {
     if (typeof props.width === 'number') {
-      return props.width + 'px'
+      return `${props.width}px`
     } else {
       return props.width
     }
@@ -54,7 +54,7 @@ const maxHeight = computed(() => {
   // 单选区域最大高度
   if (!props.button) {
     if (typeof props.height === 'number') {
-      return props.height + 'px'
+      return `${props.height}px`
     } else {
       return props.height
     }
