@@ -4,14 +4,10 @@
   </a>
 </p>
 
-<h1 align="center">
-  <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">Vue Amazing UI</a>
-</h1>
-
+<h1 align="center">Vue Amazing UI</h1>
 <p align="center">A Vue 3 Component Library</p>
 <p align="center">Each component is a Single-File Component (SFC), which can be used Independently</p>
 <p align="center">Kinda Interesting</p>
-
 <p align="center">English | <a href="README.zh-CN.md">中文</a></p>
 
 ## Documentation
