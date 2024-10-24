@@ -37,7 +37,7 @@ const preColumnHeight = ref<number[]>(Array(props.columnCount).fill(0)) // æ¯åˆ
 const flag = ref(0)
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   } else {
     return props.width
   }

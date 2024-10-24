@@ -17,14 +17,23 @@
 <script setup lang="ts">
 import pkg from '../../../package.json'
 import { ref, watchEffect } from 'vue'
-import { format, endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, addDays, startOfWeek, endOfWeek, addHours, addMinutes, addSeconds } from 'date-fns'
-
+import {
+  format,
+  endOfMonth,
+  endOfYear,
+  startOfMonth,
+  startOfYear,
+  subMonths,
+  addDays,
+  startOfWeek,
+  endOfWeek,
+  addHours,
+  addMinutes,
+  addSeconds
+} from 'date-fns'
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
 const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
-console.log(addHours(Date.now(), 1))
-console.log('rangeValue', rangeValue.value)
-
 const timeRangeValue = ref([
   {
     hours: new Date().getHours(),
@@ -63,33 +72,32 @@ const monthValue = ref({
   month: new Date().getMonth()
 })
 const yearValue = ref(new Date().getFullYear())
-
 watchEffect(() => {
-  console.log('dateValue:', dateValue.value)
+  console.log('dateValue', dateValue.value)
 })
 watchEffect(() => {
-  console.log('dateTimeValue:', dateTimeValue.value)
+  console.log('dateTimeValue', dateTimeValue.value)
 })
 watchEffect(() => {
-  console.log('rangeValue:', rangeValue.value)
+  console.log('rangeValue', rangeValue.value)
 })
 watchEffect(() => {
-  console.log('timeRangeValue:', timeRangeValue.value)
+  console.log('timeRangeValue', timeRangeValue.value)
 })
 watchEffect(() => {
-  console.log('timeValue:', timeValue.value)
+  console.log('timeValue', timeValue.value)
 })
 watchEffect(() => {
-  console.log('secondsValue:', secondsValue.value)
+  console.log('secondsValue', secondsValue.value)
 })
 watchEffect(() => {
-  console.log('weekValue:', weekValue.value)
+  console.log('weekValue', weekValue.value)
 })
 watchEffect(() => {
-  console.log('monthValue:', monthValue.value)
+  console.log('monthValue', monthValue.value)
 })
 watchEffect(() => {
-  console.log('yearValue:', yearValue.value)
+  console.log('yearValue', yearValue.value)
 })
 </script>
 
@@ -105,7 +113,7 @@ import { ref, watchEffect } from 'vue'
 import { format } from 'date-fns'
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 watchEffect(() => {
-  console.log('dateValue:', dateValue.value)
+  console.log('dateValue', dateValue.value)
 })
 </script>
 <template>
@@ -121,7 +129,8 @@ watchEffect(() => {
   placeholder="请选择日期"
   :min-date="new Date()"
   format="yyyy-MM-dd"
-  v-model="dateValue" />
+  v-model="dateValue"
+/>
 
 ::: details Show Code
 
@@ -131,7 +140,7 @@ import { ref, watchEffect } from 'vue'
 import { format } from 'date-fns'
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 watchEffect(() => {
-  console.log('dateValue:', dateValue.value)
+  console.log('dateValue', dateValue.value)
 })
 </script>
 <template>
@@ -139,7 +148,8 @@ watchEffect(() => {
     placeholder="请选择日期"
     :min-date="new Date()"
     format="yyyy-MM-dd"
-    v-model="dateValue" />
+    v-model="dateValue"
+  />
 </template>
 ```
 
@@ -152,7 +162,8 @@ watchEffect(() => {
   mode="date"
   :max-date="new Date()"
   format="yyyy-MM-dd"
-  v-model="dateValue" />
+  v-model="dateValue"
+/>
 
 ::: details Show Code
 
@@ -162,7 +173,7 @@ import { ref, watchEffect } from 'vue'
 import { format } from 'date-fns'
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 watchEffect(() => {
-  console.log('dateValue:', dateValue.value)
+  console.log('dateValue', dateValue.value)
 })
 </script>
 <template>
@@ -171,7 +182,8 @@ watchEffect(() => {
     mode="date"
     :max-date="new Date()"
     format="yyyy-MM-dd"
-    v-model="dateValue" />
+    v-model="dateValue"
+  />
 </template>
 ```
 
@@ -197,7 +209,7 @@ import { ref, watchEffect } from 'vue'
 import { format } from 'date-fns'
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
 watchEffect(() => {
-  console.log('dateTimeValue:', dateTimeValue.value)
+  console.log('dateTimeValue', dateTimeValue.value)
 })
 </script>
 <template>
@@ -233,7 +245,7 @@ import { ref, watchEffect } from 'vue'
 import { format, addDays } from 'date-fns'
 const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
 watchEffect(() => {
-  console.log('rangeValue:', rangeValue.value)
+  console.log('rangeValue', rangeValue.value)
 })
 </script>
 <template>
@@ -269,7 +281,7 @@ import { ref, watchEffect } from 'vue'
 import { format, addDays } from 'date-fns'
 const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
 watchEffect(() => {
-  console.log('rangeValue:', rangeValue.value)
+  console.log('rangeValue', rangeValue.value)
 })
 </script>
 <template>
@@ -321,7 +333,7 @@ const presetDates = ref([
   { label: 'This year', value: [startOfYear(new Date()).getTime(), endOfYear(new Date()).getTime()] }
 ])
 watchEffect(() => {
-  console.log('rangeValue:', rangeValue.value)
+  console.log('rangeValue', rangeValue.value)
 })
 </script>
 <template>
@@ -362,7 +374,7 @@ const timeValue = ref({
   minutes: new Date().getMinutes()
 })
 watchEffect(() => {
-  console.log('timeValue:', timeValue.value)
+  console.log('timeValue', timeValue.value)
 })
 </script>
 <template>
@@ -404,7 +416,7 @@ const secondsValue = ref({
   seconds: new Date().getSeconds()
 })
 watchEffect(() => {
-  console.log('secondsValue:', secondsValue.value)
+  console.log('secondsValue', secondsValue.value)
 })
 </script>
 <template>
@@ -456,7 +468,7 @@ const timeRangeValue = ref([
   }
 ])
 watchEffect(() => {
-  console.log('timeRangeValue:', timeRangeValue.value)
+  console.log('timeRangeValue', timeRangeValue.value)
 })
 </script>
 <template>
@@ -509,7 +521,7 @@ import { startOfWeek, endOfWeek } from 'date-fns'
 const options: any = { weekStartsOn: 1 }
 const weekValue = ref([startOfWeek(new Date(), options), endOfWeek(new Date(), options)])
 watchEffect(() => {
-  console.log('weekValue:', weekValue.value)
+  console.log('weekValue', weekValue.value)
 })
 </script>
 <template>
@@ -558,7 +570,7 @@ const monthValue = ref({
   month: new Date().getMonth()
 })
 watchEffect(() => {
-  console.log('monthValue:', monthValue.value)
+  console.log('monthValue', monthValue.value)
 })
 </script>
 <template>
@@ -591,7 +603,7 @@ watchEffect(() => {
 import { ref, watchEffect } from 'vue'
 const yearValue = ref(new Date().getFullYear())
 watchEffect(() => {
-  console.log('yearValue:', yearValue.value)
+  console.log('yearValue', yearValue.value)
 })
 </script>
 <template>

@@ -39,7 +39,7 @@ const emits = defineEmits(['update:show', 'openChange'])
 const slotsExist = useSlotsExist(['tooltip'])
 const tooltipMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
-    return props.maxWidth + 'px'
+    return `${props.maxWidth}px`
   }
   return props.maxWidth
 })

@@ -62,13 +62,13 @@ const hidden = ref(false) // 是否隐藏播放器中间的播放按钮
 const emits = defineEmits(['play', 'pause'])
 const veoWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })
 const veoHeight = computed(() => {
   if (typeof props.height === 'number') {
-    return props.height + 'px'
+    return `${props.height}px`
   }
   return props.height
 })

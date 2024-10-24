@@ -28,7 +28,7 @@ const desc = ref()
 const dotsHeight = ref<string[]>([])
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   } else {
     return props.width
   }

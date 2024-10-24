@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits(['update:current', 'change'])
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   } else {
     return props.width
   }
