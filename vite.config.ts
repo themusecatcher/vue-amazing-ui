@@ -64,9 +64,17 @@ export default defineConfig({
   },
   optimizeDeps: { // 依赖优化选项
     include: [ // 默认情况下，不在 node_modules 中的，链接的包不会被预构建。使用此选项可强制预构建链接的包。
-      'date-fns',
       'vue',
       'vue-router',
+      'swiper/modules',
+      'swiper/vue',
+      '@vuepic/vue-datepicker',
+      '@vueuse/integrations',
+      '@vueuse/core',
+      'qrcode',
+      'naive-ui',
+      'ant-design-vue',
+      '@ant-design/icons-vue'
     ]
   },
   // 构建为库
