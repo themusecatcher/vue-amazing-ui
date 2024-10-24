@@ -1,6 +1,6 @@
 <script setup lang="ts">
 function openChange(open: boolean) {
-  console.log('open:', open)
+  console.log('open', open)
 }
 </script>
 <template>
@@ -17,16 +17,18 @@ function openChange(open: boolean) {
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Tooltip
-      :max-width="300"
       bg-color="#fff"
       :tooltip-style="{
         padding: '12px 18px',
         borderRadius: '12px',
         fontSize: '18px',
-        color: '#1677ff'
+        color: 'rgba(0, 0, 0, 0.88)'
       }"
     >
-      <template #tooltip>Godzilla VS Kong：电影讲述传说中的王者哥斯拉和金刚对决的故事</template>
+      <template #tooltip>
+        <h3 style="text-align: center; margin: 0">Godzilla VS Kong</h3>
+        电影讲述传说中的王者哥斯拉和金刚对决的故事
+      </template>
       <Button type="primary">哥斯拉大战金刚</Button>
     </Tooltip>
     <h2 class="mt30 mb10">不同的触发方式</h2>
