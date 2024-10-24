@@ -4,14 +4,10 @@
   </a>
 </p>
 
-<h1 align="center">
-  <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">Vue Amazing UI</a>
-</h1>
-
+<h1 align="center">Vue Amazing UI</h1>
 <p align="center">一个 Vue 3 组件库</p>
 <p align="center">每个组件都是单文件组件 (SFC), 可以单独使用</p>
 <p align="center">有点意思</p>
-
 <p align="center"><a href="README.md">English</a> | 中文</p>
 
 ## 文档
