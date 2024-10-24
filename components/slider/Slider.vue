@@ -47,39 +47,39 @@ const sliderSize = computed(() => {
 const sliderStyle = computed(() => {
   if (!props.vertical) {
     return {
-      width: typeof props.width === 'number' ? props.width + 'px' : props.width
+      width: typeof props.width === 'number' ? `${props.width}px` : props.width
     }
   } else {
     return {
-      height: typeof props.height === 'number' ? props.height + 'px' : props.height
+      height: typeof props.height === 'number' ? `${props.height}px` : props.height
     }
   }
 })
 const trackStyle = computed(() => {
   if (!props.vertical) {
     return {
-      left: low.value + 'px',
+      left: `${low.value}px`,
       right: 'auto',
-      width: high.value - low.value + 'px'
+      width: `${high.value - low.value}px`
     }
   } else {
     return {
-      bottom: low.value + 'px',
+      bottom: `${low.value}px`,
       top: 'auto',
-      height: high.value - low.value + 'px'
+      height: `${high.value - low.value}px`
     }
   }
 })
 const lowHandleStyle = computed(() => {
   if (!props.vertical) {
     return {
-      left: low.value + 'px',
+      left: `${low.value}px`,
       right: 'auto',
       transform: 'translate(-50%, -50%)'
     }
   } else {
     return {
-      bottom: low.value + 'px',
+      bottom: `${low.value}px`,
       top: 'auto',
       transform: 'translate(-50%, 50%)'
     }
@@ -88,13 +88,13 @@ const lowHandleStyle = computed(() => {
 const highHandleStyle = computed(() => {
   if (!props.vertical) {
     return {
-      left: high.value + 'px',
+      left: `${high.value}px`,
       right: 'auto',
       transform: 'translate(-50%, -50%)'
     }
   } else {
     return {
-      bottom: high.value + 'px',
+      bottom: `${high.value}px`,
       top: 'auto',
       transform: 'translate(-50%, 50%)'
     }

@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const spaceWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })
