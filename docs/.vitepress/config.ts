@@ -9,7 +9,7 @@ export default defineConfig({
     ['link', { rel: 'icon', type: 'image/svg+xml', href: 'https://cn.vitejs.dev/viteconf.svg' }]
     // ['link', { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
   ],
-  appearance: true, // 默认 true，设为 false 则无法切换dark/light主题，可选 'dark' true false
+  appearance: true, // 默认 true，设为 false 则无法切换 dark/light 主题，可选 'dark' true false
   markdown: {
     lineNumbers: false // 是否显示行数，默认false
   },
