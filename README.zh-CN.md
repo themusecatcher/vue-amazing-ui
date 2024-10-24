@@ -8,25 +8,25 @@
   <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">Vue Amazing UI</a>
 </h1>
 
-<p align="center">A Vue 3 Component Library</p>
-<p align="center">Each component is a Single-File Component (SFC), which can be used Independently</p>
-<p align="center">Kinda Interesting</p>
+<p align="center">一个 Vue 3 组件库</p>
+<p align="center">每个组件都是单文件组件 (SFC), 可以单独使用</p>
+<p align="center">有点意思</p>
 
-<p align="center">English | <a href="README.zh-CN.md">中文</a></p>
+<p align="center"><a href="README.md">English</a> | 中文</p>
 
-## Documentation
+## 文档
 
 [Vue Amazing UI](https://themusecatcher.github.io/vue-amazing-ui/)
 
-## Features
+## 特性
 
-- The component library is implemented with `Vue@3.5.12`+ `TypeScript@5.6.3` + `Vite@5.4.9` + `Less@4.2.0`.
-- Currently, it includes `63` basic UI components and `16` utility functions, with continuous exploration and updates ongoing...
-- Each component is a Single-File Component (`SFC`), and they can be used independently without any issues.
-- All component styles use the `box-sizing: border-box;` model.
-- Ready to use out of the box, no fuss.
+- 组件库采用 `Vue@3.5.12`+ `TypeScript@5.6.3` + `Vite@5.4.9` + `Less@4.2.0` 实现
+- 目前共包含 `63` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
+- 所有组件均采用单文件组件 `SFC` 形式，单独使用，也没问题
+- 所有组件样式均使用 `box-sizing: border-box;` 模式
+- 开箱即用，不墨迹
 
-## Installation
+## 安装
 
 ```bash
 npm install vue-amazing-ui
@@ -38,9 +38,9 @@ yarn add vue-amazing-ui
 bun add vue-amazing-ui
 ```
 
-## Use Components
+## 使用组件
 
-**Global**
+**全局**
 
 ```ts
 import { createApp } from 'vue'
@@ -53,7 +53,7 @@ const app = createApp(App)
 app.use(VueAmazingUI)
 ```
 
-**Local**
+**局部**
 
 ```vue
 <script setup lang="ts">
@@ -62,7 +62,7 @@ import 'vue-amazing-ui/css'
 </script>
 ```
 
-## Use Functions
+## 使用工具函数
 
 ```vue
 <script setup lang="ts">
@@ -87,15 +87,15 @@ import {
 </script>
 ```
 
-## Project
+## 项目
 
-- Get the project code
+- 获取项目代码
 
 ```sh
 git clone https://github.com/themusecatcher/vue-amazing-ui.git
 ```
 
-- Install dependencies
+- 安装依赖
 
 ```sh
 cd vue-amazing-ui
@@ -103,19 +103,19 @@ cd vue-amazing-ui
 pnpm i
 ```
 
-- Run project
+- 启动
 
 ```sh
 pnpm dev
 ```
 
-## Details
+## 详情
 
 [My CSDN Blogs](https://blog.csdn.net/Dandrose)
 
-## Components
+## 组件
 
-Name | Description | Name | Description
+名称 | 说明 | 名称 | 说明
 :-- | :-- | :-- | :--
 Alert | 警告提示 | Avatar | 头像
 BackTop | 回到顶部 | Badge | 徽标
@@ -150,9 +150,9 @@ Tooltip | 文字提示 | Upload | 上传
 Video | 播放器 | Waterfall | 瀑布流
 Watermark | 水印
 
-## Functions
+## 工具函数
 
-Name | Description | Type
+名称 | 说明 | 类型
 :--- | :--- | :---
 dateFormat | 格式化日期时间字符串函数 | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string
 formatNumber | 数字格式化函数 | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string
