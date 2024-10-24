@@ -50,16 +50,18 @@ function openChange (open: boolean) {
 ## 自定义样式
 
 <Tooltip
-  :max-width="300"
   bg-color="#fff"
   :tooltip-style="{
     padding: '12px 18px',
     borderRadius: '12px',
     fontSize: '18px',
-    color: '#1677ff'
+    color: 'rgba(0, 0, 0, 0.88)'
   }"
 >
-  <template #tooltip>Godzilla VS Kong：电影讲述传说中的王者哥斯拉和金刚对决的故事</template>
+  <template #tooltip>
+    <h3 style="text-align: center; margin: 0;">Godzilla VS Kong</h3>
+    电影讲述传说中的王者哥斯拉和金刚对决的故事
+  </template>
   <Button type="primary">哥斯拉大战金刚</Button>
 </Tooltip>
 
@@ -68,16 +70,18 @@ function openChange (open: boolean) {
 ```vue
 <template>
   <Tooltip
-    :max-width="300"
     bg-color="#fff"
     :tooltip-style="{
       padding: '12px 18px',
       borderRadius: '12px',
       fontSize: '18px',
-      color: '#1677ff'
+      color: 'rgba(0, 0, 0, 0.88)'
     }"
   >
-    <template #tooltip>Godzilla VS Kong：电影讲述传说中的王者哥斯拉和金刚对决的故事</template>
+    <template #tooltip>
+      <h3 style="text-align: center; margin: 0;">Godzilla VS Kong</h3>
+      电影讲述传说中的王者哥斯拉和金刚对决的故事
+    </template>
     <Button type="primary">哥斯拉大战金刚</Button>
   </Tooltip>
 </template>
