@@ -22,13 +22,13 @@ const props = withDefaults(defineProps<Props>(), {
 const slotsExist = useSlotsExist(['default'])
 const margin = computed(() => {
   if (typeof props.orientationMargin === 'number') {
-    return props.orientationMargin + 'px'
+    return `${props.orientationMargin}px`
   }
   return props.orientationMargin
 })
 const lineHeight = computed(() => {
   if (typeof props.height === 'number') {
-    return props.height + 'px'
+    return `${props.height}px`
   }
   return props.height
 })

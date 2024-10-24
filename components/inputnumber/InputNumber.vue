@@ -37,7 +37,7 @@ const emits = defineEmits(['update:value', 'change'])
 const slotsExist = useSlotsExist(['prefix'])
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })

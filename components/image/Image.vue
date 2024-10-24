@@ -95,12 +95,12 @@ function getImageName(image: Image) {
 function getImageSize(size: string | number | (string | number)[], index: number): string {
   if (Array.isArray(size)) {
     if (typeof size[index] === 'number') {
-      return size[index] + 'px'
+      return `${size[index]}px`
     }
     return size[index]
   } else {
     if (typeof size === 'number') {
-      return size + 'px'
+      return `${size}px`
     }
     return size
   }
@@ -115,16 +115,15 @@ function onKeyboard(e: KeyboardEvent) {
     }
   }
 }
-function onPreview(index: number) {
+async function onPreview(index: number) {
   scale.value = 1
   rotate.value = 0
   dragX.value = 0
   dragY.value = 0
   showPreview.value = true
   previewIndex.value = index
-  nextTick(() => {
-    previewRef.value.focus()
-  })
+  await nextTick()
+  previewRef.value.focus()
 }
 defineExpose({
   preview: onPreview

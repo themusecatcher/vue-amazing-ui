@@ -43,24 +43,23 @@ const dialogRef = ref() // DOM 引用
 const emits = defineEmits(['update:open', 'cancel', 'ok'])
 const dialogHeight = computed(() => {
   if (typeof props.height === 'number') {
-    return props.height + 'px'
+    return `${props.height}px`
   } else {
     return props.height
   }
 })
 const dialogStyle = computed(() => {
   return {
-    width: fullScreen.value ? '100%' : props.width + 'px',
-    top: props.centered ? '50%' : fullScreen.value ? 0 : typeof props.top === 'number' ? props.top + 'px' : props.top
+    width: fullScreen.value ? '100%' : `${props.width}px`,
+    top: props.centered ? '50%' : fullScreen.value ? 0 : typeof props.top === 'number' ? `${props.top}px` : props.top
   }
 })
 watch(
   () => props.open,
-  (to) => {
+  async (to) => {
     if (to) {
-      nextTick(() => {
-        dialogRef.value.focus()
-      })
+      await nextTick()
+      dialogRef.value.focus()
       // 重置全屏显示
       fullScreen.value = false
     }

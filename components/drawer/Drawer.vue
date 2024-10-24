@@ -46,13 +46,13 @@ const slotsExist = useSlotsExist(['title', 'extra', 'footer'])
 const emits = defineEmits(['update:open', 'close'])
 const drawerWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })
 const drawerHeight = computed(() => {
   if (typeof props.height === 'number') {
-    return props.height + 'px'
+    return `${props.height}px`
   }
   return props.height
 })

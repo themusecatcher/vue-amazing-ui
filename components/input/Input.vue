@@ -39,7 +39,7 @@ const emits = defineEmits(['update:value', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })
@@ -48,7 +48,7 @@ const showClear = computed(() => {
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
-    return (props.value ? props.value.length : 0) + ' / ' + props.maxlength
+    return `${props.value ? props.value.length : 0} / ${props.maxlength}`
   }
   return props.value ? props.value.length : 0
 })

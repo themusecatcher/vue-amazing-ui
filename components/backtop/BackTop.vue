@@ -46,8 +46,8 @@ if (window && 'MutationObserver' in window) {
 }
 const backTopStyle = computed(() => {
   return {
-    bottom: typeof props.bottom === 'number' ? props.bottom + 'px' : props.bottom,
-    right: typeof props.right === 'number' ? props.right + 'px' : props.right,
+    bottom: typeof props.bottom === 'number' ? `${props.bottom}px` : props.bottom,
+    right: typeof props.right === 'number' ? `${props.right}px` : props.right,
     zIndex: props.zIndex
   }
 })

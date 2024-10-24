@@ -63,7 +63,7 @@ const emits = defineEmits(['update:show', 'cancel', 'ok', 'openChange'])
 const slotsExist = useSlotsExist(['description'])
 const popconfirmMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
-    return props.maxWidth + 'px'
+    return `${props.maxWidth}px`
   }
   return props.maxWidth
 })

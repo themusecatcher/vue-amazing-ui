@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
 const slotsExist = useSlotsExist(['title', 'extra'])
 const cardWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })
@@ -38,10 +38,10 @@ const showHeader = computed(() => {
   return slotsExist.title || slotsExist.extra || props.title || props.extra
 })
 const showTitle = computed(() => {
-  return Boolean(slotsExist.title || props.title)
+  return slotsExist.title || props.title
 })
 const showExtra = computed(() => {
-  return Boolean(slotsExist.extra || props.extra)
+  return slotsExist.extra || props.extra
 })
 </script>
 <template>

@@ -61,7 +61,7 @@ const yGap = computed(() => {
 })
 const rowWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })
