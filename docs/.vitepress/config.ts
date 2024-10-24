@@ -11,7 +11,7 @@ export default defineConfig({
   ],
   appearance: true, // 默认 true，设为 false 则无法切换 dark/light 主题，可选 'dark' true false
   markdown: {
-    lineNumbers: false // 是否显示行数，默认false
+    lineNumbers: false // 是否显示行数，默认 false
   },
   themeConfig: {
     logo: '/amazing-icon.svg',
