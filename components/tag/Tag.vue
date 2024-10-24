@@ -123,11 +123,10 @@ function onCloseTags(tag: Tag, n: number) {
   emits('update:value', newValue)
   emits('dynamicClose', tag, n)
 }
-function onAdd() {
+async function onAdd() {
   showInput.value = true
-  nextTick(() => {
-    inputRef.value.focus()
-  })
+  await nextTick()
+  inputRef.value.focus()
 }
 function onChange() {
   if (isStrArray.value) {

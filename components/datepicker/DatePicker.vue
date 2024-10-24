@@ -1,7 +1,4 @@
 <script setup lang="ts">
-defineOptions({
-  inheritAttrs: false
-})
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { computed } from 'vue'
@@ -54,24 +51,23 @@ const year = computed(() => {
 // }
 </script>
 <template>
-  <div class="m-datepicker" :style="`width: ${width}px;`">
-    <VueDatePicker
-      locale="zh-CN"
-      :month-change-on-scroll="false"
-      :enable-time-picker="showTime"
-      :time-picker="time"
-      :week-picker="week"
-      :month-picker="month"
-      :year-picker="year"
-      now-button-label="今天"
-      :show-now-button="showToday"
-      auto-apply
-      text-input
-      :model-type="modelType"
-      :day-names="['一', '二', '三', '四', '五', '六', '七']"
-      v-bind="$attrs"
-    ></VueDatePicker>
-  </div>
+  <VueDatePicker
+    class="m-datepicker"
+    :style="`width: ${width}px;`"
+    locale="zh-CN"
+    :month-change-on-scroll="false"
+    :enable-time-picker="showTime"
+    :time-picker="time"
+    :week-picker="week"
+    :month-picker="month"
+    :year-picker="year"
+    now-button-label="今天"
+    :show-now-button="showToday"
+    auto-apply
+    text-input
+    :model-type="modelType"
+    :day-names="['一', '二', '三', '四', '五', '六', '七']"
+  ></VueDatePicker>
 </template>
 <style lang="less" scoped>
 .m-datepicker {

@@ -62,6 +62,13 @@ export default defineConfig({
       }
     }
   },
+  optimizeDeps: { // 依赖优化选项
+    include: [ // 默认情况下，不在 node_modules 中的，链接的包不会被预构建。使用此选项可强制预构建链接的包。
+      'date-fns',
+      'vue',
+      'vue-router',
+    ]
+  },
   // 构建为库
   build: {
     emptyOutDir: false, // 默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。

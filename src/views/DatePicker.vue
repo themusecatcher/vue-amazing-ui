@@ -15,13 +15,9 @@ import {
   addMinutes,
   addSeconds
 } from 'date-fns'
-
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
 const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
-console.log(addHours(Date.now(), 1))
-console.log('rangeValue', rangeValue.value)
-
 const timeRangeValue = ref([
   {
     hours: new Date().getHours(),
@@ -60,33 +56,32 @@ const monthValue = ref({
   month: new Date().getMonth()
 })
 const yearValue = ref(new Date().getFullYear())
-
 watchEffect(() => {
-  console.log('dateValue:', dateValue.value)
+  console.log('dateValue', dateValue.value)
 })
 watchEffect(() => {
-  console.log('dateTimeValue:', dateTimeValue.value)
+  console.log('dateTimeValue', dateTimeValue.value)
 })
 watchEffect(() => {
-  console.log('rangeValue:', rangeValue.value)
+  console.log('rangeValue', rangeValue.value)
 })
 watchEffect(() => {
-  console.log('timeRangeValue:', timeRangeValue.value)
+  console.log('timeRangeValue', timeRangeValue.value)
 })
 watchEffect(() => {
-  console.log('timeValue:', timeValue.value)
+  console.log('timeValue', timeValue.value)
 })
 watchEffect(() => {
-  console.log('secondsValue:', secondsValue.value)
+  console.log('secondsValue', secondsValue.value)
 })
 watchEffect(() => {
-  console.log('weekValue:', weekValue.value)
+  console.log('weekValue', weekValue.value)
 })
 watchEffect(() => {
-  console.log('monthValue:', monthValue.value)
+  console.log('monthValue', monthValue.value)
 })
 watchEffect(() => {
-  console.log('yearValue:', yearValue.value)
+  console.log('yearValue', yearValue.value)
 })
 </script>
 <template>

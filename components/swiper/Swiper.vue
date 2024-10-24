@@ -70,14 +70,14 @@ const modulesBroadcast = ref([Navigation, Pagination, Mousewheel])
 const emits = defineEmits(['swiper', 'change'])
 const swiperWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   } else {
     return props.width
   }
 })
 const swiperHeight = computed(() => {
   if (typeof props.height === 'number') {
-    return props.height + 'px'
+    return `${props.height}px`
   } else {
     return props.height
   }

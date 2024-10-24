@@ -26,14 +26,14 @@ const textareaRef = ref()
 const areaHeight = ref(32)
 const textareaWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })
 const autoSizeStyle = computed(() => {
   if (typeof props.autoSize === 'object') {
     const style: { 'min-height'?: string; 'max-height'?: string; [propName: string]: any } = {
-      height: areaHeight.value + 'px',
+      height: `${areaHeight.value}px`,
       resize: 'none'
     }
     if ('minRows' in props.autoSize) {
@@ -47,7 +47,7 @@ const autoSizeStyle = computed(() => {
   if (typeof props.autoSize === 'boolean') {
     if (props.autoSize) {
       return {
-        height: areaHeight.value + 'px',
+        height: `${areaHeight.value}px`,
         resize: 'none'
       }
     }
@@ -59,7 +59,7 @@ const showClear = computed(() => {
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
-    return props.value.length + ' / ' + props.maxlength
+    return `${props.value.length} / ${props.maxlength}`
   }
   return props.value.length
 })
@@ -68,12 +68,11 @@ const lazyTextarea = computed(() => {
 })
 watch(
   () => props.value,
-  () => {
+  async () => {
     if (JSON.stringify(autoSizeStyle.value) !== '{}') {
       areaHeight.value = 32
-      nextTick(() => {
-        getAreaHeight()
-      })
+      await nextTick()
+      getAreaHeight()
     }
   },
   {
