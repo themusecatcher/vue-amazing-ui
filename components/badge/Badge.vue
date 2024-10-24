@@ -73,7 +73,7 @@ const presetClass = computed(() => {
       if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
         return `color-${props.color} white`
       } else {
-        return 'color-' + props.color
+        return `color-${props.color}`
       }
     }
   }
@@ -81,7 +81,7 @@ const presetClass = computed(() => {
     if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
       return `status-${props.status} white`
     } else {
-      return 'status-' + props.status
+      return `status-${props.status}`
     }
   }
   return

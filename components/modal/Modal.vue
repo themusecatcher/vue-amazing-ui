@@ -103,9 +103,9 @@ function erase(data: Modal) {
 }
 async function openModal() {
   if (modalData.value?.width !== undefined) {
-    modalWidth.value = typeof modalData.value.width === 'number' ? modalData.value.width + 'px' : modalData.value.width
+    modalWidth.value = typeof modalData.value.width === 'number' ? `${modalData.value.width}px` : modalData.value.width
   } else {
-    modalWidth.value = typeof props.width === 'number' ? props.width + 'px' : props.width
+    modalWidth.value = typeof props.width === 'number' ? `${props.width}px` : props.width
   }
   if (modalData.value?.centered !== undefined) {
     modalCentered.value = modalData.value.centered
@@ -113,9 +113,9 @@ async function openModal() {
     modalCentered.value = props.centered
   }
   if (modalData.value?.top !== undefined) {
-    modalTop.value = typeof modalData.value.top === 'number' ? modalData.value.top + 'px' : modalData.value.top
+    modalTop.value = typeof modalData.value.top === 'number' ? `${modalData.value.top}px` : modalData.value.top
   } else {
-    modalTop.value = typeof props.top === 'number' ? props.top + 'px' : props.top
+    modalTop.value = typeof props.top === 'number' ? `${props.top}px` : props.top
   }
   modalOpen.value = true
   emits('update:open', true)

@@ -30,7 +30,7 @@ const closeDuration = ref<number | null>(null) // 自动关闭延时
 const emits = defineEmits(['click', 'close'])
 const messageTop = computed(() => {
   if (typeof props.top === 'number') {
-    return props.top + 'px'
+    return `${props.top}px`
   }
   return props.top
 })

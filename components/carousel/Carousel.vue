@@ -74,7 +74,7 @@ const emits = defineEmits(['change', 'click'])
 const carouselWidth = computed(() => {
   // 走马灯区域宽度
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   } else {
     return props.width
   }
@@ -82,7 +82,7 @@ const carouselWidth = computed(() => {
 const carouselHeight = computed(() => {
   // 走马灯区域高度
   if (typeof props.height === 'number') {
-    return props.height + 'px'
+    return `${props.height}px`
   } else {
     return props.height
   }

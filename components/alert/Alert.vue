@@ -35,7 +35,7 @@ const showDesc = computed(() => {
   return slotsExist.description || props.description
 })
 async function onClose(e: Event) {
-  alertRef.value.style.maxHeight = alertRef.value.offsetHeight + 'px'
+  alertRef.value.style.maxHeight = `${alertRef.value.offsetHeight}px`
   await nextTick()
   closeAlert.value = true
   emit('close', e)

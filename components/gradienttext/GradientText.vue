@@ -41,7 +41,7 @@ const gradientText = computed(() => {
 })
 const rotate = computed(() => {
   if (typeof props.gradient === 'object' && props.gradient.deg) {
-    return isNumber(props.gradient.deg) ? props.gradient.deg + 'deg' : props.gradient.deg
+    return isNumber(props.gradient.deg) ? `${props.gradient.deg}deg` : props.gradient.deg
   }
   return '252deg'
 })
@@ -61,7 +61,7 @@ const colorEnd = computed(() => {
 })
 const fontSize = computed(() => {
   if (typeof props.size === 'number') {
-    return props.size + 'px'
+    return `${props.size}px`
   }
   if (typeof props.size === 'string') {
     return props.size

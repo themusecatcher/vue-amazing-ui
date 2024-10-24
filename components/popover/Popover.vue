@@ -41,7 +41,7 @@ const emits = defineEmits(['update:show', 'openChange'])
 const slotsExist = useSlotsExist(['title', 'content'])
 const popoverMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
-    return props.maxWidth + 'px'
+    return `${props.maxWidth}px`
   }
   return props.maxWidth
 })

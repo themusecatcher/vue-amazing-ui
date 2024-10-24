@@ -43,7 +43,7 @@ const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
 const emits = defineEmits(['update:value', 'change', 'search'])
 const inputSearchWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })

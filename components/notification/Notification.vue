@@ -39,7 +39,7 @@ const emit = defineEmits(['close'])
 const topStyle = computed(() => {
   if (['topRight', 'topLeft'].includes(notificationPlace.value)) {
     return {
-      top: props.top + 'px'
+      top: `${props.top}px`
     }
   }
   return {}
@@ -47,7 +47,7 @@ const topStyle = computed(() => {
 const bottomStyle = computed(() => {
   if (['bottomRight', 'bottomLeft'].includes(notificationPlace.value)) {
     return {
-      bottom: props.bottom + 'px'
+      bottom: `${props.bottom}px`
     }
   }
   return {}

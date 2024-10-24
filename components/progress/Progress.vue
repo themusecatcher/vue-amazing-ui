@@ -34,7 +34,7 @@ const slotsExist = useSlotsExist(['success'])
 const totalWidth = computed(() => {
   // 进度条总宽度
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   } else {
     return props.width
   }
