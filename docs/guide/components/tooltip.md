@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 function openChange (open: boolean) {
-  console.log('open:', open)
+  console.log('open', open)
 }
 </script>
 
@@ -30,7 +30,7 @@ function openChange (open: boolean) {
 ```vue
 <script setup lang="ts">
 function openChange (open: boolean) {
-  console.log('open:', open)
+  console.log('open', open)
 }
 </script>
 <template>
