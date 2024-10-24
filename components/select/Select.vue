@@ -58,13 +58,13 @@ const selectFocused = ref(false) /// select 是否聚焦
 const emits = defineEmits(['update:modelValue', 'change', 'openChange'])
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
-    return props.width + 'px'
+    return `${props.width}px`
   }
   return props.width
 })
 const optionsStyle = computed(() => {
   return {
-    maxHeight: props.maxDisplay * props.height + 8 + 'px'
+    maxHeight: `${props.maxDisplay * props.height + 8}px`
   }
 })
 watchEffect(() => {

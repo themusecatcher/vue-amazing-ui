@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, watchEffect, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useSlotsExist, rafTimeout, cancelRaf } from '../utils'
 interface Props {
@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   hideDelay: 100,
   show: false
 })
-const visible = ref(false)
+const visible = ref<boolean>()
 const hideTimer = ref()
 const top = ref(0) // 提示框 top 定位
 const left = ref(0) // 提示框 left 定位
@@ -47,6 +47,15 @@ const showTooltip = computed(() => {
   return slotsExist.tooltip || props.tooltip
 })
 watch(
+  () => props.show,
+  (to) => {
+    visible.value = to
+  },
+  {
+    immediate: true
+  }
+)
+watch(
   tooltipMaxWidth,
   () => {
     getPosition()
@@ -55,9 +64,6 @@ watch(
     flush: 'post'
   }
 )
-watchEffect(() => {
-  visible.value = props.show
-})
 function getPosition() {
   const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
   const tooltipWidth = tooltipRef.value.offsetWidth // 提示文本宽度

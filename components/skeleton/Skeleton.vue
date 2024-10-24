@@ -71,7 +71,7 @@ const titleWidth = computed(() => {
     return '38%'
   } else {
     if (typeof props.title.width === 'number') {
-      return props.title.width + 'px'
+      return `${props.title.width}px`
     }
     return props.title.width || '38%'
   }
@@ -96,13 +96,13 @@ const paragraphWidth = computed(() => {
     if (Array.isArray(props.paragraph.width)) {
       return props.paragraph.width.map((width: number | string) => {
         if (typeof width === 'number') {
-          return width + 'px'
+          return `${width}px`
         } else {
           return width
         }
       })
     } else if (typeof props.paragraph.width === 'number') {
-      return Array(paragraphRows.value).fill(props.paragraph.width + 'px')
+      return Array(paragraphRows.value).fill(`${props.paragraph.width}px`)
     } else if (typeof props.paragraph.width === 'string') {
       return Array(paragraphRows.value).fill(props.paragraph.width)
     }
