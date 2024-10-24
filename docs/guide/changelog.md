@@ -2,10 +2,11 @@
 
 <GlobalElement />
 
-## 1.8.9 <Tag color="volcano" size="small">soon</Tag>
+## 1.8.9 <Tag color="volcano" size="small">2024-10-24</Tag>
 
 - 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件
-- 组件库文档代码结构优化，新增赞助功能模块
+- 组件库文档代新增赞助功能模块
+- 组件库及文档代码优化
 
 ## 1.8.8 <Tag color="volcano" size="small">2024-10-22</Tag>
 
