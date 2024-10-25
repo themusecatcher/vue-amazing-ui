@@ -3,48 +3,39 @@ import { ref, reactive } from 'vue'
 const images = ref([
   {
     title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: ''
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
     title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: ''
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
     title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: ''
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
     title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
-    link: ''
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
   },
   {
     title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
-    link: ''
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
   },
   {
     title: 'image-6',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg',
-    link: ''
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg'
   },
   {
     title: 'image-7',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/7.jpg',
-    link: ''
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/7.jpg'
   },
   {
     title: 'image-8',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/8.jpg',
-    link: ''
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/8.jpg'
   },
   {
     title: 'image-9',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/9.jpg',
-    link: ''
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/9.jpg'
   }
 ])
 const showArrow = ref(false)
@@ -165,7 +156,7 @@ const carouselConfig = reactive({
       :dot-active-style="{ width: '25px', backgroundColor: 'gold' }"
       :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
     />
-    <h2 class="mt30 mb10">使用 Carousel Methods</h2>
+    <h2 class="mt30 mb10">使用 Methods</h2>
     <Space>
       <InputNumber :min="1" :max="images.length" v-model:value="toIndex" />
       <Button @click="carousel.to(toIndex)">跳转到</Button>
