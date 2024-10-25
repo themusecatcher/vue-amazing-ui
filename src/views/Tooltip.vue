@@ -6,12 +6,6 @@ function openChange(open: boolean) {
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-    <Card style="overflow: hidden">
-      <a-tooltip>
-        <template #title>prompt text</template>
-        Tooltip will show when mouse enter.
-      </a-tooltip>
-    </Card>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space>
       <Tooltip tooltip="Tesla" @open-change="openChange">
@@ -47,6 +41,23 @@ function openChange(open: boolean) {
         <Button type="primary">哥斯拉大战金刚</Button>
       </Tooltip>
     </Space>
+    <h2 class="mt30 mb10">位置</h2>
+    <Flex vertical :width="360" align="center" :gap="32">
+      <Tooltip tooltip="Vue Amazing UI" placement="bottom">
+        <Button type="primary">Bottom</Button>
+      </Tooltip>
+      <Flex width="100%" justify="space-between">
+        <Tooltip tooltip="Vue Amazing UI" placement="right">
+          <Button type="primary">Right</Button>
+        </Tooltip>
+        <Tooltip tooltip="Vue Amazing UI" placement="left">
+          <Button type="primary">Left</Button>
+        </Tooltip>
+      </Flex>
+      <Tooltip tooltip="Vue Amazing UI" placement="top">
+        <Button type="primary">Top</Button>
+      </Tooltip>
+    </Flex>
     <h2 class="mt30 mb10">不同的触发方式</h2>
     <Space>
       <Tooltip>

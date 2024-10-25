@@ -11,6 +11,7 @@ interface Props {
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
   bgColor?: string // 弹出提示框背景颜色
   arrow?: boolean // 是否显示箭头
+  placement?: 'top' | 'bottom' | 'left' | 'right' // 弹出提示位置
   trigger?: 'hover' | 'click' // 弹出提示触发方式
   showDelay?: number // 弹出提示显示的延迟时间，单位 ms
   hideDelay?: number // 弹出提示隐藏的延迟时间，单位 ms
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipStyle: () => ({}),
   bgColor: 'rgba(0, 0, 0, 0.85)',
   arrow: true,
+  placement: 'top',
   trigger: 'hover',
   showDelay: 100,
   hideDelay: 100,
@@ -33,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
 const visible = ref<boolean>()
 const hideTimer = ref()
 const top = ref(0) // 提示框 top 定位
+const bottom = ref(0) // 提示框 bottom 定位
 const left = ref(0) // 提示框 left 定位
 const contentRef = ref() // 声明一个同名的模板引用
 const tooltipRef = ref() // 声明一个同名的模板引用
@@ -47,6 +50,40 @@ const tooltipMaxWidth = computed(() => {
 })
 const showTooltip = computed(() => {
   return slotsExist.tooltip || props.tooltip
+})
+const tooltipPlacement = computed(() => {
+  switch (props.placement) {
+    case 'top':
+      return {
+        transformOrigin: `50% ${top.value}px`,
+        top: `${-top.value}px`,
+        left: `${-left.value}px`
+      }
+    case 'bottom':
+      return {
+        transformOrigin: `50% ${props.arrow ? -4 : -6}px`,
+        bottom: `${-top.value}px`,
+        left: `${-left.value}px`
+      }
+    case 'left':
+      return {
+        transformOrigin: `${left.value}px 50%`,
+        top: `${-top.value}px`,
+        left: `${-left.value}px`
+      }
+    case 'right':
+      return {
+        transformOrigin: `${props.arrow ? -4 : -6}px 50%`,
+        top: `${-top.value}px`,
+        right: `${-left.value}px`
+      }
+    default:
+      return {
+        transformOrigin: `50% ${top.value}px`,
+        top: `${-top.value}px`,
+        left: `${-left.value}px`
+      }
+  }
 })
 watch(
   () => props.show,
@@ -68,10 +105,16 @@ watch(
 )
 function getPosition() {
   const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
+  const contentHeight = contentRef.value.offsetHeight // 展示文本高度
   const tooltipWidth = tooltipRef.value.offsetWidth // 提示文本宽度
   const tooltipHeight = tooltipRef.value.offsetHeight // 提示文本高度
-  top.value = tooltipHeight + (props.arrow ? 4 : 6)
-  left.value = (tooltipWidth - contentWidth) / 2
+  if (['top', 'bottom'].includes(props.placement)) {
+    top.value = tooltipHeight + (props.arrow ? 4 : 6)
+    left.value = (tooltipWidth - contentWidth) / 2
+  } else {
+    top.value = (tooltipHeight - contentHeight) / 2
+    left.value = tooltipWidth + (props.arrow ? 4 : 6)
+  }
 }
 function onShow() {
   hideTimer.value && cancelRaf(hideTimer.value)
@@ -121,8 +164,11 @@ function onBlur() {
       ref="tooltipRef"
       tabindex="1"
       class="m-tooltip-card"
-      :class="{ 'tooltip-padding': arrow, 'tooltip-visible': visible && showTooltip }"
-      :style="`--tooltip-max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor}; transform-origin: 50% ${top}px; top: ${-top}px; left: ${-left}px;`"
+      :class="{
+        [`tooltip-${placement}-padding`]: arrow,
+        'tooltip-visible': visible && showTooltip
+      }"
+      :style="[`--tooltip-max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor};`, tooltipPlacement]"
       @blur="trigger === 'click' && activeBlur ? onBlur() : () => false"
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
       @mouseleave="trigger === 'hover' ? onHide() : () => false"
@@ -130,7 +176,7 @@ function onBlur() {
       <div class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
         <slot name="tooltip">{{ tooltip }}</slot>
       </div>
-      <div v-if="arrow" class="tooltip-arrow"></div>
+      <div v-if="arrow" class="tooltip-arrow" :class="`arrow-${placement || 'top'}`"></div>
     </div>
     <span
       ref="contentRef"
@@ -179,9 +225,6 @@ function onBlur() {
     .tooltip-arrow {
       position: absolute;
       z-index: 9;
-      left: 50%;
-      bottom: 12px;
-      transform: translateX(-50%) translateY(100%) rotate(180deg);
       display: block;
       pointer-events: none;
       width: 16px;
@@ -189,8 +232,6 @@ function onBlur() {
       overflow: hidden;
       &::before {
         position: absolute;
-        bottom: 0;
-        left: 0;
         width: 16px;
         height: 8px;
         background-color: var(--tooltip-background-color);
@@ -203,8 +244,6 @@ function onBlur() {
         position: absolute;
         width: 8.970562748477143px;
         height: 8.970562748477143px;
-        bottom: 0;
-        inset-inline: 0;
         margin: auto;
         border-radius: 0 0 2px 0;
         transform: translateY(50%) rotate(-135deg);
@@ -214,9 +253,70 @@ function onBlur() {
         content: '';
       }
     }
+    .arrow-top {
+      left: 50%;
+      bottom: 12px;
+      transform: translateX(-50%) translateY(100%) rotate(180deg);
+      &::before {
+        bottom: 0;
+        left: 0;
+      }
+      &::after {
+        bottom: 0;
+        inset-inline: 0;
+      }
+    }
+    .arrow-bottom {
+      left: 50%;
+      top: 12px;
+      transform: translateX(-50%) translateY(-100%) rotate(0deg);
+      &::before {
+        bottom: 0;
+        left: 0;
+      }
+      &::after {
+        bottom: 0;
+        inset-inline: 0;
+      }
+    }
+    .arrow-left {
+      top: 50%;
+      right: 12px;
+      transform: translateX(100%) translateY(-50%) rotate(90deg);
+      &::before {
+        bottom: 0;
+        left: 0;
+      }
+      &::after {
+        bottom: 0;
+        inset-inline: 0;
+      }
+    }
+    .arrow-right {
+      top: 50%;
+      left: 12px;
+      transform: translateX(-100%) translateY(-50%) rotate(-90deg);
+      &::before {
+        bottom: 0;
+        left: 0;
+      }
+      &::after {
+        bottom: 0;
+        inset-inline: 0;
+      }
+    }
   }
-  .tooltip-padding {
+  .tooltip-top-padding {
     padding-bottom: 12px;
+  }
+  .tooltip-bottom-padding {
+    padding-top: 12px;
+  }
+  .tooltip-left-padding {
+    padding-right: 12px;
+  }
+  .tooltip-right-padding {
+    padding-left: 12px;
   }
   .tooltip-visible {
     pointer-events: auto;
