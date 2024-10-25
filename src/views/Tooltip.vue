@@ -2,13 +2,17 @@
 function openChange(open: boolean) {
   console.log('open', open)
 }
+const placement = ref('top')
+setTimeout(() => {
+  placement.value = 'bottom'
+}, 2000)
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space>
-      <Tooltip tooltip="Tesla" @open-change="openChange">
+      <Tooltip tooltip="Tesla" :placement="placement" @open-change="openChange">
         <Button type="primary">特斯拉</Button>
       </Tooltip>
       <Tooltip tooltip="Godzilla" @open-change="openChange">
@@ -58,6 +62,11 @@ function openChange(open: boolean) {
         <Button type="primary">Top</Button>
       </Tooltip>
     </Flex>
+    <h2 class="mt30 mb10">自动调整位置</h2>
+    <h3 class="mb10">请滚动或缩小浏览器窗口来查看自适应调整弹出位置的效果</h3>
+    <Tooltip tooltip="Vue Amazing UI">
+      <Button type="primary">Flip Automatically</Button>
+    </Tooltip>
     <h2 class="mt30 mb10">不同的触发方式</h2>
     <Space>
       <Tooltip>

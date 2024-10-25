@@ -2,10 +2,16 @@
 
 <GlobalElement />
 
+## 1.8.11 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `flip` 属性，支持弹出提示被浏览器遮挡时自动调整弹出位置
+- 组件库及文档代码优化
+
 ## 1.8.10 <Tag color="volcano" size="small">2024-10-25</Tag>
 
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `tooltipClass` `placement` 属性，支持自定义弹出提示位置及类名
 - 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件，修复当标签页左右切换时，页面会短暂出现滚动条的问题
+- 组件库及文档代码优化
 
 ## 1.8.9 <Tag color="volcano" size="small">2024-10-24</Tag>
 
