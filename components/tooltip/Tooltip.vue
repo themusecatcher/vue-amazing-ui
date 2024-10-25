@@ -7,6 +7,7 @@ interface Props {
   content?: string // 展示的文本 string | slot
   contentStyle?: CSSProperties // 设置展示文本的样式
   tooltip?: string // 弹出提示文本 string | slot
+  tooltipClass?: string // 设置弹出提示的类名
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
   bgColor?: string // 弹出提示框背景颜色
   arrow?: boolean // 是否显示箭头
@@ -20,6 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   content: undefined,
   contentStyle: () => ({}),
   tooltip: undefined,
+  tooltipClass: undefined,
   tooltipStyle: () => ({}),
   bgColor: 'rgba(0, 0, 0, 0.85)',
   arrow: true,
@@ -125,7 +127,7 @@ function onBlur() {
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
       @mouseleave="trigger === 'hover' ? onHide() : () => false"
     >
-      <div class="tooltip-card" :style="tooltipStyle">
+      <div class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
         <slot name="tooltip">{{ tooltip }}</slot>
       </div>
       <div v-if="arrow" class="tooltip-arrow"></div>

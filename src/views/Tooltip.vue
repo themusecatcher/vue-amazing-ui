@@ -6,6 +6,12 @@ function openChange(open: boolean) {
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <Card style="overflow: hidden">
+      <a-tooltip>
+        <template #title>prompt text</template>
+        Tooltip will show when mouse enter.
+      </a-tooltip>
+    </Card>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space>
       <Tooltip tooltip="Tesla" @open-change="openChange">
@@ -16,21 +22,31 @@ function openChange(open: boolean) {
       </Tooltip>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Tooltip
-      bg-color="#fff"
-      :tooltip-style="{
-        padding: '12px 18px',
-        borderRadius: '12px',
-        fontSize: '18px',
-        color: 'rgba(0, 0, 0, 0.88)'
-      }"
-    >
-      <template #tooltip>
-        <h3 style="text-align: center; margin: 0">Godzilla VS Kong</h3>
-        电影讲述传说中的王者哥斯拉和金刚对决的故事
-      </template>
-      <Button type="primary">哥斯拉大战金刚</Button>
-    </Tooltip>
+    <Space gap="large">
+      <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-tooltip-class">
+        <template #tooltip>
+          <p style="text-align: center">Batman VS Superman</p>
+          电影讲述了超人帮助人类解决了很多问题，成为了人类的神，却引起了莱克斯·卢瑟的嫉妒，从而挑拨蝙蝠侠与超人之间战斗的故事
+        </template>
+        <Button type="primary">蝙蝠侠大战超人</Button>
+      </Tooltip>
+      <Tooltip
+        :max-width="360"
+        bg-color="#fff"
+        :tooltip-style="{
+          padding: '12px 18px',
+          borderRadius: '12px',
+          fontSize: '16px',
+          color: 'rgba(0, 0, 0, 0.88)'
+        }"
+      >
+        <template #tooltip>
+          <h3 style="text-align: center; margin: 0">Godzilla VS Kong</h3>
+          电影讲述帝王组织在地心世界找到巨兽起源的线索，与此同时传说中的王者哥斯拉和金刚的对决也将展开的故事
+        </template>
+        <Button type="primary">哥斯拉大战金刚</Button>
+      </Tooltip>
+    </Space>
     <h2 class="mt30 mb10">不同的触发方式</h2>
     <Space>
       <Tooltip>
@@ -67,3 +83,16 @@ function openChange(open: boolean) {
     </Tooltip>
   </div>
 </template>
+<style lang="less">
+.custom-tooltip-class {
+  font-size: 16px !important;
+  color: #0958d9 !important;
+  padding: 12px 18px !important;
+  border-radius: 12px !important;
+  p {
+    margin-bottom: 8px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+</style>
