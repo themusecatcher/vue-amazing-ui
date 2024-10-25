@@ -153,8 +153,6 @@ onMounted(() => {
   getNavSize()
 })
 function getNavSize() {
-  console.log('getnavsize')
-
   if (['top', 'bottom'].includes(props.tabPosition)) {
     getNavHorizontalSize()
   } else {
@@ -288,9 +286,6 @@ function getVerticalScroll(e: WheelEvent) {
   } else {
     scrollTop.value += scrollY
   }
-  console.log('scrollLeft', scrollLeft.value)
-  console.log('scrollTop', scrollTop.value)
-  console.log('scrollMax', scrollMax.value)
 }
 function getContentStyle(key: string | number | undefined, index: number) {
   if (props.activeKey !== getPageKey(key, index)) {
@@ -496,6 +491,7 @@ function getContentStyle(key: string | number | undefined, index: number) {
     flex: auto;
     min-width: 0;
     min-height: 0;
+    overflow: hidden;
     .tabs-content-wrap {
       position: relative;
       display: flex;
