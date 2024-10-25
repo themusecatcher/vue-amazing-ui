@@ -12,7 +12,7 @@ interface Props {
   bgColor?: string // 弹出提示框背景颜色
   arrow?: boolean // 是否显示箭头
   placement?: 'top' | 'bottom' | 'left' | 'right' // 弹出提示位置
-  flip?: boolean // 弹出提示被遮挡时自动调整弹出位置
+  flip?: boolean // 弹出提示被浏览器窗口遮挡时自动调整弹出位置
   trigger?: 'hover' | 'click' // 弹出提示触发方式
   showDelay?: number // 弹出提示显示的延迟时间，单位 ms
   hideDelay?: number // 弹出提示隐藏的延迟时间，单位 ms
@@ -140,7 +140,7 @@ function getPosition() {
     left.value = tooltipWidth.value + (props.arrow ? 4 : 6)
   }
 }
-// 弹出提示被遮挡时自动调整弹出位置
+// 弹出提示被浏览器窗口遮挡时自动调整弹出位置
 function getPlacement(place: string, disabledPlaces: string[]): string {
   const contentRect = contentRef.value.getBoundingClientRect()
   const { top, bottom, left, right } = contentRect // 展示文本各边缘相对于浏览器视口的位置(不包括滚动条)

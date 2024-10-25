@@ -323,6 +323,7 @@ tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.or
 bgColor | 弹出提示框背景颜色 | string | 'rgba(0, 0, 0, 0.85)'
 arrow | 是否显示箭头 | boolean | true
 placement | 弹出提示位置 | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | 'top'
+flip | 弹出提示被浏览器窗口遮挡时自动调整弹出位置 | boolean | true
 trigger | 弹出提示触发方式 | 'hover' &#124; 'click' | 'hover'
 showDelay | 弹出提示显示的延迟时间，单位 `ms` | number | 100
 hideDelay |弹出提示隐藏的延迟时间，单位 `ms` | number | 100
