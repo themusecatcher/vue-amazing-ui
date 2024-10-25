@@ -125,7 +125,6 @@ const carouselConfig = reactive({
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
@@ -178,7 +177,6 @@ function clickImage (image: object) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
@@ -232,7 +230,6 @@ function clickImage (image: object) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
@@ -289,7 +286,6 @@ function onChange(index: number) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
@@ -359,7 +355,6 @@ const dotPosition = ref('top')
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
@@ -404,7 +399,6 @@ const images = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
@@ -452,7 +446,6 @@ const images = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
@@ -514,7 +507,6 @@ const effect = ref('fade')
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',
