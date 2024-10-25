@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-
 const images = ref([
   {
     title: 'image-1',

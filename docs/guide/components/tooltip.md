@@ -188,6 +188,28 @@ function openChange (open: boolean) {
 
 :::
 
+## 自动调整位置
+
+*请滚动或缩小浏览器窗口来查看自适应调整弹出位置的效果*
+
+<br/>
+
+<Tooltip tooltip="Vue Amazing UI">
+  <Button type="primary">Flip Automatically</Button>
+</Tooltip>
+
+::: details Show Code
+
+```vue
+<template>
+  <Tooltip tooltip="Vue Amazing UI">
+    <Button type="primary">Flip Automatically</Button>
+  </Tooltip>
+</template>
+```
+
+:::
+
 ## 不同的触发方式
 
 <Space>
