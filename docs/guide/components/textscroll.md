@@ -301,7 +301,7 @@ function onClick (text: string) { // 获取点击的标题
 
 :::
 
-## 使用 TextScroll Methods
+## 使用 Methods
 
 <Flex vertical>
   <Space vertical>

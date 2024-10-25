@@ -92,7 +92,7 @@ const state = reactive({
       :height="80"
       @click="onClick"
     />
-    <h2 class="mt30 mb10">使用 TextScroll Methods</h2>
+    <h2 class="mt30 mb10">使用 Methods</h2>
     <Flex vertical>
       <Space vertical>
         <Space align="center">

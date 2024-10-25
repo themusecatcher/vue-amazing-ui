@@ -144,6 +144,50 @@ function openChange (open: boolean) {
 
 :::
 
+## 位置
+
+<Flex vertical :width="360" align="center" :gap="32">
+  <Tooltip tooltip="Vue Amazing UI" placement="bottom">
+    <Button type="primary">Bottom</Button>
+  </Tooltip>
+  <Flex width="100%" justify="space-between">
+    <Tooltip tooltip="Vue Amazing UI" placement="right">
+      <Button type="primary">Right</Button>
+    </Tooltip>
+    <Tooltip tooltip="Vue Amazing UI" placement="left">
+      <Button type="primary">Left</Button>
+    </Tooltip>
+  </Flex>
+  <Tooltip tooltip="Vue Amazing UI" placement="top">
+    <Button type="primary">Top</Button>
+  </Tooltip>
+</Flex>
+
+::: details Show Code
+
+```vue
+<template>
+  <Flex vertical :width="360" align="center" :gap="32">
+    <Tooltip tooltip="Vue Amazing UI" placement="bottom">
+      <Button type="primary">Bottom</Button>
+    </Tooltip>
+    <Flex width="100%" justify="space-between">
+      <Tooltip tooltip="Vue Amazing UI" placement="right">
+        <Button type="primary">Right</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" placement="left">
+        <Button type="primary">Left</Button>
+      </Tooltip>
+    </Flex>
+    <Tooltip tooltip="Vue Amazing UI" placement="top">
+      <Button type="primary">Top</Button>
+    </Tooltip>
+  </Flex>
+</template>
+```
+
+:::
+
 ## 不同的触发方式
 
 <Space>
@@ -256,6 +300,7 @@ tooltipClass | 设置弹出提示的类名 | string | undefined
 tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bgColor | 弹出提示框背景颜色 | string | 'rgba(0, 0, 0, 0.85)'
 arrow | 是否显示箭头 | boolean | true
+placement | 弹出提示位置 | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | 'top'
 trigger | 弹出提示触发方式 | 'hover' &#124; 'click' | 'hover'
 showDelay | 弹出提示显示的延迟时间，单位 `ms` | number | 100
 hideDelay |弹出提示隐藏的延迟时间，单位 `ms` | number | 100
