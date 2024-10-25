@@ -49,42 +49,97 @@ function openChange (open: boolean) {
 
 ## 自定义样式
 
-<Tooltip
-  bg-color="#fff"
-  :tooltip-style="{
-    padding: '12px 18px',
-    borderRadius: '12px',
-    fontSize: '18px',
-    color: 'rgba(0, 0, 0, 0.88)'
-  }"
->
-  <template #tooltip>
-    <h3 style="text-align: center; margin: 0;">Godzilla VS Kong</h3>
-    电影讲述传说中的王者哥斯拉和金刚对决的故事
-  </template>
-  <Button type="primary">哥斯拉大战金刚</Button>
-</Tooltip>
+<Space gap="large">
+  <Tooltip
+    :max-width="360"
+    bg-color="#fff"
+    tooltip-class="custom-tooltip-class"
+  >
+    <template #tooltip>
+      <p style="text-align: center;">Batman VS Superman</p>
+      电影讲述了超人帮助人类解决了很多问题，成为了人类的神，却引起了莱克斯·卢瑟的嫉妒，从而挑拨蝙蝠侠与超人之间战斗的故事
+    </template>
+    <Button type="primary">蝙蝠侠大战超人</Button>
+  </Tooltip>
+  <Tooltip
+    :max-width="360"
+    bg-color="#fff"
+    :tooltip-style="{
+      padding: '12px 18px',
+      borderRadius: '12px',
+      fontSize: '16px',
+      color: 'rgba(0, 0, 0, 0.88)'
+    }"
+  >
+    <template #tooltip>
+      <h3 style="text-align: center; margin: 0">Godzilla VS Kong</h3>
+      电影讲述帝王组织在地心世界找到巨兽起源的线索，与此同时传说中的王者哥斯拉和金刚的对决也将展开的故事
+    </template>
+    <Button type="primary">哥斯拉大战金刚</Button>
+  </Tooltip>
+</Space>
+
+<style lang="less">
+.custom-tooltip-class {
+  font-size: 16px !important;
+  color: #0958d9 !important;
+  padding: 12px 18px !important;
+  border-radius: 12px !important;
+  p {
+    margin-bottom: 8px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+</style>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Tooltip
-    bg-color="#fff"
-    :tooltip-style="{
-      padding: '12px 18px',
-      borderRadius: '12px',
-      fontSize: '18px',
-      color: 'rgba(0, 0, 0, 0.88)'
-    }"
-  >
-    <template #tooltip>
-      <h3 style="text-align: center; margin: 0;">Godzilla VS Kong</h3>
-      电影讲述传说中的王者哥斯拉和金刚对决的故事
-    </template>
-    <Button type="primary">哥斯拉大战金刚</Button>
-  </Tooltip>
+  <Space gap="large">
+    <Tooltip
+      :max-width="360"
+      bg-color="#fff"
+      tooltip-class="custom-tooltip-class"
+    >
+      <template #tooltip>
+        <p style="text-align: center;">Batman VS Superman</p>
+        电影讲述了超人帮助人类解决了很多问题，成为了人类的神，却引起了莱克斯·卢瑟的嫉妒，从而挑拨蝙蝠侠与超人之间战斗的故事
+      </template>
+      <Button type="primary">蝙蝠侠大战超人</Button>
+    </Tooltip>
+    <Tooltip
+      :max-width="360"
+      bg-color="#fff"
+      :tooltip-style="{
+        padding: '12px 18px',
+        borderRadius: '12px',
+        fontSize: '16px',
+        color: 'rgba(0, 0, 0, 0.88)'
+      }"
+    >
+      <template #tooltip>
+        <h3 style="text-align: center; margin: 0">Godzilla VS Kong</h3>
+        电影讲述帝王组织在地心世界找到巨兽起源的线索，与此同时传说中的王者哥斯拉和金刚的对决也将展开的故事
+      </template>
+      <Button type="primary">哥斯拉大战金刚</Button>
+    </Tooltip>
+  </Space>
 </template>
+<style lang="less">
+.custom-tooltip-class {
+  font-size: 16px !important;
+  color: #0958d9 !important;
+  padding: 12px 18px !important;
+  border-radius: 12px !important;
+  p {
+    margin-bottom: 8px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+</style>
 ```
 
 :::
@@ -197,6 +252,7 @@ maxWidth | 弹出提示最大宽度，单位 `px` | string &#124; number | 240
 content | 展示的文本 | string &#124; slot | undefined
 contentStyle | 设置展示文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 tooltip | 弹出提示文本 | string &#124; slot | undefined
+tooltipClass | 设置弹出提示的类名 | string | undefined
 tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bgColor | 弹出提示框背景颜色 | string | 'rgba(0, 0, 0, 0.85)'
 arrow | 是否显示箭头 | boolean | true
