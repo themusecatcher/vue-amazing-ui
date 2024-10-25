@@ -71,7 +71,7 @@ const routerViewRef = ref()
         <template #node>
           <svg
             v-if="themeDark"
-            class="u-dark-svg"
+            class="svg-dark"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
             focusable="false"
@@ -83,11 +83,11 @@ const routerViewRef = ref()
           </svg>
           <svg
             v-else
+            class="svg-light"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
             focusable="false"
             viewBox="0 0 24 24"
-            class="u-light-svg"
           >
             <path
               d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18zM12,8c-2.2,0-4,1.8-4,4c0,2.2,1.8,4,4,4c2.2,0,4-1.8,4-4C16,9.8,14.2,8,12,8z"
@@ -172,12 +172,12 @@ const routerViewRef = ref()
     }
   }
 }
-.u-dark-svg {
+.svg-dark {
   width: 12px;
   height: 12px;
   fill: #fff;
 }
-.u-light-svg {
+.svg-light {
   width: 12px;
   height: 12px;
   fill: rgba(60, 60, 67, 0.75);
