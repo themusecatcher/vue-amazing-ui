@@ -463,7 +463,8 @@ function onOpenChange(open: boolean) {
       tooltipStyle: {
         fontWeight: 500,
         color: 'rgba(0, 0, 0, 0.88)'
-      }
+      },
+      placement: 'top'
     }"
   >
     <template #icon>
@@ -493,7 +494,8 @@ import { SketchOutlined } from '@ant-design/icons-vue'
         tooltipStyle: {
           fontWeight: 500,
           color: 'rgba(0, 0, 0, 0.88)'
-        }
+        },
+        placement: 'top'
       }"
     >
       <template #icon>
