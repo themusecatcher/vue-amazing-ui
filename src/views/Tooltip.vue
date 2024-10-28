@@ -19,6 +19,10 @@ setTimeout(() => {
         <Button type="primary">哥斯拉</Button>
       </Tooltip>
     </Space>
+    <a-tooltip trigger="click">
+      <template #title>prompt text</template>
+      Tooltip will show when mouse enter.
+    </a-tooltip>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space gap="large">
       <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-tooltip-class">
