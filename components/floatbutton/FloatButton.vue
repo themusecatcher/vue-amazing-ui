@@ -123,7 +123,7 @@ function onClick(e: Event) {
     @mouseenter="menuTrigger === 'hover' ? (showMenu = true) : null"
     @mouseleave="menuTrigger === 'hover' ? (showMenu = false) : null"
   >
-    <Tooltip v-bind="tooltipProps" class="float-btn-tooltip">
+    <Tooltip placement="left" v-bind="tooltipProps" class="float-btn-tooltip">
       <template v-if="showTooltip" #tooltip>
         <slot name="tooltip">{{ tooltip }}</slot>
       </template>

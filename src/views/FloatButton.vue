@@ -183,7 +183,8 @@ function onOpenChange(open: boolean) {
           tooltipStyle: {
             fontWeight: 500,
             color: 'rgba(0, 0, 0, 0.88)'
-          }
+          },
+          placement: 'top'
         }"
       >
         <template #icon>
