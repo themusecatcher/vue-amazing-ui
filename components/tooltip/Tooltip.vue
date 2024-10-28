@@ -12,7 +12,7 @@ interface Props {
   bgColor?: string // 弹出提示框背景颜色
   arrow?: boolean // 是否显示箭头
   placement?: 'top' | 'bottom' | 'left' | 'right' // 弹出提示位置
-  flip?: boolean // 弹出提示被浏览器窗口遮挡时自动调整弹出位置
+  flip?: boolean // 弹出提示被浏览器窗口遮-挡时自动调整弹出位置
   trigger?: 'hover' | 'click' // 弹出提示触发方式
   showDelay?: number // 弹出提示显示的延迟时间，单位 ms
   hideDelay?: number // 弹出提示隐藏的延迟时间，单位 ms
@@ -130,7 +130,7 @@ function getPosition() {
   tooltipWidth.value = tooltipRef.value.offsetWidth
   tooltipHeight.value = tooltipRef.value.offsetHeight
   if (props.flip) {
-    tooltipPlace.value = getPlacement(tooltipPlace.value, [])
+    tooltipPlace.value = getPlacement(props.placement, [])
   }
   if (['top', 'bottom'].includes(tooltipPlace.value)) {
     top.value = tooltipHeight.value + (props.arrow ? 4 : 6)
