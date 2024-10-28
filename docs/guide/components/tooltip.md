@@ -325,6 +325,7 @@ arrow | 是否显示箭头 | boolean | true
 placement | 弹出提示位置 | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | 'top'
 flip | 弹出提示被浏览器窗口遮挡时自动调整弹出位置 | boolean | true
 trigger | 弹出提示触发方式 | 'hover' &#124; 'click' | 'hover'
+transitionDuration | 弹出提示动画的过渡持续时间，单位 `ms` | number | 100
 showDelay | 弹出提示显示的延迟时间，单位 `ms` | number | 100
 hideDelay |弹出提示隐藏的延迟时间，单位 `ms` | number | 100
 show <Tag color="cyan">v-model</Tag> | 弹出提示是否显示 | boolean | false

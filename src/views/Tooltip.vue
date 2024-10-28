@@ -2,27 +2,19 @@
 function openChange(open: boolean) {
   console.log('open', open)
 }
-const placement = ref('top')
-setTimeout(() => {
-  placement.value = 'bottom'
-}, 2000)
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space>
-      <Tooltip tooltip="Tesla" :placement="placement" @open-change="openChange">
+      <Tooltip tooltip="Tesla" @open-change="openChange">
         <Button type="primary">特斯拉</Button>
       </Tooltip>
       <Tooltip tooltip="Godzilla" @open-change="openChange">
         <Button type="primary">哥斯拉</Button>
       </Tooltip>
     </Space>
-    <a-tooltip trigger="click">
-      <template #title>prompt text</template>
-      Tooltip will show when mouse enter.
-    </a-tooltip>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space gap="large">
       <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-tooltip-class">

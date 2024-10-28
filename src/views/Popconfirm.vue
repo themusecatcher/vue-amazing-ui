@@ -27,6 +27,20 @@ const openChange = (open: boolean) => {
     >
       <Button type="danger">Delete Confirm</Button>
     </Popconfirm>
+    <a-tooltip trigger="click">
+      <template #title>prompt text</template>
+      Tooltip will show when mouse enter.
+    </a-tooltip>
+    <a-popconfirm
+      trigger="hover"
+      title="Are you sure delete this task?"
+      ok-text="Yes"
+      cancel-text="No"
+      @confirm="confirm"
+      @cancel="cancel"
+    >
+      <a href="#">Delete</a>
+    </a-popconfirm>
     <h2 class="mt30 mb10">隐藏取消按钮</h2>
     <Popconfirm title="It's friendly reminder ..." :show-cancel="false" icon-type="info" @ok="confirm">
       <Button type="primary">Hidden Cancel Btn</Button>

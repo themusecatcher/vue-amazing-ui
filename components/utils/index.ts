@@ -617,22 +617,27 @@ export function useSlotsExist(slotsName: string | string[] = 'default') {
   // 检查特定名称的插槽是否存在且不为空
   const checkSlotsExist = (slotsName: string): boolean => {
     const slotsContent = slots[slotsName]?.()
-    if (slotsContent && slotsContent?.length) {
-      const firstSlot = slotsContent[0]
-      if (typeof firstSlot.children === 'string') {
-        if (firstSlot.children === 'v-if') {
+    const checkExist = (slotContent: any) => {
+      if (typeof slotContent.children === 'string') {
+        if (slotContent.children === 'v-if') {
           return false
         }
-        return firstSlot.children.trim() !== ''
+        return slotContent.children.trim() !== ''
       } else {
-        if (firstSlot.children === null) {
-          if (firstSlot.type === 'img' || typeof firstSlot.type !== 'string') {
+        if (slotContent.children === null) {
+          if (slotContent.type === 'img' || typeof slotContent.type !== 'string') {
             return true
           }
         } else {
-          return Boolean(firstSlot.children)
+          return Boolean(slotContent.children)
         }
       }
+    }
+    if (slotsContent && slotsContent?.length) {
+      const result = slotsContent.some((slotContent) => {
+        return checkExist(slotContent)
+      })
+      return result
     }
     return false
   }
