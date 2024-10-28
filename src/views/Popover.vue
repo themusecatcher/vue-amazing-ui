@@ -1,6 +1,6 @@
 <script setup lang="ts">
 function openChange(open: boolean) {
-  console.log('open:', open)
+  console.log('open', open)
 }
 </script>
 <template>

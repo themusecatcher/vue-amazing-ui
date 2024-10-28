@@ -12,8 +12,9 @@ interface Props {
   bgColor?: string // 弹出提示框背景颜色
   arrow?: boolean // 是否显示箭头
   placement?: 'top' | 'bottom' | 'left' | 'right' // 弹出提示位置
-  flip?: boolean // 弹出提示被浏览器窗口遮-挡时自动调整弹出位置
+  flip?: boolean // 弹出提示被浏览器窗口遮挡时自动调整弹出位置
   trigger?: 'hover' | 'click' // 弹出提示触发方式
+  transitionDuration?: number // 弹出提示动画的过渡持续时间，单位 ms
   showDelay?: number // 弹出提示显示的延迟时间，单位 ms
   hideDelay?: number // 弹出提示隐藏的延迟时间，单位 ms
   show?: boolean // (v-model) 弹出提示是否显示
@@ -30,6 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   placement: 'top',
   flip: true,
   trigger: 'hover',
+  transitionDuration: 100,
   showDelay: 100,
   hideDelay: 100,
   show: false
@@ -276,6 +278,7 @@ function onBlur() {
 <template>
   <div
     class="m-tooltip-wrap"
+    :style="`--tooltip-max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor}; --transition-duration: ${transitionDuration}ms;`"
     @mouseenter="trigger === 'hover' ? onShow() : () => false"
     @mouseleave="trigger === 'hover' ? onHide() : () => false"
   >
@@ -285,9 +288,9 @@ function onBlur() {
       class="m-tooltip-card"
       :class="{
         [`tooltip-${tooltipPlace}-padding`]: arrow,
-        'tooltip-visible': tooltipVisible && showTooltip
+        'tooltip-visible': showTooltip && tooltipVisible
       }"
-      :style="[`--tooltip-max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor};`, tooltipPlacement]"
+      :style="tooltipPlacement"
       @blur="trigger === 'click' && activeBlur ? onBlur() : () => false"
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
       @mouseleave="trigger === 'hover' ? onHide() : () => false"
@@ -322,8 +325,8 @@ function onBlur() {
     transform: scale(0.8);
     opacity: 0;
     transition:
-      transform 0.1s cubic-bezier(0.78, 0.14, 0.15, 0.86),
-      opacity 0.1s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+      opacity var(--transition-duration) cubic-bezier(0.78, 0.14, 0.15, 0.86),
+      transform var(--transition-duration) cubic-bezier(0.78, 0.14, 0.15, 0.86);
     .tooltip-card {
       min-width: 32px;
       min-height: 32px;
@@ -441,6 +444,9 @@ function onBlur() {
     pointer-events: auto;
     transform: scale(1);
     opacity: 1;
+    transition:
+      opacity var(--transition-duration) cubic-bezier(0.08, 0.82, 0.17, 1),
+      transform var(--transition-duration) cubic-bezier(0.08, 0.82, 0.17, 1);
   }
   .tooltip-content {
     display: inline-block;
