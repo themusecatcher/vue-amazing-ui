@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useSlotsExist, useEventListener, rafTimeout, cancelRaf } from '../utils'
 interface Props {
@@ -36,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const tooltipVisible = ref<boolean>(false)
 const hideTimer = ref()
+const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
 const top = ref(0) // 提示框 top 定位
 const left = ref(0) // 提示框 left 定位
 const tooltipPlace = ref('top') // 弹出提示位置
@@ -48,11 +49,6 @@ const emits = defineEmits(['update:show', 'openChange'])
 const slotsExist = useSlotsExist(['tooltip'])
 const viewportWidth = ref(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
 const viewportHeight = ref(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
-function getViewportSize() {
-  viewportWidth.value = document.documentElement.clientWidth
-  viewportHeight.value = document.documentElement.clientHeight
-}
-useEventListener(window, 'resize', getViewportSize)
 const tooltipMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
     return `${props.maxWidth}px`
@@ -124,6 +120,38 @@ watch(
     flush: 'post'
   }
 )
+onMounted(() => {
+  observeScroll()
+})
+onBeforeUnmount(() => {
+  cleanup()
+})
+useEventListener(window, 'resize', getViewportSize)
+function getViewportSize() {
+  viewportWidth.value = document.documentElement.clientWidth
+  viewportHeight.value = document.documentElement.clientHeight
+  getPosition()
+}
+function observeScroll() {
+  // 监听可滚动父元素
+  cleanup()
+  scrollTarget.value = getScrollParent(contentRef.value?.parentElement.parentElement ?? null)
+  scrollTarget.value && scrollTarget.value.addEventListener('scroll', getPosition)
+}
+function cleanup() {
+  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', getPosition)
+  scrollTarget.value = null
+}
+function getScrollParent(el: HTMLElement | null) {
+  if (el) {
+    if (el.scrollHeight > el.clientHeight) {
+      return el
+    } else {
+      return getScrollParent(el.parentElement ?? null)
+    }
+  }
+  return null
+}
 function getPosition() {
   const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
   const contentHeight = contentRef.value.offsetHeight // 展示文本高度

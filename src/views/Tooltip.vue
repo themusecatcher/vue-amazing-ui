@@ -67,7 +67,7 @@ setTimeout(() => {
       </Tooltip>
     </Flex>
     <h2 class="mt30 mb10">自动调整位置</h2>
-    <h3 class="mb10">请滚动或缩小浏览器窗口来查看自适应调整弹出位置的效果</h3>
+    <h3 class="mb10">请滚动或缩放浏览器窗口来查看自适应调整弹出位置的效果</h3>
     <Tooltip tooltip="Vue Amazing UI">
       <Button type="primary">Flip Automatically</Button>
     </Tooltip>

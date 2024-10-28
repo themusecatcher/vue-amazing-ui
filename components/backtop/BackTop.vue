@@ -37,13 +37,6 @@ const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
 const targetElement = ref<HTMLElement | null>(null) // 渲染容器元素
 const emits = defineEmits(['click', 'show'])
 const slotsExist = useSlotsExist(['tooltip', 'icon', 'description'])
-// 创建一个观察器实例并传入回调函数
-let observer: any = null
-if (window && 'MutationObserver' in window) {
-  observer = new MutationObserver(() => {
-    scrollTop.value = scrollTarget.value?.scrollTop ?? 0
-  })
-}
 const backTopStyle = computed(() => {
   return {
     bottom: typeof props.bottom === 'number' ? `${props.bottom}px` : props.bottom,
@@ -63,8 +56,6 @@ const showDescription = computed(() => {
 watch(
   () => props.listenTo,
   () => {
-    observer.disconnect()
-    removeEventListener()
     observeScroll()
   },
   {
@@ -88,37 +79,27 @@ onMounted(() => {
   appendBackTop()
 })
 onBeforeUnmount(() => {
-  observer.disconnect() // 停止观察
-  removeEventListener()
+  cleanup()
   backtopRef.value?.remove()
 })
-function scrollEvent(e: Event) {
-  scrollTop.value = (e.target as HTMLElement).scrollTop
-}
-function resizeEvent() {
+function updateScrollTop() {
   scrollTop.value = scrollTarget.value?.scrollTop ?? 0
 }
-function removeEventListener() {
-  // 移除监听事件
-  if (scrollTarget.value) {
-    scrollTarget.value.removeEventListener('scroll', scrollEvent)
-    window && window.removeEventListener('resize', resizeEvent)
-  }
-}
 function observeScroll() {
+  cleanup()
   // 监听滚动的元素
   if (props.listenTo === undefined) {
-    scrollTarget.value = getScrollParentElement(backtopRef.value?.parentElement)
+    scrollTarget.value = getScrollParent(backtopRef.value?.parentElement ?? null)
   } else if (typeof props.listenTo === 'string') {
     scrollTarget.value = document.getElementsByTagName(props.listenTo)[0] as HTMLElement
   } else if (props.listenTo instanceof HTMLElement) {
     scrollTarget.value = props.listenTo
   }
-  if (scrollTarget.value) {
-    observer.observe(scrollTarget.value, { childList: true, attributes: true, subtree: true })
-    scrollTarget.value.addEventListener('scroll', scrollEvent)
-    window && window.addEventListener('resize', resizeEvent)
-  }
+  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updateScrollTop)
+}
+function cleanup() {
+  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updateScrollTop)
+  scrollTarget.value = null
 }
 function appendBackTop() {
   // 渲染容器节点
@@ -129,12 +110,12 @@ function appendBackTop() {
   }
   targetElement.value?.appendChild(backtopRef.value!) // 保证 backtop 节点只存在一个
 }
-function getScrollParentElement(el: any) {
+function getScrollParent(el: HTMLElement | null) {
   if (el) {
     if (el.scrollHeight > el.clientHeight) {
       return el
     } else {
-      return getScrollParentElement(el.parentElement)
+      return getScrollParent(el.parentElement ?? null)
     }
   }
   return null
