@@ -7,11 +7,13 @@
 ## 何时使用
 
 - 当目标元素有进一步的描述和相关操作时，可以收纳到卡片中，根据用户的操作行为进行展现。
-- 和 Tooltip 的区别是，用户可以对浮层上的元素进行操作，因此它可以承载更复杂的内容，比如链接或按钮等。
+- 和 `Tooltip` 的区别是，用户可以对浮层上的元素进行操作，因此它可以承载更复杂的内容，比如链接或按钮等。
 
 <script setup lang="ts">
-function openChange (open: boolean) {
-  console.log('open:', open)
+import { ref } from 'vue'
+const show = ref(false)
+function openChange(open: boolean) {
+  console.log('open', open)
 }
 </script>
 
@@ -30,7 +32,7 @@ function openChange (open: boolean) {
 ```vue
 <script setup lang="ts">
 function openChange (open: boolean) {
-  console.log('open:', open)
+  console.log('open', open)
 }
 </script>
 <template>
@@ -50,10 +52,10 @@ function openChange (open: boolean) {
 
 <Popover
   :max-width="180"
+  bg-color="#000"
   :title-style="{ fontSize: '16px', fontWeight: 'bold', color: '#1677ff' }"
   :content-style="{ color: '#fff' }"
-  bg-color="rgba(0, 0, 0.8)"
-  :popover-style="{ padding: '12px 18px', borderRadius: '12px' }"
+  :tooltip-style="{ padding: '12px 18px', borderRadius: '12px' }"
 >
   <template #title> Custom Title </template>
   <template #content>
@@ -69,10 +71,10 @@ function openChange (open: boolean) {
 <template>
   <Popover
     :max-width="180"
+    bg-color="#000"
     :title-style="{ fontSize: '16px', fontWeight: 'bold', color: '#1677ff' }"
     :content-style="{ color: '#fff' }"
-    bg-color="rgba(0, 0, 0.8)"
-    :popover-style="{ padding: '12px 18px', borderRadius: '12px' }"
+    :tooltip-style="{ padding: '12px 18px', borderRadius: '12px' }"
   >
     <template #title> Custom Title </template>
     <template #content>
@@ -130,6 +132,66 @@ function openChange (open: boolean) {
 
 :::
 
+## 从浮层内关闭
+
+*使用 `show` 属性控制显示隐藏*
+
+<Popover v-model:show="show" title="Click Title" trigger="click">
+  <template #content>
+    <a @click="show = false">Close</a>
+  </template>
+  <Button type="primary">Click Me</Button>
+</Popover>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const show = ref(false)
+</script>
+<template>
+  <Popover v-model:show="show" title="Click Title" trigger="click">
+    <template #content>
+      <a @click="show = false">Close</a>
+    </template>
+    <Button type="primary">Click Me</Button>
+  </Popover>
+</template>
+```
+
+:::
+
+## 自定义过渡动画时间
+
+<Popover title="Transition Duration 300ms" :transition-duration="300">
+  <template #content>
+    <p>Content</p>
+    <p>Content</p>
+  </template>
+  <Button type="primary">Transition Duration 300ms</Button>
+</Popover>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const show = ref(false)
+</script>
+<template>
+  <Popover title="Transition Duration 300ms" :transition-duration="300">
+    <template #content>
+      <p>Content</p>
+      <p>Content</p>
+    </template>
+    <Button type="primary">Transition Duration 300ms</Button>
+  </Popover>
+</template>
+```
+
+:::
+
 ## 延迟显示隐藏
 
 <Space>
@@ -180,7 +242,11 @@ function openChange (open: boolean) {
 
 ## 隐藏箭头
 
-<Popover :arrow="false" content="Vue Amazing UI">
+<Popover :arrow="false" title="Title">
+  <template #content>
+    <p>Content</p>
+    <p>Content</p>
+  </template>
   <Button type="primary">Hide Arrow</Button>
 </Popover>
 
@@ -188,7 +254,11 @@ function openChange (open: boolean) {
 
 ```vue
 <template>
-  <Popover :arrow="false" content="Vue Amazing UI">
+  <Popover :arrow="false" title="Title">
+    <template #content>
+      <p>Content</p>
+      <p>Content</p>
+    </template>
     <Button type="primary">Hide Arrow</Button>
   </Popover>
 </template>
@@ -196,24 +266,23 @@ function openChange (open: boolean) {
 
 :::
 
+<br/>
+
+> *更多使用方式请参考 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html)*
+
 ## APIs
 
 ### Popover
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-maxWidth | 弹出卡片最大宽度，单位 `px` | string &#124; number | 'auto'
 title | 卡片标题 | string &#124; slot | undefined
 titleStyle | 卡片标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 content | 卡片内容 | string &#124; slot | undefined
 contentStyle | 卡片内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-bgColor | 弹出卡片背景颜色 | string | '#fff'
-popoverStyle | 卡片容器样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-arrow | 是否显示箭头 | boolean | true
-trigger | 弹出卡片触发方式 | 'hover' &#124; 'click' | 'hover'
-showDelay | 弹出卡片显示的延迟时间，单位 `ms` | number | 100
-hideDelay | 弹出卡片隐藏的延迟时间，单位 `ms` | number | 100
-show <Tag color="cyan">v-model</Tag> | 弹出卡片是否显示 | boolean | false
+tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+
+更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
 
 ## Events
 

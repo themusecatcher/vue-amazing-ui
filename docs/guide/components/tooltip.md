@@ -9,7 +9,9 @@
 - 当某个页面需要向用户显示警告的信息时
 
 <script setup lang="ts">
-function openChange (open: boolean) {
+import { ref } from 'vue'
+const tooltip = ref()
+function openChange(open: boolean) {
   console.log('open', open)
 }
 </script>
@@ -50,13 +52,9 @@ function openChange (open: boolean) {
 ## 自定义样式
 
 <Space gap="large">
-  <Tooltip
-    :max-width="360"
-    bg-color="#fff"
-    tooltip-class="custom-tooltip-class"
-  >
+  <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-tooltip-class">
     <template #tooltip>
-      <p style="text-align: center;">Batman VS Superman</p>
+      <p style="text-align: center">Batman VS Superman</p>
       电影讲述了超人帮助人类解决了很多问题，成为了人类的神，却引起了莱克斯·卢瑟的嫉妒，从而挑拨蝙蝠侠与超人之间战斗的故事
     </template>
     <Button type="primary">蝙蝠侠大战超人</Button>
@@ -98,13 +96,9 @@ function openChange (open: boolean) {
 ```vue
 <template>
   <Space gap="large">
-    <Tooltip
-      :max-width="360"
-      bg-color="#fff"
-      tooltip-class="custom-tooltip-class"
-    >
+    <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-tooltip-class">
       <template #tooltip>
-        <p style="text-align: center;">Batman VS Superman</p>
+        <p style="text-align: center">Batman VS Superman</p>
         电影讲述了超人帮助人类解决了很多问题，成为了人类的神，却引起了莱克斯·卢瑟的嫉妒，从而挑拨蝙蝠侠与超人之间战斗的故事
       </template>
       <Button type="primary">蝙蝠侠大战超人</Button>
@@ -194,7 +188,7 @@ function openChange (open: boolean) {
 
 <br/>
 
-<Tooltip tooltip="Vue Amazing UI" placement="bottom">
+<Tooltip tooltip="Vue Amazing UI">
   <Button type="primary">Flip Automatically</Button>
 </Tooltip>
 
@@ -242,6 +236,50 @@ function openChange (open: boolean) {
 
 :::
 
+## 按键控制
+
+*`enter` 显示；`esc` 关闭，仅当 `trigger: 'click'` 时生效*
+
+<br/>
+
+<Tooltip trigger="click" keyboard>
+  <template #tooltip>Vue Amazing UI</template>
+  <Button type="primary">Click Me</Button>
+</Tooltip>
+
+::: details Show Code
+
+```vue
+<template>
+  <Tooltip trigger="click" keyboard>
+    <template #tooltip>Vue Amazing UI</template>
+    <Button type="primary">Click Me</Button>
+  </Tooltip>
+</template>
+```
+
+:::
+
+## 自定义过渡动画时间
+
+<Tooltip :transition-duration="300">
+  <template #tooltip>Vue Amazing UI</template>
+  <Button type="primary">Transition Duration 300ms</Button>
+</Tooltip>
+
+::: details Show Code
+
+```vue
+<template>
+  <Tooltip :transition-duration="300">
+    <template #tooltip>Vue Amazing UI</template>
+    <Button type="primary">Transition Duration 300ms</Button>
+  </Tooltip>
+</template>
+```
+
+:::
+
 ## 延迟显示隐藏
 
 <Space>
@@ -256,6 +294,7 @@ function openChange (open: boolean) {
   <Tooltip
     :show-delay="500"
     :hide-delay="500"
+    trigger="click"
     tooltip="Vue Amazing UI (delay 500ms)"
     :tooltip-style="{ textAlign: 'center' }"
   >
@@ -279,11 +318,42 @@ function openChange (open: boolean) {
     <Tooltip
       :show-delay="500"
       :hide-delay="500"
+      trigger="click"
       tooltip="Vue Amazing UI (delay 500ms)"
       :tooltip-style="{ textAlign: 'center' }"
     >
       <Button type="primary">Delay 500ms Tooltip</Button>
     </Tooltip>
+  </Space>
+</template>
+```
+
+:::
+
+## 使用 Methods
+
+<Space>
+  <Tooltip ref="tooltip" tooltip="Vue Amazing UI">
+    <Button type="primary">Methods Tooltip</Button>
+  </Tooltip>
+  <Button type="primary" @click="tooltip.show()">显示</Button>
+  <Button @click="tooltip.hide()">隐藏</Button>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const tooltip = ref()
+</script>
+<template>
+  <Space>
+    <Tooltip ref="tooltip" tooltip="Vue Amazing UI">
+      <Button type="primary">Methods Tooltip</Button>
+    </Tooltip>
+    <Button type="primary" @click="tooltip.show()">显示</Button>
+    <Button @click="tooltip.hide()">隐藏</Button>
   </Space>
 </template>
 ```
@@ -315,20 +385,28 @@ function openChange (open: boolean) {
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 maxWidth | 弹出提示最大宽度，单位 `px` | string &#124; number | 240
-content | 展示的文本 | string &#124; slot | undefined
-contentStyle | 设置展示文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-tooltip | 弹出提示文本 | string &#124; slot | undefined
+content | 展示的内容 | string &#124; slot | undefined
+contentStyle | 设置展示内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+tooltip | 弹出提示内容 | string &#124; slot | undefined
 tooltipClass | 设置弹出提示的类名 | string | undefined
 tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bgColor | 弹出提示框背景颜色 | string | 'rgba(0, 0, 0, 0.85)'
 arrow | 是否显示箭头 | boolean | true
 placement | 弹出提示位置 | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | 'top'
-flip | 弹出提示被浏览器窗口遮挡时自动调整弹出位置 | boolean | true
+flip | 弹出提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true
 trigger | 弹出提示触发方式 | 'hover' &#124; 'click' | 'hover'
+keyboard | 是否支持按键操作 (`enter` 显示；`esc` 关闭)，仅当 `trigger: 'click'` 时生效 | boolean | false
 transitionDuration | 弹出提示动画的过渡持续时间，单位 `ms` | number | 100
 showDelay | 弹出提示显示的延迟时间，单位 `ms` | number | 100
 hideDelay |弹出提示隐藏的延迟时间，单位 `ms` | number | 100
 show <Tag color="cyan">v-model</Tag> | 弹出提示是否显示 | boolean | false
+
+## Methods
+
+名称 | 说明 | 类型
+-- | -- | --
+show | 显示弹出提示 | () => void
+hide | 隐藏弹出提示 | () => void
 
 ## Events
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { FireFilled, QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
 const message = ref()
 const confirm = (e: MouseEvent) => {
@@ -27,22 +27,8 @@ const openChange = (open: boolean) => {
     >
       <Button type="danger">Delete Confirm</Button>
     </Popconfirm>
-    <a-tooltip trigger="click">
-      <template #title>prompt text</template>
-      Tooltip will show when mouse enter.
-    </a-tooltip>
-    <a-popconfirm
-      trigger="hover"
-      title="Are you sure delete this task?"
-      ok-text="Yes"
-      cancel-text="No"
-      @confirm="confirm"
-      @cancel="cancel"
-    >
-      <a href="#">Delete</a>
-    </a-popconfirm>
     <h2 class="mt30 mb10">隐藏取消按钮</h2>
-    <Popconfirm title="It's friendly reminder ..." :show-cancel="false" icon-type="info" @ok="confirm">
+    <Popconfirm title="It's friendly reminder ..." :show-cancel="false" icon="info" @ok="confirm">
       <Button type="primary">Hidden Cancel Btn</Button>
     </Popconfirm>
     <h2 class="mt30 mb10">自定义样式</h2>
@@ -51,8 +37,8 @@ const openChange = (open: boolean) => {
       :show-cancel="false"
       :title-style="{ fontSize: '16px', fontWeight: 'bold', color: '#1677ff' }"
       :description-style="{ color: '#fff' }"
-      bg-color="rgba(0, 0, 0.8)"
-      :popconfirm-style="{ padding: '12px 18px', borderRadius: '12px' }"
+      bg-color="#000"
+      :tooltip-style="{ padding: '16px 18px', borderRadius: '12px' }"
       :icon-style="{ fontSize: '16px', paddingTop: '5px' }"
       ok-text="Awesome"
       :ok-props="{ shape: 'round' }"
@@ -64,7 +50,7 @@ const openChange = (open: boolean) => {
       </template>
       <template #description> An Amazing Vue3 UI Components Library </template>
       <template #icon>
-        <FireFilled />
+        <FireFilled style="color: #d4380d" />
       </template>
       <Button type="primary">Vue Amazing UI</Button>
     </Popconfirm>
@@ -85,34 +71,36 @@ const openChange = (open: boolean) => {
         <Button type="danger">Delete Confirm</Button>
       </Popconfirm>
     </Space>
-    <h2 class="mt30 mb10">预置四种 Icon 图标</h2>
+    <h2 class="mt30 mb10">预置四种图标</h2>
     <Space>
       <Popconfirm title="Are you sure delete this task ?" @ok="confirm" @cancel="cancel">
         <Button type="primary">Warning Confirm</Button>
       </Popconfirm>
-      <Popconfirm title="Are you sure delete this task ?" icon-type="info" @ok="confirm" @cancel="cancel">
+      <Popconfirm title="Are you sure delete this task ?" icon="info" @ok="confirm" @cancel="cancel">
         <Button type="primary">Info Confirm</Button>
       </Popconfirm>
-      <Popconfirm title="Are you sure delete this task ?" icon-type="success" @ok="confirm" @cancel="cancel">
+      <Popconfirm title="Are you sure delete this task ?" icon="success" @ok="confirm" @cancel="cancel">
         <Button type="primary">Success Confirm</Button>
       </Popconfirm>
-      <Popconfirm title="Are you sure delete this task ?" icon-type="danger" @ok="confirm" @cancel="cancel">
+      <Popconfirm title="Are you sure delete this task ?" icon="danger" @ok="confirm" @cancel="cancel">
         <Button type="primary">Danger Confirm</Button>
       </Popconfirm>
     </Space>
-    <h2 class="mt30 mb10">自定义 Icon 图标</h2>
+    <h2 class="mt30 mb10">自定义图标</h2>
     <Space>
-      <Popconfirm title="Are you sure ?" icon-type="danger" @ok="confirm" @cancel="cancel">
-        <template #icon>
-          <QuestionCircleFilled />
-        </template>
+      <Popconfirm
+        title="Are you sure ?"
+        :icon="() => h(QuestionCircleFilled, { style: 'color: #ff4d4f' })"
+        @ok="confirm"
+        @cancel="cancel"
+      >
         <Button type="danger">Delete Confirm</Button>
       </Popconfirm>
       <Popconfirm title="Are you sure ?" @ok="confirm" @cancel="cancel">
         <template #icon>
-          <SoundFilled />
+          <SoundFilled style="color: #faad14" />
         </template>
-        <Button type="danger">Delete Confirm</Button>
+        <Button type="primary">Notification Confirm</Button>
       </Popconfirm>
     </Space>
     <h2 class="mt30 mb10">不同的触发方式</h2>
@@ -124,6 +112,10 @@ const openChange = (open: boolean) => {
         <Button type="primary">Hover Me Confirm</Button>
       </Popconfirm>
     </Space>
+    <h2 class="mt30 mb10">自定义过渡动画时间</h2>
+    <Popconfirm title="Transition Duration 300ms" :transition-duration="300" @ok="confirm" @cancel="cancel">
+      <Button type="primary">Transition Duration 300ms</Button>
+    </Popconfirm>
     <h2 class="mt30 mb10">延迟显示隐藏</h2>
     <Space>
       <Popconfirm
