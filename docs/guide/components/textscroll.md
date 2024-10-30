@@ -315,7 +315,7 @@ function onClick (text: string) { // 获取点击的标题
       <Button type="primary" ghost @click="handleReset">重置</Button>
     </Space>
   </Space>
-  <TextScroll :vertical="vertical" ref="textScroll" :scrollText="scrollText" @click="onClick" />
+  <TextScroll ref="textScroll" :vertical="vertical" :scrollText="scrollText" @click="onClick" />
 </Flex>
 
 ::: details Show Code
@@ -377,7 +377,7 @@ function onClick (text: string) { // 获取点击的标题
         <Button type="primary" ghost @click="handleReset">重置</Button>
       </Space>
     </Space>
-    <TextScroll :vertical="vertical" ref="textScroll" :scrollText="scrollText" @click="onClick" />
+    <TextScroll ref="textScroll" :vertical="vertical" :scrollText="scrollText" @click="onClick" />
   </Flex>
 </template>
 ```

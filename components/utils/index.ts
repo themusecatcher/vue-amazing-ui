@@ -619,6 +619,7 @@ export function useSlotsExist(slotsName: string | string[] = 'default') {
     const slotsContent = slots[slotsName]?.()
     const checkExist = (slotContent: any) => {
       if (typeof slotContent.children === 'string') {
+        // 排除 v-if="false" 的插槽内容
         if (slotContent.children === 'v-if') {
           return false
         }

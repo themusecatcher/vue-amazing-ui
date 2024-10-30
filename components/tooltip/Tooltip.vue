@@ -4,16 +4,17 @@ import type { CSSProperties } from 'vue'
 import { useSlotsExist, useEventListener, rafTimeout, cancelRaf } from '../utils'
 interface Props {
   maxWidth?: string | number // 弹出提示最大宽度，单位 px
-  content?: string // 展示的文本 string | slot
-  contentStyle?: CSSProperties // 设置展示文本的样式
-  tooltip?: string // 弹出提示文本 string | slot
+  content?: string // 展示的内容 string | slot
+  contentStyle?: CSSProperties // 设置展示内容的样式
+  tooltip?: string // 弹出提示内容 string | slot
   tooltipClass?: string // 设置弹出提示的类名
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
   bgColor?: string // 弹出提示框背景颜色
   arrow?: boolean // 是否显示箭头
   placement?: 'top' | 'bottom' | 'left' | 'right' // 弹出提示位置
-  flip?: boolean // 弹出提示被浏览器窗口遮挡时自动调整弹出位置
+  flip?: boolean // 弹出提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
   trigger?: 'hover' | 'click' // 弹出提示触发方式
+  keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)，仅当 trigger: 'click' 时生效
   transitionDuration?: number // 弹出提示动画的过渡持续时间，单位 ms
   showDelay?: number // 弹出提示显示的延迟时间，单位 ms
   hideDelay?: number // 弹出提示隐藏的延迟时间，单位 ms
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   placement: 'top',
   flip: true,
   trigger: 'hover',
+  keyboard: false,
   transitionDuration: 100,
   showDelay: 100,
   hideDelay: 100,
@@ -39,13 +41,16 @@ const props = withDefaults(defineProps<Props>(), {
 const tooltipVisible = ref<boolean>(false)
 const hideTimer = ref()
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
+const contentRect = ref() // content 的矩形信息
 const top = ref(0) // 提示框 top 定位
 const left = ref(0) // 提示框 left 定位
 const tooltipPlace = ref('top') // 弹出提示位置
 const contentRef = ref() // 声明一个同名的模板引用
+const contentWidth = ref() // 展示内容宽度
+const contentHeight = ref() // 展示内容高度
 const tooltipRef = ref() // 声明一个同名的模板引用
-const tooltipWidth = ref() // 提示文本宽度
-const tooltipHeight = ref() // 提示文本高度
+const tooltipWidth = ref() // 弹出提示内容宽度
+const tooltipHeight = ref() // 弹出提示内容高度
 const activeBlur = ref(false) // 是否激活 blur 事件
 const emits = defineEmits(['update:show', 'openChange'])
 const slotsExist = useSlotsExist(['tooltip'])
@@ -95,15 +100,6 @@ const tooltipPlacement = computed(() => {
   }
 })
 watch(
-  () => props.placement,
-  (to) => {
-    tooltipPlace.value = to
-  },
-  {
-    immediate: true
-  }
-)
-watch(
   () => props.show,
   (to) => {
     tooltipVisible.value = to
@@ -113,7 +109,7 @@ watch(
   }
 )
 watch(
-  () => [tooltipMaxWidth.value, tooltipPlace.value, props.arrow, props.flip],
+  () => [tooltipMaxWidth.value, props.placement, props.arrow, props.flip],
   () => {
     getPosition()
   },
@@ -137,50 +133,89 @@ function getViewportSize() {
 function observeScroll() {
   // 监听可滚动父元素
   cleanup()
-  scrollTarget.value = getScrollParent(contentRef.value?.parentElement.parentElement ?? null)
-  scrollTarget.value && scrollTarget.value.addEventListener('scroll', getPosition)
+  scrollTarget.value = getScrollParent(contentRef.value?.parentElement ?? null)
+  if (scrollTarget.value) {
+    scrollTarget.value.addEventListener('scroll', getPosition)
+  }
 }
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', getPosition)
   scrollTarget.value = null
 }
-function getScrollParent(el: HTMLElement | null) {
-  if (el) {
-    if (el.scrollHeight > el.clientHeight) {
-      return el
-    } else {
-      return getScrollParent(el.parentElement ?? null)
+function getScrollParent(el: HTMLElement | null): HTMLElement | null {
+  const isScrollable = (el: HTMLElement): boolean => {
+    const style = window.getComputedStyle(el)
+    if (
+      (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth) &&
+      (style.overflow === 'scroll' || style.overflow === 'auto')
+    ) {
+      return true
     }
+    return false
+  }
+  if (el) {
+    return isScrollable(el) ? el : getScrollParent(el.parentElement ?? null)
   }
   return null
 }
 function getPosition() {
-  const contentWidth = contentRef.value.offsetWidth // 展示文本宽度
-  const contentHeight = contentRef.value.offsetHeight // 展示文本高度
+  contentWidth.value = contentRef.value.offsetWidth
+  contentHeight.value = contentRef.value.offsetHeight
   tooltipWidth.value = tooltipRef.value.offsetWidth
   tooltipHeight.value = tooltipRef.value.offsetHeight
   if (props.flip) {
+    contentRect.value = contentRef.value.getBoundingClientRect()
     tooltipPlace.value = getPlacement(props.placement, [])
   }
   if (['top', 'bottom'].includes(tooltipPlace.value)) {
     top.value = tooltipHeight.value + (props.arrow ? 4 : 6)
-    left.value = (tooltipWidth.value - contentWidth) / 2
+    left.value = (tooltipWidth.value - contentWidth.value) / 2
   } else {
-    top.value = (tooltipHeight.value - contentHeight) / 2
+    top.value = (tooltipHeight.value - contentHeight.value) / 2
     left.value = tooltipWidth.value + (props.arrow ? 4 : 6)
   }
 }
-// 弹出提示被浏览器窗口遮挡时自动调整弹出位置
+// 获取可滚动父元素或视口的矩形信息
+function getShelterRect() {
+  if (scrollTarget.value) {
+    return scrollTarget.value.getBoundingClientRect()
+  } else {
+    return {
+      top: 0,
+      left: 0,
+      bottom: viewportHeight.value,
+      right: viewportWidth.value
+    }
+  }
+}
+// 弹出提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
 function getPlacement(place: string, disabledPlaces: string[]): string {
-  const contentRect = contentRef.value.getBoundingClientRect()
-  const { top, bottom, left, right } = contentRect // 展示文本各边缘相对于浏览器视口的位置(不包括滚动条)
-  const bottomDistance = viewportHeight.value - bottom // 下边缘距离视口下边缘的距离
-  const rightDistance = viewportWidth.value - right // 右边缘距离视口右边缘的距离
+  const { top, bottom, left, right } = contentRect.value // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
+  const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
+  const topDistance = top - targetTop // 内容元素上边缘距离滚动元素上边缘的距离
+  const bottomDistance = targetBottom - bottom // 内容元素下边缘距离动元素下边缘的距离
+  const leftDistance = left - targetLeft // 内容元素左边缘距离滚动元素左边缘的距离
+  const rightDistance = targetRight - right // 内容元素右边缘距离滚动元素右边缘的距离
+  const horizontalDistance = (tooltipWidth.value - contentWidth.value) / 2 // 水平方向容纳弹出提示需要的最小宽度
+  const verticalDistance = (tooltipHeight.value - contentHeight.value) / 2 // 垂直方向容纳弹出提示需要的最小高度
   switch (place) {
     case 'top':
       if (!disabledPlaces.includes('top')) {
-        if (top < tooltipHeight.value + (props.arrow ? 4 : 6)) {
+        if (topDistance < tooltipHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
           return getPlacement('bottom', [...disabledPlaces, 'top'])
+        } else {
+          if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
+            return 'top'
+          } else {
+            if (disabledPlaces.length !== 3) {
+              if (leftDistance < horizontalDistance) {
+                return getPlacement('right', [...disabledPlaces, 'top', 'bottom', 'left'])
+              }
+              if (rightDistance < horizontalDistance) {
+                return getPlacement('left', [...disabledPlaces, 'top', 'bottom', 'right'])
+              }
+            }
+          }
         }
       } else {
         if (!disabledPlaces.includes('bottom')) {
@@ -190,11 +225,23 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
           return getPlacement('left', [...disabledPlaces, 'top'])
         }
       }
-      return 'top'
     case 'bottom':
       if (!disabledPlaces.includes('bottom')) {
-        if (bottomDistance < tooltipHeight.value + (props.arrow ? 4 : 6)) {
+        if (bottomDistance < tooltipHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
           return getPlacement('top', [...disabledPlaces, 'bottom'])
+        } else {
+          if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
+            return 'bottom'
+          } else {
+            if (disabledPlaces.length !== 3) {
+              if (leftDistance < horizontalDistance) {
+                return getPlacement('right', [...disabledPlaces, 'top', 'bottom', 'left'])
+              }
+              if (rightDistance < horizontalDistance) {
+                return getPlacement('left', [...disabledPlaces, 'top', 'bottom', 'right'])
+              }
+            }
+          }
         }
       } else {
         if (!disabledPlaces.includes('top')) {
@@ -204,11 +251,23 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
           return getPlacement('left', [...disabledPlaces, 'bottom'])
         }
       }
-      return 'bottom'
     case 'left':
       if (!disabledPlaces.includes('left')) {
-        if (left < tooltipWidth.value + (props.arrow ? 4 : 6)) {
+        if (leftDistance < tooltipWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
           return getPlacement('right', [...disabledPlaces, 'left'])
+        } else {
+          if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
+            return 'left'
+          } else {
+            if (disabledPlaces.length !== 3) {
+              if (topDistance < verticalDistance) {
+                return getPlacement('bottom', [...disabledPlaces, 'left', 'right', 'top'])
+              }
+              if (bottomDistance < verticalDistance) {
+                return getPlacement('top', [...disabledPlaces, 'left', 'right', 'bottom'])
+              }
+            }
+          }
         }
       } else {
         if (!disabledPlaces.includes('right')) {
@@ -218,11 +277,26 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
           return getPlacement('top', [...disabledPlaces, 'left'])
         }
       }
-      return 'left'
+      if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
+        return 'left'
+      }
     case 'right':
       if (!disabledPlaces.includes('right')) {
-        if (rightDistance < tooltipWidth.value + (props.arrow ? 4 : 6)) {
+        if (rightDistance < tooltipWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
           return getPlacement('left', [...disabledPlaces, 'right'])
+        } else {
+          if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
+            return 'right'
+          } else {
+            if (disabledPlaces.length !== 3) {
+              if (topDistance < verticalDistance) {
+                return getPlacement('bottom', [...disabledPlaces, 'left', 'right', 'top'])
+              }
+              if (bottomDistance < verticalDistance) {
+                return getPlacement('top', [...disabledPlaces, 'left', 'right', 'bottom'])
+              }
+            }
+          }
         }
       } else {
         if (!disabledPlaces.includes('left')) {
@@ -232,9 +306,8 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
           return getPlacement('top', [...disabledPlaces, 'right'])
         }
       }
-      return 'right'
     default:
-      return tooltipPlace.value
+      return props.placement
   }
 }
 function onShow() {
@@ -269,11 +342,10 @@ function onLeave() {
   activeBlur.value = true
   tooltipRef.value.focus()
 }
-function onBlur() {
-  tooltipVisible.value = false
-  emits('update:show', false)
-  emits('openChange', false)
-}
+defineExpose({
+  show: onShow,
+  hide: onHide
+})
 </script>
 <template>
   <div
@@ -291,9 +363,10 @@ function onBlur() {
         'tooltip-visible': showTooltip && tooltipVisible
       }"
       :style="tooltipPlacement"
-      @blur="trigger === 'click' && activeBlur ? onBlur() : () => false"
+      @blur="trigger === 'click' && activeBlur ? onHide() : () => false"
       @mouseenter="trigger === 'hover' ? onShow() : () => false"
       @mouseleave="trigger === 'hover' ? onHide() : () => false"
+      @keydown.esc="trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
     >
       <div class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
         <slot name="tooltip">{{ tooltip }}</slot>
@@ -305,6 +378,8 @@ function onBlur() {
       class="tooltip-content"
       :style="contentStyle"
       @click="trigger === 'click' ? toggleVisible() : () => false"
+      @keydown.enter="trigger === 'click' && keyboard ? toggleVisible() : () => false"
+      @keydown.esc="trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
       @mouseenter="trigger === 'click' && tooltipVisible ? onEnter() : () => false"
       @mouseleave="trigger === 'click' && tooltipVisible ? onLeave() : () => false"
     >
@@ -322,6 +397,7 @@ function onBlur() {
     width: max-content;
     max-width: var(--tooltip-max-width);
     pointer-events: none;
+    outline: none;
     transform: scale(0.8);
     opacity: 0;
     transition:

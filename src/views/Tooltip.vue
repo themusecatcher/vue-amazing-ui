@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+const tooltip = ref()
 function openChange(open: boolean) {
   console.log('open', open)
 }
@@ -74,6 +76,17 @@ function openChange(open: boolean) {
         <Button type="primary">Click Me</Button>
       </Tooltip>
     </Space>
+    <h2 class="mt30 mb10">按键控制</h2>
+    <h3 class="mb10">enter 显示；esc 关闭，仅当 trigger: 'click' 时生效</h3>
+    <Tooltip trigger="click" keyboard>
+      <template #tooltip>Vue Amazing UI</template>
+      <Button type="primary">Click Me</Button>
+    </Tooltip>
+    <h2 class="mt30 mb10">自定义过渡动画时间</h2>
+    <Tooltip :transition-duration="300">
+      <template #tooltip>Vue Amazing UI</template>
+      <Button type="primary">Transition Duration 300ms</Button>
+    </Tooltip>
     <h2 class="mt30 mb10">延迟显示隐藏</h2>
     <Space>
       <Tooltip
@@ -87,11 +100,20 @@ function openChange(open: boolean) {
       <Tooltip
         :show-delay="500"
         :hide-delay="500"
+        trigger="click"
         tooltip="Vue Amazing UI (delay 500ms)"
         :tooltip-style="{ textAlign: 'center' }"
       >
         <Button type="primary">Delay 500ms Tooltip</Button>
       </Tooltip>
+    </Space>
+    <h2 class="mt30 mb10">使用 Methods</h2>
+    <Space>
+      <Tooltip ref="tooltip" tooltip="Vue Amazing UI">
+        <Button type="primary">Methods Tooltip</Button>
+      </Tooltip>
+      <Button type="primary" @click="tooltip.show()">显示</Button>
+      <Button @click="tooltip.hide()">隐藏</Button>
     </Space>
     <h2 class="mt30 mb10">隐藏箭头</h2>
     <Tooltip :arrow="false" tooltip="Vue Amazing UI">

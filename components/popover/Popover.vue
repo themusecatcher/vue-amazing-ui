@@ -8,16 +8,14 @@ interface Props {
   titleStyle?: CSSProperties // 卡片标题样式
   content?: string // 卡片内容 string | slot
   contentStyle?: CSSProperties // 卡片内容样式
-  popoverStyle?: CSSProperties // 卡片容器样式
-  show?: boolean // (v-model) 弹出卡片是否显示
+  tooltipStyle?: CSSProperties // 设置弹出提示的样式
 }
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   titleStyle: () => ({}),
   content: undefined,
   contentStyle: () => ({}),
-  popoverStyle: () => ({}),
-  show: false
+  tooltipStyle: () => ({})
 })
 const slotsExist = useSlotsExist(['title', 'content'])
 const showTitle = computed(() => {
@@ -35,7 +33,7 @@ const showContent = computed(() => {
       padding: '12px',
       borderRadius: '8px',
       textAlign: 'start',
-      ...popoverStyle
+      ...tooltipStyle
     }"
     :transition-duration="200"
     v-bind="$attrs"

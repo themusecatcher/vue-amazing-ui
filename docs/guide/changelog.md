@@ -2,9 +2,13 @@
 
 <GlobalElement />
 
-## 1.8.11 <Tag color="volcano" size="small">soon</Tag>
+## 1.9.0 <Tag color="volcano" size="small">2024-10-30</Tag>
 
-- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `flip` 属性，支持弹出提示被浏览器遮挡时自动调整弹出位置
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `flip` `keyboard` `transitionDuration` 属性，支持自动调整弹出位置；按键控制；自定义过渡动画时间；使用 `Methods` 控制显示隐藏
+- 优化并更新 [弹出确认 Popconfirm](https://themusecatcher.github.io/vue-amazing-ui/guide/components/popconfirm.html) 组件，以 `Tooltip` 组件为基础重构，新增 `tooltipStyle` 属性，删除部分原有属性，更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，支持自动调整弹出位置；自定义过渡动画时间等
+- 优化并更新 [气泡卡片 Popover](https://themusecatcher.github.io/vue-amazing-ui/guide/components/popconfirm.html) 组件，以 `Tooltip` 组件为基础重构，新增 `tooltipStyle` 属性，删除部分原有属性，更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，支持自动调整弹出位置；自定义过渡动画时间等
+- 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件，新增 `tooltipMaxWidth` 属性，删除 `tooltipProps` 属性，更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，支持自动调整弹出位置；自定义过渡动画时间；延迟显示隐藏；隐藏箭头等
+
 - 组件库及文档代码优化
 
 ## 1.8.10 <Tag color="volcano" size="small">2024-10-25</Tag>

@@ -110,13 +110,16 @@ function appendBackTop() {
   }
   targetElement.value?.appendChild(backtopRef.value!) // 保证 backtop 节点只存在一个
 }
-function getScrollParent(el: HTMLElement | null) {
-  if (el) {
-    if (el.scrollHeight > el.clientHeight) {
-      return el
-    } else {
-      return getScrollParent(el.parentElement ?? null)
+function getScrollParent(el: HTMLElement | null): HTMLElement | null {
+  const isScrollable = (el: HTMLElement): boolean => {
+    const style = window.getComputedStyle(el)
+    if (el.scrollHeight > el.clientHeight && (style.overflow === 'scroll' || style.overflow === 'auto')) {
+      return true
     }
+    return false
+  }
+  if (el) {
+    return isScrollable(el) ? el : getScrollParent(el.parentElement ?? null)
   }
   return null
 }

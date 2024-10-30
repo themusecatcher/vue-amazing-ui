@@ -105,7 +105,7 @@ const state = reactive({
           <Button type="primary" ghost @click="handleReset">重置</Button>
         </Space>
       </Space>
-      <TextScroll :vertical="vertical" ref="textScroll" :scrollText="scrollText" @click="onClick" />
+      <TextScroll ref="textScroll" :vertical="vertical" :scrollText="scrollText" @click="onClick" />
     </Flex>
     <h2 class="mt30 mb10">自定义滚动速度</h2>
     <TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
