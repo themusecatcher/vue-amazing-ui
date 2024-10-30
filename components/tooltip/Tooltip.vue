@@ -134,9 +134,7 @@ function observeScroll() {
   // 监听可滚动父元素
   cleanup()
   scrollTarget.value = getScrollParent(contentRef.value?.parentElement ?? null)
-  if (scrollTarget.value) {
-    scrollTarget.value.addEventListener('scroll', getPosition)
-  }
+  scrollTarget.value && scrollTarget.value.addEventListener('scroll', getPosition)
 }
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', getPosition)
