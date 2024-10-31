@@ -3,7 +3,7 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-*`Vue Amazing UI`的成长与可持续发展，离不开您的支持与赞助 ❤️❤️*
+*`Vue Amazing UI` 的成长与可持续发展，离不开您的支持与赞助 ❤️❤️*
 
 <script setup lang="ts">
 import { ref } from 'vue'

@@ -2,6 +2,21 @@
 
 <GlobalElement />
 
+## 1.9.2 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件，优化显示隐藏动画效果
+- 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，优化显示隐藏动画效果
+- 组件库及文档代码优化
+
+## 1.9.1 <Tag color="volcano" size="small">2024-10-31</Tag>
+
+- 优化并更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件，优化显示隐藏动画效果
+- 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，优化显示隐藏动画效果
+- 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，优化显示隐藏动画效果
+- 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，优化显示隐藏动画效果
+- 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增 `keyboard` 属性，支持控制是否支持键盘操作
+- 组件库及文档代码优化
+
 ## 1.9.0 <Tag color="volcano" size="small">2024-10-30</Tag>
 
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `flip` `keyboard` `transitionDuration` 属性，支持自动调整弹出位置；按键控制；自定义过渡动画时间；使用 `Methods` 控制显示隐藏
@@ -39,7 +54,7 @@
 - 优化并更新 [警告提示 Alert](https://themusecatcher.github.io/vue-amazing-ui/guide/components/alert.html) 组件，新增 `type: 'default'` 类型，以及 `bordered` 属性
 - 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html) 组件，新增 `color` 属性
 - 优化并更新 [渐变文字 GradientText](https://themusecatcher.github.io/vue-amazing-ui/guide/components/gradienttext.html) 组件，新增 `weight` 属性
-- 优化并更新 [抽屉 Drawer](https://themusecatcher.github.io/vue-amazing-ui/guide/components/drawer.html) 组件：开启抽屉时，禁止背景滚动
+- 优化并更新 [抽屉 Drawer](https://themusecatcher.github.io/vue-amazing-ui/guide/components/drawer.html) 组件，支持开启抽屉时，禁止背景滚动
 - 组件库及文档代码优化
 
 ## 1.8.5 <Tag color="volcano" size="small">2024-10-17</Tag>
@@ -114,7 +129,7 @@
 ## 1.6.5 <Tag color="volcano" size="small">2024-09-10</Tag>
 
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，新增自定义图标、自定义类名、自定义样式等功能
-- 优化并更新 [信息提示 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增自定义图标、自定义类型、自定义样式等功能
+- 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增自定义图标、自定义类型、自定义样式等功能
 - 组件库及文档代码优化
 
 ## 1.6.4 <Tag color="volcano" size="small">2024-09-06</Tag>
@@ -212,7 +227,7 @@
 ## 1.4.3 <Tag color="volcano" size="small">2024-08-02</Tag>
 
 - 优化并更新 [空状态 Empty](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html) 组件
-- 优化并更新 [信息提示 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增 `cancelProps` `okType` `okProps` `noticeProps` 属性
+- 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增 `cancelProps` `okType` `okProps` `noticeProps` 属性
 - 组件库及文档代码优化
 
 ## 1.4.2 <Tag color="volcano" size="small">2024-08-01</Tag>

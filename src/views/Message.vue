@@ -47,9 +47,9 @@ function onStyleCustom(content: string) {
     content,
     icon: h(FireFilled),
     duration: null,
+    top: '30vh',
     style: {
-      color: '#f50',
-      marginTop: '20vh'
+      color: '#f50'
     }
   })
 }

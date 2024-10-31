@@ -236,7 +236,7 @@ export default defineConfig({
               link: '/guide/components/message'
             },
             {
-              text: '信息提示 Modal',
+              text: '模态框 Modal',
               link: '/guide/components/modal'
             },
             {

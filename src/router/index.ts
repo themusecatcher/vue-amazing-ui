@@ -206,7 +206,7 @@ export const routes = [
       {
         path: '/modal',
         name: 'Modal',
-        meta: { title: '信息提示' },
+        meta: { title: '模态框' },
         component: () => import('@/views/Modal.vue')
       },
       {

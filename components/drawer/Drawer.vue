@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 import Scrollbar from '../scrollbar'
 import { useSlotsExist } from '../utils'
@@ -42,6 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
   open: false
 })
 const drawerRef = ref()
+const drawerOpen = ref<boolean>()
 const slotsExist = useSlotsExist(['title', 'extra', 'footer'])
 const emits = defineEmits(['update:open', 'close'])
 const drawerWidth = computed(() => {
@@ -82,7 +83,7 @@ const showFooter = computed(() => {
   return slotsExist.footer || props.footer
 })
 watch(
-  () => props.open,
+  drawerOpen,
   (to) => {
     if (to) {
       drawerRef.value.focus()
@@ -96,19 +97,19 @@ watch(
     }
   },
   {
-    flush: 'post'
+    immediate: true
   }
 )
-onMounted(() => {
-  if (props.open) {
-    drawerRef.value.focus()
-  }
+watchEffect(() => {
+  drawerOpen.value = props.open
 })
 function onBlur(e: Event) {
+  drawerOpen.value = false
   emits('update:open', false)
   emits('close', e)
 }
 function onClose(e: Event) {
+  drawerOpen.value = false
   emits('update:open', false)
   emits('close', e)
 }
@@ -116,10 +117,10 @@ function onClose(e: Event) {
 <template>
   <div ref="drawerRef" tabindex="-1" class="m-drawer" @keydown.esc="onClose">
     <Transition name="fade">
-      <div v-show="open" class="m-drawer-mask" @click.self="onBlur"></div>
+      <div v-show="drawerOpen" class="m-drawer-mask" @click.self="onBlur"></div>
     </Transition>
     <Transition :name="`motion-${placement}`">
-      <div v-show="open" class="m-drawer-wrap" :class="`drawer-${placement}`" :style="drawerStyle">
+      <div v-show="drawerOpen" class="m-drawer-wrap" :class="`drawer-${placement}`" :style="drawerStyle">
         <div class="m-drawer-content">
           <div v-if="!destroyOnClose" class="m-drawer-body-wrapper">
             <div v-show="showHeader" class="m-drawer-header" :class="headerClass" :style="headerStyle">
@@ -157,7 +158,7 @@ function onClose(e: Event) {
               <slot name="footer">{{ footer }}</slot>
             </div>
           </div>
-          <div v-if="destroyOnClose && open" class="m-drawer-body-wrapper">
+          <div v-if="destroyOnClose && drawerOpen" class="m-drawer-body-wrapper">
             <div v-show="showHeader" class="m-drawer-header" :class="headerClass" :style="headerStyle">
               <div class="m-header-title">
                 <svg

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const open1 = ref(false)
 const open2 = ref(false)
 const open3 = ref(false)
@@ -26,23 +25,26 @@ function onOk() {
   open7.value = false
   open8.value = false
   open9.value = false
+  console.log('ok')
 }
 function handleCancel() {
-  open4.value = false
+  console.log('cancel')
 }
 function handleOk() {
   loading.value = true
   setTimeout(() => {
     loading.value = false
     open4.value = false
+    console.log('ok')
   }, 2000)
 }
 function onLoadingOk() {
   // 点击确定回调
   loading.value = true // 开启加载状态
   setTimeout(() => {
-    open8.value = false
     loading.value = false
+    open8.value = false
+    console.log('ok')
   }, 2000)
 }
 </script>
@@ -81,6 +83,7 @@ function onLoadingOk() {
       ok-text="Submit"
       :ok-props="{ type: 'primary', ghost: true, loading: loading }"
       @ok="handleOk"
+      @cancel="handleCancel"
     >
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>

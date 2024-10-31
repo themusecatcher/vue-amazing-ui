@@ -16,9 +16,9 @@
 
 ## 特性
 
-- 组件库采用 `Vue@3.5.12`+ `TypeScript@5.6.3` + `Vite@5.4.9` + `Less@4.2.0` 实现
+- 组件库采用 `Vue@3.5.12`+ `TypeScript@5.6.3` + `Vite@5.4.10` + `Less@4.2.0` 实现
 - 目前共包含 `63` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
-- 所有组件均采用单文件组件 `SFC` 形式，单独使用，也没问题
+- 每个组件都是单文件组件 `SFC`，单独使用，也没问题
 - 所有组件样式均使用 `box-sizing: border-box;` 模式
 - 开箱即用，不墨迹
 
@@ -128,7 +128,7 @@ Grid | 栅格 | Image | 图片
 Input | 输入框 | InputNumber | 数字输入框
 InputSearch | 搜索框 | List | 列表
 LoadingBar | 加载条 | Message | 全局提示
-Modal | 信息提示 | Notification | 通知提醒
+Modal | 模态框 | Notification | 通知提醒
 NumberAnimation | 数值动画 | Pagination | 分页
 Popconfirm | 弹出确认 | Popover | 气泡卡片
 Progress | 进度条 | QRCode | 二维码

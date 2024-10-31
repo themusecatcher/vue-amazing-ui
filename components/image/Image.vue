@@ -533,10 +533,14 @@ function onSwitchRight() {
   opacity: 0;
 }
 .zoom-enter-active {
-  transition: all 0.3s;
+  transition:
+    opacity 0.3s cubic-bezier(0.08, 0.82, 0.17, 1),
+    transform 0.3s cubic-bezier(0.08, 0.82, 0.17, 1);
 }
 .zoom-leave-active {
-  transition: all 0.2s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  transition:
+    opacity 0.2s cubic-bezier(0.78, 0.14, 0.15, 0.86),
+    transform 0.2s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 .zoom-enter-from,
 .zoom-leave-to {

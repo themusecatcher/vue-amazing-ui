@@ -1,4 +1,4 @@
-# 信息提示 Modal
+# 模态框 Modal
 
 <GlobalElement />
 
@@ -221,7 +221,7 @@ function onKnow() {
 
 :::
 
-## 不同类型的信息提示
+## 不同类型的模态框
 
 <Space>
   <Button type="primary" @click="openSuccessModal">Success Modal</Button>
@@ -713,3 +713,46 @@ warning | 警告通知提示 | (data: [Modal](#modal-type)) => void
 cancel | 点击遮罩层或取消按钮的回调 | () => void
 ok | 点击确定回调 | () => void
 know | 点击知道了的回调 | () => void
+
+## 全局挂载使用
+
+- 全局挂载
+
+::: tip App.vue
+
+```vue
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+const message = ref()
+onMounted(() => {
+  window['$message'] = message.value
+})
+onBeforeUnmount(() => {
+  delete window['$message']
+})
+</script>
+<template>
+  <RouterView />
+  <Message ref="message" />
+</template>
+```
+
+:::
+
+- 使用
+
+::: tip XXX.vue
+
+```vue
+<script setup lang="ts">
+const $message = window['$message']
+function onClick() {
+  $message.success('点击了按钮')
+}
+</script>
+<template>
+  <Button @click="onClick">按钮</Button>
+</template>
+```
+
+:::

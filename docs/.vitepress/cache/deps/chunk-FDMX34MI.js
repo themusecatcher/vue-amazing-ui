@@ -26,7 +26,7 @@ import {
   watchEffect
 } from "./chunk-LPBJEE5X.js";
 
-// node_modules/.pnpm/vitepress@1.4.1_@algolia+client-search@5.9.0_@types+node@22.7.6_async-validator@4.2.5_less@4._f62sx43g5xfhg4gfdn7qgljoci/node_modules/vitepress/lib/vue-demi.mjs
+// node_modules/.pnpm/vitepress@1.4.2_@algolia+client-search@5.12.0_@types+node@22.8.4_async-validator@4.2.5_less@4_jept5xvwec7to32a6sf5d7tbbi/node_modules/vitepress/lib/vue-demi.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -46,7 +46,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@11.1.0_vue@3.5.12_typescript@5.6.3_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@11.2.0_vue@3.5.12_typescript@5.6.3_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -1022,7 +1022,7 @@ function useArrayReduce(list, reducer, ...args) {
   const reduceCallback = (sum, value, index) => reducer(toValue(sum), toValue(value), index);
   return computed(() => {
     const resolved = toValue(list);
-    return args.length ? resolved.reduce(reduceCallback, toValue(args[0])) : resolved.reduce(reduceCallback);
+    return args.length ? resolved.reduce(reduceCallback, typeof args[0] === "function" ? toValue(args[0]()) : toValue(args[0])) : resolved.reduce(reduceCallback);
   });
 }
 function useArraySome(list, fn) {
@@ -1169,7 +1169,8 @@ function useIntervalFn(cb, interval = 1e3, options = {}) {
     if (immediateCallback)
       cb();
     clean();
-    timer = setInterval(cb, intervalValue);
+    if (isActive.value)
+      timer = setInterval(cb, intervalValue);
   }
   if (immediate && isClient)
     resume();
@@ -1671,4 +1672,4 @@ vitepress/lib/vue-demi.mjs:
    * @license MIT
    *)
 */
-//# sourceMappingURL=chunk-T7C6JEJE.js.map
+//# sourceMappingURL=chunk-FDMX34MI.js.map

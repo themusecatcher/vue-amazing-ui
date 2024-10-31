@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, watchEffect, nextTick } from 'vue'
+import { ref, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import Button from '../button'
 interface Props {
-  width?: string | number // 提示框宽度，单位 px
-  title?: string // 提示框标题
-  content?: string // 提示框内容
+  width?: string | number // 模态框宽度，单位 px
+  title?: string // 模态框标题
+  content?: string // 模态框内容
   icon?: VNode // 自定义图标
   cancelText?: string // 取消按钮文字
   cancelProps?: object // 取消按钮 props 配置，参考 Button 组件 Props
@@ -14,10 +14,11 @@ interface Props {
   okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   noticeText?: string // 通知按钮文字
   noticeProps?: object // 通知按钮 props 配置，参考 Button 组件 Props
+  transformOrigin?: 'mouse' | 'center' // 模态框动画出现的位置
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
   loading?: boolean // 确认按钮 loading
-  open?: boolean // (v-model) 提示框是否可见
+  open?: boolean // (v-model) 模态框是否可见
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 420,
@@ -31,15 +32,16 @@ const props = withDefaults(defineProps<Props>(), {
   okProps: () => ({}),
   noticeText: '知道了',
   noticeProps: () => ({}),
+  transformOrigin: 'mouse',
   centered: true,
   top: 100,
   loading: false,
   open: false
 })
 interface Modal {
-  width?: string | number // 提示框宽度，单位 px
-  title?: string // 提示框标题
-  content?: string // 提示框内容
+  width?: string | number // 模态框宽度，单位 px
+  title?: string // 模态框标题
+  content?: string // 模态框内容
   icon?: VNode // 自定义图标
   class?: string // 自定义类名
   style?: CSSProperties // 自定义样式
@@ -50,27 +52,108 @@ interface Modal {
   okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   noticeText?: string // 通知按钮文字
   noticeProps?: object // 通知按钮 props 配置，参考 Button 组件 Props
+  transformOrigin?: 'mouse' | 'center' // 模态框动画出现的位置
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
   onKnow?: Function // 点击知道了按钮的回调
   onOk?: Function // 点击确认按钮的回调
   onCancel?: Function // 点击遮罩层或取消按钮的回调
 }
-const modalOpen = ref<boolean>()
-const confirmLoading = ref<boolean>()
+const modalRef = ref() // modal DOM 引用
+const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击位置
+const modalOpen = ref<boolean>(false)
+const showModalWrap = ref<boolean>(false)
+const confirmLoading = ref<boolean>(false)
 const modalWidth = ref<string>()
 const modalCentered = ref<boolean>()
+const transformOrigin = ref<string>('50% 50%')
 const modalTop = ref<string>()
 const modalData = ref<Modal>()
 const mode = ref() // 弹窗类型：'info' 'success' 'error' 'warning' 'confirm' 'erase'
-const modalRef = ref() // DOM引用
 const emits = defineEmits(['update:open', 'cancel', 'ok', 'know'])
+const modalStyle = computed(() => {
+  if (modalCentered.value) {
+    return {
+      width: `${modalWidth.value}`,
+      transformOrigin: `${transformOrigin.value}`
+    }
+  } else {
+    return {
+      width: `${modalWidth.value}`,
+      top: `${modalTop.value}`,
+      transformOrigin: `${transformOrigin.value}`
+    }
+  }
+})
+watch(
+  modalOpen,
+  async (to) => {
+    if (to) {
+      await nextTick()
+      modalRef.value.focus()
+      // 锁定滚动
+      document.documentElement.style.overflowY = 'hidden'
+      document.body.style.overflowY = 'hidden'
+    } else {
+      // 解锁滚动
+      document.documentElement.style.removeProperty('overflow-y')
+      document.body.style.removeProperty('overflow-y')
+    }
+  },
+  {
+    immediate: true
+  }
+)
 watchEffect(() => {
   modalOpen.value = props.open
 })
 watchEffect(() => {
   confirmLoading.value = props.loading
 })
+onMounted(() => {
+  document.addEventListener('click', getClickPosition, true) // 事件在捕获阶段执行
+})
+onUnmounted(() => {
+  document.removeEventListener('click', getClickPosition, true)
+})
+function getClickPosition(e: MouseEvent) {
+  if (!modalOpen.value) {
+    mousePosition.value = {
+      x: e.clientX, // 相对于浏览器视口左上角的 X 坐标，不页面滚动而改变
+      y: e.clientY // 相对于浏览器视口左上角的 Y 坐标，不页面滚动而改变
+    }
+  }
+}
+async function onBeforeEnter(el: Element) {
+  showModalWrap.value = true
+  await nextTick()
+  let transOrigin = props.transformOrigin
+  if (modalData.value?.transformOrigin !== undefined) {
+    transOrigin = modalData.value.transformOrigin
+  }
+  console.log('transOrigin', transOrigin)
+  if (transOrigin === 'mouse' && mousePosition.value) {
+    const rect = el.getBoundingClientRect()
+    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+  } else {
+    transformOrigin.value = '50% 50%'
+  }
+}
+function onBeforeLeave(el: Element) {
+  let transOrigin = props.transformOrigin
+  if (modalData.value?.transformOrigin !== undefined) {
+    transOrigin = modalData.value.transformOrigin
+  }
+  if (transOrigin === 'mouse' && mousePosition.value) {
+    const rect = el.getBoundingClientRect()
+    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+  } else {
+    transformOrigin.value = '50% 50%'
+  }
+}
+function onAfterLeave() {
+  showModalWrap.value = false
+}
 function info(data: Modal) {
   mode.value = 'info'
   modalData.value = data
@@ -101,7 +184,7 @@ function erase(data: Modal) {
   modalData.value = data
   openModal()
 }
-async function openModal() {
+function openModal() {
   if (modalData.value?.width !== undefined) {
     modalWidth.value = typeof modalData.value.width === 'number' ? `${modalData.value.width}px` : modalData.value.width
   } else {
@@ -119,8 +202,6 @@ async function openModal() {
   }
   modalOpen.value = true
   emits('update:open', true)
-  await nextTick()
-  modalRef.value.focus()
 }
 function onBlur() {
   modalOpen.value = false
@@ -163,14 +244,26 @@ defineExpose({
     <Transition name="fade">
       <div v-show="modalOpen" class="m-modal-mask"></div>
     </Transition>
-    <Transition name="zoom">
-      <div v-show="modalOpen" class="m-modal-wrap" @click.self="onBlur">
+    <div v-show="showModalWrap" class="m-modal-wrap" :class="{ 'flex-centered': modalCentered }" @click.self="onBlur">
+      <Transition
+        name="zoom"
+        enterFromClass="zoom-enter"
+        enterActiveClass="zoom-enter"
+        enterToClass="zoom-enter zoom-enter-active"
+        leaveFromClass="zoom-leave"
+        leaveActiveClass="zoom-leave zoom-leave-active"
+        leaveToClass="zoom-leave zoom-leave-active"
+        @before-enter="onBeforeEnter"
+        @before-leave="onBeforeLeave"
+        @after-leave="onAfterLeave"
+      >
         <div
+          v-show="modalOpen"
           ref="modalRef"
           tabindex="-1"
           class="m-modal"
-          :class="[modalCentered ? 'relative-hv-center' : 'top-center', modalData?.class]"
-          :style="[`width: ${modalWidth}; top: ${modalCentered ? '50%' : modalTop};`, modalData?.style]"
+          :class="modalData?.class"
+          :style="[modalStyle, modalData?.style]"
           @keydown.esc="onCancel"
         >
           <div class="m-modal-body-wrap">
@@ -256,37 +349,42 @@ defineExpose({
                     d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
                   ></path>
                 </svg>
-                <div class="modal-title">{{ modalData?.title || title }}</div>
+                <div class="modal-title">
+                  <slot name="title">{{ modalData?.title || title }}</slot>
+                </div>
               </div>
-              <div class="modal-content">{{ modalData?.content || content }}</div>
+              <div class="modal-content">
+                <slot>{{ modalData?.content || content }}</slot>
+              </div>
             </div>
             <div class="modal-btns">
               <template v-if="['confirm', 'erase'].includes(mode)">
-                <Button class="mr8" @click="onCancel" v-bind="modalData?.cancelProps || cancelProps">{{
-                  modalData?.cancelText || cancelText
-                }}</Button>
+                <Button class="mr8" @click="onCancel" v-bind="modalData?.cancelProps || cancelProps">
+                  {{ modalData?.cancelText || cancelText }}
+                </Button>
                 <Button
                   :type="modalData?.okType || okType"
                   :loading="confirmLoading"
                   @click="onOK"
                   v-bind="modalData?.okProps || okProps"
-                  >{{ modalData?.okText || okText }}</Button
                 >
+                  {{ modalData?.okText || okText }}
+                </Button>
               </template>
-              <template v-if="['info', 'success', 'error', 'warning'].includes(mode)">
-                <Button
-                  type="primary"
-                  :loading="confirmLoading"
-                  @click="onKnow"
-                  v-bind="modalData?.noticeProps || noticeProps"
-                  >{{ modalData?.noticeText || noticeText }}</Button
-                >
-              </template>
+              <Button
+                v-if="['info', 'success', 'error', 'warning'].includes(mode)"
+                type="primary"
+                :loading="confirmLoading"
+                @click="onKnow"
+                v-bind="modalData?.noticeProps || noticeProps"
+              >
+                {{ modalData?.noticeText || noticeText }}
+              </Button>
             </div>
           </div>
         </div>
-      </div>
-    </Transition>
+      </Transition>
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
@@ -298,39 +396,51 @@ defineExpose({
 .fade-leave-to {
   opacity: 0;
 }
+.zoom-enter {
+  transform: none;
+  opacity: 0;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-play-state: paused;
+}
 .zoom-enter-active {
-  transition: all 0.3s;
+  animation-name: zoomIn;
+  animation-play-state: running;
+  @keyframes zoomIn {
+    0% {
+      transform: scale(0.2);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+.zoom-leave {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 .zoom-leave-active {
-  transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-}
-.zoom-enter-from,
-.zoom-leave-to {
-  opacity: 0;
-  transform: scale(0.2);
-}
-.flex-hv-center {
-  // 水平垂直居中方法①：弹性布局，随内容增大高度，并自适应水平垂直居中
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.relative-hv-center {
-  // 水平垂直居中方法②：相对定位，随内容增大高度，并自适应水平垂直居中
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.top-center {
-  // 相对定位，固定高度，始终距离视图顶端100px
-  position: relative;
+  animation-name: zoomOut;
+  animation-play-state: running;
+  @keyframes zoomOut {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.2);
+      opacity: 0;
+    }
+  }
 }
 .m-modal-mask {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   z-index: 1000;
@@ -338,15 +448,12 @@ defineExpose({
 }
 .m-modal-wrap {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   overflow: auto;
   outline: 0;
-  inset: 0;
   z-index: 1010;
   .m-modal {
+    position: relative;
     width: 420px;
     margin: 0 auto;
     color: rgba(0, 0, 0, 0.88);
@@ -436,5 +543,10 @@ defineExpose({
       }
     }
   }
+}
+.flex-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

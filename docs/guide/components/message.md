@@ -23,7 +23,6 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
-
 const message = ref()
 function onOpen(content: string) {
   message.value.open(content) // open 调用
@@ -61,7 +60,6 @@ function onClassCustom(content: string) {
   message.value.info({
     content,
     icon: h(SoundFilled),
-    duration: null,
     class: 'custom-class'
   })
 }
@@ -70,9 +68,9 @@ function onStyleCustom(content: string) {
     content,
     icon: h(FireFilled),
     duration: null,
+    top: '30vh',
     style: {
-      color: '#f50',
-      marginTop: '20vh'
+      color: '#f50'
     }
   })
 }
@@ -120,7 +118,7 @@ function onOpen(content: string) {
 function onClick(e: Event) {
   console.log('click', e)
 }
-function onClose () {
+function onClose() {
   console.log('close')
 }
 </script>
@@ -163,7 +161,7 @@ function onWarning(content: string) {
 function onLoading(content: string) {
   message.value.loading(content) // loading 调用
 }
-function onClose () {
+function onClose() {
   console.log('close')
 }
 </script>
@@ -209,7 +207,7 @@ function onOpenCustom(content: string) {
     icon: h(FireFilled, { style: 'color: gold' })
   })
 }
-function onClose () {
+function onClose() {
   console.log('close')
 }
 </script>
@@ -248,7 +246,6 @@ function onClassCustom(content: string) {
   message.value.info({
     content,
     icon: h(SoundFilled),
-    duration: null,
     class: 'custom-class'
   })
 }
@@ -257,13 +254,13 @@ function onStyleCustom(content: string) {
     content,
     icon: h(FireFilled),
     duration: null,
+    top: '30vh',
     style: {
-      color: '#f50',
-      marginTop: '20vh'
+      color: '#f50'
     }
   })
 }
-function onClose () {
+function onClose() {
   console.log('close')
 }
 </script>
@@ -314,7 +311,7 @@ function onNeverAutoClose() {
     }
   })
 }
-function onClose () {
+function onClose() {
   console.log('close')
 }
 </script>
@@ -350,6 +347,7 @@ top | 消息距离顶部的位置，单位 `px` | string &#124; number | 30
 content? | 提示内容 | string | undefined
 icon? | 自定义图标 | VNode | undefined
 duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null | undefined
+top? | 消息距离顶部的位置，单位 `px` | string &#124; number | undefined
 class? | 自定义类名 | string | undefined
 style? | 自定义样式 | string | undefined
 onClick? | 点击 `message` 时的回调函数 | Function | undefined
@@ -372,3 +370,46 @@ loading | 加载全局提示 | (content: string &#124; [Message](#message-type))
 -- | -- | --
 click | 点击 `message` 时触发的回调函数 | (e: Event) => void
 close | 关闭时触发的回调函数 | () => void
+
+## 全局挂载使用
+
+- 全局挂载
+
+::: tip App.vue
+
+```vue
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+const message = ref()
+onMounted(() => {
+  window['$message'] = message.value
+})
+onBeforeUnmount(() => {
+  delete window['$message']
+})
+</script>
+<template>
+  <RouterView />
+  <Message ref="message" />
+</template>
+```
+
+:::
+
+- 使用
+
+::: tip XXX.vue
+
+```vue
+<script setup lang="ts">
+const $message = window['$message']
+function onClick() {
+  $message.success('点击了按钮')
+}
+</script>
+<template>
+  <Button @click="onClick">按钮</Button>
+</template>
+```
+
+:::
