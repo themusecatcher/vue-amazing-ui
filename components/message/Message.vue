@@ -16,11 +16,11 @@ interface Message {
   content?: string // 提示内容
   icon?: VNode // 自定义图标
   duration?: number | null // 自动关闭的延时时长，单位 ms；设置 null 时，不自动关闭
+  top?: string | number // 消息距离顶部的位置，单位 px
   class?: string // 自定义类名
   style?: CSSProperties // 自定义样式
   onClick?: Function // 点击 message 时的回调函数
   onClose?: Function // 关闭时的回调函数
-  [key: string]: any // 额外属性
 }
 const resetTimer = ref()
 const showMessage = ref<boolean[]>([])
@@ -28,12 +28,7 @@ const hideTimers = ref<any[]>([])
 const messageContent = ref<Message[]>([])
 const closeDuration = ref<number | null>(null) // 自动关闭延时
 const emits = defineEmits(['click', 'close'])
-const messageTop = computed(() => {
-  if (typeof props.top === 'number') {
-    return `${props.top}px`
-  }
-  return props.top
-})
+const messageTop = ref<string>()
 const clear = computed(() => {
   // 所有提示是否已经全部变为false
   return showMessage.value.every((show) => !show)
@@ -70,6 +65,11 @@ function show() {
   resetTimer.value && cancelRaf(resetTimer.value)
   const index = messageContent.value.length - 1
   const last = messageContent.value[index]
+  if (last.top !== undefined) {
+    messageTop.value = typeof last.top === 'number' ? `${last.top}px` : last.top
+  } else {
+    messageTop.value = typeof props.top === 'number' ? `${props.top}px` : props.top
+  }
   showMessage.value[index] = true
   if (last.duration !== null) {
     closeDuration.value = last.duration || props.duration
@@ -274,7 +274,7 @@ defineExpose({
 .slide-fade-move,
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 .slide-fade-enter-from,
 .slide-fade-leave-to {

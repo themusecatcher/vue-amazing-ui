@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, watchEffect, nextTick, onMounted, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import Button from '../button'
 interface Props {
   title?: string // 标题 string | slot
   content?: string // 内容 string | slot
-  width?: number // 对话框宽度，单位 px
-  height?: number | string // 对话框高度，单位 px，默认 auto，自适应内容高度
+  width?: string | number // 对话框宽度，单位 px
+  height?: string | number // 对话框高度，单位 px，默认 auto，自适应内容高度
   cancelText?: string // 取消按钮文字
   cancelProps?: object // 取消按钮 props 配置，参考 Button 组件 Props
   okText?: string // 确定按钮文字
@@ -14,6 +14,7 @@ interface Props {
   okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   bodyStyle?: CSSProperties // 设置对话框 body 样式
   footer?: boolean // 是否显示底部按钮 boolean | slot
+  transformOrigin?: 'mouse' | 'center' // 对话框动画出现的位置
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 centered: false 时生效，单位 px
   switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
@@ -32,15 +33,27 @@ const props = withDefaults(defineProps<Props>(), {
   okProps: () => ({}),
   bodyStyle: () => ({}),
   footer: true,
+  transformOrigin: 'mouse',
   centered: true,
   top: 100,
   switchFullscreen: false,
   loading: false,
   open: false
 })
-const fullScreen = ref(false)
-const dialogRef = ref() // DOM 引用
+const dialogRef = ref() // dialog DOM 引用
+const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击位置
+const dialogOpen = ref<boolean>()
+const showDialogWrap = ref<boolean>()
+const transformOrigin = ref<string>('50% 50%')
+const fullScreen = ref<boolean>(false)
 const emits = defineEmits(['update:open', 'cancel', 'ok'])
+const dialogWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return `${props.width}px`
+  } else {
+    return props.width
+  }
+})
 const dialogHeight = computed(() => {
   if (typeof props.height === 'number') {
     return `${props.height}px`
@@ -49,23 +62,94 @@ const dialogHeight = computed(() => {
   }
 })
 const dialogStyle = computed(() => {
-  return {
-    width: fullScreen.value ? '100%' : `${props.width}px`,
-    top: props.centered ? '50%' : fullScreen.value ? 0 : typeof props.top === 'number' ? `${props.top}px` : props.top
+  if (fullScreen.value) {
+    if (props.transformOrigin === 'mouse') {
+      return {
+        width: '100%',
+        transformOrigin: `${mousePosition.value?.x}px ${mousePosition.value?.y}px`
+      }
+    } else {
+      return {
+        width: '100%',
+        transformOrigin: `${transformOrigin.value}`
+      }
+    }
+  } else {
+    if (props.centered) {
+      return {
+        width: `${dialogWidth.value}`,
+        transformOrigin: `${transformOrigin.value}`
+      }
+    } else {
+      return {
+        width: `${dialogWidth.value}`,
+        transformOrigin: `${transformOrigin.value}`,
+        top: typeof props.top === 'number' ? `${props.top}px` : props.top
+      }
+    }
   }
 })
 watch(
-  () => props.open,
+  dialogOpen,
   async (to) => {
     if (to) {
       await nextTick()
       dialogRef.value.focus()
-      // 重置全屏显示
-      fullScreen.value = false
+      // 锁定滚动
+      document.documentElement.style.overflowY = 'hidden'
+      document.body.style.overflowY = 'hidden'
+    } else {
+      // 解锁滚动
+      document.documentElement.style.removeProperty('overflow-y')
+      document.body.style.removeProperty('overflow-y')
     }
+  },
+  {
+    immediate: true
   }
 )
+watchEffect(() => {
+  dialogOpen.value = props.open
+})
+onMounted(() => {
+  document.addEventListener('click', getClickPosition, true) // 事件在捕获阶段执行
+})
+onUnmounted(() => {
+  document.removeEventListener('click', getClickPosition, true)
+})
+function getClickPosition(e: MouseEvent) {
+  if (!dialogOpen.value) {
+    mousePosition.value = {
+      x: e.clientX, // 相对于浏览器视口左上角的 X 坐标，不页面滚动而改变
+      y: e.clientY // 相对于浏览器视口左上角的 Y 坐标，不页面滚动而改变
+    }
+  }
+}
+async function onBeforeEnter(el: Element) {
+  showDialogWrap.value = true
+  await nextTick()
+  if (props.transformOrigin === 'mouse' && mousePosition.value) {
+    const rect = el.getBoundingClientRect()
+    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+  } else {
+    transformOrigin.value = '50% 50%'
+  }
+}
+function onBeforeLeave(el: Element) {
+  if (props.transformOrigin === 'mouse' && mousePosition.value) {
+    const rect = el.getBoundingClientRect()
+    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+  } else {
+    transformOrigin.value = '50% 50%'
+  }
+}
+function onAfterLeave() {
+  showDialogWrap.value = false
+  // 重置全屏显示
+  fullScreen.value = false
+}
 function onBlur() {
+  dialogOpen.value = false
   emits('update:open', false)
   emits('cancel')
 }
@@ -73,10 +157,12 @@ function onFullScreen() {
   fullScreen.value = !fullScreen.value
 }
 function onClose() {
+  dialogOpen.value = false
   emits('update:open', false)
   emits('cancel')
 }
 function onCancel() {
+  dialogOpen.value = false
   emits('update:open', false)
   emits('cancel')
 }
@@ -85,23 +171,30 @@ function onOk() {
 }
 </script>
 <template>
-  <div>
+  <div class="m-dialog-root">
     <Transition name="fade">
-      <div v-show="open" class="m-dialog-mask"></div>
+      <div v-show="dialogOpen" class="m-dialog-mask"></div>
     </Transition>
-    <Transition name="zoom">
-      <div
-        v-show="open"
-        ref="dialogRef"
-        tabindex="-1"
-        class="m-dialog-wrap"
-        @click.self="onBlur"
-        @keydown.esc="onClose"
+    <div v-show="showDialogWrap" class="m-dialog-wrap" :class="{ 'flex-centered': centered }" @click.self="onBlur">
+      <Transition
+        name="zoom"
+        enterFromClass="zoom-enter"
+        enterActiveClass="zoom-enter"
+        enterToClass="zoom-enter zoom-enter-active"
+        leaveFromClass="zoom-leave"
+        leaveActiveClass="zoom-leave zoom-leave-active"
+        leaveToClass="zoom-leave zoom-leave-active"
+        @before-enter="onBeforeEnter"
+        @before-leave="onBeforeLeave"
+        @after-leave="onAfterLeave"
       >
         <div
+          v-show="dialogOpen"
+          ref="dialogRef"
+          tabindex="-1"
           class="m-dialog"
-          :class="[centered ? 'horizontal-vertical-centered' : 'fix-height-centered']"
           :style="dialogStyle"
+          @keydown.esc="onClose"
         >
           <div class="m-dialog-content" :style="`--height: ${fullScreen ? '100vh' : dialogHeight}`">
             <div class="m-dialog-header">
@@ -157,7 +250,7 @@ function onOk() {
             <div class="m-dialog-body" :style="bodyStyle">
               <slot>{{ content }}</slot>
             </div>
-            <div class="m-dialog-footer" v-if="footer">
+            <div v-if="footer" class="m-dialog-footer">
               <slot name="footer">
                 <Button class="mr8" @click="onCancel" v-bind="cancelProps">{{ cancelText }}</Button>
                 <Button :type="okType" :loading="loading" @click="onOk" v-bind="okProps">{{ okText }}</Button>
@@ -165,8 +258,8 @@ function onOk() {
             </div>
           </div>
         </div>
-      </div>
-    </Transition>
+      </Transition>
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
@@ -178,40 +271,51 @@ function onOk() {
 .fade-leave-to {
   opacity: 0;
 }
+.zoom-enter {
+  transform: none;
+  opacity: 0;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-play-state: paused;
+}
 .zoom-enter-active {
-  transition: all 0.3s;
+  animation-name: zoomIn;
+  animation-play-state: running;
+  @keyframes zoomIn {
+    0% {
+      transform: scale(0.2);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+.zoom-leave {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 .zoom-leave-active {
-  transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-}
-.zoom-enter-from,
-.zoom-leave-to {
-  opacity: 0;
-  transform: scale(0.2);
-}
-.flex-hv-center {
-  // 水平垂直居中方法①：弹性布局，随内容增大高度，并自适应水平垂直居中
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.horizontal-vertical-centered {
-  // 水平垂直居中方法②：相对定位，随内容增大高度，并自适应水平垂直居中
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.fix-height-centered {
-  // 相对定位，固定高度，始终距离视图顶端100px
-  position: relative;
-  // top: 100px;
+  animation-name: zoomOut;
+  animation-play-state: running;
+  @keyframes zoomOut {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.2);
+      opacity: 0;
+    }
+  }
 }
 .m-dialog-mask {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   z-index: 1000;
@@ -219,16 +323,14 @@ function onOk() {
 }
 .m-dialog-wrap {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   overflow: auto;
   outline: 0;
-  inset: 0;
   z-index: 1010;
   .m-dialog {
+    position: relative;
     margin: 0 auto;
+    outline: none;
     .m-dialog-content {
       display: flex;
       flex-direction: column;
@@ -308,5 +410,10 @@ function onOk() {
       }
     }
   }
+}
+.flex-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

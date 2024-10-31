@@ -16,7 +16,7 @@
 
 ## Features
 
-- The component library is implemented with `Vue@3.5.12`+ `TypeScript@5.6.3` + `Vite@5.4.9` + `Less@4.2.0`.
+- The component library is implemented with `Vue@3.5.12`+ `TypeScript@5.6.3` + `Vite@5.4.10` + `Less@4.2.0`.
 - Currently, it includes `63` basic UI components and `16` utility functions, with continuous exploration and updates ongoing...
 - Each component is a Single-File Component (`SFC`), and they can be used independently without any issues.
 - All component styles use the `box-sizing: border-box;` model.
@@ -128,7 +128,7 @@ Grid | 栅格 | Image | 图片
 Input | 输入框 | InputNumber | 数字输入框
 InputSearch | 搜索框 | List | 列表
 LoadingBar | 加载条 | Message | 全局提示
-Modal | 信息提示 | Notification | 通知提醒
+Modal | 模态框 | Notification | 通知提醒
 NumberAnimation | 数值动画 | Pagination | 分页
 Popconfirm | 弹出确认 | Popover | 气泡卡片
 Progress | 进度条 | QRCode | 二维码

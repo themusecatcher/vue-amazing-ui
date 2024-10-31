@@ -70,15 +70,15 @@ function openChange (open: boolean) {
     }"
   >
     <template #tooltip>
-      <h3 style="text-align: center; margin: 0">Godzilla VS Kong</h3>
+      <h3 style="text-align: center; margin: 0 0 8px;">Godzilla VS Kong</h3>
       电影讲述帝王组织在地心世界找到巨兽起源的线索，与此同时传说中的王者哥斯拉和金刚的对决也将展开的故事
     </template>
     <Button type="primary">哥斯拉大战金刚</Button>
   </Tooltip>
 </Space>
 
-<style lang="less">
-.custom-tooltip-class {
+<style lang="less" scoped>
+:deep(.custom-tooltip-class) {
   font-size: 16px !important;
   color: #0958d9 !important;
   padding: 12px 18px !important;
@@ -114,15 +114,15 @@ function openChange (open: boolean) {
       }"
     >
       <template #tooltip>
-        <h3 style="text-align: center; margin: 0">Godzilla VS Kong</h3>
+        <h3 style="text-align: center; margin: 0 0 8px;">Godzilla VS Kong</h3>
         电影讲述帝王组织在地心世界找到巨兽起源的线索，与此同时传说中的王者哥斯拉和金刚的对决也将展开的故事
       </template>
       <Button type="primary">哥斯拉大战金刚</Button>
     </Tooltip>
   </Space>
 </template>
-<style lang="less">
-.custom-tooltip-class {
+<style lang="less" scoped>
+:deep(.custom-tooltip-class) {
   font-size: 16px !important;
   color: #0958d9 !important;
   padding: 12px 18px !important;

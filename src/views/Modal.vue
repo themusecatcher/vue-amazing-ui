@@ -173,7 +173,7 @@ function onKnow() {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Button type="primary" @click="openInfoModal">Info Modal</Button>
-    <h2 class="mt30 mb10">不同类型的信息提示</h2>
+    <h2 class="mt30 mb10">不同类型的模态框</h2>
     <Space>
       <Button type="primary" @click="openSuccessModal">Success Modal</Button>
       <Button type="primary" @click="openErrorModal">Error Modal</Button>
