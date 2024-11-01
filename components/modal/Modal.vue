@@ -8,7 +8,7 @@ interface Props {
   title?: string // 模态框标题 string | slot
   titleStyle?: CSSProperties // 自定义标题样式
   content?: string // 模态框内容 string | slot
-  contentStyle?: CSSProperties // 自定义标题样式
+  contentStyle?: CSSProperties // 自定义内容样式
   bodyClass?: string // 自定义 body 类名
   bodyStyle?: CSSProperties // 自定义 body 样式
   cancelText?: string // 取消按钮文字
