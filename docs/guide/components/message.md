@@ -104,7 +104,7 @@ function onClose() {
 
 ## 基本使用
 
-<Button type="primary" @click="onOpen('This is a open message')">Open</Button>
+<Button type="primary" @click="onOpen('This is a noraml message')">Open</Button>
 
 ::: details Show Code
 
@@ -123,7 +123,7 @@ function onClose() {
 }
 </script>
 <template>
-  <Button type="primary" @click="onOpen('This is a open message')">Open</Button>
+  <Button type="primary" @click="onOpen('This is a noraml message')">Open</Button>
   <Message ref="message" @click="onClick" @close="onClose" />
 </template>
 ```
@@ -133,9 +133,9 @@ function onClose() {
 ## 不同类型的全局提示
 
 <Space>
-  <Button type="primary" @click="onInfo('This is a info message')">Info</Button>
+  <Button type="primary" @click="onInfo('This is an info message')">Info</Button>
   <Button type="primary" @click="onSuccess('This is a success message')">Success</Button>
-  <Button type="primary" @click="onError('This is a error message')">Error</Button>
+  <Button type="primary" @click="onError('This is an error message')">Error</Button>
   <Button type="primary" @click="onWarning('This is a warning message')">Warning</Button>
   <Button type="primary" @click="onLoading('This is a loading message')">Loading</Button>
 </Space>
@@ -167,9 +167,8 @@ function onClose() {
 </script>
 <template>
   <Space>
-    <Button type="primary" @click="onInfo('This is a info message')">Info</Button>
+    <Button type="primary" @click="onInfo('This is an info message')">Info</Button>
     <Button type="primary" @click="onSuccess('This is a success message')">Success</Button>
-    <Button type="primary" @click="onError('This is a error message')">Error</Button>
     <Button type="primary" @click="onWarning('This is a warning message')">Warning</Button>
     <Button type="primary" @click="onLoading('This is a loading message')">Loading</Button>
   </Space>
