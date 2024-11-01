@@ -6,7 +6,7 @@ interface Props {
   title?: string // 标题 string | slot
   content?: string // 内容 string | slot
   width?: string | number // 对话框宽度，单位 px
-  height?: string | number // 对话框高度，单位 px，默认 auto，自适应内容高度
+  height?: string | number // 对话框高度，单位 px，默认 'auto'，自适应内容高度
   cancelText?: string // 取消按钮文字
   cancelProps?: object // 取消按钮 props 配置，参考 Button 组件 Props
   okText?: string // 确定按钮文字

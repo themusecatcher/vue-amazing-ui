@@ -82,12 +82,12 @@ function onClose() {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Button type="primary" @click="onOpen('This is a open message')">Open</Button>
+    <Button type="primary" @click="onOpen('This is a noraml message')">Open</Button>
     <h2 class="mt30 mb10">不同类型的全局提示</h2>
     <Space>
-      <Button type="primary" @click="onInfo('This is a info message')">Info</Button>
+      <Button type="primary" @click="onInfo('This is an info message')">Info</Button>
       <Button type="primary" @click="onSuccess('This is a success message')">Success</Button>
-      <Button type="primary" @click="onError('This is a error message')">Error</Button>
+      <Button type="primary" @click="onError('This is an error message')">Error</Button>
       <Button type="primary" @click="onWarning('This is a warning message')">Warning</Button>
       <Button type="primary" @click="onLoading('This is a loading message')">Loading</Button>
     </Space>
