@@ -10,7 +10,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const open1 = ref(false)
 const open2 = ref(false)
 const open3 = ref(false)
@@ -20,11 +19,17 @@ const open6 = ref(false)
 const open7 = ref(false)
 const open8 = ref(false)
 const open9 = ref(false)
-const loading = ref(false)
-function onCancel() { // 点击遮罩层或右上角叉或取消按钮的回调
+const open10 = ref(false)
+const open11 = ref(false)
+const open12 = ref(false)
+const open13 = ref(false)
+const confirmLoading = ref(false)
+function onCancel() {
+  // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
   console.log('cancel')
 }
-function onOk() { // 点击确定回调
+function onOk() {
+  // 点击确定的回调
   open1.value = false
   open2.value = false
   open3.value = false
@@ -34,22 +39,22 @@ function onOk() { // 点击确定回调
   open7.value = false
   open8.value = false
   open9.value = false
+  open10.value = false
+  open11.value = false
+  open12.value = false
+  console.log('ok')
 }
-function handleCancel () {
-  open4.value = false
+function handleCancel() {
+  // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
+  console.log('cancel')
 }
-function handleOk () {
-  loading.value = true
+function handleOk() {
+  // 点击确定的回调
+  confirmLoading.value = true // 开启加载状态
   setTimeout(() => {
-    loading.value = false
-    open4.value = false
-  }, 2000)
-}
-function onLoadingOk() { // 点击确定回调
-  loading.value = true // 开启加载状态
-  setTimeout(() => {
-    open8.value = false
-    loading.value = false
+    confirmLoading.value = false
+    open13.value = false
+    console.log('ok')
   }, 2000)
 }
 </script>
@@ -69,15 +74,19 @@ function onLoadingOk() { // 点击确定回调
 <script setup lang="ts">
 import { ref } from 'vue'
 const open = ref(false)
-function onCancel() {
+function openDialog() {
+  open = true
+}
+function onCancel() { // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
   console.log('cancel')
 }
-function onOk () {
+function onOk () { // 点击确定的回调
+  console.log('ok')
   open.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="open = true">Open Dialog</Button>
+  <Button type="primary" @click="openDialog">Open Dialog</Button>
   <Dialog v-model:open="open" title="Title" @cancel="onCancel" @ok="onOk">
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -104,13 +113,20 @@ function onOk () {
 <script setup lang="ts">
 import { ref } from 'vue'
 const open = ref(false)
-function onOk () {
+function openDialog() {
+  open = true
+}
+function onCancel() { // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
+  console.log('cancel')
+}
+function onOk () { // 点击确定的回调
+  console.log('ok')
   open.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="open = true">Open Dialog</Button>
-  <Dialog v-model:open="open" :width="480" :height="180" @ok="onOk">
+  <Button type="primary" @click="openDialog">Open Dialog</Button>
+  <Dialog v-model:open="open" :width="480" :height="180" @cancel="onCancel" @ok="onOk">
     <template #title>Title</template>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -121,48 +137,156 @@ function onOk () {
 
 :::
 
-## 自定义按钮文字 & 类型
+## 自定义样式
 
-<Button type="primary" @click="open3 = true">Open Dialog</Button>
-<Dialog v-model:open="open3" title="Title" cancelText="cancel" okText="ok" okType="danger" @ok="onOk">
+<Space>
+  <Button type="primary" @click="open3 = true">Custom Body Class Dialog</Button>
+  <Button type="primary" @click="open4 = true">Custom Body & Mask Style Dialog</Button>
+  <Button type="primary" @click="open5 = true">Custom Title & Content Style Dialog</Button>
+</Space>
+<Dialog v-model:open="open3" title="Title" body-class="custom-class" @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
 </Dialog>
+<Dialog
+  v-model:open="open4"
+  title="Title"
+  :body-style="{
+    padding: '24px',
+    borderRadius: '16px'
+  }"
+  :mask-style="{
+    backgroundColor: 'rgba(0, 0, 0, 0.6)'
+  }"
+  @cancel="onCancel"
+  @ok="onOk"
+>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+<Dialog
+  v-model:open="open5"
+  title="Title"
+  :title-style="{
+    fontSize: '18px',
+    color: '#d4380d'
+  }"
+  :content-style="{
+    fontSize: '16px',
+    color: '#d4380d'
+  }"
+  @cancel="onCancel"
+  @ok="onOk"
+>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+
+<style lang="less" scoped>
+:deep(.custom-class) {
+  .dialog-header {
+    color: #ff6900 !important;
+  }
+  .dialog-content {
+    color: #ff6900 !important;
+  }
+}
+</style>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const open = ref(false)
-function onOk () {
-  open.value = false
+const open1 = ref(false)
+const open2 = ref(false)
+const open3 = ref(false)
+function onCancel() { // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
+  console.log('cancel')
+}
+function onOk () { // 点击确定的回调
+  console.log('ok')
+  open1.value = false
+  open2.value = false
+  open3.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="open = true">Open Dialog</Button>
-  <Dialog v-model:open="open" title="Title" cancelText="cancel" okText="ok" okType="danger" @ok="onOk">
+  <Space>
+    <Button type="primary" @click="open1 = true">Custom Body Class Dialog</Button>
+    <Button type="primary" @click="open2 = true">Custom Body & Mask Style Dialog</Button>
+    <Button type="primary" @click="open3 = true">Custom Title & Content Style Dialog</Button>
+  </Space>
+  <Dialog v-model:open="open1" title="Title" body-class="custom-class" @cancel="onCancel" @ok="onOk">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+  <Dialog
+    v-model:open="open2"
+    title="Title"
+    :body-style="{
+      padding: '24px',
+      borderRadius: '16px'
+    }"
+    :mask-style="{
+      backgroundColor: 'rgba(0, 0, 0, 0.6)'
+    }"
+    @cancel="onCancel"
+    @ok="onOk"
+  >
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+  <Dialog
+    v-model:open="open3"
+    title="Title"
+    :title-style="{
+      fontSize: '18px',
+      color: '#d4380d'
+    }"
+    :content-style="{
+      fontSize: '16px',
+      color: '#d4380d'
+    }"
+    @cancel="onCancel"
+    @ok="onOk"
+  >
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
   </Dialog>
 </template>
+<style lang="less" scoped>
+:deep(.custom-class) {
+  .dialog-header {
+    color: #ff6900 !important;
+  }
+  .dialog-content {
+    color: #ff6900 !important;
+  }
+}
+</style>
 ```
 
 :::
 
-## 自定义底部按钮
+## 自定义按钮
 
-<Button type="primary" @click="open4 = true">Open Dialog</Button>
+<Button type="primary" @click="open6 = true">Custom Btns Dialog</Button>
 <Dialog
-  v-model:open="open4"
+  v-model:open="open6"
   title="Title"
   cancel-text="Return"
   :cancel-props="{ type: 'danger', ghost: true }"
   ok-text="Submit"
-  :ok-props="{ type: 'primary', ghost: true,loading: loading }"
-  @ok="handleOk"
+  :ok-props="{ type: 'primary', ghost: true }"
+  @cancel="onCancel"
+  @ok="onOk"
 >
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -175,27 +299,28 @@ function onOk () {
 <script setup lang="ts">
 import { ref } from 'vue'
 const open = ref(false)
-function handleCancel () {
-  open.value = false
+function openDialog() {
+  open = true
 }
-function handleOk () {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-    open.value = false
-  }, 2000)
+function onCancel() { // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
+  console.log('cancel')
+}
+function onOk () { // 点击确定的回调
+  console.log('ok')
+  open.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="open = true">Open Dialog</Button>
+  <Button type="primary" @click="openDialog">Custom Btns Dialog</Button>
   <Dialog
-    v-model:open="open4"
+    v-model:open="open"
     title="Title"
     cancel-text="Return"
     :cancel-props="{ type: 'danger', ghost: true }"
     ok-text="Submit"
-    :ok-props="{ type: 'primary', ghost: true,loading: loading }"
-    @ok="handleOk"
+    :ok-props="{ type: 'primary', ghost: true }"
+    @cancel="onCancel"
+    @ok="onOk"
   >
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -208,8 +333,8 @@ function handleOk () {
 
 ## 隐藏底部按钮
 
-<Button type="primary" @click="open5 = true">Open Dialog</Button>
-<Dialog v-model:open="open5" title="Title" :footer="false" @ok="onOk">
+<Button type="primary" @click="open7 = true">Open Dialog</Button>
+<Dialog v-model:open="open7" title="Title" :footer="false" @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -221,44 +346,20 @@ function handleOk () {
 <script setup lang="ts">
 import { ref } from 'vue'
 const open = ref(false)
-function onOk () {
+function openDialog() {
+  open = true
+}
+function onCancel() { // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
+  console.log('cancel')
+}
+function onOk () { // 点击确定的回调
+  console.log('ok')
   open.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="open = true">Open Dialog</Button>
-  <Dialog v-model:open="open" title="Title" :footer="false" @ok="onOk">
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
-  </Dialog>
-</template>
-```
-
-:::
-
-## 固定高度
-
-<Button type="primary" @click="open6 = true">Open Dialog</Button>
-<Dialog v-model:open="open6" title="Title" :centered="false" :top="120" @ok="onOk">
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
-</Dialog>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const open = ref(false)
-function onOk () {
-  open.value = false
-}
-</script>
-<template>
-  <Button type="primary" @click="open = true">Open Dialog</Button>
-  <Dialog v-model:open="open" title="Title" :centered="false" :top="120" @ok="onOk">
+  <Button type="primary" @click="openDialog">Open Dialog</Button>
+  <Dialog v-model:open="open" title="Title" :footer="false" @cancel="onCancel" @ok="onOk">
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -270,8 +371,8 @@ function onOk () {
 
 ## 切换全屏
 
-<Button type="primary" @click="open7 = true">Open Dialog</Button>
-<Dialog v-model:open="open7" title="Title" switch-fullscreen @ok="onOk">
+<Button type="primary" @click="open8 = true">Open Dialog</Button>
+<Dialog v-model:open="open8" title="Title" switch-fullscreen @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -283,13 +384,20 @@ function onOk () {
 <script setup lang="ts">
 import { ref } from 'vue'
 const open = ref(false)
-function onOk () {
+function openDialog() {
+  open = true
+}
+function onCancel() { // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
+  console.log('cancel')
+}
+function onOk () { // 点击确定的回调
+  console.log('ok')
   open.value = false
 }
 </script>
 <template>
-  <Button type="primary" @click="open = true">Open Dialog</Button>
-  <Dialog v-model:open="open" title="Title" switch-fullscreen @ok="onOk">
+  <Button type="primary" @click="openDialog">Open Dialog</Button>
+  <Dialog v-model:open="open" title="Title" switch-fullscreen @cancel="onCancel" @ok="onOk">
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -299,10 +407,77 @@ function onOk () {
 
 :::
 
-## 提交 loading
+## 自定义位置
 
-<Button type="primary" @click="open8 = true">Open Dialog</Button>
-<Dialog v-model:open="open8" title="Title" :loading="loading" @ok="onLoadingOk">
+<Space>
+  <Button type="primary" @click="open9 = true">Fixed Top Number Dialog</Button>
+  <Button type="primary" @click="open10 = true">Fixed Top Percent Dialog</Button>
+  <Button type="primary" @click="open11 = true">Vertically Centered Dialog</Button>
+</Space>
+<Dialog v-model:open="open9" title="60px Top Title" :top="60" @cancel="onCancel" @ok="onOk">
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+<Dialog v-model:open="open10" title="20% Top Title" top="20%" @cancel="onCancel" @ok="onOk">
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+<Dialog v-model:open="open11" title="Centered Title" centered @cancel="onCancel" @ok="onOk">
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const open1 = ref(false)
+const open2 = ref(false)
+const open3 = ref(false)
+function onCancel() { // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
+  console.log('cancel')
+}
+function onOk () { // 点击确定的回调
+  console.log('ok')
+  open1.value = false
+  open2.value = false
+  open3.value = false
+}
+</script>
+<template>
+  <Space>
+    <Button type="primary" @click="open1 = true">Fixed Top Number Dialog</Button>
+    <Button type="primary" @click="open2 = true">Fixed Top Percent Dialog</Button>
+    <Button type="primary" @click="open3 = true">Vertically Centered Dialog</Button>
+  </Space>
+  <Dialog v-model:open="open1" title="60px Top Title" :top="60" @cancel="onCancel" @ok="onOk">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+  <Dialog v-model:open="open2" title="20% Top Title" top="20%" @cancel="onCancel" @ok="onOk">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+  <Dialog v-model:open="open3" title="Centered Title" centered @cancel="onCancel" @ok="onOk">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+</template>
+```
+
+:::
+
+## 动画出现位置
+
+<Button type="primary" @click="open12 = true">Transform Origin Center Dialog</Button>
+<Dialog v-model:open="open12" title="Title" transform-origin="center" @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -314,18 +489,65 @@ function onOk () {
 <script setup lang="ts">
 import { ref } from 'vue'
 const open = ref(false)
-const loading = ref(false)
-function onLoadingOk() { // 点击确定回调
-  loading.value = true // 开启加载状态
+function openDialog() {
+  open = true
+}
+function onCancel() { // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
+  console.log('cancel')
+}
+function onOk () { // 点击确定的回调
+  console.log('ok')
+  open.value = false
+}
+</script>
+<template>
+  <Button type="primary" @click="openDialog">Transform Origin Center Dialog</Button>
+  <Dialog v-model:open="open" title="Title" transform-origin="center" @cancel="onCancel" @ok="onOk">
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
+</template>
+```
+
+:::
+
+## 异步延迟关闭
+
+<Button type="primary" @click="open13 = true">Delayed Close Dialog</Button>
+<Dialog v-model:open="open13" title="Title" :confirm-loading="confirmLoading" @cancel="handleCancel" @ok="handleOk">
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const open = ref(false)
+const confirmLoading = ref(false)
+function openDialog() {
+  open = true
+}
+function handleCancel() {
+  // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
+  console.log('cancel')
+}
+function handleOk() {
+  // 点击确定回调
+  confirmLoading.value = true // 开启加载状态
   setTimeout(() => {
-    open.value = false
-    loading.value = false
+    confirmLoading.value = false
+    open13.value = false
+    console.log('ok')
   }, 2000)
 }
 </script>
 <template>
-  <Button type="primary" @click="open = true">Open Dialog</Button>
-  <Dialog v-model:open="open" title="Title" :loading="loading" @ok="onLoadingOk">
+  <Button type="primary" @click="openDialog">Delayed Close Dialog</Button>
+  <Dialog v-model:open="open" title="Title" :confirm-loading="confirmLoading" @cancel="handleCancel" @ok="handleOk">
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
@@ -334,51 +556,6 @@ function onLoadingOk() { // 点击确定回调
 ```
 
 :::
-
-## body 样式自定义
-
-<Button type="primary" @click="open9 = true">Open Dialog</Button>
-<Dialog
-  v-model:open="open9"
-  title="Title"
-  :body-style="{ fontSize: '20px', color: '#eb2f96' }"
-  @ok="onOk">
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
-</Dialog>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const open = ref(false)
-function onOk () {
-  open.value = false
-}
-</script>
-<template>
-  <Button type="primary" @click="open = true">Open Dialog</Button>
-  <Dialog
-    v-model:open="open"
-    title="Title"
-    :body-style="{ fontSize: '20px', color: '#eb2f96' }"
-    @ok="onOk">
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
-  </Dialog>
-</template>
-```
-
-:::
-
-<style lang="less" scoped>
-p {
-  line-height: 1.5714285714285714;
-}
-</style>
 
 ## APIs
 
@@ -386,26 +563,34 @@ p {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
+width | 对话框宽度，单位 `px` | string &#124; number | 520
+height | 对话框高度，单位 `px`，默认自适应内容高度 | string &#124; number | 'auto'
 title | 标题 | string &#124; slot | undefined
+titleStyle | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 content | 内容 | string &#124; slot | undefined
-width | 对话框宽度，单位 `px` | number | 540
-height | 对话框高度，默认 `auto`，自适应内容高度 | number &#124; string | 'auto'
+contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+bodyClass | 自定义 `body` 类名 | string | undefined
+bodyStyle | 自定义 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 cancelText | 取消按钮文字 | string | '取消'
 cancelProps | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
 okText | 确定按钮文字 | string | '确定'
 okType | 确定按钮类型 | 'primary' &#124; 'danger' | 'primary'
 okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
-bodyStyle | 设置对话框 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 footer | 是否显示底部按钮 | boolean &#124; slot | true
-centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | true
+switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个切换按钮 | boolean | false
+centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false
 top | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | 100
-switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个按钮 | boolean | false
-loading | 确定按钮 `loading` | boolean | false
-open | 对话框是否可见 | boolean | false
+transformOrigin | 对话框动画出现的位置 | 'mouse' &#124; 'center' | 'mouse'
+confirmLoading | 确定按钮 `loading` | boolean | false
+blockScroll | 是否在打开对话框时禁用背景滚动 | boolean | true
+keyboard | 是否支持键盘 `esc` 关闭 | boolean | true
+maskClosable | 点击蒙层是否允许关闭 | boolean | true
+maskStyle | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+open <Tag color="cyan">v-model</Tag> | 对话框是否可见 | boolean | false
 
 ## Events
 
 名称 | 说明 | 类型
 -- | -- | --
-cancel | 点击遮罩层或右上角叉或取消按钮的回调 | () => void
-ok | 点击确定回调 | () => void
+cancel | 点击蒙层或 `Esc` 键或右上角叉或取消按钮的回调 | () => void
+ok | 点击确定的回调 | () => void

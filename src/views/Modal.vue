@@ -111,8 +111,11 @@ function openCustomStyle() {
     content: 'Some descriptions ...',
     icon: h(NotificationFilled),
     bodyStyle: {
-      padding: '24px 32px',
+      padding: '24px',
       borderRadius: '12px'
+    },
+    maskStyle: {
+      backgroundColor: 'rgba(0, 0, 0, 0.6)'
     }
   })
 }
@@ -142,7 +145,7 @@ function openCustomInfoBtn() {
     }
   })
 }
-function openCustomConfirmBtn() {
+function openCustomConfirmBtns() {
   modal.value.confirm({
     title: 'This is a custom confirm btn modal',
     content: 'Some descriptions ...',
@@ -169,18 +172,25 @@ function openTransformCenterModal() {
 }
 function openNumberFixed() {
   modal.value.info({
-    title: 'This is a number fixed modal',
+    title: '60px This is a number fixed modal',
     content: 'Some descriptions ...',
     centered: false,
-    top: 100
+    top: 60
   })
 }
 function openPercentFixed() {
   modal.value.info({
-    title: 'This is a percent fixed modal',
+    title: '20% This is a percent fixed modal',
     content: 'Some descriptions ...',
     centered: false,
     top: '20%'
+  })
+}
+function openVerticalCentered() {
+  modal.value.info({
+    title: 'This is a vertically centered modal',
+    content: 'Some descriptions ...',
+    centered: true
   })
 }
 function openDelayedModal() {
@@ -238,22 +248,23 @@ function onKnow() {
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space>
       <Button type="primary" @click="openCustomClass">Custom Body Class Modal</Button>
-      <Button type="primary" @click="openCustomStyle">Custom Body Style Modal</Button>
+      <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
       <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
     </Space>
     <h2 class="mt30 mb10">自定义按钮</h2>
     <Space>
       <Button type="primary" @click="openCustomInfoBtn">Custom Info Btn Modal</Button>
-      <Button type="primary" @click="openCustomConfirmBtn">Custom Confirm Btn Modal</Button>
+      <Button type="primary" @click="openCustomConfirmBtns">Custom Confirm Btns Modal</Button>
+    </Space>
+    <h2 class="mt30 mb10">自定义位置</h2>
+    <Space>
+      <Button type="primary" @click="openNumberFixed">Fixed Top Number Modal</Button>
+      <Button type="primary" @click="openPercentFixed">Fixed Top Percent Modal</Button>
+      <Button type="primary" @click="openVerticalCentered">Vertically Centered Modal</Button>
     </Space>
     <h2 class="mt30 mb10">动画出现位置</h2>
     <Button type="primary" @click="openTransformCenterModal">Transform Origin Center Modal</Button>
-    <h2 class="mt30 mb10">固定高度</h2>
-    <Space>
-      <Button type="primary" @click="openNumberFixed">Number Top Fixed Modal</Button>
-      <Button type="primary" @click="openPercentFixed">Percent Top Fixed Modal</Button>
-    </Space>
-    <h2 class="mt30 mb10">延迟关闭</h2>
+    <h2 class="mt30 mb10">异步延迟关闭</h2>
     <Button type="primary" @click="openDelayedModal">Delayed Close Modal</Button>
     <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"> </Modal>
   </div>

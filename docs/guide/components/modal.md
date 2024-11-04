@@ -21,7 +21,13 @@
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { CloudFilled, FireFilled, NotificationFilled, CrownFilled, ExclamationCircleFilled } from '@ant-design/icons-vue'
+import {
+  CloudFilled,
+  FireFilled,
+  NotificationFilled,
+  CrownFilled,
+  ExclamationCircleFilled
+} from '@ant-design/icons-vue'
 const modal = ref()
 function openInfoModal() {
   modal.value.info({
@@ -126,8 +132,11 @@ function openCustomStyle() {
     content: 'Some descriptions ...',
     icon: h(NotificationFilled),
     bodyStyle: {
-      padding: '24px 32px',
+      padding: '24px',
       borderRadius: '12px'
+    },
+    maskStyle: {
+      backgroundColor: 'rgba(0, 0, 0, 0.6)'
     }
   })
 }
@@ -157,7 +166,7 @@ function openCustomInfoBtn() {
     }
   })
 }
-function openCustomConfirmBtn() {
+function openCustomConfirmBtns() {
   modal.value.confirm({
     title: 'This is a custom confirm btn modal',
     content: 'Some descriptions ...',
@@ -184,18 +193,25 @@ function openTransformCenterModal() {
 }
 function openNumberFixed() {
   modal.value.info({
-    title: 'This is a number fixed modal',
+    title: '60px This is a number fixed modal',
     content: 'Some descriptions ...',
     centered: false,
-    top: 100
+    top: 60
   })
 }
 function openPercentFixed() {
   modal.value.info({
-    title: 'This is a percent fixed modal',
+    title: '20% This is a percent fixed modal',
     content: 'Some descriptions ...',
     centered: false,
     top: '20%'
+  })
+}
+function openVerticalCentered() {
+  modal.value.info({
+    title: 'This is a vertically centered modal',
+    content: 'Some descriptions ...',
+    centered: true
   })
 }
 function openDelayedModal() {
@@ -447,7 +463,7 @@ function onKnow() {
 
 <Space>
   <Button type="primary" @click="openCustomClass">Custom Body Class Modal</Button>
-  <Button type="primary" @click="openCustomStyle">Custom Body Style Modal</Button>
+  <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
   <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
 </Space>
 
@@ -486,8 +502,11 @@ function openCustomStyle() {
     content: 'Some descriptions ...',
     icon: h(NotificationFilled),
     bodyStyle: {
-      padding: '24px 32px',
+      padding: '24px',
       borderRadius: '12px'
+    },
+    maskStyle: {
+      backgroundColor: 'rgba(0, 0, 0, 0.6)'
     }
   })
 }
@@ -520,7 +539,7 @@ function onKnow() {
 <template>
   <Space>
     <Button type="primary" @click="openCustomClass">Custom Body Class Modal</Button>
-    <Button type="primary" @click="openCustomStyle">Custom Body Style Modal</Button>
+    <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
     <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
   </Space>
   <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
@@ -546,7 +565,7 @@ function onKnow() {
 
 <Space>
   <Button type="primary" @click="openCustomInfoBtn">Custom Info Btn Modal</Button>
-  <Button type="primary" @click="openCustomConfirmBtn">Custom Confirm Btn Modal</Button>
+  <Button type="primary" @click="openCustomConfirmBtns">Custom Confirm Btns Modal</Button>
 </Space>
 
 ::: details Show Code
@@ -568,7 +587,7 @@ function openCustomInfoBtn() {
     }
   })
 }
-function openCustomConfirmBtn() {
+function openCustomConfirmBtns() {
   modal.value.confirm({
     title: 'This is a custom confirm btn modal',
     content: 'Some descriptions ...',
@@ -602,7 +621,69 @@ function onKnow() {
 <template>
   <Space>
     <Button type="primary" @click="openCustomInfoBtn">Custom Info Btn Modal</Button>
-    <Button type="primary" @click="openCustomConfirmBtn">Custom Confirm Btn Modal</Button>
+    <Button type="primary" @click="openCustomConfirmBtns">Custom Confirm Btns Modal</Button>
+  </Space>
+  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+</template>
+```
+
+:::
+
+## 自定义位置
+
+<Space>
+  <Button type="primary" @click="openNumberFixed">Fixed Top Number Modal</Button>
+  <Button type="primary" @click="openPercentFixed">Fixed Top Percent Modal</Button>
+  <Button type="primary" @click="openVerticalCentered">Vertically Centered Modal</Button>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const modal = ref()
+function openNumberFixed() {
+  modal.value.info({
+    title: '60px This is a number fixed modal',
+    content: 'Some descriptions ...',
+    centered: false,
+    top: 60
+  })
+}
+function openPercentFixed() {
+  modal.value.info({
+    title: '20% This is a percent fixed modal',
+    content: 'Some descriptions ...',
+    centered: false,
+    top: '20%'
+  })
+}
+function openVerticalCentered() {
+  modal.value.info({
+    title: 'This is a vertically centered modal',
+    content: 'Some descriptions ...',
+    centered: true
+  })
+}
+function onCancel() {
+  // 点击蒙层或 Esc 键或取消按钮的回调
+  console.log('cancel')
+}
+function onOk() {
+  // “确定”按钮回调
+  console.log('ok')
+}
+function onKnow() {
+  // “知道了”按钮回调
+  console.log('know')
+}
+</script>
+<template>
+  <Space>
+    <Button type="primary" @click="openNumberFixed">Fixed Top Number Modal</Button>
+    <Button type="primary" @click="openPercentFixed">Fixed Top Percent Modal</Button>
+    <Button type="primary" @click="openVerticalCentered">Vertically Centered Modal</Button>
   </Space>
   <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
 </template>
@@ -648,60 +729,7 @@ function onKnow() {
 
 :::
 
-## 固定高度
-
-<Space>
-  <Button type="primary" @click="openNumberFixed">Number Top Fixed Modal</Button>
-  <Button type="primary" @click="openPercentFixed">Percent Top Fixed Modal</Button>
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const modal = ref()
-function openNumberFixed() {
-  modal.value.info({
-    title: 'This is a number fixed modal',
-    content: 'Some descriptions ...',
-    centered: false,
-    top: 100
-  })
-}
-function openPercentFixed() {
-  modal.value.info({
-    title: 'This is a percent fixed modal',
-    content: 'Some descriptions ...',
-    centered: false,
-    top: '20%'
-  })
-}
-function onCancel() {
-  // 点击蒙层或 Esc 键或取消按钮的回调
-  console.log('cancel')
-}
-function onOk() {
-  // “确定”按钮回调
-  console.log('ok')
-}
-function onKnow() {
-  // “知道了”按钮回调
-  console.log('know')
-}
-</script>
-<template>
-  <Space>
-    <Button type="primary" @click="openNumberFixed">Number Top Fixed Modal</Button>
-    <Button type="primary" @click="openPercentFixed">Percent Top Fixed Modal</Button>
-  </Space>
-  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
-</template>
-```
-
-:::
-
-## 延迟关闭
+## 异步延迟关闭
 
 <Button type="primary" @click="openDelayedModal">Delayed Close Modal</Button>
 
@@ -766,13 +794,14 @@ okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124;
 okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
 noticeText | 通知按钮文字 | string | '知道了'
 noticeProps | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
-transformOrigin | 模态框动画出现的位置 | 'mouse' &#124; 'center' | 'mouse'
-centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | true
+centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false
 top | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | 100
+transformOrigin | 模态框动画出现的位置 | 'mouse' &#124; 'center' | 'mouse'
 confirmLoading | 确定按钮 `loading` | boolean | false
 blockScroll | 是否在打开模态框时禁用背景滚动 | boolean | true
 keyboard | 是否支持键盘 `esc` 关闭 | boolean | true
 maskClosable | 点击蒙层是否允许关闭 | boolean | true
+maskStyle | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 
 ### Modal Type
 
@@ -797,12 +826,13 @@ okType? | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124
 okProps? | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
 noticeText? | 通知按钮文字 | string | undefined
 noticeProps? | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
-transformOrigin | 模态框动画出现的位置 | 'mouse' &#124; 'center' | undefined
 centered? | 是否水平垂直居中，否则固定高度水平居中 | boolean | undefined
 top? | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | undefined
-blockScroll | 是否在打开模态框时禁用背景滚动 | boolean | undefined
-keyboard | 是否支持键盘 `esc` 关闭 | boolean | undefined
-maskClosable | 点击蒙层是否允许关闭 | boolean | undefined
+transformOrigin? | 模态框动画出现的位置 | 'mouse' &#124; 'center' | undefined
+blockScroll? | 是否在打开模态框时禁用背景滚动 | boolean | undefined
+keyboard? | 是否支持键盘 `esc` 关闭 | boolean | undefined
+maskClosable? | 点击蒙层是否允许关闭 | boolean | undefined
+maskStyle? | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 onKnow? | 点击知道了按钮的回调 | Function | undefined
 onOk? | 点击确认按钮的回调 | Function | undefined
 onCancel? | 点击遮罩层或取消按钮的回调 | Function | undefined

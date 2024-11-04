@@ -18,13 +18,14 @@ interface Props {
   okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   noticeText?: string // 通知按钮文字
   noticeProps?: object // 通知按钮 props 配置，参考 Button 组件 Props
-  transformOrigin?: 'mouse' | 'center' // 模态框动画出现的位置
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
+  transformOrigin?: 'mouse' | 'center' // 模态框动画出现的位置
   confirmLoading?: boolean // 确认按钮 loading
   blockScroll?: boolean // 是否在打开模态框时禁用背景滚动
   keyboard?: boolean // 是否支持键盘 esc 关闭
   maskClosable?: boolean // 点击蒙层是否允许关闭
+  maskStyle?: CSSProperties // 自定义蒙层样式
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 420,
@@ -42,13 +43,14 @@ const props = withDefaults(defineProps<Props>(), {
   okProps: () => ({}),
   noticeText: '知道了',
   noticeProps: () => ({}),
-  transformOrigin: 'mouse',
   centered: false,
   top: 100,
+  transformOrigin: 'mouse',
   confirmLoading: false,
   blockScroll: true,
   keyboard: true,
-  maskClosable: true
+  maskClosable: true,
+  maskStyle: () => ({})
 })
 interface Modal {
   width?: string | number // 模态框宽度，单位 px
@@ -66,12 +68,13 @@ interface Modal {
   okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   noticeText?: string // 通知按钮文字
   noticeProps?: object // 通知按钮 props 配置，参考 Button 组件 Props
-  transformOrigin?: 'mouse' | 'center' // 模态框动画出现的位置
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
+  transformOrigin?: 'mouse' | 'center' // 模态框动画出现的位置
   blockScroll?: boolean // 是否在打开模态框时禁用背景滚动
   keyboard?: boolean // 是否支持键盘 esc 关闭
   maskClosable?: boolean // 点击蒙层是否允许关闭
+  maskStyle?: CSSProperties // 自定义蒙层样式
   onKnow?: Function // 点击知道了按钮的回调
   onOk?: Function // 点击确认按钮的回调
   onCancel?: Function // 点击遮罩层或取消按钮的回调
@@ -99,16 +102,22 @@ const modalCentered = computed(() => {
 const modalStyle = computed(() => {
   if (modalCentered.value) {
     return {
-      width: `${modalWidth.value}`,
-      transformOrigin: `${transformOrigin.value}`
-    }
+      width: modalWidth.value,
+      transformOrigin: transformOrigin.value
+    } as CSSProperties
   } else {
     return {
-      width: `${modalWidth.value}`,
-      top: `${modalTop.value}`,
-      transformOrigin: `${transformOrigin.value}`
-    }
+      width: modalWidth.value,
+      top: modalTop.value,
+      transformOrigin: transformOrigin.value
+    } as CSSProperties
   }
+})
+const modalTitleStyle = computed(() => {
+  return getComputedValue('titleStyle') as CSSProperties
+})
+const modalContentStyle = computed(() => {
+  return getComputedValue('contentStyle') as CSSProperties
 })
 const modalBodyClass = computed(() => {
   return getComputedValue('bodyClass')
@@ -116,11 +125,8 @@ const modalBodyClass = computed(() => {
 const modalBodyStyle = computed(() => {
   return getComputedValue('bodyStyle') as CSSProperties
 })
-const modalTitleStyle = computed(() => {
-  return getComputedValue('titleStyle') as CSSProperties
-})
-const modalContentStyle = computed(() => {
-  return getComputedValue('contentStyle') as CSSProperties
+const modalMaskStyle = computed(() => {
+  return getComputedValue('maskStyle') as CSSProperties
 })
 const modalIcon = computed(() => {
   return getComputedValue('icon')
@@ -289,7 +295,7 @@ defineExpose({
 <template>
   <div class="m-modal-root">
     <Transition name="fade">
-      <div v-show="modalOpen" class="m-modal-mask"></div>
+      <div v-show="modalOpen" class="m-modal-mask" :style="modalMaskStyle"></div>
     </Transition>
     <div
       v-show="showModalWrap"
@@ -545,7 +551,7 @@ defineExpose({
             font-weight: 600;
           }
           :deep(svg) {
-            color: currentColor;
+            fill: currentColor;
           }
         }
         .icon-confirm,
