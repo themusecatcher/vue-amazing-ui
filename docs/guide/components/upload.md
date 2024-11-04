@@ -576,6 +576,7 @@ multiple | 是否支持多选文件，开启后可选择多个文件 | boolean |
 maxCount | 限制上传数量。当为 `1` 时，始终用最新上传的文件代替当前文件 | number | undefined
 tip | 上传描述文字 | string | 'Upload'
 fit | 预览图片缩放规则，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit)，仅当上传文件为图片时生效 | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain'
+draggable | 是否支持拖拽上传，开启后可拖拽文件到选择框上传 | boolean | true
 disabled | 是否禁用，只能预览，不能删除和上传 | boolean | false
 spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多个文件时的排列方式 | object | {}
 spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置上传中样式 | object | {}

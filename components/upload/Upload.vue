@@ -19,6 +19,7 @@ interface Props {
   maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
   tip?: string // 上传描述文字 string | slot
   fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 预览图片缩放规则，仅当上传文件为图片时生效
+  draggable?: boolean // 是否支持拖拽上传，开启后可拖拽文件到选择框上传
   disabled?: boolean // 是否禁用，只能预览，不能删除和上传
   spaceProps?: object // Space 组件属性配置，用于配置多个文件时的排列方式
   spinProps?: object // Spin 组件属性配置，用于配置上传中样式
@@ -36,6 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
   maxCount: undefined,
   tip: 'Upload',
   fit: 'contain',
+  draggable: true,
   disabled: false,
   spaceProps: () => ({}),
   spinProps: () => ({}),
@@ -108,7 +110,7 @@ function onDrop(e: DragEvent, index: number) {
   }
   emits('drop', e)
 }
-function onClick(index: number) {
+function onClickFileInput(index: number) {
   uploadInputRef.value[index].click()
 }
 function onUpload(e: any, index: number) {
@@ -290,8 +292,8 @@ defineExpose({
             :class="{ 'upload-disabled': disabled }"
             @dragenter.stop.prevent
             @dragover.stop.prevent
-            @drop.stop.prevent="disabled ? () => false : onDrop($event, n - 1)"
-            @click="disabled ? () => false : onClick(n - 1)"
+            @drop.stop.prevent="draggable && !disabled ? onDrop($event, n - 1) : () => false"
+            @click="!disabled ? onClickFileInput(n - 1) : () => false"
           >
             <input
               ref="uploadInputRef"
