@@ -3,41 +3,55 @@ import { ref, computed, watch, watchEffect, nextTick, onMounted, onUnmounted } f
 import type { CSSProperties } from 'vue'
 import Button from '../button'
 interface Props {
-  title?: string // 标题 string | slot
-  content?: string // 内容 string | slot
   width?: string | number // 对话框宽度，单位 px
-  height?: string | number // 对话框高度，单位 px，默认 'auto'，自适应内容高度
+  height?: string | number // 对话框高度，单位 px，默认自适应内容高度
+  title?: string // 标题 string | slot
+  titleStyle?: CSSProperties // 自定义标题样式
+  content?: string // 内容 string | slot
+  contentStyle?: CSSProperties // 自定义内容样式
+  bodyClass?: string // 自定义 body 类名
+  bodyStyle?: CSSProperties // 自定义 body 样式
   cancelText?: string // 取消按钮文字
   cancelProps?: object // 取消按钮 props 配置，参考 Button 组件 Props
   okText?: string // 确定按钮文字
   okType?: 'primary' | 'danger' // 确定按钮类型
   okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
-  bodyStyle?: CSSProperties // 设置对话框 body 样式
   footer?: boolean // 是否显示底部按钮 boolean | slot
-  transformOrigin?: 'mouse' | 'center' // 对话框动画出现的位置
+  switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个切换按钮
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 centered: false 时生效，单位 px
-  switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个按钮
-  loading?: boolean // 确定按钮 loading
+  transformOrigin?: 'mouse' | 'center' // 对话框动画出现的位置
+  confirmLoading?: boolean // 确定按钮 loading
+  blockScroll?: boolean // 是否在打开对话框时禁用背景滚动
+  keyboard?: boolean // 是否支持键盘 esc 关闭
+  maskClosable?: boolean // 点击蒙层是否允许关闭
+  maskStyle?: CSSProperties // 自定义蒙层样式
   open?: boolean // 对话框是否可见
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: undefined,
-  content: undefined,
-  width: 540,
+  width: 520,
   height: 'auto',
+  title: undefined,
+  titleStyle: () => ({}),
+  content: undefined,
+  contentStyle: () => ({}),
+  bodyClass: undefined,
+  bodyStyle: () => ({}),
   cancelText: '取消',
   cancelProps: () => ({}),
   okText: '确定',
   okType: 'primary',
   okProps: () => ({}),
-  bodyStyle: () => ({}),
   footer: true,
-  transformOrigin: 'mouse',
+  switchFullscreen: false,
   centered: false,
   top: 100,
-  switchFullscreen: false,
-  loading: false,
+  transformOrigin: 'mouse',
+  confirmLoading: false,
+  blockScroll: true,
+  keyboard: true,
+  maskClosable: true,
+  maskStyle: () => ({}),
   open: false
 })
 const dialogRef = ref() // dialog DOM 引用
@@ -45,24 +59,28 @@ const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击
 const dialogOpen = ref<boolean>()
 const showDialogWrap = ref<boolean>()
 const transformOrigin = ref<string>('50% 50%')
-const fullScreen = ref<boolean>(false)
+const fullscreen = ref<boolean>(false)
 const emits = defineEmits(['update:open', 'cancel', 'ok'])
 const dialogWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
-  } else {
-    return props.width
   }
+  return props.width
 })
 const dialogHeight = computed(() => {
   if (typeof props.height === 'number') {
     return `${props.height}px`
-  } else {
-    return props.height
   }
+  return props.height
+})
+const dialogTop = computed(() => {
+  if (typeof props.top === 'number') {
+    return `${props.top}px`
+  }
+  return props.top
 })
 const dialogStyle = computed(() => {
-  if (fullScreen.value) {
+  if (fullscreen.value) {
     if (props.transformOrigin === 'mouse') {
       return {
         width: '100%',
@@ -71,21 +89,34 @@ const dialogStyle = computed(() => {
     } else {
       return {
         width: '100%',
-        transformOrigin: `${transformOrigin.value}`
+        transformOrigin: transformOrigin.value
       }
     }
   } else {
     if (props.centered) {
       return {
-        width: `${dialogWidth.value}`,
-        transformOrigin: `${transformOrigin.value}`
+        width: dialogWidth.value,
+        transformOrigin: transformOrigin.value
       }
     } else {
       return {
-        width: `${dialogWidth.value}`,
-        transformOrigin: `${transformOrigin.value}`,
-        top: typeof props.top === 'number' ? `${props.top}px` : props.top
+        width: dialogWidth.value,
+        transformOrigin: transformOrigin.value,
+        top: dialogTop.value
       }
+    }
+  }
+})
+const dialogBodyStyle = computed(() => {
+  if (fullscreen.value) {
+    return {
+      height: '100vh',
+      ...props.bodyStyle
+    }
+  } else {
+    return {
+      height: dialogHeight.value,
+      ...props.bodyStyle
     }
   }
 })
@@ -95,13 +126,17 @@ watch(
     if (to) {
       await nextTick()
       dialogRef.value.focus()
-      // 锁定滚动
-      document.documentElement.style.overflowY = 'hidden'
-      document.body.style.overflowY = 'hidden'
+      if (props.blockScroll) {
+        // 锁定滚动
+        document.documentElement.style.overflowY = 'hidden'
+        document.body.style.overflowY = 'hidden'
+      }
     } else {
-      // 解锁滚动
-      document.documentElement.style.removeProperty('overflow-y')
-      document.body.style.removeProperty('overflow-y')
+      if (props.blockScroll) {
+        // 解锁滚动
+        document.documentElement.style.removeProperty('overflow-y')
+        document.body.style.removeProperty('overflow-y')
+      }
     }
   },
   {
@@ -146,20 +181,10 @@ function onBeforeLeave(el: Element) {
 function onAfterLeave() {
   showDialogWrap.value = false
   // 重置全屏显示
-  fullScreen.value = false
-}
-function onBlur() {
-  dialogOpen.value = false
-  emits('update:open', false)
-  emits('cancel')
+  fullscreen.value = false
 }
 function onFullScreen() {
-  fullScreen.value = !fullScreen.value
-}
-function onClose() {
-  dialogOpen.value = false
-  emits('update:open', false)
-  emits('cancel')
+  fullscreen.value = !fullscreen.value
 }
 function onCancel() {
   dialogOpen.value = false
@@ -173,9 +198,17 @@ function onOk() {
 <template>
   <div class="m-dialog-root">
     <Transition name="fade">
-      <div v-show="dialogOpen" class="m-dialog-mask"></div>
+      <div v-show="dialogOpen" class="m-dialog-mask" :style="maskStyle"></div>
     </Transition>
-    <div v-show="showDialogWrap" class="m-dialog-wrap" :class="{ 'flex-centered': centered }" @click.self="onBlur">
+    <div
+      v-show="showDialogWrap"
+      tabindex="-1"
+      ref="dialogRef"
+      class="m-dialog-wrap"
+      :class="{ 'flex-centered': centered }"
+      @click.self="props.maskClosable ? onCancel() : () => false"
+      @keydown.esc="props.keyboard ? onCancel() : () => false"
+    >
       <Transition
         name="zoom"
         enterFromClass="zoom-enter"
@@ -190,21 +223,17 @@ function onOk() {
       >
         <div
           v-show="dialogOpen"
-          ref="dialogRef"
-          tabindex="-1"
           class="m-dialog"
+          :class="{ 'dialog-with-fullscreen': fullscreen }"
           :style="dialogStyle"
-          @keydown.esc="onClose"
         >
-          <div class="m-dialog-content" :style="`--height: ${fullScreen ? '100vh' : dialogHeight}`">
-            <div class="m-dialog-header">
-              <p class="dialog-head">
-                <slot name="title">{{ title }}</slot>
-              </p>
+          <div class="m-dialog-body-wrap" :class="bodyClass" :style="dialogBodyStyle">
+            <div class="dialog-header" :class="{ 'header-with-switch': switchFullscreen }" :style="titleStyle">
+              <slot name="title">{{ title }}</slot>
             </div>
-            <span v-if="switchFullscreen" class="m-fullscreen-action" @click="onFullScreen">
+            <span v-if="switchFullscreen" class="fullscreen-action" @click="onFullScreen">
               <svg
-                v-show="!fullScreen"
+                v-show="!fullscreen"
                 focusable="false"
                 data-icon="fullscreen"
                 width="1em"
@@ -218,7 +247,7 @@ function onOk() {
                 ></path>
               </svg>
               <svg
-                v-show="fullScreen"
+                v-show="fullscreen"
                 focusable="false"
                 data-icon="fullscreen-exit"
                 width="1em"
@@ -232,7 +261,7 @@ function onOk() {
                 ></path>
               </svg>
             </span>
-            <span class="m-close-action" @click="onClose">
+            <span class="close-action" @click="onCancel">
               <svg
                 width="1em"
                 height="1em"
@@ -247,13 +276,15 @@ function onOk() {
                 ></path>
               </svg>
             </span>
-            <div class="m-dialog-body" :style="bodyStyle">
+            <div class="dialog-content" :style="contentStyle">
               <slot>{{ content }}</slot>
             </div>
-            <div v-if="footer" class="m-dialog-footer">
+            <div v-if="footer" class="dialog-footer">
               <slot name="footer">
                 <Button class="mr8" @click="onCancel" v-bind="cancelProps">{{ cancelText }}</Button>
-                <Button :type="okType" :loading="loading" @click="onOk" v-bind="okProps">{{ okText }}</Button>
+                <Button :type="okType" :loading="props.confirmLoading" @click="onOk" v-bind="okProps">{{
+                  okText
+                }}</Button>
               </slot>
             </div>
           </div>
@@ -330,11 +361,16 @@ function onOk() {
   .m-dialog {
     position: relative;
     margin: 0 auto;
+    color: rgba(0, 0, 0, 0.88);
+    font-size: 14px;
+    line-height: 1.5714285714285714;
+    width: auto;
+    max-width: calc(100vw - 32px);
+    padding-bottom: 24px;
     outline: none;
-    .m-dialog-content {
+    .m-dialog-body-wrap {
       display: flex;
       flex-direction: column;
-      height: var(--height);
       position: relative;
       background-color: #fff;
       border-radius: 8px;
@@ -343,29 +379,28 @@ function onOk() {
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
         0 9px 28px 8px rgba(0, 0, 0, 0.05);
       padding: 20px 24px;
-      .m-dialog-header {
+      .dialog-header {
+        font-size: 16px;
         color: rgba(0, 0, 0, 0.88);
+        font-weight: 600;
+        line-height: 1.5;
+        word-break: break-all;
         background: transparent;
         border-radius: 8px 8px 0 0;
         margin-bottom: 8px;
-        max-width: calc(100% - 54px);
-        .dialog-head {
-          margin: 0;
-          color: rgba(0, 0, 0, 0.88);
-          font-weight: 600;
-          font-size: 16px;
-          line-height: 1.5;
-          word-break: break-all;
-        }
+        max-width: calc(100% - 24px);
       }
-      .m-fullscreen-action {
-        .m-close-action();
+      .header-with-switch {
+        max-width: calc(100% - 54px);
+      }
+      .fullscreen-action {
+        .close-action();
         right: 48px;
       }
-      .m-close-action {
+      .close-action {
         position: absolute;
-        top: 17px;
-        right: 17px;
+        top: 20px;
+        right: 18px;
         z-index: 1010;
         font-weight: 600;
         line-height: 1;
@@ -391,7 +426,7 @@ function onOk() {
           }
         }
       }
-      .m-dialog-body {
+      .dialog-content {
         flex: 1;
         font-size: 14px;
         color: rgba(0, 0, 0, 0.88);
@@ -400,7 +435,7 @@ function onOk() {
         overflow: auto;
         transition: all 0.25s;
       }
-      .m-dialog-footer {
+      .dialog-footer {
         text-align: end;
         background: transparent;
         margin-top: 12px;
@@ -410,10 +445,17 @@ function onOk() {
       }
     }
   }
+  .dialog-with-fullscreen {
+    max-width: 100%;
+    padding-bottom: 0;
+  }
 }
 .flex-centered {
   display: flex;
   justify-content: center;
   align-items: center;
+  .m-dialog {
+    padding-bottom: 0;
+  }
 }
 </style>
