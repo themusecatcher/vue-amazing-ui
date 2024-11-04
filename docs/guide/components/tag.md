@@ -600,8 +600,8 @@ icon | 设置图标 | string &#124; slot | undefined
 size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 bordered | 是否有边框 | boolean | true
 dynamic | 是否启用标签动态添加和删除 | boolean | false
-value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Tag](#tag-type)[] | []
 spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space) ，仅当 `dynamic: true` 时生效 | object | {}
+value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Tag](#tag-type)[] | []
 
 ### Tag Type
 
