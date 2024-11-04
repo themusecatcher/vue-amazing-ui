@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-## 1.9.2 <Tag color="volcano" size="small">soon</Tag>
+## 1.9.2 <Tag color="volcano" size="small">2024-11-04</Tag>
 
 - 优化并更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件，新增 `titleStyle` `contentStyle` `bodyClass` `bodyStyle` `maskStyle` `transformOrigin` `blockScroll` `keyboard` `maskClosable` 等属性；删除部分属性；支持：控制对话框动画出现位置；控制打开对话框时禁用背景滚动；控制键盘 `Esc` 关闭；控制点击蒙层关闭；设置标题、内容、`body`、蒙层样式等功能
 - 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增 `titleStyle` `contentStyle` `bodyClass` `bodyStyle` `maskStyle` `transformOrigin` `blockScroll` `keyboard` `maskClosable` 等属性；删除部分属性；支持：控制模态框动画出现位置；控制打开模态框时禁用背景滚动；控制键盘 `Esc` 关闭；控制点击蒙层关闭；设置标题、内容、`body`、蒙层样式等功能
