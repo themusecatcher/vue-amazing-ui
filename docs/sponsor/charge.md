@@ -112,6 +112,7 @@ const QRCodes = [
 }
 .wechat-tag {
   font-size: 16px;
+  font-weight: 500;
   height: 36px;
   padding-inline: 12px;
   position: absolute;
@@ -120,6 +121,7 @@ const QRCodes = [
 }
 .alipay-tag {
   font-size: 16px;
+  font-weight: 500;
   height: 36px;
   padding-inline: 12px;
   position: absolute;
