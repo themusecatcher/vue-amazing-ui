@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   bodyStyle: () => ({}),
   footer: true,
   transformOrigin: 'mouse',
-  centered: true,
+  centered: false,
   top: 100,
   switchFullscreen: false,
   loading: false,

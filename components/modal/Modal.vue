@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   noticeText: '知道了',
   noticeProps: () => ({}),
   transformOrigin: 'mouse',
-  centered: true,
+  centered: false,
   top: 100,
   confirmLoading: false,
   blockScroll: true,
