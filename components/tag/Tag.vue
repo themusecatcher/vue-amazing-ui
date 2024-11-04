@@ -17,8 +17,8 @@ interface Props {
   size?: 'small' | 'middle' | 'large' // 标签尺寸
   bordered?: boolean // 是否有边框
   dynamic?: boolean // 是否启用标签动态添加和删除
-  value?: string[] | Tag[] // 动态标签数组，仅当 dynamic: true 时生效
   spaceProps?: object // Space 组件属性配置，仅当 dynamic: true 时生效
+  value?: string[] | Tag[] // 动态标签数组，仅当 dynamic: true 时生效
 }
 const props = withDefaults(defineProps<Props>(), {
   closable: false,
@@ -27,8 +27,8 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   bordered: true,
   dynamic: false,
-  value: () => [],
-  spaceProps: () => ({})
+  spaceProps: () => ({}),
+  value: () => []
 })
 const inputRef = ref()
 const showInput = ref(false)

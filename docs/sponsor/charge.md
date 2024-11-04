@@ -48,10 +48,10 @@ const QRCodes = [
 <div v-if="isMobile">
   <Segmented size="large" block style="padding: 4px; margin: 0 auto;" v-model:value="sponsorType" :options="sponsorOptions">
     <template #label="{ label }">
-      <span v-if="label === 'WeChat'" style="color: #07c160;">
+      <span v-if="label === 'WeChat'" style="font-weight: 500; color: #07c160;">
         <WechatOutlined style="fill: currentColor;" /> {{ label }}
       </span>
-      <span v-if="label === 'Alipay'" style="color: #1677ff;">
+      <span v-if="label === 'Alipay'" style="font-weight: 500; color: #1677ff;">
         <AlipayOutlined style="fill: currentColor;" /> {{ label }}
       </span>
     </template>
