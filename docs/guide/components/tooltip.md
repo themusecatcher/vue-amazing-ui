@@ -294,7 +294,6 @@ function openChange (open: boolean) {
   <Tooltip
     :show-delay="500"
     :hide-delay="500"
-    trigger="click"
     tooltip="Vue Amazing UI (delay 500ms)"
     :tooltip-style="{ textAlign: 'center' }"
   >
@@ -318,7 +317,6 @@ function openChange (open: boolean) {
     <Tooltip
       :show-delay="500"
       :hide-delay="500"
-      trigger="click"
       tooltip="Vue Amazing UI (delay 500ms)"
       :tooltip-style="{ textAlign: 'center' }"
     >

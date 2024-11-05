@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { ref, watch, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, watchEffect, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useSlotsExist, useEventListener, rafTimeout, cancelRaf } from '../utils'
 interface Props {
-  maxWidth?: string | number // 弹出提示最大宽度，单位 px
+  maxWidth?: string | number // 文字提示最大宽度，单位 px
   content?: string // 展示的内容 string | slot
   contentStyle?: CSSProperties // 设置展示内容的样式
-  tooltip?: string // 弹出提示内容 string | slot
-  tooltipClass?: string // 设置弹出提示的类名
-  tooltipStyle?: CSSProperties // 设置弹出提示的样式
-  bgColor?: string // 弹出提示框背景颜色
+  tooltip?: string // 文字提示内容 string | slot
+  tooltipClass?: string // 设置文字提示的类名
+  tooltipStyle?: CSSProperties // 设置文字提示的样式
+  bgColor?: string // 文字提示框背景颜色
   arrow?: boolean // 是否显示箭头
-  placement?: 'top' | 'bottom' | 'left' | 'right' // 弹出提示位置
-  flip?: boolean // 弹出提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-  trigger?: 'hover' | 'click' // 弹出提示触发方式
+  placement?: 'top' | 'bottom' | 'left' | 'right' // 文字提示位置
+  flip?: boolean // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
+  trigger?: 'hover' | 'click' // 文字提示触发方式
   keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)，仅当 trigger: 'click' 时生效
-  transitionDuration?: number // 弹出提示动画的过渡持续时间，单位 ms
-  showDelay?: number // 弹出提示显示的延迟时间，单位 ms
-  hideDelay?: number // 弹出提示隐藏的延迟时间，单位 ms
-  show?: boolean // (v-model) 弹出提示是否显示
+  transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
+  showDelay?: number // 文字提示显示的延迟时间，单位 ms
+  hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms
+  show?: boolean // (v-model) 文字提示是否显示
 }
 const props = withDefaults(defineProps<Props>(), {
   maxWidth: 240,
@@ -38,24 +38,24 @@ const props = withDefaults(defineProps<Props>(), {
   hideDelay: 100,
   show: false
 })
-const tooltipVisible = ref<boolean>(false)
-const hideTimer = ref()
+const tooltipVisible = ref<boolean>(false) // tooltip 显示隐藏标识
+const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
 const contentRect = ref() // content 的矩形信息
 const top = ref(0) // 提示框 top 定位
 const left = ref(0) // 提示框 left 定位
-const tooltipPlace = ref('top') // 弹出提示位置
+const tooltipPlace = ref('top') // 文字提示位置
 const contentRef = ref() // 声明一个同名的模板引用
 const contentWidth = ref() // 展示内容宽度
 const contentHeight = ref() // 展示内容高度
-const tooltipRef = ref() // 声明一个同名的模板引用
-const tooltipWidth = ref() // 弹出提示内容宽度
-const tooltipHeight = ref() // 弹出提示内容高度
+const tooltipRef = ref() // tooltip 模板引用
+const tooltipWidth = ref() // 文字提示内容 tooltip-card 宽度(不包含 padding)
+const tooltipHeight = ref() // 文字提示内容 tooltip-card 高度(不包含 padding)
 const activeBlur = ref(false) // 是否激活 blur 事件
-const emits = defineEmits(['update:show', 'openChange'])
-const slotsExist = useSlotsExist(['tooltip'])
 const viewportWidth = ref(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
 const viewportHeight = ref(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
+const emits = defineEmits(['update:show', 'openChange'])
+const slotsExist = useSlotsExist(['tooltip'])
 const tooltipMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
     return `${props.maxWidth}px`
@@ -100,24 +100,17 @@ const tooltipPlacement = computed(() => {
   }
 })
 watch(
-  () => props.show,
-  (to) => {
-    tooltipVisible.value = to
-  },
-  {
-    immediate: true
-  }
-)
-watch(
   () => [tooltipMaxWidth.value, props.placement, props.arrow, props.flip],
   () => {
-    getPosition()
+    tooltipVisible.value && getPosition()
   },
   {
-    deep: true,
-    flush: 'post'
+    deep: true
   }
 )
+watchEffect(() => {
+  tooltipVisible.value = props.show
+})
 onMounted(() => {
   observeScroll()
 })
@@ -128,18 +121,22 @@ useEventListener(window, 'resize', getViewportSize)
 function getViewportSize() {
   viewportWidth.value = document.documentElement.clientWidth
   viewportHeight.value = document.documentElement.clientHeight
-  getPosition()
+  tooltipVisible.value && getPosition()
 }
 function observeScroll() {
   // 监听可滚动父元素
   cleanup()
   scrollTarget.value = getScrollParent(contentRef.value?.parentElement ?? null)
-  scrollTarget.value && scrollTarget.value.addEventListener('scroll', getPosition)
+  scrollTarget.value && scrollTarget.value.addEventListener('scroll', scrollEvent)
+}
+function scrollEvent() {
+  tooltipVisible.value && getPosition()
 }
 function cleanup() {
-  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', getPosition)
+  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', scrollEvent)
   scrollTarget.value = null
 }
+// 查询最近的可滚动父元素
 function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   const isScrollable = (el: HTMLElement): boolean => {
     const style = window.getComputedStyle(el)
@@ -156,21 +153,23 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   }
   return null
 }
-function getPosition() {
+async function getPosition() {
+  await nextTick()
   contentWidth.value = contentRef.value.offsetWidth
   contentHeight.value = contentRef.value.offsetHeight
-  tooltipWidth.value = tooltipRef.value.offsetWidth
-  tooltipHeight.value = tooltipRef.value.offsetHeight
+  const tooltip = tooltipRef.value.firstElementChild // 获取 tooltip-card 元素引用
+  tooltipWidth.value = tooltip.offsetWidth
+  tooltipHeight.value = tooltip.offsetHeight
   if (props.flip) {
     contentRect.value = contentRef.value.getBoundingClientRect()
     tooltipPlace.value = getPlacement(props.placement, [])
   }
   if (['top', 'bottom'].includes(tooltipPlace.value)) {
-    top.value = tooltipHeight.value + (props.arrow ? 4 : 6)
+    top.value = tooltipHeight.value + (props.arrow ? 4 + 12 : 6)
     left.value = (tooltipWidth.value - contentWidth.value) / 2
   } else {
     top.value = (tooltipHeight.value - contentHeight.value) / 2
-    left.value = tooltipWidth.value + (props.arrow ? 4 : 6)
+    left.value = tooltipWidth.value + (props.arrow ? 4 + 12 : 6)
   }
 }
 // 获取可滚动父元素或视口的矩形信息
@@ -186,16 +185,16 @@ function getShelterRect() {
     }
   }
 }
-// 弹出提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
+// 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
 function getPlacement(place: string, disabledPlaces: string[]): string {
   const { top, bottom, left, right } = contentRect.value // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
   const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
-  const topDistance = top - targetTop // 内容元素上边缘距离滚动元素上边缘的距离
-  const bottomDistance = targetBottom - bottom // 内容元素下边缘距离动元素下边缘的距离
-  const leftDistance = left - targetLeft // 内容元素左边缘距离滚动元素左边缘的距离
-  const rightDistance = targetRight - right // 内容元素右边缘距离滚动元素右边缘的距离
-  const horizontalDistance = (tooltipWidth.value - contentWidth.value) / 2 // 水平方向容纳弹出提示需要的最小宽度
-  const verticalDistance = (tooltipHeight.value - contentHeight.value) / 2 // 垂直方向容纳弹出提示需要的最小高度
+  const topDistance = top - targetTop - (props.arrow ? 12 : 0) // 内容元素上边缘距离滚动元素上边缘的距离
+  const bottomDistance = targetBottom - bottom - (props.arrow ? 12 : 0) // 内容元素下边缘距离动元素下边缘的距离
+  const leftDistance = left - targetLeft - (props.arrow ? 12 : 0) // 内容元素左边缘距离滚动元素左边缘的距离
+  const rightDistance = targetRight - right - (props.arrow ? 12 : 0) // 内容元素右边缘距离滚动元素右边缘的距离
+  const horizontalDistance = (tooltipWidth.value - contentWidth.value) / 2 // 水平方向容纳文字提示需要的最小宽度
+  const verticalDistance = (tooltipHeight.value - contentHeight.value) / 2 // 垂直方向容纳文字提示需要的最小高度
   switch (place) {
     case 'top':
       if (!disabledPlaces.includes('top')) {
@@ -309,22 +308,25 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
   }
 }
 function onShow() {
-  hideTimer.value && cancelRaf(hideTimer.value)
+  tooltipTimer.value && cancelRaf(tooltipTimer.value)
   if (!tooltipVisible.value) {
-    getPosition()
-    rafTimeout(() => {
+    tooltipTimer.value = rafTimeout(() => {
       tooltipVisible.value = true
+      getPosition()
       emits('update:show', true)
       emits('openChange', true)
     }, props.showDelay)
   }
 }
 function onHide(): void {
-  hideTimer.value = rafTimeout(() => {
-    tooltipVisible.value = false
-    emits('update:show', false)
-    emits('openChange', false)
-  }, props.hideDelay)
+  tooltipTimer.value && cancelRaf(tooltipTimer.value)
+  if (tooltipVisible.value) {
+    tooltipTimer.value = rafTimeout(() => {
+      tooltipVisible.value = false
+      emits('update:show', false)
+      emits('openChange', false)
+    }, props.hideDelay)
+  }
 }
 function toggleVisible() {
   if (!tooltipVisible.value) {
@@ -349,43 +351,93 @@ defineExpose({
   <div
     class="m-tooltip-wrap"
     :style="`--tooltip-max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor}; --transition-duration: ${transitionDuration}ms;`"
-    @mouseenter="trigger === 'hover' ? onShow() : () => false"
-    @mouseleave="trigger === 'hover' ? onHide() : () => false"
+    @mouseenter="showTooltip && trigger === 'hover' ? onShow() : () => false"
+    @mouseleave="showTooltip && trigger === 'hover' ? onHide() : () => false"
   >
-    <div
-      ref="tooltipRef"
-      tabindex="1"
-      class="m-tooltip-card"
-      :class="{
-        [`tooltip-${tooltipPlace}-padding`]: arrow,
-        'tooltip-visible': showTooltip && tooltipVisible
-      }"
-      :style="tooltipPlacement"
-      @blur="trigger === 'click' && activeBlur ? onHide() : () => false"
-      @mouseenter="trigger === 'hover' ? onShow() : () => false"
-      @mouseleave="trigger === 'hover' ? onHide() : () => false"
-      @keydown.esc="trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
+    <Transition
+      name="zoom"
+      enter-from-class="zoom-enter"
+      enter-active-class="zoom-enter"
+      enter-to-class="zoom-enter zoom-enter-active"
+      leave-from-class="zoom-leave"
+      leave-active-class="zoom-leave zoom-leave-active"
+      leave-to-class="zoom-leave zoom-leave-active"
     >
-      <div class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
-        <slot name="tooltip">{{ tooltip }}</slot>
+      <div
+        v-show="showTooltip && tooltipVisible"
+        ref="tooltipRef"
+        tabindex="1"
+        class="m-tooltip-card"
+        :class="{ [`tooltip-${tooltipPlace}-padding`]: arrow }"
+        :style="tooltipPlacement"
+        @blur="trigger === 'click' && activeBlur ? onHide() : () => false"
+        @mouseenter="trigger === 'hover' ? onShow() : () => false"
+        @mouseleave="trigger === 'hover' ? onHide() : () => false"
+        @keydown.esc="trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
+      >
+        <div class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
+          <slot name="tooltip">{{ tooltip }}</slot>
+        </div>
+        <div v-if="arrow" class="tooltip-arrow" :class="`arrow-${tooltipPlace || 'top'}`"></div>
       </div>
-      <div v-if="arrow" class="tooltip-arrow" :class="`arrow-${tooltipPlace || 'top'}`"></div>
-    </div>
+    </Transition>
     <span
       ref="contentRef"
       class="tooltip-content"
       :style="contentStyle"
-      @click="trigger === 'click' ? toggleVisible() : () => false"
-      @keydown.enter="trigger === 'click' && keyboard ? toggleVisible() : () => false"
-      @keydown.esc="trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
-      @mouseenter="trigger === 'click' && tooltipVisible ? onEnter() : () => false"
-      @mouseleave="trigger === 'click' && tooltipVisible ? onLeave() : () => false"
+      @click="showTooltip && trigger === 'click' ? toggleVisible() : () => false"
+      @keydown.enter="showTooltip && trigger === 'click' && keyboard ? toggleVisible() : () => false"
+      @keydown.esc="showTooltip && trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
+      @mouseenter="showTooltip && trigger === 'click' && tooltipVisible ? onEnter() : () => false"
+      @mouseleave="showTooltip && trigger === 'click' && tooltipVisible ? onLeave() : () => false"
     >
       <slot>{{ content }}</slot>
     </span>
   </div>
 </template>
 <style lang="less" scoped>
+.zoom-enter {
+  transform: none;
+  opacity: 0;
+  animation-duration: var(--transition-duration);
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-play-state: paused;
+}
+.zoom-enter-active {
+  animation-name: zoomIn;
+  animation-play-state: running;
+  @keyframes zoomIn {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+.zoom-leave {
+  animation-duration: var(--transition-duration);
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
+}
+.zoom-leave-active {
+  animation-name: zoomOut;
+  animation-play-state: running;
+  @keyframes zoomOut {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+  }
+}
 .m-tooltip-wrap {
   position: relative;
   display: inline-block;
@@ -394,13 +446,7 @@ defineExpose({
     z-index: 999;
     width: max-content;
     max-width: var(--tooltip-max-width);
-    pointer-events: none;
     outline: none;
-    transform: scale(0.8);
-    opacity: 0;
-    transition:
-      opacity var(--transition-duration) cubic-bezier(0.78, 0.14, 0.15, 0.86),
-      transform var(--transition-duration) cubic-bezier(0.78, 0.14, 0.15, 0.86);
     .tooltip-card {
       min-width: 32px;
       min-height: 32px;
@@ -513,14 +559,6 @@ defineExpose({
   }
   .tooltip-right-padding {
     padding-left: 12px;
-  }
-  .tooltip-visible {
-    pointer-events: auto;
-    transform: scale(1);
-    opacity: 1;
-    transition:
-      opacity var(--transition-duration) cubic-bezier(0.08, 0.82, 0.17, 1),
-      transform var(--transition-duration) cubic-bezier(0.08, 0.82, 0.17, 1);
   }
   .tooltip-content {
     display: inline-block;

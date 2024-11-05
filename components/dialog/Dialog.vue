@@ -211,12 +211,12 @@ function onOk() {
     >
       <Transition
         name="zoom"
-        enterFromClass="zoom-enter"
-        enterActiveClass="zoom-enter"
-        enterToClass="zoom-enter zoom-enter-active"
-        leaveFromClass="zoom-leave"
-        leaveActiveClass="zoom-leave zoom-leave-active"
-        leaveToClass="zoom-leave zoom-leave-active"
+        enter-from-class="zoom-enter"
+        enter-active-class="zoom-enter"
+        enter-to-class="zoom-enter zoom-enter-active"
+        leave-from-class="zoom-leave"
+        leave-active-class="zoom-leave zoom-leave-active"
+        leave-to-class="zoom-leave zoom-leave-active"
         @before-enter="onBeforeEnter"
         @before-leave="onBeforeLeave"
         @after-leave="onAfterLeave"
