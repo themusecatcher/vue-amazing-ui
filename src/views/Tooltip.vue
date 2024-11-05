@@ -8,10 +8,6 @@ function openChange(open: boolean) {
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-    <a-tooltip :mouseEnterDelay="0.5" :mouseLeaveDelay="0.5">
-      <template #title>prompt text</template>
-      Tooltip will show when mouse enter.
-    </a-tooltip>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space>
       <Tooltip tooltip="Tesla" @open-change="openChange">
