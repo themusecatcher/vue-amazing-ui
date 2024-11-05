@@ -382,29 +382,29 @@ const tooltip = ref()
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-maxWidth | 弹出提示最大宽度，单位 `px` | string &#124; number | 240
+maxWidth | 文字提示最大宽度，单位 `px` | string &#124; number | 240
 content | 展示的内容 | string &#124; slot | undefined
 contentStyle | 设置展示内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-tooltip | 弹出提示内容 | string &#124; slot | undefined
-tooltipClass | 设置弹出提示的类名 | string | undefined
-tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-bgColor | 弹出提示框背景颜色 | string | 'rgba(0, 0, 0, 0.85)'
+tooltip | 文字提示内容 | string &#124; slot | undefined
+tooltipClass | 设置文字提示的类名 | string | undefined
+tooltipStyle | 设置文字提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+bgColor | 文字提示框背景颜色 | string | 'rgba(0, 0, 0, 0.85)'
 arrow | 是否显示箭头 | boolean | true
-placement | 弹出提示位置 | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | 'top'
-flip | 弹出提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true
-trigger | 弹出提示触发方式 | 'hover' &#124; 'click' | 'hover'
+placement | 文字提示位置 | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | 'top'
+flip | 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true
+trigger | 文字提示触发方式 | 'hover' &#124; 'click' | 'hover'
 keyboard | 是否支持按键操作 (`enter` 显示；`esc` 关闭)，仅当 `trigger: 'click'` 时生效 | boolean | false
-transitionDuration | 弹出提示动画的过渡持续时间，单位 `ms` | number | 100
-showDelay | 弹出提示显示的延迟时间，单位 `ms` | number | 100
-hideDelay |弹出提示隐藏的延迟时间，单位 `ms` | number | 100
-show <Tag color="cyan">v-model</Tag> | 弹出提示是否显示 | boolean | false
+transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100
+showDelay | 文字提示显示的延迟时间，单位 `ms` | number | 100
+hideDelay |文字提示隐藏的延迟时间，单位 `ms` | number | 100
+show <Tag color="cyan">v-model</Tag> | 文字提示是否显示 | boolean | false
 
 ## Methods
 
 名称 | 说明 | 类型
 -- | -- | --
-show | 显示弹出提示 | () => void
-hide | 隐藏弹出提示 | () => void
+show | 显示文字提示 | () => void
+hide | 隐藏文字提示 | () => void
 
 ## Events
 
