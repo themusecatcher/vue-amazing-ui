@@ -137,4 +137,4 @@ useMutationObserver(defaultSlotsRef, callback, options)
 -- | -- | -- | --
 target | 要观察的 `DOM` 元素或元素数组，可以是 `ref` 引用，也可以是 `DOM` 元素本身 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined
 callback | 当观察到变化时调用的回调函数 | MutationCallback | undefined
-options | 观察选项，默认为空对象，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver/observe#attributes) | object | {}
+options | 观察选项，默认为空对象，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver/observe#options) | object | {}
