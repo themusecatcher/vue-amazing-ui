@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { Slot } from 'vue'
 import Tooltip from '../tooltip'
-import { useSlotsExist } from '../utils'
+import { useSlotsExist, useMutationObserver } from '../utils'
 interface Props {
   icon?: Slot // 自定义图标 slot
   description?: string // 文字描述 string | slot
@@ -34,6 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
 const backtopRef = ref<HTMLElement | null>(null)
 const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
+const 
 const targetElement = ref<HTMLElement | null>(null) // 渲染容器元素
 const emits = defineEmits(['click', 'show'])
 const slotsExist = useSlotsExist(['tooltip', 'icon', 'description'])
@@ -82,8 +83,8 @@ onBeforeUnmount(() => {
   cleanup()
   backtopRef.value?.remove()
 })
-function updateScrollTop() {
-  scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+function updateScrollTop(e: Event) {
+  scrollTop.value = (e.target as HTMLElement).scrollTop
 }
 function observeScroll() {
   cleanup()
@@ -95,7 +96,17 @@ function observeScroll() {
   } else if (props.listenTo instanceof HTMLElement) {
     scrollTarget.value = props.listenTo
   }
-  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updateScrollTop)
+  if (scrollTarget.value) {
+    useMutationObserver(
+      scrollTarget.value,
+      () => {
+        scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+      },
+      { subtree: true, childList: true, attributes: true }
+    )
+
+    scrollTarget.value.addEventListener('scroll', updateScrollTop)
+  }
 }
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updateScrollTop)
@@ -113,7 +124,10 @@ function appendBackTop() {
 function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   const isScrollable = (el: HTMLElement): boolean => {
     const style = window.getComputedStyle(el)
-    if (el.scrollHeight > el.clientHeight && (style.overflow === 'scroll' || style.overflow === 'auto')) {
+    if (
+      el.scrollHeight > el.clientHeight &&
+      (['scroll', 'auto'].includes(style.overflowY) || el === document.documentElement)
+    ) {
       return true
     }
     return false

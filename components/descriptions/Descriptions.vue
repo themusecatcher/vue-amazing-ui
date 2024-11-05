@@ -32,7 +32,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const defaultSlotsRef = ref() // 所有渲染的 DescriptionsItems 节点引用
 const defaultSlots = ref(true) // 用于刷新 <slot></slot>
-const observer = ref() // defaultSlotsRef 监听器
 const stopObservation = ref(true) // 停止观察器
 const children = ref<any[]>() // DescriptionsItems 节点
 const tdCols = ref() // 放置 DescriptionsItems 节点的模板引用数组
@@ -88,7 +87,7 @@ watch(
   }
 )
 // 监听 defaultSlotsRef DOM 节点数量变化，重新渲染 Descriptions
-observer.value = useMutationObserver(
+useMutationObserver(
   defaultSlotsRef,
   (MutationRecord: MutationRecord[]) => {
     if (!stopObservation.value) {
@@ -99,7 +98,7 @@ observer.value = useMutationObserver(
       }
     }
   },
-  { childList: true, attributes: true, subtree: true }
+  { subtree: true, childList: true, attributes: true }
 )
 onMounted(() => {
   getGroupItems()

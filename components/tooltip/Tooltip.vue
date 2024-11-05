@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
-import { useSlotsExist, useEventListener, rafTimeout, cancelRaf } from '../utils'
+import { useSlotsExist, useEventListener, useResizeObserver, rafTimeout, cancelRaf } from '../utils'
 interface Props {
   maxWidth?: string | number // 文字提示最大宽度，单位 px
   content?: string // 展示的内容 string | slot
@@ -49,8 +49,9 @@ const contentRef = ref() // 声明一个同名的模板引用
 const contentWidth = ref<number>(0) // 展示内容宽度
 const contentHeight = ref<number>(0) // 展示内容高度
 const tooltipRef = ref() // tooltip 模板引用
-const tooltipWidth = ref<number>(0) // 文字提示内容 tooltip-card 宽度(不包含 padding)
-const tooltipHeight = ref<number>(0) // 文字提示内容 tooltip-card 高度(不包含 padding)
+const tooltipCardRef = ref() // tooltip-card 模板引用
+const tooltipCardWidth = ref<number>(0) // 文字提示内容 tooltip-card 宽度
+const tooltipCardHeight = ref<number>(0) // 文字提示内容 tooltip-card 高度
 const activeBlur = ref<boolean>(false) // 是否激活 blur 事件
 const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
 const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
@@ -102,7 +103,7 @@ const tooltipPlacement = computed(() => {
 watch(
   () => [tooltipMaxWidth.value, props.placement, props.arrow, props.flip],
   () => {
-    tooltipVisible.value && getPosition()
+    updatePosition()
   },
   {
     deep: true
@@ -118,22 +119,23 @@ onBeforeUnmount(() => {
   cleanup()
 })
 useEventListener(window, 'resize', getViewportSize)
+// 监听 tooltip-card 和 content 的尺寸变化，更新文字提示位置
+useResizeObserver([tooltipCardRef, contentRef], () => {
+  updatePosition()
+})
 function getViewportSize() {
   viewportWidth.value = document.documentElement.clientWidth
   viewportHeight.value = document.documentElement.clientHeight
-  tooltipVisible.value && getPosition()
+  updatePosition()
 }
 function observeScroll() {
   // 监听可滚动父元素
   cleanup()
   scrollTarget.value = getScrollParent(contentRef.value?.parentElement ?? null)
-  scrollTarget.value && scrollTarget.value.addEventListener('scroll', scrollEvent)
-}
-function scrollEvent() {
-  tooltipVisible.value && getPosition()
+  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updatePosition)
 }
 function cleanup() {
-  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', scrollEvent)
+  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
   scrollTarget.value = null
 }
 // 查询最近的可滚动父元素
@@ -141,8 +143,8 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   const isScrollable = (el: HTMLElement): boolean => {
     const style = window.getComputedStyle(el)
     if (
-      (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth) &&
-      (style.overflow === 'scroll' || style.overflow === 'auto')
+      (el.scrollHeight > el.clientHeight && ['scroll', 'auto'].includes(style.overflowY)) ||
+      (el.scrollWidth > el.clientWidth && ['scroll', 'auto'].includes(style.overflowX))
     ) {
       return true
     }
@@ -153,23 +155,27 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   }
   return null
 }
+// 更新文字提示位置
+function updatePosition() {
+  tooltipVisible.value && getPosition()
+}
+// 计算文字提示位置
 async function getPosition() {
   await nextTick()
   contentWidth.value = contentRef.value.offsetWidth
   contentHeight.value = contentRef.value.offsetHeight
-  const tooltip = tooltipRef.value.firstElementChild // 获取 tooltip-card 元素
-  tooltipWidth.value = tooltip.offsetWidth
-  tooltipHeight.value = tooltip.offsetHeight
+  tooltipCardWidth.value = tooltipCardRef.value.offsetWidth
+  tooltipCardHeight.value = tooltipCardRef.value.offsetHeight
   if (props.flip) {
     contentRect.value = contentRef.value.getBoundingClientRect()
     tooltipPlace.value = getPlacement(props.placement, [])
   }
   if (['top', 'bottom'].includes(tooltipPlace.value)) {
-    top.value = tooltipHeight.value + (props.arrow ? 4 + 12 : 6)
-    left.value = (tooltipWidth.value - contentWidth.value) / 2
+    top.value = tooltipCardHeight.value + (props.arrow ? 4 + 12 : 6)
+    left.value = (tooltipCardWidth.value - contentWidth.value) / 2
   } else {
-    top.value = (tooltipHeight.value - contentHeight.value) / 2
-    left.value = tooltipWidth.value + (props.arrow ? 4 + 12 : 6)
+    top.value = (tooltipCardHeight.value - contentHeight.value) / 2
+    left.value = tooltipCardWidth.value + (props.arrow ? 4 + 12 : 6)
   }
 }
 // 获取可滚动父元素或视口的矩形信息
@@ -193,12 +199,12 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
   const bottomDistance = targetBottom - bottom - (props.arrow ? 12 : 0) // 内容元素下边缘距离动元素下边缘的距离
   const leftDistance = left - targetLeft - (props.arrow ? 12 : 0) // 内容元素左边缘距离滚动元素左边缘的距离
   const rightDistance = targetRight - right - (props.arrow ? 12 : 0) // 内容元素右边缘距离滚动元素右边缘的距离
-  const horizontalDistance = (tooltipWidth.value - contentWidth.value) / 2 // 水平方向容纳文字提示需要的最小宽度
-  const verticalDistance = (tooltipHeight.value - contentHeight.value) / 2 // 垂直方向容纳文字提示需要的最小高度
+  const horizontalDistance = (tooltipCardWidth.value - contentWidth.value) / 2 // 水平方向容纳文字提示需要的最小宽度
+  const verticalDistance = (tooltipCardHeight.value - contentHeight.value) / 2 // 垂直方向容纳文字提示需要的最小高度
   switch (place) {
     case 'top':
       if (!disabledPlaces.includes('top')) {
-        if (topDistance < tooltipHeight.value + (props.arrow ? 4 : 6)) {
+        if (topDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6)) {
           if (disabledPlaces.length !== 3) {
             return getPlacement('bottom', [...disabledPlaces, 'top'])
           }
@@ -226,7 +232,7 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
       }
     case 'bottom':
       if (!disabledPlaces.includes('bottom')) {
-        if (bottomDistance < tooltipHeight.value + (props.arrow ? 4 : 6)) {
+        if (bottomDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6)) {
           if (disabledPlaces.length !== 3) {
             return getPlacement('top', [...disabledPlaces, 'bottom'])
           }
@@ -254,7 +260,7 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
       }
     case 'left':
       if (!disabledPlaces.includes('left')) {
-        if (leftDistance < tooltipWidth.value + (props.arrow ? 4 : 6)) {
+        if (leftDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6)) {
           if (disabledPlaces.length !== 3) {
             return getPlacement('right', [...disabledPlaces, 'left'])
           }
@@ -282,7 +288,7 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
       }
     case 'right':
       if (!disabledPlaces.includes('right')) {
-        if (rightDistance < tooltipWidth.value + (props.arrow ? 4 : 6)) {
+        if (rightDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6)) {
           if (disabledPlaces.length !== 3) {
             return getPlacement('left', [...disabledPlaces, 'right'])
           }
@@ -380,7 +386,7 @@ defineExpose({
         @mouseleave="trigger === 'hover' ? onHide() : () => false"
         @keydown.esc="trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
       >
-        <div class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
+        <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
           <slot name="tooltip">{{ tooltip }}</slot>
         </div>
         <div v-if="arrow" class="tooltip-arrow" :class="`arrow-${tooltipPlace || 'top'}`"></div>

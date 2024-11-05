@@ -107,8 +107,7 @@ const trackLeft = computed(() => {
   return 0
 })
 useEventListener(window, 'resize', updateState)
-const options = { childList: true, attributes: true, subtree: true }
-useMutationObserver(scrollbarRef, updateState, options)
+useMutationObserver(scrollbarRef, updateState, { subtree: true, childList: true, attributes: true })
 const debounceHideEvent = debounce(hideScrollbar, props.delay)
 onMounted(() => {
   updateState()
