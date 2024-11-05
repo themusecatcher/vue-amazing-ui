@@ -157,7 +157,7 @@ async function getPosition() {
   await nextTick()
   contentWidth.value = contentRef.value.offsetWidth
   contentHeight.value = contentRef.value.offsetHeight
-  const tooltip = tooltipRef.value.firstElementChild // 获取 tooltip-card 元素引用
+  const tooltip = tooltipRef.value.firstElementChild // 获取 tooltip-card 元素
   tooltipWidth.value = tooltip.offsetWidth
   tooltipHeight.value = tooltip.offsetHeight
   if (props.flip) {
@@ -427,6 +427,7 @@ defineExpose({
 .zoom-leave-active {
   animation-name: zoomOut;
   animation-play-state: running;
+  pointer-events: none;
   @keyframes zoomOut {
     0% {
       transform: scale(1);
@@ -445,10 +446,10 @@ defineExpose({
     position: absolute;
     z-index: 999;
     width: max-content;
-    max-width: var(--tooltip-max-width);
     outline: none;
     .tooltip-card {
       min-width: 32px;
+      max-width: var(--tooltip-max-width);
       min-height: 32px;
       padding: 6px 8px;
       font-size: 14px;
