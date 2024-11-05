@@ -198,109 +198,114 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
   switch (place) {
     case 'top':
       if (!disabledPlaces.includes('top')) {
-        if (topDistance < tooltipHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
-          return getPlacement('bottom', [...disabledPlaces, 'top'])
+        if (topDistance < tooltipHeight.value + (props.arrow ? 4 : 6)) {
+          if (disabledPlaces.length !== 3) {
+            return getPlacement('bottom', [...disabledPlaces, 'top'])
+          }
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
             return 'top'
           } else {
             if (disabledPlaces.length !== 3) {
               if (leftDistance < horizontalDistance) {
-                return getPlacement('right', [...disabledPlaces, 'top', 'bottom', 'left'])
+                return getPlacement('right', ['top', 'bottom', 'left'])
               }
               if (rightDistance < horizontalDistance) {
-                return getPlacement('left', [...disabledPlaces, 'top', 'bottom', 'right'])
+                return getPlacement('left', ['top', 'bottom', 'right'])
               }
             }
           }
         }
       } else {
         if (!disabledPlaces.includes('bottom')) {
-          return getPlacement('bottom', [...disabledPlaces, 'top'])
+          return getPlacement('bottom', disabledPlaces)
         }
         if (!disabledPlaces.includes('left')) {
-          return getPlacement('left', [...disabledPlaces, 'top'])
+          return getPlacement('left', disabledPlaces)
         }
       }
     case 'bottom':
       if (!disabledPlaces.includes('bottom')) {
-        if (bottomDistance < tooltipHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
-          return getPlacement('top', [...disabledPlaces, 'bottom'])
+        if (bottomDistance < tooltipHeight.value + (props.arrow ? 4 : 6)) {
+          if (disabledPlaces.length !== 3) {
+            return getPlacement('top', [...disabledPlaces, 'bottom'])
+          }
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
             return 'bottom'
           } else {
             if (disabledPlaces.length !== 3) {
               if (leftDistance < horizontalDistance) {
-                return getPlacement('right', [...disabledPlaces, 'top', 'bottom', 'left'])
+                return getPlacement('right', ['top', 'bottom', 'left'])
               }
               if (rightDistance < horizontalDistance) {
-                return getPlacement('left', [...disabledPlaces, 'top', 'bottom', 'right'])
+                return getPlacement('left', ['top', 'bottom', 'right'])
               }
             }
           }
         }
       } else {
         if (!disabledPlaces.includes('top')) {
-          return getPlacement('top', [...disabledPlaces, 'bottom'])
+          return getPlacement('top', disabledPlaces)
         }
         if (!disabledPlaces.includes('left')) {
-          return getPlacement('left', [...disabledPlaces, 'bottom'])
+          return getPlacement('left', disabledPlaces)
         }
       }
     case 'left':
       if (!disabledPlaces.includes('left')) {
-        if (leftDistance < tooltipWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
-          return getPlacement('right', [...disabledPlaces, 'left'])
+        if (leftDistance < tooltipWidth.value + (props.arrow ? 4 : 6)) {
+          if (disabledPlaces.length !== 3) {
+            return getPlacement('right', [...disabledPlaces, 'left'])
+          }
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
             return 'left'
           } else {
             if (disabledPlaces.length !== 3) {
               if (topDistance < verticalDistance) {
-                return getPlacement('bottom', [...disabledPlaces, 'left', 'right', 'top'])
+                return getPlacement('bottom', ['left', 'right', 'top'])
               }
               if (bottomDistance < verticalDistance) {
-                return getPlacement('top', [...disabledPlaces, 'left', 'right', 'bottom'])
+                return getPlacement('top', ['left', 'right', 'bottom'])
               }
             }
           }
         }
       } else {
         if (!disabledPlaces.includes('right')) {
-          return getPlacement('right', [...disabledPlaces, 'left'])
+          return getPlacement('right', disabledPlaces)
         }
         if (!disabledPlaces.includes('top')) {
-          return getPlacement('top', [...disabledPlaces, 'left'])
+          return getPlacement('top', disabledPlaces)
         }
-      }
-      if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
-        return 'left'
       }
     case 'right':
       if (!disabledPlaces.includes('right')) {
-        if (rightDistance < tooltipWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
-          return getPlacement('left', [...disabledPlaces, 'right'])
+        if (rightDistance < tooltipWidth.value + (props.arrow ? 4 : 6)) {
+          if (disabledPlaces.length !== 3) {
+            return getPlacement('left', [...disabledPlaces, 'right'])
+          }
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
             return 'right'
           } else {
             if (disabledPlaces.length !== 3) {
               if (topDistance < verticalDistance) {
-                return getPlacement('bottom', [...disabledPlaces, 'left', 'right', 'top'])
+                return getPlacement('bottom', ['left', 'right', 'top'])
               }
               if (bottomDistance < verticalDistance) {
-                return getPlacement('top', [...disabledPlaces, 'left', 'right', 'bottom'])
+                return getPlacement('top', ['left', 'right', 'bottom'])
               }
             }
           }
         }
       } else {
         if (!disabledPlaces.includes('left')) {
-          return getPlacement('left', [...disabledPlaces, 'right'])
+          return getPlacement('left', disabledPlaces)
         }
         if (!disabledPlaces.includes('top')) {
-          return getPlacement('top', [...disabledPlaces, 'right'])
+          return getPlacement('top', disabledPlaces)
         }
       }
     default:
