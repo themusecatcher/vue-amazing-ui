@@ -3,6 +3,8 @@
 # 确保脚本抛出遇到的错误
 set -e
 
+commitDesc=$1
+
 # 重新打包组件库
 pnpm build
 
@@ -23,7 +25,13 @@ git push -f git@github.com:themusecatcher/vue-amazing-ui.git master:github-pages
 # 提交所有代码到 github
 cd ../../../
 git add .
-git commit -m 'update'
+
+if [ -z ${commitDesc} ]; then
+  git commit -m 'update'
+else
+  git commit -m ${commitDesc}
+fi
+
 git push
 
 echo ⏰ "$(date '+%Y-%m-%d %H:%M:%S')"
