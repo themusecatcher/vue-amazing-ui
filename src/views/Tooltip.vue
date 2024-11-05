@@ -10,7 +10,7 @@ function openChange(open: boolean) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space>
-      <Tooltip tooltip="Tesla" @open-change="openChange">
+      <Tooltip :tooltip="Tesla" @open-change="openChange">
         <Button type="primary">特斯拉</Button>
       </Tooltip>
       <Tooltip tooltip="Godzilla" @open-change="openChange">
