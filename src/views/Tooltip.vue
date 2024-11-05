@@ -19,7 +19,7 @@ function openChange(open: boolean) {
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space gap="large">
-      <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-tooltip-class">
+      <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-class">
         <template #tooltip>
           <p style="text-align: center">Batman VS Superman</p>
           电影讲述了超人帮助人类解决了很多问题，成为了人类的神，却引起了莱克斯·卢瑟的嫉妒，从而挑拨蝙蝠侠与超人之间战斗的故事
@@ -121,7 +121,7 @@ function openChange(open: boolean) {
   </div>
 </template>
 <style lang="less" scoped>
-:deep(.custom-tooltip-class) {
+:deep(.custom-class) {
   font-size: 16px !important;
   color: #0958d9 !important;
   padding: 12px 18px !important;
