@@ -1,7 +1,7 @@
 # 回到顶部 BackTop
 
 <FloatButton
-  :bottom="96"
+  :bottom="100"
   type="primary"
   tooltip="成为赞助者✨"
   :tooltip-props="{
@@ -26,7 +26,7 @@
 - 当用户需要频繁返回顶部查看相关内容时。
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@ant-design/icons-vue'
 function onShow(show: boolean) {
   console.log('show', show)
@@ -57,14 +57,10 @@ function onShow (show: boolean) {
 
 ## 自定义图标
 
-<BackTop :right="100">
-  <template #icon>
-    <DoubleLeftOutlined :rotate="90" />
-  </template>
-</BackTop>
+<BackTop :right="100" :icon="() => h(VerticalAlignTopOutlined)" />
 <BackTop :right="160">
   <template #icon>
-    <VerticalAlignTopOutlined />
+    <DoubleLeftOutlined :rotate="90" />
   </template>
 </BackTop>
 <BackTop :right="220">
@@ -77,17 +73,14 @@ function onShow (show: boolean) {
 
 ```vue
 <script setup lang="ts">
+import { h } from 'vue'
 import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <BackTop :right="100">
-    <template #icon>
-      <DoubleLeftOutlined :rotate="90" />
-    </template>
-  </BackTop>
+  <BackTop :right="100" :icon="() => h(VerticalAlignTopOutlined)" />
   <BackTop :right="160">
     <template #icon>
-      <VerticalAlignTopOutlined />
+      <DoubleLeftOutlined :rotate="90" />
     </template>
   </BackTop>
   <BackTop :right="220">
@@ -340,7 +333,7 @@ const scrollContainer = ref()
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-icon | 自定义图标 | slot | undefined
+icon | 自定义图标 | VNode &#124; Slot | undefined
 description | 文字描述 | string &#124; slot | undefined
 tooltip | 文字提示内容 | string &#124; slot | undefined
 tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
@@ -358,4 +351,4 @@ listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近�
 名称 | 说明 | 类型
 -- | -- | --
 click | 点击按钮的回调函数 | () => void
-show | 是否展现的回调函数 | (show: boolean) => void
+show | 按钮显示隐藏的回调函数 | (show: boolean) => void

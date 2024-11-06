@@ -6,6 +6,7 @@
 
 - 优化并更新 [上传 Upload](https://themusecatcher.github.io/vue-amazing-ui/guide/components/upload.html) 组件，新增 `draggable` 属性，支持控制拖拽上传功能
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件代码和动画效果，支持异步更新内容和文字提示，自动更新文字提示框位置
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，`icon` 属性新增支持 `VNode` 类型
 - 组件库及文档代码优化
 
 ## 1.9.2 <Tag color="volcano" size="small">2024-11-04</Tag>

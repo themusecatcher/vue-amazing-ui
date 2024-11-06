@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import type { Slot } from 'vue'
+import type { VNode, Slot } from 'vue'
 import Tooltip from '../tooltip'
 import { useSlotsExist, useMutationObserver } from '../utils'
 interface Props {
-  icon?: Slot // 自定义图标 slot
+  icon?: VNode | Slot // 自定义图标
   description?: string // 文字描述 string | slot
   tooltip?: string // 文字提示内容 string | slot
   tooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props
@@ -155,7 +155,9 @@ function onBackTop() {
           <slot>
             <span class="backtop-icon" :class="{ 'icon-description': showDescription }">
               <slot name="icon">
+                <component v-if="icon" :is="icon" />
                 <svg
+                  v-else
                   width="1em"
                   height="1em"
                   viewBox="0 0 24 24"
