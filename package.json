@@ -36,7 +36,7 @@
     "build:browser": "vite -f iife build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
-  },
+  }, 
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
     "@vuepic/vue-datepicker": "^10.0.0",
