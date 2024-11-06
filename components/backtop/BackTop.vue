@@ -34,7 +34,6 @@ const props = withDefaults(defineProps<Props>(), {
 const backtopRef = ref<HTMLElement | null>(null)
 const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
-const 
 const targetElement = ref<HTMLElement | null>(null) // 渲染容器元素
 const emits = defineEmits(['click', 'show'])
 const slotsExist = useSlotsExist(['tooltip', 'icon', 'description'])
@@ -77,12 +76,18 @@ watch(backTopShow, (to) => {
 })
 onMounted(() => {
   observeScroll()
-  appendBackTop()
 })
 onBeforeUnmount(() => {
   cleanup()
   backtopRef.value?.remove()
 })
+useMutationObserver(
+  scrollTarget,
+  () => {
+    scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+  },
+  { subtree: true, childList: true, attributes: true }
+)
 function updateScrollTop(e: Event) {
   scrollTop.value = (e.target as HTMLElement).scrollTop
 }
@@ -97,16 +102,9 @@ function observeScroll() {
     scrollTarget.value = props.listenTo
   }
   if (scrollTarget.value) {
-    useMutationObserver(
-      scrollTarget.value,
-      () => {
-        scrollTop.value = scrollTarget.value?.scrollTop ?? 0
-      },
-      { subtree: true, childList: true, attributes: true }
-    )
-
     scrollTarget.value.addEventListener('scroll', updateScrollTop)
   }
+  appendBackTop()
 }
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updateScrollTop)
