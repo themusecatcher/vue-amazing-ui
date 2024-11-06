@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@ant-design/icons-vue'
 function onShow(show: boolean) {
   console.log('show', show)
@@ -13,14 +13,10 @@ const scrollContainer = ref()
     <h3 class="mb10">BackTop 会找到首个可滚动的祖先元素并且监听它的滚动事件</h3>
     <BackTop @show="onShow" />
     <h2 class="mt30 mb10">自定义图标</h2>
-    <BackTop :right="100">
-      <template #icon>
-        <DoubleLeftOutlined :rotate="90" />
-      </template>
-    </BackTop>
+    <BackTop :right="100" :icon="() => h(VerticalAlignTopOutlined)" />
     <BackTop :right="160">
       <template #icon>
-        <VerticalAlignTopOutlined />
+        <DoubleLeftOutlined :rotate="90" />
       </template>
     </BackTop>
     <BackTop :right="220">
