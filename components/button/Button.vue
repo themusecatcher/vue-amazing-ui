@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, nextTick, computed } from 'vue'
-import type { Slot } from 'vue'
+import type { VNode, Slot } from 'vue'
 import { useSlotsExist } from '../utils'
 interface Props {
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
   shape?: 'default' | 'circle' | 'round' // 设置按钮形状
-  icon?: Slot // 设置按钮图标
+  icon?: VNode | Slot // 设置按钮图标
   size?: 'small' | 'middle' | 'large' // 设置按钮尺寸
   ghost?: boolean // 按钮背景是否透明，仅当 type: 'primary' | 'danger' 时生效
   buttonClass?: string // 设置按钮类名
@@ -18,7 +18,7 @@ interface Props {
   loadingType?: 'static' | 'dynamic' // 加载指示符类型
   block?: boolean // 是否将按钮宽度调整为其父宽度
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   type: 'default',
   shape: 'default',
   icon: undefined,
@@ -46,8 +46,11 @@ const presetRippleColors = {
 const wave = ref(false)
 const emit = defineEmits(['click'])
 const slotsExist = useSlotsExist(['icon', 'default'])
+const showIcon = computed(() => {
+  return slotsExist.icon || props.icon
+})
 const showIconOnly = computed(() => {
-  return slotsExist.icon && !slotsExist.default
+  return showIcon.value && !slotsExist.default
 })
 function onClick(e: Event) {
   if (wave.value) {
@@ -92,7 +95,7 @@ function onWaveEnd() {
     @click="disabled || loading ? () => false : onClick($event)"
     @keydown.enter.prevent="keyboard && !disabled && !loading ? onKeyboard($event) : () => false"
   >
-    <div v-if="loading || !slotsExist.icon" class="btn-loading">
+    <div v-if="loading || !showIcon" class="btn-loading">
       <div v-if="!href && loadingType === 'static'" class="m-static-circle">
         <svg class="circle" width="1em" height="1em" fill="currentColor" viewBox="0 0 100 100">
           <path
@@ -109,8 +112,10 @@ function onWaveEnd() {
         </svg>
       </div>
     </div>
-    <span v-if="!loading && slotsExist.icon" class="btn-icon">
-      <slot name="icon"></slot>
+    <span v-if="!loading && showIcon" class="btn-icon">
+      <slot name="icon">
+        <component v-if="icon" :is="icon" />
+      </slot>
     </span>
     <span v-if="slotsExist.default" class="btn-content">
       <slot></slot>

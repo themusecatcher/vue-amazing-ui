@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 const disabled = ref(true)
 const sizeOptions = [
@@ -51,32 +51,14 @@ function onClick(e: Event) {
     <Space vertical>
       <Space>
         <Tooltip tooltip="search">
-          <Button type="primary" shape="circle">
-            <template #icon>
-              <SearchOutlined />
-            </template>
-          </Button>
+          <Button type="primary" shape="circle" :icon="() => h(SearchOutlined)" />
         </Tooltip>
         <Button type="primary" shape="circle">A</Button>
-        <Button type="primary" shape="round">
-          <template #icon>
-            <SearchOutlined />
-          </template>
-          Search
-        </Button>
+        <Button type="primary" shape="round" :icon="() => h(SearchOutlined)"> Search </Button>
         <Tooltip tooltip="search">
-          <Button type="primary" shape="round">
-            <template #icon>
-              <SearchOutlined />
-            </template>
-          </Button>
+          <Button type="primary" shape="round" :icon="() => h(SearchOutlined)" />
         </Tooltip>
-        <Button type="primary">
-          <template #icon>
-            <SearchOutlined />
-          </template>
-          Search
-        </Button>
+        <Button type="primary" :icon="() => h(SearchOutlined)"> Search </Button>
       </Space>
       <Space>
         <Tooltip tooltip="search">
@@ -325,11 +307,11 @@ function onClick(e: Event) {
     <Space vertical>
       <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
       <Space>
-        <Button button-class="custom-btn-class1" ripple-color="#faad14" size="large" :loading="customLoading">
+        <Button button-class="custom-class1" ripple-color="#faad14" size="large" :loading="customLoading">
           自定义样式
         </Button>
         <Button
-          button-class="custom-btn-class2"
+          button-class="custom-class2"
           ripple-color="#faad14"
           type="primary"
           size="large"
@@ -338,7 +320,7 @@ function onClick(e: Event) {
           自定义样式
         </Button>
         <Button
-          button-class="custom-btn-class1"
+          button-class="custom-class1"
           ripple-color="#faad14"
           shape="circle"
           size="large"
@@ -349,7 +331,7 @@ function onClick(e: Event) {
           </template>
         </Button>
         <Button
-          button-class="custom-btn-class2"
+          button-class="custom-class2"
           ripple-color="#faad14"
           type="primary"
           shape="round"
@@ -361,13 +343,7 @@ function onClick(e: Event) {
           </template>
           Search
         </Button>
-        <Button
-          button-class="custom-btn-class1"
-          ripple-color="#faad14"
-          shape="round"
-          size="large"
-          :loading="customLoading"
-        >
+        <Button button-class="custom-class1" ripple-color="#faad14" shape="round" size="large" :loading="customLoading">
           <template #icon>
             <DownloadOutlined />
           </template>
@@ -468,7 +444,7 @@ function onClick(e: Event) {
   </div>
 </template>
 <style lang="less" scoped>
-.custom-btn-class1 {
+.custom-class1 {
   height: 40px;
   font-size: 18px;
   border-color: #faad14;
@@ -482,7 +458,7 @@ function onClick(e: Event) {
     border-color: #d48806;
   }
 }
-.custom-btn-class2 {
+.custom-class2 {
   height: 40px;
   font-size: 18px;
   background: #faad14;

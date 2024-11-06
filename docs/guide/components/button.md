@@ -9,7 +9,7 @@
 - 响应用户点击行为，触发相应的业务逻辑
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 const disabled = ref(true)
 const sizeOptions = [
@@ -89,30 +89,16 @@ function onClick(e: Event) {
 <Space vertical>
   <Space>
     <Tooltip tooltip="search">
-      <Button type="primary" shape="circle">
-        <template #icon>
-          <SearchOutlined />
-        </template>
-      </Button>
+      <Button type="primary" shape="circle" :icon="() => h(SearchOutlined)" />
     </Tooltip>
     <Button type="primary" shape="circle">A</Button>
-    <Button type="primary" shape="round">
-      <template #icon>
-        <SearchOutlined />
-      </template>
+    <Button type="primary" shape="round" :icon="() => h(SearchOutlined)">
       Search
     </Button>
     <Tooltip tooltip="search">
-      <Button type="primary" shape="round">
-        <template #icon>
-          <SearchOutlined />
-        </template>
-      </Button>
+      <Button type="primary" shape="round" :icon="() => h(SearchOutlined)" />
     </Tooltip>
-    <Button type="primary">
-      <template #icon>
-        <SearchOutlined />
-      </template>
+    <Button type="primary" :icon="() => h(SearchOutlined)">
       Search
     </Button>
   </Space>
@@ -199,36 +185,23 @@ function onClick(e: Event) {
 
 ```vue
 <script setup lang="ts">
+import { h } from 'vue'
 import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
   <Space vertical>
     <Space>
       <Tooltip tooltip="search">
-        <Button type="primary" shape="circle">
-          <template #icon>
-            <SearchOutlined />
-          </template>
-        </Button>
+        <Button type="primary" shape="circle" :icon="() => h(SearchOutlined)" />
       </Tooltip>
       <Button type="primary" shape="circle">A</Button>
-      <Button type="primary" shape="round">
-        <template #icon>
-          <SearchOutlined />
-        </template>
+      <Button type="primary" shape="round" :icon="() => h(SearchOutlined)">
         Search
       </Button>
       <Tooltip tooltip="search">
-        <Button type="primary" shape="round">
-          <template #icon>
-            <SearchOutlined />
-          </template>
-        </Button>
+        <Button type="primary" shape="round" :icon="() => h(SearchOutlined)" />
       </Tooltip>
-      <Button type="primary">
-        <template #icon>
-          <SearchOutlined />
-        </template>
+      <Button type="primary" :icon="() => h(SearchOutlined)">
         Search
       </Button>
     </Space>
@@ -708,7 +681,7 @@ const size = ref('middle')
   <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
   <Space>
     <Button
-      button-class="custom-btn-class1"
+      button-class="custom-class1"
       ripple-color="#faad14"
       size="large"
       :loading="customLoading"
@@ -716,7 +689,7 @@ const size = ref('middle')
       自定义样式
     </Button>
     <Button
-      button-class="custom-btn-class2"
+      button-class="custom-class2"
       ripple-color="#faad14"
       type="primary"
       size="large"
@@ -725,7 +698,7 @@ const size = ref('middle')
       自定义样式
     </Button>
     <Button
-      button-class="custom-btn-class1"
+      button-class="custom-class1"
       ripple-color="#faad14"
       shape="circle"
       size="large"
@@ -736,7 +709,7 @@ const size = ref('middle')
       </template>
     </Button>
     <Button
-      button-class="custom-btn-class2"
+      button-class="custom-class2"
       ripple-color="#faad14"
       type="primary"
       shape="round"
@@ -749,7 +722,7 @@ const size = ref('middle')
       Search
     </Button>
     <Button
-      button-class="custom-btn-class1"
+      button-class="custom-class1"
       ripple-color="#faad14"
       shape="round"
       size="large"
@@ -775,7 +748,7 @@ const customLoading = ref(false)
     <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
     <Space>
       <Button
-        button-class="custom-btn-class1"
+        button-class="custom-class1"
         ripple-color="#faad14"
         size="large"
         :loading="customLoading"
@@ -783,7 +756,7 @@ const customLoading = ref(false)
         自定义样式
       </Button>
       <Button
-        button-class="custom-btn-class2"
+        button-class="custom-class2"
         ripple-color="#faad14"
         type="primary"
         size="large"
@@ -792,7 +765,7 @@ const customLoading = ref(false)
         自定义样式
       </Button>
       <Button
-        button-class="custom-btn-class1"
+        button-class="custom-class1"
         ripple-color="#faad14"
         shape="circle"
         size="large"
@@ -803,7 +776,7 @@ const customLoading = ref(false)
         </template>
       </Button>
       <Button
-        button-class="custom-btn-class2"
+        button-class="custom-class2"
         ripple-color="#faad14"
         type="primary"
         shape="round"
@@ -816,7 +789,7 @@ const customLoading = ref(false)
         Search
       </Button>
       <Button
-        button-class="custom-btn-class1"
+        button-class="custom-class1"
         ripple-color="#faad14"
         shape="round"
         size="large"
@@ -830,7 +803,7 @@ const customLoading = ref(false)
   </Space>
 </template>
 <style lang="less" scoped>
-.custom-btn-class1 {
+.custom-class1 {
   height: 40px;
   font-size: 18px;
   border-color: #faad14;
@@ -844,7 +817,7 @@ const customLoading = ref(false)
     border-color: #d48806;
   }
 }
-.custom-btn-class2 {
+.custom-class2 {
   height: 40px;
   font-size: 18px;
   background: #faad14;
@@ -1098,7 +1071,7 @@ const loadingType = ref('dynamic')
 :::
 
 <style lang="less" scoped>
-.custom-btn-class1 {
+.custom-class1 {
   height: 40px;
   font-size: 18px;
   border-color: #faad14;
@@ -1112,7 +1085,7 @@ const loadingType = ref('dynamic')
     border-color: #d48806;
   }
 }
-.custom-btn-class2 {
+.custom-class2 {
   height: 40px;
   font-size: 18px;
   background: #faad14;
@@ -1136,7 +1109,7 @@ const loadingType = ref('dynamic')
 -- | -- | -- | --
 type | 设置按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
 shape | 设置按钮形状 | 'default' &#124; 'circle' &#124; 'round' | 'default'
-icon | 设置按钮图标 | slot | undefined
+icon | 设置按钮图标 | VNode &#124; Slot | undefined
 size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 ghost | 按钮背景是否透明，仅当 `type: 'primary' \| 'danger'` 时生效 | boolean | false
 buttonClass | 设置按钮类名 | string | undefined
