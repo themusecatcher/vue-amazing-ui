@@ -81,19 +81,19 @@ onBeforeUnmount(() => {
   cleanup()
   backtopRef.value?.remove()
 })
-useMutationObserver(
+const mutationObserver = useMutationObserver(
   scrollTarget,
   () => {
     scrollTop.value = scrollTarget.value?.scrollTop ?? 0
   },
-  { subtree: true, childList: true, attributes: true }
+  { subtree: true, childList: true, attributes: true, characterData: true }
 )
 function updateScrollTop(e: Event) {
   scrollTop.value = (e.target as HTMLElement).scrollTop
 }
+// 查询并监听滚动元素
 function observeScroll() {
   cleanup()
-  // 监听滚动的元素
   if (props.listenTo === undefined) {
     scrollTarget.value = getScrollParent(backtopRef.value?.parentElement ?? null)
   } else if (typeof props.listenTo === 'string') {
@@ -101,14 +101,16 @@ function observeScroll() {
   } else if (props.listenTo instanceof HTMLElement) {
     scrollTarget.value = props.listenTo
   }
-  if (scrollTarget.value) {
-    scrollTarget.value.addEventListener('scroll', updateScrollTop)
+  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updateScrollTop)
+  if (scrollTarget.value === document.documentElement) {
+    mutationObserver.start()
   }
   appendBackTop()
 }
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updateScrollTop)
   scrollTarget.value = null
+  mutationObserver.stop()
 }
 function appendBackTop() {
   // 渲染容器节点
