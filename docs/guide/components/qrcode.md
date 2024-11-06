@@ -9,7 +9,7 @@
 - 当需要将链接转换成为二维码时使用
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const size = ref(160)
 const value = ref('hello world')
@@ -59,12 +59,12 @@ const increase = () => {
 
 *纠错等级也叫纠错率，就是指二维码可以被遮挡后还能正常扫描，而这个能被遮挡的最大面积就是纠错率。*
 
-*通常情况下二维码分为 4 个纠错级别：*
+*通常情况下二维码分为 `4` 个纠错级别：*
 
-- **L级** 可纠正约 7% 错误
-- **M级** 可纠正约 15% 错误
-- **Q级** 可纠正约 25% 错误
-- **H级** 可纠正约30% 错误。
+- **L级** 可纠正约 `7%` 错误
+- **M级** 可纠正约 `15%` 错误
+- **Q级** 可纠正约 `25%` 错误
+- **H级** 可纠正约 `30%` 错误。
 
 并不是所有位置都可以缺损，像最明显的三个角上的方框，直接影响初始定位。**中间零散的部分是内容编码，可以容忍缺损**。当二维码的内容编码携带信息比较少的时候，也就是链接比较短的时候，设置不同的纠错等级，生成的图片不会发生变化。
 
@@ -86,13 +86,11 @@ const increase = () => {
 
 <Space vertical>
   <Space>
-    <Button @click="decline">
-      <MinusOutlined />
-      <span style="margin-inline-start: 8px">small</span>
+    <Button @click="decline" :icon="() => h(MinusOutlined)">
+      small
     </Button>
-    <Button @click="increase">
-      <PlusOutlined />
-      <span style="margin-inline-start: 8px">large</span>
+    <Button @click="increase" :icon="() => h(PlusOutlined)">
+      large
     </Button>
   </Space>
   <QRCode :size="size" value="https://blog.csdn.net/Dandrose" />
@@ -121,13 +119,11 @@ const increase = () => {
 <template>
   <Space vertical>
     <Space>
-      <Button @click="decline">
-        <MinusOutlined />
-        <span style="margin-inline-start: 8px">small</span>
+      <Button @click="decline" :icon="() => h(MinusOutlined)">
+        small
       </Button>
-      <Button @click="increase">
-        <PlusOutlined />
-        <span style="margin-inline-start: 8px">large</span>
+      <Button @click="increase" :icon="() => h(PlusOutlined)">
+        large
       </Button>
     </Space>
     <QRCode :size="size" value="https://blog.csdn.net/Dandrose" />
@@ -146,11 +142,13 @@ const increase = () => {
 <Space>
   <QRCode
     value="https://blog.csdn.net/Dandrose"
-    color="#52c41a" />
+    color="#52c41a"
+  />
   <QRCode
     value="https://blog.csdn.net/Dandrose"
     color="#1677FF"
-    bg-color="#f5f5f5" />
+    bg-color="#f5f5f5"
+  />
 </Space>
 
 ::: details Show Code
@@ -160,11 +158,13 @@ const increase = () => {
   <Space>
     <QRCode
       value="https://blog.csdn.net/Dandrose"
-      color="#52c41a" />
+      color="#52c41a"
+    />
     <QRCode
       value="https://blog.csdn.net/Dandrose"
       color="#1677FF"
-      bg-color="#f5f5f5" />
+      bg-color="#f5f5f5"
+    />
   </Space>
 </template>
 ```
@@ -175,7 +175,7 @@ const increase = () => {
 
 <Space align="center" gap="large">
   <QRCode :value="value" />
-  <Textarea v-model:value="value" :width="180" allowClear />
+  <Textarea v-model:value="value" :width="200" allowClear />
 </Space>
 
 ::: details Show Code
@@ -188,7 +188,7 @@ const value = ref('hello world')
 <template>
   <Space align="center" gap="large">
     <QRCode :value="value" />
-    <Textarea v-model:value="value" :width="180" allowClear />
+    <Textarea v-model:value="value" :width="200" allowClear />
   </Space>
 </template>
 ```
