@@ -53,7 +53,7 @@ const show = ref(false)
     </Watermark>
     <h2 class="mt30 mb10">全屏幕水印</h2>
     <Watermark v-if="show" fullscreen content="Vue Amazing UI"></Watermark>
-    <Switch v-model="show" />
+    <Space align="center"> Fullscreen: <Switch v-model="show" /> </Space>
     <h2 class="mt30 mb10">水印配置器</h2>
     <h3 class="mb10">通过自定义参数配置预览水印效果。</h3>
     <Row :gutter="24">
