@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+const show = ref(false)
 const model = reactive({
   content: 'Vue Amazing UI',
   layout: 'alternate',
@@ -21,7 +22,6 @@ const layoutOptions = [
     value: 'parallel'
   }
 ]
-const show = ref(false)
 </script>
 <template>
   <div>
