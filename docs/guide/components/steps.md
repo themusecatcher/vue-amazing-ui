@@ -37,7 +37,7 @@ const minSteps = ref([
 ])
 const current = ref(2)
 watchEffect(() => {
-  console.log('current:', current.value)
+  console.log('current', current.value)
 })
 const sizeOptions = [
         {
@@ -63,7 +63,7 @@ const placeOptions = [
 const place = ref('bottom')
 function onChange(index: number) {
   // 父组件获取切换后的选中步骤
-  console.log('change:', index)
+  console.log('change', index)
 }
 function onPrev() {
   if (current.value > 1) {
@@ -109,11 +109,11 @@ const steps = ref([
 ])
 const current = ref(2)
 watchEffect(() => {
-  console.log('current:', current.value)
+  console.log('current', current.value)
 })
 function onChange(index: number) {
   // 父组件获取切换后的选中步骤
-  console.log('change:', index)
+  console.log('change', index)
 }
 </script>
 <template>
@@ -162,7 +162,7 @@ const placeOptions = [
 const place = ref('bottom')
 const current = ref(2)
 watchEffect(() => {
-  console.log('current:', current.value)
+  console.log('current', current.value)
 })
 </script>
 <template>
@@ -211,7 +211,7 @@ const sizeOptions = [
 const size = ref('small')
 const current = ref(2)
 watchEffect(() => {
-  console.log('current:', current.value)
+  console.log('current', current.value)
 })
 </script>
 <template>
@@ -252,7 +252,7 @@ const steps = ref([
 ])
 const current = ref(2)
 watchEffect(() => {
-  console.log('current:', current.value)
+  console.log('current', current.value)
 })
 </script>
 <template>
@@ -293,7 +293,7 @@ const steps = ref([
 ])
 const current = ref(2)
 watchEffect(() => {
-  console.log('current:', current.value)
+  console.log('current', current.value)
 })
 </script>
 <template>
@@ -308,7 +308,7 @@ watchEffect(() => {
 
 ## 可点击
 
-*设置 v-model:current 后即可点击*
+*设置 `v-model:current` 后即可点击*
 
 <br/>
 
@@ -343,7 +343,7 @@ const steps = ref([
 ])
 const current = ref(2)
 watchEffect(() => {
-  console.log('current:', current.value)
+  console.log('current', current.value)
 })
 function onPrev () {
   if (current.value > 1) {
@@ -430,7 +430,7 @@ const steps = ref([
 ])
 const current = ref(2)
 watchEffect(() => {
-  console.log('current:', current.value)
+  console.log('current', current.value)
 })
 const sizeOptions = [
   {

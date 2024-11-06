@@ -10,7 +10,7 @@
 
 ## 基本使用
 
-*预置风格: filled*
+*预置风格: `filled`*
 
 <Empty />
 
@@ -24,7 +24,7 @@
 
 :::
 
-*预置风格: outlined*
+*预置风格: `outlined`*
 
 <Empty image="outlined" />
 

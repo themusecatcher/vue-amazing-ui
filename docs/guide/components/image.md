@@ -7,7 +7,7 @@
 ## 何时使用
 
 - 需要展示图片和预览时
-- 加载图片时显示 loading
+- 加载图片时显示 `loading`
 
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -327,7 +327,7 @@ const images = ref([
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-src | 图像地址 &#124; 图像地址数组 | string &#124; [Image](#image-type)[] | undefined
+src | 图像地址或图像地址数组 | string &#124; [Image](#image-type)[] | undefined
 name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | undefined
 width | 图像宽度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100
 height | 图像高度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100

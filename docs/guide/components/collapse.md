@@ -128,47 +128,47 @@ const positionOptions = ref([
 ])
 const arrowPlacement = ref('left')
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey1.value)
+  console.log('activeKey', activeKey1.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey2.value)
+  console.log('activeKey', activeKey2.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey3.value)
+  console.log('activeKey', activeKey3.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey4.value)
+  console.log('activeKey', activeKey4.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey5.value)
+  console.log('activeKey', activeKey5.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey6.value)
+  console.log('activeKey', activeKey6.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey7.value)
+  console.log('activeKey', activeKey7.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey8.value)
+  console.log('activeKey', activeKey8.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey9.value)
+  console.log('activeKey', activeKey9.value)
 })
 watchEffect(() => {
-  console.log('activeKey:', activeKey10.value)
+  console.log('activeKey', activeKey10.value)
 })
 watchEffect(() => {
-  console.log('nestActiveKey:', nestActiveKey.value)
+  console.log('nestActiveKey', nestActiveKey.value)
 })
 const key = ref('1')
 watchEffect(() => {
-  console.log('key:', key.value)
+  console.log('key', key.value)
 })
 function onChange(key: number | string) {
-  console.log('change:', key)
+  console.log('change', key)
 }
 function handleClick(event: Event, key: string | number) {
   event.stopPropagation() // 阻止事件冒泡
@@ -179,7 +179,7 @@ function handleClick(event: Event, key: string | number) {
 
 ## 基本使用
 
-*activeKey 传入 `number[]` | `string[]`，所有面板可同时展开*
+*`activeKey` 传入 `number[]` | `string[]`，所有面板可同时展开*
 
 <br/>
 
@@ -212,10 +212,10 @@ const collapseData = ref([
 ])
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 function onChange(key: number | string) {
-  console.log('change:', key)
+  console.log('change', key)
 }
 </script>
 <template>
@@ -260,7 +260,7 @@ const collapseData = ref([
 ])
 const key = ref('1')
 watchEffect(() => {
-  console.log('key:', key.value)
+  console.log('key', key.value)
 })
 </script>
 <template>
@@ -325,7 +325,7 @@ const disabledCollapseData = ref([
 ])
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 </script>
 <template>
@@ -382,10 +382,10 @@ const nestCollapseData = ref([
 const activeKey = ref(['1'])
 const nestActiveKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 watchEffect(() => {
-  console.log('nestActiveKey:', nestActiveKey.value)
+  console.log('nestActiveKey', nestActiveKey.value)
 })
 </script>
 <template>
@@ -430,7 +430,7 @@ const collapseData = ref([
 ])
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 </script>
 <template>
@@ -471,7 +471,7 @@ const collapseData = ref([
 ])
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 </script>
 <template>
@@ -513,7 +513,7 @@ const arrowCollapseData = ref([
 ])
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 </script>
 <template>
@@ -568,7 +568,7 @@ const positionOptions = ref([
 const arrowPlacement = ref('left')
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 </script>
 <template>
@@ -584,6 +584,8 @@ watchEffect(() => {
 ## 自定义面板
 
 *自定义各个面板的背景色、圆角、边距和箭头图标*
+
+<br/>
 
 <Collapse
   :collapse-data="collapseData"
@@ -631,7 +633,7 @@ const collapseData = ref([
 ])
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 </script>
 <template>
@@ -694,7 +696,7 @@ const collapseData = ref([
 ])
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 </script>
 <template>
@@ -750,7 +752,7 @@ const extraCollapseData = ref([
 ])
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 function handleClick(event: Event, key: string | number) {
   event.stopPropagation() // 阻止事件冒泡
@@ -801,7 +803,7 @@ const collapseData = ref([
 ])
 const activeKey = ref(['1'])
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 </script>
 <template>

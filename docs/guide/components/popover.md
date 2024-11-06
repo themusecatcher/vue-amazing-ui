@@ -136,6 +136,8 @@ function openChange (open: boolean) {
 
 *使用 `show` 属性控制显示隐藏*
 
+<br/>
+
 <Popover v-model:show="show" title="Click Title" trigger="click">
   <template #content>
     <a @click="show = false">Close</a>

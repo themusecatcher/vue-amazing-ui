@@ -8,7 +8,7 @@ interface Image {
   name?: string // 图像名称
 }
 interface Props {
-  src?: string | Image[] // 图像地址 | 图像地址数组
+  src?: string | Image[] // 图像地址或图像地址数组
   name?: string // 图像名称，没有传入图片名时自动从图像地址 src 中读取
   width?: string | number | (string | number)[] // 图像宽度，单位 px
   height?: string | number | (string | number)[] // 图像高度，单位 px

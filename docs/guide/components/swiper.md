@@ -18,7 +18,6 @@
 <script setup lang="ts">
 import { ref, shallowReactive, onBeforeMount } from 'vue'
 import pkg from '../../../package.json'
-
 const images = ref<any[]>([])
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
@@ -137,7 +136,6 @@ function onNext() {
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-
 const images = ref<any[]>([])
 function loadImages () {
   for (let i = 1; i <= 6; i++) {
@@ -192,7 +190,6 @@ function onChange (swiper: any) {
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-
 const images = ref<any[]>([])
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
@@ -258,7 +255,6 @@ const effects = ['slide', 'fade', 'cube', 'flip', 'coverflow', 'cards']
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-
 const images = ref<any[]>([])
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
@@ -383,7 +379,6 @@ const creativeEffects = [
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-
 const images = ref<any[]>([])
 function loadImages () {
   for (let i = 1; i <= 6; i++) {
@@ -439,7 +434,6 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 ```vue
 <script setup lang="ts">
 import { ref, shallowReactive, onBeforeMount } from 'vue'
-
 const images = ref<any[]>([])
 function loadImages () {
   for (let i = 1; i <= 6; i++) {

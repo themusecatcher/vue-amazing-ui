@@ -10,7 +10,6 @@
 
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive } from 'vue'
-
 const images = ref<any[]>([])
 const state = reactive({
   columnCount: 3,
@@ -41,9 +40,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-
 const images = ref<any[]>([])
-
 function loadImages () {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
@@ -78,7 +75,6 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
       columnGap:
       <Slider :min="10" :max="100" v-model:value="state.columnGap" />
     </Flex>
-    
   </Col>
   <Col :span="6">
     <Flex vertical gap="middle">
@@ -107,7 +103,6 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive } from 'vue'
-
 const images = ref<any[]>([])
 const state = reactive({
   columnCount: 3,
@@ -141,7 +136,6 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
         columnGap:
         <Slider :min="10" :max="100" v-model:value="state.columnGap" />
       </Flex>
-      
     </Col>
     <Col :span="6">
       <Flex vertical gap="middle">

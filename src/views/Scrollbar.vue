@@ -1,6 +1,6 @@
 <script setup lang="ts">
 function onScroll(e: Event) {
-  console.log('scroll:', e)
+  console.log('scroll', e)
 }
 </script>
 <template>

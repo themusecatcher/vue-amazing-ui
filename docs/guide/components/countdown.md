@@ -23,7 +23,7 @@ function onReset() {
 
 ## 基本使用
 
-*format: MM月 DD天 HH:mm:ss*
+*`format`: `MM月 DD天 HH:mm:ss`*
 
 <br/>
 
@@ -32,7 +32,8 @@ function onReset() {
   :value="12 * 30 * 24 * 60 * 60 * 1000"
   :future="false"
   format="MM月 DD天 HH:mm:ss"
-  @finish="onFinish" />
+  @finish="onFinish"
+/>
 
 ::: details Show Code
 
@@ -48,7 +49,8 @@ function onFinish () {
     :value="12 * 30 * 24 * 60 * 60 * 1000"
     :future="false"
     format="MM月 DD天 HH:mm:ss"
-    @finish="onFinish" />
+    @finish="onFinish"
+  />
 </template>
 ```
 
@@ -56,7 +58,7 @@ function onFinish () {
 
 ## 毫秒倒计时
 
-*format: Y 年 M 月 D 天 H 时 m 分 s 秒 SSS*
+*`format`: `Y 年 M 月 D 天 H 时 m 分 s 秒 SSS`*
 
 <br/>
 

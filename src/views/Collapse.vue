@@ -108,17 +108,17 @@ const positionOptions = ref([
 ])
 const arrowPlacement = ref('left')
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 watchEffect(() => {
-  console.log('nestActiveKey:', nestActiveKey.value)
+  console.log('nestActiveKey', nestActiveKey.value)
 })
 const key = ref('1')
 watchEffect(() => {
-  console.log('key:', key.value)
+  console.log('key', key.value)
 })
 function onChange(key: number | string) {
-  console.log('change:', key)
+  console.log('change', key)
 }
 function handleClick(event: Event, key: string | number) {
   event.stopPropagation() // 阻止事件冒泡

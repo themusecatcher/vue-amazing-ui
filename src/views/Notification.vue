@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { CloudFilled, FireFilled } from '@ant-design/icons-vue'
-
 const notification = ref()
 function onOpen(description: string) {
   notification.value.open({

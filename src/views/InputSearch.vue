@@ -21,10 +21,10 @@ const size = ref('middle')
 const loading = ref(true)
 const disabled = ref(true)
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 watchEffect(() => {
-  console.log('lazyValue:', lazyValue.value)
+  console.log('lazyValue', lazyValue.value)
 })
 function onChange(e: Event) {
   console.log('change', e)
@@ -38,16 +38,14 @@ function onSearch(searchValue: string) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space gap="small" vertical>
-      <Alert>
-        <template #message>
-          .lazy:
-          <br />
-          默认情况下，v-model 会在每次 input 事件后更新数据 (IME 拼字阶段的状态例外)。
-          <br />
-          你可以添加 lazy 修饰符来改为在每次 change 事件后更新数据：
-          <br />
-          {{ '<InputSearch v-model:value.lazy="msg" />' }}
-        </template>
+      <Alert type="info">
+        .lazy:
+        <br />
+        默认情况下，v-model 会在每次 input 事件后更新数据 (IME 拼字阶段的状态例外)。
+        <br />
+        你可以添加 lazy 修饰符来改为在每次 change 事件后更新数据：
+        <br />
+        {{ '<InputSearch v-model:value.lazy="msg" />' }}
       </Alert>
       <InputSearch
         :width="200"

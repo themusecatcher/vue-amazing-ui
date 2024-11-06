@@ -30,16 +30,16 @@ const sizeOptions = [
 ]
 const size = ref('middle')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 watchEffect(() => {
-  console.log('lazyValue:', lazyValue.value)
+  console.log('lazyValue', lazyValue.value)
 })
 function onChange(e: Event) {
-  console.log('change e:', e)
+  console.log('change', e)
 }
 function onEnter(e: KeyboardEvent) {
-  console.log('enter e:', e)
+  console.log('enter', e)
 }
 </script>
 
@@ -55,9 +55,9 @@ function onEnter(e: KeyboardEvent) {
 
 :::
 
-<Space gap="small" vertical>
-  <Input :width="200" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
-  <Input :width="200" v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
+<Space gap="small" vertical :width="200">
+  <Input v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
+  <Input v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
 </Space>
 
 ::: details Show Code
@@ -68,22 +68,22 @@ import { ref, watchEffect } from 'vue'
 const value = ref('')
 const lazyValue = ref('')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 watchEffect(() => {
-  console.log('lazyValue:', lazyValue.value)
+  console.log('lazyValue', lazyValue.value)
 })
 function onChange (e: Event) {
-  console.log('change e:', e)
+  console.log('change', e)
 }
 function onEnter (e: KeyboardEvent) {
-  console.log('enter e:', e)
+  console.log('enter', e)
 }
 </script>
 <template>
-  <Space gap="small" vertical>
-    <Input :width="200" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
-    <Input :width="200" v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
+  <Space gap="small" vertical :width="200">
+    <Input v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
+    <Input v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
   </Space>
 </template>
 ```
@@ -114,7 +114,7 @@ import { ref, watchEffect } from 'vue'
 import { UserOutlined, InfoCircleOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -160,7 +160,7 @@ import { ref, watchEffect } from 'vue'
 import { SettingOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -236,7 +236,7 @@ const sizeOptions = [
 ]
 const size = ref('middle')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -286,7 +286,7 @@ watchEffect(() => {
 import { ref, watchEffect } from 'vue'
 const value = ref('')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -311,7 +311,7 @@ watchEffect(() => {
 import { ref, watchEffect } from 'vue'
 const value = ref('')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -337,7 +337,7 @@ watchEffect(() => {
 import { ref, watchEffect } from 'vue'
 const value = ref('')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>

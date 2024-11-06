@@ -7,7 +7,7 @@
 ## 何时使用
 
 - 在一组可选项中进行多项选择时
-- 单独使用可以表示两种状态之间的切换，和 Switch 类似
+- 单独使用可以表示两种状态之间的切换，和 `Switch` 类似
 
 <script setup lang="ts">
 import { ref, watch, watchEffect, computed } from 'vue'

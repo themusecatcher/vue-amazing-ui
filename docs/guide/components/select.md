@@ -7,7 +7,7 @@
 ## 何时使用
 
 - 弹出一个下拉菜单给用户选择操作，用于代替原生的选择器，或者需要一个更优雅的多选器时
-- 当选项少时（少于 5 项），建议直接将选项平铺，使用 Radio 是更好的选择
+- 当选项少时（少于 `5` 项），建议直接将选项平铺，使用 `Radio` 是更好的选择
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
@@ -116,12 +116,12 @@ const optionsCustom = ref([
     ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
-function onChange (value: string|number, label: string,  index: number) {
-  console.log('value:', value)
-  console.log('label:', label)
-  console.log('index:', index)
+function onChange (value: string | number, label: string,  index: number) {
+  console.log('value', value)
+  console.log('label', label)
+  console.log('index', index)
 }
 function onOpenChange(open: boolean) {
   console.log('openChange', open)
@@ -177,12 +177,12 @@ const options = ref([
     ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
-function onChange (value: string|number, label: string,  index: number) {
-  console.log('value:', value)
-  console.log('label:', label)
-  console.log('index:', index)
+function onChange (value: string | number, label: string,  index: number) {
+  console.log('value', value)
+  console.log('label', label)
+  console.log('index', index)
 }
 function onOpenChange(open: boolean) {
   console.log('openChange', open)
@@ -345,7 +345,7 @@ const options = ref([
     ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
@@ -400,7 +400,7 @@ const options = ref([
     ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
@@ -460,7 +460,7 @@ const options = ref([
     ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 // 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter (inputValue: string, option: any) {
@@ -528,7 +528,7 @@ const options = ref([
     ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
@@ -542,7 +542,7 @@ watchEffect(() => {
 
 :::
 
-## 自定义节点 `label`、`value` 字段名
+## 自定义节点字段名
 
 <Select
   :options="optionsCustom"
@@ -591,7 +591,7 @@ const optionsCustom = ref([
     ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
@@ -653,7 +653,7 @@ const options = ref([
     ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
@@ -711,7 +711,7 @@ const options = ref([
     ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
