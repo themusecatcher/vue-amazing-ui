@@ -10,7 +10,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(98)
@@ -31,13 +30,13 @@ const placementOptions = [
 const placement = ref('left')
 function onChange(page: number, pageSize: number) {
   // 页码 page 或 每页条数 pageSize 改变的回调
-  console.log('change page:', page)
-  console.log('change pageSize:', pageSize)
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
 }
 function pageSizeChange(page: number, pageSize: number) {
   // 每页条数 pageSize 变化的回调
-  console.log('pageSizeChange page:', page)
-  console.log('pageSizeChange pageSize:', pageSize)
+  console.log('pageSizeChange page', page)
+  console.log('pageSizeChange pageSize', pageSize)
 }
 </script>
 
@@ -53,8 +52,8 @@ import { ref } from 'vue'
 
 const page = ref(1)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
-  console.log('change page:', page)
-  console.log('change pageSize:', pageSize)
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
 }
 </script>
 <template>
@@ -95,8 +94,8 @@ const placementOptions = [
 ]
 const placement = ref('left')
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
-  console.log('change page:', page)
-  console.log('change pageSize:', pageSize)
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
 }
 </script>
 <template>
@@ -130,12 +129,12 @@ const page = ref(1)
 const pageSize = ref(10)
 const total = ref(98)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
-  console.log('change page:', page)
-  console.log('change pageSize:', pageSize)
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
 }
 function pageSizeChange (page: number, pageSize: number) { // 每页条数 pageSize 变化的回调
-  console.log('pageSizeChange page:', page)
-  console.log('pageSizeChange pageSize:', pageSize)
+  console.log('pageSizeChange page', page)
+  console.log('pageSizeChange pageSize', pageSize)
 }
 </script>
 <template>
@@ -165,8 +164,8 @@ import { ref } from 'vue'
 const page = ref(1)
 const total = ref(98)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
-  console.log('change page:', page)
-  console.log('change pageSize:', pageSize)
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
 }
 </script>
 <template>
@@ -189,8 +188,8 @@ import { ref } from 'vue'
 const page = ref(1)
 const total = ref(98)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
-  console.log('change page:', page)
-  console.log('change pageSize:', pageSize)
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
 }
 </script>
 <template>
@@ -227,8 +226,8 @@ import { ref } from 'vue'
 const page = ref(1)
 const total = ref(98)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
-  console.log('change page:', page)
-  console.log('change pageSize:', pageSize)
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
 }
 </script>
 <template>
@@ -265,8 +264,8 @@ import { ref } from 'vue'
 const page = ref(1)
 const total = ref(98)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
-  console.log('change page:', page)
-  console.log('change pageSize:', pageSize)
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
 }
 </script>
 <template>

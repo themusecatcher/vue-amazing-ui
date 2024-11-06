@@ -7,7 +7,7 @@
 ## 何时使用
 
 - 用于在多个备选项中选中单个状态
-- 和 Select 的区别是，Radio 所有选项默认可见，方便用户在比较中选择，因此选项不宜过多
+- 和 `Select` 的区别是，`Radio` 所有选项默认可见，方便用户在比较中选择，因此选项不宜过多
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'

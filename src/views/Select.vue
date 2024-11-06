@@ -109,12 +109,12 @@ const optionsCustom = ref([
 ])
 const selectedValue = ref(5)
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange(value: string | number, label: string, index: number) {
-  console.log('value:', value)
-  console.log('label:', label)
-  console.log('index:', index)
+  console.log('value', value)
+  console.log('label', label)
+  console.log('index', index)
 }
 function onOpenChange(open: boolean) {
   console.log('openChange', open)
@@ -141,7 +141,7 @@ function filter(inputValue: string, option: any) {
     <Select :width="150" :options="options" search :filter="filter" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义样式</h2>
     <Select :width="160" :height="36" search :options="options" v-model="selectedValue" />
-    <h2 class="mt30 mb10">自定义节点 lable、value 字段名</h2>
+    <h2 class="mt30 mb10">自定义节点字段名</h2>
     <Select :options="optionsCustom" label="name" value="id" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义下拉面板数</h2>
     <Select :options="options" :max-display="8" v-model="selectedValue" />

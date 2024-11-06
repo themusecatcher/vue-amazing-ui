@@ -13,16 +13,16 @@ import { ref, watchEffect } from 'vue'
 const value = ref('')
 const lazyValue = ref('')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 watchEffect(() => {
-  console.log('lazyValue:', lazyValue.value)
+  console.log('lazyValue', lazyValue.value)
 })
 function onChange (e: Event) {
-  console.log('change e:', e)
+  console.log('change', e)
 }
 function onEnter (e: KeyboardEvent) {
-  console.log('enter e:', e)
+  console.log('enter', e)
 }
 </script>
 
@@ -57,16 +57,16 @@ import { ref, watchEffect } from 'vue'
 const value = ref('')
 const lazyValue = ref('')
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 watchEffect(() => {
-  console.log('lazyValue:', lazyValue.value)
+  console.log('lazyValue', lazyValue.value)
 })
 function onChange (e: Event) {
-  console.log('change e:', e)
+  console.log('change', e)
 }
 function onEnter (e: KeyboardEvent) {
-  console.log('enter e:', e)
+  console.log('enter', e)
 }
 </script>
 <template>

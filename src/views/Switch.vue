@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const checked = ref(true)
 const customValue1 = ref('no')
 const customValue2 = ref(2)
 function onChange(checked: boolean) {
-  console.log('checked:', checked)
+  console.log('checked', checked)
 }
 watchEffect(() => {
-  console.log('checked:', checked.value)
+  console.log('checked', checked.value)
 })
 </script>
 <template>

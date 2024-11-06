@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const singleValue = ref(20)
 const smallSingleValue = ref(0.5)
 const singleCustomValue = ref(0)
@@ -9,28 +8,28 @@ const doubleCustomValue = ref([-5, 5])
 const singleCustomStepValue = ref(30)
 const doubleCustomStepValue = ref([30, 60])
 watchEffect(() => {
-  console.log('singleValue:', singleValue.value)
+  console.log('singleValue', singleValue.value)
 })
 watchEffect(() => {
-  console.log('smallSingleValue:', smallSingleValue.value)
+  console.log('smallSingleValue', smallSingleValue.value)
 })
 watchEffect(() => {
-  console.log('singleCustomValue:', singleCustomValue.value)
+  console.log('singleCustomValue', singleCustomValue.value)
 })
 watchEffect(() => {
-  console.log('doubleValue:', doubleValue.value)
+  console.log('doubleValue', doubleValue.value)
 })
 watchEffect(() => {
-  console.log('doubleCustomValue:', doubleCustomValue.value)
+  console.log('doubleCustomValue', doubleCustomValue.value)
 })
 watchEffect(() => {
-  console.log('singleCustomStepValue:', singleCustomStepValue.value)
+  console.log('singleCustomStepValue', singleCustomStepValue.value)
 })
 watchEffect(() => {
-  console.log('doubleCustomStepValue:', doubleCustomStepValue.value)
+  console.log('doubleCustomStepValue', doubleCustomStepValue.value)
 })
 function onChange(value: number | number[]) {
-  console.log('change:', value)
+  console.log('change', value)
 }
 function formatter(value: number) {
   return `${value}%`

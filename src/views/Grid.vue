@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-
 const colCountOptions = [
   {
     label: 2,

@@ -104,7 +104,7 @@ const pagination = {
     paginationListData.value = allListData.value.slice(start - 1, end)
   }
 }
-const allConfigListData = ref<ang[]>([])
+const allConfigListData = ref<any[]>([])
 for (let i = 1; i <= 30; i++) {
   allConfigListData.value.push({
     href: 'https://themusecatcher.github.io/vue-amazing-ui/',
@@ -162,7 +162,6 @@ const state = reactive({
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -220,7 +219,6 @@ const listData = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -289,7 +287,6 @@ const listData = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -382,7 +379,6 @@ const bordered = ref(true)
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -505,7 +501,6 @@ const size = ref('middle')
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -626,7 +621,6 @@ const loading = ref(true)
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -713,7 +707,6 @@ const simpleList = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -799,7 +792,6 @@ const listData = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -1069,8 +1061,7 @@ const pagination = {
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-
-const allConfigListData = ref<ang[]>([])
+const allConfigListData = ref<any[]>([])
 for (let i = 1; i <= 30; i++) {
   allConfigListData.value.push({
     href: 'https://themusecatcher.github.io/vue-amazing-ui/',

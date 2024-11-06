@@ -94,7 +94,7 @@ const pagination = {
     paginationListData.value = allListData.value.slice(start - 1, end)
   }
 }
-const allConfigListData = ref<ang[]>([])
+const allConfigListData = ref<any[]>([])
 for (let i = 1; i <= 30; i++) {
   allConfigListData.value.push({
     href: 'https://themusecatcher.github.io/vue-amazing-ui/',

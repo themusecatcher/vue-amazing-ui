@@ -171,15 +171,11 @@ const optionsCustom = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange(values: (number | string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
-}
-function onAntChange(values: (number | string)[], selectedOptions: any) {
-  console.log('values:', values)
-  console.log('selectedOptions:', selectedOptions)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 // 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter(inputValue: string, option: any) {
@@ -218,16 +214,6 @@ function filter(inputValue: string, option: any) {
       value="code"
       children="items"
       @change="onChange"
-    />
-    <h2 class="mt30 mb10">Ant Design Vue 级联选择</h2>
-    <a-cascader
-      :options="options"
-      style="width: 200px"
-      placeholder="Please select"
-      :disabled="false"
-      allowClear
-      v-model:value="selectedValue"
-      @change="onAntChange"
     />
   </div>
 </template>

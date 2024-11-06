@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive } from 'vue'
-
 const images = ref<any[]>([])
 const state = reactive({
   columnCount: 3,

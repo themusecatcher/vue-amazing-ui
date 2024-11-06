@@ -41,7 +41,7 @@ const minSteps = ref([
 ])
 const current = ref(3)
 watchEffect(() => {
-  console.log('current:', current.value)
+  console.log('current', current.value)
 })
 const sizeOptions = [
   {
@@ -67,7 +67,7 @@ const placeOptions = [
 const place = ref('bottom')
 function onChange(index: number) {
   // 父组件获取切换后的选中步骤
-  console.log('change:', index)
+  console.log('change', index)
 }
 function onPrev() {
   if (current.value > 1) {

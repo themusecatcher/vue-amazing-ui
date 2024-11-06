@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import pkg from '/package.json'
 import { ref, shallowReactive, onBeforeMount } from 'vue'
-
 const images = ref<any[]>([])
 function loadImages() {
   for (let i = 1; i <= 6; i++) {

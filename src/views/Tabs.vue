@@ -140,13 +140,13 @@ const activeKey = ref('1')
 const iconActiveKey = ref(0)
 const moreActiveKey = ref('1')
 watchEffect(() => {
-  console.log('activeKey:', activeKey.value)
+  console.log('activeKey', activeKey.value)
 })
 watchEffect(() => {
-  console.log('iconActiveKey:', iconActiveKey.value)
+  console.log('iconActiveKey', iconActiveKey.value)
 })
 watchEffect(() => {
-  console.log('moreActiveKey:', moreActiveKey.value)
+  console.log('moreActiveKey', moreActiveKey.value)
 })
 const typeOptions = [
   {
@@ -215,7 +215,7 @@ const state = reactive({
   tabPosition: 'top'
 })
 function onChange(key: string | number) {
-  console.log('key:', key)
+  console.log('key', key)
 }
 </script>
 <template>

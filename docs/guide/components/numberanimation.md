@@ -10,11 +10,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const value1 = ref(100000000.12345)
 const value2 = ref(100000000)
-
-function onPlay () {
+const animationRef = ref()
+const from = ref(0)
+const to = ref(100000000)
+function onPlay() {
   if (value1.value || value2.value) {
     value1.value = 0
     value2.value = 0
@@ -23,15 +24,15 @@ function onPlay () {
     value2.value = 100000000
   }
 }
-function onStarted () {
+function onClick() {
+  animationRef.value.play()
+}
+function onStarted() {
   console.log('started')
 }
-function onFinished () {
-  console.log('finished')
-}
-const animationRef = ref()
-function onClick () {
-  animationRef.value.play()
+function onFinished() {
+  console.log('finished');
+  [from.value, to.value] = [to.value, from.value]
 }
 </script>
 
@@ -189,51 +190,57 @@ function onClick () {
 
 ## 自定义播放和动画时间
 
-<ClientOnly>
+<Space vertical>
+  <Button type="primary" @click="onClick">播放</Button>
   <Statistic title="一个小目标">
     <NumberAnimation
       ref="animationRef"
-      :from="0"
-      :to="100000000"
+      :from="from"
+      :to="to"
       :duration="5000"
       :precision="2"
       :autoplay="false"
       @started="onStarted"
-      @finished="onFinished" />
+      @finished="onFinished"
+    />
   </Statistic>
-  <Button @click="onClick">播放</Button>
-</ClientOnly>
+</Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
-function onStarted () {
-  console.log('started')
-}
-function onFinished () {
-  console.log('finished')
-}
 const animationRef = ref()
+const from = ref(0)
+const to = ref(100000000)
 function onClick () {
   animationRef.value.play()
 }
+function onStarted () {
+  console.log('started')
+}
+function onFinished() {
+  console.log('finished');
+  [from.value, to.value] = [to.value, from.value]
+}
 </script>
 <template>
-  <Statistic title="一个小目标">
-    <NumberAnimation
-      ref="animationRef"
-      :from="0"
-      :to="100000000"
-      :duration="5000"
-      :precision="2"
-      :autoplay="false"
-      @started="onStarted"
-      @finished="onFinished" />
-  </Statistic>
-  <Button @click="onClick">播放</Button>
+  <Space vertical>
+    <Button type="primary" @click="onClick">播放</Button>
+    <Statistic title="一个小目标">
+      <NumberAnimation
+        ref="animationRef"
+        :from="from"
+        :to="to"
+        :duration="5000"
+        :precision="2"
+        :autoplay="false"
+        @started="onStarted"
+        @finished="onFinished"
+      />
+    </Statistic>
+  </Space>
 </template>
 ```
 

@@ -182,11 +182,11 @@ const optionsDisabled = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 // 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter (inputValue: string, option: any) {
@@ -261,7 +261,7 @@ const options = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
@@ -428,11 +428,11 @@ const options = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 </script>
 <template>
@@ -521,11 +521,11 @@ const optionsDisabled = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 </script>
 <template>
@@ -609,11 +609,11 @@ const options = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 </script>
 <template>
@@ -698,11 +698,11 @@ const options = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 </script>
 <template>
@@ -788,11 +788,11 @@ const options = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 </script>
 <template>
@@ -880,11 +880,11 @@ const options = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 // 自定义过滤函数，当选项的 value 值大于 输入项时返回 true
 function filter (inputValue: string, option: any) {
@@ -977,11 +977,11 @@ const options = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 </script>
 <template>
@@ -1070,11 +1070,11 @@ const optionsCustom = ref([
 ])
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue:', selectedValue.value)
+  console.log('selectedValue', selectedValue.value)
 })
 function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values:', values)
-  console.log('labels:', labels)
+  console.log('values', values)
+  console.log('labels', labels)
 }
 </script>
 <template>

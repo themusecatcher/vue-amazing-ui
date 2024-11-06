@@ -25,16 +25,16 @@ const pdfList = ref([
   }
 ])
 watchEffect(() => {
-  console.log('files:', files.value)
+  console.log('files', files.value)
 })
 watchEffect(() => {
-  console.log('fileList:', fileList.value)
+  console.log('fileList', fileList.value)
 })
 watchEffect(() => {
-  console.log('imageList:', imageList.value)
+  console.log('imageList', imageList.value)
 })
 watchEffect(() => {
-  console.log('pdfList:', pdfList.value)
+  console.log('pdfList', pdfList.value)
 })
 function onBeforeImageUpload(file: File) {
   if (file.size > 500 * 1024) {

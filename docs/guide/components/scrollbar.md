@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 function onScroll(e: Event) {
-  console.log('scroll:', e)
+  console.log('scroll', e)
 }
 </script>
 
@@ -37,7 +37,7 @@ function onScroll(e: Event) {
 ```vue
 <script setup lang="ts">
 function onScroll(e: Event) {
-  console.log('scroll:', e)
+  console.log('scroll', e)
 }
 </script>
 <template>
