@@ -89,7 +89,7 @@ const show = ref(false)
 
 ## 多行水印
 
-#### 通过 content 设置 字符串数组 指定多行文字水印内容。
+*通过 `content` 设置字符串数组，指定多行文字水印内容*
 
 <Watermark :content="['Vue Amazing UI', 'Hello World']">
   <div style="height: 400px" />
@@ -109,7 +109,7 @@ const show = ref(false)
 
 ## 图片水印
 
-#### 通过 image 指定图片地址。为保证图片高清且不被拉伸，请设置 width 和 height, 并上传至少两倍的宽高的 logo 图片地址。
+*通过 `image` 指定图片地址；为保证图片高清且不被拉伸，请设置 `width` 和 `height`, 并上传至少两倍的宽高的 `logo` 图片地址*
 
 <Watermark
   :height="30"
@@ -136,7 +136,10 @@ const show = ref(false)
 ## 全屏幕水印
 
 <Watermark v-if="show" fullscreen content="Vue Amazing UI" :z-index="30"></Watermark>
-<Switch v-model="show" />
+
+<Space align="center">
+  Fullscreen: <Switch v-model="show" />
+</Space>
 
 ::: details Show Code
 
@@ -147,7 +150,9 @@ const show = ref(false)
 </script>
 <template>
   <Watermark v-if="show" fullscreen content="Vue Amazing UI"></Watermark>
-  <Switch v-model="show" />
+  <Space align="center">
+    Fullscreen: <Switch v-model="show" />
+  </Space>
 </template>
 ```
 
@@ -155,7 +160,7 @@ const show = ref(false)
 
 ## 水印配置器
 
-#### 通过自定义参数配置预览水印效果
+*通过自定义参数配置预览水印效果*
 
 <Row :gutter="24">
   <Col :span="18">
