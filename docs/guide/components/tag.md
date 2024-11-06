@@ -329,7 +329,7 @@ import {
 
 ## 动态添加和删除
 
-### 使用字符串格式数组
+*使用字符串格式数组*
 
 <br/>
 
@@ -342,7 +342,6 @@ import {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
@@ -361,7 +360,7 @@ const onDynamicClose = (tag: any, index: number) => {
 
 :::
 
-### 使用对象格式数组
+*使用对象格式数组*
 
 <br/>
 
@@ -452,7 +451,6 @@ const onDynamicClose = (tag: any, index: number) => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
@@ -503,7 +501,6 @@ const onDynamicClose = (tag: any, index: number) => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-
 const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
