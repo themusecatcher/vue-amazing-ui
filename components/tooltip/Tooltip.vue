@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
-import { useSlotsExist, useEventListener, useResizeObserver, rafTimeout, cancelRaf } from '../utils'
+import {
+  useSlotsExist,
+  useMutationObserver,
+  useEventListener,
+  useResizeObserver,
+  rafTimeout,
+  cancelRaf
+} from '../utils'
 interface Props {
   maxWidth?: string | number // 文字提示最大宽度，单位 px
   content?: string // 展示的内容 string | slot
@@ -118,6 +125,13 @@ onMounted(() => {
 onBeforeUnmount(() => {
   cleanup()
 })
+const mutationObserver = useMutationObserver(
+  scrollTarget,
+  () => {
+    updatePosition()
+  },
+  { subtree: true, childList: true, attributes: true, characterData: true }
+)
 useEventListener(window, 'resize', getViewportSize)
 // 监听 tooltip-card 和 content 的尺寸变化，更新文字提示位置
 useResizeObserver([tooltipCardRef, contentRef], () => {
@@ -128,23 +142,29 @@ function getViewportSize() {
   viewportHeight.value = document.documentElement.clientHeight
   updatePosition()
 }
+// 查询并监听最近可滚动父元素
 function observeScroll() {
-  // 监听可滚动父元素
   cleanup()
   scrollTarget.value = getScrollParent(contentRef.value?.parentElement ?? null)
   scrollTarget.value && scrollTarget.value.addEventListener('scroll', updatePosition)
+  if (scrollTarget.value === document.documentElement) {
+    mutationObserver.start()
+  }
 }
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
   scrollTarget.value = null
+  mutationObserver.stop()
 }
 // 查询最近的可滚动父元素
 function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   const isScrollable = (el: HTMLElement): boolean => {
     const style = window.getComputedStyle(el)
     if (
-      (el.scrollHeight > el.clientHeight && ['scroll', 'auto'].includes(style.overflowY)) ||
-      (el.scrollWidth > el.clientWidth && ['scroll', 'auto'].includes(style.overflowX))
+      el.scrollHeight > el.clientHeight &&
+      (['scroll', 'auto'].includes(style.overflowY) ||
+        ['scroll', 'auto'].includes(style.overflowX) ||
+        el === document.documentElement)
     ) {
       return true
     }
@@ -180,15 +200,14 @@ async function getPosition() {
 }
 // 获取可滚动父元素或视口的矩形信息
 function getShelterRect() {
-  if (scrollTarget.value) {
+  if (scrollTarget.value && scrollTarget.value !== document.documentElement) {
     return scrollTarget.value.getBoundingClientRect()
-  } else {
-    return {
-      top: 0,
-      left: 0,
-      bottom: viewportHeight.value,
-      right: viewportWidth.value
-    }
+  }
+  return {
+    top: 0,
+    left: 0,
+    bottom: viewportHeight.value,
+    right: viewportWidth.value
   }
 }
 // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
