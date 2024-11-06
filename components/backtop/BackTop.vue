@@ -54,21 +54,21 @@ const showDescription = computed(() => {
   return slotsExist.description || props.description
 })
 watch(
-  () => props.listenTo,
-  () => {
-    observeScroll()
-  },
-  {
-    flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
-  }
-)
-watch(
   () => props.to,
   () => {
     appendBackTop()
   },
   {
-    flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
+    flush: 'post'
+  }
+)
+watch(
+  () => props.listenTo,
+  () => {
+    observeScroll()
+  },
+  {
+    flush: 'post'
   }
 )
 watch(backTopShow, (to) => {
@@ -117,7 +117,7 @@ function appendBackTop() {
   } else if (props.to instanceof HTMLElement) {
     targetElement.value = props.to
   }
-  targetElement.value?.appendChild(backtopRef.value!) // 保证 backtop 节点只存在一个
+  targetElement.value && targetElement.value?.appendChild(backtopRef.value!) // 保证 backtop 节点只存在一个
 }
 function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   const isScrollable = (el: HTMLElement): boolean => {
