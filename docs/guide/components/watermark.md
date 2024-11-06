@@ -1,22 +1,6 @@
 # 水印 Watermark
 
-<FloatButton
-  :bottom="100"
-  type="primary"
-  tooltip="成为赞助者✨"
-  :tooltip-props="{
-    tooltipStyle: {
-      fontWeight: 500
-    }
-  }"
-  href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
-  target="_blank"
->
-  <template #description>
-    <span style="font-size: 14px; font-weight: 600;">赞助</span>
-  </template>
-</FloatButton>
-<BackTop />
+<GlobalElement hide-watermark />
 
 *给页面的某个区域加上水印*
 

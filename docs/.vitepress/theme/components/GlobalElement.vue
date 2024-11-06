@@ -1,3 +1,13 @@
+<script setup lang="ts">
+interface Props {
+  hideBackTop?: boolean // 是否隐藏 BackTop 组件
+  hideWatermark?: boolean // 是否隐藏 Watermark 组件
+}
+withDefaults(defineProps<Props>(), {
+  hideBackTop: false,
+  hideWatermark: false
+})
+</script>
 <template>
   <FloatButton
     :bottom="100"
@@ -15,7 +25,7 @@
       <span style="font-size: 14px; font-weight: 600;">赞助</span>
     </template>
   </FloatButton>
-  <BackTop />
-  <Watermark fullscreen content="Vue Amazing UI" />
+  <BackTop v-if="!hideBackTop" />
+  <Watermark v-if="!hideWatermark" fullscreen content="Vue Amazing UI" />
 </template>
 
