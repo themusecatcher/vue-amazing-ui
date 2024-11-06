@@ -157,7 +157,7 @@ const options = ref([
 ])
 const value = ref([2])
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 function onChange(value: (string | number)[]) {
   console.log('change', value)
@@ -252,7 +252,7 @@ const optionsDisabled = ref([
 ])
 const value = ref([2])
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -302,7 +302,7 @@ const options = ref([
 ])
 const value = ref([2])
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 const checkAll = ref(false)
 const indeterminate = computed(() => { // 全选样式控制
@@ -313,7 +313,7 @@ const indeterminate = computed(() => { // 全选样式控制
   }
 })
 watch(checkAll, (to) => {
-  console.log('checkAll:', to)
+  console.log('checkAll', to)
   if (to) {
     value.value = options.value.map(option => option.value)
   } else {
@@ -368,7 +368,7 @@ const options = ref([
 ])
 const value = ref([2])
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
@@ -429,7 +429,7 @@ const options = ref([
 ])
 const value = ref([2])
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 const horizontalGap = ref(16)
 const verticalGap = ref(8)
@@ -492,7 +492,7 @@ const options = ref([
 ])
 const value = ref([2])
 watchEffect(() => {
-  console.log('value:', value.value)
+  console.log('value', value.value)
 })
 </script>
 <template>
