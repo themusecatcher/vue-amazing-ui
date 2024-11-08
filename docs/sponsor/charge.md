@@ -1,7 +1,6 @@
 # ✨ 成为赞助者
 
-<BackTop />
-<Watermark fullscreen content="Vue Amazing UI" />
+<GlobalElement hide-sponsor />
 
 *`Vue Amazing UI` 所有开发工作均由作者一人完成，开发迭代过程实属不易...*
 

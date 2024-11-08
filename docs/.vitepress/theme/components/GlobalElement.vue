@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { MailOutlined } from '@ant-design/icons-vue'
 interface Props {
+  hideSponsor?: boolean // 是否隐藏 赞助 按钮
   hideBackTop?: boolean // 是否隐藏 BackTop 组件
   hideWatermark?: boolean // 是否隐藏 Watermark 组件
 }
 withDefaults(defineProps<Props>(), {
+  hideSponsor: false,
   hideBackTop: false,
   hideWatermark: false
 })
 </script>
 <template>
   <FloatButton
-    :bottom="160"
+    :bottom="!hideSponsor ? 160 : 100"
     type="primary"
     :tooltip-props="{
       tooltipStyle: {
@@ -30,6 +32,7 @@ withDefaults(defineProps<Props>(), {
     </template>
   </FloatButton>
   <FloatButton
+    v-if="!hideSponsor"
     :bottom="100"
     type="primary"
     tooltip="✨ 成为赞助者"
