@@ -11,7 +11,7 @@
 - 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，优化预览打开关闭动画效果
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，优化显示隐藏动画效果
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，优化红点显示隐藏动画效果
-- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，重构表格组件；新增 `bordered` `tableLayout` `header` `footer` 属性；支持使用 `headerCell` `bodyCell` 自定义个性化头部单元格和内容单元格；引入文本省略组件，支持表格头部或内容单元格文本溢出时自动显示省略号，且悬浮省略文本时，自动弹出文字提示
 - 组件库及文档代码优化
 
 ## 1.9.3 <Tag color="volcano" size="small">2024-11-06</Tag>
