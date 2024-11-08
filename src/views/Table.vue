@@ -187,6 +187,6 @@ function onChange(page: number, pageSize: number) {
     <h2 class="mt30 mb10">加载中</h2>
     <Table :columns="columns" loading />
     <h2 class="mt30 mb10">暂无数据</h2>
-    <Table :columns="columns" />
+    <Table :columns="columns" style="margin-bottom: 200px" />
   </div>
 </template>

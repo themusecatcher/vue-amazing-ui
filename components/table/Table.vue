@@ -69,7 +69,7 @@ function onChange(page: number, pageSize: number) {
               :key="index"
             >
               <slot name="headerCell" :column="column" :title="column.title">
-                {{ column.title }}
+                <Ellipsis>{{ column.title }}</Ellipsis>
               </slot>
             </th>
           </tr>
@@ -84,9 +84,7 @@ function onChange(page: number, pageSize: number) {
             <tr class="table-tr" v-for="(record, index) in dataSource" :key="index">
               <td class="table-td" v-for="(column, n) in columns" :key="n">
                 <slot name="bodyCell" :column="column" :record="record" :text="record[column.dataIndex]" :index="index">
-                  <Ellipsis>
-                    {{ record[column.dataIndex] || '--' }}
-                  </Ellipsis>
+                  <Ellipsis>{{ record[column.dataIndex] }}</Ellipsis>
                 </slot>
               </td>
             </tr>
