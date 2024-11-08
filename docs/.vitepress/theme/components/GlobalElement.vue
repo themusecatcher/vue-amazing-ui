@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { MailOutlined } from '@ant-design/icons-vue'
 interface Props {
   hideBackTop?: boolean // 是否隐藏 BackTop 组件
   hideWatermark?: boolean // 是否隐藏 Watermark 组件
@@ -9,6 +10,25 @@ withDefaults(defineProps<Props>(), {
 })
 </script>
 <template>
+  <FloatButton
+    :bottom="160"
+    type="primary"
+    :tooltip-props="{
+      tooltipStyle: {
+        textAlign: 'center',
+        fontWeight: 500
+      }
+    }"
+  >
+    <template #icon>
+      <MailOutlined />
+    </template>
+    <template #tooltip>
+      <MailOutlined /> Email:
+      <br/>
+      themusecatcher@163.com
+    </template>
+  </FloatButton>
   <FloatButton
     :bottom="100"
     type="primary"
