@@ -18,7 +18,8 @@ withDefaults(defineProps<Props>(), {
     :tooltip-props="{
       tooltipStyle: {
         textAlign: 'center',
-        fontWeight: 500
+        fontWeight: 500,
+        padding: '8px 12px'
       }
     }"
   >
@@ -38,7 +39,8 @@ withDefaults(defineProps<Props>(), {
     tooltip="✨ 成为赞助者"
     :tooltip-props="{
       tooltipStyle: {
-        fontWeight: 500
+        fontWeight: 500,
+        padding: '8px 12px'
       }
     }"
     href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
