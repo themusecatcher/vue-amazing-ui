@@ -42,7 +42,12 @@ async function onClose(e: Event) {
 }
 </script>
 <template>
-  <Transition name="alert-motion">
+  <Transition
+    name="alert-motion"
+    leave-from-class="alert-motion-leave"
+    leave-active-class="alert-motion-leave alert-motion-leave-active"
+    leave-to-class="alert-motion-leave alert-motion-leave-active"
+  >
     <div
       v-if="!closeAlert"
       ref="alertRef"
@@ -234,15 +239,15 @@ async function onClose(e: Event) {
   </Transition>
 </template>
 <style lang="less" scoped>
-.alert-motion-enter-active,
-.alert-motion-leave-active {
+.alert-motion-leave {
   overflow: hidden;
+  opacity: 1;
   transition:
     max-height 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
     opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
     padding 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
-.alert-motion-leave-to {
+.alert-motion-leave-active {
   max-height: 0 !important;
   opacity: 0 !important;
   padding-block: 0 !important;

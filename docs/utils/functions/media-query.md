@@ -40,6 +40,10 @@ export function useMediaQuery(mediaQuery: string) {
 
 :::
 
+## 参考文档
+
+- [Window.matchMedia()](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/matchMedia)
+
 ## 基本使用
 
 *请缩放浏览器查看效果*

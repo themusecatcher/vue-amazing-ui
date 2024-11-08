@@ -146,7 +146,16 @@ function handleOffset(value: string): string {
       <span v-if="showValue" class="m-value" :class="{ 'only-number': !showContent }">
         <slot name="value"></slot>
       </span>
-      <Transition name="zoom" v-else>
+      <Transition
+        name="zoom"
+        enter-from-class="zoom-enter"
+        enter-active-class="zoom-enter"
+        enter-to-class="zoom-enter"
+        leave-from-class="zoom-leave"
+        leave-active-class="zoom-leave"
+        leave-to-class="zoom-leave"
+        v-else
+      >
         <div
           v-if="showBadge"
           class="m-badge-value"
@@ -170,30 +179,34 @@ function handleOffset(value: string): string {
   </div>
 </template>
 <style lang="less" scoped>
-.zoom-enter-active {
-  animation: zoomBadgeIn 0.3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+.zoom-enter {
+  animation-duration: 0.3s;
+  animation-timing-function: cubic-bezier(0.12, 0.4, 0.29, 1.46);
   animation-fill-mode: both;
+  animation-name: zoomBadgeIn;
+  @keyframes zoomBadgeIn {
+    0% {
+      transform: scale(0) translate(50%, -50%);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1) translate(50%, -50%);
+    }
+  }
 }
-.zoom-leave-active {
-  animation: zoomBadgeOut 0.3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+.zoom-leave {
+  animation-duration: 0.3s;
+  animation-timing-function: cubic-bezier(0.12, 0.4, 0.29, 1.46);
   animation-fill-mode: both;
-}
-@keyframes zoomBadgeIn {
-  0% {
-    transform: scale(0) translate(50%, -50%);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1) translate(50%, -50%);
-  }
-}
-@keyframes zoomBadgeOut {
-  0% {
-    transform: scale(1) translate(50%, -50%);
-  }
-  100% {
-    transform: scale(0) translate(50%, -50%);
-    opacity: 0;
+  animation-name: zoomBadgeOut;
+  @keyframes zoomBadgeOut {
+    0% {
+      transform: scale(1) translate(50%, -50%);
+    }
+    100% {
+      transform: scale(0) translate(50%, -50%);
+      opacity: 0;
+    }
   }
 }
 .m-badge {

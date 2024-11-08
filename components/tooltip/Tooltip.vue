@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
 const tooltipVisible = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
-const contentRect = ref() // content 的矩形信息
+const stopObservation = ref(false) // 是否停止监听尺寸变化
 const top = ref<number>(0) // 提示框 top 定位
 const left = ref<number>(0) // 提示框 left 定位
 const tooltipPlace = ref<string>('top') // 文字提示位置
@@ -134,9 +134,22 @@ const mutationObserver = useMutationObserver(
 )
 useEventListener(window, 'resize', getViewportSize)
 // 监听 tooltip-card 和 content 的尺寸变化，更新文字提示位置
-useResizeObserver([tooltipCardRef, contentRef], () => {
+useResizeObserver([tooltipCardRef, contentRef], (entries: ResizeObserverEntry[], observer: ResizeObserver) => {
+  // 排除 tooltip-card 显示过渡动画时的尺寸变化
+  if (entries.length === 1 && entries[0].target.className === 'tooltip-card') {
+    const { blockSize, inlineSize } = entries[0].borderBoxSize[0]
+    if (blockSize === tooltipCardHeight.value && inlineSize === tooltipCardWidth.value) {
+      return
+    }
+  }
   updatePosition()
 })
+function onBeforeEnter() {
+  stopObservation.value = false
+}
+function onAfterLeave() {
+  stopObservation.value = true
+}
 function getViewportSize() {
   viewportWidth.value = document.documentElement.clientWidth
   viewportHeight.value = document.documentElement.clientHeight
@@ -187,8 +200,7 @@ async function getPosition() {
   tooltipCardWidth.value = tooltipCardRef.value.offsetWidth
   tooltipCardHeight.value = tooltipCardRef.value.offsetHeight
   if (props.flip) {
-    contentRect.value = contentRef.value.getBoundingClientRect()
-    tooltipPlace.value = getPlacement(props.placement, [])
+    tooltipPlace.value = getPlacement()
   }
   if (['top', 'bottom'].includes(tooltipPlace.value)) {
     top.value = tooltipCardHeight.value + (props.arrow ? 4 + 12 : 6)
@@ -211,8 +223,8 @@ function getShelterRect() {
   }
 }
 // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-function getPlacement(place: string, disabledPlaces: string[]): string {
-  const { top, bottom, left, right } = contentRect.value // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
+function getPlacement(): string {
+  const { top, bottom, left, right } = contentRef.value.getBoundingClientRect() // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
   const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
   const topDistance = top - targetTop - (props.arrow ? 12 : 0) // 内容元素上边缘距离滚动元素上边缘的距离
   const bottomDistance = targetBottom - bottom - (props.arrow ? 12 : 0) // 内容元素下边缘距离动元素下边缘的距离
@@ -220,121 +232,123 @@ function getPlacement(place: string, disabledPlaces: string[]): string {
   const rightDistance = targetRight - right - (props.arrow ? 12 : 0) // 内容元素右边缘距离滚动元素右边缘的距离
   const horizontalDistance = (tooltipCardWidth.value - contentWidth.value) / 2 // 水平方向容纳文字提示需要的最小宽度
   const verticalDistance = (tooltipCardHeight.value - contentHeight.value) / 2 // 垂直方向容纳文字提示需要的最小高度
-  switch (place) {
-    case 'top':
+  return findPlace(props.placement, [])
+  // 查询满足条件的 place，如果没有，则返回默认值
+  function findPlace(place: string, disabledPlaces: string[]): string {
+    if (place === 'top') {
       if (!disabledPlaces.includes('top')) {
         if (topDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6)) {
           if (disabledPlaces.length !== 3) {
-            return getPlacement('bottom', [...disabledPlaces, 'top'])
+            return findPlace('bottom', [...disabledPlaces, 'top'])
           }
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
             return 'top'
           } else {
             if (disabledPlaces.length !== 3) {
-              if (leftDistance < horizontalDistance) {
-                return getPlacement('right', ['top', 'bottom', 'left'])
-              }
-              if (rightDistance < horizontalDistance) {
-                return getPlacement('left', ['top', 'bottom', 'right'])
+              if (leftDistance >= horizontalDistance) {
+                return findPlace('left', ['top', 'bottom', 'right'])
+              } else if (rightDistance >= horizontalDistance) {
+                return findPlace('right', ['top', 'bottom', 'left'])
               }
             }
           }
         }
       } else {
         if (!disabledPlaces.includes('bottom')) {
-          return getPlacement('bottom', disabledPlaces)
-        }
-        if (!disabledPlaces.includes('left')) {
-          return getPlacement('left', disabledPlaces)
+          return findPlace('bottom', disabledPlaces)
+        } else if (!disabledPlaces.includes('left')) {
+          return findPlace('left', disabledPlaces)
+        } else {
+          return findPlace('right', disabledPlaces)
         }
       }
-    case 'bottom':
+    } else if (place === 'bottom') {
       if (!disabledPlaces.includes('bottom')) {
         if (bottomDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6)) {
           if (disabledPlaces.length !== 3) {
-            return getPlacement('top', [...disabledPlaces, 'bottom'])
+            return findPlace('top', [...disabledPlaces, 'bottom'])
           }
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
             return 'bottom'
           } else {
             if (disabledPlaces.length !== 3) {
-              if (leftDistance < horizontalDistance) {
-                return getPlacement('right', ['top', 'bottom', 'left'])
-              }
-              if (rightDistance < horizontalDistance) {
-                return getPlacement('left', ['top', 'bottom', 'right'])
+              if (leftDistance >= horizontalDistance) {
+                return findPlace('left', ['top', 'bottom', 'right'])
+              } else if (rightDistance >= horizontalDistance) {
+                return findPlace('right', ['top', 'bottom', 'left'])
               }
             }
           }
         }
       } else {
         if (!disabledPlaces.includes('top')) {
-          return getPlacement('top', disabledPlaces)
-        }
-        if (!disabledPlaces.includes('left')) {
-          return getPlacement('left', disabledPlaces)
+          return findPlace('top', disabledPlaces)
+        } else if (!disabledPlaces.includes('left')) {
+          return findPlace('left', disabledPlaces)
+        } else {
+          return findPlace('right', disabledPlaces)
         }
       }
-    case 'left':
+    } else if (place === 'left') {
       if (!disabledPlaces.includes('left')) {
         if (leftDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6)) {
           if (disabledPlaces.length !== 3) {
-            return getPlacement('right', [...disabledPlaces, 'left'])
+            return findPlace('right', [...disabledPlaces, 'left'])
           }
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
             return 'left'
           } else {
             if (disabledPlaces.length !== 3) {
-              if (topDistance < verticalDistance) {
-                return getPlacement('bottom', ['left', 'right', 'top'])
-              }
-              if (bottomDistance < verticalDistance) {
-                return getPlacement('top', ['left', 'right', 'bottom'])
+              if (topDistance >= verticalDistance) {
+                return findPlace('top', ['left', 'right', 'bottom'])
+              } else if (bottomDistance >= verticalDistance) {
+                return findPlace('bottom', ['left', 'right', 'top'])
               }
             }
           }
         }
       } else {
         if (!disabledPlaces.includes('right')) {
-          return getPlacement('right', disabledPlaces)
-        }
-        if (!disabledPlaces.includes('top')) {
-          return getPlacement('top', disabledPlaces)
+          return findPlace('right', disabledPlaces)
+        } else if (!disabledPlaces.includes('top')) {
+          return findPlace('top', disabledPlaces)
+        } else {
+          return findPlace('bottom', disabledPlaces)
         }
       }
-    case 'right':
+    } else if (place === 'right') {
       if (!disabledPlaces.includes('right')) {
         if (rightDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6)) {
           if (disabledPlaces.length !== 3) {
-            return getPlacement('left', [...disabledPlaces, 'right'])
+            return findPlace('left', [...disabledPlaces, 'right'])
           }
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
             return 'right'
           } else {
             if (disabledPlaces.length !== 3) {
-              if (topDistance < verticalDistance) {
-                return getPlacement('bottom', ['left', 'right', 'top'])
-              }
-              if (bottomDistance < verticalDistance) {
-                return getPlacement('top', ['left', 'right', 'bottom'])
+              if (topDistance >= verticalDistance) {
+                return findPlace('top', ['left', 'right', 'bottom'])
+              } else if (bottomDistance >= verticalDistance) {
+                return findPlace('bottom', ['left', 'right', 'top'])
               }
             }
           }
         }
       } else {
         if (!disabledPlaces.includes('left')) {
-          return getPlacement('left', disabledPlaces)
-        }
-        if (!disabledPlaces.includes('top')) {
-          return getPlacement('top', disabledPlaces)
+          return findPlace('left', disabledPlaces)
+        } else if (!disabledPlaces.includes('top')) {
+          return findPlace('top', disabledPlaces)
+        } else {
+          return findPlace('bottom', disabledPlaces)
         }
       }
-    default:
-      return props.placement
+    }
+    return props.placement
   }
 }
 function onShow() {
@@ -392,6 +406,8 @@ defineExpose({
       leave-from-class="zoom-leave"
       leave-active-class="zoom-leave zoom-leave-active"
       leave-to-class="zoom-leave zoom-leave-active"
+      @before-enter="onBeforeEnter"
+      @after-leave="onAfterLeave"
     >
       <div
         v-show="showTooltip && tooltipVisible"

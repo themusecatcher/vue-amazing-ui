@@ -163,8 +163,8 @@ function onWaveEnd() {
     }
     .m-static-circle {
       .circle {
-        animation: spin-circle 0.8s linear infinite;
-        -webkit-animation: spin-circle 0.8s linear infinite;
+        animation: spinCircle 0.8s linear infinite;
+        -webkit-animation: spinCircle 0.8s linear infinite;
         .path {
           stroke-width: 10;
           stroke-dashoffset: 0;
@@ -174,16 +174,16 @@ function onWaveEnd() {
     }
     .m-dynamic-circle {
       .circle {
-        animation: spin-circle 2s linear infinite;
-        -webkit-animation: spin-circle 2s linear infinite;
+        animation: spinCircle 2s linear infinite;
+        -webkit-animation: spinCircle 2s linear infinite;
         .path {
           stroke-width: 5;
           stroke-dasharray: 90, 150;
           stroke-dashoffset: 0;
           stroke-linecap: round;
-          animation: loading-dash 1.5s ease-in-out infinite;
-          -webkit-animation: loading-dash 1.5s ease-in-out infinite;
-          @keyframes loading-dash {
+          animation: loadingDash 1.5s ease-in-out infinite;
+          -webkit-animation: loadingDash 1.5s ease-in-out infinite;
+          @keyframes loadingDash {
             0% {
               stroke-dasharray: 1, 200;
               stroke-dashoffset: 0;
@@ -200,7 +200,7 @@ function onWaveEnd() {
         }
       }
     }
-    @keyframes spin-circle {
+    @keyframes spinCircle {
       100% {
         transform: rotate(360deg);
       }
@@ -228,8 +228,8 @@ function onWaveEnd() {
   }
   .wave-active {
     z-index: 1;
-    animation-name: wave-spread, wave-opacity;
-    @keyframes wave-spread {
+    animation-name: waveSpread, waveOpacity;
+    @keyframes waveSpread {
       from {
         box-shadow: 0 0 0.5px 0 var(--ripple-color);
       }
@@ -237,7 +237,7 @@ function onWaveEnd() {
         box-shadow: 0 0 0.5px 5.5px var(--ripple-color);
       }
     }
-    @keyframes wave-opacity {
+    @keyframes waveOpacity {
       from {
         opacity: 0.6;
       }

@@ -246,7 +246,7 @@ function expandChange(open: boolean) {
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 maxWidth | 文本最大宽度，单位 `px` | string &#124; number | '100%'
-tooltipMaxWidth | 弹出提示最大宽度，单位 `px`，默认为 `maxWidth + 24` | string &#124; number | undefined
+tooltipMaxWidth | 弹出提示最大宽度，单位 `px`，默认为 `文本宽度 + 24` | string &#124; number | undefined
 line | 最大行数 | number | undefined
 expand | 是否启用点击文本展开全部 | boolean | false
 tooltip | 是否启用文本提示框，可自定义设置弹出提示内容 | boolean &#124; slot | true

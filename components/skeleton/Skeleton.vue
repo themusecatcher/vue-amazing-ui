@@ -332,13 +332,13 @@ const paragraphWidth = computed(() => {
       bottom: 0;
       right: -150%;
       background: linear-gradient(90deg, rgba(0, 0, 0, 0.06) 25%, rgba(0, 0, 0, 0.15) 37%, rgba(0, 0, 0, 0.06) 63%);
-      animation-name: skeleton-loading;
+      animation-name: skeletonLoading;
       animation-duration: 1.4s;
       animation-timing-function: ease;
       animation-iteration-count: infinite;
       content: '';
     }
-    @keyframes skeleton-loading {
+    @keyframes skeletonLoading {
       0% {
         transform: translateX(-37.5%);
       }

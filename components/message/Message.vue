@@ -21,6 +21,7 @@ interface Message {
   style?: CSSProperties // 自定义样式
   onClick?: Function // 点击 message 时的回调函数
   onClose?: Function // 关闭时的回调函数
+  [propName: string]: any // 用于包含带有任意数量的其他属性
 }
 const resetTimer = ref()
 const showMessage = ref<boolean[]>([])
@@ -30,7 +31,7 @@ const closeDuration = ref<number | null>(null) // 自动关闭延时
 const emits = defineEmits(['click', 'close'])
 const messageTop = ref<string>()
 const clear = computed(() => {
-  // 所有提示是否已经全部变为false
+  // 所有提示是否已经全部变为 false
   return showMessage.value.every((show) => !show)
 })
 watch(clear, (to, from) => {
@@ -270,7 +271,6 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-// 滑动渐变过渡效果
 .slide-fade-move,
 .slide-fade-enter-active,
 .slide-fade-leave-active {
@@ -278,9 +278,7 @@ defineExpose({
 }
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateY(-16px);
-  -ms-transform: translateY(-16px); /* IE 9 */
-  -webkit-transform: translateY(-16px); /* Safari and Chrome */
+  transform: translateY(-100%);
   opacity: 0;
 }
 .slide-fade-leave-active {
@@ -298,7 +296,7 @@ defineExpose({
   width: 100%;
   left: 0;
   right: 0;
-  pointer-events: none; // 保证整个message区域不遮挡背后元素响应鼠标事件
+  pointer-events: none; // 保证整个 message 区域不遮挡背后元素响应鼠标事件
   .m-message {
     text-align: center;
     &:not(:last-child) {
@@ -324,8 +322,8 @@ defineExpose({
       .circle {
         display: inline-block;
         stroke: currentColor;
-        animation: loading-rotate 2s linear infinite;
-        @keyframes loading-rotate {
+        animation: loadingRotate 2s linear infinite;
+        @keyframes loadingRotate {
           100% {
             transform: rotate(360deg);
           }
@@ -335,8 +333,8 @@ defineExpose({
           stroke-dashoffset: 0;
           stroke-width: 5;
           stroke-linecap: round;
-          animation: loading-dash 1.5s ease-in-out infinite;
-          @keyframes loading-dash {
+          animation: loadingDash 1.5s ease-in-out infinite;
+          @keyframes loadingDash {
             0% {
               stroke-dasharray: 1, 200;
               stroke-dashoffset: 0;

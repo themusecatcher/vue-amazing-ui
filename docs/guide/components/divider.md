@@ -91,8 +91,13 @@
 
 ```vue
 <template>
-  <Divider orientation="left">Left Text</Divider>
-  <Divider orientation="right">Right Text</Divider>
+  <div>
+    Text
+    <Divider vertical />
+    <a href="#">Link</a>
+    <Divider vertical />
+    <a href="#">Link</a>
+  </div>
 </template>
 ```
 

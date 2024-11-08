@@ -151,9 +151,9 @@ const circlePath = computed(() => {
         position: relative;
         display: inline-block;
         transform: rotate(45deg);
-        animation: loading-dot 1.2s linear infinite;
-        -webkit-animation: loading-dot 1.2s linear infinite;
-        @keyframes loading-dot {
+        animation: loadingDot 1.2s linear infinite;
+        -webkit-animation: loadingDot 1.2s linear infinite;
+        @keyframes loadingDot {
           100% {
             transform: rotate(405deg);
           }
@@ -164,9 +164,9 @@ const circlePath = computed(() => {
           background: var(--color);
           border-radius: 50%;
           opacity: 0.3;
-          animation: loading-dot-color 1s linear infinite alternate;
-          -webkit-animation: loading-dot-color 1s linear infinite alternate;
-          @keyframes loading-dot-color {
+          animation: loadingDotColor 1s linear infinite alternate;
+          -webkit-animation: loadingDotColor 1s linear infinite alternate;
+          @keyframes loadingDotColor {
             100% {
               opacity: 1;
             }
@@ -196,8 +196,8 @@ const circlePath = computed(() => {
         }
       }
       .spin-box-rotate {
-        animation: spin-circle 2.4s ease-in-out;
-        -webkit-animation: spin-circle 2.4s ease-in-out;
+        animation: spinCircle 2.4s ease-in-out;
+        -webkit-animation: spinCircle 2.4s ease-in-out;
       }
       .spin-wrap-box {
         text-align: center;
@@ -215,29 +215,29 @@ const circlePath = computed(() => {
             top: 0;
             left: 0;
             opacity: 0.3;
-            animation: spin-color-1 var(--speed) linear infinite;
-            -webkit-animation: spin-color-1 var(--speed) linear infinite;
+            animation: spinColor1 var(--speed) linear infinite;
+            -webkit-animation: spinColor1 var(--speed) linear infinite;
           }
           .spin-item:nth-child(2) {
             top: 0;
             right: 0;
             opacity: 0.5;
-            animation: spin-color-3 var(--speed) linear infinite;
-            -webkit-animation: spin-color-3 var(--speed) linear infinite;
+            animation: spinColor3 var(--speed) linear infinite;
+            -webkit-animation: spinColor3 var(--speed) linear infinite;
           }
           .spin-item:nth-child(3) {
             bottom: 0;
             right: 0;
             opacity: 0.7;
-            animation: spin-color-5 var(--speed) linear infinite;
-            -webkit-animation: spin-color-5 var(--speed) linear infinite;
+            animation: spinColor5 var(--speed) linear infinite;
+            -webkit-animation: spinColor5 var(--speed) linear infinite;
           }
           .spin-item:last-child {
             bottom: 0;
             left: 0;
             opacity: 0.9;
-            animation: spin-color-7 var(--speed) linear infinite;
-            -webkit-animation: spin-color-7 var(--speed) linear infinite;
+            animation: spinColor7 var(--speed) linear infinite;
+            -webkit-animation: spinColor7 var(--speed) linear infinite;
           }
         }
         .m-spin-line {
@@ -252,26 +252,26 @@ const circlePath = computed(() => {
           }
           .spin-item:first-child {
             opacity: 0.3;
-            animation: spin-color-1 var(--speed) linear infinite;
-            -webkit-animation: spin-color-1 var(--speed) linear infinite;
+            animation: spinColor1 var(--speed) linear infinite;
+            -webkit-animation: spinColor1 var(--speed) linear infinite;
           }
           .spin-item:nth-child(2) {
             opacity: 0.5;
             transform: translateX(-50%) rotate(90deg);
-            animation: spin-color-3 var(--speed) linear infinite;
-            -webkit-animation: spin-color-3 var(--speed) linear infinite;
+            animation: spinColor3 var(--speed) linear infinite;
+            -webkit-animation: spinColor3 var(--speed) linear infinite;
           }
           .spin-item:nth-child(3) {
             opacity: 0.7;
             transform: translateX(-50%) rotate(180deg);
-            animation: spin-color-5 var(--speed) linear infinite;
-            -webkit-animation: spin-color-5 var(--speed) linear infinite;
+            animation: spinColor5 var(--speed) linear infinite;
+            -webkit-animation: spinColor5 var(--speed) linear infinite;
           }
           .spin-item:last-child {
             opacity: 0.9;
             transform: translateX(-50%) rotate(270deg);
-            animation: spin-color-7 var(--speed) linear infinite;
-            -webkit-animation: spin-color-7 var(--speed) linear infinite;
+            animation: spinColor7 var(--speed) linear infinite;
+            -webkit-animation: spinColor7 var(--speed) linear infinite;
           }
         }
         .spin-rotate {
@@ -280,30 +280,30 @@ const circlePath = computed(() => {
           transform: rotate(45deg);
           .spin-item:first-child {
             opacity: 0.4;
-            animation: spin-color-2 var(--speed) linear infinite;
-            -webkit-animation: spin-color-2 var(--speed) linear infinite;
+            animation: spinColor2 var(--speed) linear infinite;
+            -webkit-animation: spinColor2 var(--speed) linear infinite;
           }
           .spin-item:nth-child(2) {
             opacity: 0.6;
-            animation: spin-color-4 var(--speed) linear infinite;
-            -webkit-animation: spin-color-4 var(--speed) linear infinite;
+            animation: spinColor4 var(--speed) linear infinite;
+            -webkit-animation: spinColor4 var(--speed) linear infinite;
           }
           .spin-item:nth-child(3) {
             opacity: 0.8;
-            animation: spin-color-6 var(--speed) linear infinite;
-            -webkit-animation: spin-color-6 var(--speed) linear infinite;
+            animation: spinColor6 var(--speed) linear infinite;
+            -webkit-animation: spinColor6 var(--speed) linear infinite;
           }
           .spin-item:last-child {
             opacity: 1;
-            animation: spin-color-8 var(--speed) linear infinite;
-            -webkit-animation: spin-color-8 var(--speed) linear infinite;
+            animation: spinColor8 var(--speed) linear infinite;
+            -webkit-animation: spinColor8 var(--speed) linear infinite;
           }
         }
         .has-tip {
           left: 50%;
           transform: translateX(-50%) rotate(45deg);
         }
-        @keyframes spin-color-1 {
+        @keyframes spinColor1 {
           0% {
             opacity: 0.3;
           }
@@ -314,7 +314,7 @@ const circlePath = computed(() => {
             opacity: 0.4;
           }
         }
-        @keyframes spin-color-2 {
+        @keyframes spinColor2 {
           0% {
             opacity: 0.4;
           }
@@ -328,7 +328,7 @@ const circlePath = computed(() => {
             opacity: 0.5;
           }
         }
-        @keyframes spin-color-3 {
+        @keyframes spinColor3 {
           0% {
             opacity: 0.5;
           }
@@ -342,7 +342,7 @@ const circlePath = computed(() => {
             opacity: 0.6;
           }
         }
-        @keyframes spin-color-4 {
+        @keyframes spinColor4 {
           0% {
             opacity: 0.6;
           }
@@ -356,7 +356,7 @@ const circlePath = computed(() => {
             opacity: 0.7;
           }
         }
-        @keyframes spin-color-5 {
+        @keyframes spinColor5 {
           0% {
             opacity: 0.7;
           }
@@ -370,7 +370,7 @@ const circlePath = computed(() => {
             opacity: 0.8;
           }
         }
-        @keyframes spin-color-6 {
+        @keyframes spinColor6 {
           0% {
             opacity: 0.8;
           }
@@ -384,7 +384,7 @@ const circlePath = computed(() => {
             opacity: 0.9;
           }
         }
-        @keyframes spin-color-7 {
+        @keyframes spinColor7 {
           0% {
             opacity: 0.9;
           }
@@ -395,7 +395,7 @@ const circlePath = computed(() => {
             opacity: 1;
           }
         }
-        @keyframes spin-color-8 {
+        @keyframes spinColor8 {
           0% {
             opacity: 1;
           }
@@ -408,8 +408,8 @@ const circlePath = computed(() => {
       .m-ring-rail {
         display: inline-block;
         overflow: hidden;
-        animation: spin-circle 0.8s linear infinite;
-        -webkit-animation: spin-circle 0.8s linear infinite;
+        animation: spinCircle 0.8s linear infinite;
+        -webkit-animation: spinCircle 0.8s linear infinite;
       }
       .circle {
         .trail {
@@ -424,8 +424,8 @@ const circlePath = computed(() => {
       }
       .m-dynamic-circle {
         display: inline-block;
-        animation: spin-circle 2s linear infinite;
-        -webkit-animation: spin-circle 2s linear infinite;
+        animation: spinCircle 2s linear infinite;
+        -webkit-animation: spinCircle 2s linear infinite;
         .circle {
           .path {
             stroke-width: 5;
@@ -433,9 +433,9 @@ const circlePath = computed(() => {
             stroke-dashoffset: 0;
             stroke: var(--color);
             stroke-linecap: round;
-            animation: loading-dash 1.5s ease-in-out infinite;
-            -webkit-animation: loading-dash 1.5s ease-in-out infinite;
-            @keyframes loading-dash {
+            animation: loadingDash 1.5s ease-in-out infinite;
+            -webkit-animation: loadingDash 1.5s ease-in-out infinite;
+            @keyframes loadingDash {
               0% {
                 stroke-dasharray: 1, 200;
                 stroke-dashoffset: 0;
@@ -452,7 +452,7 @@ const circlePath = computed(() => {
           }
         }
       }
-      @keyframes spin-circle {
+      @keyframes spinCircle {
         100% {
           transform: rotate(360deg);
         }
@@ -461,9 +461,9 @@ const circlePath = computed(() => {
         display: inline-block;
         position: relative;
         transform: rotate(45deg);
-        animation: spin-rotate 2.5s linear infinite;
-        -webkit-animation: spin-rotate 2.5s linear infinite;
-        @keyframes spin-rotate {
+        animation: spinRotate 2.5s linear infinite;
+        -webkit-animation: spinRotate 2.5s linear infinite;
+        @keyframes spinRotate {
           100% {
             transform: rotate(405deg);
           }
@@ -475,9 +475,9 @@ const circlePath = computed(() => {
           border-style: solid;
           border-color: var(--color);
           border-radius: 50%;
-          animation: spin-outer-ring 1.5s linear infinite;
-          -webkit-animation: spin-outer-ring 1.5s linear infinite;
-          @keyframes spin-outer-ring {
+          animation: spinOuterRing 1.5s linear infinite;
+          -webkit-animation: spinOuterRing 1.5s linear infinite;
+          @keyframes spinOuterRing {
             100% {
               transform: rotateY(360deg);
             }
@@ -488,9 +488,9 @@ const circlePath = computed(() => {
           border-style: solid;
           border-color: var(--magic-ring-color);
           border-radius: 50%;
-          animation: spin-inner-ring 1.5s linear infinite;
-          -webkit-animation: spin-inner-ring 1.5s linear infinite;
-          @keyframes spin-inner-ring {
+          animation: spinInnerRing 1.5s linear infinite;
+          -webkit-animation: spinInnerRing 1.5s linear infinite;
+          @keyframes spinInnerRing {
             0% {
               transform: rotateY(45deg);
             }
