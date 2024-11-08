@@ -11,6 +11,7 @@
 - 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，优化预览打开关闭动画效果
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，优化显示隐藏动画效果
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，优化红点显示隐藏动画效果
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 
 - 组件库及文档代码优化
 
 ## 1.9.3 <Tag color="volcano" size="small">2024-11-06</Tag>

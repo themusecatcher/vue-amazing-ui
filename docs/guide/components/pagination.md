@@ -49,7 +49,6 @@ function pageSizeChange(page: number, pageSize: number) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const page = ref(1)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
   console.log('change page', page)
@@ -75,7 +74,6 @@ function onChange (page: number, pageSize: number) { // 页码 page 或 每页�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const page = ref(1)
 const total = ref(98)
 const placementOptions = [
@@ -124,7 +122,6 @@ function onChange (page: number, pageSize: number) { // 页码 page 或 每页�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(98)
@@ -160,7 +157,6 @@ function pageSizeChange (page: number, pageSize: number) { // 每页条数 pageS
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const page = ref(1)
 const total = ref(98)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
@@ -184,7 +180,6 @@ function onChange (page: number, pageSize: number) { // 页码 page 或 每页�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const page = ref(1)
 const total = ref(98)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
@@ -222,7 +217,6 @@ function onChange (page: number, pageSize: number) { // 页码 page 或 每页�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const page = ref(1)
 const total = ref(98)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
@@ -260,7 +254,6 @@ function onChange (page: number, pageSize: number) { // 页码 page 或 每页�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const page = ref(1)
 const total = ref(98)
 function onChange (page: number, pageSize: number) { // 页码 page 或 每页条数 pageSize 改变的回调
