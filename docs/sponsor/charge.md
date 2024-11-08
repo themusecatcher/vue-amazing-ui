@@ -3,7 +3,9 @@
 <BackTop />
 <Watermark fullscreen content="Vue Amazing UI" />
 
-*`Vue Amazing UI` 的成长与可持续发展，离不开您的支持与赞助 ❤️❤️*
+*`Vue Amazing UI` 所有开发工作均由作者一人完成，开发迭代过程实属不易...*
+
+*组件库的成长与可持续发展，离不开您的支持与赞助，非常感谢 ❤️🙏❤️*
 
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -11,7 +13,6 @@ import { HeartFilled, WechatOutlined, AlipayOutlined } from '@ant-design/icons-v
 import { useMediaQuery } from 'vue-amazing-ui'
 import WeChat from '/wechat.jpg'
 import Alipay from '/alipay.jpg'
-
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 const sponsorText = {
   title: '如果您觉得 Vue Amazing UI 有用，可以请作者喝杯茶表示支持，非常感谢 ❤️🙏❤️'
@@ -100,6 +101,8 @@ const QRCodes = [
       • 您的支持和赞助对我来说至关重要！
       <br/>
       • 真诚感谢每一位现有的和未来的支持者和赞助者！
+      <br/>
+      • 生命不息，迭代不止！未来，我将继续努力！
     </span>
   </template>
 </Alert>
