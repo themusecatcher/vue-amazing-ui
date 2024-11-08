@@ -151,9 +151,9 @@ function onWaveEnd() {
       margin: auto;
       width: 14px;
       height: 14px;
-      animation: loading-rotate 2s linear infinite;
-      -webkit-animation: loading-rotate 2s linear infinite;
-      @keyframes loading-rotate {
+      animation: loadingRotate 2s linear infinite;
+      -webkit-animation: loadingRotate 2s linear infinite;
+      @keyframes loadingRotate {
         100% {
           transform: rotate(360deg);
         }
@@ -164,9 +164,9 @@ function onWaveEnd() {
         stroke: @themeColor;
         stroke-width: 5;
         stroke-linecap: round;
-        animation: loading-dash 1.5s ease-in-out infinite;
-        -webkit-animation: loading-dash 1.5s ease-in-out infinite;
-        @keyframes loading-dash {
+        animation: loadingDash 1.5s ease-in-out infinite;
+        -webkit-animation: loadingDash 1.5s ease-in-out infinite;
+        @keyframes loadingDash {
           0% {
             stroke-dasharray: 1, 200;
             stroke-dashoffset: 0;
@@ -319,8 +319,8 @@ function onWaveEnd() {
 }
 .wave-active {
   z-index: 1;
-  animation-name: wave-spread, wave-opacity;
-  @keyframes wave-spread {
+  animation-name: waveSpread, waveOpacity;
+  @keyframes waveSpread {
     from {
       box-shadow: 0 0 0.5px 0 var(--ripple-color);
     }
@@ -328,7 +328,7 @@ function onWaveEnd() {
       box-shadow: 0 0 0.5px 5px var(--ripple-color);
     }
   }
-  @keyframes wave-opacity {
+  @keyframes waveOpacity {
     from {
       opacity: 0.6;
     }

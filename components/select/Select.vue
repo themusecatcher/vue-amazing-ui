@@ -289,7 +289,15 @@ function onChange(value: string | number, label: string, index: number) {
         ></path>
       </svg>
     </div>
-    <Transition name="slide-up">
+    <Transition
+      name="slide-up"
+      enter-from-class="slide-up-enter"
+      enter-active-class="slide-up-enter"
+      enter-to-class="slide-up-enter slide-up-enter-active"
+      leave-from-class="slide-up-leave"
+      leave-active-class="slide-up-leave slide-up-leave-active"
+      leave-to-class="slide-up-leave slide-up-leave-active"
+    >
       <div
         v-if="showOptions && filterOptions && filterOptions.length"
         class="m-options-panel"
@@ -327,23 +335,52 @@ function onChange(value: string | number, label: string, index: number) {
   </div>
 </template>
 <style lang="less" scoped>
-.slide-up-enter-active {
-  transform: scaleY(1);
-  transform-origin: 0% 0%;
-  opacity: 1;
-  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.slide-up-leave-active {
-  transform: scaleY(1);
-  transform-origin: 0% 0%;
-  opacity: 1;
-  transition: all 0.2s cubic-bezier(0.755, 0.05, 0.855, 0.06);
-}
-.slide-up-enter-from,
-.slide-up-leave-to {
-  transform: scaleY(0.8);
+.slide-up-enter {
+  transform: scale(0);
   transform-origin: 0% 0%;
   opacity: 0;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.slide-up-enter-active {
+  animation-name: slideUpIn;
+  animation-play-state: running;
+  @keyframes slideUpIn {
+    0% {
+      transform: scaleY(0.8);
+      transform-origin: 0% 0%;
+      opacity: 0;
+    }
+    100% {
+      transform: scaleY(1);
+      transform-origin: 0% 0%;
+      opacity: 1;
+    }
+  }
+}
+.slide-up-leave {
+  animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.slide-up-leave-active {
+  animation-name: slideUpOut;
+  animation-play-state: running;
+  @keyframes slideUpOut {
+    0% {
+      transform: scaleY(1);
+      transform-origin: 0% 0%;
+      opacity: 1;
+    }
+    100% {
+      transform: scaleY(0.8);
+      transform-origin: 0% 0%;
+      opacity: 0;
+    }
+  }
 }
 .m-select {
   position: relative;

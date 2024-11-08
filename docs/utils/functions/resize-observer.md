@@ -104,6 +104,10 @@ export function useMounted() {
 
 :::
 
+## 参考文档
+
+- [ResizeObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver)
+
 ## 基本使用
 
 *请缩放下面的盒子来观察变化*
@@ -131,7 +135,7 @@ const state = reactive({
   devicePixelContentBlockSize: null,
   devicePixelContentInlineSize: null
 })
-useResizeObserver(el, (entries, observer) => {
+useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver) => {
   console.log('entries', entries)
   console.log('observer', observer)
   const entry = entries[0]
@@ -232,7 +236,7 @@ const state = reactive({
   devicePixelContentBlockSize: null,
   devicePixelContentInlineSize: null
 })
-useResizeObserver(el, (entries, observer) => {
+useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver) => {
   console.log('entries', entries)
   console.log('observer', observer)
   const entry = entries[0]

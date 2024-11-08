@@ -295,7 +295,15 @@ function onSwitchRight() {
     <Transition name="fade">
       <div v-show="showPreview" class="m-preview-mask"></div>
     </Transition>
-    <Transition name="zoom">
+    <Transition
+      name="zoom"
+      enter-from-class="zoom-enter"
+      enter-active-class="zoom-enter"
+      enter-to-class="zoom-enter zoom-enter-active"
+      leave-from-class="zoom-leave"
+      leave-active-class="zoom-leave zoom-leave-active"
+      leave-to-class="zoom-leave zoom-leave-active"
+    >
       <div
         v-show="showPreview"
         ref="previewRef"
@@ -532,21 +540,50 @@ function onSwitchRight() {
 .fade-leave-to {
   opacity: 0;
 }
+.zoom-enter {
+  transform: none;
+  opacity: 0;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-play-state: paused;
+}
 .zoom-enter-active {
-  transition:
-    opacity 0.3s cubic-bezier(0.08, 0.82, 0.17, 1),
-    transform 0.3s cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-name: zoomIn;
+  animation-play-state: running;
+  @keyframes zoomIn {
+    0% {
+      transform: scale(0.2);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+.zoom-leave {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 .zoom-leave-active {
-  transition:
-    opacity 0.2s cubic-bezier(0.78, 0.14, 0.15, 0.86),
-    transform 0.2s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  animation-name: zoomOut;
+  animation-play-state: running;
+  pointer-events: none;
+  @keyframes zoomOut {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.2);
+      opacity: 0;
+    }
+  }
 }
-.zoom-enter-from,
-.zoom-leave-to {
-  opacity: 0;
-  transform: scale(0.2);
-}
+
 .m-image-wrap {
   display: inline-block;
   .image-hover-mask {

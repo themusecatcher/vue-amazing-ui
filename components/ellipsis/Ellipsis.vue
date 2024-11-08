@@ -4,7 +4,7 @@ import Tooltip from '../tooltip'
 import { useResizeObserver } from '../utils'
 interface Props {
   maxWidth?: string | number // 文本最大宽度，单位 px
-  tooltipMaxWidth?: string | number // 弹出提示最大宽度，单位 px，默认为 maxWidth + 24
+  tooltipMaxWidth?: string | number // 弹出提示最大宽度，单位 px，默认为 文本宽度 + 24
   line?: number // 最大行数
   expand?: boolean // 是否启用点击文本展开全部
   tooltip?: boolean // 是否启用文本提示框，可自定义设置弹出提示内容 boolean | slot
@@ -27,6 +27,13 @@ const textMaxWidth = computed(() => {
     return `${props.maxWidth}px`
   }
   return props.maxWidth
+})
+const computedTooltipMaxWidth = computed(() => {
+  if (props.tooltipMaxWidth === undefined && ellipsisRef.value) {
+    const ellipsisWidth = ellipsisRef.value.offsetWidth
+    return `${ellipsisWidth + 24}px`
+  }
+  return props.tooltipMaxWidth
 })
 watch(
   () => props.line,
@@ -104,7 +111,7 @@ function onExpand() {
 <template>
   <Tooltip
     :style="`max-width: ${textMaxWidth}`"
-    :max-width="tooltipMaxWidth || `calc(${textMaxWidth} + 24px)`"
+    :max-width="computedTooltipMaxWidth"
     :content-style="{ maxWidth: textMaxWidth }"
     :tooltip-style="{ padding: '8px 12px' }"
     :transition-duration="200"

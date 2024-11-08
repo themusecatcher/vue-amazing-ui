@@ -11,82 +11,88 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { SmileOutlined } from '@ant-design/icons-vue'
 const loading = ref(false)
 const total = ref(80)
 const queryParams = reactive({
-        pageSize: 10,
-        page: 1
-      })
+  pageSize: 10,
+  page: 1
+})
 const columns = ref([
-        {
-          title: '名字',
-          width: 60,
-          dataIndex: 'name',
-          slot: 'name'
-        },
-        {
-          title: '年龄',
-          width: 30,
-          dataIndex: 'age'
-        },
-        {
-          title: '职业',
-          width: 50,
-          dataIndex: 'job',
-          slot: 'job'
-        },
-        {
-          title: '性别',
-          width: 30,
-          dataIndex: 'sex'
-        },
-        {
-          title: '地址',
-          width: 100,
-          dataIndex: 'address'
-        }
-      ])
-const tableData = ref([
-        {
-          name: 'Stephen',
-          age: 30,
-          job: 'player',
-          sex: '男',
-          address: 'CaliforniaCaliforniaCaliforniaCaliforniaCaliforniaCalifornia'
-        },
-        {
-          name: 'Leo',
-          age: 36,
-          job: 'actor',
-          sex: '男',
-          address: 'LA'
-        },
-        {
-          name: 'Mr.Dear',
-          age: 23,
-          job: 'boy',
-          sex: '男',
-          address: 'Beijing'
-        },
-        {
-          name: 'superman',
-          age: 32,
-          job: 'boy',
-          sex: '男',
-          address: 'US'
-        }
-      ])
+  {
+    title: '名字',
+    width: 100,
+    dataIndex: 'name',
+    key: 'name'
+  },
+  {
+    title: '年龄',
+    width: 100,
+    dataIndex: 'age'
+  },
+  {
+    title: '职业',
+    width: 100,
+    dataIndex: 'job',
+    key: 'job'
+  },
+  {
+    title: '性别',
+    width: 100,
+    dataIndex: 'sex'
+  },
+  {
+    title: '地址',
+    width: 100,
+    dataIndex: 'address'
+  },
+  {
+    title: '操作',
+    width: 120,
+    key: 'action'
+  }
+])
+const dataSource = ref([
+  {
+    name: 'Stephen',
+    age: 30,
+    job: 'player',
+    sex: '男',
+    address: 'California, San Francisco, Chase Center'
+  },
+  {
+    name: 'Leo',
+    age: 36,
+    job: 'actor',
+    sex: '男',
+    address: 'LA'
+  },
+  {
+    name: 'Mr.Dear',
+    age: 23,
+    job: 'boy',
+    sex: '男',
+    address: 'Beijing'
+  },
+  {
+    name: 'superman',
+    age: 32,
+    job: 'boy',
+    sex: '男',
+    address: 'US'
+  }
+])
 onMounted(() => {
   getData()
 })
-function getData () {
+function getData() {
   loading.value = true
   // 模拟调用接口获取列表数据
   setTimeout(() => {
     loading.value = false
-  }, 500)
+  }, 1000)
 }
-function onChange (page: number, pageSize: number) {
+function onChange(page: number, pageSize: number) {
   queryParams.page = page
   queryParams.pageSize = pageSize
   getData()
@@ -95,110 +101,123 @@ function onChange (page: number, pageSize: number) {
 
 ## 基本使用
 
-<ClientOnly>
-  <Table
-    :columns="columns"
-    :data-source="tableData"
-    :pagination="{
-      total: total,
-      page: 1,
-      pageSize: 10,
-      showQuickJumper: true,
-      showTotal: true
-    }"
-    :loading="loading"
-    @change="onChange">
-  <!-- 配置指定列数据 -->
-  <template #name="record">
-      hello {{ record.name }}
+<Table
+  :columns="columns"
+  :dataSource="dataSource"
+  :pagination="{
+    total: total,
+    page: 1,
+    pageSize: 10,
+    showQuickJumper: true,
+    showTotal: (total: number) => `Total ${total} items`
+  }"
+  :loading="loading"
+  @change="onChange"
+>
+  <template #headerCell="{ column, title }">
+    <template v-if="column.key === 'name'"> <SmileOutlined /> {{ title }} </template>
+  </template>
+  <template #bodyCell="{ column, record }">
+    <template v-if="column.key === 'name'">
+      <a> hello {{ record.name }} </a>
     </template>
-    <template #job="{ job, index }">
-      hi {{ job }}
+    <template v-else-if="column.key === 'action'">
+      <span>
+        <a>Invite {{ record.name }}</a>
+        <Divider vertical />
+        <a>Delete</a>
+      </span>
     </template>
-  </Table>
-</ClientOnly>
+  </template>
+</Table>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { SmileOutlined } from '@ant-design/icons-vue'
 const loading = ref(false)
 const total = ref(80)
 const queryParams = reactive({
-        pageSize: 10,
-        page: 1
-      })
+  pageSize: 10,
+  page: 1
+})
 const columns = ref([
-        {
-          title: '名字',
-          width: 60,
-          dataIndex: 'name',
-          slot: 'name'
-        },
-        {
-          title: '年龄',
-          width: 30,
-          dataIndex: 'age'
-        },
-        {
-          title: '职业',
-          width: 50,
-          dataIndex: 'job',
-          slot: 'job'
-        },
-        {
-          title: '性别',
-          width: 30,
-          dataIndex: 'sex'
-        },
-        {
-          title: '地址',
-          width: 100,
-          dataIndex: 'address'
-        }
-      ])
-const tableData = ref([
-        {
-          name: 'Stephen',
-          age: 30,
-          job: 'player',
-          sex: '男',
-          address: 'CaliforniaCaliforniaCaliforniaCaliforniaCaliforniaCalifornia'
-        },
-        {
-          name: 'Leo',
-          age: 36,
-          job: 'actor',
-          sex: '男',
-          address: 'LA'
-        },
-        {
-          name: 'Mr.Dear',
-          age: 23,
-          job: 'boy',
-          sex: '男',
-          address: 'Beijing'
-        },
-        {
-          name: 'superman',
-          age: 32,
-          job: 'boy',
-          sex: '男',
-          address: 'US'
-        }
-      ])
+  {
+    title: '名字',
+    width: 100,
+    dataIndex: 'name',
+    key: 'name'
+  },
+  {
+    title: '年龄',
+    width: 100,
+    dataIndex: 'age'
+  },
+  {
+    title: '职业',
+    width: 100,
+    dataIndex: 'job',
+    key: 'job'
+  },
+  {
+    title: '性别',
+    width: 100,
+    dataIndex: 'sex'
+  },
+  {
+    title: '地址',
+    width: 100,
+    dataIndex: 'address'
+  },
+  {
+    title: '操作',
+    width: 120,
+    key: 'action'
+  }
+])
+const dataSource = ref([
+  {
+    name: 'Stephen',
+    age: 30,
+    job: 'player',
+    sex: '男',
+    address: 'California, San Francisco, Chase Center'
+  },
+  {
+    name: 'Leo',
+    age: 36,
+    job: 'actor',
+    sex: '男',
+    address: 'LA'
+  },
+  {
+    name: 'Mr.Dear',
+    age: 23,
+    job: 'boy',
+    sex: '男',
+    address: 'Beijing'
+  },
+  {
+    name: 'superman',
+    age: 32,
+    job: 'boy',
+    sex: '男',
+    address: 'US'
+  }
+])
 onMounted(() => {
   getData()
 })
-function getData () {
+function getData() {
   loading.value = true
   // 模拟调用接口获取列表数据
   setTimeout(() => {
     loading.value = false
-  }, 500)
+  }, 1000)
 }
-function onChange (page: number, pageSize: number) {
+function onChange(page: number, pageSize: number) {
   queryParams.page = page
   queryParams.pageSize = pageSize
   getData()
@@ -207,22 +226,31 @@ function onChange (page: number, pageSize: number) {
 <template>
   <Table
     :columns="columns"
-    :data-source="tableData"
+    :dataSource="dataSource"
     :pagination="{
       total: total,
       page: 1,
       pageSize: 10,
       showQuickJumper: true,
-      showTotal: true
+      showTotal: (total: number) => `Total ${total} items`
     }"
     :loading="loading"
-    @change="onChange">
-  <!-- 配置指定列数据 -->
-  <template #name="record">
-      hello {{ record.name }}
+    @change="onChange"
+  >
+    <template #headerCell="{ column, title }">
+      <template v-if="column.key === 'name'"> <SmileOutlined /> {{ title }} </template>
     </template>
-    <template #job="{ job, index }">
-      hi {{ job }}
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'name'">
+        <a> hello {{ record.name }} </a>
+      </template>
+      <template v-else-if="column.key === 'action'">
+        <span>
+          <a>Invite {{ record.name }}</a>
+          <Divider vertical />
+          <a>Delete</a>
+        </span>
+      </template>
     </template>
   </Table>
 </template>
@@ -232,9 +260,7 @@ function onChange (page: number, pageSize: number) {
 
 ## 加载中
 
-<ClientOnly>
-  <Table :columns="columns" loading />
-</ClientOnly>
+<Table :columns="columns" loading />
 
 ::: details Show Code
 
@@ -280,9 +306,7 @@ const columns = ref([
 
 ## 暂无数据
 
-<ClientOnly>
-  <Table :columns="columns" />
-</ClientOnly>
+<Table :columns="columns" />
 
 ::: details Show Code
 

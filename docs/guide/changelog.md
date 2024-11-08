@@ -2,6 +2,17 @@
 
 <GlobalElement />
 
+## 1.9.4 <Tag color="volcano" size="small">2024-11-08</Tag>
+
+- 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件，优化弹出提示默认最大宽度计算方式
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，优化自动调整弹出位置算法逻辑
+- 优化并更新 [警告提示 Alert](https://themusecatcher.github.io/vue-amazing-ui/guide/components/alert.html) 组件，优化关闭时的动画效果
+- 优化并更新 [徽标 Badge](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html) 组件，优化关闭时的动画效果
+- 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，优化预览打开关闭动画效果
+- 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，优化显示隐藏动画效果
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，优化红点显示隐藏动画效果
+- 组件库及文档代码优化
+
 ## 1.9.3 <Tag color="volcano" size="small">2024-11-06</Tag>
 
 - 优化并更新 [上传 Upload](https://themusecatcher.github.io/vue-amazing-ui/guide/components/upload.html) 组件，新增 `draggable` 属性，支持控制拖拽上传功能

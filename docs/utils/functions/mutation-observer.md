@@ -108,6 +108,10 @@ export function useMounted() {
 
 :::
 
+## 参考文档
+
+- [MutationObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver)
+
 ## 基本使用
 
 ```vue
@@ -117,7 +121,7 @@ import { useMutationObserver } from 'vue-amazing-ui'
 
 const defaultSlotsRef = ref()
 // 监听 defaultSlotsRef DOM 变化
-const callback = (mutationsList: any, observer: any) => {
+const callback = (mutationsList: MutationRecord[], observer: MutationObserver) => {
   console.log('mutationsList', mutationsList)
   console.log('observer', observer)
 }

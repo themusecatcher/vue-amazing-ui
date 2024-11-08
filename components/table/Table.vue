@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Spin from '../spin'
 import Empty from '../empty'
+import Ellipsis from '../ellipsis'
 import Pagination from '../pagination'
 interface Column {
   title?: string // 列头显示文字
@@ -16,6 +17,7 @@ interface Props {
   emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
   showPagination?: boolean // 是否显示分页
   pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
+  tableLayout?: 'auto' | 'fixed' // 表格布局方式，设为 fixed 表示内容不会影响列的布局，参考 table-layout 属性
 }
 withDefaults(defineProps<Props>(), {
   columns: () => [],
@@ -24,7 +26,8 @@ withDefaults(defineProps<Props>(), {
   spinProps: () => ({}),
   emptyProps: () => ({}),
   showPagination: true,
-  pagination: () => ({})
+  pagination: () => ({}),
+  tableLayout: 'fixed'
 })
 const emit = defineEmits(['change'])
 function onChange(page: number, pageSize: number) {
@@ -34,65 +37,74 @@ function onChange(page: number, pageSize: number) {
 </script>
 <template>
   <div class="m-table-wrap">
-    <table class="m-table">
-      <thead>
-        <tr class="table-tr">
-          <th
-            class="table-th"
-            :style="`width: ${typeof item.width === 'number' ? item.width + 'px' : item.width};`"
-            v-for="(item, index) in columns"
-            :key="index"
-          >
-            {{ item.title }}
-          </th>
-        </tr>
-      </thead>
-      <tbody class="m-table-body">
-        <tr class="table-loading" v-show="loading">
-          <Spin class="loading" size="small" :colspan="columns.length" v-bind="spinProps" />
-        </tr>
-        <tr class="table-empty-wrap" v-show="!dataSource.length">
-          <td class="table-empty" :colspan="columns.length">
-            <Empty class="empty" image="outlined" v-bind="emptyProps" />
-          </td>
-        </tr>
-        <tr class="table-tr" v-for="(data, index) in dataSource" :key="index">
-          <td class="m-td" v-for="(col, n) in columns" :key="n" :title="data[col.dataIndex as any]">
-            <slot v-if="col.slot" v-bind="data" :name="col.slot" :index="index">{{
-              data[col.dataIndex as any] || '--'
-            }}</slot>
-            <span v-else>{{ data[col.dataIndex as any] || '--' }}</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <Pagination v-if="showPagination" class="mt16" @change="onChange" v-bind="pagination" />
+    <Spin size="small" :spinning="loading" v-bind="spinProps">
+      <table class="m-table" :style="`table-layout: ${tableLayout};`">
+        <thead>
+          <tr>
+            <th
+              class="table-th"
+              :style="`width: ${typeof column.width === 'number' ? column.width + 'px' : column.width};`"
+              v-for="(column, index) in columns"
+              :key="index"
+            >
+              <slot name="headerCell" :column="column" :title="column.title">
+                {{ column.title }}
+              </slot>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="!dataSource.length">
+            <td class="table-empty" :colspan="columns.length">
+              <Empty class="empty" image="outlined" v-bind="emptyProps" />
+            </td>
+          </tr>
+          <template v-if="dataSource.length">
+            <tr class="table-tr" v-for="(record, index) in dataSource" :key="index">
+              <td class="table-td" v-for="(column, n) in columns" :key="n">
+                <slot name="bodyCell" :record="record" :column="column" :text="record[column.dataIndex]" :index="index">
+                  <Ellipsis>
+                    {{ record[column.dataIndex] || '--' }}
+                  </Ellipsis>
+                </slot>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <Pagination v-if="showPagination" class="mt16" placement="right" @change="onChange" v-bind="pagination" />
+    </Spin>
   </div>
 </template>
 <style lang="less" scoped>
 .m-table-wrap {
-  color: rgba(0, 0, 0, 0.65);
-  font-size: 14px;
-  line-height: 1.5714285714285714;
-  border-radius: 8px 8px 0 0;
+  max-width: 100%;
   .m-table {
     display: table;
     table-layout: fixed;
     width: 100%;
-    text-align: left;
+    text-align: start;
+    color: rgba(0, 0, 0, 0.88);
+    font-size: 14px;
+    line-height: 1.5714285714285714;
+    background: #ffffff;
     border-radius: 8px 8px 0 0;
     border-collapse: separate;
     border-spacing: 0;
     margin: 0;
-    .table-th {
-      padding: 16px;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: 500;
-      text-align: left;
-      background: #fafafa;
+    th,
+    td {
       border: none;
+    }
+    .table-th {
+      color: rgba(0, 0, 0, 0.88);
+      font-weight: 600;
+      text-align: start;
+      background: #fafafa;
+      padding: 16px;
       border-bottom: 1px solid #f0f0f0;
-      transition: background 0.3s ease;
+      overflow-wrap: break-word;
+      transition: background 0.2s ease;
       &:first-child {
         border-top-left-radius: 8px;
       }
@@ -100,48 +112,23 @@ function onChange(page: number, pageSize: number) {
         border-top-right-radius: 8px;
       }
     }
-    .m-table-body {
-      position: relative;
-      .table-loading {
-        border: none;
-        background-color: #fff;
-        .loading {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-        }
-      }
-      .table-empty-wrap {
-        border: none;
-        background-color: #fff;
-        &:hover {
-          background: #fff;
-        }
-        .table-empty {
-          padding: 16px;
-          border: none;
-          border-bottom: 1px solid #f0f0f0;
-          .empty {
-            margin: 32px 0;
-          }
-        }
+    .table-empty {
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      .empty {
+        margin: 32px 0;
       }
     }
     .table-tr {
-      border: none;
       background-color: #fff;
-      transition: background-color 0.3s;
-      .m-td {
-        padding: 16px;
-        border: none;
-        border-bottom: 1px solid #f0f0f0;
-        transition: background 0.3s;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
+      transition: background-color 0.2s;
       &:hover {
         background-color: rgba(0, 0, 0, 0.02);
+      }
+      .table-td {
+        padding: 16px;
+        padding: 16px;
+        border-bottom: 1px solid #f0f0f0;
       }
     }
   }
