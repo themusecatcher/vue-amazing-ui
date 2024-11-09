@@ -237,10 +237,8 @@ function getPlacement(): string {
   function findPlace(place: string, disabledPlaces: string[]): string {
     if (place === 'top') {
       if (!disabledPlaces.includes('top')) {
-        if (topDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6)) {
-          if (disabledPlaces.length !== 3) {
-            return findPlace('bottom', [...disabledPlaces, 'top'])
-          }
+        if (topDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+          return findPlace('bottom', [...disabledPlaces, 'top'])
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
             return 'top'
@@ -265,10 +263,8 @@ function getPlacement(): string {
       }
     } else if (place === 'bottom') {
       if (!disabledPlaces.includes('bottom')) {
-        if (bottomDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6)) {
-          if (disabledPlaces.length !== 3) {
-            return findPlace('top', [...disabledPlaces, 'bottom'])
-          }
+        if (bottomDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+          return findPlace('top', [...disabledPlaces, 'bottom'])
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
             return 'bottom'
@@ -293,10 +289,8 @@ function getPlacement(): string {
       }
     } else if (place === 'left') {
       if (!disabledPlaces.includes('left')) {
-        if (leftDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6)) {
-          if (disabledPlaces.length !== 3) {
-            return findPlace('right', [...disabledPlaces, 'left'])
-          }
+        if (leftDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+          return findPlace('right', [...disabledPlaces, 'left'])
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
             return 'left'
@@ -321,10 +315,8 @@ function getPlacement(): string {
       }
     } else if (place === 'right') {
       if (!disabledPlaces.includes('right')) {
-        if (rightDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6)) {
-          if (disabledPlaces.length !== 3) {
-            return findPlace('left', [...disabledPlaces, 'right'])
-          }
+        if (rightDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+          return findPlace('left', [...disabledPlaces, 'right'])
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
             return 'right'
