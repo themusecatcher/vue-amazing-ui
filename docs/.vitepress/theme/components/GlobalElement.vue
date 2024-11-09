@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { MailOutlined } from '@ant-design/icons-vue'
 interface Props {
   hideSponsor?: boolean // 是否隐藏 赞助 按钮
   hideBackTop?: boolean // 是否隐藏 BackTop 组件
