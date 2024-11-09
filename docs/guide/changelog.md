@@ -2,6 +2,10 @@
 
 <GlobalElement />
 
+## 1.9.5 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，优化弹出提示默认最大宽度计算方式
+
 ## 1.9.4 <Tag color="volcano" size="small">2024-11-08</Tag>
 
 - 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件，优化弹出提示默认最大宽度计算方式
