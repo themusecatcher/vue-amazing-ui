@@ -146,7 +146,7 @@ function horizonMove() {
         textData.value.push(textData.value.shift() as Text) // 将第一条数据放到最后
         left.value = 0
       } else {
-        left.value += props.step // 每次移动step（px）
+        left.value += props.step // 每次移动 step px
       }
     },
     props.interval,
@@ -166,7 +166,6 @@ function verticalMove() {
   )
 }
 function onClick(text: Text) {
-  // 通知父组件点击的标题
   emit('click', text)
 }
 defineExpose({
@@ -200,7 +199,7 @@ defineExpose({
         @mouseleave="startMove"
         @click="onClick(text)"
       >
-        {{ text.title || '--' }}
+        {{ text.title }}
       </component>
     </div>
   </div>
@@ -227,7 +226,7 @@ defineExpose({
           @mouseleave="startMove"
           @click="onClick(text)"
         >
-          {{ text.title || '--' }}
+          {{ text.title }}
         </component>
       </div>
     </TransitionGroup>
