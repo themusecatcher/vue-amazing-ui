@@ -48,7 +48,6 @@ const props = withDefaults(defineProps<Props>(), {
 const tooltipVisible = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
-const stopObservation = ref(false) // 是否停止监听尺寸变化
 const top = ref<number>(0) // 提示框 top 定位
 const left = ref<number>(0) // 提示框 left 定位
 const tooltipPlace = ref<string>('top') // 文字提示位置
@@ -108,7 +107,7 @@ const tooltipPlacement = computed(() => {
   }
 })
 watch(
-  () => [tooltipMaxWidth.value, props.placement, props.arrow, props.flip],
+  () => [props.placement, props.arrow, props.flip],
   () => {
     updatePosition()
   },
@@ -134,7 +133,7 @@ const mutationObserver = useMutationObserver(
 )
 useEventListener(window, 'resize', getViewportSize)
 // 监听 tooltip-card 和 content 的尺寸变化，更新文字提示位置
-useResizeObserver([tooltipCardRef, contentRef], (entries: ResizeObserverEntry[], observer: ResizeObserver) => {
+useResizeObserver([tooltipCardRef, contentRef], (entries: ResizeObserverEntry[]) => {
   // 排除 tooltip-card 显示过渡动画时的尺寸变化
   if (entries.length === 1 && entries[0].target.className === 'tooltip-card') {
     const { blockSize, inlineSize } = entries[0].borderBoxSize[0]
@@ -144,15 +143,11 @@ useResizeObserver([tooltipCardRef, contentRef], (entries: ResizeObserverEntry[],
   }
   updatePosition()
 })
-function onBeforeEnter() {
-  stopObservation.value = false
-}
-function onAfterLeave() {
-  stopObservation.value = true
-}
 function getViewportSize() {
   viewportWidth.value = document.documentElement.clientWidth
   viewportHeight.value = document.documentElement.clientHeight
+
+  observeScroll() // 窗口尺寸变化时，重新查询并监听最近可滚动父元素
   updatePosition()
 }
 // 查询并监听最近可滚动父元素
@@ -237,10 +232,8 @@ function getPlacement(): string {
   function findPlace(place: string, disabledPlaces: string[]): string {
     if (place === 'top') {
       if (!disabledPlaces.includes('top')) {
-        if (topDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6)) {
-          if (disabledPlaces.length !== 3) {
-            return findPlace('bottom', [...disabledPlaces, 'top'])
-          }
+        if (topDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+          return findPlace('bottom', [...disabledPlaces, 'top'])
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
             return 'top'
@@ -265,10 +258,8 @@ function getPlacement(): string {
       }
     } else if (place === 'bottom') {
       if (!disabledPlaces.includes('bottom')) {
-        if (bottomDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6)) {
-          if (disabledPlaces.length !== 3) {
-            return findPlace('top', [...disabledPlaces, 'bottom'])
-          }
+        if (bottomDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+          return findPlace('top', [...disabledPlaces, 'bottom'])
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
             return 'bottom'
@@ -293,10 +284,8 @@ function getPlacement(): string {
       }
     } else if (place === 'left') {
       if (!disabledPlaces.includes('left')) {
-        if (leftDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6)) {
-          if (disabledPlaces.length !== 3) {
-            return findPlace('right', [...disabledPlaces, 'left'])
-          }
+        if (leftDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+          return findPlace('right', [...disabledPlaces, 'left'])
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
             return 'left'
@@ -321,10 +310,8 @@ function getPlacement(): string {
       }
     } else if (place === 'right') {
       if (!disabledPlaces.includes('right')) {
-        if (rightDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6)) {
-          if (disabledPlaces.length !== 3) {
-            return findPlace('left', [...disabledPlaces, 'right'])
-          }
+        if (rightDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+          return findPlace('left', [...disabledPlaces, 'right'])
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
             return 'right'
@@ -406,8 +393,6 @@ defineExpose({
       leave-from-class="zoom-leave"
       leave-active-class="zoom-leave zoom-leave-active"
       leave-to-class="zoom-leave zoom-leave-active"
-      @before-enter="onBeforeEnter"
-      @after-leave="onAfterLeave"
     >
       <div
         v-show="showTooltip && tooltipVisible"
