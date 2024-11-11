@@ -16,7 +16,7 @@ hero:
       text: 开始使用
       link: /guide/features
     - theme: alt
-      text: 成为赞助者 !
+      text: 成为赞助者 ✨
       link: https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html
 features:
   - icon: 💡
