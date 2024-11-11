@@ -8,6 +8,7 @@ interface Props {
   bottom?: number | string // 按钮定位的下边距，单位 px
   left?: number | string // 按钮定位的左边距，单位 px
   right?: number | string // 按钮定位的右边距，单位 px
+  zIndex?: number // 设置按钮的 z-index
   width?: number | string // 浮动按钮宽度，单位 px
   height?: number | string // 浮动按钮高度，单位 px
   type?: 'default' | 'primary' // 浮动按钮类型
@@ -26,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   bottom: 40,
   left: undefined,
   right: 40,
+  zIndex: 9,
   width: 44,
   height: 44,
   type: 'default',
@@ -114,7 +116,8 @@ function onClick(e: Event) {
       --float-btn-left: ${floatBtnLeft};
       --float-btn-right: ${floatBtnRight};
       --float-btn-top: ${floatBtnTop};
-      --float-btn-bottom: ${floatBtnBottom}
+      --float-btn-bottom: ${floatBtnBottom};
+      --float-btn-z-index: ${zIndex};
     `"
     :href="href"
     :target="target"
@@ -201,7 +204,7 @@ function onClick(e: Event) {
   right: var(--float-btn-right);
   top: var(--float-btn-top);
   bottom: var(--float-btn-bottom);
-  z-index: 99;
+  z-index: var(--float-btn-z-index);
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
