@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MailSVG from './MailSVG.vue'
 interface Props {
   hideSponsor?: boolean // 是否隐藏 赞助 按钮
   hideBackTop?: boolean // 是否隐藏 BackTop 组件
@@ -23,24 +24,10 @@ withDefaults(defineProps<Props>(), {
     }"
   >
     <template #icon>
-       <span class="mail-icon">
-        <svg width="1.25em" height="1.25em" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
-          <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
-            <path d="M3 7l9 6l9-6"></path>
-          </g>
-        </svg>
-      </span>
+      <MailSVG />
     </template>
     <template #tooltip>
-      <span class="mail-icon">
-        <svg width="1.25em" height="1.25em" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
-          <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
-            <path d="M3 7l9 6l9-6"></path>
-          </g>
-        </svg>
-      </span> Email me Anytime:
+      <MailSVG /> Email me Anytime:
       <br/>
       themusecatcher@163.com
     </template>
@@ -66,11 +53,3 @@ withDefaults(defineProps<Props>(), {
   <BackTop v-if="!hideBackTop" />
   <Watermark v-if="!hideWatermark" fullscreen content="Vue Amazing UI" />
 </template>
-<style lang="less" scoped>
-.mail-icon {
-  display: inline-block;
-  color: inherit;
-  vertical-align: -0.25em;
-}
-</style>
-
