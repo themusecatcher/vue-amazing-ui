@@ -18,7 +18,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const showTooltip = ref(false) // 是否显示提示框
 const showExpand = ref(false) // 是否可以启用点击展开
-const ellipsisRef = ref()
+const ellipsisRef = ref() // 文本 DOM 引用
+const computedTooltipMaxWidth = ref() // 计算后的弹出提示最大宽度
 const ellipsisLine = ref() // 行数
 const stopObservation = ref(false)
 const emit = defineEmits(['expandChange'])
@@ -28,13 +29,18 @@ const textMaxWidth = computed(() => {
   }
   return props.maxWidth
 })
-const computedTooltipMaxWidth = computed(() => {
-  if (props.tooltipMaxWidth === undefined && ellipsisRef.value) {
-    const ellipsisWidth = ellipsisRef.value.offsetWidth
-    return `${ellipsisWidth + 24}px`
+watch(
+  ellipsisRef,
+  (to) => {
+    if (props.tooltipMaxWidth === undefined && to) {
+      const ellipsisWidth = to.offsetWidth
+      computedTooltipMaxWidth.value = `${ellipsisWidth + 24}px`
+    }
+  },
+  {
+    flush: 'post'
   }
-  return props.tooltipMaxWidth
-})
+)
 watch(
   () => props.line,
   (to) => {

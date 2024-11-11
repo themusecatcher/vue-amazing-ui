@@ -23,7 +23,7 @@ const scrollText = ref<any[]>([
   }
 ])
 const singleText = {
-  title: '请用一只玫瑰纪念我...',
+  title: '请用一只玫瑰纪念我 🌹',
   href: 'https://blog.csdn.net/Dandrose?type=blog'
 }
 const textScroll = ref()
@@ -69,8 +69,8 @@ const state = reactive({
     <TextScroll
       :scrollText="singleText"
       single
-      :width="360"
-      :text-style="{ fontSize: '24px', fontWeight: 600, color: '#FF5B29' }"
+      :width="270"
+      :text-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
       @click="onClick"
     />
     <h2 class="mt30 mb10">垂直文字滚动</h2>

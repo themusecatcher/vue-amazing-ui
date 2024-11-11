@@ -33,7 +33,7 @@ const scrollText = ref<any[]>([
   }
 ])
 const singleText = {
-  title: '请用一只玫瑰纪念我...',
+  title: '请用一只玫瑰纪念我 🌹',
   href: 'https://blog.csdn.net/Dandrose?type=blog'
 }
 const textScroll = ref()
@@ -118,8 +118,8 @@ function onClick (text: string) { // 获取点击的标题
 <TextScroll
   :scrollText="singleText"
   single
-  :width="360"
-  :text-style="{ fontSize: '24px', fontWeight: 600, color: '#FF5B29' }"
+  :width="270"
+  :text-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
   @click="onClick"
 />
 
@@ -129,7 +129,7 @@ function onClick (text: string) { // 获取点击的标题
 <script setup lang="ts">
 import { ref } from 'vue'
 const singleText = {
-  title: '请用一只玫瑰纪念我...',
+  title: '请用一只玫瑰纪念我 🌹',
   href: 'https://blog.csdn.net/Dandrose?type=blog'
 }
 function onClick (text: string) { // 获取点击的标题
@@ -140,8 +140,8 @@ function onClick (text: string) { // 获取点击的标题
   <TextScroll
     :scrollText="singleText"
     single
-    :width="360"
-    :text-style="{ fontSize: '24px', fontWeight: 600, color: '#FF5B29' }"
+    :width="270"
+    :text-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
     @click="onClick"
   />
 </template>
