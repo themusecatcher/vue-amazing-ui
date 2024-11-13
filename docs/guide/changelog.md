@@ -2,11 +2,12 @@
 
 <GlobalElement />
 
-## 1.9.5 <Tag color="volcano" size="small">soon</Tag>
+## 1.9.5 <Tag color="volcano" size="small">2024-11-13</Tag>
 
 - 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，新增 `zIndex` 属性，支持设置按钮的 `z-index` 值
 - 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件代码
 - 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件代码逻辑
+- 组件库及文档代码优化
 
 ## 1.9.4 <Tag color="volcano" size="small">2024-11-08</Tag>
 
