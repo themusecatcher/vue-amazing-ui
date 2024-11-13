@@ -37,7 +37,7 @@ withDefaults(defineProps<Props>(), {
     v-if="!hideSponsor"
     :bottom="100"
     type="primary"
-    tooltip="✨ 成为赞助者"
+    tooltip="成为赞助者 ✨"
     :tooltip-props="{
       tooltipStyle: {
         fontWeight: 500,
