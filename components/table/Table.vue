@@ -6,6 +6,7 @@ import Empty from '../empty'
 import Ellipsis from '../ellipsis'
 import Pagination from '../pagination'
 import { useSlotsExist } from '../utils'
+import { M } from 'vite/dist/node/types.d-aGj9QkWt'
 interface Column {
   title?: string // 列头显示文字
   width?: number | string // 列宽度，单位 px
@@ -36,6 +37,7 @@ interface Props {
   expandedRowKeys?: (string | number)[] // (v-model) 展开行的 key 数组，控制展开行的属性
   expandRowByClick?: boolean // 点击行是否展开
   scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
+  size?: 'large' | 'middle' | 'small' // 表格大小
   loading?: boolean // 是否加载中
   spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置数据加载中样式
   emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
@@ -58,6 +60,7 @@ const props = withDefaults(defineProps<Props>(), {
   expandedRowKeys: () => [],
   expandRowByClick: false,
   scroll: undefined,
+  size: 'large',
   loading: false,
   spinProps: () => ({}),
   emptyProps: () => ({}),
@@ -65,22 +68,28 @@ const props = withDefaults(defineProps<Props>(), {
   pagination: () => ({})
 })
 interface Coords {
-  row: number
-  col: number
+  row: number // 行索引坐标
+  col: number // 列索引坐标
 }
+const tablePage = ref<number>(1) // 分页器当前页数
+const tablePageSize = ref<number>(10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const tableExpandedRowKeys = ref<(string | number)[]>([])
-const tableContentRef = ref() // 水平滚动容器 DOM 引用
+const tableScrollRef = ref() // 水平滚动容器 DOM 引用
 const scrollLeft = ref<number>(0) // 表格水平滚动时距容器左边位置
 const scrollWidth = ref<number>(0) // 表格水平滚动元素宽度，包括溢出滚动
 const offsetWidth = ref<number>(0) // 表格水平滚动元素宽度，不包括溢出滚动
+const scrollMax = ref<number>(0) // 表格水平滚动时，最大可滚动距离
 const tableThExpandRef = ref() // 表格展开列 th 的引用
 const tableThRef = ref() // 表格除展开列以外的 th 的引用
 const slotsExist = useSlotsExist(['header', 'footer'])
 const emits = defineEmits(['update:expandedRowKeys', 'change'])
-const headerFixed = computed(() => {
-  return props.scroll?.y
+const horizontalScroll = computed(() => {
+  return props.scroll?.x !== undefined
+})
+const verticalScroll = computed(() => {
+  return props.scroll?.y !== undefined
 })
 const showShadowLeft = computed(() => {
   return scrollLeft.value > 0
@@ -101,8 +110,7 @@ const showHeader = computed(() => {
 })
 const tableContainerStyle = computed(() => {
   const style: any = {}
-  const scroll = props.scroll
-  if (scroll?.x !== undefined) {
+  if (horizontalScroll.value) {
     style.overflow = 'auto hidden'
   }
   return style
@@ -111,7 +119,7 @@ const tableLayoutComputed = computed(() => {
   if (props.tableLayout === undefined) {
     const ellipsis = props.columns.some((column: Column) => column.ellipsis)
     const columnFixed = props.columns.some((column: Column) => column.fixed)
-    if (ellipsis || columnFixed || (props.showExpandColumn && props.expandFixed)) {
+    if (ellipsis || columnFixed || (props.showExpandColumn && props.expandFixed) || verticalScroll.value) {
       return 'fixed'
     }
     return 'auto'
@@ -123,7 +131,7 @@ const tableStyle = computed(() => {
     minWidth: '100%'
   }
   const scroll = props.scroll
-  if (scroll?.x !== undefined) {
+  if (horizontalScroll.value) {
     if (typeof scroll.x === 'boolean') {
       style.width = 'auto'
     } else {
@@ -135,7 +143,7 @@ const tableStyle = computed(() => {
     tableLayout: tableLayoutComputed.value
   }
 })
-const tableThExpandStyle = computed(() => {
+const tableExpandCellStyle = computed(() => {
   return {
     width: typeof props.expandColumnWidth === 'number' ? `${props.expandColumnWidth}px` : props.expandColumnWidth
   }
@@ -148,15 +156,6 @@ const tableExpandCellFixStyle = computed(() => {
     }
   }
   return {}
-})
-const tableBodyStyle = computed(() => {
-  const style: any = {}
-  const scroll = props.scroll
-  if (scroll?.y !== undefined) {
-    style.overflowY = 'scroll'
-    style.maxHeight = typeof scroll.y === 'number' ? `${scroll.y}px` : scroll.y
-  }
-  return style
 })
 const thColumns = computed(() => {
   return props.columns.filter((column: Column) => column.colSpan !== 0)
@@ -171,22 +170,64 @@ const tableExpandRowFixStyle = computed(() => {
   }
   return style
 })
+const tableHeadStyle = computed(() => {
+  return {
+    position: 'relative',
+    left: `${-scrollLeft.value}px`
+  }
+})
+const tableBodyStyle = computed(() => {
+  const style: any = {}
+  if (horizontalScroll.value) {
+    style.overflowX = 'auto'
+  }
+  if (verticalScroll.value) {
+    const scroll = props.scroll
+    style.overflowY = 'scroll'
+    style.maxHeight = typeof scroll.y === 'number' ? `${scroll.y}px` : scroll.y
+  }
+  return style
+})
 const showFooter = computed(() => {
   return slotsExist.footer || props.footer
+})
+watchEffect(() => {
+  if (props.showPagination) {
+    if ('page' in props.pagination) {
+      tablePage.value = props.pagination.page as number
+    }
+    if ('pageSize' in props.pagination) {
+      tablePageSize.value = props.pagination.pageSize as number
+    }
+  }
+})
+const totalDataSource = computed(() => {
+  let total = props.dataSource.length
+  if (props.showPagination && 'total' in props.pagination) {
+    total = props.pagination.total as number
+  }
+  return total
+})
+const displayDataSource = computed(() => {
+  // 有分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
+  if (props.showPagination && totalDataSource.value === props.dataSource.length) {
+    return props.dataSource.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
+  }
 })
 watchEffect(() => {
   tableExpandedRowKeys.value = props.expandedRowKeys
 })
 onMounted(() => {
-  scrollWidth.value = tableContentRef.value.scrollWidth
-  offsetWidth.value = tableContentRef.value.offsetWidth
-  console.log('scrollWidth', scrollWidth.value)
-  console.log('offsetWidth', offsetWidth.value)
+  getScrollData()
 })
-function onHorizontalScroll(e: Event) {
-  scrollLeft.value = (e.target as HTMLElement).scrollLeft
-  scrollWidth.value = (e.target as HTMLElement).scrollWidth
-  offsetWidth.value = (e.target as HTMLElement).offsetWidth
+function getScrollData() {
+  if (horizontalScroll.value) {
+    scrollWidth.value = tableScrollRef.value.scrollWidth
+    offsetWidth.value = tableScrollRef.value.offsetWidth
+    console.log('scrollWidth', scrollWidth.value)
+    console.log('offsetWidth', offsetWidth.value)
+    scrollMax.value = scrollWidth.value - offsetWidth.value
+  }
 }
 function checkFixLeftLast(columns: Column[], column: Column, index: number) {
   if (column.fixed === 'left' && index < columns.length - 1) {
@@ -204,7 +245,7 @@ function checkFixRightLast(columns: Column[], column: Column, index: number) {
   }
   return false
 }
-function tableThWidthStyle(column: Column) {
+function tableCellWidthStyle(column: Column) {
   if (column.width !== undefined) {
     return {
       width: typeof column.width === 'number' ? `${column.width}px` : column.width
@@ -288,7 +329,7 @@ function onEnterRow(record: any, rowIndex: number) {
     mergedCellsColIndex.forEach((colIndex: number) => {
       const column = props.columns[colIndex]
       mergeHoverCoords.value.push({
-        row: getMergeCellRowIndex(props.dataSource[rowIndex - 1], column, rowIndex - 1) as number,
+        row: getMergeCellRowIndex(displayDataSource.value[rowIndex - 1], column, rowIndex - 1) as number,
         col: colIndex
       })
     })
@@ -310,9 +351,36 @@ function onExpandCell(key: string | number) {
   }
   emits('update:expandedRowKeys', tableExpandedRowKeys.value)
 }
-function onChange(page: number, pageSize: number) {
+function onScroll(e: Event) {
+  scrollLeft.value = (e.target as HTMLElement).scrollLeft
+  scrollWidth.value = (e.target as HTMLElement).scrollWidth
+  offsetWidth.value = (e.target as HTMLElement).offsetWidth
+}
+function onWheel(e: WheelEvent) {
+  if (e.deltaX) {
+    const scrollX = e.deltaX * 1 // 滚轮的水平滚动量
+    if (scrollLeft.value + scrollX > scrollMax.value) {
+      scrollLeft.value = scrollMax.value
+    } else if (scrollLeft.value + scrollX < 0) {
+      scrollLeft.value = 0
+    } else {
+      e.stopPropagation() // 阻止事件冒泡
+      e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
+      scrollLeft.value += scrollX
+    }
+    tableScrollRef.value.scrollLeft = scrollLeft.value
+  }
+}
+function onPaginationChange(page: number, pageSize: number) {
+  tablePage.value = page
+  tablePageSize.value = pageSize
   // 分页回调
   emits('change', page, pageSize)
+  tableScrollRef.value.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  })
 }
 </script>
 <template>
@@ -321,19 +389,21 @@ function onChange(page: number, pageSize: number) {
       <div
         class="m-table"
         :class="{
-          'table-fixed-header': headerFixed,
+          'table-fixed-header': verticalScroll,
           'table-shadow-left': showShadowLeft,
           'table-shadow-right': showShadowRight,
           'table-has-fix-left': hasFixLeft,
           'table-has-fix-right': hasFixRight,
+          'table-small': size === 'small',
+          'table-middle': size === 'middle',
           'table-bordered': bordered
         }"
       >
         <div v-if="showHeader" class="table-header">
           <slot name="header">{{ header }}</slot>
         </div>
-        <div class="table-container">
-          <div ref="tableContentRef" class="table-content" :style="tableContainerStyle" @scroll="onHorizontalScroll">
+        <div v-if="!verticalScroll" class="table-container">
+          <div ref="tableScrollRef" class="table-content" :style="tableContainerStyle" @scroll="onScroll">
             <table :style="tableStyle">
               <thead>
                 <tr>
@@ -345,7 +415,7 @@ function onChange(page: number, pageSize: number) {
                       'table-cell-fix-left': expandFixed,
                       'table-cell-fix-left-last': expandFixed && columns[1].fixed !== 'left'
                     }"
-                    :style="[tableThExpandStyle, tableExpandCellFixStyle]"
+                    :style="[tableExpandCellStyle, tableExpandCellFixStyle]"
                   >
                     <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
                   </th>
@@ -358,7 +428,7 @@ function onChange(page: number, pageSize: number) {
                       'table-cell-fix-right': column.fixed === 'right',
                       'table-cell-fix-right-first': checkFixRightLast(thColumns, column, index)
                     }"
-                    :style="[tableThWidthStyle(column), tableCellFixStyle(column, index)]"
+                    :style="[tableCellWidthStyle(column), tableCellFixStyle(column, index)]"
                     v-for="(column, index) in thColumns"
                     :key="index"
                     :colspan="column.colSpan"
@@ -373,15 +443,14 @@ function onChange(page: number, pageSize: number) {
                 </tr>
               </thead>
               <tbody>
-                <tr v-if="!dataSource.length">
+                <tr v-if="!displayDataSource.length">
                   <td class="table-empty" :colspan="columns.length">
                     <Empty class="empty" image="outlined" v-bind="emptyProps" />
                   </td>
                 </tr>
-                <template v-if="dataSource.length">
-                  <template v-for="(record, rowIndex) in dataSource" :key="rowIndex">
+                <template v-if="displayDataSource.length">
+                  <template v-for="(record, rowIndex) in displayDataSource" :key="rowIndex">
                     <tr
-                      class="table-tr"
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
                       @click="expandRowByClick ? onExpandCell(record.key) : () => false"
@@ -390,9 +459,9 @@ function onChange(page: number, pageSize: number) {
                         v-if="showExpandColumn"
                         class="table-td"
                         :class="{
-                          'table-td-hover': hoverRowIndex === rowIndex,
                           'table-cell-fix-left': expandFixed,
-                          'table-cell-fix-left-last': expandFixed && columns[1].fixed !== 'left'
+                          'table-cell-fix-left-last': expandFixed && columns[1].fixed !== 'left',
+                          'table-td-hover': hoverRowIndex === rowIndex
                         }"
                         :style="tableExpandCellFixStyle"
                         @click.stop="onExpandCell(record.key)"
@@ -412,11 +481,15 @@ function onChange(page: number, pageSize: number) {
                       <td
                         class="table-td"
                         :class="{
-                          'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex),
                           'table-cell-fix-left': column.fixed === 'left',
                           'table-cell-fix-left-last': checkFixLeftLast(tdColumns(record, rowIndex), column, colIndex),
                           'table-cell-fix-right': column.fixed === 'right',
-                          'table-cell-fix-right-first': checkFixRightLast(tdColumns(record, rowIndex), column, colIndex)
+                          'table-cell-fix-right-first': checkFixRightLast(
+                            tdColumns(record, rowIndex),
+                            column,
+                            colIndex
+                          ),
+                          'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
                         }"
                         :style="tableCellFixStyle(column, colIndex)"
                         v-for="(column, colIndex) in tdColumns(record, rowIndex)"
@@ -446,8 +519,157 @@ function onChange(page: number, pageSize: number) {
                       </td>
                     </tr>
                     <template v-if="showExpandColumn">
-                      <tr v-show="tableExpandedRowKeys.includes(record.key)" class="table-tr table-tr-expand">
-                        <td class="table-td" :colspan="columns.length + 1">
+                      <tr v-show="tableExpandedRowKeys.includes(record.key)">
+                        <td class="table-td table-td-expand" :colspan="columns.length + 1">
+                          <div v-if="expandFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
+                            <slot
+                              name="expandedRowRender"
+                              :record="record"
+                              :index="rowIndex"
+                              :expanded="tableExpandedRowKeys.includes(record.key)"
+                            ></slot>
+                          </div>
+                          <slot
+                            v-else
+                            name="expandedRowRender"
+                            :record="record"
+                            :index="rowIndex"
+                            :expanded="tableExpandedRowKeys.includes(record.key)"
+                          ></slot>
+                        </td>
+                      </tr>
+                    </template>
+                  </template>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div v-else class="table-container">
+          <div class="table-head" style="overflow: hidden">
+            <table :style="[tableStyle, tableHeadStyle]" @wheel="horizontalScroll ? onWheel($event) : () => false">
+              <thead>
+                <tr>
+                  <th
+                    v-if="showExpandColumn"
+                    ref="tableThExpandRef"
+                    class="table-th"
+                    :class="{
+                      'table-cell-fix-left': expandFixed,
+                      'table-cell-fix-left-last': expandFixed && columns[1].fixed !== 'left'
+                    }"
+                    :style="[tableExpandCellStyle, tableExpandCellFixStyle]"
+                  >
+                    <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
+                  </th>
+                  <th
+                    ref="tableThRef"
+                    :colstart="index"
+                    :colend="index"
+                    class="table-th"
+                    :class="{
+                      'table-cell-fix-left': column.fixed === 'left',
+                      'table-cell-fix-left-last': checkFixLeftLast(thColumns, column, index),
+                      'table-cell-fix-right': column.fixed === 'right',
+                      'table-cell-fix-right-first': checkFixRightLast(thColumns, column, index)
+                    }"
+                    :style="[tableCellWidthStyle(column), tableCellFixStyle(column, index)]"
+                    v-for="(column, index) in thColumns"
+                    :key="index"
+                    :colspan="column.colSpan"
+                  >
+                    <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
+                      <Ellipsis>{{ column.title }}</Ellipsis>
+                    </slot>
+                    <slot v-else name="headerCell" :column="column" :title="column.title">
+                      {{ column.title }}
+                    </slot>
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div ref="tableScrollRef" class="table-body" :style="tableBodyStyle" @scroll="onScroll">
+            <table :style="tableStyle">
+              <tbody>
+                <tr v-if="!displayDataSource.length">
+                  <td class="table-empty" :colspan="columns.length">
+                    <Empty class="empty" image="outlined" v-bind="emptyProps" />
+                  </td>
+                </tr>
+                <template v-if="displayDataSource.length">
+                  <template v-for="(record, rowIndex) in displayDataSource" :key="rowIndex">
+                    <tr
+                      @mouseenter="onEnterRow(record, rowIndex)"
+                      @mouseleave="onLeaveRow"
+                      @click="expandRowByClick ? onExpandCell(record.key) : () => false"
+                    >
+                      <td
+                        v-if="showExpandColumn"
+                        class="table-td"
+                        :class="{
+                          'table-cell-fix-left': expandFixed,
+                          'table-cell-fix-left-last': expandFixed && columns[1].fixed !== 'left',
+                          'table-td-hover': hoverRowIndex === rowIndex
+                        }"
+                        :style="[tableExpandCellStyle, tableExpandCellFixStyle]"
+                        @click.stop="onExpandCell(record.key)"
+                      >
+                        <slot
+                          name="expandCell"
+                          :record="record"
+                          :index="rowIndex"
+                          :expanded="tableExpandedRowKeys.includes(record.key)"
+                        >
+                          <button
+                            class="expand-btn"
+                            :class="{ 'expand-btn-collapsed': !tableExpandedRowKeys.includes(record.key) }"
+                          ></button>
+                        </slot>
+                      </td>
+                      <td
+                        class="table-td"
+                        :class="{
+                          'table-cell-fix-left': column.fixed === 'left',
+                          'table-cell-fix-left-last': checkFixLeftLast(tdColumns(record, rowIndex), column, colIndex),
+                          'table-cell-fix-right': column.fixed === 'right',
+                          'table-cell-fix-right-first': checkFixRightLast(
+                            tdColumns(record, rowIndex),
+                            column,
+                            colIndex
+                          ),
+                          'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
+                        }"
+                        :style="[tableCellWidthStyle(column), tableCellFixStyle(column, colIndex)]"
+                        v-for="(column, colIndex) in tdColumns(record, rowIndex)"
+                        :key="column.dataIndex"
+                        v-bind="column.customCell && column.customCell(record, rowIndex, column)"
+                      >
+                        <slot
+                          v-if="column.ellipsis"
+                          name="bodyCell"
+                          :column="column"
+                          :record="record"
+                          :text="record[column.dataIndex]"
+                          :index="rowIndex"
+                        >
+                          <Ellipsis>{{ record[column.dataIndex] }}</Ellipsis>
+                        </slot>
+                        <slot
+                          v-else
+                          name="bodyCell"
+                          :column="column"
+                          :record="record"
+                          :text="record[column.dataIndex]"
+                          :index="rowIndex"
+                        >
+                          {{ record[column.dataIndex] }}
+                        </slot>
+                      </td>
+                    </tr>
+                    <template v-if="showExpandColumn">
+                      <tr v-show="tableExpandedRowKeys.includes(record.key)">
+                        <td class="table-td table-td-expand" :colspan="columns.length + 1">
                           <div v-if="expandFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
@@ -476,7 +698,18 @@ function onChange(page: number, pageSize: number) {
           <slot name="footer">{{ footer }}</slot>
         </div>
       </div>
-      <Pagination v-if="showPagination" class="mt16" placement="right" @change="onChange" v-bind="pagination" />
+      <Pagination
+        v-if="showPagination"
+        class="table-pagination"
+        placement="right"
+        @change="onPaginationChange"
+        v-bind="{
+          ...pagination,
+          page: tablePage,
+          pageSize: tablePageSize,
+          total: totalDataSource
+        }"
+      />
     </Spin>
   </div>
 </template>
@@ -530,161 +763,158 @@ function onChange(page: number, pageSize: number) {
         content: '';
         pointer-events: none;
       }
-      .table-content {
-        table {
-          display: table;
-          margin: 0;
-          width: 100%;
+      .table-head {
+        border-radius: 8px 8px 0 0;
+      }
+      table {
+        display: table;
+        margin: 0;
+        width: 100%;
+        text-align: start;
+        border-radius: 8px 8px 0 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        th,
+        td {
+          border: none;
+          :deep(svg) {
+            fill: CurrentColor;
+          }
+        }
+        .table-th {
+          color: rgba(0, 0, 0, 0.88);
+          font-weight: 600;
           text-align: start;
-          border-radius: 8px 8px 0 0;
-          border-collapse: separate;
-          border-spacing: 0;
-          th,
-          td {
-            border: none;
-            :deep(svg) {
-              fill: CurrentColor;
-            }
+          background: #fafafa;
+          padding: 16px;
+          border-bottom: 1px solid #f0f0f0;
+          overflow-wrap: break-word;
+          transition: background 0.2s ease;
+          &:first-child {
+            border-top-left-radius: 8px;
           }
-          .table-th {
-            color: rgba(0, 0, 0, 0.88);
-            font-weight: 600;
-            text-align: start;
-            background: #fafafa;
-            padding: 16px;
-            border-bottom: 1px solid #f0f0f0;
-            overflow-wrap: break-word;
-            transition: background 0.2s ease;
-            &:first-child {
-              border-top-left-radius: 8px;
-            }
-            &:last-child {
-              border-top-right-radius: 8px;
-            }
-            &[colspan]:not([colspan='1']) {
-              text-align: center;
-            }
+          &:last-child {
+            border-top-right-radius: 8px;
           }
-          .table-cell-fix-left {
-            position: sticky !important;
-            z-index: 2;
-            &:not(.table-th) {
-              background: #ffffff;
-            }
+          &[colspan]:not([colspan='1']) {
+            text-align: center;
           }
-          .table-cell-fix-left-last {
-            &::after {
-              position: absolute;
-              top: 0;
-              bottom: -1px;
-              right: 0;
-              width: 30px;
-              transform: translateX(100%);
-              transition: box-shadow 0.3s;
-              content: '';
-              pointer-events: none;
-            }
+        }
+        .table-empty {
+          padding: 16px;
+          border-bottom: 1px solid #f0f0f0;
+          .empty {
+            margin: 32px 0;
           }
-          .table-cell-fix-right {
-            position: sticky !important;
-            z-index: 2;
-            &:not(.table-th) {
-              background: #ffffff;
+        }
+        .table-td {
+          padding: 16px;
+          padding: 16px;
+          border-bottom: 1px solid #f0f0f0;
+          .expand-btn {
+            position: relative;
+            color: inherit;
+            float: left;
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+            background: #ffffff;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            transform: scale(0.7692307692307693);
+            user-select: none;
+            transition: all 0.3s;
+            &:hover {
+              color: #4096ff;
+              border-color: #4096ff;
             }
-          }
-          .table-cell-fix-right-first {
             &::before {
               position: absolute;
-              top: 0;
-              bottom: -1px;
-              left: 0;
-              width: 30px;
-              transform: translateX(-100%);
-              transition: box-shadow 0.3s;
+              top: 11px;
+              left: 5px;
+              right: 5px;
+              height: 2px;
+              border-radius: 2px;
+              background: currentcolor;
+              transition: transform 0.3s ease-out;
               content: '';
-              pointer-events: none;
+            }
+            &::after {
+              position: absolute;
+              top: 5px;
+              bottom: 5px;
+              left: 11px;
+              width: 2px;
+              border-radius: 2px;
+              transform: rotate(90deg);
+              background: currentcolor;
+              transition: transform 0.3s ease-out;
+              content: '';
             }
           }
-          .table-empty {
-            padding: 16px;
-            border-bottom: 1px solid #f0f0f0;
-            .empty {
-              margin: 32px 0;
+          .expand-btn-collapsed {
+            &::before {
+              transform: rotate(-180deg);
+            }
+            &::after {
+              transform: rotate(0deg);
             }
           }
-          .table-tr {
-            background-color: #fff;
-            transition: background-color 0.2s;
-            .table-td {
-              padding: 16px;
-              padding: 16px;
-              border-bottom: 1px solid #f0f0f0;
-              .expand-btn {
-                position: relative;
-                color: inherit;
-                float: left;
-                width: 26px;
-                height: 26px;
-                line-height: 26px;
-                background: #ffffff;
-                border: 1px solid #f0f0f0;
-                border-radius: 8px;
-                outline: none;
-                cursor: pointer;
-                transform: scale(0.7692307692307693);
-                user-select: none;
-                transition: all 0.3s;
-                &:hover {
-                  color: #4096ff;
-                  border-color: #4096ff;
-                }
-                &::before {
-                  position: absolute;
-                  top: 11px;
-                  left: 5px;
-                  right: 5px;
-                  height: 2px;
-                  border-radius: 2px;
-                  background: currentcolor;
-                  transition: transform 0.3s ease-out;
-                  content: '';
-                }
-                &::after {
-                  position: absolute;
-                  top: 5px;
-                  bottom: 5px;
-                  left: 11px;
-                  width: 2px;
-                  border-radius: 2px;
-                  transform: rotate(90deg);
-                  background: currentcolor;
-                  transition: transform 0.3s ease-out;
-                  content: '';
-                }
-              }
-              .expand-btn-collapsed {
-                &::before {
-                  transform: rotate(-180deg);
-                }
-                &::after {
-                  transform: rotate(0deg);
-                }
-              }
-              .table-expand-row-fixed {
-                position: relative;
-                margin: -16px -16px;
-                padding: 16px 16px;
-              }
-            }
-            .table-td-hover {
-              background-color: #fafafa;
-            }
+          .table-expand-row-fixed {
+            position: relative;
+            margin: -16px -16px;
+            padding: 16px 16px;
           }
-          .table-tr-expand {
-            .table-td {
-              background: rgba(0, 0, 0, 0.02);
-            }
+        }
+        .table-cell-fix-left {
+          position: sticky !important;
+          z-index: 2;
+          background: #ffffff;
+        }
+        .table-th.table-cell-fix-left {
+          background: #fafafa;
+        }
+        .table-cell-fix-left-last {
+          &::after {
+            position: absolute;
+            top: 0;
+            bottom: -1px;
+            right: 0;
+            width: 30px;
+            transform: translateX(100%);
+            transition: box-shadow 0.3s;
+            content: '';
+            pointer-events: none;
           }
+        }
+        .table-cell-fix-right {
+          position: sticky !important;
+          z-index: 2;
+          background: #ffffff;
+        }
+        .table-th.table-cell-fix-right {
+          background: #fafafa;
+        }
+        .table-cell-fix-right-first {
+          &::before {
+            position: absolute;
+            top: 0;
+            bottom: -1px;
+            left: 0;
+            width: 30px;
+            transform: translateX(-100%);
+            transition: box-shadow 0.3s;
+            content: '';
+            pointer-events: none;
+          }
+        }
+        .table-td-hover {
+          background-color: #fafafa;
+        }
+        .table-td-expand {
+          background: rgba(0, 0, 0, 0.02);
         }
       }
     }
@@ -711,11 +941,9 @@ function onChange(page: number, pageSize: number) {
       }
     }
     .table-container {
-      .table-content {
-        .table-cell-fix-left-last {
-          &::after {
-            box-shadow: inset 10px 0 8px -8px rgba(5, 5, 5, 0.06);
-          }
+      .table-cell-fix-left-last {
+        &::after {
+          box-shadow: inset 10px 0 8px -8px rgba(5, 5, 5, 0.06);
         }
       }
     }
@@ -729,11 +957,39 @@ function onChange(page: number, pageSize: number) {
       }
     }
     .table-container {
-      .table-content {
-        .table-cell-fix-right-first {
-          &::before {
-            box-shadow: inset -10px 0 8px -8px rgba(5, 5, 5, 0.06);
-          }
+      .table-cell-fix-right-first {
+        &::before {
+          box-shadow: inset -10px 0 8px -8px rgba(5, 5, 5, 0.06);
+        }
+      }
+    }
+  }
+  .table-small {
+    font-size: 14px;
+    .table-header,
+    .table-footer {
+      padding: 8px;
+    }
+    .table-container {
+      table {
+        .table-th,
+        .table-td {
+          padding: 8px;
+        }
+      }
+    }
+  }
+  .table-middle {
+    font-size: 14px;
+    .table-header,
+    .table-footer {
+      padding: 12px 8px;
+    }
+    .table-container {
+      table {
+        .table-th,
+        .table-td {
+          padding: 12px 8px;
         }
       }
     }
@@ -750,27 +1006,23 @@ function onChange(page: number, pageSize: number) {
     .table-container {
       border: 1px solid #f0f0f0;
       border-bottom: 0;
-      .table-content {
-        table {
-          th,
-          td {
-            &:not(:last-child) {
-              border-right: 1px solid #f0f0f0;
-            }
+      table {
+        th,
+        td {
+          &:not(:last-child) {
+            border-right: 1px solid #f0f0f0;
           }
-          .table-tr {
-            .table-td {
-              .table-expand-row-fixed {
-                margin: -16px -17px;
-              }
-            }
+        }
+        .table-td {
+          .table-expand-row-fixed {
+            margin: -16px -17px;
           }
         }
       }
     }
   }
-  .mt16 {
-    margin-top: 16px;
+  .table-pagination {
+    margin: 16px 0;
   }
 }
 </style>

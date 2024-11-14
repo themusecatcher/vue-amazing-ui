@@ -8,6 +8,21 @@ const queryParams = reactive({
   pageSize: 10,
   page: 1
 })
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('middle')
 const columns = reactive([
   {
     title: '名字',
@@ -214,6 +229,29 @@ const columnsFixHeader = reactive([
     dataIndex: 'address'
   }
 ])
+const columnsFixHeaderAndColumn = reactive([
+  { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
+  { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
+  { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
+  { title: 'Column 2', dataIndex: 'address', key: '2', width: 150 },
+  { title: 'Column 3', dataIndex: 'address', key: '3', width: 150 },
+  { title: 'Column 4', dataIndex: 'address', key: '4', width: 150 },
+  { title: 'Column 5', dataIndex: 'address', key: '5', width: 150 },
+  { title: 'Column 6', dataIndex: 'address', key: '6', width: 150 },
+  { title: 'Column 7', dataIndex: 'address', key: '7', width: 150 },
+  { title: 'Column 8', dataIndex: 'address', key: '8' },
+  {
+    title: 'Action',
+    key: 'action',
+    fixed: 'right',
+    width: 100
+  }
+])
+const columnsSize = reactive([
+  { title: 'Name', dataIndex: 'name', fixed: 'left' },
+  { title: 'Age', dataIndex: 'age' },
+  { title: 'Address', dataIndex: 'address' }
+])
 const dataSource = ref([
   {
     name: 'Stephen Curry',
@@ -356,6 +394,27 @@ const dataSourceFixColumn = ref([
   }
 ])
 const dataSourceFixHeader = ref(data)
+const dataSourceFixHeaderAndColumn = ref(data)
+const dataSourceSize = ref([
+  {
+    key: '1',
+    name: 'Stephen Curry',
+    age: 30,
+    address: 'Chase Center, GSW'
+  },
+  {
+    key: '2',
+    name: 'the Muse Catcher',
+    age: 24,
+    address: 'Beijing, China'
+  },
+  {
+    key: '3',
+    name: 'Wonder Woman',
+    age: 32,
+    address: 'Tel Aviv, Israel'
+  }
+])
 onBeforeMount(() => {
   getData()
 })
@@ -509,6 +568,7 @@ watchEffect(() => {
       <template #footer> Footer lastData name: {{ dataSource[dataSource.length - 1].name }} </template>
     </Table>
     <h2 class="mt30 mb10">单元格自动省略</h2>
+    <h3 class="mb10">设置 column.ellipsis 可以让单元格内容根据宽度自动省略</h3>
     <Table :columns="columnsEllipsis" :data-source="dataSource">
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
@@ -517,6 +577,7 @@ watchEffect(() => {
       </template>
     </Table>
     <h2 class="mt30 mb10">合并单元格</h2>
+    <h3 class="mb10">表头只支持列合并，使用 column 里的 colSpan 进行设置；表格支持行/列合并，使用 customCell 将单元格属性 colSpan 或 rowSpan 设为 0 时，设置的表格不会渲染</h3>
     <Table :columns="columnsMerge" :data-source="dataSourceMerge" bordered>
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
@@ -599,6 +660,7 @@ watchEffect(() => {
       </template>
     </Table>
     <h2 class="mt30 mb10">可展开</h2>
+    <h3 class="mb10">当表格内容较多不能一次性完全展示时</h3>
     <Table
       :columns="columnsExpandable"
       :data-source="dataSourceExpandable"
@@ -622,26 +684,45 @@ watchEffect(() => {
       </template>
     </Table>
     <h2 class="mt30 mb10">固定列</h2>
+    <h3 class="mb10">对于列数很多的数据，可以固定前后的列，横向滚动查看其它数据，需要和 scroll.x 配合使用</h3>
+    <h3 class="mb10">建议指定 scroll.x 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 scroll.x</h3>
     <Table :columns="columnsFixColumn" :data-source="dataSourceFixColumn" :scroll="{ x: 1600 }">
       <template #bodyCell="{ column }">
         <template v-if="column.key === 'action'">
           <a>action</a>
         </template>
       </template>
-    </Table> -->
+    </Table>
     <h2 class="mt30 mb10">固定表头</h2>
-    <a-table
-      bordered
-      :columns="columnsFixHeader"
-      :data-source="dataSourceFixHeader"
-      :scroll="{ y: 240 }"
-    />
+    <h3 class="mb10">方便一页内展示大量数据</h3>
     <Table
-      bordered
       :columns="columnsFixHeader"
       :data-source="dataSourceFixHeader"
       :scroll="{ y: 240 }"
     />
+    <h2 class="mt30 mb10">固定头和列</h2>
+    <h3 class="mb10">适合同时展示有大量数据和数据列</h3>
+    <h3 class="mb10">建议指定 scroll.x 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 scroll.x</h3>
+    <a-table :columns="columnsFixHeaderAndColumn" :data-source="dataSourceFixHeaderAndColumn" :scroll="{ x: 1500, y: 300 }">
+      <template #bodyCell="{ column }">
+        <template v-if="column.key === 'action'">
+          <a>action</a>
+        </template>
+      </template>
+    </a-table>
+    <Table :columns="columnsFixHeaderAndColumn" :data-source="dataSourceFixHeaderAndColumn" :scroll="{ x: 1500, y: 300 }">
+      <template #bodyCell="{ column }">
+        <template v-if="column.key === 'action'">
+          <a>action</a>
+        </template>
+      </template>
+    </Table> -->
+    <h2 class="mt30 mb10">三种尺寸</h2>
+    <h3 class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</h3>
+    <Flex vertical>
+      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <Table :columns="columnsSize" :data-source="dataSourceSize" :size="size" />
+    </Flex>
   </div>
 </template>
 <style lang="less" scoped>
