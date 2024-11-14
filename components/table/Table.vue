@@ -513,6 +513,12 @@ function onChange(page: number, pageSize: number) {
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
       overflow: hidden;
+      &::before {
+        left: 0;
+      }
+      &::after {
+        right: 0;
+      }
       &::before,
       &::after {
         position: absolute;
@@ -523,12 +529,6 @@ function onChange(page: number, pageSize: number) {
         transition: box-shadow 0.3s;
         content: '';
         pointer-events: none;
-      }
-      &::before {
-        left: 0;
-      }
-      &::after {
-        right: 0;
       }
       .table-content {
         table {

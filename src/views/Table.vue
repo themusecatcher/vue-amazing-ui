@@ -418,7 +418,7 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
@@ -525,7 +525,7 @@ watchEffect(() => {
       </template>
     </Table>
     <h2 class="mt30 mb10">可编辑单元格</h2>
-    <Button style="margin-bottom: 16px" type="primary" :icon="() => h(PlusOutlined)" @click="handleAdd">新增</Button>
+    <Button style="margin-bottom: 16px;" type="primary" :icon="() => h(PlusOutlined)" @click="handleAdd">新增</Button>
     <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
@@ -541,7 +541,11 @@ watchEffect(() => {
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'action'">
-          <Popconfirm v-if="dataSourceCellEditable.length" title="Sure to delete?" @ok="handleDelete(record.key)">
+          <Popconfirm
+            v-if="dataSourceCellEditable.length"
+            title="Sure to delete?"
+            @ok="handleDelete(record.key)"
+          >
             <a>delete</a>
           </Popconfirm>
         </template>
@@ -609,7 +613,7 @@ watchEffect(() => {
         {{ record.description }}
       </template>
       <template #expandColumnTitle>
-        <span style="color: #d4380d">More</span>
+        <span style="color: #d4380d;">More</span>
       </template>
       <template #bodyCell="{ column }">
         <template v-if="column.key === 'action'">
@@ -624,11 +628,20 @@ watchEffect(() => {
           <a>action</a>
         </template>
       </template>
-    </Table>
-    -->
+    </Table> -->
     <h2 class="mt30 mb10">固定表头</h2>
-    <a-table bordered :columns="columnsFixHeader" :data-source="dataSourceFixHeader" :scroll="{ y: 240 }" />
-    <Table bordered :columns="columnsFixHeader" :data-source="dataSourceFixHeader" :scroll="{ y: 240 }" />
+    <a-table
+      bordered
+      :columns="columnsFixHeader"
+      :data-source="dataSourceFixHeader"
+      :scroll="{ y: 240 }"
+    />
+    <Table
+      bordered
+      :columns="columnsFixHeader"
+      :data-source="dataSourceFixHeader"
+      :scroll="{ y: 240 }"
+    />
   </div>
 </template>
 <style lang="less" scoped>

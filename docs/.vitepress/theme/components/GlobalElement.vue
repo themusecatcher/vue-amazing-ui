@@ -28,7 +28,7 @@ withDefaults(defineProps<Props>(), {
       <MailSVG />
     </template>
     <template #tooltip>
-      <MailSVG /> Email me <ArrowDownOutlined />
+      <MailSVG /> Email Me <ArrowDownOutlined />
       <br/>
       themusecatcher@163.com
     </template>
