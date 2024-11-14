@@ -182,9 +182,41 @@ const columnsExpandable = reactive([
   { title: 'Address', dataIndex: 'address', key: 'address' },
   { title: 'Action', key: 'action' }
 ])
+const columnsFixColumn = reactive([
+  { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
+  { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
+  { title: 'Column 1', dataIndex: 'address', key: '1' },
+  { title: 'Column 2', dataIndex: 'address', key: '2' },
+  { title: 'Column 3', dataIndex: 'address', key: '3' },
+  { title: 'Column 4', dataIndex: 'address', key: '4' },
+  { title: 'Column 5', dataIndex: 'address', key: '5' },
+  { title: 'Column 6', dataIndex: 'address', key: '6' },
+  { title: 'Column 7', dataIndex: 'address', key: '7' },
+  { title: 'Column 8', dataIndex: 'address', key: '8' },
+  {
+    title: 'Action',
+    key: 'action',
+    fixed: 'right',
+    width: 100
+  }
+])
+const columnsFixHeader = reactive([
+  {
+    title: 'Name',
+    dataIndex: 'name'
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age'
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address'
+  }
+])
 const dataSource = ref([
   {
-    name: 'Stephen',
+    name: 'Stephen Curry',
     age: 30,
     job: 'Player',
     sex: 'boy',
@@ -221,7 +253,7 @@ const dataSource = ref([
 ])
 const dataSourceMerge = ref([
   {
-    name: 'Stephen',
+    name: 'Stephen Curry',
     age: 30,
     tel: '0666-12098909',
     phone: 18889898989,
@@ -276,7 +308,7 @@ for (let i = 0; i < 100; i++) {
     key: i.toString(),
     name: `Edrward ${i}`,
     age: 32,
-    address: `London Park no. ${i}`
+    address: `London, Park Lane no. ${i}`
   })
 }
 const dataSourceRowEditable = ref<any[]>(data.slice(0, 10))
@@ -303,6 +335,27 @@ const dataSourceExpandable = ref([
     description: 'My name is Ironman, I am 32 years old, living in Sidney No.3 Lake Park.'
   }
 ])
+const dataSourceFixColumn = ref([
+  {
+    key: '1',
+    name: 'Stephen Curry',
+    age: 30,
+    address: 'Chase Center, GSW'
+  },
+  {
+    key: '2',
+    name: 'the Muse Catcher',
+    age: 24,
+    address: 'Beijing, China'
+  },
+  {
+    key: '3',
+    name: 'Wonder Woman',
+    age: 32,
+    address: 'Tel Aviv, Israel'
+  }
+])
+const dataSourceFixHeader = ref(data)
 onBeforeMount(() => {
   getData()
 })
@@ -365,7 +418,7 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
@@ -472,7 +525,7 @@ watchEffect(() => {
       </template>
     </Table>
     <h2 class="mt30 mb10">可编辑单元格</h2>
-    <Button style="margin-bottom: 16px;" type="primary" :icon="() => h(PlusOutlined)" @click="handleAdd">新增</Button>
+    <Button style="margin-bottom: 16px" type="primary" :icon="() => h(PlusOutlined)" @click="handleAdd">新增</Button>
     <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
@@ -488,11 +541,7 @@ watchEffect(() => {
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'action'">
-          <Popconfirm
-            v-if="dataSourceCellEditable.length"
-            title="Sure to delete?"
-            @ok="handleDelete(record.key)"
-          >
+          <Popconfirm v-if="dataSourceCellEditable.length" title="Sure to delete?" @ok="handleDelete(record.key)">
             <a>delete</a>
           </Popconfirm>
         </template>
@@ -552,28 +601,34 @@ watchEffect(() => {
       :expand-column-width="100"
       showExpandColumn
       expandRowByClick
+      expandFixed
       v-model:expandedRowKeys="expandedRowKeys"
+      :scroll="{ x: 1600 }"
     >
       <template #expandedRowRender="{ record }">
         {{ record.description }}
       </template>
       <template #expandColumnTitle>
-        <span style="color: #d4380d;">More</span>
+        <span style="color: #d4380d">More</span>
       </template>
       <template #bodyCell="{ column }">
         <template v-if="column.key === 'action'">
           <a>Delete</a>
         </template>
       </template>
-    </Table> -->
+    </Table>
     <h2 class="mt30 mb10">固定列</h2>
-    <a-table :columns="columns" :data-source="data" :scroll="{ x: 1300, y: 1000 }">
+    <Table :columns="columnsFixColumn" :data-source="dataSourceFixColumn" :scroll="{ x: 1600 }">
       <template #bodyCell="{ column }">
-        <template v-if="column.key === 'operation'">
+        <template v-if="column.key === 'action'">
           <a>action</a>
         </template>
       </template>
-    </a-table>
+    </Table>
+    -->
+    <h2 class="mt30 mb10">固定表头</h2>
+    <a-table bordered :columns="columnsFixHeader" :data-source="dataSourceFixHeader" :scroll="{ y: 240 }" />
+    <Table bordered :columns="columnsFixHeader" :data-source="dataSourceFixHeader" :scroll="{ y: 240 }" />
   </div>
 </template>
 <style lang="less" scoped>
