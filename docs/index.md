@@ -21,7 +21,7 @@ hero:
 features:
   - icon: 💡
     title: 最新技术
-    details: '采用 Vue@3.5.12 + TypeScript@5.6.3 + Vite@5.4.10 + Less@4.2.0 开发'
+    details: '采用 Vue@3.5.12 + TypeScript@5.6.3 + Vite@5.4.11 + Less@4.2.0 开发'
   - icon: 🚀
     title: 开箱即用
     details: 目前共包含 63 个基础 UI 组件以及 16 个工具函数，持续探索更新中...

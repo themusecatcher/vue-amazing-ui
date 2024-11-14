@@ -79,8 +79,8 @@ const tableThExpandRef = ref() // 表格展开列 th 的引用
 const tableThRef = ref() // 表格除展开列以外的 th 的引用
 const slotsExist = useSlotsExist(['header', 'footer'])
 const emits = defineEmits(['update:expandedRowKeys', 'change'])
-const showHeader = computed(() => {
-  return slotsExist.header || props.header
+const headerFixed = computed(() => {
+  return props.scroll?.y
 })
 const showShadowLeft = computed(() => {
   return scrollLeft.value > 0
@@ -95,6 +95,9 @@ const hasFixLeft = computed(() => {
 const hasFixRight = computed(() => {
   const fixedRight = props.columns.some((column: Column) => column.fixed === 'right')
   return fixedRight
+})
+const showHeader = computed(() => {
+  return slotsExist.header || props.header
 })
 const tableContainerStyle = computed(() => {
   const style: any = {}
@@ -161,7 +164,7 @@ const thColumns = computed(() => {
 const tableExpandRowFixStyle = computed(() => {
   const style: any = {}
   if (props.expandFixed) {
-    style.width = `${offsetWidth.value + 1}px`
+    style.width = `${offsetWidth.value + (props.bordered ? 1 : 0)}px`
     style.position = 'sticky'
     style.left = '0px'
     style.overflow = 'hidden'
@@ -210,12 +213,15 @@ function tableThWidthStyle(column: Column) {
   return {}
 }
 function tableCellFixStyle(column: Column, colIndex: number) {
-  if (tableThExpandRef.value && tableThExpandRef.value) {
+  if (tableThExpandRef.value || tableThRef.value) {
     const style: any = {
       position: 'sticky'
     }
     if (column.fixed === 'left') {
-      let offset = tableThExpandRef.value.offsetWidth
+      let offset = 0
+      if (props.showExpandColumn && props.expandFixed) {
+        offset += tableThExpandRef.value.offsetWidth
+      }
       for (let i = 0; i < colIndex; i++) {
         offset += tableThRef.value[i].offsetWidth
       }
@@ -315,6 +321,7 @@ function onChange(page: number, pageSize: number) {
       <div
         class="m-table"
         :class="{
+          'table-fixed-header': headerFixed,
           'table-shadow-left': showShadowLeft,
           'table-shadow-right': showShadowRight,
           'table-has-fix-left': hasFixLeft,
@@ -525,6 +532,8 @@ function onChange(page: number, pageSize: number) {
       }
       .table-content {
         table {
+          display: table;
+          margin: 0;
           width: 100%;
           text-align: start;
           border-radius: 8px 8px 0 0;
