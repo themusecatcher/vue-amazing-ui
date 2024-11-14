@@ -721,6 +721,7 @@ watchEffect(() => {
     <h3 class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</h3>
     <Flex vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <a-table :columns="columnsSize" :data-source="dataSourceSize" :size="size" />
       <Table :columns="columnsSize" :data-source="dataSourceSize" :size="size" />
     </Flex>
   </div>
