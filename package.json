@@ -11,7 +11,7 @@
   "main": "./dist/vue-amazing-ui.umd.cjs",
   "module": "./dist/vue-amazing-ui.js",
   "browser": "./dist/vue-amazing-ui.js",
-  "unpkg": "dist/vue-amazing-ui.iife.js",
+  "unpkg": "./dist/vue-amazing-ui.iife.js",
   "exports": {
     "./dist/style.css": "./dist/style.css",
     "./css": "./dist/style.css",

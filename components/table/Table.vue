@@ -6,7 +6,6 @@ import Empty from '../empty'
 import Ellipsis from '../ellipsis'
 import Pagination from '../pagination'
 import { useSlotsExist } from '../utils'
-import { M } from 'vite/dist/node/types.d-aGj9QkWt'
 interface Column {
   title?: string // 列头显示文字
   width?: number | string // 列宽度，单位 px
