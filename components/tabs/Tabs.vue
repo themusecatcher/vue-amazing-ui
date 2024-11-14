@@ -263,6 +263,7 @@ function onWheel(e: WheelEvent) {
       // 水平滚动
       getHorizontalScroll(e)
     } else {
+      // 垂直滚动
       getVerticalScroll(e)
     }
   }
