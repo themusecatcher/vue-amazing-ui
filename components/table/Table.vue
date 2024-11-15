@@ -701,6 +701,7 @@ function onPaginationChange(page: number, pageSize: number) {
         v-if="showPagination"
         class="table-pagination"
         placement="right"
+        :size="size"
         @change="onPaginationChange"
         v-bind="{
           ...pagination,

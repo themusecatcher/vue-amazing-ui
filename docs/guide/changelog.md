@@ -2,6 +2,14 @@
 
 <GlobalElement />
 
+## 1.9.6 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `size` 属性，支持设置选择器的尺寸大小
+- 优化并更新 [分页 Pagination](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html) 组件，新增 `size` 属性，支持设置分页器的尺寸大小
+- 优化并更新 [分页 Pagination](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html) 组件，新增 `size` 属性，支持设置分页器的尺寸大小
+
+
+
 ## 1.9.5 <Tag color="volcano" size="small">2024-11-13</Tag>
 
 - 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，新增 `zIndex` 属性，支持设置按钮的 `z-index` 值

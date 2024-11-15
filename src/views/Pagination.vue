@@ -18,6 +18,21 @@ const placementOptions = [
   }
 ]
 const placement = ref('left')
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('middle')
 function onChange(page: number, pageSize: number) {
   // 页码 page 或 每页条数 pageSize 改变的回调
   console.log('change page', page)
@@ -52,6 +67,11 @@ function pageSizeChange(page: number, pageSize: number) {
     <Pagination v-model:page="page" :total="total" :show-size-changer="false" @change="onChange" />
     <h2 class="mt30 mb10">快速跳转</h2>
     <Pagination v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
+    <h2 class="mt30 mb10">三种尺寸</h2>
+    <Flex vertical>
+      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <Pagination v-model:page="page" :size="size" :total="total" show-quick-jumper @change="onChange" />
+    </Flex>
     <h2 class="mt30 mb10">数据总数</h2>
     <Space vertical>
       <Pagination v-model:page="page" :total="total" show-total @change="onChange" />

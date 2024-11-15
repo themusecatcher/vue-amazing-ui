@@ -107,6 +107,21 @@ const optionsCustom = ref([
     id: 8
   }
 ])
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('large')
 const selectedValue = ref(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
@@ -139,6 +154,12 @@ function filter(inputValue: string, option: any) {
     <Select :width="150" :options="options" search allowClear v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
     <Select :width="150" :options="options" search :filter="filter" v-model="selectedValue" />
+    <h2 class="mt30 mb10">三种大小</h2>
+    <Space vertical>
+      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <Select :width="180" :options="options" v-model="selectedValue" :size="size" />
+      <Select :width="180" :options="options" search allowClear v-model="selectedValue" :size="size" />
+    </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Select :width="160" :height="36" search :options="options" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义节点字段名</h2>
