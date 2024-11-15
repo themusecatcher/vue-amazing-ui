@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed, watchEffect, onMounted } from 'vue'
 import type { Slot } from 'vue'
 import Spin from '../spin'
 import Empty from '../empty'
@@ -8,9 +8,10 @@ import Pagination from '../pagination'
 import { useSlotsExist } from '../utils'
 interface Column {
   title?: string // 列头显示文字
-  width?: number | string // 列宽度，单位 px
+  width?: string | number // 列宽度，单位 px
   dataIndex: string // 列数据字符索引
-  ellipsis?: boolean // 超过宽度是否自动省略，设置为 true 时，表格布局 tableLayout 默认值为 'fixed'
+  ellipsis?: boolean // 超过宽度是否自动省略
+  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略样式
   fixed?: 'left' | 'right' // 列是否固定
   slot?: string // 列插槽名称索引
   customCell?: Function // 设置单元格属性
@@ -21,12 +22,21 @@ interface ScrollOption {
   y?: string | number // 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值
 }
 interface Props {
-  bordered?: boolean // 是否展示外边框和列边框
-  tableLayout?: 'auto' | 'fixed' // 表格布局方式，设为 fixed 表示内容不会影响列的布局，参考 table-layout 属性
   header?: string // 表格标题 string | slot
   footer?: string // 表格尾部 string | slot
   columns?: Column[] // 表格列的配置项
   dataSource?: any[] // 表格数据数组
+  bordered?: boolean // 是否展示外边框和列边框
+  size?: 'large' | 'middle' | 'small' // 表格大小
+  striped?: boolean // 是否使用斑马条纹
+  loading?: boolean // 是否加载中
+  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置数据加载中样式
+  emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
+  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于全局配置文本省略样式
+  showPagination?: boolean // 是否显示分页
+  pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
+  scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
+  tableLayout?: 'auto' | 'fixed' // 表格布局方式，设为 fixed 表示内容不会影响列的布局，参考 table-layout 属性
   showExpandColumn?: boolean // 是否展示展开列
   expandColumnTitle?: string // 自定义展开列表头 string | slot
   expandColumnWidth?: number | string // 展开列的宽度
@@ -35,21 +45,23 @@ interface Props {
   expandFixed?: boolean // 是否固定展开列
   expandedRowKeys?: (string | number)[] // (v-model) 展开行的 key 数组，控制展开行的属性
   expandRowByClick?: boolean // 点击行是否展开
-  scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
-  size?: 'large' | 'middle' | 'small' // 表格大小
-  loading?: boolean // 是否加载中
-  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置数据加载中样式
-  emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
-  showPagination?: boolean // 是否显示分页
-  pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
 }
 const props = withDefaults(defineProps<Props>(), {
-  bordered: false,
-  tableLayout: undefined, // 固定表头/列或使用了 column.ellipsis 时，默认值为 fixed
   header: undefined,
   footer: undefined,
   columns: () => [],
   dataSource: () => [],
+  bordered: false,
+  size: 'large',
+  striped: false,
+  loading: false,
+  spinProps: () => ({}),
+  emptyProps: () => ({}),
+  ellipsisProps: () => ({}),
+  showPagination: true,
+  pagination: () => ({}),
+  scroll: undefined,
+  tableLayout: undefined, // 固定表头/列或使用了 column.ellipsis 时，默认值为 fixed
   showExpandColumn: false,
   expandColumnTitle: undefined,
   expandColumnWidth: 48,
@@ -57,14 +69,7 @@ const props = withDefaults(defineProps<Props>(), {
   expandedRowRender: undefined,
   expandFixed: false,
   expandedRowKeys: () => [],
-  expandRowByClick: false,
-  scroll: undefined,
-  size: 'large',
-  loading: false,
-  spinProps: () => ({}),
-  emptyProps: () => ({}),
-  showPagination: true,
-  pagination: () => ({})
+  expandRowByClick: false
 })
 interface Coords {
   row: number // 行索引坐标
@@ -131,10 +136,10 @@ const tableStyle = computed(() => {
   }
   const scroll = props.scroll
   if (horizontalScroll.value) {
-    if (typeof scroll.x === 'boolean') {
+    if (typeof scroll?.x === 'boolean') {
       style.width = 'auto'
     } else {
-      style.width = typeof scroll.x === 'number' ? `${scroll.x}px` : scroll.x
+      style.width = typeof scroll?.x === 'number' ? `${scroll.x}px` : scroll?.x
     }
   }
   return {
@@ -183,22 +188,12 @@ const tableBodyStyle = computed(() => {
   if (verticalScroll.value) {
     const scroll = props.scroll
     style.overflowY = 'scroll'
-    style.maxHeight = typeof scroll.y === 'number' ? `${scroll.y}px` : scroll.y
+    style.maxHeight = typeof scroll?.y === 'number' ? `${scroll.y}px` : scroll?.y
   }
   return style
 })
 const showFooter = computed(() => {
   return slotsExist.footer || props.footer
-})
-watchEffect(() => {
-  if (props.showPagination) {
-    if ('page' in props.pagination) {
-      tablePage.value = props.pagination.page as number
-    }
-    if ('pageSize' in props.pagination) {
-      tablePageSize.value = props.pagination.pageSize as number
-    }
-  }
 })
 const totalDataSource = computed(() => {
   let total = props.dataSource.length
@@ -208,9 +203,20 @@ const totalDataSource = computed(() => {
   return total
 })
 const displayDataSource = computed(() => {
-  // 有分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
+  // 展示分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
   if (props.showPagination && totalDataSource.value === props.dataSource.length) {
     return props.dataSource.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
+  }
+  return props.dataSource
+})
+watchEffect(() => {
+  if (props.showPagination) {
+    if ('page' in props.pagination) {
+      tablePage.value = props.pagination.page as number
+    }
+    if ('pageSize' in props.pagination) {
+      tablePageSize.value = props.pagination.pageSize as number
+    }
   }
 })
 watchEffect(() => {
@@ -223,10 +229,15 @@ function getScrollData() {
   if (horizontalScroll.value) {
     scrollWidth.value = tableScrollRef.value.scrollWidth
     offsetWidth.value = tableScrollRef.value.offsetWidth
-    console.log('scrollWidth', scrollWidth.value)
-    console.log('offsetWidth', offsetWidth.value)
     scrollMax.value = scrollWidth.value - offsetWidth.value
   }
+}
+function getComputedValue(column: Column, key: keyof Props) {
+  let computedValue = props[key as keyof Props]
+  if (column?.[key as keyof Column] !== undefined) {
+    computedValue = column[key as keyof Column]
+  }
+  return computedValue as object
 }
 function checkFixLeftLast(columns: Column[], column: Column, index: number) {
   if (column.fixed === 'left' && index < columns.length - 1) {
@@ -342,7 +353,6 @@ function checkHoverCoord(row: number, col: number) {
   return mergeHoverCoords.value.some((coord: Coords) => coord.row === row && coord.col === col)
 }
 function onExpandCell(key: string | number) {
-  console.log('key', key)
   if (tableExpandedRowKeys.value.includes(key)) {
     tableExpandedRowKeys.value = tableExpandedRowKeys.value.filter((rowKey: string | number) => rowKey !== key)
   } else {
@@ -395,6 +405,7 @@ function onPaginationChange(page: number, pageSize: number) {
           'table-has-fix-right': hasFixRight,
           'table-small': size === 'small',
           'table-middle': size === 'middle',
+          'table-striped': striped,
           'table-bordered': bordered
         }"
       >
@@ -433,7 +444,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     :colspan="column.colSpan"
                   >
                     <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                      <Ellipsis>{{ column.title }}</Ellipsis>
+                      <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">{{ column.title }}</Ellipsis>
                     </slot>
                     <slot v-else name="headerCell" :column="column" :title="column.title">
                       {{ column.title }}
@@ -503,7 +514,9 @@ function onPaginationChange(page: number, pageSize: number) {
                           :text="record[column.dataIndex]"
                           :index="rowIndex"
                         >
-                          <Ellipsis>{{ record[column.dataIndex] }}</Ellipsis>
+                          <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">{{
+                            record[column.dataIndex]
+                          }}</Ellipsis>
                         </slot>
                         <slot
                           v-else
@@ -578,7 +591,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     :colspan="column.colSpan"
                   >
                     <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                      <Ellipsis>{{ column.title }}</Ellipsis>
+                      <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">{{ column.title }}</Ellipsis>
                     </slot>
                     <slot v-else name="headerCell" :column="column" :title="column.title">
                       {{ column.title }}
@@ -652,7 +665,9 @@ function onPaginationChange(page: number, pageSize: number) {
                           :text="record[column.dataIndex]"
                           :index="rowIndex"
                         >
-                          <Ellipsis>{{ record[column.dataIndex] }}</Ellipsis>
+                          <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">{{
+                            record[column.dataIndex]
+                          }}</Ellipsis>
                         </slot>
                         <slot
                           v-else
@@ -714,14 +729,6 @@ function onPaginationChange(page: number, pageSize: number) {
   </div>
 </template>
 <style lang="less" scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
 .m-table-wrap {
   clear: both;
   max-width: 100%;
@@ -734,18 +741,19 @@ function onPaginationChange(page: number, pageSize: number) {
     .table-header {
       border-radius: 8px 8px 0 0;
       padding: 16px;
+      transition: padding 0.3s;
     }
     .table-footer {
       border-radius: 0 0 8px 8px;
       padding: 16px;
       color: rgba(0, 0, 0, 0.88);
       background: #fafafa;
+      transition: padding 0.3s;
     }
     .table-container {
       position: relative;
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
-      overflow: hidden;
       &::before {
         left: 0;
       }
@@ -774,6 +782,9 @@ function onPaginationChange(page: number, pageSize: number) {
         border-radius: 8px 8px 0 0;
         border-collapse: separate;
         border-spacing: 0;
+        tr {
+          background-color: transparent;
+        }
         th,
         td {
           border: none;
@@ -789,7 +800,9 @@ function onPaginationChange(page: number, pageSize: number) {
           padding: 16px;
           border-bottom: 1px solid #f0f0f0;
           overflow-wrap: break-word;
-          transition: background 0.2s ease;
+          transition:
+            background 0.2s ease,
+            padding 0.3s;
           &:first-child {
             border-top-left-radius: 8px;
           }
@@ -809,8 +822,8 @@ function onPaginationChange(page: number, pageSize: number) {
         }
         .table-td {
           padding: 16px;
-          padding: 16px;
           border-bottom: 1px solid #f0f0f0;
+          transition: padding 0.3s;
           .expand-btn {
             position: relative;
             color: inherit;
@@ -990,6 +1003,15 @@ function onPaginationChange(page: number, pageSize: number) {
         .table-th,
         .table-td {
           padding: 12px 8px;
+        }
+      }
+    }
+  }
+  .table-striped {
+    tbody {
+      tr:nth-child(even) {
+        .table-td {
+          background-color: #fafafa;
         }
       }
     }

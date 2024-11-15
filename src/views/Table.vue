@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount, computed, h } from 'vue'
+import { ref, reactive, onBeforeMount, computed, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 const loading = ref(false)
-const total = ref(5)
-const bordered = ref(true)
+const tableLoading = ref(false)
+const sizeBordered = ref(true)
+const stripedBordered = ref(true)
+const headerFooterbordered = ref(true)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
@@ -25,37 +27,60 @@ const sizeOptions = [
 const size = ref('middle')
 const columns = reactive([
   {
-    title: '名字',
+    title: 'Name',
     width: 100,
     dataIndex: 'name',
     key: 'name'
   },
   {
-    title: '年龄',
+    title: 'Age',
     width: 60,
     dataIndex: 'age'
   },
   {
-    title: '职业',
+    title: 'Job',
     width: 80,
     dataIndex: 'job',
     key: 'job'
   },
   {
-    title: '性别',
+    title: 'Sex',
     width: 60,
     dataIndex: 'sex',
     key: 'sex'
   },
   {
-    title: '地址',
+    title: 'Address',
     width: 120,
     dataIndex: 'address'
   },
   {
-    title: '操作',
+    title: 'Action',
     width: 150,
     key: 'action'
+  }
+])
+const columnsSize = reactive([
+  { title: 'Name', dataIndex: 'name' },
+  { title: 'Age', dataIndex: 'age' },
+  { title: 'Address', dataIndex: 'address' }
+])
+const columnsStriped = reactive([
+  {
+    title: 'Name',
+    dataIndex: 'name'
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age'
+  },
+  {
+    title: 'Job',
+    dataIndex: 'job'
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address'
   }
 ])
 const columnsEllipsis = reactive([
@@ -153,41 +178,41 @@ const columnsMerge = [
 ]
 const columnsCellEditable = reactive([
   {
-    title: '名字',
+    title: 'Name',
     dataIndex: 'name',
     width: '30%'
   },
   {
-    title: '年龄',
+    title: 'Age',
     dataIndex: 'age'
   },
   {
-    title: '地址',
+    title: 'Address',
     dataIndex: 'address'
   },
   {
-    title: '操作',
+    title: 'Action',
     dataIndex: 'action'
   }
 ])
 const columnsRowEditable = reactive([
   {
-    title: 'name',
+    title: 'Name',
     dataIndex: 'name',
     width: '25%'
   },
   {
-    title: 'age',
+    title: 'Age',
     dataIndex: 'age',
     width: '15%'
   },
   {
-    title: 'address',
+    title: 'Address',
     dataIndex: 'address',
     width: '40%'
   },
   {
-    title: 'action',
+    title: 'Action',
     dataIndex: 'action'
   }
 ])
@@ -247,11 +272,6 @@ const columnsFixHeaderAndColumn = reactive([
     width: 100
   }
 ])
-const columnsSize = reactive([
-  { title: 'Name', dataIndex: 'name', fixed: 'left' },
-  { title: 'Age', dataIndex: 'age' },
-  { title: 'Address', dataIndex: 'address' }
-])
 const dataSource = ref([
   {
     name: 'Stephen Curry',
@@ -286,6 +306,58 @@ const dataSource = ref([
     age: 36,
     job: 'Actor',
     sex: 'boy',
+    address: 'Los Angeles'
+  }
+])
+const dataSourceSize = ref([
+  {
+    key: '1',
+    name: 'Stephen Curry',
+    age: 30,
+    address: 'Chase Center, GSW'
+  },
+  {
+    key: '2',
+    name: 'the Muse Catcher',
+    age: 24,
+    address: 'Beijing, China'
+  },
+  {
+    key: '3',
+    name: 'Wonder Woman',
+    age: 32,
+    address: 'Tel Aviv, Israel'
+  }
+])
+const dataSourcesStriped = ref([
+  {
+    name: 'Stephen Curry',
+    age: 30,
+    job: 'Player',
+    address: 'Chase Center, San Francisco, California'
+  },
+  {
+    name: 'the Muse Catcher',
+    age: 24,
+    job: 'None',
+    address: 'Beijing, China'
+  },
+  {
+    name: 'Wonder Woman',
+    age: 32,
+    job: 'Hero',
+    address: 'Tel Aviv, Israel'
+  },
+  {
+    name: 'Superman',
+    age: 32,
+    job: 'Hero',
+    address: 'United States'
+  },
+  {
+    name: 'Leo',
+    age: 36,
+    job: 'Actor',
     address: 'Los Angeles'
   }
 ])
@@ -395,26 +467,6 @@ const dataSourceFixColumn = ref([
 ])
 const dataSourceFixHeader = ref(data)
 const dataSourceFixHeaderAndColumn = ref(data)
-const dataSourceSize = ref([
-  {
-    key: '1',
-    name: 'Stephen Curry',
-    age: 30,
-    address: 'Chase Center, GSW'
-  },
-  {
-    key: '2',
-    name: 'the Muse Catcher',
-    age: 24,
-    address: 'Beijing, China'
-  },
-  {
-    key: '3',
-    name: 'Wonder Woman',
-    age: 32,
-    address: 'Tel Aviv, Israel'
-  }
-])
 onBeforeMount(() => {
   getData()
 })
@@ -432,28 +484,7 @@ function onChange(page: number, pageSize: number) {
 }
 const cellEditableData = reactive<any>({})
 const count = computed(() => dataSourceCellEditable.value.length + 1)
-const handleCellEdit = (key: string) => {
-  cellEditableData[key] = dataSourceCellEditable.value.filter((item) => key === item.key)[0]
-}
-const rowEditableData = reactive<any>({})
-const handleRowEdit = (key: string) => {
-  rowEditableData[key] = dataSourceRowEditable.value.filter((item) => key === item.key)[0]
-}
-const handleCellSave = (key: string) => {
-  Object.assign(dataSourceCellEditable.value.filter((item) => key === item.key)[0], cellEditableData[key])
-  delete cellEditableData[key]
-}
-const handleRowSave = (key: string) => {
-  Object.assign(dataSourceCellEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
-  delete rowEditableData[key]
-}
-const handleDelete = (key: string) => {
-  dataSourceCellEditable.value = dataSourceCellEditable.value.filter((item) => item.key !== key)
-}
-const handleCancel = (key: string) => {
-  delete rowEditableData[key]
-}
-const handleAdd = () => {
+const handleCellAdd = () => {
   const newData = {
     key: `${count.value}`,
     name: `Edward King ${count.value}`,
@@ -462,7 +493,27 @@ const handleAdd = () => {
   }
   dataSourceCellEditable.value.push(newData)
 }
-const tableLoading = ref(false)
+const handleCellEdit = (key: string) => {
+  cellEditableData[key] = dataSourceCellEditable.value.filter((item) => key === item.key)[0]
+}
+const handleCellSave = (key: string) => {
+  Object.assign(dataSourceCellEditable.value.filter((item) => key === item.key)[0], cellEditableData[key])
+  delete cellEditableData[key]
+}
+const handleCellDelete = (key: string) => {
+  dataSourceCellEditable.value = dataSourceCellEditable.value.filter((item) => item.key !== key)
+}
+const rowEditableData = reactive<any>({})
+const handleRowEdit = (key: string) => {
+  rowEditableData[key] = dataSourceRowEditable.value.filter((item) => key === item.key)[0]
+}
+const handleRowSave = (key: string) => {
+  Object.assign(dataSourceCellEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
+  delete rowEditableData[key]
+}
+const handleRowCancel = (key: string) => {
+  delete rowEditableData[key]
+}
 const handleTableChange = (page: number, pageSize: number) => {
   tableLoading.value = true
   setTimeout(() => {
@@ -477,13 +528,12 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
       :data-source="dataSource"
       :pagination="{
-        total: total,
         showTotal: true
       }"
       :loading="loading"
@@ -510,15 +560,20 @@ watchEffect(() => {
       </template>
     </Table>
     <h2 class="mt30 mb10">加载中</h2>
-    <Table :columns="columns" loading />
+    <Flex vertical>
+      <Table :columns="columns" loading />
+      <Table :columns="columns" loading :spin-props="{ indicator: 'dynamic-circle' }" />
+    </Flex>
     <h2 class="mt30 mb10">暂无数据</h2>
-    <Table :columns="columns" />
+    <Flex vertical>
+      <Table :columns="columns" />
+      <Table :columns="columns" :empty-props="{ description: 'no data', image: 'filled' }" />
+    </Flex>
     <h2 class="mt30 mb10">带边框</h2>
     <Table
       :columns="columns"
       :data-source="dataSource"
       :pagination="{
-        total: total,
         showTotal: true
       }"
       bordered
@@ -543,30 +598,42 @@ watchEffect(() => {
         </template>
       </template>
     </Table>
+    <h2 class="mt30 mb10">三种尺寸</h2>
+    <h3 class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</h3>
+    <Flex vertical>
+      <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
+      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <Table :columns="columnsSize" :data-source="dataSourceSize" :size="size" :bordered="sizeBordered" />
+    </Flex>
+    <h2 class="mt30 mb10">斑马条纹</h2>
+    <Flex vertical>
+      <Space align="center"> bordered: <Switch v-model="stripedBordered" /> </Space>
+      <Table :columns="columnsStriped" :data-source="dataSourcesStriped" striped :bordered="stripedBordered" />
+    </Flex>
     <h2 class="mt30 mb10">页头和页脚</h2>
-    <Space align="center"> bordered: <Switch v-model="bordered" /> </Space>
-    <br />
-    <br />
-    <Table :columns="columns" :data-source="dataSource" :bordered="bordered">
-      <template #header> Header firstData name: {{ dataSource[0].name }} </template>
-      <template #bodyCell="{ column, text }">
-        <template v-if="column.key === 'name'">
-          <a> hello {{ text }} </a>
+    <Flex vertical>
+      <Space align="center"> bordered: <Switch v-model="headerFooterbordered" /> </Space>
+      <Table :columns="columns" :data-source="dataSource" :bordered="headerFooterbordered">
+        <template #header> Header firstData name: {{ dataSource[0].name }} </template>
+        <template #bodyCell="{ column, text }">
+          <template v-if="column.key === 'name'">
+            <a> hello {{ text }} </a>
+          </template>
+          <template v-else-if="column.key === 'sex'">
+            <Tag v-if="text === 'boy'" color="volcano">{{ text }}</Tag>
+            <Tag v-else-if="text === 'girl'" color="magenta">{{ text }}</Tag>
+          </template>
+          <template v-else-if="column.key === 'action'">
+            <span>
+              <a>Invite</a>
+              <Divider vertical />
+              <a>Delete</a>
+            </span>
+          </template>
         </template>
-        <template v-else-if="column.key === 'sex'">
-          <Tag v-if="text === 'boy'" color="volcano">{{ text }}</Tag>
-          <Tag v-else-if="text === 'girl'" color="magenta">{{ text }}</Tag>
-        </template>
-        <template v-else-if="column.key === 'action'">
-          <span>
-            <a>Invite</a>
-            <Divider vertical />
-            <a>Delete</a>
-          </span>
-        </template>
-      </template>
-      <template #footer> Footer lastData name: {{ dataSource[dataSource.length - 1].name }} </template>
-    </Table>
+        <template #footer> Footer lastData name: {{ dataSource[dataSource.length - 1].name }} </template>
+      </Table>
+    </Flex>
     <h2 class="mt30 mb10">单元格自动省略</h2>
     <h3 class="mb10">设置 column.ellipsis 可以让单元格内容根据宽度自动省略</h3>
     <Table :columns="columnsEllipsis" :data-source="dataSource">
@@ -577,7 +644,10 @@ watchEffect(() => {
       </template>
     </Table>
     <h2 class="mt30 mb10">合并单元格</h2>
-    <h3 class="mb10">表头只支持列合并，使用 column 里的 colSpan 进行设置；表格支持行/列合并，使用 customCell 将单元格属性 colSpan 或 rowSpan 设为 0 时，设置的表格不会渲染</h3>
+    <h3 class="mb10"
+      >表头只支持列合并，使用 column 里的 colSpan 进行设置；表格支持行/列合并，使用 customCell 将单元格属性 colSpan
+      或rowSpan 设为 0 时，设置的表格不会渲染</h3
+    >
     <Table :columns="columnsMerge" :data-source="dataSourceMerge" bordered>
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
@@ -586,7 +656,9 @@ watchEffect(() => {
       </template>
     </Table>
     <h2 class="mt30 mb10">可编辑单元格</h2>
-    <Button style="margin-bottom: 16px;" type="primary" :icon="() => h(PlusOutlined)" @click="handleAdd">新增</Button>
+    <Button style="margin-bottom: 16px" type="primary" :icon="() => h(PlusOutlined)" @click="handleCellAdd"
+      >新增</Button
+    >
     <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
@@ -602,11 +674,7 @@ watchEffect(() => {
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'action'">
-          <Popconfirm
-            v-if="dataSourceCellEditable.length"
-            title="Sure to delete?"
-            @ok="handleDelete(record.key)"
-          >
+          <Popconfirm v-if="dataSourceCellEditable.length" title="Sure to delete?" @ok="handleCellDelete(record.key)">
             <a>delete</a>
           </Popconfirm>
         </template>
@@ -649,7 +717,7 @@ watchEffect(() => {
           <span v-if="rowEditableData[record.key]">
             <a @click="handleRowSave(record.key)">Save</a>
             <Divider vertical />
-            <Popconfirm title="Sure to cancel?" @ok="handleCancel(record.key)">
+            <Popconfirm title="Sure to cancel?" @ok="handleRowCancel(record.key)">
               <a>Cancel</a>
             </Popconfirm>
           </span>
@@ -675,7 +743,7 @@ watchEffect(() => {
         {{ record.description }}
       </template>
       <template #expandColumnTitle>
-        <span style="color: #d4380d;">More</span>
+        <span style="color: #d4380d">More</span>
       </template>
       <template #bodyCell="{ column }">
         <template v-if="column.key === 'action'">
@@ -695,35 +763,21 @@ watchEffect(() => {
     </Table>
     <h2 class="mt30 mb10">固定表头</h2>
     <h3 class="mb10">方便一页内展示大量数据</h3>
-    <Table
-      :columns="columnsFixHeader"
-      :data-source="dataSourceFixHeader"
-      :scroll="{ y: 240 }"
-    />
+    <Table :columns="columnsFixHeader" :data-source="dataSourceFixHeader" :scroll="{ y: 240 }" />
     <h2 class="mt30 mb10">固定头和列</h2>
     <h3 class="mb10">适合同时展示有大量数据和数据列</h3>
     <h3 class="mb10">建议指定 scroll.x 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 scroll.x</h3>
-    <a-table :columns="columnsFixHeaderAndColumn" :data-source="dataSourceFixHeaderAndColumn" :scroll="{ x: 1500, y: 300 }">
+    <Table
+      :columns="columnsFixHeaderAndColumn"
+      :data-source="dataSourceFixHeaderAndColumn"
+      :scroll="{ x: 1500, y: 300 }"
+    >
       <template #bodyCell="{ column }">
         <template v-if="column.key === 'action'">
           <a>action</a>
         </template>
       </template>
-    </a-table>
-    <Table :columns="columnsFixHeaderAndColumn" :data-source="dataSourceFixHeaderAndColumn" :scroll="{ x: 1500, y: 300 }">
-      <template #bodyCell="{ column }">
-        <template v-if="column.key === 'action'">
-          <a>action</a>
-        </template>
-      </template>
-    </Table> -->
-    <h2 class="mt30 mb10">三种尺寸</h2>
-    <h3 class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</h3>
-    <Flex vertical>
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-      <a-table :columns="columnsSize" :data-source="dataSourceSize" :size="size" />
-      <Table :columns="columnsSize" :data-source="dataSourceSize" :size="size" />
-    </Flex>
+    </Table>
   </div>
 </template>
 <style lang="less" scoped>
