@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, watch, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
 import type { VNode, Slot, CSSProperties } from 'vue'
 import Button from '../button'
 interface Props {
@@ -158,7 +158,6 @@ const modalNoticeProps: object = computed(() => {
 const modalNoticeText = computed(() => {
   return getComputedValue('noticeText')
 })
-
 watch(
   modalOpen,
   async (to) => {

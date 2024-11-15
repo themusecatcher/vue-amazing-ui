@@ -2,13 +2,12 @@
 
 <GlobalElement />
 
-## 1.9.6 <Tag color="volcano" size="small">soon</Tag>
+## 1.9.6 <Tag color="volcano" size="small">2024-11-15</Tag>
 
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `size` 属性，支持设置选择器的尺寸大小
 - 优化并更新 [分页 Pagination](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html) 组件，新增 `size` 属性，支持设置分页器的尺寸大小
-- 优化并更新 [分页 Pagination](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html) 组件，新增 `size` 属性，支持设置分页器的尺寸大小
-
-
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `size` `striped` `ellipsisProps` `scroll` `showExpandColumn` `expandColumnTitle` `expandColumnWidth` `expandCell` `expandedRowRender` `expandFixed` `expandedRowKeys` `expandRowByClick` 等属性；支持：设置三种尺寸；斑马条纹；合并单元格；可编辑单元格；可编辑行；可展开；固定列；固定表头；固定头和列等多种功能
+- 组件库及文档代码优化
 
 ## 1.9.5 <Tag color="volcano" size="small">2024-11-13</Tag>
 
@@ -26,7 +25,7 @@
 - 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，优化预览打开关闭动画效果
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，优化显示隐藏动画效果
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，优化红点显示隐藏动画效果
-- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，重构表格组件；新增 `bordered` `tableLayout` `header` `footer` 属性；支持使用 `headerCell` `bodyCell` 自定义个性化头部单元格和内容单元格；引入文本省略组件，支持表格头部或内容单元格文本溢出时自动显示省略号，且悬浮省略文本时，自动弹出文字提示
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，重构表格组件；新增 `header` `footer` `bordered` `tableLayout` 属性；支持：使用 `headerCell` `bodyCell` 自定义个性化头部单元格和内容单元格；引入文本省略组件，支持表格头部或内容单元格文本溢出时自动显示省略号，且悬浮省略文本时，自动弹出文字提示
 - 组件库及文档代码优化
 
 ## 1.9.3 <Tag color="volcano" size="small">2024-11-06</Tag>

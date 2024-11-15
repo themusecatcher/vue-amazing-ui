@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useSlotsExist } from '../utils'
 interface Props {
   spinning?: boolean // 是否为加载中状态
   size?: 'small' | 'middle' | 'large' // 加载中尺寸
-  tip?: string // 描述文案
+  tip?: string // 描述文案 string | slot
   indicator?: 'dot' | 'spin-dot' | 'spin-line' | 'ring-circle' | 'ring-rail' | 'dynamic-circle' | 'magic-ring' // 加载指示符
   color?: string // 指示符颜色，当 indicator: 'magic-ring' 时为外环颜色
   spinCircleWidth?: number // 圆环宽度，单位是加载指示符宽度的百分比，仅当 indicator: 'ring-circle' | 'ring-rail' 时生效
@@ -26,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   rotate: false,
   speed: 800
 })
+const slotsExist = useSlotsExist(['tip'])
 const circlePerimeter = computed(() => {
   // 圆环周长
   return (100 - props.spinCircleWidth) * Math.PI
@@ -37,11 +39,14 @@ const circlePath = computed(() => {
    a ${long / 2},${long / 2} 0 1 1 0,${long}
    a ${long / 2},${long / 2} 0 1 1 0,-${long}`
 })
+const showTip = computed(() => {
+  return slotsExist.tip || props.tip
+})
 </script>
 <template>
   <div
     :class="`m-spin-wrap spin-${size}`"
-    :style="`--color: ${color}; --magic-ring-color: ${magicRingColor}; --spin-circle-width: ${spinCircleWidth}; --speed: ${speed}ms;`"
+    :style="`--spin-color: ${color}; --magic-ring-color: ${magicRingColor}; --spin-circle-width: ${spinCircleWidth}; --spin-speed: ${speed}ms;`"
   >
     <div class="m-spin" v-show="spinning">
       <div class="m-spin-box">
@@ -118,7 +123,9 @@ const circlePath = computed(() => {
           <div class="outer-ring"></div>
           <div class="inner-ring"></div>
         </div>
-        <p v-if="tip" class="spin-tip" :class="{ 'dot-tip': ['dot', 'spin-dot'].includes(indicator) }">{{ tip }}</p>
+        <div v-if="showTip" class="spin-tip" :class="{ 'dot-tip': ['dot', 'spin-dot'].includes(indicator) }">
+          <slot name="tip">{{ tip }}</slot>
+        </div>
       </div>
     </div>
     <div class="spin-content" :class="{ 'spin-blur': spinning }">
@@ -161,7 +168,7 @@ const circlePath = computed(() => {
         .dot-item {
           // 单个圆点样式
           position: absolute;
-          background: var(--color);
+          background: var(--spin-color);
           border-radius: 50%;
           opacity: 0.3;
           animation: loadingDotColor 1s linear infinite alternate;
@@ -208,36 +215,36 @@ const circlePath = computed(() => {
           display: inline-block;
           .spin-item {
             position: absolute;
-            background: var(--color);
+            background: var(--spin-color);
             border-radius: 50%;
           }
           .spin-item:first-child {
             top: 0;
             left: 0;
             opacity: 0.3;
-            animation: spinColor1 var(--speed) linear infinite;
-            -webkit-animation: spinColor1 var(--speed) linear infinite;
+            animation: spinColor1 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor1 var(--spin-speed) linear infinite;
           }
           .spin-item:nth-child(2) {
             top: 0;
             right: 0;
             opacity: 0.5;
-            animation: spinColor3 var(--speed) linear infinite;
-            -webkit-animation: spinColor3 var(--speed) linear infinite;
+            animation: spinColor3 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor3 var(--spin-speed) linear infinite;
           }
           .spin-item:nth-child(3) {
             bottom: 0;
             right: 0;
             opacity: 0.7;
-            animation: spinColor5 var(--speed) linear infinite;
-            -webkit-animation: spinColor5 var(--speed) linear infinite;
+            animation: spinColor5 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor5 var(--spin-speed) linear infinite;
           }
           .spin-item:last-child {
             bottom: 0;
             left: 0;
             opacity: 0.9;
-            animation: spinColor7 var(--speed) linear infinite;
-            -webkit-animation: spinColor7 var(--speed) linear infinite;
+            animation: spinColor7 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor7 var(--spin-speed) linear infinite;
           }
         }
         .m-spin-line {
@@ -248,30 +255,30 @@ const circlePath = computed(() => {
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            background-color: var(--color);
+            background-color: var(--spin-color);
           }
           .spin-item:first-child {
             opacity: 0.3;
-            animation: spinColor1 var(--speed) linear infinite;
-            -webkit-animation: spinColor1 var(--speed) linear infinite;
+            animation: spinColor1 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor1 var(--spin-speed) linear infinite;
           }
           .spin-item:nth-child(2) {
             opacity: 0.5;
             transform: translateX(-50%) rotate(90deg);
-            animation: spinColor3 var(--speed) linear infinite;
-            -webkit-animation: spinColor3 var(--speed) linear infinite;
+            animation: spinColor3 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor3 var(--spin-speed) linear infinite;
           }
           .spin-item:nth-child(3) {
             opacity: 0.7;
             transform: translateX(-50%) rotate(180deg);
-            animation: spinColor5 var(--speed) linear infinite;
-            -webkit-animation: spinColor5 var(--speed) linear infinite;
+            animation: spinColor5 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor5 var(--spin-speed) linear infinite;
           }
           .spin-item:last-child {
             opacity: 0.9;
             transform: translateX(-50%) rotate(270deg);
-            animation: spinColor7 var(--speed) linear infinite;
-            -webkit-animation: spinColor7 var(--speed) linear infinite;
+            animation: spinColor7 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor7 var(--spin-speed) linear infinite;
           }
         }
         .spin-rotate {
@@ -280,23 +287,23 @@ const circlePath = computed(() => {
           transform: rotate(45deg);
           .spin-item:first-child {
             opacity: 0.4;
-            animation: spinColor2 var(--speed) linear infinite;
-            -webkit-animation: spinColor2 var(--speed) linear infinite;
+            animation: spinColor2 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor2 var(--spin-speed) linear infinite;
           }
           .spin-item:nth-child(2) {
             opacity: 0.6;
-            animation: spinColor4 var(--speed) linear infinite;
-            -webkit-animation: spinColor4 var(--speed) linear infinite;
+            animation: spinColor4 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor4 var(--spin-speed) linear infinite;
           }
           .spin-item:nth-child(3) {
             opacity: 0.8;
-            animation: spinColor6 var(--speed) linear infinite;
-            -webkit-animation: spinColor6 var(--speed) linear infinite;
+            animation: spinColor6 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor6 var(--spin-speed) linear infinite;
           }
           .spin-item:last-child {
             opacity: 1;
-            animation: spinColor8 var(--speed) linear infinite;
-            -webkit-animation: spinColor8 var(--speed) linear infinite;
+            animation: spinColor8 var(--spin-speed) linear infinite;
+            -webkit-animation: spinColor8 var(--spin-speed) linear infinite;
           }
         }
         .has-tip {
@@ -417,7 +424,7 @@ const circlePath = computed(() => {
           stroke-dashoffset: 0;
         }
         .path {
-          stroke: var(--color);
+          stroke: var(--spin-color);
           stroke-width: var(--spin-circle-width);
           stroke-dashoffset: 0;
         }
@@ -431,7 +438,7 @@ const circlePath = computed(() => {
             stroke-width: 5;
             stroke-dasharray: 90, 150;
             stroke-dashoffset: 0;
-            stroke: var(--color);
+            stroke: var(--spin-color);
             stroke-linecap: round;
             animation: loadingDash 1.5s ease-in-out infinite;
             -webkit-animation: loadingDash 1.5s ease-in-out infinite;
@@ -473,7 +480,7 @@ const circlePath = computed(() => {
           width: 100%;
           height: 100%;
           border-style: solid;
-          border-color: var(--color);
+          border-color: var(--spin-color);
           border-radius: 50%;
           animation: spinOuterRing 1.5s linear infinite;
           -webkit-animation: spinOuterRing 1.5s linear infinite;
@@ -501,7 +508,7 @@ const circlePath = computed(() => {
         }
       }
       .spin-tip {
-        color: var(--color);
+        color: var(--spin-color);
         text-align: center;
       }
     }

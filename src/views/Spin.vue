@@ -118,7 +118,9 @@ const size = ref('middle')
         <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
         <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
         <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
-        <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="magic-ring" />
+        <Spin class="u-spin" :size="size" :spinning="spinning" indicator="magic-ring">
+          <template #tip>加载中...</template>
+        </Spin>
       </Space>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
