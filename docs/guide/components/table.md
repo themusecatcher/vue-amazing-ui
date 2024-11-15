@@ -1500,6 +1500,26 @@ const dataSourceMerge = ref([
   </template>
 </Table>
 
+<style lang="less" scoped>
+.editable-cell {
+  .cell-icon {
+    display: none;
+  }
+  .cell-icon,
+  .cell-icon-check {
+    &:hover {
+      transition: color 0.3s;
+      color: #1890ff;
+    }
+  }
+  &:hover {
+    .cell-icon {
+      display: inline-block;
+    }
+  }
+}
+</style>
+
 ::: details Show Code
 
 ```vue
@@ -1594,6 +1614,25 @@ const handleCellDelete = (key: string) => {
     </template>
   </Table>
 </template>
+<style lang="less" scoped>
+.editable-cell {
+  .cell-icon {
+    display: none;
+  }
+  .cell-icon,
+  .cell-icon-check {
+    &:hover {
+      transition: color 0.3s;
+      color: #1890ff;
+    }
+  }
+  &:hover {
+    .cell-icon {
+      display: inline-block;
+    }
+  }
+}
+</style>
 ```
 
 :::
@@ -2061,7 +2100,7 @@ scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [Scro
 tableLayout | 表格布局方式，设为 `fixed` 表示内容不会影响列的布局，参考 [table-layout](https://developer.mozilla.org/zh-CN/docs/Web/CSS/table-layout) 属性，固定表头/列或使用了 `column.ellipsis` 时，默认值为 `fixed` | 'auto' &#124; 'fixed' | undefined
 showExpandColumn | 是否展示展开列 | boolean | false
 expandColumnTitle | 自定义展开列表头 | string &#124; slot | undefined
-expandColumnWidth | 展开列的宽度 | number &#124; string | 48
+expandColumnWidth | 展开列的宽度 | string &#124; number | 48
 expandCell | 自定义展开按钮 | slot | undefined
 expandedRowRender | 自定义额外的展开行内容 | slot | undefined
 expandFixed | 是否固定展开列 | boolean | false
@@ -2079,7 +2118,7 @@ ellipsis? | 超过宽度是否自动省略 | boolean | undefined
 ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于单独配置某列文本省略样式 | object | undefined
 fixed? | 列是否固定 | 'left' &#124; 'right' | undefined
 slot? | 列插槽名称索引 | string | undefined
-customCell? | 设置单元格属性 | Function | undefined
+customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Column) => object | undefined
 
 ### ScrollOption Type
 
