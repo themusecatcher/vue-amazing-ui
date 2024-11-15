@@ -14,7 +14,7 @@ interface Column {
   ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略样式
   fixed?: 'left' | 'right' // 列是否固定
   slot?: string // 列插槽名称索引
-  customCell?: Function // 设置单元格属性
+  customCell?: (record: any, rowIndex: number, column: Column) => object // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
 interface ScrollOption {
@@ -39,7 +39,7 @@ interface Props {
   tableLayout?: 'auto' | 'fixed' // 表格布局方式，设为 fixed 表示内容不会影响列的布局，参考 table-layout 属性
   showExpandColumn?: boolean // 是否展示展开列
   expandColumnTitle?: string // 自定义展开列表头 string | slot
-  expandColumnWidth?: number | string // 展开列的宽度
+  expandColumnWidth?: string | number // 展开列的宽度
   expandCell?: Slot // 自定义展开按钮 slot
   expandedRowRender?: Slot // 自定义额外的展开行内容 slot
   expandFixed?: boolean // 是否固定展开列
