@@ -53,20 +53,6 @@ const totalText = computed(() => {
   }
   return null
 })
-const selectHeight = computed(() => {
-  const heightMap = {
-    small: 24,
-    middle: 28,
-    large: 32
-  }
-  return heightMap[props.size] || heightMap['large']
-})
-const inputSize = computed(() => {
-  if (props.size === 'small') {
-    return 'small'
-  }
-  return 'middle'
-})
 const pageList = computed(() => {
   // 获取显示的页码数组
   return dealPageList(currentPage.value).filter((n) => n !== 1 && n !== totalPage.value)
@@ -91,6 +77,20 @@ const selectOptions = computed(() => {
         value: pageSize
       }
     })
+})
+const selectHeight = computed(() => {
+  const heightMap = {
+    small: 24,
+    middle: 28,
+    large: 32
+  }
+  return heightMap[props.size] || heightMap['large']
+})
+const optionsSize = computed(() => {
+  if (props.size === 'small') {
+    return 'small'
+  }
+  return 'middle'
 })
 watch(
   () => props.page,
@@ -204,7 +204,7 @@ function onPageSizeChange(pageSize: number) {
     <span
       tabindex="0"
       class="pagination-prev pagination-right-gap"
-      :class="{ 'item-disabled': currentPage === 1 }"
+      :class="{ 'pagination-item-disabled': currentPage === 1 }"
       @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage - 1)"
       @click="disabled || currentPage === 1 ? () => false : onPageChange(currentPage - 1)"
     >
@@ -296,7 +296,7 @@ function onPageSizeChange(pageSize: number) {
     <span
       tabindex="0"
       class="pagination-next"
-      :class="{ 'item-disabled': currentPage === totalPage }"
+      :class="{ 'pagination-item-disabled': currentPage === totalPage }"
       @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage + 1)"
       @click="disabled || currentPage === totalPage ? () => false : onPageChange(currentPage + 1)"
     >
@@ -315,10 +315,10 @@ function onPageSizeChange(pageSize: number) {
         ></path>
       </svg>
     </span>
-    <span class="m-pagination-options" v-if="showPageSizeChanger || showQuickJumper">
+    <span class="pagination-options" v-if="showPageSizeChanger || showQuickJumper">
       <Select
         v-if="showPageSizeChanger"
-        :class="{ 'pagination-right-gap': showQuickJumper }"
+        :size="optionsSize"
         :height="selectHeight"
         :disabled="disabled"
         :options="selectOptions"
@@ -328,7 +328,7 @@ function onPageSizeChange(pageSize: number) {
       <span class="pagination-jump-page" v-if="showQuickJumper">
         跳至<Input
           :width="50"
-          :size="inputSize"
+          :size="optionsSize"
           :disabled="disabled"
           v-model:value.lazy="jumpNumber"
           @change="onPageJump"
@@ -402,7 +402,7 @@ function onPageSizeChange(pageSize: number) {
     color: @themeColor;
     border-color: @themeColor;
   }
-  .item-disabled {
+  .pagination-item-disabled {
     color: rgba(0, 0, 0, 0.25);
     background: #fff;
     border-color: #d9d9d9;
@@ -469,17 +469,16 @@ function onPageSizeChange(pageSize: number) {
       }
     }
   }
-  .m-pagination-options {
+  .pagination-options {
     display: inline-block;
     margin-left: 16px;
     .pagination-jump-page {
       display: inline-block;
       height: 32px;
       line-height: 32px;
+      margin-left: 8px;
       .m-input-wrap {
         margin: 0 8px;
-        height: 32px;
-        line-height: 30px;
       }
     }
   }
@@ -521,18 +520,13 @@ function onPageSizeChange(pageSize: number) {
       line-height: 24px;
     }
   }
-  .m-pagination-options {
+  .pagination-options {
     display: inline-block;
     margin-left: 8px;
     .pagination-jump-page {
       display: inline-block;
       height: 24px;
       line-height: 24px;
-      .m-input-wrap {
-        margin: 0 4px;
-        height: 24px;
-        line-height: 22px;
-      }
     }
   }
   .pagination-right-gap {
@@ -557,7 +551,6 @@ function onPageSizeChange(pageSize: number) {
     line-height: 26px;
   }
   .pagintion-item-link {
-    margin-right: 6px;
     min-width: 28px;
     height: 28px;
     line-height: 28px;
@@ -565,17 +558,17 @@ function onPageSizeChange(pageSize: number) {
       line-height: 28px;
     }
   }
-  .m-pagination-options {
+  .pagination-options {
     display: inline-block;
     margin-left: 12px;
     .pagination-jump-page {
       display: inline-block;
       height: 28px;
       line-height: 28px;
-      .m-input-wrap {
-        margin: 0 6px;
-        height: 28px;
-        line-height: 26px;
+      :deep(.m-input-wrap) {
+        .m-input {
+          padding: 2px 11px;
+        }
       }
     }
   }
@@ -633,7 +626,7 @@ function onPageSizeChange(pageSize: number) {
       }
     }
   }
-  .m-pagination-options {
+  .pagination-options {
     color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
   }
