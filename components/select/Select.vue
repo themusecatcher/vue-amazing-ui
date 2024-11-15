@@ -23,6 +23,7 @@ interface Props {
   filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
   width?: string | number // 选择器宽度，单位 px
   height?: number // 选择器高度，单位 px
+  size?: 'small' | 'middle' | 'large' // 选择器大小
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
   scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number | string // (v-model) 当前选中的 option 条目值
@@ -38,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
   filter: true,
   width: 'auto',
   height: 32,
+  size: 'middle',
   maxDisplay: 6,
   scrollbarProps: () => ({}),
   modelValue: undefined
@@ -49,7 +51,7 @@ const inputValue = ref() // 支持搜索时，用户输入内容
 const disabledBlur = ref(false) // 是否禁用 input 标签的 blur 事件
 const hideSelectName = ref(false) // 用户输入时，隐藏 selectName 的展示
 const hoverValue = ref() // 鼠标悬浮项的 value 值
-const showOptions = ref(false) // options 面板
+const showOptions = ref(false) // 显示隐藏options 面板
 const showArrow = ref(true) // 剪头图标显隐
 const showClear = ref(false) // 清除图标显隐
 const showCaret = ref(false) // 支持搜索时，输入光标的显隐
@@ -64,7 +66,7 @@ const selectWidth = computed(() => {
 })
 const optionsStyle = computed(() => {
   return {
-    maxHeight: `${props.maxDisplay * props.height + 8}px`
+    maxHeight: `${props.maxDisplay * 32 + 8}px`
   }
 })
 watchEffect(() => {
@@ -161,8 +163,8 @@ function onHover(value: string | number, disabled: boolean | undefined) {
   disabledBlur.value = Boolean(disabled)
   hoverValue.value = value
 }
-function openSelect() {
-  selectFocus()
+function toggleSelect() {
+  focusSelect()
   if (!props.search) {
     inputRef.value.style.opacity = 0
   }
@@ -183,7 +185,7 @@ function onSearchInput(e: InputEvent) {
 }
 function onClear() {
   if (selectFocused.value) {
-    selectFocus()
+    focusSelect()
     showCaret.value = true
   }
   showClear.value = false
@@ -195,7 +197,7 @@ function onClear() {
   emits('update:modelValue')
   emits('change')
 }
-function selectFocus() {
+function focusSelect() {
   inputRef.value.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
   selectFocused.value = true
 }
@@ -213,15 +215,21 @@ function onChange(value: string | number, label: string, index: number) {
 <template>
   <div
     class="m-select"
-    :class="{ 'select-focused': selectFocused, 'search-select': search, 'select-disabled': disabled }"
-    :style="`width: ${selectWidth}; height: ${height}px;`"
-    @click="disabled ? () => false : openSelect()"
+    :class="{
+      'select-focused': selectFocused,
+      'search-select': search,
+      'select-small': size === 'small',
+      'select-large': size === 'large',
+      'select-disabled': disabled
+    }"
+    :style="`--select-width: ${selectWidth}; --select-height: ${height}px;`"
+    @click="disabled ? () => false : toggleSelect()"
   >
     <div class="m-select-wrap" @mouseenter="onEnter" @mouseleave="onLeave">
-      <span class="m-select-search">
+      <span class="select-search">
         <input
           ref="inputRef"
-          class="select-search"
+          class="search-input"
           :class="{ 'caret-show': showOptions || showCaret }"
           type="text"
           autocomplete="off"
@@ -236,7 +244,6 @@ function onChange(value: string | number, label: string, index: number) {
         v-if="!hideSelectName"
         class="select-item"
         :class="{ 'select-placeholder': !selectedName || showOptions }"
-        :style="`line-height: ${height - 2}px;`"
         :title="selectedName"
       >
         {{ selectedName || placeholder }}
@@ -300,8 +307,7 @@ function onChange(value: string | number, label: string, index: number) {
     >
       <div
         v-if="showOptions && filterOptions && filterOptions.length"
-        class="m-options-panel"
-        :style="`top: ${height + 4}px;`"
+        class="options-panel"
         @mouseleave="disabledBlur = false"
       >
         <Scrollbar :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
@@ -318,17 +324,13 @@ function onChange(value: string | number, label: string, index: number) {
             ]"
             :title="option[label]"
             @mouseenter="onHover(option[value], option.disabled)"
-            @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
+            @click.stop="option.disabled ? focusSelect() : onChange(option[value], option[label], index)"
           >
             {{ option[label] }}
           </p>
         </Scrollbar>
       </div>
-      <div
-        v-else-if="showOptions && filterOptions && !filterOptions.length"
-        class="options-empty"
-        :style="`top: ${height + 4}px; width: ${width}px;`"
-      >
+      <div v-else-if="showOptions && filterOptions && !filterOptions.length" class="options-empty" @click.stop.prevent>
         <Empty image="outlined" />
       </div>
     </Transition>
@@ -385,6 +387,8 @@ function onChange(value: string | number, label: string, index: number) {
 .m-select {
   position: relative;
   display: inline-block;
+  width: var(--select-width);
+  height: var(--select-height);
   font-size: 14px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.88);
@@ -407,18 +411,19 @@ function onChange(value: string | number, label: string, index: number) {
     height: 100%;
     outline: none;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-    .m-select-search {
+    .select-search {
       position: absolute;
       top: 0;
       bottom: 0;
       left: 11px;
       right: 11px;
-      .select-search {
-        height: 100%;
+      .search-input {
         margin: 0;
         padding: 0;
         width: 100%;
+        height: 100%;
         caret-color: transparent;
+        vertical-align: top;
         background: transparent;
         border: none;
         outline: none;
@@ -434,6 +439,7 @@ function onChange(value: string | number, label: string, index: number) {
       position: relative;
       padding-right: 18px;
       flex: 1;
+      line-height: calc(var(--select-height) - 2px);
       user-select: none;
       overflow: hidden;
       white-space: nowrap;
@@ -489,8 +495,9 @@ function onChange(value: string | number, label: string, index: number) {
       pointer-events: auto;
     }
   }
-  .m-options-panel {
+  .options-panel {
     position: absolute;
+    top: calc(var(--select-height) + 4px);
     z-index: 1000;
     width: 100%;
     background-color: #fff;
@@ -533,10 +540,13 @@ function onChange(value: string | number, label: string, index: number) {
   }
   .options-empty {
     position: absolute;
+    top: calc(var(--select-height) + 4px);
     z-index: 1000;
+    width: 100%;
     border-radius: 8px;
     padding: 9px 16px;
     background-color: #fff;
+    cursor: auto;
     outline: none;
     box-shadow:
       0 6px 16px 0 rgba(0, 0, 0, 0.08),
@@ -560,13 +570,49 @@ function onChange(value: string | number, label: string, index: number) {
 .search-select {
   .m-select-wrap {
     cursor: text;
-    .m-select-search {
-      .select-search {
+    .select-search {
+      .search-input {
         cursor: auto;
         color: inherit;
         opacity: 1;
       }
     }
+  }
+}
+.select-small {
+  font-size: 14px;
+  height: 24px;
+  .m-select-wrap {
+    padding: 0 7px;
+    border-radius: 4px;
+    .select-search {
+      left: 7px;
+      right: 28px;
+    }
+    .select-item {
+      padding-right: 22px;
+      line-height: 22px;
+    }
+  }
+  .options-panel,
+  .options-empty {
+    top: 28px;
+  }
+}
+.select-large {
+  font-size: 16px;
+  height: 40px;
+  .m-select-wrap {
+    padding: 0 11px;
+    border-radius: 8px;
+    .select-item {
+      padding-right: 20px;
+      line-height: 38px;
+    }
+  }
+  .options-panel,
+  .options-empty {
+    top: 44px;
   }
 }
 .select-disabled {
@@ -576,7 +622,7 @@ function onChange(value: string | number, label: string, index: number) {
     background: #f5f5f5;
     user-select: none;
     cursor: not-allowed;
-    .m-select-search .select-search {
+    .select-search .search-input {
       cursor: not-allowed;
     }
   }

@@ -240,6 +240,7 @@ function onPassword() {
     line-height: 1.5714285714285714;
     position: relative;
     display: inline-flex;
+    vertical-align: top;
     width: 100%;
     min-width: 0;
     background-color: #ffffff;
@@ -258,7 +259,7 @@ function onPassword() {
     }
     .input-prefix {
       margin-right: 4px;
-      display: flex;
+      display: inline-flex;
       flex: none;
       align-items: center;
       :deep(svg) {
@@ -293,7 +294,7 @@ function onPassword() {
     }
     .input-suffix {
       margin-left: 4px;
-      display: flex;
+      display: inline-flex;
       flex: none;
       gap: 8px;
       align-items: center;

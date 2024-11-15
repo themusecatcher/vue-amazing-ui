@@ -14,6 +14,7 @@ interface Props {
   pageSizeOptions?: string[] | number[] // 设置每页可以显示多少条
   showTotal?: boolean | ((total: number, range: number[]) => string) // 用于显示数据总量和当前数据顺序
   placement?: 'left' | 'center' | 'right' // 分页展示位置，靠左 left，居中 center，靠右 right
+  size?: 'large' | 'middle' | 'small' // 分页按钮大小
 }
 const props = withDefaults(defineProps<Props>(), {
   page: 1,
@@ -26,10 +27,11 @@ const props = withDefaults(defineProps<Props>(), {
   showSizeChanger: undefined,
   pageSizeOptions: () => [10, 20, 50, 100],
   showTotal: false,
-  placement: 'center'
+  placement: 'center',
+  size: 'large'
 })
-const currentPage = ref(props.page) // 当前 page
-const currentPageSize = ref(props.pageSize) // 当前 pageSize
+const currentPage = ref(props.page) // 当前页数
+const currentPageSize = ref(props.pageSize) // 每页条数
 const jumpNumber = ref() // 跳转的页码
 const forwardMore = ref(false) // 左省略号展示
 const backwardMore = ref(false) // 右省略号展示
@@ -51,6 +53,20 @@ const totalText = computed(() => {
   }
   return null
 })
+const selectHeight = computed(() => {
+  const heightMap = {
+    small: 24,
+    middle: 28,
+    large: 32
+  }
+  return heightMap[props.size] || heightMap['large']
+})
+const inputSize = computed(() => {
+  if (props.size === 'small') {
+    return 'small'
+  }
+  return 'middle'
+})
 const pageList = computed(() => {
   // 获取显示的页码数组
   return dealPageList(currentPage.value).filter((n) => n !== 1 && n !== totalPage.value)
@@ -67,7 +83,7 @@ const selectOptions = computed(() => {
   const pageSizeOptipns = [currentPageSize.value, ...props.pageSizeOptions].map((pageSize: number | string) =>
     Number(pageSize)
   )
-  return [...new Set(pageSizeOptipns)]
+  return Array.from(new Set(pageSizeOptipns))
     .sort((a: number, b: number) => a - b)
     .map((pageSize: number) => {
       return {
@@ -177,15 +193,17 @@ function onPageSizeChange(pageSize: number) {
     :class="[
       `pagination-${placement}`,
       {
+        'pagination-small': size === 'small',
+        'pagination-middle': size === 'middle',
         'pagination-disabled': disabled,
         'pagination-hidden': !total || (hideOnSinglePage && total <= currentPageSize)
       }
     ]"
   >
-    <span class="pagination-total-text" v-if="totalText">{{ totalText }}</span>
+    <span class="pagination-total-text pagination-right-gap" v-if="totalText">{{ totalText }}</span>
     <span
       tabindex="0"
-      class="pagination-prev"
+      class="pagination-prev pagination-right-gap"
       :class="{ 'item-disabled': currentPage === 1 }"
       @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage - 1)"
       @click="disabled || currentPage === 1 ? () => false : onPageChange(currentPage - 1)"
@@ -207,7 +225,7 @@ function onPageSizeChange(pageSize: number) {
     </span>
     <span
       tabindex="0"
-      :class="['pagination-item', { 'item-active': currentPage === 1 }]"
+      :class="['pagination-item pagination-right-gap', { 'pagination-item-active': currentPage === 1 }]"
       @click="disabled ? () => false : onPageChange(1)"
     >
       1
@@ -216,19 +234,28 @@ function onPageSizeChange(pageSize: number) {
       v-show="forwardMore && pageList[0] - 1 > 1"
       tabindex="0"
       ref="forward"
-      class="pagintion-item-link"
+      class="pagintion-item-link pagination-right-gap"
       @click="disabled ? () => false : onPageForward()"
     >
-      <span class="u-ellipsis">•••</span>
-      <svg class="u-icon" viewBox="64 64 896 896" data-icon="double-left" aria-hidden="true" focusable="false">
+      <span class="ellipsis-character">•••</span>
+      <svg
+        class="icon-svg"
+        focusable="false"
+        data-icon="double-right"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+        viewBox="64 64 896 896"
+      >
         <path
-          d="M272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9L272.9 512zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9L576.9 512z"
+          d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 00188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 00492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z"
         ></path>
       </svg>
     </span>
     <span
       tabindex="0"
-      :class="['pagination-item', { 'item-active': currentPage === page }]"
+      :class="['pagination-item pagination-right-gap', { 'pagination-item-active': currentPage === page }]"
       v-for="(page, index) in pageList"
       :key="index"
       @click="disabled ? () => false : onPageChange(page)"
@@ -239,20 +266,29 @@ function onPageSizeChange(pageSize: number) {
       v-show="backwardMore && pageList[pageList.length - 1] + 1 < totalPage"
       tabindex="0"
       ref="backward"
-      class="pagintion-item-link"
+      class="pagintion-item-link pagination-right-gap"
       @click="disabled ? () => false : onPageBackward()"
     >
-      <span class="u-ellipsis">•••</span>
-      <svg class="u-icon" viewBox="64 64 896 896" data-icon="double-right" aria-hidden="true" focusable="false">
+      <span class="ellipsis-character">•••</span>
+      <svg
+        class="icon-svg"
+        focusable="false"
+        data-icon="double-right"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+        viewBox="64 64 896 896"
+      >
         <path
-          d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z"
+          d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 00188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 00492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z"
         ></path>
       </svg>
     </span>
     <span
       v-show="totalPage !== 1"
       tabindex="0"
-      :class="['pagination-item', { 'item-active': currentPage === totalPage }]"
+      :class="['pagination-item pagination-right-gap', { 'pagination-item-active': currentPage === totalPage }]"
       @click="disabled ? () => false : onPageChange(totalPage)"
     >
       {{ totalPage }}
@@ -282,7 +318,8 @@ function onPageSizeChange(pageSize: number) {
     <span class="m-pagination-options" v-if="showPageSizeChanger || showQuickJumper">
       <Select
         v-if="showPageSizeChanger"
-        :class="{ mr8: showQuickJumper }"
+        :class="{ 'pagination-right-gap': showQuickJumper }"
+        :height="selectHeight"
         :disabled="disabled"
         :options="selectOptions"
         @change="onPageSizeChange"
@@ -291,6 +328,7 @@ function onPageSizeChange(pageSize: number) {
       <span class="pagination-jump-page" v-if="showQuickJumper">
         跳至<Input
           :width="50"
+          :size="inputSize"
           :disabled="disabled"
           v-model:value.lazy="jumpNumber"
           @change="onPageJump"
@@ -310,7 +348,6 @@ function onPageSizeChange(pageSize: number) {
   .pagination-total-text {
     display: inline-block;
     height: 32px;
-    margin-right: 8px;
     line-height: 32px;
   }
   .pagination-item {
@@ -322,13 +359,12 @@ function onPageSizeChange(pageSize: number) {
     border: 1px solid #d9d9d9;
     border-radius: 6px;
     background: #fff;
-    margin-right: 8px;
     cursor: pointer;
     outline: none;
     user-select: none; // 禁止选取文本
     transition: all 0.2s;
     &:hover {
-      .item-active();
+      .pagination-item-active();
     }
   }
   .pagination-prev,
@@ -360,10 +396,7 @@ function onPageSizeChange(pageSize: number) {
       }
     }
   }
-  .pagination-prev {
-    margin-right: 8px;
-  }
-  .item-active {
+  .pagination-item-active {
     // 悬浮/选中样式
     font-weight: 600;
     color: @themeColor;
@@ -389,13 +422,12 @@ function onPageSizeChange(pageSize: number) {
   .pagintion-item-link {
     position: relative;
     display: inline-block;
-    margin-right: 8px;
     min-width: 32px;
     height: 32px;
     line-height: 32px;
     cursor: pointer;
     outline: none;
-    .u-ellipsis {
+    .ellipsis-character {
       position: absolute;
       top: 0;
       left: 0;
@@ -411,7 +443,7 @@ function onPageSizeChange(pageSize: number) {
       opacity: 1;
       transition: all 0.2s;
     }
-    .u-icon {
+    .icon-svg {
       position: absolute;
       top: 0;
       left: 0;
@@ -419,19 +451,19 @@ function onPageSizeChange(pageSize: number) {
       right: 0;
       margin: auto;
       display: inline-block;
-      fill: @themeColor;
-      width: 12px;
-      height: 12px;
+      font-size: 12px;
+      color: @themeColor;
+      fill: currentColor;
       opacity: 0;
       pointer-events: none;
       transition: all 0.2s;
     }
     &:hover {
-      .u-ellipsis {
+      .ellipsis-character {
         opacity: 0;
         pointer-events: none;
       }
-      .u-icon {
+      .icon-svg {
         opacity: 1;
         pointer-events: auto;
       }
@@ -440,9 +472,6 @@ function onPageSizeChange(pageSize: number) {
   .m-pagination-options {
     display: inline-block;
     margin-left: 16px;
-    .mr8 {
-      margin-right: 8px;
-    }
     .pagination-jump-page {
       display: inline-block;
       height: 32px;
@@ -454,6 +483,9 @@ function onPageSizeChange(pageSize: number) {
       }
     }
   }
+  .pagination-right-gap {
+    margin-right: 8px;
+  }
 }
 .pagination-left {
   justify-content: flex-start;
@@ -463,6 +495,93 @@ function onPageSizeChange(pageSize: number) {
 }
 .pagination-right {
   justify-content: flex-end;
+}
+.pagination-small {
+  font-size: 14px;
+  .pagination-total-text {
+    height: 24px;
+    line-height: 24px;
+  }
+  .pagination-item {
+    min-width: 24px;
+    height: 24px;
+    line-height: 22px;
+  }
+  .pagination-prev,
+  .pagination-next {
+    min-width: 24px;
+    height: 24px;
+    line-height: 22px;
+  }
+  .pagintion-item-link {
+    min-width: 24px;
+    height: 24px;
+    line-height: 24px;
+    .ellipsis-character {
+      line-height: 24px;
+    }
+  }
+  .m-pagination-options {
+    display: inline-block;
+    margin-left: 8px;
+    .pagination-jump-page {
+      display: inline-block;
+      height: 24px;
+      line-height: 24px;
+      .m-input-wrap {
+        margin: 0 4px;
+        height: 24px;
+        line-height: 22px;
+      }
+    }
+  }
+  .pagination-right-gap {
+    margin-right: 4px;
+  }
+}
+.pagination-middle {
+  font-size: 14px;
+  .pagination-total-text {
+    height: 28px;
+    line-height: 28px;
+  }
+  .pagination-item {
+    min-width: 28px;
+    height: 28px;
+    line-height: 26px;
+  }
+  .pagination-prev,
+  .pagination-next {
+    min-width: 28px;
+    height: 28px;
+    line-height: 26px;
+  }
+  .pagintion-item-link {
+    margin-right: 6px;
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+    .ellipsis-character {
+      line-height: 28px;
+    }
+  }
+  .m-pagination-options {
+    display: inline-block;
+    margin-left: 12px;
+    .pagination-jump-page {
+      display: inline-block;
+      height: 28px;
+      line-height: 28px;
+      .m-input-wrap {
+        margin: 0 6px;
+        height: 28px;
+        line-height: 26px;
+      }
+    }
+  }
+  .pagination-right-gap {
+    margin-right: 6px;
+  }
 }
 .pagination-disabled {
   .pagination-prev,
@@ -490,7 +609,7 @@ function onPageSizeChange(pageSize: number) {
       border-color: rgba(0, 0, 0, 0.25);
     }
   }
-  .item-active {
+  .pagination-item-active {
     border-color: #d9d9d9;
     background-color: rgba(0, 0, 0, 0.15);
     &:hover {
@@ -504,11 +623,11 @@ function onPageSizeChange(pageSize: number) {
     color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
     &:hover {
-      .u-ellipsis {
+      .ellipsis-character {
         opacity: 1;
         pointer-events: none;
       }
-      .u-icon {
+      .icon-svg {
         opacity: 0;
         pointer-events: none;
       }
