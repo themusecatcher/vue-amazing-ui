@@ -2,6 +2,10 @@
 
 <GlobalElement />
 
+## 1.9.7 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `xPlacement` `yPlacement` 属性，支持设置滚动条位置；调整是否使用横向滚动属性名 `horizontal` 为 `xScrollable`
+
 ## 1.9.6 <Tag color="volcano" size="small">2024-11-15</Tag>
 
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `size` 属性，支持设置选择器的尺寸大小

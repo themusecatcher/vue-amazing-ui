@@ -9,7 +9,9 @@ interface Props {
   trigger?: 'hover' | 'none' // 显示滚动条的时机，'none' 表示一直显示
   autoHide?: boolean // 是否自动隐藏滚动条，仅当 trigger: 'hover' 时生效，true: hover且不滚动时自动隐藏，滚动时自动显示；false: hover时始终显示
   delay?: number // 滚动条自动隐藏的延迟时间，单位 ms
-  horizontal?: boolean // 是否使用横向滚动
+  xScrollable?: boolean // 是否使用横向滚动
+  xPlacement?: 'top' | 'bottom' // 横向滚动时滚动条的位置
+  yPlacement?: 'left' | 'right' // 纵向滚动时滚动条的位置
 }
 const props = withDefaults(defineProps<Props>(), {
   contentClass: undefined,
@@ -18,7 +20,9 @@ const props = withDefaults(defineProps<Props>(), {
   trigger: 'hover',
   autoHide: true,
   delay: 1000,
-  horizontal: false
+  xScrollable: false,
+  xPlacement: 'bottom',
+  yPlacement: 'right'
 })
 const scrollbarRef = ref()
 const containerRef = ref()
@@ -62,7 +66,7 @@ const isXScroll = computed(() => {
 })
 const isScroll = computed(() => {
   // 是否存在滚动，水平或垂直
-  return isYScroll.value || (props.horizontal && isXScroll.value)
+  return isYScroll.value || (props.xScrollable && isXScroll.value)
 })
 const trackHeight = computed(() => {
   // 垂直滚动条高度
@@ -89,7 +93,7 @@ const trackTop = computed(() => {
 })
 const trackWidth = computed(() => {
   // 横向滚动条宽度
-  if (props.horizontal && isXScroll.value) {
+  if (props.xScrollable && isXScroll.value) {
     if (containerWidth.value && contentWidth.value && railWidth.value) {
       const value = (railWidth.value * containerWidth.value) / contentWidth.value + 1.5 * props.size
       return Number(value.toFixed(4))
@@ -256,12 +260,12 @@ defineExpose({
         ref="contentRef"
         class="scrollbar-content"
         :class="contentClass"
-        :style="[horizontal ? { ...horizontalContentStyle, ...contentStyle } : contentStyle]"
+        :style="[xScrollable ? { ...horizontalContentStyle, ...contentStyle } : contentStyle]"
       >
         <slot></slot>
       </div>
     </div>
-    <div ref="railVerticalRef" class="scrollbar-rail rail-vertical">
+    <div ref="railVerticalRef" class="scrollbar-rail rail-vertical" :class="`rail-vertical-${yPlacement}`">
       <div
         class="scrollbar-track"
         :class="{ 'track-visible': trigger === 'none' || showTrack }"
@@ -271,7 +275,12 @@ defineExpose({
         @mousedown.prevent.stop="onTrackVerticalMouseDown"
       ></div>
     </div>
-    <div ref="railHorizontalRef" v-show="horizontal" class="scrollbar-rail rail-horizontal">
+    <div
+      ref="railHorizontalRef"
+      v-show="xScrollable"
+      class="scrollbar-rail rail-horizontal"
+      :class="`rail-horizontal-${xPlacement}`"
+    >
       <div
         class="scrollbar-track"
         :class="{ 'track-visible': trigger === 'none' || showTrack }"
@@ -335,7 +344,6 @@ defineExpose({
     }
   }
   .rail-vertical {
-    inset: 2px 4px 2px auto;
     width: var(--scrollbar-size);
     .scrollbar-track {
       width: var(--scrollbar-size);
@@ -343,14 +351,30 @@ defineExpose({
       bottom: 0;
     }
   }
+  .rail-vertical-left {
+    inset: 2px auto 2px 4px;
+  }
+  .rail-vertical-right {
+    inset: 2px 4px 2px auto;
+  }
   .rail-horizontal {
-    inset: auto 2px 4px 2px;
     height: var(--scrollbar-size);
     .scrollbar-track {
       height: var(--scrollbar-size);
       border-radius: var(--scrollbar-size);
       right: 0;
     }
+  }
+  .rail-horizontal-top {
+    inset: 4px 2px auto 2px;
+  }
+  .rail-horizontal-bottom {
+    inset: auto 2px 4px 2px;
+  }
+  .scrollbar-thumb {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 </style>
