@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MailSVG from './MailSVG.vue'
-import { ArrowDownOutlined } from '@ant-design/icons-vue'
+import ArrowDownSVG from './ArrowDownSVG.vue'
 interface Props {
   hideSponsor?: boolean // 是否隐藏 赞助 按钮
   hideBackTop?: boolean // 是否隐藏 BackTop 组件
@@ -28,7 +28,7 @@ withDefaults(defineProps<Props>(), {
       <MailSVG />
     </template>
     <template #tooltip>
-      <MailSVG /> Email Me <ArrowDownOutlined />
+      <MailSVG /> Email Me<ArrowDownSVG />
       <br/>
       themusecatcher@163.com
     </template>
