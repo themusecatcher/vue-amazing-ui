@@ -3,11 +3,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { routes } from '@/router'
 import { toggleDark, useMutationObserver } from 'components/index'
-
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
-
-const showDuty = ref(false)
 const themeDark = ref()
 const html = document.documentElement
 onMounted(() => {
@@ -30,35 +27,9 @@ function onClick(e: any): void {
   console.log(`${e.item.title} ${e.key}`)
   // console.log(e.keyPath)
 }
-function onFinish() {
-  console.log('Off Duty！')
-}
-const getOffDate = (time = '9:00'): number => {
-  const date = new Date()
-  const Y = date.getFullYear()
-  const M = date.getMonth() + 1
-  const D = date.getDate()
-  return new Date(`${Y} ${M} ${D} ${time}`).getTime() + 9 * 60 * 60 * 1000
-}
-const countdown = computed(() => {
-  return getOffDate()
-})
 const routerViewRef = ref()
 </script>
 <template>
-  <Switch v-model="showDuty" class="switch-duty" />
-  <Transition>
-    <Countdown
-      v-show="showDuty"
-      class="countdown-duty"
-      title="Off Duty"
-      :title-style="{ fontWeight: 600 }"
-      :value="countdown"
-      format="HH:mm:ss:SSS"
-      finished-text="GO GO GO"
-      @finish="onFinish"
-    />
-  </Transition>
   <Row style="width: 100%">
     <Col :xs="5" :xl="4" style="position: relative">
       <Switch
@@ -133,33 +104,13 @@ const routerViewRef = ref()
               <component :is="Component" />
             </Transition>
           </RouterView>
-          <BackTop v-if="route.name !== 'BackTop'" />
+          <!-- <BackTop v-if="route.name !== 'BackTop'" /> -->
         </div>
       </Scrollbar>
     </Col>
   </Row>
 </template>
 <style lang="less" scoped>
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.3s ease-in-out;
-}
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-.switch-duty {
-  position: fixed;
-  top: 36px;
-  right: 36px;
-  z-index: 3;
-}
-.countdown-duty {
-  position: fixed;
-  top: 36px;
-  right: 36px;
-  z-index: 2;
-}
 .switch-theme {
   position: absolute;
   top: 13px;
