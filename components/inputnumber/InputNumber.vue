@@ -355,6 +355,7 @@ function onDown() {
     box-shadow: none;
   }
   .m-input-number-wrap .input-number {
+    color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
   }
   .m-handler-wrap {

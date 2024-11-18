@@ -67,8 +67,8 @@ function onScroll(e: Event) {
 
 ## 横向滚动
 
-<Scrollbar horizontal>
-  <div style="white-space: nowrap; padding: 12px">
+<Scrollbar x-scrollable>
+  <div style="white-space: nowrap; padding: 12px;">
     我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
     我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌
     它们独自在想象里跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧 我们在想象中度过了许多年 许多年之后我们又开始想象
@@ -80,8 +80,8 @@ function onScroll(e: Event) {
 
 ```vue
 <template>
-  <Scrollbar horizontal>
-    <div style="white-space: nowrap; padding: 12px">
+  <Scrollbar x-scrollable>
+    <div style="white-space: nowrap; padding: 12px;">
       我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
       我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌
       它们独自在想象里跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧 我们在想象中度过了许多年 许多年之后我们又开始想象
@@ -145,7 +145,7 @@ function onScroll(e: Event) {
 
 ## 触发方式
 
-<Scrollbar style="max-height: 120px;" trigger="none">
+<Scrollbar style="max-height: 120px" trigger="none">
   我们在田野上面找猪<br />
   想象中已找到了三只<br />
   小鸟在白云上面追逐<br />
@@ -169,7 +169,7 @@ function onScroll(e: Event) {
 
 ```vue
 <template>
-  <Scrollbar style="max-height: 120px;" trigger="none">
+  <Scrollbar style="max-height: 120px" trigger="none">
     我们在田野上面找猪<br />
     想象中已找到了三只<br />
     小鸟在白云上面追逐<br />
@@ -249,6 +249,76 @@ function onScroll(e: Event) {
 
 :::
 
+## 滚动条位置
+
+<Flex vertical>
+  <Scrollbar style="max-height: 120px; padding-left: 12px;" y-placement="left">
+    我们在田野上面找猪<br>
+    想象中已找到了三只<br>
+    小鸟在白云上面追逐<br>
+    它们在树底下跳舞<br>
+    啦啦啦啦啦啦啦啦咧<br>
+    啦啦啦啦咧<br>
+    我们在想象中度过了许多年<br>
+    想象中我们是如此的疯狂<br>
+    我们在城市里面找猪<br>
+    想象中已找到了几百万只<br>
+    小鸟在公园里面唱歌<br>
+    它们独自在想象里跳舞<br>
+    啦啦啦啦啦啦啦啦咧<br>
+    啦啦啦啦咧<br>
+    我们在想象中度过了许多年<br>
+    许多年之后我们又开始想象<br>
+    啦啦啦啦啦啦啦啦咧
+  </Scrollbar>
+  <Scrollbar x-scrollable x-placement="top">
+    <div style="white-space: nowrap; padding: 12px;">
+      我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
+      我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌
+      它们独自在想象里跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧 我们在想象中度过了许多年 许多年之后我们又开始想象
+      啦啦啦啦啦啦啦啦咧
+    </div>
+  </Scrollbar>
+</Flex>
+
+::: details Show Code
+
+```vue
+<template>
+  <Flex vertical>
+    <Scrollbar style="max-height: 120px; padding-left: 12px;" y-placement="left">
+      我们在田野上面找猪<br>
+      想象中已找到了三只<br>
+      小鸟在白云上面追逐<br>
+      它们在树底下跳舞<br>
+      啦啦啦啦啦啦啦啦咧<br>
+      啦啦啦啦咧<br>
+      我们在想象中度过了许多年<br>
+      想象中我们是如此的疯狂<br>
+      我们在城市里面找猪<br>
+      想象中已找到了几百万只<br>
+      小鸟在公园里面唱歌<br>
+      它们独自在想象里跳舞<br>
+      啦啦啦啦啦啦啦啦咧<br>
+      啦啦啦啦咧<br>
+      我们在想象中度过了许多年<br>
+      许多年之后我们又开始想象<br>
+      啦啦啦啦啦啦啦啦咧
+    </Scrollbar>
+    <Scrollbar x-scrollable x-placement="top">
+      <div style="white-space: nowrap; padding: 12px;">
+        我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
+        我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌
+        它们独自在想象里跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧 我们在想象中度过了许多年 许多年之后我们又开始想象
+        啦啦啦啦啦啦啦啦咧
+      </div>
+    </Scrollbar>
+  </Flex>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Scrollbar
@@ -261,7 +331,9 @@ size | 滚动条的大小，单位 `px` | number | 5
 trigger | 显示滚动条的时机，`'none'` 表示一直显示 | 'hover' &#124; 'none' | 'hover'
 autoHide | 是否自动隐藏滚动条，仅当 `trigger: 'hover'` 时生效，`true`: `hover`且不滚动时自动隐藏，滚动时自动显示；`false`: `hover`时始终显示 | boolean | true
 delay | 滚动条自动隐藏的延迟时间，单位 `ms` | number | 1000
-horizontal | 是否使用横向滚动 | boolean | false
+xScrollable | 是否使用横向滚动 | boolean | false
+xPlacement | 横向滚动时滚动条的位置 | 'top' &#124; 'bottom' | 'bottom'
+yPlacement | 纵向滚动时滚动条的位置 | 'left' &#124; 'right' | 'right'
 
 ## Methods
 
