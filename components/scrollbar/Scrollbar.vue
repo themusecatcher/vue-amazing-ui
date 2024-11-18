@@ -7,7 +7,7 @@ interface Props {
   contentStyle?: CSSProperties // 内容 div 的样式
   size?: number // 滚动条的大小，单位 px
   trigger?: 'hover' | 'none' // 显示滚动条的时机，'none' 表示一直显示
-  autoHide?: boolean // 是否自动隐藏滚动条，仅当 trigger: 'hover' 时生效，true: hover且不滚动时自动隐藏，滚动时自动显示；false: hover时始终显示
+  autoHide?: boolean // 是否自动隐藏滚动条，仅当 trigger: 'hover' 时生效；为 true 时表示鼠标在滚动区域且不滚动时自动隐藏，滚动时自动显示；为 false 时表示鼠标在滚动区域时始终显示，无论是否在滚动
   delay?: number // 滚动条自动隐藏的延迟时间，单位 ms
   xScrollable?: boolean // 是否使用横向滚动
   xPlacement?: 'top' | 'bottom' // 横向滚动时滚动条的位置
@@ -242,9 +242,16 @@ function scrollTo(...args: any[]) {
 function scrollBy(...args: any[]) {
   containerRef.value?.scrollBy(...args)
 }
+function getScrollData() {
+  return {
+    scrollWidth: containerScrollWidth.value,
+    clientWidth: containerClientWidth.value
+  }
+}
 defineExpose({
   scrollTo,
-  scrollBy
+  scrollBy,
+  getScrollData
 })
 </script>
 <template>
@@ -325,7 +332,7 @@ defineExpose({
     background: transparent;
     -webkit-user-select: none;
     .scrollbar-track {
-      z-index: 1;
+      z-index: 9;
       position: absolute;
       cursor: pointer;
       opacity: 0;

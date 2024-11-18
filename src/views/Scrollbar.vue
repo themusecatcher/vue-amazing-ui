@@ -35,8 +35,8 @@ function onScroll(e: Event) {
         啦啦啦啦啦啦啦啦咧
       </div>
     </Scrollbar>
-    <h2 class="mt30 mb10">hover 时不自动隐藏</h2>
-    <Scrollbar style="max-height: 120px" :auto-hide="false">
+    <h2 class="mt30 mb10">触发方式</h2>
+    <Scrollbar style="max-height: 120px" trigger="none">
       我们在田野上面找猪<br />
       想象中已找到了三只<br />
       小鸟在白云上面追逐<br />
@@ -55,8 +55,8 @@ function onScroll(e: Event) {
       许多年之后我们又开始想象<br />
       啦啦啦啦啦啦啦啦咧
     </Scrollbar>
-    <h2 class="mt30 mb10">触发方式</h2>
-    <Scrollbar style="max-height: 120px" trigger="none">
+    <h2 class="mt30 mb10">鼠标在滚动区域时不自动隐藏</h2>
+    <Scrollbar style="max-height: 120px" :auto-hide="false" :delay="2000">
       我们在田野上面找猪<br />
       想象中已找到了三只<br />
       小鸟在白云上面追逐<br />
