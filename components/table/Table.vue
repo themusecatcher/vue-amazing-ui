@@ -12,7 +12,7 @@ interface Column {
   width?: string | number // 列宽度，单位 px
   dataIndex: string // 列数据字符索引
   ellipsis?: boolean // 超过宽度是否自动省略
-  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略样式
+  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略
   fixed?: 'left' | 'right' // 列是否固定
   slot?: string // 列插槽名称索引
   customCell?: (record: any, rowIndex: number, column: Column) => object // 设置单元格属性
@@ -31,12 +31,13 @@ interface Props {
   size?: 'large' | 'middle' | 'small' // 表格大小
   striped?: boolean // 是否使用斑马条纹
   loading?: boolean // 是否加载中
-  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置数据加载中样式
-  emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
-  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于全局配置文本省略样式
+  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置数据加载中
+  emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据
+  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于全局配置文本省略
   showPagination?: boolean // 是否显示分页
   pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
   scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
+  scrollbarProps?: object // Scrollbar 组件属性配置，参考 Scrollbar Props，用于配置表格滚动条
   tableLayout?: 'auto' | 'fixed' // 表格布局方式，设为 fixed 表示内容不会影响列的布局，参考 table-layout 属性
   showExpandColumn?: boolean // 是否展示展开列
   expandColumnTitle?: string // 自定义展开列表头 string | slot
@@ -62,6 +63,7 @@ const props = withDefaults(defineProps<Props>(), {
   showPagination: true,
   pagination: () => ({}),
   scroll: undefined,
+  scrollbarProps: () => ({}),
   tableLayout: undefined, // 固定表头/列或使用了 column.ellipsis 时，默认值为 fixed
   showExpandColumn: false,
   expandColumnTitle: undefined,
@@ -81,6 +83,7 @@ const tablePageSize = ref<number>(10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const tableExpandedRowKeys = ref<(string | number)[]>([])
+const scrollbarRef = ref() // 水平滚动容器 DOM 引用
 const tableScrollRef = ref() // 水平滚动容器 DOM 引用
 const scrollLeft = ref<number>(0) // 表格水平滚动时距容器左边位置
 const scrollWidth = ref<number>(0) // 表格水平滚动元素宽度，包括溢出滚动，不包括边框
@@ -181,11 +184,8 @@ const tableHeadStyle = computed(() => {
     left: `${-scrollLeft.value}px`
   }
 })
-const tableBodyStyle = computed(() => {
+const tableBodyScrollStyle = computed(() => {
   const style: any = {}
-  if (horizontalScroll.value) {
-    style.overflowX = 'auto'
-  }
   if (verticalScroll.value) {
     const scroll = props.scroll
     style.overflowY = 'scroll'
@@ -224,15 +224,13 @@ watchEffect(() => {
   tableExpandedRowKeys.value = props.expandedRowKeys
 })
 onMounted(() => {
-  getScrollData()
-})
-function getScrollData() {
-  if (horizontalScroll.value) {
-    scrollWidth.value = tableScrollRef.value.scrollWidth
-    clientWidth.value = tableScrollRef.value.clientWidth
+  if (horizontalScroll.value && scrollbarRef.value) {
+    const scrollData = scrollbarRef.value.getScrollData()
+    scrollWidth.value = scrollData.scrollWidth
+    clientWidth.value = scrollData.clientWidth
     scrollMax.value = scrollWidth.value - clientWidth.value
   }
-}
+})
 function getComputedValue(column: Column, key: keyof Props) {
   let computedValue = props[key as keyof Props]
   if (column?.[key as keyof Column] !== undefined) {
@@ -378,7 +376,10 @@ function onWheel(e: WheelEvent) {
       e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
       scrollLeft.value += scrollX
     }
-    tableScrollRef.value.scrollLeft = scrollLeft.value
+    scrollbarRef.value.scrollTo({
+      left: scrollLeft.value,
+      behavior: 'instant'
+    })
   }
 }
 function onPaginationChange(page: number, pageSize: number) {
@@ -386,7 +387,7 @@ function onPaginationChange(page: number, pageSize: number) {
   tablePageSize.value = pageSize
   // 分页回调
   emits('change', page, pageSize)
-  tableScrollRef.value.scrollTo({
+  scrollbarRef.value.scrollTo({
     top: 0,
     left: 0,
     behavior: 'smooth'
@@ -414,7 +415,7 @@ function onPaginationChange(page: number, pageSize: number) {
           <slot name="header">{{ header }}</slot>
         </div>
         <div v-if="!verticalScroll" class="table-container">
-          <div ref="tableScrollRef" class="table-content" :style="tableContainerStyle" @scroll="onScroll">
+          <Scrollbar ref="scrollbarRef" :x-scrollable="horizontalScroll" @scroll="onScroll" v-bind="scrollbarProps">
             <table :style="tableStyle">
               <thead>
                 <tr>
@@ -556,10 +557,10 @@ function onPaginationChange(page: number, pageSize: number) {
                 </template>
               </tbody>
             </table>
-          </div>
+          </Scrollbar>
         </div>
         <div v-else class="table-container">
-          <div class="table-head" style="overflow: hidden">
+          <div class="table-head">
             <table :style="[tableStyle, tableHeadStyle]" @wheel="horizontalScroll ? onWheel($event) : () => false">
               <thead>
                 <tr>
@@ -602,7 +603,13 @@ function onPaginationChange(page: number, pageSize: number) {
               </thead>
             </table>
           </div>
-          <div ref="tableScrollRef" class="table-body" :style="tableBodyStyle" @scroll="onScroll">
+          <Scrollbar
+            ref="scrollbarRef"
+            :x-scrollable="horizontalScroll"
+            :style="tableBodyScrollStyle"
+            @scroll="onScroll"
+            v-bind="scrollbarProps"
+          >
             <table :style="tableStyle">
               <tbody>
                 <tr v-if="!displayDataSource.length">
@@ -707,7 +714,7 @@ function onPaginationChange(page: number, pageSize: number) {
                 </template>
               </tbody>
             </table>
-          </div>
+          </Scrollbar>
         </div>
         <div v-if="showFooter" class="table-footer">
           <slot name="footer">{{ footer }}</slot>
@@ -773,6 +780,10 @@ function onPaginationChange(page: number, pageSize: number) {
         pointer-events: none;
       }
       .table-head {
+        overflow: hidden;
+        border-radius: 8px 8px 0 0;
+      }
+      .m-scrollbar {
         border-radius: 8px 8px 0 0;
       }
       table {
