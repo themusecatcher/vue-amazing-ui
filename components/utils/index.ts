@@ -452,30 +452,48 @@ export function useMutationObserver(
  * 组合式函数
  * 实时监测页面滚动方向
  *
- * @param throttleDelay 节流延迟时间，单位 ms，默认为 100ms，用于控制滚动事件触发的频率
+ * @param throttleDelay 节流延迟时间，单位 ms，默认为 0，用于控制滚动事件触发的频率
  * @returns 返回一个对象，其中包含一个名为 scrollDown 的 ref 对象，表示滚动方向是否向下
  */
-export function useScrollDirection(throttleDelay: number = 100) {
+export function useScroll(target: HTMLElement | Window | Document = window, throttleDelay: number = 0) {
   // 使用 ref 定义一个响应式变量，指示当前滚动方向是否向下
-  const scrollDown = ref<boolean>(false)
+  const scrollDirection = ref<'top' | 'bottom'>(null)
   // 记录上一次滚动的位置
   let lastScrollY = 0
   // 监听滚动事件的函数
-  function scrollEvent() {
+  function scrollEvent(e: Event) {
     // 获取当前的滚动位置
+    let currentScrollY: number
     // 注：在 safari 浏览器中 currentScrollY 会出现负值，可将负值统一处理为 0 来和 google 浏览器行为统一
-    let currentScrollY = window.pageYOffset || document.documentElement.scrollTop
+    if (target === self) {
+      currentScrollY = window.pageYOffset || document.documentElement.scrollTop
+    } else {
+      currentScrollY = e.target.scrollTop
+    }
     currentScrollY = currentScrollY < 0 ? 0 : currentScrollY
     // 比较当前位置和上一次记录的位置，来确定滚动方向
-    scrollDown.value = currentScrollY > lastScrollY
+    scrollDirection.value = currentScrollY > lastScrollY ? 'bottom' : 'top'
     // 更新上次滚动位置
     lastScrollY = currentScrollY
   }
+  function scrollEndEvent(e: Event) {
+    if (isScrolling.value) {
+      return
+    }
+    isScrolling.value = false
+    directions.left = false
+    directions.right = false
+    directions.top = false
+    directions.bottom = false
+    onStop(e)
+  }
   // 使用节流函数封装 scrollEvent，以减少滚动事件的触发频率
   const throttleScroll = throttle(scrollEvent, throttleDelay)
-  useEventListener(window, 'scroll', throttleScroll)
+  const debounceScrollEnd = debounce(scrollEndEvent, throttleDelay + 200)
+  useEventListener(target, 'scroll', throttleScroll)
+  useEventListener(target, 'scrollend', debounceScrollEnd)
   // 返回一个对象，包含我们想要暴露给组件的状态或方法
-  return { scrollDown }
+  return { scrollDirection }
 }
 /**
  * 组合式函数
