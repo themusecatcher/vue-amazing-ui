@@ -91,6 +91,13 @@ const trackTop = computed(() => {
   }
   return 0
 })
+const verticalTrackStyle = computed(() => {
+  // 垂直滚动条样式
+  return {
+    top: `${trackTop}px`,
+    height: `${trackHeight}px`
+  }
+})
 const trackWidth = computed(() => {
   // 横向滚动条宽度
   if (props.xScrollable && isXScroll.value) {
@@ -109,6 +116,13 @@ const trackLeft = computed(() => {
     )
   }
   return 0
+})
+const horizontalTrackStyle = computed(() => {
+  // 水平滚动条样式
+  return {
+    left: `${trackLeft}px`,
+    width: `${trackWidth}px`
+  }
 })
 useEventListener(window, 'resize', updateState)
 useMutationObserver(scrollbarRef, updateState, { subtree: true, childList: true, attributes: true })
@@ -276,7 +290,7 @@ defineExpose({
       <div
         class="scrollbar-track"
         :class="{ 'track-visible': trigger === 'none' || showTrack }"
-        :style="`top: ${trackTop}px; height: ${trackHeight}px;`"
+        :style="verticalTrackStyle"
         @mouseenter="autoShowTrack ? onEnterTrack() : () => false"
         @mouseleave="autoShowTrack ? onLeaveTrack() : () => false"
         @mousedown.prevent.stop="onTrackVerticalMouseDown"
@@ -291,7 +305,7 @@ defineExpose({
       <div
         class="scrollbar-track"
         :class="{ 'track-visible': trigger === 'none' || showTrack }"
-        :style="`left: ${trackLeft}px; width: ${trackWidth}px;`"
+        :style="horizontalTrackStyle"
         @mouseenter="autoShowTrack ? onEnterTrack() : () => false"
         @mouseleave="autoShowTrack ? onLeaveTrack() : () => false"
         @mousedown.prevent.stop="onTrackHorizontalMouseDown"
