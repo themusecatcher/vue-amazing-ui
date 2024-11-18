@@ -83,8 +83,8 @@ const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格�
 const tableExpandedRowKeys = ref<(string | number)[]>([])
 const tableScrollRef = ref() // 水平滚动容器 DOM 引用
 const scrollLeft = ref<number>(0) // 表格水平滚动时距容器左边位置
-const scrollWidth = ref<number>(0) // 表格水平滚动元素宽度，包括溢出滚动
-const offsetWidth = ref<number>(0) // 表格水平滚动元素宽度，不包括溢出滚动
+const scrollWidth = ref<number>(0) // 表格水平滚动元素宽度，包括溢出滚动，不包括边框
+const clientWidth = ref<number>(0) // 表格水平滚动元素宽度，不包括溢出滚动，不包括边框
 const scrollMax = ref<number>(0) // 表格水平滚动时，最大可滚动距离
 const tableThExpandRef = ref() // 表格展开列 th 的引用
 const tableThRef = ref() // 表格除展开列以外的 th 的引用
@@ -100,7 +100,7 @@ const showShadowLeft = computed(() => {
   return scrollLeft.value > 0
 })
 const showShadowRight = computed(() => {
-  return scrollWidth.value - offsetWidth.value > scrollLeft.value
+  return scrollWidth.value - clientWidth.value > scrollLeft.value
 })
 const hasFixLeft = computed(() => {
   const fixedLeft = props.columns.some((column: Column) => column.fixed === 'left')
@@ -168,7 +168,7 @@ const thColumns = computed(() => {
 const tableExpandRowFixStyle = computed(() => {
   const style: any = {}
   if (props.expandFixed) {
-    style.width = `${offsetWidth.value + (props.bordered ? 1 : 0)}px`
+    style.width = `${clientWidth.value + (props.bordered ? 1 : 0)}px`
     style.position = 'sticky'
     style.left = '0px'
     style.overflow = 'hidden'
@@ -229,8 +229,8 @@ onMounted(() => {
 function getScrollData() {
   if (horizontalScroll.value) {
     scrollWidth.value = tableScrollRef.value.scrollWidth
-    offsetWidth.value = tableScrollRef.value.offsetWidth
-    scrollMax.value = scrollWidth.value - offsetWidth.value
+    clientWidth.value = tableScrollRef.value.clientWidth
+    scrollMax.value = scrollWidth.value - clientWidth.value
   }
 }
 function getComputedValue(column: Column, key: keyof Props) {
@@ -364,7 +364,7 @@ function onExpandCell(key: string | number) {
 function onScroll(e: Event) {
   scrollLeft.value = (e.target as HTMLElement).scrollLeft
   scrollWidth.value = (e.target as HTMLElement).scrollWidth
-  offsetWidth.value = (e.target as HTMLElement).offsetWidth
+  clientWidth.value = (e.target as HTMLElement).clientWidth
 }
 function onWheel(e: WheelEvent) {
   if (e.deltaX) {
