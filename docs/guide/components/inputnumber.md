@@ -14,6 +14,7 @@ import { formatNumber } from 'vue-amazing-ui'
 const value = ref(3)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)
+const disabled = ref(true)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -238,7 +239,10 @@ watchEffect(() => {
 
 ## 禁用
 
-<InputNumber v-model:value="value" disabled />
+<Space vertical>
+  <Space align="center">disabled: <Switch v-model="disabled" /></Space>
+  <InputNumber v-model:value="value" :disabled="disabled" />
+</Space>
 
 ::: details Show Code
 
@@ -246,9 +250,13 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref } from 'vue'
 const value = ref(3)
+const disabled = ref(true)
 </script>
 <template>
-  <InputNumber v-model:value="value" disabled />
+  <Space vertical>
+    <Space align="center">disabled: <Switch v-model="disabled" /></Space>
+    <InputNumber v-model:value="value" :disabled="disabled" />
+  </Space>
 </template>
 ```
 

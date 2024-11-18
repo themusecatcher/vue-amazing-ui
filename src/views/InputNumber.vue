@@ -4,6 +4,7 @@ import { formatNumber } from 'vue-amazing-ui'
 const value = ref(3)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)
+const disabled = ref(true)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -59,6 +60,9 @@ function onChange(number: number) {
     <h2 class="mt30 mb10">添加前缀图标 $</h2>
     <InputNumber prefix="$" v-model:value="value" />
     <h2 class="mt30 mb10">禁用</h2>
-    <InputNumber v-model:value="value" disabled />
+    <Space vertical>
+      <Space align="center">disabled: <Switch v-model="disabled" /></Space>
+      <InputNumber v-model:value="value" :disabled="disabled" />
+    </Space>
   </div>
 </template>
