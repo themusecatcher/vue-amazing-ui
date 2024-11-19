@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*实时监测页面滚动方向的组合式函数*
+*实时监测指定元素滚动位置及状态的组合式函数*
 
 ::: details Show Source Code
 
@@ -16,28 +16,6 @@
  */
 import { ref } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
-export function useScrollDirection(throttleDelay = 100) {
-  // 使用 ref 定义一个响应式变量，指示当前滚动方向是否向下
-  const scrollDown = ref<boolean>(false)
-  // 记录上一次滚动的位置
-  let lastScrollY = 0
-  // 监听滚动事件的函数
-  function scrollEvent() {
-    // 获取当前的滚动位置
-    // 注：在 safari 浏览器中 currentScrollY 会出现负值，可将负值统一处理为 0 来和 google 浏览器行为统一
-    let currentScrollY = window.pageYOffset || document.documentElement.scrollTop
-    currentScrollY = currentScrollY < 0 ? 0 : currentScrollY
-    // 比较当前位置和上一次记录的位置，来确定滚动方向
-    scrollDown.value = currentScrollY > lastScrollY
-    // 更新上次滚动位置
-    lastScrollY = currentScrollY
-  }
-  // 使用节流函数封装 scrollEvent，以减少滚动事件的触发频率
-  const throttleScroll = throttle(scrollEvent, throttleDelay)
-  useEventListener(window, 'scroll', throttleScroll)
-  // 返回一个对象，包含我们想要暴露给组件的状态或方法
-  return { scrollDown }
-}
 ```
 
 :::
@@ -51,11 +29,13 @@ const { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom } = 
 
 ## 基本使用
 
-<Flex ref="scrollRef" justify="space-between">
-  <div class="scroll-container">
-    <div class="scroll-content"></div>
+<Flex justify="space-between">
+  <div class="scroll-container" ref="scrollRef" >
+    <div class="scroll-content">
+      <div class="inside-content">Scroll Me</div>
+    </div>
   </div>
-  <Space vertical gap="small">
+  <Card title="滚动位置及状态" :body-style="{ fontSize: '16px' }">
     <p>水平滚动距离：{{ x }}</p>
     <p>垂直滚动距离：{{ y }}</p>
     <p>水平最大可滚动距离：{{ xScrollMax }}</p>
@@ -65,7 +45,7 @@ const { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom } = 
     <p>是否向右滚动：{{ right }}</p>
     <p>是否向上滚动：{{ top }}</p>
     <p>是否向下滚动：{{ bottom }}</p>
-  </Space>
+  </Card>
 </Flex>
 
 <style lang="less" scoped>
@@ -76,8 +56,20 @@ const { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom } = 
   border: 2px solid #1677ff;
   overflow: scroll;
   .scroll-content {
+    position: relative;
     width: 600px;
     height: 600px;
+    .inside-content {
+      position: absolute;
+      top: 33.3%;
+      left: 33.3%;
+      font-size: 20px;
+      color: rgba(0, 0, 0, 0.88);
+      font-weight: 500;
+      background: #fafafa;
+      padding: 6px 8px;
+      border-radius: 8px;
+    }
   }
 }
 </style>
