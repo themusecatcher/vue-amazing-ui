@@ -289,7 +289,13 @@ defineExpose({
     @mouseenter="isScroll && trigger === 'hover' ? onMouseEnter() : () => false"
     @mouseleave="isScroll && trigger === 'hover' ? onMouseLeave() : () => false"
   >
-    <div ref="containerRef" class="scrollbar-container" @scroll="onScroll" @scrollend="onScrollEnd">
+    <div
+      ref="containerRef"
+      class="scrollbar-container"
+      :class="{ 'container-scroll': isScroll }"
+      @scroll="onScroll"
+      @scrollend="onScrollEnd"
+    >
       <div
         ref="contentRef"
         class="scrollbar-content"
@@ -335,7 +341,6 @@ defineExpose({
   width: 100%;
   .scrollbar-container {
     width: 100%;
-    overflow: scroll;
     height: 100%;
     min-height: inherit;
     max-height: inherit;
@@ -351,6 +356,9 @@ defineExpose({
       box-sizing: border-box;
       min-width: 100%;
     }
+  }
+  .container-scroll {
+    overflow: scroll;
   }
   .scrollbar-rail {
     position: absolute;
