@@ -188,7 +188,6 @@ const tableBodyScrollStyle = computed(() => {
   const style: any = {}
   if (verticalScroll.value) {
     const scroll = props.scroll
-    style.overflowY = 'scroll'
     style.maxHeight = typeof scroll?.y === 'number' ? `${scroll.y}px` : scroll?.y
   }
   return style
