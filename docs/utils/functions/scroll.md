@@ -1,4 +1,4 @@
-# 滚动方向 useScrollDirection
+# 滚动监测 useScroll
 
 <GlobalElement />
 
@@ -44,24 +44,68 @@ export function useScrollDirection(throttleDelay = 100) {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useScrollDirection } from 'vue-amazing-ui'
-
-const { scrollDown } = useScrollDirection()
+import { useScroll } from '../../../dist/vue-amazing-ui.js'
+const scrollRef = ref()
+const { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom } = useScroll(scrollRef)
 </script>
 
 ## 基本使用
 
-<h3>滚动方向：{{ scrollDown ? '向下' : '向上' }}</h3>
+<Flex ref="scrollRef" justify="space-between">
+  <div class="scroll-container">
+    <div class="scroll-content"></div>
+  </div>
+  <Space vertical gap="small">
+    <p>水平滚动距离：{{ x }}</p>
+    <p>垂直滚动距离：{{ y }}</p>
+    <p>水平最大可滚动距离：{{ xScrollMax }}</p>
+    <p>垂直最大可滚动距离：{{ yScrollMax }}</p>
+    <p>是否正在滚动：{{ isScrolling }}</p>
+    <p>是否向左滚动：{{ left }}</p>
+    <p>是否向右滚动：{{ right }}</p>
+    <p>是否向上滚动：{{ top }}</p>
+    <p>是否向下滚动：{{ bottom }}</p>
+  </Space>
+</Flex>
+
+<style lang="less" scoped>
+.scroll-container {
+  width: 360px;
+  height: 360px;
+  border-radius: 12px;
+  border: 2px solid #1677ff;
+  overflow: scroll;
+  .scroll-content {
+    width: 600px;
+    height: 600px;
+  }
+}
+</style>
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useScrollDirection } from 'vue-amazing-ui'
-
-const { scrollDown } = useScrollDirection()
+import { useScroll } from 'vue-amazing-ui'
+const { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom, onScroll, onStop } = useScroll()
+function onScroll(e: Event) {
+  console.log('scroll', e)
+}
+function onStop(e: Event) {
+  console.log('scrollend', e)
+}
 </script>
 <template>
-  <h3>滚动方向：{{ scrollDown ? '向下' : '向上' }}</h3>
+  <Flex vertical>
+    <h3>水平滚动距离：{{ x }}</h3>
+    <h3>垂直滚动距离：{{ y }}</h3>
+    <h3>水平最大可滚动距离：{{ xScrollMax }}</h3>
+    <h3>垂直最大可滚动距离：{{ yScrollMax }}</h3>
+    <h3>是否正在滚动：{{ isScrolling }}</h3>
+    <h3>是否向左滚动：{{ left }}</h3>
+    <h3>是否向右滚动：{{ right }}</h3>
+    <h3>是否向上滚动：{{ top }}</h3>
+    <h3>是否向下滚动：{{ bottom }}</h3>
+  </Flex>
 </template>
 ```
 

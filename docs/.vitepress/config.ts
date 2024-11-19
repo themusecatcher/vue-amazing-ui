@@ -424,8 +424,8 @@ export default defineConfig({
               link: '/utils/functions/mutation-observer'
             },
             {
-              text: 'useScrollDirection 滚动方向',
-              link: '/utils/functions/scroll-direction'
+              text: 'useScroll 滚动监测',
+              link: '/utils/functions/scroll'
             },
             {
               text: 'useFps 刷新率',

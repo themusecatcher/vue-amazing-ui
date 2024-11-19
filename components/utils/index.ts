@@ -450,50 +450,104 @@ export function useMutationObserver(
 }
 /**
  * 组合式函数
- * 实时监测页面滚动方向
+ * 实时监测滚动位置和状态
  *
  * @param throttleDelay 节流延迟时间，单位 ms，默认为 0，用于控制滚动事件触发的频率
- * @returns 返回一个对象，其中包含一个名为 scrollDown 的 ref 对象，表示滚动方向是否向下
+ * @returns 返回一个对象，其中包含滚动的位置和各种状态信息
  */
-export function useScroll(target: HTMLElement | Window | Document = window, throttleDelay: number = 0) {
-  // 使用 ref 定义一个响应式变量，指示当前滚动方向是否向下
-  const scrollDirection = ref<'top' | 'bottom'>(null)
-  // 记录上一次滚动的位置
-  let lastScrollY = 0
+export function useScroll(
+  target: HTMLElement | Window | Document = window,
+  throttleDelay: number = 0,
+  onScroll?: (e: Event) => void,
+  onStop?: (e: Event) => void
+) {
+  const x = ref(0) // 水平滚动距离
+  const xScrollMax = ref(0) // 水平最大可滚动距离
+  const y = ref(0) // 垂直滚动距离
+  const yScrollMax = ref(0) // 垂直最大可滚动距离
+  const isScrolling = ref(false) // 是否正在滚动
+  const left = ref(false) // 是否向左滚动
+  const right = ref(false) // 是否向右滚动
+  const top = ref(false) // 是否向上滚动
+  const bottom = ref(false) // 是否向下滚动
+  const lastScrollLeft = ref(0)
+  const lastScrollTop = ref(0)
+  const scrollTarget = computed(() => {
+    const targetValue = toValue(target)
+    if (targetValue) {
+      return targetValue
+    }
+    return null
+  })
+  watch(
+    () => scrollTarget.value,
+    (to, from) => {
+      if (from) {
+        cleanup(from)
+      }
+      if (to) {
+        const el: Element = ((to as Window)?.document?.documentElement ||
+          (to as Document)?.documentElement ||
+          (to as HTMLElement)) as Element
+        console.log('target', to)
+        console.log('el', el)
+        xScrollMax.value = el.scrollWidth - el.clientWidth
+        yScrollMax.value = el.scrollHeight - el.clientHeight
+        console.log('scrollWidth', el.scrollWidth)
+        console.log('clientWidth', el.clientWidth)
+        console.log('scrollHeight', el.scrollHeight)
+        console.log('clientHeight', el.clientHeight)
+        el.addEventListener('scroll', throttleScroll)
+        el.addEventListener('scrollend', debounceScrollEnd)
+      }
+    },
+    {
+      immediate: true,
+      flush: 'post'
+    }
+  )
+  function cleanup(target) {
+    target.removeEventListener('scroll', throttleScroll)
+    target.removeEventListener('scrollend', debounceScrollEnd)
+  }
+  const throttleScroll = throttle(scrollEvent, throttleDelay)
+  const debounceScrollEnd = debounce(scrollEndEvent, throttleDelay + 200)
   // 监听滚动事件的函数
   function scrollEvent(e: Event) {
+    console.log('scroll', e)
+    isScrolling.value = true
+    const eventTarget = ((e.target as Document).documentElement ?? e.target) as HTMLElement
+    const el: Element = ((eventTarget as Window)?.document?.documentElement ||
+      (eventTarget as Document)?.documentElement ||
+      (eventTarget as HTMLElement)) as Element
     // 获取当前的滚动位置
-    let currentScrollY: number
-    // 注：在 safari 浏览器中 currentScrollY 会出现负值，可将负值统一处理为 0 来和 google 浏览器行为统一
-    if (target === self) {
-      currentScrollY = window.pageYOffset || document.documentElement.scrollTop
-    } else {
-      currentScrollY = e.target.scrollTop
-    }
-    currentScrollY = currentScrollY < 0 ? 0 : currentScrollY
-    // 比较当前位置和上一次记录的位置，来确定滚动方向
-    scrollDirection.value = currentScrollY > lastScrollY ? 'bottom' : 'top'
+    x.value = el.scrollLeft
+    y.value = el.scrollTop
+    // 注：在 safari 浏览器中 lastScrollTop 会出现负值，可将负值统一处理为 0 来和 google 浏览器行为统一
+    left.value = x.value < lastScrollLeft.value
+    right.value = x.value > lastScrollLeft.value
+    top.value = y.value < lastScrollTop.value
+    bottom.value = y.value > lastScrollTop.value
     // 更新上次滚动位置
-    lastScrollY = currentScrollY
+    lastScrollLeft.value = x.value
+    lastScrollTop.value = y.value
+    debounceScrollEnd(e)
+    onScroll && onScroll(e)
   }
   function scrollEndEvent(e: Event) {
-    if (isScrolling.value) {
+    console.log('scrollend', e)
+    if (!isScrolling.value) {
       return
     }
     isScrolling.value = false
-    directions.left = false
-    directions.right = false
-    directions.top = false
-    directions.bottom = false
-    onStop(e)
+    left.value = false
+    right.value = false
+    top.value = false
+    bottom.value = false
+    onStop && onStop(e)
   }
-  // 使用节流函数封装 scrollEvent，以减少滚动事件的触发频率
-  const throttleScroll = throttle(scrollEvent, throttleDelay)
-  const debounceScrollEnd = debounce(scrollEndEvent, throttleDelay + 200)
-  useEventListener(target, 'scroll', throttleScroll)
-  useEventListener(target, 'scrollend', debounceScrollEnd)
-  // 返回一个对象，包含我们想要暴露给组件的状态或方法
-  return { scrollDirection }
+  // 返回一个对象，包含滚动位置和各种状态信息
+  return { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom }
 }
 /**
  * 组合式函数
