@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { debounce, useEventListener, useMutationObserver } from '../utils'
+import { debounce, useResizeObserver, useScroll } from '../utils'
 interface Props {
   contentClass?: string // 内容 div 的类名
   contentStyle?: CSSProperties // 内容 div 的样式
@@ -19,17 +19,17 @@ const props = withDefaults(defineProps<Props>(), {
   size: 5,
   trigger: 'hover',
   autoHide: true,
-  delay: 1000,
+  delay: 500,
   xScrollable: false,
   xPlacement: 'bottom',
   yPlacement: 'right'
 })
-const scrollbarRef = ref()
 const containerRef = ref()
 const contentRef = ref()
 const railVerticalRef = ref()
 const railHorizontalRef = ref()
-const showTrack = ref(false)
+const showHorizontalTrack = ref(false) // 是否显示横向滚动条
+const showVerticalTrack = ref(false) // 是否显示垂直滚动条
 const containerScrollHeight = ref(0) // 滚动区域高度，包括溢出高度
 const containerScrollWidth = ref(0) // 滚动区域宽度，包括溢出宽度
 const containerClientHeight = ref(0) // 滚动区域高度，不包括溢出高度
@@ -52,7 +52,7 @@ const memoMouseX = ref<number>(0) // 鼠标选中并按下水平滚动条时的�
 const horizontalContentStyle = { width: 'fit-content' } // 水平滚动时内容区域默认样式
 const trackHover = ref(false) // 鼠标是否在滚动条上
 const trackLeave = ref(false) // 鼠标在按下滚动条并拖动时是否离开滚动条
-const emit = defineEmits(['scroll'])
+const emits = defineEmits(['scroll', 'scrollend'])
 const autoShowTrack = computed(() => {
   return props.trigger === 'hover' && props.autoHide
 })
@@ -124,15 +124,21 @@ const horizontalTrackStyle = computed(() => {
     width: `${trackWidth.value}px`
   }
 })
-useEventListener(window, 'resize', updateState)
-useMutationObserver(scrollbarRef, updateState, { subtree: true, childList: true, attributes: true })
-const debounceHideEvent = debounce(hideScrollbar, props.delay)
+const {
+  left: scrollingLeft,
+  right: scrollingRight,
+  top: scrollingTop,
+  bottom: scrollingBottom
+} = useScroll(containerRef)
 onMounted(() => {
   updateState()
 })
+useResizeObserver([containerRef, contentRef], updateState)
+const debounceHideEvent = debounce(hideScrollbar, props.delay)
 function hideScrollbar() {
   if (!trackHover.value) {
-    showTrack.value = false
+    showHorizontalTrack.value = false
+    showVerticalTrack.value = false
   }
 }
 function updateScrollState() {
@@ -157,20 +163,29 @@ function updateState() {
 }
 function onScroll(e: Event) {
   if (autoShowTrack.value) {
-    showTrack.value = true
-    if (!trackXPressed.value && !trackYPressed.value) {
-      debounceHideEvent()
+    if (scrollingLeft.value || scrollingRight.value) {
+      showHorizontalTrack.value = true
+    }
+    if (scrollingTop.value || scrollingBottom.value) {
+      showVerticalTrack.value = true
     }
   }
-  emit('scroll', e)
+  emits('scroll', e)
   updateScrollState()
+}
+function onScrollEnd(e: Event) {
+  emits('scrollend', e)
+  if (!trackXPressed.value && !trackYPressed.value) {
+    debounceHideEvent()
+  }
 }
 function onMouseEnter() {
   if (trackXPressed.value || trackYPressed.value) {
     mouseLeave.value = false
   } else {
     if (!autoShowTrack.value) {
-      showTrack.value = true
+      showHorizontalTrack.value = true
+      showVerticalTrack.value = true
     }
   }
 }
@@ -179,7 +194,8 @@ function onMouseLeave() {
     mouseLeave.value = true
   } else {
     if (!autoShowTrack.value) {
-      showTrack.value = false
+      showHorizontalTrack.value = false
+      showVerticalTrack.value = false
     }
   }
 }
@@ -212,14 +228,13 @@ function onTrackVerticalMouseDown(e: MouseEvent) {
     window.onmousemove = null
     trackYPressed.value = false
     if (props.trigger === 'hover' && mouseLeave.value) {
-      showTrack.value = false
       mouseLeave.value = false
     }
     if (autoShowTrack.value && trackLeave.value) {
       trackLeave.value = false
       trackHover.value = false
-      debounceHideEvent()
     }
+    debounceHideEvent()
   }
 }
 function onTrackHorizontalMouseDown(e: MouseEvent) {
@@ -240,14 +255,13 @@ function onTrackHorizontalMouseDown(e: MouseEvent) {
     window.onmousemove = null
     trackXPressed.value = false
     if (props.trigger === 'hover' && mouseLeave.value) {
-      showTrack.value = false
       mouseLeave.value = false
     }
     if (autoShowTrack.value && trackLeave.value) {
       trackLeave.value = false
       trackHover.value = false
-      debounceHideEvent()
     }
+    debounceHideEvent()
   }
 }
 function scrollTo(...args: any[]) {
@@ -270,13 +284,12 @@ defineExpose({
 </script>
 <template>
   <div
-    ref="scrollbarRef"
     class="m-scrollbar"
     :style="`--scrollbar-size: ${size}px;`"
     @mouseenter="isScroll && trigger === 'hover' ? onMouseEnter() : () => false"
     @mouseleave="isScroll && trigger === 'hover' ? onMouseLeave() : () => false"
   >
-    <div ref="containerRef" class="scrollbar-container" @scroll="onScroll">
+    <div ref="containerRef" class="scrollbar-container" @scroll="onScroll" @scrollend="onScrollEnd">
       <div
         ref="contentRef"
         class="scrollbar-content"
@@ -289,7 +302,7 @@ defineExpose({
     <div ref="railVerticalRef" class="scrollbar-rail rail-vertical" :class="[`rail-vertical-${yPlacement}`]">
       <div
         class="scrollbar-track"
-        :class="{ 'track-visible': trigger === 'none' || showTrack }"
+        :class="{ 'track-visible': trigger === 'none' || showVerticalTrack }"
         :style="verticalTrackStyle"
         @mouseenter="autoShowTrack ? onEnterTrack() : () => false"
         @mouseleave="autoShowTrack ? onLeaveTrack() : () => false"
@@ -304,7 +317,7 @@ defineExpose({
     >
       <div
         class="scrollbar-track"
-        :class="{ 'track-visible': trigger === 'none' || showTrack }"
+        :class="{ 'track-visible': trigger === 'none' || showHorizontalTrack }"
         :style="horizontalTrackStyle"
         @mouseenter="autoShowTrack ? onEnterTrack() : () => false"
         @mouseleave="autoShowTrack ? onLeaveTrack() : () => false"

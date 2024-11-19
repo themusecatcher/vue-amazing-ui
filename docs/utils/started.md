@@ -22,7 +22,7 @@ import {
   toggleDark,
   useEventListener,
   useMutationObserver,
-  useScrollDirection,
+  useScroll,
   useFps,
   useMediaQuery,
   useResizeObserver,
@@ -46,7 +46,7 @@ downloadFile | 下载文件并自定义文件名，未传 `name` 时，从文件
 toggleDark | 一键切换暗黑模式函数 | () => void
 useEventListener | 使用 `Vue` 的生命周期钩子添加和移除事件监听器 | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void
 useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object
-useScrollDirection | 实时监测页面滚动方向 | (throttleDelay: number = 100) => object
+useScroll | 实时监测目标元素滚动位置及状态 | (target: Ref &#124; HTMLElement &#124; Window &#124; Document = window, throttleDelay: number = 0, onScroll?: (e: Event) => void, onStop?: (e: Event) => void) => object
 useFps | 实时监测浏览器刷新率FPS | () => object
 useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery: string) => object
 useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => object

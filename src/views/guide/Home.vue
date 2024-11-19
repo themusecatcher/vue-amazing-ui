@@ -64,8 +64,8 @@ const toolFunctions = [
     description: '使用 MutationObserver 观察 DOM 元素的变化'
   },
   {
-    name: 'useScrollDirection',
-    description: '实时监测页面滚动方向'
+    name: 'useScroll',
+    description: '实时监测目标元素滚动位置及状态'
   },
   {
     name: 'useFps',
@@ -100,7 +100,7 @@ import {
   toggleDark,
   useEventListener,
   useMutationObserver,
-  useScrollDirection,
+  useScroll,
   useFps,
   useMediaQuery,
   useResizeObserver,
