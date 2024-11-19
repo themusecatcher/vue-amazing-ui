@@ -70,7 +70,7 @@ import {
   toggleDark,
   useEventListener,
   useMutationObserver,
-  useScrollDirection,
+  useScroll,
   useFps,
   useMediaQuery,
   useResizeObserver,

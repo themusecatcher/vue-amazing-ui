@@ -450,13 +450,17 @@ export function useMutationObserver(
 }
 /**
  * 组合式函数
- * 实时监测滚动位置和状态
+ * 实时监测目标元素滚动位置及状态
  *
- * @param throttleDelay 节流延迟时间，单位 ms，默认为 0，用于控制滚动事件触发的频率
- * @returns 返回一个对象，其中包含滚动的位置和各种状态信息
+ * 自定义钩子用于处理滚动事件和状态
+ * @param target 滚动目标元素，可以是 Ref、HTMLElement、Window 或 Document，默认为 window
+ * @param throttleDelay 节流延迟，用于限制滚动事件的触发频率，默认为 0
+ * @param onScroll 滚动事件的回调函数，可选
+ * @param onStop 滚动结束的回调函数，可选
+ * @returns 返回一个对象，包含滚动位置和各种状态信息
  */
 export function useScroll(
-  target: HTMLElement | Window | Document = window,
+  target: Ref | HTMLElement | Window | Document = window,
   throttleDelay: number = 0,
   onScroll?: (e: Event) => void,
   onStop?: (e: Event) => void
@@ -470,72 +474,27 @@ export function useScroll(
   const right = ref(false) // 是否向右滚动
   const top = ref(false) // 是否向上滚动
   const bottom = ref(false) // 是否向下滚动
-  const lastScrollLeft = ref(0)
-  const lastScrollTop = ref(0)
-  const scrollTarget = computed(() => {
-    const targetValue = toValue(target)
-    if (targetValue) {
-      return targetValue
-    }
-    return null
-  })
-  watch(
-    () => scrollTarget.value,
-    (to, from) => {
-      if (from) {
-        cleanup(from)
-      }
-      if (to) {
-        const el: Element = ((to as Window)?.document?.documentElement ||
-          (to as Document)?.documentElement ||
-          (to as HTMLElement)) as Element
-        console.log('target', to)
-        console.log('el', el)
-        xScrollMax.value = el.scrollWidth - el.clientWidth
-        yScrollMax.value = el.scrollHeight - el.clientHeight
-        console.log('scrollWidth', el.scrollWidth)
-        console.log('clientWidth', el.clientWidth)
-        console.log('scrollHeight', el.scrollHeight)
-        console.log('clientHeight', el.clientHeight)
-        el.addEventListener('scroll', throttleScroll)
-        el.addEventListener('scrollend', debounceScrollEnd)
-      }
-    },
-    {
-      immediate: true,
-      flush: 'post'
-    }
-  )
-  function cleanup(target) {
-    target.removeEventListener('scroll', throttleScroll)
-    target.removeEventListener('scrollend', debounceScrollEnd)
-  }
-  const throttleScroll = throttle(scrollEvent, throttleDelay)
-  const debounceScrollEnd = debounce(scrollEndEvent, throttleDelay + 200)
-  // 监听滚动事件的函数
+  const lastScrollLeft = ref(0) // 上一次水平滚动距离
+  const lastScrollTop = ref(0) // 上一次垂直滚动距离
+  // 滚动事件
   function scrollEvent(e: Event) {
-    console.log('scroll', e)
     isScrolling.value = true
     const eventTarget = ((e.target as Document).documentElement ?? e.target) as HTMLElement
-    const el: Element = ((eventTarget as Window)?.document?.documentElement ||
-      (eventTarget as Document)?.documentElement ||
-      (eventTarget as HTMLElement)) as Element
-    // 获取当前的滚动位置
-    x.value = el.scrollLeft
-    y.value = el.scrollTop
-    // 注：在 safari 浏览器中 lastScrollTop 会出现负值，可将负值统一处理为 0 来和 google 浏览器行为统一
+    x.value = eventTarget.scrollLeft
+    y.value = eventTarget.scrollTop
     left.value = x.value < lastScrollLeft.value
     right.value = x.value > lastScrollLeft.value
     top.value = y.value < lastScrollTop.value
     bottom.value = y.value > lastScrollTop.value
-    // 更新上次滚动位置
     lastScrollLeft.value = x.value
     lastScrollTop.value = y.value
     debounceScrollEnd(e)
     onScroll && onScroll(e)
   }
+  // 使用节流函数限制滚动事件触发频率
+  const throttleScroll = throttle(scrollEvent, throttleDelay)
+  // 滚动结束事件
   function scrollEndEvent(e: Event) {
-    console.log('scrollend', e)
     if (!isScrolling.value) {
       return
     }
@@ -546,7 +505,49 @@ export function useScroll(
     bottom.value = false
     onStop && onStop(e)
   }
-  // 返回一个对象，包含滚动位置和各种状态信息
+  // 使用防抖函数延迟处理滚动结束事件
+  const debounceScrollEnd = debounce(scrollEndEvent, throttleDelay + 200)
+  // 计算滚动目标元素
+  const scrollTarget = computed(() => {
+    const targetValue = toValue(target)
+    if (targetValue) {
+      return targetValue
+    }
+    return null
+  })
+  // 监听滚动目标元素的变化
+  watch(
+    () => scrollTarget.value,
+    (to: any, from: any) => {
+      if (from) {
+        cleanup(from)
+      }
+      if (to) {
+        const el: Element = ((to as Window)?.document?.documentElement ||
+          (to as Document)?.documentElement ||
+          (to as HTMLElement)) as Element
+        xScrollMax.value = el.scrollWidth - el.clientWidth
+        yScrollMax.value = el.scrollHeight - el.clientHeight
+        el.addEventListener('scroll', throttleScroll)
+        el.addEventListener('scrollend', debounceScrollEnd)
+      }
+    },
+    {
+      immediate: true,
+      flush: 'post'
+    }
+  )
+  // 清理函数，用于移除事件监听器
+  function cleanup(target: any) {
+    const el: Element = ((target as Window)?.document?.documentElement ||
+      (target as Document)?.documentElement ||
+      (target as HTMLElement)) as Element
+    el.removeEventListener('scroll', throttleScroll)
+    el.removeEventListener('scrollend', debounceScrollEnd)
+  }
+  // 在组件卸载前调用清理函数
+  onBeforeUnmount(() => cleanup(scrollTarget.value))
+  // 返回滚动位置和各种状态信息
   return { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom }
 }
 /**
