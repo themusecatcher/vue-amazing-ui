@@ -94,8 +94,8 @@ const trackTop = computed(() => {
 const verticalTrackStyle = computed(() => {
   // 垂直滚动条样式
   return {
-    top: `${trackTop}px`,
-    height: `${trackHeight}px`
+    top: `${trackTop.value}px`,
+    height: `${trackHeight.value}px`
   }
 })
 const trackWidth = computed(() => {
@@ -120,8 +120,8 @@ const trackLeft = computed(() => {
 const horizontalTrackStyle = computed(() => {
   // 水平滚动条样式
   return {
-    left: `${trackLeft}px`,
-    width: `${trackWidth}px`
+    left: `${trackLeft.value}px`,
+    width: `${trackWidth.value}px`
   }
 })
 useEventListener(window, 'resize', updateState)
@@ -286,7 +286,7 @@ defineExpose({
         <slot></slot>
       </div>
     </div>
-    <div ref="railVerticalRef" class="scrollbar-rail rail-vertical" :class="`rail-vertical-${yPlacement}`">
+    <div ref="railVerticalRef" class="scrollbar-rail rail-vertical" :class="[`rail-vertical-${yPlacement}`]">
       <div
         class="scrollbar-track"
         :class="{ 'track-visible': trigger === 'none' || showTrack }"
@@ -300,7 +300,7 @@ defineExpose({
       ref="railHorizontalRef"
       v-show="xScrollable"
       class="scrollbar-rail rail-horizontal"
-      :class="`rail-horizontal-${xPlacement}`"
+      :class="[`rail-horizontal-${xPlacement}`]"
     >
       <div
         class="scrollbar-track"
