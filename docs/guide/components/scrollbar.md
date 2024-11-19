@@ -404,3 +404,4 @@ auto | 或缺省值表示浏览器会自动选择滚动时的过渡效果
 名称 | 说明 | 类型
 -- | -- | --
 scroll | 滚动的回调 | (e: Event) => void
+scrollend | 滚动结束的回调 | (e: Event) => void
