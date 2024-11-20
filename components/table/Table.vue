@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, onMounted } from 'vue'
+import { ref, computed, watchEffect, onMounted, nextTick } from 'vue'
 import type { Slot } from 'vue'
 import Spin from '../spin'
 import Empty from '../empty'
 import Scrollbar from '../scrollbar'
 import Ellipsis from '../ellipsis'
 import Pagination from '../pagination'
-import { useSlotsExist } from '../utils'
+import { useSlotsExist, useResizeObserver } from '../utils'
 interface Column {
   title?: string // 列头显示文字
   width?: string | number // 列宽度，单位 px
@@ -78,16 +78,19 @@ interface Coords {
   row: number // 行索引坐标
   col: number // 列索引坐标
 }
+const tableRef = ref() // table 组件 DOM 引用
 const tablePage = ref<number>(1) // 分页器当前页数
 const tablePageSize = ref<number>(10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const tableExpandedRowKeys = ref<(string | number)[]>([])
+const ellipsisRef = ref() // 文本省略组件 DOM 引用
 const scrollbarRef = ref() // 水平滚动容器 DOM 引用
-const tableScrollRef = ref() // 水平滚动容器 DOM 引用
 const scrollLeft = ref<number>(0) // 表格水平滚动时距容器左边位置
 const scrollWidth = ref<number>(0) // 表格水平滚动元素宽度，包括溢出滚动，不包括边框
+const scrollHeight = ref<number>(0) // 表格垂直滚动元素高度，包括溢出滚动，不包括边框
 const clientWidth = ref<number>(0) // 表格水平滚动元素宽度，不包括溢出滚动，不包括边框
+const clientHeight = ref<number>(0) // 表格垂直滚动元素高度，不包括溢出滚动，不包括边框
 const scrollMax = ref<number>(0) // 表格水平滚动时，最大可滚动距离
 const tableThExpandRef = ref() // 表格展开列 th 的引用
 const tableThRef = ref() // 表格除展开列以外的 th 的引用
@@ -96,8 +99,14 @@ const emits = defineEmits(['update:expandedRowKeys', 'change'])
 const horizontalScroll = computed(() => {
   return props.scroll?.x !== undefined
 })
+const xScrollable = computed(() => {
+  return horizontalScroll.value && scrollWidth.value > clientWidth.value
+})
 const verticalScroll = computed(() => {
   return props.scroll?.y !== undefined
+})
+const yScrollable = computed(() => {
+  return verticalScroll.value && scrollHeight.value > clientHeight.value
 })
 const showShadowLeft = computed(() => {
   return scrollLeft.value > 0
@@ -115,13 +124,6 @@ const hasFixRight = computed(() => {
 })
 const showHeader = computed(() => {
   return slotsExist.header || props.header
-})
-const tableContainerStyle = computed(() => {
-  const style: any = {}
-  if (horizontalScroll.value) {
-    style.overflow = 'auto hidden'
-  }
-  return style
 })
 const tableLayoutComputed = computed(() => {
   if (props.tableLayout === undefined) {
@@ -223,13 +225,33 @@ watchEffect(() => {
   tableExpandedRowKeys.value = props.expandedRowKeys
 })
 onMounted(() => {
-  if (horizontalScroll.value && scrollbarRef.value) {
-    const scrollData = scrollbarRef.value.getScrollData()
-    scrollWidth.value = scrollData.scrollWidth
-    clientWidth.value = scrollData.clientWidth
-    scrollMax.value = scrollWidth.value - clientWidth.value
-  }
+  getScrollState()
+  ellipsisObserveScroll() // 父组件挂载完成后，触发 ellipsis 组件的滚动元素监听
 })
+// 监听表格尺寸变化，更新滚动状态
+useResizeObserver(tableRef, () => {
+  getScrollState()
+})
+function getScrollState() {
+  if (scrollbarRef.value) {
+    const scrollData = scrollbarRef.value.getScrollData()
+    if (horizontalScroll.value) {
+      scrollWidth.value = scrollData.scrollWidth
+      clientWidth.value = scrollData.clientWidth
+      scrollMax.value = scrollWidth.value - clientWidth.value
+    }
+    if (verticalScroll.value) {
+      scrollHeight.value = scrollData.scrollHeight
+      clientHeight.value = scrollData.clientHeight
+    }
+  }
+}
+async function ellipsisObserveScroll() {
+  await nextTick()
+  if (ellipsisRef.value) {
+    ellipsisRef.value.forEach((el: any) => el.observeScroll())
+  }
+}
 function getComputedValue(column: Column, key: keyof Props) {
   let computedValue = props[key as keyof Props]
   if (column?.[key as keyof Column] !== undefined) {
@@ -323,7 +345,7 @@ function getMergedCellsIndex(record: any, rowIndex: number): number[] {
 function getMergeCellRowIndex(record: any, column: Column, rowIndex: number) {
   if (rowIndex >= 0) {
     const custom = column.customCell?.(record, rowIndex, column)
-    if (custom && 'rowSpan' in custom && custom.rowSpan > 0) {
+    if (custom && 'rowSpan' in custom && (custom.rowSpan as number) > 0) {
       return rowIndex
     } else {
       return getMergeCellRowIndex(record, column, rowIndex - 1)
@@ -359,9 +381,15 @@ function onExpandCell(key: string | number) {
   emits('update:expandedRowKeys', tableExpandedRowKeys.value)
 }
 function onScroll(e: Event) {
-  scrollLeft.value = (e.target as HTMLElement).scrollLeft
-  scrollWidth.value = (e.target as HTMLElement).scrollWidth
-  clientWidth.value = (e.target as HTMLElement).clientWidth
+  if (horizontalScroll.value) {
+    scrollLeft.value = (e.target as HTMLElement).scrollLeft
+    scrollWidth.value = (e.target as HTMLElement).scrollWidth
+    clientWidth.value = (e.target as HTMLElement).clientWidth
+  }
+  if (verticalScroll.value) {
+    scrollHeight.value = (e.target as HTMLElement).scrollHeight
+    clientHeight.value = (e.target as HTMLElement).clientHeight
+  }
 }
 function onWheel(e: WheelEvent) {
   if (e.deltaX) {
@@ -394,7 +422,7 @@ function onPaginationChange(page: number, pageSize: number) {
 }
 </script>
 <template>
-  <div class="m-table-wrap">
+  <div ref="tableRef" class="m-table-wrap">
     <Spin size="small" :spinning="loading" v-bind="spinProps">
       <div
         class="m-table"
@@ -413,8 +441,14 @@ function onPaginationChange(page: number, pageSize: number) {
         <div v-if="showHeader" class="table-header">
           <slot name="header">{{ header }}</slot>
         </div>
-        <div v-if="!verticalScroll" class="table-container">
-          <Scrollbar ref="scrollbarRef" :x-scrollable="horizontalScroll" @scroll="onScroll" v-bind="scrollbarProps">
+        <div v-if="!verticalScroll" class="table-container" :class="{ 'container-no-x-scroll': !xScrollable }">
+          <Scrollbar
+            ref="scrollbarRef"
+            :x-scrollable="horizontalScroll"
+            :auto-hide="false"
+            @scroll="onScroll"
+            v-bind="scrollbarProps"
+          >
             <table :style="tableStyle">
               <thead>
                 <tr>
@@ -445,7 +479,9 @@ function onPaginationChange(page: number, pageSize: number) {
                     :colspan="column.colSpan"
                   >
                     <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                      <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">{{ column.title }}</Ellipsis>
+                      <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">{{
+                        column.title
+                      }}</Ellipsis>
                     </slot>
                     <slot v-else name="headerCell" :column="column" :title="column.title">
                       {{ column.title }}
@@ -515,7 +551,7 @@ function onPaginationChange(page: number, pageSize: number) {
                           :text="record[column.dataIndex]"
                           :index="rowIndex"
                         >
-                          <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">{{
+                          <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">{{
                             record[column.dataIndex]
                           }}</Ellipsis>
                         </slot>
@@ -558,7 +594,14 @@ function onPaginationChange(page: number, pageSize: number) {
             </table>
           </Scrollbar>
         </div>
-        <div v-else class="table-container">
+        <div
+          v-else
+          class="table-container"
+          :class="{
+            'container-vertical-no-x-scroll': !xScrollable,
+            'container-no-scroll': !xScrollable && !yScrollable
+          }"
+        >
           <div class="table-head">
             <table :style="[tableStyle, tableHeadStyle]" @wheel="horizontalScroll ? onWheel($event) : () => false">
               <thead>
@@ -581,6 +624,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     :colend="index"
                     class="table-th"
                     :class="{
+                      'table-th-ellipsis': column.ellipsis && xScrollable,
                       'table-cell-fix-left': column.fixed === 'left',
                       'table-cell-fix-left-last': checkFixLeftLast(thColumns, column, index),
                       'table-cell-fix-right': column.fixed === 'right',
@@ -590,9 +634,17 @@ function onPaginationChange(page: number, pageSize: number) {
                     v-for="(column, index) in thColumns"
                     :key="index"
                     :colspan="column.colSpan"
+                    :title="column.ellipsis && xScrollable ? 'column.title' : undefined"
                   >
-                    <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                      <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">{{ column.title }}</Ellipsis>
+                    <slot
+                      v-if="column.ellipsis && !xScrollable"
+                      name="headerCell"
+                      :column="column"
+                      :title="column.title"
+                    >
+                      <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">{{
+                        column.title
+                      }}</Ellipsis>
                     </slot>
                     <slot v-else name="headerCell" :column="column" :title="column.title">
                       {{ column.title }}
@@ -605,6 +657,7 @@ function onPaginationChange(page: number, pageSize: number) {
           <Scrollbar
             ref="scrollbarRef"
             :x-scrollable="horizontalScroll"
+            :auto-hide="false"
             :style="tableBodyScrollStyle"
             @scroll="onScroll"
             v-bind="scrollbarProps"
@@ -672,7 +725,7 @@ function onPaginationChange(page: number, pageSize: number) {
                           :text="record[column.dataIndex]"
                           :index="rowIndex"
                         >
-                          <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">{{
+                          <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">{{
                             record[column.dataIndex]
                           }}</Ellipsis>
                         </slot>
@@ -824,6 +877,12 @@ function onPaginationChange(page: number, pageSize: number) {
             text-align: center;
           }
         }
+        .table-th-ellipsis {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          word-break: keep-all;
+        }
         .table-empty {
           padding: 16px;
           border-bottom: 1px solid #f0f0f0;
@@ -940,6 +999,21 @@ function onPaginationChange(page: number, pageSize: number) {
         .table-td-expand {
           background: rgba(0, 0, 0, 0.02);
         }
+      }
+    }
+    .container-no-x-scroll {
+      .m-scrollbar {
+        overflow: visible;
+      }
+    }
+    .container-vertical-no-x-scroll {
+      .table-head {
+        overflow: visible;
+      }
+    }
+    .container-no-scroll {
+      .m-scrollbar {
+        overflow: visible;
       }
     }
     .table-header + .table-container {

@@ -4,7 +4,7 @@
 
 ## 1.9.7 <Tag color="volcano" size="small">2024-11-20</Tag>
 
-- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `xPlacement` `yPlacement` 属性，支持设置滚动条位置；调整是否使用横向滚动属性名 `horizontal` 为 `xScrollable`；新增 `getScrollData` 方法，用于获取滚动区域相关信息
+- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `xPlacement` `yPlacement` 属性，支持设置滚动条位置；调整是否使用横向滚动属性名 `horizontal` 为 `xScrollable`；新增 `getScrollData` 方法，用于获取滚动区域相关信息；新增 `scrollend` 回调函数，同时回调函数新增 `direction` 参数，用于表示滚动方向
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `scrollbarProps` 属性，表格所有滚动均使用 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，并支持滚动条相关属性配置
 - 新增 [滚动监测 useScroll](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/scroll.html) 工具函数，用于实时监测指定元素滚动位置及状态；删除 `useScroll` 工具函数
 - 组件库及文档代码优化

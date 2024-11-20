@@ -146,7 +146,6 @@ useResizeObserver([tooltipCardRef, contentRef], (entries: ResizeObserverEntry[])
 function getViewportSize() {
   viewportWidth.value = document.documentElement.clientWidth
   viewportHeight.value = document.documentElement.clientHeight
-
   observeScroll() // 窗口尺寸变化时，重新查询并监听最近可滚动父元素
   updatePosition()
 }
@@ -169,10 +168,9 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   const isScrollable = (el: HTMLElement): boolean => {
     const style = window.getComputedStyle(el)
     if (
-      el.scrollHeight > el.clientHeight &&
-      (['scroll', 'auto'].includes(style.overflowY) ||
-        ['scroll', 'auto'].includes(style.overflowX) ||
-        el === document.documentElement)
+      (el.scrollWidth > el.clientWidth && ['scroll', 'auto'].includes(style.overflowX)) ||
+      (el.scrollHeight > el.clientHeight && ['scroll', 'auto'].includes(style.overflowY)) ||
+      ((el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight) && el === document.documentElement)
     ) {
       return true
     }
@@ -375,7 +373,8 @@ function onLeave() {
 }
 defineExpose({
   show: onShow,
-  hide: onHide
+  hide: onHide,
+  observeScroll
 })
 </script>
 <template>
