@@ -152,9 +152,6 @@ function updateScrollbarState() {
   contentWidth.value = contentRef.value.offsetWidth
   railHeight.value = railVerticalRef.value.offsetHeight
   railWidth.value = railHorizontalRef.value.offsetWidth
-  console.log('containerScrollHeight', containerScrollHeight.value)
-  console.log('containerClientHeight', containerClientHeight.value)
-  console.log('containerRef', containerRef.value)
 }
 function updateState() {
   updateScrollState()
