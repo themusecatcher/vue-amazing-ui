@@ -1,9 +1,9 @@
 <script setup lang="ts">
-function onScroll(e: Event) {
-  console.log('scroll', e)
+function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scroll', e, direction)
 }
-function onScrollEnd(e: Event) {
-  console.log('scrollend', e)
+function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scrollend', e, direction)
 }
 </script>
 <template>
@@ -30,7 +30,7 @@ function onScrollEnd(e: Event) {
       啦啦啦啦啦啦啦啦咧
     </Scrollbar>
     <h2 class="mt30 mb10">横向滚动</h2>
-    <Scrollbar x-scrollable>
+    <Scrollbar x-scrollable @scroll="onScroll" @scrollend="onScrollEnd">
       <div style="white-space: nowrap; padding: 12px">
         我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
         我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌
@@ -39,7 +39,7 @@ function onScrollEnd(e: Event) {
       </div>
     </Scrollbar>
     <h2 class="mt30 mb10">垂直及横向滚动</h2>
-    <Scrollbar style="max-height: 120px" x-scrollable>
+    <Scrollbar style="max-height: 120px" x-scrollable @scroll="onScroll" @scrollend="onScrollEnd">
       <div style="white-space: nowrap; padding-right: 12px" v-for="n in 9" :key="n">
         我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
         我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌

@@ -16,6 +16,8 @@ const props = withDefaults(defineProps<Props>(), {
   expand: false,
   tooltip: true
 })
+const tooltipRef = ref() // tooltip 组件引用
+const observeScroll = ref() // tooltip 组件暴露的 observeScroll 函数
 const showTooltip = ref(false) // 是否显示提示框
 const showExpand = ref(false) // 是否可以启用点击展开
 const ellipsisRef = ref() // 文本 DOM 引用
@@ -75,6 +77,7 @@ useResizeObserver(ellipsisRef, () => {
 })
 onMounted(() => {
   updateTooltipShow()
+  observeScroll.value = tooltipRef.value.observeScroll
 })
 function updateTooltipShow() {
   const scrollWidth = ellipsisRef.value.scrollWidth
@@ -113,9 +116,14 @@ function onExpand() {
     emit('expandChange', false)
   }
 }
+
+defineExpose({
+  observeScroll
+})
 </script>
 <template>
   <Tooltip
+    ref="tooltipRef"
     :style="`max-width: ${textMaxWidth}`"
     :max-width="computedTooltipMaxWidth"
     :content-style="{ maxWidth: textMaxWidth }"

@@ -5,11 +5,11 @@
 *看起来好看点，但是我能保证这个没有原生滚动条可靠*
 
 <script setup lang="ts">
-function onScroll(e: Event) {
-  console.log('scroll', e)
+function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scroll', e, direction)
 }
-function onScrollEnd(e: Event) {
-  console.log('scrollend', e)
+function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scrollend', e, direction)
 }
 </script>
 
@@ -39,11 +39,11 @@ function onScrollEnd(e: Event) {
 
 ```vue
 <script setup lang="ts">
-function onScroll(e: Event) {
-  console.log('scroll', e)
+function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scroll', e, direction)
 }
-function onScrollEnd(e: Event) {
-  console.log('scrollend', e)
+function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scrollend', e, direction)
 }
 </script>
 <template>
@@ -73,7 +73,7 @@ function onScrollEnd(e: Event) {
 
 ## 横向滚动
 
-<Scrollbar x-scrollable>
+<Scrollbar x-scrollable @scroll="onScroll" @scrollend="onScrollEnd">
   <div style="white-space: nowrap; padding: 12px">
     我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
     我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌
@@ -85,8 +85,16 @@ function onScrollEnd(e: Event) {
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scroll', e, direction)
+}
+function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scrollend', e, direction)
+}
+</script>
 <template>
-  <Scrollbar x-scrollable>
+  <Scrollbar x-scrollable @scroll="onScroll" @scrollend="onScrollEnd">
     <div style="white-space: nowrap; padding: 12px">
       我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
       我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌
@@ -101,7 +109,7 @@ function onScrollEnd(e: Event) {
 
 ## 垂直及横向滚动
 
-<Scrollbar style="max-height: 120px" x-scrollable>
+<Scrollbar style="max-height: 120px" x-scrollable @scroll="onScroll" @scrollend="onScrollEnd">
   <div style="white-space: nowrap; padding-right: 12px" v-for="n in 9" :key="n">
     我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
     我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌
@@ -119,8 +127,16 @@ function onScrollEnd(e: Event) {
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scroll', e, direction)
+}
+function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  console.log('scrollend', e, direction)
+}
+</script>
 <template>
-  <Scrollbar style="max-height: 120px" x-scrollable>
+  <Scrollbar style="max-height: 120px" x-scrollable @scroll="onScroll" @scrollend="onScrollEnd">
     <div style="white-space: nowrap; padding-right: 12px" v-for="n in 9" :key="n">
       我们在田野上面找猪 想象中已找到了三只 小鸟在白云上面追逐 它们在树底下跳舞 啦啦啦啦啦啦啦啦咧 啦啦啦啦咧
       我们在想象中度过了许多年 想象中我们是如此的疯狂 我们在城市里面找猪 想象中已找到了几百万只 小鸟在公园里面唱歌
@@ -403,5 +419,5 @@ auto | 或缺省值表示浏览器会自动选择滚动时的过渡效果
 
 名称 | 说明 | 类型
 -- | -- | --
-scroll | 滚动的回调 | (e: Event) => void
-scrollend | 滚动结束的回调 | (e: Event) => void
+scroll | 滚动的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void
+scrollend | 滚动结束的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void
