@@ -405,7 +405,7 @@ yPlacement | 纵向滚动时滚动条的位置 | 'left' &#124; 'right' | 'right'
 -- | -- | --
 scrollTo | 滚动到指定坐标位置 | (options: { left?: number, top?: number, behavior?: [ScrollBehavior](#scrollbehavior-type) })=> void \| (x: number, y: number) => void
 scrollBy | 滚动一段特定距离 | (options: { left?: number, top?: number, behavior?: [ScrollBehavior](#scrollbehavior-type) })=> void \| (x: number, y: number) => void
-getScrollData | 获取滚动元素数据 | () => { scrollWidth: number\, clientWidth: number }
+getScrollData | 获取滚动元素数据 | () => { scrollWidth: number\, clientWidth: number, scrollHeight: number\, clientHeight: number }
 
 ### ScrollBehavior Type
 
