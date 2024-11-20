@@ -24,10 +24,10 @@ const props = withDefaults(defineProps<Props>(), {
   xPlacement: 'bottom',
   yPlacement: 'right'
 })
-const containerRef = ref()
-const contentRef = ref()
-const railVerticalRef = ref()
-const railHorizontalRef = ref()
+const containerRef = ref() // 滚动容器 DOM 引用
+const contentRef = ref() // 滚动内容 DOM 引用
+const railVerticalRef = ref() // 垂直滚动条 DOM 引用
+const railHorizontalRef = ref() // 水平滚动条 DOM 引用
 const showYTrack = ref(false) // 是否显示垂直滚动条
 const showXTrack = ref(false) // 是否显示横向滚动条
 const containerScrollHeight = ref(0) // 滚动区域高度，包括溢出高度
@@ -42,9 +42,10 @@ const railHeight = ref(0) // 滚动条高度
 const railWidth = ref(0) // 滚动条宽度
 const containerScrollTop = ref(0) // 垂直滚动距离
 const containerScrollLeft = ref(0) // 水平滚动距离
+const mouseEnter = ref(false) // 鼠标是否在滚动区域内
 const trackYPressed = ref(false) // 垂直滚动条是否被按下
 const trackXPressed = ref(false) // 水平滚动条是否被按下
-const mouseLeave = ref(false) // 鼠标在按下滚动条并拖动时是否离开滚动区域
+const mousePressedLeave = ref(false) // 鼠标在按下滚动条并拖动时是否离开滚动区域
 const memoYTop = ref<number>(0) // 鼠标选中并按下垂直滚动条时已滚动的垂直距离
 const memoXLeft = ref<number>(0) // 鼠标选中并按下水平滚动条时已滚动的水平距离
 const memoMouseY = ref<number>(0) // 鼠标选中并按下垂直滚动条时的鼠标 Y 坐标
@@ -151,6 +152,9 @@ function updateScrollbarState() {
   contentWidth.value = contentRef.value.offsetWidth
   railHeight.value = railVerticalRef.value.offsetHeight
   railWidth.value = railHorizontalRef.value.offsetWidth
+  console.log('containerScrollHeight', containerScrollHeight.value)
+  console.log('containerClientHeight', containerClientHeight.value)
+  console.log('containerRef', containerRef.value)
 }
 function updateState() {
   updateScrollState()
@@ -167,12 +171,18 @@ function xScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
   emits('scrollend', e, direction)
 }
 function hideYScrollbar() {
-  if (!yTrackHover.value) {
+  if (props.trigger === 'hover' && props.autoHide && !xTrackHover.value) {
+    showYTrack.value = false
+  }
+  if (props.trigger === 'hover' && !props.autoHide && !mouseEnter.value) {
     showYTrack.value = false
   }
 }
 function hideXScrollbar() {
-  if (!xTrackHover.value) {
+  if (props.trigger === 'hover' && props.autoHide && !xTrackHover.value) {
+    showXTrack.value = false
+  }
+  if (props.trigger === 'hover' && !props.autoHide && !mouseEnter.value) {
     showXTrack.value = false
   }
 }
@@ -214,8 +224,9 @@ function onScroll(e: Event) {
   updateScrollState()
 }
 function onMouseEnter() {
+  mouseEnter.value = true
   if (trackXPressed.value || trackYPressed.value) {
-    mouseLeave.value = false
+    mousePressedLeave.value = false
   } else {
     if (!autoShowTrack.value) {
       showXTrack.value = true
@@ -224,8 +235,9 @@ function onMouseEnter() {
   }
 }
 function onMouseLeave() {
+  mouseEnter.value = false
   if (trackXPressed.value || trackYPressed.value) {
-    mouseLeave.value = true
+    mousePressedLeave.value = true
   } else {
     if (!autoShowTrack.value) {
       if (showXTrack.value) {
@@ -276,8 +288,8 @@ function onYTrackMouseDown(e: MouseEvent) {
   window.onmouseup = () => {
     window.onmousemove = null
     trackYPressed.value = false
-    if (props.trigger === 'hover' && mouseLeave.value) {
-      mouseLeave.value = false
+    if (props.trigger === 'hover' && mousePressedLeave.value) {
+      mousePressedLeave.value = false
     }
     if (autoShowTrack.value && yTrackLeave.value) {
       yTrackLeave.value = false
@@ -303,8 +315,8 @@ function onXTrackMouseDown(e: MouseEvent) {
   window.onmouseup = () => {
     window.onmousemove = null
     trackXPressed.value = false
-    if (props.trigger === 'hover' && mouseLeave.value) {
-      mouseLeave.value = false
+    if (props.trigger === 'hover' && mousePressedLeave.value) {
+      mousePressedLeave.value = false
     }
     if (autoShowTrack.value && xTrackLeave.value) {
       xTrackLeave.value = false
@@ -336,7 +348,18 @@ defineExpose({
 <template>
   <div
     class="m-scrollbar"
-    :style="`--scrollbar-size: ${size}px;`"
+    :style="`
+      --scrollbar-width: ${size}px;
+      --scrollbar-height: ${size}px;
+      --scrollbar-border-radius: ${size}px;
+      --scrollbar-color: rgba(0, 0, 0, 0.25);
+      --scrollbar-color-hover: rgba(0, 0, 0, 0.4);
+      --scrollbar-rail-horizontal-top: 4px 2px auto 2px;
+      --scrollbar-rail-horizontal-bottom: auto 2px 4px 2px;
+      --scrollbar-rail-vertical-right: 2px 4px 2px auto;
+      --scrollbar-rail-vertical-left: 2px auto 2px 4px;
+      --scrollbar-rail-color: transparent;
+    `"
     @mouseenter="isScroll && trigger === 'hover' ? onMouseEnter() : () => false"
     @mouseleave="isScroll && trigger === 'hover' ? onMouseLeave() : () => false"
   >
@@ -409,7 +432,7 @@ defineExpose({
     position: absolute;
     pointer-events: none;
     user-select: none;
-    background: transparent;
+    background: var(--scrollbar-rail-color);
     -webkit-user-select: none;
     .scrollbar-track {
       z-index: 9;
@@ -417,12 +440,12 @@ defineExpose({
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
-      background-color: rgba(0, 0, 0, 0.25);
+      background-color: var(--scrollbar-color);
       transition:
         background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       &:hover {
-        background-color: rgba(0, 0, 0, 0.4);
+        background-color: var(--scrollbar-color-hover);
       }
     }
     .track-visible {
@@ -431,32 +454,32 @@ defineExpose({
     }
   }
   .rail-vertical {
-    width: var(--scrollbar-size);
+    width: var(--scrollbar-width);
     .scrollbar-track {
-      width: var(--scrollbar-size);
-      border-radius: var(--scrollbar-size);
+      width: var(--scrollbar-width);
+      border-radius: var(--scrollbar-border-radius);
       bottom: 0;
     }
   }
   .rail-vertical-left {
-    inset: 2px auto 2px 4px;
+    inset: var(--scrollbar-rail-vertical-left);
   }
   .rail-vertical-right {
-    inset: 2px 4px 2px auto;
+    inset: var(--scrollbar-rail-vertical-right);
   }
   .rail-horizontal {
-    height: var(--scrollbar-size);
+    height: var(--scrollbar-height);
     .scrollbar-track {
-      height: var(--scrollbar-size);
-      border-radius: var(--scrollbar-size);
+      height: var(--scrollbar-height);
+      border-radius: var(--scrollbar-border-radius);
       right: 0;
     }
   }
   .rail-horizontal-top {
-    inset: 4px 2px auto 2px;
+    inset: var(--scrollbar-rail-horizontal-top);
   }
   .rail-horizontal-bottom {
-    inset: auto 2px 4px 2px;
+    inset: var(--scrollbar-rail-horizontal-bottom);
   }
   .scrollbar-thumb {
     position: absolute;

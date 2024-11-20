@@ -528,7 +528,7 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
@@ -750,7 +750,7 @@ watchEffect(() => {
           <a>Delete</a>
         </template>
       </template>
-    </Table>
+    </Table> -->
     <h2 class="mt30 mb10">固定列</h2>
     <h3 class="mb10">对于列数很多的数据，可以固定前后的列，横向滚动查看其它数据，需要和 scroll.x 配合使用</h3>
     <h3 class="mb10">建议指定 scroll.x 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 scroll.x</h3>
@@ -761,7 +761,7 @@ watchEffect(() => {
         </template>
       </template>
     </Table>
-    <h2 class="mt30 mb10">固定表头</h2>
+    <!-- <h2 class="mt30 mb10">固定表头</h2>
     <h3 class="mb10">方便一页内展示大量数据</h3>
     <Table :columns="columnsFixHeader" :data-source="dataSourceFixHeader" :scroll="{ y: 240 }" />
     <h2 class="mt30 mb10">固定头和列</h2>
@@ -777,7 +777,7 @@ watchEffect(() => {
           <a>action</a>
         </template>
       </template>
-    </Table>
+    </Table> -->
   </div>
 </template>
 <style lang="less" scoped>
