@@ -9,12 +9,16 @@ import Pagination from '../pagination'
 import { useSlotsExist, useResizeObserver } from '../utils'
 interface Column {
   title?: string // 列头显示文字
+  align?: 'left' | 'center' | 'right' // 列文本的对齐方式
   width?: string | number // 列宽度，单位 px
+  colSpan?: number // 表头列合并,设置为 0 时，不渲染
   dataIndex: string // 列数据字符索引
+  key?: string // 列唯一标识
   ellipsis?: boolean // 超过宽度是否自动省略
   ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略
   fixed?: 'left' | 'right' // 列是否固定
   slot?: string // 列插槽名称索引
+  children?: Column[] // 列头分组的子节点
   customCell?: (record: any, rowIndex: number, column: Column) => object // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
@@ -252,6 +256,15 @@ async function ellipsisObserveScroll() {
     ellipsisRef.value.forEach((el: any) => el.observeScroll())
   }
 }
+function getThColumnsGroup() {
+  const columns = thColumns.value.map((column: Column) => {
+    if (column.children) {
+      
+    }
+  })
+  console.log('columns', columns)
+  return columns
+}
 function getComputedValue(column: Column, key: keyof Props) {
   let computedValue = props[key as keyof Props]
   if (column?.[key as keyof Column] !== undefined) {
@@ -468,6 +481,9 @@ function onPaginationChange(page: number, pageSize: number) {
                     ref="tableThRef"
                     class="table-th"
                     :class="{
+                      'table-cell-align-left': column.align === 'left',
+                      'table-cell-align-center': column.align === 'center',
+                      'table-cell-align-right': column.align === 'right',
                       'table-cell-fix-left': column.fixed === 'left',
                       'table-cell-fix-left-last': checkFixLeftLast(thColumns, column, index),
                       'table-cell-fix-right': column.fixed === 'right',
@@ -488,6 +504,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     </slot>
                   </th>
                 </tr>
+                <tr v-for="(columns, index) in getThColumnsGroup(thColumns)"></tr>
               </thead>
               <tbody>
                 <tr v-if="!displayDataSource.length">
@@ -528,6 +545,9 @@ function onPaginationChange(page: number, pageSize: number) {
                       <td
                         class="table-td"
                         :class="{
+                          'table-cell-align-left': column.align === 'left',
+                          'table-cell-align-center': column.align === 'center',
+                          'table-cell-align-right': column.align === 'right',
                           'table-cell-fix-left': column.fixed === 'left',
                           'table-cell-fix-left-last': checkFixLeftLast(tdColumns(record, rowIndex), column, colIndex),
                           'table-cell-fix-right': column.fixed === 'right',
@@ -625,6 +645,9 @@ function onPaginationChange(page: number, pageSize: number) {
                     class="table-th"
                     :class="{
                       'table-th-ellipsis': column.ellipsis && xScrollable,
+                      'table-cell-align-left': column.align === 'left',
+                      'table-cell-align-center': column.align === 'center',
+                      'table-cell-align-right': column.align === 'right',
                       'table-cell-fix-left': column.fixed === 'left',
                       'table-cell-fix-left-last': checkFixLeftLast(thColumns, column, index),
                       'table-cell-fix-right': column.fixed === 'right',
@@ -702,6 +725,9 @@ function onPaginationChange(page: number, pageSize: number) {
                       <td
                         class="table-td"
                         :class="{
+                          'table-cell-align-left': column.align === 'left',
+                          'table-cell-align-center': column.align === 'center',
+                          'table-cell-align-right': column.align === 'right',
                           'table-cell-fix-left': column.fixed === 'left',
                           'table-cell-fix-left-last': checkFixLeftLast(tdColumns(record, rowIndex), column, colIndex),
                           'table-cell-fix-right': column.fixed === 'right',
@@ -950,6 +976,15 @@ function onPaginationChange(page: number, pageSize: number) {
             margin: -16px -16px;
             padding: 16px 16px;
           }
+        }
+        .table-cell-align-left {
+          text-align: left;
+        }
+        .table-cell-align-center {
+          text-align: center;
+        }
+        .table-cell-align-right {
+          text-align: right;
         }
         .table-cell-fix-left {
           position: sticky !important;

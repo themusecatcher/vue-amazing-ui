@@ -4,6 +4,7 @@ import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-d
 const loading = ref(false)
 const tableLoading = ref(false)
 const sizeBordered = ref(true)
+const alignBordered = ref(true)
 const stripedBordered = ref(true)
 const headerFooterbordered = ref(true)
 const queryParams = reactive({
@@ -25,6 +26,21 @@ const sizeOptions = [
   }
 ]
 const size = ref('middle')
+const alignOptions = [
+  {
+    label: 'left',
+    value: 'left'
+  },
+  {
+    label: 'center',
+    value: 'center'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  }
+]
+const align = ref('center')
 const columns = reactive([
   {
     title: 'Name',
@@ -65,6 +81,18 @@ const columnsSize = reactive([
   { title: 'Age', dataIndex: 'age' },
   { title: 'Address', dataIndex: 'address' }
 ])
+const columnsAlign = reactive([
+  { title: 'Name', align: 'center', dataIndex: 'name' },
+  { title: 'Age', align: 'center', dataIndex: 'age' },
+  { title: 'Address', align: 'center', dataIndex: 'address' }
+])
+watch(
+  align,
+  () => {
+    columnsAlign.forEach(column => column.align = align.value)
+    console.log('columnsAlign', columnsAlign)
+  }
+)
 const columnsStriped = reactive([
   {
     title: 'Name',
@@ -272,6 +300,89 @@ const columnsFixHeaderAndColumn = reactive([
     width: 100
   }
 ])
+const columnsHeaderGroup = reactive([
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    width: 100,
+    fixed: 'left'
+    // filters: [
+    //   {
+    //     text: 'Joe',
+    //     value: 'Joe'
+    //   },
+    //   {
+    //     text: 'John',
+    //     value: 'John'
+    //   }
+    // ],
+    // onFilter: (value: string, record: any) => record.name.indexOf(value) === 0
+  },
+  {
+    title: 'Other',
+    children: [
+      {
+        title: 'Age',
+        dataIndex: 'age',
+        key: 'age',
+        width: 200,
+        sorter: (a: any, b: any) => a.age - b.age
+      },
+      {
+        title: 'Address',
+        children: [
+          {
+            title: 'Street',
+            dataIndex: 'street',
+            key: 'street',
+            width: 200
+          },
+          {
+            title: 'Block',
+            children: [
+              {
+                title: 'Building',
+                dataIndex: 'building',
+                key: 'building',
+                width: 100
+              },
+              {
+                title: 'Door No.',
+                dataIndex: 'number',
+                key: 'number',
+                width: 100
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    title: 'Company',
+    children: [
+      {
+        title: 'Company Address',
+        dataIndex: 'companyAddress',
+        key: 'companyAddress',
+        width: 200
+      },
+      {
+        title: 'Company Name',
+        dataIndex: 'companyName',
+        key: 'companyName'
+      }
+    ]
+  },
+  {
+    title: 'Gender',
+    dataIndex: 'gender',
+    key: 'gender',
+    width: 80,
+    fixed: 'right'
+  }
+])
 const dataSource = ref([
   {
     name: 'Stephen Curry',
@@ -310,6 +421,26 @@ const dataSource = ref([
   }
 ])
 const dataSourceSize = ref([
+  {
+    key: '1',
+    name: 'Stephen Curry',
+    age: 30,
+    address: 'Chase Center, GSW'
+  },
+  {
+    key: '2',
+    name: 'the Muse Catcher',
+    age: 24,
+    address: 'Beijing, China'
+  },
+  {
+    key: '3',
+    name: 'Wonder Woman',
+    age: 32,
+    address: 'Tel Aviv, Israel'
+  }
+])
+const dataSourceAlign = ref([
   {
     key: '1',
     name: 'Stephen Curry',
@@ -467,6 +598,17 @@ const dataSourceFixColumn = ref([
 ])
 const dataSourceFixHeader = ref(data)
 const dataSourceFixHeaderAndColumn = ref(data)
+const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
+  key: i,
+  name: 'John Brown',
+  age: i + 1,
+  street: 'Lake Park',
+  building: 'C' + i,
+  number: 2035,
+  companyAddress: 'Lake Street 42',
+  companyName: 'SoftLake Co',
+  gender: 'M'
+}))
 onBeforeMount(() => {
   getData()
 })
@@ -528,7 +670,7 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
@@ -604,6 +746,12 @@ watchEffect(() => {
       <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Table :columns="columnsSize" :data-source="dataSourceSize" :size="size" :bordered="sizeBordered" />
+    </Flex>
+    <h2 class="mt30 mb10">列对齐方式</h2>
+    <Flex vertical>
+      <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
+      <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
+      <Table :columns="columnsAlign" :data-source="dataSourceAlign" :bordered="alignBordered" />
     </Flex>
     <h2 class="mt30 mb10">斑马条纹</h2>
     <Flex vertical>
@@ -777,7 +925,30 @@ watchEffect(() => {
           <a>action</a>
         </template>
       </template>
-    </Table>
+    </Table> -->
+    <h2 class="mt30 mb10">表头分组</h2>
+    <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
+    <a-table
+      :columns="columnsHeaderGroup"
+      :data-source="dataSourceHeaderGroup"
+      bordered
+      size="middle"
+      :scroll="{ x: 'calc(700px + 50%)', y: 240 }"
+    >
+    <!-- <template #expandedRowRender="{ record }">
+        {{ record.description }}
+      </template>
+      <template #expandColumnTitle>
+        <span style="color: #d4380d">More</span>
+      </template> -->
+    </a-table>
+    <Table
+      :columns="columnsHeaderGroup"
+      :data-source="dataSourceHeaderGroup"
+      bordered
+      size="middle"
+      :scroll="{ x: 'calc(700px + 50%)', y: 240 }"
+    />
   </div>
 </template>
 <style lang="less" scoped>
