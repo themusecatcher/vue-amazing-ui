@@ -259,7 +259,6 @@ async function ellipsisObserveScroll() {
 function getThColumnsGroup() {
   const columns = thColumns.value.map((column: Column) => {
     if (column.children) {
-      
     }
   })
   console.log('columns', columns)

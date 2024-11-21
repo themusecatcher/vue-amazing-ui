@@ -86,13 +86,10 @@ const columnsAlign = reactive([
   { title: 'Age', align: 'center', dataIndex: 'age' },
   { title: 'Address', align: 'center', dataIndex: 'address' }
 ])
-watch(
-  align,
-  () => {
-    columnsAlign.forEach(column => column.align = align.value)
-    console.log('columnsAlign', columnsAlign)
-  }
-)
+watch(align, () => {
+  columnsAlign.forEach((column) => (column.align = align.value))
+  console.log('columnsAlign', columnsAlign)
+})
 const columnsStriped = reactive([
   {
     title: 'Name',
@@ -935,7 +932,7 @@ watchEffect(() => {
       size="middle"
       :scroll="{ x: 'calc(700px + 50%)', y: 240 }"
     >
-    <!-- <template #expandedRowRender="{ record }">
+      <!-- <template #expandedRowRender="{ record }">
         {{ record.description }}
       </template>
       <template #expandColumnTitle>

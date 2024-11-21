@@ -94,8 +94,15 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
       啦啦啦啦啦啦啦啦咧
     </Scrollbar>
     <h2 class="mt30 mb10">自定义样式</h2>
+    <h3 class="mb10">可通过设置 size 属性，自定义相关 --scrollbar 变量进行各种样式自定义</h3>
     <Scrollbar
-      style="max-height: 120px; border-radius: 12px"
+      style="
+        max-height: 120px;
+        border-radius: 12px;
+        --scrollbar-color: rgba(0, 0, 0, 0.45);
+        --scrollbar-color-hover: rgba(0, 0, 0, 0.65);
+        --scrollbar-rail-vertical-right: 2px 6px 2px auto;
+      "
       :size="8"
       :content-style="{ backgroundColor: '#e6f4ff', padding: '16px 24px', fontSize: '16px' }"
     >
