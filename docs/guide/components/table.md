@@ -379,7 +379,8 @@ const columnsHeaderGroup = reactive([
       {
         title: 'Company Name',
         dataIndex: 'companyName',
-        key: 'companyName'
+        key: 'companyName',
+        width: 200
       }
     ]
   },
@@ -2385,7 +2386,8 @@ const columnsHeaderGroup = reactive([
       {
         title: 'Company Name',
         dataIndex: 'companyName',
-        key: 'companyName'
+        key: 'companyName',
+        width: 200
       }
     ]
   },
