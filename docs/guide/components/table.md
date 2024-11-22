@@ -100,7 +100,6 @@ const columnsAlign = reactive([
 ])
 watch(align, () => {
   columnsAlign.forEach((column) => (column.align = align.value))
-  console.log('columnsAlign', columnsAlign)
 })
 const columnsStriped = reactive([
   {
