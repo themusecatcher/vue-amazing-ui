@@ -10,7 +10,7 @@
 - 当需要对数据进行排序、搜索、分页、自定义操作等复杂行为时
 
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount, watchEffect, h } from 'vue'
+import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 const loading = ref(false)
 const tableLoading = ref(false)
@@ -1179,6 +1179,75 @@ const dataSourceSize = ref([
     <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Table :columns="columnsSize" :data-source="dataSourceSize" :size="size" :bordered="sizeBordered" />
+  </Flex>
+</template>
+```
+
+:::
+
+## 列对齐方式
+
+<Flex vertical>
+  <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
+  <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
+  <Table :columns="columnsAlign" :data-source="dataSourceAlign" :bordered="alignBordered" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, reactive, watch } from 'vue'
+const alignBordered = ref(true)
+const alignOptions = [
+  {
+    label: 'left',
+    value: 'left'
+  },
+  {
+    label: 'center',
+    value: 'center'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  }
+]
+const align = ref('center')
+const columnsAlign = reactive([
+  { title: 'Name', align: 'center', dataIndex: 'name' },
+  { title: 'Age', align: 'center', dataIndex: 'age' },
+  { title: 'Address', align: 'center', dataIndex: 'address' }
+])
+watch(align, () => {
+  columnsAlign.forEach((column) => (column.align = align.value))
+})
+const dataSourceAlign = ref([
+  {
+    key: '1',
+    name: 'Stephen Curry',
+    age: 30,
+    address: 'Chase Center, GSW'
+  },
+  {
+    key: '2',
+    name: 'the Muse Catcher',
+    age: 24,
+    address: 'Beijing, China'
+  },
+  {
+    key: '3',
+    name: 'Wonder Woman',
+    age: 32,
+    address: 'Tel Aviv, Israel'
+  }
+])
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
+    <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
+    <Table :columns="columnsAlign" :data-source="dataSourceAlign" :bordered="alignBordered" />
   </Flex>
 </template>
 ```
