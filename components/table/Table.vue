@@ -416,7 +416,6 @@ function tableCellWidthStyle(column: Column) {
 }
 // 表格单元格固定时的样式
 function tableCellFixStyle(column: Column) {
-  // console.log('colRef%O', colRef.value)
   if (column.fixed) {
     if (colRef.value && colRef.value.length) {
       const style: any = {
