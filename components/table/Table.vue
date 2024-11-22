@@ -13,12 +13,14 @@ interface Column {
   width?: string | number // 列宽度，单位 px
   colSpan?: number // 表头列合并,设置为 0 时，不渲染
   dataIndex: string // 列数据字符索引
-  key?: string // 列唯一标识
+  key?: string // 列标识，可忽略
   ellipsis?: boolean // 超过宽度是否自动省略
   ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略
-  fixed?: 'left' | 'right' // 列是否固定
+  fixed?: 'left' | 'right' // 列是否固定，列表头分组时，只需设置所有叶子节点是否固定
   slot?: string // 列插槽名称索引
-  children?: Column[] // 列头分组的子节点
+  children?: Column[] // 列表头分组的子节点
+  defaultSortOrder?: 'descend' | 'ascend' // 表格默认排序方式
+  sorter?: Function // 排序函数，参考 Array.sort 的 compareFunction
   customCell?: (record: any, rowIndex: number, column: Column) => object // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
@@ -96,39 +98,50 @@ const scrollHeight = ref<number>(0) // 表格垂直滚动元素高度，包括�
 const clientWidth = ref<number>(0) // 表格水平滚动元素宽度，不包括溢出滚动，不包括边框
 const clientHeight = ref<number>(0) // 表格垂直滚动元素高度，不包括溢出滚动，不包括边框
 const scrollMax = ref<number>(0) // 表格水平滚动时，最大可滚动距离
-const tableThExpandRef = ref() // 表格展开列 th 的引用
-const tableThRef = ref() // 表格除展开列以外的 th 的引用
+const colExpandRef = ref() // 表格展开列 col 的引用
+const colRef = ref() // 表格除展开列以外 col 的引用
+const thColumnsLeaf = ref<Column[]>([]) // thColumns 的所有叶子节点
 const slotsExist = useSlotsExist(['header', 'footer'])
 const emits = defineEmits(['update:expandedRowKeys', 'change'])
+// 是否设置了水平滚动
 const horizontalScroll = computed(() => {
   return props.scroll?.x !== undefined
 })
+// 是否存在水平滚动
 const xScrollable = computed(() => {
   return horizontalScroll.value && scrollWidth.value > clientWidth.value
 })
+// 是否设置了垂直滚动
 const verticalScroll = computed(() => {
   return props.scroll?.y !== undefined
 })
+// 是否存在垂直滚动
 const yScrollable = computed(() => {
   return verticalScroll.value && scrollHeight.value > clientHeight.value
 })
+// 是否显示左阴影
 const showShadowLeft = computed(() => {
   return scrollLeft.value > 0
 })
+// 是否显示右阴影
 const showShadowRight = computed(() => {
   return scrollWidth.value - clientWidth.value > scrollLeft.value
 })
+// 是否存在左固定列
 const hasFixLeft = computed(() => {
   const fixedLeft = props.columns.some((column: Column) => column.fixed === 'left')
   return props.expandFixed || fixedLeft
 })
+// 是否存在右固定列
 const hasFixRight = computed(() => {
   const fixedRight = props.columns.some((column: Column) => column.fixed === 'right')
   return fixedRight
 })
+// 是否存在表格标题
 const showHeader = computed(() => {
   return slotsExist.header || props.header
 })
+// 表格布局方式
 const tableLayoutComputed = computed(() => {
   if (props.tableLayout === undefined) {
     const ellipsis = props.columns.some((column: Column) => column.ellipsis)
@@ -140,6 +153,7 @@ const tableLayoutComputed = computed(() => {
   }
   return props.tableLayout
 })
+// 表格 table 元素的样式
 const tableStyle = computed(() => {
   const style: any = {
     minWidth: '100%'
@@ -157,11 +171,13 @@ const tableStyle = computed(() => {
     tableLayout: tableLayoutComputed.value
   }
 })
+// 展开列的宽度样式
 const tableExpandCellStyle = computed(() => {
   return {
     width: typeof props.expandColumnWidth === 'number' ? `${props.expandColumnWidth}px` : props.expandColumnWidth
   }
 })
+// 展开列固定时的样式
 const tableExpandCellFixStyle = computed(() => {
   if (props.expandFixed) {
     return {
@@ -171,9 +187,15 @@ const tableExpandCellFixStyle = computed(() => {
   }
   return {}
 })
+// 过滤掉 colSpan 为 0 的列
 const thColumns = computed(() => {
   return props.columns.filter((column: Column) => column.colSpan !== 0)
 })
+// 表头分组后的 th columns
+const thColumnsGroup = computed(() => {
+  return getThColumnsGroup(thColumns.value)
+})
+// 表格展开行固定时的样式
 const tableExpandRowFixStyle = computed(() => {
   const style: any = {}
   if (props.expandFixed) {
@@ -184,12 +206,14 @@ const tableExpandRowFixStyle = computed(() => {
   }
   return style
 })
+// 表头固定时的样式，用于模拟滚动效果
 const tableHeadStyle = computed(() => {
   return {
     position: 'relative',
     left: `${-scrollLeft.value}px`
   }
 })
+// 设置垂直滚动时的 tbody 样式
 const tableBodyScrollStyle = computed(() => {
   const style: any = {}
   if (verticalScroll.value) {
@@ -198,9 +222,11 @@ const tableBodyScrollStyle = computed(() => {
   }
   return style
 })
+// 是否存在表格尾部
 const showFooter = computed(() => {
   return slotsExist.footer || props.footer
 })
+// 表格数据总数
 const totalDataSource = computed(() => {
   let total = props.dataSource.length
   if (props.showPagination && 'total' in props.pagination) {
@@ -208,6 +234,7 @@ const totalDataSource = computed(() => {
   }
   return total
 })
+// 当前展示的表格数据
 const displayDataSource = computed(() => {
   // 展示分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
   if (props.showPagination && totalDataSource.value === props.dataSource.length) {
@@ -236,6 +263,7 @@ onMounted(() => {
 useResizeObserver(tableRef, () => {
   getScrollState()
 })
+// 获取滚动状态信息
 function getScrollState() {
   if (scrollbarRef.value) {
     const scrollData = scrollbarRef.value.getScrollData()
@@ -250,84 +278,93 @@ function getScrollState() {
     }
   }
 }
+// 在组件挂载后主动触发 ellipsis 组件弹出提示的滚动元素监听
 async function ellipsisObserveScroll() {
   await nextTick()
   if (ellipsisRef.value) {
     ellipsisRef.value.forEach((el: any) => el.observeScroll())
   }
 }
-function getThColumnsGroup() {
-  const columns = thColumns.value.map((column: Column) => {
-    if (column.children) {
+// 检查 children  中是否有固定列
+function checkChildrenFix(columns: Column[] | undefined, fixed: 'left' | 'right'): boolean {
+  if (columns && columns.length) {
+    const len = columns.length
+    for (let i = 0; i < len; i++) {
+      const column = columns[i]
+      if (column.fixed && column.fixed === fixed) {
+        return true
+      } else {
+        if (checkChildrenFix(column.children, fixed)) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+}
+// 获取 children 的叶子节点数量
+function getChildrenLeafNumber(columns: Column[]) {
+  let result = 0
+  columns.forEach((column: Column) => {
+    if (column.children && column.children.length > 0) {
+      result += getChildrenLeafNumber(column.children)
+    } else {
+      result += 1
     }
   })
-  console.log('columns', columns)
-  return columns
+  return result
 }
-function getComputedValue(column: Column, key: keyof Props) {
-  let computedValue = props[key as keyof Props]
-  if (column?.[key as keyof Column] !== undefined) {
-    computedValue = column[key as keyof Column]
-  }
-  return computedValue as object
-}
-function checkFixLeftLast(columns: Column[], column: Column, index: number) {
-  if (column.fixed === 'left' && index < columns.length - 1) {
-    if (columns[index + 1].fixed !== 'left') {
-      return true
-    }
-  }
-  return false
-}
-function checkFixRightLast(columns: Column[], column: Column, index: number) {
-  if (column.fixed === 'right' && index > 0) {
-    if (columns[index - 1].fixed !== 'right') {
-      return true
-    }
-  }
-  return false
-}
-function tableCellWidthStyle(column: Column) {
-  if (column.width !== undefined) {
-    return {
-      width: typeof column.width === 'number' ? `${column.width}px` : column.width
-    }
-  }
-  return {}
-}
-function tableCellFixStyle(column: Column, colIndex: number) {
-  if (tableThExpandRef.value || tableThRef.value) {
-    const style: any = {
-      position: 'sticky'
-    }
-    if (column.fixed === 'left') {
-      let offset = 0
-      if (props.showExpandColumn && props.expandFixed) {
-        offset += tableThExpandRef.value.offsetWidth
-      }
-      for (let i = 0; i < colIndex; i++) {
-        offset += tableThRef.value[i].offsetWidth
-      }
-      return {
-        ...style,
-        left: `${offset}px`
+// 获取 columns 的最大深度
+function getMaxDepth(columns: Column[], currentDepth = 1) {
+  let maxDepth = currentDepth
+  columns.forEach((column: Column) => {
+    if (column.children && column.children.length > 0) {
+      const childDepth = getMaxDepth(column.children, currentDepth + 1)
+      if (childDepth > maxDepth) {
+        maxDepth = childDepth
       }
     }
-    if (column.fixed === 'right') {
-      let offset = 0
-      for (let i = tableThRef.value.length - 1; i > colIndex; i--) {
-        offset += tableThRef.value[i].offsetWidth
-      }
-      return {
-        ...style,
-        right: `${offset}px`
-      }
-    }
-  }
-  return {}
+  })
+  return maxDepth
 }
-function tdColumns(record: any, rowIndex: number) {
-  return props.columns.filter((column: Column) => {
+// 计算获取表头分组的 th columns
+function getThColumnsGroup(columns: Column[]) {
+  thColumnsLeaf.value.splice(0)
+  const maxDepth = getMaxDepth(columns)
+  const result: Array<Column[]> = []
+  for (let i = 0; i < maxDepth; i++) {
+    result.push([])
+  }
+  function processColumns(columns: Column[], depth: number, colStart: number) {
+    columns.forEach((column: Column) => {
+      if (column.children && column.children.length > 0) {
+        column.colSpan = getChildrenLeafNumber(column.children)
+        column.colStart = colStart
+        column.colEnd = colStart + column.colSpan - 1
+        colStart += column.colSpan
+        processColumns(column.children, depth + 1, column.colStart)
+      } else {
+        column.rowSpan = maxDepth - depth
+        column.colStart = colStart
+        column.colEnd = colStart
+        colStart += 1
+        thColumnsLeaf.value.push(column) // 添加叶子节点
+      }
+      if (checkChildrenFix(column.children, 'left')) {
+        column.fixed = 'left'
+      }
+      if (checkChildrenFix(column.children, 'right')) {
+        column.fixed = 'right'
+      }
+      result[depth].push(column)
+    })
+  }
+  processColumns(columns, 0, props.showExpandColumn ? 1 : 0)
+  return result
+}
+// 获取表格对应于表头分组，处理后每行的 columns
+function getTdColumnsGroup(record: any, rowIndex: number) {
+  return thColumnsLeaf.value.filter((column: Column) => {
     if (column.customCell) {
       const custom = column.customCell(record, rowIndex, column)
       if (custom) {
@@ -342,18 +379,92 @@ function tdColumns(record: any, rowIndex: number) {
     return true
   })
 }
-function getMergedCellsIndex(record: any, rowIndex: number): number[] {
-  const mergedCellIndex: number[] = []
+// 针对于 props 和 Column 都有的属性，获取计算后的值，优先级为 Column's > props's
+function getComputedValue(column: Column, key: keyof Props) {
+  let computedValue = props[key as keyof Props]
+  if (column?.[key as keyof Column] !== undefined) {
+    computedValue = column[key as keyof Column]
+  }
+  return computedValue as object
+}
+// 检查是否是左固定列的最后一列
+function checkFixLeftLast(columns: Column[], column: Column, index: number) {
+  if (column.fixed === 'left' && index < columns.length - 1) {
+    if (columns[index + 1].fixed !== 'left') {
+      return true
+    }
+  }
+  return false
+}
+// 检查是否是右固定列的第一列
+function checkFixRightFirst(columns: Column[], column: Column, index: number) {
+  if (column.fixed === 'right' && index > 0) {
+    if (columns[index - 1].fixed !== 'right') {
+      return true
+    }
+  }
+  return false
+}
+// 表格单元格样式
+function tableCellWidthStyle(column: Column) {
+  if (column.width !== undefined) {
+    return {
+      width: typeof column.width === 'number' ? `${column.width}px` : column.width
+    }
+  }
+  return {}
+}
+// 表格单元格固定时的样式
+function tableCellFixStyle(column: Column) {
+  // console.log('colRef%O', colRef.value)
+  if (column.fixed) {
+    if (colRef.value && colRef.value.length) {
+      const style: any = {
+        position: 'sticky'
+      }
+      if (column.fixed === 'left') {
+        const colStart = column.colStart
+        let offset = 0
+        if (props.showExpandColumn) {
+          offset += colExpandRef.value.offsetWidth
+        }
+        for (let i = 0; i < (props.showExpandColumn ? colStart - 1 : colStart); i++) {
+          offset += colRef.value[i].offsetWidth
+        }
+        return {
+          ...style,
+          left: `${offset}px`
+        }
+      }
+      if (column.fixed === 'right') {
+        const colEnd = column.colEnd
+        let offset = 0
+        for (let i = colRef.value.length - 1; i > (props.showExpandColumn ? colEnd - 1 : colEnd); i--) {
+          offset += colRef.value[i].offsetWidth
+        }
+        return {
+          ...style,
+          right: `${offset}px`
+        }
+      }
+    }
+  }
+  return {}
+}
+// 获取被合并单元格的列索引
+function getMergedCellsColIndex(record: any, rowIndex: number): number[] {
+  const mergedCellsColIndex: number[] = []
   props.columns.forEach((column: Column, colIndex: number) => {
     if (column.customCell) {
       const custom = column.customCell(record, rowIndex, column)
       if (custom && 'rowSpan' in custom && custom.rowSpan === 0) {
-        mergedCellIndex.push(colIndex)
+        mergedCellsColIndex.push(colIndex)
       }
     }
   })
-  return mergedCellIndex
+  return mergedCellsColIndex
 }
+// 获取被合并单元格的行索引
 function getMergeCellRowIndex(record: any, column: Column, rowIndex: number) {
   if (rowIndex >= 0) {
     const custom = column.customCell?.(record, rowIndex, column)
@@ -364,9 +475,10 @@ function getMergeCellRowIndex(record: any, column: Column, rowIndex: number) {
     }
   }
 }
+// 鼠标悬浮某行
 function onEnterRow(record: any, rowIndex: number) {
   hoverRowIndex.value = rowIndex
-  const mergedCellsColIndex = getMergedCellsIndex(record, rowIndex)
+  const mergedCellsColIndex = getMergedCellsColIndex(record, rowIndex)
   if (mergedCellsColIndex.length) {
     mergedCellsColIndex.forEach((colIndex: number) => {
       const column = props.columns[colIndex]
@@ -377,13 +489,16 @@ function onEnterRow(record: any, rowIndex: number) {
     })
   }
 }
+// 鼠标离开某行
 function onLeaveRow() {
   hoverRowIndex.value = null
   mergeHoverCoords.value.splice(0) // 重置被合并单元格的坐标
 }
+// 检查单元格是否处于鼠标悬浮所在的区域，包括行/列合并的单元格
 function checkHoverCoord(row: number, col: number) {
   return mergeHoverCoords.value.some((coord: Coords) => coord.row === row && coord.col === col)
 }
+// 展开/收起展开行
 function onExpandCell(key: string | number) {
   if (tableExpandedRowKeys.value.includes(key)) {
     tableExpandedRowKeys.value = tableExpandedRowKeys.value.filter((rowKey: string | number) => rowKey !== key)
@@ -392,17 +507,19 @@ function onExpandCell(key: string | number) {
   }
   emits('update:expandedRowKeys', tableExpandedRowKeys.value)
 }
-function onScroll(e: Event) {
-  if (horizontalScroll.value) {
+// 表格滚动事件
+function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+  if (['left', 'right'].includes(direction)) {
     scrollLeft.value = (e.target as HTMLElement).scrollLeft
     scrollWidth.value = (e.target as HTMLElement).scrollWidth
     clientWidth.value = (e.target as HTMLElement).clientWidth
   }
-  if (verticalScroll.value) {
+  if (['top', 'bottom'].includes(direction)) {
     scrollHeight.value = (e.target as HTMLElement).scrollHeight
     clientHeight.value = (e.target as HTMLElement).clientHeight
   }
 }
+// 鼠标滚轮或触摸板滑动事件
 function onWheel(e: WheelEvent) {
   if (e.deltaX) {
     const scrollX = e.deltaX * 1 // 滚轮的水平滚动量
@@ -421,6 +538,7 @@ function onWheel(e: WheelEvent) {
     })
   }
 }
+// 分页变化事件
 function onPaginationChange(page: number, pageSize: number) {
   tablePage.value = page
   tablePageSize.value = pageSize
@@ -462,48 +580,60 @@ function onPaginationChange(page: number, pageSize: number) {
             v-bind="scrollbarProps"
           >
             <table :style="tableStyle">
+              <colgroup>
+                <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle">
+                <col
+                  ref="colRef"
+                  :style="tableCellWidthStyle(column)"
+                  v-for="(column, index) in thColumnsLeaf"
+                  :key="index"
+                >
+              </colgroup>
               <thead>
-                <tr>
+                <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="rowIndex">
                   <th
-                    v-if="showExpandColumn"
-                    ref="tableThExpandRef"
+                    v-if="rowIndex === 0 && showExpandColumn"
                     class="table-th"
                     :class="{
-                      'table-cell-fix-left': expandFixed,
-                      'table-cell-fix-left-last': expandFixed && columns[1].fixed !== 'left'
+                      'table-cell-fix-left': expandFixed || columns[0].fixed === 'left',
+                      'table-cell-fix-left-last': expandFixed && columns[0].fixed !== 'left'
                     }"
-                    :style="[tableExpandCellStyle, tableExpandCellFixStyle]"
+                    :style="tableExpandCellFixStyle"
+                    :rowspan="getMaxDepth(thColumns)"
+                    :colstart="0"
+                    :colend="0"
                   >
                     <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
                   </th>
                   <th
-                    ref="tableThRef"
                     class="table-th"
                     :class="{
                       'table-cell-align-left': column.align === 'left',
                       'table-cell-align-center': column.align === 'center',
                       'table-cell-align-right': column.align === 'right',
                       'table-cell-fix-left': column.fixed === 'left',
-                      'table-cell-fix-left-last': checkFixLeftLast(thColumns, column, index),
+                      'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
                       'table-cell-fix-right': column.fixed === 'right',
-                      'table-cell-fix-right-first': checkFixRightLast(thColumns, column, index)
+                      'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
                     }"
-                    :style="[tableCellWidthStyle(column), tableCellFixStyle(column, index)]"
-                    v-for="(column, index) in thColumns"
-                    :key="index"
+                    :style="tableCellFixStyle(column)"
+                    v-for="(column, colIndex) in columns"
+                    :key="`${rowIndex}-${colIndex}`"
+                    :rowspan="column.rowSpan"
                     :colspan="column.colSpan"
+                    :colstart="column.colStart"
+                    :colend="column.colEnd"
                   >
                     <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                      <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">{{
-                        column.title
-                      }}</Ellipsis>
+                      <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                        {{ column.title }}
+                      </Ellipsis>
                     </slot>
                     <slot v-else name="headerCell" :column="column" :title="column.title">
                       {{ column.title }}
                     </slot>
                   </th>
                 </tr>
-                <tr v-for="(columns, index) in getThColumnsGroup(thColumns)"></tr>
               </thead>
               <tbody>
                 <tr v-if="!displayDataSource.length">
@@ -522,8 +652,8 @@ function onPaginationChange(page: number, pageSize: number) {
                         v-if="showExpandColumn"
                         class="table-td"
                         :class="{
-                          'table-cell-fix-left': expandFixed,
-                          'table-cell-fix-left-last': expandFixed && columns[1].fixed !== 'left',
+                          'table-cell-fix-left': expandFixed || columns[0].fixed === 'left',
+                          'table-cell-fix-left-last': expandFixed && columns[0].fixed !== 'left',
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
                         :style="tableExpandCellFixStyle"
@@ -548,18 +678,18 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-cell-align-center': column.align === 'center',
                           'table-cell-align-right': column.align === 'right',
                           'table-cell-fix-left': column.fixed === 'left',
-                          'table-cell-fix-left-last': checkFixLeftLast(tdColumns(record, rowIndex), column, colIndex),
+                          'table-cell-fix-left-last': checkFixLeftLast(getTdColumnsGroup(record, rowIndex), column, colIndex),
                           'table-cell-fix-right': column.fixed === 'right',
-                          'table-cell-fix-right-first': checkFixRightLast(
-                            tdColumns(record, rowIndex),
+                          'table-cell-fix-right-first': checkFixRightFirst(
+                            getTdColumnsGroup(record, rowIndex),
                             column,
                             colIndex
                           ),
                           'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
                         }"
-                        :style="tableCellFixStyle(column, colIndex)"
-                        v-for="(column, colIndex) in tdColumns(record, rowIndex)"
-                        :key="column.dataIndex"
+                        :style="tableCellFixStyle(column)"
+                        v-for="(column, colIndex) in getTdColumnsGroup(record, rowIndex)"
+                        :key="`${rowIndex}-${colIndex}`"
                         v-bind="column.customCell && column.customCell(record, rowIndex, column)"
                       >
                         <slot
@@ -570,9 +700,9 @@ function onPaginationChange(page: number, pageSize: number) {
                           :text="record[column.dataIndex]"
                           :index="rowIndex"
                         >
-                          <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">{{
-                            record[column.dataIndex]
-                          }}</Ellipsis>
+                          <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                            {{ record[column.dataIndex] }}
+                          </Ellipsis>
                         </slot>
                         <slot
                           v-else
@@ -623,39 +753,49 @@ function onPaginationChange(page: number, pageSize: number) {
         >
           <div class="table-head">
             <table :style="[tableStyle, tableHeadStyle]" @wheel="horizontalScroll ? onWheel($event) : () => false">
+              <colgroup>
+                <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle">
+                <col
+                  ref="colRef"
+                  :style="tableCellWidthStyle(column)"
+                  v-for="(column, index) in thColumnsLeaf"
+                  :key="index"
+                >
+              </colgroup>
               <thead>
-                <tr>
+                <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="rowIndex">
                   <th
-                    v-if="showExpandColumn"
-                    ref="tableThExpandRef"
+                    v-if="rowIndex === 0 && showExpandColumn"
                     class="table-th"
                     :class="{
-                      'table-cell-fix-left': expandFixed,
-                      'table-cell-fix-left-last': expandFixed && columns[1].fixed !== 'left'
+                      'table-cell-fix-left': expandFixed || columns[0].fixed === 'left',
+                      'table-cell-fix-left-last': expandFixed && columns[0].fixed !== 'left'
                     }"
-                    :style="[tableExpandCellStyle, tableExpandCellFixStyle]"
+                    :style="tableExpandCellFixStyle"
+                    :rowspan="getMaxDepth(thColumns)"
+                    :colstart="0"
+                    :colend="0"
                   >
                     <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
                   </th>
                   <th
-                    ref="tableThRef"
-                    :colstart="index"
-                    :colend="index"
                     class="table-th"
                     :class="{
-                      'table-th-ellipsis': column.ellipsis && xScrollable,
                       'table-cell-align-left': column.align === 'left',
                       'table-cell-align-center': column.align === 'center',
                       'table-cell-align-right': column.align === 'right',
                       'table-cell-fix-left': column.fixed === 'left',
-                      'table-cell-fix-left-last': checkFixLeftLast(thColumns, column, index),
+                      'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
                       'table-cell-fix-right': column.fixed === 'right',
-                      'table-cell-fix-right-first': checkFixRightLast(thColumns, column, index)
+                      'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
                     }"
-                    :style="[tableCellWidthStyle(column), tableCellFixStyle(column, index)]"
-                    v-for="(column, index) in thColumns"
-                    :key="index"
+                    :style="tableCellFixStyle(column)"
+                    v-for="(column, colIndex) in columns"
+                    :key="`${rowIndex}-${colIndex}`"
+                    :rowspan="column.rowSpan"
                     :colspan="column.colSpan"
+                    :colstart="column.colStart"
+                    :colend="column.colEnd"
                     :title="column.ellipsis && xScrollable ? 'column.title' : undefined"
                   >
                     <slot
@@ -664,9 +804,9 @@ function onPaginationChange(page: number, pageSize: number) {
                       :column="column"
                       :title="column.title"
                     >
-                      <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">{{
-                        column.title
-                      }}</Ellipsis>
+                      <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                        {{ column.title }}
+                      </Ellipsis>
                     </slot>
                     <slot v-else name="headerCell" :column="column" :title="column.title">
                       {{ column.title }}
@@ -678,6 +818,7 @@ function onPaginationChange(page: number, pageSize: number) {
           </div>
           <Scrollbar
             ref="scrollbarRef"
+            class="table-body"
             :x-scrollable="horizontalScroll"
             :auto-hide="false"
             :style="tableBodyScrollStyle"
@@ -685,6 +826,15 @@ function onPaginationChange(page: number, pageSize: number) {
             v-bind="scrollbarProps"
           >
             <table :style="tableStyle">
+              <colgroup>
+                <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle">
+                <col
+                  ref="colRef"
+                  :style="tableCellWidthStyle(column)"
+                  v-for="(column, index) in thColumnsLeaf"
+                  :key="index"
+                >
+              </colgroup>
               <tbody>
                 <tr v-if="!displayDataSource.length">
                   <td class="table-empty" :colspan="columns.length">
@@ -702,11 +852,11 @@ function onPaginationChange(page: number, pageSize: number) {
                         v-if="showExpandColumn"
                         class="table-td"
                         :class="{
-                          'table-cell-fix-left': expandFixed,
-                          'table-cell-fix-left-last': expandFixed && columns[1].fixed !== 'left',
+                          'table-cell-fix-left': expandFixed || columns[0].fixed === 'left',
+                          'table-cell-fix-left-last': expandFixed && columns[0].fixed !== 'left',
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
-                        :style="[tableExpandCellStyle, tableExpandCellFixStyle]"
+                        :style="tableExpandCellFixStyle"
                         @click.stop="onExpandCell(record.key)"
                       >
                         <slot
@@ -728,18 +878,18 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-cell-align-center': column.align === 'center',
                           'table-cell-align-right': column.align === 'right',
                           'table-cell-fix-left': column.fixed === 'left',
-                          'table-cell-fix-left-last': checkFixLeftLast(tdColumns(record, rowIndex), column, colIndex),
+                          'table-cell-fix-left-last': checkFixLeftLast(getTdColumnsGroup(record, rowIndex), column, colIndex),
                           'table-cell-fix-right': column.fixed === 'right',
-                          'table-cell-fix-right-first': checkFixRightLast(
-                            tdColumns(record, rowIndex),
+                          'table-cell-fix-right-first': checkFixRightFirst(
+                            getTdColumnsGroup(record, rowIndex),
                             column,
                             colIndex
                           ),
                           'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
                         }"
-                        :style="[tableCellWidthStyle(column), tableCellFixStyle(column, colIndex)]"
-                        v-for="(column, colIndex) in tdColumns(record, rowIndex)"
-                        :key="column.dataIndex"
+                        :style="tableCellFixStyle(column)"
+                        v-for="(column, colIndex) in getTdColumnsGroup(record, rowIndex)"
+                        :key="`${rowIndex}-${colIndex}`"
                         v-bind="column.customCell && column.customCell(record, rowIndex, column)"
                       >
                         <slot
@@ -750,9 +900,9 @@ function onPaginationChange(page: number, pageSize: number) {
                           :text="record[column.dataIndex]"
                           :index="rowIndex"
                         >
-                          <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">{{
-                            record[column.dataIndex]
-                          }}</Ellipsis>
+                          <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                            {{ record[column.dataIndex] }}
+                          </Ellipsis>
                         </slot>
                         <slot
                           v-else
@@ -873,6 +1023,16 @@ function onPaginationChange(page: number, pageSize: number) {
         border-spacing: 0;
         tr {
           background-color: transparent;
+          &:first-child {
+            th {
+              &:first-child {
+                border-top-left-radius: 8px;
+              }
+              &:last-child {
+                border-top-right-radius: 8px;
+              }
+            }
+          }
         }
         th,
         td {
@@ -892,12 +1052,6 @@ function onPaginationChange(page: number, pageSize: number) {
           transition:
             background 0.2s ease,
             padding 0.3s;
-          &:first-child {
-            border-top-left-radius: 8px;
-          }
-          &:last-child {
-            border-top-right-radius: 8px;
-          }
           &[colspan]:not([colspan='1']) {
             text-align: center;
           }
@@ -1147,17 +1301,16 @@ function onPaginationChange(page: number, pageSize: number) {
     .table-container {
       border: 1px solid #f0f0f0;
       border-bottom: 0;
+      border-right: 0;
       table {
         th,
         td {
-          &:not(:last-child) {
-            border-right: 1px solid #f0f0f0;
-          }
+          border-right: 1px solid #f0f0f0;
         }
-        .table-td {
-          .table-expand-row-fixed {
-            margin: -16px -17px;
-          }
+      }
+      .table-td {
+        .table-expand-row-fixed {
+          margin: -16px -17px;
         }
       }
     }
