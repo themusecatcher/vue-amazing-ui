@@ -193,7 +193,7 @@ const thColumns = computed(() => {
 })
 // 表头分组后的 th columns
 const thColumnsGroup = computed(() => {
-  return getThColumnsGroup(thColumns.value)
+  return getThColumnsGroup(props.columns)
 })
 // 表格展开行固定时的样式
 const tableExpandRowFixStyle = computed(() => {
@@ -581,13 +581,13 @@ function onPaginationChange(page: number, pageSize: number) {
           >
             <table :style="tableStyle">
               <colgroup>
-                <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle">
+                <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle" />
                 <col
                   ref="colRef"
                   :style="tableCellWidthStyle(column)"
                   v-for="(column, index) in thColumnsLeaf"
                   :key="index"
-                >
+                />
               </colgroup>
               <thead>
                 <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="rowIndex">
@@ -605,34 +605,35 @@ function onPaginationChange(page: number, pageSize: number) {
                   >
                     <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
                   </th>
-                  <th
-                    class="table-th"
-                    :class="{
-                      'table-cell-align-left': column.align === 'left',
-                      'table-cell-align-center': column.align === 'center',
-                      'table-cell-align-right': column.align === 'right',
-                      'table-cell-fix-left': column.fixed === 'left',
-                      'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
-                      'table-cell-fix-right': column.fixed === 'right',
-                      'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
-                    }"
-                    :style="tableCellFixStyle(column)"
-                    v-for="(column, colIndex) in columns"
-                    :key="`${rowIndex}-${colIndex}`"
-                    :rowspan="column.rowSpan"
-                    :colspan="column.colSpan"
-                    :colstart="column.colStart"
-                    :colend="column.colEnd"
-                  >
-                    <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                      <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                  <template v-for="(column, colIndex) in columns" :key="`${rowIndex}-${colIndex}`">
+                    <th
+                      v-if="column.colSpan !== 0"
+                      class="table-th"
+                      :class="{
+                        'table-cell-align-left': column.align === 'left',
+                        'table-cell-align-center': column.align === 'center',
+                        'table-cell-align-right': column.align === 'right',
+                        'table-cell-fix-left': column.fixed === 'left',
+                        'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
+                        'table-cell-fix-right': column.fixed === 'right',
+                        'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
+                      }"
+                      :style="tableCellFixStyle(column)"
+                      :rowspan="column.rowSpan"
+                      :colspan="column.colSpan"
+                      :colstart="column.colStart"
+                      :colend="column.colEnd"
+                    >
+                      <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
+                        <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                          {{ column.title }}
+                        </Ellipsis>
+                      </slot>
+                      <slot v-else name="headerCell" :column="column" :title="column.title">
                         {{ column.title }}
-                      </Ellipsis>
-                    </slot>
-                    <slot v-else name="headerCell" :column="column" :title="column.title">
-                      {{ column.title }}
-                    </slot>
-                  </th>
+                      </slot>
+                    </th>
+                  </template>
                 </tr>
               </thead>
               <tbody>
@@ -678,7 +679,11 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-cell-align-center': column.align === 'center',
                           'table-cell-align-right': column.align === 'right',
                           'table-cell-fix-left': column.fixed === 'left',
-                          'table-cell-fix-left-last': checkFixLeftLast(getTdColumnsGroup(record, rowIndex), column, colIndex),
+                          'table-cell-fix-left-last': checkFixLeftLast(
+                            getTdColumnsGroup(record, rowIndex),
+                            column,
+                            colIndex
+                          ),
                           'table-cell-fix-right': column.fixed === 'right',
                           'table-cell-fix-right-first': checkFixRightFirst(
                             getTdColumnsGroup(record, rowIndex),
@@ -754,13 +759,13 @@ function onPaginationChange(page: number, pageSize: number) {
           <div class="table-head">
             <table :style="[tableStyle, tableHeadStyle]" @wheel="horizontalScroll ? onWheel($event) : () => false">
               <colgroup>
-                <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle">
+                <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle" />
                 <col
                   ref="colRef"
                   :style="tableCellWidthStyle(column)"
                   v-for="(column, index) in thColumnsLeaf"
                   :key="index"
-                >
+                />
               </colgroup>
               <thead>
                 <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="rowIndex">
@@ -778,40 +783,41 @@ function onPaginationChange(page: number, pageSize: number) {
                   >
                     <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
                   </th>
-                  <th
-                    class="table-th"
-                    :class="{
-                      'table-cell-align-left': column.align === 'left',
-                      'table-cell-align-center': column.align === 'center',
-                      'table-cell-align-right': column.align === 'right',
-                      'table-cell-fix-left': column.fixed === 'left',
-                      'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
-                      'table-cell-fix-right': column.fixed === 'right',
-                      'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
-                    }"
-                    :style="tableCellFixStyle(column)"
-                    v-for="(column, colIndex) in columns"
-                    :key="`${rowIndex}-${colIndex}`"
-                    :rowspan="column.rowSpan"
-                    :colspan="column.colSpan"
-                    :colstart="column.colStart"
-                    :colend="column.colEnd"
-                    :title="column.ellipsis && xScrollable ? 'column.title' : undefined"
-                  >
-                    <slot
-                      v-if="column.ellipsis && !xScrollable"
-                      name="headerCell"
-                      :column="column"
-                      :title="column.title"
+                  <template v-for="(column, colIndex) in columns" :key="`${rowIndex}-${colIndex}`">
+                    <th
+                      v-if="column.colSpan !== 0"
+                      class="table-th"
+                      :class="{
+                        'table-cell-align-left': column.align === 'left',
+                        'table-cell-align-center': column.align === 'center',
+                        'table-cell-align-right': column.align === 'right',
+                        'table-cell-fix-left': column.fixed === 'left',
+                        'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
+                        'table-cell-fix-right': column.fixed === 'right',
+                        'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
+                      }"
+                      :style="tableCellFixStyle(column)"
+                      :rowspan="column.rowSpan"
+                      :colspan="column.colSpan"
+                      :colstart="column.colStart"
+                      :colend="column.colEnd"
+                      :title="column.ellipsis && xScrollable ? 'column.title' : undefined"
                     >
-                      <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                      <slot
+                        v-if="column.ellipsis && !xScrollable"
+                        name="headerCell"
+                        :column="column"
+                        :title="column.title"
+                      >
+                        <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                          {{ column.title }}
+                        </Ellipsis>
+                      </slot>
+                      <slot v-else name="headerCell" :column="column" :title="column.title">
                         {{ column.title }}
-                      </Ellipsis>
-                    </slot>
-                    <slot v-else name="headerCell" :column="column" :title="column.title">
-                      {{ column.title }}
-                    </slot>
-                  </th>
+                      </slot>
+                    </th>
+                  </template>
                 </tr>
               </thead>
             </table>
@@ -827,13 +833,8 @@ function onPaginationChange(page: number, pageSize: number) {
           >
             <table :style="tableStyle">
               <colgroup>
-                <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle">
-                <col
-                  ref="colRef"
-                  :style="tableCellWidthStyle(column)"
-                  v-for="(column, index) in thColumnsLeaf"
-                  :key="index"
-                >
+                <col v-if="showExpandColumn" :style="tableExpandCellStyle" />
+                <col :style="tableCellWidthStyle(column)" v-for="(column, index) in thColumnsLeaf" :key="index" />
               </colgroup>
               <tbody>
                 <tr v-if="!displayDataSource.length">
@@ -878,7 +879,11 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-cell-align-center': column.align === 'center',
                           'table-cell-align-right': column.align === 'right',
                           'table-cell-fix-left': column.fixed === 'left',
-                          'table-cell-fix-left-last': checkFixLeftLast(getTdColumnsGroup(record, rowIndex), column, colIndex),
+                          'table-cell-fix-left-last': checkFixLeftLast(
+                            getTdColumnsGroup(record, rowIndex),
+                            column,
+                            colIndex
+                          ),
                           'table-cell-fix-right': column.fixed === 'right',
                           'table-cell-fix-right-first': checkFixRightFirst(
                             getTdColumnsGroup(record, rowIndex),
