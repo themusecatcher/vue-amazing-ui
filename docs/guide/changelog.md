@@ -6,6 +6,7 @@
 
 - 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，支持通过设置 `--scrollbar` 相关变量设置滚动条样式
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，表格列的配置项 `columns` 属性新增 `align` `key` `children` 类型；支持：设置列文本对齐方式；列表头分组
+- 组件库及文档代码优化
 
 ## 1.9.7 <Tag color="volcano" size="small">2024-11-20</Tag>
 

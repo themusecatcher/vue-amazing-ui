@@ -364,10 +364,27 @@ function toggleVisible() {
     onHide()
   }
 }
-function onEnter() {
+function onEnterTooltip() {
+  if (props.trigger === 'hover') {
+    onShow()
+  }
+  if (props.trigger === 'click') {
+    activeBlur.value = false
+  }
+}
+function onLeaveTooltip() {
+  if (props.trigger === 'hover') {
+    onHide()
+  }
+  if (props.trigger === 'click') {
+    activeBlur.value = true
+    tooltipRef.value.focus()
+  }
+}
+function onEnterContent() {
   activeBlur.value = false
 }
-function onLeave() {
+function onLeaveContent() {
   activeBlur.value = true
   tooltipRef.value.focus()
 }
@@ -401,8 +418,8 @@ defineExpose({
         :class="{ [`tooltip-${tooltipPlace}-padding`]: arrow }"
         :style="tooltipPlacement"
         @blur="trigger === 'click' && activeBlur ? onHide() : () => false"
-        @mouseenter="trigger === 'hover' ? onShow() : () => false"
-        @mouseleave="trigger === 'hover' ? onHide() : () => false"
+        @mouseenter="onEnterTooltip"
+        @mouseleave="onLeaveTooltip"
         @keydown.esc="trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
       >
         <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
@@ -418,8 +435,8 @@ defineExpose({
       @click="showTooltip && trigger === 'click' ? toggleVisible() : () => false"
       @keydown.enter="showTooltip && trigger === 'click' && keyboard ? toggleVisible() : () => false"
       @keydown.esc="showTooltip && trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
-      @mouseenter="showTooltip && trigger === 'click' && tooltipVisible ? onEnter() : () => false"
-      @mouseleave="showTooltip && trigger === 'click' && tooltipVisible ? onLeave() : () => false"
+      @mouseenter="showTooltip && trigger === 'click' && tooltipVisible ? onEnterContent() : () => false"
+      @mouseleave="showTooltip && trigger === 'click' && tooltipVisible ? onLeaveContent() : () => false"
     >
       <slot>{{ content }}</slot>
     </span>

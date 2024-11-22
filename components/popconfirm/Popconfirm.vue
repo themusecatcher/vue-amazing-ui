@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
   okProps: () => ({}),
   showCancel: true
 })
-const tooltipRef = ref()
+const tooltipRef = ref() // Tooltip 组件模板引用
 const emits = defineEmits(['cancel', 'ok'])
 const slotsExist = useSlotsExist(['description'])
 const showDesc = computed(() => {

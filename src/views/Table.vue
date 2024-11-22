@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount, computed, watchEffect, h } from 'vue'
+import { ref, reactive, onBeforeMount, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 const loading = ref(false)
 const tableLoading = ref(false)
@@ -359,20 +359,17 @@ const columnsHeaderGroup = reactive([
   },
   {
     title: 'Company',
-    // fixed: 'right',
     children: [
       {
         title: 'Company Address',
         dataIndex: 'companyAddress',
         key: 'companyAddress',
-        width: 200,
-        fixed: 'right'
+        width: 200
       },
       {
         title: 'Company Name',
         dataIndex: 'companyName',
-        key: 'companyName',
-        fixed: 'right'
+        key: 'companyName'
       }
     ]
   },
@@ -542,6 +539,12 @@ const dataSourceCellEditable = ref([
     name: 'Edward King 1',
     age: 32,
     address: 'London, Park Lane no. 1'
+  },
+  {
+    key: '2',
+    name: 'Edward King 2',
+    age: 32,
+    address: 'London, Park Lane no. 2'
   }
 ])
 const data: any[] = []
@@ -599,12 +602,13 @@ const dataSourceFixColumn = ref([
 ])
 const dataSourceFixHeader = ref(data)
 const dataSourceFixHeaderAndColumn = ref(data)
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min; //加1是因为包含max
+// 获取 0~10 之间的随机整数
+function getRandomIntInclusive(min: number, max: number) {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min //加 1 是因为包含 max
 }
-const dataSourceHeaderGroup = [...Array(6)].map((_, i) => ({
+const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
   key: i,
   name: 'John Brown',
   age: getRandomIntInclusive(0, 10),
@@ -631,13 +635,13 @@ function onChange(page: number, pageSize: number) {
   getData()
 }
 const cellEditableData = reactive<any>({})
-const count = computed(() => dataSourceCellEditable.value.length + 1)
 const handleCellAdd = () => {
+  const count = dataSourceCellEditable.value.length
   const newData = {
-    key: `${count.value}`,
-    name: `Edward King ${count.value}`,
+    key: `${count}`,
+    name: `Edward King ${count}`,
     age: 32,
-    address: `London, Park Lane no. ${count.value}`
+    address: `London, Park Lane no. ${count}`
   }
   dataSourceCellEditable.value.push(newData)
 }
@@ -676,7 +680,7 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
@@ -931,7 +935,7 @@ watchEffect(() => {
           <a>action</a>
         </template>
       </template>
-    </Table> -->
+    </Table>
     <h2 class="mt30 mb10">表头分组</h2>
     <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
     <Flex vertical>
@@ -940,30 +944,14 @@ watchEffect(() => {
         :columns="columnsHeaderGroup"
         :data-source="dataSourceHeaderGroup"
         :bordered="groupBordered"
-         :scroll="{ x: 1500, y: 240 }"
-      >
-        <template #expandedRowRender="{ record }">
-          {{ record.description }}
-        </template>
-        <template #expandColumnTitle>
-          <span style="color: #d4380d">More</span>
-        </template>
-      </a-table>
+        :scroll="{ x: 1500, y: 240 }"
+      />
       <Table
         :columns="columnsHeaderGroup"
         :data-source="dataSourceHeaderGroup"
-        showExpandColumn
-        expandFixed
         :bordered="groupBordered"
-         :scroll="{ x: 1500, y: 240 }"
-      >
-        <template #expandedRowRender="{ record }">
-          {{ record.description }}
-        </template>
-        <template #expandColumnTitle>
-          <span style="color: #d4380d">More</span>
-        </template>
-      </Table>
+        :scroll="{ x: 1500, y: 240 }"
+      />
     </Flex>
   </div>
 </template>
