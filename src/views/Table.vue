@@ -604,7 +604,7 @@ function getRandomIntInclusive(min, max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min; //加1是因为包含max
 }
-const dataSourceHeaderGroup = [...Array(3)].map((_, i) => ({
+const dataSourceHeaderGroup = [...Array(6)].map((_, i) => ({
   key: i,
   name: 'John Brown',
   age: getRandomIntInclusive(0, 10),
