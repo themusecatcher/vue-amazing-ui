@@ -7,6 +7,7 @@ const sizeBordered = ref(true)
 const alignBordered = ref(true)
 const stripedBordered = ref(true)
 const headerFooterbordered = ref(true)
+const groupBordered = ref(true)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
@@ -358,17 +359,20 @@ const columnsHeaderGroup = reactive([
   },
   {
     title: 'Company',
+    // fixed: 'right',
     children: [
       {
         title: 'Company Address',
         dataIndex: 'companyAddress',
         key: 'companyAddress',
-        width: 200
+        width: 200,
+        fixed: 'right'
       },
       {
         title: 'Company Name',
         dataIndex: 'companyName',
-        key: 'companyName'
+        key: 'companyName',
+        fixed: 'right'
       }
     ]
   },
@@ -595,10 +599,15 @@ const dataSourceFixColumn = ref([
 ])
 const dataSourceFixHeader = ref(data)
 const dataSourceFixHeaderAndColumn = ref(data)
-const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min; //加1是因为包含max
+}
+const dataSourceHeaderGroup = [...Array(3)].map((_, i) => ({
   key: i,
   name: 'John Brown',
-  age: i + 1,
+  age: getRandomIntInclusive(0, 10),
   street: 'Lake Park',
   building: 'C' + i,
   number: 2035,
@@ -895,7 +904,7 @@ watchEffect(() => {
           <a>Delete</a>
         </template>
       </template>
-    </Table> -->
+    </Table>
     <h2 class="mt30 mb10">固定列</h2>
     <h3 class="mb10">对于列数很多的数据，可以固定前后的列，横向滚动查看其它数据，需要和 scroll.x 配合使用</h3>
     <h3 class="mb10">建议指定 scroll.x 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 scroll.x</h3>
@@ -906,7 +915,7 @@ watchEffect(() => {
         </template>
       </template>
     </Table>
-    <!-- <h2 class="mt30 mb10">固定表头</h2>
+    <h2 class="mt30 mb10">固定表头</h2>
     <h3 class="mb10">方便一页内展示大量数据</h3>
     <Table :columns="columnsFixHeader" :data-source="dataSourceFixHeader" :scroll="{ y: 240 }" />
     <h2 class="mt30 mb10">固定头和列</h2>
@@ -925,27 +934,37 @@ watchEffect(() => {
     </Table> -->
     <h2 class="mt30 mb10">表头分组</h2>
     <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
-    <a-table
-      :columns="columnsHeaderGroup"
-      :data-source="dataSourceHeaderGroup"
-      bordered
-      size="middle"
-      :scroll="{ x: 'calc(700px + 50%)', y: 240 }"
-    >
-      <!-- <template #expandedRowRender="{ record }">
-        {{ record.description }}
-      </template>
-      <template #expandColumnTitle>
-        <span style="color: #d4380d">More</span>
-      </template> -->
-    </a-table>
-    <Table
-      :columns="columnsHeaderGroup"
-      :data-source="dataSourceHeaderGroup"
-      bordered
-      size="middle"
-      :scroll="{ x: 'calc(700px + 50%)', y: 240 }"
-    />
+    <Flex vertical>
+      <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
+      <a-table
+        :columns="columnsHeaderGroup"
+        :data-source="dataSourceHeaderGroup"
+        :bordered="groupBordered"
+         :scroll="{ x: 1500, y: 240 }"
+      >
+        <template #expandedRowRender="{ record }">
+          {{ record.description }}
+        </template>
+        <template #expandColumnTitle>
+          <span style="color: #d4380d">More</span>
+        </template>
+      </a-table>
+      <Table
+        :columns="columnsHeaderGroup"
+        :data-source="dataSourceHeaderGroup"
+        showExpandColumn
+        expandFixed
+        :bordered="groupBordered"
+         :scroll="{ x: 1500, y: 240 }"
+      >
+        <template #expandedRowRender="{ record }">
+          {{ record.description }}
+        </template>
+        <template #expandColumnTitle>
+          <span style="color: #d4380d">More</span>
+        </template>
+      </Table>
+    </Flex>
   </div>
 </template>
 <style lang="less" scoped>

@@ -2,6 +2,11 @@
 
 <GlobalElement />
 
+## 1.9.8 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，支持通过设置 `--scrollbar` 相关变量设置滚动条样式
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，表格列的配置项 `columns` 属性新增 `align` `key` `children` 类型；支持：设置列文本对齐方式；列表头分组
+
 ## 1.9.7 <Tag color="volcano" size="small">2024-11-20</Tag>
 
 - 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `xPlacement` `yPlacement` 属性，支持设置滚动条位置；调整是否使用横向滚动属性名 `horizontal` 为 `xScrollable`；新增 `getScrollData` 方法，用于获取滚动区域相关数据；新增 `scrollend` 回调函数，同时回调函数新增 `direction` 参数，用于表示滚动方向
