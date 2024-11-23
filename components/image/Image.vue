@@ -733,7 +733,7 @@ function onSwitchRight() {
         position: absolute;
         z-index: 3;
         inset: 0;
-        transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+        transition: transform 0.1s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
         display: flex;
         justify-content: center;
         align-items: center;
