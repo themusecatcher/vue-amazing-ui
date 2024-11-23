@@ -677,6 +677,13 @@ const expandedRowKeys = ref([1])
 watchEffect(() => {
   console.log('expandedRowKeys', expandedRowKeys.value)
 })
+const handleExpand = (expanded: boolean, record: any) => {
+  console.log('expanded', expanded)
+  console.log('record', record)
+}
+const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
+  console.log('expandedRowsChange', expandedRows)
+}
 </script>
 <template>
   <div>
@@ -896,6 +903,8 @@ watchEffect(() => {
       expandFixed
       v-model:expandedRowKeys="expandedRowKeys"
       :scroll="{ x: 1600 }"
+      @expand="handleExpand"
+      @expandedRowsChange="handleExpandedRowsChange"
     >
       <template #expandedRowRender="{ record }">
         {{ record.description }}
@@ -940,17 +949,11 @@ watchEffect(() => {
     <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
-      <a-table
-        :columns="columnsHeaderGroup"
-        :data-source="dataSourceHeaderGroup"
-        :bordered="groupBordered"
-        :scroll="{ x: 1500, y: 240 }"
-      />
       <Table
         :columns="columnsHeaderGroup"
         :data-source="dataSourceHeaderGroup"
         :bordered="groupBordered"
-        :scroll="{ x: 1500, y: 240 }"
+        :scroll="{ x: 1500, y: 800 }"
       />
     </Flex>
   </div>

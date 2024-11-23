@@ -412,6 +412,7 @@ trigger | 显示滚动条的时机，`'none'` 表示一直显示 | 'hover' &#124
 autoHide | 是否自动隐藏滚动条，仅当 `trigger: 'hover'` 时生效；为 `true` 时表示鼠标在滚动区域且不滚动时自动隐藏，滚动时自动显示；为 `false` 时表示鼠标在滚动区域时始终显示，无论是否在滚动 | boolean | true
 delay | 滚动条自动隐藏的延迟时间，单位 `ms` | number | 500
 xScrollable | 是否使用横向滚动 | boolean | false
+yScrollable | 是否使用纵向滚动 | boolean | true
 xPlacement | 横向滚动时滚动条的位置 | 'top' &#124; 'bottom' | 'bottom'
 yPlacement | 纵向滚动时滚动条的位置 | 'left' &#124; 'right' | 'right'
 
