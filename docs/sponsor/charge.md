@@ -56,12 +56,12 @@ const QRCodes = [
       </span>
     </template>
   </Segmented>
-  <Card :width="248" style="margin: 24px auto 32px;">
+  <Card :width="248" style="background: transparent; margin: 24px auto 32px;">
     <img v-show="sponsorType === 'WeChat'" class="qrcode-image" :src="WeChat" />
     <img v-show="sponsorType === 'Alipay'" class="qrcode-image" :src="Alipay" />
   </Card>
 </div>
-<Card v-else :body-style="{ position: 'relative' }" style="margin-bottom: 32px;">
+<Card v-else :body-style="{ position: 'relative' }" style="background: transparent; margin-bottom: 32px;">
   <Tag class="wechat-tag" color="#07c160" size="large" :bordered="false">
     <template #icon>
       <WechatOutlined />
