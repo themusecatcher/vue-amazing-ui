@@ -11,9 +11,9 @@ interface Column {
   title?: string // 列头显示文字
   align?: 'left' | 'center' | 'right' // 列文本的对齐方式
   width?: string | number // 列宽度，单位 px
-  colSpan?: number // 表头列合并,设置为 0 时，不渲染
+  colSpan?: number // 表头列合并，设置为 0 时，不渲染
   dataIndex: string // 列数据字符索引
-  key?: string // 列标识，可忽略
+  key?: string // 列标识，主要与 expandedRowKeys 配合使用
   ellipsis?: boolean // 超过宽度是否自动省略
   ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略
   fixed?: 'left' | 'right' // 列是否固定，列表头分组时，只需设置所有叶子节点是否固定
@@ -100,9 +100,9 @@ const clientHeight = ref<number>(0) // 表格垂直滚动元素高度，不包�
 const scrollMax = ref<number>(0) // 表格水平滚动时，最大可滚动距离
 const colExpandRef = ref() // 表格展开列 col 的引用
 const colRef = ref() // 表格除展开列以外 col 的引用
-const thColumnsLeaf = ref<Column[]>([]) // thColumns 的所有叶子节点
+const thColumnsLeaf = ref<Column[]>([]) // thColumns 的所有叶子节点,包括 colSpan: 0 的列
 const slotsExist = useSlotsExist(['header', 'footer'])
-const emits = defineEmits(['update:expandedRowKeys', 'change'])
+const emits = defineEmits(['expand', 'expandedRowsChange', 'update:expandedRowKeys', 'change'])
 // 是否设置了水平滚动
 const horizontalScroll = computed(() => {
   return props.scroll?.x !== undefined
@@ -125,7 +125,7 @@ const showShadowLeft = computed(() => {
 })
 // 是否显示右阴影
 const showShadowRight = computed(() => {
-  return scrollWidth.value - clientWidth.value > scrollLeft.value
+  return scrollWidth.value - clientWidth.value > Math.round(scrollLeft.value)
 })
 // 是否存在左固定列
 const hasFixLeft = computed(() => {
@@ -498,22 +498,27 @@ function checkHoverCoord(row: number, col: number) {
   return mergeHoverCoords.value.some((coord: Coords) => coord.row === row && coord.col === col)
 }
 // 展开/收起展开行
-function onExpandCell(key: string | number) {
+function onExpandCell(record: any) {
+  const key = record.key
   if (tableExpandedRowKeys.value.includes(key)) {
     tableExpandedRowKeys.value = tableExpandedRowKeys.value.filter((rowKey: string | number) => rowKey !== key)
   } else {
     tableExpandedRowKeys.value.push(key)
   }
+  emits('expand', tableExpandedRowKeys.value.includes(key), record)
+  emits('expandedRowsChange', tableExpandedRowKeys.value)
   emits('update:expandedRowKeys', tableExpandedRowKeys.value)
 }
 // 表格滚动事件
 function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
   if (['left', 'right'].includes(direction)) {
+    // 水平滚动
     scrollLeft.value = (e.target as HTMLElement).scrollLeft
     scrollWidth.value = (e.target as HTMLElement).scrollWidth
     clientWidth.value = (e.target as HTMLElement).clientWidth
   }
   if (['top', 'bottom'].includes(direction)) {
+    // 垂直滚动
     scrollHeight.value = (e.target as HTMLElement).scrollHeight
     clientHeight.value = (e.target as HTMLElement).clientHeight
   }
@@ -541,7 +546,6 @@ function onWheel(e: WheelEvent) {
 function onPaginationChange(page: number, pageSize: number) {
   tablePage.value = page
   tablePageSize.value = pageSize
-  // 分页回调
   emits('change', page, pageSize)
   scrollbarRef.value.scrollTo({
     top: 0,
@@ -556,7 +560,6 @@ function onPaginationChange(page: number, pageSize: number) {
       <div
         class="m-table"
         :class="{
-          'table-fixed-header': verticalScroll,
           'table-shadow-left': showShadowLeft,
           'table-shadow-right': showShadowRight,
           'table-has-fix-left': hasFixLeft,
@@ -573,7 +576,8 @@ function onPaginationChange(page: number, pageSize: number) {
         <div v-if="!verticalScroll" class="table-container" :class="{ 'container-no-x-scroll': !xScrollable }">
           <Scrollbar
             ref="scrollbarRef"
-            :x-scrollable="horizontalScroll"
+            :x-scrollable="xScrollable"
+            :y-scrollable="yScrollable"
             :auto-hide="false"
             @scroll="onScroll"
             v-bind="scrollbarProps"
@@ -646,7 +650,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     <tr
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
-                      @click="expandRowByClick ? onExpandCell(record.key) : () => false"
+                      @click="expandRowByClick ? onExpandCell(record) : () => false"
                     >
                       <td
                         v-if="showExpandColumn"
@@ -657,7 +661,7 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
                         :style="tableExpandCellFixStyle"
-                        @click.stop="onExpandCell(record.key)"
+                        @click.stop="onExpandCell(record)"
                       >
                         <slot
                           name="expandCell"
@@ -756,7 +760,7 @@ function onPaginationChange(page: number, pageSize: number) {
           }"
         >
           <div class="table-head">
-            <table :style="[tableStyle, tableHeadStyle]" @wheel="horizontalScroll ? onWheel($event) : () => false">
+            <table :style="[tableStyle, tableHeadStyle]" @wheel="xScrollable ? onWheel($event) : () => false">
               <colgroup>
                 <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle" />
                 <col
@@ -824,7 +828,8 @@ function onPaginationChange(page: number, pageSize: number) {
           <Scrollbar
             ref="scrollbarRef"
             class="table-body"
-            :x-scrollable="horizontalScroll"
+            :x-scrollable="xScrollable"
+            :y-scrollable="yScrollable"
             :auto-hide="false"
             :style="tableBodyScrollStyle"
             @scroll="onScroll"
@@ -846,7 +851,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     <tr
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
-                      @click="expandRowByClick ? onExpandCell(record.key) : () => false"
+                      @click="expandRowByClick ? onExpandCell(record) : () => false"
                     >
                       <td
                         v-if="showExpandColumn"
@@ -857,7 +862,7 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
                         :style="tableExpandCellFixStyle"
-                        @click.stop="onExpandCell(record.key)"
+                        @click.stop="onExpandCell(record)"
                       >
                         <slot
                           name="expandCell"

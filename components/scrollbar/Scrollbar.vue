@@ -10,6 +10,7 @@ interface Props {
   autoHide?: boolean // 是否自动隐藏滚动条，仅当 trigger: 'hover' 时生效；为 true 时表示鼠标在滚动区域且不滚动时自动隐藏，滚动时自动显示；为 false 时表示鼠标在滚动区域时始终显示，无论是否在滚动
   delay?: number // 滚动条自动隐藏的延迟时间，单位 ms
   xScrollable?: boolean // 是否使用横向滚动
+  yScrollable?: boolean // 是否使用纵向滚动
   xPlacement?: 'top' | 'bottom' // 横向滚动时滚动条的位置
   yPlacement?: 'left' | 'right' // 纵向滚动时滚动条的位置
 }
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   autoHide: true,
   delay: 500,
   xScrollable: false,
+  yScrollable: true,
   xPlacement: 'bottom',
   yPlacement: 'right'
 })
@@ -69,11 +71,11 @@ const isXScroll = computed(() => {
 })
 const isScroll = computed(() => {
   // 是否存在滚动，水平或垂直
-  return isYScroll.value || (props.xScrollable && isXScroll.value)
+  return (props.yScrollable && isYScroll.value) || (props.xScrollable && isXScroll.value)
 })
 const trackHeight = computed(() => {
   // 垂直滚动条高度
-  if (isYScroll.value) {
+  if (props.yScrollable && isYScroll.value) {
     if (containerHeight.value && contentHeight.value && railHeight.value) {
       const value = Math.min(
         containerHeight.value,
@@ -370,7 +372,12 @@ defineExpose({
         <slot></slot>
       </div>
     </div>
-    <div ref="railVerticalRef" class="scrollbar-rail rail-vertical" :class="[`rail-vertical-${yPlacement}`]">
+    <div
+      v-show="yScrollable"
+      ref="railVerticalRef"
+      class="scrollbar-rail rail-vertical"
+      :class="[`rail-vertical-${yPlacement}`]"
+    >
       <div
         class="scrollbar-track"
         :class="{ 'track-visible': trigger === 'none' || showYTrack }"
@@ -381,8 +388,8 @@ defineExpose({
       ></div>
     </div>
     <div
-      ref="railHorizontalRef"
       v-show="xScrollable"
+      ref="railHorizontalRef"
       class="scrollbar-rail rail-horizontal"
       :class="[`rail-horizontal-${xPlacement}`]"
     >

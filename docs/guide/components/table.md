@@ -688,6 +688,13 @@ const expandedRowKeys = ref([1])
 watchEffect(() => {
   console.log('expandedRowKeys', expandedRowKeys.value)
 })
+const handleExpand = (expanded: boolean, record: any) => {
+  console.log('expanded', expanded)
+  console.log('record', record)
+}
+const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
+  console.log('expandedRowsChange', expandedRows)
+}
 </script>
 
 ## 基本使用
@@ -2036,6 +2043,8 @@ const handleTableChange = (page: number, pageSize: number) => {
   expandFixed
   v-model:expandedRowKeys="expandedRowKeys"
   :scroll="{ x: 1600 }"
+  @expand="handleExpand"
+  @expandedRowsChange="handleExpandedRowsChange"
 >
   <template #expandedRowRender="{ record }">
     {{ record.description }}
@@ -2088,6 +2097,13 @@ const expandedRowKeys = ref([1])
 watchEffect(() => {
   console.log('expandedRowKeys', expandedRowKeys.value)
 })
+const handleExpand = (expanded: boolean, record: any) => {
+  console.log('expanded', expanded)
+  console.log('record', record)
+}
+const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
+  console.log('expandedRowsChange', expandedRows)
+}
 </script>
 <template>
   <Table
@@ -2099,6 +2115,8 @@ watchEffect(() => {
     expandFixed
     v-model:expandedRowKeys="expandedRowKeys"
     :scroll="{ x: 1600 }"
+    @expand="handleExpand"
+    @expandedRowsChange="handleExpandedRowsChange"
   >
     <template #expandedRowRender="{ record }">
       {{ record.description }}
@@ -2468,12 +2486,16 @@ expandRowByClick | 点击行是否展开 | boolean | false
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 title? | 列头显示文字 | string | undefined
+align? | 列文本的对齐方式 | 'left' &#124; 'center' &#124; 'right' | undefined
 width? | 列宽度，单位 `px` | string &#124; number | undefined
+colSpan? | 表头列合并,设置为 `0` 时，不渲染 | number | undefined
 dataIndex | 列数据字符索引 | string | undefined
+key? | 列标识，主要与 `expandedRowKeys` 配合使用控制展开行 | string | undefined
 ellipsis? | 超过宽度是否自动省略 | boolean | undefined
 ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于单独配置某列文本省略 | object | undefined
 fixed? | 列是否固定 | 'left' &#124; 'right' | undefined
 slot? | 列插槽名称索引 | string | undefined
+children? | 列表头分组的子节点 | [Column](#column-type)[] | undefined
 customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Column) => object | undefined
 
 ### ScrollOption Type
@@ -2497,3 +2519,5 @@ expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender
 名称 | 说明 | 类型
 -- | -- | --
 change | 分页变化时的回调 | (pager: { page: number, pageSize: number }) => void
+expand | 点击展开图标时的回调 | (expanded: boolean, record: any) => void
+expandedRowsChange | 展开的行变化时的回调 | (expandedRows: (string \| number)[]) => void
