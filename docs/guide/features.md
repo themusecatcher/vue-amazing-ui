@@ -2,6 +2,10 @@
 
 <GlobalElement />
 
+::: tip 温馨提示
+由于本文档部署在 `Github` 服务器，为了您的沉浸式访问体验，建议打开代理
+:::
+
 ## 简要介绍
 
 - 组件库采用 `Vue@{{ getVersion('vue') }}` + `TypeScript@{{ getVersion('typescript') }}` + `Vite@{{ getVersion('vite') }}` + `Less@{{ getVersion('less') }}` 实现！
