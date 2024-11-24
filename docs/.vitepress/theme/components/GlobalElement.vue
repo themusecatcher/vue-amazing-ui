@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { SoundOutlined } from '@ant-design/icons-vue'
 import MailSVG from './MailSVG.vue'
 import ArrowDownSVG from './ArrowDownSVG.vue'
 interface Props {
@@ -13,6 +14,24 @@ withDefaults(defineProps<Props>(), {
 })
 </script>
 <template>
+  <FloatButton
+    :bottom="!hideSponsor ? 220 : 160"
+    type="primary"
+    :tooltip-props="{
+      maxWidth: 200,
+      tooltipStyle: {
+        fontWeight: 500,
+        padding: '8px 12px'
+      }
+    }"
+  >
+    <template #icon>
+      <SoundOutlined />
+    </template>
+    <template #tooltip>
+      由于本文档部署在 Github 服务器，为了您的流程访问，建议打开代理
+    </template>
+  </FloatButton>
   <FloatButton
     :bottom="!hideSponsor ? 160 : 100"
     type="primary"
