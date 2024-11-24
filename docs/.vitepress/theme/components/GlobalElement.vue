@@ -29,7 +29,7 @@ withDefaults(defineProps<Props>(), {
       <SoundOutlined />
     </template>
     <template #tooltip>
-      文档部署在静态网站服务 GitHub Pages，为了您的流程访问，建议打开代理
+      文档网站部署在静态网站服务 GitHub Pages，为了您的流程访问，建议打开代理
     </template>
   </FloatButton>
   <FloatButton
