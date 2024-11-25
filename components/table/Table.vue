@@ -395,7 +395,8 @@ function getComputedValue(column: Column, key: keyof Props) {
   }
   return computedValue as object
 }
-const sortSymbol = ref<string | null>(null)
+const sortSymbol = ref<string | null>(null) // 排序标识
+// 点击 th 单元格进行排序
 function onSorter(column: Column) {
   if (sortSymbol.value === null) {
     displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
@@ -660,7 +661,44 @@ function onPaginationChange(page: number, pageSize: number) {
                       :colend="column.colEnd"
                       @click="column.sorter ? onSorter(column) : () => false"
                     >
-                      <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
+                      <div v-if="column.sorter" class="table-cell-sorter">
+                        <span class="table-cell-title">
+                          <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
+                            <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                              {{ column.title }}
+                            </Ellipsis>
+                          </slot>
+                          <slot v-else name="headerCell" :column="column" :title="column.title">
+                            {{ column.title }}
+                          </slot>
+                        </span>
+                        <span
+                          class="table-cell-arrow"
+                          :class="{
+                            'ascend-arrow': sortSymbol === 'ascend',
+                            'descend-arrow': sortSymbol === 'descend'
+                          }"
+                        >
+                          <svg
+                            width="1.25em"
+                            height="1.25em"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                            viewBox="0 0 16 16"
+                          >
+                            <g fill="none">
+                              <path
+                                d="M8 14a.75.75 0 0 1-.75-.75V4.463L4.309 7.75a.75.75 0 0 1-1.118-1L7.441 2A.75.75 0 0 1 8.56 2l4.25 4.75a.75.75 0 1 1-1.118 1L8.75 4.463v8.787A.75.75 0 0 1 8 14z"
+                                fill="currentColor"
+                                data-darkreader-inline-fill=""
+                                style="--darkreader-inline-fill: currentColor"
+                              ></path>
+                            </g>
+                          </svg>
+                        </span>
+                      </div>
+                      <slot v-else-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
                         <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
                           {{ column.title }}
                         </Ellipsis>
@@ -848,8 +886,50 @@ function onPaginationChange(page: number, pageSize: number) {
                       :title="column.ellipsis && xScrollable ? 'column.title' : undefined"
                       @click="column.sorter ? onSorter(column) : () => false"
                     >
+                      <div v-if="column.sorter" class="table-cell-sorter">
+                        <span class="table-cell-title">
+                          <slot
+                            v-if="column.ellipsis && !xScrollable"
+                            name="headerCell"
+                            :column="column"
+                            :title="column.title"
+                          >
+                            <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                              {{ column.title }}
+                            </Ellipsis>
+                          </slot>
+                          <slot v-else name="headerCell" :column="column" :title="column.title">
+                            {{ column.title }}
+                          </slot>
+                        </span>
+                        <span
+                          class="table-cell-arrow"
+                          :class="{
+                            'ascend-arrow': sortSymbol === 'ascend',
+                            'descend-arrow': sortSymbol === 'descend'
+                          }"
+                        >
+                          <svg
+                            width="1.25em"
+                            height="1.25em"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                            viewBox="0 0 16 16"
+                          >
+                            <g fill="none">
+                              <path
+                                d="M8 14a.75.75 0 0 1-.75-.75V4.463L4.309 7.75a.75.75 0 0 1-1.118-1L7.441 2A.75.75 0 0 1 8.56 2l4.25 4.75a.75.75 0 1 1-1.118 1L8.75 4.463v8.787A.75.75 0 0 1 8 14z"
+                                fill="currentColor"
+                                data-darkreader-inline-fill=""
+                                style="--darkreader-inline-fill: currentColor"
+                              ></path>
+                            </g>
+                          </svg>
+                        </span>
+                      </div>
                       <slot
-                        v-if="column.ellipsis && !xScrollable"
+                        v-else-if="column.ellipsis && !xScrollable"
                         name="headerCell"
                         :column="column"
                         :title="column.title"
@@ -1123,6 +1203,36 @@ function onPaginationChange(page: number, pageSize: number) {
           transition: all 0.3s;
           &:hover {
             background: #f0f0f0;
+          }
+          .table-cell-sorter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .table-cell-title {
+              position: relative;
+              z-index: 1;
+              flex: 1;
+            }
+            .table-cell-arrow {
+              display: inline-flex;
+              align-items: center;
+              margin-left: 4px;
+              color: rgba(0, 0, 0, 0.29);
+              transition: all 0.3s;
+              &:hover {
+                color: rgba(0, 0, 0, 0.57);
+              }
+              svg {
+                fill: currentColor;
+              }
+            }
+            .ascend-arrow {
+              color: #1677ff;
+            }
+            .descend-arrow {
+              color: #1677ff;
+              transform: rotate(180deg);
+            }
           }
         }
         .table-empty {
