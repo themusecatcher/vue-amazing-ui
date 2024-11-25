@@ -869,6 +869,7 @@ function onPaginationChange(page: number, pageSize: number) {
                 <template v-if="displayDataSource.length">
                   <template v-for="(record, rowIndex) in displayDataSource" :key="rowIndex">
                     <tr
+                      :class="getRowClassName(record, rowIndex)"
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
                       @click="expandRowByClick ? onExpandCell(record) : () => false"
