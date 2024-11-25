@@ -398,6 +398,7 @@ keyboard | 是否支持按键操作 (`enter` 显示；`esc` 关闭)，仅当 `tr
 transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100
 showDelay | 文字提示显示的延迟时间，单位 `ms` | number | 100
 hideDelay |文字提示隐藏的延迟时间，单位 `ms` | number | 100
+showControl?: boolean // 只使用 show 属性控制显示隐藏，trigger: hover 时生效，此时移入移出将不会出发显示隐藏，全部由 show 属性控制显隐
 show <Tag color="cyan">v-model</Tag> | 文字提示是否显示 | boolean | false
 
 ## Methods
