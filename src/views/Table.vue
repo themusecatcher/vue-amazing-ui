@@ -998,11 +998,17 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
     <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
+      <a-table
+        :columns="columnsHeaderGroup"
+        :data-source="dataSourceHeaderGroup"
+        :bordered="groupBordered"
+        :scroll="{ x: 1500, y: 240 }"
+      />
       <Table
         :columns="columnsHeaderGroup"
         :data-source="dataSourceHeaderGroup"
         :bordered="groupBordered"
-        :scroll="{ x: 1500, y: 800 }"
+        :scroll="{ x: 1500, y: 240 }"
       />
     </Flex>
   </div>
