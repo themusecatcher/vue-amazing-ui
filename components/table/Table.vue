@@ -21,7 +21,7 @@ interface Column {
   slot?: string // 列插槽名称索引
   children?: Column[] // 列表头分组的子节点
   defaultSortOrder?: 'descend' | 'ascend' // 表格默认排序方式
-  sorter?: Function // 排序函数，参考 Array.sort 的 compareFunction
+  sorter?: Function // 升序排序函数，参考 Array.sort 的 compareFunction
   customCell?: (record: any, rowIndex: number, column: Column) => object // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
@@ -92,6 +92,7 @@ const tablePage = ref<number>(1) // 分页器当前页数
 const tablePageSize = ref<number>(10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
+const displayDataSource = ref<any[]>([]) // 当前展示的表格数据
 const tableExpandedRowKeys = ref<(string | number)[]>([])
 const ellipsisRef = ref() // 文本省略组件 DOM 引用
 const scrollbarRef = ref() // 水平滚动容器 DOM 引用
@@ -238,13 +239,7 @@ const totalDataSource = computed(() => {
   return total
 })
 // 当前展示的表格数据
-const displayDataSource = computed(() => {
-  // 展示分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
-  if (props.showPagination && totalDataSource.value === props.dataSource.length) {
-    return props.dataSource.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
-  }
-  return props.dataSource
-})
+
 watchEffect(() => {
   if (props.showPagination) {
     if ('page' in props.pagination) {
@@ -254,6 +249,9 @@ watchEffect(() => {
       tablePageSize.value = props.pagination.pageSize as number
     }
   }
+})
+watchEffect(() => {
+  displayDataSource.value = getDisplayDataSource()
 })
 watchEffect(() => {
   tableExpandedRowKeys.value = props.expandedRowKeys
@@ -266,6 +264,13 @@ onMounted(() => {
 useResizeObserver(tableRef, () => {
   getScrollState()
 })
+function getDisplayDataSource() {
+  // 展示分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
+  if (props.showPagination && totalDataSource.value === props.dataSource.length) {
+    return props.dataSource.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
+  }
+  return (displayDataSource.value = props.dataSource)
+}
 // 获取滚动状态信息
 function getScrollState() {
   if (scrollbarRef.value) {
@@ -389,6 +394,19 @@ function getComputedValue(column: Column, key: keyof Props) {
     computedValue = column[key as keyof Column]
   }
   return computedValue as object
+}
+const sortSymbol = ref<string | null>(null)
+function onSorter(column: Column) {
+  if (sortSymbol.value === null) {
+    displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+    sortSymbol.value = 'ascend'
+  } else if (sortSymbol.value === 'ascend') {
+    displayDataSource.value.reverse()
+    sortSymbol.value = 'descend'
+  } else {
+    displayDataSource.value = getDisplayDataSource()
+    sortSymbol.value = null
+  }
 }
 // 检查是否是左固定列的最后一列
 function checkFixLeftLast(columns: Column[], column: Column, index: number) {
@@ -625,6 +643,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       :class="[
                         `${column.className}`,
                         {
+                          'table-cell-has-sorter': column.sorter,
                           'table-cell-align-left': column.align === 'left',
                           'table-cell-align-center': column.align === 'center',
                           'table-cell-align-right': column.align === 'right',
@@ -639,6 +658,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       :colspan="column.colSpan"
                       :colstart="column.colStart"
                       :colend="column.colEnd"
+                      @click="column.sorter ? onSorter(column) : () => false"
                     >
                       <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
                         <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
@@ -810,6 +830,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       :class="[
                         `${column.className}`,
                         {
+                          'table-cell-has-sorter': column.sorter,
                           'table-cell-align-left': column.align === 'left',
                           'table-cell-align-center': column.align === 'center',
                           'table-cell-align-right': column.align === 'right',
@@ -825,6 +846,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       :colstart="column.colStart"
                       :colend="column.colEnd"
                       :title="column.ellipsis && xScrollable ? 'column.title' : undefined"
+                      @click="column.sorter ? onSorter(column) : () => false"
                     >
                       <slot
                         v-if="column.ellipsis && !xScrollable"
@@ -1094,6 +1116,14 @@ function onPaginationChange(page: number, pageSize: number) {
           white-space: nowrap;
           text-overflow: ellipsis;
           word-break: keep-all;
+        }
+        .table-cell-has-sorter {
+          outline: none;
+          cursor: pointer;
+          transition: all 0.3s;
+          &:hover {
+            background: #f0f0f0;
+          }
         }
         .table-empty {
           padding: 16px;
