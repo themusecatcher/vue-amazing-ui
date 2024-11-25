@@ -3,11 +3,13 @@ import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 const loading = ref(false)
 const tableLoading = ref(false)
+const customStyleBordered = ref(true)
 const sizeBordered = ref(true)
 const alignBordered = ref(true)
 const stripedBordered = ref(true)
 const headerFooterbordered = ref(true)
 const groupBordered = ref(true)
+const sortBordered = ref(true)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
@@ -76,6 +78,12 @@ const columns = reactive([
     width: 150,
     key: 'action'
   }
+])
+const columnsCustomStyle = reactive([
+  { title: 'Name', dataIndex: 'name' },
+  { title: 'Age', dataIndex: 'age', className: 'age' },
+  { title: 'Job', dataIndex: 'job' },
+  { title: 'Address', dataIndex: 'address' }
 ])
 const columnsSize = reactive([
   { title: 'Name', dataIndex: 'name' },
@@ -381,6 +389,38 @@ const columnsHeaderGroup = reactive([
     fixed: 'right'
   }
 ])
+const columnsSort = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: (a: TableDataType, b: TableDataType) => a.name.length - b.name.length,
+    sortDirections: ['descend'],
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    defaultSortOrder: 'descend',
+    sorter: (a: TableDataType, b: TableDataType) => a.age - b.age
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+    filters: [
+      {
+        text: 'London',
+        value: 'London'
+      },
+      {
+        text: 'New York',
+        value: 'New York'
+      }
+    ],
+    filterMultiple: false,
+    onFilter: (value: string, record: TableDataType) => record.address.indexOf(value) === 0,
+    sorter: (a: TableDataType, b: TableDataType) => a.address.length - b.address.length,
+    sortDirections: ['descend', 'ascend']
+  }
+]
 const dataSource = ref([
   {
     name: 'Stephen Curry',
@@ -418,6 +458,37 @@ const dataSource = ref([
     address: 'Los Angeles'
   }
 ])
+const dataSourceCustomStyle = ref([
+  {
+    key: '1',
+    name: 'Stephen Curry',
+    age: 30,
+    job: 'Player',
+    address: 'Chase Center, GSW'
+  },
+  {
+    key: '2',
+    name: 'the Muse Catcher',
+    age: 24,
+    job: 'None',
+    address: 'Beijing, China'
+  },
+  {
+    key: '3',
+    name: 'Wonder Woman',
+    age: 32,
+    job: 'Hero',
+    address: 'Tel Aviv, Israel'
+  }
+])
+const rowClassName = (record: any, rowIndex: number) => {
+  if (record.age > 30) {
+    return 'older-row'
+  } else if (rowIndex % 2 === 1) {
+    return 'even-row'
+  }
+  return ''
+}
 const dataSourceSize = ref([
   {
     key: '1',
@@ -619,6 +690,32 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
   companyName: 'SoftLake Co',
   gender: 'M'
 }))
+const dataSourceSort  = reactive([
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park'
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park'
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park'
+  },
+  {
+    key: '4',
+    name: 'Jim Red',
+    age: 32,
+    address: 'London No. 2 Lake Park'
+  }
+])
 onBeforeMount(() => {
   getData()
 })
@@ -757,6 +854,17 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
         </template>
       </template>
     </Table>
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <h3 class="mb10">使用 rowClassName 和 Column.className 自定义表格样式</h3>
+    <Flex vertical>
+      <Space align="center"> bordered: <Switch v-model="customStyleBordered" /> </Space>
+      <Table
+        :columns="columnsCustomStyle"
+        :data-source="dataSourceCustomStyle"
+        :row-class-name="rowClassName"
+        :bordered="customStyleBordered"
+      />
+    </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <h3 class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</h3>
     <Flex vertical>
@@ -949,16 +1057,34 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
     <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
+      <a-table
+        :columns="columnsHeaderGroup"
+        :data-source="dataSourceHeaderGroup"
+        :bordered="groupBordered"
+        :scroll="{ x: 1500, y: 240 }"
+      />
       <Table
         :columns="columnsHeaderGroup"
         :data-source="dataSourceHeaderGroup"
         :bordered="groupBordered"
-        :scroll="{ x: 1500, y: 800 }"
+        :scroll="{ x: 1500, y: 240 }"
       />
+      <h2 class="mt30 mb10">表格排序</h2>
+      <a-table :scroll="{ x: 1500 }" :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" />
+      <Table :scroll="{ x: 1500 }" :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" />
     </Flex>
   </div>
 </template>
 <style lang="less" scoped>
+:deep(.even-row td) {
+  color: #1677ff !important;
+}
+:deep(.age) {
+  color: #09c8ce !important;
+}
+:deep(.older-row .age) {
+  color: #eb2f96 !important;
+}
 .editable-cell {
   .cell-icon {
     display: none;

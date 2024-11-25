@@ -14,6 +14,7 @@ import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 const loading = ref(false)
 const tableLoading = ref(false)
+const customStyleBordered = ref(true)
 const sizeBordered = ref(true)
 const alignBordered = ref(true)
 const stripedBordered = ref(true)
@@ -87,6 +88,12 @@ const columns = reactive([
     width: 150,
     key: 'action'
   }
+])
+const columnsCustomStyle = reactive([
+  { title: 'Name', dataIndex: 'name' },
+  { title: 'Age', dataIndex: 'age', className: 'age' },
+  { title: 'Job', dataIndex: 'job' },
+  { title: 'Address', dataIndex: 'address' }
 ])
 const columnsSize = reactive([
   { title: 'Name', dataIndex: 'name' },
@@ -429,6 +436,37 @@ const dataSource = ref([
     address: 'Los Angeles'
   }
 ])
+const dataSourceCustomStyle = ref([
+  {
+    key: '1',
+    name: 'Stephen Curry',
+    age: 30,
+    job: 'Player',
+    address: 'Chase Center, GSW'
+  },
+  {
+    key: '2',
+    name: 'the Muse Catcher',
+    age: 24,
+    job: 'None',
+    address: 'Beijing, China'
+  },
+  {
+    key: '3',
+    name: 'Wonder Woman',
+    age: 32,
+    job: 'Hero',
+    address: 'Tel Aviv, Israel'
+  }
+])
+const rowClassName = (record: any, rowIndex: number) => {
+  if (record.age > 30) {
+    return 'older-row'
+  } else if (rowIndex % 2 === 1) {
+    return 'even-row'
+  }
+  return ''
+}
 const dataSourceSize = ref([
   {
     key: '1',
@@ -1123,6 +1161,92 @@ const dataSource = ref([
 
 :::
 
+## 自定义样式
+
+*使用 `rowClassName` 和 `Column.className` 自定义表格样式*
+
+<br/>
+
+<Flex vertical>
+  <Space align="center"> bordered: <Switch v-model="customStyleBordered" /> </Space>
+  <Table
+    :columns="columnsCustomStyle"
+    :data-source="dataSourceCustomStyle"
+    :row-class-name="rowClassName"
+    :bordered="customStyleBordered"
+  />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+const customStyleBordered = ref(true)
+const columnsCustomStyle = reactive([
+  { title: 'Name', dataIndex: 'name' },
+  { title: 'Age', dataIndex: 'age', className: 'age' },
+  { title: 'Job', dataIndex: 'job' },
+  { title: 'Address', dataIndex: 'address' }
+])
+const dataSourceCustomStyle = ref([
+  {
+    key: '1',
+    name: 'Stephen Curry',
+    age: 30,
+    job: 'Player',
+    address: 'Chase Center, GSW'
+  },
+  {
+    key: '2',
+    name: 'the Muse Catcher',
+    age: 24,
+    job: 'None',
+    address: 'Beijing, China'
+  },
+  {
+    key: '3',
+    name: 'Wonder Woman',
+    age: 32,
+    job: 'Hero',
+    address: 'Tel Aviv, Israel'
+  }
+])
+const rowClassName = (record: any, rowIndex: number) => {
+  if (record.age > 30) {
+    return 'older-row'
+  } else if (rowIndex % 2 === 1) {
+    return 'even-row'
+  }
+  return ''
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center"> bordered: <Switch v-model="customStyleBordered" /> </Space>
+    <Table
+      :columns="columnsCustomStyle"
+      :data-source="dataSourceCustomStyle"
+      :row-class-name="rowClassName"
+      :bordered="customStyleBordered"
+    />
+  </Flex>
+</template>
+<style lang="less" scoped>
+:deep(.even-row td) {
+  color: #1677ff !important;
+}
+:deep(.age) {
+  color: #09c8ce !important;
+}
+:deep(.older-row .age) {
+  color: #eb2f96 !important;
+}
+</style>
+```
+
+:::
+
 ## 三种尺寸
 
 *另两种紧凑型的列表；小型列表适用于对话框内*
@@ -1727,26 +1851,6 @@ const dataSourceMerge = ref([
     </template>
   </template>
 </Table>
-
-<style lang="less" scoped>
-.editable-cell {
-  .cell-icon {
-    display: none;
-  }
-  .cell-icon,
-  .cell-icon-check {
-    &:hover {
-      transition: color 0.3s;
-      color: #1890ff;
-    }
-  }
-  &:hover {
-    .cell-icon {
-      display: inline-block;
-    }
-  }
-}
-</style>
 
 ::: details Show Code
 
@@ -2450,6 +2554,35 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
 
 :::
 
+<style lang="less" scoped>
+:deep(.even-row td) {
+  color: #1677ff !important;
+}
+:deep(.age) {
+  color: #09c8ce !important;
+}
+:deep(.older-row .age) {
+  color: #eb2f96 !important;
+}
+.editable-cell {
+  .cell-icon {
+    display: none;
+  }
+  .cell-icon,
+  .cell-icon-check {
+    &:hover {
+      transition: color 0.3s;
+      color: #1890ff;
+    }
+  }
+  &:hover {
+    .cell-icon {
+      display: inline-block;
+    }
+  }
+}
+</style>
+
 ## APIs
 
 ### Table
@@ -2462,6 +2595,7 @@ columns | 表格列的配置项 | [Column](#column-type)[] | []
 dataSource | 表格数据数组 | any[] | []
 bordered | 是否展示外边框和列边框 | boolean | false
 size | 表格大小 | 'large' &#124; 'middle' &#124; small | 'large'
+rowClassName | 自定义行的类名 | string &#124; ((record: any, rowIndex: number) => string) | undefined
 striped | 是否使用斑马条纹 | boolean | false
 loading | 是否加载中 | boolean | false
 spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置数据加载中 | object | {}
@@ -2488,6 +2622,7 @@ expandRowByClick | 点击行是否展开 | boolean | false
 title? | 列头显示文字 | string | undefined
 align? | 列文本的对齐方式 | 'left' &#124; 'center' &#124; 'right' | undefined
 width? | 列宽度，单位 `px` | string &#124; number | undefined
+className? | 自定义列的类名 | string | undefined
 colSpan? | 表头列合并,设置为 `0` 时，不渲染 | number | undefined
 dataIndex | 列数据字符索引 | string | undefined
 key? | 列标识，主要与 `expandedRowKeys` 配合使用控制展开行 | string | undefined
@@ -2496,6 +2631,7 @@ ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https:/
 fixed? | 列是否固定 | 'left' &#124; 'right' | undefined
 slot? | 列插槽名称索引 | string | undefined
 children? | 列表头分组的子节点 | [Column](#column-type)[] | undefined
+sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction` | Function | undefined
 customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Column) => object | undefined
 
 ### ScrollOption Type
