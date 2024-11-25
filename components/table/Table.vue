@@ -11,6 +11,7 @@ interface Column {
   title?: string // 列头显示文字
   align?: 'left' | 'center' | 'right' // 列文本的对齐方式
   width?: string | number // 列宽度，单位 px
+  className?: string // 自定义列的类名
   colSpan?: number // 表头列合并，设置为 0 时，不渲染
   dataIndex: string // 列数据字符索引
   key?: string // 列标识，主要与 expandedRowKeys 配合使用
@@ -34,6 +35,7 @@ interface Props {
   columns?: Column[] // 表格列的配置项
   dataSource?: any[] // 表格数据数组
   bordered?: boolean // 是否展示外边框和列边框
+  rowClassName?: string | ((record: any, rowIndex: number) => string) // 自定义行的类名
   size?: 'large' | 'middle' | 'small' // 表格大小
   striped?: boolean // 是否使用斑马条纹
   loading?: boolean // 是否加载中
@@ -60,6 +62,7 @@ const props = withDefaults(defineProps<Props>(), {
   columns: () => [],
   dataSource: () => [],
   bordered: false,
+  rowClassName: undefined,
   size: 'large',
   striped: false,
   loading: false,
@@ -474,6 +477,13 @@ function getMergeCellRowIndex(record: any, column: Column, rowIndex: number) {
     }
   }
 }
+// 获取每行的类名
+function getRowClassName(record: any, rowIndex: number) {
+  if (typeof props.rowClassName == 'function') {
+    return props.rowClassName(record, rowIndex)
+  }
+  return props.rowClassName
+}
 // 鼠标悬浮某行
 function onEnterRow(record: any, rowIndex: number) {
   hoverRowIndex.value = rowIndex
@@ -612,15 +622,18 @@ function onPaginationChange(page: number, pageSize: number) {
                     <th
                       v-if="column.colSpan !== 0"
                       class="table-th"
-                      :class="{
-                        'table-cell-align-left': column.align === 'left',
-                        'table-cell-align-center': column.align === 'center',
-                        'table-cell-align-right': column.align === 'right',
-                        'table-cell-fix-left': column.fixed === 'left',
-                        'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
-                        'table-cell-fix-right': column.fixed === 'right',
-                        'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
-                      }"
+                      :class="[
+                        `${column.className}`,
+                        {
+                          'table-cell-align-left': column.align === 'left',
+                          'table-cell-align-center': column.align === 'center',
+                          'table-cell-align-right': column.align === 'right',
+                          'table-cell-fix-left': column.fixed === 'left',
+                          'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
+                          'table-cell-fix-right': column.fixed === 'right',
+                          'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
+                        }
+                      ]"
                       :style="tableCellFixStyle(column)"
                       :rowspan="column.rowSpan"
                       :colspan="column.colSpan"
@@ -648,6 +661,7 @@ function onPaginationChange(page: number, pageSize: number) {
                 <template v-if="displayDataSource.length">
                   <template v-for="(record, rowIndex) in displayDataSource" :key="rowIndex">
                     <tr
+                      :class="getRowClassName(record, rowIndex)"
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
                       @click="expandRowByClick ? onExpandCell(record) : () => false"
@@ -677,24 +691,27 @@ function onPaginationChange(page: number, pageSize: number) {
                       </td>
                       <td
                         class="table-td"
-                        :class="{
-                          'table-cell-align-left': column.align === 'left',
-                          'table-cell-align-center': column.align === 'center',
-                          'table-cell-align-right': column.align === 'right',
-                          'table-cell-fix-left': column.fixed === 'left',
-                          'table-cell-fix-left-last': checkFixLeftLast(
-                            getTdColumnsGroup(record, rowIndex),
-                            column,
-                            colIndex
-                          ),
-                          'table-cell-fix-right': column.fixed === 'right',
-                          'table-cell-fix-right-first': checkFixRightFirst(
-                            getTdColumnsGroup(record, rowIndex),
-                            column,
-                            colIndex
-                          ),
-                          'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
-                        }"
+                        :class="[
+                          `${column.className}`,
+                          {
+                            'table-cell-align-left': column.align === 'left',
+                            'table-cell-align-center': column.align === 'center',
+                            'table-cell-align-right': column.align === 'right',
+                            'table-cell-fix-left': column.fixed === 'left',
+                            'table-cell-fix-left-last': checkFixLeftLast(
+                              getTdColumnsGroup(record, rowIndex),
+                              column,
+                              colIndex
+                            ),
+                            'table-cell-fix-right': column.fixed === 'right',
+                            'table-cell-fix-right-first': checkFixRightFirst(
+                              getTdColumnsGroup(record, rowIndex),
+                              column,
+                              colIndex
+                            ),
+                            'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
+                          }
+                        ]"
                         :style="tableCellFixStyle(column)"
                         v-for="(column, colIndex) in getTdColumnsGroup(record, rowIndex)"
                         :key="`${rowIndex}-${colIndex}`"
@@ -790,15 +807,18 @@ function onPaginationChange(page: number, pageSize: number) {
                     <th
                       v-if="column.colSpan !== 0"
                       class="table-th"
-                      :class="{
-                        'table-cell-align-left': column.align === 'left',
-                        'table-cell-align-center': column.align === 'center',
-                        'table-cell-align-right': column.align === 'right',
-                        'table-cell-fix-left': column.fixed === 'left',
-                        'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
-                        'table-cell-fix-right': column.fixed === 'right',
-                        'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
-                      }"
+                      :class="[
+                        `${column.className}`,
+                        {
+                          'table-cell-align-left': column.align === 'left',
+                          'table-cell-align-center': column.align === 'center',
+                          'table-cell-align-right': column.align === 'right',
+                          'table-cell-fix-left': column.fixed === 'left',
+                          'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
+                          'table-cell-fix-right': column.fixed === 'right',
+                          'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
+                        }
+                      ]"
                       :style="tableCellFixStyle(column)"
                       :rowspan="column.rowSpan"
                       :colspan="column.colSpan"
@@ -878,24 +898,27 @@ function onPaginationChange(page: number, pageSize: number) {
                       </td>
                       <td
                         class="table-td"
-                        :class="{
-                          'table-cell-align-left': column.align === 'left',
-                          'table-cell-align-center': column.align === 'center',
-                          'table-cell-align-right': column.align === 'right',
-                          'table-cell-fix-left': column.fixed === 'left',
-                          'table-cell-fix-left-last': checkFixLeftLast(
-                            getTdColumnsGroup(record, rowIndex),
-                            column,
-                            colIndex
-                          ),
-                          'table-cell-fix-right': column.fixed === 'right',
-                          'table-cell-fix-right-first': checkFixRightFirst(
-                            getTdColumnsGroup(record, rowIndex),
-                            column,
-                            colIndex
-                          ),
-                          'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
-                        }"
+                        :class="[
+                          `${column.className}`,
+                          {
+                            'table-cell-align-left': column.align === 'left',
+                            'table-cell-align-center': column.align === 'center',
+                            'table-cell-align-right': column.align === 'right',
+                            'table-cell-fix-left': column.fixed === 'left',
+                            'table-cell-fix-left-last': checkFixLeftLast(
+                              getTdColumnsGroup(record, rowIndex),
+                              column,
+                              colIndex
+                            ),
+                            'table-cell-fix-right': column.fixed === 'right',
+                            'table-cell-fix-right-first': checkFixRightFirst(
+                              getTdColumnsGroup(record, rowIndex),
+                              column,
+                              colIndex
+                            ),
+                            'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
+                          }
+                        ]"
                         :style="tableCellFixStyle(column)"
                         v-for="(column, colIndex) in getTdColumnsGroup(record, rowIndex)"
                         :key="`${rowIndex}-${colIndex}`"
