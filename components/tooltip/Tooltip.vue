@@ -26,8 +26,8 @@ interface Props {
   transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
   showDelay?: number // 文字提示显示的延迟时间，单位 ms
   hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms
-  showControl?: boolean // 只使用 show 属性控制显示隐藏，trigger: hover 时生效，此时移入移出将不会出发显示隐藏，全部由 show 属性控制显隐
   show?: boolean // (v-model) 文字提示是否显示
+  showControl?: boolean // 只使用 show 属性控制显示隐藏，仅当 trigger: hover 时生效，此时移入移出将不会触发显示隐藏，全部由 show 属性控制
 }
 const props = withDefaults(defineProps<Props>(), {
   maxWidth: 240,
@@ -46,8 +46,8 @@ const props = withDefaults(defineProps<Props>(), {
   transitionDuration: 100,
   showDelay: 100,
   hideDelay: 100,
-  showControl: false,
-  show: false
+  show: false,
+  showControl: false
 })
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
