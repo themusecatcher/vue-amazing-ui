@@ -2631,6 +2631,7 @@ ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https:/
 fixed? | 列是否固定 | 'left' &#124; 'right' | undefined
 slot? | 列插槽名称索引 | string | undefined
 children? | 列表头分组的子节点 | [Column](#column-type)[] | undefined
+sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction` | Function | undefined
 customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Column) => object | undefined
 
 ### ScrollOption Type
