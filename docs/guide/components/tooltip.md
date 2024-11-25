@@ -384,6 +384,7 @@ const tooltip = ref()
 -- | -- | -- | --
 maxWidth | 文字提示最大宽度，单位 `px` | string &#124; number | 240
 content | 展示的内容 | string &#124; slot | undefined
+contentClass | 设置展示内容的类名 | string | undefined
 contentStyle | 设置展示内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 tooltip | 文字提示内容 | string &#124; slot | undefined
 tooltipClass | 设置文字提示的类名 | string | undefined

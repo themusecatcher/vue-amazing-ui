@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, onMounted, nextTick } from 'vue'
-import type { Slot } from 'vue'
+import type { CSSProperties, Slot } from 'vue'
 import Spin from '../spin'
 import Empty from '../empty'
 import Scrollbar from '../scrollbar'
+import Tooltip from '../tooltip'
 import Ellipsis from '../ellipsis'
 import Pagination from '../pagination'
 import { useSlotsExist, useResizeObserver } from '../utils'
@@ -11,16 +12,18 @@ interface Column {
   title?: string // 列头显示文字
   align?: 'left' | 'center' | 'right' // 列文本的对齐方式
   width?: string | number // 列宽度，单位 px
+  className?: string // 自定义列的类名
   colSpan?: number // 表头列合并，设置为 0 时，不渲染
   dataIndex: string // 列数据字符索引
   key?: string // 列标识，主要与 expandedRowKeys 配合使用
   ellipsis?: boolean // 超过宽度是否自动省略
-  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略
+  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略，较高优先级
   fixed?: 'left' | 'right' // 列是否固定，列表头分组时，只需设置所有叶子节点是否固定
   slot?: string // 列插槽名称索引
   children?: Column[] // 列表头分组的子节点
-  defaultSortOrder?: 'descend' | 'ascend' // 表格默认排序方式
-  sorter?: Function // 排序函数，参考 Array.sort 的 compareFunction
+  showSorterTooltip?: boolean // 表头显示下一次排序的 tooltip 提示，较高优先级
+  tooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props，用于单独配置某列的排序弹出提示，较高优先级
+  sorter?: Function // 升序排序函数，参考 Array.sort 的 compareFunction
   customCell?: (record: any, rowIndex: number, column: Column) => object // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
@@ -34,12 +37,15 @@ interface Props {
   columns?: Column[] // 表格列的配置项
   dataSource?: any[] // 表格数据数组
   bordered?: boolean // 是否展示外边框和列边框
+  rowClassName?: string | ((record: any, rowIndex: number) => string) // 自定义行的类名
   size?: 'large' | 'middle' | 'small' // 表格大小
   striped?: boolean // 是否使用斑马条纹
   loading?: boolean // 是否加载中
   spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置数据加载中
   emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据
   ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于全局配置文本省略
+  showSorterTooltip?: boolean // 表头是否显示下一次排序的 tooltip 提示
+  tooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props，用于全局配置排序弹出提示
   showPagination?: boolean // 是否显示分页
   pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
   scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
@@ -60,12 +66,15 @@ const props = withDefaults(defineProps<Props>(), {
   columns: () => [],
   dataSource: () => [],
   bordered: false,
+  rowClassName: undefined,
   size: 'large',
   striped: false,
   loading: false,
   spinProps: () => ({}),
   emptyProps: () => ({}),
   ellipsisProps: () => ({}),
+  showSorterTooltip: true,
+  tooltipProps: () => ({}),
   showPagination: true,
   pagination: () => ({}),
   scroll: undefined,
@@ -89,6 +98,7 @@ const tablePage = ref<number>(1) // 分页器当前页数
 const tablePageSize = ref<number>(10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
+const displayDataSource = ref<any[]>([]) // 当前展示的表格数据
 const tableExpandedRowKeys = ref<(string | number)[]>([])
 const ellipsisRef = ref() // 文本省略组件 DOM 引用
 const scrollbarRef = ref() // 水平滚动容器 DOM 引用
@@ -235,13 +245,7 @@ const totalDataSource = computed(() => {
   return total
 })
 // 当前展示的表格数据
-const displayDataSource = computed(() => {
-  // 展示分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
-  if (props.showPagination && totalDataSource.value === props.dataSource.length) {
-    return props.dataSource.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
-  }
-  return props.dataSource
-})
+
 watchEffect(() => {
   if (props.showPagination) {
     if ('page' in props.pagination) {
@@ -251,6 +255,9 @@ watchEffect(() => {
       tablePageSize.value = props.pagination.pageSize as number
     }
   }
+})
+watchEffect(() => {
+  displayDataSource.value = getDisplayDataSource()
 })
 watchEffect(() => {
   tableExpandedRowKeys.value = props.expandedRowKeys
@@ -263,6 +270,13 @@ onMounted(() => {
 useResizeObserver(tableRef, () => {
   getScrollState()
 })
+function getDisplayDataSource() {
+  // 展示分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
+  if (props.showPagination && totalDataSource.value === props.dataSource.length) {
+    return props.dataSource.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
+  }
+  return (displayDataSource.value = props.dataSource)
+}
 // 获取滚动状态信息
 function getScrollState() {
   if (scrollbarRef.value) {
@@ -387,6 +401,47 @@ function getComputedValue(column: Column, key: keyof Props) {
   }
   return computedValue as object
 }
+const sortColumn = ref<string | null>(null) // 排序列
+const sortSymbol = ref<string | null>(null) // 排序标识
+const sortHover = ref<string | null>(null) // 鼠标悬浮的排序列标识
+const tableCellSorterStyle = ref<CSSProperties>({})
+const sortTooltip = computed(() => { //  sorter 排序提示文本
+  if (sortSymbol.value === null) {
+    return '点击升序'
+  } else if (sortSymbol.value === 'ascend') {
+    return '点击降序'
+  } else {
+    return '取消排序'
+  }
+})
+// 点击 th 单元格进行排序
+function onSorter(column: Column) {
+  
+  if (sortSymbol.value === null) {
+    displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+    sortColumn.value = column.dataIndex
+    sortSymbol.value = 'ascend'
+  } else if (sortSymbol.value === 'ascend') {
+    displayDataSource.value.reverse()
+    sortColumn.value = column.dataIndex
+    sortSymbol.value = 'descend'
+  } else {
+    displayDataSource.value = getDisplayDataSource()
+    sortColumn.value = null
+    sortSymbol.value = null
+  }
+}
+function onEnterSorter(e: MouseEvent, dataIndex: string) {
+  tableCellSorterStyle.value = {
+    height: `${(e.target as HTMLElement)}px`
+  }
+  sortHover.value = dataIndex
+}
+function onLeaveSorter() {
+  console.log('leave')
+  tableCellSorterStyle.value = {}
+  sortHover.value = null
+}
 // 检查是否是左固定列的最后一列
 function checkFixLeftLast(columns: Column[], column: Column, index: number) {
   if (column.fixed === 'left' && index < columns.length - 1) {
@@ -473,6 +528,13 @@ function getMergeCellRowIndex(record: any, column: Column, rowIndex: number) {
       return getMergeCellRowIndex(record, column, rowIndex - 1)
     }
   }
+}
+// 获取每行的类名
+function getRowClassName(record: any, rowIndex: number) {
+  if (typeof props.rowClassName == 'function') {
+    return props.rowClassName(record, rowIndex)
+  }
+  return props.rowClassName
 }
 // 鼠标悬浮某行
 function onEnterRow(record: any, rowIndex: number) {
@@ -612,22 +674,79 @@ function onPaginationChange(page: number, pageSize: number) {
                     <th
                       v-if="column.colSpan !== 0"
                       class="table-th"
-                      :class="{
-                        'table-cell-align-left': column.align === 'left',
-                        'table-cell-align-center': column.align === 'center',
-                        'table-cell-align-right': column.align === 'right',
-                        'table-cell-fix-left': column.fixed === 'left',
-                        'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
-                        'table-cell-fix-right': column.fixed === 'right',
-                        'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
-                      }"
-                      :style="tableCellFixStyle(column)"
+                      :class="[
+                        `${column.className}`,
+                        {
+                          'table-cell-has-sorter': column.sorter,
+                          'table-cell-sort': sortColumn === column.dataIndex,
+                          'table-cell-align-left': column.align === 'left',
+                          'table-cell-align-center': column.align === 'center',
+                          'table-cell-align-right': column.align === 'right',
+                          'table-cell-fix-left': column.fixed === 'left',
+                          'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
+                          'table-cell-fix-right': column.fixed === 'right',
+                          'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
+                        }
+                      ]"
+                      :style="[
+                        tableCellFixStyle(column),
+                        column.sorter && showSorterTooltip && sortHover === column.dataIndex ? tableCellSorterStyle : {}
+                      ]"
                       :rowspan="column.rowSpan"
                       :colspan="column.colSpan"
                       :colstart="column.colStart"
                       :colend="column.colEnd"
+                      @mouseenter="column.sorter ? onEnterSorter($event, column.dataIndex) : () => false"
+                      @mouseleave="column.sorter ? onLeaveSorter() : () => false"
+                      @click="column.sorter ? onSorter(column) : () => false"
                     >
-                      <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
+                      <Tooltip
+                        v-if="column.sorter"
+                        style="width: 100%; height: 100%;"
+                        :show="sortHover === column.dataIndex"
+                        :content-style="{ width: '100%' }"
+                        :tooltip="showSorterTooltip ? sortTooltip : undefined"
+                        :tooltip-style="{ fontWeight: 'normal' }"
+                      >
+                        <div class="table-cell-sorter">
+                          <span class="table-cell-title">
+                            <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
+                              <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                                {{ column.title }}
+                              </Ellipsis>
+                            </slot>
+                            <slot v-else name="headerCell" :column="column" :title="column.title">
+                              {{ column.title }}
+                            </slot>
+                          </span>
+                          <span
+                            class="table-cell-arrow"
+                            :class="{
+                              'ascend-arrow': sortSymbol === 'ascend',
+                              'descend-arrow': sortSymbol === 'descend'
+                            }"
+                          >
+                            <svg
+                              width="1.25em"
+                              height="1.25em"
+                              fill="currentColor"
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                              viewBox="0 0 16 16"
+                            >
+                              <g fill="none">
+                                <path
+                                  d="M8 14a.75.75 0 0 1-.75-.75V4.463L4.309 7.75a.75.75 0 0 1-1.118-1L7.441 2A.75.75 0 0 1 8.56 2l4.25 4.75a.75.75 0 1 1-1.118 1L8.75 4.463v8.787A.75.75 0 0 1 8 14z"
+                                  fill="currentColor"
+                                  data-darkreader-inline-fill=""
+                                  style="--darkreader-inline-fill: currentColor"
+                                ></path>
+                              </g>
+                            </svg>
+                          </span>
+                        </div>
+                      </Tooltip>
+                      <slot v-else-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
                         <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
                           {{ column.title }}
                         </Ellipsis>
@@ -648,6 +767,7 @@ function onPaginationChange(page: number, pageSize: number) {
                 <template v-if="displayDataSource.length">
                   <template v-for="(record, rowIndex) in displayDataSource" :key="rowIndex">
                     <tr
+                      :class="getRowClassName(record, rowIndex)"
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
                       @click="expandRowByClick ? onExpandCell(record) : () => false"
@@ -677,24 +797,28 @@ function onPaginationChange(page: number, pageSize: number) {
                       </td>
                       <td
                         class="table-td"
-                        :class="{
-                          'table-cell-align-left': column.align === 'left',
-                          'table-cell-align-center': column.align === 'center',
-                          'table-cell-align-right': column.align === 'right',
-                          'table-cell-fix-left': column.fixed === 'left',
-                          'table-cell-fix-left-last': checkFixLeftLast(
-                            getTdColumnsGroup(record, rowIndex),
-                            column,
-                            colIndex
-                          ),
-                          'table-cell-fix-right': column.fixed === 'right',
-                          'table-cell-fix-right-first': checkFixRightFirst(
-                            getTdColumnsGroup(record, rowIndex),
-                            column,
-                            colIndex
-                          ),
-                          'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
-                        }"
+                        :class="[
+                          `${column.className}`,
+                          {
+                            'table-cell-sort': sortColumn === column.dataIndex,
+                            'table-cell-align-left': column.align === 'left',
+                            'table-cell-align-center': column.align === 'center',
+                            'table-cell-align-right': column.align === 'right',
+                            'table-cell-fix-left': column.fixed === 'left',
+                            'table-cell-fix-left-last': checkFixLeftLast(
+                              getTdColumnsGroup(record, rowIndex),
+                              column,
+                              colIndex
+                            ),
+                            'table-cell-fix-right': column.fixed === 'right',
+                            'table-cell-fix-right-first': checkFixRightFirst(
+                              getTdColumnsGroup(record, rowIndex),
+                              column,
+                              colIndex
+                            ),
+                            'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
+                          }
+                        ]"
                         :style="tableCellFixStyle(column)"
                         v-for="(column, colIndex) in getTdColumnsGroup(record, rowIndex)"
                         :key="`${rowIndex}-${colIndex}`"
@@ -790,24 +914,86 @@ function onPaginationChange(page: number, pageSize: number) {
                     <th
                       v-if="column.colSpan !== 0"
                       class="table-th"
-                      :class="{
-                        'table-cell-align-left': column.align === 'left',
-                        'table-cell-align-center': column.align === 'center',
-                        'table-cell-align-right': column.align === 'right',
-                        'table-cell-fix-left': column.fixed === 'left',
-                        'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
-                        'table-cell-fix-right': column.fixed === 'right',
-                        'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
-                      }"
-                      :style="tableCellFixStyle(column)"
+                      :class="[
+                        `${column.className}`,
+                        {
+                          'table-cell-has-sorter': column.sorter,
+                          'table-cell-sort': sortColumn === column.dataIndex,
+                          'table-cell-align-left': column.align === 'left',
+                          'table-cell-align-center': column.align === 'center',
+                          'table-cell-align-right': column.align === 'right',
+                          'table-cell-fix-left': column.fixed === 'left',
+                          'table-cell-fix-left-last': checkFixLeftLast(columns, column, colIndex),
+                          'table-cell-fix-right': column.fixed === 'right',
+                          'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
+                        }
+                      ]"
+                      :style="[
+                        tableCellFixStyle(column),
+                        column.sorter && showSorterTooltip && sortHover === column.dataIndex ? tableCellSorterStyle : {}
+                      ]"
                       :rowspan="column.rowSpan"
                       :colspan="column.colSpan"
                       :colstart="column.colStart"
                       :colend="column.colEnd"
                       :title="column.ellipsis && xScrollable ? 'column.title' : undefined"
+                      @mouseenter="column.sorter ? onEnterSorter($event, column.dataIndex) : () => false"
+                      @mouseleave="column.sorter ? onLeaveSorter() : () => false"
+                      @click="column.sorter ? onSorter(column) : () => false"
                     >
+                      <Tooltip
+                        v-if="column.sorter"
+                        style="width: 100%; height: 100%;"
+                        :show="sortHover === column.dataIndex"
+                        :content-style="{ width: '100%' }"
+                        :tooltip="showSorterTooltip ? sortTooltip : undefined"
+                        :tooltip-style="{ fontWeight: 'normal' }"
+                      >
+                        <div class="table-cell-sorter">
+                          <span class="table-cell-title">
+                            <slot
+                              v-if="column.ellipsis && !xScrollable"
+                              name="headerCell"
+                              :column="column"
+                              :title="column.title"
+                            >
+                              <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                                {{ column.title }}
+                              </Ellipsis>
+                            </slot>
+                            <slot v-else name="headerCell" :column="column" :title="column.title">
+                              {{ column.title }}
+                            </slot>
+                          </span>
+                          <span
+                            class="table-cell-arrow"
+                            :class="{
+                              'ascend-arrow': sortSymbol === 'ascend',
+                              'descend-arrow': sortSymbol === 'descend'
+                            }"
+                          >
+                            <svg
+                              width="1.25em"
+                              height="1.25em"
+                              fill="currentColor"
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                              viewBox="0 0 16 16"
+                            >
+                              <g fill="none">
+                                <path
+                                  d="M8 14a.75.75 0 0 1-.75-.75V4.463L4.309 7.75a.75.75 0 0 1-1.118-1L7.441 2A.75.75 0 0 1 8.56 2l4.25 4.75a.75.75 0 1 1-1.118 1L8.75 4.463v8.787A.75.75 0 0 1 8 14z"
+                                  fill="currentColor"
+                                  data-darkreader-inline-fill=""
+                                  style="--darkreader-inline-fill: currentColor"
+                                ></path>
+                              </g>
+                            </svg>
+                          </span>
+                        </div>
+                      </Tooltip>
                       <slot
-                        v-if="column.ellipsis && !xScrollable"
+                        v-else-if="column.ellipsis && !xScrollable"
                         name="headerCell"
                         :column="column"
                         :title="column.title"
@@ -849,6 +1035,7 @@ function onPaginationChange(page: number, pageSize: number) {
                 <template v-if="displayDataSource.length">
                   <template v-for="(record, rowIndex) in displayDataSource" :key="rowIndex">
                     <tr
+                      :class="getRowClassName(record, rowIndex)"
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
                       @click="expandRowByClick ? onExpandCell(record) : () => false"
@@ -878,24 +1065,28 @@ function onPaginationChange(page: number, pageSize: number) {
                       </td>
                       <td
                         class="table-td"
-                        :class="{
-                          'table-cell-align-left': column.align === 'left',
-                          'table-cell-align-center': column.align === 'center',
-                          'table-cell-align-right': column.align === 'right',
-                          'table-cell-fix-left': column.fixed === 'left',
-                          'table-cell-fix-left-last': checkFixLeftLast(
-                            getTdColumnsGroup(record, rowIndex),
-                            column,
-                            colIndex
-                          ),
-                          'table-cell-fix-right': column.fixed === 'right',
-                          'table-cell-fix-right-first': checkFixRightFirst(
-                            getTdColumnsGroup(record, rowIndex),
-                            column,
-                            colIndex
-                          ),
-                          'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
-                        }"
+                        :class="[
+                          `${column.className}`,
+                          {
+                            'table-cell-sort': sortColumn === column.dataIndex,
+                            'table-cell-align-left': column.align === 'left',
+                            'table-cell-align-center': column.align === 'center',
+                            'table-cell-align-right': column.align === 'right',
+                            'table-cell-fix-left': column.fixed === 'left',
+                            'table-cell-fix-left-last': checkFixLeftLast(
+                              getTdColumnsGroup(record, rowIndex),
+                              column,
+                              colIndex
+                            ),
+                            'table-cell-fix-right': column.fixed === 'right',
+                            'table-cell-fix-right-first': checkFixRightFirst(
+                              getTdColumnsGroup(record, rowIndex),
+                              column,
+                              colIndex
+                            ),
+                            'table-td-hover': hoverRowIndex === rowIndex || checkHoverCoord(rowIndex, colIndex)
+                          }
+                        ]"
                         :style="tableCellFixStyle(column)"
                         v-for="(column, colIndex) in getTdColumnsGroup(record, rowIndex)"
                         :key="`${rowIndex}-${colIndex}`"
@@ -1064,12 +1255,53 @@ function onPaginationChange(page: number, pageSize: number) {
           &[colspan]:not([colspan='1']) {
             text-align: center;
           }
+          &.table-cell-sort {
+            background: #f0f0f0;
+          }
         }
         .table-th-ellipsis {
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
           word-break: keep-all;
+        }
+        .table-cell-has-sorter {
+          outline: none;
+          cursor: pointer;
+          transition: all 0.3s;
+          &:hover {
+            background: #f0f0f0;
+          }
+          .table-cell-sorter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .table-cell-title {
+              position: relative;
+              z-index: 1;
+              flex: 1;
+            }
+            .table-cell-arrow {
+              display: inline-flex;
+              align-items: center;
+              margin-left: 4px;
+              color: rgba(0, 0, 0, 0.29);
+              transition: all 0.3s;
+              &:hover {
+                color: rgba(0, 0, 0, 0.57);
+              }
+              svg {
+                fill: currentColor;
+              }
+            }
+            .ascend-arrow {
+              color: #1677ff;
+            }
+            .descend-arrow {
+              color: #1677ff;
+              transform: rotate(180deg);
+            }
+          }
         }
         .table-empty {
           padding: 16px;
@@ -1082,6 +1314,9 @@ function onPaginationChange(page: number, pageSize: number) {
           padding: 16px;
           border-bottom: 1px solid #f0f0f0;
           transition: padding 0.3s;
+          &.table-cell-sort {
+            background: #fafafa;
+          }
           .expand-btn {
             position: relative;
             color: inherit;
