@@ -6,7 +6,7 @@
 
 - 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `yScrollable` 属性，用于控制是否使用垂直滚动；新增支持通过设置 `--scrollbar` 相关变量设置滚动条样式
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `rowClassName` 属性；表格列的配置项 `columns` 属性新增 `align` `className` `key` `children` `sorter` 类型；新增 `expand` `expandedRowsChange` 事件；支持：设置列文本对齐方式；自定义样式；列表头分组；表格排序控制；监听展开事件
-- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `contentClass` `showControl` 属性，支持：设置展示内容的类名；`trigger: hover` 时只使用 `show` 属性控制显示隐藏
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `contentClass` `showControl` 属性，支持：设置展示内容的类名；是否 `trigger: hover` 时只使用 `show` 属性控制显示隐藏
 - 组件库及文档代码优化
 
 ## 1.9.7 <Tag color="volcano" size="small">2024-11-20</Tag>
