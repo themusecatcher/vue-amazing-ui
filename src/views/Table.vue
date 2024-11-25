@@ -9,6 +9,7 @@ const alignBordered = ref(true)
 const stripedBordered = ref(true)
 const headerFooterbordered = ref(true)
 const groupBordered = ref(true)
+const sortBordered = ref(true)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
@@ -388,6 +389,38 @@ const columnsHeaderGroup = reactive([
     fixed: 'right'
   }
 ])
+const columnsSort = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: (a: TableDataType, b: TableDataType) => a.name.length - b.name.length,
+    sortDirections: ['descend'],
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    defaultSortOrder: 'descend',
+    sorter: (a: TableDataType, b: TableDataType) => a.age - b.age
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+    filters: [
+      {
+        text: 'London',
+        value: 'London'
+      },
+      {
+        text: 'New York',
+        value: 'New York'
+      }
+    ],
+    filterMultiple: false,
+    onFilter: (value: string, record: TableDataType) => record.address.indexOf(value) === 0,
+    sorter: (a: TableDataType, b: TableDataType) => a.address.length - b.address.length,
+    sortDirections: ['descend', 'ascend']
+  }
+]
 const dataSource = ref([
   {
     name: 'Stephen Curry',
@@ -657,6 +690,32 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
   companyName: 'SoftLake Co',
   gender: 'M'
 }))
+const dataSourceSort  = reactive([
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park'
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park'
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park'
+  },
+  {
+    key: '4',
+    name: 'Jim Red',
+    age: 32,
+    address: 'London No. 2 Lake Park'
+  }
+])
 onBeforeMount(() => {
   getData()
 })
@@ -1010,6 +1069,9 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
         :bordered="groupBordered"
         :scroll="{ x: 1500, y: 240 }"
       />
+      <h2 class="mt30 mb10">表格排序</h2>
+      <a-table :scroll="{ x: 1500 }" :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" />
+      <Table :scroll="{ x: 1500 }" :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" />
     </Flex>
   </div>
 </template>
