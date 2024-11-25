@@ -394,7 +394,7 @@ const columnsSort = [
     title: 'Name',
     dataIndex: 'name',
     sorter: (a: TableDataType, b: TableDataType) => a.name.length - b.name.length,
-    sortDirections: ['descend'],
+    sortDirections: ['descend']
   },
   {
     title: 'Age',
@@ -690,7 +690,7 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
   companyName: 'SoftLake Co',
   gender: 'M'
 }))
-const dataSourceSort  = reactive([
+const dataSourceSort = reactive([
   {
     key: '1',
     name: 'John Brown',

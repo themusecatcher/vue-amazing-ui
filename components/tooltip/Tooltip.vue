@@ -26,6 +26,7 @@ interface Props {
   transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
   showDelay?: number // 文字提示显示的延迟时间，单位 ms
   hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms
+  showControl?: boolean // 只使用 show 属性控制显示隐藏，trigger: hover 时生效，此时移入移出将不会出发显示隐藏，全部由 show 属性控制显隐
   show?: boolean // (v-model) 文字提示是否显示
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -45,9 +46,10 @@ const props = withDefaults(defineProps<Props>(), {
   transitionDuration: 100,
   showDelay: 100,
   hideDelay: 100,
+  showControl: false,
   show: false
 })
-const tooltipVisible = ref<boolean>(false) // tooltip 显示隐藏标识
+const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
 const top = ref<number>(0) // 提示框 top 定位
@@ -118,7 +120,7 @@ watch(
   }
 )
 watchEffect(() => {
-  tooltipVisible.value = props.show
+  tooltipShow.value = props.show
 })
 onMounted(() => {
   observeScroll()
@@ -185,7 +187,7 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
 }
 // 更新文字提示位置
 function updatePosition() {
-  tooltipVisible.value && getPosition()
+  tooltipShow.value && getPosition()
 }
 // 计算文字提示位置
 async function getPosition() {
@@ -340,9 +342,9 @@ function getPlacement(): string {
 }
 function onShow() {
   tooltipTimer.value && cancelRaf(tooltipTimer.value)
-  if (!tooltipVisible.value) {
+  if (!tooltipShow.value) {
     tooltipTimer.value = rafTimeout(() => {
-      tooltipVisible.value = true
+      tooltipShow.value = true
       getPosition()
       emits('update:show', true)
       emits('openChange', true)
@@ -351,23 +353,33 @@ function onShow() {
 }
 function onHide(): void {
   tooltipTimer.value && cancelRaf(tooltipTimer.value)
-  if (tooltipVisible.value) {
+  if (tooltipShow.value) {
     tooltipTimer.value = rafTimeout(() => {
-      tooltipVisible.value = false
+      tooltipShow.value = false
       emits('update:show', false)
       emits('openChange', false)
     }, props.hideDelay)
   }
 }
 function toggleVisible() {
-  if (!tooltipVisible.value) {
+  if (!tooltipShow.value) {
     onShow()
   } else {
     onHide()
   }
 }
+function onEnterWrap() {
+  if (showTooltip.value && props.trigger === 'hover' && !props.showControl) {
+    onShow()
+  }
+}
+function onLeaveWrap() {
+  if (showTooltip.value && props.trigger === 'hover' && !props.showControl) {
+    onHide()
+  }
+}
 function onEnterTooltip() {
-  if (props.trigger === 'hover') {
+  if (props.trigger === 'hover' && !props.showControl) {
     onShow()
   }
   if (props.trigger === 'click') {
@@ -375,7 +387,7 @@ function onEnterTooltip() {
   }
 }
 function onLeaveTooltip() {
-  if (props.trigger === 'hover') {
+  if (props.trigger === 'hover' && !props.showControl) {
     onHide()
   }
   if (props.trigger === 'click') {
@@ -400,8 +412,8 @@ defineExpose({
   <div
     class="m-tooltip-wrap"
     :style="`--tooltip-max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor}; --transition-duration: ${transitionDuration}ms;`"
-    @mouseenter="showTooltip && trigger === 'hover' ? onShow() : () => false"
-    @mouseleave="showTooltip && trigger === 'hover' ? onHide() : () => false"
+    @mouseenter="onEnterWrap"
+    @mouseleave="onLeaveWrap"
   >
     <Transition
       name="zoom"
@@ -413,7 +425,7 @@ defineExpose({
       leave-to-class="zoom-leave zoom-leave-active"
     >
       <div
-        v-show="showTooltip && tooltipVisible"
+        v-show="showTooltip && tooltipShow"
         ref="tooltipRef"
         tabindex="1"
         class="m-tooltip-card"
@@ -422,7 +434,7 @@ defineExpose({
         @blur="trigger === 'click' && activeBlur ? onHide() : () => false"
         @mouseenter="onEnterTooltip"
         @mouseleave="onLeaveTooltip"
-        @keydown.esc="trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
+        @keydown.esc="trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
       >
         <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
           <slot name="tooltip">{{ tooltip }}</slot>
@@ -437,9 +449,9 @@ defineExpose({
       :style="contentStyle"
       @click="showTooltip && trigger === 'click' ? toggleVisible() : () => false"
       @keydown.enter="showTooltip && trigger === 'click' && keyboard ? toggleVisible() : () => false"
-      @keydown.esc="showTooltip && trigger === 'click' && keyboard && tooltipVisible ? onHide() : () => false"
-      @mouseenter="showTooltip && trigger === 'click' && tooltipVisible ? onEnterContent() : () => false"
-      @mouseleave="showTooltip && trigger === 'click' && tooltipVisible ? onLeaveContent() : () => false"
+      @keydown.esc="showTooltip && trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
+      @mouseenter="showTooltip && trigger === 'click' && tooltipShow ? onEnterContent() : () => false"
+      @mouseleave="showTooltip && trigger === 'click' && tooltipShow ? onLeaveContent() : () => false"
     >
       <slot>{{ content }}</slot>
     </span>
