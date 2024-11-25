@@ -3,6 +3,7 @@ import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 const loading = ref(false)
 const tableLoading = ref(false)
+const customStyleBordered = ref(true)
 const sizeBordered = ref(true)
 const alignBordered = ref(true)
 const stripedBordered = ref(true)
@@ -76,6 +77,12 @@ const columns = reactive([
     width: 150,
     key: 'action'
   }
+])
+const columnsCustomStyle = reactive([
+  { title: 'Name', dataIndex: 'name' },
+  { title: 'Age', dataIndex: 'age', className: 'age' },
+  { title: 'Job', dataIndex: 'job' },
+  { title: 'Address', dataIndex: 'address' }
 ])
 const columnsSize = reactive([
   { title: 'Name', dataIndex: 'name' },
@@ -418,6 +425,37 @@ const dataSource = ref([
     address: 'Los Angeles'
   }
 ])
+const dataSourceCustomStyle = ref([
+  {
+    key: '1',
+    name: 'Stephen Curry',
+    age: 30,
+    job: 'Player',
+    address: 'Chase Center, GSW'
+  },
+  {
+    key: '2',
+    name: 'the Muse Catcher',
+    age: 24,
+    job: 'None',
+    address: 'Beijing, China'
+  },
+  {
+    key: '3',
+    name: 'Wonder Woman',
+    age: 32,
+    job: 'Hero',
+    address: 'Tel Aviv, Israel'
+  }
+])
+const rowClassName = (record: any, rowIndex: number) => {
+  if (record.age > 30) {
+    return 'older-row'
+  } else if (rowIndex % 2 === 1) {
+    return 'even-row'
+  }
+  return ''
+}
 const dataSourceSize = ref([
   {
     key: '1',
@@ -757,6 +795,17 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
         </template>
       </template>
     </Table>
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <h3 class="mb10">使用 rowClassName 和 Column.className 自定义表格样式</h3>
+    <Flex vertical>
+      <Space align="center"> bordered: <Switch v-model="customStyleBordered" /> </Space>
+      <Table
+        :columns="columnsCustomStyle"
+        :data-source="dataSourceCustomStyle"
+        :row-class-name="rowClassName"
+        :bordered="customStyleBordered"
+      />
+    </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <h3 class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</h3>
     <Flex vertical>
@@ -959,6 +1008,15 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
   </div>
 </template>
 <style lang="less" scoped>
+:deep(.even-row td) {
+  color: #1677ff !important;
+}
+:deep(.age) {
+  color: #09c8ce !important;
+}
+:deep(.older-row .age) {
+  color: #eb2f96 !important;
+}
 .editable-cell {
   .cell-icon {
     display: none;
