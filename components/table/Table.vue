@@ -404,8 +404,8 @@ function getComputedValue(column: Column, key: keyof Props) {
 const sortColumn = ref<string | null>(null) // 排序列
 const sortSymbol = ref<string | null>(null) // 排序标识
 const sortHover = ref<string | null>(null) // 鼠标悬浮的排序列标识
-const tableCellSorterStyle = ref<CSSProperties>({})
-const sortTooltip = computed(() => { //  sorter 排序提示文本
+const sortTooltip = computed(() => {
+  //  sorter 排序提示文本
   if (sortSymbol.value === null) {
     return '点击升序'
   } else if (sortSymbol.value === 'ascend') {
@@ -416,7 +416,6 @@ const sortTooltip = computed(() => { //  sorter 排序提示文本
 })
 // 点击 th 单元格进行排序
 function onSorter(column: Column) {
-  
   if (sortSymbol.value === null) {
     displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
     sortColumn.value = column.dataIndex
@@ -431,15 +430,10 @@ function onSorter(column: Column) {
     sortSymbol.value = null
   }
 }
-function onEnterSorter(e: MouseEvent, dataIndex: string) {
-  tableCellSorterStyle.value = {
-    height: `${(e.target as HTMLElement)}px`
-  }
+function onEnterSorter(dataIndex: string) {
   sortHover.value = dataIndex
 }
 function onLeaveSorter() {
-  console.log('leave')
-  tableCellSorterStyle.value = {}
   sortHover.value = null
 }
 // 检查是否是左固定列的最后一列
@@ -688,21 +682,19 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
                         }
                       ]"
-                      :style="[
-                        tableCellFixStyle(column),
-                        column.sorter && showSorterTooltip && sortHover === column.dataIndex ? tableCellSorterStyle : {}
-                      ]"
+                      :style="tableCellFixStyle(column)"
                       :rowspan="column.rowSpan"
                       :colspan="column.colSpan"
                       :colstart="column.colStart"
                       :colend="column.colEnd"
-                      @mouseenter="column.sorter ? onEnterSorter($event, column.dataIndex) : () => false"
+                      @mouseenter="column.sorter ? onEnterSorter(column.dataIndex) : () => false"
                       @mouseleave="column.sorter ? onLeaveSorter() : () => false"
                       @click="column.sorter ? onSorter(column) : () => false"
                     >
                       <Tooltip
                         v-if="column.sorter"
-                        style="width: 100%; height: 100%;"
+                        style="width: 100%"
+                        show-control
                         :show="sortHover === column.dataIndex"
                         :content-style="{ width: '100%' }"
                         :tooltip="showSorterTooltip ? sortTooltip : undefined"
@@ -928,22 +920,20 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-cell-fix-right-first': checkFixRightFirst(columns, column, colIndex)
                         }
                       ]"
-                      :style="[
-                        tableCellFixStyle(column),
-                        column.sorter && showSorterTooltip && sortHover === column.dataIndex ? tableCellSorterStyle : {}
-                      ]"
+                      :style="tableCellFixStyle(column)"
                       :rowspan="column.rowSpan"
                       :colspan="column.colSpan"
                       :colstart="column.colStart"
                       :colend="column.colEnd"
                       :title="column.ellipsis && xScrollable ? 'column.title' : undefined"
-                      @mouseenter="column.sorter ? onEnterSorter($event, column.dataIndex) : () => false"
+                      @mouseenter="column.sorter ? onEnterSorter(column.dataIndex) : () => false"
                       @mouseleave="column.sorter ? onLeaveSorter() : () => false"
                       @click="column.sorter ? onSorter(column) : () => false"
                     >
                       <Tooltip
                         v-if="column.sorter"
-                        style="width: 100%; height: 100%;"
+                        style="width: 100%"
+                        show-control
                         :show="sortHover === column.dataIndex"
                         :content-style="{ width: '100%' }"
                         :tooltip="showSorterTooltip ? sortTooltip : undefined"

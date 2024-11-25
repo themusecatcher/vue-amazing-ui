@@ -55,8 +55,6 @@ const memoMouseX = ref<number>(0) // 鼠标选中并按下水平滚动条时的�
 const horizontalContentStyle = { width: 'fit-content' } // 水平滚动时内容区域默认样式
 const yTrackHover = ref(false) // 鼠标是否在垂直滚动条上
 const xTrackHover = ref(false) // 鼠标是否在水平滚动条上
-const yTrackLeave = ref(false) // 鼠标在按下滚动条并拖动时是否离开垂直滚动条
-const xTrackLeave = ref(false) // 鼠标在按下滚动条并拖动时是否离开水平滚动条
 const emits = defineEmits(['scroll', 'scrollend'])
 const autoShowTrack = computed(() => {
   return props.trigger === 'hover' && props.autoHide
@@ -170,7 +168,7 @@ function xScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
   emits('scrollend', e, direction)
 }
 function hideYScrollbar() {
-  if (props.trigger === 'hover' && props.autoHide && !xTrackHover.value) {
+  if (props.trigger === 'hover' && props.autoHide && !yTrackHover.value) {
     showYTrack.value = false
   }
   if (props.trigger === 'hover' && !props.autoHide && !mouseEnter.value) {
@@ -252,10 +250,8 @@ function onEnterYTrack() {
   yTrackHover.value = true
 }
 function onLeaveYTrack() {
-  if (trackYPressed.value) {
-    yTrackLeave.value = true
-  } else {
-    yTrackHover.value = false
+  yTrackHover.value = false
+  if (autoShowTrack.value) {
     debounceHideYScrollbar()
   }
 }
@@ -263,10 +259,8 @@ function onEnterXTrack() {
   xTrackHover.value = true
 }
 function onLeaveXTrack() {
-  if (trackXPressed.value) {
-    xTrackLeave.value = true
-  } else {
-    xTrackHover.value = false
+  xTrackHover.value = false
+  if (autoShowTrack.value) {
     debounceHideXScrollbar()
   }
 }
@@ -287,14 +281,12 @@ function onYTrackMouseDown(e: MouseEvent) {
   window.onmouseup = () => {
     window.onmousemove = null
     trackYPressed.value = false
-    if (props.trigger === 'hover' && mousePressedLeave.value) {
+    if (autoShowTrack.value && !yTrackHover.value) {
+      debounceHideYScrollbar()
+    } else if (props.trigger === 'hover' && !props.autoHide && mousePressedLeave.value) {
       mousePressedLeave.value = false
+      debounceHideYScrollbar()
     }
-    if (autoShowTrack.value && yTrackLeave.value) {
-      yTrackLeave.value = false
-      yTrackHover.value = false
-    }
-    debounceHideYScrollbar()
   }
 }
 function onXTrackMouseDown(e: MouseEvent) {
@@ -314,14 +306,12 @@ function onXTrackMouseDown(e: MouseEvent) {
   window.onmouseup = () => {
     window.onmousemove = null
     trackXPressed.value = false
-    if (props.trigger === 'hover' && mousePressedLeave.value) {
+    if (autoShowTrack.value && !xTrackHover.value) {
+      debounceHideXScrollbar()
+    } else if (props.trigger === 'hover' && !props.autoHide && mousePressedLeave.value) {
       mousePressedLeave.value = false
+      debounceHideXScrollbar()
     }
-    if (autoShowTrack.value && xTrackLeave.value) {
-      xTrackLeave.value = false
-      xTrackHover.value = false
-    }
-    debounceHideXScrollbar()
   }
 }
 function scrollTo(...args: any[]) {
