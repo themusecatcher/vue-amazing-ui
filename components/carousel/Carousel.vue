@@ -169,7 +169,6 @@ function onKeyboard(e: KeyboardEvent) {
 }
 // 当用户导航到新页面、切换标签页、关闭标签页、最小化或关闭浏览器，或者在移动设备上从浏览器切换到不同的应用程序时，暂停切换
 function visibilityChange() {
-  console.log('visibilityState', document.visibilityState)
   const visibility = document.visibilityState
   if (visibility === 'hidden') {
     // hidden
@@ -186,13 +185,13 @@ function onStart() {
     // 超过一条时滑动
     stopCarousel.value = false
     autoSlide() // 自动滑动轮播
-    console.log('Carousel Start')
+    // console.log('Carousel Start')
   }
 }
 function onStop() {
   slideTimer.value && cancelRaf(slideTimer.value)
   stopCarousel.value = true
-  console.log('Carousel Stop')
+  // console.log('Carousel Stop')
 }
 function autoSlide() {
   if (!stopCarousel.value) {

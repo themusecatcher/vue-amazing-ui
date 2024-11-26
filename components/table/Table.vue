@@ -21,9 +21,11 @@ interface Column {
   fixed?: 'left' | 'right' // 列是否固定，列表头分组时，只需设置所有叶子节点是否固定
   slot?: string // 列插槽名称索引
   children?: Column[] // 列表头分组的子节点
-  showSorterTooltip?: boolean // 表头显示下一次排序的 tooltip 提示，较高优先级
-  tooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props，用于单独配置某列的排序弹出提示，较高优先级
-  sorter?: Function // 升序排序函数，参考 Array.sort 的 compareFunction
+  showSorterTooltip?: boolean // 表头是否显示下一次排序的 tooltip 提示，较高优先级
+  sortTooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props，用于单独配置某列的排序弹出提示，较高优先级
+  defaultSortOrder?: 'ascend' | 'descend' // 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效
+  sortDirections?: ('ascend' | 'descend')[] // 支持的排序方式
+  sorter?: Function // 升序排序函数，参考 Array.sort 的 compareFunction，当列表头分组时，请将排序设置在叶子节点
   customCell?: (record: any, rowIndex: number, column: Column) => object // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
@@ -45,7 +47,8 @@ interface Props {
   emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据
   ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于全局配置文本省略
   showSorterTooltip?: boolean // 表头是否显示下一次排序的 tooltip 提示
-  tooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props，用于全局配置排序弹出提示
+  sortDirections?: ('ascend' | 'descend')[] // 支持的排序方式
+  sortTooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props，用于全局配置排序弹出提示
   showPagination?: boolean // 是否显示分页
   pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
   scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
@@ -74,7 +77,8 @@ const props = withDefaults(defineProps<Props>(), {
   emptyProps: () => ({}),
   ellipsisProps: () => ({}),
   showSorterTooltip: true,
-  tooltipProps: () => ({}),
+  sortDirections: () => ['ascend', 'descend'],
+  sortTooltipProps: () => ({}),
   showPagination: true,
   pagination: () => ({}),
   scroll: undefined,
@@ -93,15 +97,16 @@ interface Coords {
   row: number // 行索引坐标
   col: number // 列索引坐标
 }
-const tableRef = ref() // table 组件 DOM 引用
+const tableRef = ref() // table 组件模板引用
 const tablePage = ref<number>(1) // 分页器当前页数
 const tablePageSize = ref<number>(10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const displayDataSource = ref<any[]>([]) // 当前展示的表格数据
 const tableExpandedRowKeys = ref<(string | number)[]>([])
-const ellipsisRef = ref() // 文本省略组件 DOM 引用
-const scrollbarRef = ref() // 水平滚动容器 DOM 引用
+const tooltipRef = ref() // 排序 tooltip 提示组件模板引用
+const ellipsisRef = ref() // 文本省略组件模板引用
+const scrollbarRef = ref() // 水平滚动容器模板引用
 const scrollLeft = ref<number>(0) // 表格水平滚动时距容器左边位置
 const scrollWidth = ref<number>(0) // 表格水平滚动元素宽度，包括溢出滚动，不包括边框
 const scrollHeight = ref<number>(0) // 表格垂直滚动元素高度，包括溢出滚动，不包括边框
@@ -112,7 +117,7 @@ const colExpandRef = ref() // 表格展开列 col 的引用
 const colRef = ref() // 表格除展开列以外 col 的引用
 const thColumnsLeaf = ref<Column[]>([]) // thColumns 的所有叶子节点,包括 colSpan: 0 的列
 const slotsExist = useSlotsExist(['header', 'footer'])
-const emits = defineEmits(['expand', 'expandedRowsChange', 'update:expandedRowKeys', 'change'])
+const emits = defineEmits(['expand', 'expandedRowsChange', 'update:expandedRowKeys', 'sortChange', 'change'])
 // 是否设置了水平滚动
 const horizontalScroll = computed(() => {
   return props.scroll?.x !== undefined
@@ -244,8 +249,6 @@ const totalDataSource = computed(() => {
   }
   return total
 })
-// 当前展示的表格数据
-
 watchEffect(() => {
   if (props.showPagination) {
     if ('page' in props.pagination) {
@@ -264,18 +267,20 @@ watchEffect(() => {
 })
 onMounted(() => {
   getScrollState()
-  ellipsisObserveScroll() // 父组件挂载完成后，触发 ellipsis 组件的滚动元素监听
+  tooltipObserveScroll()
+  ellipsisObserveScroll()
 })
 // 监听表格尺寸变化，更新滚动状态
 useResizeObserver(tableRef, () => {
   getScrollState()
 })
+// 获取展示的表格数据
 function getDisplayDataSource() {
   // 展示分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
   if (props.showPagination && totalDataSource.value === props.dataSource.length) {
     return props.dataSource.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
   }
-  return (displayDataSource.value = props.dataSource)
+  return props.dataSource
 }
 // 获取滚动状态信息
 function getScrollState() {
@@ -290,6 +295,13 @@ function getScrollState() {
       scrollHeight.value = scrollData.scrollHeight
       clientHeight.value = scrollData.clientHeight
     }
+  }
+}
+// 在组件挂载后主动触发 tooltip 组件弹出提示的滚动元素监听
+async function tooltipObserveScroll() {
+  await nextTick()
+  if (tooltipRef.value) {
+    tooltipRef.value.forEach((el: any) => el.observeScroll())
   }
 }
 // 在组件挂载后主动触发 ellipsis 组件弹出提示的滚动元素监听
@@ -399,42 +411,161 @@ function getComputedValue(column: Column, key: keyof Props) {
   if (column?.[key as keyof Column] !== undefined) {
     computedValue = column[key as keyof Column]
   }
-  return computedValue as object
+  return computedValue as object | ('ascend' | 'descend')[]
 }
-const sortColumn = ref<string | null>(null) // 排序列
-const sortSymbol = ref<string | null>(null) // 排序标识
-const sortHover = ref<string | null>(null) // 鼠标悬浮的排序列标识
-const sortTooltip = computed(() => {
-  //  sorter 排序提示文本
-  if (sortSymbol.value === null) {
-    return '点击升序'
-  } else if (sortSymbol.value === 'ascend') {
-    return '点击降序'
-  } else {
-    return '取消排序'
+// 表格排序的相关数据和方法
+const disabledDefaultSort = ref<boolean>(false) // 是否禁用默认排序
+const sortColumnDataIndex = ref<string | null>(null) // 排序列的数据索引
+const sortSymbol = ref<'ascend' | 'descend' | null>(null) // 排序标识
+const sortHoverDataIndex = ref<string | null>(null) // 鼠标悬浮排序列的数据索引
+watchEffect(() => {
+  if (!disabledDefaultSort.value) {
+    initDefaultSort()
   }
 })
-// 点击 th 单元格进行排序
-function onSorter(column: Column) {
-  if (sortSymbol.value === null) {
-    displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
-    sortColumn.value = column.dataIndex
-    sortSymbol.value = 'ascend'
-  } else if (sortSymbol.value === 'ascend') {
-    displayDataSource.value.reverse()
-    sortColumn.value = column.dataIndex
-    sortSymbol.value = 'descend'
-  } else {
-    displayDataSource.value = getDisplayDataSource()
-    sortColumn.value = null
-    sortSymbol.value = null
+// 初始化默认排序时的数据索引，标识和展示数据
+function initDefaultSort() {
+  const thLeaf = thColumnsLeaf.value.filter((column: Column) => column.colSpan !== 0)
+  const len = thLeaf.length
+  for (let i = 0; i < len; i++) {
+    const column = thLeaf[i]
+    if (column.defaultSortOrder !== undefined) {
+      sortColumnDataIndex.value = column.dataIndex
+      sortSymbol.value = column.defaultSortOrder
+      displayDataSource.value = displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+      if (column.defaultSortOrder === 'descend') {
+        displayDataSource.value.reverse()
+      }
+      return
+    }
   }
 }
+// 获取 sorter 排序提示文本
+function getSortTooltip(column: Column) {
+  const sortTooltipMap = {
+    ascend: '点击升序',
+    descend: '点击降序'
+  }
+  const sortDirections = getComputedValue(column, 'sortDirections') as ('ascend' | 'descend')[]
+  if (!disabledDefaultSort.value && sortColumnDataIndex.value === column.dataIndex) {
+    // 默认排序列
+    if (sortDirections.length === 2) {
+      if (column.defaultSortOrder === sortDirections[0]) {
+        return sortTooltipMap[sortDirections[1]]
+      } else {
+        return '取消排序'
+      }
+    } else {
+      // sortDirections.length === 1
+      return '取消排序'
+    }
+  } else {
+    if (sortColumnDataIndex.value === column.dataIndex) {
+      if (sortSymbol.value === 'ascend') {
+        if (sortDirections.length === 1) {
+          // ['ascend']
+          return '取消排序'
+        } else {
+          // sortDirections.length === 2
+          if (sortDirections[0] === 'ascend') {
+            // ['ascend', 'descend']
+            return '点击降序'
+          } else {
+            return '取消排序'
+          }
+        }
+      } else {
+        // descend
+        if (sortDirections.length === 1) {
+          return '取消排序'
+        } else {
+          // sortDirections.length === 2
+          if (sortDirections[0] === 'ascend') {
+            // ['ascend', 'descend']
+            return '取消排序'
+          } else {
+            // ['descend', 'ascend']
+            return '点击升序'
+          }
+        }
+      }
+    } else {
+      if (sortDirections.length > 0) {
+        return sortTooltipMap[sortDirections[0]]
+      } else {
+        return undefined
+      }
+    }
+  }
+}
+// 点击 th 单元格操作排序
+function onSorter(column: Column) {
+  if (!disabledDefaultSort.value) {
+    disabledDefaultSort.value = true
+  }
+  const sortDirections = getComputedValue(column, 'sortDirections') as ('ascend' | 'descend')[]
+  const dataSource = getDisplayDataSource()
+  if (sortColumnDataIndex.value === column.dataIndex) {
+    if (sortSymbol.value === 'ascend') {
+      if (sortDirections.length === 1) {
+        // ['ascend']
+        sortColumnDataIndex.value = null
+        sortSymbol.value = null
+        displayDataSource.value = dataSource
+      } else {
+        // sortDirections.length === 2
+        if (sortDirections[0] === 'ascend') {
+          sortSymbol.value = 'descend'
+          displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+          displayDataSource.value.reverse()
+        } else {
+          // sortDirections[1] === 'ascend'
+          sortColumnDataIndex.value = null
+          sortSymbol.value = null
+          displayDataSource.value = dataSource
+        }
+      }
+    } else {
+      // descend
+      if (sortDirections.length === 1) {
+        // ['ascend', 'descend'] || ['descend']
+        sortColumnDataIndex.value = null
+        sortSymbol.value = null
+        displayDataSource.value = dataSource
+      } else {
+        // sortDirections.length === 2
+        if (sortDirections[0] === 'ascend') {
+          // ['ascend', 'descend']
+          sortColumnDataIndex.value = null
+          sortSymbol.value = null
+          displayDataSource.value = dataSource
+        } else {
+          // ['descend', 'ascend']
+          sortSymbol.value = 'ascend'
+          displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+        }
+      }
+    }
+  } else {
+    sortColumnDataIndex.value = column.dataIndex
+    if (sortDirections.length > 0) {
+      sortSymbol.value = sortDirections[0]
+      if (sortSymbol.value === 'ascend') {
+        displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+      } else {
+        // descend
+        displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+        displayDataSource.value.reverse()
+      }
+    }
+  }
+  emits('sortChange', column, displayDataSource.value)
+}
 function onEnterSorter(dataIndex: string) {
-  sortHover.value = dataIndex
+  sortHoverDataIndex.value = dataIndex
 }
 function onLeaveSorter() {
-  sortHover.value = null
+  sortHoverDataIndex.value = null
 }
 // 检查是否是左固定列的最后一列
 function checkFixLeftLast(columns: Column[], column: Column, index: number) {
@@ -672,7 +803,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         `${column.className}`,
                         {
                           'table-cell-has-sorter': column.sorter,
-                          'table-cell-sort': sortColumn === column.dataIndex,
+                          'table-cell-sort': sortColumnDataIndex === column.dataIndex,
                           'table-cell-align-left': column.align === 'left',
                           'table-cell-align-center': column.align === 'center',
                           'table-cell-align-right': column.align === 'right',
@@ -693,12 +824,14 @@ function onPaginationChange(page: number, pageSize: number) {
                     >
                       <Tooltip
                         v-if="column.sorter"
+                        ref="tooltipRef"
                         style="width: 100%"
                         show-control
-                        :show="sortHover === column.dataIndex"
+                        :show="sortHoverDataIndex === column.dataIndex"
                         :content-style="{ width: '100%' }"
-                        :tooltip="showSorterTooltip ? sortTooltip : undefined"
+                        :tooltip="getComputedValue(column, 'showSorterTooltip') ? getSortTooltip(column) : undefined"
                         :tooltip-style="{ fontWeight: 'normal' }"
+                        v-bind="getComputedValue(column, 'sortTooltipProps')"
                       >
                         <div class="table-cell-sorter">
                           <span class="table-cell-title">
@@ -714,8 +847,8 @@ function onPaginationChange(page: number, pageSize: number) {
                           <span
                             class="table-cell-arrow"
                             :class="{
-                              'ascend-arrow': sortSymbol === 'ascend',
-                              'descend-arrow': sortSymbol === 'descend'
+                              'ascend-arrow': sortColumnDataIndex === column.dataIndex && sortSymbol === 'ascend',
+                              'descend-arrow': sortColumnDataIndex === column.dataIndex && sortSymbol === 'descend'
                             }"
                           >
                             <svg
@@ -730,8 +863,6 @@ function onPaginationChange(page: number, pageSize: number) {
                                 <path
                                   d="M8 14a.75.75 0 0 1-.75-.75V4.463L4.309 7.75a.75.75 0 0 1-1.118-1L7.441 2A.75.75 0 0 1 8.56 2l4.25 4.75a.75.75 0 1 1-1.118 1L8.75 4.463v8.787A.75.75 0 0 1 8 14z"
                                   fill="currentColor"
-                                  data-darkreader-inline-fill=""
-                                  style="--darkreader-inline-fill: currentColor"
                                 ></path>
                               </g>
                             </svg>
@@ -792,7 +923,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         :class="[
                           `${column.className}`,
                           {
-                            'table-cell-sort': sortColumn === column.dataIndex,
+                            'table-cell-sort': sortColumnDataIndex === column.dataIndex,
                             'table-cell-align-left': column.align === 'left',
                             'table-cell-align-center': column.align === 'center',
                             'table-cell-align-right': column.align === 'right',
@@ -910,7 +1041,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         `${column.className}`,
                         {
                           'table-cell-has-sorter': column.sorter,
-                          'table-cell-sort': sortColumn === column.dataIndex,
+                          'table-cell-sort': sortColumnDataIndex === column.dataIndex,
                           'table-cell-align-left': column.align === 'left',
                           'table-cell-align-center': column.align === 'center',
                           'table-cell-align-right': column.align === 'right',
@@ -925,19 +1056,21 @@ function onPaginationChange(page: number, pageSize: number) {
                       :colspan="column.colSpan"
                       :colstart="column.colStart"
                       :colend="column.colEnd"
-                      :title="column.ellipsis && xScrollable ? 'column.title' : undefined"
+                      :title="column.ellipsis && xScrollable ? column.title : undefined"
                       @mouseenter="column.sorter ? onEnterSorter(column.dataIndex) : () => false"
                       @mouseleave="column.sorter ? onLeaveSorter() : () => false"
                       @click="column.sorter ? onSorter(column) : () => false"
                     >
                       <Tooltip
                         v-if="column.sorter"
+                        ref="tooltipRef"
                         style="width: 100%"
                         show-control
-                        :show="sortHover === column.dataIndex"
+                        :show="sortHoverDataIndex === column.dataIndex"
                         :content-style="{ width: '100%' }"
-                        :tooltip="showSorterTooltip ? sortTooltip : undefined"
+                        :tooltip="getComputedValue(column, 'showSorterTooltip') ? getSortTooltip(column) : undefined"
                         :tooltip-style="{ fontWeight: 'normal' }"
+                        v-bind="getComputedValue(column, 'sortTooltipProps')"
                       >
                         <div class="table-cell-sorter">
                           <span class="table-cell-title">
@@ -958,8 +1091,8 @@ function onPaginationChange(page: number, pageSize: number) {
                           <span
                             class="table-cell-arrow"
                             :class="{
-                              'ascend-arrow': sortSymbol === 'ascend',
-                              'descend-arrow': sortSymbol === 'descend'
+                              'ascend-arrow': sortColumnDataIndex === column.dataIndex && sortSymbol === 'ascend',
+                              'descend-arrow': sortColumnDataIndex === column.dataIndex && sortSymbol === 'descend'
                             }"
                           >
                             <svg
@@ -974,8 +1107,6 @@ function onPaginationChange(page: number, pageSize: number) {
                                 <path
                                   d="M8 14a.75.75 0 0 1-.75-.75V4.463L4.309 7.75a.75.75 0 0 1-1.118-1L7.441 2A.75.75 0 0 1 8.56 2l4.25 4.75a.75.75 0 1 1-1.118 1L8.75 4.463v8.787A.75.75 0 0 1 8 14z"
                                   fill="currentColor"
-                                  data-darkreader-inline-fill=""
-                                  style="--darkreader-inline-fill: currentColor"
                                 ></path>
                               </g>
                             </svg>
@@ -1058,7 +1189,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         :class="[
                           `${column.className}`,
                           {
-                            'table-cell-sort': sortColumn === column.dataIndex,
+                            'table-cell-sort': sortColumnDataIndex === column.dataIndex,
                             'table-cell-align-left': column.align === 'left',
                             'table-cell-align-center': column.align === 'center',
                             'table-cell-align-right': column.align === 'right',
@@ -1261,6 +1392,16 @@ function onPaginationChange(page: number, pageSize: number) {
           transition: all 0.3s;
           &:hover {
             background: #f0f0f0;
+            .table-cell-sorter {
+              .table-cell-arrow {
+                &:not(.ascend-arrow, .descend-arrow) {
+                  color: rgba(0, 0, 0, 0.57);
+                }
+              }
+            }
+          }
+          :deep(.m-tooltip-card) {
+            cursor: auto;
           }
           .table-cell-sorter {
             display: flex;
@@ -1270,6 +1411,7 @@ function onPaginationChange(page: number, pageSize: number) {
               position: relative;
               z-index: 1;
               flex: 1;
+              max-width: 100%;
             }
             .table-cell-arrow {
               display: inline-flex;
@@ -1277,9 +1419,6 @@ function onPaginationChange(page: number, pageSize: number) {
               margin-left: 4px;
               color: rgba(0, 0, 0, 0.29);
               transition: all 0.3s;
-              &:hover {
-                color: rgba(0, 0, 0, 0.57);
-              }
               svg {
                 fill: currentColor;
               }

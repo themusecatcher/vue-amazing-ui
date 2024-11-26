@@ -435,6 +435,7 @@ defineExpose({
         @mouseenter="onEnterTooltip"
         @mouseleave="onLeaveTooltip"
         @keydown.esc="trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
+        @click.stop
       >
         <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
           <slot name="tooltip">{{ tooltip }}</slot>
@@ -576,7 +577,7 @@ defineExpose({
     }
     .arrow-bottom {
       left: 50%;
-      top: 12px;
+      top: 12.1px;
       transform: translateX(-50%) translateY(-100%) rotate(0deg);
       &::before {
         bottom: 0;

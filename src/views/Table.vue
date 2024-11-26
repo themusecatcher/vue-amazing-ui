@@ -393,31 +393,20 @@ const columnsSort = [
   {
     title: 'Name',
     dataIndex: 'name',
-    sorter: (a: TableDataType, b: TableDataType) => a.name.length - b.name.length,
+    sorter: (a: any, b: any) => a.name.length - b.name.length,
     sortDirections: ['descend']
   },
   {
     title: 'Age',
     dataIndex: 'age',
     defaultSortOrder: 'descend',
-    sorter: (a: TableDataType, b: TableDataType) => a.age - b.age
+    sorter: (a: any, b: any) => a.age - b.age
   },
   {
-    title: 'Address',
+    title: 'Address Address Address Address Address Address Address',
     dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London'
-      },
-      {
-        text: 'New York',
-        value: 'New York'
-      }
-    ],
-    filterMultiple: false,
-    onFilter: (value: string, record: TableDataType) => record.address.indexOf(value) === 0,
-    sorter: (a: TableDataType, b: TableDataType) => a.address.length - b.address.length,
+    ellipsis: true,
+    sorter: (a: any, b: any) => a.address.length - b.address.length,
     sortDirections: ['descend', 'ascend']
   }
 ]
@@ -695,7 +684,7 @@ const dataSourceSort = reactive([
     key: '1',
     name: 'John Brown',
     age: 32,
-    address: 'New York No. 1 Lake Park'
+    address: 'New York No. 1 Lake Park New York No. 1 Lake Park New York No. 1 Lake Park'
   },
   {
     key: '2',
@@ -707,13 +696,13 @@ const dataSourceSort = reactive([
     key: '3',
     name: 'Joe Black',
     age: 32,
-    address: 'Sidney No. 1 Lake Park'
+    address: 'Sidney No. 12 Lake Park'
   },
   {
     key: '4',
     name: 'Jim Red',
     age: 32,
-    address: 'London No. 2 Lake Park'
+    address: 'London No. 102 Lake Park'
   }
 ])
 onBeforeMount(() => {
@@ -780,6 +769,10 @@ const handleExpand = (expanded: boolean, record: any) => {
 }
 const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
   console.log('expandedRowsChange', expandedRows)
+}
+function onSortChange(column: any, currentDataSource: any[]) {
+  console.log('sort column', column)
+  console.log('sort currentDataSource', currentDataSource)
 }
 </script>
 <template>
@@ -1057,21 +1050,17 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
     <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
-      <a-table
-        :columns="columnsHeaderGroup"
-        :data-source="dataSourceHeaderGroup"
-        :bordered="groupBordered"
-        :scroll="{ x: 1500, y: 240 }"
-      />
       <Table
         :columns="columnsHeaderGroup"
         :data-source="dataSourceHeaderGroup"
         :bordered="groupBordered"
         :scroll="{ x: 1500, y: 240 }"
       />
-      <h2 class="mt30 mb10">表格排序</h2>
-      <a-table :scroll="{ x: 1500 }" :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" />
-      <Table :scroll="{ x: 1500 }" :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" />
+    </Flex>
+    <h2 class="mt30 mb10">表格排序</h2>
+    <Flex vertical>
+      <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
+      <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
     </Flex>
   </div>
 </template>
