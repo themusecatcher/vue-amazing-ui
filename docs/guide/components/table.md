@@ -2759,7 +2759,6 @@ ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https:/
 fixed? | 列是否固定 | 'left' &#124; 'right' | undefined
 slot? | 列插槽名称索引 | string | undefined
 children? | 列表头分组的子节点 | [Column](#column-type)[] | undefined
-
 showSorterTooltip? | 表头是否显示下一次排序的 `tooltip` 提示，较高优先级 | boolean | undefined
 sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于单独配置某列的排序弹出提示，较高优先级 | object | undefined
 defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' | undefined
