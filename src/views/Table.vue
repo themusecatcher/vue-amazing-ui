@@ -389,7 +389,7 @@ const columnsHeaderGroup = reactive([
     fixed: 'right'
   }
 ])
-const columnsSort = [
+const columnsSort = reactive([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -403,13 +403,12 @@ const columnsSort = [
     sorter: (a: any, b: any) => a.age - b.age
   },
   {
-    title: 'Address Address Address Address Address Address Address',
+    title: 'Address',
     dataIndex: 'address',
-    ellipsis: true,
     sorter: (a: any, b: any) => a.address.length - b.address.length,
     sortDirections: ['descend', 'ascend']
   }
-]
+])
 const dataSource = ref([
   {
     name: 'Stephen Curry',
@@ -679,30 +678,30 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
   companyName: 'SoftLake Co',
   gender: 'M'
 }))
-const dataSourceSort = reactive([
+const dataSourceSort = ref([
   {
     key: '1',
     name: 'John Brown',
     age: 32,
-    address: 'New York No. 1 Lake Park New York No. 1 Lake Park New York No. 1 Lake Park'
+    address: 'New York No.1 Lake Park'
   },
   {
     key: '2',
     name: 'Jim Green',
     age: 42,
-    address: 'London No. 1 Lake Park'
+    address: 'London No.1 Lake Park'
   },
   {
     key: '3',
     name: 'Joe Black',
     age: 32,
-    address: 'Sidney No. 12 Lake Park'
+    address: 'Sidney No.12 Lake Park'
   },
   {
     key: '4',
     name: 'Jim Red',
     age: 32,
-    address: 'London No. 102 Lake Park'
+    address: 'London No.102 Lake Park'
   }
 ])
 onBeforeMount(() => {
