@@ -110,7 +110,7 @@ import {
   watchTriggerable,
   watchWithFilter,
   whenever
-} from "./chunk-26UMRLEQ.js";
+} from "./chunk-MH7ECODU.js";
 import {
   Fragment,
   TransitionGroup,
@@ -141,7 +141,7 @@ import {
 } from "./chunk-5TCDO6LD.js";
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/@vueuse+core@11.2.0_vue@3.5.13_typescript@5.6.3_/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@11.3.0_vue@3.5.13_typescript@5.6.3_/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {
@@ -389,8 +389,23 @@ function onClickOutside(target, handler, options = {}) {
       }
     });
   };
+  function hasMultipleRoots(target2) {
+    const vm = toValue(target2);
+    return vm && vm.$.subTree.shapeFlag === 16;
+  }
+  function checkMultipleRoots(target2, event) {
+    const vm = toValue(target2);
+    const children = vm.$.subTree && vm.$.subTree.children;
+    if (children == null || !Array.isArray(children))
+      return false;
+    return children.some((child) => child.el === event.target || event.composedPath().includes(child.el));
+  }
   const listener = (event) => {
     const el = unrefElement(target);
+    if (event.target == null)
+      return;
+    if (!(el instanceof Element) && hasMultipleRoots(target) && checkMultipleRoots(target, event))
+      return;
     if (!el || el === event.target || event.composedPath().includes(el))
       return;
     if (event.detail === 0)
@@ -3352,7 +3367,8 @@ function useFetch(url, ...args) {
     if (config.payload) {
       const headers = headersToObject(defaultFetchOptions.headers);
       const payload = toValue(config.payload);
-      if (!config.payloadType && payload && Object.getPrototypeOf(payload) === Object.prototype && !(payload instanceof FormData))
+      const proto = Object.getPrototypeOf(payload);
+      if (!config.payloadType && payload && (proto === Object.prototype || Array.isArray(proto)) && !(payload instanceof FormData))
         config.payloadType = "json";
       if (config.payloadType)
         headers["Content-Type"] = (_a2 = payloadMapping[config.payloadType]) != null ? _a2 : config.payloadType;
@@ -3495,7 +3511,7 @@ function useFetch(url, ...args) {
   }
   function waitUntilFinished() {
     return new Promise((resolve, reject) => {
-      until(isFinished).toBe(true).then(() => resolve(shell)).catch((error2) => reject(error2));
+      until(isFinished).toBe(true).then(() => resolve(shell)).catch(reject);
     });
   }
   function setType(type) {
@@ -3522,8 +3538,12 @@ function useFetch(url, ...args) {
   };
 }
 function joinPaths(start, end) {
-  if (!start.endsWith("/") && !end.startsWith("/"))
+  if (!start.endsWith("/") && !end.startsWith("/")) {
     return `${start}/${end}`;
+  }
+  if (start.endsWith("/") && end.startsWith("/")) {
+    return `${start.slice(0, -1)}${end}`;
+  }
   return `${start}${end}`;
 }
 var DEFAULT_OPTIONS = {
@@ -4764,6 +4784,8 @@ function useMouse(options = {}) {
     eventFilter
   } = options;
   let _prevMouseEvent = null;
+  let _prevScrollX = 0;
+  let _prevScrollY = 0;
   const x = ref(initialValue.x);
   const y = ref(initialValue.y);
   const sourceType = ref(null);
@@ -4774,6 +4796,10 @@ function useMouse(options = {}) {
     if (result) {
       [x.value, y.value] = result;
       sourceType.value = "mouse";
+    }
+    if (window2) {
+      _prevScrollX = window2.scrollX;
+      _prevScrollY = window2.scrollY;
     }
   };
   const touchHandler = (event) => {
@@ -4790,8 +4816,8 @@ function useMouse(options = {}) {
       return;
     const pos = extractor(_prevMouseEvent);
     if (_prevMouseEvent instanceof MouseEvent && pos) {
-      x.value = pos[0] + window2.scrollX;
-      y.value = pos[1] + window2.scrollY;
+      x.value = pos[0] + window2.scrollX - _prevScrollX;
+      y.value = pos[1] + window2.scrollY - _prevScrollY;
     }
   };
   const reset = () => {
@@ -6166,8 +6192,6 @@ function useSwipe(target, options = {}) {
     useEventListener(target, "touchstart", (e) => {
       if (e.touches.length !== 1)
         return;
-      if (listenerOptions.capture && !listenerOptions.passive)
-        e.preventDefault();
       const [x, y] = getTouchEventCoords(e);
       updateCoordsStart(x, y);
       updateCoordsEnd(x, y);
@@ -6178,6 +6202,8 @@ function useSwipe(target, options = {}) {
         return;
       const [x, y] = getTouchEventCoords(e);
       updateCoordsEnd(x, y);
+      if (listenerOptions.capture && !listenerOptions.passive && Math.abs(diffX.value) > Math.abs(diffY.value))
+        e.preventDefault();
       if (!isSwiping.value && isThresholdExceeded.value)
         isSwiping.value = true;
       if (isSwiping.value)
@@ -6676,8 +6702,8 @@ function useUrlSearchParams(mode = "history", options = {}) {
     const hash = window2.location.hash || "#";
     const index = hash.indexOf("?");
     if (index > 0)
-      return `${hash.slice(0, index)}${stringified ? `?${stringified}` : ""}`;
-    return `${hash}${stringified ? `?${stringified}` : ""}`;
+      return `${window2.location.search || ""}${hash.slice(0, index)}${stringified ? `?${stringified}` : ""}`;
+    return `${window2.location.search || ""}${hash}${stringified ? `?${stringified}` : ""}`;
   }
   function read() {
     return new URLSearchParams(getRawParams());

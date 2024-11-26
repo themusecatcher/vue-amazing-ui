@@ -52,14 +52,14 @@ function handleOk() {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Button type="primary" @click="(open1 = true)">Open Dialog</Button>
+    <Button type="primary" @click="open1 = true">Open Dialog</Button>
     <Dialog v-model:open="open1" title="Title" @cancel="onCancel" @ok="onOk">
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
     </Dialog>
     <h2 class="mt30 mb10">自定义宽高</h2>
-    <Button type="primary" @click="(open2 = true)">Open Dialog</Button>
+    <Button type="primary" @click="open2 = true">Open Dialog</Button>
     <Dialog v-model:open="open2" :width="480" :height="180" @cancel="onCancel" @ok="onOk">
       <template #title>Title</template>
       <p>Bla bla ...</p>
@@ -68,9 +68,9 @@ function handleOk() {
     </Dialog>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space>
-      <Button type="primary" @click="(open3 = true)">Custom Body Class Dialog</Button>
-      <Button type="primary" @click="(open4 = true)">Custom Body & Mask Style Dialog</Button>
-      <Button type="primary" @click="(open5 = true)">Custom Title & Content Style Dialog</Button>
+      <Button type="primary" @click="open3 = true">Custom Body Class Dialog</Button>
+      <Button type="primary" @click="open4 = true">Custom Body & Mask Style Dialog</Button>
+      <Button type="primary" @click="open5 = true">Custom Title & Content Style Dialog</Button>
     </Space>
     <Dialog v-model:open="open3" title="Title" body-class="custom-class" @cancel="onCancel" @ok="onOk">
       <p>Bla bla ...</p>
@@ -113,7 +113,7 @@ function handleOk() {
       <p>Bla bla ...</p>
     </Dialog>
     <h2 class="mt30 mb10">自定义按钮</h2>
-    <Button type="primary" @click="(open6 = true)">Custom Btns Dialog</Button>
+    <Button type="primary" @click="open6 = true">Custom Btns Dialog</Button>
     <Dialog
       v-model:open="open6"
       title="Title"
@@ -129,14 +129,14 @@ function handleOk() {
       <p>Bla bla ...</p>
     </Dialog>
     <h2 class="mt30 mb10">隐藏底部按钮</h2>
-    <Button type="primary" @click="(open7 = true)">Open Dialog</Button>
+    <Button type="primary" @click="open7 = true">Open Dialog</Button>
     <Dialog v-model:open="open7" title="Title" :footer="false" @cancel="onCancel" @ok="onOk">
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
     </Dialog>
     <h2 class="mt30 mb10">切换全屏</h2>
-    <Button type="primary" @click="(open8 = true)">Open Dialog</Button>
+    <Button type="primary" @click="open8 = true">Open Dialog</Button>
     <Dialog v-model:open="open8" title="Title" switch-fullscreen @cancel="onCancel" @ok="onOk">
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
@@ -144,9 +144,9 @@ function handleOk() {
     </Dialog>
     <h2 class="mt30 mb10">自定义位置</h2>
     <Space>
-      <Button type="primary" @click="(open9 = true)">Fixed Top Number Dialog</Button>
-      <Button type="primary" @click="(open10 = true)">Fixed Top Percent Dialog</Button>
-      <Button type="primary" @click="(open11 = true)">Vertically Centered Dialog</Button>
+      <Button type="primary" @click="open9 = true">Fixed Top Number Dialog</Button>
+      <Button type="primary" @click="open10 = true">Fixed Top Percent Dialog</Button>
+      <Button type="primary" @click="open11 = true">Vertically Centered Dialog</Button>
     </Space>
     <Dialog v-model:open="open9" title="60px Top Title" :top="60" @cancel="onCancel" @ok="onOk">
       <p>Bla bla ...</p>
@@ -164,14 +164,14 @@ function handleOk() {
       <p>Bla bla ...</p>
     </Dialog>
     <h2 class="mt30 mb10">动画出现位置</h2>
-    <Button type="primary" @click="(open12 = true)">Transform Origin Center Dialog</Button>
+    <Button type="primary" @click="open12 = true">Transform Origin Center Dialog</Button>
     <Dialog v-model:open="open12" title="Title" transform-origin="center" @cancel="onCancel" @ok="onOk">
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
     </Dialog>
     <h2 class="mt30 mb10">异步延迟关闭</h2>
-    <Button type="primary" @click="(open13 = true)">Delayed Close Dialog</Button>
+    <Button type="primary" @click="open13 = true">Delayed Close Dialog</Button>
     <Dialog v-model:open="open13" title="Title" :confirm-loading="confirmLoading" @cancel="handleCancel" @ok="handleOk">
       <p>Bla bla ...</p>
       <p>Bla bla ...</p>
