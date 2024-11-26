@@ -1411,7 +1411,7 @@ function onPaginationChange(page: number, pageSize: number) {
               position: relative;
               z-index: 1;
               flex: 1;
-              max-width: 100%;
+              max-width: calc(100% - 22px);
             }
             .table-cell-arrow {
               display: inline-flex;
