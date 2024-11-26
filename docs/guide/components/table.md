@@ -2728,7 +2728,7 @@ emptyProps | `Empty` 组件属性配置，参考 [Empty Props](https://themuseca
 ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于全局配置文本省略 | object | {}
 showSorterTooltip | 表头是否显示下一次排序的 `tooltip` 提示 | boolean | true
 sortDirections | 支持的排序方式 | ('ascend' &#124; 'descend')[] | ['ascend', 'descend']
-sortTooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于全局配置排序弹出提示 | object | {}
+sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于全局配置排序弹出提示 | object | {}
 showPagination | 是否显示分页 | boolean | true
 pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html#pagination)，用于配置分页功能 | object | {}
 scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [ScrollOption](#scrolloption-type) &#124; boolean | undefined
