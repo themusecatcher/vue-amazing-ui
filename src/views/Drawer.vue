@@ -38,7 +38,7 @@ function onClose() {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Button type="primary" @click="(open1 = true)">Open</Button>
+    <Button type="primary" @click="open1 = true">Open</Button>
     <Drawer v-model:open="open1" title="Basic Drawer" @close="onClose">
       <p>Some contents...</p>
       <p>Some contents...</p>
@@ -46,7 +46,7 @@ function onClose() {
     </Drawer>
     <h2 class="mt30 mb10">自定义位置</h2>
     <Radio v-model:value="placement" :options="options" style="margin-right: 8px" />
-    <Button type="primary" @click="(open2 = true)">Open</Button>
+    <Button type="primary" @click="open2 = true">Open</Button>
     <Drawer
       v-model:open="open2"
       title="Basic Drawer"
@@ -61,7 +61,7 @@ function onClose() {
     </Drawer>
     <h2 class="mt30 mb10">额外操作</h2>
     <Radio v-model:value="extraPlacement" :options="options" style="margin-right: 8px" />
-    <Button type="primary" @click="(open3 = true)">Open</Button>
+    <Button type="primary" @click="open3 = true">Open</Button>
     <Drawer v-model:open="open3" title="Basic Drawer" :placement="extraPlacement">
       <template #extra>
         <Button style="margin-right: 8px" @click="onClose">Cancel</Button>
@@ -73,7 +73,7 @@ function onClose() {
     </Drawer>
     <h2 class="mt30 mb10">抽屉页脚</h2>
     <Radio v-model:value="footerPlacement" :options="options" style="margin-right: 8px" />
-    <Button type="primary" @click="(open4 = true)">Open</Button>
+    <Button type="primary" @click="open4 = true">Open</Button>
     <Drawer
       v-model:open="open4"
       title="Basic Drawer"
@@ -89,7 +89,7 @@ function onClose() {
       </template>
     </Drawer>
     <h2 class="mt30 mb10">自定义 header & body 样式</h2>
-    <Button type="primary" @click="(open5 = true)">Open</Button>
+    <Button type="primary" @click="open5 = true">Open</Button>
     <Drawer
       v-model:open="open5"
       :closable="false"
