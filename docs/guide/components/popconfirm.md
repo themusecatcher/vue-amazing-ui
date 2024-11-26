@@ -620,6 +620,7 @@ title | 弹出确认框的标题 | string &#124; slot | undefined
 titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 description | 弹出确认框的内容描述 | string &#124; slot | undefined
 descriptionStyle | 设置内容描述的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+keyboard | 是否支持按键操作 (`enter` 显示；`esc` 关闭) | boolean | true
 tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 icon | 自定义弹出确认框 `Icon` 图标 | 'success' &#124; 'info' &#124; 'warning' &#124; 'danger' &#124; VNode &#124; Slot | 'warning'
 iconStyle | 设置 `Icon` 图标的样式，一般不需要设置，主要用于自定义 `Icon` 图标时 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

@@ -20,6 +20,7 @@ const alignBordered = ref(true)
 const stripedBordered = ref(true)
 const headerFooterbordered = ref(true)
 const groupBordered = ref(true)
+const sortBordered = ref(true)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
@@ -399,6 +400,26 @@ const columnsHeaderGroup = reactive([
     fixed: 'right'
   }
 ])
+const columnsSort = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: (a: any, b: any) => a.name.length - b.name.length,
+    sortDirections: ['descend']
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    defaultSortOrder: 'descend',
+    sorter: (a: any, b: any) => a.age - b.age
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+    sorter: (a: any, b: any) => a.address.length - b.address.length,
+    sortDirections: ['descend', 'ascend']
+  }
+]
 const dataSource = ref([
   {
     name: 'Stephen Curry',
@@ -668,6 +689,32 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
   companyName: 'SoftLake Co',
   gender: 'M'
 }))
+const dataSourceSort = reactive([
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park'
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park'
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 12 Lake Park'
+  },
+  {
+    key: '4',
+    name: 'Jim Red',
+    age: 32,
+    address: 'London No. 102 Lake Park'
+  }
+])
 onBeforeMount(() => {
   getData()
 })
@@ -732,6 +779,10 @@ const handleExpand = (expanded: boolean, record: any) => {
 }
 const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
   console.log('expandedRowsChange', expandedRows)
+}
+function onSortChange(column: any, currentDataSource: any[]) {
+  console.log('sort column', column)
+  console.log('sort currentDataSource', currentDataSource)
 }
 </script>
 
@@ -2554,6 +2605,80 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
 
 :::
 
+## 表格排序
+
+<Flex vertical>
+  <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
+  <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+const sortBordered = ref(true)
+const columnsSort = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: (a: any, b: any) => a.name.length - b.name.length,
+    sortDirections: ['descend']
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    defaultSortOrder: 'descend',
+    sorter: (a: any, b: any) => a.age - b.age
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+    sorter: (a: any, b: any) => a.address.length - b.address.length,
+    sortDirections: ['descend', 'ascend']
+  }
+]
+const dataSourceSort = reactive([
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park'
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park'
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 12 Lake Park'
+  },
+  {
+    key: '4',
+    name: 'Jim Red',
+    age: 32,
+    address: 'London No. 102 Lake Park'
+  }
+])
+function onSortChange(column: any, currentDataSource: any[]) {
+  console.log('sort column', column)
+  console.log('sort currentDataSource', currentDataSource)
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
+    <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
+  </Flex>
+</template>
+```
+
+:::
+
 <style lang="less" scoped>
 :deep(.even-row td) {
   color: #1677ff !important;
@@ -2594,13 +2719,16 @@ footer | 表格尾部 | string &#124; slot | undefined
 columns | 表格列的配置项 | [Column](#column-type)[] | []
 dataSource | 表格数据数组 | any[] | []
 bordered | 是否展示外边框和列边框 | boolean | false
-size | 表格大小 | 'large' &#124; 'middle' &#124; small | 'large'
 rowClassName | 自定义行的类名 | string &#124; ((record: any, rowIndex: number) => string) | undefined
+size | 表格大小 | 'large' &#124; 'middle' &#124; small | 'large'
 striped | 是否使用斑马条纹 | boolean | false
 loading | 是否加载中 | boolean | false
 spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置数据加载中 | object | {}
 emptyProps | `Empty` 组件属性配置，参考 [Empty Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html#empty)，用于配置暂无数据 | object | {}
 ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于全局配置文本省略 | object | {}
+showSorterTooltip | 表头是否显示下一次排序的 `tooltip` 提示 | boolean | true
+sortDirections | 支持的排序方式 | ('ascend' &#124; 'descend')[] | ['ascend', 'descend']
+sortTooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于全局配置排序弹出提示 | object | {}
 showPagination | 是否显示分页 | boolean | true
 pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html#pagination)，用于配置分页功能 | object | {}
 scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [ScrollOption](#scrolloption-type) &#124; boolean | undefined
@@ -2631,7 +2759,12 @@ ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https:/
 fixed? | 列是否固定 | 'left' &#124; 'right' | undefined
 slot? | 列插槽名称索引 | string | undefined
 children? | 列表头分组的子节点 | [Column](#column-type)[] | undefined
-sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction` | Function | undefined
+
+showSorterTooltip? | 表头是否显示下一次排序的 `tooltip` 提示，较高优先级 | boolean | undefined
+sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于单独配置某列的排序弹出提示，较高优先级 | object | undefined
+defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' | undefined
+sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] | undefined
+sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | Function | undefined
 customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Column) => object | undefined
 
 ### ScrollOption Type
