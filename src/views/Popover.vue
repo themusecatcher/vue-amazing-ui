@@ -52,7 +52,7 @@ function openChange(open: boolean) {
     <h3 class="mb10">使用 show 属性控制显示隐藏</h3>
     <Popover v-model:show="show" title="Click Title" trigger="click">
       <template #content>
-        <a @click="show = false">Close</a>
+        <a @click="(show = false)">Close</a>
       </template>
       <Button type="primary">Click Me</Button>
     </Popover>

@@ -308,7 +308,7 @@ function onChange(value: string | number, label: string, index: number) {
       <div
         v-if="showOptions && filterOptions && filterOptions.length"
         class="options-panel"
-        @mouseleave="disabledBlur = false"
+        @mouseleave="(disabledBlur = false)"
       >
         <Scrollbar :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
           <p

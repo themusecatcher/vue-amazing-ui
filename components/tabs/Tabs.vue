@@ -322,7 +322,7 @@ function getContentStyle(key: string | number | undefined, index: number) {
           ref="navRef"
           class="tabs-nav-list"
           :class="{ 'nav-transition': transition }"
-          @transitionend="transition = false"
+          @transitionend="(transition = false)"
           :style="navStyle"
           @wheel="showWheel ? onWheel($event) : () => false"
         >
