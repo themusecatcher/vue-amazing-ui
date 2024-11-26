@@ -246,7 +246,7 @@ function onKeyboard(e: KeyboardEvent) {
       :class="`input-${size}`"
       type="text"
       v-model="inputValue"
-      @blur="showInput = false"
+      @blur="(showInput = false)"
       @change="onChange"
       @keydown="onKeyboard"
     />
