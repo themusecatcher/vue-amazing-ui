@@ -59,6 +59,9 @@ const emits = defineEmits(['scroll', 'scrollend'])
 const autoShowTrack = computed(() => {
   return props.trigger === 'hover' && props.autoHide
 })
+const notAutoShowTrack = computed(() => {
+  return props.trigger === 'hover' && !props.autoHide
+})
 const isYScroll = computed(() => {
   // 是否存在垂直滚动
   return containerScrollHeight.value > containerClientHeight.value
@@ -168,18 +171,18 @@ function xScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
   emits('scrollend', e, direction)
 }
 function hideYScrollbar() {
-  if (props.trigger === 'hover' && props.autoHide && !yTrackHover.value) {
+  if (autoShowTrack.value && !yTrackHover.value) {
     showYTrack.value = false
   }
-  if (props.trigger === 'hover' && !props.autoHide && !mouseEnter.value) {
+  if (notAutoShowTrack.value && !mouseEnter.value) {
     showYTrack.value = false
   }
 }
 function hideXScrollbar() {
-  if (props.trigger === 'hover' && props.autoHide && !xTrackHover.value) {
+  if (autoShowTrack.value && !xTrackHover.value) {
     showXTrack.value = false
   }
-  if (props.trigger === 'hover' && !props.autoHide && !mouseEnter.value) {
+  if (notAutoShowTrack.value && !mouseEnter.value) {
     showXTrack.value = false
   }
 }
@@ -283,7 +286,7 @@ function onYTrackMouseDown(e: MouseEvent) {
     trackYPressed.value = false
     if (autoShowTrack.value && !yTrackHover.value) {
       debounceHideYScrollbar()
-    } else if (props.trigger === 'hover' && !props.autoHide && mousePressedLeave.value) {
+    } else if (notAutoShowTrack.value && mousePressedLeave.value) {
       mousePressedLeave.value = false
       debounceHideYScrollbar()
     }
@@ -308,7 +311,7 @@ function onXTrackMouseDown(e: MouseEvent) {
     trackXPressed.value = false
     if (autoShowTrack.value && !xTrackHover.value) {
       debounceHideXScrollbar()
-    } else if (props.trigger === 'hover' && !props.autoHide && mousePressedLeave.value) {
+    } else if (notAutoShowTrack.value && mousePressedLeave.value) {
       mousePressedLeave.value = false
       debounceHideXScrollbar()
     }
@@ -366,7 +369,7 @@ defineExpose({
       v-show="yScrollable"
       ref="railVerticalRef"
       class="scrollbar-rail rail-vertical"
-      :class="[`rail-vertical-${yPlacement}`]"
+      :class="`rail-vertical-${yPlacement}`"
     >
       <div
         class="scrollbar-track"
@@ -381,7 +384,7 @@ defineExpose({
       v-show="xScrollable"
       ref="railHorizontalRef"
       class="scrollbar-rail rail-horizontal"
-      :class="[`rail-horizontal-${xPlacement}`]"
+      :class="`rail-horizontal-${xPlacement}`"
     >
       <div
         class="scrollbar-track"
