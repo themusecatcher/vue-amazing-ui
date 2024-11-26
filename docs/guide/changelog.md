@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-## 1.9.8 <Tag color="volcano" size="small">soon</Tag>
+## 1.9.8 <Tag color="volcano" size="small">2024-11-26</Tag>
 
 - 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `yScrollable` 属性，用于控制是否使用垂直滚动；新增支持通过设置 `--scrollbar` 相关变量自定义滚动条样式
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `rowClassName` `showSorterTooltip` `sortDirections` `tooltipProps` 属性；表格列的配置项 `columns` 属性新增 `align` `className` `key` `children` `showSorterTooltip` `sortTooltipProps` `defaultSortOrder` `sortDirections` `sorter` 类型；新增 `expand` `expandedRowsChange` 事件；支持：设置列文本对齐方式；自定义样式；列表头分组；是否显示下一次排序的 `tooltip` 提示；自定义某列的默认排序顺序；设置支持的排序方式；表格排序控制；展开行变化回调事件；排序变化回调事件
