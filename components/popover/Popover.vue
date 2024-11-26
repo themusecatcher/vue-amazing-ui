@@ -8,6 +8,7 @@ interface Props {
   titleStyle?: CSSProperties // 卡片标题样式
   content?: string // 卡片内容 string | slot
   contentStyle?: CSSProperties // 卡片内容样式
+  keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -15,6 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   titleStyle: () => ({}),
   content: undefined,
   contentStyle: () => ({}),
+  keyboard: true,
   tooltipStyle: () => ({})
 })
 const slotsExist = useSlotsExist(['title', 'content'])
@@ -35,6 +37,7 @@ const showContent = computed(() => {
       textAlign: 'start',
       ...tooltipStyle
     }"
+    :keyboard="keyboard"
     :transition-duration="200"
     v-bind="$attrs"
   >

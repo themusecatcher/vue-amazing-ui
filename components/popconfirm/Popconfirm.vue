@@ -9,6 +9,7 @@ interface Props {
   titleStyle?: CSSProperties // 设置标题的样式
   description?: string // 弹出确认框的内容描述 string | slot
   descriptionStyle?: CSSProperties // 设置内容描述的样式
+  keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
   icon?: 'success' | 'info' | 'warning' | 'danger' | VNode | Slot // 自定义 Icon 图标，预置四种类型图标 string | VNode | slot
   iconStyle?: CSSProperties // 设置 Icon 图标的样式，一般不需要设置，主要用于自定义 Icon 图标时
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   titleStyle: () => ({}),
   description: undefined,
   descriptionStyle: () => ({}),
+  keyboard: true,
   tooltipStyle: () => ({}),
   icon: 'warning',
   iconStyle: () => ({}),
@@ -63,6 +65,7 @@ function onOk(e: Event) {
       ...tooltipStyle
     }"
     trigger="click"
+    :keyboard="keyboard"
     :transition-duration="200"
     v-bind="$attrs"
   >
