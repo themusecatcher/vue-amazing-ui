@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-## 1.9.9 <Tag color="volcano" size="small">soon</Tag>
+## 1.9.9 <Tag color="volcano" size="small">2024-11-27</Tag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码和功能
 - 优化并更新 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件，重构组件，新增支持更多样式自定义
