@@ -199,7 +199,7 @@ const emptyFixStyle = computed(() => {
     position: 'sticky',
     left: '0px',
     overflow: 'hidden'
-  }
+  } as CSSProperties
 })
 // 展开列的宽度样式
 const tableExpandCellStyle = computed(() => {
@@ -369,8 +369,6 @@ function getScrollState() {
       scrollWidth.value = scrollData.scrollWidth
       clientWidth.value = scrollData.clientWidth
       scrollMax.value = scrollWidth.value - clientWidth.value
-      console.log('scrollWidth', scrollWidth.value)
-      console.log('clientWidth', clientWidth.value)
     }
     if (verticalScroll.value) {
       scrollHeight.value = scrollData.scrollHeight
