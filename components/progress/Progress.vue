@@ -9,62 +9,105 @@ interface Gradient {
   direction?: 'left' | 'right' // 默认 'right'
 }
 interface Props {
-  width?: number | string // 进度条总宽度，单位 px
+  width?: number | string // 进度条宽度，单位 px；type: 'line' 时，为进度条宽度，默认值 '100%'；type: 'circle' 时，为进度圈宽高，默认值 120
   percent?: number // 当前进度百分比
-  strokeWidth?: number // 进度条线的宽度，单位 px，当 type: 'circle' 时，单位是进度圈画布宽度的百分比
-  strokeColor?: string | Gradient // 进度条的色彩，传入 string 时为纯色，传入 Gradient 时为渐变，进度圈时 direction: 'left' 为逆时针，direction: 'right' 为顺时针
-  strokeLinecap?: 'round' | 'butt' | 'square' // 进度条的样式
+  lineSize?: number // 进度条的尺寸，单位 px；type: 'line' 时，为进度条线高，默认值 8；type: 'circle' 时，单位是进度圈画布宽度的百分比，默认值 6
+  lineColor?: string | Gradient // 进度条的色彩，传入 string 时为纯色，传入 Gradient 时为渐变，进度圈时 direction: 'left' 为逆时针，direction: 'right' 为顺时针
+  lineCap?: 'round' | 'square' // 进度条边缘的形状
   showInfo?: boolean // 是否显示进度数值或状态图标
+  infoSize?: number // 进度数值或状态图标的尺寸，单位 px；type: 'line' 时，默认值 14；type: 'circle' 时，默认值 24
   success?: string // 进度完成时的信息 string | slot
   format?: (percent: number) => string | number // 内容的模板函数 function | slot
   type?: 'line' | 'circle' // 进度条类型
 }
 const props = withDefaults(defineProps<Props>(), {
-  width: '100%',
+  width: undefined,
   percent: 0,
-  strokeWidth: 8,
-  strokeColor: '#1677FF',
-  strokeLinecap: 'round',
+  lineSize: undefined,
+  lineColor: '#1677FF',
+  lineCap: 'round',
   showInfo: true,
+  infoSize: undefined,
   success: undefined,
   format: (percent: number) => percent + '%',
   type: 'line'
 })
 const slotsExist = useSlotsExist(['success'])
-const totalWidth = computed(() => {
-  // 进度条总宽度
-  if (typeof props.width === 'number') {
-    return `${props.width}px`
-  } else {
-    return props.width
+const progressSize = computed(() => {
+  // 进度条宽度；进度圈宽高
+  if (props.width === undefined) {
+    if (props.type === 'line') {
+      return '100%'
+    }
+    if (props.type === 'circle') {
+      return '120px'
+    }
   }
+  return typeof props.width === 'number' ? `${props.width}px` : props.width
+})
+const progressLineSize = computed(() => {
+  // 进度条高度；进度圈线宽
+  if (props.lineSize === undefined) {
+    if (props.type === 'line') {
+      return 8
+    }
+    if (props.type === 'circle') {
+      return 6
+    }
+  }
+  return props.lineSize as number
+})
+const progressInfoSize = computed(() => {
+  // 进度条/圈进度数值或状态图标尺寸
+  if (props.infoSize === undefined) {
+    if (props.type === 'line') {
+      return '14px'
+    }
+    if (props.type === 'circle') {
+      return '24px'
+    }
+  }
+  return `${props.infoSize}px`
 })
 const perimeter = computed(() => {
   // 圆条周长
-  return (100 - props.strokeWidth) * Math.PI
+  return (100 - progressLineSize.value) * Math.PI
 })
 const path = computed(() => {
   // 圆条轨道路径指令
-  const long = 100 - props.strokeWidth
+  const long = 100 - progressLineSize.value
   return `M 50,50 m 0,-${long / 2}
    a ${long / 2},${long / 2} 0 1 1 0,${long}
    a ${long / 2},${long / 2} 0 1 1 0,-${long}`
 })
 const gradientColor = computed(() => {
   // 是否为渐变色
-  return typeof props.strokeColor !== 'string'
+  return typeof props.lineColor !== 'string'
 })
 const lineColor = computed(() => {
-  if (typeof props.strokeColor === 'string') {
-    return props.strokeColor
+  // 进度条/圈颜色
+  if (typeof props.lineColor === 'string') {
+    return props.lineColor
   } else {
-    return `linear-gradient(to ${props.strokeColor.direction || 'right'}, ${props.strokeColor['0%'] || props.strokeColor.from}, ${props.strokeColor['100%'] || props.strokeColor.to})`
+    return `linear-gradient(to ${props.lineColor.direction || 'right'}, ${props.lineColor['0%'] || props.lineColor.from}, ${props.lineColor['100%'] || props.lineColor.to})`
   }
+})
+const circleGradient = computed(() => {
+  // 进度圈渐变色 id
+  if (gradientColor.value) {
+    const gradientColor = props.lineColor as Gradient
+    if (gradientColor.direction === undefined || gradientColor.direction === 'right') {
+      return `right-${gradientColor['0%'] || gradientColor.from}-${gradientColor['100%'] || gradientColor.to}`
+    } else {
+      return `left-${gradientColor['100%'] || gradientColor.to}-${gradientColor['0%'] || gradientColor.from}`
+    }
+  }
+  return null
 })
 const circleColorFrom = computed(() => {
   if (gradientColor.value) {
-    const gradientColor = props.strokeColor as Gradient
-    if (!gradientColor.direction || gradientColor.direction === 'right') {
+    const gradientColor = props.lineColor as Gradient
+    if (gradientColor.direction === undefined || gradientColor.direction === 'right') {
       return gradientColor['0%'] || gradientColor.from
     } else {
       return gradientColor['100%'] || gradientColor.to
@@ -74,7 +117,7 @@ const circleColorFrom = computed(() => {
 })
 const circleColorTo = computed(() => {
   if (gradientColor.value) {
-    const gradientColor = props.strokeColor as Gradient
+    const gradientColor = props.lineColor as Gradient
     if (!gradientColor.direction || gradientColor.direction === 'right') {
       return gradientColor['100%'] || gradientColor.to
     } else {
@@ -94,12 +137,16 @@ const showSuccess = computed(() => {
   <div
     v-if="type === 'line'"
     class="m-progress-line"
-    :style="`width: ${totalWidth}; height: ${strokeWidth < 24 ? 24 : strokeWidth}px;`"
+    :style="`
+      --progress-size: ${progressSize};
+      --success-color: #52c41a;
+      --info-size: ${progressInfoSize};
+    `"
   >
     <div class="m-progress-inner">
       <div
         :class="['progress-bg', { 'line-success': percent >= 100 && !gradientColor }]"
-        :style="`background: ${lineColor}; width: ${percent >= 100 ? 100 : percent}%; height: ${strokeWidth}px; --border-radius: ${strokeLinecap === 'round' ? '100px' : 0};`"
+        :style="`background: ${lineColor}; width: ${percent >= 100 ? 100 : percent}%; height: ${progressLineSize}px; --border-radius: ${lineCap === 'round' ? '100px' : 0};`"
       ></div>
     </div>
     <template v-if="showInfo">
@@ -130,29 +177,33 @@ const showSuccess = computed(() => {
       </Transition>
     </template>
   </div>
-  <div v-else class="m-progress-circle" :style="`width: ${totalWidth}; height: ${totalWidth};`">
+  <div
+    v-else
+    class="m-progress-circle"
+    :style="`--progress-size: ${progressSize}; --success-color: #52c41a; --info-size: ${progressInfoSize};`"
+  >
     <svg class="progress-circle" viewBox="0 0 100 100">
       <defs v-if="gradientColor">
-        <linearGradient id="circleGradient" x1="100%" y1="0%" x2="0%" y2="0%">
+        <linearGradient :id="`${circleGradient}`" x1="100%" y1="0%" x2="0%" y2="0%">
           <stop offset="0%" :stop-color="circleColorFrom as string"></stop>
           <stop offset="100%" :stop-color="circleColorTo as string"></stop>
         </linearGradient>
       </defs>
       <path
         :d="path"
-        :stroke-linecap="strokeLinecap"
+        :stroke-linecap="lineCap"
         class="circle-trail"
-        :stroke-width="strokeWidth"
+        :stroke-width="progressLineSize"
         :style="`stroke-dasharray: ${perimeter}px, ${perimeter}px;`"
         fill-opacity="0"
       ></path>
       <path
         :d="path"
-        :stroke-linecap="strokeLinecap"
+        :stroke-linecap="lineCap"
         class="circle-path"
         :class="{ 'circle-path-success': percent >= 100 && !gradientColor }"
-        :stroke-width="strokeWidth"
-        :stroke="gradientColor ? 'url(#circleGradient)' : lineColor"
+        :stroke-width="progressLineSize"
+        :stroke="gradientColor ? `url(#${circleGradient})` : lineColor"
         :style="`stroke-dasharray: ${(percent / 100) * perimeter}px, ${perimeter}px;`"
         :opacity="percent === 0 ? 0 : 1"
         fill-opacity="0"
@@ -194,10 +245,10 @@ const showSuccess = computed(() => {
 .fade-leave-to {
   opacity: 0;
 }
-@success: #52c41a;
 .m-progress-line {
   display: flex;
   align-items: center;
+  width: var(--progress-size);
   .m-progress-inner {
     width: 100%;
     background: rgba(0, 0, 0, 0.06);
@@ -233,7 +284,7 @@ const showSuccess = computed(() => {
       }
     }
     .line-success {
-      background: @success !important;
+      background: var(--success-color) !important;
     }
   }
   .progress-success {
@@ -245,16 +296,16 @@ const showSuccess = computed(() => {
     flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
     .icon-svg {
       display: inline-block;
-      font-size: 16px;
+      font-size: var(--info-size);
       fill: currentColor;
-      color: @success;
+      color: var(--success-color);
     }
     .progress-success-info {
       flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
       width: 40px;
-      font-size: 14px;
+      font-size: var(--info-size);
       padding-left: 8px;
-      color: @success;
+      color: var(--success-color);
     }
   }
   .progress-text {
@@ -263,8 +314,8 @@ const showSuccess = computed(() => {
       如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
     */
     flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
-    width: 40px;
-    font-size: 14px;
+    min-width: 40px;
+    font-size: var(--info-size);
     padding-left: 8px;
     color: rgba(0, 0, 0, 0.88);
   }
@@ -272,6 +323,8 @@ const showSuccess = computed(() => {
 .m-progress-circle {
   display: inline-block;
   position: relative;
+  width: var(--progress-size);
+  height: var(--progress-size);
   .progress-circle {
     .circle-trail {
       stroke: rgba(0, 0, 0, 0.06);
@@ -293,7 +346,7 @@ const showSuccess = computed(() => {
         opacity 0.3s ease 0s;
     }
     .circle-path-success {
-      stroke: @success !important;
+      stroke: var(--success-color) !important;
     }
   }
   .icon-svg {
@@ -305,7 +358,7 @@ const showSuccess = computed(() => {
     width: 30%;
     height: 30%;
     fill: currentColor;
-    color: @success;
+    color: var(--success-color);
   }
   .progress-success-info {
     position: absolute;
@@ -313,10 +366,10 @@ const showSuccess = computed(() => {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    font-size: 27px;
+    font-size: var(--info-size);
     line-height: 1;
     text-align: center;
-    color: @success;
+    color: var(--success-color);
   }
   .progress-text {
     position: absolute;
@@ -324,7 +377,7 @@ const showSuccess = computed(() => {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    font-size: 27px;
+    font-size: var(--info-size);
     line-height: 1;
     text-align: center;
     color: rgba(0, 0, 0, 0.85);
