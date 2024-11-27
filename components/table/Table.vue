@@ -100,6 +100,7 @@ interface Coords {
 const tableRef = ref() // table 组件模板引用
 const tablePage = ref<number>(1) // 分页器当前页数
 const tablePageSize = ref<number>(10) // 分页器每页条数
+const allDataSource = ref<any[]>([]) // // 一次性加载全部数据并进行分页时的全部数据
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const displayDataSource = ref<any[]>([]) // 当前展示的表格数据
@@ -249,6 +250,37 @@ const totalDataSource = computed(() => {
   }
   return total
 })
+// 是否一次性加载全部数据并进行分页，即：展示分页，且数据总数等于数据源的长度
+const loadAllData = computed(() => {
+  return props.showPagination && totalDataSource.value === props.dataSource.length
+})
+// 监听数据源
+watch(
+  () => props.dataSource,
+  (to) => {
+    if (loadAllData.value) {
+      allDataSource.value = [...to]
+      if (sortColumnDataIndex.value) {
+        const sortColum = to.find((column: Column) => column.dataIndex === sortColumnDataIndex.value)
+        displayDataSource.value = [...to].sort(sortColum.sorter as (a: any, b: any) => number)
+        if (sortColum.defaultSortOrder === 'descend') {
+          displayDataSource.value.reverse()
+        }
+      }
+    } else {
+      if (sortColumnDataIndex.value) {
+        const sortColum = to.find((column: Column) => column.dataIndex === sortColumnDataIndex.value)
+        displayDataSource.value = [...to].sort(sortColum.sorter as (a: any, b: any) => number)
+        if (sortColum.defaultSortOrder === 'descend') {
+          displayDataSource.value.reverse()
+        }
+      }
+    }
+  },
+  {
+    immediate: true
+  }
+)
 watchEffect(() => {
   if (props.showPagination) {
     if ('page' in props.pagination) {
@@ -277,8 +309,8 @@ useResizeObserver(tableRef, () => {
 // 获取展示的表格数据
 function getDisplayDataSource() {
   // 展示分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
-  if (props.showPagination && totalDataSource.value === props.dataSource.length) {
-    return props.dataSource.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
+  if (loadAllData.value) {
+    return allDataSource.value.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
   }
   return props.dataSource
 }
@@ -432,10 +464,10 @@ function initDefaultSort() {
     if (column.defaultSortOrder !== undefined) {
       sortColumnDataIndex.value = column.dataIndex
       sortSymbol.value = column.defaultSortOrder
-      displayDataSource.value = displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
-      if (column.defaultSortOrder === 'descend') {
-        displayDataSource.value.reverse()
-      }
+      // displayDataSource.value = displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+      // if (column.defaultSortOrder === 'descend') {
+      //   displayDataSource.value.reverse()
+      // }
       return
     }
   }
@@ -504,25 +536,30 @@ function onSorter(column: Column) {
     disabledDefaultSort.value = true
   }
   const sortDirections = getComputedValue(column, 'sortDirections') as ('ascend' | 'descend')[]
-  const dataSource = getDisplayDataSource()
+  let dataSource: any[]
+  if (loadAllData.value) {
+    dataSource = [...props.dataSource]
+  } else {
+    dataSource = displayDataSource.value
+  }
   if (sortColumnDataIndex.value === column.dataIndex) {
     if (sortSymbol.value === 'ascend') {
       if (sortDirections.length === 1) {
         // ['ascend']
         sortColumnDataIndex.value = null
         sortSymbol.value = null
-        displayDataSource.value = dataSource
+        // displayDataSource.value = dataSource
       } else {
         // sortDirections.length === 2
         if (sortDirections[0] === 'ascend') {
           sortSymbol.value = 'descend'
-          displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
-          displayDataSource.value.reverse()
+          dataSource.sort(column.sorter as (a: any, b: any) => number)
+          dataSource.reverse()
         } else {
           // sortDirections[1] === 'ascend'
           sortColumnDataIndex.value = null
           sortSymbol.value = null
-          displayDataSource.value = dataSource
+          // displayDataSource.value = dataSource
         }
       }
     } else {
@@ -531,18 +568,18 @@ function onSorter(column: Column) {
         // ['ascend', 'descend'] || ['descend']
         sortColumnDataIndex.value = null
         sortSymbol.value = null
-        displayDataSource.value = dataSource
+        // displayDataSource.value = dataSource
       } else {
         // sortDirections.length === 2
         if (sortDirections[0] === 'ascend') {
           // ['ascend', 'descend']
           sortColumnDataIndex.value = null
           sortSymbol.value = null
-          displayDataSource.value = dataSource
+          // displayDataSource.value = dataSource
         } else {
           // ['descend', 'ascend']
           sortSymbol.value = 'ascend'
-          displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+          dataSource.sort(column.sorter as (a: any, b: any) => number)
         }
       }
     }
@@ -551,13 +588,18 @@ function onSorter(column: Column) {
     if (sortDirections.length > 0) {
       sortSymbol.value = sortDirections[0]
       if (sortSymbol.value === 'ascend') {
-        displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
+        dataSource.sort(column.sorter as (a: any, b: any) => number)
       } else {
         // descend
-        displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
-        displayDataSource.value.reverse()
+        dataSource.sort(column.sorter as (a: any, b: any) => number)
+        dataSource.reverse()
       }
     }
+  }
+  if (loadAllData.value) {
+    allDataSource.value = dataSource
+  } else {
+    displayDataSource.value = dataSource
   }
   emits('sortChange', column, displayDataSource.value)
 }
