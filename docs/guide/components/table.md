@@ -2775,6 +2775,7 @@ expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender
 
 名称 | 说明 | 类型
 -- | -- | --
-change | 分页变化时的回调 | (pager: { page: number, pageSize: number }) => void
 expand | 点击展开图标时的回调 | (expanded: boolean, record: any) => void
 expandedRowsChange | 展开的行变化时的回调 | (expandedRows: (string \| number)[]) => void
+sortChange | 排序变化时的回调 | (column: [Column](#column-type), currentDataSource: any[]) => void
+change | 分页变化时的回调 | (pager: { page: number, pageSize: number }) => void
