@@ -13,6 +13,17 @@
 import { h, ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const percent = ref(80)
+const lineCapOptions = [
+  {
+    label: 'round',
+    value: 'round'
+  },
+  {
+    label: 'square',
+    value: 'square'
+  }
+]
+const lineCap = ref('square')
 function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {
@@ -52,7 +63,7 @@ const percent = ref(80)
 ## 进度圈
 
 <Space align="center">
-  <Progress type="circle" :width="120" :stroke-width="12" :percent="percent" />
+  <Progress type="circle" :percent="percent" />
   <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
   <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
 </Space>
@@ -83,7 +94,7 @@ function onDecline (scale: number) {
 </script>
 <template>
   <Space align="center">
-    <Progress type="circle" :width="120" :stroke-width="12" :percent="percent" />
+    <Progress type="circle" :percent="percent" />
     <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
     <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
   </Space>
@@ -95,8 +106,8 @@ function onDecline (scale: number) {
 ## 完成进度条
 
 <Flex vertical>
-  <Progress :stroke-width="10" :percent="100" />
-  <Progress type="circle" :width="120" :stroke-width="10" :percent="100" />
+  <Progress :percent="100" />
+  <Progress type="circle" :percent="100" />
 </Flex>
 
 ::: details Show Code
@@ -104,8 +115,8 @@ function onDecline (scale: number) {
 ```vue
 <template>
   <Flex vertical>
-    <Progress :stroke-width="10" :percent="100" />
-    <Progress type="circle" :width="120" :stroke-width="10" :percent="100" />
+    <Progress :percent="100" />
+    <Progress type="circle" :percent="100" />
   </Flex>
 </template>
 ```
@@ -118,25 +129,20 @@ function onDecline (scale: number) {
 
 <br/>
 
-<Flex vertical gap="middle">
+<Flex vertical :width="900">
   <Progress
-    :stroke-width="10"
-    :stroke-color="{
+    :line-color="{
       '0%': '#108ee9',
-      '100%': '#87d068',
-      direction: 'right'
+      '100%': '#87d068'
     }"
     :percent="percent"
   />
   <Space align="center">
     <Progress
       type="circle"
-      :width="120"
-      :stroke-width="12"
-      :stroke-color="{
+      :line-color="{
         '0%': '#108ee9',
-        '100%': '#87d068',
-        direction: 'right'
+        '100%': '#87d068'
       }"
       :percent="percent"
     />
@@ -170,25 +176,20 @@ function onDecline (scale: number) {
 }
 </script>
 <template>
-  <Flex vertical gap="middle">
+  <Flex vertical :width="900">
     <Progress
-      :stroke-width="10"
-      :stroke-color="{
+      :line-color="{
         '0%': '#108ee9',
-        '100%': '#87d068',
-        direction: 'right'
+        '100%': '#87d068'
       }"
       :percent="percent"
     />
     <Space align="center">
       <Progress
         type="circle"
-        :width="120"
-        :stroke-width="12"
-        :stroke-color="{
+        :line-color="{
           '0%': '#108ee9',
-          '100%': '#87d068',
-          direction: 'right'
+          '100%': '#87d068'
         }"
         :percent="percent"
       />
@@ -203,28 +204,29 @@ function onDecline (scale: number) {
 
 ## 自定义样式
 
-<Flex vertical gap="middle">
+<Flex vertical>
   <Progress
-    :stroke-width="28"
-    :stroke-color="{
+    :line-size="24"
+    :line-color="{
       '0%': '#108ee9',
       '100%': '#87d068',
       direction: 'left'
     }"
-    stroke-linecap="butt"
+    :info-size="24"
     :percent="percent"
   />
   <Space align="center">
     <Progress
+      style="--success-color: #108ee9"
       type="circle"
       :width="180"
-      :stroke-width="18"
-      :stroke-color="{
+      :line-size="14"
+      :line-color="{
         '0%': '#108ee9',
         '100%': '#87d068',
         direction: 'left'
       }"
-      stroke-linecap="butt"
+      :info-size="28"
       :percent="percent"
     />
     <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
@@ -257,28 +259,131 @@ function onDecline (scale: number) {
 }
 </script>
 <template>
-  <Flex vertical gap="middle">
+  <Flex vertical>
     <Progress
-      :stroke-width="28"
-      :stroke-color="{
+      :line-size="24"
+      :line-color="{
         '0%': '#108ee9',
         '100%': '#87d068',
         direction: 'left'
       }"
-      stroke-linecap="butt"
+      :info-size="24"
+      :percent="percent"
+    />
+    <Space align="center">
+      <Progress
+        style="--success-color: #108ee9"
+        type="circle"
+        :width="180"
+        :line-size="14"
+        :line-color="{
+          '0%': '#108ee9',
+          '100%': '#87d068',
+          direction: 'left'
+        }"
+        :info-size="28"
+        :percent="percent"
+      />
+      <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+    </Space>
+  </Flex>
+</template>
+```
+
+:::
+
+## 自定义边缘形状
+
+<Flex vertical>
+  <Radio :options="lineCapOptions" v-model:value="lineCap" button button-style="solid" />
+  <Progress
+    :line-size="20"
+    :line-color="{
+      '0%': 'white',
+      '100%': 'pink'
+    }"
+    :line-cap="lineCap"
+    :info-size="20"
+    :percent="percent"
+  />
+  <Space align="center">
+    <Progress
+      type="circle"
+      :width="160"
+      :line-size="12"
+      :line-color="{
+        '0%': '#e3f2fd',
+        '100%': '#2080f0'
+      }"
+      :line-cap="lineCap"
+      :info-size="24"
+      :percent="percent"
+    />
+    <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+  </Space>
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { h, ref } from 'vue'
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+const percent = ref(80)
+const lineCapOptions = [
+  {
+    label: 'round',
+    value: 'round'
+  },
+  {
+    label: 'square',
+    value: 'square'
+  }
+]
+const lineCap = ref('square')
+function onIncrease (scale: number) {
+  const res = percent.value + scale
+  if (res > 100) {
+    percent.value = 100
+  } else {
+    percent.value = res
+  }
+}
+function onDecline (scale: number) {
+  const res = percent.value - scale
+  if (res < 0) {
+    percent.value = 0
+  } else {
+    percent.value = res
+  }
+}
+</script>
+<template>
+  <Flex vertical>
+    <Radio :options="lineCapOptions" v-model:value="lineCap" button button-style="solid" />
+    <Progress
+      :line-size="20"
+      :line-color="{
+        '0%': 'white',
+        '100%': 'pink'
+      }"
+      :line-cap="lineCap"
+      :info-size="20"
       :percent="percent"
     />
     <Space align="center">
       <Progress
         type="circle"
-        :width="180"
-        :stroke-width="18"
-        :stroke-color="{
-          '0%': '#108ee9',
-          '100%': '#87d068',
-          direction: 'left'
+        :width="160"
+        :line-size="12"
+        :line-color="{
+          '0%': '#e3f2fd',
+          '100%': '#2080f0'
         }"
-        stroke-linecap="butt"
+        :line-cap="lineCap"
+        :info-size="24"
         :percent="percent"
       />
       <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
@@ -292,26 +397,44 @@ function onDecline (scale: number) {
 
 ## 自定义文字
 
-<Space align="center">
+<Flex vertical>
   <Progress
-    type="circle"
-    :width="160"
-    :stroke-width="12"
+    :line-size="20"
+    :info-size="20"
     :percent="percent"
-    :format="(percent: number) => `${percent} Days`"
+    :format="(percent: number) => `$${percent}`"
     success="Done"
   />
-  <Progress type="circle" :width="160" :stroke-width="12" :percent="percent">
+  <Progress style="--success-color: #d48806" :line-size="20" :info-size="20" :percent="percent">
     <template #format="{ percent }">
-      <span style="color: magenta">{{ percent }}%</span>
+      <span style="color: #d4380d">{{ percent }}%</span>
     </template>
     <template #success>
-      <span style="color: magenta">Bingo</span>
+      <span style="color: #d48806">Bingo</span>
     </template>
   </Progress>
-  <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-  <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
-</Space>
+  <Space align="center">
+    <Progress
+      type="circle"
+      :width="160"
+      :line-size="12"
+      :info-size="24"
+      :percent="percent"
+      :format="(percent: number) => `${percent} Days`"
+      success="Done"
+    />
+    <Progress style="--success-color: #d48806" type="circle" :width="160" :line-size="12" :info-size="24" :percent="percent">
+      <template #format="{ percent }">
+        <span style="color: #d4380d">{{ percent }}%</span>
+      </template>
+      <template #success>
+        <span style="color: #d48806">Bingo</span>
+      </template>
+    </Progress>
+    <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+  </Space>
+</Flex>
 
 ::: details Show Code
 
@@ -338,26 +461,44 @@ function onDecline (scale: number) {
 }
 </script>
 <template>
-  <Space align="center">
+  <Flex vertical>
     <Progress
-      type="circle"
-      :width="160"
-      :stroke-width="12"
+      :line-size="20"
+      :info-size="20"
       :percent="percent"
-      :format="(percent: number) => `${percent} Days`"
+      :format="(percent: number) => `$${percent}`"
       success="Done"
     />
-    <Progress type="circle" :width="160" :stroke-width="12" :percent="percent">
+    <Progress style="--success-color: #d48806" :line-size="20" :info-size="20" :percent="percent">
       <template #format="{ percent }">
-        <span style="color: magenta">{{ percent }}%</span>
+        <span style="color: #d4380d">{{ percent }}%</span>
       </template>
       <template #success>
-        <span style="color: magenta">Bingo</span>
+        <span style="color: #d48806">Bingo</span>
       </template>
     </Progress>
-    <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
-  </Space>
+    <Space align="center">
+      <Progress
+        type="circle"
+        :width="160"
+        :line-size="12"
+        :info-size="24"
+        :percent="percent"
+        :format="(percent: number) => `${percent} Days`"
+        success="Done"
+      />
+      <Progress style="--success-color: #d48806" type="circle" :width="160" :line-size="12" :info-size="24" :percent="percent">
+        <template #format="{ percent }">
+          <span style="color: #d4380d">{{ percent }}%</span>
+        </template>
+        <template #success>
+          <span style="color: #d48806">Bingo</span>
+        </template>
+      </Progress>
+      <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+    </Space>
+  </Flex>
 </template>
 ```
 
@@ -369,13 +510,15 @@ function onDecline (scale: number) {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-width | 进度条总宽度，单位 `px` | string &#124; number | '100%'
+width | 进度条宽度，单位 `px`；`type: 'line'` 时，为进度条宽度，默认值 `'100%'`；`type: 'circle'` 时，为进度圈宽高，默认值 `120` | string &#124; number | undefined
 percent | 当前进度百分比 | number | 0
-strokeWidth | 进度条线的宽度，单位 `px`，当 `type: 'circle'` 时，单位是进度圈画布宽度的百分比 | number | 8
-strokeColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变，进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | '#1677FF'
-strokeLinecap | 进度条的样式 | 'round' &#124; 'butt' &#124; 'square' | 'round'
+lineSize | 进度条的尺寸，单位 `px`；`type: 'line'` 时，为进度条线高，默认值 `8`；`type: 'circle'` 时，单位是进度圈画布宽度的百分比，默认值 `6` | number | undefined
+lineColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变；进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | '#1677FF'
+lineCap | 进度条边缘的形状 | 'round' &#124; 'square' | 'round'
 showInfo | 是否显示进度数值或状态图标 | boolean | true
-format | 内容的模板函数 | (percent: number) => (string &#124; number) &#124; Slot | (percent: number) => percent + '%'
+infoSize | 进度数值或状态图标的尺寸，单位 `px`；`type: 'line'` 时，默认值 `14`；`type: 'circle'` 时，默认值 `24` | number | undefined
+success | 进度完成时的信息 | string &#124; slot | undefined
+format | 内容的模板函数 | (percent: number) => (string &#124; number) &#124; slot | (percent: number) => percent + '%'
 type | 进度条类型 | 'line' &#124; 'circle' | 'line'
 
 ### Gradient Type
