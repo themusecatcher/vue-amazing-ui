@@ -4,7 +4,7 @@
 
 ## 1.9.9 <Tag color="volcano" size="small">soon</Tag>
 
-- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码功能
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码和功能
 
 ## 1.9.8 <Tag color="volcano" size="small">2024-11-26</Tag>
 
