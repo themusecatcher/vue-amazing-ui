@@ -51,7 +51,7 @@ function onDecline(scale: number) {
       strokeColor: { '0%': '#108ee9', '100%': '#87d068', direction: 'right' } 或 { from: '#108ee9', to: '#87d068',
       direction: 'right' }
     </h3>
-    <Flex vertical :width="900">
+    <Flex vertical>
       <Progress
         :line-color="{
           '0%': '#108ee9',

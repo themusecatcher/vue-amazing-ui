@@ -129,7 +129,7 @@ function onDecline (scale: number) {
 
 <br/>
 
-<Flex vertical :width="900">
+<Flex vertical>
   <Progress
     :line-color="{
       '0%': '#108ee9',
@@ -176,7 +176,7 @@ function onDecline (scale: number) {
 }
 </script>
 <template>
-  <Flex vertical :width="900">
+  <Flex vertical>
     <Progress
       :line-color="{
         '0%': '#108ee9',
