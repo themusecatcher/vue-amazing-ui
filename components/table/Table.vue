@@ -100,11 +100,10 @@ interface Coords {
 const tableRef = ref() // table 组件模板引用
 const tablePage = ref<number>(1) // 分页器当前页数
 const tablePageSize = ref<number>(10) // 分页器每页条数
-const allDataSource = ref<any[]>([]) // // 一次性加载全部数据并进行分页时的全部数据
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const displayDataSource = ref<any[]>([]) // 当前展示的表格数据
-const tableExpandedRowKeys = ref<(string | number)[]>([])
+const tableExpandedRowKeys = ref<(string | number)[]>([]) // 当前展开行的 key 数组
 const tooltipRef = ref() // 排序 tooltip 提示组件模板引用
 const ellipsisRef = ref() // 文本省略组件模板引用
 const scrollbarRef = ref() // 水平滚动容器模板引用
@@ -117,6 +116,12 @@ const scrollMax = ref<number>(0) // 表格水平滚动时，最大可滚动距�
 const colExpandRef = ref() // 表格展开列 col 的引用
 const colRef = ref() // 表格除展开列以外 col 的引用
 const thColumnsLeaf = ref<Column[]>([]) // thColumns 的所有叶子节点,包括 colSpan: 0 的列
+const disabledDefaultSort = ref<boolean>(false) // 是否禁用默认排序
+const sortColumnDataIndex = ref<string | null>(null) // 排序列的数据索引
+const sortColumnSorter = ref<Function | null>(null) // 排序列的升序排序函数
+const sortSymbol = ref<'ascend' | 'descend' | null>(null) // 排序标识
+const sortHoverDataIndex = ref<string | null>(null) // 鼠标悬浮排序列的数据索引
+const clickSorter = ref(false) // 是否点击排序
 const slotsExist = useSlotsExist(['header', 'footer'])
 const emits = defineEmits(['expand', 'expandedRowsChange', 'update:expandedRowKeys', 'sortChange', 'change'])
 // 是否设置了水平滚动
@@ -187,6 +192,15 @@ const tableStyle = computed(() => {
     tableLayout: tableLayoutComputed.value
   }
 })
+// 无数据时的样式
+const emptyFixStyle = computed(() => {
+  return {
+    width: `${clientWidth.value}px`,
+    position: 'sticky',
+    left: '0px',
+    overflow: 'hidden'
+  }
+})
 // 展开列的宽度样式
 const tableExpandCellStyle = computed(() => {
   return {
@@ -254,33 +268,62 @@ const totalDataSource = computed(() => {
 const loadAllData = computed(() => {
   return props.showPagination && totalDataSource.value === props.dataSource.length
 })
-// 监听数据源
+// 监听数据源/是否一次性加载全部数据并进行分页/全部数据/分页状态/排序状态变化，更新展示数据
 watch(
-  () => props.dataSource,
-  (to) => {
+  () => [
+    props.dataSource,
+    loadAllData.value,
+    tablePage.value,
+    tablePageSize.value,
+    sortColumnDataIndex.value,
+    sortSymbol.value
+  ],
+  () => {
     if (loadAllData.value) {
-      allDataSource.value = [...to]
-      if (sortColumnDataIndex.value) {
-        const sortColum = to.find((column: Column) => column.dataIndex === sortColumnDataIndex.value)
-        displayDataSource.value = [...to].sort(sortColum.sorter as (a: any, b: any) => number)
-        if (sortColum.defaultSortOrder === 'descend') {
-          displayDataSource.value.reverse()
+      let allDataSource: any[]
+      if (sortColumnDataIndex.value === null) {
+        allDataSource = [...props.dataSource]
+      } else {
+        allDataSource = [...props.dataSource].sort(sortColumnSorter.value as (a: any, b: any) => number)
+        if (sortSymbol.value === 'descend') {
+          allDataSource.reverse()
         }
       }
+      displayDataSource.value = allDataSource.slice(
+        (tablePage.value - 1) * tablePageSize.value,
+        tablePage.value * tablePageSize.value
+      )
     } else {
-      if (sortColumnDataIndex.value) {
-        const sortColum = to.find((column: Column) => column.dataIndex === sortColumnDataIndex.value)
-        displayDataSource.value = [...to].sort(sortColum.sorter as (a: any, b: any) => number)
-        if (sortColum.defaultSortOrder === 'descend') {
-          displayDataSource.value.reverse()
+      let currentDataSource: any[]
+      if (sortColumnDataIndex.value === null) {
+        currentDataSource = [...props.dataSource]
+      } else {
+        currentDataSource = [...props.dataSource].sort(sortColumnSorter.value as (a: any, b: any) => number)
+        if (sortSymbol.value === 'descend') {
+          currentDataSource.reverse()
         }
       }
+      displayDataSource.value = currentDataSource
     }
   },
   {
-    immediate: true
+    immediate: true,
+    deep: true
   }
 )
+watch(displayDataSource, (to) => {
+  if (clickSorter.value) {
+    clickSorter.value = false
+    emits('sortChange', to)
+  }
+})
+// 初始化默认排序
+watchEffect(() => {
+  if (!disabledDefaultSort.value) {
+    initDefaultSort()
+  }
+})
+// 监听分页状态变化
 watchEffect(() => {
   if (props.showPagination) {
     if ('page' in props.pagination) {
@@ -291,9 +334,7 @@ watchEffect(() => {
     }
   }
 })
-watchEffect(() => {
-  displayDataSource.value = getDisplayDataSource()
-})
+// 监听当前展开行的 key 数组变化
 watchEffect(() => {
   tableExpandedRowKeys.value = props.expandedRowKeys
 })
@@ -306,13 +347,19 @@ onMounted(() => {
 useResizeObserver(tableRef, () => {
   getScrollState()
 })
-// 获取展示的表格数据
-function getDisplayDataSource() {
-  // 展示分页，且数据总数等于数据源的长度，即：一次性加载全部数据并进行分页
-  if (loadAllData.value) {
-    return allDataSource.value.slice((tablePage.value - 1) * tablePageSize.value, tablePage.value * tablePageSize.value)
+// 初始化默认排序时的数据索引，标识和展示数据
+function initDefaultSort() {
+  const thLeaf = thColumnsLeaf.value.filter((column: Column) => column.colSpan !== 0)
+  const len = thLeaf.length
+  for (let i = 0; i < len; i++) {
+    const column = thLeaf[i]
+    if (column.defaultSortOrder !== undefined) {
+      sortColumnDataIndex.value = column.dataIndex
+      sortColumnSorter.value = column.sorter as (a: any, b: any) => number
+      sortSymbol.value = column.defaultSortOrder
+      return
+    }
   }
-  return props.dataSource
 }
 // 获取滚动状态信息
 function getScrollState() {
@@ -322,6 +369,8 @@ function getScrollState() {
       scrollWidth.value = scrollData.scrollWidth
       clientWidth.value = scrollData.clientWidth
       scrollMax.value = scrollWidth.value - clientWidth.value
+      console.log('scrollWidth', scrollWidth.value)
+      console.log('clientWidth', clientWidth.value)
     }
     if (verticalScroll.value) {
       scrollHeight.value = scrollData.scrollHeight
@@ -445,33 +494,6 @@ function getComputedValue(column: Column, key: keyof Props) {
   }
   return computedValue as object | ('ascend' | 'descend')[]
 }
-// 表格排序的相关数据和方法
-const disabledDefaultSort = ref<boolean>(false) // 是否禁用默认排序
-const sortColumnDataIndex = ref<string | null>(null) // 排序列的数据索引
-const sortSymbol = ref<'ascend' | 'descend' | null>(null) // 排序标识
-const sortHoverDataIndex = ref<string | null>(null) // 鼠标悬浮排序列的数据索引
-watchEffect(() => {
-  if (!disabledDefaultSort.value) {
-    initDefaultSort()
-  }
-})
-// 初始化默认排序时的数据索引，标识和展示数据
-function initDefaultSort() {
-  const thLeaf = thColumnsLeaf.value.filter((column: Column) => column.colSpan !== 0)
-  const len = thLeaf.length
-  for (let i = 0; i < len; i++) {
-    const column = thLeaf[i]
-    if (column.defaultSortOrder !== undefined) {
-      sortColumnDataIndex.value = column.dataIndex
-      sortSymbol.value = column.defaultSortOrder
-      // displayDataSource.value = displayDataSource.value.sort(column.sorter as (a: any, b: any) => number)
-      // if (column.defaultSortOrder === 'descend') {
-      //   displayDataSource.value.reverse()
-      // }
-      return
-    }
-  }
-}
 // 获取 sorter 排序提示文本
 function getSortTooltip(column: Column) {
   const sortTooltipMap = {
@@ -530,36 +552,28 @@ function getSortTooltip(column: Column) {
     }
   }
 }
-// 点击 th 单元格操作排序
+// 点击 th 单元格操作排序，更新 sortColumnDataIndex sortColumnSorter sortSymbol
 function onSorter(column: Column) {
   if (!disabledDefaultSort.value) {
     disabledDefaultSort.value = true
   }
   const sortDirections = getComputedValue(column, 'sortDirections') as ('ascend' | 'descend')[]
-  let dataSource: any[]
-  if (loadAllData.value) {
-    dataSource = [...props.dataSource]
-  } else {
-    dataSource = displayDataSource.value
-  }
   if (sortColumnDataIndex.value === column.dataIndex) {
     if (sortSymbol.value === 'ascend') {
       if (sortDirections.length === 1) {
         // ['ascend']
         sortColumnDataIndex.value = null
+        sortColumnSorter.value = null
         sortSymbol.value = null
-        // displayDataSource.value = dataSource
       } else {
         // sortDirections.length === 2
         if (sortDirections[0] === 'ascend') {
           sortSymbol.value = 'descend'
-          dataSource.sort(column.sorter as (a: any, b: any) => number)
-          dataSource.reverse()
         } else {
           // sortDirections[1] === 'ascend'
           sortColumnDataIndex.value = null
+          sortColumnSorter.value = null
           sortSymbol.value = null
-          // displayDataSource.value = dataSource
         }
       }
     } else {
@@ -567,41 +581,28 @@ function onSorter(column: Column) {
       if (sortDirections.length === 1) {
         // ['ascend', 'descend'] || ['descend']
         sortColumnDataIndex.value = null
+        sortColumnSorter.value = null
         sortSymbol.value = null
-        // displayDataSource.value = dataSource
       } else {
         // sortDirections.length === 2
         if (sortDirections[0] === 'ascend') {
           // ['ascend', 'descend']
           sortColumnDataIndex.value = null
+          sortColumnSorter.value = null
           sortSymbol.value = null
-          // displayDataSource.value = dataSource
         } else {
           // ['descend', 'ascend']
           sortSymbol.value = 'ascend'
-          dataSource.sort(column.sorter as (a: any, b: any) => number)
         }
       }
     }
   } else {
     sortColumnDataIndex.value = column.dataIndex
+    sortColumnSorter.value = column.sorter as (a: any, b: any) => number
     if (sortDirections.length > 0) {
       sortSymbol.value = sortDirections[0]
-      if (sortSymbol.value === 'ascend') {
-        dataSource.sort(column.sorter as (a: any, b: any) => number)
-      } else {
-        // descend
-        dataSource.sort(column.sorter as (a: any, b: any) => number)
-        dataSource.reverse()
-      }
     }
   }
-  if (loadAllData.value) {
-    allDataSource.value = dataSource
-  } else {
-    displayDataSource.value = dataSource
-  }
-  emits('sortChange', column, displayDataSource.value)
 }
 function onEnterSorter(dataIndex: string) {
   sortHoverDataIndex.value = dataIndex
@@ -805,6 +806,7 @@ function onPaginationChange(page: number, pageSize: number) {
         <div v-if="!verticalScroll" class="table-container" :class="{ 'container-no-x-scroll': !xScrollable }">
           <Scrollbar
             ref="scrollbarRef"
+            style="border-radius: 8px 8px 0 0"
             :x-scrollable="xScrollable"
             :y-scrollable="yScrollable"
             :auto-hide="false"
@@ -925,8 +927,11 @@ function onPaginationChange(page: number, pageSize: number) {
               </thead>
               <tbody>
                 <tr v-if="!displayDataSource.length">
-                  <td class="table-empty" :colspan="columns.length">
-                    <Empty class="empty" image="outlined" v-bind="emptyProps" />
+                  <td class="table-empty" :colspan="thColumnsLeaf.length">
+                    <div v-if="xScrollable" class="table-empty-fixed" :style="emptyFixStyle">
+                      <Empty class="empty" image="outlined" v-bind="emptyProps" />
+                    </div>
+                    <Empty v-else class="empty" image="outlined" v-bind="emptyProps" />
                   </td>
                 </tr>
                 <template v-if="displayDataSource.length">
@@ -1191,8 +1196,11 @@ function onPaginationChange(page: number, pageSize: number) {
               </colgroup>
               <tbody>
                 <tr v-if="!displayDataSource.length">
-                  <td class="table-empty" :colspan="columns.length">
-                    <Empty class="empty" image="outlined" v-bind="emptyProps" />
+                  <td class="table-empty" :colspan="thColumnsLeaf.length">
+                    <div v-if="xScrollable" class="table-empty-fixed" :style="emptyFixStyle">
+                      <Empty class="empty" image="outlined" v-bind="emptyProps" />
+                    </div>
+                    <Empty v-else class="empty" image="outlined" v-bind="emptyProps" />
                   </td>
                 </tr>
                 <template v-if="displayDataSource.length">
@@ -1373,9 +1381,6 @@ function onPaginationChange(page: number, pageSize: number) {
         overflow: hidden;
         border-radius: 8px 8px 0 0;
       }
-      .m-scrollbar {
-        border-radius: 8px 8px 0 0;
-      }
       table {
         display: table;
         margin: 0;
@@ -1477,6 +1482,11 @@ function onPaginationChange(page: number, pageSize: number) {
         .table-empty {
           padding: 16px;
           border-bottom: 1px solid #f0f0f0;
+          .table-empty-fixed {
+            padding: 16px;
+            margin: -16px -17px;
+            border-right: 1px solid #f0f0f0;
+          }
           .empty {
             margin: 32px 0;
           }

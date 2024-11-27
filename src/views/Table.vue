@@ -312,17 +312,6 @@ const columnsHeaderGroup = reactive([
     key: 'name',
     width: 100,
     fixed: 'left'
-    // filters: [
-    //   {
-    //     text: 'Joe',
-    //     value: 'Joe'
-    //   },
-    //   {
-    //     text: 'John',
-    //     value: 'John'
-    //   }
-    // ],
-    // onFilter: (value: string, record: any) => record.name.indexOf(value) === 0
   },
   {
     title: 'Other',
@@ -667,7 +656,7 @@ function getRandomIntInclusive(min: number, max: number) {
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min //加 1 是因为包含 max
 }
-const data2 = [...Array(100)].map((_, i) => ({
+const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
   key: i,
   name: 'John Brown',
   age: getRandomIntInclusive(0, 10),
@@ -678,13 +667,6 @@ const data2 = [...Array(100)].map((_, i) => ({
   companyName: 'SoftLake Co',
   gender: 'M'
 }))
-const dataSourceHeaderGroup = ref(data2.slice(0, 10))
-function change() {
-  console.log('change')
-  setTimeout(() => {
-    dataSourceHeaderGroup.value = data2.slice(10, 20)
-  }, 1000)
-}
 const dataSourceSort = ref([
   {
     key: '1',
@@ -1056,21 +1038,11 @@ function onSortChange(column: any, currentDataSource: any[]) {
     <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
-      <a-table
-        :columns="columnsHeaderGroup"
-        :data-source="dataSourceHeaderGroup"
-        :bordered="groupBordered"
-        :scroll="{ x: 1500, y: 240 }"
-        :pagination="{ total: 50 }"
-        @change="change"
-      />
       <Table
         :columns="columnsHeaderGroup"
         :data-source="dataSourceHeaderGroup"
         :bordered="groupBordered"
         :scroll="{ x: 1500, y: 240 }"
-        :pagination="{ total: 50 }"
-        @change="change"
       />
     </Flex>
     <h2 class="mt30 mb10">表格排序</h2>

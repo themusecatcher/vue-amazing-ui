@@ -323,17 +323,6 @@ const columnsHeaderGroup = reactive([
     key: 'name',
     width: 100,
     fixed: 'left'
-    // filters: [
-    //   {
-    //     text: 'Joe',
-    //     value: 'Joe'
-    //   },
-    //   {
-    //     text: 'John',
-    //     value: 'John'
-    //   }
-    // ],
-    // onFilter: (value: string, record: any) => record.name.indexOf(value) === 0
   },
   {
     title: 'Other',
@@ -2489,7 +2478,7 @@ const dataSourceFixHeaderAndColumn = ref(data)
     :columns="columnsHeaderGroup"
     :data-source="dataSourceHeaderGroup"
     :bordered="groupBordered"
-      :scroll="{ x: 1500, y: 240 }"
+    :scroll="{ x: 1500, y: 240 }"
   />
 </Flex>
 
@@ -2597,7 +2586,7 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
       :columns="columnsHeaderGroup"
       :data-source="dataSourceHeaderGroup"
       :bordered="groupBordered"
-        :scroll="{ x: 1500, y: 240 }"
+      :scroll="{ x: 1500, y: 240 }"
     />
   </Flex>
 </template>
