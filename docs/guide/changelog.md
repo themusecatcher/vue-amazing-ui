@@ -4,7 +4,8 @@
 
 ## 1.9.9 <Tag color="volcano" size="small">soon</Tag>
 
-- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码功能
+
 ## 1.9.8 <Tag color="volcano" size="small">2024-11-26</Tag>
 
 - 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件，新增 `yScrollable` 属性，用于控制是否使用垂直滚动；新增支持通过设置 `--scrollbar` 相关变量自定义滚动条样式

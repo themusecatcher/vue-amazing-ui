@@ -554,6 +554,7 @@ function getSortTooltip(column: Column) {
 }
 // 点击 th 单元格操作排序，更新 sortColumnDataIndex sortColumnSorter sortSymbol
 function onSorter(column: Column) {
+  clickSorter.value = true
   sortColumn.value = column
   if (!disabledDefaultSort.value) {
     disabledDefaultSort.value = true
