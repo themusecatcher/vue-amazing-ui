@@ -18,7 +18,7 @@ import {
   now,
   setCSSProperty,
   showWarning
-} from "./chunk-3CICESJC.js";
+} from "./chunk-HTQMM6PW.js";
 import {
   computed,
   h,
@@ -34,7 +34,7 @@ import {
 } from "./chunk-5TCDO6LD.js";
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@11.1.15/node_modules/swiper/shared/swiper-core.mjs
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -3709,7 +3709,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 });
 Swiper.use([Resize, Observer]);
 
-// node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@11.1.15/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -3909,7 +3909,7 @@ function updateSwiper(_ref) {
   let loopNeedDestroy;
   let loopNeedEnable;
   let loopNeedReloop;
-  if (changedParams.includes("thumbs") && passedParams.thumbs && passedParams.thumbs.swiper && currentParams.thumbs && !currentParams.thumbs.swiper) {
+  if (changedParams.includes("thumbs") && passedParams.thumbs && passedParams.thumbs.swiper && !passedParams.thumbs.swiper.destroyed && currentParams.thumbs && (!currentParams.thumbs.swiper || currentParams.thumbs.swiper.destroyed)) {
     needThumbsInit = true;
   }
   if (changedParams.includes("controller") && passedParams.controller && passedParams.controller.control && currentParams.controller && !currentParams.controller.control) {
@@ -4054,7 +4054,7 @@ function updateSwiper(_ref) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@11.1.15/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
     obj = {};
@@ -4178,7 +4178,7 @@ var updateOnVirtualData = (swiper) => {
   }
 };
 
-// node_modules/.pnpm/swiper@11.1.14/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@11.1.15/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots, slidesRef, oldSlidesRef) {
   if (originalSlots === void 0) {
     originalSlots = {};
