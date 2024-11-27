@@ -117,6 +117,7 @@ const colExpandRef = ref() // 表格展开列 col 的引用
 const colRef = ref() // 表格除展开列以外 col 的引用
 const thColumnsLeaf = ref<Column[]>([]) // thColumns 的所有叶子节点,包括 colSpan: 0 的列
 const disabledDefaultSort = ref<boolean>(false) // 是否禁用默认排序
+const sortColumn = ref<Column | null>(null) // 排序列
 const sortColumnDataIndex = ref<string | null>(null) // 排序列的数据索引
 const sortColumnSorter = ref<Function | null>(null) // 排序列的升序排序函数
 const sortSymbol = ref<'ascend' | 'descend' | null>(null) // 排序标识
@@ -276,6 +277,7 @@ watch(
     tablePage.value,
     tablePageSize.value,
     sortColumnDataIndex.value,
+    sortColumnSorter.value,
     sortSymbol.value
   ],
   () => {
@@ -314,7 +316,7 @@ watch(
 watch(displayDataSource, (to) => {
   if (clickSorter.value) {
     clickSorter.value = false
-    emits('sortChange', to)
+    emits('sortChange', sortColumn.value, to)
   }
 })
 // 初始化默认排序
@@ -552,6 +554,7 @@ function getSortTooltip(column: Column) {
 }
 // 点击 th 单元格操作排序，更新 sortColumnDataIndex sortColumnSorter sortSymbol
 function onSorter(column: Column) {
+  sortColumn.value = column
   if (!disabledDefaultSort.value) {
     disabledDefaultSort.value = true
   }
