@@ -55,7 +55,7 @@ export default defineConfig({
       less: {
         modifyVars: { // 或者globalVars
           // `themeColor` is global variables fields name
-          themeColor: '#1677FF',
+          themeColor: '#1677ff',
           themeHoverColor: '#4096ff'
         },
         javascriptEnabled: true
@@ -70,7 +70,8 @@ export default defineConfig({
       // __dirname 的值是 vite.config.ts 文件所在目录
       entry: resolve(__dirname, 'components', 'index.ts'),  // entry 是必需的，因为库不能使用HTML作为入口。
       name: 'VueAmazingUI', // 暴露的全局变量
-      fileName: 'vue-amazing-ui' // 输出的包文件名，默认是 package.json 的 name 选项
+      fileName: 'vue-amazing-ui' // 输出的包文件名，默认是 package.json 的 name 选项；也可以定义为以 format 和 entryName 为参数的函数，并返回文件名
+      // cssFileName: 'vue-amazing-ui' // 指定 CSS 输出文件的名称，默认为 package.json 中的 name
     },
     rollupOptions: { // 自定义底层的Rollup打包配置
       plugins: [
