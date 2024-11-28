@@ -564,7 +564,7 @@ defineExpose({
     }
     .arrow-top {
       left: 50%;
-      bottom: 12.1px;
+      bottom: 12px;
       transform: translateX(-50%) translateY(100%) rotate(180deg);
       &::before {
         bottom: 0;
@@ -577,7 +577,7 @@ defineExpose({
     }
     .arrow-bottom {
       left: 50%;
-      top: 12.1px;
+      top: 12px;
       transform: translateX(-50%) translateY(-100%) rotate(0deg);
       &::before {
         bottom: 0;
