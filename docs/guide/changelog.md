@@ -2,6 +2,10 @@
 
 <GlobalElement />
 
+## 1.9.11 <Tag color="volcano" size="small">2024-11-28</Tag>
+
+- 修复 `vite` 更新至 `v6` 后，打包后 `cssFileName` 默认值更改为 `package.json` 中的 `name` 值导致无法引入 `css` 文件的问题
+
 ## 1.9.10 <Tag color="volcano" size="small">2024-11-28</Tag>
 
 - 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件，新增支持设置多种 `CSS` 变量自定义样式
