@@ -4,7 +4,7 @@
 
 ## 1.9.11 <Tag color="volcano" size="small">2024-11-28</Tag>
 
-- 修复 `vite` 更新至 `v6` 后，打包后 `cssFileName` 默认值更改为 `package.json` 中的 `name` 值导致无法引入 `css` 文件的问题
+- 修复组件库 `vue-amazing-ui@1.9.10` 更新 `vite` 至 `v6` 后，打包时 `cssFileName` 默认值更改为 `package.json` 中的 `name` 值导致无法引入 `css` 文件的相关问题
 
 ## 1.9.10 <Tag color="volcano" size="small">2024-11-28</Tag>
 
