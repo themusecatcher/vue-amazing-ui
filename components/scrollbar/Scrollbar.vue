@@ -72,7 +72,10 @@ const isXScroll = computed(() => {
 })
 const isScroll = computed(() => {
   // 是否存在滚动，水平或垂直
-  return (props.yScrollable && isYScroll.value) || (props.xScrollable && isXScroll.value)
+  if (containerScrollHeight.value || containerScrollWidth.value) {
+    return (props.yScrollable && isYScroll.value) || (props.xScrollable && isXScroll.value)
+  }
+  return true
 })
 const trackHeight = computed(() => {
   // 垂直滚动条高度

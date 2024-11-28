@@ -4,12 +4,15 @@
 
 ## 1.9.10 <Tag color="volcano" size="small">2024-11-28</Tag>
 
-- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增支持设置 `--rail-color` `--track-color` `--handle-color` `--handle-shadow-color` 等 `CSS` 变量自定义样式
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件，新增支持设置多种 `CSS` 变量自定义样式
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增支持设置多种 `CSS` 变量自定义样式
+- 组件库及文档代码优化
 
 ## 1.9.9 <Tag color="volcano" size="small">2024-11-27</Tag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码和功能
 - 优化并更新 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件，重构组件，新增支持更多样式自定义
+- 组件库及文档代码优化
 
 ## 1.9.8 <Tag color="volcano" size="small">2024-11-26</Tag>
 
