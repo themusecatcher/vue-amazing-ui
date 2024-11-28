@@ -17,6 +17,22 @@ const doubleValue = ref([20, 80])
 const doubleCustomValue = ref([-5, 5])
 const singleCustomStepValue = ref(30)
 const doubleCustomStepValue = ref([30, 60])
+const customStyle = {
+  '--track-color': '#ffbb96',
+  '--track-color-hover': '#d4380d',
+  '--handle-color': '#fff2e8',
+  '--handle-shadow-color': '#ffbb96',
+  '--handle-shadow-color-hover-focus': '#d4380d'
+}
+const rangeCustomStyle = {
+  '--rail-color': 'rgb(219, 219, 223)',
+  '--rail-color-hover': 'rgb(199, 199, 203)',
+  '--track-color': '#ffbb96',
+  '--track-color-hover': '#d4380d',
+  '--handle-color': '#fff2e8',
+  '--handle-shadow-color': '#ffbb96',
+  '--handle-shadow-color-hover-focus': '#d4380d'
+}
 watchEffect(() => {
   console.log('singleValue', singleValue.value)
 })
@@ -322,6 +338,53 @@ watchEffect(() => {
   <Flex vertical gap="large">
     <Slider :tooltip="false" v-model:value="singleValue" />
     <Slider range :tooltip="false" v-model:value="doubleValue" />
+  </Flex>
+</template>
+```
+
+:::
+
+## 自定义样式
+
+<Flex vertical gap="large">
+  <Slider :style="customStyle" v-model:value="singleValue" />
+  <Slider :style="rangeCustomStyle" range v-model:value="doubleValue" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const singleValue = ref(20)
+const doubleValue = ref([20, 80])
+const customStyle = {
+  '--track-color': '#ffbb96',
+  '--track-color-hover': '#d4380d',
+  '--handle-color': '#fff2e8',
+  '--handle-shadow-color': '#ffbb96',
+  '--handle-shadow-color-hover-focus': '#d4380d'
+}
+const rangeCustomStyle = {
+  '--rail-color': 'rgb(219, 219, 223)',
+  '--rail-color-hover': 'rgb(199, 199, 203)',
+  '--track-color': '#ffbb96',
+  '--track-color-hover': '#d4380d',
+  '--handle-color': '#fff2e8',
+  '--handle-shadow-color': '#ffbb96',
+  '--handle-shadow-color-hover-focus': '#d4380d'
+}
+watchEffect(() => {
+  console.log('singleValue', singleValue.value)
+})
+watchEffect(() => {
+  console.log('doubleValue', doubleValue.value)
+})
+</script>
+<template>
+  <Flex vertical gap="large">
+    <Slider :style="customStyle" v-model:value="singleValue" />
+    <Slider :style="rangeCustomStyle" range v-model:value="doubleValue" />
   </Flex>
 </template>
 ```

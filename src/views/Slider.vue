@@ -7,6 +7,22 @@ const doubleValue = ref([20, 80])
 const doubleCustomValue = ref([-5, 5])
 const singleCustomStepValue = ref(30)
 const doubleCustomStepValue = ref([30, 60])
+const customStyle = {
+  '--track-color': '#ffbb96',
+  '--track-color-hover': '#d4380d',
+  '--handle-color': '#fff2e8',
+  '--handle-shadow-color': '#ffbb96',
+  '--handle-shadow-color-hover-focus': '#d4380d'
+}
+const rangeCustomStyle = {
+  '--rail-color': 'rgb(219, 219, 223)',
+  '--rail-color-hover': 'rgb(199, 199, 203)',
+  '--track-color': '#ffbb96',
+  '--track-color-hover': '#d4380d',
+  '--handle-color': '#fff2e8',
+  '--handle-shadow-color': '#ffbb96',
+  '--handle-shadow-color-hover-focus': '#d4380d'
+}
 watchEffect(() => {
   console.log('singleValue', singleValue.value)
 })
@@ -86,6 +102,11 @@ function formatter(value: number) {
     <Flex vertical gap="large">
       <Slider :tooltip="false" v-model:value="singleValue" />
       <Slider range :tooltip="false" v-model:value="doubleValue" />
+    </Flex>
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <Flex vertical gap="large">
+      <Slider :style="customStyle" v-model:value="singleValue" />
+      <Slider :style="rangeCustomStyle" range v-model:value="doubleValue" />
     </Flex>
   </div>
 </template>
