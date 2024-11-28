@@ -42,8 +42,8 @@ importers:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.3)
       vue-amazing-ui:
-        specifier: ^1.9.9
-        version: 1.9.9(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
+        specifier: ^1.9.10
+        version: 1.9.10(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
       vue-router:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.6.3))
@@ -2711,8 +2711,8 @@ packages:
   vscode-uri@3.0.8:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
 
-  vue-amazing-ui@1.9.9:
-    resolution: {integrity: sha512-b6o+Mhxz/yZ/ju4oG0VxNp99imczHpb3XWZgbcGHwEN+Am1SFMWquJNXfZgbDdAibsUcjO6wSqp8tqxznuwyPQ==}
+  vue-amazing-ui@1.9.10:
+    resolution: {integrity: sha512-r/UVTQfslUjsrxiQzA29hmTaujCyJmzrpeoQ22wzcDQRVyxeGp6rL3pcdUzM3R8C6c8ynYss6InjEn/Z50QTuA==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -5524,12 +5524,12 @@ snapshots:
 
   vscode-uri@3.0.8: {}
 
-  vue-amazing-ui@1.9.9(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3):
+  vue-amazing-ui@1.9.10(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3):
     dependencies:
       '@ant-design/icons-vue': 7.0.1(vue@3.5.13(typescript@5.6.3))
       '@vuepic/vue-datepicker': 10.0.0(vue@3.5.13(typescript@5.6.3))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.6.3))
-      '@vueuse/integrations': 11.3.0(async-validator@4.2.5)(focus-trap@7.6.2)(qrcode@1.5.4)(vue@3.5.13(typescript@5.6.3))
+      '@vueuse/core': 12.0.0(typescript@5.6.3)
+      '@vueuse/integrations': 12.0.0(async-validator@4.2.5)(focus-trap@7.6.2)(qrcode@1.5.4)(typescript@5.6.3)
       ant-design-vue: 4.2.6(vue@3.5.13(typescript@5.6.3))
       core-js: 3.39.0
       date-fns: 4.1.0
@@ -5539,7 +5539,6 @@ snapshots:
       vue: 3.5.13(typescript@5.6.3)
       vue-router: 4.5.0(vue@3.5.13(typescript@5.6.3))
     transitivePeerDependencies:
-      - '@vue/composition-api'
       - async-validator
       - axios
       - change-case

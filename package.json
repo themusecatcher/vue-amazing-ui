@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "1.9.10",
+  "version": "1.9.11",
   "private": false,
   "type": "module",
   "files": [
@@ -13,8 +13,8 @@
   "browser": "./dist/vue-amazing-ui.js",
   "unpkg": "./dist/vue-amazing-ui.iife.js",
   "exports": {
-    "./dist/style.css": "./dist/style.css",
-    "./css": "./dist/style.css",
+    "./dist/vue-amazing-ui.css": "./dist/vue-amazing-ui.css",
+    "./css": "./dist/vue-amazing-ui.css",
     ".": {
       "import": "./dist/vue-amazing-ui.js",
       "require": "./dist/vue-amazing-ui.umd.cjs"
@@ -49,7 +49,7 @@
     "qrcode": "^1.5.4",
     "swiper": "^11.1.15",
     "vue": "^3.5.13",
-    "vue-amazing-ui": "^1.9.9",
+    "vue-amazing-ui": "^1.9.10",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
