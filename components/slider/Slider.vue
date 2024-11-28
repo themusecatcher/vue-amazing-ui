@@ -396,7 +396,21 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       'slider-vertical': vertical,
       'slider-disabled': disabled
     }"
-    :style="sliderStyle"
+    :style="[
+      sliderStyle,
+      `
+      --rail-color: rgba(0, 0, 0, 0.04);
+      --rail-color-hover: rgba(0, 0, 0, 0.1);
+      --rail-color-disabled: rgba(0, 0, 0, 0.06);
+      --track-color: #91caff;
+      --track-color-hover: #1677ff;
+      --track-color-disabled: rgba(0, 0, 0, 0.25);
+      --handle-color: #fff;
+      --handle-shadow-color: #91caff;
+      --handle-shadow-color-hover-focus: #1677ff;
+      --handle-shadow-color-disabled: #bfbfbf;
+      `
+    ]"
     @click="disabled ? () => false : onClickSliderPoint($event)"
   >
     <div class="slider-rail"></div>
@@ -444,27 +458,27 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   cursor: pointer;
   touch-action: none; // 禁用元素上的所有手势,使用自己的拖动和缩放api
   .slider-rail {
-    // 灰色未选择滑动条背景色
+    // 灰色轨道颜色
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: var(--rail-color);
     border-radius: 2px;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .slider-track {
-    // 蓝色已选择滑动条背景色
+    // 蓝色轨道颜色
     position: absolute;
-    background-color: #91caff;
+    background-color: var(--track-color);
     border-radius: 2px;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   &:hover {
     .slider-rail {
-      // 灰色未选择滑动条背景色
-      background: rgba(0, 0, 0, 0.1);
+      // 灰色轨道悬浮色
+      background: var(--rail-color-hover);
     }
     .slider-track {
-      // 蓝色已选择滑动条背景色
-      background: @themeColor;
+      // 蓝色轨道悬浮色
+      background: var(--track-color-hover);
     }
   }
   .slider-handle {
@@ -472,8 +486,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     position: absolute;
     width: 10px;
     height: 10px;
-    background: #fff;
-    box-shadow: 0 0 0 2px #91caff;
+    background: var(--handle-color);
+    box-shadow: 0 0 0 2px var(--handle-shadow-color);
     border-radius: 50%;
     outline: none;
     transition:
@@ -492,7 +506,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     .hover-focus-handle {
       width: 12px;
       height: 12px;
-      box-shadow: 0 0 0 4px @themeColor;
+      box-shadow: 0 0 0 4px var(--handle-shadow-color-hover-focus);
     }
     &:hover,
     &:focus {
@@ -640,26 +654,26 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
 .slider-disabled {
   cursor: not-allowed;
   .slider-rail {
-    background: rgba(0, 0, 0, 0.06);
+    background: var(--rail-color-disabled);
   }
   .slider-track {
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--track-color-disabled);
   }
   .slider-handle {
-    box-shadow: 0 0 0 2px #bfbfbf;
+    box-shadow: 0 0 0 2px var(--handle-shadow-color-disabled);
     &:hover,
     &:focus {
       width: 10px;
       height: 10px;
-      box-shadow: 0 0 0 2px #bfbfbf;
+      box-shadow: 0 0 0 2px var(--handle-shadow-color-disabled);
     }
   }
   &:hover {
     .slider-rail {
-      background: rgba(0, 0, 0, 0.06);
+      background: var(--rail-color-disabled);
     }
     .slider-track {
-      background: rgba(0, 0, 0, 0.25);
+      background: var(--track-color-disabled);
     }
   }
 }

@@ -2,6 +2,10 @@
 
 <GlobalElement />
 
+## 1.9.10 <Tag color="volcano" size="small">2024-11-28</Tag>
+
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增支持设置 `--rail-color` `--track-color` `--handle-color` `--handle-shadow-color` 等 `CSS` 变量自定义样式
+
 ## 1.9.9 <Tag color="volcano" size="small">2024-11-27</Tag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码和功能
