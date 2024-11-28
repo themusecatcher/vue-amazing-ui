@@ -399,16 +399,16 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     :style="[
       sliderStyle,
       `
-      --rail-color: rgba(0, 0, 0, 0.04);
-      --rail-color-hover: rgba(0, 0, 0, 0.1);
-      --rail-color-disabled: rgba(0, 0, 0, 0.06);
-      --track-color: #91caff;
-      --track-color-hover: #1677ff;
-      --track-color-disabled: rgba(0, 0, 0, 0.25);
-      --handle-color: #fff;
-      --handle-shadow-color: #91caff;
-      --handle-shadow-color-hover-focus: #1677ff;
-      --handle-shadow-color-disabled: #bfbfbf;
+        --rail-color: rgba(0, 0, 0, 0.04);
+        --rail-color-hover: rgba(0, 0, 0, 0.1);
+        --rail-color-disabled: rgba(0, 0, 0, 0.06);
+        --track-color: #91caff;
+        --track-color-hover: #1677ff;
+        --track-color-disabled: rgba(0, 0, 0, 0.25);
+        --handle-color: #fff;
+        --handle-shadow-color: #91caff;
+        --handle-shadow-color-hover-focus: #1677ff;
+        --handle-shadow-color-disabled: #bfbfbf;
       `
     ]"
     @click="disabled ? () => false : onClickSliderPoint($event)"

@@ -12,10 +12,37 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@ant-design/icons-vue'
+const defaultCustomStyle = {
+  '--backtop-width': '54px',
+  '--backtop-height': '54px',
+  '--icon-size': '32px',
+  '--color-default-hover': '#d4380d'
+}
+const primaryCustomStyle = {
+  '--backtop-width': '54px',
+  '--backtop-height': '54px',
+  '--icon-size': '32px',
+  '--bg-color-primary': '#d4380d',
+  '--bg-color-primary-hover': '#dd6747',
+  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
+  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
+  '--square-border-radius': '18px'
+}
+const primaryDescCustomStyle = {
+  '--backtop-width': '54px',
+  '--backtop-height': '54px',
+  '--icon-width-desc-size': '30px',
+  '--desc-size': '16px',
+  '--bg-color-primary': '#d4380d',
+  '--bg-color-primary-hover': '#dd6747',
+  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
+  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
+  '--square-border-radius': '18px'
+}
+const scrollContainer = ref()
 function onShow(show: boolean) {
   console.log('show', show)
 }
-const scrollContainer = ref()
 </script>
 
 ## 基本使用
@@ -117,6 +144,8 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 
 <BackTop tooltip="回到顶部" :right="160" :bottom="160" />
 <BackTop
+  type="primary"
+  shape="square"
   tooltip="回到顶部"
   :tooltip-props="{
     bgColor: '#fff',
@@ -138,6 +167,8 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 <template>
   <BackTop tooltip="回到顶部" :right="160" :bottom="160" />
   <BackTop
+    type="primary"
+    shape="square"
     tooltip="回到顶部"
     :tooltip-props="{
       bgColor: '#fff',
@@ -152,6 +183,53 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
     :right="220"
     :bottom="160"
   />
+</template>
+```
+
+:::
+
+## 自定义样式
+
+<BackTop :style="defaultCustomStyle" :right="280" :bottom="160" />
+<BackTop :style="primaryCustomStyle" type="primary" shape="square" :right="350" :bottom="160" />
+<BackTop :style="primaryDescCustomStyle" type="primary" shape="square" description="顶部" :right="420" :bottom="160" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+const defaultCustomStyle = {
+  '--backtop-width': '54px',
+  '--backtop-height': '54px',
+  '--icon-size': '32px',
+  '--color-default-hover': '#d4380d'
+}
+const primaryCustomStyle = {
+  '--backtop-width': '54px',
+  '--backtop-height': '54px',
+  '--icon-size': '32px',
+  '--bg-color-primary': '#d4380d',
+  '--bg-color-primary-hover': '#dd6747',
+  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
+  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
+  '--square-border-radius': '18px'
+}
+const primaryDescCustomStyle = {
+  '--backtop-width': '54px',
+  '--backtop-height': '54px',
+  '--icon-width-desc-size': '30px',
+  '--desc-size': '16px',
+  '--bg-color-primary': '#d4380d',
+  '--bg-color-primary-hover': '#dd6747',
+  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
+  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
+  '--square-border-radius': '18px'
+}
+</script>
+<template>
+  <BackTop :style="defaultCustomStyle" :right="280" :bottom="160" />
+  <BackTop :style="primaryCustomStyle" type="primary" shape="square" :right="350" :bottom="160" />
+  <BackTop :style="primaryDescCustomStyle" type="primary" shape="square" description="顶部" :right="420" :bottom="160" />
 </template>
 ```
 
