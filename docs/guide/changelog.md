@@ -363,9 +363,10 @@
 - 新增 布局 Layout 组件
 - 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
-- 新增 时间选择器 TimePicker 组件
-- 分段控制器 Segmented 组件，选项切换效果优化
+<!-- - 新增 时间选择器 TimePicker 组件
 - 重构级联选择 Cascader 组件
+- 分段控制器 Segmented 组件，选项切换效果优化 -->
+
 
 <style lang="less" scoped>
 .m-tag {
