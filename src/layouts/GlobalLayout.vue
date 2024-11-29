@@ -5,7 +5,7 @@ import { routes } from '@/router'
 import { toggleDark, useMutationObserver } from 'components/index'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
-const themeDark = ref()
+const themeDark = ref<boolean>(false)
 const html = document.documentElement
 onMounted(() => {
   themeDark.value = html.classList.contains('dark')
