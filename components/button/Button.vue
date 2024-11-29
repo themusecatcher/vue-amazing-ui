@@ -2,7 +2,7 @@
 import { ref, nextTick, computed } from 'vue'
 import type { VNode, Slot } from 'vue'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
   shape?: 'default' | 'circle' | 'round' // 设置按钮形状
   icon?: VNode | Slot // 设置按钮图标

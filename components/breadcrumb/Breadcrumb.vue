@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
-interface Query {
+export interface Query {
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
-interface Route {
+export interface Route {
   name: string // 路由名称
   path?: string // 路由地址
   query?: Query // 路由查询参数
 }
-interface Props {
+export interface Props {
   routes?: Route[] // router 路由数组
   breadcrumbClass?: string // 设置面包屑类名
   breadcrumbStyle?: CSSProperties // 设置面包屑样式

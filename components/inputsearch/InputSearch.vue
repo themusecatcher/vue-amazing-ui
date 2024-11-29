@@ -2,7 +2,7 @@
 import { ref, computed, nextTick } from 'vue'
 import Button from '../button'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   width?: string | number // 搜索框宽度，单位 px
   icon?: boolean // 搜索图标 boolean | slot
   search?: string // 搜索按钮，默认时为搜索图标 string | slot

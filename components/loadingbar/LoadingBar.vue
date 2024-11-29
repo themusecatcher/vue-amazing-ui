@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
-interface Props {
+export interface Props {
   containerClass?: string // 加载条容器的类名
   containerStyle?: CSSProperties // 加载条容器的样式
   loadingBarSize?: number // 加载条大小，单位 px

@@ -5,8 +5,10 @@ import LayoutSider from './LayoutSider.vue'
 import LayoutContent from './LayoutContent.vue'
 import LayoutFooter from './LayoutFooter.vue'
 ;[Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter].forEach((component: any) => {
-  // 使用install方法，在app.use挂载
-  component.install = (app: App): void => {
+  export type { Props } from './.vue'
+
+  // 使用 install 方法，在 app.use 挂载
+  component.install = (app: App) => {
     app.component(component.__name as string, component)
   }
 })

@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 const theme = ref({
   token: {
-    colorPrimary: '#00b96b'
+    colorPrimary: '#d4380d'
   }
 })
 const route = useRoute()

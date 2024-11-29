@@ -3,11 +3,11 @@ import { computed, ref, watchEffect, nextTick } from 'vue'
 import Space from '../space'
 import Spin from '../spin'
 import { add } from '../utils'
-interface Image {
+export interface Image {
   src: string // 图像地址
   name?: string // 图像名称
 }
-interface Props {
+export interface Props {
   src?: string | Image[] // 图像地址或图像地址数组
   name?: string // 图像名称，没有传入图片名时自动从图像地址 src 中读取
   width?: string | number | (string | number)[] // 图像宽度，单位 px

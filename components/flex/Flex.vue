@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-interface Props {
+export interface Props {
   width?: string | number // 弹性区域总宽度，单位 px
   vertical?: boolean // flex 主轴的方向是否垂直，vertical 使用 flex-direction: column
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse' // 设置元素单行显示还是多行显示；参考 flex-wrap

@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import { formatNumber, useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   title?: string // 数值的标题 string | slot
   value?: string | number // 数值的内容 string | number | slot
   valueStyle?: CSSProperties // 设置数值的样式

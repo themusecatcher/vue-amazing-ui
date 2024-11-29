@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import Tooltip from '../tooltip'
 import Badge from '../badge'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   top?: number | string // 按钮定位的上边距，单位 px
   bottom?: number | string // 按钮定位的下边距，单位 px
   left?: number | string // 按钮定位的左边距，单位 px

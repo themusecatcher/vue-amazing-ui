@@ -2,7 +2,7 @@
 import { ref, computed, nextTick } from 'vue'
 import type { Slot } from 'vue'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot
   type?: 'default' | 'success' | 'info' | 'warning' | 'error' // 警告提示的类型

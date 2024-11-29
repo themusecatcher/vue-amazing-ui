@@ -2,7 +2,7 @@
 import { ref, computed, watch, watchEffect, nextTick } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
-interface Props {
+export interface Props {
   title?: string // 通知提醒标题，优先级低于 Notification 中的 title
   description?: string // 通知提醒内容，优先级低于 Notification 中的 description
   duration?: number | null // 自动关闭的延时时长，单位 ms；设置 null 时，不自动关闭，优先级低于 Notification 中的 duration
@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
   bottom: 24,
   placement: 'topRight'
 })
-interface Notification {
+export interface Notification {
   title?: string // 通知提醒标题
   description?: string // 通知提醒内容
   icon?: VNode // 自定义图标

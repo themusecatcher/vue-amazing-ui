@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-interface SkeletonButtonProps {
+export interface SkeletonButtonProps {
   shape?: 'default' | 'round' | 'circle' // 指定按钮的形状，默认 'default'
   size?: 'small' | 'middle' | 'large' // 设置按钮的大小，默认 'middle'
   block?: boolean // 将按钮宽度调整为其父宽度的选项，默认 false
 }
-interface SkeletonAvatarProps {
+export interface SkeletonAvatarProps {
   shape?: 'circle' | 'square' // 指定头像的形状，默认 'circle'
   size?: number | 'small' | 'middle' | 'large' // 设置头像占位图的大小，默认 'middle'
 }
-interface SkeletonInputProps {
+export interface SkeletonInputProps {
   size: 'small' | 'middle' | 'large' // 设置输入框的大小，默认 'middle'
 }
-interface SkeletonTitleProps {
+export interface SkeletonTitleProps {
   width?: number | string // 设置标题占位图的宽度，默认 '38%'
 }
-interface SkeletonParagraphProps {
+export interface SkeletonParagraphProps {
   rows?: number | string // 设置段落占位图的行数，默认 avatar ? 2 : 3
   width?: number | string | Array<number | string> // 设置段落占位图的宽度，若为数组时则为对应的每行宽度，反之则是最后一行的宽度，默认 '61%'
 }
-interface Props {
+export interface Props {
   animated?: boolean // 是否展示动画效果
   button?: boolean | SkeletonButtonProps // 是否使用按钮占位图
   avatar?: boolean | SkeletonAvatarProps // 是否显示头像占位图

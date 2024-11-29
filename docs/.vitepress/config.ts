@@ -5,7 +5,8 @@ export default defineConfig({
   description: 'Amazing UI 组件库',
   base: '/vue-amazing-ui/',
 
-  head: [ // 网站图标
+  head: [
+    // 网站图标
     ['link', { rel: 'icon', type: 'image/svg+xml', href: 'https://cn.vitejs.dev/viteconf.svg' }]
     // ['link', { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
   ],
@@ -40,7 +41,8 @@ export default defineConfig({
     //   provider: 'local'
     // },
 
-    algolia: { // algolia 搜索服务 与 内置 search 可二选一
+    algolia: {
+      // algolia 搜索服务 与 内置 search 可二选一
       appId: 'SHDNEYGA8Z',
       apiKey: '91419401b0b0efd31b610e54e5b97249',
       indexName: 'vue-amazing-ui'
@@ -432,15 +434,15 @@ export default defineConfig({
               link: '/utils/functions/fps'
             },
             {
-               text: 'useMediaQuery 媒体查询',
+              text: 'useMediaQuery 媒体查询',
               link: '/utils/functions/media-query'
             },
             {
-               text: 'useResizeObserver 监听DOM尺寸',
+              text: 'useResizeObserver 监听DOM尺寸',
               link: '/utils/functions/resize-observer'
             },
             {
-               text: 'useSlotsExist 监听插槽存在',
+              text: 'useSlotsExist 监听插槽存在',
               link: '/utils/functions/slots-exist'
             }
           ]
