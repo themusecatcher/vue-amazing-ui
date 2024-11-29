@@ -821,42 +821,48 @@ watchEffect(() => {
 -- | -- | -- | --
 items | 折叠面板数据 | [Item](#item-type)[] | []
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | number[] &#124; number &#124; string[] &#124; string &#124; null | null
-disabled | 是否禁用，优先级低于 `Item` 的 `disabled` | boolean | false
 bordered | 带边框风格的折叠面板 | boolean | true
-copyable | 是否可复制面板内容 | boolean | false
-copyProps | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
-lang | 面板右上角固定内容，例如标识 `language` | string &#124; slot | undefined
-itemStyle | 设置面板容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+ghost | 使折叠面板透明且无边框 | boolean | false
 headerStyle | 设置面板标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 contentStyle | 设置面板内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-arrow | 自定义箭头切换图标 | slot | undefined
-showArrow | 是否展示箭头，优先级低于 `Item` 的 `showArrow` | boolean | true
+collapseStyle | 设置面板容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+arrow | 自定义箭头切换图标 | VNode &#124; slot | undefined
+showArrow | 是否展示箭头 | boolean | true
 arrowPlacement | 箭头位置 | 'left' &#124; 'right' | 'left'
 arrowStyle | 设置面板箭头的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 extra | 面板标题右侧的额外内容 | string &#124; slot | undefined
-ghost | 使折叠面板透明且无边框 | boolean | false
+disabled | 是否禁用 | boolean | false
+lang | 面板右上角固定内容，例如标识 `language` | string &#124; slot | undefined
+copyable | 是否可复制面板内容 | boolean | false
+copyProps | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
+copyText | 复制按钮文本 | string | 'Copy'
+copiedText | 已复制按钮文本 | string | 'Copied'
 
 ### Item Type
+
+<br/>
+
+*以下属性均具有更高优先级*
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 (`0,1,2...`) 绑定 | string &#124; number | undefined
 header? | 面板标题 | string &#124; v-slot:header="{ item, header, key, active }" | undefined
+headerStyle? | 设置面板标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 content? | 面板内容 | string &#124; v-slot:content="{ item, content, key, active }" | undefined
-disabled? | 是否禁用 | boolean | undefined
+contentStyle? | 设置面板内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
+collapseStyle? | 设置面板容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
+arrow? | 自定义箭头切换图标 | VNode | undefined
 showArrow? | 是否展示箭头 | boolean | undefined
-copyable | 是否可复制面板内容 | boolean | undefined
-copyProps | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
-extra | 面板标题右侧的额外内容 | string &#124; v-slot:extra="{ item, extra, key, active }" | undefined
-
-## Slots
-
-名称 | 说明 | 类型
--- | -- | --
-headerCell | 个性化头部单元格 | v-slot:headerCell="{ column, title }"
-expandCell | 自定义展开按钮 | v-slot:expandCell="{ record, index, expanded }"
-bodyCell | 个性化单元格 | v-slot:bodyCell="{ column, record, text, index }"
-expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender="{ record, index, expanded }"
+arrowPlacement? | 箭头位置 | 'left' &#124; 'right' | undefined
+arrowStyle? | 设置面板箭头的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
+extra? | 面板标题右侧的额外内容 | string &#124; slot | undefined
+disabled? | 是否禁用 | boolean | undefined
+lang? | 面板右上角固定内容，例如标识 `language` | string &#124; slot | undefined
+copyable? | 是否可复制面板内容 | boolean | undefined
+copyProps? | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
+copyText? | 复制按钮文本 | string | undefined
+copiedText? | 已复制按钮文本 | string | undefined
 
 ## Events
 
