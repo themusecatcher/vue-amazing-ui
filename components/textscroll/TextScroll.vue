@@ -58,6 +58,13 @@ const totalWidth = computed(() => {
     return props.width
   }
 })
+const sliderBoardStyle = computed(() => {
+  return {
+    ...props.boardStyle,
+    width: totalWidth.value,
+    height: `${props.height}px`
+  }
+})
 const displayAmount = computed(() => {
   if (props.single) {
     return 1
@@ -180,8 +187,8 @@ defineExpose({
     ref="horizontalRef"
     class="m-slider-horizontal"
     :style="[
-      boardStyle,
-      `--href-hover-color: ${hrefHoverColor}; --text-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
+      sliderBoardStyle,
+      `--shadow-color: #d3d3d3; --bg-color: #fff; --href-hover-color: ${hrefHoverColor}; --text-gap: ${gap}px;`
     ]"
   >
     <div class="m-scroll-view" :style="`will-change: transform; transform: translateX(${-left}px);`">
@@ -208,8 +215,8 @@ defineExpose({
     ref="verticalRef"
     class="m-slider-vertical"
     :style="[
-      boardStyle,
-      `--href-hover-color: ${hrefHoverColor}; --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
+      sliderBoardStyle,
+      `--shadow-color: #d3d3d3; --bg-color: #fff; --href-hover-color: ${hrefHoverColor}; --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px;`
     ]"
   >
     <TransitionGroup name="slide">
@@ -236,9 +243,9 @@ defineExpose({
 // 水平滚动
 .m-slider-horizontal {
   overflow: hidden;
-  box-shadow: 0px 0px 5px #d3d3d3;
+  box-shadow: 0px 0px 5px var(--shadow-color);
   border-radius: 6px;
-  background-color: #fff;
+  background-color: var(--bg-color);
   .m-scroll-view {
     height: 100%;
     display: inline-flex;
@@ -276,11 +283,11 @@ defineExpose({
   opacity: 0;
 }
 .m-slider-vertical {
-  overflow: hidden;
-  box-shadow: 0px 0px 5px #d3d3d3;
-  border-radius: 6px;
-  background-color: #fff;
   position: relative;
+  overflow: hidden;
+  box-shadow: 0px 0px 5px var(--shadow-color);
+  border-radius: 6px;
+  background-color: var(--bg-color);
   .m-scroll-view {
     position: absolute;
     left: 0;
