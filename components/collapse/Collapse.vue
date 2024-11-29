@@ -15,6 +15,7 @@ export interface Item {
   arrow?: VNode | Slot // 自定义箭头切换图标
   showArrow?: boolean // 是否展示箭头
   arrowPlacement?: 'left' | 'right' // 箭头位置
+  arrowStyle?: CSSProperties // 设置面板箭头的样式
   extra?: string // 面板标题右侧的额外内容 string | slot
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
@@ -161,15 +162,15 @@ function onCopy(index: number, key: string | number) {
       <div
         tabindex="0"
         class="m-collapse-header"
-        :class="{ 'collapse-header-no-arrow': item.showArrow !== undefined ? !item.showArrow : !showArrow }"
+        :class="{ 'collapse-header-no-arrow': getComputedValue(item, 'showArrow') }"
         :style="headerStyle"
         @click="getComputedValue(item, 'disabled') ? () => false : onClick(getComputedKey(item.key, index))"
         @keydown.enter="onClick(getComputedKey(item.key, index))"
       >
         <div
-          v-if="item.showArrow !== undefined ? item.showArrow : showArrow"
+          v-if="getComputedValue(item, 'showArrow')"
           class="collapse-arrow"
-          :style="arrowStyle"
+          :style="getComputedValue(item, 'arrowStyle') as CSSProperties"
         >
           <slot name="arrow" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
             <svg
