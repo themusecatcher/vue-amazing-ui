@@ -5,35 +5,37 @@ import Button from '../button'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   header?: string // 面板标题 string | slot
+  headerStyle?: CSSProperties // 设置面板标题的样式
   content?: string // 面板内容 string | slot
-  disabled?: boolean // 是否禁用展开
-  copyable?: boolean // 是否可复制面板内容
-  copyProps?: object // 复制按钮属性配置，参考 Button Props
-  copyText?: string // 复制按钮文本
-  copiedText?: string // 已复制按钮文本
-  lang?: string // 面板右上角固定内容，例如 language 标识 string | slot
-  arrow?: VNode | Slot // 自定义箭头切换图标
+  contentStyle?: CSSProperties // 设置面板内容的样式
+  collapseStyle?: CSSProperties // 设置面板容器的样式
+  arrow?: VNode // 自定义箭头切换图标
   showArrow?: boolean // 是否展示箭头
   arrowPlacement?: 'left' | 'right' // 箭头位置
   arrowStyle?: CSSProperties // 设置面板箭头的样式
   extra?: string // 面板标题右侧的额外内容 string | slot
+  disabled?: boolean // 是否禁用展开
+  lang?: string // 面板右上角固定内容，例如 language 标识 string | slot
+  copyable?: boolean // 是否可复制面板内容
+  copyProps?: object // 复制按钮属性配置，参考 Button Props
+  copyText?: string // 复制按钮文本
+  copiedText?: string // 已复制按钮文本
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
 export interface Props {
   items?: Item[] // 折叠面板数据，可使用 slot 替换指定 key 的 header、content、arrow、extra、lang
   activeKey?: string[] | string | number[] | number | null // (v-model) 当前激活 tab 面板的 key，传入 string | number 类型时，即为手风琴模式
-  disabled?: boolean // 是否禁用，较低优先级
-  collapseStyle?: CSSProperties // 设置面板的样式
   bordered?: boolean // 带边框风格的折叠面板
   ghost?: boolean // 使折叠面板透明且无边框
-  itemStyle?: CSSProperties // 设置面板容器的样式
-  headerStyle?: CSSProperties // 设置面板标题的样式
-  contentStyle?: CSSProperties // 设置面板内容的样式
-  arrow?: Slot // 自定义箭头切换图标 slot
+  headerStyle?: CSSProperties // 设置面板标题的样式，较低优先级
+  contentStyle?: CSSProperties // 设置面板内容的样式，较低优先级
+  collapseStyle?: CSSProperties // 设置面板容器的样式，较低优先级
+  arrow?: VNode | Slot // 自定义箭头切换图标，，较低优先级 vnode | slot
   showArrow?: boolean // 是否展示箭头，较低优先级
-  arrowPlacement?: 'left' | 'right' // 箭头位置
-  arrowStyle?: CSSProperties // 设置面板箭头的样式
+  arrowPlacement?: 'left' | 'right' // 箭头位置，较低优先级
+  arrowStyle?: CSSProperties // 设置面板箭头的样式，较低优先级
   extra?: string // 面板标题右侧的额外内容，较低优先级 string | slot
+  disabled?: boolean // 是否禁用，较低优先级
   lang?: string // 面板右上角固定内容，例如 language 标识，较低优先级 string | slot
   copyable?: boolean // 是否可复制面板内容，较低优先级
   copyProps?: object // 复制按钮属性配置，参考 Button Props，较低优先级
@@ -43,18 +45,17 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   activeKey: null,
-  disabled: false,
-  collapseStyle: () => ({}),
   bordered: true,
   ghost: false,
-  itemStyle: () => ({}),
   headerStyle: () => ({}),
   contentStyle: () => ({}),
+  collapseStyle: () => ({}),
   arrow: undefined,
   showArrow: true,
   arrowPlacement: 'left',
   arrowStyle: () => ({}),
   extra: undefined,
+  disabled: false,
   lang: undefined,
   copyable: false,
   copyProps: () => ({}),
@@ -147,15 +148,17 @@ function onCopy(index: number, key: string | number) {
     class="m-collapse"
     :class="{
       'collapse-borderless': !bordered,
-      'collapse-arrow-right': arrowPlacement === 'right',
       'collapse-ghost': ghost
     }"
-    :style="collapseStyle"
   >
     <div
       class="m-collapse-item"
-      :class="{ 'collapse-item-disabled': getComputedValue(item, 'disabled') }"
-      :style="itemStyle"
+      :class="{
+        'collapse-arrow-left': getComputedValue(item, 'arrowPlacement') === 'left',
+        'collapse-arrow-right': getComputedValue(item, 'arrowPlacement') === 'right',
+        'collapse-item-disabled': getComputedValue(item, 'disabled')
+      }"
+      :style="getComputedValue(item, 'collapseStyle') as CSSProperties"
       v-for="(item, index) in items"
       :key="index"
     >
@@ -163,7 +166,7 @@ function onCopy(index: number, key: string | number) {
         tabindex="0"
         class="m-collapse-header"
         :class="{ 'collapse-header-no-arrow': getComputedValue(item, 'showArrow') }"
-        :style="headerStyle"
+        :style="getComputedValue(item, 'headerStyle') as CSSProperties"
         @click="getComputedValue(item, 'disabled') ? () => false : onClick(getComputedKey(item.key, index))"
         @keydown.enter="onClick(getComputedKey(item.key, index))"
       >
@@ -172,8 +175,10 @@ function onCopy(index: number, key: string | number) {
           class="collapse-arrow"
           :style="getComputedValue(item, 'arrowStyle') as CSSProperties"
         >
-          <slot name="arrow" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+          <slot name="arrow" :item="item" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+            <component v-if="getComputedValue(item, 'arrow')" :is="getComputedValue(item, 'arrow')" />
             <svg
+              v-else
               class="arrow-svg"
               :class="{ 'arrow-rotate': activeCheck(getComputedKey(item.key, index)) }"
               focusable="false"
@@ -192,12 +197,12 @@ function onCopy(index: number, key: string | number) {
         </div>
         <div class="collapse-header">
           <slot name="header" :item="item" :header="item.header" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
-            {{ item.header || '--' }}
+            {{ item.header }}
           </slot>
         </div>
         <div class="collapse-extra">
-          <slot name="extra" :item="item" :extra="item.extra" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
-            {{ item.extra || extra }}
+          <slot name="extra" :item="item" :extra="getComputedValue(item, 'extra')" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+            {{ getComputedValue(item, 'extra') }}
           </slot>
         </div>
       </div>
@@ -221,7 +226,7 @@ function onCopy(index: number, key: string | number) {
           <Button class="collapse-copy" size="small" type="primary" @click="onCopy(index, getComputedKey(item.key, index))" v-bind="getComputedValue(item, 'copyProps') as object">
             {{ getCopyBtnTxt(item, index) }}
           </Button>
-          <div ref="contentRef" class="collapse-content" :style="contentStyle">
+          <div ref="contentRef" class="collapse-content" :style="getComputedValue(item, 'contentStyle') as CSSProperties">
             <slot
               name="content"
               :item="item"
@@ -285,7 +290,6 @@ function onCopy(index: number, key: string | number) {
         height: 22px;
         display: flex;
         align-items: center;
-        padding-right: 12px;
         .arrow-rotate {
           transform: rotate(90deg);
         }
@@ -351,6 +355,17 @@ function onCopy(index: number, key: string | number) {
       }
     }
   }
+  .collapse-arrow-left {
+    .m-collapse-header .collapse-arrow {
+      padding-right: 12px;
+    }
+  }
+  .collapse-arrow-right {
+    .m-collapse-header .collapse-arrow {
+      order: 1; // order 属性定义项目的排列顺序。数值越小，排列越靠前，默认为 0
+      padding-left: 12px;
+    }
+  }
   .collapse-item-disabled {
     .m-collapse-header {
       color: rgba(0, 0, 0, 0.25);
@@ -372,13 +387,6 @@ function onCopy(index: number, key: string | number) {
       background-color: transparent;
       border-top: 0;
     }
-  }
-}
-.collapse-arrow-right {
-  .m-collapse-item .m-collapse-header .collapse-arrow {
-    order: 1; // order 属性定义项目的排列顺序。数值越小，排列越靠前，默认为 0
-    padding-right: 0;
-    padding-left: 12px;
   }
 }
 .collapse-ghost {
