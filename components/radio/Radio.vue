@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue'
-interface Option {
+export interface Option {
   label: string // 选项名
   value: string | number | boolean // 选项值
   disabled?: boolean // 是否禁用选项
 }
-interface Props {
+export interface Props {
   options?: Option[] // 单选框选项数据
   disabled?: boolean // 是否禁用
   vertical?: boolean // 是否垂直排列，仅当 button: false 时生效

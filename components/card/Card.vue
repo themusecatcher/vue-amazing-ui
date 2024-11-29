@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import Skeleton from '../skeleton'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   width?: number | string // 卡片宽度，单位 px
   bordered?: boolean // 是否有边框
   size?: 'small' | 'middle' | 'large' // 卡片的尺寸

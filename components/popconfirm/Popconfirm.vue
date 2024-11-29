@@ -4,7 +4,7 @@ import type { CSSProperties, VNode, Slot } from 'vue'
 import Tooltip from '../tooltip'
 import Button from '../button'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   title?: string // 弹出确认框的标题 string | slot
   titleStyle?: CSSProperties // 设置标题的样式
   description?: string // 弹出确认框的内容描述 string | slot

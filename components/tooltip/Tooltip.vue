@@ -9,7 +9,7 @@ import {
   rafTimeout,
   cancelRaf
 } from '../utils'
-interface Props {
+export interface Props {
   maxWidth?: string | number // 文字提示最大宽度，单位 px
   content?: string // 展示的内容 string | slot
   contentClass?: string // 设置展示内容的类名

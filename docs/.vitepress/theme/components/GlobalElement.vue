@@ -28,9 +28,7 @@ withDefaults(defineProps<Props>(), {
     <template #icon>
       <SoundOutlined />
     </template>
-    <template #tooltip>
-      文档网站部署在静态网站服务 GitHub Pages，为了您的流程访问，建议打开代理
-    </template>
+    <template #tooltip> 文档网站部署在静态网站服务 GitHub Pages，为了您的流程访问，建议打开代理 </template>
   </FloatButton>
   <FloatButton
     :bottom="!hideSponsor ? 160 : 100"
@@ -48,7 +46,7 @@ withDefaults(defineProps<Props>(), {
     </template>
     <template #tooltip>
       <MailSVG /> Email Me<ArrowDownSVG />
-      <br/>
+      <br />
       themusecatcher@163.com
     </template>
   </FloatButton>
@@ -67,7 +65,7 @@ withDefaults(defineProps<Props>(), {
     target="_blank"
   >
     <template #description>
-      <span style="font-size: 14px; font-weight: 600;">赞助</span>
+      <span style="font-size: 14px; font-weight: 600">赞助</span>
     </template>
   </FloatButton>
   <BackTop v-if="!hideBackTop" />

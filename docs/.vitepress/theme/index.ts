@@ -8,7 +8,7 @@ import '../../../dist/vue-amazing-ui.css'
 
 export default {
   extends: DefaultTheme, // or ...DefaultTheme
-  enhanceApp ({ app }) {
+  enhanceApp({ app }) {
     app.component('GlobalElement', GlobalElement)
     app.use(VueAmazingUI)
   }

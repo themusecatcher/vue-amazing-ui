@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import type { Slot } from 'vue'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   icon?: Slot // 自定义图标 slot
   status?: 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500' // 结果的状态，决定图标和颜色
   title?: string // 标题文字 string | slot

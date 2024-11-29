@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { routes } from '@/router'
 import { toggleDark, useMutationObserver } from 'components/index'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
-const themeDark = ref()
+const themeDark = ref<boolean>(false)
 const html = document.documentElement
 onMounted(() => {
   themeDark.value = html.classList.contains('dark')
@@ -21,7 +21,7 @@ useMutationObserver(
   },
   { attributes: true }
 )
-const menus = ref(routes[0].children)
+const menus = ref<any[]>(routes[0].children)
 const current = ref<string[]>([route.name as string])
 function onClick(e: any): void {
   console.log(`${e.item.title} ${e.key}`)

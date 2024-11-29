@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import type { VNode, Slot } from 'vue'
 import { useEventListener, useSlotsExist } from '../utils'
-interface Responsive {
+export interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
   md?: number // ≥768px 响应式栅格
@@ -10,7 +10,7 @@ interface Responsive {
   xl?: number // ≥1200px 响应式栅格
   xxl?: number // ≥1600px 响应式栅格
 }
-interface Props {
+export interface Props {
   color?: string // 头像的背景色
   shape?: 'circle' | 'square' // 指定头像的形状
   size?: number | 'small' | 'middle' | 'large' | Responsive // 设置头像的大小，number 类型时单位 px

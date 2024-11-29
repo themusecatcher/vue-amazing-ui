@@ -2,7 +2,7 @@
 import { ref, computed, watch, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
 import type { VNode, Slot, CSSProperties } from 'vue'
 import Button from '../button'
-interface Props {
+export interface Props {
   width?: string | number // 模态框宽度，单位 px
   icon?: VNode | Slot // 自定义图标
   title?: string // 模态框标题 string | slot
@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   maskClosable: true,
   maskStyle: () => ({})
 })
-interface Modal {
+export interface Modal {
   width?: string | number // 模态框宽度，单位 px
   icon?: VNode // 自定义图标
   title?: string // 模态框标题

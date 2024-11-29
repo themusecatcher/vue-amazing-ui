@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useEventListener } from '../utils'
-interface Props {
+export interface Props {
   span?: number // 栅格占位格数，取 0,1,2...24，为 0 时相当于 display: none，优先级低于 xs, sm, md, lg, xl, xxl
   offset?: number // 栅格左侧的间隔格数，取 0,1,2...24
   flex?: string | number //	flex 布局填充

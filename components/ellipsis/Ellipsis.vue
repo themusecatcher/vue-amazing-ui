@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import Tooltip from '../tooltip'
 import { useResizeObserver } from '../utils'
-interface Props {
+export interface Props {
   maxWidth?: string | number // 文本最大宽度，单位 px
   tooltipMaxWidth?: string | number // 弹出提示最大宽度，单位 px，默认为 文本宽度 + 24
   line?: number // 最大行数

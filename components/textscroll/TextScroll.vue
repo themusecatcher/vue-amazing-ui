@@ -2,12 +2,12 @@
 import { ref, computed, watch, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
-interface Text {
+export interface Text {
   title: string // 文字标题
   href?: string // 跳转链接
   target?: '_self' | '_blank' // 跳转链接打开方式，href 存在时生效
 }
-interface Props {
+export interface Props {
   scrollText?: Text[] | Text // 滚动文字数组，single 为 true 时，类型为 Text；多条文字滚动时，数组长度必须大于等于 amount 才能滚动
   single?: boolean // 是否启用单条文字滚动效果，只支持水平文字滚动，为 true 时，amount 自动设为 1
   width?: number | string // 滚动区域宽度，单位 px
@@ -56,6 +56,13 @@ const totalWidth = computed(() => {
     return `${props.width}px`
   } else {
     return props.width
+  }
+})
+const sliderBoardStyle = computed(() => {
+  return {
+    ...props.boardStyle,
+    width: totalWidth.value,
+    height: `${props.height}px`
   }
 })
 const displayAmount = computed(() => {
@@ -180,8 +187,8 @@ defineExpose({
     ref="horizontalRef"
     class="m-slider-horizontal"
     :style="[
-      boardStyle,
-      `--href-hover-color: ${hrefHoverColor}; --text-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
+      sliderBoardStyle,
+      `--shadow-color: #d3d3d3; --bg-color: #fff; --href-hover-color: ${hrefHoverColor}; --text-gap: ${gap}px;`
     ]"
   >
     <div class="m-scroll-view" :style="`will-change: transform; transform: translateX(${-left}px);`">
@@ -208,8 +215,8 @@ defineExpose({
     ref="verticalRef"
     class="m-slider-vertical"
     :style="[
-      boardStyle,
-      `--href-hover-color: ${hrefHoverColor}; --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px; height: ${height}px; width: ${totalWidth};`
+      sliderBoardStyle,
+      `--shadow-color: #d3d3d3; --bg-color: #fff; --href-hover-color: ${hrefHoverColor}; --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px;`
     ]"
   >
     <TransitionGroup name="slide">
@@ -236,9 +243,9 @@ defineExpose({
 // 水平滚动
 .m-slider-horizontal {
   overflow: hidden;
-  box-shadow: 0px 0px 5px #d3d3d3;
+  box-shadow: 0px 0px 5px var(--shadow-color);
   border-radius: 6px;
-  background-color: #fff;
+  background-color: var(--bg-color);
   .m-scroll-view {
     height: 100%;
     display: inline-flex;
@@ -276,11 +283,11 @@ defineExpose({
   opacity: 0;
 }
 .m-slider-vertical {
-  overflow: hidden;
-  box-shadow: 0px 0px 5px #d3d3d3;
-  border-radius: 6px;
-  background-color: #fff;
   position: relative;
+  overflow: hidden;
+  box-shadow: 0px 0px 5px var(--shadow-color);
+  border-radius: 6px;
+  background-color: var(--bg-color);
   .m-scroll-view {
     position: absolute;
     left: 0;

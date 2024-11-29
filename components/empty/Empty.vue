@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   description?: string // 自定义描述内容 string | slot
   descriptionStyle?: CSSProperties // 设置描述文本的样式
   image?: 'filled' | 'outlined' | string // 显示图片的链接，或者 选择两种预置风格图片 string | slot

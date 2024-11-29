@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-interface Props {
+export interface Props {
   src?: string // 视频文件地址，支持网络地址 https 和相对地址
   poster?: string // 视频封面地址，支持网络地址 https 和相对地址
   second?: number // 在未设置封面时，自动截取视频第 second 秒对应帧作为视频封面，单位 s

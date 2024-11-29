@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useSlotsExist } from '../utils'
-interface Gradient {
+export interface Gradient {
   '0%'?: string
   '100%'?: string
   from?: string
   to?: string
   direction?: 'left' | 'right' // 默认 'right'
 }
-interface Props {
+export interface Props {
   width?: number | string // 进度条宽度，单位 px；type: 'line' 时，为进度条宽度，默认值 '100%'；type: 'circle' 时，为进度圈宽高，默认值 120
   percent?: number // 当前进度百分比
   lineSize?: number // 进度条的尺寸，单位 px；type: 'line' 时，为进度条线高，默认值 8；type: 'circle' 时，单位是进度圈画布宽度的百分比，默认值 6
