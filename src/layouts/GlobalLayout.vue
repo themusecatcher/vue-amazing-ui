@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { routes } from '@/router'
 import { toggleDark, useMutationObserver } from 'components/index'
@@ -21,7 +21,7 @@ useMutationObserver(
   },
   { attributes: true }
 )
-const menus = ref(routes[0].children)
+const menus = ref<any[]>(routes[0].children)
 const current = ref<string[]>([route.name as string])
 function onClick(e: any): void {
   console.log(`${e.item.title} ${e.key}`)

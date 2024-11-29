@@ -21,32 +21,11 @@ import {
   toRef,
   toRefs,
   unref,
-  version,
   watch,
   watchEffect
 } from "./chunk-5TCDO6LD.js";
 
-// node_modules/.pnpm/vitepress@1.5.0_@algolia+client-search@5.15.0_@types+node@22.10.0_async-validator@4.2.5_less@_ixih2ixea6wr2vqjvh367qwj5y/node_modules/vitepress/lib/vue-demi.mjs
-var isVue2 = false;
-var isVue3 = true;
-function set(target, key, val) {
-  if (Array.isArray(target)) {
-    target.length = Math.max(target.length, key);
-    target.splice(key, 1, val);
-    return val;
-  }
-  target[key] = val;
-  return val;
-}
-function del(target, key) {
-  if (Array.isArray(target)) {
-    target.splice(key, 1);
-    return;
-  }
-  delete target[key];
-}
-
-// node_modules/.pnpm/@vueuse+shared@11.3.0_vue@3.5.13_typescript@5.6.3_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@12.0.0_typescript@5.6.3/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -69,7 +48,7 @@ function computedWithControl(source, fn) {
   };
   watch(source, update, { flush: "sync" });
   const get2 = typeof fn === "function" ? fn : fn.get;
-  const set3 = typeof fn === "function" ? void 0 : fn.set;
+  const set2 = typeof fn === "function" ? void 0 : fn.set;
   const result = customRef((_track, _trigger) => {
     track = _track;
     trigger = _trigger;
@@ -83,7 +62,7 @@ function computedWithControl(source, fn) {
         return v;
       },
       set(v2) {
-        set3 == null ? void 0 : set3(v2);
+        set2 == null ? void 0 : set2(v2);
       }
     };
   });
@@ -188,11 +167,6 @@ function createSharedComposable(composable) {
   };
 }
 function extendRef(ref2, extend, { enumerable = false, unwrap = true } = {}) {
-  if (!isVue3 && !version.startsWith("2.7.")) {
-    if (true)
-      throw new Error("[VueUse] extendRef only works in Vue 2.7 or above.");
-    return;
-  }
   for (const [key, value] of Object.entries(extend)) {
     if (key === "value")
       continue;
@@ -312,11 +286,6 @@ function reactiveOmit(obj, ...keys) {
   const predicate = flatKeys[0];
   return reactiveComputed(() => typeof predicate === "function" ? Object.fromEntries(Object.entries(toRefs(obj)).filter(([k, v]) => !predicate(toValue(v), k))) : Object.fromEntries(Object.entries(toRefs(obj)).filter((e) => !flatKeys.includes(e[0]))));
 }
-var directiveHooks = {
-  mounted: isVue3 ? "mounted" : "inserted",
-  updated: isVue3 ? "updated" : "componentUpdated",
-  unmounted: isVue3 ? "unmounted" : "unbind"
-};
 var isClient = typeof window !== "undefined" && typeof document !== "undefined";
 var isWorker = typeof WorkerGlobalScope !== "undefined" && globalThis instanceof WorkerGlobalScope;
 var isDef = (val) => typeof val !== "undefined";
@@ -629,7 +598,7 @@ function refWithControl(initial, options = {}) {
         return get2();
       },
       set(v) {
-        set3(v);
+        set2(v);
       }
     };
   });
@@ -638,7 +607,7 @@ function refWithControl(initial, options = {}) {
       track();
     return source;
   }
-  function set3(value, triggering = true) {
+  function set2(value, triggering = true) {
     var _a, _b;
     if (value === source)
       return;
@@ -651,14 +620,14 @@ function refWithControl(initial, options = {}) {
       trigger();
   }
   const untrackedGet = () => get2(false);
-  const silentSet = (v) => set3(v, false);
+  const silentSet = (v) => set2(v, false);
   const peek = () => get2(false);
-  const lay = (v) => set3(v, false);
+  const lay = (v) => set2(v, false);
   return extendRef(
     ref2,
     {
       get: get2,
-      set: set3,
+      set: set2,
       untrackedGet,
       silentSet,
       peek,
@@ -668,18 +637,14 @@ function refWithControl(initial, options = {}) {
   );
 }
 var controlledRef = refWithControl;
-function set2(...args) {
+function set(...args) {
   if (args.length === 2) {
     const [ref2, value] = args;
     ref2.value = value;
   }
   if (args.length === 3) {
-    if (isVue2) {
-      set(...args);
-    } else {
-      const [target, key, value] = args;
-      target[key] = value;
-    }
+    const [target, key, value] = args;
+    target[key] = value;
   }
 }
 function watchWithFilter(source, cb, options = {}) {
@@ -1054,12 +1019,12 @@ function useCounter(initialValue = 0, options = {}) {
   const inc = (delta = 1) => count.value = Math.max(Math.min(max, count.value + delta), min);
   const dec = (delta = 1) => count.value = Math.min(Math.max(min, count.value - delta), max);
   const get2 = () => count.value;
-  const set3 = (val) => count.value = Math.max(min, Math.min(max, val));
+  const set2 = (val) => count.value = Math.max(min, Math.min(max, val));
   const reset = (val = _initialValue) => {
     _initialValue = val;
-    return set3(val);
+    return set2(val);
   };
-  return { count, inc, dec, get: get2, set: set3, reset };
+  return { count, inc, dec, get: get2, set: set2, reset };
 }
 var REGEX_PARSE = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[T\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/i;
 var REGEX_FORMAT = /[YMDHhms]o|\[([^\]]+)\]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a{1,2}|A{1,2}|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
@@ -1551,10 +1516,6 @@ function whenever(source, cb, options) {
 }
 
 export {
-  isVue2,
-  isVue3,
-  set,
-  del,
   computedEager,
   computedWithControl,
   tryOnScopeDispose,
@@ -1575,7 +1536,6 @@ export {
   toReactive,
   reactiveComputed,
   reactiveOmit,
-  directiveHooks,
   isClient,
   isWorker,
   isDef,
@@ -1617,7 +1577,7 @@ export {
   refThrottled,
   refWithControl,
   controlledRef,
-  set2,
+  set,
   watchWithFilter,
   watchPausable,
   syncRef,
@@ -1663,13 +1623,4 @@ export {
   watchTriggerable,
   whenever
 };
-/*! Bundled license information:
-
-vitepress/lib/vue-demi.mjs:
-  (**
-   * vue-demi v0.14.7
-   * Copyright (c) 2020-present, Anthony Fu
-   * @license MIT
-   *)
-*/
-//# sourceMappingURL=chunk-MH7ECODU.js.map
+//# sourceMappingURL=chunk-YGRTXT6N.js.map
