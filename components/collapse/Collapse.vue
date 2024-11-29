@@ -76,7 +76,7 @@ function getComputedValue(item: Item, key: keyof Props) {
   }
   return computedValue
 }
-function getComputedKey(key: number|string|undefined, index: number) {
+function getComputedKey(key: number | string | undefined, index: number) {
   if (key !== undefined) {
     return key
   }
@@ -133,7 +133,7 @@ function onCopy(index: number, key: string | number) {
       /* clipboard successfully set */
       copyBtnClickedKeys.value.push(key)
       setTimeout(() => {
-        copyBtnClickedKeys.value.filter((clickedKey: string | number ) => clickedKey !== key)
+        copyBtnClickedKeys.value.filter((clickedKey: string | number) => clickedKey !== key)
       }, 3000)
     },
     (err) => {
@@ -175,7 +175,12 @@ function onCopy(index: number, key: string | number) {
           class="collapse-arrow"
           :style="getComputedValue(item, 'arrowStyle') as CSSProperties"
         >
-          <slot name="arrow" :item="item" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+          <slot
+            name="arrow"
+            :item="item"
+            :key="getComputedKey(item.key, index)"
+            :active="activeCheck(getComputedKey(item.key, index))"
+          >
             <component v-if="getComputedValue(item, 'arrow')" :is="getComputedValue(item, 'arrow')" />
             <svg
               v-else
@@ -196,12 +201,24 @@ function onCopy(index: number, key: string | number) {
           </slot>
         </div>
         <div class="collapse-header">
-          <slot name="header" :item="item" :header="item.header" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+          <slot
+            name="header"
+            :item="item"
+            :header="item.header"
+            :key="getComputedKey(item.key, index)"
+            :active="activeCheck(getComputedKey(item.key, index))"
+          >
             {{ item.header }}
           </slot>
         </div>
         <div class="collapse-extra">
-          <slot name="extra" :item="item" :extra="getComputedValue(item, 'extra')" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+          <slot
+            name="extra"
+            :item="item"
+            :extra="getComputedValue(item, 'extra')"
+            :key="getComputedKey(item.key, index)"
+            :active="activeCheck(getComputedKey(item.key, index))"
+          >
             {{ getComputedValue(item, 'extra') }}
           </slot>
         </div>
@@ -219,14 +236,30 @@ function onCopy(index: number, key: string | number) {
           :class="{ 'collapse-copyable': getComputedValue(item, 'copyable') }"
         >
           <div class="collapse-lang">
-            <slot name="lang" :item="item" :lang="getComputedValue(item, 'lang')" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+            <slot
+              name="lang"
+              :item="item"
+              :lang="getComputedValue(item, 'lang')"
+              :key="getComputedKey(item.key, index)"
+              :active="activeCheck(getComputedKey(item.key, index))"
+            >
               {{ getComputedValue(item, 'lang') }}
             </slot>
           </div>
-          <Button class="collapse-copy" size="small" type="primary" @click="onCopy(index, getComputedKey(item.key, index))" v-bind="getComputedValue(item, 'copyProps') as object">
+          <Button
+            class="collapse-copy"
+            size="small"
+            type="primary"
+            @click="onCopy(index, getComputedKey(item.key, index))"
+            v-bind="getComputedValue(item, 'copyProps') as object"
+          >
             {{ getCopyBtnTxt(item, index) }}
           </Button>
-          <div ref="contentRef" class="collapse-content" :style="getComputedValue(item, 'contentStyle') as CSSProperties">
+          <div
+            ref="contentRef"
+            class="collapse-content"
+            :style="getComputedValue(item, 'contentStyle') as CSSProperties"
+          >
             <slot
               name="content"
               :item="item"
