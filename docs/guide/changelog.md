@@ -2,6 +2,12 @@
 
 <GlobalElement />
 
+## 1.10.0 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [折叠面板 Collapse](https://themusecatcher.github.io/vue-amazing-ui/guide/components/collapse.html) 组件，将 `collapseData` 属性重命名为 `items`
+- 优化并更新 [时间轴 Timeline](https://themusecatcher.github.io/vue-amazing-ui/guide/components/timeline.html) 组件，将 `timelineData` 属性重命名为 `items`
+- 导出所有组件属性的类型定义，为使用 `TypeScript` 开发提供更好的支持
+
 ## 1.9.11 <Tag color="volcano" size="small">2024-11-28</Tag>
 
 - 修复组件库 `vue-amazing-ui@1.9.10` 更新 `vite` 至 `v6` 后，打包时 `cssFileName` 默认值更改为 `package.json` 中的 `name` 值导致无法引入 `css` 文件的相关问题

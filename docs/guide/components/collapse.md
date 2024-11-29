@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { DoubleRightOutlined, RightCircleFilled, StarOutlined, StarFilled } from '@ant-design/icons-vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -31,7 +31,7 @@ const collapseData = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const disabledCollapseData = ref([
+const disabledCollapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -52,7 +52,7 @@ const disabledCollapseData = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const nestCollapseData = ref([
+const nestCollapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -60,7 +60,7 @@ const nestCollapseData = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const extraCollapseData = ref([
+const extraCollapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -83,7 +83,7 @@ const extraCollapseData = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const arrowCollapseData = ref([
+const arrowCollapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -183,14 +183,14 @@ function handleClick(event: Event, key: string | number) {
 
 <br/>
 
-<Collapse :collapse-data="collapseData" v-model:active-key="activeKey" @change="onChange" />
+<Collapse :items="collapseItems" v-model:active-key="activeKey" @change="onChange" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -219,7 +219,7 @@ function onChange(key: number | string) {
 }
 </script>
 <template>
-  <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" @change="onChange" />
+  <Collapse :items="collapseItems" v-model:active-key="activeKey" @change="onChange" />
 </template>
 ```
 
@@ -231,14 +231,14 @@ function onChange(key: number | string) {
 
 <br/>
 
-<Collapse :collapse-data="collapseData" v-model:active-key="key" />
+<Collapse :items="collapseItems" v-model:active-key="key" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -264,7 +264,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Collapse :collapse-data="collapseData" v-model:active-key="key" />
+  <Collapse :items="collapseItems" v-model:active-key="key" />
 </template>
 ```
 
@@ -273,8 +273,8 @@ watchEffect(() => {
 ## 禁用
 
 <Flex vertical>
-  <Collapse disabled :collapse-data="collapseData" v-model:active-key="activeKey1" />
-  <Collapse :collapse-data="disabledCollapseData" v-model:active-key="activeKey1" />
+  <Collapse disabled :items="collapseItems" v-model:active-key="activeKey1" />
+  <Collapse :items="disabledCollapseItems" v-model:active-key="activeKey1" />
 </Flex>
 
 ::: details Show Code
@@ -282,7 +282,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -302,7 +302,7 @@ const collapseData = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const disabledCollapseData = ref([
+const disabledCollapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -330,8 +330,8 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Collapse disabled :collapse-data="collapseData" v-model:active-key="activeKey" />
-    <Collapse :collapse-data="disabledCollapseData" v-model:active-key="activeKey" />
+    <Collapse disabled :items="collapseItems" v-model:active-key="activeKey" />
+    <Collapse :items="disabledCollapseItems" v-model:active-key="activeKey" />
   </Flex>
 </template>
 ```
@@ -340,9 +340,9 @@ watchEffect(() => {
 
 ## 面板嵌套
 
-<Collapse :collapse-data="collapseData" v-model:active-key="activeKey2">
+<Collapse :items="collapseItems" v-model:active-key="activeKey2">
   <template #content="{ key }">
-    <Collapse v-if="key === '1'" :collapse-data="nestCollapseData" v-model:active-key="nestActiveKey" />
+    <Collapse v-if="key === '1'" :items="nestCollapseItems" v-model:active-key="nestActiveKey" />
   </template>
 </Collapse>
 
@@ -351,7 +351,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -371,7 +371,7 @@ const collapseData = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const nestCollapseData = ref([
+const nestCollapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -389,9 +389,9 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Collapse :collapse-data="collapseData" v-model:active-key="activeKey">
+  <Collapse :items="collapseItems" v-model:active-key="activeKey">
     <template #content="{ key }">
-      <Collapse v-if="key === '1'" :collapse-data="nestCollapseData" v-model:active-key="nestActiveKey" />
+      <Collapse v-if="key === '1'" :items="nestCollapseItems" v-model:active-key="nestActiveKey" />
     </template>
   </Collapse>
 </template>
@@ -401,14 +401,14 @@ watchEffect(() => {
 
 ## 无边框
 
-<Collapse :collapse-data="collapseData" v-model:active-key="activeKey3" :bordered="false" />
+<Collapse :items="collapseItems" v-model:active-key="activeKey3" :bordered="false" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -434,7 +434,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" :bordered="false" />
+  <Collapse :items="collapseItems" v-model:active-key="activeKey" :bordered="false" />
 </template>
 ```
 
@@ -442,14 +442,14 @@ watchEffect(() => {
 
 ## 可复制
 
-<Collapse copyable lang="template" :collapse-data="collapseData" v-model:active-key="activeKey4" />
+<Collapse copyable lang="template" :items="collapseItems" v-model:active-key="activeKey4" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -475,7 +475,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Collapse copyable lang="template" :collapse-data="collapseData" v-model:active-key="activeKey" />
+  <Collapse copyable lang="template" :items="collapseItems" v-model:active-key="activeKey" />
 </template>
 ```
 
@@ -483,14 +483,14 @@ watchEffect(() => {
 
 ## 隐藏箭头
 
-<Collapse :collapse-data="arrowCollapseData" v-model:active-key="activeKey5" />
+<Collapse :items="arrowCollapseItems" v-model:active-key="activeKey5" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const arrowCollapseData = ref([
+const arrowCollapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -517,7 +517,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Collapse :collapse-data="arrowCollapseData" v-model:active-key="activeKey" />
+  <Collapse :items="arrowCollapseItems" v-model:active-key="activeKey" />
 </template>
 ```
 
@@ -527,7 +527,7 @@ watchEffect(() => {
 
 <Flex vertical>
   <Radio :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
-  <Collapse :collapse-data="collapseData" v-model:active-key="activeKey6" :arrow-placement="arrowPlacement" />
+  <Collapse :items="collapseItems" v-model:active-key="activeKey6" :arrow-placement="arrowPlacement" />
 </Flex>
 
 ::: details Show Code
@@ -535,7 +535,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -574,7 +574,7 @@ watchEffect(() => {
 <template>
   <Flex vertical>
     <Radio :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
-    <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" :arrow-placement="arrowPlacement" />
+    <Collapse :items="collapseItems" v-model:active-key="activeKey" :arrow-placement="arrowPlacement" />
   </Flex>
 </template>
 ```
@@ -588,7 +588,7 @@ watchEffect(() => {
 <br/>
 
 <Collapse
-  :collapse-data="collapseData"
+  :items="collapseItems"
   v-model:active-key="activeKey7"
   :bordered="false"
   :collapse-style="{ backgroundColor: '#fff' }"
@@ -611,7 +611,7 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { DoubleRightOutlined, RightCircleFilled } from '@ant-design/icons-vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -638,7 +638,7 @@ watchEffect(() => {
 </script>
 <template>
   <Collapse
-    :collapse-data="collapseData"
+    :items="collapseItems"
     v-model:active-key="activeKey"
     :bordered="false"
     :collapse-style="{ backgroundColor: '#fff' }"
@@ -662,7 +662,7 @@ watchEffect(() => {
 ## 自定义面板样式
 
 <Collapse
-  :collapse-data="collapseData"
+  :items="collapseItems"
   v-model:active-key="activeKey8"
   :arrow-style="{ fontSize: '14px', height: '25px' }"
   :header-style="{ fontSize: '16px', color: '#ff6900' }"
@@ -674,7 +674,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -701,7 +701,7 @@ watchEffect(() => {
 </script>
 <template>
   <Collapse
-    :collapse-data="collapseData"
+    :items="collapseItems"
     v-model:active-key="activeKey"
     :arrow-style="{ fontSize: '14px', height: '25px' }"
     :header-style="{ fontSize: '16px', color: '#ff6900' }"
@@ -714,7 +714,7 @@ watchEffect(() => {
 
 ## 面板额外内容
 
-<Collapse :collapse-data="extraCollapseData" v-model:active-key="activeKey9">
+<Collapse :items="extraCollapseItems" v-model:active-key="activeKey9">
   <template #extra="{ key }">
     <StarFilled @click="handleClick($event, key)" v-if="key === '1'" />
     <StarOutlined @click="handleClick($event, key)" v-if="key === '3'" />
@@ -727,7 +727,7 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { StarOutlined, StarFilled } from '@ant-design/icons-vue'
-const extraCollapseData = ref([
+const extraCollapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -761,7 +761,7 @@ function handleClick(event: Event, key: string | number) {
 }
 </script>
 <template>
-  <Collapse :collapse-data="extraCollapseData" v-model:active-key="activeKey">
+  <Collapse :items="extraCollapseItems" v-model:active-key="activeKey">
     <template #extra="{ key }">
       <StarFilled @click="handleClick($event, key)" v-if="key === '1'" />
       <StarOutlined @click="handleClick($event, key)" v-if="key === '3'" />
@@ -774,14 +774,14 @@ function handleClick(event: Event, key: string | number) {
 
 ## 幽灵折叠面板
 
-<Collapse :collapse-data="collapseData" v-model:active-key="activeKey10" ghost />
+<Collapse :items="collapseItems" v-model:active-key="activeKey10" ghost />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseData = ref([
+const collapseItems = ref([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -807,7 +807,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Collapse :collapse-data="collapseData" v-model:active-key="activeKey" ghost />
+  <Collapse :items="collapseItems" v-model:active-key="activeKey" ghost />
 </template>
 ```
 
@@ -819,9 +819,9 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-collapseData | 折叠面板数据，可使用 `slot` 替换指定 `key` 的 `header` `content` `arrow` `extra` `lang` | [Collapse](#collapse-type)[] | []
+items | 折叠面板数据 | [Item](#item-type)[] | []
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | number[] &#124; number &#124; string[] &#124; string &#124; null | null
-disabled | 是否禁用，优先级低于 `Collapse` 的 `disabled` | boolean | false
+disabled | 是否禁用，优先级低于 `Item` 的 `disabled` | boolean | false
 bordered | 带边框风格的折叠面板 | boolean | true
 copyable | 是否可复制面板内容 | boolean | false
 copyProps | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
@@ -830,22 +830,33 @@ itemStyle | 设置面板容器的样式 | [CSSProperties](https://cn.vuejs.org/a
 headerStyle | 设置面板标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 contentStyle | 设置面板内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 arrow | 自定义箭头切换图标 | slot | undefined
-showArrow | 是否展示箭头，优先级低于 `Collapse` 的 `showArrow` | boolean | true
+showArrow | 是否展示箭头，优先级低于 `Item` 的 `showArrow` | boolean | true
 arrowPlacement | 箭头位置 | 'left' &#124; 'right' | 'left'
 arrowStyle | 设置面板箭头的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 extra | 面板标题右侧的额外内容 | string &#124; slot | undefined
 ghost | 使折叠面板透明且无边框 | boolean | false
 
-### Collapse Type
+### Item Type
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-key | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 (`0,1,2...`) 绑定 | string &#124; number | undefined
-header | 面板标题 | string &#124; slot | undefined
-content | 面板内容 | string &#124; slot | undefined
-disabled | 是否禁用 | boolean | false
-showArrow | 是否展示箭头 | boolean | true
-extra | 面板标题右侧的额外内容 | string &#124; slot | undefined
+key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 (`0,1,2...`) 绑定 | string &#124; number | undefined
+header? | 面板标题 | string &#124; v-slot:header="{ item, header, key, active }" | undefined
+content? | 面板内容 | string &#124; v-slot:content="{ item, content, key, active }" | undefined
+disabled? | 是否禁用 | boolean | undefined
+showArrow? | 是否展示箭头 | boolean | undefined
+copyable | 是否可复制面板内容 | boolean | undefined
+copyProps | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
+extra | 面板标题右侧的额外内容 | string &#124; v-slot:extra="{ item, extra, key, active }" | undefined
+
+## Slots
+
+名称 | 说明 | 类型
+-- | -- | --
+headerCell | 个性化头部单元格 | v-slot:headerCell="{ column, title }"
+expandCell | 自定义展开按钮 | v-slot:expandCell="{ record, index, expanded }"
+bodyCell | 个性化单元格 | v-slot:bodyCell="{ column, record, text, index }"
+expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender="{ record, index, expanded }"
 
 ## Events
 

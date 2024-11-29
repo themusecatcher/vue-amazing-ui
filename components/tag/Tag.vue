@@ -2,7 +2,7 @@
 import { ref, computed, nextTick, watchEffect } from 'vue'
 import Space from '../space'
 import { useSlotsExist } from '../utils'
-interface Tag {
+export interface Tag {
   label?: string // 标签文本名 string | slot
   closable?: boolean // 标签是否可以关闭，默认 true
   color?: string // 标签颜色
@@ -10,7 +10,7 @@ interface Tag {
   size?: 'small' | 'middle' | 'large' // 标签尺寸
   bordered?: boolean // 是否有边框，默认 true
 }
-interface Props {
+export interface Props {
   closable?: boolean // 标签是否可以关闭
   color?: string // 标签颜色
   icon?: string // 设置图标 string | slot

@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import Tooltip from '../tooltip'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   title?: string // 卡片标题 string | slot
   titleStyle?: CSSProperties // 卡片标题样式
   content?: string // 卡片内容 string | slot

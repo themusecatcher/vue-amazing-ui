@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   spinning?: boolean // 是否为加载中状态
   size?: 'small' | 'middle' | 'large' // 加载中尺寸
   tip?: string // 描述文案 string | slot

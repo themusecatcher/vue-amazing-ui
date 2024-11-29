@@ -2,14 +2,14 @@
 import { shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useMutationObserver } from '../utils'
-interface Font {
+export interface Font {
   color?: string // 字体颜色，默认 'rgba(0, 0, 0, 0.15)'
   fontSize?: number // 字体大小，单位 px，默认 16
   fontWeight?: 'normal' | 'light' | 'weight' | number // 字体粗细，默认 'normal'
   fontFamily?: string // 字体类型，默认 'sans-serif'
   fontStyle?: 'none' | 'normal' | 'italic' | 'oblique' // 字体样式，默认 'normal'
 }
-interface Props {
+export interface Props {
   width?: number // 水印的宽度，默认为 content 自身的宽度，单位 px
   height?: number // 水印的高度，默认为 content 自身的高度，单位 px
   layout?: 'parallel' | 'alternate' // 布局方式：平行布局，交替布局

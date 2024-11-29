@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import { debounce, useResizeObserver, useScroll } from '../utils'
-interface Props {
+export interface Props {
   contentClass?: string // 内容 div 的类名
   contentStyle?: CSSProperties // 内容 div 的样式
   size?: number // 滚动条的大小，单位 px

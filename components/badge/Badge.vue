@@ -24,7 +24,7 @@ enum Status {
   error = 'error',
   warning = 'warning'
 }
-interface Props {
+export interface Props {
   color?: PresetColor | string // 自定义小圆点的颜色，优先级高于 status
   value?: number | string // 展示的数字或文字，为数字时大于 max 显示为 max+，为 0 时隐藏 number | string | slot
   max?: number // 展示封顶的数字值

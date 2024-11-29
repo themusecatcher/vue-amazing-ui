@@ -2,14 +2,14 @@
 import { ref, watch, onMounted, computed } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { useResizeObserver, useSlotsExist } from '../utils'
-interface Tab {
+export interface Tab {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   tab?: string // 页签显示文字 string | slot
   icon?: VNode // 页签图标
   content?: string // 标签页内容 string | slot
   disabled?: boolean // 是否禁用页签
 }
-interface Props {
+export interface Props {
   tabPages?: Tab[] // 标签页数组
   prefix?: string // 标签页前缀 string | slot
   suffix?: string // 标签页后缀 string | slot

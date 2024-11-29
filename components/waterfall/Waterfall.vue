@@ -6,11 +6,11 @@ import { useResizeObserver } from '../utils'
   宽度固定，图片等比例缩放；使用JS获取每张图片宽度和高度，结合 `relative` 和 `absolute` 定位
   计算每个图片的位置 `top`，`left`，保证每张新的图片都追加在当前高度最小的那列末尾
 */
-interface Image {
+export interface Image {
   name?: string // 图片名称
   src: string // 图片地址
 }
-interface Props {
+export interface Props {
   images?: Image[] // 图片数组
   columnCount?: number // 要划分的列数
   columnGap?: number // 各列之间的间隙，单位 px

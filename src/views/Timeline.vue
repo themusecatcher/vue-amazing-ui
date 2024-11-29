@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ClockCircleOutlined } from '@ant-design/icons-vue'
-const timelineData = ref([
+const timelineItems = ref([
   {
     desc: 'Create a services site 2023-05-24',
     color: 'green'
@@ -27,9 +27,9 @@ const timelineData = ref([
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Timeline :timeline-data="timelineData" />
+    <Timeline :items="timelineItems" />
     <h2 class="mb10">自定义样式</h2>
-    <Timeline :timeline-data="timelineData">
+    <Timeline :items="timelineItems">
       <template #dot="{ index }">
         <span class="big-dot" v-if="index === 2"></span>
         <ClockCircleOutlined
@@ -42,18 +42,18 @@ const timelineData = ref([
       </template>
     </Timeline>
     <h2 class="mb10">使用虚线</h2>
-    <Timeline :timeline-data="timelineData" line-style="dashed" />
+    <Timeline :items="timelineItems" line-style="dashed" />
     <h2 class="mb10">右侧时间轴点</h2>
-    <Timeline :timeline-data="timelineData" mode="right" :width="540" />
+    <Timeline :items="timelineItems" mode="right" :width="540" />
     <h2 class="mb10">中间时间轴点</h2>
     <h3 class="mb10">内容从左边开始交替展现</h3>
-    <Timeline :timeline-data="timelineData" mode="center" :width="540">
+    <Timeline :items="timelineItems" mode="center" :width="540">
       <template #dot="{ index }">
         <span class="big-dot" v-if="index === 2"></span>
       </template>
     </Timeline>
     <h3 class="mb10">内容从右边开始交替展现</h3>
-    <Timeline :timeline-data="timelineData" mode="center" position="right" :width="640">
+    <Timeline :items="timelineItems" mode="center" position="right" :width="640">
       <template #dot="{ index }">
         <span class="big-dot" v-if="index === 2"></span>
       </template>

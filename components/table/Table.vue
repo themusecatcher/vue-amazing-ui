@@ -8,7 +8,7 @@ import Tooltip from '../tooltip'
 import Ellipsis from '../ellipsis'
 import Pagination from '../pagination'
 import { useSlotsExist, useResizeObserver } from '../utils'
-interface Column {
+export interface Column {
   title?: string // 列头显示文字
   align?: 'left' | 'center' | 'right' // 列文本的对齐方式
   width?: string | number // 列宽度，单位 px
@@ -33,7 +33,7 @@ interface ScrollOption {
   x?: string | number | true // 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，true 和 'max-content'
   y?: string | number // 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值
 }
-interface Props {
+export interface Props {
   header?: string // 表格标题 string | slot
   footer?: string // 表格尾部 string | slot
   columns?: Column[] // 表格列的配置项

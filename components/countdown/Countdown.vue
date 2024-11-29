@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   title?: string // 倒计时标题 string | slot
   titleStyle?: CSSProperties // 设置标题的样式
   prefix?: string // 倒计时的前缀 string | slot

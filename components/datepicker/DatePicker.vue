@@ -2,7 +2,7 @@
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { computed } from 'vue'
-interface Props {
+export interface Props {
   width?: number // 日期选择器宽度
   mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式，可选：时间time，日期date，周week，月month，年year
   // format?: string | ((date: Date) => string) | ((dates: Date[]) => string) // 日期展示格式，(yy: 年, M: 月, d: 天, H: 时, m: 分, s: 秒, w: 周)

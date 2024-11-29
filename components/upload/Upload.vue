@@ -4,16 +4,16 @@ import Spin from '../spin'
 import Message from '../message'
 import Image from '../image'
 import Space from '../space'
-interface FileType {
+export interface FileType {
   name?: string // 文件名
   url: any // 文件地址
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
-interface MessageType {
+export interface MessageType {
   upload?: string // 上传成功的消息提示，没有设置该属性时即不显示上传消息提示
   remove?: string // 删除成功的消息提示，没有设置该属性时即不显示删除消息提示
 }
-interface Props {
+export interface Props {
   accept?: string // 接受上传的文件类型，与 <input type="file" /> 的 accept 属性一致，参考 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept
   multiple?: boolean // 是否支持多选文件，开启后可选择多个文件
   maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件

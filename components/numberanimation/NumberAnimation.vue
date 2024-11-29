@@ -29,7 +29,7 @@ enum TransitionFunc {
   easeOutBack = 'easeOutBack',
   easeInOutBack = 'easeInOutBack'
 }
-interface Props {
+export interface Props {
   from?: number // 数值动画起始数值
   to?: number // 数值目标值
   duration?: number // 数值动画持续时间，单位 ms

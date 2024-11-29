@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   width?: string | number // 输入框宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 输入框大小
   addonBefore?: string // 设置前置标签 string | slot

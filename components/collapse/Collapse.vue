@@ -1,44 +1,51 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { CSSProperties, Slot } from 'vue'
+import type { CSSProperties, VNode, Slot } from 'vue'
 import Button from '../button'
-import { rafTimeout } from '../utils'
-interface Collapse {
+export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   header?: string // 面板标题 string | slot
   content?: string // 面板内容 string | slot
-  disabled?: boolean // 是否禁用展开，默认 false
-  showArrow?: boolean // 是否展示箭头，默认 true
-  extra?: string // 面板标题右侧的额外内容 string | slot
-}
-interface Props {
-  collapseData?: Collapse[] // 折叠面板数据，可使用 slot 替换指定 key 的 header、content、arrow、extra、lang
-  activeKey?: string[] | string | number[] | number | null // (v-model) 当前激活 tab 面板的 key，传入 string | number 类型时，即为手风琴模式
-  disabled?: boolean // 是否禁用，优先级低于 Collapse 的 disabled
-  collapseStyle?: CSSProperties // 设置面板的样式
-  bordered?: boolean // 带边框风格的折叠面板
+  disabled?: boolean // 是否禁用展开
   copyable?: boolean // 是否可复制面板内容
   copyProps?: object // 复制按钮属性配置，参考 Button Props
-  lang?: string // 面板右上角固定内容，例如标识 language string | slot
+  copyText?: string // 复制按钮文本
+  copiedText?: string // 已复制按钮文本
+  lang?: string // 面板右上角固定内容，例如 language 标识 string | slot
+  arrow?: VNode | Slot // 自定义箭头切换图标
+  showArrow?: boolean // 是否展示箭头
+  arrowPlacement?: 'left' | 'right' // 箭头位置
+  extra?: string // 面板标题右侧的额外内容 string | slot
+  [propName: string]: any // 用于包含带有任意数量的其他属性
+}
+export interface Props {
+  items?: Item[] // 折叠面板数据，可使用 slot 替换指定 key 的 header、content、arrow、extra、lang
+  activeKey?: string[] | string | number[] | number | null // (v-model) 当前激活 tab 面板的 key，传入 string | number 类型时，即为手风琴模式
+  disabled?: boolean // 是否禁用，较低优先级
+  collapseStyle?: CSSProperties // 设置面板的样式
+  bordered?: boolean // 带边框风格的折叠面板
+  ghost?: boolean // 使折叠面板透明且无边框
   itemStyle?: CSSProperties // 设置面板容器的样式
   headerStyle?: CSSProperties // 设置面板标题的样式
   contentStyle?: CSSProperties // 设置面板内容的样式
   arrow?: Slot // 自定义箭头切换图标 slot
-  showArrow?: boolean // 是否展示箭头，优先级低于 Collapse 的 showArrow
+  showArrow?: boolean // 是否展示箭头，较低优先级
   arrowPlacement?: 'left' | 'right' // 箭头位置
   arrowStyle?: CSSProperties // 设置面板箭头的样式
-  extra?: string // 面板标题右侧的额外内容 string | slot
-  ghost?: boolean // 使折叠面板透明且无边框
+  extra?: string // 面板标题右侧的额外内容，较低优先级 string | slot
+  lang?: string // 面板右上角固定内容，例如 language 标识，较低优先级 string | slot
+  copyable?: boolean // 是否可复制面板内容，较低优先级
+  copyProps?: object // 复制按钮属性配置，参考 Button Props，较低优先级
+  copyText?: string // 复制按钮文本，较低优先级
+  copiedText?: string // 已复制按钮文本，较低优先级
 }
 const props = withDefaults(defineProps<Props>(), {
-  collapseData: () => [],
+  items: () => [],
   activeKey: null,
   disabled: false,
   collapseStyle: () => ({}),
   bordered: true,
-  copyable: false,
-  copyProps: () => ({}),
-  lang: undefined,
+  ghost: false,
   itemStyle: () => ({}),
   headerStyle: () => ({}),
   contentStyle: () => ({}),
@@ -47,11 +54,32 @@ const props = withDefaults(defineProps<Props>(), {
   arrowPlacement: 'left',
   arrowStyle: () => ({}),
   extra: undefined,
-  ghost: false
+  lang: undefined,
+  copyable: false,
+  copyProps: () => ({}),
+  copyText: 'Copy',
+  copiedText: 'Copied'
 })
 const contentRef = ref() // 面板内容的模板引用
-const copyTxt = ref('Copy')
+const copyBtnTxt = ref<string>() // 复制按钮文本
+const copyBtnClickedKeys = ref<(string | number)[]>([]) // 被点击的复制按钮的 key
 const emits = defineEmits(['update:activeKey', 'change'])
+watchEffect(() => {
+  copyBtnTxt.value = props.copyText
+})
+function getComputedValue(item: Item, key: keyof Props) {
+  let computedValue = props[key as keyof Props]
+  if (item?.[key as keyof Item] !== undefined) {
+    computedValue = item[key as keyof Item]
+  }
+  return computedValue
+}
+function getComputedKey(key: number|string|undefined, index: number) {
+  if (key !== undefined) {
+    return key
+  }
+  return index
+}
 function setProperties(el: Element) {
   ;(el as HTMLElement).style.height =
     (el.lastElementChild as HTMLElement).offsetHeight + (props.bordered && !props.ghost ? 1 : 0) + 'px'
@@ -65,10 +93,10 @@ function emitValue(value: any) {
   emits('update:activeKey', value)
   emits('change', value)
 }
-function onClick(key: number | string) {
+function onClick(key: string | number) {
   if (activeCheck(key)) {
     if (Array.isArray(props.activeKey)) {
-      const res = (props.activeKey as any[]).filter((actKey: number | string) => actKey !== key)
+      const res = (props.activeKey as any[]).filter((actKey: string | number) => actKey !== key)
       emitValue(res)
     } else {
       emitValue(null)
@@ -81,25 +109,34 @@ function onClick(key: number | string) {
     }
   }
 }
-function activeCheck(key: number | string): boolean {
+function activeCheck(key: string | number): boolean {
   if (Array.isArray(props.activeKey)) {
     return (props.activeKey as any[]).includes(key)
   } else {
     return props.activeKey === key
   }
 }
-function onCopy(index: number) {
+function getCopyBtnTxt(item: Item, index: number) {
+  const copyText = getComputedValue(item, 'copyText')
+  const copiedText = getComputedValue(item, 'copiedText')
+  if (copyBtnClickedKeys.value.includes(getComputedKey(item.key, index))) {
+    return copiedText
+  } else {
+    return copyText
+  }
+}
+function onCopy(index: number, key: string | number) {
   navigator.clipboard.writeText(contentRef.value[index].innerText || '').then(
     () => {
       /* clipboard successfully set */
-      copyTxt.value = 'Copied'
-      rafTimeout(() => {
-        copyTxt.value = 'Copy'
+      copyBtnClickedKeys.value.push(key)
+      setTimeout(() => {
+        copyBtnClickedKeys.value.filter((clickedKey: string | number ) => clickedKey !== key)
       }, 3000)
     },
     (err) => {
       /* clipboard write failed */
-      copyTxt.value = err
+      console.log('copy failed', err)
     }
   )
 }
@@ -116,28 +153,28 @@ function onCopy(index: number) {
   >
     <div
       class="m-collapse-item"
-      :class="{ 'collapse-item-disabled': data.disabled === undefined ? disabled : data.disabled }"
+      :class="{ 'collapse-item-disabled': getComputedValue(item, 'disabled') }"
       :style="itemStyle"
-      v-for="(data, index) in collapseData"
+      v-for="(item, index) in items"
       :key="index"
     >
       <div
         tabindex="0"
         class="m-collapse-header"
-        :class="{ 'collapse-header-no-arrow': data.showArrow !== undefined ? !data.showArrow : !showArrow }"
+        :class="{ 'collapse-header-no-arrow': item.showArrow !== undefined ? !item.showArrow : !showArrow }"
         :style="headerStyle"
-        @click="(data.disabled === undefined ? disabled : data.disabled) ? () => false : onClick(data.key || index)"
-        @keydown.enter="onClick(data.key || index)"
+        @click="getComputedValue(item, 'disabled') ? () => false : onClick(getComputedKey(item.key, index))"
+        @keydown.enter="onClick(getComputedKey(item.key, index))"
       >
         <div
-          v-if="data.showArrow !== undefined ? data.showArrow : showArrow"
+          v-if="item.showArrow !== undefined ? item.showArrow : showArrow"
           class="collapse-arrow"
           :style="arrowStyle"
         >
-          <slot name="arrow" :key="data.key || index" :active="activeCheck(data.key || index)">
+          <slot name="arrow" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
             <svg
               class="arrow-svg"
-              :class="{ 'arrow-rotate': activeCheck(data.key || index) }"
+              :class="{ 'arrow-rotate': activeCheck(getComputedKey(item.key, index)) }"
               focusable="false"
               data-icon="right"
               width="1em"
@@ -153,13 +190,13 @@ function onCopy(index: number) {
           </slot>
         </div>
         <div class="collapse-header">
-          <slot name="header" :header="data.header" :key="data.key || index" :active="activeCheck(data.key || index)">
-            {{ data.header || '--' }}
+          <slot name="header" :item="item" :header="item.header" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+            {{ item.header || '--' }}
           </slot>
         </div>
         <div class="collapse-extra">
-          <slot name="extra" :extra="data.extra" :key="data.key || index" :active="activeCheck(data.key || index)">
-            {{ data.extra || extra }}
+          <slot name="extra" :item="item" :extra="item.extra" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+            {{ item.extra || extra }}
           </slot>
         </div>
       </div>
@@ -171,26 +208,27 @@ function onCopy(index: number) {
         @after-leave="removeProperties"
       >
         <div
-          v-show="activeCheck(data.key || index)"
+          v-show="activeCheck(getComputedKey(item.key, index))"
           class="m-collapse-content"
-          :class="{ 'collapse-copyable': copyable }"
+          :class="{ 'collapse-copyable': getComputedValue(item, 'copyable') }"
         >
           <div class="collapse-lang">
-            <slot name="lang" :lang="lang" :key="data.key || index" :active="activeCheck(data.key || index)">
-              {{ lang }}
+            <slot name="lang" :item="item" :lang="getComputedValue(item, 'lang')" :key="getComputedKey(item.key, index)" :active="activeCheck(getComputedKey(item.key, index))">
+              {{ getComputedValue(item, 'lang') }}
             </slot>
           </div>
-          <Button class="collapse-copy" size="small" type="primary" @click="onCopy(index)" v-bind="copyProps">{{
-            copyTxt
-          }}</Button>
+          <Button class="collapse-copy" size="small" type="primary" @click="onCopy(index, getComputedKey(item.key, index))" v-bind="getComputedValue(item, 'copyProps') as object">
+            {{ getCopyBtnTxt(item, index) }}
+          </Button>
           <div ref="contentRef" class="collapse-content" :style="contentStyle">
             <slot
               name="content"
-              :content="data.content"
-              :key="data.key || index"
-              :active="activeCheck(data.key || index)"
+              :item="item"
+              :content="item.content"
+              :key="getComputedKey(item.key, index)"
+              :active="activeCheck(getComputedKey(item.key, index))"
             >
-              {{ data.content }}
+              {{ item.content }}
             </slot>
           </div>
         </div>

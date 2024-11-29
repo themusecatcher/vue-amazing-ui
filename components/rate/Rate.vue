@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import Tooltip from '../tooltip'
-interface Props {
+export interface Props {
   allowClear?: boolean // 是否允许再次点击后清除
   allowHalf?: boolean // 是否允许半选
   count?: number // star 总数

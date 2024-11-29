@@ -5,7 +5,7 @@ import { useQRCode } from '@vueuse/integrations/useQRCode'
   参考文档：https://vueuse.org/integrations/useQRCode/
   https://www.npmjs.com/package/qrcode#qr-code-options
 */
-interface Props {
+export interface Props {
   value?: string // 扫描后的文本或地址
   size?: number // 二维码大小，单位 px
   color?: string // 二维码颜色，Value must be in hex format (十六进制颜色值)
