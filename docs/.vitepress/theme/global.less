@@ -2,7 +2,7 @@
  * Colors
  * -------------------------------------------------------------------------- */
 
- :root {
+:root {
   --vp-c-brand: #646cff;
   --vp-c-brand-light: #747bff;
   --vp-c-brand-lighter: #9499ff;
@@ -36,17 +36,9 @@
 
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(
-    120deg,
-    #bd34fe 30%,
-    #41d1ff
-  );
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
 
-  --vp-home-hero-image-background-image: linear-gradient(
-    -45deg,
-    #bd34fe 50%,
-    #47caff 50%
-  );
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
   --vp-home-hero-image-filter: blur(40px);
 }
 
@@ -129,7 +121,7 @@
   color: var(--vp-custom-block-tip-text) !important;
 }
 strong {
-  color: #00C1D4;
+  color: #00c1d4;
 }
 blockquote {
   padding: 0 12px;
@@ -151,7 +143,8 @@ summary {
 svg {
   fill: var(--vp-c-text-1);
 }
-h1 { // h1 标签渐变色文本
+h1 {
+  // h1 标签渐变色文本
   display: inline-block;
   -webkit-background-clip: text;
   background-clip: text;
@@ -176,7 +169,8 @@ h1 { // h1 标签渐变色文本
     display: flex;
     align-items: center;
   }
-  .name { // 标题悬浮动画效果
+  .name {
+    // 标题悬浮动画效果
     transition: all 0.3s ease-in-out;
     &:hover {
       transform: scale(1.02);
@@ -206,12 +200,14 @@ h1 { // h1 标签渐变色文本
     .container {
       display: inline-block;
       transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-      .message, .copyright {
+      .message,
+      .copyright {
         color: rgba(0, 0, 0, 0.68);
       }
       &:hover {
         transform: scale(1.05);
-        .message, .copyright {
+        .message,
+        .copyright {
           font-weight: 600;
         }
       }
@@ -220,7 +216,8 @@ h1 { // h1 标签渐变色文本
 }
 .dark {
   .VPFooter {
-    .message, .copyright {
+    .message,
+    .copyright {
       color: rgba(255, 255, 255, 0.6) !important;
     }
   }
@@ -411,7 +408,8 @@ h1 { // h1 标签渐变色文本
         border-radius: 32px;
         border: none;
         transition: all 0.25s;
-        .icon, .title {
+        .icon,
+        .title {
           font-size: 18px;
           transition: all 0.25s;
         }
@@ -434,7 +432,10 @@ h1 { // h1 标签渐变色文本
         transform: scale(1.02);
         transform-origin: 50%, 50%;
         .VPFeature {
-          box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+          box-shadow:
+            0 6px 16px 0 rgba(0, 0, 0, 0.08),
+            0 3px 6px -4px rgba(0, 0, 0, 0.12),
+            0 9px 28px 8px rgba(0, 0, 0, 0.05);
         }
       }
     }
@@ -446,7 +447,6 @@ h1 { // h1 标签渐变色文本
   &:hover {
     transform: scale(1.1);
     font-weight: 600 !important;
-    
   }
 }
 .is-active .VPLink .text {
@@ -471,6 +471,6 @@ h1 { // h1 标签渐变色文本
   display: inline-block;
   -webkit-background-clip: text;
   background-clip: text;
-  color: #FFF;
+  color: #fff;
   background: linear-gradient(to right, #41d1ff, #c41d7f);
 }

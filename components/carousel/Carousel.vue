@@ -4,12 +4,12 @@ import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useEventListener, useResizeObserver } from '../utils'
 import { useTransition } from '@vueuse/core'
 import Spin from '../spin'
-interface Image {
+export interface Image {
   title?: string // 图片名称
   src: string // 图片地址
   link?: string // 图片跳转链接
 }
-interface Props {
+export interface Props {
   images?: Image[] // 走马灯图片数组
   width?: number | string // 走马灯宽度，单位 px
   height?: number | string // 走马灯高度，单位 px

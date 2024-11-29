@@ -4,7 +4,7 @@ import Spin from '../spin'
 import Empty from '../empty'
 import Pagination from '../pagination'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   bordered?: boolean // 是否展示边框
   vertical?: boolean // 是否使用竖直样式
   split?: boolean // 是否展示分割线

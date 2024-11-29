@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 import Scrollbar from '../scrollbar'
 import { useSlotsExist } from '../utils'
-interface Props {
+export interface Props {
   width?: string | number // 抽屉宽度，在 placement 为 right 或 left 时使用，单位 px
   height?: string | number // 抽屉高度，在 placement 为 top 或 bottom 时使用，单位 px
   title?: string // 标题 string | slot

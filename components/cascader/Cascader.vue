@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import Select from '../select'
 import { ref, watchEffect } from 'vue'
-interface Option {
+export interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
   disabled?: boolean // 是否禁用选项，默认 false
   children?: Option[] // 选项 children 数组
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
-interface Props {
+export interface Props {
   options?: Option[] // 可选项数据源
   label?: string // 下拉字典项的文本字段名
   value?: string // 下拉字典项的值字段名

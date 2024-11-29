@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
-interface Data {
+export interface Item {
   desc: string // 文字描述 string | slot
   color?: 'blue' | 'green' | 'red' | 'gray' | string // 圆圈颜色，默认值 blue
 }
-interface Props {
-  timelineData?: Data[] // 时间轴内容数组
+export interface Props {
+  items?: Item[] // 时间轴内容数组
   width?: number | string // 时间轴区域总宽度，单位 px
   lineStyle?: 'solid' | 'dashed' | 'dotted' // 时间线样式
   mode?: 'left' | 'center' | 'right' // 通过设置 mode 可以改变时间轴和内容的相对位置
   position?: 'left' | 'right' // 当 mode 为 center 时，内容交替展现，内容从左边（left）开始或者右边（right）开始展现
 }
 const props = withDefaults(defineProps<Props>(), {
-  timelineData: () => [],
+  items: () => [],
   width: '100%',
   lineStyle: 'solid',
   mode: 'left',
@@ -34,7 +34,7 @@ const totalWidth = computed(() => {
   }
 })
 const len = computed(() => {
-  return props.timelineData.length
+  return props.items.length
 })
 function getDotsHeight() {
   for (let n = 0; n < len.value; n++) {
@@ -78,8 +78,8 @@ watchEffect(
   <div class="m-timeline" :style="`width: ${totalWidth};`">
     <div
       class="timeline-item"
-      :class="{ 'item-last': index === timelineData.length - 1 }"
-      v-for="(data, index) in timelineData"
+      :class="{ 'item-last': index === items.length - 1 }"
+      v-for="(data, index) in items"
       :key="index"
     >
       <span class="timeline-tail" :class="`tail-${mode}`" :style="`border-left-style: ${lineStyle};`"></span>

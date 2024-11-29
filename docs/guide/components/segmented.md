@@ -379,11 +379,11 @@ const value = ref(options[0])
 -- | -- | -- | --
 block | 是否将宽度调整为父元素宽度，同时所有选项占据相同的宽度 | boolean | false
 disabled | 是否禁用 | boolean | false
-options | 选项数据 | string[] &#124; number[] &#124; SegmentedOption[] | []
+options | 选项数据 | string[] &#124; number[] &#124; [Option](#option-type)[] | []
 size | 控件尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 value <Tag color="cyan">v-model</Tag> | 当前选中的值 | string &#124; number | undefined
 
-### SegmentedOption Type
+### Option Type
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --

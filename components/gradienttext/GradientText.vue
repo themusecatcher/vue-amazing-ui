@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-interface Gradient {
+export interface Gradient {
   from: string
   to: string
   deg?: number | string // 渐变角度，默认 252，单位 deg
 }
-interface Props {
+export interface Props {
   gradient?: string | Gradient // 文字渐变色参数
   size?: number | string // 文字大小，不指定单位时，默认单位 px
   weight?: number // 文字粗细

@@ -2,12 +2,12 @@
 import { ref, computed, watch, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
-interface Text {
+export interface Text {
   title: string // 文字标题
   href?: string // 跳转链接
   target?: '_self' | '_blank' // 跳转链接打开方式，href 存在时生效
 }
-interface Props {
+export interface Props {
   scrollText?: Text[] | Text // 滚动文字数组，single 为 true 时，类型为 Text；多条文字滚动时，数组长度必须大于等于 amount 才能滚动
   single?: boolean // 是否启用单条文字滚动效果，只支持水平文字滚动，为 true 时，amount 自动设为 1
   width?: number | string // 滚动区域宽度，单位 px

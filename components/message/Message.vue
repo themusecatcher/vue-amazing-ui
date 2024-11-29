@@ -2,7 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { rafTimeout, cancelRaf } from '../utils'
-interface Props {
+export interface Props {
   content?: string // 提示内容
   duration?: number // 自动关闭的延时，单位 ms，设置 null 时，不自动关闭
   top?: string | number // 消息距离顶部的位置，单位 px
@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<Props>(), {
   duration: 3000,
   top: 30
 })
-interface Message {
+export interface Message {
   content?: string // 提示内容
   icon?: VNode // 自定义图标
   duration?: number | null // 自动关闭的延时时长，单位 ms；设置 null 时，不自动关闭

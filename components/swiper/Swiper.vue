@@ -23,12 +23,12 @@ import 'swiper/less/effect-flip'
 import 'swiper/less/effect-coverflow'
 import 'swiper/less/effect-cards'
 import 'swiper/less/effect-creative'
-interface Image {
+export interface Image {
   name?: string // 图片名称
   src: string // 图片地址
   link?: string // 图片跳转链接
 }
-interface Props {
+export interface Props {
   images?: Image[] // 轮播图片数组
   width?: number | string // 轮播区域宽度，单位 px
   height?: number | string // 轮播区域高度，单位 px

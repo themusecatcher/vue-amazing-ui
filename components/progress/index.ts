@@ -1,9 +1,11 @@
 import type { App } from 'vue'
 import Progress from './Progress.vue'
+export type { Props, Gradient } from './Progress.vue'
 
-// 使用install方法，在app.use挂载
-Progress.install = (app: App): void => {
+// 使用 install 方法，在 app.use 挂载
+Progress.install = (app: App) => {
   app.component(Progress.__name as string, Progress)
+  return app
 }
 
 export default Progress

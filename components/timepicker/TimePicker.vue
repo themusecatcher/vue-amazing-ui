@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
-interface DisabledTime {
+export interface DisabledTime {
   disabledHours?: () => number[]
   disabledMinutes?: (selectedHour: number) => number[]
   disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]
 }
-interface Props {
+export interface Props {
   allowClear?: boolean // 是否展示清除按钮
   bordered?: boolean // 是否有边框
   disabled?: boolean // 是否禁用

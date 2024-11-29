@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-interface Step {
+export interface Step {
   title?: string // 标题
   description?: string // 描述
 }
-interface Props {
+export interface Props {
   steps?: Step[] // 步骤数组
   width?: number | string // 步骤条总宽度，单位 px
   size?: 'default' | 'small' // 步骤条大小

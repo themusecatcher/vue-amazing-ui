@@ -2,7 +2,7 @@
 import { computed, nextTick, ref, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useEventListener, useMutationObserver, useSlotsExist } from '../utils'
-interface Responsive {
+export interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
   md?: number // ≥768px 响应式栅格
@@ -10,7 +10,7 @@ interface Responsive {
   xl?: number // ≥1200px 响应式栅格
   xxl?: number // ≥1600px 响应式栅格
 }
-interface Props {
+export interface Props {
   title?: string // 描述列表的标题，显示在最顶部 string | slot
   extra?: string // 描述列表的操作区域，显示在右上方 string | slot
   bordered?: boolean // 是否展示边框

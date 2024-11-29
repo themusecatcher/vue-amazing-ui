@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-interface Props {
+export interface Props {
   width?: string | number // 区域总宽度，单位 px
   align?: 'stretch' | 'start' | 'end' | 'center' | 'baseline' // 垂直排列方式
   vertical?: boolean // 是否为垂直布局

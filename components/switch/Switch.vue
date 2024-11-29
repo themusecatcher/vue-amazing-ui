@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
-interface Props {
+export interface Props {
   checked?: string // 选中时的内容 string | slot
   checkedValue?: boolean | string | number // 选中时的值
   unchecked?: string // 未选中时的内容 string | slot

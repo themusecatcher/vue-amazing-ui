@@ -1,14 +1,14 @@
 <script setup lang="ts">
-interface SegmentedOption {
+export interface Option {
   label?: string // 选项名
   value: string | number // 选项值
   disabled?: boolean // 是否禁用选项
   payload?: any // 自定义数据载体
 }
-interface Props {
+export interface Props {
   block?: boolean // 是否将宽度调整为父元素宽度，同时所有选项占据相同的宽度
   disabled?: boolean // 是否禁用
-  options?: string[] | number[] | SegmentedOption[] // 选项数据
+  options?: string[] | number[] | Option[] // 选项数据
   size?: 'small' | 'middle' | 'large' // 控件尺寸
   value?: string | number // (v-model) 当前选中的值
 }
@@ -26,19 +26,19 @@ function onSelected(value: string | number) {
     emits('change', value)
   }
 }
-function getOptionDisabled(option: string | number | SegmentedOption) {
+function getOptionDisabled(option: string | number | Option) {
   if (typeof option == 'object') {
     return option?.disabled || false
   }
   return false
 }
-function getOptionValue(option: string | number | SegmentedOption) {
+function getOptionValue(option: string | number | Option) {
   if (typeof option == 'object') {
     return option.value
   }
   return option
 }
-function getOptionLabel(option: string | number | SegmentedOption) {
+function getOptionLabel(option: string | number | Option) {
   if (typeof option == 'object') {
     return option.label
   }

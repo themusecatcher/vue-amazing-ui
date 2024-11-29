@@ -14,17 +14,18 @@
   读取规则：https://raw.githubusercontent.com/<username>/<repo>/<branch>/<file>
   return fetch('https://raw.githubusercontent.com/themusecatcher/vue-amazing-ui/master/package.json')
 */
-export function fetchVersion () {
+export function fetchVersion() {
   return fetch('https://api.github.com/repos/themusecatcher/vue-amazing-ui/contents/package.json?ref=master', {
     headers: {
       // See https://docs.github.com/en/rest/overview/media-types
-      Accept: 'application/vnd.github.v3.raw',
+      Accept: 'application/vnd.github.v3.raw'
       // See https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api#authentication
       // Authorization: 'token ${GITHUB_TOKEN}',
     }
-  }).then(res => res.json())
-    .then(json => json.version ?? '')
-    .then(version => {
+  })
+    .then((res) => res.json())
+    .then((json) => json.version ?? '')
+    .then((version) => {
       if (!version) return
       const tagLineParagragh = document.querySelector('div.VPHero.has-image.VPHomeHero > div > div.main > p.tagline')
       const docsVersionSpan = document.createElement('samp')

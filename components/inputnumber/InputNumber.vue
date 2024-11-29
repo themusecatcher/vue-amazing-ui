@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useSlotsExist, add } from '../utils'
-interface Props {
+export interface Props {
   width?: string | number // 数字输入框宽度，单位 px
   min?: number // 最小值
   max?: number // 最大值
