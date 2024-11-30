@@ -44,7 +44,6 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const timelineItems = ref([
   {
     desc: 'Create a services site 2023-05-24',
@@ -167,7 +166,6 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const timelineItems = ref([
   {
     desc: 'Create a services site 2023-05-24',
@@ -206,7 +204,6 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const timelineItems = ref([
   {
     desc: 'Create a services site 2023-05-24',
@@ -253,7 +250,6 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const timelineItems = ref([
   {
     desc: 'Create a services site 2023-05-24',
@@ -302,7 +298,6 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-
 const timelineItems = ref([
   {
     desc: 'Create a services site 2023-05-24',
