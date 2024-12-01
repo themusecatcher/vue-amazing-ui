@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useResizeObserver, useSlotsExist } from '../utils'
+import { useResizeObserver, useSlotsExist } from 'components/utils'
 export interface Tab {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   tab?: string // 页签显示文字 string | slot

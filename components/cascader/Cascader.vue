@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Select from '../select'
+import Select from 'components/select'
 import { ref, watchEffect } from 'vue'
 export interface Option {
   label?: string // 选项名

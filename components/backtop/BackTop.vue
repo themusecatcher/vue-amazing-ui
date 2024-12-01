@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { VNode, Slot } from 'vue'
-import Tooltip from '../tooltip'
-import { useSlotsExist, useMutationObserver } from '../utils'
+import Tooltip from 'components/tooltip'
+import { useSlotsExist, useMutationObserver } from 'components/utils'
 export interface Props {
   icon?: VNode | Slot // 自定义图标
   description?: string // 文字描述 string | slot

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, nextTick } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf } from '../utils'
+import { rafTimeout, cancelRaf } from 'components/utils'
 export interface Props {
   title?: string // 通知提醒标题，优先级低于 Notification 中的 title
   description?: string // 通知提醒内容，优先级低于 Notification 中的 description

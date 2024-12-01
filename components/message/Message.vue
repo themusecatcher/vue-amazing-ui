@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { rafTimeout, cancelRaf } from '../utils'
+import { rafTimeout, cancelRaf } from 'components/utils'
 export interface Props {
   content?: string // 提示内容
   duration?: number // 自动关闭的延时，单位 ms，设置 null 时，不自动关闭

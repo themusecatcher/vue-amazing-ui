@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import Input from '../input'
-import Select from '../select'
+import Input from 'components/input'
+import Select from 'components/select'
 export interface Props {
   page?: number // (v-model) 当前页数
   pageSize?: number // (v-model) 每页条数

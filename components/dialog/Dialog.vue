@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, nextTick, onMounted, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import Button from '../button'
+import Button from 'components/button'
 export interface Props {
   width?: string | number // 对话框宽度，单位 px
   height?: string | number // 对话框高度，单位 px，默认自适应内容高度

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
-import Tooltip from '../tooltip'
-import Button from '../button'
-import { useSlotsExist } from '../utils'
+import Tooltip from 'components/tooltip'
+import Button from 'components/button'
+import { useSlotsExist } from 'components/utils'
 export interface Props {
   title?: string // 弹出确认框的标题 string | slot
   titleStyle?: CSSProperties // 设置标题的样式

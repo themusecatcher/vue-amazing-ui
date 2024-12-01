@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import Spin from '../spin'
-import Message from '../message'
-import Image from '../image'
-import Space from '../space'
+import Spin from 'components/spin'
+import Message from 'components/message'
+import Image from 'components/image'
+import Space from 'components/space'
 export interface FileType {
   name?: string // 文件名
   url: any // 文件地址

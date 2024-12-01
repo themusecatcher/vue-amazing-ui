@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { VNode, Slot } from 'vue'
-import { useEventListener, useSlotsExist } from '../utils'
+import { useEventListener, useSlotsExist } from 'components/utils'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格

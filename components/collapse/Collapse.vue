@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
-import Button from '../button'
+import Button from 'components/button'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   header?: string // 面板标题 string | slot

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import { useSlotsExist, add } from '../utils'
+import { useSlotsExist, add } from 'components/utils'
 export interface Props {
   width?: string | number // 数字输入框宽度，单位 px
   min?: number // 最小值

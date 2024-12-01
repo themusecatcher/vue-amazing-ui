@@ -8,7 +8,7 @@ import {
   useResizeObserver,
   rafTimeout,
   cancelRaf
-} from '../utils'
+} from 'components/utils'
 export interface Props {
   maxWidth?: string | number // 文字提示最大宽度，单位 px
   content?: string // 展示的内容 string | slot
