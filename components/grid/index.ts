@@ -4,13 +4,14 @@ import Col from './Col.vue'
 export type { Props as RowProps, Responsive } from './Row.vue'
 export type { Props as ColProps } from './Col.vue'
 
-const components = [Row, Col]
-components.forEach((component: any) => {
-  // 使用 install 方法，在 app.use 挂载
-  component.install = (app: App) => {
-    app.component(component.__name as string, component)
-    return app
-  }
-})
+// 使用 install 方法，在 app.use 挂载
+Row.install = (app: App) => {
+  app.component(Row.__name as string, Row)
+  return app
+}
+Col.install = (app: App) => {
+  app.component(Col.__name as string, Col)
+  return app
+}
 
 export { Row, Col }

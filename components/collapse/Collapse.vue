@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
 import Button from '../button'
 export interface Item {
