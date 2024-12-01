@@ -1,5 +1,5 @@
 import './less/global.less'
-import type { App } from 'vue'
+import type { App, Plugin } from 'vue'
 import * as components from './components'
 export * from './components'
 export {
@@ -24,7 +24,9 @@ export {
 export const install = function (app: App) {
   Object.keys(components).forEach((key) => {
     const component = components[key as keyof typeof components]
-    app.component(key, component)
+    if (component.install) {
+      app.use(component)
+    }
   })
   return app // 用于支持链式调用，例如: app.use(A).use(B)
 }
