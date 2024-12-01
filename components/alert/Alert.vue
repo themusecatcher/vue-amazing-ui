@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
 import type { Slot } from 'vue'
-import { useSlotsExist } from '../utils'
+import { useSlotsExist } from 'components/utils'
 export interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import Tooltip from '../tooltip'
-import { useResizeObserver } from '../utils'
+import Tooltip from 'components/tooltip'
+import { useResizeObserver } from 'components/utils'
 export interface Props {
   maxWidth?: string | number // 文本最大宽度，单位 px
   tooltipMaxWidth?: string | number // 弹出提示最大宽度，单位 px，默认为 文本宽度 + 24

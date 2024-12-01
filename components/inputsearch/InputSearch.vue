@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
-import Button from '../button'
-import { useSlotsExist } from '../utils'
+import Button from 'components/button'
+import { useSlotsExist } from 'components/utils'
 export interface Props {
   width?: string | number // 搜索框宽度，单位 px
   icon?: boolean // 搜索图标 boolean | slot

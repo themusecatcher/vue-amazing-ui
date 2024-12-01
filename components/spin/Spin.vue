@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useSlotsExist } from '../utils'
+import { useSlotsExist } from 'components/utils'
 export interface Props {
   spinning?: boolean // 是否为加载中状态
   size?: 'small' | 'middle' | 'large' // 加载中尺寸

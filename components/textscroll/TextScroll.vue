@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf, useResizeObserver } from '../utils'
+import { rafTimeout, cancelRaf, useResizeObserver } from 'components/utils'
 export interface Text {
   title: string // 文字标题
   href?: string // 跳转链接

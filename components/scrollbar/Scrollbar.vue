@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { debounce, useResizeObserver, useScroll } from '../utils'
+import { debounce, useResizeObserver, useScroll } from 'components/utils'
 export interface Props {
   contentClass?: string // 内容 div 的类名
   contentStyle?: CSSProperties // 内容 div 的样式

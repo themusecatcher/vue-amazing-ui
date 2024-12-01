@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
-import Skeleton from '../skeleton'
-import { useSlotsExist } from '../utils'
+import Skeleton from 'components/skeleton'
+import { useSlotsExist } from 'components/utils'
 export interface Props {
   width?: number | string // 卡片宽度，单位 px
   bordered?: boolean // 是否有边框

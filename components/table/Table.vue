@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
 import type { CSSProperties, Slot } from 'vue'
-import Spin from '../spin'
-import Empty from '../empty'
-import Scrollbar from '../scrollbar'
-import Tooltip from '../tooltip'
-import Ellipsis from '../ellipsis'
-import Pagination from '../pagination'
-import { useSlotsExist, useResizeObserver } from '../utils'
+import Spin from 'components/spin'
+import Empty from 'components/empty'
+import Scrollbar from 'components/scrollbar'
+import Tooltip from 'components/tooltip'
+import Ellipsis from 'components/ellipsis'
+import Pagination from 'components/pagination'
+import { useSlotsExist, useResizeObserver } from 'components/utils'
 export interface Column {
   title?: string // 列头显示文字
   align?: 'left' | 'center' | 'right' // 列文本的对齐方式

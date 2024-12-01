@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, nextTick } from 'vue'
-import Space from '../space'
-import Spin from '../spin'
-import { add } from '../utils'
+import Space from 'components/space'
+import Spin from 'components/spin'
+import { add } from 'components/utils'
 export interface Image {
   src: string // 图像地址
   name?: string // 图像名称

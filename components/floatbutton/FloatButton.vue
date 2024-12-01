@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import Tooltip from '../tooltip'
-import Badge from '../badge'
-import { useSlotsExist } from '../utils'
+import Tooltip from 'components/tooltip'
+import Badge from 'components/badge'
+import { useSlotsExist } from 'components/utils'
 export interface Props {
   top?: number | string // 按钮定位的上边距，单位 px
   bottom?: number | string // 按钮定位的下边距，单位 px

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, onMounted, watch } from 'vue'
 import type { CSSProperties } from 'vue'
-import { formatNumber } from '../utils'
+import { formatNumber } from 'components/utils'
 import { useTransition, TransitionPresets } from '@vueuse/core'
 enum TransitionFunc {
   linear = 'linear',

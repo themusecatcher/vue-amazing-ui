@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useSlotsExist } from '../utils'
+import { useSlotsExist } from 'components/utils'
 export interface Gradient {
   '0%'?: string
   '100%'?: string

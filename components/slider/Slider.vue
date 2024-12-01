@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { useResizeObserver } from '../utils'
+import { useResizeObserver } from 'components/utils'
 export interface Props {
   width?: string | number // 滑动输入条宽度，单位 px，水平模式时生效
   height?: string | number // 滑动输入条高度，单位 px，垂直模式时生效

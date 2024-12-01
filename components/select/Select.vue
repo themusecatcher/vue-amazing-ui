@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch } from 'vue'
-import Empty from '../empty'
-import Scrollbar from '../scrollbar'
+import Empty from 'components/empty'
+import Scrollbar from 'components/scrollbar'
 export interface Option {
   label?: string // 选项名
   value?: string | number // 选项值

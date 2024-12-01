@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
-import { useMutationObserver } from '../utils'
+import { useMutationObserver } from 'components/utils'
 export interface Font {
   color?: string // 字体颜色，默认 'rgba(0, 0, 0, 0.15)'
   fontSize?: number // 字体大小，单位 px，默认 16

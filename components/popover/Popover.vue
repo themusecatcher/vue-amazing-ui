@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
-import Tooltip from '../tooltip'
-import { useSlotsExist } from '../utils'
+import Tooltip from 'components/tooltip'
+import { useSlotsExist } from 'components/utils'
 export interface Props {
   title?: string // 卡片标题 string | slot
   titleStyle?: CSSProperties // 卡片标题样式

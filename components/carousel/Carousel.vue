@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf, useEventListener, useResizeObserver } from '../utils'
+import { rafTimeout, cancelRaf, useEventListener, useResizeObserver } from 'components/utils'
 import { useTransition } from '@vueuse/core'
-import Spin from '../spin'
+import Spin from 'components/spin'
 export interface Image {
   title?: string // 图片名称
   src: string // 图片地址

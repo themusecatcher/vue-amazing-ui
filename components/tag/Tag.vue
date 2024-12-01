@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watchEffect } from 'vue'
-import Space from '../space'
-import { useSlotsExist } from '../utils'
+import Space from 'components/space'
+import { useSlotsExist } from 'components/utils'
 export interface Tag {
   label?: string // 标签文本名 string | slot
   closable?: boolean // 标签是否可以关闭，默认 true
