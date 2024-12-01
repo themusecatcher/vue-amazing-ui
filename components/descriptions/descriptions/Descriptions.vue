@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { useEventListener, useMutationObserver, useSlotsExist } from '../utils'
+import { useEventListener, useMutationObserver, useSlotsExist } from 'components/utils'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格

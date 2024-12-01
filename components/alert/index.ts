@@ -1,4 +1,4 @@
-import type { App, Plugin } from 'vue'
+import type { App } from 'vue'
 import Alert from './Alert.vue'
 export type { Props } from './Alert.vue'
 
@@ -8,4 +8,4 @@ Alert.install = (app: App) => {
   return app
 }
 
-export default Alert as typeof Alert & Plugin
+export default Alert

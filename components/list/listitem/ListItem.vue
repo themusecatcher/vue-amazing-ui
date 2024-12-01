@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { CSSProperties, Slot } from 'vue'
-import Avatar from '../avatar'
-import { useSlotsExist } from '../utils'
+import Avatar from 'components/avatar'
+import { useSlotsExist } from 'components/utils'
 export interface Props {
   avatar?: string // 列表元素的图标字符 string | slot
   avatarProps?: object // Avatar 组件属性配置，参考 Avatar Props，用于配置列表图标样式
