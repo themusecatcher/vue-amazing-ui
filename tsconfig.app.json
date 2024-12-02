@@ -1,17 +1,16 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": [
-    "types/env.d.ts",
+    "src/*.ts",
     "src/**/*.ts",
-    "src/**/*.d.ts",
     "src/**/*.vue",
+    // "src/**/*.d.ts",
     "types/**/*.d.ts",
-    "types/**/*.ts",
     "components/*.ts",
     "components/**/*.ts",
     "components/**/*.vue",
-    "components.d.ts",
-    "vite.config.ts"
+    // "components.d.ts",
+    // "vite.config.ts"
   ],
   "exclude": [
     "node_modules",

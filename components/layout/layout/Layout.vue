@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-interface Props {
+export interface Props {
   class?: string // 容器 class
   style?: CSSProperties // 	指定样式
 }

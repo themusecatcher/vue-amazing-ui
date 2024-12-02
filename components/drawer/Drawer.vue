@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
 import Scrollbar from 'components/scrollbar'
 import { useSlotsExist } from 'components/utils'

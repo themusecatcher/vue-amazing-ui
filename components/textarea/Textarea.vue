@@ -86,13 +86,13 @@ function getAreaHeight() {
   areaHeight.value = textareaRef.value.scrollHeight + 2
 }
 const emits = defineEmits(['update:value', 'change', 'enter'])
-function onInput(e: InputEvent) {
+function onInput(e: Event) {
   if (!lazyTextarea.value) {
     emits('update:value', (e.target as HTMLInputElement).value)
     emits('change', e)
   }
 }
-function onChange(e: InputEvent) {
+function onChange(e: Event) {
   if (lazyTextarea.value) {
     emits('update:value', (e.target as HTMLInputElement).value)
     emits('change', e)

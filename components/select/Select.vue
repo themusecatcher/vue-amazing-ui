@@ -180,7 +180,7 @@ function toggleSelect() {
     }
   }
 }
-function onSearchInput(e: InputEvent) {
+function onSearchInput(e: Event) {
   hideSelectName.value = Boolean((e.target as HTMLInputElement)?.value)
 }
 function onClear() {

@@ -130,7 +130,7 @@ function updateValue(value: string) {
     }
   }
 }
-function onInput(e: InputEvent) {
+function onInput(e: Event) {
   if (!lazyInput.value) {
     const target = e.target as HTMLInputElement
     const value = props.parser ? String(props.parser(target.value)) : target.value

@@ -71,13 +71,13 @@ const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
 
-function onInput(e: InputEvent) {
+function onInput(e: Event) {
   if (!lazyInput.value) {
     emits('update:value', (e.target as HTMLInputElement).value)
     emits('change', e)
   }
 }
-function onChange(e: InputEvent) {
+function onChange(e: Event) {
   if (lazyInput.value) {
     emits('update:value', (e.target as HTMLInputElement).value)
     emits('change', e)

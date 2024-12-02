@@ -22,10 +22,9 @@ export {
 } from './utils'
 
 export const install = function (app: App) {
-  Object.keys(components).forEach((key) => {
-    const component = components[key as keyof typeof components]
+  Object.values(components).forEach((component) => {
     if (component.install) {
-      app.use(component)
+      app.use(component as unknown as Plugin)
     }
   })
   return app // 用于支持链式调用，例如: app.use(A).use(B)
