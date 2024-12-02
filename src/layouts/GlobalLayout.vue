@@ -21,7 +21,7 @@ useMutationObserver(
   },
   { attributes: true }
 )
-const menus = ref<any[]>(routes[0].children)
+const menus: any = ref(routes[0].children)
 const current = ref<string[]>([route.name as string])
 function onClick(e: any): void {
   console.log(`${e.item.title} ${e.key}`)

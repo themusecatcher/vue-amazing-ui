@@ -214,7 +214,7 @@ const tableExpandCellFixStyle = computed(() => {
     return {
       position: 'sticky',
       left: '0px'
-    }
+    } as CSSProperties
   }
   return {}
 })

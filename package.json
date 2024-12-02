@@ -3,10 +3,14 @@
   "version": "1.9.12",
   "private": false,
   "type": "module",
+  "types": "types/global.d.ts",
   "files": [
     "dist",
+    "types/components",
+    "types/global.d.ts",
     "package.json",
-    "README.md"
+    "README.md",
+    "README.zh-CN.md"
   ],
   "main": "./dist/vue-amazing-ui.umd.cjs",
   "module": "./dist/vue-amazing-ui.js",
@@ -15,6 +19,7 @@
   "exports": {
     "./dist/vue-amazing-ui.css": "./dist/vue-amazing-ui.css",
     "./css": "./dist/vue-amazing-ui.css",
+    "./types": "./types/global.d.ts",
     ".": {
       "import": "./dist/vue-amazing-ui.js",
       "require": "./dist/vue-amazing-ui.umd.cjs"
@@ -35,6 +40,7 @@
     "build:es": "vite build",
     "build:browser": "vite -f iife build",
     "preview": "vite preview",
+    "gen-dts": "esbuild scripts/gen-component-declaration.js --bundle --platform=node --tsconfig=tsconfig.esbuild.json | node",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
@@ -72,6 +78,7 @@
     "unplugin-auto-import": "^0.18.6",
     "unplugin-vue-components": "^0.27.5",
     "vite": "^6.0.1",
+    "vite-plugin-dts": "^4.3.0",
     "vitepress": "^1.5.0",
     "vue-tsc": "^2.1.10"
   },
