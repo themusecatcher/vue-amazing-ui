@@ -6,7 +6,6 @@ import 'less/global.less'
 import VueAmazingUI from 'components/index'
 // import VueAmazingUI from '../dist/vue-amazing-ui'
 // import '../dist/vue-amazing-ui.css'
-
 // import VueAmazingUI from 'vue-amazing-ui'
 // import 'vue-amazing-ui/css'
 
