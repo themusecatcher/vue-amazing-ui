@@ -6,7 +6,7 @@
 
 - 导出所有组件属性的类型定义，为使用 `TypeScript` 开发提供更好的支持
 
-## 1.9.12 <Tag color="volcano" size="small">soon</Tag>
+## 1.9.12 <Tag color="volcano" size="small">2024-12-02</Tag>
 
 - 优化并更新 [折叠面板 Collapse](https://themusecatcher.github.io/vue-amazing-ui/guide/components/collapse.html) 组件，将 `collapseData` 属性重命名为 `items`，新增 `collapseStyle` `copyText` `copiedText` 等属性；支持：自定义样式；自定义箭头图标；自定义复制按钮文本；单个面板自定义样式、箭头属性、复制按钮等功能
 - 优化并更新 [时间轴 Timeline](https://themusecatcher.github.io/vue-amazing-ui/guide/components/timeline.html) 组件，将 `timelineData` 属性重命名为 `items`
