@@ -112,7 +112,7 @@ const routerViewRef = ref()
 </template>
 <style lang="less" scoped>
 .switch-theme {
-  position: absolute;
+  position: absolute !important;
   top: 13px;
   right: 13px;
   z-index: 3;
