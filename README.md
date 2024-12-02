@@ -36,26 +36,40 @@ bun add vue-amazing-ui
 
 ## Use Components
 
-**Global**
+**Global Registration All Components**
 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
-
 import VueAmazingUI from 'vue-amazing-ui'
 import 'vue-amazing-ui/css'
 
 const app = createApp(App)
-app.use(VueAmazingUI)
+app.use(VueAmazingUI).mount('#app')
 ```
 
-**Local**
+**Global Registration Some Components**
+
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import { Button, Tag } from 'vue-amazing-ui'
+import 'vue-amazing-ui/css'
+
+const app = createApp(App)
+app.use(Button).use(Tag).mount('#app')
+```
+
+**Local Registration**
 
 ```vue
 <script setup lang="ts">
 import { Button } from 'vue-amazing-ui'
 import 'vue-amazing-ui/css'
 </script>
+<template>
+  <Button>button</Button>
+</template>
 ```
 
 ## Use Functions

@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 import { routes } from '@/router'
 import { useFps } from 'components/index'
 const { fps } = useFps()
-const installData = ref([
+const installItems = ref([
   {
     header: 'Install',
     content: `npm install vue-amazing-ui\n# or\npnpm add vue-amazing-ui\n# or\nyarn add vue-amazing-ui\n# or\nbun add vue-amazing-ui`
@@ -84,7 +84,7 @@ const toolFunctions = [
     description: '监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在'
   }
 ]
-const collapseData = [
+const functionItems = [
   {
     header: '以上工具函数 API 使用时直接引入即可:',
     content: `<script setup lang="ts">
@@ -153,7 +153,7 @@ function onOpen() {
     </p>
     <p class="u-tip">开箱即用，不墨迹！</p>
     <h2 class="mt30 mb10">使用方式：</h2>
-    <Collapse lang="bash" :fontSize="16" :collapseData="installData" v-model:activeKey="activeKey" copyable />
+    <Collapse lang="bash" :fontSize="16" :items="installItems" v-model:activeKey="activeKey" copyable />
     <ul class="m-list">
       <li class="u-tip mb10 mt10">全局引入并注册所有组件</li>
       <li class="u-tip mb10 mt10">按需引入并注册部分组件</li>
@@ -166,7 +166,7 @@ function onOpen() {
         : {{ func.description }}
       </li>
     </ul>
-    <Collapse lang="typescript" :fontSize="16" :collapseData="collapseData" v-model:activeKey="activeKey" copyable />
+    <Collapse lang="typescript" :fontSize="16" :items="functionItems" v-model:activeKey="activeKey" copyable />
     <Descriptions class="mb10 mt30" title="生产环境依赖 (dependencies)" :column="{ md: 2, lg: 3, xl: 4 }">
       <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
         <Tag color="volcano">{{ version }}</Tag>

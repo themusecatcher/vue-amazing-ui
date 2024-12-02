@@ -36,26 +36,40 @@ bun add vue-amazing-ui
 
 ## 使用组件
 
-**全局**
+**全局注册所有组件**
 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
-
 import VueAmazingUI from 'vue-amazing-ui'
 import 'vue-amazing-ui/css'
 
 const app = createApp(App)
-app.use(VueAmazingUI)
+app.use(VueAmazingUI).mount('#app')
 ```
 
-**局部**
+**全局注册部分组件**
+
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import { Button, Tag } from 'vue-amazing-ui'
+import 'vue-amazing-ui/css'
+
+const app = createApp(App)
+app.use(Button).use(Tag).mount('#app')
+```
+
+**局部注册组件**
 
 ```vue
 <script setup lang="ts">
 import { Button } from 'vue-amazing-ui'
 import 'vue-amazing-ui/css'
 </script>
+<template>
+  <Button>button</Button>
+</template>
 ```
 
 ## 使用工具函数

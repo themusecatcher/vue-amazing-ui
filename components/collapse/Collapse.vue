@@ -2,8 +2,10 @@
 import { ref, watchEffect } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
 import Button from 'components/button'
+import { debounce } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
+  disabled?: boolean // 是否禁用展开收起
   header?: string // 面板标题 string | slot
   headerStyle?: CSSProperties // 设置面板标题的样式
   content?: string // 面板内容 string | slot
@@ -14,7 +16,6 @@ export interface Item {
   arrowPlacement?: 'left' | 'right' // 箭头位置
   arrowStyle?: CSSProperties // 设置面板箭头的样式
   extra?: string // 面板标题右侧的额外内容 string | slot
-  disabled?: boolean // 是否禁用展开
   lang?: string // 面板右上角固定内容，例如 language 标识 string | slot
   copyable?: boolean // 是否可复制面板内容
   copyProps?: object // 复制按钮属性配置，参考 Button Props
@@ -26,6 +27,7 @@ export interface Props {
   items?: Item[] // 折叠面板数据，可使用 slot 替换指定 key 的 header、content、arrow、extra、lang
   activeKey?: string[] | string | number[] | number | null // (v-model) 当前激活 tab 面板的 key，传入 string | number 类型时，即为手风琴模式
   bordered?: boolean // 带边框风格的折叠面板
+  disabled?: boolean // 是否禁用展开收起，较低优先级
   ghost?: boolean // 使折叠面板透明且无边框
   headerStyle?: CSSProperties // 设置面板标题的样式，较低优先级
   contentStyle?: CSSProperties // 设置面板内容的样式，较低优先级
@@ -35,7 +37,6 @@ export interface Props {
   arrowPlacement?: 'left' | 'right' // 箭头位置，较低优先级
   arrowStyle?: CSSProperties // 设置面板箭头的样式，较低优先级
   extra?: string // 面板标题右侧的额外内容，较低优先级 string | slot
-  disabled?: boolean // 是否禁用，较低优先级
   lang?: string // 面板右上角固定内容，例如 language 标识，较低优先级 string | slot
   copyable?: boolean // 是否可复制面板内容，较低优先级
   copyProps?: object // 复制按钮属性配置，参考 Button Props，较低优先级
@@ -46,6 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   activeKey: null,
   bordered: true,
+  disabled: false,
   ghost: false,
   headerStyle: () => ({}),
   contentStyle: () => ({}),
@@ -55,7 +57,6 @@ const props = withDefaults(defineProps<Props>(), {
   arrowPlacement: 'left',
   arrowStyle: () => ({}),
   extra: undefined,
-  disabled: false,
   lang: undefined,
   copyable: false,
   copyProps: () => ({}),
@@ -127,14 +128,17 @@ function getCopyBtnTxt(item: Item, index: number) {
     return copyText
   }
 }
+const debounceRestCopyBtn = debounce((key: string | number) => {
+  copyBtnClickedKeys.value = copyBtnClickedKeys.value.filter((clickedKey: string | number) => clickedKey !== key)
+}, 3000)
 function onCopy(index: number, key: string | number) {
   navigator.clipboard.writeText(contentRef.value[index].innerText || '').then(
     () => {
+      if (!copyBtnClickedKeys.value.includes(key)) {
+        copyBtnClickedKeys.value.push(key)
+      }
       /* clipboard successfully set */
-      copyBtnClickedKeys.value.push(key)
-      setTimeout(() => {
-        copyBtnClickedKeys.value.filter((clickedKey: string | number) => clickedKey !== key)
-      }, 3000)
+      debounceRestCopyBtn(key)
     },
     (err) => {
       /* clipboard write failed */
@@ -181,7 +185,12 @@ function onCopy(index: number, key: string | number) {
             :key="getComputedKey(item.key, index)"
             :active="activeCheck(getComputedKey(item.key, index))"
           >
-            <component v-if="getComputedValue(item, 'arrow')" :is="getComputedValue(item, 'arrow')" />
+            <component
+              v-if="getComputedValue(item, 'arrow')"
+              :is="getComputedValue(item, 'arrow')"
+              class="arrow-svg"
+              :class="{ 'arrow-rotate': activeCheck(getComputedKey(item.key, index)) }"
+            />
             <svg
               v-else
               class="arrow-svg"
@@ -323,12 +332,15 @@ function onCopy(index: number, key: string | number) {
         height: 22px;
         display: flex;
         align-items: center;
-        .arrow-rotate {
-          transform: rotate(90deg);
-        }
         :deep(svg) {
           fill: currentColor;
           transition: transform 0.3s;
+        }
+        .arrow-svg {
+          transition: transform 0.3s;
+        }
+        .arrow-rotate {
+          transform: rotate(90deg);
         }
       }
       .collapse-header {
