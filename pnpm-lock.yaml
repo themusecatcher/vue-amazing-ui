@@ -54,6 +54,9 @@ importers:
       '@rollup/plugin-terser':
         specifier: ^0.4.4
         version: 0.4.4(rollup@4.27.4)
+      '@tsconfig/node22':
+        specifier: ^22.0.0
+        version: 22.0.0
       '@types/node':
         specifier: ^22.10.1
         version: 22.10.1
@@ -819,6 +822,9 @@ packages:
 
   '@simonwep/pickr@1.8.2':
     resolution: {integrity: sha512-/l5w8BIkrpP6n1xsetx9MWPWlU6OblN5YgZZphxan0Tq4BByTCETL6lyIeY8lagalS2Nbt4F2W034KHLIiunKA==}
+
+  '@tsconfig/node22@22.0.0':
+    resolution: {integrity: sha512-twLQ77zevtxobBOD4ToAtVmuYrpeYUh3qh+TEp+08IWhpsrIflVHqQ1F1CiPxQGL7doCdBIOOCF+1Tm833faNg==}
 
   '@types/argparse@1.0.38':
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
@@ -3224,6 +3230,8 @@ snapshots:
     dependencies:
       core-js: 3.39.0
       nanopop: 2.4.2
+
+  '@tsconfig/node22@22.0.0': {}
 
   '@types/argparse@1.0.38': {}
 
