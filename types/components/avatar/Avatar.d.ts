@@ -30,11 +30,11 @@ declare const __VLS_component: import('vue').DefineComponent<Props, {}, {}, {}, 
     size: number | "small" | "middle" | "large" | Responsive;
     icon: VNode | Slot;
     src: string;
-    target: "_self" | "_blank";
     color: string;
     shape: "circle" | "square";
     alt: string;
     href: string;
+    target: "_self" | "_blank";
 }, {}, {}, {}, string, import('vue').ComponentProvideOptions, false, {}, any>;
 declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 export default _default;
