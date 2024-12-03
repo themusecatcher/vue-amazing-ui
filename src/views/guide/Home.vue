@@ -2,7 +2,7 @@
 import pkg from '/package.json'
 import { ref, computed } from 'vue'
 import { routes } from '@/router'
-import { useFps } from 'components/index'
+import { useFps } from 'vue-amazing-ui'
 const { fps } = useFps()
 const installItems = ref([
   {
@@ -87,7 +87,7 @@ const toolFunctions = [
 const functionItems = [
   {
     header: '以上工具函数 API 使用时直接引入即可:',
-    content: `<script setup lang="ts">
+    content: `\<script setup lang="ts">
 import {
   dateFormat,
   formatNumber,
