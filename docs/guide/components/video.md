@@ -10,8 +10,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.mp4')
-const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/bao.jpg')
+const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.0/ultra.mp4')
+const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.0/ultra.jpg')
 </script>
 
 ## 基本使用
@@ -27,8 +27,8 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.mp4')
-const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/bao.jpg')
+const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.0/ultra.mp4')
+const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.0/ultra.jpg')
 </script>
 <template>
   <Video
@@ -69,8 +69,8 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.mp4')
-const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/bao.jpg')
+const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.0/ultra.mp4')
+const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.0/ultra.jpg')
 </script>
 <template>
   <Video
@@ -101,7 +101,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/b
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.mp4')
+const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.0/ultra.mp4')
 </script>
 <template>
   <Video
