@@ -10,8 +10,8 @@
 
 - 组件库采用 `Vue@{{ getVersion('vue') }}` + `TypeScript@{{ getVersion('typescript') }}` + `Vite@{{ getVersion('vite') }}` + `Less@{{ getVersion('less') }}` 实现！
 - 目前共包含 `63` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
+- `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
 - 每个组件都是单文件组件 `SFC`，单独使用，也没问题！
-- 所有组件样式均使用 `box-sizing: border-box;` 模式！
 - 部分组件样式尚未完美适配文档主题的 `dark` 暗黑模式，可切换 `light` 模式查看！
 - 开箱即用，不墨迹！
 
