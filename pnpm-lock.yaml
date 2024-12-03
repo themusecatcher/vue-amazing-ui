@@ -45,8 +45,8 @@ importers:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.3)
       vue-amazing-ui:
-        specifier: 1.10.0-beta.1
-        version: 1.10.0-beta.1(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
+        specifier: 1.10.0
+        version: 1.10.0(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
       vue-router:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.6.3))
@@ -2512,9 +2512,6 @@ packages:
 
   vue-amazing-ui@1.10.0:
     resolution: {integrity: sha512-w+QB/AKu3iLBwbQfpJ1bE1yAbUy4xt/nQN40HZKHBhR28QDs5ZSp7JVsYsFoBpWTG8weNVFDHr4BYomsao7CNA==}
-
-  vue-amazing-ui@1.10.0-beta.1:
-    resolution: {integrity: sha512-SsyAIj0W9+kEMmoxBPBczG4LIZ1lMGaid4rhNBv8M0Lsnb5HMKvZ/bT09bABvbkovVLceyvDf3Ba1/evFYypZA==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -5018,36 +5015,6 @@ snapshots:
       qrcode: 1.5.4
       swiper: 11.1.15
       vue: 3.5.13(typescript@5.6.3)
-      vue-router: 4.5.0(vue@3.5.13(typescript@5.6.3))
-    transitivePeerDependencies:
-      - async-validator
-      - axios
-      - change-case
-      - drauu
-      - focus-trap
-      - fuse.js
-      - idb-keyval
-      - jwt-decode
-      - nprogress
-      - sortablejs
-      - typescript
-      - universal-cookie
-
-  vue-amazing-ui@1.10.0-beta.1(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3):
-    dependencies:
-      '@ant-design/icons-vue': 7.0.1(vue@3.5.13(typescript@5.6.3))
-      '@types/minimist': 1.2.5
-      '@vuepic/vue-datepicker': 10.0.0(vue@3.5.13(typescript@5.6.3))
-      '@vueuse/core': 12.0.0(typescript@5.6.3)
-      '@vueuse/integrations': 12.0.0(async-validator@4.2.5)(focus-trap@7.6.2)(qrcode@1.5.4)(typescript@5.6.3)
-      ant-design-vue: 4.2.6(vue@3.5.13(typescript@5.6.3))
-      core-js: 3.39.0
-      date-fns: 4.1.0
-      naive-ui: 2.40.2(vue@3.5.13(typescript@5.6.3))
-      qrcode: 1.5.4
-      swiper: 11.1.15
-      vue: 3.5.13(typescript@5.6.3)
-      vue-amazing-ui: 1.10.0(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
       vue-router: 4.5.0(vue@3.5.13(typescript@5.6.3))
     transitivePeerDependencies:
       - async-validator
