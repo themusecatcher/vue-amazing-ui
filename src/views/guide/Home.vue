@@ -155,8 +155,9 @@ function onOpen() {
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse lang="bash" :fontSize="16" :items="installItems" v-model:activeKey="activeKey" copyable />
     <ul class="m-list">
-      <li class="u-tip mb10 mt10">全局引入并注册所有组件</li>
-      <li class="u-tip mb10 mt10">按需引入并注册部分组件</li>
+      <li class="u-tip mb10 mt10">全局引入注册所有组件</li>
+      <li class="u-tip mb10 mt10">全局引入注册部分组件</li>
+      <li class="u-tip mb10 mt10">局部引入注册部分组件</li>
       <li class="u-tip mb10">无需任何安装引入注册，直接使用单文件组件 SFC</li>
     </ul>
     <h2 class="mt30">常用工具函数：</h2>
@@ -166,7 +167,7 @@ function onOpen() {
         : {{ func.description }}
       </li>
     </ul>
-    <Collapse lang="typescript" :fontSize="16" :items="functionItems" v-model:activeKey="activeKey" copyable />
+    <Collapse lang="vue" :fontSize="16" :items="functionItems" v-model:activeKey="activeKey" copyable />
     <Descriptions class="mb10 mt30" title="生产环境依赖 (dependencies)" :column="{ md: 2, lg: 3, xl: 4 }">
       <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
         <Tag color="volcano">{{ version }}</Tag>
