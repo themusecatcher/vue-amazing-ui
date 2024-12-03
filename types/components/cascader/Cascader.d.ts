@@ -34,6 +34,7 @@ declare const _default: import('vue').DefineComponent<Props, {}, {}, {}, {}, imp
     search: boolean;
     width: "auto" | number | number[];
     height: number;
+    children: string;
     value: string;
     disabled: boolean | boolean[];
     gap: number;
@@ -42,7 +43,6 @@ declare const _default: import('vue').DefineComponent<Props, {}, {}, {}, {}, imp
     allowClear: boolean;
     maxDisplay: number;
     modelValue: number[] | string[];
-    children: string;
     changeOnSelect: boolean;
 }, {}, {}, {}, string, import('vue').ComponentProvideOptions, false, {}, any>;
 export default _default;
