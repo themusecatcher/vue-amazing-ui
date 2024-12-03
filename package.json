@@ -1,9 +1,8 @@
 {
   "name": "vue-amazing-ui",
-  "version": "1.10.0",
+  "version": "1.10.0-beta.1",
   "private": false,
   "type": "module",
-  "types": "types/global.d.ts",
   "files": [
     "dist",
     "types/components",
@@ -16,6 +15,7 @@
   "module": "./dist/vue-amazing-ui.js",
   "browser": "./dist/vue-amazing-ui.js",
   "unpkg": "./dist/vue-amazing-ui.iife.js",
+  "types": "./types/global.d.ts",
   "exports": {
     "./dist/vue-amazing-ui.css": "./dist/vue-amazing-ui.css",
     "./css": "./dist/vue-amazing-ui.css",
