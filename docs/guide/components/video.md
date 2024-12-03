@@ -20,7 +20,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.1/u
   :src="src"
   :poster="poster"
   width="100%"
-  :height="400" />
+  height="56.25%" />
 
 ::: details Show Code
 
@@ -35,7 +35,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.1/u
     :src="src"
     :poster="poster"
     width="100%"
-    :height="400" />
+    height="56.25%" />
 </template>
 ```
 
@@ -62,7 +62,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.1/u
   :src="src"
   :poster="poster"
   width="100%"
-  :height="400" />
+  height="56.25%" />
 
 ::: details Show Code
 
@@ -78,7 +78,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.1/u
     :src="src"
     :poster="poster"
     width="100%"
-    :height="400" />
+    height="56.25%" />
 </template>
 ```
 
@@ -93,7 +93,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.1/u
 <Video
   :src="src"
   width="100%"
-  :height="400"
+  height="56.25%"
   :second="3" />
 
 ::: details Show Code
@@ -107,7 +107,7 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.1/ultr
   <Video
     :src="src"
     width="100%"
-    :height="400"
+    height="56.25%"
     :second="3" />
 </template>
 ```
