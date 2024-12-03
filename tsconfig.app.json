@@ -4,13 +4,10 @@
     "src/*.ts",
     "src/**/*.ts",
     "src/**/*.vue",
-    // "src/**/*.d.ts",
     "types/**/*.d.ts",
     "components/*.ts",
     "components/**/*.ts",
     "components/**/*.vue",
-    // "components.d.ts",
-    // "vite.config.ts"
   ],
   "exclude": [
     "node_modules",
