@@ -40,7 +40,6 @@
     "build:es": "vite build",
     "build:browser": "vite -f iife build",
     "preview": "vite preview",
-    "gen-dts": "esbuild scripts/gen-component-declaration.js --bundle --platform=node --tsconfig=tsconfig.esbuild.json | node",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
