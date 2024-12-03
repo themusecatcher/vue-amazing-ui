@@ -2,7 +2,8 @@ import { fileURLToPath, URL } from 'node:url'
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import dts from 'vite-plugin-dts' // 自动生成类型文件
+ // 自动生成类型文件
+import dts from 'vite-plugin-dts'
 // import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 // ant-desing naive-ui 按需引入
