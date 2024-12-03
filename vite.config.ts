@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import dts from 'vite-plugin-dts'
+import dts from 'vite-plugin-dts' // 自动生成类型文件
 // import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 // ant-desing naive-ui 按需引入
@@ -25,8 +25,8 @@ export default defineConfig({
       // outDir: 'dist', // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
       tsconfigPath: './tsconfig.app.json',
       insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
-      cleanVueFileName: true, // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
-      // rollupTypes: true, // 是否将发出的类型文件打包进单个文件，默认 false
+      cleanVueFileName: true // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
+      // rollupTypes: true // 是否将发出的类型文件打包进单个文件，默认 false
       // copyDtsFiles: true // 是否将源码里的 .d.ts 文件复制到 `outDir`，默认 false
     }),
     // AutoImport({ // 自动引入所需 apis

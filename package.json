@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "1.10.0-beta.2",
+  "version": "1.10.0",
   "private": false,
   "type": "module",
   "files": [
@@ -21,7 +21,6 @@
   "exports": {
     "./dist/vue-amazing-ui.css": "./dist/vue-amazing-ui.css",
     "./css": "./dist/vue-amazing-ui.css",
-    "./types": "./types/vue-amazing-ui.d.ts",
     ".": {
       "import": "./dist/vue-amazing-ui.js",
       "require": "./dist/vue-amazing-ui.umd.cjs"
