@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "1.9.12",
+  "version": "1.10.0",
   "private": false,
   "type": "module",
   "types": "types/global.d.ts",
@@ -36,7 +36,7 @@
     "format": "prettier --write src/ components/",
     "clean": "rimraf ./dist",
     "build:lib": "run-p type-check build:es build:browser",
-    "type-check": "vue-tsc --noEmit",
+    "type-check": "vue-tsc --build --force",
     "build:es": "vite build",
     "build:browser": "vite -f iife build",
     "preview": "vite preview",
@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@types/minimist": "^1.2.5",
     "@vuepic/vue-datepicker": "^10.0.0",
     "@vueuse/core": "^12.0.0",
     "@vueuse/integrations": "^12.0.0",
