@@ -8,7 +8,6 @@
 declare module '*.js'
 declare module '*.gz'
 declare module 'vue-amazing-ui'
-declare module 'naive-ui'
 declare module '*.json'
 
 interface Window {
