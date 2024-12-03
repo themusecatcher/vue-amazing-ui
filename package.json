@@ -1,12 +1,14 @@
 {
   "name": "vue-amazing-ui",
-  "version": "1.10.0-beta.1",
+  "version": "1.10.0-beta.2",
   "private": false,
   "type": "module",
   "files": [
-    "dist",
-    "types/components",
-    "types/global.d.ts",
+    "dist/components",
+    "dist/*.css",
+    "dist/*.d.ts",
+    "dist/*.js",
+    "dist/*.cjs",
     "package.json",
     "README.md",
     "README.zh-CN.md"
@@ -15,11 +17,11 @@
   "module": "./dist/vue-amazing-ui.js",
   "browser": "./dist/vue-amazing-ui.js",
   "unpkg": "./dist/vue-amazing-ui.iife.js",
-  "types": "./types/global.d.ts",
+  "types": "./dist/vue-amazing-ui.d.ts",
   "exports": {
     "./dist/vue-amazing-ui.css": "./dist/vue-amazing-ui.css",
     "./css": "./dist/vue-amazing-ui.css",
-    "./types": "./types/global.d.ts",
+    "./types": "./types/vue-amazing-ui.d.ts",
     ".": {
       "import": "./dist/vue-amazing-ui.js",
       "require": "./dist/vue-amazing-ui.umd.cjs"
@@ -55,7 +57,7 @@
     "qrcode": "^1.5.4",
     "swiper": "^11.1.15",
     "vue": "^3.5.13",
-    "vue-amazing-ui": "1.10.0-beta.1",
+    "vue-amazing-ui": "1.10.0",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {

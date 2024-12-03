@@ -22,7 +22,7 @@ export default defineConfig({
   plugins: [
     vue(),
     dts({
-      outDir: 'types', // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
+      // outDir: 'dist', // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
       tsconfigPath: './tsconfig.app.json',
       insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
       cleanVueFileName: true, // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
