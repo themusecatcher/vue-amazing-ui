@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Bao.mp4')
-const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/bao.jpg')
+const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.1/ultra.mp4')
+const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.1/ultra.jpg')
 function onPlay() {
   console.log('play')
 }
