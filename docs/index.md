@@ -21,12 +21,12 @@ hero:
 features:
   - icon: 💡
     title: 最新技术
-    details: '采用 Vue@3.5.13 + TypeScript@5.6.3 + Vite@6.0.2 + Less@4.2.1 开发！'
+    details: '基于 Vue@3.5.13、TypeScript@5.6.3、Vite@6.0.2 等最新技术栈开发'
   - icon: 🚀
     title: 开箱即用
     details: 目前共包含 63 个基础 UI 组件以及 16 个工具函数，持续探索更新中...
-  - icon: ⚡️
-    title: 独有特色
+  - icon: 😉
+    title: 有点意思
     details: '所有组件均采用单文件组件 SFC，单独使用，也没问题！'
 ---
 
@@ -54,7 +54,7 @@ function getVersion (target: string): string {
 }
 function fetchDesc () {
   const featureDetails: any = document.querySelector('div.VPFeatures.VPHomeFeatures > div.container > div.items :first-child > div.VPLink.no-icon.VPFeature .box > p.details')
-  const developDesc = `采用 Vue@${getVersion('vue')} + TypeScript@${getVersion('typescript')} + Vite@${getVersion('vite')} + Less@${getVersion('less')} 开发`
+  const developDesc = `基于 Vue@${getVersion('vue')}、TypeScript@${getVersion('typescript')}、Vite@${getVersion('vite')} 等最新技术栈开发`
   featureDetails.textContent = developDesc
 }
 onMounted(() => {
