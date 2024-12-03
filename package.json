@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
+    "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.10.1",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "^10.1.0",
