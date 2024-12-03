@@ -157,7 +157,7 @@ const activeKey10 = ref(['1'])
 const activeKey11 = ref(['1'])
 const activeKey12 = ref(['1'])
 const nestActiveKey = ref(['1'])
-const arrowPlacement = ref('left')
+const arrowPlacement = ref('right')
 const key = ref('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
@@ -788,7 +788,7 @@ const positionOptions = ref([
     value: 'right'
   }
 ])
-const arrowPlacement = ref('left')
+const arrowPlacement = ref('right')
 const activeKey = ref(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
@@ -991,7 +991,7 @@ showArrow | 是否展示箭头 | boolean | true
 arrowPlacement | 箭头位置 | 'left' &#124; 'right' | 'left'
 arrowStyle | 设置面板箭头的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 extra | 面板标题右侧的额外内容 | string &#124; slot | undefined
-lang | 面板右上角固定内容，例如标识 `language` | string &#124; slot | undefined
+lang | 面板右上角固定内容，例如 `language` 标识 | string &#124; slot | undefined
 copyable | 是否可复制面板内容 | boolean | false
 copyProps | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
 copyText | 复制按钮文本 | string | 'Copy'

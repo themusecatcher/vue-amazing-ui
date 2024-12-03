@@ -141,7 +141,7 @@ const positionOptions = ref([
 ])
 const activeKey = ref(['1'])
 const nestActiveKey = ref(['1'])
-const arrowPlacement = ref('left')
+const arrowPlacement = ref('right')
 const key = ref('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)

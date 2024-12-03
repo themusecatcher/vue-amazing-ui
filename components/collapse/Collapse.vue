@@ -32,7 +32,7 @@ export interface Props {
   headerStyle?: CSSProperties // 设置面板标题的样式，较低优先级
   contentStyle?: CSSProperties // 设置面板内容的样式，较低优先级
   collapseStyle?: CSSProperties // 设置面板容器的样式，较低优先级
-  arrow?: VNode | Slot // 自定义箭头切换图标，，较低优先级 vnode | slot
+  arrow?: VNode | Slot // 自定义箭头切换图标，较低优先级 vnode | slot
   showArrow?: boolean // 是否展示箭头，较低优先级
   arrowPlacement?: 'left' | 'right' // 箭头位置，较低优先级
   arrowStyle?: CSSProperties // 设置面板箭头的样式，较低优先级
@@ -307,6 +307,12 @@ function onCopy(index: number, key: string | number) {
   border-radius: 8px;
   .m-collapse-item {
     border-bottom: 1px solid #d9d9d9;
+    &:first-child {
+      border-radius: 8px 8px 0 0;
+      .m-collapse-header {
+        border-radius: 8px 8px 0 0;
+      }
+    }
     &:last-child {
       border-radius: 0 0 8px 8px;
       .m-collapse-header,
