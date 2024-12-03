@@ -2,9 +2,9 @@
 
 <GlobalElement />
 
-## 1.10.1 <Tag color="volcano" size="small">2024-12-04</Tag>
+## 1.10.1 <Tag color="volcano" size="small">soon</Tag>
 
-- 添加类型声明文件，提供所有组件相关类型定义的导出，为使用 `TypeScript` 开发提供更好的支持
+- 优化类型声明文件导出
 - 组件库及文档代码优化
 
 ## 1.10.0 <Tag color="volcano" size="small">2024-12-03</Tag>
