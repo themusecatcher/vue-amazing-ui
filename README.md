@@ -16,10 +16,10 @@
 
 ## Features
 
-- The component library is implemented with `Vue@3.5.13`+ `TypeScript@5.6.3` + `Vite@6.0.1` + `Less@4.2.1`.
+- The component library is implemented with `Vue@3.5.13`+ `TypeScript@5.6.3` + `Vite@6.0.2` + `Less@4.2.1`.
 - Currently, it includes `63` basic UI components and `16` utility functions, with continuous exploration and updates ongoing...
+- All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
 - Each component is a Single-File Component (`SFC`), and they can be used independently without any issues.
-- All component styles use the `box-sizing: border-box;` model.
 - Ready to use out of the box, no fuss.
 
 ## Installation
