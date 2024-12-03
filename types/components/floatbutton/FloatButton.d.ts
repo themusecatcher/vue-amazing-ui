@@ -40,9 +40,9 @@ declare const __VLS_component: import('vue').DefineComponent<Props, {}, {}, {}, 
     icon: string;
     width: number | string;
     height: number | string;
+    target: "_self" | "_blank";
     shape: "circle" | "square";
     href: string;
-    target: "_self" | "_blank";
     top: number | string;
     bottom: number | string;
     left: number | string;
