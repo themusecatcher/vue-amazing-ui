@@ -32,9 +32,9 @@ declare const __VLS_component: import('vue').DefineComponent<Props, {}, {}, {}, 
     size: "small" | "middle" | "large";
     type: "default" | "reverse" | "primary" | "danger" | "dashed" | "text" | "link";
     icon: VNode | Slot;
-    target: "_self" | "_blank";
     shape: "default" | "circle" | "round";
     href: string;
+    target: "_self" | "_blank";
     keyboard: boolean;
     block: boolean;
     disabled: boolean;
