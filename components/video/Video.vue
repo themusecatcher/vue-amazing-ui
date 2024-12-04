@@ -150,6 +150,24 @@ function onPlay() {
   }
   emits('play')
 }
+function play() {
+  if (originPlay.value) {
+    originPlay.value = false
+    veoRef.value.currentTime = 0
+  }
+  if (!playing.value) {
+    veoRef.value.play()
+  }
+}
+function pause() {
+  if (playing.value) {
+    veoRef.value.pause()
+  }
+}
+defineExpose({
+  play,
+  pause
+})
 </script>
 <template>
   <div
