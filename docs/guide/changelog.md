@@ -2,7 +2,11 @@
 
 <GlobalElement />
 
-## 1.10.1 <Tag color="volcano" size="small">soon</Tag>
+## 1.10.2 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [播放器 Video](https://themusecatcher.github.io/vue-amazing-ui/guide/components/collapse.html) 组件，新增 iconSize 属性，支持：设置播放暂停图标的尺寸
+
+## 1.10.1 <Tag color="volcano" size="small">2024-12-04</Tag>
 
 - 优化类型声明文件导出
 - 组件库及文档代码优化
