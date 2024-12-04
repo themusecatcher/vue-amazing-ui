@@ -232,7 +232,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/u
 <Video
   :src="src"
   :poster="poster"
-  :show-play="false"
+  :play-icon="false"
   width="100%"
   height="56.25%"
 />
@@ -249,7 +249,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/u
   <Video
     :src="src"
     :poster="poster"
-    :show-play="false"
+    :play-icon="false"
     width="100%"
     height="56.25%"
   />
@@ -313,7 +313,7 @@ controls | 是否向用户显示控件，比如进度条，全屏等 | boolean |
 loop | 视频播放完成后，是否循环播放 | boolean | false
 muted |  是否静音 | boolean | false
 preload | 是否在页面加载后载入视频，如果设置了 `autoplay` 属性，则 `preload` 将被忽略 | 'auto' &#124; 'metadata' &#124; 'none' | 'metadata'
-showPlay | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true
+playIcon | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true
 iconSize | 暂停图标尺寸，单位 `px` | number | 80
 
 *`preload` 可选属性：*

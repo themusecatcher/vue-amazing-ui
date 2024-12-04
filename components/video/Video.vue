@@ -12,7 +12,7 @@ export interface Props {
   loop?: boolean // 视频播放完成后，是否循环播放
   muted?: boolean // 是否静音
   preload?: 'auto' | 'metadata' | 'none' // 是否在页面加载后载入视频，如果设置了 autoplay 属性，则 preload 将被忽略
-  showPlay?: boolean // 播放暂停时是否显示播放器中间的暂停图标
+  playIcon?: boolean // 播放暂停时是否显示播放器中间的暂停图标
   iconSize?: number // 暂停图标尺寸，单位 px
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -53,7 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
     none: 页面加载后不应加载视频
   */
   preload: 'metadata',
-  showPlay: true,
+  playIcon: true,
   iconSize: 80
 })
 const veoRef = ref() // 视频元素模板引用，参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
@@ -138,14 +138,14 @@ function onClickPlay() {
 }
 function onPause() {
   playing.value = false
-  if (props.showPlay) {
+  if (props.playIcon) {
     showPlayIcon.value = true
   }
   emits('pause')
 }
 function onPlay() {
   playing.value = true
-  if (props.showPlay) {
+  if (props.playIcon) {
     showPlayIcon.value = false
   }
   emits('play')
@@ -188,14 +188,14 @@ defineExpose({
       :preload="preload"
       crossorigin="anonymous"
       @loadedmetadata="poster ? () => false : getPoster()"
-      @pause="showPlay ? onPause() : () => false"
-      @play="showPlay ? onPlay() : () => false"
+      @pause="onPause()"
+      @play="onPlay()"
       @click.prevent="onClickPlay"
       v-bind="$attrs"
     >
       您的浏览器不支持video标签。
     </video>
-    <span v-show="originPlay || showPlay" class="icon-play" :class="{ 'icon-show': showPlayIcon }">
+    <span v-show="originPlay || playIcon" class="icon-play" :class="{ 'icon-show': showPlayIcon }">
       <svg class="play-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34">
         <path
           d="M28.26,11.961L11.035,0.813C7.464-1.498,3,1.391,3,6.013v21.974c0,4.622,4.464,7.511,8.035,5.2L28.26,22.039
@@ -219,7 +219,9 @@ defineExpose({
     vertical-align: bottom;
   }
   .icon-play {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     top: 0;
     right: 0;
@@ -240,8 +242,7 @@ defineExpose({
       fill: currentColor;
       width: 29px;
       height: 34px;
-      margin-top: 23px;
-      margin-left: 27px;
+      margin-left: 3px;
     }
   }
   .icon-show {

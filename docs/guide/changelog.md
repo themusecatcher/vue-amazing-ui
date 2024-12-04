@@ -4,7 +4,7 @@
 
 ## 1.10.2 <Tag color="volcano" size="small">soon</Tag>
 
-- 优化并更新 [播放器 Video](https://themusecatcher.github.io/vue-amazing-ui/guide/components/collapse.html) 组件，新增 `iconSize` 属性；新增 `play` `pause` 方法；支持：设置播放暂停图标的尺寸；使用 `Methods` 控制播放暂停
+- 优化并更新 [播放器 Video](https://themusecatcher.github.io/vue-amazing-ui/guide/components/video.html) 组件，新增 `iconSize` 属性；新增 `play` `pause` 方法；支持：设置播放暂停图标的尺寸；使用 `Methods` 控制播放暂停
 
 ## 1.10.1 <Tag color="volcano" size="small">2024-12-04</Tag>
 

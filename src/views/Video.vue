@@ -42,7 +42,7 @@ const pause = () => {
     <h2 class="mt30 mb10">隐藏播放控件</h2>
     <Video :src="src" :poster="poster" :controls="false" />
     <h2 class="mt30 mb10">隐藏暂停图标</h2>
-    <Video :src="src" :poster="poster" :show-play="false" />
+    <Video :src="src" :poster="poster" :play-icon="false" />
     <h2 class="mt30 mb10">使用 Methods</h2>
     <Flex vertical>
       <Space>
