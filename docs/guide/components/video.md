@@ -12,11 +12,18 @@
 import { ref } from 'vue'
 const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/ultra.mp4')
 const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/ultra.jpg')
+const video = ref()
 function onPlay() {
   console.log('play')
 }
 function onPause() {
   console.log('pause')
+}
+const play = () => {
+  video.value.play()
+}
+const pause = () => {
+  video.value.pause()
 }
 </script>
 
@@ -141,9 +148,9 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/u
 
 :::
 
-## [自动播放](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide)
+## 自动循环播放
 
-*据一般规则，媒体内容将在满足以下至少一个的条件下自动播放：*
+*据一般规则，媒体内容将在满足以下至少一个的条件下[自动播放](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide)：*
 
 1. 音频被静音或其音量设置为 `0`
 2. 用户和网页已有交互行为（包括点击、触摸、按下某个键等等）
@@ -251,6 +258,44 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/u
 
 :::
 
+## 使用 Methods
+
+<Flex vertical>
+  <Space>
+    <Button type="primary" @click="play">播放</Button>
+    <Button @click="pause">暂停</Button>
+  </Space>
+  <Video ref="video" :src="src" :poster="poster" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/ultra.mp4')
+const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/ultra.jpg')
+const video = ref()
+const play = () => {
+  video.value.play()
+}
+const pause = () => {
+  video.value.pause()
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space>
+      <Button type="primary" @click="play">播放</Button>
+      <Button @click="pause">暂停</Button>
+    </Space>
+    <Video ref="video" :src="src" :poster="poster" />
+  </Flex>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Video
@@ -269,6 +314,7 @@ loop | 视频播放完成后，是否循环播放 | boolean | false
 muted |  是否静音 | boolean | false
 preload | 是否在页面加载后载入视频，如果设置了 `autoplay` 属性，则 `preload` 将被忽略 | 'auto' &#124; 'metadata' &#124; 'none' | 'metadata'
 showPlay | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true
+iconSize | 暂停图标尺寸，单位 `px` | number | 80
 
 *`preload` 可选属性：*
 
