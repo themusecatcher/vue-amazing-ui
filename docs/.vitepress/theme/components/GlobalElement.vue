@@ -15,7 +15,25 @@ withDefaults(defineProps<Props>(), {
 </script>
 <template>
   <FloatButton
-    :bottom="!hideSponsor ? 220 : 160"
+    v-if="!hideSponsor"
+    :bottom="220"
+    type="primary"
+    tooltip="成为赞助者 ✨"
+    :tooltip-props="{
+      tooltipStyle: {
+        fontWeight: 500,
+        padding: '8px 12px'
+      }
+    }"
+    href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
+    target="_blank"
+  >
+    <template #description>
+      <span style="font-size: 14px; font-weight: 600">赞助</span>
+    </template>
+  </FloatButton>
+  <FloatButton
+    :bottom="160"
     type="primary"
     :tooltip-props="{
       maxWidth: 200,
@@ -31,7 +49,7 @@ withDefaults(defineProps<Props>(), {
     <template #tooltip> 文档网站部署在静态网站服务 GitHub Pages，为了您的流程访问，建议打开代理 </template>
   </FloatButton>
   <FloatButton
-    :bottom="!hideSponsor ? 160 : 100"
+    :bottom="100"
     type="primary"
     :tooltip-props="{
       tooltipStyle: {
@@ -48,24 +66,6 @@ withDefaults(defineProps<Props>(), {
       <MailSVG /> Email Me<ArrowDownSVG />
       <br />
       themusecatcher@163.com
-    </template>
-  </FloatButton>
-  <FloatButton
-    v-if="!hideSponsor"
-    :bottom="100"
-    type="primary"
-    tooltip="成为赞助者 ✨"
-    :tooltip-props="{
-      tooltipStyle: {
-        fontWeight: 500,
-        padding: '8px 12px'
-      }
-    }"
-    href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
-    target="_blank"
-  >
-    <template #description>
-      <span style="font-size: 14px; font-weight: 600">赞助</span>
     </template>
   </FloatButton>
   <BackTop v-if="!hideBackTop" />
