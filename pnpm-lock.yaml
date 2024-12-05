@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@ant-design/icons-vue':
-        specifier: ^7.0.1
-        version: 7.0.1(vue@3.5.13(typescript@5.6.3))
-      '@types/minimist':
-        specifier: ^1.2.5
-        version: 1.2.5
       '@vuepic/vue-datepicker':
         specifier: ^10.0.0
         version: 10.0.0(vue@3.5.13(typescript@5.6.3))
@@ -23,18 +17,6 @@ importers:
       '@vueuse/integrations':
         specifier: ^12.0.0
         version: 12.0.0(async-validator@4.2.5)(focus-trap@7.6.2)(qrcode@1.5.4)(typescript@5.6.3)
-      ant-design-vue:
-        specifier: ^4.2.6
-        version: 4.2.6(vue@3.5.13(typescript@5.6.3))
-      core-js:
-        specifier: ^3.39.0
-        version: 3.39.0
-      date-fns:
-        specifier: ^4.1.0
-        version: 4.1.0
-      naive-ui:
-        specifier: ^2.40.3
-        version: 2.40.3(vue@3.5.13(typescript@5.6.3))
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
@@ -44,19 +26,19 @@ importers:
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.3)
-      vue-amazing-ui:
-        specifier: 1.10.2
-        version: 1.10.2(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
-      vue-router:
-        specifier: ^4.5.0
-        version: 4.5.0(vue@3.5.13(typescript@5.6.3))
     devDependencies:
+      '@ant-design/icons-vue':
+        specifier: ^7.0.1
+        version: 7.0.1(vue@3.5.13(typescript@5.6.3))
       '@rollup/plugin-terser':
         specifier: ^0.4.4
         version: 0.4.4(rollup@4.28.0)
       '@tsconfig/node22':
         specifier: ^22.0.0
         version: 22.0.0
+      '@types/minimist':
+        specifier: ^1.2.5
+        version: 1.2.5
       '@types/node':
         specifier: ^22.10.1
         version: 22.10.1
@@ -72,6 +54,12 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.7.0
         version: 0.7.0(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+      ant-design-vue:
+        specifier: ^4.2.6
+        version: 4.2.6(vue@3.5.13(typescript@5.6.3))
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       eslint:
         specifier: ^9.16.0
         version: 9.16.0
@@ -84,6 +72,9 @@ importers:
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
+      naive-ui:
+        specifier: ^2.40.3
+        version: 2.40.3(vue@3.5.13(typescript@5.6.3))
       npm-run-all2:
         specifier: ^7.0.1
         version: 7.0.1
@@ -114,6 +105,12 @@ importers:
       vitepress:
         specifier: ^1.5.0
         version: 1.5.0(@algolia/client-search@5.15.0)(@types/node@22.10.1)(async-validator@4.2.5)(less@4.2.1)(postcss@8.4.49)(qrcode@1.5.4)(search-insights@2.17.2)(terser@5.36.0)(typescript@5.6.3)
+      vue-amazing-ui:
+        specifier: 1.10.2
+        version: 1.10.2(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
+      vue-router:
+        specifier: ^4.5.0
+        version: 4.5.0(vue@3.5.13(typescript@5.6.3))
       vue-tsc:
         specifier: ^2.1.10
         version: 2.1.10(typescript@5.6.3)

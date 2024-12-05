@@ -5,6 +5,7 @@
 ## 1.10.3 <Tag color="volcano" size="small">soon</Tag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `sticky` 属性，支持：对于长表格设置跟随页面固定表头和水平滚动条，方便查看表头和使用滚动条
+- 组件库项目代码优化
 
 ## 1.10.2 <Tag color="volcano" size="small">2024-12-05</Tag>
 
