@@ -398,6 +398,38 @@ const columnsSort = reactive([
     sortDirections: ['descend', 'ascend']
   }
 ])
+const columnsSelection = reactive([
+  {
+    title: 'Name',
+    dataIndex: 'name'
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age'
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address'
+  }
+])
+const columnsFixHeaderAndScrollbar = reactive([
+  { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
+  { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
+  { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
+  { title: 'Column 2', dataIndex: 'address', key: '2', width: 150 },
+  { title: 'Column 3', dataIndex: 'address', key: '3', width: 150 },
+  { title: 'Column 4', dataIndex: 'address', key: '4', width: 150 },
+  { title: 'Column 5', dataIndex: 'address', key: '5', width: 150 },
+  { title: 'Column 6', dataIndex: 'address', key: '6', width: 150 },
+  { title: 'Column 7', dataIndex: 'address', key: '7', width: 150 },
+  { title: 'Column 8', dataIndex: 'address', key: '8' },
+  {
+    title: 'Action',
+    key: 'action',
+    fixed: 'right',
+    width: 100
+  }
+])
 const dataSource = ref([
   {
     name: 'Stephen Curry',
@@ -693,6 +725,33 @@ const dataSourceSort = ref([
     address: 'London No.102 Lake Park'
   }
 ])
+const dataSourceSelection = ref([
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No.1 Lake Park'
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No.2 Lake Park'
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No.3 Lake Park'
+  },
+  {
+    key: '4',
+    name: 'Disabled User',
+    age: 99,
+    address: 'Sidney No.4 Lake Park'
+  }
+])
+const dataSourceFixHeaderAndScrollbar = ref(data)
 onBeforeMount(() => {
   getData()
 })
@@ -761,6 +820,15 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
 function onSortChange(column: any, currentDataSource: any[]) {
   console.log('sort column', column)
   console.log('sort currentDataSource', currentDataSource)
+}
+const rowSelection = {
+  onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
+  },
+  getCheckboxProps: (record: any) => ({
+    disabled: record.name === 'Disabled User', // Column configuration not to be checked
+    name: record.name
+  })
 }
 </script>
 <template>
@@ -1050,6 +1118,47 @@ function onSortChange(column: any, currentDataSource: any[]) {
       <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
     </Flex>
+    <h2 class="mt30 mb10">可选择</h2>
+    <a-table :row-selection="rowSelection" :columns="columnsSelection" :data-source="dataSourceSelection">
+      <template #bodyCell="{ column, text }">
+        <template v-if="column.dataIndex === 'name'">
+          <a>{{ text }}</a>
+        </template>
+      </template>
+    </a-table>
+    <Table :row-selection="rowSelection" :columns="columnsSelection" :data-source="dataSourceSelection">
+      <template #bodyCell="{ column, text }">
+        <template v-if="column.dataIndex === 'name'">
+          <a>{{ text }}</a>
+        </template>
+      </template>
+    </Table>
+    <h2 class="mt30 mb10">随页面滚动的固定表头和滚动条</h2>
+    <h3 class="mb10">对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条</h3>
+    <a-table
+      sticky
+      :columns="columnsFixHeaderAndScrollbar"
+      :data-source="dataSourceFixHeaderAndScrollbar"
+      :scroll="{ x: 1500 }"
+    >
+      <template #bodyCell="{ column }">
+        <template v-if="column.key === 'action'">
+          <a>action</a>
+        </template>
+      </template>
+    </a-table>
+    <Table
+      sticky
+      :columns="columnsFixHeaderAndScrollbar"
+      :data-source="dataSourceFixHeaderAndScrollbar"
+      :scroll="{ x: 1500 }"
+    >
+      <template #bodyCell="{ column }">
+        <template v-if="column.key === 'action'">
+          <a>action</a>
+        </template>
+      </template>
+    </Table>
   </div>
 </template>
 <style lang="less" scoped>
