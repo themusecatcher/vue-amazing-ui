@@ -316,6 +316,24 @@ const columnsFixHeaderAndColumn = reactive([
     width: 100
   }
 ])
+const columnsFixHeaderAndScrollbar = reactive([
+  { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
+  { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
+  { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
+  { title: 'Column 2', dataIndex: 'address', key: '2', width: 150 },
+  { title: 'Column 3', dataIndex: 'address', key: '3', width: 150 },
+  { title: 'Column 4', dataIndex: 'address', key: '4', width: 150 },
+  { title: 'Column 5', dataIndex: 'address', key: '5', width: 150 },
+  { title: 'Column 6', dataIndex: 'address', key: '6', width: 150 },
+  { title: 'Column 7', dataIndex: 'address', key: '7', width: 150 },
+  { title: 'Column 8', dataIndex: 'address', key: '8' },
+  {
+    title: 'Action',
+    key: 'action',
+    fixed: 'right',
+    width: 100
+  }
+])
 const columnsHeaderGroup = reactive([
   {
     title: 'Name',
@@ -407,6 +425,20 @@ const columnsSort = reactive([
     dataIndex: 'address',
     sorter: (a: any, b: any) => a.address.length - b.address.length,
     sortDirections: ['descend', 'ascend']
+  }
+])
+const columnsSelection = reactive([
+  {
+    title: 'Name',
+    dataIndex: 'name'
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age'
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address'
   }
 ])
 const dataSource = ref([
@@ -661,6 +693,7 @@ const dataSourceFixColumn = ref([
 ])
 const dataSourceFixHeader = ref(data)
 const dataSourceFixHeaderAndColumn = ref(data)
+const dataSourceFixHeaderAndScrollbar = ref(data)
 // 获取 0~10 之间的随机整数
 function getRandomIntInclusive(min: number, max: number) {
   min = Math.ceil(min)
@@ -702,6 +735,32 @@ const dataSourceSort = ref([
     name: 'Jim Red',
     age: 32,
     address: 'London No.102 Lake Park'
+  }
+])
+const dataSourceSelection = ref([
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No.1 Lake Park'
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No.2 Lake Park'
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No.3 Lake Park'
+  },
+  {
+    key: '4',
+    name: 'Disabled User',
+    age: 99,
+    address: 'Sidney No.4 Lake Park'
   }
 ])
 onBeforeMount(() => {
@@ -772,6 +831,15 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
 function onSortChange(column: any, currentDataSource: any[]) {
   console.log('sort column', column)
   console.log('sort currentDataSource', currentDataSource)
+}
+const rowSelection = {
+  onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
+  },
+  getCheckboxProps: (record: any) => ({
+    disabled: record.name === 'Disabled User', // Column configuration not to be checked
+    name: record.name
+  })
 }
 </script>
 
@@ -2466,6 +2534,77 @@ const dataSourceFixHeaderAndColumn = ref(data)
 
 :::
 
+## 随页面滚动的固定表头和滚动条
+
+*对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条*
+
+<br/>
+
+<Table
+  sticky
+  :columns="columnsFixHeaderAndScrollbar"
+  :data-source="dataSourceFixHeaderAndScrollbar"
+  :scroll="{ x: 1500 }"
+>
+  <template #bodyCell="{ column }">
+    <template v-if="column.key === 'action'">
+      <a>action</a>
+    </template>
+  </template>
+</Table>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+const columnsFixHeaderAndScrollbar = reactive([
+  { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
+  { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
+  { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
+  { title: 'Column 2', dataIndex: 'address', key: '2', width: 150 },
+  { title: 'Column 3', dataIndex: 'address', key: '3', width: 150 },
+  { title: 'Column 4', dataIndex: 'address', key: '4', width: 150 },
+  { title: 'Column 5', dataIndex: 'address', key: '5', width: 150 },
+  { title: 'Column 6', dataIndex: 'address', key: '6', width: 150 },
+  { title: 'Column 7', dataIndex: 'address', key: '7', width: 150 },
+  { title: 'Column 8', dataIndex: 'address', key: '8' },
+  {
+    title: 'Action',
+    key: 'action',
+    fixed: 'right',
+    width: 100
+  }
+])
+const data: any[] = []
+for (let i = 0; i < 100; i++) {
+  data.push({
+    key: i.toString(),
+    name: `Edrward ${i}`,
+    age: 32,
+    address: `London, Park Lane no. ${i}`
+  })
+}
+const dataSourceFixHeaderAndScrollbar = ref(data)
+</script>
+<template>
+  <Table
+    sticky
+    :columns="columnsFixHeaderAndScrollbar"
+    :data-source="dataSourceFixHeaderAndScrollbar"
+    :scroll="{ x: 1500 }"
+  >
+    <template #bodyCell="{ column }">
+      <template v-if="column.key === 'action'">
+        <a>action</a>
+      </template>
+    </template>
+  </Table>
+</template>
+```
+
+:::
+
 ## 表头分组
 
 *`columns[n]` 可以内嵌 children，以渲染分组表头*
@@ -2718,6 +2857,7 @@ ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://
 showSorterTooltip | 表头是否显示下一次排序的 `tooltip` 提示 | boolean | true
 sortDirections | 支持的排序方式 | ('ascend' &#124; 'descend')[] | ['ascend', 'descend']
 sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于全局配置排序弹出提示 | object | {}
+sticky | 是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定 | boolean | false
 showPagination | 是否显示分页 | boolean | true
 pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html#pagination)，用于配置分页功能 | object | {}
 scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [ScrollOption](#scrolloption-type) &#124; boolean | undefined

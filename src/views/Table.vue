@@ -305,6 +305,24 @@ const columnsFixHeaderAndColumn = reactive([
     width: 100
   }
 ])
+const columnsFixHeaderAndScrollbar = reactive([
+  { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
+  { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
+  { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
+  { title: 'Column 2', dataIndex: 'address', key: '2', width: 150 },
+  { title: 'Column 3', dataIndex: 'address', key: '3', width: 150 },
+  { title: 'Column 4', dataIndex: 'address', key: '4', width: 150 },
+  { title: 'Column 5', dataIndex: 'address', key: '5', width: 150 },
+  { title: 'Column 6', dataIndex: 'address', key: '6', width: 150 },
+  { title: 'Column 7', dataIndex: 'address', key: '7', width: 150 },
+  { title: 'Column 8', dataIndex: 'address', key: '8' },
+  {
+    title: 'Action',
+    key: 'action',
+    fixed: 'right',
+    width: 100
+  }
+])
 const columnsHeaderGroup = reactive([
   {
     title: 'Name',
@@ -410,24 +428,6 @@ const columnsSelection = reactive([
   {
     title: 'Address',
     dataIndex: 'address'
-  }
-])
-const columnsFixHeaderAndScrollbar = reactive([
-  { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
-  { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
-  { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
-  { title: 'Column 2', dataIndex: 'address', key: '2', width: 150 },
-  { title: 'Column 3', dataIndex: 'address', key: '3', width: 150 },
-  { title: 'Column 4', dataIndex: 'address', key: '4', width: 150 },
-  { title: 'Column 5', dataIndex: 'address', key: '5', width: 150 },
-  { title: 'Column 6', dataIndex: 'address', key: '6', width: 150 },
-  { title: 'Column 7', dataIndex: 'address', key: '7', width: 150 },
-  { title: 'Column 8', dataIndex: 'address', key: '8' },
-  {
-    title: 'Action',
-    key: 'action',
-    fixed: 'right',
-    width: 100
   }
 ])
 const dataSource = ref([
@@ -682,6 +682,7 @@ const dataSourceFixColumn = ref([
 ])
 const dataSourceFixHeader = ref(data)
 const dataSourceFixHeaderAndColumn = ref(data)
+const dataSourceFixHeaderAndScrollbar = ref(data)
 // 获取 0~10 之间的随机整数
 function getRandomIntInclusive(min: number, max: number) {
   min = Math.ceil(min)
@@ -751,7 +752,6 @@ const dataSourceSelection = ref([
     address: 'Sidney No.4 Lake Park'
   }
 ])
-const dataSourceFixHeaderAndScrollbar = ref(data)
 onBeforeMount(() => {
   getData()
 })
@@ -833,7 +833,7 @@ const rowSelection = {
 </script>
 <template>
   <div>
-    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
@@ -1102,6 +1102,19 @@ const rowSelection = {
         </template>
       </template>
     </Table>
+    <h2 class="mt30 mb10">随页面滚动的固定表头和滚动条</h2>
+    <h3 class="mb10">对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条</h3>
+    <Table
+      :columns="columnsFixHeaderAndScrollbar"
+      :data-source="dataSourceFixHeaderAndScrollbar"
+      :scroll="{ x: 1500 }"
+    >
+      <template #bodyCell="{ column }">
+        <template v-if="column.key === 'action'">
+          <a>action</a>
+        </template>
+      </template>
+    </Table>
     <h2 class="mt30 mb10">表头分组</h2>
     <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
     <Flex vertical>
@@ -1117,7 +1130,7 @@ const rowSelection = {
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
-    </Flex>
+    </Flex> -->
     <h2 class="mt30 mb10">可选择</h2>
     <a-table :row-selection="rowSelection" :columns="columnsSelection" :data-source="dataSourceSelection">
       <template #bodyCell="{ column, text }">
@@ -1130,32 +1143,6 @@ const rowSelection = {
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
           <a>{{ text }}</a>
-        </template>
-      </template>
-    </Table>
-    <h2 class="mt30 mb10">随页面滚动的固定表头和滚动条</h2>
-    <h3 class="mb10">对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条</h3>
-    <a-table
-      sticky
-      :columns="columnsFixHeaderAndScrollbar"
-      :data-source="dataSourceFixHeaderAndScrollbar"
-      :scroll="{ x: 1500 }"
-    >
-      <template #bodyCell="{ column }">
-        <template v-if="column.key === 'action'">
-          <a>action</a>
-        </template>
-      </template>
-    </a-table>
-    <Table
-      sticky
-      :columns="columnsFixHeaderAndScrollbar"
-      :data-source="dataSourceFixHeaderAndScrollbar"
-      :scroll="{ x: 1500 }"
-    >
-      <template #bodyCell="{ column }">
-        <template v-if="column.key === 'action'">
-          <a>action</a>
         </template>
       </template>
     </Table>
