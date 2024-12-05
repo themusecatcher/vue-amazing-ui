@@ -2,6 +2,10 @@
 
 <GlobalElement />
 
+## 1.10.3 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `sticky` 属性，支持：对于长表格设置跟随页面固定表头和水平滚动条，方便查看表头和使用滚动条
+
 ## 1.10.2 <Tag color="volcano" size="small">2024-12-05</Tag>
 
 - 优化并更新 [播放器 Video](https://themusecatcher.github.io/vue-amazing-ui/guide/components/video.html) 组件，新增 `iconSize` 属性；重命名 `showPlay` 属性为 `playIcon`；新增 `play` `pause` 方法；支持：设置播放暂停图标的尺寸；使用 `Methods` 控制播放暂停

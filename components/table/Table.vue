@@ -49,6 +49,7 @@ export interface Props {
   showSorterTooltip?: boolean // 表头是否显示下一次排序的 tooltip 提示
   sortDirections?: ('ascend' | 'descend')[] // 支持的排序方式
   sortTooltipProps?: object // 排序 Tooltip 组件属性配置，参考 Tooltip Props，用于全局配置排序弹出提示
+  sticky?: boolean //	是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定
   showPagination?: boolean // 是否显示分页
   pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
   scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
@@ -79,6 +80,7 @@ const props = withDefaults(defineProps<Props>(), {
   showSorterTooltip: true,
   sortDirections: () => ['ascend', 'descend'],
   sortTooltipProps: () => ({}),
+  sticky: false,
   showPagination: true,
   pagination: () => ({}),
   scroll: undefined,
@@ -805,7 +807,11 @@ function onPaginationChange(page: number, pageSize: number) {
         <div v-if="showHeader" class="table-header">
           <slot name="header">{{ header }}</slot>
         </div>
-        <div v-if="!verticalScroll" class="table-container" :class="{ 'container-no-x-scroll': !xScrollable }">
+        <div
+          v-if="!verticalScroll && !sticky"
+          class="table-container"
+          :class="{ 'container-no-x-scroll': !xScrollable }"
+        >
           <Scrollbar
             ref="scrollbarRef"
             style="border-radius: 8px 8px 0 0"
@@ -1055,7 +1061,7 @@ function onPaginationChange(page: number, pageSize: number) {
             'container-no-scroll': !xScrollable && !yScrollable
           }"
         >
-          <div class="table-head">
+          <div class="table-head" :class="{ 'table-head-sticky': sticky }">
             <table :style="[tableStyle, tableHeadStyle]" @wheel="xScrollable ? onWheel($event) : () => false">
               <colgroup>
                 <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle" />
@@ -1184,6 +1190,7 @@ function onPaginationChange(page: number, pageSize: number) {
           <Scrollbar
             ref="scrollbarRef"
             class="table-body"
+            :class="{ 'table-x-scrollbar-sticky': sticky }"
             :x-scrollable="xScrollable"
             :y-scrollable="yScrollable"
             :auto-hide="false"
@@ -1382,6 +1389,19 @@ function onPaginationChange(page: number, pageSize: number) {
       .table-head {
         overflow: hidden;
         border-radius: 8px 8px 0 0;
+      }
+      .table-head-sticky {
+        position: sticky;
+        top: 0px;
+        z-index: 3;
+        background: #ffffff;
+      }
+      .table-x-scrollbar-sticky {
+        overflow: visible;
+        :deep(.rail-horizontal-bottom) {
+          position: sticky;
+          z-index: 3;
+        }
       }
       table {
         display: table;
