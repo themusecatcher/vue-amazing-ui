@@ -176,7 +176,7 @@ export { default as Tag } from './tag'
 export type { Props as TextareaProps } from './textarea'
 export { default as Textarea } from './textarea'
 
-export type { Props as TextScrollProps, Text as TextScrollText } from './textscroll'
+export type { Props as TextScrollProps, Item as TextScrollItem } from './textscroll'
 export { default as TextScroll } from './textscroll'
 
 export type { Props as TimelineProps, Item as TimelineItem } from './timeline'
