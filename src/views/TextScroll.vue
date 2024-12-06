@@ -179,7 +179,6 @@ const state = reactive({
     </Row>
     <TextScroll
       class="mt30"
-      style="margin-bottom: 100px"
       :scrollText="scrollText"
       :single="state.single"
       :height="state.height"
