@@ -167,7 +167,7 @@ const carouselConfig = reactive({
     <br />
     <br />
     <Carousel ref="carousel" :images="images" :width="800" :height="450" />
-    <h2 class="mt30 mb10">走马灯配置器</h2>
+    <h2 class="mt30 mb10">轮播图配置器</h2>
     <Flex gap="large" vertical>
       <Row :gutter="[24, 12]">
         <Col :span="6">

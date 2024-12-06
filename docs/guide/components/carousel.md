@@ -1,4 +1,4 @@
-# 走马灯 Carousel
+# 轮播图 Carousel
 
 <GlobalElement />
 
@@ -7,7 +7,7 @@
 ## 何时使用
 
 - 当有一组平级的内容。
-- 当内容空间不足时，可以用走马灯的形式进行收纳，进行轮播展现。
+- 当内容空间不足时，可以用轮播图的形式进行收纳，进行轮播展现。
 - 常用于一组图片或卡片轮播。
 
 <script setup lang="ts">
@@ -678,7 +678,7 @@ function getCurrentIndex () {
 
 :::
 
-## 走马灯配置器
+## 轮播图配置器
 
 <Flex gap="large" vertical>
   <Row :gutter="[24, 12]">
@@ -918,11 +918,11 @@ const carouselConfig = reactive({
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-images | 走马灯图片数组 | [Image](#image-type)[] | []
-width | 走马灯宽度，单位 `px` | number &#124; string | '100%'
-height | 走马灯高度，单位 `px` | number &#124; string | '100vh'
+images | 轮播图图片数组 | [Image](#image-type)[] | []
+width | 轮播图宽度，单位 `px` | number &#124; string | '100%'
+height | 轮播图高度，单位 `px` | number &#124; string | '100vh'
 autoplay | 是否自动轮播 | boolean | false
-pauseOnMouseEnter | 当鼠标移入走马灯时，是否暂停自动轮播 | boolean | false
+pauseOnMouseEnter | 当鼠标移入轮播图时，是否暂停自动轮播 | boolean | false
 effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide'
 interval | 自动轮播间隔，单位 `ms` | number | 3000
 showArrow | 是否显示箭头 | boolean | true

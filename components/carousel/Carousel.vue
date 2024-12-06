@@ -10,11 +10,11 @@ export interface Image {
   link?: string // 图片跳转链接
 }
 export interface Props {
-  images?: Image[] // 走马灯图片数组
-  width?: number | string // 走马灯宽度，单位 px
-  height?: number | string // 走马灯高度，单位 px
+  images?: Image[] // 轮播图图片数组
+  width?: number | string // 轮播图宽度，单位 px
+  height?: number | string // 轮播图高度，单位 px
   autoplay?: boolean // 是否自动轮播
-  pauseOnMouseEnter?: boolean // 当鼠标移入走马灯时，是否暂停自动轮播
+  pauseOnMouseEnter?: boolean // 当鼠标移入轮播图时，是否暂停自动轮播
   effect?: 'slide' | 'fade' // 轮播图切换时的过渡效果
   interval?: number // 自动轮播间隔，单位 ms
   showArrow?: boolean // 是否显示箭头
@@ -72,7 +72,7 @@ const imageHeight = ref() // 图片高度
 const complete = ref(Array(props.images.length).fill(false)) // 图片是否加载完成
 const emits = defineEmits(['change', 'click'])
 const carouselWidth = computed(() => {
-  // 走马灯区域宽度
+  // 轮播图区域宽度
   if (typeof props.width === 'number') {
     return `${props.width}px`
   } else {
@@ -80,7 +80,7 @@ const carouselWidth = computed(() => {
   }
 })
 const carouselHeight = computed(() => {
-  // 走马灯区域高度
+  // 轮播图区域高度
   if (typeof props.height === 'number') {
     return `${props.height}px`
   } else {

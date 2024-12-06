@@ -146,7 +146,7 @@ export default defineConfig({
               link: '/guide/components/card'
             },
             {
-              text: '走马灯 Carousel',
+              text: '轮播图 Carousel',
               link: '/guide/components/carousel'
             },
             {

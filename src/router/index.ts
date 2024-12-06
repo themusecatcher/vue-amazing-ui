@@ -62,7 +62,7 @@ export const routes = [
       {
         path: '/carousel',
         name: 'Carousel',
-        meta: { title: '走马灯' },
+        meta: { title: '轮播图' },
         component: () => import('@/views/Carousel.vue')
       },
       {
