@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const scrollText = ref<any[]>([
+const scrollItems = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年',
+    title: '《麦田里的守望者》首次出版于1951年',
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
@@ -63,10 +63,10 @@ const state = reactive({
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">水平文字滚动</h2>
-    <TextScroll :scrollText="scrollText" @click="onClick" />
+    <TextScroll :items="scrollItems" @click="onClick" />
     <h2 class="mt30 mb10">单条文字滚动</h2>
     <TextScroll
-      :scrollText="singleText"
+      :items="singleText"
       single
       :width="270"
       :text-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
@@ -74,17 +74,17 @@ const state = reactive({
     />
     <h2 class="mt30 mb10">垂直文字滚动</h2>
     <TextScroll
-      :scrollText="scrollText"
+      :items="scrollItems"
       :board-style="{ backgroundColor: '#e6f4ff' }"
       :text-style="{ fontSize: '20px' }"
       vertical
       @click="onClick"
     />
     <h2 class="mt30 mb10">自定义链接悬浮样式</h2>
-    <TextScroll :scrollText="scrollText" href-hover-color="#ff6900" @click="onClick" />
+    <TextScroll :items="scrollItems" href-hover-color="#ff6900" @click="onClick" />
     <h2 class="mt30 mb10">自定义样式</h2>
     <TextScroll
-      :scrollText="scrollText"
+      :items="scrollItems"
       :board-style="{ backgroundColor: '#e6f4ff', borderRadius: '12px' }"
       :text-style="{ fontSize: '28px', color: '#FF9800' }"
       :gap="30"
@@ -104,10 +104,10 @@ const state = reactive({
           <Button type="primary" ghost @click="handleReset">重置</Button>
         </Space>
       </Space>
-      <TextScroll ref="textScroll" :vertical="vertical" :scrollText="scrollText" @click="onClick" />
+      <TextScroll ref="textScroll" :vertical="vertical" :items="scrollItems" @click="onClick" />
     </Flex>
     <h2 class="mt30 mb10">自定义滚动速度</h2>
-    <TextScroll :scrollText="scrollText" :step="2" @click="onClick" />
+    <TextScroll :items="scrollItems" :step="2" @click="onClick" />
     <h2 class="mt30 mb10">文字滚动配置器</h2>
     <Row :gutter="[24, 12]">
       <Col :span="6">
@@ -143,7 +143,7 @@ const state = reactive({
       <Col :span="6">
         <Flex gap="small" vertical>
           amount:
-          <Slider v-model:value="state.amount" :min="1" :max="scrollText.length" />
+          <Slider v-model:value="state.amount" :min="1" :max="scrollItems.length" />
         </Flex>
       </Col>
       <Col :span="6">
@@ -179,7 +179,7 @@ const state = reactive({
     </Row>
     <TextScroll
       class="mt30"
-      :scrollText="scrollText"
+      :items="scrollItems"
       :single="state.single"
       :height="state.height"
       :board-style="{
