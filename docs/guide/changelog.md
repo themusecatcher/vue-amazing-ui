@@ -356,7 +356,7 @@
 ## 1.3.1 <Tag color="volcano" size="small">2024-07-25</Tag>
 
 - 优化 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件实现
-- 优化 [走马灯 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件实现
+- 优化 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件实现
 - 优化更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件
 - 优化更新 [弹出确认 Popconfirm](https://themusecatcher.github.io/vue-amazing-ui/guide/components/popconfirm.html) 组件
 - 组件库及文档代码优化
@@ -391,6 +391,9 @@
 - 新增 布局 Layout 组件
 - 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
+- 新增 颜色选择器 ColorPicker 组件
+- 新增 跑马灯 Marquee 组件
+- 时间轴 Timeline 组件，新增水平时间轴
 <!-- - 新增 时间选择器 TimePicker 组件
 - 重构级联选择 Cascader 组件
 - 分段控制器 Segmented 组件，选项切换效果优化 -->
