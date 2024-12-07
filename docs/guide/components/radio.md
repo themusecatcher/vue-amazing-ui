@@ -507,53 +507,6 @@ const verticalGap = ref(8)
 
 :::
 
-## 自定义单选区域宽高
-
-<Radio vertical :width="110" :height="150" :options="options" v-model:value="value" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-const options = ref([
-  {
-    label: '北京市',
-    value: 1
-  },
-  {
-    label: '纽约市',
-    value: 2
-  },
-  {
-    label: '布宜诺斯艾利斯',
-    value: 3
-  },
-  {
-    label: '伊斯坦布尔',
-    value: 4
-  },
-  {
-    label: '拜占庭',
-    value: 5
-  },
-  {
-    label: '君士坦丁堡',
-    value: 6
-  }
-])
-const value = ref(2)
-watchEffect(() => {
-  console.log('value', value.value)
-})
-</script>
-<template>
-  <Radio vertical :width="110" :height="150" :options="options" v-model:value="value" />
-</template>
-```
-
-:::
-
 ## 按钮大小
 
 <Space vertical>
@@ -641,8 +594,6 @@ disabled | 是否禁用 | boolean | false
 vertical | 是否垂直排列，仅当 `button: false` 时生效 | boolean | false
 checked <Tag color="cyan">v-model</Tag> | 当前是否选中 | boolean | false
 gap | 多个单选框之间的间距；垂直排列时为垂直间距，单位 `px`；数组间距用于水平排列折行时：`[水平间距, 垂直间距]`；仅当 `button: false` 时生效 | number &#124; number[] | 8
-width | 单选区域最大宽度，超出后折行，单位 `px`；仅当 `button: false` 时生效 | string &#124; number | 'auto'
-height | 单选区域最大高度，超出后滚动，单位 `px`；仅当 `button: false` 时生效 | string &#124; number | 'auto'
 button | 是否启用按钮样式 | boolean | false
 buttonStyle | 按钮样式风格 | 'outline' &#124; 'solid' | 'outline'
 buttonSize | 按钮大小；仅当 `button: true` 时生效 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
