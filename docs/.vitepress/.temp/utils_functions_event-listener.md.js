@@ -1,6 +1,6 @@
 import { defineComponent, ref, resolveComponent, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderStyle, ssrInterpolate } from "vue/server-renderer";
-import { a as ua, s as st } from "./vue-amazing-ui.Dc6oJnPH.js";
+import { a as ua, s as st } from "./vue-amazing-ui.Df5pEiN_.js";
 import "@vueuse/core";
 import "@vuepic/vue-datepicker";
 import "@vueuse/integrations/useQRCode";

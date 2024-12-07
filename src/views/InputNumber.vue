@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { formatNumber } from 'vue-amazing-ui'
+import { formatNumber } from 'components/index'
 const value = ref(3)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)

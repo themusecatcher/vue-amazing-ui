@@ -1,6 +1,6 @@
 import { defineComponent, ref, watchEffect, computed, watch, resolveComponent, withCtx, createTextVNode, createVNode, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderStyle } from "vue/server-renderer";
-const __pageData = JSON.parse('{"title":"复选框 Checkbox","description":"","frontmatter":{},"headers":[],"relativePath":"guide/components/checkbox.md","filePath":"guide/components/checkbox.md","lastUpdated":1730881825000}');
+const __pageData = JSON.parse('{"title":"复选框 Checkbox","description":"","frontmatter":{},"headers":[],"relativePath":"guide/components/checkbox.md","filePath":"guide/components/checkbox.md","lastUpdated":1733552059000}');
 const __default__ = { name: "guide/components/checkbox.md" };
 const _sfc_main = /* @__PURE__ */ defineComponent({
   ...__default__,

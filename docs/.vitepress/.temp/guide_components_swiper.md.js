@@ -1,6 +1,6 @@
 import { defineComponent, ref, onBeforeMount, shallowReactive, resolveComponent, withCtx, unref, createTextVNode, toDisplayString, createVNode, openBlock, createBlock, Fragment, renderList, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderStyle, ssrRenderList } from "vue/server-renderer";
-import { p as pkg } from "./package.DyG7CbfA.js";
+import { p as pkg } from "./package.MtXVtTz7.js";
 const __pageData = JSON.parse('{"title":"触摸滑动插件 Swiper{{ pkg.dependencies.swiper }}","description":"","frontmatter":{},"headers":[],"relativePath":"guide/components/swiper.md","filePath":"guide/components/swiper.md","lastUpdated":1730881752000}');
 const __default__ = { name: "guide/components/swiper.md" };
 const _sfc_main = /* @__PURE__ */ defineComponent({

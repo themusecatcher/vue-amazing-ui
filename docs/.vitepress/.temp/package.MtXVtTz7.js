@@ -83,7 +83,7 @@ const devDependencies = {
 const sideEffects = [
   "dist/*"
 ];
-const description = "An Amazing Vue3 UI Components Library.";
+const description = "An Amazing Vue3 UI Components Library, Uses TypeScript.";
 const repository = {
   type: "git",
   url: "git+https://github.com/themusecatcher/vue-amazing-ui.git"

@@ -4,7 +4,7 @@ import { u as useRouter, a as useRoute, b as useData } from "./app.js";
 import "@vueuse/core";
 import "./plugin-vue_export-helper.1tPrXgE0.js";
 import "@ant-design/icons-vue";
-import "./vue-amazing-ui.Dc6oJnPH.js";
+import "./vue-amazing-ui.Df5pEiN_.js";
 import "@vuepic/vue-datepicker";
 import "@vueuse/integrations/useQRCode";
 import "swiper/vue";
