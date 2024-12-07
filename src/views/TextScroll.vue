@@ -21,16 +21,16 @@ const scrollItems = ref<any[]>([
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   }
 ])
-const singleText = {
+const singleItem = {
   title: '请用一只玫瑰纪念我 🌹',
   href: 'https://blog.csdn.net/Dandrose?type=blog'
 }
 const textScroll = ref()
 const disabled = ref(true)
 const vertical = ref(false)
-function onClick(text: string) {
-  // 获取点击的标题
-  console.log('text', text)
+function onClick(item: any) {
+  // 获取点击的 item
+  console.log('item', item)
 }
 function handleStart() {
   textScroll.value.start()
@@ -42,7 +42,7 @@ function handleStop() {
 }
 function handleReset() {
   textScroll.value.reset()
-  disabled.value = true
+  disabled.value = false
 }
 const state = reactive({
   single: false,
@@ -53,8 +53,7 @@ const state = reactive({
   backgroundColor: '#FFF',
   amount: 4,
   gap: 20,
-  interval: 10,
-  step: 1,
+  speed: 48,
   vertical: false,
   verticalInterval: 3000
 })
@@ -66,17 +65,17 @@ const state = reactive({
     <TextScroll :items="scrollItems" @click="onClick" />
     <h2 class="mt30 mb10">单条文字滚动</h2>
     <TextScroll
-      :items="singleText"
+      :items="singleItem"
       single
-      :width="270"
-      :text-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
+      :width="280"
+      :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
       @click="onClick"
     />
     <h2 class="mt30 mb10">垂直文字滚动</h2>
     <TextScroll
+      style="background-color: #e6f4ff"
       :items="scrollItems"
-      :board-style="{ backgroundColor: '#e6f4ff' }"
-      :text-style="{ fontSize: '20px' }"
+      :item-style="{ fontSize: '20px' }"
       vertical
       @click="onClick"
     />
@@ -84,11 +83,11 @@ const state = reactive({
     <TextScroll :items="scrollItems" href-hover-color="#ff6900" @click="onClick" />
     <h2 class="mt30 mb10">自定义样式</h2>
     <TextScroll
+      style="background-color: #e6f4ff; border-radius: 12px"
       :items="scrollItems"
-      :board-style="{ backgroundColor: '#e6f4ff', borderRadius: '12px' }"
-      :text-style="{ fontSize: '28px', color: '#FF9800' }"
+      :item-style="{ fontSize: '28px', color: '#FF9800' }"
       :gap="30"
-      :height="80"
+      :height="60"
       @click="onClick"
     />
     <h2 class="mt30 mb10">使用 Methods</h2>
@@ -107,7 +106,7 @@ const state = reactive({
       <TextScroll ref="textScroll" :vertical="vertical" :items="scrollItems" @click="onClick" />
     </Flex>
     <h2 class="mt30 mb10">自定义滚动速度</h2>
-    <TextScroll :items="scrollItems" :step="2" @click="onClick" />
+    <TextScroll :items="scrollItems" :speed="72" @click="onClick" />
     <h2 class="mt30 mb10">文字滚动配置器</h2>
     <Row :gutter="[24, 12]">
       <Col :span="6">
@@ -154,14 +153,8 @@ const state = reactive({
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          interval:
-          <Slider v-model:value="state.interval" :min="5" :max="100" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex gap="small" vertical>
-          step:
-          <Slider v-model:value="state.step" :min="0.1" :step="0.1" :max="20" />
+          speed:
+          <Slider v-model:value="state.speed" :min="10" :max="100" />
         </Flex>
       </Col>
       <Col :span="6">
@@ -182,18 +175,15 @@ const state = reactive({
       :items="scrollItems"
       :single="state.single"
       :height="state.height"
-      :board-style="{
-        backgroundColor: state.backgroundColor
-      }"
-      :text-style="{
+      :style="`background-color: ${state.backgroundColor}`"
+      :item-style="{
         fontSize: state.fontSize + 'px',
         fontWeight: state.fontWeight,
         color: state.color
       }"
       :amount="state.amount"
       :gap="state.gap"
-      :interval="state.interval"
-      :step="state.step"
+      :speed="state.speed"
       :vertical="state.vertical"
       :vertical-interval="state.verticalInterval"
       @click="onClick"

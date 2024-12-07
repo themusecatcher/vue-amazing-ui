@@ -125,8 +125,6 @@ const buttonSize = ref('middle')
       </Row>
       <Radio :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="value" />
     </Flex>
-    <h2 class="mt30 mb10">自定义单选区域宽高</h2>
-    <Radio vertical :width="110" :height="150" :options="options" v-model:value="value" />
     <h2 class="mt30 mb10">按钮大小</h2>
     <Space vertical>
       <Radio :options="sizeOptions" v-model:value="buttonSize" />

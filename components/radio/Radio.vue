@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect, nextTick } from 'vue'
 export interface Option {
   label: string // 选项名
   value: string | number | boolean // 选项值
@@ -11,8 +11,6 @@ export interface Props {
   vertical?: boolean // 是否垂直排列，仅当 button: false 时生效
   checked?: boolean // (v-model) 当前是否选中
   gap?: number | number[] // 多个单选框之间的间距；垂直排列时为垂直间距，单位 px；数组间距用于水平排列折行时：[水平间距, 垂直间距]；仅当 button: false 时生效
-  width?: string | number // 单选区域最大宽度，超出后折行，单位 px；仅当 button: false 时生效
-  height?: string | number // 单选区域最大高度，超出后滚动，单位 px；仅当 button: false 时生效
   button?: boolean // 是否启用按钮样式
   buttonStyle?: 'outline' | 'solid' // 按钮样式风格
   buttonSize?: 'small' | 'middle' | 'large' // 按钮大小；仅当 button: true 时生效
@@ -24,43 +22,18 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   checked: false,
   gap: 8,
-  width: 'auto',
-  height: 'auto',
   button: false,
   buttonStyle: 'outline',
   buttonSize: 'middle',
   value: undefined
 })
-const radioChecked = ref<boolean>()
+const radioChecked = ref<boolean>(false)
 const optionsCheckedValue = ref<string | number | boolean>()
+const wave = ref<boolean>(false)
 const emits = defineEmits(['update:checked', 'update:value', 'change'])
 const optionsAmount = computed(() => {
   // 选项总数
   return props.options.length
-})
-const maxWidth = computed(() => {
-  // 单选区域最大宽度
-  if (!props.button) {
-    if (typeof props.width === 'number') {
-      return `${props.width}px`
-    } else {
-      return props.width
-    }
-  } else {
-    return 'auto'
-  }
-})
-const maxHeight = computed(() => {
-  // 单选区域最大高度
-  if (!props.button) {
-    if (typeof props.height === 'number') {
-      return `${props.height}px`
-    } else {
-      return props.height
-    }
-  } else {
-    return 'auto'
-  }
 })
 const gapValue = computed(() => {
   if (!props.button) {
@@ -87,6 +60,7 @@ function checkDisabled(disabled: boolean | undefined) {
 }
 function onClick(value: string | number | boolean) {
   if (value !== optionsCheckedValue.value) {
+    startWave()
     optionsCheckedValue.value = value
     emits('update:value', value)
     emits('change', value)
@@ -94,10 +68,24 @@ function onClick(value: string | number | boolean) {
 }
 function onChecked() {
   if (!radioChecked.value) {
+    startWave()
     radioChecked.value = true
     emits('update:checked', true)
     emits('change', true)
   }
+}
+function startWave() {
+  if (wave.value) {
+    wave.value = false
+    nextTick(() => {
+      wave.value = true
+    })
+  } else {
+    wave.value = true
+  }
+}
+function onWaveEnd() {
+  wave.value = false
 }
 </script>
 <template>
@@ -109,18 +97,25 @@ function onChecked() {
       'radio-button-small': button && buttonSize === 'small',
       'radio-button-large': button && buttonSize === 'large'
     }"
-    :style="`--radio-gap: ${gapValue}; --radio-max-width: ${maxWidth}; --radio-max-height: ${maxHeight};`"
+    :style="`--radio-gap: ${gapValue};`"
   >
     <template v-if="optionsAmount">
       <template v-if="!button">
         <div
-          class="m-radio-wrap"
+          class="radio-wrap"
           :class="{ 'radio-disabled': checkDisabled(option.disabled) }"
           v-for="(option, index) in options"
           :key="index"
           @click="checkDisabled(option.disabled) ? () => false : onClick(option.value)"
         >
-          <span class="radio-handle" :class="{ 'radio-checked': optionsCheckedValue === option.value }"></span>
+          <span class="radio-handle" :class="{ 'radio-checked': optionsCheckedValue === option.value }">
+            <span
+              v-if="!checkDisabled(option.disabled)"
+              class="radio-wave"
+              :class="{ 'wave-active': wave && optionsCheckedValue === option.value }"
+              @animationend="onWaveEnd"
+            ></span>
+          </span>
           <span class="radio-label">
             <slot :label="option.label">{{ option.label }}</slot>
           </span>
@@ -129,7 +124,7 @@ function onChecked() {
       <template v-else>
         <div
           tabindex="0"
-          class="m-radio-button-wrap"
+          class="radio-button-wrap"
           :class="{
             'radio-button-checked': optionsCheckedValue === option.value,
             'radio-button-disabled': checkDisabled(option.disabled)
@@ -141,12 +136,18 @@ function onChecked() {
           <span class="radio-label">
             <slot :label="option.label">{{ option.label }}</slot>
           </span>
+          <span
+            v-if="!checkDisabled(option.disabled)"
+            class="radio-wave"
+            :class="{ 'wave-active': wave && optionsCheckedValue === option.value }"
+            @animationend="onWaveEnd"
+          ></span>
         </div>
       </template>
     </template>
     <template v-else>
       <template v-if="!button">
-        <div class="m-radio-wrap" :class="{ 'radio-disabled': disabled }" @click="disabled ? () => false : onChecked()">
+        <div class="radio-wrap" :class="{ 'radio-disabled': disabled }" @click="disabled ? () => false : onChecked()">
           <span class="radio-handle" :class="{ 'radio-checked': radioChecked }"></span>
           <span class="radio-label">
             <slot></slot>
@@ -156,7 +157,7 @@ function onChecked() {
       <template v-else>
         <div
           tabindex="0"
-          class="m-radio-button-wrap"
+          class="radio-button-wrap"
           :class="{
             'radio-button-checked': radioChecked,
             'radio-button-disabled': disabled
@@ -166,6 +167,12 @@ function onChecked() {
           <span class="radio-label">
             <slot></slot>
           </span>
+          <span
+            v-if="!disabled"
+            class="radio-wave"
+            :class="{ 'wave-active': wave && radioChecked }"
+            @animationend="onWaveEnd"
+          ></span>
         </div>
       </template>
     </template>
@@ -179,10 +186,7 @@ function onChecked() {
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1;
-  max-width: var(--radio-max-width);
-  max-height: var(--radio-max-height);
-  overflow: auto;
-  .m-radio-wrap {
+  .radio-wrap {
     display: inline-flex;
     align-items: flex-start;
     cursor: pointer;
@@ -253,7 +257,7 @@ function onChecked() {
       }
     }
   }
-  .m-radio-button-wrap {
+  .radio-button-wrap {
     position: relative;
     height: 32px;
     padding-inline: 15px;
@@ -267,9 +271,6 @@ function onChecked() {
     transition:
       all 0.2s,
       box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    &:focus-within {
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
-    }
     &:first-child {
       border-left: 1px solid #d9d9d9;
       border-start-start-radius: 6px;
@@ -315,6 +316,41 @@ function onChecked() {
     background-color: rgba(0, 0, 0, 0.15);
   }
 }
+.radio-handle,
+.radio-button-wrap {
+  .radio-wave {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    animation-iteration-count: 1;
+    animation-duration: 0.6s;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1), cubic-bezier(0, 0, 0.2, 1);
+    border-radius: inherit;
+  }
+  .wave-active {
+    z-index: 1;
+    animation-name: waveSpread, waveOpacity;
+    @keyframes waveSpread {
+      from {
+        box-shadow: 0 0 0.5px 0 #1677ff;
+      }
+      to {
+        box-shadow: 0 0 0.5px 5px #1677ff;
+      }
+    }
+    @keyframes waveOpacity {
+      from {
+        opacity: 0.6;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+  }
+}
 .radio-vertical {
   flex-direction: column;
   flex-wrap: nowrap;
@@ -330,7 +366,7 @@ function onChecked() {
   }
 }
 .radio-button-small {
-  .m-radio-button-wrap {
+  .radio-button-wrap {
     height: 24px;
     padding-inline: 7px;
     line-height: 22px;
@@ -345,7 +381,7 @@ function onChecked() {
   }
 }
 .radio-button-large {
-  .m-radio-button-wrap {
+  .radio-button-wrap {
     height: 40px;
     font-size: 16px;
     line-height: 38px;

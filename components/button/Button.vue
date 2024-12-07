@@ -43,7 +43,7 @@ const presetRippleColors = {
   text: 'transparent',
   link: 'transparent'
 }
-const wave = ref(false)
+const wave = ref<boolean>(false)
 const emit = defineEmits(['click'])
 const slotsExist = useSlotsExist(['icon', 'default'])
 const showIcon = computed(() => {

@@ -2,9 +2,15 @@
 
 <GlobalElement />
 
+## 1.10.4 <Tag color="volcano" size="small">soon</Tag>
+
+- 重构 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件，删除 `width` `height` 属性；新增选中动画效果
+- 重构 [单选框 Radio](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html) 组件，删除 `width` `height` 属性；新增选中动画效果
+
 ## 1.10.3 <Tag color="volcano" size="small">soon</Tag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `sticky` 属性，支持：对于长表格设置跟随页面固定表头和水平滚动条，方便查看表头和使用滚动条
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，将 `scrollText` 属性重命名为 `items`；删除 `interval` `step` 属性，新增 `speed` 属性；用于更方便的控制水平滚动动画速度；重构水平滚动动画效果；新增 `pauseOnMouseEnter` 属性，支持控制鼠标移入时是否暂停滚动
 - 组件库项目代码优化
 
 ## 1.10.2 <Tag color="volcano" size="small">2024-12-05</Tag>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, nextTick } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useResizeObserver } from 'components/utils'
 export interface Item {
@@ -19,6 +19,7 @@ export interface Props {
   speed?: number // 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效
   vertical?: boolean // 是否垂直滚动
   verticalInterval?: number // 垂直文字滚动时间间隔，单位 ms，垂直滚动时生效
+  pauseOnMouseEnter?: boolean // 鼠标移入是否暂停滚动
 }
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
@@ -31,7 +32,8 @@ const props = withDefaults(defineProps<Props>(), {
   gap: 20,
   speed: 48,
   vertical: false,
-  verticalInterval: 3000
+  verticalInterval: 3000,
+  pauseOnMouseEnter: true
 })
 const horizontalRef = ref() // 水平滚动 DOM 引用
 const horizontalWrapWidth = ref<number>(0) // 水平滚动容器宽度
@@ -39,12 +41,13 @@ const verticalRef = ref() // 垂直滚动 DOM 引用
 const groupRef = ref() // 水平滚动内容 DOM 引用
 const groupWidth = ref<number>(0) // 水平滚动内容宽度
 const playState = ref<'paused' | 'running'>('paused')
+const reset = ref(true) // 重置水平滚动动画状态
 const activeIndex = ref(0) // 垂直滚动当前索引
 const verticalMoveRaf = ref() // 垂直滚动定时器引用标识
 const origin = ref(true) // 垂直滚动初始状态
 const emit = defineEmits(['click'])
 const scrollItems = ref<Item[]>([])
-const itemAmount = computed(() => {
+const itemsAmount = computed(() => {
   return scrollItems.value.length
 })
 const scrollBoardStyle = computed(() => {
@@ -68,15 +71,25 @@ const duration = computed(() => {
   return groupWidth.value / props.speed
 })
 watch(
-  () => [
-    scrollItems.value,
-    props.width,
-    props.amount,
-    props.gap,
-    props.speed,
-    props.vertical,
-    props.verticalInterval
-  ],
+  () => props.items,
+  () => {
+    if (props.single) {
+      scrollItems.value = [props.items] as Item[]
+    } else {
+      scrollItems.value = [...(props.items as Item[])]
+    }
+    resetMove()
+    nextTick(() => {
+      startMove()
+    })
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+)
+watch(
+  () => [props.vertical, props.verticalInterval],
   () => {
     initScroll()
   },
@@ -85,27 +98,15 @@ watch(
     flush: 'post'
   }
 )
-watchEffect(() => {
-  initScrollItem()
-})
-useResizeObserver([horizontalRef, groupRef, verticalRef], () => {
+useResizeObserver([horizontalRef, verticalRef], () => {
   initScroll()
 })
-function initScrollItem() {
-  activeIndex.value = 0
-  if (props.single) {
-    scrollItems.value = [props.items] as Item[]
-  } else {
-    scrollItems.value = [...props.items as Item[]]
-  }
-}
 function initScroll() {
   if (!props.vertical) {
     getScrollSize()
   } else {
     origin.value = true
   }
-  verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
   startMove() // 开始滚动
 }
 // 获取水平滚动容器宽度；水平滚动内容宽度
@@ -116,25 +117,25 @@ function getScrollSize() {
 // 重置水平滚动状态
 function resetScrollState() {
   playState.value = 'paused'
-  nextTick().then(() => {
-    void groupRef.value?.offsetTop
+  nextTick(() => {
     playState.value = 'running'
   })
 }
 // 当 CSS Animation 运动到最后一帧时触发
-function onAnimationIteration () {
+function onAnimationIteration() {
   resetScrollState()
 }
 // 滚动开始
 function startMove() {
   if (props.vertical) {
-    if (itemAmount.value > 1) {
+    if (itemsAmount.value > 1) {
       verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
       verticalMove() // 垂直滚动
     }
   } else {
-    if (itemAmount.value >= displayAmount.value) {
+    if (itemsAmount.value >= displayAmount.value) {
       // 超过 amount 条开始滚动
+      reset.value = false
       playState.value = 'running' // 水平滚动
     }
   }
@@ -147,25 +148,35 @@ function stopMove() {
     playState.value = 'paused'
   }
 }
+// 滚动重置
+function resetMove() {
+  if (props.vertical) {
+    activeIndex.value = 0
+  } else {
+    playState.value = 'paused'
+    reset.value = true
+  }
+}
+
 function verticalMove() {
   verticalMoveRaf.value = rafTimeout(
     () => {
       if (origin.value) {
         origin.value = false
       }
-      activeIndex.value = (activeIndex.value + 1) % itemAmount.value
+      activeIndex.value = (activeIndex.value + 1) % itemsAmount.value
       verticalMove()
     },
     origin.value ? props.verticalInterval : props.verticalInterval + 1000
   )
 }
-function onClick(text: Item) {
-  emit('click', text)
+function onClick(item: Item) {
+  emit('click', item)
 }
 defineExpose({
   start: startMove,
   stop: stopMove,
-  reset: initScrollItem
+  reset: resetMove
 })
 </script>
 <template>
@@ -181,14 +192,20 @@ defineExpose({
         --scroll-href-hover-color: ${hrefHoverColor};
         --scroll-item-gap: ${gap}px;
         --scroll-play-state: ${playState};
-        --scroll-direction: normal;
         --scroll-duration: ${duration}s;
         --scroll-delay: 0s;
         --scroll-iteration-count: infinite;
       `
     ]"
+    @mouseenter="pauseOnMouseEnter ? stopMove() : () => false"
+    @mouseleave="pauseOnMouseEnter ? startMove() : () => false"
   >
-    <div ref="groupRef" class="scroll-items-group" @animationiteration="onAnimationIteration">
+    <div
+      ref="groupRef"
+      class="scroll-items-group"
+      :class="{ 'scroll-items-reset': reset }"
+      @animationiteration="onAnimationIteration"
+    >
       <component
         :is="item.href ? 'a' : 'div'"
         class="scroll-item"
@@ -199,26 +216,22 @@ defineExpose({
         :title="item.title"
         :href="item.href"
         :target="item.target"
-        @mouseenter="stopMove"
-        @mouseleave="startMove"
         @click="onClick(item)"
       >
         {{ item.title }}
       </component>
     </div>
-    <div class="scroll-items-group">
+    <div class="scroll-items-group" :class="{ 'scroll-items-reset': reset }">
       <component
         :is="item.href ? 'a' : 'div'"
         class="scroll-item"
         :class="{ 'href-item': item.href }"
         :style="[itemStyle, `width: ${itemWidth}px;`]"
-        v-for="(item, index) in <Item[]>scrollItems"
+        v-for="(item, index) in scrollItems"
         :key="index"
         :title="item.title"
         :href="item.href"
         :target="item.target"
-        @mouseenter="stopMove"
-        @mouseleave="startMove"
         @click="onClick(item)"
       >
         {{ item.title }}
@@ -235,20 +248,20 @@ defineExpose({
     ]"
   >
     <TransitionGroup name="slide">
-      <div class="scroll-items-group" v-for="(text, index) in <Item[]>scrollItems" :key="index" v-show="activeIndex === index">
+      <div class="scroll-item-wrap" v-for="(item, index) in scrollItems" :key="index" v-show="activeIndex === index">
         <component
-          :is="text.href ? 'a' : 'div'"
+          :is="item.href ? 'a' : 'div'"
           class="scroll-item"
-          :class="{ 'href-item': text.href }"
+          :class="{ 'href-item': item.href }"
           :style="itemStyle"
-          :title="text.title"
-          :href="text.href"
-          :target="text.target"
-          @mouseenter="stopMove"
-          @mouseleave="startMove"
-          @click="onClick(text)"
+          :title="item.title"
+          :href="item.href"
+          :target="item.target"
+          @mouseenter="pauseOnMouseEnter ? stopMove() : () => false"
+          @mouseleave="pauseOnMouseEnter ? startMove() : () => false"
+          @click="onClick(item)"
         >
-          {{ text.title }}
+          {{ item.title }}
         </component>
       </div>
     </TransitionGroup>
@@ -271,8 +284,6 @@ defineExpose({
     align-items: center;
     animation: horizontalScroll var(--scroll-duration) linear var(--scroll-delay) var(--scroll-iteration-count);
     animation-play-state: var(--scroll-play-state);
-    animation-delay: var(--scroll-delay);
-    animation-direction: var(--scroll-direction);
     @keyframes horizontalScroll {
       0% {
         transform: translateX(0);
@@ -299,6 +310,9 @@ defineExpose({
       }
     }
   }
+  .scroll-items-reset {
+    animation: none;
+  }
 }
 // 垂直滚动
 .slide-enter-active,
@@ -319,7 +333,7 @@ defineExpose({
   box-shadow: 0px 0px 5px var(--scroll-shadow-color);
   border-radius: 6px;
   background-color: var(--scroll-bg-color);
-  .scroll-items-group {
+  .scroll-item-wrap {
     position: absolute;
     left: 0;
     right: 0;
