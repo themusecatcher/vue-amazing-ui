@@ -1,6 +1,6 @@
 import { defineComponent, ref, watchEffect, resolveComponent, withCtx, createVNode, createTextVNode, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderStyle } from "vue/server-renderer";
-import { W as Wl } from "./vue-amazing-ui.Dc6oJnPH.js";
+import { O as Ol } from "./vue-amazing-ui.Df5pEiN_.js";
 import "@vueuse/core";
 import "@vuepic/vue-datepicker";
 import "@vueuse/integrations/useQRCode";
@@ -26,7 +26,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       console.log("formatValue2", formatValue2.value);
     });
     function formatter(value2) {
-      return Wl(value2, 2) + "%";
+      return Ol(value2, 2) + "%";
     }
     function parser(value2) {
       return Number(value2.replace(/[,%]/g, ""));

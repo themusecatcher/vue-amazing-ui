@@ -1,6 +1,6 @@
 import { defineComponent, resolveComponent, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderStyle } from "vue/server-renderer";
-import { p as pkg } from "./package.DyG7CbfA.js";
+import { p as pkg } from "./package.MtXVtTz7.js";
 const __pageData = JSON.parse('{"title":"特性","description":"","frontmatter":{},"headers":[],"relativePath":"guide/features.md","filePath":"guide/features.md","lastUpdated":1733210171000}');
 const __default__ = { name: "guide/features.md" };
 const _sfc_main = /* @__PURE__ */ defineComponent({

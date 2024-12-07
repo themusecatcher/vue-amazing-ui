@@ -1,6 +1,6 @@
 import { defineComponent, ref, watchEffect, resolveComponent, withCtx, unref, createTextVNode, toDisplayString, createVNode, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderStyle } from "vue/server-renderer";
-import { p as pkg } from "./package.DyG7CbfA.js";
+import { p as pkg } from "./package.MtXVtTz7.js";
 import { format, addDays, addHours, addMinutes, addSeconds, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, startOfWeek, endOfWeek } from "date-fns";
 const __pageData = JSON.parse(`{"title":"日期选择 DatePicker{{ pkg.dependencies['@vuepic/vue-datepicker'] }}","description":"","frontmatter":{},"headers":[],"relativePath":"guide/components/datepicker.md","filePath":"guide/components/datepicker.md","lastUpdated":1729754900000}`);
 const __default__ = { name: "guide/components/datepicker.md" };

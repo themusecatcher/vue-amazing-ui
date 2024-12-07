@@ -1,6 +1,6 @@
 import { defineComponent, ref, watchEffect, resolveComponent, withCtx, createTextVNode, createVNode, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderStyle } from "vue/server-renderer";
-const __pageData = JSON.parse('{"title":"单选框 Radio","description":"","frontmatter":{},"headers":[],"relativePath":"guide/components/radio.md","filePath":"guide/components/radio.md","lastUpdated":1730881752000}');
+const __pageData = JSON.parse('{"title":"单选框 Radio","description":"","frontmatter":{},"headers":[],"relativePath":"guide/components/radio.md","filePath":"guide/components/radio.md","lastUpdated":1733552059000}');
 const __default__ = { name: "guide/components/radio.md" };
 const _sfc_main = /* @__PURE__ */ defineComponent({
   ...__default__,

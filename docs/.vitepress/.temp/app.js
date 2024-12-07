@@ -3,7 +3,7 @@ import { ssrRenderAttrs, ssrRenderSlot, ssrInterpolate, ssrRenderAttr, ssrRender
 import { usePreferredDark, useDark, useMediaQuery, useWindowSize, onKeyStroke, useWindowScroll, useScrollLock } from "@vueuse/core";
 import { _ as _export_sfc } from "./plugin-vue_export-helper.1tPrXgE0.js";
 import { SoundOutlined } from "@ant-design/icons-vue";
-import { p as p0 } from "./vue-amazing-ui.Dc6oJnPH.js";
+import { p as p0 } from "./vue-amazing-ui.Df5pEiN_.js";
 import "@vuepic/vue-datepicker";
 import "@vueuse/integrations/useQRCode";
 import "swiper/vue";
@@ -3100,7 +3100,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
     const VPLocalSearchBox = () => null;
-    const VPAlgoliaSearchBox = defineAsyncComponent(() => import("./VPAlgoliaSearchBox.DmOURE0t.js"));
+    const VPAlgoliaSearchBox = defineAsyncComponent(() => import("./VPAlgoliaSearchBox.Bni1BxDh.js"));
     const { theme: theme2 } = useData();
     const loaded = ref(false);
     const actuallyLoaded = ref(false);

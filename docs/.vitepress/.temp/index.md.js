@@ -1,6 +1,6 @@
 import { defineComponent, onMounted, resolveComponent, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent } from "vue/server-renderer";
-import { p as pkg } from "./package.DyG7CbfA.js";
+import { p as pkg } from "./package.MtXVtTz7.js";
 function fetchVersion() {
   return fetch("https://api.github.com/repos/themusecatcher/vue-amazing-ui/contents/package.json?ref=master", {
     headers: {

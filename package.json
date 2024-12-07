@@ -85,7 +85,7 @@
   "sideEffects": [
     "dist/*"
   ],
-  "description": "An Amazing Vue3 UI Components Library.",
+  "description": "An Amazing Vue3 UI Components Library, Uses TypeScript.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/themusecatcher/vue-amazing-ui.git"
