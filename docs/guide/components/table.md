@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const loading = ref(false)
 const tableLoading = ref(false)
 const customStyleBordered = ref(true)
@@ -54,8 +55,8 @@ const alignOptions = [
     value: 'right'
   }
 ]
-const align = ref('center')
-const columns = reactive([
+const align = ref<TableColumn['align']>('center')
+const columns = reactive<TableColumn[]>([
   {
     title: 'Name',
     width: 100,
@@ -90,26 +91,26 @@ const columns = reactive([
     key: 'action'
   }
 ])
-const columnsCustomStyle = reactive([
+const columnsCustomStyle = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age', className: 'age' },
   { title: 'Job', dataIndex: 'job' },
   { title: 'Address', dataIndex: 'address' }
 ])
-const columnsSize = reactive([
+const columnsSize = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age' },
   { title: 'Address', dataIndex: 'address' }
 ])
-const columnsAlign = reactive([
+const columnsAlign = reactive<TableColumn[]>([
   { title: 'Name', align: 'center', dataIndex: 'name' },
   { title: 'Age', align: 'center', dataIndex: 'age' },
   { title: 'Address', align: 'center', dataIndex: 'address' }
 ])
 watch(align, () => {
-  columnsAlign.forEach((column) => (column.align = align.value))
+  columnsAlign.forEach((column: TableColumn) => (column.align = align.value))
 })
-const columnsStriped = reactive([
+const columnsStriped = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -127,7 +128,7 @@ const columnsStriped = reactive([
     dataIndex: 'address'
   }
 ])
-const columnsEllipsis = reactive([
+const columnsEllipsis = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -163,7 +164,7 @@ const sharedOnCell = (record: any, index: number) => {
     return { colSpan: 0 }
   }
 }
-const columnsMerge = [
+const columnsMerge = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -219,8 +220,8 @@ const columnsMerge = [
     dataIndex: 'address',
     customCell: sharedOnCell
   }
-]
-const columnsCellEditable = reactive([
+])
+const columnsCellEditable = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -239,7 +240,7 @@ const columnsCellEditable = reactive([
     dataIndex: 'action'
   }
 ])
-const columnsRowEditable = reactive([
+const columnsRowEditable = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -260,13 +261,13 @@ const columnsRowEditable = reactive([
     dataIndex: 'action'
   }
 ])
-const columnsExpandable = reactive([
+const columnsExpandable = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name', key: 'name' },
   { title: 'Age', dataIndex: 'age', key: 'age' },
   { title: 'Address', dataIndex: 'address', key: 'address' },
   { title: 'Action', key: 'action' }
 ])
-const columnsFixColumn = reactive([
+const columnsFixColumn = reactive<TableColumn[]>([
   { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   { title: 'Column 1', dataIndex: 'address', key: '1' },
@@ -284,7 +285,7 @@ const columnsFixColumn = reactive([
     width: 100
   }
 ])
-const columnsFixHeader = reactive([
+const columnsFixHeader = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -298,7 +299,7 @@ const columnsFixHeader = reactive([
     dataIndex: 'address'
   }
 ])
-const columnsFixHeaderAndColumn = reactive([
+const columnsFixHeaderAndColumn = reactive<TableColumn[]>([
   { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
@@ -316,7 +317,7 @@ const columnsFixHeaderAndColumn = reactive([
     width: 100
   }
 ])
-const columnsFixHeaderAndScrollbar = reactive([
+const columnsFixHeaderAndScrollbar = reactive<TableColumn[]>([
   { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
@@ -334,7 +335,7 @@ const columnsFixHeaderAndScrollbar = reactive([
     width: 100
   }
 ])
-const columnsHeaderGroup = reactive([
+const columnsHeaderGroup = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -407,7 +408,7 @@ const columnsHeaderGroup = reactive([
     fixed: 'right'
   }
 ])
-const columnsSort = reactive([
+const columnsSort = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -427,7 +428,7 @@ const columnsSort = reactive([
     sortDirections: ['descend', 'ascend']
   }
 ])
-const columnsSelection = reactive([
+const columnsSelection = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -881,12 +882,13 @@ const rowSelection = {
 <script setup lang="ts">
 import { ref, reactive, onBeforeMount } from 'vue'
 import { SmileOutlined } from '@ant-design/icons-vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const loading = ref(false)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
 })
-const columns = reactive([
+const columns = reactive<TableColumn[]>([
   {
     title: 'Name',
     width: 100,
@@ -1021,7 +1023,8 @@ function onChange(page: number, pageSize: number) {
 ```vue
 <script setup lang="ts">
 import { reactive } from 'vue'
-const columns = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columns = reactive<TableColumn[]>([
   {
     title: 'Name',
     width: 100,
@@ -1079,7 +1082,8 @@ const columns = reactive([
 ```vue
 <script setup lang="ts">
 import { reactive } from 'vue'
-const columns = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columns = reactive<TableColumn>([
   {
     title: 'Name',
     width: 100,
@@ -1162,7 +1166,8 @@ const columns = reactive([
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { SmileOutlined } from '@ant-design/icons-vue'
-const columns = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columns = reactive<TableColumn[]>([
   {
     title: 'Name',
     width: 100,
@@ -1290,8 +1295,9 @@ const dataSource = ref([
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const customStyleBordered = ref(true)
-const columnsCustomStyle = reactive([
+const columnsCustomStyle = reactive<TableColumn>([
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age', className: 'age' },
   { title: 'Job', dataIndex: 'job' },
@@ -1372,6 +1378,7 @@ const rowClassName = (record: any, rowIndex: number) => {
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const sizeBordered = ref(true)
 const sizeOptions = [
   {
@@ -1388,7 +1395,7 @@ const sizeOptions = [
   }
 ]
 const size = ref('middle')
-const columnsSize = reactive([
+const columnsSize = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age' },
   { title: 'Address', dataIndex: 'address' }
@@ -1438,6 +1445,7 @@ const dataSourceSize = ref([
 ```vue
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const alignBordered = ref(true)
 const alignOptions = [
   {
@@ -1454,13 +1462,13 @@ const alignOptions = [
   }
 ]
 const align = ref('center')
-const columnsAlign = reactive([
+const columnsAlign = reactive<TableColumn[]>([
   { title: 'Name', align: 'center', dataIndex: 'name' },
   { title: 'Age', align: 'center', dataIndex: 'age' },
   { title: 'Address', align: 'center', dataIndex: 'address' }
 ])
 watch(align, () => {
-  columnsAlign.forEach((column) => (column.align = align.value))
+  columnsAlign.forEach((column: TableColumn) => (column.align = align.value))
 })
 const dataSourceAlign = ref([
   {
@@ -1506,8 +1514,9 @@ const dataSourceAlign = ref([
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const stripedBordered = ref(true)
-const columnsStriped = reactive([
+const columnsStriped = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -1599,8 +1608,9 @@ const dataSourcesStriped = ref([
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const headerFooterbordered = ref(true)
-const columns = reactive([
+const columns = reactive<TableColumn[]>([
   {
     title: 'Name',
     width: 100,
@@ -1721,7 +1731,8 @@ const dataSource = ref([
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const columnsEllipsis = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columnsEllipsis = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -1822,12 +1833,13 @@ const dataSource = ref([
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const sharedOnCell = (record: any, index: number) => {
   if (index === 4) {
     return { colSpan: 0 }
   }
 }
-const columnsMerge = [
+const columnsMerge = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -1883,7 +1895,7 @@ const columnsMerge = [
     dataIndex: 'address',
     customCell: sharedOnCell
   }
-]
+])
 const dataSourceMerge = ref([
   {
     name: 'Stephen Curry',
@@ -1966,7 +1978,8 @@ const dataSourceMerge = ref([
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
-const columnsCellEditable = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columnsCellEditable = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -2137,8 +2150,9 @@ const handleCellDelete = (key: string) => {
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const tableLoading = ref(false)
-const columnsRowEditable = reactive([
+const columnsRowEditable = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -2276,7 +2290,8 @@ const handleTableChange = (page: number, pageSize: number) => {
 ```vue
 <script setup lang="ts">
 import { ref, reactive, watchEffect } from 'vue'
-const columnsExpandable = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columnsExpandable = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name', key: 'name' },
   { title: 'Age', dataIndex: 'age', key: 'age' },
   { title: 'Address', dataIndex: 'address', key: 'address' },
@@ -2367,7 +2382,8 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const columnsFixColumn = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columnsFixColumn = reactive<TableColumn[]>([
   { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   { title: 'Column 1', dataIndex: 'address', key: '1' },
@@ -2432,7 +2448,8 @@ const dataSourceFixColumn = ref([
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const columnsFixHeader = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columnsFixHeader = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -2488,7 +2505,8 @@ const dataSourceFixHeader = ref(data)
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const columnsFixHeaderAndColumn = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columnsFixHeaderAndColumn = reactive<TableColumn[]>([
   { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
@@ -2558,7 +2576,8 @@ const dataSourceFixHeaderAndColumn = ref(data)
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const columnsFixHeaderAndScrollbar = reactive([
+import type { TableColumn } from 'vue-amazing-ui'
+const columnsFixHeaderAndScrollbar = reactive<TableColumn[]>([
   { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
@@ -2626,8 +2645,9 @@ const dataSourceFixHeaderAndScrollbar = ref(data)
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const groupBordered = ref(true)
-const columnsHeaderGroup = reactive([
+const columnsHeaderGroup = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -2745,8 +2765,9 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import type { TableColumn } from 'vue-amazing-ui'
 const sortBordered = ref(true)
-const columnsSort = reactive([
+const columnsSort = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -2845,7 +2866,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
 header | 表格标题 | string &#124; slot | undefined
 footer | 表格尾部 | string &#124; slot | undefined
 columns | 表格列的配置项 | [Column](#column-type)[] | []
-dataSource | 表格数据数组 | any[] | []
+dataSource | 表格数据数组 | object[] | []
 bordered | 是否展示外边框和列边框 | boolean | false
 rowClassName | 自定义行的类名 | string &#124; ((record: any, rowIndex: number) => string) | undefined
 size | 表格大小 | 'large' &#124; 'middle' &#124; small | 'large'
@@ -2893,7 +2914,7 @@ sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](https:
 defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' | undefined
 sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] | undefined
 sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | Function | undefined
-customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Column) => object | undefined
+customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Column) => object &#124; undefined | undefined
 
 ### ScrollOption Type
 

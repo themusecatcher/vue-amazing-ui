@@ -26,7 +26,7 @@ export interface Column {
   defaultSortOrder?: 'ascend' | 'descend' // 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效
   sortDirections?: ('ascend' | 'descend')[] // 支持的排序方式
   sorter?: Function // 升序排序函数，参考 Array.sort 的 compareFunction，当列表头分组时，请将排序设置在叶子节点
-  customCell?: (record: any, rowIndex: number, column: Column) => object // 设置单元格属性
+  customCell?: (record: any, rowIndex: number, column: Column) => object | undefined // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
 interface ScrollOption {
@@ -37,7 +37,7 @@ export interface Props {
   header?: string // 表格标题 string | slot
   footer?: string // 表格尾部 string | slot
   columns?: Column[] // 表格列的配置项
-  dataSource?: any[] // 表格数据数组
+  dataSource?: object[] // 表格数据数组
   bordered?: boolean // 是否展示外边框和列边框
   rowClassName?: string | ((record: any, rowIndex: number) => string) // 自定义行的类名
   size?: 'large' | 'middle' | 'small' // 表格大小

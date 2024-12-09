@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
+import type { TableColumn } from '../../dist/vue-amazing-ui'
 const loading = ref(false)
 const tableLoading = ref(false)
 const customStyleBordered = ref(true)
@@ -43,8 +44,8 @@ const alignOptions = [
     value: 'right'
   }
 ]
-const align = ref('center')
-const columns = reactive([
+const align = ref<TableColumn['align']>('center')
+const columns = reactive<TableColumn[]>([
   {
     title: 'Name',
     width: 100,
@@ -79,26 +80,26 @@ const columns = reactive([
     key: 'action'
   }
 ])
-const columnsCustomStyle = reactive([
+const columnsCustomStyle = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age', className: 'age' },
   { title: 'Job', dataIndex: 'job' },
   { title: 'Address', dataIndex: 'address' }
 ])
-const columnsSize = reactive([
+const columnsSize = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age' },
   { title: 'Address', dataIndex: 'address' }
 ])
-const columnsAlign = reactive([
+const columnsAlign = reactive<TableColumn[]>([
   { title: 'Name', align: 'center', dataIndex: 'name' },
   { title: 'Age', align: 'center', dataIndex: 'age' },
   { title: 'Address', align: 'center', dataIndex: 'address' }
 ])
 watch(align, () => {
-  columnsAlign.forEach((column) => (column.align = align.value))
+  columnsAlign.forEach((column: TableColumn) => (column.align = align.value))
 })
-const columnsStriped = reactive([
+const columnsStriped = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -116,7 +117,7 @@ const columnsStriped = reactive([
     dataIndex: 'address'
   }
 ])
-const columnsEllipsis = reactive([
+const columnsEllipsis = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -152,7 +153,7 @@ const sharedOnCell = (record: any, index: number) => {
     return { colSpan: 0 }
   }
 }
-const columnsMerge = [
+const columnsMerge = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -208,8 +209,8 @@ const columnsMerge = [
     dataIndex: 'address',
     customCell: sharedOnCell
   }
-]
-const columnsCellEditable = reactive([
+])
+const columnsCellEditable = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -228,7 +229,7 @@ const columnsCellEditable = reactive([
     dataIndex: 'action'
   }
 ])
-const columnsRowEditable = reactive([
+const columnsRowEditable = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -249,13 +250,13 @@ const columnsRowEditable = reactive([
     dataIndex: 'action'
   }
 ])
-const columnsExpandable = reactive([
+const columnsExpandable = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name', key: 'name' },
   { title: 'Age', dataIndex: 'age', key: 'age' },
   { title: 'Address', dataIndex: 'address', key: 'address' },
   { title: 'Action', key: 'action' }
 ])
-const columnsFixColumn = reactive([
+const columnsFixColumn = reactive<TableColumn[]>([
   { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   { title: 'Column 1', dataIndex: 'address', key: '1' },
@@ -273,7 +274,7 @@ const columnsFixColumn = reactive([
     width: 100
   }
 ])
-const columnsFixHeader = reactive([
+const columnsFixHeader = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
@@ -287,7 +288,7 @@ const columnsFixHeader = reactive([
     dataIndex: 'address'
   }
 ])
-const columnsFixHeaderAndColumn = reactive([
+const columnsFixHeaderAndColumn = reactive<TableColumn[]>([
   { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
@@ -305,7 +306,7 @@ const columnsFixHeaderAndColumn = reactive([
     width: 100
   }
 ])
-const columnsFixHeaderAndScrollbar = reactive([
+const columnsFixHeaderAndScrollbar = reactive<TableColumn[]>([
   { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
   { title: 'Column 1', dataIndex: 'address', key: '1', width: 150 },
@@ -323,7 +324,7 @@ const columnsFixHeaderAndScrollbar = reactive([
     width: 100
   }
 ])
-const columnsHeaderGroup = reactive([
+const columnsHeaderGroup = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -396,7 +397,7 @@ const columnsHeaderGroup = reactive([
     fixed: 'right'
   }
 ])
-const columnsSort = reactive([
+const columnsSort = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
@@ -416,7 +417,7 @@ const columnsSort = reactive([
     sortDirections: ['descend', 'ascend']
   }
 ])
-const columnsSelection = reactive([
+const columnsSelection = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name'
