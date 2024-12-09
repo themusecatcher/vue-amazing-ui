@@ -85,9 +85,9 @@ watch(
 )
 watch(scrollItems, () => {
   resetMove()
-  nextTick(() => {
-    startMove()
-  })
+  // nextTick(() => {
+  //   startMove()
+  // })
 })
 watch(
   () => [props.vertical, props.verticalInterval],
@@ -157,6 +157,10 @@ function resetMove() {
     playState.value = 'paused'
     reset.value = true
   }
+  nextTick(() => {
+    void horizontalRef.value?.offsetTop
+    startMove()
+  })
 }
 
 function verticalMove() {
