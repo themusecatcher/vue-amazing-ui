@@ -5,8 +5,8 @@ set -e
 
 commitDesc=$1
 
-# 重新打包组件库
-pnpm build
+# # 重新打包组件库
+# pnpm build
 
 # 打包生成静态文件
 pnpm docs:build
