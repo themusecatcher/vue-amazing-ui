@@ -833,7 +833,7 @@ const rowSelection = {
 </script>
 <template>
   <div>
-    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
@@ -1107,6 +1107,7 @@ const rowSelection = {
     <Table
       :columns="columnsFixHeaderAndScrollbar"
       :data-source="dataSourceFixHeaderAndScrollbar"
+      sticky
       :scroll="{ x: 1500 }"
     >
       <template #bodyCell="{ column }">
@@ -1130,8 +1131,8 @@ const rowSelection = {
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
-    </Flex> -->
-    <h2 class="mt30 mb10">可选择</h2>
+    </Flex>
+    <!-- <h2 class="mt30 mb10">可选择</h2>
     <a-table :row-selection="rowSelection" :columns="columnsSelection" :data-source="dataSourceSelection">
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
@@ -1145,7 +1146,7 @@ const rowSelection = {
           <a>{{ text }}</a>
         </template>
       </template>
-    </Table>
+    </Table> -->
   </div>
 </template>
 <style lang="less" scoped>

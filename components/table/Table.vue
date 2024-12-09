@@ -14,8 +14,8 @@ export interface Column {
   width?: string | number // 列宽度，单位 px
   className?: string // 自定义列的类名
   colSpan?: number // 表头列合并，设置为 0 时，不渲染
-  dataIndex: string // 列数据字符索引
-  key?: string // 列标识，主要与 expandedRowKeys 配合使用
+  dataIndex?: string // 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略
+  key?: string // 自定义列标识
   ellipsis?: boolean // 超过宽度是否自动省略
   ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略，较高优先级
   fixed?: 'left' | 'right' // 列是否固定，列表头分组时，只需设置所有叶子节点是否固定
@@ -61,7 +61,7 @@ export interface Props {
   expandCell?: Slot // 自定义展开按钮 slot
   expandedRowRender?: Slot // 自定义额外的展开行内容 slot
   expandFixed?: boolean // 是否固定展开列
-  expandedRowKeys?: (string | number)[] // (v-model) 展开行的 key 数组，控制展开行的属性
+  expandedRowKeys?: (string | number)[] // (v-model) 展开行的 key 数组，控制展开行的属性；需与 dataSource 数据中的 key 配合使用
   expandRowByClick?: boolean // 点击行是否展开
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -358,7 +358,7 @@ function initDefaultSort() {
   for (let i = 0; i < len; i++) {
     const column = thLeaf[i]
     if (column.defaultSortOrder !== undefined) {
-      sortColumnDataIndex.value = column.dataIndex
+      sortColumnDataIndex.value = column.dataIndex as string
       sortColumnSorter.value = column.sorter as (a: any, b: any) => number
       sortSymbol.value = column.defaultSortOrder
       return
@@ -601,7 +601,7 @@ function onSorter(column: Column) {
       }
     }
   } else {
-    sortColumnDataIndex.value = column.dataIndex
+    sortColumnDataIndex.value = column.dataIndex as string
     sortColumnSorter.value = column.sorter as (a: any, b: any) => number
     if (sortDirections.length > 0) {
       sortSymbol.value = sortDirections[0]
@@ -870,7 +870,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       :colspan="column.colSpan"
                       :colstart="column.colStart"
                       :colend="column.colEnd"
-                      @mouseenter="column.sorter ? onEnterSorter(column.dataIndex) : () => false"
+                      @mouseenter="column.sorter ? onEnterSorter(column.dataIndex as string) : () => false"
                       @mouseleave="column.sorter ? onLeaveSorter() : () => false"
                       @click="column.sorter ? onSorter(column) : () => false"
                     >
@@ -1007,11 +1007,11 @@ function onPaginationChange(page: number, pageSize: number) {
                           name="bodyCell"
                           :column="column"
                           :record="record"
-                          :text="record[column.dataIndex]"
+                          :text="record[column.dataIndex as string]"
                           :index="rowIndex"
                         >
                           <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
-                            {{ record[column.dataIndex] }}
+                            {{ record[column.dataIndex as string] }}
                           </Ellipsis>
                         </slot>
                         <slot
@@ -1019,10 +1019,10 @@ function onPaginationChange(page: number, pageSize: number) {
                           name="bodyCell"
                           :column="column"
                           :record="record"
-                          :text="record[column.dataIndex]"
+                          :text="record[column.dataIndex as string]"
                           :index="rowIndex"
                         >
-                          {{ record[column.dataIndex] }}
+                          {{ record[column.dataIndex as string] }}
                         </slot>
                       </td>
                     </tr>
@@ -1112,7 +1112,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       :colstart="column.colStart"
                       :colend="column.colEnd"
                       :title="column.ellipsis && xScrollable ? column.title : undefined"
-                      @mouseenter="column.sorter ? onEnterSorter(column.dataIndex) : () => false"
+                      @mouseenter="column.sorter ? onEnterSorter(column.dataIndex as string) : () => false"
                       @mouseleave="column.sorter ? onLeaveSorter() : () => false"
                       @click="column.sorter ? onSorter(column) : () => false"
                     >
@@ -1277,11 +1277,11 @@ function onPaginationChange(page: number, pageSize: number) {
                           name="bodyCell"
                           :column="column"
                           :record="record"
-                          :text="record[column.dataIndex]"
+                          :text="record[column.dataIndex as string]"
                           :index="rowIndex"
                         >
                           <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
-                            {{ record[column.dataIndex] }}
+                            {{ record[column.dataIndex as string] }}
                           </Ellipsis>
                         </slot>
                         <slot
@@ -1289,10 +1289,10 @@ function onPaginationChange(page: number, pageSize: number) {
                           name="bodyCell"
                           :column="column"
                           :record="record"
-                          :text="record[column.dataIndex]"
+                          :text="record[column.dataIndex as string]"
                           :index="rowIndex"
                         >
-                          {{ record[column.dataIndex] }}
+                          {{ record[column.dataIndex as string] }}
                         </slot>
                       </td>
                     </tr>
