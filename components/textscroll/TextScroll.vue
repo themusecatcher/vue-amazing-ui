@@ -18,7 +18,8 @@ export interface Props {
   gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的间距，单位 px
   speed?: number // 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效
   vertical?: boolean // 是否垂直滚动
-  verticalInterval?: number // 垂直文字滚动时间间隔，单位 ms，垂直滚动时生效
+  duration?: number // 垂直滚动过渡持续时间，单位 ms，垂直滚动时生效
+  interval?: number // 垂直文字滚动时间间隔，单位 ms，垂直滚动时生效
   pauseOnMouseEnter?: boolean // 鼠标移入是否暂停滚动
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -32,7 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
   gap: 20,
   speed: 48,
   vertical: false,
-  verticalInterval: 3000,
+  duration: 1000,
+  interval: 3000,
   pauseOnMouseEnter: true
 })
 const horizontalRef = ref() // 水平滚动 DOM 引用
@@ -41,10 +43,10 @@ const verticalRef = ref() // 垂直滚动 DOM 引用
 const groupRef = ref() // 水平滚动内容 DOM 引用
 const groupWidth = ref<number>(0) // 水平滚动内容宽度
 const playState = ref<'paused' | 'running'>('paused') // 水平滚动动画执行状态
-const reset = ref(true) // 重置水平滚动动画状态
+const reset = ref<boolean>(true) // 重置水平滚动动画状态
 const activeIndex = ref(0) // 垂直滚动当前索引
 const verticalMoveRaf = ref() // 垂直滚动定时器引用标识
-const origin = ref(true) // 垂直滚动初始状态
+const originVertical = ref<boolean>(true) // 垂直滚动初始状态
 const emit = defineEmits(['click'])
 const scrollItems = ref<Item[]>([])
 const itemsAmount = computed(() => {
@@ -67,7 +69,7 @@ const itemWidth = computed(() => {
   // 水平滚动单条文字宽度
   return parseFloat((horizontalWrapWidth.value / displayAmount.value).toFixed(2))
 })
-const duration = computed(() => {
+const horizontalDuration = computed(() => {
   return groupWidth.value / props.speed
 })
 watch(
@@ -76,7 +78,11 @@ watch(
     if (props.single) {
       scrollItems.value = [props.items] as Item[]
     } else {
-      scrollItems.value = [...(props.items as Item[])]
+      if (props.vertical && (props.items as Item[]).length === 1) {
+        scrollItems.value = [...props.items as Item[], ...props.items as Item[]]
+      } else {
+        scrollItems.value = [...(props.items as Item[])]
+      }
     }
   },
   {
@@ -87,7 +93,7 @@ watch(scrollItems, () => {
   resetMove()
 })
 watch(
-  () => [props.vertical, props.verticalInterval],
+  () => [props.vertical, props.interval],
   () => {
     initScroll()
   },
@@ -96,14 +102,14 @@ watch(
     flush: 'post'
   }
 )
-useResizeObserver([horizontalRef, verticalRef], () => {
+useResizeObserver([horizontalRef, groupRef, verticalRef], () => {
   initScroll()
 })
 function initScroll() {
   if (!props.vertical) {
     getScrollSize()
   } else {
-    origin.value = true
+    originVertical.value = true
   }
   startMove() // 开始滚动
 }
@@ -128,7 +134,7 @@ function onAnimationIteration() {
 function startMove() {
   if (props.vertical) {
     if (itemsAmount.value > 1) {
-      verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
+      reset.value = false
       verticalMove() // 垂直滚动
     }
   } else {
@@ -142,6 +148,7 @@ function startMove() {
 // 滚动暂停
 function stopMove() {
   if (props.vertical) {
+    originVertical.value = false
     verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
   } else {
     playState.value = 'paused'
@@ -160,18 +167,18 @@ function resetMove() {
     startMove()
   })
 }
-
 function verticalMove() {
   verticalMoveRaf.value = rafTimeout(
     () => {
-      if (origin.value) {
-        origin.value = false
+      if (originVertical.value) {
+        originVertical.value = false
       }
       activeIndex.value = (activeIndex.value + 1) % itemsAmount.value
       verticalMove()
     },
-    origin.value ? props.verticalInterval : props.verticalInterval + 1000
+    originVertical.value ? props.interval : props.interval + props.duration
   )
+  
 }
 function onClick(item: Item) {
   emit('click', item)
@@ -195,7 +202,7 @@ defineExpose({
         --scroll-href-hover-color: ${hrefHoverColor};
         --scroll-item-gap: ${gap}px;
         --scroll-play-state: ${playState};
-        --scroll-duration: ${duration}s;
+        --scroll-duration: ${horizontalDuration}s;
         --scroll-delay: 0s;
         --scroll-iteration-count: infinite;
       `
@@ -247,11 +254,26 @@ defineExpose({
     class="m-scroll-vertical"
     :style="[
       scrollBoardStyle,
-      `--scroll-shadow-color: #d3d3d3; --scroll-bg-color: #fff; --scroll-href-hover-color: ${hrefHoverColor}; --enter-move: ${height}px; --leave-move: ${-height}px; --tex-gap: ${gap}px;`
+      `
+        --scroll-shadow-color: #d3d3d3;
+        --scroll-bg-color: #fff;
+        --scroll-href-hover-color: ${hrefHoverColor};
+        --scroll-duration: ${duration}ms;
+        --scroll-timing-function: ease;
+        --scroll-scale: 0.5;
+        --scroll-item-padding: ${gap}px;
+      `
     ]"
+    @mouseenter="pauseOnMouseEnter ? stopMove() : () => false"
+    @mouseleave="pauseOnMouseEnter ? startMove() : () => false"
   >
     <TransitionGroup name="slide">
-      <div class="scroll-item-wrap" v-for="(item, index) in scrollItems" :key="index" v-show="activeIndex === index">
+      <div
+        class="scroll-item-wrap"
+        v-for="(item, index) in scrollItems"
+        :key="index"
+        v-show="activeIndex === index"
+      >
         <component
           :is="item.href ? 'a' : 'div'"
           class="scroll-item"
@@ -260,8 +282,6 @@ defineExpose({
           :title="item.title"
           :href="item.href"
           :target="item.target"
-          @mouseenter="pauseOnMouseEnter ? stopMove() : () => false"
-          @mouseleave="pauseOnMouseEnter ? startMove() : () => false"
           @click="onClick(item)"
         >
           {{ item.title }}
@@ -320,14 +340,14 @@ defineExpose({
 // 垂直滚动
 .slide-enter-active,
 .slide-leave-active {
-  transition: all 1s ease;
+  transition: all var(--scroll-duration) var(--scroll-timing-function);
 }
 .slide-enter-from {
-  transform: translateY(var(--enter-move)) scale(0.5);
+  transform: translateY(100%) scale(var(--scroll-scale));
   opacity: 0;
 }
 .slide-leave-to {
-  transform: translateY(var(--leave-move)) scale(0.5);
+  transform: translateY(-100%) scale(var(--scroll-scale));
   opacity: 0;
 }
 .m-scroll-vertical {
@@ -344,7 +364,7 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 var(--tex-gap);
+    padding: 0 var(--scroll-item-padding);
     .scroll-item {
       font-size: 16px;
       font-weight: 400;

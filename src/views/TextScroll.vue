@@ -3,27 +3,32 @@ import { ref, reactive } from 'vue'
 const scrollItems = ref<any[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   }
 ])
 const singleItem = {
   title: '请用一只玫瑰纪念我 🌹',
-  href: 'https://blog.csdn.net/Dandrose?type=blog'
+  href: 'https://blog.csdn.net/Dandrose?type=blog',
+  target: '_blank'
 }
 const textScroll = ref()
 const disabled = ref(true)
@@ -63,14 +68,6 @@ const state = reactive({
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">水平文字滚动</h2>
     <TextScroll :items="scrollItems" @click="onClick" />
-    <h2 class="mt30 mb10">单条文字滚动</h2>
-    <TextScroll
-      :items="singleItem"
-      single
-      :width="280"
-      :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
-      @click="onClick"
-    />
     <h2 class="mt30 mb10">垂直文字滚动</h2>
     <TextScroll
       style="background-color: #e6f4ff"
@@ -79,17 +76,46 @@ const state = reactive({
       vertical
       @click="onClick"
     />
-    <h2 class="mt30 mb10">自定义链接悬浮样式</h2>
-    <TextScroll :items="scrollItems" href-hover-color="#ff6900" @click="onClick" />
+    <h2 class="mt30 mb10">单条文字滚动</h2>
+    <Flex vertical>
+      <TextScroll
+        :items="singleItem"
+        single
+        :width="280"
+        :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
+        @click="onClick"
+      />
+      <TextScroll
+        :items="[singleItem]"
+        vertical
+        :width="300"
+        :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
+        @click="onClick"
+      />
+    </Flex>
     <h2 class="mt30 mb10">自定义样式</h2>
     <TextScroll
       style="background-color: #e6f4ff; border-radius: 12px"
       :items="scrollItems"
-      :item-style="{ fontSize: '28px', color: '#FF9800' }"
-      :gap="30"
+      :item-style="{ fontSize: '30px', fontWeight: 500, color: '#FF9800' }"
+      width="80%"
       :height="60"
       @click="onClick"
     />
+    <h2 class="mt30 mb10">自定义链接悬浮样式</h2>
+    <TextScroll :items="scrollItems" href-hover-color="#ff6900" @click="onClick" />
+    <h2 class="mt30 mb10">自定义展示条数和间距</h2>
+    <TextScroll
+      :items="scrollItems"
+      :amount="3"
+      :gap="30"
+      @click="onClick"
+    />
+    <h2 class="mt30 mb10">自定义滚动速度</h2>
+    <Flex vertical>
+      <TextScroll :items="scrollItems" :speed="72" @click="onClick" />
+      <TextScroll :items="scrollItems" vertical :interval="1000" @click="onClick" />
+    </Flex>
     <h2 class="mt30 mb10">使用 Methods</h2>
     <Flex vertical>
       <Space vertical>
@@ -105,8 +131,6 @@ const state = reactive({
       </Space>
       <TextScroll ref="textScroll" :vertical="vertical" :items="scrollItems" @click="onClick" />
     </Flex>
-    <h2 class="mt30 mb10">自定义滚动速度</h2>
-    <TextScroll :items="scrollItems" :speed="72" @click="onClick" />
     <h2 class="mt30 mb10">文字滚动配置器</h2>
     <Row :gutter="[24, 12]">
       <Col :span="6">
