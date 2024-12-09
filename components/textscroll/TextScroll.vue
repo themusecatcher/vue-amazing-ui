@@ -8,8 +8,8 @@ export interface Item {
   target?: '_self' | '_blank' // 跳转链接打开方式，href 存在时生效
 }
 export interface Props {
-  items?: Item[] | Item // 滚动文字数组，single 为 true 时，类型为 Item；多条文字滚动时，数组长度必须大于等于 amount 才能滚动
-  single?: boolean // 是否启用单条文字滚动效果，只支持水平文字滚动，为 true 时，amount 自动设为 1
+  items?: Item[] | Item // 滚动文字数组，single 为 true 时，类型为 Item；多条文字水平滚动时，数组长度必须大于等于 amount 才能滚动
+  single?: boolean // 是否启用单条文字滚动效果，水平滚动时生效；为 true 时，amount 自动设为 1
   width?: number | string // 滚动区域宽度，单位 px
   height?: number // 滚动区域高度，单位 px
   itemStyle?: CSSProperties // 滚动文字样式
@@ -85,9 +85,6 @@ watch(
 )
 watch(scrollItems, () => {
   resetMove()
-  // nextTick(() => {
-  //   startMove()
-  // })
 })
 watch(
   () => [props.vertical, props.verticalInterval],
@@ -95,7 +92,7 @@ watch(
     initScroll()
   },
   {
-    deep: true, // 强制转成深层侦听器
+    deep: true,
     flush: 'post'
   }
 )
@@ -119,6 +116,7 @@ function getScrollSize() {
 function resetScrollState() {
   playState.value = 'paused'
   nextTick(() => {
+    void horizontalRef.value?.offsetTop // 强制浏览器触发重排
     playState.value = 'running'
   })
 }

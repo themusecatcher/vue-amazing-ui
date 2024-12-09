@@ -84,7 +84,7 @@ const scrollItems = ref<any[]>([
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年',
+    title: '《麦田里的守望者》首次出版于1951年',
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
@@ -169,7 +169,7 @@ const scrollItems = ref<any[]>([
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年',
+    title: '《麦田里的守望者》首次出版于1951年',
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
@@ -217,7 +217,7 @@ const scrollItems = ref<any[]>([
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年',
+    title: '《麦田里的守望者》首次出版于1951年',
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
@@ -266,7 +266,7 @@ const scrollItems = ref<any[]>([
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年',
+    title: '《麦田里的守望者》首次出版于1951年',
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
@@ -328,7 +328,7 @@ const scrollItems = ref<any[]>([
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年',
+    title: '《麦田里的守望者》首次出版于1951年',
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
@@ -398,7 +398,7 @@ const scrollItems = ref<any[]>([
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年',
+    title: '《麦田里的守望者》首次出版于1951年',
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
@@ -519,7 +519,7 @@ const scrollItems = ref<any[]>([
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
-    title: '首次出版于1951年',
+    title: '《麦田里的守望者》首次出版于1951年',
     href: 'https://blog.csdn.net/Dandrose?type=blog'
   },
   {
@@ -655,8 +655,8 @@ const state = reactive({
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-items | 滚动文字数组，`single: true` 时，类型为 `Text`；多条文字滚动时，数组长度必须大于等于 `amount` 才能滚动 | [Item](#item-type)[] &#124; [Item](#item-type) | []
-single | 是否启用单条文字滚动效果，只支持水平文字滚动，为 `true` `时，amount` 自动设为 `1` | boolean | false
+items | 滚动文字数组，`single` 为 `true` 时，类型为 `Item`；多条文字水平滚动时，数组长度必须大于等于 `amount` 才能滚动 | [Item](#item-type)[] &#124; [Item](#item-type) | []
+single | 是否启用单条文字滚动效果，水平滚动时生效，为 `true` 时，`amount` 自动设为 1 | boolean | false
 width | 滚动区域宽度，单位 `px` | number &#124; string | '100%'
 height | 滚动区域高度，单位 `px` | number | 50
 itemStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
