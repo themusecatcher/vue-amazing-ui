@@ -2541,9 +2541,9 @@ const dataSourceFixHeaderAndColumn = ref(data)
 <br/>
 
 <Table
-  sticky
   :columns="columnsFixHeaderAndScrollbar"
   :data-source="dataSourceFixHeaderAndScrollbar"
+  sticky
   :scroll="{ x: 1500 }"
 >
   <template #bodyCell="{ column }">
@@ -2589,9 +2589,9 @@ const dataSourceFixHeaderAndScrollbar = ref(data)
 </script>
 <template>
   <Table
-    sticky
     :columns="columnsFixHeaderAndScrollbar"
     :data-source="dataSourceFixHeaderAndScrollbar"
+    sticky
     :scroll="{ x: 1500 }"
   >
     <template #bodyCell="{ column }">
@@ -2869,7 +2869,7 @@ expandColumnWidth | 展开列的宽度 | string &#124; number | 48
 expandCell | 自定义展开按钮 | slot | undefined
 expandedRowRender | 自定义额外的展开行内容 | slot | undefined
 expandFixed | 是否固定展开列 | boolean | false
-expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性 | (string \| number)[] | []
+expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性；需与 `dataSource` 数据中的 `key` 配合使用 | (string \| number)[] | []
 expandRowByClick | 点击行是否展开 | boolean | false
 
 ### Column Type
@@ -2881,8 +2881,8 @@ align? | 列文本的对齐方式 | 'left' &#124; 'center' &#124; 'right' | unde
 width? | 列宽度，单位 `px` | string &#124; number | undefined
 className? | 自定义列的类名 | string | undefined
 colSpan? | 表头列合并,设置为 `0` 时，不渲染 | number | undefined
-dataIndex | 列数据字符索引 | string | undefined
-key? | 列标识，主要与 `expandedRowKeys` 配合使用控制展开行 | string | undefined
+dataIndex | 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略 | string | undefined
+key? | 自定义列标识 | string | undefined
 ellipsis? | 超过宽度是否自动省略 | boolean | undefined
 ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于单独配置某列文本省略 | object | undefined
 fixed? | 列是否固定 | 'left' &#124; 'right' | undefined
