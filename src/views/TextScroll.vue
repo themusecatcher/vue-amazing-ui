@@ -42,7 +42,7 @@ function handleStop() {
 }
 function handleReset() {
   textScroll.value.reset()
-  disabled.value = false
+  disabled.value = true
 }
 const state = reactive({
   single: false,
