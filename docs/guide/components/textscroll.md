@@ -656,13 +656,13 @@ const state = reactive({
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
 items | 滚动文字数组，`single` 为 `true` 时，类型为 `Item`；多条文字水平滚动时，数组长度必须大于等于 `amount` 才能滚动 | [Item](#item-type)[] &#124; [Item](#item-type) | []
-single | 是否启用单条文字滚动效果，水平滚动时生效，为 `true` 时，`amount` 自动设为 1 | boolean | false
-width | 滚动区域宽度，单位 `px` | number &#124; string | '100%'
+single | 是否启用单条文字滚动效果，水平滚动时生效，为 `true` 时，`amount` 自动设为 `1` | boolean | false
+width | 滚动区域宽度，单位 `px` | string &#124; number | '100%'
 height | 滚动区域高度，单位 `px` | number | 50
 itemStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 hrefHoverColor | 链接文字鼠标悬浮颜色；仅当 `href` 存在时生效 | string | '#1677ff'
 amount | 滚动区域展示条数，水平滚动时生效 | number | 4
-gap | 水平滚动文字各列间距或垂直滚动文字两边的边距，单位 `px` |  number | 20
+gap | 水平滚动文字各列间距或垂直滚动文字两边的间距，单位 `px` |  number | 20
 speed | 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效 | number | 48
 vertical | 是否垂直滚动 | boolean | false
 verticalInterval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000

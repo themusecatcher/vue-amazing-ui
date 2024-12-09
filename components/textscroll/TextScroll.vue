@@ -15,7 +15,7 @@ export interface Props {
   itemStyle?: CSSProperties // 滚动文字样式
   hrefHoverColor?: string // 链接文字鼠标悬浮颜色；仅当 href 存在时生效
   amount?: number // 滚动区域展示条数，水平滚动时生效
-  gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的边距，单位 px
+  gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的间距，单位 px
   speed?: number // 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效
   vertical?: boolean // 是否垂直滚动
   verticalInterval?: number // 垂直文字滚动时间间隔，单位 ms，垂直滚动时生效
