@@ -44,7 +44,7 @@ const groupRef = ref() // 水平滚动内容 DOM 引用
 const groupWidth = ref<number>(0) // 水平滚动内容宽度
 const playState = ref<'paused' | 'running'>('paused') // 水平滚动动画执行状态
 const reset = ref<boolean>(true) // 重置水平滚动动画状态
-const activeIndex = ref(0) // 垂直滚动当前索引
+const activeIndex = ref<number>(0) // 垂直滚动当前索引
 const verticalMoveRaf = ref() // 垂直滚动定时器引用标识
 const originVertical = ref<boolean>(true) // 垂直滚动初始状态
 const emit = defineEmits(['click'])
@@ -52,12 +52,14 @@ const scrollItems = ref<Item[]>([])
 const itemsAmount = computed(() => {
   return scrollItems.value.length
 })
+// 文字滚动区域尺寸样式
 const scrollBoardStyle = computed(() => {
   return {
     width: typeof props.width === 'number' ? `${props.width}px` : props.width,
     height: `${props.height}px`
   }
 })
+// 水平滚动时展示条数
 const displayAmount = computed(() => {
   if (props.single) {
     return 1
@@ -69,7 +71,8 @@ const itemWidth = computed(() => {
   // 水平滚动单条文字宽度
   return parseFloat((horizontalWrapWidth.value / displayAmount.value).toFixed(2))
 })
-const horizontalDuration = computed(() => {
+const animationDuration = computed(() => {
+  // 水平滚动动画持续时间
   return groupWidth.value / props.speed
 })
 watch(
@@ -79,21 +82,22 @@ watch(
       scrollItems.value = [props.items] as Item[]
     } else {
       if (props.vertical && (props.items as Item[]).length === 1) {
-        scrollItems.value = [...props.items as Item[], ...props.items as Item[]]
+        scrollItems.value = [...(props.items as Item[]), ...(props.items as Item[])]
       } else {
         scrollItems.value = [...(props.items as Item[])]
       }
     }
   },
   {
-    immediate: true
+    immediate: true,
+    deep: true // 因为 props.items 是引用类型
   }
 )
 watch(scrollItems, () => {
   resetMove()
 })
 watch(
-  () => [props.vertical, props.interval],
+  () => [props.vertical, props.duration, props.interval],
   () => {
     initScroll()
   },
@@ -106,10 +110,12 @@ useResizeObserver([horizontalRef, groupRef, verticalRef], () => {
   initScroll()
 })
 function initScroll() {
+  verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
+  if (!originVertical.value) {
+    originVertical.value = true
+  }
   if (!props.vertical) {
     getScrollSize()
-  } else {
-    originVertical.value = true
   }
   startMove() // 开始滚动
 }
@@ -130,11 +136,25 @@ function resetScrollState() {
 function onAnimationIteration() {
   resetScrollState()
 }
+function verticalMove() {
+  verticalMoveRaf.value = rafTimeout(
+    () => {
+      if (originVertical.value) {
+        originVertical.value = false
+      }
+      activeIndex.value = (activeIndex.value + 1) % itemsAmount.value
+    },
+    originVertical.value ? props.interval : props.interval + props.duration,
+    true
+  )
+}
+function onClick(item: Item) {
+  emit('click', item)
+}
 // 滚动开始
 function startMove() {
   if (props.vertical) {
-    if (itemsAmount.value > 1) {
-      reset.value = false
+    if (itemsAmount.value >= 1) {
       verticalMove() // 垂直滚动
     }
   } else {
@@ -148,7 +168,7 @@ function startMove() {
 // 滚动暂停
 function stopMove() {
   if (props.vertical) {
-    originVertical.value = false
+    originVertical.value = true
     verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
   } else {
     playState.value = 'paused'
@@ -157,31 +177,22 @@ function stopMove() {
 // 滚动重置
 function resetMove() {
   if (props.vertical) {
-    activeIndex.value = 0
+    verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
+    if (activeIndex.value !== 0) {
+      activeIndex.value = 0
+      originVertical.value = false
+    } else {
+      originVertical.value = true
+    }
+    startMove()
   } else {
     playState.value = 'paused'
     reset.value = true
+    nextTick(() => {
+      void horizontalRef.value?.offsetTop
+      startMove()
+    })
   }
-  nextTick(() => {
-    void horizontalRef.value?.offsetTop
-    startMove()
-  })
-}
-function verticalMove() {
-  verticalMoveRaf.value = rafTimeout(
-    () => {
-      if (originVertical.value) {
-        originVertical.value = false
-      }
-      activeIndex.value = (activeIndex.value + 1) % itemsAmount.value
-      verticalMove()
-    },
-    originVertical.value ? props.interval : props.interval + props.duration
-  )
-  
-}
-function onClick(item: Item) {
-  emit('click', item)
 }
 defineExpose({
   start: startMove,
@@ -202,7 +213,7 @@ defineExpose({
         --scroll-href-hover-color: ${hrefHoverColor};
         --scroll-item-gap: ${gap}px;
         --scroll-play-state: ${playState};
-        --scroll-duration: ${horizontalDuration}s;
+        --scroll-duration: ${animationDuration}s;
         --scroll-delay: 0s;
         --scroll-iteration-count: infinite;
       `
@@ -268,12 +279,7 @@ defineExpose({
     @mouseleave="pauseOnMouseEnter ? startMove() : () => false"
   >
     <TransitionGroup name="slide">
-      <div
-        class="scroll-item-wrap"
-        v-for="(item, index) in scrollItems"
-        :key="index"
-        v-show="activeIndex === index"
-      >
+      <div class="scroll-item-wrap" v-for="(item, index) in scrollItems" :key="index" v-show="activeIndex === index">
         <component
           :is="item.href ? 'a' : 'div'"
           class="scroll-item"
@@ -299,11 +305,8 @@ defineExpose({
   border-radius: 6px;
   background-color: var(--scroll-bg-color);
   .scroll-items-group {
-    min-width: 100%;
-    flex: 0 0 auto;
     z-index: 1;
     display: flex;
-    flex-direction: row;
     align-items: center;
     animation: horizontalScroll var(--scroll-duration) linear var(--scroll-delay) var(--scroll-iteration-count);
     animation-play-state: var(--scroll-play-state);
@@ -351,8 +354,8 @@ defineExpose({
   opacity: 0;
 }
 .m-scroll-vertical {
-  position: relative;
   overflow: hidden;
+  position: relative;
   box-shadow: 0px 0px 5px var(--scroll-shadow-color);
   border-radius: 6px;
   background-color: var(--scroll-bg-color);

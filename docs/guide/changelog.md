@@ -7,6 +7,10 @@
 - 重构 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件，删除 `width` `height` 属性；新增选中动画效果
 - 重构 [单选框 Radio](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html) 组件，删除 `width` `height` 属性；新增选中动画效果
 
+## 1.10.4 <Tag color="volcano" size="small">2024-12-10</Tag>
+
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，将 `verticalInterval` 属性重命名为 `interval`；新增 `duration` 属性；用于控制垂直滚动过渡持续时间；代码逻辑优化
+
 ## 1.10.3 <Tag color="volcano" size="small">2024-12-09</Tag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `sticky` 属性，支持：对于长表格设置跟随页面固定表头和水平滚动条，方便查看表头和使用滚动条
