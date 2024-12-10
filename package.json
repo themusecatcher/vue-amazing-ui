@@ -78,7 +78,7 @@
     "vite": "^6.0.2",
     "vite-plugin-dts": "^4.3.0",
     "vitepress": "^1.5.0",
-    "vue-amazing-ui": "1.10.2",
+    "vue-amazing-ui": "1.10.4",
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.1.10"
   },
