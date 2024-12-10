@@ -10,35 +10,41 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const scrollItems = ref<any[]>([
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   }
 ])
-const singleItem = {
+const singleItem: TextScrollItem = {
   title: '请用一只玫瑰纪念我 🌹',
-  href: 'https://blog.csdn.net/Dandrose?type=blog'
+  href: 'https://blog.csdn.net/Dandrose?type=blog',
+  target: '_blank'
 }
 const textScroll = ref()
 const disabled = ref(true)
 const vertical = ref(false)
-function onClick(item: any) {
+function onClick(item: TextScrollItem) {
   // 获取点击的 item
   console.log('item', item)
 }
@@ -65,7 +71,8 @@ const state = reactive({
   gap: 20,
   speed: 48,
   vertical: false,
-  verticalInterval: 3000
+  duration: 1000,
+  interval: 3000
 })
 </script>
 
@@ -78,71 +85,39 @@ const state = reactive({
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollItems = ref<any[]>([
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   }
 ])
-function onClick(item: any) {
+function onClick(item: TextScrollItem) {
   // 获取点击的 item
   console.log('item', item)
 }
 </script>
 <template>
   <TextScroll :items="scrollItems" @click="onClick" />
-</template>
-```
-
-:::
-
-## 单条文字滚动
-
-<TextScroll
-  :items="singleItem"
-  single
-  :width="280"
-  :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
-  @click="onClick"
-/>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const singleItem = {
-  title: '请用一只玫瑰纪念我 🌹',
-  href: 'https://blog.csdn.net/Dandrose?type=blog'
-}
-function onClick(item: any) {
-  // 获取点击的 item
-  console.log('item', item)
-}
-</script>
-<template>
-  <TextScroll
-    :items="singleItem"
-    single
-    :width="280"
-    :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
-    @click="onClick"
-  />
 </template>
 ```
 
@@ -163,28 +138,33 @@ function onClick(item: any) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollItems = ref<any[]>([
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   }
 ])
-function onClick(item: any) {
+function onClick(item: TextScrollItem) {
   // 获取点击的 item
   console.log('item', item)
 }
@@ -202,6 +182,114 @@ function onClick(item: any) {
 
 :::
 
+## 单条文字滚动
+
+<Flex vertical>
+  <TextScroll
+    :items="singleItem"
+    single
+    :width="280"
+    :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
+    @click="onClick"
+  />
+  <TextScroll
+    :items="[singleItem]"
+    vertical
+    :width="300"
+    :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
+    @click="onClick"
+  />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { TextScrollItem } from 'vue-amazing-ui'
+const singleItem: TextScrollItem = {
+  title: '请用一只玫瑰纪念我 🌹',
+  href: 'https://blog.csdn.net/Dandrose?type=blog'
+}
+function onClick(item: TextScrollItem) {
+  // 获取点击的 item
+  console.log('item', item)
+}
+</script>
+<template>
+  <TextScroll
+    :items="singleItem"
+    single
+    :width="280"
+    :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
+    @click="onClick"
+  />
+</template>
+```
+
+:::
+
+## 自定义样式
+
+<TextScroll
+  style="background-color: #e6f4ff; border-radius: 12px"
+  :items="scrollItems"
+  :item-style="{ fontSize: '30px', fontWeight: 500, color: '#FF9800' }"
+  width="80%"
+  :height="60"
+  @click="onClick"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
+  {
+    title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
+  },
+  {
+    title: '《麦田里的守望者》首次出版于1951年',
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
+  },
+  {
+    title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
+  },
+  {
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
+  },
+  {
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
+  }
+])
+function onClick(item: TextScrollItem) {
+  // 获取点击的 item
+  console.log('item', item)
+}
+</script>
+<template>
+  <TextScroll
+    style="background-color: #e6f4ff; border-radius: 12px"
+    :items="scrollItems"
+    :item-style="{ fontSize: '30px', fontWeight: 500, color: '#FF9800' }"
+    width="80%"
+    :height="60"
+    @click="onClick"
+  />
+</template>
+```
+
+:::
+
 ## 自定义链接悬浮样式
 
 <TextScroll :items="scrollItems" href-hover-color="#ff6900" @click="onClick" />
@@ -211,28 +299,33 @@ function onClick(item: any) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollItems = ref<any[]>([
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   }
 ])
-function onClick(item: any) {
+function onClick(item: TextScrollItem) {
   // 获取点击的 item
   console.log('item', item)
 }
@@ -244,14 +337,12 @@ function onClick(item: any) {
 
 :::
 
-## 自定义样式
+## 自定义展示条数和间距
 
 <TextScroll
-  style="background-color: #e6f4ff; border-radius: 12px"
   :items="scrollItems"
-  :item-style="{ fontSize: '28px', color: '#FF9800' }"
   :amount="3"
-  :height="60"
+  :gap="30"
   @click="onClick"
 />
 
@@ -260,41 +351,97 @@ function onClick(item: any) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollItems = ref<any[]>([
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   }
 ])
-function onClick(item: any) {
+function onClick(item: TextScrollItem) {
   // 获取点击的 item
   console.log('item', item)
 }
 </script>
 <template>
   <TextScroll
-    style="background-color: #e6f4ff; border-radius: 12px"
     :items="scrollItems"
-    :item-style="{ fontSize: '28px', color: '#FF9800' }"
     :amount="3"
-    :height="60"
+    :gap="30"
     @click="onClick"
   />
+</template>
+```
+
+:::
+
+## 自定义滚动速度
+
+<Flex vertical>
+  <TextScroll :items="scrollItems" :speed="72" @click="onClick" />
+  <TextScroll :items="scrollItems" vertical :duration="800" :interval="2000" @click="onClick" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
+  {
+    title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
+  },
+  {
+    title: '《麦田里的守望者》首次出版于1951年',
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
+  },
+  {
+    title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
+  },
+  {
+    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
+  },
+  {
+    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
+  }
+])
+function onClick(item: TextScrollItem) {
+  // 获取点击的 item
+  console.log('item', item)
+}
+</script>
+<template>
+  <Flex vertical>
+    <TextScroll :items="scrollItems" :speed="72" @click="onClick" />
+    <TextScroll :items="scrollItems" vertical :duration="800" :interval="2000" @click="onClick" />
+  </Flex>
 </template>
 ```
 
@@ -322,25 +469,30 @@ function onClick(item: any) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const scrollItems = ref<any[]>([
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   }
 ])
 const textScroll = ref()
@@ -358,7 +510,7 @@ function handleReset() {
   textScroll.value.reset()
   disabled.value = true
 }
-function onClick(item: any) {
+function onClick(item: TextScrollItem) {
   // 获取点击的 item
   console.log('item', item)
 }
@@ -378,48 +530,6 @@ function onClick(item: any) {
     </Space>
     <TextScroll ref="textScroll" :vertical="vertical" :items="scrollItems" @click="onClick" />
   </Flex>
-</template>
-```
-
-:::
-
-## 自定义滚动速度
-
-<TextScroll :items="scrollItems" :speed="72" @click="onClick" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const scrollItems = ref<any[]>([
-  {
-    title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
-  },
-  {
-    title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
-  },
-  {
-    title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
-  },
-  {
-    title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
-  },
-  {
-    title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
-  }
-])
-function onClick(item: any) {
-  // 获取点击的 item
-  console.log('item', item)
-}
-</script>
-<template>
-  <TextScroll :items="scrollItems" :speed="72" @click="onClick" />
 </template>
 ```
 
@@ -484,17 +594,23 @@ function onClick(item: any) {
   </Col>
   <Col :span="6">
     <Flex gap="small" vertical>
-      verticalInterval:
-      <Slider v-model:value="state.verticalInterval" :min="1000" :step="100" :max="10000" />
+      duration:
+      <Slider v-model:value="state.duration" :min="100" :step="100" :max="3000" />
+    </Flex>
+  </Col>
+  <Col :span="6">
+    <Flex gap="small" vertical>
+      interval:
+      <Slider v-model:value="state.interval" :min="1000" :step="100" :max="10000" />
     </Flex>
   </Col>
 </Row>
 <TextScroll
   class="mt30"
+  :style="`background-color: ${state.backgroundColor}`"
   :items="scrollItems"
   :single="state.single"
   :height="state.height"
-  :style="`background-color: ${state.backgroundColor}`"
   :item-style="{
     fontSize: state.fontSize + 'px',
     fontWeight: state.fontWeight,
@@ -504,7 +620,8 @@ function onClick(item: any) {
   :gap="state.gap"
   :speed="state.speed"
   :vertical="state.vertical"
-  :vertical-interval="state.verticalInterval"
+  :duration="state.duration"
+  :interval="state.interval"
   @click="onClick"
 />
 
@@ -513,28 +630,33 @@ function onClick(item: any) {
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const scrollItems = ref<any[]>([
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '塞林格将故事的起止局限于16岁的中学生霍尔顿·考尔菲德从离开学校到纽约游荡的三天时间内'
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog'
+    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    target: '_blank'
   }
 ])
-function onClick(item: any) {
+function onClick(item: TextScrollItem) {
   // 获取点击的 item
   costringle.log('item', item)
 }
@@ -549,7 +671,8 @@ const state = reactive({
   gap: 20,
   speed: 48,
   vertical: false,
-  verticalInterval: 3000
+  duration: 1000,
+  interval: 3000
 })
 </script>
 <template>
@@ -610,17 +733,23 @@ const state = reactive({
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        verticalInterval:
-        <Slider v-model:value="state.verticalInterval" :min="1000" :step="100" :max="10000" />
+        duration:
+        <Slider v-model:value="state.duration" :min="100" :step="100" :max="3000" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        interval:
+        <Slider v-model:value="state.interval" :min="1000" :step="100" :max="10000" />
       </Flex>
     </Col>
   </Row>
   <TextScroll
     class="mt30"
+    :style="`background-color: ${state.backgroundColor}`"
     :items="scrollItems"
     :single="state.single"
     :height="state.height"
-    :style="`background-color: ${state.backgroundColor}`"
     :item-style="{
       fontSize: state.fontSize + 'px',
       fontWeight: state.fontWeight,
@@ -630,7 +759,8 @@ const state = reactive({
     :gap="state.gap"
     :speed="state.speed"
     :vertical="state.vertical"
-    :vertical-interval="state.verticalInterval"
+    :duration="state.duration"
+    :interval="state.interval"
     @click="onClick"
   />
 </template>
@@ -665,7 +795,8 @@ amount | 滚动区域展示条数，水平滚动时生效 | number | 4
 gap | 水平滚动文字各列间距或垂直滚动文字两边的间距，单位 `px` |  number | 20
 speed | 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效 | number | 48
 vertical | 是否垂直滚动 | boolean | false
-verticalInterval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000
+duration | 垂直滚动过渡持续时间，单位 `ms`，垂直滚动时生效 | number | 1000
+interval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000
 pauseOnMouseEnter | 鼠标移入是否暂停滚动 | boolean | true
 
 ### Item Type

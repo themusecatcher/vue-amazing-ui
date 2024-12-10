@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const scrollItems = ref<any[]>([
+import type { TextScrollItem } from 'vue-amazing-ui'
+const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
     href: 'https://blog.csdn.net/Dandrose?type=blog',
@@ -25,7 +26,7 @@ const scrollItems = ref<any[]>([
     target: '_blank'
   }
 ])
-const singleItem = {
+const singleItem: TextScrollItem = {
   title: '请用一只玫瑰纪念我 🌹',
   href: 'https://blog.csdn.net/Dandrose?type=blog',
   target: '_blank'
@@ -33,7 +34,7 @@ const singleItem = {
 const textScroll = ref()
 const disabled = ref(true)
 const vertical = ref(false)
-function onClick(item: any) {
+function onClick(item: TextScrollItem) {
   // 获取点击的 item
   console.log('item', item)
 }
@@ -60,7 +61,8 @@ const state = reactive({
   gap: 20,
   speed: 48,
   vertical: false,
-  verticalInterval: 3000
+  duration: 1000,
+  interval: 3000
 })
 </script>
 <template>
@@ -102,19 +104,14 @@ const state = reactive({
       :height="60"
       @click="onClick"
     />
-    <h2 class="mt30 mb10">自定义链接悬浮样式</h2>
+    <h2 class="mt30 mb10">自定义链接悬浮色</h2>
     <TextScroll :items="scrollItems" href-hover-color="#ff6900" @click="onClick" />
     <h2 class="mt30 mb10">自定义展示条数和间距</h2>
-    <TextScroll
-      :items="scrollItems"
-      :amount="3"
-      :gap="30"
-      @click="onClick"
-    />
+    <TextScroll :items="scrollItems" :amount="3" :gap="30" @click="onClick" />
     <h2 class="mt30 mb10">自定义滚动速度</h2>
     <Flex vertical>
       <TextScroll :items="scrollItems" :speed="72" @click="onClick" />
-      <TextScroll :items="scrollItems" vertical :interval="1000" @click="onClick" />
+      <TextScroll :items="scrollItems" vertical :duration="800" :interval="2000" @click="onClick" />
     </Flex>
     <h2 class="mt30 mb10">使用 Methods</h2>
     <Flex vertical>
@@ -189,17 +186,23 @@ const state = reactive({
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          verticalInterval:
-          <Slider v-model:value="state.verticalInterval" :min="1000" :step="100" :max="10000" />
+          duration:
+          <Slider v-model:value="state.duration" :min="100" :step="100" :max="3000" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          interval:
+          <Slider v-model:value="state.interval" :min="1000" :step="100" :max="10000" />
         </Flex>
       </Col>
     </Row>
     <TextScroll
       class="mt30"
+      :style="`background-color: ${state.backgroundColor}`"
       :items="scrollItems"
       :single="state.single"
       :height="state.height"
-      :style="`background-color: ${state.backgroundColor}`"
       :item-style="{
         fontSize: state.fontSize + 'px',
         fontWeight: state.fontWeight,
@@ -209,7 +212,8 @@ const state = reactive({
       :gap="state.gap"
       :speed="state.speed"
       :vertical="state.vertical"
-      :vertical-interval="state.verticalInterval"
+      :duration="state.duration"
+      :interval="state.interval"
       @click="onClick"
     />
   </div>
