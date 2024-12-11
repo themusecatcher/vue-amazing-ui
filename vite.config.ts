@@ -24,7 +24,7 @@ export default defineConfig({
     vue(),
     dts({
       // outDir: 'dist', // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
-      tsconfigPath: './tsconfig.app.json',
+      tsconfigPath: './tsconfig.dts.json',
       insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
       cleanVueFileName: true // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
       // rollupTypes: true // 是否将发出的类型文件打包进单个文件，默认 false
@@ -74,9 +74,9 @@ export default defineConfig({
   },
   // 构建为库
   build: {
-    emptyOutDir: false, // 默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
+    // emptyOutDir: true, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
     lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
-      formats: f === 'iife' ? ['iife'] : ['es', 'umd'],
+      formats: ['es', 'cjs'],
       // __dirname 的值是 vite.config.ts 文件所在目录
       entry: resolve(__dirname, 'components', 'index.ts'),  // entry 是必需的，因为库不能使用HTML作为入口。
       name: 'VueAmazingUI', // 暴露的全局变量
@@ -89,7 +89,7 @@ export default defineConfig({
       ],
       // https://rollupjs.org/configuration-options/
       // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
-      external: f === 'iife' ? ['vue'] : ['vue', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/integrations/useQRCode', '@vueuse/core', 'qrcode'],
+      external: ['vue', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/integrations/useQRCode', '@vueuse/core', 'qrcode'],
       // 当创建 iife 或 umd 格式的 bundle 时，你需要通过 output.globals 选项提供全局变量名，以替换掉外部引入。
       output: {
         name: 'VueAmazingUI', // 对于输出格式为 iife | umd 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出
@@ -109,7 +109,6 @@ export default defineConfig({
         // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
         globals: {
           vue: 'Vue',
-          // 'vue-router': 'VueRouter', // 引入vue-router全局变量，否则router.push将无法使用
           'swiper/modules': 'SwiperModules',
           'swiper/vue': 'SwiperVue',
           '@vuepic/vue-datepicker': 'VueDatePicker',
