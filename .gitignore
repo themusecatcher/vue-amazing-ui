@@ -11,6 +11,8 @@ node_modules
 .DS_Store
 # components
 dist
+es
+lib
 *.mp4
 dist-ssr
 coverage
