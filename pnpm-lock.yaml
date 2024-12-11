@@ -23,9 +23,6 @@ importers:
       swiper:
         specifier: ^11.1.15
         version: 11.1.15
-      vue:
-        specifier: ^3.5.13
-        version: 3.5.13(typescript@5.6.3)
     devDependencies:
       '@ant-design/icons-vue':
         specifier: ^7.0.1
@@ -105,6 +102,9 @@ importers:
       vitepress:
         specifier: ^1.5.0
         version: 1.5.0(@algolia/client-search@5.15.0)(@types/node@22.10.1)(async-validator@4.2.5)(less@4.2.1)(postcss@8.4.49)(qrcode@1.5.4)(search-insights@2.17.2)(terser@5.36.0)(typescript@5.6.3)
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.13(typescript@5.6.3)
       vue-amazing-ui:
         specifier: 1.10.4
         version: 1.10.4(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
