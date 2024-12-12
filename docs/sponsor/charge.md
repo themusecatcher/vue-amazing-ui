@@ -13,7 +13,7 @@ import { useMediaQuery } from 'vue-amazing-ui'
 import WeChat from '/wechat.jpg'
 import Alipay from '/alipay.jpg'
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
-const sponsorText = {
+const sponsorItem = {
   title: '如果您觉得 Vue Amazing UI 有用，可以请作者喝杯茶表示支持，非常感谢 ❤️🙏❤️'
 }
 const sponsorOptions = ['WeChat', 'Alipay']
@@ -35,7 +35,7 @@ const QRCodes = [
 ## Sponsor
 
 <TextScroll
-  :scrollText="sponsorText"
+  :items="sponsorItem"
   single
   :height="54"
   :gap="10"
