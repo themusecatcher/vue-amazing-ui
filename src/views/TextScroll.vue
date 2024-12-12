@@ -99,8 +99,7 @@ const state = reactive({
     <TextScroll
       style="background-color: #e6f4ff; border-radius: 12px"
       :items="scrollItems"
-      :item-style="{ fontSize: '30px', fontWeight: 500, color: '#FF9800' }"
-      width="80%"
+      :item-style="{ fontSize: '20px', fontWeight: 500, color: '#FF9800' }"
       :height="60"
       @click="onClick"
     />
