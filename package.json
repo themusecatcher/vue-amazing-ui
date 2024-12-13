@@ -13,17 +13,16 @@
     "README.md",
     "README.zh-CN.md"
   ],
-  "main": "./dist/vue-amazing-ui.umd.cjs",
-  "module": "./dist/vue-amazing-ui.js",
-  "browser": "./dist/vue-amazing-ui.js",
-  "unpkg": "./dist/vue-amazing-ui.iife.js",
-  "types": "./dist/vue-amazing-ui.d.ts",
+  "main": "lib/index.cjs",
+  "module": "es/index.js",
+  "unpkg": "dist/vue-amazing-ui.js",
+  "jsdelivr": "dist/index.js",
+  "types": "es/index.d.ts",
   "exports": {
-    "./dist/vue-amazing-ui.css": "./dist/vue-amazing-ui.css",
     "./css": "./dist/vue-amazing-ui.css",
     ".": {
       "import": "./dist/vue-amazing-ui.js",
-      "require": "./dist/vue-amazing-ui.umd.cjs"
+      "require": "./dist/vue-amazing-ui.cjs"
     }
   },
   "scripts": {
@@ -34,10 +33,13 @@
     "pub": "sh scripts/publish.sh",
     "push": "sh scripts/push.sh",
     "build": "run-s format clean build:components",
+    "build:clean": "run-s clean build:components",
     "format": "prettier --write src/ components/",
     "clean": "rimraf dist es lib",
-    "build:components": "run-p type-check build-only",
+    "build:components": "run-p type-check build:dist build:browser build-only",
     "type-check": "vue-tsc --build --force",
+    "build:dist": "vite build -- dir=dist",
+    "build:browser": "vite build -- dir=dist f=iife",
     "build-only": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
