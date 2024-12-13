@@ -21,8 +21,6 @@ import terser from '@rollup/plugin-terser'
 const { _: args } = minimist(process.argv.slice(2))
 const dir = args[1] ? args[1].split('=')[1] : undefined
 const f = args[2] ? args[2].split('=')[1] : undefined
-console.log('dir', dir)
-console.log('f', f)
 const buildDistOptions = {
   // emptyOutDir: true, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
@@ -102,7 +100,7 @@ const buildESAndLibOptions = {
   // emptyOutDir: true, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
     // formats: ['es', 'cjs'],
-    entry: 'components/index.ts',
+    entry: resolve(__dirname, 'components', 'index.ts'),
     // __dirname 的值是 vite.config.ts 文件所在目录
     // entry: resolve(__dirname, 'components', 'index.ts'),  // entry 是必需的，因为库不能使用HTML作为入口。
     // name: 'VueAmazingUI', // 暴露的全局变量
@@ -143,7 +141,7 @@ const buildESAndLibOptions = {
     //     qrcode: 'qrcode'
     //   }
     // }
-    input: ['components/index.ts', 'components/index.ts'],
+    input: 'components/index.ts',
     output: [
       {
         format: 'es',
@@ -200,10 +198,10 @@ const buildESAndLibOptions = {
   //   }
   // },
   // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在其被加载时一并获取。如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
-  // cssCodeSplit: true, // 默认 true，如果指定了 build.lib，build.cssCodeSplit 会默认为 false
+  cssCodeSplit: true, // 默认 true，如果指定了 build.lib，build.cssCodeSplit 会默认为 false
   // cssMinify: 'esbuild', // boolean | 'esbuild' | 'lightningcss'，默认: 与 build.minify 一致，允许用户覆盖 CSS 最小化压缩的配置，而不是使用默认的 build.minify
   // reportCompressedSize: true, // 默认 true，启用/禁用 gzip 压缩大小报告。压缩大型输出文件可能会很慢，因此禁用该功能可能会提高大型项目的构建性能。
-  chunkSizeWarningLimit: 1000, // 默认 500，规定触发警告的 chunk 大小，单位kbs
+  // chunkSizeWarningLimit: 500, // 默认 500，规定触发警告的 chunk 大小，单位kbs
   // sourcemap: false // boolean | 'inline' | 'hidden'，构建后是否生成 source map 文件。默认 false
 }
 // https://vitejs.dev/config/
@@ -211,12 +209,24 @@ export default defineConfig({
   plugins: [
     vue(),
     dts({
-      outDir: dir === 'dist' ? 'dist' : ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
+      outDir: dir === 'dist' ? 'dist' : ['es/', 'lib/'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
       tsconfigPath: './tsconfig.dts.json',
       insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
       cleanVueFileName: true, // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
-      rollupTypes: false // 是否将发出的类型文件打包进单个文件，默认 false
+      // rollupTypes: true // 是否将发出的类型文件打包进单个文件，默认 false
       // copyDtsFiles: true // 是否将源码里的 .d.ts 文件复制到 `outDir`，默认 false
+      // 使用自定义函数来控制每个文件的输出路径
+      beforeWriteFile: (filePath, content) => {
+        console.log('filePath', filePath)
+        // filePath: es/components/button/index.d.ts
+        // componentPath: es/button/button.d.ts
+        const componentPath = filePath.replace(/es\/components\/([^/]+)\/[^/]+\.d\.ts$/, 'es/$1/$1.d.ts')
+        console.log('componentPath', componentPath)
+        return {
+          filePath: componentPath,
+          content
+        };
+      },
     }),
     // AutoImport({ // 自动引入所需 apis
     //   dts: 'src/auto-imports.d.ts',
