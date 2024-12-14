@@ -37,10 +37,8 @@ const QRCodes = [
 <TextScroll
   :items="sponsorItem"
   single
-  :height="54"
-  :gap="10"
-  style="background-color: #e6f4ff"
-  :item-style="{ fontSize: '20px', fontWeight: 500, color: 'rgba(0, 0, 0, 0.88)' }"
+  :gap="12"
+  :item-style="{ fontSize: '18px', fontWeight: 500, color: 'rgba(0, 0, 0, 0.88)' }"
 />
 
 <br/>
