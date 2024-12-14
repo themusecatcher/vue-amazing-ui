@@ -399,7 +399,6 @@
 - 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
 - 新增 颜色选择器 ColorPicker 组件
-- 新增 跑马灯 Marquee 组件
 - 时间轴 Timeline 组件，新增水平时间轴
 <!-- - 新增 时间选择器 TimePicker 组件
 - 重构级联选择 Cascader 组件
