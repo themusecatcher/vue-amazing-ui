@@ -39,8 +39,8 @@ const QRCodes = [
   single
   :height="54"
   :gap="10"
-  :board-style="{ backgroundColor: '#e6f4ff' }"
-  :text-style="{ fontSize: '20px', fontWeight: 500, color: 'rgba(0, 0, 0, 0.88)' }"
+  style="background-color: #e6f4ff"
+  :item-style="{ fontSize: '20px', fontWeight: 500, color: 'rgba(0, 0, 0, 0.88)' }"
 />
 
 <br/>
