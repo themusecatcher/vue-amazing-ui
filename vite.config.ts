@@ -209,24 +209,44 @@ export default defineConfig({
   plugins: [
     vue(),
     dts({
-      outDir: dir === 'dist' ? 'dist' : ['es/', 'lib/'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
+      outDir: ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
       tsconfigPath: './tsconfig.dts.json',
-      insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
       cleanVueFileName: true, // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
+      // insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
       // rollupTypes: true // 是否将发出的类型文件打包进单个文件，默认 false
       // copyDtsFiles: true // 是否将源码里的 .d.ts 文件复制到 `outDir`，默认 false
       // 使用自定义函数来控制每个文件的输出路径
-      beforeWriteFile: (filePath, content) => {
-        console.log('filePath', filePath)
+      beforeWriteFile: (filePath: string, content: string) => {
+        // console.log('filePath', filePath)
         // filePath: es/components/button/index.d.ts
-        // componentPath: es/button/button.d.ts
-        const componentPath = filePath.replace(/es\/components\/([^/]+)\/[^/]+\.d\.ts$/, 'es/$1/$1.d.ts')
-        console.log('componentPath', componentPath)
+        // componentPath: es/button/index.d.ts
+        // [^/]+: 匹配一个或多个除了 / 之外的任何单个字符
+        let targetPath: string
+        // es/components/button/index.d.ts 转换为 es/button/index.d.ts
+        targetPath = filePath.replace(/es\/components\/([^/]+)\/index\.d\.ts$/, 'es/$1/index.d.ts')
+        if (filePath === targetPath) {
+          // 将 es/components/button/Button.d.ts 转换为 es/button/Button.d.ts
+          targetPath = filePath.replace(/es\/components\/([^/]+)\/([^/]+)\.d\.ts$/, 'es/$1/$2.d.ts')
+        }
+        if (filePath === targetPath) {
+          // 将 es/components/components.d.ts 转换为 es/components.d.ts
+          // 将 es/components/index.d.ts 转换为 es/index.d.ts
+          targetPath = filePath.replace(/es\/components\/([^/]+)\.d\.ts$/, 'es/$1.d.ts')
+        }
+        if (filePath === targetPath) {
+          // 将 es/components/grid/row/index.d.ts 转换为es/grid/row/index.d.ts
+          targetPath = filePath.replace(/es\/components\/([^/]+)\/([^/]+)\/index\.d\.ts$/, 'es/$1/$2/index.d.ts')
+          if (filePath === targetPath) {
+            // 将 es/components/grid/row/Row.d.ts 转换为 es/grid/row/Row.d.ts
+            targetPath = filePath.replace(/es\/components\/([^/]+)\/([^/]+)\/([^/]+)\.d\.ts$/, 'es/$1/$2/$3.d.ts')
+          }
+        }
+        // console.log('targetPath', targetPath)
         return {
-          filePath: componentPath,
+          filePath: targetPath,
           content
-        };
-      },
+        }
+      }
     }),
     // AutoImport({ // 自动引入所需 apis
     //   dts: 'src/auto-imports.d.ts',
