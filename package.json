@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.2",
   "private": false,
   "type": "module",
   "files": [
@@ -18,8 +18,8 @@
   "types": "es/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.umd.cjs"
+      "import": "./es/index.js",
+      "require": "./dist/index.cjs"
     },
     "./css": "./dist/style.css"
   },

@@ -26,9 +26,9 @@ const buildDistOptions = {
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
     formats: f === 'iife' ? ['iife'] : ['es', 'umd'],
     // __dirname 的值是 vite.config.ts 文件所在目录
-    entry: resolve(__dirname, 'components', 'index.ts'),  // entry 是必需的，因为库不能使用HTML作为入口。
+    entry: resolve(__dirname, 'components', 'index.ts'),  // 或 'components/index.ts' entry 是必需的，因为库不能使用HTML作为入口。
     name: 'VueAmazingUI', // 暴露的全局变量
-    fileName: 'index.min', // 输出的包文件名，默认是 package.json 的 name 选项；也可以定义为以 format 和 entryName 为参数的函数，并返回文件名
+    fileName: 'index', // 输出的包文件名，默认是 package.json 的 name 选项；也可以定义为以 format 和 entryName 为参数的函数，并返回文件名
     cssFileName: 'style' // 指定 CSS 输出文件的名称，默认为 package.json 中的 name
   },
   rollupOptions: { // 自定义底层的Rollup打包配置
@@ -100,7 +100,7 @@ const buildESAndLibOptions = {
   // emptyOutDir: true, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
     // formats: ['es', 'cjs'],
-    entry: resolve(__dirname, 'components', 'index.ts'),
+    entry: resolve(__dirname, 'components', 'index.ts'), // 或 'components/index.ts'
     // __dirname 的值是 vite.config.ts 文件所在目录
     // entry: resolve(__dirname, 'components', 'index.ts'),  // entry 是必需的，因为库不能使用HTML作为入口。
     // name: 'VueAmazingUI', // 暴露的全局变量
@@ -141,7 +141,7 @@ const buildESAndLibOptions = {
     //     qrcode: 'qrcode'
     //   }
     // }
-    input: 'components/index.ts',
+    input: resolve(__dirname, 'components', 'index.ts'), // 'components/index.ts'
     output: [
       {
         format: 'es',
@@ -289,7 +289,7 @@ function VueAmazingUIResolver() {
         return {
           name: componentName, // 组件名
           from: 'vue-amazing-ui', // 组件库名称
-          sideEffects: `vue-amazing-ui/${componentsMap[componentName as keyof typeof componentsMap]}/${componentName}.css`, // 组件样式文件
+          sideEffects: `vue-amazing-ui/es/${componentsMap[componentName as keyof typeof componentsMap]}/${componentName}.css`, // 组件样式文件
         }
       }
     }
