@@ -2,8 +2,8 @@
 // import LayoutContent from './layoutcontent'
 // import LayoutFooter from './layoutfooter'
 // import LayoutHeader from './layoutheader'
-// import LayoutSlider from './layoutslider'
+// import LayoutSlider from './layoutsider'
 
 // export type { LayoutProps } from './layout'
 
-// export { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSlider }
+// export { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider }

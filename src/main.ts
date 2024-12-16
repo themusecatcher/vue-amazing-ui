@@ -20,6 +20,7 @@ import '../es/radio/Radio.css'
 import '../es/switch/Switch.css'
 import '../es/space/Space.css'
 import '../es/tooltip/Tooltip.css'
+import '../es/watermark/Watermark.css'
 
 const app = createApp(App)
 // window.rafTimeout = rafTimeout // 挂载到window上，全局可用，无需引入
