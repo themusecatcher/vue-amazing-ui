@@ -22,6 +22,7 @@ import 'less/global.less'
 // import '../es/tooltip/Tooltip.css'
 // import '../es/watermark/Watermark.css'
 // import VueAmazingUI from 'vue-amazing-ui'
+// import 'vue-amazing-ui/css'
 
 const app = createApp(App)
 // window.rafTimeout = rafTimeout // 挂载到window上，全局可用，无需引入

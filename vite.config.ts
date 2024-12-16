@@ -24,7 +24,7 @@ const f = args[2] ? args[2].split('=')[1] : undefined
 const buildDistOptions = {
   // emptyOutDir: true, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
-    formats: f === 'iife' ? ['iife'] : ['es', 'umd'],
+    formats: f === 'iife' ? ['iife'] : ['es', 'umd'], // iife: 自执行函数表达式 Immediately Invoked Function Expression
     // __dirname 的值是 vite.config.ts 文件所在目录
     entry: resolve(__dirname, 'components', 'index.ts'),  // 或 'components/index.ts' entry 是必需的，因为库不能使用HTML作为入口。
     name: 'VueAmazingUI', // 暴露的全局变量
@@ -156,7 +156,7 @@ const buildESAndLibOptions = {
         preserveModules: true,
         dir: 'es',
         exports: 'named',
-        preserveModulesRoot: 'components',
+        preserveModulesRoot: 'components'
       },
       {
         format: 'cjs',
@@ -171,7 +171,7 @@ const buildESAndLibOptions = {
         preserveModules: true,
         dir: 'lib',
         exports: 'named',
-        preserveModulesRoot: 'components',
+        preserveModulesRoot: 'components'
       }
     ]
   },
