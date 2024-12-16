@@ -291,7 +291,12 @@ function reRendering(mutation: MutationRecord, watermarkElement?: HTMLElement) {
 }
 </script>
 <template>
-  <div ref="containerRef" style="position: relative">
+  <div ref="containerRef" class="watermark-container">
     <slot></slot>
   </div>
 </template>
+<style lang="less">
+.watermark-container {
+  position: relative;
+}
+</style>
