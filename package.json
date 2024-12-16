@@ -4,26 +4,24 @@
   "private": false,
   "type": "module",
   "files": [
-    "dist/components",
-    "dist/*.css",
-    "dist/*.d.ts",
-    "dist/*.js",
-    "dist/*.cjs",
+    "dist",
+    "es",
+    "lib",
     "package.json",
     "README.md",
     "README.zh-CN.md"
   ],
   "main": "lib/index.cjs",
   "module": "es/index.js",
-  "unpkg": "dist/vue-amazing-ui.js",
+  "unpkg": "dist/index.js",
   "jsdelivr": "dist/index.js",
   "types": "es/index.d.ts",
   "exports": {
-    "./css": "./dist/vue-amazing-ui.css",
     ".": {
-      "import": "./dist/vue-amazing-ui.js",
-      "require": "./dist/vue-amazing-ui.cjs"
-    }
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
+    },
+    "./css": "./dist/style.css"
   },
   "scripts": {
     "docs:dev": "vitepress dev docs --port 8000 --open",
