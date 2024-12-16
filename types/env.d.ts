@@ -8,6 +8,7 @@
 declare module '*.js'
 declare module '*.gz'
 declare module '*.json'
+// declare module 'vue-amazing-ui'
 
 interface Window {
   rafTimeout: Function

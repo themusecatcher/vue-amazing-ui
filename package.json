@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "private": false,
   "type": "module",
   "files": [
@@ -11,15 +11,15 @@
     "README.md",
     "README.zh-CN.md"
   ],
-  "main": "lib/index.cjs",
   "module": "es/index.js",
-  "unpkg": "dist/index.js",
-  "jsdelivr": "dist/index.js",
+  "main": "lib/index.cjs",
+  "unpkg": "dist/index.iife.js",
+  "jsdelivr": "dist/index.iife.js",
   "types": "es/index.d.ts",
   "exports": {
     ".": {
       "import": "./es/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./lib/index.cjs"
     },
     "./css": "./dist/style.css"
   },
@@ -47,7 +47,8 @@
     "@vueuse/core": "^12.0.0",
     "@vueuse/integrations": "^12.0.0",
     "qrcode": "^1.5.4",
-    "swiper": "^11.1.15"
+    "swiper": "^11.1.15",
+    "vue-amazing-ui": "1.10.4"
   },
   "devDependencies": {
     "@ant-design/icons-vue": "^7.0.1",
@@ -77,7 +78,6 @@
     "vite-plugin-dts": "^4.3.0",
     "vitepress": "^1.5.0",
     "vue": "^3.5.13",
-    "vue-amazing-ui": "2.0.0-beta.1",
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.1.10"
   },
