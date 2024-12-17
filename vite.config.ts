@@ -303,7 +303,7 @@ export default defineConfig({
       outDir: ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
       tsconfigPath: './tsconfig.dts.json',
       cleanVueFileName: true, // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
-      // insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
+      insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
       // rollupTypes: true // 是否将发出的类型文件打包进单个文件，默认 false
       // copyDtsFiles: true // 是否将源码里的 .d.ts 文件复制到 `outDir`，默认 false
       // 使用自定义函数来控制每个文件的输出路径

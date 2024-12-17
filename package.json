@@ -79,13 +79,11 @@
     "vite-plugin-dts": "^4.3.0",
     "vitepress": "^1.5.0",
     "vue": "^3.5.13",
-    "vue-amazing-ui": "2.0.0-beta.5",
+    "vue-amazing-ui": "1.10.4",
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.1.10"
   },
-  "sideEffects": [
-    "dist/*"
-  ],
+  "sideEffects": false,
   "description": "An Amazing Vue3 UI Components Library, Uses TypeScript.",
   "repository": {
     "type": "git",
