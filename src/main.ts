@@ -21,12 +21,12 @@ import 'less/global.less'
 // import 'vue-amazing-ui/es/space/Space.css'
 // import 'vue-amazing-ui/es/tooltip/Tooltip.css'
 // import 'vue-amazing-ui/es/watermark/Watermark.css'
-// import VueAmazingUI from 'vue-amazing-ui'
-// import 'vue-amazing-ui/css'
+import VueAmazingUI from 'vue-amazing-ui'
+import 'vue-amazing-ui/css'
 
 const app = createApp(App)
 // window.rafTimeout = rafTimeout // 挂载到window上，全局可用，无需引入
 app.use(router)
-// app.use(VueAmazingUI)
+app.use(VueAmazingUI)
 // app.use(Row).use(Col).use(Button).use(Scrollbar).use(Radio).use(Switch).use(Space).use(Tooltip).use(Watermark)
 app.mount('#app')
