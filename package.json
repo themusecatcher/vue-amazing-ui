@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0-beta.5",
   "private": false,
   "type": "module",
   "files": [
@@ -17,10 +17,15 @@
   "jsdelivr": "dist/index.iife.js",
   "types": "es/index.d.ts",
   "exports": {
-    "./dist": "./dist",
-    "./es": "./es",
-    "./lib": "./lib",
-    "./css": "./dist/style.css"
+    "./dist": "./dist/",
+    "./es/*": "./es/*",
+    "./es/*/*.css": "./es/*/*.css",
+    "./lib": "./lib/",
+    "./css": "./dist/style.css",
+    ".": {
+      "import": "./es/index.js",
+      "require": "./lib/index.cjs"
+    }
   },
   "scripts": {
     "docs:dev": "vitepress dev docs --port 8000 --open",
@@ -45,8 +50,7 @@
     "@vueuse/core": "^12.0.0",
     "@vueuse/integrations": "^12.0.0",
     "qrcode": "^1.5.4",
-    "swiper": "^11.1.15",
-    "vue-amazing-ui": "2.0.0-beta.3"
+    "swiper": "^11.1.15"
   },
   "devDependencies": {
     "@ant-design/icons-vue": "^7.0.1",
@@ -76,6 +80,7 @@
     "vite-plugin-dts": "^4.3.0",
     "vitepress": "^1.5.0",
     "vue": "^3.5.13",
+    "vue-amazing-ui": "1.10.4",
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.1.10"
   },
