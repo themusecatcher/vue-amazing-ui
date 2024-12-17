@@ -30,7 +30,6 @@
     "pub": "sh scripts/publish.sh",
     "push": "sh scripts/push.sh",
     "build": "run-s format clean build:components",
-    "build:clean": "run-s clean build:components",
     "format": "prettier --write src/ components/",
     "clean": "rimraf dist es lib",
     "build:components": "run-p type-check build:dist build:browser build-only",
