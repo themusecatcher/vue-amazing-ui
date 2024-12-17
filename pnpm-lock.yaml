@@ -24,8 +24,8 @@ importers:
         specifier: ^11.1.15
         version: 11.1.15
       vue-amazing-ui:
-        specifier: 1.10.4
-        version: 1.10.4(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
+        specifier: 2.0.0-beta.3
+        version: 2.0.0-beta.3(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@ant-design/icons-vue':
         specifier: ^7.0.1
@@ -2521,6 +2521,9 @@ packages:
 
   vue-amazing-ui@1.10.4:
     resolution: {integrity: sha512-+xqtsTSrRrWhERCOHUslVTISKdstudfsg0ni3vwaW3UHiZUVoGtT2uA+JPM9fDr32empv/1K9hGJhJB8ZPbgJg==}
+
+  vue-amazing-ui@2.0.0-beta.3:
+    resolution: {integrity: sha512-m7TGp7/q+elwHnvCb+vI/K2o8J/O4h6/BhTYoOfnuXPWC1Ksdsy716XlSGa4GmvSzkXBvcppgLJ0oCy0srDh1A==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -5041,6 +5044,29 @@ snapshots:
       - sortablejs
       - typescript
       - universal-cookie
+
+  vue-amazing-ui@2.0.0-beta.3(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3)):
+    dependencies:
+      '@vuepic/vue-datepicker': 10.0.0(vue@3.5.13(typescript@5.6.3))
+      '@vueuse/core': 12.0.0(typescript@5.6.3)
+      '@vueuse/integrations': 12.0.0(async-validator@4.2.5)(focus-trap@7.6.2)(qrcode@1.5.4)(typescript@5.6.3)
+      qrcode: 1.5.4
+      swiper: 11.1.15
+      vue-amazing-ui: 1.10.4(async-validator@4.2.5)(focus-trap@7.6.2)(typescript@5.6.3)
+    transitivePeerDependencies:
+      - async-validator
+      - axios
+      - change-case
+      - drauu
+      - focus-trap
+      - fuse.js
+      - idb-keyval
+      - jwt-decode
+      - nprogress
+      - sortablejs
+      - typescript
+      - universal-cookie
+      - vue
 
   vue-demi@0.14.10(vue@3.5.13(typescript@5.6.3)):
     dependencies:
