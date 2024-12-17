@@ -1,8 +1,7 @@
 {
   "name": "vue-amazing-ui",
-  "version": "2.0.0-beta.8",
+  "version": "2.0.0-beta.9",
   "private": false,
-  "type": "module",
   "files": [
     "dist",
     "es",
@@ -69,7 +68,7 @@
     "vite-plugin-dts": "^4.3.0",
     "vitepress": "^1.5.0",
     "vue": "^3.5.13",
-    "vue-amazing-ui": "1.10.4",
+    "vue-amazing-ui": "2.0.0-beta.8",
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.1.10"
   },
