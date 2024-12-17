@@ -2,6 +2,7 @@
 import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 import type { TableColumn } from 'components/index'
+import type { TableColumnType } from 'ant-design-vue'
 const loading = ref(false)
 const tableLoading = ref(false)
 const customStyleBordered = ref(true)
