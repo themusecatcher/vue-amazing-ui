@@ -20,9 +20,9 @@
     "./lib/*": "./lib/*",
     "./css": "./dist/style.css",
     ".": {
+      "types": "./es/index.d.ts",
       "import": "./es/index.js",
-      "require": "./lib/index.cjs",
-      "types": "./es/index.d.ts"
+      "require": "./lib/index.cjs"
     }
   },
   "scripts": {
