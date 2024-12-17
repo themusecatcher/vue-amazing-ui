@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import 'less/global.less'
 
-import VueAmazingUI from 'components/index'
+// import VueAmazingUI from 'components/index'
 // import VueAmazingUI from '../dist/vue-amazing-ui'
 // import '../dist/vue-amazing-ui.css'
 // import VueAmazingUI from '../es/index'
@@ -21,8 +21,8 @@ import VueAmazingUI from 'components/index'
 // import 'vue-amazing-ui/es/space/Space.css'
 // import 'vue-amazing-ui/es/tooltip/Tooltip.css'
 // import 'vue-amazing-ui/es/watermark/Watermark.css'
-// import VueAmazingUI from 'vue-amazing-ui'
-// import 'vue-amazing-ui/css'
+import VueAmazingUI from 'vue-amazing-ui'
+import 'vue-amazing-ui/css'
 
 const app = createApp(App)
 // window.rafTimeout = rafTimeout // 挂载到window上，全局可用，无需引入
