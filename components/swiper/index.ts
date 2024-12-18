@@ -1,11 +1,5 @@
-import type { App } from 'vue'
 import Swiper from './Swiper.vue'
 export type { Props, Image } from './Swiper.vue'
+import { withInstall } from '../utils/type'
 
-// 使用 install 方法，在 app.use 挂载
-Swiper.install = (app: App) => {
-  app.component(Swiper.__name as string, Swiper)
-  return app
-}
-
-export default Swiper
+export default withInstall(Swiper)

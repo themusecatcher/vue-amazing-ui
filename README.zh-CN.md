@@ -6,7 +6,7 @@
 
 <h1 align="center">Vue Amazing UI</h1>
 <p align="center">一个 Vue 3 组件库</p>
-<p align="center">每个组件都是单文件组件 (SFC), 可以单独使用</p>
+<p align="center">使用 TypeScript，每个组件都是单文件组件 (SFC), 可独立使用</p>
 <p align="center">有点意思</p>
 <p align="center"><a href="README.md">English</a> | 中文</p>
 
@@ -18,16 +18,17 @@
 
 - 组件库采用 `Vue@3.5.13`+ `TypeScript@5.6.3` + `Vite@6.0.2` + `Less@4.2.1` 实现
 - 目前共包含 `63` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
+- 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
-- 每个组件都是单文件组件 `SFC`，单独使用，也没问题
+- 每个组件都是单文件组件 `SFC`，独立使用，也没问题
 - 开箱即用，不墨迹
 
 ## 安装
 
-```bash
-npm install vue-amazing-ui
-# or
+```sh
 pnpm add vue-amazing-ui
+# or
+npm install vue-amazing-ui
 # or
 yarn add vue-amazing-ui
 # or
@@ -36,36 +37,45 @@ bun add vue-amazing-ui
 
 ## 使用组件
 
-**全局注册所有组件**
+**全局完整注册（不推荐）**
+
+*失去 `tree-shaking` 的能力，打包后有冗余代码*
 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import VueAmazingUI from 'vue-amazing-ui'
-import 'vue-amazing-ui/css'
+import 'vue-amazing-ui/css' // 等价于 'vue-amazing-ui/dist/style.css'
 
 const app = createApp(App)
-app.use(VueAmazingUI).mount('#app')
+app.use(VueAmazingUI)
+app.mount('#app')
 ```
 
-**全局注册部分组件**
+**全局部分注册**
+
+*全局或局部引入部分组件，都只有导入的组件才会被打包*
 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/css'
+import 'vue-amazing-ui/es/button/Button.css'
+import 'vue-amazing-ui/es/tag/Tag.css'
 
 const app = createApp(App)
-app.use(Button).use(Tag).mount('#app')
+app.use(Button).use(Tag)
+app.mount('#app')
 ```
 
-**局部注册组件**
+**局部注册组件（推荐）**
+
+*这种情况下，也只有导入的组件才会被打包*
 
 ```vue
 <script setup lang="ts">
 import { Button } from 'vue-amazing-ui'
-import 'vue-amazing-ui/css'
+import 'vue-amazing-ui/es/button/Button.css'
 </script>
 <template>
   <Button>button</Button>
@@ -97,6 +107,23 @@ import {
 </script>
 ```
 
+## 使用类型
+
+*所有类型均可直接从 `vue-amazing-ui` 中引入使用，无需额外安装*
+
+```vue
+<script setup lang="ts">
+import { Button } from 'vue-amazing-ui'
+import type { ButtonProps } from 'vue-amazing-ui'
+import 'vue-amazing-ui/es/button/Button.css'
+
+const shape = ref<ButtonProps['shape']>('default')
+</script>
+<template>
+  <Button :shape="shape">button</Button>
+</template>
+```
+
 ## 项目
 
 - 获取项目代码
@@ -119,7 +146,7 @@ pnpm i
 pnpm dev
 ```
 
-## 详情
+## 博客
 
 [My CSDN Blogs](https://blog.csdn.net/Dandrose)
 

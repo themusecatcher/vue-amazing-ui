@@ -109,6 +109,10 @@ export default defineConfig({
               link: '/guide/started'
             },
             {
+              text: '按需引入',
+              link: '/guide/ondemand'
+            },
+            {
               text: '更新日志',
               link: '/guide/changelog'
             }

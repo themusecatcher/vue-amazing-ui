@@ -1,11 +1,5 @@
-import type { App } from 'vue'
 import Ellipsis from './Ellipsis.vue'
 export type { Props } from './Ellipsis.vue'
+import { withInstall } from '../utils/type'
 
-// 使用 install 方法，在 app.use 挂载
-Ellipsis.install = (app: App) => {
-  app.component(Ellipsis.__name as string, Ellipsis)
-  return app
-}
-
-export default Ellipsis
+export default withInstall(Ellipsis)

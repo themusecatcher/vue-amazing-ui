@@ -1,11 +1,5 @@
-import type { App } from 'vue'
 import Message from './Message.vue'
 export type { Props, Message } from './Message.vue'
+import { withInstall } from '../utils/type'
 
-// 使用 install 方法，在 app.use 挂载
-Message.install = (app: App) => {
-  app.component(Message.__name as string, Message)
-  return app
-}
-
-export default Message
+export default withInstall(Message)
