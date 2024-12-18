@@ -2,7 +2,7 @@ export function VueAmazingUIResolver() {
   return {
     type: 'component' as const,
     resolve: (componentName: string) => {
-      // 定义组件库中的组件名称映射
+      // 组件库中的所有组件名称映射
       const componentsMap = {
         Alert: 'alert',
         Avatar: 'avatar',

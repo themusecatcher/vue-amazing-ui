@@ -9,6 +9,8 @@ import dts from 'vite-plugin-dts'
 import Components from 'unplugin-vue-components/vite'
 // ant-desing naive-ui 按需引入
 import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import { VueAmazingUIResolver } from 'vue-amazing-ui'
+
 // 打包体积可视化插件
 // import { visualizer } from 'rollup-plugin-visualizer'
 
