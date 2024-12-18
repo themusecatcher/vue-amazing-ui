@@ -54,7 +54,7 @@ app.mount('#app')
 
 **Global Registration Some Components**
 
-*Both global and local importing of components result in only the imported components being packaged.*
+*Whether globally or locally importing components, only the imported components will be bundled.*
 
 ```ts
 import { createApp } from 'vue'
