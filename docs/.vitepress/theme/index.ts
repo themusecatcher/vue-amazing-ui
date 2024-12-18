@@ -3,8 +3,8 @@ import './global.less' // global less
 import GlobalElement from './components/GlobalElement.vue'
 // import VueAmazingUI from 'vue-amazing-ui'
 // import 'vue-amazing-ui/css'
-import VueAmazingUI from '../../../dist/vue-amazing-ui'
-import '../../../dist/vue-amazing-ui.css'
+import VueAmazingUI from '../../../dist/index'
+import '../../../dist/style.css'
 
 export default {
   extends: DefaultTheme, // or ...DefaultTheme

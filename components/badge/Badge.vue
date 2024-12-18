@@ -2,28 +2,21 @@
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useSlotsExist } from 'components/utils'
-enum PresetColor {
-  pink = 'pink',
-  red = 'red',
-  yellow = 'yellow',
-  orange = 'orange',
-  cyan = 'cyan',
-  green = 'green',
-  blue = 'blue',
-  purple = 'purple',
-  geekblue = 'geekblue',
-  magenta = 'magenta',
-  volcano = 'volcano',
-  gold = 'gold',
-  lime = 'lime'
-}
-enum Status {
-  success = 'success',
-  processing = 'processing',
-  default = 'default',
-  error = 'error',
-  warning = 'warning'
-}
+export type PresetColor =
+  | 'pink'
+  | 'red'
+  | 'yellow'
+  | 'orange'
+  | 'cyan'
+  | 'green'
+  | 'blue'
+  | 'purple'
+  | 'geekblue'
+  | 'magenta'
+  | 'volcano'
+  | 'gold'
+  | 'lime'
+export type Status = 'success' | 'processing' | 'default' | 'error' | 'warning'
 export interface Props {
   color?: PresetColor | string // 自定义小圆点的颜色，优先级高于 status
   value?: number | string // 展示的数字或文字，为数字时大于 max 显示为 max+，为 0 时隐藏 number | string | slot
@@ -52,9 +45,24 @@ const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   ripple: true
 })
+const presetColors: string[] = [
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime'
+]
 const slotsExist = useSlotsExist(['default', 'value'])
 const customStyle = computed(() => {
-  if (props.color && !Object.keys(PresetColor).includes(props.color)) {
+  if (props.color && !presetColors.includes(props.color)) {
     if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
       return {
         backgroundColor: props.color
@@ -69,7 +77,7 @@ const customStyle = computed(() => {
 })
 const presetClass = computed(() => {
   if (props.color) {
-    if (Object.keys(PresetColor).includes(props.color)) {
+    if (presetColors.includes(props.color)) {
       if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
         return `color-${props.color} white`
       } else {

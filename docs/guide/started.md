@@ -2,16 +2,16 @@
 
 <GlobalElement />
 
-## Install
+## 安装
 
 ::: code-group
 
-```sh [npm]
-$ npm install vue-amazing-ui
-```
-
 ```sh [pnpm]
 $ pnpm add vue-amazing-ui
+```
+
+```sh [npm]
+$ npm install vue-amazing-ui
 ```
 
 ```sh [yarn]
@@ -24,45 +24,54 @@ $ bun add vue-amazing-ui
 
 :::
 
-## Use Components
+## 使用组件
 
-> **Global Registration All Components**
+> **全局完整注册（不推荐）**
+
+*失去 `tree-shaking` 的能力，打包后有冗余代码*
 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import VueAmazingUI from 'vue-amazing-ui'
-import 'vue-amazing-ui/css'
+import 'vue-amazing-ui/css' // 等价于 'vue-amazing-ui/dist/style.css'
 
 const app = createApp(App)
-app.use(VueAmazingUI).mount('#app')
+app.use(VueAmazingUI)
+app.mount('#app')
 ```
 
-> **Global Registration Some Components**
+> **全局部分注册**
+
+*全局或局部引入部分组件，都只有导入的组件才会被打包*
 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/css'
+import 'vue-amazing-ui/es/button/Button.css'
+import 'vue-amazing-ui/es/tag/Tag.css'
 
 const app = createApp(App)
-app.use(Button).use(Tag).mount('#app')
+app.use(Button).use(Tag)
+app.mount('#app')
 ```
 
-> **Local Registration**
+> **局部注册组件（推荐）**
+
+*这种情况下，也只有导入的组件才会被打包*
 
 ```vue
 <script setup lang="ts">
 import { Button } from 'vue-amazing-ui'
-import 'vue-amazing-ui/css'
+import 'vue-amazing-ui/es/button/Button.css'
 </script>
 <template>
   <Button>button</Button>
 </template>
 ```
 
-## Use Functions
+## 使用工具函数
 
 ```vue
 <script setup lang="ts">
@@ -85,4 +94,21 @@ import {
   useSlotsExist
 } from 'vue-amazing-ui'
 </script>
+```
+
+## 使用类型
+
+*所有类型均可直接从 `vue-amazing-ui` 中引入使用，无需额外安装*
+
+```vue
+<script setup lang="ts">
+import { Button } from 'vue-amazing-ui'
+import type { ButtonProps } from 'vue-amazing-ui'
+import 'vue-amazing-ui/es/button/Button.css'
+
+const shape = ref<ButtonProps['shape']>('default')
+</script>
+<template>
+  <Button :shape="shape">button</Button>
+</template>
 ```

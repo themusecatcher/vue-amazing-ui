@@ -1083,7 +1083,7 @@ const columns = reactive<TableColumn[]>([
 <script setup lang="ts">
 import { reactive } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const columns = reactive<TableColumn>([
+const columns = reactive<TableColumn[]>([
   {
     title: 'Name',
     width: 100,
@@ -1297,7 +1297,7 @@ const dataSource = ref([
 import { ref, reactive } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
 const customStyleBordered = ref(true)
-const columnsCustomStyle = reactive<TableColumn>([
+const columnsCustomStyle = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age', className: 'age' },
   { title: 'Job', dataIndex: 'job' },

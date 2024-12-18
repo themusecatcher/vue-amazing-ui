@@ -29,7 +29,7 @@ export interface Column {
   customCell?: (record: any, rowIndex: number, column: Column) => object | undefined // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
-interface ScrollOption {
+export type ScrollOption = {
   x?: string | number | true // 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，true 和 'max-content'
   y?: string | number // 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值
 }

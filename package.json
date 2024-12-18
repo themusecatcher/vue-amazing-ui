@@ -1,29 +1,30 @@
 {
   "name": "vue-amazing-ui",
-  "version": "1.10.4",
+  "version": "2.0.0-beta.11",
   "private": false,
   "type": "module",
   "files": [
-    "dist/components",
-    "dist/*.css",
-    "dist/*.d.ts",
-    "dist/*.js",
-    "dist/*.cjs",
+    "dist",
+    "es",
+    "lib",
     "package.json",
     "README.md",
     "README.zh-CN.md"
   ],
-  "main": "./dist/vue-amazing-ui.umd.cjs",
-  "module": "./dist/vue-amazing-ui.js",
-  "browser": "./dist/vue-amazing-ui.js",
-  "unpkg": "./dist/vue-amazing-ui.iife.js",
-  "types": "./dist/vue-amazing-ui.d.ts",
+  "main": "lib/index.cjs",
+  "module": "es/index.js",
+  "unpkg": "dist/index.iife.js",
+  "jsdelivr": "dist/index.iife.js",
+  "types": "es/index.d.ts",
   "exports": {
-    "./dist/vue-amazing-ui.css": "./dist/vue-amazing-ui.css",
-    "./css": "./dist/vue-amazing-ui.css",
+    "./dist/*": "./dist/*",
+    "./es/*": "./es/*",
+    "./lib/*": "./lib/*",
+    "./css": "./dist/style.css",
     ".": {
-      "import": "./dist/vue-amazing-ui.js",
-      "require": "./dist/vue-amazing-ui.umd.cjs"
+      "types": "./es/index.d.ts",
+      "import": "./es/index.js",
+      "require": "./lib/index.cjs"
     }
   },
   "scripts": {
@@ -36,8 +37,10 @@
     "build": "run-s format clean build:components",
     "format": "prettier --write src/ components/",
     "clean": "rimraf dist es lib",
-    "build:components": "run-p type-check build-only",
+    "build:components": "run-p type-check build:dist build:browser build-only",
     "type-check": "vue-tsc --build --force",
+    "build:dist": "vite build -- dir=dist",
+    "build:browser": "vite build -- dir=dist f=iife",
     "build-only": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
@@ -77,13 +80,11 @@
     "vite-plugin-dts": "^4.3.0",
     "vitepress": "^1.5.0",
     "vue": "^3.5.13",
-    "vue-amazing-ui": "1.10.4",
+    "vue-amazing-ui": "2.0.0-beta.11",
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.1.10"
   },
-  "sideEffects": [
-    "dist/*"
-  ],
+  "sideEffects": false,
   "description": "An Amazing Vue3 UI Components Library, Uses TypeScript.",
   "repository": {
     "type": "git",
