@@ -1,11 +1,5 @@
-import type { App } from 'vue'
 import Table from './Table.vue'
-export type { Props, Column } from './Table.vue'
+export type { Props, Column, ScrollOption } from './Table.vue'
+import { withInstall } from '../utils/type'
 
-// 使用 install 方法，在 app.use 挂载
-Table.install = (app: App) => {
-  app.component(Table.__name as string, Table)
-  return app
-}
-
-export default Table
+export default withInstall(Table)

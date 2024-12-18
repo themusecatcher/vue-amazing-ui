@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { routes } from '@/router'
-import { toggleDark, useMutationObserver } from 'components/index'
+import { toggleDark, useMutationObserver } from 'vue-amazing-ui'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 // const router = useRouter() // 返回router实例，相当于在模板中使用$router
 const themeDark = ref<boolean>(false)
@@ -104,7 +104,7 @@ const routerViewRef = ref()
               <component :is="Component" />
             </Transition>
           </RouterView>
-          <!-- <BackTop v-if="route.name !== 'BackTop'" /> -->
+          <BackTop v-if="route.name !== 'BackTop'" />
         </div>
       </Scrollbar>
     </Col>
@@ -138,7 +138,7 @@ const routerViewRef = ref()
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s;
+  transition: opacity 0.2s;
 }
 .fade-enter-from,
 .fade-leave-to {

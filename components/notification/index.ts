@@ -1,11 +1,5 @@
-import type { App } from 'vue'
 import Notification from './Notification.vue'
 export type { Props, Notification } from './Notification.vue'
+import { withInstall } from '../utils/type'
 
-// 使用 install 方法，在 app.use 挂载
-Notification.install = (app: App) => {
-  app.component(Notification.__name as string, Notification)
-  return app
-}
-
-export default Notification
+export default withInstall(Notification)
