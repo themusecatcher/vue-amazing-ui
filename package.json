@@ -100,7 +100,8 @@
     "UI",
     "Components",
     "Tools",
-    "Functions"
+    "Functions",
+    "Tree Shaking"
   ],
   "author": "theMuseCatcher",
   "license": "MIT",
