@@ -3,32 +3,31 @@ import { ref, computed, watchEffect, onMounted, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 import { formatNumber } from 'components/utils'
 import { useTransition, TransitionPresets } from '@vueuse/core'
-enum TransitionFunc {
-  linear = 'linear',
-  easeOutSine = 'easeOutSine',
-  easeInOutSine = 'easeInOutSine',
-  easeInQuad = 'easeInQuad',
-  easeOutQuad = 'easeOutQuad',
-  easeInOutQuad = 'easeInOutQuad',
-  easeInCubic = 'easeInCubic',
-  easeOutCubic = 'easeOutCubic',
-  easeInOutCubic = 'easeInOutCubic',
-  easeInQuart = 'easeInQuart',
-  easeOutQuart = 'easeOutQuart',
-  easeInOutQuart = 'easeInOutQuart',
-  easeInQuint = 'easeInQuint',
-  easeOutQuint = 'easeOutQuint',
-  easeInOutQuint = 'easeInOutQuint',
-  easeInExpo = 'easeInExpo',
-  easeOutExpo = 'easeOutExpo',
-  easeInOutExpo = 'easeInOutExpo',
-  easeInCirc = 'easeInCirc',
-  easeOutCirc = 'easeOutCirc',
-  easeInOutCirc = 'easeInOutCirc',
-  easeInBack = 'easeInBack',
-  easeOutBack = 'easeOutBack',
-  easeInOutBack = 'easeInOutBack'
-}
+export type TransitionFunc =
+  | 'linear'
+  | 'easeOutSine'
+  | 'easeInOutSine'
+  | 'easeInQuad'
+  | 'easeOutQuad'
+  | 'easeInOutQuad'
+  | 'easeInCubic'
+  | 'easeOutCubic'
+  | 'easeInOutCubic'
+  | 'easeInQuart'
+  | 'easeOutQuart'
+  | 'easeInOutQuart'
+  | 'easeInQuint'
+  | 'easeOutQuint'
+  | 'easeInOutQuint'
+  | 'easeInExpo'
+  | 'easeOutExpo'
+  | 'easeInOutExpo'
+  | 'easeInCirc'
+  | 'easeOutCirc'
+  | 'easeInOutCirc'
+  | 'easeInBack'
+  | 'easeOutBack'
+  | 'easeInOutBack'
 export interface Props {
   from?: number // 数值动画起始数值
   to?: number // 数值目标值
@@ -53,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   separator: ',',
   decimal: '.',
   valueStyle: () => ({}),
-  transition: TransitionFunc['easeInOutCubic']
+  transition: 'easeInOutCubic'
 })
 const source = ref(props.from)
 const emits = defineEmits(['started', 'finished'])

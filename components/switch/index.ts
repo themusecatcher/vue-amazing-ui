@@ -1,11 +1,5 @@
-import type { App } from 'vue'
 import Switch from './Switch.vue'
 export type { Props } from './Switch.vue'
+import { withInstall } from '../utils/type'
 
-// 使用 install 方法，在 app.use 挂载
-Switch.install = (app: App) => {
-  app.component(Switch.__name as string, Switch)
-  return app
-}
-
-export default Switch
+export default withInstall(Switch)

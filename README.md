@@ -6,7 +6,7 @@
 
 <h1 align="center">Vue Amazing UI</h1>
 <p align="center">A Vue 3 Component Library</p>
-<p align="center">Each component is a Single-File Component (SFC), which can be used Independently</p>
+<p align="center">Uses TypeScript, Each component is a Single-File Component (SFC), which can be used Independently</p>
 <p align="center">Kinda Interesting</p>
 <p align="center">English | <a href="README.zh-CN.md">中文</a></p>
 
@@ -18,16 +18,17 @@
 
 - The component library is implemented with `Vue@3.5.13`+ `TypeScript@5.6.3` + `Vite@6.0.2` + `Less@4.2.1`.
 - Currently, it includes `63` basic UI components and `16` utility functions, with continuous exploration and updates ongoing...
+- What's more, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
 - Each component is a Single-File Component (`SFC`), and they can be used independently without any issues.
 - Ready to use out of the box, no fuss.
 
 ## Installation
 
-```bash
-npm install vue-amazing-ui
-# or
+```sh
 pnpm add vue-amazing-ui
+# or
+npm install vue-amazing-ui
 # or
 yarn add vue-amazing-ui
 # or
@@ -36,36 +37,45 @@ bun add vue-amazing-ui
 
 ## Use Components
 
-**Global Registration All Components**
+**Global Registration All Components (Not Recommended)**
+
+*No tree-shaking. Bundle will have redundant codes.*
 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import VueAmazingUI from 'vue-amazing-ui'
-import 'vue-amazing-ui/css'
+import 'vue-amazing-ui/css' // 等价于 'vue-amazing-ui/dist/style.css'
 
 const app = createApp(App)
-app.use(VueAmazingUI).mount('#app')
+app.use(VueAmazingUI)
+app.mount('#app')
 ```
 
 **Global Registration Some Components**
+
+*Both global and local importing of components result in only the imported components being packaged.*
 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/css'
+import 'vue-amazing-ui/es/button/Button.css'
+import 'vue-amazing-ui/es/tag/Tag.css'
 
 const app = createApp(App)
-app.use(Button).use(Tag).mount('#app')
+app.use(Button).use(Tag)
+app.mount('#app')
 ```
 
-**Local Registration**
+**Local Registration (Recommended)**
+
+*In this form, only components imported will be bundled.*
 
 ```vue
 <script setup lang="ts">
 import { Button } from 'vue-amazing-ui'
-import 'vue-amazing-ui/css'
+import 'vue-amazing-ui/es/button/Button.css'
 </script>
 <template>
   <Button>button</Button>
@@ -97,6 +107,23 @@ import {
 </script>
 ```
 
+## Use Types
+
+*All types can be directly imported from vue-amazing-ui without the need for additional installation.*
+
+```vue
+<script setup lang="ts">
+import { Button } from 'vue-amazing-ui'
+import type { ButtonProps } from 'vue-amazing-ui'
+import 'vue-amazing-ui/es/button/Button.css'
+
+const shape = ref<ButtonProps['shape']>('default')
+</script>
+<template>
+  <Button :shape="shape">button</Button>
+</template>
+```
+
 ## Project
 
 - Get the project code
@@ -119,7 +146,7 @@ pnpm i
 pnpm dev
 ```
 
-## Details
+## Blogs
 
 [My CSDN Blogs](https://blog.csdn.net/Dandrose)
 

@@ -7,7 +7,7 @@ export { default as Avatar } from './avatar'
 export type { Props as BackTopProps } from './backtop'
 export { default as BackTop } from './backtop'
 
-export type { Props as BadgeProps } from './badge'
+export type { Props as BadgeProps, PresetColor as BadgePresetColor, Status as BadgeStatus } from './badge'
 export { default as Badge } from './badge'
 
 export type { Props as BreadcrumbProps, Route as BreadcrumbRoute, Query as BreadcrumbRouteQuery } from './breadcrumb'
@@ -97,7 +97,7 @@ export { default as Modal } from './modal'
 export type { Props as NotificationProps, Notification as NotificationOptions } from './notification'
 export { default as Notification } from './notification'
 
-export type { Props as NumberAnimationProps } from './numberanimation'
+export type { Props as NumberAnimationProps, TransitionFunc as NumberAnimationTransitionFunc } from './numberanimation'
 export { default as NumberAnimation } from './numberanimation'
 
 export type { Props as PaginationProps } from './pagination'
@@ -164,7 +164,7 @@ export { default as Swiper } from './swiper'
 export type { Props as SwitchProps } from './switch'
 export { default as Switch } from './switch'
 
-export type { Props as TableProps, Column as TableColumn } from './table'
+export type { Props as TableProps, Column as TableColumn, ScrollOption as TableScrollOption } from './table'
 export { default as Table } from './table'
 
 export type { Props as TabsProps, Tab as TabsItem } from './tabs'

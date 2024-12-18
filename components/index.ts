@@ -20,6 +20,7 @@ export {
   useResizeObserver,
   useSlotsExist
 } from './utils'
+export { VueAmazingUIResolver } from './utils/resolver'
 
 export const install = function (app: App) {
   Object.values(components).forEach((component) => {

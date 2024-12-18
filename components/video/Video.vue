@@ -114,16 +114,18 @@ watch(
 function getPoster() {
   // 在未设置封面时，自动截取视频0.5s对应帧作为视频封面
   // 由于不少视频第一帧为黑屏，故设置视频开始播放时间为0.5s，即取该时刻帧作为封面图
-  veoRef.value.currentTime = props.second
-  // 创建canvas元素
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-  // canvas画图
-  canvas.width = veoRef.value.videoWidth
-  canvas.height = veoRef.value.videoHeight
-  ctx?.drawImage(veoRef.value, 0, 0, canvas.width, canvas.height)
-  // 把canvas转成base64编码格式
-  veoPoster.value = canvas.toDataURL('image/png')
+  if (veoRef.value) {
+    veoRef.value.currentTime = props.second
+    // 创建canvas元素
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    // canvas画图
+    canvas.width = veoRef.value.videoWidth
+    canvas.height = veoRef.value.videoHeight
+    ctx?.drawImage(veoRef.value, 0, 0, canvas.width, canvas.height)
+    // 把canvas转成base64编码格式
+    veoPoster.value = canvas.toDataURL('image/png')
+  }
 }
 function onClickPlay() {
   if (originPlay.value) {
