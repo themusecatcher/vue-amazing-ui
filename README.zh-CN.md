@@ -127,6 +127,23 @@ export default defineConfig({
 </template>
 ```
 
+## 使用类型
+
+*所有类型均可直接从 `vue-amazing-ui` 中引入使用，无需任何额外安装*
+
+```vue
+<script setup lang="ts">
+import { Button } from 'vue-amazing-ui'
+import type { ButtonProps } from 'vue-amazing-ui'
+import 'vue-amazing-ui/es/button/Button.css'
+
+const shape = ref<ButtonProps['shape']>('default')
+</script>
+<template>
+  <Button :shape="shape">button</Button>
+</template>
+```
+
 ## 使用工具函数
 
 ```vue
@@ -150,23 +167,6 @@ import {
   useSlotsExist
 } from 'vue-amazing-ui'
 </script>
-```
-
-## 使用类型
-
-*所有类型均可直接从 `vue-amazing-ui` 中引入使用，无需额外安装*
-
-```vue
-<script setup lang="ts">
-import { Button } from 'vue-amazing-ui'
-import type { ButtonProps } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-
-const shape = ref<ButtonProps['shape']>('default')
-</script>
-<template>
-  <Button :shape="shape">button</Button>
-</template>
 ```
 
 ## 项目

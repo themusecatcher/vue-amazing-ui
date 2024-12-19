@@ -127,6 +127,23 @@ Then, you can directly use all components from `vue-amazing-ui` in your code.
 </template>
 ```
 
+## Use Types
+
+*All types can be directly imported and used from `vue-amazing-ui` without any additional installation.*
+
+```vue
+<script setup lang="ts">
+import { Button } from 'vue-amazing-ui'
+import type { ButtonProps } from 'vue-amazing-ui'
+import 'vue-amazing-ui/es/button/Button.css'
+
+const shape = ref<ButtonProps['shape']>('default')
+</script>
+<template>
+  <Button :shape="shape">button</Button>
+</template>
+```
+
 ## Use Functions
 
 ```vue
@@ -150,23 +167,6 @@ import {
   useSlotsExist
 } from 'vue-amazing-ui'
 </script>
-```
-
-## Use Types
-
-*All types can be directly imported from vue-amazing-ui without the need for additional installation.*
-
-```vue
-<script setup lang="ts">
-import { Button } from 'vue-amazing-ui'
-import type { ButtonProps } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-
-const shape = ref<ButtonProps['shape']>('default')
-</script>
-<template>
-  <Button :shape="shape">button</Button>
-</template>
 ```
 
 ## Project
