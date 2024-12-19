@@ -82,6 +82,51 @@ import 'vue-amazing-ui/es/button/Button.css'
 </template>
 ```
 
+**Automatic On-Demand Import (Strongly Recommended)**
+
+Use the [`unplugin-vue-components`](https://github.com/unplugin/unplugin-vue-components) plugin to automatically import components on demand. The plugin will automatically parse the components used in the template and import the components and styles.
+
+```sh
+pnpm add unplugin-vue-components -D
+# or
+npm install unplugin-vue-components -D
+# or
+yarn add unplugin-vue-components -D
+# or
+bun add unplugin-vue-components -D
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import Components from 'unplugin-vue-components/vite'
+// vue-amazing-ui on-demand import
+import { VueAmazingUIResolver } from 'vue-amazing-ui'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    vue(),
+    Components({
+      resolvers: [
+        // auto import components from VueAmazingUI
+        VueAmazingUIResolver()
+      ]
+    })
+  ]
+})
+```
+
+Then, you can directly use all components from `vue-amazing-ui` in your code.
+
+```vue
+<template>
+  <Button>button</Button>
+  <Tag>tag</Tag>
+</template>
+```
+
 ## Use Functions
 
 ```vue
@@ -191,19 +236,19 @@ Watermark | 水印
 
 Name | Description | Type
 :--- | :--- | :---
-dateFormat | 格式化日期时间字符串函数 | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string
-formatNumber | 数字格式化函数 | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string
-rafTimeout | 使用 `requestAnimationFrame` 实现的延迟 `setTimeout` 或间隔 `setInterval` 调用函数 | (fn: Function, delay: number = 0, interval: boolean = false) => object
-cancelRaf | 用于取消 `rafTimeout` 函数 | (raf: { id: number }) => void
-throttle | 节流函数 | (fn: Function, delay: number = 300) => any
-debounce | 防抖函数 | (fn: Function, delay: number = 300) => any
-add | 消除 `js` 加减精度问题的加法函数 | (num1: number, num2: number) => number
-downloadFile | 下载文件并自定义文件名，未传 `name` 时，从文件地址中自动提取文件名称 | (url: string, fileName?: string) => void
-toggleDark | 一键切换暗黑模式函数 | () => void
-useEventListener | 使用 `Vue` 的生命周期钩子添加和移除事件监听器 | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void
-useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object
-useScroll | 实时监测目标元素滚动位置及状态 | (target: Ref &#124; HTMLElement &#124; Window &#124; Document = window, throttleDelay: number = 0, onScroll?: (e: Event) => void, onStop?: (e: Event) => void) => object
-useFps | 实时监测浏览器刷新率FPS | () => object
-useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery: string) => object
-useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => object
-useSlotsExist | 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在 | (slotsName: string &#124; string[] = 'default') => Reactive &#124; Ref\<boolean>
+dateFormat | Format date-time string function | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string
+formatNumber | Number formatting function | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string
+rafTimeout | Function to implement `setTimeout` or `setInterval` using `requestAnimationFrame` | (fn: Function, delay: number = 0, interval: boolean = false) => object
+cancelRaf | Function to cancel the `rafTimeout` function | (raf: { id: number }) => void
+throttle | Throttle function | (fn: Function, delay: number = 300) => any
+debounce | Debounce function | (fn: Function, delay: number = 300) => any
+add | Addition function that eliminates precision issues in JavaScript arithmetic | (num1: number, num2: number) => number
+downloadFile | Function to download a file with a custom filename; if no name is provided, it extracts the filename from the URL | (url: string, fileName?: string) => void
+toggleDark | Function to toggle dark mode | () => void
+useEventListener | Function to add and remove event listeners using Vue lifecycle hooks | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void
+useMutationObserver | Function to observe changes in DOM elements using `MutationObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object
+useScroll | Function to monitor the scroll position and state of a target element in real time | (target: Ref &#124; HTMLElement &#124; Window &#124; Document = window, throttleDelay: number = 0, onScroll?: (e: Event) => void, onStop?: (e: Event) => void) => object
+useFps | Function to monitor the browser's refresh rate (FPS) in real time | () => object
+useMediaQuery | Function to determine if the current environment matches a specified media query condition | (mediaQuery: string) => object
+useResizeObserver | Function to observe changes in the dimensions of DOM elements using `ResizeObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => object
+useSlotsExist | Function to watch for the existence of slots with given names, supporting single slots or an array of slots | (slotsName: string &#124; string[] = 'default') => Reactive &#124; Ref\<boolean>
