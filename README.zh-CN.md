@@ -82,6 +82,51 @@ import 'vue-amazing-ui/es/button/Button.css'
 </template>
 ```
 
+**自动按需引入（强烈推荐）**
+
+使用 [`unplugin-vue-components`](https://github.com/unplugin/unplugin-vue-components) 插件来按需自动加载组件，插件会自动解析模板中的使用到的组件，并导入组件和样式
+
+```sh
+pnpm add unplugin-vue-components -D
+# or
+npm install unplugin-vue-components -D
+# or
+yarn add unplugin-vue-components -D
+# or
+bun add unplugin-vue-components -D
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import Components from 'unplugin-vue-components/vite'
+// vue-amazing-ui 按需引入
+import { VueAmazingUIResolver } from 'vue-amazing-ui'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    vue(),
+    Components({
+      resolvers: [
+        // auto import components from VueAmazingUI
+        VueAmazingUIResolver()
+      ]
+    })
+  ]
+})
+```
+
+然后，你可以在代码中直接使用 `vue-amazing-ui` 的所有组件
+
+```vue
+<template>
+  <Button>button</Button>
+  <Tag>tag</Tag>
+</template>
+```
+
 ## 使用工具函数
 
 ```vue
@@ -193,7 +238,7 @@ Watermark | 水印
 :--- | :--- | :---
 dateFormat | 格式化日期时间字符串函数 | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string
 formatNumber | 数字格式化函数 | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string
-rafTimeout | 使用 `requestAnimationFrame` 实现的延迟 `setTimeout` 或间隔 `setInterval` 调用函数 | (fn: Function, delay: number = 0, interval: boolean = false) => object
+rafTimeout | 使用 `requestAnimationFrame` 实现的 `setTimeout` 或 `setInterval` 调用函数 | (fn: Function, delay: number = 0, interval: boolean = false) => object
 cancelRaf | 用于取消 `rafTimeout` 函数 | (raf: { id: number }) => void
 throttle | 节流函数 | (fn: Function, delay: number = 300) => any
 debounce | 防抖函数 | (fn: Function, delay: number = 300) => any
