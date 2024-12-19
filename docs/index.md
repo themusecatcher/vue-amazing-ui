@@ -27,7 +27,7 @@ features:
     details: 目前共包含 63 个基础 UI 组件以及 16 个工具函数，持续探索更新中...
   - icon: 😉
     title: 有点意思
-    details: '所有组件均使用 TypeScript，且都是 SFC；支持 tree shaking'
+    details: '使用 TypeScript，都是单文件组件 (SFC)，支持 tree shaking'
 ---
 
 <GlobalElement hide-sponsor />
