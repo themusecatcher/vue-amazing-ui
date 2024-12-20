@@ -22,14 +22,6 @@ const stepsItems = ref([
   {
     title: 'Step 3',
     description: 'description 3'
-  },
-  {
-    title: 'Step 4',
-    description: 'description 4'
-  },
-  {
-    title: 'Step 5',
-    description: 'description 5'
   }
 ])
 const minStepsItems = ref([
@@ -41,12 +33,6 @@ const minStepsItems = ref([
   },
   {
     title: 'Step 3'
-  },
-  {
-    title: 'Step 4'
-  },
-  {
-    title: 'Step 5'
   }
 ])
 const current = ref(3)
