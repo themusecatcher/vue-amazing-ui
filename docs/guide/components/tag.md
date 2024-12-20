@@ -23,6 +23,7 @@ import {
   YoutubeOutlined,
   InstagramOutlined
 } from '@ant-design/icons-vue'
+import type { TagItem } from 'vue-amazing-ui'
 const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
@@ -48,9 +49,9 @@ watchEffect(() => {
 const onClose = (e: MouseEvent) => {
   console.log('e', e)
 }
-const onDynamicClose = (tag: any, index: number) => {
-  console.log('tag', tag)  
-  console.log('index', index)  
+const onDynamicClose = (tag: TagItem, index: number) => {
+  console.log('tag', tag)
+  console.log('index', index)
 }
 </script>
 
@@ -342,13 +343,14 @@ import {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { TagItem } from 'vue-amazing-ui'
 const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
 })
-const onDynamicClose = (tag: any, index: number) => {
-  console.log('tag', tag)  
-  console.log('index', index)  
+const onDynamicClose = (tag: TagItem, index: number) => {
+  console.log('tag', tag)
+  console.log('index', index)
 }
 </script>
 <template>
@@ -385,6 +387,7 @@ const onDynamicClose = (tag: any, index: number) => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { CheckCircleOutlined } from '@ant-design/icons-vue'
+import type { TagItem } from 'vue-amazing-ui'
 const objTags = ref([
   {
     label: '天空',
@@ -403,9 +406,9 @@ const objTags = ref([
 watchEffect(() => {
   console.log('objTags', objTags.value)
 })
-const onDynamicClose = (tag: any, index: number) => {
-  console.log('tag', tag)  
-  console.log('index', index)  
+const onDynamicClose = (tag: TagItem, index: number) => {
+  console.log('tag', tag)
+  console.log('index', index)
 }
 </script>
 <template>
@@ -451,6 +454,7 @@ const onDynamicClose = (tag: any, index: number) => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { TagItem } from 'vue-amazing-ui'
 const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
@@ -458,9 +462,9 @@ watchEffect(() => {
 const onClose = (e: MouseEvent) => {
   console.log('e', e)
 }
-const onDynamicClose = (tag: any, index: number) => {
-  console.log('tag', tag)  
-  console.log('index', index)  
+const onDynamicClose = (tag: TagItem, index: number) => {
+  console.log('tag', tag)
+  console.log('index', index)
 }
 </script>
 <template>
@@ -501,13 +505,14 @@ const onDynamicClose = (tag: any, index: number) => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { TagItem } from 'vue-amazing-ui'
 const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
 })
-const onDynamicClose = (tag: any, index: number) => {
-  console.log('tag', tag)  
-  console.log('index', index)  
+const onDynamicClose = (tag: TagItem, index: number) => {
+  console.log('tag', tag)
+  console.log('index', index)
 }
 </script>
 <template>
@@ -598,9 +603,9 @@ size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 bordered | 是否有边框 | boolean | true
 dynamic | 是否启用标签动态添加和删除 | boolean | false
 spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space) ，仅当 `dynamic: true` 时生效 | object | {}
-value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Tag](#tag-type)[] | []
+value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Item](#item-type)[] | []
 
-### Tag Type
+### Item Type
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
@@ -616,4 +621,4 @@ bordered? | 是否有边框 | boolean | true
 名称 | 说明 | 类型
 -- | -- | --
 close | 关闭时的回调 | (e: Event) => void
-dynamicClose | 启用标签动态添加和删除时关闭的回调 | (tag: Tag, index: number) => void
+dynamicClose | 启用标签动态添加和删除时关闭的回调 | (tag: [Item](#item-type), index: number) => void
