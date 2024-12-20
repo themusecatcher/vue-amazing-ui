@@ -3,7 +3,7 @@ import { ref, computed, nextTick, watchEffect } from 'vue'
 import Space from 'components/space'
 import { useSlotsExist } from 'components/utils'
 export interface Item {
-  label?: string // 标签文本名 string | slot
+  label?: string // 标签文本 string | slot
   closable?: boolean // 标签是否可以关闭，默认 true
   color?: string // 标签颜色
   icon?: string // 设置图标 string | slot
@@ -71,7 +71,7 @@ const isStrArray = computed(() => {
   }
   return null
 })
-const tags = computed(() => {
+const tagItems = computed(() => {
   if (props.dynamic) {
     if (props.value.length) {
       if (isStrArray.value) {
@@ -116,12 +116,12 @@ function onClose(e: MouseEvent) {
   hidden.value = true
   emits('close', e)
 }
-function onCloseTags(tag: Item, n: number) {
-  const newValue = (props.value as any[]).filter((tag: any, index: number) => {
+function onCloseTags(item: Item, n: number) {
+  const newValue = (props.value as any[]).filter((item: any, index: number) => {
     return index !== n
   })
   emits('update:value', newValue)
-  emits('dynamicClose', tag, n)
+  emits('dynamicClose', item, n)
 }
 async function onAdd() {
   showInput.value = true
@@ -166,7 +166,7 @@ function onKeyboard(e: KeyboardEvent) {
     <span v-if="showIcon" class="tag-icon">
       <slot name="icon">{{ icon }}</slot>
     </span>
-    <span class="tag-content">
+    <span class="tag-label">
       <slot></slot>
     </span>
     <span v-if="closable" class="tag-close" @click="onClose">
@@ -190,24 +190,24 @@ function onKeyboard(e: KeyboardEvent) {
     <div
       class="m-tag"
       :class="[
-        `tag-${tag.size || size}`,
-        (tag.color || color) && presetColor.includes(tag.color || color) ? `tag-${tag.color || color}` : '',
+        `tag-${item.size || size}`,
+        (item.color || color) && presetColor.includes(item.color || color) ? `tag-${item.color || color}` : '',
         {
-          'tag-borderless': tag.bordered !== undefined && !tag.bordered,
-          'tag-has-color': (tag.color || color) && !presetColor.includes(tag.color || color)
+          'tag-borderless': item.bordered !== undefined && !item.bordered,
+          'tag-has-color': (item.color || color) && !presetColor.includes(item.color || color)
         }
       ]"
-      :style="`background-color: ${(tag.color || color) && !presetColor.includes(tag.color || color) ? tag.color || color : ''};`"
-      v-for="(tag, index) in tags"
+      :style="`background-color: ${(item.color || color) && !presetColor.includes(item.color || color) ? item.color || color : ''};`"
+      v-for="(item, index) in tagItems"
       :key="index"
     >
       <span v-if="showTagsIcon[index]" ref="tagsIconRef" class="tag-icon">
-        <slot name="icon" :index="index">{{ tag.icon }}</slot>
+        <slot name="icon" :item="item" :icon="icon" :index="index">{{ item.icon }}</slot>
       </span>
-      <span class="tag-content">
-        <slot :label="tag.label" :index="index">{{ tag.label }}</slot>
+      <span class="tag-label">
+        <slot name="label" :item="item" :label="item.label" :index="index">{{ item.label }}</slot>
       </span>
-      <span v-if="tag.closable || closable" class="tag-close" @click="onCloseTags(tag, index)">
+      <span v-if="item.closable || closable" class="tag-close" @click="onCloseTags(item, index)">
         <svg
           focusable="false"
           class="close-svg"
@@ -275,7 +275,7 @@ function onKeyboard(e: KeyboardEvent) {
       fill: currentColor;
     }
   }
-  .tag-content {
+  .tag-label {
     height: 100%;
     display: inline-flex;
     align-items: center;
