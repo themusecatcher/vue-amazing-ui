@@ -155,7 +155,7 @@ export { default as Spin } from './spin'
 export type { Props as StatisticProps } from './statistic'
 export { default as Statistic } from './statistic'
 
-export type { Props as StepsProps, Step as StepsItem } from './steps'
+export type { Props as StepsProps, Item as StepsItem } from './steps'
 export { default as Steps } from './steps'
 
 export type { Props as SwiperProps, Image as SwiperImage } from './swiper'

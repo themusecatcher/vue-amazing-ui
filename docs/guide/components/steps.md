@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
-const steps = ref([
+const stepsItems = ref([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -22,9 +22,17 @@ const steps = ref([
   {
     title: 'Step 3',
     description: 'description 3'
+  },
+  {
+    title: 'Step 4',
+    description: 'description 4'
+  },
+  {
+    title: 'Step 5',
+    description: 'description 5'
   }
 ])
-const minSteps = ref([
+const minStepsItems = ref([
   {
     title: 'Step 1'
   },
@@ -33,33 +41,39 @@ const minSteps = ref([
   },
   {
     title: 'Step 3'
+  },
+  {
+    title: 'Step 4'
+  },
+  {
+    title: 'Step 5'
   }
 ])
-const current = ref(2)
+const current = ref(3)
 watchEffect(() => {
   console.log('current', current.value)
 })
 const sizeOptions = [
-        {
-          label: 'default',
-          value: 'default'
-        },
-        {
-          label: 'small',
-          value: 'small'
-        }
-      ]
+  {
+    label: 'default',
+    value: 'default'
+  },
+  {
+    label: 'small',
+    value: 'small'
+  }
+]
 const size = ref('small')
 const placeOptions = [
-        {
-          label: 'right',
-          value: 'right'
-        },
-        {
-          label: 'bottom',
-          value: 'bottom'
-        }
-      ]
+  {
+    label: 'right',
+    value: 'right'
+  },
+  {
+    label: 'bottom',
+    value: 'bottom'
+  }
+]
 const place = ref('bottom')
 function onChange(index: number) {
   // 父组件获取切换后的选中步骤
@@ -71,7 +85,7 @@ function onPrev() {
   }
 }
 function onNext() {
-  if (steps.value.length >= current.value) {
+  if (stepsItems.value.length >= current.value) {
     current.value++
   }
 }
@@ -86,14 +100,14 @@ const state = reactive({
 
 ## 基本使用
 
-<Steps :steps="steps" :current="current" @change="onChange" />
+<Steps :items="stepsItems" :current="current" @change="onChange" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const steps = ref([
+const stepsItems = ref([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -117,7 +131,7 @@ function onChange(index: number) {
 }
 </script>
 <template>
-  <Steps :steps="steps" :current="current" @change="onChange" />
+  <Steps :items="stepsItems" :current="current" @change="onChange" />
 </template>
 ```
 
@@ -127,7 +141,7 @@ function onChange(index: number) {
 
 <Flex vertical>
   <Radio :options="placeOptions" v-model:value="place" button button-style="solid" />
-  <Steps :steps="steps" :label-placement="place" :current="current" />
+  <Steps :items="stepsItems" :label-placement="place" :current="current" />
 </Flex>
 
 ::: details Show Code
@@ -135,7 +149,7 @@ function onChange(index: number) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const steps = ref([
+const stepsItems = ref([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -150,15 +164,15 @@ const steps = ref([
   }
 ])
 const placeOptions = [
-        {
-          label: 'right',
-          value: 'right'
-        },
-        {
-          label: 'bottom',
-          value: 'bottom'
-        }
-      ]
+  {
+    label: 'right',
+    value: 'right'
+  },
+  {
+    label: 'bottom',
+    value: 'bottom'
+  }
+]
 const place = ref('bottom')
 const current = ref(2)
 watchEffect(() => {
@@ -168,7 +182,7 @@ watchEffect(() => {
 <template>
   <Flex vertical>
     <Radio :options="placeOptions" v-model:value="place" button button-style="solid" />
-    <Steps :steps="steps" :label-placement="place" :current="current" />
+    <Steps :items="stepsItems" :label-placement="place" :current="current" />
   </Flex>
 </template>
 ```
@@ -179,7 +193,7 @@ watchEffect(() => {
 
 <Flex vertical>
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  <Steps :steps="minSteps" :size="size" :current="current" />
+  <Steps :items="minStepsItems" :size="size" :current="current" />
 </Flex>
 
 ::: details Show Code
@@ -187,7 +201,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const minSteps = ref([
+const minStepsItems = ref([
   {
     title: 'Step 1'
   },
@@ -199,15 +213,15 @@ const minSteps = ref([
   }
 ])
 const sizeOptions = [
-        {
-          label: 'default',
-          value: 'default'
-        },
-        {
-          label: 'small',
-          value: 'small'
-        }
-      ]
+  {
+    label: 'default',
+    value: 'default'
+  },
+  {
+    label: 'small',
+    value: 'small'
+  }
+]
 const size = ref('small')
 const current = ref(2)
 watchEffect(() => {
@@ -217,7 +231,7 @@ watchEffect(() => {
 <template>
   <Flex vertical>
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-    <Steps :steps="minSteps" :size="size" :current="current" />
+    <Steps :items="minStepsItems" :size="size" :current="current" />
   </Flex>
 </template>
 ```
@@ -227,8 +241,8 @@ watchEffect(() => {
 ## 垂直步骤条
 
 <Space :gap="120">
-  <Steps :steps="steps" vertical :current="current" />
-  <Steps :steps="steps" vertical size="small" :current="current" />
+  <Steps :items="stepsItems" vertical :current="current" />
+  <Steps :items="stepsItems" vertical size="small" :current="current" />
 </Space>
 
 ::: details Show Code
@@ -236,7 +250,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const steps = ref([
+const stepsItems = ref([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -257,8 +271,8 @@ watchEffect(() => {
 </script>
 <template>
   <Space :gap="120">
-    <Steps :steps="steps" vertical :current="current" />
-    <Steps :steps="steps" vertical size="small" :current="current" />
+    <Steps :items="stepsItems" vertical :current="current" />
+    <Steps :items="stepsItems" vertical size="small" :current="current" />
   </Space>
 </template>
 ```
@@ -268,8 +282,8 @@ watchEffect(() => {
 ## 点状步骤条
 
 <Space vertical>
-  <Steps :steps="steps" dotted v-model:current="current" />
-  <Steps :steps="steps" vertical dotted v-model:current="current" />
+  <Steps :items="stepsItems" dotted v-model:current="current" />
+  <Steps :items="stepsItems" vertical dotted v-model:current="current" />
 </Space>
 
 ::: details Show Code
@@ -277,7 +291,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const steps = ref([
+const stepsItems = ref([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -298,8 +312,8 @@ watchEffect(() => {
 </script>
 <template>
   <Space vertical>
-    <Steps :steps="steps" dotted v-model:current="current" />
-    <Steps :steps="steps" vertical dotted v-model:current="current" />
+    <Steps :items="stepsItems" dotted v-model:current="current" />
+    <Steps :items="stepsItems" vertical dotted v-model:current="current" />
   </Space>
 </template>
 ```
@@ -312,22 +326,21 @@ watchEffect(() => {
 
 <br/>
 
-<Space>
-  <Button @click="onPrev">Prev</Button>
-  <Button @click="onNext">Next</Button>
-</Space>
-<br/>
-<br/>
-<Steps :steps="steps" v-model:current="current" />
-<br/>
-<Steps :steps="steps" vertical v-model:current="current" />
+<Flex vertical>
+  <Space>
+    <Button @click="onPrev">Prev</Button>
+    <Button @click="onNext">Next</Button>
+  </Space>
+  <Steps :items="stepsItems" v-model:current="current" />
+  <Steps :items="stepsItems" vertical v-model:current="current" />
+</Flex>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const steps = ref([
+const stepsItems = ref([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -357,15 +370,14 @@ function onNext () {
 }
 </script>
 <template>
-  <Space>
-    <Button @click="onPrev">Prev</Button>
-    <Button @click="onNext">Next</Button>
-  </Space>
-  <br/>
-  <br/>
-  <Steps :steps="steps" v-model:current="current" />
-  <br/>
-  <Steps :steps="steps" vertical v-model:current="current" />
+  <Flex vertical>
+    <Space>
+      <Button @click="onPrev">Prev</Button>
+      <Button @click="onNext">Next</Button>
+    </Space>
+    <Steps :items="stepsItems" v-model:current="current" />
+    <Steps :items="stepsItems" vertical v-model:current="current" />
+  </Flex>
 </template>
 ```
 
@@ -401,12 +413,12 @@ function onNext () {
 </Row>
 <Steps
   class="mt30"
-  :steps="steps"
+  :items="stepsItems"
   :size="state.size"
   :vertical="state.vertical"
   :label-placement="state.labelPlacement"
   :dotted="state.dotted"
-  :current="current"
+  v-model:current="current"
 />
 
 ::: details Show Code
@@ -414,7 +426,7 @@ function onNext () {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const steps = ref([
+const stepsItems = ref([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -489,7 +501,7 @@ const state = reactive({
   </Row>
   <Steps
     class="mt30"
-    :steps="steps"
+    :items="stepsItems"
     :size="state.size"
     :vertical="state.vertical"
     :label-placement="state.labelPlacement"
@@ -518,7 +530,7 @@ const state = reactive({
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-steps | 步骤数组 | [Step](#step-type)[] | []
+items | 步骤数组 | [Item](#item-type)[] | []
 width | 步骤条总宽度，单位 `px` | number &#124; string | 'auto'
 size | 步骤条大小 | 'default' &#124; 'small' | 'default'
 vertical | 是否使用垂直步骤条，当 `vertical: true` `时，labelPlacement` 自动设为 `right` | boolean | false
@@ -526,7 +538,7 @@ labelPlacement | 标签放置位置，默认放图标右侧，可选 `bottom` �
 dotted | 是否使用点状步骤条，当 `dotted: true` 且 `vertical: false` 时，`labelPlacement` 将自动设为 `bottom` | boolean | false
 current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1
 
-### Step Type
+### Item Type
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --

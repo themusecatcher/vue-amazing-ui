@@ -2,6 +2,10 @@
 
 <GlobalElement />
 
+## 2.0.1 <Tag color="volcano" size="small">2024-12-18</Tag>
+
+- 优化并更新 [步骤条 Steps](https://themusecatcher.github.io/vue-amazing-ui/guide/components/steps.html) 组件，将 `Steps` 属性重命名为 `items`
+
 ## 2.0.0 <Tag color="volcano" size="small">2024-12-18</Tag>
 
 - 优化组件库打包构建；所有组件支持手动或自动按需引入；全面支持基于 `ES modules` 的 `tree shaking`
