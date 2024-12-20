@@ -10,15 +10,13 @@ export interface Props {
   lineStyle?: 'solid' | 'dashed' | 'dotted' // 时间线样式
   mode?: 'left' | 'center' | 'right' // 通过设置 mode 可以改变时间轴和内容的相对位置
   position?: 'left' | 'right' // 当 mode 为 center 时，内容交替展现，内容从左边（left）开始或者右边（right）开始展现
-  horizontal?: boolean // 是否使用水平时间轴
 }
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   width: '100%',
   lineStyle: 'solid',
   mode: 'left',
-  position: 'left',
-  horizontal: false
+  position: 'left'
 })
 enum ColorStyle { // 颜色主题对象
   blue = '#1677ff',
