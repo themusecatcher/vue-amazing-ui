@@ -2,7 +2,7 @@
 import { ref, watch, onMounted, computed } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { useResizeObserver, useSlotsExist } from 'components/utils'
-export interface Tab {
+export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   tab?: string // 页签显示文字 string | slot
   icon?: VNode // 页签图标
@@ -10,7 +10,7 @@ export interface Tab {
   disabled?: boolean // 是否禁用页签
 }
 export interface Props {
-  tabPages?: Tab[] // 标签页数组
+  items?: Item[] // 标签页数组
   prefix?: string // 标签页前缀 string | slot
   suffix?: string // 标签页后缀 string | slot
   animated?: boolean // 是否启用切换动画，在 tabPosition: 'top' | 'bottom' 时有效
@@ -24,7 +24,7 @@ export interface Props {
   activeKey?: string | number // (v-model) 当前激活 tab 面板的 key
 }
 const props = withDefaults(defineProps<Props>(), {
-  tabPages: () => [],
+  items: () => [],
   prefix: undefined,
   suffix: undefined,
   animated: true,
@@ -56,7 +56,7 @@ const transition = ref(false)
 const emits = defineEmits(['update:activeKey', 'change'])
 const slotsExist = useSlotsExist(['prefix', 'suffix'])
 const activeIndex = computed(() => {
-  return props.tabPages.findIndex((page, index) => getPageKey(page.key, index) === props.activeKey)
+  return props.items.findIndex((page, index) => getPageKey(page.key, index) === props.activeKey)
 })
 const showPrefix = computed(() => {
   return Boolean(slotsExist.prefix || props.prefix)
@@ -330,24 +330,24 @@ function getContentStyle(key: string | number | undefined, index: number) {
             ref="tabsRef"
             class="tab-item"
             :class="{
-              'tab-line-active': type === 'line' && activeKey === getPageKey(page.key, index),
-              'tab-card-active': type === 'card' && activeKey === getPageKey(page.key, index),
-              'tab-disabled': page.disabled
+              'tab-line-active': type === 'line' && activeKey === getPageKey(item.key, index),
+              'tab-card-active': type === 'card' && activeKey === getPageKey(item.key, index),
+              'tab-disabled': item.disabled
             }"
             :style="index > 0 && tabGutter !== undefined ? tabGutterStyle : {}"
-            @click="page.disabled ? () => false : onTab(getPageKey(page.key, index))"
-            v-for="(page, index) in tabPages"
+            @click="item.disabled ? () => false : onTab(getPageKey(item.key, index))"
+            v-for="(item, index) in items"
             :key="index"
           >
-            <slot name="tab" :key="getPageKey(page.key, index)" :tab="page.tab">
-              <component v-if="page.icon" :is="page.icon" />
-              {{ page.tab }}
+            <slot name="tab" :item="item" :tab="item.tab" :key="getPageKey(item.key, index)">
+              <component v-if="item.icon" :is="item.icon" />
+              {{ item.tab }}
             </slot>
           </div>
           <div
             class="tab-bar"
             :class="{
-              'tab-bar-disabled': tabPages[activeIndex]?.disabled,
+              'tab-bar-disabled': items[activeIndex]?.disabled,
               'card-hidden': type === 'card'
             }"
             :style="tabBarStyle"
@@ -366,11 +366,13 @@ function getContentStyle(key: string | number | undefined, index: number) {
       >
         <div
           class="tabs-content"
-          :style="getContentStyle(page.key, index)"
-          v-for="(page, index) in tabPages"
-          :key="page.key || index"
+          :style="getContentStyle(item.key, index)"
+          v-for="(item, index) in items"
+          :key="item.key || index"
         >
-          <slot name="content" :key="getPageKey(page.key, index)" :content="page.content">{{ page.content }}</slot>
+          <slot name="content" :item="item" :content="item.content" :key="getPageKey(item.key, index)">{{
+            item.content
+          }}</slot>
         </div>
       </div>
     </div>

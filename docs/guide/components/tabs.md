@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { ref, h, watchEffect, computed, reactive } from 'vue'
 import { AppleOutlined, AndroidOutlined, WindowsOutlined } from '@ant-design/icons-vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -43,7 +43,7 @@ const tabPages = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const tabPagesDisabled = ref([
+const tabItemsDisabled = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -231,14 +231,14 @@ function onChange(key: string | number) {
 
 ## 基本使用
 
-<Tabs :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
+<Tabs :items="tabItems" v-model:active-key="activeKey" @change="onChange" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -279,7 +279,7 @@ function onChange(key: string | number) {
 }
 </script>
 <template>
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" @change="onChange" />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" @change="onChange" />
 </template>
 ```
 
@@ -287,14 +287,14 @@ function onChange(key: string | number) {
 
 ## 卡片式标签页
 
-<Tabs :tab-pages="tabPages" v-model:active-key="activeKey" type="card" @change="onChange" />
+<Tabs :items="tabItems" v-model:active-key="activeKey" type="card" @change="onChange" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -335,7 +335,7 @@ function onChange(key: string | number) {
 }
 </script>
 <template>
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" type="card" @change="onChange" />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" type="card" @change="onChange" />
 </template>
 ```
 
@@ -348,8 +348,8 @@ function onChange(key: string | number) {
 <br/>
 
 <Flex vertical>
-  <Tabs :tab-pages="tabPagesDisabled" v-model:active-key="activeKey" />
-  <Tabs :tab-pages="tabPagesDisabled" v-model:active-key="activeKey" type="card" />
+  <Tabs :items="tabItemsDisabled" v-model:active-key="activeKey" />
+  <Tabs :items="tabItemsDisabled" v-model:active-key="activeKey" type="card" />
 </Flex>
 
 ::: details Show Code
@@ -357,7 +357,7 @@ function onChange(key: string | number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPagesDisabled = ref([
+const tabItemsDisabled = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -397,8 +397,8 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Tabs :tab-pages="tabPagesDisabled" v-model:active-key="activeKey" />
-    <Tabs :tab-pages="tabPagesDisabled" v-model:active-key="activeKey" type="card" />
+    <Tabs :items="tabItemsDisabled" v-model:active-key="activeKey" />
+    <Tabs :items="tabItemsDisabled" v-model:active-key="activeKey" type="card" />
   </Flex>
 </template>
 ```
@@ -408,8 +408,8 @@ watchEffect(() => {
 ## 居中展示
 
 <Flex vertical>
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" centered />
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" centered type="card" />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" centered />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" centered type="card" />
 </Flex>
 
 ::: details Show Code
@@ -417,7 +417,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -456,8 +456,8 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" centered />
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" centered type="card" />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" centered />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" centered type="card" />
   </Flex>
 </template>
 ```
@@ -467,8 +467,8 @@ watchEffect(() => {
 ## 带图标的标签页
 
 <Flex vertical>
-  <Tabs :tab-pages="iconTabPages" v-model:active-key="iconActiveKey" />
-  <Tabs :tab-pages="iconTabPages" v-model:active-key="iconActiveKey" type="card">
+  <Tabs :items="iconTabPages" v-model:active-key="iconActiveKey" />
+  <Tabs :items="iconTabPages" v-model:active-key="iconActiveKey" type="card">
     <template #tab="{ key, tab }">
       <AppleOutlined v-if="key === 0" />
       <AndroidOutlined v-if="key === 1" />
@@ -519,8 +519,8 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Tabs :tab-pages="iconTabPages" v-model:active-key="iconActiveKey" />
-    <Tabs :tab-pages="iconTabPages" v-model:active-key="iconActiveKey" type="card">
+    <Tabs :items="iconTabPages" v-model:active-key="iconActiveKey" />
+    <Tabs :items="iconTabPages" v-model:active-key="iconActiveKey" type="card">
       <template #tab="{ key, tab }">
         <AppleOutlined v-if="key === 0" />
         <AndroidOutlined v-if="key === 1" />
@@ -537,8 +537,8 @@ watchEffect(() => {
 ## 前缀 & 后缀
 
 <Flex vertical>
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" prefix="prefix" suffix="suffix" />
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" type="card">
+  <Tabs :items="tabItems" v-model:active-key="activeKey" prefix="prefix" suffix="suffix" />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" type="card">
     <template #prefix>
       <Button type="primary">prefix</Button>
     </template>
@@ -553,7 +553,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -592,8 +592,8 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" prefix="prefix" suffix="suffix" />
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" type="card">
+    <Tabs :items="tabItems" v-model:active-key="activeKey" prefix="prefix" suffix="suffix" />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" type="card">
       <template #prefix>
         <Button type="primary">prefix</Button>
       </template>
@@ -611,8 +611,8 @@ watchEffect(() => {
 
 <Flex vertical>
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :size="size" />
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :size="size" type="card" />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" type="card" />
 </Flex>
 
 ::: details Show Code
@@ -620,7 +620,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -675,8 +675,8 @@ const size = ref('middle')
 <template>
   <Flex vertical>
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :size="size" />
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :size="size" type="card" />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" type="card" />
   </Flex>
 </template>
 ```
@@ -687,8 +687,8 @@ const size = ref('middle')
 
 <Flex vertical>
   <Radio :options="positionOptions" v-model:value="position" button button-style="solid" />
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" />
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :tab-position="position" type="card" />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" type="card" />
 </Flex>
 
 ::: details Show Code
@@ -696,7 +696,7 @@ const size = ref('middle')
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -755,8 +755,8 @@ const position = ref('top')
 <template>
   <Flex vertical>
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :size="size" />
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" :size="size" type="card" />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" type="card" />
   </Flex>
 </template>
 ```
@@ -769,13 +769,13 @@ const position = ref('top')
   <Radio :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
   <Tabs
     :style="positionStyle"
-    :tab-pages="moreTabPages"
+    :items="moreTabPages"
     v-model:active-key="moreActiveKey"
     :tab-position="morePosition"
   />
   <Tabs
     :style="positionStyle"
-    :tab-pages="moreTabPages"
+    :items="moreTabPages"
     v-model:active-key="moreActiveKey"
     :tab-position="morePosition"
     type="card"
@@ -869,13 +869,13 @@ watchEffect(() => {
     <Radio :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
     <Tabs
       :style="positionStyle"
-      :tab-pages="moreTabPages"
+      :items="moreTabPages"
       v-model:active-key="moreActiveKey"
       :tab-position="morePosition"
     />
     <Tabs
       :style="positionStyle"
-      :tab-pages="moreTabPages"
+      :items="moreTabPages"
       v-model:active-key="moreActiveKey"
       :tab-position="morePosition"
       type="card"
@@ -890,7 +890,7 @@ watchEffect(() => {
 
 <Flex vertical>
   <Tabs
-    :tab-pages="tabPages"
+    :items="tabItems"
     v-model:active-key="activeKey"
     :tab-gutter="24"
     :tab-style="{
@@ -904,7 +904,7 @@ watchEffect(() => {
     }"
   />
   <Tabs
-    :tab-pages="tabPages"
+    :items="tabItems"
     v-model:active-key="activeKey"
     type="card"
     size="large"
@@ -926,7 +926,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -966,7 +966,7 @@ watchEffect(() => {
 <template>
   <Flex vertical>
     <Tabs
-      :tab-pages="tabPages"
+      :items="tabItems"
       v-model:active-key="activeKey"
       :tab-gutter="24"
       :tab-style="{
@@ -980,7 +980,7 @@ watchEffect(() => {
       }"
     />
     <Tabs
-      :tab-pages="tabPages"
+      :items="tabItems"
       v-model:active-key="activeKey"
       type="card"
       size="large"
@@ -1003,7 +1003,7 @@ watchEffect(() => {
 
 ## 自定义内容
 
-<Tabs :tab-pages="tabPages" v-model:active-key="activeKey">
+<Tabs :items="tabItems" v-model:active-key="activeKey">
   <template #content="{ key, content }">
     <p v-if="key === '1'">key: 1 的 slot 内容</p>
     <p v-if="key === '2'">key: 2 的 slot 内容</p>
@@ -1016,7 +1016,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -1054,7 +1054,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey">
+  <Tabs :items="tabItems" v-model:active-key="activeKey">
     <template #content="{ key, content }">
       <p v-if="key === '1'">key: 1 的 slot 内容</p>
       <p v-if="key === '2'">key: 2 的 slot 内容</p>
@@ -1108,7 +1108,7 @@ watchEffect(() => {
       </Space>
     </Col>
   </Row>
-  <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" v-bind="state" />
+  <Tabs :items="tabItems" v-model:active-key="activeKey" v-bind="state" />
 </Flex>
 
 ::: details Show Code
@@ -1116,7 +1116,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabPages = ref([
+const tabItems = ref([
   {
     key: '1',
     tab: 'Tab 1',
@@ -1246,7 +1246,7 @@ const state = reactive({
         </Space>
       </Col>
     </Row>
-    <Tabs :tab-pages="tabPages" v-model:active-key="activeKey" v-bind="state" />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" v-bind="state" />
   </Flex>
 </template>
 ```
@@ -1259,7 +1259,7 @@ const state = reactive({
 
 参数 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-tabPages | 标签页数组 | [Tab](#tab-type)[] | []
+items | 标签页数组 | [Item](#item-type)[] | []
 prefix | 标签页前缀 | string &#124; slot | undefined
 suffix | 标签页后缀 | string &#124; slot | undefined
 animated | 是否启用切换动画，在 `tabPosition: 'top' \| 'bottom'` 时有效 | boolean | true
@@ -1272,7 +1272,7 @@ tabPosition | 自定义页签位置 | 'top' &#124; 'right' &#124; 'bottom' &#124
 contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | undefined
 
-### Tab Type
+### Item Type
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
@@ -1281,6 +1281,13 @@ tab? | 页签显示文字 | string | undefined
 icon? | 页签图标 | VNode | undefined
 content? | 标签页内容 | string &#124; slot | undefined
 disabled? | 是否禁用页签 | boolean | false
+
+## Slots
+
+名称 | 说明 | 类型
+-- | -- | --
+tab | 自定义页签显示文字 | v-slot:tab="{ item, tab, key }"
+content | 自定义标签页内容 | v-slot:content="{ item, content, key }"
 
 ## Events
 

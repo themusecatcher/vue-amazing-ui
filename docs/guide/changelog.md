@@ -5,6 +5,7 @@
 ## 2.0.1 <Tag color="volcano" size="small">2024-12-18</Tag>
 
 - 优化并更新 [步骤条 Steps](https://themusecatcher.github.io/vue-amazing-ui/guide/components/steps.html) 组件，将 `Steps` 属性重命名为 `items`
+- 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件，将 `tabPages` 属性重命名为 `items`
 - 组件库及文档代码优化
 
 ## 2.0.0 <Tag color="volcano" size="small">2024-12-18</Tag>

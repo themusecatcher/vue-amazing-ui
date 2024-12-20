@@ -12,6 +12,7 @@ import {
   YoutubeOutlined,
   InstagramOutlined
 } from '@ant-design/icons-vue'
+import type { TagItem } from 'vue-amazing-ui'
 const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
@@ -37,7 +38,7 @@ watchEffect(() => {
 const onClose = (e: MouseEvent) => {
   console.log('e', e)
 }
-const onDynamicClose = (tag: any, index: number) => {
+const onDynamicClose = (tag: TagItem, index: number) => {
   console.log('tag', tag)
   console.log('index', index)
 }
