@@ -49,8 +49,8 @@ watchEffect(() => {
 const onClose = (e: MouseEvent) => {
   console.log('e', e)
 }
-const onDynamicClose = (tag: TagItem, index: number) => {
-  console.log('tag', tag)
+const onDynamicClose = (item: TagItem, index: number) => {
+  console.log('item', item)
   console.log('index', index)
 }
 </script>
@@ -348,8 +348,8 @@ const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
 })
-const onDynamicClose = (tag: TagItem, index: number) => {
-  console.log('tag', tag)
+const onDynamicClose = (item: TagItem, index: number) => {
+  console.log('item', item)
   console.log('index', index)
 }
 </script>
@@ -368,7 +368,7 @@ const onDynamicClose = (tag: TagItem, index: number) => {
 
 <Space gap="small">
   <Tag dynamic v-model:value="objTags" @dynamic-close="onDynamicClose">
-    <template #default="{ label, index }">
+    <template #label="{ label, index }">
       <template v-if="index===1">
         {{ label }} {{ index }}
       </template>
@@ -406,15 +406,15 @@ const objTags = ref([
 watchEffect(() => {
   console.log('objTags', objTags.value)
 })
-const onDynamicClose = (tag: TagItem, index: number) => {
-  console.log('tag', tag)
+const onDynamicClose = (item: TagItem, index: number) => {
+  console.log('item', item)
   console.log('index', index)
 }
 </script>
 <template>
   <Space gap="small">
     <Tag dynamic v-model:value="objTags" @dynamic-close="onDynamicClose">
-      <template #default="{ label, index }">
+      <template #label="{ label, index }">
         <template v-if="index===1">
           {{ label }} {{ index }}
         </template>
@@ -462,8 +462,8 @@ watchEffect(() => {
 const onClose = (e: MouseEvent) => {
   console.log('e', e)
 }
-const onDynamicClose = (tag: TagItem, index: number) => {
-  console.log('tag', tag)
+const onDynamicClose = (item: TagItem, index: number) => {
+  console.log('item', item)
   console.log('index', index)
 }
 </script>
@@ -510,8 +510,8 @@ const strTags = ref(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
 })
-const onDynamicClose = (tag: TagItem, index: number) => {
-  console.log('tag', tag)
+const onDynamicClose = (item: TagItem, index: number) => {
+  console.log('item', item)
   console.log('index', index)
 }
 </script>
@@ -609,16 +609,23 @@ value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: tr
 
 名称 | 说明 | 类型 | 默认值
 -- | -- | -- | --
-label? | 标签文本名 | string &#124; slot | undefined
+label? | 标签文本 | string &#124; slot | undefined
 closable? | 标签是否可以关闭 | boolean | true
 color? | 标签颜色 | string | undefined
 icon? | 设置图标 | string &#124; slot | undefined
 size? | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 bordered? | 是否有边框 | boolean | true
 
+## Slots
+
+名称 | 说明 | 类型
+-- | -- | --
+label | 自定义标签文本 | v-slot:label="{ item, label, index }"
+icon | 自定义图标 | v-slot:icon="{ item, icon, index }"
+
 ## Events
 
 名称 | 说明 | 类型
 -- | -- | --
 close | 关闭时的回调 | (e: Event) => void
-dynamicClose | 启用标签动态添加和删除时关闭的回调 | (tag: [Item](#item-type), index: number) => void
+dynamicClose | 启用标签动态添加和删除时关闭的回调 | (item: [Item](#item-type), index: number) => void

@@ -38,8 +38,8 @@ watchEffect(() => {
 const onClose = (e: MouseEvent) => {
   console.log('e', e)
 }
-const onDynamicClose = (tag: TagItem, index: number) => {
-  console.log('tag', tag)
+const onDynamicClose = (item: TagItem, index: number) => {
+  console.log('item', item)
   console.log('index', index)
 }
 </script>
@@ -160,7 +160,7 @@ const onDynamicClose = (tag: TagItem, index: number) => {
     <h3 class="mb10">使用对象格式数组</h3>
     <Space>
       <Tag dynamic v-model:value="objTags">
-        <template #default="{ label, index }">
+        <template #label="{ label, index }">
           <template v-if="index === 1">{{ label }} {{ index }}</template>
         </template>
         <template #icon="{ index }">
