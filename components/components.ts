@@ -167,10 +167,10 @@ export { default as Switch } from './switch'
 export type { Props as TableProps, Column as TableColumn, ScrollOption as TableScrollOption } from './table'
 export { default as Table } from './table'
 
-export type { Props as TabsProps, Tab as TabsItem } from './tabs'
+export type { Props as TabsProps, Item as TabsItem } from './tabs'
 export { default as Tabs } from './tabs'
 
-export type { Props as TagProps, Tag as TagItem } from './tag'
+export type { Props as TagProps, Item as TagItem } from './tag'
 export { default as Tag } from './tag'
 
 export type { Props as TextareaProps } from './textarea'

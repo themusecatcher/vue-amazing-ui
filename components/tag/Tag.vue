@@ -2,7 +2,7 @@
 import { ref, computed, nextTick, watchEffect } from 'vue'
 import Space from 'components/space'
 import { useSlotsExist } from 'components/utils'
-export interface Tag {
+export interface Item {
   label?: string // 标签文本名 string | slot
   closable?: boolean // 标签是否可以关闭，默认 true
   color?: string // 标签颜色
@@ -18,7 +18,7 @@ export interface Props {
   bordered?: boolean // 是否有边框
   dynamic?: boolean // 是否启用标签动态添加和删除
   spaceProps?: object // Space 组件属性配置，仅当 dynamic: true 时生效
-  value?: string[] | Tag[] // 动态标签数组，仅当 dynamic: true 时生效
+  value?: string[] | Item[] // 动态标签数组，仅当 dynamic: true 时生效
 }
 const props = withDefaults(defineProps<Props>(), {
   closable: false,
@@ -116,7 +116,7 @@ function onClose(e: MouseEvent) {
   hidden.value = true
   emits('close', e)
 }
-function onCloseTags(tag: Tag, n: number) {
+function onCloseTags(tag: Item, n: number) {
   const newValue = (props.value as any[]).filter((tag: any, index: number) => {
     return index !== n
   })
