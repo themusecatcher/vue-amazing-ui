@@ -10,13 +10,15 @@ export interface Props {
   lineStyle?: 'solid' | 'dashed' | 'dotted' // 时间线样式
   mode?: 'left' | 'center' | 'right' // 通过设置 mode 可以改变时间轴和内容的相对位置
   position?: 'left' | 'right' // 当 mode 为 center 时，内容交替展现，内容从左边（left）开始或者右边（right）开始展现
+  horizontal?: boolean // 是否使用水平时间轴
 }
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   width: '100%',
   lineStyle: 'solid',
   mode: 'left',
-  position: 'left'
+  position: 'left',
+  horizontal: false
 })
 enum ColorStyle { // 颜色主题对象
   blue = '#1677ff',
@@ -24,7 +26,7 @@ enum ColorStyle { // 颜色主题对象
   red = '#ff4d4f',
   gray = '#00000040'
 }
-const desc = ref()
+const descRef = ref()
 const dotsHeight = ref<string[]>([])
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -38,9 +40,10 @@ const len = computed(() => {
 })
 function getDotsHeight() {
   for (let n = 0; n < len.value; n++) {
-    dotsHeight.value[n] = getComputedStyle(desc.value[n].firstElementChild || desc.value[n], null).getPropertyValue(
-      'line-height'
-    )
+    dotsHeight.value[n] = getComputedStyle(
+      descRef.value[n].firstElementChild || descRef.value[n],
+      null
+    ).getPropertyValue('line-height')
   }
 }
 watchEffect(
@@ -56,16 +59,16 @@ watchEffect(
         if ((n + 1) % 2) {
           // odd
           if (props.position === 'left') {
-            desc.value[n].classList.add('desc-alternate-left')
+            descRef.value[n].classList.add('desc-alternate-left')
           } else {
-            desc.value[n].classList.add('desc-alternate-right')
+            descRef.value[n].classList.add('desc-alternate-right')
           }
         } else {
           // even
           if (props.position === 'left') {
-            desc.value[n].classList.add('desc-alternate-right')
+            descRef.value[n].classList.add('desc-alternate-right')
           } else {
-            desc.value[n].classList.add('desc-alternate-left')
+            descRef.value[n].classList.add('desc-alternate-left')
           }
         }
       }
@@ -79,21 +82,21 @@ watchEffect(
     <div
       class="timeline-item"
       :class="{ 'item-last': index === items.length - 1 }"
-      v-for="(data, index) in items"
+      v-for="(item, index) in items"
       :key="index"
     >
       <span class="timeline-tail" :class="`tail-${mode}`" :style="`border-left-style: ${lineStyle};`"></span>
       <div class="timeline-dot" :class="`dot-${mode}`" :style="`height: ${dotsHeight[index]}`">
-        <slot name="dot" :index="index">
-          <span class="dot-item" v-if="data.color === 'red'" :style="{ borderColor: ColorStyle.red }"></span>
-          <span class="dot-item" v-else-if="data.color === 'gray'" :style="{ borderColor: ColorStyle.gray }"></span>
-          <span class="dot-item" v-else-if="data.color === 'green'" :style="{ borderColor: ColorStyle.green }"></span>
-          <span class="dot-item" v-else-if="data.color === 'blue'" :style="{ borderColor: ColorStyle.blue }"></span>
-          <span class="dot-item" v-else :style="{ borderColor: data.color || ColorStyle.blue }"></span>
+        <slot name="dot" :item="item" :index="index">
+          <span class="dot-item" v-if="item.color === 'red'" :style="{ borderColor: ColorStyle.red }"></span>
+          <span class="dot-item" v-else-if="item.color === 'gray'" :style="{ borderColor: ColorStyle.gray }"></span>
+          <span class="dot-item" v-else-if="item.color === 'green'" :style="{ borderColor: ColorStyle.green }"></span>
+          <span class="dot-item" v-else-if="item.color === 'blue'" :style="{ borderColor: ColorStyle.blue }"></span>
+          <span class="dot-item" v-else :style="{ borderColor: item.color || ColorStyle.blue }"></span>
         </slot>
       </div>
-      <div ref="desc" :class="`timeline-desc desc-${mode}`">
-        <slot name="desc" :index="index">{{ data.desc || '--' }}</slot>
+      <div ref="descRef" :class="`timeline-desc desc-${mode}`">
+        <slot name="desc" :item="item" :index="index">{{ item.desc || '--' }}</slot>
       </div>
     </div>
   </div>

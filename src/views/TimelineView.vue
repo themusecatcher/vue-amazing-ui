@@ -58,6 +58,12 @@ const timelineItems = ref([
         <span class="big-dot" v-if="index === 2"></span>
       </template>
     </Timeline>
+    <h3 class="mb10">水平时间轴</h3>
+    <Timeline horizontal :items="timelineItems">
+      <template #dot="{ index }">
+        <span class="big-dot" v-if="index === 2"></span>
+      </template>
+    </Timeline>
   </div>
 </template>
 <style lang="less" scoped>

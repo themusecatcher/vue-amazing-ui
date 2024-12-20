@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-export interface Step {
+export interface Item {
   title?: string // 标题
   description?: string // 描述
 }
 export interface Props {
-  steps?: Step[] // 步骤数组
+  items?: Item[] // 步骤数组
   width?: number | string // 步骤条总宽度，单位 px
   size?: 'default' | 'small' // 步骤条大小
   vertical?: boolean // 是否使用垂直步骤条，当 vertical: true 时，labelPlacement 自动设为 right
@@ -14,7 +14,7 @@ export interface Props {
   current?: number // (v-model) 当前选中的步骤，设置 v-model 后，Steps 变为可点击状态。从 1 开始计数
 }
 const props = withDefaults(defineProps<Props>(), {
-  steps: () => [],
+  items: () => [],
   width: 'auto',
   size: 'default',
   vertical: false,
@@ -32,7 +32,7 @@ const totalWidth = computed(() => {
 })
 const totalSteps = computed(() => {
   // 步骤总数
-  return props.steps.length
+  return props.items.length
 })
 const currentStep = computed(() => {
   if (props.current < 1) {
@@ -63,13 +63,13 @@ function onChange(index: number) {
     :style="`width: ${totalWidth};`"
   >
     <div
-      class="m-steps-item"
+      class="steps-item"
       :class="{
         'steps-finish': currentStep > index + 1,
         'steps-process': currentStep === index + 1,
         'steps-wait': currentStep < index + 1
       }"
-      v-for="(step, index) in steps"
+      v-for="(item, index) in items"
       :key="index"
     >
       <div tabindex="0" class="steps-info-wrap" @click="onChange(index + 1)">
@@ -97,9 +97,9 @@ function onChange(index: number) {
             <span class="steps-dot"></span>
           </template>
         </div>
-        <div class="m-steps-content">
-          <div class="steps-title">{{ step.title }}</div>
-          <div v-if="step.description" class="steps-description">{{ step.description }}</div>
+        <div class="steps-content">
+          <div class="steps-title">{{ item.title }}</div>
+          <div v-if="item.description" class="steps-description">{{ item.description }}</div>
         </div>
       </div>
     </div>
@@ -111,13 +111,13 @@ function onChange(index: number) {
   gap: 16px;
   transition: all 0.3s;
   &:not(.steps-label-bottom) {
-    .m-steps-item .steps-info-wrap {
+    .steps-item .steps-info-wrap {
       .steps-tail {
         display: none;
       }
     }
   }
-  .m-steps-item {
+  .steps-item {
     position: relative;
     overflow: hidden;
     flex: 1; // 弹性盒模型对象的子元素都有相同的长度，且忽略它们内部的内容
@@ -125,7 +125,7 @@ function onChange(index: number) {
     &:last-child {
       flex: none;
       .steps-info-wrap {
-        .m-steps-content .steps-title {
+        .steps-content .steps-title {
           padding-right: 0;
           &::after {
             display: none;
@@ -191,7 +191,7 @@ function onChange(index: number) {
           transition: all 0.3s;
         }
       }
-      .m-steps-content {
+      .steps-content {
         display: inline-block;
         vertical-align: top;
         transition: all 0.3s;
@@ -242,7 +242,7 @@ function onChange(index: number) {
           background: @themeColor;
         }
       }
-      .m-steps-content {
+      .steps-content {
         .steps-title {
           color: rgba(0, 0, 0, 0.88);
           &::after {
@@ -257,7 +257,7 @@ function onChange(index: number) {
         .steps-icon {
           border-color: @themeColor;
         }
-        .m-steps-content {
+        .steps-content {
           .steps-title,
           .steps-description {
             color: @themeColor;
@@ -279,7 +279,7 @@ function onChange(index: number) {
           background: @themeColor;
         }
       }
-      .m-steps-content {
+      .steps-content {
         .steps-title,
         .steps-description {
           color: rgba(0, 0, 0, 0.88);
@@ -297,7 +297,7 @@ function onChange(index: number) {
             color: @themeColor;
           }
         }
-        .m-steps-content {
+        .steps-content {
           .steps-title,
           .steps-description {
             color: @themeColor;
@@ -314,7 +314,7 @@ function onChange(index: number) {
 }
 .steps-small {
   gap: 12px;
-  .m-steps-item {
+  .steps-item {
     .steps-info-wrap {
       .steps-icon {
         width: 24px;
@@ -324,7 +324,7 @@ function onChange(index: number) {
           font-size: 12px;
         }
       }
-      .m-steps-content {
+      .steps-content {
         .steps-title {
           font-size: 14px;
           line-height: 24px;
@@ -339,7 +339,7 @@ function onChange(index: number) {
 }
 .steps-label-bottom {
   gap: 0;
-  .m-steps-item {
+  .steps-item {
     overflow: visible;
     .steps-info-wrap {
       .steps-tail {
@@ -349,7 +349,7 @@ function onChange(index: number) {
       .steps-icon {
         margin-left: 40px;
       }
-      .m-steps-content {
+      .steps-content {
         display: block;
         width: 112px;
         margin-top: 12px;
@@ -365,7 +365,7 @@ function onChange(index: number) {
   }
 }
 .steps-dotted {
-  .m-steps-item {
+  .steps-item {
     overflow: visible;
     .steps-info-wrap {
       .steps-tail {
@@ -393,7 +393,7 @@ function onChange(index: number) {
         border: 0;
         vertical-align: top;
       }
-      .m-steps-content {
+      .steps-content {
         width: 140px;
         margin-top: 20px;
         .steps-title {
@@ -404,11 +404,7 @@ function onChange(index: number) {
   }
   .steps-process {
     .steps-info-wrap .steps-icon {
-      top: -1px;
-      width: 10px;
-      height: 10px;
-      line-height: 10px;
-      margin-left: 65px;
+      transform: scale(1.25);
     }
   }
 }
@@ -416,7 +412,7 @@ function onChange(index: number) {
   display: inline-flex;
   flex-direction: column;
   gap: 0;
-  .m-steps-item {
+  .steps-item {
     flex: 1 0 auto;
     overflow: visible;
     &:last-child {
@@ -427,7 +423,7 @@ function onChange(index: number) {
         .steps-tail {
           display: block;
         }
-        .m-steps-content {
+        .steps-content {
           .steps-title {
             &::after {
               display: none;
@@ -452,7 +448,7 @@ function onChange(index: number) {
         float: left;
         margin-right: 16px;
       }
-      .m-steps-content {
+      .steps-content {
         display: block;
         min-height: 48px;
         overflow: hidden;
@@ -467,13 +463,13 @@ function onChange(index: number) {
   }
 }
 .steps-small.steps-vertical {
-  .m-steps-item {
+  .steps-item {
     .steps-info-wrap {
       .steps-tail {
         left: 11px;
         padding: 30px 0 6px;
       }
-      .m-steps-content {
+      .steps-content {
         .steps-title {
           line-height: 24px;
         }
@@ -482,7 +478,7 @@ function onChange(index: number) {
   }
 }
 .steps-vertical.steps-dotted {
-  .m-steps-item {
+  .steps-item {
     .steps-info-wrap {
       .steps-tail {
         top: 12px;
@@ -499,7 +495,7 @@ function onChange(index: number) {
         margin-left: 0;
         background: none;
       }
-      .m-steps-content {
+      .steps-content {
         width: inherit;
         margin: 0;
       }
@@ -517,7 +513,7 @@ function onChange(index: number) {
   }
 }
 .steps-small.steps-vertical.steps-dotted {
-  .m-steps-item {
+  .steps-item {
     .steps-info-wrap {
       .steps-tail {
         top: 8px;

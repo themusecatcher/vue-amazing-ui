@@ -349,3 +349,10 @@ position | 当 `mode` 为 `center` 时，内容交替展现，内容从左边（
 -- | -- | -- | --
 desc | 文字描述 | string &#124; slot | undefined
 color? | 圆圈颜色 | 'blue' &#124; 'green' &#124; 'red' &#124; 'gray' &#124; string | 'blue'
+
+## Slots
+
+名称 | 说明 | 类型
+-- | -- | --
+dot | 自定义时间轴点 | v-slot:dot="{ item, index }"
+desc | 自定义文字描述 | v-slot:desc="{ item, index }"
