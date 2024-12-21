@@ -34,7 +34,7 @@ $ bun add vue-amazing-ui
 import { createApp } from 'vue'
 import App from './App.vue'
 import VueAmazingUI from 'vue-amazing-ui'
-import 'vue-amazing-ui/css' // 等价于 'vue-amazing-ui/dist/style.css'
+import 'vue-amazing-ui/css'
 
 const app = createApp(App)
 app.use(VueAmazingUI)
