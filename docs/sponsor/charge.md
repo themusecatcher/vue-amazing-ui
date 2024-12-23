@@ -151,4 +151,14 @@ const QRCodes = [
     </template>
     <Avatar :size="36" src="https://github.com/themusecatcher.png" href="https://github.com/themusecatcher" target="_blank" />
   </Tooltip>
+  <Tooltip>
+    <template #tooltip>
+      <div style="text-align: center">
+        WeChat
+        <br/>
+        Ant
+      </div>
+    </template>
+    <Avatar :size="36" src="../public/1.jpeg" />
+  </Tooltip>
 </Space>
