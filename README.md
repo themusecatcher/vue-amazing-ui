@@ -20,7 +20,7 @@
 - Currently, it includes `63` basic UI components and `16` utility functions, with continuous exploration and updates ongoing...
 - What's more, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
-- Each component is a Single-File Component (`SFC`), and they can be used independently without any issues.
+- All components are built in single file component `SFC` style and can be used independently.
 - Ready to use out of the box, no fuss.
 
 ## Installation
