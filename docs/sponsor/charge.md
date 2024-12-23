@@ -159,6 +159,6 @@ const QRCodes = [
         Ant
       </div>
     </template>
-    <Avatar :size="36" src="../public/1.jpeg" />
+    <Avatar :size="36" src="./avatars/1.jpeg" />
   </Tooltip>
 </Space>
