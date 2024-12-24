@@ -9,14 +9,15 @@ import dts from 'vite-plugin-dts'
 import Components from 'unplugin-vue-components/vite'
 // ant-desing naive-ui 按需引入
 import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+// vue-amazing-ui 按需引入
 // import { VueAmazingUIResolver } from 'vue-amazing-ui'
-
+// 按需导入组件库样式
+// import { createStyleImportPlugin } from 'vite-plugin-style-import'
 // 打包体积可视化插件
 // import { visualizer } from 'rollup-plugin-visualizer'
-
 // 功能全面且轻量级的命令行参数解析工具
 import minimist from 'minimist'
-
+// 最小化混淆器 
 // import terser from '@rollup/plugin-terser'
 
 // 获取 vite build 构建时，传入的参数：dir f
@@ -33,7 +34,7 @@ const buildDistOptions = {
     fileName: 'index', // 输出的包文件名，默认是 package.json 的 name 选项；也可以定义为以 format 和 entryName 为参数的函数，并返回文件名
     cssFileName: 'style' // 指定 CSS 输出文件的名称，默认为 package.json 中的 name
   },
-  rollupOptions: { // 自定义底层的Rollup打包配置
+  rollupOptions: { // 自定义底层的 Rollup 打包配置
     plugins: [
       // terser()
     ],
@@ -103,7 +104,7 @@ const buildESAndLibOptions = {
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
     entry: resolve(__dirname, 'components', 'index.ts'), // 或 'components/index.ts'
   },
-  rollupOptions: { // 自定义底层的Rollup打包配置
+  rollupOptions: { // 自定义底层的 Rollup 打包配置
     plugins: [
       // terser()
     ],
@@ -200,7 +201,19 @@ export default defineConfig({
         // auto import components from VueAmazingUI
         // VueAmazingUIResolver()
       ]
-    })
+    }),
+    // createStyleImportPlugin({
+    //   libs: [
+    //     {
+    //       libraryName: 'vue-amazing-ui', // 需要导入的库名
+    //       libraryNameChangeCase: 'pascalCase', // 'pascalCase': 帕斯卡命名法，每个单词的首字母大写，不使用分隔符；默认 'paramCase'，导出的名称转换格式
+    //       // esModule: true, // 默认 false，如果样式文件不是 .css 后缀。需要开启此选项
+    //       resolveStyle: (componentName: string) => {
+    //         return `vue-amazing-ui/es/${componentName.toLocaleLowerCase()}/${componentName}.css`
+    //       }
+    //     }
+    //   ]
+    // })
     // AutoImport({ // 自动引入所需 apis
     //   dts: 'src/auto-imports.d.ts',
     //   imports: ['vue', 'vue-router'],
