@@ -4,6 +4,7 @@ import {
   effectScope,
   getCurrentInstance,
   getCurrentScope,
+  hasInjectionContext,
   inject,
   isReactive,
   isRef,
@@ -23,9 +24,9 @@ import {
   unref,
   watch,
   watchEffect
-} from "./chunk-5TCDO6LD.js";
+} from "./chunk-X54IR6VG.js";
 
-// node_modules/.pnpm/@vueuse+shared@12.0.0_typescript@5.6.3/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@12.2.0_typescript@5.7.2/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -82,6 +83,9 @@ function createEventHook() {
   const off = (fn) => {
     fns.delete(fn);
   };
+  const clear = () => {
+    fns.clear();
+  };
   const on = (fn) => {
     fns.add(fn);
     const offFn = () => off(fn);
@@ -96,7 +100,8 @@ function createEventHook() {
   return {
     on,
     off,
-    trigger
+    trigger,
+    clear
   };
 }
 function createGlobalState(stateFactory) {
@@ -116,9 +121,9 @@ var injectLocal = (...args) => {
   var _a;
   const key = args[0];
   const instance = (_a = getCurrentInstance()) == null ? void 0 : _a.proxy;
-  if (instance == null)
+  if (instance == null && !hasInjectionContext())
     throw new Error("injectLocal must be called in setup");
-  if (localProvidedStateMap.has(instance) && key in localProvidedStateMap.get(instance))
+  if (instance && localProvidedStateMap.has(instance) && key in localProvidedStateMap.get(instance))
     return localProvidedStateMap.get(instance)[key];
   return inject(...args);
 };
@@ -487,6 +492,9 @@ function increaseWithUnit(target, delta) {
   if (Number.isNaN(result))
     return target;
   return result + unit;
+}
+function pxValue(px) {
+  return px.endsWith("rem") ? Number.parseFloat(px) * 16 : Number.parseFloat(px);
 }
 function objectPick(obj, keys, omitUndefined = false) {
   return keys.reduce((n, k) => {
@@ -915,15 +923,24 @@ function defaultComparator(value, othVal) {
   return value === othVal;
 }
 function useArrayDifference(...args) {
-  var _a;
+  var _a, _b;
   const list = args[0];
   const values = args[1];
   let compareFn = (_a = args[2]) != null ? _a : defaultComparator;
+  const {
+    symmetric = false
+  } = (_b = args[3]) != null ? _b : {};
   if (typeof compareFn === "string") {
     const key = compareFn;
     compareFn = (value, othVal) => value[key] === othVal[key];
   }
-  return computed(() => toValue(list).filter((x) => toValue(values).findIndex((y) => compareFn(x, y)) === -1));
+  const diff1 = computed(() => toValue(list).filter((x) => toValue(values).findIndex((y) => compareFn(x, y)) === -1));
+  if (symmetric) {
+    const diff2 = computed(() => toValue(values).filter((x) => toValue(list).findIndex((y) => compareFn(x, y)) === -1));
+    return computed(() => symmetric ? [...toValue(diff1), ...toValue(diff2)] : toValue(diff1));
+  } else {
+    return diff1;
+  }
 }
 function useArrayEvery(list, fn) {
   return computed(() => toValue(list).every((element, index, array) => fn(toValue(element), index, array)));
@@ -1562,6 +1579,7 @@ export {
   invoke,
   containsProp,
   increaseWithUnit,
+  pxValue,
   objectPick,
   objectOmit,
   objectEntries,
@@ -1623,4 +1641,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-YGRTXT6N.js.map
+//# sourceMappingURL=chunk-26OFZVLI.js.map
