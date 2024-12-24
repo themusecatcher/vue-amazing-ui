@@ -63,11 +63,13 @@ app.mount('#app')
 
 ```vue
 <script setup lang="ts">
-import { Button } from 'vue-amazing-ui'
+import { Button, Tag } from 'vue-amazing-ui'
 import 'vue-amazing-ui/es/button/Button.css'
+import 'vue-amazing-ui/es/tag/Tag.css'
 </script>
 <template>
   <Button>button</Button>
+  <Tag>tag</Tag>
 </template>
 ```
 

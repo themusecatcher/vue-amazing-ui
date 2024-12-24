@@ -11,8 +11,9 @@ import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 // vue-amazing-ui 按需引入
 // import { VueAmazingUIResolver } from 'vue-amazing-ui'
-// 按需导入组件库样式
+// 自动引入组件样式
 // import { createStyleImportPlugin } from 'vite-plugin-style-import'
+// import { VueAmazingUIStyleResolve } from 'vue-amazing-ui'
 // 打包体积可视化插件
 // import { visualizer } from 'rollup-plugin-visualizer'
 // 功能全面且轻量级的命令行参数解析工具
@@ -202,16 +203,10 @@ export default defineConfig({
         // VueAmazingUIResolver()
       ]
     }),
+    // imports component library styles on demand
     // createStyleImportPlugin({
-    //   libs: [
-    //     {
-    //       libraryName: 'vue-amazing-ui', // 需要导入的库名
-    //       libraryNameChangeCase: 'pascalCase', // 'pascalCase': 帕斯卡命名法，每个单词的首字母大写，不使用分隔符；默认 'paramCase'，导出的名称转换格式
-    //       // esModule: true, // 默认 false，如果样式文件不是 .css 后缀。需要开启此选项
-    //       resolveStyle: (componentName: string) => {
-    //         return `vue-amazing-ui/es/${componentName.toLocaleLowerCase()}/${componentName}.css`
-    //       }
-    //     }
+    //   resolves:[
+    //     VueAmazingUIStyleResolve()
     //   ]
     // })
     // AutoImport({ // 自动引入所需 apis
