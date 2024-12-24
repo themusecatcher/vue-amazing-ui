@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { h } from 'vue'
 import {
   GlobalOutlined,
   QuestionCircleOutlined,
@@ -96,11 +97,10 @@ function onOpenChange(open: boolean) {
           <StarFilled spin style="color: gold" />
         </template>
       </FloatButton>
-      <FloatButton shape="square">
-        <template #icon>
-          <SettingOutlined style="color: #1677ff" />
-        </template>
-      </FloatButton>
+      <FloatButton
+        shape="square"
+        :icon="() => h(SettingOutlined, { style: 'color: #1677ff' })"
+      />
     </Card>
     <h2 class="mt30 mb10">文字描述信息</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
