@@ -3,6 +3,26 @@
   "version": "2.0.1",
   "private": false,
   "type": "module",
+  "author": "theMuseCatcher",
+  "homepage": "https://themusecatcher.github.io/vue-amazing-ui",
+  "description": "An Amazing Vue3 UI Components Library, Uses TypeScript.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/themusecatcher/vue-amazing-ui.git"
+  },
+  "keywords": [
+    "Vue3",
+    "TypeScript",
+    "Vite",
+    "Less",
+    "SFC",
+    "Amazing",
+    "UI",
+    "Components",
+    "Tools",
+    "Functions",
+    "Tree Shaking"
+  ],
   "files": [
     "dist",
     "es",
@@ -11,6 +31,7 @@
     "README.md",
     "README.zh-CN.md"
   ],
+  "sideEffects": false,
   "main": "lib/index.cjs",
   "module": "es/index.js",
   "unpkg": "dist/index.iife.js",
@@ -85,31 +106,10 @@
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.1.10"
   },
-  "sideEffects": false,
-  "description": "An Amazing Vue3 UI Components Library, Uses TypeScript.",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/themusecatcher/vue-amazing-ui.git"
-  },
-  "keywords": [
-    "Vue3",
-    "TypeScript",
-    "Vite",
-    "Less",
-    "SFC",
-    "Amazing",
-    "UI",
-    "Components",
-    "Tools",
-    "Functions",
-    "Tree Shaking"
-  ],
-  "author": "theMuseCatcher",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/themusecatcher/vue-amazing-ui/issues"
   },
-  "homepage": "https://themusecatcher.github.io/vue-amazing-ui",
   "browserslist": [
     "> 1%",
     "last 2 versions",
