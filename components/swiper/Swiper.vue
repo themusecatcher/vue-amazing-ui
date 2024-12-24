@@ -110,6 +110,9 @@ function onSwiper(swiper: SwiperTypes) {
     }
   }
 }
+function onSlideChange(swiper: SwiperTypes) {
+  emits('change', swiper)
+}
 function getImageName(image: Image) {
   // 从图片地址 src 中获取图片名称
   if (image.name) {
@@ -134,7 +137,7 @@ function getImageName(image: Image) {
     :loop="loop"
     lazy
     @swiper="onSwiper"
-    @slideChange="(swiper) => $emit('change', swiper)"
+    @slideChange="onSlideChange"
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
@@ -154,7 +157,7 @@ function getImageName(image: Image) {
     :loop="loop"
     lazy
     @swiper="onSwiper"
-    @slideChange="(swiper) => $emit('change', swiper)"
+    @slideChange="onSlideChange"
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
@@ -173,7 +176,7 @@ function getImageName(image: Image) {
     :loop="loop"
     lazy
     @swiper="onSwiper"
-    @slideChange="(swiper) => $emit('change', swiper)"
+    @slideChange="onSlideChange"
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
