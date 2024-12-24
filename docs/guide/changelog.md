@@ -5,7 +5,7 @@
 ## 2.0.2 <Tag color="volcano" size="small">2024-12-24</Tag>
 
 - 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，`icon` 属性新增类型 `VNode`
-- 新增 `VueAmazingUIStyleResolve` 方法导出，用于配合 `vite-plugin-style-import` 插件实现按需自动引入组件样式，具体请参考 自动引入样式
+- 新增 `VueAmazingUIStyleResolve` 方法导出，用于配合 `vite-plugin-style-import` 插件实现按需自动引入组件样式，具体请参考 [自动引入样式](https://themusecatcher.github.io/vue-amazing-ui/guide/ondemand.html#%E8%87%AA%E5%8A%A8%E5%BC%95%E5%85%A5%E6%A0%B7%E5%BC%8F-%E6%8E%A8%E8%8D%90)
 - 组件库及文档代码优化
 
 ## 2.0.1 <Tag color="volcano" size="small">2024-12-20</Tag>
@@ -17,7 +17,7 @@
 ## 2.0.0 <Tag color="volcano" size="small">2024-12-18</Tag>
 
 - 优化组件库打包构建；所有组件支持手动或自动按需引入；全面支持基于 `ES modules` 的 `tree shaking`
-- 新增 `VueAmazingUIResolver` 方法导出，用于配合 `unplugin-vue-components` 插件支持组件库的自动按需引入，具体请参考 [自动按需引入](https://themusecatcher.github.io/vue-amazing-ui/guide/ondemand.html#%E8%87%AA%E5%8A%A8%E5%BC%95%E5%85%A5-%E6%8E%A8%E8%8D%90)
+- 新增 `VueAmazingUIResolver` 方法导出，用于配合 `unplugin-vue-components` 插件支持组件库的自动按需引入，具体请参考 [自动按需引入](https://themusecatcher.github.io/vue-amazing-ui/guide/ondemand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90)
 - 组件库及文档代码优化
 
 ## 1.10.4 <Tag color="volcano" size="small">2024-12-10</Tag>
