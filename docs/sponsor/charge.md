@@ -12,6 +12,7 @@ import { HeartFilled, WechatOutlined, AlipayOutlined } from '@ant-design/icons-v
 import { useMediaQuery } from 'vue-amazing-ui'
 import WeChat from '/wechat.jpg'
 import Alipay from '/alipay.jpg'
+import Avatar1 from './avatars/1.jpeg'
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 const sponsorItem = {
   title: '如果您觉得 Vue Amazing UI 有用，对您有帮助，可以对作者表示下支持，非常感谢 ❤️🙏❤️'
@@ -159,6 +160,6 @@ const QRCodes = [
         Ant
       </div>
     </template>
-    <Avatar :size="36" src="./avatars/1.jpeg" />
+    <Avatar :size="36" :src="Avatar1" />
   </Tooltip>
 </Space>
