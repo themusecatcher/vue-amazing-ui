@@ -2,6 +2,11 @@
 
 <GlobalElement />
 
+## 2.0.2 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，`icon` 属性新增类型 `VNode`
+- 组件库及文档代码优化
+
 ## 2.0.1 <Tag color="volcano" size="small">2024-12-20</Tag>
 
 - 优化并更新 [步骤条 Steps](https://themusecatcher.github.io/vue-amazing-ui/guide/components/steps.html) 组件，将 `Steps` 属性重命名为 `items`
