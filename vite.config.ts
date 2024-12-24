@@ -17,14 +17,14 @@ import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/r
 // 功能全面且轻量级的命令行参数解析工具
 import minimist from 'minimist'
 
-import terser from '@rollup/plugin-terser'
+// import terser from '@rollup/plugin-terser'
 
 // 获取 vite build 构建时，传入的参数：dir f
 const { _: args } = minimist(process.argv.slice(2))
 const dir = args[1] ? args[1].split('=')[1] : undefined
 const f = args[2] ? args[2].split('=')[1] : undefined
 const buildDistOptions = {
-  // emptyOutDir: true, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
+  emptyOutDir: false, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
     formats: f === 'iife' ? ['iife'] : ['es', 'umd'], // iife: 自执行函数表达式 Immediately Invoked Function Expression
     // __dirname 的值是 vite.config.ts 文件所在目录
@@ -35,7 +35,7 @@ const buildDistOptions = {
   },
   rollupOptions: { // 自定义底层的Rollup打包配置
     plugins: [
-      terser()
+      // terser()
     ],
     // https://rollupjs.org/configuration-options/
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
@@ -105,7 +105,7 @@ const buildESAndLibOptions = {
   },
   rollupOptions: { // 自定义底层的Rollup打包配置
     plugins: [
-      terser()
+      // terser()
     ],
     // https://rollupjs.org/configuration-options/
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
