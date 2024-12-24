@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import type { Slot, VNode } from 'vue'
 import Tooltip from 'components/tooltip'
 import Badge from 'components/badge'
 import { useSlotsExist } from 'components/utils'
@@ -13,7 +14,7 @@ export interface Props {
   height?: number | string // 浮动按钮高度，单位 px
   type?: 'default' | 'primary' // 浮动按钮类型
   shape?: 'circle' | 'square' // 浮动按钮形状
-  icon?: string // 浮动按钮图标 string | slot
+  icon?: VNode | Slot // 浮动按钮图标
   description?: string // 文字描述信息 string | slot
   href?: string // 点击跳转的地址，指定此属性按钮的行为和 a 链接一致
   target?: '_self' | '_blank' // 相当于 a 标签的 target 属性，href 存在时生效
@@ -44,6 +45,15 @@ const props = withDefaults(defineProps<Props>(), {
 const showMenu = ref(false)
 const emits = defineEmits(['click', 'openChange'])
 const slotsExist = useSlotsExist(['icon', 'description', 'tooltip', 'menu'])
+const showTooltip = computed(() => {
+  return slotsExist.tooltip || props.tooltip
+})
+const showIcon = computed(() => {
+  return slotsExist.icon || props.icon
+})
+const showDescription = computed(() => {
+  return slotsExist.description || props.description
+})
 const floatBtnWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -88,12 +98,6 @@ const floatBtnBottom = computed(() => {
     return props.bottom
   }
 })
-const showDescription = computed(() => {
-  return slotsExist.description || props.description
-})
-const showTooltip = computed(() => {
-  return slotsExist.tooltip || props.tooltip
-})
 watch(showMenu, (to) => {
   emits('openChange', to)
 })
@@ -133,9 +137,11 @@ function onClick(e: Event) {
       <Badge v-bind="badgeProps">
         <div class="float-btn-body">
           <div class="float-btn-content">
-            <div v-if="slotsExist.icon" class="float-btn-icon">
+            <div v-if="showIcon" class="float-btn-icon">
               <Transition name="fade">
-                <slot v-if="!showMenu" name="icon"></slot>
+                <slot v-if="!showMenu" name="icon">
+                  <component v-if="icon" :is="icon" />
+                </slot>
                 <svg
                   v-else
                   class="close-svg"

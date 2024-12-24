@@ -10,6 +10,7 @@
 - 无论浏览到何处都可以看见的按钮
 
 <script setup lang="ts">
+import { h } from 'vue'
 import {
   GlobalOutlined,
   QuestionCircleOutlined,
@@ -245,17 +246,17 @@ import { CustomerServiceOutlined } from '@ant-design/icons-vue'
       <StarFilled spin style="color: gold" />
     </template>
   </FloatButton>
-  <FloatButton shape="square">
-    <template #icon>
-      <SettingOutlined style="color: #1677ff" />
-    </template>
-  </FloatButton>
+  <FloatButton
+    shape="square"
+    :icon="() => h(SettingOutlined, { style: 'color: #1677ff' })"
+  />
 </Card>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
+import { h } from 'vue'
 import { StarFilled, SettingOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
@@ -265,11 +266,10 @@ import { StarFilled, SettingOutlined } from '@ant-design/icons-vue'
         <StarFilled spin style="color: gold" />
       </template>
     </FloatButton>
-    <FloatButton shape="square">
-      <template #icon>
-        <SettingOutlined style="color: #1677ff" />
-      </template>
-    </FloatButton>
+    <FloatButton
+      shape="square"
+      :icon="() => h(SettingOutlined, { style: 'color: #1677ff' })"
+    />
   </Card>
 </template>
 ```
@@ -582,7 +582,7 @@ width | 浮动按钮宽度，单位 `px` | number &#124; string | 44
 height | 浮动按钮高度，单位 `px` | number &#124; string | 44
 type | 浮动按钮类型 | 'default' &#124; 'primary' | 'default'
 shape | 浮动按钮形状 | 'circle' &#124; 'square' | 'circle'
-icon | 浮动按钮图标 | string &#124; slot | undefined
+icon | 浮动按钮图标 | VNode &#124; Slot | undefined
 description | 文字描述信息 | string &#124; slot | undefined
 href | 点击跳转的地址，指定此属性按钮的行为和 `a` 链接一致 | string | undefined
 target | 相当于 `a` 标签的 `target` `属性，href` 存在时生效 | 'self' &#124; '_blank' | 'self'
