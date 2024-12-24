@@ -5,7 +5,7 @@
 ## 2.0.2 <Tag color="volcano" size="small">2024-12-24</Tag>
 
 - 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，`icon` 属性新增类型 `VNode`
-- 新增 `VueAmazingUIStyleResolve` 方法导出，用于配合 `vite-plugin-style-import` 插件实现按需自动引入组件样式，具体请参考 [自动引入样式]()
+- 新增 `VueAmazingUIStyleResolve` 方法导出，用于配合 `vite-plugin-style-import` 插件实现按需自动引入组件样式，具体请参考 自动引入样式
 - 组件库及文档代码优化
 
 ## 2.0.1 <Tag color="volcano" size="small">2024-12-20</Tag>
