@@ -88,14 +88,26 @@ export function VueAmazingUIResolver() {
     }
   }
 }
-import type { Lib } from 'vite-plugin-style-import'
+type ChangeCaseType =
+  | 'camelCase'
+  | 'capitalCase'
+  | 'constantCase'
+  | 'dotCase'
+  | 'headerCase'
+  | 'noCase'
+  | 'paramCase'
+  | 'pascalCase'
+  | 'pathCase'
+  | 'sentenceCase'
+  | 'snakeCase'
 export function VueAmazingUIStyleResolve() {
+  const changeCase: ChangeCaseType = 'pascalCase'
   return {
     libraryName: 'vue-amazing-ui', // 需要导入的库名
-    libraryNameChangeCase: 'pascalCase', // 'pascalCase': 帕斯卡命名法，每个单词的首字母大写，不使用分隔符；默认 'paramCase'，导出的名称转换格式
+    libraryNameChangeCase: changeCase, // 'pascalCase': 帕斯卡命名法，每个单词的首字母大写，不使用分隔符；默认 'paramCase'，导出的名称转换格式
     // esModule: true, // 默认 false，如果样式文件不是 .css 后缀。需要开启此选项
     resolveStyle: (componentName: string) => {
       return `vue-amazing-ui/es/${componentsMap[componentName as keyof typeof componentsMap]}/${componentName}.css` // 组件样式文件
     }
-  } as Lib
+  }
 }
