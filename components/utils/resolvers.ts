@@ -88,6 +88,7 @@ export function VueAmazingUIResolver() {
     }
   }
 }
+import type { Lib } from 'vite-plugin-style-import'
 export function VueAmazingUIStyleResolve() {
   return {
     libraryName: 'vue-amazing-ui', // 需要导入的库名
@@ -96,5 +97,5 @@ export function VueAmazingUIStyleResolve() {
     resolveStyle: (componentName: string) => {
       return `vue-amazing-ui/es/${componentsMap[componentName as keyof typeof componentsMap]}/${componentName}.css` // 组件样式文件
     }
-  }
+  } as Lib
 }

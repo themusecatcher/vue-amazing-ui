@@ -13,7 +13,7 @@ import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/r
 // import { VueAmazingUIResolver } from 'vue-amazing-ui'
 // 自动引入组件样式
 // import { createStyleImportPlugin } from 'vite-plugin-style-import'
-// import { VueAmazingUIStyleResolve } from 'vue-amazing-ui'
+// import { VueAmazingUIStyleResolve } from './es/index.js'
 // 打包体积可视化插件
 // import { visualizer } from 'rollup-plugin-visualizer'
 // 功能全面且轻量级的命令行参数解析工具
