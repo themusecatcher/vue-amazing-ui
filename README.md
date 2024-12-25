@@ -197,10 +197,7 @@ Then, you can directly use all components from `vue-amazing-ui` in your code.
 
 ```vue
 <script setup lang="ts">
-import { Button } from 'vue-amazing-ui'
 import type { ButtonProps } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-
 const shape = ref<ButtonProps['shape']>('default')
 </script>
 <template>
