@@ -113,6 +113,13 @@ const buttonSize = ref('middle')
     </Space>
     <h2 class="mt30 mb10">垂直排列</h2>
     <Radio vertical :options="options" v-model:value="value" />
+    <h2 class="mt30 mb10">自定义选项名</h2>
+    <Radio :options="options" v-model:value="value">
+      <template #default="{ option, label, index }">
+        <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
+        <span v-if="index === 3" style="color: #1677ff">{{ option.label }}</span>
+      </template>
+    </Radio>
     <h2 class="mt30 mb10">自定义间距</h2>
     <Flex vertical>
       <Row :gutter="24">

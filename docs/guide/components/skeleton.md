@@ -332,3 +332,9 @@ width | 设置标题占位图的宽度 | number &#124; string | '38%'
 :-- | :-- | :-- | :--
 rows | 设置段落占位图的行数 | number &#124; string | avatar ? 2 : 3
 width | 设置段落占位图的宽度，若为数组时则为对应的每行宽度，反之则是最后一行的宽度 | number &#124; string &#124; Array<number&#124;string> | '61%'
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义内容 | v-slot:default

@@ -416,6 +416,12 @@ yScrollable | 是否使用纵向滚动 | boolean | true
 xPlacement | 横向滚动时滚动条的位置 | 'top' &#124; 'bottom' | 'bottom'
 yPlacement | 纵向滚动时滚动条的位置 | 'left' &#124; 'right' | 'right'
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义内容 | v-slot:default
+
 ## Methods
 
 名称 | 说明 | 类型
@@ -427,7 +433,7 @@ getScrollData | 获取滚动元素数据 | () => { scrollWidth: number\, clientW
 ### ScrollBehavior Type
 
 值 | 说明
--- | --
+:-- | :--
 smooth | 平滑滚动并产生过渡效果
 instant | 滚动会直接跳转到目标位置，没有过渡效果
 auto | 或缺省值表示浏览器会自动选择滚动时的过渡效果

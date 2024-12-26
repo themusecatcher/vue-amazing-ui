@@ -603,6 +603,12 @@ url | 文件地址 | string | undefined
 upload? | 上传成功的消息提示，没有设置该属性时即不显示上传消息提示 | string | '上传成功'
 remove? | 删除成功的消息提示，没有设置该属性时即不显示删除消息提示 | string | '删除成功'
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+tip | 自定义上传描述文字 | v-slot:tip
+
 ## Methods
 
 名称 | 说明 | 类型

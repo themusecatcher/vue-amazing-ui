@@ -438,6 +438,63 @@ watchEffect(() => {
 
 :::
 
+## 自定义选项名
+
+<Radio :options="options" v-model:value="value">
+  <template #default="{ option, label, index }">
+    <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
+    <span v-if="index === 3" style="color: #1677ff">{{ option.label }}</span>
+  </template>
+</Radio>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const value = ref(2)
+watchEffect(() => {
+  console.log('value', value.value)
+})
+</script>
+<template>
+  <Radio :options="options" v-model:value="value">
+    <template #default="{ option, label, index }">
+      <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
+      <span v-if="index === 3" style="color: #1677ff">{{ option.label }}</span>
+    </template>
+  </Radio>
+</template>
+```
+
+:::
+
 ## 自定义间距
 
 <Flex vertical>
@@ -606,6 +663,12 @@ value <Tag color="cyan">v-model</Tag> | 当前选中的值 | string &#124; numbe
 label | 选项名 | string | undefined
 value | 选项值 | string &#124; number &#124; boolean | undefined
 disabled? | 是否禁用选项 | boolean | undefined
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义选项名 | v-slot:default="{ option, label, index }"
 
 ## Events
 

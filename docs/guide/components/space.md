@@ -292,3 +292,9 @@ align | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'cente
 vertical | 是否为垂直布局 | boolean | false
 gap | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'middle'
 wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | true
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义内容 | v-slot:default

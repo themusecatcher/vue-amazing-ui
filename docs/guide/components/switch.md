@@ -146,7 +146,7 @@ watchEffect(() => {
 
 ## 自定义图标和样式
 
-<Switch class="u-theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }">
+<Switch class="theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }">
   <template #node="{ checked }">
     <svg
       v-if="checked"
@@ -154,7 +154,7 @@ watchEffect(() => {
       aria-hidden="true"
       focusable="false"
       viewBox="0 0 24 24"
-      class="u-dark-svg"
+      class="svg-dark"
     >
       <path
         d="M12.1,22c-0.3,0-0.6,0-0.9,0c-5.5-0.5-9.5-5.4-9-10.9c0.4-4.8,4.2-8.6,9-9c0.4,0,0.8,0.2,1,0.5c0.2,0.3,0.2,0.8-0.1,1.1c-2,2.7-1.4,6.4,1.3,8.4c2.1,1.6,5,1.6,7.1,0c0.3-0.2,0.7-0.3,1.1-0.1c0.3,0.2,0.5,0.6,0.5,1c-0.2,2.7-1.5,5.1-3.6,6.8C16.6,21.2,14.4,22,12.1,22zM9.3,4.4c-2.9,1-5,3.6-5.2,6.8c-0.4,4.4,2.8,8.3,7.2,8.7c2.1,0.2,4.2-0.4,5.8-1.8c1.1-0.9,1.9-2.1,2.4-3.4c-2.5,0.9-5.3,0.5-7.5-1.1C9.2,11.4,8.1,7.7,9.3,4.4z"
@@ -166,7 +166,7 @@ watchEffect(() => {
       aria-hidden="true"
       focusable="false"
       viewBox="0 0 24 24"
-      class="u-light-svg"
+      class="svg-light"
     >
       <path
         d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18zM12,8c-2.2,0-4,1.8-4,4c0,2.2,1.8,4,4,4c2.2,0,4-1.8,4-4C16,9.8,14.2,8,12,8z"
@@ -192,7 +192,7 @@ watchEffect(() => {
 </Switch>
 
 <style lang="less" scoped>
-.u-theme-switch {
+.theme-switch {
   :deep(.switch-checked) {
     background: #faad14;
     &:hover:not(.disabled) {
@@ -200,12 +200,12 @@ watchEffect(() => {
     }
   }
 }
-.u-dark-svg {
+.svg-dark {
   width: 12px;
   height: 12px;
   fill: #fff;
 }
-.u-light-svg {
+.svg-light {
   width: 12px;
   height: 12px;
   fill: rgba(60, 60, 67, .75);
@@ -223,7 +223,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Switch class="u-theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }">
+  <Switch class="theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }">
     <template #node="{ checked }">
       <svg
         v-if="checked"
@@ -231,7 +231,7 @@ watchEffect(() => {
         aria-hidden="true"
         focusable="false"
         viewBox="0 0 24 24"
-        class="u-dark-svg"
+        class="svg-dark"
       >
         <path
           d="M12.1,22c-0.3,0-0.6,0-0.9,0c-5.5-0.5-9.5-5.4-9-10.9c0.4-4.8,4.2-8.6,9-9c0.4,0,0.8,0.2,1,0.5c0.2,0.3,0.2,0.8-0.1,1.1c-2,2.7-1.4,6.4,1.3,8.4c2.1,1.6,5,1.6,7.1,0c0.3-0.2,0.7-0.3,1.1-0.1c0.3,0.2,0.5,0.6,0.5,1c-0.2,2.7-1.5,5.1-3.6,6.8C16.6,21.2,14.4,22,12.1,22zM9.3,4.4c-2.9,1-5,3.6-5.2,6.8c-0.4,4.4,2.8,8.3,7.2,8.7c2.1,0.2,4.2-0.4,5.8-1.8c1.1-0.9,1.9-2.1,2.4-3.4c-2.5,0.9-5.3,0.5-7.5-1.1C9.2,11.4,8.1,7.7,9.3,4.4z"
@@ -243,7 +243,7 @@ watchEffect(() => {
         aria-hidden="true"
         focusable="false"
         viewBox="0 0 24 24"
-        class="u-light-svg"
+        class="svg-light"
       >
         <path
           d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18zM12,8c-2.2,0-4,1.8-4,4c0,2.2,1.8,4,4,4c2.2,0,4-1.8,4-4C16,9.8,14.2,8,12,8z"
@@ -269,7 +269,7 @@ watchEffect(() => {
   </Switch>
 </template>
 <style lang="less" scoped>
-.u-theme-switch {
+.theme-switch {
   :deep(.switch-checked) {
     background: #faad14;
     &:hover:not(.disabled) {
@@ -277,12 +277,12 @@ watchEffect(() => {
     }
   }
 }
-.u-dark-svg {
+.svg-dark {
   width: 12px;
   height: 12px;
   fill: #fff;
 }
-.u-light-svg {
+.svg-light {
   width: 12px;
   height: 12px;
   fill: rgba(60, 60, 67, .75);
@@ -357,6 +357,14 @@ size | 开关大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 rippleColor | 点击时的波纹颜色，当自定义选中颜色时需要设置 | string | '#1677ff'
 circleStyle | 圆点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 modelValue <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean &#124; string &#124; number | false
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+checked | 自定义选中时的内容 | v-slot:checked
+unchecked | 自定义未选中时的内容 | v-slot:unchecked
+node | 自定义开关节点 | v-slot:node="{ checked }"
 
 ## Events
 

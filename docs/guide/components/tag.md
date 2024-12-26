@@ -188,6 +188,9 @@ const onClose = (e: MouseEvent) => {
     </template>
     stop
   </Tag>
+  <Tag color="default" icon="😉">
+    blink
+  </Tag>
 </Space>
 
 ::: details Show Code
@@ -249,6 +252,9 @@ import {
         <MinusCircleOutlined />
       </template>
       stop
+    </Tag>
+    <Tag color="default" icon="😉">
+      blink
     </Tag>
   </Space>
 </template>
@@ -620,8 +626,9 @@ bordered? | 是否有边框 | boolean | true
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-label | 自定义标签文本 | v-slot:label="{ item, label, index }"
 icon | 自定义图标 | v-slot:icon="{ item, icon, index }"
+label | 自定义标签文本 | v-slot:label="{ item, label, index }"
+default | 自定义内容 | v-slot:default
 
 ## Events
 

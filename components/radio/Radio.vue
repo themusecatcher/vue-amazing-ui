@@ -117,7 +117,7 @@ function onWaveEnd() {
             ></span>
           </span>
           <span class="radio-label">
-            <slot :label="option.label">{{ option.label }}</slot>
+            <slot :option="option" :label="option.label" :index="index">{{ option.label }}</slot>
           </span>
         </div>
       </template>
@@ -134,7 +134,7 @@ function onWaveEnd() {
           @click="checkDisabled(option.disabled) ? () => false : onClick(option.value)"
         >
           <span class="radio-label">
-            <slot :label="option.label">{{ option.label }}</slot>
+            <slot :option="option" :label="option.label" :index="index">{{ option.label }}</slot>
           </span>
           <span
             v-if="!checkDisabled(option.disabled)"

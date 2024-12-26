@@ -273,3 +273,12 @@ prefix | 设置数值的前缀 | string &#124; slot | undefined
 suffix | 设置数值的后缀 | string &#124; slot | undefined
 separator | 设置千分位标识符 | string | ','
 formatter | 自定义数值展示 | Function | (value: string) => value
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+title | 自定义数值的标题 | v-slot:title
+default | 自定义数值的内容 | v-slot:default
+prefix | 自定义数值的前缀 | v-slot:prefix
+suffix | 自定义数值的后缀 | v-slot:suffix
