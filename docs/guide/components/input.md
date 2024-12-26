@@ -388,6 +388,15 @@ maxlength | 最大长度 | number | undefined
 showCount | 是否展示字数 | boolean | false
 value <Tag color="cyan">v-model</Tag> | 输入框内容 | string | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+addonBefore | 自定义前置标签 | v-slot:addonBefore
+addonAfter | 自定义后置标签 | v-slot:addonAfter
+prefix | 自定义前缀图标 | v-slot:prefix
+suffix | 自定义后缀图标 | v-slot:suffix
+
 ## Events
 
 名称 | 说明 | 类型

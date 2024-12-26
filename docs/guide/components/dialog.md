@@ -588,6 +588,14 @@ maskClosable | 点击蒙层是否允许关闭 | boolean | true
 maskStyle | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 open <Tag color="cyan">v-model</Tag> | 对话框是否可见 | boolean | false
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+title | 自定义标题 | v-slot:title
+default | 自定义内容 | v-slot:default
+footer | 自定义底部内容 | v-slot:footer
+
 ## Events
 
 名称 | 说明 | 类型

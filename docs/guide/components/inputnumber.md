@@ -281,6 +281,12 @@ disabled | 是否禁用 | boolean | false
 placeholder | 数字输入的占位符 | string | undefined
 value <Tag color="cyan">v-model</Tag> | 当前值 | number | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+prefix | 自定义前缀图标 | v-slot:prefix
+
 ## Events
 
 名称 | 说明 | 类型

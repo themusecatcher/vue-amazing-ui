@@ -315,3 +315,9 @@ wrap | 设置元素单行显示还是多行显示；参考 [`flex-wrap`](https:/
 justify | 设置元素在主轴方向上的对齐方式；参考 [`justify-content`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/justify-content) | string | 'normal'
 align | 设置元素在交叉轴方向上的对齐方式；参考 [`align-items`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/align-items) | string | 'normal'
 gap | 设置网格之间的间隙，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'middle'
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义内容 | v-slot:default
