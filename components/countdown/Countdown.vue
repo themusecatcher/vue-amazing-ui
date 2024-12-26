@@ -7,7 +7,7 @@ export interface Props {
   titleStyle?: CSSProperties // 设置标题的样式
   prefix?: string // 倒计时的前缀 string | slot
   suffix?: string // 倒计时的后缀 string | slot
-  finishedText?: string // 完成后的展示文本 string | slot
+  finish?: string // 倒计时完成后的展示文本 string | slot
   future?: boolean // value 是否为未来某时刻的时间戳；为 false 表示相对剩余时间戳
   format?: string // 倒计时展示格式，(Y/YY：年，M/MM：月，D/DD：日，H/HH：时，m/mm：分钟，s/ss：秒，SSS：毫秒)
   value?: number // 倒计时数值，支持设置未来某时刻的时间戳 (ms) 或 相对剩余时间 (ms)
@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   titleStyle: () => ({}),
   prefix: undefined,
   suffix: undefined,
-  finishedText: undefined,
+  finish: undefined,
   future: true,
   format: 'HH:mm:ss',
   value: 0,
@@ -86,14 +86,14 @@ function initCountdown() {
       if (props.value > Date.now()) {
         futureTime.value = props.value
       } else {
-        finish()
+        countDownFinish()
       }
     } else {
       // 相对剩余时间，单位 ms
       if (props.value > 0) {
         futureTime.value = props.value + Date.now()
       } else {
-        finish()
+        countDownFinish()
       }
     }
     remainingTime.value = futureTime.value - Date.now()
@@ -105,7 +105,7 @@ function initCountdown() {
     remainingTime.value = 0
   }
 }
-function finish() {
+function countDownFinish() {
   remainingTime.value = 0
   emit('finish')
 }
@@ -114,7 +114,7 @@ function CountDown() {
     remainingTime.value = futureTime.value - Date.now()
     rafID.value = requestAnimationFrame(CountDown)
   } else {
-    finish()
+    countDownFinish()
   }
 }
 // 前置补 0
@@ -188,8 +188,8 @@ defineExpose({
           <slot name="prefix">{{ prefix }}</slot>
         </span>
       </template>
-      <span v-if="finishedText && remainingTime === 0" class="time-value" :style="valueStyle">
-        <slot name="finish">{{ finishedText }}</slot>
+      <span v-if="finish && remainingTime === 0" class="time-value" :style="valueStyle">
+        <slot name="finish">{{ finish }}</slot>
       </span>
       <span v-else class="time-value" :style="valueStyle">
         {{ timeFormat(remainingTime) }}

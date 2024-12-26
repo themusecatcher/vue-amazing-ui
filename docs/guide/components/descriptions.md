@@ -890,6 +890,15 @@ lg | `≥992px` 响应式栅格 | number | undefined
 xl | `≥1200px` 响应式栅格 | number | undefined
 xxl | `≥1600px` 响应式栅格 | number | undefined
 
+## Descriptions Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+title | 自定义倒计时标题 | v-slot:title
+prefix | 自定义倒计时的前缀 | v-slot:prefix
+suffix | 自定义倒计时的后缀 | v-slot:suffix
+finish | 自定义完成后的展示文本 | v-slot:finish
+
 ### DescriptionsItem
 
 参数 | 说明 | 类型 | 默认值

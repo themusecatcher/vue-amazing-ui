@@ -6,6 +6,7 @@
 
 ## 2.0.3 <Tag color="volcano" size="small">2024-12-26</Tag>
 
+- 优化并更新 [倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html) 组件，将 `finishedText` 属性重命名为 `finish`
 - 组件库及文档代码优化
 
 ## 2.0.2 <Tag color="volcano" size="small">2024-12-24</Tag>

@@ -180,7 +180,7 @@ const active = ref(true)
 
 <Space gap="small" vertical>
   <Countdown />
-  <Countdown finished-text="Finished" />
+  <Countdown finish="Finished" />
 </Space>
 
 ::: details Show Code
@@ -189,7 +189,7 @@ const active = ref(true)
 <template>
   <Space gap="small" vertical>
     <Countdown />
-    <Countdown finished-text="Finished" />
+    <Countdown finish="Finished" />
   </Space>
 </template>
 ```
@@ -252,12 +252,21 @@ title | 倒计时标题 | string &#124; slot | undefined
 titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 prefix | 倒计时的前缀 | string &#124; slot | undefined
 suffix | 倒计时的后缀 | string &#124; slot | undefined
-finishedText | 完成后的展示文本 | string &#124; slot | undefined
+finish | 倒计时完成后的展示文本 | string &#124; slot | undefined
 future | `value` 是否为未来某时刻的时间戳；为 `false` 表示相对剩余时间戳 | boolean | true
 format | 倒计时展示格式，(`Y/YY`：年，`M/MM`：月，`D/DD`：日，`H/HH`：时，`m/mm`：分钟，`s/ss`：秒，`SSS`：毫秒) | string | 'HH:mm:ss'
 value | 倒计时数值，支持设置未来某时刻的时间戳或相对剩余时间，单位 `ms` | number | 0
 valueStyle | 设置倒计时的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 active | 是否处于计时状态，仅当 `future: false` 时生效 | boolean | true
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+title | 自定义倒计时标题 | v-slot:title
+prefix | 自定义倒计时的前缀 | v-slot:prefix
+suffix | 自定义倒计时的后缀 | v-slot:suffix
+finish | 自定义完成后的展示文本 | v-slot:finish
 
 ## Methods
 
