@@ -2927,6 +2927,9 @@ y? | 设置纵向滚动，也可用于指定滚动区域的高，可以设置为
 
 名称 | 说明 | 类型
 :-- | :-- | :--
+header | 自定义表格标题 | v-slot:header
+footer | 自定义表格尾部 | v-slot:footer
+expandColumnTitle | 自定义展开列表头 | v-slot:expandColumnTitle
 headerCell | 个性化头部单元格 | v-slot:headerCell="{ column, title }"
 expandCell | 自定义展开按钮 | v-slot:expandCell="{ record, index, expanded }"
 bodyCell | 个性化单元格 | v-slot:bodyCell="{ column, record, text, index }"

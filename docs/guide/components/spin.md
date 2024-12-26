@@ -536,3 +536,10 @@ ringRailColor | 圆环轨道颜色，仅当 `indicator: 'ring-rail'` 时生效 |
 magicRingColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | '#4096ff'
 rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | boolean | false
 speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位 `ms`，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | number | 800
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+tip | 自定义描述文案 | v-slot:tip
+default | 自定义内容 | v-slot:default

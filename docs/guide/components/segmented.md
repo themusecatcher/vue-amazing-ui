@@ -392,6 +392,12 @@ value | 选项值 | string &#124; number | undefined
 disabled? | 是否禁用选项 | boolean | false
 payload? | 自定义数据载体 | any | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+label | 自定义图标 | v-slot:label="{ option, label, index, payload }"
+
 ## Events
 
 名称 | 说明 | 类型

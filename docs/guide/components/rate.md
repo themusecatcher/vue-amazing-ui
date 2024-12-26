@@ -487,7 +487,7 @@ const state = reactive({
 allowClear | 是否允许再次点击后清除 | boolean | true
 allowHalf | 是否允许半选 | boolean | false
 count | `star` 总数 | number | 5
-character | 自定义字符，预置四种图标 | 'star-outlined' &#124; 'star-filled' &#124; 'heart-outlined' &#124; 'heart-filled' &#124; string &#124; slot | 'star-filled'
+character | 字符或图标，预置四种图标 | 'star-outlined' &#124; 'star-filled' &#124; 'heart-outlined' &#124; 'heart-filled' &#124; string &#124; slot | 'star-filled'
 size | 字符大小，单位 `px` | number | 20
 color | 字符选中颜色 | string | '#fadb14'
 gap | 字符间距，单位 `px` | number | 8
@@ -495,6 +495,13 @@ disabled | 只读，无法进行交互 | boolean | false
 tooltips | 自定义每项的提示信息 | string[] | []
 tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
 value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `0,1,2,3...` | number | 0
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+character | 自定义字符或图标 | v-slot:character="{ value }"
+tooltip | 自定义每项的提示信息 | v-slot:tooltip="{ tooltip, value }"
 
 ## Events
 

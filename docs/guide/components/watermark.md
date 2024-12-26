@@ -323,3 +323,9 @@ fontSize | 字体大小，单位 `px` | number | 16
 fontWeight | 字体粗细 | 'normal' &#124; 'light' &#124; 'weight' &#124; number | 'normal'
 fontFamily | 字体类型 | string | 'sans-serif'
 fontStyle | 字体样式 | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal'
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义内容 | v-slot:default

@@ -1288,6 +1288,8 @@ disabled? | 是否禁用页签 | boolean | false
 :-- | :-- | :--
 tab | 自定义页签显示文字 | v-slot:tab="{ item, tab, key }"
 content | 自定义标签页内容 | v-slot:content="{ item, content, key }"
+prefix | 自定义标签页前缀 | v-slot:prefix
+suffix | 自定义标签页后缀 | v-slot:suffix
 
 ## Events
 

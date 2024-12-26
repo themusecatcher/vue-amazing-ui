@@ -5,7 +5,7 @@ export interface Props {
   allowClear?: boolean // 是否允许再次点击后清除
   allowHalf?: boolean // 是否允许半选
   count?: number // star 总数
-  character?: 'star-outlined' | 'star-filled' | 'heart-outlined' | 'heart-filled' | string // 自定义字符，预置四种图标 string | slot
+  character?: 'star-outlined' | 'star-filled' | 'heart-outlined' | 'heart-filled' | string // 字符或图标，预置四种图标 string | slot
   size?: number // 字符大小，单位 px
   color?: string // 字符选中颜色
   gap?: number // 字符间距，单位 px
@@ -109,7 +109,7 @@ function onDown() {
     <template v-for="n in count" :key="n">
       <Tooltip v-bind="tooltipProps">
         <template v-if="tooltips[n - 1]" #tooltip>
-          <slot name="tooltip" :value="n">{{ tooltips[n - 1] }}</slot>
+          <slot name="tooltip" :tooltip="tooltips[n - 1]" :value="n">{{ tooltips[n - 1] }}</slot>
         </template>
         <div
           tabindex="0"
@@ -131,7 +131,7 @@ function onDown() {
             @mouseenter="onFirstEnter(n - 0.5)"
             @mouseleave="resetTempValue"
           >
-            <slot name="character">
+            <slot name="character" :value="n">
               <svg
                 v-if="character === 'star-filled'"
                 class="icon-character"
@@ -204,7 +204,7 @@ function onDown() {
             @mouseenter="onSecondEnter(n)"
             @mouseleave="resetTempValue"
           >
-            <slot name="character">
+            <slot name="character" :value="n">
               <svg
                 v-if="character === 'star-filled'"
                 class="icon-character"

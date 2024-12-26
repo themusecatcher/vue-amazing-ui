@@ -124,6 +124,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
         </template>
         stop
       </Tag>
+      <Tag color="default" icon="😉"> blink </Tag>
     </Space>
     <h2 class="mt30 mb10">图标按钮标签</h2>
     <Space gap="small">

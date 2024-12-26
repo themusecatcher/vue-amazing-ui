@@ -215,14 +215,6 @@ import { CloseCircleOutlined } from '@ant-design/icons-vue'
 
 ```vue
 <template>
-  <Result status="404" title="404" sub-title="Sorry, the page you visited does not exist.">
-    <template #extra>
-      <Button type="primary">Back Home</Button>
-    </template>
-  </Result>
-
-  ## 500 服务器发生了错误
-
   <Result status="500" title="500" sub-title="Sorry, the server is wrong.">
     <template #extra>
       <Button type="primary">Back Home</Button>
@@ -282,3 +274,13 @@ status | 结果的状态，决定图标和颜色 | 'success' &#124; 'error' &#12
 title | 标题文字 | string &#124; slot | undefined
 subTitle | 副标题文字 | string &#124; slot | undefined
 extra | 额外内容 | string &#124; slot | undefined
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+icon | 自定义图标 | v-slot:icon
+title | 自定义标题文字 | v-slot:title
+subTitle | 自定义副标题文字 | v-slot:subTitle
+extra | 自定义额外内容 | v-slot:extra
+default | 自定义内容 | v-slot:default

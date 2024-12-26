@@ -401,6 +401,13 @@ hideDelay |文字提示隐藏的延迟时间，单位 `ms` | number | 100
 show <Tag color="cyan">v-model</Tag> | 文字提示是否显示 | boolean | false
 showControl | 只使用 `show` 属性控制显示隐藏，仅当 `trigger: hover` 时生效，此时移入移出将不会触发显示隐藏，全部由 `show` 属性控制 | boolean | false
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+tooltip | 自定义文字提示内容 | v-slot:tooltip
+default | 自定义展示的内容 | v-slot:default
+
 ## Methods
 
 名称 | 说明 | 类型

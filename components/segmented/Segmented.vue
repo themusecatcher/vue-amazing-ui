@@ -78,7 +78,9 @@ function getOptionLabel(option: string | number | Option) {
         >
           <slot
             name="label"
+            :option="option"
             :label="getOptionLabel(option)"
+            :index="index"
             :payload="typeof option === 'object' ? option.payload : {}"
           >
             {{ getOptionLabel(option) }}
