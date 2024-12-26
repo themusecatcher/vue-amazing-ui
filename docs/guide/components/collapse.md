@@ -1023,6 +1023,16 @@ copyProps? | 复制按钮属性配置，参考 [Button Props](https://themusecat
 copyText? | 复制按钮文本 | string | undefined
 copiedText? | 已复制按钮文本 | string | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+header | 自定义面板标题 | v-slot:header="{ item, header, key, active }"
+content | 自定义面板内容 | v-slot:content="{ item, content, key, active }"
+arrow | 自定义箭头切换图标 | v-slot:arrow="{ item, key, active }"
+extra | 自定义面板标题右侧的额外内容 | v-slot:extra="{ item, extra, key, active }"
+lang | 自定义面板右上角固定内容 | v-slot:lang="{ item, lang, key, active }"
+
 ## Events
 
 名称 | 说明 | 类型

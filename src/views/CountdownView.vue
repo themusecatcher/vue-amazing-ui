@@ -59,7 +59,7 @@ function onReset() {
     <h2 class="mt30 mb10">倒计时已完成</h2>
     <Space gap="small" vertical>
       <Countdown />
-      <Countdown finished-text="Finished" />
+      <Countdown finish="Finished" />
     </Space>
     <h2 class="mt30 mb10">重置倒计时</h2>
     <Space vertical>
