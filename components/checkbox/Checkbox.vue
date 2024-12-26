@@ -105,7 +105,7 @@ function onWaveEnd() {
           ></span>
         </span>
         <span class="checkbox-label">
-          <slot :label="option.label">{{ option.label }}</slot>
+          <slot :option="option" :label="option.label" :index="index">{{ option.label }}</slot>
         </span>
       </div>
     </template>

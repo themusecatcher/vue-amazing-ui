@@ -477,6 +477,12 @@ label | 选项名 | string | undefined
 value | 选项值 | string &#124; number | undefined
 disabled? | 是否禁用选项 | boolean | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义选项名 | v-slot:default="{ option, label, index }"
+
 ## Events
 
 名称 | 说明 | 类型

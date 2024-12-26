@@ -1122,6 +1122,13 @@ loading | 是否加载中 | boolean | false
 loadingType | 加载指示符类型 | 'static' &#124; 'dynamic' | 'dynamic'
 block | 是否将按钮宽度调整为其父宽度 | boolean | false
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义按钮内容 | v-slot:default
+icon | 自定义按钮图标 | v-slot:icon
+
 ## Events
 
 名称 | 说明 | 类型
