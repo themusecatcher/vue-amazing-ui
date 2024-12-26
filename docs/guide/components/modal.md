@@ -837,6 +837,14 @@ onKnow? | 点击知道了按钮的回调 | Function | undefined
 onOk? | 点击确认按钮的回调 | Function | undefined
 onCancel? | 点击遮罩层或取消按钮的回调 | Function | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+icon | 自定义图标 | v-slot:icon
+title | 自定义模态框标题 | v-slot:title
+default | 自定义模态框内容 | v-slot:default
+
 ## Methods
 
 名称 | 说明 | 类型

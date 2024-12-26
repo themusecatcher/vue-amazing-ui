@@ -1196,7 +1196,7 @@ pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https:/
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-avatar | 列表元素的图标字符 | string &#124; slot | undefined
+avatar | 列表元素的图标 | string &#124; slot | undefined
 avatarProps | `Avatar` 组件属性配置，参考 [Avatar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html#avatar)，用于配置列表图标样式 | object | {}
 title | 列表元素的标题 | string &#124; slot | undefined
 description | 列表元素的描述内容 | string &#124; slot | undefined
@@ -1208,3 +1208,24 @@ descriptionStyle | 设置描述内容的样式 | [CSSProperties](https://cn.vuej
 contentStyle | 设置内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 actionsStyle | 设置操作区域的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 extraStyle | 设置额外内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+
+## Slots
+
+### List Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+header | 自定义列表头部 | v-slot:header
+default | 自定义内容 | v-slot:default
+footer | 自定义列表底部 | v-slot:footer
+
+### ListItem Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+avatar | 自定义列表元素的图标 | v-slot:avatar
+title | 自定义列表元素的标题 | v-slot:title
+description | 自定义列表元素的描述内容 | v-slot:description
+default | 自定义内容 | v-slot:default
+actions | 自定义列表操作组 | v-slot:actions
+extra | 自定义额外内容 | v-slot:extra

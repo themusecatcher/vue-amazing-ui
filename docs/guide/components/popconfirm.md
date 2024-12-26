@@ -634,6 +634,17 @@ showCancel | 是否显示取消按钮 | boolean | true
 
 更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+title | 自定义弹出确认框的标题 | v-slot:title
+description | 自定义弹出确认框的内容描述 | v-slot:description
+icon | 自定义图标 | v-slot:icon
+cancelText | 自定义取消按钮文字 | v-slot:cancelText
+okText | 自定义确认按钮文字 | v-slot:okText
+default | 自定义内容 | v-solt:default
+
 ## Events
 
 名称 | 说明 | 类型

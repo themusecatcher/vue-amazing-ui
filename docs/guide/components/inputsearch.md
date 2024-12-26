@@ -715,6 +715,16 @@ maxlength | 文本最大长度 | number | undefined
 showCount | 是否展示字数 | boolean | false
 value <Tag color="cyan">v-model</Tag> | 搜索框内容 | string | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+icon | 自定义搜索图标 | v-slot:icon
+search | 自定义搜索按钮 | v-slot:search
+addonBefore | 自定义前置标签 | v-slot:addonBefore
+prefix | 自定义前缀图标 | v-slot:prefix
+suffix | 自定义后缀图标 | v-slot:suffix
+
 ## Events
 
 名称 | 说明 | 类型

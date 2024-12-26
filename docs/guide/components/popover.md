@@ -287,6 +287,14 @@ tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.or
 
 更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+title | 自定义卡片标题 | v-slot:title
+content | 自定义卡片内容 | v-slot:content
+default | 自定义内容 | v-solt:default
+
 ## Events
 
 名称 | 说明 | 类型

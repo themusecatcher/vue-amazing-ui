@@ -104,7 +104,7 @@
 
 <Empty :image-style="{ height: '48px' }" :description-style="{ color: 'rgb(169, 174, 184)' }">
   <svg
-    class="u-svg"
+    class="svg-icon"
     viewBox="0 0 48 48"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +120,7 @@
 </Empty>
 
 <style lang="less" scoped>
-.u-svg {
+.svg-icon {
   display: inline-block;
   vertical-align: bottom;
   width: 48px;
@@ -136,7 +136,7 @@
 <template>
   <Empty :image-style="{ height: '48px' }" :description-style="{ color: 'rgb(169, 174, 184)' }">
     <svg
-      class="u-svg"
+      class="svg-icon"
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +152,7 @@
   </Empty>
 </template>
 <style lang="less" scoped>
-.u-svg {
+.svg-icon {
   display: inline-block;
   vertical-align: bottom;
   width: 48px;
@@ -176,3 +176,11 @@ descriptionStyle | 设置描述文本的样式 | [CSSProperties](https://cn.vuej
 image | 显示图片的链接，或者选择两种预置风格图片 | 'filled' &#124; 'outlined' &#124; string &#124; slot  | 'filled'
 imageStyle | 设置图片的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 footer | 设置底部内容 | slot | undefined
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+description | 自定义描述内容 | v-slot:description
+default | 自定义图片 | v-slot:default
+footer | 自定义底部内容 | v-slot:footer

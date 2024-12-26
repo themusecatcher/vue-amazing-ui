@@ -28,7 +28,7 @@
     <h2>插槽自定义</h2>
     <Empty :image-style="{ height: '48px' }" :description-style="{ color: 'rgb(169, 174, 184)' }">
       <svg
-        class="u-svg"
+        class="svg-icon"
         viewBox="0 0 48 48"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,7 @@
   </div>
 </template>
 <style lang="less" scoped>
-.u-svg {
+.svg-icon {
   display: inline-block;
   vertical-align: bottom;
   width: 48px;

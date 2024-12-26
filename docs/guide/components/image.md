@@ -350,6 +350,12 @@ album | 是否相册模式，即从一张展示图片点开相册 | boolean | fa
 src | 图像地址 | string | undefined
 name? | 图像名称 | string | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+preview | 自定义预览文本 | v-slot:preview
+
 ## Methods
 
 名称 | 说明 | 类型

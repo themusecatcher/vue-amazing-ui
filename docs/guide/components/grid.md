@@ -1054,3 +1054,17 @@ md | `≥768px` 响应式栅格 | number &#124; {span?: number&#44; offset?: num
 lg | `≥992px` 响应式栅格 | number &#124; {span?: number&#44; offset?: number} | undefined
 xl | `≥1200px` 响应式栅格 | number &#124; {span?: number&#44; offset?: number} | undefined
 xxl | `≥1600px` 响应式栅格 | number &#124; {span?: number&#44; offset?: number} | undefined
+
+## Slots
+
+### Row Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义行内容 | v-slot:default
+
+### Col Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义列内容 | v-slot:default

@@ -591,6 +591,15 @@ tooltip | 气泡卡片的内容 | sring &#124; slot | undefined
 tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
 badgeProps | 带徽标的浮动按钮（不支持 `status` 以及相关属性），参考 [Badge Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html#badge) | object | {}
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+icon | 自定义浮动按钮图标 | v-slot:icon
+description | 自定义文字描述信息 | v-slot:description
+menu | 自定义菜单按钮 | v-slot:menu
+tooltip | 自定义气泡卡片的内容 | v-slot:tooltip
+
 ## Events
 
 名称 | 说明 | 类型

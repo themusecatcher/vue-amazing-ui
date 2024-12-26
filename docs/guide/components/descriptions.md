@@ -890,15 +890,6 @@ lg | `≥992px` 响应式栅格 | number | undefined
 xl | `≥1200px` 响应式栅格 | number | undefined
 xxl | `≥1600px` 响应式栅格 | number | undefined
 
-## Descriptions Slots
-
-名称 | 说明 | 类型
-:-- | :-- | :--
-title | 自定义倒计时标题 | v-slot:title
-prefix | 自定义倒计时的前缀 | v-slot:prefix
-suffix | 自定义倒计时的后缀 | v-slot:suffix
-finish | 自定义完成后的展示文本 | v-slot:finish
-
 ### DescriptionsItem
 
 参数 | 说明 | 类型 | 默认值
@@ -907,3 +898,19 @@ label | 内容的描述标签 | string &#124; slot | undefined
 span | 包含列的数量，**当使用水平列表且未设置 `span` 时等效于 `span: 1`，但最后一行的最后一项，会包含该行剩余的所有列数** | number | undefined
 labelStyle | 自定义标签样式，优先级高于 `Description` 的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 contentStyle | 自定义内容样式，优先级高于 `Description` 的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+
+## Slots
+
+### Descriptions Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+title | 自定义描述列表的标题 | v-slot:title
+extra | 自定义描述列表的操作区域 | v-slot:extra
+
+### DescriptionsItem Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+label | 自定义描述标签 | v-slot:label
+default | 自定义内容 | v-slot:default

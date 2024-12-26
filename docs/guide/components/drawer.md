@@ -324,6 +324,15 @@ destroyOnClose | 关闭时是否销毁 `Drawer` 里的子元素 | boolean | fals
 zIndex | 设置 `Drawer` 的 `z-index` | number | 1000
 open <Tag color="cyan">v-model</Tag> | 抽屉是否可见 | boolean | false
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+title | 自定义标题 | v-slot:title
+extra | 自定义抽屉右上角的操作区域 | v-slot:extra
+default | 自定义抽屉内容 | v-slot:default
+footer | 自定义抽屉的页脚 | v-slot:footer
+
 ## Events
 
 名称 | 说明 | 类型

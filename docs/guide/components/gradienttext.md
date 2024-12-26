@@ -148,3 +148,9 @@ type | 渐变文字的类型 | 'primary' &#124; 'info' &#124; 'success' &#124; '
 from | 起始颜色 | string | undefined
 to | 终点颜色 | string | undefined
 deg? | 渐变角度，单位 `deg` | number &#124; string | 252
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义内容 | v-slot:default
