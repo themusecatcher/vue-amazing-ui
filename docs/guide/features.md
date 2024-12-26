@@ -2,9 +2,17 @@
 
 <GlobalElement />
 
-::: tip 温馨提示
-由于文档网站部署在静态网站服务 `GitHub Pages`，为了您的流程访问，建议打开代理
-:::
+<Alert type="info" show-icon :bordered="false">
+  <template #icon>
+    <SoundFilled />
+  </template>
+  <p style="font-size: 18px; font-weight: 600; color: #1677ff;">Join Me</p>
+  <template #description>
+    <p style="font-size: 16px;">
+      如果您对 Vue Amazing UI 感兴趣，欢迎加入我们，一起开发、维护和迭代组件库。您的贡献将帮助组件库不断的完善与扩展，共同打造更优秀的用户体验。
+    </p>
+  </template>
+</Alert>
 
 ## 简要介绍
 
@@ -76,6 +84,7 @@
   :::
 
 <script setup lang="ts">
+import { SoundFilled } from '@ant-design/icons-vue'
 import pkg from '../../package.json'
 
 const dependencies = pkg.dependencies

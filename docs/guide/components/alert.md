@@ -615,6 +615,16 @@ icon | 自定义图标，`showIcon` 为 `true` 时有效 |  string &#124; slot |
 showIcon | 是否显示辅助图标 | boolean | false
 actions | 自定义操作项 | slot | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+-- | -- | --
+default | 警告提示内容 | v-slot:default
+description | 警告提示的辅助性文字介绍 | v-slot:description
+closeText | 自定义关闭按钮 | v-slot:closeText
+icon | 自定义图标 | v-slot:icon
+actions | 自定义操作项 | v-slot:actions
+
 ## Events
 
 名称 | 说明 | 类型
