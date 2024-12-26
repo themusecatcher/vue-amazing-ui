@@ -509,7 +509,7 @@ function onDecline (scale: number) {
 ### Progress
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 进度条宽度，单位 `px`；`type: 'line'` 时，为进度条宽度，默认值 `'100%'`；`type: 'circle'` 时，为进度圈宽高，默认值 `120` | string &#124; number | undefined
 percent | 当前进度百分比 | number | 0
 lineSize | 进度条的尺寸，单位 `px`；`type: 'line'` 时，为进度条线高，默认值 `8`；`type: 'circle'` 时，单位是进度圈画布宽度的百分比，默认值 `6` | number | undefined
@@ -524,7 +524,7 @@ type | 进度条类型 | 'line' &#124; 'circle' | 'line'
 ### Gradient Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 '0%'? | 起始值 | string | undefined
 '100%'? | 终点值 | string | undefined
 from? | 起始值 | string | undefined

@@ -200,7 +200,7 @@ const value = ref('hello world')
 ### QRCode
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 value | 扫描后的文本或地址 | string | undefined
 size | 二维码大小，单位 `px` | number | 160
 color | 二维码颜色，Value must be in `hex format` (十六进制颜色值) | string | '#000'

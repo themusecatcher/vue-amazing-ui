@@ -296,7 +296,7 @@ Watermark | 水印
 ## 工具函数
 
 名称 | 说明 | 类型
-:--- | :--- | :---
+:-- | :-- | :--
 dateFormat | 格式化日期时间字符串函数 | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string
 formatNumber | 数字格式化函数 | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string
 rafTimeout | 使用 `requestAnimationFrame` 实现的 `setTimeout` 或 `setInterval` 调用函数 | (fn: Function, delay: number = 0, interval: boolean = false) => object

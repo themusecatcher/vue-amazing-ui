@@ -615,7 +615,7 @@ const cancel = (e: MouseEvent) => {
 ### Popconfirm
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title | 弹出确认框的标题 | string &#124; slot | undefined
 titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 description | 弹出确认框的内容描述 | string &#124; slot | undefined
@@ -637,7 +637,7 @@ showCancel | 是否显示取消按钮 | boolean | true
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 cancel | 点击取消的回调 | (e: Event) => void
 ok | 点击确认的回调 | (e: Event) => void
 openChange | 显示隐藏的回调 | (open: boolean) => void

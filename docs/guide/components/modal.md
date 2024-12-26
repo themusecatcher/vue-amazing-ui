@@ -778,7 +778,7 @@ function onOk() {
 ### Modal
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 模态框宽度，单位 `px` | string &#124; number | 420
 icon | 自定义图标 | VNode &#124; Slot | undefined
 title | 模态框标题 | string &#124; slot | undefined
@@ -810,7 +810,7 @@ maskStyle | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/uti
 *调用时传入的 `Modal` 类型，以下属性均具有更高优先级*
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width? | 模态框宽度，单位 `px` | string &#124; number | undefined
 icon? | 自定义图标 | VNode | undefined
 title? | 模态框标题 | string | undefined
@@ -840,7 +840,7 @@ onCancel? | 点击遮罩层或取消按钮的回调 | Function | undefined
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 info | 信息提示模态框 | (data: [Modal](#modal-type)) => void
 success | 成功提示模态框 | (data: [Modal](#modal-type)) => void
 error | 错误提示模态框 | (data: [Modal](#modal-type)) => void
@@ -850,7 +850,7 @@ erase | 删除提示模态框 | (data: [Modal](#modal-type)) => void
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 cancel | 点击蒙层或 `Esc` 键或取消按钮的回调 | () => void
 ok | 点击确定按钮的回调 | () => void
 know | 点击知道了按钮的回调 | () => void

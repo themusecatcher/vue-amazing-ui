@@ -869,7 +869,7 @@ const state = reactive({
 ### Descriptions
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title | 描述列表的标题，显示在最顶部 | string &#124; slot | undefined
 extra | 描述列表的操作区域，显示在右上方 | string &#124; slot | undefined
 bordered | 是否展示边框 | boolean | false
@@ -882,7 +882,7 @@ contentStyle | 自定义内容样式，优先级低于 `DescriptionItems`  的 `
 ### Responsive Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 xs | `<576px` 响应式栅格 | number | undefined
 sm | `≥576px` 响应式栅格 | number | undefined
 md | `≥768px` 响应式栅格 | number | undefined
@@ -893,7 +893,7 @@ xxl | `≥1600px` 响应式栅格 | number | undefined
 ### DescriptionsItem
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 label | 内容的描述标签 | string &#124; slot | undefined
 span | 包含列的数量，**当使用水平列表且未设置 `span` 时等效于 `span: 1`，但最后一行的最后一项，会包含该行剩余的所有列数** | number | undefined
 labelStyle | 自定义标签样式，优先级高于 `Description` 的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

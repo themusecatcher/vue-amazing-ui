@@ -381,7 +381,7 @@ const tooltip = ref()
 ### Tooltip
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 maxWidth | 文字提示最大宽度，单位 `px` | string &#124; number | 240
 content | 展示的内容 | string &#124; slot | undefined
 contentClass | 设置展示内容的类名 | string | undefined
@@ -404,12 +404,12 @@ showControl | 只使用 `show` 属性控制显示隐藏，仅当 `trigger: hover
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 show | 显示文字提示 | () => void
 hide | 隐藏文字提示 | () => void
 
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 openChange | 显示隐藏的回调 | (open: boolean) => void

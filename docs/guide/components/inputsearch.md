@@ -698,7 +698,7 @@ function onSearch(searchValue: string) {
 ### InputSearch
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 搜索框宽度，单位 `px` | string &#124; number | '100%'
 icon | 搜索图标 | boolean &#124; slot | true
 search | 搜索按钮，默认时为搜索图标 | string &#124; slot | undefined
@@ -718,6 +718,6 @@ value <Tag color="cyan">v-model</Tag> | 搜索框内容 | string | undefined
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 搜索框内容变化时的回调 | (e: Event) => void
 enter | 点击搜索或按下回车键时的回调 | (value: string) => void

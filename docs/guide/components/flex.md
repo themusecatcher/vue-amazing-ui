@@ -308,7 +308,7 @@ const customGapSize = ref(16)
 ### Flex
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 弹性区域总宽度，单位 `px` | string &#124; number | 'auto'
 vertical | `flex` 主轴的方向是否垂直，`vertical` 使用 `flex-direction: column` | boolean | false
 wrap | 设置元素单行显示还是多行显示；参考 [`flex-wrap`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex-wrap) | 'nowrap' &#124; 'wrap' &#124; 'wrap-reverse' | 'nowrap'

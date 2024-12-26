@@ -977,7 +977,7 @@ watchEffect(() => {
 ### Collapse
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 items | 折叠面板数据 | [Item](#item-type)[] | []
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | number[] &#124; number &#124; string[] &#124; string &#124; null | null
 bordered | 带边框风格的折叠面板 | boolean | true
@@ -1004,7 +1004,7 @@ copiedText | 已复制按钮文本 | string | 'Copied'
 *以下属性均具有更高优先级*
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 (`0,1,2...`) 绑定 | string &#124; number | undefined
 disabled? | 是否禁用展开收起 | boolean | undefined
 header? | 面板标题 | string &#124; v-slot:header="{ item, header, key, active }" | undefined
@@ -1026,5 +1026,5 @@ copiedText? | 已复制按钮文本 | string | undefined
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 切换面板的回调 | (key: number &#124; string) => void

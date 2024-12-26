@@ -483,7 +483,7 @@ const state = reactive({
 ### Rate
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 allowClear | 是否允许再次点击后清除 | boolean | true
 allowHalf | 是否允许半选 | boolean | false
 count | `star` 总数 | number | 5
@@ -499,6 +499,6 @@ value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `0,1,2,3...` | num
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 选择时的回调 | (value: number) => void
 hoverChange | 鼠标经过时数值变化的回调 | (value: number) => void

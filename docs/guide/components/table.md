@@ -2862,7 +2862,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
 ### Table
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 header | 表格标题 | string &#124; slot | undefined
 footer | 表格尾部 | string &#124; slot | undefined
 columns | 表格列的配置项 | [Column](#column-type)[] | []
@@ -2896,7 +2896,7 @@ expandRowByClick | 点击行是否展开 | boolean | false
 ### Column Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title? | 列头显示文字 | string | undefined
 align? | 列文本的对齐方式 | 'left' &#124; 'center' &#124; 'right' | undefined
 width? | 列宽度，单位 `px` | string &#124; number | undefined
@@ -2919,14 +2919,14 @@ customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Co
 ### ScrollOption Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 x? | 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，`true` 和 `'max-content'` | string &#124; number &#124; true | undefined
 y? | 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值 | string &#124; number | undefined
 
 ## Slots
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 headerCell | 个性化头部单元格 | v-slot:headerCell="{ column, title }"
 expandCell | 自定义展开按钮 | v-slot:expandCell="{ record, index, expanded }"
 bodyCell | 个性化单元格 | v-slot:bodyCell="{ column, record, text, index }"
@@ -2935,7 +2935,7 @@ expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 expand | 点击展开图标时的回调 | (expanded: boolean, record: any) => void
 expandedRowsChange | 展开的行变化时的回调 | (expandedRows: (string \| number)[]) => void
 sortChange | 排序变化时的回调 | (column: [Column](#column-type), currentDataSource: any[]) => void

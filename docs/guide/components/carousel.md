@@ -917,7 +917,7 @@ const carouselConfig = reactive({
 ### Carousel
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 images | 轮播图图片数组 | [Image](#image-type)[] | []
 width | 轮播图宽度，单位 `px` | number &#124; string | '100%'
 height | 轮播图高度，单位 `px` | number &#124; string | '100vh'
@@ -945,7 +945,7 @@ slideFunction | 滑动动画函数，，仅当 `effect` 为 `'slide'` 时生效�
 ### Image Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title? | 图片名称 | string | undefined
 src | 图片地址 | string | undefined
 link? | 图片跳转链接 | string | undefined
@@ -953,7 +953,7 @@ link? | 图片跳转链接 | string | undefined
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 to | 切换至某一页，从 `1` 开始 | (n: number) => void
 prev | 切换至前一页 | () => void
 next | 切换至后一页 | () => void
@@ -962,6 +962,6 @@ getCurrentIndex | 获取当前页，从 `1` 开始 | () => number
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 切换时的图片索引，从 `1` 开始 | (index: number) => void
 click | 点击图片时的回调 | (image: [Image](#image-type)) => void

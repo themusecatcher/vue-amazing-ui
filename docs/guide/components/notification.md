@@ -406,7 +406,7 @@ function onClose() {
 ### Notification
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title | 通知提醒标题，优先级低于 [Notification](#notification-type) 中的 `title` | string | undefined
 description | 通知提醒内容，优先级低于 [Notification](#notification-type) 中的 `description` | string | undefined
 duration | 自动关闭的延时时长，单位 `ms`，默认 `4500ms`；设置 `null` 时，不自动关闭，优先级低于 [Notification](#notification-type) 中的 `duration` | number &#124; null | 4500
@@ -421,7 +421,7 @@ placement | 消息弹出位置，优先级低于 [Notification](#notification-ty
 *调用时传入的 `Notification` 类型，以下属性均具有更高优先级*
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title? | 通知提醒标题 | string | undefined
 description? | 通知提醒内容 | string | undefined
 icon? | 自定义图标 | VNode | undefined
@@ -434,7 +434,7 @@ onClose | 关闭时的回调函数 | Function | undefined
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 open | 基本通知提醒 | (data: [Notification](#notification-type)) => void
 info | 信息通知提醒 | (data: [Notification](#notification-type)) => void
 success | 成功通知提醒 | (data: [Notification](#notification-type)) => void
@@ -444,5 +444,5 @@ warning | 警告通知提醒 | (data: [Notification](#notification-type)) => voi
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 close | 通知提醒关闭时的回调 | () => void

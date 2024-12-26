@@ -588,7 +588,7 @@ const buttonSize = ref('middle')
 ### Radio
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 options | 单选框选项数据 | [Option](#option-type)[] | []
 disabled | 是否禁用 | boolean | false
 vertical | 是否垂直排列，仅当 `button: false` 时生效 | boolean | false
@@ -602,7 +602,7 @@ value <Tag color="cyan">v-model</Tag> | 当前选中的值 | string &#124; numbe
 ### Option Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 label | 选项名 | string | undefined
 value | 选项值 | string &#124; number &#124; boolean | undefined
 disabled? | 是否禁用选项 | boolean | undefined
@@ -610,5 +610,5 @@ disabled? | 是否禁用选项 | boolean | undefined
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 选项变化时的回调函数 | (value: string \| number \| boolean) => void

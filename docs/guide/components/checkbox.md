@@ -460,7 +460,7 @@ const verticalGap = ref(8)
 ### Checkbox
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 options | 复选框选项数据 | [Option](#option-type)[] | []
 disabled | 是否禁用 | boolean | false
 vertical | 是否垂直排列 | boolean | false
@@ -472,7 +472,7 @@ checked <Tag color="cyan">v-model</Tag> | 当前是否选中 | boolean | false
 ### Option Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 label | 选项名 | string | undefined
 value | 选项值 | string &#124; number | undefined
 disabled? | 是否禁用选项 | boolean | undefined
@@ -480,5 +480,5 @@ disabled? | 是否禁用选项 | boolean | undefined
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 变化时回调函数 | (value: boolean \| (string \| number)[]) => void

@@ -276,7 +276,7 @@ import { SmileTwoTone } from '@ant-design/icons-vue'
 ### Result
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 icon | 自定义图标 | slot | undefined
 status | 结果的状态，决定图标和颜色 | 'success' &#124; 'error' &#124; 'info' &#124; 'warning' &#124; '404' &#124; '403' &#124; '500' | 'info'
 title | 标题文字 | string &#124; slot | undefined

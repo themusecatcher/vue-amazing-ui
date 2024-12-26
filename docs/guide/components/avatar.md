@@ -314,7 +314,7 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 ### Avatar
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 color | 头像的背景色 | string | 'rgba(0, 0, 0, 0.25)'
 shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle'
 size | 设置头像的大小，`number`类型时单位 `px` | number &#124; 'small' &#124; 'middle' &#124; 'large' &#124; [Responsive](#responsive-type) | 'middle'
@@ -327,10 +327,17 @@ target | 相当于 `a` 标签的 `target` `属性，href` 存在时生效 | 'sel
 ### Responsive Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 xs | `<576px` 响应式栅格 | number | undefined
 sm | `≥576px` 响应式栅格 | number | undefined
 md | `≥768px` 响应式栅格 | number | undefined
 lg | `≥992px` 响应式栅格 | number | undefined
 xl | `≥1200px` 响应式栅格 | number | undefined
 xxl | `≥1600px` 响应式栅格 | number | undefined
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 字符类型的头像内容 | v-slot:default
+icon | 自定义头像图标 | v-slot:icon

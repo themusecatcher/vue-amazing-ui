@@ -336,7 +336,7 @@ const timelineItems = ref([
 ### Timeline
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 items | 时间轴内容数组 | [Item](#item-type)[] | []
 width | 时间轴区域总宽度，单位 `px` | number &#124; string | '100%'
 lineStyle | 时间线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid'
@@ -346,13 +346,13 @@ position | 当 `mode` 为 `center` 时，内容交替展现，内容从左边（
 ### Item Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 desc | 文字描述 | string &#124; slot | undefined
 color? | 圆圈颜色 | 'blue' &#124; 'green' &#124; 'red' &#124; 'gray' &#124; string | 'blue'
 
 ## Slots
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 dot | 自定义时间轴点 | v-slot:dot="{ item, index }"
 desc | 自定义文字描述 | v-slot:desc="{ item, index }"

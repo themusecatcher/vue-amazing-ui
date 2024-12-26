@@ -572,7 +572,7 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 ### FloatButton
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 top | 按钮定位的上边距，单位 `px` | number &#124; string | undefined
 bottom | 按钮定位的下边距，单位 `px` | number &#124; string | 40
 left | 按钮定位的左边距，单位 `px` | number &#124; string | undefined
@@ -594,6 +594,6 @@ badgeProps | 带徽标的浮动按钮（不支持 `status` 以及相关属性）
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 click | 点击浮动按钮时的回调 | (e: Event) => void
 openChange | 浮动按钮菜单展开收起时的回调 | (open: boolean) => void

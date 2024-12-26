@@ -396,7 +396,7 @@ watchEffect(() => {
 ### Slider
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 滑动输入条宽度，单位 `px`，水平模式时生效 | string &#124; number | '100%'
 height | 滑动输入条高度，单位 `px`，垂直模式时生效 | string &#124; number | '100%'
 vertical | 是否启用垂直模式 | boolean | false
@@ -412,5 +412,5 @@ value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `fa
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 当前取值变化后的回调 | (value: number &#124; number[]) => void

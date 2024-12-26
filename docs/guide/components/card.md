@@ -353,7 +353,7 @@ const loading = ref(true)
 ### Card
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 卡片宽度，单位 `px` | number &#124; string | 'auto'
 bordered | 是否有边框 | boolean | true
 size | 卡片的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'

@@ -1106,7 +1106,7 @@ const loadingType = ref('dynamic')
 ### Button
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 type | 设置按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
 shape | 设置按钮形状 | 'default' &#124; 'circle' &#124; 'round' | 'default'
 icon | 设置按钮图标 | VNode &#124; Slot | undefined
@@ -1125,5 +1125,5 @@ block | 是否将按钮宽度调整为其父宽度 | boolean | false
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 click | 点击按钮时的回调 | (e: Event) => void

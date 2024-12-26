@@ -330,7 +330,7 @@ function onClose() {
 ### Message
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 content | 提示内容 | string | undefined
 duration | 自动关闭的延时，单位 `ms`，设置 `null` 时，不自动关闭 | number | 3000
 top | 消息距离顶部的位置，单位 `px` | string &#124; number | 30
@@ -342,7 +342,7 @@ top | 消息距离顶部的位置，单位 `px` | string &#124; number | 30
 *调用时传入的 `Message` 类型，以下属性均具有更高优先级*
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 content? | 提示内容 | string | undefined
 icon? | 自定义图标 | VNode | undefined
 duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null | undefined
@@ -355,7 +355,7 @@ onClose? | 关闭时的回调函数 | Function | undefined
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 open | 基本全局提示 | (content: string &#124; [Message](#message-type)) => void
 info | 信息全局提示 | (content: string &#124; [Message](#message-type)) => void
 success | 成功全局提示 | (content: string &#124; [Message](#message-type)) => void
@@ -366,7 +366,7 @@ loading | 加载全局提示 | (content: string &#124; [Message](#message-type))
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 click | 点击 `message` 时触发的回调函数 | (e: Event) => void
 close | 关闭时触发的回调函数 | () => void
 

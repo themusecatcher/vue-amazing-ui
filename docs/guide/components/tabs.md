@@ -1258,7 +1258,7 @@ const state = reactive({
 ### Tabs
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 items | 标签页数组 | [Item](#item-type)[] | []
 prefix | 标签页前缀 | string &#124; slot | undefined
 suffix | 标签页后缀 | string &#124; slot | undefined
@@ -1275,7 +1275,7 @@ activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` |
 ### Item Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number | undefined
 tab? | 页签显示文字 | string | undefined
 icon? | 页签图标 | VNode | undefined
@@ -1285,12 +1285,12 @@ disabled? | 是否禁用页签 | boolean | false
 ## Slots
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 tab | 自定义页签显示文字 | v-slot:tab="{ item, tab, key }"
 content | 自定义标签页内容 | v-slot:content="{ item, content, key }"
 
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 切换面板的回调 | (key: string &#124; number) => void

@@ -179,7 +179,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 ### Waterfall
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 images | 图片数组 | [Image](#image-type)[] | []
 columnCount | 要划分的列数 | number | 3
 columnGap | 各列之间的间隙，单位 `px` | number | 20
@@ -191,6 +191,6 @@ spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatch
 ### Image Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 name? | 图片名称 | string | undefined
 src | 图片地址 | string | undefined

@@ -628,7 +628,7 @@ watchEffect(() => {
 *更多使用 `API` 请参考 [官方文档](https://vue3datepicker.com/)*
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 日期选择器宽度，单位 `px` | number | 180
 mode | 选择器模式 | 'time' &#124; 'date' &#124; 'week' &#124; 'month' &#124; 'year' | 'date'
 [format](#format-支持的格式化占位符列表) | 日期展示格式 | string &#124; ((date: Date) => string) &#124; ((dates: Date[]) => string) | [DefaultFormat](#defaultformat-value)
@@ -640,7 +640,7 @@ modelType | `v-model` 值类型，可选 `timestamp`: 时间戳、`format`: 字�
 ### DefaultFormat Value
 
 类型 | 值
---- | ---
+:-- | :--
 Single picker | 'MM/dd/yyyy HH:mm'
 Range picker | 'MM/dd/yyyy HH:mm - MM/dd/yyyy HH:mm'
 Month picker | 'MM/yyyy'
@@ -651,7 +651,7 @@ Week picker | 'ww-yyyy'
 ### format 支持的格式化占位符列表
 
 标识 | 示例 | 描述
--- | -- | --
+:-- | :-- | :--
 yy | 23 | 年，两位数
 yyyy | 2023 | 年，四位数
 M | 1-12 | 月

@@ -524,7 +524,7 @@ const size = ref('middle')
 ### Spin
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 spinning | 是否为加载中状态 | boolean | true
 size | 加载中尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 tip | 描述文案 | string &#124; slot | undefined
