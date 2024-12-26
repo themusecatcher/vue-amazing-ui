@@ -2,6 +2,12 @@
 
 <GlobalElement />
 
+对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或者直接通过右下角邮箱地址直接联系我
+
+## 2.0.3 <Tag color="volcano" size="small">2024-12-26</Tag>
+
+- 组件库及文档代码优化
+
 ## 2.0.2 <Tag color="volcano" size="small">2024-12-24</Tag>
 
 - 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，`icon` 属性新增类型 `VNode`
