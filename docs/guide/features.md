@@ -4,7 +4,7 @@
 
 <Alert type="info" show-icon :bordered="false">
   <template #icon>
-    <SoundFilled />
+    <TeamOutlined />
   </template>
   <p style="font-size: 18px; font-weight: 600; color: #1677ff;">Join Me</p>
   <template #description>
@@ -84,7 +84,7 @@
   :::
 
 <script setup lang="ts">
-import { SoundFilled } from '@ant-design/icons-vue'
+import { TeamOutlined } from '@ant-design/icons-vue'
 import pkg from '../../package.json'
 
 const dependencies = pkg.dependencies
