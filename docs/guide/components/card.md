@@ -364,3 +364,10 @@ title | 卡片标题 | string &#124; slot | undefined
 extra | 卡片右上角的操作区域 | string &#124; slot | undefined
 headStyle | 自定义标题区域样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bodyStyle | 自定义内容区域样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+title | 自定义卡片标题 | v-slot:title
+extra | 自定义右上角的操作区域 | v-slot:extra
