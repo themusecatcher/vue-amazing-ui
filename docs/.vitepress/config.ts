@@ -18,7 +18,7 @@ export default defineConfig({
     logo: '/amazing-icon.svg',
 
     editLink: {
-      pattern: 'https://github.com/themusecatcher/vue-amazing-ui/tree/master/docs/:path',
+      pattern: 'https://github.com/themusecatcher/vue-amazing-ui/tree/main/docs/:path',
       text: '在 GitHub 上编辑此页面' // Edit this page on GitHub
     },
 
