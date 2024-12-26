@@ -408,6 +408,15 @@ visibilityHeight | 滚动时触发显示回到顶部的高度，单位 `px` | nu
 to | `BackTop` 渲染的容器节点，可选：元素标签名（例如 `body`）或者元素本身，下同 | string &#124; HTMLElement | 'body'
 listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近的一个可滚动的祖先节点 | string &#124; HTMLElement | undefined
 
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义按钮 | v-slot:default
+icon | 自定义图标 | v-slot:icon
+description | 自定义文字描述 | v-slot:description
+tooltip | 自定义文字提示内容 | v-slot:tooltip
+
 ## Events
 
 名称 | 说明 | 类型
