@@ -330,3 +330,9 @@ query? | 路由查询参数 | [Query](#query-type) | undefined
 名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 [propName: string] | 用于包含带有任意数量的其他属性 | any  | undefined
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+separator | 自定义分隔符 | v-slot:separator="{ route, index }"

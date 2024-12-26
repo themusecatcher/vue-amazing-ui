@@ -66,7 +66,7 @@ function getUrl(route: Route) {
         {{ route.name }}
       </component>
       <span v-if="index < breadcrumbAmount - 1" class="breadcrumb-separator" :style="separatorStyle">
-        <slot name="separator" :index="index">
+        <slot name="separator" :route="route" :index="index">
           <span v-if="separator">{{ separator }}</span>
           <svg
             v-else

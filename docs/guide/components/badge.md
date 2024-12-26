@@ -506,11 +506,18 @@ ripple | 是否开启涟漪动画效果 | boolean | true
 ### PresetColor Type
 
 名称 | 值
--- | --
+:-- | :--
 PresetColor | 'pink' &#124; 'red' &#124; 'yellow' &#124; 'orange' &#124; 'cyan' &#124; 'green' &#124; 'blue' &#124; 'purple' &#124; 'geekblue' &#124; 'magenta' &#124; 'volcano' &#124; 'gold' &#124; 'lime'
 
 ### Status Type
 
 名称 | 值
--- | --
+:-- | :--
 Status | 'success' &#124; 'processing' &#124; 'default' &#124; 'error' &#124; 'warning'
+
+## Slots
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 自定义内容元素 | v-slot:default
+value | 自定义徽标数字或文字 | v-slot:value

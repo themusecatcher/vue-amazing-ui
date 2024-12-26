@@ -267,7 +267,7 @@ transition | 动画过渡效果 | [TransitionFunc](#transitionfunc-type) | 'ease
 ### TransitionFunc Type
 
 名称 | 值
--- | --
+:-- | :--
 TransitionFunc | 'linear' &#124; 'easeOutSine' &#124; 'easeInOutSine' &#124; 'easeInQuad' &#124; 'easeOutQuad' &#124; 'easeInOutQuad' &#124; 'easeInCubic' &#124; 'easeOutCubic' &#124; 'easeInOutCubic' &#124; 'easeInQuart' &#124; 'easeOutQuart' &#124; 'easeInOutQuart' &#124; 'easeInQuint' &#124; 'easeOutQuint' &#124; 'easeInOutQuint' &#124; 'easeInExpo' &#124; 'easeOutExpo' &#124; 'easeInOutExpo' &#124; 'easeInCirc' &#124; 'easeOutCirc' &#124; 'easeInOutCirc' &#124; 'easeInBack' &#124; 'easeOutBack' &#124; 'easeInOutBack'
 
 ## Methods
