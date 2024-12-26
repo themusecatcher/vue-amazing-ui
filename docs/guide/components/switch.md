@@ -346,7 +346,7 @@ const customValue2 = ref(2)
 ### Switch
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 checked | 选中时的内容 | string &#124; slot | undefined
 checkedValue | 选中时的值 | boolean &#124; string &#124; number | true
 unchecked | 未选中时的内容 | string &#124; slot | undefined
@@ -361,5 +361,5 @@ modelValue <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean 
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 变化时的回调 | (checked: boolean) => void

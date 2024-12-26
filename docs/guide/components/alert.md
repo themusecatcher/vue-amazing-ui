@@ -604,7 +604,7 @@ function onClose (e: Event) {
 ### Alert
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 message | 警告提示内容 | string &#124; slot | undefined
 description | 警告提示的辅助性文字介绍 | string &#124; slot | undefined
 type | 警告提示的类型 | 'default' &#124; 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'default'
@@ -618,7 +618,7 @@ actions | 自定义操作项 | slot | undefined
 ## Slots
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 default | 警告提示内容 | v-slot:default
 description | 警告提示的辅助性文字介绍 | v-slot:description
 closeText | 自定义关闭按钮 | v-slot:closeText
@@ -628,5 +628,5 @@ actions | 自定义操作项 | v-slot:actions
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 close | 关闭时触发的回调函数 | (e: Event) => void

@@ -264,7 +264,7 @@ function formatter (value: string): string {
 ### Statistic
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title | 数值的标题 | string | undefined
 value | 数值的内容 | string &#124; number &#124; slot | undefined
 valueStyle | 设置数值的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

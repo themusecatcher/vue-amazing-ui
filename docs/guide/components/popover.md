@@ -277,7 +277,7 @@ const show = ref(false)
 ### Popover
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title | 卡片标题 | string &#124; slot | undefined
 titleStyle | 卡片标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 content | 卡片内容 | string &#124; slot | undefined
@@ -290,5 +290,5 @@ tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.or
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 openChange | 显示隐藏的回调 | (open: boolean) => void

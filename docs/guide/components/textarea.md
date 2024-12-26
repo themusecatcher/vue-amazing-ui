@@ -216,7 +216,7 @@ const value = ref('')
 ### Textarea
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 文本域宽度，单位 `px` | string &#124; number | '100%'
 allowClear | 可以点击清除图标删除内容 | boolean | false
 autoSize | 自适应内容高度 | boolean &#124; {minRows\?: number, maxRows?: number} | false
@@ -229,6 +229,6 @@ value <Tag color="cyan">v-model</Tag> | 文本域内容 | string | undefined
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 文本域内容变化时的回调 | (e: Event) => void
 enter | 按下回车的回调 | (e: Event) => void

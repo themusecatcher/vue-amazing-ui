@@ -782,7 +782,7 @@ const state = reactive({
 ### TextScroll
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 items | 滚动文字数组，`single` 为 `true` 时，类型为 `Item`；多条文字水平滚动时，数组长度必须大于等于 `amount` 才能滚动 | [Item](#item-type)[] &#124; [Item](#item-type) | []
 single | 是否启用单条文字滚动效果，水平滚动时生效，为 `true` 时，`amount` 自动设为 `1` | boolean | false
 width | 滚动区域宽度，单位 `px` | string &#124; number | '100%'
@@ -808,7 +808,7 @@ target? | 跳转链接打开方式，`href` 存在时生效 | '_self' &#124; '_b
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 start | 开始滚动 | () => void
 stop | 暂停滚动 | () => void
 reset | 重置滚动 | () => void
@@ -816,5 +816,5 @@ reset | 重置滚动 | () => void
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 click | 点击标题时的回调 | (item: [Item](#item-type)) => void

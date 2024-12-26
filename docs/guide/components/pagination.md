@@ -332,7 +332,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 ### Pagination
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 page <Tag color="cyan">v-model</Tag> | 当前页数 | number | 1
 pageSize <Tag color="cyan">v-model</Tag> | 每页条数 | number | 10
 total | 数据总数 | number | 0
@@ -349,6 +349,6 @@ size | 分页按钮大小 | 'large' &#124; 'middle' &#124; 'small' | 'large'
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 页码 `page` 或每页条数 `pageSize` 改变的回调 | (page: number, pageSize: number) => void
 pageSizeChange | 每页条数 `pageSize` 变化的回调 | (page: number, pageSize: number) => void

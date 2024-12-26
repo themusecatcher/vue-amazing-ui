@@ -247,7 +247,7 @@ function onReset() {
 ### Countdown
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title | 倒计时标题 | string &#124; slot | undefined
 titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 prefix | 倒计时的前缀 | string &#124; slot | undefined
@@ -262,11 +262,11 @@ active | 是否处于计时状态，仅当 `future: false` 时生效 | boolean |
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 reset | 重置倒计时 | () => void
 
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 finish | 倒计时结束的回调 | () => void

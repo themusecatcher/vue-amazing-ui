@@ -131,7 +131,7 @@ const strStyle = computed(() => {
     <slot v-if="!src && showIcon" name="icon">
       <component :is="icon" />
     </slot>
-    <span v-if="!src && !showIcon && showStr" class="string-item" :style="strStyle">
+    <span v-if="showStr" class="string-item" :style="strStyle">
       <slot></slot>
     </span>
   </component>

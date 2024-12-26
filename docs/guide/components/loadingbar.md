@@ -179,7 +179,7 @@ const customLoadingBar = ref()
 ### LoadingBar
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 containerClass | 加载条容器的类名 | string | undefined
 containerStyle | 加载条容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 loadingBarSize | 加载条大小，单位 `px` | number | 2
@@ -191,7 +191,7 @@ to | 加载条的挂载位置，可选：元素标签名（例如 `body`）或�
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 start | 开始加载的回调函数 | (from = 0, to = 80) => void
 finish | 结束加载的回调函数 | () => void
 error | 出现错误的回调函数 | () => void

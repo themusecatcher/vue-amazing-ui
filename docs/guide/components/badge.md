@@ -489,7 +489,7 @@ const colors = [
 ### Badge
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 color | 自定义小圆点的颜色，优先级高于 `status` | [PresetColor](#presetcolor-type) &#124; string | undefined
 value | 展示的数字或文字，为数字时大于 `max` 显示为 `max+`，为 `0` 时隐藏 | number &#124; string &#124; slot | undefined
 max | 展示封顶的数字值 | number | 99

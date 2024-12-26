@@ -301,7 +301,7 @@ const pause = () => {
 ### Video
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 视频播放器宽度，单位 `px` | number | 800
 height | 视频播放器高度，单位 `px` | number | 450
 src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | undefined
@@ -332,6 +332,6 @@ iconSize | 暂停图标尺寸，单位 `px` | number | 80
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 play | 开始播放的回调 | () => void
 pause | 暂停播放的回调 | () => void

@@ -1095,7 +1095,7 @@ function onChange (values: (number|string)[], labels: string[]) {
 ### Cascader
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 options | 可选项数据源 | [Option](#option-type)[] | []
 label | 下拉字典项的文本字段名 | string | 'label'
 value | 下拉字典项的值字段名 | string | 'value'
@@ -1115,7 +1115,7 @@ modelValue <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; s
 ### Option Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 label? | 选项名 | string | undefined
 value? | 选项值 | string &#124; number | undefined
 disabled? | 是否禁用选项 | boolean | false
@@ -1125,5 +1125,5 @@ children? | 选项 `children` 数组 | [Option](#option-type)[] | undefined
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 选择完成后的回调 | (values: (number&#124;string)[], labels: string[]) => void

@@ -376,7 +376,7 @@ const value = ref(options[0])
 ### Segmented
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 block | 是否将宽度调整为父元素宽度，同时所有选项占据相同的宽度 | boolean | false
 disabled | 是否禁用 | boolean | false
 options | 选项数据 | string[] &#124; number[] &#124; [Option](#option-type)[] | []
@@ -386,7 +386,7 @@ value <Tag color="cyan">v-model</Tag> | 当前选中的值 | string &#124; numbe
 ### Option Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 label? | 选项名 | string | undefined
 value | 选项值 | string &#124; number | undefined
 disabled? | 是否禁用选项 | boolean | false
@@ -395,5 +395,5 @@ payload? | 自定义数据载体 | any | undefined
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 选项变化时的回调函数 | (value: string &#124; number) => void

@@ -570,7 +570,7 @@ function onRemove (file: FileType) {
 ### Upload
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 accept | 接受上传的文件类型，与`<input type="file" />`的 `accept` 属性一致，参考 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept) | string | '*'
 multiple | 是否支持多选文件，开启后可选择多个文件 | boolean | false
 maxCount | 限制上传数量。当为 `1` 时，始终用最新上传的文件代替当前文件 | number | undefined
@@ -591,7 +591,7 @@ fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [FileType]
 ### FileType Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 name? | 文件名 | string | undefined
 url | 文件地址 | string | undefined
 [propName: string] | 用于包含带有任意数量的其他属性 | any | undefined
@@ -599,14 +599,14 @@ url | 文件地址 | string | undefined
 ### MessageType Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 upload? | 上传成功的消息提示，没有设置该属性时即不显示上传消息提示 | string | '上传成功'
 remove? | 删除成功的消息提示，没有设置该属性时即不显示删除消息提示 | string | '删除成功'
 
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 info | 上传基本信息提示 | (content: string) => void
 success | 上传成功信息提示 | (content: string) => void
 error | 上传失败信息提示 | (content: string) => void
@@ -616,7 +616,7 @@ loading | 加载中信息提示 | (content: string) => void
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 drop | 当文件被拖入上传区域时的回调 | (e: [DragEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/DragEvent/DragEvent)) => void
 change | 上传文件改变时的回调 | (files: [FileType](#filetype-type)[]) => void
 preview | 点击预览时的回调 | (file: [FileType](#filetype-type)) => void

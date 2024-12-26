@@ -326,7 +326,7 @@ const images = ref([
 ### Image
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 src | 图像地址或图像地址数组 | string &#124; [Image](#image-type)[] | undefined
 name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | undefined
 width | 图像宽度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100
@@ -346,12 +346,12 @@ album | 是否相册模式，即从一张展示图片点开相册 | boolean | fa
 ### Image Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 src | 图像地址 | string | undefined
 name? | 图像名称 | string | undefined
 
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 preview | 预览索引为 `index` 的图片，从 `0` 开始 | (index: number) => void

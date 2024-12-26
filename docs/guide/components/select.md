@@ -823,7 +823,7 @@ watchEffect(() => {
 ### Select
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 options | 选项数据 | [Option](#option-type)[] | []
 label | 选项的 `label` 文本字段名 | string | 'label'
 value | 选项的 `value` 值字段名 | string | 'value'
@@ -842,7 +842,7 @@ modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值 
 ### Option Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 label? | 选项名 | string | undefined
 value? | 选项值 | string &#124; number | undefined
 disabled? | 是否禁用选项 | boolean | false
@@ -851,6 +851,6 @@ disabled? | 是否禁用选项 | boolean | false
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 选项值改变后的回调 | (value: string &#124; number, label: string,  index: number) => void
 openChange | 下拉菜单展开收起的回调 | (open: boolean) => void

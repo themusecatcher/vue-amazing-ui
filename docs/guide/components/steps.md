@@ -515,7 +515,7 @@ const state = reactive({
 ### Steps
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 items | 步骤数组 | [Item](#item-type)[] | []
 width | 步骤条总宽度，单位 `px` | number &#124; string | 'auto'
 size | 步骤条大小 | 'default' &#124; 'small' | 'default'
@@ -527,12 +527,12 @@ current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-mode
 ### Item Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 title? | 标题 | string | undefined
 description? | 描述 | string | undefined
 
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 点击切换步骤时触发 | (index: number) => void

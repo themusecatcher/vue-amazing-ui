@@ -305,7 +305,7 @@ p {
 ### Drawer
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 抽屉宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px` | string &#124; number | 378
 height | 抽屉高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px` | string &#124; number | 378
 title | 标题 | string &#124; slot | undefined
@@ -327,5 +327,5 @@ open <Tag color="cyan">v-model</Tag> | 抽屉是否可见 | boolean | false
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 close | 点击遮罩层或左上角叉或取消按钮的回调 | (e: Event) => void

@@ -373,7 +373,7 @@ const value = ref('')
 ### Input
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 输入框宽度，单位 `px` | string &#124; number | '100%'
 size | 输入框大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 addonBefore | 设置前置标签 | string &#124; slot | undefined
@@ -391,6 +391,6 @@ value <Tag color="cyan">v-model</Tag> | 输入框内容 | string | undefined
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 change | 输入框内容变化时的回调 | (e: Event) => void
 enter | 按下回车的回调 | (e: Event) => void

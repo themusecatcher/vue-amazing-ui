@@ -1022,7 +1022,7 @@ const state = reactive({
 ### Row
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 行宽度，单位 `px` | string &#124; number | 'auto'
 gutter | 栅格间隔，可以写成像素值或支持响应式的对象写法来设置水平间隔 `{ xs: 8, sm: 16, md: 24}`。或者使用数组形式同时设置 `[水平间距, 垂直间距]` | number &#124; [number &#124; [Responsive](#responsive-type), number &#124; [Responsive](#responsive-type)] &#124; [Responsive](#responsive-type) | 0
 wrap | 是否自动换行 | boolean | false
@@ -1032,7 +1032,7 @@ justify | 水平排列方式 | 'start' &#124; 'end' &#124; 'center' &#124; 'spac
 ### Responsive Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 xs | `<576px` 响应式栅格 | number |  undefined
 sm | `≥576px` 响应式栅格 | number |  undefined
 md | `≥768px` 响应式栅格 | number |  undefined
@@ -1043,7 +1043,7 @@ xxl | `≥1600px` 响应式栅格 | number |  undefined
 ### Col
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 span | 栅格占位格数，取 `0,1,2...24`，为 `0` 时相当于 `display: none`，优先级低于 `xs`, `sm`, `md`, `lg`, `xl`, `xxl` | number | undefined
 offset | 栅格左侧的间隔格数，取 `0,1,2...24` | number | 0
 flex | `flex` 布局填充 | string &#124; number | undefined

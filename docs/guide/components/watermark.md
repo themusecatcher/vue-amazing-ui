@@ -301,7 +301,7 @@ const layoutOptions = [
 ### Watermark
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 水印的宽度，默认为 `content` 自身的宽度，单位 `px` | number | undefined
 height | 水印的高度，默认为 `content` 自身的高度，单位 `px` | number | undefined
 layout | 水印的布局方式：平行布局 `parallel`; 交替布局 `alternate` | 'parallel' &#124; 'alternate' | 'alternate'
@@ -317,7 +317,7 @@ offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | [number, 
 ### Font Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 color | 字体颜色 | string | 'rgba(0, 0, 0, 0.15)'
 fontSize | 字体大小，单位 `px` | number | 16
 fontWeight | 字体粗细 | 'normal' &#124; 'light' &#124; 'weight' &#124; number | 'normal'

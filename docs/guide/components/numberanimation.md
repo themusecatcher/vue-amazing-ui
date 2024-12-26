@@ -251,7 +251,7 @@ function onFinished() {
 ### NumberAnimation
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 from | 数值动画起始数值 | number | 0
 to | 数值目标值 | number | 1000
 duration | 数值动画持续时间，单位 `ms` | number | 3000
@@ -273,12 +273,12 @@ TransitionFunc | 'linear' &#124; 'easeOutSine' &#124; 'easeInOutSine' &#124; 'ea
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 play | 播放动画 | () => void
 
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 started | 动画开始播放 | () => void
 finished | 动画播放完成 | () => void

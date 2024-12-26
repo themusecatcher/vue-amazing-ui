@@ -1178,7 +1178,7 @@ const state = reactive({
 ### List
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 bordered | 是否展示边框 | boolean | false
 vertical | 是否使用竖直样式 | boolean | false
 split | 是否展示分割线 | boolean | true
@@ -1195,7 +1195,7 @@ pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https:/
 ### ListItem
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 avatar | 列表元素的图标字符 | string &#124; slot | undefined
 avatarProps | `Avatar` 组件属性配置，参考 [Avatar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html#avatar)，用于配置列表图标样式 | object | {}
 title | 列表元素的标题 | string &#124; slot | undefined

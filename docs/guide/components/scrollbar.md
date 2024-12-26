@@ -404,7 +404,7 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
 ### Scrollbar
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 contentClass | 内容 `div` 的类名 | string | undefined
 contentStyle | 内容 `div` 的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 size | 滚动条的大小，单位 `px` | number | 5
@@ -419,7 +419,7 @@ yPlacement | 纵向滚动时滚动条的位置 | 'left' &#124; 'right' | 'right'
 ## Methods
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 scrollTo | 滚动到指定坐标位置 | (options: { left?: number, top?: number, behavior?: [ScrollBehavior](#scrollbehavior-type) })=> void \| (x: number, y: number) => void
 scrollBy | 滚动一段特定距离 | (options: { left?: number, top?: number, behavior?: [ScrollBehavior](#scrollbehavior-type) })=> void \| (x: number, y: number) => void
 getScrollData | 获取滚动元素数据 | () => { scrollWidth: number\, clientWidth: number, scrollHeight: number\, clientHeight: number }
@@ -435,6 +435,6 @@ auto | 或缺省值表示浏览器会自动选择滚动时的过渡效果
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 scroll | 滚动的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void
 scrollend | 滚动结束的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void

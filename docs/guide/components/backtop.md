@@ -394,7 +394,7 @@ const scrollContainer = ref()
 ### BackTop
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 icon | 自定义图标 | VNode &#124; Slot | undefined
 description | 文字描述 | string &#124; slot | undefined
 tooltip | 文字提示内容 | string &#124; slot | undefined
@@ -411,6 +411,6 @@ listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近�
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 click | 点击按钮的回调函数 | () => void
 show | 按钮显示隐藏的回调函数 | (show: boolean) => void

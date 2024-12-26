@@ -595,7 +595,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 ### Tag
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 closable | 标签是否可以关闭 | boolean | false
 color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | undefined
 icon | 设置图标 | string &#124; slot | undefined
@@ -608,7 +608,7 @@ value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: tr
 ### Item Type
 
 名称 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 label? | 标签文本 | string &#124; slot | undefined
 closable? | 标签是否可以关闭 | boolean | true
 color? | 标签颜色 | string | undefined
@@ -619,13 +619,13 @@ bordered? | 是否有边框 | boolean | true
 ## Slots
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 label | 自定义标签文本 | v-slot:label="{ item, label, index }"
 icon | 自定义图标 | v-slot:icon="{ item, icon, index }"
 
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 close | 关闭时的回调 | (e: Event) => void
 dynamicClose | 启用标签动态添加和删除时关闭的回调 | (item: [Item](#item-type), index: number) => void

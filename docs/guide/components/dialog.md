@@ -562,7 +562,7 @@ function handleOk() {
 ### Dialog
 
 参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
+:-- | :-- | :-- | :--
 width | 对话框宽度，单位 `px` | string &#124; number | 520
 height | 对话框高度，单位 `px`，默认自适应内容高度 | string &#124; number | 'auto'
 title | 标题 | string &#124; slot | undefined
@@ -591,6 +591,6 @@ open <Tag color="cyan">v-model</Tag> | 对话框是否可见 | boolean | false
 ## Events
 
 名称 | 说明 | 类型
--- | -- | --
+:-- | :-- | :--
 cancel | 点击蒙层或 `Esc` 键或右上角叉或取消按钮的回调 | () => void
 ok | 点击确定的回调 | () => void
