@@ -568,7 +568,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
           width: 8.970562748477143px;
           height: 8.970562748477143px;
           bottom: 0;
-          inset-inline: 0;
+          left: 0;
+          right: 0;
           margin: auto;
           border-radius: 0 0 2px 0;
           transform: translateY(50%) rotate(-135deg);
