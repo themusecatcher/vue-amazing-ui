@@ -572,7 +572,8 @@ defineExpose({
       }
       &::after {
         bottom: 0;
-        inset-inline: 0;
+        left: 0;
+        right: 0;
       }
     }
     .arrow-bottom {
@@ -585,7 +586,8 @@ defineExpose({
       }
       &::after {
         bottom: 0;
-        inset-inline: 0;
+        left: 0;
+        right: 0;
       }
     }
     .arrow-left {
@@ -598,7 +600,8 @@ defineExpose({
       }
       &::after {
         bottom: 0;
-        inset-inline: 0;
+        left: 0;
+        right: 0;
       }
     }
     .arrow-right {
@@ -611,7 +614,8 @@ defineExpose({
       }
       &::after {
         bottom: 0;
-        inset-inline: 0;
+        left: 0;
+        right: 0;
       }
     }
   }

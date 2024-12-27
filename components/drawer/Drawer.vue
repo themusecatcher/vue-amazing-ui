@@ -324,7 +324,8 @@ function onClose(e: Event) {
   }
   .drawer-top {
     top: 0;
-    inset-inline: 0;
+    left: 0;
+    right: 0;
     box-shadow:
       0 6px 16px 0 rgba(0, 0, 0, 0.08),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
@@ -341,7 +342,8 @@ function onClose(e: Event) {
   }
   .drawer-bottom {
     bottom: 0;
-    inset-inline: 0;
+    left: 0;
+    right: 0;
     box-shadow:
       0 -6px 16px 0 rgba(0, 0, 0, 0.08),
       0 -3px 6px -4px rgba(0, 0, 0, 0.12),
