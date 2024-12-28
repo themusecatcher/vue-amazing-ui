@@ -18,6 +18,7 @@ export interface Props {
   image?: string // 图片源，建议使用 2 倍或 3 倍图，优先级高于文字
   content?: string | string[] // 水印文字内容
   fullscreen?: boolean // 是否启用全屏水印
+  fixed?: boolean // 是否固定水印，仅当启用全屏水印时生效
   textStyle?: Font // 水印文字样式
   gap?: [number, number] // 水印之间的间距
   offset?: [number, number] // 水印距离容器左上角的偏移量，默认为 gap / 2
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   image: undefined,
   content: undefined,
   fullscreen: false,
+  fixed: true,
   textStyle: () => ({
     color: 'rgba(0, 0, 0, 0.15)',
     fontSize: 16,
@@ -62,10 +64,13 @@ const BaseSize = computed(() => {
   }
   return layoutMap[props.layout]
 })
+const fullscreenFixed = computed(() => {
+  return props.fullscreen && props.fixed
+})
 const markStyle = computed(() => {
   const markStyle: CSSProperties = {
     zIndex: props.zIndex ?? 9,
-    position: 'absolute',
+    position: fullscreenFixed.value ? 'fixed' : 'absolute',
     left: 0,
     top: 0,
     width: '100%',
