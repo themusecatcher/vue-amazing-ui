@@ -5,7 +5,7 @@
   "type": "module",
   "author": "theMuseCatcher",
   "homepage": "https://themusecatcher.github.io/vue-amazing-ui",
-  "description": "An Amazing Vue3 UI Components Library, Uses TypeScript.",
+  "description": "An Amazing Vue3 UI Components Library, Using TypeScript.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/themusecatcher/vue-amazing-ui.git"
