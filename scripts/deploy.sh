@@ -16,6 +16,7 @@ cd docs/.vitepress/dist
 
 # 提交打包静态网站到 github-pages 分支
 git init
+git branch -M main
 git add .
 git commit -m 'deploy'
 

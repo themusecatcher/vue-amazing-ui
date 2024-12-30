@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 const show = ref(false)
+const fixed = ref(true)
 const model = reactive({
   content: 'Vue Amazing UI',
   layout: 'alternate',
@@ -52,8 +53,8 @@ const layoutOptions = [
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">全屏幕水印</h2>
-    <Watermark v-if="show" fullscreen content="Vue Amazing UI"></Watermark>
-    <Space align="center"> Fullscreen: <Switch v-model="show" /> </Space>
+    <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
+    <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
     <h2 class="mt30 mb10">水印配置器</h2>
     <h3 class="mb10">通过自定义参数配置预览水印效果。</h3>
     <Row :gutter="24">
