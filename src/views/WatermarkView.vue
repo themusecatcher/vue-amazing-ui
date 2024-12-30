@@ -2,6 +2,10 @@
 import { reactive, ref } from 'vue'
 const show = ref(false)
 const fixed = ref(true)
+const imageModel = reactive({
+  rotate: 0,
+  borderRadius: 24
+})
 const model = reactive({
   content: 'Vue Amazing UI',
   layout: 'alternate',
@@ -42,13 +46,23 @@ const layoutOptions = [
     </Watermark>
     <h2 class="mt30 mb10">图片水印</h2>
     <h3 class="mb10"
-      >通过 image 指定图片地址。为保证图片高清且不被拉伸，请设置 width 和 height, 并上传至少两倍的宽高的 logo
-      图片地址。</h3
+      >通过 image 指定图片地址；为保证图片高清且不被拉伸，请设置 width 和
+      height；另支持设置图片旋转角度和展示区域的圆角</h3
     >
+    <Flex>
+      <Flex vertical :gap="8" :width="240">
+        Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+      </Flex>
+      <Flex vertical :gap="8" :width="240">
+        BorderRadius: <Slider v-model:value="imageModel.borderRadius" :step="1" :min="0" :max="100" />
+      </Flex>
+    </Flex>
     <Watermark
-      :height="30"
-      :width="130"
-      image="https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*lkAoRbywo0oAAAAAAAAAAAAADrJ8AQ/original"
+      :height="48"
+      :width="48"
+      :rotate="imageModel.rotate"
+      :border-radius="imageModel.borderRadius"
+      image="https://avatars.githubusercontent.com/u/46012811?v=4"
     >
       <div style="height: 360px" />
     </Watermark>
@@ -60,20 +74,17 @@ const layoutOptions = [
     <Row :gutter="24">
       <Col :span="18">
         <Watermark v-bind="model">
-          <p class="u-paragraph">
-            Natural user cognition: According to cognitive psychology, about 80% of external information is obtained
-            through visual channels. The most important visual elements in the interface design, including layout,
-            colors, illustrations, icons, etc., should fully absorb the laws of nature, thereby reducing the user&apos;s
-            cognitive cost and bringing authentic and smooth feelings. In some scenarios, opportunely adding other
-            sensory channels such as hearing, touch can create a richer and more natural product experience.
+          <p class="paragraph-text">
+            《麦田里的守望者》（英语：The Catcher in the
+            Rye），为美国作家J.D.塞林格于1951年发表的长篇小说。这部有争议的作品原本是面向成年读者的，但迅速因其青春期焦虑和隔绝的主题而在青少年读者中流行。
           </p>
-          <p class="u-paragraph">
-            Natural user behavior: In the interaction with the system, the designer should fully understand the
-            relationship between users, system roles, and task objectives, and also contextually organize system
-            functions and services. At the same time, a series of methods such as behavior analysis, artificial
-            intelligence and sensors could be applied to assist users to make effective decisions and reduce extra
-            operations of users, to save users&apos; mental and physical resources and make human-computer interaction
-            more natural.
+          <p class="paragraph-text">
+            该书以主人公霍尔顿·考菲尔德第一人称口吻讲述自己被学校开除学籍后在纽约城游荡将近两昼夜，企图逃出虚伪的成人世界、去寻求纯洁与真理的经历与感受。
+          </p>
+          <p class="paragraph-text">
+            该书于1951年出版之后，立刻引起巨大的轰动，受到读者──特别是青年人──的热烈的欢迎，被翻译为多国语版。小说每年大约有250,000本售出、总计为6500万本。《时代杂志》将《麦田里的守望者》列在“2005年度百大英语小说（自1923年起）”榜上，现代图书馆及其读者也将其列在20世纪百大英文小说榜上。赞赏者认为本书用青少年的口吻平铺直叙，增加了作品的感染力，传神地描写主角的内心思维，并说出了青少年不满成年世界充满虚伪欺瞒的心声。批评者则认为书中主角离经叛道，逃学、吸烟、喝酒又满嘴粗话，会给年轻读者带来不良影响。当时许多图书馆及学校将之列为禁书，并被列在America
+            library
+            Associations上。但现在这本书却是许多美国学校的指定读物。有的评论家说，它“大大地影响了好几代美国青年”。而且有学者认为，霍尔顿是当代美国文学中最早出现的反英雄形象之一。
           </p>
           <img
             style="max-width: 100%"
@@ -118,8 +129,9 @@ const layoutOptions = [
   </div>
 </template>
 <style lang="less" scoped>
-.u-paragraph {
+.paragraph-text {
   margin-bottom: 1em;
+  font-size: 16px;
   color: rgba(0, 0, 0, 0.88);
   word-break: break-word;
   line-height: 1.5714285714285714;
