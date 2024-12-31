@@ -179,7 +179,7 @@ const tableLayoutComputed = computed(() => {
 })
 // 表格 table 元素的样式
 const tableStyle = computed(() => {
-  const style: any = {
+  const style: CSSProperties = {
     minWidth: '100%'
   }
   const scroll = props.scroll
@@ -190,19 +190,18 @@ const tableStyle = computed(() => {
       style.width = typeof scroll?.x === 'number' ? `${scroll.x}px` : scroll?.x
     }
   }
-  return {
-    ...style,
-    tableLayout: tableLayoutComputed.value
-  }
+  style.tableLayout = tableLayoutComputed.value
+  return style
 })
 // 无数据时的样式
 const emptyFixStyle = computed(() => {
-  return {
+  const style: CSSProperties = {
     width: `${clientWidth.value}px`,
     position: 'sticky',
     left: '0px',
     overflow: 'hidden'
-  } as CSSProperties
+  }
+  return style
 })
 // 展开列的宽度样式
 const tableExpandCellStyle = computed(() => {
@@ -212,13 +211,12 @@ const tableExpandCellStyle = computed(() => {
 })
 // 展开列固定时的样式
 const tableExpandCellFixStyle = computed(() => {
+  const style: CSSProperties = {}
   if (props.expandFixed) {
-    return {
-      position: 'sticky',
-      left: '0px'
-    } as CSSProperties
+    style.position = 'sticky'
+    style.left = '0px'
   }
-  return {}
+  return style
 })
 // 过滤掉 colSpan 为 0 的列
 const thColumns = computed(() => {
@@ -230,7 +228,7 @@ const thColumnsGroup = computed(() => {
 })
 // 表格展开行固定时的样式
 const tableExpandRowFixStyle = computed(() => {
-  const style: any = {}
+  const style: CSSProperties = {}
   if (props.expandFixed) {
     style.width = `${clientWidth.value + (props.bordered ? 1 : 0)}px`
     style.position = 'sticky'
@@ -241,14 +239,15 @@ const tableExpandRowFixStyle = computed(() => {
 })
 // 表头固定时的样式，用于模拟滚动效果
 const tableHeadStyle = computed(() => {
-  return {
+  const style: CSSProperties = {
     position: 'relative',
     left: `${-scrollLeft.value}px`
   }
+  return style
 })
 // 设置垂直滚动时的 tbody 样式
 const tableBodyScrollStyle = computed(() => {
-  const style: any = {}
+  const style: CSSProperties = {}
   if (verticalScroll.value) {
     const scroll = props.scroll
     style.maxHeight = typeof scroll?.y === 'number' ? `${scroll.y}px` : scroll?.y
@@ -634,20 +633,18 @@ function checkFixRightFirst(columns: Column[], column: Column, index: number) {
 }
 // 表格单元格样式
 function tableCellWidthStyle(column: Column) {
+  const style: CSSProperties = {}
   if (column.width !== undefined) {
-    return {
-      width: typeof column.width === 'number' ? `${column.width}px` : column.width
-    }
+    style.width = typeof column.width === 'number' ? `${column.width}px` : column.width
   }
-  return {}
+  return style
 }
 // 表格单元格固定时的样式
 function tableCellFixStyle(column: Column) {
+  const style: CSSProperties = {}
   if (column.fixed) {
     if (colRef.value && colRef.value.length) {
-      const style: any = {
-        position: 'sticky'
-      }
+      style.position = 'sticky'
       if (column.fixed === 'left') {
         const colStart = column.colStart
         let offset = 0
@@ -657,10 +654,8 @@ function tableCellFixStyle(column: Column) {
         for (let i = 0; i < (props.showExpandColumn ? colStart - 1 : colStart); i++) {
           offset += colRef.value[i].offsetWidth
         }
-        return {
-          ...style,
-          left: `${offset}px`
-        }
+        style.left = `${offset}px`
+        return style
       }
       if (column.fixed === 'right') {
         const colEnd = column.colEnd
@@ -668,14 +663,12 @@ function tableCellFixStyle(column: Column) {
         for (let i = colRef.value.length - 1; i > (props.showExpandColumn ? colEnd - 1 : colEnd); i--) {
           offset += colRef.value[i].offsetWidth
         }
-        return {
-          ...style,
-          right: `${offset}px`
-        }
+        style.right = `${offset}px`
+        return style
       }
     }
   }
-  return {}
+  return style
 }
 // 获取被合并单元格的列索引
 function getMergedCellsColIndex(record: any, rowIndex: number): number[] {
