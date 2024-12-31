@@ -13,8 +13,9 @@ git add .
 git commit -m "update"
 git push
 
-# 设置官方源
+# 设置官方源并查看
 # pnpm config set registry https://registry.npmjs.org
+# pnpm config list
 
 # 发布到 npm，pnpm(高性能的npm)
 pnpm publish
