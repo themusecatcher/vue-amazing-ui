@@ -23,9 +23,10 @@ const props = withDefaults(defineProps<Props>(), {
   indeterminate: false,
   checked: false
 })
-const checkboxChecked = ref<boolean>(false)
-const optionsCheckedValue = ref<(string | number)[]>([])
-const wave = ref<boolean>(false)
+const checkboxChecked = ref<boolean>(false) // v-model:checked 是否选中标志
+const optionsCheckedValue = ref<(string | number)[]>([]) // v-model:value 已选中的选项值
+const wave = ref<boolean>(false) // 使用 v-model:checked 时的复选框动画选中效果标志
+const waveOptionsValue = ref<(string | number)[]>([]) // 使用 v-model:value 时的复选框动画选中效果标志
 const emits = defineEmits(['update:value', 'update:checked', 'change'])
 const optionsAmount = computed(() => {
   // 选项总数
@@ -50,8 +51,14 @@ function checkDisabled(disabled: boolean | undefined) {
     return disabled
   }
 }
-function onClick(value: string | number) {
+function onChecked() {
   startWave()
+  checkboxChecked.value = !checkboxChecked.value
+  emits('update:checked', checkboxChecked.value)
+  emits('change', checkboxChecked.value)
+}
+function onClick(value: string | number) {
+  startOptionWave(value)
   if (optionsCheckedValue.value.includes(value)) {
     // 已选中
     const newVal = optionsCheckedValue.value.filter((target) => target !== value)
@@ -66,12 +73,6 @@ function onClick(value: string | number) {
     emits('change', newVal)
   }
 }
-function onChecked() {
-  startWave()
-  checkboxChecked.value = !checkboxChecked.value
-  emits('update:checked', checkboxChecked.value)
-  emits('change', checkboxChecked.value)
-}
 function startWave() {
   if (wave.value) {
     wave.value = false
@@ -84,6 +85,19 @@ function startWave() {
 }
 function onWaveEnd() {
   wave.value = false
+}
+function startOptionWave(value: string | number) {
+  if (waveOptionsValue.value.includes(value)) {
+    waveOptionsValue.value = waveOptionsValue.value.filter((optionValue) => optionValue !== value)
+    nextTick(() => {
+      waveOptionsValue.value.push(value)
+    })
+  } else {
+    waveOptionsValue.value.push(value)
+  }
+}
+function onWaveOptionEnd(value: string | number) {
+  waveOptionsValue.value = waveOptionsValue.value.filter((optionValue) => optionValue !== value)
 }
 </script>
 <template>
@@ -100,8 +114,8 @@ function onWaveEnd() {
           <span
             v-if="!checkDisabled(option.disabled)"
             class="checkbox-wave"
-            :class="{ 'wave-active': wave }"
-            @animationend="onWaveEnd"
+            :class="{ 'wave-active': waveOptionsValue.includes(option.value) }"
+            @animationend="onWaveOptionEnd(option.value)"
           ></span>
         </span>
         <span class="checkbox-label">
