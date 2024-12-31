@@ -4,7 +4,7 @@ const show = ref(false)
 const fixed = ref(true)
 const imageModel = reactive({
   rotate: 0,
-  borderRadius: 24
+  layout: 'alternate'
 })
 const model = reactive({
   content: 'Vue Amazing UI',
@@ -46,22 +46,22 @@ const layoutOptions = [
     </Watermark>
     <h2 class="mt30 mb10">图片水印</h2>
     <h3 class="mb10"
-      >通过 image 指定图片地址；为保证图片高清且不被拉伸，请设置 width 和
-      height；另支持设置图片旋转角度和展示区域的圆角</h3
+      >通过 image 指定图片地址；为保证图片高清且不被拉伸，请设置 width 和 height；另支持设置图片布局方式 layout
+      和旋转角度 rotate 等</h3
     >
     <Flex>
-      <Flex vertical :gap="8" :width="240">
-        Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+      <Flex vertical :gap="8">
+        Layout: <Radio :options="layoutOptions" v-model:value="imageModel.layout" button />
       </Flex>
       <Flex vertical :gap="8" :width="240">
-        BorderRadius: <Slider v-model:value="imageModel.borderRadius" :step="1" :min="0" :max="100" />
+        Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
       </Flex>
     </Flex>
     <Watermark
       :height="48"
       :width="48"
+      :layout="imageModel.layout"
       :rotate="imageModel.rotate"
-      :border-radius="imageModel.borderRadius"
       image="https://avatars.githubusercontent.com/u/46012811?v=4"
     >
       <div style="height: 360px" />

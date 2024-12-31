@@ -6,7 +6,7 @@
 
 ## 2.0.4 <Tag color="volcano" size="small">2024-12-30</Tag>
 
-- 优化并更新 [水印 Watermark](https://themusecatcher.github.io/vue-amazing-ui/guide/components/watermark.html) 组件，新增 `borderRadius` `fixed` 属性，支持：设置图片水印圆角；固定全屏水印
+- 优化并更新 [水印 Watermark](https://themusecatcher.github.io/vue-amazing-ui/guide/components/watermark.html) 组件，新增 `fixed` 属性，支持固定全屏水印
 - 组件库及文档代码优化
 
 ## 2.0.3 <Tag color="volcano" size="small">2024-12-26</Tag>
