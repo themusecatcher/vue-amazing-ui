@@ -65,12 +65,12 @@ const optionsDisabled = ref([
   }
 ])
 const checked = ref(false)
-const value = ref([2])
+const selectedOptions = ref([2])
 watchEffect(() => {
   console.log('checked', checked.value)
 })
 watchEffect(() => {
-  console.log('value', value.value)
+  console.log('selectedOptions', selectedOptions.value)
 })
 function onChange(value: boolean | (string | number)[]) {
   console.log('change', value)
@@ -78,7 +78,7 @@ function onChange(value: boolean | (string | number)[]) {
 const checkAll = ref(false) // 全选v-model
 const indeterminate = computed(() => {
   // 全选样式控制
-  if (value.value.length > 0 && value.value.length < options.value.length) {
+  if (selectedOptions.value.length > 0 && selectedOptions.value.length < options.value.length) {
     return true
   } else {
     return false
@@ -87,9 +87,9 @@ const indeterminate = computed(() => {
 watch(checkAll, (to) => {
   console.log('checkAll', to)
   if (to) {
-    value.value = options.value.map((option) => option.value)
+    selectedOptions.value = options.value.map((option) => option.value)
   } else {
-    value.value = []
+    selectedOptions.value = []
   }
 })
 const horizontalGap = ref(16)
@@ -122,7 +122,7 @@ function onChange(value: boolean) {
 
 ## 选项列表
 
-<Checkbox :options="options" v-model:value="value" @change="onChange" />
+<Checkbox :options="options" v-model:value="selectedOptions" @change="onChange" />
 
 ::: details Show Code
 
@@ -155,16 +155,16 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref([2])
+const selectedOptions = ref([2])
 watchEffect(() => {
-  console.log('value', value.value)
+  console.log('selectedOptions', selectedOptions.value)
 })
 function onChange(value: (string | number)[]) {
   console.log('change', value)
 }
 </script>
 <template>
-  <Checkbox :options="options" v-model:value="value" @change="onChange" />
+  <Checkbox :options="options" v-model:value="selectedOptions" @change="onChange" />
 </template>
 ```
 
@@ -172,7 +172,7 @@ function onChange(value: (string | number)[]) {
 
 ## 禁用
 
-<Checkbox :options="options" v-model:value="value" disabled />
+<Checkbox :options="options" v-model:value="selectedOptions" disabled />
 
 ::: details Show Code
 
@@ -205,10 +205,10 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref([2])
+const selectedOptions = ref([2])
 </script>
 <template>
-  <Checkbox :options="options" v-model:value="value" disabled />
+  <Checkbox :options="options" v-model:value="selectedOptions" disabled />
 </template>
 ```
 
@@ -216,7 +216,7 @@ const value = ref([2])
 
 ## 禁用选项
 
-<Checkbox :options="optionsDisabled" v-model:value="value" />
+<Checkbox :options="optionsDisabled" v-model:value="selectedOptions" />
 
 ::: details Show Code
 
@@ -250,13 +250,13 @@ const optionsDisabled = ref([
     value: 6
   }
 ])
-const value = ref([2])
+const selectedOptions = ref([2])
 watchEffect(() => {
-  console.log('value', value.value)
+  console.log('selectedOptions', selectedOptions.value)
 })
 </script>
 <template>
-  <Checkbox :options="optionsDisabled" v-model:value="value" />
+  <Checkbox :options="optionsDisabled" v-model:value="selectedOptions" />
 </template>
 ```
 
@@ -266,7 +266,7 @@ watchEffect(() => {
 
 <Space vertical>
   <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll">Check All</Checkbox>
-  <Checkbox :options="options" v-model:value="value" />
+  <Checkbox :options="options" v-model:value="selectedOptions" />
 </Space>
 
 ::: details Show Code
@@ -300,13 +300,13 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref([2])
+const selectedOptions = ref([2])
 watchEffect(() => {
-  console.log('value', value.value)
+  console.log('selectedOptions', selectedOptions.value)
 })
 const checkAll = ref(false)
 const indeterminate = computed(() => { // 全选样式控制
-  if (value.value.length > 0 && value.value.length < options.value.length) {
+  if (selectedOptions.value.length > 0 && selectedOptions.value.length < options.value.length) {
     return true
   } else {
     return false
@@ -315,16 +315,16 @@ const indeterminate = computed(() => { // 全选样式控制
 watch(checkAll, (to) => {
   console.log('checkAll', to)
   if (to) {
-    value.value = options.value.map(option => option.value)
+    selectedOptions.value = options.value.map(option => option.value)
   } else {
-    value.value = []
+    selectedOptions.value = []
   }
 })
 </script>
 <template>
   <Space vertical>
     <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll">Check All</Checkbox>
-    <Checkbox :options="options" v-model:value="value" />
+    <Checkbox :options="options" v-model:value="selectedOptions" />
   </Space>
 </template>
 ```
@@ -333,7 +333,7 @@ watch(checkAll, (to) => {
 
 ## 垂直排列
 
-<Checkbox :options="options" vertical v-model:value="value" />
+<Checkbox :options="options" vertical v-model:value="selectedOptions" />
 
 ::: details Show Code
 
@@ -366,13 +366,13 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref([2])
+const selectedOptions = ref([2])
 watchEffect(() => {
-  console.log('value', value.value)
+  console.log('selectedOptions', selectedOptions.value)
 })
 </script>
 <template>
-  <Checkbox :options="options" vertical v-model:value="value" />
+  <Checkbox :options="options" vertical v-model:value="selectedOptions" />
 </template>
 ```
 
@@ -380,7 +380,7 @@ watchEffect(() => {
 
 ## 自定义选项名
 
-<Checkbox :options="options" v-model:value="value">
+<Checkbox :options="options" v-model:value="selectedOptions">
   <template #default="{ option, label, index }">
     <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
     <span v-if="index === 3" style="color: #1677ff">{{ option.label }}</span>
@@ -418,13 +418,13 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref([2])
+const selectedOptions = ref([2])
 watchEffect(() => {
-  console.log('value', value.value)
+  console.log('selectedOptions', selectedOptions.value)
 })
 </script>
 <template>
-  <Checkbox :options="options" v-model:value="value">
+  <Checkbox :options="options" v-model:value="selectedOptions">
     <template #default="{ option, label, index }">
       <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
       <span v-if="index === 3" style="color: #1677ff">{{ option.label }}</span>
@@ -450,7 +450,7 @@ watchEffect(() => {
       </Flex>
     </Col>
   </Row>
-  <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="value" />
+  <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="selectedOptions" />
 </Flex>
 
 ::: details Show Code
@@ -484,9 +484,9 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref([2])
+const selectedOptions = ref([2])
 watchEffect(() => {
-  console.log('value', value.value)
+  console.log('selectedOptions', selectedOptions.value)
 })
 const horizontalGap = ref(16)
 const verticalGap = ref(8)
@@ -505,7 +505,7 @@ const verticalGap = ref(8)
         </Flex>
       </Col>
     </Row>
-    <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="value" />
+    <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="selectedOptions" />
   </Flex>
 </template>
 ```

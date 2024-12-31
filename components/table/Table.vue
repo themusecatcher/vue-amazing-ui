@@ -4,6 +4,7 @@ import type { CSSProperties, Slot } from 'vue'
 import Spin from 'components/spin'
 import Empty from 'components/empty'
 import Scrollbar from 'components/scrollbar'
+import Checkbox from 'components/checkbox'
 import Tooltip from 'components/tooltip'
 import Ellipsis from 'components/ellipsis'
 import Pagination from 'components/pagination'
@@ -29,6 +30,9 @@ export interface Column {
   customCell?: (record: any, rowIndex: number, column: Column) => object | undefined // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
+export interface Selection {
+  fixed?: boolean // 选择框列是否固定在左边
+}
 export type ScrollOption = {
   x?: string | number | true // 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，true 和 'max-content'
   y?: string | number // 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值
@@ -52,6 +56,7 @@ export interface Props {
   sticky?: boolean //	是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定
   showPagination?: boolean // 是否显示分页
   pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
+  rowSelection?: Selection // 列表项是否可选择
   scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
   scrollbarProps?: object // Scrollbar 组件属性配置，参考 Scrollbar Props，用于配置表格滚动条
   tableLayout?: 'auto' | 'fixed' // 表格布局方式，设为 fixed 表示内容不会影响列的布局，参考 table-layout 属性
@@ -83,6 +88,7 @@ const props = withDefaults(defineProps<Props>(), {
   sticky: false,
   showPagination: true,
   pagination: () => ({}),
+  rowSelection: undefined,
   scroll: undefined,
   scrollbarProps: () => ({}),
   tableLayout: undefined, // 固定表头/列或使用了 column.ellipsis 时，默认值为 fixed
@@ -106,6 +112,9 @@ const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const displayDataSource = ref<any[]>([]) // 当前展示的表格数据
 const tableExpandedRowKeys = ref<(string | number)[]>([]) // 当前展开行的 key 数组
+const checkAll = ref(false) // 是否全选
+const tableOptions = ref([]) // 表格选项数组
+const selectedOptions = ref([]) // 已选中的选项数组
 const tooltipRef = ref() // 排序 tooltip 提示组件模板引用
 const ellipsisRef = ref() // 文本省略组件模板引用
 const scrollbarRef = ref() // 水平滚动容器模板引用
@@ -116,7 +125,8 @@ const clientWidth = ref<number>(0) // 表格水平滚动元素宽度，不包括
 const clientHeight = ref<number>(0) // 表格垂直滚动元素高度，不包括溢出滚动，不包括边框
 const scrollMax = ref<number>(0) // 表格水平滚动时，最大可滚动距离
 const colExpandRef = ref() // 表格展开列 col 的引用
-const colRef = ref() // 表格除展开列以外 col 的引用
+const colSelectionRef = ref() // 表格可选择列 col 的引用
+const colRef = ref() // 表格除展开列/可选择列以外 col 的引用
 const thColumnsLeaf = ref<Column[]>([]) // thColumns 的所有叶子节点,包括 colSpan: 0 的列
 const disabledDefaultSort = ref<boolean>(false) // 是否禁用默认排序
 const sortColumn = ref<Column | null>(null) // 排序列
@@ -127,6 +137,27 @@ const sortHoverDataIndex = ref<string | null>(null) // 鼠标悬浮排序列的�
 const clickSorter = ref(false) // 是否点击排序
 const slotsExist = useSlotsExist(['header', 'footer'])
 const emits = defineEmits(['expand', 'expandedRowsChange', 'update:expandedRowKeys', 'sortChange', 'change'])
+// 是否展示选择框
+const showSelectionColumn = computed(() => {
+  return props.rowSelection !== undefined
+})
+const indeterminate = computed(() => {
+  // 全选样式控制
+  if (selectedOptions.value.length > 0 && selectedOptions.value.length < selectedOptions.value.length) {
+    return true
+  } else {
+    return false
+  }
+})
+watch(checkAll, (to) => {
+  console.log('checkAll', to)
+  if (to) {
+    // selectedOptions.value = tableOptions.value.map(option => option.value)
+  } else {
+    selectedOptions.value = []
+  }
+})
+
 // 是否设置了水平滚动
 const horizontalScroll = computed(() => {
   return props.scroll?.x !== undefined
@@ -209,15 +240,6 @@ const tableExpandCellStyle = computed(() => {
     width: typeof props.expandColumnWidth === 'number' ? `${props.expandColumnWidth}px` : props.expandColumnWidth
   }
 })
-// 展开列固定时的样式
-const tableExpandCellFixStyle = computed(() => {
-  const style: CSSProperties = {}
-  if (props.expandFixed) {
-    style.position = 'sticky'
-    style.left = '0px'
-  }
-  return style
-})
 // 过滤掉 colSpan 为 0 的列
 const thColumns = computed(() => {
   return props.columns.filter((column: Column) => column.colSpan !== 0)
@@ -226,14 +248,40 @@ const thColumns = computed(() => {
 const thColumnsGroup = computed(() => {
   return getThColumnsGroup(props.columns)
 })
+const thFirstColumnFixed = computed(() => {
+  return thColumnsGroup.value[0][0].fixed === 'left'
+})
+// 可选择列是否固定
+const selectionColumnFixed = computed(() => {
+  if (props.rowSelection !== undefined) {
+    if (props.rowSelection.fixed || thFirstColumnFixed.value) {
+      return true
+    }
+  }
+  return false
+})
+// 可选择列是否固定，且为最后一个
+const selectionColumnFixedLast = computed(() => {
+  return selectionColumnFixed.value && !thFirstColumnFixed.value
+})
+// 展开列是否固定
+const expandColumnFixed = computed(() => {
+  return props.expandFixed || selectionColumnFixed.value || (!showSelectionColumn.value && thFirstColumnFixed.value)
+})
+// 展开列是否固定，且为最后一个
+const expandColumnFixedLast = computed(() => {
+  return (
+    (expandColumnFixed.value && showSelectionColumn.value && !selectionColumnFixed.value) ||
+    (expandColumnFixed.value && !showSelectionColumn.value && !thFirstColumnFixed.value)
+  )
+})
 // 表格展开行固定时的样式
 const tableExpandRowFixStyle = computed(() => {
-  const style: CSSProperties = {}
-  if (props.expandFixed) {
-    style.width = `${clientWidth.value + (props.bordered ? 1 : 0)}px`
-    style.position = 'sticky'
-    style.left = '0px'
-    style.overflow = 'hidden'
+  const style: CSSProperties = {
+    width: `${clientWidth.value + (props.bordered ? 1 : 0)}px`,
+    position: 'sticky',
+    left: '0px',
+    overflow: 'hidden'
   }
   return style
 })
@@ -314,6 +362,7 @@ watch(
     deep: true
   }
 )
+// 监听点击排序导致的表格展示数据的变化
 watch(displayDataSource, (to) => {
   if (clickSorter.value) {
     clickSorter.value = false
@@ -393,7 +442,7 @@ async function ellipsisObserveScroll() {
     ellipsisRef.value.forEach((el: any) => el.observeScroll())
   }
 }
-// 检查 children  中是否有固定列
+// 检查 children 中是否有固定列
 function checkChildrenFix(columns: Column[] | undefined, fixed: 'left' | 'right'): boolean {
   if (columns && columns.length) {
     const len = columns.length
@@ -607,9 +656,11 @@ function onSorter(column: Column) {
     }
   }
 }
+// 鼠标移入排序
 function onEnterSorter(dataIndex: string) {
   sortHoverDataIndex.value = dataIndex
 }
+// 鼠标离开排序
 function onLeaveSorter() {
   sortHoverDataIndex.value = null
 }
@@ -639,6 +690,24 @@ function tableCellWidthStyle(column: Column) {
   }
   return style
 }
+// 展开列固定时的样式
+function tableExpandCellFixStyle(fixed: boolean) {
+  const style: CSSProperties = {}
+  if (fixed) {
+    style.position = 'sticky'
+    style.left = '0px'
+  }
+  return style
+}
+// 可选择列固定时的样式
+function tableSelectionCellFixStyle(fixed: boolean) {
+  const style: CSSProperties = {}
+  if (fixed) {
+    style.position = 'sticky'
+    style.left = props.showExpandColumn ? `${colExpandRef.value && colExpandRef.value.offsetWidth}px` : '0px'
+  }
+  return style
+}
 // 表格单元格固定时的样式
 function tableCellFixStyle(column: Column) {
   const style: CSSProperties = {}
@@ -650,6 +719,9 @@ function tableCellFixStyle(column: Column) {
         let offset = 0
         if (props.showExpandColumn) {
           offset += colExpandRef.value.offsetWidth
+        }
+        if (showSelectionColumn.value) {
+          offset += colSelectionRef.value.offsetWidth
         }
         for (let i = 0; i < (props.showExpandColumn ? colStart - 1 : colStart); i++) {
           offset += colRef.value[i].offsetWidth
@@ -817,6 +889,7 @@ function onPaginationChange(page: number, pageSize: number) {
             <table :style="tableStyle">
               <colgroup>
                 <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle" />
+                <col ref="colSelectionRef" v-if="showSelectionColumn" style="width: 32px" />
                 <col
                   ref="colRef"
                   :style="tableCellWidthStyle(column)"
@@ -826,20 +899,36 @@ function onPaginationChange(page: number, pageSize: number) {
               </colgroup>
               <thead>
                 <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="rowIndex">
-                  <th
-                    v-if="rowIndex === 0 && showExpandColumn"
-                    class="table-th"
-                    :class="{
-                      'table-cell-fix-left': expandFixed || columns[0].fixed === 'left',
-                      'table-cell-fix-left-last': expandFixed && columns[0].fixed !== 'left'
-                    }"
-                    :style="tableExpandCellFixStyle"
-                    :rowspan="getMaxDepth(thColumns)"
-                    :colstart="0"
-                    :colend="0"
-                  >
-                    <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
-                  </th>
+                  <template v-if="rowIndex === 0">
+                    <th
+                      v-if="showExpandColumn"
+                      class="table-th"
+                      :class="{
+                        'table-cell-fix-left': expandColumnFixed,
+                        'table-cell-fix-left-last': expandColumnFixedLast
+                      }"
+                      :style="tableExpandCellFixStyle(expandColumnFixed)"
+                      :rowspan="getMaxDepth(thColumns)"
+                      :colstart="0"
+                      :colend="0"
+                    >
+                      <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
+                    </th>
+                    <th
+                      v-if="showSelectionColumn"
+                      class="table-th table-th-selection"
+                      :class="{
+                        'table-cell-fix-left': selectionColumnFixed,
+                        'table-cell-fix-left-last': selectionColumnFixedLast
+                      }"
+                      :style="tableSelectionCellFixStyle(selectionColumnFixed)"
+                      :rowspan="getMaxDepth(thColumns)"
+                      :colstart="0"
+                      :colend="0"
+                    >
+                      <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" />
+                    </th>
+                  </template>
                   <template v-for="(column, colIndex) in columns" :key="`${rowIndex}-${colIndex}`">
                     <th
                       v-if="column.colSpan !== 0"
@@ -947,11 +1036,34 @@ function onPaginationChange(page: number, pageSize: number) {
                         v-if="showExpandColumn"
                         class="table-td"
                         :class="{
-                          'table-cell-fix-left': expandFixed || columns[0].fixed === 'left',
-                          'table-cell-fix-left-last': expandFixed && columns[0].fixed !== 'left',
+                          'table-cell-fix-left': expandColumnFixed,
+                          'table-cell-fix-left-last': expandColumnFixedLast,
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
-                        :style="tableExpandCellFixStyle"
+                        :style="tableExpandCellFixStyle(expandColumnFixed)"
+                        @click.stop="onExpandCell(record)"
+                      >
+                        <slot
+                          name="expandCell"
+                          :record="record"
+                          :index="rowIndex"
+                          :expanded="tableExpandedRowKeys.includes(record.key)"
+                        >
+                          <button
+                            class="expand-btn"
+                            :class="{ 'expand-btn-collapsed': !tableExpandedRowKeys.includes(record.key) }"
+                          ></button>
+                        </slot>
+                      </td>
+                      <td
+                        v-if="showSelectionColumn"
+                        class="table-td"
+                        :class="{
+                          'table-cell-fix-left': selectionColumnFixed,
+                          'table-cell-fix-left-last': selectionColumnFixedLast,
+                          'table-td-hover': hoverRowIndex === rowIndex
+                        }"
+                        :style="tableExpandCellFixStyle(expandColumnFixed)"
                         @click.stop="onExpandCell(record)"
                       >
                         <slot
@@ -1021,8 +1133,8 @@ function onPaginationChange(page: number, pageSize: number) {
                     </tr>
                     <template v-if="showExpandColumn">
                       <tr v-show="tableExpandedRowKeys.includes(record.key)">
-                        <td class="table-td table-td-expand" :colspan="columns.length + 1">
-                          <div v-if="expandFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
+                        <td class="table-td table-td-expand" :colspan="thColumnsLeaf.length + 1">
+                          <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
                               :record="record"
@@ -1071,10 +1183,10 @@ function onPaginationChange(page: number, pageSize: number) {
                     v-if="rowIndex === 0 && showExpandColumn"
                     class="table-th"
                     :class="{
-                      'table-cell-fix-left': expandFixed || columns[0].fixed === 'left',
-                      'table-cell-fix-left-last': expandFixed && columns[0].fixed !== 'left'
+                      'table-cell-fix-left': expandColumnFixed,
+                      'table-cell-fix-left-last': expandColumnFixedLast
                     }"
-                    :style="tableExpandCellFixStyle"
+                    :style="tableExpandCellFixStyle(expandColumnFixed)"
                     :rowspan="getMaxDepth(thColumns)"
                     :colstart="0"
                     :colend="0"
@@ -1217,11 +1329,11 @@ function onPaginationChange(page: number, pageSize: number) {
                         v-if="showExpandColumn"
                         class="table-td"
                         :class="{
-                          'table-cell-fix-left': expandFixed || columns[0].fixed === 'left',
-                          'table-cell-fix-left-last': expandFixed && columns[0].fixed !== 'left',
+                          'table-cell-fix-left': expandColumnFixed,
+                          'table-cell-fix-left-last': expandColumnFixedLast,
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
-                        :style="tableExpandCellFixStyle"
+                        :style="tableExpandCellFixStyle(expandColumnFixed)"
                         @click.stop="onExpandCell(record)"
                       >
                         <slot
@@ -1291,8 +1403,8 @@ function onPaginationChange(page: number, pageSize: number) {
                     </tr>
                     <template v-if="showExpandColumn">
                       <tr v-show="tableExpandedRowKeys.includes(record.key)">
-                        <td class="table-td table-td-expand" :colspan="columns.length + 1">
-                          <div v-if="expandFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
+                        <td class="table-td table-td-expand" :colspan="thColumnsLeaf.length + 1">
+                          <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
                               :record="record"
@@ -1441,6 +1553,11 @@ function onPaginationChange(page: number, pageSize: number) {
           &.table-cell-sort {
             background: #f0f0f0;
           }
+        }
+        .table-th-selection {
+          padding-left: 8px;
+          padding-right: 8px;
+          text-align: center;
         }
         .table-th-ellipsis {
           overflow: hidden;

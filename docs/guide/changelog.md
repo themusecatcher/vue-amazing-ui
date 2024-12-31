@@ -4,6 +4,12 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或者直接通过右下角邮箱地址直接联系我
 
+## 2.0.5 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件点击动画效果
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件功能优化
+- 组件库及文档代码优化
+
 ## 2.0.4 <Tag color="volcano" size="small">2024-12-30</Tag>
 
 - 优化并更新 [水印 Watermark](https://themusecatcher.github.io/vue-amazing-ui/guide/components/watermark.html) 组件，新增 `fixed` 属性，支持固定全屏水印

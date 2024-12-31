@@ -420,7 +420,8 @@ const columnsSort = reactive<TableColumn[]>([
 const columnsSelection = reactive<TableColumn[]>([
   {
     title: 'Name',
-    dataIndex: 'name'
+    dataIndex: 'name',
+    fixed: 'left'
   },
   {
     title: 'Age',
@@ -823,6 +824,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
   console.log('sort currentDataSource', currentDataSource)
 }
 const rowSelection = {
+  // fixed: false,
   onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
   },
@@ -834,7 +836,7 @@ const rowSelection = {
 </script>
 <template>
   <div>
-    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
@@ -1132,22 +1134,46 @@ const rowSelection = {
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
-    </Flex>
-    <!-- <h2 class="mt30 mb10">可选择</h2>
-    <a-table :row-selection="rowSelection" :columns="columnsSelection" :data-source="dataSourceSelection">
+    </Flex> -->
+    <h2 class="mt30 mb10">可选择</h2>
+    <a-table
+      :scroll="{ x: 1500 }"
+      :row-selection="rowSelection"
+      showExpandColumn
+      :columns="columnsSelection"
+      :data-source="dataSourceSelection"
+    >
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
           <a>{{ text }}</a>
         </template>
+      </template>
+      <template #expandedRowRender="{ record }">
+        {{ record.description }}
+      </template>
+      <template #expandColumnTitle>
+        <span style="color: #d4380d">More</span>
       </template>
     </a-table>
-    <Table :row-selection="rowSelection" :columns="columnsSelection" :data-source="dataSourceSelection">
+    <Table
+      :scroll="{ x: 1500 }"
+      :row-selection="rowSelection"
+      showExpandColumn
+      :columns="columnsSelection"
+      :data-source="dataSourceSelection"
+    >
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
           <a>{{ text }}</a>
         </template>
       </template>
-    </Table> -->
+      <template #expandedRowRender="{ record }">
+        {{ record.description }}
+      </template>
+      <template #expandColumnTitle>
+        <span style="color: #d4380d">More</span>
+      </template>
+    </Table>
   </div>
 </template>
 <style lang="less" scoped>
