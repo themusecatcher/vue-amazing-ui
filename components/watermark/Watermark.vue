@@ -16,7 +16,6 @@ export interface Props {
   rotate?: number // 水印绘制时，旋转的角度，单位 deg
   zIndex?: number // 追加的水印元素的 z-index
   image?: string // 图片源，建议使用 2 倍或 3 倍图，优先级高于文字
-  borderRadius?: number // 设置图片水印圆角，该值对应图片圆形可展示区域的半径，仅当使用图片水印时生效
   content?: string | string[] // 水印文字内容
   fullscreen?: boolean // 是否启用全屏水印
   fixed?: boolean // 是否固定水印，仅当启用全屏水印时生效
@@ -31,7 +30,6 @@ const props = withDefaults(defineProps<Props>(), {
   rotate: -22,
   zIndex: 90,
   image: undefined,
-  borderRadius: undefined,
   content: undefined,
   fullscreen: false,
   fixed: true,
@@ -257,28 +255,10 @@ function renderWatermark() {
     if (image) {
       const img = new Image()
       img.onload = () => {
-        if (props.borderRadius) {
-          // 设置圆角
-          ctx.beginPath()
-          ctx.arc(drawX + drawWidth / 2, drawY + drawHeight / 2, props.borderRadius * 2, 0, Math.PI * 2)
-          ctx.clip()
-        }
         ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight)
         // Draw interleaved pictures after rotation
         ctx.restore()
         rotateWatermark(ctx, alternateRotateX, alternateRotateY, rotate)
-        if (props.borderRadius) {
-          // 设置圆角
-          ctx.beginPath()
-          ctx.arc(
-            alternateDrawX + drawWidth / 2,
-            alternateDrawY + drawHeight / 2,
-            props.borderRadius * 2,
-            0,
-            Math.PI * 2
-          )
-          ctx.clip()
-        }
         ctx.drawImage(img, alternateDrawX, alternateDrawY, drawWidth, drawHeight)
         appendWatermark(canvas.toDataURL(), markWidth)
       }

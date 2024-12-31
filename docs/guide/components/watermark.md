@@ -15,7 +15,7 @@ const show = ref(false)
 const fixed = ref(true)
 const imageModel = reactive({
   rotate: 0,
-  borderRadius: 24
+  layout: 'alternate'
 })
 const model = reactive({
   content: 'Vue Amazing UI',
@@ -39,7 +39,6 @@ const layoutOptions = [
   }
 ]
 </script>
-
 ## 基本使用
 
 <Watermark content="Vue Amazing UI">
@@ -98,21 +97,21 @@ const layoutOptions = [
 
 ## 图片水印
 
-*通过 `image` 指定图片地址；为保证图片高清且不被拉伸，请设置 `width` 和 `height`；另支持设置图片旋转角度和展示区域的圆角*
+*通过 `image` 指定图片地址；为保证图片高清且不被拉伸，请设置 `width` 和 `height`；另支持设置图片布局方式 `layout` 和旋转角度 `rotate` 等*
 
 <Flex>
-  <Flex vertical :gap="8" :width="240">
-    Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+  <Flex vertical :gap="8">
+    Layout: <Radio :options="layoutOptions" v-model:value="imageModel.layout" button />
   </Flex>
   <Flex vertical :gap="8" :width="240">
-    BorderRadius: <Slider v-model:value="imageModel.borderRadius" :step="1" :min="0" :max="100" />
+    Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
   </Flex>
 </Flex>
 <Watermark
   :height="48"
   :width="48"
+  :layout="imageModel.layout"
   :rotate="imageModel.rotate"
-  :border-radius="imageModel.borderRadius"
   image="https://avatars.githubusercontent.com/u/46012811?v=4"
 >
   <div style="height: 360px" />
@@ -125,23 +124,33 @@ const layoutOptions = [
 import { reactive } from 'vue'
 const imageModel = reactive({
   rotate: 0,
-  borderRadius: 24
+  layout: 'alternate'
 })
+const layoutOptions = [
+  {
+    label: 'alternate',
+    value: 'alternate'
+  },
+  {
+    label: 'parallel',
+    value: 'parallel'
+  }
+]
 </script>
 <template>
   <Flex>
-    <Flex vertical :gap="8" :width="240">
-      Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+    <Flex vertical :gap="8">
+      Layout: <Radio :options="layoutOptions" v-model:value="imageModel.layout" button />
     </Flex>
     <Flex vertical :gap="8" :width="240">
-      BorderRadius: <Slider v-model:value="imageModel.borderRadius" :step="1" :min="0" :max="100" />
+      Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
     </Flex>
   </Flex>
   <Watermark
     :height="48"
     :width="48"
+    :layout="imageModel.layout"
     :rotate="imageModel.rotate"
-    :border-radius="imageModel.borderRadius"
     image="https://avatars.githubusercontent.com/u/46012811?v=4"
   >
     <div style="height: 360px" />
@@ -351,7 +360,6 @@ layout | 水印的布局方式：平行布局 `parallel`; 交替布局 `alternat
 rotate | 水印绘制时，旋转的角度，单位 `°` | number | -22
 zIndex | 追加的水印元素的 `z-index` | number| 90
 image | 图片源，建议使用 `2` 倍或 `3` 倍图，优先级高于文字 | string | undefined
-borderRadius | number | 设置图片水印圆角，该值对应图片圆形可展示区域的半径，仅当使用图片水印时生效 | undefined
 content | 水印文字内容 | string &#124; string[] | undefined
 fullscreen | 是否启用全屏水印 | boolean | false
 fixed | 是否固定水印，仅当启用全屏水印时生效 | boolean | true
