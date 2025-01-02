@@ -188,8 +188,11 @@ function onWaveEnd() {
   line-height: 1;
   .radio-wrap {
     display: inline-flex;
-    align-items: flex-start;
+    align-items: baseline;
     cursor: pointer;
+    color: rgba(0, 0, 0, 0.88);
+    font-size: 14px;
+    line-height: 1.5714285714285714;
     &:not(.radio-disabled):hover {
       .radio-handle {
         border-color: @themeColor;
@@ -201,8 +204,8 @@ function onWaveEnd() {
         如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
       */
       flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
+      align-self: center;
       position: relative;
-      top: 3px;
       width: 16px;
       height: 16px;
       background: transparent;

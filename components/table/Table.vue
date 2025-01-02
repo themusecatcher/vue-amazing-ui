@@ -852,6 +852,7 @@ function onPaginationChange(page: number, pageSize: number) {
     behavior: 'smooth'
   })
 }
+const checked = ref(false)
 </script>
 <template>
   <div ref="tableRef" class="m-table-wrap">
@@ -1034,7 +1035,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     >
                       <td
                         v-if="showExpandColumn"
-                        class="table-td"
+                        class="table-td table-td-expand"
                         :class="{
                           'table-cell-fix-left': expandColumnFixed,
                           'table-cell-fix-left-last': expandColumnFixedLast,
@@ -1063,20 +1064,9 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-cell-fix-left-last': selectionColumnFixedLast,
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
-                        :style="tableExpandCellFixStyle(expandColumnFixed)"
-                        @click.stop="onExpandCell(record)"
+                        :style="tableSelectionCellFixStyle(expandColumnFixed)"
                       >
-                        <slot
-                          name="expandCell"
-                          :record="record"
-                          :index="rowIndex"
-                          :expanded="tableExpandedRowKeys.includes(record.key)"
-                        >
-                          <button
-                            class="expand-btn"
-                            :class="{ 'expand-btn-collapsed': !tableExpandedRowKeys.includes(record.key) }"
-                          ></button>
-                        </slot>
+                        <Checkbox v-model:checked="checked" />
                       </td>
                       <td
                         class="table-td"
@@ -1133,7 +1123,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     </tr>
                     <template v-if="showExpandColumn">
                       <tr v-show="tableExpandedRowKeys.includes(record.key)">
-                        <td class="table-td table-td-expand" :colspan="thColumnsLeaf.length + 1">
+                        <td class="table-td table-td-expand-row" :colspan="thColumnsLeaf.length + 1">
                           <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
@@ -1327,7 +1317,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     >
                       <td
                         v-if="showExpandColumn"
-                        class="table-td"
+                        class="table-td table-td-expand"
                         :class="{
                           'table-cell-fix-left': expandColumnFixed,
                           'table-cell-fix-left-last': expandColumnFixedLast,
@@ -1403,7 +1393,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     </tr>
                     <template v-if="showExpandColumn">
                       <tr v-show="tableExpandedRowKeys.includes(record.key)">
-                        <td class="table-td table-td-expand" :colspan="thColumnsLeaf.length + 1">
+                        <td class="table-td table-td-expand-row" :colspan="thColumnsLeaf.length + 1">
                           <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
@@ -1558,6 +1548,9 @@ function onPaginationChange(page: number, pageSize: number) {
           padding-left: 8px;
           padding-right: 8px;
           text-align: center;
+          .m-checkbox {
+            line-height: 1.5714285714285714;
+          }
         }
         .table-th-ellipsis {
           overflow: hidden;
@@ -1632,6 +1625,7 @@ function onPaginationChange(page: number, pageSize: number) {
           }
           .expand-btn {
             position: relative;
+            left: -3px;
             color: inherit;
             float: left;
             width: 26px;
@@ -1742,6 +1736,10 @@ function onPaginationChange(page: number, pageSize: number) {
           background-color: #fafafa;
         }
         .table-td-expand {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+        .table-td-expand-row {
           background: rgba(0, 0, 0, 0.02);
         }
       }
