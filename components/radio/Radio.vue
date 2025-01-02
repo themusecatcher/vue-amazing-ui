@@ -146,35 +146,39 @@ function onWaveEnd() {
       </template>
     </template>
     <template v-else>
-      <template v-if="!button">
-        <div class="radio-wrap" :class="{ 'radio-disabled': disabled }" @click="disabled ? () => false : onChecked()">
-          <span class="radio-handle" :class="{ 'radio-checked': radioChecked }"></span>
-          <span class="radio-label">
-            <slot></slot>
-          </span>
-        </div>
-      </template>
-      <template v-else>
-        <div
-          tabindex="0"
-          class="radio-button-wrap"
-          :class="{
-            'radio-button-checked': radioChecked,
-            'radio-button-disabled': disabled
-          }"
-          @click="disabled ? () => false : onChecked()"
-        >
-          <span class="radio-label">
-            <slot></slot>
-          </span>
+      <div v-if="!button" class="radio-wrap" :class="{ 'radio-disabled': disabled }" @click="disabled ? () => false : onChecked()">
+        <span class="radio-handle" :class="{ 'radio-checked': radioChecked }">
           <span
             v-if="!disabled"
             class="radio-wave"
             :class="{ 'wave-active': wave && radioChecked }"
             @animationend="onWaveEnd"
           ></span>
-        </div>
-      </template>
+        </span>
+        <span class="radio-label">
+          <slot></slot>
+        </span>
+      </div>
+      <div
+        v-else
+        tabindex="0"
+        class="radio-button-wrap"
+        :class="{
+          'radio-button-checked': radioChecked,
+          'radio-button-disabled': disabled
+        }"
+        @click="disabled ? () => false : onChecked()"
+      >
+        <span class="radio-label">
+          <slot></slot>
+        </span>
+        <span
+          v-if="!disabled"
+          class="radio-wave"
+          :class="{ 'wave-active': wave && radioChecked }"
+          @animationend="onWaveEnd"
+        ></span>
+      </div>
     </template>
   </div>
 </template>
@@ -183,9 +187,6 @@ function onWaveEnd() {
   display: inline-flex;
   flex-wrap: wrap;
   gap: var(--radio-gap);
-  color: rgba(0, 0, 0, 0.88);
-  font-size: 14px;
-  line-height: 1;
   .radio-wrap {
     display: inline-flex;
     align-items: baseline;
