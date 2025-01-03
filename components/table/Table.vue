@@ -32,8 +32,8 @@ export interface Column {
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
 export interface Selection {
-  columnTitle?: string | VNode // 自定义复选框标题
-  columnWidth?: string | number // 列表复选框宽度
+  columnTitle?: string | VNode // 自定义选择框标题
+  columnWidth?: string | number // 列表选择框宽度
   fixed?: boolean // 复选框列是否固定在左边
   hideSelectAll?: boolean // 是否隐藏全选复选框
   type?: 'checkbox' | 'radio' // 复选框/单选框
@@ -45,8 +45,8 @@ export interface Selection {
     changeRows: any[],
     selectedRowKeys: string[],
     changeRowKeys: string[]
-  ) => void // 点击全选时的回调
-  getCheckboxProps?: (record: any, rowIndex: number) => object // 复选框的属性配置
+  ) => void // 点击复选框全选时的回调
+  getSelectionProps?: (record: any, rowIndex: number) => object // 选择框组件的属性配置
 }
 export type ScrollOption = {
   initialScrollPositionOnChange?: boolean // 当分页、排序变化后是否滚动到表格初始位置
@@ -72,7 +72,7 @@ export interface Props {
   sticky?: boolean //	是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定
   showPagination?: boolean // 是否显示分页
   pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
-  rowSelection?: Selection // 列表项是否可选择
+  rowSelection?: Selection // 列表项选择配置
   scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
   scrollbarProps?: object // Scrollbar 组件属性配置，参考 Scrollbar Props，用于配置表格滚动条
   tableLayout?: 'auto' | 'fixed' // 表格布局方式，设为 fixed 表示内容不会影响列的布局，参考 table-layout 属性
@@ -163,7 +163,7 @@ const showSelectionColumn = computed(() => {
 })
 // 是否自定义了复选框标题
 const showSelectionColumnTitle = computed(() => {
-  return props.rowSelection?.columnTitle !== undefined
+  return props.rowSelection?.columnTitle
 })
 // 是否展示全选复选框
 const showSelectionAll = computed(() => {
@@ -411,17 +411,19 @@ watch(
 watch(
   tableOptionsChecked,
   (to) => {
-    const selectedOptions = to.filter((checked: boolean) => checked)
-    let checkboxOptionsAmount = 0
-    displayDataSource.value.forEach((record: any, rowIndex: number) => {
-      const checkboxProps =
-        props.rowSelection?.getCheckboxProps && props.rowSelection.getCheckboxProps(record, rowIndex)
-      if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
-        checkboxOptionsAmount++
-      }
-    })
-    indeterminate.value = 0 < selectedOptions.length && selectedOptions.length < checkboxOptionsAmount
-    checkAll.value = selectedOptions.length === checkboxOptionsAmount
+    if (props.rowSelection?.type === undefined || props.rowSelection?.type === 'checkbox') {
+      const selectedOptions = to.filter((checked: boolean) => checked)
+      let checkboxOptionsAmount = 0
+      displayDataSource.value.forEach((record: any, rowIndex: number) => {
+        const checkboxProps =
+          props.rowSelection?.getSelectionProps && props.rowSelection.getSelectionProps(record, rowIndex)
+        if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
+          checkboxOptionsAmount++
+        }
+      })
+      indeterminate.value = 0 < selectedOptions.length && selectedOptions.length < checkboxOptionsAmount
+      checkAll.value = selectedOptions.length === checkboxOptionsAmount
+    }
   },
   {
     deep: true
@@ -457,12 +459,13 @@ onMounted(() => {
 useResizeObserver(tableRef, () => {
   getScrollState()
 })
-// 点击全选
+// 点击复选框全选
 function onCheckAllChange(checked: boolean) {
   changeRowKeys.value.splice(0)
   changeRows.value.splice(0)
   displayDataSource.value.forEach((record: any, rowIndex: number) => {
-    const checkboxProps = props.rowSelection?.getCheckboxProps && props.rowSelection.getCheckboxProps(record, rowIndex)
+    const checkboxProps =
+      props.rowSelection?.getSelectionProps && props.rowSelection.getSelectionProps(record, rowIndex)
     if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
       if (checked) {
         // 全选
@@ -495,14 +498,24 @@ function onCheckAllChange(checked: boolean) {
     )
   props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
 }
-// 点击某行选择框
-function onTableCheckboxChange(checked: boolean, key: string, record: any) {
+// 点击某行复选框/单选框
+function onTableSelectionChange(checked: boolean, rowIndex: number, key: string, record: any) {
   if (checked) {
-    // 选中
-    selectedRowKeys.value.push(key)
-    selectedRows.value.push(record)
+    // 选中复选框/单选框
+    if (props.rowSelection?.type === 'radio') {
+      tableOptionsChecked.value.forEach((checked: boolean, index) => {
+        if (index !== rowIndex && checked) {
+          tableOptionsChecked.value[index] = false
+        }
+      })
+      selectedRowKeys.value = [key]
+      selectedRows.value = [record]
+    } else {
+      selectedRowKeys.value.push(key)
+      selectedRows.value.push(record)
+    }
   } else {
-    // 取消选中
+    // 复选框取消选中
     selectedRowKeys.value = selectedRowKeys.value.filter((selectedRowKey: string) => selectedRowKey !== key)
     selectedRows.value = selectedRows.value.filter((selectedRow: any) => selectedRow.key !== key)
   }
@@ -818,7 +831,6 @@ function tableSelectionCellFixStyle(fixed: boolean) {
     style.position = 'sticky'
     style.left = props.showExpandColumn ? `${colExpandRef.value && colExpandRef.value.offsetWidth}px` : '0px'
   }
-  console.log('style', style)
   return style
 }
 // 表格单元格固定时的样式
@@ -1045,8 +1057,8 @@ function onPaginationChange(page: number, pageSize: number) {
                       :colend="0"
                     >
                       <template v-if="showSelectionColumnTitle">
-                        <component v-if="isVNode(rowSelection.columnTitle)" :is="rowSelection.columnTitle" />
-                        <template v-else>{{ rowSelection.columnTitle }}</template>
+                        <component v-if="isVNode(rowSelection?.columnTitle)" :is="rowSelection?.columnTitle" />
+                        <template v-else>{{ rowSelection?.columnTitle }}</template>
                       </template>
                       <div v-else-if="showSelectionAll" class="table-selection">
                         <Checkbox
@@ -1197,14 +1209,14 @@ function onPaginationChange(page: number, pageSize: number) {
                           <Radio
                             v-if="rowSelection?.type === 'radio'"
                             v-model:checked="tableOptionsChecked[rowIndex]"
-                            @change="onTableCheckboxChange($event, record.key, record)"
-                            v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
+                            @change="onTableSelectionChange($event, rowIndex, record.key, record)"
+                            v-bind="rowSelection?.getSelectionProps && rowSelection.getSelectionProps(record, rowIndex)"
                           />
                           <Checkbox
                             v-else
                             v-model:checked="tableOptionsChecked[rowIndex]"
-                            @change="onTableCheckboxChange($event, record.key, record)"
-                            v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
+                            @change="onTableSelectionChange($event, rowIndex, record.key, record)"
+                            v-bind="rowSelection?.getSelectionProps && rowSelection.getSelectionProps(record, rowIndex)"
                           />
                         </div>
                       </td>
@@ -1338,8 +1350,8 @@ function onPaginationChange(page: number, pageSize: number) {
                       :colend="0"
                     >
                       <template v-if="showSelectionColumnTitle">
-                        <component v-if="isVNode(rowSelection.columnTitle)" :is="rowSelection.columnTitle" />
-                        <template v-else>{{ rowSelection.columnTitle }}</template>
+                        <component v-if="isVNode(rowSelection?.columnTitle)" :is="rowSelection?.columnTitle" />
+                        <template v-else>{{ rowSelection?.columnTitle }}</template>
                       </template>
                       <div v-else-if="showSelectionAll" class="table-selection">
                         <Checkbox
@@ -1520,14 +1532,14 @@ function onPaginationChange(page: number, pageSize: number) {
                           <Radio
                             v-if="rowSelection?.type === 'radio'"
                             v-model:checked="tableOptionsChecked[rowIndex]"
-                            @change="onTableCheckboxChange($event, record.key, record)"
-                            v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
+                            @change="onTableSelectionChange($event, rowIndex, record.key, record)"
+                            v-bind="rowSelection?.getSelectionProps && rowSelection.getSelectionProps(record, rowIndex)"
                           />
                           <Checkbox
                             v-else
                             v-model:checked="tableOptionsChecked[rowIndex]"
-                            @change="onTableCheckboxChange($event, record.key, record)"
-                            v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
+                            @change="onTableSelectionChange($event, rowIndex, record.key, record)"
+                            v-bind="rowSelection?.getSelectionProps && rowSelection.getSelectionProps(record, rowIndex)"
                           />
                         </div>
                       </td>

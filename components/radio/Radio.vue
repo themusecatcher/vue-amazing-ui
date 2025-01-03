@@ -96,6 +96,7 @@ function onWaveEnd() {
     class="m-radio"
     :class="{ 'radio-vertical': !button && vertical }"
     :style="`--radio-gap: ${gapValue};`"
+    v-bind="$attrs"
   >
     <template v-if="!button">
       <div
@@ -151,6 +152,7 @@ function onWaveEnd() {
       class="radio-wrap"
       :class="{ 'radio-disabled': disabled }"
       @click="disabled ? () => false : onChecked()"
+      v-bind="$attrs"
     >
       <span class="radio-handle" :class="{ 'radio-checked': radioChecked }">
         <span
@@ -176,6 +178,7 @@ function onWaveEnd() {
         'radio-button-large': buttonSize === 'large'
       }"
       @click="disabled ? () => false : onChecked()"
+      v-bind="$attrs"
     >
       <span class="radio-label">
         <slot></slot>
