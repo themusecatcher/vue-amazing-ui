@@ -90,7 +90,7 @@ function onWaveEnd() {
 }
 function startOptionWave(value: string | number) {
   if (waveOptionsValue.value.includes(value)) {
-    waveOptionsValue.value = waveOptionsValue.value.filter((optionValue) => optionValue !== value)
+    waveOptionsValue.value = waveOptionsValue.value.filter((optionValue: string | number) => optionValue !== value)
     nextTick(() => {
       waveOptionsValue.value.push(value)
     })
@@ -99,7 +99,7 @@ function startOptionWave(value: string | number) {
   }
 }
 function onWaveOptionEnd(value: string | number) {
-  waveOptionsValue.value = waveOptionsValue.value.filter((optionValue: ) => optionValue !== value)
+  waveOptionsValue.value = waveOptionsValue.value.filter((optionValue: string | number) => optionValue !== value)
 }
 </script>
 <template>
