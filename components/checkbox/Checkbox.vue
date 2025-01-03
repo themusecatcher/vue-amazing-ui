@@ -63,7 +63,7 @@ function onClick(value: string | number) {
   startOptionWave(value)
   if (optionsCheckedValue.value.includes(value)) {
     // 已选中
-    const newVal = optionsCheckedValue.value.filter((target) => target !== value)
+    const newVal = optionsCheckedValue.value.filter((target: string | number) => target !== value)
     optionsCheckedValue.value = newVal
     emits('update:value', newVal)
     emits('change', newVal)
@@ -99,7 +99,7 @@ function startOptionWave(value: string | number) {
   }
 }
 function onWaveOptionEnd(value: string | number) {
-  waveOptionsValue.value = waveOptionsValue.value.filter((optionValue) => optionValue !== value)
+  waveOptionsValue.value = waveOptionsValue.value.filter((optionValue: ) => optionValue !== value)
 }
 </script>
 <template>
