@@ -74,11 +74,13 @@ const rowSelection = reactive({
   hideSelectAll: false,
   type: 'checkbox',
   onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
-    console.log('onChange selectedRowKeys', selectedRowKeys)
+    console.log('onChange')
+    console.log('selectedRowKeys', selectedRowKeys)
     console.log('selectedRows', selectedRows)
   },
   onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
-    console.log('onSelect record', record)
+    console.log('onSelect')
+    console.log('record', record)
     console.log('selected', selected)
     console.log('selectedRows', selectedRows)
     console.log('selectedRowKeys', selectedRowKeys)
@@ -90,13 +92,14 @@ const rowSelection = reactive({
     selectedRowKeys: string[],
     changeRowKeys: string[]
   ) => {
-    console.log('onSelectAll selected', selected)
+    console.log('onSelectAll')
+    console.log('selected', selected)
     console.log('selectedRows', selectedRows)
     console.log('changeRows', changeRows)
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('changeRowKeys', changeRowKeys)
   },
-  getCheckboxProps: (record: any) => ({
+  getSelectionProps: (record: any) => ({
     disabled: record.key === '5',
     name: record.name
   })
@@ -2990,11 +2993,13 @@ const rowSelection = reactive({
   hideSelectAll: false,
   type: 'checkbox',
   onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
-    console.log('onChange selectedRowKeys', selectedRowKeys)
+    console.log('onChange')
+    console.log('selectedRowKeys', selectedRowKeys)
     console.log('selectedRows', selectedRows)
   },
   onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
-    console.log('onSelect record', record)
+    console.log('onSelect')
+    console.log('record', record)
     console.log('selected', selected)
     console.log('selectedRows', selectedRows)
     console.log('selectedRowKeys', selectedRowKeys)
@@ -3006,13 +3011,14 @@ const rowSelection = reactive({
     selectedRowKeys: string[],
     changeRowKeys: string[]
   ) => {
-    console.log('onSelectAll selected', selected)
+    console.log('onSelectAll')
+    console.log('selected', selected)
     console.log('selectedRows', selectedRows)
     console.log('changeRows', changeRows)
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('changeRowKeys', changeRowKeys)
   },
-  getCheckboxProps: (record: any) => ({
+  getSelectionProps: (record: any) => ({
     disabled: record.key === '5',
     name: record.name
   })

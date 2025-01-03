@@ -63,11 +63,13 @@ const rowSelection = reactive({
   hideSelectAll: false,
   type: 'checkbox',
   onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
-    console.log('onChange selectedRowKeys', selectedRowKeys)
+    console.log('onChange')
+    console.log('selectedRowKeys', selectedRowKeys)
     console.log('selectedRows', selectedRows)
   },
   onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
-    console.log('onSelect record', record)
+    console.log('onSelect')
+    console.log('record', record)
     console.log('selected', selected)
     console.log('selectedRows', selectedRows)
     console.log('selectedRowKeys', selectedRowKeys)
@@ -79,13 +81,14 @@ const rowSelection = reactive({
     selectedRowKeys: string[],
     changeRowKeys: string[]
   ) => {
-    console.log('onSelectAll selected', selected)
+    console.log('onSelectAll')
+    console.log('selected', selected)
     console.log('selectedRows', selectedRows)
     console.log('changeRows', changeRows)
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('changeRowKeys', changeRowKeys)
   },
-  getCheckboxProps: (record: any) => ({
+  getSelectionProps: (record: any) => ({
     disabled: record.key === '5',
     name: record.name
   })
@@ -876,7 +879,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
 </script>
 <template>
   <div>
-    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Table
       :columns="columns"
@@ -961,13 +964,17 @@ function onSortChange(column: any, currentDataSource: any[]) {
     <h3 class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</h3>
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
-      <Space align="center"> size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" /> </Space>
+      <Space align="center">
+        size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      </Space>
       <Table :columns="columnsSize" :data-source="dataSourceSize" :bordered="sizeBordered" :size="size" />
     </Flex>
     <h2 class="mt30 mb10">列对齐方式</h2>
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
-      <Space align="center"> align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" /> </Space>
+      <Space align="center">
+        align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
+      </Space>
       <Table :columns="columnsAlign" :data-source="dataSourceAlign" :bordered="alignBordered" />
     </Flex>
     <h2 class="mt30 mb10">斑马条纹</h2>
@@ -1174,7 +1181,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
-    </Flex> -->
+    </Flex>
     <h2 class="mt30 mb10">可选择</h2>
     <Flex vertical>
       <Row :gutter="[24, 12]">
