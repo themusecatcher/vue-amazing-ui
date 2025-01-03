@@ -131,8 +131,10 @@ const tableExpandedRowKeys = ref<(string | number)[]>([]) // 当前展开行的 
 const checkAll = ref(false) // 是否全选
 const indeterminate = ref(false) // 全选样式控制
 const tableOptionsChecked = ref<boolean[]>([]) // 表格选项数组
-const selectedRowKeys = ref<string[]>([])
-const selectedRows = ref<any[]>([])
+const selectedRowKeys = ref<string[]>([]) // 已选中行的 key 数组
+const changeRowKeys = ref<any[]>([]) // 变化行的 key 数组
+const selectedRows = ref<any[]>([]) // 已选中行的数组
+const changeRows = ref<any[]>([]) // 变化行的数组
 const tooltipRef = ref() // 排序 tooltip 提示组件模板引用
 const ellipsisRef = ref() // 文本省略组件模板引用
 const scrollbarRef = ref() // 水平滚动容器模板引用
@@ -162,6 +164,13 @@ const showSelectionColumn = computed(() => {
 // 是否自定义了复选框标题
 const showSelectionColumnTitle = computed(() => {
   return props.rowSelection?.columnTitle !== undefined
+})
+// 是否展示全选复选框
+const showSelectionAll = computed(() => {
+  return (
+    !props.rowSelection?.hideSelectAll &&
+    (props.rowSelection?.type === undefined || props.rowSelection?.type === 'checkbox')
+  )
 })
 // 是否设置了水平滚动
 const horizontalScroll = computed(() => {
@@ -450,35 +459,50 @@ useResizeObserver(tableRef, () => {
 })
 // 点击全选
 function onCheckAllChange(checked: boolean) {
-  const changeRows: any[] = []
-  const changeRowKeys: string[] = []
-  if (checked) {
-    displayDataSource.value.forEach((record: any, rowIndex: number) => {
-      const checkboxProps =
-        props.rowSelection?.getCheckboxProps && props.rowSelection.getCheckboxProps(record, rowIndex)
-      if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
+  changeRowKeys.value.splice(0)
+  changeRows.value.splice(0)
+  displayDataSource.value.forEach((record: any, rowIndex: number) => {
+    const checkboxProps = props.rowSelection?.getCheckboxProps && props.rowSelection.getCheckboxProps(record, rowIndex)
+    if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
+      if (checked) {
+        // 全选
         if (!tableOptionsChecked.value[rowIndex]) {
           tableOptionsChecked.value[rowIndex] = true
           selectedRowKeys.value.push(record.key)
           selectedRows.value.push(record)
-          changeRowKeys.push(record.key)
-          changeRows.push(record)
+          changeRowKeys.value.push(record.key)
+          changeRows.value.push(record)
+        }
+      } else {
+        // 取消全选
+        selectedRowKeys.value.splice(0)
+        selectedRows.value.splice(0)
+        if (tableOptionsChecked.value[rowIndex]) {
+          tableOptionsChecked.value[rowIndex] = false
+          changeRowKeys.value.push(record.key)
+          changeRows.value.push(record)
         }
       }
-    })
-  } else {
-    tableOptionsChecked.value = tableOptionsChecked.value.map(() => false)
-  }
+    }
+  })
   props.rowSelection?.onSelectAll &&
-    props.rowSelection.onSelectAll(checked, selectedRows.value, changeRows, selectedRowKeys.value, changeRowKeys)
+    props.rowSelection.onSelectAll(
+      checked,
+      selectedRows.value,
+      changeRows.value,
+      selectedRowKeys.value,
+      changeRowKeys.value
+    )
   props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
 }
-// 选中行
+// 点击某行选择框
 function onTableCheckboxChange(checked: boolean, key: string, record: any) {
   if (checked) {
+    // 选中
     selectedRowKeys.value.push(key)
     selectedRows.value.push(record)
   } else {
+    // 取消选中
     selectedRowKeys.value = selectedRowKeys.value.filter((selectedRowKey: string) => selectedRowKey !== key)
     selectedRows.value = selectedRows.value.filter((selectedRow: any) => selectedRow.key !== key)
   }
@@ -794,6 +818,7 @@ function tableSelectionCellFixStyle(fixed: boolean) {
     style.position = 'sticky'
     style.left = props.showExpandColumn ? `${colExpandRef.value && colExpandRef.value.offsetWidth}px` : '0px'
   }
+  console.log('style', style)
   return style
 }
 // 表格单元格固定时的样式
@@ -1023,7 +1048,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         <component v-if="isVNode(rowSelection.columnTitle)" :is="rowSelection.columnTitle" />
                         <template v-else>{{ rowSelection.columnTitle }}</template>
                       </template>
-                      <div v-else-if="!rowSelection?.hideSelectAll" class="table-checkbox">
+                      <div v-else-if="showSelectionAll" class="table-selection">
                         <Checkbox
                           :indeterminate="indeterminate"
                           v-model:checked="checkAll"
@@ -1166,10 +1191,17 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-cell-fix-left-last': selectionColumnFixedLast,
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
-                        :style="tableSelectionCellFixStyle(expandColumnFixed)"
+                        :style="tableSelectionCellFixStyle(selectionColumnFixed)"
                       >
-                        <div class="table-checkbox">
+                        <div class="table-selection">
+                          <Radio
+                            v-if="rowSelection?.type === 'radio'"
+                            v-model:checked="tableOptionsChecked[rowIndex]"
+                            @change="onTableCheckboxChange($event, record.key, record)"
+                            v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
+                          />
                           <Checkbox
+                            v-else
                             v-model:checked="tableOptionsChecked[rowIndex]"
                             @change="onTableCheckboxChange($event, record.key, record)"
                             v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
@@ -1309,7 +1341,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         <component v-if="isVNode(rowSelection.columnTitle)" :is="rowSelection.columnTitle" />
                         <template v-else>{{ rowSelection.columnTitle }}</template>
                       </template>
-                      <div v-else-if="!rowSelection?.hideSelectAll" class="table-checkbox">
+                      <div v-else-if="showSelectionAll" class="table-selection">
                         <Checkbox
                           :indeterminate="indeterminate"
                           v-model:checked="checkAll"
@@ -1482,10 +1514,17 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-cell-fix-left-last': selectionColumnFixedLast,
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
-                        :style="tableSelectionCellFixStyle(expandColumnFixed)"
+                        :style="tableSelectionCellFixStyle(selectionColumnFixed)"
                       >
-                        <div class="table-checkbox">
+                        <div class="table-selection">
+                          <Radio
+                            v-if="rowSelection?.type === 'radio'"
+                            v-model:checked="tableOptionsChecked[rowIndex]"
+                            @change="onTableCheckboxChange($event, record.key, record)"
+                            v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
+                          />
                           <Checkbox
+                            v-else
                             v-model:checked="tableOptionsChecked[rowIndex]"
                             @change="onTableCheckboxChange($event, record.key, record)"
                             v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
@@ -1702,7 +1741,7 @@ function onPaginationChange(page: number, pageSize: number) {
           padding-left: 8px;
           padding-right: 8px;
           text-align: center;
-          .table-checkbox {
+          .table-selection {
             height: 22px;
             vertical-align: top;
             display: inline-flex;
@@ -1903,7 +1942,7 @@ function onPaginationChange(page: number, pageSize: number) {
           padding-left: 8px;
           padding-right: 8px;
           text-align: center;
-          .table-checkbox {
+          .table-selection {
             height: 22px;
             vertical-align: top;
             display: inline-flex;

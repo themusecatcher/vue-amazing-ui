@@ -825,11 +825,11 @@ function onSortChange(column: any, currentDataSource: any[]) {
 const rowSelection = {
   fixed: true,
   selections: false,
-  // columnTitle: '复选框',
+  columnTitle: '单选框',
   hideDefaultSelections: true,
   // hideSelectAll: true,
   columnWidth: 100,
-  // type: 'radio',
+  type: 'radio',
   onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
     console.log('onChange selectedRowKeys', selectedRowKeys)
     console.log('selectedRows', selectedRows)
