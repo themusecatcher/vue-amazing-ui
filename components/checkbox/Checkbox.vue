@@ -108,6 +108,7 @@ function onWaveOptionEnd(value: string | number) {
     class="m-checkbox"
     :class="{ 'checkbox-vertical': vertical }"
     :style="`--checkbox-gap: ${gapValue};`"
+    v-bind="$attrs"
   >
     <div
       class="checkbox-wrap"
@@ -134,6 +135,7 @@ function onWaveOptionEnd(value: string | number) {
     class="checkbox-wrap"
     :class="{ 'checkbox-disabled': disabled }"
     @click="disabled ? () => false : onChecked()"
+    v-bind="$attrs"
   >
     <span
       class="checkbox-box"

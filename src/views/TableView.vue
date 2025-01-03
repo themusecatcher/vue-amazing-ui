@@ -11,6 +11,7 @@ const stripedBordered = ref(true)
 const headerFooterbordered = ref(true)
 const groupBordered = ref(true)
 const sortBordered = ref(true)
+const selectionBordered = ref(true)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
@@ -45,6 +46,50 @@ const alignOptions = [
   }
 ]
 const align = ref<TableColumn['align']>('center')
+const selectionTypeOptions = [
+  {
+    label: 'Checkbox',
+    value: 'checkbox'
+  },
+  {
+    label: 'Radio',
+    value: 'radio'
+  }
+]
+const rowSelection = reactive({
+  columnTitle: '',
+  columnWidth: 100,
+  fixed: true,
+  hideSelectAll: false,
+  type: 'checkbox',
+  onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
+    console.log('onChange selectedRowKeys', selectedRowKeys)
+    console.log('selectedRows', selectedRows)
+  },
+  onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
+    console.log('onSelect record', record)
+    console.log('selected', selected)
+    console.log('selectedRows', selectedRows)
+    console.log('selectedRowKeys', selectedRowKeys)
+  },
+  onSelectAll: (
+    selected: boolean,
+    selectedRows: any[],
+    changeRows: any[],
+    selectedRowKeys: string[],
+    changeRowKeys: string[]
+  ) => {
+    console.log('onSelectAll selected', selected)
+    console.log('selectedRows', selectedRows)
+    console.log('changeRows', changeRows)
+    console.log('selectedRowKeys', selectedRowKeys)
+    console.log('changeRowKeys', changeRowKeys)
+  },
+  getCheckboxProps: (record: any) => ({
+    disabled: record.key === '5',
+    name: record.name
+  })
+})
 const columns = reactive<TableColumn[]>([
   {
     title: 'Name',
@@ -748,9 +793,15 @@ const dataSourceSelection = ref([
   },
   {
     key: '4',
+    name: 'Jean Blue',
+    age: 36,
+    address: 'Paris No.4 Lake Park'
+  },
+  {
+    key: '5',
     name: 'Disabled User',
     age: 99,
-    address: 'Sidney No.4 Lake Park'
+    address: 'Berlin No.5 Lake Park'
   }
 ])
 onBeforeMount(() => {
@@ -821,48 +872,6 @@ const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
 function onSortChange(column: any, currentDataSource: any[]) {
   console.log('sort column', column)
   console.log('sort currentDataSource', currentDataSource)
-}
-const rowSelection = {
-  fixed: true,
-  selections: false,
-  columnTitle: '单选框',
-  hideDefaultSelections: true,
-  // hideSelectAll: true,
-  columnWidth: 100,
-  type: 'radio',
-  onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
-    console.log('onChange selectedRowKeys', selectedRowKeys)
-    console.log('selectedRows', selectedRows)
-  },
-  onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
-    console.log('onSelect record', record)
-    console.log('selected', selected)
-    console.log('selectedRows', selectedRows)
-    console.log('selectedRowKeys', selectedRowKeys)
-  },
-  onSelectAll: (
-    selected: boolean,
-    selectedRows: any[],
-    changeRows: any[],
-    selectedRowKeys: string[],
-    changeRowKeys: string[]
-  ) => {
-    console.log('onSelectAll selected', selected)
-    console.log('selectedRows', selectedRows)
-    console.log('changeRows', changeRows)
-    console.log('selectedRowKeys', selectedRowKeys)
-    console.log('changeRowKeys', changeRowKeys)
-  },
-  onSelectInvert: (selectedRows: any[]) => {
-    console.log('onSelectInvert selected', selectedRows)
-  },
-  onSelectNone: () => {
-    console.log('清空选择')
-  },
-  getCheckboxProps: (record: any) => ({
-    disabled: record.name === 'Disabled User', // Column configuration not to be checked
-    name: record.name
-  })
 }
 </script>
 <template>
@@ -952,13 +961,13 @@ const rowSelection = {
     <h3 class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</h3>
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-      <Table :columns="columnsSize" :data-source="dataSourceSize" :size="size" :bordered="sizeBordered" />
+      <Space align="center"> size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" /> </Space>
+      <Table :columns="columnsSize" :data-source="dataSourceSize" :bordered="sizeBordered" :size="size" />
     </Flex>
     <h2 class="mt30 mb10">列对齐方式</h2>
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
-      <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
+      <Space align="center"> align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" /> </Space>
       <Table :columns="columnsAlign" :data-source="dataSourceAlign" :bordered="alignBordered" />
     </Flex>
     <h2 class="mt30 mb10">斑马条纹</h2>
@@ -1167,30 +1176,48 @@ const rowSelection = {
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
     </Flex> -->
     <h2 class="mt30 mb10">可选择</h2>
-    <a-table
-      :scroll="{ x: 1500, y: 300 }"
-      :row-selection="rowSelection"
-      :columns="columnsSelection"
-      :data-source="dataSourceSelection"
-    >
-      <template #bodyCell="{ column, text }">
-        <template v-if="column.dataIndex === 'name'">
-          <a>{{ text }}</a>
+    <Flex vertical>
+      <Row :gutter="[24, 12]">
+        <Col :span="6">
+          <Space gap="small" vertical> bordered: <Switch v-model="selectionBordered" /> </Space>
+        </Col>
+        <Col :span="6">
+          <Flex gap="small" vertical>
+            columnTitle: <Input v-model:value="rowSelection.columnTitle" placeholder="columnTitle" />
+          </Flex>
+        </Col>
+        <Col :span="6">
+          <Flex gap="small" vertical>
+            columnWidth: <Slider v-model:value="rowSelection.columnWidth" :min="32" :max="120" />
+          </Flex>
+        </Col>
+        <Col :span="6">
+          <Space gap="small" vertical> fixed: <Switch v-model="rowSelection.fixed" /> </Space>
+        </Col>
+        <Col :span="6">
+          <Space gap="small" vertical> hideSelectAll: <Switch v-model="rowSelection.hideSelectAll" /> </Space>
+        </Col>
+        <Col :span="6">
+          <Space gap="small" vertical>
+            type:
+            <Radio :options="selectionTypeOptions" v-model:value="rowSelection.type" button button-style="solid" />
+          </Space>
+        </Col>
+      </Row>
+      <Table
+        :columns="columnsSelection"
+        :data-source="dataSourceSelection"
+        :row-selection="rowSelection"
+        :bordered="selectionBordered"
+        :scroll="{ x: 1500 }"
+      >
+        <template #bodyCell="{ column, text }">
+          <template v-if="column.dataIndex === 'name'">
+            <a>{{ text }}</a>
+          </template>
         </template>
-      </template>
-    </a-table>
-    <Table
-      :scroll="{ x: 1500, y: 300 }"
-      :row-selection="rowSelection"
-      :columns="columnsSelection"
-      :data-source="dataSourceSelection"
-    >
-      <template #bodyCell="{ column, text }">
-        <template v-if="column.dataIndex === 'name'">
-          <a>{{ text }}</a>
-        </template>
-      </template>
-    </Table>
+      </Table>
+    </Flex>
   </div>
 </template>
 <style lang="less" scoped>
