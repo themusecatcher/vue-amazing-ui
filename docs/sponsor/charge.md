@@ -5,6 +5,7 @@
 `Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。其中所有开发工作均由作者一人完成，开发迭代过程实属不易...为了组件库的健康可持续发展，非常期望能获得您的支持与赞助。
 
 <script setup lang="ts">
+import { withBase } from 'vitepress'
 import { ref } from 'vue'
 import { HeartFilled, WechatOutlined, AlipayOutlined } from '@ant-design/icons-vue'
 import { useMediaQuery } from 'vue-amazing-ui'
@@ -158,7 +159,7 @@ const QRCodes = [
         Ant
       </div>
     </template>
-    <Avatar :size="36" src="/avatars/1.jpeg" />
+    <Avatar :size="36" :src="withBase('/avatars/1.jpeg')" />
   </Tooltip>
   <Tooltip>
     <template #tooltip>
@@ -168,6 +169,6 @@ const QRCodes = [
         nizhensh-i
       </div>
     </template>
-    <Avatar :size="36" src="/avatars/2.jpg" href="https://github.com/nizhensh-i" target="_blank" />
+    <Avatar :size="36" :src="withBase('/avatars/2.jpg')" href="https://github.com/nizhensh-i" target="_blank" />
   </Tooltip>
 </Space>
