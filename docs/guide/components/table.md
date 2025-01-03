@@ -2875,6 +2875,10 @@ function onSortChange(column: any, currentDataSource: any[]) {
 
 ## 可选择
 
+*可通过 `rowSelection` 属性来自定义选择项*
+
+<br/>
+
 <Flex vertical>
   <Row :gutter="[24, 12]">
     <Col :span="6">

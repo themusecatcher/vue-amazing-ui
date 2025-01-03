@@ -57,7 +57,7 @@ const selectionTypeOptions = [
   }
 ]
 const rowSelection = reactive({
-  columnTitle: '',
+  columnTitle: undefined,
   columnWidth: 100,
   fixed: true,
   hideSelectAll: false,
@@ -1183,6 +1183,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
     </Flex>
     <h2 class="mt30 mb10">可选择</h2>
+    <h3 class="mb10">可通过 rowSelection 属性来自定义选择项</h3>
     <Flex vertical>
       <Row :gutter="[24, 12]">
         <Col :span="6">
