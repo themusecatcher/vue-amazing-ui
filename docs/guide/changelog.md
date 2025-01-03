@@ -4,7 +4,7 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或者直接通过右下角邮箱地址直接联系我
 
-## 2.0.5 <Tag color="volcano" size="small">soon</Tag>
+## 2.0.5 <Tag color="volcano" size="small">2024-01-03</Tag>
 
 - 优化并更新 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件点击动画效果及代码
 - 优化并更新 [单选框 Radio](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html) 组件代码
