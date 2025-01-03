@@ -158,6 +158,16 @@ const QRCodes = [
         Ant
       </div>
     </template>
-    <Avatar :size="36" :src="Avatar1" />
+    <Avatar :size="36" src="./avatars/1.jpeg" />
+  </Tooltip>
+  <Tooltip>
+    <template #tooltip>
+      <div style="text-align: center">
+        GitHub
+        <br/>
+        nizhensh-i
+      </div>
+    </template>
+    <Avatar :size="36" src="./avatars/2.jpg" href="https://github.com/nizhensh-i" target="_blank" />
   </Tooltip>
 </Space>
