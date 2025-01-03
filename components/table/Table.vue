@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
-import type { CSSProperties, Slot } from 'vue'
+import { isVNode, ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
+import type { VNode, CSSProperties, Slot } from 'vue'
 import Spin from 'components/spin'
 import Empty from 'components/empty'
 import Scrollbar from 'components/scrollbar'
 import Checkbox from 'components/checkbox'
+import Radio from 'components/radio'
 import Tooltip from 'components/tooltip'
 import Ellipsis from 'components/ellipsis'
 import Pagination from 'components/pagination'
@@ -31,9 +32,24 @@ export interface Column {
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
 export interface Selection {
-  fixed?: boolean // 选择框列是否固定在左边
+  columnTitle?: string | VNode // 自定义复选框标题
+  columnWidth?: string | number // 列表复选框宽度
+  fixed?: boolean // 复选框列是否固定在左边
+  hideSelectAll?: boolean // 是否隐藏全选复选框
+  type?: 'checkbox' | 'radio' // 复选框/单选框
+  onChange?: (selectedRowKeys: string[], selectedRows: any[]) => void // 选中项发生变化时的回调
+  onSelect?: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => void // 点击除全选外某行选择框时的回调
+  onSelectAll?: (
+    selected: boolean,
+    selectedRows: any[],
+    changeRows: any[],
+    selectedRowKeys: string[],
+    changeRowKeys: string[]
+  ) => void // 点击全选时的回调
+  getCheckboxProps?: (record: any, rowIndex: number) => object // 复选框的属性配置
 }
 export type ScrollOption = {
+  initialScrollPositionOnChange?: boolean // 当分页、排序变化后是否滚动到表格初始位置
   x?: string | number | true // 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，true 和 'max-content'
   y?: string | number // 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值
 }
@@ -113,8 +129,10 @@ const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格�
 const displayDataSource = ref<any[]>([]) // 当前展示的表格数据
 const tableExpandedRowKeys = ref<(string | number)[]>([]) // 当前展开行的 key 数组
 const checkAll = ref(false) // 是否全选
-const tableOptions = ref([]) // 表格选项数组
-const selectedOptions = ref([]) // 已选中的选项数组
+const indeterminate = ref(false) // 全选样式控制
+const tableOptionsChecked = ref<boolean[]>([]) // 表格选项数组
+const selectedRowKeys = ref<string[]>([])
+const selectedRows = ref<any[]>([])
 const tooltipRef = ref() // 排序 tooltip 提示组件模板引用
 const ellipsisRef = ref() // 文本省略组件模板引用
 const scrollbarRef = ref() // 水平滚动容器模板引用
@@ -137,27 +155,14 @@ const sortHoverDataIndex = ref<string | null>(null) // 鼠标悬浮排序列的�
 const clickSorter = ref(false) // 是否点击排序
 const slotsExist = useSlotsExist(['header', 'footer'])
 const emits = defineEmits(['expand', 'expandedRowsChange', 'update:expandedRowKeys', 'sortChange', 'change'])
-// 是否展示选择框
+// 是否展示复选框
 const showSelectionColumn = computed(() => {
   return props.rowSelection !== undefined
 })
-const indeterminate = computed(() => {
-  // 全选样式控制
-  if (selectedOptions.value.length > 0 && selectedOptions.value.length < selectedOptions.value.length) {
-    return true
-  } else {
-    return false
-  }
+// 是否自定义了复选框标题
+const showSelectionColumnTitle = computed(() => {
+  return props.rowSelection?.columnTitle !== undefined
 })
-watch(checkAll, (to) => {
-  console.log('checkAll', to)
-  if (to) {
-    // selectedOptions.value = tableOptions.value.map(option => option.value)
-  } else {
-    selectedOptions.value = []
-  }
-})
-
 // 是否设置了水平滚动
 const horizontalScroll = computed(() => {
   return props.scroll?.x !== undefined
@@ -185,7 +190,7 @@ const showShadowRight = computed(() => {
 // 是否存在左固定列
 const hasFixLeft = computed(() => {
   const fixedLeft = props.columns.some((column: Column) => column.fixed === 'left')
-  return props.expandFixed || fixedLeft
+  return expandColumnFixed.value || selectionColumnFixed.value || fixedLeft
 })
 // 是否存在右固定列
 const hasFixRight = computed(() => {
@@ -201,7 +206,7 @@ const tableLayoutComputed = computed(() => {
   if (props.tableLayout === undefined) {
     const ellipsis = props.columns.some((column: Column) => column.ellipsis)
     const columnFixed = props.columns.some((column: Column) => column.fixed)
-    if (ellipsis || columnFixed || (props.showExpandColumn && props.expandFixed) || verticalScroll.value) {
+    if (ellipsis || columnFixed || expandColumnFixed.value || selectionColumnFixed.value || verticalScroll.value) {
       return 'fixed'
     }
     return 'auto'
@@ -240,6 +245,20 @@ const tableExpandCellStyle = computed(() => {
     width: typeof props.expandColumnWidth === 'number' ? `${props.expandColumnWidth}px` : props.expandColumnWidth
   }
 })
+// 复选框列的宽度样式
+const tableSelectionCellStyle = computed(() => {
+  const style: CSSProperties = {
+    width: '32px'
+  }
+  if (props.rowSelection?.columnWidth !== undefined) {
+    if (typeof props.rowSelection.columnWidth === 'number') {
+      style.width = `${props.rowSelection.columnWidth}px`
+    } else {
+      style.width = props.rowSelection.columnWidth
+    }
+  }
+  return style
+})
 // 过滤掉 colSpan 为 0 的列
 const thColumns = computed(() => {
   return props.columns.filter((column: Column) => column.colSpan !== 0)
@@ -266,7 +285,10 @@ const selectionColumnFixedLast = computed(() => {
 })
 // 展开列是否固定
 const expandColumnFixed = computed(() => {
-  return props.expandFixed || selectionColumnFixed.value || (!showSelectionColumn.value && thFirstColumnFixed.value)
+  return (
+    props.showExpandColumn &&
+    (props.expandFixed || selectionColumnFixed.value || (!showSelectionColumn.value && thFirstColumnFixed.value))
+  )
 })
 // 展开列是否固定，且为最后一个
 const expandColumnFixedLast = computed(() => {
@@ -363,12 +385,39 @@ watch(
   }
 )
 // 监听点击排序导致的表格展示数据的变化
-watch(displayDataSource, (to) => {
-  if (clickSorter.value) {
-    clickSorter.value = false
-    emits('sortChange', sortColumn.value, to)
+watch(
+  displayDataSource,
+  (to) => {
+    tableOptionsChecked.value = new Array(to.length).fill(false)
+    if (clickSorter.value) {
+      clickSorter.value = false
+      emits('sortChange', sortColumn.value, to)
+    }
+  },
+  {
+    immediate: true
   }
-})
+)
+// 监听表格选项数组变化
+watch(
+  tableOptionsChecked,
+  (to) => {
+    const selectedOptions = to.filter((checked: boolean) => checked)
+    let checkboxOptionsAmount = 0
+    displayDataSource.value.forEach((record: any, rowIndex: number) => {
+      const checkboxProps =
+        props.rowSelection?.getCheckboxProps && props.rowSelection.getCheckboxProps(record, rowIndex)
+      if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
+        checkboxOptionsAmount++
+      }
+    })
+    indeterminate.value = 0 < selectedOptions.length && selectedOptions.length < checkboxOptionsAmount
+    checkAll.value = selectedOptions.length === checkboxOptionsAmount
+  },
+  {
+    deep: true
+  }
+)
 // 初始化默认排序
 watchEffect(() => {
   if (!disabledDefaultSort.value) {
@@ -399,6 +448,44 @@ onMounted(() => {
 useResizeObserver(tableRef, () => {
   getScrollState()
 })
+// 点击全选
+function onCheckAllChange(checked: boolean) {
+  const changeRows: any[] = []
+  const changeRowKeys: string[] = []
+  if (checked) {
+    displayDataSource.value.forEach((record: any, rowIndex: number) => {
+      const checkboxProps =
+        props.rowSelection?.getCheckboxProps && props.rowSelection.getCheckboxProps(record, rowIndex)
+      if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
+        if (!tableOptionsChecked.value[rowIndex]) {
+          tableOptionsChecked.value[rowIndex] = true
+          selectedRowKeys.value.push(record.key)
+          selectedRows.value.push(record)
+          changeRowKeys.push(record.key)
+          changeRows.push(record)
+        }
+      }
+    })
+  } else {
+    tableOptionsChecked.value = tableOptionsChecked.value.map(() => false)
+  }
+  props.rowSelection?.onSelectAll &&
+    props.rowSelection.onSelectAll(checked, selectedRows.value, changeRows, selectedRowKeys.value, changeRowKeys)
+  props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
+}
+// 选中行
+function onTableCheckboxChange(checked: boolean, key: string, record: any) {
+  if (checked) {
+    selectedRowKeys.value.push(key)
+    selectedRows.value.push(record)
+  } else {
+    selectedRowKeys.value = selectedRowKeys.value.filter((selectedRowKey: string) => selectedRowKey !== key)
+    selectedRows.value = selectedRows.value.filter((selectedRow: any) => selectedRow.key !== key)
+  }
+  props.rowSelection?.onSelect &&
+    props.rowSelection.onSelect(record, checked, selectedRows.value, selectedRowKeys.value)
+  props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
+}
 // 初始化默认排序时的数据索引，标识和展示数据
 function initDefaultSort() {
   const thLeaf = thColumnsLeaf.value.filter((column: Column) => column.colSpan !== 0)
@@ -655,6 +742,7 @@ function onSorter(column: Column) {
       sortSymbol.value = sortDirections[0]
     }
   }
+  initialScrollPosition()
 }
 // 鼠标移入排序
 function onEnterSorter(dataIndex: string) {
@@ -841,18 +929,22 @@ function onWheel(e: WheelEvent) {
     })
   }
 }
+function initialScrollPosition() {
+  if (props.scroll?.initialScrollPositionOnChange) {
+    scrollbarRef.value.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    })
+  }
+}
 // 分页变化事件
 function onPaginationChange(page: number, pageSize: number) {
   tablePage.value = page
   tablePageSize.value = pageSize
   emits('change', page, pageSize)
-  scrollbarRef.value.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: 'smooth'
-  })
+  initialScrollPosition()
 }
-const checked = ref(false)
 </script>
 <template>
   <div ref="tableRef" class="m-table-wrap">
@@ -890,7 +982,7 @@ const checked = ref(false)
             <table :style="tableStyle">
               <colgroup>
                 <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle" />
-                <col ref="colSelectionRef" v-if="showSelectionColumn" style="width: 32px" />
+                <col ref="colSelectionRef" v-if="showSelectionColumn" :style="tableSelectionCellStyle" />
                 <col
                   ref="colRef"
                   :style="tableCellWidthStyle(column)"
@@ -927,7 +1019,17 @@ const checked = ref(false)
                       :colstart="0"
                       :colend="0"
                     >
-                      <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" />
+                      <template v-if="showSelectionColumnTitle">
+                        <component v-if="isVNode(rowSelection.columnTitle)" :is="rowSelection.columnTitle" />
+                        <template v-else>{{ rowSelection.columnTitle }}</template>
+                      </template>
+                      <div v-else-if="!rowSelection?.hideSelectAll" class="table-checkbox">
+                        <Checkbox
+                          :indeterminate="indeterminate"
+                          v-model:checked="checkAll"
+                          @change="onCheckAllChange"
+                        />
+                      </div>
                     </th>
                   </template>
                   <template v-for="(column, colIndex) in columns" :key="`${rowIndex}-${colIndex}`">
@@ -935,7 +1037,7 @@ const checked = ref(false)
                       v-if="column.colSpan !== 0"
                       class="table-th"
                       :class="[
-                        `${column.className}`,
+                        column.className,
                         {
                           'table-cell-has-sorter': column.sorter,
                           'table-cell-sort': sortColumnDataIndex === column.dataIndex,
@@ -1058,7 +1160,7 @@ const checked = ref(false)
                       </td>
                       <td
                         v-if="showSelectionColumn"
-                        class="table-td"
+                        class="table-td table-td-selection"
                         :class="{
                           'table-cell-fix-left': selectionColumnFixed,
                           'table-cell-fix-left-last': selectionColumnFixedLast,
@@ -1066,12 +1168,18 @@ const checked = ref(false)
                         }"
                         :style="tableSelectionCellFixStyle(expandColumnFixed)"
                       >
-                        <Checkbox v-model:checked="checked" />
+                        <div class="table-checkbox">
+                          <Checkbox
+                            v-model:checked="tableOptionsChecked[rowIndex]"
+                            @change="onTableCheckboxChange($event, record.key, record)"
+                            v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
+                          />
+                        </div>
                       </td>
                       <td
                         class="table-td"
                         :class="[
-                          `${column.className}`,
+                          column.className,
                           {
                             'table-cell-sort': sortColumnDataIndex === column.dataIndex,
                             'table-cell-align-left': column.align === 'left',
@@ -1160,6 +1268,7 @@ const checked = ref(false)
             <table :style="[tableStyle, tableHeadStyle]" @wheel="xScrollable ? onWheel($event) : () => false">
               <colgroup>
                 <col ref="colExpandRef" v-if="showExpandColumn" :style="tableExpandCellStyle" />
+                <col ref="colSelectionRef" v-if="showSelectionColumn" :style="tableSelectionCellStyle" />
                 <col
                   ref="colRef"
                   :style="tableCellWidthStyle(column)"
@@ -1169,26 +1278,52 @@ const checked = ref(false)
               </colgroup>
               <thead>
                 <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="rowIndex">
-                  <th
-                    v-if="rowIndex === 0 && showExpandColumn"
-                    class="table-th"
-                    :class="{
-                      'table-cell-fix-left': expandColumnFixed,
-                      'table-cell-fix-left-last': expandColumnFixedLast
-                    }"
-                    :style="tableExpandCellFixStyle(expandColumnFixed)"
-                    :rowspan="getMaxDepth(thColumns)"
-                    :colstart="0"
-                    :colend="0"
-                  >
-                    <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
-                  </th>
+                  <template v-if="rowIndex === 0">
+                    <th
+                      v-if="showExpandColumn"
+                      class="table-th"
+                      :class="{
+                        'table-cell-fix-left': expandColumnFixed,
+                        'table-cell-fix-left-last': expandColumnFixedLast
+                      }"
+                      :style="tableExpandCellFixStyle(expandColumnFixed)"
+                      :rowspan="getMaxDepth(thColumns)"
+                      :colstart="0"
+                      :colend="0"
+                    >
+                      <slot name="expandColumnTitle">{{ expandColumnTitle }}</slot>
+                    </th>
+                    <th
+                      v-if="showSelectionColumn"
+                      class="table-th table-th-selection"
+                      :class="{
+                        'table-cell-fix-left': selectionColumnFixed,
+                        'table-cell-fix-left-last': selectionColumnFixedLast
+                      }"
+                      :style="tableSelectionCellFixStyle(selectionColumnFixed)"
+                      :rowspan="getMaxDepth(thColumns)"
+                      :colstart="0"
+                      :colend="0"
+                    >
+                      <template v-if="showSelectionColumnTitle">
+                        <component v-if="isVNode(rowSelection.columnTitle)" :is="rowSelection.columnTitle" />
+                        <template v-else>{{ rowSelection.columnTitle }}</template>
+                      </template>
+                      <div v-else-if="!rowSelection?.hideSelectAll" class="table-checkbox">
+                        <Checkbox
+                          :indeterminate="indeterminate"
+                          v-model:checked="checkAll"
+                          @change="onCheckAllChange"
+                        />
+                      </div>
+                    </th>
+                  </template>
                   <template v-for="(column, colIndex) in columns" :key="`${rowIndex}-${colIndex}`">
                     <th
                       v-if="column.colSpan !== 0"
                       class="table-th"
                       :class="[
-                        `${column.className}`,
+                        column.className,
                         {
                           'table-cell-has-sorter': column.sorter,
                           'table-cell-sort': sortColumnDataIndex === column.dataIndex,
@@ -1296,6 +1431,7 @@ const checked = ref(false)
             <table :style="tableStyle">
               <colgroup>
                 <col v-if="showExpandColumn" :style="tableExpandCellStyle" />
+                <col v-if="showSelectionColumn" :style="tableSelectionCellStyle" />
                 <col :style="tableCellWidthStyle(column)" v-for="(column, index) in thColumnsLeaf" :key="index" />
               </colgroup>
               <tbody>
@@ -1339,9 +1475,27 @@ const checked = ref(false)
                         </slot>
                       </td>
                       <td
+                        v-if="showSelectionColumn"
+                        class="table-td table-td-selection"
+                        :class="{
+                          'table-cell-fix-left': selectionColumnFixed,
+                          'table-cell-fix-left-last': selectionColumnFixedLast,
+                          'table-td-hover': hoverRowIndex === rowIndex
+                        }"
+                        :style="tableSelectionCellFixStyle(expandColumnFixed)"
+                      >
+                        <div class="table-checkbox">
+                          <Checkbox
+                            v-model:checked="tableOptionsChecked[rowIndex]"
+                            @change="onTableCheckboxChange($event, record.key, record)"
+                            v-bind="rowSelection?.getCheckboxProps && rowSelection.getCheckboxProps(record, rowIndex)"
+                          />
+                        </div>
+                      </td>
+                      <td
                         class="table-td"
                         :class="[
-                          `${column.className}`,
+                          column.className,
                           {
                             'table-cell-sort': sortColumnDataIndex === column.dataIndex,
                             'table-cell-align-left': column.align === 'left',
@@ -1548,8 +1702,11 @@ const checked = ref(false)
           padding-left: 8px;
           padding-right: 8px;
           text-align: center;
-          .m-checkbox {
-            line-height: 1.5714285714285714;
+          .table-checkbox {
+            height: 22px;
+            vertical-align: top;
+            display: inline-flex;
+            align-items: center;
           }
         }
         .table-th-ellipsis {
@@ -1741,6 +1898,17 @@ const checked = ref(false)
         }
         .table-td-expand-row {
           background: rgba(0, 0, 0, 0.02);
+        }
+        .table-td-selection {
+          padding-left: 8px;
+          padding-right: 8px;
+          text-align: center;
+          .table-checkbox {
+            height: 22px;
+            vertical-align: top;
+            display: inline-flex;
+            align-items: center;
+          }
         }
       }
     }
