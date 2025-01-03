@@ -103,7 +103,12 @@ function onWaveOptionEnd(value: string | number) {
 }
 </script>
 <template>
-  <div v-if="optionsAmount" class="m-checkbox" :class="{ 'checkbox-vertical': vertical }" :style="`--checkbox-gap: ${gapValue};`">
+  <div
+    v-if="optionsAmount"
+    class="m-checkbox"
+    :class="{ 'checkbox-vertical': vertical }"
+    :style="`--checkbox-gap: ${gapValue};`"
+  >
     <div
       class="checkbox-wrap"
       :class="{ 'checkbox-disabled': checkDisabled(option.disabled) }"

@@ -6,8 +6,9 @@
 
 ## 2.0.5 <Tag color="volcano" size="small">soon</Tag>
 
-- 优化并更新 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件点击动画效果
-- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件功能优化
+- 优化并更新 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件点击动画效果及代码
+- 优化并更新 [单选框 Radio](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html) 组件代码
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码及功能优化；`scroll` 属性新增 `initialScrollPositionOnChange` 类型，用于设置当分页、排序变化后是否滚动到表格初始位置；新增 `rowSelection` 属性，用于支持设置列表项选择，更多配置项请参考 [Selection Type](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html#selection-type)
 - 组件库及文档代码优化
 
 ## 2.0.4 <Tag color="volcano" size="small">2024-12-30</Tag>

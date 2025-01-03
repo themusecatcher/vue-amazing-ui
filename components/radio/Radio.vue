@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
 const radioChecked = ref<boolean>(false)
 const optionsCheckedValue = ref<string | number | boolean>()
 const wave = ref<boolean>(false)
-  const slotsExist = useSlotsExist(['default'])
+const slotsExist = useSlotsExist(['default'])
 const emits = defineEmits(['update:checked', 'update:value', 'change'])
 const optionsAmount = computed(() => {
   // 选项总数
@@ -146,7 +146,12 @@ function onWaveEnd() {
     </template>
   </div>
   <template v-else>
-    <div v-if="!button" class="radio-wrap" :class="{ 'radio-disabled': disabled }" @click="disabled ? () => false : onChecked()">
+    <div
+      v-if="!button"
+      class="radio-wrap"
+      :class="{ 'radio-disabled': disabled }"
+      @click="disabled ? () => false : onChecked()"
+    >
       <span class="radio-handle" :class="{ 'radio-checked': radioChecked }">
         <span
           v-if="!disabled"

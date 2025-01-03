@@ -2881,6 +2881,7 @@ sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](
 sticky | 是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定 | boolean | false
 showPagination | 是否显示分页 | boolean | true
 pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html#pagination)，用于配置分页功能 | object | {}
+rowSelection | 列表项是否可选择 | [Selection](#selection-type) | undefined
 scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [ScrollOption](#scrolloption-type) &#124; boolean | undefined
 scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar)，用于配置表格滚动条 | object | {}
 tableLayout | 表格布局方式，设为 `fixed` 表示内容不会影响列的布局，参考 [table-layout](https://developer.mozilla.org/zh-CN/docs/Web/CSS/table-layout) 属性，固定表头/列或使用了 `column.ellipsis` 时，默认值为 `fixed` | 'auto' &#124; 'fixed' | undefined
@@ -2920,6 +2921,21 @@ customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Co
 
 名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
+x? | 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，`true` 和 `'max-content'` | string &#124; number &#124; true | undefined
+y? | 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值 | string &#124; number | undefined
+
+### Selection Type
+
+名称 | 说明 | 类型 | 默认值
+:-- | :-- | :-- | :--
+columnTitle? | 自定义复选框标题 | string &#124; VNode | undefined
+columnWidth? | 列表复选框宽度 | string &#124; number | undefined
+
+### ScrollOption Type
+
+名称 | 说明 | 类型 | 默认值
+:-- | :-- | :-- | :--
+initialScrollPositionOnChange? | 当分页、排序变化后是否滚动到表格初始位置 | boolean | undefined
 x? | 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，`true` 和 `'max-content'` | string &#124; number &#124; true | undefined
 y? | 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值 | string &#124; number | undefined
 

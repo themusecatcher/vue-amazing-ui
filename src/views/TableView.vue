@@ -420,8 +420,7 @@ const columnsSort = reactive<TableColumn[]>([
 const columnsSelection = reactive<TableColumn[]>([
   {
     title: 'Name',
-    dataIndex: 'name',
-    fixed: 'left'
+    dataIndex: 'name'
   },
   {
     title: 'Age',
@@ -824,9 +823,41 @@ function onSortChange(column: any, currentDataSource: any[]) {
   console.log('sort currentDataSource', currentDataSource)
 }
 const rowSelection = {
-  // fixed: false,
+  fixed: true,
+  selections: false,
+  // columnTitle: '复选框',
+  hideDefaultSelections: true,
+  // hideSelectAll: true,
+  columnWidth: 100,
+  // type: 'radio',
   onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
+    console.log('onChange selectedRowKeys', selectedRowKeys)
+    console.log('selectedRows', selectedRows)
+  },
+  onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
+    console.log('onSelect record', record)
+    console.log('selected', selected)
+    console.log('selectedRows', selectedRows)
+    console.log('selectedRowKeys', selectedRowKeys)
+  },
+  onSelectAll: (
+    selected: boolean,
+    selectedRows: any[],
+    changeRows: any[],
+    selectedRowKeys: string[],
+    changeRowKeys: string[]
+  ) => {
+    console.log('onSelectAll selected', selected)
+    console.log('selectedRows', selectedRows)
+    console.log('changeRows', changeRows)
+    console.log('selectedRowKeys', selectedRowKeys)
+    console.log('changeRowKeys', changeRowKeys)
+  },
+  onSelectInvert: (selectedRows: any[]) => {
+    console.log('onSelectInvert selected', selectedRows)
+  },
+  onSelectNone: () => {
+    console.log('清空选择')
   },
   getCheckboxProps: (record: any) => ({
     disabled: record.name === 'Disabled User', // Column configuration not to be checked
@@ -1137,9 +1168,8 @@ const rowSelection = {
     </Flex> -->
     <h2 class="mt30 mb10">可选择</h2>
     <a-table
-      :scroll="{ x: 1500 }"
+      :scroll="{ x: 1500, y: 300 }"
       :row-selection="rowSelection"
-      showExpandColumn
       :columns="columnsSelection"
       :data-source="dataSourceSelection"
     >
@@ -1147,18 +1177,11 @@ const rowSelection = {
         <template v-if="column.dataIndex === 'name'">
           <a>{{ text }}</a>
         </template>
-      </template>
-      <template #expandedRowRender="{ record }">
-        {{ record.description }}
-      </template>
-      <template #expandColumnTitle>
-        <span style="color: #d4380d">More</span>
       </template>
     </a-table>
     <Table
-      :scroll="{ x: 1500 }"
+      :scroll="{ x: 1500, y: 300 }"
       :row-selection="rowSelection"
-      showExpandColumn
       :columns="columnsSelection"
       :data-source="dataSourceSelection"
     >
@@ -1166,12 +1189,6 @@ const rowSelection = {
         <template v-if="column.dataIndex === 'name'">
           <a>{{ text }}</a>
         </template>
-      </template>
-      <template #expandedRowRender="{ record }">
-        {{ record.description }}
-      </template>
-      <template #expandColumnTitle>
-        <span style="color: #d4380d">More</span>
       </template>
     </Table>
   </div>

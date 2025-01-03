@@ -10,7 +10,7 @@
 - 单独使用可以表示两种状态之间的切换，和 `Switch` 类似
 
 <script setup lang="ts">
-import { ref, watch, watchEffect, computed } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 const options = ref([
   {
     label: '北京市',
@@ -75,25 +75,27 @@ watchEffect(() => {
 function onChange(value: boolean | (string | number)[]) {
   console.log('change', value)
 }
-const checkAll = ref(false) // 全选v-model
-const indeterminate = computed(() => {
-  // 全选样式控制
-  if (selectedOptions.value.length > 0 && selectedOptions.value.length < options.value.length) {
-    return true
-  } else {
-    return false
+const checkAll = ref(false) // 是否全选
+const indeterminate = ref(false) // 全选样式控制
+watch(
+  selectedOptions,
+  (to) => {
+    indeterminate.value = 0 < to.length && to.length < options.value.length
+    checkAll.value = to.length === options.value.length
+  },
+  {
+    immediate: true
   }
-})
-watch(checkAll, (to) => {
-  console.log('checkAll', to)
-  if (to) {
+)
+const horizontalGap = ref(16)
+const verticalGap = ref(8)
+function onCheckAllChange(checked: boolean) {
+  if (checked) {
     selectedOptions.value = options.value.map((option) => option.value)
   } else {
     selectedOptions.value = []
   }
-})
-const horizontalGap = ref(16)
-const verticalGap = ref(8)
+}
 </script>
 
 ## 基本使用
@@ -265,7 +267,7 @@ watchEffect(() => {
 ## 全选
 
 <Space vertical>
-  <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll">Check All</Checkbox>
+  <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" @change="onCheckAllChange">Check All</Checkbox>
   <Checkbox :options="options" v-model:value="selectedOptions" />
 </Space>
 
@@ -273,7 +275,7 @@ watchEffect(() => {
 
 ```vue
 <script setup lang="ts">
-import { ref, watch, watchEffect, computed } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 const options = ref([
   {
     label: '北京市',
@@ -304,26 +306,29 @@ const selectedOptions = ref([2])
 watchEffect(() => {
   console.log('selectedOptions', selectedOptions.value)
 })
-const checkAll = ref(false)
-const indeterminate = computed(() => { // 全选样式控制
-  if (selectedOptions.value.length > 0 && selectedOptions.value.length < options.value.length) {
-    return true
-  } else {
-    return false
+const checkAll = ref(false) // 是否全选
+const indeterminate = ref(false) // 全选样式控制
+watch(
+  selectedOptions,
+  (to) => {
+    indeterminate.value = 0 < to.length && to.length < options.value.length
+    checkAll.value = to.length === options.value.length
+  },
+  {
+    immediate: true
   }
-})
-watch(checkAll, (to) => {
-  console.log('checkAll', to)
-  if (to) {
-    selectedOptions.value = options.value.map(option => option.value)
+)
+function onCheckAllChange(checked: boolean) {
+  if (checked) {
+    selectedOptions.value = options.value.map((option) => option.value)
   } else {
     selectedOptions.value = []
   }
-})
+}
 </script>
 <template>
   <Space vertical>
-    <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll">Check All</Checkbox>
+    <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" @change="onCheckAllChange">Check All</Checkbox>
     <Checkbox :options="options" v-model:value="selectedOptions" />
   </Space>
 </template>
