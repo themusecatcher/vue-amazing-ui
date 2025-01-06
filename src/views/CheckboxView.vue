@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, watchEffect } from 'vue'
-import type { Chec }
-const options = ref([
+import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+const options = ref<CheckboxOption[]>([
   {
     label: '北京市',
     value: 1
@@ -27,7 +27,7 @@ const options = ref([
     value: 6
   }
 ])
-const optionsDisabled = ref([
+const optionsDisabled = ref<CheckboxOption[]>([
   {
     label: '北京市',
     value: 1
@@ -54,8 +54,8 @@ const optionsDisabled = ref([
     value: 6
   }
 ])
-const checked = ref(false)
-const selectedOptions = ref([2])
+const checked = ref<CheckboxProps['checked']>(false)
+const selectedOptions = ref<CheckboxProps['value']>([2])
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -65,11 +65,11 @@ watchEffect(() => {
 function onChange(value: boolean | (string | number)[]) {
   console.log('change', value)
 }
-const checkAll = ref(false) // 是否全选
-const indeterminate = ref(false) // 全选样式控制
+const checkAll = ref<CheckboxProps['checked']>(false) // 是否全选
+const indeterminate = ref<CheckboxProps['indeterminate']>(false) // 全选样式控制
 watch(
   selectedOptions,
-  (to) => {
+  (to: any) => {
     indeterminate.value = 0 < to.length && to.length < options.value.length
     checkAll.value = to.length === options.value.length
   },

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 const size = ref('default')
-const options = ref([
+const options = [
   {
     label: 'default',
     value: 'default'
@@ -14,7 +14,7 @@ const options = ref([
     label: 'small',
     value: 'small'
   }
-])
+]
 const show = ref(true)
 const onClick = () => {
   show.value = false

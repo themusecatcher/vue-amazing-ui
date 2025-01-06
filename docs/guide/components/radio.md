@@ -11,7 +11,8 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -37,7 +38,7 @@ const options = ref([
     value: 6
   }
 ])
-const optionsDisabled = ref([
+const optionsDisabled = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -64,8 +65,8 @@ const optionsDisabled = ref([
     value: 6
   }
 ])
-const checked = ref(false)
-const value = ref(2)
+const checked = ref<RadioProps['checked']>(false)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -91,7 +92,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const buttonSize = ref('middle')
+const buttonSize = ref<RadioProps['buttonSize']>('middle')
 </script>
 
 ## 基本使用
@@ -103,7 +104,8 @@ const buttonSize = ref('middle')
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const checked = ref(false)
+import type { RadioProps } from 'vue-amazing-ui'
+const checked = ref<RadioProps['checked']>(false)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -127,7 +129,8 @@ function onChange(value: string | number | boolean) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -153,7 +156,7 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref(2)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -180,7 +183,8 @@ function onChange(value: string | number | boolean) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -206,8 +210,8 @@ const options = ref([
     value: 6
   }
 ])
-const checked = ref(false)
-const value = ref(2)
+const checked = ref<RadioProps['checked']>(false)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -237,7 +241,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -263,8 +268,8 @@ const options = ref([
     value: 6
   }
 ])
-const checked = ref(false)
-const value = ref(2)
+const checked = ref<RadioProps['checked']>(false)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -295,7 +300,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -321,8 +327,8 @@ const options = ref([
     value: 6
   }
 ])
-const checked = ref(false)
-const value = ref(2)
+const checked = ref<RadioProps['checked']>(false)
+const value = ref<RadioProps['value']>(2)
 </script>
 <template>
   <Space vertical>
@@ -348,7 +354,8 @@ const value = ref(2)
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const optionsDisabled = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const optionsDisabled = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -375,7 +382,7 @@ const optionsDisabled = ref([
     value: 6
   }
 ])
-const value = ref(2)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -400,7 +407,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -426,7 +434,7 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref(2)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -452,7 +460,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -478,7 +487,7 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref(2)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -514,7 +523,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -540,7 +550,7 @@ const options = ref([
     value: 6
   }
 ])
-const value = ref(2)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -578,7 +588,8 @@ const verticalGap = ref(8)
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -604,8 +615,8 @@ const options = ref([
     value: 6
   }
 ])
-const checked = ref(false)
-const value = ref(2)
+const checked = ref<RadioProps['checked']>(false)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -626,7 +637,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const buttonSize = ref('middle')
+const buttonSize = ref<RadioProps['buttonSize']>('middle')
 </script>
 <template>
   <Space vertical>

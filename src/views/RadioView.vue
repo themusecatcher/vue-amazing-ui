@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { RadioProps, RadioOption } from 'vue-amazing-ui'
+const options = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -26,7 +27,7 @@ const options = ref([
     value: 6
   }
 ])
-const optionsDisabled = ref([
+const optionsDisabled = ref<RadioOption[]>([
   {
     label: '北京市',
     value: 1
@@ -53,8 +54,8 @@ const optionsDisabled = ref([
     value: 6
   }
 ])
-const checked = ref(false)
-const value = ref(2)
+const checked = ref<RadioProps['checked']>(false)
+const value = ref<RadioProps['value']>(2)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -80,7 +81,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const buttonSize = ref('middle')
+const buttonSize = ref<RadioProps['buttonSize']>('middle')
 </script>
 <template>
   <div>
