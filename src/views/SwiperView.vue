@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import pkg from '/package.json'
 import { ref, shallowReactive, onBeforeMount } from 'vue'
-const images = ref<any[]>([])
+import type { SwiperImage } from 'vue-amazing-ui'
+const images = ref<SwiperImage[]>([])
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
-      title: `image-${i}`,
+      name: `image-${i}`,
       link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`,
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
