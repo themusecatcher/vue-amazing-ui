@@ -7,7 +7,8 @@ import {
   StarOutlined,
   StarFilled
 } from '@ant-design/icons-vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem, RadioOption } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -27,7 +28,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const disabledCollapseItems = ref([
+const disabledCollapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -48,7 +49,7 @@ const disabledCollapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const nestCollapseItems = ref([
+const nestCollapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -56,7 +57,7 @@ const nestCollapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const customStyleItems = ref([
+const customStyleItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -84,11 +85,11 @@ const customStyleItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const customArrowItems = ref([
+const customArrowItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
-    arrow: () => h(ArrowRightOutlined),
+    arrow: h(ArrowRightOutlined),
     arrowStyle: {
       color: '#1677ff'
     },
@@ -108,7 +109,7 @@ const customArrowItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const extraCollapseItems = ref([
+const extraCollapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -129,7 +130,7 @@ const extraCollapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const positionOptions = ref([
+const positionOptions = ref<RadioOption[]>([
   {
     label: 'left',
     value: 'left'
@@ -139,10 +140,10 @@ const positionOptions = ref([
     value: 'right'
   }
 ])
-const activeKey = ref(['1'])
-const nestActiveKey = ref(['1'])
-const arrowPlacement = ref('right')
-const key = ref('1')
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const nestActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const arrowPlacement = ref<CollapseProps['arrowPlacement']>('right')
+const key = ref<CollapseProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
