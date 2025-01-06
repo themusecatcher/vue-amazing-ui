@@ -2,16 +2,16 @@
 import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const loading = ref(false)
-const tableLoading = ref(false)
-const customStyleBordered = ref(true)
-const sizeBordered = ref(true)
-const alignBordered = ref(true)
-const stripedBordered = ref(true)
-const headerFooterbordered = ref(true)
-const groupBordered = ref(true)
-const sortBordered = ref(true)
-const selectionBordered = ref(true)
+const loading = ref<boolean>(false)
+const tableLoading = ref<boolean>(false)
+const customStyleBordered = ref<boolean>(true)
+const sizeBordered = ref<boolean>(true)
+const alignBordered = ref<boolean>(true)
+const stripedBordered = ref<boolean>(true)
+const headerFooterbordered = ref<boolean>(true)
+const groupBordered = ref<boolean>(true)
+const sortBordered = ref<boolean>(true)
+const selectionBordered = ref<boolean>(true)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
