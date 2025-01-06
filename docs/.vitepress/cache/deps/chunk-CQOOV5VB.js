@@ -21,12 +21,13 @@ import {
   shallowRef,
   toRef,
   toRefs,
+  toValue,
   unref,
   watch,
   watchEffect
 } from "./chunk-X54IR6VG.js";
 
-// node_modules/.pnpm/@vueuse+shared@12.2.0_typescript@5.7.2/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@12.3.0_typescript@5.7.2/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -219,10 +220,6 @@ function makeDestructurable(obj, arr) {
     return Object.assign([...arr], obj);
   }
 }
-function toValue(r) {
-  return typeof r === "function" ? r() : unref(r);
-}
-var resolveUnref = toValue;
 function reactify(fn, options) {
   const unrefFn = (options == null ? void 0 : options.computedGetter) === false ? unref : toValue;
   return function(...args) {
@@ -516,6 +513,9 @@ function objectEntries(obj) {
 function getLifeCycleTarget(target) {
   return target || getCurrentInstance();
 }
+function toArray(value) {
+  return Array.isArray(value) ? value : [value];
+}
 function toRef2(...args) {
   if (args.length !== 1)
     return toRef(...args);
@@ -729,8 +729,7 @@ function syncRefs(source, targets, options = {}) {
     deep = false,
     immediate = true
   } = options;
-  if (!Array.isArray(targets))
-    targets = [targets];
+  targets = toArray(targets);
   return watch(
     source,
     (newValue) => targets.forEach((target) => target.value = newValue),
@@ -767,6 +766,8 @@ function toRefs2(objectRef, options = {}) {
   }
   return result;
 }
+var toValue2 = toValue;
+var resolveUnref = toValue;
 function tryOnBeforeMount(fn, sync = true, target) {
   const instance = getLifeCycleTarget(target);
   if (instance)
@@ -1274,7 +1275,9 @@ function useToNumber(value, options = {}) {
   } = options;
   return computed(() => {
     let resolved = toValue(value);
-    if (typeof resolved === "string")
+    if (typeof method === "function")
+      resolved = method(resolved);
+    else if (typeof resolved === "string")
       resolved = Number[method](resolved, radix);
     if (nanToZero && Number.isNaN(resolved))
       resolved = 0;
@@ -1546,8 +1549,6 @@ export {
   get,
   isDefined,
   makeDestructurable,
-  toValue,
-  resolveUnref,
   reactify,
   reactifyObject,
   toReactive,
@@ -1584,6 +1585,7 @@ export {
   objectOmit,
   objectEntries,
   getLifeCycleTarget,
+  toArray,
   toRef2 as toRef,
   resolveRef,
   reactivePick,
@@ -1601,6 +1603,8 @@ export {
   syncRef,
   syncRefs,
   toRefs2 as toRefs,
+  toValue2 as toValue,
+  resolveUnref,
   tryOnBeforeMount,
   tryOnBeforeUnmount,
   tryOnMounted,
@@ -1641,4 +1645,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-26OFZVLI.js.map
+//# sourceMappingURL=chunk-CQOOV5VB.js.map

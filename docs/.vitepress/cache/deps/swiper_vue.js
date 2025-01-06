@@ -31,10 +31,10 @@ import {
   now,
   setCSSProperty,
   showWarning
-} from "./chunk-HTQMM6PW.js";
+} from "./chunk-BWYKSETY.js";
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/swiper@11.1.15/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@11.2.0/node_modules/swiper/shared/swiper-core.mjs
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -850,9 +850,9 @@ function updateSlidesClasses() {
     }
   } else {
     if (gridEnabled) {
-      activeSlide = slides.filter((slideEl) => slideEl.column === activeIndex)[0];
-      nextSlide = slides.filter((slideEl) => slideEl.column === activeIndex + 1)[0];
-      prevSlide = slides.filter((slideEl) => slideEl.column === activeIndex - 1)[0];
+      activeSlide = slides.find((slideEl) => slideEl.column === activeIndex);
+      nextSlide = slides.find((slideEl) => slideEl.column === activeIndex + 1);
+      prevSlide = slides.find((slideEl) => slideEl.column === activeIndex - 1);
     } else {
       activeSlide = slides[activeIndex];
     }
@@ -1008,7 +1008,7 @@ function updateActiveIndex(newActiveIndex) {
   if (swiper.virtual && params.virtual.enabled && params.loop) {
     realIndex = getVirtualRealIndex(activeIndex);
   } else if (gridEnabled) {
-    const firstSlideInColumn = swiper.slides.filter((slideEl) => slideEl.column === activeIndex)[0];
+    const firstSlideInColumn = swiper.slides.find((slideEl) => slideEl.column === activeIndex);
     let activeSlideIndex = parseInt(firstSlideInColumn.getAttribute("data-swiper-slide-index"), 10);
     if (Number.isNaN(activeSlideIndex)) {
       activeSlideIndex = Math.max(swiper.slides.indexOf(firstSlideInColumn), 0);
@@ -1506,7 +1506,7 @@ function slideToLoop(index, speed, runCallbacks, internal) {
       let targetSlideIndex;
       if (gridEnabled) {
         const slideIndex = newIndex * swiper.params.grid.rows;
-        targetSlideIndex = swiper.slides.filter((slideEl) => slideEl.getAttribute("data-swiper-slide-index") * 1 === slideIndex)[0].column;
+        targetSlideIndex = swiper.slides.find((slideEl) => slideEl.getAttribute("data-swiper-slide-index") * 1 === slideIndex).column;
       } else {
         targetSlideIndex = swiper.getSlideIndexByData(newIndex);
       }
@@ -1541,7 +1541,7 @@ function slideToLoop(index, speed, runCallbacks, internal) {
       }
       if (gridEnabled) {
         const slideIndex = newIndex * swiper.params.grid.rows;
-        newIndex = swiper.slides.filter((slideEl) => slideEl.getAttribute("data-swiper-slide-index") * 1 === slideIndex)[0].column;
+        newIndex = swiper.slides.find((slideEl) => slideEl.getAttribute("data-swiper-slide-index") * 1 === slideIndex).column;
       } else {
         newIndex = swiper.getSlideIndexByData(newIndex);
       }
@@ -1861,7 +1861,7 @@ function loopFix(_temp) {
   const appendSlidesIndexes = [];
   let activeIndex = swiper.activeIndex;
   if (typeof activeSlideIndex === "undefined") {
-    activeSlideIndex = swiper.getSlideIndex(slides.filter((el) => el.classList.contains(params.slideActiveClass))[0]);
+    activeSlideIndex = swiper.getSlideIndex(slides.find((el) => el.classList.contains(params.slideActiveClass)));
   } else {
     activeIndex = activeSlideIndex;
   }
@@ -2200,7 +2200,7 @@ function onTouchMove(event) {
   }
   let targetTouch;
   if (e.type === "touchmove") {
-    targetTouch = [...e.changedTouches].filter((t) => t.identifier === data.touchId)[0];
+    targetTouch = [...e.changedTouches].find((t) => t.identifier === data.touchId);
     if (!targetTouch || targetTouch.identifier !== data.touchId) return;
   } else {
     targetTouch = e;
@@ -2439,7 +2439,7 @@ function onTouchEnd(event) {
     if (e.pointerId !== data.pointerId) return;
     targetTouch = e;
   } else {
-    targetTouch = [...e.changedTouches].filter((t) => t.identifier === data.touchId)[0];
+    targetTouch = [...e.changedTouches].find((t) => t.identifier === data.touchId);
     if (!targetTouch || targetTouch.identifier !== data.touchId) return;
   }
   if (["pointercancel", "pointerout", "pointerleave", "contextmenu"].includes(e.type)) {
@@ -2780,7 +2780,10 @@ function setBreakpoint() {
   } = swiper;
   const breakpoints2 = params.breakpoints;
   if (!breakpoints2 || breakpoints2 && Object.keys(breakpoints2).length === 0) return;
-  const breakpoint = swiper.getBreakpoint(breakpoints2, swiper.params.breakpointsBase, swiper.el);
+  const document2 = getDocument();
+  const breakpointsBase = params.breakpointsBase === "window" || !params.breakpointsBase ? params.breakpointsBase : "container";
+  const breakpointContainer = ["window", "container"].includes(params.breakpointsBase) || !params.breakpointsBase ? swiper.el : document2.querySelector(params.breakpointsBase);
+  const breakpoint = swiper.getBreakpoint(breakpoints2, breakpointsBase, breakpointContainer);
   if (!breakpoint || swiper.currentBreakpoint === breakpoint) return;
   const breakpointOnlyParams = breakpoint in breakpoints2 ? breakpoints2[breakpoint] : void 0;
   const breakpointParams = breakpointOnlyParams || swiper.originalParams;
@@ -3323,7 +3326,7 @@ var Swiper = class _Swiper {
     return elementIndex(slideEl) - firstSlideIndex;
   }
   getSlideIndexByData(index) {
-    return this.getSlideIndex(this.slides.filter((slideEl) => slideEl.getAttribute("data-swiper-slide-index") * 1 === index)[0]);
+    return this.getSlideIndex(this.slides.find((slideEl) => slideEl.getAttribute("data-swiper-slide-index") * 1 === index));
   }
   recalcSlides() {
     const swiper = this;
@@ -3709,7 +3712,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 });
 Swiper.use([Resize, Observer]);
 
-// node_modules/.pnpm/swiper@11.1.15/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@11.2.0/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -4054,7 +4057,7 @@ function updateSwiper(_ref) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@11.1.15/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@11.2.0/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
     obj = {};
@@ -4178,7 +4181,7 @@ var updateOnVirtualData = (swiper) => {
   }
 };
 
-// node_modules/.pnpm/swiper@11.1.15/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@11.2.0/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots, slidesRef, oldSlidesRef) {
   if (originalSlots === void 0) {
     originalSlots = {};
