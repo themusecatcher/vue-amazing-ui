@@ -13,11 +13,11 @@ import {
   InstagramOutlined
 } from '@ant-design/icons-vue'
 import type { TagItem } from 'vue-amazing-ui'
-const strTags = ref(['天空', '大海', '湖泊'])
+const strTags = ref<string[]>(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
 })
-const objTags = ref([
+const objTags = ref<TagItem[]>([
   {
     label: '天空',
     color: 'processing'

@@ -24,11 +24,11 @@ import {
   InstagramOutlined
 } from '@ant-design/icons-vue'
 import type { TagItem } from 'vue-amazing-ui'
-const strTags = ref(['天空', '大海', '湖泊'])
+const strTags = ref<string[]>(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
 })
-const objTags = ref([
+const objTags = ref<TagItem[]>([
   {
     label: '天空',
     color: 'processing'
@@ -350,7 +350,7 @@ import {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { TagItem } from 'vue-amazing-ui'
-const strTags = ref(['天空', '大海', '湖泊'])
+const strTags = ref<string[]>(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
 })
@@ -394,7 +394,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 import { ref, watchEffect } from 'vue'
 import { CheckCircleOutlined } from '@ant-design/icons-vue'
 import type { TagItem } from 'vue-amazing-ui'
-const objTags = ref([
+const objTags = ref<TagItem[]>([
   {
     label: '天空',
     color: 'processing'
@@ -461,7 +461,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { TagItem } from 'vue-amazing-ui'
-const strTags = ref(['天空', '大海', '湖泊'])
+const strTags = ref<string[]>(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
 })
@@ -512,7 +512,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { TagItem } from 'vue-amazing-ui'
-const strTags = ref(['天空', '大海', '湖泊'])
+const strTags = ref<string[]>(['天空', '大海', '湖泊'])
 watchEffect(() => {
   console.log('strTags', strTags.value)
 })
