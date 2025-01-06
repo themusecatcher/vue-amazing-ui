@@ -12,23 +12,24 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
-const options = reactive(['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'])
-const optionsDisabled = reactive([
+import type { SegmentedProps, SegmentedOption } from 'vue-amazing-ui'
+const options = reactive<string[]>(['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'])
+const optionsDisabled = reactive<(string | SegmentedOption)[]>([
   'Daily',
   { label: 'Weekly', value: 'Weekly', disabled: true },
   'Monthly',
   { label: 'Quarterly', value: 'Quarterly', disabled: true },
   'Yearly'
 ])
-const value = ref(options[0])
-const value2 = ref('Daily')
+const value = ref<SegmentedProps['value']>(options[0])
+const value2 = ref<SegmentedProps['value']>('Daily')
 const onChange = (value: string | number) => {
   console.log('change', value)
 }
-const dynamicOptions = reactive(['Daily', 'Weekly', 'Monthly'])
-const dynamicValue = ref(dynamicOptions[0])
-const loading = ref(false)
-const disabled = ref(false)
+const dynamicOptions = reactive<string[]>(['Daily', 'Weekly', 'Monthly'])
+const dynamicValue = ref<SegmentedProps['value']>(dynamicOptions[0])
+const loading = ref<boolean>(false)
+const disabled = ref<boolean>(false)
 const loadMore = () => {
   loading.value = true
   setTimeout(() => {
@@ -37,7 +38,7 @@ const loadMore = () => {
     disabled.value = true
   }, 1000)
 }
-const customOptions1 = reactive([
+const customOptions1 = reactive<SegmentedOption[]>([
   {
     label: 'user1',
     value: 'user1',
@@ -63,8 +64,8 @@ const customOptions1 = reactive([
     }
   }
 ])
-const customValue = ref(customOptions1[0].value)
-const customOptions2 = reactive([
+const customValue = ref<SegmentedProps['value']>(customOptions1[0].value)
+const customOptions2 = reactive<SegmentedOption[]>([
   {
     value: 'spring',
     payload: {
@@ -94,7 +95,7 @@ const customOptions2 = reactive([
     }
   }
 ])
-const customValue2 = ref(customOptions2[0].value)
+const customValue2 = ref<SegmentedProps['value']>(customOptions2[0].value)
 </script>
 
 ## 基本使用
@@ -106,8 +107,9 @@ const customValue2 = ref(customOptions2[0].value)
 ```vue
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-const options = reactive(['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'])
-const value = ref(options[0])
+import type { SegmentedProps, SegmentedOption } from 'vue-amazing-ui'
+const options = reactive<string[]>(['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'])
+const value = ref<>(options[0])
 const onChange = (value: string | number) => {
   console.log('change', value)
 }
