@@ -12,7 +12,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ClockCircleOutlined } from '@ant-design/icons-vue'
-const timelineItems = ref([
+import type { TimelineItem } from 'vue-amazing-ui'
+const timelineItems = ref<TimelineItem[]>([
   {
     desc: 'Create a services site 2023-05-24',
     color: 'green'
@@ -44,7 +45,8 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const timelineItems = ref([
+import type { TimelineItem } from 'vue-amazing-ui'
+const timelineItems = ref<TimelineItem[]>([
   {
     desc: 'Create a services site 2023-05-24',
     color: 'green'
@@ -106,7 +108,8 @@ const timelineItems = ref([
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ClockCircleOutlined } from '@ant-design/icons-vue'
-const timelineItems = ref([
+import type { TimelineItem } from 'vue-amazing-ui'
+const timelineItems = ref<TimelineItem[]>([
   {
     desc: 'Create a services site 2023-05-24',
     color: 'green'
@@ -166,7 +169,8 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const timelineItems = ref([
+import type { TimelineItem } from 'vue-amazing-ui'
+const timelineItems = ref<TimelineItem[]>([
   {
     desc: 'Create a services site 2023-05-24',
     color: 'green'
@@ -204,7 +208,8 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const timelineItems = ref([
+import type { TimelineItem } from 'vue-amazing-ui'
+const timelineItems = ref<TimelineItem[]>([
   {
     desc: 'Create a services site 2023-05-24',
     color: 'green'
@@ -250,7 +255,8 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const timelineItems = ref([
+import type { TimelineItem } from 'vue-amazing-ui'
+const timelineItems = ref<TimelineItem[]>([
   {
     desc: 'Create a services site 2023-05-24',
     color: 'green'
@@ -298,7 +304,8 @@ const timelineItems = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const timelineItems = ref([
+import type { TimelineItem } from 'vue-amazing-ui'
+const timelineItems = ref<TimelineItem[]>([
   {
     desc: 'Create a services site 2023-05-24',
     color: 'green'
