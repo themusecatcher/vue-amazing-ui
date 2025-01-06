@@ -18,11 +18,12 @@
 <script setup lang="ts">
 import { ref, shallowReactive, onBeforeMount } from 'vue'
 import pkg from '../../../package.json'
-const images = ref<any[]>([])
+import type { SwiperImage } from 'vue-amazing-ui'
+const images = ref<SwiperImage[]>([])
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
-      title: `image-${i}`,
+      name: `image-${i}`,
       link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`,
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
@@ -40,53 +41,53 @@ const creativeEffects = [
   {
     prev: {
       shadow: true,
-      translate: [0, 0, -400],
+      translate: [0, 0, -400]
     },
     next: {
-      translate: ['100%', 0, 0],
+      translate: ['100%', 0, 0]
     }
   },
   {
     prev: {
       shadow: true,
-      translate: ['-120%', 0, -500],
+      translate: ['-120%', 0, -500]
     },
     next: {
       shadow: true,
-      translate: ['120%', 0, -500],
+      translate: ['120%', 0, -500]
     }
   },
   {
     prev: {
       shadow: true,
-      translate: ['-20%', 0, -1],
+      translate: ['-20%', 0, -1]
     },
     next: {
-      translate: ['100%', 0, 0],
+      translate: ['100%', 0, 0]
     }
   },
   {
     prev: {
       shadow: true,
       translate: [0, 0, -800],
-      rotate: [180, 0, 0],
+      rotate: [180, 0, 0]
     },
     next: {
       shadow: true,
       translate: [0, 0, -800],
-      rotate: [-180, 0, 0],
+      rotate: [-180, 0, 0]
     }
   },
   {
     prev: {
       shadow: true,
       translate: ['-125%', 0, -800],
-      rotate: [0, 0, -90],
+      rotate: [0, 0, -90]
     },
     next: {
       shadow: true,
       translate: ['125%', 0, -800],
-      rotate: [0, 0, 90],
+      rotate: [0, 0, 90]
     }
   },
   {
@@ -94,12 +95,12 @@ const creativeEffects = [
       shadow: true,
       origin: 'left center',
       translate: ['-5%', 0, -200],
-      rotate: [0, 100, 0],
+      rotate: [0, 100, 0]
     },
     next: {
       origin: 'right center',
       translate: ['5%', 0, -200],
-      rotate: [0, -100, 0],
+      rotate: [0, -100, 0]
     }
   }
 ]
@@ -136,11 +137,12 @@ function onNext() {
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-const images = ref<any[]>([])
+import type { SwiperImage } from 'vue-amazing-ui'
+const images = ref<SwiperImage[]>([])
 function loadImages () {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
-      title: `image-${i}`,
+      name: `image-${i}`,
       link: '',
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
@@ -190,11 +192,12 @@ function onChange (swiper: any) {
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-const images = ref<any[]>([])
+import type { SwiperImage } from 'vue-amazing-ui'
+const images = ref<SwiperImage[]>([])
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
-      title: `image-${i}`,
+      name: `image-${i}`,
       link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`,
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
@@ -255,11 +258,12 @@ const effects = ['slide', 'fade', 'cube', 'flip', 'coverflow', 'cards']
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-const images = ref<any[]>([])
+import type { SwiperImage } from 'vue-amazing-ui'
+const images = ref<SwiperImage[]>([])
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
-      title: `image-${i}`,
+      name: `image-${i}`,
       link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`,
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
@@ -372,18 +376,20 @@ const creativeEffects = [
   :height="200"
   :slides-per-view="3"
   :space-between="20"
-  :speed="2500" />
+  :speed="2500"
+/>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-const images = ref<any[]>([])
+import type { SwiperImage } from 'vue-amazing-ui'
+const images = ref<SwiperImage[]>([])
 function loadImages () {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
-      title: `image-${i}`,
+      name: `image-${i}`,
       link: '',
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
@@ -400,7 +406,8 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
     :height="200"
     :slides-per-view="3"
     :space-between="20"
-    :speed="2500" />
+    :speed="2500"
+  />
 </template>
 ```
 
@@ -434,11 +441,12 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 ```vue
 <script setup lang="ts">
 import { ref, shallowReactive, onBeforeMount } from 'vue'
-const images = ref<any[]>([])
+import type { SwiperImage } from 'vue-amazing-ui'
+const images = ref<SwiperImage[]>([])
 function loadImages () {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
-      title: `image-${i}`,
+      name: `image-${i}`,
       link: '',
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
