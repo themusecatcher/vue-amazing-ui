@@ -418,9 +418,6 @@ export const routes = [
     component: () => import('@/views/guide/NotFound.vue')
   }
 ]
-
-const views = import.meta.glob('./views/*.vue')
-console.log('views', views)
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 使用history模式，hash模式：createWebHashHistory
   routes, // `routes: routes` 的缩写
