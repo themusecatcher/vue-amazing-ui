@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-
 const open1 = ref<boolean>(false)
 const open2 = ref<boolean>(false)
 const open3 = ref<boolean>(false)

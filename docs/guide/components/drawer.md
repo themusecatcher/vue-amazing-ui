@@ -313,9 +313,9 @@ closable | 是否显示左上角的关闭按钮 | boolean | true
 placement | 抽屉的方向 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'right'
 headerClass | 设置 `Drawer` 头部的类名 | string | undefined
 headerStyle | 设置 `Drawer` 头部的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar)，用于设置内容滚动条的样式 | object | {}
 bodyClass | 设置 `Drawer` 内容部分的类名 | string | undefined
 bodyStyle | 设置 `Drawer` 内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar)，用于设置内容滚动条的样式 | object | {}
 extra | 抽屉右上角的操作区域 | string &#124; slot | undefined
 footer | 抽屉的页脚 | string &#124; slot | undefined
 footerClass | 设置 `Drawer` 页脚的类名 | string | undefined

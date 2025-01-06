@@ -11,9 +11,9 @@ export interface Props {
   placement?: 'top' | 'right' | 'bottom' | 'left' // 抽屉的方向
   headerClass?: string // 设置 Drawer 头部的类名
   headerStyle?: CSSProperties // 设置 Drawer 头部的样式
-  scrollbarProps?: object // Scrollbar 组件属性配置，用于设置内容滚动条的样式
   bodyClass?: string // 设置 Drawer 内容部分的类名
   bodyStyle?: CSSProperties // 设置 Drawer 内容部分的样式
+  scrollbarProps?: object // Scrollbar 组件属性配置，用于设置内容滚动条的样式
   extra?: string // 抽屉右上角的操作区域 string | slot
   footer?: string // 抽屉的页脚 string | slot
   footerClass?: string // 设置 Drawer 页脚的类名
@@ -30,9 +30,9 @@ const props = withDefaults(defineProps<Props>(), {
   placement: 'right',
   headerClass: undefined,
   headerStyle: () => ({}),
-  scrollbarProps: () => ({}),
   bodyClass: undefined,
   bodyStyle: () => ({}),
+  scrollbarProps: () => ({}),
   extra: undefined,
   footer: undefined,
   footerClass: undefined,
@@ -117,14 +117,14 @@ function onClose(e: Event) {
 <template>
   <div ref="drawerRef" tabindex="-1" class="m-drawer" @keydown.esc="onClose">
     <Transition name="fade">
-      <div v-show="drawerOpen" class="m-drawer-mask" @click.self="onBlur"></div>
+      <div v-show="drawerOpen" class="drawer-mask" @click.self="onBlur"></div>
     </Transition>
     <Transition :name="`motion-${placement}`">
-      <div v-show="drawerOpen" class="m-drawer-wrap" :class="`drawer-${placement}`" :style="drawerStyle">
-        <div class="m-drawer-content">
-          <div v-if="!destroyOnClose" class="m-drawer-body-wrapper">
-            <div v-show="showHeader" class="m-drawer-header" :class="headerClass" :style="headerStyle">
-              <div class="m-header-title">
+      <div v-show="drawerOpen" class="drawer-wrap" :class="`drawer-${placement}`" :style="drawerStyle">
+        <div class="drawer-content">
+          <div v-if="!destroyOnClose" class="drawer-body-wrapper">
+            <div v-show="showHeader" class="drawer-header" :class="headerClass" :style="headerStyle">
+              <div class="header-title">
                 <svg
                   v-if="closable"
                   focusable="false"
@@ -150,17 +150,17 @@ function onClose(e: Event) {
               </div>
             </div>
             <Scrollbar v-bind="scrollbarProps">
-              <div class="m-drawer-body" :class="bodyClass" :style="bodyStyle">
+              <div class="drawer-body" :class="bodyClass" :style="bodyStyle">
                 <slot></slot>
               </div>
             </Scrollbar>
-            <div v-if="showFooter" class="m-drawer-footer" :class="footerClass" :style="footerStyle">
+            <div v-if="showFooter" class="drawer-footer" :class="footerClass" :style="footerStyle">
               <slot name="footer">{{ footer }}</slot>
             </div>
           </div>
-          <div v-if="destroyOnClose && drawerOpen" class="m-drawer-body-wrapper">
-            <div v-show="showHeader" class="m-drawer-header" :class="headerClass" :style="headerStyle">
-              <div class="m-header-title">
+          <div v-if="destroyOnClose && drawerOpen" class="drawer-body-wrapper">
+            <div v-show="showHeader" class="drawer-header" :class="headerClass" :style="headerStyle">
+              <div class="header-title">
                 <svg
                   v-if="closable"
                   focusable="false"
@@ -186,11 +186,11 @@ function onClose(e: Event) {
               </div>
             </div>
             <Scrollbar v-bind="scrollbarProps">
-              <div class="m-drawer-body" :class="bodyClass" :style="bodyStyle">
+              <div class="drawer-body" :class="bodyClass" :style="bodyStyle">
                 <slot></slot>
               </div>
             </Scrollbar>
-            <div v-if="showFooter" class="m-drawer-footer" :class="footerClass" :style="footerStyle">
+            <div v-if="showFooter" class="drawer-footer" :class="footerClass" :style="footerStyle">
               <slot name="footer">{{ footer }}</slot>
             </div>
           </div>
@@ -246,28 +246,28 @@ function onClose(e: Event) {
   z-index: 1000;
   pointer-events: none;
   outline: none;
-  .m-drawer-mask {
+  .drawer-mask {
     position: absolute;
     inset: 0;
     z-index: 1000;
     background: rgba(0, 0, 0, 0.45);
     pointer-events: auto;
   }
-  .m-drawer-wrap {
+  .drawer-wrap {
     position: absolute;
     transition: all 0.3s;
-    .m-drawer-content {
+    .drawer-content {
       width: 100%;
       height: 100%;
       overflow: auto;
       background: #ffffff;
       pointer-events: auto;
-      .m-drawer-body-wrapper {
+      .drawer-body-wrapper {
         display: flex;
         flex-direction: column;
         width: 100%;
         height: 100%;
-        .m-drawer-header {
+        .drawer-header {
           display: flex;
           flex: 0;
           align-items: center;
@@ -275,7 +275,7 @@ function onClose(e: Event) {
           font-size: 16px;
           line-height: 1.5;
           border-bottom: 1px solid rgba(5, 5, 5, 0.06);
-          .m-header-title {
+          .header-title {
             display: flex;
             flex: 1;
             align-items: center;
@@ -308,12 +308,12 @@ function onClose(e: Event) {
             color: rgba(0, 0, 0, 0.88);
           }
         }
-        .m-drawer-body {
+        .drawer-body {
           height: 100%;
           padding: 24px;
           word-break: break-all;
         }
-        .m-drawer-footer {
+        .drawer-footer {
           flex-shrink: 0;
           padding: 8px 16px;
           border-top: 1px solid rgba(5, 5, 5, 0.06);

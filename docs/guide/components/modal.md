@@ -794,6 +794,7 @@ okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124;
 okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
 noticeText | 通知按钮文字 | string | '知道了'
 noticeProps | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
+destroyOnClose | 关闭时是否销毁 `Modal` 里的子元素 | boolean | false
 centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false
 top | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | 100
 transformOrigin | 模态框动画出现的位置 | 'mouse' &#124; 'center' | 'mouse'
@@ -826,6 +827,7 @@ okType? | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124
 okProps? | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
 noticeText? | 通知按钮文字 | string | undefined
 noticeProps? | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
+destroyOnClose? | 关闭时是否销毁 `Modal` 里的子元素 | boolean | undefined
 centered? | 是否水平垂直居中，否则固定高度水平居中 | boolean | undefined
 top? | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | undefined
 transformOrigin? | 模态框动画出现的位置 | 'mouse' &#124; 'center' | undefined
