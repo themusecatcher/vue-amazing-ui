@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, h, watchEffect, computed, reactive } from 'vue'
 import { AppleOutlined, AndroidOutlined, WindowsOutlined } from '@ant-design/icons-vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -33,7 +34,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const tabItemsDisabled = ref([
+const tabItemsDisabled = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -66,7 +67,7 @@ const tabItemsDisabled = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const iconTabPages = ref([
+const iconTabPages = ref<TabsItem[]>([
   {
     tab: 'Tab 1',
     icon: h(AppleOutlined),
@@ -94,7 +95,7 @@ const iconTabPages = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const moreTabPages = ref([
+const moreTabPages = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -136,9 +137,9 @@ const moreTabPages = ref([
     content: 'Content of Tab Pane 8'
   }
 ])
-const activeKey = ref('1')
-const iconActiveKey = ref(0)
-const moreActiveKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
+const iconActiveKey = ref<TabsProps['activeKey']>(0)
+const moreActiveKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -204,7 +205,7 @@ const positionStyle = computed(() => {
     }
   }
 })
-const state = reactive({
+const state = reactive<TabsProps>({
   prefix: '',
   suffix: '',
   animated: true,

@@ -11,7 +11,8 @@
 <script setup lang="ts">
 import { ref, h, watchEffect, computed, reactive } from 'vue'
 import { AppleOutlined, AndroidOutlined, WindowsOutlined } from '@ant-design/icons-vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -43,7 +44,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const tabItemsDisabled = ref([
+const tabItemsDisabled = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -76,7 +77,7 @@ const tabItemsDisabled = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const iconTabPages = ref([
+const iconTabPages = ref<TabsItem[]>([
   {
     tab: 'Tab 1',
     icon: h(AppleOutlined),
@@ -104,7 +105,7 @@ const iconTabPages = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const moreTabPages = ref([
+const moreTabPages = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -146,9 +147,9 @@ const moreTabPages = ref([
     content: 'Content of Tab Pane 8'
   }
 ])
-const activeKey = ref('1')
-const iconActiveKey = ref(0)
-const moreActiveKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
+const iconActiveKey = ref<TabsProps['activeKey']>(0)
+const moreActiveKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -214,7 +215,7 @@ const positionStyle = computed(() => {
     }
   }
 })
-const state = reactive({
+const state = reactive<TabsProps>({
   prefix: '',
   suffix: '',
   animated: true,
@@ -238,7 +239,8 @@ function onChange(key: string | number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -270,7 +272,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -294,7 +296,8 @@ function onChange(key: string | number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -326,7 +329,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -357,7 +360,8 @@ function onChange(key: string | number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItemsDisabled = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItemsDisabled = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -390,7 +394,7 @@ const tabItemsDisabled = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -417,7 +421,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -449,7 +454,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -484,7 +489,8 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, h, watchEffect } from 'vue'
 import { AppleOutlined, AndroidOutlined, WindowsOutlined } from '@ant-design/icons-vue'
-const iconTabPages = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const iconTabPages = ref<TabsItem[]>([
   {
     tab: 'Tab 1',
     icon: h(AppleOutlined),
@@ -512,7 +518,7 @@ const iconTabPages = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const iconActiveKey = ref(0)
+const iconActiveKey = ref<TabsProps['activeKey']>(0)
 watchEffect(() => {
   console.log('iconActiveKey', iconActiveKey.value)
 })
@@ -553,7 +559,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -585,7 +592,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -620,7 +627,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -652,7 +660,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -696,7 +704,8 @@ const size = ref('middle')
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -728,7 +737,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -787,7 +796,8 @@ const position = ref('top')
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect, computed } from 'vue'
-const moreTabPages = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const moreTabPages = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -829,7 +839,7 @@ const moreTabPages = ref([
     content: 'Content of Tab Pane 8'
   }
 ])
-const moreActiveKey = ref('1')
+const moreActiveKey = ref<TabsProps['activeKey']>('1')
 const positionOptions = [
   {
     label: 'top',
@@ -926,7 +936,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -958,7 +969,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -1016,7 +1027,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -1048,7 +1060,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -1116,7 +1128,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tabItems = ref([
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
   {
     key: '1',
     tab: 'Tab 1',
@@ -1148,7 +1161,7 @@ const tabItems = ref([
     content: 'Content of Tab Pane 6'
   }
 ])
-const activeKey = ref('1')
+const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -1194,7 +1207,7 @@ const positionOptions = [
     value: 'right'
   }
 ]
-const state = reactive({
+const state = reactive<TabsProps>({
   prefix: '',
   suffix: '',
   animated: true,
