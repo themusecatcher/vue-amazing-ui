@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, watchEffect } from 'vue'
+import type { Chec }
 const options = ref([
   {
     label: '北京市',
