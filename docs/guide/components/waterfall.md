@@ -10,23 +10,25 @@
 
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive } from 'vue'
-const images = ref<any[]>([])
+import type { WaterfallImage } from 'vue-amazing-ui'
+const images = ref<WaterfallImage[]>([])
 const state = reactive({
   columnCount: 3,
   columnGap: 20,
   backgroundColor: '#e6f4ff',
   borderRadius: 12
 })
-function loadImages () {
+function loadImages() {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
-      title: `image-${i}`,
-      link: '',
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
+      name: `image-${i}`,
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`,
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
     })
   }
 }
-onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
+onBeforeMount(() => {
+  // 组件已完成响应式状态设置，但未创建DOM节点
   loadImages()
 })
 </script>
@@ -40,7 +42,8 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-const images = ref<any[]>([])
+import type { WaterfallImage } from 'vue-amazing-ui'
+const images = ref<WaterfallImage[]>([])
 function loadImages () {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
@@ -103,7 +106,8 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 ```vue
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive } from 'vue'
-const images = ref<any[]>([])
+import type { WaterfallImage } from 'vue-amazing-ui'
+const images = ref<WaterfallImage[]>([])
 const state = reactive({
   columnCount: 3,
   columnGap: 20,
@@ -194,3 +198,5 @@ spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatch
 :-- | :-- | :-- | :--
 name? | 图片名称 | string | undefined
 src | 图片地址 | string | undefined
+link? | 图片跳转链接 | string | undefined
+target? | 如何打开跳转链接 | '_self' &#124; '_blank' | undefined

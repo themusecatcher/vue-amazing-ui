@@ -24,8 +24,8 @@ function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
       name: `image-${i}`,
-      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`,
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`,
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
   }
 }
@@ -139,12 +139,12 @@ function onNext() {
 import { ref, onBeforeMount } from 'vue'
 import type { SwiperImage } from 'vue-amazing-ui'
 const images = ref<SwiperImage[]>([])
-function loadImages () {
+function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
       name: `image-${i}`,
-      link: '',
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
   }
 }
@@ -386,12 +386,12 @@ const creativeEffects = [
 import { ref, onBeforeMount } from 'vue'
 import type { SwiperImage } from 'vue-amazing-ui'
 const images = ref<SwiperImage[]>([])
-function loadImages () {
+function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
       name: `image-${i}`,
-      link: '',
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
   }
 }
@@ -443,12 +443,12 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
 import { ref, shallowReactive, onBeforeMount } from 'vue'
 import type { SwiperImage } from 'vue-amazing-ui'
 const images = ref<SwiperImage[]>([])
-function loadImages () {
+function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
       name: `image-${i}`,
-      link: '',
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
   }
 }
@@ -521,6 +521,7 @@ preloaderColor | 预加载时的 `loading` 颜色 | 'theme' &#124; 'white' &#124
 name? | 图片名称 | string | undefined
 src | 图片地址 | string | undefined
 link? | 图片跳转链接 | string | undefined
+target? | 如何打开跳转链接 | '_self' &#124; '_blank' | undefined
 
 ## Events
 

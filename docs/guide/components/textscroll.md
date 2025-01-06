@@ -42,8 +42,8 @@ const singleItem: TextScrollItem = {
   target: '_blank'
 }
 const textScroll = ref()
-const disabled = ref(true)
-const vertical = ref(false)
+const disabled = ref<boolean>(true)
+const vertical = ref<boolean>(false)
 function onClick(item: TextScrollItem) {
   // 获取点击的 item
   console.log('item', item)
