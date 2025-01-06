@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ArrowRightOutlined, DoubleRightOutlined } from '@ant-design/icons-vue'
-import type { BreadcrumbItems } from 'vue-amazing-ui'
-const routes = ref([
+import type { BreadcrumbRoute } from 'vue-amazing-ui'
+const routes = ref<BreadcrumbRoute[]>([
   {
     name: '一级路由',
     path: '/first'
@@ -16,7 +16,7 @@ const routes = ref([
     name: '三级路由'
   }
 ])
-const longNameRoutes = ref([
+const longNameRoutes = ref<BreadcrumbRoute[]>([
   {
     name: '一级路由'
   },
