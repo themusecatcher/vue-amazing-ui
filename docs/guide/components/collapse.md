@@ -10,8 +10,15 @@
 
 <script setup lang="ts">
 import { ref, watchEffect, h } from 'vue'
-import { ArrowRightOutlined, DoubleRightOutlined, RightCircleFilled, StarOutlined, StarFilled } from '@ant-design/icons-vue'
-const collapseItems = ref([
+import {
+  ArrowRightOutlined,
+  DoubleRightOutlined,
+  RightCircleFilled,
+  StarOutlined,
+  StarFilled
+} from '@ant-design/icons-vue'
+import type { CollapseProps, CollapseItem, RadioOption } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -31,7 +38,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const disabledCollapseItems = ref([
+const disabledCollapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -52,7 +59,7 @@ const disabledCollapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const nestCollapseItems = ref([
+const nestCollapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -60,8 +67,8 @@ const nestCollapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const customStyleItems = ref([
-{
+const customStyleItems = ref<CollapseItem[]>([
+  {
     key: '1',
     header: 'This is panel header 1',
     content:
@@ -88,11 +95,11 @@ const customStyleItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const customArrowItems = ref([
+const customArrowItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
-    arrow: () => h(ArrowRightOutlined),
+    arrow: h(ArrowRightOutlined),
     arrowStyle: {
       color: '#1677ff'
     },
@@ -112,7 +119,7 @@ const customArrowItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const extraCollapseItems = ref([
+const extraCollapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -133,7 +140,7 @@ const extraCollapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const positionOptions = ref([
+const positionOptions = ref<RadioOption[]>([
   {
     label: 'left',
     value: 'left'
@@ -143,60 +150,12 @@ const positionOptions = ref([
     value: 'right'
   }
 ])
-const activeKey = ref(['1'])
-const activeKey1 = ref(['1'])
-const activeKey2 = ref(['1'])
-const activeKey3 = ref(['1'])
-const activeKey4 = ref(['1'])
-const activeKey5 = ref(['1'])
-const activeKey6 = ref(['1'])
-const activeKey7 = ref(['1'])
-const activeKey8 = ref(['1'])
-const activeKey9 = ref(['1'])
-const activeKey10 = ref(['1'])
-const activeKey11 = ref(['1'])
-const activeKey12 = ref(['1'])
-const nestActiveKey = ref(['1'])
-const arrowPlacement = ref('right')
-const key = ref('1')
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const nestActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const arrowPlacement = ref<CollapseProps['arrowPlacement']>('right')
+const key = ref<CollapseProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey1.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey2.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey3.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey4.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey5.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey6.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey7.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey8.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey9.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey10.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey11.value)
-})
-watchEffect(() => {
-  console.log('activeKey', activeKey12.value)
 })
 watchEffect(() => {
   console.log('nestActiveKey', nestActiveKey.value)
@@ -226,7 +185,8 @@ function handleClick(key: string | number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -246,7 +206,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -274,7 +234,8 @@ function onChange(key: number | string) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -294,7 +255,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const key = ref('1')
+const key = ref<CollapseProps['activeKey']>('1')
 watchEffect(() => {
   console.log('key', key.value)
 })
@@ -315,7 +276,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -335,7 +297,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -359,7 +321,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -379,7 +342,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const disabledCollapseItems = ref([
+const disabledCollapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -400,7 +363,7 @@ const disabledCollapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -424,7 +387,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -444,7 +408,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -469,7 +433,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -489,7 +454,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const nestCollapseItems = ref([
+const nestCollapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -497,7 +462,7 @@ const nestCollapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 const nestActiveKey = ref(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
@@ -541,7 +506,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -561,7 +527,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -599,7 +565,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const customStyleItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const customStyleItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -627,7 +594,7 @@ const customStyleItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -664,11 +631,12 @@ import {
   DoubleRightOutlined,
   RightCircleFilled
 } from '@ant-design/icons-vue'
-const customArrowItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const customArrowItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
-    arrow: () => h(ArrowRightOutlined),
+    arrow: h(ArrowRightOutlined),
     arrowStyle: {
       color: '#1677ff'
     },
@@ -688,7 +656,7 @@ const customArrowItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -714,7 +682,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -734,7 +703,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -758,7 +727,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem, RadioOption } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -778,7 +748,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const positionOptions = ref([
+const positionOptions = ref<RadioOption[]>([
   {
     label: 'left',
     value: 'left'
@@ -788,8 +758,8 @@ const positionOptions = ref([
     value: 'right'
   }
 ])
-const arrowPlacement = ref('right')
-const activeKey = ref(['1'])
+const arrowPlacement = ref<CollapseProps['arrowPlacement']>('right')
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -819,7 +789,8 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { StarOutlined, StarFilled } from '@ant-design/icons-vue'
-const extraCollapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const extraCollapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -840,7 +811,7 @@ const extraCollapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -871,7 +842,8 @@ function handleClick(event: Event, key: string | number) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -891,7 +863,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
@@ -926,7 +898,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const collapseItems = ref([
+import type { CollapseProps, CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
     header: 'This is panel header 1',
@@ -946,7 +919,7 @@ const collapseItems = ref([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref(['1'])
+const activeKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
