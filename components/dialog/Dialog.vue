@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, nextTick, onMounted, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
+import Scrollbar from 'components/scrollbar'
 import Button from 'components/button'
 export interface Props {
   width?: string | number // 对话框宽度，单位 px
@@ -11,12 +12,14 @@ export interface Props {
   contentStyle?: CSSProperties // 自定义内容样式
   bodyClass?: string // 自定义 body 类名
   bodyStyle?: CSSProperties // 自定义 body 样式
+  scrollbarProps?: object // Scrollbar 组件属性配置，用于设置内容滚动条的样式
   cancelText?: string // 取消按钮文字
   cancelProps?: object // 取消按钮 props 配置，参考 Button 组件 Props
   okText?: string // 确定按钮文字
   okType?: 'primary' | 'danger' // 确定按钮类型
   okProps?: object // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   footer?: boolean // 是否显示底部按钮 boolean | slot
+  destroyOnClose?: boolean // 关闭时是否销毁 Dialog 里的子元素
   switchFullscreen?: boolean // 是否允许切换全屏，允许后右上角会出现一个切换按钮
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 centered: false 时生效，单位 px
@@ -37,12 +40,14 @@ const props = withDefaults(defineProps<Props>(), {
   contentStyle: () => ({}),
   bodyClass: undefined,
   bodyStyle: () => ({}),
+  scrollbarProps: () => ({}),
   cancelText: '取消',
   cancelProps: () => ({}),
   okText: '确定',
   okType: 'primary',
   okProps: () => ({}),
   footer: true,
+  destroyOnClose: false,
   switchFullscreen: false,
   centered: false,
   top: 100,
@@ -227,7 +232,7 @@ function onOk() {
           :class="{ 'dialog-with-fullscreen': fullscreen }"
           :style="dialogStyle"
         >
-          <div class="m-dialog-body-wrap" :class="bodyClass" :style="dialogBodyStyle">
+          <div v-if="!destroyOnClose" class="dialog-body-wrap" :class="bodyClass" :style="dialogBodyStyle">
             <div class="dialog-header" :class="{ 'header-with-switch': switchFullscreen }" :style="titleStyle">
               <slot name="title">{{ title }}</slot>
             </div>
@@ -276,9 +281,74 @@ function onOk() {
                 ></path>
               </svg>
             </span>
-            <div class="dialog-content" :style="contentStyle">
-              <slot>{{ content }}</slot>
+            <Scrollbar v-bind="scrollbarProps">
+              <div class="dialog-content" :style="contentStyle">
+                <slot>{{ content }}</slot>
+              </div>
+            </Scrollbar>
+            <div v-if="footer" class="dialog-footer">
+              <slot name="footer">
+                <Button class="mr8" @click="onCancel" v-bind="cancelProps">{{ cancelText }}</Button>
+                <Button :type="okType" :loading="props.confirmLoading" @click="onOk" v-bind="okProps">{{
+                  okText
+                }}</Button>
+              </slot>
             </div>
+          </div>
+          <div v-if="destroyOnClose && dialogOpen" class="dialog-body-wrap" :class="bodyClass" :style="dialogBodyStyle">
+            <div class="dialog-header" :class="{ 'header-with-switch': switchFullscreen }" :style="titleStyle">
+              <slot name="title">{{ title }}</slot>
+            </div>
+            <span v-if="switchFullscreen" class="fullscreen-action" @click="onFullScreen">
+              <svg
+                v-show="!fullscreen"
+                focusable="false"
+                data-icon="fullscreen"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                aria-hidden="true"
+                viewBox="64 64 896 896"
+              >
+                <path
+                  d="M290 236.4l43.9-43.9a8.01 8.01 0 00-4.7-13.6L169 160c-5.1-.6-9.5 3.7-8.9 8.9L179 329.1c.8 6.6 8.9 9.4 13.6 4.7l43.7-43.7L370 423.7c3.1 3.1 8.2 3.1 11.3 0l42.4-42.3c3.1-3.1 3.1-8.2 0-11.3L290 236.4zm352.7 187.3c3.1 3.1 8.2 3.1 11.3 0l133.7-133.6 43.7 43.7a8.01 8.01 0 0013.6-4.7L863.9 169c.6-5.1-3.7-9.5-8.9-8.9L694.8 179c-6.6.8-9.4 8.9-4.7 13.6l43.9 43.9L600.3 370a8.03 8.03 0 000 11.3l42.4 42.4zM845 694.9c-.8-6.6-8.9-9.4-13.6-4.7l-43.7 43.7L654 600.3a8.03 8.03 0 00-11.3 0l-42.4 42.3a8.03 8.03 0 000 11.3L734 787.6l-43.9 43.9a8.01 8.01 0 004.7 13.6L855 864c5.1.6 9.5-3.7 8.9-8.9L845 694.9zm-463.7-94.6a8.03 8.03 0 00-11.3 0L236.3 733.9l-43.7-43.7a8.01 8.01 0 00-13.6 4.7L160.1 855c-.6 5.1 3.7 9.5 8.9 8.9L329.2 845c6.6-.8 9.4-8.9 4.7-13.6L290 787.6 423.7 654c3.1-3.1 3.1-8.2 0-11.3l-42.4-42.4z"
+                ></path>
+              </svg>
+              <svg
+                v-show="fullscreen"
+                focusable="false"
+                data-icon="fullscreen-exit"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                aria-hidden="true"
+                viewBox="64 64 896 896"
+              >
+                <path
+                  d="M391 240.9c-.8-6.6-8.9-9.4-13.6-4.7l-43.7 43.7L200 146.3a8.03 8.03 0 00-11.3 0l-42.4 42.3a8.03 8.03 0 000 11.3L280 333.6l-43.9 43.9a8.01 8.01 0 004.7 13.6L401 410c5.1.6 9.5-3.7 8.9-8.9L391 240.9zm10.1 373.2L240.8 633c-6.6.8-9.4 8.9-4.7 13.6l43.9 43.9L146.3 824a8.03 8.03 0 000 11.3l42.4 42.3c3.1 3.1 8.2 3.1 11.3 0L333.7 744l43.7 43.7A8.01 8.01 0 00391 783l18.9-160.1c.6-5.1-3.7-9.4-8.8-8.8zm221.8-204.2L783.2 391c6.6-.8 9.4-8.9 4.7-13.6L744 333.6 877.7 200c3.1-3.1 3.1-8.2 0-11.3l-42.4-42.3a8.03 8.03 0 00-11.3 0L690.3 279.9l-43.7-43.7a8.01 8.01 0 00-13.6 4.7L614.1 401c-.6 5.2 3.7 9.5 8.8 8.9zM744 690.4l43.9-43.9a8.01 8.01 0 00-4.7-13.6L623 614c-5.1-.6-9.5 3.7-8.9 8.9L633 783.1c.8 6.6 8.9 9.4 13.6 4.7l43.7-43.7L824 877.7c3.1 3.1 8.2 3.1 11.3 0l42.4-42.3c3.1-3.1 3.1-8.2 0-11.3L744 690.4z"
+                ></path>
+              </svg>
+            </span>
+            <span class="close-action" @click="onCancel">
+              <svg
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="64 64 896 896"
+                data-icon="close"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+                ></path>
+              </svg>
+            </span>
+            <Scrollbar v-bind="scrollbarProps">
+              <div class="dialog-content" :style="contentStyle">
+                <slot>{{ content }}</slot>
+              </div>
+            </Scrollbar>
             <div v-if="footer" class="dialog-footer">
               <slot name="footer">
                 <Button class="mr8" @click="onCancel" v-bind="cancelProps">{{ cancelText }}</Button>
@@ -368,7 +438,7 @@ function onOk() {
     max-width: calc(100vw - 32px);
     padding-bottom: 24px;
     outline: none;
-    .m-dialog-body-wrap {
+    .dialog-body-wrap {
       display: flex;
       flex-direction: column;
       position: relative;
@@ -427,12 +497,10 @@ function onOk() {
         }
       }
       .dialog-content {
-        flex: 1;
         font-size: 14px;
         color: rgba(0, 0, 0, 0.88);
         line-height: 1.5714285714285714;
         word-break: break-all;
-        overflow: auto;
         transition: all 0.25s;
       }
       .dialog-footer {

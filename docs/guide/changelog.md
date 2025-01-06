@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或者直接通过右下角邮箱地址直接联系我
 
+## 2.0.6 <Tag color="volcano" size="small">2024-01-06</Tag>
+
+- 优化并更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件，新增 `destroyOnClose` `scrollbarProps` 属性，支持：设置关闭时是否销毁 `Dialog` 里的子元素；固定高度时使用滚动条组件，并可自定义滚动条样式
+- 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增 `destroyOnClose` 属性，支持：设置关闭时是否销毁 `Modal` 里的子元素
+
 ## 2.0.5 <Tag color="volcano" size="small">2024-01-03</Tag>
 
 - 优化并更新 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件点击动画效果及代码

@@ -60,11 +60,14 @@ function handleOk() {
     </Dialog>
     <h2 class="mt30 mb10">自定义宽高</h2>
     <Button type="primary" @click="open2 = true">Open Dialog</Button>
-    <Dialog v-model:open="open2" :width="480" :height="180" @cancel="onCancel" @ok="onOk">
+    <Dialog v-model:open="open2" :width="480" :height="200" @cancel="onCancel" @ok="onOk">
       <template #title>Title</template>
-      <p>Bla bla ...</p>
-      <p>Bla bla ...</p>
-      <p>Bla bla ...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
     </Dialog>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space>

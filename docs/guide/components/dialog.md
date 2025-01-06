@@ -100,11 +100,14 @@ function onOk () { // 点击确定的回调
 ## 自定义宽高
 
 <Button type="primary" @click="open2 = true">Open Dialog</Button>
-<Dialog v-model:open="open2" :width="480" :height="180" @ok="onOk">
+<Dialog v-model:open="open2" :width="480" :height="200" @cancel="onCancel" @ok="onOk">
   <template #title>Title</template>
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
-  <p>Bla bla ...</p>
+  <p>Some contents...</p>
+  <p>Some contents...</p>
+  <p>Some contents...</p>
+  <p>Some contents...</p>
+  <p>Some contents...</p>
+  <p>Some contents...</p>
 </Dialog>
 
 ::: details Show Code
@@ -126,11 +129,14 @@ function onOk () { // 点击确定的回调
 </script>
 <template>
   <Button type="primary" @click="openDialog">Open Dialog</Button>
-  <Dialog v-model:open="open" :width="480" :height="180" @cancel="onCancel" @ok="onOk">
+  <Dialog v-model:open="open" :width="480" :height="200" @cancel="onCancel" @ok="onOk">
     <template #title>Title</template>
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
-    <p>Bla bla ...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
   </Dialog>
 </template>
 ```
@@ -571,12 +577,14 @@ content | 内容 | string &#124; slot | undefined
 contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bodyClass | 自定义 `body` 类名 | string | undefined
 bodyStyle | 自定义 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar)，用于设置内容滚动条的样式 | object | {}
 cancelText | 取消按钮文字 | string | '取消'
 cancelProps | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
 okText | 确定按钮文字 | string | '确定'
 okType | 确定按钮类型 | 'primary' &#124; 'danger' | 'primary'
 okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
 footer | 是否显示底部按钮 | boolean &#124; slot | true
+destroyOnClose | 关闭时是否销毁 `Dialog` 里的子元素 | boolean | false
 switchFullscreen | 是否允许切换全屏，允许后右上角会出现一个切换按钮 | boolean | false
 centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false
 top | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | 100
