@@ -10,7 +10,8 @@
 
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
-const stepsItems = ref([
+import type { StepsProps, StepsItem } from 'vue-amazing-ui'
+const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -24,7 +25,7 @@ const stepsItems = ref([
     description: 'description 3'
   }
 ])
-const minStepsItems = ref([
+const minStepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1'
   },
@@ -75,7 +76,7 @@ function onNext() {
     current.value++
   }
 }
-const state = reactive({
+const state = reactive<StepsProps>({
   size: 'default',
   vertical: false,
   labelPlacement: 'right',
@@ -93,7 +94,8 @@ const state = reactive({
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const stepsItems = ref([
+import type { StepsItem } from 'vue-amazing-ui'
+const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -135,7 +137,8 @@ function onChange(index: number) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const stepsItems = ref([
+import type { StepsItem } from 'vue-amazing-ui'
+const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -187,7 +190,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const minStepsItems = ref([
+import type { StepsItem } from 'vue-amazing-ui'
+const minStepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1'
   },
@@ -236,7 +240,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const stepsItems = ref([
+import type { StepsItem } from 'vue-amazing-ui'
+const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -277,7 +282,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const stepsItems = ref([
+import type { StepsItem } from 'vue-amazing-ui'
+const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -326,7 +332,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const stepsItems = ref([
+import type { StepsItem } from 'vue-amazing-ui'
+const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -412,7 +419,8 @@ function onNext () {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const stepsItems = ref([
+import type { StepsProps, StepsItem } from 'vue-amazing-ui'
+const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -450,7 +458,7 @@ const placeOptions = [
     value: 'bottom'
   }
 ]
-const state = reactive({
+const state = reactive<StepsProps>({
   size: 'default',
   vertical: false,
   labelPlacement: 'right',

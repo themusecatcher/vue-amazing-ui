@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
-const stepsItems = ref([
+import type { StepsProps, StepsItem } from 'vue-amazing-ui'
+const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
     description: 'description 1'
@@ -22,7 +23,7 @@ const stepsItems = ref([
     description: 'description 5'
   }
 ])
-const minStepsItems = ref([
+const minStepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1'
   },
@@ -79,7 +80,7 @@ function onNext() {
     current.value++
   }
 }
-const state = reactive({
+const state = reactive<StepsProps>({
   size: 'default',
   vertical: false,
   labelPlacement: 'right',
