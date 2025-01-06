@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
-import type { TableColumn } from 'vue-amazing-ui'
+import type { TableProps, TableColumn } from 'vue-amazing-ui'
 const loading = ref<boolean>(false)
 const tableLoading = ref<boolean>(false)
 const customStyleBordered = ref<boolean>(true)
@@ -30,7 +30,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<TableProps['size']>('middle')
 const alignOptions = [
   {
     label: 'left',
