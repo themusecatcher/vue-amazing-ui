@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { PaginationProps } from 'vue-amazing-ui'
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(98)
@@ -27,7 +28,7 @@ const placementOptions = [
     value: 'right'
   }
 ]
-const placement = ref('left')
+const placement = ref<PaginationProps['placement']>('left')
 const sizeOptions = [
   {
     label: 'small',
@@ -42,7 +43,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<PaginationProps['size']>('middle')
 function onChange(page: number, pageSize: number) {
   // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
@@ -89,6 +90,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { PaginationProps } from 'vue-amazing-ui'
 const page = ref(1)
 const total = ref(98)
 const placementOptions = [
@@ -105,7 +107,7 @@ const placementOptions = [
     value: 'right'
   }
 ]
-const placement = ref('left')
+const placement = ref<PaginationProps['placement']>('left')
 function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
@@ -133,6 +135,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { PaginationProps } from 'vue-amazing-ui'
 const page = ref(1)
 const total = ref(98)
 const sizeOptions = [
@@ -149,7 +152,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<PaginationProps['size']>('middle')
 function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
