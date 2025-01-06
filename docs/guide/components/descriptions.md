@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 const size = ref('default')
-const options = ref([
+const options = [
   {
     label: 'default',
     value: 'default'
@@ -24,7 +24,7 @@ const options = ref([
     label: 'small',
     value: 'small'
   }
-])
+]
 const show = ref(true)
 const onClick = () => {
   show.value = false
@@ -55,7 +55,6 @@ const state = reactive({
   }
 })
 </script>
-
 ## 基本使用
 
 <ClientOnly>
@@ -332,7 +331,7 @@ const state = reactive({
 <script setup lang="ts">
 import { ref } from 'vue'
 const size = ref('default')
-const options = ref([
+const options = [
   {
     label: 'default',
     value: 'default'
@@ -345,7 +344,7 @@ const options = ref([
     label: 'small',
     value: 'small'
   }
-])
+]
 </script>
 <template>
   <Flex vertical gap="middle">
@@ -667,7 +666,7 @@ const options = ref([
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const options = ref([
+const options = [
   {
     label: 'default',
     value: 'default'
@@ -680,7 +679,7 @@ const options = ref([
     label: 'small',
     value: 'small'
   }
-])
+]
 const state = reactive({
   title: 'User Info',
   extra: 'extra',

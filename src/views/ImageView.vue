@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { ImageItem } from 'vue-amazing-ui'
+const images = ref<ImageItem[]>([
   {
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
     name: 'image-1.jpg'
