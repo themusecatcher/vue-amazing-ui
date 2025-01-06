@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -38,7 +39,7 @@ const options = ref([
     value: 9
   }
 ])
-const optionsDisabled = ref([
+const optionsDisabled = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -73,7 +74,7 @@ const optionsDisabled = ref([
     value: 8
   }
 ])
-const optionsCustom = ref([
+const optionsCustom = ref<SelectOption[]>([
   {
     name: '北京市',
     id: 1
@@ -122,7 +123,7 @@ const sizeOptions = [
   }
 ]
 const size = ref('large')
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })

@@ -11,7 +11,8 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -49,7 +50,7 @@ const options = ref([
     value: 9
   }
 ])
-const optionsDisabled = ref([
+const optionsDisabled = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -84,7 +85,7 @@ const optionsDisabled = ref([
     value: 8
   }
 ])
-const optionsCustom = ref([
+const optionsCustom = ref<SelectOption[]>([
   {
     name: '北京市',
     id: 1
@@ -133,7 +134,7 @@ const sizeOptions = [
   }
 ]
 const size = ref('large')
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -160,7 +161,8 @@ function filter(inputValue: string, option: any) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -192,9 +194,13 @@ const options = ref([
   {
     label: '君士坦丁堡',
     value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -223,7 +229,8 @@ function onOpenChange(open: boolean) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -255,9 +262,13 @@ const options = ref([
   {
     label: '君士坦丁堡',
     value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 </script>
 <template>
   <Select :options="options" v-model="selectedValue" disabled />
@@ -275,7 +286,8 @@ const selectedValue = ref(5)
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const optionsDisabled = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const optionsDisabled = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -310,7 +322,7 @@ const optionsDisabled = ref([
     value: 8
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 </script>
 <template>
   <Select :options="optionsDisabled" v-model="selectedValue" />
@@ -328,7 +340,8 @@ const selectedValue = ref(5)
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -360,9 +373,13 @@ const options = ref([
   {
     label: '君士坦丁堡',
     value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -383,7 +400,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -415,9 +433,13 @@ const options = ref([
   {
     label: '君士坦丁堡',
     value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -444,7 +466,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -476,9 +499,13 @@ const options = ref([
   {
     label: '君士坦丁堡',
     value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -513,7 +540,8 @@ function filter (inputValue: string, option: any) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -545,6 +573,10 @@ const options = ref([
   {
     label: '君士坦丁堡',
     value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
   }
 ])
 const sizeOptions = [
@@ -562,7 +594,7 @@ const sizeOptions = [
   }
 ]
 const size = ref('large')
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -592,7 +624,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -624,9 +657,13 @@ const options = ref([
   {
     label: '君士坦丁堡',
     value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -657,7 +694,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const optionsCustom = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const optionsCustom = ref<SelectOption[]>([
   {
     name: '北京市',
     id: 1
@@ -691,7 +729,7 @@ const optionsCustom = ref([
     id: 8
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -717,7 +755,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -749,9 +788,13 @@ const options = ref([
   {
     label: '君士坦丁堡',
     value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -772,7 +815,8 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const options = ref([
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -804,9 +848,13 @@ const options = ref([
   {
     label: '君士坦丁堡',
     value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
   }
 ])
-const selectedValue = ref(5)
+const selectedValue = ref<SelectProps['modelValue']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
