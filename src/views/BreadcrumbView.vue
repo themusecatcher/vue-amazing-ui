@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ArrowRightOutlined, DoubleRightOutlined } from '@ant-design/icons-vue'
+import type { BreadcrumbItems } from 'vue-amazing-ui'
 const routes = ref([
   {
     name: '一级路由',
