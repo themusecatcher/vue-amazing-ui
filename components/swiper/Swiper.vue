@@ -27,6 +27,7 @@ export interface Image {
   name?: string // 图片名称
   src: string // 图片地址
   link?: string // 图片跳转链接
+  target?: '_self' | '_blank' // 如何打开跳转链接
 }
 export interface Props {
   images?: Image[] // 轮播图片数组
@@ -141,7 +142,12 @@ function getImageName(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <component :is="image.link ? 'a' : 'div'" class="swiper-link" :href="image.link" target="_blank">
+      <component
+        :is="image.link ? 'a' : 'div'"
+        class="swiper-link"
+        :href="image.link"
+        :target="image.target ? image.target : '_blank'"
+      >
         <img class="swiper-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
       </component>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
@@ -161,7 +167,12 @@ function getImageName(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <component :is="image.link ? 'a' : 'div'" class="swiper-link" :href="image.link" target="_blank">
+      <component
+        :is="image.link ? 'a' : 'div'"
+        class="swiper-link"
+        :href="image.link"
+        :target="image.target ? image.target : '_blank'"
+      >
         <img class="swiper-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
       </component>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>
@@ -180,7 +191,12 @@ function getImageName(image: Image) {
     v-bind="$attrs"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
-      <component :is="image.link ? 'a' : 'div'" class="swiper-link" :href="image.link" target="_blank">
+      <component
+        :is="image.link ? 'a' : 'div'"
+        class="swiper-link"
+        :href="image.link"
+        :target="image.target ? image.target : '_blank'"
+      >
         <img class="swiper-image" :src="image.src" :alt="getImageName(image)" loading="lazy" />
       </component>
       <div :class="`swiper-lazy-preloader swiper-lazy-preloader-${preloaderColor}`"></div>

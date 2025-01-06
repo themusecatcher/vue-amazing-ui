@@ -7,8 +7,8 @@ function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
       name: `image-${i}`,
-      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`,
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`,
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.6/${i}.jpg`
     })
   }
 }

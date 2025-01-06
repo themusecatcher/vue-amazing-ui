@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { UploadFileType } from 'vue-amazing-ui'
 const uploadRef = ref()
-const files = ref([])
-const fileList = ref([
+const files = ref<UploadFileType[]>([])
+const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
@@ -12,13 +13,13 @@ const fileList = ref([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
   }
 ])
-const imageList = ref([
+const imageList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   }
 ])
-const pdfList = ref([
+const pdfList = ref<UploadFileType[]>([
   {
     name: 'Markdown.pdf',
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
@@ -88,21 +89,16 @@ function onCustomRequest(file: File) {
     }, 1000)
   })
 }
-interface FileType {
-  name?: string // 文件名
-  url: any // 文件地址
-  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
-}
 function onDrop(e: DragEvent) {
   console.log('drop', e)
 }
-function onChange(files: FileType[]) {
+function onChange(files: UploadFileType[]) {
   console.log('change', files)
 }
-function onPreview(file: FileType) {
+function onPreview(file: UploadFileType) {
   console.log('preview', file)
 }
-function onRemove(file: FileType) {
+function onRemove(file: UploadFileType) {
   console.log('remove', file)
 }
 </script>

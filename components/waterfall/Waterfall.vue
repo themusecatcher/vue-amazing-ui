@@ -9,6 +9,8 @@ import { useResizeObserver } from 'components/utils'
 export interface Image {
   name?: string // 图片名称
   src: string // 图片地址
+  link?: string // 图片跳转链接
+  target?: '_self' | '_blank' // 如何打开跳转链接
 }
 export interface Props {
   images?: Image[] // 图片数组
@@ -160,7 +162,14 @@ function getImageName(image: Image) {
       v-for="(property, index) in imagesProperty"
       :key="index"
     >
-      <img class="u-image" :src="images[index].src" :alt="getImageName(images[index])" @load="onLoaded(index)" />
+      <a
+        class="image-link"
+        :class="{ 'link-cursor': images[index].link }"
+        :href="images[index].link"
+        :target="images[index].target ? images[index].target : '_blank'"
+      >
+        <img class="image-item" :src="images[index].src" :alt="getImageName(images[index])" @load="onLoaded(index)" />
+      </a>
     </Spin>
   </div>
 </template>
@@ -170,12 +179,20 @@ function getImageName(image: Image) {
   border-radius: var(--border-radius);
   .waterfall-image {
     position: absolute;
-    .u-image {
-      width: 100%;
+    .image-link {
+      display: block;
       height: 100%;
-      border-radius: var(--border-radius);
-      display: inline-block;
-      vertical-align: bottom;
+      cursor: default;
+      .image-item {
+        width: 100%;
+        height: 100%;
+        border-radius: var(--border-radius);
+        display: inline-block;
+        vertical-align: bottom;
+      }
+    }
+    .link-cursor {
+      cursor: pointer;
     }
   }
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive } from 'vue'
-const images = ref<any[]>([])
+import type { WaterfallImage } from 'vue-amazing-ui'
+const images = ref<WaterfallImage[]>([])
 const state = reactive({
   columnCount: 3,
   columnGap: 20,
@@ -10,9 +11,9 @@ const state = reactive({
 function loadImages() {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
-      title: `image-${i}`,
-      link: '',
+      name: `image-${i}`,
       src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
+      // link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
     })
   }
 }
