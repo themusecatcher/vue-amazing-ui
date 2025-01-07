@@ -115,12 +115,12 @@ const activeKey = ref(0)
 const componentsTotal = computed(() => {
   return (routes[0].children as Array<any>).length - 1
 })
-function onOpen() {
+function onOpenWindow() {
   // 打开一个新的窗口，并导航到指定的URL
   // let newWindow = window.open() // 在当前浏览器窗口中打开一个空的标签页
   // let newWindow = window.open('http://localhost:9000/backtop') // 在当前浏览器窗口中打开新的标签页
   // let newWindow = window.open('http://localhost:9000/backtop', 'Backtop') // 在当前浏览器窗口中打开新的标签页
-  // 使用弹窗形式打开新的标签页，不指定left，top时，默认紧靠电脑桌面左上角
+  // 使用弹窗形式打开新的标签页，不指定 left，top 时，默认紧靠电脑桌面左上角
   let newWindow = window.open('http://localhost:9000/backtop', '_blank', 'popup,width=800,height=600')
   // newWindow?.resizeTo(800, 600)
   // newWindow?.moveTo(100, 100)
@@ -137,7 +137,7 @@ function onOpen() {
     <Tag color="purple">FPS：{{ fps }}</Tag>
     <br />
     <br />
-    <Button type="primary" @click="onOpen">Open New Window</Button>
+    <Button type="primary" @click="onOpenWindow">Open New Window</Button>
     <p class="u-tip mt30 mb10"
       >组件库采用 <Tag color="magenta">Vue@{{ devDependencies['vue'] }}</Tag> +
       <Tag color="magenta">TypeScript@{{ devDependencies['typescript'] }}</Tag> +
@@ -188,11 +188,3 @@ function onOpen() {
     </Descriptions>
   </div>
 </template>
-<style lang="less">
-.u-head {
-  font-size: 16px;
-}
-.u-text {
-  font-size: 16px;
-}
-</style>
