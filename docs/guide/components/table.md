@@ -10,19 +10,19 @@
 - 当需要对数据进行排序、搜索、分页、自定义操作等复杂行为时
 
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
+import { ref, reactive, onBeforeMount, watch, watchEffect, h, computed, unref } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
-import type { TableColumn } from 'vue-amazing-ui'
-const loading = ref(false)
-const tableLoading = ref(false)
-const customStyleBordered = ref(true)
-const sizeBordered = ref(true)
-const alignBordered = ref(true)
-const stripedBordered = ref(true)
-const headerFooterbordered = ref(true)
-const groupBordered = ref(true)
-const sortBordered = ref(true)
-const selectionBordered = ref(true)
+import type { TableProps, TableColumn, TableSelection } from 'vue-amazing-ui'
+const loading = ref<boolean>(false)
+const tableLoading = ref<boolean>(false)
+const customStyleBordered = ref<boolean>(true)
+const sizeBordered = ref<boolean>(true)
+const alignBordered = ref<boolean>(true)
+const stripedBordered = ref<boolean>(true)
+const headerFooterbordered = ref<boolean>(true)
+const groupBordered = ref<boolean>(true)
+const sortBordered = ref<boolean>(true)
+const selectionBordered = ref<boolean>(true)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
@@ -41,7 +41,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<TableProps['size']>('middle')
 const alignOptions = [
   {
     label: 'left',
@@ -67,16 +67,19 @@ const selectionTypeOptions = [
     value: 'radio'
   }
 ]
+// const rowSelection = reactive<TableSelection>({
 const rowSelection = reactive({
-  columnTitle: '',
+  columnTitle: undefined,
   columnWidth: 100,
   fixed: true,
   hideSelectAll: false,
   type: 'checkbox',
+  selectedRowKeys: ['3'],
   onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
     console.log('onChange')
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('selectedRows', selectedRows)
+    rowSelection.selectedRowKeys = selectedRowKeys
   },
   onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
     console.log('onSelect')
@@ -103,6 +106,12 @@ const rowSelection = reactive({
     disabled: record.key === '5',
     name: record.name
   })
+})
+const clear = () => {
+  rowSelection.selectedRowKeys = []
+}
+watchEffect(() => {
+  console.log('rowSelection.selectedRowKeys', rowSelection.selectedRowKeys)
 })
 const columns = reactive<TableColumn[]>([
   {
@@ -786,38 +795,7 @@ const dataSourceSort = ref([
     address: 'London No.102 Lake Park'
   }
 ])
-const dataSourceSelection = ref([
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No.1 Lake Park'
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No.2 Lake Park'
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No.3 Lake Park'
-  },
-  {
-    key: '4',
-    name: 'Jean Blue',
-    age: 36,
-    address: 'Paris No.4 Lake Park'
-  },
-  {
-    key: '5',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Berlin No.5 Lake Park'
-  }
-])
+const dataSourceSelection = ref(data)
 onBeforeMount(() => {
   getData()
 })
@@ -2875,16 +2853,14 @@ function onSortChange(column: any, currentDataSource: any[]) {
 
 ## 可选择
 
-*可通过 `rowSelection` 属性来自定义选择项*
+*可通过 `rowSelection` 属性来自定义选择功能*
 
 <br/>
 
 <Flex vertical>
   <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Space gap="small" vertical>
-        bordered: <Switch v-model="selectionBordered" />
-      </Space>
+      <Space gap="small" vertical> bordered: <Switch v-model="selectionBordered" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
@@ -2897,21 +2873,21 @@ function onSortChange(column: any, currentDataSource: any[]) {
       </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical>
-        fixed: <Switch v-model="rowSelection.fixed" />
-      </Space>
+      <Space gap="small" vertical> fixed: <Switch v-model="rowSelection.fixed" /> </Space>
+    </Col>
+    <Col :span="6">
+      <Space gap="small" vertical> hideSelectAll: <Switch v-model="rowSelection.hideSelectAll" /> </Space>
     </Col>
     <Col :span="6">
       <Space gap="small" vertical>
-        hideSelectAll: <Switch v-model="rowSelection.hideSelectAll" />
-      </Space>
-    </Col>
-    <Col :span="6">
-      <Space gap="small" vertical>
-        type: <Radio :options="selectionTypeOptions" v-model:value="rowSelection.type" button button-style="solid" />
+        type:
+        <Radio :options="selectionTypeOptions" v-model:value="rowSelection.type" button button-style="solid" />
       </Space>
     </Col>
   </Row>
+  <Space>
+    <Button @click="clear">清空</Button>
+  </Space>
   <Table
     :columns="columnsSelection"
     :data-source="dataSourceSelection"
@@ -2919,6 +2895,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
     :bordered="selectionBordered"
     :scroll="{ x: 1500 }"
   >
+    <template #header> Selected {{ rowSelection.selectedRowKeys.length }} items </template>
     <template #bodyCell="{ column, text }">
       <template v-if="column.dataIndex === 'name'">
         <a>{{ text }}</a>
@@ -2931,9 +2908,9 @@ function onSortChange(column: any, currentDataSource: any[]) {
 
 ```vue
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import type { TableColumn } from 'vue-amazing-ui'
-const selectionBordered = ref(true)
+import { ref, reactive, watchEffect } from 'vue'
+import type { TableColumn, TableSelection } from 'vue-amazing-ui'
+const selectionBordered = ref<boolean>(true)
 const columnsSelection = reactive<TableColumn[]>([
   {
     title: 'Name',
@@ -2948,38 +2925,16 @@ const columnsSelection = reactive<TableColumn[]>([
     dataIndex: 'address'
   }
 ])
-const dataSourceSelection = ref([
-  {
-    key: '1',
-    name: 'John Brown',
+const data: any[] = []
+for (let i = 0; i < 100; i++) {
+  data.push({
+    key: i.toString(),
+    name: `Edrward ${i}`,
     age: 32,
-    address: 'New York No.1 Lake Park'
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No.2 Lake Park'
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No.3 Lake Park'
-  },
-  {
-    key: '4',
-    name: 'Jean Blue',
-    age: 36,
-    address: 'Paris No.4 Lake Park'
-  },
-  {
-    key: '5',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Berlin No.5 Lake Park'
-  }
-])
+    address: `London, Park Lane no. ${i}`
+  })
+}
+const dataSourceSelection = ref(data)
 const selectionTypeOptions = [
   {
     label: 'Checkbox',
@@ -2990,16 +2945,18 @@ const selectionTypeOptions = [
     value: 'radio'
   }
 ]
-const rowSelection = reactive({
-  columnTitle: '',
+const rowSelection = reactive<TableSelection>({
+  columnTitle: undefined,
   columnWidth: 100,
   fixed: true,
   hideSelectAll: false,
   type: 'checkbox',
+  selectedRowKeys: ['3'],
   onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
     console.log('onChange')
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('selectedRows', selectedRows)
+    rowSelection.selectedRowKeys = selectedRowKeys
   },
   onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
     console.log('onSelect')
@@ -3027,14 +2984,18 @@ const rowSelection = reactive({
     name: record.name
   })
 })
+const clear = () => {
+  rowSelection.selectedRowKeys = []
+}
+watchEffect(() => {
+  console.log('rowSelection.selectedRowKeys', rowSelection.selectedRowKeys)
+})
 </script>
 <template>
   <Flex vertical>
     <Row :gutter="[24, 12]">
       <Col :span="6">
-        <Space gap="small" vertical>
-          bordered: <Switch v-model="selectionBordered" />
-        </Space>
+        <Space gap="small" vertical> bordered: <Switch v-model="selectionBordered" /> </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
@@ -3047,21 +3008,21 @@ const rowSelection = reactive({
         </Flex>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical>
-          fixed: <Switch v-model="rowSelection.fixed" />
-        </Space>
+        <Space gap="small" vertical> fixed: <Switch v-model="rowSelection.fixed" /> </Space>
+      </Col>
+      <Col :span="6">
+        <Space gap="small" vertical> hideSelectAll: <Switch v-model="rowSelection.hideSelectAll" /> </Space>
       </Col>
       <Col :span="6">
         <Space gap="small" vertical>
-          hideSelectAll: <Switch v-model="rowSelection.hideSelectAll" />
-        </Space>
-      </Col>
-      <Col :span="6">
-        <Space gap="small" vertical>
-          type: <Radio :options="selectionTypeOptions" v-model:value="rowSelection.type" button button-style="solid" />
+          type:
+          <Radio :options="selectionTypeOptions" v-model:value="rowSelection.type" button button-style="solid" />
         </Space>
       </Col>
     </Row>
+    <Space>
+      <Button @click="clear">清空</Button>
+    </Space>
     <Table
       :columns="columnsSelection"
       :data-source="dataSourceSelection"
@@ -3069,6 +3030,7 @@ const rowSelection = reactive({
       :bordered="selectionBordered"
       :scroll="{ x: 1500 }"
     >
+      <template #header> Selected {{ rowSelection.selectedRowKeys.length }} items </template>
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
           <a>{{ text }}</a>
@@ -3186,6 +3148,7 @@ columnWidth? | 列表选择框宽度 | string &#124; number | undefined
 fixed? | 复选框列是否固定在左边 | boolean | undefined
 hideSelectAll? | 是否隐藏全选复选框 | boolean | undefined
 type? | 复选框/单选框 | 'checkbox' &#124; 'radio' | undefined
+selectedRowKeys? | 选中项的 `key` 数组，需和 `onChange` 配合使用 | string[] | undefined
 onChange? | 选中项发生变化时的回调 | (selectedRowKeys: string[], selectedRows: any[]) => void | undefined
 onSelect? | 点击除全选外某行选择框时的回调 | (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => void | undefined
 onSelectAll? | 点击复选框全选时的回调 | (selected: boolean, selectedRows: any[], changeRows: any[], selectedRowKeys: string[], changeRowKeys: string[]) => void | undefined

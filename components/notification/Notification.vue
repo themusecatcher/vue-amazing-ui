@@ -62,8 +62,8 @@ watch(
     // 所有提示都消失后重置
     if (!from && to) {
       resetTimer.value = rafTimeout(() => {
-        hideIndex.value.splice(0)
-        notificationData.value.splice(0)
+        hideIndex.value = []
+        notificationData.value = []
       }, 300)
     }
   },
