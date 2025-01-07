@@ -44,12 +44,12 @@ onBeforeMount(() => {
 import { ref, onBeforeMount } from 'vue'
 import type { WaterfallImage } from 'vue-amazing-ui'
 const images = ref<WaterfallImage[]>([])
-function loadImages () {
+function loadImages() {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
-      title: `image-${i}`,
-      link: '',
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
+      name: `image-${i}`,
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`,
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
     })
   }
 }
@@ -114,12 +114,12 @@ const state = reactive({
   backgroundColor: '#e6f4ff',
   borderRadius: 12
 })
-function loadImages () {
+function loadImages() {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
-      title: `image-${i}`,
-      link: '',
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
+      name: `image-${i}`,
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`,
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/${i}.jpg`
     })
   }
 }
