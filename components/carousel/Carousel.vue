@@ -5,9 +5,10 @@ import { rafTimeout, cancelRaf, useEventListener, useResizeObserver } from 'comp
 import { useTransition } from '@vueuse/core'
 import Spin from 'components/spin'
 export interface Image {
-  title?: string // 图片名称
+  name?: string // 图片名称
   src: string // 图片地址
   link?: string // 图片跳转链接
+  target?: '_self' | '_blank' // 如何打开跳转链接
 }
 export interface Props {
   images?: Image[] // 轮播图图片数组
