@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
@@ -85,7 +85,7 @@ const triggerOptions = [
     value: 'hover'
   }
 ]
-const trigger = ref<CarouselProps['dotsTrigger']>('hover')
+const dotsTrigger = ref<CarouselProps['dotsTrigger']>('hover')
 function clickImage(image: CarouselImage) {
   console.log('image', image)
 }
@@ -144,10 +144,10 @@ const state = reactive<CarouselProps>({
     <br />
     <Carousel :images="images" :width="800" :height="450" :effect="effect" :fade-duration="1500" />
     <h2 class="mt30 mb10">鼠标经过指示点切换轮播图</h2>
-    <Radio :options="triggerOptions" v-model:value="trigger" button button-style="solid" />
+    <Radio :options="triggerOptions" v-model:value="dotsTrigger" button button-style="solid" />
     <br />
     <br />
-    <Carousel :images="images" :width="800" :height="450" :dots-trigger="trigger" />
+    <Carousel :images="images" :width="800" :height="450" :dots-trigger="dotsTrigger" />
     <h2 class="mt30 mb10">自定义滑动动画</h2>
     <Carousel :images="images" :width="800" :height="450" :slide-duration="800" :slide-function="[0.45, 1, 0.55, 1]" />
     <h2 class="mt30 mb10">自定义样式</h2>
@@ -208,14 +208,10 @@ const state = reactive<CarouselProps>({
           <Space gap="small" vertical> dots：<Switch v-model="state.dots" /> </Space>
         </Col>
         <Col :span="6">
-          <Flex gap="small" vertical>
-            dotSize：<Slider v-model:value="state.dotSize" :min="4" :max="64" />
-          </Flex>
+          <Flex gap="small" vertical> dotSize：<Slider v-model:value="state.dotSize" :min="4" :max="64" /> </Flex>
         </Col>
         <Col :span="6">
-          <Flex gap="small" vertical>
-            dotColor：<Input v-model:value="state.dotColor" placeholder="dotColor" />
-          </Flex>
+          <Flex gap="small" vertical> dotColor：<Input v-model:value="state.dotColor" placeholder="dotColor" /> </Flex>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
@@ -245,12 +241,7 @@ const state = reactive<CarouselProps>({
           </Flex>
         </Col>
       </Row>
-      <Carousel
-        :images="images"
-        :height="450"
-        :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
-        v-bind="state"
-      />
+      <Carousel :images="images" :height="450" :spin-style="{ indicator: 'dot', color: '#13C2C2' }" v-bind="state" />
     </Flex>
   </div>
-</template>
+</template> -->

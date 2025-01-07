@@ -164,7 +164,12 @@ export { default as Swiper } from './swiper'
 export type { Props as SwitchProps } from './switch'
 export { default as Switch } from './switch'
 
-export type { Props as TableProps, Column as TableColumn, ScrollOption as TableScrollOption } from './table'
+export type {
+  Props as TableProps,
+  Column as TableColumn,
+  Selection as TableSelection,
+  ScrollOption as TableScrollOption
+} from './table'
 export { default as Table } from './table'
 
 export type { Props as TabsProps, Item as TabsItem } from './tabs'

@@ -12,30 +12,34 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const images = ref([
+import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
-const showArrow = ref(false)
-const positionOptions = ref([
+const showArrow = ref<boolean>(false)
+const positionOptions = [
   {
     label: 'top',
     value: 'top'
@@ -52,9 +56,9 @@ const positionOptions = ref([
     label: 'right',
     value: 'right'
   }
-])
-const dotPosition = ref('top')
-const effectOptions = ref([
+]
+const dotPosition = ref<CarouselProps['dotPosition']>('top')
+const effectOptions = [
   {
     label: 'slide',
     value: 'slide'
@@ -63,9 +67,9 @@ const effectOptions = ref([
     label: 'fade',
     value: 'fade'
   }
-])
-const effect = ref('fade')
-const triggerOptions = ref([
+]
+const effect = ref<CarouselProps['effect']>('fade')
+const triggerOptions = [
   {
     label: 'click',
     value: 'click'
@@ -74,9 +78,9 @@ const triggerOptions = ref([
     label: 'hover',
     value: 'hover'
   }
-])
-const trigger = ref('hover')
-function clickImage(image: object) {
+]
+const dotsTrigger = ref<CarouselProps['dotsTrigger']>('hover')
+function clickImage(image: CarouselImage) {
   console.log('image', image)
 }
 function onChange(index: number) {
@@ -88,7 +92,7 @@ const currentIndex = ref(1)
 function getCurrentIndex() {
   currentIndex.value = carousel.value.getCurrentIndex()
 }
-const carouselConfig = reactive({
+const state = reactive<CarouselProps>({
   autoplay: true,
   pauseOnMouseEnter: false,
   effect: 'slide',
@@ -120,29 +124,33 @@ const carouselConfig = reactive({
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
-function clickImage (image: object) {
+function clickImage (image: CarouselImage) {
   console.log('image', image)
 }
 </script>
@@ -167,30 +175,34 @@ function clickImage (image: object) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
-const showArrow = ref(false)
-function clickImage (image: object) {
+const showArrow = ref<boolean>(false)
+function clickImage (image: CarouselImage) {
   console.log('image', image)
 }
 </script>
@@ -215,29 +227,33 @@ function clickImage (image: object) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
-function clickImage (image: object) {
+function clickImage (image: CarouselImage) {
   console.log('image', image)
 }
 function onChange(index: number) {
@@ -256,36 +272,37 @@ function onChange(index: number) {
 <Radio :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
 <br/>
 <br/>
-<Carousel
-  :images="images"
-  :height="450"
-  :dotPosition="dotPosition" />
+<Carousel :images="images" :height="450" :dotPosition="dotPosition" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
 const positionOptions = ref([
@@ -306,16 +323,13 @@ const positionOptions = ref([
     value: 'right'
   }
 ])
-const dotPosition = ref('top')
+const dotPosition = ref<CarouselProps['dotPosition']>('top')
 </script>
 <template>
   <Radio :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
   <br/>
   <br/>
-  <Carousel
-    :images="images"
-    :height="450"
-    :dotPosition="dotPosition" />
+  <Carousel :images="images" :height="450" :dotPosition="dotPosition" />
 </template>
 ```
 
@@ -330,26 +344,30 @@ const dotPosition = ref('top')
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
 </script>
@@ -369,26 +387,30 @@ const images = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
 </script>
@@ -411,26 +433,30 @@ const images = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
 const effectOptions = ref([
@@ -443,7 +469,7 @@ const effectOptions = ref([
     value: 'fade'
   }
 ])
-const effect = ref('fade')
+const effect = ref<CarouselProps['effect']>('fade')
 </script>
 <template>
   <Radio :options="effectOptions" v-model:value="effect" button button-style="solid" />
@@ -457,36 +483,40 @@ const effect = ref('fade')
 
 ## 鼠标经过指示点切换轮播图
 
-<Radio :options="triggerOptions" v-model:value="trigger" button button-style="solid" />
+<Radio :options="triggerOptions" v-model:value="dotsTrigger" button button-style="solid" />
 <br />
 <br />
-<Carousel :images="images" :height="450" :dots-trigger="trigger" />
+<Carousel :images="images" :height="450" :dots-trigger="dotsTrigger" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
 const triggerOptions = ref([
@@ -499,13 +529,13 @@ const triggerOptions = ref([
     value: 'hover'
   }
 ])
-const trigger = ref('hover')
+const dotsTrigger = ref<CarouselProps['dotsTrigger']>('hover')
 </script>
 <template>
-  <Radio :options="triggerOptions" v-model:value="trigger" button button-style="solid" />
+  <Radio :options="triggerOptions" v-model:value="dotsTrigger" button button-style="solid" />
   <br />
   <br />
-  <Carousel :images="images" :height="450" :dots-trigger="trigger" />
+  <Carousel :images="images" :height="450" :dots-trigger="dotsTrigger" />
 </template>
 ```
 
@@ -517,33 +547,38 @@ const trigger = ref('hover')
   :images="images"
   :height="450"
   :slide-duration="800"
-  :slide-function="[0.45, 1, 0.55, 1]" />
+  :slide-function="[0.45, 1, 0.55, 1]"
+/>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
 </script>
@@ -552,7 +587,8 @@ const images = ref([
     :images="images"
     :height="450"
     :slide-duration="800"
-    :slide-function="[0.45, 1, 0.55, 1]" />
+    :slide-function="[0.45, 1, 0.55, 1]"
+  />
 </template>
 ```
 
@@ -576,26 +612,30 @@ const images = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
 </script>
@@ -633,26 +673,30 @@ const images = ref([
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const images = ref([
+import type { CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
 const carousel = ref()
@@ -683,91 +727,79 @@ function getCurrentIndex () {
 <Flex gap="large" vertical>
   <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Space gap="small" vertical> autoplay：<Switch v-model="carouselConfig.autoplay" /> </Space>
+      <Space gap="small" vertical> autoplay：<Switch v-model="state.autoplay" /> </Space>
+    </Col>
+    <Col :span="6">
+      <Space gap="small" vertical> pauseOnMouseEnter：<Switch v-model="state.pauseOnMouseEnter" /> </Space>
     </Col>
     <Col :span="6">
       <Space gap="small" vertical>
-        pauseOnMouseEnter：<Switch v-model="carouselConfig.pauseOnMouseEnter" />
-      </Space>
-    </Col>
-    <Col :span="6">
-      <Space gap="small" vertical>
-        effect：<Radio :options="effectOptions" v-model:value="carouselConfig.effect" button button-style="solid" />
+        effect：<Radio :options="effectOptions" v-model:value="state.effect" button button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        interval：<Slider v-model:value="carouselConfig.interval" :min="100" :step="10" :max="10000" />
+        interval：<Slider v-model:value="state.interval" :min="100" :step="10" :max="10000" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> showArrow：<Switch v-model="carouselConfig.showArrow" /> </Space>
+      <Space gap="small" vertical> showArrow：<Switch v-model="state.showArrow" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        arrowColor：<Input v-model:value="carouselConfig.arrowColor" placeholder="arrowColor" />
+        arrowColor：<Input v-model:value="state.arrowColor" placeholder="arrowColor" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Flex gap="small" vertical> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
+      <Flex gap="small" vertical> arrowSize：<Slider v-model:value="state.arrowSize" :min="1" /> </Flex>
     </Col>
     <Col :span="6"></Col>
     <Col :span="6">
-      <Space gap="small" vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
-    </Col>
-    <Col :span="6">
-      <Flex gap="small" vertical> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
-    </Col>
-    <Col :span="6">
-      <Flex gap="small" vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
+      <Space gap="small" vertical> dots：<Switch v-model="state.dots" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        dotActiveColor：<Input v-model:value="carouselConfig.dotActiveColor" placeholder="dotActiveColor" />
+        dotSize：<Slider v-model:value="state.dotSize" :min="4" :max="64" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        dotColor：<Input v-model:value="state.dotColor" placeholder="dotColor" />
+      </Flex>
+    </Col>
+    <Col :span="6">
+      <Flex gap="small" vertical>
+        dotActiveColor：<Input v-model:value="state.dotActiveColor" placeholder="dotActiveColor" />
       </Flex>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
         dotPosition：
-        <Select :options="positionOptions" v-model="carouselConfig.dotPosition" />
+        <Select :options="positionOptions" v-model="state.dotPosition" />
       </Flex>
     </Col>
     <Col :span="6">
       <Space gap="small" vertical>
         dotsTrigger：
-        <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
+        <Radio :options="triggerOptions" v-model:value="state.dotsTrigger" button button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        fadeDuration：<Slider v-model:value="carouselConfig.fadeDuration" :min="100" :step="10" :max="10000" />
+        fadeDuration：<Slider v-model:value="state.fadeDuration" :min="100" :step="10" :max="10000" />
       </Flex>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        fadeFunction：<Input v-model:value="carouselConfig.fadeFunction" placeholder="fadeFunction" />
+        fadeFunction：<Input v-model:value="state.fadeFunction" placeholder="fadeFunction" />
       </Flex>
     </Col>
   </Row>
   <Carousel
     :images="images"
     :height="450"
-    :autoplay="carouselConfig.autoplay"
-    :pause-on-mouse-enter="carouselConfig.pauseOnMouseEnter"
-    :effect="carouselConfig.effect"
-    :interval="carouselConfig.interval"
-    :show-arrow="carouselConfig.showArrow"
-    :arrow-color="carouselConfig.arrowColor"
-    :arrow-size="carouselConfig.arrowSize"
-    :dots="carouselConfig.dots"
-    :dot-size="carouselConfig.dotSize"
-    :dot-color="carouselConfig.dotColor"
-    :dot-active-color="carouselConfig.dotActiveColor"
-    :dot-position="carouselConfig.dotPosition"
-    :dots-trigger="carouselConfig.dotsTrigger"
-    :fade-duration="carouselConfig.fadeDuration"
-    :fade-function="carouselConfig.fadeFunction"
     :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
+    v-bind="state"
   />
 </Flex>
 
@@ -776,29 +808,33 @@ function getCurrentIndex () {
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const images = ref([
+import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
+const images = ref<CarouselImage[]>([
   {
-    title: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    name: 'image-1',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
   },
   {
-    title: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    name: 'image-2',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
   },
   {
-    title: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    name: 'image-3',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
   },
   {
-    title: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg'
+    name: 'image-4',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
   },
   {
-    title: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg'
+    name: 'image-5',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
   }
 ])
-const carouselConfig = reactive({
+const state = reactive<CarouselProps>({
   autoplay: true,
   pauseOnMouseEnter: false,
   effect: 'slide',
@@ -820,91 +856,79 @@ const carouselConfig = reactive({
   <Flex gap="large" vertical>
     <Row :gutter="[24, 12]">
       <Col :span="6">
-        <Space gap="small" vertical> autoplay：<Switch v-model="carouselConfig.autoplay" /> </Space>
+        <Space gap="small" vertical> autoplay：<Switch v-model="state.autoplay" /> </Space>
+      </Col>
+      <Col :span="6">
+        <Space gap="small" vertical> pauseOnMouseEnter：<Switch v-model="state.pauseOnMouseEnter" /> </Space>
       </Col>
       <Col :span="6">
         <Space gap="small" vertical>
-          pauseOnMouseEnter：<Switch v-model="carouselConfig.pauseOnMouseEnter" />
-        </Space>
-      </Col>
-      <Col :span="6">
-        <Space gap="small" vertical>
-          effect：<Radio :options="effectOptions" v-model:value="carouselConfig.effect" button button-style="solid" />
+          effect：<Radio :options="effectOptions" v-model:value="state.effect" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          interval：<Slider v-model:value="carouselConfig.interval" :min="100" :step="10" :max="10000" />
+          interval：<Slider v-model:value="state.interval" :min="100" :step="10" :max="10000" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> showArrow：<Switch v-model="carouselConfig.showArrow" /> </Space>
+        <Space gap="small" vertical> showArrow：<Switch v-model="state.showArrow" /> </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          arrowColor：<Input v-model:value="carouselConfig.arrowColor" placeholder="arrowColor" />
+          arrowColor：<Input v-model:value="state.arrowColor" placeholder="arrowColor" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex gap="small" vertical> arrowSize：<Slider v-model:value="carouselConfig.arrowSize" :min="1" /> </Flex>
+        <Flex gap="small" vertical> arrowSize：<Slider v-model:value="state.arrowSize" :min="1" /> </Flex>
       </Col>
       <Col :span="6"></Col>
       <Col :span="6">
-        <Space gap="small" vertical> dots：<Switch v-model="carouselConfig.dots" /> </Space>
-      </Col>
-      <Col :span="6">
-        <Flex gap="small" vertical> dotSize：<Slider v-model:value="carouselConfig.dotSize" :min="4" :max="64" /> </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex gap="small" vertical> dotColor：<Input v-model:value="carouselConfig.dotColor" placeholder="dotColor" /> </Flex>
+        <Space gap="small" vertical> dots：<Switch v-model="state.dots" /> </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          dotActiveColor：<Input v-model:value="carouselConfig.dotActiveColor" placeholder="dotActiveColor" />
+          dotSize：<Slider v-model:value="state.dotSize" :min="4" :max="64" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          dotColor：<Input v-model:value="state.dotColor" placeholder="dotColor" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          dotActiveColor：<Input v-model:value="state.dotActiveColor" placeholder="dotActiveColor" />
         </Flex>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
           dotPosition：
-          <Select :options="positionOptions" v-model="carouselConfig.dotPosition" />
+          <Select :options="positionOptions" v-model="state.dotPosition" />
         </Flex>
       </Col>
       <Col :span="6">
         <Space gap="small" vertical>
           dotsTrigger：
-          <Radio :options="triggerOptions" v-model:value="carouselConfig.dotsTrigger" button button-style="solid" />
+          <Radio :options="triggerOptions" v-model:value="state.dotsTrigger" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          fadeDuration：<Slider v-model:value="carouselConfig.fadeDuration" :min="100" :step="10" :max="10000" />
+          fadeDuration：<Slider v-model:value="state.fadeDuration" :min="100" :step="10" :max="10000" />
         </Flex>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          fadeFunction：<Input v-model:value="carouselConfig.fadeFunction" placeholder="fadeFunction" />
+          fadeFunction：<Input v-model:value="state.fadeFunction" placeholder="fadeFunction" />
         </Flex>
       </Col>
     </Row>
     <Carousel
       :images="images"
       :height="450"
-      :autoplay="carouselConfig.autoplay"
-      :pause-on-mouse-enter="carouselConfig.pauseOnMouseEnter"
-      :effect="carouselConfig.effect"
-      :interval="carouselConfig.interval"
-      :show-arrow="carouselConfig.showArrow"
-      :arrow-color="carouselConfig.arrowColor"
-      :arrow-size="carouselConfig.arrowSize"
-      :dots="carouselConfig.dots"
-      :dot-size="carouselConfig.dotSize"
-      :dot-color="carouselConfig.dotColor"
-      :dot-active-color="carouselConfig.dotActiveColor"
-      :dot-position="carouselConfig.dotPosition"
-      :dots-trigger="carouselConfig.dotsTrigger"
-      :fade-duration="carouselConfig.fadeDuration"
-      :fade-function="carouselConfig.fadeFunction"
       :spin-style="{ indicator: 'dot', color: '#13C2C2' }"
+      v-bind="state"
     />
   </Flex>
 </template>
@@ -946,9 +970,10 @@ slideFunction | 滑动动画函数，，仅当 `effect` 为 `'slide'` 时生效�
 
 名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-title? | 图片名称 | string | undefined
+name? | 图片名称 | string | undefined
 src | 图片地址 | string | undefined
 link? | 图片跳转链接 | string | undefined
+target? | 如何打开跳转链接 | '_self' &#124; '_blank' | undefined
 
 ## Methods
 
