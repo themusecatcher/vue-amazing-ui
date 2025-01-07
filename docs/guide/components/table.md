@@ -67,8 +67,7 @@ const selectionTypeOptions = [
     value: 'radio'
   }
 ]
-// const rowSelection = reactive<TableSelection>({
-const rowSelection = reactive({
+const rowSelection = reactive<TableSelection>({
   columnTitle: undefined,
   columnWidth: 100,
   fixed: true,
@@ -708,21 +707,21 @@ for (let i = 0; i < 100; i++) {
 const dataSourceRowEditable = ref<any[]>(data.slice(0, 10))
 const dataSourceExpandable = ref([
   {
-    key: 1,
+    key: '1',
     name: 'Superman',
     age: 32,
     address: 'New York No.1 Lake Park',
     description: 'My name is Superman, I am 32 years old, living in New York No.1 Lake Park.'
   },
   {
-    key: 2,
+    key: '2',
     name: 'Spiderman',
     age: 22,
     address: 'London No.2 Lake Park',
     description: 'My name is Spiderman, I am 42 years old, living in London No.2 Lake Park.'
   },
   {
-    key: 3,
+    key: '3',
     name: 'Ironman',
     age: 36,
     address: 'Sidney No.3 Lake Park',
@@ -759,7 +758,7 @@ function getRandomIntInclusive(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min //加 1 是因为包含 max
 }
 const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
-  key: i,
+  key: i.toString(),
   name: 'John Brown',
   age: getRandomIntInclusive(0, 10),
   street: 'Lake Park',
@@ -850,7 +849,7 @@ const handleTableChange = (page: number, pageSize: number) => {
     tableLoading.value = false
   }, 500)
 }
-const expandedRowKeys = ref([1])
+const expandedRowKeys = ref<TableProps['expandedRowKeys']>(['1'])
 watchEffect(() => {
   console.log('expandedRowKeys', expandedRowKeys.value)
 })
@@ -858,10 +857,10 @@ const handleExpand = (expanded: boolean, record: any) => {
   console.log('expanded', expanded)
   console.log('record', record)
 }
-const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
+const handleExpandedRowsChange = (expandedRows: string[]) => {
   console.log('expandedRowsChange', expandedRows)
 }
-function onSortChange(column: any, currentDataSource: any[]) {
+function onSortChange(column: TableColumn, currentDataSource: any[]) {
   console.log('sort column', column)
   console.log('sort currentDataSource', currentDataSource)
 }
@@ -906,7 +905,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
 import { ref, reactive, onBeforeMount } from 'vue'
 import { SmileOutlined } from '@ant-design/icons-vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const loading = ref(false)
+const loading = ref<boolean>(false)
 const queryParams = reactive({
   pageSize: 10,
   page: 1
@@ -1319,7 +1318,7 @@ const dataSource = ref([
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const customStyleBordered = ref(true)
+const customStyleBordered = ref<boolean>(true)
 const columnsCustomStyle = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age', className: 'age' },
@@ -1401,8 +1400,8 @@ const rowClassName = (record: any, rowIndex: number) => {
 ```vue
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import type { TableColumn } from 'vue-amazing-ui'
-const sizeBordered = ref(true)
+import type { TableProps, TableColumn } from 'vue-amazing-ui'
+const sizeBordered = ref<boolean>(true)
 const sizeOptions = [
   {
     label: 'small',
@@ -1417,7 +1416,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<TableProps['size']>('middle')
 const columnsSize = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age' },
@@ -1469,7 +1468,7 @@ const dataSourceSize = ref([
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const alignBordered = ref(true)
+const alignBordered = ref<boolean>(true)
 const alignOptions = [
   {
     label: 'left',
@@ -1484,7 +1483,7 @@ const alignOptions = [
     value: 'right'
   }
 ]
-const align = ref('center')
+const align = ref<TableColumn['align']>('center')
 const columnsAlign = reactive<TableColumn[]>([
   { title: 'Name', align: 'center', dataIndex: 'name' },
   { title: 'Age', align: 'center', dataIndex: 'age' },
@@ -1538,7 +1537,7 @@ const dataSourceAlign = ref([
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const stripedBordered = ref(true)
+const stripedBordered = ref<boolean>(true)
 const columnsStriped = reactive<TableColumn[]>([
   {
     title: 'Name',
@@ -1632,7 +1631,7 @@ const dataSourcesStriped = ref([
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const headerFooterbordered = ref(true)
+const headerFooterbordered = ref<boolean>(true)
 const columns = reactive<TableColumn[]>([
   {
     title: 'Name',
@@ -2174,7 +2173,7 @@ const handleCellDelete = (key: string) => {
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const tableLoading = ref(false)
+const tableLoading = ref<boolean>(false)
 const columnsRowEditable = reactive<TableColumn[]>([
   {
     title: 'Name',
@@ -2313,7 +2312,7 @@ const handleTableChange = (page: number, pageSize: number) => {
 ```vue
 <script setup lang="ts">
 import { ref, reactive, watchEffect } from 'vue'
-import type { TableColumn } from 'vue-amazing-ui'
+import type { TableProps, TableColumn } from 'vue-amazing-ui'
 const columnsExpandable = reactive<TableColumn[]>([
   { title: 'Name', dataIndex: 'name', key: 'name' },
   { title: 'Age', dataIndex: 'age', key: 'age' },
@@ -2322,28 +2321,28 @@ const columnsExpandable = reactive<TableColumn[]>([
 ])
 const dataSourceExpandable = ref([
   {
-    key: 1,
+    key: '1',
     name: 'Superman',
     age: 32,
     address: 'New York No.1 Lake Park',
     description: 'My name is Superman, I am 32 years old, living in New York No.1 Lake Park.'
   },
   {
-    key: 2,
+    key: '2',
     name: 'Spiderman',
     age: 22,
     address: 'London No.2 Lake Park',
     description: 'My name is Spiderman, I am 42 years old, living in London No.2 Lake Park.'
   },
   {
-    key: 3,
+    key: '3',
     name: 'Ironman',
     age: 36,
     address: 'Sidney No.3 Lake Park',
     description: 'My name is Ironman, I am 32 years old, living in Sidney No.3 Lake Park.'
   }
 ])
-const expandedRowKeys = ref([1])
+const expandedRowKeys = ref<TableProps['expandedRowKeys']>(['1'])
 watchEffect(() => {
   console.log('expandedRowKeys', expandedRowKeys.value)
 })
@@ -2351,7 +2350,7 @@ const handleExpand = (expanded: boolean, record: any) => {
   console.log('expanded', expanded)
   console.log('record', record)
 }
-const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
+const handleExpandedRowsChange = (expandedRows: string[]) => {
   console.log('expandedRowsChange', expandedRows)
 }
 </script>
@@ -2669,7 +2668,7 @@ const dataSourceFixHeaderAndScrollbar = ref(data)
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const groupBordered = ref(true)
+const groupBordered = ref<boolean>(true)
 const columnsHeaderGroup = reactive<TableColumn[]>([
   {
     title: 'Name',
@@ -2750,7 +2749,7 @@ function getRandomIntInclusive(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min //加 1 是因为包含 max
 }
 const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
-  key: i,
+  key: i.toString(),
   name: 'John Brown',
   age: getRandomIntInclusive(0, 10),
   street: 'Lake Park',
@@ -2789,7 +2788,7 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const sortBordered = ref(true)
+const sortBordered = ref<boolean>(true)
 const columnsSort = reactive<TableColumn[]>([
   {
     title: 'Name',
@@ -2836,7 +2835,7 @@ const dataSourceSort = ref([
     address: 'London No.102 Lake Park'
   }
 ])
-function onSortChange(column: any, currentDataSource: any[]) {
+function onSortChange(column: TableColumn, currentDataSource: any[]) {
   console.log('sort column', column)
   console.log('sort currentDataSource', currentDataSource)
 }
@@ -2895,7 +2894,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
     :bordered="selectionBordered"
     :scroll="{ x: 1500 }"
   >
-    <template #header> Selected {{ rowSelection.selectedRowKeys.length }} items </template>
+    <template #header> Selected {{ rowSelection.selectedRowKeys?.length }} items </template>
     <template #bodyCell="{ column, text }">
       <template v-if="column.dataIndex === 'name'">
         <a>{{ text }}</a>
@@ -3030,7 +3029,7 @@ watchEffect(() => {
       :bordered="selectionBordered"
       :scroll="{ x: 1500 }"
     >
-      <template #header> Selected {{ rowSelection.selectedRowKeys.length }} items </template>
+      <template #header> Selected {{ rowSelection.selectedRowKeys?.length }} items </template>
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
           <a>{{ text }}</a>

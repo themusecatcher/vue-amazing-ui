@@ -9,6 +9,7 @@
 - 优化并更新 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件，图片类型 `Image` 新增 `link` `target` 属性，支持：设置图片跳转链接；设置如何打开跳转链接
 - 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，图片类型 `Image` 新增 `target` 属性，支持设置如何打开跳转链接
 - 优化并更新 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件，图片类型 `Image` 新增 `link` `target` 属性，支持：设置图片跳转链接；设置如何打开跳转链接
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件；`rowSelection` 属性新增 `selectedRowKeys`，用于支持设置选中项的 `key` 数组，需和 `onChange` 配合使用
 
 ## 2.0.6 <Tag color="volcano" size="small">2024-01-06</Tag>
 
