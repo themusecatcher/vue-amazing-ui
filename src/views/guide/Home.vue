@@ -16,7 +16,9 @@ const url = '../../../package.json'
 // 字符串类型对象
 type Recordable<T = any> = Record<string, T>
 const dependencies = (modules as Recordable)[url].dependencies
+const devDependencies = (modules as Recordable)[url].devDependencies
 console.log('dependencies', dependencies)
+console.log('devDependencies', devDependencies)
 
 const toolFunctions = [
   {
@@ -136,7 +138,13 @@ function onOpen() {
     <br />
     <br />
     <Button type="primary" @click="onOpen">Open New Window</Button>
-    <p class="u-tip mt30 mb10">
+    <p class="u-tip mt30 mb10"
+      >组件库采用 <Tag color="magenta">Vue@{{ devDependencies['vue'] }}</Tag> +
+      <Tag color="magenta">TypeScript@{{ devDependencies['typescript'] }}</Tag> +
+      <Tag color="magenta">Vite@{{ devDependencies['vite'] }}</Tag> +
+      <Tag color="magenta">Less@{{ devDependencies['less'] }}</Tag> 实现！</p
+    >
+    <p class="u-tip mb10">
       目前共包含
       <Tag color="magenta">{{ componentsTotal }}</Tag>
       个基础
@@ -145,20 +153,20 @@ function onOpen() {
       <Tag color="magenta">{{ toolFunctions.length }}</Tag>
       个工具函数，并且持续探索更新中...
     </p>
-    <p class="u-tip mb10"> 所有组件均采用单文件组件 <Tag color="magenta">SFC</Tag> 形式，无需安装，直接使用！ </p>
+    <p class="u-tip mb10"> 顺便一提，它们全都可以 <Tag color="magenta">treeshaking</Tag> </p>
     <p class="u-tip mb10">
-      所有组件样式均使用
-      <Tag color="magenta">box-sizing: border-box;</Tag>
-      模式！
+      <Tag color="magenta">Vue Amazing UI</Tag> 全量使用 <Tag color="magenta">TypeScript</Tag> 编写，和你的
+      <Tag color="magenta">TypeScript</Tag> 项目无缝衔接
     </p>
-    <p class="u-tip">开箱即用，不墨迹！</p>
+    <p class="u-tip mb10"> 全部组件均采用单文件组件 <Tag color="magenta">SFC</Tag> 风格，可独立使用 </p>
+    <p class="u-tip"> 开箱即用，不墨迹 </p>
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse lang="bash" :fontSize="16" :items="installItems" v-model:activeKey="activeKey" copyable />
     <ul class="m-list">
       <li class="u-tip mb10 mt10">全局引入注册所有组件</li>
       <li class="u-tip mb10 mt10">全局引入注册部分组件</li>
       <li class="u-tip mb10 mt10">局部引入注册部分组件</li>
-      <li class="u-tip mb10">无需任何安装引入注册，直接使用单文件组件 SFC</li>
+      <li class="u-tip mb10">无需任何安装引入注册，直接使用单文件组件 <Tag color="magenta">SFC</Tag></li>
     </ul>
     <h2 class="mt30">常用工具函数：</h2>
     <ul class="m-list">
