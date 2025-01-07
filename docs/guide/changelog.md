@@ -4,7 +4,7 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或者直接通过右下角邮箱地址直接联系我
 
-## 2.0.7 <Tag color="volcano" size="small">soon</Tag>
+## 2.0.7 <Tag color="volcano" size="small">2024-01-07</Tag>
 
 - 优化并更新 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件，图片类型 `Image` 新增 `link` `target` 属性，支持：设置图片跳转链接；设置如何打开跳转链接
 - 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，图片类型 `Image` 新增 `target` 属性，支持设置如何打开跳转链接
