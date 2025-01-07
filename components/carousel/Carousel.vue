@@ -380,35 +380,49 @@ defineExpose({
     @mouseenter="autoplay && pauseOnMouseEnter ? onStop() : () => false"
     @mouseleave="autoplay && pauseOnMouseEnter ? onStart() : () => false"
   >
-    <div class="m-carousel-flex" :style="carouselStyle">
+    <div class="carousel-flex-wrap" :style="carouselStyle">
       <div
-        class="m-image"
+        class="image-wrap"
         :class="{ 'image-fade-active': effect === 'fade' && activeSwitcher === index + 1 }"
         @click="clickImage(image)"
         v-for="(image, index) in images"
         :key="index"
       >
         <Spin :spinning="!complete[index]" indicator="dynamic-circle" v-bind="spinProps">
-          <img
-            @load="onComplete(index)"
-            :src="image.src"
-            :key="image.src"
-            :alt="image.title"
-            class="u-image"
-            :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"
-          />
+          <a
+            class="image-link"
+            :class="{ 'link-cursor': image.link }"
+            :href="image.link"
+            :target="image.target ? image.target : '_blank'"
+          >
+            <img
+              @load="onComplete(index)"
+              :src="image.src"
+              :key="image.src"
+              :alt="image.name"
+              class="image-item"
+              :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"
+            />
+          </a>
         </Spin>
       </div>
-      <div class="m-image" @click="clickImage(images[0])" v-if="imageAmount && effect === 'slide'">
+      <div class="image-wrap" @click="clickImage(images[0])" v-if="imageAmount && effect === 'slide'">
         <Spin :spinning="!complete[0]" indicator="dynamic-circle" v-bind="spinProps">
-          <img
-            @load="onComplete(0)"
-            :src="images[0].src"
-            :key="images[0].src"
-            :alt="images[0].title"
-            class="u-image"
-            :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"
-          />
+          <a
+            class="image-link"
+            :class="{ 'link-cursor': images[0].link }"
+            :href="images[0].link"
+            :target="images[0].target ? images[0].target : '_blank'"
+          >
+            <img
+              @load="onComplete(0)"
+              :src="images[0].src"
+              :key="images[0].src"
+              :alt="images[0].name"
+              class="image-item"
+              :style="`width: ${imageWidth}px; height: ${imageHeight}px;`"
+            />
+          </a>
         </Spin>
       </div>
     </div>
@@ -440,10 +454,10 @@ defineExpose({
         ></path>
       </svg>
     </template>
-    <div class="m-switch" :class="`switch-${dotPosition}`" v-if="dots">
+    <div class="carousel-switch" :class="`switch-${dotPosition}`" v-if="dots">
       <div
         tabindex="0"
-        class="u-dot"
+        class="dot-item"
         :style="[dotStyle, activeSwitcher === n ? { backgroundColor: dotActiveColor, ...dotActiveStyle } : {}]"
         v-for="n in imageAmount"
         :key="n"
@@ -460,20 +474,29 @@ defineExpose({
   margin: 0 auto;
   position: relative;
   overflow: hidden;
-  .m-carousel-flex {
+  .carousel-flex-wrap {
     display: flex;
     width: 100%;
     height: 100%;
-    // will-change: transform;
-    .m-image {
+    .image-wrap {
       // 指定了 flex 元素的收缩规则。flex 元素仅在默认宽度之和大于容器的时候才会发生收缩，其收缩的大小是依据 flex-shrink 的值
       flex-shrink: 0; // 默认为 1，为 0 时不缩小
       display: inline-block;
       cursor: pointer;
-      .u-image {
-        display: inline-block;
-        object-fit: cover;
-        vertical-align: bottom; // 消除img标签底部的5px
+      .image-link {
+        display: block;
+        height: 100%;
+        cursor: default;
+        .image-item {
+          width: 100%;
+          height: 100%;
+          border-radius: var(--border-radius);
+          display: inline-block;
+          vertical-align: bottom;
+        }
+      }
+      .link-cursor {
+        cursor: pointer;
       }
     }
   }
@@ -519,7 +542,7 @@ defineExpose({
       opacity: 1;
     }
   }
-  .m-switch {
+  .carousel-switch {
     display: flex;
     justify-content: center;
     gap: 8px;
@@ -529,7 +552,7 @@ defineExpose({
     left: 50%;
     transform: translateX(-50%);
     height: auto;
-    .u-dot {
+    .dot-item {
       // flex: 0 1 auto;
       width: var(--dot-size);
       height: var(--dot-size);
@@ -562,7 +585,7 @@ defineExpose({
   }
 }
 .carousel-vertical {
-  .m-carousel-flex {
+  .carousel-flex-wrap {
     flex-direction: column;
   }
   .arrow-left {
@@ -578,7 +601,7 @@ defineExpose({
   }
 }
 .carousel-fade {
-  .m-image {
+  .image-wrap {
     position: absolute;
     opacity: 0;
     pointer-events: none;
