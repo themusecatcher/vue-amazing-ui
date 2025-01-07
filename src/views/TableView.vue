@@ -1,5 +1,5 @@
 <!-- <script setup lang="ts">
-import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
+import { ref, reactive, onBeforeMount, watch, watchEffect, h, computed, unref } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 import type { TableProps, TableColumn, TableSelection } from 'vue-amazing-ui'
 const loading = ref<boolean>(false)
@@ -62,10 +62,12 @@ const rowSelection = reactive<TableSelection>({
   fixed: true,
   hideSelectAll: false,
   type: 'checkbox',
+  selectedRowKeys: ['3'],
   onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
     console.log('onChange')
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('selectedRows', selectedRows)
+    rowSelection.selectedRowKeys = selectedRowKeys
   },
   onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
     console.log('onSelect')
@@ -92,6 +94,12 @@ const rowSelection = reactive<TableSelection>({
     disabled: record.key === '5',
     name: record.name
   })
+})
+const clear = () => {
+  rowSelection.selectedRowKeys = []
+}
+watchEffect(() => {
+  console.log('rowSelection.selectedRowKeys', rowSelection.selectedRowKeys)
 })
 const columns = reactive<TableColumn[]>([
   {
@@ -775,38 +783,7 @@ const dataSourceSort = ref([
     address: 'London No.102 Lake Park'
   }
 ])
-const dataSourceSelection = ref([
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No.1 Lake Park'
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No.2 Lake Park'
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No.3 Lake Park'
-  },
-  {
-    key: '4',
-    name: 'Jean Blue',
-    age: 36,
-    address: 'Paris No.4 Lake Park'
-  },
-  {
-    key: '5',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Berlin No.5 Lake Park'
-  }
-])
+const dataSourceSelection = ref(data)
 onBeforeMount(() => {
   getData()
 })
@@ -1183,7 +1160,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
     </Flex>
     <h2 class="mt30 mb10">可选择</h2>
-    <h3 class="mb10">可通过 rowSelection 属性来自定义选择项</h3>
+    <h3 class="mb10">可通过 rowSelection 属性来自定义选择功能</h3>
     <Flex vertical>
       <Row :gutter="[24, 12]">
         <Col :span="6">
@@ -1212,6 +1189,9 @@ function onSortChange(column: any, currentDataSource: any[]) {
           </Space>
         </Col>
       </Row>
+      <Space>
+        <Button @click="clear">清空</Button>
+      </Space>
       <Table
         :columns="columnsSelection"
         :data-source="dataSourceSelection"
@@ -1219,6 +1199,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
         :bordered="selectionBordered"
         :scroll="{ x: 1500 }"
       >
+        <template #header> Selected {{ rowSelection.selectedRowKeys.length }} items </template>
         <template #bodyCell="{ column, text }">
           <template v-if="column.dataIndex === 'name'">
             <a>{{ text }}</a>

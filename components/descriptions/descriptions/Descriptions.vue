@@ -118,7 +118,7 @@ async function getGroupItems() {
     return element.className === (props.bordered ? 'descriptions-item-bordered' : 'descriptions-item')
   })
   if (groupItems.value.length) {
-    groupItems.value.splice(0) // 清空列表
+    groupItems.value = [] // 清空列表
     await nextTick()
   }
   if (children.value && children.value.length) {

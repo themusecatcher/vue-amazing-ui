@@ -38,8 +38,8 @@ watch(clear, (to, from) => {
   // 所有提示都消失后重置
   if (!from && to) {
     resetTimer.value = rafTimeout(() => {
-      messageContent.value.splice(0)
-      showMessage.value.splice(0)
+      messageContent.value = []
+      showMessage.value = []
     }, 300)
   }
 })

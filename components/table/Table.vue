@@ -37,6 +37,7 @@ export interface Selection {
   fixed?: boolean // 复选框列是否固定在左边
   hideSelectAll?: boolean // 是否隐藏全选复选框
   type?: 'checkbox' | 'radio' // 复选框/单选框
+  selectedRowKeys?: string[] // 选中项的 key 数组，需和 onChange 配合使用
   onChange?: (selectedRowKeys: string[], selectedRows: any[]) => void // 选中项发生变化时的回调
   onSelect?: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => void // 点击除全选外某行选择框时的回调
   onSelectAll?: (
@@ -167,10 +168,7 @@ const showSelectionColumnTitle = computed(() => {
 })
 // 是否展示全选复选框
 const showSelectionAll = computed(() => {
-  return (
-    !props.rowSelection?.hideSelectAll &&
-    (props.rowSelection?.type === undefined || props.rowSelection?.type === 'checkbox')
-  )
+  return !props.rowSelection?.hideSelectAll && props.rowSelection?.type !== 'radio'
 })
 // 是否设置了水平滚动
 const horizontalScroll = computed(() => {
@@ -394,20 +392,62 @@ watch(
   }
 )
 // 监听点击排序导致的表格展示数据的变化
-watch(
-  displayDataSource,
-  (to) => {
-    tableOptionsChecked.value = new Array(to.length).fill(false)
-    if (clickSorter.value) {
-      clickSorter.value = false
-      emits('sortChange', sortColumn.value, to)
+watch(displayDataSource, (to) => {
+  tableOptionsChecked.value = new Array(to.length).fill(false)
+  const len = to.length
+  for (let i = 0; i < len; i++) {
+    const record = to[i]
+    if (selectedRowKeys.value.includes(record.key)) {
+      if (
+        props.rowSelection?.type === undefined ||
+        props.rowSelection?.type === 'checkbox' ||
+        (props.rowSelection?.type === 'radio' && !tableOptionsChecked.value.includes(true))
+      ) {
+        tableOptionsChecked.value[i] = true
+        continue
+      }
     }
+    tableOptionsChecked.value[i] = false
+  }
+  if (clickSorter.value) {
+    clickSorter.value = false
+    emits('sortChange', sortColumn.value, to)
+  }
+})
+// 监听选中项的 key 数组和选择框类型变化
+watch(
+  () => [props.rowSelection?.selectedRowKeys, props.rowSelection?.type],
+  () => {
+    selectedRowKeys.value = []
+    selectedRows.value = []
+    displayDataSource.value.forEach((record: any, rowIndex) => {
+      if (props.rowSelection?.type === 'radio') {
+        // 单选
+        if (props.rowSelection?.selectedRowKeys && props.rowSelection.selectedRowKeys[0] === record.key) {
+          tableOptionsChecked.value[rowIndex] = true
+          selectedRowKeys.value.push(record.key)
+          selectedRows.value.push(record)
+        } else {
+          tableOptionsChecked.value[rowIndex] = false
+        }
+      } else {
+        // 复选
+        if (props.rowSelection?.selectedRowKeys && props.rowSelection.selectedRowKeys.includes(record.key)) {
+          tableOptionsChecked.value[rowIndex] = true
+          selectedRowKeys.value.push(record.key)
+          selectedRows.value.push(record)
+        } else {
+          tableOptionsChecked.value[rowIndex] = false
+        }
+      }
+    })
   },
   {
-    immediate: true
+    immediate: true,
+    deep: true
   }
 )
-// 监听表格选项数组变化
+// 监听表格选中的选项数组变化
 watch(
   tableOptionsChecked,
   (to) => {
@@ -426,6 +466,7 @@ watch(
     }
   },
   {
+    immediate: true,
     deep: true
   }
 )
@@ -461,8 +502,8 @@ useResizeObserver(tableRef, () => {
 })
 // 点击复选框全选
 function onCheckAllChange(checked: boolean) {
-  changeRowKeys.value.splice(0)
-  changeRows.value.splice(0)
+  changeRowKeys.value = []
+  changeRows.value = []
   displayDataSource.value.forEach((record: any, rowIndex: number) => {
     const checkboxProps =
       props.rowSelection?.getSelectionProps && props.rowSelection.getSelectionProps(record, rowIndex)
@@ -478,8 +519,8 @@ function onCheckAllChange(checked: boolean) {
         }
       } else {
         // 取消全选
-        selectedRowKeys.value.splice(0)
-        selectedRows.value.splice(0)
+        selectedRowKeys.value = []
+        selectedRows.value = []
         if (tableOptionsChecked.value[rowIndex]) {
           tableOptionsChecked.value[rowIndex] = false
           changeRowKeys.value.push(record.key)
@@ -499,8 +540,8 @@ function onCheckAllChange(checked: boolean) {
   props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
 }
 // 点击某行复选框/单选框
-function onTableSelectionChange(checked: boolean, rowIndex: number, key: string, record: any) {
-  if (checked) {
+function onTableSelectionChange(selected: boolean, rowIndex: number, key: string, record: any) {
+  if (selected) {
     // 选中复选框/单选框
     if (props.rowSelection?.type === 'radio') {
       tableOptionsChecked.value.forEach((checked: boolean, index) => {
@@ -520,7 +561,7 @@ function onTableSelectionChange(checked: boolean, rowIndex: number, key: string,
     selectedRows.value = selectedRows.value.filter((selectedRow: any) => selectedRow.key !== key)
   }
   props.rowSelection?.onSelect &&
-    props.rowSelection.onSelect(record, checked, selectedRows.value, selectedRowKeys.value)
+    props.rowSelection.onSelect(record, selected, selectedRows.value, selectedRowKeys.value)
   props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
 }
 // 初始化默认排序时的数据索引，标识和展示数据
@@ -610,7 +651,7 @@ function getMaxDepth(columns: Column[], currentDepth = 1) {
 }
 // 计算获取表头分组的 th columns
 function getThColumnsGroup(columns: Column[]) {
-  thColumnsLeaf.value.splice(0)
+  thColumnsLeaf.value = []
   const maxDepth = getMaxDepth(columns)
   const result: Array<Column[]> = []
   for (let i = 0; i < maxDepth; i++) {
@@ -915,7 +956,7 @@ function onEnterRow(record: any, rowIndex: number) {
 // 鼠标离开某行
 function onLeaveRow() {
   hoverRowIndex.value = null
-  mergeHoverCoords.value.splice(0) // 重置被合并单元格的坐标
+  mergeHoverCoords.value = [] // 重置被合并单元格的坐标
 }
 // 检查单元格是否处于鼠标悬浮所在的区域，包括行/列合并的单元格
 function checkHoverCoord(row: number, col: number) {

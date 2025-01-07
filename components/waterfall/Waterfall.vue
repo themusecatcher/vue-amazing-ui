@@ -81,7 +81,7 @@ async function preloadImages(symbol: number) {
   // 计算图片宽高和位置（top，left）
   // 计算每列的图片宽度
   imageWidth.value = ((waterfallWidth.value as number) - (props.columnCount + 1) * props.columnGap) / props.columnCount
-  imagesProperty.value.splice(0)
+  imagesProperty.value = []
   for (let i = 0; i < len.value; i++) {
     if (symbol === flag.value) {
       await loadImage(props.images[i].src, i)
