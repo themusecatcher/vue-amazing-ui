@@ -1,4 +1,4 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import { ref, reactive, onBeforeMount, watch, watchEffect, h, computed, unref } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 import type { TableProps, TableColumn, TableSelection } from 'vue-amazing-ui'
@@ -696,21 +696,21 @@ for (let i = 0; i < 100; i++) {
 const dataSourceRowEditable = ref<any[]>(data.slice(0, 10))
 const dataSourceExpandable = ref([
   {
-    key: 1,
+    key: '1',
     name: 'Superman',
     age: 32,
     address: 'New York No.1 Lake Park',
     description: 'My name is Superman, I am 32 years old, living in New York No.1 Lake Park.'
   },
   {
-    key: 2,
+    key: '2',
     name: 'Spiderman',
     age: 22,
     address: 'London No.2 Lake Park',
     description: 'My name is Spiderman, I am 42 years old, living in London No.2 Lake Park.'
   },
   {
-    key: 3,
+    key: '3',
     name: 'Ironman',
     age: 36,
     address: 'Sidney No.3 Lake Park',
@@ -747,7 +747,7 @@ function getRandomIntInclusive(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min //加 1 是因为包含 max
 }
 const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
-  key: i,
+  key: i.toString(),
   name: 'John Brown',
   age: getRandomIntInclusive(0, 10),
   street: 'Lake Park',
@@ -838,7 +838,7 @@ const handleTableChange = (page: number, pageSize: number) => {
     tableLoading.value = false
   }, 500)
 }
-const expandedRowKeys = ref([1])
+const expandedRowKeys = ref<TableProps['expandedRowKeys']>(['1'])
 watchEffect(() => {
   console.log('expandedRowKeys', expandedRowKeys.value)
 })
@@ -846,10 +846,10 @@ const handleExpand = (expanded: boolean, record: any) => {
   console.log('expanded', expanded)
   console.log('record', record)
 }
-const handleExpandedRowsChange = (expandedRows: (string | number)[]) => {
+const handleExpandedRowsChange = (expandedRows: string[]) => {
   console.log('expandedRowsChange', expandedRows)
 }
-function onSortChange(column: any, currentDataSource: any[]) {
+function onSortChange(column: TableColumn, currentDataSource: any[]) {
   console.log('sort column', column)
   console.log('sort currentDataSource', currentDataSource)
 }
@@ -1199,7 +1199,7 @@ function onSortChange(column: any, currentDataSource: any[]) {
         :bordered="selectionBordered"
         :scroll="{ x: 1500 }"
       >
-        <template #header> Selected {{ rowSelection.selectedRowKeys.length }} items </template>
+        <template #header> Selected {{ rowSelection.selectedRowKeys?.length }} items </template>
         <template #bodyCell="{ column, text }">
           <template v-if="column.dataIndex === 'name'">
             <a>{{ text }}</a>
@@ -1236,4 +1236,4 @@ function onSortChange(column: any, currentDataSource: any[]) {
     }
   }
 }
-</style> -->
+</style>

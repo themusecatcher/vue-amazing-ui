@@ -1,4 +1,4 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
@@ -244,4 +244,4 @@ const state = reactive<CarouselProps>({
       <Carousel :images="images" :height="450" :spin-style="{ indicator: 'dot', color: '#13C2C2' }" v-bind="state" />
     </Flex>
   </div>
-</template> -->
+</template>

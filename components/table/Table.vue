@@ -83,7 +83,7 @@ export interface Props {
   expandCell?: Slot // 自定义展开按钮 slot
   expandedRowRender?: Slot // 自定义额外的展开行内容 slot
   expandFixed?: boolean // 是否固定展开列
-  expandedRowKeys?: (string | number)[] // (v-model) 展开行的 key 数组，控制展开行的属性；需与 dataSource 数据中的 key 配合使用
+  expandedRowKeys?: string[] // (v-model) 展开行的 key 数组，控制展开行的属性；需与 dataSource 数据中的 key 配合使用
   expandRowByClick?: boolean // 点击行是否展开
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -128,7 +128,7 @@ const tablePageSize = ref<number>(10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const displayDataSource = ref<any[]>([]) // 当前展示的表格数据
-const tableExpandedRowKeys = ref<(string | number)[]>([]) // 当前展开行的 key 数组
+const tableExpandedRowKeys = ref<string[]>([]) // 当前展开行的 key 数组
 const checkAll = ref(false) // 是否全选
 const indeterminate = ref(false) // 全选样式控制
 const tableOptionsChecked = ref<boolean[]>([]) // 表格选项数组
