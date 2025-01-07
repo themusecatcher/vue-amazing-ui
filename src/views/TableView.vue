@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
-import type { TableProps, TableColumn } from 'vue-amazing-ui'
+import type { TableProps, TableColumn, TableSelection } from 'vue-amazing-ui'
 const loading = ref<boolean>(false)
 const tableLoading = ref<boolean>(false)
 const customStyleBordered = ref<boolean>(true)
@@ -56,7 +56,7 @@ const selectionTypeOptions = [
     value: 'radio'
   }
 ]
-const rowSelection = reactive({
+const rowSelection = reactive<TableSelection>({
   columnTitle: undefined,
   columnWidth: 100,
   fixed: true,
@@ -1255,4 +1255,4 @@ function onSortChange(column: any, currentDataSource: any[]) {
     }
   }
 }
-</style>
+</style> -->
