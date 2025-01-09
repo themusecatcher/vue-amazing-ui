@@ -10,6 +10,8 @@
 
 ## 2.0.8 <Tag color="volcano" size="small">2024-01-09</Tag>
 
+- 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html) 组件
+- 优化并更新 [分段控制器 Segmented](https://themusecatcher.github.io/vue-amazing-ui/guide/components/segmented.html) 组件
 - 组件库及文档代码优化
 
 ## 2.0.7 <Tag color="volcano" size="small">2024-01-07</Tag>

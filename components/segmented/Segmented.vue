@@ -54,9 +54,9 @@ function getOptionLabel(option: string | number | Option) {
       'segmented-block': block
     }"
   >
-    <div class="m-segmented-group">
+    <div class="segmented-group">
       <div
-        class="m-segmented-item"
+        class="segmented-item"
         :class="{
           'segmented-item-selected': value === getOptionValue(option),
           'segmented-item-disabled': disabled || getOptionDisabled(option),
@@ -100,13 +100,13 @@ function getOptionLabel(option: string | number | Option) {
   background-color: #f5f5f5;
   border-radius: 6px;
   transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  .m-segmented-group {
+  .segmented-group {
     position: relative;
     display: flex;
     align-items: stretch;
     justify-items: flex-start;
     width: 100%;
-    .m-segmented-item {
+    .segmented-item {
       position: relative;
       text-align: center;
       cursor: pointer;
@@ -150,6 +150,9 @@ function getOptionLabel(option: string | number | Option) {
         :deep(svg) {
           fill: currentColor;
         }
+        :deep(.m-avatar) {
+          cursor: pointer;
+        }
       }
     }
     .segmented-item-selected {
@@ -168,7 +171,7 @@ function getOptionLabel(option: string | number | Option) {
 }
 .segmented-small {
   border-radius: 4px;
-  .m-segmented-group .m-segmented-item {
+  .segmented-group .segmented-item {
     border-radius: 2px;
     .segmented-item-label {
       min-height: 20px;
@@ -179,7 +182,7 @@ function getOptionLabel(option: string | number | Option) {
 }
 .segmented-large {
   border-radius: 8px;
-  .m-segmented-group .m-segmented-item {
+  .segmented-group .segmented-item {
     border-radius: 6px;
     .segmented-item-label {
       min-height: 36px;
@@ -192,7 +195,7 @@ function getOptionLabel(option: string | number | Option) {
 .segmented-block {
   display: flex;
   width: 100%;
-  .m-segmented-group .m-segmented-item {
+  .segmented-group .segmented-item {
     flex: 1;
     min-width: 0;
   }
