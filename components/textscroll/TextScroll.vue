@@ -90,7 +90,7 @@ watch(
   },
   {
     immediate: true,
-    deep: true // 因为 props.items 是引用类型
+    deep: true
   }
 )
 watch(scrollItems, () => {
