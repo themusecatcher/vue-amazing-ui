@@ -37,9 +37,7 @@ const scrollItems = ref<TextScrollItem[]>([
   }
 ])
 const singleItem: TextScrollItem = {
-  title: '请用一只玫瑰纪念我 🌹',
-  href: 'https://blog.csdn.net/Dandrose?type=blog',
-  target: '_blank'
+  title: '请用一只玫瑰纪念我 🌹'
 }
 const textScroll = ref()
 const disabled = ref<boolean>(true)
@@ -208,8 +206,7 @@ function onClick(item: TextScrollItem) {
 import { ref } from 'vue'
 import type { TextScrollItem } from 'vue-amazing-ui'
 const singleItem: TextScrollItem = {
-  title: '请用一只玫瑰纪念我 🌹',
-  href: 'https://blog.csdn.net/Dandrose?type=blog'
+  title: '请用一只玫瑰纪念我 🌹'
 }
 function onClick(item: TextScrollItem) {
   // 获取点击的 item
@@ -795,7 +792,7 @@ speed | 水平滚动时移动的速度，单位是像素每秒，水平滚动时
 vertical | 是否垂直滚动 | boolean | false
 duration | 垂直滚动过渡持续时间，单位 `ms`，垂直滚动时生效 | number | 1000
 interval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000
-pauseOnMouseEnter | 鼠标移入是否暂停滚动 | boolean | true
+pauseOnMouseEnter | 鼠标移入是否暂停滚动 | boolean | false
 
 ### Item Type
 
