@@ -39,6 +39,7 @@ const QRCodes = [
   single
   :gap="12"
   :item-style="{ fontSize: '18px', fontWeight: 500, color: 'rgba(0, 0, 0, 0.88)' }"
+  :pause-on-mouse-enter="false"
 />
 
 <br/>

@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   duration: 1000,
   interval: 3000,
-  pauseOnMouseEnter: true
+  pauseOnMouseEnter: false
 })
 const horizontalRef = ref() // 水平滚动 DOM 引用
 const horizontalWrapWidth = ref<number>(0) // 水平滚动容器宽度
