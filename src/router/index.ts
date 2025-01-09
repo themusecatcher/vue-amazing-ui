@@ -84,6 +84,12 @@ export const routes = [
         component: () => import('@/views/CollapseView.vue')
       },
       {
+        path: '/colorpicker',
+        name: 'ColorPicker',
+        meta: { title: '颜色选择器' },
+        component: () => import('@/views/ColorPickerView.vue')
+      },
+      {
         path: '/countdown',
         name: 'Countdown',
         meta: { title: '倒计时' },
