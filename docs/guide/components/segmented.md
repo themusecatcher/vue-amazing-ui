@@ -59,7 +59,7 @@ const customOptions1 = reactive<SegmentedOption[]>([
     label: 'user3',
     value: 'user3',
     payload: {
-      icon: 'User',
+      icon: UserOutlined,
       style: { backgroundColor: '#f56a00' }
     }
   }
@@ -224,7 +224,7 @@ const value = ref<SegmentedProps['value']>(options[0])
         <template v-if="payload.icon">
           <Avatar :style="payload.style">
             <template #icon>
-              <UserOutlined />
+              <component :is="payload.icon" />
             </template>
             {{ payload.content }}
           </Avatar>
@@ -276,7 +276,7 @@ const customOptions1 = reactive<SegmentedOption[]>([
     label: 'user3',
     value: 'user3',
     payload: {
-      icon: 'User',
+      icon: UserOutlined,
       style: { backgroundColor: '#f56a00' }
     }
   }
@@ -322,7 +322,7 @@ const customValue2 = ref<SegmentedProps['value']>(customOptions2[0].value)
           <template v-if="payload.icon">
             <Avatar :style="payload.style">
               <template #icon>
-                <UserOutlined />
+                <component :is="payload.icon" />
               </template>
               {{ payload.content }}
             </Avatar>

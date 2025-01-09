@@ -262,14 +262,14 @@ function onSwitchRight() {
       >
         <Spin :spinning="!complete[index]" indicator="dynamic-circle" size="small" v-bind="spinProps">
           <img
-            class="u-image"
+            class="image-item"
             :style="`object-fit: ${fit};`"
             @load="onComplete(index)"
             :src="image.src"
             :alt="getImageName(image)"
           />
         </Spin>
-        <div class="m-image-mask" @click="onPreview(index)">
+        <div class="image-mask" @click="onPreview(index)">
           <div class="image-mask-info">
             <svg
               class="eye-svg"
@@ -293,7 +293,7 @@ function onSwitchRight() {
       </div>
     </Space>
     <Transition name="fade">
-      <div v-show="showPreview" class="m-preview-mask"></div>
+      <div v-show="showPreview" class="preview-mask"></div>
     </Transition>
     <Transition
       name="zoom"
@@ -314,8 +314,8 @@ function onSwitchRight() {
         @keydown="onKeyboard"
         @keydown.esc="onClose"
       >
-        <div class="m-preview-body">
-          <div class="m-preview-operations">
+        <div class="preview-body">
+          <div class="preview-operations">
             <a
               class="previe-name"
               :href="images[previewIndex].src"
@@ -472,7 +472,7 @@ function onSwitchRight() {
             </div>
           </div>
           <div
-            class="m-preview-image"
+            class="preview-image-wrap"
             :style="`transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
             v-show="previewIndex === index"
             v-for="(image, index) in images"
@@ -588,7 +588,7 @@ function onSwitchRight() {
   display: inline-block;
   .image-hover-mask {
     &:hover {
-      .m-image-mask {
+      .image-mask {
         opacity: 1;
         pointer-events: auto;
       }
@@ -600,13 +600,13 @@ function onSwitchRight() {
     vertical-align: top;
     border-radius: 8px;
     overflow: hidden;
-    .u-image {
+    .image-item {
       display: inline-block;
       width: 100%;
       height: 100%;
       vertical-align: bottom;
     }
-    .m-image-mask {
+    .image-mask {
       // top right bottom left 简写为 inset: 0
       // insert 无论元素的书写模式、行内方向和文本朝向如何，其所定义的都不是逻辑偏移而是实体偏移
       position: absolute;
@@ -643,7 +643,7 @@ function onSwitchRight() {
   .image-bordered {
     border: 1px solid #d9d9d9;
   }
-  .m-preview-mask {
+  .preview-mask {
     position: fixed;
     inset: 0;
     z-index: 1000;
@@ -661,12 +661,12 @@ function onSwitchRight() {
     z-index: 1080;
     height: 100%;
     text-align: center;
-    .m-preview-body {
+    .preview-body {
       position: absolute;
       inset: 0;
       overflow: hidden;
       pointer-events: none;
-      .m-preview-operations {
+      .preview-operations {
         position: fixed;
         width: 100%;
         z-index: 9;
@@ -729,7 +729,7 @@ function onSwitchRight() {
           }
         }
       }
-      .m-preview-image {
+      .preview-image-wrap {
         position: absolute;
         z-index: 3;
         inset: 0;

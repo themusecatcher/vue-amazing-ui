@@ -151,6 +151,7 @@ const strStyle = computed(() => {
   border: 1px solid transparent;
   overflow: hidden;
   white-space: nowrap;
+  vertical-align: middle;
   cursor: auto;
   outline: none;
   &:hover {
