@@ -27,9 +27,7 @@ const scrollItems = ref<TextScrollItem[]>([
   }
 ])
 const singleItem: TextScrollItem = {
-  title: '请用一只玫瑰纪念我 🌹',
-  href: 'https://blog.csdn.net/Dandrose?type=blog',
-  target: '_blank'
+  title: '请用一只玫瑰纪念我 🌹'
 }
 const textScroll = ref()
 const disabled = ref<boolean>(true)

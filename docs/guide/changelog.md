@@ -7,6 +7,12 @@
 ## 2.1.0 <Tag color="volcano" size="small">soon</Tag>
 
 - 新增 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件
+- 组件库及文档代码优化
+
+## 2.0.9 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，将 `pauseOnMouseEnter` 属性默认值调整为 `false`
+- 组件库及文档代码优化
 
 ## 2.0.8 <Tag color="volcano" size="small">2024-01-09</Tag>
 
