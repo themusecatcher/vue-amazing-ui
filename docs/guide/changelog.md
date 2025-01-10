@@ -9,31 +9,31 @@
 - 新增 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件
 - 组件库及文档代码优化
 
-## 2.0.9 <Tag color="volcano" size="small">soon</Tag>
+## 2.0.9 <Tag color="volcano" size="small">2025-01-10</Tag>
 
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，将 `pauseOnMouseEnter` 属性默认值调整为 `false`
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，将 `pauseOnMouseEnter` 属性默认值调整为 `false`，并更新文档示例
 - 组件库及文档代码优化
 
-## 2.0.8 <Tag color="volcano" size="small">2024-01-09</Tag>
+## 2.0.8 <Tag color="volcano" size="small">2025-01-09</Tag>
 
 - 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html) 组件
 - 优化并更新 [分段控制器 Segmented](https://themusecatcher.github.io/vue-amazing-ui/guide/components/segmented.html) 组件
 - 组件库及文档代码优化
 
-## 2.0.7 <Tag color="volcano" size="small">2024-01-07</Tag>
+## 2.0.7 <Tag color="volcano" size="small">2025-01-07</Tag>
 
 - 优化并更新 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件，图片类型 `Image` 新增 `link` `target` 属性，支持：设置图片跳转链接；设置如何打开跳转链接
 - 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，图片类型 `Image` 新增 `target` 属性，支持设置如何打开跳转链接
 - 优化并更新 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件，图片类型 `Image` 新增 `link` `target` 属性，支持：设置图片跳转链接；设置如何打开跳转链接
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件；`rowSelection` 属性新增 `selectedRowKeys`，用于支持设置选中项的 `key` 数组，需和 `onChange` 配合使用
 
-## 2.0.6 <Tag color="volcano" size="small">2024-01-06</Tag>
+## 2.0.6 <Tag color="volcano" size="small">2025-01-06</Tag>
 
 - 优化并更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件，新增 `destroyOnClose` `scrollbarProps` 属性，支持：设置关闭时是否销毁 `Dialog` 里的子元素；固定高度时使用滚动条组件，并可自定义滚动条样式
 - 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增 `destroyOnClose` 属性，支持：设置关闭时是否销毁 `Modal` 里的子元素
 - 组件库及文档代码优化
 
-## 2.0.5 <Tag color="volcano" size="small">2024-01-03</Tag>
+## 2.0.5 <Tag color="volcano" size="small">2025-01-03</Tag>
 
 - 优化并更新 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件点击动画效果及代码
 - 优化并更新 [单选框 Radio](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html) 组件代码
