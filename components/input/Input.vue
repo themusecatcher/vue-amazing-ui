@@ -33,8 +33,10 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
+const inputWrapRef = ref() // inputWrap 元素引用
 const inputRef = ref() // input 元素引用
-const showPassword = ref(false)
+const leaveWrap = ref<boolean>(false) // 鼠标是否移出 inputWrap
+const showPassword = ref<boolean>(false) // 是否显示密码
 const emits = defineEmits(['update:value', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const inputWidth = computed(() => {
@@ -70,7 +72,18 @@ const showAfter = computed(() => {
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
-
+function onMouseEnter() {
+  leaveWrap.value = false
+  inputWrapRef.value.style.zIndex = 1
+}
+function onMouseLeave() {
+  leaveWrap.value = true
+}
+function onTransitionEnd() {
+  if (leaveWrap.value) {
+    inputWrapRef.value.style.zIndex = ''
+  }
+}
 function onInput(e: Event) {
   if (!lazyInput.value) {
     emits('update:value', (e.target as HTMLInputElement).value)
@@ -106,6 +119,7 @@ function onPassword() {
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
+      ref="inputWrapRef"
       tabindex="1"
       class="input-wrap"
       :class="[
@@ -116,6 +130,9 @@ function onPassword() {
           'input-disabled': disabled
         }
       ]"
+      @mouseenter="onMouseEnter"
+      @mouseleave="onMouseLeave"
+      @transitionend="onTransitionEnd"
     >
       <span v-if="showPrefix" class="input-prefix">
         <slot name="prefix">{{ prefix }}</slot>
@@ -249,7 +266,6 @@ function onPassword() {
     &:hover {
       border-color: #4096ff;
       border-right-width: 1px;
-      z-index: 1;
     }
     &:focus-within {
       border-color: #4096ff;
