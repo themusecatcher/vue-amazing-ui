@@ -643,8 +643,28 @@ function onToggleTooltip() {
     width: 100%;
     flex-wrap: nowrap;
     vertical-align: bottom;
-    :deep(.input-item) {
-      text-align: center;
+    :deep(.m-input) {
+      flex-grow: 1;
+      flex-basis: 0;
+      &:not(:first-child) {
+        margin-left: -1px;
+        .input-wrap {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+      }
+      &:not(:last-child) {
+        .input-wrap {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+      }
+      &:last-child {
+        flex-grow: 1.25;
+      }
+      .input-item {
+        text-align: center;
+      }
     }
   }
 }
