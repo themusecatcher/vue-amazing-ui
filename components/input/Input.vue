@@ -122,7 +122,7 @@ function onPassword() {
       </span>
       <input
         ref="inputRef"
-        class="u-input"
+        class="input-item"
         :type="password && !showPassword ? 'password' : 'text'"
         :value="value"
         :placeholder="placeholder"
@@ -266,7 +266,7 @@ function onPassword() {
         fill: currentColor;
       }
     }
-    .u-input {
+    .input-item {
       font-size: 14px;
       color: rgba(0, 0, 0, 0.88);
       line-height: 1.5714285714285714;
@@ -352,7 +352,7 @@ function onPassword() {
     font-size: 16px;
     line-height: 1.5;
     border-radius: 8px;
-    .u-input {
+    .input-item {
       font-size: 16px;
       line-height: 1.5;
     }
@@ -376,7 +376,7 @@ function onPassword() {
       border-color: #d9d9d9;
       box-shadow: none;
     }
-    .u-input {
+    .input-item {
       color: rgba(0, 0, 0, 0.25);
       background-color: transparent;
       cursor: not-allowed;
