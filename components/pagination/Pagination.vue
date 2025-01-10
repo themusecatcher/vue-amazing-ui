@@ -477,7 +477,7 @@ function onPageSizeChange(pageSize: number) {
       height: 32px;
       line-height: 32px;
       margin-left: 8px;
-      .m-input-wrap {
+      .m-input {
         margin: 0 8px;
       }
     }
@@ -565,8 +565,8 @@ function onPageSizeChange(pageSize: number) {
       display: inline-block;
       height: 28px;
       line-height: 28px;
-      :deep(.m-input-wrap) {
-        .m-input {
+      :deep(.m-input) {
+        .input-wrap {
           padding: 2px 11px;
         }
       }
