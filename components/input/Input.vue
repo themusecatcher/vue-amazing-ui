@@ -101,13 +101,13 @@ function onPassword() {
 }
 </script>
 <template>
-  <div class="m-input-wrap" :style="`width: ${inputWidth};`">
-    <span v-if="showBefore" class="m-addon" :class="{ 'addon-before': showBefore }">
+  <div class="m-input" :style="`width: ${inputWidth};`">
+    <span v-if="showBefore" class="input-addon" :class="{ 'addon-before': showBefore }">
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
       tabindex="1"
-      class="m-input"
+      class="input-wrap"
       :class="[
         `input-${size}`,
         {
@@ -190,13 +190,13 @@ function onPassword() {
         </span>
       </span>
     </div>
-    <span v-if="showAfter" class="m-addon" :class="{ 'addon-after': showAfter }">
+    <span v-if="showAfter" class="input-addon" :class="{ 'addon-after': showAfter }">
       <slot name="addonAfter">{{ addonAfter }}</slot>
     </span>
   </div>
 </template>
 <style lang="less" scoped>
-.m-input-wrap {
+.m-input {
   width: 100%;
   text-align: start;
   vertical-align: top;
@@ -204,7 +204,7 @@ function onPassword() {
   display: inline-table;
   border-collapse: separate;
   border-spacing: 0;
-  .m-addon {
+  .input-addon {
     position: relative;
     padding: 0 11px;
     color: rgba(0, 0, 0, 0.88);
@@ -234,7 +234,7 @@ function onPassword() {
     border-bottom-left-radius: 0;
     border-left: 0;
   }
-  .m-input {
+  .input-wrap {
     font-size: 14px;
     color: rgba(0, 0, 0, 0.88);
     line-height: 1.5714285714285714;
