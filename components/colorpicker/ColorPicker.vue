@@ -1,8 +1,26 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { hsla, hsva, hsv2hsl, rgba, rgb2hsl } from 'seemly'
-import type { HSLA } from 'seemly'
+import {
+  hsla,
+  hsva,
+  rgba,
+  hsl2hsv,
+  rgb2hsv,
+  hsv2rgb,
+  hsl2rgb,
+  hsv2hsl,
+  rgb2hsl,
+  toHsvaString,
+  toHsvString,
+  toHslaString,
+  toHslString,
+  toRgbaString,
+  toRgbString,
+  toHexaString,
+  toHexString
+} from 'seemly'
+import type { HSVA, RGBA, HSLA } from 'seemly'
 import Tooltip from 'components/tooltip'
 import Input from 'components/input'
 import { useSlotsExist } from 'components/utils'
@@ -29,9 +47,21 @@ const props = withDefaults(defineProps<Props>(), {
   modes: () => ['rgb', 'hex', 'hsl'],
   actions: () => []
 })
-const displayedModeRef = ref<ColorPickerMode>(getModeFromValue(props.value) || props.modes[0] || 'rgb') // 当前展示的 mode
-console.log('displayedModeRef', displayedModeRef.value)
-const emits = defineEmits(['update:show', 'update:value'])
+const HANDLE_SIZE = '12px'
+const HANDLE_SIZE_NUM = 12
+const BORDER_RADIUS = '6px'
+const BORDER_RADIUS_NUM = 6
+let upcomingValue: string | undefined = undefined
+const tooltipRef = ref()
+const palleteRef = ref<HTMLElement | null>(null) // pallete 调色板模板引用
+const hueRailRef = ref<HTMLElement | null>(null) // hue 轨道条模板引用
+const alphaRailRef = ref<HTMLElement | null>(null) // alpha 轨道条模板引用
+const displayedHue = ref<number>(0)
+const displayedAlpha = ref<number>(1)
+const displayedSv = ref<[number, number]>([0, 0])
+const displayedValue = ref<string>()
+const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
+const emits = defineEmits(['update:show', 'update:value', 'complete'])
 // const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
 // const showTitle = computed(() => {
 //   return slotsExist.title || props.title
@@ -44,74 +74,81 @@ const emits = defineEmits(['update:show', 'update:value'])
 // })
 const layerHandleStyle = computed(() => {
   const style: CSSProperties = {
-    width: '12px',
-    height: '12px',
-    borderRadius: '6px',
-    left: 'calc(0% - 6px)',
-    bottom: 'calc(0% - 6px)'
+    width: HANDLE_SIZE,
+    height: HANDLE_SIZE,
+    borderRadius: BORDER_RADIUS,
+    left: `calc(${displayedSv.value[0]}% - ${BORDER_RADIUS})`,
+    bottom: `calc(${displayedSv.value[1]}% - ${BORDER_RADIUS})`
   }
   return style
 })
+const alphaRailBackgroundImage = computed(() => {
+  if (!rgbaRef.value) return ''
+  return `linear-gradient(to right, rgba(${rgbaRef.value[0]}, ${rgbaRef.value[1]}, ${rgbaRef.value[2]}, 0) 0%, rgba(${rgbaRef.value[0]}, ${rgbaRef.value[1]}, ${rgbaRef.value[2]}, 1) 100%)`
+})
+const handleColor = computed(() => {
+  if (!rgbaRef.value) return ''
+  return `rgb(${rgbaRef.value[0]}, ${rgbaRef.value[1]}, ${rgbaRef.value[2]})`
+})
 const layerHandleFillStyle = computed(() => {
   const style: CSSProperties = {
-    backgroundColor: 'rgb(0, 0, 0)',
-    borderRadius: '6px',
-    width: '12px',
-    height: '12px'
+    backgroundColor: handleColor.value,
+    borderRadius: BORDER_RADIUS,
+    width: HANDLE_SIZE,
+    height: HANDLE_SIZE
   }
   return style
 })
 const sliderStyle = computed(() => {
   const style: CSSProperties = {
-    height: '12px',
-    borderRadius: '6px'
+    height: HANDLE_SIZE,
+    borderRadius: BORDER_RADIUS
   }
   return style
 })
 const sliderRailStyle = computed(() => {
   const style: CSSProperties = {
     position: 'relative',
-    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 0px 2px 0px inset',
-    backgroundImage:
-      'linear-gradient(90deg, red, rgb(255, 255, 0) 16.66%, rgb(0, 255, 0) 33.33%, rgb(0, 255, 255) 50%, rgb(0, 0, 255) 66.66%, rgb(255, 0, 255) 83.33%, red)',
-    height: '12px',
-    borderRadius: '6px'
+    boxShadow: 'inset 0 0 2px 0 rgba(0, 0, 0, 0.24)',
+    backgroundImage: 'linear-gradient(90deg, red, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, red)',
+    height: HANDLE_SIZE,
+    borderRadius: BORDER_RADIUS
   }
   return style
 })
 const sliderColorHandleStyle = computed(() => {
   const style: CSSProperties = {
-    left: 'calc(0% - 6px)',
-    borderRadius: '6px',
-    width: '12px',
-    height: '12px'
+    left: `calc((${displayedHue.value}%) / 359 * 100 - ${BORDER_RADIUS})`,
+    borderRadius: BORDER_RADIUS,
+    width: HANDLE_SIZE,
+    height: HANDLE_SIZE
   }
   return style
 })
 const sliderColorHandleFillStyle = computed(() => {
   const style: CSSProperties = {
-    backgroundColor: 'rgb(0, 255, 38)',
-    borderRadius: '6px',
-    width: '12px',
-    height: '12px'
+    backgroundColor: `hsl(${displayedHue.value}, 100%, 50%)`,
+    borderRadius: BORDER_RADIUS,
+    width: HANDLE_SIZE,
+    height: HANDLE_SIZE
   }
   return style
 })
 const sliderAlphaHandleStyle = computed(() => {
   const style: CSSProperties = {
-    left: 'calc(0% - 6px)',
-    borderRadius: '6px',
-    width: '12px',
-    height: '12px'
+    left: `calc(${displayedAlpha.value * 100}% - ${BORDER_RADIUS})`,
+    borderRadius: BORDER_RADIUS,
+    width: HANDLE_SIZE,
+    height: HANDLE_SIZE
   }
   return style
 })
 const sliderAlphaHandleFillStyle = computed(() => {
   const style: CSSProperties = {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: '6px',
-    width: '12px',
-    height: '12px'
+    backgroundColor: rgbaRef.value ? toRgbaString(rgbaRef.value) : undefined,
+    borderRadius: BORDER_RADIUS,
+    width: HANDLE_SIZE,
+    height: HANDLE_SIZE
   }
   return style
 })
@@ -123,7 +160,7 @@ const colorPickerHeight = computed(() => {
   }
   return `${heightMap[props.size]}px`
 })
-const valueModeRef = computed(() => getModeFromValue(props.value))
+const valueMode = computed(() => getModeFromValue(displayedValue.value))
 let _h: number, // avoid conflict with render function's h
   s: number,
   l: number,
@@ -132,39 +169,268 @@ let _h: number, // avoid conflict with render function's h
   g: number,
   b: number,
   a: number
-const hslaRef = computed<HSLA | null>(() => {
-  if (!props.value) return null
-  switch (valueModeRef.value!) {
-    case 'hsl':
-      return hsla(props.value)
+const hsvaRef = computed<HSVA | null>(() => {
+  if (!displayedValue.value) return null
+  switch (valueMode.value!) {
     case 'hsv':
-      ;[_h, s, v, a] = hsva(props.value)
+      return hsva(displayedValue.value)
+    case 'hsl':
+      ;[_h, s, l, a] = hsla(displayedValue.value)
+      return [...hsl2hsv(_h, s, l), a]
+    case 'rgb':
+    case 'hex':
+      ;[r, g, b, a] = rgba(displayedValue.value)
+      return [...rgb2hsv(r, g, b), a]
+  }
+})
+const rgbaRef = computed<RGBA | null>(() => {
+  if (!displayedValue.value) return null
+  switch (valueMode.value!) {
+    case 'rgb':
+    case 'hex':
+      return rgba(displayedValue.value)
+    case 'hsv':
+      ;[_h, s, v, a] = hsva(displayedValue.value)
+      return [...hsv2rgb(_h, s, v), a]
+    case 'hsl':
+      ;[_h, s, l, a] = hsla(displayedValue.value)
+      return [...hsl2rgb(_h, s, l), a]
+  }
+})
+const hslaRef = computed<HSLA | null>(() => {
+  if (!displayedValue.value) return null
+  switch (valueMode.value!) {
+    case 'hsl':
+      return hsla(displayedValue.value)
+    case 'hsv':
+      ;[_h, s, v, a] = hsva(displayedValue.value)
       return [...hsv2hsl(_h, s, v), a]
     case 'rgb':
     case 'hex':
-      ;[r, g, b, a] = rgba(props.value)
+      ;[r, g, b, a] = rgba(displayedValue.value)
       return [...rgb2hsl(r, g, b), a]
   }
 })
-function getModeFromValue(color: string | null): ColorPickerMode | null {
-  if (color === null) return null
+const displayedValueArr = computed(() => {
+  let valueArr = null
+  switch (displayedMode.value) {
+    case 'rgb':
+    case 'hex':
+      valueArr = rgbaRef.value
+      break
+    case 'hsv':
+      valueArr = hsvaRef.value
+      break
+    case 'hsl':
+      valueArr = hslaRef.value
+      break
+  }
+  return valueArr === null ? [undefined, undefined, undefined, undefined] : valueArr.map((value) => value.toString())
+})
+watch(
+  () => props.value,
+  (to) => {
+    displayedValue.value = to
+  },
+  {
+    immediate: true
+  }
+)
+function onUpdateValue(value: string, updateSource: 'cursor' | 'input'): void {
+  if (updateSource === 'cursor') {
+    upcomingValue = value
+  } else {
+    upcomingValue = undefined
+  }
+  // const { nTriggerFormChange, nTriggerFormInput } = formItem
+  // const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
+  // if (onUpdateValue)
+  //   call(onUpdateValue as OnUpdateValueImpl, value)
+  // if (_onUpdateValue)
+  //   call(_onUpdateValue as OnUpdateValueImpl, value)
+  // nTriggerFormChange()
+  // nTriggerFormInput()
+  emits('update:value', value)
+  displayedValue.value = value
+}
+function handleUpdateSv(s: number, v: number): void {
+  const alpha = hsvaRef.value ? hsvaRef.value[3] : 1
+  displayedSv.value = [s, v]
+  switch (displayedMode.value) {
+    case 'hsv':
+      onUpdateValue((props.showAlpha ? toHsvaString : toHsvString)([displayedHue.value, s, v, alpha]), 'cursor')
+      break
+    case 'hsl':
+      onUpdateValue(
+        (props.showAlpha ? toHslaString : toHslString)([...hsv2hsl(displayedHue.value, s, v), alpha]),
+        'cursor'
+      )
+      break
+    case 'rgb':
+      onUpdateValue(
+        (props.showAlpha ? toRgbaString : toRgbString)([...hsv2rgb(displayedHue.value, s, v), alpha]),
+        'cursor'
+      )
+      break
+    case 'hex':
+      onUpdateValue(
+        (props.showAlpha ? toHexaString : toHexString)([...hsv2rgb(displayedHue.value, s, v), alpha]),
+        'cursor'
+      )
+      break
+  }
+}
+// pallete mouse down
+function handlePalleteMouseDown(e: MouseEvent): void {
+  if (!palleteRef.value) return
+  document.addEventListener('mousemove', handlePalleteMouseMove)
+  document.addEventListener('mouseup', handlePalleteMouseUp)
+  // on('mousemove', document, handleMouseMove)
+  // on('mouseup', document, handleMouseUp)
+  handlePalleteMouseMove(e)
+}
+function handlePalleteMouseMove(e: MouseEvent): void {
+  if (!palleteRef.value) return
+  const { width, height, left, bottom } = palleteRef.value.getBoundingClientRect()
+  const newV = (bottom - e.clientY) / height
+  const newS = (e.clientX - left) / width
+  const normalizedNewS = 100 * (newS > 1 ? 1 : newS < 0 ? 0 : newS)
+  const normalizedNewV = 100 * (newV > 1 ? 1 : newV < 0 ? 0 : newV)
+  handleUpdateSv(normalizedNewS, normalizedNewV)
+}
+function handlePalleteMouseUp(): void {
+  document.removeEventListener('mousemove', handlePalleteMouseMove)
+  document.removeEventListener('mouseup', handlePalleteMouseUp)
+  emits('complete')
+  // off('mousemove', document, handleMouseMove)
+  // off('mouseup', document, handleMouseUp)
+  // props.onComplete?.()
+}
+function handleUpdateHue(hue: number): void {
+  displayedHue.value = hue
+  if (!hsvaRef.value) {
+    return
+  }
+  const [, s, v, a] = hsvaRef.value
+  switch (displayedMode.value) {
+    case 'hsv':
+      onUpdateValue((props.showAlpha ? toHsvaString : toHsvString)([hue, s, v, a]), 'cursor')
+      break
+    case 'rgb':
+      onUpdateValue((props.showAlpha ? toRgbaString : toRgbString)([...hsv2rgb(hue, s, v), a]), 'cursor')
+      break
+    case 'hex':
+      onUpdateValue((props.showAlpha ? toHexaString : toHexString)([...hsv2rgb(hue, s, v), a]), 'cursor')
+      break
+    case 'hsl':
+      onUpdateValue((props.showAlpha ? toHslaString : toHslString)([...hsv2hsl(hue, s, v), a]), 'cursor')
+      break
+  }
+}
+// hue slider mouse down
+function handleHueSliderMouseDown(e: MouseEvent): void {
+  if (!hueRailRef.value) return
+  document.addEventListener('mousemove', handleHueSliderMouseMove)
+  document.addEventListener('mouseup', handleHueSliderMouseUp)
+  // on('mousemove', document, handleMouseMove)
+  // on('mouseup', document, handleMouseUp)
+  handleHueSliderMouseMove(e)
+}
+function normalizeHue(hue: number): number {
+  hue = Math.round(hue)
+  return hue >= 360 ? 359 : hue < 0 ? 0 : hue
+}
+function handleHueSliderMouseMove(e: MouseEvent): void {
+  if (!hueRailRef.value) return
+  const { width, left } = hueRailRef.value.getBoundingClientRect()
+  const newHue = normalizeHue(((e.clientX - left - BORDER_RADIUS_NUM) / (width - HANDLE_SIZE_NUM)) * 360)
+  handleUpdateHue(newHue)
+}
+function handleHueSliderMouseUp(): void {
+  document.removeEventListener('mousemove', handleHueSliderMouseMove)
+  document.removeEventListener('mouseup', handleHueSliderMouseUp)
+  emits('complete')
+  // off('mousemove', document, handleMouseMove)
+  // off('mouseup', document, handleMouseUp)
+  // props.onComplete?.()
+}
+function handleUpdateAlpha(alpha: number): void {
+  switch (displayedMode.value) {
+    case 'hsv':
+      ;[_h, s, v] = hsvaRef.value!
+      onUpdateValue(toHsvaString([_h, s, v, alpha]), 'cursor')
+      break
+    case 'rgb':
+      ;[r, g, b] = rgbaRef.value!
+      onUpdateValue(toRgbaString([r, g, b, alpha]), 'cursor')
+      break
+    case 'hex':
+      ;[r, g, b] = rgbaRef.value!
+      onUpdateValue(toHexaString([r, g, b, alpha]), 'cursor')
+      break
+    case 'hsl':
+      ;[_h, s, l] = hslaRef.value!
+      onUpdateValue(toHslaString([_h, s, l, alpha]), 'cursor')
+      break
+  }
+  displayedAlpha.value = alpha
+}
+// alpha slider mouse down
+function handleAlphaSliderMouseDown(e: MouseEvent): void {
+  if (!alphaRailRef.value || !rgbaRef.value) return
+  document.addEventListener('mousemove', handleAlphaSliderMouseMove)
+  document.addEventListener('mouseup', handleAlphaSliderMouseUp)
+  handleAlphaSliderMouseMove(e)
+  // on('mousemove', document, handleMouseMove)
+  // on('mouseup', document, handleMouseUp)
+}
+function normalizeAlpha(alpha: number): number {
+  alpha = Math.round(alpha * 100) / 100
+  return alpha > 1 ? 1 : alpha < 0 ? 0 : alpha
+}
+function handleAlphaSliderMouseMove(e: MouseEvent): void {
+  if (!alphaRailRef.value) return
+  const { width, left } = alphaRailRef.value.getBoundingClientRect()
+  const newAlpha = normalizeAlpha((e.clientX - left) / (width - HANDLE_SIZE_NUM))
+  handleUpdateAlpha(newAlpha)
+}
+function handleAlphaSliderMouseUp(): void {
+  document.removeEventListener('mousemove', handleAlphaSliderMouseMove)
+  document.removeEventListener('mouseup', handleAlphaSliderMouseUp)
+  emits('complete')
+  // off('mousemove', document, handleMouseMove)
+  // off('mouseup', document, handleMouseUp)
+  // props.onComplete?.()
+}
+function getModeFromValue(color: string | undefined): ColorPickerMode | undefined {
+  if (color === undefined) return undefined
   if (/^ *#/.test(color)) return 'hex'
   if (color.includes('rgb')) return 'rgb'
   if (color.includes('hsl')) return 'hsl'
   if (color.includes('hsv')) return 'hsv'
-  return null
+  return undefined
 }
 function onUpdateMode(): void {
-  const currentModeIndex = props.modes.findIndex((mode) => mode === displayedModeRef.value)
+  const currentModeIndex = props.modes.findIndex((mode) => mode === displayedMode.value)
   if (currentModeIndex !== -1) {
-    displayedModeRef.value = props.modes[(currentModeIndex + 1) % props.modes.length]
+    displayedMode.value = props.modes[(currentModeIndex + 1) % props.modes.length]
   } else {
-    displayedModeRef.value = 'rgb'
+    displayedMode.value = 'rgb'
+  }
+}
+const showTooltip = ref<boolean>(false) // tooltip 弹出面板显隐状态
+function onToggleTooltip() {
+  if (showTooltip.value) {
+    tooltipRef.value.hide()
+  } else {
+    tooltipRef.value.show()
   }
 }
 </script>
 <template>
   <Tooltip
+    ref="tooltipRef"
+    v-model:show="showTooltip"
     style="width: 100%"
     :arrow="false"
     bg-color="#fff"
@@ -182,14 +448,14 @@ function onUpdateMode(): void {
     v-bind="$attrs"
   >
     <template #tooltip>
-      <div class="color-picker-pallete">
+      <div ref="palleteRef" class="color-picker-pallete" @mousedown="handlePalleteMouseDown">
         <div
           class="color-picker-pallete-layer"
-          :style="{ backgroundImage: `linear-gradient(90deg, white, ${value})` }"
+          :style="{ backgroundImage: `linear-gradient(90deg, white, hsl(${displayedHue}, 100%, 50%))` }"
         ></div>
         <div
           class="color-picker-pallete-layer pallete-layer-shadowed"
-          style="background-image: linear-gradient(rgba(0, 0, 0, 0), rgb(0, 0, 0))"
+          style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0%), rgba(0, 0, 0, 100%))"
         ></div>
         <div class="color-picker-handle" :style="layerHandleStyle">
           <div class="color-picker-handle-fill" :style="layerHandleFillStyle"></div>
@@ -198,33 +464,39 @@ function onUpdateMode(): void {
       <div class="color-picker-preview">
         <div class="color-picker-preview-sliders">
           <div class="color-picker-slider" :style="sliderStyle">
-            <div :style="sliderRailStyle">
-              <div style="position: absolute; top: 0px; bottom: 0; left: 6px; right: 6px">
+            <div ref="hueRailRef" :style="sliderRailStyle" @mousedown="handleHueSliderMouseDown">
+              <div :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`">
                 <div class="color-picker-handle" :style="sliderColorHandleStyle">
                   <div class="color-picker-handle-fill" :style="sliderColorHandleFillStyle"></div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="color-picker-slider" :style="sliderStyle">
+          <div
+            v-if="showAlpha"
+            ref="alphaRailRef"
+            class="color-picker-slider"
+            :style="sliderStyle"
+            @mousedown="handleAlphaSliderMouseDown"
+          >
             <div
-              style="
-                border-radius: 6px;
+              :style="`
+                border-radius: ${BORDER_RADIUS};
                 position: absolute;
                 top: 0px;
                 bottom: 0;
                 left: 0px;
                 right: 0px;
                 overflow: hidden;
-              "
+              `"
             >
               <div class="color-picker-checkboard"></div>
-              <div
-                class="color-picker-slider-image"
-                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%)"
-              ></div>
+              <div class="color-picker-slider-image" :style="`background-image: ${alphaRailBackgroundImage}`"></div>
             </div>
-            <div style="position: absolute; top: 0px; bottom: 0; left: 6px; right: 6px">
+            <div
+              v-if="rgbaRef"
+              :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`"
+            >
               <div class="color-picker-handle" :style="sliderAlphaHandleStyle">
                 <div class="color-picker-handle-fill" :style="sliderAlphaHandleFillStyle"></div>
               </div>
@@ -238,23 +510,43 @@ function onUpdateMode(): void {
           :style="{ cursor: modes.length === 1 ? '' : 'pointer' }"
           @click="onUpdateMode"
         >
-          {{ displayedModeRef.toUpperCase() + (showAlpha ? 'A' : '') }}
+          {{ displayedMode.toUpperCase() + (showAlpha ? 'A' : '') }}
         </div>
         <div class="color-picker-input-group">
-          <Input />
+          <template v-if="displayedMode === 'hex'">
+            <Input size="small" :placeholder="displayedMode.toUpperCase() + (showAlpha ? 'A' : '')" />
+          </template>
+          <template v-else>
+            <Input
+              size="small"
+              :placeholder="val"
+              v-model:value="displayedValueArr[index]"
+              v-for="(val, index) in (displayedMode.toUpperCase() + (showAlpha ? 'A' : '')).split('')"
+              :key="index"
+            />
+          </template>
         </div>
       </div>
     </template>
-    <div tabindex="1" class="color-picker" :style="`--color-picker-height: ${colorPickerHeight};`">
+    <div
+      tabindex="1"
+      class="color-picker"
+      :class="{ 'color-picker-disabled': disabled }"
+      :style="`--color-picker-height: ${colorPickerHeight};`"
+      @click.stop="onToggleTooltip"
+    >
       <div class="color-picker-fill">
         <div class="color-picker-checkboard"></div>
-        <div class="color-picker-panel" :style="{ backgroundColor: value }"></div>
         <div
-          v-if="value && hslaRef"
+          :style="`position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: ${hslaRef ? toHslaString(hslaRef) : ''};`"
+        ></div>
+        <div
+          v-if="displayedValue && hslaRef"
           class="color-picker-value"
           :style="{ color: hslaRef[2] > 50 || hslaRef[3] < 0.5 ? 'black' : 'white' }"
-          >{{ value }}</div
         >
+          {{ displayedValue }}
+        </div>
       </div>
     </div>
   </Tooltip>
@@ -351,6 +643,9 @@ function onUpdateMode(): void {
     width: 100%;
     flex-wrap: nowrap;
     vertical-align: bottom;
+    :deep(.input-item) {
+      text-align: center;
+    }
   }
 }
 .color-picker {
@@ -408,17 +703,13 @@ function onUpdateMode(): void {
         bottom: 0;
       }
     }
-    .color-picker-panel {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
     .color-picker-value {
       white-space: nowrap;
       position: relative;
     }
   }
+}
+.color-picker-disabled {
+  cursor: not-allowed;
 }
 </style>
