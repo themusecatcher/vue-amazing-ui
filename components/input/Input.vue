@@ -133,7 +133,7 @@ function onPassword() {
         @keydown.enter.prevent="onKeyboard"
       />
       <span v-if="showInputSuffix" class="input-suffix">
-        <span v-if="showClear" class="m-actions" :class="{ 'clear-hidden': !value }" @click="onClear">
+        <span v-if="showClear" class="input-actions" :class="{ 'clear-hidden': !value }" @click="onClear">
           <svg
             class="clear-svg"
             focusable="false"
@@ -149,7 +149,7 @@ function onPassword() {
             ></path>
           </svg>
         </span>
-        <span v-if="password" class="m-actions" @click="onPassword">
+        <span v-if="password" class="input-actions" @click="onPassword">
           <svg
             v-show="showPassword"
             class="eye-svg"
@@ -185,7 +185,7 @@ function onPassword() {
           </svg>
         </span>
         <span v-if="showCount" class="input-count">{{ showCountNum }}</span>
-        <span v-if="showSuffix" class="m-suffix">
+        <span v-if="showSuffix" class="suffix-item">
           <slot name="suffix">{{ suffix }}</slot>
         </span>
       </span>
@@ -298,7 +298,7 @@ function onPassword() {
       flex: none;
       gap: 8px;
       align-items: center;
-      .m-actions {
+      .input-actions {
         display: inline-flex;
         align-items: center;
         cursor: pointer;
@@ -329,7 +329,7 @@ function onPassword() {
       .input-count {
         color: rgba(0, 0, 0, 0.45);
       }
-      .m-suffix {
+      .suffix-item {
         display: flex;
         flex: none;
         align-items: center;
