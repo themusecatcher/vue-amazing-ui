@@ -104,13 +104,13 @@ function onSearch() {
 }
 </script>
 <template>
-  <div class="m-input-search-wrap" :style="`width: ${inputSearchWidth};`">
-    <span v-if="showBefore" class="m-addon-before" :class="`addon-before-${size}`">
+  <div class="m-input-search" :style="`width: ${inputSearchWidth};`">
+    <span v-if="showBefore" class="input-search-addon-before" :class="`addon-before-${size}`">
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
       tabindex="1"
-      class="m-input-search"
+      class="input-search-wrap"
       :class="[
         `input-search-${size}`,
         {
@@ -119,7 +119,7 @@ function onSearch() {
         }
       ]"
     >
-      <span v-if="showPrefix" class="m-prefix">
+      <span v-if="showPrefix" class="input-search-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
       <input
@@ -135,7 +135,7 @@ function onSearch() {
         @keydown.enter.prevent="onInputSearch"
       />
       <span v-if="showInputSuffix" class="input-search-suffix">
-        <span v-if="showClear" class="m-clear" :class="{ 'clear-hidden': !value }" @click="onClear">
+        <span v-if="showClear" class="input-search-clear" :class="{ 'clear-hidden': !value }" @click="onClear">
           <svg
             class="clear-svg"
             focusable="false"
@@ -152,12 +152,12 @@ function onSearch() {
           </svg>
         </span>
         <span v-if="showCount" class="input-search-count">{{ showCountNum }}</span>
-        <span v-if="showSuffix" class="m-suffix">
+        <span v-if="showSuffix" class="suffix-item">
           <slot name="suffix">{{ suffix }}</slot>
         </span>
       </span>
     </div>
-    <span class="m-search-button" @click="onSearch" @keydown.enter.prevent="onSearch">
+    <span class="input-search-button" @click="onSearch" @keydown.enter.prevent="onSearch">
       <slot name="search">
         <Button class="search-btn" :size="size" :disabled="disabled" :loading="loading" v-bind="searchProps">
           <template v-if="icon" #icon>
@@ -184,12 +184,12 @@ function onSearch() {
   </div>
 </template>
 <style lang="less" scoped>
-.m-input-search-wrap {
+.m-input-search {
   width: 100%;
   position: relative;
   display: inline-flex;
   align-items: center;
-  .m-addon-before {
+  .input-search-addon-before {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -220,7 +220,7 @@ function onSearch() {
   .addon-before-small {
     height: 40px;
   }
-  .m-input-search {
+  .input-search-wrap {
     font-size: 14px;
     color: rgba(0, 0, 0, 0.88);
     line-height: 1.5714285714285714;
@@ -243,7 +243,7 @@ function onSearch() {
       outline: 0;
       z-index: 1;
     }
-    .m-prefix {
+    .input-search-prefix {
       margin-right: 4px;
       display: flex;
       flex: none;
@@ -284,7 +284,7 @@ function onSearch() {
       flex: none;
       gap: 8px;
       align-items: center;
-      .m-clear {
+      .input-search-clear {
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -306,7 +306,7 @@ function onSearch() {
       .input-search-count {
         color: rgba(0, 0, 0, 0.45);
       }
-      .m-suffix {
+      .suffix-item {
         display: flex;
         flex: none;
         align-items: center;
@@ -364,7 +364,7 @@ function onSearch() {
       cursor: not-allowed;
     }
   }
-  .m-search-button {
+  .input-search-button {
     position: relative;
     left: -1px;
     border-left: 0;
