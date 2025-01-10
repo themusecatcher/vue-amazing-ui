@@ -121,7 +121,7 @@ function onClear() {
     <textarea
       ref="textareaRef"
       type="hidden"
-      class="u-textarea"
+      class="textarea-item"
       :class="{ 'clear-class': showClear, 'textarea-disabled': disabled }"
       :style="autoSizeStyle"
       :value="value"
@@ -154,7 +154,7 @@ function onClear() {
 .m-textarea {
   position: relative;
   display: inline-block;
-  .u-textarea {
+  .textarea-item {
     width: 100%;
     min-width: 0;
     min-height: 32px;
