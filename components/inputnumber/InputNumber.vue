@@ -171,7 +171,7 @@ function onDown() {
     :class="{ 'input-number-disabled': disabled }"
     :style="`width: ${inputWidth};`"
   >
-    <div class="m-input-number-wrap">
+    <div class="input-number-wrap">
       <span v-if="showPrefix" class="input-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
@@ -188,9 +188,9 @@ function onDown() {
         @keydown="keyboard ? onKeyboard($event) : () => false"
       />
     </div>
-    <div class="m-handler-wrap">
+    <div class="input-number-handler-wrap">
       <span
-        class="m-arrow up-arrow"
+        class="input-number-arrow up-arrow"
         :class="{ 'arrow-disabled': (value || 0) >= max }"
         @click="(value || 0) >= max ? () => false : onUp()"
       >
@@ -210,7 +210,7 @@ function onDown() {
         </svg>
       </span>
       <span
-        class="m-arrow down-arrow"
+        class="input-number-arrow down-arrow"
         :class="{ 'arrow-disabled': (value || 0) <= min }"
         @click="(value || 0) <= min ? () => false : onDown()"
       >
@@ -247,7 +247,7 @@ function onDown() {
   transition: all 0.2s;
   &:hover {
     border-color: #4096ff;
-    .m-handler-wrap {
+    .input-number-handler-wrap {
       background: #fff;
       opacity: 1;
     }
@@ -257,7 +257,7 @@ function onDown() {
     border-color: #4096ff;
     box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
   }
-  .m-input-number-wrap {
+  .input-number-wrap {
     height: 100%;
     display: flex;
     .input-prefix {
@@ -291,7 +291,7 @@ function onDown() {
       color: rgba(0, 0, 0, 0.25);
     }
   }
-  .m-handler-wrap {
+  .input-number-handler-wrap {
     position: absolute;
     top: 0;
     right: 0;
@@ -304,7 +304,7 @@ function onDown() {
     flex-direction: column;
     align-items: stretch; // 默认值，元素被拉伸以适应容器
     transition: all 0.2s linear;
-    .m-arrow {
+    .input-number-arrow {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -354,11 +354,11 @@ function onDown() {
     border-color: #d9d9d9;
     box-shadow: none;
   }
-  .m-input-number-wrap .input-number {
+  .input-number-wrap .input-number {
     color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
   }
-  .m-handler-wrap {
+  .input-number-handler-wrap {
     display: none;
   }
 }
