@@ -7,6 +7,7 @@
 ## 2.1.0 <Tag color="volcano" size="small">soon</Tag>
 
 - 新增 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件代码逻辑
 - 组件库及文档代码优化
 
 ## 2.0.9 <Tag color="volcano" size="small">2025-01-10</Tag>

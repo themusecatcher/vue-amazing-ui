@@ -32,10 +32,10 @@ const sliderWidth = ref() // 滑动输入条宽度
 const sliderHeight = ref() // 滑动输入条高度
 const low = ref(0) // 左/下滑块距离滑动条左/上端的距离
 const high = ref(0) // 右/上滑动距离滑动条左/上端的距离
-const lowHandle = ref() // low handle 模板引用
-const lowTooltip = ref() // low tooltip 模板应用
-const highHandle = ref() // high handle 模板引用
-const highTooltip = ref() // high tooltip 模板引用
+const lowHandleRef = ref() // low handle DOM 引用
+const lowTooltipRef = ref() // low tooltip DOM 引用
+const highHandleRef = ref() // high handle DOM 引用
+const highTooltipRef = ref() // high tooltip DOM 引用
 const emits = defineEmits(['update:value', 'change'])
 const sliderSize = computed(() => {
   if (!props.vertical) {
@@ -224,26 +224,32 @@ function onClickSliderPoint(e: MouseEvent) {
     // 双滑块模式
     if (targetDistance <= low.value) {
       low.value = targetDistance
-      handlerFocus(lowHandle.value, lowTooltip.value)
+      handlerFocus(lowHandleRef.value, lowTooltipRef.value)
     } else if (targetDistance >= high.value) {
       high.value = targetDistance
-      handlerFocus(highHandle.value, highTooltip.value)
+      handlerFocus(highHandleRef.value, highTooltipRef.value)
     } else {
       if (targetDistance - low.value < high.value - targetDistance) {
         low.value = targetDistance
-        handlerFocus(lowHandle.value, lowTooltip.value)
+        handlerFocus(lowHandleRef.value, lowTooltipRef.value)
       } else {
         high.value = targetDistance
-        handlerFocus(highHandle.value, highTooltip.value)
+        handlerFocus(highHandleRef.value, highTooltipRef.value)
       }
     }
   } else {
     // 单滑块模式
     high.value = targetDistance
-    handlerFocus(highHandle.value, highTooltip.value)
+    handlerFocus(highHandleRef.value, highTooltipRef.value)
   }
 }
-function onLowMouseDown() {
+function handleLowMouseDown(e: MouseEvent) {
+  if (!lowHandleRef.value) return
+  document.addEventListener('mousemove', handleLowMouseMove)
+  document.addEventListener('mouseup', handleLowMouseUp)
+  handleLowMouseMove(e)
+}
+function handleLowMouseMove(e: MouseEvent) {
   // 在滑动输入条上拖动较小数值滑块
   let originalDistance
   if (!props.vertical) {
@@ -252,41 +258,47 @@ function onLowMouseDown() {
   } else {
     originalDistance = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
   }
-  window.onmousemove = (e: MouseEvent) => {
-    if (props.tooltip) {
-      lowTooltip.value.classList.add('show-handle-tooltip')
-    }
-    let targetDistance // 目标移动距离
-    if (!props.vertical) {
-      // horizontal
-      // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-      const value = Math.round(pixelStepOperation(e.clientX - originalDistance, '/'))
-      targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
-    } else {
-      // vertical
-      // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
-      const value = Math.round(pixelStepOperation(originalDistance - e.clientY, '/'))
-      targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
-    }
-    if (targetDistance < 0) {
-      low.value = 0
-    } else if (targetDistance >= 0 && targetDistance <= high.value) {
-      low.value = targetDistance
-    } else {
-      // targetDistance > high
-      low.value = high.value
-      highHandle.value.focus()
-      onHighMouseDown()
-    }
+  if (props.tooltip) {
+    lowTooltipRef.value.classList.add('show-handle-tooltip')
   }
-  window.onmouseup = () => {
-    if (props.tooltip) {
-      lowTooltip.value.classList.remove('show-handle-tooltip')
-    }
-    window.onmousemove = null
+  let targetDistance // 目标移动距离
+  if (!props.vertical) {
+    // horizontal
+    // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+    const value = Math.round(pixelStepOperation(e.clientX - originalDistance, '/'))
+    targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
+  } else {
+    // vertical
+    // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
+    const value = Math.round(pixelStepOperation(originalDistance - e.clientY, '/'))
+    targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
+  }
+  if (targetDistance < 0) {
+    low.value = 0
+  } else if (targetDistance >= 0 && targetDistance <= high.value) {
+    low.value = targetDistance
+  } else {
+    // targetDistance > high
+    low.value = high.value
+    highHandleRef.value.focus()
+    handleLowMouseUp()
+    handleHighMouseDown(e)
   }
 }
-function onHighMouseDown() {
+function handleLowMouseUp() {
+  if (props.tooltip) {
+    lowTooltipRef.value.classList.remove('show-handle-tooltip')
+  }
+  document.removeEventListener('mousemove', handleLowMouseMove)
+  document.removeEventListener('mouseup', handleLowMouseUp)
+}
+function handleHighMouseDown(e: MouseEvent) {
+  if (!highHandleRef.value) return
+  document.addEventListener('mousemove', handleHighMouseMove)
+  document.addEventListener('mouseup', handleHighMouseUp)
+  handleHighMouseMove(e)
+}
+function handleHighMouseMove(e: MouseEvent) {
   // 在滑动输入条上拖动较大数值滑块
   let originalDistance
   if (!props.vertical) {
@@ -295,41 +307,41 @@ function onHighMouseDown() {
   } else {
     originalDistance = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
   }
-  window.onmousemove = (e: MouseEvent) => {
-    if (props.tooltip) {
-      highTooltip.value.classList.add('show-handle-tooltip')
-    }
-    let targetDistance // 目标移动距离
-    if (!props.vertical) {
-      // horizontal
-      // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-      const value = Math.round(pixelStepOperation(e.clientX - originalDistance, '/'))
-      targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
-    } else {
-      // vertical
-      // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
-      const value = Math.round(pixelStepOperation(originalDistance - e.clientY, '/'))
-      targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
-    }
-    if (targetDistance > sliderSize.value) {
-      high.value = sliderSize.value
-    } else if (low.value <= targetDistance && targetDistance <= sliderSize.value) {
-      high.value = targetDistance
-    } else {
-      // targetDistance < low
-      high.value = low.value
-      if (props.range) {
-        lowHandle.value.focus()
-        onLowMouseDown()
-      }
+  if (props.tooltip) {
+    highTooltipRef.value.classList.add('show-handle-tooltip')
+  }
+  let targetDistance // 目标移动距离
+  if (!props.vertical) {
+    // horizontal
+    // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+    const value = Math.round(pixelStepOperation(e.clientX - originalDistance, '/'))
+    targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
+  } else {
+    // vertical
+    // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
+    const value = Math.round(pixelStepOperation(originalDistance - e.clientY, '/'))
+    targetDistance = fixedDigit(pixelStepOperation(value, '*'), 2)
+  }
+  if (targetDistance > sliderSize.value) {
+    high.value = sliderSize.value
+  } else if (low.value <= targetDistance && targetDistance <= sliderSize.value) {
+    high.value = targetDistance
+  } else {
+    // targetDistance < low
+    high.value = low.value
+    if (props.range) {
+      lowHandleRef.value.focus()
+      handleHighMouseUp()
+      handleLowMouseDown(e)
     }
   }
-  window.onmouseup = () => {
-    if (props.tooltip) {
-      highTooltip.value.classList.remove('show-handle-tooltip')
-    }
-    window.onmousemove = null
+}
+function handleHighMouseUp() {
+  if (props.tooltip) {
+    highTooltipRef.value.classList.remove('show-handle-tooltip')
   }
+  document.removeEventListener('mousemove', handleHighMouseMove)
+  document.removeEventListener('mouseup', handleHighMouseUp)
 }
 function onLowSlide(source: number, place: string) {
   const targetDistance = pixelStepOperation(source, '-')
@@ -347,7 +359,7 @@ function onLowSlide(source: number, place: string) {
     } else {
       high.value = low.value
       low.value = targetDistance
-      lowHandle.value.focus()
+      lowHandleRef.value.focus()
     }
   }
 }
@@ -367,7 +379,7 @@ function onHighSlide(source: number, place: string) {
     } else {
       low.value = high.value
       high.value = targetDistance
-      highHandle.value.focus()
+      highHandleRef.value.focus()
     }
   }
 }
@@ -418,34 +430,34 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     <div
       v-if="range"
       tabindex="0"
-      ref="lowHandle"
+      ref="lowHandleRef"
       class="slider-handle"
       :style="lowHandleStyle"
       @keydown.left.prevent="disabled ? () => false : onLowSlide(low, 'low')"
       @keydown.right.prevent="disabled ? () => false : onHighSlide(low, 'low')"
       @keydown.down.prevent="disabled ? () => false : onLowSlide(low, 'low')"
       @keydown.up.prevent="disabled ? () => false : onHighSlide(low, 'low')"
-      @mousedown="disabled ? () => false : onLowMouseDown()"
-      @blur="tooltip && !disabled ? handlerBlur(lowTooltip) : () => false"
+      @mousedown="disabled ? () => false : handleLowMouseDown($event)"
+      @blur="tooltip && !disabled ? handlerBlur(lowTooltipRef) : () => false"
     >
-      <div v-if="tooltip" ref="lowTooltip" class="handle-tooltip">
+      <div v-if="tooltip" ref="lowTooltipRef" class="handle-tooltip">
         {{ lowTooltipValue }}
         <div class="tooltip-arrow"></div>
       </div>
     </div>
     <div
       tabindex="0"
-      ref="highHandle"
+      ref="highHandleRef"
       class="slider-handle"
       :style="highHandleStyle"
       @keydown.left.prevent="disabled ? () => false : onLowSlide(high, 'high')"
       @keydown.right.prevent="disabled ? () => false : onHighSlide(high, 'high')"
       @keydown.down.prevent="disabled ? () => false : onLowSlide(high, 'high')"
       @keydown.up.prevent="disabled ? () => false : onHighSlide(high, 'high')"
-      @mousedown="disabled ? () => false : onHighMouseDown()"
-      @blur="tooltip && !disabled ? handlerBlur(highTooltip) : () => false"
+      @mousedown="disabled ? () => false : handleHighMouseDown($event)"
+      @blur="tooltip && !disabled ? handlerBlur(highTooltipRef) : () => false"
     >
-      <div v-if="tooltip" ref="highTooltip" class="handle-tooltip">
+      <div v-if="tooltip" ref="highTooltipRef" class="handle-tooltip">
         {{ highTooltipValue }}
         <div class="tooltip-arrow"></div>
       </div>
