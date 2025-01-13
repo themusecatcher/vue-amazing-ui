@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
 import {
   hsla,
@@ -20,7 +20,7 @@ import {
   toHexaString,
   toHexString
 } from 'seemly'
-import type { HSVA, RGBA, HSLA } from 'seemly'
+import type { HSVA, RGBA, HSLA, HSV, RGB, HSL } from 'seemly'
 import Tooltip from 'components/tooltip'
 import Input from 'components/input'
 import { useSlotsExist } from 'components/utils'
@@ -51,7 +51,6 @@ const HANDLE_SIZE = '12px'
 const HANDLE_SIZE_NUM = 12
 const BORDER_RADIUS = '6px'
 const BORDER_RADIUS_NUM = 6
-let upcomingValue: string | undefined = undefined
 const tooltipRef = ref()
 const palleteRef = ref<HTMLElement | null>(null) // pallete 调色板模板引用
 const hueRailRef = ref<HTMLElement | null>(null) // hue 轨道条模板引用
@@ -59,8 +58,10 @@ const alphaRailRef = ref<HTMLElement | null>(null) // alpha 轨道条模板引�
 const displayedHue = ref<number>(0)
 const displayedAlpha = ref<number>(1)
 const displayedSv = ref<[number, number]>([0, 0])
+const upcomingValue = ref<string | undefined>()
 const displayedValue = ref<string>()
 const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
+const inputValueArr = ref<string[]>([])
 const emits = defineEmits(['update:show', 'update:value', 'complete'])
 // const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
 // const showTitle = computed(() => {
@@ -161,6 +162,9 @@ const colorPickerHeight = computed(() => {
   return `${heightMap[props.size]}px`
 })
 const valueMode = computed(() => getModeFromValue(displayedValue.value))
+const displayedModeComputed = computed(() => {
+  return displayedMode.value.toUpperCase() + (props.showAlpha ? 'A' : '')
+})
 let _h: number, // avoid conflict with render function's h
   s: number,
   l: number,
@@ -212,20 +216,29 @@ const hslaRef = computed<HSLA | null>(() => {
   }
 })
 const displayedValueArr = computed(() => {
-  let valueArr = null
   switch (displayedMode.value) {
     case 'rgb':
     case 'hex':
-      valueArr = rgbaRef.value
-      break
+      return rgbaRef.value
     case 'hsv':
-      valueArr = hsvaRef.value
-      break
+      return hsvaRef.value
     case 'hsl':
-      valueArr = hslaRef.value
-      break
+      return hslaRef.value
   }
-  return valueArr === null ? [undefined, undefined, undefined, undefined] : valueArr.map((value) => value.toString())
+  // let valueArr = null
+  // switch (displayedMode.value) {
+  //   case 'rgb':
+  //   case 'hex':
+  //     valueArr = rgbaRef.value
+  //     break
+  //   case 'hsv':
+  //     valueArr = hsvaRef.value
+  //     break
+  //   case 'hsl':
+  //     valueArr = hslaRef.value
+  //     break
+  // }
+  // return valueArr === null ? [undefined, undefined, undefined, undefined] : valueArr.map((value) => value.toString())
 })
 watch(
   () => props.value,
@@ -236,11 +249,43 @@ watch(
     immediate: true
   }
 )
+watch(
+  displayedValueArr,
+  (to) => {
+    if (to === null) {
+      inputValueArr.value = new Array(props.showAlpha ? 4 : 3).fill(undefined)
+    } else {
+      inputValueArr.value = to.map((value) => value.toString())
+    }
+  },
+  {
+    immediate: true
+  }
+)
+watch(
+  inputValueArr,
+  () => {
+    console.log('inputValueArr', inputValueArr.value)
+  },
+  {
+    deep: true
+  }
+)
+watchEffect(() => {
+  if (upcomingValue.value === undefined || upcomingValue.value !== displayedValue.value) {
+    if (hsvaRef.value) {
+      displayedHue.value = hsvaRef.value[0]
+      displayedAlpha.value = hsvaRef.value[3]
+      displayedSv.value = [hsvaRef.value[1], hsvaRef.value[2]]
+    }
+  }
+  upcomingValue.value = undefined
+})
 function onUpdateValue(value: string, updateSource: 'cursor' | 'input'): void {
   if (updateSource === 'cursor') {
-    upcomingValue = value
+    upcomingValue.value = value
   } else {
-    upcomingValue = undefined
+    upcomingValue.value = undefined
   }
   // const { nTriggerFormChange, nTriggerFormInput } = formItem
   // const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
@@ -256,6 +301,7 @@ function onUpdateValue(value: string, updateSource: 'cursor' | 'input'): void {
 function handleUpdateSv(s: number, v: number): void {
   const alpha = hsvaRef.value ? hsvaRef.value[3] : 1
   displayedSv.value = [s, v]
+  console.log('displayedSv', displayedSv.value)
   switch (displayedMode.value) {
     case 'hsv':
       onUpdateValue((props.showAlpha ? toHsvaString : toHsvString)([displayedHue.value, s, v, alpha]), 'cursor')
@@ -418,8 +464,135 @@ function onUpdateMode(): void {
     displayedMode.value = 'rgb'
   }
 }
+function normalizeHexaUnit(value: string): boolean {
+  const trimmedValue = value.trim()
+  if (/^#[0-9a-fA-F]+$/.test(trimmedValue)) {
+    return [4, 5, 7, 9].includes(trimmedValue.length)
+  }
+  return false
+}
+// 0 - 360
+function normalizeHueUnit(value: string): number | false {
+  if (/^\d{1,3}\.?\d*$/.test(value.trim())) {
+    return Math.max(0, Math.min(Number.parseInt(value), 360))
+  }
+  return false
+}
+// 0 - 100
+function normalizeSlvUnit(value: string): number | false {
+  if (/^\d{1,3}\.?\d*$/.test(value.trim())) {
+    return Math.max(0, Math.min(Number.parseInt(value), 100))
+  }
+  return false
+}
+// 0 - 100%
+function normalizeAlphaUnit(value: string): number | false {
+  if (/^\d{1,3}\.?\d*%$/.test(value.trim())) {
+    return Math.max(0, Math.min(Number.parseInt(value) / 100, 100))
+  }
+  return false
+}
+// 0 - 255
+function normalizeRgbUnit(value: string): number | false {
+  if (/^\d{1,3}\.?\d*$/.test(value.trim())) {
+    return Math.max(0, Math.min(Number.parseInt(value), 255))
+  }
+  return false
+}
+function getInputString(value: string, mode: string): string {
+  if (value === null) return ''
+  if (mode === 'HEX') {
+    return value as string
+  }
+  if (mode === 'A') {
+    return `${Math.floor(Number(value) * 100)}%`
+  }
+  return String(Math.floor(Number(value)))
+}
+function handleInputUpdateValue(value: string): void {
+  onUpdateValue(value, 'input')
+  // void nextTick(handleComplete)
+}
+function handleUnitUpdateValue(index: number, value: number | string) {
+  if (displayedMode.value === 'hex') {
+    handleInputUpdateValue((props.showAlpha ? toHexaString : toHexString)(value as string))
+    return
+  }
+  let nextValueArr: any
+  if (displayedValueArr.value === null) {
+    nextValueArr = [0, 0, 0, 0]
+  } else {
+    nextValueArr = Array.from(displayedValueArr.value) as typeof displayedValueArr.value
+  }
+  switch (displayedMode.value) {
+    case 'hsv':
+      nextValueArr[index] = value
+      handleInputUpdateValue((props.showAlpha ? toHsvaString : toHsvString)(nextValueArr as HSVA | HSV))
+      break
+    case 'rgb':
+      nextValueArr[index] = value
+      handleInputUpdateValue((props.showAlpha ? toRgbaString : toRgbString)(nextValueArr as RGBA | RGB))
+      break
+    case 'hsl':
+      nextValueArr[index] = value
+      handleInputUpdateValue((props.showAlpha ? toHslaString : toHslString)(nextValueArr as HSLA | HSL))
+      break
+  }
+}
+function onInputChange(index: number): void {
+  console.log('index', index)
+  let unit: number | false
+  let valid: boolean
+  const value = inputValueArr.value[index]
+  const mode = displayedModeComputed.value[index]
+  switch (mode) {
+    case 'HEX':
+      valid = normalizeHexaUnit(value)
+      if (valid) {
+        handleUnitUpdateValue(index, value)
+      }
+      inputValueArr.value[index] = getInputString(value, mode) // to normalized new value
+      break
+    case 'H':
+      unit = normalizeHueUnit(value)
+      if (unit === false) {
+        inputValueArr.value[index] = getInputString(value, mode)
+      } else {
+        handleUnitUpdateValue(index, unit)
+      }
+      break
+    case 'S':
+    case 'L':
+    case 'V':
+      unit = normalizeSlvUnit(value)
+      if (unit === false) {
+        inputValueArr.value[index] = getInputString(value, mode)
+      } else {
+        handleUnitUpdateValue(index, unit)
+      }
+      break
+    case 'A':
+      unit = normalizeAlphaUnit(value)
+      if (unit === false) {
+        inputValueArr.value[index] = getInputString(value, mode)
+      } else {
+        handleUnitUpdateValue(index, unit)
+      }
+      break
+    case 'R':
+    case 'G':
+    case 'B':
+      unit = normalizeRgbUnit(value)
+      if (unit === false) {
+        inputValueArr.value[index] = getInputString(value, mode)
+      } else {
+        handleUnitUpdateValue(index, unit)
+      }
+      break
+  }
+}
 const showTooltip = ref<boolean>(false) // tooltip 弹出面板显隐状态
-function onToggleTooltip() {
+function onToggleTooltip(): void {
   if (showTooltip.value) {
     tooltipRef.value.hide()
   } else {
@@ -510,18 +683,19 @@ function onToggleTooltip() {
           :style="{ cursor: modes.length === 1 ? '' : 'pointer' }"
           @click="onUpdateMode"
         >
-          {{ displayedMode.toUpperCase() + (showAlpha ? 'A' : '') }}
+          {{ displayedModeComputed }}
         </div>
         <div class="color-picker-input-group">
           <template v-if="displayedMode === 'hex'">
-            <Input size="small" :placeholder="displayedMode.toUpperCase() + (showAlpha ? 'A' : '')" />
+            <Input size="small" :placeholder="displayedModeComputed" />
           </template>
           <template v-else>
             <Input
               size="small"
               :placeholder="val"
-              v-model:value="displayedValueArr[index]"
-              v-for="(val, index) in (displayedMode.toUpperCase() + (showAlpha ? 'A' : '')).split('')"
+              v-model:value.lazy="inputValueArr[index]"
+              @change="onInputChange(index)"
+              v-for="(val, index) in displayedModeComputed.split('')"
               :key="index"
             />
           </template>
@@ -661,6 +835,9 @@ function onToggleTooltip() {
       }
       &:last-child {
         flex-grow: 1.25;
+      }
+      .input-wrap {
+        padding: 0 4px;
       }
       .input-item {
         text-align: center;
