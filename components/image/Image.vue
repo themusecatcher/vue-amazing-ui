@@ -21,6 +21,7 @@ export interface Props {
   minZoomScale?: number // 最小缩放比例
   maxZoomScale?: number // 最大缩放比例
   resetOnDbclick?: boolean // 缩放移动旋转图片后，是否可以双击还原
+  draggable?: boolean // 是否可以拖动图片
   loop?: boolean // 是否可以循环切换图片
   album?: boolean // 是否相册模式，即从一张展示图片点开相册
 }
@@ -38,11 +39,12 @@ const props = withDefaults(defineProps<Props>(), {
   minZoomScale: 0.1,
   maxZoomScale: 10,
   resetOnDbclick: true,
+  draggable: false,
   loop: false,
   album: false
 })
 const images = ref<any[]>([])
-const previewRef = ref() // DOM 引用
+const previewRef = ref() // 预览 DOM 引用
 const previewIndex = ref(0) // 当前预览的图片索引
 const showPreview = ref(false) // 是否显示预览
 const rotate = ref(0) // 预览图片旋转角度
@@ -53,8 +55,19 @@ const sourceX = ref(0) // 拖动开始时位置
 const sourceY = ref(0) // 拖动开始时位置
 const dragX = ref(0) // 拖动横向距离
 const dragY = ref(0) // 拖动纵向距离
+const sourceDragX = ref(0) // 鼠标按下时图片的X轴偏移量
+const sourceDragY = ref(0) // 鼠标按下时图片的Y轴偏移量
+const top = ref<number>(0) // 图片上边缘距浏览器窗口上边界的距离
+const bottom = ref<number>(0) // 图片下边缘距浏览器窗口上边界的距离
+const right = ref<number>(0) // 图片右边缘距浏览器窗口左边界的距离
+const left = ref<number>(0) // 图片左边缘距浏览器窗口左边界的距离
+const viewportWidth = ref<number>(0) // 视口宽度
+const viewportHeight = ref<number>(0) // 视口高度
 const imageAmount = computed(() => {
   return images.value.length
+})
+const dragTransitionDuration = computed(() => {
+  return props.draggable ? '100ms' : '300ms'
 })
 const complete = ref(Array(imageAmount.value).fill(false)) // 图片是否加载完成
 const loaded = ref(Array(imageAmount.value).fill(false)) // 预览图片是否加载完成
@@ -189,44 +202,54 @@ function onWheel(e: WheelEvent) {
     scale.value = add(scale.value, -scrollZoom)
   }
 }
-function onMouseDown(event: MouseEvent) {
+function handleMouseDown(e: MouseEvent) {
   // event.preventDefault() // 消除拖动元素时的阴影
-  const el = event.target // 当前点击的元素
+  if (!e.target) return
+  const el = e.target // 当前点击的元素
   const imageRect = (el as Element).getBoundingClientRect()
-  const top = imageRect.top // 图片上边缘距浏览器窗口上边界的距离
-  const bottom = imageRect.bottom // 图片下边缘距浏览器窗口上边界的距离
-  const right = imageRect.right // 图片右边缘距浏览器窗口左边界的距离
-  const left = imageRect.left // 图片左边缘距浏览器窗口左边界的距离
-  const viewportWidth = window.innerWidth // 视口宽度
-  const viewportHeight = window.innerHeight // 视口高度
-  sourceX.value = event.clientX // 鼠标按下时相对于视口左边缘的X坐标
-  sourceY.value = event.clientY // 鼠标按下时相对于视口上边缘的Y坐标
-  const sourceDragX = dragX.value // 鼠标按下时图片的X轴偏移量
-  const sourceDragY = dragY.value // 鼠标按下时图片的Y轴偏移量
-  window.onmousemove = (e: MouseEvent) => {
-    // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    dragX.value = sourceDragX + e.clientX - sourceX.value
-    dragY.value = sourceDragY + e.clientY - sourceY.value
-  }
-  window.onmouseup = () => {
-    if (dragX.value > sourceDragX + viewportWidth - right) {
+  top.value = imageRect.top // 图片上边缘距浏览器窗口上边界的距离
+  bottom.value = imageRect.bottom // 图片下边缘距浏览器窗口上边界的距离
+  right.value = imageRect.right // 图片右边缘距浏览器窗口左边界的距离
+  left.value = imageRect.left // 图片左边缘距浏览器窗口左边界的距离
+  viewportWidth.value = window.innerWidth // 视口宽度
+  viewportHeight.value = window.innerHeight // 视口高度
+  sourceX.value = e.clientX // 鼠标按下时相对于视口左边缘的X坐标
+  sourceY.value = e.clientY // 鼠标按下时相对于视口上边缘的Y坐标
+  sourceDragX.value = dragX.value // 鼠标按下时图片的X轴偏移量
+  sourceDragY.value = dragY.value // 鼠标按下时图片的Y轴偏移量
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', handleMouseUp)
+  handleMouseMove(e)
+}
+function handleMouseMove(e: MouseEvent) {
+  // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+  dragX.value = sourceDragX.value + e.clientX - sourceX.value
+  dragY.value = sourceDragY.value + e.clientY - sourceY.value
+}
+function handleMouseUp() {
+  if (props.draggable) {
+    if (dragX.value > sourceDragX.value + viewportWidth.value - right.value) {
       // 溢出视口右边缘
-      dragX.value = sourceDragX + viewportWidth - right
+      dragX.value = sourceDragX.value + viewportWidth.value - right.value
     }
-    if (dragX.value < sourceDragX - left) {
+    if (dragX.value < sourceDragX.value - left.value) {
       // 溢出视口左边缘
-      dragX.value = sourceDragX - left
+      dragX.value = sourceDragX.value - left.value
     }
-    if (dragY.value > sourceDragY + viewportHeight - bottom) {
+    if (dragY.value > sourceDragY.value + viewportHeight.value - bottom.value) {
       // 溢出视口下边缘
-      dragY.value = sourceDragY + viewportHeight - bottom
+      dragY.value = sourceDragY.value + viewportHeight.value - bottom.value
     }
-    if (dragY.value < sourceDragY - top) {
+    if (dragY.value < sourceDragY.value - top.value) {
       // 溢出视口上边缘
-      dragY.value = sourceDragY - top
+      dragY.value = sourceDragY.value - top.value
     }
-    window.onmousemove = null
+  } else {
+    dragX.value = 0
+    dragY.value = 0
   }
+  document.removeEventListener('mousemove', handleMouseMove)
+  document.removeEventListener('mouseup', handleMouseUp)
 }
 function onSwitchLeft() {
   if (props.loop) {
@@ -473,7 +496,7 @@ function onSwitchRight() {
           </div>
           <div
             class="preview-image-wrap"
-            :style="`transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
+            :style="`--drag-transition-duration: ${dragTransitionDuration}; transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
             v-show="previewIndex === index"
             v-for="(image, index) in images"
             :key="index"
@@ -483,7 +506,7 @@ function onSwitchRight() {
               :style="`transform: scale3d(${swapX * scale}, ${swapY * scale}, 1) rotate(${rotate}deg);`"
               :src="image.src"
               :alt="getImageName(image)"
-              @mousedown.prevent="onMouseDown($event)"
+              @mousedown.prevent="handleMouseDown"
               @load="onLoaded(index)"
               @dblclick="resetOnDbclick ? onResetOrigin() : () => false"
             />
@@ -733,7 +756,7 @@ function onSwitchRight() {
         position: absolute;
         z-index: 3;
         inset: 0;
-        transition: transform 0.1s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+        transition: transform var(--drag-transition-duration) cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
         display: flex;
         justify-content: center;
         align-items: center;
