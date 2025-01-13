@@ -420,3 +420,4 @@ hide | 隐藏文字提示 | () => void
 名称 | 说明 | 类型
 :-- | :-- | :--
 openChange | 显示隐藏的回调 | (open: boolean) => void
+animationend | 显示隐藏动画结束时的回调 | (open: boolean) => void

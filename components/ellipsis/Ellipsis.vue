@@ -20,6 +20,7 @@ const tooltipRef = ref() // tooltip 组件引用
 const observeScroll = ref() // tooltip 组件暴露的 observeScroll 函数
 const showTooltip = ref(false) // 是否显示提示框
 const showExpand = ref(false) // 是否可以启用点击展开
+const expanded = ref(false) // 启用点击展开时，是否展开
 const ellipsisRef = ref() // 文本 DOM 引用
 const computedTooltipMaxWidth = ref() // 计算后的弹出提示最大宽度
 const ellipsisLine = ref() // 行数
@@ -31,18 +32,6 @@ const textMaxWidth = computed(() => {
   }
   return props.maxWidth
 })
-watch(
-  ellipsisRef,
-  (to) => {
-    if (props.tooltipMaxWidth === undefined && to) {
-      const ellipsisWidth = to.offsetWidth
-      computedTooltipMaxWidth.value = `${ellipsisWidth + 24}px`
-    }
-  },
-  {
-    flush: 'post'
-  }
-)
 watch(
   () => props.line,
   (to) => {
@@ -84,6 +73,8 @@ function updateTooltipShow() {
   const scrollHeight = ellipsisRef.value.scrollHeight
   const clientWidth = ellipsisRef.value.clientWidth
   const clientHeight = ellipsisRef.value.clientHeight
+  const offsetWidth = ellipsisRef.value.offsetWidth
+  computedTooltipMaxWidth.value = `${offsetWidth + 24}px`
   if (scrollWidth > clientWidth || scrollHeight > clientHeight) {
     if (props.expand) {
       showExpand.value = true
@@ -105,18 +96,25 @@ function onExpand() {
   if (ellipsisLine.value !== 'none') {
     ellipsisLine.value = 'none'
     if (props.tooltip && showTooltip.value) {
-      showTooltip.value = false
+      expanded.value = true
+      tooltipRef.value.hide()
     }
     emit('expandChange', true)
   } else {
     ellipsisLine.value = props.line ?? 'none'
     if (props.tooltip && !showTooltip.value) {
+      expanded.value = false
       showTooltip.value = true
+      tooltipRef.value.show()
     }
     emit('expandChange', false)
   }
 }
-
+function onAnimationEnd() {
+  if (expanded.value) {
+    showTooltip.value = false
+  }
+}
 defineExpose({
   observeScroll
 })
@@ -129,6 +127,7 @@ defineExpose({
     :content-style="{ maxWidth: textMaxWidth }"
     :tooltip-style="{ padding: '8px 12px' }"
     :transition-duration="200"
+    @animationend="onAnimationEnd"
     v-bind="$attrs"
   >
     <template #tooltip>
