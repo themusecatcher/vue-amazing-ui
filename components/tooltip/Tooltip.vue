@@ -62,10 +62,9 @@ const tooltipRef = ref() // tooltip 模板引用
 const tooltipCardRef = ref() // tooltip-card 模板引用
 const tooltipCardWidth = ref<number>(0) // 文字提示内容 tooltip-card 宽度
 const tooltipCardHeight = ref<number>(0) // 文字提示内容 tooltip-card 高度
-const activeBlur = ref<boolean>(false) // 是否激活 blur 事件
 const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
 const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
-const emits = defineEmits(['update:show', 'openChange'])
+const emits = defineEmits(['update:show', 'openChange', 'animationend'])
 const slotsExist = useSlotsExist(['tooltip'])
 const tooltipMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
@@ -340,7 +339,7 @@ function getPlacement(): string {
     return props.placement
   }
 }
-function onShow() {
+function onShow(): void {
   tooltipTimer.value && cancelRaf(tooltipTimer.value)
   if (!tooltipShow.value) {
     tooltipTimer.value = rafTimeout(() => {
@@ -348,6 +347,9 @@ function onShow() {
       getPosition()
       emits('update:show', true)
       emits('openChange', true)
+      if (showTooltip.value && props.trigger === 'click') {
+        document.addEventListener('click', handleClick)
+      }
     }, props.showDelay)
   }
 }
@@ -358,6 +360,9 @@ function onHide(): void {
       tooltipShow.value = false
       emits('update:show', false)
       emits('openChange', false)
+      if (showTooltip.value && props.trigger === 'click') {
+        document.removeEventListener('click', handleClick)
+      }
     }, props.hideDelay)
   }
 }
@@ -365,6 +370,11 @@ function toggleVisible() {
   if (!tooltipShow.value) {
     onShow()
   } else {
+    onHide()
+  }
+}
+function handleClick(e: Event) {
+  if (!tooltipRef.value.contains(e.target)) {
     onHide()
   }
 }
@@ -378,29 +388,18 @@ function onLeaveWrap() {
     onHide()
   }
 }
+function onAnimationEnd() {
+  emits('animationend', tooltipShow.value)
+}
 function onEnterTooltip() {
   if (props.trigger === 'hover' && !props.showControl) {
     onShow()
-  }
-  if (props.trigger === 'click') {
-    activeBlur.value = false
   }
 }
 function onLeaveTooltip() {
   if (props.trigger === 'hover' && !props.showControl) {
     onHide()
   }
-  if (props.trigger === 'click') {
-    activeBlur.value = true
-    tooltipRef.value.focus()
-  }
-}
-function onEnterContent() {
-  activeBlur.value = false
-}
-function onLeaveContent() {
-  activeBlur.value = true
-  tooltipRef.value.focus()
 }
 defineExpose({
   show: onShow,
@@ -423,19 +422,17 @@ defineExpose({
       leave-from-class="zoom-leave"
       leave-active-class="zoom-leave zoom-leave-active"
       leave-to-class="zoom-leave zoom-leave-active"
+      @animationend="onAnimationEnd"
     >
       <div
         v-show="showTooltip && tooltipShow"
         ref="tooltipRef"
-        tabindex="1"
         class="m-tooltip-card"
         :class="{ [`tooltip-${tooltipPlace}-padding`]: arrow }"
         :style="tooltipPlacement"
-        @blur="trigger === 'click' && activeBlur ? onHide() : () => false"
         @mouseenter="onEnterTooltip"
         @mouseleave="onLeaveTooltip"
         @keydown.esc="trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
-        @click.stop
       >
         <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
           <slot name="tooltip">{{ tooltip }}</slot>
@@ -448,11 +445,9 @@ defineExpose({
       class="tooltip-content"
       :class="contentClass"
       :style="contentStyle"
-      @click="showTooltip && trigger === 'click' ? toggleVisible() : () => false"
+      @click="showTooltip && trigger === 'click' && !tooltipShow ? onShow() : () => false"
       @keydown.enter="showTooltip && trigger === 'click' && keyboard ? toggleVisible() : () => false"
       @keydown.esc="showTooltip && trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
-      @mouseenter="showTooltip && trigger === 'click' && tooltipShow ? onEnterContent() : () => false"
-      @mouseleave="showTooltip && trigger === 'click' && tooltipShow ? onLeaveContent() : () => false"
     >
       <slot>{{ content }}</slot>
     </span>

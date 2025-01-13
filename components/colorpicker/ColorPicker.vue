@@ -51,7 +51,6 @@ const HANDLE_SIZE = '12px'
 const HANDLE_SIZE_NUM = 12
 const BORDER_RADIUS = '6px'
 const BORDER_RADIUS_NUM = 6
-const tooltipRef = ref()
 const palleteRef = ref<HTMLElement | null>(null) // pallete 调色板模板引用
 const hueRailRef = ref<HTMLElement | null>(null) // hue 轨道条模板引用
 const alphaRailRef = ref<HTMLElement | null>(null) // alpha 轨道条模板引用
@@ -225,20 +224,6 @@ const displayedValueArr = computed(() => {
     case 'hsl':
       return hslaRef.value
   }
-  // let valueArr = null
-  // switch (displayedMode.value) {
-  //   case 'rgb':
-  //   case 'hex':
-  //     valueArr = rgbaRef.value
-  //     break
-  //   case 'hsv':
-  //     valueArr = hsvaRef.value
-  //     break
-  //   case 'hsl':
-  //     valueArr = hslaRef.value
-  //     break
-  // }
-  // return valueArr === null ? [undefined, undefined, undefined, undefined] : valueArr.map((value) => value.toString())
 })
 watch(
   () => props.value,
@@ -544,6 +529,7 @@ function onInputChange(index: number): void {
   let unit: number | false
   let valid: boolean
   const value = inputValueArr.value[index]
+  console.log('value', value)
   const mode = displayedModeComputed.value[index]
   switch (mode) {
     case 'HEX':
@@ -573,6 +559,7 @@ function onInputChange(index: number): void {
       break
     case 'A':
       unit = normalizeAlphaUnit(value)
+      console.log('unit', unit)
       if (unit === false) {
         inputValueArr.value[index] = getInputString(value, mode)
       } else {
@@ -591,19 +578,9 @@ function onInputChange(index: number): void {
       break
   }
 }
-const showTooltip = ref<boolean>(false) // tooltip 弹出面板显隐状态
-function onToggleTooltip(): void {
-  if (showTooltip.value) {
-    tooltipRef.value.hide()
-  } else {
-    tooltipRef.value.show()
-  }
-}
 </script>
 <template>
   <Tooltip
-    ref="tooltipRef"
-    v-model:show="showTooltip"
     style="width: 100%"
     :arrow="false"
     bg-color="#fff"
@@ -707,7 +684,6 @@ function onToggleTooltip(): void {
       class="color-picker"
       :class="{ 'color-picker-disabled': disabled }"
       :style="`--color-picker-height: ${colorPickerHeight};`"
-      @click.stop="onToggleTooltip"
     >
       <div class="color-picker-fill">
         <div class="color-picker-checkboard"></div>
