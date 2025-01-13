@@ -23,6 +23,7 @@ import {
 import type { HSVA, RGBA, HSLA, HSV, RGB, HSL } from 'seemly'
 import Tooltip from 'components/tooltip'
 import Input from 'components/input'
+import Button from 'components/button'
 import { useSlotsExist } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export interface Props {
@@ -43,7 +44,7 @@ const props = withDefaults(defineProps<Props>(), {
   show: false,
   size: 'middle',
   disabled: false,
-  value: 'rgba(0, 0, 0, 1)',
+  value: undefined,
   modes: () => ['rgb', 'hex', 'hsl'],
   actions: () => []
 })
@@ -51,6 +52,7 @@ const HANDLE_SIZE = '12px'
 const HANDLE_SIZE_NUM = 12
 const BORDER_RADIUS = '6px'
 const BORDER_RADIUS_NUM = 6
+const tooltipRef = ref() // tooltip 模板引用
 const palleteRef = ref<HTMLElement | null>(null) // pallete 调色板模板引用
 const hueRailRef = ref<HTMLElement | null>(null) // hue 轨道条模板引用
 const alphaRailRef = ref<HTMLElement | null>(null) // alpha 轨道条模板引用
@@ -61,7 +63,7 @@ const upcomingValue = ref<string | undefined>()
 const displayedValue = ref<string>()
 const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
 const inputValueArr = ref<string[]>([])
-const emits = defineEmits(['update:show', 'update:value', 'complete'])
+const emits = defineEmits(['update:show', 'update:value', 'confirm', 'clear', 'complete'])
 // const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
 // const showTitle = computed(() => {
 //   return slotsExist.title || props.title
@@ -229,6 +231,7 @@ watch(
   () => props.value,
   (to) => {
     displayedValue.value = to
+    console.log('displayedValue', displayedValue.value)
   },
   {
     immediate: true
@@ -237,11 +240,18 @@ watch(
 watch(
   displayedValueArr,
   (to) => {
+    console.log('displayedValueArr', to)
     if (to === null) {
       inputValueArr.value = new Array(props.showAlpha ? 4 : 3).fill(undefined)
     } else {
-      inputValueArr.value = to.map((value) => value.toString())
+      inputValueArr.value = to.map((value: number, index: number) => {
+        if (props.showAlpha && index === 3) {
+          return `${Math.floor(value * 100)}%`
+        }
+        return value.toString()
+      })
     }
+    console.log('inputValueArr', inputValueArr.value)
   },
   {
     immediate: true
@@ -280,8 +290,9 @@ function onUpdateValue(value: string, updateSource: 'cursor' | 'input'): void {
   //   call(_onUpdateValue as OnUpdateValueImpl, value)
   // nTriggerFormChange()
   // nTriggerFormInput()
-  emits('update:value', value)
   displayedValue.value = value
+  console.log('displayedValue', displayedValue.value)
+  emits('update:value', value)
 }
 function handleUpdateSv(s: number, v: number): void {
   const alpha = hsvaRef.value ? hsvaRef.value[3] : 1
@@ -484,8 +495,8 @@ function normalizeRgbUnit(value: string): number | false {
   }
   return false
 }
-function getInputString(value: string, mode: string): string {
-  if (value === null) return ''
+function getInputString(value: string | undefined, mode: string): string {
+  if (value === undefined) return ''
   if (mode === 'HEX') {
     return value as string
   }
@@ -507,7 +518,7 @@ function handleUnitUpdateValue(index: number, value: number | string) {
   if (displayedValueArr.value === null) {
     nextValueArr = [0, 0, 0, 0]
   } else {
-    nextValueArr = Array.from(displayedValueArr.value) as typeof displayedValueArr.value
+    nextValueArr = [...displayedValueArr.value]
   }
   switch (displayedMode.value) {
     case 'hsv':
@@ -528,6 +539,8 @@ function onInputChange(index: number): void {
   console.log('index', index)
   let unit: number | false
   let valid: boolean
+  const originValue =
+    displayedValueArr.value?.[index] === undefined ? undefined : displayedValueArr.value?.[index].toString()
   const value = inputValueArr.value[index]
   console.log('value', value)
   const mode = displayedModeComputed.value[index]
@@ -537,12 +550,12 @@ function onInputChange(index: number): void {
       if (valid) {
         handleUnitUpdateValue(index, value)
       }
-      inputValueArr.value[index] = getInputString(value, mode) // to normalized new value
+      inputValueArr.value[index] = getInputString(value, mode)
       break
     case 'H':
       unit = normalizeHueUnit(value)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(value, mode)
+        inputValueArr.value[index] = getInputString(originValue, mode)
       } else {
         handleUnitUpdateValue(index, unit)
       }
@@ -552,7 +565,7 @@ function onInputChange(index: number): void {
     case 'V':
       unit = normalizeSlvUnit(value)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(value, mode)
+        inputValueArr.value[index] = getInputString(originValue, mode)
       } else {
         handleUnitUpdateValue(index, unit)
       }
@@ -561,7 +574,7 @@ function onInputChange(index: number): void {
       unit = normalizeAlphaUnit(value)
       console.log('unit', unit)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(value, mode)
+        inputValueArr.value[index] = getInputString(originValue, mode)
       } else {
         handleUnitUpdateValue(index, unit)
       }
@@ -571,22 +584,33 @@ function onInputChange(index: number): void {
     case 'B':
       unit = normalizeRgbUnit(value)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(value, mode)
+        inputValueArr.value[index] = getInputString(originValue, mode)
       } else {
         handleUnitUpdateValue(index, unit)
       }
       break
   }
 }
+function onConfirm() {
+  emits('confirm', displayedValue.value)
+  tooltipRef.value.hide()
+}
+function onClear() {
+  displayedValue.value = undefined
+  emits('update:value', displayedValue.value)
+  emits('clear')
+  tooltipRef.value.hide()
+}
 </script>
 <template>
   <Tooltip
+    ref="tooltipRef"
     style="width: 100%"
     :arrow="false"
     bg-color="#fff"
     :tooltip-style="{
       width: '240px',
-      padding: '12px',
+      padding: 0,
       borderRadius: '4px',
       color: 'rgba(0, 0, 0, 0.88)',
       ...tooltipStyle
@@ -598,90 +622,99 @@ function onInputChange(index: number): void {
     v-bind="$attrs"
   >
     <template #tooltip>
-      <div ref="palleteRef" class="color-picker-pallete" @mousedown="handlePalleteMouseDown">
-        <div
-          class="color-picker-pallete-layer"
-          :style="{ backgroundImage: `linear-gradient(90deg, white, hsl(${displayedHue}, 100%, 50%))` }"
-        ></div>
-        <div
-          class="color-picker-pallete-layer pallete-layer-shadowed"
-          style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0%), rgba(0, 0, 0, 100%))"
-        ></div>
-        <div class="color-picker-handle" :style="layerHandleStyle">
-          <div class="color-picker-handle-fill" :style="layerHandleFillStyle"></div>
+      <div class="color-picker-panel" :class="{ 'panel-with-actions': actions.length }">
+        <div ref="palleteRef" class="color-picker-pallete" @mousedown="handlePalleteMouseDown">
+          <div
+            class="color-picker-pallete-layer"
+            :style="{ backgroundImage: `linear-gradient(90deg, white, hsl(${displayedHue}, 100%, 50%))` }"
+          ></div>
+          <div
+            class="color-picker-pallete-layer pallete-layer-shadowed"
+            style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0%), rgba(0, 0, 0, 100%))"
+          ></div>
+          <div class="color-picker-handle" :style="layerHandleStyle">
+            <div class="color-picker-handle-fill" :style="layerHandleFillStyle"></div>
+          </div>
         </div>
-      </div>
-      <div class="color-picker-preview">
-        <div class="color-picker-preview-sliders">
-          <div class="color-picker-slider" :style="sliderStyle">
-            <div ref="hueRailRef" :style="sliderRailStyle" @mousedown="handleHueSliderMouseDown">
-              <div :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`">
-                <div class="color-picker-handle" :style="sliderColorHandleStyle">
-                  <div class="color-picker-handle-fill" :style="sliderColorHandleFillStyle"></div>
+        <div class="color-picker-preview">
+          <div class="color-picker-preview-sliders">
+            <div class="color-picker-slider" :style="sliderStyle">
+              <div ref="hueRailRef" :style="sliderRailStyle" @mousedown="handleHueSliderMouseDown">
+                <div
+                  :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`"
+                >
+                  <div class="color-picker-handle" :style="sliderColorHandleStyle">
+                    <div class="color-picker-handle-fill" :style="sliderColorHandleFillStyle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="showAlpha"
+              ref="alphaRailRef"
+              class="color-picker-slider"
+              :style="sliderStyle"
+              @mousedown="handleAlphaSliderMouseDown"
+            >
+              <div
+                :style="`
+                  border-radius: ${BORDER_RADIUS};
+                  position: absolute;
+                  top: 0px;
+                  bottom: 0;
+                  left: 0px;
+                  right: 0px;
+                  overflow: hidden;
+                `"
+              >
+                <div class="color-picker-checkboard"></div>
+                <div class="color-picker-slider-image" :style="`background-image: ${alphaRailBackgroundImage}`"></div>
+              </div>
+              <div
+                v-if="rgbaRef"
+                :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`"
+              >
+                <div class="color-picker-handle" :style="sliderAlphaHandleStyle">
+                  <div class="color-picker-handle-fill" :style="sliderAlphaHandleFillStyle"></div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <div class="color-picker-input">
           <div
-            v-if="showAlpha"
-            ref="alphaRailRef"
-            class="color-picker-slider"
-            :style="sliderStyle"
-            @mousedown="handleAlphaSliderMouseDown"
+            class="color-picker-input-mode"
+            :style="{ cursor: modes.length === 1 ? '' : 'pointer' }"
+            @click="onUpdateMode"
           >
-            <div
-              :style="`
-                border-radius: ${BORDER_RADIUS};
-                position: absolute;
-                top: 0px;
-                bottom: 0;
-                left: 0px;
-                right: 0px;
-                overflow: hidden;
-              `"
-            >
-              <div class="color-picker-checkboard"></div>
-              <div class="color-picker-slider-image" :style="`background-image: ${alphaRailBackgroundImage}`"></div>
-            </div>
-            <div
-              v-if="rgbaRef"
-              :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`"
-            >
-              <div class="color-picker-handle" :style="sliderAlphaHandleStyle">
-                <div class="color-picker-handle-fill" :style="sliderAlphaHandleFillStyle"></div>
-              </div>
-            </div>
+            {{ displayedModeComputed }}
+          </div>
+          <div class="color-picker-input-group">
+            <template v-if="displayedMode === 'hex'">
+              <Input size="small" :placeholder="displayedModeComputed" />
+            </template>
+            <template v-else>
+              <Input
+                size="small"
+                :style="`${val === 'A' ? 'flex-grow: 1.25' : ''}`"
+                :placeholder="val"
+                v-model:value.lazy="inputValueArr[index]"
+                @change="onInputChange(index)"
+                v-for="(val, index) in displayedModeComputed.split('')"
+                :key="index"
+              />
+            </template>
           </div>
         </div>
       </div>
-      <div class="color-picker-input">
-        <div
-          class="color-picker-input-mode"
-          :style="{ cursor: modes.length === 1 ? '' : 'pointer' }"
-          @click="onUpdateMode"
-        >
-          {{ displayedModeComputed }}
-        </div>
-        <div class="color-picker-input-group">
-          <template v-if="displayedMode === 'hex'">
-            <Input size="small" :placeholder="displayedModeComputed" />
-          </template>
-          <template v-else>
-            <Input
-              size="small"
-              :placeholder="val"
-              v-model:value.lazy="inputValueArr[index]"
-              @change="onInputChange(index)"
-              v-for="(val, index) in displayedModeComputed.split('')"
-              :key="index"
-            />
-          </template>
-        </div>
+      <div v-if="actions.length" class="color-picker-actions">
+        <Button v-if="actions.includes('confirm')" type="primary" size="small" @click="onConfirm">确认</Button>
+        <Button v-if="actions.includes('clear')" size="small" @click="onClear">清除</Button>
       </div>
     </template>
     <div
       tabindex="1"
-      class="color-picker"
+      class="color-picker-display"
       :class="{ 'color-picker-disabled': disabled }"
       :style="`--color-picker-height: ${colorPickerHeight};`"
     >
@@ -702,58 +735,68 @@ function onInputChange(index: number): void {
   </Tooltip>
 </template>
 <style lang="less" scoped>
-.color-picker-pallete {
-  height: 180px;
-  position: relative;
-  margin-bottom: 8px;
-  cursor: crosshair;
-  .color-picker-pallete-layer {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+.color-picker-panel {
+  padding: 12px;
+  .color-picker-pallete {
+    height: 180px;
+    position: relative;
+    margin-bottom: 8px;
+    cursor: crosshair;
+    .color-picker-pallete-layer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+    .pallete-layer-shadowed {
+      box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.24);
+    }
   }
-  .pallete-layer-shadowed {
-    box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.24);
-  }
-}
-.color-picker-preview {
-  display: flex;
-  .color-picker-preview-sliders {
-    flex: 1 0 auto;
-    .color-picker-slider {
-      margin-bottom: 8px;
-      position: relative;
-      &::after {
-        content: '';
-        position: absolute;
-        border-radius: inherit;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.24);
-        pointer-events: none;
-      }
-      .color-picker-checkboard {
-        background: white;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
+  .color-picker-preview {
+    display: flex;
+    .color-picker-preview-sliders {
+      flex: 1 0 auto;
+      .color-picker-slider {
+        margin-bottom: 8px;
+        position: relative;
         &::after {
-          background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
-            linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
-          background-size: 12px 12px;
-          background-position:
-            0 0,
-            0 6px,
-            6px -6px,
-            -6px 0px;
-          background-repeat: repeat;
           content: '';
+          position: absolute;
+          border-radius: inherit;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.24);
+          pointer-events: none;
+        }
+        .color-picker-checkboard {
+          background: white;
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          &::after {
+            background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
+              linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
+            background-size: 12px 12px;
+            background-position:
+              0 0,
+              0 6px,
+              6px -6px,
+              -6px 0px;
+            background-repeat: repeat;
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+          }
+        }
+        .color-picker-slider-image {
           position: absolute;
           left: 0;
           right: 0;
@@ -761,67 +804,67 @@ function onInputChange(index: number): void {
           bottom: 0;
         }
       }
-      .color-picker-slider-image {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
+    }
+  }
+  .color-picker-handle {
+    z-index: 1;
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.45);
+    position: absolute;
+    background-color: white;
+    overflow: hidden;
+    .color-picker-handle-fill {
+      border: 2px solid white;
+    }
+  }
+  .color-picker-input {
+    display: flex;
+    align-items: center;
+    .color-picker-input-mode {
+      width: 72px;
+      text-align: center;
+    }
+    .color-picker-input-group {
+      display: inline-flex;
+      width: 100%;
+      flex-wrap: nowrap;
+      vertical-align: bottom;
+      :deep(.m-input) {
+        flex-grow: 1;
+        flex-basis: 0;
+        &:not(:first-child) {
+          margin-left: -1px;
+          .input-wrap {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+          }
+        }
+        &:not(:last-child) {
+          .input-wrap {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+          }
+        }
+        .input-wrap {
+          padding: 0 4px;
+        }
+        .input-item {
+          text-align: center;
+        }
       }
     }
   }
 }
-.color-picker-handle {
-  z-index: 1;
-  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.45);
-  position: absolute;
-  background-color: white;
-  overflow: hidden;
-  .color-picker-handle-fill {
-    border: 2px solid white;
-  }
+.panel-with-actions {
+  padding-bottom: 8px;
 }
-.color-picker-input {
+.color-picker-actions {
   display: flex;
-  align-items: center;
-  .color-picker-input-mode {
-    width: 72px;
-    text-align: center;
-  }
-  .color-picker-input-group {
-    display: inline-flex;
-    width: 100%;
-    flex-wrap: nowrap;
-    vertical-align: bottom;
-    :deep(.m-input) {
-      flex-grow: 1;
-      flex-basis: 0;
-      &:not(:first-child) {
-        margin-left: -1px;
-        .input-wrap {
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-        }
-      }
-      &:not(:last-child) {
-        .input-wrap {
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-      }
-      &:last-child {
-        flex-grow: 1.25;
-      }
-      .input-wrap {
-        padding: 0 4px;
-      }
-      .input-item {
-        text-align: center;
-      }
-    }
-  }
+  gap: 8px;
+  border-top: 1px solid rgba(5, 5, 5, 0.06);
+  padding: 8px 12px;
+  justify-content: flex-end;
 }
-.color-picker {
+.color-picker-display {
   position: relative;
   display: inline-block;
   font-size: 14px;
