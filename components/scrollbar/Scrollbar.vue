@@ -257,7 +257,7 @@ function onEnterYTrack() {
 }
 function onLeaveYTrack() {
   yTrackHover.value = false
-  if (autoShowTrack.value) {
+  if (autoShowTrack.value && !trackYPressed.value) {
     debounceHideYScrollbar()
   }
 }
@@ -266,59 +266,66 @@ function onEnterXTrack() {
 }
 function onLeaveXTrack() {
   xTrackHover.value = false
-  if (autoShowTrack.value) {
+  if (autoShowTrack.value && !trackXPressed.value) {
     debounceHideXScrollbar()
   }
 }
-function onYTrackMouseDown(e: MouseEvent) {
+function handleYTrackMouseDown(e: MouseEvent) {
   trackYPressed.value = true
   memoYTop.value = containerScrollTop.value
   memoMouseY.value = e.clientY
-  window.onmousemove = (e: MouseEvent) => {
-    const diffY = e.clientY - memoMouseY.value
-    const dScrollTop =
-      (diffY * (contentHeight.value - containerHeight.value)) / (containerHeight.value - trackHeight.value)
-    const toScrollTopUpperBound = contentHeight.value - containerHeight.value
-    let toScrollTop = memoYTop.value + dScrollTop
-    toScrollTop = Math.min(toScrollTopUpperBound, toScrollTop)
-    toScrollTop = Math.max(toScrollTop, 0)
-    containerRef.value.scrollTop = toScrollTop
-  }
-  window.onmouseup = () => {
-    window.onmousemove = null
-    trackYPressed.value = false
-    if (autoShowTrack.value && !yTrackHover.value) {
-      debounceHideYScrollbar()
-    } else if (notAutoShowTrack.value && mousePressedLeave.value) {
-      mousePressedLeave.value = false
-      debounceHideYScrollbar()
-    }
-  }
+  document.addEventListener('mousemove', handleYTrackMouseMove)
+  document.addEventListener('mouseup', handleYTrackMouseUp)
+  handleYTrackMouseMove(e)
 }
-function onXTrackMouseDown(e: MouseEvent) {
+function handleYTrackMouseMove(e: MouseEvent) {
+  const diffY = e.clientY - memoMouseY.value
+  const dScrollTop =
+    (diffY * (contentHeight.value - containerHeight.value)) / (containerHeight.value - trackHeight.value)
+  const toScrollTopUpperBound = contentHeight.value - containerHeight.value
+  let toScrollTop = memoYTop.value + dScrollTop
+  toScrollTop = Math.min(toScrollTopUpperBound, toScrollTop)
+  toScrollTop = Math.max(toScrollTop, 0)
+  containerRef.value.scrollTop = toScrollTop
+}
+function handleYTrackMouseUp() {
+  trackYPressed.value = false
+  if (autoShowTrack.value && !yTrackHover.value) {
+    debounceHideYScrollbar()
+  } else if (notAutoShowTrack.value && mousePressedLeave.value) {
+    mousePressedLeave.value = false
+    debounceHideYScrollbar()
+  }
+  document.removeEventListener('mousemove', handleYTrackMouseMove)
+  document.removeEventListener('mouseup', handleYTrackMouseUp)
+}
+function handleXTrackMouseDown(e: MouseEvent) {
   trackXPressed.value = true
   memoXLeft.value = containerScrollLeft.value
   memoMouseX.value = e.clientX
-  window.onmousemove = (e: MouseEvent) => {
-    const diffX = e.clientX - memoMouseX.value
-    const dScrollLeft =
-      (diffX * (contentWidth.value - containerWidth.value)) / (containerWidth.value - trackWidth.value)
-    const toScrollLeftUpperBound = contentWidth.value - containerWidth.value
-    let toScrollLeft = memoXLeft.value + dScrollLeft
-    toScrollLeft = Math.min(toScrollLeftUpperBound, toScrollLeft)
-    toScrollLeft = Math.max(toScrollLeft, 0)
-    containerRef.value.scrollLeft = toScrollLeft
+  document.addEventListener('mousemove', handleXTrackMouseMove)
+  document.addEventListener('mouseup', handleXTrackMouseUp)
+  handleXTrackMouseMove(e)
+}
+function handleXTrackMouseMove(e: MouseEvent) {
+  const diffX = e.clientX - memoMouseX.value
+  const dScrollLeft = (diffX * (contentWidth.value - containerWidth.value)) / (containerWidth.value - trackWidth.value)
+  const toScrollLeftUpperBound = contentWidth.value - containerWidth.value
+  let toScrollLeft = memoXLeft.value + dScrollLeft
+  toScrollLeft = Math.min(toScrollLeftUpperBound, toScrollLeft)
+  toScrollLeft = Math.max(toScrollLeft, 0)
+  containerRef.value.scrollLeft = toScrollLeft
+}
+function handleXTrackMouseUp() {
+  trackXPressed.value = false
+  if (autoShowTrack.value && !xTrackHover.value) {
+    debounceHideXScrollbar()
+  } else if (notAutoShowTrack.value && mousePressedLeave.value) {
+    mousePressedLeave.value = false
+    debounceHideXScrollbar()
   }
-  window.onmouseup = () => {
-    window.onmousemove = null
-    trackXPressed.value = false
-    if (autoShowTrack.value && !xTrackHover.value) {
-      debounceHideXScrollbar()
-    } else if (notAutoShowTrack.value && mousePressedLeave.value) {
-      mousePressedLeave.value = false
-      debounceHideXScrollbar()
-    }
-  }
+  document.removeEventListener('mousemove', handleXTrackMouseMove)
+  document.removeEventListener('mouseup', handleXTrackMouseUp)
 }
 function scrollTo(...args: any[]) {
   containerRef.value?.scrollTo(...args)
@@ -380,7 +387,7 @@ defineExpose({
         :style="verticalTrackStyle"
         @mouseenter="autoShowTrack ? onEnterYTrack() : () => false"
         @mouseleave="autoShowTrack ? onLeaveYTrack() : () => false"
-        @mousedown.prevent.stop="onYTrackMouseDown"
+        @mousedown.prevent.stop="handleYTrackMouseDown"
       ></div>
     </div>
     <div
@@ -395,7 +402,7 @@ defineExpose({
         :style="horizontalTrackStyle"
         @mouseenter="autoShowTrack ? onEnterXTrack() : () => false"
         @mouseleave="autoShowTrack ? onLeaveXTrack() : () => false"
-        @mousedown.prevent.stop="onXTrackMouseDown"
+        @mousedown.prevent.stop="handleXTrackMouseDown"
       ></div>
     </div>
   </div>
