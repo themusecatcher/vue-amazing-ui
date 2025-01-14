@@ -9,10 +9,10 @@ commitDesc=$1
 
 git add .
 
-if [ -z ${commitDesc} ]; then
+if [ -z "$commitDesc" ]; then
   git commit -m 'update'
 else
-  git commit -m ${commitDesc}
+  git commit -m "$commitDesc"
 fi
 
 git push

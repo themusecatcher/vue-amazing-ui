@@ -78,9 +78,10 @@ function onInput(e: Event) {
   }
 }
 function onChange(e: Event) {
-  if (lazyInput.value) {
-    emits('update:value', (e.target as HTMLInputElement).value)
+  const target = e.target as HTMLInputElement
+  if (target.value !== props.value) {
     emits('change', e)
+    emits('update:value', target.value)
   }
 }
 function onClear() {
@@ -88,19 +89,15 @@ function onClear() {
   inputRef.value.focus()
 }
 async function onInputSearch(e: KeyboardEvent) {
-  if (!lazyInput.value) {
-    onSearch()
-  } else {
-    if (lazyInput.value) {
-      inputRef.value.blur()
-      await nextTick()
-      inputRef.value.focus()
-    }
-    emits('search', props.value)
+  const target = e.target as HTMLInputElement
+  emits('search', target.value, e)
+  if (lazyInput.value) {
+    const changeEvent = new Event('change')
+    e.target?.dispatchEvent(changeEvent)
   }
 }
-function onSearch() {
-  emits('search', props.value)
+function onSearch(e: Event) {
+  emits('search', props.value, e)
 }
 </script>
 <template>
