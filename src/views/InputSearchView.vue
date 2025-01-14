@@ -29,8 +29,8 @@ watchEffect(() => {
 function onChange(e: Event) {
   console.log('change', e)
 }
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
