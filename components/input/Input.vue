@@ -96,13 +96,12 @@ function onChange(e: Event) {
     emits('change', e)
   }
 }
-function onKeyboard(e: KeyboardEvent) {
+function onEnter(e: KeyboardEvent) {
   emits('enter', e)
   if (lazyInput.value) {
-    inputRef.value.blur()
-    nextTick(() => {
-      inputRef.value.focus()
-    })
+    const changeEvent = new Event('change')
+    e.target?.dispatchEvent(changeEvent)
+    emits('update:value', (e.target as HTMLInputElement).value)
   }
 }
 function onClear() {
@@ -147,7 +146,7 @@ function onPassword() {
         :disabled="disabled"
         @input="onInput"
         @change="onChange"
-        @keydown.enter.prevent="onKeyboard"
+        @keydown.enter.prevent="onEnter"
       />
       <span v-if="showInputSuffix" class="input-suffix">
         <span v-if="showClear" class="input-actions" :class="{ 'clear-hidden': !value }" @click="onClear">

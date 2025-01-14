@@ -23,6 +23,9 @@ function parser(value: string): number {
 function onChange(number: number) {
   console.log('change', number)
 }
+function onEnter(e: KeyboardEvent) {
+  console.log('enter', e)
+}
 </script>
 <template>
   <div>
@@ -38,8 +41,14 @@ function onChange(number: number) {
         <br />
         {{ '<InputNumber v-model:value.lazy="value" />' }}
       </Alert>
-      <InputNumber :width="120" v-model:value="value" placeholder="Basic usage" @change="onChange" />
-      <InputNumber :width="120" v-model:value.lazy="value" placeholder="Lazy usage" @change="onChange" />
+      <InputNumber :width="120" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
+      <InputNumber
+        :width="120"
+        v-model:value.lazy="value"
+        placeholder="Lazy usage"
+        @change="onChange"
+        @enter="onEnter"
+      />
     </Space>
     <h2 class="mt30 mb10">步数为小数</h2>
     <InputNumber :step="0.1" v-model:value="value" />

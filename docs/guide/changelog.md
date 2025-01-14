@@ -8,9 +8,13 @@
 
 - 新增 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件
 
+## 2.0.11 <Tag color="volcano" size="small">2025-01-14</Tag>
+
+- 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件代码，新增 `enter` 事件，支持监听按下回车的回调
+
 ## 2.0.10 <Tag color="volcano" size="small">2025-01-13</Tag>
 
-- 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件代码，新增 draggable 属性，支持设置是否可以拖动图片
+- 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件代码，新增 `draggable` 属性，支持设置是否可以拖动图片
 - 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件代码逻辑
 - 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件代码逻辑
 - 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件代码逻辑
