@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const inputRef = ref() // input 模板引用
 const numValue = ref<string>()
-const emits = defineEmits(['update:value', 'change'])
+const emits = defineEmits(['update:value', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix'])
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -155,6 +155,14 @@ function onKeyboard(e: KeyboardEvent) {
     onDown()
   }
 }
+function onEnter(e: KeyboardEvent) {
+  emits('enter', e)
+  if (lazyInput.value) {
+    const target = e.target as HTMLInputElement
+    const value = props.parser ? String(props.parser(target.value)) : target.value
+    updateValue(value)
+  }
+}
 function onUp() {
   const res = Math.min(props.max, add(props.value || 0, +props.step)).toFixed(precision.value)
   emitValue(getNumberValue(res))
@@ -186,6 +194,7 @@ function onDown() {
         @change="onChange"
         @keydown.up.prevent
         @keydown="keyboard ? onKeyboard($event) : () => false"
+        @keydown.enter.prevent="onEnter"
       />
     </div>
     <div class="input-number-handler-wrap">

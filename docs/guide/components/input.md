@@ -402,4 +402,4 @@ suffix | 自定义后缀图标 | v-slot:suffix
 名称 | 说明 | 类型
 :-- | :-- | :--
 change | 输入框内容变化时的回调 | (e: Event) => void
-enter | 按下回车的回调 | (e: Event) => void
+enter | 按下回车的回调 | (e: KeyboardEvent) => void

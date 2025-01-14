@@ -33,6 +33,9 @@ function parser(value: string): number {
 function onChange(number: number) {
   console.log('change', number)
 }
+function onEnter(e: KeyboardEvent) {
+  console.log('enter', e)
+}
 </script>
 
 ## 基本使用
@@ -53,12 +56,14 @@ function onChange(number: number) {
     v-model:value="value"
     placeholder="Basic usage"
     @change="onChange"
+    @enter="onEnter"
   />
   <InputNumber
-  :width="120"
+    :width="120"
     v-model:value.lazy="value"
     placeholder="Lazy usage"
     @change="onChange"
+    @enter="onEnter"
   />
 </Space>
 
@@ -74,6 +79,9 @@ watchEffect(() => {
 function onChange (number: number) {
   console.log('change', number)
 }
+function onEnter(e: KeyboardEvent) {
+  console.log('enter', e)
+}
 </script>
 <template>
   <Space gap="small" vertical>
@@ -82,12 +90,14 @@ function onChange (number: number) {
       v-model:value="value"
       placeholder="Basic usage"
       @change="onChange"
+      @enter="onEnter"
     />
     <InputNumber
-    :width="120"
+      :width="120"
       v-model:value.lazy="value"
       placeholder="Lazy usage"
       @change="onChange"
+      @enter="onEnter"
     />
   </Space>
 </template>
@@ -292,3 +302,4 @@ prefix | 自定义前缀图标 | v-slot:prefix
 名称 | 说明 | 类型
 :-- | :-- | :--
 change | 变化回调 | (value: number) => void
+enter | 按下回车的回调 | (e: KeyboardEvent) => void
