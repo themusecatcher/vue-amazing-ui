@@ -18,10 +18,10 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
-function onChange (e: Event) {
+function onChange(e: Event) {
   console.log('change', e)
 }
-function onEnter (e: KeyboardEvent) {
+function onEnter(e: KeyboardEvent) {
   console.log('enter', e)
 }
 </script>

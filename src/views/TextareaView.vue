@@ -9,10 +9,10 @@ watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
 function onChange(e: Event) {
-  console.log('change', e, lazyValue.value)
+  console.log('change', e)
 }
 function onEnter(e: KeyboardEvent) {
-  console.log('enter', e, lazyValue.value)
+  console.log('enter', e)
 }
 </script>
 <template>
@@ -36,6 +36,20 @@ function onEnter(e: KeyboardEvent) {
         :rows="2"
         @change="onChange"
         @enter="onEnter"
+      />
+      <a-textarea
+        v-model:value="value"
+        placeholder="Basic usage rows 2"
+        :rows="2"
+        @change="onChange"
+        @pressEnter="onEnter"
+      />
+      <a-textarea
+        v-model:value.lazy="lazyValue"
+        placeholder="Lazy usage rows 2"
+        :rows="2"
+        @change="onChange"
+        @pressEnter="onEnter"
       />
     </Space>
     <h2 class="mt30 mb10">适应文本高度的文本域</h2>

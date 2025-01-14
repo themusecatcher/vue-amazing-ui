@@ -87,24 +87,21 @@ function getAreaHeight() {
 }
 const emits = defineEmits(['update:value', 'change', 'enter'])
 function onInput(e: Event) {
+  const target = e.target as HTMLInputElement
   if (!lazyTextarea.value) {
-    emits('update:value', (e.target as HTMLInputElement).value)
+    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
 function onChange(e: Event) {
-  if (lazyTextarea.value) {
-    emits('update:value', (e.target as HTMLInputElement).value)
+  const target = e.target as HTMLInputElement
+  if (target.value !== props.value) {
+    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
-async function onKeyboard(e: KeyboardEvent) {
+function onEnter(e: KeyboardEvent) {
   emits('enter', e)
-  if (lazyTextarea.value) {
-    textareaRef.value.blur()
-    await nextTick()
-    textareaRef.value.focus()
-  }
 }
 function onClear() {
   emits('update:value', '')
@@ -130,7 +127,7 @@ function onClear() {
       :disabled="disabled"
       @input="onInput"
       @change="onChange"
-      @keydown.enter="onKeyboard"
+      @keydown.enter="onEnter"
     />
     <svg
       v-if="showClear"

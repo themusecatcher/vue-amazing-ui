@@ -11,6 +11,7 @@
 ## 2.0.11 <Tag color="volcano" size="small">2025-01-14</Tag>
 
 - 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件代码，新增 `enter` 事件，支持监听按下回车的回调
+- 组件库及文档代码优化
 
 ## 2.0.10 <Tag color="volcano" size="small">2025-01-13</Tag>
 
