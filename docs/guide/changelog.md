@@ -10,6 +10,9 @@
 
 ## 2.0.11 <Tag color="volcano" size="small">2025-01-14</Tag>
 
+- 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件代码逻辑
+- 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件代码逻辑
+- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件代码逻辑
 - 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件代码，新增 `enter` 事件，支持监听按下回车的回调
 - 组件库及文档代码优化
 

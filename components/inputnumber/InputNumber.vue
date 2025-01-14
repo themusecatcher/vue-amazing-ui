@@ -91,8 +91,8 @@ function restoreCursor(start: number, beforeTxt: string, afterTxt: string) {
   inputRef.value.setSelectionRange(startPos, startPos)
 }
 function emitValue(value: number | undefined) {
+  emits('update:value', value) // 保证在 change 回调时能获取到最新数据
   emits('change', value)
-  emits('update:value', value)
 }
 function getFormatValue() {
   if (props.formatter) {
