@@ -61,6 +61,20 @@ function onSearch(value: string, e: Event) {
         @change="onChange"
         @search="onSearch"
       />
+      <a-input-search
+        :width="200"
+        v-model:value="value"
+        placeholder="Basic search usage"
+        @change="onChange"
+        @search="onSearch"
+      />
+      <a-input-search
+        :width="200"
+        v-model:value.lazy="lazyValue"
+        placeholder="Lazy search usage"
+        @change="onChange"
+        @search="onSearch"
+      />
     </Space>
     <h2 class="mt30 mb10">自定义搜索按钮</h2>
     <Space vertical>

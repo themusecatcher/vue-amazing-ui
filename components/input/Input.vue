@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed } from 'vue'
 import { useSlotsExist } from 'components/utils'
 export interface Props {
   width?: string | number // 输入框宽度，单位 px
@@ -85,14 +85,16 @@ function onTransitionEnd() {
   }
 }
 function onInput(e: Event) {
+  const target = e.target as HTMLInputElement
   if (!lazyInput.value) {
-    emits('update:value', (e.target as HTMLInputElement).value)
+    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
 function onChange(e: Event) {
-  if (lazyInput.value) {
-    emits('update:value', (e.target as HTMLInputElement).value)
+  const target = e.target as HTMLInputElement
+  if (target.value !== props.value) {
+    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
@@ -101,7 +103,6 @@ function onEnter(e: KeyboardEvent) {
   if (lazyInput.value) {
     const changeEvent = new Event('change')
     e.target?.dispatchEvent(changeEvent)
-    emits('update:value', (e.target as HTMLInputElement).value)
   }
 }
 function onClear() {

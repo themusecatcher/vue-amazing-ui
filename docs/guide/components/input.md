@@ -11,7 +11,13 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { UserOutlined, InfoCircleOutlined, SettingOutlined, EnvironmentOutlined, CompassOutlined } from '@ant-design/icons-vue'
+import {
+  UserOutlined,
+  InfoCircleOutlined,
+  SettingOutlined,
+  EnvironmentOutlined,
+  CompassOutlined
+} from '@ant-design/icons-vue'
 const value = ref('')
 const lazyValue = ref('')
 const sizeOptions = [

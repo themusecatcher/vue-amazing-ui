@@ -7,13 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
-    AInput: typeof import('ant-design-vue/es')['Input']
-    AInputNumber: typeof import('ant-design-vue/es')['InputNumber']
-    AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
-    AMenu: typeof import('ant-design-vue/es')['Menu']
-    AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
-    NColorPicker: typeof import('naive-ui')['NColorPicker']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
