@@ -74,14 +74,14 @@ const lazyInput = computed(() => {
 function onInput(e: Event) {
   const target = e.target as HTMLInputElement
   if (!lazyInput.value) {
-    emits('update:value', target.value) //  // 保证在 change 回调时能获取到最新数据
+    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
 function onChange(e: Event) {
   const target = e.target as HTMLInputElement
   if (target.value !== props.value) {
-    emits('update:value', target.value) //  // 保证在 change 回调时能获取到最新数据
+    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }

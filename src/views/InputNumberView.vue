@@ -2,11 +2,15 @@
 import { ref, watchEffect } from 'vue'
 import { formatNumber } from 'vue-amazing-ui'
 const value = ref(3)
+const lazyValue = ref(6)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)
 const disabled = ref(true)
 watchEffect(() => {
   console.log('value', value.value)
+})
+watchEffect(() => {
+  console.log('lazyValue', lazyValue.value)
 })
 watchEffect(() => {
   console.log('formatValue1', formatValue1.value)
@@ -44,10 +48,24 @@ function onEnter(e: KeyboardEvent) {
       <InputNumber :width="120" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
       <InputNumber
         :width="120"
-        v-model:value.lazy="value"
+        v-model:value.lazy="lazyValue"
         placeholder="Lazy usage"
         @change="onChange"
         @enter="onEnter"
+      />
+      <a-input-number
+        :width="120"
+        v-model:value="value"
+        placeholder="Basic usage"
+        @change="onChange"
+        @pressEnter="onEnter"
+      />
+      <a-input-number
+        :width="120"
+        v-model:value.lazy="lazyValue"
+        placeholder="Lazy usage"
+        @change="onChange"
+        @pressEnter="onEnter"
       />
     </Space>
     <h2 class="mt30 mb10">步数为小数</h2>

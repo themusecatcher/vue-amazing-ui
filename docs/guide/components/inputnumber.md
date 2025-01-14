@@ -12,11 +12,15 @@
 import { ref, watchEffect } from 'vue'
 import { formatNumber } from 'vue-amazing-ui'
 const value = ref(3)
+const lazyValue = ref(6)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)
 const disabled = ref(true)
 watchEffect(() => {
   console.log('value', value.value)
+})
+watchEffect(() => {
+  console.log('lazyValue', lazyValue.value)
 })
 watchEffect(() => {
   console.log('formatValue1', formatValue1.value)
@@ -60,7 +64,7 @@ function onEnter(e: KeyboardEvent) {
   />
   <InputNumber
     :width="120"
-    v-model:value.lazy="value"
+    v-model:value.lazy="lazyValue"
     placeholder="Lazy usage"
     @change="onChange"
     @enter="onEnter"
@@ -73,8 +77,12 @@ function onEnter(e: KeyboardEvent) {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const value = ref(3)
+const lazyValue = ref(6)
 watchEffect(() => {
   console.log('value', value.value)
+})
+watchEffect(() => {
+  console.log('lazyValue', lazyValue.value)
 })
 function onChange (number: number) {
   console.log('change', number)
@@ -94,7 +102,7 @@ function onEnter(e: KeyboardEvent) {
     />
     <InputNumber
       :width="120"
-      v-model:value.lazy="value"
+      v-model:value.lazy="lazyValue"
       placeholder="Lazy usage"
       @change="onChange"
       @enter="onEnter"
