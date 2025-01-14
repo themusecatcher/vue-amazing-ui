@@ -53,20 +53,6 @@ function onEnter(e: KeyboardEvent) {
         @change="onChange"
         @enter="onEnter"
       />
-      <a-input-number
-        :width="120"
-        v-model:value="value"
-        placeholder="Basic usage"
-        @change="onChange"
-        @pressEnter="onEnter"
-      />
-      <a-input-number
-        :width="120"
-        v-model:value.lazy="lazyValue"
-        placeholder="Lazy usage"
-        @change="onChange"
-        @pressEnter="onEnter"
-      />
     </Space>
     <h2 class="mt30 mb10">步数为小数</h2>
     <InputNumber :step="0.1" v-model:value="value" />
