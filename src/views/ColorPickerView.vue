@@ -40,7 +40,7 @@ function handleClear() {
     <h2 class="mt30 mb10">基本使用</h2>
     <Space :width="240">
       <ColorPicker :modes="['rgb', 'hex', 'hsl', 'hsv']" />
-      <n-color-picker :modes="['rgb', 'hex', 'hsl', 'hsv']" />
+      <n-color-picker :modes="['rgb', 'hex', 'hsl', 'hsv']" :actions="['confirm', 'clear']" />
     </Space>
     <h2 class="mt30 mb10">不透明度</h2>
     <h3 class="mb10">show-alpha 控制是否可调节 alpha 通道</h3>

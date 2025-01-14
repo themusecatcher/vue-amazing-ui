@@ -567,6 +567,8 @@ function onInputChange(index: number): void {
       if (unit === false) {
         inputValueArr.value[index] = getInputString(originValue, mode)
       } else {
+        console.log('index', index)
+        console.log('unit', unit)
         handleUnitUpdateValue(index, unit)
       }
       break
