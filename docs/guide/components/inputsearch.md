@@ -39,8 +39,8 @@ watchEffect(() => {
 function onChange(e: Event) {
   console.log('change', e)
 }
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 
@@ -88,8 +88,8 @@ watchEffect(() => {
 function onChange(e: Event) {
   console.log('change', e)
 }
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
@@ -172,8 +172,8 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
@@ -286,8 +286,8 @@ const size = ref('middle')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
@@ -345,8 +345,8 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
@@ -392,8 +392,8 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
@@ -450,8 +450,8 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
@@ -504,8 +504,8 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
@@ -570,8 +570,8 @@ const loading = ref(true)
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
@@ -653,8 +653,8 @@ const disabled = ref(true)
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(searchValue: string) {
-  console.log('searchValue', searchValue)
+function onSearch(value: string, e: Event) {
+  console.log('search', value, e)
 }
 </script>
 <template>
@@ -730,4 +730,4 @@ suffix | 自定义后缀图标 | v-slot:suffix
 名称 | 说明 | 类型
 :-- | :-- | :--
 change | 搜索框内容变化时的回调 | (e: Event) => void
-enter | 点击搜索或按下回车键时的回调 | (value: string) => void
+enter | 点击搜索或按下回车键时的回调 | (value: string, e: Event) => void
