@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import {
   useSlotsExist,
@@ -118,9 +118,20 @@ watch(
     deep: true
   }
 )
-watchEffect(() => {
-  tooltipShow.value = props.show
-})
+watch(
+  () => props.show,
+  (to) => {
+    if (to && !tooltipShow.value) {
+      onShow()
+    }
+    if (!to && tooltipShow.value) {
+      onHide()
+    }
+  },
+  {
+    immediate: true
+  }
+)
 onMounted(() => {
   observeScroll()
 })

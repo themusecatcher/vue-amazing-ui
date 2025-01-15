@@ -16,11 +16,11 @@
 ::: details Show Code
 
 ```vue
+<script lang="ts" setup>
+</script>
 <template>
 </template>
 ```
-
-:::
 
 :::
 

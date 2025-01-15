@@ -38,6 +38,9 @@ const actions = ref(['confirm', 'clear'])
 watchEffect(() => {
   console.log('colorValue', colorValue.value)
 })
+watchEffect(() => {
+  console.log('show', show.value)
+})
 function handleConfirm(value: string) {
   console.log('confirm', value)
 }
@@ -50,18 +53,12 @@ function handleClear() {
     <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1> -->
     <h2 class="mt30 mb10">基本使用</h2>
     <Space :width="240">
-      <ColorPicker v-model:value="colorValue" :modes="['rgb', 'hex', 'hsl', 'hsv']" />
-      <n-color-picker
-        v-model:value="colorValue"
-        :modes="['rgb', 'hex', 'hsl', 'hsv']"
-        :actions="['confirm', 'clear']"
-      />
+      <ColorPicker v-model:value="colorValue" />
+      <n-color-picker v-model:value="colorValue" />
     </Space>
     <h2 class="mt30 mb10">自定义面板样式</h2>
     <Space :width="240">
       <ColorPicker
-        v-model:value="colorValue"
-        :modes="['rgb', 'hex', 'hsl', 'hsv']"
         :tooltip-style="{
           width: '280px',
           padding: '4px',
@@ -74,18 +71,8 @@ function handleClear() {
     <Space vertical>
       <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
       <Space :width="240">
-        <ColorPicker
-          :show-alpha="showAlpha"
-          :actions="['confirm', 'clear']"
-          @confirm="handleConfirm"
-          @clear="handleClear"
-        />
-        <n-color-picker
-          :show-alpha="showAlpha"
-          :actions="['confirm', 'clear']"
-          @confirm="handleConfirm"
-          @clear="handleClear"
-        />
+        <ColorPicker :show-alpha="showAlpha" />
+        <n-color-picker :show-alpha="showAlpha" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">颜色预览块</h2>
@@ -93,18 +80,8 @@ function handleClear() {
     <Space vertical>
       <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
       <Space :width="240">
-        <ColorPicker
-          :show-preview="showPreview"
-          :actions="['confirm', 'clear']"
-          @confirm="handleConfirm"
-          @clear="handleClear"
-        />
-        <n-color-picker
-          :show-alpha="showPreview"
-          :actions="['confirm', 'clear']"
-          @confirm="handleConfirm"
-          @clear="handleClear"
-        />
+        <ColorPicker :show-preview="showPreview" />
+        <n-color-picker :show-preview="showPreview" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">尺寸</h2>
@@ -133,7 +110,6 @@ function handleClear() {
     <h2 class="mt30 mb10">预设色板</h2>
     <Space :width="240">
       <ColorPicker
-        :actions="['confirm', 'clear']"
         :swatches="[
           '#FFFFFF',
           '#18A058',
@@ -146,7 +122,6 @@ function handleClear() {
         ]"
       />
       <n-color-picker
-        :actions="['confirm', 'clear']"
         :swatches="[
           '#FFFFFF',
           '#18A058',
@@ -164,32 +139,24 @@ function handleClear() {
     <Space vertical>
       <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
       <Space :width="240">
-        <ColorPicker v-model:value="colorValue" :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
-        <n-color-picker v-model:value="colorValue" :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
+        <ColorPicker :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
+        <n-color-picker :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">额外页脚</h2>
     <Space :width="240">
-      <ColorPicker
-        v-model:value="colorValue"
-        :actions="['confirm', 'clear']"
-        @confirm="handleConfirm"
-        @clear="handleClear"
-      >
+      <ColorPicker>
         <template #footer> extra footer </template>
       </ColorPicker>
-      <n-color-picker
-        v-model:value="colorValue"
-        :actions="['confirm', 'clear']"
-        @confirm="handleConfirm"
-        @clear="handleClear"
-      >
+      <n-color-picker>
         <template #action> 你好 </template>
       </n-color-picker>
     </Space>
     <h2 class="mt30 mb10">使用按钮控制面板</h2>
-    <Space :width="240">
-      <ColorPicker v-model:show="show" :actions="['confirm', 'clear']" @confirm="handleConfirm" @clear="handleClear" />
+    <Space>
+      <Space :width="240">
+        <ColorPicker v-model:show="show" />
+      </Space>
       <Button type="primary" @click="show = true">显示</Button>
       <Button @click="show = false">隐藏</Button>
     </Space>
