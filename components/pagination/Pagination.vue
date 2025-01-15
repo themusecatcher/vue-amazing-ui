@@ -567,7 +567,7 @@ function onPageSizeChange(pageSize: number) {
       line-height: 28px;
       :deep(.m-input) {
         .input-wrap {
-          padding: 2px 11px;
+          padding: 3px 11px;
         }
       }
     }

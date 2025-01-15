@@ -33,9 +33,9 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
-const inputWrapRef = ref() // inputWrap 元素引用
 const inputRef = ref() // input 元素引用
-const leaveWrap = ref<boolean>(false) // 鼠标是否移出 inputWrap
+const inputWrapHover = ref<boolean>(false) // 鼠标是否悬浮
+const inputFocus = ref<boolean>(false) // input 元素是否聚焦
 const showPassword = ref<boolean>(false) // 是否显示密码
 const emits = defineEmits(['update:value', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
@@ -73,16 +73,16 @@ const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
 function onMouseEnter() {
-  leaveWrap.value = false
-  inputWrapRef.value.style.zIndex = 1
+  inputWrapHover.value = true
 }
 function onMouseLeave() {
-  leaveWrap.value = true
+  inputWrapHover.value = false
 }
-function onTransitionEnd() {
-  if (leaveWrap.value) {
-    inputWrapRef.value.style.zIndex = ''
-  }
+function onFocus() {
+  inputFocus.value = true
+}
+function onBlur() {
+  inputFocus.value = false
 }
 function onInput(e: Event) {
   const target = e.target as HTMLInputElement
@@ -119,8 +119,6 @@ function onPassword() {
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
-      ref="inputWrapRef"
-      tabindex="1"
       class="input-wrap"
       :class="[
         `input-${size}`,
@@ -132,8 +130,9 @@ function onPassword() {
       ]"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
-      @transitionend="onTransitionEnd"
     >
+      <div class="input-border"></div>
+      <div class="input-border-state" :class="{ 'input-hover': inputWrapHover, 'input-focus': inputFocus }"></div>
       <span v-if="showPrefix" class="input-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
@@ -145,6 +144,8 @@ function onPassword() {
         :placeholder="placeholder"
         :maxlength="maxlength"
         :disabled="disabled"
+        @focus="onFocus"
+        @blur="onBlur"
         @input="onInput"
         @change="onChange"
         @keydown.enter.prevent="onEnter"
@@ -252,6 +253,7 @@ function onPassword() {
     border-left: 0;
   }
   .input-wrap {
+    position: relative;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.88);
     line-height: 1.5714285714285714;
@@ -261,17 +263,35 @@ function onPassword() {
     width: 100%;
     min-width: 0;
     background-color: #ffffff;
-    border: 1px solid #d9d9d9;
-    transition: all 0.2s;
-    &:hover {
-      border-color: #4096ff;
-      border-right-width: 1px;
+    .input-border {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      border: 1px solid #d9d9d9;
     }
-    &:focus-within {
-      border-color: #4096ff;
+    .input-border-state {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      border: 1px solid #d9d9d9;
+      border-color: #00000000;
+      transition: all 0.2s;
+    }
+    .input-hover {
+      border: 1px solid #4096ff;
+    }
+    .input-focus {
+      border: 1px solid #4096ff;
       box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
-      border-right-width: 1px;
-      outline: 0;
     }
     .input-prefix {
       margin-right: 4px;
@@ -356,15 +376,15 @@ function onPassword() {
     }
   }
   .input-small {
-    padding: 0 7px;
+    padding: 1px 7px;
     border-radius: 4px;
   }
   .input-middle {
-    padding: 4px 11px;
+    padding: 5px 11px;
     border-radius: 6px;
   }
   .input-large {
-    padding: 7px 11px;
+    padding: 8px 11px;
     font-size: 16px;
     line-height: 1.5;
     border-radius: 8px;

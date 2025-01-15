@@ -62,6 +62,7 @@ const displayedSv = ref<[number, number]>([0, 0])
 const upcomingValue = ref<string | undefined>()
 const displayedValue = ref<string>()
 const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
+const hexValue = ref<string>('')
 const inputValueArr = ref<string[]>([])
 const emits = defineEmits(['update:show', 'update:value', 'confirm', 'clear', 'complete'])
 // const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
@@ -162,7 +163,9 @@ const colorPickerHeight = computed(() => {
   }
   return `${heightMap[props.size]}px`
 })
-const valueMode = computed(() => getModeFromValue(displayedValue.value))
+const valueMode = computed(() => {
+  return getModeFromValue(displayedValue.value)
+})
 const displayedModeComputed = computed(() => {
   return displayedMode.value.toUpperCase() + (props.showAlpha ? 'A' : '')
 })
@@ -206,6 +209,7 @@ const hslaRef = computed<HSLA | null>(() => {
   if (!displayedValue.value) return null
   switch (valueMode.value!) {
     case 'hsl':
+      console.log('hsla(displayedValue.value)', displayedValue.value, hsla(displayedValue.value))
       return hsla(displayedValue.value)
     case 'hsv':
       ;[_h, s, v, a] = hsva(displayedValue.value)
@@ -247,8 +251,9 @@ watch(
       inputValueArr.value = to.map((value: number, index: number) => {
         if (props.showAlpha && index === 3) {
           return `${Math.floor(value * 100)}%`
+        } else {
+          return `${Math.floor(value)}`
         }
-        return value.toString()
       })
     }
     console.log('inputValueArr', inputValueArr.value)
@@ -497,7 +502,7 @@ function normalizeRgbUnit(value: string): number | false {
 }
 function getInputString(value: string | undefined, mode: string): string {
   if (value === undefined) return ''
-  if (mode === 'HEX') {
+  if (mode === 'HEX' || mode === 'HEXA') {
     return value as string
   }
   if (mode === 'A') {
@@ -531,31 +536,47 @@ function handleUnitUpdateValue(index: number, value: number | string) {
       break
     case 'hsl':
       nextValueArr[index] = value
+      console.log('displayedValueArr', displayedValueArr.value)
+      console.log('nextValueArr', nextValueArr)
       handleInputUpdateValue((props.showAlpha ? toHslaString : toHslString)(nextValueArr as HSLA | HSL))
       break
   }
 }
-function onInputChange(index: number): void {
+function onInputChange(e: Event, index: number): void {
+  const target = e.target as HTMLInputElement
   console.log('index', index)
   let unit: number | false
   let valid: boolean
-  const originValue =
-    displayedValueArr.value?.[index] === undefined ? undefined : displayedValueArr.value?.[index].toString()
-  const value = inputValueArr.value[index]
+  let originValue
+  const value = target.value
+  if (index === undefined) {
+    // hex
+    originValue = displayedValueArr.value === null ? undefined : displayedValueArr.value
+  } else {
+    originValue =
+      displayedValueArr.value?.[index] === undefined ? undefined : displayedValueArr.value?.[index].toString()
+  }
+  console.log('displayedValueArr', displayedValueArr.value)
+  console.log('originValue', originValue)
   console.log('value', value)
-  const mode = displayedModeComputed.value[index]
+  const mode = index === undefined ? displayedModeComputed.value : displayedModeComputed.value[index]
+  console.log('displayedModeComputed', displayedModeComputed.value)
+  console.log('mode', mode)
   switch (mode) {
     case 'HEX':
+    case 'HEXA':
       valid = normalizeHexaUnit(value)
       if (valid) {
-        handleUnitUpdateValue(index, value)
+        handleUnitUpdateValue(0, value)
       }
-      inputValueArr.value[index] = getInputString(value, mode)
+      hexValue.value = getInputString(value, mode)
+      console.log('hexValue', hexValue.value)
       break
     case 'H':
       unit = normalizeHueUnit(value)
+      console.log('unit', unit)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(originValue, mode)
+        inputValueArr.value[index] = getInputString(originValue as string, mode)
       } else {
         handleUnitUpdateValue(index, unit)
       }
@@ -565,7 +586,7 @@ function onInputChange(index: number): void {
     case 'V':
       unit = normalizeSlvUnit(value)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(originValue, mode)
+        inputValueArr.value[index] = getInputString(originValue as string, mode)
       } else {
         console.log('index', index)
         console.log('unit', unit)
@@ -576,7 +597,7 @@ function onInputChange(index: number): void {
       unit = normalizeAlphaUnit(value)
       console.log('unit', unit)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(originValue, mode)
+        inputValueArr.value[index] = getInputString(originValue as string, mode)
       } else {
         handleUnitUpdateValue(index, unit)
       }
@@ -586,7 +607,7 @@ function onInputChange(index: number): void {
     case 'B':
       unit = normalizeRgbUnit(value)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(originValue, mode)
+        inputValueArr.value[index] = getInputString(originValue as string, mode)
       } else {
         handleUnitUpdateValue(index, unit)
       }
@@ -693,7 +714,12 @@ function onClear() {
           </div>
           <div class="color-picker-input-group">
             <template v-if="displayedMode === 'hex'">
-              <Input size="small" :placeholder="displayedModeComputed" />
+              <Input
+                size="small"
+                :placeholder="displayedModeComputed"
+                v-model:value.lazy="hexValue"
+                @change="onInputChange"
+              />
             </template>
             <template v-else>
               <Input
@@ -701,7 +727,7 @@ function onClear() {
                 :style="`${val === 'A' ? 'flex-grow: 1.25' : ''}`"
                 :placeholder="val"
                 v-model:value.lazy="inputValueArr[index]"
-                @change="onInputChange(index)"
+                @change="onInputChange($event, index)"
                 v-for="(val, index) in displayedModeComputed.split('')"
                 :key="index"
               />
@@ -847,7 +873,7 @@ function onClear() {
           }
         }
         .input-wrap {
-          padding: 0 4px;
+          padding: 1px 4px;
         }
         .input-item {
           text-align: center;
