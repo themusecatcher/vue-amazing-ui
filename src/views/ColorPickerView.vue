@@ -92,8 +92,14 @@ function handleClear() {
     </Space>
     <h2 class="mt30 mb10">预设色板</h2>
     <Space :width="240">
-      <ColorPicker :swatches="['#FFFFFF', '#18A058', '#2080F0', '#F0A020', 'rgba(208, 48, 80, 1)']" />
-      <n-color-picker :swatches="['#FFFFFF', '#18A058', '#2080F0', '#F0A020', 'rgba(208, 48, 80, 1)']" />
+      <ColorPicker
+        :actions="['confirm', 'clear']"
+        :swatches="['#FFFFFF', '#18A058', '#2080F0', '#F0A020', 'rgba(208, 48, 80, 1)', '#1677ff', '#ff6900']"
+      />
+      <n-color-picker
+        :actions="['confirm', 'clear']"
+        :swatches="['#FFFFFF', '#18A058', '#2080F0', '#F0A020', 'rgba(208, 48, 80, 1)', '#1677ff', '#ff6900']"
+      />
     </Space>
   </div>
 </template>

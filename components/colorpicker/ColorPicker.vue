@@ -36,6 +36,7 @@ export interface Props {
   value?: string // (v-model) 颜色选择器的值
   modes?: Array<'rgb' | 'hex' | 'hsl' | 'hsv'> // 颜色选择器支持颜色的格式
   actions?: Array<'confirm' | 'clear'> // 显示按钮
+  swatches?: string[] // 色板的值
 }
 const props = withDefaults(defineProps<Props>(), {
   keyboard: true,
@@ -46,7 +47,8 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   value: undefined,
   modes: () => ['rgb', 'hex', 'hsl'],
-  actions: () => []
+  actions: () => [],
+  swatches: () => []
 })
 const HANDLE_SIZE = '12px'
 const HANDLE_SIZE_NUM = 12
@@ -231,6 +233,21 @@ const displayedValueArr = computed(() => {
       return hslaRef.value
   }
 })
+interface ParsedColor {
+  value: string
+  mode: ColorPickerMode | undefined
+  legalValue: string
+}
+const parsedSwatches = computed<ParsedColor[]>(() =>
+  props.swatches.map((value: string) => {
+    const mode = getModeFromValue(value)
+    return {
+      value,
+      mode,
+      legalValue: normalizeColor(value, mode)
+    }
+  })
+)
 watch(
   () => props.value,
   (to) => {
@@ -281,7 +298,7 @@ watchEffect(() => {
   }
   upcomingValue.value = undefined
 })
-function onUpdateValue(value: string, updateSource: 'cursor' | 'input'): void {
+function onUpdateValue(value: string | undefined, updateSource: 'cursor' | 'input'): void {
   if (updateSource === 'cursor') {
     upcomingValue.value = value
   } else {
@@ -614,13 +631,120 @@ function onInputChange(e: Event, index: number): void {
       break
   }
 }
+// Try to normalize the color values to ensure that they are valid CSS colors
+function normalizeColor(color: string, mode: ColorPickerMode | undefined): string {
+  if (mode === 'hsv') {
+    const [h, s, v, a] = hsva(color)
+    return toRgbaString([...hsv2rgb(h, s, v), a])
+  }
+  // For the mode that is not in preset, we keep the original value.
+  // For color names, they are legal to CSS, so we don’t deal with them,
+  // and only standardize them when outputting.
+  return color
+}
+function getHexFromName(color: string): string {
+  const ctx = document.createElement('canvas').getContext('2d')
+  if (!ctx) {
+    return '#000000'
+  }
+  ctx.fillStyle = color
+  return ctx.fillStyle
+}
+function convertColor(
+  value: string,
+  mode: ColorPickerMode,
+  originalMode?: ColorPickerMode | undefined
+): string | undefined {
+  originalMode = originalMode || getModeFromValue(value)
+  if (!originalMode) return undefined
+  if (originalMode === mode) return value
+  const convert = {
+    rgb: {
+      hex(value: string): string {
+        return toHexaString(rgba(value))
+      },
+      hsl(value: string): string {
+        const [r, g, b, a] = rgba(value)
+        return toHslaString([...rgb2hsl(r, g, b), a])
+      },
+      hsv(value: string): string {
+        const [r, g, b, a] = rgba(value)
+        return toHsvaString([...rgb2hsv(r, g, b), a])
+      }
+    },
+    hex: {
+      rgb(value: string): string {
+        return toRgbaString(rgba(value))
+      },
+      hsl(value: string): string {
+        const [r, g, b, a] = rgba(value)
+        return toHslaString([...rgb2hsl(r, g, b), a])
+      },
+      hsv(value: string): string {
+        const [r, g, b, a] = rgba(value)
+        return toHsvaString([...rgb2hsv(r, g, b), a])
+      }
+    },
+    hsl: {
+      hex(value: string): string {
+        const [h, s, l, a] = hsla(value)
+        return toHexaString([...hsl2rgb(h, s, l), a])
+      },
+      rgb(value: string): string {
+        const [h, s, l, a] = hsla(value)
+        return toRgbaString([...hsl2rgb(h, s, l), a])
+      },
+      hsv(value: string): string {
+        const [h, s, l, a] = hsla(value)
+        return toHsvaString([...hsl2hsv(h, s, l), a])
+      }
+    },
+    hsv: {
+      hex(value: string): string {
+        const [h, s, v, a] = hsva(value)
+        return toHexaString([...hsv2rgb(h, s, v), a])
+      },
+      rgb(value: string) {
+        const [h, s, v, a] = hsva(value)
+        return toRgbaString([...hsv2rgb(h, s, v), a])
+      },
+      hsl(value: string): string {
+        const [h, s, v, a] = hsva(value)
+        return toHslaString([...hsv2hsl(h, s, v), a])
+      }
+    }
+  }
+  const conversions = convert[originalMode]
+  return (conversions as any)[mode](value)
+}
+function normalizeOutput(parsed: ParsedColor): string | undefined {
+  let { value, mode: swatchColorMode } = parsed
+  // color name is converted to hex
+  if (!swatchColorMode) {
+    swatchColorMode = 'hex'
+    if (/^[a-zA-Z]+$/.test(value)) {
+      value = getHexFromName(value)
+    } else {
+      // for invalid color, make it black
+      console.warn('color-picker', `color ${value} in swatches is invalid.`)
+      value = '#000000'
+    }
+  }
+
+  if (swatchColorMode === displayedMode.value) return value
+
+  // swatch value to current mode value
+  return convertColor(value, displayedMode.value, swatchColorMode)
+}
+function onSwatch(swatch: ParsedColor): void {
+  onUpdateValue(normalizeOutput(swatch), 'input')
+}
 function onConfirm() {
   emits('confirm', displayedValue.value)
   tooltipRef.value.hide()
 }
 function onClear() {
-  displayedValue.value = undefined
-  emits('update:value', displayedValue.value)
+  onUpdateValue(undefined, 'input')
   emits('clear')
   tooltipRef.value.hide()
 }
@@ -645,100 +769,113 @@ function onClear() {
     v-bind="$attrs"
   >
     <template #tooltip>
-      <div class="color-picker-panel" :class="{ 'panel-with-actions': actions.length }">
-        <div ref="palleteRef" class="color-picker-pallete" @mousedown="handlePalleteMouseDown">
-          <div
-            class="color-picker-pallete-layer"
-            :style="{ backgroundImage: `linear-gradient(90deg, white, hsl(${displayedHue}, 100%, 50%))` }"
-          ></div>
-          <div
-            class="color-picker-pallete-layer pallete-layer-shadowed"
-            style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0%), rgba(0, 0, 0, 100%))"
-          ></div>
-          <div class="color-picker-handle" :style="layerHandleStyle">
-            <div class="color-picker-handle-fill" :style="layerHandleFillStyle"></div>
+      <template v-if="!disabled">
+        <div class="color-picker-panel" :class="{ 'panel-with-actions': actions.length }">
+          <div ref="palleteRef" class="color-picker-pallete" @mousedown="handlePalleteMouseDown">
+            <div
+              class="color-picker-pallete-layer"
+              :style="{ backgroundImage: `linear-gradient(90deg, white, hsl(${displayedHue}, 100%, 50%))` }"
+            ></div>
+            <div
+              class="color-picker-pallete-layer pallete-layer-shadowed"
+              style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0%), rgba(0, 0, 0, 100%))"
+            ></div>
+            <div class="color-picker-handle" :style="layerHandleStyle">
+              <div class="color-picker-handle-fill" :style="layerHandleFillStyle"></div>
+            </div>
           </div>
-        </div>
-        <div class="color-picker-preview">
-          <div class="color-picker-preview-sliders">
-            <div class="color-picker-slider" :style="sliderStyle">
-              <div ref="hueRailRef" :style="sliderRailStyle" @mousedown="handleHueSliderMouseDown">
+          <div class="color-picker-preview">
+            <div class="color-picker-preview-sliders">
+              <div class="color-picker-slider" :style="sliderStyle">
+                <div ref="hueRailRef" :style="sliderRailStyle" @mousedown="handleHueSliderMouseDown">
+                  <div
+                    :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`"
+                  >
+                    <div class="color-picker-handle" :style="sliderColorHandleStyle">
+                      <div class="color-picker-handle-fill" :style="sliderColorHandleFillStyle"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="showAlpha"
+                ref="alphaRailRef"
+                class="color-picker-slider"
+                :style="sliderStyle"
+                @mousedown="handleAlphaSliderMouseDown"
+              >
                 <div
+                  :style="`
+                    border-radius: ${BORDER_RADIUS};
+                    position: absolute;
+                    top: 0px;
+                    bottom: 0;
+                    left: 0px;
+                    right: 0px;
+                    overflow: hidden;
+                  `"
+                >
+                  <div class="color-picker-checkboard"></div>
+                  <div class="color-picker-slider-image" :style="`background-image: ${alphaRailBackgroundImage}`"></div>
+                </div>
+                <div
+                  v-if="rgbaRef"
                   :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`"
                 >
-                  <div class="color-picker-handle" :style="sliderColorHandleStyle">
-                    <div class="color-picker-handle-fill" :style="sliderColorHandleFillStyle"></div>
+                  <div class="color-picker-handle" :style="sliderAlphaHandleStyle">
+                    <div class="color-picker-handle-fill" :style="sliderAlphaHandleFillStyle"></div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="color-picker-input">
             <div
-              v-if="showAlpha"
-              ref="alphaRailRef"
-              class="color-picker-slider"
-              :style="sliderStyle"
-              @mousedown="handleAlphaSliderMouseDown"
+              class="color-picker-input-mode"
+              :style="{ cursor: modes.length === 1 ? '' : 'pointer' }"
+              @click="onUpdateMode"
             >
-              <div
-                :style="`
-                  border-radius: ${BORDER_RADIUS};
-                  position: absolute;
-                  top: 0px;
-                  bottom: 0;
-                  left: 0px;
-                  right: 0px;
-                  overflow: hidden;
-                `"
-              >
-                <div class="color-picker-checkboard"></div>
-                <div class="color-picker-slider-image" :style="`background-image: ${alphaRailBackgroundImage}`"></div>
-              </div>
-              <div
-                v-if="rgbaRef"
-                :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`"
-              >
-                <div class="color-picker-handle" :style="sliderAlphaHandleStyle">
-                  <div class="color-picker-handle-fill" :style="sliderAlphaHandleFillStyle"></div>
-                </div>
-              </div>
+              {{ displayedModeComputed }}
+            </div>
+            <div class="color-picker-input-group">
+              <template v-if="displayedMode === 'hex'">
+                <Input
+                  size="small"
+                  :placeholder="displayedModeComputed"
+                  v-model:value.lazy="hexValue"
+                  @change="onInputChange"
+                />
+              </template>
+              <template v-else>
+                <Input
+                  size="small"
+                  :style="`${val === 'A' ? 'flex-grow: 1.25' : ''}`"
+                  :placeholder="val"
+                  v-model:value.lazy="inputValueArr[index]"
+                  @change="onInputChange($event, index)"
+                  v-for="(val, index) in displayedModeComputed.split('')"
+                  :key="index"
+                />
+              </template>
+            </div>
+          </div>
+          <div class="color-picker-swatches">
+            <div
+              tabindex="0"
+              class="color-picker-swatch"
+              v-for="(swatch, index) in parsedSwatches"
+              :key="index"
+              @click="onSwatch(swatch)"
+            >
+              <div class="color-picker-swatch-fill" :style="`background: ${swatch.legalValue};`"></div>
             </div>
           </div>
         </div>
-        <div class="color-picker-input">
-          <div
-            class="color-picker-input-mode"
-            :style="{ cursor: modes.length === 1 ? '' : 'pointer' }"
-            @click="onUpdateMode"
-          >
-            {{ displayedModeComputed }}
-          </div>
-          <div class="color-picker-input-group">
-            <template v-if="displayedMode === 'hex'">
-              <Input
-                size="small"
-                :placeholder="displayedModeComputed"
-                v-model:value.lazy="hexValue"
-                @change="onInputChange"
-              />
-            </template>
-            <template v-else>
-              <Input
-                size="small"
-                :style="`${val === 'A' ? 'flex-grow: 1.25' : ''}`"
-                :placeholder="val"
-                v-model:value.lazy="inputValueArr[index]"
-                @change="onInputChange($event, index)"
-                v-for="(val, index) in displayedModeComputed.split('')"
-                :key="index"
-              />
-            </template>
-          </div>
+        <div v-if="actions.length" class="color-picker-actions">
+          <Button v-if="actions.includes('confirm')" type="primary" size="small" @click="onConfirm">确认</Button>
+          <Button v-if="actions.includes('clear')" size="small" @click="onClear">清除</Button>
         </div>
-      </div>
-      <div v-if="actions.length" class="color-picker-actions">
-        <Button v-if="actions.includes('confirm')" type="primary" size="small" @click="onConfirm">确认</Button>
-        <Button v-if="actions.includes('clear')" size="small" @click="onClear">清除</Button>
-      </div>
+      </template>
     </template>
     <div
       tabindex="1"
@@ -881,6 +1018,34 @@ function onClear() {
       }
     }
   }
+  .color-picker-swatches {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    position: relative;
+    margin-top: 10px;
+    .color-picker-swatch {
+      width: 18px;
+      height: 18px;
+      background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
+        linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
+      background-size: 8px 8px;
+      background-position:
+        0px 0,
+        0px 4px,
+        4px -4px,
+        -4px 0px;
+      background-repeat: repeat;
+      .color-picker-swatch-fill {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 3px;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+        cursor: pointer;
+      }
+    }
+  }
 }
 .panel-with-actions {
   padding-bottom: 8px;
@@ -903,10 +1068,10 @@ function onClear() {
   cursor: pointer;
   outline: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  &:hover {
+  &:not(.color-picker-disabled):hover {
     border-color: #4096ff;
   }
-  &:focus {
+  &:not(.color-picker-disabled)focus {
     border-color: #4096ff;
     box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
   }
