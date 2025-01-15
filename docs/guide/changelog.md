@@ -8,6 +8,11 @@
 
 - 新增 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件
 
+## 2.0.12 <Tag color="volcano" size="small">2025-01-15</Tag>
+
+- 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件代码逻辑
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件代码逻辑
+
 ## 2.0.11 <Tag color="volcano" size="small">2025-01-14</Tag>
 
 - 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件代码逻辑
