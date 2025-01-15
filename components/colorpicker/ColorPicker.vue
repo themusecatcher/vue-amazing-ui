@@ -27,28 +27,28 @@ import Button from 'components/button'
 import { useSlotsExist } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export interface Props {
-  keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)
   tooltipStyle?: CSSProperties // 设置弹出面板的样式
   showAlpha?: boolean // 是否可调节 alpha 通道
-  show?: boolean // (v-model) 是否展示面板
+  showPreview?: boolean // 是否展示颜色预览块
   size?: 'small' | 'middle' | 'large' // 颜色选择器的尺寸
   disabled?: boolean // 是否禁用
   value?: string // (v-model) 颜色选择器的值
   modes?: Array<'rgb' | 'hex' | 'hsl' | 'hsv'> // 颜色选择器支持颜色的格式
-  actions?: Array<'confirm' | 'clear'> // 显示按钮
   swatches?: string[] // 色板的值
+  actions?: Array<'confirm' | 'clear'> // 显示按钮
+  footer?: string // 底部额外的页脚内容 string | slot
 }
 const props = withDefaults(defineProps<Props>(), {
-  keyboard: true,
   tooltipStyle: () => ({}),
   showAlpha: true,
-  show: false,
+  showPreview: false,
   size: 'middle',
   disabled: false,
   value: undefined,
   modes: () => ['rgb', 'hex', 'hsl'],
+  swatches: () => [],
   actions: () => [],
-  swatches: () => []
+  footer: undefined
 })
 const HANDLE_SIZE = '12px'
 const HANDLE_SIZE_NUM = 12
@@ -66,17 +66,11 @@ const displayedValue = ref<string | undefined>(props.value)
 const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
 const hexValue = ref<string>()
 const inputValueArr = ref<string[]>([])
-const emits = defineEmits(['update:show', 'update:value', 'confirm', 'clear', 'complete'])
-// const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
-// const showTitle = computed(() => {
-//   return slotsExist.title || props.title
-// })
-// const showPrefix = computed(() => {
-//   return slotsExist.prefix || props.prefix
-// })
-// const showSuffix = computed(() => {
-//   return slotsExist.suffix || props.suffix
-// })
+const emits = defineEmits(['update:value', 'confirm', 'clear'])
+const slotsExist = useSlotsExist(['footer'])
+const showFooter = computed(() => {
+  return slotsExist.footer || props.footer
+})
 const layerHandleStyle = computed(() => {
   const style: CSSProperties = {
     width: HANDLE_SIZE,
@@ -170,6 +164,9 @@ const valueMode = computed(() => {
 })
 const displayedModeComputed = computed(() => {
   return displayedMode.value.toUpperCase() + (props.showAlpha ? 'A' : '')
+})
+const displayedModeComputedArr = computed(() => {
+  return displayedModeComputed.value.split('')
 })
 let _h: number, // avoid conflict with render function's h
   s: number,
@@ -377,7 +374,7 @@ function handlePalleteMouseMove(e: MouseEvent): void {
 function handlePalleteMouseUp(): void {
   document.removeEventListener('mousemove', handlePalleteMouseMove)
   document.removeEventListener('mouseup', handlePalleteMouseUp)
-  emits('complete')
+  // emits('complete')
   // off('mousemove', document, handleMouseMove)
   // off('mouseup', document, handleMouseUp)
   // props.onComplete?.()
@@ -425,7 +422,7 @@ function handleHueSliderMouseMove(e: MouseEvent): void {
 function handleHueSliderMouseUp(): void {
   document.removeEventListener('mousemove', handleHueSliderMouseMove)
   document.removeEventListener('mouseup', handleHueSliderMouseUp)
-  emits('complete')
+  // emits('complete')
   // off('mousemove', document, handleMouseMove)
   // off('mouseup', document, handleMouseUp)
   // props.onComplete?.()
@@ -473,7 +470,7 @@ function handleAlphaSliderMouseMove(e: MouseEvent): void {
 function handleAlphaSliderMouseUp(): void {
   document.removeEventListener('mousemove', handleAlphaSliderMouseMove)
   document.removeEventListener('mouseup', handleAlphaSliderMouseUp)
-  emits('complete')
+  // emits('complete')
   // off('mousemove', document, handleMouseMove)
   // off('mouseup', document, handleMouseUp)
   // props.onComplete?.()
@@ -764,6 +761,7 @@ function onClear() {
   <Tooltip
     ref="tooltipRef"
     style="width: 100%"
+    max-width="none"
     :arrow="false"
     bg-color="#fff"
     :tooltip-style="{
@@ -775,7 +773,6 @@ function onClear() {
     }"
     :content-style="{ width: '100%' }"
     trigger="click"
-    :keyboard="keyboard"
     :transition-duration="200"
     v-bind="$attrs"
   >
@@ -864,7 +861,7 @@ function onClear() {
                   :placeholder="val"
                   v-model:value.lazy="inputValueArr[index]"
                   @change="onInputChange($event, index)"
-                  v-for="(val, index) in displayedModeComputed.split('')"
+                  v-for="(val, index) in displayedModeComputedArr"
                   :key="index"
                 />
               </template>
@@ -885,6 +882,9 @@ function onClear() {
         <div v-if="actions.length" class="color-picker-actions">
           <Button v-if="actions.includes('confirm')" type="primary" size="small" @click="onConfirm">确认</Button>
           <Button v-if="actions.includes('clear')" size="small" @click="onClear">清除</Button>
+        </div>
+        <div v-if="showFooter" class="color-picker-footer">
+          <slot name="footer">{{ footer }}</slot>
         </div>
       </template>
     </template>
@@ -1067,6 +1067,10 @@ function onClear() {
   border-top: 1px solid rgba(5, 5, 5, 0.06);
   padding: 8px 12px;
   justify-content: flex-end;
+}
+.color-picker-footer {
+  border-top: 1px solid rgba(5, 5, 5, 0.06);
+  padding: 8px 12px;
 }
 .color-picker-display {
   position: relative;
