@@ -253,39 +253,31 @@ watch(
   }
 )
 watch(
-  displayedMode,
+  () => [displayedMode.value, displayedValueArr.value],
   (to) => {
-    if (to === 'hex') {
+    console.log('[displayedMode, displayedValueArr]', to)
+    if (displayedMode.value === 'hex') {
       hexValue.value =
         displayedValueArr.value === null
           ? undefined
           : (props.showAlpha ? toHexaString : toHexString)(displayedValueArr.value as RGBA)
-    }
-  },
-  {
-    immediate: true
-  }
-)
-watch(
-  displayedValueArr,
-  (to) => {
-    console.log('displayedValueArr', to)
-
-    if (to === null) {
-      inputValueArr.value = new Array(props.showAlpha ? 4 : 3).fill(undefined)
     } else {
-      inputValueArr.value = to.map((value: number, index: number) => {
-        if (props.showAlpha && index === 3) {
-          return `${Math.floor(value * 100)}%`
-        } else {
-          return `${Math.floor(value)}`
-        }
-      })
+      if (displayedValueArr.value === null) {
+        inputValueArr.value = new Array(props.showAlpha ? 4 : 3).fill(undefined)
+      } else {
+        inputValueArr.value = displayedValueArr.value.map((value: number, index: number) => {
+          if (props.showAlpha && index === 3) {
+            return `${Math.floor(value * 100)}%`
+          } else {
+            return `${Math.floor(value)}`
+          }
+        })
+      }
     }
-    console.log('inputValueArr', inputValueArr.value)
   },
   {
-    immediate: true
+    immediate: true,
+    deep: true
   }
 )
 watch(
@@ -490,7 +482,6 @@ function onUpdateMode(): void {
   } else {
     displayedMode.value = 'rgb'
   }
-  console.log('displayedMode', displayedMode.value)
 }
 function normalizeHexaUnit(value: string): boolean {
   const trimmedValue = value.trim()
