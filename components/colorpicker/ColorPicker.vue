@@ -1091,10 +1091,10 @@ function onClear() {
     display: flex;
     align-items: center;
     justify-content: center;
-    left: 4px;
-    right: 4px;
-    top: 4px;
-    bottom: 4px;
+    left: 3px;
+    right: 3px;
+    top: 3px;
+    bottom: 3px;
     border-radius: 4px;
     .color-picker-checkboard {
       background: white;
