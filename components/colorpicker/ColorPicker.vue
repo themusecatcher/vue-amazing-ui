@@ -62,9 +62,9 @@ const displayedHue = ref<number>(0)
 const displayedAlpha = ref<number>(1)
 const displayedSv = ref<[number, number]>([0, 0])
 const upcomingValue = ref<string | undefined>()
-const displayedValue = ref<string>()
+const displayedValue = ref<string | undefined>(props.value)
 const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
-const hexValue = ref<string>('')
+const hexValue = ref<string>()
 const inputValueArr = ref<string[]>([])
 const emits = defineEmits(['update:show', 'update:value', 'confirm', 'clear', 'complete'])
 // const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
@@ -253,6 +253,17 @@ watch(
   (to) => {
     displayedValue.value = to
     console.log('displayedValue', displayedValue.value)
+  }
+)
+watch(
+  displayedMode,
+  (to) => {
+    if (to === 'hex') {
+      hexValue.value =
+        displayedValueArr.value === null
+          ? undefined
+          : (props.showAlpha ? toHexaString : toHexString)(displayedValueArr.value as RGBA)
+    }
   },
   {
     immediate: true
@@ -262,6 +273,7 @@ watch(
   displayedValueArr,
   (to) => {
     console.log('displayedValueArr', to)
+
     if (to === null) {
       inputValueArr.value = new Array(props.showAlpha ? 4 : 3).fill(undefined)
     } else {
@@ -481,6 +493,7 @@ function onUpdateMode(): void {
   } else {
     displayedMode.value = 'rgb'
   }
+  console.log('displayedMode', displayedMode.value)
 }
 function normalizeHexaUnit(value: string): boolean {
   const trimmedValue = value.trim()
@@ -730,9 +743,7 @@ function normalizeOutput(parsed: ParsedColor): string | undefined {
       value = '#000000'
     }
   }
-
   if (swatchColorMode === displayedMode.value) return value
-
   // swatch value to current mode value
   return convertColor(value, displayedMode.value, swatchColorMode)
 }
