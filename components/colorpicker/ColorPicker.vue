@@ -867,7 +867,7 @@ function onClear() {
               </template>
             </div>
           </div>
-          <div class="color-picker-swatches">
+          <div v-if="parsedSwatches.length" class="color-picker-swatches">
             <div
               tabindex="0"
               class="color-picker-swatch"

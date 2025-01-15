@@ -166,6 +166,10 @@ export default defineConfig({
               link: '/guide/components/collapse'
             },
             {
+              text: '颜色选择器 ColorPicker',
+              link: '/guide/components/colorpicker'
+            },
+            {
               text: '倒计时 Countdown',
               link: '/guide/components/countdown'
             },
