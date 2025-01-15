@@ -1082,7 +1082,7 @@ function onClear() {
   &:not(.color-picker-disabled):hover {
     border-color: #4096ff;
   }
-  &:not(.color-picker-disabled)focus {
+  &:not(.color-picker-disabled):focus {
     border-color: #4096ff;
     box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
   }
