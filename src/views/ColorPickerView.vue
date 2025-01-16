@@ -81,7 +81,7 @@ function handleClear() {
       <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
       <Space :width="240">
         <ColorPicker :show-preview="showPreview" />
-        <n-color-picker :show-preview="showPreview" />
+        <n-color-picker :show-preview="showPreview" :actions="['clear']" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">尺寸</h2>
