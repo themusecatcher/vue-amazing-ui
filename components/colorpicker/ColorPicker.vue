@@ -26,6 +26,7 @@ import Input from 'components/input'
 import Button from 'components/button'
 import { useSlotsExist } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
+export type ColorPickerAction = 'confirm' | 'clear'
 export interface Props {
   label?: (color: string) => string // 展示的内容 function | slot
   tooltipStyle?: CSSProperties // 设置弹出面板的样式
@@ -34,9 +35,9 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 颜色选择器的尺寸
   disabled?: boolean // 是否禁用
   value?: string // (v-model) 颜色选择器的值
-  modes?: Array<'rgb' | 'hex' | 'hsl' | 'hsv'> // 颜色选择器支持颜色的格式
+  modes?: ColorPickerMode[] // 颜色选择器支持颜色的格式
   swatches?: string[] // 色板的值
-  actions?: Array<'confirm' | 'clear'> // 显示按钮
+  actions?: ColorPickerAction[] // 显示按钮
   footer?: string // 底部额外的页脚内容 string | slot
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -713,7 +714,7 @@ function onClear() {
 <template>
   <Tooltip
     ref="tooltipRef"
-    style="width: 100%"
+    :style="`width: 100%; height: ${colorPickerHeight};`"
     max-width="none"
     :arrow="false"
     bg-color="#fff"
@@ -724,7 +725,7 @@ function onClear() {
       color: 'rgba(0, 0, 0, 0.88)',
       ...tooltipStyle
     }"
-    :content-style="{ width: '100%' }"
+    :content-style="{ width: '100%', height: '100%' }"
     trigger="click"
     :transition-duration="200"
     v-bind="$attrs"

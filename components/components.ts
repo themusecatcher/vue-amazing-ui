@@ -31,7 +31,7 @@ export { default as Checkbox } from './checkbox'
 export type { Props as CollapseProps, Item as CollapseItem } from './collapse'
 export { default as Collapse } from './collapse'
 
-export type { Props as ColorPickerProps } from './colorpicker'
+export type { Props as ColorPickerProps, ColorPickerMode, ColorPickerAction } from './colorpicker'
 export { default as ColorPicker } from './colorpicker'
 
 export type { Props as CountdownProps } from './countdown'

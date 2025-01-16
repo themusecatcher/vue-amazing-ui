@@ -475,12 +475,24 @@ showPreview | 是否展示颜色预览块 | boolean | false
 size | 颜色选择器的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 disabled | 是否禁用 | boolean | false
 value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined
-modes | 颜色选择器支持颜色的格式 | Array<'rgb' &#124; 'hex' &#124; 'hsl' &#124; 'hsv'> | ['rgb', 'hex', 'hsl']
+modes | 颜色选择器支持颜色的格式 | [ColorPickerMode](#colorpickermode-type)[] | ['rgb', 'hex', 'hsl']
 swatches | 色板的值 | string[] | []
-actions | 显示按钮 | Array<'confirm' &#124; 'clear'> | []
+actions | 显示按钮 | [ColorPickerAction](#colorpickeraction-type)[] | []
 footer | 底部额外的页脚内容 | string &#124; slot | undefined
 
 更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
+
+### ColorPickerMode Type
+
+名称 | 值
+:-- | :--
+ColorPickerMode | 'rgb' &#124; 'hsl' &#124; 'hsv' &#124; 'hex'
+
+### ColorPickerAction Type
+
+名称 | 值
+:-- | :--
+ColorPickerAction | 'confirm' &#124; 'clear'
 
 ## Slots
 

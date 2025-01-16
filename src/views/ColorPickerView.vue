@@ -23,7 +23,7 @@ const modeOptions: CheckboxOption[] = [
     value: 'hsv'
   }
 ]
-const modes = ref(['rgb'])
+const modes = ref(['rgb', 'hex'])
 const actionOptions: CheckboxOption[] = [
   {
     label: 'confirm',
@@ -60,7 +60,6 @@ function handleClear() {
     <h2 class="mt30 mb10">基本使用</h2>
     <Space :width="240">
       <ColorPicker v-model:value="colorValue" />
-      <n-color-picker v-model:value="colorValue" />
     </Space>
     <h2 class="mt30 mb10">自定义展示内容</h2>
     <Space :width="240">
@@ -85,7 +84,6 @@ function handleClear() {
       <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
       <Space :width="240">
         <ColorPicker :show-alpha="showAlpha" />
-        <n-color-picker :show-alpha="showAlpha" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">颜色预览块</h2>
@@ -94,7 +92,6 @@ function handleClear() {
       <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
       <Space :width="240">
         <ColorPicker :show-preview="showPreview" />
-        <n-color-picker :show-preview="showPreview" :actions="['clear']" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">尺寸</h2>
@@ -102,14 +99,10 @@ function handleClear() {
       <ColorPicker size="small" />
       <ColorPicker />
       <ColorPicker size="large" />
-      <n-color-picker size="small" />
-      <n-color-picker show-preview />
-      <n-color-picker size="large" />
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Space :width="240">
       <ColorPicker disabled />
-      <n-color-picker disabled />
     </Space>
     <h2 class="mt30 mb10">设定模式</h2>
     <h3 class="mb10">使用 modes 设定可选模式</h3>
@@ -117,24 +110,11 @@ function handleClear() {
       <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
       <Space :width="240">
         <ColorPicker :modes="modes" />
-        <n-color-picker :modes="modes" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">预设色板</h2>
     <Space :width="240">
       <ColorPicker
-        :swatches="[
-          '#FFFFFF',
-          '#18A058',
-          '#2080F0',
-          '#F0A020',
-          '#1677ff',
-          '#ff6900',
-          'rgba(0, 0, 0, 0.88)',
-          'rgba(208, 48, 80, 1)'
-        ]"
-      />
-      <n-color-picker
         :swatches="[
           '#FFFFFF',
           '#18A058',
@@ -153,7 +133,6 @@ function handleClear() {
       <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
       <Space :width="240">
         <ColorPicker :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
-        <n-color-picker :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">额外页脚</h2>
@@ -161,10 +140,6 @@ function handleClear() {
       <ColorPicker>
         <template #footer>extra footer</template>
       </ColorPicker>
-      // <n-color-picker>
-      //   <template #label="color">hello {{ color }}</template>
-      //   <template #action> 你好 </template>
-      // </n-color-picker>
     </Space>
     <h2 class="mt30 mb10">使用按钮控制面板</h2>
     <Space>
