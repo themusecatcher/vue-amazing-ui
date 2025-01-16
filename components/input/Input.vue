@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useSlotsExist } from 'components/utils'
 export interface Props {
   width?: string | number // 输入框宽度，单位 px
@@ -36,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
 const inputRef = ref() // input 元素引用
 const inputWrapHover = ref<boolean>(false) // 鼠标是否悬浮
 const inputFocus = ref<boolean>(false) // input 元素是否聚焦
+const inputValue = ref<string>() // 输入框的值
 const showPassword = ref<boolean>(false) // 是否显示密码
 const emits = defineEmits(['update:value', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
@@ -72,6 +73,17 @@ const showAfter = computed(() => {
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
+watch(
+  () => props.value,
+  (to) => {
+    if (inputValue.value !== to) {
+      inputValue.value = to
+    }
+  },
+  {
+    immediate: true
+  }
+)
 function onMouseEnter() {
   inputWrapHover.value = true
 }
@@ -86,6 +98,7 @@ function onBlur() {
 }
 function onInput(e: Event) {
   const target = e.target as HTMLInputElement
+  inputValue.value = target.value
   if (!lazyInput.value) {
     emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
@@ -119,6 +132,7 @@ function onPassword() {
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
+      tabindex="1"
       class="input-wrap"
       :class="[
         `input-${size}`,
@@ -140,7 +154,7 @@ function onPassword() {
         ref="inputRef"
         class="input-item"
         :type="password && !showPassword ? 'password' : 'text'"
-        :value="value"
+        :value="inputValue"
         :placeholder="placeholder"
         :maxlength="maxlength"
         :disabled="disabled"
