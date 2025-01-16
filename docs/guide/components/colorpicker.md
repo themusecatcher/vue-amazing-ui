@@ -51,6 +51,9 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('show', show.value)
 })
+function handleComplele(value: string) {
+  console.log('complete', value)
+}
 function handleConfirm(value: string) {
   console.log('confirm', value)
 }
@@ -78,6 +81,39 @@ watchEffect(() => {
 <template>
   <Space :width="240">
     <ColorPicker v-model:value="colorValue" />
+  </Space>
+</template>
+```
+
+:::
+
+## 自定义展示内容
+
+<Space :width="240">
+  <ColorPicker :label="labelFormat"/>
+  <ColorPicker>
+    <template #label="{ color }">
+      I'm {{ color }}
+    </template>
+  </ColorPicker>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+function labelFormat(color: string) {
+  return `hello ${color}`
+}
+</script>
+<template>
+  <Space :width="240">
+    <ColorPicker :label="labelFormat"/>
+    <ColorPicker>
+      <template #label="{ color }">
+        I'm {{ color }}
+      </template>
+    </ColorPicker>
   </Space>
 </template>
 ```
@@ -148,8 +184,7 @@ const showAlpha = ref(false)
 
 ## 颜色预览块
 
-使用 `showPreview` 控制是否展示颜色预览块
-
+*使用 `showPreview` 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器*
 <br/>
 
 <Space vertical>
@@ -339,6 +374,9 @@ const actionOptions: CheckboxOption[] = [
   }
 ]
 const actions = ref(['confirm', 'clear'])
+function handleComplele(value: string) {
+  console.log('complete', value)
+}
 function handleConfirm(value: string) {
   console.log('confirm', value)
 }
@@ -350,7 +388,7 @@ function handleClear() {
   <Space vertical>
     <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
     <Space :width="240">
-      <ColorPicker :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
+      <ColorPicker :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
     </Space>
   </Space>
 </template>
@@ -427,6 +465,7 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
+label | 展示的内容 | (color: string) => string &#124; slot | undefined
 tooltipStyle | 设置弹出面板的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 showAlpha | 是否可调节 `alpha` 通道 | boolean | true
 showPreview | 是否展示颜色预览块 | boolean | false
@@ -444,11 +483,13 @@ footer | 底部额外的页脚内容 | string &#124; slot | undefined
 
 名称 | 说明 | 类型
 :-- | :-- | :--
+label | 自定义展示的内容 | v-slot:label="{ color }"
 footer | 自定义底部额外的页脚内容 | v-slot:footer
 
 ## Events
 
 名称 | 说明 | 类型
 :-- | :-- | :--
+complete | 颜色完成改变后的回调（在鼠标拖动时候不会调用） | (value: string) => void
 confirm | 点击确认按钮的回调 | (value: string) => void
 clear | 点击清除按钮的回调 | () => void
