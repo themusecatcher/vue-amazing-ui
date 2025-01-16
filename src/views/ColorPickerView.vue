@@ -41,6 +41,12 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('show', show.value)
 })
+function labelFormat(color: string) {
+  return `hello ${color}`
+}
+function handleComplele(value: string) {
+  console.log('complete', value)
+}
 function handleConfirm(value: string) {
   console.log('confirm', value)
 }
@@ -55,6 +61,13 @@ function handleClear() {
     <Space :width="240">
       <ColorPicker v-model:value="colorValue" />
       <n-color-picker v-model:value="colorValue" />
+    </Space>
+    <h2 class="mt30 mb10">自定义展示内容</h2>
+    <Space :width="240">
+      <ColorPicker :label="labelFormat" />
+      <ColorPicker>
+        <template #label="{ color }"> I'm {{ color }} </template>
+      </ColorPicker>
     </Space>
     <h2 class="mt30 mb10">自定义面板样式</h2>
     <Space :width="240">
@@ -77,6 +90,7 @@ function handleClear() {
     </Space>
     <h2 class="mt30 mb10">颜色预览块</h2>
     <h3 class="mb10">使用 showPreview 控制是否展示颜色预览块</h3>
+    <h3 class="mb10">点击颜色预览块可以触发浏览器原生的颜色选择器</h3>
     <Space vertical>
       <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
       <Space :width="240">
@@ -139,16 +153,17 @@ function handleClear() {
     <Space vertical>
       <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
       <Space :width="240">
-        <ColorPicker :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
-        <n-color-picker :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
+        <ColorPicker :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
+        <n-color-picker :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">额外页脚</h2>
     <Space :width="240">
       <ColorPicker>
-        <template #footer> extra footer </template>
+        <template #footer>extra footer</template>
       </ColorPicker>
       <n-color-picker>
+        <template #label="color">hello {{ color }}</template>
         <template #action> 你好 </template>
       </n-color-picker>
     </Space>

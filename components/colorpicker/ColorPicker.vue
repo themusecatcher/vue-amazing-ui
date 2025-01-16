@@ -27,6 +27,7 @@ import Button from 'components/button'
 import { useSlotsExist } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export interface Props {
+  label?: (color: string) => string // 展示的内容 function | slot
   tooltipStyle?: CSSProperties // 设置弹出面板的样式
   showAlpha?: boolean // 是否可调节 alpha 通道
   showPreview?: boolean // 是否展示颜色预览块
@@ -39,6 +40,7 @@ export interface Props {
   footer?: string // 底部额外的页脚内容 string | slot
 }
 const props = withDefaults(defineProps<Props>(), {
+  label: undefined,
   tooltipStyle: () => ({}),
   showAlpha: true,
   showPreview: false,
@@ -66,7 +68,7 @@ const displayedValue = ref<string | undefined>(props.value)
 const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
 const hexValue = ref<string>()
 const inputValueArr = ref<string[]>([])
-const emits = defineEmits(['update:value', 'confirm', 'clear'])
+const emits = defineEmits(['update:value', 'complete', 'confirm', 'clear'])
 const slotsExist = useSlotsExist(['footer'])
 const showFooter = computed(() => {
   return slotsExist.footer || props.footer
@@ -171,7 +173,7 @@ const displayedModeComputed = computed(() => {
 const displayedModeComputedArr = computed(() => {
   return displayedModeComputed.value.split('')
 })
-let _h: number, // avoid conflict with render function's h
+let _h: number, // avoid conflict with render function's 
   s: number,
   l: number,
   v: number,
@@ -211,7 +213,6 @@ const hslaRef = computed<HSLA | null>(() => {
   if (!displayedValue.value) return null
   switch (valueMode.value!) {
     case 'hsl':
-      console.log('hsla(displayedValue.value)', displayedValue.value, hsla(displayedValue.value))
       return hsla(displayedValue.value)
     case 'hsv':
       ;[_h, s, v, a] = hsva(displayedValue.value)
@@ -252,13 +253,11 @@ watch(
   () => props.value,
   (to) => {
     displayedValue.value = to
-    console.log('displayedValue', displayedValue.value)
   }
 )
 watch(
   () => [displayedMode.value, displayedValueArr.value],
   (to) => {
-    console.log('[displayedMode, displayedValueArr]', to)
     if (displayedMode.value === 'hex') {
       hexValue.value =
         displayedValueArr.value === null
@@ -280,15 +279,6 @@ watch(
   },
   {
     immediate: true,
-    deep: true
-  }
-)
-watch(
-  inputValueArr,
-  () => {
-    console.log('inputValueArr', inputValueArr.value)
-  },
-  {
     deep: true
   }
 )
@@ -317,13 +307,14 @@ function onUpdateValue(value: string | undefined, updateSource: 'cursor' | 'inpu
   // nTriggerFormChange()
   // nTriggerFormInput()
   displayedValue.value = value
-  console.log('displayedValue', displayedValue.value)
   emits('update:value', value)
+  if (updateSource === 'input') {
+    emits('complete', value)
+  }
 }
 function handleUpdateSv(s: number, v: number): void {
   const alpha = hsvaRef.value ? hsvaRef.value[3] : 1
   displayedSv.value = [s, v]
-  console.log('displayedSv', displayedSv.value)
   switch (displayedMode.value) {
     case 'hsv':
       onUpdateValue((props.showAlpha ? toHsvaString : toHsvString)([displayedHue.value, s, v, alpha]), 'cursor')
@@ -369,7 +360,7 @@ function handlePalleteMouseMove(e: MouseEvent): void {
 function handlePalleteMouseUp(): void {
   document.removeEventListener('mousemove', handlePalleteMouseMove)
   document.removeEventListener('mouseup', handlePalleteMouseUp)
-  // emits('complete')
+  emits('complete', displayedValue.value)
   // off('mousemove', document, handleMouseMove)
   // off('mouseup', document, handleMouseUp)
   // props.onComplete?.()
@@ -417,6 +408,7 @@ function handleHueSliderMouseMove(e: MouseEvent): void {
 function handleHueSliderMouseUp(): void {
   document.removeEventListener('mousemove', handleHueSliderMouseMove)
   document.removeEventListener('mouseup', handleHueSliderMouseUp)
+  emits('complete', displayedValue.value)
   // emits('complete')
   // off('mousemove', document, handleMouseMove)
   // off('mouseup', document, handleMouseUp)
@@ -465,6 +457,7 @@ function handleAlphaSliderMouseMove(e: MouseEvent): void {
 function handleAlphaSliderMouseUp(): void {
   document.removeEventListener('mousemove', handleAlphaSliderMouseMove)
   document.removeEventListener('mouseup', handleAlphaSliderMouseUp)
+  emits('complete', displayedValue.value)
   // emits('complete')
   // off('mousemove', document, handleMouseMove)
   // off('mouseup', document, handleMouseUp)
@@ -562,15 +555,12 @@ function handleUnitUpdateValue(index: number, value: number | string) {
       break
     case 'hsl':
       nextValueArr[index] = value
-      console.log('displayedValueArr', displayedValueArr.value)
-      console.log('nextValueArr', nextValueArr)
       handleInputUpdateValue((props.showAlpha ? toHslaString : toHslString)(nextValueArr as HSLA | HSL))
       break
   }
 }
 function handleInputChange(e: Event, index: number): void {
   const target = e.target as HTMLInputElement
-  console.log('index', index)
   let unit: number | false
   let valid: boolean
   let originValue
@@ -582,12 +572,7 @@ function handleInputChange(e: Event, index: number): void {
     originValue =
       displayedValueArr.value?.[index] === undefined ? undefined : displayedValueArr.value?.[index].toString()
   }
-  console.log('displayedValueArr', displayedValueArr.value)
-  console.log('originValue', originValue)
-  console.log('value', value)
   const mode = index === undefined ? displayedModeComputed.value : displayedModeComputed.value[index]
-  console.log('displayedModeComputed', displayedModeComputed.value)
-  console.log('mode', mode)
   switch (mode) {
     case 'HEX':
     case 'HEXA':
@@ -596,11 +581,9 @@ function handleInputChange(e: Event, index: number): void {
         handleUnitUpdateValue(0, value)
       }
       hexValue.value = getInputString(value, mode)
-      console.log('hexValue', hexValue.value)
       break
     case 'H':
       unit = normalizeHueUnit(value)
-      console.log('unit', unit)
       if (unit === false) {
         inputValueArr.value[index] = getInputString(originValue as string, mode)
       } else {
@@ -614,14 +597,11 @@ function handleInputChange(e: Event, index: number): void {
       if (unit === false) {
         inputValueArr.value[index] = getInputString(originValue as string, mode)
       } else {
-        console.log('index', index)
-        console.log('unit', unit)
         handleUnitUpdateValue(index, unit)
       }
       break
     case 'A':
       unit = normalizeAlphaUnit(value)
-      console.log('unit', unit)
       if (unit === false) {
         inputValueArr.value[index] = getInputString(originValue as string, mode)
       } else {
@@ -835,7 +815,7 @@ function onClear() {
                 </div>
               </div>
             </div>
-            <div class="color-picker-preview-circle">
+            <div v-if="showPreview" class="color-picker-preview-circle">
               <span class="color-picker-circle-fill" :style="`background: ${circleColor || '#000000'};`"></span>
               <input
                 class="color-picker-circle-input"
@@ -912,7 +892,7 @@ function onClear() {
           class="color-picker-value"
           :style="{ color: hslaRef[2] > 50 || hslaRef[3] < 0.5 ? 'black' : 'white' }"
         >
-          {{ displayedValue }}
+          <slot name="label" :color="displayedValue">{{ label ? label(displayedValue) : displayedValue }}</slot>
         </div>
       </div>
     </div>
