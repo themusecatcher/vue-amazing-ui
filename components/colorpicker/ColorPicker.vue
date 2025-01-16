@@ -151,6 +151,9 @@ const sliderAlphaHandleFillStyle = computed(() => {
   }
   return style
 })
+const circleColor = computed(() => {
+  return rgbaRef.value && toHexString(rgbaRef.value)
+})
 const colorPickerHeight = computed(() => {
   const heightMap = {
     small: 24,
@@ -483,6 +486,11 @@ function onUpdateMode(): void {
     displayedMode.value = 'rgb'
   }
 }
+function handleColorInputChange(e: Event): void {
+  const target = e.target as HTMLInputElement
+  const color = convertColor(target.value.toUpperCase(), displayedMode.value, 'hex')
+  onUpdateValue(color, 'input')
+}
 function normalizeHexaUnit(value: string): boolean {
   const trimmedValue = value.trim()
   if (/^#[0-9a-fA-F]+$/.test(trimmedValue)) {
@@ -560,7 +568,7 @@ function handleUnitUpdateValue(index: number, value: number | string) {
       break
   }
 }
-function onInputChange(e: Event, index: number): void {
+function handleInputChange(e: Event, index: number): void {
   const target = e.target as HTMLInputElement
   console.log('index', index)
   let unit: number | false
@@ -827,6 +835,15 @@ function onClear() {
                 </div>
               </div>
             </div>
+            <div class="color-picker-preview-circle">
+              <span class="color-picker-circle-fill" :style="`background: ${circleColor || '#000000'};`"></span>
+              <input
+                class="color-picker-circle-input"
+                type="color"
+                :value="circleColor"
+                @change.stop="handleColorInputChange"
+              />
+            </div>
           </div>
           <div class="color-picker-input">
             <div
@@ -842,7 +859,7 @@ function onClear() {
                   size="small"
                   :placeholder="displayedModeComputed"
                   v-model:value.lazy="hexValue"
-                  @change="onInputChange"
+                  @change="handleInputChange"
                 />
               </template>
               <template v-else>
@@ -851,7 +868,7 @@ function onClear() {
                   :style="`${val === 'A' ? 'flex-grow: 1.25' : ''}`"
                   :placeholder="val"
                   v-model:value.lazy="inputValueArr[index]"
-                  @change="onInputChange($event, index)"
+                  @change="handleInputChange($event, index)"
                   v-for="(val, index) in displayedModeComputedArr"
                   :key="index"
                 />
@@ -970,6 +987,29 @@ function onClear() {
           top: 0;
           bottom: 0;
         }
+      }
+    }
+    .color-picker-preview-circle {
+      position: relative;
+      height: 30px;
+      width: 30px;
+      margin: 0 0 8px 6px;
+      border-radius: 50%;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+      overflow: hidden;
+      .color-picker-circle-fill {
+        display: block;
+        width: 30px;
+        height: 30px;
+      }
+      .color-picker-circle-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 30px;
+        height: 30px;
+        opacity: 0;
+        z-index: 1;
       }
     }
   }
