@@ -173,7 +173,7 @@ const displayedModeComputed = computed(() => {
 const displayedModeComputedArr = computed(() => {
   return displayedModeComputed.value.split('')
 })
-let _h: number, // avoid conflict with render function's 
+let _h: number, // avoid conflict with render function's
   s: number,
   l: number,
   v: number,
@@ -298,14 +298,6 @@ function onUpdateValue(value: string | undefined, updateSource: 'cursor' | 'inpu
   } else {
     upcomingValue.value = undefined
   }
-  // const { nTriggerFormChange, nTriggerFormInput } = formItem
-  // const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
-  // if (onUpdateValue)
-  //   call(onUpdateValue as OnUpdateValueImpl, value)
-  // if (_onUpdateValue)
-  //   call(_onUpdateValue as OnUpdateValueImpl, value)
-  // nTriggerFormChange()
-  // nTriggerFormInput()
   displayedValue.value = value
   emits('update:value', value)
   if (updateSource === 'input') {
@@ -344,8 +336,6 @@ function handlePalleteMouseDown(e: MouseEvent): void {
   if (!palleteRef.value) return
   document.addEventListener('mousemove', handlePalleteMouseMove)
   document.addEventListener('mouseup', handlePalleteMouseUp)
-  // on('mousemove', document, handleMouseMove)
-  // on('mouseup', document, handleMouseUp)
   handlePalleteMouseMove(e)
 }
 function handlePalleteMouseMove(e: MouseEvent): void {
@@ -361,9 +351,6 @@ function handlePalleteMouseUp(): void {
   document.removeEventListener('mousemove', handlePalleteMouseMove)
   document.removeEventListener('mouseup', handlePalleteMouseUp)
   emits('complete', displayedValue.value)
-  // off('mousemove', document, handleMouseMove)
-  // off('mouseup', document, handleMouseUp)
-  // props.onComplete?.()
 }
 function handleUpdateHue(hue: number): void {
   displayedHue.value = hue
@@ -391,8 +378,6 @@ function handleHueSliderMouseDown(e: MouseEvent): void {
   if (!hueRailRef.value) return
   document.addEventListener('mousemove', handleHueSliderMouseMove)
   document.addEventListener('mouseup', handleHueSliderMouseUp)
-  // on('mousemove', document, handleMouseMove)
-  // on('mouseup', document, handleMouseUp)
   handleHueSliderMouseMove(e)
 }
 function normalizeHue(hue: number): number {
@@ -409,10 +394,6 @@ function handleHueSliderMouseUp(): void {
   document.removeEventListener('mousemove', handleHueSliderMouseMove)
   document.removeEventListener('mouseup', handleHueSliderMouseUp)
   emits('complete', displayedValue.value)
-  // emits('complete')
-  // off('mousemove', document, handleMouseMove)
-  // off('mouseup', document, handleMouseUp)
-  // props.onComplete?.()
 }
 function handleUpdateAlpha(alpha: number): void {
   switch (displayedMode.value) {
@@ -441,8 +422,6 @@ function handleAlphaSliderMouseDown(e: MouseEvent): void {
   document.addEventListener('mousemove', handleAlphaSliderMouseMove)
   document.addEventListener('mouseup', handleAlphaSliderMouseUp)
   handleAlphaSliderMouseMove(e)
-  // on('mousemove', document, handleMouseMove)
-  // on('mouseup', document, handleMouseUp)
 }
 function normalizeAlpha(alpha: number): number {
   alpha = Math.round(alpha * 100) / 100
@@ -458,10 +437,6 @@ function handleAlphaSliderMouseUp(): void {
   document.removeEventListener('mousemove', handleAlphaSliderMouseMove)
   document.removeEventListener('mouseup', handleAlphaSliderMouseUp)
   emits('complete', displayedValue.value)
-  // emits('complete')
-  // off('mousemove', document, handleMouseMove)
-  // off('mouseup', document, handleMouseUp)
-  // props.onComplete?.()
 }
 function getModeFromValue(color: string | undefined): ColorPickerMode | undefined {
   if (color === undefined) return undefined
@@ -531,7 +506,6 @@ function getInputString(value: string | undefined, mode: string): string {
 }
 function handleInputUpdateValue(value: string): void {
   onUpdateValue(value, 'input')
-  // void nextTick(handleComplete)
 }
 function handleUnitUpdateValue(index: number, value: number | string) {
   if (displayedMode.value === 'hex') {
