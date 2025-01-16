@@ -17,7 +17,7 @@
 ## 简要介绍
 
 - 组件库采用 `Vue@{{ getVersion('vue') }}` + `TypeScript@{{ getVersion('typescript') }}` + `Vite@{{ getVersion('vite') }}` + `Less@{{ getVersion('less') }}` 实现！
-- 目前共包含 `63` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
+- 目前共包含 `64` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
 - 全部组件均采用单文件组件 `SFC` 风格，可独立使用

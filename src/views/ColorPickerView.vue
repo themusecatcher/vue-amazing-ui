@@ -56,7 +56,7 @@ function handleClear() {
 </script>
 <template>
   <div>
-    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1> -->
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Space :width="240">
       <ColorPicker v-model:value="colorValue" />
@@ -161,10 +161,10 @@ function handleClear() {
       <ColorPicker>
         <template #footer>extra footer</template>
       </ColorPicker>
-      <n-color-picker>
-        <template #label="color">hello {{ color }}</template>
-        <template #action> 你好 </template>
-      </n-color-picker>
+      // <n-color-picker>
+      //   <template #label="color">hello {{ color }}</template>
+      //   <template #action> 你好 </template>
+      // </n-color-picker>
     </Space>
     <h2 class="mt30 mb10">使用按钮控制面板</h2>
     <Space>
