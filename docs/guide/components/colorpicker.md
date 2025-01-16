@@ -51,6 +51,9 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('show', show.value)
 })
+function labelFormat(color: string) {
+  return `hello ${color}`
+}
 function handleComplele(value: string) {
   console.log('complete', value)
 }

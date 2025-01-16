@@ -89,8 +89,7 @@ function handleClear() {
       </Space>
     </Space>
     <h2 class="mt30 mb10">颜色预览块</h2>
-    <h3 class="mb10">使用 showPreview 控制是否展示颜色预览块</h3>
-    <h3 class="mb10">点击颜色预览块可以触发浏览器原生的颜色选择器</h3>
+    <h3 class="mb10">使用 showPreview 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器</h3>
     <Space vertical>
       <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
       <Space :width="240">
