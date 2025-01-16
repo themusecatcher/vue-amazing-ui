@@ -54,11 +54,11 @@ watchEffect(() => {
 function labelFormat(color: string) {
   return `hello ${color}`
 }
-function handleComplele(value: string) {
-  console.log('complete', value)
+function handleComplele(color: string) {
+  console.log('complete', color)
 }
-function handleConfirm(value: string) {
-  console.log('confirm', value)
+function handleConfirm(color: string) {
+  console.log('confirm', color)
 }
 function handleClear() {
   console.log('clear')
@@ -377,11 +377,11 @@ const actionOptions: CheckboxOption[] = [
   }
 ]
 const actions = ref(['confirm', 'clear'])
-function handleComplele(value: string) {
-  console.log('complete', value)
+function handleComplele(color: string) {
+  console.log('complete', color)
 }
-function handleConfirm(value: string) {
-  console.log('confirm', value)
+function handleConfirm(color: string) {
+  console.log('confirm', color)
 }
 function handleClear() {
   console.log('clear')
@@ -505,6 +505,6 @@ footer | 自定义底部额外的页脚内容 | v-slot:footer
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-complete | 颜色完成改变后的回调（在鼠标拖动时候不会调用） | (value: string) => void
-confirm | 点击确认按钮的回调 | (value: string) => void
+complete | 颜色完成改变后的回调（在鼠标拖动时候不会调用） | (color: string) => void
+confirm | 点击确认按钮的回调 | (color: string) => void
 clear | 点击清除按钮的回调 | () => void

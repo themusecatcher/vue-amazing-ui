@@ -44,11 +44,11 @@ watchEffect(() => {
 function labelFormat(color: string) {
   return `hello ${color}`
 }
-function handleComplele(value: string) {
-  console.log('complete', value)
+function handleComplele(color: string) {
+  console.log('complete', color)
 }
-function handleConfirm(value: string) {
-  console.log('confirm', value)
+function handleConfirm(color: string) {
+  console.log('confirm', color)
 }
 function handleClear() {
   console.log('clear')
