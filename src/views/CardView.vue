@@ -43,7 +43,7 @@ const loading = ref(true)
       </Card>
     </div>
     <h2 class="mt30 mb10">简洁卡片</h2>
-    <Card hoverable :width="300">
+    <Card :width="300">
       <p>Card content</p>
       <p>Card content</p>
       <p>Card content</p>

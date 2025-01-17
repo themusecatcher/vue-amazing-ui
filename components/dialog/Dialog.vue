@@ -203,7 +203,7 @@ function onOk() {
 <template>
   <div class="m-dialog-root">
     <Transition name="fade">
-      <div v-show="dialogOpen" class="m-dialog-mask" :style="maskStyle"></div>
+      <div v-show="dialogOpen" class="dialog-mask" :style="maskStyle"></div>
     </Transition>
     <div
       v-show="showDialogWrap"
@@ -414,7 +414,7 @@ function onOk() {
     }
   }
 }
-.m-dialog-mask {
+.dialog-mask {
   position: fixed;
   inset: 0;
   width: 100%;

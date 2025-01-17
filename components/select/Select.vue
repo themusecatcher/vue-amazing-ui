@@ -225,7 +225,7 @@ function onChange(value: string | number, label: string, index: number) {
     :style="`--select-width: ${selectWidth}; --select-height: ${height}px;`"
     @click="disabled ? () => false : toggleSelect()"
   >
-    <div class="m-select-wrap" @mouseenter="onEnter" @mouseleave="onLeave">
+    <div class="select-wrap" @mouseenter="onEnter" @mouseleave="onLeave">
       <span class="select-search">
         <input
           ref="inputRef"
@@ -307,7 +307,7 @@ function onChange(value: string | number, label: string, index: number) {
     >
       <div
         v-if="showOptions && filterOptions && filterOptions.length"
-        class="options-panel"
+        class="select-options-panel"
         @mouseleave="disabledBlur = false"
       >
         <Scrollbar :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
@@ -396,11 +396,11 @@ function onChange(value: string | number, label: string, index: number) {
   cursor: pointer;
   &:not(.select-disabled):hover {
     // 悬浮时样式
-    .m-select-wrap {
+    .select-wrap {
       border-color: #4096ff;
     }
   }
-  .m-select-wrap {
+  .select-wrap {
     position: relative;
     display: flex;
     padding: 0 11px;
@@ -495,7 +495,7 @@ function onChange(value: string | number, label: string, index: number) {
       pointer-events: auto;
     }
   }
-  .options-panel {
+  .select-options-panel {
     position: absolute;
     top: calc(var(--select-height) + 4px);
     z-index: 1000;
@@ -562,13 +562,13 @@ function onChange(value: string | number, label: string, index: number) {
 }
 .select-focused:not(.select-disabled) {
   // 激活时样式
-  .m-select-wrap {
+  .select-wrap {
     border-color: #4096ff;
     box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
   }
 }
 .search-select {
-  .m-select-wrap {
+  .select-wrap {
     cursor: text;
     .select-search {
       .search-input {
@@ -582,7 +582,7 @@ function onChange(value: string | number, label: string, index: number) {
 .select-small {
   font-size: 14px;
   height: 24px;
-  .m-select-wrap {
+  .select-wrap {
     padding: 0 7px;
     border-radius: 4px;
     .select-search {
@@ -594,7 +594,7 @@ function onChange(value: string | number, label: string, index: number) {
       line-height: 22px;
     }
   }
-  .options-panel,
+  .select-options-panel,
   .options-empty {
     top: 28px;
   }
@@ -602,7 +602,7 @@ function onChange(value: string | number, label: string, index: number) {
 .select-large {
   font-size: 16px;
   height: 40px;
-  .m-select-wrap {
+  .select-wrap {
     padding: 0 11px;
     border-radius: 8px;
     .select-item {
@@ -610,13 +610,13 @@ function onChange(value: string | number, label: string, index: number) {
       line-height: 38px;
     }
   }
-  .options-panel,
+  .select-options-panel,
   .options-empty {
     top: 44px;
   }
 }
 .select-disabled {
-  .m-select-wrap {
+  .select-wrap {
     // 下拉禁用样式
     color: rgba(0, 0, 0, 0.25);
     background: #f5f5f5;

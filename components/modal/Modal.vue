@@ -300,7 +300,7 @@ defineExpose({
 <template>
   <div class="m-modal-root">
     <Transition name="fade">
-      <div v-show="modalOpen" class="m-modal-mask" :style="modalMaskStyle"></div>
+      <div v-show="modalOpen" class="modal-mask" :style="modalMaskStyle"></div>
     </Transition>
     <div
       v-show="showModalWrap"
@@ -621,7 +621,7 @@ defineExpose({
     }
   }
 }
-.m-modal-mask {
+.modal-mask {
   position: fixed;
   inset: 0;
   width: 100%;

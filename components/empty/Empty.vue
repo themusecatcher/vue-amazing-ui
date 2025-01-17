@@ -26,7 +26,7 @@ const showFooter = computed(() => {
 </script>
 <template>
   <div class="m-empty" :class="{ 'empty-image-outlined': image === 'outlined' }">
-    <div class="m-empty-image" :style="imageStyle">
+    <div class="empty-image-wrap" :style="imageStyle">
       <slot v-if="slotsExist.default"></slot>
       <svg
         v-else-if="image === 'filled'"
@@ -100,7 +100,7 @@ const showFooter = computed(() => {
 .m-empty {
   margin-inline: 8px;
   text-align: center;
-  .m-empty-image {
+  .empty-image-wrap {
     height: 100px;
     margin-bottom: 8px;
     opacity: 1;
@@ -133,7 +133,7 @@ const showFooter = computed(() => {
 }
 .empty-image-outlined {
   margin-block: 32px;
-  .m-empty-image {
+  .empty-image-wrap {
     height: 40px;
   }
 }

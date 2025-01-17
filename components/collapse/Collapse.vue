@@ -156,7 +156,7 @@ function onCopy(index: number, key: string | number) {
     }"
   >
     <div
-      class="m-collapse-item"
+      class="collapse-item"
       :class="{
         'collapse-arrow-left': getComputedValue(item, 'arrowPlacement') === 'left',
         'collapse-arrow-right': getComputedValue(item, 'arrowPlacement') === 'right',
@@ -168,7 +168,7 @@ function onCopy(index: number, key: string | number) {
     >
       <div
         tabindex="0"
-        class="m-collapse-header"
+        class="collapse-header-wrap"
         :class="{ 'collapse-header-no-arrow': getComputedValue(item, 'showArrow') }"
         :style="getComputedValue(item, 'headerStyle') as CSSProperties"
         @click="getComputedValue(item, 'disabled') ? () => false : onClick(getComputedKey(item.key, index))"
@@ -241,7 +241,7 @@ function onCopy(index: number, key: string | number) {
       >
         <div
           v-show="activeCheck(getComputedKey(item.key, index))"
-          class="m-collapse-content"
+          class="collapse-content-wrap"
           :class="{ 'collapse-copyable': getComputedValue(item, 'copyable') }"
         >
           <div class="collapse-lang">
@@ -305,22 +305,22 @@ function onCopy(index: number, key: string | number) {
   border: 1px solid #d9d9d9;
   border-bottom: 0;
   border-radius: 8px;
-  .m-collapse-item {
+  .collapse-item {
     border-bottom: 1px solid #d9d9d9;
     &:first-child {
       border-radius: 8px 8px 0 0;
-      .m-collapse-header {
+      .collapse-header-wrap {
         border-radius: 8px 8px 0 0;
       }
     }
     &:last-child {
       border-radius: 0 0 8px 8px;
-      .m-collapse-header,
-      .m-collapse-content {
+      .collapse-header-wrap,
+      .collapse-content-wrap {
         border-radius: 0 0 8px 8px;
       }
     }
-    .m-collapse-header {
+    .collapse-header-wrap {
       position: relative;
       display: flex;
       flex-wrap: nowrap;
@@ -366,7 +366,7 @@ function onCopy(index: number, key: string | number) {
     .collapse-header-no-arrow {
       padding-left: 12px;
     }
-    .m-collapse-content {
+    .collapse-content-wrap {
       position: relative;
       color: rgba(0, 0, 0, 0.88);
       background-color: #ffffff;
@@ -407,18 +407,18 @@ function onCopy(index: number, key: string | number) {
     }
   }
   .collapse-arrow-left {
-    .m-collapse-header .collapse-arrow {
+    .collapse-header-wrap .collapse-arrow {
       padding-right: 12px;
     }
   }
   .collapse-arrow-right {
-    .m-collapse-header .collapse-arrow {
+    .collapse-header-wrap .collapse-arrow {
       order: 1; // order 属性定义项目的排列顺序。数值越小，排列越靠前，默认为 0
       padding-left: 12px;
     }
   }
   .collapse-item-disabled {
-    .m-collapse-header {
+    .collapse-header-wrap {
       color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
     }
@@ -427,14 +427,14 @@ function onCopy(index: number, key: string | number) {
 .collapse-borderless {
   background-color: rgba(0, 0, 0, 0.02);
   border: 0;
-  .m-collapse-item {
+  .collapse-item {
     &:last-child {
       border-bottom: 0;
-      .m-collapse-header {
+      .collapse-header-wrap {
         border-radius: 0;
       }
     }
-    .m-collapse-content {
+    .collapse-content-wrap {
       background-color: transparent;
       border-top: 0;
     }
@@ -443,9 +443,9 @@ function onCopy(index: number, key: string | number) {
 .collapse-ghost {
   background-color: transparent;
   border: 0;
-  .m-collapse-item {
+  .collapse-item {
     border-bottom: 0;
-    .m-collapse-content {
+    .collapse-content-wrap {
       background-color: transparent;
       border: 0;
     }

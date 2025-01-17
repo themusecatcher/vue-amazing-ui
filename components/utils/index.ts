@@ -691,20 +691,20 @@ export function useSlotsExist(slotsName: string | string[] = 'default') {
   const checkSlotsExist = (slotName: string): boolean => {
     const slotsContent = slots[slotName]?.()
     const checkExist = (slotContent: any) => {
-      if (typeof slotContent.children === 'string') {
+      if (slotContent.children === null) {
+        if (slotContent.type === 'img' || typeof slotContent.type !== 'string') {
+          return true
+        }
+      } else if (typeof slotContent.children === 'string') {
         // 排除 v-if="false" 的插槽内容
         if (slotContent.children === 'v-if') {
           return false
         }
         return slotContent.children.trim() !== ''
+      } else if (Array.isArray(slotContent.children)) {
+        return Boolean(slotContent.children.length)
       } else {
-        if (slotContent.children === null) {
-          if (slotContent.type === 'img' || typeof slotContent.type !== 'string') {
-            return true
-          }
-        } else {
-          return Boolean(slotContent.children)
-        }
+        return Boolean(slotContent.children)
       }
     }
     if (slotsContent && slotsContent?.length) {

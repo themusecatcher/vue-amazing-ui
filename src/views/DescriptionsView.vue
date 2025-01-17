@@ -302,7 +302,7 @@ const state = reactive({
         <Col :span="6">
           <Flex gap="small" vertical>
             labelStyle color:
-            <Input v-model:value="state.labelStyle.color" placeholder="labelStyle color" />
+            <ColorPicker v-model:value="state.labelStyle.color" />
           </Flex>
         </Col>
         <Col :span="6">
@@ -327,7 +327,7 @@ const state = reactive({
         <Col :span="6">
           <Flex gap="small" vertical>
             contentStyle color:
-            <Input v-model:value="state.contentStyle.color" placeholder="contentStyle color" />
+            <ColorPicker v-model:value="state.contentStyle.color" />
           </Flex>
         </Col>
         <Col :span="6">

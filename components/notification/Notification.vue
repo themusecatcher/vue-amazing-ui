@@ -159,16 +159,12 @@ defineExpose({
 })
 </script>
 <template>
-  <div
-    class="m-notification-wrap"
-    :class="`notification-${notificationPlace}`"
-    :style="{ ...topStyle, ...bottomStyle }"
-  >
+  <div class="m-notification" :class="`notification-${notificationPlace}`" :style="{ ...topStyle, ...bottomStyle }">
     <TransitionGroup :name="['topRight', 'bottomRight'].includes(notificationPlace) ? 'right' : 'left'">
       <div
         v-show="!hideIndex.includes(index)"
         ref="notificationRef"
-        class="m-notification-content"
+        class="notification-wrap"
         :class="[`icon-${notification.mode}`, notification.class]"
         :style="notification.style"
         v-for="(notification, index) in notificationData"
@@ -308,14 +304,14 @@ defineExpose({
   position: absolute;
   left: 0;
 }
-.m-notification-wrap {
+.m-notification {
   position: fixed;
   z-index: 999; // 突出显示该层级
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1.5714285714285714;
   margin-right: 24px;
-  .m-notification-content {
+  .notification-wrap {
     position: relative;
     display: flex;
     width: 384px;

@@ -179,7 +179,7 @@ defineExpose({
   >
     <video
       ref="veoRef"
-      class="u-video"
+      class="video-element"
       :style="`object-fit: ${fit};`"
       :src="src"
       :poster="poster ? poster : veoPoster"
@@ -214,7 +214,7 @@ defineExpose({
   position: relative;
   background: #000;
   cursor: pointer;
-  .u-video {
+  .video-element {
     display: inline-block;
     width: 100%;
     height: 100%;

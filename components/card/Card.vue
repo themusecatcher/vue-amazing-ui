@@ -56,8 +56,8 @@ const showExtra = computed(() => {
     }"
     :style="`width: ${cardWidth};`"
   >
-    <div class="m-card-head" :style="headStyle" v-if="showHeader">
-      <div class="m-head-wrapper">
+    <div class="card-head" :style="headStyle" v-if="showHeader">
+      <div class="head-wrapper">
         <div v-if="showTitle" class="head-title">
           <slot name="title">{{ title }}</slot>
         </div>
@@ -66,7 +66,7 @@ const showExtra = computed(() => {
         </div>
       </div>
     </div>
-    <div class="m-card-body" :style="bodyStyle">
+    <div class="card-body" :style="bodyStyle">
       <Skeleton :title="false" :loading="loading" v-bind="skeletonProps">
         <slot></slot>
       </Skeleton>
@@ -83,7 +83,7 @@ const showExtra = computed(() => {
   border-radius: 8px;
   text-align: left;
   transition: width 0.2s;
-  .m-card-head {
+  .card-head {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -94,7 +94,7 @@ const showExtra = computed(() => {
     border-bottom: 1px solid #f0f0f0;
     border-radius: 8px 8px 0 0;
     transition: all 0.2s;
-    .m-head-wrapper {
+    .head-wrapper {
       width: 100%;
       display: flex;
       align-items: center;
@@ -114,7 +114,7 @@ const showExtra = computed(() => {
       }
     }
   }
-  .m-card-body {
+  .card-body {
     border-radius: 0 0 8px 8px;
     transition: padding 0.2s;
   }
@@ -123,36 +123,36 @@ const showExtra = computed(() => {
   border: 1px solid #f0f0f0;
 }
 .card-small {
-  .m-card-head {
+  .card-head {
     min-height: 38px;
     padding: 0 12px;
     font-size: 14px;
   }
-  .m-card-body {
+  .card-body {
     padding: 12px;
   }
 }
 .card-middle {
-  .m-card-head {
+  .card-head {
     min-height: 56px;
     padding: 0 24px;
     font-size: 16px;
   }
-  .m-card-body {
+  .card-body {
     padding: 24px;
   }
 }
 .card-large {
   font-size: 16px;
-  .m-card-head {
+  .card-head {
     min-height: 74px;
     padding: 0 36px;
     font-size: 18px;
-    .m-head-wrapper .head-extra {
+    .head-wrapper .head-extra {
       font-size: 16px;
     }
   }
-  .m-card-body {
+  .card-body {
     padding: 36px;
   }
 }
