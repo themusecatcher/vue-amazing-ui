@@ -50,7 +50,7 @@ function getUrl(route: Route) {
 </script>
 <template>
   <div class="m-breadcrumb" :class="breadcrumbClass" :style="breadcrumbStyle">
-    <div class="m-breadcrumb-item" v-for="(route, index) in routes" :key="index">
+    <div class="breadcrumb-item" v-for="(route, index) in routes" :key="index">
       <component
         :is="route.path ? 'a' : 'span'"
         class="breadcrumb-link"
@@ -95,7 +95,7 @@ function getUrl(route: Route) {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  .m-breadcrumb-item {
+  .breadcrumb-item {
     display: inline-flex;
     align-items: center;
     .breadcrumb-link {
