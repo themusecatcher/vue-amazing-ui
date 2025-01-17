@@ -1,6 +1,6 @@
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/@vue+devtools-shared@7.6.8/node_modules/@vue/devtools-shared/dist/index.js
+// node_modules/.pnpm/@vue+devtools-shared@7.7.0/node_modules/@vue/devtools-shared/dist/index.js
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -30,7 +30,7 @@ var __toESM = (mod, isNodeMode, target2) => (target2 = mod != null ? __create(__
   mod
 ));
 var init_esm_shims = __esm({
-  "../../node_modules/.pnpm/tsup@8.3.5_@microsoft+api-extractor@7.48.0_@types+node@22.10.1__@swc+core@1.5.29_jiti@2.0.0_p_swvvp2d4pgn6xuiiec4l4x2i7a/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.pnpm/tsup@8.3.5_@microsoft+api-extractor@7.48.1_@types+node@22.10.5__jiti@2.4.2_postcss@8.4.49_tsx_s7k37zks4wtn7x2grzma6lrsfa/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
@@ -526,7 +526,7 @@ function createHooks() {
 var { clearTimeout: clearTimeout2, setTimeout: setTimeout2 } = globalThis;
 var random = Math.random.bind(Math);
 
-// node_modules/.pnpm/@vue+devtools-kit@7.6.8/node_modules/@vue/devtools-kit/dist/index.js
+// node_modules/.pnpm/@vue+devtools-kit@7.7.0/node_modules/@vue/devtools-kit/dist/index.js
 var __create2 = Object.create;
 var __defProp2 = Object.defineProperty;
 var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -556,7 +556,7 @@ var __toESM2 = (mod, isNodeMode, target22) => (target22 = mod != null ? __create
   mod
 ));
 var init_esm_shims2 = __esm2({
-  "../../node_modules/.pnpm/tsup@8.3.5_@microsoft+api-extractor@7.48.0_@types+node@22.10.1__@swc+core@1.5.29_jiti@2.0.0_p_swvvp2d4pgn6xuiiec4l4x2i7a/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.pnpm/tsup@8.3.5_@microsoft+api-extractor@7.48.1_@types+node@22.10.5__jiti@2.4.2_postcss@8.4.49_tsx_s7k37zks4wtn7x2grzma6lrsfa/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
@@ -2125,19 +2125,6 @@ function getAppRecord(instance) {
   else if (instance.root)
     return instance.appContext.app.__VUE_DEVTOOLS_NEXT_APP_RECORD__;
 }
-async function getComponentId(options) {
-  const { app, uid, instance } = options;
-  try {
-    if (instance.__VUE_DEVTOOLS_NEXT_UID__)
-      return instance.__VUE_DEVTOOLS_NEXT_UID__;
-    const appRecord = await getAppRecord(app);
-    if (!appRecord)
-      return null;
-    const isRoot = appRecord.rootInstance === instance;
-    return `${appRecord.id}:${isRoot ? "root" : uid}`;
-  } catch (e) {
-  }
-}
 function isFragment(instance) {
   var _a25, _b25;
   const subTreeType = (_a25 = instance.subTree) == null ? void 0 : _a25.type;
@@ -2166,6 +2153,12 @@ function getInstanceName(instance) {
   if (fileName)
     return fileName;
   return "Anonymous Component";
+}
+function getUniqueComponentId(instance) {
+  var _a25, _b25, _c;
+  const appId = (_c = (_b25 = (_a25 = instance == null ? void 0 : instance.appContext) == null ? void 0 : _a25.app) == null ? void 0 : _b25.__VUE_DEVTOOLS_NEXT_APP_RECORD_ID__) != null ? _c : 0;
+  const instanceId = instance === (instance == null ? void 0 : instance.root) ? "root" : instance.uid;
+  return `${appId}:${instanceId}`;
 }
 function getComponentInstance(appRecord, instanceId) {
   instanceId = instanceId || `${appRecord.id}:root`;
@@ -2399,18 +2392,11 @@ function inspectFn(e) {
   }
 }
 function selectComponentFn(e, cb) {
-  var _a25;
   e.preventDefault();
   e.stopPropagation();
   if (inspectInstance) {
-    const app = (_a25 = activeAppRecord.value) == null ? void 0 : _a25.app;
-    getComponentId({
-      app,
-      uid: app.uid,
-      instance: inspectInstance
-    }).then((id) => {
-      cb(id);
-    });
+    const uniqueComponentId = getUniqueComponentId(inspectInstance);
+    cb(uniqueComponentId);
   }
 }
 var inspectComponentHighLighterSelectFn = null;
@@ -3398,9 +3384,13 @@ function callDevToolsPluginSetupFn(plugin, app) {
   }
   setupFn(api);
 }
-function registerDevToolsPlugin(app) {
-  if (target.__VUE_DEVTOOLS_KIT__REGISTERED_PLUGIN_APPS__.has(app) || devtoolsState.highPerfModeEnabled)
+function registerDevToolsPlugin(app, options) {
+  if (target.__VUE_DEVTOOLS_KIT__REGISTERED_PLUGIN_APPS__.has(app)) {
     return;
+  }
+  if (devtoolsState.highPerfModeEnabled && !(options == null ? void 0 : options.inspectingComponent)) {
+    return;
+  }
   target.__VUE_DEVTOOLS_KIT__REGISTERED_PLUGIN_APPS__.add(app);
   devtoolsPluginBuffer.forEach((plugin) => {
     callDevToolsPluginSetupFn(plugin, app);
@@ -3583,14 +3573,14 @@ function createDevToolsApi(hooks2) {
     // get vue inspector
     getVueInspector: getComponentInspector,
     // toggle app
-    toggleApp(id) {
+    toggleApp(id, options) {
       const appRecord = devtoolsAppRecords.value.find((record) => record.id === id);
       if (appRecord) {
         setActiveAppRecordId(id);
         setActiveAppRecord(appRecord);
         normalizeRouterInfo(appRecord, activeAppRecord);
         callInspectorUpdatedHook();
-        registerDevToolsPlugin(appRecord.app);
+        registerDevToolsPlugin(appRecord.app, options);
       }
     },
     // inspect dom
@@ -3998,7 +3988,7 @@ var classRule = compositeTransformation(isInstanceOfRegisteredClass, (clazz, sup
 }, (v, a, superJson) => {
   const clazz = superJson.classRegistry.getValue(a[1]);
   if (!clazz) {
-    throw new Error("Trying to deserialize unknown class - check https://github.com/blitz-js/superjson/issues/116#issuecomment-773996564");
+    throw new Error(`Trying to deserialize unknown class '${a[1]}' - check https://github.com/blitz-js/superjson/issues/116#issuecomment-773996564`);
   }
   return Object.assign(Object.create(clazz.prototype), v);
 });
@@ -4063,6 +4053,8 @@ var untransformValue = (json, type, superJson) => {
 };
 init_esm_shims2();
 var getNthKey = (value, n) => {
+  if (n > value.size)
+    throw new Error("index out of bounds");
   const keys = value.keys();
   while (n > 0) {
     keys.next();
