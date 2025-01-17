@@ -107,7 +107,7 @@ import {
   watchTriggerable,
   watchWithFilter,
   whenever
-} from "./chunk-CQOOV5VB.js";
+} from "./chunk-GOFHB7HN.js";
 import {
   Fragment,
   TransitionGroup,
@@ -136,10 +136,10 @@ import {
   unref,
   watch,
   watchEffect
-} from "./chunk-X54IR6VG.js";
+} from "./chunk-3MB4FZ2E.js";
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/@vueuse+core@12.3.0_typescript@5.7.2/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@12.4.0_typescript@5.7.3/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {
@@ -425,7 +425,7 @@ function onClickOutside(target, handler, options = {}) {
           handler(event);
         }
       }, 0);
-    })
+    }, { passive: true })
   ].filter(Boolean);
   const stop = () => cleanup.forEach((fn) => fn());
   return stop;
@@ -747,12 +747,26 @@ function useActiveElement(options = {}) {
     activeElement.value = getDeepActiveElement();
   };
   if (window2) {
-    useEventListener(window2, "blur", (event) => {
-      if (event.relatedTarget !== null)
-        return;
-      trigger();
-    }, true);
-    useEventListener(window2, "focus", trigger, true);
+    const listenerOptions = {
+      capture: true,
+      passive: true
+    };
+    useEventListener(
+      window2,
+      "blur",
+      (event) => {
+        if (event.relatedTarget !== null)
+          return;
+        trigger();
+      },
+      listenerOptions
+    );
+    useEventListener(
+      window2,
+      "focus",
+      trigger,
+      listenerOptions
+    );
   }
   if (triggerOnRemoval) {
     onElementRemoval(activeElement, trigger, { document: document2 });
@@ -1125,8 +1139,9 @@ function useAsyncState(promise, initialState, options) {
     }
     return state.value;
   }
-  if (immediate)
+  if (immediate) {
     execute(delay);
+  }
   const shell = {
     state,
     isReady,
@@ -1283,7 +1298,7 @@ function useBluetooth(options) {
     navigator: navigator2 = defaultNavigator
   } = options || {};
   const isSupported = useSupported(() => navigator2 && "bluetooth" in navigator2);
-  const device = shallowRef(void 0);
+  const device = shallowRef();
   const error = shallowRef(null);
   watch(device, () => {
     connectToBluetoothGATTServer();
@@ -1304,18 +1319,20 @@ function useBluetooth(options) {
       error.value = err;
     }
   }
-  const server = ref();
-  const isConnected = computed(() => {
-    var _a;
-    return ((_a = server.value) == null ? void 0 : _a.connected) || false;
-  });
+  const server = shallowRef();
+  const isConnected = shallowRef(false);
+  function reset() {
+    isConnected.value = false;
+    device.value = void 0;
+    server.value = void 0;
+  }
   async function connectToBluetoothGATTServer() {
     error.value = null;
     if (device.value && device.value.gatt) {
-      device.value.addEventListener("gattserverdisconnected", () => {
-      });
+      device.value.addEventListener("gattserverdisconnected", reset);
       try {
         server.value = await device.value.gatt.connect();
+        isConnected.value = server.value.connected;
       } catch (err) {
         error.value = err;
       }
@@ -1333,7 +1350,7 @@ function useBluetooth(options) {
   });
   return {
     isSupported,
-    isConnected,
+    isConnected: readonly(isConnected),
     // Device:
     device,
     requestDevice,
@@ -1674,7 +1691,7 @@ function usePermission(permissionDesc, options = {}) {
     var _a, _b;
     state.value = (_b = (_a = permissionStatus.value) == null ? void 0 : _a.state) != null ? _b : "prompt";
   };
-  useEventListener(permissionStatus, "change", update);
+  useEventListener(permissionStatus, "change", update, { passive: true });
   const query = createSingletonPromise(async () => {
     if (!isSupported.value)
       return;
@@ -1726,7 +1743,7 @@ function useClipboard(options = {}) {
     }
   }
   if (isSupported.value && read)
-    useEventListener(["copy", "cut"], updateText);
+    useEventListener(["copy", "cut"], updateText, { passive: true });
   async function copy(value = toValue(source)) {
     if (isSupported.value && value != null) {
       if (isClipboardApiSupported.value && isAllowed(permissionWrite.value))
@@ -1781,7 +1798,7 @@ function useClipboardItems(options = {}) {
     }
   }
   if (isSupported.value && read)
-    useEventListener(["copy", "cut"], updateContent);
+    useEventListener(["copy", "cut"], updateContent, { passive: true });
   async function copy(value = toValue(source)) {
     if (isSupported.value && value != null) {
       await navigator2.clipboard.write(value);
@@ -1802,6 +1819,8 @@ function cloneFnJSON(source) {
 }
 function useCloned(source, options = {}) {
   const cloned = ref({});
+  const isModified = ref(false);
+  let _lastSync = false;
   const {
     manual,
     clone = cloneFnJSON,
@@ -1809,7 +1828,19 @@ function useCloned(source, options = {}) {
     deep = true,
     immediate = true
   } = options;
+  watch(cloned, () => {
+    if (_lastSync) {
+      _lastSync = false;
+      return;
+    }
+    isModified.value = true;
+  }, {
+    deep: true,
+    flush: "sync"
+  });
   function sync() {
+    _lastSync = true;
+    isModified.value = false;
     cloned.value = clone(toValue(source));
   }
   if (!manual && (isRef(source) || typeof source === "function")) {
@@ -1821,7 +1852,7 @@ function useCloned(source, options = {}) {
   } else {
     sync();
   }
-  return { cloned, sync };
+  return { cloned, isModified, sync };
 }
 var _global = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 var globalKey = "__vueuse_ssr_handlers__";
@@ -1895,6 +1926,7 @@ function useStorage(key, defaults2, storage, options = {}) {
     initOnMounted
   } = options;
   const data = (shallow ? shallowRef : ref)(typeof defaults2 === "function" ? defaults2() : defaults2);
+  const keyComputed = computed(() => toValue(key));
   if (!storage) {
     try {
       storage = getSSRHandler("getDefaultStorage", () => {
@@ -1915,10 +1947,11 @@ function useStorage(key, defaults2, storage, options = {}) {
     () => write(data.value),
     { flush, deep, eventFilter }
   );
+  watch(keyComputed, () => update(), { flush });
   if (window2 && listenToStorageChanges) {
     tryOnMounted(() => {
       if (storage instanceof Storage)
-        useEventListener(window2, "storage", update);
+        useEventListener(window2, "storage", update, { passive: true });
       else
         useEventListener(window2, customStorageEventName, updateFromCustomEvent);
       if (initOnMounted)
@@ -1930,7 +1963,7 @@ function useStorage(key, defaults2, storage, options = {}) {
   function dispatchWriteEvent(oldValue, newValue) {
     if (window2) {
       const payload = {
-        key,
+        key: keyComputed.value,
         oldValue,
         newValue,
         storageArea: storage
@@ -1942,14 +1975,14 @@ function useStorage(key, defaults2, storage, options = {}) {
   }
   function write(v) {
     try {
-      const oldValue = storage.getItem(key);
+      const oldValue = storage.getItem(keyComputed.value);
       if (v == null) {
         dispatchWriteEvent(oldValue, null);
-        storage.removeItem(key);
+        storage.removeItem(keyComputed.value);
       } else {
         const serialized = serializer.write(v);
         if (oldValue !== serialized) {
-          storage.setItem(key, serialized);
+          storage.setItem(keyComputed.value, serialized);
           dispatchWriteEvent(oldValue, serialized);
         }
       }
@@ -1958,10 +1991,10 @@ function useStorage(key, defaults2, storage, options = {}) {
     }
   }
   function read(event) {
-    const rawValue = event ? event.newValue : storage.getItem(key);
+    const rawValue = event ? event.newValue : storage.getItem(keyComputed.value);
     if (rawValue == null) {
       if (writeDefaults && rawInit != null)
-        storage.setItem(key, serializer.write(rawInit));
+        storage.setItem(keyComputed.value, serializer.write(rawInit));
       return rawInit;
     } else if (!event && mergeDefaults) {
       const value = serializer.read(rawValue);
@@ -1983,7 +2016,7 @@ function useStorage(key, defaults2, storage, options = {}) {
       data.value = rawInit;
       return;
     }
-    if (event && event.key !== key)
+    if (event && event.key !== keyComputed.value)
       return;
     pauseWatch();
     try {
@@ -2448,7 +2481,7 @@ function useDeviceMotion(options = {}) {
           interval.value = event.interval;
         }
       );
-      useEventListener(window2, "devicemotion", onDeviceMotion);
+      useEventListener(window2, "devicemotion", onDeviceMotion, { passive: true });
     }
   }
   const ensurePermissions = async () => {
@@ -2500,7 +2533,7 @@ function useDeviceOrientation(options = {}) {
       alpha.value = event.alpha;
       beta.value = event.beta;
       gamma.value = event.gamma;
-    });
+    }, { passive: true });
   }
   return {
     isSupported,
@@ -2579,7 +2612,7 @@ function useDevicesList(options = {}) {
   if (isSupported.value) {
     if (requestPermissions)
       ensurePermissions();
-    useEventListener(navigator2.mediaDevices, "devicechange", update);
+    useEventListener(navigator2.mediaDevices, "devicechange", update, { passive: true });
     update();
   }
   return {
@@ -2652,11 +2685,11 @@ function useDocumentVisibility(options = {}) {
   const visibility = ref(document2.visibilityState);
   useEventListener(document2, "visibilitychange", () => {
     visibility.value = document2.visibilityState;
-  });
+  }, { passive: true });
   return visibility;
 }
 function useDraggable(target, options = {}) {
-  var _a, _b;
+  var _a;
   const {
     pointerTypes,
     preventDefault: preventDefault2,
@@ -2742,7 +2775,13 @@ function useDraggable(target, options = {}) {
     handleEvent(e);
   };
   if (isClient) {
-    const config = { capture: (_b = options.capture) != null ? _b : true };
+    const config = () => {
+      var _a2;
+      return {
+        capture: (_a2 = options.capture) != null ? _a2 : true,
+        passive: !toValue(preventDefault2)
+      };
+    };
     useEventListener(draggingHandle, "pointerdown", start, config);
     useEventListener(draggingElement, "pointermove", move, config);
     useEventListener(draggingElement, "pointerup", end, config);
@@ -3821,12 +3860,13 @@ function useFocus(target, options = {}) {
   const { initialValue = false, focusVisible = false, preventScroll = false } = options;
   const innerFocused = ref(false);
   const targetElement = computed(() => unrefElement(target));
+  const listenerOptions = { passive: true };
   useEventListener(targetElement, "focus", (event) => {
     var _a, _b;
     if (!focusVisible || ((_b = (_a = event.target).matches) == null ? void 0 : _b.call(_a, ":focus-visible")))
       innerFocused.value = true;
-  });
-  useEventListener(targetElement, "blur", () => innerFocused.value = false);
+  }, listenerOptions);
+  useEventListener(targetElement, "blur", () => innerFocused.value = false, listenerOptions);
   const focused = computed({
     get: () => innerFocused.value,
     set(value) {
@@ -3858,11 +3898,12 @@ function useFocusWithin(target, options = {}) {
   if (!window2 || !activeElement.value) {
     return { focused };
   }
-  useEventListener(targetElement, EVENT_FOCUS_IN, () => _focused.value = true);
+  const listenerOptions = { passive: true };
+  useEventListener(targetElement, EVENT_FOCUS_IN, () => _focused.value = true, listenerOptions);
   useEventListener(targetElement, EVENT_FOCUS_OUT, () => {
     var _a, _b, _c;
     return _focused.value = (_c = (_b = (_a = targetElement.value) == null ? void 0 : _a.matches) == null ? void 0 : _b.call(_a, PSEUDO_CLASS_FOCUS_WITHIN)) != null ? _c : false;
-  });
+  }, listenerOptions);
   return { focused };
 }
 function useFps(options) {
@@ -3990,8 +4031,9 @@ function useFullscreen(target, options = {}) {
     if (!isElementFullScreenValue || isElementFullScreenValue && isCurrentElementFullScreen())
       isFullscreen.value = isElementFullScreenValue;
   };
-  useEventListener(document2, eventHandlers, handlerCallback, false);
-  useEventListener(() => unrefElement(targetRef), eventHandlers, handlerCallback, false);
+  const listenerOptions = { capture: false, passive: true };
+  useEventListener(document2, eventHandlers, handlerCallback, listenerOptions);
+  useEventListener(() => unrefElement(targetRef), eventHandlers, handlerCallback, listenerOptions);
   if (autoExit)
     tryOnScopeDispose(exit);
   return {
@@ -4091,8 +4133,9 @@ function useGamepad(options = {}) {
     gamepads.value = gamepads.value.filter((x) => x.index !== gamepad.index);
     onDisconnectedHook.trigger(gamepad.index);
   };
-  useEventListener("gamepadconnected", (e) => onGamepadConnected(e.gamepad));
-  useEventListener("gamepaddisconnected", (e) => onGamepadDisconnected(e.gamepad));
+  const listenerOptions = { passive: true };
+  useEventListener("gamepadconnected", (e) => onGamepadConnected(e.gamepad), listenerOptions);
+  useEventListener("gamepaddisconnected", (e) => onGamepadDisconnected(e.gamepad), listenerOptions);
   tryOnMounted(() => {
     const _gamepads = (navigator2 == null ? void 0 : navigator2.getGamepads()) || [];
     for (const gamepad of _gamepads) {
@@ -4195,13 +4238,14 @@ function useIdle(timeout = oneMinute, options = {}) {
   );
   if (window2) {
     const document2 = window2.document;
+    const listenerOptions = { passive: true };
     for (const event of events2)
-      useEventListener(window2, event, onEvent, { passive: true });
+      useEventListener(window2, event, onEvent, listenerOptions);
     if (listenForVisibilityChange) {
       useEventListener(document2, "visibilitychange", () => {
         if (!document2.hidden)
           onEvent();
-      });
+      }, listenerOptions);
     }
     reset();
   }
@@ -4581,8 +4625,8 @@ function useMagicKeys(options = {}) {
     updateRefs(e, false);
     return onEventFired(e);
   }, { passive });
-  useEventListener("blur", reset, { passive: true });
-  useEventListener("focus", reset, { passive: true });
+  useEventListener("blur", reset, { passive });
+  useEventListener("focus", reset, { passive });
   const proxy = new Proxy(
     refs,
     {
@@ -4777,44 +4821,125 @@ function useMediaControls(target, options = {}) {
       el.pause();
     }
   });
-  useEventListener(target, "timeupdate", () => ignoreCurrentTimeUpdates(() => currentTime.value = toValue(target).currentTime));
-  useEventListener(target, "durationchange", () => duration.value = toValue(target).duration);
-  useEventListener(target, "progress", () => buffered.value = timeRangeToArray(toValue(target).buffered));
-  useEventListener(target, "seeking", () => seeking.value = true);
-  useEventListener(target, "seeked", () => seeking.value = false);
-  useEventListener(target, ["waiting", "loadstart"], () => {
-    waiting.value = true;
-    ignorePlayingUpdates(() => playing.value = false);
-  });
-  useEventListener(target, "loadeddata", () => waiting.value = false);
-  useEventListener(target, "playing", () => {
-    waiting.value = false;
-    ended.value = false;
-    ignorePlayingUpdates(() => playing.value = true);
-  });
-  useEventListener(target, "ratechange", () => rate.value = toValue(target).playbackRate);
-  useEventListener(target, "stalled", () => stalled.value = true);
-  useEventListener(target, "ended", () => ended.value = true);
-  useEventListener(target, "pause", () => ignorePlayingUpdates(() => playing.value = false));
-  useEventListener(target, "play", () => ignorePlayingUpdates(() => playing.value = true));
-  useEventListener(target, "enterpictureinpicture", () => isPictureInPicture.value = true);
-  useEventListener(target, "leavepictureinpicture", () => isPictureInPicture.value = false);
-  useEventListener(target, "volumechange", () => {
-    const el = toValue(target);
-    if (!el)
-      return;
-    volume.value = el.volume;
-    muted.value = el.muted;
-  });
+  const listenerOptions = { passive: true };
+  useEventListener(
+    target,
+    "timeupdate",
+    () => ignoreCurrentTimeUpdates(() => currentTime.value = toValue(target).currentTime),
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "durationchange",
+    () => duration.value = toValue(target).duration,
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "progress",
+    () => buffered.value = timeRangeToArray(toValue(target).buffered),
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "seeking",
+    () => seeking.value = true,
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "seeked",
+    () => seeking.value = false,
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    ["waiting", "loadstart"],
+    () => {
+      waiting.value = true;
+      ignorePlayingUpdates(() => playing.value = false);
+    },
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "loadeddata",
+    () => waiting.value = false,
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "playing",
+    () => {
+      waiting.value = false;
+      ended.value = false;
+      ignorePlayingUpdates(() => playing.value = true);
+    },
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "ratechange",
+    () => rate.value = toValue(target).playbackRate,
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "stalled",
+    () => stalled.value = true,
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "ended",
+    () => ended.value = true,
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "pause",
+    () => ignorePlayingUpdates(() => playing.value = false),
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "play",
+    () => ignorePlayingUpdates(() => playing.value = true),
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "enterpictureinpicture",
+    () => isPictureInPicture.value = true,
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "leavepictureinpicture",
+    () => isPictureInPicture.value = false,
+    listenerOptions
+  );
+  useEventListener(
+    target,
+    "volumechange",
+    () => {
+      const el = toValue(target);
+      if (!el)
+        return;
+      volume.value = el.volume;
+      muted.value = el.muted;
+    },
+    listenerOptions
+  );
   const listeners = [];
   const stop = watch([target], () => {
     const el = toValue(target);
     if (!el)
       return;
     stop();
-    listeners[0] = useEventListener(el.textTracks, "addtrack", () => tracks.value = tracksToArray(el.textTracks));
-    listeners[1] = useEventListener(el.textTracks, "removetrack", () => tracks.value = tracksToArray(el.textTracks));
-    listeners[2] = useEventListener(el.textTracks, "change", () => tracks.value = tracksToArray(el.textTracks));
+    listeners[0] = useEventListener(el.textTracks, "addtrack", () => tracks.value = tracksToArray(el.textTracks), listenerOptions);
+    listeners[1] = useEventListener(el.textTracks, "removetrack", () => tracks.value = tracksToArray(el.textTracks), listenerOptions);
+    listeners[2] = useEventListener(el.textTracks, "change", () => tracks.value = tracksToArray(el.textTracks), listenerOptions);
   });
   tryOnScopeDispose(() => listeners.forEach((listener) => listener()));
   return {
@@ -4957,7 +5082,7 @@ function useMouse(options = {}) {
         useEventListener(target, "touchend", reset, listenerOptions);
     }
     if (scroll && type === "page")
-      useEventListener(window2, "scroll", scrollHandlerWrapper, { passive: true });
+      useEventListener(window2, "scroll", scrollHandlerWrapper, listenerOptions);
   }
   return {
     x,
@@ -5009,9 +5134,12 @@ function useMouseInElement(target, options = {}) {
       },
       { immediate: true }
     );
-    useEventListener(document, "mouseleave", () => {
-      isOutside.value = true;
-    });
+    useEventListener(
+      document,
+      "mouseleave",
+      () => isOutside.value = true,
+      { passive: true }
+    );
   }
   return {
     x,
@@ -5056,18 +5184,19 @@ function useMousePressed(options = {}) {
     (_a = options.onReleased) == null ? void 0 : _a.call(options, event);
   };
   const target = computed(() => unrefElement(options.target) || window2);
-  useEventListener(target, "mousedown", onPressed("mouse"), { passive: true, capture });
-  useEventListener(window2, "mouseleave", onReleased, { passive: true, capture });
-  useEventListener(window2, "mouseup", onReleased, { passive: true, capture });
+  const listenerOptions = { passive: true, capture };
+  useEventListener(target, "mousedown", onPressed("mouse"), listenerOptions);
+  useEventListener(window2, "mouseleave", onReleased, listenerOptions);
+  useEventListener(window2, "mouseup", onReleased, listenerOptions);
   if (drag) {
-    useEventListener(target, "dragstart", onPressed("mouse"), { passive: true, capture });
-    useEventListener(window2, "drop", onReleased, { passive: true, capture });
-    useEventListener(window2, "dragend", onReleased, { passive: true, capture });
+    useEventListener(target, "dragstart", onPressed("mouse"), listenerOptions);
+    useEventListener(window2, "drop", onReleased, listenerOptions);
+    useEventListener(window2, "dragend", onReleased, listenerOptions);
   }
   if (touch) {
-    useEventListener(target, "touchstart", onPressed("touch"), { passive: true, capture });
-    useEventListener(window2, "touchend", onReleased, { passive: true, capture });
-    useEventListener(window2, "touchcancel", onReleased, { passive: true, capture });
+    useEventListener(target, "touchstart", onPressed("touch"), listenerOptions);
+    useEventListener(window2, "touchend", onReleased, listenerOptions);
+    useEventListener(window2, "touchcancel", onReleased, listenerOptions);
   }
   return {
     pressed,
@@ -5082,7 +5211,7 @@ function useNavigatorLanguage(options = {}) {
   useEventListener(window2, "languagechange", () => {
     if (navigator2)
       language.value = navigator2.language;
-  });
+  }, { passive: true });
   return {
     isSupported,
     language
@@ -5117,21 +5246,22 @@ function useNetwork(options = {}) {
       type.value = connection.type;
     }
   }
+  const listenerOptions = { passive: true };
   if (window2) {
     useEventListener(window2, "offline", () => {
       isOnline.value = false;
       offlineAt.value = Date.now();
-    });
+    }, listenerOptions);
     useEventListener(window2, "online", () => {
       isOnline.value = true;
       onlineAt.value = Date.now();
-    });
+    }, listenerOptions);
   }
   if (connection)
-    useEventListener(connection, "change", updateNetworkInformation, false);
+    useEventListener(connection, "change", updateNetworkInformation, listenerOptions);
   updateNetworkInformation();
   return {
-    isSupported: readonly(isSupported),
+    isSupported,
     isOnline: readonly(isOnline),
     saveData: readonly(saveData),
     offlineAt: readonly(offlineAt),
@@ -5260,9 +5390,10 @@ function usePageLeave(options = {}) {
     isLeft.value = !from;
   };
   if (window2) {
-    useEventListener(window2, "mouseout", handler, { passive: true });
-    useEventListener(window2.document, "mouseleave", handler, { passive: true });
-    useEventListener(window2.document, "mouseenter", handler, { passive: true });
+    const listenerOptions = { passive: true };
+    useEventListener(window2, "mouseout", handler, listenerOptions);
+    useEventListener(window2.document, "mouseleave", handler, listenerOptions);
+    useEventListener(window2.document, "mouseenter", handler, listenerOptions);
   }
   return isLeft;
 }
@@ -5278,7 +5409,7 @@ function useScreenOrientation(options = {}) {
     useEventListener(window2, "orientationchange", () => {
       orientation.value = screenOrientation.type;
       angle.value = screenOrientation.angle;
-    });
+    }, { passive: true });
   }
   const lockOrientation = (type) => {
     if (isSupported.value && typeof screenOrientation.lock === "function")
@@ -5452,6 +5583,7 @@ function usePointerLock(target, options = {}) {
   const triggerElement = ref();
   let targetElement;
   if (isSupported.value) {
+    const listenerOptions = { passive: true };
     useEventListener(document2, "pointerlockchange", () => {
       var _a;
       const currentElement = (_a = document2.pointerLockElement) != null ? _a : element.value;
@@ -5460,7 +5592,7 @@ function usePointerLock(target, options = {}) {
         if (!element.value)
           targetElement = triggerElement.value = null;
       }
-    });
+    }, listenerOptions);
     useEventListener(document2, "pointerlockerror", () => {
       var _a;
       const currentElement = (_a = document2.pointerLockElement) != null ? _a : element.value;
@@ -5468,7 +5600,7 @@ function usePointerLock(target, options = {}) {
         const action = document2.pointerLockElement ? "release" : "acquire";
         throw new Error(`Failed to ${action} pointer lock.`);
       }
-    });
+    }, listenerOptions);
   }
   async function lock(e) {
     var _a;
@@ -5536,6 +5668,7 @@ function usePointerSwipe(target, options = {}) {
     const isPrimaryButton = e.buttons === 1;
     return (_c = (_b = (_a = options.pointerTypes) == null ? void 0 : _a.includes(e.pointerType)) != null ? _b : isReleasingButton || isPrimaryButton) != null ? _c : true;
   };
+  const listenerOptions = { passive: true };
   const stops = [
     useEventListener(target, "pointerdown", (e) => {
       if (!eventIsAllowed(e))
@@ -5547,7 +5680,7 @@ function usePointerSwipe(target, options = {}) {
       updatePosStart(x, y);
       updatePosEnd(x, y);
       onSwipeStart == null ? void 0 : onSwipeStart(e);
-    }),
+    }, listenerOptions),
     useEventListener(target, "pointermove", (e) => {
       if (!eventIsAllowed(e))
         return;
@@ -5559,7 +5692,7 @@ function usePointerSwipe(target, options = {}) {
         isSwiping.value = true;
       if (isSwiping.value)
         onSwipe == null ? void 0 : onSwipe(e);
-    }),
+    }, listenerOptions),
     useEventListener(target, "pointerup", (e) => {
       if (!eventIsAllowed(e))
         return;
@@ -5567,7 +5700,7 @@ function usePointerSwipe(target, options = {}) {
         onSwipeEnd == null ? void 0 : onSwipeEnd(e, direction.value);
       isPointerDown.value = false;
       isSwiping.value = false;
-    })
+    }, listenerOptions)
   ];
   tryOnMounted(() => {
     var _a, _b, _c, _d, _e, _f, _g, _h;
@@ -5622,7 +5755,7 @@ function usePreferredLanguages(options = {}) {
   const value = ref(navigator2.languages);
   useEventListener(window2, "languagechange", () => {
     value.value = navigator2.languages;
-  });
+  }, { passive: true });
   return value;
 }
 function usePreferredReducedMotion(options) {
@@ -5671,7 +5804,7 @@ function useScreenSafeArea() {
     bottomCssVar.value = "env(safe-area-inset-bottom, 0px)";
     leftCssVar.value = "env(safe-area-inset-left, 0px)";
     update();
-    useEventListener("resize", useDebounceFn(update));
+    useEventListener("resize", useDebounceFn(update), { passive: true });
   }
   function update() {
     top.value = getValue(topVarName);
@@ -6208,7 +6341,7 @@ function useStorageAsync(key, initialValue, storage, options = {}) {
   }
   read();
   if (window2 && listenToStorageChanges)
-    useEventListener(window2, "storage", (e) => Promise.resolve().then(() => read(e)));
+    useEventListener(window2, "storage", (e) => Promise.resolve().then(() => read(e)), { passive: true });
   if (storage) {
     watchWithFilter(
       data,
@@ -6289,8 +6422,7 @@ function useSwipe(target, options = {}) {
     onSwipe,
     onSwipeEnd,
     onSwipeStart,
-    passive = true,
-    window: window2 = defaultWindow
+    passive = true
   } = options;
   const coordsStart = reactive({ x: 0, y: 0 });
   const coordsEnd = reactive({ x: 0, y: 0 });
@@ -6317,12 +6449,7 @@ function useSwipe(target, options = {}) {
     coordsEnd.x = x;
     coordsEnd.y = y;
   };
-  let listenerOptions;
-  const isPassiveEventSupported = checkPassiveEventSupport(window2 == null ? void 0 : window2.document);
-  if (!passive)
-    listenerOptions = isPassiveEventSupported ? { passive: false, capture: true } : { capture: true };
-  else
-    listenerOptions = isPassiveEventSupported ? { passive: true } : { capture: false };
+  const listenerOptions = { passive, capture: !passive };
   const onTouchEnd = (e) => {
     if (isSwiping.value)
       onSwipeEnd == null ? void 0 : onSwipeEnd(e, direction.value);
@@ -6353,29 +6480,16 @@ function useSwipe(target, options = {}) {
   ];
   const stop = () => stops.forEach((s) => s());
   return {
-    isPassiveEventSupported,
     isSwiping,
     direction,
     coordsStart,
     coordsEnd,
     lengthX: diffX,
     lengthY: diffY,
-    stop
+    stop,
+    // TODO: Remove in the next major version
+    isPassiveEventSupported: true
   };
-}
-function checkPassiveEventSupport(document2) {
-  if (!document2)
-    return false;
-  let supportsPassive = false;
-  const optionsBlock = {
-    get passive() {
-      supportsPassive = true;
-      return false;
-    }
-  };
-  document2.addEventListener("x", noop, optionsBlock);
-  document2.removeEventListener("x", noop);
-  return supportsPassive;
 }
 function useTemplateRefsList() {
   const refs = ref([]);
@@ -6446,7 +6560,7 @@ function useTextSelection(options = {}) {
       selection.value = window2.getSelection();
   }
   if (window2)
-    useEventListener(window2.document, "selectionchange", onSelectionChange);
+    useEventListener(window2.document, "selectionchange", onSelectionChange, { passive: true });
   return {
     text,
     rects,
@@ -6904,9 +7018,10 @@ function useUrlSearchParams(mode = "history", options = {}) {
       return;
     write(read(), true);
   }
-  useEventListener(window2, "popstate", onChanged, false);
+  const listenerOptions = { passive: true };
+  useEventListener(window2, "popstate", onChanged, listenerOptions);
   if (mode !== "history")
-    useEventListener(window2, "hashchange", onChanged, false);
+    useEventListener(window2, "hashchange", onChanged, listenerOptions);
   const initial = read();
   if (initial.keys().next().value)
     updateState(initial);
@@ -7294,7 +7409,7 @@ function useWakeLock(options = {}) {
     useEventListener(sentinel, "release", () => {
       var _a, _b;
       requestedType.value = (_b = (_a = sentinel.value) == null ? void 0 : _a.type) != null ? _b : false;
-    });
+    }, { passive: true });
     whenever(
       () => documentVisibility.value === "visible" && (document2 == null ? void 0 : document2.visibilityState) === "visible" && requestedType.value,
       (type) => {
@@ -7546,7 +7661,7 @@ function useWebSocket(url, options = {}) {
   }
   if (autoClose) {
     if (isClient)
-      useEventListener("beforeunload", () => close());
+      useEventListener("beforeunload", () => close(), { passive: true });
     tryOnScopeDispose(close);
   }
   const open = () => {
@@ -7728,12 +7843,13 @@ function useWindowFocus(options = {}) {
   if (!window2)
     return ref(false);
   const focused = ref(window2.document.hasFocus());
+  const listenerOptions = { passive: true };
   useEventListener(window2, "blur", () => {
     focused.value = false;
-  });
+  }, listenerOptions);
   useEventListener(window2, "focus", () => {
     focused.value = true;
-  });
+  }, listenerOptions);
   return focused;
 }
 function useWindowScroll(options = {}) {
@@ -7771,9 +7887,10 @@ function useWindowSize(options = {}) {
   };
   update();
   tryOnMounted(update);
-  useEventListener("resize", update, { passive: true });
+  const listenerOptions = { passive: true };
+  useEventListener("resize", update, listenerOptions);
   if (window2 && type === "visual" && window2.visualViewport) {
-    useEventListener(window2.visualViewport, "resize", update, { passive: true });
+    useEventListener(window2.visualViewport, "resize", update, listenerOptions);
   }
   if (listenOrientation) {
     const matches = useMediaQuery("(orientation: portrait)");

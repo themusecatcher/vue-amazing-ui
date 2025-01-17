@@ -34,10 +34,10 @@ import {
   version,
   watch,
   watchEffect
-} from "./chunk-X54IR6VG.js";
+} from "./chunk-3MB4FZ2E.js";
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/vitepress@1.5.0_@algolia+client-search@5.18.0_@types+node@22.10.5_async-validator@4.2.5_less@_xr5qxgzyyrms4qgd2iw2ev4foq/node_modules/vitepress/lib/vue-demi.mjs
+// node_modules/.pnpm/vitepress@1.5.0_@algolia+client-search@5.19.0_@types+node@22.10.7_async-validator@4.2.5_less@_or545ydgmng4c3jrxt4e5tmw5q/node_modules/vitepress/lib/vue-demi.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -57,7 +57,7 @@ function del(target, key) {
   delete target[key];
 }
 
-// node_modules/.pnpm/@vueuse+shared@11.3.0_vue@3.5.13_typescript@5.7.2_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@11.3.0_vue@3.5.13_typescript@5.7.3_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -1561,7 +1561,7 @@ function whenever(source, cb, options) {
   return stop;
 }
 
-// node_modules/.pnpm/@vueuse+core@11.3.0_vue@3.5.13_typescript@5.7.2_/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@11.3.0_vue@3.5.13_typescript@5.7.3_/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {

@@ -25,9 +25,9 @@ import {
   unref,
   watch,
   watchEffect
-} from "./chunk-X54IR6VG.js";
+} from "./chunk-3MB4FZ2E.js";
 
-// node_modules/.pnpm/@vueuse+shared@12.3.0_typescript@5.7.2/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@12.4.0_typescript@5.7.3/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -1645,4 +1645,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-CQOOV5VB.js.map
+//# sourceMappingURL=chunk-GOFHB7HN.js.map

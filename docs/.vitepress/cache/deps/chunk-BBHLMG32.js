@@ -1,4 +1,4 @@
-// node_modules/.pnpm/swiper@11.2.0/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@11.2.1/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === "object" && "constructor" in obj && obj.constructor === Object;
 }
@@ -147,7 +147,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@11.2.0/node_modules/swiper/shared/utils.mjs
+// node_modules/.pnpm/swiper@11.2.1/node_modules/swiper/shared/utils.mjs
 function classesToTokens(classes) {
   if (classes === void 0) {
     classes = "";
@@ -320,8 +320,9 @@ function elementChildren(element, selector) {
   if (selector === void 0) {
     selector = "";
   }
+  const window2 = getWindow();
   const children = [...element.children];
-  if (element instanceof HTMLSlotElement) {
+  if (window2.HTMLSlotElement && element instanceof HTMLSlotElement) {
     children.push(...element.assignedElements());
   }
   if (!selector) {
@@ -341,8 +342,9 @@ function elementIsChildOfSlot(el, slot) {
   }
 }
 function elementIsChildOf(el, parent) {
+  const window2 = getWindow();
   let isChild = parent.contains(el);
-  if (!isChild && parent instanceof HTMLSlotElement) {
+  if (!isChild && window2.HTMLSlotElement && parent instanceof HTMLSlotElement) {
     const children = [...parent.assignedElements()];
     isChild = children.includes(el);
     if (!isChild) {
@@ -488,4 +490,4 @@ export {
   makeElementsArray,
   getRotateFix
 };
-//# sourceMappingURL=chunk-BWYKSETY.js.map
+//# sourceMappingURL=chunk-BBHLMG32.js.map
