@@ -45,46 +45,46 @@ const showTip = computed(() => {
 </script>
 <template>
   <div
-    :class="`m-spin-wrap spin-${size}`"
+    :class="`m-spin spin-${size}`"
     :style="`--spin-color: ${color}; --magic-ring-color: ${magicRingColor}; --spin-circle-width: ${spinCircleWidth}; --spin-speed: ${speed}ms;`"
   >
-    <div class="m-spin" v-show="spinning">
-      <div class="m-spin-box">
-        <div v-if="indicator === 'dot'" class="m-loading-dot">
+    <div class="spin-wrap" v-show="spinning">
+      <div class="spin-box">
+        <div v-if="indicator === 'dot'" class="spin-loading-dot">
           <span class="dot-item"></span>
           <span class="dot-item"></span>
           <span class="dot-item"></span>
           <span class="dot-item"></span>
         </div>
         <div v-if="indicator === 'spin-dot'" class="spin-wrap-box" :class="{ 'spin-box-rotate': rotate }">
-          <div class="m-spin-dot">
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
+          <div class="spin-dot-items">
+            <span class="dot-item"></span>
+            <span class="dot-item"></span>
+            <span class="dot-item"></span>
+            <span class="dot-item"></span>
           </div>
-          <div class="m-spin-dot spin-rotate" :class="{ 'has-tip': tip }">
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
+          <div class="spin-dot-items spin-rotate" :class="{ 'has-tip': tip }">
+            <span class="dot-item"></span>
+            <span class="dot-item"></span>
+            <span class="dot-item"></span>
+            <span class="dot-item"></span>
           </div>
         </div>
         <div v-if="indicator === 'spin-line'" class="spin-wrap-box" :class="{ 'spin-box-rotate': rotate }">
-          <div class="m-spin-line">
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
+          <div class="spin-line-items">
+            <span class="line-item"></span>
+            <span class="line-item"></span>
+            <span class="line-item"></span>
+            <span class="line-item"></span>
           </div>
-          <div class="m-spin-line spin-rotate" :class="{ 'has-tip': tip }">
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
-            <span class="spin-item"></span>
+          <div class="spin-line-items spin-rotate" :class="{ 'has-tip': tip }">
+            <span class="line-item"></span>
+            <span class="line-item"></span>
+            <span class="line-item"></span>
+            <span class="line-item"></span>
           </div>
         </div>
-        <div v-if="indicator === 'ring-circle'" class="m-ring-circle">
+        <div v-if="indicator === 'ring-circle'" class="spin-ring-circle">
           <svg class="circle" viewBox="0 0 100 100">
             <path
               :d="circlePath"
@@ -95,7 +95,7 @@ const showTip = computed(() => {
             ></path>
           </svg>
         </div>
-        <div v-if="indicator === 'ring-rail'" class="m-ring-rail">
+        <div v-if="indicator === 'ring-rail'" class="spin-ring-rail">
           <svg class="circle" viewBox="0 0 100 100">
             <path
               :d="circlePath"
@@ -114,12 +114,12 @@ const showTip = computed(() => {
             ></path>
           </svg>
         </div>
-        <div v-if="indicator === 'dynamic-circle'" class="m-dynamic-circle">
+        <div v-if="indicator === 'dynamic-circle'" class="spin-dynamic-circle">
           <svg class="circle" viewBox="0 0 50 50">
             <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
           </svg>
         </div>
-        <div v-if="indicator === 'magic-ring'" class="m-magic-ring">
+        <div v-if="indicator === 'magic-ring'" class="spin-magic-ring">
           <div class="outer-ring"></div>
           <div class="inner-ring"></div>
         </div>
@@ -134,14 +134,14 @@ const showTip = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-spin-wrap {
+.m-spin {
   position: relative;
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  .m-spin {
+  .spin-wrap {
     position: absolute;
     top: 0;
     left: 0;
@@ -151,10 +151,10 @@ const showTip = computed(() => {
     align-items: center;
     justify-content: center;
     z-index: 9;
-    .m-spin-box {
+    .spin-box {
       text-align: center;
       line-height: 0;
-      .m-loading-dot {
+      .spin-loading-dot {
         position: relative;
         display: inline-block;
         transform: rotate(45deg);
@@ -210,36 +210,36 @@ const showTip = computed(() => {
         text-align: center;
         line-height: 0;
         position: relative;
-        .m-spin-dot {
+        .spin-dot-items {
           position: relative;
           display: inline-block;
-          .spin-item {
+          .dot-item {
             position: absolute;
             background: var(--spin-color);
             border-radius: 50%;
           }
-          .spin-item:first-child {
+          .dot-item:first-child {
             top: 0;
             left: 0;
             opacity: 0.3;
             animation: spinColor1 var(--spin-speed) linear infinite;
             -webkit-animation: spinColor1 var(--spin-speed) linear infinite;
           }
-          .spin-item:nth-child(2) {
+          .dot-item:nth-child(2) {
             top: 0;
             right: 0;
             opacity: 0.5;
             animation: spinColor3 var(--spin-speed) linear infinite;
             -webkit-animation: spinColor3 var(--spin-speed) linear infinite;
           }
-          .spin-item:nth-child(3) {
+          .dot-item:nth-child(3) {
             bottom: 0;
             right: 0;
             opacity: 0.7;
             animation: spinColor5 var(--spin-speed) linear infinite;
             -webkit-animation: spinColor5 var(--spin-speed) linear infinite;
           }
-          .spin-item:last-child {
+          .dot-item:last-child {
             bottom: 0;
             left: 0;
             opacity: 0.9;
@@ -247,34 +247,34 @@ const showTip = computed(() => {
             -webkit-animation: spinColor7 var(--spin-speed) linear infinite;
           }
         }
-        .m-spin-line {
+        .spin-line-items {
           position: relative;
           display: inline-block;
-          .spin-item {
+          .line-item {
             position: absolute;
             top: 0;
             left: 50%;
             transform: translateX(-50%);
             background-color: var(--spin-color);
           }
-          .spin-item:first-child {
+          .line-item:first-child {
             opacity: 0.3;
             animation: spinColor1 var(--spin-speed) linear infinite;
             -webkit-animation: spinColor1 var(--spin-speed) linear infinite;
           }
-          .spin-item:nth-child(2) {
+          .line-item:nth-child(2) {
             opacity: 0.5;
             transform: translateX(-50%) rotate(90deg);
             animation: spinColor3 var(--spin-speed) linear infinite;
             -webkit-animation: spinColor3 var(--spin-speed) linear infinite;
           }
-          .spin-item:nth-child(3) {
+          .line-item:nth-child(3) {
             opacity: 0.7;
             transform: translateX(-50%) rotate(180deg);
             animation: spinColor5 var(--spin-speed) linear infinite;
             -webkit-animation: spinColor5 var(--spin-speed) linear infinite;
           }
-          .spin-item:last-child {
+          .line-item:last-child {
             opacity: 0.9;
             transform: translateX(-50%) rotate(270deg);
             animation: spinColor7 var(--spin-speed) linear infinite;
@@ -285,25 +285,28 @@ const showTip = computed(() => {
           position: absolute;
           left: 0;
           transform: rotate(45deg);
-          .spin-item:first-child {
-            opacity: 0.4;
-            animation: spinColor2 var(--spin-speed) linear infinite;
-            -webkit-animation: spinColor2 var(--spin-speed) linear infinite;
-          }
-          .spin-item:nth-child(2) {
-            opacity: 0.6;
-            animation: spinColor4 var(--spin-speed) linear infinite;
-            -webkit-animation: spinColor4 var(--spin-speed) linear infinite;
-          }
-          .spin-item:nth-child(3) {
-            opacity: 0.8;
-            animation: spinColor6 var(--spin-speed) linear infinite;
-            -webkit-animation: spinColor6 var(--spin-speed) linear infinite;
-          }
-          .spin-item:last-child {
-            opacity: 1;
-            animation: spinColor8 var(--spin-speed) linear infinite;
-            -webkit-animation: spinColor8 var(--spin-speed) linear infinite;
+          .dot-item,
+          .line-item {
+            &:first-child {
+              opacity: 0.4;
+              animation: spinColor2 var(--spin-speed) linear infinite;
+              -webkit-animation: spinColor2 var(--spin-speed) linear infinite;
+            }
+            &:nth-child(2) {
+              opacity: 0.6;
+              animation: spinColor4 var(--spin-speed) linear infinite;
+              -webkit-animation: spinColor4 var(--spin-speed) linear infinite;
+            }
+            &:nth-child(3) {
+              opacity: 0.8;
+              animation: spinColor6 var(--spin-speed) linear infinite;
+              -webkit-animation: spinColor6 var(--spin-speed) linear infinite;
+            }
+            &:last-child {
+              opacity: 1;
+              animation: spinColor8 var(--spin-speed) linear infinite;
+              -webkit-animation: spinColor8 var(--spin-speed) linear infinite;
+            }
           }
         }
         .has-tip {
@@ -411,8 +414,8 @@ const showTip = computed(() => {
           }
         }
       }
-      .m-ring-circle,
-      .m-ring-rail {
+      .spin-ring-circle,
+      .spin-ring-rail {
         display: inline-block;
         overflow: hidden;
         animation: spinCircle 0.8s linear infinite;
@@ -429,7 +432,7 @@ const showTip = computed(() => {
           stroke-dashoffset: 0;
         }
       }
-      .m-dynamic-circle {
+      .spin-dynamic-circle {
         display: inline-block;
         animation: spinCircle 2s linear infinite;
         -webkit-animation: spinCircle 2s linear infinite;
@@ -464,7 +467,7 @@ const showTip = computed(() => {
           transform: rotate(360deg);
         }
       }
-      .m-magic-ring {
+      .spin-magic-ring {
         display: inline-block;
         position: relative;
         transform: rotate(45deg);
@@ -525,8 +528,8 @@ const showTip = computed(() => {
   }
 }
 .spin-small {
-  .m-spin .m-spin-box {
-    .m-loading-dot {
+  .spin-wrap .spin-box {
+    .spin-loading-dot {
       width: 20px;
       height: 20px;
       .dot-item {
@@ -534,35 +537,35 @@ const showTip = computed(() => {
         height: 8px;
       }
     }
-    .m-spin-dot {
+    .spin-dot-items {
       width: 20px;
       height: 20px;
-      .spin-item {
+      .dot-item {
         width: 6px;
         height: 6px;
       }
     }
-    .m-spin-line {
+    .spin-line-items {
       --line-length: 8px;
       width: calc(var(--line-length) * 3);
       height: calc(var(--line-length) * 3);
-      .spin-item {
+      .line-item {
         transform-origin: 50% calc(var(--line-length) * 1.5);
         border-radius: var(--line-length);
         width: calc(var(--line-length) / 2.5);
         height: var(--line-length);
       }
     }
-    .m-ring-circle,
-    .m-ring-rail {
+    .spin-ring-circle,
+    .spin-ring-rail {
       width: 24px;
       height: 24px;
     }
-    .m-dynamic-circle {
+    .spin-dynamic-circle {
       width: 26px;
       height: 26px;
     }
-    .m-magic-ring {
+    .spin-magic-ring {
       width: 24px;
       height: 24px;
       .outer-ring,
@@ -588,8 +591,8 @@ const showTip = computed(() => {
   }
 }
 .spin-middle {
-  .m-spin .m-spin-box {
-    .m-loading-dot {
+  .spin-wrap .spin-box {
+    .spin-loading-dot {
       width: 30px;
       height: 30px;
       .dot-item {
@@ -597,35 +600,35 @@ const showTip = computed(() => {
         height: 11px;
       }
     }
-    .m-spin-dot {
+    .spin-dot-items {
       width: 30px;
       height: 30px;
-      .spin-item {
+      .dot-item {
         width: 9px;
         height: 9px;
       }
     }
-    .m-spin-line {
+    .spin-line-items {
       --line-length: 12px;
       width: calc(var(--line-length) * 3);
       height: calc(var(--line-length) * 3);
-      .spin-item {
+      .line-item {
         transform-origin: 50% calc(var(--line-length) * 1.5);
         border-radius: var(--line-length);
         width: calc(var(--line-length) / 3);
         height: var(--line-length);
       }
     }
-    .m-ring-circle,
-    .m-ring-rail {
+    .spin-ring-circle,
+    .spin-ring-rail {
       width: 36px;
       height: 36px;
     }
-    .m-dynamic-circle {
+    .spin-dynamic-circle {
       width: 38px;
       height: 38px;
     }
-    .m-magic-ring {
+    .spin-magic-ring {
       width: 36px;
       height: 36px;
       .outer-ring,
@@ -651,8 +654,8 @@ const showTip = computed(() => {
   }
 }
 .spin-large {
-  .m-spin .m-spin-box {
-    .m-loading-dot {
+  .spin-wrap .spin-box {
+    .spin-loading-dot {
       width: 40px;
       height: 40px;
       .dot-item {
@@ -660,35 +663,35 @@ const showTip = computed(() => {
         height: 15px;
       }
     }
-    .m-spin-dot {
+    .spin-dot-items {
       width: 40px;
       height: 40px;
-      .spin-item {
+      .dot-item {
         width: 12px;
         height: 12px;
       }
     }
-    .m-spin-line {
+    .spin-line-items {
       --line-length: 16px;
       width: calc(var(--line-length) * 3);
       height: calc(var(--line-length) * 3);
-      .spin-item {
+      .line-item {
         transform-origin: 50% calc(var(--line-length) * 1.5);
         border-radius: var(--line-length);
         width: calc(var(--line-length) / 3);
         height: var(--line-length);
       }
     }
-    .m-ring-circle,
-    .m-ring-rail {
+    .spin-ring-circle,
+    .spin-ring-rail {
       width: 48px;
       height: 48px;
     }
-    .m-dynamic-circle {
+    .spin-dynamic-circle {
       width: 50px;
       height: 50px;
     }
-    .m-magic-ring {
+    .spin-magic-ring {
       width: 48px;
       height: 48px;
       .outer-ring,

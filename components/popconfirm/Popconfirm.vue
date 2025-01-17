@@ -70,8 +70,8 @@ function onOk(e: Event) {
     v-bind="$attrs"
   >
     <template #tooltip>
-      <div class="m-popconfirm-message">
-        <span class="m-popconfirm-icon" :style="iconStyle">
+      <div class="popconfirm-wrap">
+        <span class="popconfirm-icon" :style="iconStyle">
           <slot name="icon">
             <svg
               v-if="icon === 'info'"
@@ -143,7 +143,7 @@ function onOk(e: Event) {
       <div v-if="showDesc" class="popconfirm-description" :style="descriptionStyle">
         <slot name="description">{{ description }}</slot>
       </div>
-      <div class="popconfirm-buttons">
+      <div class="popconfirm-btns">
         <Button v-if="showCancel" size="small" :type="cancelType" @click="onCancel" v-bind="cancelProps">
           <slot name="cancelText">{{ cancelText }}</slot>
         </Button>
@@ -156,7 +156,7 @@ function onOk(e: Event) {
   </Tooltip>
 </template>
 <style lang="less" scoped>
-.m-popconfirm-message {
+.popconfirm-wrap {
   position: relative;
   margin-bottom: 8px;
   font-size: 14px;
@@ -164,7 +164,7 @@ function onOk(e: Event) {
   display: flex;
   flex-wrap: nowrap;
   align-items: start;
-  .m-popconfirm-icon {
+  .popconfirm-icon {
     flex: none;
     font-size: 14px;
     line-height: 1;
@@ -206,7 +206,7 @@ function onOk(e: Event) {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
 }
-.popconfirm-buttons {
+.popconfirm-btns {
   text-align: end;
   .m-btn {
     margin-left: 8px;

@@ -273,11 +273,11 @@ function onSwitchRight() {
 }
 </script>
 <template>
-  <div class="m-image-wrap">
+  <div class="m-image">
     <Space gap="small" v-bind="spaceProps">
       <div
         v-show="!album || (album && index === 0)"
-        class="m-image"
+        class="image-wrap"
         :class="{ 'image-bordered': bordered, 'image-hover-mask': complete[index] }"
         :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
         v-for="(image, index) in images"
@@ -330,7 +330,7 @@ function onSwitchRight() {
       <div
         v-show="showPreview"
         ref="previewRef"
-        class="m-preview-wrap"
+        class="preview-wrap"
         tabindex="-1"
         @click.self="onClose"
         @wheel.prevent="onWheel"
@@ -607,7 +607,7 @@ function onSwitchRight() {
   }
 }
 
-.m-image-wrap {
+.m-image {
   display: inline-block;
   .image-hover-mask {
     &:hover {
@@ -617,7 +617,7 @@ function onSwitchRight() {
       }
     }
   }
-  .m-image {
+  .image-wrap {
     position: relative;
     display: inline-block;
     vertical-align: top;
@@ -673,7 +673,7 @@ function onSwitchRight() {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.45);
   }
-  .m-preview-wrap {
+  .preview-wrap {
     position: fixed;
     top: 0;
     left: 0;

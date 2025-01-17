@@ -93,7 +93,7 @@ const showFooter = computed(() => {
   border: 1px solid #d9d9d9;
   border-radius: 8px;
   .list-header,
-  :deep(.m-list-item),
+  :deep(.list-item-wrap),
   .list-footer {
     padding-inline: 24px;
   }
@@ -102,13 +102,13 @@ const showFooter = computed(() => {
   }
 }
 .list-vertical {
-  :deep(.m-list-item) {
+  :deep(.list-item-wrap) {
     align-items: initial;
-    .m-list-item-main {
+    .list-item-main {
       display: block;
-      .m-list-item-meta {
+      .list-item-meta {
         margin-bottom: 16px;
-        .m-list-item-content {
+        .list-item-content {
           .list-item-title {
             margin-bottom: 12px;
             color: rgba(0, 0, 0, 0.88);
@@ -135,38 +135,38 @@ const showFooter = computed(() => {
   .list-header {
     border-bottom: 1px solid rgba(5, 5, 5, 0.06);
   }
-  :deep(.m-list-item) {
+  :deep(.list-item-wrap) {
     &:not(:last-child) {
       border-bottom: 1px solid rgba(5, 5, 5, 0.06);
     }
   }
 }
 .list-small {
-  :deep(.m-list-item) {
+  :deep(.list-item-wrap) {
     padding: 8px 16px;
   }
 }
 .list-bordered.list-small {
   .list-header,
-  :deep(.m-list-item),
+  :deep(.list-item-wrap),
   .list-footer {
     padding: 8px 16px;
   }
 }
 .list-large {
-  :deep(.m-list-item) {
+  :deep(.list-item-wrap) {
     padding: 16px 24px;
   }
 }
 .list-bordered.list-large {
   .list-header,
-  :deep(.m-list-item),
+  :deep(.list-item-wrap),
   .list-footer {
     padding: 16px 24px;
   }
 }
 .list-hoverable {
-  :deep(.m-list-item) {
+  :deep(.list-item-wrap) {
     &:hover {
       background-color: rgba(0, 0, 0, 0.02);
     }

@@ -346,6 +346,7 @@ zoomRatio | 每次缩放比率 | number | 0.1
 minZoomScale | 最小缩放比例 | number | 0.1
 maxZoomScale | 最大缩放比例 | number | 10
 resetOnDbclick | 缩放移动旋转图片后，是否可以双击还原 | boolean | true
+draggable | 是否可以拖动图片 | boolean | false
 loop | 是否可以循环切换图片 | boolean | false
 album | 是否相册模式，即从一张展示图片点开相册 | boolean | false
 

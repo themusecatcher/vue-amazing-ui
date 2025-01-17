@@ -143,7 +143,7 @@ const showSuccess = computed(() => {
       --info-size: ${progressInfoSize};
     `"
   >
-    <div class="m-progress-inner">
+    <div class="progress-inner">
       <div
         :class="['progress-bg', { 'line-success': percent >= 100 && !gradientColor }]"
         :style="`background: ${lineColor}; width: ${percent >= 100 ? 100 : percent}%; height: ${progressLineSize}px; --border-radius: ${lineCap === 'round' ? '100px' : 0};`"
@@ -249,7 +249,7 @@ const showSuccess = computed(() => {
   display: flex;
   align-items: center;
   width: var(--progress-size);
-  .m-progress-inner {
+  .progress-inner {
     width: 100%;
     background: rgba(0, 0, 0, 0.06);
     border-radius: 100px;

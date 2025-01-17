@@ -43,15 +43,15 @@ const showExtra = computed(() => {
 })
 </script>
 <template>
-  <div class="m-list-item">
-    <div class="m-list-item-main">
-      <div v-if="showAvatar || showContent" class="m-list-item-meta">
-        <div v-if="showAvatar" class="m-list-item-avatar" :style="avatarStyle">
+  <div class="list-item-wrap">
+    <div class="list-item-main">
+      <div v-if="showAvatar || showContent" class="list-item-meta">
+        <div v-if="showAvatar" class="list-item-avatar" :style="avatarStyle">
           <slot name="avatar">
             <Avatar v-bind="avatarProps">{{ avatar }}</Avatar>
           </slot>
         </div>
-        <div v-if="showContent" class="m-list-item-content">
+        <div v-if="showContent" class="list-item-content">
           <p class="list-item-title" :style="titleStyle">
             <slot name="title">{{ title }}</slot>
           </p>
@@ -73,7 +73,7 @@ const showExtra = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-list-item {
+.list-item-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -81,19 +81,19 @@ const showExtra = computed(() => {
   color: rgba(0, 0, 0, 0.88);
   max-width: 100%;
   transition: all 0.3s;
-  .m-list-item-main {
+  .list-item-main {
     display: flex;
     align-items: center;
     flex: 1;
-    .m-list-item-meta {
+    .list-item-meta {
       display: flex;
       flex: 1;
       align-items: flex-start;
       max-width: 100%;
-      .m-list-item-avatar {
+      .list-item-avatar {
         margin-right: 16px;
       }
-      .m-list-item-content {
+      .list-item-content {
         flex: 1 0;
         width: 0;
         color: rgba(0, 0, 0, 0.88);

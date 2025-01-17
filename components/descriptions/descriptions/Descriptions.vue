@@ -214,7 +214,7 @@ function setStyle(element: any, styles: any) {
 </script>
 <template>
   <div class="m-descriptions" :class="`descriptions-${size}`">
-    <div class="m-descriptions-header" v-if="showHeader">
+    <div class="descriptions-header" v-if="showHeader">
       <div class="descriptions-title">
         <slot name="title">{{ title }}</slot>
       </div>
@@ -222,7 +222,7 @@ function setStyle(element: any, styles: any) {
         <slot name="extra">{{ extra }}</slot>
       </div>
     </div>
-    <div v-if="!vertical" class="m-descriptions-view" :class="{ 'descriptions-bordered': bordered }">
+    <div v-if="!vertical" class="descriptions-view" :class="{ 'descriptions-bordered': bordered }">
       <table>
         <tbody v-if="!bordered">
           <tr v-for="(items, row) in groupItems" :key="row">
@@ -240,7 +240,7 @@ function setStyle(element: any, styles: any) {
         </tbody>
       </table>
     </div>
-    <div v-else class="m-descriptions-view" :class="{ 'descriptions-bordered': bordered }">
+    <div v-else class="descriptions-view" :class="{ 'descriptions-bordered': bordered }">
       <table>
         <tbody v-if="!bordered">
           <template v-for="(items, row) in groupItems" :key="row">
@@ -275,7 +275,7 @@ function setStyle(element: any, styles: any) {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
-  .m-descriptions-header {
+  .descriptions-header {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
@@ -295,7 +295,7 @@ function setStyle(element: any, styles: any) {
       font-size: 14px;
     }
   }
-  .m-descriptions-view {
+  .descriptions-view {
     width: 100%;
     border-radius: 8px;
     table {
@@ -374,7 +374,7 @@ function setStyle(element: any, styles: any) {
   }
 }
 .descriptions-middle {
-  .m-descriptions-view {
+  .descriptions-view {
     .descriptions-item-td {
       padding-bottom: 12px !important;
     }
@@ -389,7 +389,7 @@ function setStyle(element: any, styles: any) {
   }
 }
 .descriptions-small {
-  .m-descriptions-view {
+  .descriptions-view {
     .descriptions-item-td {
       padding-bottom: 8px !important;
     }
