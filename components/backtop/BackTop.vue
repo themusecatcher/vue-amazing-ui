@@ -150,7 +150,7 @@ function onBackTop() {
     <div
       v-show="backTopShow"
       ref="backtopRef"
-      class="m-backtop-wrap"
+      class="m-backtop"
       :style="[
         backTopStyle,
         `
@@ -186,7 +186,7 @@ function onBackTop() {
         <template v-if="showTooltip" #tooltip>
           <slot name="tooltip">{{ tooltip }}</slot>
         </template>
-        <div class="m-backtop" :class="`backtop-${type} backtop-${shape}`">
+        <div class="backtop-wrap" :class="`backtop-${type} backtop-${shape}`">
           <slot>
             <span class="backtop-icon" :class="{ 'icon-description': showDescription }">
               <slot name="icon">
@@ -242,10 +242,10 @@ function onBackTop() {
   opacity: 0;
   transform: scale(0.5);
 }
-.m-backtop-wrap {
+.m-backtop {
   position: fixed;
   z-index: var(--z-index);
-  .m-backtop {
+  .backtop-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
