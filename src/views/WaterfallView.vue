@@ -50,7 +50,7 @@ onBeforeMount(() => {
       <Col :span="6">
         <Flex vertical>
           backgroundColor:
-          <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
+          <ColorPicker v-model:value="state.backgroundColor" />
         </Flex>
       </Col>
     </Row>

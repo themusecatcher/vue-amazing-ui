@@ -196,9 +196,7 @@ const state = reactive<CarouselProps>({
           <Space gap="small" vertical> showArrow：<Switch v-model="state.showArrow" /> </Space>
         </Col>
         <Col :span="6">
-          <Flex gap="small" vertical>
-            arrowColor：<Input v-model:value="state.arrowColor" placeholder="arrowColor" />
-          </Flex>
+          <Flex gap="small" vertical> arrowColor：<ColorPicker v-model:value="state.arrowColor" /> </Flex>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical> arrowSize：<Slider v-model:value="state.arrowSize" :min="1" /> </Flex>
@@ -211,12 +209,10 @@ const state = reactive<CarouselProps>({
           <Flex gap="small" vertical> dotSize：<Slider v-model:value="state.dotSize" :min="4" :max="64" /> </Flex>
         </Col>
         <Col :span="6">
-          <Flex gap="small" vertical> dotColor：<Input v-model:value="state.dotColor" placeholder="dotColor" /> </Flex>
+          <Flex gap="small" vertical> dotColor：<ColorPicker v-model:value="state.dotColor" /> </Flex>
         </Col>
         <Col :span="6">
-          <Flex gap="small" vertical>
-            dotActiveColor：<Input v-model:value="state.dotActiveColor" placeholder="dotActiveColor" />
-          </Flex>
+          <Flex gap="small" vertical> dotActiveColor：<ColorPicker v-model:value="state.dotActiveColor" /> </Flex>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>

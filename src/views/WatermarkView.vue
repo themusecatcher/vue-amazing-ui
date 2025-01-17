@@ -70,7 +70,7 @@ const layoutOptions = [
     <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
     <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
     <h2 class="mt30 mb10">水印配置器</h2>
-    <h3 class="mb10">通过自定义参数配置预览水印效果。</h3>
+    <h3 class="mb10">通过自定义参数配置预览水印效果</h3>
     <Row :gutter="24">
       <Col :span="18">
         <Watermark v-bind="model">
@@ -95,33 +95,26 @@ const layoutOptions = [
       </Col>
       <Col :span="6">
         <Flex vertical :gap="12">
-          Content:<Input v-model:value="model.content" /> Layout:<Radio
-            :options="layoutOptions"
-            v-model:value="model.layout"
-            button
-          />
-          Color:<Input v-model:value="model.color" /> FontSize:<Slider
-            v-model:value="model.fontSize"
-            :step="1"
-            :min="0"
-            :max="100"
-          />
-          FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" /> zIndex:<Slider
-            v-model:value="model.zIndex"
-            :step="1"
-            :min="0"
-            :max="100"
-          />
-          Rotate:<Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" />
-          Gap:
-          <Flex>
-            <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
-            <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
+          <Flex vertical> Content:<Input v-model:value="model.content" /> </Flex>
+          <Flex vertical> Layout:<Radio :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
+          <Flex vertical> Color:<ColorPicker v-model:value="model.color" /> </Flex>
+          <Flex vertical> FontSize:<Slider v-model:value="model.fontSize" :step="1" :min="0" :max="100" /> </Flex>
+          <Flex vertical>
+            FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
           </Flex>
-          Offset:
-          <Flex>
-            <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
-            <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
+          <Flex vertical> zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> </Flex>
+          <Flex vertical> Rotate:<Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" /> </Flex>
+          <Flex vertical>
+            Gap:
+            <Flex>
+              <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
+              <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
+            </Flex>
+            Offset:
+            <Flex>
+              <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
+              <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
+            </Flex>
           </Flex>
         </Flex>
       </Col>

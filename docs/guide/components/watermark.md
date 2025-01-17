@@ -195,13 +195,16 @@ const fixed = ref(true)
   <Col :span="18">
     <Watermark v-bind="model">
       <p class="paragraph-text">
-        《麦田里的守望者》（英语：The Catcher in the Rye），为美国作家J.D.塞林格于1951年发表的长篇小说。这部有争议的作品原本是面向成年读者的，但迅速因其青春期焦虑和隔绝的主题而在青少年读者中流行。
+        《麦田里的守望者》（英语：The Catcher in the
+        Rye），为美国作家J.D.塞林格于1951年发表的长篇小说。这部有争议的作品原本是面向成年读者的，但迅速因其青春期焦虑和隔绝的主题而在青少年读者中流行。
       </p>
       <p class="paragraph-text">
         该书以主人公霍尔顿·考菲尔德第一人称口吻讲述自己被学校开除学籍后在纽约城游荡将近两昼夜，企图逃出虚伪的成人世界、去寻求纯洁与真理的经历与感受。
       </p>
       <p class="paragraph-text">
-        该书于1951年出版之后，立刻引起巨大的轰动，受到读者──特别是青年人──的热烈的欢迎，被翻译为多国语版。小说每年大约有250,000本售出、总计为6500万本。《时代杂志》将《麦田里的守望者》列在“2005年度百大英语小说（自1923年起）”榜上，现代图书馆及其读者也将其列在20世纪百大英文小说榜上。赞赏者认为本书用青少年的口吻平铺直叙，增加了作品的感染力，传神地描写主角的内心思维，并说出了青少年不满成年世界充满虚伪欺瞒的心声。批评者则认为书中主角离经叛道，逃学、吸烟、喝酒又满嘴粗话，会给年轻读者带来不良影响。当时许多图书馆及学校将之列为禁书，并被列在America library Associations上。但现在这本书却是许多美国学校的指定读物。有的评论家说，它“大大地影响了好几代美国青年”。而且有学者认为，霍尔顿是当代美国文学中最早出现的反英雄形象之一。
+        该书于1951年出版之后，立刻引起巨大的轰动，受到读者──特别是青年人──的热烈的欢迎，被翻译为多国语版。小说每年大约有250,000本售出、总计为6500万本。《时代杂志》将《麦田里的守望者》列在“2005年度百大英语小说（自1923年起）”榜上，现代图书馆及其读者也将其列在20世纪百大英文小说榜上。赞赏者认为本书用青少年的口吻平铺直叙，增加了作品的感染力，传神地描写主角的内心思维，并说出了青少年不满成年世界充满虚伪欺瞒的心声。批评者则认为书中主角离经叛道，逃学、吸烟、喝酒又满嘴粗话，会给年轻读者带来不良影响。当时许多图书馆及学校将之列为禁书，并被列在America
+        library
+        Associations上。但现在这本书却是许多美国学校的指定读物。有的评论家说，它“大大地影响了好几代美国青年”。而且有学者认为，霍尔顿是当代美国文学中最早出现的反英雄形象之一。
       </p>
       <img
         style="max-width: 100%"
@@ -212,33 +215,26 @@ const fixed = ref(true)
   </Col>
   <Col :span="6">
     <Flex vertical :gap="12">
-      Content:<Input v-model:value="model.content" /> Layout:<Radio
-        :options="layoutOptions"
-        v-model:value="model.layout"
-        button
-      />
-      Color:<Input v-model:value="model.color" /> FontSize:<Slider
-        v-model:value="model.fontSize"
-        :step="1"
-        :min="0"
-        :max="100"
-      />
-      FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
-      zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> Rotate:<Slider
-        v-model:value="model.rotate"
-        :step="1"
-        :min="-180"
-        :max="180"
-      />
-      Gap:
-      <Flex>
-        <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
-        <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
+      <Flex vertical> Content:<Input v-model:value="model.content" /> </Flex>
+      <Flex vertical> Layout:<Radio :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
+      <Flex vertical> Color:<ColorPicker v-model:value="model.color" /> </Flex>
+      <Flex vertical> FontSize:<Slider v-model:value="model.fontSize" :step="1" :min="0" :max="100" /> </Flex>
+      <Flex vertical>
+        FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
       </Flex>
-      Offset:
-      <Flex>
-        <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
-        <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
+      <Flex vertical> zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> </Flex>
+      <Flex vertical> Rotate:<Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" /> </Flex>
+      <Flex vertical>
+        Gap:
+        <Flex>
+          <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
+          <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
+        </Flex>
+        Offset:
+        <Flex>
+          <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
+          <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
+        </Flex>
       </Flex>
     </Flex>
   </Col>
@@ -286,13 +282,16 @@ const layoutOptions = [
     <Col :span="18">
       <Watermark v-bind="model">
         <p class="paragraph-text">
-          《麦田里的守望者》（英语：The Catcher in the Rye），为美国作家J.D.塞林格于1951年发表的长篇小说。这部有争议的作品原本是面向成年读者的，但迅速因其青春期焦虑和隔绝的主题而在青少年读者中流行。
+          《麦田里的守望者》（英语：The Catcher in the
+          Rye），为美国作家J.D.塞林格于1951年发表的长篇小说。这部有争议的作品原本是面向成年读者的，但迅速因其青春期焦虑和隔绝的主题而在青少年读者中流行。
         </p>
         <p class="paragraph-text">
           该书以主人公霍尔顿·考菲尔德第一人称口吻讲述自己被学校开除学籍后在纽约城游荡将近两昼夜，企图逃出虚伪的成人世界、去寻求纯洁与真理的经历与感受。
         </p>
         <p class="paragraph-text">
-          该书于1951年出版之后，立刻引起巨大的轰动，受到读者──特别是青年人──的热烈的欢迎，被翻译为多国语版。小说每年大约有250,000本售出、总计为6500万本。《时代杂志》将《麦田里的守望者》列在“2005年度百大英语小说（自1923年起）”榜上，现代图书馆及其读者也将其列在20世纪百大英文小说榜上。赞赏者认为本书用青少年的口吻平铺直叙，增加了作品的感染力，传神地描写主角的内心思维，并说出了青少年不满成年世界充满虚伪欺瞒的心声。批评者则认为书中主角离经叛道，逃学、吸烟、喝酒又满嘴粗话，会给年轻读者带来不良影响。当时许多图书馆及学校将之列为禁书，并被列在America library Associations上。但现在这本书却是许多美国学校的指定读物。有的评论家说，它“大大地影响了好几代美国青年”。而且有学者认为，霍尔顿是当代美国文学中最早出现的反英雄形象之一。
+          该书于1951年出版之后，立刻引起巨大的轰动，受到读者──特别是青年人──的热烈的欢迎，被翻译为多国语版。小说每年大约有250,000本售出、总计为6500万本。《时代杂志》将《麦田里的守望者》列在“2005年度百大英语小说（自1923年起）”榜上，现代图书馆及其读者也将其列在20世纪百大英文小说榜上。赞赏者认为本书用青少年的口吻平铺直叙，增加了作品的感染力，传神地描写主角的内心思维，并说出了青少年不满成年世界充满虚伪欺瞒的心声。批评者则认为书中主角离经叛道，逃学、吸烟、喝酒又满嘴粗话，会给年轻读者带来不良影响。当时许多图书馆及学校将之列为禁书，并被列在America
+          library
+          Associations上。但现在这本书却是许多美国学校的指定读物。有的评论家说，它“大大地影响了好几代美国青年”。而且有学者认为，霍尔顿是当代美国文学中最早出现的反英雄形象之一。
         </p>
         <img
           style="max-width: 100%"
@@ -303,33 +302,26 @@ const layoutOptions = [
     </Col>
     <Col :span="6">
       <Flex vertical :gap="12">
-        Content:<Input v-model:value="model.content" /> Layout:<Radio
-          :options="layoutOptions"
-          v-model:value="model.layout"
-          button
-        />
-        Color:<Input v-model:value="model.color" /> FontSize:<Slider
-          v-model:value="model.fontSize"
-          :step="1"
-          :min="0"
-          :max="100"
-        />
-        FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
-        zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> Rotate:<Slider
-          v-model:value="model.rotate"
-          :step="1"
-          :min="-180"
-          :max="180"
-        />
-        Gap:
-        <Flex>
-          <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
-          <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
+        <Flex vertical> Content:<Input v-model:value="model.content" /> </Flex>
+        <Flex vertical> Layout:<Radio :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
+        <Flex vertical> Color:<ColorPicker v-model:value="model.color" /> </Flex>
+        <Flex vertical> FontSize:<Slider v-model:value="model.fontSize" :step="1" :min="0" :max="100" /> </Flex>
+        <Flex vertical>
+          FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
         </Flex>
-        Offset:
-        <Flex>
-          <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
-          <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
+        <Flex vertical> zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> </Flex>
+        <Flex vertical> Rotate:<Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" /> </Flex>
+        <Flex vertical>
+          Gap:
+          <Flex>
+            <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
+            <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
+          </Flex>
+          Offset:
+          <Flex>
+            <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
+            <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
+          </Flex>
         </Flex>
       </Flex>
     </Col>
