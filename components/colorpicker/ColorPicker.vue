@@ -65,14 +65,14 @@ const displayedHue = ref<number>(0)
 const displayedAlpha = ref<number>(1)
 const displayedSv = ref<[number, number]>([0, 0])
 const upcomingValue = ref<string | undefined>()
-const displayedValue = ref<string | undefined>(props.value)
+const displayedValue = ref<string | undefined>(props.value) // 展示的值
 const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
-const hexValue = ref<string>()
-const inputValueArr = ref<string[]>([])
+const hexValue = ref<string>() // hex 模式下输入框的绑定值
+const inputValueArr = ref<string[]>([]) // 非 hex 模式下多个输入框的绑定值
 const emits = defineEmits(['update:value', 'complete', 'confirm', 'clear'])
-const slotsExist = useSlotsExist(['footer'])
+const slotsFooterExist = useSlotsExist('footer')
 const showFooter = computed(() => {
-  return slotsExist.footer || props.footer
+  return slotsFooterExist.value || props.footer
 })
 const layerHandleStyle = computed(() => {
   const style: CSSProperties = {
@@ -84,13 +84,9 @@ const layerHandleStyle = computed(() => {
   }
   return style
 })
-const alphaRailBackgroundImage = computed(() => {
-  if (!rgbaRef.value) return ''
-  return `linear-gradient(to right, rgba(${rgbaRef.value[0]}, ${rgbaRef.value[1]}, ${rgbaRef.value[2]}, 0) 0%, rgba(${rgbaRef.value[0]}, ${rgbaRef.value[1]}, ${rgbaRef.value[2]}, 1) 100%)`
-})
 const handleColor = computed(() => {
-  if (!rgbaRef.value) return ''
-  return `rgb(${rgbaRef.value[0]}, ${rgbaRef.value[1]}, ${rgbaRef.value[2]})`
+  if (!rgbaComputed.value) return ''
+  return `rgb(${rgbaComputed.value[0]}, ${rgbaComputed.value[1]}, ${rgbaComputed.value[2]})`
 })
 const layerHandleFillStyle = computed(() => {
   const style: CSSProperties = {
@@ -136,6 +132,11 @@ const sliderColorHandleFillStyle = computed(() => {
   }
   return style
 })
+// 不透明度 alpha 轨道条的背景
+const alphaRailBackgroundImage = computed(() => {
+  if (!rgbaComputed.value) return ''
+  return `linear-gradient(to right, rgba(${rgbaComputed.value[0]}, ${rgbaComputed.value[1]}, ${rgbaComputed.value[2]}, 0) 0%, rgba(${rgbaComputed.value[0]}, ${rgbaComputed.value[1]}, ${rgbaComputed.value[2]}, 1) 100%)`
+})
 const sliderAlphaHandleStyle = computed(() => {
   const style: CSSProperties = {
     left: `calc(${displayedAlpha.value * 100}% - ${BORDER_RADIUS})`,
@@ -147,15 +148,16 @@ const sliderAlphaHandleStyle = computed(() => {
 })
 const sliderAlphaHandleFillStyle = computed(() => {
   const style: CSSProperties = {
-    backgroundColor: rgbaRef.value ? toRgbaString(rgbaRef.value) : undefined,
+    backgroundColor: rgbaComputed.value ? toRgbaString(rgbaComputed.value) : undefined,
     borderRadius: BORDER_RADIUS,
     width: HANDLE_SIZE,
     height: HANDLE_SIZE
   }
   return style
 })
+// 颜色预览块的颜色
 const circleColor = computed(() => {
-  return rgbaRef.value && toHexString(rgbaRef.value)
+  return rgbaComputed.value && toHexString(rgbaComputed.value)
 })
 const colorPickerHeight = computed(() => {
   const heightMap = {
@@ -182,7 +184,7 @@ let _h: number, // avoid conflict with render function's
   g: number,
   b: number,
   a: number
-const hsvaRef = computed<HSVA | null>(() => {
+const hsvaComputed = computed<HSVA | null>(() => {
   if (!displayedValue.value) return null
   switch (valueMode.value!) {
     case 'hsv':
@@ -196,7 +198,7 @@ const hsvaRef = computed<HSVA | null>(() => {
       return [...rgb2hsv(r, g, b), a]
   }
 })
-const rgbaRef = computed<RGBA | null>(() => {
+const rgbaComputed = computed<RGBA | null>(() => {
   if (!displayedValue.value) return null
   switch (valueMode.value!) {
     case 'rgb':
@@ -210,7 +212,7 @@ const rgbaRef = computed<RGBA | null>(() => {
       return [...hsl2rgb(_h, s, l), a]
   }
 })
-const hslaRef = computed<HSLA | null>(() => {
+const hslaComputed = computed<HSLA | null>(() => {
   if (!displayedValue.value) return null
   switch (valueMode.value!) {
     case 'hsl':
@@ -228,11 +230,11 @@ const displayedValueArr = computed(() => {
   switch (displayedMode.value) {
     case 'rgb':
     case 'hex':
-      return rgbaRef.value
+      return rgbaComputed.value
     case 'hsv':
-      return hsvaRef.value
+      return hsvaComputed.value
     case 'hsl':
-      return hslaRef.value
+      return hslaComputed.value
   }
 })
 interface ParsedColor {
@@ -258,7 +260,7 @@ watch(
 )
 watch(
   () => [displayedMode.value, displayedValueArr.value],
-  (to) => {
+  () => {
     if (displayedMode.value === 'hex') {
       hexValue.value =
         displayedValueArr.value === null
@@ -285,10 +287,10 @@ watch(
 )
 watchEffect(() => {
   if (upcomingValue.value === undefined || upcomingValue.value !== displayedValue.value) {
-    if (hsvaRef.value) {
-      displayedHue.value = hsvaRef.value[0]
-      displayedAlpha.value = hsvaRef.value[3]
-      displayedSv.value = [hsvaRef.value[1], hsvaRef.value[2]]
+    if (hsvaComputed.value) {
+      displayedHue.value = hsvaComputed.value[0]
+      displayedAlpha.value = hsvaComputed.value[3]
+      displayedSv.value = [hsvaComputed.value[1], hsvaComputed.value[2]]
     }
   }
   upcomingValue.value = undefined
@@ -306,7 +308,7 @@ function onUpdateValue(value: string | undefined, updateSource: 'cursor' | 'inpu
   }
 }
 function handleUpdateSv(s: number, v: number): void {
-  const alpha = hsvaRef.value ? hsvaRef.value[3] : 1
+  const alpha = hsvaComputed.value ? hsvaComputed.value[3] : 1
   displayedSv.value = [s, v]
   switch (displayedMode.value) {
     case 'hsv':
@@ -355,10 +357,10 @@ function handlePalleteMouseUp(): void {
 }
 function handleUpdateHue(hue: number): void {
   displayedHue.value = hue
-  if (!hsvaRef.value) {
+  if (!hsvaComputed.value) {
     return
   }
-  const [, s, v, a] = hsvaRef.value
+  const [, s, v, a] = hsvaComputed.value
   switch (displayedMode.value) {
     case 'hsv':
       onUpdateValue((props.showAlpha ? toHsvaString : toHsvString)([hue, s, v, a]), 'cursor')
@@ -399,19 +401,19 @@ function handleHueSliderMouseUp(): void {
 function handleUpdateAlpha(alpha: number): void {
   switch (displayedMode.value) {
     case 'hsv':
-      ;[_h, s, v] = hsvaRef.value!
+      ;[_h, s, v] = hsvaComputed.value!
       onUpdateValue(toHsvaString([_h, s, v, alpha]), 'cursor')
       break
     case 'rgb':
-      ;[r, g, b] = rgbaRef.value!
+      ;[r, g, b] = rgbaComputed.value!
       onUpdateValue(toRgbaString([r, g, b, alpha]), 'cursor')
       break
     case 'hex':
-      ;[r, g, b] = rgbaRef.value!
+      ;[r, g, b] = rgbaComputed.value!
       onUpdateValue(toHexaString([r, g, b, alpha]), 'cursor')
       break
     case 'hsl':
-      ;[_h, s, l] = hslaRef.value!
+      ;[_h, s, l] = hslaComputed.value!
       onUpdateValue(toHslaString([_h, s, l, alpha]), 'cursor')
       break
   }
@@ -419,7 +421,7 @@ function handleUpdateAlpha(alpha: number): void {
 }
 // alpha slider mouse down
 function handleAlphaSliderMouseDown(e: MouseEvent): void {
-  if (!alphaRailRef.value || !rgbaRef.value) return
+  if (!alphaRailRef.value || !rgbaComputed.value) return
   document.addEventListener('mousemove', handleAlphaSliderMouseMove)
   document.addEventListener('mouseup', handleAlphaSliderMouseUp)
   handleAlphaSliderMouseMove(e)
@@ -781,7 +783,7 @@ function onClear() {
                   <div class="color-picker-slider-image" :style="`background-image: ${alphaRailBackgroundImage}`"></div>
                 </div>
                 <div
-                  v-if="rgbaRef"
+                  v-if="rgbaComputed"
                   :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`"
                 >
                   <div class="color-picker-handle" :style="sliderAlphaHandleStyle">
@@ -860,12 +862,12 @@ function onClear() {
       <div class="color-picker-fill">
         <div class="color-picker-checkboard"></div>
         <div
-          :style="`position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: ${hslaRef ? toHslaString(hslaRef) : ''};`"
+          :style="`position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: ${hslaComputed ? toHslaString(hslaComputed) : ''};`"
         ></div>
         <div
-          v-if="displayedValue && hslaRef"
+          v-if="displayedValue && hslaComputed"
           class="color-picker-value"
-          :style="{ color: hslaRef[2] > 50 || hslaRef[3] < 0.5 ? 'black' : 'white' }"
+          :style="{ color: hslaComputed[2] > 50 || hslaComputed[3] < 0.5 ? 'black' : 'white' }"
         >
           <slot name="label" :color="displayedValue">{{ label ? label(displayedValue) : displayedValue }}</slot>
         </div>
