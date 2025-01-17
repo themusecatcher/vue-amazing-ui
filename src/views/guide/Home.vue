@@ -113,7 +113,7 @@ import {
 ]
 const activeKey = ref(0)
 const componentsTotal = computed(() => {
-  return (routes[0].children as Array<any>).length - 1
+  return (routes[0].children as Array<any>).length - 3
 })
 function onOpenWindow() {
   // 打开一个新的窗口，并导航到指定的URL
