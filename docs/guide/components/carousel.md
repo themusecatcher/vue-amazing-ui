@@ -747,7 +747,7 @@ function getCurrentIndex () {
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        arrowColor：<Input v-model:value="state.arrowColor" placeholder="arrowColor" />
+        arrowColor：<ColorPicker v-model:value="state.arrowColor" />
       </Flex>
     </Col>
     <Col :span="6">
@@ -764,12 +764,12 @@ function getCurrentIndex () {
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        dotColor：<Input v-model:value="state.dotColor" placeholder="dotColor" />
+        dotColor：<ColorPicker v-model:value="state.dotColor" />
       </Flex>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        dotActiveColor：<Input v-model:value="state.dotActiveColor" placeholder="dotActiveColor" />
+        dotActiveColor：<ColorPicker v-model:value="state.dotActiveColor" />
       </Flex>
     </Col>
     <Col :span="6">
@@ -876,7 +876,7 @@ const state = reactive<CarouselProps>({
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          arrowColor：<Input v-model:value="state.arrowColor" placeholder="arrowColor" />
+          arrowColor：<ColorPicker v-model:value="state.arrowColor" />
         </Flex>
       </Col>
       <Col :span="6">
@@ -893,12 +893,12 @@ const state = reactive<CarouselProps>({
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          dotColor：<Input v-model:value="state.dotColor" placeholder="dotColor" />
+          dotColor：<ColorPicker v-model:value="state.dotColor" />
         </Flex>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          dotActiveColor：<Input v-model:value="state.dotActiveColor" placeholder="dotActiveColor" />
+          dotActiveColor：<ColorPicker v-model:value="state.dotActiveColor" />
         </Flex>
       </Col>
       <Col :span="6">

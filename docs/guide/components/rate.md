@@ -369,7 +369,7 @@ watchEffect(() => {
     <Flex gap="small" vertical> size:<Slider v-model:value="state.size" :min="10" :max="100" /> </Flex>
   </Col>
   <Col :span="6">
-    <Flex gap="small" vertical> color:<Input v-model:value="state.color" placeholder="color" /> </Flex>
+    <Flex gap="small" vertical> color:<ColorPicker v-model:value="state.color" /> </Flex>
   </Col>
   <Col :span="6">
     <Flex gap="small" vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
@@ -449,7 +449,7 @@ const state = reactive({
       <Flex gap="small" vertical> size:<Slider v-model:value="state.size" :min="10" :max="100" /> </Flex>
     </Col>
     <Col :span="6">
-      <Flex gap="small" vertical> color:<Input v-model:value="state.color" placeholder="color" /> </Flex>
+      <Flex gap="small" vertical> color:<ColorPicker v-model:value="state.color" /> </Flex>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>

@@ -88,7 +88,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
   <Col :span="6">
     <Flex vertical>
       backgroundColor:
-      <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
+      <ColorPicker v-model:value="state.backgroundColor" />
     </Flex>
   </Col>
 </Row>
@@ -150,7 +150,7 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
     <Col :span="6">
       <Flex vertical>
         backgroundColor:
-        <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
+        <ColorPicker v-model:value="state.backgroundColor" />
       </Flex>
     </Col>
   </Row>

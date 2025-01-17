@@ -608,21 +608,21 @@ function onClick(item: TextScrollItem) {
       </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical>
+      <Flex gap="small" vertical>
         color:
-        <Input v-model:value="state.color" placeholder="color" />
-      </Space>
+        <ColorPicker v-model:value="state.color" />
+      </Flex>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
         backgroundColor:
-        <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
+        <ColorPicker v-model:value="state.backgroundColor" />
       </Flex>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
         hrefHoverColor:
-        <Input v-model:value="state.hrefHoverColor" placeholder="hrefHoverColor" />
+        <ColorPicker v-model:value="state.hrefHoverColor" />
       </Flex>
     </Col>
     <Col :span="6">
@@ -764,21 +764,21 @@ const state = reactive({
         </Flex>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical>
+        <Flex gap="small" vertical>
           color:
-          <Input v-model:value="state.color" placeholder="color" />
-        </Space>
+          <ColorPicker v-model:value="state.color" />
+        </Flex>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
           backgroundColor:
-          <Input v-model:value="state.backgroundColor" placeholder="backgroundColor" />
+          <ColorPicker v-model:value="state.backgroundColor" />
         </Flex>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
           hrefHoverColor:
-          <Input v-model:value="state.hrefHoverColor" placeholder="hrefHoverColor" />
+          <ColorPicker v-model:value="state.hrefHoverColor" />
         </Flex>
       </Col>
       <Col :span="6">
