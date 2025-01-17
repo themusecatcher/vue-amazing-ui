@@ -1066,27 +1066,38 @@ function onClear() {
   font-size: 14px;
   width: 100%;
   height: var(--color-picker-height);
-  border: 1px solid #d9d9d9;
   border-radius: 4px;
-  cursor: pointer;
   outline: none;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   &:not(.color-picker-disabled):hover {
-    border-color: #4096ff;
+    &::after {
+      border-color: #4096ff;
+    }
   }
   &:not(.color-picker-disabled):focus {
-    border-color: #4096ff;
-    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    &::after {
+      border-color: #4096ff;
+      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    }
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .color-picker-fill {
     position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
-    left: 3px;
-    right: 3px;
-    top: 3px;
-    bottom: 3px;
+    left: 4px;
+    right: 4px;
+    top: 4px;
+    bottom: 4px;
     border-radius: 4px;
     .color-picker-checkboard {
       background: white;
