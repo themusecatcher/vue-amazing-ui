@@ -10,7 +10,7 @@ import Components from 'unplugin-vue-components/vite'
 // ant-desing naive-ui 按需引入
 import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 // vue-amazing-ui 按需引入
-// import { VueAmazingUIResolver } from 'vue-amazing-ui'       
+// import { VueAmazingUIResolver } from 'vue-amazing-ui'
 // 自动引入组件样式
 // import { createStyleImportPlugin } from 'vite-plugin-style-import'
 // import { VueAmazingUIStyleResolve } from 'vue-amazing-ui'
