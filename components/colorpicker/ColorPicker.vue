@@ -1130,6 +1130,7 @@ function onClear() {
 .color-picker-small {
   padding: 2px;
   .color-picker-fill {
+    height: 18px;
     .color-picker-value {
       line-height: 1.2857142857142858;
     }
@@ -1137,10 +1138,14 @@ function onClear() {
 }
 .color-picker-middle {
   padding: 4px;
+  .color-picker-fill {
+    height: 22px;
+  }
 }
 .color-picker-large {
   padding: 6px;
   .color-picker-fill {
+    height: 26px;
     .color-picker-value {
       font-size: 16px;
       line-height: 1.625;
