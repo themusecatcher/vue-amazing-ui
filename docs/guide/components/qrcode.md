@@ -13,6 +13,8 @@ import { h, ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const size = ref(160)
 const value = ref('hello world')
+const color = ref('#FF6900')
+const bgColor = ref('#00000030')
 const decline = () => {
   size.value = size.value - 10
   if (size.value < 48) {
@@ -140,15 +142,13 @@ const increase = () => {
 <br/>
 
 <Space>
-  <QRCode
-    value="https://blog.csdn.net/Dandrose"
-    color="#52c41a"
-  />
-  <QRCode
-    value="https://blog.csdn.net/Dandrose"
-    color="#1677FF"
-    bg-color="#f5f5f5"
-  />
+  <QRCode value="https://blog.csdn.net/Dandrose" color="#52c41a" />
+  <QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" bg-color="#f5f5f5" />
+  <QRCode value="https://blog.csdn.net/Dandrose" :color="color" :bg-color="bgColor" />
+  <Space vertical :width="164">
+    <ColorPicker v-model:value="color" :modes="['hex']" />
+    <ColorPicker v-model:value="bgColor" :modes="['hex']" />
+  </Space>
 </Space>
 
 ::: details Show Code
@@ -156,15 +156,13 @@ const increase = () => {
 ```vue
 <template>
   <Space>
-    <QRCode
-      value="https://blog.csdn.net/Dandrose"
-      color="#52c41a"
-    />
-    <QRCode
-      value="https://blog.csdn.net/Dandrose"
-      color="#1677FF"
-      bg-color="#f5f5f5"
-    />
+    <QRCode value="https://blog.csdn.net/Dandrose" color="#52c41a" />
+    <QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" bg-color="#f5f5f5" />
+    <QRCode value="https://blog.csdn.net/Dandrose" :color="color" :bg-color="bgColor" />
+    <Space vertical :width="164">
+      <ColorPicker v-model:value="color" :modes="['hex']" />
+      <ColorPicker v-model:value="bgColor" :modes="['hex']" />
+    </Space>
   </Space>
 </template>
 ```
