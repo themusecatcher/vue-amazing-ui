@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { UserOutlined, TeamOutlined, SketchOutlined } from '@ant-design/icons-vue'
-const color = ref('#1677ff')
+const color = ref('#87d068')
 </script>
 <template>
   <div>
@@ -61,11 +61,6 @@ const color = ref('#1677ff')
         </template>
       </Avatar>
       <Avatar color="#ff6900" shape="square">
-        <template #icon>
-          <UserOutlined />
-        </template>
-      </Avatar>
-      <Avatar color="#87d068">
         <template #icon>
           <UserOutlined />
         </template>
