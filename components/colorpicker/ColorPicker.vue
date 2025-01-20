@@ -856,7 +856,7 @@ function onClear() {
     <div
       tabindex="1"
       class="color-picker-display"
-      :class="{ 'color-picker-disabled': disabled }"
+      :class="[`color-picker-${size}`, { 'color-picker-disabled': disabled }]"
       :style="`--color-picker-height: ${colorPickerHeight};`"
     >
       <div class="color-picker-fill">
@@ -1061,56 +1061,42 @@ function onClear() {
   padding: 8px 12px;
 }
 .color-picker-display {
-  position: relative;
   display: inline-block;
-  font-size: 14px;
   width: 100%;
   height: var(--color-picker-height);
   border-radius: 4px;
   outline: none;
+  cursor: pointer;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   &:not(.color-picker-disabled):hover {
-    &::after {
-      border-color: #4096ff;
-    }
+    border-color: #4096ff;
   }
   &:not(.color-picker-disabled):focus {
-    &::after {
-      border-color: #4096ff;
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
-    }
-  }
-  &::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-color: #4096ff;
+    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
   }
   .color-picker-fill {
-    position: absolute;
+    position: relative;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    left: 4px;
-    right: 4px;
-    top: 4px;
-    bottom: 4px;
-    border-radius: 4px;
     .color-picker-checkboard {
+      width: 100%;
+      height: 100%;
+      position: relative;
       background: white;
       position: absolute;
       left: 0;
       right: 0;
       top: 0;
       bottom: 0;
-      border-radius: 4px;
       &::after {
         background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
           linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
-        --color-picker-block-size: calc((var(--color-picker-height) - 8px) / 3);
+        --color-picker-block-size: calc((var(--color-picker-height) - 10px) / 3);
         background-size: calc(var(--color-picker-block-size) * 2) calc(var(--color-picker-block-size) * 2);
         background-position:
           0 0,
@@ -1124,12 +1110,33 @@ function onClear() {
         right: 0;
         top: 0;
         bottom: 0;
-        border-radius: inherit;
       }
     }
     .color-picker-value {
       white-space: nowrap;
       position: relative;
+      font-size: 14px;
+      line-height: 1.5714285714285714;
+    }
+  }
+}
+.color-picker-small {
+  padding: 2px;
+  .color-picker-fill {
+    .color-picker-value {
+      line-height: 1.2857142857142858;
+    }
+  }
+}
+.color-picker-middle {
+  padding: 4px;
+}
+.color-picker-large {
+  padding: 6px;
+  .color-picker-fill {
+    .color-picker-value {
+      font-size: 16px;
+      line-height: 1.625;
     }
   }
 }
