@@ -446,3 +446,49 @@ warning | 警告通知提醒 | (data: [Notification](#notification-type)) => voi
 名称 | 说明 | 类型
 :-- | :-- | :--
 close | 通知提醒关闭时的回调 | () => void
+
+## 全局挂载使用
+
+- 全局挂载
+
+::: tip App.vue
+
+```vue
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+const notification = ref()
+onMounted(() => {
+  window['$notification'] = notification.value
+})
+onBeforeUnmount(() => {
+  delete window['$notification']
+})
+</script>
+<template>
+  <RouterView />
+  <Notification ref="notification" />
+</template>
+```
+
+:::
+
+- 使用
+
+::: tip XXX.vue
+
+```vue
+<script setup lang="ts">
+const $notification = window['$notification']
+function onClick() {
+  $notification.open({
+    title: 'Notification Title',
+    description: 'This is a normal notification'
+  })
+}
+</script>
+<template>
+  <Button @click="onClick">按钮</Button>
+</template>
+```
+
+:::

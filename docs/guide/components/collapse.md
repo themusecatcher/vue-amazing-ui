@@ -980,9 +980,9 @@ copiedText | 已复制按钮文本 | string | 'Copied'
 :-- | :-- | :-- | :--
 key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 (`0,1,2...`) 绑定 | string &#124; number | undefined
 disabled? | 是否禁用展开收起 | boolean | undefined
-header? | 面板标题 | string &#124; v-slot:header="{ item, header, key, active }" | undefined
+header? | 面板标题 | string &#124; slot | undefined
 headerStyle? | 设置面板标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-content? | 面板内容 | string &#124; v-slot:content="{ item, content, key, active }" | undefined
+content? | 面板内容 | string &#124; slot | undefined
 contentStyle? | 设置面板内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 collapseStyle? | 设置面板容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 arrow? | 自定义箭头切换图标 | VNode | undefined
