@@ -6,7 +6,7 @@
 
 ## 2.1.2 <Tag color="volcano" size="small">2025-01-20</Tag>
 
-- 新增 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件
 - 优化并更新 [监听插槽存在 useSlotsExist](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/slots-exist.html) 工具函数
 - 组件库及文档代码优化
 
