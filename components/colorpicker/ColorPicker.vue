@@ -167,6 +167,14 @@ const colorPickerHeight = computed(() => {
   }
   return `${heightMap[props.size]}px`
 })
+const colorPickerBlockSize = computed(() => {
+  const gapMap = {
+    small: 6,
+    middle: 10,
+    large: 14
+  }
+  return `calc((${colorPickerHeight.value} - ${gapMap[props.size]}px) / 3)`
+})
 const valueMode = computed(() => {
   return getModeFromValue(displayedValue.value)
 })
@@ -857,7 +865,7 @@ function onClear() {
       tabindex="1"
       class="color-picker-display"
       :class="[`color-picker-${size}`, { 'color-picker-disabled': disabled }]"
-      :style="`--color-picker-height: ${colorPickerHeight};`"
+      :style="`--color-picker-height: ${colorPickerHeight}; --color-picker-block-size: ${colorPickerBlockSize};`"
     >
       <div class="color-picker-fill">
         <div class="color-picker-checkboard"></div>
@@ -1096,7 +1104,6 @@ function onClear() {
       &::after {
         background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
           linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
-        --color-picker-block-size: calc((var(--color-picker-height) - 10px) / 3);
         background-size: calc(var(--color-picker-block-size) * 2) calc(var(--color-picker-block-size) * 2);
         background-position:
           0 0,
