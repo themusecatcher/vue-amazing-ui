@@ -2,7 +2,7 @@
 
 <GlobalElement hide-sponsor />
 
-`Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。其中所有开发工作均由作者一人完成，开发迭代过程实属不易...为了组件库的健康可持续发展，非常期望能获得您的支持与赞助。
+`Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。组件库及文档所有工作均由作者一人完成，开发迭代过程实属不易...为了组件库的健康可持续发展，非常期望能获得您的支持与赞助。
 
 <script setup lang="ts">
 import { withBase } from 'vitepress'
