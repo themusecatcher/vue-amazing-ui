@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.1.2 <Tag color="volcano" size="small">2025-01-20</Tag>
+
+- 优化并更新 [监听插槽存在 useSlotsExist](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/slots-exist.html) 工具函数
+- 组件库及文档代码优化
+
 ## 2.1.1 <Tag color="volcano" size="small">2025-01-17</Tag>
 
 - 组件库及文档代码优化

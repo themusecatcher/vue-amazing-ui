@@ -15,31 +15,29 @@
  * @returns 如果是单个插槽名称，则返回一个计算属性，表示该插槽是否存在
  *          如果是插槽名称数组，则返回一个 reactive 对象，其中的每个属性对应该插槽是否存在
  */
-import { useSlots, reactive, computed } from 'vue'
+import { useSlots, reactive, computed, Comment, Text } from 'vue'
+import type { VNode } from 'vue'
 export function useSlotsExist(slotsName: string | string[] = 'default') {
   const slots = useSlots() // 获取当前组件的所有插槽
   // 检查特定名称的插槽是否存在且不为空
   const checkSlotsExist = (slotName: string): boolean => {
     const slotsContent = slots[slotName]?.()
-    const checkExist = (slotContent: any) => {
-      if (slotContent.children === null) {
-        if (slotContent.type === 'img' || typeof slotContent.type !== 'string') {
-          return true
-        }
-      } else if (typeof slotContent.children === 'string') {
-        // 排除 v-if="false" 的插槽内容
-        if (slotContent.children === 'v-if') {
-          return false
-        }
+    const checkExist = (slotContent: VNode) => {
+      if (slotContent.type === Comment) {
+        return false
+      }
+      if (Array.isArray(slotContent.children) && !slotContent.children.length) {
+        return false
+      }
+      if (slotContent.type !== Text) {
+        return true
+      }
+      if (typeof slotContent.children === 'string') {
         return slotContent.children.trim() !== ''
-      } else if (Array.isArray(slotContent.children)) {
-        return Boolean(slotContent.children.length)
-      } else {
-        return Boolean(slotContent.children)
       }
     }
     if (slotsContent && slotsContent?.length) {
-      const result = slotsContent.some((slotContent) => {
+      const result = slotsContent.some((slotContent: VNode) => {
         return checkExist(slotContent)
       })
       return result
@@ -62,7 +60,6 @@ export function useSlotsExist(slotsName: string | string[] = 'default') {
 :::
 
 ## 基本使用
-
 
 ```vue
 <script setup lang="ts">

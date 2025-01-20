@@ -317,9 +317,11 @@ import {
   onBeforeUnmount,
   onUnmounted,
   useSlots,
-  reactive
+  reactive,
+  Text,
+  Comment
 } from 'vue'
-import type { Ref } from 'vue'
+import type { Ref, VNode } from 'vue'
 /**
  * 用于判断组件是否已挂载的自定义钩子
  *
@@ -690,25 +692,22 @@ export function useSlotsExist(slotsName: string | string[] = 'default') {
   // 检查特定名称的插槽是否存在且不为空
   const checkSlotsExist = (slotName: string): boolean => {
     const slotsContent = slots[slotName]?.()
-    const checkExist = (slotContent: any) => {
-      if (slotContent.children === null) {
-        if (slotContent.type === 'img' || typeof slotContent.type !== 'string') {
-          return true
-        }
-      } else if (typeof slotContent.children === 'string') {
-        // 排除 v-if="false" 的插槽内容
-        if (slotContent.children === 'v-if') {
-          return false
-        }
+    const checkExist = (slotContent: VNode) => {
+      if (slotContent.type === Comment) {
+        return false
+      }
+      if (Array.isArray(slotContent.children) && !slotContent.children.length) {
+        return false
+      }
+      if (slotContent.type !== Text) {
+        return true
+      }
+      if (typeof slotContent.children === 'string') {
         return slotContent.children.trim() !== ''
-      } else if (Array.isArray(slotContent.children)) {
-        return Boolean(slotContent.children.length)
-      } else {
-        return Boolean(slotContent.children)
       }
     }
     if (slotsContent && slotsContent?.length) {
-      const result = slotsContent.some((slotContent) => {
+      const result = slotsContent.some((slotContent: VNode) => {
         return checkExist(slotContent)
       })
       return result
