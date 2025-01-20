@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { h } from 'vue'
+import { ref, h } from 'vue'
 import { UserOutlined, TeamOutlined, SketchOutlined } from '@ant-design/icons-vue'
+const color = ref('#1677ff')
 </script>
 <template>
   <div>
@@ -69,6 +70,12 @@ import { UserOutlined, TeamOutlined, SketchOutlined } from '@ant-design/icons-vu
           <UserOutlined />
         </template>
       </Avatar>
+      <Avatar :color="color">
+        <template #icon>
+          <UserOutlined />
+        </template>
+      </Avatar>
+      <ColorPicker style="width: 200px" v-model:value="color" />
     </Space>
     <h2 class="mt30 mb10">自定义图标类型</h2>
     <Space align="center">

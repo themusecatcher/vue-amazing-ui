@@ -67,7 +67,7 @@ function handleClear() {
 
 ## 基本使用
 
-<Space :width="240">
+<Space :width="230">
   <ColorPicker v-model:value="colorValue" />
 </Space>
 
@@ -82,7 +82,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker v-model:value="colorValue" />
   </Space>
 </template>
@@ -92,7 +92,7 @@ watchEffect(() => {
 
 ## 自定义展示内容
 
-<Space :width="240">
+<Space :width="230">
   <ColorPicker :label="labelFormat"/>
   <ColorPicker>
     <template #label="{ color }">
@@ -110,7 +110,7 @@ function labelFormat(color: string) {
 }
 </script>
 <template>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker :label="labelFormat"/>
     <ColorPicker>
       <template #label="{ color }">
@@ -125,7 +125,7 @@ function labelFormat(color: string) {
 
 ## 自定义面板样式
 
-<Space :width="240">
+<Space :width="230">
   <ColorPicker
     :tooltip-style="{
       width: '280px',
@@ -139,7 +139,7 @@ function labelFormat(color: string) {
 
 ```vue
 <template>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker
       :tooltip-style="{
         width: '280px',
@@ -161,7 +161,7 @@ function labelFormat(color: string) {
 
 <Space vertical>
   <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker :show-alpha="showAlpha" />
   </Space>
 </Space>
@@ -176,7 +176,7 @@ const showAlpha = ref(false)
 <template>
   <Space vertical>
     <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
-    <Space :width="240">
+    <Space :width="230">
       <ColorPicker :show-alpha="showAlpha" />
     </Space>
   </Space>
@@ -192,7 +192,7 @@ const showAlpha = ref(false)
 
 <Space vertical>
   <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker :show-preview="showPreview" />
   </Space>
 </Space>
@@ -207,7 +207,7 @@ const showPreview = ref(true)
 <template>
   <Space vertical>
     <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
-    <Space :width="240">
+    <Space :width="230">
       <ColorPicker :show-preview="showPreview" />
     </Space>
   </Space>
@@ -218,7 +218,7 @@ const showPreview = ref(true)
 
 ## 尺寸
 
-<Space :width="240">
+<Space :width="230">
   <ColorPicker size="small" />
   <ColorPicker />
   <ColorPicker size="large" />
@@ -228,7 +228,7 @@ const showPreview = ref(true)
 
 ```vue
 <template>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker size="small" />
     <ColorPicker />
     <ColorPicker size="large" />
@@ -240,7 +240,7 @@ const showPreview = ref(true)
 
 ## 禁用
 
-<Space :width="240">
+<Space :width="230">
   <ColorPicker disabled />
 </Space>
 
@@ -248,7 +248,7 @@ const showPreview = ref(true)
 
 ```vue
 <template>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker disabled />
   </Space>
 </template>
@@ -264,7 +264,7 @@ const showPreview = ref(true)
 
 <Space vertical>
   <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker :modes="modes" />
   </Space>
 </Space>
@@ -298,7 +298,7 @@ const modes = ref(['rgb'])
 <template>
   <Space vertical>
     <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
-    <Space :width="240">
+    <Space :width="230">
       <ColorPicker :modes="modes" />
     </Space>
   </Space>
@@ -309,7 +309,7 @@ const modes = ref(['rgb'])
 
 ## 预设色板
 
-<Space :width="240">
+<Space :width="230">
   <ColorPicker
     :swatches="[
       '#FFFFFF',
@@ -328,7 +328,7 @@ const modes = ref(['rgb'])
 
 ```vue
 <template>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker
       :swatches="[
         '#FFFFFF',
@@ -355,7 +355,7 @@ const modes = ref(['rgb'])
 
 <Space vertical>
   <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
   </Space>
 </Space>
@@ -390,7 +390,7 @@ function handleClear() {
 <template>
   <Space vertical>
     <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
-    <Space :width="240">
+    <Space :width="230">
       <ColorPicker :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
     </Space>
   </Space>
@@ -401,7 +401,7 @@ function handleClear() {
 
 ## 额外页脚
 
-<Space :width="240">
+<Space :width="230">
   <ColorPicker>
     <template #footer> extra footer </template>
   </ColorPicker>
@@ -411,7 +411,7 @@ function handleClear() {
 
 ```vue
 <template>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker>
       <template #footer> extra footer </template>
     </ColorPicker>
@@ -428,7 +428,7 @@ function handleClear() {
 <br/>
 
 <Space>
-  <Space :width="240">
+  <Space :width="230">
     <ColorPicker v-model:show="show" />
   </Space>
   <Button type="primary" @click="show = true">显示</Button>
@@ -447,7 +447,7 @@ watchEffect(() => {
 </script>
 <template>
   <Space>
-    <Space :width="240">
+    <Space :width="230">
       <ColorPicker v-model:show="show" />
     </Space>
     <Button type="primary" @click="show = true">显示</Button>
