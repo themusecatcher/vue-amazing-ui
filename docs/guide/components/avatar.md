@@ -5,8 +5,9 @@
 *用来代表用户或事物，支持图片、图标或字符展示*
 
 <script setup lang="ts">
-import { h } from 'vue'
+import { ref, h } from 'vue'
 import { UserOutlined, TeamOutlined, SketchOutlined } from '@ant-design/icons-vue'
+const color = ref('#87d068')
 </script>
 
 ## 基本使用
@@ -133,18 +134,21 @@ import { UserOutlined } from '@ant-design/icons-vue'
       <UserOutlined />
     </template>
   </Avatar>
-  <Avatar color="#87d068">
+  <Avatar :color="color">
     <template #icon>
       <UserOutlined />
     </template>
   </Avatar>
+  <ColorPicker style="width: 200px" v-model:value="color" />
 </Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
+const color = ref('#87d068')
 </script>
 <template>
   <Space>
@@ -158,11 +162,12 @@ import { UserOutlined } from '@ant-design/icons-vue'
         <UserOutlined />
       </template>
     </Avatar>
-    <Avatar color="#87d068">
+    <Avatar :color="color">
       <template #icon>
         <UserOutlined />
       </template>
     </Avatar>
+    <ColorPicker style="width: 200px" v-model:value="color" />
   </Space>
 </template>
 ```
