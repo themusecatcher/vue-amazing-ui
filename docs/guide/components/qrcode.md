@@ -154,6 +154,11 @@ const increase = () => {
 ::: details Show Code
 
 ```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+const color = ref('#FF6900')
+const bgColor = ref('#00000030')
+</script>
 <template>
   <Space>
     <QRCode value="https://blog.csdn.net/Dandrose" color="#52c41a" />
