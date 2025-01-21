@@ -1135,7 +1135,7 @@ function onClear() {
         white-space: nowrap;
         position: relative;
         font-size: 14px;
-        line-height: 1.5714285714285714;
+        line-height: 1.7142857142857142;
       }
     }
   }
@@ -1162,11 +1162,10 @@ function onClear() {
       bottom: 5px;
       .color-picker-value {
         font-size: 16px;
-        line-height: 1.625;
+        line-height: 1.875;
       }
     }
   }
-  
 }
 .color-picker-disabled {
   cursor: not-allowed;
