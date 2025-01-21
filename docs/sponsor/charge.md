@@ -35,11 +35,17 @@ const QRCodes = [
 ## Sponsor
 
 <TextScroll
+  v-if="!isMobile"
   :items="sponsorItem"
   single
   :gap="12"
   :item-style="{ fontSize: '18px', fontWeight: 500, color: 'rgba(0, 0, 0, 0.88)' }"
 />
+<Alert v-else style="background-color: #fff; box-shadow: 0 0 5px #d3d3d3;">
+  <p style="font-size: 18px; font-weight: 500; color: rgba(0, 0, 0, 0.88);">
+    {{ sponsorItem.title }}
+  </p>
+</Alert>
 
 <br/>
 

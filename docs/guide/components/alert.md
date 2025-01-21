@@ -619,7 +619,7 @@ actions | 自定义操作项 | slot | undefined
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-default | 警告提示内容 | v-slot:default
+message | 警告提示内容 | v-slot:default
 description | 警告提示的辅助性文字介绍 | v-slot:description
 closeText | 自定义关闭按钮 | v-slot:closeText
 icon | 自定义图标 | v-slot:icon
