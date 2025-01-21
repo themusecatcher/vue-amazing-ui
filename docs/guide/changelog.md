@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.1.3 <Tag color="volcano" size="small">2025-01-21</Tag>
+
+- 优化并更新 [分段控制器 Segmented](https://themusecatcher.github.io/vue-amazing-ui/guide/components/segmented.html) 组件，优化选项切换过渡效果
+- 组件库及文档代码优化
+
 ## 2.1.2 <Tag color="volcano" size="small">2025-01-20</Tag>
 
 - 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件
@@ -499,8 +504,7 @@
 - 新增 穿梭框 Transfer 组件
 <!-- - 时间轴 Timeline 组件，新增水平时间轴
 - 新增 时间选择器 TimePicker 组件
-- 重构级联选择 Cascader 组件
-- 分段控制器 Segmented 组件，选项切换效果优化 -->
+- 重构级联选择 Cascader 组件 -->
 
 <style lang="less" scoped>
 .m-tag {

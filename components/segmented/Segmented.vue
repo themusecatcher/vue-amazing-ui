@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, computed, watch, nextTick } from 'vue'
+import type { CSSProperties } from 'vue'
 export interface Option {
   label?: string // 选项名
   value: string | number // 选项值
@@ -19,9 +21,59 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   value: undefined
 })
+const segmentedGroupRef = ref()
+const segmentedItemRef = ref()
+const selectedValue = ref<string | number>() // 当前选中的值
+const selectedWallWidth = ref<number>(0) // selectedWall 的宽度
+const selectedWallOffsetLeft = ref<number>(0) // selectedWall 的偏移量
 const emits = defineEmits(['update:value', 'change'])
+const selectedWallStyle = computed(() => {
+  const borderRadiusMap = {
+    small: '2px',
+    middle: '4px',
+    large: '8px'
+  }
+  const style: CSSProperties = {
+    position: 'absolute',
+    top: 0,
+    left: `${selectedWallOffsetLeft.value}px`,
+    backgroundColor: '#fff',
+    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02)',
+    width: `${selectedWallWidth.value}px`,
+    height: '100%',
+    borderRadius: borderRadiusMap[props.size],
+    pointerEvents: 'none',
+    transition: 'all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1)'
+  }
+  return style
+})
+watch(
+  () => props.value,
+  async (to) => {
+    if (to !== selectedValue.value) {
+      selectedValue.value = to
+      await nextTick()
+      getSelectedWallState()
+    }
+  },
+  {
+    immediate: true
+  }
+)
+function getSelectedWallState() {
+  const selectedIndex = props.options.findIndex(
+    (option: string | number | Option) => getOptionValue(option) === selectedValue.value
+  )
+  const selectedTarget = segmentedItemRef.value?.[selectedIndex]
+  const { width, left } = selectedTarget.getBoundingClientRect()
+  const { left: groupLeft } = segmentedGroupRef.value.getBoundingClientRect()
+  selectedWallWidth.value = width
+  selectedWallOffsetLeft.value = left - groupLeft
+}
 function onSelected(value: string | number) {
-  if (value !== props.value) {
+  if (value !== selectedValue.value) {
+    selectedValue.value = value
+    getSelectedWallState()
     emits('update:value', value)
     emits('change', value)
   }
@@ -54,11 +106,12 @@ function getOptionLabel(option: string | number | Option) {
       'segmented-block': block
     }"
   >
-    <div class="segmented-group">
+    <div ref="segmentedGroupRef" class="segmented-group">
       <div
+        ref="segmentedItemRef"
         class="segmented-item"
         :class="{
-          'segmented-item-selected': value === getOptionValue(option),
+          'segmented-item-selected': selectedValue === getOptionValue(option),
           'segmented-item-disabled': disabled || getOptionDisabled(option),
           'segmented-item-block': block
         }"
@@ -69,7 +122,7 @@ function getOptionLabel(option: string | number | Option) {
         <input
           type="radio"
           class="segmented-item-input"
-          :checked="value === getOptionValue(option)"
+          :checked="selectedValue === getOptionValue(option)"
           :disabled="disabled || getOptionDisabled(option)"
         />
         <div
@@ -87,6 +140,7 @@ function getOptionLabel(option: string | number | Option) {
           </slot>
         </div>
       </div>
+      <div :style="selectedWallStyle"></div>
     </div>
   </div>
 </template>
@@ -108,11 +162,10 @@ function getOptionLabel(option: string | number | Option) {
     width: 100%;
     .segmented-item {
       position: relative;
+      z-index: 1;
       text-align: center;
       cursor: pointer;
-      transition:
-        color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1),
-        background-color 0.2s;
+      transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
       border-radius: 4px;
       &:hover:not(.segmented-item-selected):not(.segmented-item-disabled) {
         color: rgba(0, 0, 0, 0.88);
@@ -156,11 +209,6 @@ function getOptionLabel(option: string | number | Option) {
       }
     }
     .segmented-item-selected {
-      background-color: #ffffff;
-      box-shadow:
-        0 1px 2px 0 rgba(0, 0, 0, 0.03),
-        0 1px 6px -1px rgba(0, 0, 0, 0.02),
-        0 2px 4px 0 rgba(0, 0, 0, 0.02);
       color: rgba(0, 0, 0, 0.88);
     }
     .segmented-item-disabled {
