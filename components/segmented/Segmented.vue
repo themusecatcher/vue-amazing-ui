@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
+import { useResizeObserver } from 'components/utils'
 export interface Option {
   label?: string // 选项名
   value: string | number // 选项值
@@ -60,15 +61,20 @@ watch(
     immediate: true
   }
 )
+useResizeObserver(segmentedGroupRef, () => {
+  getSelectedWallState()
+})
 function getSelectedWallState() {
   const selectedIndex = props.options.findIndex(
     (option: string | number | Option) => getOptionValue(option) === selectedValue.value
   )
   const selectedTarget = segmentedItemRef.value?.[selectedIndex]
-  const { width, left } = selectedTarget.getBoundingClientRect()
-  const { left: groupLeft } = segmentedGroupRef.value.getBoundingClientRect()
-  selectedWallWidth.value = width
-  selectedWallOffsetLeft.value = left - groupLeft
+  if (selectedTarget && segmentedGroupRef.value) {
+    const { width, left } = selectedTarget.getBoundingClientRect()
+    const { left: groupLeft } = segmentedGroupRef.value.getBoundingClientRect()
+    selectedWallWidth.value = width
+    selectedWallOffsetLeft.value = left - groupLeft
+  }
 }
 function onSelected(value: string | number) {
   if (value !== selectedValue.value) {
@@ -165,6 +171,7 @@ function getOptionLabel(option: string | number | Option) {
       z-index: 1;
       text-align: center;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
       transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
       border-radius: 4px;
       &:hover:not(.segmented-item-selected):not(.segmented-item-disabled) {
