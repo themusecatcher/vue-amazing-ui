@@ -343,7 +343,7 @@ function handleHighMouseUp() {
   document.removeEventListener('mousemove', handleHighMouseMove)
   document.removeEventListener('mouseup', handleHighMouseUp)
 }
-function onLowSlide(source: number, place: string) {
+function handleLowSlide(source: number, place: string) {
   const targetDistance = pixelStepOperation(source, '-')
   if (place === 'low') {
     // 左/下滑块左/下移
@@ -363,7 +363,7 @@ function onLowSlide(source: number, place: string) {
     }
   }
 }
-function onHighSlide(source: number, place: string) {
+function handleHighSlide(source: number, place: string) {
   const targetDistance = pixelStepOperation(source, '+')
   if (place === 'high') {
     // 右/上滑块右/上移
@@ -433,10 +433,10 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       ref="lowHandleRef"
       class="slider-handle"
       :style="lowHandleStyle"
-      @keydown.left.prevent="disabled ? () => false : onLowSlide(low, 'low')"
-      @keydown.right.prevent="disabled ? () => false : onHighSlide(low, 'low')"
-      @keydown.down.prevent="disabled ? () => false : onLowSlide(low, 'low')"
-      @keydown.up.prevent="disabled ? () => false : onHighSlide(low, 'low')"
+      @keydown.left.prevent="disabled ? () => false : handleLowSlide(low, 'low')"
+      @keydown.right.prevent="disabled ? () => false : handleHighSlide(low, 'low')"
+      @keydown.down.prevent="disabled ? () => false : handleLowSlide(low, 'low')"
+      @keydown.up.prevent="disabled ? () => false : handleHighSlide(low, 'low')"
       @mousedown="disabled ? () => false : handleLowMouseDown($event)"
       @blur="tooltip && !disabled ? handlerBlur(lowTooltipRef) : () => false"
     >
@@ -450,10 +450,10 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       ref="highHandleRef"
       class="slider-handle"
       :style="highHandleStyle"
-      @keydown.left.prevent="disabled ? () => false : onLowSlide(high, 'high')"
-      @keydown.right.prevent="disabled ? () => false : onHighSlide(high, 'high')"
-      @keydown.down.prevent="disabled ? () => false : onLowSlide(high, 'high')"
-      @keydown.up.prevent="disabled ? () => false : onHighSlide(high, 'high')"
+      @keydown.left.prevent="disabled ? () => false : handleLowSlide(high, 'high')"
+      @keydown.right.prevent="disabled ? () => false : handleHighSlide(high, 'high')"
+      @keydown.down.prevent="disabled ? () => false : handleLowSlide(high, 'high')"
+      @keydown.up.prevent="disabled ? () => false : handleHighSlide(high, 'high')"
       @mousedown="disabled ? () => false : handleHighMouseDown($event)"
       @blur="tooltip && !disabled ? handlerBlur(highTooltipRef) : () => false"
     >

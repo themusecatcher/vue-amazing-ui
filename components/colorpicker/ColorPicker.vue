@@ -170,8 +170,8 @@ const colorPickerHeight = computed(() => {
 const colorPickerBlockSize = computed(() => {
   const gapMap = {
     small: 6,
-    middle: 10,
-    large: 14
+    middle: 8,
+    large: 10
   }
   return `calc((${colorPickerHeight.value} - ${gapMap[props.size]}px) / 3)`
 })
@@ -867,17 +867,19 @@ function onClear() {
       :class="[`color-picker-${size}`, { 'color-picker-disabled': disabled }]"
       :style="`--color-picker-height: ${colorPickerHeight}; --color-picker-block-size: ${colorPickerBlockSize};`"
     >
-      <div class="color-picker-fill">
-        <div class="color-picker-checkboard"></div>
-        <div
-          :style="`position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: ${hslaComputed ? toHslaString(hslaComputed) : ''};`"
-        ></div>
-        <div
-          v-if="displayedValue && hslaComputed"
-          class="color-picker-value"
-          :style="{ color: hslaComputed[2] > 50 || hslaComputed[3] < 0.5 ? 'black' : 'white' }"
-        >
-          <slot name="label" :color="displayedValue">{{ label ? label(displayedValue) : displayedValue }}</slot>
+      <div class="color-picker-wrap">
+        <div class="color-picker-fill">
+          <div class="color-picker-checkboard"></div>
+          <div
+            :style="`position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: ${hslaComputed ? toHslaString(hslaComputed) : ''};`"
+          ></div>
+          <div
+            v-if="displayedValue && hslaComputed"
+            class="color-picker-value"
+            :style="{ color: hslaComputed[2] > 50 || hslaComputed[3] < 0.5 ? 'black' : 'white' }"
+          >
+            <slot name="label" :color="displayedValue">{{ label ? label(displayedValue) : displayedValue }}</slot>
+          </div>
         </div>
       </div>
     </div>
@@ -1073,84 +1075,98 @@ function onClear() {
   width: 100%;
   height: var(--color-picker-height);
   border-radius: 4px;
+  position: relative;
   outline: none;
-  cursor: pointer;
-  border: 1px solid #d9d9d9;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   &:not(.color-picker-disabled):hover {
-    border-color: #4096ff;
+    .color-picker-wrap {
+      border-color: #4096ff;
+    }
   }
   &:not(.color-picker-disabled):focus {
-    border-color: #4096ff;
-    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    .color-picker-wrap {
+      border-color: #4096ff;
+      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    }
   }
-  .color-picker-fill {
-    position: relative;
-    width: 100%;
+  .color-picker-wrap {
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .color-picker-checkboard {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      background: white;
+    cursor: pointer;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    .color-picker-fill {
       position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      &::after {
-        background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
-          linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
-        background-size: calc(var(--color-picker-block-size) * 2) calc(var(--color-picker-block-size) * 2);
-        background-position:
-          0 0,
-          0 var(--color-picker-block-size),
-          var(--color-picker-block-size) calc(-1 * var(--color-picker-block-size)),
-          calc(-1 * var(--color-picker-block-size)) 0px;
-        background-repeat: repeat;
-        content: '';
+      left: 4px;
+      right: 4px;
+      top: 4px;
+      bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .color-picker-checkboard {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background: white;
         position: absolute;
         left: 0;
         right: 0;
         top: 0;
         bottom: 0;
+        &::after {
+          background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
+            linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
+          background-size: calc(var(--color-picker-block-size) * 2) calc(var(--color-picker-block-size) * 2);
+          background-position:
+            0 0,
+            0 var(--color-picker-block-size),
+            var(--color-picker-block-size) calc(-1 * var(--color-picker-block-size)),
+            calc(-1 * var(--color-picker-block-size)) 0px;
+          background-repeat: repeat;
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+        }
       }
-    }
-    .color-picker-value {
-      white-space: nowrap;
-      position: relative;
-      font-size: 14px;
-      line-height: 1.5714285714285714;
+      .color-picker-value {
+        white-space: nowrap;
+        position: relative;
+        font-size: 14px;
+        line-height: 1.5714285714285714;
+      }
     }
   }
 }
 .color-picker-small {
-  padding: 2px;
-  .color-picker-fill {
-    height: 18px;
-    .color-picker-value {
-      line-height: 1.2857142857142858;
+  .color-picker-wrap {
+    .color-picker-fill {
+      left: 3px;
+      right: 3px;
+      top: 3px;
+      bottom: 3px;
+      .color-picker-value {
+        line-height: 1.2857142857142858;
+      }
     }
-  }
-}
-.color-picker-middle {
-  padding: 4px;
-  .color-picker-fill {
-    height: 22px;
   }
 }
 .color-picker-large {
-  padding: 6px;
-  .color-picker-fill {
-    height: 26px;
-    .color-picker-value {
-      font-size: 16px;
-      line-height: 1.625;
+  .color-picker-wrap {
+    .color-picker-fill {
+      left: 5px;
+      right: 5px;
+      top: 5px;
+      bottom: 5px;
+      .color-picker-value {
+        font-size: 16px;
+        line-height: 1.625;
+      }
     }
   }
+  
 }
 .color-picker-disabled {
   cursor: not-allowed;
