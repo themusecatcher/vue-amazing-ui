@@ -3,6 +3,14 @@ import { reactive, ref } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import type { SegmentedProps, SegmentedOption } from 'vue-amazing-ui'
 const options = reactive<string[]>(['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'])
+const blockOptions = reactive<string[]>([
+  'Daily',
+  'Weekly',
+  'Monthly',
+  'Quarterly',
+  'Yearly',
+  'Long Text Long Text Long Text'
+])
 const optionsDisabled = reactive<(string | SegmentedOption)[]>([
   'Daily',
   { label: 'Weekly', value: 'Weekly', disabled: true },
@@ -103,7 +111,7 @@ const customValue2 = ref<SegmentedProps['value']>(customOptions2[0].value)
     </Space>
     <h2 class="mt30 mb10">block 分段控制器</h2>
     <Space :width="600">
-      <Segmented v-model:value="value" block :options="options" />
+      <Segmented v-model:value="value" block :options="blockOptions" />
     </Space>
     <h2 class="mt30 mb10">自定义渲染</h2>
     <Space vertical>

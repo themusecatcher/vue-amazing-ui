@@ -14,6 +14,7 @@ import { reactive, ref } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import type { SegmentedProps, SegmentedOption } from 'vue-amazing-ui'
 const options = reactive<string[]>(['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'])
+const blockOptions = reactive<string[]>(['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly', 'Long Text Long Text Long Text'])
 const optionsDisabled = reactive<(string | SegmentedOption)[]>([
   'Daily',
   { label: 'Weekly', value: 'Weekly', disabled: true },
@@ -193,9 +194,7 @@ const loadMore = () => {
 
 ## block 分段控制器
 
-<Space :width="600">
-  <Segmented v-model:value="value" block :options="options" />
-</Space>
+<Segmented v-model:value="value" block :options="blockOptions" />
 
 ::: details Show Code
 
@@ -203,13 +202,11 @@ const loadMore = () => {
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { SegmentedProps } from 'vue-amazing-ui'
-const options = reactive<string[]>(['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'])
-const value = ref<SegmentedProps['value']>(options[0])
+const blockOptions = reactive<string[]>(['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly', 'Long Text Long Text Long Text'])
+const value = ref<SegmentedProps['value']>(blockOptions[0])
 </script>
 <template>
-  <Space :width="600">
-    <Segmented v-model:value="value" block :options="options" />
-  </Space>
+  <Segmented v-model:value="value" block :options="blockOptions" />
 </template>
 ```
 
