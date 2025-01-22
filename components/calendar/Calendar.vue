@@ -1,76 +1,60 @@
 <script setup lang="ts">
-import { ref, nextTick, computed } from 'vue'
+import { ref, reactive, onMounted, nextTick, computed } from 'vue'
 import type { VNode, Slot } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { getYear } from 'date-fns'
+import type { SelectOption } from 'vue-amazing-ui'
+import Select from 'components/select'
+import Radio from 'components/radio'
 export interface Props {
-  type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
-  shape?: 'default' | 'circle' | 'round' // 设置按钮形状
-  icon?: VNode | Slot // 设置按钮图标
-  size?: 'small' | 'middle' | 'large' // 设置按钮尺寸
-  ghost?: boolean // 按钮背景是否透明，仅当 type: 'primary' | 'danger' 时生效
-  buttonClass?: string // 设置按钮类名
-  rippleColor?: string // 点击时的波纹颜色，一般不需要设置，默认会根据 type 自动匹配，主要用于自定义样式时且 type: 'default'
-  href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
-  target?: '_self' | '_blank' // 如何打开目标链接，相当于 a 链接的 target 属性，href 存在时生效
-  keyboard?: boolean // 是否支持键盘操作
-  disabled?: boolean // 是否禁用
-  loading?: boolean // 是否加载中
-  loadingType?: 'static' | 'dynamic' // 加载指示符类型
-  block?: boolean // 是否将按钮宽度调整为其父宽度
+  disabledDate?: (timestamp: number) => boolean // 不可选择的日期
+  display?: 'panel' | 'card' // 日历展示方式，面板/卡片
+  mode?: 'month' | 'year' // 初始模式
+  value?: number // (v-model) 当前被选中的日期的时间戳
 }
 const props = withDefaults(defineProps<Props>(), {
-  type: 'default',
-  shape: 'default',
-  icon: undefined,
-  size: 'middle',
-  ghost: false,
-  rippleColor: undefined,
-  buttonClass: undefined,
-  href: undefined,
-  target: '_self',
-  keyboard: true,
-  disabled: false,
-  loading: false,
-  loadingType: 'dynamic',
-  block: false
+  disabledDate: undefined,
+  display: 'panel',
+  mode: 'month',
+  value: undefined
 })
-const presetRippleColors = {
-  default: '#1677ff',
-  reverse: '#1677ff',
-  primary: '#1677ff',
-  danger: '#ff4d4f',
-  dashed: '#1677ff',
-  text: 'transparent',
-  link: 'transparent'
-}
-const wave = ref<boolean>(false)
-const emit = defineEmits(['click'])
-const slotsExist = useSlotsExist(['icon', 'default'])
-const showIcon = computed(() => {
-  return slotsExist.icon || props.icon
+const yearOptions = reactive<SelectOption[]>([])
+const now = Date.now()
+const year = ref<number>(getYear(now))
+onMounted(() => {
+  getYearOptions()
 })
-const showIconOnly = computed(() => {
-  return showIcon.value && !slotsExist.default
-})
-function onClick(e: Event) {
-  if (wave.value) {
-    wave.value = false
-    nextTick(() => {
-      wave.value = true
+function getYearOptions() {
+  yearOptions.length = 0
+  const startYear = year.value - 10
+  const endYear = year.value + 9
+  for (let y = startYear; y <= endYear; y++) {
+    yearOptions.push({
+      label: `${y}年`,
+      value: y
     })
-  } else {
-    wave.value = true
   }
-  emit('click', e)
 }
-function onKeyboard(e: KeyboardEvent) {
-  onClick(e)
-}
-function onWaveEnd() {
-  wave.value = false
-}
+const emits = defineEmits(['update:value', 'change'])
 </script>
 <template>
+  <div class="m-calendar">
+    <div class="calendar-header">
+      <Select :options="yearOptions" v-model="year" />
+    </div>
+    <slot name="header"></slot>
+  </div>
 </template>
 <style lang="less" scoped>
+.m-calendar {
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  list-style: none;
+  background: #ffffff;
+  .calendar-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 0;
+  }
+}
 </style>
