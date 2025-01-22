@@ -6,6 +6,7 @@
 
 ## 2.1.4 <Tag color="volcano" size="small">2025-01-22</Tag>
 
+- 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增支持设置多种 `CSS` 变量自定义样式
 - 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件，调整弹出面板默认弹出位置为 `bottom`，关闭 [#27](https://github.com/themusecatcher/vue-amazing-ui/issues/27)
 - 组件库及文档代码优化
 
