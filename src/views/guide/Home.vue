@@ -319,6 +319,56 @@ function dateArray(
 }
 const now = Date.now()
 console.log('dateArray', dateArray(startOfMonth(now).valueOf(), null, now, 0, true, true))
+
+export interface MonthItem {
+  type: 'month'
+  monthFormat: string
+  dateObject: {
+    month: number
+    year: number
+  }
+  isCurrent: boolean
+  selected: boolean
+  ts: number
+}
+function monthItem(
+  monthTs: number,
+  valueTs: number | null,
+  currentTs: number,
+  {
+    monthFormat
+  }: {
+    monthFormat: string
+  }
+): MonthItem {
+  return {
+    type: 'month',
+    monthFormat,
+    dateObject: {
+      month: getMonth(monthTs),
+      year: getYear(monthTs)
+    },
+    isCurrent: isSameMonth(currentTs, monthTs),
+    selected: valueTs !== null && matchDate(valueTs, monthTs, 'month'),
+    ts: getTime(monthTs)
+  }
+}
+function monthArray(
+  yearAnchorTs: number,
+  valueTs: number | null,
+  currentTs: number,
+  format: {
+    monthFormat: string
+  }
+): MonthItem[] {
+  const calendarMonths: MonthItem[] = []
+  const yearStart = startOfYear(yearAnchorTs)
+  for (let i = 0; i < 12; i++) {
+    calendarMonths.push(monthItem(getTime(addMonths(yearStart, i)), valueTs, currentTs, format))
+  }
+  return calendarMonths
+}
+console.log('monthArray', monthArray(now, null, now, { monthFormat: 'MMMM' }))
 </script>
 <template>
   <div>
