@@ -4,7 +4,7 @@
 
 <GlobalElement />
 
-## 手动引入
+## 手动引入（不推荐）
 
 ```vue
 <script setup lang="ts">
