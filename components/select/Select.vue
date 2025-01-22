@@ -321,12 +321,14 @@ function onClick() {
       leave-active-class="slide-up-leave slide-up-leave-active"
       leave-to-class="slide-up-leave slide-up-leave-active"
     >
-      <div v-if="showOptions && filterOptions && filterOptions.length" class="select-options-panel" @click.stop="onClick" @mouseenter="disabledBlur = true" @mouseleave="disabledBlur = false">
-        <Scrollbar
-          :content-style="{ padding: '4px' }"
-          :style="optionsStyle"
-          v-bind="scrollbarProps"
-        >
+      <div
+        v-if="showOptions && filterOptions && filterOptions.length"
+        class="select-options-panel"
+        @click.stop="onClick"
+        @mouseenter="disabledBlur = true"
+        @mouseleave="disabledBlur = false"
+      >
+        <Scrollbar :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
           <p
             v-for="(option, index) in filterOptions"
             :key="index"
@@ -346,7 +348,13 @@ function onClick() {
           </p>
         </Scrollbar>
       </div>
-      <div v-else-if="showOptions && filterOptions && !filterOptions.length" class="select-options-panel options-empty" @click.stop="onClick" @mouseenter="disabledBlur = true" @mouseleave="disabledBlur = false">
+      <div
+        v-else-if="showOptions && filterOptions && !filterOptions.length"
+        class="select-options-panel options-empty"
+        @click.stop="onClick"
+        @mouseenter="disabledBlur = true"
+        @mouseleave="disabledBlur = false"
+      >
         <Empty image="outlined" />
       </div>
     </Transition>
@@ -432,7 +440,7 @@ function onClick() {
       display: inline-block;
       width: 0;
       visibility: hidden;
-      content: "\a0";
+      content: '\a0';
       line-height: calc(var(--select-height) - 2px);
     }
     .select-search {
