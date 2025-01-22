@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.1.4 <Tag color="volcano" size="small">2025-01-22</Tag>
+
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件，调整弹出面板默认弹出位置为 `bottom`，关闭 [#27](https://github.com/themusecatcher/vue-amazing-ui/issues/27)
+- 组件库及文档代码优化
+
 ## 2.1.3 <Tag color="volcano" size="small">2025-01-21</Tag>
 
 - 优化并更新 [分段控制器 Segmented](https://themusecatcher.github.io/vue-amazing-ui/guide/components/segmented.html) 组件，优化选项切换过渡效果

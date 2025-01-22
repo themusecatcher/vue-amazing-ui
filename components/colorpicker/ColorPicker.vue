@@ -727,6 +727,7 @@ function onClear() {
     :style="`width: 100%; height: ${colorPickerHeight};`"
     max-width="none"
     :arrow="false"
+    placement="bottom"
     bg-color="#fff"
     :tooltip-style="{
       width: '240px',
