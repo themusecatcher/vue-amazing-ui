@@ -54,6 +54,12 @@ export const routes = [
         component: () => import('@/views/ButtonView.vue')
       },
       {
+        path: '/calendar',
+        name: 'Calendar',
+        meta: { title: '日历' },
+        component: () => import('@/views/CalendarView.vue')
+      },
+      {
         path: '/card',
         name: 'Card',
         meta: { title: '卡片' },
