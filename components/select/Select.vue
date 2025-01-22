@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch } from 'vue'
+import type { CSSProperties } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar from 'components/scrollbar'
 export interface Option {
@@ -38,7 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
   filter: true,
   width: 'auto',
-  height: 32,
+  height: undefined,
   size: 'middle',
   maxDisplay: 6,
   scrollbarProps: () => ({}),
@@ -64,10 +65,22 @@ const selectWidth = computed(() => {
   }
   return props.width
 })
+const selectHeight = computed(() => {
+  const heightMap = {
+    small: 24,
+    middle: 32,
+    large: 40
+  }
+  if (props.height !== undefined) {
+    return `${props.height}px`
+  }
+  return `${heightMap[props.size]}px`
+})
 const optionsStyle = computed(() => {
-  return {
+  const style: CSSProperties = {
     maxHeight: `${props.maxDisplay * 32 + 8}px`
   }
+  return style
 })
 watchEffect(() => {
   if (props.search) {
@@ -211,6 +224,9 @@ function onChange(value: string | number, label: string, index: number) {
   }
   showCaret.value = false
 }
+function onClick() {
+  inputRef.value.focus()
+}
 </script>
 <template>
   <div
@@ -222,7 +238,7 @@ function onChange(value: string | number, label: string, index: number) {
       'select-large': size === 'large',
       'select-disabled': disabled
     }"
-    :style="`--select-width: ${selectWidth}; --select-height: ${height}px;`"
+    :style="`--select-width: ${selectWidth}; --select-height: ${selectHeight};`"
     @click="disabled ? () => false : toggleSelect()"
   >
     <div class="select-wrap" @mouseenter="onEnter" @mouseleave="onLeave">
@@ -308,6 +324,8 @@ function onChange(value: string | number, label: string, index: number) {
       <div
         v-if="showOptions && filterOptions && filterOptions.length"
         class="select-options-panel"
+        @click.stop="onClick"
+        @mouseenter="disabledBlur = true"
         @mouseleave="disabledBlur = false"
       >
         <Scrollbar :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
@@ -330,7 +348,13 @@ function onChange(value: string | number, label: string, index: number) {
           </p>
         </Scrollbar>
       </div>
-      <div v-else-if="showOptions && filterOptions && !filterOptions.length" class="options-empty" @click.stop.prevent>
+      <div
+        v-else-if="showOptions && filterOptions && !filterOptions.length"
+        class="select-options-panel options-empty"
+        @click.stop="onClick"
+        @mouseenter="disabledBlur = true"
+        @mouseleave="disabledBlur = false"
+      >
         <Empty image="outlined" />
       </div>
     </Transition>
@@ -394,6 +418,7 @@ function onChange(value: string | number, label: string, index: number) {
   color: rgba(0, 0, 0, 0.88);
   outline: none;
   cursor: pointer;
+  transition: all 0.3s;
   &:not(.select-disabled):hover {
     // 悬浮时样式
     .select-wrap {
@@ -411,6 +436,13 @@ function onChange(value: string | number, label: string, index: number) {
     height: 100%;
     outline: none;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    &::after {
+      display: inline-block;
+      width: 0;
+      visibility: hidden;
+      content: '\a0';
+      line-height: calc(var(--select-height) - 2px);
+    }
     .select-search {
       position: absolute;
       top: 0;
@@ -503,6 +535,7 @@ function onChange(value: string | number, label: string, index: number) {
     background-color: #fff;
     border-radius: 8px;
     outline: none;
+    cursor: auto;
     box-shadow:
       0 6px 16px 0 rgba(0, 0, 0, 0.08),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
@@ -539,22 +572,10 @@ function onChange(value: string | number, label: string, index: number) {
     }
   }
   .options-empty {
-    position: absolute;
-    top: calc(var(--select-height) + 4px);
-    z-index: 1000;
-    width: 100%;
-    border-radius: 8px;
     padding: 9px 16px;
-    background-color: #fff;
-    cursor: auto;
-    outline: none;
-    box-shadow:
-      0 6px 16px 0 rgba(0, 0, 0, 0.08),
-      0 3px 6px -4px rgba(0, 0, 0, 0.12),
-      0 9px 28px 8px rgba(0, 0, 0, 0.05);
     .m-empty {
       margin-block: 8px;
-      :deep(.m-empty-image) {
+      :deep(.empty-image-wrap) {
         height: 35px;
       }
     }
@@ -581,7 +602,6 @@ function onChange(value: string | number, label: string, index: number) {
 }
 .select-small {
   font-size: 14px;
-  height: 24px;
   .select-wrap {
     padding: 0 7px;
     border-radius: 4px;
@@ -591,28 +611,17 @@ function onChange(value: string | number, label: string, index: number) {
     }
     .select-item {
       padding-right: 22px;
-      line-height: 22px;
     }
-  }
-  .select-options-panel,
-  .options-empty {
-    top: 28px;
   }
 }
 .select-large {
   font-size: 16px;
-  height: 40px;
   .select-wrap {
     padding: 0 11px;
     border-radius: 8px;
     .select-item {
       padding-right: 20px;
-      line-height: 38px;
     }
-  }
-  .select-options-panel,
-  .options-empty {
-    top: 44px;
   }
 }
 .select-disabled {
