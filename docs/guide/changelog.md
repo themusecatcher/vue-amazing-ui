@@ -6,6 +6,8 @@
 
 ## 2.1.5 <Tag color="volcano" size="small">2025-02-05</Tag>
 
+- 移除通过 自动引入样式 使用组件库及相关 `api`，推荐使用自动按需引入
+- 优化并更新自动按需引入 api: `VueAmazingUIResolver`，关闭 [#29](https://github.com/themusecatcher/vue-amazing-ui/issues/29)
 - 组件库及文档代码优化
 
 ## 2.1.4 <Tag color="volcano" size="small">2025-01-22</Tag>
