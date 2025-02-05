@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.1.5 <Tag color="volcano" size="small">2025-02-05</Tag>
+
+- 组件库及文档代码优化
+
 ## 2.1.4 <Tag color="volcano" size="small">2025-01-22</Tag>
 
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增支持设置多种 `CSS` 变量自定义样式

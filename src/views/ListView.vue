@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue'
+import { ref, reactive, h } from 'vue'
+import { UserOutlined, StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue'
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -295,7 +295,7 @@ const state = reactive({
     <List>
       <ListItem
         :avatar-props="{
-          src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+          icon: () => h(UserOutlined),
           size: 56
         }"
         :avatar-style="{ alignSelf: 'center' }"
@@ -317,7 +317,7 @@ const state = reactive({
         </template>
         <template #extra>
           <img
-            class="u-img"
+            class="extra-img"
             width="200"
             alt="extra"
             src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg"
@@ -345,7 +345,7 @@ const state = reactive({
         </template>
         <template #extra>
           <img
-            class="u-img"
+            class="extra-img"
             width="272"
             alt="extra"
             src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
@@ -430,7 +430,7 @@ const state = reactive({
   </div>
 </template>
 <style lang="less" scoped>
-.u-img {
+.extra-img {
   display: inline-block;
   vertical-align: bottom;
 }
