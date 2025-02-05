@@ -345,7 +345,11 @@ function onClick() {
         @mouseenter="disabledBlur = true"
         @mouseleave="disabledBlur = false"
       >
+<<<<<<< HEAD
         <Scrollbar ref="scrollbarRef" :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
+=======
+        <Scrollbar :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
+>>>>>>> 84afdb0a63a32074916a56f794484eb190b25cbd
           <p
             v-for="(option, index) in filterOptions"
             :key="index"
