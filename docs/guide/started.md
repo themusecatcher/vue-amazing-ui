@@ -79,6 +79,7 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { ButtonProps } from 'vue-amazing-ui'
 const shape = ref<ButtonProps['shape']>('default')
 </script>

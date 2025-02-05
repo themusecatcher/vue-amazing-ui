@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch } from 'vue'
+import { ref, computed, watchEffect, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar from 'components/scrollbar'
@@ -52,7 +52,9 @@ const inputValue = ref() // 支持搜索时，用户输入内容
 const disabledBlur = ref(false) // 是否禁用 input 标签的 blur 事件
 const hideSelectName = ref(false) // 用户输入时，隐藏 selectName 的展示
 const hoverValue = ref() // 鼠标悬浮项的 value 值
-const showOptions = ref(false) // 显示隐藏options 面板
+const scrollbarRef = ref() // 下拉面板滚动条 DOM 引用
+const scrollTop = ref(0) // 下拉面板滚动条滚动高度
+const showOptions = ref(false) // 显示隐藏 options 面板
 const showArrow = ref(true) // 剪头图标显隐
 const showClear = ref(false) // 清除图标显隐
 const showCaret = ref(false) // 支持搜索时，输入光标的显隐
@@ -75,6 +77,10 @@ const selectHeight = computed(() => {
     return `${props.height}px`
   }
   return `${heightMap[props.size]}px`
+})
+// 是否存在滚动
+const isScrollable = computed(() => {
+  return props.options.length > props.maxDisplay
 })
 const optionsStyle = computed(() => {
   const style: CSSProperties = {
@@ -109,8 +115,19 @@ watchEffect(() => {
   // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   initSelector()
 })
-watch(showOptions, (to) => {
+watch(showOptions, async (to) => {
   emits('openChange', to)
+  if (!to && isScrollable.value) {
+    const scrollData = scrollbarRef.value.getScrollData()
+    scrollTop.value = scrollData.scrollTop
+  }
+  if (to && isScrollable.value) {
+    await nextTick()
+    scrollbarRef.value.scrollTo({
+      top: scrollTop.value,
+      behavior: 'instant'
+    })
+  }
   if (props.search && !to) {
     inputValue.value = undefined
     hideSelectName.value = false
@@ -321,12 +338,14 @@ function onClick() {
       leave-active-class="slide-up-leave slide-up-leave-active"
       leave-to-class="slide-up-leave slide-up-leave-active"
     >
-      <div v-if="showOptions && filterOptions && filterOptions.length" class="select-options-panel" @click.stop="onClick" @mouseenter="disabledBlur = true" @mouseleave="disabledBlur = false">
-        <Scrollbar
-          :content-style="{ padding: '4px' }"
-          :style="optionsStyle"
-          v-bind="scrollbarProps"
-        >
+      <div
+        v-if="showOptions && filterOptions && filterOptions.length"
+        class="select-options-panel"
+        @click.stop="onClick"
+        @mouseenter="disabledBlur = true"
+        @mouseleave="disabledBlur = false"
+      >
+        <Scrollbar ref="scrollbarRef" :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
           <p
             v-for="(option, index) in filterOptions"
             :key="index"
@@ -346,7 +365,13 @@ function onClick() {
           </p>
         </Scrollbar>
       </div>
-      <div v-else-if="showOptions && filterOptions && !filterOptions.length" class="select-options-panel options-empty" @click.stop="onClick" @mouseenter="disabledBlur = true" @mouseleave="disabledBlur = false">
+      <div
+        v-else-if="showOptions && filterOptions && !filterOptions.length"
+        class="select-options-panel options-empty"
+        @click.stop="onClick"
+        @mouseenter="disabledBlur = true"
+        @mouseleave="disabledBlur = false"
+      >
         <Empty image="outlined" />
       </div>
     </Transition>
@@ -432,7 +457,7 @@ function onClick() {
       display: inline-block;
       width: 0;
       visibility: hidden;
-      content: "\a0";
+      content: '\a0';
       line-height: calc(var(--select-height) - 2px);
     }
     .select-search {

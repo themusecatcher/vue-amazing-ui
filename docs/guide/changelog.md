@@ -4,8 +4,20 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.1.6 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件交互，自动记录下拉面板滚动位置
+- 组件库及文档代码优化
+
+## 2.1.5 <Tag color="volcano" size="small">2025-02-05</Tag>
+
+- 移除通过 自动引入样式 使用组件库及相关 `api`，推荐使用自动按需引入
+- 优化并更新自动按需引入 api: `VueAmazingUIResolver`，关闭 [#29](https://github.com/themusecatcher/vue-amazing-ui/issues/29)
+- 组件库及文档代码优化
+
 ## 2.1.4 <Tag color="volcano" size="small">2025-01-22</Tag>
 
+- 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增支持设置多种 `CSS` 变量自定义样式
 - 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件，调整弹出面板默认弹出位置为 `bottom`，关闭 [#27](https://github.com/themusecatcher/vue-amazing-ui/issues/27)
 - 组件库及文档代码优化
 

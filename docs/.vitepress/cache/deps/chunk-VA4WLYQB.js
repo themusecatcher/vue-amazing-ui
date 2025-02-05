@@ -27,7 +27,7 @@ import {
   watchEffect
 } from "./chunk-3MB4FZ2E.js";
 
-// node_modules/.pnpm/@vueuse+shared@12.4.0_typescript@5.7.3/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@12.5.0_typescript@5.7.3/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -334,6 +334,7 @@ function debounceFilter(ms, options = {}) {
     lastRejector();
     lastRejector = noop;
   };
+  let lastInvoker;
   const filter = (invoke2) => {
     const duration = toValue(ms);
     const maxDuration = toValue(options.maxWait);
@@ -348,12 +349,13 @@ function debounceFilter(ms, options = {}) {
     }
     return new Promise((resolve, reject) => {
       lastRejector = options.rejectOnCancel ? reject : resolve;
+      lastInvoker = invoke2;
       if (maxDuration && !maxTimer) {
         maxTimer = setTimeout(() => {
           if (timer)
             _clearTimeout(timer);
           maxTimer = null;
-          resolve(invoke2());
+          resolve(lastInvoker());
         }, maxDuration);
       }
       timer = setTimeout(() => {
@@ -1645,4 +1647,4 @@ export {
   watchTriggerable,
   whenever
 };
-//# sourceMappingURL=chunk-GOFHB7HN.js.map
+//# sourceMappingURL=chunk-VA4WLYQB.js.map
