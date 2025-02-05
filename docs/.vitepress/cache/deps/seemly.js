@@ -1,6 +1,6 @@
 import "./chunk-EQCVQC35.js";
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/animation/next-frame-once.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/animation/next-frame-once.js
 var onceCbs = [];
 var paramsMap = /* @__PURE__ */ new WeakMap();
 function flushOnceCallbacks() {
@@ -14,7 +14,7 @@ function beforeNextFrameOnce(cb, ...params2) {
   onceCbs.push(cb) === 1 && requestAnimationFrame(flushOnceCallbacks);
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/animation/next-frame.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/animation/next-frame.js
 var cbs = [];
 var params = [];
 function flushCallbacks() {
@@ -27,7 +27,7 @@ function beforeNextFrame(cb, ...args) {
   params.push(args);
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/dom/get-scroll-parent.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/dom/get-scroll-parent.js
 function getParentNode(node) {
   if (node.nodeType === 9) {
     return null;
@@ -53,7 +53,7 @@ function getScrollParent(node) {
   return getScrollParent(parentNode);
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/dom/unwrap-element.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/dom/unwrap-element.js
 function unwrapElement(target) {
   if (typeof target === "string")
     return document.querySelector(target);
@@ -62,7 +62,7 @@ function unwrapElement(target) {
   return target;
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/dom/happens-in.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/dom/happens-in.js
 function happensIn(e, dataSetPropName) {
   let { target } = e;
   while (target) {
@@ -75,12 +75,12 @@ function happensIn(e, dataSetPropName) {
   return false;
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/dom/get-precise-event-target.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/dom/get-precise-event-target.js
 function getPreciseEventTarget(event) {
   return event.composedPath()[0] || null;
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/css/responsive.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/css/responsive.js
 function parseResponsiveProp(reponsiveProp) {
   if (typeof reponsiveProp === "number") {
     return {
@@ -130,7 +130,7 @@ function parseResponsivePropValue(reponsiveProp, activeKeyOrSize) {
   }
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/css/index.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/css/index.js
 function depx(value) {
   if (typeof value === "string") {
     if (value.endsWith("px")) {
@@ -192,28 +192,160 @@ function getGap(value, orient) {
   return orient === "row" ? rowGap : colGap;
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/color/colors.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/color/colors.js
 var colors_default = {
-  black: "#000",
-  silver: "#C0C0C0",
-  gray: "#808080",
-  white: "#FFF",
-  maroon: "#800000",
-  red: "#F00",
-  purple: "#800080",
-  fuchsia: "#F0F",
-  green: "#008000",
-  lime: "#0F0",
-  olive: "#808000",
-  yellow: "#FF0",
-  navy: "#000080",
-  blue: "#00F",
-  teal: "#008080",
+  aliceblue: "#F0F8FF",
+  antiquewhite: "#FAEBD7",
   aqua: "#0FF",
+  aquamarine: "#7FFFD4",
+  azure: "#F0FFFF",
+  beige: "#F5F5DC",
+  bisque: "#FFE4C4",
+  black: "#000",
+  blanchedalmond: "#FFEBCD",
+  blue: "#00F",
+  blueviolet: "#8A2BE2",
+  brown: "#A52A2A",
+  burlywood: "#DEB887",
+  cadetblue: "#5F9EA0",
+  chartreuse: "#7FFF00",
+  chocolate: "#D2691E",
+  coral: "#FF7F50",
+  cornflowerblue: "#6495ED",
+  cornsilk: "#FFF8DC",
+  crimson: "#DC143C",
+  cyan: "#0FF",
+  darkblue: "#00008B",
+  darkcyan: "#008B8B",
+  darkgoldenrod: "#B8860B",
+  darkgray: "#A9A9A9",
+  darkgrey: "#A9A9A9",
+  darkgreen: "#006400",
+  darkkhaki: "#BDB76B",
+  darkmagenta: "#8B008B",
+  darkolivegreen: "#556B2F",
+  darkorange: "#FF8C00",
+  darkorchid: "#9932CC",
+  darkred: "#8B0000",
+  darksalmon: "#E9967A",
+  darkseagreen: "#8FBC8F",
+  darkslateblue: "#483D8B",
+  darkslategray: "#2F4F4F",
+  darkslategrey: "#2F4F4F",
+  darkturquoise: "#00CED1",
+  darkviolet: "#9400D3",
+  deeppink: "#FF1493",
+  deepskyblue: "#00BFFF",
+  dimgray: "#696969",
+  dimgrey: "#696969",
+  dodgerblue: "#1E90FF",
+  firebrick: "#B22222",
+  floralwhite: "#FFFAF0",
+  forestgreen: "#228B22",
+  fuchsia: "#F0F",
+  gainsboro: "#DCDCDC",
+  ghostwhite: "#F8F8FF",
+  gold: "#FFD700",
+  goldenrod: "#DAA520",
+  gray: "#808080",
+  grey: "#808080",
+  green: "#008000",
+  greenyellow: "#ADFF2F",
+  honeydew: "#F0FFF0",
+  hotpink: "#FF69B4",
+  indianred: "#CD5C5C",
+  indigo: "#4B0082",
+  ivory: "#FFFFF0",
+  khaki: "#F0E68C",
+  lavender: "#E6E6FA",
+  lavenderblush: "#FFF0F5",
+  lawngreen: "#7CFC00",
+  lemonchiffon: "#FFFACD",
+  lightblue: "#ADD8E6",
+  lightcoral: "#F08080",
+  lightcyan: "#E0FFFF",
+  lightgoldenrodyellow: "#FAFAD2",
+  lightgray: "#D3D3D3",
+  lightgrey: "#D3D3D3",
+  lightgreen: "#90EE90",
+  lightpink: "#FFB6C1",
+  lightsalmon: "#FFA07A",
+  lightseagreen: "#20B2AA",
+  lightskyblue: "#87CEFA",
+  lightslategray: "#778899",
+  lightslategrey: "#778899",
+  lightsteelblue: "#B0C4DE",
+  lightyellow: "#FFFFE0",
+  lime: "#0F0",
+  limegreen: "#32CD32",
+  linen: "#FAF0E6",
+  magenta: "#F0F",
+  maroon: "#800000",
+  mediumaquamarine: "#66CDAA",
+  mediumblue: "#0000CD",
+  mediumorchid: "#BA55D3",
+  mediumpurple: "#9370DB",
+  mediumseagreen: "#3CB371",
+  mediumslateblue: "#7B68EE",
+  mediumspringgreen: "#00FA9A",
+  mediumturquoise: "#48D1CC",
+  mediumvioletred: "#C71585",
+  midnightblue: "#191970",
+  mintcream: "#F5FFFA",
+  mistyrose: "#FFE4E1",
+  moccasin: "#FFE4B5",
+  navajowhite: "#FFDEAD",
+  navy: "#000080",
+  oldlace: "#FDF5E6",
+  olive: "#808000",
+  olivedrab: "#6B8E23",
+  orange: "#FFA500",
+  orangered: "#FF4500",
+  orchid: "#DA70D6",
+  palegoldenrod: "#EEE8AA",
+  palegreen: "#98FB98",
+  paleturquoise: "#AFEEEE",
+  palevioletred: "#DB7093",
+  papayawhip: "#FFEFD5",
+  peachpuff: "#FFDAB9",
+  peru: "#CD853F",
+  pink: "#FFC0CB",
+  plum: "#DDA0DD",
+  powderblue: "#B0E0E6",
+  purple: "#800080",
+  rebeccapurple: "#663399",
+  red: "#F00",
+  rosybrown: "#BC8F8F",
+  royalblue: "#4169E1",
+  saddlebrown: "#8B4513",
+  salmon: "#FA8072",
+  sandybrown: "#F4A460",
+  seagreen: "#2E8B57",
+  seashell: "#FFF5EE",
+  sienna: "#A0522D",
+  silver: "#C0C0C0",
+  skyblue: "#87CEEB",
+  slateblue: "#6A5ACD",
+  slategray: "#708090",
+  slategrey: "#708090",
+  snow: "#FFFAFA",
+  springgreen: "#00FF7F",
+  steelblue: "#4682B4",
+  tan: "#D2B48C",
+  teal: "#008080",
+  thistle: "#D8BFD8",
+  tomato: "#FF6347",
+  turquoise: "#40E0D0",
+  violet: "#EE82EE",
+  wheat: "#F5DEB3",
+  white: "#FFF",
+  whitesmoke: "#F5F5F5",
+  yellow: "#FF0",
+  yellowgreen: "#9ACD32",
   transparent: "#0000"
 };
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/color/convert.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/color/convert.js
 function hsl2hsv(h, s, l) {
   s /= 100;
   l /= 100;
@@ -257,7 +389,7 @@ function hsl2rgb(h, s, l) {
   return [f(0) * 255, f(8) * 255, f(4) * 255];
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/color/index.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/color/index.js
 var prefix = "^\\s*";
 var suffix = "\\s*$";
 var percent = "\\s*((\\.\\d+)|(\\d+(\\.\\d*)?))%\\s*";
@@ -350,6 +482,12 @@ function rgba(color) {
       ];
     } else if (color in colors_default) {
       return rgba(colors_default[color]);
+    } else if (hslRegex.test(color) || hslaRegex.test(color)) {
+      const [h, s, l, a] = hsla(color);
+      return [...hsl2rgb(h, s, l), a];
+    } else if (hsvRegex.test(color) || hsvaRegex.test(color)) {
+      const [h, s, v, a] = hsva(color);
+      return [...hsv2rgb(h, s, v), a];
     }
     throw new Error(`[seemly/rgba]: Invalid color value ${color}.`);
   } catch (e) {
@@ -380,7 +518,7 @@ function composite(background, overlay) {
 }
 function changeColor(base, options) {
   const [r, g, b, a = 1] = Array.isArray(base) ? base : rgba(base);
-  if (options.alpha) {
+  if (typeof options.alpha === "number") {
     return stringifyRgba(r, g, b, options.alpha);
   }
   return stringifyRgba(r, g, b, a);
@@ -494,7 +632,7 @@ function toHexString(base) {
   return `#${base.slice(0, 3).map((unit) => roundChannel(unit).toString(16).toUpperCase().padStart(2, "0")).join("")}`;
 }
 
-// node_modules/.pnpm/seemly@0.3.9/node_modules/seemly/es/misc/index.js
+// node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/misc/index.js
 function createId(length = 8) {
   return Math.random().toString(16).slice(2, 2 + length);
 }

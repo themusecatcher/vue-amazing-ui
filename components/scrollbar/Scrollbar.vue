@@ -335,6 +335,7 @@ function scrollBy(...args: any[]) {
 }
 function getScrollData() {
   return {
+    scrollTop: containerScrollTop.value,
     scrollWidth: containerScrollWidth.value,
     scrollHeight: containerScrollHeight.value,
     clientWidth: containerClientWidth.value,
