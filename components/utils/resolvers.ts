@@ -73,7 +73,86 @@ const componentsMap = {
   Waterfall: 'waterfall',
   Watermark: 'watermark'
 }
-export function VueAmazingUIResolver() {
+function getSideEffects(componentName: string, options?: VueAmazingUIResolverOptions) {
+  const type = options?.cjs ? 'lib' : 'es'
+  const sideEffects = [
+    `vue-amazing-ui/${type}/${componentsMap[componentName as keyof typeof componentsMap]}/${componentName}.css`
+  ]
+  // 依赖子组件的样式
+  const AvatarStyle = ['ListItem']
+  if (AvatarStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/avatar/Avatar.css`)
+  }
+  const BadgeStyle = ['FloatButton']
+  if (BadgeStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/badge/Badge.css`)
+  }
+  const ButtonStyle = ['Collapse', 'ColorPicker', 'Dialog', 'InputSearch', 'Modal', 'Popconfirm']
+  if (ButtonStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/button/Button.css`)
+  }
+  const CheckboxStyle = ['Table']
+  if (CheckboxStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/checkbox/Checkbox.css`)
+  }
+  const EllipsisStyle = ['Table']
+  if (EllipsisStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/ellipsis/Ellipsis.css`)
+  }
+  const EmptyStyle = ['List', 'Select', 'Table']
+  if (EmptyStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/empty/Empty.css`)
+  }
+  const ImageStyle = ['Upload']
+  if (ImageStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/image/Image.css`)
+  }
+  const InputStyle = ['ColorPicker', 'Pagination']
+  if (InputStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/input/Input.css`)
+  }
+  const MessageStyle = ['Upload']
+  if (MessageStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/message/Message.css`)
+  }
+  const PaginationStyle = ['List', 'Table']
+  if (PaginationStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/pagination/Pagination.css`)
+  }
+  const RadioStyle = ['Table']
+  if (RadioStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/radio/Radio.css`)
+  }
+  const ScrollbarStyle = ['Dialog', 'Drawer', 'Select', 'Table']
+  if (ScrollbarStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/scrollbar/Scrollbar.css`)
+  }
+  const SelectStyle = ['Cascader', 'Pagination']
+  if (SelectStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/select/Select.css`)
+  }
+  const SkeletonStyle = ['Card']
+  if (SkeletonStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/skeleton/Skeleton.css`)
+  }
+  const SpaceStyle = ['Image', 'Tag', 'Upload']
+  if (SpaceStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/space/Space.css`)
+  }
+  const SpinStyle = ['Carousel', 'Image', 'List', 'Table', 'Upload', 'Waterfall']
+  if (SpinStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/spin/Spin.css`)
+  }
+  const TooltipStyle = ['BackTop', 'ColorPicker', 'Ellipsis', 'FloatButton', 'Popconfirm', 'Popover', 'Rate', 'Table']
+  if (TooltipStyle.includes(componentName)) {
+    sideEffects.push(`vue-amazing-ui/${type}/tooltip/Tooltip.css`)
+  }
+  return sideEffects
+}
+export interface VueAmazingUIResolverOptions {
+  cjs?: boolean // whether use commonjs build, default false
+}
+export function VueAmazingUIResolver(options?: VueAmazingUIResolverOptions) {
   return {
     type: 'component' as const,
     resolve: (componentName: string) => {
@@ -82,32 +161,9 @@ export function VueAmazingUIResolver() {
         return {
           name: componentName, // 组件名
           from: 'vue-amazing-ui', // 组件库名称
-          sideEffects: `vue-amazing-ui/es/${componentsMap[componentName as keyof typeof componentsMap]}/${componentName}.css` // 组件样式文件
+          sideEffects: getSideEffects(componentName, options) // 组件样式文件
         }
       }
-    }
-  }
-}
-type ChangeCaseType =
-  | 'camelCase'
-  | 'capitalCase'
-  | 'constantCase'
-  | 'dotCase'
-  | 'headerCase'
-  | 'noCase'
-  | 'paramCase'
-  | 'pascalCase'
-  | 'pathCase'
-  | 'sentenceCase'
-  | 'snakeCase'
-export function VueAmazingUIStyleResolve() {
-  const changeCase: ChangeCaseType = 'pascalCase'
-  return {
-    libraryName: 'vue-amazing-ui', // 需要导入的库名
-    libraryNameChangeCase: changeCase, // 'pascalCase': 帕斯卡命名法，每个单词的首字母大写，不使用分隔符；默认 'paramCase'，导出的名称转换格式
-    // esModule: true, // 默认 false，如果样式文件不是 .css 后缀。需要开启此选项
-    resolveStyle: (componentName: string) => {
-      return `vue-amazing-ui/es/${componentsMap[componentName as keyof typeof componentsMap]}/${componentName}.css` // 组件样式文件
     }
   }
 }

@@ -89,7 +89,17 @@ function onWaveEnd() {
       },
       buttonClass
     ]"
-    :style="`--ripple-color: ${rippleColor || presetRippleColors[type]};`"
+    :style="`
+      --primary-color: #1677ff;
+      --primary-color-hover: #4096ff;
+      --primary-color-active: #0958d9;
+      --danger-color: #ff4d4f;
+      --danger-color-hover: #ff7875;
+      --danger-color-active: #d9363e;
+      --text-color-hover: rgba(0, 0, 0, 0.06);
+      --text-color-active: rgba(0, 0, 0, 0.15);
+      --ripple-color: ${rippleColor || presetRippleColors[type]};
+    `"
     :href="href"
     :target="target"
     @click="disabled || loading ? () => false : onClick($event)"
@@ -124,8 +134,6 @@ function onWaveEnd() {
   </component>
 </template>
 <style lang="less" scoped>
-@primary: #1677ff;
-@danger: #ff4d4f;
 .m-btn {
   position: relative;
   display: inline-flex;
@@ -254,12 +262,12 @@ function onWaveEnd() {
   background-color: #ffffff;
   border-color: #d9d9d9;
   &:hover {
-    color: #4096ff !important;
-    border-color: #4096ff;
+    color: var(--primary-color-hover) !important;
+    border-color: var(--primary-color-hover);
   }
   &:active {
-    color: #0958d9 !important;
-    border-color: #0958d9;
+    color: var(--primary-color-active) !important;
+    border-color: var(--primary-color-active);
   }
   .btn-icon {
     :deep(svg) {
@@ -271,43 +279,43 @@ function onWaveEnd() {
   .btn-default();
   &:hover {
     color: #fff !important;
-    background-color: #4096ff;
-    border-color: #4096ff;
+    background-color: var(--primary-color-hover);
+    border-color: var(--primary-color-hover);
   }
   &:active {
     color: #fff !important;
-    background-color: #0958d9;
-    border-color: #0958d9;
+    background-color: var(--primary-color-active);
+    border-color: var(--primary-color-active);
   }
 }
 .btn-primary {
   color: #fff;
-  background-color: @primary;
-  border-color: @primary;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
   &:hover {
     color: #fff;
-    background-color: #4096ff;
-    border-color: #4096ff;
+    background-color: var(--primary-color-hover);
+    border-color: var(--primary-color-hover);
   }
   &:active {
     color: #fff;
-    background-color: #0958d9;
-    border-color: #0958d9;
+    background-color: var(--primary-color-active);
+    border-color: var(--primary-color-active);
   }
 }
 .btn-danger {
   color: #fff;
-  background-color: @danger;
-  border-color: @danger;
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
   &:hover {
     color: #fff;
-    background-color: #ff7875;
-    border-color: #ff7875;
+    background-color: var(--danger-color-hover);
+    border-color: var(--danger-color-hover);
   }
   &:active {
     color: #fff;
-    background-color: #d9363e;
-    border-color: #d9363e;
+    background-color: var(--danger-color-active);
+    border-color: var(--danger-color-active);
   }
 }
 .btn-dashed {
@@ -316,19 +324,19 @@ function onWaveEnd() {
 }
 .btn-text {
   &:hover {
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: var(--text-color-hover);
   }
   &:active {
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: var(--text-color-active);
   }
 }
 .btn-link {
-  color: @primary;
+  color: var(--primary-color);
   &:hover {
-    color: #4096ff;
+    color: var(--primary-color-hover);
   }
   &:active {
-    color: #0958d9;
+    color: var(--primary-color-active);
   }
   .btn-icon {
     :deep(svg) {
@@ -434,16 +442,16 @@ function onWaveEnd() {
   pointer-events: none;
 }
 .btn-primary.btn-ghost:not(.btn-disabled) {
-  color: @primary;
-  border-color: @primary;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
   background-color: transparent;
   &:hover {
-    color: #4096ff;
-    border-color: #4096ff;
+    color: var(--primary-color-hover);
+    border-color: var(--primary-color-hover);
   }
   &:active {
-    color: #0958d9;
-    border-color: #0958d9;
+    color: var(--primary-color-active);
+    border-color: var(--primary-color-active);
   }
   .btn-icon {
     :deep(svg) {
@@ -452,16 +460,16 @@ function onWaveEnd() {
   }
 }
 .btn-danger.btn-ghost:not(.btn-disabled) {
-  color: @danger;
-  border-color: @danger;
+  color: var(--danger-color);
+  border-color: var(--danger-color);
   background-color: transparent;
   &:hover {
-    color: #ff7875;
-    border-color: #ff7875;
+    color: var(--danger-color-hover);
+    border-color: var(--danger-color-hover);
   }
   &:active {
-    color: #d9363e;
-    border-color: #d9363e;
+    color: var(--danger-color-active);
+    border-color: var(--danger-color-active);
   }
   .btn-icon {
     :deep(svg) {

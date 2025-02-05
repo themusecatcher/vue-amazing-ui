@@ -11,9 +11,6 @@ import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 // vue-amazing-ui 按需引入
 // import { VueAmazingUIResolver } from 'vue-amazing-ui'
-// 自动引入组件样式
-// import { createStyleImportPlugin } from 'vite-plugin-style-import'
-// import { VueAmazingUIStyleResolve } from 'vue-amazing-ui'
 // 打包体积可视化插件
 // import { visualizer } from 'rollup-plugin-visualizer'
 // 功能全面且轻量级的命令行参数解析工具
@@ -95,7 +92,7 @@ const buildDistOptions = {
   //   }
   // },
   // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在其被加载时一并获取。如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
-  // cssCodeSplit: true, // 默认 true，如果指定了 build.lib，build.cssCodeSplit 会默认为 false
+  cssCodeSplit: false, // 默认 true，如果指定了 build.lib，build.cssCodeSplit 会默认为 false
   // cssMinify: 'esbuild', // boolean | 'esbuild' | 'lightningcss'，默认: 与 build.minify 一致，允许用户覆盖 CSS 最小化压缩的配置，而不是使用默认的 build.minify
   // reportCompressedSize: true, // 默认 true，启用/禁用 gzip 压缩大小报告。压缩大型输出文件可能会很慢，因此禁用该功能可能会提高大型项目的构建性能。
   chunkSizeWarningLimit: 1000, // 默认 500，规定触发警告的 chunk 大小，单位kbs
@@ -204,12 +201,6 @@ export default defineConfig({
         // VueAmazingUIResolver()
       ]
     }),
-    // imports component library styles on demand
-    // createStyleImportPlugin({
-    //   resolves:[
-    //     VueAmazingUIStyleResolve()
-    //   ]
-    // })
     // AutoImport({ // 自动引入所需 apis
     //   dts: 'src/auto-imports.d.ts',
     //   imports: ['vue', 'vue-router'],

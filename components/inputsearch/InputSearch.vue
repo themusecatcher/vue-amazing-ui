@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed } from 'vue'
 import Button from 'components/button'
 import { useSlotsExist } from 'components/utils'
 export interface Props {

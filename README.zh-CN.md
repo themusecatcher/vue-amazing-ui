@@ -16,7 +16,7 @@
 
 ## 特性
 
-- 组件库采用 `Vue@3.5.13`+ `TypeScript@5.7.3` + `Vite@6.0.8` + `Less@4.2.2` 实现
+- 组件库采用 `Vue@3.5.13`+ `TypeScript@5.7.3` + `Vite@6.0.11` + `Less@4.2.2` 实现
 - 目前共包含 `64` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -84,68 +84,6 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
-**自动引入样式（推荐）**
-
-使用 [`vite-plugin-style-import`](https://github.com/vbenjs/vite-plugin-style-import) 插件来按需自动引入组件样式，插件会自动解析模板中的使用到的组件，并导入其样式
-
-```sh
-pnpm add vite-plugin-style-import -D
-# or
-npm install vite-plugin-style-import -D
-# or
-yarn add vite-plugin-style-import -D
-# or
-bun add vite-plugin-style-import -D
-```
-
-```ts
-// vite.config.ts
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { createStyleImportPlugin } from 'vite-plugin-style-import'
-// 自动引入组件样式
-import { VueAmazingUIStyleResolve } from 'vue-amazing-ui'
-
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    // imports component library styles on demand
-    createStyleImportPlugin({
-      resolves:[
-        VueAmazingUIStyleResolve()
-      ]
-    })
-  ]
-})
-```
-
-然后，你可以在代码中引入使用 `vue-amazing-ui` 的所有组件，无论是全局部分注册的方式，还是局部注册的方式，都无需再额外引入组件样式
-
-- 全局部分注册
-
-  ```ts
-  import { createApp } from 'vue'
-  import App from './App.vue'
-  import { Button, Tag } from 'vue-amazing-ui'
-
-  const app = createApp(App)
-  app.use(Button).use(Tag)
-  app.mount('#app')
-  ```
-
-- 局部注册
-
-  ```vue
-  <script setup lang="ts">
-  import { Button, Tag } from 'vue-amazing-ui'
-  </script>
-  <template>
-    <Button>button</Button>
-    <Tag>tag</Tag>
-  </template>
-  ```
-
 **自动按需引入（强烈推荐）**
 
 使用 [`unplugin-vue-components`](https://github.com/unplugin/unplugin-vue-components) 插件来按需自动加载组件，插件会自动解析模板中的使用到的组件，并导入组件和样式
@@ -197,6 +135,7 @@ export default defineConfig({
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { ButtonProps } from 'vue-amazing-ui'
 const shape = ref<ButtonProps['shape']>('default')
 </script>
