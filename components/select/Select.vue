@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch } from 'vue'
+import { ref, computed, watchEffect, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar from 'components/scrollbar'
@@ -52,7 +52,9 @@ const inputValue = ref() // 支持搜索时，用户输入内容
 const disabledBlur = ref(false) // 是否禁用 input 标签的 blur 事件
 const hideSelectName = ref(false) // 用户输入时，隐藏 selectName 的展示
 const hoverValue = ref() // 鼠标悬浮项的 value 值
-const showOptions = ref(false) // 显示隐藏options 面板
+const scrollbarRef = ref() // 下拉面板滚动条 DOM 引用
+const scrollTop = ref(0) // 下拉面板滚动条滚动高度
+const showOptions = ref(false) // 显示隐藏 options 面板
 const showArrow = ref(true) // 剪头图标显隐
 const showClear = ref(false) // 清除图标显隐
 const showCaret = ref(false) // 支持搜索时，输入光标的显隐
@@ -75,6 +77,10 @@ const selectHeight = computed(() => {
     return `${props.height}px`
   }
   return `${heightMap[props.size]}px`
+})
+const isScrollable = computed(() => {
+  // 是否存在滚动
+  return props.options.length > props.maxDisplay
 })
 const optionsStyle = computed(() => {
   const style: CSSProperties = {
@@ -109,8 +115,19 @@ watchEffect(() => {
   // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   initSelector()
 })
-watch(showOptions, (to) => {
+watch(showOptions, async (to) => {
   emits('openChange', to)
+  if (to && isScrollable.value) {
+    await nextTick()
+    scrollbarRef.value.scrollTo({
+      top: scrollTop.value,
+      behavior: 'instant'
+    })
+  }
+  if (!to && isScrollable.value) {
+    const scrollData = scrollbarRef.value.getScrollData()
+    scrollTop.value = scrollData.scrollTop
+  }
   if (props.search && !to) {
     inputValue.value = undefined
     hideSelectName.value = false
@@ -328,7 +345,7 @@ function onClick() {
         @mouseenter="disabledBlur = true"
         @mouseleave="disabledBlur = false"
       >
-        <Scrollbar :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
+        <Scrollbar ref="scrollbarRef" :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
           <p
             v-for="(option, index) in filterOptions"
             :key="index"
