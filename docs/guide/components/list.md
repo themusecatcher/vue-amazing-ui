@@ -9,8 +9,8 @@
 - 最基础的列表展示，可承载文字、列表、图片、段落，链接等
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue'
+import { ref, reactive, h } from 'vue'
+import { UserOutlined, StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue'
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -756,7 +756,7 @@ const listData = ref([
 <List>
   <ListItem
     :avatar-props="{
-      src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+      icon: () => h(UserOutlined),
       size: 56
     }"
     :avatar-style="{ alignSelf: 'center' }"
@@ -778,7 +778,7 @@ const listData = ref([
     </template>
     <template #extra>
       <img
-        class="u-img"
+        class="extra-img"
         width="200"
         alt="extra"
         src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg"
@@ -791,7 +791,8 @@ const listData = ref([
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
+import { UserOutlined } from '@ant-design/icons-vue'
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
@@ -819,7 +820,7 @@ const listData = ref([
   <List>
     <ListItem
       :avatar-props="{
-        src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+        icon: () => h(UserOutlined),
         size: 56
       }"
       :avatar-style="{ alignSelf: 'center' }"
@@ -841,7 +842,7 @@ const listData = ref([
       </template>
       <template #extra>
         <img
-          class="u-img"
+          class="extra-img"
           width="200"
           alt="extra"
           src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg"
@@ -881,7 +882,7 @@ const listData = ref([
     </template>
     <template #extra>
       <img
-        class="u-img"
+        class="extra-img"
         width="272"
         alt="extra"
         src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
@@ -897,7 +898,7 @@ const listData = ref([
 </List>
 
 <style lang="less" scoped>
-.u-img {
+.extra-img {
   display: inline-block;
   vertical-align: bottom;
 }
@@ -961,7 +962,7 @@ const pagination = {
       </template>
       <template #extra>
         <img
-          class="u-img"
+          class="extra-img"
           width="272"
           alt="extra"
           src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
@@ -977,7 +978,7 @@ const pagination = {
   </List>
 </template>
 <style lang="less" scoped>
-.u-img {
+.extra-img {
   display: inline-block;
   vertical-align: bottom;
 }

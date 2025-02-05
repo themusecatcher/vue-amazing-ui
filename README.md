@@ -84,68 +84,6 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
-**Auto Import Styles (Recommended)**
-
-Use the [`vite-plugin-style-import`](https://github.com/vbenjs/vite-plugin-style-import) plugin to automatically import component styles on demand. The plugin will automatically parse the used components in the template and import their styles.
-
-```sh
-pnpm add vite-plugin-style-import -D
-# or
-npm install vite-plugin-style-import -D
-# or
-yarn add vite-plugin-style-import -D
-# or
-bun add vite-plugin-style-import -D
-```
-
-```ts
-// vite.config.ts
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { createStyleImportPlugin } from 'vite-plugin-style-import'
-// Automatically import component styles
-import { VueAmazingUIStyleResolve } from 'vue-amazing-ui'
-
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    // imports component library styles on demand
-    createStyleImportPlugin({
-      resolves:[
-        VueAmazingUIStyleResolve()
-      ]
-    })
-  ]
-})
-```
-
-Then, you can use all components of `vue-amazing-ui` in your code without needing to manually import component styles, whether you are using global partial registration or local registration.
-
-- Global Partial Registration
-
-  ```ts
-  import { createApp } from 'vue'
-  import App from './App.vue'
-  import { Button, Tag } from 'vue-amazing-ui'
-
-  const app = createApp(App)
-  app.use(Button).use(Tag)
-  app.mount('#app')
-  ```
-
-- Local Registration
-
-  ```vue
-  <script setup lang="ts">
-  import { Button, Tag } from 'vue-amazing-ui'
-  </script>
-  <template>
-    <Button>button</Button>
-    <Tag>tag</Tag>
-  </template>
-  ```
-
 **Automatic On-Demand Import (Strongly Recommended)**
 
 Use the [`unplugin-vue-components`](https://github.com/unplugin/unplugin-vue-components) plugin to automatically import components on demand. The plugin will automatically parse the components used in the template and import the components and styles.

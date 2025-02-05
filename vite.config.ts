@@ -11,9 +11,6 @@ import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 // vue-amazing-ui 按需引入
 // import { VueAmazingUIResolver } from 'vue-amazing-ui'
-// 自动引入组件样式
-// import { createStyleImportPlugin } from 'vite-plugin-style-import'
-// import { VueAmazingUIStyleResolve } from 'vue-amazing-ui'
 // 打包体积可视化插件
 // import { visualizer } from 'rollup-plugin-visualizer'
 // 功能全面且轻量级的命令行参数解析工具
@@ -204,12 +201,6 @@ export default defineConfig({
         // VueAmazingUIResolver()
       ]
     }),
-    // imports component library styles on demand
-    // createStyleImportPlugin({
-    //   resolves:[
-    //     VueAmazingUIStyleResolve()
-    //   ]
-    // })
     // AutoImport({ // 自动引入所需 apis
     //   dts: 'src/auto-imports.d.ts',
     //   imports: ['vue', 'vue-router'],
