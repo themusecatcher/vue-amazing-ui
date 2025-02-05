@@ -78,8 +78,8 @@ const selectHeight = computed(() => {
   }
   return `${heightMap[props.size]}px`
 })
+// 是否存在滚动
 const isScrollable = computed(() => {
-  // 是否存在滚动
   return props.options.length > props.maxDisplay
 })
 const optionsStyle = computed(() => {
@@ -117,16 +117,16 @@ watchEffect(() => {
 })
 watch(showOptions, async (to) => {
   emits('openChange', to)
+  if (!to && isScrollable.value) {
+    const scrollData = scrollbarRef.value.getScrollData()
+    scrollTop.value = scrollData.scrollTop
+  }
   if (to && isScrollable.value) {
     await nextTick()
     scrollbarRef.value.scrollTo({
       top: scrollTop.value,
       behavior: 'instant'
     })
-  }
-  if (!to && isScrollable.value) {
-    const scrollData = scrollbarRef.value.getScrollData()
-    scrollTop.value = scrollData.scrollTop
   }
   if (props.search && !to) {
     inputValue.value = undefined
