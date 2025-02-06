@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, nextTick, computed } from 'vue'
 import type { VNode, Slot } from 'vue'
-import { getYear } from 'date-fns'
+import { getYear, getMonth } from 'date-fns'
 import type { SelectOption } from 'vue-amazing-ui'
 import Select from 'components/select'
 import Radio from 'components/radio'
@@ -18,10 +18,13 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined
 })
 const yearOptions = reactive<SelectOption[]>([])
+const monthOptions = reactive<SelectOption[]>([])
 const now = Date.now()
 const year = ref<number>(getYear(now))
+const month = ref<number>(getMonth(now))
 onMounted(() => {
   getYearOptions()
+  getMonthOptions()
 })
 function getYearOptions() {
   yearOptions.length = 0
@@ -34,12 +37,21 @@ function getYearOptions() {
     })
   }
 }
+function getMonthOptions() {
+  for (let m = 1; m <= 12; m++) {
+    monthOptions.push({
+      label: `${m}月`,
+      value: m
+    })
+  }
+}
 const emits = defineEmits(['update:value', 'change'])
 </script>
 <template>
   <div class="m-calendar">
     <div class="calendar-header">
       <Select :options="yearOptions" v-model="year" />
+      <Select :options="monthOptions" v-model="month" />
     </div>
     <slot name="header"></slot>
   </div>
