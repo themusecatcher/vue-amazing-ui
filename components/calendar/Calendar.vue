@@ -392,7 +392,8 @@ function onPanelChange() {
         :size="display === 'card' ? 'small' : 'middle'"
         :options="monthOptions"
         v-model="calendarMonth"
-        @change="onPanelChange" />
+        @change="onPanelChange"
+      />
       <Radio
         class="calendar-mode-radio"
         :button-size="display === 'card' ? 'small' : 'middle'"
@@ -612,14 +613,16 @@ function onPanelChange() {
               height: 24px;
               transform: translateY(-50%);
               transition: all 0.3s;
-              content: "";
+              content: '';
               pointer-events: none;
             }
             .date-cell-inner {
               display: inline-block;
               height: 24px;
               border-radius: 4px;
-              transition: background 0.2s, color 0.2s;
+              transition:
+                background 0.2s,
+                color 0.2s;
             }
             .date-cell-today {
               &::before {
@@ -631,7 +634,7 @@ function onPanelChange() {
                 z-index: 1;
                 border: 1px solid #1677ff;
                 border-radius: 4px;
-                content: "";
+                content: '';
               }
             }
             .date-cell-selected {

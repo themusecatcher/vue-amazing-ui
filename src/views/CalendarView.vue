@@ -19,5 +19,4 @@ function onPanelChange(info: any, mode: 'month' | 'year') {
     </Space>
   </div>
 </template>
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>
