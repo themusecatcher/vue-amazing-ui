@@ -9,7 +9,7 @@
   <p style="font-size: 18px; font-weight: 600; color: #1677ff;">Join Me</p>
   <template #description>
     <p style="font-size: 16px;">
-      如果您对 Vue Amazing UI 感兴趣，欢迎加入我，一起开发、维护和迭代组件库。您的贡献将帮助组件库不断的更新与完善，共同打造更优秀的用户体验。
+      如果您对 Vue Amazing UI 感兴趣，欢迎加入我，一起开发、维护和迭代组件库。您的贡献将帮助组件库不断的更新与完善，共同打造更 amazing 的 UI 组件库！
     </p>
   </template>
 </Alert>
