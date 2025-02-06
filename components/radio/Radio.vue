@@ -287,6 +287,7 @@ function onWaveEnd() {
   border-left-width: 0;
   border-right-width: 1px;
   cursor: pointer;
+  outline: none;
   transition:
     all 0.2s,
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
