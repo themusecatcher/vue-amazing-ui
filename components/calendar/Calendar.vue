@@ -21,6 +21,7 @@ import {
   isValid,
   parse,
   setYear,
+  startOfDay,
   startOfMonth,
   startOfYear
 } from 'date-fns'
@@ -69,8 +70,8 @@ const modeOptions = reactive<RadioOption[]>([
 ])
 const weeks = ['一', '二', '三', '四', '五', '六', '日']
 const now = Date.now()
-const year = ref<number>(getYear(now))
-const month = ref<number>(getMonth(now) + 1)
+const calendarYear = ref<number>(getYear(now))
+const calendarMonth = ref<number>(getMonth(now) + 1)
 const calendarMode = ref<'month' | 'year'>(props.mode)
 const matcherMap = {
   date: isSameDay,
@@ -79,8 +80,10 @@ const matcherMap = {
   quarter: isSameQuarter
 } as const
 const calendarDates = ref<Array<DateItem[]>>([])
-const selectedTimestamp = ref<number>(0)
-const emits = defineEmits(['update:value', 'change'])
+const dateSelectedTimestamp = ref<number>(startOfDay(now).getTime())
+const calendarMonths = ref<Array<MonthItem[]>>([])
+const monthSelectedTimestamp = ref<number>(startOfMonth(now).getTime())
+const emits = defineEmits(['update:value', 'change', 'panelChange'])
 watch(
   () => props.mode,
   (to) => {
@@ -88,11 +91,14 @@ watch(
   }
 )
 watch(
-  () => [year.value, month.value],
+  () => [calendarYear.value, calendarMonth.value],
   () => {
-    const firstDayOfMonth = new Date(year.value, month.value - 1, 1)
+    const firstDayOfMonth = new Date(calendarYear.value, calendarMonth.value - 1, 1)
     const startOfMonthTimestamp = firstDayOfMonth.getTime()
     calendarDates.value = getCalendarDates(startOfMonthTimestamp)
+    calendarMonths.value = getCalendarMonths(startOfMonthTimestamp)
+    console.log('calendarDates', calendarDates.value)
+    console.log('calendarMonths', calendarMonths.value)
   },
   {
     deep: true,
@@ -105,8 +111,8 @@ onMounted(() => {
 })
 function getYearOptions() {
   yearOptions.length = 0
-  const startYear = year.value - 10
-  const endYear = year.value + 9
+  const startYear = calendarYear.value - 10
+  const endYear = calendarYear.value + 9
   for (let y = startYear; y <= endYear; y++) {
     yearOptions.push({
       label: `${y}年`,
@@ -283,14 +289,34 @@ function getCalendarDates(startOfMonthTimestamp: number): DateItem[][] {
   console.log('result', result)
   return result
 }
+function getCalendarMonths(startOfMonthTimestamp: number): MonthItem[][] {
+  const months = getMonths(startOfMonthTimestamp, null, now, { monthFormat: 'MMMM' })
+  const chunkSize = 3
+  const chunkCount = months.length / chunkSize
+  const result: MonthItem[][] = []
+  for (let i = 0; i < chunkCount; i++) {
+    result.push(months.slice(i * chunkSize, (i + 1) * chunkSize))
+  }
+  console.log('result', result)
+  return result
+}
 console.log('getDates', getDates(startOfMonth(now).valueOf(), null, now, 0, true, true))
 function getDateStr(date: DateItem) {
   return format(date.ts, 'yyyy-MM-dd')
 }
-function onSelected(date: DateItem) {
-  console.log('onSelected', date)
-  if (selectedTimestamp.value !== date.ts) {
-    selectedTimestamp.value = date.ts
+function getMonthStr(month: MonthItem) {
+  return format(month.ts, 'yyyy-MM')
+}
+function onDateSelected(date: DateItem) {
+  console.log('onDateSelected', date)
+  if (dateSelectedTimestamp.value !== date.ts) {
+    dateSelectedTimestamp.value = date.ts
+  }
+}
+function onMonthSelected(month: MonthItem) {
+  console.log('onMonthSelected', month)
+  if (monthSelectedTimestamp.value !== month.ts) {
+    monthSelectedTimestamp.value = month.ts
   }
 }
 export interface MonthItem {
@@ -326,7 +352,7 @@ function monthItem(
     ts: getTime(monthTs)
   }
 }
-function monthArray(
+function getMonths(
   yearAnchorTs: number,
   valueTs: number | null,
   currentTs: number,
@@ -341,25 +367,51 @@ function monthArray(
   }
   return calendarMonths
 }
-console.log('monthArray', monthArray(now, null, now, { monthFormat: 'MMMM' }))
+console.log('getMonths', getMonths(now, null, now, { monthFormat: 'MMMM' }))
+function onPanelChange() {
+  if (calendarMode.value === 'month') {
+    emits('panelChange', { year: calendarYear.value, month: calendarMonth.value }, calendarMode.value)
+  } else {
+    emits('panelChange', { year: calendarYear.value }, calendarMode.value)
+  }
+}
 </script>
 <template>
   <div class="m-calendar" :class="`calendar-${display}`">
     <div class="calendar-header">
-      <Select :options="yearOptions" v-model="year" />
-      <Select class="calendar-month-select" :options="monthOptions" v-model="month" />
-      <Radio class="calendar-mode-radio" :options="modeOptions" v-model:value="calendarMode" button />
+      <Select
+        class="calendar-year-select"
+        :size="display === 'card' ? 'small' : 'middle'"
+        :options="yearOptions"
+        v-model="calendarYear"
+        @change="onPanelChange"
+      />
+      <Select
+        v-if="calendarMode === 'month'"
+        class="calendar-month-select"
+        :size="display === 'card' ? 'small' : 'middle'"
+        :options="monthOptions"
+        v-model="calendarMonth"
+        @change="onPanelChange" />
+      <Radio
+        class="calendar-mode-radio"
+        :button-size="display === 'card' ? 'small' : 'middle'"
+        :options="modeOptions"
+        v-model:value="calendarMode"
+        button
+        @change="onPanelChange"
+      />
     </div>
     <div tabindex="0" class="calendar-display-wrap">
       <div class="calendar-date-panel">
         <div class="calendar-body">
           <table class="calendar-table">
-            <thead>
+            <thead v-if="calendarMode === 'month'">
               <tr>
                 <th v-for="(week, index) in weeks" :key="index">{{ week }}</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody v-if="calendarMode === 'month'">
               <tr v-for="(weekDates, weekIndex) in calendarDates" :key="weekIndex">
                 <td
                   class="calendar-date-cell"
@@ -372,11 +424,33 @@ console.log('monthArray', monthArray(now, null, now, { monthFormat: 'MMMM' }))
                     :class="{
                       'date-cell-in-view': dateItem.inCurrentMonth,
                       'date-cell-today': dateItem.isCurrentDate,
-                      'date-cell-selected': selectedTimestamp === dateItem.ts
+                      'date-cell-selected': dateSelectedTimestamp === dateItem.ts
                     }"
-                    @click="onSelected(dateItem)"
+                    @click="onDateSelected(dateItem)"
                   >
                     <div class="date-value">{{ dateItem.dateObject.date }}</div>
+                    <div class="date-content"></div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <tbody v-if="calendarMode === 'year'">
+              <tr v-for="(rowMonths, rowIndex) in calendarMonths" :key="rowIndex">
+                <td
+                  class="calendar-date-cell"
+                  v-for="(monthItem, index) in rowMonths"
+                  :key="index"
+                  :title="getMonthStr(monthItem)"
+                >
+                  <div
+                    class="date-cell-inner date-cell-in-view"
+                    :class="{
+                      'date-cell-today': monthItem.isCurrent,
+                      'date-cell-selected': monthSelectedTimestamp === monthItem.ts
+                    }"
+                    @click="onMonthSelected(monthItem)"
+                  >
+                    <div class="date-value">{{ monthItem.dateObject.month + 1 }}月</div>
                     <div class="date-content"></div>
                   </div>
                 </td>
@@ -400,6 +474,9 @@ console.log('monthArray', monthArray(now, null, now, { monthFormat: 'MMMM' }))
     display: flex;
     justify-content: flex-end;
     padding: 12px 0;
+    .calendar-year-select {
+      min-width: 80px;
+    }
     .calendar-month-select {
       min-width: 72px;
       margin-left: 8px;
@@ -423,8 +500,6 @@ console.log('monthArray', monthArray(now, null, now, { monthFormat: 'MMMM' }))
           border-collapse: collapse;
           th {
             height: auto;
-            padding-right: 12px;
-            padding-bottom: 4px;
             line-height: 18px;
             width: 36px;
             color: rgba(0, 0, 0, 0.88);
@@ -440,7 +515,38 @@ console.log('monthArray', monthArray(now, null, now, { monthFormat: 'MMMM' }))
           }
           .calendar-date-cell {
             .date-cell-inner {
+              position: relative;
+              z-index: 2;
+              min-width: 24px;
+              line-height: 24px;
               color: rgba(0, 0, 0, 0.25);
+              cursor: pointer;
+              &:hover:not(.date-cell-selected) {
+                background: rgba(0, 0, 0, 0.04);
+              }
+            }
+            .date-cell-in-view {
+              color: rgba(0, 0, 0, 0.88);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.calendar-panel {
+  .calendar-display-wrap {
+    width: 100%;
+    text-align: end;
+    .calendar-date-panel {
+      .calendar-body {
+        .calendar-table {
+          th {
+            padding-right: 12px;
+            padding-bottom: 4px;
+          }
+          .calendar-date-cell {
+            .date-cell-inner {
               display: block;
               width: auto;
               height: auto;
@@ -450,20 +556,6 @@ console.log('monthArray', monthArray(now, null, now, { monthFormat: 'MMMM' }))
               border-top: 2px solid rgba(5, 5, 5, 0.06);
               border-radius: 0;
               transition: background 0.3s;
-
-              cursor: pointer;
-
-              position: relative;
-              z-index: 2;
-              // display: inline-block;
-              min-width: 24px;
-              // height: 24px;
-              line-height: 24px;
-              // border-radius: 4px;
-              // transition: background 0.2s, border 0.2s;
-              &:hover:not(.date-cell-selected) {
-                background: rgba(0, 0, 0, 0.04);
-              }
               .date-value {
                 line-height: 24px;
                 transition: color 0.3s;
@@ -478,9 +570,6 @@ console.log('monthArray', monthArray(now, null, now, { monthFormat: 'MMMM' }))
                 text-align: start;
               }
             }
-            .date-cell-in-view {
-              color: rgba(0, 0, 0, 0.88);
-            }
             .date-cell-today {
               border-color: #1677ff;
             }
@@ -494,20 +583,65 @@ console.log('monthArray', monthArray(now, null, now, { monthFormat: 'MMMM' }))
     }
   }
 }
-.calendar-panel {
-  .calendar-display-wrap {
-    width: 100%;
-    text-align: end;
-    
-  }
-}
 .calendar-card {
+  width: 300px;
+  border: 1px solid rgb(217, 217, 217);
+  border-radius: 4px;
+  .calendar-header {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
   .calendar-display-wrap {
     display: inline-flex;
     flex-direction: column;
     text-align: center;
-    border: 1px solid rgba(5, 5, 5, 0.06);
+    border-top: 1px solid rgba(5, 5, 5, 0.06);
     border-radius: 0 0 8px 8px;
+    .calendar-date-panel {
+      .calendar-body {
+        .calendar-table {
+          // height: 256px;
+          .calendar-date-cell {
+            padding: 4px 0;
+            &::before {
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 0;
+              z-index: 1;
+              height: 24px;
+              transform: translateY(-50%);
+              transition: all 0.3s;
+              content: "";
+              pointer-events: none;
+            }
+            .date-cell-inner {
+              display: inline-block;
+              height: 24px;
+              border-radius: 4px;
+              transition: background 0.2s, color 0.2s;
+            }
+            .date-cell-today {
+              &::before {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 1;
+                border: 1px solid #1677ff;
+                border-radius: 4px;
+                content: "";
+              }
+            }
+            .date-cell-selected {
+              color: #fff;
+              background: #1677ff;
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>
