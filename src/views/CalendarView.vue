@@ -66,7 +66,7 @@ const getYears = (value: Dayjs) => {
 </script>
 <template>
   <div>
-    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Calendar @panelChange="onPanelChange" />
     <a-calendar @panelChange="onPanelChange" />
@@ -76,25 +76,27 @@ const getYears = (value: Dayjs) => {
       <div :style="{ width: '300px', border: '1px solid #d9d9d9', borderRadius: '4px' }">
         <a-calendar :fullscreen="false" @panelChange="onPanelChange" />
       </div>
-    </Space>
+    </Space> -->
     <h2 class="mt30 mb10">通知事项日历</h2>
     <Calendar @panelChange="onPanelChange">
       <template #dateCellValue="{ dateObject, year, month, date, timestamp }">
         <template v-if="format(timestamp, 'yyyy-MM-dd') === '2025-02-12'">
-          <span style="font-size: 16px; font-weight: 500;">{{ date }}</span>
-        </template>
-      </template>
-      <template #dateCellContent="{ dateObject, year, month, date, timestamp }">
-        <template v-if="format(timestamp, 'yyyy-MM-dd') === '2025-02-12'">
           <GradientText
             :size="20"
-            :weight="500"
+            :weight="600"
             :gradient="{
               deg: '90deg',
               from: '#09c8ce',
               to: '#eb2f96'
             }"
-          >元宵节</GradientText>
+          >{{ date }} (元宵节)</GradientText>
+        </template>
+      </template>
+      <template #dateCellContent="{ dateObject, year, month, date, timestamp }">
+        <template v-if="format(timestamp, 'yyyy-MM-dd') === '2025-02-12'">
+          <Ellipsis><Badge color="geekblue" />This a geekblue long text</Ellipsis>
+          <Badge color="magenta" text="This a magenta text" />
+          <Badge color="volcano" text="This a volcano text" />
         </template>
       </template>
     </Calendar>
