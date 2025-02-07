@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   valueStyle: () => ({}),
   zIndex: 9,
   title: undefined,
-  ripple: true
+  ripple: false
 })
 const presetColors: string[] = [
   'pink',
