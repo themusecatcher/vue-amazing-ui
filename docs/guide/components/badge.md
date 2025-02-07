@@ -291,11 +291,11 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 ## 状态点
 
 <Space>
-  <Badge status="success" />
-  <Badge status="error" />
-  <Badge status="default" />
-  <Badge status="processing" />
-  <Badge status="warning" />
+  <Badge status="success" ripple />
+  <Badge status="error" ripple />
+  <Badge status="default" ripple />
+  <Badge status="processing" ripple />
+  <Badge status="warning" ripple />
 </Space>
 <br/>
 <Space style="margin-top: 10px;" vertical>
@@ -311,11 +311,11 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 ```vue
 <template>
   <Space>
-    <Badge status="success" />
-    <Badge status="error" />
-    <Badge status="default" />
-    <Badge status="processing" />
-    <Badge status="warning" />
+    <Badge status="success" ripple />
+    <Badge status="error" ripple />
+    <Badge status="default" ripple />
+    <Badge status="processing" ripple />
+    <Badge status="warning" ripple />
   </Space>
   <br/>
   <Space style="margin-top: 10px;" vertical>
@@ -501,7 +501,7 @@ text | 在设置了 `status` 的前提下有效，设置状态点的文本 | str
 valueStyle | 设置徽标的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 zIndex | 设置徽标的 `z-index` | number | 9
 title | 设置鼠标放在状态点上时显示的文字 | string | undefined
-ripple | 是否开启涟漪动画效果 | boolean | true
+ripple | 是否开启涟漪动画效果 | boolean | false
 
 ### PresetColor Type
 
