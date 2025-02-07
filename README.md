@@ -54,7 +54,7 @@ app.mount('#app')
 
 **Global Partial Registration**
 
-*In this form, only components imported will be bundled.*
+*In this form, only the imported components will be bundled.*
 
 ```ts
 import { createApp } from 'vue'
@@ -70,7 +70,7 @@ app.mount('#app')
 
 **Local Registration**
 
-*In this form, only components imported will be bundled.*
+*In this form, only the imported components will be bundled as well.*
 
 ```vue
 <script setup lang="ts">
