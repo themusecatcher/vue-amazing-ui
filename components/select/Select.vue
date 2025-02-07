@@ -116,19 +116,19 @@ watchEffect(() => {
   initSelector()
 })
 watch(showOptions, async (to) => {
-  emits('openChange', to)
-  if (scrollbarRef.value && isScrollable.value) {
+  if (isScrollable.value) {
     if (!to) {
-      const scrollData = scrollbarRef.value.getScrollData()
-      scrollTop.value = scrollData.scrollTop
+      const scrollData = scrollbarRef.value && scrollbarRef.value.getScrollData()
+      scrollTop.value = scrollData?.scrollTop || 0
     } else {
       await nextTick()
-      scrollbarRef.value.scrollTo({
+      scrollbarRef.value && scrollbarRef.value.scrollTo({
         top: scrollTop.value,
         behavior: 'instant'
       })
     }
   }
+  emits('openChange', to)
   if (props.search && !to) {
     inputValue.value = undefined
     hideSelectName.value = false
