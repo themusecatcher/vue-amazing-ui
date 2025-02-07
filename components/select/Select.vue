@@ -122,10 +122,11 @@ watch(showOptions, async (to) => {
       scrollTop.value = scrollData?.scrollTop || 0
     } else {
       await nextTick()
-      scrollbarRef.value && scrollbarRef.value.scrollTo({
-        top: scrollTop.value,
-        behavior: 'instant'
-      })
+      scrollbarRef.value &&
+        scrollbarRef.value.scrollTo({
+          top: scrollTop.value,
+          behavior: 'instant'
+        })
     }
   }
   emits('openChange', to)
