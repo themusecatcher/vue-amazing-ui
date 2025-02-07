@@ -10,6 +10,7 @@
 
 ## 2.1.7 <Tag color="volcano" size="small">2025-02-07</Tag>
 
+- 优化并更新 [徽标 Badge](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html) 组件，将属性 `ripple` 默认值调整为 `false`
 - 组件库及文档代码优化
 
 ## 2.1.6 <Tag color="volcano" size="small">2025-02-06</Tag>

@@ -115,11 +115,11 @@ function increase() {
     </Badge>
     <h2 class="mt30 mb10">状态点</h2>
     <Space>
-      <Badge status="success" />
-      <Badge status="error" />
-      <Badge status="default" />
-      <Badge status="processing" />
-      <Badge status="warning" />
+      <Badge status="success" ripple />
+      <Badge status="error" ripple />
+      <Badge status="default" ripple />
+      <Badge status="processing" ripple />
+      <Badge status="warning" ripple />
     </Space>
     <br />
     <Space style="margin-top: 10px" vertical>
