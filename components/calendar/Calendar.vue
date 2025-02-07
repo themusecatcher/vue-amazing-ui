@@ -404,15 +404,15 @@ function onPanelChange() {
       />
     </div>
     <div tabindex="0" class="calendar-display-wrap">
-      <div class="calendar-date-panel">
+      <div v-if="calendarMode === 'month'" class="calendar-date-panel">
         <div class="calendar-body">
           <table class="calendar-table">
-            <thead v-if="calendarMode === 'month'">
+            <thead>
               <tr>
                 <th v-for="(week, index) in weeks" :key="index">{{ week }}</th>
               </tr>
             </thead>
-            <tbody v-if="calendarMode === 'month'">
+            <tbody>
               <tr v-for="(weekDates, weekIndex) in calendarDates" :key="weekIndex">
                 <td
                   class="calendar-date-cell"
@@ -435,7 +435,13 @@ function onPanelChange() {
                 </td>
               </tr>
             </tbody>
-            <tbody v-if="calendarMode === 'year'">
+          </table>
+        </div>
+      </div>
+      <div v-if="calendarMode === 'year'" class="calendar-month-panel">
+        <div class="calendar-body">
+          <table class="calendar-table">
+            <tbody>
               <tr v-for="(rowMonths, rowIndex) in calendarMonths" :key="rowIndex">
                 <td
                   class="calendar-date-cell"
@@ -489,7 +495,8 @@ function onPanelChange() {
   .calendar-display-wrap {
     background: #ffffff;
     outline: none;
-    .calendar-date-panel {
+    .calendar-date-panel,
+    .calendar-month-panel {
       display: flex;
       flex-direction: column;
       width: auto;
@@ -499,20 +506,18 @@ function onPanelChange() {
           width: 100%;
           table-layout: fixed;
           border-collapse: collapse;
+          th,
+          td {
+            position: relative;
+            min-width: 24px;
+            font-weight: normal;
+          }
           th {
             height: auto;
             line-height: 18px;
             width: 36px;
             color: rgba(0, 0, 0, 0.88);
             vertical-align: middle;
-            position: relative;
-            min-width: 24px;
-            font-weight: normal;
-          }
-          td {
-            position: relative;
-            min-width: 24px;
-            font-weight: normal;
           }
           .calendar-date-cell {
             .date-cell-inner {
@@ -539,7 +544,8 @@ function onPanelChange() {
   .calendar-display-wrap {
     width: 100%;
     text-align: end;
-    .calendar-date-panel {
+    .calendar-date-panel,
+    .calendar-month-panel {
       .calendar-body {
         .calendar-table {
           th {
@@ -598,10 +604,10 @@ function onPanelChange() {
     text-align: center;
     border-top: 1px solid rgba(5, 5, 5, 0.06);
     border-radius: 0 0 8px 8px;
-    .calendar-date-panel {
+    .calendar-date-panel,
+    .calendar-month-panel {
       .calendar-body {
         .calendar-table {
-          // height: 256px;
           .calendar-date-cell {
             padding: 4px 0;
             &::before {
@@ -620,9 +626,7 @@ function onPanelChange() {
               display: inline-block;
               height: 24px;
               border-radius: 4px;
-              transition:
-                background 0.2s,
-                color 0.2s;
+              transition: background 0.2s, color 0.2s;
             }
             .date-cell-today {
               &::before {
@@ -640,6 +644,28 @@ function onPanelChange() {
             .date-cell-selected {
               color: #fff;
               background: #1677ff;
+            }
+          }
+        }
+      }
+    }
+    .calendar-date-panel {
+      .calendar-body {
+        .calendar-table {
+          .calendar-date-cell {
+            height: 40px;
+          }
+        }
+      }
+    }
+    .calendar-month-panel {
+      .calendar-body {
+        .calendar-table {
+          .calendar-date-cell {
+            height: 64px;
+            .date-cell-inner {
+              width: 60px;
+              padding: 0 8px;
             }
           }
         }
