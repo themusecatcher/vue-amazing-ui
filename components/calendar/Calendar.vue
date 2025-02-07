@@ -621,6 +621,7 @@ function onPanelChange() {
                 position: static;
                 width: auto;
                 height: 86px;
+                overflow-x: visible;
                 overflow-y: auto;
                 color: rgba(0, 0, 0, 0.88);
                 line-height: 1.5714285714285714;
