@@ -8,6 +8,10 @@
 
 - 新增 [日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html) 组件 -->
 
+## 2.1.7 <Tag color="volcano" size="small">2025-02-07</Tag>
+
+- 组件库及文档代码优化
+
 ## 2.1.6 <Tag color="volcano" size="small">2025-02-06</Tag>
 
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件交互，自动记录下拉面板滚动位置
