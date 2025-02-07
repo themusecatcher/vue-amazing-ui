@@ -501,7 +501,7 @@ text | 在设置了 `status` 的前提下有效，设置状态点的文本 | str
 valueStyle | 设置徽标的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 zIndex | 设置徽标的 `z-index` | number | 9
 title | 设置鼠标放在状态点上时显示的文字 | string | undefined
-ripple | 是否开启涟漪动画效果 | boolean | true
+ripple | 是否开启涟漪动画效果 | boolean | false
 
 ### PresetColor Type
 
