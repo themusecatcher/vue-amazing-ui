@@ -80,10 +80,9 @@ const matcherMap = {
   quarter: isSameQuarter
 } as const
 const calendarDates = ref<Array<DateItem[]>>([])
-const dateSelectedTimestamp = ref<number>(startOfDay(now).getTime())
+const selectedTimestamp = ref<number>(startOfDay(now).getTime())
 const calendarMonths = ref<Array<MonthItem[]>>([])
-const monthSelectedTimestamp = ref<number>(startOfMonth(now).getTime())
-const emits = defineEmits(['update:value', 'change', 'panelChange'])
+const emits = defineEmits(['update:value', 'change', 'panelChange', 'select'])
 watch(
   () => props.mode,
   (to) => {
@@ -91,9 +90,9 @@ watch(
   }
 )
 watch(
-  () => [calendarYear.value, calendarMonth.value],
-  () => {
-    const firstDayOfMonth = new Date(calendarYear.value, calendarMonth.value - 1, 1)
+  calendarYear,
+  (to) => {
+    const firstDayOfMonth = new Date(to, calendarMonth.value - 1, 1)
     const startOfMonthTimestamp = firstDayOfMonth.getTime()
     calendarDates.value = getCalendarDates(startOfMonthTimestamp)
     calendarMonths.value = getCalendarMonths(startOfMonthTimestamp)
@@ -101,7 +100,18 @@ watch(
     console.log('calendarMonths', calendarMonths.value)
   },
   {
-    deep: true,
+    immediate: true
+  }
+)
+watch(
+  calendarMonth,
+  (to) => {
+    const firstDayOfMonth = new Date(calendarYear.value, to - 1, 1)
+    const startOfMonthTimestamp = firstDayOfMonth.getTime()
+    calendarDates.value = getCalendarDates(startOfMonthTimestamp)
+    console.log('calendarDates', calendarDates.value)
+  },
+  {
     immediate: true
   }
 )
@@ -112,8 +122,8 @@ onMounted(() => {
 function getYearOptions() {
   yearOptions.length = 0
   const startYear = calendarYear.value - 10
-  const endYear = calendarYear.value + 9
-  for (let y = startYear; y <= endYear; y++) {
+  const endYear = calendarYear.value + 10
+  for (let y = startYear; y < endYear; y++) {
     yearOptions.push({
       label: `${y}年`,
       value: y
@@ -309,14 +319,21 @@ function getMonthStr(month: MonthItem) {
 }
 function onDateSelected(date: DateItem) {
   console.log('onDateSelected', date)
-  if (dateSelectedTimestamp.value !== date.ts) {
-    dateSelectedTimestamp.value = date.ts
+  if (selectedTimestamp.value !== date.ts) {
+    selectedTimestamp.value = date.ts
+    emits('update:value', selectedTimestamp.value)
+    emits('select', date.ts, 'date')
   }
 }
 function onMonthSelected(month: MonthItem) {
   console.log('onMonthSelected', month)
-  if (monthSelectedTimestamp.value !== month.ts) {
-    monthSelectedTimestamp.value = month.ts
+  if (startOfMonth(selectedTimestamp.value).getTime() !== month.ts) {
+    calendarMonth.value = month.dateObject.month + 1
+    const offsetYears = month.dateObject.year - getYear(selectedTimestamp.value)
+    const offsetMonths = month.dateObject.month - getMonth(selectedTimestamp.value)
+    selectedTimestamp.value = addMonths(addYears(selectedTimestamp.value, offsetYears).getTime(), offsetMonths).getTime()
+    emits('update:value', selectedTimestamp.value)
+    emits('select', month.ts, 'month')
   }
 }
 export interface MonthItem {
@@ -383,6 +400,7 @@ function onPanelChange() {
         class="calendar-year-select"
         :size="display === 'card' ? 'small' : 'middle'"
         :options="yearOptions"
+        :max-display="8"
         v-model="calendarYear"
         @change="onPanelChange"
       />
@@ -391,6 +409,7 @@ function onPanelChange() {
         class="calendar-month-select"
         :size="display === 'card' ? 'small' : 'middle'"
         :options="monthOptions"
+        :max-display="8"
         v-model="calendarMonth"
         @change="onPanelChange"
       />
@@ -425,7 +444,7 @@ function onPanelChange() {
                     :class="{
                       'date-cell-in-view': dateItem.inCurrentMonth,
                       'date-cell-today': dateItem.isCurrentDate,
-                      'date-cell-selected': dateSelectedTimestamp === dateItem.ts
+                      'date-cell-selected': selectedTimestamp === dateItem.ts
                     }"
                     @click="onDateSelected(dateItem)"
                   >
@@ -453,7 +472,7 @@ function onPanelChange() {
                     class="date-cell-inner date-cell-in-view"
                     :class="{
                       'date-cell-today': monthItem.isCurrent,
-                      'date-cell-selected': monthSelectedTimestamp === monthItem.ts
+                      'date-cell-selected': startOfMonth(selectedTimestamp).getTime() === monthItem.ts
                     }"
                     @click="onMonthSelected(monthItem)"
                   >
@@ -481,11 +500,7 @@ function onPanelChange() {
     display: flex;
     justify-content: flex-end;
     padding: 12px 0;
-    .calendar-year-select {
-      min-width: 80px;
-    }
     .calendar-month-select {
-      min-width: 72px;
       margin-left: 8px;
     }
     .calendar-mode-radio {
@@ -541,6 +556,14 @@ function onPanelChange() {
   }
 }
 .calendar-panel {
+  .calendar-header {
+    .calendar-year-select {
+      min-width: 90px;
+    }
+    .calendar-month-select {
+      min-width: 72px;
+    }
+  }
   .calendar-display-wrap {
     width: 100%;
     text-align: end;
@@ -597,6 +620,12 @@ function onPanelChange() {
   .calendar-header {
     padding-left: 8px;
     padding-right: 8px;
+    .calendar-year-select {
+      min-width: 86px;
+    }
+    .calendar-month-select {
+      min-width: 70px;
+    }
   }
   .calendar-display-wrap {
     display: inline-flex;
