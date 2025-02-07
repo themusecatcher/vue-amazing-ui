@@ -28,14 +28,17 @@ import {
 import type { SelectOption, RadioOption } from 'vue-amazing-ui'
 import Select from 'components/select'
 import Radio from 'components/radio'
+import { useSlotsExist } from 'components/utils'
 export interface Props {
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
+  header?: string // 自定义头部内容 string | slot
   display?: 'panel' | 'card' // 日历展示方式，面板/卡片
   mode?: 'month' | 'year' // 初始模式
   value?: number // (v-model) 当前被选中的日期的时间戳
 }
 const props = withDefaults(defineProps<Props>(), {
   disabledDate: undefined,
+  header: undefined,
   display: 'panel',
   mode: 'month',
   value: undefined
@@ -82,7 +85,11 @@ const matcherMap = {
 const calendarDates = ref<Array<DateItem[]>>([])
 const selectedTimestamp = ref<number>(startOfDay(now).getTime())
 const calendarMonths = ref<Array<MonthItem[]>>([])
+const slotsExist = useSlotsExist(['header'])
 const emits = defineEmits(['update:value', 'change', 'panelChange', 'select'])
+const showHeader = computed(() => {
+  return slotsExist.header || props.header
+})
 watch(
   () => props.mode,
   (to) => {
@@ -321,6 +328,9 @@ function onDateSelected(date: DateItem) {
   console.log('onDateSelected', date)
   if (selectedTimestamp.value !== date.ts) {
     selectedTimestamp.value = date.ts
+    if (date.dateObject.month + 1 !== calendarMonth.value) {
+      calendarMonth.value = date.dateObject.month + 1
+    }
     emits('update:value', selectedTimestamp.value)
     emits('select', date.ts, 'date')
   }
@@ -395,32 +405,37 @@ function onPanelChange() {
 </script>
 <template>
   <div class="m-calendar" :class="`calendar-${display}`">
-    <div class="calendar-header">
-      <Select
-        class="calendar-year-select"
-        :size="display === 'card' ? 'small' : 'middle'"
-        :options="yearOptions"
-        :max-display="8"
-        v-model="calendarYear"
-        @change="onPanelChange"
-      />
-      <Select
-        v-if="calendarMode === 'month'"
-        class="calendar-month-select"
-        :size="display === 'card' ? 'small' : 'middle'"
-        :options="monthOptions"
-        :max-display="8"
-        v-model="calendarMonth"
-        @change="onPanelChange"
-      />
-      <Radio
-        class="calendar-mode-radio"
-        :button-size="display === 'card' ? 'small' : 'middle'"
-        :options="modeOptions"
-        v-model:value="calendarMode"
-        button
-        @change="onPanelChange"
-      />
+    <div class="calendar-header-wrap">
+      <div v-if="showHeader" class="calendar-header-content">
+        <slot name="header">{{ header }}</slot>
+      </div>
+      <div class="calendar-header-actions">
+        <Select
+          class="calendar-year-select"
+          :size="display === 'card' ? 'small' : 'middle'"
+          :options="yearOptions"
+          :max-display="8"
+          v-model="calendarYear"
+          @change="onPanelChange"
+        />
+        <Select
+          v-if="calendarMode === 'month'"
+          class="calendar-month-select"
+          :size="display === 'card' ? 'small' : 'middle'"
+          :options="monthOptions"
+          :max-display="8"
+          v-model="calendarMonth"
+          @change="onPanelChange"
+        />
+        <Radio
+          class="calendar-mode-radio"
+          :button-size="display === 'card' ? 'small' : 'middle'"
+          :options="modeOptions"
+          v-model:value="calendarMode"
+          button
+          @change="onPanelChange"
+        />
+      </div>
     </div>
     <div tabindex="0" class="calendar-display-wrap">
       <div v-if="calendarMode === 'month'" class="calendar-date-panel">
@@ -435,21 +450,23 @@ function onPanelChange() {
               <tr v-for="(weekDates, weekIndex) in calendarDates" :key="weekIndex">
                 <td
                   class="calendar-date-cell"
+                  :class="{
+                    'date-cell-disabled': disabledDate && disabledDate(dateItem.ts),
+                    'date-cell-in-view': dateItem.inCurrentMonth,
+                    'date-cell-today': dateItem.isCurrentDate,
+                    'date-cell-selected': selectedTimestamp === dateItem.ts
+                  }"
                   v-for="(dateItem, index) in weekDates"
                   :key="index"
                   :title="getDateStr(dateItem)"
                 >
-                  <div
-                    class="date-cell-inner"
-                    :class="{
-                      'date-cell-in-view': dateItem.inCurrentMonth,
-                      'date-cell-today': dateItem.isCurrentDate,
-                      'date-cell-selected': selectedTimestamp === dateItem.ts
-                    }"
-                    @click="onDateSelected(dateItem)"
-                  >
-                    <div class="date-value">{{ dateItem.dateObject.date }}</div>
-                    <div class="date-content"></div>
+                  <div class="date-cell-inner" @click="onDateSelected(dateItem)">
+                    <div class="date-value">
+                      <slot name="dateCellValue" :dateObject="dateItem.dateObject" v-bind="dateItem.dateObject" :timestamp="dateItem.ts">{{ dateItem.dateObject.date }}</slot>
+                    </div>
+                    <div class="date-content">
+                      <slot name="dateCellContent" :dateObject="dateItem.dateObject" v-bind="dateItem.dateObject" :timestamp="dateItem.ts"></slot>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -463,19 +480,16 @@ function onPanelChange() {
             <tbody>
               <tr v-for="(rowMonths, rowIndex) in calendarMonths" :key="rowIndex">
                 <td
-                  class="calendar-date-cell"
+                  class="calendar-date-cell date-cell-in-view"
+                  :class="{
+                    'date-cell-today': monthItem.isCurrent,
+                    'date-cell-selected': startOfMonth(selectedTimestamp).getTime() === monthItem.ts
+                  }"
                   v-for="(monthItem, index) in rowMonths"
                   :key="index"
                   :title="getMonthStr(monthItem)"
                 >
-                  <div
-                    class="date-cell-inner date-cell-in-view"
-                    :class="{
-                      'date-cell-today': monthItem.isCurrent,
-                      'date-cell-selected': startOfMonth(selectedTimestamp).getTime() === monthItem.ts
-                    }"
-                    @click="onMonthSelected(monthItem)"
-                  >
+                  <div class="date-cell-inner" @click="onMonthSelected(monthItem)">
                     <div class="date-value">{{ monthItem.dateObject.month + 1 }}月</div>
                     <div class="date-content"></div>
                   </div>
@@ -496,15 +510,20 @@ function onPanelChange() {
   line-height: 1.5714285714285714;
   list-style: none;
   background: #ffffff;
-  .calendar-header {
-    display: flex;
-    justify-content: flex-end;
+  .calendar-header-wrap {
     padding: 12px 0;
-    .calendar-month-select {
-      margin-left: 8px;
+    .calendar-header-content {
+      margin-bottom: 10px;
     }
-    .calendar-mode-radio {
-      margin-left: 8px;
+    .calendar-header-actions {
+      display: flex;
+      justify-content: flex-end;
+      .calendar-month-select {
+        margin-left: 8px;
+      }
+      .calendar-mode-radio {
+        margin-left: 8px;
+      }
     }
   }
   .calendar-display-wrap {
@@ -535,20 +554,26 @@ function onPanelChange() {
             vertical-align: middle;
           }
           .calendar-date-cell {
+            color: rgba(0, 0, 0, 0.25);
+            cursor: pointer;
             .date-cell-inner {
               position: relative;
               z-index: 2;
               min-width: 24px;
               line-height: 24px;
-              color: rgba(0, 0, 0, 0.25);
-              cursor: pointer;
-              &:hover:not(.date-cell-selected) {
+            }
+            &:hover:not(.date-cell-selected) {
+              .date-cell-inner {
                 background: rgba(0, 0, 0, 0.04);
               }
             }
-            .date-cell-in-view {
-              color: rgba(0, 0, 0, 0.88);
-            }
+          }
+          .date-cell-disabled {
+            color: rgba(0, 0, 0, 0.25);
+            pointer-events: none;
+          }
+          .date-cell-in-view:not(.date-cell-disabled):not(.date-cell-selected) {
+            color: rgba(0, 0, 0, 0.88);
           }
         }
       }
@@ -556,12 +581,14 @@ function onPanelChange() {
   }
 }
 .calendar-panel {
-  .calendar-header {
-    .calendar-year-select {
-      min-width: 90px;
-    }
-    .calendar-month-select {
-      min-width: 72px;
+  .calendar-header-wrap {
+    .calendar-header-actions {
+      .calendar-year-select {
+        min-width: 90px;
+      }
+      .calendar-month-select {
+        min-width: 72px;
+      }
     }
   }
   .calendar-display-wrap {
@@ -600,10 +627,17 @@ function onPanelChange() {
                 text-align: start;
               }
             }
-            .date-cell-today {
+          }
+          .date-cell-today {
+            .date-cell-inner {
               border-color: #1677ff;
+              .date-value {
+                color: rgba(0, 0, 0, 0.88);
+              }
             }
-            .date-cell-selected {
+          }
+          .date-cell-selected {
+            .date-cell-inner {
               color: #1677ff;
               background: #e6f4ff;
             }
@@ -617,14 +651,16 @@ function onPanelChange() {
   width: 300px;
   border: 1px solid rgb(217, 217, 217);
   border-radius: 4px;
-  .calendar-header {
+  .calendar-header-wrap {
     padding-left: 8px;
     padding-right: 8px;
-    .calendar-year-select {
-      min-width: 86px;
-    }
-    .calendar-month-select {
-      min-width: 70px;
+    .calendar-header-actions {
+      .calendar-year-select {
+        min-width: 86px;
+      }
+      .calendar-month-select {
+        min-width: 70px;
+      }
     }
   }
   .calendar-display-wrap {
@@ -657,7 +693,14 @@ function onPanelChange() {
               border-radius: 4px;
               transition: background 0.2s, color 0.2s;
             }
-            .date-cell-today {
+          }
+          .date-cell-disabled {
+            &::before {
+              background: rgba(0, 0, 0, 0.04);
+            }
+          }
+          .date-cell-today {
+            .date-cell-inner {
               &::before {
                 position: absolute;
                 top: 0;
@@ -670,7 +713,16 @@ function onPanelChange() {
                 content: '';
               }
             }
-            .date-cell-selected {
+          }
+          .date-cell-disabled.date-cell-today {
+            .date-cell-inner {
+              &::before {
+                border-color: rgba(0, 0, 0, 0.25);
+              }
+            }
+          }
+          .date-cell-selected {
+            .date-cell-inner {
               color: #fff;
               background: #1677ff;
             }
