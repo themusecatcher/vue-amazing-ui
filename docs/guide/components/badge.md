@@ -291,11 +291,11 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 ## 状态点
 
 <Space>
-  <Badge status="success" />
-  <Badge status="error" />
-  <Badge status="default" />
-  <Badge status="processing" />
-  <Badge status="warning" />
+  <Badge status="success" ripple />
+  <Badge status="error" ripple />
+  <Badge status="default" ripple />
+  <Badge status="processing" ripple />
+  <Badge status="warning" ripple />
 </Space>
 <br/>
 <Space style="margin-top: 10px;" vertical>
@@ -311,11 +311,11 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 ```vue
 <template>
   <Space>
-    <Badge status="success" />
-    <Badge status="error" />
-    <Badge status="default" />
-    <Badge status="processing" />
-    <Badge status="warning" />
+    <Badge status="success" ripple />
+    <Badge status="error" ripple />
+    <Badge status="default" ripple />
+    <Badge status="processing" ripple />
+    <Badge status="warning" ripple />
   </Space>
   <br/>
   <Space style="margin-top: 10px;" vertical>
