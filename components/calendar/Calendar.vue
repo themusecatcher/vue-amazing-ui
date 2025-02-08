@@ -1,46 +1,52 @@
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted, nextTick, computed } from 'vue'
-import type { VNode, Slot } from 'vue'
+import { ref, reactive, watch, onMounted, computed } from 'vue'
 import {
   addDays,
   addMonths,
-  addQuarters,
   addYears,
   format,
   getDate,
   getDay,
   getMonth,
-  getQuarter,
   getTime,
   getYear,
   isSameDay,
   isSameMonth,
-  isSameQuarter,
-  isSameWeek,
-  isSameYear,
-  isValid,
   parse,
-  setYear,
   startOfDay,
   startOfMonth,
   startOfYear
 } from 'date-fns'
-import type { SelectOption, RadioOption } from 'vue-amazing-ui'
 import Select from 'components/select'
 import Radio from 'components/radio'
 import { useSlotsExist } from 'components/utils'
+import type { SelectOption, RadioOption } from 'vue-amazing-ui'
+export type StartDayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
+export type DefaultWeek = '一' | '二' | '三' | '四' | '五' | '六' | '日'
 export interface Props {
-  disabledDate?: (timestamp: number) => boolean // 不可选择的日期
-  header?: string // 自定义头部内容 string | slot
   display?: 'panel' | 'card' // 日历展示方式，面板/卡片
   mode?: 'month' | 'year' // 初始模式
-  value?: number // (v-model) 当前被选中的日期的时间戳
+  header?: string // 自定义头部内容 string | slot
+  startDayOfWeek?: StartDayOfWeek // 一周的开始是星期几，0-6，0 是周一
+  dateStrip?: boolean // 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉
+  dateFormat?: (date: number) => string // 自定义日期展示格式
+  weekFormat?: (defaultWeek: DefaultWeek, week: number) => string // 自定义星期展示格式
+  monthFormat?: (month: number) => string // 自定义月展示格式
+  disabledDate?: (timestamp: number) => boolean // 不可选择的日期
+  valueFormat?: string // 被选中日期的格式，默认为时间戳；参考 https://date-fns.org/v4.1.0/docs/format
+  value?: string | number // (v-model) 当前被选中的日期的时间戳
 }
 const props = withDefaults(defineProps<Props>(), {
-  disabledDate: undefined,
-  header: undefined,
   display: 'panel',
   mode: 'month',
+  header: undefined,
+  startDayOfWeek: 0,
+  dateStrip: true,
+  dateFormat: undefined,
+  weekFormat: undefined,
+  monthFormat: undefined,
+  disabledDate: undefined,
+  valueFormat: undefined,
   value: undefined
 })
 export interface DateItem {
@@ -52,11 +58,15 @@ export interface DateItem {
   }
   inCurrentMonth: boolean
   isCurrentDate: boolean
-  inSpan: boolean
-  startOfSpan: boolean
-  endOfSpan: boolean
-  selected: boolean
-  inSelectedWeek: boolean
+  ts: number
+}
+export interface MonthItem {
+  type: 'month'
+  dateObject: {
+    month: number
+    year: number
+  }
+  isCurrent: boolean
   ts: number
 }
 const yearOptions = reactive<SelectOption[]>([])
@@ -71,22 +81,37 @@ const modeOptions = reactive<RadioOption[]>([
     value: 'year'
   }
 ])
-const weeks = ['一', '二', '三', '四', '五', '六', '日']
-const now = Date.now()
-const calendarYear = ref<number>(getYear(now))
-const calendarMonth = ref<number>(getMonth(now) + 1)
-const calendarMode = ref<'month' | 'year'>(props.mode)
-const matcherMap = {
-  date: isSameDay,
-  month: isSameMonth,
-  year: isSameYear,
-  quarter: isSameQuarter
-} as const
+const now = ref(Date.now())
+const defaultWeeks = computed(() => {
+  const origin: DefaultWeek[] = ['一', '二', '三', '四', '五', '六', '日']
+  const result: DefaultWeek[] = []
+  result.push(origin[props.startDayOfWeek])
+  let startDay = (props.startDayOfWeek + 1) % 7
+  while(startDay !== props.startDayOfWeek) {
+    result.push(origin[startDay])
+    startDay = (startDay + 1) % 7
+  }
+  return result
+})
+const calendarYear = ref<number>(getYear(now.value))
+const calendarMonth = ref<number>(getMonth(now.value) + 1)
+const calendarMode = ref<Props['mode']>(props.mode)
 const calendarDates = ref<Array<DateItem[]>>([])
-const selectedTimestamp = ref<number>(startOfDay(now).getTime())
+const selectedValue = ref<string | number>()
 const calendarMonths = ref<Array<MonthItem[]>>([])
 const slotsExist = useSlotsExist(['header'])
 const emits = defineEmits(['update:value', 'change', 'panelChange', 'select'])
+const selectedValueTimestamp = computed(() => {
+  if (!selectedValue.value) return
+  if (typeof selectedValue.value === 'string') {
+    return parse(selectedValue.value, props.valueFormat as string, new Date()).getTime()
+  }
+  return selectedValue.value
+})
+const startOfMonthTimestamp = computed(() => {
+  const firstDayOfMonth = new Date(calendarYear.value, calendarMonth.value - 1, 1)
+  return firstDayOfMonth.getTime()
+})
 const showHeader = computed(() => {
   return slotsExist.header || props.header
 })
@@ -97,28 +122,38 @@ watch(
   }
 )
 watch(
+  () => [props.startDayOfWeek, props.dateStrip, calendarMonth.value, calendarYear.value],
+  () => {
+    calendarDates.value = getCalendarDates()
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+)
+watch(
   calendarYear,
-  (to) => {
-    const firstDayOfMonth = new Date(to, calendarMonth.value - 1, 1)
-    const startOfMonthTimestamp = firstDayOfMonth.getTime()
-    calendarDates.value = getCalendarDates(startOfMonthTimestamp)
-    calendarMonths.value = getCalendarMonths(startOfMonthTimestamp)
-    console.log('calendarDates', calendarDates.value)
-    console.log('calendarMonths', calendarMonths.value)
+  () => {
+    calendarMonths.value = getCalendarMonths()
   },
   {
     immediate: true
   }
 )
 watch(
-  calendarMonth,
-  (to) => {
-    const firstDayOfMonth = new Date(calendarYear.value, to - 1, 1)
-    const startOfMonthTimestamp = firstDayOfMonth.getTime()
-    calendarDates.value = getCalendarDates(startOfMonthTimestamp)
-    console.log('calendarDates', calendarDates.value)
+  () => [props.valueFormat, props.value],
+  () => {
+    if (props.value) {
+      if (props.valueFormat === undefined || props.valueFormat === 'T') {
+        selectedValue.value = Number(format(startOfDay(props.value).getTime(), props.valueFormat || 'T'))
+      } else {
+        selectedValue.value = format(startOfDay(props.value).getTime(), props.valueFormat)
+      }
+    }
+    console.log('selectedValue', selectedValue.value)
   },
   {
+    deep: true,
     immediate: true
   }
 )
@@ -126,7 +161,7 @@ onMounted(() => {
   getYearOptions()
   getMonthOptions()
 })
-function getYearOptions() {
+function getYearOptions(): void {
   yearOptions.length = 0
   const startYear = calendarYear.value - 10
   const endYear = calendarYear.value + 10
@@ -137,7 +172,7 @@ function getYearOptions() {
     })
   }
 }
-function getMonthOptions() {
+function getMonthOptions(): void {
   for (let m = 1; m <= 12; m++) {
     monthOptions.push({
       label: `${m}月`,
@@ -145,62 +180,7 @@ function getMonthOptions() {
     })
   }
 }
-// 0 is Monday
-export type FirstDayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
-function dateOrWeekItem(
-  time: number,
-  monthTs: number,
-  valueTs: number | [number, number] | null,
-  currentTs: number,
-  mode: 'date' | 'week',
-  firstDayOfWeek: FirstDayOfWeek
-): DateItem {
-  if (mode === 'date') {
-    return dateItem(time, monthTs, valueTs, currentTs)
-  } else {
-    return weekItem(time, monthTs, valueTs, currentTs, firstDayOfWeek)
-  }
-}
-function makeWeekMatcher(firstDayOfWeek: FirstDayOfWeek) {
-  return (sourceTime: number, patternTime: number | Date) => {
-    // date-fns: 0 - Sunday
-    // naive-ui: 0 - Monday
-    const weekStartsOn = ((firstDayOfWeek + 1) % 7) as FirstDayOfWeek
-    return isSameWeek(sourceTime, patternTime, { weekStartsOn })
-  }
-}
-function matchDate(
-  sourceTime: number,
-  patternTime: number | Date,
-  type: 'date' | 'month' | 'year' | 'quarter' | 'week',
-  firstDayOfWeek: FirstDayOfWeek = 0
-): boolean {
-  const matcher = type === 'week' ? makeWeekMatcher(firstDayOfWeek) : matcherMap[type]
-  return matcher(sourceTime, patternTime)
-}
-// date item's valueTs can be a tuple since two date may show in one panel, so
-// any matched value would make it shown as selected
-function dateItem(
-  time: number,
-  monthTs: number,
-  valueTs: number | [number, number] | null,
-  currentTs: number
-): DateItem {
-  let inSpan = false
-  let startOfSpan = false
-  let endOfSpan = false
-  if (Array.isArray(valueTs)) {
-    if (valueTs[0] < time && time < valueTs[1]) {
-      inSpan = true
-    }
-    if (matchDate(valueTs[0], time, 'date')) startOfSpan = true
-    if (matchDate(valueTs[1], time, 'date')) endOfSpan = true
-  }
-  const selected =
-    valueTs !== null &&
-    (Array.isArray(valueTs)
-      ? matchDate(valueTs[0], time, 'date') || matchDate(valueTs[1], time, 'date')
-      : matchDate(valueTs, time, 'date'))
+function getDateItem(time: number, monthTs: number, currentTs: number): DateItem {
   return {
     type: 'date',
     dateObject: {
@@ -209,67 +189,11 @@ function dateItem(
       year: getYear(time)
     },
     inCurrentMonth: isSameMonth(time, monthTs),
-    isCurrentDate: matchDate(currentTs, time, 'date'),
-    inSpan,
-    inSelectedWeek: false,
-    startOfSpan,
-    endOfSpan,
-    selected,
+    isCurrentDate: isSameDay(currentTs, time),
     ts: getTime(time)
   }
 }
-function weekItem(
-  time: number,
-  monthTs: number,
-  valueTs: number | [number, number] | null,
-  currentTs: number,
-  firstDayOfWeek: FirstDayOfWeek
-): DateItem {
-  let inSpan = false
-  let startOfSpan = false
-  let endOfSpan = false
-  if (Array.isArray(valueTs)) {
-    if (valueTs[0] < time && time < valueTs[1]) {
-      inSpan = true
-    }
-    if (matchDate(valueTs[0], time, 'week', firstDayOfWeek)) startOfSpan = true
-    if (matchDate(valueTs[1], time, 'week', firstDayOfWeek)) endOfSpan = true
-  }
-  const inSelectedWeek =
-    valueTs !== null &&
-    (Array.isArray(valueTs)
-      ? matchDate(valueTs[0], time, 'week', firstDayOfWeek) || matchDate(valueTs[1], time, 'week', firstDayOfWeek)
-      : matchDate(valueTs, time, 'week', firstDayOfWeek))
-  return {
-    type: 'date',
-    dateObject: {
-      date: getDate(time),
-      month: getMonth(time),
-      year: getYear(time)
-    },
-    inCurrentMonth: isSameMonth(time, monthTs),
-    isCurrentDate: matchDate(currentTs, time, 'date'),
-    inSpan,
-    startOfSpan,
-    endOfSpan,
-    selected: false,
-    inSelectedWeek,
-    ts: getTime(time)
-  }
-}
-/**
- * Given time to display calendar, given the selected time, given current time,
- * return the date array of display time's month.
- */
-function getDates(
-  monthTs: number,
-  valueTs: number | [number, number] | null,
-  currentTs: number,
-  startDay: 0 | 1 | 2 | 3 | 4 | 5 | 6,
-  strip: boolean = false,
-  weekMode: boolean = false
-): DateItem[] {
-  const granularity = weekMode ? 'week' : 'date'
+function getDates(monthTs: number, currentTs: number, startDay: StartDayOfWeek, strip: boolean = false): DateItem[] {
   const displayMonth = getMonth(monthTs)
   // First day of current month
   let displayMonthIterator = getTime(startOfMonth(monthTs))
@@ -278,124 +202,134 @@ function getDates(
   const calendarDays: DateItem[] = []
   let protectLastMonthDateIsShownFlag = !strip
   while (getDay(lastMonthIterator) !== startDay || protectLastMonthDateIsShownFlag) {
-    calendarDays.unshift(dateOrWeekItem(lastMonthIterator, monthTs, valueTs, currentTs, granularity, startDay))
+    calendarDays.unshift(getDateItem(lastMonthIterator, monthTs, currentTs))
     lastMonthIterator = getTime(addDays(lastMonthIterator, -1))
     protectLastMonthDateIsShownFlag = false
   }
   while (getMonth(displayMonthIterator) === displayMonth) {
-    calendarDays.push(dateOrWeekItem(displayMonthIterator, monthTs, valueTs, currentTs, granularity, startDay))
+    calendarDays.push(getDateItem(displayMonthIterator, monthTs, currentTs))
     displayMonthIterator = getTime(addDays(displayMonthIterator, 1))
   }
   const endIndex = strip ? (calendarDays.length <= 28 ? 28 : calendarDays.length <= 35 ? 35 : 42) : 42
   while (calendarDays.length < endIndex) {
-    calendarDays.push(dateOrWeekItem(displayMonthIterator, monthTs, valueTs, currentTs, granularity, startDay))
+    calendarDays.push(getDateItem(displayMonthIterator, monthTs, currentTs))
     displayMonthIterator = getTime(addDays(displayMonthIterator, 1))
   }
-
   return calendarDays
 }
-console.log('startOfMonth(now).valueOf()', startOfMonth(now).valueOf())
-function getCalendarDates(startOfMonthTimestamp: number): DateItem[][] {
-  const dates = getDates(startOfMonthTimestamp, null, now, 0, true, false)
+function getCalendarDates(): DateItem[][] {
+  const dates = getDates(startOfMonthTimestamp.value, Date.now(), props.startDayOfWeek, props.dateStrip)
+  // console.log('dates', dates)
   const chunkSize = 7
   const chunkCount = dates.length / chunkSize
   const result: DateItem[][] = []
   for (let i = 0; i < chunkCount; i++) {
     result.push(dates.slice(i * chunkSize, (i + 1) * chunkSize))
   }
-  console.log('result', result)
+  // console.log('result', result)
   return result
 }
-function getCalendarMonths(startOfMonthTimestamp: number): MonthItem[][] {
-  const months = getMonths(startOfMonthTimestamp, null, now, { monthFormat: 'MMMM' })
+function getMonthItem(monthTs: number, currentTs: number): MonthItem {
+  return {
+    type: 'month',
+    dateObject: {
+      month: getMonth(monthTs),
+      year: getYear(monthTs)
+    },
+    isCurrent: isSameMonth(currentTs, monthTs),
+    ts: getTime(monthTs)
+  }
+}
+function getMonths(yearAnchorTs: number, currentTs: number): MonthItem[] {
+  const calendarMonths: MonthItem[] = []
+  const yearStart = startOfYear(yearAnchorTs)
+  for (let i = 0; i < 12; i++) {
+    calendarMonths.push(getMonthItem(getTime(addMonths(yearStart, i)), currentTs))
+  }
+  return calendarMonths
+}
+function getCalendarMonths(): MonthItem[][] {
+  const months = getMonths(startOfMonthTimestamp.value, Date.now())
   const chunkSize = 3
   const chunkCount = months.length / chunkSize
   const result: MonthItem[][] = []
   for (let i = 0; i < chunkCount; i++) {
     result.push(months.slice(i * chunkSize, (i + 1) * chunkSize))
   }
-  console.log('result', result)
+  // console.log('result', result)
   return result
 }
-console.log('getDates', getDates(startOfMonth(now).valueOf(), null, now, 0, true, true))
-function getDateStr(date: DateItem) {
+function getDateStr(date: DateItem): string {
   return format(date.ts, 'yyyy-MM-dd')
 }
-function getMonthStr(month: MonthItem) {
+function getMonthStr(month: MonthItem): string {
   return format(month.ts, 'yyyy-MM')
 }
-function onDateSelected(date: DateItem) {
-  console.log('onDateSelected', date)
-  if (selectedTimestamp.value !== date.ts) {
-    selectedTimestamp.value = date.ts
+function getDateFormat(date: number): string {
+  if (props.dateFormat === undefined) {
+    return `${date}`
+  } else {
+    return props.dateFormat(date)
+  }
+}
+function getWeekFormat(defaultWeek: DefaultWeek, week: number): string {
+  if (props.weekFormat === undefined) {
+    return defaultWeek
+  } else {
+    return props.weekFormat(defaultWeek, week)
+  }
+}
+function getMonthFormat(month: number): string {
+  if (props.monthFormat === undefined) {
+    return `${month}月`
+  } else {
+    return props.monthFormat(month)
+  }
+}
+function onDateSelected(date: DateItem): void {
+  // console.log('onDateSelected', date)
+  if (selectedValueTimestamp.value !== date.ts) {
     if (date.dateObject.month + 1 !== calendarMonth.value) {
       calendarMonth.value = date.dateObject.month + 1
     }
-    emits('update:value', selectedTimestamp.value)
-    emits('select', date.ts, 'date')
+    if (props.valueFormat === undefined || props.valueFormat === 'T') {
+      selectedValue.value = date.ts
+    } else {
+      selectedValue.value = format(date.ts, props.valueFormat)
+    }
+    emits('update:value', selectedValue.value)
+    emits('select', selectedValue.value, 'date')
+    emits('change', selectedValue.value, date.dateObject)
   }
 }
-function onMonthSelected(month: MonthItem) {
-  console.log('onMonthSelected', month)
-  if (startOfMonth(selectedTimestamp.value).getTime() !== month.ts) {
+function getSelectedValueStartOfMonthTimeStamp(): number | undefined {
+  if (!selectedValue.value) return
+  if (typeof selectedValue.value === 'string') {
+    const selectedValueTimestamp = parse(selectedValue.value, props.valueFormat as string, new Date()).getTime()
+    return startOfMonth(selectedValueTimestamp).getTime()
+  }
+  return startOfMonth(selectedValue.value).getTime()
+}
+function onMonthSelected(month: MonthItem): void {
+  // console.log('onMonthSelected', month)
+  if (getSelectedValueStartOfMonthTimeStamp() !== month.ts) {
     calendarMonth.value = month.dateObject.month + 1
-    const offsetYears = month.dateObject.year - getYear(selectedTimestamp.value)
-    const offsetMonths = month.dateObject.month - getMonth(selectedTimestamp.value)
-    selectedTimestamp.value = addMonths(addYears(selectedTimestamp.value, offsetYears).getTime(), offsetMonths).getTime()
-    emits('update:value', selectedTimestamp.value)
-    emits('select', month.ts, 'month')
+    if (selectedValue.value) {
+      const offsetYears = month.dateObject.year - getYear(selectedValueTimestamp.value as number)
+      const offsetMonths = month.dateObject.month - getMonth(selectedValueTimestamp.value as number)
+      const newDate = addMonths(addYears(selectedValueTimestamp.value as number, offsetYears), offsetMonths)
+      if (props.valueFormat === undefined || props.valueFormat === 'T') {
+        selectedValue.value = Number(format(newDate, props.valueFormat || 'T'))
+      } else {
+        selectedValue.value = format(newDate, props.valueFormat)
+      }
+    }
+    emits('update:value', selectedValue.value)
+    emits('select', selectedValue.value, 'month')
+    emits('change', selectedValue.value, month.dateObject)
   }
 }
-export interface MonthItem {
-  type: 'month'
-  monthFormat: string
-  dateObject: {
-    month: number
-    year: number
-  }
-  isCurrent: boolean
-  selected: boolean
-  ts: number
-}
-function monthItem(
-  monthTs: number,
-  valueTs: number | null,
-  currentTs: number,
-  {
-    monthFormat
-  }: {
-    monthFormat: string
-  }
-): MonthItem {
-  return {
-    type: 'month',
-    monthFormat,
-    dateObject: {
-      month: getMonth(monthTs),
-      year: getYear(monthTs)
-    },
-    isCurrent: isSameMonth(currentTs, monthTs),
-    selected: valueTs !== null && matchDate(valueTs, monthTs, 'month'),
-    ts: getTime(monthTs)
-  }
-}
-function getMonths(
-  yearAnchorTs: number,
-  valueTs: number | null,
-  currentTs: number,
-  format: {
-    monthFormat: string
-  }
-): MonthItem[] {
-  const calendarMonths: MonthItem[] = []
-  const yearStart = startOfYear(yearAnchorTs)
-  for (let i = 0; i < 12; i++) {
-    calendarMonths.push(monthItem(getTime(addMonths(yearStart, i)), valueTs, currentTs, format))
-  }
-  return calendarMonths
-}
-console.log('getMonths', getMonths(now, null, now, { monthFormat: 'MMMM' }))
-function onPanelChange() {
+function onPanelChange(): void {
   if (calendarMode.value === 'month') {
     emits('panelChange', { year: calendarYear.value, month: calendarMonth.value }, calendarMode.value)
   } else {
@@ -443,7 +377,7 @@ function onPanelChange() {
           <table class="calendar-table">
             <thead>
               <tr>
-                <th v-for="(week, index) in weeks" :key="index">{{ week }}</th>
+                <th v-for="(week, index) in defaultWeeks" :key="index">{{ getWeekFormat(week, index + 1) }}</th>
               </tr>
             </thead>
             <tbody>
@@ -454,7 +388,7 @@ function onPanelChange() {
                     'date-cell-disabled': disabledDate && disabledDate(dateItem.ts),
                     'date-cell-in-view': dateItem.inCurrentMonth,
                     'date-cell-today': dateItem.isCurrentDate,
-                    'date-cell-selected': selectedTimestamp === dateItem.ts
+                    'date-cell-selected': selectedValueTimestamp && selectedValueTimestamp === dateItem.ts
                   }"
                   v-for="(dateItem, index) in weekDates"
                   :key="index"
@@ -462,7 +396,7 @@ function onPanelChange() {
                 >
                   <div class="date-cell-inner" @click="onDateSelected(dateItem)">
                     <div class="date-value">
-                      <slot name="dateCellValue" :dateObject="dateItem.dateObject" v-bind="dateItem.dateObject" :timestamp="dateItem.ts">{{ dateItem.dateObject.date }}</slot>
+                      <slot name="dateCellValue" :dateObject="dateItem.dateObject" v-bind="dateItem.dateObject" :timestamp="dateItem.ts">{{ getDateFormat(dateItem.dateObject.date) }}</slot>
                     </div>
                     <div class="date-content">
                       <slot name="dateCellContent" :dateObject="dateItem.dateObject" v-bind="dateItem.dateObject" :timestamp="dateItem.ts"></slot>
@@ -483,14 +417,14 @@ function onPanelChange() {
                   class="calendar-date-cell date-cell-in-view"
                   :class="{
                     'date-cell-today': monthItem.isCurrent,
-                    'date-cell-selected': startOfMonth(selectedTimestamp).getTime() === monthItem.ts
+                    'date-cell-selected': selectedValueTimestamp && startOfMonth(selectedValueTimestamp).getTime() === monthItem.ts
                   }"
                   v-for="(monthItem, index) in rowMonths"
                   :key="index"
                   :title="getMonthStr(monthItem)"
                 >
                   <div class="date-cell-inner" @click="onMonthSelected(monthItem)">
-                    <div class="date-value">{{ monthItem.dateObject.month + 1 }}月</div>
+                    <div class="date-value">{{ getMonthFormat(monthItem.dateObject.month + 1) }}</div>
                     <div class="date-content"></div>
                   </div>
                 </td>
@@ -500,7 +434,6 @@ function onPanelChange() {
         </div>
       </div>
     </div>
-    <slot name="header"></slot>
   </div>
 </template>
 <style lang="less" scoped>
@@ -621,7 +554,6 @@ function onPanelChange() {
                 position: static;
                 width: auto;
                 height: 86px;
-                overflow-x: visible;
                 overflow-y: auto;
                 color: rgba(0, 0, 0, 0.88);
                 line-height: 1.5714285714285714;
