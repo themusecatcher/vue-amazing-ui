@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
-import { subDays, addDays, format } from 'date-fns'
-import type { CalendarStartDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'components/index'
+import { format, subDays, addDays } from 'date-fns'
+import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
 const modeDate = ref(Date.now())
+const customCardStyleDate = ref(Date.now())
 const headerDate = ref(Date.now())
 const startDayOfWeekDate = ref(Date.now())
 const formatDate = ref(Date.now())
 const noticeDate = ref(Date.now())
-const selectDate = ref(Date.now())
+const slotDate = ref(Date.now())
+const selectDate = ref(new Date('2030-10-06').getTime())
 const disableDate = ref(Date.now())
 const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
 const message = ref()
@@ -56,7 +58,7 @@ const weekOptions = [
     value: 6
   }
 ]
-const startDayOfWeek = ref<CalendarStartDayOfWeek>(6)
+const startDayOfWeek = ref<CalendarDayOfWeek>(6)
 watchEffect(() => {
   console.log('date', date.value)
 })
@@ -65,6 +67,9 @@ watchEffect(() => {
 })
 watchEffect(() => {
   console.log('modeDate', modeDate.value)
+})
+watchEffect(() => {
+  console.log('customCardStyleDate', customCardStyleDate.value)
 })
 watchEffect(() => {
   console.log('headerDate', headerDate.value)
@@ -79,6 +84,9 @@ watchEffect(() => {
   console.log('noticeDate', noticeDate.value)
 })
 watchEffect(() => {
+  console.log('slotDate', slotDate.value)
+})
+watchEffect(() => {
   console.log('selectDate', selectDate.value)
 })
 watchEffect(() => {
@@ -87,42 +95,46 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('dateStr', dateStr.value)
 })
-function cardDateFormat(date: number) {
+function cardDateFormat(date: number, timestamp: number) {
   return String(date).padStart(2, '0')
 }
-function cardWeekFormat(defaultWeek: CalendarDefaultWeek, week: number) {
+function cardWeekFormat(defaultWeek: CalendarDefaultWeek, week: CalendarDayOfWeek) {
   return `周${defaultWeek}`
 }
-function cardMonthFormat(month: number) {
+function cardMonthFormat(month: number, timestamp: number) {
   const chineseNumber = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
   return `${chineseNumber[month - 1]}月`
 }
-function panelDateFormat(date: number) {
-  return `${date}日`
+function panelDateFormat(date: number, timestamp: number) {
+  return format(timestamp, 'do')
 }
-function panelWeekFormat(defaultWeek: CalendarDefaultWeek, week: number) {
-  return `星期${defaultWeek}`
+function panelWeekFormat(defaultWeek: CalendarDefaultWeek, week: CalendarDayOfWeek, timestamp: number) {
+  return format(timestamp, 'EEEE')
+}
+function panelMonthFormat(month: number, timestamp: number) {
+  return format(timestamp, 'MMM')
 }
 function disabledDate(timestamp: number): boolean {
-  // console.log('timestamp', timestamp)
   if (subDays(Date.now(), 4).getTime() < timestamp && timestamp < addDays(Date.now(), 3).getTime()) {
     return true
   }
   return false
 }
+function disabledWeekend(timestamp: number): boolean {
+  return ['6', '7'].includes(format(timestamp, 'i'))
+}
 function onSelect(date: string | number, source: 'date' | 'month') {
   console.log('select', date, source)
   message.value.success(format(date, 'yyyy-MM-dd'))
 }
-function onChange(date: string | number, dateObject: CalendarDateItem['dateObject'] | CalendarMonthItem['dateObject']) {
-  console.log('change', date, dateObject)
+function onChange(
+  date: string | number,
+  dateOrMonth: CalendarDateItem['dateObject'] | CalendarMonthItem['monthObject']
+) {
+  console.log('change', date, dateOrMonth)
 }
-interface PanelInfo {
-  year: number
-  month?: number
-}
-function onPanelChange(info: PanelInfo, mode: 'month' | 'year') {
-  console.log('panelChange', info, mode)
+function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
+  console.log('panelChange', date, info, mode)
 }
 </script>
 <template>
@@ -131,7 +143,7 @@ function onPanelChange(info: PanelInfo, mode: 'month' | 'year') {
     <h2 class="mt30 mb10">基本使用</h2>
     <Calendar v-model:value="date" @change="onChange" @panelChange="onPanelChange" />
     <h2 class="mt30 mb10">卡片模式</h2>
-    <Calendar v-model:value="cardDate" display="card" />
+    <Calendar v-model:value="cardDate" display="card" @change="onChange" @panelChange="onPanelChange" />
     <h2 class="mt30 mb10">初始模式</h2>
     <Flex vertical>
       <Space align="center">
@@ -143,9 +155,7 @@ function onPanelChange(info: PanelInfo, mode: 'month' | 'year') {
     <Space>
       <Calendar v-model:value="headerDate" header="Custom header" display="card" @panelChange="onPanelChange" />
       <Calendar v-model:value="headerDate" display="card" @panelChange="onPanelChange">
-        <template #header>
-          <CalendarOutlined /> 日历
-        </template>
+        <template #header> <CalendarOutlined /> 日历 </template>
       </Calendar>
     </Space>
     <h2 class="mt30 mb10">自定义一周的开始</h2>
@@ -156,39 +166,73 @@ function onPanelChange(info: PanelInfo, mode: 'month' | 'year') {
       <Calendar v-model:value="startDayOfWeekDate" :start-day-of-week="startDayOfWeek" />
     </Flex>
     <h2 class="mt30 mb10">自定义展示格式</h2>
-    <h3 class="mb10">使用 dateFormat / weekFormat / monthFormat 自定义日期/星期/月的展示格式</h3>
+    <h3 class="mb10">使用 weekFormat / dateFormat / monthFormat 自定义日期/星期/月的展示格式</h3>
     <Space>
-      <Calendar v-model:value="formatDate" header="Date format" display="card" :date-format="cardDateFormat" @panelChange="onPanelChange" />
-      <Calendar v-model:value="formatDate" header="Week format" display="card" :week-format="cardWeekFormat" @panelChange="onPanelChange" />
-      <Calendar v-model:value="formatDate" header="Month format" mode="year" display="card" :month-format="cardMonthFormat" @panelChange="onPanelChange" />
+      <Calendar
+        header="Date format"
+        display="card"
+        v-model:value="formatDate"
+        :date-format="cardDateFormat"
+        @panelChange="onPanelChange"
+      />
+      <Calendar
+        header="Week format"
+        display="card"
+        v-model:value="formatDate"
+        :week-format="cardWeekFormat"
+        @panelChange="onPanelChange"
+      />
+      <Calendar
+        header="Month format"
+        mode="year"
+        display="card"
+        v-model:value="formatDate"
+        :month-format="cardMonthFormat"
+        @panelChange="onPanelChange"
+      />
     </Space>
     <Calendar
       v-model:value="formatDate"
       :date-format="panelDateFormat"
       :week-format="panelWeekFormat"
+      :month-format="panelMonthFormat"
       @panelChange="onPanelChange"
     />
     <h2 class="mt30 mb10">通知事项日历</h2>
-    <Calendar v-model:value="noticeDate" @panelChange="onPanelChange">
-      <template #dateCellValue="{ dateObject, year, month, date, timestamp }">
-        <template v-if="format(timestamp, 'yyyy-MM-dd') === '2025-02-12'">
-          <GradientText
-            style="line-height: 24px"
-            :size="16"
-            :weight="600"
-            :gradient="{
-              deg: '90deg',
-              from: '#09c8ce',
-              to: '#eb2f96' }"
-          >{{ date }} (元宵节)</GradientText>
+    <Calendar display="card" v-model:value="noticeDate" @panelChange="onPanelChange">
+      <template #dateValue="{ dateObject, timestamp }">
+        <span v-if="[8, 12, 16].includes(dateObject.date)">{{ dateObject.date }}日</span>
+      </template>
+      <template #dateContent="{ dateObject, timestamp }">
+        <template v-if="[8, 12, 16].includes(dateObject.date)">
+          <Badge status="warning" text="This is warning event." />
+          <Badge status="success" text="This is usual event." />
+          <Badge color="volcano" text="This is volcano event" />
         </template>
       </template>
-      <template #dateCellContent="{ dateObject, year, month, date, timestamp }">
-        <template v-if="format(timestamp, 'yyyy-MM-dd') === '2025-02-12'">
-          <Badge color="geekblue" title="This a geekblue text" text="This a geekblue long text" />
-          <Badge color="magenta" text="This a magenta text" />
-          <Badge color="volcano" text="This a volcano text" />
+      <template #monthValue="{ monthObject, timestamp }">
+        <template v-if="[1, 7].includes(monthObject.month)">
+          <template v-if="monthObject.month === 1">二月</template>
+          <template v-if="monthObject.month === 7">八月</template>
         </template>
+      </template>
+      <template #monthContent="{ monthObject, timestamp }">
+        <template v-if="[1, 7].includes(monthObject.month)">
+          <Badge status="warning" text="This is warning event." />
+          <Badge status="success" text="This is usual event." />
+          <Badge color="volcano" text="This is volcano event" />
+        </template>
+      </template>
+    </Calendar>
+    <h2 class="mt30 mb10">自定义插槽</h2>
+    <h3 class="mb10">使用 week dateValue dateContent monthValue monthContent</h3>
+    <Calendar v-model:value="slotDate" @panelChange="onPanelChange">
+      <template #week="{ defaultWeek, week, timestamp }">
+        {{ format(timestamp, 'EEE') }}
+      </template>
+      <template #dateValue="{ dateObject, timestamp }"> {{ dateObject.date }}日 </template>
+      <template #monthValue="{ monthObject, timestamp }">
+        {{ format(timestamp, 'MMMM') }}
       </template>
     </Calendar>
     <h2 class="mt30 mb10">选择功能</h2>
@@ -199,10 +243,32 @@ function onPanelChange(info: PanelInfo, mode: 'month' | 'year') {
       <Space align="center">
         display:<Radio :options="displayOptions" v-model:value="display" button button-style="solid" />
       </Space>
-      <Calendar v-model:value="disableDate" :disabled-date="disabledDate" :display="display" v-model:value="date" @select="onSelect" @panelChange="onPanelChange" />
+      <Space>
+        <Flex vertical>
+          <Alert type="info" message="禁用指定日期 (以今天为准的前三天和后三天)" />
+          <Calendar
+            v-model:value="disableDate"
+            :disabled-date="disabledDate"
+            :display="display"
+            @select="onSelect"
+            @panelChange="onPanelChange"
+          />
+        </Flex>
+        <Flex vertical>
+          <Alert type="info" message="禁用所有周末 (星期六 & 星期日)" />
+          <Calendar
+            v-model:value="disableDate"
+            :disabled-date="disabledWeekend"
+            :display="display"
+            @select="onSelect"
+            @panelChange="onPanelChange"
+          />
+        </Flex>
+      </Space>
     </Flex>
     <h2 class="mt30 mb10">自定义日期格式</h2>
-    <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" />
+    <Alert type="info" :message="`You selected date: ${dateStr}`" />
+    <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
     <Message ref="message" />
   </div>
 </template>

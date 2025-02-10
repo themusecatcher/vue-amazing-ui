@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import {
   addDays,
   addMonths,
@@ -21,19 +21,19 @@ import Select from 'components/select'
 import Radio from 'components/radio'
 import { useSlotsExist } from 'components/utils'
 import type { SelectOption, RadioOption } from 'vue-amazing-ui'
-export type StartDayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type DefaultWeek = '一' | '二' | '三' | '四' | '五' | '六' | '日'
 export interface Props {
   display?: 'panel' | 'card' // 日历展示方式，面板/卡片
   mode?: 'month' | 'year' // 初始模式
-  header?: string // 自定义头部内容 string | slot
-  startDayOfWeek?: StartDayOfWeek // 一周的开始是星期几，0-6，0 是周一
+  header?: string // 自定义日历头部内容 string | slot
+  startDayOfWeek?: DayOfWeek // 一周的开始是星期几，0-6，0 是周一
   dateStrip?: boolean // 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉
-  dateFormat?: (date: number) => string // 自定义日期展示格式
-  weekFormat?: (defaultWeek: DefaultWeek, week: number) => string // 自定义星期展示格式
-  monthFormat?: (month: number) => string // 自定义月展示格式
+  dateFormat?: (date: number, timestamp: number) => string // 自定义日期展示格式
+  weekFormat?: (defaultWeek: DefaultWeek, week: number, timestamp: number) => string // 自定义星期展示格式
+  monthFormat?: (month: number, timestamp: number) => string // 自定义月展示格式
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
-  valueFormat?: string // 被选中日期的格式，默认为时间戳；参考 https://date-fns.org/v4.1.0/docs/format
+  valueFormat?: string // 被选中日期的格式，默认为时间戳；参考 format https://date-fns.org/v4.1.0/docs/format
   value?: string | number // (v-model) 当前被选中的日期的时间戳
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -56,22 +56,23 @@ export interface DateItem {
     month: number
     year: number
   }
+  timestamp: number
   inCurrentMonth: boolean
   isCurrentDate: boolean
-  ts: number
 }
 export interface MonthItem {
   type: 'month'
-  dateObject: {
+  monthObject: {
     month: number
     year: number
   }
+  timestamp: number
   isCurrent: boolean
-  ts: number
 }
-const yearOptions = reactive<SelectOption[]>([])
-const monthOptions = reactive<SelectOption[]>([])
-const modeOptions = reactive<RadioOption[]>([
+const now = ref(Date.now())
+const yearOptions = ref<SelectOption[]>([])
+const monthOptions = ref<SelectOption[]>(getMonthOptions())
+const modeOptions = ref<RadioOption[]>([
   {
     label: '月',
     value: 'month'
@@ -81,18 +82,6 @@ const modeOptions = reactive<RadioOption[]>([
     value: 'year'
   }
 ])
-const now = ref(Date.now())
-const defaultWeeks = computed(() => {
-  const origin: DefaultWeek[] = ['一', '二', '三', '四', '五', '六', '日']
-  const result: DefaultWeek[] = []
-  result.push(origin[props.startDayOfWeek])
-  let startDay = (props.startDayOfWeek + 1) % 7
-  while(startDay !== props.startDayOfWeek) {
-    result.push(origin[startDay])
-    startDay = (startDay + 1) % 7
-  }
-  return result
-})
 const calendarYear = ref<number>(getYear(now.value))
 const calendarMonth = ref<number>(getMonth(now.value) + 1)
 const calendarMode = ref<Props['mode']>(props.mode)
@@ -101,6 +90,17 @@ const selectedValue = ref<string | number>()
 const calendarMonths = ref<Array<MonthItem[]>>([])
 const slotsExist = useSlotsExist(['header'])
 const emits = defineEmits(['update:value', 'change', 'panelChange', 'select'])
+const defaultWeeks = computed(() => {
+  const origin: DefaultWeek[] = ['一', '二', '三', '四', '五', '六', '日']
+  const result: DefaultWeek[] = []
+  result.push(origin[props.startDayOfWeek])
+  let startDay = (props.startDayOfWeek + 1) % 7
+  while (startDay !== props.startDayOfWeek) {
+    result.push(origin[startDay])
+    startDay = (startDay + 1) % 7
+  }
+  return result
+})
 const selectedValueTimestamp = computed(() => {
   if (!selectedValue.value) return
   if (typeof selectedValue.value === 'string') {
@@ -115,6 +115,18 @@ const startOfMonthTimestamp = computed(() => {
 const showHeader = computed(() => {
   return slotsExist.header || props.header
 })
+watch(
+  selectedValueTimestamp,
+  (to) => {
+    if (to) {
+      calendarYear.value = getYear(to)
+      calendarMonth.value = getMonth(to) + 1
+    }
+  },
+  {
+    immediate: true
+  }
+)
 watch(
   () => props.mode,
   (to) => {
@@ -134,6 +146,7 @@ watch(
 watch(
   calendarYear,
   () => {
+    yearOptions.value = getYearOptions()
     calendarMonths.value = getCalendarMonths()
   },
   {
@@ -150,35 +163,33 @@ watch(
         selectedValue.value = format(startOfDay(props.value).getTime(), props.valueFormat)
       }
     }
-    console.log('selectedValue', selectedValue.value)
   },
   {
     deep: true,
     immediate: true
   }
 )
-onMounted(() => {
-  getYearOptions()
-  getMonthOptions()
-})
-function getYearOptions(): void {
-  yearOptions.length = 0
+function getYearOptions(): SelectOption[] {
+  const options = []
   const startYear = calendarYear.value - 10
   const endYear = calendarYear.value + 10
   for (let y = startYear; y < endYear; y++) {
-    yearOptions.push({
+    options.push({
       label: `${y}年`,
       value: y
     })
   }
+  return options
 }
-function getMonthOptions(): void {
+function getMonthOptions(): SelectOption[] {
+  const options = []
   for (let m = 1; m <= 12; m++) {
-    monthOptions.push({
+    options.push({
       label: `${m}月`,
       value: m
     })
   }
+  return options
 }
 function getDateItem(time: number, monthTs: number, currentTs: number): DateItem {
   return {
@@ -188,12 +199,12 @@ function getDateItem(time: number, monthTs: number, currentTs: number): DateItem
       month: getMonth(time),
       year: getYear(time)
     },
+    timestamp: getTime(time),
     inCurrentMonth: isSameMonth(time, monthTs),
-    isCurrentDate: isSameDay(currentTs, time),
-    ts: getTime(time)
+    isCurrentDate: isSameDay(currentTs, time)
   }
 }
-function getDates(monthTs: number, currentTs: number, startDay: StartDayOfWeek, strip: boolean = false): DateItem[] {
+function getDates(monthTs: number, currentTs: number, startDay: DayOfWeek, strip: boolean = false): DateItem[] {
   const displayMonth = getMonth(monthTs)
   // First day of current month
   let displayMonthIterator = getTime(startOfMonth(monthTs))
@@ -219,25 +230,23 @@ function getDates(monthTs: number, currentTs: number, startDay: StartDayOfWeek, 
 }
 function getCalendarDates(): DateItem[][] {
   const dates = getDates(startOfMonthTimestamp.value, Date.now(), props.startDayOfWeek, props.dateStrip)
-  // console.log('dates', dates)
   const chunkSize = 7
   const chunkCount = dates.length / chunkSize
   const result: DateItem[][] = []
   for (let i = 0; i < chunkCount; i++) {
     result.push(dates.slice(i * chunkSize, (i + 1) * chunkSize))
   }
-  // console.log('result', result)
   return result
 }
 function getMonthItem(monthTs: number, currentTs: number): MonthItem {
   return {
     type: 'month',
-    dateObject: {
+    monthObject: {
       month: getMonth(monthTs),
       year: getYear(monthTs)
     },
-    isCurrent: isSameMonth(currentTs, monthTs),
-    ts: getTime(monthTs)
+    timestamp: getTime(monthTs),
+    isCurrent: isSameMonth(currentTs, monthTs)
   }
 }
 function getMonths(yearAnchorTs: number, currentTs: number): MonthItem[] {
@@ -256,46 +265,44 @@ function getCalendarMonths(): MonthItem[][] {
   for (let i = 0; i < chunkCount; i++) {
     result.push(months.slice(i * chunkSize, (i + 1) * chunkSize))
   }
-  // console.log('result', result)
   return result
 }
 function getDateStr(date: DateItem): string {
-  return format(date.ts, 'yyyy-MM-dd')
+  return format(date.timestamp, 'yyyy-MM-dd')
 }
 function getMonthStr(month: MonthItem): string {
-  return format(month.ts, 'yyyy-MM')
+  return format(month.timestamp, 'yyyy-MM')
 }
-function getDateFormat(date: number): string {
+function getDateFormat(date: number, timestamp: number): string {
   if (props.dateFormat === undefined) {
     return `${date}`
   } else {
-    return props.dateFormat(date)
+    return props.dateFormat(date, timestamp)
   }
 }
-function getWeekFormat(defaultWeek: DefaultWeek, week: number): string {
+function getWeekFormat(defaultWeek: DefaultWeek, week: number, timestamp: number): string {
   if (props.weekFormat === undefined) {
     return defaultWeek
   } else {
-    return props.weekFormat(defaultWeek, week)
+    return props.weekFormat(defaultWeek, week, timestamp)
   }
 }
-function getMonthFormat(month: number): string {
+function getMonthFormat(month: number, timestamp: number): string {
   if (props.monthFormat === undefined) {
     return `${month}月`
   } else {
-    return props.monthFormat(month)
+    return props.monthFormat(month, timestamp)
   }
 }
 function onDateSelected(date: DateItem): void {
-  // console.log('onDateSelected', date)
-  if (selectedValueTimestamp.value !== date.ts) {
+  if (selectedValueTimestamp.value !== date.timestamp) {
     if (date.dateObject.month + 1 !== calendarMonth.value) {
       calendarMonth.value = date.dateObject.month + 1
     }
     if (props.valueFormat === undefined || props.valueFormat === 'T') {
-      selectedValue.value = date.ts
+      selectedValue.value = date.timestamp
     } else {
-      selectedValue.value = format(date.ts, props.valueFormat)
+      selectedValue.value = format(date.timestamp, props.valueFormat)
     }
     emits('update:value', selectedValue.value)
     emits('select', selectedValue.value, 'date')
@@ -311,12 +318,11 @@ function getSelectedValueStartOfMonthTimeStamp(): number | undefined {
   return startOfMonth(selectedValue.value).getTime()
 }
 function onMonthSelected(month: MonthItem): void {
-  // console.log('onMonthSelected', month)
-  if (getSelectedValueStartOfMonthTimeStamp() !== month.ts) {
-    calendarMonth.value = month.dateObject.month + 1
+  if (getSelectedValueStartOfMonthTimeStamp() !== month.timestamp) {
+    calendarMonth.value = month.monthObject.month + 1
     if (selectedValue.value) {
-      const offsetYears = month.dateObject.year - getYear(selectedValueTimestamp.value as number)
-      const offsetMonths = month.dateObject.month - getMonth(selectedValueTimestamp.value as number)
+      const offsetYears = month.monthObject.year - getYear(selectedValueTimestamp.value as number)
+      const offsetMonths = month.monthObject.month - getMonth(selectedValueTimestamp.value as number)
       const newDate = addMonths(addYears(selectedValueTimestamp.value as number, offsetYears), offsetMonths)
       if (props.valueFormat === undefined || props.valueFormat === 'T') {
         selectedValue.value = Number(format(newDate, props.valueFormat || 'T'))
@@ -326,14 +332,19 @@ function onMonthSelected(month: MonthItem): void {
     }
     emits('update:value', selectedValue.value)
     emits('select', selectedValue.value, 'month')
-    emits('change', selectedValue.value, month.dateObject)
+    emits('change', selectedValue.value, month.monthObject)
   }
 }
 function onPanelChange(): void {
   if (calendarMode.value === 'month') {
-    emits('panelChange', { year: calendarYear.value, month: calendarMonth.value }, calendarMode.value)
+    emits(
+      'panelChange',
+      selectedValue.value,
+      { year: calendarYear.value, month: calendarMonth.value },
+      calendarMode.value
+    )
   } else {
-    emits('panelChange', { year: calendarYear.value }, calendarMode.value)
+    emits('panelChange', selectedValue.value, { year: calendarYear.value }, calendarMode.value)
   }
 }
 </script>
@@ -377,7 +388,15 @@ function onPanelChange(): void {
           <table class="calendar-table">
             <thead>
               <tr>
-                <th v-for="(week, index) in defaultWeeks" :key="index">{{ getWeekFormat(week, index + 1) }}</th>
+                <th v-for="(defaultWeek, index) in defaultWeeks" :key="index">
+                  <slot
+                    name="week"
+                    :defaultWeek="defaultWeek"
+                    :week="index"
+                    :timestamp="calendarDates[0][index].timestamp"
+                    >{{ getWeekFormat(defaultWeek, index, calendarDates[0][index].timestamp) }}</slot
+                  >
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -385,10 +404,10 @@ function onPanelChange(): void {
                 <td
                   class="calendar-date-cell"
                   :class="{
-                    'date-cell-disabled': disabledDate && disabledDate(dateItem.ts),
+                    'date-cell-disabled': disabledDate && disabledDate(dateItem.timestamp),
                     'date-cell-in-view': dateItem.inCurrentMonth,
                     'date-cell-today': dateItem.isCurrentDate,
-                    'date-cell-selected': selectedValueTimestamp && selectedValueTimestamp === dateItem.ts
+                    'date-cell-selected': selectedValueTimestamp && selectedValueTimestamp === dateItem.timestamp
                   }"
                   v-for="(dateItem, index) in weekDates"
                   :key="index"
@@ -396,10 +415,12 @@ function onPanelChange(): void {
                 >
                   <div class="date-cell-inner" @click="onDateSelected(dateItem)">
                     <div class="date-value">
-                      <slot name="dateCellValue" :dateObject="dateItem.dateObject" v-bind="dateItem.dateObject" :timestamp="dateItem.ts">{{ getDateFormat(dateItem.dateObject.date) }}</slot>
+                      <slot name="dateValue" v-bind="dateItem">{{
+                        getDateFormat(dateItem.dateObject.date, dateItem.timestamp)
+                      }}</slot>
                     </div>
                     <div class="date-content">
-                      <slot name="dateCellContent" :dateObject="dateItem.dateObject" v-bind="dateItem.dateObject" :timestamp="dateItem.ts"></slot>
+                      <slot name="dateContent" v-bind="dateItem"></slot>
                     </div>
                   </div>
                 </td>
@@ -417,15 +438,22 @@ function onPanelChange(): void {
                   class="calendar-date-cell date-cell-in-view"
                   :class="{
                     'date-cell-today': monthItem.isCurrent,
-                    'date-cell-selected': selectedValueTimestamp && startOfMonth(selectedValueTimestamp).getTime() === monthItem.ts
+                    'date-cell-selected':
+                      selectedValueTimestamp && startOfMonth(selectedValueTimestamp).getTime() === monthItem.timestamp
                   }"
                   v-for="(monthItem, index) in rowMonths"
                   :key="index"
                   :title="getMonthStr(monthItem)"
                 >
                   <div class="date-cell-inner" @click="onMonthSelected(monthItem)">
-                    <div class="date-value">{{ getMonthFormat(monthItem.dateObject.month + 1) }}</div>
-                    <div class="date-content"></div>
+                    <div class="date-value">
+                      <slot name="monthValue" v-bind="monthItem">{{
+                        getMonthFormat(monthItem.monthObject.month + 1, monthItem.timestamp)
+                      }}</slot>
+                    </div>
+                    <div class="date-content">
+                      <slot name="monthContent" v-bind="monthItem"></slot>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -447,6 +475,9 @@ function onPanelChange(): void {
     padding: 12px 0;
     .calendar-header-content {
       margin-bottom: 10px;
+      :deep(svg) {
+        fill: currentColor;
+      }
     }
     .calendar-header-actions {
       display: flex;
@@ -470,21 +501,32 @@ function onPanelChange(): void {
       .calendar-body {
         padding: 8px 0;
         .calendar-table {
+          display: table;
+          margin: 0;
           width: 100%;
           table-layout: fixed;
           border-collapse: collapse;
+          tr {
+            border: none;
+            background-color: transparent;
+          }
           th,
           td {
             position: relative;
             min-width: 24px;
+            font-size: inherit;
             font-weight: normal;
+            padding: 0;
+            border: none;
           }
           th {
+            text-align: inherit;
             height: auto;
             line-height: 18px;
             width: 36px;
             color: rgba(0, 0, 0, 0.88);
             vertical-align: middle;
+            background: transparent;
           }
           .calendar-date-cell {
             color: rgba(0, 0, 0, 0.25);
@@ -624,7 +666,9 @@ function onPanelChange(): void {
               display: inline-block;
               height: 24px;
               border-radius: 4px;
-              transition: background 0.2s, color 0.2s;
+              transition:
+                background 0.2s,
+                color 0.2s;
             }
           }
           .date-cell-disabled {
