@@ -549,9 +549,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
   <template #week="{ defaultWeek, week, timestamp }">
     {{ format(timestamp, 'EEE') }}
   </template>
-  <template #dateValue="{ dateObject, timestamp }">
-    {{ dateObject.date }}日
-  </template>
+  <template #dateValue="{ dateObject, timestamp }"> {{ dateObject.date }}日 </template>
   <template #monthValue="{ monthObject, timestamp }">
     {{ format(timestamp, 'MMMM') }}
   </template>
@@ -576,9 +574,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     <template #week="{ defaultWeek, week, timestamp }">
       {{ format(timestamp, 'EEE') }}
     </template>
-    <template #dateValue="{ dateObject, timestamp }">
-      {{ dateObject.date }}日
-    </template>
+    <template #dateValue="{ dateObject, timestamp }"> {{ dateObject.date }}日 </template>
     <template #monthValue="{ monthObject, timestamp }">
       {{ format(timestamp, 'MMMM') }}
     </template>
