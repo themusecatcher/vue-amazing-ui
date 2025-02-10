@@ -167,37 +167,39 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     </Flex>
     <h2 class="mt30 mb10">自定义展示格式</h2>
     <h3 class="mb10">使用 weekFormat / dateFormat / monthFormat 自定义日期/星期/月的展示格式</h3>
-    <Space>
+    <Flex vertical>
+      <Space>
+        <Calendar
+          header="Date format"
+          display="card"
+          v-model:value="formatDate"
+          :date-format="cardDateFormat"
+          @panelChange="onPanelChange"
+        />
+        <Calendar
+          header="Week format"
+          display="card"
+          v-model:value="formatDate"
+          :week-format="cardWeekFormat"
+          @panelChange="onPanelChange"
+        />
+        <Calendar
+          header="Month format"
+          mode="year"
+          display="card"
+          v-model:value="formatDate"
+          :month-format="cardMonthFormat"
+          @panelChange="onPanelChange"
+        />
+      </Space>
       <Calendar
-        header="Date format"
-        display="card"
         v-model:value="formatDate"
-        :date-format="cardDateFormat"
+        :date-format="panelDateFormat"
+        :week-format="panelWeekFormat"
+        :month-format="panelMonthFormat"
         @panelChange="onPanelChange"
       />
-      <Calendar
-        header="Week format"
-        display="card"
-        v-model:value="formatDate"
-        :week-format="cardWeekFormat"
-        @panelChange="onPanelChange"
-      />
-      <Calendar
-        header="Month format"
-        mode="year"
-        display="card"
-        v-model:value="formatDate"
-        :month-format="cardMonthFormat"
-        @panelChange="onPanelChange"
-      />
-    </Space>
-    <Calendar
-      v-model:value="formatDate"
-      :date-format="panelDateFormat"
-      :week-format="panelWeekFormat"
-      :month-format="panelMonthFormat"
-      @panelChange="onPanelChange"
-    />
+    </Flex>
     <h2 class="mt30 mb10">通知事项日历</h2>
     <Calendar v-model:value="noticeDate" @panelChange="onPanelChange">
       <template #dateValue="{ dateObject, timestamp }">
