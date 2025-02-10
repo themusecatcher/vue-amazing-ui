@@ -2,7 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 import { format, subDays, addDays } from 'date-fns'
-import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui'
+import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'components/index'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
 const modeDate = ref(Date.now())
@@ -199,7 +199,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       @panelChange="onPanelChange"
     />
     <h2 class="mt30 mb10">通知事项日历</h2>
-    <Calendar display="card" v-model:value="noticeDate" @panelChange="onPanelChange">
+    <Calendar v-model:value="noticeDate" @panelChange="onPanelChange">
       <template #dateValue="{ dateObject, timestamp }">
         <span v-if="[8, 12, 16].includes(dateObject.date)">{{ dateObject.date }}日</span>
       </template>
@@ -225,7 +225,6 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       </template>
     </Calendar>
     <h2 class="mt30 mb10">自定义插槽</h2>
-    <h3 class="mb10">使用 week dateValue dateContent monthValue monthContent</h3>
     <Calendar v-model:value="slotDate" @panelChange="onPanelChange">
       <template #week="{ defaultWeek, week, timestamp }">
         {{ format(timestamp, 'EEE') }}
