@@ -137,7 +137,10 @@ function onSelect(date: string | number, source: 'date' | 'month') {
   console.log('select', date, source)
   message.value.success(format(date, 'yyyy-MM-dd'))
 }
-function onChange(date: string | number, dateOrMonth: CalendarDateItem['dateObject'] | CalendarMonthItem['monthObject']) {
+function onChange(
+  date: string | number,
+  dateOrMonth: CalendarDateItem['dateObject'] | CalendarMonthItem['monthObject']
+) {
   console.log('change', date, dateOrMonth)
 }
 function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
