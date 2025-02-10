@@ -85,7 +85,6 @@
     "@vue/tsconfig": "^0.7.0",
     "ant-design-vue": "^4.2.6",
     "date-fns": "^4.1.0",
-    "dayjs": "^1.11.13",
     "eslint": "^9.19.0",
     "eslint-plugin-vue": "^9.32.0",
     "less": "^4.2.2",
