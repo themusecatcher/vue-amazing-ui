@@ -8,6 +8,11 @@
 
 - 新增 [日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html) 组件 -->
 
+## 2.1.8 <Tag color="volcano" size="small">2025-02-10</Tag>
+
+- 更新自动按需引入 api：`VueAmazingUIResolver` ，修复无法识别 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件的问题
+- 组件库及文档代码优化
+
 ## 2.1.7 <Tag color="volcano" size="small">2025-02-07</Tag>
 
 - 优化并更新 [徽标 Badge](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html) 组件，将属性 `ripple` 默认值调整为 `false`
