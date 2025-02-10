@@ -590,8 +590,10 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 选择功能
 
-<Alert type="info" :message="`You selected date: ${format(selectDate, 'yyyy-MM-dd')}`" />
-<Calendar v-model:value="selectDate" @select="onSelect" @panelChange="onPanelChange" />
+<Flex vertical>
+  <Alert type="info" :message="`You selected date: ${format(selectDate, 'yyyy-MM-dd')}`" />
+  <Calendar v-model:value="selectDate" @select="onSelect" @panelChange="onPanelChange" />
+</Flex>
 
 ::: details Show Code
 
@@ -613,8 +615,10 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 }
 </script>
 <template>
-  <Alert type="info" :message="`You selected date: ${format(selectDate, 'yyyy-MM-dd')}`" />
-  <Calendar v-model:value="selectDate" @select="onSelect" @panelChange="onPanelChange" />
+  <Flex vertical>
+    <Alert type="info" :message="`You selected date: ${format(selectDate, 'yyyy-MM-dd')}`" />
+    <Calendar v-model:value="selectDate" @select="onSelect" @panelChange="onPanelChange" />
+  </Flex>
   <Message ref="message" />
 </template>
 ```
@@ -702,8 +706,10 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 自定义日期格式
 
-<Alert type="info" :message="`You selected date: ${dateStr}`" />
-<Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+<Flex vertical>
+  <Alert type="info" :message="`You selected date: ${dateStr}`" />
+  <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+</Flex>
 
 ::: details Show Code
 
@@ -720,8 +726,10 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 }
 </script>
 <template>
-  <Alert type="info" :message="`You selected date: ${dateStr}`" />
-  <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+  <Flex vertical>
+    <Alert type="info" :message="`You selected date: ${dateStr}`" />
+    <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+  </Flex>
 </template>
 ```
 
