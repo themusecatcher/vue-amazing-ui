@@ -146,6 +146,10 @@ export default defineConfig({
               link: '/guide/components/button'
             },
             {
+              text: '日历 Calendar',
+              link: '/guide/components/calendar'
+            },
+            {
               text: '卡片 Card',
               link: '/guide/components/card'
             },

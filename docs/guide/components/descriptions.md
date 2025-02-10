@@ -103,7 +103,7 @@ const state = reactive({
     <DescriptionsItem label="Order time">2018-04-24 18:00:00</DescriptionsItem>
     <DescriptionsItem label="Usage Time" :span="2">2030-04-24 18:00:00</DescriptionsItem>
     <DescriptionsItem label="Status" :span="3">
-      <Badge status="processing" text="Running" />
+      <Badge status="processing" ripple text="Running" />
     </DescriptionsItem>
     <DescriptionsItem label="Negotiated Amount">$80.00</DescriptionsItem>
     <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
@@ -136,7 +136,7 @@ const state = reactive({
     <DescriptionsItem label="Order time">2018-04-24 18:00:00</DescriptionsItem>
     <DescriptionsItem label="Usage Time" :span="2">2030-04-24 18:00:00</DescriptionsItem>
     <DescriptionsItem label="Status" :span="3">
-      <Badge status="processing" text="Running" />
+      <Badge status="processing" ripple text="Running" />
     </DescriptionsItem>
     <DescriptionsItem label="Negotiated Amount">$80.00</DescriptionsItem>
     <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
@@ -652,7 +652,7 @@ const options = [
     <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
     <DescriptionsItem label="Official">$60.00</DescriptionsItem>
     <DescriptionsItem label="Status" :span="1">
-      <Badge status="processing" text="Running" />
+      <Badge status="processing" ripple text="Running" />
     </DescriptionsItem>
     <DescriptionsItem label="Usage Time" :span="2">2030-04-24 18:00:00</DescriptionsItem>
     <DescriptionsItem label="Address" :span="3"
@@ -850,7 +850,7 @@ const state = reactive({
       <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
       <DescriptionsItem label="Official">$60.00</DescriptionsItem>
       <DescriptionsItem label="Status" :span="1">
-        <Badge status="processing" text="Running" />
+        <Badge status="processing" ripple text="Running" />
       </DescriptionsItem>
       <DescriptionsItem label="Usage Time" :span="2">2030-04-24 18:00:00</DescriptionsItem>
       <DescriptionsItem label="Address" :span="3"
