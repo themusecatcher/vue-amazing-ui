@@ -470,7 +470,6 @@ function onPanelChange(): void {
   font-size: 14px;
   line-height: 1.5714285714285714;
   list-style: none;
-  background: #ffffff;
   .calendar-header-wrap {
     padding: 12px 0;
     .calendar-header-content {
@@ -556,6 +555,7 @@ function onPanelChange(): void {
   }
 }
 .calendar-panel {
+  background: transparent;
   .calendar-header-wrap {
     .calendar-header-actions {
       .calendar-year-select {
@@ -624,6 +624,7 @@ function onPanelChange(): void {
 }
 .calendar-card {
   width: 300px;
+  background: #fff;
   border: 1px solid rgb(217, 217, 217);
   border-radius: 4px;
   .calendar-header-wrap {

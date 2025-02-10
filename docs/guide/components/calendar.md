@@ -361,37 +361,39 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 <br/>
 
-<Space>
+<Flex vertical>
+  <Space>
+    <Calendar
+      header="Date format"
+      display="card"
+      v-model:value="formatDate"
+      :date-format="cardDateFormat"
+      @panelChange="onPanelChange"
+    />
+    <Calendar
+      header="Week format"
+      display="card"
+      v-model:value="formatDate"
+      :week-format="cardWeekFormat"
+      @panelChange="onPanelChange"
+    />
+    <Calendar
+      header="Month format"
+      mode="year"
+      display="card"
+      v-model:value="formatDate"
+      :month-format="cardMonthFormat"
+      @panelChange="onPanelChange"
+    />
+  </Space>
   <Calendar
-    header="Date format"
-    display="card"
     v-model:value="formatDate"
-    :date-format="cardDateFormat"
+    :date-format="panelDateFormat"
+    :week-format="panelWeekFormat"
+    :month-format="panelMonthFormat"
     @panelChange="onPanelChange"
   />
-  <Calendar
-    header="Week format"
-    display="card"
-    v-model:value="formatDate"
-    :week-format="cardWeekFormat"
-    @panelChange="onPanelChange"
-  />
-  <Calendar
-    header="Month format"
-    mode="year"
-    display="card"
-    v-model:value="formatDate"
-    :month-format="cardMonthFormat"
-    @panelChange="onPanelChange"
-  />
-</Space>
-<Calendar
-  v-model:value="formatDate"
-  :date-format="panelDateFormat"
-  :week-format="panelWeekFormat"
-  :month-format="panelMonthFormat"
-  @panelChange="onPanelChange"
-/>
+</Flex>
 
 ::: details Show Code
 
@@ -427,37 +429,39 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 }
 </script>
 <template>
-  <Space>
+  <Flex vertical>
+    <Space>
+      <Calendar
+        header="Date format"
+        display="card"
+        v-model:value="formatDate"
+        :date-format="cardDateFormat"
+        @panelChange="onPanelChange"
+      />
+      <Calendar
+        header="Week format"
+        display="card"
+        v-model:value="formatDate"
+        :week-format="cardWeekFormat"
+        @panelChange="onPanelChange"
+      />
+      <Calendar
+        header="Month format"
+        mode="year"
+        display="card"
+        v-model:value="formatDate"
+        :month-format="cardMonthFormat"
+        @panelChange="onPanelChange"
+      />
+    </Space>
     <Calendar
-      header="Date format"
-      display="card"
       v-model:value="formatDate"
-      :date-format="cardDateFormat"
+      :date-format="panelDateFormat"
+      :week-format="panelWeekFormat"
+      :month-format="panelMonthFormat"
       @panelChange="onPanelChange"
     />
-    <Calendar
-      header="Week format"
-      display="card"
-      v-model:value="formatDate"
-      :week-format="cardWeekFormat"
-      @panelChange="onPanelChange"
-    />
-    <Calendar
-      header="Month format"
-      mode="year"
-      display="card"
-      v-model:value="formatDate"
-      :month-format="cardMonthFormat"
-      @panelChange="onPanelChange"
-    />
-  </Space>
-  <Calendar
-    v-model:value="formatDate"
-    :date-format="panelDateFormat"
-    :week-format="panelWeekFormat"
-    :month-format="panelMonthFormat"
-    @panelChange="onPanelChange"
-  />
+  </Flex>
 </template>
 ```
 
