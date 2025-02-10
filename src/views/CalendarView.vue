@@ -237,8 +237,10 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       </template>
     </Calendar>
     <h2 class="mt30 mb10">选择功能</h2>
-    <Alert type="info" :message="`You selected date: ${format(selectDate, 'yyyy-MM-dd')}`" />
-    <Calendar v-model:value="selectDate" @select="onSelect" @panelChange="onPanelChange" />
+    <Flex vertical>
+      <Alert type="info" :message="`You selected date: ${format(selectDate, 'yyyy-MM-dd')}`" />
+      <Calendar v-model:value="selectDate" @select="onSelect" @panelChange="onPanelChange" />
+    </Flex>
     <h2 class="mt30 mb10">禁用日期</h2>
     <Flex vertical>
       <Space align="center">
@@ -268,8 +270,10 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       </Space>
     </Flex>
     <h2 class="mt30 mb10">自定义日期格式</h2>
-    <Alert type="info" :message="`You selected date: ${dateStr}`" />
-    <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+    <Flex vertical>
+      <Alert type="info" :message="`You selected date: ${dateStr}`" />
+      <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+    </Flex>
     <Message ref="message" />
   </div>
 </template>
