@@ -100,6 +100,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   const EllipsisStyle = ['Table']
   if (EllipsisStyle.includes(componentName)) {
     sideEffects.push(`vue-amazing-ui/${type}/ellipsis/Ellipsis.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/tooltip/Tooltip.css`)
   }
   const EmptyStyle = ['List', 'Select', 'Table']
   if (EmptyStyle.includes(componentName)) {
@@ -108,6 +109,8 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   const ImageStyle = ['Upload']
   if (ImageStyle.includes(componentName)) {
     sideEffects.push(`vue-amazing-ui/${type}/image/Image.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/space/Space.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/spin/Spin.css`)
   }
   const InputStyle = ['ColorPicker', 'Pagination']
   if (InputStyle.includes(componentName)) {
@@ -120,6 +123,10 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   const PaginationStyle = ['List', 'Table']
   if (PaginationStyle.includes(componentName)) {
     sideEffects.push(`vue-amazing-ui/${type}/pagination/Pagination.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/input/Input.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/select/Select.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/empty/Empty.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/scrollbar/Scrollbar.css`)
   }
   const RadioStyle = ['Table']
   if (RadioStyle.includes(componentName)) {
@@ -132,6 +139,8 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   const SelectStyle = ['Cascader', 'Pagination']
   if (SelectStyle.includes(componentName)) {
     sideEffects.push(`vue-amazing-ui/${type}/select/Select.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/empty/Empty.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/scrollbar/Scrollbar.css`)
   }
   const SkeletonStyle = ['Card']
   if (SkeletonStyle.includes(componentName)) {
