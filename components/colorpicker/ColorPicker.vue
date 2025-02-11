@@ -931,7 +931,8 @@ function onClear() {
           top: 0;
           bottom: 0;
           &::after {
-            background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
+            background-image:
+              linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
               linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
             background-size: 12px 12px;
             background-position:
@@ -1037,7 +1038,8 @@ function onClear() {
     .color-picker-swatch {
       width: 18px;
       height: 18px;
-      background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
+      background-image:
+        linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
         linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
       background-size: 8px 8px;
       background-position:
@@ -1115,7 +1117,8 @@ function onClear() {
         top: 0;
         bottom: 0;
         &::after {
-          background-image: linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
+          background-image:
+            linear-gradient(45deg, #ddd 25%, #0000 25%), linear-gradient(-45deg, #ddd 25%, #0000 25%),
             linear-gradient(45deg, #0000 75%, #ddd 75%), linear-gradient(-45deg, #0000 75%, #ddd 75%);
           background-size: calc(var(--color-picker-block-size) * 2) calc(var(--color-picker-block-size) * 2);
           background-position:

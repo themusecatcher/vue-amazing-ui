@@ -213,7 +213,9 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   const type = options?.cjs ? 'lib' : 'es'
   const sideEffects: string[] = []
   sideEffectsComponents.forEach((component: string) => {
-    sideEffects.push(`vue-amazing-ui/${type}/${componentsMap[component as keyof typeof componentsMap]}/${component}.css`)
+    sideEffects.push(
+      `vue-amazing-ui/${type}/${componentsMap[component as keyof typeof componentsMap]}/${component}.css`
+    )
   })
   return sideEffects
 }
