@@ -109,7 +109,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
     sideEffectsComponents.push(...componentDependencies[componentName as keyof typeof componentDependencies])
   }
   const type = options?.cjs ? 'lib' : 'es'
-  const sideEffects: string[] = [`vue-amazing-ui/${type}/style/global.css`]
+  const sideEffects: string[] = [`vue-amazing-ui/${type}/style/global.css`] // 组件库全局默认样式
   sideEffectsComponents.forEach((component: string) => {
     sideEffects.push(
       `vue-amazing-ui/${type}/${componentsMap[component as keyof typeof componentsMap]}/${component}.css`

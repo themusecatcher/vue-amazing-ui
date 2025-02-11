@@ -7,7 +7,24 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
+    AMenu: typeof import('ant-design-vue/es')['Menu']
+    AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
+    BackTop: typeof import('vue-amazing-ui')['BackTop']
+    Button: typeof import('vue-amazing-ui')['Button']
+    Col: typeof import('vue-amazing-ui')['Col']
+    Collapse: typeof import('vue-amazing-ui')['Collapse']
+    Descriptions: typeof import('vue-amazing-ui')['Descriptions']
+    DescriptionsItem: typeof import('vue-amazing-ui')['DescriptionsItem']
+    Radio: typeof import('vue-amazing-ui')['Radio']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Row: typeof import('vue-amazing-ui')['Row']
+    Scrollbar: typeof import('vue-amazing-ui')['Scrollbar']
+    Space: typeof import('vue-amazing-ui')['Space']
+    Switch: typeof import('vue-amazing-ui')['Switch']
+    Tag: typeof import('vue-amazing-ui')['Tag']
+    Tooltip: typeof import('vue-amazing-ui')['Tooltip']
+    Watermark: typeof import('vue-amazing-ui')['Watermark']
   }
 }
