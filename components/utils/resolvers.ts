@@ -75,89 +75,146 @@ const componentsMap = {
   Waterfall: 'waterfall',
   Watermark: 'watermark'
 }
+const loadedStyleComponents: string[] = [] // 已加载样式的组件数组，避免重复加载样式文件
 function getSideEffects(componentName: string, options?: VueAmazingUIResolverOptions) {
-  const type = options?.cjs ? 'lib' : 'es'
-  const sideEffects = [
-    `vue-amazing-ui/${type}/${componentsMap[componentName as keyof typeof componentsMap]}/${componentName}.css`
-  ]
-  // 依赖子组件的样式
+  if (!loadedStyleComponents.includes(componentName)) {
+    loadedStyleComponents.push(componentName)
+  }
+  const sideEffectsComponents = [componentName] // 当前组件依赖的并且样式未被加载过的子组件数组
   const AvatarStyle = ['ListItem']
-  if (AvatarStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/avatar/Avatar.css`)
+  if (AvatarStyle.includes(componentName) && !loadedStyleComponents.includes('Avatar')) {
+    loadedStyleComponents.push('Avatar')
+    sideEffectsComponents.push('Avatar')
   }
   const BadgeStyle = ['FloatButton']
-  if (BadgeStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/badge/Badge.css`)
+  if (BadgeStyle.includes(componentName) && !loadedStyleComponents.includes('Badge')) {
+    loadedStyleComponents.push('Badge')
+    sideEffectsComponents.push('Badge')
   }
   const ButtonStyle = ['Collapse', 'ColorPicker', 'Dialog', 'InputSearch', 'Modal', 'Popconfirm']
-  if (ButtonStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/button/Button.css`)
+  if (ButtonStyle.includes(componentName) && !loadedStyleComponents.includes('Button')) {
+    loadedStyleComponents.push('Button')
+    sideEffectsComponents.push('Button')
   }
   const CheckboxStyle = ['Table']
-  if (CheckboxStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/checkbox/Checkbox.css`)
+  if (CheckboxStyle.includes(componentName) && !loadedStyleComponents.includes('Checkbox')) {
+    loadedStyleComponents.push('Checkbox')
+    sideEffectsComponents.push('Checkbox')
   }
   const EllipsisStyle = ['Table']
   if (EllipsisStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/ellipsis/Ellipsis.css`)
-    sideEffects.push(`vue-amazing-ui/${type}/tooltip/Tooltip.css`)
+    if (!loadedStyleComponents.includes('Ellipsis')) {
+      loadedStyleComponents.push('Ellipsis')
+      sideEffectsComponents.push('Ellipsis')
+      if (!loadedStyleComponents.includes('Tooltip')) {
+        loadedStyleComponents.push('Tooltip')
+        sideEffectsComponents.push('Tooltip')
+      }
+    }
   }
   const EmptyStyle = ['List', 'Select', 'Table']
-  if (EmptyStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/empty/Empty.css`)
+  if (EmptyStyle.includes(componentName) && !loadedStyleComponents.includes('Empty')) {
+    loadedStyleComponents.push('Empty')
+    sideEffectsComponents.push('Empty')
   }
   const ImageStyle = ['Upload']
   if (ImageStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/image/Image.css`)
-    sideEffects.push(`vue-amazing-ui/${type}/space/Space.css`)
-    sideEffects.push(`vue-amazing-ui/${type}/spin/Spin.css`)
+    if (!loadedStyleComponents.includes('Image')) {
+      loadedStyleComponents.push('Image')
+      sideEffectsComponents.push('Image')
+      if (!loadedStyleComponents.includes('Space')) {
+        loadedStyleComponents.push('Space')
+        sideEffectsComponents.push('Space')
+      }
+      if (!loadedStyleComponents.includes('Spin')) {
+        loadedStyleComponents.push('Spin')
+        sideEffectsComponents.push('Spin')
+      }
+    }
   }
   const InputStyle = ['ColorPicker', 'Pagination']
-  if (InputStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/input/Input.css`)
+  if (InputStyle.includes(componentName) && !loadedStyleComponents.includes('Input')) {
+    loadedStyleComponents.push('Input')
+    sideEffectsComponents.push('Input')
   }
   const MessageStyle = ['Upload']
-  if (MessageStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/message/Message.css`)
+  if (MessageStyle.includes(componentName) && !loadedStyleComponents.includes('Message')) {
+    loadedStyleComponents.push('Message')
+    sideEffectsComponents.push('Message')
   }
   const PaginationStyle = ['List', 'Table']
   if (PaginationStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/pagination/Pagination.css`)
-    sideEffects.push(`vue-amazing-ui/${type}/input/Input.css`)
-    sideEffects.push(`vue-amazing-ui/${type}/select/Select.css`)
-    sideEffects.push(`vue-amazing-ui/${type}/empty/Empty.css`)
-    sideEffects.push(`vue-amazing-ui/${type}/scrollbar/Scrollbar.css`)
+    if (!loadedStyleComponents.includes('Pagination')) {
+      loadedStyleComponents.push('Pagination')
+      sideEffectsComponents.push('Pagination')
+      if (!loadedStyleComponents.includes('Input')) {
+        loadedStyleComponents.push('Input')
+        sideEffectsComponents.push('Input')
+      }
+      if (!loadedStyleComponents.includes('Select')) {
+        loadedStyleComponents.push('Select')
+        sideEffectsComponents.push('Select')
+        if (!loadedStyleComponents.includes('Empty')) {
+          loadedStyleComponents.push('Empty')
+          sideEffectsComponents.push('Empty')
+        }
+        if (!loadedStyleComponents.includes('Scrollbar')) {
+          loadedStyleComponents.push('Scrollbar')
+          sideEffectsComponents.push('Scrollbar')
+        }
+      }
+    }
   }
   const RadioStyle = ['Calendar', 'Table']
-  if (RadioStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/radio/Radio.css`)
+  if (RadioStyle.includes(componentName) && !loadedStyleComponents.includes('Radio')) {
+    loadedStyleComponents.push('Radio')
+    sideEffectsComponents.push('Radio')
   }
   const ScrollbarStyle = ['Dialog', 'Drawer', 'Select', 'Table']
-  if (ScrollbarStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/scrollbar/Scrollbar.css`)
+  if (ScrollbarStyle.includes(componentName) && !loadedStyleComponents.includes('Scrollbar')) {
+    loadedStyleComponents.push('Scrollbar')
+    sideEffectsComponents.push('Scrollbar')
   }
   const SelectStyle = ['Calendar', 'Cascader', 'Pagination']
   if (SelectStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/select/Select.css`)
-    sideEffects.push(`vue-amazing-ui/${type}/empty/Empty.css`)
-    sideEffects.push(`vue-amazing-ui/${type}/scrollbar/Scrollbar.css`)
+    if (!loadedStyleComponents.includes('Select')) {
+      loadedStyleComponents.push('Select')
+      sideEffectsComponents.push('Select')
+      if (!loadedStyleComponents.includes('Empty')) {
+        loadedStyleComponents.push('Empty')
+        sideEffectsComponents.push('Empty')
+      }
+      if (!loadedStyleComponents.includes('Scrollbar')) {
+        loadedStyleComponents.push('Scrollbar')
+        sideEffectsComponents.push('Scrollbar')
+      }
+    }
   }
   const SkeletonStyle = ['Card']
-  if (SkeletonStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/skeleton/Skeleton.css`)
+  if (SkeletonStyle.includes(componentName) && !loadedStyleComponents.includes('Skeleton')) {
+    loadedStyleComponents.push('Skeleton')
+    sideEffectsComponents.push('Skeleton')
   }
   const SpaceStyle = ['Image', 'Tag', 'Upload']
-  if (SpaceStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/space/Space.css`)
+  if (SpaceStyle.includes(componentName) && !loadedStyleComponents.includes('Space')) {
+    loadedStyleComponents.push('Space')
+    sideEffectsComponents.push('Space')
   }
   const SpinStyle = ['Carousel', 'Image', 'List', 'Table', 'Upload', 'Waterfall']
-  if (SpinStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/spin/Spin.css`)
+  if (SpinStyle.includes(componentName) && !loadedStyleComponents.includes('Spin')) {
+    loadedStyleComponents.push('Spin')
+    sideEffectsComponents.push('Spin')
   }
   const TooltipStyle = ['BackTop', 'ColorPicker', 'Ellipsis', 'FloatButton', 'Popconfirm', 'Popover', 'Rate', 'Table']
-  if (TooltipStyle.includes(componentName)) {
-    sideEffects.push(`vue-amazing-ui/${type}/tooltip/Tooltip.css`)
+  if (TooltipStyle.includes(componentName) && !loadedStyleComponents.includes('Tooltip')) {
+    loadedStyleComponents.push('Tooltip')
+    sideEffectsComponents.push('Tooltip')
   }
+  const type = options?.cjs ? 'lib' : 'es'
+  const sideEffects: string[] = []
+  sideEffectsComponents.forEach((component: string) => {
+    sideEffects.push(`vue-amazing-ui/${type}/${componentsMap[component as keyof typeof componentsMap]}/${component}.css`)
+  })
   return sideEffects
 }
 export interface VueAmazingUIResolverOptions {

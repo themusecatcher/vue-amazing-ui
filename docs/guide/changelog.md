@@ -4,9 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
-## 2.2.0 <Tag color="volcano" size="small">soon</Tag>
+## 2.2.0 <Tag color="volcano" size="small">2025-02-11</Tag>
 
 - 新增 [日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html) 组件
+- 优化并更新自动按需引入
+- 组件库及文档代码优化
 
 ## 2.1.8 <Tag color="volcano" size="small">2025-02-10</Tag>
 
