@@ -1,0 +1,137 @@
+// 所有组件样式的路径映射
+const componentsMap = {
+  Alert: 'alert',
+  Avatar: 'avatar',
+  BackTop: 'backtop',
+  Badge: 'badge',
+  Breadcrumb: 'breadcrumb',
+  Button: 'button',
+  Calendar: 'calendar',
+  Card: 'card',
+  Carousel: 'carousel',
+  Cascader: 'cascader',
+  Checkbox: 'checkbox',
+  Collapse: 'collapse',
+  ColorPicker: 'colorpicker',
+  Countdown: 'countdown',
+  DatePicker: 'datepicker',
+  Descriptions: 'descriptions/descriptions',
+  DescriptionsItem: 'descriptions/descriptionsitem',
+  Dialog: 'dialog',
+  Divider: 'divider',
+  Drawer: 'drawer',
+  Ellipsis: 'ellipsis',
+  Empty: 'empty',
+  Flex: 'flex',
+  FloatButton: 'floatbutton',
+  GradientText: 'gradienttext',
+  Row: 'grid/row',
+  Col: 'grid/col',
+  Image: 'image',
+  Input: 'input',
+  InputNumber: 'inputnumber',
+  InputSearch: 'inputsearch',
+  Layout: 'layout',
+  LayoutHeader: 'layout/layoutheader',
+  LayoutSider: 'layout/layoutsider',
+  LayoutContent: 'layout/layoutcontent',
+  LayoutFooter: 'layout/layoutfooter',
+  List: 'list/list',
+  ListItem: 'list/listitem',
+  LoadingBar: 'loadingbar',
+  Message: 'message',
+  Modal: 'modal',
+  Notification: 'notification',
+  NumberAnimation: 'numberanimation',
+  Pagination: 'pagination',
+  Popconfirm: 'popconfirm',
+  Popover: 'popover',
+  Progress: 'progress',
+  QRCode: 'qrcode',
+  Radio: 'radio',
+  Rate: 'rate',
+  Result: 'result',
+  Scrollbar: 'scrollbar',
+  Segmented: 'segmented',
+  Select: 'select',
+  Skeleton: 'skeleton',
+  Slider: 'slider',
+  Space: 'space',
+  Spin: 'spin',
+  Statistic: 'statistic',
+  Steps: 'steps',
+  Swiper: 'swiper',
+  Switch: 'switch',
+  Table: 'table',
+  Tabs: 'tabs',
+  Tag: 'tag',
+  Textarea: 'textarea',
+  TextScroll: 'textscroll',
+  Timeline: 'timeline',
+  TimePicker: 'timepicker',
+  Tooltip: 'tooltip',
+  Upload: 'upload',
+  Video: 'video',
+  Waterfall: 'waterfall',
+  Watermark: 'watermark'
+}
+// 定义组件依赖关系
+const componentDependencies = {
+  BackTop: ['Tooltip'],
+  Calendar: ['Radio', 'Select', 'Empty', 'Scrollbar'],
+  Card: ['Skeleton'],
+  Carousel: ['Spin'],
+  Cascader: ['Select', 'Empty', 'Scrollbar'],
+  Collapse: ['Button'],
+  ColorPicker: ['Button', 'Input', 'Tooltip'],
+  Dialog: ['Button', 'Scrollbar'],
+  Drawer: ['Scrollbar'],
+  Ellipsis: ['Tooltip'],
+  FloatButton: ['Badge', 'Tooltip'],
+  Image: ['Space', 'Spin'],
+  InputSearch: ['Button'],
+  List: ['Empty', 'Pagination', 'Input', 'Select', 'Scrollbar', 'Spin'],
+  ListItem: ['Avatar'],
+  Modal: ['Button'],
+  Pagination: ['Input', 'Select', 'Empty', 'Scrollbar'],
+  Popconfirm: ['Button', 'Tooltip'],
+  Popover: ['Tooltip'],
+  Rate: ['Tooltip'],
+  Select: ['Empty', 'Scrollbar'],
+  Table: ['Checkbox', 'Ellipsis', 'Empty', 'Pagination', 'Input', 'Select', 'Radio', 'Scrollbar', 'Spin','Tooltip'],
+  Tag: ['Space'],
+  Upload: ['Image', 'Message', 'Space', 'Spin'],
+  Waterfall: ['Spin']
+}
+function getSideEffects(componentName: string, options?: VueAmazingUIResolverOptions) {
+  const sideEffectsComponents: string[] = [componentName] // 组件依赖的所有样式
+  if (componentName in componentDependencies) {
+    sideEffectsComponents.push(...componentDependencies[componentName as keyof typeof componentDependencies])
+  }
+  const type = options?.cjs ? 'lib' : 'es'
+  const sideEffects: string[] = []
+  sideEffectsComponents.forEach((component: string) => {
+    sideEffects.push(
+      `vue-amazing-ui/${type}/${componentsMap[component as keyof typeof componentsMap]}/${component}.css`
+    )
+  })
+  return sideEffects
+}
+export interface VueAmazingUIResolverOptions {
+  cjs?: boolean // whether use commonjs build, default false
+}
+export function VueAmazingUIResolver(options?: VueAmazingUIResolverOptions) {
+  return {
+    type: 'component' as const,
+    resolve: (componentName: string) => {
+      // where `componentName` is always CapitalCase
+      if (componentName in componentsMap) {
+        return {
+          name: componentName, // 组件名
+          from: 'vue-amazing-ui', // 组件库名称
+          sideEffects: getSideEffects(componentName, options) // 组件样式文件
+        }
+      }
+    }
+  }
+}
