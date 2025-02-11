@@ -98,7 +98,7 @@ const componentDependencies = {
   Popover: ['Tooltip'],
   Rate: ['Tooltip'],
   Select: ['Empty', 'Scrollbar'],
-  Table: ['Checkbox', 'Ellipsis', 'Empty', 'Pagination', 'Input', 'Select', 'Radio', 'Scrollbar', 'Spin','Tooltip'],
+  Table: ['Checkbox', 'Ellipsis', 'Empty', 'Pagination', 'Input', 'Select', 'Radio', 'Scrollbar', 'Spin', 'Tooltip'],
   Tag: ['Space'],
   Upload: ['Image', 'Message', 'Space', 'Spin'],
   Waterfall: ['Spin']
