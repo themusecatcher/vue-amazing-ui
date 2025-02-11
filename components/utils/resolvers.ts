@@ -128,7 +128,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
     sideEffects.push(`vue-amazing-ui/${type}/empty/Empty.css`)
     sideEffects.push(`vue-amazing-ui/${type}/scrollbar/Scrollbar.css`)
   }
-  const RadioStyle = ['Table']
+  const RadioStyle = ['Calendar', 'Table']
   if (RadioStyle.includes(componentName)) {
     sideEffects.push(`vue-amazing-ui/${type}/radio/Radio.css`)
   }
