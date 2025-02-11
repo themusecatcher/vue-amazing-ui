@@ -341,9 +341,9 @@ function onKeyboard(e: KeyboardEvent) {
   text-align: center;
   cursor: pointer;
   &:hover {
-    border-color: @themeColor;
+    border-color: #1677ff;
     .plus-svg {
-      color: @themeColor;
+      color: #1677ff;
     }
   }
 }
@@ -392,11 +392,11 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 .tag-processing {
-  color: @themeColor;
+  color: #1677ff;
   background: #e6f4ff;
   border-color: #91caff;
   :deep(svg) {
-    color: @themeColor;
+    color: #1677ff;
     fill: currentColor;
   }
 }

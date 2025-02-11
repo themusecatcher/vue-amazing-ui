@@ -711,7 +711,7 @@ function onSwitchRight() {
           text-overflow: ellipsis;
           transition: color 0.3s;
           &:hover {
-            color: @themeColor;
+            color: #1677ff;
           }
         }
         .preview-progress {

@@ -390,17 +390,17 @@ function onPageSizeChange(pageSize: number) {
       transition: color 0.2s;
     }
     &:hover {
-      border-color: @themeColor;
+      border-color: #1677ff;
       .arrow-svg {
-        color: @themeColor;
+        color: #1677ff;
       }
     }
   }
   .pagination-item-active {
     // 悬浮/选中样式
     font-weight: 600;
-    color: @themeColor;
-    border-color: @themeColor;
+    color: #1677ff;
+    border-color: #1677ff;
   }
   .pagination-item-disabled {
     color: rgba(0, 0, 0, 0.25);
@@ -452,7 +452,7 @@ function onPageSizeChange(pageSize: number) {
       margin: auto;
       display: inline-block;
       font-size: 12px;
-      color: @themeColor;
+      color: #1677ff;
       fill: currentColor;
       opacity: 0;
       pointer-events: none;

@@ -215,7 +215,7 @@ function getImageName(image: Image) {
   }
 }
 .swiper {
-  --swiper-theme-color: @themeColor;
+  --swiper-theme-color: #1677ff;
 }
 :deep(.swiper-wrapper) {
   // 自动切换过渡效果设置
@@ -227,6 +227,6 @@ function getImageName(image: Image) {
   height: 12px;
 }
 .swiper-lazy-preloader-theme {
-  --swiper-preloader-color: @themeColor;
+  --swiper-preloader-color: #1677ff;
 }
 </style>

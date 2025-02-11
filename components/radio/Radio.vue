@@ -211,7 +211,7 @@ function onWaveEnd() {
   line-height: 1.5714285714285714;
   &:not(.radio-disabled):hover {
     .radio-handle {
-      border-color: @themeColor;
+      border-color: #1677ff;
     }
   }
   .radio-handle {
@@ -249,8 +249,8 @@ function onWaveEnd() {
     }
   }
   .radio-checked {
-    border-color: @themeColor;
-    background-color: @themeColor;
+    border-color: #1677ff;
+    background-color: #1677ff;
     &::after {
       transform: scale(0.375);
       opacity: 1;
@@ -314,7 +314,7 @@ function onWaveEnd() {
     border-end-end-radius: 6px;
   }
   &:not(.radio-button-disabled):hover {
-    color: @themeColor;
+    color: #1677ff;
   }
 }
 .radio-button-single {
@@ -323,11 +323,11 @@ function onWaveEnd() {
 }
 .radio-button-wrap.radio-button-checked:not(.radio-button-disabled) {
   z-index: 1;
-  color: @themeColor;
+  color: #1677ff;
   background-color: #ffffff;
-  border-color: @themeColor;
+  border-color: #1677ff;
   &::before {
-    background-color: @themeColor;
+    background-color: #1677ff;
   }
 }
 .radio-button-disabled {
@@ -341,8 +341,8 @@ function onWaveEnd() {
 }
 .radio-button-solid.radio-button-checked:not(.radio-button-disabled) {
   color: #fff;
-  background-color: @themeColor;
-  border-color: @themeColor;
+  background-color: #1677ff;
+  border-color: #1677ff;
   &:hover {
     color: #fff;
   }

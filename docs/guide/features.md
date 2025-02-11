@@ -31,14 +31,14 @@
 - 局部引入注册部分组件
 - 无需任何安装引入，直接使用单文件组件 `SFC`
 
-  *使用单文件组件 `SFC` 时，请按需要引入如下所示组件库默认全局样式：*
+## 全局默认样式
+
+*使用单文件组件 `SFC` 时，请按需要引入如下所示组件库全局默认样式：*
 
   ::: details Show Global Styles
 
   ```less
   // 组件库全局样式定义
-  @themeColor: #1677ff; // 全局主题色
-  @themeHoverColor: #4096ff; // 主题色悬浮态
   *,
   *::before,
   *::after {
@@ -68,7 +68,7 @@
     caret-color: auto;
   }
   a {
-    color: @themeColor;
+    color: #1677ff;
     text-decoration: none;
     background-color: transparent;
     -webkit-tap-highlight-color: transparent;

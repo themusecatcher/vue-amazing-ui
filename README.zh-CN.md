@@ -84,6 +84,17 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
+**全局部分注册和局部注册组件，都需手动引入组件库全局默认样式（推荐使用自动按需引入）**
+
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import 'vue-amazing-ui/es/style/global.css' // 引入全局默认样式
+
+const app = createApp(App)
+app.mount('#app')
+```
+
 **自动按需引入（强烈推荐）**
 
 使用 [`unplugin-vue-components`](https://github.com/unplugin/unplugin-vue-components) 插件来按需自动加载组件，插件会自动解析模板中的使用到的组件，并导入组件和样式

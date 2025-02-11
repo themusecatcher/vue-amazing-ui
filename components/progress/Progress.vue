@@ -256,7 +256,7 @@ const showSuccess = computed(() => {
     overflow: hidden;
     .progress-bg {
       position: relative;
-      background-color: @themeColor;
+      background-color: #1677ff;
       border-radius: var(--border-radius);
       transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
       &::after {

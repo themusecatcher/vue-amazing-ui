@@ -430,7 +430,7 @@ defineExpose({
       cursor: pointer;
       transition: border-color 0.3s;
       &:hover {
-        border-color: @themeColor;
+        border-color: #1677ff;
       }
       .plus-svg {
         display: inline-block;
@@ -486,7 +486,7 @@ defineExpose({
         display: inline-block;
         width: 100%;
         height: 60px;
-        color: @themeColor;
+        color: #1677ff;
         fill: currentColor;
       }
       .file-mask {

@@ -970,7 +970,7 @@ const showExtra = computed(() => {
       font-size: 72px;
     }
     .icon-info {
-      color: @themeColor;
+      color: #1677ff;
     }
     .icon-success {
       color: #52c41a;

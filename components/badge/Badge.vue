@@ -344,8 +344,8 @@ function handleOffset(value: string): string {
     background-color: rgba(0, 0, 0, 0.25);
   }
   .status-processing {
-    color: @themeColor;
-    background-color: @themeColor;
+    color: #1677ff;
+    background-color: #1677ff;
   }
   .status-warning {
     color: #faad14;
@@ -376,8 +376,8 @@ function handleOffset(value: string): string {
     background-color: #52c41a;
   }
   .color-blue {
-    color: @themeColor;
-    background-color: @themeColor;
+    color: #1677ff;
+    background-color: #1677ff;
   }
   .color-purple {
     color: #722ed1;

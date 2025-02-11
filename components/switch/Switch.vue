@@ -161,7 +161,7 @@ function onWaveEnd() {
       .path {
         stroke-dasharray: 90, 150;
         stroke-dashoffset: 0;
-        stroke: @themeColor;
+        stroke: #1677ff;
         stroke-width: 5;
         stroke-linecap: round;
         animation: loadingDash 1.5s ease-in-out infinite;
@@ -252,7 +252,7 @@ function onWaveEnd() {
   }
 }
 .switch-checked {
-  background: @themeColor;
+  background: #1677ff;
   &:hover:not(.switch-disabled) {
     background: #4096ff;
   }
