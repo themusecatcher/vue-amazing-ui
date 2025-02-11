@@ -6,8 +6,7 @@
 
 ## 2.2.1 <Tag color="volcano" size="small">2025-02-12</Tag>
 
-- 优化并更新自动按需引入 resolver: `VueAmazingUIResolver`
-- 使用自动按需引入时，自动引入组件库全局默认样式
+- 优化并更新自动按需引入 resolver: `VueAmazingUIResolver`；当使用自动按需引入时，resolver 自动引入组件库全局默认样式
 - 组件库及文档代码优化
 
 ## 2.2.0 <Tag color="volcano" size="small">2025-02-11</Tag>
