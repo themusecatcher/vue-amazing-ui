@@ -34,7 +34,7 @@ features:
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { fetchVersion } from './.vitepress/utils/fetchVersion'
+import { fetchVersion, setLabel } from './.vitepress/utils/fetchVersion'
 import pkg from '../package.json'
 
 const dependencies = pkg.dependencies
@@ -58,7 +58,8 @@ function fetchDesc () {
   featureDetails.textContent = developDesc
 }
 onMounted(() => {
-  fetchVersion()
+  setLabel(pkg.version)
+  // fetchVersion()
   fetchDesc()
 })
 </script>
