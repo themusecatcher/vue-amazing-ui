@@ -2,7 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 import { format, subDays, addDays } from 'date-fns'
-import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'components/index'
+import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui/index'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
 const modeDate = ref(Date.now())
