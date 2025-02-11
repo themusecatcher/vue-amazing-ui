@@ -4,15 +4,18 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.2.1 <Tag color="volcano" size="small">2025-02-12</Tag>
+
+- 优化并更新自动按需引入 resolver: `VueAmazingUIResolver`
+
 ## 2.2.0 <Tag color="volcano" size="small">2025-02-11</Tag>
 
 - 新增 [日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html) 组件
-- 优化并更新自动按需引入
 - 组件库及文档代码优化
 
 ## 2.1.8 <Tag color="volcano" size="small">2025-02-10</Tag>
 
-- 更新自动按需引入 api：`VueAmazingUIResolver` ，修复无法识别 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件的问题
+- 更新自动按需引入：`VueAmazingUIResolver` ，修复无法识别 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件的问题
 - 组件库及文档代码优化
 
 ## 2.1.7 <Tag color="volcano" size="small">2025-02-07</Tag>
