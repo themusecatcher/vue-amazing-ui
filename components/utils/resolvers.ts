@@ -129,7 +129,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   if (ScrollbarStyle.includes(componentName)) {
     sideEffects.push(`vue-amazing-ui/${type}/scrollbar/Scrollbar.css`)
   }
-  const SelectStyle = ['Cascader', 'Pagination']
+  const SelectStyle = ['Calendar', 'Cascader', 'Pagination']
   if (SelectStyle.includes(componentName)) {
     sideEffects.push(`vue-amazing-ui/${type}/select/Select.css`)
   }
