@@ -382,7 +382,7 @@ defineExpose({
   }
   .icon-info {
     :deep(.icon-svg) {
-      color: @themeColor;
+      color: #1677ff;
     }
   }
   .icon-success {

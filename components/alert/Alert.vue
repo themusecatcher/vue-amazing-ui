@@ -331,7 +331,7 @@ async function onClose(e: Event) {
   border: 1px solid #91caff;
   .m-alert-icon,
   .m-big-icon {
-    color: @themeColor;
+    color: #1677ff;
     .icon-svg,
     :deep(svg) {
       fill: currentColor;

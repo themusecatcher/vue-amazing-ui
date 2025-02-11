@@ -436,14 +436,14 @@ function getContentStyle(key: string | number | undefined, index: number) {
           cursor: pointer;
           transition: all 0.3s;
           &:hover {
-            color: @themeColor;
+            color: #1677ff;
           }
           :deep(svg) {
             fill: currentColor;
           }
         }
         .tab-line-active {
-          color: @themeColor;
+          color: #1677ff;
           text-shadow: 0 0 0.25px currentcolor;
         }
         .tab-disabled {
@@ -455,7 +455,7 @@ function getContentStyle(key: string | number | undefined, index: number) {
         }
         .tab-bar {
           position: absolute;
-          background-color: @themeColor;
+          background-color: #1677ff;
           pointer-events: none;
           border-radius: 2px;
           transition:
@@ -862,7 +862,7 @@ function getContentStyle(key: string | number | undefined, index: number) {
           transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
         .tab-card-active {
-          color: @themeColor;
+          color: #1677ff;
           background: #ffffff;
           text-shadow: 0 0 0.25px currentcolor;
         }

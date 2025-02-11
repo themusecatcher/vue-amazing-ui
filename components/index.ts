@@ -1,4 +1,4 @@
-import './less/global.less'
+import './style/global.less'
 import type { App, Plugin } from 'vue'
 import * as components from './components'
 export * from './components'

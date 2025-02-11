@@ -84,6 +84,17 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
+**Both Global Partial Registration and Local Registration require manually importing the global default styles of the component library (Automatic On-Demand Import is recommended).**
+
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import 'vue-amazing-ui/es/style/global.css' // 引入全局默认样式
+
+const app = createApp(App)
+app.mount('#app')
+```
+
 **Automatic On-Demand Import (Strongly Recommended)**
 
 Use the [`unplugin-vue-components`](https://github.com/unplugin/unplugin-vue-components) plugin to automatically import components on demand. The plugin will automatically parse the components used in the template and import the components and styles.

@@ -325,7 +325,7 @@ function onDown() {
       &:hover {
         height: 60%;
         .icon-svg {
-          color: @themeColor;
+          color: #1677ff;
         }
       }
       .icon-svg {

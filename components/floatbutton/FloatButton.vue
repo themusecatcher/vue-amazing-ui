@@ -315,10 +315,10 @@ function onClick(e: Event) {
 }
 
 .float-btn-primary {
-  background-color: @themeColor;
+  background-color: #1677ff;
   & > .float-btn-tooltip {
     .float-btn-body {
-      background-color: @themeColor;
+      background-color: #1677ff;
       transition: background-color 0.2s;
       &:hover {
         background-color: #4096ff;

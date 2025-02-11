@@ -108,7 +108,7 @@ const showExtra = computed(() => {
             color: rgba(0, 0, 0, 0.88);
             transition: all 0.3s;
             &:hover {
-              color: @themeColor;
+              color: #1677ff;
             }
           }
         }
@@ -154,7 +154,7 @@ const showExtra = computed(() => {
       }
       & > :deep(a) {
         // 选择所有直接子元素且是 a 标签
-        color: @themeColor;
+        color: #1677ff;
         transition: color 0.3s;
         &:hover {
           color: #4096ff;

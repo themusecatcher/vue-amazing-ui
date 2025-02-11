@@ -363,7 +363,7 @@ defineExpose({
     .icon-info,
     .icon-loading {
       :deep(svg) {
-        color: @themeColor;
+        color: #1677ff;
         fill: currentColor;
       }
     }

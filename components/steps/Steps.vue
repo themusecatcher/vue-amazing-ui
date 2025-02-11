@@ -180,7 +180,7 @@ function onChange(index: number) {
         .icon-svg {
           display: inline-block;
           font-size: 16px;
-          color: @themeColor;
+          color: #1677ff;
           fill: currentColor;
           transition: all 0.3s;
         }
@@ -232,21 +232,21 @@ function onChange(index: number) {
       cursor: pointer;
       .steps-tail {
         &::after {
-          background-color: @themeColor;
+          background-color: #1677ff;
         }
       }
       .steps-icon {
         background-color: #e6f4ff;
         border-color: #e6f4ff;
         .steps-dot {
-          background: @themeColor;
+          background: #1677ff;
         }
       }
       .steps-content {
         .steps-title {
           color: rgba(0, 0, 0, 0.88);
           &::after {
-            background-color: @themeColor;
+            background-color: #1677ff;
           }
         }
         .steps-description {
@@ -255,12 +255,12 @@ function onChange(index: number) {
       }
       &:hover {
         .steps-icon {
-          border-color: @themeColor;
+          border-color: #1677ff;
         }
         .steps-content {
           .steps-title,
           .steps-description {
-            color: @themeColor;
+            color: #1677ff;
           }
         }
       }
@@ -269,14 +269,14 @@ function onChange(index: number) {
   .steps-process {
     .steps-info-wrap {
       .steps-icon {
-        background-color: @themeColor;
+        background-color: #1677ff;
         border: 1px solid rgba(0, 0, 0, 0.25);
-        border-color: @themeColor;
+        border-color: #1677ff;
         .steps-num {
           color: #fff;
         }
         .steps-dot {
-          background: @themeColor;
+          background: #1677ff;
         }
       }
       .steps-content {
@@ -292,15 +292,15 @@ function onChange(index: number) {
       cursor: pointer;
       &:hover {
         .steps-icon {
-          border-color: @themeColor;
+          border-color: #1677ff;
           .steps-num {
-            color: @themeColor;
+            color: #1677ff;
           }
         }
         .steps-content {
           .steps-title,
           .steps-description {
-            color: @themeColor;
+            color: #1677ff;
           }
         }
       }

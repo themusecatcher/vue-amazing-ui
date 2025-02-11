@@ -180,7 +180,7 @@ function onOk(e: Event) {
     }
   }
   .icon-info {
-    color: @themeColor;
+    color: #1677ff;
   }
   .icon-success {
     color: #52c41a;

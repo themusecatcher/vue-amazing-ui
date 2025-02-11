@@ -73,6 +73,17 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
+> **全局部分注册和局部注册组件，都需手动引入组件库全局默认样式（推荐使用[自动按需引入](/guide/ondemand#自动按需引入-强烈推荐)）**
+
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import 'vue-amazing-ui/es/style/global.css' // 引入全局默认样式
+
+const app = createApp(App)
+app.mount('#app')
+```
+
 ## 使用类型
 
 *所有类型均可直接从 `vue-amazing-ui` 中引入使用，无需任何额外安装*

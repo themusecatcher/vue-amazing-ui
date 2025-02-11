@@ -170,7 +170,7 @@ function onWaveOptionEnd(value: string | number) {
   line-height: 1.5714285714285714;
   &:not(.checkbox-disabled):hover {
     .checkbox-box {
-      border-color: @themeColor;
+      border-color: #1677ff;
     }
   }
   .checkbox-box {
@@ -239,8 +239,8 @@ function onWaveOptionEnd(value: string | number) {
     }
   }
   .checkbox-checked {
-    background-color: @themeColor;
-    border-color: @themeColor;
+    background-color: #1677ff;
+    border-color: #1677ff;
     &::after {
       opacity: 1;
       transform: rotate(45deg) scale(1) translate(-50%, -50%);
@@ -253,7 +253,7 @@ function onWaveOptionEnd(value: string | number) {
       left: 50%;
       width: 8px;
       height: 8px;
-      background-color: @themeColor;
+      background-color: #1677ff;
       border: 0;
       transform: translate(-50%, -50%) scale(1);
       opacity: 1;
