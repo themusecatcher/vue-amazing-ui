@@ -199,7 +199,9 @@ export default defineConfig({
         }),
         NaiveUiResolver(),
         // auto import components from VueAmazingUI
-        // VueAmazingUIResolver()
+        // VueAmazingUIResolver({
+        //   cjs: false // whether use commonjs build, default false
+        // })
       ]
     }),
     // AutoImport({ // 自动引入所需 apis
