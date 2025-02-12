@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, nextTick } from 'vue'
+import { ref, computed, watch, watchEffect, nextTick, onBeforeUnmount } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf } from 'components/utils'
 export interface Props {
@@ -74,6 +74,11 @@ watch(
 watchEffect(() => {
   notificationPlace.value = props.placement
 })
+onBeforeUnmount(() => {
+  hideTimers.value.forEach((rafId: any) => {
+    rafId && cancelRaf(rafId)
+  })
+})
 function onEnter(index: number) {
   stopAutoClose(index)
 }
@@ -97,6 +102,7 @@ async function onClose(index: number) {
   notificationRef.value[index].style.maxHeight = notificationRef.value[index].offsetHeight + 'px'
   await nextTick()
   hideIndex.value.push(index)
+  hideTimers.value[index] = null
   notificationData.value[index].onClose && notificationData.value[index].onClose()
   emit('close')
 }
