@@ -37,20 +37,6 @@ function onEnter(e: KeyboardEvent) {
         @change="onChange"
         @enter="onEnter"
       />
-      <a-textarea
-        v-model:value="value"
-        placeholder="Basic usage rows 2"
-        :rows="2"
-        @change="onChange"
-        @pressEnter="onEnter"
-      />
-      <a-textarea
-        v-model:value.lazy="lazyValue"
-        placeholder="Lazy usage rows 2"
-        :rows="2"
-        @change="onChange"
-        @pressEnter="onEnter"
-      />
     </Space>
     <h2 class="mt30 mb10">适应文本高度的文本域</h2>
     <Space vertical :width="300">
