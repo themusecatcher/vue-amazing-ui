@@ -1050,7 +1050,7 @@ function onPaginationChange(page: number, pageSize: number) {
         >
           <Scrollbar
             ref="scrollbarRef"
-            style="border-radius: 8px 8px 0 0"
+            :style="showHeader ? {} : { borderRadius: '8px 8px 0 0' }"
             :x-scrollable="xScrollable"
             :y-scrollable="yScrollable"
             :auto-hide="false"
