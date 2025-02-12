@@ -35,8 +35,6 @@
 
 *使用单文件组件 `SFC` 时，请按需要引入如下所示组件库全局默认样式：*
 
-  ::: details Show Global Styles
-
   ```less
   // 组件库全局样式定义
   *,
@@ -48,7 +46,6 @@
     caret-color: transparent; // 消除 win 系统点击后出现插入光标闪烁的问题
   }
   body {
-    min-height: 100vh;
     font-family:
       Inter,
       -apple-system,
@@ -74,15 +71,13 @@
     -webkit-tap-highlight-color: transparent;
     outline: none;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: color 0.3s ease;
     &:hover {
       color: #4096ff;
     }
   }
   ```
   
-  :::
-
 <script setup lang="ts">
 import { TeamOutlined } from '@ant-design/icons-vue'
 import pkg from '../../package.json'
