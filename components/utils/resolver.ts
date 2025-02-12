@@ -104,6 +104,9 @@ const componentDependencies = {
   Waterfall: ['Spin']
 }
 function getSideEffects(componentName: string, options?: VueAmazingUIResolverOptions) {
+  if (['NumberAnimation', 'Watermark'].includes(componentName) ) { // 无样式文件的组件
+    return []
+  }
   const sideEffectsComponents: string[] = [componentName] // 组件依赖的所有样式
   if (componentName in componentDependencies) {
     sideEffectsComponents.push(...componentDependencies[componentName as keyof typeof componentDependencies])
