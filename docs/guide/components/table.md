@@ -3069,6 +3069,18 @@ watchEffect(() => {
     }
   }
 }
+a {
+  color: #1677ff;
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  &:hover {
+    color: #4096ff;
+  }
+}
 </style>
 
 ## APIs
