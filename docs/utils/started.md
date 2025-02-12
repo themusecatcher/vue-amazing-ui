@@ -2,11 +2,11 @@
 
 <GlobalElement />
 
-## 简要介绍
+## 介绍
 
-开箱即用！
+功能丰富，简单易用！
 
-## 使用方式
+## 使用
 
 ```vue
 <script setup lang="ts">
@@ -31,7 +31,7 @@ import {
 </script>
 ```
 
-## 常用工具函数
+## 说明
 
 Name | Description | Type
 :--- | :--- | :---
