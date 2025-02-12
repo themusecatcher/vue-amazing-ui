@@ -154,7 +154,7 @@ const QRCodes = [
       <div style="text-align: center">
         GitHub
         <br/>
-        themusecatcher
+        @themusecatcher
       </div>
     </template>
     <Avatar :size="36" src="https://github.com/themusecatcher.png" href="https://github.com/themusecatcher" target="_blank" />
@@ -164,7 +164,7 @@ const QRCodes = [
       <div style="text-align: center">
         WeChat
         <br/>
-        Ant
+        @Ant
       </div>
     </template>
     <Avatar :size="36" :src="withBase('/avatars/1.jpeg')" />
@@ -174,7 +174,7 @@ const QRCodes = [
       <div style="text-align: center">
         GitHub
         <br/>
-        nizhensh-i
+        @nizhensh-i
       </div>
     </template>
     <Avatar :size="36" :src="withBase('/avatars/2.jpg')" href="https://github.com/nizhensh-i" target="_blank" />
