@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { useResizeObserver, useSlotsExist } from 'components/utils'
 export interface Item {
@@ -120,7 +120,7 @@ const tabBarStyle = computed(() => {
 const animatedStyle = computed(() => {
   if (props.animated && ['top', 'bottom'].includes(props.tabPosition)) {
     return {
-      marginLeft: `-${100 * activeIndex.value}%`
+      marginLeft: `-${100 * (activeIndex.value !== -1 ? activeIndex.value : 0)}%`
     }
   }
   return {}
@@ -146,10 +146,10 @@ watch(
     flush: 'post'
   }
 )
-useResizeObserver([wrapRef, navRef], () => {
+onMounted(() => {
   getNavSize()
 })
-onMounted(() => {
+useResizeObserver([wrapRef, navRef], () => {
   getNavSize()
 })
 function getNavSize() {
@@ -193,7 +193,7 @@ function getBarDisplay() {
   }
 }
 function getBarHorizontalDisplay() {
-  const el = tabsRef.value[activeIndex.value]
+  const el = activeIndex.value !== -1 ? tabsRef.value[activeIndex.value] : null
   if (el) {
     tabBarLeft.value = el.offsetLeft
     tabBarWidth.value = el.offsetWidth
@@ -214,7 +214,7 @@ function getBarHorizontalDisplay() {
   }
 }
 function getBarVerticalDisplay() {
-  const el = tabsRef.value[activeIndex.value]
+  const el = activeIndex.value !== -1 ? tabsRef.value[activeIndex.value] : null
   if (el) {
     tabBarTop.value = el.offsetTop
     tabBarHeight.value = el.offsetHeight
