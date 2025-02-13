@@ -67,7 +67,7 @@ const year = computed(() => {
     text-input
     :model-type="modelType"
     :day-names="['一', '二', '三', '四', '五', '六', '七']"
-  ></VueDatePicker>
+  />
 </template>
 <style lang="less" scoped>
 .m-datepicker {
@@ -76,50 +76,158 @@ const year = computed(() => {
     svg {
       fill: currentColor;
     }
+    :deep(.dp__input:hover:not(.dp__disabled)) {
+      border-color: var(--dp-border-color-hover);
+    }
+    .dp__disabled {
+      color: rgba(0, 0, 0, 0.25);
+      cursor: not-allowed;
+      &:hover {
+        border-color: var(--dp-border-color);
+      }
+    }
+    .dp__input_focus {
+      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    }
+  }
+  :deep(.dp__outer_menu_wrap) {
+    .dp__menu {
+      overflow: hidden;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      .dp__arrow_top,
+      .dp__arrow_bottom {
+        display: none;
+      }
+      .dp__overlay {
+        padding-top: 6px;
+        .dp__overlay_container::-webkit-scrollbar-thumb {
+          border-radius: 5px;
+          cursor: pointer;
+          background-color: var(--dp-scroll-bar-color);
+          transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+          }
+        }
+      }
+    }
   }
 }
-.dp__theme_dark {
-  // dark theme
+// CSS variables
+.m-datepicker {
+  /*General*/
+  --dp-font-family: -apple-system, blinkmacsystemfont, "Segoe UI", roboto, oxygen, ubuntu, cantarell, "Open Sans",
+  "Helvetica Neue", sans-serif;
+  --dp-border-radius: 8px; /*Configurable border-radius*/
+  --dp-cell-border-radius: 4px; /*Specific border radius for the calendar cell*/
+  // --dp-common-transition: all 0.1s ease-in; /*Generic transition applied on buttons and calendar cells*/
+  --dp-common-transition: all 0.2s ease; /*Generic transition applied on buttons and calendar cells*/
+
+  /*Sizing*/
+  --dp-button-height: 35px; /*Size for buttons in overlays*/
+  --dp-month-year-row-height: 35px; /*Height of the month-year select row*/
+  --dp-month-year-row-button-size: 35px; /*Specific height for the next/previous buttons*/
+  --dp-button-icon-height: 20px; /*Icon sizing in buttons*/
+  --dp-cell-size: 35px; /*Width and height of calendar cell*/
+  --dp-cell-padding: 5px; /*Padding in the cell*/
+  --dp-common-padding: 10px; /*Common padding used*/
+  --dp-input-icon-padding: 35px; /*Padding on the left side of the input if icon is present*/
+  --dp-input-padding: 6px 30px 6px 12px; /*Padding in the input*/
+  --dp-menu-min-width: 260px; /*Adjust the min width of the menu*/
+  --dp-action-buttons-padding: 2px 5px; /*Adjust padding for the action buttons in action row*/
+  --dp-row-margin:  5px 0; /*Adjust the spacing between rows in the calendar*/
+  --dp-calendar-header-cell-padding:  0.5rem; /*Adjust padding in calendar header cells*/
+  --dp-two-calendars-spacing:  10px; /*Space between multiple calendars*/
+  --dp-overlay-col-padding:  3px; /*Padding in the overlay column*/
+  --dp-time-inc-dec-button-size:  32px; /*Sizing for arrow buttons in the time picker*/
+  --dp-menu-padding: 6px 8px; /*Menu padding*/
+  
+  /*Font sizes*/
+  --dp-font-size: 1rem; /*Default font-size*/
+  --dp-preview-font-size: 0.8rem; /*Font size of the date preview in the action row*/
+  --dp-time-font-size: 2rem; /*Font size in the time picker*/
+  
+  /*Transitions*/
+  --dp-animation-duration: 0.1s; /*Transition duration*/
+  --dp-menu-appear-transition-timing: cubic-bezier(.4, 0, 1, 1); /*Timing on menu appear animation*/
+  --dp-transition-timing: ease-out; /*Timing on slide animations*/
+}
+// dark theme configuration
+.dp__theme_dark,
+:deep(.dp__theme_dark) {
   --dp-background-color: #212121;
-  --dp-text-color: #ffffff;
+  --dp-text-color: #fff;
   --dp-hover-color: #484848;
-  --dp-hover-text-color: #ffffff;
+  --dp-hover-text-color: #fff;
   --dp-hover-icon-color: #959595;
-  --dp-primary-color: #005cb2;
-  --dp-primary-text-color: #ffffff;
+  // --dp-primary-color: #005cb2;
+  --dp-primary-color: #1668dc;
+  --dp-primary-disabled-color: #61a8ea;
+  --dp-primary-text-color: #fff;
   --dp-secondary-color: #a9a9a9;
   --dp-border-color: #2d2d2d;
   --dp-menu-border-color: #2d2d2d;
   --dp-border-color-hover: #aaaeb7;
+  --dp-border-color-focus: #aaaeb7;
   --dp-disabled-color: #737373;
+  --dp-disabled-color-text: #d0d0d0;
   --dp-scroll-bar-background: #212121;
   --dp-scroll-bar-color: #484848;
   --dp-success-color: #00701a;
   --dp-success-color-disabled: #428f59;
   --dp-icon-color: #959595;
   --dp-danger-color: #e53935;
-  --dp-highlight-color: rgba(0, 92, 178, 0.2);
+  --dp-marker-color: #e53935;
+  --dp-tooltip-color: #3e3e3e;
+  --dp-highlight-color: rgb(0 92 178 / 20%);
+  --dp-range-between-dates-background-color: var(--dp-hover-color, #484848);
+  --dp-range-between-dates-text-color: var(--dp-hover-text-color, #fff);
+  --dp-range-between-border-color: var(--dp-hover-color, #fff);
 }
-.dp__theme_light {
-  // light theme
-  --dp-background-color: #ffffff;
-  --dp-text-color: #212121;
-  --dp-hover-color: #f3f3f3;
-  --dp-hover-text-color: #212121;
+// light theme configuration
+.dp__theme_light,
+:deep(.dp__theme_light) {
+  --dp-background-color: #fff;
+  // --dp-text-color: #212121;
+  --dp-text-color: rgba(0, 0, 0, 0.88);
+  // --dp-hover-color: #f3f3f3;
+  --dp-hover-color: rgba(0, 0, 0, 0.04);
+  // --dp-hover-text-color: #212121;
+  --dp-hover-text-color: rgba(0, 0, 0, 0.88);
   --dp-hover-icon-color: #959595;
-  --dp-primary-color: #1976d2;
-  --dp-primary-text-color: #f8f5f5;
-  --dp-secondary-color: #c0c4cc;
-  --dp-border-color: #ddd;
-  --dp-menu-border-color: #ddd;
-  --dp-border-color-hover: #aaaeb7;
-  --dp-disabled-color: #f6f6f6;
-  --dp-scroll-bar-background: #f3f3f3;
-  --dp-scroll-bar-color: #959595;
+  // --dp-primary-color: #1976d2;
+  --dp-primary-color: #1677ff;
+  --dp-primary-disabled-color: #6bacea;
+  // --dp-primary-text-color: #f8f5f5;
+  --dp-primary-text-color: #fff;
+  // --dp-secondary-color: #c0c4cc;
+  --dp-secondary-color: rgba(0, 0, 0, 0.25);
+  // --dp-border-color: #ddd;
+  --dp-border-color: #d9d9d9;
+  // --dp-menu-border-color: #ddd;
+  --dp-menu-border-color: #d9d9d9;
+  // --dp-border-color-hover: #aaaeb7;
+  --dp-border-color-hover: #4096ff;
+  // --dp-border-color-focus: #aaaeb7;
+  --dp-border-color-focus: #4096ff;
+  // --dp-disabled-color: #f6f6f6;
+  --dp-disabled-color: rgba(0, 0, 0, 0.04);
+  // --dp-scroll-bar-background: #f3f3f3;
+  --dp-scroll-bar-background: transparent;
+  // --dp-scroll-bar-color: #959595;
+  --dp-scroll-bar-color: rgba(0, 0, 0, 0.25);
   --dp-success-color: #76d275;
   --dp-success-color-disabled: #a3d9b1;
   --dp-icon-color: #959595;
   --dp-danger-color: #ff6f60;
-  --dp-highlight-color: rgba(25, 118, 210, 0.1);
+  --dp-marker-color: #ff6f60;
+  --dp-tooltip-color: #fafafa;
+  --dp-disabled-color-text: #8e8e8e;
+  --dp-highlight-color: rgb(25 118 210 / 10%);
+  --dp-range-between-dates-background-color: var(--dp-hover-color, #f3f3f3);
+  --dp-range-between-dates-text-color: var(--dp-hover-text-color, #212121);
+  --dp-range-between-border-color: var(--dp-hover-color, #f3f3f3);
 }
 </style>
