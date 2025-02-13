@@ -4,6 +4,14 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.2.2 <Tag color="volcano" size="small">2025-02-13</Tag>
+
+- 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件代码
+- 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件代码
+- 优化并更新 [通知提醒 Notification](https://themusecatcher.github.io/vue-amazing-ui/guide/components/notification.html) 组件代码
+- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件代码
+- 组件库及文档代码优化
+
 ## 2.2.1 <Tag color="volcano" size="small">2025-02-12</Tag>
 
 - 优化并更新自动按需引入 resolver: `VueAmazingUIResolver`；当使用自动按需引入时，resolver 自动引入组件库全局默认样式
