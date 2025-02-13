@@ -103,7 +103,7 @@ watchEffect(() => {
 
 ## 基本使用
 
-<DatePicker placeholder="请选择日期" format="yyyy-MM-dd" v-model="dateValue"/>
+<DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
 
 ::: details Show Code
 
@@ -117,7 +117,26 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <DatePicker placeholder="请选择日期" format="yyyy-MM-dd" v-model="dateValue"/>
+  <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+</template>
+```
+
+:::
+
+## 禁用
+
+<DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { format } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
+</script>
+<template>
+  <DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" />
 </template>
 ```
 
@@ -125,12 +144,7 @@ watchEffect(() => {
 
 ## 禁用过去
 
-<DatePicker
-  placeholder="请选择日期"
-  :min-date="new Date()"
-  format="yyyy-MM-dd"
-  v-model="dateValue"
-/>
+<DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
 
 ::: details Show Code
 
@@ -144,12 +158,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <DatePicker
-    placeholder="请选择日期"
-    :min-date="new Date()"
-    format="yyyy-MM-dd"
-    v-model="dateValue"
-  />
+  <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
 </template>
 ```
 
@@ -157,13 +166,7 @@ watchEffect(() => {
 
 ## 禁用未来
 
-<DatePicker
-  placeholder="请选择日期"
-  mode="date"
-  :max-date="new Date()"
-  format="yyyy-MM-dd"
-  v-model="dateValue"
-/>
+<DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
 
 ::: details Show Code
 
@@ -177,13 +180,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <DatePicker
-    placeholder="请选择日期"
-    mode="date"
-    :max-date="new Date()"
-    format="yyyy-MM-dd"
-    v-model="dateValue"
-  />
+  <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
 </template>
 ```
 
@@ -192,13 +189,12 @@ watchEffect(() => {
 ## 日期时间选择器
 
 <DatePicker
-  placeholder="请选择日期时间"
-  mode="date"
-  format="yyyy-MM-dd HH:mm:ss"
   :width="240"
+  v-model="dateTimeValue"
+  format="yyyy-MM-dd HH:mm:ss"
   show-time
   enable-seconds
-  v-model="dateTimeValue"
+  placeholder="请选择日期时间"
 />
 
 ::: details Show Code
@@ -214,13 +210,12 @@ watchEffect(() => {
 </script>
 <template>
   <DatePicker
-    placeholder="请选择日期时间"
-    mode="date"
-    format="yyyy-MM-dd HH:mm:ss"
     :width="240"
+    v-model="dateTimeValue"
+    format="yyyy-MM-dd HH:mm:ss"
     show-time
     enable-seconds
-    v-model="dateTimeValue"
+    placeholder="请选择日期时间"
   />
 </template>
 ```
@@ -230,11 +225,12 @@ watchEffect(() => {
 ## 日期范围选择器
 
 <DatePicker
-  placeholder="请选择日期范围"
-  range
-  format="yyyy-MM-dd"
   :width="280"
   v-model="rangeValue"
+  range
+  :preset-dates="presetDates"
+  format="yyyy-MM-dd"
+  placeholder="请选择日期范围"
 />
 
 ::: details Show Code
@@ -250,11 +246,12 @@ watchEffect(() => {
 </script>
 <template>
   <DatePicker
-    placeholder="请选择日期范围"
-    range
-    format="yyyy-MM-dd"
     :width="280"
     v-model="rangeValue"
+    range
+    :preset-dates="presetDates"
+    format="yyyy-MM-dd"
+    placeholder="请选择日期范围"
   />
 </template>
 ```
@@ -264,13 +261,13 @@ watchEffect(() => {
 ## 双日期面板
 
 <DatePicker
-  placeholder="请选择日期范围"
+  :width="280"
+  v-model="rangeValue"
   mode="range"
   format="yyyy-MM-dd"
-  :width="280"
   range
   multi-calendars
-  v-model="rangeValue"
+  placeholder="请选择日期范围"
 />
 
 ::: details Show Code
@@ -286,13 +283,13 @@ watchEffect(() => {
 </script>
 <template>
   <DatePicker
-    placeholder="请选择日期范围"
+    :width="280"
+    v-model="rangeValue"
     mode="range"
     format="yyyy-MM-dd"
-    :width="280"
     range
     multi-calendars
-    v-model="rangeValue"
+    placeholder="请选择日期范围"
   />
 </template>
 ```
@@ -306,14 +303,14 @@ watchEffect(() => {
 <br/>
 
 <DatePicker
-  placeholder="请选择日期范围"
+  :width="280"
+  v-model="rangeValue"
   mode="range"
   format="yyyy-MM-dd"
-  :width="280"
   range
   :preset-dates="presetDates"
   multi-calendars
-  v-model="rangeValue"
+  placeholder="请选择日期范围"
 />
 
 ::: details Show Code
@@ -338,14 +335,14 @@ watchEffect(() => {
 </script>
 <template>
   <DatePicker
-    placeholder="请选择日期范围"
+    :width="280"
+    v-model="rangeValue"
     mode="range"
     format="yyyy-MM-dd"
-    :width="280"
     range
     :preset-dates="presetDates"
     multi-calendars
-    v-model="rangeValue"
+    placeholder="请选择日期范围"
   />
 </template>
 ```
@@ -355,13 +352,13 @@ watchEffect(() => {
 ## 时分选择器
 
 <DatePicker
-  placeholder="请选择时间"
+  :width="120"
+  v-model="timeValue"
   mode="time"
   show-time
   mode-height="120"
   format="HH:mm"
-  :width="120"
-  v-model="timeValue"
+  placeholder="请选择时间"
 />
 
 ::: details Show Code
@@ -379,13 +376,13 @@ watchEffect(() => {
 </script>
 <template>
   <DatePicker
-    placeholder="请选择时间"
+    :width="120"
+    v-model="timeValue"
     mode="time"
     show-time
     mode-height="120"
     format="HH:mm"
-    :width="120"
-    v-model="timeValue"
+    placeholder="请选择时间"
   />
 </template>
 ```
@@ -395,14 +392,14 @@ watchEffect(() => {
 ## 时分秒选择器
 
 <DatePicker
-  placeholder="请选择时间"
+  :width="150"
+  v-model="secondsValue"
   mode="time"
+  format="HH:mm:ss"
   show-time
   enable-seconds
   mode-height="120"
-  format="HH:mm:ss"
-  :width="150"
-  v-model="secondsValue"
+  placeholder="请选择时间"
 />
 
 ::: details Show Code
@@ -421,14 +418,14 @@ watchEffect(() => {
 </script>
 <template>
   <DatePicker
-    placeholder="请选择时间"
+    :width="150"
+    v-model="secondsValue"
     mode="time"
+    format="HH:mm:ss"
     show-time
     enable-seconds
     mode-height="120"
-    format="HH:mm:ss"
-    :width="150"
-    v-model="secondsValue"
+    placeholder="请选择时间"
   />
 </template>
 ```
@@ -438,15 +435,15 @@ watchEffect(() => {
 ## 时分秒范围选择器
 
 <DatePicker
-  placeholder="请选择时间"
+  :width="240"
+  v-model="timeRangeValue"
   mode="time"
+  format="HH:mm:ss"
   show-time
   range
   enable-seconds
   mode-height="120"
-  format="HH:mm:ss"
-  :width="240"
-  v-model="timeRangeValue"
+  placeholder="请选择时间"
 />
 
 ::: details Show Code
@@ -473,15 +470,15 @@ watchEffect(() => {
 </script>
 <template>
   <DatePicker
-    placeholder="请选择时间"
+    :width="240"
+    v-model="timeRangeValue"
     mode="time"
+    format="HH:mm:ss"
     show-time
     range
     enable-seconds
     mode-height="120"
-    format="HH:mm:ss"
-    :width="240"
-    v-model="timeRangeValue"
+    placeholder="请选择时间"
   />
 </template>
 ```
@@ -502,13 +499,7 @@ watchEffect(() => {
   >
     {{ format(weekValue[0], 'yyyy-MM-dd') + ' ~ ' + format(weekValue[1], 'yyyy-MM-dd') }}
   </GradientText>
-  <DatePicker
-    placeholder="请选择周"
-    v-model="weekValue"
-    mode="week"
-    format="yyyy年 第ww周"
-    :width="200"
-  />
+  <DatePicker :width="200" v-model="weekValue" mode="week" format="yyyy年 第ww周" placeholder="请选择周" />
 </Space>
 
 ::: details Show Code
@@ -537,13 +528,7 @@ watchEffect(() => {
     >
       {{ format(weekValue[0], 'yyyy-MM-dd') + ' ~ ' + format(weekValue[1], 'yyyy-MM-dd') }}
     </GradientText>
-    <DatePicker
-      placeholder="请选择周"
-      v-model="weekValue"
-      mode="week"
-      format="yyyy年 第ww周"
-      :width="200"
-    />
+    <DatePicker :width="200" v-model="weekValue" mode="week" format="yyyy年 第ww周" placeholder="请选择周" />
   </Space>
 </template>
 ```
@@ -552,13 +537,7 @@ watchEffect(() => {
 
 ## 月选择器
 
-<DatePicker
-  placeholder="请选择月"
-  mode="month"
-  format="yyyy-MM"
-  :width="150"
-  v-model="monthValue"
-/>
+<DatePicker :width="150" v-model="monthValue" mode="month" format="yyyy-MM" placeholder="请选择月" />
 
 ::: details Show Code
 
@@ -574,13 +553,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <DatePicker
-    placeholder="请选择月"
-    mode="month"
-    format="yyyy-MM"
-    :width="150"
-    v-model="monthValue"
-  />
+  <DatePicker :width="150" v-model="monthValue" mode="month" format="yyyy-MM" placeholder="请选择月" />
 </template>
 ```
 
@@ -588,13 +561,7 @@ watchEffect(() => {
 
 ## 年选择器
 
-<DatePicker
-  placeholder="请选择年"
-  mode="year"
-  format="yyyy"
-  :width="120"
-  v-model="yearValue"
-/>
+<DatePicker :width="120" v-model="yearValue" mode="year" format="yyyy" placeholder="请选择年" />
 
 ::: details Show Code
 
@@ -607,13 +574,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <DatePicker
-    placeholder="请选择年"
-    mode="year"
-    format="yyyy"
-    :width="120"
-    v-model="yearValue"
-  />
+  <DatePicker :width="120" v-model="yearValue" mode="year" format="yyyy" placeholder="请选择年" />
 </template>
 ```
 

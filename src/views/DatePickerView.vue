@@ -85,7 +85,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <div style="margin-left: 60px;">
+  <div style="margin-left: 60px">
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <ul class="m-list">
       <li>
