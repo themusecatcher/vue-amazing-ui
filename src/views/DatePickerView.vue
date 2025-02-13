@@ -100,7 +100,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <div style="margin-left: 60px">
+  <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <ul class="m-list">
       <li>
@@ -116,13 +116,13 @@ watchEffect(() => {
     </Space>
     <h2 class="mt30 mb10">基本使用</h2>
     <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-    <h2 class="mt30 mb10">禁用</h2>
-    <DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">三种大小</h2>
     <Space vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <DatePicker :size="size" v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
     </Space>
+    <h2 class="mt30 mb10">禁用</h2>
+    <DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">禁用日期</h2>
     <h3 class="mb10">不可选择过去日期</h3>
     <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
