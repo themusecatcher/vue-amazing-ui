@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.2.3 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增属性 `size`，支持设置日期选择组件大小
+- 组件库及文档代码优化
+
 ## 2.2.2 <Tag color="volcano" size="small">2025-02-13</Tag>
 
 - 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件代码

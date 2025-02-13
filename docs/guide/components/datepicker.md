@@ -51,7 +51,7 @@ const presetDates = ref([
   { label: 'This month', value: [startOfMonth(new Date()), endOfMonth(new Date())] },
   {
     label: 'Last month',
-    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
+    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))]
   },
   { label: 'This year', value: [startOfYear(new Date()).getTime(), endOfYear(new Date()).getTime()] }
 ])
@@ -142,6 +142,58 @@ const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 
 :::
 
+## 三种大小
+
+<Space vertical>
+  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <DatePicker :size="size" v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { format } from 'date-fns'
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('middle')
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
+watchEffect(() => {
+  console.log('dateValue', dateValue.value)
+})
+</script>
+<template>
+  <Space vertical>
+    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <DatePicker :size="size" v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+  </Space>
+</template>
+```
+
+:::
+
+## 禁用日期
+
+*不可选择过去日期*
+
+<br/>
+
+    <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
+    <h3 class="mt10 mb10">不可选择未来日期</h3>
+    <DatePicker v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
 ## 禁用过去
 
 <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
@@ -591,6 +643,7 @@ watchEffect(() => {
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 width | 日期选择器宽度，单位 `px` | number | 180
+size | 日期选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 mode | 选择器模式 | 'time' &#124; 'date' &#124; 'week' &#124; 'month' &#124; 'year' | 'date'
 [format](#format-支持的格式化占位符列表) | 日期展示格式 | string &#124; ((date: Date) => string) &#124; ((dates: Date[]) => string) | [DefaultFormat](#defaultformat-value)
 showTime | 是否增加时间选择 | boolean | false
