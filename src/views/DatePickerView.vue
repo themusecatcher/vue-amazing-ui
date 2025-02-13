@@ -85,7 +85,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <div>
+  <div style="margin-left: 60px;">
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <ul class="m-list">
       <li>
@@ -100,83 +100,85 @@ watchEffect(() => {
       <Tag color="volcano">{{ pkg.dependencies['@vuepic/vue-datepicker'] }}</Tag>
     </Space>
     <h2 class="mt30 mb10">基本使用</h2>
-    <DatePicker placeholder="请选择日期" v-model="dateValue" show-today format="yyyy-MM-dd" />
+    <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+    <h2 class="mt30 mb10">禁用</h2>
+    <DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">禁用过去</h2>
-    <DatePicker placeholder="请选择日期" v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" />
+    <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">禁用未来</h2>
-    <DatePicker placeholder="请选择日期" v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" />
+    <DatePicker v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">日期时间选择器</h2>
     <DatePicker
-      placeholder="请选择日期时间"
+      :width="240"
       v-model="dateTimeValue"
       format="yyyy-MM-dd HH:mm:ss"
-      :width="240"
       show-time
       enable-seconds
+      placeholder="请选择日期时间"
     />
     <h2 class="mt30 mb10">日期范围选择器</h2>
     <DatePicker
-      placeholder="请选择日期范围"
+      :width="280"
       v-model="rangeValue"
       range
       :preset-dates="presetDates"
       format="yyyy-MM-dd"
-      :width="280"
+      placeholder="请选择日期范围"
     />
     <h2 class="mt30 mb10">双日期面板</h2>
     <DatePicker
-      placeholder="请选择日期范围"
+      :width="280"
       v-model="rangeValue"
       mode="range"
       format="yyyy-MM-dd"
-      :width="280"
       range
       multi-calendars
+      placeholder="请选择日期范围"
     />
     <h2 class="mt30 mb10">预设范围</h2>
     <h3 class="mb10">预设常用的日期范围以提高用户体验</h3>
     <DatePicker
-      placeholder="请选择日期范围"
+      :width="280"
+      v-model="rangeValue"
       mode="range"
       format="yyyy-MM-dd"
-      :width="280"
       range
       :preset-dates="presetDates"
       multi-calendars
-      v-model="rangeValue"
+      placeholder="请选择日期范围"
     />
     <h2 class="mt30 mb10">时分选择器</h2>
     <DatePicker
-      placeholder="请选择时间"
+      :width="120"
       v-model="timeValue"
       mode="time"
       show-time
       mode-height="120"
       format="HH:mm"
-      :width="120"
+      placeholder="请选择时间"
     />
     <h2 class="mt30 mb10">时分秒选择器</h2>
     <DatePicker
-      placeholder="请选择时间"
+      :width="150"
       v-model="secondsValue"
       mode="time"
+      format="HH:mm:ss"
       show-time
       enable-seconds
       mode-height="120"
-      format="HH:mm:ss"
-      :width="150"
+      placeholder="请选择时间"
     />
     <h2 class="mt30 mb10">时分秒范围选择器</h2>
     <DatePicker
-      placeholder="请选择时间"
+      :width="240"
       v-model="timeRangeValue"
       mode="time"
+      format="HH:mm:ss"
       show-time
       range
       enable-seconds
       mode-height="120"
-      format="HH:mm:ss"
-      :width="240"
+      placeholder="请选择时间"
     />
     <h2 class="mt30 mb10">周选择器</h2>
     <Space vertical>
@@ -191,11 +193,11 @@ watchEffect(() => {
       >
         {{ format(weekValue[0], 'yyyy-MM-dd') + ' ~ ' + format(weekValue[1], 'yyyy-MM-dd') }}
       </GradientText>
-      <DatePicker placeholder="请选择周" v-model="weekValue" mode="week" format="yyyy年 第ww周" :width="200" />
+      <DatePicker :width="200" v-model="weekValue" mode="week" format="yyyy年 第ww周" placeholder="请选择周" />
     </Space>
     <h2 class="mt30 mb10">月选择器</h2>
-    <DatePicker placeholder="请选择月" v-model="monthValue" mode="month" format="yyyy-MM" :width="150" />
+    <DatePicker :width="150" v-model="monthValue" mode="month" format="yyyy-MM" placeholder="请选择月" />
     <h2 class="mt30 mb10">年选择器</h2>
-    <DatePicker placeholder="请选择年" v-model="yearValue" mode="year" format="yyyy" :width="120" />
+    <DatePicker :width="120" v-model="yearValue" mode="year" format="yyyy" placeholder="请选择年" />
   </div>
 </template>
