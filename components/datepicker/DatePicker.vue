@@ -4,6 +4,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { computed } from 'vue'
 export interface Props {
   width?: number // 日期选择器宽度
+  size?: 'small' | 'middle' | 'large' // 日期选择器大小
   mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式，可选：时间time，日期date，周week，月month，年year
   // format?: string | ((date: Date) => string) | ((dates: Date[]) => string) // 日期展示格式，(yy: 年, M: 月, d: 天, H: 时, m: 分, s: 秒, w: 周)
   showTime?: boolean // 是否增加时间选择
@@ -15,6 +16,7 @@ export interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 180,
+  size: 'middle',
   mode: 'date',
   /* format default
     Single picker: 'MM/dd/yyyy HH:mm'
@@ -53,6 +55,10 @@ const year = computed(() => {
 <template>
   <VueDatePicker
     class="m-datepicker"
+    :class="{
+      'datepicker-small': size === 'small',
+      'datepicker-large': size === 'large'
+    }"
     :style="`width: ${width}px;`"
     locale="zh-CN"
     :month-change-on-scroll="false"
@@ -76,6 +82,9 @@ const year = computed(() => {
     svg {
       fill: currentColor;
     }
+    .dp__input {
+      line-height: 1.5714285714285714;
+    }
     :deep(.dp__input:hover:not(.dp__disabled)) {
       border-color: var(--dp-border-color-hover);
     }
@@ -94,7 +103,7 @@ const year = computed(() => {
     .dp__menu {
       overflow: hidden;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       box-shadow:
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
@@ -104,7 +113,7 @@ const year = computed(() => {
         display: none;
       }
       .dp__overlay {
-        padding-top: 6px;
+        padding-top: 8px;
         .dp__overlay_container::-webkit-scrollbar-thumb {
           border-radius: 5px;
           cursor: pointer;
@@ -115,6 +124,13 @@ const year = computed(() => {
           }
         }
       }
+      .dp__cell_disabled.dp__today {
+        background: transparent;
+        border: 1px solid var(--dp-secondary-color);
+      }
+      .dp__cell_disabled.dp__active_date {
+        border-color: var(--dp-secondary-color);
+      }
     }
   }
 }
@@ -124,7 +140,7 @@ const year = computed(() => {
   --dp-font-family:
     -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, oxygen, ubuntu, cantarell, 'Open Sans', 'Helvetica Neue',
     sans-serif;
-  --dp-border-radius: 8px; /*Configurable border-radius*/
+  --dp-border-radius: 6px; /*Configurable border-radius*/
   --dp-cell-border-radius: 4px; /*Specific border radius for the calendar cell*/
   // --dp-common-transition: all 0.1s ease-in; /*Generic transition applied on buttons and calendar cells*/
   --dp-common-transition: all 0.2s ease; /*Generic transition applied on buttons and calendar cells*/
@@ -137,7 +153,7 @@ const year = computed(() => {
   --dp-cell-padding: 5px; /*Padding in the cell*/
   --dp-common-padding: 10px; /*Common padding used*/
   --dp-input-icon-padding: 35px; /*Padding on the left side of the input if icon is present*/
-  --dp-input-padding: 6px 30px 6px 12px; /*Padding in the input*/
+  --dp-input-padding: 4px 30px 4px 12px; /*Padding in the input*/
   --dp-menu-min-width: 260px; /*Adjust the min width of the menu*/
   --dp-action-buttons-padding: 2px 5px; /*Adjust padding for the action buttons in action row*/
   --dp-row-margin: 5px 0; /*Adjust the spacing between rows in the calendar*/
@@ -147,13 +163,24 @@ const year = computed(() => {
   --dp-time-inc-dec-button-size: 32px; /*Sizing for arrow buttons in the time picker*/
   --dp-menu-padding: 6px 8px; /*Menu padding*/
   /*Font sizes*/
-  --dp-font-size: 1rem; /*Default font-size*/
-  --dp-preview-font-size: 0.8rem; /*Font size of the date preview in the action row*/
-  --dp-time-font-size: 2rem; /*Font size in the time picker*/
+  --dp-font-size: 14px; /*Default font-size*/
+  --dp-preview-font-size: 12px; /*Font size of the date preview in the action row*/
+  --dp-time-font-size: 28px; /*Font size in the time picker*/
   /*Transitions*/
   --dp-animation-duration: 0.2s; /*Transition duration*/
   --dp-menu-appear-transition-timing: cubic-bezier(0.4, 0, 0.2, 1); /*Timing on menu appear animation*/
   --dp-transition-timing: ease-in-out; /*Timing on slide animations*/
+}
+.datepicker-small {
+  --dp-input-padding: 0px 30px 0px 12px;
+}
+.datepicker-large {
+  --dp-font-size: 16px;
+  :deep(.dp__input_wrap) {
+    .dp__input {
+      height: 40px;
+    }
+  }
 }
 // dark theme configuration
 .dp__theme_dark,

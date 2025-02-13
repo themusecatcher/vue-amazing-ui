@@ -56,6 +56,21 @@ const monthValue = ref({
   month: new Date().getMonth()
 })
 const yearValue = ref(new Date().getFullYear())
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('middle')
 watchEffect(() => {
   console.log('dateValue', dateValue.value)
 })
@@ -103,9 +118,15 @@ watchEffect(() => {
     <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">禁用</h2>
     <DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-    <h2 class="mt30 mb10">禁用过去</h2>
+    <h2 class="mt30 mb10">三种大小</h2>
+    <Space vertical>
+      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <DatePicker :size="size" v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+    </Space>
+    <h2 class="mt30 mb10">禁用日期</h2>
+    <h3 class="mb10">不可选择过去日期</h3>
     <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
-    <h2 class="mt30 mb10">禁用未来</h2>
+    <h3 class="mt10 mb10">不可选择未来日期</h3>
     <DatePicker v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">日期时间选择器</h2>
     <DatePicker
