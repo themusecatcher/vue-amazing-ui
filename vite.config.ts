@@ -36,7 +36,7 @@ const buildDistOptions = {
     plugins: [
       // terser()
     ],
-    // https://rollupjs.org/configuration-options/
+    // https://cn.rollupjs.org/configuration-options
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
     external: f === 'iife' ? ['vue'] : ['vue', 'date-fns', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/integrations/useQRCode', '@vueuse/core', 'seemly', 'qrcode'],
     // 当创建 iife 或 umd 格式的 bundle 时，你需要通过 output.globals 选项提供全局变量名，以替换掉外部引入。
@@ -108,7 +108,7 @@ const buildESAndLibOptions = {
     plugins: [
       // terser()
     ],
-    // https://rollupjs.org/configuration-options/
+    // https://cn.rollupjs.org/configuration-options
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
     external: ['vue', 'date-fns', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/integrations/useQRCode', '@vueuse/core', 'seemly', 'qrcode'],
     input: resolve(__dirname, 'components', 'index.ts'), // 'components/index.ts'
