@@ -3,26 +3,28 @@ import { ref, computed } from 'vue'
 import type { Swiper as SwiperTypes } from 'swiper/types'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import {
-  Pagination,
   Navigation,
+  Pagination,
   Autoplay,
+  Mousewheel,
   EffectFade,
   EffectCube,
   EffectFlip,
   EffectCoverflow,
   EffectCards,
-  EffectCreative,
-  Mousewheel
+  EffectCreative
 } from 'swiper/modules'
-import 'swiper/less'
-import 'swiper/less/navigation'
-import 'swiper/less/pagination'
-import 'swiper/less/effect-fade'
-import 'swiper/less/effect-cube'
-import 'swiper/less/effect-flip'
-import 'swiper/less/effect-coverflow'
-import 'swiper/less/effect-cards'
-import 'swiper/less/effect-creative'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+// import 'swiper/css/autoplay' // 目标文件为空
+// import 'swiper/css/mousewheel' // 目标文件为空
+import 'swiper/css/effect-fade'
+import 'swiper/css/effect-cube'
+import 'swiper/css/effect-flip'
+// import 'swiper/css/effect-coverflow' // 目标文件为空
+import 'swiper/css/effect-cards'
+import 'swiper/css/effect-creative'
 export interface Image {
   name?: string // 图片名称
   src: string // 图片地址
