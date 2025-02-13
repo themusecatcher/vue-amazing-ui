@@ -72,6 +72,21 @@ const monthValue = ref({
   month: new Date().getMonth()
 })
 const yearValue = ref(new Date().getFullYear())
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('middle')
 watchEffect(() => {
   console.log('dateValue', dateValue.value)
 })
@@ -123,25 +138,6 @@ watchEffect(() => {
 
 :::
 
-## 禁用
-
-<DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import { format } from 'date-fns'
-const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
-</script>
-<template>
-  <DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" />
-</template>
-```
-
-:::
-
 ## 三种大小
 
 <Space vertical>
@@ -185,16 +181,30 @@ watchEffect(() => {
 
 :::
 
+## 禁用
+
+<DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { format } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
+</script>
+<template>
+  <DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" />
+</template>
+```
+
+:::
+
 ## 禁用日期
 
 *不可选择过去日期*
 
 <br/>
-
-    <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
-    <h3 class="mt10 mb10">不可选择未来日期</h3>
-    <DatePicker v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
-## 禁用过去
 
 <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
 
@@ -216,9 +226,11 @@ watchEffect(() => {
 
 :::
 
-## 禁用未来
+*不可选择未来日期*
 
-<DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
+<br/>
+
+<DatePicker v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
 
 ::: details Show Code
 
