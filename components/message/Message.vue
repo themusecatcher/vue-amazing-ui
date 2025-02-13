@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { rafTimeout, cancelRaf } from 'components/utils'
 export interface Props {
@@ -32,7 +32,7 @@ const emits = defineEmits(['click', 'close'])
 const messageTop = ref<string>()
 const clear = computed(() => {
   // 所有提示是否已经全部变为 false
-  return showMessage.value.every((show) => !show)
+  return showMessage.value.every((show: boolean) => !show)
 })
 watch(clear, (to, from) => {
   // 所有提示都消失后重置
@@ -42,6 +42,11 @@ watch(clear, (to, from) => {
       showMessage.value = []
     }, 300)
   }
+})
+onBeforeUnmount(() => {
+  hideTimers.value.forEach((rafId: any) => {
+    rafId && cancelRaf(rafId)
+  })
 })
 function onEnter(index: number) {
   hideTimers.value[index] && cancelRaf(hideTimers.value[index])
@@ -57,6 +62,7 @@ function hideMessage(index: number) {
   if (closeDuration.value !== null) {
     hideTimers.value[index] = rafTimeout(() => {
       showMessage.value[index] = false
+      hideTimers.value[index] = null
       messageContent.value[index].onClose && messageContent.value[index].onClose()
       emits('close')
     }, closeDuration.value)
