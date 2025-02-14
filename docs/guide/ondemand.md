@@ -57,7 +57,9 @@ export default defineConfig({
     Components({
       resolvers: [
         // auto import components from VueAmazingUI
-        VueAmazingUIResolver()
+        VueAmazingUIResolver({
+          cjs: false // whether use commonjs build, default false
+        })
       ]
     })
   ]
