@@ -390,9 +390,9 @@ function onClick() {
   animation-play-state: paused;
 }
 .slide-down-enter-active {
-  animation-name: slideUpIn;
+  animation-name: slideDownIn;
   animation-play-state: running;
-  @keyframes slideUpIn {
+  @keyframes slideDownIn {
     0% {
       transform: scaleY(0.8);
       transform-origin: 0% 0%;
@@ -412,9 +412,9 @@ function onClick() {
   animation-play-state: paused;
 }
 .slide-down-leave-active {
-  animation-name: slideUpOut;
+  animation-name: slideDownOut;
   animation-play-state: running;
-  @keyframes slideUpOut {
+  @keyframes slideDownOut {
     0% {
       transform: scaleY(1);
       transform-origin: 0% 0%;
