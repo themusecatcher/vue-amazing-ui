@@ -153,7 +153,7 @@ watchEffect(() => {
       mode="range"
       format="yyyy-MM-dd"
       range
-      :multi-calendars="{ solo: true}"
+      :multi-calendars="{ solo: true }"
       placeholder="请选择日期范围"
     />
     <h2 class="mt30 mb10">预设范围</h2>
