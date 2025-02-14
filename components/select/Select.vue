@@ -332,13 +332,13 @@ function onClick() {
       </svg>
     </div>
     <Transition
-      name="slide-up"
-      enter-from-class="slide-up-enter"
-      enter-active-class="slide-up-enter"
-      enter-to-class="slide-up-enter slide-up-enter-active"
-      leave-from-class="slide-up-leave"
-      leave-active-class="slide-up-leave slide-up-leave-active"
-      leave-to-class="slide-up-leave slide-up-leave-active"
+      name="slide-down"
+      enter-from-class="slide-down-enter"
+      enter-active-class="slide-down-enter"
+      enter-to-class="slide-down-enter slide-down-enter-active"
+      leave-from-class="slide-down-leave"
+      leave-active-class="slide-down-leave slide-down-leave-active"
+      leave-to-class="slide-down-leave slide-down-leave-active"
     >
       <div
         v-if="showOptions && filterOptions && filterOptions.length"
@@ -380,7 +380,7 @@ function onClick() {
   </div>
 </template>
 <style lang="less" scoped>
-.slide-up-enter {
+.slide-down-enter {
   transform: scale(0);
   transform-origin: 0% 0%;
   opacity: 0;
@@ -389,7 +389,7 @@ function onClick() {
   animation-fill-mode: both;
   animation-play-state: paused;
 }
-.slide-up-enter-active {
+.slide-down-enter-active {
   animation-name: slideUpIn;
   animation-play-state: running;
   @keyframes slideUpIn {
@@ -405,13 +405,13 @@ function onClick() {
     }
   }
 }
-.slide-up-leave {
+.slide-down-leave {
   animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
   animation-duration: 0.2s;
   animation-fill-mode: both;
   animation-play-state: paused;
 }
-.slide-up-leave-active {
+.slide-down-leave-active {
   animation-name: slideUpOut;
   animation-play-state: running;
   @keyframes slideUpOut {
