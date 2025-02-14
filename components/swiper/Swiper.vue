@@ -129,6 +129,7 @@ function getImageName(image: Image) {
 <template>
   <Swiper
     v-if="mode === 'banner'"
+    class="swiper-banner"
     :class="{ 'swiper-no-swiping': !swipe }"
     :style="`width: ${swiperWidth}; height: ${swiperHeight};`"
     :modules="modulesBanner"
@@ -157,7 +158,7 @@ function getImageName(image: Image) {
   </Swiper>
   <Swiper
     v-if="mode === 'carousel'"
-    class="swiper-no-swiping"
+    class="swiper-carousel swiper-no-swiping"
     :style="`width: ${swiperWidth}; height: ${swiperHeight};`"
     :modules="modulesCarousel"
     :autoplay="autoplayCarousel"
@@ -206,6 +207,22 @@ function getImageName(image: Image) {
   </Swiper>
 </template>
 <style lang="less" scoped>
+.swiper-banner {
+  :deep(.swiper-wrapper) {
+    transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+}
+.swiper-carousel {
+  :deep(.swiper-wrapper) {
+    // 自动切换过渡效果设置
+    transition-timing-function: linear; // 线性过渡模拟走马灯效果
+  }
+}
+.swiper-broadcast {
+  :deep(.swiper-wrapper) {
+    transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+}
 .swiper-link {
   display: block;
   height: 100%;
@@ -218,11 +235,6 @@ function getImageName(image: Image) {
 }
 .swiper {
   --swiper-theme-color: #1677ff;
-}
-:deep(.swiper-wrapper) {
-  // 自动切换过渡效果设置
-  transition-timing-function: linear; // 线性过渡模拟走马灯效果
-  -webkit-transition-timing-function: linear;
 }
 :deep(.swiper-pagination-bullet) {
   width: 12px;

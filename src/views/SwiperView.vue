@@ -127,6 +127,7 @@ function onNext() {
     <Swiper
       :images="images"
       :height="640"
+      :speed="800"
       :pagination="{
         dynamicBullets: true,
         clickable: true
@@ -140,6 +141,7 @@ function onNext() {
           style="display: inline-block"
           :images="images"
           :height="240"
+          :speed="600"
           :pagination="{
             dynamicBullets: true,
             clickable: true
@@ -161,6 +163,7 @@ function onNext() {
           style="display: inline-block"
           :images="images"
           :height="240"
+          :speed="600"
           :pagination="{
             dynamicBullets: true,
             clickable: true
@@ -181,11 +184,12 @@ function onNext() {
       <Swiper
         :images="images"
         mode="broadcast"
+        :height="320"
+        :speed="600"
         :pagination="{
           dynamicBullets: true,
           clickable: true
         }"
-        :height="320"
         :slides-per-view="3"
         :space-between="30"
         navigation

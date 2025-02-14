@@ -125,6 +125,7 @@ function onNext() {
 <Swiper
   :images="images"
   :height="480"
+  :speed="800"
   :pagination="{
     dynamicBullets: true,
     clickable: true
@@ -159,6 +160,7 @@ function onChange (swiper: any) {
   <Swiper
     :images="images"
     :height="480"
+    :speed="800"
     :pagination="{
       dynamicBullets: true,
       clickable: true
@@ -178,6 +180,7 @@ function onChange (swiper: any) {
       style="display: inline-block"
       :images="images"
       :height="160"
+      :speed="600"
       :pagination="{
         dynamicBullets: true,
         clickable: true
@@ -216,6 +219,7 @@ const effects = ['slide', 'fade', 'cube', 'flip', 'coverflow', 'cards']
         style="display: inline-block"
         :images="images"
         :height="160"
+        :speed="600"
         :pagination="{
           dynamicBullets: true,
           clickable: true
@@ -243,6 +247,7 @@ const effects = ['slide', 'fade', 'cube', 'flip', 'coverflow', 'cards']
       style="display: inline-block"
       :images="images"
       :height="160"
+      :speed="600"
       :pagination="{
         dynamicBullets: true,
         clickable: true
@@ -354,6 +359,7 @@ const creativeEffects = [
         style="display: inline-block"
         :images="images"
         :height="160"
+        :speed="600"
         :pagination="{
           dynamicBullets: true,
           clickable: true
@@ -423,11 +429,12 @@ onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM�
   <Swiper
     :images="images"
     mode="broadcast"
+    :height="200"
+    :speed="600"
     :pagination="{
       dynamicBullets: true,
       clickable: true
     }"
-    :height="200"
     :slides-per-view="3"
     :space-between="30"
     navigation
@@ -478,11 +485,12 @@ function onNext () {
     <Swiper
       :images="images"
       mode="broadcast"
+      :height="200"
+      :speed="600"
       :pagination="{
         dynamicBullets: true,
         clickable: true
       }"
-      :height="200"
       :slides-per-view="3"
       :space-between="30"
       navigation
