@@ -61,6 +61,7 @@ const year = computed(() => {
     }"
     :style="`width: ${width}px;`"
     locale="zh-CN"
+    position="left"
     :month-change-on-scroll="false"
     :enable-time-picker="showTime"
     :time-picker="time"
@@ -173,9 +174,79 @@ const year = computed(() => {
   --dp-animation-duration: 0.2s; /*Transition duration*/
   --dp-menu-appear-transition-timing: cubic-bezier(0.4, 0, 0.2, 1); /*Timing on menu appear animation*/
   --dp-transition-timing: ease-in-out; /*Timing on slide animations*/
-  .slide-up-enter {
+  // 向下弹出时的过渡效果
+  .slide-down-enter {
     transform: scale(0);
     transform-origin: 0% 0%;
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+    animation-play-state: paused;
+  }
+  .slide-down-enter-active {
+    animation-name: slideDownIn;
+    animation-play-state: running;
+    @keyframes slideDownIn {
+      0% {
+        transform: scaleY(0.8);
+        transform-origin: 0% 0%;
+        opacity: 0;
+      }
+      100% {
+        transform: scaleY(1);
+        transform-origin: 0% 0%;
+        opacity: 1;
+      }
+    }
+  }
+  .slide-down-leave {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+    animation-play-state: paused;
+  }
+  .slide-down-leave-active {
+    animation-name: slideDownOut;
+    animation-play-state: running;
+    @keyframes slideDownOut {
+      0% {
+        transform: scaleY(1);
+        transform-origin: 0% 0%;
+        opacity: 1;
+      }
+      100% {
+        transform: scaleY(0.8);
+        transform-origin: 0% 0%;
+        opacity: 0;
+      }
+    }
+  }
+  :deep(.dp-menu-appear-bottom-enter-active, .dp-slide-down-enter-active) {
+    .slide-down-enter();
+  }
+  :deep(.dp-menu-appear-bottom-leave-active, .dp-slide-down-leave-active) {
+    .slide-down-leave();
+    .slide-down-leave-active();
+  }
+  :deep(.dp-menu-appear-bottom-enter-from, .dp-slide-down-enter-from) {
+    .slide-down-enter();
+  }
+  :deep(.dp-menu-appear-bottom-enter-to, .dp-slide-down-enter-to) {
+    .slide-down-enter();
+    .slide-down-enter-active();
+  }
+  :deep(.dp-menu-appear-bottom-leave-from, .dp-slide-down-leave-from) {
+    .slide-down-leave();
+  }
+  :deep(.dp-menu-appear-bottom-leave-to, .dp-slide-down-leave-to) {
+    .slide-down-leave();
+    .slide-down-leave-active();
+  }
+  // 向上弹出时的过渡效果
+  .slide-up-enter {
+    transform: scale(0);
+    transform-origin: bottom left;
     opacity: 0;
     animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
     animation-duration: 0.2s;
@@ -188,12 +259,12 @@ const year = computed(() => {
     @keyframes slideUpIn {
       0% {
         transform: scaleY(0.8);
-        transform-origin: 0% 0%;
+        transform-origin: bottom left;
         opacity: 0;
       }
       100% {
         transform: scaleY(1);
-        transform-origin: 0% 0%;
+        transform-origin: bottom left;
         opacity: 1;
       }
     }
@@ -210,102 +281,34 @@ const year = computed(() => {
     @keyframes slideUpOut {
       0% {
         transform: scaleY(1);
-        transform-origin: 0% 0%;
+        transform-origin: bottom left;
         opacity: 1;
       }
       100% {
         transform: scaleY(0.8);
-        transform-origin: 0% 0%;
+        transform-origin: bottom left;
         opacity: 0;
       }
     }
   }
-  // :deep(
-  //   .dp-menu-appear-bottom-enter-active,
-  //   .dp-menu-appear-bottom-leave-active,
-  //   .dp-menu-appear-top-enter-active,
-  //   .dp-menu-appear-top-leave-active,
-  //   .dp-slide-up-enter-active,
-  //   .dp-slide-up-leave-active,
-  //   .dp-slide-down-enter-active,
-  //   .dp-slide-down-leave-active
-  // ) {
-  //   transition: all var(--dp-animation-duration) var(--dp-transition-timing);
-  // }
-  :deep(
-    .dp-menu-appear-bottom-enter-active,
-    .dp-menu-appear-top-enter-active,
-    .dp-slide-up-enter-active,
-    .dp-slide-down-enter-active
-  ) {
+  :deep(.dp-menu-appear-top-enter-active, .dp-slide-up-enter-active) {
     .slide-up-enter();
   }
-  :deep(
-    .dp-menu-appear-bottom-leave-active,
-    .dp-menu-appear-top-leave-active,
-    .dp-slide-up-leave-active,
-    .dp-slide-down-leave-active
-  ) {
+  :deep(.dp-menu-appear-top-leave-active, .dp-slide-up-leave-active) {
     .slide-up-leave();
     .slide-up-leave-active();
   }
-  // :deep(
-  //   .dp-menu-appear-top-enter-from,
-  //   .dp-menu-appear-top-leave-to,
-  //   .dp-slide-down-leave-to,
-  //   .dp-slide-up-enter-from
-  // ) {
-  //   opacity: 0;
-  //   transform: translateY(var(--dp-transition-length));
-  // }
-  :deep(
-    .dp-menu-appear-top-enter-from,
-    .dp-slide-up-enter-from
-  ) {
+  :deep(.dp-menu-appear-top-enter-from, .dp-slide-up-enter-from) {
     .slide-up-enter();
   }
-  :deep(
-    .dp-menu-appear-top-leave-to,
-    .dp-slide-down-leave-to
-  ) {
-    .slide-up-leave();
-    .slide-up-leave-active();
-  }
-
-  // :deep(
-  //   .dp-menu-appear-bottom-enter-from,
-  //   .dp-menu-appear-bottom-leave-to,
-  //   .dp-slide-down-enter-from,
-  //   .dp-slide-up-leave-to
-  // ) {
-  //   opacity: 0;
-  //   transform: translateY(calc(var(--dp-transition-length) * -1));
-  // }
-  :deep(
-    .dp-menu-appear-bottom-enter-from,
-    .dp-slide-down-enter-from,
-  ) {
-    .slide-up-enter();
-  }
-  :deep(
-    .dp-menu-appear-bottom-enter-to,
-    .dp-slide-down-enter-to
-  ) {
+  :deep(.dp-menu-appear-top-enter-to, .dp-slide-up-enter-to) {
     .slide-up-enter();
     .slide-up-enter-active();
   }
-
-  :deep(
-    .dp-menu-appear-bottom-leave-from,
-    .dp-slide-down-leave-from
-  ) {
+  :deep(.dp-menu-appear-top-leave-from, .dp-slide-up-leave-from) {
     .slide-up-leave();
   }
-  
-  :deep(
-    .dp-menu-appear-bottom-leave-to,
-    .dp-slide-up-leave-to
-  ) {
+  :deep(.dp-menu-appear-top-leave-to, .dp-slide-up-leave-to) {
     .slide-up-leave();
     .slide-up-leave-active();
   }
