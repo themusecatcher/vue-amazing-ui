@@ -221,7 +221,7 @@ const year = computed(() => {
   // --dp-text-color: #212121;
   --dp-text-color: rgba(0, 0, 0, 0.88);
   // --dp-hover-color: #f3f3f3;
-  --dp-hover-color: rgba(0, 0, 0, 0.04);
+  // --dp-hover-color: rgba(0, 0, 0, 0.04);
   // --dp-hover-text-color: #212121;
   --dp-hover-text-color: rgba(0, 0, 0, 0.88);
   --dp-hover-icon-color: #959595;
@@ -254,8 +254,8 @@ const year = computed(() => {
   --dp-tooltip-color: #fafafa;
   --dp-disabled-color-text: #8e8e8e;
   --dp-highlight-color: rgb(25 118 210 / 10%);
-  --dp-range-between-dates-background-color: var(--dp-hover-color, #f3f3f3);
-  --dp-range-between-dates-text-color: var(--dp-hover-text-color, #212121);
-  --dp-range-between-border-color: var(--dp-hover-color, #f3f3f3);
+  --dp-range-between-dates-background-color: var(--dp-hover-color, rgba(0, 0, 0, 0.04));
+  --dp-range-between-dates-text-color: var(--dp-hover-text-color, rgba(0, 0, 0, 0.88));
+  --dp-range-between-border-color: var(--dp-hover-color, rgba(0, 0, 0, 0.04));
 }
 </style>

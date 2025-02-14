@@ -120,7 +120,7 @@ function onNext() {
       </li>
     </ul>
     <Space class="mt30" gap="small">
-      <h1>Swiper</h1>
+      <h1>swiper</h1>
       <Tag color="volcano">{{ pkg.dependencies.swiper }}</Tag>
     </Space>
     <h2 class="mt30 mb10">基本使用</h2>
