@@ -6,7 +6,7 @@
 
 ## 2.2.3 <Tag color="volcano" size="small">soon</Tag>
 
-- 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增属性 `size`，支持设置日期选择组件大小
+- 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件；新增属性 `size`，支持设置日期选择组件大小
 - 组件库及文档代码优化
 
 ## 2.2.2 <Tag color="volcano" size="small">2025-02-13</Tag>
