@@ -217,7 +217,7 @@ Calendar | 日历 | Card | 卡片
 Carousel | 轮播图 | Cascader | 级联选择
 Checkbox | 复选框 | Collapse | 折叠面板
 ColorPicker | 颜色选择器 | Countdown | 倒计时
-DatePicker | 日期选择 | Descriptions | 描述列表
+DatePicker | 日期选择器 | Descriptions | 描述列表
 Dialog | 对话框 | Divider | 分割线
 Drawer | 抽屉 | Ellipsis | 文本省略
 Empty | 空状态 | Flex | 弹性布局

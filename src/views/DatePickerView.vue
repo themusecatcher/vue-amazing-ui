@@ -111,7 +111,7 @@ watchEffect(() => {
       </li>
     </ul>
     <Space class="mt30" gap="small">
-      <h1>DatePicker</h1>
+      <h1>@vuepic/vue-datepicker</h1>
       <Tag color="volcano">{{ pkg.dependencies['@vuepic/vue-datepicker'] }}</Tag>
     </Space>
     <h2 class="mt30 mb10">基本使用</h2>
