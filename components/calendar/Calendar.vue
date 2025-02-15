@@ -56,9 +56,9 @@ export interface DateItem {
     month: number
     year: number
   }
-  timestamp: number
-  inCurrentMonth: boolean
-  isCurrentDate: boolean
+  timestamp: number // 当天开始的时间戳
+  inCurrentMonth: boolean // 是否在当前月
+  isCurrentDate: boolean // 是否为今天
 }
 export interface MonthItem {
   type: 'month'
@@ -66,8 +66,8 @@ export interface MonthItem {
     month: number
     year: number
   }
-  timestamp: number
-  isCurrent: boolean
+  timestamp: number // 当月开始的时间戳
+  isCurrent: boolean // 是否为当前月
 }
 const now = ref(Date.now())
 const yearOptions = ref<SelectOption[]>([])

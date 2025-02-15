@@ -782,7 +782,7 @@ DefaultWeek | '一' &#124; '二' &#124; '三' &#124; '四' &#124; '五' &#124; '
 :-- | :-- | :-- | :--
 type | 类型 | 'date' | undefined
 dateObject | 日期对象 | \{ date: number, month: number, year: number } | undefined
-timestamp | 时间戳 | number | undefined
+timestamp | 当天开始的时间戳 | number | undefined
 inCurrentMonth | 是否在当前月 | boolean | undefined
 isCurrentDate | 是否为今天 | boolean | undefined
 
@@ -792,7 +792,7 @@ isCurrentDate | 是否为今天 | boolean | undefined
 :-- | :-- | :-- | :--
 type | 类型 | 'month' | undefined
 monthObject | 月份对象 | \{ month: number, year: number } | undefined
-timestamp | 时间戳 | number | undefined
+timestamp | 当月开始的时间戳 | number | undefined
 isCurrent | 是否为当前月 | boolean | undefined
 
 ## Slots
