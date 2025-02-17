@@ -52,9 +52,9 @@ const props = withDefaults(defineProps<Props>(), {
 export interface DateItem {
   type: 'date'
   dateObject: {
-    date: number
-    month: number
-    year: number
+    date: number // 日期
+    month: number // 月份 0-11
+    year: number // 年份
   }
   timestamp: number // 当天开始的时间戳
   inCurrentMonth: boolean // 是否在当前月
@@ -63,8 +63,8 @@ export interface DateItem {
 export interface MonthItem {
   type: 'month'
   monthObject: {
-    month: number
-    year: number
+    month: number // 月份 0-11
+    year: number // 年份
   }
   timestamp: number // 当月开始的时间戳
   isCurrent: boolean // 是否为当前月
