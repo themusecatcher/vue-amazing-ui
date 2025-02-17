@@ -227,10 +227,8 @@ docs:dev
 <a href="https://github.com/themusecatcher" target="_blank">
   <img class="avatar" src="https://github.com/themusecatcher.png" alt="GitHub@themusecatcher">
 </a>
-<a href="https://github.com/themusecatcher" target="_blank">
-  <img class="avatar" src="./docs/public/avatars/1.jpeg" alt="WeChat@Ant">
-</a>
-<a href="https://github.com/themusecatcher" target="_blank">
+<img class="avatar" src="./docs/public/avatars/1.jpeg" alt="WeChat@Ant">
+<a href="https://github.com/nizhensh-i" target="_blank">
   <img class="avatar" src="./docs/public/avatars/2.jpg" alt="GitHub@nizhensh-i">
 </a>
 
