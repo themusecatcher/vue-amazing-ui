@@ -110,7 +110,7 @@ watchEffect(() => {
         <a class="u-file" href="https://vue3datepicker.com/installation/" target="_blank">Vue Datepicker Documents</a>
       </li>
       <li>
-        <a class="u-file" href="https://vue3datepicker.com/installation/" target="_blank">date-fns</a>
+        <a class="u-file" href="https://date-fns.org/" target="_blank">date-fns</a>
       </li>
     </ul>
     <Space class="mt30" gap="small">
