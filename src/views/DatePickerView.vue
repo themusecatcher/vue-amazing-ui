@@ -109,6 +109,9 @@ watchEffect(() => {
       <li>
         <a class="u-file" href="https://vue3datepicker.com/installation/" target="_blank">Vue Datepicker Documents</a>
       </li>
+      <li>
+        <a class="u-file" href="https://vue3datepicker.com/installation/" target="_blank">date-fns</a>
+      </li>
     </ul>
     <Space class="mt30" gap="small">
       <h1>@vuepic/vue-datepicker</h1>
