@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.2.5 <Tag color="volcano" size="small">soon</Tag>
+
+- 优化并更新 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件；调整属性 `lineCap` 的类型为：`'round' | 'butt'`
+
 ## 2.2.4 <Tag color="volcano" size="small">2025-02-17</Tag>
 
 - 组件库及文档代码优化

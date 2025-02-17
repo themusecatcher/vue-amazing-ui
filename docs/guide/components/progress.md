@@ -19,11 +19,11 @@ const lineCapOptions = [
     value: 'round'
   },
   {
-    label: 'square',
-    value: 'square'
+    label: 'butt',
+    value: 'butt'
   }
 ]
-const lineCap = ref('square')
+const lineCap = ref('butt')
 function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {
@@ -338,11 +338,11 @@ const lineCapOptions = [
     value: 'round'
   },
   {
-    label: 'square',
-    value: 'square'
+    label: 'butt',
+    value: 'butt'
   }
 ]
-const lineCap = ref('square')
+const lineCap = ref('butt')
 function onIncrease (scale: number) {
   const res = percent.value + scale
   if (res > 100) {
@@ -514,7 +514,7 @@ width | 进度条宽度，单位 `px`；`type: 'line'` 时，为进度条宽度�
 percent | 当前进度百分比 | number | 0
 lineSize | 进度条的尺寸，单位 `px`；`type: 'line'` 时，为进度条线高，默认值 `8`；`type: 'circle'` 时，单位是进度圈画布宽度的百分比，默认值 `6` | number | undefined
 lineColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变；进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | '#1677FF'
-lineCap | 进度条边缘的形状 | 'round' &#124; 'square' | 'round'
+lineCap | 进度条边缘的形状 | 'round' &#124; 'butt' | 'round'
 showInfo | 是否显示进度数值或状态图标 | boolean | true
 infoSize | 进度数值或状态图标的尺寸，单位 `px`；`type: 'line'` 时，默认值 `14`；`type: 'circle'` 时，默认值 `24` | number | undefined
 success | 进度完成时的信息 | string &#124; slot | undefined
