@@ -8,6 +8,10 @@
 
 - 当数据是日期或按照日期划分时，例如日程、课表、价格日历等；目前支持年/月切换
 
+## 参考文档
+
+- [date-fns](https://date-fns.org/)
+
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'

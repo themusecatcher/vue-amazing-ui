@@ -8,7 +8,7 @@
 
 - 当用户需要选择或输入一个日期，弹出日期面板进行选择
 
-## 官方文档
+## 参考文档
 
 - [Vue Datepicker](https://vue3datepicker.com/)
 - [Vue Datepicker Documents](https://vue3datepicker.com/installation/)
