@@ -535,5 +535,5 @@ target? | 如何打开跳转链接 | '_self' &#124; '_blank' | undefined
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-swiper | `Swiper`初始化后的回调 | (swiper: any) => void
+swiper | `Swiper` 初始化后的回调 | (swiper: any) => void
 change | 轮播图片变化时的回调 | (swiper: any) => void
