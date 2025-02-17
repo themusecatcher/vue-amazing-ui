@@ -271,7 +271,7 @@ valueStyle | 设置数值的样式 | [CSSProperties](https://cn.vuejs.org/api/ut
 precision | 数值精度 | number | 0
 prefix | 设置数值的前缀 | string &#124; slot | undefined
 suffix | 设置数值的后缀 | string &#124; slot | undefined
-separator | 设置千分位标识符 | string | ','
+separator | 设置千分位标识符 | string | ,
 formatter | 自定义数值展示 | Function | (value: string) => value
 
 ## Slots
