@@ -17,6 +17,9 @@ importers:
       '@vueuse/integrations':
         specifier: ^12.5.0
         version: 12.5.0(async-validator@4.2.5)(focus-trap@7.6.4)(qrcode@1.5.4)(typescript@5.7.3)
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
@@ -54,9 +57,6 @@ importers:
       ant-design-vue:
         specifier: ^4.2.6
         version: 4.2.6(vue@3.5.13(typescript@5.7.3))
-      date-fns:
-        specifier: ^4.1.0
-        version: 4.1.0
       eslint:
         specifier: ^9.20.0
         version: 9.20.0
