@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import type { ProgressProps } from 'vue-amazing-ui'
 const percent = ref(80)
 const lineCapOptions = [
   {
@@ -8,11 +9,12 @@ const lineCapOptions = [
     value: 'round'
   },
   {
-    label: 'square',
-    value: 'square'
+    label: 'butt',
+    value: 'butt'
   }
 ]
-const lineCap = ref('square')
+// const lineCap = ref<ProgressProps['lineCap']>('butt')
+const lineCap = ref('butt')
 function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {

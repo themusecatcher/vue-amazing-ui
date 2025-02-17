@@ -13,7 +13,7 @@ export interface Props {
   percent?: number // 当前进度百分比
   lineSize?: number // 进度条的尺寸，单位 px；type: 'line' 时，为进度条线高，默认值 8；type: 'circle' 时，单位是进度圈画布宽度的百分比，默认值 6
   lineColor?: string | Gradient // 进度条的色彩，传入 string 时为纯色，传入 Gradient 时为渐变，进度圈时 direction: 'left' 为逆时针，direction: 'right' 为顺时针
-  lineCap?: 'round' | 'square' // 进度条边缘的形状
+  lineCap?: 'round' | 'butt' // 进度条边缘的形状
   showInfo?: boolean // 是否显示进度数值或状态图标
   infoSize?: number // 进度数值或状态图标的尺寸，单位 px；type: 'line' 时，默认值 14；type: 'circle' 时，默认值 24
   success?: string // 进度完成时的信息 string | slot
