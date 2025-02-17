@@ -225,20 +225,12 @@ docs:dev
 All sponsors will be listed here, thank you very much for your support and sponsorship ❤️❤️
 
 <a href="https://github.com/themusecatcher" target="_blank">
-  <img class="avatar" src="https://github.com/themusecatcher.png" alt="GitHub@themusecatcher">
+  <img width="64" height="64" src="https://github.com/themusecatcher.png" alt="GitHub@themusecatcher">
 </a>
-<img class="avatar" src="./docs/public/avatars/1.jpeg" alt="WeChat@Ant">
+<img width="64" height="64" src="./docs/public/avatars/1.jpeg" alt="WeChat@Ant">
 <a href="https://github.com/nizhensh-i" target="_blank">
-  <img class="avatar" src="./docs/public/avatars/2.jpg" alt="GitHub@nizhensh-i">
+  <img width="64" height="64" src="./docs/public/avatars/2.jpg" alt="GitHub@nizhensh-i">
 </a>
-
-<style>
-.avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-}
-</style>
 
 ## Components
 
