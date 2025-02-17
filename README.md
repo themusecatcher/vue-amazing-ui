@@ -124,7 +124,9 @@ export default defineConfig({
     Components({
       resolvers: [
         // auto import components from VueAmazingUI
-        VueAmazingUIResolver()
+        VueAmazingUIResolver({
+          cjs: false // whether use commonjs build, default false
+        })
       ]
     })
   ]
@@ -202,9 +204,43 @@ pnpm i
 pnpm dev
 ```
 
+- Run docs
+
+```sh
+docs:dev
+```
+
 ## Blogs
 
 [My CSDN Blogs](https://blog.csdn.net/Dandrose)
+
+## Sponsorship
+
+`Vue Amazing UI` is an open-source project licensed under the `MIT` license, and it is completely free to use. All work on the component library and documentation is completed by the author alone, and the development and iteration process has been challenging. For the healthy and sustainable development of the component library, your support and sponsorship are greatly appreciated.
+
+#### [Become a Sponsor](https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html)
+
+## Sponsors 🫡
+
+All sponsors will be listed here, thank you very much for your support and sponsorship ❤️❤️
+
+<a href="https://github.com/themusecatcher" target="_blank">
+  <img class="avatar" src="https://github.com/themusecatcher.png" alt="GitHub@themusecatcher">
+</a>
+<a href="https://github.com/themusecatcher" target="_blank">
+  <img class="avatar" src="./docs/public/avatars/1.jpeg" alt="WeChat@Ant">
+</a>
+<a href="https://github.com/themusecatcher" target="_blank">
+  <img class="avatar" src="./docs/public/avatars/2.jpg" alt="GitHub@nizhensh-i">
+</a>
+
+<style>
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+</style>
 
 ## Components
 

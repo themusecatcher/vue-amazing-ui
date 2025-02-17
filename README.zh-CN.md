@@ -124,7 +124,9 @@ export default defineConfig({
     Components({
       resolvers: [
         // auto import components from VueAmazingUI
-        VueAmazingUIResolver()
+        VueAmazingUIResolver({
+          cjs: false // whether use commonjs build, default false
+        })
       ]
     })
   ]
@@ -196,15 +198,49 @@ cd vue-amazing-ui
 pnpm i
 ```
 
-- 启动
+- 启动项目
 
 ```sh
 pnpm dev
 ```
 
+- 启动文档
+
+```sh
+docs:dev
+```
+
 ## 博客
 
 [My CSDN Blogs](https://blog.csdn.net/Dandrose)
+
+## 赞助
+
+`Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。组件库及文档所有工作均由作者一人完成，开发迭代过程实属不易...为了组件库的健康可持续发展，非常期望能获得您的支持与赞助。
+
+#### [成为赞助者](https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html)
+
+## 赞助者 🫡
+
+所有的赞助者都将出现在此处，非常感谢你们的支持与赞助 ❤️❤️
+
+<a href="https://github.com/themusecatcher" target="_blank">
+  <img class="avatar" src="https://github.com/themusecatcher.png" alt="GitHub@themusecatcher">
+</a>
+<a href="https://github.com/themusecatcher" target="_blank">
+  <img class="avatar" src="./docs/public/avatars/1.jpeg" alt="WeChat@Ant">
+</a>
+<a href="https://github.com/themusecatcher" target="_blank">
+  <img class="avatar" src="./docs/public/avatars/2.jpg" alt="GitHub@nizhensh-i">
+</a>
+
+<style>
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+</style>
 
 ## 组件
 
