@@ -140,6 +140,11 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <ul class="m-list">
+      <li>
+        <a class="u-file" href="https://date-fns.org/" target="_blank">date-fns</a>
+      </li>
+    </ul>
     <h2 class="mt30 mb10">基本使用</h2>
     <Calendar v-model:value="date" @change="onChange" @panelChange="onPanelChange" />
     <h2 class="mt30 mb10">卡片模式</h2>
