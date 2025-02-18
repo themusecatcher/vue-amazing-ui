@@ -4,9 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
-## 2.2.5 <Tag color="volcano" size="small">soon</Tag>
+## 2.2.5 <Tag color="volcano" size="small">2025-02-18</Tag>
 
-- 优化并更新 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件；调整属性 `lineCap` 的类型为：`'round' | 'butt'`
+- 优化并更新 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件；调整属性 `lineCap` 类型为：`'round' | 'butt'`
+- 优化并更新 [二维码 QRCode](https://themusecatcher.github.io/vue-amazing-ui/guide/components/qrcode.html) 组件；新增 `type` `icon` `iconSize` 属性；支持：设置二维码渲染类型，可选 `svg` `canvas` `image` 三种；在二维码中设置图片 `Icon` 并自定义 `Icon` 尺寸大小；新增方法：`getQRCodeImage()`，用于获取二维码图片
 
 ## 2.2.4 <Tag color="volcano" size="small">2025-02-17</Tag>
 
