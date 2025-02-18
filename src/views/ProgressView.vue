@@ -1,4 +1,4 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import { h, ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { ProgressProps } from 'vue-amazing-ui'
@@ -180,4 +180,4 @@ function onDecline(scale: number) {
       </Space>
     </Flex>
   </div>
-</template> -->
+</template>
