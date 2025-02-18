@@ -13,8 +13,7 @@ const lineCapOptions = [
     value: 'butt'
   }
 ]
-// const lineCap = ref<ProgressProps['lineCap']>('butt')
-const lineCap = ref('butt')
+const lineCap = ref<ProgressProps['lineCap']>('butt')
 function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {
