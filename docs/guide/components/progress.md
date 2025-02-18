@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import type { ProgressProps } from 'vue-amazing-ui'
 const percent = ref(80)
 const lineCapOptions = [
   {
@@ -23,7 +24,7 @@ const lineCapOptions = [
     value: 'butt'
   }
 ]
-const lineCap = ref('butt')
+const lineCap = ref<ProgressProps['lineCap']>('butt')
 function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {
@@ -331,6 +332,7 @@ function onDecline (scale: number) {
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import type { ProgressProps } from 'vue-amazing-ui'
 const percent = ref(80)
 const lineCapOptions = [
   {
@@ -342,7 +344,7 @@ const lineCapOptions = [
     value: 'butt'
   }
 ]
-const lineCap = ref('butt')
+const lineCap = ref<ProgressProps['lineCap']>('butt')
 function onIncrease (scale: number) {
   const res = percent.value + scale
   if (res > 100) {
