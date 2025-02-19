@@ -109,8 +109,8 @@ importers:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.3)
       vue-amazing-ui:
-        specifier: 2.2.5
-        version: 2.2.5(async-validator@4.2.5)(focus-trap@7.6.4)(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
+        specifier: 2.2.6
+        version: 2.2.6(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
       vue-router:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.7.3))
@@ -2805,8 +2805,8 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
-  vue-amazing-ui@2.2.5:
-    resolution: {integrity: sha512-WB/XFXxjk+zGKj3/ReaXBKSEAHZr+o5H1lmqmP+KoA2Y2Rnpb1czaX4skVPtguzv6zdVgek+Ii9MyL8emIsF9g==}
+  vue-amazing-ui@2.2.6:
+    resolution: {integrity: sha512-L3QQA+xAhxKvLYeelP3MpmZ8X5JnaEbf1Skc3p3s1WwN7lHNzYXet7o55wSCNaTe4iP/MWahopRL4OyHRlwwVA==}
 
   vue-eslint-parser@9.4.3:
     resolution: {integrity: sha512-2rYRLWlIpaiN8xbPiDyXZXRgLGOtWxERV7ND5fFAv5qo1D2N9Fu9MNajBNc6o13lZ+24DAWCkQCvj4klgmcITg==}
@@ -5701,29 +5701,17 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
-  vue-amazing-ui@2.2.5(async-validator@4.2.5)(focus-trap@7.6.4)(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)):
+  vue-amazing-ui@2.2.6(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)):
     dependencies:
       '@types/qrcode': 1.5.5
       '@vuepic/vue-datepicker': 11.0.1(vue@3.5.13(typescript@5.7.3))
       '@vueuse/core': 12.5.0(typescript@5.7.3)
-      '@vueuse/integrations': 12.5.0(async-validator@4.2.5)(focus-trap@7.6.4)(qrcode@1.5.4)(typescript@5.7.3)
       date-fns: 4.1.0
       qrcode: 1.5.4
       seemly: 0.3.10
       swiper: 11.2.2
     transitivePeerDependencies:
-      - async-validator
-      - axios
-      - change-case
-      - drauu
-      - focus-trap
-      - fuse.js
-      - idb-keyval
-      - jwt-decode
-      - nprogress
-      - sortablejs
       - typescript
-      - universal-cookie
       - vue
 
   vue-eslint-parser@9.4.3(eslint@9.20.0):
