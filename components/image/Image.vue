@@ -2,7 +2,7 @@
 import { computed, ref, watchEffect, nextTick } from 'vue'
 import Space from 'components/space'
 import Spin from 'components/spin'
-import { add } from 'components/utils'
+import { add, downloadFile } from 'components/utils'
 export interface Image {
   src: string // 图像地址
   name?: string // 图像名称
@@ -12,6 +12,7 @@ export interface Props {
   name?: string // 图像名称，没有传入图片名时自动从图像地址 src 中读取
   width?: string | number | (string | number)[] // 图像宽度，单位 px
   height?: string | number | (string | number)[] // 图像高度，单位 px
+  disabled?: boolean // 是否禁用图像预览
   bordered?: boolean // 是否显示边框
   fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 图片在容器内的的适应类型
   preview?: string // 预览文本 string | slot
@@ -30,6 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   name: undefined,
   width: 100,
   height: 100,
+  disabled: false,
   bordered: true,
   fit: 'contain',
   preview: '预览',
@@ -43,7 +45,7 @@ const props = withDefaults(defineProps<Props>(), {
   loop: false,
   album: false
 })
-const images = ref<any[]>([])
+const images = ref<Image[]>([]) // 图片数组
 const previewRef = ref() // 预览 DOM 引用
 const previewIndex = ref(0) // 当前预览的图片索引
 const showPreview = ref(false) // 是否显示预览
@@ -80,7 +82,7 @@ function getImages() {
   } else {
     return [
       {
-        src: props.src,
+        src: props.src || '',
         name: props.name
       }
     ]
@@ -144,6 +146,10 @@ defineExpose({
 function onClose() {
   // 关闭
   showPreview.value = false
+}
+function onDownload() {
+  const image = images.value[previewIndex.value]
+  downloadFile(image.src, image.name)
 }
 function onZoomin() {
   // 放大
@@ -278,7 +284,7 @@ function onSwitchRight() {
       <div
         v-show="!album || (album && index === 0)"
         class="image-wrap"
-        :class="{ 'image-bordered': bordered, 'image-hover-mask': complete[index] }"
+        :class="{ 'image-bordered': bordered, 'image-hover-mask': !disabled && complete[index] }"
         :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
         v-for="(image, index) in images"
         :key="index"
@@ -292,7 +298,7 @@ function onSwitchRight() {
             :alt="getImageName(image)"
           />
         </Spin>
-        <div class="image-mask" @click="onPreview(index)">
+        <div v-if="!disabled" class="image-mask" @click="onPreview(index)">
           <div class="image-mask-info">
             <svg
               class="eye-svg"
@@ -363,6 +369,14 @@ function onSwitchRight() {
                   d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
                 ></path>
               </svg>
+            </div>
+            <div
+              class="preview-operation"
+              :class="{ 'operation-disabled': scale === maxZoomScale }"
+              title="下载"
+              @click="onDownload"
+            >
+              <svg class="icon-svg" focusable="false" data-icon="download" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M505.7 661a8 8 0 0012.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z"></path></svg>
             </div>
             <div
               class="preview-operation"

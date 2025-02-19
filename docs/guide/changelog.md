@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.2.6 <Tag color="volcano" size="small">2025-02-19</Tag>
+
+- 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件，预览时新增下载图片操作；新增 `disabled` 属性，支持禁用图片预览功能
+- 优化 [下载文件 downloadFile](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/download-file.html) 工具函数代码
+
 ## 2.2.5 <Tag color="volcano" size="small">2025-02-18</Tag>
 
 - 优化并更新 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件；调整属性 `lineCap` 类型为：`'round' | 'butt'`

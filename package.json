@@ -70,7 +70,6 @@
     "@types/qrcode": "^1.5.5",
     "@vuepic/vue-datepicker": "^11.0.1",
     "@vueuse/core": "^12.5.0",
-    "@vueuse/integrations": "^12.5.0",
     "date-fns": "^4.1.0",
     "qrcode": "^1.5.4",
     "seemly": "^0.3.10",

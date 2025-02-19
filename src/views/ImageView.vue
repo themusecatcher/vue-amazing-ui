@@ -3,23 +3,23 @@ import { ref } from 'vue'
 import type { ImageItem } from 'vue-amazing-ui'
 const images = ref<ImageItem[]>([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -28,10 +28,12 @@ const images = ref<ImageItem[]>([
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+    <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
     <h2 class="mt30 mb10">多张图片预览</h2>
     <h3 class="mb10">可循环切换图片，并支持键盘 (left / right / up / down) 按键切换</h3>
     <Image :src="images" loop />
+    <h2 class="mt30 mb10">禁用预览</h2>
+    <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" disabled />
     <h2 class="mt30 mb10">自定义样式</h2>
     <h3 class="mb10">自定义宽高；同时图片覆盖容器；预览文本设为 preview</h3>
     <Image :src="images" :width="[100, 200, 100, 200, 100]" :space-props="{ width: 416 }" fit="cover" loop>
@@ -56,7 +58,7 @@ const images = ref<ImageItem[]>([
       :zoom-ratio="0.2"
       :min-zoom-scale="0.5"
       :max-zoom-scale="2"
-      src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
+      src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg"
     />
   </div>
 </template>
