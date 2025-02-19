@@ -275,7 +275,7 @@ cancelRaf | Function to cancel the `rafTimeout` function | (raf: { id: number })
 throttle | Throttle function | (fn: Function, delay: number = 300) => any
 debounce | Debounce function | (fn: Function, delay: number = 300) => any
 add | Addition function that eliminates precision issues in JavaScript arithmetic | (num1: number, num2: number) => number
-downloadFile | Function to download a file with a custom filename; if no name is provided, it extracts the filename from the URL | (url: string, fileName?: string) => void
+downloadFile | Function to download a file with a custom filename; if no filename is provided, it extracts the filename from the URL | (url: string, fileName?: string) => void
 toggleDark | Function to toggle dark mode | () => void
 useEventListener | Function to add and remove event listeners using Vue lifecycle hooks | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void
 useMutationObserver | Function to observe changes in DOM elements using `MutationObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object

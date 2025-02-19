@@ -275,7 +275,7 @@ cancelRaf | 用于取消 `rafTimeout` 函数 | (raf: { id: number }) => void
 throttle | 节流函数 | (fn: Function, delay: number = 300) => any
 debounce | 防抖函数 | (fn: Function, delay: number = 300) => any
 add | 消除 `js` 加减精度问题的加法函数 | (num1: number, num2: number) => number
-downloadFile | 下载文件并自定义文件名，未传 `name` 时，从文件地址中自动提取文件名称 | (url: string, fileName?: string) => void
+downloadFile | 下载文件并自定义文件名，未传 `fileName` 时，从文件地址中自动提取文件名称 | (url: string, fileName?: string) => void
 toggleDark | 一键切换暗黑模式函数 | () => void
 useEventListener | 使用 `Vue` 的生命周期钩子添加和移除事件监听器 | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void
 useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object
