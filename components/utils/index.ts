@@ -244,42 +244,41 @@ export function add(num1: number, num2: number): number {
 /**
  * 下载文件并自定义文件名
  *
- * @param url 文件的 URL
+ * @param url 文件的 URL，支持网络路径或本地路径
  * @param fileName 文件名；文件的命名，如果未提供，则从 URL 中尝试提取
  */
 export function downloadFile(url: string, fileName?: string): void {
-  url = encodeURI(url) // 对 URL 进行编码防止 XSS 攻击
-  let name = ''
-  if (fileName) {
-    name = fileName
-  } else {
-    // 提取文件名
-    const urlObj = new URL(url)
-    name = urlObj.pathname.split('/').pop() || 'download'
+  if (!url) {
+    console.error('无效的 url')
+    return
   }
-  const xhr = new XMLHttpRequest() // 创建 XMLHttpRequest 对象用于文件下载
-  xhr.open('GET', url, true)
-  xhr.responseType = 'blob' // 设置响应类型为 blob，以便处理二进制数据
-  xhr.onerror = function () {
-    console.error('下载文件失败')
+  // 获取文件名，如果未提供，则从URL中获取或使用默认值
+  const name = fileName ? fileName : (url.split('?')[0].split('/').pop() || 'download')
+  try {
+    // 使用 fetch API 从指定 URL 请求文件
+    fetch(url).then(response => {
+      // 检查响应状态是否成功
+      if (response.ok) {
+        // 将响应转换为 Blob 对象
+        response.blob().then(blob => {
+          const blobUrl = URL.createObjectURL(blob) // 创建 Blob URL
+          const a = document.createElement('a') // 创建超链接元素
+          a.href = blobUrl // 设置超链接的 href 属性为 Blob URL
+          a.download = name // 设置超链接的 download 属性为自定义的文件名
+          // 将超链接元素添加到文档中并触发点击事件
+          document.body.appendChild(a)
+          a.click() // 点击超链接，触发下载事件
+          document.body.removeChild(a)
+          URL.revokeObjectURL(blobUrl) // 释放 Blob URL 所占的内存
+        })
+      } else {
+        console.error('请求文件失败，状态码:', response.status)
+      }
+    })
+  } catch (error) {
+    // 处理下载过程中出现的异常情况
+    console.error('文件下载失败:', error)
   }
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      const blob = xhr.response
-      const link = document.createElement('a')
-      const body = document.querySelector('body')
-      link.href = window.URL.createObjectURL(blob)
-      link.download = name
-      link.style.display = 'none'
-      body?.appendChild(link)
-      link.click()
-      body?.removeChild(link) // 下载完成后，移除链接并释放 blob 对象 URL
-      window.URL.revokeObjectURL(link.href)
-    } else {
-      console.error('请求文件失败，状态码：', xhr.status)
-    }
-  }
-  xhr.send() // 发送请求
 }
 /*
   一键切换暗黑模式函数
