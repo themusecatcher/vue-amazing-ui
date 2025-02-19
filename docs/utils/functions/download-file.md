@@ -17,14 +17,14 @@ export function downloadFile(url: string, fileName?: string): void {
     return
   }
   // 获取文件名，如果未提供，则从URL中获取或使用默认值
-  const name = fileName ? fileName : (url.split('?')[0].split('/').pop() || 'download')
+  const name = fileName ? fileName : url.split('?')[0].split('/').pop() || 'download'
   try {
     // 使用 fetch API 从指定 URL 请求文件
-    fetch(url).then(response => {
+    fetch(url).then((response) => {
       // 检查响应状态是否成功
       if (response.ok) {
         // 将响应转换为 Blob 对象
-        response.blob().then(blob => {
+        response.blob().then((blob) => {
           const blobUrl = URL.createObjectURL(blob) // 创建 Blob URL
           const a = document.createElement('a') // 创建超链接元素
           a.href = blobUrl // 设置超链接的 href 属性为 Blob URL
