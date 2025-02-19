@@ -2,7 +2,7 @@
 import type { CSSProperties } from 'vue'
 export interface Props {
   class?: string // 容器 class
-  style?: CSSProperties // 	指定样式
+  style?: CSSProperties // 指定样式
 }
 const props = withDefaults(defineProps<Props>(), {
   class: undefined,

@@ -14,23 +14,23 @@ import { ref } from 'vue'
 import type { ImageItem } from 'vue-amazing-ui'
 const images = ref<ImageItem[]>([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -38,13 +38,13 @@ const images = ref<ImageItem[]>([
 
 ## 基本使用
 
-<Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+<Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+  <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
 </template>
 ```
 
@@ -66,29 +66,43 @@ import { ref } from 'vue'
 import type { ImageItem } from 'vue-amazing-ui'
 const images = ref<ImageItem[]>([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
     name: 'image-5.jpg'
   }
 ])
 </script>
 <template>
   <Image :src="images" loop />
+</template>
+```
+
+:::
+
+## 禁用预览
+
+<Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" disabled />
+
+::: details Show Code
+
+```vue
+<template>
+  <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" disabled />
 </template>
 ```
 
@@ -127,23 +141,23 @@ import { ref } from 'vue'
 import type { ImageItem } from 'vue-amazing-ui'
 const images = ref<ImageItem[]>([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -188,23 +202,23 @@ import { ref } from 'vue'
 import type { ImageItem } from 'vue-amazing-ui'
 const images = ref<ImageItem[]>([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -233,23 +247,23 @@ import { ref } from 'vue'
 import type { ImageItem } from 'vue-amazing-ui'
 const images = ref<ImageItem[]>([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -273,23 +287,23 @@ import { ref } from 'vue'
 import type { ImageItem } from 'vue-amazing-ui'
 const images = ref<ImageItem[]>([
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
     name: 'image-1.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
     name: 'image-2.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
     name: 'image-3.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
     name: 'image-4.jpg'
   },
   {
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
     name: 'image-5.jpg'
   }
 ])
@@ -311,7 +325,7 @@ const images = ref<ImageItem[]>([
   :zoom-ratio="0.2"
   :min-zoom-scale="0.5"
   :max-zoom-scale="2"
-  src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+  src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
 
 ::: details Show Code
 
@@ -321,7 +335,7 @@ const images = ref<ImageItem[]>([
     :zoom-ratio="0.2"
     :min-zoom-scale="0.5"
     :max-zoom-scale="2"
-    src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg" />
+    src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
 </template>
 ```
 
@@ -337,6 +351,7 @@ src | 图像地址或图像地址数组 | string &#124; [Image](#image-type)[] |
 name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | undefined
 width | 图像宽度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100
 height | 图像高度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100
+disabled | 是否禁用图像预览 | boolean | false
 bordered | 是否显示边框 | boolean | true
 fit | 图片在容器内的的适应类型，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain'
 preview | 预览文本 | string &#124; slot | '预览'

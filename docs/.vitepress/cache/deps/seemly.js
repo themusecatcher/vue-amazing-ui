@@ -1,4 +1,4 @@
-import "./chunk-EQCVQC35.js";
+import "./chunk-JVWSFFO4.js";
 
 // node_modules/.pnpm/seemly@0.3.10/node_modules/seemly/es/animation/next-frame-once.js
 var onceCbs = [];

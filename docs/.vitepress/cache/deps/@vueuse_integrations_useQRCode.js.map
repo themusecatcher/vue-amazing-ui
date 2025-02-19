@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../node_modules/.pnpm/@vueuse+integrations@12.5.0_async-validator@4.2.5_focus-trap@7.6.4_qrcode@1.5.4_typescript@5.7.3/node_modules/@vueuse/integrations/useQRCode.mjs"],
-  "sourcesContent": ["import { toRef, isClient } from '@vueuse/shared';\nimport QRCode from 'qrcode';\nimport { ref, watch } from 'vue';\n\nfunction useQRCode(text, options) {\n  const src = toRef(text);\n  const result = ref(\"\");\n  watch(\n    src,\n    async (value) => {\n      if (src.value && isClient)\n        result.value = await QRCode.toDataURL(value, options);\n    },\n    { immediate: true }\n  );\n  return result;\n}\n\nexport { useQRCode };\n"],
-  "mappings": ";;;;;;;;;;;;;;;;AACA,oBAAmB;AAGnB,SAAS,UAAU,MAAM,SAAS;AAChC,QAAM,MAAM,MAAM,IAAI;AACtB,QAAM,SAAS,IAAI,EAAE;AACrB;AAAA,IACE;AAAA,IACA,OAAO,UAAU;AACf,UAAI,IAAI,SAAS;AACf,eAAO,QAAQ,MAAM,cAAAA,QAAO,UAAU,OAAO,OAAO;AAAA,IACxD;AAAA,IACA,EAAE,WAAW,KAAK;AAAA,EACpB;AACA,SAAO;AACT;",
-  "names": ["QRCode"]
-}
