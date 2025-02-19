@@ -38,13 +38,15 @@ const images = ref<ImageItem[]>([
     <h3 class="mb10">自定义宽高；同时图片覆盖容器；预览文本设为 preview</h3>
     <Image :src="images" :width="[100, 200, 100, 200, 100]" :space-props="{ width: 416 }" fit="cover" loop>
       <template #preview>
-        <p class="u-pre">preview</p>
+        <p class="preview-txt">preview</p>
       </template>
     </Image>
+    <h2 class="mt30 mb10">自定义预览图片样式</h2>
+    <Image :src="images" :preview-image-style="{ background: '#fff', padding: '12px', borderRadius: '8px' }" loop />
     <h2 class="mt30 mb10">自定义排列方式 & 加载中样式</h2>
     <Image
       :src="images"
-      :space-props="{ width: 632, gap: 16 }"
+      :space-props="{ width: 332, gap: 16 }"
       :spin-props="{ tip: 'loading', indicator: 'spin-line', color: '#fadb14' }"
       loop
     />
@@ -63,7 +65,7 @@ const images = ref<ImageItem[]>([
   </div>
 </template>
 <style lang="less" scoped>
-.u-pre {
+.preview-txt {
   display: inline-block;
   font-size: 16px;
 }

@@ -122,12 +122,12 @@ const images = ref<ImageItem[]>([
   loop
 >
   <template #preview>
-    <p class="u-pre">preview</p>
+    <p class="preview-txt">preview</p>
   </template>
 </Image>
 
 <style lang="less" scoped>
-.u-pre {
+.preview-txt {
   display: inline-block;
   font-size: 16px;
 }
@@ -171,12 +171,12 @@ const images = ref<ImageItem[]>([
     loop
   >
     <template #preview>
-      <p class="u-pre">preview</p>
+      <p class="preview-txt">preview</p>
     </template>
   </Image>
 </template>
 <style lang="less" scoped>
-.u-pre {
+.preview-txt {
   display: inline-block;
   font-size: 16px;
 }
@@ -185,11 +185,51 @@ const images = ref<ImageItem[]>([
 
 :::
 
+## 自定义预览图片样式
+
+<Image :src="images" :preview-image-style="{ background: '#fff', padding: '12px', borderRadius: '8px' }" loop />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { ImageItem } from 'vue-amazing-ui'
+const images = ref<ImageItem[]>([
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    name: 'image-1.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    name: 'image-2.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    name: 'image-3.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    name: 'image-4.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    name: 'image-5.jpg'
+  }
+])
+</script>
+<template>
+  <Image :src="images" :preview-image-style="{ background: '#fff', padding: '12px', borderRadius: '8px' }" loop />
+</template>
+```
+
+:::
+
 ## 自定义排列方式 & 加载中样式
 
 <Image
   :src="images"
-  :space-props="{ width: 632, gap: 16 }"
+  :space-props="{ width: 332, gap: 16 }"
   :spin-props="{ tip: 'loading', indicator: 'spin-line', color: '#fadb14' }"
   loop
 />
@@ -226,7 +266,7 @@ const images = ref<ImageItem[]>([
 <template>
   <Image
     :src="images"
-    :space-props="{ width: 632, gap: 16 }"
+    :space-props="{ width: 332, gap: 16 }"
     :spin-props="{ tip: 'loading', indicator: 'spin-line', color: '#fadb14' }"
     loop
   />
@@ -355,6 +395,7 @@ disabled | 是否禁用图像预览 | boolean | false
 bordered | 是否显示边框 | boolean | true
 fit | 图片在容器内的的适应类型，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain'
 preview | 预览文本 | string &#124; slot | '预览'
+previewImageStyle | 自定义预览图片时 `img` 元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多张展示图片时的排列方式 | object | {}
 spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置图片加载中样式 | object | {}
 zoomRatio | 每次缩放比率 | number | 0.1
