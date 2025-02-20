@@ -91,8 +91,8 @@ export { default as InputNumber } from './inputnumber'
 export type { Props as InputSearchProps } from './inputsearch'
 export { default as InputSearch } from './inputsearch'
 
-// export type { LayoutProps } from './layout'
-// export { default as { Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter } } from './layout'
+export type { LayoutProps, LayoutContentProps, LayoutFooterProps, LayoutHeaderProps, LayoutSiderProps } from './layout'
+export { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider } from './layout'
 
 export type { ListProps, ListItemProps } from './list'
 export { List, ListItem } from './list'

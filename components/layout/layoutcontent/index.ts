@@ -1,5 +1,5 @@
-// import LayoutContent from './LayoutContent.vue'
-// // export type { Props as LayoutProps } from './Layout.vue'
-// import { withInstall } from '../../utils/type'
+import LayoutContent from './LayoutContent.vue'
+export type { Props as LayoutContentProps } from './LayoutContent.vue'
+import { withInstall } from '../../utils/type'
 
-// export default withInstall(LayoutContent)
+export default withInstall(LayoutContent)

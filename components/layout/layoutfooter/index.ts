@@ -1,5 +1,5 @@
-// import LayoutFooter from './LayoutFooter.vue'
-// // export type { Props as LayoutProps } from './Layout.vue'
-// import { withInstall } from '../../utils/type'
+import LayoutFooter from './LayoutFooter.vue'
+export type { Props as LayoutFooterProps } from './LayoutFooter.vue'
+import { withInstall } from '../../utils/type'
 
-// export default withInstall(LayoutFooter)
+export default withInstall(LayoutFooter)
