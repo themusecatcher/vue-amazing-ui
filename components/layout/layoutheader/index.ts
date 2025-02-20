@@ -1,5 +1,5 @@
-// import LayoutHeader from './LayoutHeader.vue'
-// // export type { Props as LayoutProps } from './Layout.vue'
-// import { withInstall } from '../../utils/type'
+import LayoutHeader from './LayoutHeader.vue'
+export type { Props as LayoutHeaderProps } from './LayoutHeader.vue'
+import { withInstall } from '../../utils/type'
 
-// export default withInstall(LayoutHeader)
+export default withInstall(LayoutHeader)

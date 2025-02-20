@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-interface Props {
+export interface Props {
   class?: string // 容器 class
   style?: CSSProperties // 指定样式
 }
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   class: undefined,
   style: () => ({})
 })
 </script>
 <template>
-  <div class="m-layout"> </div>
+  <main class="layout-content" :style="style">
+    <slot></slot>
+  </main>
 </template>
-<style lang="less" scoped>
-.m-layout {
-}
-</style>

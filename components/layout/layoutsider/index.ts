@@ -1,5 +1,5 @@
-// import LayoutSlider from './LayoutSlider.vue'
-// export type { Props as LayoutProps } from './Layout.vue'
-// import { withInstall } from '../../utils/type'
+import LayoutSlider from './LayoutSider.vue'
+export type { Props as LayoutSiderProps } from './LayoutSider.vue'
+import { withInstall } from '../../utils/type'
 
-// export default withInstall(LayoutSlider)
+export default withInstall(LayoutSlider)
