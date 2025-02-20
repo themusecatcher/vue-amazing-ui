@@ -67,14 +67,17 @@ const routes1 = ref<BreadcrumbRoute[]>([
 const selectedKeys = ref<string[]>(['2'])
 const selectedKeys1 = ref<string[]>(['2'])
 const selectedKeys2 = ref<string[]>(['1'])
-const selectedKeys3 = ref<string[]>(['1'])
-const selectedKeys4 = ref<string[]>(['4'])
-const selectedKeys5 = ref<string[]>(['4'])
-const selectedKeys6 = ref<string[]>(['2'])
+const selectedKeys3 = ref<string[]>(['2'])
+const selectedKeys4 = ref<string[]>(['1'])
+const selectedKeys5 = ref<string[]>(['1'])
+const selectedKeys6 = ref<string[]>(['1'])
+const selectedKeys7 = ref<string[]>(['4'])
+const selectedKeys8 = ref<string[]>(['4'])
+const selectedKeys9 = ref<string[]>(['2'])
 const openKeys = ref<string[]>(['sub1'])
 const collapsed = ref<boolean>(false)
 const onCollapse = (collapsed: boolean, type: string) => {
-  console.log(collapsed, type)
+  console.log('collapse', collapsed, type)
 }
 const onBreakpoint = (broken: boolean) => {
   console.log(broken)
@@ -82,7 +85,7 @@ const onBreakpoint = (broken: boolean) => {
 </script>
 <template>
   <div>
-    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Flex vertical :gap="48">
       <Layout>
@@ -219,7 +222,7 @@ const onBreakpoint = (broken: boolean) => {
       <LayoutHeader class="header">
         <div class="logo" />
         <a-menu
-          v-model:selectedKeys="selectedKeys1"
+          v-model:selectedKeys="selectedKeys3"
           theme="dark"
           mode="horizontal"
           :style="{ lineHeight: '64px' }"
@@ -234,7 +237,7 @@ const onBreakpoint = (broken: boolean) => {
         <Layout style="padding: 24px 0; background: #fff">
           <LayoutSider width="200" style="background: #fff">
             <a-menu
-              v-model:selectedKeys="selectedKeys2"
+              v-model:selectedKeys="selectedKeys4"
               v-model:openKeys="openKeys"
               mode="inline"
               style="height: 100%"
@@ -289,64 +292,70 @@ const onBreakpoint = (broken: boolean) => {
     <h2 class="mt30 mb10">侧边布局</h2>
     <h3 class="mb10">侧边两列式布局。页面横向空间有限时，侧边导航可收起</h3>
     <h3 class="mb10">侧边导航在页面布局上采用的是左右的结构，一般主导航放置于页面的左侧固定位置，辅助菜单放置于工作区顶部。内容根据浏览器终端进行自适应，能提高横向空间的使用率，但是整个页面排版不稳定。侧边导航的模式层级扩展性强，一、二、三级导航项目可以更为顺畅且具关联性的被展示，同时侧边导航可以固定，使得用户在操作和浏览中可以快速的定位和切换当前位置，有很高的操作效率。但这类导航横向页面内容的空间会被牺牲一部份</h3>
-    <Layout style="min-height: 100vh; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047;">
-      <LayoutSider v-model:collapsed="collapsed" collapsible>
-        <div class="logo-1" />
-        <a-menu v-model:selectedKeys="selectedKeys2" theme="dark" mode="inline">
-          <a-menu-item key="1">
-            <pie-chart-outlined />
-            <span>Option 1</span>
-          </a-menu-item>
-          <a-menu-item key="2">
-            <desktop-outlined />
-            <span>Option 2</span>
-          </a-menu-item>
-          <a-sub-menu key="sub1">
-            <template #title>
-              <span>
-                <user-outlined />
-                <span>User</span>
-              </span>
-            </template>
-            <a-menu-item key="3">Tom</a-menu-item>
-            <a-menu-item key="4">Bill</a-menu-item>
-            <a-menu-item key="5">Alex</a-menu-item>
-          </a-sub-menu>
-          <a-sub-menu key="sub2">
-            <template #title>
-              <span>
-                <team-outlined />
-                <span>Team</span>
-              </span>
-            </template>
-            <a-menu-item key="6">Team 1</a-menu-item>
-            <a-menu-item key="8">Team 2</a-menu-item>
-          </a-sub-menu>
-          <a-menu-item key="9">
-            <file-outlined />
-            <span>File</span>
-          </a-menu-item>
-        </a-menu>
-      </LayoutSider>
+    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047;">
       <Layout>
-        <LayoutHeader style="background: #fff; padding: 0" />
-        <LayoutContent style="margin: 0 16px">
-          <Breadcrumb :routes="routes1" style="margin: 16px 0" />
-          <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
-            Curry is a basketball player.
-          </div>
-        </LayoutContent>
-        <LayoutFooter style="text-align: center">
-          Vue Amazing UI ©2023 Created by the Muse Catcher
-        </LayoutFooter>
+        <LayoutSider
+          :style="{ height: '360px', position: 'sticky', left: 0, top: 0, bottom: 0 }"
+          v-model:collapsed="collapsed"
+          collapsible
+          @collapse="onCollapse">
+          <div class="logo-1" />
+          <a-menu v-model:selectedKeys="selectedKeys5" theme="dark" mode="inline" :inline-collapsed="collapsed">
+            <a-menu-item key="1">
+              <pie-chart-outlined />
+              <span>Option 1</span>
+            </a-menu-item>
+            <a-menu-item key="2">
+              <desktop-outlined />
+              <span>Option 2</span>
+            </a-menu-item>
+            <a-sub-menu key="sub1">
+              <template #title>
+                <span>
+                  <user-outlined />
+                  <span>User</span>
+                </span>
+              </template>
+              <a-menu-item key="3">Tom</a-menu-item>
+              <a-menu-item key="4">Bill</a-menu-item>
+              <a-menu-item key="5">Alex</a-menu-item>
+            </a-sub-menu>
+            <a-sub-menu key="sub2">
+              <template #title>
+                <span>
+                  <team-outlined />
+                  <span>Team</span>
+                </span>
+              </template>
+              <a-menu-item key="6">Team 1</a-menu-item>
+              <a-menu-item key="8">Team 2</a-menu-item>
+            </a-sub-menu>
+            <a-menu-item key="9">
+              <file-outlined />
+              <span>File</span>
+            </a-menu-item>
+          </a-menu>
+        </LayoutSider>
+        <Layout>
+          <LayoutHeader style="background: #fff; padding: 0" />
+          <LayoutContent style="margin: 0 16px">
+            <Breadcrumb :routes="routes1" style="margin: 16px 0" />
+            <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
+              Curry is a basketball player.
+            </div>
+          </LayoutContent>
+          <LayoutFooter style="text-align: center">
+            Vue Amazing UI ©2023 Created by the Muse Catcher
+          </LayoutFooter>
+        </Layout>
       </Layout>
-    </Layout>
+    </div>
     <h2 class="mt30 mb10">自定义收起展开触发器</h2>
     <h3 class="mb10">要使用自定义触发器，可以设置 :trigger="null" 来隐藏默认设定</h3>
     <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047;">
       <LayoutSider v-model:collapsed="collapsed" :trigger="null" collapsible>
         <div class="logo-1" />
-        <a-menu v-model:selectedKeys="selectedKeys3" theme="dark" mode="inline">
+        <a-menu v-model:selectedKeys="selectedKeys6" theme="dark" mode="inline" :inline-collapsed="collapsed">
           <a-menu-item key="1">
             <user-outlined />
             <span>nav 1</span>
@@ -374,7 +383,7 @@ const onBreakpoint = (broken: boolean) => {
           Content
         </LayoutContent>
       </Layout>
-    </Layout>
+    </Layout> -->
     <h2 class="mt30 mb10">响应式布局</h2>
     <h3 class="mb10">Layout.Sider 支持响应式布局</h3>
     <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047;">
@@ -385,7 +394,7 @@ const onBreakpoint = (broken: boolean) => {
         @breakpoint="onBreakpoint"
       >
         <div class="logo-1" />
-        <a-menu v-model:selectedKeys="selectedKeys4" theme="dark" mode="inline">
+        <a-menu v-model:selectedKeys="selectedKeys7" theme="dark" mode="inline">
           <a-menu-item key="1">
             <user-outlined />
             <span class="nav-text">nav 1</span>
@@ -414,13 +423,50 @@ const onBreakpoint = (broken: boolean) => {
         </LayoutFooter>
       </Layout>
     </Layout>
-    <h2 class="mt30 mb10">固定侧边栏</h2>
+    <a-layout>
+      <a-layout-sider
+        breakpoint="lg"
+        collapsed-width="0"
+        @collapse="onCollapse"
+        @breakpoint="onBreakpoint"
+      >
+        <div class="logo" />
+        <a-menu v-model:selectedKeys="selectedKeys7" theme="dark" mode="inline">
+          <a-menu-item key="1">
+            <user-outlined />
+            <span class="nav-text">nav 1</span>
+          </a-menu-item>
+          <a-menu-item key="2">
+            <video-camera-outlined />
+            <span class="nav-text">nav 2</span>
+          </a-menu-item>
+          <a-menu-item key="3">
+            <upload-outlined />
+            <span class="nav-text">nav 3</span>
+          </a-menu-item>
+          <a-menu-item key="4">
+            <user-outlined />
+            <span class="nav-text">nav 4</span>
+          </a-menu-item>
+        </a-menu>
+      </a-layout-sider>
+      <a-layout>
+        <a-layout-header :style="{ background: '#fff', padding: 0 }" />
+        <a-layout-content :style="{ margin: '24px 16px 0' }">
+          <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">content</div>
+        </a-layout-content>
+        <a-layout-footer style="text-align: center">
+          Ant Design ©2018 Created by Ant UED
+        </a-layout-footer>
+      </a-layout>
+    </a-layout>
+    <!-- <h2 class="mt30 mb10">固定侧边栏</h2>
     <h3 class="mb10">当内容较长时，使用固定侧边栏可以提供更好的体验</h3>
     <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047;">
       <Layout>
         <LayoutSider :style="{ overflow: 'auto', height: '360px', position: 'sticky', left: 0, top: 0, bottom: 0 }">
           <div class="logo-1" />
-          <a-menu v-model:selectedKeys="selectedKeys5" theme="dark" mode="inline">
+          <a-menu v-model:selectedKeys="selectedKeys8" theme="dark" mode="inline">
             <a-menu-item key="1">
               <user-outlined />
               <span class="nav-text">nav 1</span>
@@ -569,7 +615,7 @@ const onBreakpoint = (broken: boolean) => {
         <LayoutHeader :style="{ position: 'sticky', zIndex: 1, top: 0, width: '100%' }">
           <div class="logo" />
           <a-menu
-            v-model:selectedKeys="selectedKeys6"
+            v-model:selectedKeys="selectedKeys9"
             theme="dark"
             mode="horizontal"
             :style="{ lineHeight: '64px' }"
@@ -587,7 +633,7 @@ const onBreakpoint = (broken: boolean) => {
           Vue Amazing UI ©2023 Created by the Muse Catcher
         </LayoutFooter>
       </Layout>
-    </div>
+    </div> -->
   </div>
 </template>
 <style lang="less" scoped>
@@ -608,24 +654,6 @@ const onBreakpoint = (broken: boolean) => {
   margin: 16px;
   background: rgba(255, 255, 255, 0.3);
 }
-.ant-row-rtl #components-layout-demo-top .logo {
-  float: right;
-  margin: 16px 0 16px 24px;
-}
-
-[data-theme='dark'] .site-layout-content {
-  background: #141414;
-}
-
-.ant-row-rtl #components-layout-demo-top-side-2 .logo {
-  float: right;
-  margin: 16px 0 16px 24px;
-}
-
-.site-layout-background {
-  background: #fff;
-}
-
 .trigger {
   font-size: 18px;
   line-height: 64px;
