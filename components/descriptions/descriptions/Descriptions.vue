@@ -42,32 +42,28 @@ const thVerticalBorderedRows = ref() // 放置垂直列表的 DescriptionsItems 
 const tdVerticalBorderedRows = ref() // 放置垂直列表的 DescriptionsItems 节点的 td 模板引用数组（带边框）
 const groupItems = ref<any[]>([]) // 处理后的 DescriptionsItems 节点数组
 const viewportWidth = ref(window.innerWidth)
-function getViewportWidth() {
-  viewportWidth.value = window.innerWidth
-}
-useEventListener(window, 'resize', getViewportWidth)
 const slotsExist = useSlotsExist(['title', 'extra'])
 const showHeader = computed(() => {
   return slotsExist.title || slotsExist.extra || props.title || props.extra
 })
 const responsiveColumn = computed(() => {
   if (typeof props.column === 'object') {
-    if (viewportWidth.value >= 1600 && props.column.xxl) {
+    if (viewportWidth.value >= 1600 && props.column.xxl !== undefined) {
       return props.column.xxl
     }
-    if (viewportWidth.value >= 1200 && props.column.xl) {
+    if (viewportWidth.value >= 1200 && props.column.xl !== undefined) {
       return props.column.xl
     }
-    if (viewportWidth.value >= 992 && props.column.lg) {
+    if (viewportWidth.value >= 992 && props.column.lg !== undefined) {
       return props.column.lg
     }
-    if (viewportWidth.value >= 768 && props.column.md) {
+    if (viewportWidth.value >= 768 && props.column.md !== undefined) {
       return props.column.md
     }
-    if (viewportWidth.value >= 576 && props.column.sm) {
+    if (viewportWidth.value >= 576 && props.column.sm !== undefined) {
       return props.column.sm
     }
-    if (viewportWidth.value < 576 && props.column.xs) {
+    if (viewportWidth.value < 576 && props.column.xs !== undefined) {
       return props.column.xs
     }
     return 1
@@ -86,6 +82,7 @@ watch(
     deep: true
   }
 )
+useEventListener(window, 'resize', getViewportWidth)
 // 监听 defaultSlotsRef DOM 节点数量变化，重新渲染 Descriptions
 useMutationObserver(
   defaultSlotsRef,
@@ -103,6 +100,9 @@ useMutationObserver(
 onMounted(() => {
   getGroupItems()
 })
+function getViewportWidth() {
+  viewportWidth.value = window.innerWidth
+}
 async function refreshDefaultSlots() {
   defaultSlots.value = !defaultSlots.value
   await nextTick()

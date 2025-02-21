@@ -31,10 +31,6 @@ const props = withDefaults(defineProps<Props>(), {
   target: '_self'
 })
 const viewportWidth = ref(window.innerWidth)
-function getViewportWidth() {
-  viewportWidth.value = window.innerWidth
-}
-useEventListener(window, 'resize', getViewportWidth)
 const slotsExist = useSlotsExist(['default', 'icon'])
 const showIcon = computed(() => {
   if (!props.src) {
@@ -64,17 +60,17 @@ const avatarStyle = computed(() => {
   }
   if (typeof props.size === 'object') {
     let size = 32
-    if (viewportWidth.value >= 1600 && props.size.xxl) {
+    if (viewportWidth.value >= 1600 && props.size.xxl !== undefined) {
       size = props.size.xxl
-    } else if (viewportWidth.value >= 1200 && props.size.xl) {
+    } else if (viewportWidth.value >= 1200 && props.size.xl !== undefined) {
       size = props.size.xl
-    } else if (viewportWidth.value >= 992 && props.size.lg) {
+    } else if (viewportWidth.value >= 992 && props.size.lg !== undefined) {
       size = props.size.lg
-    } else if (viewportWidth.value >= 768 && props.size.md) {
+    } else if (viewportWidth.value >= 768 && props.size.md !== undefined) {
       size = props.size.md
-    } else if (viewportWidth.value >= 576 && props.size.sm) {
+    } else if (viewportWidth.value >= 576 && props.size.sm !== undefined) {
       size = props.size.sm
-    } else if (viewportWidth.value < 576 && props.size.xs) {
+    } else if (viewportWidth.value < 576 && props.size.xs !== undefined) {
       size = props.size.xs
     }
     return {
@@ -110,6 +106,10 @@ const strStyle = computed(() => {
   }
   return {}
 })
+useEventListener(window, 'resize', getViewportWidth)
+function getViewportWidth() {
+  viewportWidth.value = window.innerWidth
+}
 </script>
 <template>
   <component
