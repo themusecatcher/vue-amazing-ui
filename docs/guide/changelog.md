@@ -564,9 +564,15 @@
 
 ## future
 
+- 新增 高亮文本 Highlight 组件
+- 新增 自动完成 AutoComplete 组件
 - 新增 布局 Layout 组件
 - 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
+- 新增 漫游式引导 Tour 组件
+- 新增 评论 Comment 组件
+- 新增 下拉菜单 Dropdown 组件
+- 更新 滑动输入条 Slider 组件，带刻度的滑动输入条
 <!-- - 时间轴 Timeline 组件，新增水平时间轴
 - 新增 时间选择器 TimePicker 组件
 - 重构级联选择 Cascader 组件 -->
