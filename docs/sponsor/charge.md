@@ -10,7 +10,8 @@ import { HeartFilled, WechatOutlined, AlipayOutlined } from '@ant-design/icons-v
 import { useMediaQuery } from 'vue-amazing-ui'
 import WeChat from '/wechat.jpg'
 import Alipay from '/alipay.jpg'
-import Avatar1 from './avatars/1.jpeg'
+import Avatar1 from '/avatar_1.jpeg'
+import Avatar2 from '/avatar_2.jpg'
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 const sponsorItem = {
   title: '如果您觉得 Vue Amazing UI 有用，对您有帮助，可以对作者表示下支持，非常感谢 ❤️🙏❤️'
@@ -20,12 +21,12 @@ const sponsorType = ref('WeChat')
 const QRCodes = [
   {
     src: WeChat,
-    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/wechat.jpg',
+    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/wechat.jpg',
     name: 'WeChat'
   },
   {
     src: Alipay,
-    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/alipay.jpg',
+    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/alipay.jpg',
     name: 'Alipay'
   }
 ]
@@ -166,7 +167,7 @@ const QRCodes = [
         @Ant
       </div>
     </template>
-    <Avatar :size="36" src="../public/avatars/1.jpeg" />
+    <Avatar :size="36" :src="Avatar1" />
   </Tooltip>
   <Tooltip>
     <template #tooltip>
@@ -176,6 +177,6 @@ const QRCodes = [
         @nizhensh-i
       </div>
     </template>
-    <Avatar :size="36" src="../public/avatars/2.jpg" href="https://github.com/nizhensh-i" target="_blank" />
+    <Avatar :size="36" :src="Avatar2" href="https://github.com/nizhensh-i" target="_blank" />
   </Tooltip>
 </Space>
