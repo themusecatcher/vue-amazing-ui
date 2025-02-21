@@ -80,7 +80,7 @@ const onCollapse = (collapsed: boolean, type: string) => {
   console.log('collapse', collapsed, type)
 }
 const onBreakpoint = (broken: boolean) => {
-  console.log(broken)
+  console.log('breakpoint', broken)
 }
 </script>
 <template>
@@ -383,18 +383,18 @@ const onBreakpoint = (broken: boolean) => {
           Content
         </LayoutContent>
       </Layout>
-    </Layout> -->
-    <h2 class="mt30 mb10">响应式布局</h2>
-    <h3 class="mb10">Layout.Sider 支持响应式布局</h3>
+    </Layout>
+    <h2 class="mt30 mb10">响应式收起宽度</h2>
+    <h3 class="mb10">collapsedWidth 支持响应式宽度，根据不同的视窗宽度可以设置不同的收起宽度</h3>
     <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047;">
       <LayoutSider
-        breakpoint="lg"
-        collapsed-width="0"
+        v-model:collapsed="collapsed"
+        collapsible
+        :collapsed-width="{ lg: 80, xl: 120 }"
         @collapse="onCollapse"
-        @breakpoint="onBreakpoint"
       >
         <div class="logo-1" />
-        <a-menu v-model:selectedKeys="selectedKeys7" theme="dark" mode="inline">
+        <a-menu v-model:selectedKeys="selectedKeys7" theme="dark" mode="inline" :inline-collapsed="collapsed">
           <a-menu-item key="1">
             <user-outlined />
             <span class="nav-text">nav 1</span>
@@ -422,11 +422,52 @@ const onBreakpoint = (broken: boolean) => {
           Vue Amazing UI ©2023 Created by the Muse Catcher
         </LayoutFooter>
       </Layout>
+    </Layout> -->
+    <h2 class="mt30 mb10">响应式触发收起</h2>
+    <h3 class="mb10">通过配置 breakpoint 属性，当视窗宽度小于 breakpoint 时 Sider 缩小为对应的 collapsedWidth 宽度，若将 collapsedWidth 设置为 0，会出现特殊 trigger</h3>
+    <Layout>
+      <LayoutSider
+        v-model:collapsed="collapsed"
+        collapsible
+        breakpoint="lg"
+        :collapsed-width="{ lg: 0 }"
+        @collapse="onCollapse"
+        @breakpoint="onBreakpoint"
+      >
+        <div class="logo" />
+        <a-menu v-model:selectedKeys="selectedKeys7" theme="dark" mode="inline" :inline-collapsed="collapsed">
+          <a-menu-item key="1">
+            <user-outlined />
+            <span class="nav-text">nav 1</span>
+          </a-menu-item>
+          <a-menu-item key="2">
+            <video-camera-outlined />
+            <span class="nav-text">nav 2</span>
+          </a-menu-item>
+          <a-menu-item key="3">
+            <upload-outlined />
+            <span class="nav-text">nav 3</span>
+          </a-menu-item>
+          <a-menu-item key="4">
+            <user-outlined />
+            <span class="nav-text">nav 4</span>
+          </a-menu-item>
+        </a-menu>
+      </LayoutSider>
+      <Layout>
+        <LayoutHeader :style="{ background: '#fff', padding: 0 }" />
+        <LayoutCntent :style="{ margin: '24px 16px 0' }">
+          <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">content</div>
+        </LayoutCntent>
+        <LayoutFooter style="text-align: center">
+          Vue Amazing UI ©2023 Created by the Muse Catcher
+        </LayoutFooter>
+      </Layout>
     </Layout>
     <a-layout>
       <a-layout-sider
-        breakpoint="lg"
-        collapsed-width="0"
+        collapsible
+        :collapsed-width="0"
         @collapse="onCollapse"
         @breakpoint="onBreakpoint"
       >

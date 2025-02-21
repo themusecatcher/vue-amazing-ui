@@ -1,12 +1,24 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
+import { useEventListener } from 'components/utils'
+export interface Responsive {
+  xs?: number // <576px
+  sm?: number // ≥576px
+  md?: number // ≥768px
+  lg?: number // ≥992px
+  xl?: number // ≥1200px
+  xxl?: number // ≥1600px
+  xxxl?: number // ≥2000px
+}
 export interface Props {
   class?: string // 容器 class
   style?: CSSProperties // 指定样式
   width?: number | string // 宽度，单位 px
   collapsible?: boolean // 是否可收起
+  collapsedWidth?: number | Responsive // 收起时的宽度，设置为 0 会出现特殊 trigger，支持像素值或响应式的对象写法
   trigger?: string // 自定义收起触发器，设置为 null 时隐藏触发器 string | slot
+  breakpoint?: keyof Responsive // 触发收起的断点
   collapsed?: boolean // (v-model) 当前收起状态
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -14,14 +26,21 @@ const props = withDefaults(defineProps<Props>(), {
   style: () => ({}),
   width: 200,
   collapsible: false,
+  collapsedWidth: 80,
   trigger: undefined,
+  breakpoint: undefined,
   collapsed: undefined
 })
+const viewportWidth = ref(window.innerWidth)
 const siderCollapsed = ref<boolean>()
-const emits = defineEmits(['update:collapsed', 'collapse'])
+const emits = defineEmits(['update:collapsed', 'collapse', 'breakpoint'])
 const siderWidth = computed(() => {
   if (props.collapsible && siderCollapsed.value) {
-    return '80px'
+    if (typeof props.collapsedWidth === 'number') {
+      return `${props.collapsedWidth}px`
+    } else {
+      return `${getResponsiveCollapsedWidth(props.collapsedWidth)}px`
+    }
   }
   return typeof props.width === 'number' ? `${props.width}px` : props.width
 })
@@ -38,15 +57,43 @@ const siderStyle = computed(() => {
 watchEffect(() => {
   siderCollapsed.value = props.collapsed
 })
+useEventListener(window, 'resize', getViewportWidth)
+function getViewportWidth() {
+  viewportWidth.value = window.innerWidth
+}
+function getResponsiveCollapsedWidth(collapsedWidth: Responsive) {
+  if (viewportWidth.value >= 2000 && collapsedWidth.xxxl) {
+    return collapsedWidth.xxxl
+  }
+  if (viewportWidth.value >= 1600 && collapsedWidth.xxl) {
+    return collapsedWidth.xxl
+  }
+  if (viewportWidth.value >= 1200 && collapsedWidth.xl) {
+    return collapsedWidth.xl
+  }
+  if (viewportWidth.value >= 992 && collapsedWidth.lg) {
+    return collapsedWidth.lg
+  }
+  if (viewportWidth.value >= 768 && collapsedWidth.md) {
+    return collapsedWidth.md
+  }
+  if (viewportWidth.value >= 576 && collapsedWidth.sm) {
+    return collapsedWidth.sm
+  }
+  if (viewportWidth.value < 576 && collapsedWidth.xs) {
+    return collapsedWidth.xs
+  }
+  return 80
+}
 function toggleCollapse() {
   siderCollapsed.value = !siderCollapsed.value
   emits('update:collapsed', siderCollapsed.value)
-  emits('collapse', siderCollapsed.value)
+  emits('collapse', siderCollapsed.value, 'clickTrigger')
 }
 </script>
 <template>
   <aside class="layout-sider" :class="{ 'layout-sider-has-trigger': collapsible }" :style="siderStyle">
-    <div class="layout-sider-children">
+    <div class="layout-sider-children" :style="`collapsed-sider-width: ${props.collapsedWidth}px;`">
       <slot></slot>
     </div>
     <div
@@ -60,6 +107,11 @@ function toggleCollapse() {
   </aside>
 </template>
 <style lang="less" scoped>
+.layout-sider-children {
+  :deep(.ant-menu-inline-collapsed) {
+    width: var(--collapsed-sider-width);
+  }
+}
 .arrow-svg {
   transition: all 0.2s;
 }
