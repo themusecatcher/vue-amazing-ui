@@ -3069,7 +3069,7 @@ watchEffect(() => {
     }
   }
 }
-a {
+.table-td a {
   color: #1677ff;
   text-decoration: none;
   background-color: transparent;
