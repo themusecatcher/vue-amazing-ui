@@ -20,12 +20,12 @@ const sponsorType = ref('WeChat')
 const QRCodes = [
   {
     src: WeChat,
-    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/wechat.jpg',
+    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/wechat.jpg',
     name: 'WeChat'
   },
   {
     src: Alipay,
-    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.8/alipay.jpg',
+    // src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/alipay.jpg',
     name: 'Alipay'
   }
 ]
