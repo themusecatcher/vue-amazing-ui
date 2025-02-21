@@ -31,10 +31,6 @@ const alignProperties = {
   stretch: 'stretch'
 }
 const viewportWidth = ref(window.innerWidth)
-function getViewportWidth() {
-  viewportWidth.value = window.innerWidth
-}
-useEventListener(window, 'resize', getViewportWidth)
 const xGap = computed(() => {
   if (typeof props.gutter === 'number') {
     return props.gutter
@@ -65,23 +61,27 @@ const rowWidth = computed(() => {
   }
   return props.width
 })
-function getResponsiveGap(gutter: any) {
-  if (viewportWidth.value >= 1600 && gutter.xxl) {
+useEventListener(window, 'resize', getViewportWidth)
+function getViewportWidth() {
+  viewportWidth.value = window.innerWidth
+}
+function getResponsiveGap(gutter: Responsive) {
+  if (viewportWidth.value >= 1600 && gutter.xxl !== undefined) {
     return gutter.xxl
   }
-  if (viewportWidth.value >= 1200 && gutter.xl) {
+  if (viewportWidth.value >= 1200 && gutter.xl !== undefined) {
     return gutter.xl
   }
-  if (viewportWidth.value >= 992 && gutter.lg) {
+  if (viewportWidth.value >= 992 && gutter.lg !== undefined) {
     return gutter.lg
   }
-  if (viewportWidth.value >= 768 && gutter.md) {
+  if (viewportWidth.value >= 768 && gutter.md !== undefined) {
     return gutter.md
   }
-  if (viewportWidth.value >= 576 && gutter.sm) {
+  if (viewportWidth.value >= 576 && gutter.sm !== undefined) {
     return gutter.sm
   }
-  if (viewportWidth.value < 576 && gutter.xs) {
+  if (viewportWidth.value < 576 && gutter.xs !== undefined) {
     return gutter.xs
   }
   return 0

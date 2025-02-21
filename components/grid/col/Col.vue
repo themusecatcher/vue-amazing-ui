@@ -25,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
   xl: undefined,
   xxl: undefined
 })
+const viewportWidth = ref(window.innerWidth)
 const flexValue = computed(() => {
   if (typeof props.flex === 'number') {
     return `${props.flex} ${props.flex} auto`
@@ -59,14 +60,9 @@ const responsiveProperties = computed(() => {
     }
   ]
 })
-const viewportWidth = ref(window.innerWidth)
-function getViewportWidth() {
-  viewportWidth.value = window.innerWidth
-}
-useEventListener(window, 'resize', getViewportWidth)
 const responsiveValue = computed(() => {
   for (const responsive of responsiveProperties.value) {
-    if (responsive.value && viewportWidth.value >= responsive.width) {
+    if (responsive.value !== undefined && viewportWidth.value >= responsive.width) {
       if (typeof responsive.value === 'object') {
         return {
           span: responsive.value.span || props.span,
@@ -85,6 +81,10 @@ const responsiveValue = computed(() => {
     offset: props.offset
   }
 })
+useEventListener(window, 'resize', getViewportWidth)
+function getViewportWidth() {
+  viewportWidth.value = window.innerWidth
+}
 </script>
 <template>
   <div
