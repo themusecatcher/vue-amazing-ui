@@ -16,7 +16,7 @@
 
 ## 特性
 
-- 组件库采用 `Vue@3.5.13`+ `TypeScript@5.7.3` + `Vite@6.1.0` + `Less@4.2.2` 实现
+- 组件库采用 `Vue@3.5.13`+ `TypeScript@5.7.3` + `Vite@6.1.1` + `Less@4.2.2` 实现
 - 目前共包含 `65` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
