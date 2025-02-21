@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.2.7 <Tag color="volcano" size="small">2025-02-21</Tag>
+
+- 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html)、[描述列表 Descriptions](https://themusecatcher.github.io/vue-amazing-ui/guide/components/descriptions.html)、[栅格 Grid](https://themusecatcher.github.io/vue-amazing-ui/guide/components/grid.html) 响应式相关组件代码
+
 ## 2.2.6 <Tag color="volcano" size="small">2025-02-19</Tag>
 
 - 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，预览时新增下载图片操作；新增 `disabled` `previewImageStyle` 属性，支持：禁用图片预览功能；自定义预览图片时 `img` 元素的样式
