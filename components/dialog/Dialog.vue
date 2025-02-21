@@ -90,25 +90,25 @@ const dialogStyle = computed(() => {
       return {
         width: '100%',
         transformOrigin: `${mousePosition.value?.x}px ${mousePosition.value?.y}px`
-      }
+      } as CSSProperties
     } else {
       return {
         width: '100%',
         transformOrigin: transformOrigin.value
-      }
+      } as CSSProperties
     }
   } else {
     if (props.centered) {
       return {
         width: dialogWidth.value,
         transformOrigin: transformOrigin.value
-      }
+      } as CSSProperties
     } else {
       return {
         width: dialogWidth.value,
         transformOrigin: transformOrigin.value,
         top: dialogTop.value
-      }
+      } as CSSProperties
     }
   }
 })
@@ -117,12 +117,12 @@ const dialogBodyStyle = computed(() => {
     return {
       height: '100vh',
       ...props.bodyStyle
-    }
+    } as CSSProperties
   } else {
     return {
       height: dialogHeight.value,
       ...props.bodyStyle
-    }
+    } as CSSProperties
   }
 })
 watch(
