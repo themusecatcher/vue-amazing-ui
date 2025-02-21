@@ -60,6 +60,39 @@ const hasSider = computed(() => {
     margin-top: -0.1px;
     padding-top: 0.1px;
   }
+  :deep(.layout-sider-zero-width-trigger) {
+    position: absolute;
+    top: 64px;
+    right: -40px;
+    z-index: 1;
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #001529;
+    border-start-start-radius: 0;
+    border-start-end-radius: 6px;
+    border-end-end-radius: 6px;
+    border-end-start-radius: 0;
+    cursor: pointer;
+    transition: background 0.3s;
+    &::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: transparent;
+      transition: all 0.3s;
+      content: "";
+    }
+    &:hover::after {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
   :deep(.layout-sider-trigger) {
     // position: fixed;
     position: sticky;

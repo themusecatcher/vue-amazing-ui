@@ -75,8 +75,8 @@ const selectedKeys7 = ref<string[]>(['4'])
 const selectedKeys8 = ref<string[]>(['4'])
 const selectedKeys9 = ref<string[]>(['2'])
 const openKeys = ref<string[]>(['sub1'])
-const collapsed = ref<boolean>(false)
-const onCollapse = (collapsed: boolean, type: string) => {
+const collapsed = ref<boolean>(true)
+const onCollapse = (collapsed: boolean, type: 'responsiveBreakpoint' | 'clickTrigger') => {
   console.log('collapse', collapsed, type)
 }
 const onBreakpoint = (broken: boolean) => {
@@ -85,7 +85,7 @@ const onBreakpoint = (broken: boolean) => {
 </script>
 <template>
   <div>
-    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Flex vertical :gap="48">
       <Layout>
@@ -422,19 +422,19 @@ const onBreakpoint = (broken: boolean) => {
           Vue Amazing UI ©2023 Created by the Muse Catcher
         </LayoutFooter>
       </Layout>
-    </Layout> -->
+    </Layout>
     <h2 class="mt30 mb10">响应式触发收起</h2>
     <h3 class="mb10">通过配置 breakpoint 属性，当视窗宽度小于 breakpoint 时 Sider 缩小为对应的 collapsedWidth 宽度，若将 collapsedWidth 设置为 0，会出现特殊 trigger</h3>
-    <Layout>
+    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047;">
       <LayoutSider
         v-model:collapsed="collapsed"
         collapsible
-        breakpoint="lg"
-        :collapsed-width="{ lg: 0 }"
+        breakpoint="xl"
+        :collapsed-width="0"
         @collapse="onCollapse"
         @breakpoint="onBreakpoint"
       >
-        <div class="logo" />
+        <div class="logo-1" />
         <a-menu v-model:selectedKeys="selectedKeys7" theme="dark" mode="inline" :inline-collapsed="collapsed">
           <a-menu-item key="1">
             <user-outlined />
@@ -456,52 +456,15 @@ const onBreakpoint = (broken: boolean) => {
       </LayoutSider>
       <Layout>
         <LayoutHeader :style="{ background: '#fff', padding: 0 }" />
-        <LayoutCntent :style="{ margin: '24px 16px 0' }">
+        <LayoutContent :style="{ margin: '24px 16px 0' }">
           <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">content</div>
-        </LayoutCntent>
+        </LayoutContent>
         <LayoutFooter style="text-align: center">
           Vue Amazing UI ©2023 Created by the Muse Catcher
         </LayoutFooter>
       </Layout>
     </Layout>
-    <a-layout>
-      <a-layout-sider
-        collapsible
-        :collapsed-width="0"
-        @collapse="onCollapse"
-        @breakpoint="onBreakpoint"
-      >
-        <div class="logo" />
-        <a-menu v-model:selectedKeys="selectedKeys7" theme="dark" mode="inline">
-          <a-menu-item key="1">
-            <user-outlined />
-            <span class="nav-text">nav 1</span>
-          </a-menu-item>
-          <a-menu-item key="2">
-            <video-camera-outlined />
-            <span class="nav-text">nav 2</span>
-          </a-menu-item>
-          <a-menu-item key="3">
-            <upload-outlined />
-            <span class="nav-text">nav 3</span>
-          </a-menu-item>
-          <a-menu-item key="4">
-            <user-outlined />
-            <span class="nav-text">nav 4</span>
-          </a-menu-item>
-        </a-menu>
-      </a-layout-sider>
-      <a-layout>
-        <a-layout-header :style="{ background: '#fff', padding: 0 }" />
-        <a-layout-content :style="{ margin: '24px 16px 0' }">
-          <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">content</div>
-        </a-layout-content>
-        <a-layout-footer style="text-align: center">
-          Ant Design ©2018 Created by Ant UED
-        </a-layout-footer>
-      </a-layout>
-    </a-layout>
-    <!-- <h2 class="mt30 mb10">固定侧边栏</h2>
+    <h2 class="mt30 mb10">固定侧边栏</h2>
     <h3 class="mb10">当内容较长时，使用固定侧边栏可以提供更好的体验</h3>
     <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047;">
       <Layout>
@@ -674,7 +637,7 @@ const onBreakpoint = (broken: boolean) => {
           Vue Amazing UI ©2023 Created by the Muse Catcher
         </LayoutFooter>
       </Layout>
-    </div> -->
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
