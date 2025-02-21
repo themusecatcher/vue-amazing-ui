@@ -127,7 +127,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   }
   if (componentName === 'Swiper') {
     // 特殊处理 Swiper 组件样式依赖文件
-    sideEffects.push(`vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.2/node_modules/swiper/swiper.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.4/node_modules/swiper/swiper.css`)
     const swiperModulesStyle = [
       'navigation',
       'pagination',
@@ -139,7 +139,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
     ]
     swiperModulesStyle.forEach((moduleName) => {
       sideEffects.push(
-        `vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.2/node_modules/swiper/modules/${moduleName}.css`
+        `vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.4/node_modules/swiper/modules/${moduleName}.css`
       )
     })
   }
