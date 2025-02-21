@@ -14,7 +14,7 @@ import Avatar1 from '/avatar_1.jpeg'
 import Avatar2 from '/avatar_2.jpg'
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 const sponsorItem = {
-  title: '如果您觉得 Vue Amazing UI 有用，对您有帮助，可以对作者表示下支持，非常感谢 ❤️🙏❤️'
+  title: '如果觉得 Vue Amazing UI 有用、有趣，或者对您有帮助，欢迎对作者表示下支持，非常感谢 ❤️🙏❤️'
 }
 const sponsorOptions = ['WeChat', 'Alipay']
 const sponsorType = ref('WeChat')
