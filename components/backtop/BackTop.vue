@@ -94,11 +94,14 @@ function updateScrollTop(e: Event) {
 function observeScroll() {
   cleanup()
   if (props.listenTo === undefined) {
-    scrollTarget.value = getScrollParent(backtopRef.value?.parentElement ?? null)
+    scrollTarget.value = getScrollParent(backtopRef.value)
   } else if (typeof props.listenTo === 'string') {
     scrollTarget.value = document.getElementsByTagName(props.listenTo)[0] as HTMLElement
   } else if (props.listenTo instanceof HTMLElement) {
     scrollTarget.value = props.listenTo
+  }
+  if (!scrollTarget.value) {
+    console.warn('Container of back-top element is not found.')
   }
   scrollTarget.value && scrollTarget.value.addEventListener('scroll', updateScrollTop)
   if (scrollTarget.value === document.documentElement) {
@@ -120,21 +123,24 @@ function appendBackTop() {
   }
   targetElement.value && targetElement.value?.appendChild(backtopRef.value!) // 保证 backtop 节点只存在一个
 }
+function getParentElement(el: HTMLElement): HTMLElement | null {
+  // Document
+  if (el === document.documentElement) return null
+  return el.parentElement
+}
 function getScrollParent(el: HTMLElement | null): HTMLElement | null {
+  if (el === null) return null
+  const parentElement = getParentElement(el)
+  if (parentElement === null) return null
+  // Document
+  if (parentElement === document.documentElement) return document.documentElement
   const isScrollable = (el: HTMLElement): boolean => {
-    const style = window.getComputedStyle(el)
-    if (
-      el.scrollHeight > el.clientHeight &&
-      (['scroll', 'auto'].includes(style.overflowY) || el === document.documentElement)
-    ) {
-      return true
-    }
-    return false
+    const { overflow, overflowX, overflowY } = getComputedStyle(el)
+    return /(auto|scroll|overlay)/.test(overflow + overflowY + overflowX)
   }
-  if (el) {
-    return isScrollable(el) ? el : getScrollParent(el.parentElement ?? null)
-  }
-  return null
+  // Element
+  if (isScrollable(parentElement)) return parentElement
+  return getScrollParent(parentElement)
 }
 function onBackTop() {
   scrollTarget.value &&
