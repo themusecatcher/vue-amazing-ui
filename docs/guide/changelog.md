@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.2.9 <Tag color="volcano" size="small">2025-02-24</Tag>
+
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件的类型定义，获取更好的类型提示
+
 ## 2.2.8 <Tag color="volcano" size="small">2025-02-22</Tag>
 
 - 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件自动查找可滚动祖先节点相关代码逻辑，修复在某些情况下无法自动找到可滚动祖先节点的问题
