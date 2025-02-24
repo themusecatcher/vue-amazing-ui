@@ -1,4 +1,4 @@
-// node_modules/.pnpm/swiper@11.2.2/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@11.2.4/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === "object" && "constructor" in obj && obj.constructor === Object;
 }
@@ -9,7 +9,8 @@ function extend(target, src) {
   if (src === void 0) {
     src = {};
   }
-  Object.keys(src).forEach((key) => {
+  const noExtend = ["__proto__", "constructor", "prototype"];
+  Object.keys(src).filter((key) => noExtend.indexOf(key) < 0).forEach((key) => {
     if (typeof target[key] === "undefined") target[key] = src[key];
     else if (isObject(src[key]) && isObject(target[key]) && Object.keys(src[key]).length > 0) {
       extend(target[key], src[key]);
@@ -147,7 +148,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@11.2.2/node_modules/swiper/shared/utils.mjs
+// node_modules/.pnpm/swiper@11.2.4/node_modules/swiper/shared/utils.mjs
 function classesToTokens(classes) {
   if (classes === void 0) {
     classes = "";
@@ -331,14 +332,13 @@ function elementChildren(element, selector) {
   return children.filter((el) => el.matches(selector));
 }
 function elementIsChildOfSlot(el, slot) {
-  var _a, _b;
   const elementsQueue = [slot];
   while (elementsQueue.length > 0) {
     const elementToCheck = elementsQueue.shift();
     if (el === elementToCheck) {
       return true;
     }
-    elementsQueue.push(...elementToCheck.children, ...((_a = elementToCheck.shadowRoot) == null ? void 0 : _a.children) || [], ...((_b = elementToCheck.assignedElements) == null ? void 0 : _b.call(elementToCheck)) || []);
+    elementsQueue.push(...elementToCheck.children, ...elementToCheck.shadowRoot ? elementToCheck.shadowRoot.children : [], ...elementToCheck.assignedElements ? elementToCheck.assignedElements() : []);
   }
 }
 function elementIsChildOf(el, parent) {
@@ -490,4 +490,4 @@ export {
   makeElementsArray,
   getRotateFix
 };
-//# sourceMappingURL=chunk-QZD24K7O.js.map
+//# sourceMappingURL=chunk-GBDU6TAK.js.map
