@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, h, watchEffect } from 'vue'
+import { FireFilled } from '@ant-design/icons-vue'
 const singleValue = ref<number>(20)
 const smallSingleValue = ref<number>(0.5)
 const singleCustomValue = ref<number>(0)
@@ -15,7 +16,8 @@ const marks = ref<Record<number, any>>({
     style: {
       color: '#f50',
     },
-    label: '100°C',
+    // label: '100°C'
+    label: h(FireFilled)
   }
 })
 const singleCustomStepValue = ref<number>(30)
@@ -89,8 +91,24 @@ function formatter(value: number) {
     </Flex> -->
     <h2 class="mt30 mb10">自定义刻度标记</h2>
     <Flex vertical gap="large">
-      <Slider v-model:value="markSingleValue" :marks="marks" />
-      <a-slider v-model:value="markSingleValue" :min="0" :max="100" :marks="marks" />
+      <!-- <a-slider v-model:value="markSingleValue" :marks="marks">
+        <template #mark="{ label, point }">
+          <template v-if="point === 100">
+            <strong>{{ label }}</strong>
+          </template>
+          <template v-else>{{ label }}</template>
+        </template>
+      </a-slider> -->
+      <!-- <Slider v-model:value="markSingleValue" :marks="marks">
+        <template #mark="{ label, value }">
+          <template v-if="value === 100">
+            <strong>{{ label }}</strong>
+          </template>
+          <template v-else>{{ label }}</template>
+        </template>
+      </Slider> -->
+      <!-- <Slider v-model:value="markSingleValue" :marks="marks" />
+      <a-slider v-model:value="markSingleValue" :min="0" :max="100" :marks="marks" /> -->
       <Slider range v-model:value="markDoubleValue" :marks="marks" />
       <a-slider range v-model:value="markDoubleValue" :min="0" :max="100" :marks="marks" />
     </Flex>
@@ -103,8 +121,8 @@ function formatter(value: number) {
     <Space :gap="36" style="height: 300px">
       <!-- <Slider vertical v-model:value="singleValue" />
       <Slider range vertical v-model:value="doubleValue" /> -->
-      <Slider vertical v-model:value="markSingleValue" :marks="marks" />
-      <a-slider vertical v-model:value="markSingleValue" :marks="marks" />
+      <!-- <Slider vertical v-model:value="markSingleValue" :marks="marks" />
+      <a-slider vertical v-model:value="markSingleValue" :marks="marks" /> -->
     </Space>
     <!-- <h2 class="mt30 mb10">带输入框的滑块</h2>
     <Row :gutter="[24, 16]">

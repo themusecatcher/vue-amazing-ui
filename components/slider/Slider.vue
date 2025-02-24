@@ -106,7 +106,7 @@ const highHandleStyle = computed(() => {
 })
 const marksDot = computed(() => {
   let dots: number[] = []
-  if (JSON.stringify(props.marks) !== '{}') {
+  if (Object.keys(props.marks).length > 0) {
     dots = Object.keys(props.marks).map(parseFloat).sort((a, b) => a - b)
   }
   return dots
@@ -387,10 +387,13 @@ function isDotActive(value: number) {
   }
   return value <= (sliderValue.value as number)
 }
-function getMarkText(value: number) {
+function getMarkLabel(value: number) {
   const mark = typeof props.marks[value] === 'function' ? props.marks[value]() : props.marks[value]
   const markIsObject = typeof mark === 'object' && !isVNode(mark)
   let markLabel = markIsObject ? mark.label : mark
+  if (markIsObject) {
+    console.log('mark', typeof mark.label, isVNode(mark.label))
+  }
   if (!markLabel) return null
   return markLabel
 }
@@ -503,7 +506,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     :class="{
       'slider-horizontal': !vertical,
       'slider-vertical': vertical,
-      'slider-with-marks': JSON.stringify(marks) !== '{}',
+      'slider-with-marks': Object.keys(marks).length > 0,
       'slider-disabled': disabled
     }"
     :style="[
@@ -525,7 +528,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   >
     <div class="slider-rail"></div>
     <div class="slider-track" :style="trackStyle"></div>
-    <template v-if="JSON.stringify(marks) !== '{}'">
+    <template v-if="Object.keys(marks).length > 0">
       <div class="slider-dots">
         <span
           class="slider-dot"
@@ -541,7 +544,12 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
           :style="getMarkStyle(markValue)"
           v-for="(markValue, index) in marksDot" :key="index"
           @click.stop="onClickMark(markValue)"
-        >{{ getMarkText(markValue) }}</span>
+        >
+          <slot name="mark" :label="getMarkLabel(markValue)" :isVNode="isVNode(getMarkLabel(markValue))" :value="markValue">
+            <component v-if="isVNode(getMarkLabel(markValue))" :is="getMarkLabel(markValue)"/>
+            <template v-else>{{ getMarkLabel(markValue) }}</template>
+          </slot>
+        </span>
       </div>
     </template>
     <div
