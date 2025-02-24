@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, isVNode } from 'vue'
+import type { VNode, CSSProperties } from 'vue'
 import { useResizeObserver } from 'components/utils'
+export type Marks = { [markValue: number]: string | VNode | { style: CSSProperties, label: string | VNode } | (() => VNode) }
 export interface Props {
   width?: string | number // 滑动输入条宽度，单位 px，水平模式时生效
   height?: string | number // 滑动输入条高度，单位 px，垂直模式时生效
   vertical?: boolean // 是否启用垂直模式
   min?: number // 最小值
   max?: number // 最大值
+  marks?: Marks // 刻度标记，key 的类型必须为 number 且取值在闭区间 [min, max] 内，每个标签可以单独设置样式
   disabled?: boolean // 是否禁用
   range?: boolean // 是否使用双滑块模式
   step?: number // 步长，取值必须大于 0，并且可被 (max - min) 整除
@@ -20,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   min: 0,
   max: 100,
+  marks: () => ({}),
   disabled: false,
   range: false,
   step: 1,
@@ -27,11 +31,11 @@ const props = withDefaults(defineProps<Props>(), {
   tooltip: true,
   value: 0
 })
-const sliderRef = ref() // slider DOM 引用
-const sliderWidth = ref() // 滑动输入条宽度
-const sliderHeight = ref() // 滑动输入条高度
-const low = ref(0) // 左/下滑块距离滑动条左/上端的距离
-const high = ref(0) // 右/上滑动距离滑动条左/上端的距离
+const sliderRef = ref() // slider 模板引用
+const sliderWidth = ref<number>(0) // 滑动输入条宽度
+const sliderHeight = ref<number>(0) // 滑动输入条高度
+const low = ref<number>(0) // 左/下滑块距离滑动条左/上端的距离
+const high = ref<number>(0) // 右/上滑动距离滑动条左/上端的距离
 const lowHandleRef = ref() // low handle DOM 引用
 const lowTooltipRef = ref() // low tooltip DOM 引用
 const highHandleRef = ref() // high handle DOM 引用
@@ -100,11 +104,19 @@ const highHandleStyle = computed(() => {
     }
   }
 })
+const marksDot = computed(() => {
+  let dots: number[] = []
+  if (JSON.stringify(props.marks) !== '{}') {
+    dots = Object.keys(props.marks).map(parseFloat).sort((a, b) => a - b)
+  }
+  return dots
+})
+// 获取 step 数值精度
 const precision = computed(() => {
-  // 获取 step 数值精度
   const strNumArr = props.step.toString().split('.')
   return strNumArr[1]?.length ?? 0
 })
+// 滑动输入条的值（通过 handle 位置计算得出）
 const sliderValue = computed(() => {
   let highValue
   if (high.value === sliderSize.value) {
@@ -124,7 +136,7 @@ const sliderValue = computed(() => {
   }
   return highValue
 })
-const lowTooltipValue = computed(() => {
+  const lowTooltipValue = computed(() => {
   if (props.range) {
     return props.formatTooltip((sliderValue.value as number[])[0])
   }
@@ -139,38 +151,51 @@ const highTooltipValue = computed(() => {
 watch(
   () => [props.min, props.max, props.step, props.vertical, props.value],
   () => {
-    getSliderPosition()
+    updateSliderPosition()
   },
   {
-    deep: true
+    deep: true,
+    flush: 'post'
   }
 )
 watch(sliderValue, (to) => {
-  emits('update:value', to)
-  emits('change', to)
+  if (JSON.stringify(to) !== JSON.stringify(props.value)) {
+    emits('update:value', to)
+    emits('change', to)
+  }
 })
 useResizeObserver(sliderRef, () => {
   getSliderSize()
-  getSliderPosition()
-})
-onMounted(() => {
-  getSliderSize()
-  getSliderPosition()
 })
 function getSliderSize() {
   sliderWidth.value = sliderRef.value.offsetWidth
   sliderHeight.value = sliderRef.value.offsetHeight
+  updateSliderPosition()
 }
-function getSliderPosition() {
+// 更新双滑块时的下/左滑块位置
+function updateLowHandlePosition(value: number) {
+  const lowValue = pixelStepOperation((checkLow(value) - props.min) / props.step, '*')
+  low.value = fixedDigit(lowValue, 2)
+}
+// 更新双滑块时的上/右滑块位置
+function updateHighHandlePosition(value: number) {
+  const highValue = pixelStepOperation((checkHigh(value) - props.min) / props.step, '*')
+  high.value = fixedDigit(highValue, 2)
+}
+// 更新单滑块的滑块位置
+function updateSingleHandlePosition(value: number) {
+  const highValue = pixelStepOperation((checkValue(value) - props.min) / props.step, '*')
+  high.value = fixedDigit(highValue, 2)
+}
+// 通过 sliderValue 计算滑块位置
+function updateSliderPosition() {
   if (props.range) {
     // 双滑块模式
-    const lowValue = pixelStepOperation((checkLow((props.value as number[])[0]) - props.min) / props.step, '*')
-    low.value = fixedDigit(lowValue, 2)
-    const highValue = pixelStepOperation((checkHigh((props.value as number[])[1]) - props.min) / props.step, '*')
-    high.value = fixedDigit(highValue, 2)
+    updateLowHandlePosition((props.value as number[])[0])
+    updateHighHandlePosition((props.value as number[])[1])
   } else {
-    const highValue = pixelStepOperation((checkValue(props.value as number) - props.min) / props.step, '*')
-    high.value = fixedDigit(highValue, 2)
+    // 单滑块模式
+    updateSingleHandlePosition((props.value as number))
   }
 }
 function checkLow(value: number): number {
@@ -206,6 +231,7 @@ function handlerFocus(handler: HTMLElement, tooltip: HTMLElement) {
     tooltip.classList.add('show-handle-tooltip')
   }
 }
+// 点击滑动输入条任意位置
 function onClickSliderPoint(e: MouseEvent) {
   let targetDistance // 目标移动距离
   if (!props.vertical) {
@@ -343,6 +369,77 @@ function handleHighMouseUp() {
   document.removeEventListener('mousemove', handleHighMouseMove)
   document.removeEventListener('mouseup', handleHighMouseUp)
 }
+function getDotStyle(value: number) {
+  const offset = `${Math.abs(value - props.min) / (props.max - props.min) * 100}%`
+  if (!props.vertical) {
+    return {
+      left: offset
+    }
+  } else {
+    return {
+      bottom: offset
+    }
+  }
+}
+function isDotActive(value: number) {
+  if (props.range) {
+    return (sliderValue.value as number[])[0] <= value && value <= (sliderValue.value as number[])[1]
+  }
+  return value <= (sliderValue.value as number)
+}
+function getMarkText(value: number) {
+  const mark = typeof props.marks[value] === 'function' ? props.marks[value]() : props.marks[value]
+  const markIsObject = typeof mark === 'object' && !isVNode(mark)
+  let markLabel = markIsObject ? mark.label : mark
+  if (!markLabel) return null
+  return markLabel
+}
+function getMarkStyle(value: number) {
+  const offset = `${Math.abs(value - props.min) / (props.max - props.min) * 100}%`
+  let markLabelStyle = {}
+  const mark = typeof props.marks[value] === 'function' ? props.marks[value]() : props.marks[value]
+  const markIsObject = typeof mark === 'object' && !isVNode(mark)
+  if (markIsObject && 'style' in mark) {
+    markLabelStyle = mark.style
+  }
+  if (!props.vertical) {
+    return {
+      transform: 'translateX(-50%)',
+      left: offset,
+      ...markLabelStyle
+    }
+  } else {
+    return {
+      transform: 'translateY(50%)',
+      bottom: offset,
+      ...markLabelStyle
+    }
+  }
+}
+function onClickMark(value: number) {
+  if (props.range) {
+    // 双滑块模式
+    if (value <= (sliderValue.value as number[])[0]) {
+      updateLowHandlePosition(value)
+      handlerFocus(lowHandleRef.value, lowTooltipRef.value)
+    } else if (value >= (sliderValue.value as number[])[1]) {
+      updateHighHandlePosition(value)
+      handlerFocus(highHandleRef.value, highTooltipRef.value)
+    } else {
+      if (value - (sliderValue.value as number[])[0] < (sliderValue.value as number[])[1] - value) {
+        updateLowHandlePosition(value)
+        handlerFocus(lowHandleRef.value, lowTooltipRef.value)
+      } else {
+        updateHighHandlePosition(value)
+        handlerFocus(highHandleRef.value, highTooltipRef.value)
+      }
+    }
+  } else {
+    // 单滑块模式
+    updateSingleHandlePosition(value)
+    handlerFocus(highHandleRef.value, highTooltipRef.value)
+  }
+}
 function handleLowSlide(source: number, place: string) {
   const targetDistance = pixelStepOperation(source, '-')
   if (place === 'low') {
@@ -406,6 +503,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     :class="{
       'slider-horizontal': !vertical,
       'slider-vertical': vertical,
+      'slider-with-marks': JSON.stringify(marks) !== '{}',
       'slider-disabled': disabled
     }"
     :style="[
@@ -427,6 +525,25 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   >
     <div class="slider-rail"></div>
     <div class="slider-track" :style="trackStyle"></div>
+    <template v-if="JSON.stringify(marks) !== '{}'">
+      <div class="slider-dots">
+        <span
+          class="slider-dot"
+          :class="{ 'slider-dot-active': isDotActive(markValue) }"
+          :style="getDotStyle(markValue)"
+          v-for="(markValue, index) in marksDot" :key="index"
+        ></span>
+      </div>
+      <div class="slider-marks">
+        <span
+          class="slider-mark"
+          :class="{ 'slider-mark-active': isDotActive(markValue) }"
+          :style="getMarkStyle(markValue)"
+          v-for="(markValue, index) in marksDot" :key="index"
+          @click.stop="onClickMark(markValue)"
+        >{{ getMarkText(markValue) }}</span>
+      </div>
+    </template>
     <div
       v-if="range"
       tabindex="0"
@@ -483,6 +600,40 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     border-radius: 2px;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  .slider-dots {
+    position: absolute;
+    background: transparent;
+    pointer-events: none;
+    .slider-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: #ffffff;
+      border: 2px solid #f0f0f0;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .slider-dot-active {
+      border-color: #91caff;
+    }
+  }
+  .slider-marks {
+    position: absolute;
+    font-size: 14px;
+    .slider-mark {
+      position: absolute;
+      display: inline-block;
+      color: rgba(0, 0, 0, 0.45);
+      text-align: center;
+      word-break: keep-all;
+      cursor: pointer;
+      user-select: none;
+    }
+    .slider-mark-active {
+      color: rgba(0, 0, 0, 0.88);
+    }
+  }
   &:hover {
     .slider-rail {
       // 灰色轨道悬浮色
@@ -491,6 +642,14 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     .slider-track {
       // 蓝色轨道悬浮色
       background: var(--track-color-hover);
+    }
+    .slider-dots {
+      .slider-dot {
+        border-color: var(--rail-color-hover);
+      }
+      .slider-dot-active {
+        border-color: var(--track-color-hover);
+      }
     }
   }
   .slider-handle {
@@ -605,6 +764,22 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   .slider-track {
     height: 4px;
   }
+  .slider-dots {
+    left: 0;
+    top: 4px;
+    width: 100%;
+    height: 4px;
+    .slider-dot {
+      margin-left: -4px;
+      position: absolute;
+      top: -2px;
+    }
+  }
+  .slider-marks {
+    left: 0;
+    top: 14px;
+    width: 100%;
+  }
   .slider-handle {
     top: 50%;
     .handle-tooltip {
@@ -629,6 +804,9 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     }
   }
 }
+.slider-horizontal.slider-with-marks {
+  margin-bottom: 30px;
+}
 .slider-vertical {
   padding-inline: 4px;
   width: 12px;
@@ -639,6 +817,22 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   }
   .slider-track {
     width: 4px;
+  }
+  .slider-dots {
+    left: 4px;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    .slider-dot {
+      margin-bottom: -4px;
+      position: absolute;
+      left: -2px;
+    }
+  }
+  .slider-marks {
+    left: 18px;
+    top: 0;
+    height: 100%;
   }
   .slider-handle {
     left: 50%;
@@ -689,5 +883,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       background: var(--track-color-disabled);
     }
   }
+}
+.slider-vertical.slider-with-marks {
+  margin-right: 36px;
 }
 </style>
