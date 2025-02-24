@@ -10,6 +10,7 @@ import { HeartFilled, WechatOutlined, AlipayOutlined } from '@ant-design/icons-v
 import { useMediaQuery } from 'vue-amazing-ui'
 import WeChat from '/wechat.jpg'
 import Alipay from '/alipay.jpg'
+import Avatar0 from '/avatar.png'
 import Avatar1 from '/avatar_1.jpeg'
 import Avatar2 from '/avatar_2.jpg'
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
@@ -157,7 +158,7 @@ const QRCodes = [
         @themusecatcher
       </div>
     </template>
-    <Avatar :size="36" src="https://github.com/themusecatcher.png" href="https://github.com/themusecatcher" target="_blank" />
+    <Avatar :size="36" :src="Avatar0" href="https://github.com/themusecatcher" target="_blank" />
   </Tooltip>
   <Tooltip>
     <template #tooltip>
