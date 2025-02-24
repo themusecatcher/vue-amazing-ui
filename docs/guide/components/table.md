@@ -74,13 +74,13 @@ const rowSelection = reactive<TableSelection>({
   hideSelectAll: false,
   type: 'checkbox',
   selectedRowKeys: ['3'],
-  onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
+  onChange: (selectedRowKeys: string[], selectedRows: Record<string, any>[]) => {
     console.log('onChange')
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('selectedRows', selectedRows)
     rowSelection.selectedRowKeys = selectedRowKeys
   },
-  onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
+  onSelect: (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => {
     console.log('onSelect')
     console.log('record', record)
     console.log('selected', selected)
@@ -89,8 +89,8 @@ const rowSelection = reactive<TableSelection>({
   },
   onSelectAll: (
     selected: boolean,
-    selectedRows: any[],
-    changeRows: any[],
+    selectedRows: Record<string, any>[],
+    changeRows: Record<string, any>[],
     selectedRowKeys: string[],
     changeRowKeys: string[]
   ) => {
@@ -101,7 +101,7 @@ const rowSelection = reactive<TableSelection>({
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('changeRowKeys', changeRowKeys)
   },
-  getSelectionProps: (record: any) => ({
+  getSelectionProps: (record: Record<string, any>) => ({
     disabled: record.key === '5',
     name: record.name
   })
@@ -215,7 +215,7 @@ const columnsEllipsis = reactive<TableColumn[]>([
     ellipsis: true
   }
 ])
-const sharedOnCell = (record: any, index: number) => {
+const sharedOnCell = (record: Record<string, any>, index: number) => {
   if (index === 4) {
     return { colSpan: 0 }
   }
@@ -224,7 +224,7 @@ const columnsMerge = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
-    customCell: (record: any, index: number) => {
+    customCell: (record: Record<string, any>, index: number) => {
       return {
         colSpan: index < 4 ? 1 : 5
       }
@@ -239,7 +239,7 @@ const columnsMerge = reactive<TableColumn[]>([
     title: 'Home phone',
     colSpan: 2,
     dataIndex: 'tel',
-    customCell: (record: any, index: number) => {
+    customCell: (record: Record<string, any>, index: number) => {
       if (index === 2) {
         return { rowSpan: 2 }
       }
@@ -256,7 +256,7 @@ const columnsMerge = reactive<TableColumn[]>([
     title: 'Phone',
     colSpan: 0,
     dataIndex: 'phone',
-    customCell: (record: any, index: number) => {
+    customCell: (record: Record<string, any>, index: number) => {
       if (index === 1) {
         return { rowSpan: 3 }
       }
@@ -407,7 +407,7 @@ const columnsHeaderGroup = reactive<TableColumn[]>([
         dataIndex: 'age',
         key: 'age',
         width: 200,
-        sorter: (a: any, b: any) => a.age - b.age
+        sorter: (a: Record<string, number>, b: Record<string, number>) => a.age - b.age
       },
       {
         title: 'Address',
@@ -468,19 +468,19 @@ const columnsSort = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
-    sorter: (a: any, b: any) => a.name.length - b.name.length,
+    sorter: (a: Record<string, string>, b: Record<string, string>) => a.name.length - b.name.length,
     sortDirections: ['descend']
   },
   {
     title: 'Age',
     dataIndex: 'age',
     defaultSortOrder: 'descend',
-    sorter: (a: any, b: any) => a.age - b.age
+    sorter: (a: Record<string, number>, b: Record<string, number>) => a.age - b.age
   },
   {
     title: 'Address',
     dataIndex: 'address',
-    sorter: (a: any, b: any) => a.address.length - b.address.length,
+    sorter: (a: Record<string, string>, b: Record<string, string>) => a.address.length - b.address.length,
     sortDirections: ['descend', 'ascend']
   }
 ])
@@ -558,7 +558,7 @@ const dataSourceCustomStyle = ref([
     address: 'Tel Aviv, Israel'
   }
 ])
-const rowClassName = (record: any, rowIndex: number) => {
+const rowClassName = (record: Record<string, any>, rowIndex: number) => {
   if (record.age > 30) {
     return 'older-row'
   } else if (rowIndex % 2 === 1) {
@@ -695,7 +695,7 @@ const dataSourceCellEditable = ref([
     address: 'London, Park Lane no. 2'
   }
 ])
-const data: any[] = []
+const data: Record<string, any>[] = []
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
@@ -704,7 +704,7 @@ for (let i = 0; i < 100; i++) {
     address: `London, Park Lane no. ${i}`
   })
 }
-const dataSourceRowEditable = ref<any[]>(data.slice(0, 10))
+const dataSourceRowEditable = ref<Record<string, any>[]>(data.slice(0, 10))
 const dataSourceExpandable = ref([
   {
     key: '1',
@@ -810,7 +810,7 @@ function onChange(page: number, pageSize: number) {
   queryParams.pageSize = pageSize
   getData()
 }
-const cellEditableData = reactive<any>({})
+const cellEditableData = reactive<Record<string, any>>({})
 const handleCellAdd = () => {
   const count = dataSourceCellEditable.value.length
   const newData = {
@@ -831,7 +831,7 @@ const handleCellSave = (key: string) => {
 const handleCellDelete = (key: string) => {
   dataSourceCellEditable.value = dataSourceCellEditable.value.filter((item) => item.key !== key)
 }
-const rowEditableData = reactive<any>({})
+const rowEditableData = reactive<Record<string, any>>({})
 const handleRowEdit = (key: string) => {
   rowEditableData[key] = dataSourceRowEditable.value.filter((item) => key === item.key)[0]
 }
@@ -853,14 +853,14 @@ const expandedRowKeys = ref<TableProps['expandedRowKeys']>(['1'])
 watchEffect(() => {
   console.log('expandedRowKeys', expandedRowKeys.value)
 })
-const handleExpand = (expanded: boolean, record: any) => {
+const handleExpand = (expanded: boolean, record: Record<string, any>) => {
   console.log('expanded', expanded)
   console.log('record', record)
 }
 const handleExpandedRowsChange = (expandedRows: string[]) => {
   console.log('expandedRowsChange', expandedRows)
 }
-function onSortChange(column: TableColumn, currentDataSource: any[]) {
+function onSortChange(column: TableColumn, currentDataSource: Record<string, any>[]) {
   console.log('sort column', column)
   console.log('sort currentDataSource', currentDataSource)
 }
@@ -1348,7 +1348,7 @@ const dataSourceCustomStyle = ref([
     address: 'Tel Aviv, Israel'
   }
 ])
-const rowClassName = (record: any, rowIndex: number) => {
+const rowClassName = (record: Record<string, any>, rowIndex: number) => {
   if (record.age > 30) {
     return 'older-row'
   } else if (rowIndex % 2 === 1) {
@@ -1856,7 +1856,7 @@ const dataSource = ref([
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { TableColumn } from 'vue-amazing-ui'
-const sharedOnCell = (record: any, index: number) => {
+const sharedOnCell = (record: Record<string, any>, index: number) => {
   if (index === 4) {
     return { colSpan: 0 }
   }
@@ -1865,7 +1865,7 @@ const columnsMerge = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
-    customCell: (record: any, index: number) => {
+    customCell: (record: Record<string, any>, index: number) => {
       return {
         colSpan: index < 4 ? 1 : 5
       }
@@ -1880,7 +1880,7 @@ const columnsMerge = reactive<TableColumn[]>([
     title: 'Home phone',
     colSpan: 2,
     dataIndex: 'tel',
-    customCell: (record: any, index: number) => {
+    customCell: (record: Record<string, any>, index: number) => {
       if (index === 2) {
         return { rowSpan: 2 }
       }
@@ -1897,7 +1897,7 @@ const columnsMerge = reactive<TableColumn[]>([
     title: 'Phone',
     colSpan: 0,
     dataIndex: 'phone',
-    customCell: (record: any, index: number) => {
+    customCell: (record: Record<string, any>, index: number) => {
       if (index === 1) {
         return { rowSpan: 3 }
       }
@@ -2040,7 +2040,7 @@ const dataSourceCellEditable = ref([
     address: 'London, Park Lane no. 2'
   }
 ])
-const data: any[] = []
+const data: Record<string, any>[] = []
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
@@ -2049,7 +2049,7 @@ for (let i = 0; i < 100; i++) {
     address: `London, Park Lane no. ${i}`
   })
 }
-const cellEditableData = reactive<any>({})
+const cellEditableData = reactive<Record<string, any>>({})
 const handleCellAdd = () => {
   const count = dataSourceCellEditable.value.length
   const newData = {
@@ -2195,7 +2195,7 @@ const columnsRowEditable = reactive<TableColumn[]>([
     dataIndex: 'action'
   }
 ])
-const data: any[] = []
+const data: Record<string, any>[] = []
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
@@ -2204,8 +2204,8 @@ for (let i = 0; i < 100; i++) {
     address: `London, Park Lane no. ${i}`
   })
 }
-const dataSourceRowEditable = ref<any[]>(data.slice(0, 10))
-const rowEditableData = reactive<any>({})
+const dataSourceRowEditable = ref<Record<string, any>[]>(data.slice(0, 10))
+const rowEditableData = reactive<Record<string, any>>({})
 const handleRowEdit = (key: string) => {
   rowEditableData[key] = dataSourceRowEditable.value.filter((item) => key === item.key)[0]
 }
@@ -2346,7 +2346,7 @@ const expandedRowKeys = ref<TableProps['expandedRowKeys']>(['1'])
 watchEffect(() => {
   console.log('expandedRowKeys', expandedRowKeys.value)
 })
-const handleExpand = (expanded: boolean, record: any) => {
+const handleExpand = (expanded: boolean, record: Record<string, any>) => {
   console.log('expanded', expanded)
   console.log('record', record)
 }
@@ -2485,7 +2485,7 @@ const columnsFixHeader = reactive<TableColumn[]>([
     dataIndex: 'address'
   }
 ])
-const data: any[] = []
+const data: Record<string, any>[] = []
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
@@ -2546,7 +2546,7 @@ const columnsFixHeaderAndColumn = reactive<TableColumn[]>([
     width: 100
   }
 ])
-const data: any[] = []
+const data: Record<string, any>[] = []
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
@@ -2617,7 +2617,7 @@ const columnsFixHeaderAndScrollbar = reactive<TableColumn[]>([
     width: 100
   }
 ])
-const data: any[] = []
+const data: Record<string, any>[] = []
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
@@ -2685,7 +2685,7 @@ const columnsHeaderGroup = reactive<TableColumn[]>([
         dataIndex: 'age',
         key: 'age',
         width: 200,
-        sorter: (a: any, b: any) => a.age - b.age
+        sorter: (a: Record<string, number>, b: Record<string, number>) => a.age - b.age
       },
       {
         title: 'Address',
@@ -2793,19 +2793,19 @@ const columnsSort = reactive<TableColumn[]>([
   {
     title: 'Name',
     dataIndex: 'name',
-    sorter: (a: any, b: any) => a.name.length - b.name.length,
+    sorter: (a: Record<string, string>, b: Record<string, string>) => a.name.length - b.name.length,
     sortDirections: ['descend']
   },
   {
     title: 'Age',
     dataIndex: 'age',
     defaultSortOrder: 'descend',
-    sorter: (a: any, b: any) => a.age - b.age
+    sorter: (a: Record<string, number>, b: Record<string, number>) => a.age - b.age
   },
   {
     title: 'Address',
     dataIndex: 'address',
-    sorter: (a: any, b: any) => a.address.length - b.address.length,
+    sorter: (a: Record<string, string>, b: Record<string, string>) => a.address.length - b.address.length,
     sortDirections: ['descend', 'ascend']
   }
 ])
@@ -2835,7 +2835,7 @@ const dataSourceSort = ref([
     address: 'London No.102 Lake Park'
   }
 ])
-function onSortChange(column: TableColumn, currentDataSource: any[]) {
+function onSortChange(column: TableColumn, currentDataSource: Record<string, any>[]) {
   console.log('sort column', column)
   console.log('sort currentDataSource', currentDataSource)
 }
@@ -2924,7 +2924,7 @@ const columnsSelection = reactive<TableColumn[]>([
     dataIndex: 'address'
   }
 ])
-const data: any[] = []
+const data: Record<string, any>[] = []
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
@@ -2951,13 +2951,13 @@ const rowSelection = reactive<TableSelection>({
   hideSelectAll: false,
   type: 'checkbox',
   selectedRowKeys: ['3'],
-  onChange: (selectedRowKeys: string[], selectedRows: any[]) => {
+  onChange: (selectedRowKeys: string[], selectedRows: Record<string, any>[]) => {
     console.log('onChange')
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('selectedRows', selectedRows)
     rowSelection.selectedRowKeys = selectedRowKeys
   },
-  onSelect: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => {
+  onSelect: (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => {
     console.log('onSelect')
     console.log('record', record)
     console.log('selected', selected)
@@ -2966,8 +2966,8 @@ const rowSelection = reactive<TableSelection>({
   },
   onSelectAll: (
     selected: boolean,
-    selectedRows: any[],
-    changeRows: any[],
+    selectedRows: Record<string, any>[],
+    changeRows: Record<string, any>[],
     selectedRowKeys: string[],
     changeRowKeys: string[]
   ) => {
@@ -2978,7 +2978,7 @@ const rowSelection = reactive<TableSelection>({
     console.log('selectedRowKeys', selectedRowKeys)
     console.log('changeRowKeys', changeRowKeys)
   },
-  getSelectionProps: (record: any) => ({
+  getSelectionProps: (record: Record<string, any>) => ({
     disabled: record.key === '5',
     name: record.name
   })
@@ -3094,7 +3094,7 @@ footer | 表格尾部 | string &#124; slot | undefined
 columns | 表格列的配置项 | [Column](#column-type)[] | []
 dataSource | 表格数据数组 | object[] | []
 bordered | 是否展示外边框和列边框 | boolean | false
-rowClassName | 自定义行的类名 | string &#124; ((record: any, rowIndex: number) => string) | undefined
+rowClassName | 自定义行的类名 | string &#124; ((record: Record<string, any>, rowIndex: number) => string) | undefined
 size | 表格大小 | 'large' &#124; 'middle' &#124; small | 'large'
 striped | 是否使用斑马条纹 | boolean | false
 loading | 是否加载中 | boolean | false
@@ -3141,7 +3141,7 @@ sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](https:
 defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' | undefined
 sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] | undefined
 sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | Function | undefined
-customCell? | 设置单元格属性 | (record: any, rowIndex: number, column: Column) => object &#124; undefined | undefined
+customCell? | 设置单元格属性 | (record: Record<string, any>, rowIndex: number, column: Column) => object &#124; undefined | undefined
 
 ### Selection Type
 
@@ -3153,10 +3153,10 @@ fixed? | 复选框列是否固定在左边 | boolean | undefined
 hideSelectAll? | 是否隐藏全选复选框 | boolean | undefined
 type? | 复选框/单选框 | 'checkbox' &#124; 'radio' | undefined
 selectedRowKeys? | 选中项的 `key` 数组，需和 `onChange` 配合使用 | string[] | undefined
-onChange? | 选中项发生变化时的回调 | (selectedRowKeys: string[], selectedRows: any[]) => void | undefined
-onSelect? | 点击除全选外某行选择框时的回调 | (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => void | undefined
-onSelectAll? | 点击复选框全选时的回调 | (selected: boolean, selectedRows: any[], changeRows: any[], selectedRowKeys: string[], changeRowKeys: string[]) => void | undefined
-getSelectionProps? | 选择框组件的属性配置 | (record: any, rowIndex: number) => object | undefined
+onChange? | 选中项发生变化时的回调 | (selectedRowKeys: string[], selectedRows: Record<string, any>[]) => void | undefined
+onSelect? | 点击除全选外某行选择框时的回调 | (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => void | undefined
+onSelectAll? | 点击复选框全选时的回调 | (selected: boolean, selectedRows: Record<string, any>[], changeRows: Record<string, any>[], selectedRowKeys: string[], changeRowKeys: string[]) => void | undefined
+getSelectionProps? | 选择框组件的属性配置 | (record: Record<string, any>, rowIndex: number) => object | undefined
 
 ### ScrollOption Type
 
@@ -3182,7 +3182,7 @@ expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-expand | 点击展开图标时的回调 | (expanded: boolean, record: any) => void
+expand | 点击展开图标时的回调 | (expanded: boolean, record: Record<string, any>) => void
 expandedRowsChange | 展开的行变化时的回调 | (expandedRows: string[]) => void
-sortChange | 排序变化时的回调 | (column: [Column](#column-type), currentDataSource: any[]) => void
+sortChange | 排序变化时的回调 | (column: [Column](#column-type), currentDataSource: Record<string, any>[]) => void
 change | 分页变化时的回调 | (pager: { page: number, pageSize: number }) => void
