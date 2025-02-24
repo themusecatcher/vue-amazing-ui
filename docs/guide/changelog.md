@@ -4,9 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
-## 2.2.9 <Tag color="volcano" size="small">2025-02-24</Tag>
+## 2.2.9 <Tag color="volcano" size="small">2025-02-25</Tag>
 
-- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件的类型定义，获取更好的类型提示
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码相关类型定义
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增 `marks` 属性，支持添加刻度标记，并自定义标记样式
 
 ## 2.2.8 <Tag color="volcano" size="small">2025-02-22</Tag>
 
