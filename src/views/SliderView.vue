@@ -1,12 +1,25 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const singleValue = ref(20)
-const smallSingleValue = ref(0.5)
-const singleCustomValue = ref(0)
-const doubleValue = ref([20, 80])
-const doubleCustomValue = ref([-5, 5])
-const singleCustomStepValue = ref(30)
-const doubleCustomStepValue = ref([30, 60])
+const singleValue = ref<number>(20)
+const smallSingleValue = ref<number>(0.5)
+const singleCustomValue = ref<number>(0)
+const doubleValue = ref<number[]>([20, 80])
+const doubleCustomValue = ref<number[]>([-5, 5])
+const markSingleValue = ref<number>(30)
+const markDoubleValue = ref<number[]>([30, 60])
+const marks = ref<Record<number, any>>({
+  0: '0°C',
+  26: '26°C',
+  37: '37°C',
+  100: {
+    style: {
+      color: '#f50',
+    },
+    label: '100°C',
+  }
+})
+const singleCustomStepValue = ref<number>(30)
+const doubleCustomStepValue = ref<number[]>([30, 60])
 const customStyle = {
   '--track-color': '#ffbb96',
   '--track-color-hover': '#d4380d',
@@ -39,6 +52,12 @@ watchEffect(() => {
   console.log('doubleCustomValue', doubleCustomValue.value)
 })
 watchEffect(() => {
+  console.log('markSingleValue', markSingleValue.value)
+})
+watchEffect(() => {
+  console.log('markDoubleValue', markDoubleValue.value)
+})
+watchEffect(() => {
   console.log('singleCustomStepValue', singleCustomStepValue.value)
 })
 watchEffect(() => {
@@ -53,7 +72,7 @@ function formatter(value: number) {
 </script>
 <template>
   <div style="width: 80%">
-    <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <!-- <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Slider v-model:value="singleValue" @change="onChange" />
     <h2 class="mt30 mb10">双滑块</h2>
@@ -67,6 +86,13 @@ function formatter(value: number) {
     <Flex vertical gap="large">
       <Slider :min="-10" :max="10" v-model:value="singleCustomValue" />
       <Slider :min="-10" :max="10" range v-model:value="doubleCustomValue" />
+    </Flex> -->
+    <h2 class="mt30 mb10">自定义刻度标记</h2>
+    <Flex vertical gap="large">
+      <Slider v-model:value="markSingleValue" :marks="marks" />
+      <a-slider v-model:value="markSingleValue" :min="0" :max="100" :marks="marks" />
+      <Slider range v-model:value="markDoubleValue" :marks="marks" />
+      <a-slider range v-model:value="markDoubleValue" :min="0" :max="100" :marks="marks" />
     </Flex>
     <h2 class="mt30 mb10">自定义步长</h2>
     <Flex vertical gap="large">
@@ -75,10 +101,12 @@ function formatter(value: number) {
     </Flex>
     <h2 class="mt30 mb10">垂直模式</h2>
     <Space :gap="36" style="height: 300px">
-      <Slider vertical v-model:value="singleValue" />
-      <Slider range vertical v-model:value="doubleValue" />
+      <!-- <Slider vertical v-model:value="singleValue" />
+      <Slider range vertical v-model:value="doubleValue" /> -->
+      <Slider vertical v-model:value="markSingleValue" :marks="marks" />
+      <a-slider vertical v-model:value="markSingleValue" :marks="marks" />
     </Space>
-    <h2 class="mt30 mb10">带输入框的滑块</h2>
+    <!-- <h2 class="mt30 mb10">带输入框的滑块</h2>
     <Row :gutter="[24, 16]">
       <Col :span="18">
         <Slider v-model:value="singleValue" />
@@ -107,6 +135,6 @@ function formatter(value: number) {
     <Flex vertical gap="large">
       <Slider :style="customStyle" v-model:value="singleValue" />
       <Slider :style="rangeCustomStyle" range v-model:value="doubleValue" />
-    </Flex>
+    </Flex> -->
   </div>
 </template>
