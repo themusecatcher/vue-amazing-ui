@@ -5,16 +5,17 @@
 `Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。组件库及文档所有工作均由作者一人完成，开发迭代过程实属不易...为了组件库的健康可持续发展，非常期望能获得您的支持与赞助。
 
 <script setup lang="ts">
-import { withBase } from 'vitepress'
 import { ref } from 'vue'
 import { HeartFilled, WechatOutlined, AlipayOutlined } from '@ant-design/icons-vue'
 import { useMediaQuery } from 'vue-amazing-ui'
 import WeChat from '/wechat.jpg'
 import Alipay from '/alipay.jpg'
-import Avatar1 from './avatars/1.jpeg'
+import Avatar0 from '/avatar.png'
+import Avatar1 from '/avatar_1.jpeg'
+import Avatar2 from '/avatar_2.jpg'
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 const sponsorItem = {
-  title: '如果您觉得 Vue Amazing UI 有用，对您有帮助，可以对作者表示下支持，非常感谢 ❤️🙏❤️'
+  title: '如果觉得 Vue Amazing UI 有用、有趣，或者对您有帮助，欢迎对作者表示下支持，非常感谢 ❤️'
 }
 const sponsorOptions = ['WeChat', 'Alipay']
 const sponsorType = ref('WeChat')
@@ -157,7 +158,7 @@ const QRCodes = [
         @themusecatcher
       </div>
     </template>
-    <Avatar :size="36" src="https://github.com/themusecatcher.png" href="https://github.com/themusecatcher" target="_blank" />
+    <Avatar :size="36" :src="Avatar0" href="https://github.com/themusecatcher" target="_blank" />
   </Tooltip>
   <Tooltip>
     <template #tooltip>
@@ -167,7 +168,7 @@ const QRCodes = [
         @Ant
       </div>
     </template>
-    <Avatar :size="36" :src="withBase('/avatars/1.jpeg')" />
+    <Avatar :size="36" :src="Avatar1" />
   </Tooltip>
   <Tooltip>
     <template #tooltip>
@@ -177,6 +178,6 @@ const QRCodes = [
         @nizhensh-i
       </div>
     </template>
-    <Avatar :size="36" :src="withBase('/avatars/2.jpg')" href="https://github.com/nizhensh-i" target="_blank" />
+    <Avatar :size="36" :src="Avatar2" href="https://github.com/nizhensh-i" target="_blank" />
   </Tooltip>
 </Space>
