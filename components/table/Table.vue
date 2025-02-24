@@ -28,7 +28,7 @@ export interface Column {
   defaultSortOrder?: 'ascend' | 'descend' // 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效
   sortDirections?: ('ascend' | 'descend')[] // 支持的排序方式
   sorter?: Function // 升序排序函数，参考 Array.sort 的 compareFunction，当列表头分组时，请将排序设置在叶子节点
-  customCell?: (record: any, rowIndex: number, column: Column) => object | undefined // 设置单元格属性
+  customCell?: (record: Record<string, any>, rowIndex: number, column: Column) => object | undefined // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
 export interface Selection {
@@ -38,16 +38,16 @@ export interface Selection {
   hideSelectAll?: boolean // 是否隐藏全选复选框
   type?: 'checkbox' | 'radio' // 复选框/单选框
   selectedRowKeys?: string[] // 选中项的 key 数组，需和 onChange 配合使用
-  onChange?: (selectedRowKeys: string[], selectedRows: any[]) => void // 选中项发生变化时的回调
-  onSelect?: (record: any, selected: boolean, selectedRows: any[], selectedRowKeys: string[]) => void // 点击除全选外某行选择框时的回调
+  onChange?: (selectedRowKeys: string[], selectedRows: Record<string, any>[]) => void // 选中项发生变化时的回调
+  onSelect?: (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => void // 点击除全选外某行选择框时的回调
   onSelectAll?: (
     selected: boolean,
-    selectedRows: any[],
-    changeRows: any[],
+    selectedRows: Record<string, any>[],
+    changeRows: Record<string, any>[],
     selectedRowKeys: string[],
     changeRowKeys: string[]
   ) => void // 点击复选框全选时的回调
-  getSelectionProps?: (record: any, rowIndex: number) => object // 选择框组件的属性配置
+  getSelectionProps?: (record: Record<string, any>, rowIndex: number) => object // 选择框组件的属性配置
 }
 export type ScrollOption = {
   initialScrollPositionOnChange?: boolean // 当分页、排序变化后是否滚动到表格初始位置
@@ -60,7 +60,7 @@ export interface Props {
   columns?: Column[] // 表格列的配置项
   dataSource?: object[] // 表格数据数组
   bordered?: boolean // 是否展示外边框和列边框
-  rowClassName?: string | ((record: any, rowIndex: number) => string) // 自定义行的类名
+  rowClassName?: string | ((record: Record<string, any>, rowIndex: number) => string) // 自定义行的类名
   size?: 'large' | 'middle' | 'small' // 表格大小
   striped?: boolean // 是否使用斑马条纹
   loading?: boolean // 是否加载中
@@ -127,15 +127,15 @@ const tablePage = ref<number>(1) // 分页器当前页数
 const tablePageSize = ref<number>(10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
-const displayDataSource = ref<any[]>([]) // 当前展示的表格数据
+const displayDataSource = ref<Record<string, any>[]>([]) // 当前展示的表格数据
 const tableExpandedRowKeys = ref<string[]>([]) // 当前展开行的 key 数组
 const checkAll = ref(false) // 是否全选
 const indeterminate = ref(false) // 全选样式控制
 const tableOptionsChecked = ref<boolean[]>([]) // 表格选项数组
 const selectedRowKeys = ref<string[]>([]) // 已选中行的 key 数组
-const changeRowKeys = ref<any[]>([]) // 变化行的 key 数组
-const selectedRows = ref<any[]>([]) // 已选中行的数组
-const changeRows = ref<any[]>([]) // 变化行的数组
+const changeRowKeys = ref<string[]>([]) // 变化行的 key 数组
+const selectedRows = ref<Record<string, any>[]>([]) // 已选中行的数组
+const changeRows = ref<Record<string, any>[]>([]) // 变化行的数组
 const tooltipRef = ref() // 排序 tooltip 提示组件模板引用
 const ellipsisRef = ref() // 文本省略组件模板引用
 const scrollbarRef = ref() // 水平滚动容器模板引用
@@ -360,7 +360,7 @@ watch(
   ],
   () => {
     if (loadAllData.value) {
-      let allDataSource: any[]
+      let allDataSource: Record<string, any>[]
       if (sortColumnDataIndex.value === null) {
         allDataSource = [...props.dataSource]
       } else {
@@ -374,7 +374,7 @@ watch(
         tablePage.value * tablePageSize.value
       )
     } else {
-      let currentDataSource: any[]
+      let currentDataSource: Record<string, any>[]
       if (sortColumnDataIndex.value === null) {
         currentDataSource = [...props.dataSource]
       } else {
@@ -420,7 +420,7 @@ watch(
   () => {
     selectedRowKeys.value = []
     selectedRows.value = []
-    displayDataSource.value.forEach((record: any, rowIndex) => {
+    displayDataSource.value.forEach((record: Record<string, any>, rowIndex) => {
       if (props.rowSelection?.type === 'radio') {
         // 单选
         if (props.rowSelection?.selectedRowKeys && props.rowSelection.selectedRowKeys[0] === record.key) {
@@ -454,7 +454,7 @@ watch(
     if (props.rowSelection?.type === undefined || props.rowSelection?.type === 'checkbox') {
       const selectedOptions = to.filter((checked: boolean) => checked)
       let checkboxOptionsAmount = 0
-      displayDataSource.value.forEach((record: any, rowIndex: number) => {
+      displayDataSource.value.forEach((record: Record<string, any>, rowIndex: number) => {
         const checkboxProps =
           props.rowSelection?.getSelectionProps && props.rowSelection.getSelectionProps(record, rowIndex)
         if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
@@ -504,7 +504,7 @@ useResizeObserver(tableRef, () => {
 function onCheckAllChange(checked: boolean) {
   changeRowKeys.value = []
   changeRows.value = []
-  displayDataSource.value.forEach((record: any, rowIndex: number) => {
+  displayDataSource.value.forEach((record: Record<string, any>, rowIndex: number) => {
     const checkboxProps =
       props.rowSelection?.getSelectionProps && props.rowSelection.getSelectionProps(record, rowIndex)
     if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
@@ -540,7 +540,7 @@ function onCheckAllChange(checked: boolean) {
   props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
 }
 // 点击某行复选框/单选框
-function onTableSelectionChange(selected: boolean, rowIndex: number, key: string, record: any) {
+function onTableSelectionChange(selected: boolean, rowIndex: number, key: string, record: Record<string, any>) {
   if (selected) {
     // 选中复选框/单选框
     if (props.rowSelection?.type === 'radio') {
@@ -558,7 +558,7 @@ function onTableSelectionChange(selected: boolean, rowIndex: number, key: string
   } else {
     // 复选框取消选中
     selectedRowKeys.value = selectedRowKeys.value.filter((selectedRowKey: string) => selectedRowKey !== key)
-    selectedRows.value = selectedRows.value.filter((selectedRow: any) => selectedRow.key !== key)
+    selectedRows.value = selectedRows.value.filter((selectedRow: Record<string, any>) => selectedRow.key !== key)
   }
   props.rowSelection?.onSelect &&
     props.rowSelection.onSelect(record, selected, selectedRows.value, selectedRowKeys.value)
@@ -685,7 +685,7 @@ function getThColumnsGroup(columns: Column[]) {
   return result
 }
 // 获取表格对应于表头分组，处理后每行的 columns
-function getTdColumnsGroup(record: any, rowIndex: number) {
+function getTdColumnsGroup(record: Record<string, any>, rowIndex: number) {
   return thColumnsLeaf.value.filter((column: Column) => {
     if (column.customCell) {
       const custom = column.customCell(record, rowIndex, column)
@@ -909,7 +909,7 @@ function tableCellFixStyle(column: Column) {
   return style
 }
 // 获取被合并单元格的列索引
-function getMergedCellsColIndex(record: any, rowIndex: number): number[] {
+function getMergedCellsColIndex(record: Record<string, any>, rowIndex: number): number[] {
   const mergedCellsColIndex: number[] = []
   props.columns.forEach((column: Column, colIndex: number) => {
     if (column.customCell) {
@@ -922,7 +922,7 @@ function getMergedCellsColIndex(record: any, rowIndex: number): number[] {
   return mergedCellsColIndex
 }
 // 获取被合并单元格的行索引
-function getMergeCellRowIndex(record: any, column: Column, rowIndex: number) {
+function getMergeCellRowIndex(record: Record<string, any>, column: Column, rowIndex: number) {
   if (rowIndex >= 0) {
     const custom = column.customCell?.(record, rowIndex, column)
     if (custom && 'rowSpan' in custom && (custom.rowSpan as number) > 0) {
@@ -933,14 +933,14 @@ function getMergeCellRowIndex(record: any, column: Column, rowIndex: number) {
   }
 }
 // 获取每行的类名
-function getRowClassName(record: any, rowIndex: number) {
+function getRowClassName(record: Record<string, any>, rowIndex: number) {
   if (typeof props.rowClassName == 'function') {
     return props.rowClassName(record, rowIndex)
   }
   return props.rowClassName
 }
 // 鼠标悬浮某行
-function onEnterRow(record: any, rowIndex: number) {
+function onEnterRow(record: Record<string, any>, rowIndex: number) {
   hoverRowIndex.value = rowIndex
   const mergedCellsColIndex = getMergedCellsColIndex(record, rowIndex)
   if (mergedCellsColIndex.length) {
@@ -963,7 +963,7 @@ function checkHoverCoord(row: number, col: number) {
   return mergeHoverCoords.value.some((coord: Coords) => coord.row === row && coord.col === col)
 }
 // 展开/收起展开行
-function onExpandCell(record: any) {
+function onExpandCell(record: Record<string, any>) {
   const key = record.key
   if (tableExpandedRowKeys.value.includes(key)) {
     tableExpandedRowKeys.value = tableExpandedRowKeys.value.filter((rowKey: string | number) => rowKey !== key)
