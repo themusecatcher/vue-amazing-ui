@@ -10,14 +10,14 @@ const markSingleValue = ref<number>(30)
 const markDoubleValue = ref<number[]>([30, 60])
 const marks = ref<Record<number, any>>({
   0: '0°C',
-  26: '26°C',
-  37: '37°C',
+  26.5: '26.5°C',
+  37.3: '37.3°C',
   100: {
     style: {
       color: '#f50',
     },
-    // label: '100°C'
-    label: h(FireFilled)
+    label: '100°C'
+    // label: h(FireFilled)
   }
 })
 const singleCustomStepValue = ref<number>(30)
@@ -90,16 +90,10 @@ function formatter(value: number) {
       <Slider :min="-10" :max="10" range v-model:value="doubleCustomValue" />
     </Flex> -->
     <h2 class="mt30 mb10">自定义刻度标记</h2>
-    <Flex vertical gap="large">
-      <!-- <a-slider v-model:value="markSingleValue" :marks="marks">
-        <template #mark="{ label, point }">
-          <template v-if="point === 100">
-            <strong>{{ label }}</strong>
-          </template>
-          <template v-else>{{ label }}</template>
-        </template>
-      </a-slider> -->
-      <!-- <Slider v-model:value="markSingleValue" :marks="marks">
+    <Flex vertical>
+      <!-- <Slider v-model:value="markSingleValue" :marks="marks" />
+      <Slider range v-model:value="markDoubleValue" :marks="marks" />
+      <Slider v-model:value="markSingleValue" :marks="marks">
         <template #mark="{ label, value }">
           <template v-if="value === 100">
             <strong>{{ label }}</strong>
@@ -107,16 +101,28 @@ function formatter(value: number) {
           <template v-else>{{ label }}</template>
         </template>
       </Slider> -->
-      <!-- <Slider v-model:value="markSingleValue" :marks="marks" />
-      <a-slider v-model:value="markSingleValue" :min="0" :max="100" :marks="marks" /> -->
-      <Slider range v-model:value="markDoubleValue" :marks="marks" />
-      <a-slider range v-model:value="markDoubleValue" :min="0" :max="100" :marks="marks" />
+      <a-slider v-model:value="markSingleValue" :marks="marks" :step="10">
+        <template #mark="{ label, point }">
+          <template v-if="point === 100">
+            <strong>{{ label }}</strong>
+          </template>
+          <template v-else>{{ label }}</template>
+        </template>
+      </a-slider>
+      <Slider v-model:value="markSingleValue" :marks="marks" :step="10">
+        <template #mark="{ label, value }">
+          <template v-if="value === 100">
+            <strong>{{ label }}</strong>
+          </template>
+          <template v-else>{{ label }}</template>
+        </template>
+      </Slider>
     </Flex>
-    <h2 class="mt30 mb10">自定义步长</h2>
+    <!-- <h2 class="mt30 mb10">自定义步长</h2>
     <Flex vertical gap="large">
       <Slider :step="5" v-model:value="singleCustomStepValue" />
       <Slider range :step="5" v-model:value="doubleCustomStepValue" />
-    </Flex>
+    </Flex> -->
     <h2 class="mt30 mb10">垂直模式</h2>
     <Space :gap="36" style="height: 300px">
       <!-- <Slider vertical v-model:value="singleValue" />
