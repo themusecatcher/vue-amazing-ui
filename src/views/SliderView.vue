@@ -6,12 +6,16 @@ const smallSingleValue = ref<number>(0.5)
 const singleCustomValue = ref<number>(0)
 const doubleValue = ref<number[]>([20, 80])
 const doubleCustomValue = ref<number[]>([-5, 5])
-const markSingleValue = ref<number>(30)
-const markDoubleValue = ref<number[]>([30, 60])
+const markSingleValue1 = ref<number>(24)
+const markSingleValue2 = ref<number>(30)
+const markSingleValue3 = ref<number>(37)
+const markDoubleValue1 = ref<number[]>([20, 55])
+const markDoubleValue2 = ref<number[]>([30, 60])
+const markDoubleValue3 = ref<number[]>([0, 37])
 const marks = ref<Record<number, any>>({
   0: '0°C',
-  26.5: '26.5°C',
-  37.3: '37.3°C',
+  26: '26°C',
+  37: '37°C',
   100: {
     style: {
       color: '#f50',
@@ -38,39 +42,52 @@ const rangeCustomStyle = {
   '--handle-shadow-color': '#ffbb96',
   '--handle-shadow-color-hover-focus': '#d4380d'
 }
+// watchEffect(() => {
+//   console.log('singleValue', singleValue.value)
+// })
+// watchEffect(() => {
+//   console.log('smallSingleValue', smallSingleValue.value)
+// })
+// watchEffect(() => {
+//   console.log('singleCustomValue', singleCustomValue.value)
+// })
+// watchEffect(() => {
+//   console.log('doubleValue', doubleValue.value)
+// })
+// watchEffect(() => {
+//   console.log('doubleCustomValue', doubleCustomValue.value)
+// })
 watchEffect(() => {
-  console.log('singleValue', singleValue.value)
+  console.log('markSingleValue1', markSingleValue1.value)
 })
 watchEffect(() => {
-  console.log('smallSingleValue', smallSingleValue.value)
+  console.log('markSingleValue2', markSingleValue2.value)
 })
 watchEffect(() => {
-  console.log('singleCustomValue', singleCustomValue.value)
+  console.log('markSingleValue3', markSingleValue3.value)
 })
 watchEffect(() => {
-  console.log('doubleValue', doubleValue.value)
+  console.log('markDoubleValue1', markDoubleValue1.value)
 })
 watchEffect(() => {
-  console.log('doubleCustomValue', doubleCustomValue.value)
+  console.log('markDoubleValue2', markDoubleValue2.value)
 })
 watchEffect(() => {
-  console.log('markSingleValue', markSingleValue.value)
+  console.log('markDoubleValue3', markDoubleValue3.value)
 })
-watchEffect(() => {
-  console.log('markDoubleValue', markDoubleValue.value)
-})
-watchEffect(() => {
-  console.log('singleCustomStepValue', singleCustomStepValue.value)
-})
-watchEffect(() => {
-  console.log('doubleCustomStepValue', doubleCustomStepValue.value)
-})
+// watchEffect(() => {
+//   console.log('singleCustomStepValue', singleCustomStepValue.value)
+// })
+// watchEffect(() => {
+//   console.log('doubleCustomStepValue', doubleCustomStepValue.value)
+// })
 function onChange(value: number | number[]) {
   console.log('change', value)
 }
 function formatter(value: number) {
   return `${value}%`
 }
+const markSingleValue4 = ref(32)
 </script>
 <template>
   <div style="width: 80%">
@@ -91,25 +108,48 @@ function formatter(value: number) {
     </Flex> -->
     <h2 class="mt30 mb10">自定义刻度标记</h2>
     <Flex vertical>
-      <!-- <Slider v-model:value="markSingleValue" :marks="marks" />
-      <Slider range v-model:value="markDoubleValue" :marks="marks" />
-      <Slider v-model:value="markSingleValue" :marks="marks">
+      <Slider v-model:value="markSingleValue1" :marks="marks">
         <template #mark="{ label, value }">
           <template v-if="value === 100">
             <strong>{{ label }}</strong>
           </template>
           <template v-else>{{ label }}</template>
         </template>
-      </Slider> -->
-      <a-slider v-model:value="markSingleValue" :marks="marks" :step="10">
-        <template #mark="{ label, point }">
-          <template v-if="point === 100">
+      </Slider>
+      <Slider range v-model:value="markDoubleValue1" :marks="marks">
+        <template #mark="{ label, value }">
+          <template v-if="value === 100">
             <strong>{{ label }}</strong>
           </template>
           <template v-else>{{ label }}</template>
         </template>
-      </a-slider>
-      <Slider v-model:value="markSingleValue" :marks="marks" :step="10">
+      </Slider>
+      <n-slider v-model:value="markSingleValue4" :marks="marks" :step="10" />
+      <Slider v-model:value="markSingleValue2" :marks="marks" :step="10">
+        <template #mark="{ label, value }">
+          <template v-if="value === 100">
+            <FireFilled />
+          </template>
+          <template v-else>{{ label }}</template>
+        </template>
+      </Slider>
+      <Slider range v-model:value="markDoubleValue2" :marks="marks" :step="10">
+        <template #mark="{ label, value }">
+          <template v-if="value === 100">
+            <FireFilled />
+          </template>
+          <template v-else>{{ label }}</template>
+        </template>
+      </Slider>
+      <Slider v-model:value="markSingleValue3" :marks="marks" step="mark">
+        <template #mark="{ label, value }">
+          <template v-if="value === 100">
+            <strong>{{ label }}</strong>
+          </template>
+          <template v-else>{{ label }}</template>
+        </template>
+      </Slider>
+      <Slider range v-model:value="markDoubleValue3" :marks="marks" step="mark">
         <template #mark="{ label, value }">
           <template v-if="value === 100">
             <strong>{{ label }}</strong>
