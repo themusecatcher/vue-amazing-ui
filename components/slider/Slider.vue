@@ -9,10 +9,10 @@ export interface Props {
   vertical?: boolean // 是否启用垂直模式
   min?: number // 最小值
   max?: number // 最大值
-  marks?: Marks // 刻度标记，key 的类型必须为 number 且取值在闭区间 [min, max] 内，每个标签可以单独设置样式
+  marks?: Marks // 刻度标记，key 的类型必须为 number 且取值在闭区间 [min, max] 内，每个标记可以单独设置样式
   disabled?: boolean // 是否禁用
   range?: boolean // 是否使用双滑块模式
-  step?: number // 步长，取值必须大于 0，并且可被 (max - min) 整除
+  step?: number // 步长，取值必须大于 0，并且可被 (max - min) 整除；当 marks 不为空对象时，可以设置 step 为 null，此时 Slider 的可选值仅有 marks 标出来的部分
   formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
   tooltip?: boolean // 是否展示 Tooltip
   value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
@@ -113,6 +113,7 @@ const marksDot = computed(() => {
 })
 // 获取 step 数值精度
 const precision = computed(() => {
+  if (props.step === null) return 0
   const strNumArr = props.step.toString().split('.')
   return strNumArr[1]?.length ?? 0
 })
@@ -123,8 +124,10 @@ const sliderValue = computed(() => {
     highValue = props.max
   } else {
     highValue = fixedDigit(pixelStepOperation(high.value, '/') * props.step + props.min, precision.value)
+    console.log('highValue', highValue)
     if (props.step > 1) {
       highValue = Math.round(highValue / props.step) * props.step
+      console.log('highValue2', highValue)
     }
   }
   if (props.range) {
@@ -485,16 +488,16 @@ function handleHighSlide(source: number, place: string) {
 }
 function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): number {
   if (operator === '+') {
-    return target + (sliderSize.value * props.step) / (props.max - props.min)
+    return target + (sliderSize.value * (props.step as number)) / (props.max - props.min)
   }
   if (operator === '-') {
-    return target - (sliderSize.value * props.step) / (props.max - props.min)
+    return target - (sliderSize.value * (props.step as number)) / (props.max - props.min)
   }
   if (operator === '*') {
-    return (target * sliderSize.value * props.step) / (props.max - props.min)
+    return (target * sliderSize.value * (props.step as number)) / (props.max - props.min)
   }
   if (operator === '/') {
-    return (target * (props.max - props.min)) / (sliderSize.value * props.step)
+    return (target * (props.max - props.min)) / (sliderSize.value * (props.step as number))
   }
   return target
 }
