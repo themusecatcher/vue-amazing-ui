@@ -288,15 +288,17 @@ function onClickSliderPoint(e: MouseEvent) {
     // horizontal
     const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
     // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+    originPosition = e.clientX - leftX
     const position = Math.round(pixelStepOperation(e.clientX - leftX, '/'))
     targetPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
   } else {
     const bottomY = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
     // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
+    originPosition = bottomY - e.clientY
     const position = Math.round(pixelStepOperation(bottomY - e.clientY, '/'))
     targetPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
   }
-  console.log('targetPosition', targetPosition)
+  console.log('originPosition', originPosition)
   // 获取目标位置对应的目标值
   const targetValue = getTargetValueFromPosition(targetPosition)
   if (props.step === 'mark') { // 仅可选 marks 标记的部分
