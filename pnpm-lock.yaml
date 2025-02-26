@@ -109,8 +109,8 @@ importers:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.3)
       vue-amazing-ui:
-        specifier: 2.2.8
-        version: 2.2.8(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
+        specifier: 2.2.9
+        version: 2.2.9(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
       vue-router:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.7.3))
@@ -2799,8 +2799,8 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
-  vue-amazing-ui@2.2.8:
-    resolution: {integrity: sha512-+NroaK/eLlJFui50XArEl00/YLmmohAJfhHmMXvzdXl/cVJjxBg8dM/Vxk24JZKSK0RjhzP1l4y8GkhDyfRwPg==}
+  vue-amazing-ui@2.2.9:
+    resolution: {integrity: sha512-xQxF2qFByDymzkE89ZbE9TfsM5fElAv5iUnvyrIAYcQa+crPzKzaxHVZIjXn6Hisrsp8Z/Pi3LMPKe4kWHlSDg==}
 
   vue-eslint-parser@9.4.3:
     resolution: {integrity: sha512-2rYRLWlIpaiN8xbPiDyXZXRgLGOtWxERV7ND5fFAv5qo1D2N9Fu9MNajBNc6o13lZ+24DAWCkQCvj4klgmcITg==}
@@ -5669,7 +5669,7 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
-  vue-amazing-ui@2.2.8(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)):
+  vue-amazing-ui@2.2.9(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)):
     dependencies:
       '@types/qrcode': 1.5.5
       '@vuepic/vue-datepicker': 11.0.1(vue@3.5.13(typescript@5.7.3))
