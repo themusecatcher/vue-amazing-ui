@@ -587,7 +587,6 @@
 - 新增 评论 Comment 组件
 - 新增 下拉菜单 Dropdown 组件
 - 更新 表格 Table 组件，新增虚拟滚动功能
-- 更新 滑动输入条 Slider 组件，带刻度的滑动输入条
 <!-- - 时间轴 Timeline 组件，新增水平时间轴
 - 新增 时间选择器 TimePicker 组件
 - 重构级联选择 Cascader 组件 -->
