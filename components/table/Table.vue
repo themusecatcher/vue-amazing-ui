@@ -39,7 +39,12 @@ export interface Selection {
   type?: 'checkbox' | 'radio' // 复选框/单选框
   selectedRowKeys?: string[] // 选中项的 key 数组，需和 onChange 配合使用
   onChange?: (selectedRowKeys: string[], selectedRows: Record<string, any>[]) => void // 选中项发生变化时的回调
-  onSelect?: (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => void // 点击除全选外某行选择框时的回调
+  onSelect?: (
+    record: Record<string, any>,
+    selected: boolean,
+    selectedRows: Record<string, any>[],
+    selectedRowKeys: string[]
+  ) => void // 点击除全选外某行选择框时的回调
   onSelectAll?: (
     selected: boolean,
     selectedRows: Record<string, any>[],
