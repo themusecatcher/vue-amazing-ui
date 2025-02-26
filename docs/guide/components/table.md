@@ -80,7 +80,12 @@ const rowSelection = reactive<TableSelection>({
     console.log('selectedRows', selectedRows)
     rowSelection.selectedRowKeys = selectedRowKeys
   },
-  onSelect: (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => {
+  onSelect: (
+    record: Record<string, any>,
+    selected: boolean,
+    selectedRows: Record<string, any>[],
+    selectedRowKeys: string[]
+  ) => {
     console.log('onSelect')
     console.log('record', record)
     console.log('selected', selected)
@@ -2957,7 +2962,12 @@ const rowSelection = reactive<TableSelection>({
     console.log('selectedRows', selectedRows)
     rowSelection.selectedRowKeys = selectedRowKeys
   },
-  onSelect: (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => {
+  onSelect: (
+    record: Record<string, any>,
+    selected: boolean,
+    selectedRows: Record<string, any>[],
+    selectedRowKeys: string[]
+  ) => {
     console.log('onSelect')
     console.log('record', record)
     console.log('selected', selected)
