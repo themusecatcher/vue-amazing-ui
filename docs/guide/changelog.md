@@ -7,7 +7,7 @@
 ## 2.2.9 <Tag color="volcano" size="small">2025-02-25</Tag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码相关类型定义
-- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增 `marks` 属性，支持添加刻度标记，并自定义标记样式
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增 `marks` 属性，支持添加刻度标记，并可自定义标记样式；更新属性 `step` 的类型为 `number | 'mark'`，支持当 `marks` 不为空对象时，设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分
 
 ## 2.2.8 <Tag color="volcano" size="small">2025-02-22</Tag>
 
@@ -585,6 +585,7 @@
 - 新增 漫游式引导 Tour 组件
 - 新增 评论 Comment 组件
 - 新增 下拉菜单 Dropdown 组件
+- 更新 表格 Table 组件，新增虚拟滚动功能
 - 更新 滑动输入条 Slider 组件，带刻度的滑动输入条
 <!-- - 时间轴 Timeline 组件，新增水平时间轴
 - 新增 时间选择器 TimePicker 组件
