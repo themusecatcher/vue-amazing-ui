@@ -812,6 +812,13 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       word-break: keep-all;
       cursor: pointer;
       user-select: none;
+      :deep(strong) {
+        // 仅用于适配 vitepress 文档样式
+        color: inherit;
+      }
+      :deep(svg) {
+        fill: currentColor;
+      }
     }
     .slider-mark-active {
       color: var(--mark-color-active);
