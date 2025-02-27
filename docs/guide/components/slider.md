@@ -304,6 +304,10 @@ watchEffect(() => {
 
 ## 自定义刻度标记
 
+*使用 marks 属性可以添加刻度标记*
+
+<br/>
+
 <Flex vertical>
   <Slider v-model:value="markSingleValue1" :marks="marks">
     <template #mark="{ label, value }">
@@ -321,6 +325,13 @@ watchEffect(() => {
       <template v-else>{{ label }}</template>
     </template>
   </Slider>
+</Flex>
+
+*同时设置 `marks` & `step` 属性*
+
+<br/>
+
+<Flex vertical>
   <Slider v-model:value="markSingleValue2" :marks="marks" :step="10">
     <template #mark="{ label, value }">
       <template v-if="value === 100">
@@ -337,6 +348,13 @@ watchEffect(() => {
       <template v-else>{{ label }}</template>
     </template>
   </Slider>
+</Flex>
+
+*设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分*
+
+<br/>
+
+<Flex vertical>
   <Slider v-model:value="markSingleValue3" :marks="marks" step="mark">
     <template #mark="{ label, value }">
       <template v-if="value === 100">
@@ -398,6 +416,7 @@ watchEffect(() => {
 })
 </script>
 <template>
+  <h3 class="mb10">使用 marks 属性可以添加刻度标记</h3>
   <Flex vertical>
     <Slider v-model:value="markSingleValue1" :marks="marks">
       <template #mark="{ label, value }">
@@ -415,6 +434,9 @@ watchEffect(() => {
         <template v-else>{{ label }}</template>
       </template>
     </Slider>
+  </Flex>
+  <h3 class="mb10">同时设置 marks & step 属性</h3>
+  <Flex vertical>
     <Slider v-model:value="markSingleValue2" :marks="marks" :step="10">
       <template #mark="{ label, value }">
         <template v-if="value === 100">
@@ -431,6 +453,9 @@ watchEffect(() => {
         <template v-else>{{ label }}</template>
       </template>
     </Slider>
+  </Flex>
+  <h3 class="mb10">设置 step 为 'mark'，此时 Slider 的可选值仅有 marks 标记的部分</h3>
+  <Flex vertical>
     <Slider v-model:value="markSingleValue3" :marks="marks" step="mark">
       <template #mark="{ label, value }">
         <template v-if="value === 100">
