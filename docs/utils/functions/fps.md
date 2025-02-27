@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*实时监测浏览器刷新率FPS的组合式函数*
+*实时监测浏览器刷新率 `FPS` 的组合式函数*
 
 ::: details Show Source Code
 
