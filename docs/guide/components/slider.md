@@ -60,6 +60,8 @@ const formatSingleValue = ref<number>(20)
 const formatDoubleValue = ref<number[]>([20, 80])
 const hideTooltipSingleValue = ref<number>(20)
 const hideTooltipDoubleValue = ref<number[]>([20, 80])
+const tooltipOpenSingleValue = ref<number>(20)
+const tooltipOpenDoubleValue = ref<number[]>([20, 80])
 const customStyleSingleValue = ref<number>(20)
 const customStyleDoubleValue = ref<number[]>([20, 80])
 const singleCustomStyle = {
@@ -165,6 +167,12 @@ watchEffect(() => {
 })
 watchEffect(() => {
   console.log('hideTooltipDoubleValue', hideTooltipDoubleValue.value)
+})
+watchEffect(() => {
+  console.log('tooltipOpenSingleValue', tooltipOpenSingleValue.value)
+})
+watchEffect(() => {
+  console.log('tooltipOpenDoubleValue', tooltipOpenDoubleValue.value)
 })
 watchEffect(() => {
   console.log('customStyleSingleValue', customStyleSingleValue.value)
@@ -700,6 +708,37 @@ watchEffect(() => {
 
 :::
 
+## 始终显示 Tooltip
+
+<Flex vertical :gap="36">
+  <Slider tooltip-open v-model:value="tooltipOpenSingleValue" />
+  <Slider range tooltip-open v-model:value="tooltipOpenDoubleValue" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const tooltipOpenSingleValue = ref<number>(20)
+const tooltipOpenDoubleValue = ref<number[]>([20, 80])
+watchEffect(() => {
+  console.log('tooltipOpenSingleValue', tooltipOpenSingleValue.value)
+})
+watchEffect(() => {
+  console.log('tooltipOpenDoubleValue', tooltipOpenDoubleValue.value)
+})
+</script>
+<template>
+  <Flex vertical :gap="36">
+    <Slider tooltip-open v-model:value="tooltipOpenSingleValue" />
+    <Slider range tooltip-open v-model:value="tooltipOpenDoubleValue" />
+  </Flex>
+</template>
+```
+
+:::
+
 ## 自定义样式
 
 *通过修改样式变量可以自定义滑动输入条样式、标记样式、Tooltip 样式*
@@ -781,6 +820,7 @@ disabled | 是否禁用 | boolean | false
 range | 是否使用双滑块模式 | boolean | false
 step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除；当 `marks` 不为空对象时，可以设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分 | number &#124; 'mark' | 1
 tooltip | 是否展示 `Tooltip` | boolean | true
+tooltipOpen | 是否一直显示 `tooltip` | boolean | false
 tooltipStyle | 自定义 `Tooltip` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value
 value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `false` 时，使用 `number`，否则用 `[number, number]` | number &#124; number[] | 0
