@@ -2,6 +2,8 @@
 
 <GlobalElement />
 
+*下载文件并自定义文件名的工具函数*
+
 ::: details Show Source Code
 
 ```ts
@@ -47,10 +49,6 @@ export function downloadFile(url: string, fileName?: string): void {
 ```
 
 :::
-
-## 何时使用
-
-- 下载文件并自定义文件名时
 
 ## 基本使用
 

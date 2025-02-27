@@ -2,6 +2,8 @@
 
 <GlobalElement />
 
+*消除 `js` 加减精度问题的工具函数*
+
 ::: details Show Source Code
 
 ```ts
@@ -40,10 +42,6 @@ export function add(num1: number, num2: number): number {
 ```
 
 :::
-
-## 何时使用
-
-- 消除 `js` 加减精度问题时
 
 ## 基本使用
 
