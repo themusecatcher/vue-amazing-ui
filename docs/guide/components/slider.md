@@ -19,25 +19,25 @@ const customScaleSingleValue = ref<number>(0)
 const customScaleDoubleValue = ref<number[]>([-5, 5])
 const customStepSingleValue = ref<number>(30)
 const customStepDoubleValue = ref<number[]>([30, 60])
-const markSingleValue1 = ref<number>(24)
-const markSingleValue2 = ref<number>(30)
+const markSingleValue1 = ref<number>(37)
+const markSingleValue2 = ref<number>(37)
 const markSingleValue3 = ref<number>(37)
-const markDoubleValue1 = ref<number[]>([25, 75])
+const markDoubleValue1 = ref<number[]>([20, 65])
 const markDoubleValue2 = ref<number[]>([30, 60])
-const markDoubleValue3 = ref<number[]>([0, 37])
-const verticalSingleValue = ref<number>(20)
+const markDoubleValue3 = ref<number[]>([26, 37])
+const verticalSingleValue = ref<number>(37)
 const verticalDoubleValue = ref<number[]>([20, 80])
-const markVerticalSingleValue = ref<number>(30)
-const markVerticalDoubleValue1 = ref<number[]>([35, 65])
+const markVerticalSingleValue = ref<number>(37)
+const markVerticalDoubleValue1 = ref<number[]>([20, 65])
 const markVerticalDoubleValue2 = ref<number[]>([30, 60])
-const markVerticalDoubleValue3 = ref<number[]>([0, 37])
+const markVerticalDoubleValue3 = ref<number[]>([26, 37])
 const marks = ref<Record<number, any>>({
   0: '0°C',
   26: '26°C',
   37: '37°C',
   100: {
     style: {
-      color: '#f50',
+      color: '#f50'
     },
     label: '100°C'
   }
@@ -79,7 +79,7 @@ const rangeCustomStyle = {
   '--handle-shadow-color-hover-focus': '#d4380d',
   '--dot-border-color': 'rgb(219, 219, 223)',
   '--dot-border-color-hover': 'rgb(199, 199, 203)',
-  '--dot-color-active': '#ffbb96',
+  '--dot-color-active': '#ffbb96'
 }
 watchEffect(() => {
   console.log('singleValue', singleValue.value)
@@ -379,12 +379,12 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
-const markSingleValue1 = ref<number>(24)
-const markSingleValue2 = ref<number>(30)
+const markSingleValue1 = ref<number>(37)
+const markSingleValue2 = ref<number>(37)
 const markSingleValue3 = ref<number>(37)
-const markDoubleValue1 = ref<number[]>([25, 75])
+const markDoubleValue1 = ref<number[]>([20, 65])
 const markDoubleValue2 = ref<number[]>([30, 60])
-const markDoubleValue3 = ref<number[]>([0, 37])
+const markDoubleValue3 = ref<number[]>([26, 37])
 const marks = ref<Record<number, any>>({
   0: '0°C',
   26: '26°C',
@@ -502,12 +502,12 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, h, watchEffect } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
-const verticalSingleValue = ref<number>(20)
+const verticalSingleValue = ref<number>(37)
 const verticalDoubleValue = ref<number[]>([20, 80])
-const markVerticalSingleValue = ref<number>(30)
-const markVerticalDoubleValue1 = ref<number[]>([35, 65])
+const markVerticalSingleValue = ref<number>(37)
+const markVerticalDoubleValue1 = ref<number[]>([20, 65])
 const markVerticalDoubleValue2 = ref<number[]>([30, 60])
-const markVerticalDoubleValue3 = ref<number[]>([0, 37])
+const markVerticalDoubleValue3 = ref<number[]>([26, 37])
 const marks = ref<Record<number, any>>({
   0: '0°C',
   26: '26°C',
