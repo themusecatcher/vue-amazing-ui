@@ -57,7 +57,9 @@ const singleCustomStyle = {
   '--track-color-hover': '#d4380d',
   '--handle-color': '#fff2e8',
   '--handle-shadow-color': '#ffbb96',
-  '--handle-shadow-color-hover-focus': '#d4380d'
+  '--handle-shadow-color-hover-focus': '#d4380d',
+  '--tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--tooltip-bg-color': '#fff'
 }
 const rangeCustomStyle = {
   '--rail-color': 'rgb(219, 219, 223)',
@@ -69,7 +71,18 @@ const rangeCustomStyle = {
   '--handle-shadow-color-hover-focus': '#d4380d',
   '--dot-border-color': 'rgb(219, 219, 223)',
   '--dot-border-color-hover': 'rgb(199, 199, 203)',
-  '--dot-color-active': '#ffbb96'
+  '--dot-color-active': '#ffbb96',
+  '--tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--tooltip-bg-color': '#fff'
+}
+const tooltipStyle = {
+  top: '-40px',
+  fontSize: '16px',
+  fontWeight: 500,
+  lineHeight: 1.5,
+  height: '40px',
+  padding: '8px 12px',
+  borderRadius: '8px'
 }
 watchEffect(() => {
   console.log('singleValue', singleValue.value)
@@ -276,9 +289,16 @@ function formatter(value: number) {
       <Slider range :tooltip="false" v-model:value="hideTooltipDoubleValue" />
     </Flex>
     <h2 class="mt30 mb10">自定义样式</h2>
+    <h3 class="mb10">通过修改样式变量可以自定义滑动输入条样式、标记样式、Tooltip 样式</h3>
     <Flex vertical gap="large">
       <Slider :style="singleCustomStyle" v-model:value="customStyleSingleValue" />
-      <Slider :style="rangeCustomStyle" range v-model:value="customStyleDoubleValue" :marks="marks" />
+      <Slider
+        :style="rangeCustomStyle"
+        range
+        v-model:value="customStyleDoubleValue"
+        :marks="marks"
+        :tooltip-style="tooltipStyle"
+      />
     </Flex>
   </div>
 </template>

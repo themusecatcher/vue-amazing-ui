@@ -67,7 +67,9 @@ const singleCustomStyle = {
   '--track-color-hover': '#d4380d',
   '--handle-color': '#fff2e8',
   '--handle-shadow-color': '#ffbb96',
-  '--handle-shadow-color-hover-focus': '#d4380d'
+  '--handle-shadow-color-hover-focus': '#d4380d',
+  '--tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--tooltip-bg-color': '#fff'
 }
 const rangeCustomStyle = {
   '--rail-color': 'rgb(219, 219, 223)',
@@ -79,7 +81,18 @@ const rangeCustomStyle = {
   '--handle-shadow-color-hover-focus': '#d4380d',
   '--dot-border-color': 'rgb(219, 219, 223)',
   '--dot-border-color-hover': 'rgb(199, 199, 203)',
-  '--dot-color-active': '#ffbb96'
+  '--dot-color-active': '#ffbb96',
+  '--tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--tooltip-bg-color': '#fff'
+}
+const tooltipStyle = {
+  top: '-40px',
+  fontSize: '16px',
+  fontWeight: 500,
+  lineHeight: 1.5,
+  height: '40px',
+  padding: '8px 12px',
+  borderRadius: '8px'
 }
 watchEffect(() => {
   console.log('singleValue', singleValue.value)
@@ -689,9 +702,11 @@ watchEffect(() => {
 
 ## 自定义样式
 
+*通过修改样式变量可以自定义滑动输入条样式、标记样式、Tooltip 样式*
+
 <Flex vertical gap="large">
   <Slider :style="singleCustomStyle" v-model:value="customStyleSingleValue" />
-  <Slider :style="rangeCustomStyle" range v-model:value="customStyleDoubleValue" :marks="marks" />
+  <Slider :style="rangeCustomStyle" range v-model:value="customStyleDoubleValue" :marks="marks" :tooltip-style="tooltipStyle" />
 </Flex>
 
 ::: details Show Code
@@ -706,7 +721,9 @@ const singleCustomStyle = {
   '--track-color-hover': '#d4380d',
   '--handle-color': '#fff2e8',
   '--handle-shadow-color': '#ffbb96',
-  '--handle-shadow-color-hover-focus': '#d4380d'
+  '--handle-shadow-color-hover-focus': '#d4380d',
+  '--tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--tooltip-bg-color': '#fff'
 }
 const rangeCustomStyle = {
   '--rail-color': 'rgb(219, 219, 223)',
@@ -719,6 +736,17 @@ const rangeCustomStyle = {
   '--dot-border-color': 'rgb(219, 219, 223)',
   '--dot-border-color-hover': 'rgb(199, 199, 203)',
   '--dot-color-active': '#ffbb96',
+  '--tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--tooltip-bg-color': '#fff'
+}
+const tooltipStyle = {
+  top: '-40px',
+  fontSize: '16px',
+  fontWeight: 500,
+  lineHeight: 1.5,
+  height: '40px',
+  padding: '8px 12px',
+  borderRadius: '8px'
 }
 watchEffect(() => {
   console.log('customStyleSingleValue', customStyleSingleValue.value)
@@ -730,7 +758,7 @@ watchEffect(() => {
 <template>
   <Flex vertical gap="large">
     <Slider :style="singleCustomStyle" v-model:value="customStyleSingleValue" />
-    <Slider :style="rangeCustomStyle" range v-model:value="customStyleDoubleValue" :marks="marks" />
+    <Slider :style="rangeCustomStyle" range v-model:value="customStyleDoubleValue" :marks="marks" :tooltip-style="tooltipStyle" />
   </Flex>
 </template>
 ```
@@ -752,8 +780,9 @@ marks | 刻度标记，`key` 的类型必须为 `number` 且取值在闭区间 `
 disabled | 是否禁用 | boolean | false
 range | 是否使用双滑块模式 | boolean | false
 step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除；当 `marks` 不为空对象时，可以设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分 | number &#124; 'mark' | 1
-formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value
 tooltip | 是否展示 `Tooltip` | boolean | true
+tooltipStyle | 自定义 `Tooltip` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value
 value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `false` 时，使用 `number`，否则用 `[number, number]` | number &#124; number[] | 0
 
 ### Marks Type

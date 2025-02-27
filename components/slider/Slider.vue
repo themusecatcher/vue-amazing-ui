@@ -15,8 +15,9 @@ export interface Props {
   disabled?: boolean // 是否禁用
   range?: boolean // 是否使用双滑块模式
   step?: number | 'mark' // 步长，取值必须大于 0，并且可被 (max - min) 整除；当 marks 不为空对象时，可以设置 step 为 'mark'，此时 Slider 的可选值仅有 marks 标记的部分
-  formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
   tooltip?: boolean // 是否展示 Tooltip
+  tooltipStyle?: CSSProperties // 自定义 Tooltip 样式
+  formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
   value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -29,8 +30,9 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   range: false,
   step: 1,
-  formatTooltip: (value: number) => value,
   tooltip: true,
+  tooltipStyle: () => ({}),
+  formatTooltip: (value: number) => value,
   value: 0
 })
 const sliderRef = ref() // slider 模板引用
@@ -690,6 +692,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         --dot-color-active: #91caff;
         --mark-color: rgba(0, 0, 0, 0.45);
         --mark-color-active: rgba(0, 0, 0, 0.88);
+        --tooltip-color: #fff;
+        --tooltip-bg-color: rgba(0, 0, 0, 0.85);
       `
     ]"
     @click="disabled ? () => false : onClickSliderPoint($event)"
@@ -740,7 +744,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       @mousedown="disabled ? () => false : handleLowMouseDown($event)"
       @blur="tooltip && !disabled ? handlerBlur(lowTooltipRef) : () => false"
     >
-      <div v-if="tooltip" ref="lowTooltipRef" class="handle-tooltip">
+      <div v-if="tooltip" ref="lowTooltipRef" class="handle-tooltip" :style="tooltipStyle">
         {{ lowTooltipValue }}
         <div class="tooltip-arrow"></div>
       </div>
@@ -757,7 +761,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       @mousedown="disabled ? () => false : handleHighMouseDown($event)"
       @blur="tooltip && !disabled ? handlerBlur(highTooltipRef) : () => false"
     >
-      <div v-if="tooltip" ref="highTooltipRef" class="handle-tooltip">
+      <div v-if="tooltip" ref="highTooltipRef" class="handle-tooltip" :style="tooltipStyle">
         {{ highTooltipValue }}
         <div class="tooltip-arrow"></div>
       </div>
@@ -888,11 +892,11 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       padding: 6px 8px;
       height: 32px;
       font-size: 14px;
-      color: #fff;
+      color: var(--tooltip-color);
       line-height: 20px;
       text-align: center;
       border-radius: 6px;
-      background: rgba(0, 0, 0, 0.85);
+      background: var(--tooltip-bg-color);
       box-shadow:
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
@@ -918,7 +922,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
           left: 0;
           width: 16px;
           height: 8px;
-          background-color: rgba(0, 0, 0, 0.85);
+          background-color: var(--tooltip-bg-color);
           clip-path: path(
             'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
           );
