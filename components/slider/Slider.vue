@@ -16,6 +16,7 @@ export interface Props {
   range?: boolean // 是否使用双滑块模式
   step?: number | 'mark' // 步长，取值必须大于 0，并且可被 (max - min) 整除；当 marks 不为空对象时，可以设置 step 为 'mark'，此时 Slider 的可选值仅有 marks 标记的部分
   tooltip?: boolean // 是否展示 Tooltip
+  tooltipOpen?: boolean // 是否一直显示 tooltip
   tooltipStyle?: CSSProperties // 自定义 Tooltip 样式
   formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
   value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   range: false,
   step: 1,
   tooltip: true,
+  tooltipOpen: false,
   tooltipStyle: () => ({}),
   formatTooltip: (value: number) => value,
   value: 0
@@ -314,7 +316,7 @@ function handlerBlur(tooltip: HTMLElement): void {
 }
 function handlerFocus(handler: HTMLElement, tooltip: HTMLElement): void {
   handler.focus()
-  if (props.tooltip) {
+  if (props.tooltip && !props.tooltipOpen) {
     tooltip.classList.add('show-handle-tooltip')
   }
 }
@@ -428,7 +430,7 @@ function handleLowMouseMove(e: MouseEvent): void {
     const position = Math.round(pixelStepOperation(originalPosition, '/'))
     stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
   }
-  if (props.tooltip) {
+  if (props.tooltip && !props.tooltipOpen) {
     lowTooltipRef.value.classList.add('show-handle-tooltip')
   }
   if (props.step === 'mark') {
@@ -461,7 +463,7 @@ function handleLowMouseMove(e: MouseEvent): void {
   }
 }
 function handleLowMouseUp(): void {
-  if (props.tooltip) {
+  if (props.tooltip && !props.tooltipOpen) {
     lowTooltipRef.value.classList.remove('show-handle-tooltip')
   }
   document.removeEventListener('mousemove', handleLowMouseMove)
@@ -492,7 +494,7 @@ function handleHighMouseMove(e: MouseEvent): void {
     const position = Math.round(pixelStepOperation(originalPosition, '/'))
     stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
   }
-  if (props.tooltip) {
+  if (props.tooltip && !props.tooltipOpen) {
     highTooltipRef.value.classList.add('show-handle-tooltip')
   }
   if (props.step === 'mark') {
@@ -529,7 +531,7 @@ function handleHighMouseMove(e: MouseEvent): void {
   }
 }
 function handleHighMouseUp(): void {
-  if (props.tooltip) {
+  if (props.tooltip && !props.tooltipOpen) {
     highTooltipRef.value.classList.remove('show-handle-tooltip')
   }
   document.removeEventListener('mousemove', handleHighMouseMove)
@@ -742,9 +744,15 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       @keydown.down.prevent="disabled ? () => false : handleLowSlide(low, 'low')"
       @keydown.up.prevent="disabled ? () => false : handleHighSlide(low, 'low')"
       @mousedown="disabled ? () => false : handleLowMouseDown($event)"
-      @blur="tooltip && !disabled ? handlerBlur(lowTooltipRef) : () => false"
+      @blur="tooltip && !disabled && !tooltipOpen ? handlerBlur(lowTooltipRef) : () => false"
     >
-      <div v-if="tooltip" ref="lowTooltipRef" class="handle-tooltip" :style="tooltipStyle">
+      <div
+        v-if="tooltip"
+        ref="lowTooltipRef"
+        class="handle-tooltip"
+        :class="{ 'show-handle-tooltip': tooltipOpen }"
+        :style="tooltipStyle"
+      >
         {{ lowTooltipValue }}
         <div class="tooltip-arrow"></div>
       </div>
@@ -759,9 +767,15 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       @keydown.down.prevent="disabled ? () => false : handleLowSlide(high, 'high')"
       @keydown.up.prevent="disabled ? () => false : handleHighSlide(high, 'high')"
       @mousedown="disabled ? () => false : handleHighMouseDown($event)"
-      @blur="tooltip && !disabled ? handlerBlur(highTooltipRef) : () => false"
+      @blur="tooltip && !disabled && !tooltipOpen ? handlerBlur(highTooltipRef) : () => false"
     >
-      <div v-if="tooltip" ref="highTooltipRef" class="handle-tooltip" :style="tooltipStyle">
+      <div
+        v-if="tooltip"
+        ref="highTooltipRef"
+        class="handle-tooltip"
+        :class="{ 'show-handle-tooltip': tooltipOpen }"
+        :style="tooltipStyle"
+      >
         {{ highTooltipValue }}
         <div class="tooltip-arrow"></div>
       </div>

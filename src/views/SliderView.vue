@@ -50,6 +50,8 @@ const formatSingleValue = ref<number>(20)
 const formatDoubleValue = ref<number[]>([20, 80])
 const hideTooltipSingleValue = ref<number>(20)
 const hideTooltipDoubleValue = ref<number[]>([20, 80])
+const tooltipOpenSingleValue = ref<number>(20)
+const tooltipOpenDoubleValue = ref<number[]>([20, 80])
 const customStyleSingleValue = ref<number>(20)
 const customStyleDoubleValue = ref<number[]>([20, 80])
 const singleCustomStyle = {
@@ -155,6 +157,12 @@ watchEffect(() => {
 })
 watchEffect(() => {
   console.log('hideTooltipDoubleValue', hideTooltipDoubleValue.value)
+})
+watchEffect(() => {
+  console.log('tooltipOpenSingleValue', tooltipOpenSingleValue.value)
+})
+watchEffect(() => {
+  console.log('tooltipOpenDoubleValue', tooltipOpenDoubleValue.value)
 })
 watchEffect(() => {
   console.log('customStyleSingleValue', customStyleSingleValue.value)
@@ -287,6 +295,11 @@ function formatter(value: number) {
     <Flex vertical gap="large">
       <Slider :tooltip="false" v-model:value="hideTooltipSingleValue" />
       <Slider range :tooltip="false" v-model:value="hideTooltipDoubleValue" />
+    </Flex>
+    <h2 class="mt30 mb10">始终显示 Tooltip</h2>
+    <Flex vertical :gap="36">
+      <Slider tooltip-open v-model:value="tooltipOpenSingleValue" />
+      <Slider range tooltip-open v-model:value="tooltipOpenDoubleValue" />
     </Flex>
     <h2 class="mt30 mb10">自定义样式</h2>
     <h3 class="mb10">通过修改样式变量可以自定义滑动输入条样式、标记样式、Tooltip 样式</h3>
