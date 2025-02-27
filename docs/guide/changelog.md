@@ -6,7 +6,7 @@
 
 ## 2.2.10 <Tag color="volcano" size="small">2025-02-27</Tag>
 
-- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增 `tooltipStyle` 属性，支持自定义 `tooltip` 样式，同时新增多个 `CSS` 变量，用于支持更丰富的样式自定义
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增 `tooltipStyle` 属性，支持自定义 `tooltip` 样式，同时新增相关 `CSS` 变量，用于支持更丰富的样式自定义
 
 ## 2.2.9 <Tag color="volcano" size="small">2025-02-26</Tag>
 
