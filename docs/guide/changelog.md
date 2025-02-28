@@ -6,7 +6,10 @@
 
 ## 2.2.11 <Tag color="volcano" size="small">2025-02-28</Tag>
 
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件代码
+- 优化并更新 [面包屑 Breadcrumb](https://themusecatcher.github.io/vue-amazing-ui/guide/components/breadcrumb.html) 组件，新增多个样式变量，用于支持更丰富的样式自定义
 - 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件代码；新增 `tooltipOpen` 属性，支持设置是否一直显示 `tooltip`
+- 组件库及文档代码优化
 
 ## 2.2.10 <Tag color="volcano" size="small">2025-02-27</Tag>
 
