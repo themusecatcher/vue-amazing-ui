@@ -16,16 +16,16 @@ const defaultCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
   '--icon-size': '32px',
-  '--color-default-hover': '#d4380d'
+  '--default-color-hover': '#d4380d'
 }
 const primaryCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
   '--icon-size': '32px',
-  '--bg-color-primary': '#d4380d',
-  '--bg-color-primary-hover': '#dd6747',
-  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
-  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
+  '--primary-bg-color': '#d4380d',
+  '--primary-bg-color-hover': '#dd6747',
+  '--primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
   '--square-border-radius': '18px'
 }
 const primaryDescCustomStyle = {
@@ -33,10 +33,10 @@ const primaryDescCustomStyle = {
   '--backtop-height': '54px',
   '--icon-width-desc-size': '30px',
   '--desc-size': '16px',
-  '--bg-color-primary': '#d4380d',
-  '--bg-color-primary-hover': '#dd6747',
-  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
-  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
+  '--primary-bg-color': '#d4380d',
+  '--primary-bg-color-hover': '#dd6747',
+  '--primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
   '--square-border-radius': '18px'
 }
 const scrollContainer = ref()
@@ -202,16 +202,16 @@ const defaultCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
   '--icon-size': '32px',
-  '--color-default-hover': '#d4380d'
+  '--default-color-hover': '#d4380d'
 }
 const primaryCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
   '--icon-size': '32px',
-  '--bg-color-primary': '#d4380d',
-  '--bg-color-primary-hover': '#dd6747',
-  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
-  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
+  '--primary-bg-color': '#d4380d',
+  '--primary-bg-color-hover': '#dd6747',
+  '--primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
   '--square-border-radius': '18px'
 }
 const primaryDescCustomStyle = {
@@ -219,10 +219,10 @@ const primaryDescCustomStyle = {
   '--backtop-height': '54px',
   '--icon-width-desc-size': '30px',
   '--desc-size': '16px',
-  '--bg-color-primary': '#d4380d',
-  '--bg-color-primary-hover': '#dd6747',
-  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
-  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
+  '--primary-bg-color': '#d4380d',
+  '--primary-bg-color-hover': '#dd6747',
+  '--primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
   '--square-border-radius': '18px'
 }
 </script>
