@@ -224,6 +224,7 @@ watch(sliderValue, (to) => {
 useResizeObserver(sliderRef, () => {
   getSliderSize()
 })
+// 获取滑动输入条尺寸
 function getSliderSize(): void {
   sliderWidth.value = sliderRef.value.offsetWidth
   sliderHeight.value = sliderRef.value.offsetHeight
@@ -320,6 +321,29 @@ function handlerFocus(handler: HTMLElement, tooltip: HTMLElement): void {
     tooltip.classList.add('show-handle-tooltip')
   }
 }
+// 获取鼠标事件出发时的点击位置 & 步长位置
+function getSliderPosition(e: MouseEvent): { originalPosition: number; stepPosition: number } {
+  let originalPosition // 鼠标点击位置
+  let stepPosition // 只考虑步长时将要移动的位置
+  if (!props.vertical) {
+    // horizontal
+    const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
+    // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+    originalPosition = e.clientX - leftX
+    const position = Math.round(pixelStepOperation(originalPosition, '/'))
+    stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
+  } else {
+    const bottomY = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
+    // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
+    originalPosition = bottomY - e.clientY
+    const position = Math.round(pixelStepOperation(originalPosition, '/'))
+    stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
+  }
+  return {
+    originalPosition,
+    stepPosition
+  }
+}
 // 根据初始位置和步长位置 获取将要移动的目标位置
 function getTargetPosition(originalPosition: number, stepPosition: number): number {
   if (hasMarks.value) {
@@ -338,23 +362,11 @@ function getTargetPosition(originalPosition: number, stepPosition: number): numb
 }
 // 点击滑动输入条任意位置
 function onClickSliderPoint(e: MouseEvent): void {
-  let originalPosition // 鼠标点击位置
-  let stepPosition // 只考虑步长时将要移动的位置
+  let {
+    originalPosition, // 鼠标点击位置
+    stepPosition // 只考虑步长时将要移动的位置
+  } = getSliderPosition(e)
   let targetPosition // 考虑步长和刻度标记时，将要移动的目标位置
-  if (!props.vertical) {
-    // horizontal
-    const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
-    // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    originalPosition = e.clientX - leftX
-    const position = Math.round(pixelStepOperation(originalPosition, '/'))
-    stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
-  } else {
-    const bottomY = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
-    // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
-    originalPosition = bottomY - e.clientY
-    const position = Math.round(pixelStepOperation(originalPosition, '/'))
-    stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
-  }
   if (props.step === 'mark') {
     // 仅可选 marks 标记的部分
     // 获取距离点击位置最近的 mark 标记位置
@@ -411,25 +423,13 @@ function handleLowMouseDown(e: MouseEvent): void {
   document.addEventListener('mouseup', handleLowMouseUp)
   handleLowMouseMove(e)
 }
+// 在滑动输入条上拖动较小数值滑块
 function handleLowMouseMove(e: MouseEvent): void {
-  // 在滑动输入条上拖动较小数值滑块
-  let originalPosition // 初始位置
-  let stepPosition // 只考虑步长时将要移动的位置
+  let {
+    originalPosition, // 初始位置
+    stepPosition // 只考虑步长时将要移动的位置
+  } = getSliderPosition(e)
   let targetPosition // 考虑步长和刻度标记时，将要移动的目标位置
-  if (!props.vertical) {
-    // horizontal
-    const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
-    // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    originalPosition = e.clientX - leftX
-    const position = Math.round(pixelStepOperation(originalPosition, '/'))
-    stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
-  } else {
-    const bottomY = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
-    // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
-    originalPosition = bottomY - e.clientY
-    const position = Math.round(pixelStepOperation(originalPosition, '/'))
-    stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
-  }
   if (props.tooltip && !props.tooltipOpen) {
     lowTooltipRef.value.classList.add('show-handle-tooltip')
   }
@@ -475,25 +475,14 @@ function handleHighMouseDown(e: MouseEvent): void {
   document.addEventListener('mouseup', handleHighMouseUp)
   handleHighMouseMove(e)
 }
+// 在滑动输入条上拖动较大数值滑块
 function handleHighMouseMove(e: MouseEvent): void {
-  // 在滑动输入条上拖动较大数值滑块
-  let originalPosition // 初始位置
-  let stepPosition // 只考虑步长时将要移动的位置
+  let {
+    originalPosition, // 初始位置
+    stepPosition // 只考虑步长时将要移动的位置
+  } = getSliderPosition(e)
   let targetPosition // 考虑步长和刻度标记时，将要移动的目标位置
-  if (!props.vertical) {
-    // horizontal
-    const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
-    // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-    originalPosition = e.clientX - leftX
-    const position = Math.round(pixelStepOperation(originalPosition, '/'))
-    stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
-  } else {
-    const bottomY = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
-    // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
-    originalPosition = bottomY - e.clientY
-    const position = Math.round(pixelStepOperation(originalPosition, '/'))
-    stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
-  }
+  ;({ originalPosition, stepPosition } = getSliderPosition(e))
   if (props.tooltip && !props.tooltipOpen) {
     highTooltipRef.value.classList.add('show-handle-tooltip')
   }
