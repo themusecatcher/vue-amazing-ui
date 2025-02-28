@@ -14,7 +14,7 @@ export interface Props {
   breadcrumbClass?: string // 设置面包屑类名
   breadcrumbStyle?: CSSProperties // 设置面包屑样式
   maxWidth?: string | number // 设置文本最大显示宽度，超出后显示省略号，单位 px
-  separator?: string // 自定义分隔符，默认为 > string | slot
+  separator?: string // 自定义分隔符，默认为 '>' string | slot
   separatorStyle?: CSSProperties // 设置分隔符样式
   target?: '_self' | '_blank' // 如何打开目标 URL，当前窗口或新窗口
 }
@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
 const breadcrumbAmount = computed(() => {
   return props.routes.length
 })
-function getUrl(route: Route) {
+function getTargetUrl(route: Route): string {
   let targetUrl: string = ''
   if (route.path) {
     targetUrl = route.path
@@ -49,7 +49,22 @@ function getUrl(route: Route) {
 }
 </script>
 <template>
-  <div class="m-breadcrumb" :class="breadcrumbClass" :style="breadcrumbStyle">
+  <div
+    class="m-breadcrumb"
+    :class="breadcrumbClass"
+    :style="[
+      `
+        --breadcrumb-color: rgba(0, 0, 0, 0.45);
+        --breadcrumb-bg-color-hover: rgba(0, 0, 0, 0.06);
+        --breadcrumb-color-hover: rgba(0, 0, 0, 0.88);
+        --breadcrumb-color-active: rgba(0, 0, 0, 0.88);
+        --breadcrumb-padding: 0 4px;
+        --breadcrumb-border-radius: 4px;
+        --breadcrumb-separator-color: rgba(0, 0, 0, 0.45);
+      `,
+      breadcrumbStyle
+    ]"
+  >
     <div class="breadcrumb-item" v-for="(route, index) in routes" :key="index">
       <component
         :is="route.path ? 'a' : 'span'"
@@ -59,7 +74,7 @@ function getUrl(route: Route) {
           'link-active': index === breadcrumbAmount - 1
         }"
         :style="`max-width: ${maxWidth}px;`"
-        :href="getUrl(route)"
+        :href="getTargetUrl(route)"
         :target="target"
         :title="route.name"
       >
@@ -90,7 +105,7 @@ function getUrl(route: Route) {
 <style lang="less" scoped>
 .m-breadcrumb {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--breadcrumb-color);
   line-height: 1.5714285714285714;
   display: flex;
   align-items: center;
@@ -100,12 +115,12 @@ function getUrl(route: Route) {
     align-items: center;
     .breadcrumb-link {
       display: inline-block;
-      color: rgba(0, 0, 0, 0.45);
+      color: var(--breadcrumb-color);
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      padding: 0 4px;
-      border-radius: 4px;
+      padding: var(--breadcrumb-padding);
+      border-radius: var(--breadcrumb-border-radius);
       text-decoration: none;
       cursor: text;
       transition:
@@ -115,20 +130,21 @@ function getUrl(route: Route) {
     .link-hover {
       cursor: pointer;
       &:hover {
-        background-color: rgba(0, 0, 0, 0.06);
-        color: rgba(0, 0, 0, 0.88);
+        background-color: var(--breadcrumb-bg-color-hover);
+        color: var(--breadcrumb-color-hover);
       }
     }
     .link-active {
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--breadcrumb-color-active);
     }
     .breadcrumb-separator {
       display: inline-flex;
       align-items: center;
       margin: 0 4px;
-      color: rgba(0, 0, 0, 0.45);
+      color: var(--breadcrumb-separator-color);
       :deep(svg) {
-        margin-inline: -2px;
+        margin-left: -2px;
+        margin-right: -2px;
         fill: currentColor;
       }
     }
