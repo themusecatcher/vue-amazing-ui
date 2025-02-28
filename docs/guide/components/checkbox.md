@@ -526,6 +526,64 @@ const verticalGap = ref(8)
 
 :::
 
+## 自定义主题色
+
+<Flex vertical>
+  <Checkbox style="--checkbox-primary-color: #ff6900" v-model:checked="checked"> Checkbox </Checkbox>
+  <Checkbox style="--checkbox-primary-color: #ff6900" :options="options" v-model:value="selectedOptions" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+const options = ref<CheckboxOption[]>([
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const checked = ref<CheckboxProps['checked']>(false)
+const selectedOptions = ref<CheckboxProps['value']>([2])
+watchEffect(() => {
+  console.log('checked', checked.value)
+})
+watchEffect(() => {
+  console.log('selectedOptions', selectedOptions.value)
+})
+</script>
+<template>
+  <Flex vertical>
+    <Checkbox style="--checkbox-primary-color: #ff6900" v-model:checked="checked"> Checkbox </Checkbox>
+    <Checkbox style="--checkbox-primary-color: #ff6900" :options="options" v-model:value="selectedOptions" />
+  </Flex>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Checkbox
