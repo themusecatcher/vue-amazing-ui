@@ -67,6 +67,7 @@ const optionsDisabled = ref<CheckboxOption[]>([
 ])
 const checked = ref<CheckboxProps['checked']>(false)
 const selectedOptions = ref<CheckboxProps['value']>([2])
+const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -529,8 +530,9 @@ const verticalGap = ref(8)
 ## 自定义主题色
 
 <Flex vertical>
-  <Checkbox style="--checkbox-primary-color: #ff6900" v-model:checked="checked"> Checkbox </Checkbox>
-  <Checkbox style="--checkbox-primary-color: #ff6900" :options="options" v-model:value="selectedOptions" />
+  <Space align="center">checkboxPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+  <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" v-model:checked="checked"> Checkbox </Checkbox>
+  <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" :options="options" v-model:value="selectedOptions" />
 </Flex>
 
 ::: details Show Code
@@ -567,6 +569,7 @@ const options = ref<CheckboxOption[]>([
 ])
 const checked = ref<CheckboxProps['checked']>(false)
 const selectedOptions = ref<CheckboxProps['value']>([2])
+const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -576,8 +579,9 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Checkbox style="--checkbox-primary-color: #ff6900" v-model:checked="checked"> Checkbox </Checkbox>
-    <Checkbox style="--checkbox-primary-color: #ff6900" :options="options" v-model:value="selectedOptions" />
+    <Space align="center">checkboxPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+    <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" v-model:checked="checked"> Checkbox </Checkbox>
+    <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" :options="options" v-model:value="selectedOptions" />
   </Flex>
 </template>
 ```
