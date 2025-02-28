@@ -8,6 +8,7 @@
 
 - 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件代码
 - 优化并更新 [面包屑 Breadcrumb](https://themusecatcher.github.io/vue-amazing-ui/guide/components/breadcrumb.html) 组件，新增多个样式变量，用于支持更丰富的样式自定义
+- 优化并更新 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件，新增主题色样式变量，用于支持自定义主题色
 - 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件代码；新增 `tooltipOpen` 属性，支持设置是否一直显示 `tooltip`
 - 组件库及文档代码优化
 

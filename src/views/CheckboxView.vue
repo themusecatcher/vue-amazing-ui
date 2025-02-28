@@ -126,5 +126,10 @@ function onCheckAllChange(checked: boolean) {
       </Row>
       <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="selectedOptions" />
     </Flex>
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Flex vertical>
+      <Checkbox style="--checkbox-primary-color: #ff6900" v-model:checked="checked"> Checkbox </Checkbox>
+      <Checkbox style="--checkbox-primary-color: #ff6900" :options="options" v-model:value="selectedOptions" />
+    </Flex>
   </div>
 </template>
