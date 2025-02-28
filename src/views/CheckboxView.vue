@@ -129,9 +129,15 @@ function onCheckAllChange(checked: boolean) {
     </Flex>
     <h2 class="mt30 mb10">自定义主题色</h2>
     <Flex vertical>
-      <Space align="center">checkboxPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+      <Space align="center"
+        >checkboxPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor"
+      /></Space>
       <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" v-model:checked="checked"> Checkbox </Checkbox>
-      <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" :options="options" v-model:value="selectedOptions" />
+      <Checkbox
+        :style="`--checkbox-primary-color: ${primaryColor}`"
+        :options="options"
+        v-model:value="selectedOptions"
+      />
     </Flex>
   </div>
 </template>

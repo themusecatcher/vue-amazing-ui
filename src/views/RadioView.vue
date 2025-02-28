@@ -145,7 +145,13 @@ function onChange(value: string | number | boolean) {
     <Space vertical>
       <Space align="center">radioPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
       <Radio :style="`--radio-primary-color: ${primaryColor}`" :options="options" v-model:value="value" />
-      <Radio :style="`--radio-primary-color: ${primaryColor}`" :options="options" v-model:value="value" button button-style="solid" />
+      <Radio
+        :style="`--radio-primary-color: ${primaryColor}`"
+        :options="options"
+        v-model:value="value"
+        button
+        button-style="solid"
+      />
     </Space>
   </div>
 </template>
