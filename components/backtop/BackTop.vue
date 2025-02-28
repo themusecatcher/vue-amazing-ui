@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   to: 'body',
   listenTo: undefined
 })
-const backtopRef = ref<HTMLElement | null>(null)
+const backtopRef = ref<HTMLElement | null>(null) // backTop 元素引用
 const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
 const targetElement = ref<HTMLElement | null>(null) // 渲染容器元素
@@ -87,11 +87,11 @@ const mutationObserver = useMutationObserver(
   },
   { subtree: true, childList: true, attributes: true, characterData: true }
 )
-function updateScrollTop(e: Event) {
+function updateScrollTop(e: Event): void {
   scrollTop.value = (e.target as HTMLElement).scrollTop
 }
 // 查询并监听滚动元素
-function observeScroll() {
+function observeScroll(): void {
   cleanup()
   if (props.listenTo === undefined) {
     scrollTarget.value = getScrollParent(backtopRef.value)
@@ -109,12 +109,12 @@ function observeScroll() {
   }
   appendBackTop()
 }
-function cleanup() {
+function cleanup(): void {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updateScrollTop)
   scrollTarget.value = null
   mutationObserver.stop()
 }
-function appendBackTop() {
+function appendBackTop(): void {
   // 渲染容器节点
   if (typeof props.to === 'string') {
     targetElement.value = document.getElementsByTagName(props.to)[0] as HTMLElement
@@ -142,7 +142,7 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   if (isScrollable(parentElement)) return parentElement
   return getScrollParent(parentElement)
 }
-function onBackTop() {
+function onBackTop(): void {
   scrollTarget.value &&
     scrollTarget.value.scrollTo({
       top: 0,
@@ -166,18 +166,18 @@ function onBackTop() {
           --icon-size: 26px;
           --icon-width-desc-size: 24px;
           --desc-size: 12px;
-          --color-default: rgba(0, 0, 0, 0.88);
-          --color-default-hover: #1677ff;
-          --bg-color-default: rgba(255, 255, 255, 0.88);
-          --bg-color-default-hover: rgba(255, 255, 255);
-          --shadow-color-default: rgba(0, 0, 0, 0.12);
-          --shadow-color-default-hover: rgba(0, 0, 0, 0.12);
-          --color-primary: #fff;
-          --color-primary-hover: #fff;
-          --bg-color-primary: #1677ff;
-          --bg-color-primary-hover: #4096ff;
-          --shadow-color-primary: rgba(9, 88, 217, 0.32);
-          --shadow-color-primary-hover: rgba(9, 88, 217, 0.32);
+          --default-color: rgba(0, 0, 0, 0.88);
+          --default-color-hover: #1677ff;
+          --default-bg-color: rgba(255, 255, 255, 0.88);
+          --default-bg-color-hover: rgba(255, 255, 255);
+          --default-shadow-color: rgba(0, 0, 0, 0.12);
+          --default-shadow-color-hover: rgba(0, 0, 0, 0.12);
+          --primary-color: #fff;
+          --primary-color-hover: #fff;
+          --primary-bg-color: #1677ff;
+          --primary-bg-color-hover: #4096ff;
+          --primary-shadow-color: rgba(9, 88, 217, 0.32);
+          --primary-shadow-color-hover: rgba(9, 88, 217, 0.32);
           --circle-border-radius: calc(var(--backtop-width) / 2);
           --square-border-radius: 8px;
         `
@@ -283,38 +283,38 @@ function onBackTop() {
     }
   }
   .backtop-default {
-    color: var(--color-default);
-    background-color: var(--bg-color-default);
-    box-shadow: 0 2px 8px 0 var(--shadow-color-default);
+    color: var(--default-color);
+    background-color: var(--default-bg-color);
+    box-shadow: 0 2px 8px 0 var(--default-shadow-color);
     .backtop-icon,
     .backtop-description {
-      color: var(--color-default);
+      color: var(--default-color);
     }
     &:hover {
-      color: var(--color-default-hover);
-      background-color: var(--bg-color-default-hover);
-      box-shadow: 0 2px 8px 3px var(--shadow-color-default-hover);
+      color: var(--default-color-hover);
+      background-color: var(--default-bg-color-hover);
+      box-shadow: 0 2px 8px 3px var(--default-shadow-color-hover);
       .backtop-icon,
       .backtop-description {
-        color: var(--color-default-hover);
+        color: var(--default-color-hover);
       }
     }
   }
   .backtop-primary {
-    color: var(--color-primary);
-    background-color: var(--bg-color-primary);
-    box-shadow: 0 2px 8px 0 var(--shadow-color-primary);
+    color: var(--primary-color);
+    background-color: var(--primary-bg-color);
+    box-shadow: 0 2px 8px 0 var(--primary-shadow-color);
     .backtop-icon,
     .backtop-description {
-      color: var(--color-primary);
+      color: var(--primary-color);
     }
     &:hover {
-      color: var(--color-primary-hover);
-      background-color: var(--bg-color-primary-hover);
-      box-shadow: 0 2px 8px 3px var(--shadow-color-primary-hover);
+      color: var(--primary-color-hover);
+      background-color: var(--primary-bg-color-hover);
+      box-shadow: 0 2px 8px 3px var(--primary-shadow-color-hover);
       .backtop-icon,
       .backtop-description {
-        color: var(--color-primary-hover);
+        color: var(--primary-color-hover);
       }
     }
   }
