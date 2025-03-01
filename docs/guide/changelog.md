@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## 2.2.12 <Tag color="volcano" size="small">soon</Tag>
+
+- 组件库及文档代码优化
+
 ## 2.2.11 <Tag color="volcano" size="small">2025-02-28</Tag>
 
 - 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件代码
