@@ -18,6 +18,12 @@ const sizeOptions = [
 ]
 const size = ref('middle')
 const customLoading = ref(false)
+const customStyle = {
+  '--primary-color': '#faad14',
+  '--primary-color-hover': '#ffc53d',
+  '--primary-color-active': '#d48806',
+  '--ripple-color': '#faad14'
+}
 const loading = ref(true)
 const loadingOptions = [
   {
@@ -304,6 +310,7 @@ function onClick(e: Event) {
       </Space>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
+    <h3 class="mb10">可通过自定义类名然后通过样式覆盖 或 直接自定义样式变量 来自定义样式</h3>
     <Space vertical>
       <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
       <Space>
@@ -319,25 +326,12 @@ function onClick(e: Event) {
         >
           自定义样式
         </Button>
-        <Button
-          button-class="custom-class1"
-          ripple-color="#faad14"
-          shape="circle"
-          size="large"
-          :loading="customLoading"
-        >
+        <Button shape="circle" size="large" :style="customStyle" :loading="customLoading">
           <template #icon>
             <SearchOutlined />
           </template>
         </Button>
-        <Button
-          button-class="custom-class2"
-          ripple-color="#faad14"
-          type="primary"
-          shape="round"
-          size="large"
-          :loading="customLoading"
-        >
+        <Button type="primary" shape="round" size="large" :style="customStyle" :loading="customLoading">
           <template #icon>
             <SearchOutlined />
           </template>
