@@ -13,13 +13,15 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-
+import type { RadioOption } from 'vue-amazing-ui'
+import { generate } from '@ant-design/colors'
 const open1 = ref<boolean>(false)
 const open2 = ref<boolean>(false)
 const open3 = ref<boolean>(false)
 const open4 = ref<boolean>(false)
 const open5 = ref<boolean>(false)
-const options = ref([
+const open6 = ref<boolean>(false)
+const options = ref<RadioOption[]>([
   {
     label: 'top',
     value: 'top'
@@ -40,9 +42,21 @@ const options = ref([
 const placement = ref('right')
 const extraPlacement = ref('right')
 const footerPlacement = ref('right')
-function onClose () { // 点击遮罩层或左上角叉或取消按钮的回调
+const primaryColor = ref('#ff6900')
+function getColorPalettes(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
+}
+function onClose() {
   open3.value = false
   open4.value = false
+  open6.value = false
   console.log('close')
 }
 </script>
@@ -61,9 +75,9 @@ function onClose () { // 点击遮罩层或左上角叉或取消按钮的回调
 ```vue
 <script lang="ts" setup>
 import { ref } from 'vue'
-
-const open = ref(false)
-function onClose () { // 点击遮罩层或左上角叉或取消按钮的回调
+const open = ref<boolean>(false)
+function onClose () {
+  open.value = false
   console.log('close')
 }
 </script>
@@ -94,9 +108,9 @@ function onClose () { // 点击遮罩层或左上角叉或取消按钮的回调
 ```vue
 <script lang="ts" setup>
 import { ref } from 'vue'
-
-const open = ref(false)
-const options = ref([
+import type { RadioOption } from 'vue-amazing-ui'
+const open = ref<boolean>(false)
+const options = ref<RadioOption[]>([
   {
     label: 'top',
     value: 'top'
@@ -148,9 +162,9 @@ const placement = ref('right')
 ```vue
 <script lang="ts" setup>
 import { ref } from 'vue'
-
-const open = ref(false)
-const options = ref([
+import type { RadioOption } from 'vue-amazing-ui'
+const open = ref<boolean>(false)
+const options = ref<RadioOption[]>([
   {
     label: 'top',
     value: 'top'
@@ -210,26 +224,26 @@ function onClose () {
 ```vue
 <script lang="ts" setup>
 import { ref } from 'vue'
-
-const open = ref(false)
-const options = ref([
-    {
-      label: 'top',
-      value: 'top'
-    },
-    {
-      label: 'right',
-      value: 'right'
-    },
-    {
-      label: 'bottom',
-      value: 'bottom'
-    },
-    {
-      label: 'left',
-      value: 'left'
-    }
-  ])
+import type { RadioOption } from 'vue-amazing-ui'
+const open = ref<boolean>(false)
+const options = ref<RadioOption[]>([
+  {
+    label: 'top',
+    value: 'top'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  },
+  {
+    label: 'bottom',
+    value: 'bottom'
+  },
+  {
+    label: 'left',
+    value: 'left'
+  }
+])
 const footerPlacement = ref('right')
 function onClose () {
   open.value = false
@@ -273,8 +287,7 @@ function onClose () {
 ```vue
 <script lang="ts" setup>
 import { ref } from 'vue'
-
-const open = ref(false)
+const open = ref<boolean>(false)
 </script>
 <template>
   <Button type="primary" @click="open = true">Open</Button>
@@ -294,9 +307,79 @@ const open = ref(false)
 
 :::
 
+## 自定义主题色
+
+<Space align="center">
+  primaryColor:
+  <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  <Button :style="getColorPalettes(primaryColor)" type="primary" @click="open6 = true">Open</Button>
+</Space>
+<Drawer
+  v-model:open="open6"
+  :closable="false"
+  title="Basic Drawer"
+  :footer-style="{ textAlign: 'right' }"
+>
+  <p>Some contents...</p>
+  <p>Some contents...</p>
+  <p>Some contents...</p>
+  <template #footer>
+    <Button style="margin-right: 8px" :style="getColorPalettes(primaryColor)" @click="onClose">Cancel</Button>
+    <Button :style="getColorPalettes(primaryColor)" type="primary" @click="onClose">Submit</Button>
+  </template>
+</Drawer>
+
+::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { generate } from '@ant-design/colors'
+const open = ref<boolean>(false)
+const primaryColor = ref('#ff6900')
+function getColorPalettes(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
+}
+function onClose() {
+  open.value = false
+  console.log('close')
+}
+</script>
+<template>
+  <Space align="center">
+    primaryColor:
+    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    <Button :style="getColorPalettes(primaryColor)" type="primary" @click="open = true">Open</Button>
+  </Space>
+  <Drawer
+    v-model:open="open"
+    :closable="false"
+    title="Basic Drawer"
+    :footer-style="{ textAlign: 'right' }"
+  >
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <template #footer>
+      <Button style="margin-right: 8px" :style="getColorPalettes(primaryColor)" @click="onClose">Cancel</Button>
+      <Button :style="getColorPalettes(primaryColor)" type="primary" @click="onClose">Submit</Button>
+    </template>
+  </Drawer>
+</template>
+```
+
+:::
+
 <style lang="less" scoped>
 p {
-  color: rgba(0, 0, 0, .88);
+  color: rgba(0, 0, 0, 0.88);
 }
 </style>
 
