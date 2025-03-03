@@ -241,7 +241,7 @@ function onClose() {
     <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
   </Space>
   <Space align="center">
-    checkboxPrimaryColor:
+    messagePrimaryColor:
     <ColorPicker style="width: 200px" v-model:value="primaryColor" />
     <Button type="primary" @click="onThemeCustom('This is a custom theme message')">Custom Theme</Button>
   </Space>
@@ -289,7 +289,7 @@ function onClose() {
       <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
     </Space>
     <Space align="center">
-      checkboxPrimaryColor:
+      messagePrimaryColor:
       <ColorPicker style="width: 200px" v-model:value="primaryColor" />
       <Button type="primary" @click="onThemeCustom('This is a custom theme message')">Custom Theme</Button>
     </Space>
