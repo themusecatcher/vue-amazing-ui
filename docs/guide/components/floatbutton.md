@@ -21,8 +21,16 @@ import {
   MessageOutlined,
   CommentOutlined
 } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const primaryColor = ref('#ff6900')
-const primaryColorHover = ref('#ff904d')
+function getColorPalettes(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--float-btn-primary-color': color,
+    '--float-btn-primary-color-hover': colorPalettes[4]
+  }
+  return style
+}
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -572,25 +580,16 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 ## 自定义主题色
 
 <Flex vertical>
-  <Space align="center">floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
-  <Space align="center"
-    >floatButtonPrimaryColorHover:<ColorPicker style="width: 200px" v-model:value="primaryColorHover"
-  /></Space>
+  <Space align="center">
+    floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  </Space>
   <Card style="height: 300px; transform: translate(0)">
-    <FloatButton
-      :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
-      type="primary"
-      :right="96"
-    >
+    <FloatButton :style="getColorPalettes(primaryColor)" type="primary" :right="96">
       <template #icon>
         <MessageOutlined />
       </template>
     </FloatButton>
-    <FloatButton
-      :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
-      type="primary"
-      shape="square"
-    >
+    <FloatButton :style="getColorPalettes(primaryColor)" type="primary" shape="square">
       <template #icon>
         <CommentOutlined />
       </template>
@@ -604,30 +603,29 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 <script setup lang="ts">
 import { ref } from 'vue'
 import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const primaryColor = ref('#ff6900')
-const primaryColorHover = ref('#ff904d')
+function getColorPalettes(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--float-btn-primary-color': color,
+    '--float-btn-primary-color-hover': colorPalettes[4]
+  }
+  return style
+}
 </script>
 <template>
   <Flex vertical>
-    <Space align="center">floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
-    <Space align="center"
-      >floatButtonPrimaryColorHover:<ColorPicker style="width: 200px" v-model:value="primaryColorHover"
-    /></Space>
+    <Space align="center">
+      floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    </Space>
     <Card style="height: 300px; transform: translate(0)">
-      <FloatButton
-        :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
-        type="primary"
-        :right="96"
-      >
+      <FloatButton :style="getColorPalettes(primaryColor)" type="primary" :right="96">
         <template #icon>
           <MessageOutlined />
         </template>
       </FloatButton>
-      <FloatButton
-        :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
-        type="primary"
-        shape="square"
-      >
+      <FloatButton :style="getColorPalettes(primaryColor)" type="primary" shape="square">
         <template #icon>
           <CommentOutlined />
         </template>
