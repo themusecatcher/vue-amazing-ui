@@ -28,6 +28,12 @@ const sizeOptions = [
 ]
 const size = ref('middle')
 const customLoading = ref(false)
+const customStyle = {
+  '--primary-color': '#faad14',
+  '--primary-color-hover': '#ffc53d',
+  '--primary-color-active': '#d48806',
+  '--ripple-color': '#faad14'
+}
 const loading = ref(true)
 const loadingOptions = [
   {
@@ -677,15 +683,14 @@ const size = ref('middle')
 
 ## 自定义样式
 
+*可通过自定义类名然后通过样式覆盖 或 直接自定义样式变量 来自定义样式*
+
+<br/>
+
 <Space vertical>
   <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
   <Space>
-    <Button
-      button-class="custom-class1"
-      ripple-color="#faad14"
-      size="large"
-      :loading="customLoading"
-    >
+    <Button button-class="custom-class1" ripple-color="#faad14" size="large" :loading="customLoading">
       自定义样式
     </Button>
     <Button
@@ -698,10 +703,9 @@ const size = ref('middle')
       自定义样式
     </Button>
     <Button
-      button-class="custom-class1"
-      ripple-color="#faad14"
       shape="circle"
       size="large"
+      :style="customStyle"
       :loading="customLoading"
     >
       <template #icon>
@@ -709,11 +713,10 @@ const size = ref('middle')
       </template>
     </Button>
     <Button
-      button-class="custom-class2"
-      ripple-color="#faad14"
       type="primary"
       shape="round"
       size="large"
+      :style="customStyle"
       :loading="customLoading"
     >
       <template #icon>
@@ -721,13 +724,7 @@ const size = ref('middle')
       </template>
       Search
     </Button>
-    <Button
-      button-class="custom-class1"
-      ripple-color="#faad14"
-      shape="round"
-      size="large"
-      :loading="customLoading"
-    >
+    <Button button-class="custom-class1" ripple-color="#faad14" shape="round" size="large" :loading="customLoading">
       <template #icon>
         <DownloadOutlined />
       </template>
@@ -742,17 +739,18 @@ const size = ref('middle')
 import { ref } from 'vue'
 import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 const customLoading = ref(false)
+const customStyle = {
+  '--primary-color': '#faad14',
+  '--primary-color-hover': '#ffc53d',
+  '--primary-color-active': '#d48806',
+  '--ripple-color': '#faad14'
+}
 </script>
 <template>
   <Space vertical>
     <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
     <Space>
-      <Button
-        button-class="custom-class1"
-        ripple-color="#faad14"
-        size="large"
-        :loading="customLoading"
-      >
+      <Button button-class="custom-class1" ripple-color="#faad14" size="large" :loading="customLoading">
         自定义样式
       </Button>
       <Button
@@ -765,10 +763,9 @@ const customLoading = ref(false)
         自定义样式
       </Button>
       <Button
-        button-class="custom-class1"
-        ripple-color="#faad14"
         shape="circle"
         size="large"
+        :style="customStyle"
         :loading="customLoading"
       >
         <template #icon>
@@ -776,11 +773,10 @@ const customLoading = ref(false)
         </template>
       </Button>
       <Button
-        button-class="custom-class2"
-        ripple-color="#faad14"
         type="primary"
         shape="round"
         size="large"
+        :style="customStyle"
         :loading="customLoading"
       >
         <template #icon>
@@ -788,13 +784,7 @@ const customLoading = ref(false)
         </template>
         Search
       </Button>
-      <Button
-        button-class="custom-class1"
-        ripple-color="#faad14"
-        shape="round"
-        size="large"
-        :loading="customLoading"
-      >
+      <Button button-class="custom-class1" ripple-color="#faad14" shape="round" size="large" :loading="customLoading">
         <template #icon>
           <DownloadOutlined />
         </template>
