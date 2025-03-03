@@ -257,7 +257,14 @@ function onClick() {
       'select-large': size === 'large',
       'select-disabled': disabled
     }"
-    :style="`--select-width: ${selectWidth}; --select-height: ${selectHeight};`"
+    :style="`
+      --select-width: ${selectWidth};
+      --select-height: ${selectHeight};
+      --select-primary-color-hover: #4096ff;
+      --select-primary-color-focus: #4096ff;
+      --select-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --select-item-bg-color-active: #e6f4ff;
+    `"
     @click="disabled ? () => false : toggleSelect()"
   >
     <div class="select-wrap" @mouseenter="onEnter" @mouseleave="onLeave">
@@ -441,7 +448,7 @@ function onClick() {
   &:not(.select-disabled):hover {
     // 悬浮时样式
     .select-wrap {
-      border-color: #4096ff;
+      border-color: var(--select-primary-color-hover);
     }
   }
   .select-wrap {
@@ -582,7 +589,7 @@ function onClick() {
     .option-selected {
       // 被选中的下拉项样式
       font-weight: 600;
-      background: #e6f4ff;
+      background: var(--select-item-bg-color-active);
     }
     .option-disabled {
       // 禁用某个下拉选项时的样式
@@ -603,8 +610,8 @@ function onClick() {
 .select-focused:not(.select-disabled) {
   // 激活时样式
   .select-wrap {
-    border-color: #4096ff;
-    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    border-color: var(--select-primary-color-focus);
+    box-shadow: 0 0 0 2px var(--select-primary-shadow-color);
   }
 }
 .search-select {
