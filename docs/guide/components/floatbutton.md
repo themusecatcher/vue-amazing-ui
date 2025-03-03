@@ -10,7 +10,7 @@
 - 无论浏览到何处都可以看见的按钮
 
 <script setup lang="ts">
-import { h } from 'vue'
+import { h, ref } from 'vue'
 import {
   GlobalOutlined,
   QuestionCircleOutlined,
@@ -21,6 +21,8 @@ import {
   MessageOutlined,
   CommentOutlined
 } from '@ant-design/icons-vue'
+const primaryColor = ref('#ff6900')
+const primaryColorHover = ref('#ff904d')
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -562,6 +564,76 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
       </template>
     </FloatButton>
   </Card>
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Flex vertical>
+  <Space align="center">primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+  <Space align="center"
+    >primaryColorHover:<ColorPicker style="width: 200px" v-model:value="primaryColorHover"
+  /></Space>
+  <Card width="50%" style="height: 300px; transform: translate(0)">
+    <FloatButton
+      :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
+      type="primary"
+      :right="96"
+    >
+      <template #icon>
+        <MessageOutlined />
+      </template>
+    </FloatButton>
+    <FloatButton
+      :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
+      type="primary"
+      shape="square"
+    >
+      <template #icon>
+        <CommentOutlined />
+      </template>
+    </FloatButton>
+  </Card>
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
+const primaryColor = ref('#ff6900')
+const primaryColorHover = ref('#ff904d')
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+    <Space align="center"
+      >primaryColorHover:<ColorPicker style="width: 200px" v-model:value="primaryColorHover"
+    /></Space>
+    <Card width="50%" style="height: 300px; transform: translate(0)">
+      <FloatButton
+        :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
+        type="primary"
+        :right="96"
+      >
+        <template #icon>
+          <MessageOutlined />
+        </template>
+      </FloatButton>
+      <FloatButton
+        :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
+        type="primary"
+        shape="square"
+      >
+        <template #icon>
+          <CommentOutlined />
+        </template>
+      </FloatButton>
+    </Card>
+  </Flex>
 </template>
 ```
 

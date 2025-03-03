@@ -122,6 +122,8 @@ function onClick(e: Event) {
       --float-btn-top: ${floatBtnTop};
       --float-btn-bottom: ${floatBtnBottom};
       --float-btn-z-index: ${zIndex};
+      --float-btn-primary-color: #1677ff;
+      --float-btn-primary-color-hover: #4096ff;
     `"
     :href="href"
     :target="target"
@@ -315,13 +317,13 @@ function onClick(e: Event) {
 }
 
 .float-btn-primary {
-  background-color: #1677ff;
+  background-color: var(--float-btn-primary-color);
   & > .float-btn-tooltip {
     .float-btn-body {
-      background-color: #1677ff;
+      background-color: var(--float-btn-primary-color);
       transition: background-color 0.2s;
       &:hover {
-        background-color: #4096ff;
+        background-color: var(--float-btn-primary-color-hover);
       }
       .float-btn-content {
         .float-btn-icon {
