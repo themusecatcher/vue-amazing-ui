@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const disabled = ref(true)
 const sizeOptions = [
   {
@@ -18,12 +19,7 @@ const sizeOptions = [
 ]
 const size = ref('middle')
 const customLoading = ref(false)
-const customStyle = {
-  '--button-primary-color': '#faad14',
-  '--button-primary-color-hover': '#ffc53d',
-  '--button-primary-color-active': '#d48806',
-  '--button-ripple-color': '#faad14'
-}
+const primaryColor = ref('#ff6900')
 const loading = ref(true)
 const loadingOptions = [
   {
@@ -36,6 +32,15 @@ const loadingOptions = [
   }
 ]
 const loadingType = ref('dynamic')
+function getColorPalettes(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6]
+  }
+  return style
+}
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -326,18 +331,24 @@ function onClick(e: Event) {
         >
           自定义样式
         </Button>
-        <Button shape="circle" size="large" :style="customStyle" :loading="customLoading">
+      </Space>
+      <Space align="center">
+        buttonPrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      </Space>
+      <Space>
+        <Button shape="circle" size="large" :style="getColorPalettes(primaryColor)" :loading="customLoading">
           <template #icon>
             <SearchOutlined />
           </template>
         </Button>
-        <Button type="primary" shape="round" size="large" :style="customStyle" :loading="customLoading">
+        <Button type="primary" shape="round" size="large" :style="getColorPalettes(primaryColor)" :loading="customLoading">
           <template #icon>
             <SearchOutlined />
           </template>
           Search
         </Button>
-        <Button button-class="custom-class1" ripple-color="#faad14" shape="round" size="large" :loading="customLoading">
+        <Button type="reverse" shape="round" size="large" :style="getColorPalettes(primaryColor)" :loading="customLoading">
           <template #icon>
             <DownloadOutlined />
           </template>

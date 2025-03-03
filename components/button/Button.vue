@@ -279,8 +279,8 @@ function onWaveEnd() {
   .btn-default();
   &:hover {
     color: #fff !important;
-    background-color: var(--button-primary-color-hover);
-    border-color: var(--button-primary-color-hover);
+    background-color: var(--button-primary-color);
+    border-color: var(--button-primary-color);
   }
   &:active {
     color: #fff !important;
