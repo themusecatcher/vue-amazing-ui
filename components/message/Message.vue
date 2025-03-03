@@ -30,8 +30,8 @@ const messageContent = ref<Message[]>([])
 const closeDuration = ref<number | null>(null) // 自动关闭延时
 const emits = defineEmits(['click', 'close'])
 const messageTop = ref<string>()
+// 所有提示是否已经全部变为 false
 const clear = computed(() => {
-  // 所有提示是否已经全部变为 false
   return showMessage.value.every((show: boolean) => !show)
 })
 watch(clear, (to, from) => {
@@ -48,17 +48,17 @@ onBeforeUnmount(() => {
     rafId && cancelRaf(rafId)
   })
 })
-function onEnter(index: number) {
+function onEnter(index: number): void {
   hideTimers.value[index] && cancelRaf(hideTimers.value[index])
 }
-function onLeave(index: number) {
+function onLeave(index: number): void {
   hideMessage(index)
 }
-function onClick(e: Event, index: number) {
+function onClick(e: Event, index: number): void {
   messageContent.value[index].onClick && messageContent.value[index].onClick()
   emits('click', e)
 }
-function hideMessage(index: number) {
+function hideMessage(index: number): void {
   if (closeDuration.value !== null) {
     hideTimers.value[index] = rafTimeout(() => {
       showMessage.value[index] = false
@@ -68,7 +68,7 @@ function hideMessage(index: number) {
     }, closeDuration.value)
   }
 }
-function show() {
+function show(): void {
   resetTimer.value && cancelRaf(resetTimer.value)
   const index = messageContent.value.length - 1
   const last = messageContent.value[index]
@@ -85,7 +85,7 @@ function show() {
     closeDuration.value = null
   }
 }
-function open(message: string | Message) {
+function open(message: string | Message): void {
   if (typeof message === 'string') {
     messageContent.value.push({
       content: message,
@@ -99,7 +99,7 @@ function open(message: string | Message) {
   }
   show()
 }
-function info(message: string | Message) {
+function info(message: string | Message): void {
   if (typeof message === 'string') {
     messageContent.value.push({
       content: message,
@@ -113,7 +113,7 @@ function info(message: string | Message) {
   }
   show()
 }
-function success(message: string | Message) {
+function success(message: string | Message): void {
   if (typeof message === 'string') {
     messageContent.value.push({
       content: message,
@@ -127,7 +127,7 @@ function success(message: string | Message) {
   }
   show()
 }
-function error(message: string | Message) {
+function error(message: string | Message): void {
   if (typeof message === 'string') {
     messageContent.value.push({
       content: message,
@@ -141,7 +141,7 @@ function error(message: string | Message) {
   }
   show()
 }
-function warning(message: string | Message) {
+function warning(message: string | Message): void {
   if (typeof message === 'string') {
     messageContent.value.push({
       content: message,
@@ -155,7 +155,7 @@ function warning(message: string | Message) {
   }
   show()
 }
-function loading(message: string | Message) {
+function loading(message: string | Message): void {
   if (typeof message === 'string') {
     messageContent.value.push({
       content: message,
@@ -179,7 +179,16 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-message" :style="`top: ${messageTop};`">
+  <div
+    class="m-message"
+    :style="`
+      top: ${messageTop};
+      --message-primary-color: #1677ff;
+      --message-success-color: #52c41a;
+      --message-warning-color: #faad14;
+      --message-error-color: #ff4d4f;
+    `"
+  >
     <TransitionGroup name="slide-fade">
       <div
         v-show="showMessage[index]"
@@ -369,25 +378,25 @@ defineExpose({
     .icon-info,
     .icon-loading {
       :deep(svg) {
-        color: #1677ff;
+        color: var(--message-primary-color);
         fill: currentColor;
       }
     }
     .icon-success {
       :deep(svg) {
-        color: #52c41a;
+        color: var(--message-success-color);
         fill: currentColor;
       }
     }
     .icon-warning {
       :deep(svg) {
-        color: #faad14;
+        color: var(--message-warning-color);
         fill: currentColor;
       }
     }
     .icon-error {
       :deep(svg) {
-        color: #ff4d4f;
+        color: var(--message-error-color);
         fill: currentColor;
       }
     }

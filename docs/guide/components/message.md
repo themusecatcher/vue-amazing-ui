@@ -24,6 +24,9 @@
 import { ref, h } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
 const message = ref()
+const customMessage = ref()
+const customThemeMessage = ref()
+const primaryColor = ref('#ff6900')
 function onOpen(content: string) {
   message.value.open(content) // open 调用
 }
@@ -64,15 +67,17 @@ function onClassCustom(content: string) {
   })
 }
 function onStyleCustom(content: string) {
-  message.value.warning({
+  customMessage.value.warning({
     content,
     icon: h(FireFilled),
-    duration: null,
     top: '30vh',
     style: {
       color: '#f50'
     }
   })
+}
+function onThemeCustom(content: string) {
+  customThemeMessage.value.info(content)
 }
 function onCustomClose() {
   message.value.info({
@@ -101,6 +106,13 @@ function onClose() {
 </script>
 
 <Message ref="message" @click="onClick" @close="onClose" />
+<Message ref="customMessage" @click="onClick" @close="onClose" />
+<Message
+  ref="customThemeMessage"
+  :style="`--message-primary-color: ${primaryColor};`"
+  @click="onClick"
+  @close="onClose"
+/>
 
 ## 基本使用
 
@@ -223,9 +235,16 @@ function onClose() {
 
 ## 自定义样式
 
-<Space>
-  <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
-  <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
+<Space vertical>
+  <Space>
+    <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
+    <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
+  </Space>
+  <Space align="center">
+    checkboxPrimaryColor:
+    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    <Button type="primary" @click="onThemeCustom('This is a custom theme message')">Custom Theme</Button>
+  </Space>
 </Space>
 
 <style lang="less" scoped>
@@ -264,11 +283,25 @@ function onClose() {
 }
 </script>
 <template>
-  <Space>
-    <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
-    <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
+  <Space vertical>
+    <Space>
+      <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
+      <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
+    </Space>
+    <Space align="center">
+      checkboxPrimaryColor:
+      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      <Button type="primary" @click="onThemeCustom('This is a custom theme message')">Custom Theme</Button>
+    </Space>
   </Space>
-  <Message ref="message" @close="onClose" />
+  <Message ref="message" @click="onClick" @close="onClose" />
+  <Message ref="customMessage" @click="onClick" @close="onClose" />
+  <Message
+    ref="customThemeMessage"
+    :style="`--message-primary-color: ${primaryColor};`"
+    @click="onClick"
+    @close="onClose"
+  />
 </template>
 <style lang="less" scoped>
 :deep(.custom-class) {
