@@ -572,11 +572,11 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 ## 自定义主题色
 
 <Flex vertical>
-  <Space align="center">primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+  <Space align="center">floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
   <Space align="center"
-    >primaryColorHover:<ColorPicker style="width: 200px" v-model:value="primaryColorHover"
+    >floatButtonPrimaryColorHover:<ColorPicker style="width: 200px" v-model:value="primaryColorHover"
   /></Space>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card style="height: 300px; transform: translate(0)">
     <FloatButton
       :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
       type="primary"
@@ -609,11 +609,11 @@ const primaryColorHover = ref('#ff904d')
 </script>
 <template>
   <Flex vertical>
-    <Space align="center">primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+    <Space align="center">floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
     <Space align="center"
-      >primaryColorHover:<ColorPicker style="width: 200px" v-model:value="primaryColorHover"
+      >floatButtonPrimaryColorHover:<ColorPicker style="width: 200px" v-model:value="primaryColorHover"
     /></Space>
-    <Card width="50%" style="height: 300px; transform: translate(0)">
+    <Card style="height: 300px; transform: translate(0)">
       <FloatButton
         :style="`--float-btn-primary-color: ${primaryColor}; --float-btn-primary-color-hover: ${primaryColorHover};`"
         type="primary"
