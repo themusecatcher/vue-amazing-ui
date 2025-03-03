@@ -298,7 +298,15 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-modal-root">
+  <div
+    class="m-modal-root"
+    :style="`
+      --modal-primary-color: #1677ff;
+      --modal-success-color: #52c41a;
+      --modal-warning-color: #faad14;
+      --modal-error-color: #ff4d4f;
+    `"
+  >
     <Transition name="fade">
       <div v-show="modalOpen" class="modal-mask" :style="modalMaskStyle"></div>
     </Transition>
@@ -681,6 +689,9 @@ defineExpose({
           :deep(svg) {
             fill: currentColor;
           }
+        }
+        .icon-confirm {
+          color: #faad14;
         }
         .icon-confirm,
         .icon-erase {
