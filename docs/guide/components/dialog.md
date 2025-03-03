@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { generate } from '@ant-design/colors'
 const open1 = ref(false)
 const open2 = ref(false)
 const open3 = ref(false)
@@ -23,7 +24,18 @@ const open10 = ref(false)
 const open11 = ref(false)
 const open12 = ref(false)
 const open13 = ref(false)
+const open14 = ref(false)
 const confirmLoading = ref(false)
+const primaryColor = ref('#ff6900')
+function getColorPalettes(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6]
+  }
+  return style
+}
 function onCancel() {
   // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
   console.log('cancel')
@@ -49,11 +61,11 @@ function handleCancel() {
   console.log('cancel')
 }
 function handleOk() {
-  // 点击确定的回调
+  // 点击确定回调
   confirmLoading.value = true // 开启加载状态
   setTimeout(() => {
     confirmLoading.value = false
-    open13.value = false
+    open14.value = false
     console.log('ok')
   }, 2000)
 }
@@ -145,10 +157,19 @@ function onOk () { // 点击确定的回调
 
 ## 自定义样式
 
-<Space>
-  <Button type="primary" @click="open3 = true">Custom Body Class Dialog</Button>
-  <Button type="primary" @click="open4 = true">Custom Body & Mask Style Dialog</Button>
-  <Button type="primary" @click="open5 = true">Custom Title & Content Style Dialog</Button>
+<Space vertical>
+  <Space>
+    <Button type="primary" @click="open3 = true">Custom Body Class Dialog</Button>
+    <Button type="primary" @click="open4 = true">Custom Body & Mask Style Dialog</Button>
+    <Button type="primary" @click="open5 = true">Custom Title & Content Style Dialog</Button>
+  </Space>
+  <Space align="center">
+    primaryColor:
+    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    <Button :style="getColorPalettes(primaryColor)" type="primary" @click="open6 = true">
+      Custom Theme Modal
+    </Button>
+  </Space>
 </Space>
 <Dialog v-model:open="open3" title="Title" body-class="custom-class" @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
@@ -190,6 +211,18 @@ function onOk () { // 点击确定的回调
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
 </Dialog>
+<Dialog
+  v-model:open="open6"
+  title="Title"
+  :cancel-props="{ style: getColorPalettes(primaryColor) }"
+  :ok-props="{ style: getColorPalettes(primaryColor) }"
+  @cancel="onCancel"
+  @ok="onOk"
+>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+  <p>Bla bla ...</p>
+</Dialog>
 
 <style lang="less" scoped>
 :deep(.custom-class) {
@@ -207,9 +240,21 @@ function onOk () { // 点击确定的回调
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { generate } from '@ant-design/colors'
 const open1 = ref(false)
 const open2 = ref(false)
 const open3 = ref(false)
+const open4 = ref(false)
+const primaryColor = ref('#ff6900')
+function getColorPalettes(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6]
+  }
+  return style
+}
 function onCancel() { // 点击蒙层或 Esc 键或右上角叉或取消按钮的回调
   console.log('cancel')
 }
@@ -221,10 +266,19 @@ function onOk () { // 点击确定的回调
 }
 </script>
 <template>
-  <Space>
-    <Button type="primary" @click="open1 = true">Custom Body Class Dialog</Button>
-    <Button type="primary" @click="open2 = true">Custom Body & Mask Style Dialog</Button>
-    <Button type="primary" @click="open3 = true">Custom Title & Content Style Dialog</Button>
+  <Space vertical>
+    <Space>
+      <Button type="primary" @click="open1 = true">Custom Body Class Dialog</Button>
+      <Button type="primary" @click="open2 = true">Custom Body & Mask Style Dialog</Button>
+      <Button type="primary" @click="open3 = true">Custom Title & Content Style Dialog</Button>
+    </Space>
+    <Space align="center">
+      primaryColor:
+      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      <Button :style="getColorPalettes(primaryColor)" type="primary" @click="open4 = true">
+        Custom Theme Modal
+      </Button>
+    </Space>
   </Space>
   <Dialog v-model:open="open1" title="Title" body-class="custom-class" @cancel="onCancel" @ok="onOk">
     <p>Bla bla ...</p>
@@ -266,6 +320,18 @@ function onOk () { // 点击确定的回调
     <p>Bla bla ...</p>
     <p>Bla bla ...</p>
   </Dialog>
+  <Dialog
+    v-model:open="open4"
+    title="Title"
+    :cancel-props="{ style: getColorPalettes(primaryColor) }"
+    :ok-props="{ style: getColorPalettes(primaryColor) }"
+    @cancel="onCancel"
+    @ok="onOk"
+  >
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+    <p>Bla bla ...</p>
+  </Dialog>
 </template>
 <style lang="less" scoped>
 :deep(.custom-class) {
@@ -283,9 +349,9 @@ function onOk () { // 点击确定的回调
 
 ## 自定义按钮
 
-<Button type="primary" @click="open6 = true">Custom Btns Dialog</Button>
+<Button type="primary" @click="open7 = true">Custom Btns Dialog</Button>
 <Dialog
-  v-model:open="open6"
+  v-model:open="open7"
   title="Title"
   cancel-text="Return"
   :cancel-props="{ type: 'danger', ghost: true }"
@@ -339,8 +405,8 @@ function onOk () { // 点击确定的回调
 
 ## 隐藏底部按钮
 
-<Button type="primary" @click="open7 = true">Open Dialog</Button>
-<Dialog v-model:open="open7" title="Title" :footer="false" @cancel="onCancel" @ok="onOk">
+<Button type="primary" @click="open8 = true">Open Dialog</Button>
+<Dialog v-model:open="open8" title="Title" :footer="false" @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -377,8 +443,8 @@ function onOk () { // 点击确定的回调
 
 ## 切换全屏
 
-<Button type="primary" @click="open8 = true">Open Dialog</Button>
-<Dialog v-model:open="open8" title="Title" switch-fullscreen @cancel="onCancel" @ok="onOk">
+<Button type="primary" @click="open9 = true">Open Dialog</Button>
+<Dialog v-model:open="open9" title="Title" switch-fullscreen @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -416,21 +482,21 @@ function onOk () { // 点击确定的回调
 ## 自定义位置
 
 <Space>
-  <Button type="primary" @click="open9 = true">Fixed Top Number Dialog</Button>
-  <Button type="primary" @click="open10 = true">Fixed Top Percent Dialog</Button>
-  <Button type="primary" @click="open11 = true">Vertically Centered Dialog</Button>
+  <Button type="primary" @click="open10 = true">Fixed Top Number Dialog</Button>
+  <Button type="primary" @click="open11 = true">Fixed Top Percent Dialog</Button>
+  <Button type="primary" @click="open12 = true">Vertically Centered Dialog</Button>
 </Space>
-<Dialog v-model:open="open9" title="60px Top Title" :top="60" @cancel="onCancel" @ok="onOk">
+<Dialog v-model:open="open10" title="60px Top Title" :top="60" @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
 </Dialog>
-<Dialog v-model:open="open10" title="20% Top Title" top="20%" @cancel="onCancel" @ok="onOk">
+<Dialog v-model:open="open11" title="20% Top Title" top="20%" @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
 </Dialog>
-<Dialog v-model:open="open11" title="Centered Title" centered @cancel="onCancel" @ok="onOk">
+<Dialog v-model:open="open12" title="Centered Title" centered @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -482,8 +548,8 @@ function onOk () { // 点击确定的回调
 
 ## 动画出现位置
 
-<Button type="primary" @click="open12 = true">Transform Origin Center Dialog</Button>
-<Dialog v-model:open="open12" title="Title" transform-origin="center" @cancel="onCancel" @ok="onOk">
+<Button type="primary" @click="open13 = true">Transform Origin Center Dialog</Button>
+<Dialog v-model:open="open13" title="Title" transform-origin="center" @cancel="onCancel" @ok="onOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -520,8 +586,8 @@ function onOk () { // 点击确定的回调
 
 ## 异步延迟关闭
 
-<Button type="primary" @click="open13 = true">Delayed Close Dialog</Button>
-<Dialog v-model:open="open13" title="Title" :confirm-loading="confirmLoading" @cancel="handleCancel" @ok="handleOk">
+<Button type="primary" @click="open14 = true">Delayed Close Dialog</Button>
+<Dialog v-model:open="open14" title="Title" :confirm-loading="confirmLoading" @cancel="handleCancel" @ok="handleOk">
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
   <p>Bla bla ...</p>
@@ -546,7 +612,7 @@ function handleOk() {
   confirmLoading.value = true // 开启加载状态
   setTimeout(() => {
     confirmLoading.value = false
-    open13.value = false
+    open.value = false
     console.log('ok')
   }, 2000)
 }
