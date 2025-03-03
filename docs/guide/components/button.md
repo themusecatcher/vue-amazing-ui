@@ -1103,7 +1103,7 @@ icon | 设置按钮图标 | VNode &#124; Slot | undefined
 size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 ghost | 按钮背景是否透明，仅当 `type: 'primary' \| 'danger'` 时生效 | boolean | false
 buttonClass | 设置按钮类名 | string | undefined
-rippleColor | 点击时的波纹颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | undefined
+rippleColor | 点击时的波纹颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时 | string | undefined
 href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | undefined
 target | 如何打开目标链接，相当于 `a` 链接的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self'
 keyboard | 是否支持键盘操作 | boolean | true
