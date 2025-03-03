@@ -216,7 +216,9 @@ function onOpenChange(open: boolean) {
     </Card>
     <h2 class="mt30 mb10">自定义主题色</h2>
     <Flex vertical>
-      <Space align="center">floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+      <Space align="center"
+        >floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor"
+      /></Space>
       <Space align="center"
         >floatButtonPrimaryColorHover:<ColorPicker style="width: 200px" v-model:value="primaryColorHover"
       /></Space>
