@@ -76,6 +76,7 @@
     "swiper": "^11.2.4"
   },
   "devDependencies": {
+    "@ant-design/colors": "^7.2.0",
     "@ant-design/icons-vue": "^7.0.1",
     "@tsconfig/node22": "^22.0.0",
     "@types/minimist": "^1.2.5",

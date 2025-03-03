@@ -10,6 +10,7 @@
 - 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，新增颜色样式变量，用于支持自定义不同类型颜色
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，新增颜色样式变量，用于支持自定义不同类型颜色
+- 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增颜色样式变量，用于支持自定义不同类型颜色
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-02-28">2.2.11</VersionDateTag>
