@@ -128,6 +128,7 @@ defineExpose({
     top: 0;
     bottom: 0;
     margin: auto;
+    pointer-events: none;
   }
 }
 .qrcode-bordered {

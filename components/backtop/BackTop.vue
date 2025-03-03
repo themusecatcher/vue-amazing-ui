@@ -160,7 +160,7 @@ function onBackTop(): void {
       :style="[
         backTopStyle,
         `
-          --z-index: ${zIndex};
+          --backtop-z-index: ${zIndex};
           --backtop-width: 44px;
           --backtop-height: 44px;
           --icon-size: 26px;
@@ -250,7 +250,7 @@ function onBackTop(): void {
 }
 .m-backtop {
   position: fixed;
-  z-index: var(--z-index);
+  z-index: var(--backtop-z-index);
   .backtop-wrap {
     display: flex;
     flex-direction: column;
