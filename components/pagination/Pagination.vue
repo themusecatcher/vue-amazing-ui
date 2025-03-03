@@ -10,7 +10,9 @@ export interface Props {
   pageAmount?: number // 显示的页码数
   hideOnSinglePage?: boolean // 只有一页时是否隐藏分页
   showQuickJumper?: boolean // 是否可以快速跳转至某页
+  jumperProps?: object // 自定义快速跳转组件属性
   showSizeChanger?: boolean // 是否展示 pageSize 切换器，当 total 大于 50 时默认为 true
+  changerProps?: object // 自定义 pageSize 切换器组件属性
   pageSizeOptions?: string[] | number[] // 设置每页可以显示多少条
   showTotal?: boolean | ((total: number, range: number[]) => string) // 用于显示数据总量和当前数据顺序
   placement?: 'left' | 'center' | 'right' // 分页展示位置，靠左 left，居中 center，靠右 right
@@ -24,7 +26,9 @@ const props = withDefaults(defineProps<Props>(), {
   pageAmount: 5,
   hideOnSinglePage: false,
   showQuickJumper: false,
+  jumperProps: () => ({}),
   showSizeChanger: undefined,
+  changerProps: () => ({}),
   pageSizeOptions: () => [10, 20, 50, 100],
   showTotal: false,
   placement: 'center',
@@ -199,6 +203,7 @@ function onPageSizeChange(pageSize: number) {
         'pagination-hidden': !total || (hideOnSinglePage && total <= currentPageSize)
       }
     ]"
+    :style="`--pagination-primary-color: #1677ff;`"
   >
     <span class="pagination-total-text pagination-right-gap" v-if="totalText">{{ totalText }}</span>
     <span
@@ -322,8 +327,9 @@ function onPageSizeChange(pageSize: number) {
         :height="selectHeight"
         :disabled="disabled"
         :options="selectOptions"
-        @change="onPageSizeChange"
         v-model="currentPageSize"
+        @change="onPageSizeChange"
+        v-bind="changerProps"
       />
       <span class="pagination-jump-page" v-if="showQuickJumper">
         跳至<Input
@@ -333,6 +339,7 @@ function onPageSizeChange(pageSize: number) {
           v-model:value.lazy="jumpNumber"
           @change="onPageJump"
           @enter="onPageJump"
+          v-bind="jumperProps"
         />页
       </span>
     </span>
@@ -390,17 +397,17 @@ function onPageSizeChange(pageSize: number) {
       transition: color 0.2s;
     }
     &:hover {
-      border-color: #1677ff;
+      border-color: var(--pagination-primary-color);
       .arrow-svg {
-        color: #1677ff;
+        color: var(--pagination-primary-color);
       }
     }
   }
   .pagination-item-active {
     // 悬浮/选中样式
     font-weight: 600;
-    color: #1677ff;
-    border-color: #1677ff;
+    color: var(--pagination-primary-color);
+    border-color: var(--pagination-primary-color);
   }
   .pagination-item-disabled {
     color: rgba(0, 0, 0, 0.25);
@@ -452,7 +459,7 @@ function onPageSizeChange(pageSize: number) {
       margin: auto;
       display: inline-block;
       font-size: 12px;
-      color: #1677ff;
+      color: var(--pagination-primary-color);
       fill: currentColor;
       opacity: 0;
       pointer-events: none;
