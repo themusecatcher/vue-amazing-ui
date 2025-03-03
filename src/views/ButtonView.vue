@@ -19,10 +19,10 @@ const sizeOptions = [
 const size = ref('middle')
 const customLoading = ref(false)
 const customStyle = {
-  '--primary-color': '#faad14',
-  '--primary-color-hover': '#ffc53d',
-  '--primary-color-active': '#d48806',
-  '--ripple-color': '#faad14'
+  '--button-primary-color': '#faad14',
+  '--button-primary-color-hover': '#ffc53d',
+  '--button-primary-color-active': '#d48806',
+  '--button-ripple-color': '#faad14'
 }
 const loading = ref(true)
 const loadingOptions = [
