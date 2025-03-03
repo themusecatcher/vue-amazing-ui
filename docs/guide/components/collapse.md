@@ -151,18 +151,73 @@ const positionOptions = ref<RadioOption[]>([
   }
 ])
 const activeKey = ref<CollapseProps['activeKey']>(['1'])
-const nestActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const accordionActiveKey = ref<CollapseProps['activeKey']>('1')
+const borderlessActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const disabledActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const disabledItemActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const ghostActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const nestOuterActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const nestInnerActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const customActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const customStyleActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const customArrowActiveKey1 = ref<CollapseProps['activeKey']>(['1'])
+const customArrowActiveKey2 = ref<CollapseProps['activeKey']>(['1'])
+const hideArrowActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const arrowPlaceActiveKey = ref<CollapseProps['activeKey']>(['1'])
 const arrowPlacement = ref<CollapseProps['arrowPlacement']>('right')
-const key = ref<CollapseProps['activeKey']>('1')
+const extraActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const copyableActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const customCopyActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
 watchEffect(() => {
-  console.log('nestActiveKey', nestActiveKey.value)
+  console.log('accordionActiveKey', accordionActiveKey.value)
 })
-
 watchEffect(() => {
-  console.log('key', key.value)
+  console.log('borderlessActiveKey', borderlessActiveKey.value)
+})
+watchEffect(() => {
+  console.log('disabledItemActiveKey', disabledItemActiveKey.value)
+})
+watchEffect(() => {
+  console.log('ghostActiveKey', ghostActiveKey.value)
+})
+watchEffect(() => {
+  console.log('nestOuterActiveKey', nestOuterActiveKey.value)
+})
+watchEffect(() => {
+  console.log('nestInnerActiveKey', nestInnerActiveKey.value)
+})
+watchEffect(() => {
+  console.log('customActiveKey', customActiveKey.value)
+})
+watchEffect(() => {
+  console.log('customStyleActiveKey', customStyleActiveKey.value)
+})
+watchEffect(() => {
+  console.log('customArrowActiveKey1', customArrowActiveKey1.value)
+})
+watchEffect(() => {
+  console.log('customArrowActiveKey2', customArrowActiveKey2.value)
+})
+watchEffect(() => {
+  console.log('hideArrowActiveKey', hideArrowActiveKey.value)
+})
+watchEffect(() => {
+  console.log('arrowPlaceActiveKey', arrowPlaceActiveKey.value)
+})
+watchEffect(() => {
+  console.log('arrowPlacement', arrowPlacement.value)
+})
+watchEffect(() => {
+  console.log('extraActiveKey', extraActiveKey.value)
+})
+watchEffect(() => {
+  console.log('copyableActiveKey', copyableActiveKey.value)
+})
+watchEffect(() => {
+  console.log('customCopyActiveKey', customCopyActiveKey.value)
 })
 function onChange(key: number | string) {
   console.log('change', key)
@@ -227,7 +282,7 @@ function onChange(key: number | string) {
 
 <br/>
 
-<Collapse :items="collapseItems" v-model:active-key="key" />
+<Collapse :items="collapseItems" v-model:active-key="accordionActiveKey" />
 
 ::: details Show Code
 
@@ -255,13 +310,13 @@ const collapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const key = ref<CollapseProps['activeKey']>('1')
+const accordionActiveKey = ref<CollapseProps['activeKey']>('1')
 watchEffect(() => {
-  console.log('key', key.value)
+  console.log('accordionActiveKey', accordionActiveKey.value)
 })
 </script>
 <template>
-  <Collapse :items="collapseItems" v-model:active-key="key" />
+  <Collapse :items="collapseItems" v-model:active-key="accordionActiveKey" />
 </template>
 ```
 
@@ -269,7 +324,7 @@ watchEffect(() => {
 
 ## 无边框
 
-<Collapse :items="collapseItems" v-model:active-key="activeKey1" :bordered="false" />
+<Collapse :items="collapseItems" v-model:active-key="borderlessActiveKey" :bordered="false" />
 
 ::: details Show Code
 
@@ -297,13 +352,13 @@ const collapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const borderlessActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('borderlessActiveKey', borderlessActiveKey.value)
 })
 </script>
 <template>
-  <Collapse :items="collapseItems" v-model:active-key="activeKey" :bordered="false" />
+  <Collapse :items="collapseItems" v-model:active-key="borderlessActiveKey" :bordered="false" />
 </template>
 ```
 
@@ -312,8 +367,8 @@ watchEffect(() => {
 ## 禁用
 
 <Flex vertical>
-  <Collapse disabled :items="collapseItems" v-model:active-key="activeKey2" />
-  <Collapse :items="disabledCollapseItems" v-model:active-key="activeKey2" />
+  <Collapse disabled :items="collapseItems" v-model:active-key="disabledActiveKey" />
+  <Collapse :items="disabledCollapseItems" v-model:active-key="disabledItemActiveKey" />
 </Flex>
 
 ::: details Show Code
@@ -363,15 +418,19 @@ const disabledCollapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const disabledActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const disabledItemActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('disabledActiveKey', disabledActiveKey.value)
+})
+watchEffect(() => {
+  console.log('disabledItemActiveKey', disabledItemActiveKey.value)
 })
 </script>
 <template>
   <Flex vertical>
-    <Collapse disabled :items="collapseItems" v-model:active-key="activeKey" />
-    <Collapse :items="disabledCollapseItems" v-model:active-key="activeKey" />
+    <Collapse disabled :items="collapseItems" v-model:active-key="disabledActiveKey" />
+    <Collapse :items="disabledCollapseItems" v-model:active-key="disabledItemActiveKey" />
   </Flex>
 </template>
 ```
@@ -380,7 +439,7 @@ watchEffect(() => {
 
 ## 幽灵折叠面板
 
-<Collapse :items="collapseItems" v-model:active-key="activeKey3" ghost />
+<Collapse :items="collapseItems" v-model:active-key="ghostActiveKey" ghost />
 
 ::: details Show Code
 
@@ -408,13 +467,13 @@ const collapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const ghostActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('ghostActiveKey', ghostActiveKey.value)
 })
 </script>
 <template>
-  <Collapse :items="collapseItems" v-model:active-key="activeKey" ghost />
+  <Collapse :items="collapseItems" v-model:active-key="ghostActiveKey" ghost />
 </template>
 ```
 
@@ -422,9 +481,9 @@ watchEffect(() => {
 
 ## 面板嵌套
 
-<Collapse :items="collapseItems" v-model:active-key="activeKey4">
+<Collapse :items="collapseItems" v-model:active-key="nestOuterActiveKey">
   <template #content="{ key }">
-    <Collapse v-if="key === '1'" :items="nestCollapseItems" v-model:active-key="nestActiveKey" />
+    <Collapse v-if="key === '1'" :items="nestCollapseItems" v-model:active-key="nestInnerActiveKey" />
   </template>
 </Collapse>
 
@@ -462,19 +521,19 @@ const nestCollapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
-const nestActiveKey = ref(['1'])
+const nestOuterActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const nestInnerActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('nestOuterActiveKey', nestOuterActiveKey.value)
 })
 watchEffect(() => {
-  console.log('nestActiveKey', nestActiveKey.value)
+  console.log('nestInnerActiveKey', nestInnerActiveKey.value)
 })
 </script>
 <template>
-  <Collapse :items="collapseItems" v-model:active-key="activeKey">
+  <Collapse :items="collapseItems" v-model:active-key="nestOuterActiveKey">
     <template #content="{ key }">
-      <Collapse v-if="key === '1'" :items="nestCollapseItems" v-model:active-key="nestActiveKey" />
+      <Collapse v-if="key === '1'" :items="nestCollapseItems" v-model:active-key="nestInnerActiveKey" />
     </template>
   </Collapse>
 </template>
@@ -491,7 +550,7 @@ watchEffect(() => {
 <Collapse
   style="background-color: #fff"
   :items="collapseItems"
-  v-model:active-key="activeKey5"
+  v-model:active-key="customActiveKey"
   :bordered="false"
   :collapse-style="{
     backgroundColor: '#f7f7f7',
@@ -527,16 +586,16 @@ const collapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const customActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('customActiveKey', customActiveKey.value)
 })
 </script>
 <template>
   <Collapse
     style="background-color: #fff"
     :items="collapseItems"
-    v-model:active-key="activeKey"
+    v-model:active-key="customActiveKey"
     :bordered="false"
     :collapse-style="{
       backgroundColor: '#f7f7f7',
@@ -544,7 +603,7 @@ watchEffect(() => {
       marginBottom: '16px',
       border: 0
     }"
-    />
+  />
 </template>
 ```
 
@@ -554,7 +613,7 @@ watchEffect(() => {
 
 <Collapse
   :items="customStyleItems"
-  v-model:active-key="activeKey6"
+  v-model:active-key="customStyleActiveKey"
   :header-style="{ fontSize: '16px', color: '#ff6900' }"
   :content-style="{ padding: '16px 24px', color: '#09c8ce' }"
   :arrow-style="{ fontSize: '14px', height: '25px' }"
@@ -594,18 +653,18 @@ const customStyleItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const customStyleActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('customStyleActiveKey', customStyleActiveKey.value)
 })
 </script>
 <template>
   <Collapse
-    :items="collapseItems"
-    v-model:active-key="activeKey"
-    :arrow-style="{ fontSize: '14px', height: '25px' }"
+    :items="customStyleItems"
+    v-model:active-key="customStyleActiveKey"
     :header-style="{ fontSize: '16px', color: '#ff6900' }"
-    :content-style="{ padding: '16px 24px', color: 'rgba(0, 0, 0, 0.65)' }"
+    :content-style="{ padding: '16px 24px', color: '#09c8ce' }"
+    :arrow-style="{ fontSize: '14px', height: '25px' }"
   />
 </template>
 ```
@@ -614,12 +673,23 @@ watchEffect(() => {
 
 ## 自定义箭头
 
-<Collapse :items="customArrowItems" :arrow-style="{ color: '#ff6900' }" v-model:active-key="activeKey7">
-  <template #arrow="{ key, active }">
-    <DoubleRightOutlined v-if="key === '2'" :rotate="active ? 90 : 0" />
-    <RightCircleFilled v-if="key === '3'" :rotate="active ? 90 : 0" />
-  </template>
-</Collapse>
+<Flex vertical>
+  <Collapse
+    :items="customArrowItems"
+    :arrow-style="{ color: '#ff6900' }"
+    v-model:active-key="customArrowActiveKey1"
+  />
+  <Collapse
+    :items="customArrowItems"
+    :arrow-style="{ color: '#ff6900' }"
+    v-model:active-key="customArrowActiveKey2"
+  >
+    <template #arrow="{ key, active }">
+      <DoubleRightOutlined v-if="key === '2'" :rotate="active ? 90 : 0" />
+      <RightCircleFilled v-if="key === '3'" :rotate="active ? 90 : 0" />
+    </template>
+  </Collapse>
+</Flex>
 
 ::: details Show Code
 
@@ -656,18 +726,33 @@ const customArrowItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const customArrowActiveKey1 = ref<CollapseProps['activeKey']>(['1'])
+const customArrowActiveKey2 = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('customArrowActiveKey1', customArrowActiveKey1.value)
+})
+watchEffect(() => {
+  console.log('customArrowActiveKey2', customArrowActiveKey2.value)
 })
 </script>
 <template>
-  <Collapse :items="customArrowItems" :arrow-style="{ color: '#ff6900' }" v-model:active-key="activeKey">
-    <template #arrow="{ key, active }">
-      <DoubleRightOutlined v-if="key === '2'" :rotate="active ? 90 : 0" />
-      <RightCircleFilled v-if="key === '3'" :rotate="active ? 90 : 0" />
-    </template>
-  </Collapse>
+  <Flex vertical>
+    <Collapse
+      :items="customArrowItems"
+      :arrow-style="{ color: '#ff6900' }"
+      v-model:active-key="customArrowActiveKey1"
+    />
+    <Collapse
+      :items="customArrowItems"
+      :arrow-style="{ color: '#ff6900' }"
+      v-model:active-key="customArrowActiveKey2"
+    >
+      <template #arrow="{ key, active }">
+        <DoubleRightOutlined v-if="key === '2'" :rotate="active ? 90 : 0" />
+        <RightCircleFilled v-if="key === '3'" :rotate="active ? 90 : 0" />
+      </template>
+    </Collapse>
+  </Flex>
 </template>
 ```
 
@@ -675,7 +760,7 @@ watchEffect(() => {
 
 ## 隐藏箭头
 
-<Collapse :items="collapseItems" v-model:active-key="activeKey8" :show-arrow="false" />
+<Collapse :items="collapseItems" v-model:active-key="hideArrowActiveKey" :show-arrow="false" />
 
 ::: details Show Code
 
@@ -703,13 +788,13 @@ const collapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const hideArrowActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('hideArrowActiveKey', hideArrowActiveKey.value)
 })
 </script>
 <template>
-  <Collapse :items="collapseItems" v-model:active-key="activeKey" :show-arrow="false" />
+  <Collapse :items="collapseItems" v-model:active-key="hideArrowActiveKey" :show-arrow="false" />
 </template>
 ```
 
@@ -719,7 +804,7 @@ watchEffect(() => {
 
 <Flex vertical>
   <Radio :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
-  <Collapse :items="collapseItems" v-model:active-key="activeKey9" :arrow-placement="arrowPlacement" />
+  <Collapse :items="collapseItems" v-model:active-key="arrowPlaceActiveKey" :arrow-placement="arrowPlacement" />
 </Flex>
 
 ::: details Show Code
@@ -759,15 +844,15 @@ const positionOptions = ref<RadioOption[]>([
   }
 ])
 const arrowPlacement = ref<CollapseProps['arrowPlacement']>('right')
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const arrowPlaceActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('arrowPlaceActiveKey', arrowPlaceActiveKey.value)
 })
 </script>
 <template>
   <Flex vertical>
     <Radio :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
-    <Collapse :items="collapseItems" v-model:active-key="activeKey" :arrow-placement="arrowPlacement" />
+    <Collapse :items="collapseItems" v-model:active-key="arrowPlaceActiveKey" :arrow-placement="arrowPlacement" />
   </Flex>
 </template>
 ```
@@ -776,7 +861,7 @@ watchEffect(() => {
 
 ## 面板额外内容
 
-<Collapse :items="extraCollapseItems" v-model:active-key="activeKey10">
+<Collapse :items="extraCollapseItems" v-model:active-key="extraActiveKey">
   <template #extra="{ key }">
     <StarFilled v-if="key === '1'" @click.stop="handleClick(key)" />
     <StarOutlined v-if="key === '3'" @click.stop="handleClick(key)" />
@@ -811,18 +896,16 @@ const extraCollapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const extraActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('extraActiveKey', extraActiveKey.value)
 })
-function handleClick(event: Event, key: string | number) {
-  event.stopPropagation() // 阻止事件冒泡
-  console.log('event', event)
+function handleClick(key: string | number) {
   console.log('key', key)
 }
 </script>
 <template>
-  <Collapse :items="extraCollapseItems" v-model:active-key="activeKey">
+  <Collapse :items="extraCollapseItems" v-model:active-key="extraActiveKey">
     <template #extra="{ key }">
       <StarFilled v-if="key === '1'" @click.stop="handleClick(key)" />
       <StarOutlined v-if="key === '3'" @click.stop="handleClick(key)" />
@@ -835,7 +918,7 @@ function handleClick(event: Event, key: string | number) {
 
 ## 可复制
 
-<Collapse :items="collapseItems" v-model:active-key="activeKey11" lang="template" copyable />
+<Collapse :items="collapseItems" v-model:active-key="copyableActiveKey" lang="template" copyable />
 
 ::: details Show Code
 
@@ -863,13 +946,13 @@ const collapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const copyableActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('copyableActiveKey', copyableActiveKey.value)
 })
 </script>
 <template>
-  <Collapse :items="collapseItems" v-model:active-key="activeKey" lang="template" copyable />
+  <Collapse :items="collapseItems" v-model:active-key="copyableActiveKey" lang="template" copyable />
 </template>
 ```
 
@@ -879,7 +962,7 @@ watchEffect(() => {
 
 <Collapse
   :items="collapseItems"
-  v-model:active-key="activeKey12"
+  v-model:active-key="customCopyActiveKey"
   lang="javascript"
   copyable
   copy-text="复制"
@@ -919,15 +1002,15 @@ const collapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const activeKey = ref<CollapseProps['activeKey']>(['1'])
+const customCopyActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
-  console.log('activeKey', activeKey.value)
+  console.log('customCopyActiveKey', customCopyActiveKey.value)
 })
 </script>
 <template>
   <Collapse
     :items="collapseItems"
-    v-model:active-key="activeKey"
+    v-model:active-key="customCopyActiveKey"
     lang="javascript"
     copyable
     copy-text="复制"
