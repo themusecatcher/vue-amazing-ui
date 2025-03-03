@@ -6,6 +6,7 @@
 
 ## <VersionDateTag date="soon">2.2.12</VersionDateTag>
 
+- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，新增样式变量，用于支持自定义主题色
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-02-28">2.2.11</VersionDateTag>
