@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { PaginationProps } from 'vue-amazing-ui'
+import { generate } from '@ant-design/colors'
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(98)
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const placementOptions = [
   {
     label: 'left',
@@ -74,7 +77,7 @@ function pageSizeChange(page: number, pageSize: number) {
     <h2 class="mt30 mb10">快速跳转</h2>
     <Pagination v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
     <h2 class="mt30 mb10">数据总数</h2>
-    <Space vertical>
+    <Flex vertical>
       <Pagination v-model:page="page" :total="total" show-total @change="onChange" />
       <Pagination
         v-model:page="page"
@@ -88,8 +91,37 @@ function pageSizeChange(page: number, pageSize: number) {
         :show-total="(total: number, range: number[]) => `${range[0]}-${range[1]} of ${total} items`"
         @change="onChange"
       />
-    </Space>
+    </Flex>
     <h2 class="mt30 mb10">禁用</h2>
     <Pagination disabled v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Flex vertical>
+      <Space align="center">
+        primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+      </Space>
+      <Pagination
+        :style="`--pagination-primary-color: ${primaryColor}`"
+        v-model:page="page"
+        :total="total"
+        show-quick-jumper
+        :changer-props="{
+          style: {
+            '--select-primary-color-hover': generate(primaryColor)[4],
+            '--select-primary-color-focus': generate(primaryColor)[4],
+            '--select-primary-shadow-color': primaryShadowColor,
+            '--select-item-bg-color-active': generate(primaryColor)[0]
+          }
+        }"
+        :jumper-props="{
+          style: {
+            '--input-primary-color-hover': generate(primaryColor)[4],
+            '--input-primary-color-focus': generate(primaryColor)[4],
+            '--input-primary-shadow-color': primaryShadowColor
+          }
+        }"
+        @change="onChange"
+      />
+    </Flex>
   </div>
 </template>

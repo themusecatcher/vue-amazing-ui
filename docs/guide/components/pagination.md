@@ -258,7 +258,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 
 ## 数据总数
 
-<Space vertical>
+<Flex vertical>
   <Pagination v-model:page="page" :total="total" show-total @change="onChange" />
   <Pagination
     v-model:page="page"
@@ -272,7 +272,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
     :show-total="(total: number, range: number[]) => `${range[0]}-${range[1]} of ${total} items`"
     @change="onChange"
   />
-</Space>
+</Flex>
 
 ::: details Show Code
 
@@ -287,7 +287,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 }
 </script>
 <template>
-  <Space vertical>
+  <Flex vertical>
     <Pagination v-model:page="page" :total="total" show-total @change="onChange" />
     <Pagination
       v-model:page="page"
@@ -301,7 +301,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
       :show-total="(total: number, range: number[]) => `${range[0]}-${range[1]} of ${total} items`"
       @change="onChange"
     />
-  </Space>
+  </Flex>
 </template>
 ```
 
@@ -325,6 +325,86 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 </script>
 <template>
   <Pagination disabled v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Flex vertical>
+  <Space align="center">
+    primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+  </Space>
+  <Pagination
+    :style="`--pagination-primary-color: ${primaryColor}`"
+    v-model:page="page"
+    :total="total"
+    show-quick-jumper
+    :changer-props="{
+      style: {
+        '--select-primary-color-hover': generate(primaryColor)[4],
+        '--select-primary-color-focus': generate(primaryColor)[4],
+        '--select-primary-shadow-color': primaryShadowColor,
+        '--select-item-bg-color-active': generate(primaryColor)[0]
+      }
+    }"
+    :jumper-props="{
+      style: {
+        '--input-primary-color-hover': generate(primaryColor)[4],
+        '--input-primary-color-focus': generate(primaryColor)[4],
+        '--input-primary-shadow-color': primaryShadowColor
+      }
+    }"
+    @change="onChange"
+  />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { generate } from '@ant-design/colors'
+const page = ref(1)
+const total = ref(98)
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
+function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">
+      primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+    </Space>
+    <Pagination
+      :style="`--pagination-primary-color: ${primaryColor}`"
+      v-model:page="page"
+      :total="total"
+      show-quick-jumper
+      :changer-props="{
+        style: {
+          '--select-primary-color-hover': generate(primaryColor)[4],
+          '--select-primary-color-focus': generate(primaryColor)[4],
+          '--select-primary-shadow-color': primaryShadowColor,
+          '--select-item-bg-color-active': generate(primaryColor)[0]
+        }
+      }"
+      :jumper-props="{
+        style: {
+          '--input-primary-color-hover': generate(primaryColor)[4],
+          '--input-primary-color-focus': generate(primaryColor)[4],
+          '--input-primary-shadow-color': primaryShadowColor
+        }
+      }"
+      @change="onChange"
+    />
+  </Flex>
 </template>
 ```
 
