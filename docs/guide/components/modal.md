@@ -161,7 +161,8 @@ function getColorPalettes(color: string) {
   const style = {
     '--button-primary-color': color,
     '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6]
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
   }
   return style
 }
@@ -568,7 +569,8 @@ function getColorPalettes(color: string) {
   const style = {
     '--button-primary-color': color,
     '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6]
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
   }
   return style
 }
