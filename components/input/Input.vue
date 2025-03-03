@@ -127,7 +127,15 @@ function onPassword() {
 }
 </script>
 <template>
-  <div class="m-input" :style="`width: ${inputWidth};`">
+  <div
+    class="m-input"
+    :style="`
+      width: ${inputWidth};
+      --input-primary-color-hover: #4096ff;
+      --input-primary-color-focus: #4096ff;
+      --input-primary-shadow-color: rgba(5, 145, 255, 0.1);
+    `"
+  >
     <span v-if="showBefore" class="input-addon" :class="{ 'addon-before': showBefore }">
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
@@ -301,11 +309,11 @@ function onPassword() {
       transition: all 0.2s;
     }
     .input-hover {
-      border: 1px solid #4096ff;
+      border: 1px solid var(--input-primary-color-hover);
     }
     .input-focus {
-      border: 1px solid #4096ff;
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+      border: 1px solid var(--input-primary-color-focus);
+      box-shadow: 0 0 0 2px var(--input-primary-shadow-color);
     }
     .input-prefix {
       margin-right: 4px;
