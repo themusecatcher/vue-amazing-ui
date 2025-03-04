@@ -207,6 +207,7 @@ function onDecline (scale: number) {
 
 <Flex vertical>
   <Progress
+    style="--progress-success-color: #ff6900"
     :line-size="24"
     :line-color="{
       '0%': '#108ee9',
@@ -218,7 +219,7 @@ function onDecline (scale: number) {
   />
   <Space align="center">
     <Progress
-      style="--success-color: #108ee9"
+      style="--progress-success-color: #ff6900"
       type="circle"
       :width="180"
       :line-size="14"
@@ -262,6 +263,7 @@ function onDecline (scale: number) {
 <template>
   <Flex vertical>
     <Progress
+      style="--progress-success-color: #ff6900"
       :line-size="24"
       :line-color="{
         '0%': '#108ee9',
@@ -273,7 +275,7 @@ function onDecline (scale: number) {
     />
     <Space align="center">
       <Progress
-        style="--success-color: #108ee9"
+        style="--progress-success-color: #ff6900"
         type="circle"
         :width="180"
         :line-size="14"
