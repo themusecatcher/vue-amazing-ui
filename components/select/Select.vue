@@ -135,7 +135,7 @@ watch(showOptions, async (to) => {
     hideSelectName.value = false
   }
 })
-function initSelector() {
+function initSelector(): void {
   if (props.modelValue) {
     const target = props.options.find((option) => option[props.value] === props.modelValue)
     if (target) {
@@ -150,7 +150,7 @@ function initSelector() {
     hoverValue.value = null
   }
 }
-function onBlur() {
+function onBlur(): void {
   selectFocused.value = false
   if (showOptions.value) {
     showOptions.value = false
@@ -161,7 +161,7 @@ function onBlur() {
     hideSelectName.value = false
   }
 }
-function onEnter() {
+function onEnter(): void {
   disabledBlur.value = true
   if (props.allowClear) {
     if (selectedName.value || (props.search && inputValue.value)) {
@@ -173,7 +173,7 @@ function onEnter() {
     }
   }
 }
-function onLeave() {
+function onLeave(): void {
   disabledBlur.value = false
   if (props.allowClear && showClear.value) {
     showClear.value = false
@@ -191,11 +191,11 @@ function onLeave() {
     }
   }
 }
-function onHover(value: string | number, disabled: boolean | undefined) {
+function onHover(value: string | number, disabled: boolean | undefined): void {
   disabledBlur.value = Boolean(disabled)
   hoverValue.value = value
 }
-function toggleSelect() {
+function toggleSelect(): void {
   focusSelect()
   if (!props.search && inputRef.value) {
     inputRef.value.style.opacity = '0'
@@ -212,10 +212,10 @@ function toggleSelect() {
     }
   }
 }
-function onSearchInput(e: Event) {
+function onSearchInput(e: Event): void {
   hideSelectName.value = Boolean((e.target as HTMLInputElement)?.value)
 }
-function onClear() {
+function onClear(): void {
   if (selectFocused.value) {
     focusSelect()
     showCaret.value = true
@@ -229,11 +229,11 @@ function onClear() {
   emits('update:modelValue')
   emits('change')
 }
-function focusSelect() {
+function focusSelect(): void {
   inputRef.value?.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
   selectFocused.value = true
 }
-function onChange(value: string | number, label: string, index: number) {
+function onChange(value: string | number, label: string, index: number): void {
   // 选中下拉项后的回调
   if (props.modelValue !== value) {
     selectedName.value = label
@@ -243,7 +243,7 @@ function onChange(value: string | number, label: string, index: number) {
   }
   showCaret.value = false
 }
-function onClick() {
+function onClick(): void {
   inputRef.value?.focus()
 }
 </script>
