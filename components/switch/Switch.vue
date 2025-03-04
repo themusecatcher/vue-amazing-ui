@@ -25,9 +25,9 @@ const props = withDefaults(defineProps<Props>(), {
   circleStyle: () => ({}),
   modelValue: false
 })
-const wave = ref(false)
+const wave = ref<boolean>(false)
 const emit = defineEmits(['update:modelValue', 'change'])
-function onSwitch() {
+function onSwitch(): void {
   if (props.modelValue === props.checkedValue) {
     emit('update:modelValue', props.uncheckedValue)
     emit('change', props.uncheckedValue)
@@ -44,7 +44,7 @@ function onSwitch() {
     wave.value = true
   }
 }
-function onWaveEnd() {
+function onWaveEnd(): void {
   wave.value = false
 }
 </script>
@@ -58,7 +58,11 @@ function onWaveEnd() {
       'switch-checked': modelValue === checkedValue,
       'switch-disabled': disabled
     }"
-    :style="`--ripple-color: ${rippleColor};`"
+    :style="`
+      --switch-primary-color: #1677ff;
+      --switch-primary-color-hover: #4096ff;
+      --switch-ripple-color: ${rippleColor};
+    `"
     @click="disabled || loading ? () => false : onSwitch()"
   >
     <div class="switch-inner">
@@ -161,7 +165,7 @@ function onWaveEnd() {
       .path {
         stroke-dasharray: 90, 150;
         stroke-dashoffset: 0;
-        stroke: #1677ff;
+        stroke: var(--switch-primary-color);
         stroke-width: 5;
         stroke-linecap: round;
         animation: loadingDash 1.5s ease-in-out infinite;
@@ -252,9 +256,9 @@ function onWaveEnd() {
   }
 }
 .switch-checked {
-  background: #1677ff;
+  background: var(--switch-primary-color);
   &:hover:not(.switch-disabled) {
-    background: #4096ff;
+    background: var(--switch-primary-color-hover);
   }
   .switch-inner {
     padding-left: 9px;
@@ -322,10 +326,10 @@ function onWaveEnd() {
   animation-name: waveSpread, waveOpacity;
   @keyframes waveSpread {
     from {
-      box-shadow: 0 0 0.5px 0 var(--ripple-color);
+      box-shadow: 0 0 0.5px 0 var(--switch-ripple-color);
     }
     to {
-      box-shadow: 0 0 0.5px 5px var(--ripple-color);
+      box-shadow: 0 0 0.5px 5px var(--switch-ripple-color);
     }
   }
   @keyframes waveOpacity {
