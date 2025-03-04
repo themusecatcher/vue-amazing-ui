@@ -182,7 +182,7 @@ watchEffect(() => {
 
 ## 带数字提示
 
-<Textarea :width="360" v-model:value="value" show-count :maxlength="10" />
+<Textarea :width="360" v-model:value="value" placeholder="textarea with show count" show-count :maxlength="10" />
 
 ::: details Show Code
 
@@ -195,7 +195,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Textarea :width="360" v-model:value="value" show-count :maxlength="10" />
+  <Textarea :width="360" v-model:value="value" placeholder="textarea with show count" show-count :maxlength="10" />
 </template>
 ```
 
@@ -203,7 +203,7 @@ watchEffect(() => {
 
 ## 禁用
 
-<Textarea :width="360" v-model:value="value" disabled />
+<Textarea :width="360" v-model:value="value" placeholder="disabled textarea" disabled />
 
 ::: details Show Code
 
@@ -213,7 +213,7 @@ import { ref } from 'vue'
 const value = ref('')
 </script>
 <template>
-  <Textarea :width="360" v-model:value="value" disabled />
+  <Textarea :width="360" v-model:value="value" placeholder="disabled textarea" disabled />
 </template>
 ```
 
