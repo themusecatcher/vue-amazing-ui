@@ -76,6 +76,7 @@ function onDecline(scale: number) {
     <h2 class="mt30 mb10">自定义样式</h2>
     <Flex vertical>
       <Progress
+        style="--progress-success-color: #ff6900"
         :line-size="24"
         :line-color="{
           '0%': '#108ee9',
@@ -87,7 +88,7 @@ function onDecline(scale: number) {
       />
       <Space align="center">
         <Progress
-          style="--success-color: #108ee9"
+          style="--progress-success-color: #ff6900"
           type="circle"
           :width="180"
           :line-size="14"

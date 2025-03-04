@@ -139,8 +139,9 @@ const showSuccess = computed(() => {
     class="m-progress-line"
     :style="`
       --progress-size: ${progressSize};
-      --success-color: #52c41a;
-      --info-size: ${progressInfoSize};
+      --progress-primary-color: #1677ff;
+      --progress-success-color: #52c41a;
+      --progress-info-size: ${progressInfoSize};
     `"
   >
     <div class="progress-inner">
@@ -180,7 +181,7 @@ const showSuccess = computed(() => {
   <div
     v-else
     class="m-progress-circle"
-    :style="`--progress-size: ${progressSize}; --success-color: #52c41a; --info-size: ${progressInfoSize};`"
+    :style="`--progress-size: ${progressSize}; --progress-success-color: #52c41a; --progress-info-size: ${progressInfoSize};`"
   >
     <svg class="progress-circle" viewBox="0 0 100 100">
       <defs v-if="gradientColor">
@@ -256,7 +257,7 @@ const showSuccess = computed(() => {
     overflow: hidden;
     .progress-bg {
       position: relative;
-      background-color: #1677ff;
+      background-color: var(--progress-primary-color);
       border-radius: var(--border-radius);
       transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
       &::after {
@@ -284,7 +285,7 @@ const showSuccess = computed(() => {
       }
     }
     .line-success {
-      background: var(--success-color) !important;
+      background: var(--progress-success-color) !important;
     }
   }
   .progress-success {
@@ -296,16 +297,16 @@ const showSuccess = computed(() => {
     flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
     .icon-svg {
       display: inline-block;
-      font-size: var(--info-size);
+      font-size: var(--progress-info-size);
       fill: currentColor;
-      color: var(--success-color);
+      color: var(--progress-success-color);
     }
     .progress-success-info {
       flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
       width: 40px;
-      font-size: var(--info-size);
+      font-size: var(--progress-info-size);
       padding-left: 8px;
-      color: var(--success-color);
+      color: var(--progress-success-color);
     }
   }
   .progress-text {
@@ -315,7 +316,7 @@ const showSuccess = computed(() => {
     */
     flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
     min-width: 40px;
-    font-size: var(--info-size);
+    font-size: var(--progress-info-size);
     padding-left: 8px;
     color: rgba(0, 0, 0, 0.88);
   }
@@ -346,7 +347,7 @@ const showSuccess = computed(() => {
         opacity 0.3s ease 0s;
     }
     .circle-path-success {
-      stroke: var(--success-color) !important;
+      stroke: var(--progress-success-color) !important;
     }
   }
   .icon-svg {
@@ -358,7 +359,7 @@ const showSuccess = computed(() => {
     width: 30%;
     height: 30%;
     fill: currentColor;
-    color: var(--success-color);
+    color: var(--progress-success-color);
   }
   .progress-success-info {
     position: absolute;
@@ -366,10 +367,10 @@ const showSuccess = computed(() => {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    font-size: var(--info-size);
+    font-size: var(--progress-info-size);
     line-height: 1;
     text-align: center;
-    color: var(--success-color);
+    color: var(--progress-success-color);
   }
   .progress-text {
     position: absolute;
@@ -377,7 +378,7 @@ const showSuccess = computed(() => {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    font-size: var(--info-size);
+    font-size: var(--progress-info-size);
     line-height: 1;
     text-align: center;
     color: rgba(0, 0, 0, 0.85);
