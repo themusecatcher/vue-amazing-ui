@@ -4,7 +4,7 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
-## <VersionDateTag date="soon">2.2.12</VersionDateTag>
+## <VersionDateTag date="2025-03-04">2.2.12</VersionDateTag>
 
 - 优化并更新 [按钮 Button](/guide/components/button.html) 组件，新增颜色样式变量，用于支持自定义主题色或样式
 - 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，新增颜色样式变量，用于支持自定义主题色
@@ -24,6 +24,7 @@
 - 优化并更新 [步骤条 Steps](https://themusecatcher.github.io/vue-amazing-ui/guide/components/steps.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [开关 Switch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/switch.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件，新增颜色样式变量，用于支持自定义主题色
+- 优化并更新 [上传 Upload](https://themusecatcher.github.io/vue-amazing-ui/guide/components/upload.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 更新 [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件文档，新增自定义主题色样例
 - 更新 [抽屉 Drawer](https://themusecatcher.github.io/vue-amazing-ui/guide/components/drawer.html) 组件文档，新增自定义主题色样例
 - 组件库及文档代码优化
