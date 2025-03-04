@@ -23,7 +23,7 @@ import {
 } from '@ant-design/icons-vue'
 import { generate } from '@ant-design/colors'
 const primaryColor = ref('#ff6900')
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--float-btn-primary-color': color,
@@ -584,12 +584,12 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
     floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
   </Space>
   <Card style="height: 300px; transform: translate(0)">
-    <FloatButton :style="getColorPalettes(primaryColor)" type="primary" :right="96">
+    <FloatButton :style="getThemeStyle(primaryColor)" type="primary" :right="96">
       <template #icon>
         <MessageOutlined />
       </template>
     </FloatButton>
-    <FloatButton :style="getColorPalettes(primaryColor)" type="primary" shape="square">
+    <FloatButton :style="getThemeStyle(primaryColor)" type="primary" shape="square">
       <template #icon>
         <CommentOutlined />
       </template>
@@ -605,7 +605,7 @@ import { ref } from 'vue'
 import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 import { generate } from '@ant-design/colors'
 const primaryColor = ref('#ff6900')
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--float-btn-primary-color': color,
@@ -620,12 +620,12 @@ function getColorPalettes(color: string) {
       floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
     </Space>
     <Card style="height: 300px; transform: translate(0)">
-      <FloatButton :style="getColorPalettes(primaryColor)" type="primary" :right="96">
+      <FloatButton :style="getThemeStyle(primaryColor)" type="primary" :right="96">
         <template #icon>
           <MessageOutlined />
         </template>
       </FloatButton>
-      <FloatButton :style="getColorPalettes(primaryColor)" type="primary" shape="square">
+      <FloatButton :style="getThemeStyle(primaryColor)" type="primary" shape="square">
         <template #icon>
           <CommentOutlined />
         </template>
