@@ -92,9 +92,7 @@ function handleOk() {
       <Space align="center">
         primaryColor:
         <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-        <Button :style="getThemeStyle(primaryColor)" type="primary" @click="open6 = true">
-          Custom Theme Modal
-        </Button>
+        <Button :style="getThemeStyle(primaryColor)" type="primary" @click="open6 = true"> Custom Theme Modal </Button>
       </Space>
     </Space>
     <Dialog v-model:open="open3" title="Title" body-class="custom-class" @cancel="onCancel" @ok="onOk">
