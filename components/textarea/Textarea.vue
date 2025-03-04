@@ -239,6 +239,7 @@ function onClear(): void {
 }
 .show-count {
   &::after {
+    font-size: 14px;
     color: rgba(0, 0, 0, 0.45);
     white-space: nowrap;
     content: attr(data-count);
