@@ -667,24 +667,24 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     :style="[
       sliderStyle,
       `
-        --rail-color: rgba(0, 0, 0, 0.04);
-        --rail-color-hover: rgba(0, 0, 0, 0.1);
-        --rail-color-disabled: rgba(0, 0, 0, 0.06);
-        --track-color: #91caff;
-        --track-color-hover: #1677ff;
-        --track-color-disabled: rgba(0, 0, 0, 0.25);
-        --handle-color: #fff;
-        --handle-shadow-color: #91caff;
-        --handle-shadow-color-hover-focus: #1677ff;
-        --handle-shadow-color-disabled: #bfbfbf;
-        --dot-color: #fff;
-        --dot-border-color: #f0f0f0;
-        --dot-border-color-hover: rgba(0, 0, 0, 0.1);
-        --dot-color-active: #91caff;
-        --mark-color: rgba(0, 0, 0, 0.45);
-        --mark-color-active: rgba(0, 0, 0, 0.88);
-        --tooltip-color: #fff;
-        --tooltip-bg-color: rgba(0, 0, 0, 0.85);
+        --slider-rail-color: rgba(0, 0, 0, 0.04);
+        --slider-rail-color-hover: rgba(0, 0, 0, 0.1);
+        --slider-rail-color-disabled: rgba(0, 0, 0, 0.06);
+        --slider-track-color: #91caff;
+        --slider-track-color-hover: #1677ff;
+        --slider-track-color-disabled: rgba(0, 0, 0, 0.25);
+        --slider-handle-color: #fff;
+        --slider-handle-shadow-color: #91caff;
+        --slider-handle-shadow-color-hover-focus: #1677ff;
+        --slider-handle-shadow-color-disabled: #bfbfbf;
+        --slider-dot-color: #fff;
+        --slider-dot-border-color: #f0f0f0;
+        --slider-dot-border-color-hover: rgba(0, 0, 0, 0.1);
+        --slider-dot-color-active: #91caff;
+        --slider-mark-color: rgba(0, 0, 0, 0.45);
+        --slider-mark-color-active: rgba(0, 0, 0, 0.88);
+        --slider-tooltip-color: #fff;
+        --slider-tooltip-bg-color: rgba(0, 0, 0, 0.85);
       `
     ]"
     @click="disabled ? () => false : onClickSliderPoint($event)"
@@ -779,14 +779,14 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   .slider-rail {
     // 灰色轨道颜色
     position: absolute;
-    background-color: var(--rail-color);
+    background-color: var(--slider-rail-color);
     border-radius: 2px;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .slider-track {
     // 蓝色轨道颜色
     position: absolute;
-    background-color: var(--track-color);
+    background-color: var(--slider-track-color);
     border-radius: 2px;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -798,14 +798,14 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       position: absolute;
       width: 8px;
       height: 8px;
-      background-color: var(--dot-color);
-      border: 2px solid var(--dot-border-color);
+      background-color: var(--slider-dot-color);
+      border: 2px solid var(--slider-dot-border-color);
       border-radius: 50%;
       cursor: pointer;
       transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .slider-dot-active {
-      border-color: var(--dot-color-active);
+      border-color: var(--slider-dot-color-active);
     }
   }
   .slider-marks {
@@ -814,7 +814,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     .slider-mark {
       position: absolute;
       display: inline-block;
-      color: var(--mark-color);
+      color: var(--slider-mark-color);
       text-align: center;
       word-break: keep-all;
       cursor: pointer;
@@ -828,24 +828,24 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       }
     }
     .slider-mark-active {
-      color: var(--mark-color-active);
+      color: var(--slider-mark-color-active);
     }
   }
   &:hover {
     .slider-rail {
       // 灰色轨道悬浮色
-      background: var(--rail-color-hover);
+      background: var(--slider-rail-color-hover);
     }
     .slider-track {
       // 蓝色轨道悬浮色
-      background: var(--track-color-hover);
+      background: var(--slider-track-color-hover);
     }
     .slider-dots {
       .slider-dot {
-        border-color: var(--dot-border-color-hover);
+        border-color: var(--slider-dot-border-color-hover);
       }
       .slider-dot-active {
-        border-color: var(--track-color-hover);
+        border-color: var(--slider-track-color-hover);
       }
     }
   }
@@ -854,8 +854,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     position: absolute;
     width: 10px;
     height: 10px;
-    background: var(--handle-color);
-    box-shadow: 0 0 0 2px var(--handle-shadow-color);
+    background: var(--slider-handle-color);
+    box-shadow: 0 0 0 2px var(--slider-handle-shadow-color);
     border-radius: 50%;
     outline: none;
     transition:
@@ -874,7 +874,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     .hover-focus-handle {
       width: 12px;
       height: 12px;
-      box-shadow: 0 0 0 4px var(--handle-shadow-color-hover-focus);
+      box-shadow: 0 0 0 4px var(--slider-handle-shadow-color-hover-focus);
     }
     &:hover,
     &:focus {
@@ -895,11 +895,11 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       padding: 6px 8px;
       height: 32px;
       font-size: 14px;
-      color: var(--tooltip-color);
+      color: var(--slider-tooltip-color);
       line-height: 20px;
       text-align: center;
       border-radius: 6px;
-      background: var(--tooltip-bg-color);
+      background: var(--slider-tooltip-bg-color);
       box-shadow:
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
         0 3px 6px -4px rgba(0, 0, 0, 0.12),
@@ -925,7 +925,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
           left: 0;
           width: 16px;
           height: 8px;
-          background-color: var(--tooltip-bg-color);
+          background-color: var(--slider-tooltip-bg-color);
           clip-path: path(
             'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
           );
@@ -1058,26 +1058,26 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
 .slider-disabled {
   cursor: not-allowed;
   .slider-rail {
-    background: var(--rail-color-disabled);
+    background: var(--slider-rail-color-disabled);
   }
   .slider-track {
-    background: var(--track-color-disabled);
+    background: var(--slider-track-color-disabled);
   }
   .slider-handle {
-    box-shadow: 0 0 0 2px var(--handle-shadow-color-disabled);
+    box-shadow: 0 0 0 2px var(--slider-handle-shadow-color-disabled);
     &:hover,
     &:focus {
       width: 10px;
       height: 10px;
-      box-shadow: 0 0 0 2px var(--handle-shadow-color-disabled);
+      box-shadow: 0 0 0 2px var(--slider-handle-shadow-color-disabled);
     }
   }
   &:hover {
     .slider-rail {
-      background: var(--rail-color-disabled);
+      background: var(--slider-rail-color-disabled);
     }
     .slider-track {
-      background: var(--track-color-disabled);
+      background: var(--slider-track-color-disabled);
     }
   }
 }

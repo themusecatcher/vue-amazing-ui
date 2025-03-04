@@ -46,7 +46,7 @@ const showTip = computed(() => {
 <template>
   <div
     :class="`m-spin spin-${size}`"
-    :style="`--spin-color: ${color}; --magic-ring-color: ${magicRingColor}; --spin-circle-width: ${spinCircleWidth}; --spin-speed: ${speed}ms;`"
+    :style="`--spin-color: ${color}; --spin-magic-ring-color: ${magicRingColor}; --spin-circle-width: ${spinCircleWidth}; --spin-speed: ${speed}ms;`"
   >
     <div class="spin-wrap" v-show="spinning">
       <div class="spin-box">
@@ -496,7 +496,7 @@ const showTip = computed(() => {
         .inner-ring {
           position: absolute;
           border-style: solid;
-          border-color: var(--magic-ring-color);
+          border-color: var(--spin-magic-ring-color);
           border-radius: 50%;
           animation: spinInnerRing 1.5s linear infinite;
           -webkit-animation: spinInnerRing 1.5s linear infinite;
