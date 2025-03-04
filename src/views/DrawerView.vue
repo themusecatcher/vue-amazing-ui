@@ -30,7 +30,7 @@ const placement = ref('right')
 const extraPlacement = ref('right')
 const footerPlacement = ref('right')
 const primaryColor = ref('#ff6900')
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--button-primary-color': color,
@@ -118,15 +118,15 @@ function onClose() {
     <Space align="center">
       primaryColor:
       <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-      <Button :style="getColorPalettes(primaryColor)" type="primary" @click="open6 = true">Open</Button>
+      <Button :style="getThemeStyle(primaryColor)" type="primary" @click="open6 = true">Open</Button>
     </Space>
     <Drawer v-model:open="open6" :closable="false" title="Basic Drawer" :footer-style="{ textAlign: 'right' }">
       <p>Some contents...</p>
       <p>Some contents...</p>
       <p>Some contents...</p>
       <template #footer>
-        <Button style="margin-right: 8px" :style="getColorPalettes(primaryColor)" @click="onClose">Cancel</Button>
-        <Button :style="getColorPalettes(primaryColor)" type="primary" @click="onClose">Submit</Button>
+        <Button style="margin-right: 8px" :style="getThemeStyle(primaryColor)" @click="onClose">Cancel</Button>
+        <Button :style="getThemeStyle(primaryColor)" type="primary" @click="onClose">Submit</Button>
       </template>
     </Drawer>
   </div>
