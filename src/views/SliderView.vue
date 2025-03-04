@@ -55,27 +55,27 @@ const tooltipOpenDoubleValue = ref<number[]>([20, 80])
 const customStyleSingleValue = ref<number>(20)
 const customStyleDoubleValue = ref<number[]>([20, 80])
 const singleCustomStyle = {
-  '--track-color': '#ffbb96',
-  '--track-color-hover': '#d4380d',
-  '--handle-color': '#fff2e8',
-  '--handle-shadow-color': '#ffbb96',
-  '--handle-shadow-color-hover-focus': '#d4380d',
-  '--tooltip-color': 'rgba(0, 0, 0, 0.88)',
-  '--tooltip-bg-color': '#fff'
+  '--slider-track-color': '#ffbb96',
+  '--slider-track-color-hover': '#d4380d',
+  '--slider-handle-color': '#fff2e8',
+  '--slider-handle-shadow-color': '#ffbb96',
+  '--slider-handle-shadow-color-hover-focus': '#d4380d',
+  '--slider-tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--slider-tooltip-bg-color': '#fff'
 }
 const rangeCustomStyle = {
   '--rail-color': 'rgb(219, 219, 223)',
   '--rail-color-hover': 'rgb(199, 199, 203)',
-  '--track-color': '#ffbb96',
-  '--track-color-hover': '#d4380d',
-  '--handle-color': '#fff2e8',
-  '--handle-shadow-color': '#ffbb96',
-  '--handle-shadow-color-hover-focus': '#d4380d',
+  '--slider-track-color': '#ffbb96',
+  '--slider-track-color-hover': '#d4380d',
+  '--slider-handle-color': '#fff2e8',
+  '--slider-handle-shadow-color': '#ffbb96',
+  '--slider-handle-shadow-color-hover-focus': '#d4380d',
   '--dot-border-color': 'rgb(219, 219, 223)',
   '--dot-border-color-hover': 'rgb(199, 199, 203)',
   '--dot-color-active': '#ffbb96',
-  '--tooltip-color': 'rgba(0, 0, 0, 0.88)',
-  '--tooltip-bg-color': '#fff'
+  '--slider-tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--slider-tooltip-bg-color': '#fff'
 }
 const tooltipStyle = {
   top: '-40px',
