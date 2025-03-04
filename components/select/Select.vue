@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const filterOptions = ref<Option[]>() // 过滤后的选项数组
 const selectedName = ref() // 当前选中选项的 label
-const inputRef = ref() // 输入框 DOM 引用
+const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const inputValue = ref() // 支持搜索时，用户输入内容
 const disabledBlur = ref(false) // 是否禁用 input 标签的 blur 事件
 const hideSelectName = ref(false) // 用户输入时，隐藏 selectName 的展示
@@ -197,8 +197,8 @@ function onHover(value: string | number, disabled: boolean | undefined) {
 }
 function toggleSelect() {
   focusSelect()
-  if (!props.search) {
-    inputRef.value.style.opacity = 0
+  if (!props.search && inputRef.value) {
+    inputRef.value.style.opacity = '0'
   }
   showOptions.value = !showOptions.value
   if (!hoverValue.value && selectedName.value) {
@@ -230,7 +230,7 @@ function onClear() {
   emits('change')
 }
 function focusSelect() {
-  inputRef.value.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
+  inputRef.value?.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
   selectFocused.value = true
 }
 function onChange(value: string | number, label: string, index: number) {
@@ -244,7 +244,7 @@ function onChange(value: string | number, label: string, index: number) {
   showCaret.value = false
 }
 function onClick() {
-  inputRef.value.focus()
+  inputRef.value?.focus()
 }
 </script>
 <template>
