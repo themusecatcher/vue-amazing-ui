@@ -11,6 +11,7 @@
 - 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件，新增颜色样式变量，用于支持自定义主题色
+- 优化并更新 [文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，新增颜色样式变量，用于支持自定义不同类型颜色
 - 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增颜色样式变量，用于支持自定义不同类型颜色
