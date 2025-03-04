@@ -102,7 +102,16 @@ function onSearch(e: Event) {
 }
 </script>
 <template>
-  <div class="m-input-search" :style="`width: ${inputSearchWidth};`">
+  <div
+    class="m-input-search"
+    :style="`
+      --input-search-width: ${inputSearchWidth};
+      --input-number-primary-color: #1677ff;
+      --input-number-primary-color-hover: #4096ff;
+      --input-number-primary-color-focus: #4096ff;
+      --input-number-primary-shadow-color: rgba(5, 145, 255, 0.1);
+    `"
+  >
     <span v-if="showBefore" class="input-search-addon-before" :class="`addon-before-${size}`">
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
@@ -183,7 +192,7 @@ function onSearch(e: Event) {
 </template>
 <style lang="less" scoped>
 .m-input-search {
-  width: 100%;
+  width: var(--input-search-width);
   position: relative;
   display: inline-flex;
   align-items: center;
