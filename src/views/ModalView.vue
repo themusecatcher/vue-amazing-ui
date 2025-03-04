@@ -277,9 +277,7 @@ function onKnow() {
       <Space align="center">
         modalPrimaryColor:
         <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-        <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme"
-          >Custom Theme Modal</Button
-        >
+        <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme">Custom Theme Modal</Button>
       </Space>
     </Space>
     <h2 class="mt30 mb10">自定义按钮</h2>
