@@ -45,6 +45,10 @@
     padding: 0;
     caret-color: transparent; // 消除 win 系统点击后出现插入光标闪烁的问题
   }
+  :root {
+    --primary-color: #1677ff;
+    --primary-color-hover: #4096ff;
+  }
   body {
     font-family:
       Inter,
@@ -65,7 +69,7 @@
     caret-color: auto;
   }
   a {
-    color: #1677ff;
+    color: var(--primary-color);
     text-decoration: none;
     background-color: transparent;
     -webkit-tap-highlight-color: transparent;
@@ -73,7 +77,7 @@
     cursor: pointer;
     transition: color 0.3s ease;
     &:hover {
-      color: #4096ff;
+      color: var(--primary-color-hover);
     }
   }
   ```
