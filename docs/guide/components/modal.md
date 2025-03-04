@@ -499,9 +499,7 @@ function onKnow() {
   <Space align="center">
     modalPrimaryColor:
     <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme"
-      >Custom Theme Modal</Button
-    >
+    <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme">Custom Theme Modal</Button>
   </Space>
 </Space>
 
@@ -606,9 +604,7 @@ function onKnow() {
     <Space align="center">
       modalPrimaryColor:
       <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-      <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme"
-        >Custom Theme Modal</Button
-      >
+      <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme">Custom Theme Modal</Button>
     </Space>
   </Space>
   <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
