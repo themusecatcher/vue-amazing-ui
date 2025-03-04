@@ -4,7 +4,7 @@ import type { PaginationProps } from 'vue-amazing-ui'
 import { generate } from '@ant-design/colors'
 const page = ref(1)
 const pageSize = ref(10)
-const total = ref(98)
+const total = ref(988008)
 const primaryColor = ref('#ff6900')
 const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const placementOptions = [
