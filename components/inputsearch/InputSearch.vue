@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
-const inputRef = ref()
+const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
 const emits = defineEmits(['update:value', 'change', 'search'])
 const inputSearchWidth = computed(() => {
@@ -71,25 +71,25 @@ const showBefore = computed(() => {
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
-function onInput(e: Event) {
+function onInput(e: Event): void {
   const target = e.target as HTMLInputElement
   if (!lazyInput.value) {
     emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
-function onChange(e: Event) {
+function onChange(e: Event): void {
   const target = e.target as HTMLInputElement
   if (target.value !== props.value) {
     emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
-function onClear() {
+function onClear(): void {
   emits('update:value', '')
-  inputRef.value.focus()
+  inputRef.value?.focus()
 }
-async function onInputSearch(e: KeyboardEvent) {
+async function onInputSearch(e: KeyboardEvent): Promise<void> {
   const target = e.target as HTMLInputElement
   emits('search', target.value, e)
   if (lazyInput.value) {
@@ -97,7 +97,7 @@ async function onInputSearch(e: KeyboardEvent) {
     e.target?.dispatchEvent(changeEvent)
   }
 }
-function onSearch(e: Event) {
+function onSearch(e: Event): void {
   emits('search', props.value, e)
 }
 </script>
@@ -106,10 +106,9 @@ function onSearch(e: Event) {
     class="m-input-search"
     :style="`
       --input-search-width: ${inputSearchWidth};
-      --input-number-primary-color: #1677ff;
-      --input-number-primary-color-hover: #4096ff;
-      --input-number-primary-color-focus: #4096ff;
-      --input-number-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --input-search-primary-color-hover: #4096ff;
+      --input-search-primary-color-focus: #4096ff;
+      --input-search-primary-shadow-color: rgba(5, 145, 255, 0.1);
     `"
   >
     <span v-if="showBefore" class="input-search-addon-before" :class="`addon-before-${size}`">
@@ -239,13 +238,13 @@ function onSearch(e: Event) {
     border: 1px solid #d9d9d9;
     transition: all 0.2s;
     &:hover {
-      border-color: #4096ff;
+      border-color: var(--input-search-primary-color-hover);
       border-right-width: 1px;
       z-index: 1;
     }
     &:focus-within {
-      border-color: #4096ff;
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+      border-color: var(--input-search-primary-color-focus);
+      box-shadow: 0 0 0 2px var(--input-search-primary-shadow-color);
       border-right-width: 1px;
       outline: 0;
       z-index: 1;
