@@ -43,7 +43,7 @@ const currentStep = computed(() => {
     return props.current
   }
 })
-function onChange(index: number) {
+function onChange(index: number): void {
   // 点击切换选择步骤
   if (currentStep.value !== index) {
     emits('update:current', index)
@@ -60,7 +60,13 @@ function onChange(index: number) {
       'steps-label-bottom': !vertical && (labelPlacement === 'bottom' || dotted),
       'steps-dotted': dotted
     }"
-    :style="`width: ${totalWidth};`"
+    :style="`
+      --steps-width: ${totalWidth};
+      --steps-primary-color: #1677ff;
+      --steps-primary-color-hover: #1677ff;
+      --steps-icon-color: #e6f4ff;
+      --steps-icon-color-hover: #1677ff;
+    `"
   >
     <div
       class="steps-item"
@@ -109,6 +115,7 @@ function onChange(index: number) {
 .m-steps {
   display: flex;
   gap: 16px;
+  width: var(--steps-width);
   transition: all 0.3s;
   &:not(.steps-label-bottom) {
     .steps-item .steps-info-wrap {
@@ -180,7 +187,7 @@ function onChange(index: number) {
         .icon-svg {
           display: inline-block;
           font-size: 16px;
-          color: #1677ff;
+          color: var(--steps-primary-color);
           fill: currentColor;
           transition: all 0.3s;
         }
@@ -232,21 +239,21 @@ function onChange(index: number) {
       cursor: pointer;
       .steps-tail {
         &::after {
-          background-color: #1677ff;
+          background-color: var(--steps-primary-color);
         }
       }
       .steps-icon {
-        background-color: #e6f4ff;
-        border-color: #e6f4ff;
+        background-color: var(--steps-icon-color);
+        border-color: var(--steps-icon-color);
         .steps-dot {
-          background: #1677ff;
+          background: var(--steps-primary-color);
         }
       }
       .steps-content {
         .steps-title {
           color: rgba(0, 0, 0, 0.88);
           &::after {
-            background-color: #1677ff;
+            background-color: var(--steps-primary-color);
           }
         }
         .steps-description {
@@ -255,12 +262,12 @@ function onChange(index: number) {
       }
       &:hover {
         .steps-icon {
-          border-color: #1677ff;
+          border-color: var(--steps-icon-color-hover);
         }
         .steps-content {
           .steps-title,
           .steps-description {
-            color: #1677ff;
+            color: var(--steps-primary-color-hover);
           }
         }
       }
@@ -269,14 +276,14 @@ function onChange(index: number) {
   .steps-process {
     .steps-info-wrap {
       .steps-icon {
-        background-color: #1677ff;
+        background-color: var(--steps-primary-color);
         border: 1px solid rgba(0, 0, 0, 0.25);
-        border-color: #1677ff;
+        border-color: var(--steps-primary-color);
         .steps-num {
           color: #fff;
         }
         .steps-dot {
-          background: #1677ff;
+          background: var(--steps-primary-color);
         }
       }
       .steps-content {
@@ -292,15 +299,15 @@ function onChange(index: number) {
       cursor: pointer;
       &:hover {
         .steps-icon {
-          border-color: #1677ff;
+          border-color: var(--steps-icon-color-hover);
           .steps-num {
-            color: #1677ff;
+            color: var(--steps-primary-color-hover);
           }
         }
         .steps-content {
           .steps-title,
           .steps-description {
-            color: #1677ff;
+            color: var(--steps-primary-color-hover);
           }
         }
       }
