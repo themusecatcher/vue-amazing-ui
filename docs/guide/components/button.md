@@ -42,7 +42,7 @@ const loadingOptions = [
   }
 ]
 const loadingType = ref('dynamic')
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--button-primary-color': color,
@@ -714,7 +714,7 @@ const size = ref('middle')
     <ColorPicker style="width: 200px" v-model:value="primaryColor" />
   </Space>
   <Space>
-    <Button shape="circle" size="large" :style="getColorPalettes(primaryColor)" :loading="customLoading">
+    <Button shape="circle" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
       <template #icon>
         <SearchOutlined />
       </template>
@@ -723,7 +723,7 @@ const size = ref('middle')
       type="primary"
       shape="round"
       size="large"
-      :style="getColorPalettes(primaryColor)"
+      :style="getThemeStyle(primaryColor)"
       :loading="customLoading"
     >
       <template #icon>
@@ -735,7 +735,7 @@ const size = ref('middle')
       type="reverse"
       shape="round"
       size="large"
-      :style="getColorPalettes(primaryColor)"
+      :style="getThemeStyle(primaryColor)"
       :loading="customLoading"
     >
       <template #icon>
@@ -754,7 +754,7 @@ import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 import { generate } from '@ant-design/colors'
 const customLoading = ref(false)
 const primaryColor = ref('#ff6900')
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--button-primary-color': color,
@@ -787,7 +787,7 @@ function getColorPalettes(color: string) {
       <ColorPicker style="width: 200px" v-model:value="primaryColor" />
     </Space>
     <Space>
-      <Button shape="circle" size="large" :style="getColorPalettes(primaryColor)" :loading="customLoading">
+      <Button shape="circle" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
         <template #icon>
           <SearchOutlined />
         </template>
@@ -796,7 +796,7 @@ function getColorPalettes(color: string) {
         type="primary"
         shape="round"
         size="large"
-        :style="getColorPalettes(primaryColor)"
+        :style="getThemeStyle(primaryColor)"
         :loading="customLoading"
       >
         <template #icon>
@@ -808,7 +808,7 @@ function getColorPalettes(color: string) {
         type="reverse"
         shape="round"
         size="large"
-        :style="getColorPalettes(primaryColor)"
+        :style="getThemeStyle(primaryColor)"
         :loading="customLoading"
       >
         <template #icon>
