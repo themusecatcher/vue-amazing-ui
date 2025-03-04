@@ -32,7 +32,7 @@ function getThemeStyle(color: string) {
   const style = {
     '--input-number-primary-color': color,
     '--input-number-primary-color-hover': colorPalettes[4],
-    '--input-number-primary-color-focus': colorPalettes[6],
+    '--input-number-primary-color-focus': colorPalettes[4],
     '--input-number-primary-shadow-color': primaryShadowColor.value
   }
   return style
