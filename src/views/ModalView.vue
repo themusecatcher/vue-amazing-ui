@@ -135,7 +135,7 @@ function openCustomTitleContentStyle() {
     }
   })
 }
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--button-primary-color': color,
@@ -150,7 +150,7 @@ function openCustomTheme() {
     title: 'This is a custom theme modal',
     content: 'Some descriptions ...',
     noticeProps: {
-      style: getColorPalettes(primaryColor.value)
+      style: getThemeStyle(primaryColor.value)
     }
   })
 }
@@ -277,7 +277,7 @@ function onKnow() {
       <Space align="center">
         modalPrimaryColor:
         <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-        <Button :style="getColorPalettes(primaryColor)" type="primary" @click="openCustomTheme"
+        <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme"
           >Custom Theme Modal</Button
         >
       </Space>
