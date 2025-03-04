@@ -152,14 +152,14 @@ onMounted(() => {
 useResizeObserver([wrapRef, navRef], () => {
   getNavSize()
 })
-function getNavSize() {
+function getNavSize(): void {
   if (['top', 'bottom'].includes(props.tabPosition)) {
     getNavHorizontalSize()
   } else {
     getNavVerticalSize()
   }
 }
-function getNavHorizontalSize() {
+function getNavHorizontalSize(): void {
   wrapWidth.value = wrapRef.value.offsetWidth
   navWidth.value = navRef.value.offsetWidth
   if (navWidth.value > wrapWidth.value) {
@@ -172,7 +172,7 @@ function getNavHorizontalSize() {
   }
   getBarDisplay()
 }
-function getNavVerticalSize() {
+function getNavVerticalSize(): void {
   wrapHeight.value = wrapRef.value.offsetHeight
   navHeight.value = navRef.value.offsetHeight
   if (navHeight.value > wrapHeight.value) {
@@ -185,14 +185,14 @@ function getNavVerticalSize() {
   }
   getBarDisplay()
 }
-function getBarDisplay() {
+function getBarDisplay(): void {
   if (['top', 'bottom'].includes(props.tabPosition)) {
     getBarHorizontalDisplay()
   } else {
     getBarVerticalDisplay()
   }
 }
-function getBarHorizontalDisplay() {
+function getBarHorizontalDisplay(): void {
   const el = activeIndex.value !== -1 ? tabsRef.value[activeIndex.value] : null
   if (el) {
     tabBarLeft.value = el.offsetLeft
@@ -213,7 +213,7 @@ function getBarHorizontalDisplay() {
     tabBarWidth.value = 0
   }
 }
-function getBarVerticalDisplay() {
+function getBarVerticalDisplay(): void {
   const el = activeIndex.value !== -1 ? tabsRef.value[activeIndex.value] : null
   if (el) {
     tabBarTop.value = el.offsetTop
@@ -234,14 +234,14 @@ function getBarVerticalDisplay() {
     tabBarHeight.value = 0
   }
 }
-function getPageKey(key: string | number | undefined, index: number) {
+function getPageKey(key: string | number | undefined, index: number): string | number {
   if (key === undefined) {
     return index
   } else {
     return key
   }
 }
-function onTab(key: string | number) {
+function onTab(key: string | number): void {
   emits('update:activeKey', key)
   emits('change', key)
 }
@@ -255,7 +255,7 @@ function onTab(key: string | number) {
   WheelEvent.deltaZ 只读：返回一个浮点数（double）表示 z 轴方向的滚动量。
   WheelEvent.deltaMode 只读：返回一个无符号长整型数（unsigned long），表示 delta* 值滚动量的单位。
 */
-function onWheel(e: WheelEvent) {
+function onWheel(e: WheelEvent): void {
   e.stopPropagation()
   e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
   if (e.deltaX || e.deltaY) {
@@ -268,7 +268,7 @@ function onWheel(e: WheelEvent) {
     }
   }
 }
-function getHorizontalScroll(e: WheelEvent) {
+function getHorizontalScroll(e: WheelEvent): void {
   const scrollX = (e.deltaX || e.deltaY) * 1 // 滚轮的水平滚动量
   if (scrollLeft.value + scrollX > scrollMax.value) {
     scrollLeft.value = scrollMax.value
@@ -278,7 +278,7 @@ function getHorizontalScroll(e: WheelEvent) {
     scrollLeft.value += scrollX
   }
 }
-function getVerticalScroll(e: WheelEvent) {
+function getVerticalScroll(e: WheelEvent): void {
   const scrollY = (e.deltaX || e.deltaY) * 1 // 滚轮的垂直滚动量
   if (scrollTop.value + scrollY > scrollMax.value) {
     scrollTop.value = scrollMax.value
@@ -288,9 +288,9 @@ function getVerticalScroll(e: WheelEvent) {
     scrollTop.value += scrollY
   }
 }
-function getContentStyle(key: string | number | undefined, index: number) {
+function getContentStyle(key: string | number | undefined, index: number): CSSProperties {
   if (props.activeKey !== getPageKey(key, index)) {
-    return hiddenStyle.value
+    return hiddenStyle.value as CSSProperties
   }
   return {}
 }
@@ -304,6 +304,7 @@ function getContentStyle(key: string | number | undefined, index: number) {
         'tabs-card': type === 'card'
       }
     ]"
+    :style="`--tabs-primary-color: #1677ff;`"
   >
     <div class="m-tabs-nav" :style="tabStyle">
       <div v-if="showPrefix" class="tabs-prefix">
@@ -436,14 +437,14 @@ function getContentStyle(key: string | number | undefined, index: number) {
           cursor: pointer;
           transition: all 0.3s;
           &:hover {
-            color: #1677ff;
+            color: var(--tabs-primary-color);
           }
           :deep(svg) {
             fill: currentColor;
           }
         }
         .tab-line-active {
-          color: #1677ff;
+          color: var(--tabs-primary-color);
           text-shadow: 0 0 0.25px currentcolor;
         }
         .tab-disabled {
@@ -455,7 +456,7 @@ function getContentStyle(key: string | number | undefined, index: number) {
         }
         .tab-bar {
           position: absolute;
-          background-color: #1677ff;
+          background-color: var(--tabs-primary-color);
           pointer-events: none;
           border-radius: 2px;
           transition:
@@ -862,7 +863,7 @@ function getContentStyle(key: string | number | undefined, index: number) {
           transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
         .tab-card-active {
-          color: #1677ff;
+          color: var(--tabs-primary-color);
           background: #ffffff;
           text-shadow: 0 0 0.25px currentcolor;
         }

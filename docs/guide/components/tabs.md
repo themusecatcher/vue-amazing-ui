@@ -147,6 +147,7 @@ const moreTabPages = ref<TabsItem[]>([
     content: 'Content of Tab Pane 8'
   }
 ])
+const primaryColor = ref('#ff6900')
 const activeKey = ref<TabsProps['activeKey']>('1')
 const iconActiveKey = ref<TabsProps['activeKey']>(0)
 const moreActiveKey = ref<TabsProps['activeKey']>('1')
@@ -1005,6 +1006,85 @@ watchEffect(() => {
       :content-style="{
         fontSize: '16px'
       }"
+    />
+  </Flex>
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Flex vertical>
+  <Space align="center">
+    tabsPrimaryColor:
+    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  </Space>
+  <Tabs :style="`--tabs-primary-color: ${primaryColor}`" :items="tabItems" v-model:active-key="activeKey" />
+  <Tabs
+    :style="`--tabs-primary-color: ${primaryColor}`"
+    :items="tabItems"
+    v-model:active-key="activeKey"
+    type="card"
+  />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import type { TabsProps, TabsItem } from 'vue-amazing-ui'
+const tabItems = ref<TabsItem[]>([
+  {
+    key: '1',
+    tab: 'Tab 1',
+    content: 'Content of Tab Pane 1'
+  },
+  {
+    key: '2',
+    tab: 'Tab 2',
+    content: 'Content of Tab Pane 2'
+  },
+  {
+    key: '3',
+    tab: 'Tab 3',
+    content: 'Content of Tab Pane 3'
+  },
+  {
+    key: '4',
+    tab: 'Tab 4',
+    content: 'Content of Tab Pane 4'
+  },
+  {
+    key: '5',
+    tab: 'Tab 5',
+    content: 'Content of Tab Pane 5'
+  },
+  {
+    key: '6',
+    tab: 'Tab 6',
+    content: 'Content of Tab Pane 6'
+  }
+])
+const primaryColor = ref('#ff6900')
+const activeKey = ref<TabsProps['activeKey']>('1')
+watchEffect(() => {
+  console.log('activeKey', activeKey.value)
+})
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">
+      tabsPrimaryColor:
+      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    </Space>
+    <Tabs :style="`--tabs-primary-color: ${primaryColor}`" :items="tabItems" v-model:active-key="activeKey" />
+    <Tabs
+      :style="`--tabs-primary-color: ${primaryColor}`"
+      :items="tabItems"
+      v-model:active-key="activeKey"
+      type="card"
     />
   </Flex>
 </template>
