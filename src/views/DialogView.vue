@@ -17,7 +17,7 @@ const open13 = ref(false)
 const open14 = ref(false)
 const confirmLoading = ref(false)
 const primaryColor = ref('#ff6900')
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--button-primary-color': color,
@@ -92,7 +92,7 @@ function handleOk() {
       <Space align="center">
         primaryColor:
         <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-        <Button :style="getColorPalettes(primaryColor)" type="primary" @click="open6 = true">
+        <Button :style="getThemeStyle(primaryColor)" type="primary" @click="open6 = true">
           Custom Theme Modal
         </Button>
       </Space>
@@ -140,8 +140,8 @@ function handleOk() {
     <Dialog
       v-model:open="open6"
       title="Title"
-      :cancel-props="{ style: getColorPalettes(primaryColor) }"
-      :ok-props="{ style: getColorPalettes(primaryColor) }"
+      :cancel-props="{ style: getThemeStyle(primaryColor) }"
+      :ok-props="{ style: getThemeStyle(primaryColor) }"
       @cancel="onCancel"
       @ok="onOk"
     >
