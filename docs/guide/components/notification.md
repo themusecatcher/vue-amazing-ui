@@ -89,7 +89,7 @@ function onStyleCustom(description: string) {
     }
   })
 }
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--button-primary-color': color,
@@ -278,7 +278,7 @@ function onClose() {
     notificationPrimaryColor:
     <ColorPicker style="width: 200px" v-model:value="primaryColor" />
     <Button
-      :style="getColorPalettes(primaryColor)"
+      :style="getThemeStyle(primaryColor)"
       type="primary"
       @click="onThemeCustom('This is a custom theme notification')"
     >
@@ -325,7 +325,7 @@ function onStyleCustom(description: string) {
     }
   })
 }
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--button-primary-color': color,
@@ -355,7 +355,7 @@ function onClose() {
       notificationPrimaryColor:
       <ColorPicker style="width: 200px" v-model:value="primaryColor" />
       <Button
-        :style="getColorPalettes(primaryColor)"
+        :style="getThemeStyle(primaryColor)"
         type="primary"
         @click="onThemeCustom('This is a custom theme notification')"
       >
