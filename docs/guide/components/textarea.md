@@ -10,14 +10,26 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { generate } from '@ant-design/colors'
 const value = ref('')
 const lazyValue = ref('')
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('value', value.value)
 })
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--textarea-primary-color-hover': colorPalettes[4],
+    '--textarea-primary-color-focus': colorPalettes[4],
+    '--textarea-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
 function onChange(e: Event) {
   console.log('change', e)
 }
@@ -38,7 +50,7 @@ function onEnter(e: KeyboardEvent) {
 
 :::
 
-<Space vertical :width="480">
+<Space vertical :width="360">
   <Textarea v-model:value="value" placeholder="Basic usage rows 2" :rows="2" @change="onChange" @enter="onEnter" />
   <Textarea
     v-model:value.lazy="lazyValue"
@@ -70,7 +82,7 @@ function onEnter (e: KeyboardEvent) {
 }
 </script>
 <template>
-  <Space vertical :width="480">
+  <Space vertical :width="360">
     <Textarea v-model:value="value" placeholder="Basic usage rows 2" :rows="2" @change="onChange" @enter="onEnter" />
     <Textarea
       v-model:value.lazy="lazyValue"
@@ -87,13 +99,12 @@ function onEnter (e: KeyboardEvent) {
 
 ## 适应文本高度的文本域
 
-<Space :width="480">
-  <Textarea
-    v-model:value="value"
-    placeholder="Autosize height based on content lines"
-    auto-size
-  />
-</Space>
+<Textarea
+  :width="360"
+  v-model:value="value"
+  placeholder="Autosize height based on content lines"
+  auto-size
+/>
 
 ::: details Show Code
 
@@ -101,15 +112,17 @@ function onEnter (e: KeyboardEvent) {
 <script setup lang="ts">
 import { ref } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value', value.value)
+})
 </script>
 <template>
-  <Space :width="480">
-    <Textarea
-      v-model:value="value"
-      placeholder="Autosize height based on content lines"
-      auto-size
-    />
-  </Space>
+  <Textarea
+    :width="360"
+    v-model:value="value"
+    placeholder="Autosize height based on content lines"
+    auto-size
+  />
 </template>
 ```
 
@@ -117,13 +130,12 @@ const value = ref('')
 
 ## 自定义行数
 
-<Space :width="480">
-  <Textarea
-    v-model:value="value"
-    placeholder="Autosize height with minimum and maximum number of lines"
-    :auto-size="{ minRows: 2, maxRows: 5 }"
-  />
-</Space>
+<Textarea
+  :width="360"
+  v-model:value="value"
+  placeholder="Autosize height with minimum and maximum number of lines"
+  :auto-size="{ minRows: 2, maxRows: 5 }"
+/>
 
 ::: details Show Code
 
@@ -131,15 +143,17 @@ const value = ref('')
 <script setup lang="ts">
 import { ref } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value', value.value)
+})
 </script>
 <template>
-  <Space :width="480">
-    <Textarea
-      v-model:value="value"
-      placeholder="Autosize height with minimum and maximum number of lines"
-      :auto-size="{ minRows: 2, maxRows: 5 }"
-    />
-  </Space>
+  <Textarea
+    :width="360"
+    v-model:value="value"
+    placeholder="Autosize height with minimum and maximum number of lines"
+    :auto-size="{ minRows: 2, maxRows: 5 }"
+  />
 </template>
 ```
 
@@ -147,9 +161,7 @@ const value = ref('')
 
 ## 带清除图标
 
-<Space :width="480">
-  <Textarea v-model:value="value" placeholder="textarea with clear icon" allow-clear />
-</Space>
+<Textarea :width="360" v-model:value="value" placeholder="textarea with clear icon" allow-clear />
 
 ::: details Show Code
 
@@ -157,11 +169,12 @@ const value = ref('')
 <script setup lang="ts">
 import { ref } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value', value.value)
+})
 </script>
 <template>
-  <Space :width="480">
-    <Textarea v-model:value="value" placeholder="textarea with clear icon" allow-clear />
-  </Space>
+  <Textarea :width="360" v-model:value="value" placeholder="textarea with clear icon" allow-clear />
 </template>
 ```
 
@@ -169,9 +182,7 @@ const value = ref('')
 
 ## 带数字提示
 
-<Space :width="480">
-  <Textarea v-model:value="value" show-count :maxlength="10" />
-</Space>
+<Textarea :width="360" v-model:value="value" show-count :maxlength="10" />
 
 ::: details Show Code
 
@@ -179,11 +190,12 @@ const value = ref('')
 <script setup lang="ts">
 import { ref } from 'vue'
 const value = ref('')
+watchEffect(() => {
+  console.log('value', value.value)
+})
 </script>
 <template>
-  <Space :width="480">
-    <Textarea v-model:value="value" show-count :maxlength="10" />
-  </Space>
+  <Textarea :width="360" v-model:value="value" show-count :maxlength="10" />
 </template>
 ```
 
@@ -191,9 +203,7 @@ const value = ref('')
 
 ## 禁用
 
-<Space :width="480">
-  <Textarea v-model:value="value" disabled />
-</Space>
+<Textarea :width="360" v-model:value="value" disabled />
 
 ::: details Show Code
 
@@ -203,8 +213,61 @@ import { ref } from 'vue'
 const value = ref('')
 </script>
 <template>
-  <Space :width="480">
-    <Textarea v-model:value="value" disabled />
+  <Textarea :width="360" v-model:value="value" disabled />
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Space vertical>
+  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+  <Space align="center">
+    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+  </Space>
+  <Textarea
+    :width="360"
+    :style="getThemeStyle(primaryColor)"
+    v-model:value="value"
+    placeholder="custom theme textarea"
+  />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { generate } from '@ant-design/colors'
+const value = ref('')
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
+watchEffect(() => {
+  console.log('value', value.value)
+})
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--textarea-primary-color-hover': colorPalettes[4],
+    '--textarea-primary-color-focus': colorPalettes[4],
+    '--textarea-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
+</script>
+<template>
+  <Space vertical>
+    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+    <Space align="center">
+      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+    </Space>
+    <Textarea
+      :width="360"
+      :style="getThemeStyle(primaryColor)"
+      v-model:value="value"
+      placeholder="custom theme textarea"
+    />
   </Space>
 </template>
 ```
