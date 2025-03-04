@@ -143,11 +143,11 @@ const {
   bottom: scrollingBottom
 } = useScroll(containerRef)
 useResizeObserver([containerRef, contentRef], updateState)
-function updateScrollState() {
+function updateScrollState(): void {
   containerScrollTop.value = containerRef.value.scrollTop
   containerScrollLeft.value = containerRef.value.scrollLeft
 }
-function updateScrollbarState() {
+function updateScrollbarState(): void {
   containerScrollHeight.value = containerRef.value.scrollHeight
   containerScrollWidth.value = containerRef.value.scrollWidth
   containerClientHeight.value = containerRef.value.clientHeight
@@ -159,7 +159,7 @@ function updateScrollbarState() {
   railHeight.value = railVerticalRef.value.offsetHeight
   railWidth.value = railHorizontalRef.value.offsetWidth
 }
-function updateState() {
+function updateState(): void {
   updateScrollState()
   updateScrollbarState()
 }
@@ -167,13 +167,13 @@ const debounceYScrollEnd = debounce(yScrollEnd, 100)
 const debounceXScrollEnd = debounce(xScrollEnd, 100)
 const debounceHideYScrollbar = debounce(hideYScrollbar, 100 + props.delay)
 const debounceHideXScrollbar = debounce(hideXScrollbar, 100 + props.delay)
-function yScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+function yScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom'): void {
   emits('scrollend', e, direction)
 }
-function xScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+function xScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom'): void {
   emits('scrollend', e, direction)
 }
-function hideYScrollbar() {
+function hideYScrollbar(): void {
   if (autoShowTrack.value && !yTrackHover.value) {
     showYTrack.value = false
   }
@@ -181,7 +181,7 @@ function hideYScrollbar() {
     showYTrack.value = false
   }
 }
-function hideXScrollbar() {
+function hideXScrollbar(): void {
   if (autoShowTrack.value && !xTrackHover.value) {
     showXTrack.value = false
   }
@@ -189,7 +189,7 @@ function hideXScrollbar() {
     showXTrack.value = false
   }
 }
-function onScroll(e: Event) {
+function onScroll(e: Event): void {
   if (scrollingLeft.value || scrollingRight.value) {
     let direction: string = ''
     if (scrollingLeft.value) {
