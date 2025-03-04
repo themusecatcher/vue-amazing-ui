@@ -74,7 +74,7 @@ watch(
     deep: true
   }
 )
-function restoreCursor(start: number, beforeTxt: string, afterTxt: string) {
+function restoreCursor(start: number, beforeTxt: string, afterTxt: string): void {
   const { value: inputValue } = inputRef.value
   let startPos = inputValue.length
   if (inputValue.endsWith(afterTxt)) {
@@ -90,18 +90,18 @@ function restoreCursor(start: number, beforeTxt: string, afterTxt: string) {
   }
   inputRef.value.setSelectionRange(startPos, startPos)
 }
-function emitValue(value: number | undefined) {
+function emitValue(value: number | undefined): void {
   emits('update:value', value) // 保证在 change 回调时能获取到最新数据
   emits('change', value)
 }
-function getFormatValue() {
+function getFormatValue(): string | undefined {
   if (props.formatter) {
     return props.formatter(props.value?.toFixed(precision.value) as string)
   } else {
     return props.value?.toFixed(precision.value)
   }
 }
-function getNumberValue(value: string) {
+function getNumberValue(value: string): number {
   let numberValue = parseFloat(value)
   if (numberValue > props.max) {
     numberValue = props.max
@@ -111,7 +111,7 @@ function getNumberValue(value: string) {
   }
   return numberValue
 }
-function updateValue(value: string) {
+function updateValue(value: string): void {
   // Number.isNaN() 判断传递的值是否为 NaN，并检测器类型是否为 Number
   if (!Number.isNaN(parseFloat(value))) {
     const numberValue = getNumberValue(value)
@@ -130,7 +130,7 @@ function updateValue(value: string) {
     }
   }
 }
-function onInput(e: Event) {
+function onInput(e: Event): void {
   if (!lazyInput.value) {
     const target = e.target as HTMLInputElement
     const value = props.parser ? String(props.parser(target.value)) : target.value
@@ -142,12 +142,12 @@ function onInput(e: Event) {
     }
   }
 }
-function onChange(e: Event) {
+function onChange(e: Event): void {
   const target = e.target as HTMLInputElement
   const value = props.parser ? String(props.parser(target.value)) : target.value
   updateValue(value)
 }
-function onKeyboard(e: KeyboardEvent) {
+function onKeyboard(e: KeyboardEvent): void {
   if (e.key === 'ArrowUp') {
     onUp()
   }
@@ -155,7 +155,7 @@ function onKeyboard(e: KeyboardEvent) {
     onDown()
   }
 }
-function onEnter(e: KeyboardEvent) {
+function onEnter(e: KeyboardEvent): void {
   emits('enter', e)
   if (lazyInput.value) {
     const target = e.target as HTMLInputElement
@@ -163,11 +163,11 @@ function onEnter(e: KeyboardEvent) {
     updateValue(value)
   }
 }
-function onUp() {
+function onUp(): void {
   const res = Math.min(props.max, add(props.value || 0, +props.step)).toFixed(precision.value)
   emitValue(getNumberValue(res))
 }
-function onDown() {
+function onDown(): void {
   const res = Math.max(props.min, add(props.value || 0, -props.step)).toFixed(precision.value)
   emitValue(getNumberValue(res))
 }
@@ -177,7 +177,13 @@ function onDown() {
     tabindex="1"
     class="m-input-number"
     :class="{ 'input-number-disabled': disabled }"
-    :style="`width: ${inputWidth};`"
+    :style="`
+      --input-number-width: ${inputWidth};
+      --input-number-primary-color: #1677ff;
+      --input-number-primary-color-hover: #4096ff;
+      --input-number-primary-color-focus: #4096ff;
+      --input-number-primary-shadow-color: rgba(5, 145, 255, 0.1);
+    `"
   >
     <div class="input-number-wrap">
       <span v-if="showPrefix" class="input-prefix">
@@ -245,6 +251,7 @@ function onDown() {
 .m-input-number {
   position: relative;
   display: inline-block;
+  width: var(--input-number-width);
   height: 32px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
@@ -255,7 +262,7 @@ function onDown() {
   border: 1px solid #d9d9d9;
   transition: all 0.2s;
   &:hover {
-    border-color: #4096ff;
+    border-color: var(--input-number-primary-color-hover);
     .input-number-handler-wrap {
       background: #fff;
       opacity: 1;
@@ -263,8 +270,8 @@ function onDown() {
   }
   &:focus-within {
     // 激活时样式
-    border-color: #4096ff;
-    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    border-color: var(--input-number-primary-color-focus);
+    box-shadow: 0 0 0 2px var(--input-number-primary-shadow-color);
   }
   .input-number-wrap {
     height: 100%;
@@ -325,7 +332,7 @@ function onDown() {
       &:hover {
         height: 60%;
         .icon-svg {
-          color: #1677ff;
+          color: var(--input-number-primary-color);
         }
       }
       .icon-svg {
