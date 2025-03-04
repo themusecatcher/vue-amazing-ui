@@ -153,7 +153,7 @@ function onPageBackward(): void {
   emits('update:page', currentPage.value)
   emits('change', currentPage.value, currentPageSize.value)
 }
-async function onPageJump() {
+async function onPageJump(): Promise<void> {
   let num = Number(jumpNumber.value) // 转换为数字
   if (jumpNumber.value && Number.isInteger(num)) {
     // 是否为整数
@@ -179,7 +179,7 @@ function onPageChange(page: number): boolean | void {
     emits('change', currentPage.value, currentPageSize.value)
   }
 }
-function onPageSizeChange(pageSize: number) {
+function onPageSizeChange(pageSize: number): void {
   currentPageSize.value = pageSize
   const maxPage = Math.ceil(props.total / pageSize)
   if (currentPage.value > maxPage) {
