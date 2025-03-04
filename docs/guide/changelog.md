@@ -11,6 +11,7 @@
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，新增颜色样式变量，用于支持自定义不同类型颜色
 - 优化并更新 [模态框 Modal](https://themusecatcher.github.io/vue-amazing-ui/guide/components/modal.html) 组件，新增颜色样式变量，用于支持自定义不同类型颜色
 - 优化并更新 [通知提醒 Notification](https://themusecatcher.github.io/vue-amazing-ui/guide/components/notification.html) 组件，新增颜色样式变量，用于支持自定义不同类型颜色
+- 优化并更新 [分页 Pagination](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html) 组件，新增主题色样式变量，用于支持自定义主题色；新增 `jumperProps` `changerProps` 属性，支持自定义设置 `jumper` 和 `changer` 组件的属性
 - [对话框 Dialog](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dialog.html) 组件文档新增自定义主题色样例
 - [抽屉 Drawer](https://themusecatcher.github.io/vue-amazing-ui/guide/components/drawer.html) 组件文档新增自定义主题色样例
 - 组件库及文档代码优化
