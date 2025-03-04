@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
-const inputRef = ref() // input 元素引用
+const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const inputWrapHover = ref<boolean>(false) // 鼠标是否悬浮
 const inputFocus = ref<boolean>(false) // input 元素是否聚焦
 const inputValue = ref<string>() // 输入框的值
@@ -84,19 +84,19 @@ watch(
     immediate: true
   }
 )
-function onMouseEnter() {
+function onMouseEnter(): void {
   inputWrapHover.value = true
 }
-function onMouseLeave() {
+function onMouseLeave(): void {
   inputWrapHover.value = false
 }
-function onFocus() {
+function onFocus(): void {
   inputFocus.value = true
 }
-function onBlur() {
+function onBlur(): void {
   inputFocus.value = false
 }
-function onInput(e: Event) {
+function onInput(e: Event): void {
   const target = e.target as HTMLInputElement
   inputValue.value = target.value
   if (!lazyInput.value) {
@@ -104,25 +104,25 @@ function onInput(e: Event) {
     emits('change', e)
   }
 }
-function onChange(e: Event) {
+function onChange(e: Event): void {
   const target = e.target as HTMLInputElement
   if (target.value !== props.value) {
     emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
-function onEnter(e: KeyboardEvent) {
+function onEnter(e: KeyboardEvent): void {
   emits('enter', e)
   if (lazyInput.value) {
     const changeEvent = new Event('change')
     e.target?.dispatchEvent(changeEvent)
   }
 }
-function onClear() {
+function onClear(): void {
   emits('update:value', '')
-  inputRef.value.focus()
+  inputRef.value?.focus()
 }
-function onPassword() {
+function onPassword(): void {
   showPassword.value = !showPassword.value
 }
 </script>
@@ -130,7 +130,7 @@ function onPassword() {
   <div
     class="m-input"
     :style="`
-      width: ${inputWidth};
+      --input-width: ${inputWidth};
       --input-primary-color-hover: #4096ff;
       --input-primary-color-focus: #4096ff;
       --input-primary-shadow-color: rgba(5, 145, 255, 0.1);
@@ -237,7 +237,7 @@ function onPassword() {
 </template>
 <style lang="less" scoped>
 .m-input {
-  width: 100%;
+  width: var(--input-width);
   text-align: start;
   vertical-align: top;
   position: relative;
@@ -427,10 +427,10 @@ function onPassword() {
     color: rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.04);
     cursor: not-allowed;
-    &:hover {
+    .input-hover {
       border-color: #d9d9d9;
     }
-    &:focus-within {
+    .input-focus {
       border-color: #d9d9d9;
       box-shadow: none;
     }
