@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+import { generate } from '@ant-design/colors'
 const options = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -124,9 +125,21 @@ const sizeOptions = [
 ]
 const size = ref('large')
 const selectedValue = ref<SelectProps['modelValue']>(5)
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--select-primary-color-hover': colorPalettes[4],
+    '--select-primary-color-focus': colorPalettes[4],
+    '--select-primary-shadow-color': primaryShadowColor.value,
+    '--select-item-bg-color-active': colorPalettes[0]
+  }
+  return style
+}
 function onChange(value: string | number, label: string, index: number) {
   console.log('value', value)
   console.log('label', label)
@@ -152,14 +165,14 @@ function filter(inputValue: string, option: any) {
     <h2 class="mt30 mb10">支持清除</h2>
     <Select :options="options" allow-clear v-model="selectedValue" />
     <h2 class="mt30 mb10">支持搜索</h2>
-    <Select :width="150" :options="options" search allowClear v-model="selectedValue" />
+    <Select :width="150" :options="options" search allow-clear v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
     <Select :width="150" :options="options" search :filter="filter" v-model="selectedValue" />
     <h2 class="mt30 mb10">三种大小</h2>
     <Space vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Select :width="180" :options="options" v-model="selectedValue" :size="size" />
-      <Select :width="180" :options="options" search allowClear v-model="selectedValue" :size="size" />
+      <Select :width="180" :options="options" search allow-clear v-model="selectedValue" :size="size" />
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Select :width="160" :height="36" search :options="options" v-model="selectedValue" />
@@ -169,5 +182,13 @@ function filter(inputValue: string, option: any) {
     <Select :options="options" :max-display="8" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义下拉面板滚动条</h2>
     <Select :options="options" v-model="selectedValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Space vertical>
+      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+      <Space align="center">
+        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+      </Space>
+      <Select :width="150" :style="getThemeStyle(primaryColor)" search :options="options" v-model="selectedValue" />
+    </Space>
   </div>
 </template>
