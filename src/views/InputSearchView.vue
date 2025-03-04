@@ -38,6 +38,16 @@ function getThemeStyle(color: string) {
   }
   return style
 }
+function getButtonThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
+}
 function onChange(e: Event) {
   console.log('change', e)
 }
@@ -263,26 +273,37 @@ function onSearch(value: string, e: Event) {
       <Space align="center">
         primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
       </Space>
-      <InputSearch :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme input search" @search="onSearch" />
       <InputSearch
         :style="getThemeStyle(primaryColor)"
+        :search-props="{ style: getButtonThemeStyle(primaryColor) }"
         v-model:value="value"
-        :search-props="{ type: 'primary' }"
         placeholder="custom theme input search"
         @search="onSearch"
       />
       <InputSearch
         :style="getThemeStyle(primaryColor)"
+        :search-props="{ type: 'primary', style: getButtonThemeStyle(primaryColor) }"
+        v-model:value="value"
+        placeholder="custom theme input search"
+        @search="onSearch"
+      />
+      <InputSearch
+        :style="getThemeStyle(primaryColor)"
+        :search-props="{ type: 'primary', style: getButtonThemeStyle(primaryColor) }"
         v-model:value="value"
         placeholder="custom theme input search"
         :icon="false"
         search="Search"
-        :search-props="{ type: 'primary' }"
         @search="onSearch"
       />
-      <InputSearch :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme input search" @search="onSearch">
+      <InputSearch
+        :style="getThemeStyle(primaryColor)"
+        v-model:value="value"
+        placeholder="custom theme input search"
+        @search="onSearch"
+      >
         <template #search>
-          <Button type="primary">
+          <Button type="primary" :style="getButtonThemeStyle(primaryColor)">
             <template #icon>
               <SearchOutlined />
             </template>
