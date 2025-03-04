@@ -343,25 +343,13 @@ function onClick(e: Event) {
             <SearchOutlined />
           </template>
         </Button>
-        <Button
-          type="primary"
-          shape="round"
-          size="large"
-          :style="getThemeStyle(primaryColor)"
-          :loading="customLoading"
-        >
+        <Button type="primary" shape="round" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
           <template #icon>
             <SearchOutlined />
           </template>
           Search
         </Button>
-        <Button
-          type="reverse"
-          shape="round"
-          size="large"
-          :style="getThemeStyle(primaryColor)"
-          :loading="customLoading"
-        >
+        <Button type="reverse" shape="round" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
           <template #icon>
             <DownloadOutlined />
           </template>
