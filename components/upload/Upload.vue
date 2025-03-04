@@ -282,7 +282,7 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-upload-wrap">
+  <div class="m-upload-wrap" :style="`--upload-primary-color: #1677ff;`">
     <Space gap="small" v-bind="spaceProps">
       <div class="upload-item-panel" v-for="n of showUpload" :key="n">
         <div
@@ -430,7 +430,7 @@ defineExpose({
       cursor: pointer;
       transition: border-color 0.3s;
       &:hover {
-        border-color: #1677ff;
+        border-color: var(--upload-primary-color);
       }
       .plus-svg {
         display: inline-block;
@@ -486,7 +486,7 @@ defineExpose({
         display: inline-block;
         width: 100%;
         height: 60px;
-        color: #1677ff;
+        color: var(--upload-primary-color);
         fill: currentColor;
       }
       .file-mask {

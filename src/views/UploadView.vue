@@ -167,5 +167,7 @@ function onRemove(file: UploadFileType) {
       @change="onChange"
       @remove="onRemove"
     />
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Upload v-model:fileList="fileList" @change="onChange" @remove="onRemove" />
   </div>
 </template>
