@@ -32,7 +32,7 @@ const loadingOptions = [
   }
 ]
 const loadingType = ref('dynamic')
-function getColorPalettes(color: string) {
+function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--button-primary-color': color,
@@ -338,7 +338,7 @@ function onClick(e: Event) {
         <ColorPicker style="width: 200px" v-model:value="primaryColor" />
       </Space>
       <Space>
-        <Button shape="circle" size="large" :style="getColorPalettes(primaryColor)" :loading="customLoading">
+        <Button shape="circle" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
           <template #icon>
             <SearchOutlined />
           </template>
@@ -347,7 +347,7 @@ function onClick(e: Event) {
           type="primary"
           shape="round"
           size="large"
-          :style="getColorPalettes(primaryColor)"
+          :style="getThemeStyle(primaryColor)"
           :loading="customLoading"
         >
           <template #icon>
@@ -359,7 +359,7 @@ function onClick(e: Event) {
           type="reverse"
           shape="round"
           size="large"
-          :style="getColorPalettes(primaryColor)"
+          :style="getThemeStyle(primaryColor)"
           :loading="customLoading"
         >
           <template #icon>
