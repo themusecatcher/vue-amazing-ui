@@ -48,7 +48,7 @@ function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--input-primary-color-hover': colorPalettes[4],
-    '--input-primary-color-focus': colorPalettes[6],
+    '--input-primary-color-focus': colorPalettes[4],
     '--input-primary-shadow-color': primaryShadowColor.value
   }
   return style
@@ -403,7 +403,7 @@ function getThemeStyle(color: string) {
   const colorPalettes = generate(color)
   const style = {
     '--input-primary-color-hover': colorPalettes[4],
-    '--input-primary-color-focus': colorPalettes[6],
+    '--input-primary-color-focus': colorPalettes[4],
     '--input-primary-shadow-color': primaryShadowColor.value
   }
   return style
