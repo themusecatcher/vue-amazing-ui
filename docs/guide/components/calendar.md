@@ -891,9 +891,9 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 display | 日历展示方式，面板/卡片 | 'panel' &#124; 'card' | 'panel'
 mode | 初始模式 | 'month' &#124; 'year' | 'month'
 header | 自定义日历头部内容 | string &#124; slot | undefined
-yearSelectProps | 年选择器 props，参考 Select 组件 Props
-monthSelectProps | 月选择器 props，参考 Select 组件 Props
-modeRadioProps | 模式切换器 props，参考 Radio 组件 Props
+yearSelectProps | 年选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {}
+monthSelectProps | 月选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {}
+modeRadioProps | 模式切换器 `props`，参考 [Radio Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html#radio) | object | {}
 startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | [DayOfWeek](#dayofweek-type) | 0
 dateStrip | 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉 | boolean | true
 dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined
