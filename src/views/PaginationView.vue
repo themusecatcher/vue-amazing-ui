@@ -7,7 +7,6 @@ const pageSize = ref(10)
 const total = ref(500)
 const primaryColor = ref('#ff6900')
 const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-console.log('generate', generate('#1677ff'))
 const placementOptions = [
   {
     label: 'left',
