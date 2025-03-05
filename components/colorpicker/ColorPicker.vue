@@ -28,8 +28,10 @@ import { useSlotsExist } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
 export interface Props {
+  width?: string | number // 颜色选择器的宽度，单位 px
   label?: (color: string) => string // 展示的内容 function | slot
   tooltipStyle?: CSSProperties // 设置弹出面板的样式
+  inputProps?: object // 输入框组件 props，参考 Input 组件 Props
   showAlpha?: boolean // 是否可调节 alpha 通道
   showPreview?: boolean // 是否展示颜色预览块
   size?: 'small' | 'middle' | 'large' // 颜色选择器的尺寸
@@ -41,8 +43,10 @@ export interface Props {
   footer?: string // 底部额外的页脚内容 string | slot
 }
 const props = withDefaults(defineProps<Props>(), {
+  width: '100%',
   label: undefined,
   tooltipStyle: () => ({}),
+  inputProps: () => ({}),
   showAlpha: true,
   showPreview: false,
   size: 'middle',
@@ -158,6 +162,12 @@ const sliderAlphaHandleFillStyle = computed(() => {
 // 颜色预览块的颜色
 const circleColor = computed(() => {
   return rgbaComputed.value && toHexString(rgbaComputed.value)
+})
+const colorPickerWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return `${props.width}px`
+  }
+  return props.width
 })
 const colorPickerHeight = computed(() => {
   const heightMap = {
@@ -724,7 +734,7 @@ function onClear() {
 <template>
   <Tooltip
     ref="tooltipRef"
-    :style="`width: 100%; height: ${colorPickerHeight};`"
+    :style="`width: ${colorPickerWidth}; height: ${colorPickerHeight};`"
     max-width="none"
     :arrow="false"
     placement="bottom"
@@ -739,7 +749,6 @@ function onClear() {
     :content-style="{ width: '100%', height: '100%' }"
     trigger="click"
     :transition-duration="200"
-    v-bind="$attrs"
   >
     <template #tooltip>
       <template v-if="!disabled">
@@ -826,17 +835,19 @@ function onClear() {
                   :placeholder="displayedModeComputed"
                   v-model:value.lazy="hexValue"
                   @change="handleInputChange"
+                  v-bind="inputProps"
                 />
               </template>
               <template v-else>
                 <Input
                   size="small"
                   :style="`${val === 'A' ? 'flex-grow: 1.25' : ''}`"
+                  v-for="(val, index) in displayedModeComputedArr"
+                  :key="index"
                   :placeholder="val"
                   v-model:value.lazy="inputValueArr[index]"
                   @change="handleInputChange($event, index)"
-                  v-for="(val, index) in displayedModeComputedArr"
-                  :key="index"
+                  v-bind="inputProps"
                 />
               </template>
             </div>
@@ -866,7 +877,15 @@ function onClear() {
       tabindex="1"
       class="color-picker-display"
       :class="[`color-picker-${size}`, { 'color-picker-disabled': disabled }]"
-      :style="`--color-picker-height: ${colorPickerHeight}; --color-picker-block-size: ${colorPickerBlockSize};`"
+      :style="`
+        --color-picker-width: ${colorPickerWidth};
+        --color-picker-height: ${colorPickerHeight};
+        --color-picker-block-size: ${colorPickerBlockSize};
+        --color-picker-primary-color-hover: #4096ff;
+        --color-picker-primary-color-focus: #4096ff;
+        --color-picker-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      `"
+      v-bind="$attrs"
     >
       <div class="color-picker-wrap">
         <div class="color-picker-fill">
@@ -1075,20 +1094,20 @@ function onClear() {
 }
 .color-picker-display {
   display: inline-block;
-  width: 100%;
+  width: var(--color-picker-width);
   height: var(--color-picker-height);
   border-radius: 4px;
   position: relative;
   outline: none;
   &:not(.color-picker-disabled):hover {
     .color-picker-wrap {
-      border-color: #4096ff;
+      border-color: var(--color-picker-primary-color-hover);
     }
   }
   &:not(.color-picker-disabled):focus {
     .color-picker-wrap {
-      border-color: #4096ff;
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+      border-color: var(--color-picker-primary-color-focus);
+      box-shadow: 0 0 0 2px var(--color-picker-primary-shadow-color);
     }
   }
   .color-picker-wrap {
