@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@types/qrcode':
-        specifier: ^1.5.5
-        version: 1.5.5
       '@vuepic/vue-datepicker':
         specifier: ^11.0.1
         version: 11.0.1(vue@3.5.13(typescript@5.7.3))
@@ -45,6 +42,9 @@ importers:
       '@types/node':
         specifier: ^22.13.4
         version: 22.13.4
+      '@types/qrcode':
+        specifier: ^1.5.5
+        version: 1.5.5
       '@vitejs/plugin-vue':
         specifier: ^5.2.1
         version: 5.2.1(vite@6.1.1(@types/node@22.13.4)(less@4.2.2)(terser@5.37.0))(vue@3.5.13(typescript@5.7.3))
