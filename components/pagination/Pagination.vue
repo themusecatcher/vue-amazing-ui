@@ -10,9 +10,9 @@ export interface Props {
   pageAmount?: number // 显示的页码数
   hideOnSinglePage?: boolean // 只有一页时是否隐藏分页
   showQuickJumper?: boolean // 是否可以快速跳转至某页
-  jumperProps?: object // 自定义快速跳转组件属性
+  jumperProps?: object // 快速跳转组件 props，参考 Input 组件 Props
   showSizeChanger?: boolean // 是否展示 pageSize 切换器，当 total 大于 50 时默认为 true
-  changerProps?: object // 自定义 pageSize 切换器组件属性
+  changerProps?: object // pageSize 切换器组件 props，参考 Select 组件 Props
   pageSizeOptions?: string[] | number[] // 设置每页可以显示多少条
   showTotal?: boolean | ((total: number, range: number[]) => string) // 用于显示数据总量和当前数据顺序
   placement?: 'left' | 'center' | 'right' // 分页展示位置，靠左 left，居中 center，靠右 right
@@ -110,7 +110,7 @@ watch(
 )
 function dealPageList(curPage: number): number[] {
   var resList = []
-  var offset = Math.floor(props.pageAmount / 2) // 向下取整
+  var offset = Math.floor(props.pageAmount / 2)
   var pager = {
     start: curPage - offset,
     end: curPage + offset
@@ -172,13 +172,14 @@ function onPageChange(page: number): boolean | void {
   if (page === 0 || page === totalPage.value + 1) {
     return false
   }
+  // 点击的页码不是当前页码
   if (currentPage.value !== page) {
-    // 点击的页码不是当前页码
     currentPage.value = page
     emits('update:page', currentPage.value)
     emits('change', currentPage.value, currentPageSize.value)
   }
 }
+// pageSize 切换器变化时的回调
 function onPageSizeChange(pageSize: number): void {
   currentPageSize.value = pageSize
   const maxPage = Math.ceil(props.total / pageSize)
@@ -205,10 +206,10 @@ function onPageSizeChange(pageSize: number): void {
     ]"
     :style="`--pagination-primary-color: #1677ff;`"
   >
-    <span class="pagination-total-text pagination-right-gap" v-if="totalText">{{ totalText }}</span>
+    <span class="pagination-total-text" v-if="totalText">{{ totalText }}</span>
     <span
       tabindex="0"
-      class="pagination-prev pagination-right-gap"
+      class="pagination-prev"
       :class="{ 'pagination-item-disabled': currentPage === 1 }"
       @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage - 1)"
       @click="disabled || currentPage === 1 ? () => false : onPageChange(currentPage - 1)"
@@ -230,7 +231,7 @@ function onPageSizeChange(pageSize: number): void {
     </span>
     <span
       tabindex="0"
-      :class="['pagination-item pagination-right-gap', { 'pagination-item-active': currentPage === 1 }]"
+      :class="['pagination-item', { 'pagination-item-active': currentPage === 1 }]"
       @click="disabled ? () => false : onPageChange(1)"
     >
       1
@@ -239,7 +240,7 @@ function onPageSizeChange(pageSize: number): void {
       v-show="forwardMore && pageList[0] - 1 > 1"
       tabindex="0"
       ref="forward"
-      class="pagintion-item-link pagination-right-gap"
+      class="pagintion-item-link"
       @click="disabled ? () => false : onPageForward()"
     >
       <span class="ellipsis-character">•••</span>
@@ -260,7 +261,7 @@ function onPageSizeChange(pageSize: number): void {
     </span>
     <span
       tabindex="0"
-      :class="['pagination-item pagination-right-gap', { 'pagination-item-active': currentPage === page }]"
+      :class="['pagination-item', { 'pagination-item-active': currentPage === page }]"
       v-for="(page, index) in pageList"
       :key="index"
       @click="disabled ? () => false : onPageChange(page)"
@@ -271,7 +272,7 @@ function onPageSizeChange(pageSize: number): void {
       v-show="backwardMore && pageList[pageList.length - 1] + 1 < totalPage"
       tabindex="0"
       ref="backward"
-      class="pagintion-item-link pagination-right-gap"
+      class="pagintion-item-link"
       @click="disabled ? () => false : onPageBackward()"
     >
       <span class="ellipsis-character">•••</span>
@@ -293,7 +294,7 @@ function onPageSizeChange(pageSize: number): void {
     <span
       v-show="totalPage !== 1"
       tabindex="0"
-      :class="['pagination-item pagination-right-gap', { 'pagination-item-active': currentPage === totalPage }]"
+      :class="['pagination-item', { 'pagination-item-active': currentPage === totalPage }]"
       @click="disabled ? () => false : onPageChange(totalPage)"
     >
       {{ totalPage }}
@@ -349,6 +350,7 @@ function onPageSizeChange(pageSize: number): void {
 .m-pagination {
   display: flex;
   align-items: center;
+  gap: 8px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
@@ -476,21 +478,16 @@ function onPageSizeChange(pageSize: number): void {
     }
   }
   .pagination-options {
-    display: inline-block;
-    margin-left: 16px;
+    display: inline-flex;
+    gap: 8px;
+    margin-left: 8px;
     .pagination-jump-page {
       display: inline-flex;
+      gap: 8px;
       align-items: center;
       vertical-align: bottom;
       height: 32px;
-      margin-left: 8px;
-      .m-input {
-        margin: 0 8px;
-      }
     }
-  }
-  .pagination-right-gap {
-    margin-right: 8px;
   }
 }
 .pagination-left {
@@ -503,7 +500,7 @@ function onPageSizeChange(pageSize: number): void {
   justify-content: flex-end;
 }
 .pagination-small {
-  font-size: 14px;
+  gap: 4px;
   .pagination-total-text {
     height: 24px;
   }
@@ -524,17 +521,16 @@ function onPageSizeChange(pageSize: number): void {
     }
   }
   .pagination-options {
-    margin-left: 8px;
+    gap: 4px;
+    margin-left: 4px;
     .pagination-jump-page {
+      gap: 4px;
       height: 24px;
     }
   }
-  .pagination-right-gap {
-    margin-right: 4px;
-  }
 }
 .pagination-middle {
-  font-size: 14px;
+  gap: 6px;
   .pagination-total-text {
     height: 28px;
   }
@@ -555,8 +551,10 @@ function onPageSizeChange(pageSize: number): void {
     }
   }
   .pagination-options {
-    margin-left: 12px;
+    gap: 6px;
+    margin-left: 6px;
     .pagination-jump-page {
+      gap: 6px;
       height: 28px;
       :deep(.m-input) {
         .input-wrap {
@@ -564,9 +562,6 @@ function onPageSizeChange(pageSize: number): void {
         }
       }
     }
-  }
-  .pagination-right-gap {
-    margin-right: 6px;
   }
 }
 .pagination-disabled {
