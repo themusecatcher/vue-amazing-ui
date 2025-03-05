@@ -4,9 +4,10 @@ import type { PaginationProps } from 'vue-amazing-ui'
 import { generate } from '@ant-design/colors'
 const page = ref(1)
 const pageSize = ref(10)
-const total = ref(988008)
+const total = ref(500)
 const primaryColor = ref('#ff6900')
 const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
+console.log('generate', generate('#1677ff'))
 const placementOptions = [
   {
     label: 'left',
@@ -37,6 +38,33 @@ const sizeOptions = [
   }
 ]
 const size = ref<PaginationProps['size']>('middle')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--pagination-primary-color': color,
+    '--pagination-primary-color-focus-visible': colorPalettes[2]
+  }
+  return style
+}
+function getSelectThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--select-primary-color-hover': colorPalettes[4],
+    '--select-primary-color-focus': colorPalettes[4],
+    '--select-primary-shadow-color': primaryShadowColor.value,
+    '--select-item-bg-color-active': colorPalettes[0]
+  }
+  return style
+}
+function getInputThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--input-primary-color-hover': colorPalettes[4],
+    '--input-primary-color-focus': colorPalettes[4],
+    '--input-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
 function onChange(page: number, pageSize: number) {
   // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
@@ -103,25 +131,12 @@ function pageSizeChange(page: number, pageSize: number) {
         />
       </Space>
       <Pagination
-        :style="`--pagination-primary-color: ${primaryColor}`"
+        :style="getThemeStyle(primaryColor)"
         v-model:page="page"
         :total="total"
         show-quick-jumper
-        :changer-props="{
-          style: {
-            '--select-primary-color-hover': generate(primaryColor)[4],
-            '--select-primary-color-focus': generate(primaryColor)[4],
-            '--select-primary-shadow-color': primaryShadowColor,
-            '--select-item-bg-color-active': generate(primaryColor)[0]
-          }
-        }"
-        :jumper-props="{
-          style: {
-            '--input-primary-color-hover': generate(primaryColor)[4],
-            '--input-primary-color-focus': generate(primaryColor)[4],
-            '--input-primary-shadow-color': primaryShadowColor
-          }
-        }"
+        :changer-props="{ style: getSelectThemeStyle(primaryColor) }"
+        :jumper-props="{ style: getInputThemeStyle(primaryColor) }"
         @change="onChange"
       />
     </Flex>
