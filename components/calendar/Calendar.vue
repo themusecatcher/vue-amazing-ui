@@ -349,7 +349,15 @@ function onPanelChange(): void {
 }
 </script>
 <template>
-  <div class="m-calendar" :class="`calendar-${display}`">
+  <div
+    class="m-calendar"
+    :class="`calendar-${display}`"
+    :style="`
+      --calendar-primary-color: #1677ff;
+      --calendar-panel-primary-bg-color: #e6f4ff;
+      --calendar-card-primary-bg-color: #1677ff;
+    `"
+  >
     <div class="calendar-header-wrap">
       <div v-if="showHeader" class="calendar-header-content">
         <slot name="header">{{ header }}</slot>
@@ -606,7 +614,7 @@ function onPanelChange(): void {
           }
           .date-cell-today {
             .date-cell-inner {
-              border-color: #1677ff;
+              border-color: var(--calendar-primary-color);
               .date-value {
                 color: rgba(0, 0, 0, 0.88);
               }
@@ -614,8 +622,8 @@ function onPanelChange(): void {
           }
           .date-cell-selected {
             .date-cell-inner {
-              color: #1677ff;
-              background: #e6f4ff;
+              color: var(--calendar-primary-color);
+              background: var(--calendar-panel-primary-bg-color);
             }
           }
         }
@@ -686,7 +694,7 @@ function onPanelChange(): void {
                 bottom: 0;
                 left: 0;
                 z-index: 1;
-                border: 1px solid #1677ff;
+                border: 1px solid var(--calendar-primary-color);
                 border-radius: 4px;
                 content: '';
               }
@@ -702,7 +710,7 @@ function onPanelChange(): void {
           .date-cell-selected {
             .date-cell-inner {
               color: #fff;
-              background: #1677ff;
+              background: var(--calendar-card-primary-bg-color);
             }
           }
         }
