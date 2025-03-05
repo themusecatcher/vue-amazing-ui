@@ -124,10 +124,10 @@ function pageSizeChange(page: number, pageSize: number) {
     <h2 class="mt30 mb10">自定义主题色</h2>
     <Flex vertical>
       <Space align="center">
-        primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> primaryShadowColor:<ColorPicker
-          style="width: 200px"
-          v-model:value="primaryShadowColor"
-        />
+        primaryColor:
+        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+        primaryShadowColor:
+        <ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
       </Space>
       <Pagination
         :style="getThemeStyle(primaryColor)"
