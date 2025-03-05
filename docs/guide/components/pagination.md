@@ -426,7 +426,9 @@ disabled | 是否禁用 | boolean | false
 pageAmount | 显示的页码数 | number | 5
 hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false
 showQuickJumper | 是否可以快速跳转至某页 | boolean | false
+jumperProps | 快速跳转组件 `props`，参考 [Input Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html#input) | object | {}
 showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined
+changerProps | `pageSize` 切换器组件 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {}
 pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100]
 showTotal | 用于显示数据总量和当前数据顺序 | boolean &#124; ((total: number, range: number[]) => string) | false
 placement | 分页展示位置 | 'left' &#124; 'center' &#124; 'right' | 'center'
