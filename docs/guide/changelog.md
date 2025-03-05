@@ -6,6 +6,7 @@
 
 ## <VersionDateTag date="2025-03-05">2.2.13</VersionDateTag>
 
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件代码
 - 优化并更新 [分页 Pagination](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html) 组件代码
 - 组件库及文档代码优化
 

@@ -199,7 +199,7 @@ function onHover(value: string | number, disabled: boolean | undefined): void {
   hoverValue.value = value
 }
 function toggleSelect(): void {
-  focusSelect()
+  selectFocus()
   if (!props.search && inputRef.value) {
     inputRef.value.style.opacity = '0'
   }
@@ -220,7 +220,7 @@ function onSearchInput(e: Event): void {
 }
 function onClear(): void {
   if (selectFocused.value) {
-    focusSelect()
+    selectFocus()
     showCaret.value = true
   }
   showClear.value = false
@@ -232,7 +232,7 @@ function onClear(): void {
   emits('update:modelValue')
   emits('change')
 }
-function focusSelect(): void {
+function selectFocus(): void {
   inputRef.value?.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
 }
 // 选中下拉项后的回调
@@ -244,7 +244,7 @@ function onChange(value: string | number, label: string, index: number): void {
     emits('change', value, label, index)
   }
   showCaret.value = false
-  focusSelect()
+  selectFocus()
 }
 </script>
 <template>
@@ -351,7 +351,7 @@ function onChange(value: string | number, label: string, index: number): void {
       <div
         v-if="showOptions && filterOptions && filterOptions.length"
         class="select-options-panel"
-        @click.stop="focusSelect"
+        @click.stop="selectFocus"
         @mouseenter="disabledBlur = true"
         @mouseleave="disabledBlur = false"
       >
@@ -369,7 +369,7 @@ function onChange(value: string | number, label: string, index: number): void {
             ]"
             :title="option[label]"
             @mouseenter="onHover(option[value], option.disabled)"
-            @click.stop="option.disabled ? focusSelect() : onChange(option[value], option[label], index)"
+            @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
           >
             {{ option[label] }}
           </p>
@@ -378,7 +378,7 @@ function onChange(value: string | number, label: string, index: number): void {
       <div
         v-else-if="showOptions && filterOptions && !filterOptions.length"
         class="select-options-panel options-empty"
-        @click.stop="focusSelect"
+        @click.stop="selectFocus"
         @mouseenter="disabledBlur = true"
         @mouseleave="disabledBlur = false"
       >
