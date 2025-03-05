@@ -164,6 +164,7 @@ function filter(inputValue: string, option: any) {
     <Select :options="optionsDisabled" v-model="selectedValue" />
     <h2 class="mt30 mb10">支持清除</h2>
     <Select :options="options" allow-clear v-model="selectedValue" />
+    <a-select style="width: 200px" :options="options" allow-clear v-model="selectedValue" />
     <h2 class="mt30 mb10">支持搜索</h2>
     <Select :width="150" :options="options" search allow-clear v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
