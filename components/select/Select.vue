@@ -150,6 +150,9 @@ function initSelector(): void {
     hoverValue.value = null
   }
 }
+function onFocus(): void {
+  selectFocused.value = true
+}
 function onBlur(): void {
   selectFocused.value = false
   if (showOptions.value) {
@@ -231,10 +234,9 @@ function onClear(): void {
 }
 function focusSelect(): void {
   inputRef.value?.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
-  selectFocused.value = true
 }
+// 选中下拉项后的回调
 function onChange(value: string | number, label: string, index: number): void {
-  // 选中下拉项后的回调
   if (props.modelValue !== value) {
     selectedName.value = label
     hoverValue.value = value
@@ -242,9 +244,7 @@ function onChange(value: string | number, label: string, index: number): void {
     emits('change', value, label, index)
   }
   showCaret.value = false
-}
-function onClick(): void {
-  inputRef.value?.focus()
+  focusSelect()
 }
 </script>
 <template>
@@ -279,7 +279,8 @@ function onClick(): void {
           :disabled="disabled"
           @input="onSearchInput"
           v-model="inputValue"
-          @blur="!disabledBlur && showOptions && !disabled ? onBlur() : () => false"
+          @blur="!disabledBlur && !disabled ? onBlur() : () => false"
+          @focus="!disabled ? onFocus() : () => false"
         />
       </span>
       <span
@@ -350,7 +351,7 @@ function onClick(): void {
       <div
         v-if="showOptions && filterOptions && filterOptions.length"
         class="select-options-panel"
-        @click.stop="onClick"
+        @click.stop="focusSelect"
         @mouseenter="disabledBlur = true"
         @mouseleave="disabledBlur = false"
       >
@@ -377,7 +378,7 @@ function onClick(): void {
       <div
         v-else-if="showOptions && filterOptions && !filterOptions.length"
         class="select-options-panel options-empty"
-        @click.stop="onClick"
+        @click.stop="focusSelect"
         @mouseenter="disabledBlur = true"
         @mouseleave="disabledBlur = false"
       >
