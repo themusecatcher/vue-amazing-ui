@@ -2,6 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 import { format, subDays, addDays } from 'date-fns'
+import { generate } from '@ant-design/colors'
 import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
@@ -275,6 +276,11 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       </Space>
     </Flex>
     <h2 class="mt30 mb10">自定义日期格式</h2>
+    <Flex vertical>
+      <Alert type="info" :message="`You selected date: ${dateStr}`" />
+      <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+    </Flex>
+    <h2 class="mt30 mb10">自定义主题色</h2>
     <Flex vertical>
       <Alert type="info" :message="`You selected date: ${dateStr}`" />
       <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
