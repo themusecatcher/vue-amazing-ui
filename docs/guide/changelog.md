@@ -8,6 +8,7 @@
 
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件代码
 - 优化并更新 [分页 Pagination](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html) 组件代码
+- 优化并更新 [日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html) 组件，新增颜色样式变量，新增 `yearSelectProps` `monthSelectProps` `modeRadioProps` 属性，用于支持自定义主题色或相关组件属性
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-04">2.2.12</VersionDateTag>

@@ -16,6 +16,7 @@ const slotDate = ref(Date.now())
 const selectDate = ref(new Date('2030-10-06').getTime())
 const disableDate = ref(Date.now())
 const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
+const customThemeDate = ref(Date.now())
 const message = ref()
 const displayOptions = [
   {
@@ -28,7 +29,10 @@ const displayOptions = [
   }
 ]
 const modeDisplay = ref('card')
-const display = ref('panel')
+const disabledDisplay = ref('panel')
+const customThemeDisplay = ref('panel')
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const weekOptions = [
   {
     label: '周一',
@@ -96,6 +100,9 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('dateStr', dateStr.value)
 })
+watchEffect(() => {
+  console.log('customThemeDate', customThemeDate.value)
+})
 function cardDateFormat(date: number, timestamp: number) {
   return String(date).padStart(2, '0')
 }
@@ -123,6 +130,25 @@ function disabledDate(timestamp: number): boolean {
 }
 function disabledWeekend(timestamp: number): boolean {
   return ['6', '7'].includes(format(timestamp, 'i'))
+}
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--calendar-primary-color': color,
+    '--calendar-panel-primary-bg-color': colorPalettes[0],
+    '--calendar-card-primary-bg-color': color
+  }
+  return style
+}
+function getSelectThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--select-primary-color-hover': colorPalettes[4],
+    '--select-primary-color-focus': colorPalettes[4],
+    '--select-primary-shadow-color': primaryShadowColor.value,
+    '--select-item-bg-color-active': colorPalettes[0]
+  }
+  return style
 }
 function onSelect(date: string | number, source: 'date' | 'month') {
   console.log('select', date, source)
@@ -250,7 +276,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     <h2 class="mt30 mb10">禁用日期</h2>
     <Flex vertical>
       <Space align="center">
-        display:<Radio :options="displayOptions" v-model:value="display" button button-style="solid" />
+        display:<Radio :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
       </Space>
       <Space>
         <Flex vertical>
@@ -258,7 +284,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
           <Calendar
             v-model:value="disableDate"
             :disabled-date="disabledDate"
-            :display="display"
+            :display="disabledDisplay"
             @select="onSelect"
             @panelChange="onPanelChange"
           />
@@ -268,7 +294,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
           <Calendar
             v-model:value="disableDate"
             :disabled-date="disabledWeekend"
-            :display="display"
+            :display="disabledDisplay"
             @select="onSelect"
             @panelChange="onPanelChange"
           />
@@ -282,8 +308,29 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     </Flex>
     <h2 class="mt30 mb10">自定义主题色</h2>
     <Flex vertical>
-      <Alert type="info" :message="`You selected date: ${dateStr}`" />
-      <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+      <Space align="center">
+        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+      </Space>
+      <Space align="center">
+        display:
+        <Radio
+          :style="`--radio-primary-color: ${primaryColor}`"
+          :options="displayOptions"
+          v-model:value="customThemeDisplay"
+          button
+          button-style="solid"
+        />
+      </Space>
+      <Calendar
+        :style="getThemeStyle(primaryColor)"
+        v-model:value="customThemeDate"
+        :display="customThemeDisplay"
+        :year-select-props="{ style: getSelectThemeStyle(primaryColor) }"
+        :month-select-props="{ style: getSelectThemeStyle(primaryColor) }"
+        :mode-radio-props="{ style: { '--radio-primary-color': primaryColor } }"
+        @panelChange="onPanelChange"
+      />
     </Flex>
     <Message ref="message" />
   </div>

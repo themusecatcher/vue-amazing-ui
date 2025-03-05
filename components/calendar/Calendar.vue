@@ -27,6 +27,9 @@ export interface Props {
   display?: 'panel' | 'card' // 日历展示方式，面板/卡片
   mode?: 'month' | 'year' // 初始模式
   header?: string // 自定义日历头部内容 string | slot
+  yearSelectProps?: object // 年选择器 props，参考 Select 组件 Props
+  monthSelectProps?: object // 月选择器 props，参考 Select 组件 Props
+  modeRadioProps?: object // 模式切换器 props，参考 Radio 组件 Props
   startDayOfWeek?: DayOfWeek // 一周的开始是星期几，0-6，0 是周一
   dateStrip?: boolean // 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉
   dateFormat?: (date: number, timestamp: number) => string // 自定义日期展示格式
@@ -40,6 +43,9 @@ const props = withDefaults(defineProps<Props>(), {
   display: 'panel',
   mode: 'month',
   header: undefined,
+  yearSelectProps: () => ({}),
+  monthSelectProps: () => ({}),
+  modeRadioProps: () => ({}),
   startDayOfWeek: 0,
   dateStrip: true,
   dateFormat: undefined,
@@ -370,6 +376,7 @@ function onPanelChange(): void {
           :max-display="8"
           v-model="calendarYear"
           @change="onPanelChange"
+          v-bind="yearSelectProps"
         />
         <Select
           v-if="calendarMode === 'month'"
@@ -379,6 +386,7 @@ function onPanelChange(): void {
           :max-display="8"
           v-model="calendarMonth"
           @change="onPanelChange"
+          v-bind="monthSelectProps"
         />
         <Radio
           class="calendar-mode-radio"
@@ -387,6 +395,7 @@ function onPanelChange(): void {
           v-model:value="calendarMode"
           button
           @change="onPanelChange"
+          v-bind="modeRadioProps"
         />
       </div>
     </div>
@@ -420,8 +429,9 @@ function onPanelChange(): void {
                   v-for="(dateItem, index) in weekDates"
                   :key="index"
                   :title="getDateStr(dateItem)"
+                  @click="onDateSelected(dateItem)"
                 >
-                  <div class="date-cell-inner" @click="onDateSelected(dateItem)">
+                  <div class="date-cell-inner">
                     <div class="date-value">
                       <slot name="dateValue" v-bind="dateItem">{{
                         getDateFormat(dateItem.dateObject.date, dateItem.timestamp)
@@ -452,8 +462,9 @@ function onPanelChange(): void {
                   v-for="(monthItem, index) in rowMonths"
                   :key="index"
                   :title="getMonthStr(monthItem)"
+                  @click="onMonthSelected(monthItem)"
                 >
-                  <div class="date-cell-inner" @click="onMonthSelected(monthItem)">
+                  <div class="date-cell-inner">
                     <div class="date-value">
                       <slot name="monthValue" v-bind="monthItem">{{
                         getMonthFormat(monthItem.monthObject.month + 1, monthItem.timestamp)
