@@ -4,29 +4,29 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 const defaultCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
-  '--icon-size': '32px',
-  '--default-color-hover': '#d4380d'
+  '--backtop-icon-size': '32px',
+  '--backtop-default-color-hover': '#d4380d'
 }
 const primaryCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
-  '--icon-size': '32px',
-  '--primary-bg-color': '#d4380d',
-  '--primary-bg-color-hover': '#dd6747',
-  '--primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
-  '--square-border-radius': '18px'
+  '--backtop-icon-size': '32px',
+  '--backtop-primary-bg-color': '#d4380d',
+  '--backtop-primary-bg-color-hover': '#dd6747',
+  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-square-border-radius': '18px'
 }
 const primaryDescCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
-  '--icon-width-desc-size': '30px',
-  '--desc-size': '16px',
-  '--primary-bg-color': '#d4380d',
-  '--primary-bg-color-hover': '#dd6747',
-  '--primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
-  '--square-border-radius': '18px'
+  '--backtop-icon-with-desc-size': '30px',
+  '--backtop-desc-font-size': '16px',
+  '--backtop-primary-bg-color': '#d4380d',
+  '--backtop-primary-bg-color-hover': '#dd6747',
+  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-square-border-radius': '18px'
 }
 const scrollContainer = ref()
 function onShow(show: boolean) {
@@ -91,13 +91,13 @@ function onShow(show: boolean) {
     />
     <h2 class="mt30 mb10">自定义可视高度</h2>
     <h3 class="mb10">自定义滚动时触发显示回到顶部的高度</h3>
-    <BackTop :bottom="270" :visibility-height="300">
+    <BackTop :bottom="280" :visibility-height="300">
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
         可视高度：300px
       </div>
     </BackTop>
     <h2 class="mt30 mb10">自定义位置</h2>
-    <BackTop :right="260" :bottom="270">
+    <BackTop :right="260" :bottom="280">
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">改变位置</div>
     </BackTop>
     <h2 class="mt30 mb10">自定义监听目标</h2>
