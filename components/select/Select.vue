@@ -284,9 +284,8 @@ function onChange(value: string | number, label: string, index: number): void {
         />
       </span>
       <span
-        v-if="!hideSelectName"
         class="select-item"
-        :class="{ 'select-placeholder': !selectedName || showOptions }"
+        :class="{ 'select-placeholder': !selectedName || showOptions, 'select-item-hidden': hideSelectName }"
         :title="selectedName"
       >
         {{ selectedName || placeholder }}
@@ -509,6 +508,9 @@ function onChange(value: string | number, label: string, index: number): void {
       color: rgba(0, 0, 0, 0.25);
       transition: none;
       pointer-events: none;
+    }
+    .select-item-hidden {
+      visibility: hidden;
     }
     .icon-svg {
       position: absolute;
