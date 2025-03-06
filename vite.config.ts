@@ -3,7 +3,7 @@ import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import type { BuildEnvironmentOptions } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+import VueDevTools from 'vite-plugin-vue-devtools'
 // 自动生成类型文件
 import dts from 'vite-plugin-dts'
 // import AutoImport from 'unplugin-auto-import/vite'
@@ -152,7 +152,9 @@ const buildESAndLibOptions = {
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
+    VueDevTools({
+      launchEditor: 'cursor'
+    }),
     dts({
       outDir: ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
       tsconfigPath: './tsconfig.dts.json',
