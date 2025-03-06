@@ -10,8 +10,20 @@
 - 非浮层的静态展现形式，始终展现，不会自动消失，用户可以点击关闭
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { generate } from '@ant-design/colors'
 import { AlertFilled, AlertOutlined, SmileOutlined } from '@ant-design/icons-vue'
-function onClose (e: Event) {
+const primaryColor = ref('#ff6900')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--alert-primary-color': color,
+    '--alert-primary-bg-color': colorPalettes[0],
+    '--alert-primary-border-color': colorPalettes[2]
+  }
+  return style
+}
+function onClose(e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>
@@ -593,6 +605,62 @@ function onClose (e: Event) {
         </Space>
       </template>
     </Alert>
+  </Flex>
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Flex vertical>
+  <Space align="center">
+    alertPrimaryColor:
+    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  </Space>
+  <Alert :style="getThemeStyle(primaryColor)" message="Info Text" type="info" :bordered="false" />
+  <Alert :style="getThemeStyle(primaryColor)" message="Info Text" type="info" show-icon />
+  <Alert
+    :style="getThemeStyle(primaryColor)"
+    message="Info Text"
+    description="Info Description Info Description Info Description Info Description"
+    type="info"
+    show-icon
+  />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { generate } from '@ant-design/colors'
+const primaryColor = ref('#ff6900')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--alert-primary-color': color,
+    '--alert-primary-bg-color': colorPalettes[0],
+    '--alert-primary-border-color': colorPalettes[2]
+  }
+  return style
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">
+      alertPrimaryColor:
+      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    </Space>
+    <Alert :style="getThemeStyle(primaryColor)" message="Info Text" type="info" :bordered="false" />
+    <Alert :style="getThemeStyle(primaryColor)" message="Info Text" type="info" show-icon />
+    <Alert
+      :style="getThemeStyle(primaryColor)"
+      message="Info Text"
+      description="Info Description Info Description Info Description Info Description"
+      type="info"
+      show-icon
+    />
   </Flex>
 </template>
 ```
