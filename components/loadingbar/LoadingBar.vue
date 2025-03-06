@@ -19,20 +19,20 @@ withDefaults(defineProps<Props>(), {
   colorError: '#ff4d4f',
   to: 'body'
 })
-const showLoadingBar = ref(false)
-const loadingBarRef = ref() // 加载条 DOM 引用
-const loadingStarted = ref(false) // 加载条是否开始
-const loadingFinishing = ref(false) // 加载条是否完成
-const loadingErroring = ref(false) // 加载条是否报错
-async function init() {
+const showLoadingBar = ref<boolean>(false)
+const loadingBarRef = ref() // 加载条元素引用
+const loadingStarted = ref<boolean>(false) // 加载条是否开始
+const loadingFinishing = ref<boolean>(false) // 加载条是否完成
+const loadingErroring = ref<boolean>(false) // 加载条是否报错
+function init(): void {
   showLoadingBar.value = false
   loadingFinishing.value = false
   loadingErroring.value = false
 }
-async function start(from = 0, to = 80, status: 'starting' | 'error' = 'starting') {
+async function start(from = 0, to = 80, status: 'starting' | 'error' = 'starting'): Promise<void> {
   // 加载条开始加载的回调函数
   loadingStarted.value = true
-  await init()
+  init()
   if (loadingFinishing.value) {
     return
   }
@@ -48,7 +48,7 @@ async function start(from = 0, to = 80, status: 'starting' | 'error' = 'starting
   loadingBarRef.value.style.transition = ''
   loadingBarRef.value.style.maxWidth = `${to}%`
 }
-async function finish() {
+async function finish(): Promise<void> {
   // 加载条结束加载的回调函数
   if (loadingFinishing.value || loadingErroring.value) {
     return
@@ -65,7 +65,7 @@ async function finish() {
   void loadingBarRef.value.offsetWidth // 触发浏览器回流(重排)
   showLoadingBar.value = false
 }
-function error() {
+function error(): void {
   // 加载条出现错误的回调函数
   if (loadingFinishing.value || loadingErroring.value) {
     return
@@ -85,12 +85,12 @@ function error() {
     showLoadingBar.value = false
   }
 }
-function onAfterEnter() {
+function onAfterEnter(): void {
   if (loadingErroring.value) {
     showLoadingBar.value = false
   }
 }
-async function onAfterLeave() {
+async function onAfterLeave(): Promise<void> {
   await init()
 }
 defineExpose({
@@ -102,12 +102,16 @@ defineExpose({
 <template>
   <Teleport :disabled="!to" :to="to">
     <Transition name="fade-in" @after-enter="onAfterEnter" @after-leave="onAfterLeave">
-      <div v-show="showLoadingBar" class="m-loading-bar-container" :class="containerClass" :style="containerStyle">
-        <div
-          ref="loadingBarRef"
-          class="loading-bar"
-          :style="`--loading-bar-size: ${loadingBarSize}px; --loading-bar-color-loading: ${colorLoading}; --loading-bar-color-finish: ${colorFinish}; --loading-bar-color-error: ${colorError}; max-width: 100%;`"
-        ></div>
+      <div
+        v-show="showLoadingBar"
+        class="m-loading-bar-container"
+        :class="containerClass"
+        :style="[
+          `--loading-bar-size: ${loadingBarSize}px; --loading-bar-color-loading: ${colorLoading}; --loading-bar-color-finish: ${colorFinish}; --loading-bar-color-error: ${colorError};`,
+          containerStyle
+        ]"
+      >
+        <div ref="loadingBarRef" class="loading-bar" style="max-width: 100%"></div>
       </div>
     </Transition>
   </Teleport>
