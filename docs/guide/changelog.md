@@ -10,6 +10,7 @@
 - 优化并更新 [级联选择 Cascader](https://themusecatcher.github.io/vue-amazing-ui/guide/components/cascader.html) 组件，新增 `size` 属性，支持三种尺寸；同时支持自定义主题色
 - 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件代码，重命名相关样式变量
 - 优化并更新 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件代码，重命名相关样式变量
+- 优化并更新 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html) 组件代码，重命名相关样式变量
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件代码
 - 组件库及文档代码优化
 
