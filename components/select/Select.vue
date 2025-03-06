@@ -599,6 +599,7 @@ function onChange(value: string | number, label: string, index: number): void {
     }
   }
   .options-empty {
+    min-width: 112px;
     padding: 9px 16px;
     .m-empty {
       margin-block: 8px;
