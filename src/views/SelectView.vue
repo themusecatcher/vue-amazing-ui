@@ -162,22 +162,22 @@ function filter(inputValue: string, option: any) {
     <Select :options="options" disabled v-model="selectedValue" />
     <h2 class="mt30 mb10">禁用选项</h2>
     <Select :options="optionsDisabled" v-model="selectedValue" />
-    <h2 class="mt30 mb10">支持清除</h2>
-    <Select :options="options" allow-clear v-model="selectedValue" />
-    <h2 class="mt30 mb10">支持搜索</h2>
-    <Select :width="150" :options="options" search allow-clear v-model="selectedValue" />
-    <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
-    <Select :width="150" :options="options" search :filter="filter" v-model="selectedValue" />
+    <h2 class="mt30 mb10">自定义节点字段名</h2>
+    <Select :options="optionsCustom" label="name" value="id" v-model="selectedValue" />
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <Select :width="160" :height="36" search :options="options" v-model="selectedValue" />
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Select :width="180" :options="options" v-model="selectedValue" :size="size" />
       <Select :width="180" :options="options" search allow-clear v-model="selectedValue" :size="size" />
     </Space>
-    <h2 class="mt30 mb10">自定义样式</h2>
-    <Select :width="160" :height="36" search :options="options" v-model="selectedValue" />
-    <h2 class="mt30 mb10">自定义节点字段名</h2>
-    <Select :options="optionsCustom" label="name" value="id" v-model="selectedValue" />
+    <h2 class="mt30 mb10">支持清除</h2>
+    <Select :options="options" allow-clear v-model="selectedValue" />
+    <h2 class="mt30 mb10">支持搜索</h2>
+    <Select :width="150" :options="options" search allow-clear v-model="selectedValue" />
+    <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
+    <Select :width="150" :options="options" search :filter="filter" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义下拉面板数</h2>
     <Select :options="options" :max-display="8" v-model="selectedValue" />
     <h2 class="mt30 mb10">自定义下拉面板滚动条</h2>

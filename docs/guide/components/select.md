@@ -344,6 +344,225 @@ const selectedValue = ref<SelectProps['modelValue']>(5)
 
 :::
 
+## 自定义节点字段名
+
+<Select
+  :options="optionsCustom"
+  label="name"
+  value="id"
+  v-model="selectedValue"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const optionsCustom = ref<SelectOption[]>([
+  {
+    name: '北京市',
+    id: 1
+  },
+  {
+    name: '上海市',
+    id: 2
+  },
+  {
+    name: '纽约市',
+    id: 3
+  },
+  {
+    name: '旧金山',
+    id: 4
+  },
+  {
+    name: '布宜诺斯艾利斯',
+    id: 5
+  },
+  {
+    name: '伊斯坦布尔',
+    id: 6
+  },
+  {
+    name: '拜占庭',
+    id: 7
+  },
+  {
+    name: '君士坦丁堡',
+    id: 8
+  }
+])
+const selectedValue = ref<SelectProps['modelValue']>(5)
+watchEffect(() => {
+  console.log('selectedValue', selectedValue.value)
+})
+</script>
+<template>
+  <Select
+    :options="optionsCustom"
+    label="name"
+    value="id"
+    v-model="selectedValue"
+  />
+</template>
+```
+
+:::
+
+## 自定义样式
+
+<Select
+  :width="160"
+  :height="36"
+  :options="options"
+  v-model="selectedValue"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '上海市',
+    value: 2
+  },
+  {
+    label: '纽约市',
+    value: 3
+  },
+  {
+    label: '旧金山',
+    value: 4
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 5
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 6
+  },
+  {
+    label: '拜占庭',
+    value: 7
+  },
+  {
+    label: '君士坦丁堡',
+    value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
+  }
+])
+const selectedValue = ref<SelectProps['modelValue']>(5)
+watchEffect(() => {
+  console.log('selectedValue', selectedValue.value)
+})
+</script>
+<template>
+  <Select
+    :width="160"
+    :height="36"
+    :options="options"
+    v-model="selectedValue"
+  />
+</template>
+```
+
+:::
+
+## 三种尺寸
+
+<Space vertical >
+  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <Select :width="180" :options="options" v-model="selectedValue" :size="size" />
+  <Select :width="180" :options="options" search allowClear v-model="selectedValue" :size="size" />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '上海市',
+    value: 2
+  },
+  {
+    label: '纽约市',
+    value: 3
+  },
+  {
+    label: '旧金山',
+    value: 4
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 5
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 6
+  },
+  {
+    label: '拜占庭',
+    value: 7
+  },
+  {
+    label: '君士坦丁堡',
+    value: 8
+  },
+  {
+    label: '墨尔本',
+    value: 9
+  }
+])
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('large')
+const selectedValue = ref<SelectProps['modelValue']>(5)
+watchEffect(() => {
+  console.log('selectedValue', selectedValue.value)
+})
+</script>
+<template>
+  <Space vertical >
+    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <Select :width="180" :options="options" v-model="selectedValue" :size="size" />
+    <Select :width="180" :options="options" search allowClear v-model="selectedValue" :size="size" />
+  </Space>
+</template>
+```
+
+:::
+
 ## 支持清除
 
 <Select :options="options" allow-clear v-model="selectedValue" />
@@ -540,226 +759,7 @@ function filter (inputValue: string, option: any) {
 
 :::
 
-## 三种尺寸
-
-<Space vertical >
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  <Select :width="180" :options="options" v-model="selectedValue" :size="size" />
-  <Select :width="180" :options="options" search allowClear v-model="selectedValue" :size="size" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { SelectProps, SelectOption } from 'vue-amazing-ui'
-const options = ref<SelectOption[]>([
-  {
-    label: '北京市',
-    value: 1
-  },
-  {
-    label: '上海市',
-    value: 2
-  },
-  {
-    label: '纽约市',
-    value: 3
-  },
-  {
-    label: '旧金山',
-    value: 4
-  },
-  {
-    label: '布宜诺斯艾利斯',
-    value: 5
-  },
-  {
-    label: '伊斯坦布尔',
-    value: 6
-  },
-  {
-    label: '拜占庭',
-    value: 7
-  },
-  {
-    label: '君士坦丁堡',
-    value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
-  }
-])
-const sizeOptions = [
-  {
-    label: 'small',
-    value: 'small'
-  },
-  {
-    label: 'middle',
-    value: 'middle'
-  },
-  {
-    label: 'large',
-    value: 'large'
-  }
-]
-const size = ref('large')
-const selectedValue = ref<SelectProps['modelValue']>(5)
-watchEffect(() => {
-  console.log('selectedValue', selectedValue.value)
-})
-</script>
-<template>
-  <Space vertical >
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-    <Select :width="180" :options="options" v-model="selectedValue" :size="size" />
-    <Select :width="180" :options="options" search allowClear v-model="selectedValue" :size="size" />
-  </Space>
-</template>
-```
-
-:::
-
-## 自定义样式
-
-<Select
-  :width="160"
-  :height="36"
-  :options="options"
-  v-model="selectedValue"
-/>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { SelectProps, SelectOption } from 'vue-amazing-ui'
-const options = ref<SelectOption[]>([
-  {
-    label: '北京市',
-    value: 1
-  },
-  {
-    label: '上海市',
-    value: 2
-  },
-  {
-    label: '纽约市',
-    value: 3
-  },
-  {
-    label: '旧金山',
-    value: 4
-  },
-  {
-    label: '布宜诺斯艾利斯',
-    value: 5
-  },
-  {
-    label: '伊斯坦布尔',
-    value: 6
-  },
-  {
-    label: '拜占庭',
-    value: 7
-  },
-  {
-    label: '君士坦丁堡',
-    value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
-  }
-])
-const selectedValue = ref<SelectProps['modelValue']>(5)
-watchEffect(() => {
-  console.log('selectedValue', selectedValue.value)
-})
-</script>
-<template>
-  <Select
-    :width="160"
-    :height="36"
-    :options="options"
-    v-model="selectedValue"
-  />
-</template>
-```
-
-:::
-
-## 自定义节点字段名
-
-<Select
-  :options="optionsCustom"
-  label="name"
-  value="id"
-  v-model="selectedValue"
-/>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { SelectProps, SelectOption } from 'vue-amazing-ui'
-const optionsCustom = ref<SelectOption[]>([
-  {
-    name: '北京市',
-    id: 1
-  },
-  {
-    name: '上海市',
-    id: 2
-  },
-  {
-    name: '纽约市',
-    id: 3
-  },
-  {
-    name: '旧金山',
-    id: 4
-  },
-  {
-    name: '布宜诺斯艾利斯',
-    id: 5
-  },
-  {
-    name: '伊斯坦布尔',
-    id: 6
-  },
-  {
-    name: '拜占庭',
-    id: 7
-  },
-  {
-    name: '君士坦丁堡',
-    id: 8
-  }
-])
-const selectedValue = ref<SelectProps['modelValue']>(5)
-watchEffect(() => {
-  console.log('selectedValue', selectedValue.value)
-})
-</script>
-<template>
-  <Select
-    :options="optionsCustom"
-    label="name"
-    value="id"
-    v-model="selectedValue"
-  />
-</template>
-```
-
-:::
-
-## 自定义下拉面板展示数
+## 自定义下拉面板数
 
 <Select :options="options" :max-display="5" v-model="selectedValue" />
 
@@ -975,12 +975,12 @@ label | 选项的 `label` 文本字段名 | string | 'label'
 value | 选项的 `value` 值字段名 | string | 'value'
 placeholder | 默认占位文本 | string | '请选择'
 disabled | 是否禁用 | boolean | false
-allowClear | 是否支持清除 | boolean | false
-search | 是否支持搜索，使用搜索时请设置 `width` | boolean | false
-filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含时返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true
 width | 选择器宽度，单位 `px` | string &#124; number | 'auto'
 height | 选择器高度，单位 `px` | number | undefined
 size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+allowClear | 是否支持清除 | boolean | false
+search | 是否支持搜索，使用搜索时请设置 `width` | boolean | false
+filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含时返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true
 scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar) | object | {}
 maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6
 modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值 | number &#124; string | undefined
