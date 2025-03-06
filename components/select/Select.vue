@@ -19,7 +19,7 @@ export interface Props {
   height?: number // 选择器高度，单位 px
   size?: 'small' | 'middle' | 'large' // 选择器大小
   allowClear?: boolean // 是否支持清除
-  search?: boolean // 是否支持搜索，使用搜索时请设置 width
+  search?: boolean // 是否支持搜索
   /*
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
