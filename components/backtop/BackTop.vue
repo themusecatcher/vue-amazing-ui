@@ -163,23 +163,23 @@ function onBackTop(): void {
           --backtop-z-index: ${zIndex};
           --backtop-width: 44px;
           --backtop-height: 44px;
-          --icon-size: 26px;
-          --icon-width-desc-size: 24px;
-          --desc-size: 12px;
-          --default-color: rgba(0, 0, 0, 0.88);
-          --default-color-hover: #1677ff;
-          --default-bg-color: rgba(255, 255, 255, 0.88);
-          --default-bg-color-hover: rgba(255, 255, 255);
-          --default-shadow-color: rgba(0, 0, 0, 0.12);
-          --default-shadow-color-hover: rgba(0, 0, 0, 0.12);
-          --primary-color: #fff;
-          --primary-color-hover: #fff;
-          --primary-bg-color: #1677ff;
-          --primary-bg-color-hover: #4096ff;
-          --primary-shadow-color: rgba(9, 88, 217, 0.32);
-          --primary-shadow-color-hover: rgba(9, 88, 217, 0.32);
-          --circle-border-radius: calc(var(--backtop-width) / 2);
-          --square-border-radius: 8px;
+          --backtop-icon-size: 26px;
+          --backtop-icon-with-desc-size: 24px;
+          --backtop-desc-font-size: 12px;
+          --backtop-default-color: rgba(0, 0, 0, 0.88);
+          --backtop-default-color-hover: #1677ff;
+          --backtop-default-bg-color: rgba(255, 255, 255, 0.88);
+          --backtop-default-bg-color-hover: rgba(255, 255, 255);
+          --backtop-default-shadow-color: rgba(0, 0, 0, 0.12);
+          --backtop-default-shadow-color-hover: rgba(0, 0, 0, 0.12);
+          --backtop-primary-color: #fff;
+          --backtop-primary-color-hover: #fff;
+          --backtop-primary-bg-color: #1677ff;
+          --backtop-primary-bg-color-hover: #4096ff;
+          --backtop-primary-shadow-color: rgba(9, 88, 217, 0.32);
+          --backtop-primary-shadow-color-hover: rgba(9, 88, 217, 0.32);
+          --backtop-circle-border-radius: calc(var(--backtop-width) / 2);
+          --backtop-square-border-radius: 8px;
         `
       ]"
       @click="onBackTop"
@@ -194,7 +194,7 @@ function onBackTop(): void {
         </template>
         <div class="backtop-wrap" :class="`backtop-${type} backtop-${shape}`">
           <slot>
-            <span class="backtop-icon" :class="{ 'icon-description': showDescription }">
+            <span class="backtop-icon" :class="{ 'icon-with-description': showDescription }">
               <slot name="icon">
                 <component v-if="icon" :is="icon" />
                 <svg
@@ -262,20 +262,20 @@ function onBackTop(): void {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     .backtop-icon {
       display: inline-flex;
-      font-size: var(--icon-size);
+      font-size: var(--backtop-icon-size);
       :deep(svg) {
         pointer-events: none;
         fill: currentColor;
         transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
     }
-    .icon-description {
-      font-size: var(--icon-width-desc-size);
+    .icon-with-description {
+      font-size: var(--backtop-icon-with-desc-size);
     }
     .backtop-description {
       display: flex;
       align-items: center;
-      font-size: var(--desc-size);
+      font-size: var(--backtop-desc-font-size);
       font-weight: 500;
       line-height: 1.2;
       pointer-events: none;
@@ -283,46 +283,46 @@ function onBackTop(): void {
     }
   }
   .backtop-default {
-    color: var(--default-color);
-    background-color: var(--default-bg-color);
-    box-shadow: 0 2px 8px 0 var(--default-shadow-color);
+    color: var(--backtop-default-color);
+    background-color: var(--backtop-default-bg-color);
+    box-shadow: 0 2px 8px 0 var(--backtop-default-shadow-color);
     .backtop-icon,
     .backtop-description {
-      color: var(--default-color);
+      color: var(--backtop-default-color);
     }
     &:hover {
-      color: var(--default-color-hover);
-      background-color: var(--default-bg-color-hover);
-      box-shadow: 0 2px 8px 3px var(--default-shadow-color-hover);
+      color: var(--backtop-default-color-hover);
+      background-color: var(--backtop-default-bg-color-hover);
+      box-shadow: 0 2px 8px 3px var(--backtop-default-shadow-color-hover);
       .backtop-icon,
       .backtop-description {
-        color: var(--default-color-hover);
+        color: var(--backtop-default-color-hover);
       }
     }
   }
   .backtop-primary {
-    color: var(--primary-color);
-    background-color: var(--primary-bg-color);
-    box-shadow: 0 2px 8px 0 var(--primary-shadow-color);
+    color: var(--backtop-primary-color);
+    background-color: var(--backtop-primary-bg-color);
+    box-shadow: 0 2px 8px 0 var(--backtop-primary-shadow-color);
     .backtop-icon,
     .backtop-description {
-      color: var(--primary-color);
+      color: var(--backtop-primary-color);
     }
     &:hover {
-      color: var(--primary-color-hover);
-      background-color: var(--primary-bg-color-hover);
-      box-shadow: 0 2px 8px 3px var(--primary-shadow-color-hover);
+      color: var(--backtop-primary-color-hover);
+      background-color: var(--backtop-primary-bg-color-hover);
+      box-shadow: 0 2px 8px 3px var(--backtop-primary-shadow-color-hover);
       .backtop-icon,
       .backtop-description {
-        color: var(--primary-color-hover);
+        color: var(--backtop-primary-color-hover);
       }
     }
   }
   .backtop-circle {
-    border-radius: var(--circle-border-radius);
+    border-radius: var(--backtop-circle-border-radius);
   }
   .backtop-square {
-    border-radius: var(--square-border-radius);
+    border-radius: var(--backtop-square-border-radius);
   }
 }
 </style>
