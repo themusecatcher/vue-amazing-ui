@@ -540,7 +540,7 @@ function filter (inputValue: string, option: any) {
 
 :::
 
-## 三种大小
+## 三种尺寸
 
 <Space vertical >
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
