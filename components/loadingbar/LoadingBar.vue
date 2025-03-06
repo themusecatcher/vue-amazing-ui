@@ -19,7 +19,7 @@ withDefaults(defineProps<Props>(), {
   colorError: '#ff4d4f',
   to: 'body'
 })
-const showLoadingBar = ref<boolean>(false)
+const showLoadingBar = ref<boolean>(false) // 加载条是否显示
 const loadingBarRef = ref() // 加载条元素引用
 const loadingStarted = ref<boolean>(false) // 加载条是否开始
 const loadingFinishing = ref<boolean>(false) // 加载条是否完成
@@ -29,8 +29,8 @@ function init(): void {
   loadingFinishing.value = false
   loadingErroring.value = false
 }
+// 加载条开始加载的回调函数
 async function start(from = 0, to = 80, status: 'starting' | 'error' = 'starting'): Promise<void> {
-  // 加载条开始加载的回调函数
   loadingStarted.value = true
   init()
   if (loadingFinishing.value) {
@@ -48,8 +48,8 @@ async function start(from = 0, to = 80, status: 'starting' | 'error' = 'starting
   loadingBarRef.value.style.transition = ''
   loadingBarRef.value.style.maxWidth = `${to}%`
 }
+// 加载条结束加载的回调函数
 async function finish(): Promise<void> {
-  // 加载条结束加载的回调函数
   if (loadingFinishing.value || loadingErroring.value) {
     return
   }
@@ -65,8 +65,8 @@ async function finish(): Promise<void> {
   void loadingBarRef.value.offsetWidth // 触发浏览器回流(重排)
   showLoadingBar.value = false
 }
+// 加载条出现错误的回调函数
 function error(): void {
-  // 加载条出现错误的回调函数
   if (loadingFinishing.value || loadingErroring.value) {
     return
   }
@@ -90,8 +90,8 @@ function onAfterEnter(): void {
     showLoadingBar.value = false
   }
 }
-async function onAfterLeave(): Promise<void> {
-  await init()
+function onAfterLeave(): void {
+  init()
 }
 defineExpose({
   start,
