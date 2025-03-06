@@ -15,6 +15,9 @@ export interface Props {
   value?: string // 字典项的值字段名
   placeholder?: string // 默认占位文本
   disabled?: boolean // 是否禁用
+  width?: string | number // 选择器宽度，单位 px
+  height?: number // 选择器高度，单位 px
+  size?: 'small' | 'middle' | 'large' // 选择器大小
   allowClear?: boolean // 是否支持清除
   search?: boolean // 是否支持搜索，使用搜索时请设置 width
   /*
@@ -22,9 +25,6 @@ export interface Props {
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
   filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
-  width?: string | number // 选择器宽度，单位 px
-  height?: number // 选择器高度，单位 px
-  size?: 'small' | 'middle' | 'large' // 选择器大小
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
   scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number | string // (v-model) 当前选中的 option 条目值
@@ -35,12 +35,12 @@ const props = withDefaults(defineProps<Props>(), {
   value: 'value',
   placeholder: '请选择',
   disabled: false,
-  allowClear: false,
-  search: false,
-  filter: true,
   width: 'auto',
   height: undefined,
   size: 'middle',
+  allowClear: false,
+  search: false,
+  filter: true,
   maxDisplay: 6,
   scrollbarProps: () => ({}),
   modelValue: undefined
