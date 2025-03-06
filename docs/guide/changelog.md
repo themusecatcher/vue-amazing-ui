@@ -11,6 +11,7 @@
 - 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件代码，重命名相关样式变量
 - 优化并更新 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件代码，重命名相关样式变量
 - 优化并更新 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html) 组件代码，重命名相关样式变量
+- 优化并更新 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件代码，重命名相关样式变量
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件代码
 - 组件库及文档代码优化
 
