@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { generate } from '@ant-design/colors'
 const options = ref([
   {
     value: '1',
@@ -169,10 +170,37 @@ const optionsCustom = ref([
     ]
   }
 ])
+const sizeOptions = [
+  {
+    label: 'small',
+    value: 'small'
+  },
+  {
+    label: 'middle',
+    value: 'middle'
+  },
+  {
+    label: 'large',
+    value: 'large'
+  }
+]
+const size = ref('large')
 const selectedValue = ref(['2', '21', '212'])
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--select-primary-color-hover': colorPalettes[4],
+    '--select-primary-color-focus': colorPalettes[4],
+    '--select-primary-shadow-color': primaryShadowColor.value,
+    '--select-item-bg-color-active': colorPalettes[0]
+  }
+  return style
+}
 function onChange(values: (number | string)[], labels: string[]) {
   console.log('values', values)
   console.log('labels', labels)
@@ -196,16 +224,6 @@ function filter(inputValue: string, option: any) {
     <h2 class="mt30 mb10">禁用选项</h2>
     <h3 class="mb10">只需指定 options 里的 disabled 字段</h3>
     <Cascader :options="optionsDisabled" v-model="selectedValue" @change="onChange" />
-    <h2 class="mt30 mb10">选择即改变</h2>
-    <Cascader :options="options" v-model="selectedValue" change-on-select @change="onChange" />
-    <h2 class="mt30 mb10">支持清除</h2>
-    <Cascader :options="options" v-model="selectedValue" allow-clear @change="onChange" />
-    <h2 class="mt30 mb10">支持搜索</h2>
-    <Cascader :options="options" :width="100" v-model="selectedValue" search @change="onChange" />
-    <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
-    <Cascader :options="options" :width="100" v-model="selectedValue" search :filter="filter" @change="onChange" />
-    <h2 class="mt30 mb10">自定义样式</h2>
-    <Cascader :options="options" v-model="selectedValue" :width="120" :height="36" :gap="12" @change="onChange" />
     <h2 class="mt30 mb10">自定义字段名</h2>
     <Cascader
       :options="optionsCustom"
@@ -215,5 +233,36 @@ function filter(inputValue: string, option: any) {
       children="items"
       @change="onChange"
     />
+    <h2 class="mt30 mb10">自定义样式</h2>
+    <Cascader :options="options" v-model="selectedValue" :width="100" :height="36" :gap="12" @change="onChange" />
+    <h2 class="mt30 mb10">三种尺寸</h2>
+    <Space vertical>
+      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <Cascader :options="options" v-model="selectedValue" :size="size" @change="onChange" />
+      <Cascader :options="options" v-model="selectedValue" :size="size" allow-clear search @change="onChange" />
+    </Space>
+    <h2 class="mt30 mb10">选择即改变</h2>
+    <Cascader :options="options" v-model="selectedValue" change-on-select @change="onChange" />
+    <h2 class="mt30 mb10">支持清除</h2>
+    <Cascader :options="options" v-model="selectedValue" allow-clear @change="onChange" />
+    <h2 class="mt30 mb10">支持搜索</h2>
+    <Cascader :options="options" v-model="selectedValue" search @change="onChange" />
+    <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
+    <Cascader :options="options" v-model="selectedValue" allow-clear search :filter="filter" @change="onChange" />
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Space vertical>
+      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+      <Space align="center">
+        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+      </Space>
+      <Cascader
+        :style="getThemeStyle(primaryColor)"
+        :options="options"
+        v-model="selectedValue"
+        allow-clear
+        search
+        @change="onChange"
+      />
+    </Space>
   </div>
 </template>
