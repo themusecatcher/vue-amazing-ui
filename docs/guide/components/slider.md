@@ -741,7 +741,7 @@ watchEffect(() => {
 
 ## 自定义样式
 
-*通过修改样式变量可以自定义滑动输入条样式、标记样式、Tooltip 样式*
+*通过修改样式变量可以自定义滑动输入条样式、标记样式、`Tooltip` 样式*
 
 <Flex vertical gap="large">
   <Slider :style="singleCustomStyle" v-model:value="customStyleSingleValue" />
