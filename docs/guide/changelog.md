@@ -8,6 +8,7 @@
 
 - 优化并更新 [警告提示 Alert](https://themusecatcher.github.io/vue-amazing-ui/guide/components/alert.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件代码，重命名相关样式变量
+- 优化并更新 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件代码，重命名相关样式变量
 
 ## <VersionDateTag date="2025-03-05">2.2.13</VersionDateTag>
 

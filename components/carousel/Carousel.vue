@@ -376,7 +376,15 @@ defineExpose({
     ref="carouselRef"
     class="m-carousel"
     :class="{ 'carousel-vertical': verticalSlide, 'carousel-fade': effect === 'fade' }"
-    :style="`--arrow-color: ${arrowColor}; --dot-size: ${dotSize}px; --dot-color: ${dotColor}; --fade-duration: ${props.fadeDuration}ms; --fade-function: ${props.fadeFunction}; width: ${carouselWidth}; height: ${carouselHeight};`"
+    :style="`
+      --carousel-width: ${carouselWidth};
+      --carousel-height: ${carouselHeight};
+      --carousel-arrow-color: ${arrowColor};
+      --carousel-dot-size: ${dotSize}px;
+      --carousel-dot-color: ${dotColor};
+      --carousel-fade-duration: ${props.fadeDuration}ms;
+      --carousel-fade-function: ${props.fadeFunction};
+    `"
     @mouseenter="autoplay && pauseOnMouseEnter ? onStop() : () => false"
     @mouseleave="autoplay && pauseOnMouseEnter ? onStart() : () => false"
   >
@@ -471,6 +479,8 @@ defineExpose({
 <style lang="less" scoped>
 .m-carousel {
   display: inline-block;
+  width: var(--carousel-width);
+  height: var(--carousel-height);
   margin: 0 auto;
   position: relative;
   overflow: hidden;
@@ -515,7 +525,7 @@ defineExpose({
     left: 6px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--arrow-color);
+    color: var(--carousel-arrow-color);
     fill: currentColor;
     cursor: pointer;
     opacity: 0;
@@ -531,7 +541,7 @@ defineExpose({
     right: 6px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--arrow-color);
+    color: var(--carousel-arrow-color);
     fill: currentColor;
     cursor: pointer;
     opacity: 0;
@@ -554,10 +564,10 @@ defineExpose({
     height: auto;
     .dot-item {
       // flex: 0 1 auto;
-      width: var(--dot-size);
-      height: var(--dot-size);
-      border-radius: var(--dot-size);
-      background-color: var(--dot-color);
+      width: var(--carousel-dot-size);
+      height: var(--carousel-dot-size);
+      border-radius: var(--carousel-dot-size);
+      background-color: var(--carousel-dot-color);
       cursor: pointer;
       outline: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -606,8 +616,8 @@ defineExpose({
     opacity: 0;
     pointer-events: none;
     transition-property: opacity;
-    transition-duration: var(--fade-duration);
-    transition-timing-function: var(--fade-function);
+    transition-duration: var(--carousel-fade-duration);
+    transition-timing-function: var(--carousel-fade-function);
   }
   .image-fade-active {
     opacity: 1;
