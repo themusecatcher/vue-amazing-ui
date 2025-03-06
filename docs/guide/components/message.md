@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const message = ref()
 const customMessage = ref()
 const customThemeMessage = ref()
@@ -75,6 +76,16 @@ function onStyleCustom(content: string) {
       color: '#f50'
     }
   })
+}
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
 }
 function onThemeCustom(content: string) {
   customThemeMessage.value.info(content)
@@ -243,7 +254,12 @@ function onClose() {
   <Space align="center">
     messagePrimaryColor:
     <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    <Button type="primary" @click="onThemeCustom('This is a custom theme message')">Custom Theme</Button>
+    <Button
+      :style="getThemeStyle(primaryColor)"
+      type="primary"
+      @click="onThemeCustom('This is a custom theme message')"
+      >Custom Theme</Button
+    >
   </Space>
 </Space>
 
@@ -259,7 +275,11 @@ function onClose() {
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const message = ref()
+const customMessage = ref()
+const customThemeMessage = ref()
+const primaryColor = ref('#ff6900')
 function onClassCustom(content: string) {
   message.value.info({
     content,
@@ -278,6 +298,22 @@ function onStyleCustom(content: string) {
     }
   })
 }
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
+}
+function onThemeCustom(content: string) {
+  customThemeMessage.value.info(content)
+}
+function onClick(e: Event) {
+  console.log('click', e)
+}
 function onClose() {
   console.log('close')
 }
@@ -291,7 +327,12 @@ function onClose() {
     <Space align="center">
       messagePrimaryColor:
       <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-      <Button type="primary" @click="onThemeCustom('This is a custom theme message')">Custom Theme</Button>
+      <Button
+        :style="getThemeStyle(primaryColor)"
+        type="primary"
+        @click="onThemeCustom('This is a custom theme message')"
+        >Custom Theme</Button
+      >
     </Space>
   </Space>
   <Message ref="message" @click="onClick" @close="onClose" />
