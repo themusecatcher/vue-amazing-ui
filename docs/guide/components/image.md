@@ -34,6 +34,7 @@ const images = ref<ImageItem[]>([
     name: 'image-5.jpg'
   }
 ])
+const primaryColor = ref('#ff6900')
 </script>
 
 ## 基本使用
@@ -365,7 +366,8 @@ const images = ref<ImageItem[]>([
   :zoom-ratio="0.2"
   :min-zoom-scale="0.5"
   :max-zoom-scale="2"
-  src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
+  src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg"
+/>
 
 ::: details Show Code
 
@@ -375,7 +377,44 @@ const images = ref<ImageItem[]>([
     :zoom-ratio="0.2"
     :min-zoom-scale="0.5"
     :max-zoom-scale="2"
-    src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
+    src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg"
+  />
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Space vertical>
+  <Space align="center">
+    imagePrimaryColor:
+    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  </Space>
+  <Image
+    :style="`--image-primary-color: ${primaryColor};`"
+    src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg"
+  />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const primaryColor = ref('#ff6900')
+</script>
+<template>
+  <Space vertical>
+    <Space align="center">
+      imagePrimaryColor:
+      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    </Space>
+    <Image
+      :style="`--image-primary-color: ${primaryColor};`"
+      src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg"
+    />
+  </Space>
 </template>
 ```
 

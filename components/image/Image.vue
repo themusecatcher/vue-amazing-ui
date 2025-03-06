@@ -282,7 +282,7 @@ function onSwitchRight() {
 }
 </script>
 <template>
-  <div class="m-image" :style="`--image-primary-color: #1677ff;`">
+  <div class="m-image" style="--image-primary-color: #1677ff">
     <Space gap="small" v-bind="spaceProps">
       <div
         v-show="!album || (album && index === 0)"

@@ -106,7 +106,7 @@ defineExpose({
         <div
           ref="loadingBarRef"
           class="loading-bar"
-          :style="`--loading-bar-size: ${loadingBarSize}px; --color-loading: ${colorLoading}; --color-finish: ${colorFinish}; --color-error: ${colorError}; max-width: 100%;`"
+          :style="`--loading-bar-size: ${loadingBarSize}px; --loading-bar-color-loading: ${colorLoading}; --loading-bar-color-finish: ${colorFinish}; --loading-bar-color-error: ${colorError}; max-width: 100%;`"
         ></div>
       </div>
     </Transition>
@@ -139,16 +139,16 @@ defineExpose({
     border-radius: var(--loading-bar-size);
   }
   .loading-bar-starting {
-    background: var(--color-loading);
+    background: var(--loading-bar-color-loading);
   }
   .loading-bar-finishing {
-    background: var(--color-finish);
+    background: var(--loading-bar-color-finish);
     transition:
       max-width 0.2s linear,
       background 0.2s linear;
   }
   .loading-bar-error {
-    background: var(--color-error);
+    background: var(--loading-bar-color-error);
     transition:
       max-width 0.2s linear,
       background 0.2s linear;
