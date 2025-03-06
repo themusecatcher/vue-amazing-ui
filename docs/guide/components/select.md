@@ -413,7 +413,7 @@ watchEffect(() => {
 ## 自定义样式
 
 <Select
-  :width="160"
+  :width="150"
   :height="36"
   :options="options"
   v-model="selectedValue"
@@ -470,7 +470,7 @@ watchEffect(() => {
 </script>
 <template>
   <Select
-    :width="160"
+    :width="150"
     :height="36"
     :options="options"
     v-model="selectedValue"
@@ -484,8 +484,8 @@ watchEffect(() => {
 
 <Space vertical >
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  <Select :width="180" :options="options" v-model="selectedValue" :size="size" />
-  <Select :width="180" :options="options" search allowClear v-model="selectedValue" :size="size" />
+  <Select :options="options" v-model="selectedValue" :size="size" />
+  <Select :options="options" search allowClear v-model="selectedValue" :size="size" />
 </Space>
 
 ::: details Show Code
@@ -555,8 +555,8 @@ watchEffect(() => {
 <template>
   <Space vertical >
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-    <Select :width="180" :options="options" v-model="selectedValue" :size="size" />
-    <Select :width="180" :options="options" search allowClear v-model="selectedValue" :size="size" />
+    <Select :options="options" v-model="selectedValue" :size="size" />
+    <Select :options="options" search allowClear v-model="selectedValue" :size="size" />
   </Space>
 </template>
 ```
@@ -625,7 +625,7 @@ watchEffect(() => {
 
 ## 支持搜索
 
-<Select :width="150" :options="options" allow-clear search v-model="selectedValue" />
+<Select :options="options" allow-clear search v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -677,7 +677,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Select :width="150" :options="options" allow-clear search v-model="selectedValue" />
+  <Select :options="options" allow-clear search v-model="selectedValue" />
 </template>
 ```
 
@@ -685,13 +685,7 @@ watchEffect(() => {
 
 ## 自定义搜索过滤函数
 
-<Select
-  :width="150"
-  :options="options"
-  search
-  :filter="filter"
-  v-model="selectedValue"
-/>
+<Select :options="options" search :filter="filter" v-model="selectedValue" />
 
 ::: details Show Code
 
@@ -747,13 +741,7 @@ function filter (inputValue: string, option: any) {
 }
 </script>
 <template>
-  <Select
-    :width="150"
-    :options="options"
-    search
-    :filter="filter"
-    v-model="selectedValue"
-  />
+  <Select :options="options" search :filter="filter" v-model="selectedValue" />
 </template>
 ```
 
@@ -886,7 +874,7 @@ watchEffect(() => {
   <Space align="center">
     primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
   </Space>
-  <Select :width="150" :style="getThemeStyle(primaryColor)" search :options="options" v-model="selectedValue" />
+  <Select :style="getThemeStyle(primaryColor)" search :options="options" v-model="selectedValue" />
 </Space>
 
 ::: details Show Code
@@ -957,7 +945,7 @@ function getThemeStyle(color: string) {
     <Space align="center">
       primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
     </Space>
-    <Select :width="150" :style="getThemeStyle(primaryColor)" search :options="options" v-model="selectedValue" />
+    <Select :style="getThemeStyle(primaryColor)" search :options="options" v-model="selectedValue" />
   </Space>
 </template>
 ```
