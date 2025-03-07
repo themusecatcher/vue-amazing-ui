@@ -210,6 +210,12 @@ export const routes = [
         component: () => import('@/views/LoadingBarView.vue')
       },
       {
+        path: '/menu',
+        name: 'Menu',
+        meta: { title: ' 菜单' },
+        component: () => import('@/views/MenuView.vue')
+      },
+      {
         path: '/message',
         name: 'Message',
         meta: { title: '全局提示' },
