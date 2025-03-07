@@ -283,7 +283,7 @@ const primaryDescCustomStyle = {
 
 <br/>
 
-<BackTop :listen-to="scrollContainer" :bottom="330" :visibility-height="10">
+<BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">
   <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
 </BackTop>
 <div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
@@ -306,7 +306,7 @@ const primaryDescCustomStyle = {
 <br/>
 
 <Scrollbar style="width: 600px; height: 100px">
-  <BackTop :bottom="330" :right="260" :visibility-height="10">
+  <BackTop :bottom="340" :right="260" :visibility-height="10">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
       监听 Scrollbar
     </div>
@@ -341,7 +341,7 @@ import { ref } from 'vue'
 const scrollContainer = ref()
 </script>
 <template>
-  <BackTop :listen-to="scrollContainer" :bottom="330" :visibility-height="10">
+  <BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
   </BackTop>
   <div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
@@ -358,7 +358,7 @@ const scrollContainer = ref()
   </div>
   <br />
   <Scrollbar style="width: 600px; height: 100px">
-    <BackTop :bottom="330" :right="260" :visibility-height="10">
+    <BackTop :bottom="340" :right="260" :visibility-height="10">
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
         监听 Scrollbar
       </div>
