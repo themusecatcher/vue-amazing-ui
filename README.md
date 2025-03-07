@@ -222,7 +222,7 @@ docs:dev
 
 ## Sponsors 🫡
 
-All sponsors will be listed here, thank you very much for your support and sponsorship ❤️❤️
+All sponsors will be listed here, thank you very much for your support and sponsorship ❤️
 
 <a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher"></a> <img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i"></a>
 
