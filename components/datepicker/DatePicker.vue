@@ -59,7 +59,13 @@ const year = computed(() => {
       'datepicker-small': size === 'small',
       'datepicker-large': size === 'large'
     }"
-    :style="`width: ${width}px;`"
+    :style="`
+      --datepicker-width: ${width}px;
+      --datepicker-primary-color: #1677ff;
+      --datepicker-primary-color-hover: #4096ff;
+      --datepicker-primary-color-focus: #4096ff;
+      --datepicker-primary-shadow-color: rgba(5, 145, 255, 0.1);
+    `"
     locale="zh-CN"
     position="left"
     :month-change-on-scroll="false"
@@ -79,6 +85,7 @@ const year = computed(() => {
 <style lang="less" scoped>
 .m-datepicker {
   display: inline-block;
+  width: var(--datepicker-width);
   :deep(.dp__input_wrap) {
     svg {
       fill: currentColor;
@@ -97,7 +104,7 @@ const year = computed(() => {
       }
     }
     .dp__input_focus {
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+      box-shadow: 0 0 0 2px var(--datepicker-primary-shadow-color);
     }
   }
   :deep(.dp__outer_menu_wrap) {
@@ -368,7 +375,7 @@ const year = computed(() => {
   --dp-hover-text-color: rgba(0, 0, 0, 0.88);
   --dp-hover-icon-color: #959595;
   // --dp-primary-color: #1976d2;
-  --dp-primary-color: #1677ff;
+  --dp-primary-color: var(--datepicker-primary-color);
   --dp-primary-disabled-color: #6bacea;
   // --dp-primary-text-color: #f8f5f5;
   --dp-primary-text-color: #fff;
@@ -379,9 +386,9 @@ const year = computed(() => {
   // --dp-menu-border-color: #ddd;
   --dp-menu-border-color: #d9d9d9;
   // --dp-border-color-hover: #aaaeb7;
-  --dp-border-color-hover: #4096ff;
+  --dp-border-color-hover: var(--datepicker-primary-color-hover);
   // --dp-border-color-focus: #aaaeb7;
-  --dp-border-color-focus: #4096ff;
+  --dp-border-color-focus: var(--datepicker-primary-color-focus);
   // --dp-disabled-color: #f6f6f6;
   --dp-disabled-color: rgba(0, 0, 0, 0.04);
   // --dp-scroll-bar-background: #f3f3f3;
