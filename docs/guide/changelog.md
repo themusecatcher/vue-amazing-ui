@@ -7,6 +7,7 @@
 ## <VersionDateTag date="2025-03-07">2.2.15</VersionDateTag>
 
 - 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增颜色样式变量，用于支持自定义主题色
+- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，新增 `CSS` 变量，支持：自定义主题色；自定义切换动画效果
 
 ## <VersionDateTag date="2025-03-06">2.2.14</VersionDateTag>
 

@@ -20,6 +20,7 @@ import { ref, shallowReactive, onBeforeMount } from 'vue'
 import pkg from '../../../package.json'
 import type { SwiperImage } from 'vue-amazing-ui'
 const images = ref<SwiperImage[]>([])
+const primaryColor = ref('#ff6900')
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
@@ -124,7 +125,7 @@ function onNext() {
 
 <Swiper
   :images="images"
-  :height="480"
+  :height="450"
   :speed="800"
   :pagination="{
     dynamicBullets: true,
@@ -159,7 +160,7 @@ function onChange (swiper: any) {
 <template>
   <Swiper
     :images="images"
-    :height="480"
+    :height="450"
     :speed="800"
     :pagination="{
       dynamicBullets: true,
@@ -496,6 +497,69 @@ function onNext () {
       navigation
       mousewheel
       @swiper="onBroadcastSwiper"
+    />
+  </Flex>
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Flex vertical>
+  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+  <Swiper
+    :style="`--swiper-primary-color: ${primaryColor}; --swiper-navigation-size: 32px;`"
+    :images="images"
+    :height="450"
+    :speed="400"
+    navigation
+    :pagination="{
+      dynamicBullets: true,
+      clickable: true
+    }"
+    @change="onChange"
+  />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, onBeforeMount } from 'vue'
+import type { SwiperImage } from 'vue-amazing-ui'
+const images = ref<SwiperImage[]>([])
+const primaryColor = ref('#ff6900')
+function loadImages() {
+  for (let i = 1; i <= 6; i++) {
+    images.value.push({
+      name: `image-${i}`,
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/${i}.jpg`
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/${i}.jpg`
+    })
+  }
+}
+onBeforeMount(() => { // 组件已完成响应式状态设置，但未创建DOM节点
+  loadImages()
+})
+function onChange(swiper: any) {
+  console.log('slider change', swiper)
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+    <Swiper
+      :style="`--swiper-primary-color: ${primaryColor}; --swiper-navigation-size: 32px;`"
+      :images="images"
+      :height="450"
+      :speed="400"
+      navigation
+      :pagination="{
+        dynamicBullets: true,
+        clickable: true
+      }"
+      @change="onChange"
     />
   </Flex>
 </template>
