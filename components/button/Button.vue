@@ -9,7 +9,7 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 设置按钮尺寸
   ghost?: boolean // 按钮背景是否透明，仅当 type: 'primary' | 'danger' 时生效
   buttonClass?: string // 设置按钮类名
-  rippleColor?: string // 点击时的波纹颜色，一般不需要设置，默认会根据 type 自动匹配，主要用于自定义样式时且 type: 'default'
+  rippleColor?: string // 点击时的波纹颜色，一般不需要设置，默认会根据 type 自动匹配，主要用于自定义样式时
   href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
   target?: '_self' | '_blank' // 如何打开目标链接，相当于 a 链接的 target 属性，href 存在时生效
   keyboard?: boolean // 是否支持键盘操作
@@ -90,15 +90,15 @@ function onWaveEnd() {
       buttonClass
     ]"
     :style="`
-      --primary-color: #1677ff;
-      --primary-color-hover: #4096ff;
-      --primary-color-active: #0958d9;
-      --danger-color: #ff4d4f;
-      --danger-color-hover: #ff7875;
-      --danger-color-active: #d9363e;
-      --text-color-hover: rgba(0, 0, 0, 0.06);
-      --text-color-active: rgba(0, 0, 0, 0.15);
-      --ripple-color: ${rippleColor || presetRippleColors[type]};
+      --button-primary-color: #1677ff;
+      --button-primary-color-hover: #4096ff;
+      --button-primary-color-active: #0958d9;
+      --button-danger-color: #ff4d4f;
+      --button-danger-color-hover: #ff7875;
+      --button-danger-color-active: #d9363e;
+      --button-text-color-hover: rgba(0, 0, 0, 0.06);
+      --button-text-color-active: rgba(0, 0, 0, 0.15);
+      --button-ripple-color: ${rippleColor || presetRippleColors[type]};
     `"
     :href="href"
     :target="target"
@@ -239,10 +239,10 @@ function onWaveEnd() {
     animation-name: waveSpread, waveOpacity;
     @keyframes waveSpread {
       from {
-        box-shadow: 0 0 0.5px 0 var(--ripple-color);
+        box-shadow: 0 0 0.5px 0 var(--button-ripple-color);
       }
       to {
-        box-shadow: 0 0 0.5px 5.5px var(--ripple-color);
+        box-shadow: 0 0 0.5px 5.5px var(--button-ripple-color);
       }
     }
     @keyframes waveOpacity {
@@ -262,12 +262,12 @@ function onWaveEnd() {
   background-color: #ffffff;
   border-color: #d9d9d9;
   &:hover {
-    color: var(--primary-color-hover) !important;
-    border-color: var(--primary-color-hover);
+    color: var(--button-primary-color-hover) !important;
+    border-color: var(--button-primary-color-hover);
   }
   &:active {
-    color: var(--primary-color-active) !important;
-    border-color: var(--primary-color-active);
+    color: var(--button-primary-color-active) !important;
+    border-color: var(--button-primary-color-active);
   }
   .btn-icon {
     :deep(svg) {
@@ -279,43 +279,43 @@ function onWaveEnd() {
   .btn-default();
   &:hover {
     color: #fff !important;
-    background-color: var(--primary-color-hover);
-    border-color: var(--primary-color-hover);
+    background-color: var(--button-primary-color);
+    border-color: var(--button-primary-color);
   }
   &:active {
     color: #fff !important;
-    background-color: var(--primary-color-active);
-    border-color: var(--primary-color-active);
+    background-color: var(--button-primary-color-active);
+    border-color: var(--button-primary-color-active);
   }
 }
 .btn-primary {
   color: #fff;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  background-color: var(--button-primary-color);
+  border-color: var(--button-primary-color);
   &:hover {
     color: #fff;
-    background-color: var(--primary-color-hover);
-    border-color: var(--primary-color-hover);
+    background-color: var(--button-primary-color-hover);
+    border-color: var(--button-primary-color-hover);
   }
   &:active {
     color: #fff;
-    background-color: var(--primary-color-active);
-    border-color: var(--primary-color-active);
+    background-color: var(--button-primary-color-active);
+    border-color: var(--button-primary-color-active);
   }
 }
 .btn-danger {
   color: #fff;
-  background-color: var(--danger-color);
-  border-color: var(--danger-color);
+  background-color: var(--button-danger-color);
+  border-color: var(--button-danger-color);
   &:hover {
     color: #fff;
-    background-color: var(--danger-color-hover);
-    border-color: var(--danger-color-hover);
+    background-color: var(--button-danger-color-hover);
+    border-color: var(--button-danger-color-hover);
   }
   &:active {
     color: #fff;
-    background-color: var(--danger-color-active);
-    border-color: var(--danger-color-active);
+    background-color: var(--button-danger-color-active);
+    border-color: var(--button-danger-color-active);
   }
 }
 .btn-dashed {
@@ -324,19 +324,19 @@ function onWaveEnd() {
 }
 .btn-text {
   &:hover {
-    background-color: var(--text-color-hover);
+    background-color: var(--button-text-color-hover);
   }
   &:active {
-    background-color: var(--text-color-active);
+    background-color: var(--button-text-color-active);
   }
 }
 .btn-link {
-  color: var(--primary-color);
+  color: var(--button-primary-color);
   &:hover {
-    color: var(--primary-color-hover);
+    color: var(--button-primary-color-hover);
   }
   &:active {
-    color: var(--primary-color-active);
+    color: var(--button-primary-color-active);
   }
   .btn-icon {
     :deep(svg) {
@@ -442,16 +442,16 @@ function onWaveEnd() {
   pointer-events: none;
 }
 .btn-primary.btn-ghost:not(.btn-disabled) {
-  color: var(--primary-color);
-  border-color: var(--primary-color);
+  color: var(--button-primary-color);
+  border-color: var(--button-primary-color);
   background-color: transparent;
   &:hover {
-    color: var(--primary-color-hover);
-    border-color: var(--primary-color-hover);
+    color: var(--button-primary-color-hover);
+    border-color: var(--button-primary-color-hover);
   }
   &:active {
-    color: var(--primary-color-active);
-    border-color: var(--primary-color-active);
+    color: var(--button-primary-color-active);
+    border-color: var(--button-primary-color-active);
   }
   .btn-icon {
     :deep(svg) {
@@ -460,16 +460,16 @@ function onWaveEnd() {
   }
 }
 .btn-danger.btn-ghost:not(.btn-disabled) {
-  color: var(--danger-color);
-  border-color: var(--danger-color);
+  color: var(--button-danger-color);
+  border-color: var(--button-danger-color);
   background-color: transparent;
   &:hover {
-    color: var(--danger-color-hover);
-    border-color: var(--danger-color-hover);
+    color: var(--button-danger-color-hover);
+    border-color: var(--button-danger-color-hover);
   }
   &:active {
-    color: var(--danger-color-active);
-    border-color: var(--danger-color-active);
+    color: var(--button-danger-color-active);
+    border-color: var(--button-danger-color-active);
   }
   .btn-icon {
     :deep(svg) {

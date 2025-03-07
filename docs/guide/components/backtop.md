@@ -15,29 +15,29 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 const defaultCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
-  '--icon-size': '32px',
-  '--color-default-hover': '#d4380d'
+  '--backtop-icon-size': '32px',
+  '--backtop-default-color-hover': '#d4380d'
 }
 const primaryCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
-  '--icon-size': '32px',
-  '--bg-color-primary': '#d4380d',
-  '--bg-color-primary-hover': '#dd6747',
-  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
-  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
-  '--square-border-radius': '18px'
+  '--backtop-icon-size': '32px',
+  '--backtop-primary-bg-color': '#d4380d',
+  '--backtop-primary-bg-color-hover': '#dd6747',
+  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-square-border-radius': '18px'
 }
 const primaryDescCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
-  '--icon-width-desc-size': '30px',
-  '--desc-size': '16px',
-  '--bg-color-primary': '#d4380d',
-  '--bg-color-primary-hover': '#dd6747',
-  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
-  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
-  '--square-border-radius': '18px'
+  '--backtop-icon-with-desc-size': '30px',
+  '--backtop-desc-font-size': '16px',
+  '--backtop-primary-bg-color': '#d4380d',
+  '--backtop-primary-bg-color-hover': '#dd6747',
+  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-square-border-radius': '18px'
 }
 const scrollContainer = ref()
 function onShow(show: boolean) {
@@ -201,29 +201,29 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 const defaultCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
-  '--icon-size': '32px',
-  '--color-default-hover': '#d4380d'
+  '--backtop-icon-size': '32px',
+  '--backtop-default-color-hover': '#d4380d'
 }
 const primaryCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
-  '--icon-size': '32px',
-  '--bg-color-primary': '#d4380d',
-  '--bg-color-primary-hover': '#dd6747',
-  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
-  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
-  '--square-border-radius': '18px'
+  '--backtop-icon-size': '32px',
+  '--backtop-primary-bg-color': '#d4380d',
+  '--backtop-primary-bg-color-hover': '#dd6747',
+  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-square-border-radius': '18px'
 }
 const primaryDescCustomStyle = {
   '--backtop-width': '54px',
   '--backtop-height': '54px',
-  '--icon-width-desc-size': '30px',
-  '--desc-size': '16px',
-  '--bg-color-primary': '#d4380d',
-  '--bg-color-primary-hover': '#dd6747',
-  '--shadow-color-primary': 'rgba(221, 103, 71, 0.36)',
-  '--shadow-color-primary-hover': 'rgba(221, 103, 71, 0.36)',
-  '--square-border-radius': '18px'
+  '--backtop-icon-with-desc-size': '30px',
+  '--backtop-desc-font-size': '16px',
+  '--backtop-primary-bg-color': '#d4380d',
+  '--backtop-primary-bg-color-hover': '#dd6747',
+  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--backtop-square-border-radius': '18px'
 }
 </script>
 <template>
@@ -239,7 +239,7 @@ const primaryDescCustomStyle = {
 
 *自定义滚动时触发显示回到顶部的高度*
 
-<BackTop :bottom="270" :visibility-height="300">
+<BackTop :bottom="280" :visibility-height="300">
   <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
     可视高度：300px
   </div>
@@ -249,7 +249,7 @@ const primaryDescCustomStyle = {
 
 ```vue
 <template>
-  <BackTop :bottom="270" :visibility-height="300">
+  <BackTop :bottom="280" :visibility-height="300">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
       可视高度：300px
     </div>
@@ -261,7 +261,7 @@ const primaryDescCustomStyle = {
 
 ## 自定义位置
 
-<BackTop :right="260" :bottom="270">
+<BackTop :right="260" :bottom="280">
   <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">改变位置</div>
 </BackTop>
 
@@ -269,7 +269,7 @@ const primaryDescCustomStyle = {
 
 ```vue
 <template>
-  <BackTop :right="260" :bottom="270">
+  <BackTop :right="260" :bottom="280">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">改变位置</div>
   </BackTop>
 </template>
@@ -283,7 +283,7 @@ const primaryDescCustomStyle = {
 
 <br/>
 
-<BackTop :listen-to="scrollContainer" :bottom="330" :visibility-height="10">
+<BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">
   <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
 </BackTop>
 <div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
@@ -306,7 +306,7 @@ const primaryDescCustomStyle = {
 <br/>
 
 <Scrollbar style="width: 600px; height: 100px">
-  <BackTop :bottom="330" :right="260" :visibility-height="10">
+  <BackTop :bottom="340" :right="260" :visibility-height="10">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
       监听 Scrollbar
     </div>
@@ -341,7 +341,7 @@ import { ref } from 'vue'
 const scrollContainer = ref()
 </script>
 <template>
-  <BackTop :listen-to="scrollContainer" :bottom="330" :visibility-height="10">
+  <BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
   </BackTop>
   <div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
@@ -358,7 +358,7 @@ const scrollContainer = ref()
   </div>
   <br />
   <Scrollbar style="width: 600px; height: 100px">
-    <BackTop :bottom="330" :right="260" :visibility-height="10">
+    <BackTop :bottom="340" :right="260" :visibility-height="10">
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
         监听 Scrollbar
       </div>

@@ -18,8 +18,11 @@ import {
   EnvironmentOutlined,
   CompassOutlined
 } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const value = ref('')
 const lazyValue = ref('')
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const sizeOptions = [
   {
     label: 'small',
@@ -41,6 +44,15 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--input-primary-color-hover': colorPalettes[4],
+    '--input-primary-color-focus': colorPalettes[4],
+    '--input-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
 function onChange(e: Event) {
   console.log('change', e)
 }
@@ -190,7 +202,7 @@ watchEffect(() => {
 
 ## 三种大小
 
-<Space gap="small" vertical :width="300">
+<Space gap="small" vertical :width="240">
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Input v-model:value="value" :size="size" placeholder="Basic usage" />
   <Input
@@ -246,7 +258,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Space gap="small" vertical :width="300">
+  <Space gap="small" vertical :width="240">
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Input v-model:value="value" :size="size" placeholder="Basic usage" />
     <Input
@@ -281,9 +293,7 @@ watchEffect(() => {
 
 ## 带清除图标
 
-<Space>
-  <Input allow-clear v-model:value="value" placeholder="input with clear icon" />
-</Space>
+<Input :width="200" allow-clear v-model:value="value" placeholder="input with clear icon" />
 
 ::: details Show Code
 
@@ -296,9 +306,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Space>
-    <Input allow-clear v-model:value="value" placeholder="input with clear icon" />
-  </Space>
+  <Input :width="200" allow-clear v-model:value="value" placeholder="input with clear icon" />
 </template>
 ```
 
@@ -306,9 +314,7 @@ watchEffect(() => {
 
 ## 密码框
 
-<Space>
-  <Input password v-model:value="value" placeholder="input password" />
-</Space>
+<Input :width="200" password v-model:value="value" placeholder="input password" />
 
 ::: details Show Code
 
@@ -321,9 +327,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Space>
-    <Input password v-model:value="value" placeholder="input password" />
-  </Space>
+  <Input :width="200" password v-model:value="value" placeholder="input password" />
 </template>
 ```
 
@@ -358,7 +362,7 @@ watchEffect(() => {
 
 ## 禁用
 
-<Input disabled v-model:value="value" placeholder="disabled input" />
+<Input :width="200" disabled v-model:value="value" placeholder="disabled input" />
 
 ::: details Show Code
 
@@ -368,7 +372,53 @@ import { ref } from 'vue'
 const value = ref('')
 </script>
 <template>
-  <Input disabled v-model:value="value" placeholder="disabled input" />
+  <Input :width="200" disabled v-model:value="value" placeholder="disabled input" />
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Space vertical>
+  <Space align="center">
+    primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  </Space>
+  <Space align="center">
+    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+  </Space>
+  <Input :width="200" :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme input" />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { generate } from '@ant-design/colors'
+const value = ref('')
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--input-primary-color-hover': colorPalettes[4],
+    '--input-primary-color-focus': colorPalettes[4],
+    '--input-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
+</script>
+<template>
+  <Space vertical>
+    <Space align="center">
+      primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    </Space>
+    <Space align="center">
+      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+    </Space>
+    <Input :width="200" :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme input" />
+  </Space>
 </template>
 ```
 

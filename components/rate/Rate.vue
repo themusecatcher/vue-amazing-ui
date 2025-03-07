@@ -49,7 +49,7 @@ watch(
     immediate: true
   }
 )
-function onClick(value: number) {
+function onClick(value: number): void {
   tempValue.value = null
   if (value !== activeValue.value) {
     activeValue.value = value
@@ -67,22 +67,22 @@ function onClick(value: number) {
     }
   }
 }
-function onFirstEnter(value: number) {
+function onFirstEnter(value: number): void {
   hoverValue.value = value
   emits('hoverChange', value) // 鼠标经过时数值变化的回调
 }
-function onSecondEnter(value: number) {
+function onSecondEnter(value: number): void {
   hoverValue.value = value
   emits('hoverChange', value)
 }
-function resetTempValue() {
+function resetTempValue(): void {
   // 重置点击 value
   tempValue.value = null
 }
-function onLeave() {
+function onLeave(): void {
   hoverValue.value = activeValue.value
 }
-function onUp() {
+function onUp(): void {
   tempValue.value = null
   if (activeValue.value < props.count) {
     activeValue.value += props.allowHalf ? 0.5 : 1
@@ -90,7 +90,7 @@ function onUp() {
     emits('update:value', activeValue.value)
   }
 }
-function onDown() {
+function onDown(): void {
   tempValue.value = null
   if (activeValue.value > 0) {
     activeValue.value -= props.allowHalf ? 0.5 : 1
@@ -103,7 +103,7 @@ function onDown() {
   <div
     class="m-rate"
     :class="{ 'rate-disabled': disabled }"
-    :style="`--star-color: ${color}; --star-gap: ${gap}px; --star-size: ${size}px;`"
+    :style="`--rate-star-color: ${color}; --rate-star-gap: ${gap}px; --rate-star-size: ${size}px;`"
     @mouseleave="onLeave"
   >
     <template v-for="n in count" :key="n">
@@ -278,7 +278,7 @@ function onDown() {
 <style lang="less" scoped>
 .m-rate {
   display: inline-flex;
-  gap: var(--star-gap);
+  gap: var(--rate-star-gap);
   line-height: normal;
   outline: none;
   .rate-star {
@@ -287,11 +287,11 @@ function onDown() {
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
     &:focus-visible {
-      outline: 1px dashed var(--star-color);
+      outline: 1px dashed var(--rate-star-color);
       transform: scale(1.1);
     }
     :deep(svg) {
-      font-size: var(--star-size);
+      font-size: var(--rate-star-size);
       color: rgba(0, 0, 0, 0.06);
       fill: currentColor;
       transition: color 0.2s;
@@ -304,7 +304,7 @@ function onDown() {
       align-items: center;
       vertical-align: middle;
       height: 1em;
-      font-size: var(--star-size);
+      font-size: var(--rate-star-size);
       color: rgba(0, 0, 0, 0.06);
       transition: color 0.2s;
     }
@@ -342,20 +342,20 @@ function onDown() {
     .star-first {
       opacity: 1;
       :deep(svg) {
-        color: var(--star-color);
+        color: var(--rate-star-color);
       }
       .icon-character {
-        color: var(--star-color);
+        color: var(--rate-star-color);
       }
     }
   }
   .star-full {
     .star-second {
       :deep(svg) {
-        color: var(--star-color);
+        color: var(--rate-star-color);
       }
       .icon-character {
-        color: var(--star-color);
+        color: var(--rate-star-color);
       }
     }
   }

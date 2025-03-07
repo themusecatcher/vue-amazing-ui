@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import type { RadioOption } from 'vue-amazing-ui'
+import { generate } from '@ant-design/colors'
 const open1 = ref<boolean>(false)
 const open2 = ref<boolean>(false)
 const open3 = ref<boolean>(false)
 const open4 = ref<boolean>(false)
 const open5 = ref<boolean>(false)
-const options = ref([
+const open6 = ref<boolean>(false)
+const options = ref<RadioOption[]>([
   {
     label: 'top',
     value: 'top'
@@ -26,10 +29,21 @@ const options = ref([
 const placement = ref('right')
 const extraPlacement = ref('right')
 const footerPlacement = ref('right')
+const primaryColor = ref('#ff6900')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
+}
 function onClose() {
-  // 点击遮罩层或左上角叉或取消按钮的回调
   open3.value = false
   open4.value = false
+  open6.value = false
   console.log('close')
 }
 </script>
@@ -99,6 +113,21 @@ function onClose() {
       <p>Some contents...</p>
       <p>Some contents...</p>
       <p>Some contents...</p>
+    </Drawer>
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Space align="center">
+      primaryColor:
+      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      <Button :style="getThemeStyle(primaryColor)" type="primary" @click="open6 = true">Open</Button>
+    </Space>
+    <Drawer v-model:open="open6" :closable="false" title="Basic Drawer" :footer-style="{ textAlign: 'right' }">
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <template #footer>
+        <Button style="margin-right: 8px" :style="getThemeStyle(primaryColor)" @click="onClose">Cancel</Button>
+        <Button :style="getThemeStyle(primaryColor)" type="primary" @click="onClose">Submit</Button>
+      </template>
     </Drawer>
   </div>
 </template>

@@ -23,6 +23,7 @@ const images = ref<ImageItem[]>([
     name: 'image-5.jpg'
   }
 ])
+const primaryColor = ref('#ff6900')
 </script>
 <template>
   <div>
@@ -62,6 +63,17 @@ const images = ref<ImageItem[]>([
       :max-zoom-scale="2"
       src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg"
     />
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Space vertical>
+      <Space align="center">
+        imagePrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      </Space>
+      <Image
+        :style="`--image-primary-color: ${primaryColor};`"
+        src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg"
+      />
+    </Space>
   </div>
 </template>
 <style lang="less" scoped>

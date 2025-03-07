@@ -137,6 +137,7 @@ const moreTabPages = ref<TabsItem[]>([
     content: 'Content of Tab Pane 8'
   }
 ])
+const primaryColor = ref('#ff6900')
 const activeKey = ref<TabsProps['activeKey']>('1')
 const iconActiveKey = ref<TabsProps['activeKey']>(0)
 const moreActiveKey = ref<TabsProps['activeKey']>('1')
@@ -320,6 +321,20 @@ function onChange(key: string | number) {
         :content-style="{
           fontSize: '16px'
         }"
+      />
+    </Flex>
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Flex vertical>
+      <Space align="center">
+        tabsPrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      </Space>
+      <Tabs :style="`--tabs-primary-color: ${primaryColor}`" :items="tabItems" v-model:active-key="activeKey" />
+      <Tabs
+        :style="`--tabs-primary-color: ${primaryColor}`"
+        :items="tabItems"
+        v-model:active-key="activeKey"
+        type="card"
       />
     </Flex>
     <h2 class="mt30 mb10">自定义内容</h2>

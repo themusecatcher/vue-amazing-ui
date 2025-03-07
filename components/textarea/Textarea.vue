@@ -22,8 +22,8 @@ const props = withDefaults(defineProps<Props>(), {
   value: '',
   valueModifiers: () => ({})
 })
-const textareaRef = ref()
-const areaHeight = ref(32)
+const textareaRef = ref<HTMLElement | null>(null) // textarea 元素引用
+const areaHeight = ref<number>(32)
 const textareaWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -82,37 +82,42 @@ watch(
 onMounted(() => {
   getAreaHeight()
 })
-function getAreaHeight() {
-  areaHeight.value = textareaRef.value.scrollHeight + 2
+function getAreaHeight(): void {
+  areaHeight.value = (textareaRef.value as HTMLElement).scrollHeight + 2
 }
 const emits = defineEmits(['update:value', 'change', 'enter'])
-function onInput(e: Event) {
+function onInput(e: Event): void {
   const target = e.target as HTMLInputElement
   if (!lazyTextarea.value) {
     emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
-function onChange(e: Event) {
+function onChange(e: Event): void {
   const target = e.target as HTMLInputElement
   if (target.value !== props.value) {
     emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
   }
 }
-function onEnter(e: KeyboardEvent) {
+function onEnter(e: KeyboardEvent): void {
   emits('enter', e)
 }
-function onClear() {
+function onClear(): void {
   emits('update:value', '')
-  textareaRef.value.focus()
+  textareaRef.value?.focus()
 }
 </script>
 <template>
   <div
     class="m-textarea"
     :class="{ 'show-count': showCount }"
-    :style="`width: ${textareaWidth};`"
+    :style="`
+      --textarea-width: ${textareaWidth};
+      --textarea-primary-color-hover: #4096ff;
+      --textarea-primary-color-focus: #4096ff;
+      --textarea-primary-shadow-color: rgba(5, 145, 255, 0.1);
+    `"
     :data-count="showCountNum"
   >
     <textarea
@@ -151,6 +156,7 @@ function onClear() {
 .m-textarea {
   position: relative;
   display: inline-block;
+  width: var(--textarea-width);
   .textarea-item {
     width: 100%;
     min-width: 0;
@@ -176,12 +182,12 @@ function onClear() {
     border-radius: 6px;
     outline: none;
     &:hover {
-      border-color: #4096ff;
+      border-color: var(--textarea-primary-color-hover);
       z-index: 1;
     }
     &:focus-within {
-      border-color: #4096ff;
-      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+      border-color: var(--textarea-primary-color-focus);
+      box-shadow: 0 0 0 2px var(--textarea-primary-shadow-color);
       outline: 0;
     }
   }
@@ -233,6 +239,7 @@ function onClear() {
 }
 .show-count {
   &::after {
+    font-size: 14px;
     color: rgba(0, 0, 0, 0.45);
     white-space: nowrap;
     content: attr(data-count);

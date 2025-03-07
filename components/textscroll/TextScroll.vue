@@ -109,7 +109,7 @@ watch(
 useResizeObserver([horizontalRef, groupRef, verticalRef], () => {
   initScroll()
 })
-function initScroll() {
+function initScroll(): void {
   verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
   if (!originVertical.value) {
     originVertical.value = true
@@ -120,12 +120,12 @@ function initScroll() {
   startMove() // 开始滚动
 }
 // 获取水平滚动容器宽度；水平滚动内容宽度
-function getScrollSize() {
+function getScrollSize(): void {
   horizontalWrapWidth.value = horizontalRef.value.offsetWidth
   groupWidth.value = groupRef.value.offsetWidth
 }
 // 重置水平滚动状态
-function resetScrollState() {
+function resetScrollState(): void {
   playState.value = 'paused'
   nextTick(() => {
     void horizontalRef.value?.offsetTop // 强制浏览器触发重排
@@ -133,10 +133,10 @@ function resetScrollState() {
   })
 }
 // 当 CSS Animation 运动到最后一帧时触发
-function onAnimationIteration() {
+function onAnimationIteration(): void {
   resetScrollState()
 }
-function verticalMove() {
+function verticalMove(): void {
   verticalMoveRaf.value = rafTimeout(
     () => {
       if (originVertical.value) {
@@ -148,11 +148,11 @@ function verticalMove() {
     true
   )
 }
-function onClick(item: Item) {
+function onClick(item: Item): void {
   emit('click', item)
 }
 // 滚动开始
-function startMove() {
+function startMove(): void {
   if (props.vertical) {
     if (itemsAmount.value >= 1) {
       verticalMove() // 垂直滚动
@@ -166,7 +166,7 @@ function startMove() {
   }
 }
 // 滚动暂停
-function stopMove() {
+function stopMove(): void {
   if (props.vertical) {
     originVertical.value = true
     verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
@@ -175,7 +175,7 @@ function stopMove() {
   }
 }
 // 滚动重置
-function resetMove() {
+function resetMove(): void {
   if (props.vertical) {
     verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
     if (activeIndex.value !== 0) {
@@ -208,14 +208,14 @@ defineExpose({
     :style="[
       scrollBoardStyle,
       `
-        --scroll-shadow-color: #d3d3d3;
-        --scroll-bg-color: #fff;
-        --scroll-href-hover-color: ${hrefHoverColor};
-        --scroll-item-gap: ${gap}px;
-        --scroll-play-state: ${playState};
-        --scroll-duration: ${animationDuration}s;
-        --scroll-delay: 0s;
-        --scroll-iteration-count: infinite;
+        --text-scroll-shadow-color: #d3d3d3;
+        --text-scroll-bg-color: #fff;
+        --text-scroll-href-hover-color: ${hrefHoverColor};
+        --text-scroll-item-gap: ${gap}px;
+        --text-scroll-play-state: ${playState};
+        --text-scroll-duration: ${animationDuration}s;
+        --text-scroll-delay: 0s;
+        --text-scroll-iteration-count: infinite;
       `
     ]"
     @mouseenter="pauseOnMouseEnter ? stopMove() : () => false"
@@ -266,13 +266,13 @@ defineExpose({
     :style="[
       scrollBoardStyle,
       `
-        --scroll-shadow-color: #d3d3d3;
-        --scroll-bg-color: #fff;
-        --scroll-href-hover-color: ${hrefHoverColor};
-        --scroll-duration: ${duration}ms;
-        --scroll-timing-function: ease;
-        --scroll-scale: 0.5;
-        --scroll-item-padding: ${gap}px;
+        --text-scroll-shadow-color: #d3d3d3;
+        --text-scroll-bg-color: #fff;
+        --text-scroll-href-hover-color: ${hrefHoverColor};
+        --text-scroll-duration: ${duration}ms;
+        --text-scroll-timing-function: ease;
+        --text-scroll-scale: 0.5;
+        --text-scroll-item-padding: ${gap}px;
       `
     ]"
     @mouseenter="pauseOnMouseEnter ? stopMove() : () => false"
@@ -301,15 +301,16 @@ defineExpose({
 .m-scroll-horizontal {
   overflow: hidden;
   display: flex;
-  box-shadow: 0px 0px 5px var(--scroll-shadow-color);
+  box-shadow: 0px 0px 5px var(--text-scroll-shadow-color);
   border-radius: 6px;
-  background-color: var(--scroll-bg-color);
+  background-color: var(--text-scroll-bg-color);
   .scroll-items-group {
     z-index: 1;
     display: flex;
     align-items: center;
-    animation: horizontalScroll var(--scroll-duration) linear var(--scroll-delay) var(--scroll-iteration-count);
-    animation-play-state: var(--scroll-play-state);
+    animation: horizontalScroll var(--text-scroll-duration) linear var(--text-scroll-delay)
+      var(--text-scroll-iteration-count);
+    animation-play-state: var(--text-scroll-play-state);
     @keyframes horizontalScroll {
       0% {
         transform: translateX(0);
@@ -319,7 +320,7 @@ defineExpose({
       }
     }
     .scroll-item {
-      padding-left: var(--scroll-item-gap);
+      padding-left: var(--text-scroll-item-gap);
       font-size: 16px;
       font-weight: 400;
       color: rgba(0, 0, 0, 0.88);
@@ -332,7 +333,7 @@ defineExpose({
       cursor: pointer;
       transition: color 0.3s;
       &:hover {
-        color: var(--scroll-href-hover-color) !important;
+        color: var(--text-scroll-href-hover-color) !important;
       }
     }
   }
@@ -343,22 +344,22 @@ defineExpose({
 // 垂直滚动
 .slide-enter-active,
 .slide-leave-active {
-  transition: all var(--scroll-duration) var(--scroll-timing-function);
+  transition: all var(--text-scroll-duration) var(--text-scroll-timing-function);
 }
 .slide-enter-from {
-  transform: translateY(100%) scale(var(--scroll-scale));
+  transform: translateY(100%) scale(var(--text-scroll-scale));
   opacity: 0;
 }
 .slide-leave-to {
-  transform: translateY(-100%) scale(var(--scroll-scale));
+  transform: translateY(-100%) scale(var(--text-scroll-scale));
   opacity: 0;
 }
 .m-scroll-vertical {
   overflow: hidden;
   position: relative;
-  box-shadow: 0px 0px 5px var(--scroll-shadow-color);
+  box-shadow: 0px 0px 5px var(--text-scroll-shadow-color);
   border-radius: 6px;
-  background-color: var(--scroll-bg-color);
+  background-color: var(--text-scroll-bg-color);
   .scroll-item-wrap {
     position: absolute;
     left: 0;
@@ -367,7 +368,7 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 var(--scroll-item-padding);
+    padding: 0 var(--text-scroll-item-padding);
     .scroll-item {
       font-size: 16px;
       font-weight: 400;
@@ -381,7 +382,7 @@ defineExpose({
       cursor: pointer;
       transition: color 0.3s;
       &:hover {
-        color: var(--scroll-href-hover-color) !important;
+        color: var(--text-scroll-href-hover-color) !important;
       }
     }
   }

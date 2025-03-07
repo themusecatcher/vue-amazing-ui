@@ -28,7 +28,10 @@ import {
   CrownFilled,
   ExclamationCircleFilled
 } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const modal = ref()
+const customModal = ref()
+const primaryColor = ref('#ff6900')
 function openInfoModal() {
   modal.value.info({
     title: 'This is an info modal',
@@ -153,6 +156,25 @@ function openCustomTitleContentStyle() {
     }
   })
 }
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
+}
+function openCustomTheme() {
+  customModal.value.info({
+    title: 'This is a custom theme modal',
+    content: 'Some descriptions ...',
+    noticeProps: {
+      style: getThemeStyle(primaryColor.value)
+    }
+  })
+}
 function openCustomInfoBtn() {
   modal.value.info({
     title: 'This is a custom info btn modal',
@@ -244,7 +266,14 @@ function onKnow() {
 }
 </script>
 
-<Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+<Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"></Modal>
+<Modal
+  ref="customModal"
+  :style="`--modal-primary-color: ${primaryColor};`"
+  @cancel="onCancel"
+  @ok="onOk"
+  @know="onKnow"
+></Modal>
 
 ## 基本使用
 
@@ -461,10 +490,17 @@ function onKnow() {
 
 ## 自定义样式
 
-<Space>
-  <Button type="primary" @click="openCustomClass">Custom Body Class Modal</Button>
-  <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
-  <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
+<Space vertical>
+  <Space>
+    <Button type="primary" @click="openCustomClass">Custom Body Class Modal</Button>
+    <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
+    <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
+  </Space>
+  <Space align="center">
+    modalPrimaryColor:
+    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme">Custom Theme Modal</Button>
+  </Space>
 </Space>
 
 <style lang="less" scoped>
@@ -487,7 +523,10 @@ function onKnow() {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { FireFilled, NotificationFilled, CrownFilled } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const modal = ref()
+const customModal = ref()
+const primaryColor = ref('#ff6900')
 function openCustomClass() {
   modal.value.info({
     title: 'This is a custom class modal',
@@ -523,6 +562,25 @@ function openCustomTitleContentStyle() {
     }
   })
 }
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
+}
+function openCustomTheme() {
+  customModal.value.info({
+    title: 'This is a custom theme modal',
+    content: 'Some descriptions ...',
+    noticeProps: {
+      style: getThemeStyle(primaryColor.value)
+    }
+  })
+}
 function onCancel() {
   // 点击蒙层或 Esc 键或取消按钮的回调
   console.log('cancel')
@@ -537,12 +595,26 @@ function onKnow() {
 }
 </script>
 <template>
-  <Space>
-    <Button type="primary" @click="openCustomClass">Custom Body Class Modal</Button>
-    <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
-    <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
+  <Space vertical>
+    <Space>
+      <Button type="primary" @click="openCustomClass">Custom Body Class Modal</Button>
+      <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
+      <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
+    </Space>
+    <Space align="center">
+      modalPrimaryColor:
+      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme">Custom Theme Modal</Button>
+    </Space>
   </Space>
   <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+  <Modal
+    ref="customModal"
+    :style="`--modal-primary-color: ${primaryColor};`"
+    @cancel="onCancel"
+    @ok="onOk"
+    @know="onKnow"
+  ></Modal>
 </template>
 <style lang="less" scoped>
 :deep(.custom-class) {

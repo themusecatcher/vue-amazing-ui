@@ -2,6 +2,8 @@
 
 <GlobalElement />
 
+*格式化日期为指定格式的工具函数*
+
 ::: details Show Source Code
 
 ```ts
@@ -68,10 +70,6 @@ export function dateFormat(value: number | string | Date = Date.now(), format: s
 ```
 
 :::
-
-## 何时使用
-
-- 格式化日期时
 
 <script setup lang="ts">
 import { dateFormat } from 'vue-amazing-ui'

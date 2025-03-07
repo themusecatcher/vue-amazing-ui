@@ -11,6 +11,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const disabled = ref(true)
 const sizeOptions = [
   {
@@ -28,6 +29,7 @@ const sizeOptions = [
 ]
 const size = ref('middle')
 const customLoading = ref(false)
+const primaryColor = ref('#ff6900')
 const loading = ref(true)
 const loadingOptions = [
   {
@@ -40,6 +42,16 @@ const loadingOptions = [
   }
 ]
 const loadingType = ref('dynamic')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
+}
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -677,15 +689,14 @@ const size = ref('middle')
 
 ## 自定义样式
 
+*可通过自定义类名然后通过样式覆盖 或 直接自定义样式变量 来自定义样式*
+
+<br/>
+
 <Space vertical>
   <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
   <Space>
-    <Button
-      button-class="custom-class1"
-      ripple-color="#faad14"
-      size="large"
-      :loading="customLoading"
-    >
+    <Button button-class="custom-class1" ripple-color="#faad14" size="large" :loading="customLoading">
       自定义样式
     </Button>
     <Button
@@ -697,23 +708,22 @@ const size = ref('middle')
     >
       自定义样式
     </Button>
-    <Button
-      button-class="custom-class1"
-      ripple-color="#faad14"
-      shape="circle"
-      size="large"
-      :loading="customLoading"
-    >
+  </Space>
+  <Space align="center">
+    buttonPrimaryColor:
+    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  </Space>
+  <Space>
+    <Button shape="circle" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
       <template #icon>
         <SearchOutlined />
       </template>
     </Button>
     <Button
-      button-class="custom-class2"
-      ripple-color="#faad14"
       type="primary"
       shape="round"
       size="large"
+      :style="getThemeStyle(primaryColor)"
       :loading="customLoading"
     >
       <template #icon>
@@ -722,10 +732,10 @@ const size = ref('middle')
       Search
     </Button>
     <Button
-      button-class="custom-class1"
-      ripple-color="#faad14"
+      type="reverse"
       shape="round"
       size="large"
+      :style="getThemeStyle(primaryColor)"
       :loading="customLoading"
     >
       <template #icon>
@@ -741,18 +751,25 @@ const size = ref('middle')
 <script setup lang="ts">
 import { ref } from 'vue'
 import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const customLoading = ref(false)
+const primaryColor = ref('#ff6900')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6],
+    '--button-ripple-color': color
+  }
+  return style
+}
 </script>
 <template>
   <Space vertical>
     <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
     <Space>
-      <Button
-        button-class="custom-class1"
-        ripple-color="#faad14"
-        size="large"
-        :loading="customLoading"
-      >
+      <Button button-class="custom-class1" ripple-color="#faad14" size="large" :loading="customLoading">
         自定义样式
       </Button>
       <Button
@@ -764,23 +781,22 @@ const customLoading = ref(false)
       >
         自定义样式
       </Button>
-      <Button
-        button-class="custom-class1"
-        ripple-color="#faad14"
-        shape="circle"
-        size="large"
-        :loading="customLoading"
-      >
+    </Space>
+    <Space align="center">
+      buttonPrimaryColor:
+      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    </Space>
+    <Space>
+      <Button shape="circle" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
         <template #icon>
           <SearchOutlined />
         </template>
       </Button>
       <Button
-        button-class="custom-class2"
-        ripple-color="#faad14"
         type="primary"
         shape="round"
         size="large"
+        :style="getThemeStyle(primaryColor)"
         :loading="customLoading"
       >
         <template #icon>
@@ -789,10 +805,10 @@ const customLoading = ref(false)
         Search
       </Button>
       <Button
-        button-class="custom-class1"
-        ripple-color="#faad14"
+        type="reverse"
         shape="round"
         size="large"
+        :style="getThemeStyle(primaryColor)"
         :loading="customLoading"
       >
         <template #icon>
@@ -1113,7 +1129,7 @@ icon | 设置按钮图标 | VNode &#124; Slot | undefined
 size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 ghost | 按钮背景是否透明，仅当 `type: 'primary' \| 'danger'` 时生效 | boolean | false
 buttonClass | 设置按钮类名 | string | undefined
-rippleColor | 点击时的波纹颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时且 `type: 'default'` | string | undefined
+rippleColor | 点击时的波纹颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时 | string | undefined
 href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | undefined
 target | 如何打开目标链接，相当于 `a` 链接的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self'
 keyboard | 是否支持键盘操作 | boolean | true

@@ -11,6 +11,7 @@
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
 import type { StepsProps, StepsItem } from 'vue-amazing-ui'
+import { generate } from '@ant-design/colors'
 const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
@@ -23,6 +24,14 @@ const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 3',
     description: 'description 3'
+  },
+  {
+    title: 'Step 4',
+    description: 'description 4'
+  },
+  {
+    title: 'Step 5',
+    description: 'description 5'
   }
 ])
 const minStepsItems = ref<StepsItem[]>([
@@ -34,9 +43,16 @@ const minStepsItems = ref<StepsItem[]>([
   },
   {
     title: 'Step 3'
+  },
+  {
+    title: 'Step 4'
+  },
+  {
+    title: 'Step 5'
   }
 ])
 const current = ref(3)
+const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('current', current.value)
 })
@@ -62,6 +78,16 @@ const placeOptions = [
   }
 ]
 const place = ref('bottom')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--steps-primary-color': color,
+    '--steps-primary-color-hover': color,
+    '--steps-icon-color': colorPalettes[0],
+    '--steps-icon-color-hover': color
+  }
+  return style
+}
 function onChange(index: number) {
   // 父组件获取切换后的选中步骤
   console.log('change', index)
@@ -370,6 +396,66 @@ function onNext () {
     </Space>
     <Steps :items="stepsItems" v-model:current="current" />
     <Steps :items="stepsItems" vertical v-model:current="current" />
+  </Flex>
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Flex vertical>
+  <Space align="center">
+    stepsPrimaryColor:
+    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  </Space>
+  <Steps :style="getThemeStyle(primaryColor)" :items="stepsItems" v-model:current="current" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import type { StepsItem } from 'vue-amazing-ui'
+import { generate } from '@ant-design/colors'
+const stepsItems = ref<StepsItem[]>([
+  {
+    title: 'Step 1',
+    description: 'description 1'
+  },
+  {
+    title: 'Step 2',
+    description: 'description 2'
+  },
+  {
+    title: 'Step 3',
+    description: 'description 3'
+  }
+])
+const current = ref(2)
+const primaryColor = ref('#ff6900')
+watchEffect(() => {
+  console.log('current', current.value)
+})
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--steps-primary-color': color,
+    '--steps-primary-color-hover': color,
+    '--steps-icon-color': colorPalettes[0],
+    '--steps-icon-color-hover': color
+  }
+  return style
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">
+      stepsPrimaryColor:
+      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    </Space>
+    <Steps :style="getThemeStyle(primaryColor)" :items="stepsItems" v-model:current="current" />
   </Flex>
 </template>
 ```

@@ -143,11 +143,11 @@ const {
   bottom: scrollingBottom
 } = useScroll(containerRef)
 useResizeObserver([containerRef, contentRef], updateState)
-function updateScrollState() {
+function updateScrollState(): void {
   containerScrollTop.value = containerRef.value.scrollTop
   containerScrollLeft.value = containerRef.value.scrollLeft
 }
-function updateScrollbarState() {
+function updateScrollbarState(): void {
   containerScrollHeight.value = containerRef.value.scrollHeight
   containerScrollWidth.value = containerRef.value.scrollWidth
   containerClientHeight.value = containerRef.value.clientHeight
@@ -159,7 +159,7 @@ function updateScrollbarState() {
   railHeight.value = railVerticalRef.value.offsetHeight
   railWidth.value = railHorizontalRef.value.offsetWidth
 }
-function updateState() {
+function updateState(): void {
   updateScrollState()
   updateScrollbarState()
 }
@@ -167,13 +167,13 @@ const debounceYScrollEnd = debounce(yScrollEnd, 100)
 const debounceXScrollEnd = debounce(xScrollEnd, 100)
 const debounceHideYScrollbar = debounce(hideYScrollbar, 100 + props.delay)
 const debounceHideXScrollbar = debounce(hideXScrollbar, 100 + props.delay)
-function yScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+function yScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom'): void {
   emits('scrollend', e, direction)
 }
-function xScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+function xScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom'): void {
   emits('scrollend', e, direction)
 }
-function hideYScrollbar() {
+function hideYScrollbar(): void {
   if (autoShowTrack.value && !yTrackHover.value) {
     showYTrack.value = false
   }
@@ -181,7 +181,7 @@ function hideYScrollbar() {
     showYTrack.value = false
   }
 }
-function hideXScrollbar() {
+function hideXScrollbar(): void {
   if (autoShowTrack.value && !xTrackHover.value) {
     showXTrack.value = false
   }
@@ -189,7 +189,7 @@ function hideXScrollbar() {
     showXTrack.value = false
   }
 }
-function onScroll(e: Event) {
+function onScroll(e: Event): void {
   if (scrollingLeft.value || scrollingRight.value) {
     let direction: string = ''
     if (scrollingLeft.value) {
@@ -226,7 +226,7 @@ function onScroll(e: Event) {
   }
   updateScrollState()
 }
-function onMouseEnter() {
+function onMouseEnter(): void {
   mouseEnter.value = true
   if (trackXPressed.value || trackYPressed.value) {
     mousePressedLeave.value = false
@@ -237,7 +237,7 @@ function onMouseEnter() {
     }
   }
 }
-function onMouseLeave() {
+function onMouseLeave(): void {
   mouseEnter.value = false
   if (trackXPressed.value || trackYPressed.value) {
     mousePressedLeave.value = true
@@ -252,25 +252,25 @@ function onMouseLeave() {
     }
   }
 }
-function onEnterYTrack() {
+function onEnterYTrack(): void {
   yTrackHover.value = true
 }
-function onLeaveYTrack() {
+function onLeaveYTrack(): void {
   yTrackHover.value = false
   if (autoShowTrack.value && !trackYPressed.value) {
     debounceHideYScrollbar()
   }
 }
-function onEnterXTrack() {
+function onEnterXTrack(): void {
   xTrackHover.value = true
 }
-function onLeaveXTrack() {
+function onLeaveXTrack(): void {
   xTrackHover.value = false
   if (autoShowTrack.value && !trackXPressed.value) {
     debounceHideXScrollbar()
   }
 }
-function handleYTrackMouseDown(e: MouseEvent) {
+function handleYTrackMouseDown(e: MouseEvent): void {
   trackYPressed.value = true
   memoYTop.value = containerScrollTop.value
   memoMouseY.value = e.clientY
@@ -278,7 +278,7 @@ function handleYTrackMouseDown(e: MouseEvent) {
   document.addEventListener('mouseup', handleYTrackMouseUp)
   handleYTrackMouseMove(e)
 }
-function handleYTrackMouseMove(e: MouseEvent) {
+function handleYTrackMouseMove(e: MouseEvent): void {
   const diffY = e.clientY - memoMouseY.value
   const dScrollTop =
     (diffY * (contentHeight.value - containerHeight.value)) / (containerHeight.value - trackHeight.value)
@@ -288,7 +288,7 @@ function handleYTrackMouseMove(e: MouseEvent) {
   toScrollTop = Math.max(toScrollTop, 0)
   containerRef.value.scrollTop = toScrollTop
 }
-function handleYTrackMouseUp() {
+function handleYTrackMouseUp(): void {
   trackYPressed.value = false
   if (autoShowTrack.value && !yTrackHover.value) {
     debounceHideYScrollbar()
@@ -299,7 +299,7 @@ function handleYTrackMouseUp() {
   document.removeEventListener('mousemove', handleYTrackMouseMove)
   document.removeEventListener('mouseup', handleYTrackMouseUp)
 }
-function handleXTrackMouseDown(e: MouseEvent) {
+function handleXTrackMouseDown(e: MouseEvent): void {
   trackXPressed.value = true
   memoXLeft.value = containerScrollLeft.value
   memoMouseX.value = e.clientX
@@ -307,7 +307,7 @@ function handleXTrackMouseDown(e: MouseEvent) {
   document.addEventListener('mouseup', handleXTrackMouseUp)
   handleXTrackMouseMove(e)
 }
-function handleXTrackMouseMove(e: MouseEvent) {
+function handleXTrackMouseMove(e: MouseEvent): void {
   const diffX = e.clientX - memoMouseX.value
   const dScrollLeft = (diffX * (contentWidth.value - containerWidth.value)) / (containerWidth.value - trackWidth.value)
   const toScrollLeftUpperBound = contentWidth.value - containerWidth.value
@@ -316,7 +316,7 @@ function handleXTrackMouseMove(e: MouseEvent) {
   toScrollLeft = Math.max(toScrollLeft, 0)
   containerRef.value.scrollLeft = toScrollLeft
 }
-function handleXTrackMouseUp() {
+function handleXTrackMouseUp(): void {
   trackXPressed.value = false
   if (autoShowTrack.value && !xTrackHover.value) {
     debounceHideXScrollbar()
@@ -327,13 +327,13 @@ function handleXTrackMouseUp() {
   document.removeEventListener('mousemove', handleXTrackMouseMove)
   document.removeEventListener('mouseup', handleXTrackMouseUp)
 }
-function scrollTo(...args: any[]) {
+function scrollTo(...args: any[]): void {
   containerRef.value?.scrollTo(...args)
 }
-function scrollBy(...args: any[]) {
+function scrollBy(...args: any[]): void {
   containerRef.value?.scrollBy(...args)
 }
-function getScrollData() {
+function getScrollData(): object {
   return {
     scrollTop: containerScrollTop.value,
     scrollWidth: containerScrollWidth.value,

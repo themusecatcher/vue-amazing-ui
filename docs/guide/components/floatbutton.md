@@ -10,7 +10,7 @@
 - 无论浏览到何处都可以看见的按钮
 
 <script setup lang="ts">
-import { h } from 'vue'
+import { h, ref } from 'vue'
 import {
   GlobalOutlined,
   QuestionCircleOutlined,
@@ -21,6 +21,16 @@ import {
   MessageOutlined,
   CommentOutlined
 } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
+const primaryColor = ref('#ff6900')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--float-btn-primary-color': color,
+    '--float-btn-primary-color-hover': colorPalettes[4]
+  }
+  return style
+}
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -562,6 +572,66 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
       </template>
     </FloatButton>
   </Card>
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Flex vertical>
+  <Space align="center">
+    floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  </Space>
+  <Card style="height: 300px; transform: translate(0)">
+    <FloatButton :style="getThemeStyle(primaryColor)" type="primary" :right="96">
+      <template #icon>
+        <MessageOutlined />
+      </template>
+    </FloatButton>
+    <FloatButton :style="getThemeStyle(primaryColor)" type="primary" shape="square">
+      <template #icon>
+        <CommentOutlined />
+      </template>
+    </FloatButton>
+  </Card>
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
+const primaryColor = ref('#ff6900')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--float-btn-primary-color': color,
+    '--float-btn-primary-color-hover': colorPalettes[4]
+  }
+  return style
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">
+      floatButtonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    </Space>
+    <Card style="height: 300px; transform: translate(0)">
+      <FloatButton :style="getThemeStyle(primaryColor)" type="primary" :right="96">
+        <template #icon>
+          <MessageOutlined />
+        </template>
+      </FloatButton>
+      <FloatButton :style="getThemeStyle(primaryColor)" type="primary" shape="square">
+        <template #icon>
+          <CommentOutlined />
+        </template>
+      </FloatButton>
+    </Card>
+  </Flex>
 </template>
 ```
 

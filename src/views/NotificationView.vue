@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { CloudFilled, FireFilled } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const notification = ref()
+const customNotification = ref()
+const primaryColor = ref('#ff6900')
 function onOpen(description: string) {
   notification.value.open({
     title: 'Notification Title',
@@ -65,6 +68,21 @@ function onStyleCustom(description: string) {
     }
   })
 }
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--button-primary-color': color,
+    '--button-primary-color-hover': colorPalettes[4],
+    '--button-primary-color-active': colorPalettes[6]
+  }
+  return style
+}
+function onThemeCustom(description: string) {
+  customNotification.value.info({
+    title: 'Notification Title',
+    description
+  })
+}
 function onOpenPlacement(placement: string) {
   notification.value.info({
     title: 'Notification Title',
@@ -112,9 +130,22 @@ function onClose() {
       <Button type="primary" @click="onOpenCustom('This is a custom icon notification')">Custom Icon</Button>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Space>
-      <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
-      <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
+    <Space vertical>
+      <Space>
+        <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
+        <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
+      </Space>
+      <Space align="center">
+        notificationPrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+        <Button
+          :style="getThemeStyle(primaryColor)"
+          type="primary"
+          @click="onThemeCustom('This is a custom theme notification')"
+        >
+          Custom Theme
+        </Button>
+      </Space>
     </Space>
     <h2 class="mt30 mb10">弹出位置</h2>
     <Space>
@@ -129,6 +160,7 @@ function onClose() {
       <Button type="primary" @click="onNeverAutoClose">Never Auto Close</Button>
     </Space>
     <Notification ref="notification" @close="onClose" />
+    <Notification ref="customNotification" :style="`--notification-primary-color: ${primaryColor};`" @close="onClose" />
   </div>
 </template>
 <style lang="less" scoped>

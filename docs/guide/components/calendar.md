@@ -16,6 +16,7 @@
 import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 import { format, subDays, addDays } from 'date-fns'
+import { generate } from '@ant-design/colors'
 import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
@@ -29,6 +30,7 @@ const slotDate = ref(Date.now())
 const selectDate = ref(new Date('2030-10-06').getTime())
 const disableDate = ref(Date.now())
 const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
+const customThemeDate = ref(Date.now())
 const message = ref()
 const displayOptions = [
   {
@@ -41,7 +43,10 @@ const displayOptions = [
   }
 ]
 const modeDisplay = ref('card')
-const display = ref('panel')
+const disabledDisplay = ref('panel')
+const customThemeDisplay = ref('panel')
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const weekOptions = [
   {
     label: '周一',
@@ -109,6 +114,9 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('dateStr', dateStr.value)
 })
+watchEffect(() => {
+  console.log('customThemeDate', customThemeDate.value)
+})
 function cardDateFormat(date: number, timestamp: number) {
   return String(date).padStart(2, '0')
 }
@@ -136,6 +144,25 @@ function disabledDate(timestamp: number): boolean {
 }
 function disabledWeekend(timestamp: number): boolean {
   return ['6', '7'].includes(format(timestamp, 'i'))
+}
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--calendar-primary-color': color,
+    '--calendar-panel-primary-bg-color': colorPalettes[0],
+    '--calendar-card-primary-bg-color': color
+  }
+  return style
+}
+function getSelectThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--select-primary-color-hover': colorPalettes[4],
+    '--select-primary-color-focus': colorPalettes[4],
+    '--select-primary-shadow-color': primaryShadowColor.value,
+    '--select-item-bg-color-active': colorPalettes[0]
+  }
+  return style
 }
 function onSelect(date: string | number, source: 'date' | 'month') {
   console.log('select', date, source)
@@ -633,16 +660,16 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 <Flex vertical>
   <Space align="center">
-    display:<Radio :options="displayOptions" v-model:value="display" button button-style="solid" />
+    display:<Radio :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
   </Space>
   <Space>
     <Flex vertical>
       <Alert type="info" message="禁用指定日期 (以今天为准的前三天和后三天)" />
-      <Calendar v-model:value="disableDate" :disabled-date="disabledDate" :display="display" @select="onSelect" @panelChange="onPanelChange" />
+      <Calendar v-model:value="disableDate" :disabled-date="disabledDate" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
     </Flex>
     <Flex vertical>
       <Alert type="info" message="禁用所有周末 (星期六 & 星期日)" />
-      <Calendar v-model:value="disableDate" :disabled-date="disabledWeekend" :display="display" @select="onSelect" @panelChange="onPanelChange" />
+      <Calendar v-model:value="disableDate" :disabled-date="disabledWeekend" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
     </Flex>
   </Space>
 </Flex>
@@ -665,7 +692,7 @@ const displayOptions = [
     value: 'card'
   }
 ]
-const display = ref('panel')
+const disabledDisplay = ref('panel')
 watchEffect(() => {
   console.log('disableDate', disableDate.value)
 })
@@ -689,16 +716,16 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 <template>
   <Flex vertical>
     <Space align="center">
-      display:<Radio :options="displayOptions" v-model:value="display" button button-style="solid" />
+      display:<Radio :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
     </Space>
     <Space>
       <Flex vertical>
         <Alert type="info" message="禁用指定日期 (以今天为准的前三天和后三天)" />
-        <Calendar v-model:value="disableDate" :disabled-date="disabledDate" :display="display" @select="onSelect" @panelChange="onPanelChange" />
+        <Calendar v-model:value="disableDate" :disabled-date="disabledDate" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
       </Flex>
       <Flex vertical>
         <Alert type="info" message="禁用所有周末 (星期六 & 星期日)" />
-        <Calendar v-model:value="disableDate" :disabled-date="disabledWeekend" :display="display" @select="onSelect" @panelChange="onPanelChange" />
+        <Calendar v-model:value="disableDate" :disabled-date="disabledWeekend" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
       </Flex>
     </Space>
   </Flex>
@@ -739,6 +766,111 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 :::
 
+## 自定义主题色
+
+<Flex vertical>
+  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+  <Space align="center">
+    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+  </Space>
+  <Space align="center">
+    display:
+    <Radio
+      :style="`--radio-primary-color: ${primaryColor}`"
+      :options="displayOptions"
+      v-model:value="customThemeDisplay"
+      button
+      button-style="solid"
+    />
+  </Space>
+  <Calendar
+    :style="getThemeStyle(primaryColor)"
+    v-model:value="customThemeDate"
+    :display="customThemeDisplay"
+    :year-select-props="{ style: getSelectThemeStyle(primaryColor) }"
+    :month-select-props="{ style: getSelectThemeStyle(primaryColor) }"
+    :mode-radio-props="{ style: { '--radio-primary-color': primaryColor } }"
+    @panelChange="onPanelChange"
+  />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref, watchEffect } from 'vue'
+import { generate } from '@ant-design/colors'
+const customThemeDate = ref(Date.now())
+const displayOptions = [
+  {
+    label: 'panel',
+    value: 'panel'
+  },
+  {
+    label: 'card',
+    value: 'card'
+  }
+]
+const customThemeDisplay = ref('panel')
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
+watchEffect(() => {
+  console.log('customThemeDate', customThemeDate.value)
+})
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--calendar-primary-color': color,
+    '--calendar-panel-primary-bg-color': colorPalettes[0],
+    '--calendar-card-primary-bg-color': color
+  }
+  return style
+}
+function getSelectThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--select-primary-color-hover': colorPalettes[4],
+    '--select-primary-color-focus': colorPalettes[4],
+    '--select-primary-shadow-color': primaryShadowColor.value,
+    '--select-item-bg-color-active': colorPalettes[0]
+  }
+  return style
+}
+function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
+  console.log('panelChange', date, info, mode)
+}
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+    <Space align="center">
+      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+    </Space>
+    <Space align="center">
+      display:
+      <Radio
+        :style="`--radio-primary-color: ${primaryColor}`"
+        :options="displayOptions"
+        v-model:value="customThemeDisplay"
+        button
+        button-style="solid"
+      />
+    </Space>
+    <Calendar
+      :style="getThemeStyle(primaryColor)"
+      v-model:value="customThemeDate"
+      :display="customThemeDisplay"
+      :year-select-props="{ style: getSelectThemeStyle(primaryColor) }"
+      :month-select-props="{ style: getSelectThemeStyle(primaryColor) }"
+      :mode-radio-props="{ style: { '--radio-primary-color': primaryColor } }"
+      @panelChange="onPanelChange"
+    />
+  </Flex>
+</template>
+```
+
+:::
+
 <Message ref="message" />
 
 <style lang="less" scoped>
@@ -759,6 +891,9 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 display | 日历展示方式，面板/卡片 | 'panel' &#124; 'card' | 'panel'
 mode | 初始模式 | 'month' &#124; 'year' | 'month'
 header | 自定义日历头部内容 | string &#124; slot | undefined
+yearSelectProps | 年选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {}
+monthSelectProps | 月选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {}
+modeRadioProps | 模式切换器 `props`，参考 [Radio Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html#radio) | object | {}
 startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | [DayOfWeek](#dayofweek-type) | 0
 dateStrip | 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉 | boolean | true
 dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined

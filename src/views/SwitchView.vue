@@ -1,14 +1,25 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { generate } from '@ant-design/colors'
 const checked = ref(true)
+const primaryColor = ref('#ff6900')
 const customValue1 = ref('no')
 const customValue2 = ref(2)
-function onChange(checked: boolean) {
-  console.log('checked', checked)
-}
 watchEffect(() => {
   console.log('checked', checked.value)
 })
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--switch-primary-color': color,
+    '--switch-primary-color-hover': colorPalettes[4],
+    '--switch-ripple-color': color
+  }
+  return style
+}
+function onChange(checked: boolean) {
+  console.log('checked', checked)
+}
 </script>
 <template>
   <div>
@@ -85,6 +96,11 @@ watchEffect(() => {
         </svg>
       </template>
     </Switch>
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Space vertical>
+      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+      <Switch :style="getThemeStyle(primaryColor)" v-model="checked" />
+    </Space>
     <h2 class="mt30 mb10">自定义选中的值</h2>
     <Space gap="large">
       <Space vertical align="center">

@@ -338,15 +338,15 @@ function onCopy(index: number, key: string | number) {
         height: 22px;
         display: flex;
         align-items: center;
+        :deep(.arrow-svg) {
+          transition: transform 0.3s;
+        }
+        :deep(.arrow-rotate) {
+          transform: rotate(90deg);
+        }
         :deep(svg) {
           fill: currentColor;
           transition: transform 0.3s;
-        }
-        .arrow-svg {
-          transition: transform 0.3s;
-        }
-        .arrow-rotate {
-          transform: rotate(90deg);
         }
       }
       .collapse-header {

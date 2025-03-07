@@ -33,8 +33,8 @@ const optionsCheckedValue = ref<string | number | boolean>()
 const wave = ref<boolean>(false)
 const slotsExist = useSlotsExist(['default'])
 const emits = defineEmits(['update:checked', 'update:value', 'change'])
+// 选项总数
 const optionsAmount = computed(() => {
-  // 选项总数
   return props.options.length
 })
 const gapValue = computed(() => {
@@ -53,14 +53,14 @@ watchEffect(() => {
 watchEffect(() => {
   optionsCheckedValue.value = props.value
 })
-function checkDisabled(disabled: boolean | undefined) {
+function checkDisabled(disabled: boolean | undefined): boolean {
   if (disabled === undefined) {
     return props.disabled
   } else {
     return disabled
   }
 }
-function onClick(value: string | number | boolean) {
+function onClick(value: string | number | boolean): void {
   if (value !== optionsCheckedValue.value) {
     startWave()
     optionsCheckedValue.value = value
@@ -68,7 +68,7 @@ function onClick(value: string | number | boolean) {
     emits('change', value)
   }
 }
-function onChecked() {
+function onChecked(): void {
   if (!radioChecked.value) {
     startWave()
     radioChecked.value = true
@@ -76,7 +76,7 @@ function onChecked() {
     emits('change', true)
   }
 }
-function startWave() {
+function startWave(): void {
   if (wave.value) {
     wave.value = false
     nextTick(() => {
@@ -86,7 +86,7 @@ function startWave() {
     wave.value = true
   }
 }
-function onWaveEnd() {
+function onWaveEnd(): void {
   wave.value = false
 }
 </script>
@@ -95,7 +95,7 @@ function onWaveEnd() {
     v-if="optionsAmount"
     class="m-radio"
     :class="{ 'radio-vertical': !button && vertical }"
-    :style="`--radio-gap: ${gapValue};`"
+    :style="`--radio-gap: ${gapValue}; --radio-primary-color: #1677ff;`"
     v-bind="$attrs"
   >
     <template v-if="!button">
@@ -151,6 +151,7 @@ function onWaveEnd() {
       v-if="!button"
       class="radio-wrap"
       :class="{ 'radio-disabled': disabled }"
+      :style="`--radio-primary-color: #1677ff;`"
       @click="disabled ? () => false : onChecked()"
       v-bind="$attrs"
     >
@@ -177,6 +178,7 @@ function onWaveEnd() {
         'radio-button-small': buttonSize === 'small',
         'radio-button-large': buttonSize === 'large'
       }"
+      :style="`--radio-primary-color: #1677ff;`"
       @click="disabled ? () => false : onChecked()"
       v-bind="$attrs"
     >
@@ -211,7 +213,7 @@ function onWaveEnd() {
   line-height: 1.5714285714285714;
   &:not(.radio-disabled):hover {
     .radio-handle {
-      border-color: #1677ff;
+      border-color: var(--radio-primary-color);
     }
   }
   .radio-handle {
@@ -249,8 +251,8 @@ function onWaveEnd() {
     }
   }
   .radio-checked {
-    border-color: #1677ff;
-    background-color: #1677ff;
+    border-color: var(--radio-primary-color);
+    background-color: var(--radio-primary-color);
     &::after {
       transform: scale(0.375);
       opacity: 1;
@@ -314,7 +316,7 @@ function onWaveEnd() {
     border-end-end-radius: 6px;
   }
   &:not(.radio-button-disabled):hover {
-    color: #1677ff;
+    color: var(--radio-primary-color);
   }
 }
 .radio-button-single {
@@ -323,11 +325,11 @@ function onWaveEnd() {
 }
 .radio-button-wrap.radio-button-checked:not(.radio-button-disabled) {
   z-index: 1;
-  color: #1677ff;
+  color: var(--radio-primary-color);
   background-color: #ffffff;
-  border-color: #1677ff;
+  border-color: var(--radio-primary-color);
   &::before {
-    background-color: #1677ff;
+    background-color: var(--radio-primary-color);
   }
 }
 .radio-button-disabled {
@@ -341,8 +343,8 @@ function onWaveEnd() {
 }
 .radio-button-solid.radio-button-checked:not(.radio-button-disabled) {
   color: #fff;
-  background-color: #1677ff;
-  border-color: #1677ff;
+  background-color: var(--radio-primary-color);
+  border-color: var(--radio-primary-color);
   &:hover {
     color: #fff;
   }
@@ -400,10 +402,10 @@ function onWaveEnd() {
   animation-name: waveSpread, waveOpacity;
   @keyframes waveSpread {
     from {
-      box-shadow: 0 0 0.5px 0 #1677ff;
+      box-shadow: 0 0 0.5px 0 var(--radio-primary-color);
     }
     to {
-      box-shadow: 0 0 0.5px 5px #1677ff;
+      box-shadow: 0 0 0.5px 5px var(--radio-primary-color);
     }
   }
   @keyframes waveOpacity {

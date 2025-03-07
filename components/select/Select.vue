@@ -15,16 +15,16 @@ export interface Props {
   value?: string // 字典项的值字段名
   placeholder?: string // 默认占位文本
   disabled?: boolean // 是否禁用
+  width?: string | number // 选择器宽度，单位 px
+  height?: number // 选择器高度，单位 px
+  size?: 'small' | 'middle' | 'large' // 选择器大小
   allowClear?: boolean // 是否支持清除
-  search?: boolean // 是否支持搜索，使用搜索时请设置 width
+  search?: boolean // 是否支持搜索
   /*
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
   filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
-  width?: string | number // 选择器宽度，单位 px
-  height?: number // 选择器高度，单位 px
-  size?: 'small' | 'middle' | 'large' // 选择器大小
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
   scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number | string // (v-model) 当前选中的 option 条目值
@@ -35,19 +35,19 @@ const props = withDefaults(defineProps<Props>(), {
   value: 'value',
   placeholder: '请选择',
   disabled: false,
-  search: false,
-  allowClear: false,
-  filter: true,
   width: 'auto',
   height: undefined,
   size: 'middle',
+  allowClear: false,
+  search: false,
+  filter: true,
   maxDisplay: 6,
   scrollbarProps: () => ({}),
   modelValue: undefined
 })
 const filterOptions = ref<Option[]>() // 过滤后的选项数组
 const selectedName = ref() // 当前选中选项的 label
-const inputRef = ref() // 输入框 DOM 引用
+const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const inputValue = ref() // 支持搜索时，用户输入内容
 const disabledBlur = ref(false) // 是否禁用 input 标签的 blur 事件
 const hideSelectName = ref(false) // 用户输入时，隐藏 selectName 的展示
@@ -135,7 +135,7 @@ watch(showOptions, async (to) => {
     hideSelectName.value = false
   }
 })
-function initSelector() {
+function initSelector(): void {
   if (props.modelValue) {
     const target = props.options.find((option) => option[props.value] === props.modelValue)
     if (target) {
@@ -150,7 +150,10 @@ function initSelector() {
     hoverValue.value = null
   }
 }
-function onBlur() {
+function onFocus(): void {
+  selectFocused.value = true
+}
+function onBlur(): void {
   selectFocused.value = false
   if (showOptions.value) {
     showOptions.value = false
@@ -161,7 +164,7 @@ function onBlur() {
     hideSelectName.value = false
   }
 }
-function onEnter() {
+function onEnter(): void {
   disabledBlur.value = true
   if (props.allowClear) {
     if (selectedName.value || (props.search && inputValue.value)) {
@@ -173,7 +176,7 @@ function onEnter() {
     }
   }
 }
-function onLeave() {
+function onLeave(): void {
   disabledBlur.value = false
   if (props.allowClear && showClear.value) {
     showClear.value = false
@@ -191,14 +194,14 @@ function onLeave() {
     }
   }
 }
-function onHover(value: string | number, disabled: boolean | undefined) {
+function onHover(value: string | number, disabled: boolean | undefined): void {
   disabledBlur.value = Boolean(disabled)
   hoverValue.value = value
 }
-function toggleSelect() {
-  focusSelect()
-  if (!props.search) {
-    inputRef.value.style.opacity = 0
+function toggleSelect(): void {
+  selectFocus()
+  if (!props.search && inputRef.value) {
+    inputRef.value.style.opacity = '0'
   }
   showOptions.value = !showOptions.value
   if (!hoverValue.value && selectedName.value) {
@@ -212,12 +215,12 @@ function toggleSelect() {
     }
   }
 }
-function onSearchInput(e: Event) {
+function onSearchInput(e: Event): void {
   hideSelectName.value = Boolean((e.target as HTMLInputElement)?.value)
 }
-function onClear() {
+function onClear(): void {
   if (selectFocused.value) {
-    focusSelect()
+    selectFocus()
     showCaret.value = true
   }
   showClear.value = false
@@ -229,12 +232,11 @@ function onClear() {
   emits('update:modelValue')
   emits('change')
 }
-function focusSelect() {
-  inputRef.value.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
-  selectFocused.value = true
+function selectFocus(): void {
+  inputRef.value?.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
 }
-function onChange(value: string | number, label: string, index: number) {
-  // 选中下拉项后的回调
+// 选中下拉项后的回调
+function onChange(value: string | number, label: string, index: number): void {
   if (props.modelValue !== value) {
     selectedName.value = label
     hoverValue.value = value
@@ -242,9 +244,7 @@ function onChange(value: string | number, label: string, index: number) {
     emits('change', value, label, index)
   }
   showCaret.value = false
-}
-function onClick() {
-  inputRef.value.focus()
+  selectFocus()
 }
 </script>
 <template>
@@ -257,7 +257,14 @@ function onClick() {
       'select-large': size === 'large',
       'select-disabled': disabled
     }"
-    :style="`--select-width: ${selectWidth}; --select-height: ${selectHeight};`"
+    :style="`
+      --select-width: ${selectWidth};
+      --select-height: ${selectHeight};
+      --select-primary-color-hover: #4096ff;
+      --select-primary-color-focus: #4096ff;
+      --select-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --select-item-bg-color-active: #e6f4ff;
+    `"
     @click="disabled ? () => false : toggleSelect()"
   >
     <div class="select-wrap" @mouseenter="onEnter" @mouseleave="onLeave">
@@ -272,13 +279,13 @@ function onClick() {
           :disabled="disabled"
           @input="onSearchInput"
           v-model="inputValue"
-          @blur="!disabledBlur && showOptions && !disabled ? onBlur() : () => false"
+          @blur="!disabledBlur && !disabled ? onBlur() : () => false"
+          @focus="!disabled ? onFocus() : () => false"
         />
       </span>
       <span
-        v-if="!hideSelectName"
         class="select-item"
-        :class="{ 'select-placeholder': !selectedName || showOptions }"
+        :class="{ 'select-placeholder': !selectedName || showOptions, 'select-item-hidden': hideSelectName }"
         :title="selectedName"
       >
         {{ selectedName || placeholder }}
@@ -343,7 +350,7 @@ function onClick() {
       <div
         v-if="showOptions && filterOptions && filterOptions.length"
         class="select-options-panel"
-        @click.stop="onClick"
+        @click.stop="selectFocus"
         @mouseenter="disabledBlur = true"
         @mouseleave="disabledBlur = false"
       >
@@ -361,7 +368,7 @@ function onClick() {
             ]"
             :title="option[label]"
             @mouseenter="onHover(option[value], option.disabled)"
-            @click.stop="option.disabled ? focusSelect() : onChange(option[value], option[label], index)"
+            @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
           >
             {{ option[label] }}
           </p>
@@ -370,7 +377,7 @@ function onClick() {
       <div
         v-else-if="showOptions && filterOptions && !filterOptions.length"
         class="select-options-panel options-empty"
-        @click.stop="onClick"
+        @click.stop="selectFocus"
         @mouseenter="disabledBlur = true"
         @mouseleave="disabledBlur = false"
       >
@@ -441,7 +448,7 @@ function onClick() {
   &:not(.select-disabled):hover {
     // 悬浮时样式
     .select-wrap {
-      border-color: #4096ff;
+      border-color: var(--select-primary-color-hover);
     }
   }
   .select-wrap {
@@ -501,6 +508,9 @@ function onClick() {
       color: rgba(0, 0, 0, 0.25);
       transition: none;
       pointer-events: none;
+    }
+    .select-item-hidden {
+      visibility: hidden;
     }
     .icon-svg {
       position: absolute;
@@ -582,7 +592,7 @@ function onClick() {
     .option-selected {
       // 被选中的下拉项样式
       font-weight: 600;
-      background: #e6f4ff;
+      background: var(--select-item-bg-color-active);
     }
     .option-disabled {
       // 禁用某个下拉选项时的样式
@@ -591,6 +601,7 @@ function onClick() {
     }
   }
   .options-empty {
+    min-width: 112px;
     padding: 9px 16px;
     .m-empty {
       margin-block: 8px;
@@ -603,8 +614,8 @@ function onClick() {
 .select-focused:not(.select-disabled) {
   // 激活时样式
   .select-wrap {
-    border-color: #4096ff;
-    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    border-color: var(--select-primary-color-focus);
+    box-shadow: 0 0 0 2px var(--select-primary-shadow-color);
   }
 }
 .search-select {

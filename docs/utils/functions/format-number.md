@@ -2,6 +2,8 @@
 
 <GlobalElement />
 
+*格式化数字为指定格式的工具函数*
+
 ::: details Show Source Code
 
 ```ts
@@ -53,10 +55,6 @@ export function formatNumber(
 ```
 
 :::
-
-## 何时使用
-
-- 格式化数字时
 
 <script setup lang="ts">
 import { formatNumber } from 'vue-amazing-ui'
