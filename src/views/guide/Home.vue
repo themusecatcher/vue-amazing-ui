@@ -3,6 +3,29 @@ import pkg from '/package.json'
 import { ref, computed } from 'vue'
 import { routes } from '@/router'
 import { useFps } from 'components/utils'
+import { TinyColor } from '@ctrl/tinycolor'
+import { generate } from '@ant-design/colors'
+console.log('generate', generate('#ff6900'))
+console.log('generate', generate('#1677ff'))
+const colorPalettes = generate('#ff6900')
+function isStableColor(color: number): boolean {
+  return color >= 0 && color <= 255;
+}
+function getAlphaColor(frontColor: string, backgroundColor: string): string {
+  const { r: fR, g: fG, b: fB, a: originAlpha } = new TinyColor(frontColor).toRgb()
+  if (originAlpha < 1) return frontColor
+  const { r: bR, g: bG, b: bB } = new TinyColor(backgroundColor).toRgb()
+  for (let fA = 0.01; fA <= 1; fA += 0.01) {
+    const r = Math.round((fR - bR * (1 - fA)) / fA)
+    const g = Math.round((fG - bG * (1 - fA)) / fA)
+    const b = Math.round((fB - bB * (1 - fA)) / fA)
+    if (isStableColor(r) && isStableColor(g) && isStableColor(b)) {
+      return new TinyColor({ r, g, b, a: Math.round(fA * 100) / 100 }).toRgbString()
+    }
+  }
+  return new TinyColor({ r: fR, g: fG, b: fB, a: 1 }).toRgbString()
+}
+console.log('shadowColor', getAlphaColor(colorPalettes[0], '#ffffff'))
 const { fps } = useFps()
 const installItems = ref([
   {
