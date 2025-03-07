@@ -222,7 +222,7 @@ docs:dev
 
 ## 赞助者 🫡
 
-所有的赞助者都将出现在此处，非常感谢你们的支持与赞助 ❤️❤️
+所有的赞助者都将出现在此处，非常感谢你们的支持与赞助 ❤️
 
 <a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher"></a><img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant"><a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i"></a>
 
