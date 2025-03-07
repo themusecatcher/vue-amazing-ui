@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import type { CSSProperties, Slots } from 'vue'  
+import type { CSSProperties, Slots } from 'vue'
 export interface Props {
   class?: string // 容器 class
   style?: CSSProperties // 指定样式
@@ -47,7 +47,9 @@ const hasSider = computed(() => {
     position: relative;
     min-width: 0;
     background: #001529;
-    transition: all 0.2s, background 0s;
+    transition:
+      all 0.2s,
+      background 0s;
   }
   :deep(.layout-sider-has-trigger) {
     .layout-sider-children {
@@ -87,7 +89,7 @@ const hasSider = computed(() => {
       left: 0;
       background: transparent;
       transition: all 0.3s;
-      content: "";
+      content: '';
     }
     &:hover::after {
       background: rgba(255, 255, 255, 0.2);

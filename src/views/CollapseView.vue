@@ -141,18 +141,73 @@ const positionOptions = ref<RadioOption[]>([
   }
 ])
 const activeKey = ref<CollapseProps['activeKey']>(['1'])
-const nestActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const accordionActiveKey = ref<CollapseProps['activeKey']>('1')
+const borderlessActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const disabledActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const disabledItemActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const ghostActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const nestOuterActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const nestInnerActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const customActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const customStyleActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const customArrowActiveKey1 = ref<CollapseProps['activeKey']>(['1'])
+const customArrowActiveKey2 = ref<CollapseProps['activeKey']>(['1'])
+const hideArrowActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const arrowPlaceActiveKey = ref<CollapseProps['activeKey']>(['1'])
 const arrowPlacement = ref<CollapseProps['arrowPlacement']>('right')
-const key = ref<CollapseProps['activeKey']>('1')
+const extraActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const copyableActiveKey = ref<CollapseProps['activeKey']>(['1'])
+const customCopyActiveKey = ref<CollapseProps['activeKey']>(['1'])
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
 watchEffect(() => {
-  console.log('nestActiveKey', nestActiveKey.value)
+  console.log('accordionActiveKey', accordionActiveKey.value)
 })
-
 watchEffect(() => {
-  console.log('key', key.value)
+  console.log('borderlessActiveKey', borderlessActiveKey.value)
+})
+watchEffect(() => {
+  console.log('disabledItemActiveKey', disabledItemActiveKey.value)
+})
+watchEffect(() => {
+  console.log('ghostActiveKey', ghostActiveKey.value)
+})
+watchEffect(() => {
+  console.log('nestOuterActiveKey', nestOuterActiveKey.value)
+})
+watchEffect(() => {
+  console.log('nestInnerActiveKey', nestInnerActiveKey.value)
+})
+watchEffect(() => {
+  console.log('customActiveKey', customActiveKey.value)
+})
+watchEffect(() => {
+  console.log('customStyleActiveKey', customStyleActiveKey.value)
+})
+watchEffect(() => {
+  console.log('customArrowActiveKey1', customArrowActiveKey1.value)
+})
+watchEffect(() => {
+  console.log('customArrowActiveKey2', customArrowActiveKey2.value)
+})
+watchEffect(() => {
+  console.log('hideArrowActiveKey', hideArrowActiveKey.value)
+})
+watchEffect(() => {
+  console.log('arrowPlaceActiveKey', arrowPlaceActiveKey.value)
+})
+watchEffect(() => {
+  console.log('arrowPlacement', arrowPlacement.value)
+})
+watchEffect(() => {
+  console.log('extraActiveKey', extraActiveKey.value)
+})
+watchEffect(() => {
+  console.log('copyableActiveKey', copyableActiveKey.value)
+})
+watchEffect(() => {
+  console.log('customCopyActiveKey', customCopyActiveKey.value)
 })
 function onChange(key: number | string) {
   console.log('change', key)
@@ -169,20 +224,20 @@ function handleClick(key: string | number) {
     <Collapse :items="collapseItems" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">'手风琴'</h2>
     <h3 class="mb10">只允许单个内容区域展开，只需 activeKey 传入 number | string 即可</h3>
-    <Collapse :items="collapseItems" v-model:active-key="key" />
+    <Collapse :items="collapseItems" v-model:active-key="accordionActiveKey" />
     <h2 class="mt30 mb10">无边框</h2>
-    <Collapse :items="collapseItems" v-model:active-key="activeKey" :bordered="false" />
+    <Collapse :items="collapseItems" v-model:active-key="borderlessActiveKey" :bordered="false" />
     <h2 class="mt30 mb10">禁用</h2>
     <Flex vertical>
-      <Collapse disabled :items="collapseItems" v-model:active-key="activeKey" />
-      <Collapse :items="disabledCollapseItems" v-model:active-key="activeKey" />
+      <Collapse disabled :items="collapseItems" v-model:active-key="disabledActiveKey" />
+      <Collapse :items="disabledCollapseItems" v-model:active-key="disabledItemActiveKey" />
     </Flex>
     <h2 class="mt30 mb10">幽灵折叠面板</h2>
-    <Collapse :items="collapseItems" v-model:active-key="activeKey" ghost />
+    <Collapse :items="collapseItems" v-model:active-key="ghostActiveKey" ghost />
     <h2 class="mt30 mb10">面板嵌套</h2>
-    <Collapse :items="collapseItems" v-model:active-key="activeKey">
+    <Collapse :items="collapseItems" v-model:active-key="nestOuterActiveKey">
       <template #content="{ key }">
-        <Collapse v-if="key === '1'" :items="nestCollapseItems" v-model:active-key="nestActiveKey" />
+        <Collapse v-if="key === '1'" :items="nestCollapseItems" v-model:active-key="nestInnerActiveKey" />
       </template>
     </Collapse>
     <h2 class="mt30 mb10">自定义面板</h2>
@@ -190,7 +245,7 @@ function handleClick(key: string | number) {
     <Collapse
       style="background-color: #fff"
       :items="collapseItems"
-      v-model:active-key="activeKey"
+      v-model:active-key="customActiveKey"
       :bordered="false"
       :collapse-style="{
         backgroundColor: '#f7f7f7',
@@ -202,38 +257,49 @@ function handleClick(key: string | number) {
     <h2 class="mt30 mb10">自定义样式</h2>
     <Collapse
       :items="customStyleItems"
-      v-model:active-key="activeKey"
+      v-model:active-key="customStyleActiveKey"
       :header-style="{ fontSize: '16px', color: '#ff6900' }"
       :content-style="{ padding: '16px 24px', color: '#09c8ce' }"
       :arrow-style="{ fontSize: '14px', height: '25px' }"
     />
     <h2 class="mt30 mb10">自定义箭头</h2>
-    <Collapse :items="customArrowItems" :arrow-style="{ color: '#ff6900' }" v-model:active-key="activeKey">
-      <template #arrow="{ key, active }">
-        <DoubleRightOutlined v-if="key === '2'" :rotate="active ? 90 : 0" />
-        <RightCircleFilled v-if="key === '3'" :rotate="active ? 90 : 0" />
-      </template>
-    </Collapse>
+    <Flex vertical>
+      <Collapse
+        :items="customArrowItems"
+        :arrow-style="{ color: '#ff6900' }"
+        v-model:active-key="customArrowActiveKey1"
+      />
+      <Collapse
+        :items="customArrowItems"
+        :arrow-style="{ color: '#ff6900' }"
+        v-model:active-key="customArrowActiveKey2"
+      >
+        <template #arrow="{ key, active }">
+          <DoubleRightOutlined v-if="key === '2'" :rotate="active ? 90 : 0" />
+          <RightCircleFilled v-if="key === '3'" :rotate="active ? 90 : 0" />
+        </template>
+      </Collapse>
+    </Flex>
     <h2 class="mt30 mb10">隐藏箭头</h2>
-    <Collapse :items="collapseItems" v-model:active-key="activeKey" :show-arrow="false" />
+    <Collapse :items="collapseItems" v-model:active-key="hideArrowActiveKey" :show-arrow="false" />
     <h2 class="mt30 mb10">箭头位置</h2>
     <Flex vertical>
       <Radio :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
-      <Collapse :items="collapseItems" v-model:active-key="activeKey" :arrow-placement="arrowPlacement" />
+      <Collapse :items="collapseItems" v-model:active-key="arrowPlaceActiveKey" :arrow-placement="arrowPlacement" />
     </Flex>
     <h2 class="mt30 mb10">面板额外内容</h2>
-    <Collapse :items="extraCollapseItems" v-model:active-key="activeKey">
+    <Collapse :items="extraCollapseItems" v-model:active-key="extraActiveKey">
       <template #extra="{ key }">
         <StarFilled v-if="key === '1'" @click.stop="handleClick(key)" />
         <StarOutlined v-if="key === '3'" @click.stop="handleClick(key)" />
       </template>
     </Collapse>
     <h2 class="mt30 mb10">可复制</h2>
-    <Collapse :items="collapseItems" v-model:active-key="activeKey" lang="template" copyable />
+    <Collapse :items="collapseItems" v-model:active-key="copyableActiveKey" lang="template" copyable />
     <h2 class="mt30 mb10">自定义复制按钮</h2>
     <Collapse
       :items="collapseItems"
-      v-model:active-key="activeKey"
+      v-model:active-key="customCopyActiveKey"
       lang="javascript"
       copyable
       copy-text="复制"

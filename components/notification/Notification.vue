@@ -165,7 +165,20 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-notification" :class="`notification-${notificationPlace}`" :style="{ ...topStyle, ...bottomStyle }">
+  <div
+    class="m-notification"
+    :class="`notification-${notificationPlace}`"
+    :style="[
+      topStyle,
+      bottomStyle,
+      `
+        --notification-primary-color: #1677ff;
+        --notification-success-color: #52c41a;
+        --notification-error-color: #ff4d4f;
+        --notification-warning-color: #faad14;
+      `
+    ]"
+  >
     <TransitionGroup :name="['topRight', 'bottomRight'].includes(notificationPlace) ? 'right' : 'left'">
       <div
         v-show="!hideIndex.includes(index)"
@@ -388,22 +401,22 @@ defineExpose({
   }
   .icon-info {
     :deep(.icon-svg) {
-      color: #1677ff;
+      color: var(--notification-primary-color);
     }
   }
   .icon-success {
     :deep(.icon-svg) {
-      color: #52c41a;
+      color: var(--notification-success-color);
     }
   }
   .icon-warning {
     :deep(.icon-svg) {
-      color: #faad14;
+      color: var(--notification-warning-color);
     }
   }
   .icon-error {
     :deep(.icon-svg) {
-      color: #ff4d4f;
+      color: var(--notification-error-color);
     }
   }
 }

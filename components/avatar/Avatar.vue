@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   href: undefined,
   target: '_self'
 })
-const viewportWidth = ref(window.innerWidth)
+const viewportWidth = ref<number>(window.innerWidth)
 const slotsExist = useSlotsExist(['default', 'icon'])
 const showIcon = computed(() => {
   if (!props.src) {
@@ -107,7 +107,7 @@ const strStyle = computed(() => {
   return {}
 })
 useEventListener(window, 'resize', getViewportWidth)
-function getViewportWidth() {
+function getViewportWidth(): void {
   viewportWidth.value = window.innerWidth
 }
 </script>

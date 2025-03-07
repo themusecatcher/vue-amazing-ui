@@ -10,7 +10,9 @@ export interface Props {
   pageAmount?: number // 显示的页码数
   hideOnSinglePage?: boolean // 只有一页时是否隐藏分页
   showQuickJumper?: boolean // 是否可以快速跳转至某页
+  jumperProps?: object // 快速跳转组件 props，参考 Input 组件 Props
   showSizeChanger?: boolean // 是否展示 pageSize 切换器，当 total 大于 50 时默认为 true
+  changerProps?: object // pageSize 切换器组件 props，参考 Select 组件 Props
   pageSizeOptions?: string[] | number[] // 设置每页可以显示多少条
   showTotal?: boolean | ((total: number, range: number[]) => string) // 用于显示数据总量和当前数据顺序
   placement?: 'left' | 'center' | 'right' // 分页展示位置，靠左 left，居中 center，靠右 right
@@ -24,14 +26,17 @@ const props = withDefaults(defineProps<Props>(), {
   pageAmount: 5,
   hideOnSinglePage: false,
   showQuickJumper: false,
+  jumperProps: () => ({}),
   showSizeChanger: undefined,
+  changerProps: () => ({}),
   pageSizeOptions: () => [10, 20, 50, 100],
   showTotal: false,
   placement: 'center',
   size: 'large'
 })
-const currentPage = ref(props.page) // 当前页数
-const currentPageSize = ref(props.pageSize) // 每页条数
+const currentPage = ref<number>(props.page) // 当前页数
+const currentPageSize = ref<number>(props.pageSize) // 每页条数
+const pageListRef = ref<HTMLElement[] | null>(null) // pageList 生成的 page 元素引用
 const jumpNumber = ref() // 跳转的页码
 const forwardMore = ref(false) // 左省略号展示
 const backwardMore = ref(false) // 右省略号展示
@@ -94,7 +99,7 @@ const optionsSize = computed(() => {
 })
 watch(
   () => props.page,
-  (to: number) => {
+  (to) => {
     currentPage.value = to
   }
 )
@@ -106,7 +111,7 @@ watch(
 )
 function dealPageList(curPage: number): number[] {
   var resList = []
-  var offset = Math.floor(props.pageAmount / 2) // 向下取整
+  var offset = Math.floor(props.pageAmount / 2)
   var pager = {
     start: curPage - offset,
     end: curPage + offset
@@ -149,7 +154,7 @@ function onPageBackward(): void {
   emits('update:page', currentPage.value)
   emits('change', currentPage.value, currentPageSize.value)
 }
-async function onPageJump() {
+async function onPageJump(): Promise<void> {
   let num = Number(jumpNumber.value) // 转换为数字
   if (jumpNumber.value && Number.isInteger(num)) {
     // 是否为整数
@@ -164,18 +169,32 @@ async function onPageJump() {
   await nextTick()
   jumpNumber.value = undefined // 清空跳转输入框
 }
-function onPageChange(page: number): boolean | void {
+// 聚焦当前页码
+async function activePageFocus(activePage: number) {
+  await nextTick()
+  const targetIndex = pageList.value.findIndex((page: number) => page === activePage)
+  pageListRef.value?.[targetIndex].focus()
+}
+function onPageChange(page: number, inPageList: boolean = false): boolean | void {
   if (page === 0 || page === totalPage.value + 1) {
     return false
   }
+  // 点击的页码不是当前页码
   if (currentPage.value !== page) {
-    // 点击的页码不是当前页码
     currentPage.value = page
+    if (inPageList) {
+      activePageFocus(page)
+    }
     emits('update:page', currentPage.value)
     emits('change', currentPage.value, currentPageSize.value)
   }
 }
-function onPageSizeChange(pageSize: number) {
+function onPageNext(e: Event, page: number): void {
+  ;(e.target as HTMLElement).focus()
+  onPageChange(page)
+}
+// pageSize 切换器变化时的回调
+function onPageSizeChange(pageSize: number): void {
   currentPageSize.value = pageSize
   const maxPage = Math.ceil(props.total / pageSize)
   if (currentPage.value > maxPage) {
@@ -199,11 +218,12 @@ function onPageSizeChange(pageSize: number) {
         'pagination-hidden': !total || (hideOnSinglePage && total <= currentPageSize)
       }
     ]"
+    :style="`--pagination-primary-color: #1677ff; --pagination-primary-color-focus-visible: #91caff;`"
   >
-    <span class="pagination-total-text pagination-right-gap" v-if="totalText">{{ totalText }}</span>
+    <span class="pagination-total-text" v-if="totalText">{{ totalText }}</span>
     <span
       tabindex="0"
-      class="pagination-prev pagination-right-gap"
+      class="pagination-prev"
       :class="{ 'pagination-item-disabled': currentPage === 1 }"
       @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage - 1)"
       @click="disabled || currentPage === 1 ? () => false : onPageChange(currentPage - 1)"
@@ -225,7 +245,8 @@ function onPageSizeChange(pageSize: number) {
     </span>
     <span
       tabindex="0"
-      :class="['pagination-item pagination-right-gap', { 'pagination-item-active': currentPage === 1 }]"
+      :class="['pagination-item', { 'pagination-item-active': currentPage === 1 }]"
+      @keydown.enter.prevent="disabled ? () => false : onPageChange(1)"
       @click="disabled ? () => false : onPageChange(1)"
     >
       1
@@ -234,14 +255,15 @@ function onPageSizeChange(pageSize: number) {
       v-show="forwardMore && pageList[0] - 1 > 1"
       tabindex="0"
       ref="forward"
-      class="pagintion-item-link pagination-right-gap"
+      class="pagintion-jump-prev"
+      @keydown.enter.prevent="disabled ? () => false : onPageForward()"
       @click="disabled ? () => false : onPageForward()"
     >
       <span class="ellipsis-character">•••</span>
       <svg
         class="icon-svg"
         focusable="false"
-        data-icon="double-right"
+        data-icon="double-left"
         width="1em"
         height="1em"
         fill="currentColor"
@@ -249,16 +271,18 @@ function onPageSizeChange(pageSize: number) {
         viewBox="64 64 896 896"
       >
         <path
-          d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512 181.7 851.1A7.98 7.98 0 00188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5zm304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512 485.7 851.1A7.98 7.98 0 00492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5z"
+          d="M272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 000 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9L272.9 512zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 000 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9L576.9 512z"
         ></path>
       </svg>
     </span>
     <span
+      ref="pageListRef"
       tabindex="0"
-      :class="['pagination-item pagination-right-gap', { 'pagination-item-active': currentPage === page }]"
+      :class="['pagination-item', { 'pagination-item-active': currentPage === page }]"
       v-for="(page, index) in pageList"
       :key="index"
-      @click="disabled ? () => false : onPageChange(page)"
+      @keydown.enter.prevent="disabled ? () => false : onPageChange(page, true)"
+      @click="disabled ? () => false : onPageChange(page, true)"
     >
       {{ page }}
     </span>
@@ -266,7 +290,8 @@ function onPageSizeChange(pageSize: number) {
       v-show="backwardMore && pageList[pageList.length - 1] + 1 < totalPage"
       tabindex="0"
       ref="backward"
-      class="pagintion-item-link pagination-right-gap"
+      class="pagintion-jump-next"
+      @keydown.enter.prevent="disabled ? () => false : onPageBackward()"
       @click="disabled ? () => false : onPageBackward()"
     >
       <span class="ellipsis-character">•••</span>
@@ -288,7 +313,8 @@ function onPageSizeChange(pageSize: number) {
     <span
       v-show="totalPage !== 1"
       tabindex="0"
-      :class="['pagination-item pagination-right-gap', { 'pagination-item-active': currentPage === totalPage }]"
+      :class="['pagination-item', { 'pagination-item-active': currentPage === totalPage }]"
+      @keydown.enter.prevent="disabled ? () => false : onPageChange(totalPage)"
       @click="disabled ? () => false : onPageChange(totalPage)"
     >
       {{ totalPage }}
@@ -298,7 +324,7 @@ function onPageSizeChange(pageSize: number) {
       class="pagination-next"
       :class="{ 'pagination-item-disabled': currentPage === totalPage }"
       @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage + 1)"
-      @click="disabled || currentPage === totalPage ? () => false : onPageChange(currentPage + 1)"
+      @click="disabled || currentPage === totalPage ? () => false : onPageNext($event, currentPage + 1)"
     >
       <svg
         class="arrow-svg"
@@ -322,8 +348,9 @@ function onPageSizeChange(pageSize: number) {
         :height="selectHeight"
         :disabled="disabled"
         :options="selectOptions"
-        @change="onPageSizeChange"
         v-model="currentPageSize"
+        @change="onPageSizeChange"
+        v-bind="changerProps"
       />
       <span class="pagination-jump-page" v-if="showQuickJumper">
         跳至<Input
@@ -333,6 +360,7 @@ function onPageSizeChange(pageSize: number) {
           v-model:value.lazy="jumpNumber"
           @change="onPageJump"
           @enter="onPageJump"
+          v-bind="jumperProps"
         />页
       </span>
     </span>
@@ -342,29 +370,39 @@ function onPageSizeChange(pageSize: number) {
 .m-pagination {
   display: flex;
   align-items: center;
+  gap: 8px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
   .pagination-total-text {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     height: 32px;
-    line-height: 32px;
   }
   .pagination-item {
-    display: inline-block;
-    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 6px;
     min-width: 32px;
     height: 32px;
-    line-height: 30px;
     border: 1px solid #d9d9d9;
     border-radius: 6px;
     background: #fff;
     cursor: pointer;
-    outline: none;
+    outline: 0;
     user-select: none; // 禁止选取文本
-    transition: all 0.2s;
+    transition: all 0.3s;
     &:hover {
-      .pagination-item-active();
+      color: var(--pagination-primary-color);
+      border-color: var(--pagination-primary-color);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--pagination-primary-color-focus-visible);
+      outline-offset: 1px;
+      transition:
+        outline-offset 0s,
+        outline 0s;
     }
   }
   .pagination-prev,
@@ -374,33 +412,38 @@ function onPageSizeChange(pageSize: number) {
     justify-content: center;
     min-width: 32px;
     height: 32px;
-    line-height: 30px;
     border: 1px solid #d9d9d9;
     border-radius: 6px;
     background: #fff;
     cursor: pointer;
-    outline: none;
+    outline: 0;
     user-select: none; // 禁止选取文本
-    transition: all 0.2s;
+    transition: all 0.3s;
     .arrow-svg {
       display: inline-block;
       font-size: 12px;
       color: rgba(0, 0, 0, 0.65);
       fill: currentColor;
-      transition: color 0.2s;
+      transition: color 0.3s;
     }
     &:hover {
-      border-color: #1677ff;
+      border-color: var(--pagination-primary-color);
       .arrow-svg {
-        color: #1677ff;
+        color: var(--pagination-primary-color);
       }
+    }
+    &:focus-visible:not(.pagination-item-disabled) {
+      outline: 2px solid var(--pagination-primary-color-focus-visible);
+      outline-offset: 1px;
+      transition:
+        outline-offset 0s,
+        outline 0s;
     }
   }
   .pagination-item-active {
     // 悬浮/选中样式
-    font-weight: 600;
-    color: #1677ff;
-    border-color: #1677ff;
+    color: var(--pagination-primary-color);
+    border-color: var(--pagination-primary-color);
   }
   .pagination-item-disabled {
     color: rgba(0, 0, 0, 0.25);
@@ -419,14 +462,16 @@ function onPageSizeChange(pageSize: number) {
       color: rgba(0, 0, 0, 0.25);
     }
   }
-  .pagintion-item-link {
+  .pagintion-jump-prev,
+  .pagintion-jump-next {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     min-width: 32px;
     height: 32px;
-    line-height: 32px;
+    border-radius: 6px;
     cursor: pointer;
-    outline: none;
+    outline: 0;
     .ellipsis-character {
       position: absolute;
       top: 0;
@@ -441,7 +486,7 @@ function onPageSizeChange(pageSize: number) {
       text-align: center;
       text-indent: 0.13em;
       opacity: 1;
-      transition: all 0.2s;
+      transition: all 0.3s;
     }
     .icon-svg {
       position: absolute;
@@ -452,11 +497,11 @@ function onPageSizeChange(pageSize: number) {
       margin: auto;
       display: inline-block;
       font-size: 12px;
-      color: #1677ff;
+      color: var(--pagination-primary-color);
       fill: currentColor;
       opacity: 0;
       pointer-events: none;
-      transition: all 0.2s;
+      transition: all 0.3s;
     }
     &:hover {
       .ellipsis-character {
@@ -468,22 +513,33 @@ function onPageSizeChange(pageSize: number) {
         pointer-events: auto;
       }
     }
-  }
-  .pagination-options {
-    display: inline-block;
-    margin-left: 16px;
-    .pagination-jump-page {
-      display: inline-block;
-      height: 32px;
-      line-height: 32px;
-      margin-left: 8px;
-      .m-input {
-        margin: 0 8px;
+    &:focus-visible {
+      outline: 2px solid var(--pagination-primary-color-focus-visible);
+      outline-offset: 1px;
+      transition:
+        outline-offset 0s,
+        outline 0s;
+      .ellipsis-character {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .icon-svg {
+        opacity: 1;
+        pointer-events: auto;
       }
     }
   }
-  .pagination-right-gap {
-    margin-right: 8px;
+  .pagination-options {
+    display: inline-flex;
+    gap: 8px;
+    margin-left: 8px;
+    .pagination-jump-page {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      vertical-align: bottom;
+      height: 32px;
+    }
   }
 }
 .pagination-left {
@@ -496,84 +552,70 @@ function onPageSizeChange(pageSize: number) {
   justify-content: flex-end;
 }
 .pagination-small {
-  font-size: 14px;
+  gap: 4px;
   .pagination-total-text {
     height: 24px;
-    line-height: 24px;
   }
   .pagination-item {
     min-width: 24px;
     height: 24px;
-    line-height: 22px;
   }
   .pagination-prev,
   .pagination-next {
     min-width: 24px;
     height: 24px;
-    line-height: 22px;
   }
-  .pagintion-item-link {
+  .pagintion-jump-prev,
+  .pagintion-jump-next {
     min-width: 24px;
     height: 24px;
-    line-height: 24px;
     .ellipsis-character {
       line-height: 24px;
     }
   }
   .pagination-options {
-    display: inline-block;
-    margin-left: 8px;
+    gap: 4px;
+    margin-left: 4px;
     .pagination-jump-page {
-      display: inline-block;
+      gap: 4px;
       height: 24px;
-      line-height: 24px;
     }
-  }
-  .pagination-right-gap {
-    margin-right: 4px;
   }
 }
 .pagination-middle {
-  font-size: 14px;
+  gap: 6px;
   .pagination-total-text {
     height: 28px;
-    line-height: 28px;
   }
   .pagination-item {
     min-width: 28px;
     height: 28px;
-    line-height: 26px;
   }
   .pagination-prev,
   .pagination-next {
     min-width: 28px;
     height: 28px;
-    line-height: 26px;
   }
-  .pagintion-item-link {
+  .pagintion-jump-prev,
+  .pagintion-jump-next {
     min-width: 28px;
     height: 28px;
-    line-height: 28px;
     .ellipsis-character {
       line-height: 28px;
     }
   }
   .pagination-options {
-    display: inline-block;
-    margin-left: 12px;
+    gap: 6px;
+    margin-left: 6px;
     .pagination-jump-page {
-      display: inline-block;
+      gap: 6px;
       height: 28px;
-      line-height: 28px;
       :deep(.m-input) {
         .input-wrap {
           padding: 3px 11px;
         }
       }
     }
-  }
-  .pagination-right-gap {
-    margin-right: 6px;
   }
 }
 .pagination-disabled {
@@ -591,6 +633,9 @@ function onPageSizeChange(pageSize: number) {
         color: rgba(0, 0, 0, 0.25);
       }
     }
+    &:focus-visible {
+      outline: 0 !important;
+    }
   }
   .pagination-item {
     color: rgba(0, 0, 0, 0.25);
@@ -600,6 +645,9 @@ function onPageSizeChange(pageSize: number) {
       font-weight: normal;
       color: rgba(0, 0, 0, 0.25);
       border-color: rgba(0, 0, 0, 0.25);
+    }
+    &:focus-visible {
+      outline: 0;
     }
   }
   .pagination-item-active {
@@ -612,10 +660,22 @@ function onPageSizeChange(pageSize: number) {
       background-color: rgba(0, 0, 0, 0.15);
     }
   }
-  .pagintion-item-link {
+  .pagintion-jump-prev,
+  .pagintion-jump-next {
     color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
     &:hover {
+      .ellipsis-character {
+        opacity: 1;
+        pointer-events: none;
+      }
+      .icon-svg {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+    &:focus-visible {
+      outline: 0;
       .ellipsis-character {
         opacity: 1;
         pointer-events: none;

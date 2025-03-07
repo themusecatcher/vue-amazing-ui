@@ -298,7 +298,17 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-modal-root">
+  <div
+    class="m-modal-root"
+    :style="`
+      --modal-primary-color: #1677ff;
+      --modal-success-color: #52c41a;
+      --modal-error-color: #ff4d4f;
+      --modal-warning-color: #faad14;
+      --modal-confirm-color: #faad14;
+      --modal-erase-color: #faad14;
+    `"
+  >
     <Transition name="fade">
       <div v-show="modalOpen" class="modal-mask" :style="modalMaskStyle"></div>
     </Transition>
@@ -682,21 +692,23 @@ defineExpose({
             fill: currentColor;
           }
         }
-        .icon-confirm,
-        .icon-erase {
-          color: #faad14;
-        }
         .icon-info {
-          color: #1677ff;
+          color: var(--modal-primary-color);
         }
         .icon-success {
-          color: #52c41a;
+          color: var(--modal-success-color);
         }
         .icon-error {
-          color: #ff4d4f;
+          color: var(--modal-error-color);
         }
         .icon-warning {
-          color: #faad14;
+          color: var(--modal-warning-color);
+        }
+        .icon-confirm {
+          color: var(--modal-confirm-color);
+        }
+        .icon-erase {
+          color: var(--modal-erase-color);
         }
         .modal-content {
           flex-basis: 100%;

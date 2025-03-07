@@ -11,10 +11,13 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
+import { generate } from '@ant-design/colors'
 const colorValue = ref('rgba(0, 0, 0, 1)')
 const showAlpha = ref(false)
 const showPreview = ref(true)
 const show = ref(false)
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const modeOptions: CheckboxOption[] = [
   {
     label: 'rgb',
@@ -33,7 +36,7 @@ const modeOptions: CheckboxOption[] = [
     value: 'hsv'
   }
 ]
-const modes = ref(['rgb'])
+const modes = ref(['rgb', 'hex'])
 const actionOptions: CheckboxOption[] = [
   {
     label: 'confirm',
@@ -63,13 +66,29 @@ function handleConfirm(color: string) {
 function handleClear() {
   console.log('clear')
 }
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--color-picker-primary-color-hover': colorPalettes[4],
+    '--color-picker-primary-color-focus': colorPalettes[4],
+    '--color-picker-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
+function getInputThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--input-primary-color-hover': colorPalettes[4],
+    '--input-primary-color-focus': colorPalettes[4],
+    '--input-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
 </script>
 
 ## 基本使用
 
-<Space :width="240">
-  <ColorPicker v-model:value="colorValue" />
-</Space>
+<ColorPicker :width="240" v-model:value="colorValue" />
 
 ::: details Show Code
 
@@ -82,9 +101,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Space :width="240">
-    <ColorPicker v-model:value="colorValue" />
-  </Space>
+  <ColorPicker :width="240" v-model:value="colorValue" />
 </template>
 ```
 
@@ -125,29 +142,27 @@ function labelFormat(color: string) {
 
 ## 自定义面板样式
 
-<Space :width="240">
+<ColorPicker
+  :width="240"
+  :tooltip-style="{
+    width: '280px',
+    padding: '4px',
+    borderRadius: '8px'
+  }"
+/>
+
+::: details Show Code
+
+```vue
+<template>
   <ColorPicker
+    :width="240"
     :tooltip-style="{
       width: '280px',
       padding: '4px',
       borderRadius: '8px'
     }"
   />
-</Space>
-
-::: details Show Code
-
-```vue
-<template>
-  <Space :width="240">
-    <ColorPicker
-      :tooltip-style="{
-        width: '280px',
-        padding: '4px',
-        borderRadius: '8px'
-      }"
-    />
-  </Space>
 </template>
 ```
 
@@ -161,9 +176,7 @@ function labelFormat(color: string) {
 
 <Space vertical>
   <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
-  <Space :width="240">
-    <ColorPicker :show-alpha="showAlpha" />
-  </Space>
+  <ColorPicker :width="240" :show-alpha="showAlpha" />
 </Space>
 
 ::: details Show Code
@@ -176,9 +189,7 @@ const showAlpha = ref(false)
 <template>
   <Space vertical>
     <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
-    <Space :width="240">
-      <ColorPicker :show-alpha="showAlpha" />
-    </Space>
+    <ColorPicker :width="240" :show-alpha="showAlpha" />
   </Space>
 </template>
 ```
@@ -192,9 +203,7 @@ const showAlpha = ref(false)
 
 <Space vertical>
   <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
-  <Space :width="240">
-    <ColorPicker :show-preview="showPreview" />
-  </Space>
+  <ColorPicker :width="240" :show-preview="showPreview" />
 </Space>
 
 ::: details Show Code
@@ -207,9 +216,7 @@ const showPreview = ref(true)
 <template>
   <Space vertical>
     <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
-    <Space :width="240">
-      <ColorPicker :show-preview="showPreview" />
-    </Space>
+    <ColorPicker :width="240" :show-preview="showPreview" />
   </Space>
 </template>
 ```
@@ -240,9 +247,7 @@ const showPreview = ref(true)
 
 ## 禁用
 
-<Space :width="240">
-  <ColorPicker disabled />
-</Space>
+<ColorPicker :width="240" disabled />
 
 ::: details Show Code
 
@@ -264,9 +269,7 @@ const showPreview = ref(true)
 
 <Space vertical>
   <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
-  <Space :width="240">
-    <ColorPicker :modes="modes" />
-  </Space>
+  <ColorPicker :width="240" :modes="modes" />
 </Space>
 
 ::: details Show Code
@@ -298,9 +301,7 @@ const modes = ref(['rgb'])
 <template>
   <Space vertical>
     <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
-    <Space :width="240">
-      <ColorPicker :modes="modes" />
-    </Space>
+    <ColorPicker :width="240" :modes="modes" />
   </Space>
 </template>
 ```
@@ -309,8 +310,26 @@ const modes = ref(['rgb'])
 
 ## 预设色板
 
-<Space :width="240">
+<ColorPicker
+  :width="240"
+  :swatches="[
+    '#FFFFFF',
+    '#18A058',
+    '#2080F0',
+    '#F0A020',
+    '#1677ff',
+    '#ff6900',
+    'rgba(0, 0, 0, 0.88)',
+    'rgba(208, 48, 80, 1)'
+  ]"
+/>
+
+::: details Show Code
+
+```vue
+<template>
   <ColorPicker
+    :width="240"
     :swatches="[
       '#FFFFFF',
       '#18A058',
@@ -322,26 +341,6 @@ const modes = ref(['rgb'])
       'rgba(208, 48, 80, 1)'
     ]"
   />
-</Space>
-
-::: details Show Code
-
-```vue
-<template>
-  <Space :width="240">
-    <ColorPicker
-      :swatches="[
-        '#FFFFFF',
-        '#18A058',
-        '#2080F0',
-        '#F0A020',
-        '#1677ff',
-        '#ff6900',
-        'rgba(0, 0, 0, 0.88)',
-        'rgba(208, 48, 80, 1)'
-      ]"
-    />
-  </Space>
 </template>
 ```
 
@@ -355,9 +354,7 @@ const modes = ref(['rgb'])
 
 <Space vertical>
   <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
-  <Space :width="240">
-    <ColorPicker :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
-  </Space>
+  <ColorPicker :width="240" :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
 </Space>
 
 ::: details Show Code
@@ -390,9 +387,7 @@ function handleClear() {
 <template>
   <Space vertical>
     <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
-    <Space :width="240">
-      <ColorPicker :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
-    </Space>
+    <ColorPicker :width="240" :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
   </Space>
 </template>
 ```
@@ -401,21 +396,17 @@ function handleClear() {
 
 ## 额外页脚
 
-<Space :width="240">
-  <ColorPicker>
-    <template #footer> extra footer </template>
-  </ColorPicker>
-</Space>
+<ColorPicker :width="240">
+  <template #footer> extra footer </template>
+</ColorPicker>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Space :width="240">
-    <ColorPicker>
-      <template #footer> extra footer </template>
-    </ColorPicker>
-  </Space>
+  <ColorPicker :width="240">
+    <template #footer> extra footer </template>
+  </ColorPicker>
 </template>
 ```
 
@@ -428,9 +419,7 @@ function handleClear() {
 <br/>
 
 <Space>
-  <Space :width="240">
-    <ColorPicker v-model:show="show" />
-  </Space>
+  <ColorPicker :width="240" v-model:show="show" />
   <Button type="primary" @click="show = true">显示</Button>
   <Button @click="show = false">隐藏</Button>
 </Space>
@@ -447,11 +436,67 @@ watchEffect(() => {
 </script>
 <template>
   <Space>
-    <Space :width="240">
-      <ColorPicker v-model:show="show" />
-    </Space>
+    <ColorPicker :width="240" v-model:show="show" />
     <Button type="primary" @click="show = true">显示</Button>
     <Button @click="show = false">隐藏</Button>
+  </Space>
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Space vertical>
+  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+  <Space align="center">
+    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+  </Space>
+  <ColorPicker
+    :width="240"
+    :style="getThemeStyle(primaryColor)"
+    :input-props="{ style: getInputThemeStyle(primaryColor) }"
+  />
+</Space>
+
+::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { generate } from '@ant-design/colors'
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--color-picker-primary-color-hover': colorPalettes[4],
+    '--color-picker-primary-color-focus': colorPalettes[4],
+    '--color-picker-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
+function getInputThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--input-primary-color-hover': colorPalettes[4],
+    '--input-primary-color-focus': colorPalettes[4],
+    '--input-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
+</script>
+<template>
+  <Space vertical>
+    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+    <Space align="center">
+      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+    </Space>
+    <ColorPicker
+      :width="240"
+      :style="getThemeStyle(primaryColor)"
+      :input-props="{ style: getInputThemeStyle(primaryColor) }"
+    />
   </Space>
 </template>
 ```
@@ -468,8 +513,10 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
+width | 颜色选择器的宽度，单位 `px` | string &#124; number | '100%'
 label | 展示的内容 | (color: string) => string &#124; slot | undefined
 tooltipStyle | 设置弹出面板的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+inputProps | 输入框组件 `props`，参考 [Input Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html#input) | object | {}
 showAlpha | 是否可调节 `alpha` 通道 | boolean | true
 showPreview | 是否展示颜色预览块 | boolean | false
 size | 颜色选择器的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'

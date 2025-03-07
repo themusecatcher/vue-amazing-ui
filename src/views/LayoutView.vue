@@ -123,16 +123,13 @@ const onBreakpoint = (broken: boolean) => {
     </Flex>
     <h2 class="mt30 mb10">上中下布局</h2>
     <h3 class="mb10">最基本的『上-中-下』布局</h3>
-    <h3 class="mb10">一般主导航放置于页面的顶端，从左自右依次为：logo、一级导航项、辅助菜单（用户、设置、通知等）。通常将内容放在固定尺寸（例如：1200px）内，整个页面排版稳定，不受用户终端显示器影响；上下级的结构符合用户上下浏览的习惯，也是较为经典的网站导航模式。页面上下切分的方式提高了主工作区域的信息展示效率，但在纵向空间上会有一些牺牲。此外，由于导航栏水平空间的限制，不适合那些一级导航项很多的信息结构。</h3>
+    <h3 class="mb10"
+      >一般主导航放置于页面的顶端，从左自右依次为：logo、一级导航项、辅助菜单（用户、设置、通知等）。通常将内容放在固定尺寸（例如：1200px）内，整个页面排版稳定，不受用户终端显示器影响；上下级的结构符合用户上下浏览的习惯，也是较为经典的网站导航模式。页面上下切分的方式提高了主工作区域的信息展示效率，但在纵向空间上会有一些牺牲。此外，由于导航栏水平空间的限制，不适合那些一级导航项很多的信息结构。</h3
+    >
     <Layout class="layout">
       <LayoutHeader>
         <div class="logo" />
-        <a-menu
-          v-model:selectedKeys="selectedKeys"
-          theme="dark"
-          mode="horizontal"
-          :style="{ lineHeight: '64px' }"
-        >
+        <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
           <a-menu-item key="1">nav 1</a-menu-item>
           <a-menu-item key="2">nav 2</a-menu-item>
           <a-menu-item key="3">nav 3</a-menu-item>
@@ -142,21 +139,14 @@ const onBreakpoint = (broken: boolean) => {
         <Breadcrumb :routes="routes" style="margin: 16px 0" />
         <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">Content</div>
       </LayoutContent>
-      <LayoutFooter style="text-align: center">
-        Vue Amazing UI ©2023 Created by the Muse Catcher
-      </LayoutFooter>
+      <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
     </Layout>
     <h2 class="mt30 mb10">顶部-侧边栏布局-通栏</h2>
     <h3 class="mb10">同样拥有顶部导航及侧边栏，区别是两边未留边距，多用于应用型的网站</h3>
     <Layout>
       <LayoutHeader class="header">
         <div class="logo" />
-        <a-menu
-          v-model:selectedKeys="selectedKeys1"
-          theme="dark"
-          mode="horizontal"
-          :style="{ lineHeight: '64px' }"
-        >
+        <a-menu v-model:selectedKeys="selectedKeys1" theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
           <a-menu-item key="1">nav 1</a-menu-item>
           <a-menu-item key="2">nav 2</a-menu-item>
           <a-menu-item key="3">nav 3</a-menu-item>
@@ -221,12 +211,7 @@ const onBreakpoint = (broken: boolean) => {
     <Layout>
       <LayoutHeader class="header">
         <div class="logo" />
-        <a-menu
-          v-model:selectedKeys="selectedKeys3"
-          theme="dark"
-          mode="horizontal"
-          :style="{ lineHeight: '64px' }"
-        >
+        <a-menu v-model:selectedKeys="selectedKeys3" theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
           <a-menu-item key="1">nav 1</a-menu-item>
           <a-menu-item key="2">nav 2</a-menu-item>
           <a-menu-item key="3">nav 3</a-menu-item>
@@ -236,12 +221,7 @@ const onBreakpoint = (broken: boolean) => {
         <Breadcrumb :routes="routes" style="margin: 16px 0" />
         <Layout style="padding: 24px 0; background: #fff">
           <LayoutSider width="200" style="background: #fff">
-            <a-menu
-              v-model:selectedKeys="selectedKeys4"
-              v-model:openKeys="openKeys"
-              mode="inline"
-              style="height: 100%"
-            >
+            <a-menu v-model:selectedKeys="selectedKeys4" v-model:openKeys="openKeys" mode="inline" style="height: 100%">
               <a-sub-menu key="sub1">
                 <template #title>
                   <span>
@@ -280,25 +260,24 @@ const onBreakpoint = (broken: boolean) => {
               </a-sub-menu>
             </a-menu>
           </LayoutSider>
-          <LayoutContent :style="{ padding: '0 24px', minHeight: '280px' }">
-            Content
-          </LayoutContent>
+          <LayoutContent :style="{ padding: '0 24px', minHeight: '280px' }"> Content </LayoutContent>
         </Layout>
       </LayoutContent>
-      <LayoutFooter style="text-align: center">
-        Vue Amazing UI ©2023 Created by the Muse Catcher
-      </LayoutFooter>
+      <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
     </Layout>
     <h2 class="mt30 mb10">侧边布局</h2>
     <h3 class="mb10">侧边两列式布局。页面横向空间有限时，侧边导航可收起</h3>
-    <h3 class="mb10">侧边导航在页面布局上采用的是左右的结构，一般主导航放置于页面的左侧固定位置，辅助菜单放置于工作区顶部。内容根据浏览器终端进行自适应，能提高横向空间的使用率，但是整个页面排版不稳定。侧边导航的模式层级扩展性强，一、二、三级导航项目可以更为顺畅且具关联性的被展示，同时侧边导航可以固定，使得用户在操作和浏览中可以快速的定位和切换当前位置，有很高的操作效率。但这类导航横向页面内容的空间会被牺牲一部份</h3>
-    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047;">
+    <h3 class="mb10"
+      >侧边导航在页面布局上采用的是左右的结构，一般主导航放置于页面的左侧固定位置，辅助菜单放置于工作区顶部。内容根据浏览器终端进行自适应，能提高横向空间的使用率，但是整个页面排版不稳定。侧边导航的模式层级扩展性强，一、二、三级导航项目可以更为顺畅且具关联性的被展示，同时侧边导航可以固定，使得用户在操作和浏览中可以快速的定位和切换当前位置，有很高的操作效率。但这类导航横向页面内容的空间会被牺牲一部份</h3
+    >
+    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047">
       <Layout>
         <LayoutSider
           :style="{ height: '360px', position: 'sticky', left: 0, top: 0, bottom: 0 }"
           v-model:collapsed="collapsed"
           collapsible
-          @collapse="onCollapse">
+          @collapse="onCollapse"
+        >
           <div class="logo-1" />
           <a-menu v-model:selectedKeys="selectedKeys5" theme="dark" mode="inline" :inline-collapsed="collapsed">
             <a-menu-item key="1">
@@ -344,15 +323,13 @@ const onBreakpoint = (broken: boolean) => {
               Curry is a basketball player.
             </div>
           </LayoutContent>
-          <LayoutFooter style="text-align: center">
-            Vue Amazing UI ©2023 Created by the Muse Catcher
-          </LayoutFooter>
+          <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
         </Layout>
       </Layout>
     </div>
     <h2 class="mt30 mb10">自定义收起展开触发器</h2>
     <h3 class="mb10">要使用自定义触发器，可以设置 :trigger="null" 来隐藏默认设定</h3>
-    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047;">
+    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047">
       <LayoutSider v-model:collapsed="collapsed" :trigger="null" collapsible>
         <div class="logo-1" />
         <a-menu v-model:selectedKeys="selectedKeys6" theme="dark" mode="inline" :inline-collapsed="collapsed">
@@ -372,11 +349,7 @@ const onBreakpoint = (broken: boolean) => {
       </LayoutSider>
       <Layout>
         <LayoutHeader style="background: #fff; padding: 0">
-          <menu-unfold-outlined
-            v-if="collapsed"
-            class="trigger"
-            @click="() => (collapsed = !collapsed)"
-          />
+          <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
           <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
         </LayoutHeader>
         <LayoutContent :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
@@ -386,7 +359,7 @@ const onBreakpoint = (broken: boolean) => {
     </Layout>
     <h2 class="mt30 mb10">响应式收起宽度</h2>
     <h3 class="mb10">collapsedWidth 支持响应式宽度，根据不同的视窗宽度可以设置不同的收起宽度</h3>
-    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047;">
+    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047">
       <LayoutSider
         v-model:collapsed="collapsed"
         collapsible
@@ -418,14 +391,15 @@ const onBreakpoint = (broken: boolean) => {
         <LayoutContent :style="{ margin: '24px 16px 0' }">
           <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">content</div>
         </LayoutContent>
-        <LayoutFooter style="text-align: center">
-          Vue Amazing UI ©2023 Created by the Muse Catcher
-        </LayoutFooter>
+        <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
       </Layout>
     </Layout>
     <h2 class="mt30 mb10">响应式触发收起</h2>
-    <h3 class="mb10">通过配置 breakpoint 属性，当视窗宽度小于 breakpoint 时 Sider 缩小为对应的 collapsedWidth 宽度，若将 collapsedWidth 设置为 0，会出现特殊 trigger</h3>
-    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047;">
+    <h3 class="mb10"
+      >通过配置 breakpoint 属性，当视窗宽度小于 breakpoint 时 Sider 缩小为对应的 collapsedWidth 宽度，若将
+      collapsedWidth 设置为 0，会出现特殊 trigger</h3
+    >
+    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047">
       <LayoutSider
         v-model:collapsed="collapsed"
         collapsible
@@ -459,14 +433,12 @@ const onBreakpoint = (broken: boolean) => {
         <LayoutContent :style="{ margin: '24px 16px 0' }">
           <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">content</div>
         </LayoutContent>
-        <LayoutFooter style="text-align: center">
-          Vue Amazing UI ©2023 Created by the Muse Catcher
-        </LayoutFooter>
+        <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
       </Layout>
     </Layout>
     <h2 class="mt30 mb10">固定侧边栏</h2>
     <h3 class="mb10">当内容较长时，使用固定侧边栏可以提供更好的体验</h3>
-    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047;">
+    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047">
       <Layout>
         <LayoutSider :style="{ overflow: 'auto', height: '360px', position: 'sticky', left: 0, top: 0, bottom: 0 }">
           <div class="logo-1" />
@@ -614,16 +586,11 @@ const onBreakpoint = (broken: boolean) => {
     </div>
     <h2 class="mt30 mb10">固定头部</h2>
     <h3 class="mb10">一般用于固定顶部导航，方便页面切换</h3>
-    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047;">
+    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047">
       <Layout>
         <LayoutHeader :style="{ position: 'sticky', zIndex: 1, top: 0, width: '100%' }">
           <div class="logo" />
-          <a-menu
-            v-model:selectedKeys="selectedKeys9"
-            theme="dark"
-            mode="horizontal"
-            :style="{ lineHeight: '64px' }"
-          >
+          <a-menu v-model:selectedKeys="selectedKeys9" theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
             <a-menu-item key="1">nav 1</a-menu-item>
             <a-menu-item key="2">nav 2</a-menu-item>
             <a-menu-item key="3">nav 3</a-menu-item>

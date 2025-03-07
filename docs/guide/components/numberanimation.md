@@ -167,7 +167,7 @@ function onFinished() {
 <ClientOnly>
   <Statistic title="一个小目标">
     <NumberAnimation
-      :value-style="{fontSize: '30px', fontWeight: 600, color: '#d4380d'}"
+      :value-style="{ fontSize: '30px', fontWeight: 600, color: '#d4380d' }"
       :from="0"
       :to="value2" />
   </Statistic>
@@ -179,7 +179,7 @@ function onFinished() {
 <template>
   <Statistic title="一个小目标">
     <NumberAnimation
-      :value-style="{fontSize: '30px', fontWeight: 600, color: '#d4380d'}"
+      :value-style="{ fontSize: '30px', fontWeight: 600, color: '#d4380d' }"
       :from="0"
       :to="100000000" />
   </Statistic>

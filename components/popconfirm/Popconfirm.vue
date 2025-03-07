@@ -44,11 +44,11 @@ const slotsExist = useSlotsExist(['description'])
 const showDesc = computed(() => {
   return slotsExist.description || props.description
 })
-function onCancel(e: Event) {
+function onCancel(e: Event): void {
   emits('cancel', e)
   tooltipRef.value.hide()
 }
-function onOk(e: Event) {
+function onOk(e: Event): void {
   emits('ok', e)
   tooltipRef.value.hide()
 }
@@ -67,6 +67,12 @@ function onOk(e: Event) {
     trigger="click"
     :keyboard="keyboard"
     :transition-duration="200"
+    :style="`
+      --popconfirm-primary-color: #1677ff;
+      --popconfirm-success-color: #52c41a;
+      --popconfirm-danger-color: #ff4d4f;
+      --popconfirm-warning-color: #faad14;
+    `"
     v-bind="$attrs"
   >
     <template #tooltip>
@@ -180,16 +186,16 @@ function onOk(e: Event) {
     }
   }
   .icon-info {
-    color: #1677ff;
+    color: var(--popconfirm-primary-color);
   }
   .icon-success {
-    color: #52c41a;
+    color: var(--popconfirm-success-color);
   }
   .icon-danger {
-    color: #ff4d4f;
+    color: var(--popconfirm-danger-color);
   }
   .icon-warning {
-    color: #faad14;
+    color: var(--popconfirm-warning-color);
   }
   .popconfirm-title {
     flex: auto;

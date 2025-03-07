@@ -30,8 +30,8 @@ const wave = ref<boolean>(false) // 使用 v-model:checked 时的复选框动画
 const waveOptionsValue = ref<(string | number)[]>([]) // 使用 v-model:value 时的复选框动画选中效果标志
 const slotsExist = useSlotsExist(['default'])
 const emits = defineEmits(['update:value', 'update:checked', 'change'])
+// 选项总数
 const optionsAmount = computed(() => {
-  // 选项总数
   return props.options.length
 })
 const gapValue = computed(() => {
@@ -46,20 +46,20 @@ watchEffect(() => {
 watchEffect(() => {
   optionsCheckedValue.value = props.value
 })
-function checkDisabled(disabled: boolean | undefined) {
+function checkDisabled(disabled: boolean | undefined): boolean {
   if (disabled === undefined) {
     return props.disabled
   } else {
     return disabled
   }
 }
-function onChecked() {
+function onChecked(): void {
   startWave()
   checkboxChecked.value = !checkboxChecked.value
   emits('update:checked', checkboxChecked.value)
   emits('change', checkboxChecked.value)
 }
-function onClick(value: string | number) {
+function onClick(value: string | number): void {
   startOptionWave(value)
   if (optionsCheckedValue.value.includes(value)) {
     // 已选中
@@ -75,7 +75,7 @@ function onClick(value: string | number) {
     emits('change', newVal)
   }
 }
-function startWave() {
+function startWave(): void {
   if (wave.value) {
     wave.value = false
     nextTick(() => {
@@ -85,10 +85,10 @@ function startWave() {
     wave.value = true
   }
 }
-function onWaveEnd() {
+function onWaveEnd(): void {
   wave.value = false
 }
-function startOptionWave(value: string | number) {
+function startOptionWave(value: string | number): void {
   if (waveOptionsValue.value.includes(value)) {
     waveOptionsValue.value = waveOptionsValue.value.filter((optionValue: string | number) => optionValue !== value)
     nextTick(() => {
@@ -98,7 +98,7 @@ function startOptionWave(value: string | number) {
     waveOptionsValue.value.push(value)
   }
 }
-function onWaveOptionEnd(value: string | number) {
+function onWaveOptionEnd(value: string | number): void {
   waveOptionsValue.value = waveOptionsValue.value.filter((optionValue: string | number) => optionValue !== value)
 }
 </script>
@@ -107,7 +107,7 @@ function onWaveOptionEnd(value: string | number) {
     v-if="optionsAmount"
     class="m-checkbox"
     :class="{ 'checkbox-vertical': vertical }"
-    :style="`--checkbox-gap: ${gapValue};`"
+    :style="`--checkbox-gap: ${gapValue}; --checkbox-primary-color: #1677ff;`"
     v-bind="$attrs"
   >
     <div
@@ -134,6 +134,7 @@ function onWaveOptionEnd(value: string | number) {
     v-else
     class="checkbox-wrap"
     :class="{ 'checkbox-disabled': disabled }"
+    :style="`--checkbox-primary-color: #1677ff;`"
     @click="disabled ? () => false : onChecked()"
     v-bind="$attrs"
   >
@@ -170,7 +171,7 @@ function onWaveOptionEnd(value: string | number) {
   line-height: 1.5714285714285714;
   &:not(.checkbox-disabled):hover {
     .checkbox-box {
-      border-color: #1677ff;
+      border-color: var(--checkbox-primary-color);
     }
   }
   .checkbox-box {
@@ -188,7 +189,6 @@ function onWaveOptionEnd(value: string | number) {
     border-radius: 4px;
     transition: all 0.3s;
     &::after {
-      box-sizing: border-box;
       position: absolute;
       top: 50%;
       left: 21.5%;
@@ -222,10 +222,10 @@ function onWaveOptionEnd(value: string | number) {
       animation-name: waveSpread, waveOpacity;
       @keyframes waveSpread {
         from {
-          box-shadow: 0 0 0.5px 0 #1677ff;
+          box-shadow: 0 0 0.5px 0 var(--checkbox-primary-color);
         }
         to {
-          box-shadow: 0 0 0.5px 5px #1677ff;
+          box-shadow: 0 0 0.5px 5px var(--checkbox-primary-color);
         }
       }
       @keyframes waveOpacity {
@@ -239,8 +239,8 @@ function onWaveOptionEnd(value: string | number) {
     }
   }
   .checkbox-checked {
-    background-color: #1677ff;
-    border-color: #1677ff;
+    background-color: var(--checkbox-primary-color);
+    border-color: var(--checkbox-primary-color);
     &::after {
       opacity: 1;
       transform: rotate(45deg) scale(1) translate(-50%, -50%);
@@ -253,7 +253,7 @@ function onWaveOptionEnd(value: string | number) {
       left: 50%;
       width: 8px;
       height: 8px;
-      background-color: #1677ff;
+      background-color: var(--checkbox-primary-color);
       border: 0;
       transform: translate(-50%, -50%) scale(1);
       opacity: 1;

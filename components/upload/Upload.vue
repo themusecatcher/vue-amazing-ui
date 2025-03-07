@@ -81,20 +81,20 @@ function initUpload() {
     }
   }
 }
+// 检查 url 是否为图片
 function isImage(url: string) {
-  // 检查 url 是否为图片
   const imageUrlReg = /\.(jpg|jpeg|png|gif)$/i
   const base64Reg = /^data:image/
   return imageUrlReg.test(url) || base64Reg.test(url)
 }
+// 检查 url 是否为pdf
 function isPDF(url: string) {
-  // 检查 url 是否为pdf
   const pdfUrlReg = /\.pdf$/i
   const base64Reg = /^data:application\/pdf/
   return pdfUrlReg.test(url) || base64Reg.test(url)
 }
+// 拖拽上传
 function onDrop(e: DragEvent, index: number) {
-  // 拖拽上传
   const files = e.dataTransfer?.files
   if (files?.length) {
     const len = files.length
@@ -113,8 +113,8 @@ function onDrop(e: DragEvent, index: number) {
 function onClickFileInput(index: number) {
   uploadInputRef.value[index].click()
 }
+// 点击上传
 function onUpload(e: any, index: number) {
-  // 点击上传
   const files = e.target.files
   if (files?.length) {
     const len = files.length
@@ -129,8 +129,8 @@ function onUpload(e: any, index: number) {
     uploadInputRef.value[index].value = ''
   }
 }
+// 统一上传文件方法
 const uploadFile = async (file: File, index: number) => {
-  // 统一上传文件方法
   // console.log('开始上传 upload-event files:', file)
   const promiseFunction = () => {
     return new Promise((resolve, reject) => {
@@ -144,7 +144,7 @@ const uploadFile = async (file: File, index: number) => {
         } else {
           // 检查返回值是否为布尔值
           if (typeof result === 'boolean') {
-            // 如果是布尔值，根据值resolve或reject
+            // 如果是布尔值，根据值 resolve 或 reject
             result ? resolve(result) : reject(new Error('Function returned false'))
           } else {
             // 否则，直接resolve返回值
@@ -282,7 +282,7 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-upload-wrap">
+  <div class="m-upload-wrap" :style="`--upload-primary-color: #1677ff;`">
     <Space gap="small" v-bind="spaceProps">
       <div class="upload-item-panel" v-for="n of showUpload" :key="n">
         <div
@@ -324,12 +324,20 @@ defineExpose({
           </div>
         </div>
         <div v-show="uploading[n - 1]" class="file-uploading">
-          <Spin class="spin-uploading" tip="uploading" size="small" indicator="spin-line" v-bind="spinProps" />
+          <Spin
+            class="spin-uploading"
+            tip="uploading"
+            size="small"
+            indicator="spin-line"
+            color="var(--upload-primary-color)"
+            v-bind="spinProps"
+          />
         </div>
         <div v-if="uploadedFiles[n - 1]" class="file-preview">
           <Image
             v-if="isImage(uploadedFiles[n - 1].url)"
             ref="imageRef"
+            style="--image-primary-color: var(--upload-primary-color)"
             :bordered="false"
             :width="82"
             :height="82"
@@ -430,7 +438,7 @@ defineExpose({
       cursor: pointer;
       transition: border-color 0.3s;
       &:hover {
-        border-color: #1677ff;
+        border-color: var(--upload-primary-color);
       }
       .plus-svg {
         display: inline-block;
@@ -486,7 +494,7 @@ defineExpose({
         display: inline-block;
         width: 100%;
         height: 60px;
-        color: #1677ff;
+        color: var(--upload-primary-color);
         fill: currentColor;
       }
       .file-mask {

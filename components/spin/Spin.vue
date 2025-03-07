@@ -46,7 +46,7 @@ const showTip = computed(() => {
 <template>
   <div
     :class="`m-spin spin-${size}`"
-    :style="`--spin-color: ${color}; --magic-ring-color: ${magicRingColor}; --spin-circle-width: ${spinCircleWidth}; --spin-speed: ${speed}ms;`"
+    :style="`--spin-primary-color: ${color}; --spin-magic-ring-color: ${magicRingColor}; --spin-circle-width: ${spinCircleWidth}; --spin-speed: ${speed}ms;`"
   >
     <div class="spin-wrap" v-show="spinning">
       <div class="spin-box">
@@ -168,7 +168,7 @@ const showTip = computed(() => {
         .dot-item {
           // 单个圆点样式
           position: absolute;
-          background: var(--spin-color);
+          background: var(--spin-primary-color);
           border-radius: 50%;
           opacity: 0.3;
           animation: loadingDotColor 1s linear infinite alternate;
@@ -215,7 +215,7 @@ const showTip = computed(() => {
           display: inline-block;
           .dot-item {
             position: absolute;
-            background: var(--spin-color);
+            background: var(--spin-primary-color);
             border-radius: 50%;
           }
           .dot-item:first-child {
@@ -255,7 +255,7 @@ const showTip = computed(() => {
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            background-color: var(--spin-color);
+            background-color: var(--spin-primary-color);
           }
           .line-item:first-child {
             opacity: 0.3;
@@ -427,7 +427,7 @@ const showTip = computed(() => {
           stroke-dashoffset: 0;
         }
         .path {
-          stroke: var(--spin-color);
+          stroke: var(--spin-primary-color);
           stroke-width: var(--spin-circle-width);
           stroke-dashoffset: 0;
         }
@@ -441,7 +441,7 @@ const showTip = computed(() => {
             stroke-width: 5;
             stroke-dasharray: 90, 150;
             stroke-dashoffset: 0;
-            stroke: var(--spin-color);
+            stroke: var(--spin-primary-color);
             stroke-linecap: round;
             animation: loadingDash 1.5s ease-in-out infinite;
             -webkit-animation: loadingDash 1.5s ease-in-out infinite;
@@ -483,7 +483,7 @@ const showTip = computed(() => {
           width: 100%;
           height: 100%;
           border-style: solid;
-          border-color: var(--spin-color);
+          border-color: var(--spin-primary-color);
           border-radius: 50%;
           animation: spinOuterRing 1.5s linear infinite;
           -webkit-animation: spinOuterRing 1.5s linear infinite;
@@ -496,7 +496,7 @@ const showTip = computed(() => {
         .inner-ring {
           position: absolute;
           border-style: solid;
-          border-color: var(--magic-ring-color);
+          border-color: var(--spin-magic-ring-color);
           border-radius: 50%;
           animation: spinInnerRing 1.5s linear infinite;
           -webkit-animation: spinInnerRing 1.5s linear infinite;
@@ -511,7 +511,7 @@ const showTip = computed(() => {
         }
       }
       .spin-tip {
-        color: var(--spin-color);
+        color: var(--spin-primary-color);
         text-align: center;
       }
     }

@@ -128,15 +128,37 @@ function toggleCollapse() {
         class="layout-sider-zero-width-trigger layout-sider-zero-width-trigger-left"
         @click="toggleCollapse"
       >
-        <svg class="bars-svg" focusable="false" data-icon="bars" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="0 0 1024 1024"><path d="M912 192H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM104 228a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0z"></path></svg>
+        <svg
+          class="bars-svg"
+          focusable="false"
+          data-icon="bars"
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          aria-hidden="true"
+          viewBox="0 0 1024 1024"
+        >
+          <path
+            d="M912 192H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM104 228a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0z"
+          ></path>
+        </svg>
       </span>
-      <div
-        v-else
-        class="layout-sider-trigger"
-        :style="`width: ${siderWidth}`"
-        @click="toggleCollapse"
-      >
-        <svg class="arrow-svg" :class="{'rotate-arrow': siderCollapsed }" focusable="false" data-icon="left" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"></path></svg>
+      <div v-else class="layout-sider-trigger" :style="`width: ${siderWidth}`" @click="toggleCollapse">
+        <svg
+          class="arrow-svg"
+          :class="{ 'rotate-arrow': siderCollapsed }"
+          focusable="false"
+          data-icon="left"
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          aria-hidden="true"
+          viewBox="64 64 896 896"
+        >
+          <path
+            d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"
+          ></path>
+        </svg>
       </div>
     </template>
   </aside>

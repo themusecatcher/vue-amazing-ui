@@ -59,6 +59,20 @@ async function onClose(e: Event) {
           'alert-width-description': showDesc
         }
       ]"
+      :style="`
+        --alert-primary-color: #1677ff;
+        --alert-primary-bg-color: #e6f4ff;
+        --alert-primary-border-color: #91caff;
+        --alert-success-color: #52c41a;
+        --alert-success-bg-color: #f6ffed;
+        --alert-success-border-color: #b7eb8f;
+        --alert-warning-color: #faad14;
+        --alert-warning-bg-color: #fffbe6;
+        --alert-warning-border-color: #ffe58f;
+        --alert-error-color: #ff4d4f;
+        --alert-error-bg-color: #fff2f0;
+        --alert-error-border-color: #ffccc7;
+      `"
     >
       <template v-if="showIcon && showSlotsIcon">
         <span v-if="!showDesc" class="m-alert-icon">
@@ -327,11 +341,11 @@ async function onClose(e: Event) {
   }
 }
 .alert-info {
-  background-color: #e6f4ff;
-  border: 1px solid #91caff;
+  background-color: var(--alert-primary-bg-color);
+  border: 1px solid var(--alert-primary-border-color);
   .m-alert-icon,
   .m-big-icon {
-    color: #1677ff;
+    color: var(--alert-primary-color);
     .icon-svg,
     :deep(svg) {
       fill: currentColor;
@@ -339,11 +353,11 @@ async function onClose(e: Event) {
   }
 }
 .alert-success {
-  background-color: #f6ffed;
-  border: 1px solid #b7eb8f;
+  background-color: var(--alert-success-bg-color);
+  border: 1px solid var(--alert-success-border-color);
   .m-alert-icon,
   .m-big-icon {
-    color: #52c41a;
+    color: var(--alert-success-color);
     .icon-svg,
     :deep(svg) {
       fill: currentColor;
@@ -351,11 +365,11 @@ async function onClose(e: Event) {
   }
 }
 .alert-warning {
-  background-color: #fffbe6;
-  border: 1px solid #ffe58f;
+  background-color: var(--alert-warning-bg-color);
+  border: 1px solid var(--alert-warning-border-color);
   .m-alert-icon,
   .m-big-icon {
-    color: #faad14;
+    color: var(--alert-warning-color);
     .icon-svg,
     :deep(svg) {
       fill: currentColor;
@@ -363,11 +377,11 @@ async function onClose(e: Event) {
   }
 }
 .alert-error {
-  background-color: #fff2f0;
-  border: 1px solid #ffccc7;
+  background-color: var(--alert-error-bg-color);
+  border: 1px solid var(--alert-error-border-color);
   .m-alert-icon,
   .m-big-icon {
-    color: #ff4d4f;
+    color: var(--alert-error-color);
     .icon-svg,
     :deep(svg) {
       fill: currentColor;

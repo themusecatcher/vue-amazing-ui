@@ -67,6 +67,7 @@ const optionsDisabled = ref<CheckboxOption[]>([
 ])
 const checked = ref<CheckboxProps['checked']>(false)
 const selectedOptions = ref<CheckboxProps['value']>([2])
+const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -520,6 +521,67 @@ const verticalGap = ref(8)
       </Col>
     </Row>
     <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="selectedOptions" />
+  </Flex>
+</template>
+```
+
+:::
+
+## 自定义主题色
+
+<Flex vertical>
+  <Space align="center">checkboxPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+  <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" v-model:checked="checked"> Checkbox </Checkbox>
+  <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" :options="options" v-model:value="selectedOptions" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+const options = ref<CheckboxOption[]>([
+  {
+    label: '北京市',
+    value: 1
+  },
+  {
+    label: '纽约市',
+    value: 2
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: 3
+  },
+  {
+    label: '伊斯坦布尔',
+    value: 4
+  },
+  {
+    label: '拜占庭',
+    value: 5
+  },
+  {
+    label: '君士坦丁堡',
+    value: 6
+  }
+])
+const checked = ref<CheckboxProps['checked']>(false)
+const selectedOptions = ref<CheckboxProps['value']>([2])
+const primaryColor = ref('#ff6900')
+watchEffect(() => {
+  console.log('checked', checked.value)
+})
+watchEffect(() => {
+  console.log('selectedOptions', selectedOptions.value)
+})
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">checkboxPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
+    <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" v-model:checked="checked"> Checkbox </Checkbox>
+    <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" :options="options" v-model:value="selectedOptions" />
   </Flex>
 </template>
 ```

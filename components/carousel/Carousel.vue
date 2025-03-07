@@ -72,32 +72,32 @@ const imageWidth = ref() // 图片宽度
 const imageHeight = ref() // 图片高度
 const complete = ref(Array(props.images.length).fill(false)) // 图片是否加载完成
 const emits = defineEmits(['change', 'click'])
+// 轮播图区域宽度
 const carouselWidth = computed(() => {
-  // 轮播图区域宽度
   if (typeof props.width === 'number') {
     return `${props.width}px`
   } else {
     return props.width
   }
 })
+// 轮播图区域高度
 const carouselHeight = computed(() => {
-  // 轮播图区域高度
   if (typeof props.height === 'number') {
     return `${props.height}px`
   } else {
     return props.height
   }
 })
+// 轮播图片数量
 const imageAmount = computed(() => {
-  // 轮播图片数量
   return props.images.length
 })
+// 是否垂直轮播
 const verticalSlide = computed(() => {
-  // 是否垂直轮播
   return ['left', 'right'].includes(props.dotPosition)
 })
+// 每次移动的单位距离
 const moveUnitDistance = computed(() => {
-  // 每次移动的单位距离
   if (verticalSlide.value) {
     return imageHeight.value
   } else {
@@ -140,7 +140,7 @@ useResizeObserver(carouselRef, () => {
   getImageSize()
   initCarousel()
 })
-function initCarousel() {
+function initCarousel(): void {
   slideTimer.value && cancelRaf(slideTimer.value)
   moveEffectRaf.value && cancelAnimationFrame(moveEffectRaf.value)
   switchPrevent.value = false
@@ -149,16 +149,16 @@ function initCarousel() {
   }
   onStart()
 }
-function onComplete(index: number) {
-  // 图片加载完成
+// 图片加载完成
+function onComplete(index: number): void {
   complete.value[index] = true
 }
-function getImageSize() {
-  // 获取每张图片大小
+// 获取每张图片尺寸
+function getImageSize(): void {
   imageWidth.value = carouselRef.value.offsetWidth
   imageHeight.value = carouselRef.value.offsetHeight
 }
-function onKeyboard(e: KeyboardEvent) {
+function onKeyboard(e: KeyboardEvent): void {
   if (imageAmount.value > 1) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       onLeftArrow()
@@ -169,7 +169,7 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 // 当用户导航到新页面、切换标签页、关闭标签页、最小化或关闭浏览器，或者在移动设备上从浏览器切换到不同的应用程序时，暂停切换
-function visibilityChange() {
+function visibilityChange(): void {
   const visibility = document.visibilityState
   if (visibility === 'hidden') {
     // hidden
@@ -181,7 +181,7 @@ function visibilityChange() {
     onStart()
   }
 }
-function onStart() {
+function onStart(): void {
   if (props.autoplay && imageAmount.value > 1 && complete.value[0]) {
     // 超过一条时滑动
     stopCarousel.value = false
@@ -189,7 +189,7 @@ function onStart() {
     // console.log('Carousel Start')
   }
 }
-function onStop() {
+function onStop(): void {
   slideTimer.value && cancelRaf(slideTimer.value)
   stopCarousel.value = true
   // console.log('Carousel Stop')
@@ -210,7 +210,7 @@ function autoSlide() {
     }, props.interval)
   }
 }
-function onLeftArrow() {
+function onLeftArrow(): void {
   if (!switchPrevent.value) {
     switchPrevent.value = true
     slideTimer.value && cancelRaf(slideTimer.value)
@@ -224,7 +224,7 @@ function onLeftArrow() {
     }
   }
 }
-function onRightArrow() {
+function onRightArrow(): void {
   if (!switchPrevent.value) {
     switchPrevent.value = true
     slideTimer.value && cancelRaf(slideTimer.value)
@@ -246,7 +246,7 @@ const cubicBezierNumber = useTransition(baseNumber, {
   duration: props.slideDuration, // 过渡动画时长
   transition: props.slideFunction // 过渡动画函数
 })
-function moveFade(direction: 'left' | 'right' | 'switch', n?: number) {
+function moveFade(direction: 'left' | 'right' | 'switch', n?: number): void {
   if (direction === 'left') {
     activeSwitcher.value = (activeSwitcher.value % imageAmount.value) + 1
   } else if (direction === 'right') {
@@ -261,21 +261,21 @@ function moveFade(direction: 'left' | 'right' | 'switch', n?: number) {
     }
   }, props.fadeDuration)
 }
-function toggleNumber(target: number) {
+function toggleNumber(target: number): void {
   targetPosition.value = target
   baseNumber.value = baseNumber.value ? 0 : 1
   originNumber.value = offset.value // 初始位置
   distance.value = target - originNumber.value // 总距离
 }
-function moveEffect() {
-  // 滑动效果函数
+// 滑动效果函数
+function moveEffect(): void {
   if (baseNumber.value) {
     offset.value = originNumber.value + distance.value * cubicBezierNumber.value
   } else {
     offset.value = originNumber.value + distance.value * (1 - cubicBezierNumber.value)
   }
 }
-function moveLeftEffect() {
+function moveLeftEffect(): void {
   if (offset.value >= targetPosition.value) {
     switchPrevent.value = false
     if (props.autoplay) {
@@ -286,8 +286,8 @@ function moveLeftEffect() {
     moveEffectRaf.value = requestAnimationFrame(moveLeftEffect)
   }
 }
-function moveLeft(target: number) {
-  // 箭头切换或跳转切换，向左滑动效果
+// 箭头切换或跳转切换，向左滑动效果
+function moveLeft(target: number): void {
   if (offset.value === imageAmount.value * moveUnitDistance.value) {
     // 最后一张时，重置left
     offset.value = 0
@@ -295,7 +295,7 @@ function moveLeft(target: number) {
   toggleNumber(target)
   moveEffectRaf.value = requestAnimationFrame(moveLeftEffect)
 }
-function moveRightEffect() {
+function moveRightEffect(): void {
   if (offset.value <= targetPosition.value) {
     switchPrevent.value = false
     if (props.autoplay) {
@@ -306,8 +306,8 @@ function moveRightEffect() {
     moveEffectRaf.value = requestAnimationFrame(moveRightEffect)
   }
 }
-function moveRight(target: number) {
-  // 箭头切换或跳转切换，向右滑动效果
+// 箭头切换或跳转切换，向右滑动效果
+function moveRight(target: number): void {
   if (offset.value === 0) {
     // 第一张时，重置left
     offset.value = imageAmount.value * moveUnitDistance.value
@@ -315,8 +315,8 @@ function moveRight(target: number) {
   toggleNumber(target)
   moveEffectRaf.value = requestAnimationFrame(moveRightEffect)
 }
-function onSwitch(n: number) {
-  // 分页切换图片
+// 分页切换图片
+function onSwitch(n: number): void {
   if (!switchPrevent.value && activeSwitcher.value !== n) {
     switchPrevent.value = true
     slideTimer.value && cancelRaf(slideTimer.value)
@@ -344,10 +344,10 @@ function onSwitch(n: number) {
     }
   }
 }
-function onMouseEnter(n: number) {
+function onMouseEnter(n: number): void {
   onSwitch(n)
 }
-function clickImage(image: Image) {
+function clickImage(image: Image): void {
   emits('click', image)
 }
 function to(n: number): void {
@@ -376,7 +376,15 @@ defineExpose({
     ref="carouselRef"
     class="m-carousel"
     :class="{ 'carousel-vertical': verticalSlide, 'carousel-fade': effect === 'fade' }"
-    :style="`--arrow-color: ${arrowColor}; --dot-size: ${dotSize}px; --dot-color: ${dotColor}; --fade-duration: ${props.fadeDuration}ms; --fade-function: ${props.fadeFunction}; width: ${carouselWidth}; height: ${carouselHeight};`"
+    :style="`
+      --carousel-width: ${carouselWidth};
+      --carousel-height: ${carouselHeight};
+      --carousel-arrow-color: ${arrowColor};
+      --carousel-dot-size: ${dotSize}px;
+      --carousel-dot-color: ${dotColor};
+      --carousel-fade-duration: ${props.fadeDuration}ms;
+      --carousel-fade-function: ${props.fadeFunction};
+    `"
     @mouseenter="autoplay && pauseOnMouseEnter ? onStop() : () => false"
     @mouseleave="autoplay && pauseOnMouseEnter ? onStart() : () => false"
   >
@@ -471,6 +479,8 @@ defineExpose({
 <style lang="less" scoped>
 .m-carousel {
   display: inline-block;
+  width: var(--carousel-width);
+  height: var(--carousel-height);
   margin: 0 auto;
   position: relative;
   overflow: hidden;
@@ -515,7 +525,7 @@ defineExpose({
     left: 6px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--arrow-color);
+    color: var(--carousel-arrow-color);
     fill: currentColor;
     cursor: pointer;
     opacity: 0;
@@ -531,7 +541,7 @@ defineExpose({
     right: 6px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--arrow-color);
+    color: var(--carousel-arrow-color);
     fill: currentColor;
     cursor: pointer;
     opacity: 0;
@@ -554,10 +564,10 @@ defineExpose({
     height: auto;
     .dot-item {
       // flex: 0 1 auto;
-      width: var(--dot-size);
-      height: var(--dot-size);
-      border-radius: var(--dot-size);
-      background-color: var(--dot-color);
+      width: var(--carousel-dot-size);
+      height: var(--carousel-dot-size);
+      border-radius: var(--carousel-dot-size);
+      background-color: var(--carousel-dot-color);
       cursor: pointer;
       outline: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -606,8 +616,8 @@ defineExpose({
     opacity: 0;
     pointer-events: none;
     transition-property: opacity;
-    transition-duration: var(--fade-duration);
-    transition-timing-function: var(--fade-function);
+    transition-duration: var(--carousel-fade-duration);
+    transition-timing-function: var(--carousel-fade-function);
   }
   .image-fade-active {
     opacity: 1;

@@ -282,7 +282,7 @@ function onSwitchRight() {
 }
 </script>
 <template>
-  <div class="m-image">
+  <div class="m-image" style="--image-primary-color: #1677ff">
     <Space gap="small" v-bind="spaceProps">
       <div
         v-show="!album || (album && index === 0)"
@@ -292,7 +292,13 @@ function onSwitchRight() {
         v-for="(image, index) in images"
         :key="index"
       >
-        <Spin :spinning="!complete[index]" indicator="dynamic-circle" size="small" v-bind="spinProps">
+        <Spin
+          :spinning="!complete[index]"
+          color="var(--image-primary-color)"
+          indicator="dynamic-circle"
+          size="small"
+          v-bind="spinProps"
+        >
           <img
             class="image-item"
             :style="`object-fit: ${fit};`"
@@ -349,7 +355,7 @@ function onSwitchRight() {
         <div class="preview-body">
           <div class="preview-operations">
             <a
-              class="previe-name"
+              class="preview-name"
               :href="images[previewIndex].src"
               target="_blank"
               :title="getImageName(images[previewIndex])"
@@ -732,7 +738,7 @@ function onSwitchRight() {
         background: rgba(0, 0, 0, 0.1);
         height: 42px;
         pointer-events: auto;
-        .previe-name {
+        .preview-name {
           position: absolute;
           left: 12px;
           font-size: 14px;
@@ -744,7 +750,7 @@ function onSwitchRight() {
           text-overflow: ellipsis;
           transition: color 0.3s;
           &:hover {
-            color: #1677ff;
+            color: var(--image-primary-color);
           }
         }
         .preview-progress {

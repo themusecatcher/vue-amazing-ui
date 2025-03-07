@@ -7,8 +7,11 @@ import {
   EnvironmentOutlined,
   CompassOutlined
 } from '@ant-design/icons-vue'
+import { generate } from '@ant-design/colors'
 const value = ref('')
 const lazyValue = ref('')
+const primaryColor = ref('#ff6900')
+const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const sizeOptions = [
   {
     label: 'small',
@@ -30,6 +33,15 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
+function getThemeStyle(color: string) {
+  const colorPalettes = generate(color)
+  const style = {
+    '--input-primary-color-hover': colorPalettes[4],
+    '--input-primary-color-focus': colorPalettes[4],
+    '--input-primary-shadow-color': primaryShadowColor.value
+  }
+  return style
+}
 function onChange(e: Event) {
   console.log('change', e)
 }
@@ -78,7 +90,7 @@ function onEnter(e: KeyboardEvent) {
       </Input>
     </Space>
     <h2 class="mt30 mb10">三种大小</h2>
-    <Space gap="small" vertical :width="300">
+    <Space gap="small" vertical :width="240">
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Input v-model:value="value" :size="size" placeholder="Basic usage" />
       <Input v-model:value="value" :size="size" placeholder="Basic usage">
@@ -99,19 +111,23 @@ function onEnter(e: KeyboardEvent) {
       </Input>
     </Space>
     <h2 class="mt30 mb10">带清除图标</h2>
-    <Space>
-      <Input allow-clear v-model:value="value" placeholder="input with clear icon" />
-    </Space>
+    <Input :width="200" allow-clear v-model:value="value" placeholder="input with clear icon" />
     <h2 class="mt30 mb10">密码框</h2>
-    <Space>
-      <Input password v-model:value="value" placeholder="input password" />
-    </Space>
+    <Input :width="200" password v-model:value="value" placeholder="input password" />
     <h2 class="mt30 mb10">带字数提示</h2>
     <Space vertical>
       <Input show-count allow-clear v-model:value="value" placeholder="please input" />
       <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
-    <Input disabled v-model:value="value" placeholder="disabled input" />
+    <Input :width="200" disabled v-model:value="value" placeholder="disabled input" />
+    <h2 class="mt30 mb10">自定义主题色</h2>
+    <Space vertical>
+      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+      <Space align="center">
+        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
+      </Space>
+      <Input :width="200" :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme input" />
+    </Space>
   </div>
 </template>
