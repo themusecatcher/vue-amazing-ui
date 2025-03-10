@@ -13,6 +13,7 @@ import Alipay from '/alipay.jpg'
 import Avatar0 from '/avatar.png'
 import Avatar1 from '/avatar_1.jpeg'
 import Avatar2 from '/avatar_2.jpg'
+import Avatar3 from '/avatar_3.png'
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 const sponsorItem = {
   title: '如果觉得 Vue Amazing UI 有用、有趣，或者对您有帮助，欢迎对作者表示下支持，非常感谢 ❤️'
@@ -179,5 +180,15 @@ const QRCodes = [
       </div>
     </template>
     <Avatar :size="36" :src="Avatar2" href="https://github.com/nizhensh-i" target="_blank" />
+  </Tooltip>
+  <Tooltip>
+    <template #tooltip>
+      <div style="text-align: center">
+        GitHub
+        <br/>
+        @beijin1949
+      </div>
+    </template>
+    <Avatar style="border-color: rgba(0, 0, 0, 0.25)" color="#fff" :size="36" :src="Avatar3" href="https://github.com/beijin1949" target="_blank" />
   </Tooltip>
 </Space>
