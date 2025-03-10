@@ -16,7 +16,7 @@
 
 ## 特性
 
-- 组件库采用 `Vue@3.5.13`+ `TypeScript@5.8.2` + `Vite@6.2.0` + `Less@4.2.2` 实现
+- 组件库采用 `Vue@3.5.13`+ `TypeScript@5.8.2` + `Vite@6.2.1` + `Less@4.2.2` 实现
 - 目前共包含 `65` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -224,7 +224,7 @@ docs:dev
 
 所有的赞助者都将出现在此处，非常感谢你们的支持与赞助 ❤️
 
-<a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher"></a><img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant"><a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i"></a>
+<a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher" title="GitHub@themusecatcher"></a> <img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" title="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a> <a href="https://github.com/beijin1949" target="_blank"><img width="64" height="64" src="./docs/public/avatar_3.png" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a>
 
 ## 组件
 

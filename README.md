@@ -16,7 +16,7 @@
 
 ## Features
 
-- The component library is implemented with `Vue@3.5.13`+ `TypeScript@5.8.2` + `Vite@6.2.0` + `Less@4.2.2`.
+- The component library is implemented with `Vue@3.5.13`+ `TypeScript@5.8.2` + `Vite@6.2.1` + `Less@4.2.2`.
 - Currently, it includes `65` basic UI components and `16` utility functions, with continuous exploration and updates ongoing...
 - What's more, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
@@ -224,7 +224,7 @@ docs:dev
 
 All sponsors will be listed here, thank you very much for your support and sponsorship ❤️
 
-<a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher"></a> <img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i"></a> <a href="https://github.com/beijin1949" target="_blank"><img width="64" height="64" src="./docs/public/avatar_3.png" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a>
+<a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher" title="GitHub@themusecatcher"></a> <img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" title="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a> <a href="https://github.com/beijin1949" target="_blank"><img width="64" height="64" src="./docs/public/avatar_3.png" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a>
 
 ## Components
 
