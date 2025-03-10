@@ -9,7 +9,7 @@ console.log('generate', generate('#ff6900'))
 console.log('generate', generate('#1677ff'))
 const colorPalettes = generate('#ff6900')
 function isStableColor(color: number): boolean {
-  return color >= 0 && color <= 255;
+  return color >= 0 && color <= 255
 }
 function getAlphaColor(frontColor: string, backgroundColor: string): string {
   const { r: fR, g: fG, b: fB, a: originAlpha } = new TinyColor(frontColor).toRgb()
