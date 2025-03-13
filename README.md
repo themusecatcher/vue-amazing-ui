@@ -286,4 +286,4 @@ useFps | Function to monitor the browser's refresh rate (FPS) in real time | () 
 useMediaQuery | Function to determine if the current environment matches a specified media query condition | (mediaQuery: string) => object
 useResizeObserver | Function to observe changes in the dimensions of DOM elements using `ResizeObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => object
 useSlotsExist | Function to watch for the existence of slots with given names, supporting single slots or an array of slots | (slotsName: string &#124; string[] = 'default') => Reactive &#124; Ref\<boolean>
-useInject | 使用依赖注入的函数，用于获取颜色调色板和阴影颜色 | (key: string) => { colorPalettes: Ref<string[]>; shadowColor: Ref<string> }
+useInject | A function that uses injection to obtain color palettes and shadow color | (key: string) => { colorPalettes: Ref<string[]>; shadowColor: Ref<string> }
