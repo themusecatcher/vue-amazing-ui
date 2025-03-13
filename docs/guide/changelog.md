@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-03-14">2.3.1</VersionDateTag>
+
+- 修复自动按需引入对 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件引入的问题
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2025-03-13">2.3.0</VersionDateTag>
 
 - 新增 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件，用于支持全局自定义主题色
