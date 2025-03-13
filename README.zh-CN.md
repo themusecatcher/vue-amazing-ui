@@ -6,7 +6,7 @@
 
 <h1 align="center">Vue Amazing UI</h1>
 <p align="center">一个 Vue 3 组件库</p>
-<p align="center">使用 TypeScript，都是单文件组件 (SFC)，支持 tree shaking</p>
+<p align="center">主题可调，使用 TypeScript，都是单文件组件 (SFC)，支持 tree shaking</p>
 <p align="center">有点意思</p>
 <p align="center"><a href="README.md">English</a> | 中文</p>
 
@@ -19,6 +19,7 @@
 - 组件库采用 `Vue@3.5.13`+ `TypeScript@5.8.2` + `Vite@6.2.1` + `Less@4.2.2` 实现
 - 目前共包含 `66` 个基础 `UI` 组件以及 `17` 个工具函数，并且持续探索更新中...
 - 顺便一提，它们全都可以 `treeshaking`
+- 主题可调，你只需提供一个主题色，剩下的都交给我
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
 - 全部组件均采用单文件组件 `SFC` 风格，可独立使用
 - 开箱即用，不墨迹

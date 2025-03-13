@@ -113,6 +113,10 @@ export default defineConfig({
               link: '/guide/ondemand'
             },
             {
+              text: '定制主题',
+              link: '/guide/customize'
+            },
+            {
               text: '更新日志',
               link: '/guide/changelog'
             }
