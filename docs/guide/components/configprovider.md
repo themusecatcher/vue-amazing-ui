@@ -686,8 +686,8 @@ theme | 主题对象 | [Theme](#theme-type) | {}
 
 名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-common? | 全局通用配置，优先级低于组件配置 | [Config]() | undefined
-[ComponentName?](#componentname-type) | 组件自定义配置 | [Config]() | undefined
+common? | 全局通用配置，优先级低于组件配置 | [Config](#config-type) | undefined
+[ComponentName?](#componentname-type) | 组件自定义配置 | [Config](#config-type) | undefined
 
 ### Config Type
 
