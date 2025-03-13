@@ -6,7 +6,7 @@
 
 <h1 align="center">Vue Amazing UI</h1>
 <p align="center">一个 Vue 3 组件库</p>
-<p align="center">主题可调，使用 TypeScript，都是单文件组件 (SFC)，支持 tree shaking</p>
+<p align="center">主题可调，全量使用 TypeScript 和 SFC，支持 tree shaking</p>
 <p align="center">有点意思</p>
 <p align="center"><a href="README.md">English</a> | 中文</p>
 
@@ -85,7 +85,7 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
-**全局部分注册和局部注册组件，都需手动引入组件库全局默认样式（推荐使用自动按需引入）**
+**全局部分注册和局部注册组件，都需手动引入组件库全局默认样式（推荐使用[自动按需引入](https://themusecatcher.github.io/vue-amazing-ui/guide/ondemand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90)）**
 
 ```ts
 import { createApp } from 'vue'
