@@ -150,7 +150,7 @@ function getThemeStyle(color: string) {
     <DatePicker v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">日期时间选择器</h2>
     <DatePicker
-      :width="240"
+      :width="210"
       v-model="dateTimeValue"
       format="yyyy-MM-dd HH:mm:ss"
       show-time
@@ -159,7 +159,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">日期范围选择器</h2>
     <DatePicker
-      :width="280"
+      :width="240"
       v-model="rangeValue"
       range
       :preset-dates="presetDates"
@@ -168,7 +168,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">双日期面板</h2>
     <DatePicker
-      :width="280"
+      :width="240"
       v-model="rangeValue"
       mode="range"
       format="yyyy-MM-dd"
@@ -179,7 +179,7 @@ function getThemeStyle(color: string) {
     <h2 class="mt30 mb10">预设范围</h2>
     <h3 class="mb10">预设常用的日期范围以提高用户体验</h3>
     <DatePicker
-      :width="280"
+      :width="240"
       v-model="rangeValue"
       mode="range"
       format="yyyy-MM-dd"
@@ -190,7 +190,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">时分选择器</h2>
     <DatePicker
-      :width="120"
+      :width="110"
       v-model="timeValue"
       mode="time"
       show-time
@@ -200,7 +200,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">时分秒选择器</h2>
     <DatePicker
-      :width="150"
+      :width="130"
       v-model="secondsValue"
       mode="time"
       format="HH:mm:ss"
@@ -211,7 +211,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">时分秒范围选择器</h2>
     <DatePicker
-      :width="240"
+      :width="200"
       v-model="timeRangeValue"
       mode="time"
       format="HH:mm:ss"
@@ -234,12 +234,12 @@ function getThemeStyle(color: string) {
       >
         {{ format(weekValue[0], 'yyyy-MM-dd') + ' ~ ' + format(weekValue[1], 'yyyy-MM-dd') }}
       </GradientText>
-      <DatePicker :width="200" v-model="weekValue" mode="week" format="yyyy年 第ww周" placeholder="请选择周" />
+      <DatePicker :width="170" v-model="weekValue" mode="week" format="yyyy年 第ww周" placeholder="请选择周" />
     </Space>
     <h2 class="mt30 mb10">月选择器</h2>
-    <DatePicker :width="150" v-model="monthValue" mode="month" format="yyyy-MM" placeholder="请选择月" />
+    <DatePicker :width="130" v-model="monthValue" mode="month" format="yyyy-MM" placeholder="请选择月" />
     <h2 class="mt30 mb10">年选择器</h2>
-    <DatePicker :width="120" v-model="yearValue" mode="year" format="yyyy" placeholder="请选择年" />
+    <DatePicker :width="110" v-model="yearValue" mode="year" format="yyyy" placeholder="请选择年" />
     <h2 class="mt30 mb10">自定义主题色</h2>
     <Space vertical>
       <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>

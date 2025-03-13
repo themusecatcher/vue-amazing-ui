@@ -174,6 +174,10 @@ export default defineConfig({
               link: '/guide/components/colorpicker'
             },
             {
+              text: '全局化配置 ConfigProvider',
+              link: '/guide/components/configprovider'
+            },
+            {
               text: '倒计时 Countdown',
               link: '/guide/components/countdown'
             },
@@ -456,6 +460,10 @@ export default defineConfig({
             {
               text: 'useSlotsExist 监听插槽存在',
               link: '/utils/functions/slots-exist'
+            },
+            {
+              text: 'useInject 获取注入数据',
+              link: '/utils/functions/injection'
             }
           ]
         }

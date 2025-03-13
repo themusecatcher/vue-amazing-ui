@@ -4,6 +4,13 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-03-12">2.3.0</VersionDateTag>
+
+- 新增 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件，用于支持全局自定义主题色
+- 优化并更新 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html) 组件代码
+- 优化并更新支持自定义主题色的组件，用于配合 `ConfigProvider` 组件支持全局自定义主题色
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2025-03-07">2.2.15</VersionDateTag>
 
 - 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增颜色样式变量，用于支持自定义主题色

@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "2.2.15",
+  "version": "2.3.0",
   "private": false,
   "type": "module",
   "author": "theMuseCatcher",
@@ -67,6 +67,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@ant-design/colors": "^7.2.0",
+    "@ctrl/tinycolor": "^4.1.0",
     "@vuepic/vue-datepicker": "^11.0.1",
     "@vueuse/core": "^12.8.2",
     "date-fns": "^4.1.0",
@@ -75,9 +77,7 @@
     "swiper": "^11.2.5"
   },
   "devDependencies": {
-    "@ant-design/colors": "^7.2.0",
     "@ant-design/icons-vue": "^7.0.1",
-    "@ctrl/tinycolor": "^4.1.0",
     "@tsconfig/node22": "^22.0.0",
     "@types/minimist": "^1.2.5",
     "@types/node": "^22.13.10",

@@ -18,7 +18,8 @@ export {
   useFps,
   useMediaQuery,
   useResizeObserver,
-  useSlotsExist
+  useSlotsExist,
+  useInject
 } from './utils'
 export { VueAmazingUIResolver } from './utils/resolver'
 export type { VueAmazingUIResolverOptions } from './utils/resolver'

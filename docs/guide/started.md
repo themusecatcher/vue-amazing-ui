@@ -119,7 +119,8 @@ import {
   useFps,
   useMediaQuery,
   useResizeObserver,
-  useSlotsExist
+  useSlotsExist,
+  useInject
 } from 'vue-amazing-ui'
 </script>
 ```

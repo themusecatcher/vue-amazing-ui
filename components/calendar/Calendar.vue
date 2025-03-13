@@ -19,7 +19,7 @@ import {
 } from 'date-fns'
 import Select from 'components/select'
 import Radio from 'components/radio'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 import type { SelectOption, RadioOption } from 'vue-amazing-ui'
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type DefaultWeek = '一' | '二' | '三' | '四' | '五' | '六' | '日'
@@ -94,8 +94,10 @@ const calendarMode = ref<Props['mode']>(props.mode)
 const calendarDates = ref<Array<DateItem[]>>([])
 const selectedValue = ref<string | number>()
 const calendarMonths = ref<Array<MonthItem[]>>([])
-const slotsExist = useSlotsExist(['header'])
+const { colorPalettes } = useInject('Calendar') // 主题色注入
 const emits = defineEmits(['update:value', 'change', 'panelChange', 'select'])
+const slotsExist = useSlotsExist(['header'])
+
 const defaultWeeks = computed(() => {
   const origin: DefaultWeek[] = ['一', '二', '三', '四', '五', '六', '日']
   const result: DefaultWeek[] = []
@@ -359,9 +361,9 @@ function onPanelChange(): void {
     class="m-calendar"
     :class="`calendar-${display}`"
     :style="`
-      --calendar-primary-color: #1677ff;
-      --calendar-panel-primary-bg-color: #e6f4ff;
-      --calendar-card-primary-bg-color: #1677ff;
+      --calendar-primary-color: ${colorPalettes[5]};
+      --calendar-panel-primary-bg-color: ${colorPalettes[0]};
+      --calendar-card-primary-bg-color: ${colorPalettes[5]};
     `"
   >
     <div class="calendar-header-wrap">

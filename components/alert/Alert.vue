@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
 import type { Slot } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   message?: string // 警告提示内容 string | slot
   description?: string // 警告提示的辅助性文字介绍 string | slot
@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const alertRef = ref() // alert 模板引用
 const closeAlert = ref(false)
+const { colorPalettes } = useInject('Alert') // 主题色注入
 const emit = defineEmits(['close'])
 const slotsExist = useSlotsExist(['icon', 'description', 'actions'])
 const showSlotsIcon = computed(() => {
@@ -60,9 +61,9 @@ async function onClose(e: Event) {
         }
       ]"
       :style="`
-        --alert-primary-color: #1677ff;
-        --alert-primary-bg-color: #e6f4ff;
-        --alert-primary-border-color: #91caff;
+        --alert-primary-color: ${colorPalettes[5]};
+        --alert-primary-bg-color: ${colorPalettes[0]};
+        --alert-primary-border-color: ${colorPalettes[2]};
         --alert-success-color: #52c41a;
         --alert-success-bg-color: #f6ffed;
         --alert-success-border-color: #b7eb8f;

@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import type { Slot, VNode } from 'vue'
 import Tooltip from 'components/tooltip'
 import Badge from 'components/badge'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   top?: number | string // 按钮定位的上边距，单位 px
   bottom?: number | string // 按钮定位的下边距，单位 px
@@ -43,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   badgeProps: () => ({})
 })
 const showMenu = ref(false)
+const { colorPalettes } = useInject('FloatButton') // 主题色注入
 const emits = defineEmits(['click', 'openChange'])
 const slotsExist = useSlotsExist(['icon', 'description', 'tooltip', 'menu'])
 const showTooltip = computed(() => {
@@ -122,8 +123,8 @@ function onClick(e: Event) {
       --float-btn-top: ${floatBtnTop};
       --float-btn-bottom: ${floatBtnBottom};
       --float-btn-z-index: ${zIndex};
-      --float-btn-primary-color: #1677ff;
-      --float-btn-primary-color-hover: #4096ff;
+      --float-btn-primary-color: ${colorPalettes[5]};
+      --float-btn-primary-color-hover: ${colorPalettes[4]};
     `"
     :href="href"
     :target="target"

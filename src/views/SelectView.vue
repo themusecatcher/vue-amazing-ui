@@ -34,10 +34,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const optionsDisabled = ref<SelectOption[]>([

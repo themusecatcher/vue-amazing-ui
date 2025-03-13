@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, nextTick, computed } from 'vue'
+import { ref, reactive, nextTick, computed } from 'vue'
 import type { VNode, Slot } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
   shape?: 'default' | 'circle' | 'round' // 设置按钮形状
@@ -34,16 +34,17 @@ const props = withDefaults(defineProps<Props>(), {
   loadingType: 'dynamic',
   block: false
 })
-const presetRippleColors = {
-  default: '#1677ff',
-  reverse: '#1677ff',
-  primary: '#1677ff',
+const wave = ref<boolean>(false)
+const { colorPalettes } = useInject('Button') // 主题色注入
+const presetRippleColors = reactive({
+  default: colorPalettes.value[5],
+  reverse: colorPalettes.value[5],
+  primary: colorPalettes.value[5],
   danger: '#ff4d4f',
-  dashed: '#1677ff',
+  dashed: colorPalettes.value[5],
   text: 'transparent',
   link: 'transparent'
-}
-const wave = ref<boolean>(false)
+})
 const emit = defineEmits(['click'])
 const slotsExist = useSlotsExist(['icon', 'default'])
 const showIcon = computed(() => {
@@ -90,9 +91,9 @@ function onWaveEnd() {
       buttonClass
     ]"
     :style="`
-      --button-primary-color: #1677ff;
-      --button-primary-color-hover: #4096ff;
-      --button-primary-color-active: #0958d9;
+      --button-primary-color: ${colorPalettes[5]};
+      --button-primary-color-hover: ${colorPalettes[4]};
+      --button-primary-color-active: ${colorPalettes[6]};
       --button-danger-color: #ff4d4f;
       --button-danger-color-hover: #ff7875;
       --button-danger-color-active: #d9363e;

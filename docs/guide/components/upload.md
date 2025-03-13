@@ -18,23 +18,23 @@ const files = ref<UploadFileType[]>([])
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 const imageList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   }
 ])
 const pdfList = ref<UploadFileType[]>([
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 const primaryColor = ref('#ff6900')
@@ -86,12 +86,12 @@ function onCustomRequest(file: File) {
       if (file.type === 'application/pdf') {
         var res = {
           name: 'Markdown.pdf',
-          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
         }
       } else {
         var res = {
           name: '1.jpg',
-          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
         }
       }
       if (res) {
@@ -167,7 +167,7 @@ import type { UploadFileType } from 'vue-amazing-ui'
 const imageList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   }
 ])
 </script>
@@ -199,11 +199,11 @@ const files = ref<UploadFileType[]>([])
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 watchEffect(() => {
@@ -266,11 +266,11 @@ import type { UploadFileType } from 'vue-amazing-ui'
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 watchEffect(() => {
@@ -303,11 +303,11 @@ import type { UploadFileType } from 'vue-amazing-ui'
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 watchEffect(() => {
@@ -344,11 +344,11 @@ import type { UploadFileType } from 'vue-amazing-ui'
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 watchEffect(() => {
@@ -405,13 +405,13 @@ const uploadRef = ref()
 const imageList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   }
 ])
 const pdfList = ref<UploadFileType[]>([
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 watchEffect(() => {
@@ -502,11 +502,11 @@ import type { UploadFileType } from 'vue-amazing-ui'
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 watchEffect(() => {
@@ -519,12 +519,12 @@ function onCustomRequest(file: File) {
       if (file.type === 'application/pdf') {
         var res = {
           name: 'Markdown.pdf',
-          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
         }
       } else {
         var res = {
           name: '1.jpg',
-          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
         }
       }
       if (res) {
@@ -577,11 +577,11 @@ import type { UploadFileType } from 'vue-amazing-ui'
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf'
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 const primaryColor = ref('#ff6900')
