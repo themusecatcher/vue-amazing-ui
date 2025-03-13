@@ -2,10 +2,26 @@
 import { ref, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import type { CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
+import type {
+  ConfigProviderTheme,
+  CarouselImage,
+  SelectOption,
+  StepsItem,
+  TabsItem,
+  TextScrollItem,
+  UploadFileType
+} from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
-const buttonPrimaryColor = ref<string>('#ff6900')
+const buttonPrimaryColor = ref<string>('#18a058')
+const theme = ref<ConfigProviderTheme>({
+  common: {
+    primaryColor: commonPrimaryColor.value
+  },
+  Button: {
+    primaryColor: buttonPrimaryColor.value
+  }
+})
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
 const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
@@ -301,7 +317,7 @@ function onDecline(scale: number) {
         <Upload v-model:fileList="fileList" />
       </Flex>
     </ConfigProvider>
-    <h2 class="mt30 mb10">自定义单个组件主题色</h2>
+    <h2 class="mt30 mb10">自定义组件主题</h2>
     <Flex vertical>
       <Space align="center">
         commonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="commonPrimaryColor" />
@@ -309,9 +325,7 @@ function onDecline(scale: number) {
       <Space align="center">
         buttonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="buttonPrimaryColor" />
       </Space>
-      <ConfigProvider
-        :theme="{ common: { primaryColor: commonPrimaryColor }, Button: { primaryColor: buttonPrimaryColor } }"
-      >
+      <ConfigProvider :theme="theme">
         <Space align="center">
           <Alert style="width: 200px" message="Info Text" type="info" show-icon />
           <Button type="primary">Primary Button</Button>

@@ -6,7 +6,7 @@
 
 <h1 align="center">Vue Amazing UI</h1>
 <p align="center">A Vue 3 Component Library</p>
-<p align="center">Uses TypeScript, All components are single-file components (SFC), Supports tree shaking.</p>
+<p align="center">Theme Customizable, Uses TypeScript, All components are single-file components (SFC), Supports tree shaking.</p>
 <p align="center">Kinda Interesting</p>
 <p align="center">English | <a href="README.zh-CN.md">中文</a></p>
 
@@ -19,6 +19,7 @@
 - The component library is implemented with `Vue@3.5.13`+ `TypeScript@5.8.2` + `Vite@6.2.1` + `Less@4.2.2`.
 - Currently, it includes `66` basic UI components and `17` utility functions, with continuous exploration and updates ongoing...
 - What's more, they are all treeshakable.
+- Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
 - All components are built in single file component `SFC` style and can be used independently.
 - Ready to use out of the box, no fuss.

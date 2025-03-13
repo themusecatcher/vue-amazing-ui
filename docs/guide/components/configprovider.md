@@ -6,17 +6,25 @@
 
 ## 何时使用
 
-- 当需要全局自定义主题时
-- 当需要为组件提供的全局配置时
+- 当需要定制主题时
+<!-- - 当需要为组件提供的全局配置时 -->
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import type { CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
+import type { ConfigProviderTheme, CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
-const buttonPrimaryColor = ref<string>('#ff6900')
+const buttonPrimaryColor = ref<string>('#18a058')
+const theme = ref<ConfigProviderTheme>({
+  common: {
+    primaryColor: commonPrimaryColor.value
+  },
+  Button: {
+    primaryColor: buttonPrimaryColor.value
+  }
+})
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
 const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
@@ -625,7 +633,7 @@ function onDecline(scale: number) {
 
 :::
 
-## 自定义单个组件主题色
+## 自定义组件主题
 
 <Flex vertical>
   <Space align="center">
@@ -649,8 +657,17 @@ function onDecline(scale: number) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { ConfigProviderTheme } from 'vue-amazing-ui'
 const commonPrimaryColor = ref<string>('#1677ff')
-const buttonPrimaryColor = ref<string>('#ff6900')
+const buttonPrimaryColor = ref<string>('#18a058')
+const theme = ref<ConfigProviderTheme>({
+  common: {
+    primaryColor: commonPrimaryColor.value
+  },
+  Button: {
+    primaryColor: buttonPrimaryColor.value
+  }
+})
 </script>
 <template>
   <Flex vertical>
@@ -660,9 +677,7 @@ const buttonPrimaryColor = ref<string>('#ff6900')
     <Space align="center">
       buttonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="buttonPrimaryColor" />
     </Space>
-    <ConfigProvider
-      :theme="{ common: { primaryColor: commonPrimaryColor }, Button: { primaryColor: buttonPrimaryColor } }"
-    >
+    <ConfigProvider :theme="theme">
       <Space align="center">
         <Alert style="width: 200px" message="Info Text" type="info" show-icon />
         <Button type="primary">Primary Button</Button>
