@@ -26,7 +26,8 @@ import {
   useFps,
   useMediaQuery,
   useResizeObserver,
-  useSlotsExist
+  useSlotsExist,
+  useInject
 } from 'vue-amazing-ui'
 </script>
 ```
@@ -51,3 +52,4 @@ useFps | 实时监测浏览器刷新率FPS | () => object
 useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery: string) => object
 useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => object
 useSlotsExist | 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在 | (slotsName: string &#124; string[] = 'default') => Reactive &#124; Ref\<boolean>
+useInject | 使用依赖注入的函数，用于获取颜色调色板和阴影颜色 | (key: string) => { colorPalettes: Ref\<string[]>; shadowColor: Ref\<string> }

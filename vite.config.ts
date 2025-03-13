@@ -16,7 +16,7 @@ import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/r
 // import { visualizer } from 'rollup-plugin-visualizer'
 // 功能全面且轻量级的命令行参数解析工具
 import minimist from 'minimist'
-// 最小化混淆器 
+// 最小化混淆器
 // import terser from '@rollup/plugin-terser'
 
 // 获取 vite build 构建时，传入的参数：dir f
@@ -25,6 +25,7 @@ const dir = args[1] ? args[1].split('=')[1] : undefined
 const f = args[2] ? args[2].split('=')[1] : undefined
 const buildDistOptions = {
   emptyOutDir: false, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
+  copyPublicDir: false, // 默认情况下，Vite 会在构建阶段将 publicDir 目录中的所有文件复制到 outDir 目录中。可以通过设置该选项为 false 来禁用该行为。
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
     formats: f === 'iife' ? ['iife'] : ['es', 'umd'], // iife: 自执行函数表达式 Immediately Invoked Function Expression
     // __dirname 的值是 vite.config.ts 文件所在目录
@@ -39,7 +40,7 @@ const buildDistOptions = {
     ],
     // https://cn.rollupjs.org/configuration-options
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
-    external: f === 'iife' ? ['vue'] : ['vue', 'date-fns', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/core', 'seemly', 'qrcode'],
+    external: f === 'iife' ? ['vue'] : ['vue', 'date-fns', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/core', 'seemly', 'qrcode', '@ant-design/colors', '@ctrl/tinycolor'],
     // 当创建 iife 或 umd 格式的 bundle 时，你需要通过 output.globals 选项提供全局变量名，以替换掉外部引入。
     output: {
       name: 'VueAmazingUI', // 对于输出格式为 iife | umd 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出
@@ -66,7 +67,9 @@ const buildDistOptions = {
         '@vuepic/vue-datepicker': 'VueDatePicker',
         '@vueuse/core': 'Core',
         seemly: 'seemly',
-        qrcode: 'QRCode'
+        qrcode: 'QRCode',
+        '@ant-design/colors': 'Colors',
+        '@ctrl/tinycolor': 'TinyColor'
       }
     }
   },
@@ -101,6 +104,7 @@ const buildDistOptions = {
 }
 const buildESAndLibOptions = {
   // emptyOutDir: true, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
+  copyPublicDir: false, // 默认情况下，Vite 会在构建阶段将 publicDir 目录中的所有文件复制到 outDir 目录中。
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
     entry: resolve(__dirname, 'components', 'index.ts'), // 或 'components/index.ts'
   },
@@ -110,7 +114,7 @@ const buildESAndLibOptions = {
     ],
     // https://cn.rollupjs.org/configuration-options
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
-    external: ['vue', 'date-fns', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/core', 'seemly', 'qrcode'],
+    external: ['vue', 'date-fns', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/core', 'seemly', 'qrcode', '@ant-design/colors', '@ctrl/tinycolor'],
     input: resolve(__dirname, 'components', 'index.ts'), // 'components/index.ts'
     output: [
       {

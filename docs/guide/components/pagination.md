@@ -122,7 +122,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 import { ref } from 'vue'
 import type { PaginationProps } from 'vue-amazing-ui'
 const page = ref(1)
-const total = ref(98)
+const total = ref(500)
 const placementOptions = [
   {
     label: 'left',
@@ -167,7 +167,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 import { ref } from 'vue'
 import type { PaginationProps } from 'vue-amazing-ui'
 const page = ref(1)
-const total = ref(98)
+const total = ref(500)
 const sizeOptions = [
   {
     label: 'small',
@@ -216,7 +216,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 import { ref } from 'vue'
 const page = ref(1)
 const pageSize = ref(10)
-const total = ref(98)
+const total = ref(500)
 function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
@@ -250,7 +250,7 @@ function pageSizeChange (page: number, pageSize: number) { // 每页条数 pageS
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-const total = ref(98)
+const total = ref(500)
 function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
@@ -273,7 +273,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-const total = ref(98)
+const total = ref(500)
 function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
@@ -310,7 +310,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-const total = ref(98)
+const total = ref(500)
 function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
@@ -347,7 +347,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-const total = ref(98)
+const total = ref(500)
 function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
@@ -387,7 +387,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 import { ref } from 'vue'
 import { generate } from '@ant-design/colors'
 const page = ref(1)
-const total = ref(98)
+const total = ref(500)
 const primaryColor = ref('#ff6900')
 const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 function getThemeStyle(color: string) {

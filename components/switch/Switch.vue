@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
+import { useInject } from 'components/utils'
 export interface Props {
   checked?: string // 选中时的内容 string | slot
   checkedValue?: boolean | string | number // 选中时的值
@@ -21,11 +22,12 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   disabled: false,
   size: 'middle',
-  rippleColor: '#1677ff',
+  rippleColor: undefined,
   circleStyle: () => ({}),
   modelValue: false
 })
 const wave = ref<boolean>(false)
+const { colorPalettes } = useInject('Switch') // 主题色注入
 const emit = defineEmits(['update:modelValue', 'change'])
 function onSwitch(): void {
   if (props.modelValue === props.checkedValue) {
@@ -59,9 +61,9 @@ function onWaveEnd(): void {
       'switch-disabled': disabled
     }"
     :style="`
-      --switch-primary-color: #1677ff;
-      --switch-primary-color-hover: #4096ff;
-      --switch-ripple-color: ${rippleColor};
+      --switch-primary-color: ${colorPalettes[5]};
+      --switch-primary-color-hover: ${colorPalettes[4]};
+      --switch-ripple-color: ${rippleColor || colorPalettes[5]};
     `"
     @click="disabled || loading ? () => false : onSwitch()"
   >

@@ -43,6 +43,9 @@ export { default as Collapse } from './collapse'
 export type { Props as ColorPickerProps, ColorPickerMode, ColorPickerAction } from './colorpicker'
 export { default as ColorPicker } from './colorpicker'
 
+export type { Props as ConfigProviderProps, Theme as ConfigProviderTheme } from './configprovider'
+export { default as ConfigProvider } from './configprovider'
+
 export type { Props as CountdownProps } from './countdown'
 export { default as Countdown } from './countdown'
 

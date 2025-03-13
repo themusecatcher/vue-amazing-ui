@@ -24,14 +24,6 @@ const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 3',
     description: 'description 3'
-  },
-  {
-    title: 'Step 4',
-    description: 'description 4'
-  },
-  {
-    title: 'Step 5',
-    description: 'description 5'
   }
 ])
 const minStepsItems = ref<StepsItem[]>([
@@ -43,15 +35,9 @@ const minStepsItems = ref<StepsItem[]>([
   },
   {
     title: 'Step 3'
-  },
-  {
-    title: 'Step 4'
-  },
-  {
-    title: 'Step 5'
   }
 ])
-const current = ref(3)
+const current = ref(2)
 const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('current', current.value)
@@ -107,7 +93,7 @@ const state = reactive<StepsProps>({
   vertical: false,
   labelPlacement: 'right',
   dotted: false,
-  current: 3
+  current: 2
 })
 </script>
 
@@ -549,7 +535,7 @@ const state = reactive<StepsProps>({
   vertical: false,
   labelPlacement: 'right',
   dotted: false,
-  current: 3
+  current: 2
 })
 </script>
 <template>

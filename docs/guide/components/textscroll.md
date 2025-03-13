@@ -861,7 +861,7 @@ single | 是否启用单条文字滚动效果，水平滚动时生效，为 `tru
 width | 滚动区域宽度，单位 `px` | string &#124; number | '100%'
 height | 滚动区域高度，单位 `px` | number | 50
 itemStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-hrefHoverColor | 链接文字鼠标悬浮颜色；仅当 `href` 存在时生效 | string | '#1677ff'
+hrefHoverColor | 链接文字鼠标悬浮颜色；仅当 `href` 存在时生效 | string | undefined
 amount | 滚动区域展示条数，水平滚动时生效 | number | 4
 gap | 水平滚动文字各列间距或垂直滚动文字两边的间距，单位 `px` |  number | 20
 speed | 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效 | number | 48

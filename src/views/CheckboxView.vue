@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, watchEffect } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
   {
     label: '北京市',
@@ -54,8 +54,8 @@ const optionsDisabled = ref<CheckboxOption[]>([
     value: 6
   }
 ])
-const checked = ref<CheckboxProps['checked']>(false)
-const selectedOptions = ref<CheckboxProps['value']>([2])
+const checked = ref<boolean>(false)
+const selectedOptions = ref<(string | number)[]>([2])
 const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('checked', checked.value)
@@ -66,8 +66,8 @@ watchEffect(() => {
 function onChange(value: boolean | (string | number)[]) {
   console.log('change', value)
 }
-const checkAll = ref<CheckboxProps['checked']>(false) // 是否全选
-const indeterminate = ref<CheckboxProps['indeterminate']>(false) // 全选样式控制
+const checkAll = ref<boolean>(false) // 是否全选
+const indeterminate = ref<boolean>(false) // 全选样式控制
 watch(
   selectedOptions,
   (to: any) => {

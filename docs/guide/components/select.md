@@ -45,10 +45,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const optionsDisabled = ref<SelectOption[]>([
@@ -207,10 +203,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -275,10 +267,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -457,10 +445,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -526,10 +510,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const sizeOptions = [
@@ -605,10 +585,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -665,10 +641,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -725,10 +697,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -789,10 +757,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -849,10 +813,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -916,10 +876,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
