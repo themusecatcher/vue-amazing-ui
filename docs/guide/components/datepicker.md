@@ -31,7 +31,6 @@ import {
   addMinutes,
   addSeconds
 } from 'date-fns'
-import { generate } from '@ant-design/colors'
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
 const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
@@ -88,9 +87,6 @@ const sizeOptions = [
   }
 ]
 const size = ref('middle')
-const themeDateValue = ref(format(new Date(), 'yyyy-MM-dd'))
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('dateValue', dateValue.value)
 })
@@ -118,19 +114,6 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('yearValue', yearValue.value)
 })
-watchEffect(() => {
-  console.log('themeDateValue', themeDateValue.value)
-})
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--datepicker-primary-color': color,
-    '--datepicker-primary-color-hover': colorPalettes[4],
-    '--datepicker-primary-color-focus': colorPalettes[4],
-    '--datepicker-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
 </script>
 
 ## 基本使用
@@ -656,56 +639,6 @@ watchEffect(() => {
 </script>
 <template>
   <DatePicker :width="110" v-model="yearValue" mode="year" format="yyyy" placeholder="请选择年" />
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center">
-    primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
-  </Space>
-  <Space align="center">
-    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-  </Space>
-  <DatePicker :style="getThemeStyle(primaryColor)" v-model="themeDateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import { generate } from '@ant-design/colors'
-const themeDateValue = ref(format(new Date(), 'yyyy-MM-dd'))
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-watchEffect(() => {
-  console.log('themeDateValue', themeDateValue.value)
-})
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--datepicker-primary-color': color,
-    '--datepicker-primary-color-hover': colorPalettes[4],
-    '--datepicker-primary-color-focus': colorPalettes[4],
-    '--datepicker-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center">
-      primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    </Space>
-    <Space align="center">
-      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-    </Space>
-    <DatePicker :style="getThemeStyle(primaryColor)" v-model="themeDateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-  </Space>
 </template>
 ```
 
