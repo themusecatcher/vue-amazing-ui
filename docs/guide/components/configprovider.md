@@ -696,6 +696,8 @@ const theme = ref<ConfigProviderTheme>({
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 theme | 主题对象 | [Theme](#theme-type) | {}
+abstract | boolean | 是否不存在 `DOM` 包裹元素 | true
+tag | string | `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效 | 'div'
 
 ### Theme Type
 

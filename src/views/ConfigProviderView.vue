@@ -332,5 +332,6 @@ function onDecline(scale: number) {
         </Space>
       </ConfigProvider>
     </Flex>
+    <h2 class="mt30 mb10">自定义组件主题</h2>
   </div>
 </template>
