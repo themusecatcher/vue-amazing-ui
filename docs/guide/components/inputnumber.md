@@ -11,14 +11,11 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { formatNumber } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
 const value = ref(3)
 const lazyValue = ref(6)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)
 const disabled = ref(true)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -36,16 +33,6 @@ function formatter(value: number): string {
 }
 function parser(value: string): number {
   return Number(value.replace(/[,%]/g, ''))
-}
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-number-primary-color': color,
-    '--input-number-primary-color-hover': colorPalettes[4],
-    '--input-number-primary-color-focus': colorPalettes[4],
-    '--input-number-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
 }
 function onChange(number: number) {
   console.log('change', number)
@@ -287,49 +274,6 @@ const disabled = ref(true)
   <Space vertical>
     <Space align="center">disabled: <Switch v-model="disabled" /></Space>
     <InputNumber v-model:value="value" :disabled="disabled" />
-  </Space>
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <Space align="center">
-    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-  </Space>
-  <InputNumber :width="130" :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import { generate } from '@ant-design/colors'
-const value = ref(3)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-number-primary-color': color,
-    '--input-number-primary-color-hover': colorPalettes[4],
-    '--input-number-primary-color-focus': colorPalettes[4],
-    '--input-number-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-    <Space align="center">
-      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-    </Space>
-    <InputNumber :width="130" :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme" />
   </Space>
 </template>
 ```
