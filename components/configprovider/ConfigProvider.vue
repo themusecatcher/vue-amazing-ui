@@ -103,9 +103,13 @@ export interface Theme {
 }
 export interface Props {
   theme?: Theme // 主题对象
+  abstract?: boolean // 是否不存在 DOM 包裹元素
+  tag?: string // ConfigProvider 被渲染成的元素，abstract 为 true 时有效
 }
 const props = withDefaults(defineProps<Props>(), {
-  theme: () => ({})
+  theme: () => ({}),
+  abstract: true,
+  tag: 'div'
 })
 interface ThemeColor {
   colorPalettes: string[]
@@ -307,5 +311,8 @@ function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'):
 }
 </script>
 <template>
-  <slot></slot>
+  <slot v-if="abstract"></slot>
+  <component v-else :is="tag" class="m-config-provider">
+    <slot></slot>
+  </component>
 </template>
