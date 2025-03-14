@@ -56,7 +56,6 @@ const optionsDisabled = ref<CheckboxOption[]>([
 ])
 const checked = ref<boolean>(false)
 const selectedOptions = ref<(string | number)[]>([2])
-const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -126,18 +125,6 @@ function onCheckAllChange(checked: boolean) {
         </Col>
       </Row>
       <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="selectedOptions" />
-    </Flex>
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Flex vertical>
-      <Space align="center"
-        >checkboxPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor"
-      /></Space>
-      <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" v-model:checked="checked"> Checkbox </Checkbox>
-      <Checkbox
-        :style="`--checkbox-primary-color: ${primaryColor}`"
-        :options="options"
-        v-model:value="selectedOptions"
-      />
     </Flex>
   </div>
 </template>
