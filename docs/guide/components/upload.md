@@ -37,7 +37,6 @@ const pdfList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
-const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('files', files.value)
 })
@@ -551,60 +550,6 @@ function onRemove (file: UploadFileType) {
     @change="onChange"
     @remove="onRemove"
   />
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <Upload
-    :style="`--upload-primary-color: ${primaryColor}`"
-    v-model:fileList="fileList"
-    @change="onChange"
-    @remove="onRemove"
-  />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { UploadFileType } from 'vue-amazing-ui'
-const fileList = ref<UploadFileType[]>([
-  {
-    name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
-  },
-  {
-    name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
-  }
-])
-const primaryColor = ref('#ff6900')
-watchEffect(() => {
-  console.log('fileList', fileList.value)
-})
-function onChange (files: UploadFileType[]) {
-  console.log('change', files)
-}
-function onRemove (file: UploadFileType) {
-  console.log('remove', file)
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-    <Upload
-      :style="`--upload-primary-color: ${primaryColor}`"
-      v-model:fileList="fileList"
-      @change="onChange"
-      @remove="onRemove"
-    />
-  </Space>
 </template>
 ```
 
