@@ -461,17 +461,10 @@ function onKnow() {
 
 ## 自定义样式
 
-<Space vertical>
-  <Space>
-    <Button type="primary" @click="openCustomClass">Custom Body Class Modal</Button>
-    <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
-    <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
-  </Space>
-  <Space align="center">
-    modalPrimaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    <Button :style="getThemeStyle(primaryColor)" type="primary" @click="openCustomTheme">Custom Theme Modal</Button>
-  </Space>
+<Space>
+  <Button type="primary" @click="openCustomClass">Custom Body Class Modal</Button>
+  <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
+  <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
 </Space>
 
 <style lang="less" scoped>
