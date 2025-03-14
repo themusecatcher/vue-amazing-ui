@@ -7,7 +7,7 @@
 ## <VersionDateTag date="2025-03-14">2.3.1</VersionDateTag>
 
 - 优化并更新 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件，新增 `abstract` `tag` 属性，支持：设置是否不存在 `DOM` 包裹元素；自定义 `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效
-- 更新自动按需引入，修复对 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件引入的问题
+- 更新自动按需引入，修复 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件引入的问题
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-13">2.3.0</VersionDateTag>
