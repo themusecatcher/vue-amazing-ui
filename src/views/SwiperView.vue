@@ -3,7 +3,6 @@ import { ref, shallowReactive, onBeforeMount } from 'vue'
 import pkg from '/package.json'
 import type { SwiperImage } from 'vue-amazing-ui'
 const images = ref<SwiperImage[]>([])
-const primaryColor = ref('#ff6900')
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
     images.value.push({
@@ -198,22 +197,5 @@ function onNext() {
         @swiper="onBroadcastSwiper"
       />
     </Flex>
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Space vertical>
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-      <Swiper
-        :style="`--swiper-primary-color: ${primaryColor}; --swiper-navigation-size: 32px;`"
-        :images="images"
-        :width="800"
-        :height="450"
-        :speed="400"
-        navigation
-        :pagination="{
-          dynamicBullets: true,
-          clickable: true
-        }"
-        @change="onChange"
-      />
-    </Space>
   </div>
 </template>
