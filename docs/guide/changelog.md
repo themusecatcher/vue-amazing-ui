@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="soon">2.3.2</VersionDateTag>
+
+- 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，删除 `rippleColor` 属性，新增 `color` 属性，支持自定义按钮颜色
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2025-03-14">2.3.1</VersionDateTag>
 
 - 优化并更新 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件，新增 `abstract` `tag` 属性，支持：设置是否不存在 `DOM` 包裹元素；自定义 `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效
