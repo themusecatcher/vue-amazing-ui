@@ -689,6 +689,24 @@ const theme = ref<ConfigProviderTheme>({
 
 :::
 
+## 自定义包裹元素
+
+<ConfigProvider :abstract="false" tag="span" :theme="{ common: { primaryColor: '#ff6900' } }">
+  <Button type="primary">Primary Button</Button>
+</ConfigProvider>
+
+::: details Show Code
+
+```vue
+<template>
+  <ConfigProvider :abstract="false" tag="span" :theme="{ common: { primaryColor: '#ff6900' } }">
+    <Button type="primary">Primary Button</Button>
+  </ConfigProvider>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### ConfigProvider

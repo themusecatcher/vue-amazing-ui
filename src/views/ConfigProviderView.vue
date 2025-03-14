@@ -332,6 +332,9 @@ function onDecline(scale: number) {
         </Space>
       </ConfigProvider>
     </Flex>
-    <h2 class="mt30 mb10">自定义组件主题</h2>
+    <h2 class="mt30 mb10">自定义包裹元素</h2>
+    <ConfigProvider :abstract="false" tag="span" :theme="{ common: { primaryColor: '#ff6900' } }">
+      <Button type="primary">Primary Button</Button>
+    </ConfigProvider>
   </div>
 </template>
