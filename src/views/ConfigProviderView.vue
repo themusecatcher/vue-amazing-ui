@@ -203,7 +203,9 @@ function onDecline(scale: number) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+    <Card width="50%" title="以下示例已包含所有使用主题色的组件">
+      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+    </Card>
     <br />
     <br />
     <ConfigProvider :theme="{ common: { primaryColor } }">

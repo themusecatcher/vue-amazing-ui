@@ -208,9 +208,11 @@ function onDecline(scale: number) {
 *`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应用外围包裹一次即可全局生效。*
 
 <br/>
-<Space align="center">
-  primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
-</Space>
+<Card title="以下示例已包含所有使用主题色的组件" >
+  <Space align="center">
+    primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+  </Space>
+</Card>
 <br/>
 <br/>
 <ConfigProvider :theme="{ common: { primaryColor } }">
