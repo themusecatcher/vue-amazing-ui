@@ -7,6 +7,7 @@
 ## <VersionDateTag date="soon">2.3.2</VersionDateTag>
 
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，删除 `rippleColor` 属性，新增 `color` 属性，支持自定义按钮颜色
+- 修复 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件渐变进度圈展示
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-14">2.3.1</VersionDateTag>

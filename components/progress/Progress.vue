@@ -101,18 +101,17 @@ const lineColorComputed = computed(() => {
 // 进度圈渐变色 id
 const circleGradient = computed(() => {
   if (isGradientColor.value) {
-    const gradientColor = lineColorComputed.value as Gradient
+    const gradientColor = props.lineColor as Gradient
     if (gradientColor.direction === undefined || gradientColor.direction === 'right') {
       return `right-${gradientColor['0%'] || gradientColor.from}-${gradientColor['100%'] || gradientColor.to}`
-    } else {
-      return `left-${gradientColor['100%'] || gradientColor.to}-${gradientColor['0%'] || gradientColor.from}`
     }
+    return `left-${gradientColor['100%'] || gradientColor.to}-${gradientColor['0%'] || gradientColor.from}`
   }
   return null
 })
 const circleColorFrom = computed(() => {
   if (isGradientColor.value) {
-    const gradientColor = lineColorComputed.value as Gradient
+    const gradientColor = props.lineColor as Gradient
     if (gradientColor.direction === undefined || gradientColor.direction === 'right') {
       return gradientColor['0%'] || gradientColor.from
     } else {
@@ -123,7 +122,7 @@ const circleColorFrom = computed(() => {
 })
 const circleColorTo = computed(() => {
   if (isGradientColor.value) {
-    const gradientColor = lineColorComputed.value as Gradient
+    const gradientColor = props.lineColor as Gradient
     if (!gradientColor.direction || gradientColor.direction === 'right') {
       return gradientColor['100%'] || gradientColor.to
     } else {
