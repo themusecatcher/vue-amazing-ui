@@ -14,13 +14,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import type { RadioOption } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
 const open1 = ref<boolean>(false)
 const open2 = ref<boolean>(false)
 const open3 = ref<boolean>(false)
 const open4 = ref<boolean>(false)
 const open5 = ref<boolean>(false)
-const open6 = ref<boolean>(false)
 const options = ref<RadioOption[]>([
   {
     label: 'top',
@@ -42,21 +40,9 @@ const options = ref<RadioOption[]>([
 const placement = ref('right')
 const extraPlacement = ref('right')
 const footerPlacement = ref('right')
-const primaryColor = ref('#ff6900')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
 function onClose() {
   open3.value = false
   open4.value = false
-  open6.value = false
   console.log('close')
 }
 </script>
@@ -77,7 +63,6 @@ function onClose() {
 import { ref } from 'vue'
 const open = ref<boolean>(false)
 function onClose () {
-  open.value = false
   console.log('close')
 }
 </script>
@@ -301,76 +286,6 @@ const open = ref<boolean>(false)
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
-  </Drawer>
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Space align="center">
-  primaryColor:
-  <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-  <Button :style="getThemeStyle(primaryColor)" type="primary" @click="open6 = true">Open</Button>
-</Space>
-<Drawer
-  v-model:open="open6"
-  :closable="false"
-  title="Basic Drawer"
-  :footer-style="{ textAlign: 'right' }"
->
-  <p>Some contents...</p>
-  <p>Some contents...</p>
-  <p>Some contents...</p>
-  <template #footer>
-    <Button style="margin-right: 8px" :style="getThemeStyle(primaryColor)" @click="onClose">Cancel</Button>
-    <Button :style="getThemeStyle(primaryColor)" type="primary" @click="onClose">Submit</Button>
-  </template>
-</Drawer>
-
-::: details Show Code
-
-```vue
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { generate } from '@ant-design/colors'
-const open = ref<boolean>(false)
-const primaryColor = ref('#ff6900')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
-function onClose() {
-  open.value = false
-  console.log('close')
-}
-</script>
-<template>
-  <Space align="center">
-    primaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    <Button :style="getThemeStyle(primaryColor)" type="primary" @click="open = true">Open</Button>
-  </Space>
-  <Drawer
-    v-model:open="open"
-    :closable="false"
-    title="Basic Drawer"
-    :footer-style="{ textAlign: 'right' }"
-  >
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <template #footer>
-      <Button style="margin-right: 8px" :style="getThemeStyle(primaryColor)" @click="onClose">Cancel</Button>
-      <Button :style="getThemeStyle(primaryColor)" type="primary" @click="onClose">Submit</Button>
-    </template>
   </Drawer>
 </template>
 ```
