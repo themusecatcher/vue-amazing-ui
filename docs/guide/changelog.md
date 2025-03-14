@@ -6,7 +6,7 @@
 
 ## <VersionDateTag date="2025-03-14">2.3.1</VersionDateTag>
 
-- 修复自动按需引入对 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件引入的问题
+- 更新自动按需引入，修复对 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件引入的问题
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-13">2.3.0</VersionDateTag>
