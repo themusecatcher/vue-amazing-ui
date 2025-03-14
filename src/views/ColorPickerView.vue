@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
 const colorValue = ref('rgba(0, 0, 0, 1)')
 const showAlpha = ref(false)
 const showPreview = ref(true)
 const show = ref(false)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const modeOptions: CheckboxOption[] = [
   {
     label: 'rgb',
@@ -55,24 +52,6 @@ function handleConfirm(color: string) {
 }
 function handleClear() {
   console.log('clear')
-}
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--color-picker-primary-color-hover': colorPalettes[4],
-    '--color-picker-primary-color-focus': colorPalettes[4],
-    '--color-picker-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-function getInputThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-primary-color-hover': colorPalettes[4],
-    '--input-primary-color-focus': colorPalettes[4],
-    '--input-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
 }
 </script>
 <template>
@@ -157,18 +136,6 @@ function getInputThemeStyle(color: string) {
       <ColorPicker :width="240" v-model:show="show" />
       <Button type="primary" @click="show = true">显示</Button>
       <Button @click="show = false">隐藏</Button>
-    </Space>
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Space vertical>
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-      <Space align="center">
-        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-      </Space>
-      <ColorPicker
-        :width="240"
-        :style="getThemeStyle(primaryColor)"
-        :input-props="{ style: getInputThemeStyle(primaryColor) }"
-      />
     </Space>
   </div>
 </template>
