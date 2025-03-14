@@ -254,7 +254,7 @@ function onDecline(scale: number) {
       <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
     </Space>
     <Calendar v-model:value="cardDate" display="card" />
-    <Carousel style="margin-left: 0" :images="images" :width="800" :height="450" />
+    <Carousel style="margin-left: 0" :images="images" :height="450" />
     <Card style="height: 300px; transform: translate(0)">
       <FloatButton type="primary" :right="96">
         <template #icon>
@@ -309,7 +309,6 @@ function onDecline(scale: number) {
     <Swiper
       style="margin-left: 0"
       :images="images"
-      :width="800"
       :height="450"
       :speed="800"
       :pagination="{
@@ -558,7 +557,7 @@ function onDecline(scale: number) {
         <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
       </Space>
       <Calendar v-model:value="cardDate" display="card" />
-      <Carousel style="margin-left: 0" :images="images" :width="800" :height="450" />
+      <Carousel style="margin-left: 0" :images="images" :height="450" />
       <Card style="height: 300px; transform: translate(0)">
         <FloatButton type="primary" :right="96">
           <template #icon>
@@ -613,7 +612,6 @@ function onDecline(scale: number) {
       <Swiper
         style="margin-left: 0"
         :images="images"
-        :width="800"
         :height="450"
         :speed="800"
         :pagination="{
