@@ -21,7 +21,7 @@
 - What's more, they are all treeshakable.
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
-- All components are built in single file component `SFC` style and can be used independently.
+- All components are built in single file component `SFC` and can be used independently.
 - Ready to use out of the box, no fuss.
 
 ## Installation
