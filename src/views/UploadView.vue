@@ -25,7 +25,6 @@ const pdfList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
-const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('files', files.value)
 })
@@ -168,15 +167,5 @@ function onRemove(file: UploadFileType) {
       @change="onChange"
       @remove="onRemove"
     />
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Space vertical>
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-      <Upload
-        :style="`--upload-primary-color: ${primaryColor}`"
-        v-model:fileList="fileList"
-        @change="onChange"
-        @remove="onRemove"
-      />
-    </Space>
   </div>
 </template>
