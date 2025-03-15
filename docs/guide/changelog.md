@@ -4,7 +4,7 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
-## <VersionDateTag date="soon">2.3.2</VersionDateTag>
+## <VersionDateTag date="2025-03-15">2.3.2</VersionDateTag>
 
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，删除 `rippleColor` 属性，新增 `color` 属性，支持自定义按钮颜色
 - 修复 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件渐变进度圈展示
