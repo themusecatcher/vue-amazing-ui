@@ -22,10 +22,7 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { CloudFilled, FireFilled } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const notification = ref()
-const customNotification = ref()
-const primaryColor = ref('#ff6900')
 function onOpen(description: string) {
   notification.value.open({
     title: 'Notification Title',
@@ -89,21 +86,6 @@ function onStyleCustom(description: string) {
     }
   })
 }
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6]
-  }
-  return style
-}
-function onThemeCustom(description: string) {
-  customNotification.value.info({
-    title: 'Notification Title',
-    description
-  })
-}
 function onOpenPlacement(placement: string) {
   notification.value.info({
     title: 'Notification Title',
@@ -135,7 +117,6 @@ function onClose() {
 </script>
 
 <Notification ref="notification" @close="onClose" />
-<Notification ref="customNotification" :style="`--notification-primary-color: ${primaryColor};`" @close="onClose" />
 
 ## 基本使用
 
@@ -269,22 +250,9 @@ function onClose() {
 
 ## 自定义样式
 
-<Space vertical>
-  <Space>
-    <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
-    <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
-  </Space>
-  <Space align="center">
-    notificationPrimaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    <Button
-      :style="getThemeStyle(primaryColor)"
-      type="primary"
-      @click="onThemeCustom('This is a custom theme notification')"
-    >
-      Custom Theme
-    </Button>
-  </Space>
+<Space>
+  <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
+  <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
 </Space>
 
 <style lang="less" scoped>
@@ -302,10 +270,7 @@ function onClose() {
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { CloudFilled, FireFilled } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const notification = ref()
-const customNotification = ref()
-const primaryColor = ref('#ff6900')
 function onClassCustom(description: string) {
   notification.value.open({
     title: 'Notification Title',
@@ -325,46 +290,17 @@ function onStyleCustom(description: string) {
     }
   })
 }
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6]
-  }
-  return style
-}
-function onThemeCustom(description: string) {
-  customNotification.value.info({
-    title: 'Notification Title',
-    description
-  })
-}
 function onClose() {
   // 通知提醒关闭时的回调函数
   console.log('notification closed')
 }
 </script>
 <template>
-  <Space vertical>
-    <Space>
-      <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
-      <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
-    </Space>
-    <Space align="center">
-      notificationPrimaryColor:
-      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-      <Button
-        :style="getThemeStyle(primaryColor)"
-        type="primary"
-        @click="onThemeCustom('This is a custom theme notification')"
-      >
-        Custom Theme
-      </Button>
-    </Space>
+  <Space>
+    <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
+    <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
   </Space>
   <Notification ref="notification" @close="onClose" />
-  <Notification ref="customNotification" :style="`--notification-primary-color: ${primaryColor};`" @close="onClose" />
 </template>
 <style lang="less" scoped>
 :deep(.custom-class) {

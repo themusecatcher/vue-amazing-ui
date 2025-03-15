@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, nextTick, computed } from 'vue'
 import type { VNode, Slot } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { generate } from '@ant-design/colors'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
   shape?: 'default' | 'circle' | 'round' // 设置按钮形状
@@ -9,7 +10,7 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 设置按钮尺寸
   ghost?: boolean // 按钮背景是否透明，仅当 type: 'primary' | 'danger' 时生效
   buttonClass?: string // 设置按钮类名
-  rippleColor?: string // 点击时的波纹颜色，一般不需要设置，默认会根据 type 自动匹配，主要用于自定义样式时
+  color?: string // 按钮颜色
   href?: string // 点击跳转的地址，与 a 链接的 href 属性一致
   target?: '_self' | '_blank' // 如何打开目标链接，相当于 a 链接的 target 属性，href 存在时生效
   keyboard?: boolean // 是否支持键盘操作
@@ -24,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
   icon: undefined,
   size: 'middle',
   ghost: false,
-  rippleColor: undefined,
+  color: undefined,
   buttonClass: undefined,
   href: undefined,
   target: '_self',
@@ -34,16 +35,26 @@ const props = withDefaults(defineProps<Props>(), {
   loadingType: 'dynamic',
   block: false
 })
-const presetRippleColors = {
-  default: '#1677ff',
-  reverse: '#1677ff',
-  primary: '#1677ff',
-  danger: '#ff4d4f',
-  dashed: '#1677ff',
-  text: 'transparent',
-  link: 'transparent'
-}
 const wave = ref<boolean>(false)
+const { colorPalettes } = useInject('Button') // 主题色注入
+const colorPalettesComputed = computed(() => {
+  if (props.color !== undefined) {
+    return generate(props.color)
+  }
+  return colorPalettes.value
+})
+const rippleColorComputed = computed(() => {
+  const presetRippleColors = {
+    default: colorPalettesComputed.value[5],
+    reverse: colorPalettesComputed.value[5],
+    primary: colorPalettesComputed.value[5],
+    danger: '#ff4d4f',
+    dashed: colorPalettesComputed.value[5],
+    text: 'transparent',
+    link: 'transparent'
+  }
+  return presetRippleColors[props.type]
+})
 const emit = defineEmits(['click'])
 const slotsExist = useSlotsExist(['icon', 'default'])
 const showIcon = computed(() => {
@@ -90,15 +101,15 @@ function onWaveEnd() {
       buttonClass
     ]"
     :style="`
-      --button-primary-color: #1677ff;
-      --button-primary-color-hover: #4096ff;
-      --button-primary-color-active: #0958d9;
+      --button-primary-color: ${colorPalettesComputed[5]};
+      --button-primary-color-hover: ${colorPalettesComputed[4]};
+      --button-primary-color-active: ${colorPalettesComputed[6]};
       --button-danger-color: #ff4d4f;
       --button-danger-color-hover: #ff7875;
       --button-danger-color-active: #d9363e;
       --button-text-color-hover: rgba(0, 0, 0, 0.06);
       --button-text-color-active: rgba(0, 0, 0, 0.15);
-      --button-ripple-color: ${rippleColor || presetRippleColors[type]};
+      --button-ripple-color: ${rippleColorComputed};
     `"
     :href="href"
     :target="target"

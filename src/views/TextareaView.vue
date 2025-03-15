@@ -1,25 +1,13 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { generate } from '@ant-design/colors'
 const value = ref('')
 const lazyValue = ref('')
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('value', value.value)
 })
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--textarea-primary-color-hover': colorPalettes[4],
-    '--textarea-primary-color-focus': colorPalettes[4],
-    '--textarea-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
 function onChange(e: Event) {
   console.log('change', e)
 }
@@ -65,18 +53,5 @@ function onEnter(e: KeyboardEvent) {
     <Textarea :width="360" v-model:value="value" placeholder="textarea with show count" show-count :maxlength="10" />
     <h2 class="mt30 mb10">禁用</h2>
     <Textarea :width="360" v-model:value="value" placeholder="disabled textarea" disabled />
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Space vertical>
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-      <Space align="center">
-        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-      </Space>
-      <Textarea
-        :width="360"
-        :style="getThemeStyle(primaryColor)"
-        v-model:value="value"
-        placeholder="custom theme textarea"
-      />
-    </Space>
   </div>
 </template>

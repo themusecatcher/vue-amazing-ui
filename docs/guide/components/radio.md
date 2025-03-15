@@ -82,7 +82,6 @@ const sizeOptions = [
 const checked = ref<RadioProps['checked']>(false)
 const value = ref<RadioProps['value']>(2)
 const buttonSize = ref<RadioProps['buttonSize']>('middle')
-const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -646,63 +645,6 @@ watchEffect(() => {
     <Radio :options="sizeOptions" v-model:value="buttonSize" />
     <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
     <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />
-  </Space>
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center">radioPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
-  <Radio :style="`--radio-primary-color: ${primaryColor}`" :options="options" v-model:value="value" />
-  <Radio :style="`--radio-primary-color: ${primaryColor}`" :options="options" v-model:value="value" button button-style="solid" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { RadioProps, RadioOption } from 'vue-amazing-ui'
-const options = ref<RadioOption[]>([
-  {
-    label: '北京市',
-    value: 1
-  },
-  {
-    label: '纽约市',
-    value: 2
-  },
-  {
-    label: '布宜诺斯艾利斯',
-    value: 3
-  },
-  {
-    label: '伊斯坦布尔',
-    value: 4
-  },
-  {
-    label: '拜占庭',
-    value: 5
-  },
-  {
-    label: '君士坦丁堡',
-    value: 6
-  }
-])
-const value = ref<RadioProps['value']>(2)
-const primaryColor = ref('#ff6900')
-watchEffect(() => {
-  console.log('value', value.value)
-})
-</script>
-<template>
-  <Space vertical>
-    <Space align="center">radioPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
-    <Radio :style="`--radio-primary-color: ${primaryColor}`" :options="options" v-model:value="value" />
-    <Radio :style="`--radio-primary-color: ${primaryColor}`" :options="options" v-model:value="value" button button-style="solid" />
   </Space>
 </template>
 ```

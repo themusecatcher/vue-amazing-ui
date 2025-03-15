@@ -529,11 +529,11 @@ spinning | 是否为加载中状态 | boolean | true
 size | 加载中尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 tip | 描述文案 | string &#124; slot | undefined
 indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'ring-circle' &#124; 'ring-rail' &#124; 'dynamic-circle' &#124; 'magic-ring' | 'dot'
-color | 指示符颜色，当 `indicator: 'magic-ring'` 时为外环颜色 | string | '#1677ff'
+color | 指示符颜色，当 `indicator: 'magic-ring'` 时为外环颜色 | string | undefined
 spinCircleWidth | 圆环宽度，单位是加载指示符宽度的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 12
 spinCirclePercent | 圆环长度百分比 (`0～100`)，单位是圆环周长的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 33
 ringRailColor | 圆环轨道颜色，仅当 `indicator: 'ring-rail'` 时生效 | string | 'rgba(0, 0, 0, 0.12)'
-magicRingColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | '#4096ff'
+magicRingColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | undefined
 rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | boolean | false
 speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位 `ms`，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | number | 800
 

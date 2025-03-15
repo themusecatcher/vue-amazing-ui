@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   spinning?: boolean // 是否为加载中状态
   size?: 'small' | 'middle' | 'large' // 加载中尺寸
@@ -19,25 +19,40 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   tip: undefined,
   indicator: 'dot',
-  color: '#1677ff',
+  color: undefined,
   spinCircleWidth: 12,
   spinCirclePercent: 33,
   ringRailColor: 'rgba(0, 0, 0, 0.12)',
-  magicRingColor: '#4096ff',
+  magicRingColor: undefined,
   rotate: false,
   speed: 800
 })
+const { colorPalettes } = useInject('Spin') // 主题色注入
 const slotsExist = useSlotsExist(['tip'])
+// 圆环周长
 const circlePerimeter = computed(() => {
-  // 圆环周长
   return (100 - props.spinCircleWidth) * Math.PI
 })
+// 圆环轨道路径指令
 const circlePath = computed(() => {
-  // 圆环轨道路径指令
   const long = 100 - props.spinCircleWidth
   return `M 50,50 m 0,-${long / 2}
    a ${long / 2},${long / 2} 0 1 1 0,${long}
    a ${long / 2},${long / 2} 0 1 1 0,-${long}`
+})
+const primaryColor = computed(() => {
+  if (props.color === undefined) {
+    return colorPalettes.value[5]
+  } else {
+    return props.color
+  }
+})
+const magicRingColorComputed = computed(() => {
+  if (props.magicRingColor === undefined) {
+    return colorPalettes.value[4]
+  } else {
+    return props.magicRingColor
+  }
 })
 const showTip = computed(() => {
   return slotsExist.tip || props.tip
@@ -46,7 +61,13 @@ const showTip = computed(() => {
 <template>
   <div
     :class="`m-spin spin-${size}`"
-    :style="`--spin-primary-color: ${color}; --spin-magic-ring-color: ${magicRingColor}; --spin-circle-width: ${spinCircleWidth}; --spin-speed: ${speed}ms;`"
+    :style="`
+      --spin-primary-color: ${primaryColor};
+      --spin-ring-rail-color: ${ringRailColor};
+      --spin-magic-ring-color: ${magicRingColorComputed};
+      --spin-circle-width: ${spinCircleWidth};
+      --spin-speed: ${speed}ms;
+    `"
   >
     <div class="spin-wrap" v-show="spinning">
       <div class="spin-box">

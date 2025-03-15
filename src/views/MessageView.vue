@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const message = ref()
 const customMessage = ref()
-const customThemeMessage = ref()
-const primaryColor = ref('#ff6900')
 function onOpen(content: string) {
   message.value.open(content) // open 调用
 }
@@ -55,19 +52,6 @@ function onStyleCustom(content: string) {
     }
   })
 }
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
-function onThemeCustom(content: string) {
-  customThemeMessage.value.info(content)
-}
 function onCustomClose() {
   message.value.info({
     content: 'The message will automatically turn off after 3 seconds.',
@@ -112,21 +96,9 @@ function onClose() {
       <Button type="primary" @click="onOpenCustom('This is a custom icon message')">Custom Icon</Button>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Space vertical>
-      <Space>
-        <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
-        <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
-      </Space>
-      <Space align="center">
-        messagePrimaryColor:
-        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-        <Button
-          :style="getThemeStyle(primaryColor)"
-          type="primary"
-          @click="onThemeCustom('This is a custom theme message')"
-          >Custom Theme</Button
-        >
-      </Space>
+    <Space>
+      <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
+      <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
     </Space>
     <h2 class="mt30 mb10">自定义关闭延时</h2>
     <Space>
@@ -135,12 +107,6 @@ function onClose() {
     </Space>
     <Message ref="message" @click="onClick" @close="onClose" />
     <Message ref="customMessage" @click="onClick" @close="onClose" />
-    <Message
-      ref="customThemeMessage"
-      :style="`--message-primary-color: ${primaryColor};`"
-      @click="onClick"
-      @close="onClose"
-    />
   </div>
 </template>
 <style lang="less" scoped>

@@ -2,8 +2,9 @@
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { computed } from 'vue'
+import { useInject } from 'components/utils'
 export interface Props {
-  width?: number // 日期选择器宽度
+  width?: string | number // 日期选择器宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 日期选择器大小
   mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式，可选：时间time，日期date，周week，月month，年year
   // format?: string | ((date: Date) => string) | ((dates: Date[]) => string) // 日期展示格式，(yy: 年, M: 月, d: 天, H: 时, m: 分, s: 秒, w: 周)
@@ -15,7 +16,7 @@ export interface Props {
   modelType?: 'timestamp' | 'format' // v-model 值类型，可选 timestamp: 时间戳、format: 字符串，mode 为 week 或 year 时，该配置不生效
 }
 const props = withDefaults(defineProps<Props>(), {
-  width: 180,
+  width: 150,
   size: 'middle',
   mode: 'date',
   /* format default
@@ -32,6 +33,13 @@ const props = withDefaults(defineProps<Props>(), {
   // flow: () => [],
   // dark: false,
   modelType: 'format'
+})
+const { colorPalettes, shadowColor } = useInject('DatePicker') // 主题色注入
+const datepickerWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return `${props.width}px`
+  }
+  return props.width
 })
 const time = computed(() => {
   return props.mode === 'time'
@@ -60,11 +68,11 @@ const year = computed(() => {
       'datepicker-large': size === 'large'
     }"
     :style="`
-      --datepicker-width: ${width}px;
-      --datepicker-primary-color: #1677ff;
-      --datepicker-primary-color-hover: #4096ff;
-      --datepicker-primary-color-focus: #4096ff;
-      --datepicker-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --datepicker-width: ${datepickerWidth};
+      --datepicker-primary-color: ${colorPalettes[5]};
+      --datepicker-primary-color-hover: ${colorPalettes[4]};
+      --datepicker-primary-color-focus: ${colorPalettes[4]};
+      --datepicker-primary-shadow-color: ${shadowColor};
     `"
     locale="zh-CN"
     position="left"

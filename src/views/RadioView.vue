@@ -71,7 +71,6 @@ const sizeOptions = [
 const checked = ref<RadioProps['checked']>(false)
 const value = ref<RadioProps['value']>(2)
 const buttonSize = ref<RadioProps['buttonSize']>('middle')
-const primaryColor = ref('#ff6900')
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -140,18 +139,6 @@ function onChange(value: string | number | boolean) {
       <Radio v-model:checked="checked" button :button-size="buttonSize">Radio Button</Radio>
       <Radio :options="options" v-model:value="value" button :button-size="buttonSize" />
       <Radio :options="options" v-model:value="value" button button-style="solid" :button-size="buttonSize" />
-    </Space>
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Space vertical>
-      <Space align="center">radioPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
-      <Radio :style="`--radio-primary-color: ${primaryColor}`" :options="options" v-model:value="value" />
-      <Radio
-        :style="`--radio-primary-color: ${primaryColor}`"
-        :options="options"
-        v-model:value="value"
-        button
-        button-style="solid"
-      />
     </Space>
   </div>
 </template>

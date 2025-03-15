@@ -11,7 +11,6 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { generate } from '@ant-design/colors'
 const options = ref([
   {
     value: '1',
@@ -197,21 +196,9 @@ const sizeOptions = [
 ]
 const size = ref('large')
 const selectedValue = ref(['2', '21', '212'])
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--select-primary-color-hover': colorPalettes[4],
-    '--select-primary-color-focus': colorPalettes[4],
-    '--select-primary-shadow-color': primaryShadowColor.value,
-    '--select-item-bg-color-active': colorPalettes[0]
-  }
-  return style
-}
 function onChange(values: (number | string)[], labels: string[]) {
   console.log('values', values)
   console.log('labels', labels)
@@ -1149,126 +1136,6 @@ function filter (inputValue: string, option: any) {
 </script>
 <template>
   <Cascader :options="options" v-model="selectedValue" allow-clear search :filter="filter" @change="onChange" />
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <Space align="center">
-    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-  </Space>
-  <Cascader
-    :style="getThemeStyle(primaryColor)"
-    :options="options"
-    v-model="selectedValue"
-    allow-clear
-    search
-    @change="onChange"
-  />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import { generate } from '@ant-design/colors'
-const options = ref([
-  {
-    value: '1',
-    label: '北京',
-    children: [
-      {
-        value: '11',
-        label: '北京市',
-        children: [
-          {
-            value: '111',
-            label: '东城区'
-          },
-          {
-            value: '112',
-            label: '西城区'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    value: '2',
-    label: '浙江',
-    children: [
-      {
-        value: '21',
-        label: '杭州市',
-        children: [
-          {
-            value: '211',
-            label: '西湖区'
-          },
-          {
-            value: '212',
-            label: '余杭区'
-          }
-        ]
-      },
-      {
-        value: '22',
-        label: '湖州市',
-        children: [
-          {
-            value: '221',
-            label: '吴兴区'
-          },
-          {
-            value: '222',
-            label: '安吉区'
-          }
-        ]
-      }
-    ]
-  }
-])
-const selectedValue = ref(['2', '21', '212'])
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-watchEffect(() => {
-  console.log('selectedValue', selectedValue.value)
-})
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--select-primary-color-hover': colorPalettes[4],
-    '--select-primary-color-focus': colorPalettes[4],
-    '--select-primary-shadow-color': primaryShadowColor.value,
-    '--select-item-bg-color-active': colorPalettes[0]
-  }
-  return style
-}
-function onChange (values: (number|string)[], labels: string[]) {
-  console.log('values', values)
-  console.log('labels', labels)
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-    <Space align="center">
-      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-    </Space>
-    <Cascader
-      :style="getThemeStyle(primaryColor)"
-      :options="options"
-      v-model="selectedValue"
-      allow-clear
-      search
-      @change="onChange"
-    />
-  </Space>
 </template>
 ```
 
