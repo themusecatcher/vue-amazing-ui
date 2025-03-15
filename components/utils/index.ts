@@ -755,13 +755,26 @@ export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowCo
   }
   return toRefs(commonInjectValue)
 }
-function getColorPalettes(primaryColor: string): string[] {
+/**
+ * 获取颜色调色板
+ *
+ * @param primaryColor 主色
+ * @returns 返回颜色调色板
+ */
+export function getColorPalettes(primaryColor: string): string[] {
   return generate(primaryColor)
 }
 function isStableColor(color: number): boolean {
   return color >= 0 && color <= 255
 }
-function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'): string {
+/**
+ * 获取透明度颜色，一般用作阴影色
+ *
+ * @param frontColor 前景色
+ * @param backgroundColor 背景色
+ * @returns 返回透明度颜色
+ */
+export function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'): string {
   const { r: fR, g: fG, b: fB, a: originAlpha } = new TinyColor(frontColor).toRgb()
   if (originAlpha < 1) return frontColor
   const { r: bR, g: bG, b: bB } = new TinyColor(backgroundColor).toRgb()
