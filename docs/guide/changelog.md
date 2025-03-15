@@ -4,6 +4,25 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-03-15">2.3.2</VersionDateTag>
+
+- 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，删除 `rippleColor` 属性，新增 `color` 属性，支持自定义按钮颜色
+- 修复 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件渐变进度圈展示
+- 组件库及文档代码优化
+
+## <VersionDateTag date="2025-03-14">2.3.1</VersionDateTag>
+
+- 优化并更新 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件，新增 `abstract` `tag` 属性，支持：设置是否不存在 `DOM` 包裹元素；自定义 `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效
+- 更新自动按需引入，修复 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件引入的问题
+- 组件库及文档代码优化
+
+## <VersionDateTag date="2025-03-13">2.3.0</VersionDateTag>
+
+- 新增 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件，用于支持全局自定义主题色
+- 优化并更新 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html) 组件代码
+- 优化并更新支持自定义主题色的组件，用于配合 `ConfigProvider` 组件支持全局自定义主题色
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2025-03-07">2.2.15</VersionDateTag>
 
 - 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增颜色样式变量，用于支持自定义主题色

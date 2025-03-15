@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 输入框宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 输入框大小
@@ -38,6 +38,7 @@ const inputWrapHover = ref<boolean>(false) // 鼠标是否悬浮
 const inputFocus = ref<boolean>(false) // input 元素是否聚焦
 const inputValue = ref<string>() // 输入框的值
 const showPassword = ref<boolean>(false) // 是否显示密码
+const { colorPalettes, shadowColor } = useInject('Input') // 主题色注入
 const emits = defineEmits(['update:value', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const inputWidth = computed(() => {
@@ -131,9 +132,9 @@ function onPassword(): void {
     class="m-input"
     :style="`
       --input-width: ${inputWidth};
-      --input-primary-color-hover: #4096ff;
-      --input-primary-color-focus: #4096ff;
-      --input-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --input-primary-color-hover: ${colorPalettes[4]};
+      --input-primary-color-focus: ${colorPalettes[4]};
+      --input-primary-shadow-color: ${shadowColor};
     `"
   >
     <span v-if="showBefore" class="input-addon" :class="{ 'addon-before': showBefore }">

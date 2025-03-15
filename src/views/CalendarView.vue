@@ -2,7 +2,6 @@
 import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 import { format, subDays, addDays } from 'date-fns'
-import { generate } from '@ant-design/colors'
 import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
@@ -30,9 +29,6 @@ const displayOptions = [
 ]
 const modeDisplay = ref('card')
 const disabledDisplay = ref('panel')
-const customThemeDisplay = ref('panel')
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const weekOptions = [
   {
     label: '周一',
@@ -130,25 +126,6 @@ function disabledDate(timestamp: number): boolean {
 }
 function disabledWeekend(timestamp: number): boolean {
   return ['6', '7'].includes(format(timestamp, 'i'))
-}
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--calendar-primary-color': color,
-    '--calendar-panel-primary-bg-color': colorPalettes[0],
-    '--calendar-card-primary-bg-color': color
-  }
-  return style
-}
-function getSelectThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--select-primary-color-hover': colorPalettes[4],
-    '--select-primary-color-focus': colorPalettes[4],
-    '--select-primary-shadow-color': primaryShadowColor.value,
-    '--select-item-bg-color-active': colorPalettes[0]
-  }
-  return style
 }
 function onSelect(date: string | number, source: 'date' | 'month') {
   console.log('select', date, source)
@@ -305,32 +282,6 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     <Flex vertical>
       <Alert type="info" :message="`You selected date: ${dateStr}`" />
       <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
-    </Flex>
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Flex vertical>
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-      <Space align="center">
-        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-      </Space>
-      <Space align="center">
-        display:
-        <Radio
-          :style="`--radio-primary-color: ${primaryColor}`"
-          :options="displayOptions"
-          v-model:value="customThemeDisplay"
-          button
-          button-style="solid"
-        />
-      </Space>
-      <Calendar
-        :style="getThemeStyle(primaryColor)"
-        v-model:value="customThemeDate"
-        :display="customThemeDisplay"
-        :year-select-props="{ style: getSelectThemeStyle(primaryColor) }"
-        :month-select-props="{ style: getSelectThemeStyle(primaryColor) }"
-        :mode-radio-props="{ style: { '--radio-primary-color': primaryColor } }"
-        @panelChange="onPanelChange"
-      />
     </Flex>
     <Message ref="message" />
   </div>

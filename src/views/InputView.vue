@@ -7,11 +7,8 @@ import {
   EnvironmentOutlined,
   CompassOutlined
 } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const value = ref('')
 const lazyValue = ref('')
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const sizeOptions = [
   {
     label: 'small',
@@ -33,15 +30,6 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-primary-color-hover': colorPalettes[4],
-    '--input-primary-color-focus': colorPalettes[4],
-    '--input-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
 function onChange(e: Event) {
   console.log('change', e)
 }
@@ -121,13 +109,5 @@ function onEnter(e: KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Input :width="200" disabled v-model:value="value" placeholder="disabled input" />
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Space vertical>
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-      <Space align="center">
-        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-      </Space>
-      <Input :width="200" :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme input" />
-    </Space>
   </div>
 </template>

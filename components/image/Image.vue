@@ -3,7 +3,7 @@ import { computed, ref, watchEffect, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import Space from 'components/space'
 import Spin from 'components/spin'
-import { add, downloadFile } from 'components/utils'
+import { add, downloadFile, useInject } from 'components/utils'
 export interface Image {
   src: string // 图像地址
   name?: string // 图像名称
@@ -68,6 +68,7 @@ const right = ref<number>(0) // 图片右边缘距浏览器窗口左边界的距
 const left = ref<number>(0) // 图片左边缘距浏览器窗口左边界的距离
 const viewportWidth = ref<number>(0) // 视口宽度
 const viewportHeight = ref<number>(0) // 视口高度
+const { colorPalettes } = useInject('Image') // 主题色注入
 const imageAmount = computed(() => {
   return images.value.length
 })
@@ -282,7 +283,7 @@ function onSwitchRight() {
 }
 </script>
 <template>
-  <div class="m-image" style="--image-primary-color: #1677ff">
+  <div class="m-image" :style="`--image-primary-color: ${colorPalettes[5]};`">
     <Space gap="small" v-bind="spaceProps">
       <div
         v-show="!album || (album && index === 0)"

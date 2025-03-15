@@ -16,26 +16,26 @@ import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 const showArrow = ref<boolean>(false)
@@ -128,26 +128,26 @@ import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 function clickImage (image: CarouselImage) {
@@ -179,26 +179,26 @@ import type { CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 const showArrow = ref<boolean>(false)
@@ -231,26 +231,26 @@ import type { CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 function clickImage (image: CarouselImage) {
@@ -283,26 +283,26 @@ import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 const positionOptions = ref([
@@ -348,26 +348,26 @@ import type { CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 </script>
@@ -391,26 +391,26 @@ import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 </script>
@@ -437,26 +437,26 @@ import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 const effectOptions = ref([
@@ -497,26 +497,26 @@ import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 const triggerOptions = ref([
@@ -559,26 +559,26 @@ import type { CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 </script>
@@ -616,26 +616,26 @@ import type { CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 </script>
@@ -677,26 +677,26 @@ import type { CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 const carousel = ref()
@@ -812,26 +812,26 @@ import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
   },
   {
     name: 'image-2',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/2.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg'
   },
   {
     name: 'image-3',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg',
-    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/3.jpg'
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    link: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg'
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
 const state = reactive<CarouselProps>({
@@ -955,7 +955,7 @@ arrowSize | 箭头大小，单位 `px` | number | 36
 dots | 是否显示指示点 | boolean | true
 dotSize | 指示点大小，单位 `px` | number | 10
 dotColor | 指示点颜色 | string | 'rgba(255, 255, 255, 0.3)'
-dotActiveColor | 指示点选中颜色 | string | '#1677FF'
+dotActiveColor | 指示点选中颜色 | string | undefined
 dotStyle | 指示点样式，优先级高于 `dotSize`、`dotColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 dotActiveStyle | 指示点选中样式，优先级高于 `dotActiveColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 dotPosition | 指示点位置，位置为 `left` &#124; `right` 时，`effect: 'slide'` 轮播自动变为垂直轮播 | 'bottom' &#124; 'top' &#124; 'left' &#124; 'right' | 'bottom'

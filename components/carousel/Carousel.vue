@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf, useEventListener, useResizeObserver } from 'components/utils'
+import { rafTimeout, cancelRaf, useEventListener, useResizeObserver, useInject } from 'components/utils'
 import { useTransition } from '@vueuse/core'
 import Spin from 'components/spin'
 export interface Image {
@@ -24,7 +24,7 @@ export interface Props {
   dots?: boolean // 是否显示指示点
   dotSize?: number // 指示点大小，单位 px
   dotColor?: string // 指示点颜色
-  dotActiveColor?: string // 指示点选中颜色
+  dotActiveColor?: string // 指示点选中颜色，默认为主题色
   dotStyle?: CSSProperties // 指示点样式，优先级高于 dotSize、dotColor
   dotActiveStyle?: CSSProperties // 指示点选中样式，优先级高于 dotActiveColor
   dotPosition?: 'bottom' | 'top' | 'left' | 'right' // 指示点位置，位置为 'left' | 'right' 时，effect: 'slide' 轮播自动变为垂直轮播
@@ -49,7 +49,7 @@ const props = withDefaults(defineProps<Props>(), {
   dots: true,
   dotSize: 10,
   dotColor: 'rgba(255, 255, 255, 0.3)',
-  dotActiveColor: '#1677FF',
+  dotActiveColor: undefined,
   dotStyle: () => ({}),
   dotActiveStyle: () => ({}),
   dotPosition: 'bottom',
@@ -71,6 +71,7 @@ const activeSwitcher = ref(1) // 当前展示图片标识
 const imageWidth = ref() // 图片宽度
 const imageHeight = ref() // 图片高度
 const complete = ref(Array(props.images.length).fill(false)) // 图片是否加载完成
+const { colorPalettes } = useInject('Carousel') // 主题色注入
 const emits = defineEmits(['change', 'click'])
 // 轮播图区域宽度
 const carouselWidth = computed(() => {
@@ -102,6 +103,14 @@ const moveUnitDistance = computed(() => {
     return imageHeight.value
   } else {
     return imageWidth.value
+  }
+})
+// 指示点选中颜色
+const dotActiveColorComputed = computed(() => {
+  if (props.dotActiveColor === undefined) {
+    return colorPalettes.value[5]
+  } else {
+    return props.dotActiveColor
   }
 })
 const carouselStyle = computed(() => {
@@ -466,7 +475,7 @@ defineExpose({
       <div
         tabindex="0"
         class="dot-item"
-        :style="[dotStyle, activeSwitcher === n ? { backgroundColor: dotActiveColor, ...dotActiveStyle } : {}]"
+        :style="[dotStyle, activeSwitcher === n ? { backgroundColor: dotActiveColorComputed, ...dotActiveStyle } : {}]"
         v-for="n in imageAmount"
         :key="n"
         @click="dotsTrigger === 'click' ? onSwitch(n) : () => false"

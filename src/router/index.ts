@@ -96,6 +96,12 @@ export const routes = [
         component: () => import('@/views/ColorPickerView.vue')
       },
       {
+        path: '/configprovider',
+        name: 'ConfigProvider',
+        meta: { title: '全局化配置' },
+        component: () => import('@/views/ConfigProviderView.vue')
+      },
+      {
         path: '/countdown',
         name: 'Countdown',
         meta: { title: '倒计时' },

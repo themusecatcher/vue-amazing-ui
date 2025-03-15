@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useInject } from 'components/utils'
 import type { Swiper as SwiperTypes } from 'swiper/types'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import {
@@ -70,6 +71,7 @@ const autoplayCarousel = ref<object | boolean>({
   disableOnInteraction: false
 })
 const modulesBroadcast = ref([Navigation, Pagination, Mousewheel])
+const { colorPalettes } = useInject('Swiper') // 主题色注入
 const emits = defineEmits(['swiper', 'change'])
 const swiperWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -134,7 +136,7 @@ function getImageName(image: Image) {
     :style="`
       --swiper-width: ${swiperWidth};
       --swiper-height: ${swiperHeight};
-      --swiper-primary-color: #1677ff;
+      --swiper-primary-color: ${colorPalettes[5]};
       --swiper-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
     `"
     :modules="modulesBanner"
@@ -167,7 +169,7 @@ function getImageName(image: Image) {
     :style="`
       --swiper-width: ${swiperWidth};
       --swiper-height: ${swiperHeight};
-      --swiper-primary-color: #1677ff;
+      --swiper-primary-color: ${colorPalettes[5]};
       --swiper-timing-function: linear;
     `"
     :modules="modulesCarousel"
@@ -197,7 +199,7 @@ function getImageName(image: Image) {
     :style="`
       --swiper-width: ${swiperWidth};
       --swiper-height: ${swiperHeight};
-      --swiper-primary-color: #1677ff;
+      --swiper-primary-color: ${colorPalettes[5]};
       --swiper-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
     `"
     :modules="modulesBroadcast"

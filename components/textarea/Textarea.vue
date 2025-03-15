@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 文本域宽度，单位 px
   allowClear?: boolean // 可以点击清除图标删除内容
@@ -24,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const textareaRef = ref<HTMLElement | null>(null) // textarea 元素引用
 const areaHeight = ref<number>(32)
+const { colorPalettes, shadowColor } = useInject('Textarea') // 主题色注入
 const textareaWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -114,9 +116,9 @@ function onClear(): void {
     :class="{ 'show-count': showCount }"
     :style="`
       --textarea-width: ${textareaWidth};
-      --textarea-primary-color-hover: #4096ff;
-      --textarea-primary-color-focus: #4096ff;
-      --textarea-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --textarea-primary-color-hover: ${colorPalettes[4]};
+      --textarea-primary-color-focus: ${colorPalettes[4]};
+      --textarea-primary-shadow-color: ${shadowColor};
     `"
     :data-count="showCountNum"
   >

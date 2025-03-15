@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
 import Tooltip from 'components/tooltip'
 import Button from 'components/button'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   title?: string // 弹出确认框的标题 string | slot
   titleStyle?: CSSProperties // 设置标题的样式
@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
   showCancel: true
 })
 const tooltipRef = ref() // Tooltip 组件模板引用
+const { colorPalettes } = useInject('Popconfirm') // 主题色注入
 const emits = defineEmits(['cancel', 'ok'])
 const slotsExist = useSlotsExist(['description'])
 const showDesc = computed(() => {
@@ -68,7 +69,7 @@ function onOk(e: Event): void {
     :keyboard="keyboard"
     :transition-duration="200"
     :style="`
-      --popconfirm-primary-color: #1677ff;
+      --popconfirm-primary-color: ${colorPalettes[5]};
       --popconfirm-success-color: #52c41a;
       --popconfirm-danger-color: #ff4d4f;
       --popconfirm-warning-color: #faad14;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf, useResizeObserver } from 'components/utils'
+import { rafTimeout, cancelRaf, useResizeObserver, useInject } from 'components/utils'
 export interface Item {
   title: string // 文字标题
   href?: string // 跳转链接
@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   width: '100%',
   height: 50,
   itemStyle: () => ({}),
-  hrefHoverColor: '#1677ff',
+  hrefHoverColor: undefined,
   amount: 4,
   gap: 20,
   speed: 48,
@@ -47,8 +47,9 @@ const reset = ref<boolean>(true) // 重置水平滚动动画状态
 const activeIndex = ref<number>(0) // 垂直滚动当前索引
 const verticalMoveRaf = ref() // 垂直滚动定时器引用标识
 const originVertical = ref<boolean>(true) // 垂直滚动初始状态
-const emit = defineEmits(['click'])
 const scrollItems = ref<Item[]>([])
+const { colorPalettes } = useInject('TextScroll') // 主题色注入
+const emit = defineEmits(['click'])
 const itemsAmount = computed(() => {
   return scrollItems.value.length
 })
@@ -210,7 +211,7 @@ defineExpose({
       `
         --text-scroll-shadow-color: #d3d3d3;
         --text-scroll-bg-color: #fff;
-        --text-scroll-href-hover-color: ${hrefHoverColor};
+        --text-scroll-href-hover-color: ${hrefHoverColor || colorPalettes[5]};
         --text-scroll-item-gap: ${gap}px;
         --text-scroll-play-state: ${playState};
         --text-scroll-duration: ${animationDuration}s;
@@ -268,7 +269,7 @@ defineExpose({
       `
         --text-scroll-shadow-color: #d3d3d3;
         --text-scroll-bg-color: #fff;
-        --text-scroll-href-hover-color: ${hrefHoverColor};
+        --text-scroll-href-hover-color: ${hrefHoverColor || colorPalettes[5]};
         --text-scroll-duration: ${duration}ms;
         --text-scroll-timing-function: ease;
         --text-scroll-scale: 0.5;
