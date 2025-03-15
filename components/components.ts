@@ -103,7 +103,7 @@ export { List, ListItem } from './list'
 export type { Props as LoadingBarProps } from './loadingbar'
 export { default as LoadingBar } from './loadingbar'
 
-export type { Props as MenuProps } from './menu'
+export type { Props as MenuProps, Item as MenuItem } from './menu'
 export { default as Menu } from './menu'
 
 export type { Props as MessageProps, Message as MessageOptions } from './message'

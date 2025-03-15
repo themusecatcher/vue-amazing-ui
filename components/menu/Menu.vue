@@ -42,5 +42,9 @@ const emits = defineEmits(['update:openKeys', 'update:selectedKeys', 'click', 's
 </template>
 <style lang="less" scoped>
 .m-menu {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+  outline: none;
+  transition: width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
 }
 </style>
