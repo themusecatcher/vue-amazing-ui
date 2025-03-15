@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SoundOutlined } from '@ant-design/icons-vue'
+import { MessageOutlined } from '@ant-design/icons-vue'
 import MailSVG from './MailSVG.vue'
 import ArrowDownSVG from './ArrowDownSVG.vue'
 interface Props {
@@ -44,7 +44,7 @@ withDefaults(defineProps<Props>(), {
     }"
   >
     <template #icon>
-      <SoundOutlined />
+      <MessageOutlined />
     </template>
     <template #tooltip> 文档网站部署在静态网站服务 GitHub Pages，为了您的流程访问，建议打开代理 </template>
   </FloatButton>
