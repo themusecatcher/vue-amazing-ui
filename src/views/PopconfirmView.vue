@@ -1,19 +1,7 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { FireFilled, QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const message = ref()
-const primaryColor = ref('#ff6900')
-function getButtonThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
   message.value.success('Click on Yes')
@@ -66,24 +54,6 @@ const openChange = (open: boolean) => {
       </template>
       <Button type="primary">Vue Amazing UI</Button>
     </Popconfirm>
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Space vertical>
-      <Space align="center">
-        primaryColor:
-        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-      </Space>
-      <Popconfirm
-        title="Custom Theme"
-        description="There will have some descriptions ..."
-        :style="`--popconfirm-warning-color: ${primaryColor}`"
-        :cancel-props="{ style: getButtonThemeStyle(primaryColor) }"
-        :ok-props="{ style: getButtonThemeStyle(primaryColor) }"
-        @ok="confirm"
-        @cancel="cancel"
-      >
-        <Button :style="getButtonThemeStyle(primaryColor)" type="primary">Custom Theme Confirm</Button>
-      </Popconfirm>
-    </Space>
     <h2 class="mt30 mb10">自定义按钮</h2>
     <Space>
       <Popconfirm title="Are you sure ?" ok-text="Yes" cancel-text="No" @ok="confirm" @cancel="cancel">

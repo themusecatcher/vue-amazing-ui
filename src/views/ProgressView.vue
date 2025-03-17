@@ -14,12 +14,6 @@ const lineCapOptions = [
   }
 ]
 const lineCap = ref<ProgressProps['lineCap']>('butt')
-const primaryColor = ref('#ff6900')
-const successColor = ref('#18a058')
-const themeStyle = {
-  '--progress-primary-color': primaryColor.value,
-  '--progress-success-color': successColor.value
-}
 function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {
@@ -106,17 +100,6 @@ function onDecline(scale: number) {
           :info-size="28"
           :percent="percent"
         />
-        <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-        <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
-      </Space>
-    </Flex>
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Flex vertical>
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-      <Space align="center"> successColor:<ColorPicker style="width: 200px" v-model:value="successColor" /> </Space>
-      <Progress :style="themeStyle" :percent="percent" />
-      <Space align="center">
-        <Progress type="circle" :style="themeStyle" :percent="percent" />
         <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
         <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
       </Space>

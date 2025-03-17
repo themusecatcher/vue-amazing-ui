@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
-import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
+import { SearchOutlined, DownloadOutlined, CrownOutlined } from '@ant-design/icons-vue'
 const disabled = ref(true)
 const sizeOptions = [
   {
@@ -19,7 +18,6 @@ const sizeOptions = [
 ]
 const size = ref('middle')
 const customLoading = ref(false)
-const primaryColor = ref('#ff6900')
 const loading = ref(true)
 const loadingOptions = [
   {
@@ -32,16 +30,6 @@ const loadingOptions = [
   }
 ]
 const loadingType = ref('dynamic')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -315,44 +303,33 @@ function onClick(e: Event) {
         </Button>
       </Space>
     </Space>
-    <h2 class="mt30 mb10">自定义样式</h2>
-    <h3 class="mb10">可通过自定义类名然后通过样式覆盖 或 直接自定义样式变量 来自定义样式</h3>
+    <h2 class="mt30 mb10">自定义颜色</h2>
     <Space vertical>
       <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
       <Space>
-        <Button button-class="custom-class1" ripple-color="#faad14" size="large" :loading="customLoading">
-          自定义样式
-        </Button>
-        <Button
-          button-class="custom-class2"
-          ripple-color="#faad14"
-          type="primary"
-          size="large"
-          :loading="customLoading"
-        >
-          自定义样式
-        </Button>
-      </Space>
-      <Space align="center">
-        buttonPrimaryColor:
-        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-      </Space>
-      <Space>
-        <Button shape="circle" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
+        <Button type="reverse" color="#d4380d" :loading="customLoading">
           <template #icon>
-            <SearchOutlined />
+            <CrownOutlined />
           </template>
+          #d4380d
         </Button>
-        <Button type="primary" shape="round" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
+        <Button type="primary" color="#faad14" :loading="customLoading">
           <template #icon>
-            <SearchOutlined />
+            <CrownOutlined />
           </template>
-          Search
+          #faad14
         </Button>
-        <Button type="reverse" shape="round" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
+        <Button ghost type="primary" color="#ff6900" :loading="customLoading">
           <template #icon>
-            <DownloadOutlined />
+            <CrownOutlined />
           </template>
+          #ff6900
+        </Button>
+        <Button type="primary" shape="round" color="#18a058" :loading="customLoading">
+          <template #icon>
+            <CrownOutlined />
+          </template>
+          #18a058
         </Button>
       </Space>
     </Space>
@@ -449,33 +426,3 @@ function onClick(e: Event) {
     </Space>
   </div>
 </template>
-<style lang="less" scoped>
-.custom-class1 {
-  height: 40px;
-  font-size: 18px;
-  border-color: #faad14;
-  color: #faad14;
-  &:hover {
-    color: #ffc53d !important;
-    border-color: #ffc53d;
-  }
-  &:active {
-    color: #d48806 !important;
-    border-color: #d48806;
-  }
-}
-.custom-class2 {
-  height: 40px;
-  font-size: 18px;
-  background: #faad14;
-  border-color: #faad14;
-  &:hover {
-    background: #ffc53d;
-    border-color: #ffc53d;
-  }
-  &:active {
-    background: #d48806;
-    border-color: #d48806;
-  }
-}
-</style>

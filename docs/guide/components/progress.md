@@ -302,65 +302,6 @@ function onDecline (scale: number) {
 
 :::
 
-## 自定义主题色
-
-<Flex vertical>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <Space align="center"> successColor:<ColorPicker style="width: 200px" v-model:value="successColor" /> </Space>
-  <Progress :style="themeStyle" :percent="percent" />
-  <Space align="center">
-    <Progress type="circle" :style="themeStyle" :percent="percent" />
-    <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
-  </Space>
-</Flex>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { h, ref } from 'vue'
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-const percent = ref(80)
-const primaryColor = ref('#ff6900')
-const successColor = ref('#18a058')
-const themeStyle = {
-  '--progress-primary-color': primaryColor.value,
-  '--progress-success-color': successColor.value
-}
-function onIncrease (scale: number) {
-  const res = percent.value + scale
-  if (res > 100) {
-    percent.value = 100
-  } else {
-    percent.value = res
-  }
-}
-function onDecline (scale: number) {
-  const res = percent.value - scale
-  if (res < 0) {
-    percent.value = 0
-  } else {
-    percent.value = res
-  }
-}
-</script>
-<template>
-  <Flex vertical>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-    <Space align="center"> successColor:<ColorPicker style="width: 200px" v-model:value="successColor" /> </Space>
-    <Progress :style="themeStyle" :percent="percent" />
-    <Space align="center">
-      <Progress type="circle" :style="themeStyle" :percent="percent" />
-      <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
-    </Space>
-  </Flex>
-</template>
-```
-
-:::
-
 ## 自定义边缘形状
 
 <Flex vertical>
@@ -582,7 +523,7 @@ function onDecline (scale: number) {
 width | 进度条宽度，单位 `px`；`type: 'line'` 时，为进度条宽度，默认值 `'100%'`；`type: 'circle'` 时，为进度圈宽高，默认值 `120` | string &#124; number | undefined
 percent | 当前进度百分比 | number | 0
 lineSize | 进度条的尺寸，单位 `px`；`type: 'line'` 时，为进度条线高，默认值 `8`；`type: 'circle'` 时，单位是进度圈画布宽度的百分比，默认值 `6` | number | undefined
-lineColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变；进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | '#1677FF'
+lineColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变；进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | undefined
 lineCap | 进度条边缘的形状 | 'round' &#124; 'butt' | 'round'
 showInfo | 是否显示进度数值或状态图标 | boolean | true
 infoSize | 进度数值或状态图标的尺寸，单位 `px`；`type: 'line'` 时，默认值 `14`；`type: 'circle'` 时，默认值 `24` | number | undefined

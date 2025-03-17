@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, nextTick, onBeforeUnmount } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf } from 'components/utils'
+import { rafTimeout, cancelRaf, useInject } from 'components/utils'
 export interface Props {
   title?: string // 通知提醒标题，优先级低于 Notification 中的 title
   description?: string // 通知提醒内容，优先级低于 Notification 中的 description
@@ -35,6 +35,7 @@ const notificationData = ref<any[]>([])
 const closeDuration = ref<number | null>(null) // 自动关闭延时
 const notificationPlace = ref() // 弹出位置
 const notificationRef = ref() // notificationData 数组的 DOM 引用
+const { colorPalettes } = useInject('Notification') // 主题色注入
 const emit = defineEmits(['close'])
 const topStyle = computed(() => {
   if (['topRight', 'topLeft'].includes(notificationPlace.value)) {
@@ -172,7 +173,7 @@ defineExpose({
       topStyle,
       bottomStyle,
       `
-        --notification-primary-color: #1677ff;
+        --notification-primary-color: ${colorPalettes[5]};
         --notification-success-color: #52c41a;
         --notification-error-color: #ff4d4f;
         --notification-warning-color: #faad14;

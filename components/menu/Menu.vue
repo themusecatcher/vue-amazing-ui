@@ -38,10 +38,13 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits(['update:openKeys', 'update:selectedKeys', 'click', 'select', 'openChange'])
 </script>
 <template>
-  <div class="m-menu">
-  </div>
+  <div class="m-menu"> </div>
 </template>
 <style lang="less" scoped>
 .m-menu {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+  outline: none;
+  transition: width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
 }
 </style>

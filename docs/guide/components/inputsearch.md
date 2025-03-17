@@ -11,7 +11,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { SearchOutlined, CompassOutlined, EnvironmentOutlined, InfoCircleOutlined } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const value = ref('')
 const lazyValue = ref('')
 const sizeOptions = [
@@ -31,33 +30,12 @@ const sizeOptions = [
 const size = ref('middle')
 const loading = ref(true)
 const disabled = ref(true)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('value', value.value)
 })
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-search-primary-color-hover': colorPalettes[4],
-    '--input-search-primary-color-focus': colorPalettes[4],
-    '--input-search-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-function getButtonThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
 function onChange(e: Event) {
   console.log('change', e)
 }
@@ -702,117 +680,6 @@ function onSearch(value: string, e: Event) {
     <InputSearch v-model:value="value" :disabled="disabled" placeholder="input search text" @search="onSearch">
       <template #search>
         <Button type="primary" :disabled="disabled">
-          <template #icon>
-            <SearchOutlined />
-          </template>
-          Search
-        </Button>
-      </template>
-    </InputSearch>
-  </Space>
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <Space align="center">
-    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-  </Space>
-  <InputSearch :style="getThemeStyle(primaryColor)" :search-props="{ style: getButtonThemeStyle(primaryColor) }" v-model:value="value" placeholder="custom theme input search" @search="onSearch" />
-  <InputSearch
-    :style="getThemeStyle(primaryColor)"
-    :search-props="{ type: 'primary', style: getButtonThemeStyle(primaryColor) }"
-    v-model:value="value"
-    placeholder="custom theme input search"
-    @search="onSearch"
-  />
-  <InputSearch
-    :style="getThemeStyle(primaryColor)"
-    :search-props="{ type: 'primary', style: getButtonThemeStyle(primaryColor) }"
-    v-model:value="value"
-    placeholder="custom theme input search"
-    :icon="false"
-    search="Search"
-    @search="onSearch"
-  />
-  <InputSearch :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme input search" @search="onSearch">
-    <template #search>
-      <Button type="primary" :style="getButtonThemeStyle(primaryColor)">
-        <template #icon>
-          <SearchOutlined />
-        </template>
-        Search
-      </Button>
-    </template>
-  </InputSearch>
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import { SearchOutlined } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
-const value = ref('')
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-watchEffect(() => {
-  console.log('value', value.value)
-})
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-search-primary-color-hover': colorPalettes[4],
-    '--input-search-primary-color-focus': colorPalettes[4],
-    '--input-search-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-function getButtonThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
-function onSearch(value: string, e: Event) {
-  console.log('search', value, e)
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-    <Space align="center">
-      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-    </Space>
-    <InputSearch :style="getThemeStyle(primaryColor)" :search-props="{ style: getButtonThemeStyle(primaryColor) }" v-model:value="value" placeholder="custom theme input search" @search="onSearch" />
-    <InputSearch
-      :style="getThemeStyle(primaryColor)"
-      :search-props="{ type: 'primary', style: getButtonThemeStyle(primaryColor) }"
-      v-model:value="value"
-      placeholder="custom theme input search"
-      @search="onSearch"
-    />
-    <InputSearch
-      :style="getThemeStyle(primaryColor)"
-      :search-props="{ type: 'primary', style: getButtonThemeStyle(primaryColor) }"
-      v-model:value="value"
-      placeholder="custom theme input search"
-      :icon="false"
-      search="Search"
-      @search="onSearch"
-    />
-    <InputSearch :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme input search" @search="onSearch">
-      <template #search>
-        <Button type="primary" :style="getButtonThemeStyle(primaryColor)">
           <template #icon>
             <SearchOutlined />
           </template>

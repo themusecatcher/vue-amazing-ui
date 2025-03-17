@@ -4,6 +4,7 @@ import Spin from 'components/spin'
 import Message from 'components/message'
 import Image from 'components/image'
 import Space from 'components/space'
+import { useInject } from 'components/utils'
 export interface FileType {
   name?: string // 文件名
   url: any // 文件地址
@@ -55,6 +56,7 @@ const uploading = ref<boolean[]>([]) // 上传中
 const uploadInputRef = ref() // 上传文件控件引用
 const imageRef = ref()
 const messageRef = ref()
+const { colorPalettes } = useInject('Upload') // 主题色注入
 const emits = defineEmits(['update:fileList', 'drop', 'change', 'preview', 'remove'])
 const maxFileCount = computed(() => {
   if (props.maxCount === undefined) {
@@ -282,7 +284,7 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-upload-wrap" :style="`--upload-primary-color: #1677ff;`">
+  <div class="m-upload-wrap" :style="`--upload-primary-color: ${colorPalettes[5]};`">
     <Space gap="small" v-bind="spaceProps">
       <div class="upload-item-panel" v-for="n of showUpload" :key="n">
         <div

@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { VNode, Slot } from 'vue'
 import Tooltip from 'components/tooltip'
-import { useSlotsExist, useMutationObserver } from 'components/utils'
+import { useSlotsExist, useMutationObserver, useInject } from 'components/utils'
 export interface Props {
   icon?: VNode | Slot // 自定义图标
   description?: string // 文字描述 string | slot
@@ -35,6 +35,7 @@ const backtopRef = ref<HTMLElement | null>(null) // backTop 元素引用
 const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
 const targetElement = ref<HTMLElement | null>(null) // 渲染容器元素
+const { colorPalettes } = useInject('BackTop') // 主题色注入
 const emits = defineEmits(['click', 'show'])
 const slotsExist = useSlotsExist(['tooltip', 'icon', 'description'])
 const backTopStyle = computed(() => {
@@ -167,15 +168,15 @@ function onBackTop(): void {
           --backtop-icon-with-desc-size: 24px;
           --backtop-desc-font-size: 12px;
           --backtop-default-color: rgba(0, 0, 0, 0.88);
-          --backtop-default-color-hover: #1677ff;
+          --backtop-default-color-hover: ${colorPalettes[5]};
           --backtop-default-bg-color: rgba(255, 255, 255, 0.88);
           --backtop-default-bg-color-hover: rgba(255, 255, 255);
           --backtop-default-shadow-color: rgba(0, 0, 0, 0.12);
           --backtop-default-shadow-color-hover: rgba(0, 0, 0, 0.12);
           --backtop-primary-color: #fff;
           --backtop-primary-color-hover: #fff;
-          --backtop-primary-bg-color: #1677ff;
-          --backtop-primary-bg-color-hover: #4096ff;
+          --backtop-primary-bg-color: ${colorPalettes[5]};
+          --backtop-primary-bg-color-hover: ${colorPalettes[4]};
           --backtop-primary-shadow-color: rgba(9, 88, 217, 0.32);
           --backtop-primary-shadow-color-hover: rgba(9, 88, 217, 0.32);
           --backtop-circle-border-radius: calc(var(--backtop-width) / 2);

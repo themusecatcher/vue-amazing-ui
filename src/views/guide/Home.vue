@@ -83,6 +83,10 @@ const toolFunctions = [
   {
     name: 'useSlotsExist',
     description: '监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在'
+  },
+  {
+    name: 'useInject',
+    description: '使用依赖注入的函数，用于获取颜色调色板和阴影颜色'
   }
 ]
 const functionItems = [
@@ -105,7 +109,8 @@ import {
   useFps,
   useMediaQuery,
   useResizeObserver,
-  useSlotsExist
+  useSlotsExist,
+  useInject
 } from 'vue-amazing-ui'
 <\/script>`
   }
@@ -153,11 +158,12 @@ function onOpenWindow() {
       个工具函数，并且持续探索更新中...
     </p>
     <p class="u-tip mb10"> 顺便一提，它们全都可以 <Tag color="magenta">treeshaking</Tag> </p>
+    <p class="u-tip mb10"> 主题可调，你只需提供一个主题色，剩下的都交给我 </p>
     <p class="u-tip mb10">
       <Tag color="magenta">Vue Amazing UI</Tag> 全量使用 <Tag color="magenta">TypeScript</Tag> 编写，和你的
       <Tag color="magenta">TypeScript</Tag> 项目无缝衔接
     </p>
-    <p class="u-tip mb10"> 全部组件均采用单文件组件 <Tag color="magenta">SFC</Tag> 风格，可独立使用 </p>
+    <p class="u-tip mb10"> 全部组件均采用单文件组件 <Tag color="magenta">SFC</Tag>，可独立使用 </p>
     <p class="u-tip"> 开箱即用，不墨迹 </p>
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse lang="bash" :fontSize="16" :items="installItems" v-model:activeKey="activeKey" copyable />

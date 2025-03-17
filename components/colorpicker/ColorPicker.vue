@@ -24,7 +24,7 @@ import type { HSVA, RGBA, HSLA, HSV, RGB, HSL } from 'seemly'
 import Tooltip from 'components/tooltip'
 import Input from 'components/input'
 import Button from 'components/button'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
 export interface Props {
@@ -73,6 +73,7 @@ const displayedValue = ref<string | undefined>(props.value) // 展示的值
 const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
 const hexValue = ref<string>() // hex 模式下输入框的绑定值
 const inputValueArr = ref<string[]>([]) // 非 hex 模式下多个输入框的绑定值
+const { colorPalettes, shadowColor } = useInject('ColorPicker') // 主题色注入
 const emits = defineEmits(['update:value', 'complete', 'confirm', 'clear'])
 const slotsFooterExist = useSlotsExist('footer')
 const showFooter = computed(() => {
@@ -881,9 +882,9 @@ function onClear() {
         --color-picker-width: ${colorPickerWidth};
         --color-picker-height: ${colorPickerHeight};
         --color-picker-block-size: ${colorPickerBlockSize};
-        --color-picker-primary-color-hover: #4096ff;
-        --color-picker-primary-color-focus: #4096ff;
-        --color-picker-primary-shadow-color: rgba(5, 145, 255, 0.1);
+        --color-picker-primary-color-hover: ${colorPalettes[4]};
+        --color-picker-primary-color-focus: ${colorPalettes[4]};
+        --color-picker-primary-shadow-color: ${shadowColor};
       `"
       v-bind="$attrs"
     >

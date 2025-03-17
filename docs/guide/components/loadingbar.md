@@ -183,8 +183,8 @@ const customLoadingBar = ref()
 containerClass | 加载条容器的类名 | string | undefined
 containerStyle | 加载条容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 loadingBarSize | 加载条大小，单位 `px` | number | 2
-colorLoading | 加载中颜色 | string | '#1677ff'
-colorFinish | 加载完成颜色 | string | '#1677ff'
+colorLoading | 加载中颜色 | string | undefined
+colorFinish | 加载完成颜色 | string | undefined
 colorError | 加载错误颜色 | string | '#ff4d4f'
 to | 加载条的挂载位置，可选：元素标签名（例如 `body`）或者元素本身 | string &#124; HTMLElement | 'body'
 

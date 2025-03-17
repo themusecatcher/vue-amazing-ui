@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import Button from 'components/button'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 搜索框宽度，单位 px
   icon?: boolean // 搜索图标 boolean | slot
@@ -39,8 +39,9 @@ const props = withDefaults(defineProps<Props>(), {
   valueModifiers: () => ({})
 })
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
-const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
+const { colorPalettes, shadowColor } = useInject('InputSearch') // 主题色注入
 const emits = defineEmits(['update:value', 'change', 'search'])
+const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
 const inputSearchWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -106,9 +107,9 @@ function onSearch(e: Event): void {
     class="m-input-search"
     :style="`
       --input-search-width: ${inputSearchWidth};
-      --input-search-primary-color-hover: #4096ff;
-      --input-search-primary-color-focus: #4096ff;
-      --input-search-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --input-search-primary-color-hover: ${colorPalettes[4]};
+      --input-search-primary-color-focus: ${colorPalettes[4]};
+      --input-search-primary-shadow-color: ${shadowColor};
     `"
   >
     <span v-if="showBefore" class="input-search-addon-before" :class="`addon-before-${size}`">
