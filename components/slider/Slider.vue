@@ -3,7 +3,7 @@ import { ref, computed, watch, isVNode } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import { useResizeObserver, useInject } from 'components/utils'
 export type Marks = {
-  [markValue: number]: string | VNode | { style: CSSProperties; label: string | VNode } | (() => VNode)
+  [markValue: number]: string | VNode | { style: CSSProperties; label: string | VNode }
 }
 export interface Props {
   width?: string | number // 滑动输入条宽度，单位 px，水平模式时生效
@@ -546,7 +546,7 @@ function isDotActive(value: number): boolean {
   return value <= (sliderValue.value as number)
 }
 function getMarkLabel(value: number): string | VNode | null {
-  const mark = typeof props.marks[value] === 'function' ? props.marks[value]() : props.marks[value]
+  const mark = props.marks[value]
   const markIsObject = typeof mark === 'object' && !isVNode(mark)
   let markLabel = markIsObject ? mark.label : mark
   if (!markLabel) return null
@@ -555,7 +555,7 @@ function getMarkLabel(value: number): string | VNode | null {
 function getMarkStyle(value: number): CSSProperties {
   const offset = `${(Math.abs(value - props.min) / (props.max - props.min)) * 100}%`
   let markLabelStyle = {}
-  const mark = typeof props.marks[value] === 'function' ? props.marks[value]() : props.marks[value]
+  const mark = props.marks[value]
   const markIsObject = typeof mark === 'object' && !isVNode(mark)
   if (markIsObject && 'style' in mark) {
     markLabelStyle = mark.style
@@ -713,9 +713,9 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         >
           <slot
             name="mark"
+            :value="markValue"
             :label="getMarkLabel(markValue)"
             :isVNode="isVNode(getMarkLabel(markValue))"
-            :value="markValue"
           >
             <component v-if="isVNode(getMarkLabel(markValue))" :is="getMarkLabel(markValue)" />
             <template v-else>{{ getMarkLabel(markValue) }}</template>

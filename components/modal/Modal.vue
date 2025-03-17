@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, watch, watchEffect, isVNode, onMounted, onUnmounted, nextTick } from 'vue'
 import type { VNode, Slot, CSSProperties } from 'vue'
 import Button from 'components/button'
 import { useInject } from 'components/utils'
@@ -345,7 +345,7 @@ defineExpose({
                 }"
               >
                 <slot name="icon">
-                  <component v-if="modalIcon" :is="modalIcon" class="icon-svg" />
+                  <component v-if="isVNode(modalIcon)" :is="modalIcon" class="icon-svg" />
                   <svg
                     v-else-if="modalMode === 'confirm' || modalMode === 'erase'"
                     class="icon-svg"
@@ -468,7 +468,7 @@ defineExpose({
                 }"
               >
                 <slot name="icon">
-                  <component v-if="modalIcon" :is="modalIcon" class="icon-svg" />
+                  <component v-if="isVNode(modalIcon)" :is="modalIcon" class="icon-svg" />
                   <svg
                     v-else-if="modalMode === 'confirm' || modalMode === 'erase'"
                     class="icon-svg"
