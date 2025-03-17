@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, isVNode, h } from 'vue'
+import { ref, computed, isVNode, cloneVNode } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
 import { useInject } from 'components/utils'
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 export interface Item {
   label?: string | VNode // 菜单标题
   icon?: VNode // 菜单图标
@@ -36,10 +35,18 @@ const props = withDefaults(defineProps<Props>(), {
   theme: 'light',
   triggerSubMenuAction: 'click'
 })
-const icon = h(AppstoreOutlined)
-console.log('isVNode', isVNode(typeof icon === 'function' ? (icon as Function)() : icon))
 const { colorPalettes } = useInject('Menu') // 主题色注入
 const emits = defineEmits(['update:openKeys', 'update:selectedKeys', 'click', 'select', 'openChange'])
+function onSelectMenu(key: string | number) {
+  if (!props.selectedKeys.includes(key)) {
+    emits('update:selectedKeys', [key])
+    emits('select', key)
+  }
+}
+function getMenuIcon(icon: VNode | undefined) {
+  if (!icon) return null
+  return typeof icon === 'function' ? cloneVNode((icon as () => VNode)()) : cloneVNode(icon as VNode)
+}
 </script>
 <template>
   <div
@@ -60,12 +67,13 @@ const emits = defineEmits(['update:openKeys', 'update:selectedKeys', 'click', 's
       v-for="(item, index) in items"
       :key="index"
       :title="item.title"
+      @click="onSelectMenu(item.key)"
     >
-      <component class="menu-item-icon" v-if="isVNode(item.icon)" :is="item.icon" />
-      <span v-if="isVNode(item.label)" class="menu-item-label">
-        <component :is="item.label" />
+      <component class="menu-item-icon" :is="getMenuIcon(item.icon)" />
+      <span class="menu-item-label">
+        <component v-if="isVNode(item.label)" :is="item.label" />
+        <template v-else>{{ item.label }}</template>
       </span>
-      <span v-else class="menu-item-label">{{ item.label }}</span>
     </div>
   </div>
 </template>
@@ -84,7 +92,7 @@ const emits = defineEmits(['update:openKeys', 'update:selectedKeys', 'click', 's
     cursor: pointer;
     transition: border-color 0.3s, background 0.3s, padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     .menu-item-icon {
-      color: var(--menu-primary-color);
+      color: inherit;
     }
     .menu-item-label {
       transition: color 0.3s;
@@ -94,7 +102,7 @@ const emits = defineEmits(['update:openKeys', 'update:selectedKeys', 'click', 's
       opacity: 1;
       transition: opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), margin 0.3s, color 0.3s;
     }
-    a::before {
+    :deep(a::before) {
       color: inherit;
       position: absolute;
       top: 0;
@@ -128,6 +136,14 @@ const emits = defineEmits(['update:openKeys', 'update:selectedKeys', 'click', 's
 .menu-light {
   color: rgba(0, 0, 0, 0.88);
   background: #ffffff;
+  .menu-item {
+    :deep(a) {
+      color: inherit;
+      &:hover {
+        color: inherit;
+      }
+    }
+  }
   .menu-item-selected {
     color: var(--menu-primary-color);
     background-color: #ffefe6;
@@ -147,6 +163,12 @@ const emits = defineEmits(['update:openKeys', 'update:selectedKeys', 'click', 's
       border-bottom: 2px solid transparent;
       transition: border-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       content: "";
+    }
+    &:hover {
+      &::after {
+        border-bottom-width: 2px;
+        border-bottom-color: var(--menu-primary-color);
+      }
     }
   }
   & >.menu-item-selected {

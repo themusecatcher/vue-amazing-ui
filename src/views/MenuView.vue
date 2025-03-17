@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { ref, h, watchEffect } from 'vue'
 import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 const current = ref<string[]>(['mail'])
 const items = ref<MenuProps['items']>([
@@ -57,6 +57,9 @@ const items = ref<MenuProps['items']>([
     title: 'Navigation Four - Link'
   }
 ])
+watchEffect(() => {
+  console.log('current', current.value)
+})
 </script>
 <template>
   <div>
