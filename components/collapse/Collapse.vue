@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect, isVNode } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
 import Button from 'components/button'
 import { debounce } from 'components/utils'
@@ -186,7 +186,7 @@ function onCopy(index: number, key: string | number) {
             :active="activeCheck(getComputedKey(item.key, index))"
           >
             <component
-              v-if="isVNode(getComputedValue(item, 'arrow'))"
+              v-if="getComputedValue(item, 'arrow')"
               :is="getComputedValue(item, 'arrow')"
               class="arrow-svg"
               :class="{ 'arrow-rotate': activeCheck(getComputedKey(item.key, index)) }"

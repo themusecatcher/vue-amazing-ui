@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, isVNode } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { Slot, VNode } from 'vue'
 import Tooltip from 'components/tooltip'
 import Badge from 'components/badge'
@@ -143,7 +143,7 @@ function onClick(e: Event) {
             <div v-if="showIcon" class="float-btn-icon">
               <Transition name="fade">
                 <slot v-if="!showMenu" name="icon">
-                  <component v-if="isVNode(icon)" :is="icon" />
+                  <component v-if="icon" :is="icon" />
                 </slot>
                 <svg
                   v-else
