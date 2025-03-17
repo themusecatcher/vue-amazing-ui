@@ -2,7 +2,7 @@
 import { ref, h, watchEffect } from 'vue'
 import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 const current = ref<string[]>(['mail'])
-const items = ref<MenuProps['items']>([
+const items = ref([
   {
     key: 'mail',
     icon: () => h(MailOutlined),
