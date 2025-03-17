@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, isVNode } from 'vue'
+import { ref, computed } from 'vue'
 import type { VNode, Slot } from 'vue'
 import { useEventListener, useSlotsExist } from 'components/utils'
 export interface Responsive {
@@ -129,7 +129,7 @@ function getViewportWidth(): void {
   >
     <img v-if="src" class="image-item" :src="src" :alt="alt" />
     <slot v-if="!src && showIcon" name="icon">
-      <component v-if="isVNode(icon)" :is="icon" />
+      <component :is="icon" />
     </slot>
     <span v-if="showStr" class="string-item" :style="strStyle">
       <slot></slot>

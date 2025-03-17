@@ -3,7 +3,7 @@ import { ref, computed, watch, isVNode } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import { useResizeObserver, useInject } from 'components/utils'
 export type Marks = {
-  [markValue: number]: string | VNode | { style: CSSProperties; label: string | VNode }
+  [markValue: number]: string | VNode | { style: CSSProperties; label: string | VNode | (() => VNode) }
 }
 export interface Props {
   width?: string | number // 滑动输入条宽度，单位 px，水平模式时生效
@@ -550,7 +550,7 @@ function getMarkLabel(value: number): string | VNode | null {
   const markIsObject = typeof mark === 'object' && !isVNode(mark)
   let markLabel = markIsObject ? mark.label : mark
   if (!markLabel) return null
-  return markLabel
+  return typeof markLabel === 'function' ? markLabel() : markLabel
 }
 function getMarkStyle(value: number): CSSProperties {
   const offset = `${(Math.abs(value - props.min) / (props.max - props.min)) * 100}%`
@@ -711,14 +711,9 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
           :key="index"
           @click.stop="disabled ? () => false : onClickMark(index)"
         >
-          <slot
-            name="mark"
-            :value="markValue"
-            :label="getMarkLabel(markValue)"
-            :isVNode="isVNode(getMarkLabel(markValue))"
-          >
-            <component v-if="isVNode(getMarkLabel(markValue))" :is="getMarkLabel(markValue)" />
-            <template v-else>{{ getMarkLabel(markValue) }}</template>
+          <slot name="mark" :label="getMarkLabel(markValue)" :value="markValue">
+            <template v-if="typeof getMarkLabel(markValue) === 'string'">{{ getMarkLabel(markValue) }}</template>
+            <component v-else :is="getMarkLabel(markValue)" />
           </slot>
         </span>
       </div>

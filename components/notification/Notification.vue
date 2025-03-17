@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, nextTick, isVNode, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, watchEffect, nextTick, onBeforeUnmount } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useInject } from 'components/utils'
 export interface Props {
@@ -192,7 +192,7 @@ defineExpose({
         @mouseenter="onEnter(index)"
         @mouseleave="onLeave(index)"
       >
-        <component v-if="isVNode(notification.icon)" :is="notification.icon" class="icon-svg" />
+        <component v-if="notification.icon" :is="notification.icon" class="icon-svg" />
         <svg
           v-else-if="notification.mode === 'info'"
           class="icon-svg"
