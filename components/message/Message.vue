@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, isVNode, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { rafTimeout, cancelRaf, useInject } from 'components/utils'
 export interface Props {
@@ -206,7 +206,7 @@ defineExpose({
           @mouseleave="onLeave(index)"
           @click="onClick($event, index)"
         >
-          <component v-if="message.icon" :is="message.icon" class="icon-svg" />
+          <component v-if="isVNode(message.icon)" :is="message.icon" class="icon-svg" />
           <svg
             v-else-if="message.mode === 'info'"
             class="icon-svg"

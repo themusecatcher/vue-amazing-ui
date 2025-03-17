@@ -90,17 +90,23 @@ function getMenuIcon(icon: VNode | undefined) {
     border-radius: 8px;
     white-space: nowrap;
     cursor: pointer;
-    transition: border-color 0.3s, background 0.3s, padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition:
+      border-color 0.3s,
+      background 0.3s,
+      padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     .menu-item-icon {
       color: inherit;
     }
     .menu-item-label {
       transition: color 0.3s;
     }
-    .menu-item-icon +span {
+    .menu-item-icon + span {
       margin-left: 10px;
       opacity: 1;
-      transition: opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), margin 0.3s, color 0.3s;
+      transition:
+        opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+        margin 0.3s,
+        color 0.3s;
     }
     :deep(a::before) {
       color: inherit;
@@ -110,7 +116,7 @@ function getMenuIcon(icon: VNode | undefined) {
       right: 0;
       bottom: 0;
       background-color: transparent;
-      content: "";
+      content: '';
     }
   }
 }
@@ -130,7 +136,9 @@ function getMenuIcon(icon: VNode | undefined) {
     display: inline-block;
     vertical-align: bottom;
     padding-inline: 16px;
-    transition: border-color 0.3s, background 0.3s;
+    transition:
+      border-color 0.3s,
+      background 0.3s;
   }
 }
 .menu-light {
@@ -150,7 +158,7 @@ function getMenuIcon(icon: VNode | undefined) {
   }
 }
 .menu-light.menu-horizontal {
-  & >.menu-item {
+  & > .menu-item {
     top: 1px;
     margin-top: -1px;
     margin-bottom: 0;
@@ -162,7 +170,7 @@ function getMenuIcon(icon: VNode | undefined) {
       bottom: 0;
       border-bottom: 2px solid transparent;
       transition: border-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-      content: "";
+      content: '';
     }
     &:hover {
       &::after {
@@ -171,7 +179,7 @@ function getMenuIcon(icon: VNode | undefined) {
       }
     }
   }
-  & >.menu-item-selected {
+  & > .menu-item-selected {
     color: var(--menu-primary-color);
     background-color: transparent;
     &::after {

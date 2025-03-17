@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, isVNode } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
 import Tooltip from 'components/tooltip'
 import Button from 'components/button'
@@ -140,7 +140,7 @@ function onOk(e: Event): void {
                 d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z"
               ></path>
             </svg>
-            <component v-else-if="icon" :is="icon" />
+            <component v-else-if="isVNode(icon)" :is="icon" />
           </slot>
         </span>
         <div class="popconfirm-title" :class="{ 'title-font-weight': showDesc }" :style="titleStyle">

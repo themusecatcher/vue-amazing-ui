@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, nextTick, computed } from 'vue'
+import { ref, nextTick, computed, isVNode } from 'vue'
 import type { VNode, Slot } from 'vue'
 import { generate } from '@ant-design/colors'
 import { useSlotsExist, useInject } from 'components/utils'
@@ -135,7 +135,7 @@ function onWaveEnd() {
     </div>
     <span v-if="!loading && showIcon" class="btn-icon">
       <slot name="icon">
-        <component v-if="icon" :is="icon" />
+        <component v-if="isVNode(icon)" :is="icon" />
       </slot>
     </span>
     <span v-if="slotsExist.default" class="btn-content">
