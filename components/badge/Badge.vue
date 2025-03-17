@@ -139,7 +139,7 @@ function handleOffset(value: string): string {
   <div
     class="m-badge"
     :class="{ 'badge-status-color': value === undefined && (color || status) }"
-    :style="[`--z-index: ${zIndex}`, value === undefined && !dot ? dotOffestStyle : null]"
+    :style="[`--badge-z-index: ${zIndex}`, value === undefined && !dot ? dotOffestStyle : null]"
   >
     <template v-if="value === undefined && !dot && (color || status)">
       <span class="status-dot" :class="[presetClass, { 'dot-ripple': ripple }]" :style="customStyle"></span>
@@ -270,7 +270,7 @@ function handleOffset(value: string): string {
   .m-value {
     position: absolute;
     top: 0;
-    z-index: var(--z-index);
+    z-index: var(--badge-z-index);
     right: 0;
     transform: translate(50%, -50%);
     transform-origin: 100% 0%;

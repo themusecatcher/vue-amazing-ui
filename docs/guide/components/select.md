@@ -12,7 +12,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { SelectProps, SelectOption } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
 const options = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -45,10 +44,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const optionsDisabled = ref<SelectOption[]>([
@@ -136,21 +131,9 @@ const sizeOptions = [
 ]
 const size = ref('large')
 const selectedValue = ref<SelectProps['modelValue']>(5)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--select-primary-color-hover': colorPalettes[4],
-    '--select-primary-color-focus': colorPalettes[4],
-    '--select-primary-shadow-color': primaryShadowColor.value,
-    '--select-item-bg-color-active': colorPalettes[0]
-  }
-  return style
-}
 function onChange(value: string | number, label: string, index: number) {
   console.log('value', value)
   console.log('label', label)
@@ -207,10 +190,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -275,10 +254,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -457,10 +432,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -526,10 +497,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const sizeOptions = [
@@ -605,10 +572,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -665,10 +628,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -725,10 +684,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -789,10 +744,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -849,10 +800,6 @@ const options = ref<SelectOption[]>([
   {
     label: '君士坦丁堡',
     value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
   }
 ])
 const selectedValue = ref<SelectProps['modelValue']>(5)
@@ -862,91 +809,6 @@ watchEffect(() => {
 </script>
 <template>
   <Select :options="options" v-model="selectedValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <Space align="center">
-    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-  </Space>
-  <Select :style="getThemeStyle(primaryColor)" search :options="options" v-model="selectedValue" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { SelectProps, SelectOption } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
-const options = ref<SelectOption[]>([
-  {
-    label: '北京市',
-    value: 1
-  },
-  {
-    label: '上海市',
-    value: 2
-  },
-  {
-    label: '纽约市',
-    value: 3
-  },
-  {
-    label: '旧金山',
-    value: 4
-  },
-  {
-    label: '布宜诺斯艾利斯',
-    value: 5
-  },
-  {
-    label: '伊斯坦布尔',
-    value: 6
-  },
-  {
-    label: '拜占庭',
-    value: 7
-  },
-  {
-    label: '君士坦丁堡',
-    value: 8
-  },
-  {
-    label: '墨尔本',
-    value: 9
-  }
-])
-const selectedValue = ref<SelectProps['modelValue']>(5)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-watchEffect(() => {
-  console.log('selectedValue', selectedValue.value)
-})
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--select-primary-color-hover': colorPalettes[4],
-    '--select-primary-color-focus': colorPalettes[4],
-    '--select-primary-shadow-color': primaryShadowColor.value,
-    '--select-item-bg-color-active': colorPalettes[0]
-  }
-  return style
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-    <Space align="center">
-      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-    </Space>
-    <Select :style="getThemeStyle(primaryColor)" search :options="options" v-model="selectedValue" />
-  </Space>
 </template>
 ```
 

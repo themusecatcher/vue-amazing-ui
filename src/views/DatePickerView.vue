@@ -15,7 +15,6 @@ import {
   addMinutes,
   addSeconds
 } from 'date-fns'
-import { generate } from '@ant-design/colors'
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
 const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
@@ -72,9 +71,6 @@ const sizeOptions = [
   }
 ]
 const size = ref('middle')
-const themeDateValue = ref(format(new Date(), 'yyyy-MM-dd'))
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('dateValue', dateValue.value)
 })
@@ -102,19 +98,6 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('yearValue', yearValue.value)
 })
-watchEffect(() => {
-  console.log('themeDateValue', themeDateValue.value)
-})
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--datepicker-primary-color': color,
-    '--datepicker-primary-color-hover': colorPalettes[4],
-    '--datepicker-primary-color-focus': colorPalettes[4],
-    '--datepicker-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
 </script>
 <template>
   <div>
@@ -150,7 +133,7 @@ function getThemeStyle(color: string) {
     <DatePicker v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">日期时间选择器</h2>
     <DatePicker
-      :width="240"
+      :width="210"
       v-model="dateTimeValue"
       format="yyyy-MM-dd HH:mm:ss"
       show-time
@@ -159,7 +142,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">日期范围选择器</h2>
     <DatePicker
-      :width="280"
+      :width="240"
       v-model="rangeValue"
       range
       :preset-dates="presetDates"
@@ -168,7 +151,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">双日期面板</h2>
     <DatePicker
-      :width="280"
+      :width="240"
       v-model="rangeValue"
       mode="range"
       format="yyyy-MM-dd"
@@ -179,7 +162,7 @@ function getThemeStyle(color: string) {
     <h2 class="mt30 mb10">预设范围</h2>
     <h3 class="mb10">预设常用的日期范围以提高用户体验</h3>
     <DatePicker
-      :width="280"
+      :width="240"
       v-model="rangeValue"
       mode="range"
       format="yyyy-MM-dd"
@@ -190,7 +173,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">时分选择器</h2>
     <DatePicker
-      :width="120"
+      :width="110"
       v-model="timeValue"
       mode="time"
       show-time
@@ -200,7 +183,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">时分秒选择器</h2>
     <DatePicker
-      :width="150"
+      :width="130"
       v-model="secondsValue"
       mode="time"
       format="HH:mm:ss"
@@ -211,7 +194,7 @@ function getThemeStyle(color: string) {
     />
     <h2 class="mt30 mb10">时分秒范围选择器</h2>
     <DatePicker
-      :width="240"
+      :width="200"
       v-model="timeRangeValue"
       mode="time"
       format="HH:mm:ss"
@@ -234,24 +217,11 @@ function getThemeStyle(color: string) {
       >
         {{ format(weekValue[0], 'yyyy-MM-dd') + ' ~ ' + format(weekValue[1], 'yyyy-MM-dd') }}
       </GradientText>
-      <DatePicker :width="200" v-model="weekValue" mode="week" format="yyyy年 第ww周" placeholder="请选择周" />
+      <DatePicker :width="170" v-model="weekValue" mode="week" format="yyyy年 第ww周" placeholder="请选择周" />
     </Space>
     <h2 class="mt30 mb10">月选择器</h2>
-    <DatePicker :width="150" v-model="monthValue" mode="month" format="yyyy-MM" placeholder="请选择月" />
+    <DatePicker :width="130" v-model="monthValue" mode="month" format="yyyy-MM" placeholder="请选择月" />
     <h2 class="mt30 mb10">年选择器</h2>
-    <DatePicker :width="120" v-model="yearValue" mode="year" format="yyyy" placeholder="请选择年" />
-    <h2 class="mt30 mb10">自定义主题色</h2>
-    <Space vertical>
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-      <Space align="center">
-        primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-      </Space>
-      <DatePicker
-        :style="getThemeStyle(primaryColor)"
-        v-model="themeDateValue"
-        format="yyyy-MM-dd"
-        placeholder="请选择日期"
-      />
-    </Space>
+    <DatePicker :width="110" v-model="yearValue" mode="year" format="yyyy" placeholder="请选择年" />
   </div>
 </template>

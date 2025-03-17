@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, isVNode } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
-import { useResizeObserver } from 'components/utils'
+import { useResizeObserver, useInject } from 'components/utils'
 export type Marks = {
   [markValue: number]: string | VNode | { style: CSSProperties; label: string | VNode } | (() => VNode)
 }
@@ -46,6 +46,7 @@ const lowHandleRef = ref() // low handle DOM 引用
 const lowTooltipRef = ref() // low tooltip DOM 引用
 const highHandleRef = ref() // high handle DOM 引用
 const highTooltipRef = ref() // high tooltip DOM 引用
+const { colorPalettes } = useInject('Slider') // 主题色注入
 const emits = defineEmits(['update:value', 'change'])
 const sliderSize = computed(() => {
   if (!props.vertical) {
@@ -670,17 +671,17 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         --slider-rail-color: rgba(0, 0, 0, 0.04);
         --slider-rail-color-hover: rgba(0, 0, 0, 0.1);
         --slider-rail-color-disabled: rgba(0, 0, 0, 0.06);
-        --slider-track-color: #91caff;
-        --slider-track-color-hover: #1677ff;
+        --slider-track-color: ${colorPalettes[2]};
+        --slider-track-color-hover: ${colorPalettes[5]};
         --slider-track-color-disabled: rgba(0, 0, 0, 0.25);
         --slider-handle-color: #fff;
-        --slider-handle-shadow-color: #91caff;
-        --slider-handle-shadow-color-hover-focus: #1677ff;
+        --slider-handle-shadow-color: ${colorPalettes[2]};
+        --slider-handle-shadow-color-hover-focus: ${colorPalettes[5]};
         --slider-handle-shadow-color-disabled: #bfbfbf;
         --slider-dot-color: #fff;
         --slider-dot-border-color: #f0f0f0;
         --slider-dot-border-color-hover: rgba(0, 0, 0, 0.1);
-        --slider-dot-color-active: #91caff;
+        --slider-dot-color-active: ${colorPalettes[2]};
         --slider-mark-color: rgba(0, 0, 0, 0.45);
         --slider-mark-color-active: rgba(0, 0, 0, 0.88);
         --slider-tooltip-color: #fff;

@@ -13,6 +13,7 @@ const componentsMap = {
   Checkbox: 'checkbox',
   Collapse: 'collapse',
   ColorPicker: 'colorpicker',
+  ConfigProvider: 'configprovider',
   Countdown: 'countdown',
   DatePicker: 'datepicker',
   Descriptions: 'descriptions/descriptions',
@@ -104,7 +105,7 @@ const componentDependencies = {
   Waterfall: ['Spin']
 }
 function getSideEffects(componentName: string, options?: VueAmazingUIResolverOptions) {
-  if (['NumberAnimation', 'Watermark'].includes(componentName)) {
+  if (['ConfigProvider', 'NumberAnimation', 'Watermark'].includes(componentName)) {
     // 无样式文件的组件
     return []
   }

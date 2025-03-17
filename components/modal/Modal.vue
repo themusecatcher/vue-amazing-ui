@@ -2,6 +2,7 @@
 import { ref, computed, watch, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
 import type { VNode, Slot, CSSProperties } from 'vue'
 import Button from 'components/button'
+import { useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 模态框宽度，单位 px
   icon?: VNode | Slot // 自定义图标
@@ -90,6 +91,7 @@ const confirmBtnLoading = ref<boolean>(false)
 const transformOrigin = ref<string>('50% 50%')
 const modalData = ref<Modal>()
 const modalMode = ref() // 弹窗类型：'info' 'success' 'error' 'warning' 'confirm' 'erase'
+const { colorPalettes } = useInject('Modal') // 主题色注入
 const emits = defineEmits(['update:open', 'cancel', 'ok', 'know'])
 const modalWidth = computed(() => {
   const width = getComputedValue('width')
@@ -301,7 +303,7 @@ defineExpose({
   <div
     class="m-modal-root"
     :style="`
-      --modal-primary-color: #1677ff;
+      --modal-primary-color: ${colorPalettes[5]};
       --modal-success-color: #52c41a;
       --modal-error-color: #ff4d4f;
       --modal-warning-color: #faad14;

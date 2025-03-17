@@ -113,6 +113,10 @@ export default defineConfig({
               link: '/guide/ondemand'
             },
             {
+              text: '定制主题',
+              link: '/guide/customize'
+            },
+            {
               text: '更新日志',
               link: '/guide/changelog'
             }
@@ -172,6 +176,10 @@ export default defineConfig({
             {
               text: '颜色选择器 ColorPicker',
               link: '/guide/components/colorpicker'
+            },
+            {
+              text: '全局化配置 ConfigProvider',
+              link: '/guide/components/configprovider'
             },
             {
               text: '倒计时 Countdown',
@@ -456,6 +464,10 @@ export default defineConfig({
             {
               text: 'useSlotsExist 监听插槽存在',
               link: '/utils/functions/slots-exist'
+            },
+            {
+              text: 'useInject 获取注入数据',
+              link: '/utils/functions/injection'
             }
           ]
         }

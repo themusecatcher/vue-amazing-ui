@@ -2,6 +2,7 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import Input from 'components/input'
 import Select from 'components/select'
+import { useInject } from 'components/utils'
 export interface Props {
   page?: number // (v-model) 当前页数
   pageSize?: number // (v-model) 每页条数
@@ -40,6 +41,7 @@ const pageListRef = ref<HTMLElement[] | null>(null) // pageList 生成的 page �
 const jumpNumber = ref() // 跳转的页码
 const forwardMore = ref(false) // 左省略号展示
 const backwardMore = ref(false) // 右省略号展示
+const { colorPalettes } = useInject('Pagination') // 主题色注入
 const emits = defineEmits(['update:page', 'update:pageSize', 'change', 'pageSizeChange'])
 const totalPage = computed(() => {
   // 总页数
@@ -218,7 +220,7 @@ function onPageSizeChange(pageSize: number): void {
         'pagination-hidden': !total || (hideOnSinglePage && total <= currentPageSize)
       }
     ]"
-    :style="`--pagination-primary-color: #1677ff; --pagination-primary-color-focus-visible: #91caff;`"
+    :style="`--pagination-primary-color: ${colorPalettes[5]}; --pagination-primary-color-focus-visible: ${colorPalettes[2]};`"
   >
     <span class="pagination-total-text" v-if="totalText">{{ totalText }}</span>
     <span
