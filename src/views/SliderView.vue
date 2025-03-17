@@ -265,9 +265,9 @@ function formatter(value: number) {
       <Slider vertical range v-model:value="markVerticalDoubleValue1" :marks="marks" />
       <Slider vertical range v-model:value="markVerticalDoubleValue2" :marks="verticalMarks" :step="10" />
       <Slider vertical range v-model:value="markVerticalDoubleValue3" :marks="verticalMarks" step="mark">
-        <template #mark="{ label, isVNode, value }">
-          <template v-if="isVNode"> {{ value }}°C </template>
-          <template v-else>{{ label }}</template>
+        <template #mark="{ label, value }">
+          <template v-if="typeof label === 'string'">{{ label }}</template>
+          <template v-else> {{ value }}°C </template>
         </template>
       </Slider>
     </Space>
