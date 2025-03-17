@@ -4,9 +4,13 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="soon">2.3.4</VersionDateTag>
+
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2025-03-17">2.3.3</VersionDateTag>
 
-- 组件库中包含 `VNode` 类型节点渲染的组件，添加 `isVNode` 判断
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-15">2.3.2</VersionDateTag>

@@ -829,13 +829,13 @@ value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `fa
 
 名称 | 值
 :-- | :--
-Marks | { [markValue: number]: string &#124; VNode &#124; { style: [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties), label: string &#124; VNode } }
+Marks | { [markValue: number]: string &#124; VNode &#124; { style: [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties), label: string &#124; VNode } &#124; (() => VNode) }
 
 ## Slots
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-mark | 自定义刻度标记 | v-slot:mark="{ value, label, isVNode }"
+mark | 自定义刻度标记 | v-slot:mark="{ label, value }"
 
 ## Events
 
