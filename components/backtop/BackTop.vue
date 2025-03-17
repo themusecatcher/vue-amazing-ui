@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, isVNode, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { VNode, Slot } from 'vue'
 import Tooltip from 'components/tooltip'
 import { useSlotsExist, useMutationObserver, useInject } from 'components/utils'
@@ -197,7 +197,7 @@ function onBackTop(): void {
           <slot>
             <span class="backtop-icon" :class="{ 'icon-with-description': showDescription }">
               <slot name="icon">
-                <component v-if="isVNode(icon)" :is="icon" />
+                <component v-if="icon" :is="icon" />
                 <svg
                   v-else
                   width="1em"

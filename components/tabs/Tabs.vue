@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, isVNode, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { useResizeObserver, useSlotsExist, useInject } from 'components/utils'
 export interface Item {
@@ -342,7 +342,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
             :key="index"
           >
             <slot name="tab" :item="item" :tab="item.tab" :key="getPageKey(item.key, index)">
-              <component v-if="isVNode(item.icon)" :is="item.icon" />
+              <component v-if="item.icon" :is="item.icon" />
               {{ item.tab }}
             </slot>
           </div>
