@@ -71,8 +71,8 @@ function getMenuIcon(icon: VNode | undefined) {
     >
       <component class="menu-item-icon" :is="getMenuIcon(item.icon)" />
       <span class="menu-item-label">
-        <component v-if="isVNode(item.label)" :is="item.label" />
-        <template v-else>{{ item.label }}</template>
+        <template v-if="typeof item.label === 'string'">{{ item.label }}</template>
+        <component v-else :is="item.label" />
       </span>
     </div>
   </div>
@@ -96,6 +96,11 @@ function getMenuIcon(icon: VNode | undefined) {
       padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     .menu-item-icon {
       color: inherit;
+      :deep(svg) {
+        min-width: 14px;
+        font-size: 14px;
+        transition: font-size 0.2s cubic-bezier(0.215, 0.61, 0.355, 1), margin 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), color 0.3s;
+      }
     }
     .menu-item-label {
       transition: color 0.3s;
