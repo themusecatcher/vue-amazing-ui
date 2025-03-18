@@ -50,7 +50,6 @@ export function useMediaQuery(mediaQuery: string) {
 
 <script setup lang="ts">
 import { useMediaQuery } from 'vue-amazing-ui'
-
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 </script>
 <h3>{{ isMobile ? '移动端' : '桌面端' }}</h3>
@@ -58,7 +57,6 @@ const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 ```vue
 <script setup lang="ts">
 import { useMediaQuery } from 'vue-amazing-ui'
-
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 </script>
 <template>

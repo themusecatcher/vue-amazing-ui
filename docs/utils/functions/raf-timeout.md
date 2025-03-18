@@ -72,11 +72,9 @@ export function cancelRaf(raf: { id: number }): void {
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
-
 const timeoutRaf = rafTimeout(() => {
   console.log('raf timeout')
 }, 1000)
-
 const intervalRaf = rafTimeout(() => {
   console.log('raf interval')
 }, 1000, true)
@@ -94,11 +92,9 @@ onUnmounted(() => {
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
-
 const timeoutRaf = rafTimeout(() => {
   console.log('raf timeout')
 }, 1000)
-
 onUnmounted(() => {
   cancelRaf(timeoutRaf)
 })
@@ -113,11 +109,9 @@ onUnmounted(() => {
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
-
 const intervalRaf = rafTimeout(() => {
   console.log('raf interval')
 }, 1000, true)
-
 onUnmounted(() => {
   cancelRaf(intervalRaf)
 })

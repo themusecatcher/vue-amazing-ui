@@ -117,7 +117,6 @@ export function useMounted() {
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useResizeObserver } from 'vue-amazing-ui'
-
 const el = ref(null)
 const state = reactive({
   borderBlockSize: null,
@@ -218,7 +217,6 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useResizeObserver } from 'vue-amazing-ui'
-
 const el = ref(null)
 const state = reactive({
   borderBlockSize: null,

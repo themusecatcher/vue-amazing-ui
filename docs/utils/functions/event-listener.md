@@ -33,7 +33,6 @@ export function useEventListener(target: HTMLElement | Window | Document, event:
 <script setup lang="ts">
 import { ref } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
-
 const scrollDown = ref(false) // 是否向下滚动
 let lastScrollPosition = 0 // 保存上一次滚动的位置
 
@@ -57,7 +56,6 @@ useEventListener(window, 'scroll', throttleScroll)
 <script setup lang="ts">
 import { ref } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
-
 const scrollDown = ref(false) // 是否向下滚动
 let lastScrollPosition = 0 // 保存上一次滚动的位置
 
