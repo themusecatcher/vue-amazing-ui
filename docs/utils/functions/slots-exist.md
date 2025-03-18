@@ -65,7 +65,6 @@ export function useSlotsExist(slotsName: string | string[] = 'default') {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSlotsExist } from 'vue-amazing-ui'
-
 // 监听单个插槽的存在
 const slotsDefaultExist = useSlotsExist() // 等同于 useSlotsExist('default')
 const slotsHeaderExist = useSlotsExist('header')
@@ -73,7 +72,6 @@ watchEffect(() => {
   console.log('slotsDefaultExist', slotsDefaultExist.value)
   console.log('slotsHeaderExist', slotsHeaderExist.value)
 })
-
 // 监听一组插槽的存在
 const slotsExist = useSlotsExist(['default', 'header'])
 watchEffect(() => {

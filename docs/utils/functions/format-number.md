@@ -69,7 +69,6 @@ import { formatNumber } from 'vue-amazing-ui'
 ```vue
 <script setup lang="ts">
 import { formatNumber } from 'vue-amazing-ui'
-
 formatNumber(123456789.87654321, 2, ',') // 123,456,789.88
 </script>
 ```
