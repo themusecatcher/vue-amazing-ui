@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-03-19">2.4.0</VersionDateTag>
+
+- 新增 [高亮文本 Highlight](https://themusecatcher.github.io/vue-amazing-ui/guide/components/highlight.html) 组件，用于高亮文本
+
 ## <VersionDateTag date="2025-03-18">2.3.4</VersionDateTag>
 
 - 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，更新 `Marks` 类型
@@ -667,7 +671,6 @@
 
 ## future
 
-- 新增 高亮文本 Highlight 组件
 - 新增 自动完成 AutoComplete 组件
 - 新增 布局 Layout 组件
 - 新增 菜单 Menu 组件

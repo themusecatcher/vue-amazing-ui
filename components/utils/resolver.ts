@@ -28,6 +28,7 @@ const componentsMap = {
   GradientText: 'gradienttext',
   Row: 'grid/row',
   Col: 'grid/col',
+  Highlight: 'highlight',
   Image: 'image',
   Input: 'input',
   InputNumber: 'inputnumber',
@@ -105,7 +106,7 @@ const componentDependencies = {
   Waterfall: ['Spin']
 }
 function getSideEffects(componentName: string, options?: VueAmazingUIResolverOptions) {
-  if (['ConfigProvider', 'NumberAnimation', 'Watermark'].includes(componentName)) {
+  if (['ConfigProvider', 'Highlight', 'NumberAnimation', 'Watermark'].includes(componentName)) {
     // 无样式文件的组件
     return []
   }

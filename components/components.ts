@@ -82,6 +82,9 @@ export { default as GradientText } from './gradienttext'
 export type { RowProps, Responsive as RowResponsive, ColProps } from './grid'
 export { Row, Col } from './grid'
 
+export type { Props as HighlightProps } from './highlight'
+export { default as Highlight } from './highlight'
+
 export type { Props as ImageProps, Image as ImageItem } from './image'
 export { default as Image } from './image'
 
