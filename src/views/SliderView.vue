@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, h, watchEffect } from 'vue'
+import { ref, h, watchEffect, isVNode } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
 const singleValue = ref<number>(20)
 const doubleValue = ref<number[]>([20, 80])
@@ -265,8 +265,8 @@ function formatter(value: number) {
       <Slider vertical range v-model:value="markVerticalDoubleValue1" :marks="marks" />
       <Slider vertical range v-model:value="markVerticalDoubleValue2" :marks="verticalMarks" :step="10" />
       <Slider vertical range v-model:value="markVerticalDoubleValue3" :marks="verticalMarks" step="mark">
-        <template #mark="{ label, isVNode, value }">
-          <template v-if="isVNode"> {{ value }}°C </template>
+        <template #mark="{ label, value }">
+          <template v-if="isVNode(label)"> {{ value }}°C </template>
           <template v-else>{{ label }}</template>
         </template>
       </Slider>

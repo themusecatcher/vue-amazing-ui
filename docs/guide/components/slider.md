@@ -9,7 +9,7 @@
 - 当用户需要在数值区间/自定义区间内进行选择时
 
 <script setup lang="ts">
-import { ref, h, watchEffect } from 'vue'
+import { ref, h, watchEffect, isVNode } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
 const singleValue = ref<number>(20)
 const doubleValue = ref<number[]>([20, 80])
@@ -508,10 +508,8 @@ watchEffect(() => {
   <Slider vertical range v-model:value="markVerticalDoubleValue1" :marks="marks" />
   <Slider vertical range v-model:value="markVerticalDoubleValue2" :marks="verticalMarks" :step="10" />
   <Slider vertical range v-model:value="markVerticalDoubleValue3" :marks="verticalMarks" step="mark">
-    <template #mark="{ label, isVNode, value }">
-      <template v-if="isVNode">
-        {{ value }}°C
-      </template>
+    <template #mark="{ label, value }">
+      <template v-if="isVNode(label)"> {{ value }}°C </template>
       <template v-else>{{ label }}</template>
     </template>
   </Slider>
@@ -521,7 +519,7 @@ watchEffect(() => {
 
 ```vue
 <script setup lang="ts">
-import { ref, h, watchEffect } from 'vue'
+import { ref, h, watchEffect, isVNode } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
 const verticalSingleValue = ref<number>(37)
 const verticalDoubleValue = ref<number[]>([20, 80])
@@ -579,10 +577,8 @@ watchEffect(() => {
     <Slider vertical range v-model:value="markVerticalDoubleValue1" :marks="marks" />
     <Slider vertical range v-model:value="markVerticalDoubleValue2" :marks="verticalMarks" :step="10" />
     <Slider vertical range v-model:value="markVerticalDoubleValue3" :marks="verticalMarks" step="mark">
-      <template #mark="{ label, isVNode, value }">
-        <template v-if="isVNode">
-          {{ value }}°C
-        </template>
+      <template #mark="{ label, value }">
+        <template v-if="isVNode(label)"> {{ value }}°C </template>
         <template v-else>{{ label }}</template>
       </template>
     </Slider>
@@ -829,7 +825,7 @@ value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `fa
 
 名称 | 值
 :-- | :--
-Marks | { [markValue: number]: string &#124; VNode &#124; { style: [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties), label: string &#124; VNode } &#124; (() => VNode) }
+Marks | { [markValue: number]: string &#124; VNode &#124; (() => VNode) &#124; { style: [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties), label: string &#124; VNode &#124; (() => VNode) } }
 
 ## Slots
 
