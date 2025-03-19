@@ -80,4 +80,4 @@ function splitAndMarkByRegex(str: string, regex: RegExp): Array<{ text: string; 
       <component v-else :is="textOrVnode" />
     </template>
   </span>
-</template>   
+</template>
