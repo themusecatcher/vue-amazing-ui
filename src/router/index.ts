@@ -174,6 +174,12 @@ export const routes = [
         component: () => import('@/views/GridView.vue')
       },
       {
+        path: '/highlight',
+        name: 'Highlight',
+        meta: { title: '高亮文本' },
+        component: () => import('@/views/HighlightView.vue')
+      },
+      {
         path: '/image',
         name: 'Image',
         meta: { title: '图片' },

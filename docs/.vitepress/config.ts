@@ -230,6 +230,10 @@ export default defineConfig({
               link: '/guide/components/grid'
             },
             {
+              text: '高亮文本 Highlight',
+              link: '/guide/components/highlight'
+            },
+            {
               text: '图片 Image',
               link: '/guide/components/image'
             },

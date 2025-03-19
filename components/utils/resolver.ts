@@ -28,6 +28,7 @@ const componentsMap = {
   GradientText: 'gradienttext',
   Row: 'grid/row',
   Col: 'grid/col',
+  Highlight: 'highlight',
   Image: 'image',
   Input: 'input',
   InputNumber: 'inputnumber',
@@ -105,7 +106,7 @@ const componentDependencies = {
   Waterfall: ['Spin']
 }
 function getSideEffects(componentName: string, options?: VueAmazingUIResolverOptions) {
-  if (['ConfigProvider', 'NumberAnimation', 'Watermark'].includes(componentName)) {
+  if (['ConfigProvider', 'Highlight', 'NumberAnimation', 'Watermark'].includes(componentName)) {
     // 无样式文件的组件
     return []
   }
@@ -123,7 +124,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   if (componentName === 'DatePicker') {
     // 特殊处理 DatePicker 组件样式依赖文件
     sideEffects.push(
-      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@11.0.1_vue@3.5.13_typescript@5.8.2_/node_modules/@vuepic/vue-datepicker/dist/main.css`
+      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@11.0.2_vue@3.5.13_typescript@5.8.2_/node_modules/@vuepic/vue-datepicker/dist/main.css`
     )
   }
   if (componentName === 'Swiper') {
