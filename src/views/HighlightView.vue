@@ -16,7 +16,7 @@ const patterns = ref(['Vue Amazing UI', 'Vue3', 'TypeScript', 'SFC', 'tree shaki
       :patterns="['Vue Amazing UI', 'TypeScript']"
       :highlight-style="{
         padding: '0 6px',
-        borderRadius: '3px',
+        borderRadius: '4px',
         display: 'inline-block',
         color: '#fff',
         background: '#1677ff',
