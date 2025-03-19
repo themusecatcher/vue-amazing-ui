@@ -67,5 +67,14 @@ watchEffect(() => {
     <h2 class="mt30 mb10">基本使用</h2>
     <a-menu v-model:selectedKeys="current" mode="horizontal" :items="items" />
     <Menu v-model:selectedKeys="current" mode="horizontal" :items="items" />
+    <!-- <a-menu
+      id="dddddd"
+      v-model:openKeys="openKeys"
+      v-model:selectedKeys="selectedKeys"
+      style="width: 256px"
+      mode="inline"
+      :items="items"
+      @click="handleClick"
+    ></a-menu> -->
   </div>
 </template>
