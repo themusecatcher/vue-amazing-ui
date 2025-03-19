@@ -17,7 +17,7 @@
 ## 特性
 
 - 组件库采用 `Vue@3.5.13`+ `TypeScript@5.8.2` + `Vite@6.2.2` + `Less@4.2.2` 实现
-- 目前共包含 `66` 个基础 `UI` 组件以及 `17` 个工具函数，并且持续探索更新中...
+- 目前共包含 `67` 个基础 `UI` 组件以及 `17` 个工具函数，并且持续探索更新中...
 - 顺便一提，它们全都可以 `treeshaking`
 - 主题可调，你只需提供一个主题色，剩下的都交给我
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -245,26 +245,27 @@ Divider | 分割线 | Drawer | 抽屉
 Ellipsis | 文本省略 | Empty | 空状态
 Flex | 弹性布局 | FloatButton | 浮动按钮
 GradientText | 渐变文字 | Grid | 栅格
-Image | 图片 | Input | 输入框
-InputNumber | 数字输入框 | InputSearch | 搜索框
-List | 列表 | LoadingBar | 加载条
-Message | 全局提示 | Modal | 模态框
-Notification | 通知提醒 | NumberAnimation | 数值动画
-Pagination | 分页 | Popconfirm | 弹出确认
-Popover | 气泡卡片 | Progress | 进度条
-QRCode | 二维码 | Radio | 单选框
-Rate | 评分 | Result | 结果
-Scrollbar | 滚动条 | Segmented | 分段控制器
-Select | 选择器 | Skeleton | 骨架屏
-Slider | 滑动输入条 | Space | 间距
-Spin | 加载中 | Statistic | 统计数值
-Steps | 步骤条 | Swiper | 触摸滑动插件
-Switch | 开关 | Table | 表格
-Tabs | 标签页 | Tag | 标签
-Textarea | 文本域 | TextScroll | 文字滚动
-Timeline | 时间轴 | Tooltip | 文字提示
-Upload | 上传 | Video | 播放器
-Waterfall | 瀑布流 | Watermark | 水印
+Highlight | 高亮文本 | Image | 图片
+Input | 输入框 | InputNumber | 数字输入框
+InputSearch | 搜索框 | List | 列表
+LoadingBar | 加载条 | Message | 全局提示
+Modal | 模态框 | Notification | 通知提醒
+NumberAnimation | 数值动画 | Pagination | 分页
+Popconfirm | 弹出确认 | Popover | 气泡卡片
+Progress | 进度条 | QRCode | 二维码
+Radio | 单选框 | Rate | 评分
+Result | 结果 | Scrollbar | 滚动条
+Segmented | 分段控制器 | Select | 选择器
+Skeleton | 骨架屏 | Slider | 滑动输入条
+Space | 间距 | Spin | 加载中
+Statistic | 统计数值 | Steps | 步骤条
+Swiper | 触摸滑动插件 | Switch | 开关
+Table | 表格 | Tabs | 标签页
+Tag | 标签 | Textarea | 文本域
+TextScroll | 文字滚动 | Timeline | 时间轴
+Tooltip | 文字提示 | Upload | 上传
+Video | 播放器 | Waterfall | 瀑布流
+Watermark | 水印
 
 ## 工具函数
 
