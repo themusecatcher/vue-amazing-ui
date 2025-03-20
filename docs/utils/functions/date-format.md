@@ -86,7 +86,6 @@ import { dateFormat } from 'vue-amazing-ui'
 ```vue
 <script setup lang="ts">
 import { dateFormat } from 'vue-amazing-ui'
-
 dateFormat(Date.now())
 </script>
 ```
