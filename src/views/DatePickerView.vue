@@ -139,9 +139,18 @@ function disabledDates(date: Date): boolean {
     <h3 class="mb10">不可选择过去日期，min-date 支持：Date | string 类型</h3>
     <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h3 class="mt10 mb10">不可选择未来日期，max-date 支持：Date | string 类型</h3>
-    <DatePicker v-model="dateValue" :max-date="format(new Date(), 'yyyy-MM-dd')" format="yyyy-MM-dd" placeholder="请选择日期" />
-    <h3 class="mt10 mb10">不可选择指定范围日期，disabled-dates 支持：Date[] | string[] | (date: Date) => boolean 类型</h3>
+    <DatePicker
+      v-model="dateValue"
+      :max-date="format(new Date(), 'yyyy-MM-dd')"
+      format="yyyy-MM-dd"
+      placeholder="请选择日期"
+    />
+    <h3 class="mt10 mb10"
+      >不可选择指定范围日期，disabled-dates 支持：Date[] | string[] | (date: Date) => boolean 类型</h3
+    >
     <h3 class="mt10 mb10">不可选择未来7天内的日期</h3>
+    <DatePicker v-model="dateValue" :disabled-dates="disabledDates" format="yyyy-MM-dd" placeholder="请选择日期" />
+    <h3 class="mt10 mb10">只能选择未来7天内的日期</h3>
     <DatePicker v-model="dateValue" :disabled-dates="disabledDates" format="yyyy-MM-dd" placeholder="请选择日期" />
     <!-- <h3 class="mt10 mb10">不可选择过去七天的日期</h3>
     <DatePicker v-model="dateValue" :disabled-dates="[new Date(), subDays(new Date(), 7)]" format="yyyy-MM-dd" placeholder="请选择日期" />

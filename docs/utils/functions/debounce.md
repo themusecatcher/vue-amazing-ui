@@ -58,7 +58,6 @@ function showPosition () {
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { debounce, useEventListener } from 'vue-amazing-ui'
-
 const scrollTop = ref(0)
 useEventListener(window, 'scroll', debounce(showPosition, 100))
 function showPosition () {
