@@ -42,7 +42,6 @@ export function throttle(fn: Function, delay: number = 300): any {
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
-
 const scrollTop = ref(0)
 useEventListener(window, 'scroll', throttle(showPosition, 100))
 function showPosition () {
@@ -58,7 +57,6 @@ function showPosition () {
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
-
 const scrollTop = ref(0)
 useEventListener(window, 'scroll', throttle(showPosition, 100))
 function showPosition () {
