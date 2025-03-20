@@ -3,12 +3,14 @@ import pkg from '/package.json'
 import { ref, watchEffect } from 'vue'
 import {
   format,
+  endOfDay,
   endOfMonth,
   endOfYear,
   startOfMonth,
   startOfYear,
   subMonths,
   addDays,
+  subDays,
   startOfWeek,
   endOfWeek,
   addHours,
@@ -98,6 +100,13 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('yearValue', yearValue.value)
 })
+function disabledDates(date: Date): boolean {
+  const current = date.getTime()
+  if (endOfDay(new Date()).getTime() < current && current <= endOfDay(addDays(new Date(), 7)).getTime()) {
+    return true
+  }
+  return false
+}
 </script>
 <template>
   <div>
@@ -127,10 +136,17 @@ watchEffect(() => {
     <h2 class="mt30 mb10">禁用</h2>
     <DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">禁用日期</h2>
-    <h3 class="mb10">不可选择过去日期</h3>
+    <h3 class="mb10">不可选择过去日期，min-date 支持：Date | string 类型</h3>
     <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
-    <h3 class="mt10 mb10">不可选择未来日期</h3>
-    <DatePicker v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
+    <h3 class="mt10 mb10">不可选择未来日期，max-date 支持：Date | string 类型</h3>
+    <DatePicker v-model="dateValue" :max-date="format(new Date(), 'yyyy-MM-dd')" format="yyyy-MM-dd" placeholder="请选择日期" />
+    <h3 class="mt10 mb10">不可选择指定范围日期，disabled-dates 支持：Date[] | string[] | (date: Date) => boolean 类型</h3>
+    <h3 class="mt10 mb10">不可选择未来7天内的日期</h3>
+    <DatePicker v-model="dateValue" :disabled-dates="disabledDates" format="yyyy-MM-dd" placeholder="请选择日期" />
+    <!-- <h3 class="mt10 mb10">不可选择过去七天的日期</h3>
+    <DatePicker v-model="dateValue" :disabled-dates="[new Date(), subDays(new Date(), 7)]" format="yyyy-MM-dd" placeholder="请选择日期" />
+    <h3 class="mt10 mb10">不可选择未来七天的日期</h3>
+    <DatePicker v-model="dateValue" :disabled-dates="[format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 7), 'yyyy-MM-dd')]" format="yyyy-MM-dd" placeholder="请选择日期" /> -->
     <h2 class="mt30 mb10">日期时间选择器</h2>
     <DatePicker
       :width="210"

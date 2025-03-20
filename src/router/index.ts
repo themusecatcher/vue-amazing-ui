@@ -443,18 +443,33 @@ export const routes = [
   }
 ]
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL), // 使用history模式，hash模式：createWebHashHistory
+  history: createWebHistory(import.meta.env.BASE_URL), // 使用 history 模式，hash 模式：createWebHashHistory
   routes, // `routes: routes` 的缩写
   scrollBehavior(to, from, savedPosition) {
     // 滚动行为
     return { left: 0, top: 0, behavior: 'smooth' }
   }
 })
+export const loadingBarRef: any = {}
 // 注册全局前置守卫
 router.beforeEach((to, from) => {
   const domTitle = to.meta.title
   const appTitle = import.meta.env.VITE_GLOB_APP_TITLE
   document.title = `${domTitle} - ${appTitle}`
+  if (!from || to.path !== from.path) {
+    if (loadingBarRef.value) {
+      loadingBarRef.value.start()
+    }
+  }
+})
+router.afterEach((to, from) => {
+  if (!from || to.path !== from.path) {
+    if (loadingBarRef.value) {
+      setTimeout(() => {
+        loadingBarRef.value.finish()
+      }, 100)
+    }
+  }
 })
 
 export default router
