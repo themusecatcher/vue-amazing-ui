@@ -113,7 +113,6 @@ dateFormat('2023-05-31', 'MM/DD/YYYY') // 05/31/2023
 ```vue
 <script setup lang="ts">
 import { dateFormat } from 'vue-amazing-ui'
-
 dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
 </script>
 ```
