@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-03-20">2.4.1</VersionDateTag>
+
+- [日期选择器 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件文档新增多种日期禁用使用方式
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2025-03-19">2.4.0</VersionDateTag>
 
 - 新增 [高亮文本 Highlight](https://themusecatcher.github.io/vue-amazing-ui/guide/components/highlight.html) 组件，用于高亮文本

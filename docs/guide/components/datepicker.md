@@ -16,9 +16,10 @@
 
 <script setup lang="ts">
 import pkg from '../../../package.json'
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, computed } from 'vue'
 import {
   format,
+  endOfDay,
   endOfMonth,
   endOfYear,
   startOfMonth,
@@ -29,7 +30,11 @@ import {
   endOfWeek,
   addHours,
   addMinutes,
-  addSeconds
+  addSeconds,
+  getMonth,
+  addMonths,
+  getYear,
+  addYears
 } from 'date-fns'
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
@@ -113,6 +118,34 @@ watchEffect(() => {
 })
 watchEffect(() => {
   console.log('yearValue', yearValue.value)
+})
+function disabledDates(date: Date): boolean {
+  const current = date.getTime()
+  if (endOfDay(new Date()).getTime() < current && current <= endOfDay(addDays(new Date(), 7)).getTime()) {
+    return false
+  }
+  return true
+}
+function disabledDatesNextWeek(date: Date): boolean {
+  const current = date.getTime()
+  if (endOfDay(new Date()).getTime() < current && current <= endOfDay(addDays(new Date(), 7)).getTime()) {
+    return true
+  }
+  return false
+}
+interface Filters {
+  months?: number[] // 0 = Jan, 11 - Dec
+  years?: number[] // Array of years to disable
+  times?: {
+    hours?: number[] // disable specific hours
+    minutes?: number[] // disable sepcific minutes
+    seconds?: number[] // disable specific seconds
+  }
+}
+const filters = computed<Filters>(() => {
+  return {
+    months: [0, 1, 2].map((index: number) => getMonth(addMonths(new Date(), index + 1)))
+  }
 })
 </script>
 
@@ -202,7 +235,7 @@ const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 
 ## 禁用日期
 
-*不可选择过去日期*
+*不可选择过去日期 `min-date` 支持：`Date | string` 类型*
 
 <br/>
 
@@ -226,11 +259,16 @@ watchEffect(() => {
 
 :::
 
-*不可选择未来日期*
+*不可选择未来日期 `max-date` 支持：`Date | string` 类型*
 
 <br/>
 
-<DatePicker v-model="dateValue" :max-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
+<DatePicker
+  v-model="dateValue"
+  :max-date="format(new Date(), 'yyyy-MM-dd')"
+  format="yyyy-MM-dd"
+  placeholder="请选择日期"
+/>
 
 ::: details Show Code
 
@@ -244,7 +282,180 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
+  <DatePicker
+    v-model="dateValue"
+    :max-date="format(new Date(), 'yyyy-MM-dd')"
+    format="yyyy-MM-dd"
+    placeholder="请选择日期"
+  />
+</template>
+```
+
+:::
+
+*只能选择未来七天内的日期 `disabled-dates` 支持：`Date[] | string[] | (date: Date) => boolean` 类型*
+
+<br/>
+
+<DatePicker v-model="dateValue" :disabled-dates="disabledDates" format="yyyy-MM-dd" placeholder="请选择日期" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { format, endOfDay, addDays } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
+watchEffect(() => {
+  console.log('dateValue', dateValue.value)
+})
+function disabledDates(date: Date): boolean {
+  const current = date.getTime()
+  if (endOfDay(new Date()).getTime() < current && current <= endOfDay(addDays(new Date(), 7)).getTime()) {
+    return false
+  }
+  return true
+}
+</script>
+<template>
+  <DatePicker v-model="dateValue" :disabled-dates="disabledDates" format="yyyy-MM-dd" placeholder="请选择日期" />
+</template>
+```
+
+:::
+
+*不可选择未来七天的日期*
+
+<br/>
+
+<DatePicker
+  v-model="dateValue"
+  :disabled-dates="disabledDatesNextWeek"
+  format="yyyy-MM-dd"
+  placeholder="请选择日期"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { format, endOfDay, addDays } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
+watchEffect(() => {
+  console.log('dateValue', dateValue.value)
+})
+function disabledDatesNextWeek(date: Date): boolean {
+  const current = date.getTime()
+  if (endOfDay(new Date()).getTime() < current && current <= endOfDay(addDays(new Date(), 7)).getTime()) {
+    return true
+  }
+  return false
+}
+</script>
+<template>
+  <DatePicker
+    v-model="dateValue"
+    :disabled-dates="disabledDatesNextWeek"
+    format="yyyy-MM-dd"
+    placeholder="请选择日期"
+  />
+</template>
+```
+
+:::
+
+*不可选择明天/后天*
+
+<br/>
+
+<DatePicker
+  v-model="dateValue"
+  :disabled-dates="[addDays(new Date(), 1), addDays(new Date(), 2)]"
+  format="yyyy-MM-dd"
+  placeholder="请选择日期"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { format, addDays } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
+watchEffect(() => {
+  console.log('dateValue', dateValue.value)
+})
+</script>
+<template>
+  <DatePicker
+    v-model="dateValue"
+    :disabled-dates="[addDays(new Date(), 1), addDays(new Date(), 2)]"
+    format="yyyy-MM-dd"
+    placeholder="请选择日期"
+  />
+</template>
+```
+
+:::
+
+*不可选择周六和周日 `disabled-week-days` 支持：`string[] | number[]` 类型；`0-6`, `0`是周日, `6`是周六*
+
+<br/>
+
+<DatePicker v-model="dateValue" :disabled-week-days="[0, 6]" format="yyyy-MM-dd" placeholder="请选择日期" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { format } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
+watchEffect(() => {
+  console.log('dateValue', dateValue.value)
+})
+</script>
+<template>
+  <DatePicker v-model="dateValue" :disabled-week-days="[0, 6]" format="yyyy-MM-dd" placeholder="请选择日期" />
+</template>
+```
+
+:::
+
+*不可选择未来三个月*
+
+<br/>
+
+<DatePicker v-model="dateValue" :filters="filters" format="yyyy-MM-dd" placeholder="请选择日期" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect, computed } from 'vue'
+import { format, getMonth, addMonths } from 'date-fns'
+const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
+watchEffect(() => {
+  console.log('dateValue', dateValue.value)
+})
+interface Filters {
+  months?: number[] // 0 = Jan, 11 - Dec
+  years?: number[] // Array of years to disable
+  times?: {
+    hours?: number[] // disable specific hours
+    minutes?: number[] // disable sepcific minutes
+    seconds?: number[] // disable specific seconds
+  }
+}
+const filters = computed<Filters>(() => {
+  return {
+    months: [0, 1, 2].map((index: number) => getMonth(addMonths(new Date(), index + 1)))
+  }
+})
+</script>
+<template>
+  <DatePicker v-model="dateValue" :filters="filters" format="yyyy-MM-dd" placeholder="请选择日期" />
 </template>
 ```
 

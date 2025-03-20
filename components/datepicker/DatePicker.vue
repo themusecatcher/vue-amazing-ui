@@ -145,6 +145,7 @@ const year = computed(() => {
         border: 1px solid var(--dp-secondary-color);
       }
       .dp__cell_disabled.dp__active_date {
+        color: rgba(0, 0, 0, 0.45);
         border-color: var(--dp-secondary-color);
       }
       .dp__range_between {
