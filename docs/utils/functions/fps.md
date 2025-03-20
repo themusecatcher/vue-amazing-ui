@@ -48,7 +48,9 @@ const { fps } = useFps()
 
 ## 基本使用
 
-<h3>帧率：{{ fps }}</h3>
+<ClientOnly>
+  <h3>帧率：{{ fps }}</h3>
+</ClientOnly>
 
 ```vue
 <script setup lang="ts">
