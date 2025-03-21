@@ -48,6 +48,7 @@ function splitAndMarkByRegex(str: string, regex: RegExp): Array<{ text: string; 
   const result = []
   let lastIndex = 0
   let match
+  // 在一个指定字符串中执行一个搜索匹配，返回一个结果数组或 null
   while ((match = regex.exec(str)) !== null) {
     if (match.index > lastIndex) {
       result.push({
@@ -60,6 +61,7 @@ function splitAndMarkByRegex(str: string, regex: RegExp): Array<{ text: string; 
       isMatch: true
     })
     lastIndex = regex.lastIndex
+    // 针对字符串中所有可能的匹配项测试正则表达式，还是仅针对第一个匹配项
     if (!regex.global) {
       break
     }
