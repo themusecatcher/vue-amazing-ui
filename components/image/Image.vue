@@ -73,7 +73,7 @@ const imageAmount = computed(() => {
   return images.value.length
 })
 const dragTransitionDuration = computed(() => {
-  return props.draggable ? '100ms' : '300ms'
+  return props.draggable ? '100ms' : '200ms'
 })
 const complete = ref(Array(imageAmount.value).fill(false)) // 图片是否加载完成
 const loaded = ref(Array(imageAmount.value).fill(false)) // 预览图片是否加载完成
