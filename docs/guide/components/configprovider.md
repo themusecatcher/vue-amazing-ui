@@ -272,7 +272,7 @@ function onDecline(scale: number) {
     <LoadingBar ref="loadingBarRef" :container-style="{ position: 'absolute' }" :to="cardRef" />
     <div
       ref="cardRef"
-      style="position: relative; width: 50%; padding: 48px 36px; border-radius: 8px; border: 1px solid #f0f0f0"
+      style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
     >
       <Space>
         <Button type="primary" @click="loadingBarRef.start()">Start</Button>
@@ -575,7 +575,7 @@ function onDecline(scale: number) {
       <LoadingBar ref="loadingBarRef" :container-style="{ position: 'absolute' }" :to="cardRef" />
       <div
         ref="cardRef"
-        style="position: relative; width: 50%; padding: 48px 36px; border-radius: 8px; border: 1px solid #f0f0f0"
+        style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
       >
         <Space>
           <Button type="primary" @click="loadingBarRef.start()">Start</Button>
