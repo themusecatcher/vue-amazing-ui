@@ -109,7 +109,7 @@ const color = ref('#87d068')
       </template>
     </Avatar>
     <h2 class="mt30 mb10">链接跳转</h2>
-    <Tooltip tooltip="themusecatcher@github">
+    <Tooltip tooltip="GitHub@themusecatcher">
       <Avatar
         :size="36"
         src="https://github.com/themusecatcher.png"

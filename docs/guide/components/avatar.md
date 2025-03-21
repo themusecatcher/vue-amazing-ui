@@ -288,7 +288,7 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 
 ## 链接跳转
 
-<Tooltip tooltip="themusecatcher@github">
+<Tooltip tooltip="GitHub@themusecatcher">
   <Avatar
     :size="36"
     src="https://github.com/themusecatcher.png"
@@ -301,7 +301,7 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 
 ```vue
 <template>
-  <Tooltip tooltip="themusecatcher@github">
+  <Tooltip tooltip="GitHub@themusecatcher">
     <Avatar
       :size="36"
       src="https://github.com/themusecatcher.png"
