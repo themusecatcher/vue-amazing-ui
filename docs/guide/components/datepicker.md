@@ -31,13 +31,13 @@ import {
   addMinutes,
   addSeconds,
   getMonth,
-  addMonths,
-  getYear,
-  addYears
+  addMonths
 } from 'date-fns'
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
-const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
+const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 3), 'yyyy-MM-dd')])
+const rangeTimeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd HH:mm:ss'), format(addDays(new Date(), 3), 'yyyy-MM-dd HH:mm:ss')])
+const maxRangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 6), 'yyyy-MM-dd')])
 const timeRangeValue = ref([
   {
     hours: new Date().getHours(),
@@ -99,6 +99,12 @@ watchEffect(() => {
 })
 watchEffect(() => {
   console.log('rangeValue', rangeValue.value)
+})
+watchEffect(() => {
+  console.log('rangeTimeValue', rangeTimeValue.value)
+})
+watchEffect(() => {
+  console.log('maxRangeValue', maxRangeValue.value)
 })
 watchEffect(() => {
   console.log('timeRangeValue', timeRangeValue.value)
@@ -234,7 +240,7 @@ const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 
 ## 禁用日期
 
-*不可选择过去日期 `min-date` 支持：`Date | string` 类型*
+*不可选择过去日期，`min-date` 支持：`Date | string` 类型*
 
 <br/>
 
@@ -258,7 +264,7 @@ watchEffect(() => {
 
 :::
 
-*不可选择未来日期 `max-date` 支持：`Date | string` 类型*
+*不可选择未来日期，`max-date` 支持：`Date | string` 类型*
 
 <br/>
 
@@ -292,7 +298,7 @@ watchEffect(() => {
 
 :::
 
-*只能选择未来七天内的日期 `disabled-dates` 支持：`Date[] | string[] | (date: Date) => boolean` 类型*
+*只能选择未来七天内的日期，`disabled-dates` 支持：`Date[] | string[] | (date: Date) => boolean` 类型*
 
 <br/>
 
@@ -398,7 +404,7 @@ watchEffect(() => {
 
 :::
 
-*不可选择周六和周日 `disabled-week-days` 支持：`string[] | number[]` 类型；`0-6`, `0`是周日, `6`是周六*
+*不可选择周六和周日，`disabled-week-days` 支持：`string[] | number[]` 类型；`0-6`, `0`是周日, `6`是周六*
 
 <br/>
 
@@ -422,7 +428,7 @@ watchEffect(() => {
 
 :::
 
-*不可选择未来三个月*
+*不可选择未来三个月，`filters` 支持：`Filters` 类型*
 
 <br/>
 
@@ -498,14 +504,7 @@ watchEffect(() => {
 
 ## 日期范围选择器
 
-<DatePicker
-  :width="240"
-  v-model="rangeValue"
-  range
-  :preset-dates="presetDates"
-  format="yyyy-MM-dd"
-  placeholder="请选择日期范围"
-/>
+<DatePicker :width="240" v-model="rangeValue" range format="yyyy-MM-dd" placeholder="请选择日期范围" />
 
 ::: details Show Code
 
@@ -513,20 +512,13 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { format, addDays } from 'date-fns'
-const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
+const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 3), 'yyyy-MM-dd')])
 watchEffect(() => {
   console.log('rangeValue', rangeValue.value)
 })
 </script>
 <template>
-  <DatePicker
-    :width="240"
-    v-model="rangeValue"
-    range
-    :preset-dates="presetDates"
-    format="yyyy-MM-dd"
-    placeholder="请选择日期范围"
-  />
+  <DatePicker :width="240" v-model="rangeValue" range format="yyyy-MM-dd" placeholder="请选择日期范围" />
 </template>
 ```
 
@@ -537,7 +529,6 @@ watchEffect(() => {
 <DatePicker
   :width="240"
   v-model="rangeValue"
-  mode="range"
   format="yyyy-MM-dd"
   range
   multi-calendars
@@ -550,7 +541,7 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { format, addDays } from 'date-fns'
-const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
+const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 3), 'yyyy-MM-dd')])
 watchEffect(() => {
   console.log('rangeValue', rangeValue.value)
 })
@@ -559,11 +550,53 @@ watchEffect(() => {
   <DatePicker
     :width="240"
     v-model="rangeValue"
-    mode="range"
     format="yyyy-MM-dd"
     range
     multi-calendars
     placeholder="请选择日期范围"
+  />
+</template>
+```
+
+:::
+
+## 日期时间范围选择器
+
+<DatePicker
+  :width="350"
+  v-model="rangeTimeValue"
+  range
+  show-time
+  enable-seconds
+  multi-calendars
+  format="yyyy-MM-dd HH:mm:ss"
+  placeholder="请选择日期时间范围"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { format, addDays } from 'date-fns'
+const rangeTimeValue = ref<string[]>([
+  format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+  format(addDays(new Date(), 3), 'yyyy-MM-dd HH:mm:ss')
+])
+watchEffect(() => {
+  console.log('rangeTimeValue', rangeTimeValue.value)
+})
+</script>
+<template>
+  <DatePicker
+    :width="350"
+    v-model="rangeTimeValue"
+    range
+    show-time
+    enable-seconds
+    multi-calendars
+    format="yyyy-MM-dd HH:mm:ss"
+    placeholder="请选择日期时间范围"
   />
 </template>
 ```
@@ -579,7 +612,6 @@ watchEffect(() => {
 <DatePicker
   :width="240"
   v-model="rangeValue"
-  mode="range"
   format="yyyy-MM-dd"
   range
   :preset-dates="presetDates"
@@ -593,7 +625,7 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { format, addDays, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear } from 'date-fns'
-const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
+const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 3), 'yyyy-MM-dd')])
 const presetDates = ref([
   { label: 'Today', value: [new Date(), new Date()] },
   { label: 'This month', value: [startOfMonth(new Date()), endOfMonth(new Date())] },
@@ -611,11 +643,50 @@ watchEffect(() => {
   <DatePicker
     :width="240"
     v-model="rangeValue"
-    mode="range"
     format="yyyy-MM-dd"
     range
     :preset-dates="presetDates"
     multi-calendars
+    placeholder="请选择日期范围"
+  />
+</template>
+```
+
+:::
+
+## 自定义最长日期可选择范围
+
+*最长日期可选范围不超过七天*
+
+<br/>
+
+<DatePicker
+  :width="240"
+  v-model="maxRangeValue"
+  format="yyyy-MM-dd"
+  range
+  :max-range="7"
+  placeholder="请选择日期范围"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { format, addDays } from 'date-fns'
+const maxRangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 6), 'yyyy-MM-dd')])
+watchEffect(() => {
+  console.log('maxRangeValue', maxRangeValue.value)
+})
+</script>
+<template>
+  <DatePicker
+    :width="240"
+    v-model="maxRangeValue"
+    format="yyyy-MM-dd"
+    range
+    :max-range="7"
     placeholder="请选择日期范围"
   />
 </template>
@@ -870,8 +941,10 @@ mode | 选择器模式 | 'time' &#124; 'date' &#124; 'week' &#124; 'month' &#124
 [format](#format-支持的格式化占位符列表) | 日期展示格式 | string &#124; ((date: Date) => string) &#124; ((dates: Date[]) => string) | [DefaultFormat](#defaultformat-value)
 showTime | 是否增加时间选择 | boolean | false
 showToday | 是否展示”今天“按钮 | boolean | false
-modelValue <Tag color="cyan">v-model</Tag> | 双向绑定值 | number &#124; string &#124; object &#124; array | null
+range | 是否使用范围选择器 | boolean | false
+maxRange | 范围选择器最长日期可选择范围，单位天，仅当 `range: true` 时生效 | number | undefined
 modelType | `v-model` 值类型，可选 `timestamp`: 时间戳、`format`: 字符串，`mode` 为 `week` 或 `year` 时，该配置不生效 | 'timestamp' &#124; 'format' | 'format'
+modelValue <Tag color="cyan">v-model</Tag> | 双向绑定值 | number &#124; string &#124; object &#124; array | null
 
 ### DefaultFormat Value
 
