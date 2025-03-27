@@ -4,6 +4,15 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-03-27">2.4.3</VersionDateTag>
+
+- 优化并更新[日期选择器 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增 `maxRange` 属性，用于支持自定义最长日期可选择范围
+- 组件库及文档代码优化
+
+## <VersionDateTag date="2025-03-25">2.4.2</VersionDateTag>
+
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2025-03-21">2.4.1</VersionDateTag>
 
 - 优化并更新[日期选择器 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，文档新增多种日期禁用场景及使用方式

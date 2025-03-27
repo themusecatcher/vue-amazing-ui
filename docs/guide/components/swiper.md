@@ -1,4 +1,4 @@
-# 触摸滑动插件 Swiper<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">{{ pkg.dependencies.swiper }}</Tag>
+# 触摸滑动插件 Swiper<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">11.2.5</Tag>
 
 <GlobalElement />
 
@@ -17,7 +17,6 @@
 
 <script setup lang="ts">
 import { ref, shallowReactive, onBeforeMount } from 'vue'
-import pkg from '../../../package.json'
 import type { SwiperImage } from 'vue-amazing-ui'
 const images = ref<SwiperImage[]>([])
 function loadImages() {
