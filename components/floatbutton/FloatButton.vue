@@ -229,6 +229,9 @@ function onClick(e: Event) {
   .float-btn-tooltip {
     width: 100%;
     height: 100%;
+    :deep(.m-tooltip-card) {
+      cursor: auto;
+    }
     :deep(.tooltip-content) {
       width: 100%;
       height: 100%;
