@@ -16,13 +16,16 @@ import {
   addMinutes,
   addSeconds,
   getMonth,
-  addMonths,
-  getYear,
-  addYears
+  addMonths
 } from 'date-fns'
 const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTimeValue = ref(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
-const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 1), 'yyyy-MM-dd')])
+const rangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 3), 'yyyy-MM-dd')])
+const rangeTimeValue = ref<string[]>([
+  format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+  format(addDays(new Date(), 3), 'yyyy-MM-dd HH:mm:ss')
+])
+const maxRangeValue = ref<string[]>([format(new Date(), 'yyyy-MM-dd'), format(addDays(new Date(), 6), 'yyyy-MM-dd')])
 const timeRangeValue = ref([
   {
     hours: new Date().getHours(),
@@ -86,6 +89,12 @@ watchEffect(() => {
   console.log('rangeValue', rangeValue.value)
 })
 watchEffect(() => {
+  console.log('rangeTimeValue', rangeTimeValue.value)
+})
+watchEffect(() => {
+  console.log('maxRangeValue', maxRangeValue.value)
+})
+watchEffect(() => {
   console.log('timeRangeValue', timeRangeValue.value)
 })
 watchEffect(() => {
@@ -129,11 +138,6 @@ interface Filters {
 const filters = computed<Filters>(() => {
   return {
     months: [0, 1, 2].map((index: number) => getMonth(addMonths(new Date(), index + 1)))
-  }
-})
-const yearFilters = computed<Filters>(() => {
-  return {
-    years: [0, -1, -2].map((index: number) => getYear(addYears(new Date(), index - 1)))
   }
 })
 </script>
@@ -196,7 +200,7 @@ const yearFilters = computed<Filters>(() => {
       >不可选择周六和周日，disabled-week-days 支持：string[] | number[] 类型；0-6, 0是周日, 6是周六</h3
     >
     <DatePicker v-model="dateValue" :disabled-week-days="[0, 6]" format="yyyy-MM-dd" placeholder="请选择日期" />
-    <h3 class="mt10 mb10">不可选择未来三个月</h3>
+    <h3 class="mt10 mb10">不可选择未来三个月，filters 支持：Filters 类型</h3>
     <DatePicker v-model="dateValue" :filters="filters" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">日期时间选择器</h2>
     <DatePicker
@@ -208,34 +212,46 @@ const yearFilters = computed<Filters>(() => {
       placeholder="请选择日期时间"
     />
     <h2 class="mt30 mb10">日期范围选择器</h2>
-    <DatePicker
-      :width="240"
-      v-model="rangeValue"
-      range
-      :preset-dates="presetDates"
-      format="yyyy-MM-dd"
-      placeholder="请选择日期范围"
-    />
+    <DatePicker :width="240" v-model="rangeValue" range format="yyyy-MM-dd" placeholder="请选择日期范围" />
     <h2 class="mt30 mb10">双日期面板</h2>
     <DatePicker
       :width="240"
       v-model="rangeValue"
-      mode="range"
       format="yyyy-MM-dd"
       range
-      :multi-calendars="{ solo: true }"
+      multi-calendars
       placeholder="请选择日期范围"
+    />
+    <h2 class="mt30 mb10">日期时间范围选择器</h2>
+    <DatePicker
+      :width="350"
+      v-model="rangeTimeValue"
+      range
+      show-time
+      enable-seconds
+      multi-calendars
+      format="yyyy-MM-dd HH:mm:ss"
+      placeholder="请选择日期时间范围"
     />
     <h2 class="mt30 mb10">预设范围</h2>
     <h3 class="mb10">预设常用的日期范围以提高用户体验</h3>
     <DatePicker
       :width="240"
       v-model="rangeValue"
-      mode="range"
       format="yyyy-MM-dd"
       range
       :preset-dates="presetDates"
       multi-calendars
+      placeholder="请选择日期范围"
+    />
+    <h2 class="mt30 mb10">自定义最长日期可选择范围</h2>
+    <h3 class="mb10">最长日期可选范围不超过7天</h3>
+    <DatePicker
+      :width="240"
+      v-model="maxRangeValue"
+      format="yyyy-MM-dd"
+      range
+      :max-range="7"
       placeholder="请选择日期范围"
     />
     <h2 class="mt30 mb10">时分选择器</h2>
