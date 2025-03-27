@@ -1,4 +1,4 @@
-# 日期选择器 DatePicker<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">{{ pkg.dependencies['@vuepic/vue-datepicker'] }}</Tag>
+# 日期选择器 DatePicker<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">11.0.2</Tag>
 
 <GlobalElement />
 
@@ -15,7 +15,6 @@
 - [date-fns](https://date-fns.org/)
 
 <script setup lang="ts">
-import pkg from '../../../package.json'
 import { ref, watchEffect, computed } from 'vue'
 import {
   format,
