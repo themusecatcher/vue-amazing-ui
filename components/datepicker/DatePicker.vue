@@ -73,9 +73,6 @@ watch(
     startTs.value = null
   }
 )
-function onCleared() {
-  startTs.value = null
-}
 function onClosed() {
   startTs.value = null
 }
@@ -119,7 +116,6 @@ function maxRangeDisabledDates(date: Date): boolean {
     :day-names="['一', '二', '三', '四', '五', '六', '七']"
     :disabled-dates="range && maxRange ? maxRangeDisabledDates : []"
     @range-start="rangeStart"
-    @cleared="onCleared"
     @closed="onClosed"
   />
 </template>
