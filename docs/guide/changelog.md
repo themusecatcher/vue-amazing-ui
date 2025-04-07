@@ -693,7 +693,7 @@
 - 新增 漫游式引导 Tour 组件
 - 新增 评论 Comment 组件
 - 新增 下拉菜单 Dropdown 组件
-- 更新 表格 Table 组件，新增虚拟滚动功能
-<!-- - 时间轴 Timeline 组件，新增水平时间轴
+<!-- - 更新 表格 Table 组件，新增虚拟滚动功能
+- 时间轴 Timeline 组件，新增水平时间轴
 - 新增 时间选择器 TimePicker 组件
 - 重构级联选择 Cascader 组件 -->
