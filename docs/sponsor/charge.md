@@ -5,8 +5,8 @@
 `Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。组件库及文档所有工作均由作者一人完成，开发迭代过程实属不易...为了组件库的健康可持续发展，非常期望能获得您的支持与赞助。
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { HeartFilled, WechatOutlined, AlipayOutlined } from '@ant-design/icons-vue'
+import { ref, h } from 'vue'
+import { HeartFilled, WechatOutlined, AlipayOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { useMediaQuery } from 'vue-amazing-ui'
 import WeChat from '/wechat.jpg'
 import Alipay from '/alipay.jpg'
@@ -190,5 +190,35 @@ const QRCodes = [
       </div>
     </template>
     <Avatar style="border-color: rgba(0, 0, 0, 0.25)" color="#fff" :size="36" :src="Avatar3" href="https://github.com/beijin1949" target="_blank" />
+  </Tooltip>
+  <Tooltip>
+    <template #tooltip>
+      <div style="text-align: center">
+        WeChat
+        <br/>
+        @*梦
+      </div>
+    </template>
+    <Avatar :size="36" :icon="() => h(UserOutlined)" />
+  </Tooltip>
+  <Tooltip>
+    <template #tooltip>
+      <div style="text-align: center">
+        WeChat
+        <br/>
+        @*鱼
+      </div>
+    </template>
+    <Avatar :size="36" :icon="() => h(UserOutlined)" />
+  </Tooltip>
+  <Tooltip>
+    <template #tooltip>
+      <div style="text-align: center">
+        Alipay
+        <br/>
+        @**山
+      </div>
+    </template>
+    <Avatar :size="36" :icon="() => h(UserOutlined)" />
   </Tooltip>
 </Space>
