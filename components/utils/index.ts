@@ -174,6 +174,7 @@ export function cancelRaf(raf: { id: number }): void {
 export function throttle(fn: Function, delay: number = 300): any {
   let valid = true // 用于标记函数是否可以执行
   return function (...args: any[]) {
+    if (!valid) return false // 返回 false，表示当前不执行函数
     // 返回一个新的函数，该函数负责执行节流逻辑
     if (valid) {
       fn(...args) // 执行原函数
@@ -182,7 +183,6 @@ export function throttle(fn: Function, delay: number = 300): any {
         valid = true
       }, delay)
     }
-    return false // 返回false，表示当前不执行函数
   }
 }
 /**
