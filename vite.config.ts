@@ -4,8 +4,8 @@ import { defineConfig } from 'vite'
 import type { BuildEnvironmentOptions } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import VueDevTools from 'vite-plugin-vue-devtools'
-//  https://github.com/qmhc/vite-plugin-dts/tree/main 用于在 库模式 中从 .ts(x) 或 .vue 源文件生成类型文件（*.d.ts）的 Vite 插件
-import dts from 'vite-plugin-dts' 
+// 用于在 库模式 中从 .ts(x) 或 .vue 源文件生成类型文件（*.d.ts）的 Vite 插件 https://github.com/qmhc/vite-plugin-dts/tree/main
+import dts from 'vite-plugin-dts'
 // import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 // ant-desing naive-ui 按需引入
@@ -165,7 +165,7 @@ export default defineConfig({
     VueDevTools({
       launchEditor: 'cursor'
     }),
-    dts({
+    dts({ // 自动生成类型文件
       outDir: ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
       tsconfigPath: './tsconfig.dts.json',
       cleanVueFileName: true, // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
@@ -175,13 +175,13 @@ export default defineConfig({
       // 使用自定义函数来控制每个文件的输出路径
       beforeWriteFile: (filePath: string, content: string) => {
         // console.log('filePath', filePath)
-        // filePath: es/components/button/index.d.ts
-        // componentPath: es/button/index.d.ts
+        // 默认生成的文件路径 filePath: es/components/button/index.d.ts
+        // 各个组件需要的文件路径 componentPath: es/button/index.d.ts
         // [^/]+: 匹配一个或多个除了 / 之外的任何单个字符
         let targetPath: string
         // es/components/button/index.d.ts 转换为 es/button/index.d.ts
         targetPath = filePath.replace(/es\/components\/([^/]+)\/index\.d\.ts$/, 'es/$1/index.d.ts')
-        if (filePath === targetPath) {
+        if (filePath === targetPath) { // 说明文件路径未被匹配，没有任何变动
           // 将 es/components/button/Button.d.ts 转换为 es/button/Button.d.ts
           targetPath = filePath.replace(/es\/components\/([^/]+)\/([^/]+)\.d\.ts$/, 'es/$1/$2.d.ts')
         }
