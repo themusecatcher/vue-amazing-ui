@@ -4,8 +4,8 @@ import { defineConfig } from 'vite'
 import type { BuildEnvironmentOptions } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import VueDevTools from 'vite-plugin-vue-devtools'
-// 自动生成类型文件
-import dts from 'vite-plugin-dts'
+//  https://github.com/qmhc/vite-plugin-dts/tree/main 用于在 库模式 中从 .ts(x) 或 .vue 源文件生成类型文件（*.d.ts）的 Vite 插件
+import dts from 'vite-plugin-dts' 
 // import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 // ant-desing naive-ui 按需引入
@@ -27,6 +27,11 @@ const buildDistOptions = {
   emptyOutDir: false, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
   copyPublicDir: false, // 默认情况下，Vite 会在构建阶段将 publicDir 目录中的所有文件复制到 outDir 目录中。可以通过设置该选项为 false 来禁用该行为。
   lib: { // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
+    /*
+      es: 将 bundle 保留为 ES 模块文件，适用于其他打包工具，以及支持 <script type=module> 标签的浏览器
+      umd: 通用模块定义规范，同时支持 amd，cjs 和 iife
+      iife: 自执行函数，适用于 <script> 标签（如果你想为你的应用程序创建 bundle，那么你可能会使用它）。iife 表示“自执行 函数表达式”
+    */
     formats: f === 'iife' ? ['iife'] : ['es', 'umd'], // iife: 自执行函数表达式 Immediately Invoked Function Expression
     // __dirname 的值是 vite.config.ts 文件所在目录
     entry: resolve(__dirname, 'components', 'index.ts'),  // 或 'components/index.ts' entry 是必需的，因为库不能使用HTML作为入口。
@@ -116,9 +121,12 @@ const buildESAndLibOptions = {
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
     external: ['vue', 'date-fns', 'swiper/modules', 'swiper/vue', '@vuepic/vue-datepicker', '@vueuse/core', 'seemly', 'qrcode', '@ant-design/colors', '@ctrl/tinycolor'],
     input: resolve(__dirname, 'components', 'index.ts'), // 'components/index.ts'
-    output: [
+    output: [ // https://cn.rollupjs.org/javascript-api/#outputoptions-object
       {
-        format: 'es',
+        dir: 'es', // 指定所有生成的 chunk 被放置在哪个目录中
+        format: 'es', // 指定生成的 bundle 的格式
+        entryFileNames: '[name].js', // 默认：'[name].js'，类型：string | ((chunkInfo: PreRenderedChunk) => string)
+        // 指定 chunks 的入口文件模式，其值也可以是一个函数，对每个入口 chunk 调用以返回匹配模式
         // entryFileNames: (chunkInfo: any) => {
         //   console.log('chunkInfo', chunkInfo.name)
         //   if (chunkInfo.name.endsWith('.vue')) {
@@ -126,14 +134,14 @@ const buildESAndLibOptions = {
         //   }
         //   return `${chunkInfo.name}.js`
         // },
-        entryFileNames: '[name].js',
-        preserveModules: true,
-        dir: 'es',
-        exports: 'named',
-        preserveModulesRoot: 'components'
+        exports: 'named', // 指定导出模式 named – 适用于使用命名导出的情况
+        preserveModules: true, // 将使用原始模块名作为文件名，为所有模块创建单独的 chunk，而不是创建尽可能少的 chunk
+        preserveModulesRoot: 'components' // 确保输入的模块会输出到 es 目录下，而不是在 es/components 下
       },
       {
+        dir: 'lib',
         format: 'cjs',
+        entryFileNames: '[name].cjs',
         // entryFileNames: (chunkInfo: any) => {
         //   console.log('chunkInfo', chunkInfo.name)
         //   if (chunkInfo.name.endsWith('.vue')) {
@@ -141,10 +149,8 @@ const buildESAndLibOptions = {
         //   }
         //   return `${chunkInfo.name}.cjs`
         // },
-        entryFileNames: '[name].cjs',
-        preserveModules: true,
-        dir: 'lib',
         exports: 'named',
+        preserveModules: true,
         preserveModulesRoot: 'components'
       }
     ]
