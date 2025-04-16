@@ -309,6 +309,7 @@ defineExpose({
     z-index: 1;
     display: flex;
     align-items: center;
+    will-change: transform;
     animation: horizontalScroll var(--text-scroll-duration) linear var(--text-scroll-delay)
       var(--text-scroll-iteration-count);
     animation-play-state: var(--text-scroll-play-state);
