@@ -1,6 +1,9 @@
 export type { Props as AlertProps } from './alert'
 export { default as Alert } from './alert'
 
+export type { Props as AutoCompleteProps } from './autocomplete'
+export { default as AutoComplete } from './autocomplete'
+
 export type { Props as AvatarProps, Responsive as AvatarResponsive } from './avatar'
 export { default as Avatar } from './avatar'
 

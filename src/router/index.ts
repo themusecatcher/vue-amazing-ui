@@ -24,6 +24,12 @@ export const routes = [
         component: () => import('@/views/AlertView.vue')
       },
       {
+        path: '/autocomplete',
+        name: 'AutoComplete',
+        meta: { title: '自动完成' },
+        component: () => import('@/views/AutoCompleteView.vue')
+      },
+      {
         path: '/avatar',
         name: 'Avatar',
         meta: { title: '头像' },
