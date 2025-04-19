@@ -472,18 +472,25 @@ export const routes: RouteRecordRaw[] = [
         meta: { title: '首页' },
         component: components['../views/home/Index.vue']
       },
-      ...Object.entries(modules).filter(([path, _]) => !path.includes('home') && !path.includes('exception')).map(([path, meta]) => {
-        const componentPath = path.replace('index.ts', 'Index.vue') // 打包过后，目录结构是不存在的，不能直接用该变量作为组件导入的路径
-        path = path.replace('../views', '').replace('/index.ts', '') || '/'
-        // 将路径转换为所有首字母大写的 name；filter(Boolean) 去掉空字符串，即去掉多余的斜杠导致的空字符串
-        const name = path.split('/').filter(Boolean).map((word: string) => word[0].toUpperCase() + word.slice(1)).join('') || 'Index'
-        return {
-          path,
-          name,
-          meta,
-          component: components[componentPath]
-        }
-      }) as RouteRecordRaw[]
+      ...(Object.entries(modules)
+        .filter(([path, _]) => !path.includes('home') && !path.includes('exception'))
+        .map(([path, meta]) => {
+          const componentPath = path.replace('index.ts', 'Index.vue') // 打包过后，目录结构是不存在的，不能直接用该变量作为组件导入的路径
+          path = path.replace('../views', '').replace('/index.ts', '') || '/'
+          // 将路径转换为所有首字母大写的 name；filter(Boolean) 去掉空字符串，即去掉多余的斜杠导致的空字符串
+          const name =
+            path
+              .split('/')
+              .filter(Boolean)
+              .map((word: string) => word[0].toUpperCase() + word.slice(1))
+              .join('') || 'Index'
+          return {
+            path,
+            name,
+            meta,
+            component: components[componentPath]
+          }
+        }) as RouteRecordRaw[])
     ]
   },
   {
