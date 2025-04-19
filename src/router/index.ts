@@ -1,33 +1,33 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import GlobalLayout from '@/layouts/GlobalLayout.vue'
 
-export const routes = [
-  {
-    path: '/',
-    name: 'Index',
-    component: GlobalLayout,
-    redirect: '/home',
-    children: [
-      {
-        path: '/home',
-        name: 'Home',
-        meta: { title: '首页' },
-        // route level code-splitting
-        // this generates a separate chunk (Home.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import('@/views/guide/Home.vue')
-      },
-    ]
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    // 如果你省略了最后的 `*`，在解析或跳转时，参数中的 `/` 字符将被编码
-    // path: '/:pathMatch(.*)',
-    name: 'not-found',
-    meta: { title: 'NotFound' },
-    component: () => import('@/views/guide/NotFound.vue')
-  }
-]
+// export const routes = [
+//   {
+//     path: '/',
+//     name: 'Index',
+//     component: GlobalLayout,
+//     redirect: '/home',
+//     children: [
+//       {
+//         path: '/home',
+//         name: 'Home',
+//         meta: { title: '首页' },
+//         // route level code-splitting
+//         // this generates a separate chunk (Home.[hash].js) for this route
+//         // which is lazy-loaded when the route is visited.
+//         component: () => import('@/views/home/Index.vue')
+//       },
+//     ]
+//   },
+//   {
+//     path: '/:pathMatch(.*)*',
+//     // 如果你省略了最后的 `*`，在解析或跳转时，参数中的 `/` 字符将被编码
+//     // path: '/:pathMatch(.*)',
+//     name: 'NotFound',
+//     meta: { title: '未找到' },
+//     component: () => import('@/views/exception/Index.vue')
+//   }
+// ]
 /*
   读取目录结构（编译时态），自动生成路由
   运行时态和编译时态的区别：
