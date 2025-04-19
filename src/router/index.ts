@@ -497,8 +497,8 @@ export const routes: RouteRecordRaw[] = [
     path: '/:pathMatch(.*)*',
     // 如果你省略了最后的 `*`，在解析或跳转时，参数中的 `/` 字符将被编码
     // path: '/:pathMatch(.*)',
-    name: 'not-found',
-    meta: { title: 'NotFound' },
+    name: 'NotFound',
+    meta: { title: '未找到' },
     component: components['../views/exception/Index.vue']
   }
 ]
