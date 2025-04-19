@@ -58,7 +58,7 @@
 ## <VersionDateTag date="2025-03-07">2.2.15</VersionDateTag>
 
 - 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增颜色样式变量，用于支持自定义主题色
-- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，新增 `CSS` 变量，支持：自定义主题色；自定义切换动画效果
+- 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，新增 `CSS` 变量，支持：自定义主题色；自定义切换动画效果
 
 ## <VersionDateTag date="2025-03-06">2.2.14</VersionDateTag>
 
@@ -148,7 +148,7 @@
 ## <VersionDateTag date="2025-02-14">2.2.3</VersionDateTag>
 
 - 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件样式和过渡动画效果；新增属性 `size`，支持设置日期选择组件大小
-- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件过渡动画效果
+- 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件过渡动画效果
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-02-13">2.2.2</VersionDateTag>
@@ -156,7 +156,7 @@
 - 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件代码
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件代码
 - 优化并更新 [通知提醒 Notification](https://themusecatcher.github.io/vue-amazing-ui/guide/components/notification.html) 组件代码
-- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件代码
+- 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件代码
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-02-12">2.2.1</VersionDateTag>
@@ -251,7 +251,7 @@
 ## <VersionDateTag date="2025-01-07">2.0.7</VersionDateTag>
 
 - 优化并更新 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件，图片类型 `Image` 新增 `link` `target` 属性，支持：设置图片跳转链接；设置如何打开跳转链接
-- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，图片类型 `Image` 新增 `target` 属性，支持设置如何打开跳转链接
+- 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，图片类型 `Image` 新增 `target` 属性，支持设置如何打开跳转链接
 - 优化并更新 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件，图片类型 `Image` 新增 `link` `target` 属性，支持：设置图片跳转链接；设置如何打开跳转链接
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件；`rowSelection` 属性新增 `selectedRowKeys`，用于支持设置选中项的 `key` 数组，需和 `onChange` 配合使用
 

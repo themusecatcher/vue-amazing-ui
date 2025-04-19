@@ -342,7 +342,7 @@ export default defineConfig({
               link: '/guide/components/steps'
             },
             {
-              text: '触摸滑动插件 Swiper',
+              text: '触摸滑动 Swiper',
               link: '/guide/components/swiper'
             },
             {

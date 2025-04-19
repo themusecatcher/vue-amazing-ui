@@ -1,4 +1,4 @@
-# 触摸滑动插件 Swiper<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">11.2.5</Tag>
+# 触摸滑动 Swiper<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">11.2.5</Tag>
 
 <GlobalElement />
 
