@@ -26,6 +26,7 @@ const current = ref<string[]>([route.name as string])
 function onClick(e: any): void {
   console.log(`${e.item.title} ${e.key}`)
   // console.log(e.keyPath)
+  console.log(route.name)
 }
 const routerViewRef = ref()
 </script>
@@ -104,7 +105,7 @@ const routerViewRef = ref()
               <component :is="Component" />
             </Transition>
           </RouterView>
-          <BackTop v-if="['BackTop', 'ConfigProvider'].includes(route.name as string)" />
+          <BackTop v-if="!['BackTop', 'ConfigProvider'].includes(route.name as string)" />
         </div>
       </Scrollbar>
     </Col>
