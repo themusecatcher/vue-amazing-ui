@@ -38,15 +38,13 @@
   "jsdelivr": "dist/index.iife.js",
   "types": "es/index.d.ts",
   "exports": {
-    "./dist/*": "./dist/*",
-    "./es/*": "./es/*",
-    "./lib/*": "./lib/*",
-    "./css": "./dist/style.css",
     ".": {
       "types": "./es/index.d.ts",
       "import": "./es/index.js",
       "require": "./lib/index.cjs"
-    }
+    },
+    "./css": "./dist/style.css",
+    "./*": "./*"
   },
   "scripts": {
     "docs:dev": "vitepress dev docs --port 8000 --open",
