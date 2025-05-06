@@ -4,9 +4,14 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-05-06">2.4.5</VersionDateTag>
+
+- 优化并更新 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件代码和瀑布流渲染逻辑
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2025-04-16">2.4.4</VersionDateTag>
 
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件水平滚动动画
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件水平滚动动画
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-27">2.4.3</VersionDateTag>
