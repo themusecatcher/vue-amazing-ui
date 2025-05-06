@@ -7,7 +7,7 @@
 ## <VersionDateTag date="2025-05-06">2.4.5</VersionDateTag>
 
 - 优化并更新 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件代码和瀑布流渲染逻辑
-- 组件库及文档代码优化
+- 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-04-16">2.4.4</VersionDateTag>
 
