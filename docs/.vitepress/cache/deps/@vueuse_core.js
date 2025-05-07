@@ -27,6 +27,7 @@ import {
   readonly,
   ref,
   shallowReactive,
+  shallowReadonly,
   shallowRef,
   toRaw,
   toRef,
@@ -35,10 +36,10 @@ import {
   unref,
   watch,
   watchEffect
-} from "./chunk-IA4MHOT7.js";
+} from "./chunk-QXP276DV.js";
 import "./chunk-JVWSFFO4.js";
 
-// node_modules/.pnpm/@vueuse+shared@13.0.0_vue@3.5.13_typescript@5.8.2_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@13.1.0_vue@3.5.13_typescript@5.8.3_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -139,7 +140,7 @@ var injectLocal = (...args) => {
     return localProvidedStateMap.get(instance)[key];
   return inject(...args);
 };
-var provideLocal = (key, value) => {
+function provideLocal(key, value) {
   var _a;
   const instance = (_a = getCurrentInstance()) == null ? void 0 : _a.proxy;
   if (instance == null)
@@ -148,8 +149,8 @@ var provideLocal = (key, value) => {
     localProvidedStateMap.set(instance, /* @__PURE__ */ Object.create(null));
   const localProvidedState = localProvidedStateMap.get(instance);
   localProvidedState[key] = value;
-  provide(key, value);
-};
+  return provide(key, value);
+}
 function createInjectionState(composable, options) {
   const key = (options == null ? void 0 : options.injectionKey) || Symbol(composable.name || "InjectionState");
   const defaultValue = options == null ? void 0 : options.defaultValue;
@@ -583,12 +584,12 @@ function useDebounceFn(fn, ms = 200, options = {}) {
   );
 }
 function refDebounced(value, ms = 200, options = {}) {
-  const debounced = ref(value.value);
+  const debounced = ref(toValue(value));
   const updater = useDebounceFn(() => {
     debounced.value = value.value;
   }, ms, options);
   watch(value, () => updater());
-  return debounced;
+  return shallowReadonly(debounced);
 }
 function refDefault(source, defaultValue) {
   return computed({
@@ -610,7 +611,7 @@ function useThrottleFn(fn, ms = 200, trailing = false, leading = true, rejectOnC
 function refThrottled(value, delay = 200, trailing = true, leading = true) {
   if (delay <= 0)
     return value;
-  const throttled = ref(value.value);
+  const throttled = ref(toValue(value));
   const updater = useThrottleFn(() => {
     throttled.value = value.value;
   }, delay, trailing, leading);
@@ -807,7 +808,7 @@ function tryOnBeforeUnmount(fn, target) {
     onBeforeUnmount(fn, target);
 }
 function tryOnMounted(fn, sync = true, target) {
-  const instance = getLifeCycleTarget();
+  const instance = getLifeCycleTarget(target);
   if (instance)
     onMounted(fn, target);
   else if (sync)
@@ -1066,7 +1067,7 @@ function useCounter(initialValue = 0, options = {}) {
     _initialValue = val;
     return set2(val);
   };
-  return { count, inc, dec, get: get2, set: set2, reset };
+  return { count: shallowReadonly(count), inc, dec, get: get2, set: set2, reset };
 }
 var REGEX_PARSE = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[T\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/i;
 var REGEX_FORMAT = /[YMDHhms]o|\[([^\]]+)\]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a{1,2}|A{1,2}|m{1,2}|s{1,2}|Z{1,2}|z{1,4}|SSS/g;
@@ -1198,7 +1199,7 @@ function useIntervalFn(cb, interval = 1e3, options = {}) {
   }
   tryOnScopeDispose(pause);
   return {
-    isActive,
+    isActive: shallowReadonly(isActive),
     pause,
     resume
   };
@@ -1224,12 +1225,12 @@ function useInterval(interval = 1e3, options = {}) {
   );
   if (exposeControls) {
     return {
-      counter,
+      counter: shallowReadonly(counter),
       reset,
       ...controls
     };
   } else {
-    return counter;
+    return shallowReadonly(counter);
   }
 }
 function useLastChanged(source, options = {}) {
@@ -1240,7 +1241,7 @@ function useLastChanged(source, options = {}) {
     () => ms.value = timestamp(),
     options
   );
-  return ms;
+  return shallowReadonly(ms);
 }
 function useTimeoutFn(cb, interval, options = {}) {
   const {
@@ -1277,7 +1278,7 @@ function useTimeoutFn(cb, interval, options = {}) {
   }
   tryOnScopeDispose(stop);
   return {
-    isPending: readonly(isPending),
+    isPending: shallowReadonly(isPending),
     start,
     stop
   };
@@ -1570,7 +1571,7 @@ function whenever(source, cb, options) {
   return stop;
 }
 
-// node_modules/.pnpm/@vueuse+core@13.0.0_vue@3.5.13_typescript@5.8.2_/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@13.1.0_vue@3.5.13_typescript@5.8.3_/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {
