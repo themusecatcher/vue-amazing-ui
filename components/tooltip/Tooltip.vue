@@ -166,7 +166,7 @@ function getViewportSize() {
 // 查询并监听最近可滚动父元素
 function observeScroll() {
   cleanup()
-  scrollTarget.value = getScrollParent(contentRef.value?.parentElement ?? null)
+  scrollTarget.value = getScrollParent(contentRef.value)
   scrollTarget.value && scrollTarget.value.addEventListener('scroll', updatePosition)
   if (scrollTarget.value === document.documentElement) {
     mutationObserver.start()
@@ -178,22 +178,24 @@ function cleanup() {
   mutationObserver.stop()
 }
 // 查询最近的可滚动父元素
+function getParentElement(el: HTMLElement): HTMLElement | null {
+  // Document
+  if (el === document.documentElement) return null
+  return el.parentElement
+}
 function getScrollParent(el: HTMLElement | null): HTMLElement | null {
+  if (el === null) return null
+  const parentElement = getParentElement(el)
+  if (parentElement === null) return null
+  // Document
+  if (parentElement === document.documentElement) return document.documentElement
   const isScrollable = (el: HTMLElement): boolean => {
-    const style = window.getComputedStyle(el)
-    if (
-      (el.scrollWidth > el.clientWidth && ['scroll', 'auto'].includes(style.overflowX)) ||
-      (el.scrollHeight > el.clientHeight && ['scroll', 'auto'].includes(style.overflowY)) ||
-      ((el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight) && el === document.documentElement)
-    ) {
-      return true
-    }
-    return false
+    const { overflow, overflowX, overflowY } = getComputedStyle(el)
+    return /(auto|scroll|overlay)/.test(overflow + overflowY + overflowX)
   }
-  if (el) {
-    return isScrollable(el) ? el : getScrollParent(el.parentElement ?? null)
-  }
-  return null
+  // Element
+  if (isScrollable(parentElement)) return parentElement
+  return getScrollParent(parentElement)
 }
 // 更新文字提示位置
 function updatePosition() {
