@@ -177,12 +177,13 @@ function cleanup() {
   scrollTarget.value = null
   mutationObserver.stop()
 }
-// 查询最近的可滚动父元素
+// 获取父元素
 function getParentElement(el: HTMLElement): HTMLElement | null {
   // Document
   if (el === document.documentElement) return null
   return el.parentElement
 }
+// 查找最近的可滚动父元素
 function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   if (el === null) return null
   const parentElement = getParentElement(el)
