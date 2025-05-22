@@ -29,7 +29,7 @@ watchEffect(() => {
 function onChange(e: Event) {
   console.log('change', e)
 }
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
