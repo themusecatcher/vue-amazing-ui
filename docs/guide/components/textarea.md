@@ -228,3 +228,5 @@ value <Tag color="cyan">v-model</Tag> | 文本域内容 | string | undefined
 :-- | :-- | :--
 change | 文本域内容变化时的回调 | (e: Event) => void
 enter | 按下回车的回调 | (e: Event) => void
+compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void
+compositionend | 当文本段落的组成完成或取消时触发的回调 | (e: CompositionEvent) => void

@@ -39,7 +39,7 @@ watchEffect(() => {
 function onChange(e: Event) {
   console.log('change', e)
 }
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -88,7 +88,7 @@ watchEffect(() => {
 function onChange(e: Event) {
   console.log('change', e)
 }
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -172,7 +172,7 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -286,7 +286,7 @@ const size = ref('middle')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -345,7 +345,7 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -392,7 +392,7 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -450,7 +450,7 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -504,7 +504,7 @@ const value = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -570,7 +570,7 @@ const loading = ref(true)
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -653,7 +653,7 @@ const disabled = ref(true)
 watchEffect(() => {
   console.log('value', value.value)
 })
-function onSearch(value: string, e: Event) {
+function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
   console.log('search', value, e)
 }
 </script>
@@ -730,4 +730,6 @@ suffix | 自定义后缀图标 | v-slot:suffix
 名称 | 说明 | 类型
 :-- | :-- | :--
 change | 搜索框内容变化时的回调 | (e: Event) => void
-enter | 点击搜索或按下回车键时的回调 | (value: string, e: Event) => void
+search | 点击搜索或按下回车键时的回调 | (value: string, e: MouseEvent &#124; KeyboardEvent) => void
+compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void
+compositionend | 当文本段落的组成完成或取消时触发的回调 | (e: CompositionEvent) => void

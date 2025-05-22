@@ -4,6 +4,14 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-05-22">2.4.6</VersionDateTag>
+
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，优化自动查找最近的可滚动父元素代码逻辑
+- 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
+- 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
+- 优化并更新 [文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
+- 更新组件库文档及部分依赖版本
+
 ## <VersionDateTag date="2025-05-06">2.4.5</VersionDateTag>
 
 - 优化并更新 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件代码和瀑布流渲染逻辑
