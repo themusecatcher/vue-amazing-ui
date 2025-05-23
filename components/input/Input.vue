@@ -111,11 +111,13 @@ function onCompositionEnd(e: CompositionEvent): void {
   e.target?.dispatchEvent(changeEvent)
 }
 function onInput(e: Event): void {
-  const target = e.target as HTMLInputElement
-  inputValue.value = target.value
-  if (!lazyInput.value && !isComposing.value) {
-    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
-    emits('change', e)
+  if (!isComposing.value) {
+    const target = e.target as HTMLInputElement
+    inputValue.value = target.value
+    if (!lazyInput.value) {
+      emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
+      emits('change', e)
+    }
   }
 }
 function onChange(e: Event): void {
