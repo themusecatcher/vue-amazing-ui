@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-05-23">2.4.7</VersionDateTag>
+
+- 修复 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html)、[搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html)、[文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件使用文本合成系统输入且带字数提示时字数统计的问题
+
 ## <VersionDateTag date="2025-05-22">2.4.6</VersionDateTag>
 
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，优化自动查找最近的可滚动父元素代码逻辑
