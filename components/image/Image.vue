@@ -98,7 +98,6 @@ function onCompleted(n: number) {
 }
 // 预览图片加载完成
 function onPreviewCompleted(index: number) {
-  // 标记当前预览完成的图片已加载
   loaded.value[index] = true
 }
 function getImageName(image: Image) {
