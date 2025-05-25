@@ -38,7 +38,7 @@ const images = ref<ImageItem[]>([
 
 ## 基本使用
 
-<Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
+<!-- <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" /> -->
 
 ::: details Show Code
 
@@ -96,7 +96,7 @@ const images = ref<ImageItem[]>([
 
 ## 禁用预览
 
-<Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" disabled />
+<!-- <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" disabled />
 
 ::: details Show Code
 
@@ -425,4 +425,4 @@ preview | 自定义预览文本 | v-slot:preview
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-preview | 预览索引为 `index` 的图片，从 `0` 开始 | (index: number) => void
+preview | 预览索引为 `index` 的图片，从 `0` 开始 | (index: number) => void -->
