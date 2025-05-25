@@ -50,18 +50,18 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const images = ref<Image[]>([]) // 图片数组
 const previewRef = ref() // 预览 DOM 引用
-const previewIndex = ref(0) // 当前预览的图片索引
-const showPreview = ref(false) // 是否显示预览
-const rotate = ref(0) // 预览图片旋转角度
-const scale = ref(1) // 缩放比例
-const swapX = ref(1) // 水平镜像数值符号
-const swapY = ref(1) // 垂直镜像数值符号
-const sourceX = ref(0) // 拖动开始时位置
-const sourceY = ref(0) // 拖动开始时位置
-const dragX = ref(0) // 拖动横向距离
-const dragY = ref(0) // 拖动纵向距离
-const sourceDragX = ref(0) // 鼠标按下时图片的X轴偏移量
-const sourceDragY = ref(0) // 鼠标按下时图片的Y轴偏移量
+const previewIndex = ref<number>(0) // 当前预览的图片索引
+const showPreview = ref<boolean>(false) // 是否显示预览
+const rotate = ref<number>(0) // 预览图片旋转角度
+const scale = ref<number>(1) // 缩放比例
+const swapX = ref<number>(1) // 水平镜像数值符号
+const swapY = ref<number>(1) // 垂直镜像数值符号
+const sourceX = ref<number>(0) // 拖动开始时位置
+const sourceY = ref<number>(0) // 拖动开始时位置
+const dragX = ref<number>(0) // 拖动横向距离
+const dragY = ref<number>(0) // 拖动纵向距离
+const sourceDragX = ref<number>(0) // 鼠标按下时图片的X轴偏移量
+const sourceDragY = ref<number>(0) // 鼠标按下时图片的Y轴偏移量
 const top = ref<number>(0) // 图片上边缘距浏览器窗口上边界的距离
 const bottom = ref<number>(0) // 图片下边缘距浏览器窗口上边界的距离
 const right = ref<number>(0) // 图片右边缘距浏览器窗口左边界的距离
@@ -75,8 +75,8 @@ const imageAmount = computed(() => {
 const dragTransitionDuration = computed(() => {
   return props.draggable ? '100ms' : '200ms'
 })
-const complete = ref(Array(imageAmount.value).fill(false)) // 图片是否加载完成
-const loaded = ref(Array(imageAmount.value).fill(false)) // 预览图片是否加载完成
+const complete = ref<boolean[]>([]) // 图片是否加载完成
+const loaded = ref<boolean[]>([]) // 预览图片是否加载完成
 watchEffect(() => {
   images.value = getImages()
 })
@@ -92,12 +92,13 @@ function getImages() {
     ]
   }
 }
-function onComplete(n: number) {
-  // 图片加载完成
+// 图片加载完成
+function onCompleted(n: number) {
   complete.value[n] = true
 }
-function onLoaded(index: number) {
-  // 预览图片加载完成
+// 预览图片加载完成
+function onPreviewCompleted(index: number) {
+  // 标记当前预览完成的图片已加载
   loaded.value[index] = true
 }
 function getImageName(image: Image) {
@@ -303,7 +304,7 @@ function onSwitchRight() {
           <img
             class="image-item"
             :style="`object-fit: ${fit};`"
-            @load="onComplete(index)"
+            @load="onCompleted(index)"
             :src="image.src"
             :alt="getImageName(image)"
           />
@@ -547,7 +548,7 @@ function onSwitchRight() {
               :src="image.src"
               :alt="getImageName(image)"
               @mousedown.prevent="handleMouseDown"
-              @load="onLoaded(index)"
+              @load="onPreviewCompleted(index)"
               @dblclick="resetOnDbclick ? onResetOrigin() : () => false"
             />
           </div>
