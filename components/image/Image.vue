@@ -52,6 +52,7 @@ const images = ref<Image[]>([]) // 图片数组
 const previewRef = ref() // 预览 DOM 引用
 const previewIndex = ref<number>(0) // 当前预览的图片索引
 const showPreview = ref<boolean>(false) // 是否显示预览
+const imagesCompleted = ref<boolean[]>([]) // 图片是否加载完成
 const rotate = ref<number>(0) // 预览图片旋转角度
 const scale = ref<number>(1) // 缩放比例
 const swapX = ref<number>(1) // 水平镜像数值符号
@@ -75,8 +76,6 @@ const imageAmount = computed(() => {
 const dragTransitionDuration = computed(() => {
   return props.draggable ? '100ms' : '200ms'
 })
-const complete = ref<boolean[]>([]) // 图片是否加载完成
-const loaded = ref<boolean[]>([]) // 预览图片是否加载完成
 watchEffect(() => {
   images.value = getImages()
 })
@@ -93,12 +92,9 @@ function getImages() {
   }
 }
 // 图片加载完成
-function onCompleted(n: number) {
-  complete.value[n] = true
-}
-// 预览图片加载完成
-function onPreviewCompleted(index: number) {
-  loaded.value[index] = true
+function onCompleted(index: number) {
+  imagesCompleted.value[index] = true
+  console.log('index', index, imagesCompleted.value[index])
 }
 function getImageName(image: Image) {
   // 从图像地址src中获取图像名称
@@ -288,13 +284,13 @@ function onSwitchRight() {
       <div
         v-show="!album || (album && index === 0)"
         class="image-wrap"
-        :class="{ 'image-bordered': bordered, 'image-hover-mask': !disabled && complete[index] }"
+        :class="{ 'image-bordered': bordered, 'image-hover-mask': !disabled && imagesCompleted[index] }"
         :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
         v-for="(image, index) in images"
         :key="index"
       >
         <Spin
-          :spinning="!complete[index]"
+          :spinning="!imagesCompleted[index]"
           color="var(--image-primary-color)"
           indicator="dynamic-circle"
           size="small"
@@ -547,7 +543,6 @@ function onSwitchRight() {
               :src="image.src"
               :alt="getImageName(image)"
               @mousedown.prevent="handleMouseDown"
-              @load="onPreviewCompleted(index)"
               @dblclick="resetOnDbclick ? onResetOrigin() : () => false"
             />
           </div>
