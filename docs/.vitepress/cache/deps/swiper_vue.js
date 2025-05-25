@@ -17,8 +17,9 @@ import {
   nextTick as nextTick2,
   now,
   setCSSProperty,
+  setInnerHTML,
   showWarning
-} from "./chunk-NG7LZIX5.js";
+} from "./chunk-NXVYRO4H.js";
 import {
   computed,
   h,
@@ -31,10 +32,10 @@ import {
   provide,
   ref,
   watch
-} from "./chunk-QXP276DV.js";
+} from "./chunk-O3I43HSE.js";
 import "./chunk-JVWSFFO4.js";
 
-// node_modules/.pnpm/swiper@11.2.6/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/shared/swiper-core.mjs
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -1280,11 +1281,9 @@ function transitionEmit(_ref) {
     else dir = "reset";
   }
   swiper.emit(`transition${step}`);
-  if (runCallbacks && activeIndex !== previousIndex) {
-    if (dir === "reset") {
-      swiper.emit(`slideResetTransition${step}`);
-      return;
-    }
+  if (runCallbacks && dir === "reset") {
+    swiper.emit(`slideResetTransition${step}`);
+  } else if (runCallbacks && activeIndex !== previousIndex) {
     swiper.emit(`slideChangeTransition${step}`);
     if (dir === "next") {
       swiper.emit(`slideNextTransition${step}`);
@@ -3735,7 +3734,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 });
 Swiper.use([Resize, Observer]);
 
-// node_modules/.pnpm/swiper@11.2.6/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -4045,14 +4044,14 @@ function updateSwiper(_ref) {
       if (!nextEl || typeof nextEl === "string") {
         nextEl = document.createElement("div");
         nextEl.classList.add("swiper-button-next");
-        nextEl.innerHTML = swiper.hostEl.constructor.nextButtonSvg;
+        setInnerHTML(nextEl, swiper.hostEl.constructor.nextButtonSvg);
         nextEl.part.add("button-next");
         swiper.el.appendChild(nextEl);
       }
       if (!prevEl || typeof prevEl === "string") {
         prevEl = document.createElement("div");
         prevEl.classList.add("swiper-button-prev");
-        prevEl.innerHTML = swiper.hostEl.constructor.prevButtonSvg;
+        setInnerHTML(prevEl, swiper.hostEl.constructor.prevButtonSvg);
         prevEl.part.add("button-prev");
         swiper.el.appendChild(prevEl);
       }
@@ -4080,7 +4079,7 @@ function updateSwiper(_ref) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@11.2.6/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
     obj = {};
@@ -4199,12 +4198,13 @@ var updateOnVirtualData = (swiper) => {
   swiper.updateSlides();
   swiper.updateProgress();
   swiper.updateSlidesClasses();
+  swiper.emit("_virtualUpdated");
   if (swiper.parallax && swiper.params.parallax && swiper.params.parallax.enabled) {
     swiper.parallax.setTranslate();
   }
 };
 
-// node_modules/.pnpm/swiper@11.2.6/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots, slidesRef, oldSlidesRef) {
   if (originalSlots === void 0) {
     originalSlots = {};
@@ -4556,6 +4556,14 @@ var Swiper2 = {
       default: void 0
     },
     loopPreventsSliding: {
+      type: Boolean,
+      default: void 0
+    },
+    loopAdditionalSlides: {
+      type: Number,
+      default: void 0
+    },
+    loopAddBlankSlides: {
       type: Boolean,
       default: void 0
     },
