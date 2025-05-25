@@ -400,6 +400,7 @@ preview | 预览文本 | string &#124; slot | '预览'
 previewImageStyle | 自定义预览图片时 `img` 元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多张展示图片时的排列方式 | object | {}
 spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置图片加载中样式 | object | {}
+previewSpinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置预览图片加载中样式 | object | {}
 zoomRatio | 每次缩放比率 | number | 0.1
 minZoomScale | 最小缩放比例 | number | 0.1
 maxZoomScale | 最大缩放比例 | number | 10
