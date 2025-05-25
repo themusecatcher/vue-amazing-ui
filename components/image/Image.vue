@@ -305,7 +305,7 @@ function onSwitchRight(): void {
         :key="index"
       >
         <Spin
-          :spinning="!imagesCompleted[index] && imagesRef[index].complete"
+          :spinning="!imagesCompleted[index] && imagesRef[index]?.complete"
           color="var(--image-primary-color)"
           indicator="dynamic-circle"
           size="small"
@@ -551,7 +551,7 @@ function onSwitchRight(): void {
             :key="index"
           >
             <Spin
-              :spinning="!previewCompleted[index] && !previewImagesRef[index].complete"
+              :spinning="!previewCompleted[index] && !previewImagesRef[index]?.complete"
               color="var(--image-primary-color)"
               indicator="dynamic-circle"
               v-bind="previewSpinProps"
