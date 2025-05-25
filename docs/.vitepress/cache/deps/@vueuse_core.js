@@ -36,10 +36,10 @@ import {
   unref,
   watch,
   watchEffect
-} from "./chunk-QXP276DV.js";
+} from "./chunk-O3I43HSE.js";
 import "./chunk-JVWSFFO4.js";
 
-// node_modules/.pnpm/@vueuse+shared@13.1.0_vue@3.5.13_typescript@5.8.3_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@13.2.0_vue@3.5.14_typescript@5.8.3_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -1491,11 +1491,14 @@ function watchImmediate(source, cb, options) {
   );
 }
 function watchOnce(source, cb, options) {
-  const stop = watch(source, (...args) => {
-    nextTick(() => stop());
-    return cb(...args);
-  }, options);
-  return stop;
+  return watch(
+    source,
+    cb,
+    {
+      ...options,
+      once: true
+    }
+  );
 }
 function watchThrottled(source, cb, options = {}) {
   const {
@@ -1571,7 +1574,7 @@ function whenever(source, cb, options) {
   return stop;
 }
 
-// node_modules/.pnpm/@vueuse+core@13.1.0_vue@3.5.13_typescript@5.8.3_/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@13.2.0_vue@3.5.14_typescript@5.8.3_/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {
@@ -1583,6 +1586,7 @@ function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   }
   const {
     lazy = false,
+    flush = "pre",
     evaluating = void 0,
     shallow = true,
     onError = noop
@@ -1619,7 +1623,7 @@ function computedAsync(evaluationCallback, initialState, optionsOrRef) {
         evaluating.value = false;
       hasFinished = true;
     }
-  });
+  }, { flush });
   if (lazy) {
     return computed(() => {
       started.value = true;
@@ -1800,8 +1804,8 @@ function onClickOutside(target, handler, options = {}) {
   if (isIOS && !_iOSWorkaround) {
     _iOSWorkaround = true;
     const listenerOptions = { passive: true };
-    Array.from(window2.document.body.children).forEach((el) => useEventListener(el, "click", noop, listenerOptions));
-    useEventListener(window2.document.documentElement, "click", noop, listenerOptions);
+    Array.from(window2.document.body.children).forEach((el) => el.addEventListener("click", noop, listenerOptions));
+    window2.document.documentElement.addEventListener("click", noop, listenerOptions);
   }
   let shouldListen = true;
   const shouldIgnore = (event) => {
@@ -3408,18 +3412,33 @@ function useStorage(key, defaults2, storage, options = {}) {
     { flush, deep, eventFilter }
   );
   watch(keyComputed, () => update(), { flush });
+  let firstMounted = false;
+  const onStorageEvent = (ev) => {
+    if (initOnMounted && !firstMounted) {
+      return;
+    }
+    update(ev);
+  };
+  const onStorageCustomEvent = (ev) => {
+    if (initOnMounted && !firstMounted) {
+      return;
+    }
+    updateFromCustomEvent(ev);
+  };
   if (window2 && listenToStorageChanges) {
-    tryOnMounted(() => {
-      if (storage instanceof Storage)
-        useEventListener(window2, "storage", update, { passive: true });
-      else
-        useEventListener(window2, customStorageEventName, updateFromCustomEvent);
-      if (initOnMounted)
-        update();
-    });
+    if (storage instanceof Storage)
+      useEventListener(window2, "storage", onStorageEvent, { passive: true });
+    else
+      useEventListener(window2, customStorageEventName, onStorageCustomEvent);
   }
-  if (!initOnMounted)
+  if (initOnMounted) {
+    tryOnMounted(() => {
+      firstMounted = true;
+      update();
+    });
+  } else {
     update();
+  }
   function dispatchWriteEvent(oldValue, newValue) {
     if (window2) {
       const payload = {
@@ -5244,7 +5263,7 @@ function useFileDialog(options = {}) {
   const { on: onCancel, trigger: cancelTrigger } = createEventHook();
   let input;
   if (document2) {
-    input = document2.createElement("input");
+    input = unrefElement(options.input) || document2.createElement("input");
     input.type = "file";
     input.onchange = (event) => {
       const result = event.target;
@@ -5559,6 +5578,7 @@ function useFullscreen(target, options = {}) {
   const listenerOptions = { capture: false, passive: true };
   useEventListener(document2, eventHandlers, handlerCallback, listenerOptions);
   useEventListener(() => unrefElement(targetRef), eventHandlers, handlerCallback, listenerOptions);
+  tryOnMounted(handlerCallback, false);
   if (autoExit)
     tryOnScopeDispose(exit);
   return {
@@ -6103,6 +6123,7 @@ function useMagicKeys(options = {}) {
   };
   const refs = useReactive ? reactive(obj) : obj;
   const metaDeps = /* @__PURE__ */ new Set();
+  const shiftDeps = /* @__PURE__ */ new Set();
   const usedKeys = /* @__PURE__ */ new Set();
   function setRefs(key, value) {
     if (key in refs) {
@@ -6131,6 +6152,15 @@ function useMagicKeys(options = {}) {
     for (const key2 of values) {
       usedKeys.add(key2);
       setRefs(key2, value);
+    }
+    if (key === "shift" && !value) {
+      shiftDeps.forEach((key2) => {
+        current.delete(key2);
+        setRefs(key2, false);
+      });
+      shiftDeps.clear();
+    } else if (typeof e.getModifierState === "function" && e.getModifierState("Shift") && value) {
+      [...current, ...values].forEach((key2) => shiftDeps.add(key2));
     }
     if (key === "meta" && !value) {
       metaDeps.forEach((key2) => {
@@ -7222,7 +7252,7 @@ function usePointerSwipe(target, options = {}) {
   ];
   tryOnMounted(() => {
     var _a, _b, _c, _d, _e, _f, _g, _h;
-    (_b = (_a = targetRef.value) == null ? void 0 : _a.style) == null ? void 0 : _b.setProperty("touch-action", "none");
+    (_b = (_a = targetRef.value) == null ? void 0 : _a.style) == null ? void 0 : _b.setProperty("touch-action", "pan-y");
     if (disableTextSelect) {
       (_d = (_c = targetRef.value) == null ? void 0 : _c.style) == null ? void 0 : _d.setProperty("-webkit-user-select", "none");
       (_f = (_e = targetRef.value) == null ? void 0 : _e.style) == null ? void 0 : _f.setProperty("-ms-user-select", "none");
@@ -7903,6 +7933,8 @@ function useStyleTag(css, options = {}) {
     const el = document2.getElementById(id) || document2.createElement("style");
     if (!el.isConnected) {
       el.id = id;
+      if (options.nonce)
+        el.nonce = options.nonce;
       if (options.media)
         el.media = options.media;
       document2.head.appendChild(el);
