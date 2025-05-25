@@ -79,7 +79,7 @@ const dragTransitionDuration = computed(() => {
 watchEffect(() => {
   images.value = getImages()
 })
-function getImages() {
+function getImages(): Image[] {
   if (Array.isArray(props.src)) {
     return props.src
   } else {
@@ -92,11 +92,10 @@ function getImages() {
   }
 }
 // 图片加载完成
-function onCompleted(index: number) {
+function onCompleted(index: number): void {
   imagesCompleted.value[index] = true
-  console.log('index', index, imagesCompleted.value[index])
 }
-function getImageName(image: Image) {
+function getImageName(image: Image): {
   // 从图像地址src中获取图像名称
   if (image) {
     if (image.name) {
