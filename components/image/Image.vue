@@ -297,6 +297,8 @@ function onSwitchRight(): void {
   <div class="m-image" :style="`--image-primary-color: ${colorPalettes[5]};`">
     <Space gap="small" v-bind="spaceProps">
       <div
+        v-for="(image, index) in images"
+        :key="index"
         v-show="!album || (album && index === 0)"
         class="image-wrap"
         :class="{
@@ -304,8 +306,6 @@ function onSwitchRight(): void {
           'image-hover-mask': !disabled && (imagesCompleted[index] || imagesRef[index]?.naturalWidth)
         }"
         :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
-        v-for="(image, index) in images"
-        :key="index"
       >
         <Spin
           :spinning="!(imagesCompleted[index] || imagesRef[index]?.naturalWidth)"
@@ -547,11 +547,11 @@ function onSwitchRight(): void {
             </div>
           </div>
           <div
-            class="preview-image-wrap"
-            :style="`--drag-transition-duration: ${dragTransitionDuration}; transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
-            v-show="previewIndex === index"
             v-for="(image, index) in images"
             :key="index"
+            v-show="previewIndex === index"
+            class="preview-image-wrap"
+            :style="`--drag-transition-duration: ${dragTransitionDuration}; transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
           >
             <Spin
               :spinning="!(previewCompleted[index] || previewImagesRef[index]?.naturalWidth)"
