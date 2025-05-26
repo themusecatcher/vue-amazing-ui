@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-05-26">2.4.8</VersionDateTag>
+
+- 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，优化图片已成功加载逻辑：兼容缓存加载以及使用 `SSG` 时 `@load` 事件偶尔无法正常触发的问题；新增 `previewSpinProps`，用于支持配置预览图片加载中样式
+
 ## <VersionDateTag date="2025-05-23">2.4.7</VersionDateTag>
 
 - 修复 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html)、[搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html)、[文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件使用文本合成系统输入且带字数提示时字数统计的问题
