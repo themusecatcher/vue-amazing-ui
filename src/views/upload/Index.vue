@@ -198,7 +198,6 @@ function onRemove(file: UploadFileType) {
     />
     <h2 class="mt30 mb10">自定义分片上传</h2>
     <Upload
-      multiple
       upload-mode="custom"
       :custom-request="onCustomSliceUpload"
       v-model:fileList="fileList"
