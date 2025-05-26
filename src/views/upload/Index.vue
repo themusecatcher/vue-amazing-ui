@@ -69,7 +69,7 @@ function onBeforePdfUpload(file: File) {
 function onCustomRequest(file: File) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // 模拟接口调用返回name和url
+      // 模拟接口调用返回 name 和 url
       if (file.type === 'application/pdf') {
         var res = {
           name: 'Markdown.pdf',
@@ -87,6 +87,35 @@ function onCustomRequest(file: File) {
         reject('upload request fail ...')
       }
     }, 1000)
+  })
+}
+import { sliceFile } from './sliceFile'
+function onCustomSliceUpload(file: File) {
+  return new Promise((resolve, reject) => {
+    console.time('sliceFile')
+    sliceFile(file).then((chunks) => {
+      console.log('chunks', chunks)
+      console.timeEnd('sliceFile')
+      setTimeout(() => {
+        // 模拟接口调用返回 name 和 url
+        if (file.type === 'application/pdf') {
+          var res = {
+            name: 'Markdown.pdf',
+            url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
+          }
+        } else {
+          var res = {
+            name: '1.jpg',
+            url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
+          }
+        }
+        if (res) {
+          resolve(res)
+        } else {
+          reject('upload request fail ...')
+        }
+      }, 1000)
+    })
   })
 }
 function onDrop(e: DragEvent) {
@@ -163,6 +192,15 @@ function onRemove(file: UploadFileType) {
       multiple
       upload-mode="custom"
       :custom-request="onCustomRequest"
+      v-model:fileList="fileList"
+      @change="onChange"
+      @remove="onRemove"
+    />
+    <h2 class="mt30 mb10">自定义分片上传</h2>
+    <Upload
+      multiple
+      upload-mode="custom"
+      :custom-request="onCustomSliceUpload"
       v-model:fileList="fileList"
       @change="onChange"
       @remove="onRemove"
