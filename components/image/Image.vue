@@ -299,7 +299,10 @@ function onSwitchRight(): void {
       <div
         v-show="!album || (album && index === 0)"
         class="image-wrap"
-        :class="{ 'image-bordered': bordered, 'image-hover-mask': !disabled && imagesCompleted[index] }"
+        :class="{
+          'image-bordered': bordered,
+          'image-hover-mask': !disabled && (imagesCompleted[index] || imagesRef[index]?.naturalWidth)
+        }"
         :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
         v-for="(image, index) in images"
         :key="index"
