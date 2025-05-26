@@ -1,5 +1,5 @@
-// 创建分片
 import SparkMD5 from 'spark-md5'
+// 创建分片
 function createFileChunk(file: File, index: number, chunkSize: number) {
   return new Promise((resolve, reject) => {
     const start = index * chunkSize

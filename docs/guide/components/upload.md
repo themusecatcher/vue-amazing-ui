@@ -555,6 +555,171 @@ function onRemove (file: UploadFileType) {
 
 :::
 
+## 自定义分片上传
+
+<Upload
+  upload-mode="custom"
+  :custom-request="onCustomSliceUpload"
+  v-model:fileList="fileList"
+  @change="onChange"
+  @remove="onRemove"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import type { UploadFileType } from 'vue-amazing-ui'
+const fileList = ref<UploadFileType[]>([
+  {
+    name: '1.jpg',
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
+  },
+  {
+    name: 'Markdown.pdf',
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
+  }
+])
+watchEffect(() => {
+  console.log('fileList', fileList.value)
+})
+import { sliceFile } from './sliceFile'
+function onCustomSliceUpload(file: File) {
+  return new Promise((resolve, reject) => {
+    console.time('sliceFile')
+    sliceFile(file).then((chunks) => {
+      console.log('chunks', chunks)
+      console.timeEnd('sliceFile')
+      setTimeout(() => {
+        // 模拟接口调用返回 name 和 url
+        if (file.type === 'application/pdf') {
+          var res = {
+            name: 'Markdown.pdf',
+            url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
+          }
+        } else {
+          var res = {
+            name: '1.jpg',
+            url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
+          }
+        }
+        if (res) {
+          resolve(res)
+        } else {
+          reject('upload request fail ...')
+        }
+      }, 1000)
+    })
+  })
+}
+function onChange (files: UploadFileType[]) {
+  console.log('change', files)
+}
+function onRemove (file: UploadFileType) {
+  console.log('remove', file)
+}
+</script>
+<template>
+  <Upload
+    multiple
+    upload-mode="custom"
+    :custom-request="onCustomRequest"
+    v-model:fileList="fileList"
+    @change="onChange"
+    @remove="onRemove"
+  />
+</template>
+```
+
+:::
+
+::: details sliceFile Source Code
+
+```ts
+const CHUNK_SIZE = 1024 * 1024 * 5 // 5MB 分片大小
+// navigator.hardwareConcurrency 返回用户计算机上可用于运行线程的逻辑处理器数量
+const THREAD_COUNT = navigator.hardwareConcurrency || 4 // 并发执行的线程数
+export function sliceFile(file: File) {
+  return new Promise((resolve, reject) => {
+    const chunkCount = Math.ceil(file.size / CHUNK_SIZE) // 分片数量
+    const threadChunkCount = Math.ceil(chunkCount / THREAD_COUNT) // 每个线程分配的分片数量
+    const result: any[] = []
+    let finishCount = 0
+    for (let i = 0; i < THREAD_COUNT; i++) {
+      // 依次创建 web worker 线程
+      const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' }) // // module 为了线程内部可以导入其他模块
+      const start = i * threadChunkCount
+      const end = Math.min(start + threadChunkCount, chunkCount)
+      worker.postMessage({
+        file,
+        start,
+        end,
+        CHUNK_SIZE
+      })
+      worker.onmessage = (e: MessageEvent) => {
+        worker.terminate()
+        result[i] = e.data
+        finishCount++
+        if (finishCount === THREAD_COUNT) {
+          // 所有线程均完成时返回结果
+          resolve(result.flat())
+        }
+      }
+      worker.onerror = (err) => {
+        worker.terminate()
+        reject(err)
+      }
+    }
+  })
+}
+```
+
+:::
+
+::: details worker Source Code
+
+```ts
+import SparkMD5 from 'spark-md5'
+// 创建分片
+function createFileChunk(file: File, index: number, chunkSize: number) {
+  return new Promise((resolve, reject) => {
+    const start = index * chunkSize
+    const end = Math.min(file.size, start + chunkSize)
+    const spark = new SparkMD5.ArrayBuffer() // https://github.com/satazor/js-spark-md5
+    const fileReader = new FileReader()
+    const blob = file.slice(start, end)
+    fileReader.onload = (e: ProgressEvent<FileReader>) => {
+      spark.append(e.target?.result as ArrayBuffer)
+      resolve({
+        start,
+        end,
+        index,
+        hash: spark.end(),
+        blob
+      })
+    }
+    fileReader.onerror = (e) => {
+      reject(new Error(`文件读取过程中发生错误: ${e}`))
+    }
+    fileReader.readAsArrayBuffer(blob)
+  })
+}
+// web worker 通信
+onmessage = async (e: MessageEvent) => {
+  const { file, start, end, CHUNK_SIZE } = e.data
+  const result = []
+  for (let i = start; i < end; i++) {
+    const chunkPromise = createFileChunk(file, i, CHUNK_SIZE)
+    result.push(chunkPromise)
+  }
+  const chunks = await Promise.all(result)
+  postMessage(chunks)
+}
+```
+
+:::
+
 ## APIs
 
 ### Upload
