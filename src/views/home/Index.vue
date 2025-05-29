@@ -87,6 +87,10 @@ const toolFunctions = [
   {
     name: 'useInject',
     description: '使用依赖注入的函数，用于获取颜色调色板和阴影颜色'
+  },
+  {
+    name: 'useOptionsSupported',
+    description: '检查浏览器是否支持给定的事件监听器选项'
   }
 ]
 const functionItems = [
@@ -110,7 +114,8 @@ import {
   useMediaQuery,
   useResizeObserver,
   useSlotsExist,
-  useInject
+  useInject,
+  useOptionsSupported
 } from 'vue-amazing-ui'
 <\/script>`
   }

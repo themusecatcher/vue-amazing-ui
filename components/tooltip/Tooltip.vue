@@ -170,7 +170,12 @@ function getViewportSize() {
 function observeScroll() {
   cleanup()
   scrollTarget.value = getScrollParent(contentRef.value)
-  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updatePosition, passiveSupported.value ? { passive: true } : undefined)
+  scrollTarget.value &&
+    scrollTarget.value.addEventListener(
+      'scroll',
+      updatePosition,
+      passiveSupported.value ? { passive: true } : undefined
+    )
   if (scrollTarget.value === document.documentElement) {
     mutationObserver.start()
   }

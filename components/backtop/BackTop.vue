@@ -105,7 +105,12 @@ function observeScroll(): void {
   if (!scrollTarget.value) {
     console.warn('Container of back-top element is not found.')
   }
-  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updateScrollTop, passiveSupported.value ? { passive: true } : undefined)
+  scrollTarget.value &&
+    scrollTarget.value.addEventListener(
+      'scroll',
+      updateScrollTop,
+      passiveSupported.value ? { passive: true } : undefined
+    )
   if (scrollTarget.value === document.documentElement) {
     mutationObserver.start()
   }
