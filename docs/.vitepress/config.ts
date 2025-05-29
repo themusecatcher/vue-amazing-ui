@@ -472,6 +472,10 @@ export default defineConfig({
             {
               text: 'useInject 获取注入数据',
               link: '/utils/functions/injection'
+            },
+            {
+              text: 'useOptionsSupported 否支持事件监听器选项',
+              link: '/utils/functions/options-supported'
             }
           ]
         }

@@ -120,7 +120,8 @@ import {
   useMediaQuery,
   useResizeObserver,
   useSlotsExist,
-  useInject
+  useInject,
+  useOptionsSupported
 } from 'vue-amazing-ui'
 </script>
 ```

@@ -16,7 +16,8 @@
  * @returns {Object} 返回一个包含 FPS 值的 ref 对象
  */
 import { ref } from 'vue'
-export function useFps() {
+import type { Ref } from 'vue'
+export function useFps(): { fps: Ref<number> } {
   const fps = ref<number>(0)
   const frameCount = ref<number>(0)
   let lastTime = performance.now()

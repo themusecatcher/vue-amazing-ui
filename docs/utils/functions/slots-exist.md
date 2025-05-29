@@ -16,8 +16,11 @@
  *          如果是插槽名称数组，则返回一个 reactive 对象，其中的每个属性对应该插槽是否存在
  */
 import { useSlots, reactive, computed, Comment, Text } from 'vue'
-import type { VNode } from 'vue'
-export function useSlotsExist(slotsName: string | string[] = 'default') {
+import type { ComputedRef, Reactive, VNode } from 'vue'
+type SlotsExistResult<T extends string | string[]> = T extends string
+  ? ComputedRef<boolean>
+  : Reactive<Record<string, ComputedRef<boolean>>>
+export function useSlotsExist<T extends string | string[] = 'default'>(slotsName: T): SlotsExistResult<T> {
   const slots = useSlots() // 获取当前组件的所有插槽
   // 检查特定名称的插槽是否存在且不为空
   const checkSlotsExist = (slotName: string): boolean => {
@@ -45,14 +48,14 @@ export function useSlotsExist(slotsName: string | string[] = 'default') {
     return false
   }
   if (Array.isArray(slotsName)) {
-    const slotsExist = reactive<any>({})
+    const slotsExist = reactive<Record<string, ComputedRef<boolean>>>({})
     slotsName.forEach((slotName: string) => {
       const exist = computed(() => checkSlotsExist(slotName))
       slotsExist[slotName] = exist // 将一个 ref 赋值给一个 reactive 属性时，该 ref 会自动解包
     })
-    return slotsExist
+    return slotsExist as SlotsExistResult<T>
   } else {
-    return computed(() => checkSlotsExist(slotsName))
+    return computed(() => checkSlotsExist(slotsName)) as SlotsExistResult<T>
   }
 }
 ```
