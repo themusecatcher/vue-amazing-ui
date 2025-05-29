@@ -21,7 +21,7 @@
     }
   }
 */
-export function toggleDark() {
+export function toggleDark(): void {
   const html = document.documentElement
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
   html.classList.toggle('dark')

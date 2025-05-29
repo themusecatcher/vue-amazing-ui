@@ -26,7 +26,17 @@ export function useScroll(
   throttleDelay: number = 0,
   onScroll?: (e: Event) => void,
   onStop?: (e: Event) => void
-) {
+): {
+  x: Ref<number>
+  xScrollMax: Ref<number>
+  y: Ref<number>
+  yScrollMax: Ref<number>
+  isScrolling: Ref<boolean>
+  left: Ref<boolean>
+  right: Ref<boolean>
+  top: Ref<boolean>
+  bottom: Ref<boolean>
+} {
   const x = ref(0) // 水平滚动距离
   const xScrollMax = ref(0) // 水平最大可滚动距离
   const y = ref(0) // 垂直滚动距离
@@ -90,8 +100,8 @@ export function useScroll(
           (to as HTMLElement)) as Element
         xScrollMax.value = el.scrollWidth - el.clientWidth
         yScrollMax.value = el.scrollHeight - el.clientHeight
-        el.addEventListener('scroll', throttleScroll)
-        el.addEventListener('scrollend', debounceScrollEnd)
+        el.addEventListener('scroll', throttleScroll as EventListener)
+        el.addEventListener('scrollend', debounceScrollEnd as EventListener)
       }
     },
     {
@@ -102,10 +112,10 @@ export function useScroll(
   // 清理函数，用于移除事件监听器
   function cleanup(target: any) {
     const el: Element = ((target as Window)?.document?.documentElement ||
-          (target as Document)?.documentElement ||
-          (target as HTMLElement)) as Element
-    el.removeEventListener('scroll', throttleScroll)
-    el.removeEventListener('scrollend', debounceScrollEnd)
+      (target as Document)?.documentElement ||
+      (target as HTMLElement)) as Element
+    el.removeEventListener('scroll', throttleScroll as EventListener)
+    el.removeEventListener('scrollend', debounceScrollEnd as EventListener)
   }
   // 在组件卸载前调用清理函数
   onBeforeUnmount(() => cleanup(scrollTarget.value))

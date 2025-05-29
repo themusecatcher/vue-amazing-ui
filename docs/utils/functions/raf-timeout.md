@@ -15,7 +15,7 @@
  * @param interval 是否间隔执行，如果为 true，则在首次执行后，以 delay 为间隔持续执行
  * @returns 返回一个对象，包含一个 id 属性，该 id 为 requestAnimationFrame 的调用 ID，可用于取消动画帧
  */
-export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): object {
+export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): { id: number } {
   let start: number | null = null // 记录动画开始的时间戳
   function timeElapse(timestamp: number) {
     // 定义动画帧回调函数

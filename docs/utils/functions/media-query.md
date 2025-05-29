@@ -17,7 +17,8 @@
  * @returns 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
  */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-export function useMediaQuery(mediaQuery: string) {
+import type { Ref } from 'vue'
+export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
   // 检查传入的mediaQuery参数是否为空或非法
   if (!mediaQuery || typeof mediaQuery !== 'string' || mediaQuery.trim() === '') {
     throw new Error('Invalid mediaQuery parameter. It must be a non-empty string.')

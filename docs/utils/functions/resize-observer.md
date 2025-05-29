@@ -19,12 +19,12 @@
  * @returns 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
  */
 import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
-import type { Ref } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 export function useResizeObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: ResizeObserverCallback,
   options: object = {}
-) {
+): { start: () => void; stop: () => void } {
   const isSupported = useSupported(() => window && 'ResizeObserver' in window)
   let observer: ResizeObserver | undefined
   const stopObservation = ref(false)
@@ -65,23 +65,23 @@ export function useResizeObserver(
       flush: 'post'
     }
   )
-  const stop = () => {
-    stopObservation.value = true
-    cleanup()
-  }
   const start = () => {
     stopObservation.value = false
     observeElements()
   }
+  const stop = () => {
+    stopObservation.value = true
+    cleanup()
+  }
   // 在组件卸载前清理 ResizeObserver
   onBeforeUnmount(() => cleanup())
   return {
-    stop,
-    start
+    start,
+    stop
   }
 }
 // 辅助函数
-export function useSupported(callback: () => unknown) {
+export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   const isMounted = useMounted()
   return computed(() => {
     // to trigger the ref
@@ -89,7 +89,7 @@ export function useSupported(callback: () => unknown) {
     return Boolean(callback())
   })
 }
-export function useMounted() {
+export function useMounted(): Ref<boolean> {
   const isMounted = ref(false)
   // 获取当前组件的实例
   const instance = getCurrentInstance()

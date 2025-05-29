@@ -17,7 +17,7 @@
  * @param delay 防抖的时间期限，单位 ms，默认为 300ms
  * @returns 返回一个新的防抖的函数
  */
-export function debounce(fn: Function, delay: number = 300): any {
+export function debounce(fn: Function, delay: number = 300): Function {
   let timer: any = null // 使用闭包保存定时器的引用
   return function (...args: any[]) {
     // 返回一个包装函数

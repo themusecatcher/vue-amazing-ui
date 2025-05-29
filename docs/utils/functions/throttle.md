@@ -17,7 +17,7 @@
  * @param delay 节流的时间间隔，单位 ms，默认为 300ms
  * @returns 返回一个新的节流的函数
  */
-export function throttle(fn: Function, delay: number = 300): any {
+export function throttle(fn: Function, delay: number = 300): Function {
   let valid = true // 用于标记函数是否可以执行
   return function (...args: any[]) {
     if (!valid) return false // 返回 false，表示当前不执行函数
