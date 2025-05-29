@@ -3,6 +3,7 @@ import { ref, computed, watch, watchEffect, nextTick, onMounted, onUnmounted } f
 import type { CSSProperties } from 'vue'
 import Scrollbar from 'components/scrollbar'
 import Button from 'components/button'
+import { useOptionsSupported } from 'components/utils'
 export interface Props {
   width?: string | number // 对话框宽度，单位 px
   height?: string | number // 对话框高度，单位 px，默认自适应内容高度
@@ -65,6 +66,7 @@ const dialogOpen = ref<boolean>()
 const showDialogWrap = ref<boolean>()
 const transformOrigin = ref<string>('50% 50%')
 const fullscreen = ref<boolean>(false)
+const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:open', 'cancel', 'ok'])
 const dialogWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -152,10 +154,10 @@ watchEffect(() => {
   dialogOpen.value = props.open
 })
 onMounted(() => {
-  document.addEventListener('click', getClickPosition, true) // 事件在捕获阶段执行
+  document.addEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true) // 事件在捕获阶段执行
 })
 onUnmounted(() => {
-  document.removeEventListener('click', getClickPosition, true)
+  document.removeEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true)
 })
 function getClickPosition(e: MouseEvent) {
   if (!dialogOpen.value) {

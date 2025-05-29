@@ -7,7 +7,8 @@ import {
   useEventListener,
   useResizeObserver,
   rafTimeout,
-  cancelRaf
+  cancelRaf,
+  useOptionsSupported
 } from 'components/utils'
 export interface Props {
   maxWidth?: string | number // 文字提示最大宽度，单位 px
@@ -64,6 +65,8 @@ const tooltipCardWidth = ref<number>(0) // 文字提示内容 tooltip-card 宽�
 const tooltipCardHeight = ref<number>(0) // 文字提示内容 tooltip-card 高度
 const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
 const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
+const { isSupported: passiveSupported } = useOptionsSupported('passive')
+const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:show', 'openChange', 'animationend'])
 const slotsExist = useSlotsExist(['tooltip'])
 const tooltipMaxWidth = computed(() => {
@@ -167,7 +170,7 @@ function getViewportSize() {
 function observeScroll() {
   cleanup()
   scrollTarget.value = getScrollParent(contentRef.value)
-  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updatePosition)
+  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updatePosition, passiveSupported.value ? { passive: true } : undefined)
   if (scrollTarget.value === document.documentElement) {
     mutationObserver.start()
   }
@@ -362,7 +365,7 @@ function onShow(): void {
       emits('update:show', true)
       emits('openChange', true)
       if (showTooltip.value && props.trigger === 'click') {
-        document.addEventListener('click', handleClick)
+        document.addEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
       }
     }, props.showDelay)
   }
@@ -375,7 +378,7 @@ function onHide(): void {
       emits('update:show', false)
       emits('openChange', false)
       if (showTooltip.value && props.trigger === 'click') {
-        document.removeEventListener('click', handleClick)
+        document.removeEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
       }
     }, props.hideDelay)
   }
