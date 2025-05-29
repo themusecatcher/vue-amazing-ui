@@ -2,7 +2,7 @@
 import { ref, computed, watch, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
 import type { VNode, Slot, CSSProperties } from 'vue'
 import Button from 'components/button'
-import { useInject } from 'components/utils'
+import { useInject, useOptionsSupported } from 'components/utils'
 export interface Props {
   width?: string | number // 模态框宽度，单位 px
   icon?: VNode | Slot // 自定义图标
@@ -92,6 +92,7 @@ const transformOrigin = ref<string>('50% 50%')
 const modalData = ref<Modal>()
 const modalMode = ref() // 弹窗类型：'info' 'success' 'error' 'warning' 'confirm' 'erase'
 const { colorPalettes } = useInject('Modal') // 主题色注入
+const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:open', 'cancel', 'ok', 'know'])
 const modalWidth = computed(() => {
   const width = getComputedValue('width')
@@ -194,10 +195,10 @@ watchEffect(() => {
   confirmBtnLoading.value = props.confirmLoading
 })
 onMounted(() => {
-  document.addEventListener('click', getClickPosition, true) // 事件在捕获阶段执行
+  document.addEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true) // 事件在捕获阶段执行
 })
 onUnmounted(() => {
-  document.removeEventListener('click', getClickPosition, true)
+  document.removeEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true)
 })
 function getClickPosition(e: MouseEvent) {
   if (!modalOpen.value) {

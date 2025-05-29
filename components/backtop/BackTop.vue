@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { VNode, Slot } from 'vue'
 import Tooltip from 'components/tooltip'
-import { useSlotsExist, useMutationObserver, useInject } from 'components/utils'
+import { useSlotsExist, useMutationObserver, useInject, useOptionsSupported } from 'components/utils'
 export interface Props {
   icon?: VNode | Slot // 自定义图标
   description?: string // 文字描述 string | slot
@@ -36,6 +36,7 @@ const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
 const targetElement = ref<HTMLElement | null>(null) // 渲染容器元素
 const { colorPalettes } = useInject('BackTop') // 主题色注入
+const { isSupported: passiveSupported } = useOptionsSupported('passive')
 const emits = defineEmits(['click', 'show'])
 const slotsExist = useSlotsExist(['tooltip', 'icon', 'description'])
 const backTopStyle = computed(() => {
@@ -104,7 +105,7 @@ function observeScroll(): void {
   if (!scrollTarget.value) {
     console.warn('Container of back-top element is not found.')
   }
-  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updateScrollTop)
+  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updateScrollTop, passiveSupported.value ? { passive: true } : undefined)
   if (scrollTarget.value === document.documentElement) {
     mutationObserver.start()
   }
