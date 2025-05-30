@@ -124,12 +124,12 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   if (componentName === 'DatePicker') {
     // 特殊处理 DatePicker 组件样式依赖文件
     sideEffects.push(
-      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@11.0.2_vue@3.5.14_typescript@5.8.3_/node_modules/@vuepic/vue-datepicker/dist/main.css`
+      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@11.0.2_vue@3.5.16_typescript@5.8.3_/node_modules/@vuepic/vue-datepicker/dist/main.css`
     )
   }
   if (componentName === 'Swiper') {
     // 特殊处理 Swiper 组件样式依赖文件
-    sideEffects.push(`vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/swiper.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper.css`)
     const swiperModulesStyle = [
       'effect-cards',
       'effect-creative',
