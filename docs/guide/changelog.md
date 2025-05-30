@@ -4,10 +4,14 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
-## <VersionDateTag date="2025-05-29">2.4.9</VersionDateTag>
+## <VersionDateTag date="2025-05-30">2.4.10</VersionDateTag>
 
 - 新增 [否支持事件监听器选项 useOptionsSupported](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 - 更新组件库部分依赖版本
+
+## <VersionDateTag date="2025-05-29">2.4.9</VersionDateTag>
+
+- 新增 [否支持事件监听器选项 useOptionsSupported](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 
 ## <VersionDateTag date="2025-05-26">2.4.8</VersionDateTag>
 

@@ -716,7 +716,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 <Flex vertical>
   <Alert type="info" :message="`You selected date: ${dateStr}`" />
-  <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+  <Calendar v-model:value="dateStr" value-format="T" @panelChange="onPanelChange" @change="onChange" @select="onSelect" />
 </Flex>
 
 ::: details Show Code
@@ -773,7 +773,7 @@ weekFormat | 自定义星期展示格式 (defaultWeek: [DefaultWeek](#defaultwee
 monthFormat | 自定义月展示格式 | (month: number, timestamp: number) => string | undefined
 disabledDate | 不可选择的日期 | (timestamp: number) => boolean | undefined
 valueFormat | 被选中日期的格式，默认为时间戳；参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined
-value <Tag color="cyan">v-model</Tag> | 当前被选中的日期的时间戳 | string &#124; number | undefined
+value <Tag color="cyan">v-model</Tag> | 当前被选中的日期 | string &#124; number | undefined
 
 ### DayOfWeek Type
 

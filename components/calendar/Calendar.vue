@@ -3,7 +3,6 @@ import { ref, watch, computed } from 'vue'
 import {
   addDays,
   addMonths,
-  addYears,
   format,
   getDate,
   getDay,
@@ -15,7 +14,8 @@ import {
   parse,
   startOfDay,
   startOfMonth,
-  startOfYear
+  startOfYear,
+  set
 } from 'date-fns'
 import Select from 'components/select'
 import Radio from 'components/radio'
@@ -37,7 +37,6 @@ export interface Props {
   monthFormat?: (month: number, timestamp: number) => string // 自定义月展示格式
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
   valueFormat?: string // 被选中日期的格式，默认为时间戳；参考 format https://date-fns.org/v4.1.0/docs/format
-  value?: string | number // (v-model) 当前被选中的日期的时间戳
 }
 const props = withDefaults(defineProps<Props>(), {
   display: 'panel',
@@ -52,9 +51,10 @@ const props = withDefaults(defineProps<Props>(), {
   weekFormat: undefined,
   monthFormat: undefined,
   disabledDate: undefined,
-  valueFormat: undefined,
-  value: undefined
+  valueFormat: undefined
 })
+// (v-model) 当前被选中的日期
+const selectedValue = defineModel<string | number>('value')
 export interface DateItem {
   type: 'date'
   dateObject: {
@@ -92,12 +92,10 @@ const calendarYear = ref<number>(getYear(now.value))
 const calendarMonth = ref<number>(getMonth(now.value) + 1)
 const calendarMode = ref<Props['mode']>(props.mode)
 const calendarDates = ref<Array<DateItem[]>>([])
-const selectedValue = ref<string | number>()
 const calendarMonths = ref<Array<MonthItem[]>>([])
 const { colorPalettes } = useInject('Calendar') // 主题色注入
-const emits = defineEmits(['update:value', 'change', 'panelChange', 'select'])
+const emits = defineEmits(['change', 'panelChange', 'select'])
 const slotsExist = useSlotsExist(['header'])
-
 const defaultWeeks = computed(() => {
   const origin: DefaultWeek[] = ['一', '二', '三', '四', '五', '六', '日']
   const result: DefaultWeek[] = []
@@ -162,18 +160,19 @@ watch(
   }
 )
 watch(
-  () => [props.valueFormat, props.value],
-  () => {
-    if (props.value) {
-      if (props.valueFormat === undefined || props.valueFormat === 'T') {
-        selectedValue.value = Number(format(startOfDay(props.value).getTime(), props.valueFormat || 'T'))
+  () => props.valueFormat,
+  (to) => {
+    if (selectedValue.value) {
+      if (to === undefined || to === 'T') {
+        if (typeof selectedValue.value === 'string') {
+          selectedValue.value = Number(format(startOfDay(selectedValue.value).getTime(), 'T'))
+        }
       } else {
-        selectedValue.value = format(startOfDay(props.value).getTime(), props.valueFormat)
+        selectedValue.value = format(startOfDay(selectedValue.value).getTime(), to)
       }
     }
   },
   {
-    deep: true,
     immediate: true
   }
 )
@@ -302,45 +301,50 @@ function getMonthFormat(month: number, timestamp: number): string {
     return props.monthFormat(month, timestamp)
   }
 }
-function onDateSelected(date: DateItem): void {
-  if (selectedValueTimestamp.value !== date.timestamp) {
-    if (date.dateObject.month + 1 !== calendarMonth.value) {
-      calendarMonth.value = date.dateObject.month + 1
-    }
-    if (props.valueFormat === undefined || props.valueFormat === 'T') {
-      selectedValue.value = date.timestamp
-    } else {
-      selectedValue.value = format(date.timestamp, props.valueFormat)
-    }
-    emits('update:value', selectedValue.value)
-    emits('select', selectedValue.value, 'date')
-    emits('change', selectedValue.value, date.dateObject)
+function formatDate(timestamp: number): number | string {
+  if (props.valueFormat === undefined || props.valueFormat === 'T') {
+    return Number(format(timestamp, 'T'))
+  } else {
+    return format(timestamp, props.valueFormat)
   }
 }
-function getSelectedValueStartOfMonthTimeStamp(): number | undefined {
-  if (!selectedValue.value) return
-  if (typeof selectedValue.value === 'string') {
-    const selectedValueTimestamp = parse(selectedValue.value, props.valueFormat as string, new Date()).getTime()
-    return startOfMonth(selectedValueTimestamp).getTime()
+function onDateSelected(date: DateItem): void {
+  let newDateValue
+  if (selectedValueTimestamp.value) {
+    if (startOfDay(new Date(selectedValueTimestamp.value)).getTime() !== date.timestamp) {
+      newDateValue = set(new Date(selectedValueTimestamp.value), {
+        year: date.dateObject.year,
+        month: date.dateObject.month,
+        date: date.dateObject.date
+      }).getTime()
+    }
+  } else {
+    newDateValue = date.timestamp
   }
-  return startOfMonth(selectedValue.value).getTime()
+  if (newDateValue) {
+    newDateValue = formatDate(newDateValue)
+    selectedValue.value = newDateValue
+    emits('select', newDateValue, 'date')
+    emits('change', newDateValue, date.dateObject)
+  }
 }
 function onMonthSelected(month: MonthItem): void {
-  if (getSelectedValueStartOfMonthTimeStamp() !== month.timestamp) {
-    calendarMonth.value = month.monthObject.month + 1
-    if (selectedValue.value) {
-      const offsetYears = month.monthObject.year - getYear(selectedValueTimestamp.value as number)
-      const offsetMonths = month.monthObject.month - getMonth(selectedValueTimestamp.value as number)
-      const newDate = addMonths(addYears(selectedValueTimestamp.value as number, offsetYears), offsetMonths)
-      if (props.valueFormat === undefined || props.valueFormat === 'T') {
-        selectedValue.value = Number(format(newDate, props.valueFormat || 'T'))
-      } else {
-        selectedValue.value = format(newDate, props.valueFormat)
-      }
+  let newDateValue
+  if (selectedValueTimestamp.value) {
+    if (startOfMonth(new Date(selectedValueTimestamp.value)).getTime() !== month.timestamp) {
+      newDateValue = set(new Date(selectedValueTimestamp.value), {
+        year: month.monthObject.year,
+        month: month.monthObject.month
+      }).getTime()
     }
-    emits('update:value', selectedValue.value)
-    emits('select', selectedValue.value, 'month')
-    emits('change', selectedValue.value, month.monthObject)
+  } else {
+    newDateValue = month.timestamp
+  }
+  if (newDateValue) {
+    newDateValue = formatDate(newDateValue)
+    selectedValue.value = newDateValue
+    emits('select', newDateValue, 'month')
+    emits('change', newDateValue, month.monthObject)
   }
 }
 function onPanelChange(): void {
@@ -426,7 +430,8 @@ function onPanelChange(): void {
                     'date-cell-disabled': disabledDate && disabledDate(dateItem.timestamp),
                     'date-cell-in-view': dateItem.inCurrentMonth,
                     'date-cell-today': dateItem.isCurrentDate,
-                    'date-cell-selected': selectedValueTimestamp && selectedValueTimestamp === dateItem.timestamp
+                    'date-cell-selected':
+                      selectedValueTimestamp && startOfDay(selectedValueTimestamp).getTime() === dateItem.timestamp
                   }"
                   v-for="(dateItem, index) in weekDates"
                   :key="index"
