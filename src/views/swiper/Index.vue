@@ -184,7 +184,7 @@ function onNext() {
       <Swiper
         :images="images"
         mode="broadcast"
-        :height="320"
+        :height="280"
         :speed="600"
         :pagination="{
           dynamicBullets: true,
