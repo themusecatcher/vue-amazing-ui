@@ -820,9 +820,11 @@ function onSwitchRight(): void {
         z-index: 3;
         inset: 0;
         transition: transform var(--drag-transition-duration) cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        :deep(.spin-content) {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
         .preview-image {
           display: inline-block;
           vertical-align: middle;
