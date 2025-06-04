@@ -32,10 +32,10 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const waterfallRef = ref() // 瀑布流容器引用
 const waterfallWidth = ref<number>(0) // 瀑布流区域宽度
-const imagesLoaded = ref<boolean[]>(Array(props.images.length).fill(false)) // 图片是否加载完成
+const imagesLoaded = ref<boolean[]>([]) // 图片是否加载完成
 const imagesSize = ref<{ width: number; height: number }[]>([]) // 所有图片原始尺寸
 const imagesProperty = ref<{ width: number; height: number; top: number; left: number }[]>([]) // 瀑布流图片的宽高和位置信息
-const preColumnHeight = ref<number[]>(Array(props.columnCount).fill(0)) // 每列的高度
+const preColumnHeight = ref<number[]>([]) // 每列的高度
 const flag = ref<number>(0) // 更新瀑布流标识
 // 瀑布流区域总宽度
 const totalWidth = computed(() => {
@@ -58,34 +58,51 @@ const imagesAmount = computed(() => {
   return props.images.length
 })
 watch(
-  () => [props.images, props.columnCount, props.columnGap, props.width],
-  () => {
-    waterfallWidth.value = waterfallRef.value.offsetWidth
-    preColumnHeight.value = Array(props.columnCount).fill(0)
-    flag.value++
-    updateWaterfall(flag.value)
+  () => props.images,
+  (to, from) => {
+    console.log('images changed', to)
+    // 只有当图片数组长度变化或图片文件变化时才清空图片尺寸数组并重新初始化
+    if (to.length !== to.length || to.some((image, index) => image.src !== from[index]?.src)) {
+      imagesSize.value = []
+      initWaterfall()
+    }
   },
   {
-    deep: true, // 强制转成深层侦听器
-    flush: 'post' // 在侦听器回调中访问被 Vue 更新之后的 DOM
+    deep: true,
+    flush: 'post'
+  }
+)
+watch(
+  () => [props.columnCount, props.columnGap, props.width],
+  () => {
+    initWaterfall()
+  },
+  {
+    deep: true,
+    flush: 'post'
   }
 )
 onMounted(() => {
-  waterfallWidth.value = waterfallRef.value.offsetWidth
-  updateWaterfall(flag.value)
+  initWaterfall()
 })
 // 窗口宽度改变时重新计算瀑布流布局
 useResizeObserver(waterfallRef, () => {
   const currentWidth = waterfallRef.value.offsetWidth
   if (props.images.length && currentWidth !== waterfallWidth.value) {
-    waterfallWidth.value = currentWidth
-    flag.value++
-    updateWaterfall(flag.value)
+    initWaterfall()
   }
 })
+// 初始化瀑布流
+function initWaterfall() {
+  if (!waterfallRef.value) return
+  waterfallWidth.value = waterfallRef.value.offsetWidth
+  preColumnHeight.value = Array(props.columnCount).fill(0)
+  imagesProperty.value.splice(0)
+  flag.value++
+  updateWaterfall(flag.value)
+}
 // 更新瀑布流
 async function updateWaterfall(symbol: number): Promise<boolean | void> {
-  imagesProperty.value = []
   for (let i = 0; i < imagesAmount.value; i++) {
     if (symbol === flag.value) {
       if (!imagesSize.value[i]) {
@@ -109,12 +126,12 @@ function loadImage(url: string, n: number): void | Promise<string> {
     return new Promise((resolve, reject) => {
       const image = new Image()
       image.src = url
-      // 图片加载完成后，通过 image.width 和 image.height 获取图片原始宽高
+      // 图片加载完成后，通过 image.naturalWidth 和 image.naturalHeight 获取图片原始宽高
       image.onload = function () {
         imagesSize.value[n] = {
           // 保存已加载图片的尺寸信息
-          width: image.width,
-          height: image.height
+          width: image.naturalWidth,
+          height: image.naturalHeight
         }
         getImagesProperty(n)
         resolve('loaded')
