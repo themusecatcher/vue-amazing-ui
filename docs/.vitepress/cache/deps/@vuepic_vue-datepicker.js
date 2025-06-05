@@ -90,10 +90,10 @@ import {
   withDirectives,
   withKeys,
   withModifiers
-} from "./chunk-O3I43HSE.js";
+} from "./chunk-5U2WJACE.js";
 import "./chunk-JVWSFFO4.js";
 
-// node_modules/.pnpm/@vuepic+vue-datepicker@11.0.2_vue@3.5.14_typescript@5.8.3_/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
+// node_modules/.pnpm/@vuepic+vue-datepicker@11.0.2_vue@3.5.16_typescript@5.8.3_/node_modules/@vuepic/vue-datepicker/dist/vue-datepicker.js
 function Gt() {
   const e = useAttrs();
   return openBlock(), createElementBlock(

@@ -19,7 +19,7 @@ import {
   setCSSProperty,
   setInnerHTML,
   showWarning
-} from "./chunk-NXVYRO4H.js";
+} from "./chunk-TB33TTH4.js";
 import {
   computed,
   h,
@@ -32,10 +32,10 @@ import {
   provide,
   ref,
   watch
-} from "./chunk-O3I43HSE.js";
+} from "./chunk-5U2WJACE.js";
 import "./chunk-JVWSFFO4.js";
 
-// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/swiper-core.mjs
 var support;
 function calcSupport() {
   const window2 = getWindow();
@@ -3734,7 +3734,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 });
 Swiper.use([Resize, Observer]);
 
-// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   "eventsPrefix",
   "injectStyles",
@@ -4079,7 +4079,7 @@ function updateSwiper(_ref) {
   swiper.update();
 }
 
-// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
     obj = {};
@@ -4204,7 +4204,7 @@ var updateOnVirtualData = (swiper) => {
   }
 };
 
-// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots, slidesRef, oldSlidesRef) {
   if (originalSlots === void 0) {
     originalSlots = {};

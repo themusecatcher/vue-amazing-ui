@@ -36,10 +36,10 @@ import {
   unref,
   watch,
   watchEffect
-} from "./chunk-O3I43HSE.js";
+} from "./chunk-5U2WJACE.js";
 import "./chunk-JVWSFFO4.js";
 
-// node_modules/.pnpm/@vueuse+shared@13.2.0_vue@3.5.14_typescript@5.8.3_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@13.3.0_vue@3.5.16_typescript@5.8.3_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a;
   const result = shallowRef();
@@ -1574,7 +1574,7 @@ function whenever(source, cb, options) {
   return stop;
 }
 
-// node_modules/.pnpm/@vueuse+core@13.2.0_vue@3.5.14_typescript@5.8.3_/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@13.3.0_vue@3.5.16_typescript@5.8.3_/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   let options;
   if (isRef(optionsOrRef)) {
@@ -4978,7 +4978,7 @@ function createFetch(config = {}) {
   return useFactoryFetch;
 }
 function useFetch(url, ...args) {
-  var _a;
+  var _a, _b;
   const supportsAbort = typeof AbortController === "function";
   let fetchOptions = {};
   let options = {
@@ -5003,7 +5003,7 @@ function useFetch(url, ...args) {
       options = { ...options, ...args[1] };
   }
   const {
-    fetch = (_a = defaultWindow) == null ? void 0 : _a.fetch,
+    fetch = (_b = (_a = defaultWindow) == null ? void 0 : _a.fetch) != null ? _b : globalThis == null ? void 0 : globalThis.fetch,
     initialData,
     timeout
   } = options;
@@ -5039,7 +5039,7 @@ function useFetch(url, ...args) {
     timer = useTimeoutFn(abort, timeout, { immediate: false });
   let executeCounter = 0;
   const execute = async (throwOnFailed = false) => {
-    var _a2, _b;
+    var _a2, _b2;
     abort();
     loading(true);
     error.value = null;
@@ -5088,7 +5088,7 @@ function useFetch(url, ...args) {
         ...context.options,
         headers: {
           ...headersToObject(defaultFetchOptions.headers),
-          ...headersToObject((_b = context.options) == null ? void 0 : _b.headers)
+          ...headersToObject((_b2 = context.options) == null ? void 0 : _b2.headers)
         }
       }
     ).then(async (fetchResponse) => {
@@ -6824,11 +6824,12 @@ function useNetwork(options = {}) {
 function useNow(options = {}) {
   const {
     controls: exposeControls = false,
-    interval = "requestAnimationFrame"
+    interval = "requestAnimationFrame",
+    immediate = true
   } = options;
   const now2 = ref(/* @__PURE__ */ new Date());
   const update = () => now2.value = /* @__PURE__ */ new Date();
-  const controls = interval === "requestAnimationFrame" ? useRafFn(update, { immediate: true }) : useIntervalFn(update, interval, { immediate: true });
+  const controls = interval === "requestAnimationFrame" ? useRafFn(update, { immediate }) : useIntervalFn(update, interval, { immediate });
   if (exposeControls) {
     return {
       now: now2,

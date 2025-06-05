@@ -1,4 +1,4 @@
-// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === "object" && "constructor" in obj && obj.constructor === Object;
 }
@@ -148,7 +148,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@11.2.7/node_modules/swiper/shared/utils.mjs
+// node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/utils.mjs
 function classesToTokens(classes) {
   if (classes === void 0) {
     classes = "";
@@ -503,4 +503,4 @@ export {
   getRotateFix,
   setInnerHTML
 };
-//# sourceMappingURL=chunk-NXVYRO4H.js.map
+//# sourceMappingURL=chunk-TB33TTH4.js.map
