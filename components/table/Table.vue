@@ -17,7 +17,7 @@ export interface Column {
   className?: string // 自定义列的类名
   colSpan?: number // 表头列合并，设置为 0 时，不渲染
   dataIndex?: string // 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略
-  key?: string // 自定义列标识
+  key?: string // 自定义列标识，未设置 dataIndex 时作为 Vue 唯一的标识
   ellipsis?: boolean // 超过宽度是否自动省略
   ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略，较高优先级
   fixed?: 'left' | 'right' // 列是否固定，列表头分组时，只需设置所有叶子节点是否固定
@@ -78,6 +78,7 @@ export interface Props {
   sticky?: boolean //	是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定
   showPagination?: boolean // 是否显示分页
   pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
+  rowKey?: string | ((record: Record<string, any>, index?: number) => string) // 表格内容行的唯一标识 key，可以是字符串或一个函数
   rowSelection?: Selection // 列表项选择配置
   scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
   scrollbarProps?: object // Scrollbar 组件属性配置，参考 Scrollbar Props，用于配置表格滚动条
@@ -110,6 +111,7 @@ const props = withDefaults(defineProps<Props>(), {
   sticky: false,
   showPagination: true,
   pagination: () => ({}),
+  rowKey: 'key',
   rowSelection: undefined,
   scroll: undefined,
   scrollbarProps: () => ({}),
@@ -163,6 +165,16 @@ const sortHoverDataIndex = ref<string | null>(null) // 鼠标悬浮排序列的�
 const clickSorter = ref(false) // 是否点击排序
 const slotsExist = useSlotsExist(['header', 'footer'])
 const emits = defineEmits(['expand', 'expandedRowsChange', 'update:expandedRowKeys', 'sortChange', 'change'])
+// 获取表格内容行的 key 标识函数
+const getRowKey = computed(() => {
+  if (typeof props.rowKey === 'function') {
+    return props.rowKey
+  }
+  return (record: Record<string, any>, index: number) => {
+    const key = record && record[props.rowKey as string]
+    return key === undefined ? index : key
+  }
+})
 // 是否展示复选框
 const showSelectionColumn = computed(() => {
   return props.rowSelection !== undefined
@@ -861,6 +873,18 @@ function tableCellWidthStyle(column: Column) {
   }
   return style
 }
+// 获取表格表头列的唯一标识 key
+function getColumnKey(column: Column, index: number): string | number {
+  if ('dataIndex' in column && column.dataIndex) {
+    return column.dataIndex
+  }
+  return column.key !== undefined ? column.key : index
+}
+// 获取表格每行表头的唯一标识 key
+function getThColumnsGroupRowKey(columns: Column[]) {
+  return columns.map(getColumnKey).join('-')
+}
+
 // 展开列固定时的样式
 function tableExpandCellFixStyle(fixed: boolean) {
   const style: CSSProperties = {}
@@ -1048,6 +1072,7 @@ function onPaginationChange(page: number, pageSize: number) {
         <div v-if="showHeader" class="table-header">
           <slot name="header">{{ header }}</slot>
         </div>
+        <!-- 没有设置垂直滚动 & 没有设置粘性定位的表头和水平滚动条 -->
         <div
           v-if="!verticalScroll && !sticky"
           class="table-container"
@@ -1074,7 +1099,7 @@ function onPaginationChange(page: number, pageSize: number) {
                 />
               </colgroup>
               <thead>
-                <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="rowIndex">
+                <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="getThColumnsGroupRowKey(columns)">
                   <template v-if="rowIndex === 0">
                     <th
                       v-if="showExpandColumn"
@@ -1115,7 +1140,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       </div>
                     </th>
                   </template>
-                  <template v-for="(column, colIndex) in columns" :key="`${rowIndex}-${colIndex}`">
+                  <template v-for="(column, colIndex) in columns" :key="getColumnKey(column, colIndex)">
                     <th
                       v-if="column.colSpan !== 0"
                       class="table-th"
@@ -1211,8 +1236,9 @@ function onPaginationChange(page: number, pageSize: number) {
                   </td>
                 </tr>
                 <template v-if="displayDataSource.length">
-                  <template v-for="(record, rowIndex) in displayDataSource" :key="rowIndex">
+                  <template v-for="(record, rowIndex) in displayDataSource" :key="getRowKey(record, rowIndex)">
                     <tr
+                      :data-row-key="getRowKey(record, rowIndex)"
                       :class="getRowClassName(record, rowIndex)"
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
@@ -1292,7 +1318,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         ]"
                         :style="tableCellFixStyle(column)"
                         v-for="(column, colIndex) in getTdColumnsGroup(record, rowIndex)"
-                        :key="`${rowIndex}-${colIndex}`"
+                        :key="getColumnKey(column, colIndex)"
                         v-bind="column.customCell && column.customCell(record, rowIndex, column)"
                       >
                         <slot
@@ -1367,7 +1393,7 @@ function onPaginationChange(page: number, pageSize: number) {
                 />
               </colgroup>
               <thead>
-                <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="rowIndex">
+                <tr v-for="(columns, rowIndex) in thColumnsGroup" :key="getThColumnsGroupRowKey(columns)">
                   <template v-if="rowIndex === 0">
                     <th
                       v-if="showExpandColumn"
@@ -1408,7 +1434,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       </div>
                     </th>
                   </template>
-                  <template v-for="(column, colIndex) in columns" :key="`${rowIndex}-${colIndex}`">
+                  <template v-for="(column, colIndex) in columns" :key="getColumnKey(column, colIndex)">
                     <th
                       v-if="column.colSpan !== 0"
                       class="table-th"
@@ -1534,8 +1560,9 @@ function onPaginationChange(page: number, pageSize: number) {
                   </td>
                 </tr>
                 <template v-if="displayDataSource.length">
-                  <template v-for="(record, rowIndex) in displayDataSource" :key="rowIndex">
+                  <template v-for="(record, rowIndex) in displayDataSource" :key="getRowKey(record, rowIndex)">
                     <tr
+                      :data-row-key="getRowKey(record, rowIndex)"
                       :class="getRowClassName(record, rowIndex)"
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
@@ -1615,7 +1642,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         ]"
                         :style="tableCellFixStyle(column)"
                         v-for="(column, colIndex) in getTdColumnsGroup(record, rowIndex)"
-                        :key="`${rowIndex}-${colIndex}`"
+                        :key="getColumnKey(column, colIndex)"
                         v-bind="column.customCell && column.customCell(record, rowIndex, column)"
                       >
                         <slot
