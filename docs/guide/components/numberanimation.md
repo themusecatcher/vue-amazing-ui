@@ -39,36 +39,22 @@ function onFinished() {
 ## 基本使用
 
 <ClientOnly>
-  <Row>
-    <Col :span="12">
-      <Statistic title="一个小目标">
-        <NumberAnimation :to="value1" />
-      </Statistic>
-    </Col>
-    <Col :span="12">
-      <Statistic title="一个小目标">
-        <NumberAnimation :to="value1" separator="" />
-      </Statistic>
-    </Col>
-  </Row>
+  <Statistic title="一个小目标">
+    <NumberAnimation :to="value" />
+  </Statistic>
 </ClientOnly>
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const value = ref(100000000.12345)
+</script>
 <template>
-  <Row>
-    <Col :span="12">
-      <Statistic title="一个小目标">
-        <NumberAnimation :to="100000000.12345" />
-      </Statistic>
-    </Col>
-    <Col :span="12">
-      <Statistic title="一个小目标">
-        <NumberAnimation :to="100000000.12345" separator="" />
-      </Statistic>
-    </Col>
-  </Row>
+  <Statistic title="一个小目标">
+    <NumberAnimation :to="value" />
+  </Statistic>
 </template>
 ```
 
@@ -94,16 +80,20 @@ function onFinished() {
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const value = ref(100000000.12345)
+</script>
 <template>
   <Row>
     <Col :span="12">
       <Statistic title="一个小目标">
-        <NumberAnimation :from="0.00" :to="100000000.12345" :precision="2" />
+        <NumberAnimation :from="0.00" :to="value" :precision="2" />
       </Statistic>
     </Col>
     <Col :span="12">
       <Statistic title="一个小目标">
-        <NumberAnimation :to="100000000.12345" :precision="3" />
+        <NumberAnimation :to="value" :precision="3" />
       </Statistic>
     </Col>
   </Row>
@@ -138,6 +128,10 @@ function onFinished() {
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const value = ref(100000000)
+</script>
 <template>
   <Row>
     <Col :span="12">
@@ -145,15 +139,56 @@ function onFinished() {
         <NumberAnimation
           prefix="$"
           :from="0"
-          :to="100000000" />
+          :to="value" />
       </Statistic>
     </Col>
     <Col :span="12">
       <Statistic title="一个小目标">
         <NumberAnimation
           :from="0"
-          :to="100000000"
+          :to="value"
           suffix="元" />
+      </Statistic>
+    </Col>
+  </Row>
+</template>
+```
+
+:::
+
+## 自定义千分位分隔符 & 小数点字符
+<ClientOnly>
+  <Row>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation separator=";" decimal="," :precision="2" :from="0" :to="value2" />
+      </Statistic>
+    </Col>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation separator="" :from="0" :to="value2" />
+      </Statistic>
+    </Col>
+  </Row>
+</ClientOnly>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const value = ref(100000000.12345)
+</script>
+<template>
+  <Row>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation separator=";" decimal="," :precision="2" :from="0" :to="value" />
+      </Statistic>
+    </Col>
+    <Col :span="12">
+      <Statistic title="一个小目标">
+        <NumberAnimation separator="" :from="0" :to="value" />
       </Statistic>
     </Col>
   </Row>
@@ -176,12 +211,16 @@ function onFinished() {
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const value = ref(100000000)
+</script>
 <template>
   <Statistic title="一个小目标">
     <NumberAnimation
       :value-style="{ fontSize: '30px', fontWeight: 600, color: '#d4380d' }"
       :from="0"
-      :to="100000000" />
+      :to="value" />
   </Statistic>
 </template>
 ```
@@ -241,6 +280,28 @@ function onFinished() {
       />
     </Statistic>
   </Space>
+</template>
+```
+
+:::
+
+## 自定义动画过渡效果
+
+<Statistic title="一个小目标">
+  <NumberAnimation transition="easeInCubic" :from="0" :to="value2" />
+</Statistic>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const value = ref(100000000)
+</script>
+<template>
+  <Statistic title="一个小目标">
+    <NumberAnimation transition="easeInCubic" :from="0" :to="value" />
+  </Statistic>
 </template>
 ```
 

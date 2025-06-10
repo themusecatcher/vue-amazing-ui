@@ -32,18 +32,9 @@ function onFinished() {
     <br />
     <Button type="primary" @click="onPlay">Play</Button>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Row>
-      <Col :span="12">
-        <Statistic title="一个小目标">
-          <NumberAnimation :to="value1" />
-        </Statistic>
-      </Col>
-      <Col :span="12">
-        <Statistic title="一个小目标">
-          <NumberAnimation :to="value1" separator="" />
-        </Statistic>
-      </Col>
-    </Row>
+    <Statistic title="一个小目标">
+      <NumberAnimation :to="value1" />
+    </Statistic>
     <h2 class="mt30 mb10">精度</h2>
     <Row>
       <Col :span="12">
@@ -70,9 +61,22 @@ function onFinished() {
         </Statistic>
       </Col>
     </Row>
+    <h2 class="mt30 mb10">自定义千分位分隔符 & 小数点字符</h2>
+    <Row>
+      <Col :span="12">
+        <Statistic title="一个小目标">
+          <NumberAnimation separator=";" decimal="," :precision="2" :from="0" :to="value2" />
+        </Statistic>
+      </Col>
+      <Col :span="12">
+        <Statistic title="一个小目标">
+          <NumberAnimation separator="" :from="0" :to="value2" />
+        </Statistic>
+      </Col>
+    </Row>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Statistic title="一个小目标">
-      <NumberAnimation :value-style="{ fontSize: '30px', fontWeight: 600, color: '#d4380d' }" :from="0" :to="value2" />
+      <NumberAnimation :value-style="{ fontSize: '30px', fontWeight: 600, color: '#ff6900' }" :from="0" :to="value2" />
     </Statistic>
     <h2 class="mt30 mb10">自定义播放和动画时间</h2>
     <Space vertical>
@@ -90,5 +94,9 @@ function onFinished() {
         />
       </Statistic>
     </Space>
+    <h2 class="mt30 mb10">自定义动画过渡效果</h2>
+    <Statistic title="一个小目标">
+      <NumberAnimation transition="easeInCubic" :from="0" :to="value2" />
+    </Statistic>
   </div>
 </template>
