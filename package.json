@@ -62,8 +62,7 @@
     "build:browser": "vite build -- dir=dist f=iife",
     "build-only": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "prepare": "husky"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
     "@ant-design/colors": "^8.0.0",
@@ -117,22 +116,5 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "lint-staged": {
-    "*.{js,ts}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "*.vue": [
-      "prettier --parser=vue --write",
-      "eslint --fix"
-    ],
-    "*.{html,css,less}": [
-      "prettier --write"
-    ],
-    "*.md": [
-      "prettier --write --parser markdown --prose-wrap never",
-      "eslint --fix"
-    ]
-  }
+  ]
 }
