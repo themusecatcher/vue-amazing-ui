@@ -11,7 +11,6 @@ const route = useRoute()
 const routeName = computed(() => {
   return route.name
 })
-console.log(routeName)
 const loadingBar = ref()
 onMounted(() => {
   loadingBarRef.value = loadingBar.value
