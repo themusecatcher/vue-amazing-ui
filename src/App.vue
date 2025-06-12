@@ -15,7 +15,6 @@ const loadingBar = ref()
 onMounted(() => {
   loadingBarRef.value = loadingBar.value
 })
-console.log('')
 </script>
 <template>
   <a-config-provider :theme="theme">
