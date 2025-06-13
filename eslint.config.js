@@ -18,9 +18,6 @@ export default defineConfigWithVueTs(
     ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**']
   },
 
-  pluginVue.configs['flat/essential'],
-  vueTsConfigs.recommended,
-  skipFormatting,
   // 添加自定义规则
   {
     name: 'custom-eslint-rules',
@@ -28,5 +25,9 @@ export default defineConfigWithVueTs(
       // 示例：关闭 @typescript-eslint/no-explicit-any 规则
       '@typescript-eslint/no-explicit-any': 'off'
     }
-  }
+  },
+
+  pluginVue.configs['flat/essential'],
+  vueTsConfigs.recommended,
+  skipFormatting
 )
