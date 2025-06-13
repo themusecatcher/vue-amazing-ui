@@ -21,10 +21,8 @@ useMutationObserver(
   },
   { attributes: true }
 )
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const menus = ref<any>(routes[0].children)
 const current = ref<string[]>([route.name as string])
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onClick(e: any): void {
   console.log(`${e.item.title} ${e.key}`)
   // console.log(e.keyPath)
