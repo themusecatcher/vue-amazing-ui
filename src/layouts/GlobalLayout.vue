@@ -9,10 +9,10 @@ const themeDark = ref<boolean>(false)
 const html = document.documentElement
 onMounted(() => {
   themeDark.value = html.classList.contains('dark')
-  // if (!themeDark.value) {
-  //   // 默认开启暗黑模式
-  //   toggleDark()
-  // }
+  if (!themeDark.value) {
+    // 默认开启暗黑模式
+    toggleDark()
+  }
 })
 useMutationObserver(
   html,
@@ -21,8 +21,10 @@ useMutationObserver(
   },
   { attributes: true }
 )
-const menus: any = ref(routes[0].children)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const menus = ref<any>(routes[0].children)
 const current = ref<string[]>([route.name as string])
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onClick(e: any): void {
   console.log(`${e.item.title} ${e.key}`)
   // console.log(e.keyPath)
