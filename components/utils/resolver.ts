@@ -141,7 +141,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
     ]
     swiperModulesStyle.forEach((moduleName) => {
       sideEffects.push(
-        `vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.6/node_modules/swiper/modules/${moduleName}.css`
+        `vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/${moduleName}.css`
       )
     })
   }

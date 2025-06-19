@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-06-19">2.4.14</VersionDateTag>
+
+- 修复 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，使用按需引入时样式版本引入错误的问题
+
 ## <VersionDateTag date="2025-06-05">2.4.13</VersionDateTag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件部分代码逻辑，新增 `rowKey` 属性，用于支持设置表格内容行的唯一标识 `key`
