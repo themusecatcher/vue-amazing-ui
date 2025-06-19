@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*按钮用于开始一个即时操作*
+_按钮用于开始一个即时操作_
 
 ## 何时使用
 
@@ -10,8 +10,7 @@
 
 <script setup lang="ts">
 import { h, ref } from 'vue'
-import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
+import { SearchOutlined, DownloadOutlined, CrownOutlined } from '@ant-design/icons-vue'
 const disabled = ref(true)
 const sizeOptions = [
   {
@@ -29,7 +28,6 @@ const sizeOptions = [
 ]
 const size = ref('middle')
 const customLoading = ref(false)
-const primaryColor = ref('#ff6900')
 const loading = ref(true)
 const loadingOptions = [
   {
@@ -42,16 +40,6 @@ const loadingOptions = [
   }
 ]
 const loadingType = ref('dynamic')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -59,7 +47,7 @@ function onClick(e: Event) {
 
 ## 基本使用
 
-*七种类型*
+_七种类型_
 
 <br/>
 
@@ -207,15 +195,11 @@ import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
         <Button type="primary" shape="circle" :icon="() => h(SearchOutlined)" />
       </Tooltip>
       <Button type="primary" shape="circle">A</Button>
-      <Button type="primary" shape="round" :icon="() => h(SearchOutlined)">
-        Search
-      </Button>
+      <Button type="primary" shape="round" :icon="() => h(SearchOutlined)"> Search </Button>
       <Tooltip tooltip="search">
         <Button type="primary" shape="round" :icon="() => h(SearchOutlined)" />
       </Tooltip>
-      <Button type="primary" :icon="() => h(SearchOutlined)">
-        Search
-      </Button>
+      <Button type="primary" :icon="() => h(SearchOutlined)"> Search </Button>
     </Space>
     <Space>
       <Tooltip tooltip="search">
@@ -687,60 +671,34 @@ const size = ref('middle')
 
 :::
 
-## 自定义样式
-
-*可通过自定义类名然后通过样式覆盖 或 直接自定义样式变量 来自定义样式*
-
-<br/>
+## 自定义颜色
 
 <Space vertical>
   <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
   <Space>
-    <Button button-class="custom-class1" ripple-color="#faad14" size="large" :loading="customLoading">
-      自定义样式
-    </Button>
-    <Button
-      button-class="custom-class2"
-      ripple-color="#faad14"
-      type="primary"
-      size="large"
-      :loading="customLoading"
-    >
-      自定义样式
-    </Button>
-  </Space>
-  <Space align="center">
-    buttonPrimaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-  </Space>
-  <Space>
-    <Button shape="circle" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
+    <Button type="reverse" color="#d4380d" :loading="customLoading">
       <template #icon>
-        <SearchOutlined />
+        <CrownOutlined />
       </template>
+      #d4380d
     </Button>
-    <Button
-      type="primary"
-      shape="round"
-      size="large"
-      :style="getThemeStyle(primaryColor)"
-      :loading="customLoading"
-    >
+    <Button type="primary" color="#faad14" :loading="customLoading">
       <template #icon>
-        <SearchOutlined />
+        <CrownOutlined />
       </template>
-      Search
+      #faad14
     </Button>
-    <Button
-      type="reverse"
-      shape="round"
-      size="large"
-      :style="getThemeStyle(primaryColor)"
-      :loading="customLoading"
-    >
+    <Button ghost type="primary" color="#ff6900" :loading="customLoading">
       <template #icon>
-        <DownloadOutlined />
+        <CrownOutlined />
       </template>
+      #ff6900
+    </Button>
+    <Button type="primary" shape="round" color="#18a058" :loading="customLoading">
+      <template #icon>
+        <CrownOutlined />
+      </template>
+      #18a058
     </Button>
   </Space>
 </Space>
@@ -750,104 +708,40 @@ const size = ref('middle')
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
+import { CrownOutlined } from '@ant-design/icons-vue'
 const customLoading = ref(false)
-const primaryColor = ref('#ff6900')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
 </script>
 <template>
   <Space vertical>
     <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
     <Space>
-      <Button button-class="custom-class1" ripple-color="#faad14" size="large" :loading="customLoading">
-        自定义样式
-      </Button>
-      <Button
-        button-class="custom-class2"
-        ripple-color="#faad14"
-        type="primary"
-        size="large"
-        :loading="customLoading"
-      >
-        自定义样式
-      </Button>
-    </Space>
-    <Space align="center">
-      buttonPrimaryColor:
-      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    </Space>
-    <Space>
-      <Button shape="circle" size="large" :style="getThemeStyle(primaryColor)" :loading="customLoading">
+      <Button type="reverse" color="#d4380d" :loading="customLoading">
         <template #icon>
-          <SearchOutlined />
+          <CrownOutlined />
         </template>
+        #d4380d
       </Button>
-      <Button
-        type="primary"
-        shape="round"
-        size="large"
-        :style="getThemeStyle(primaryColor)"
-        :loading="customLoading"
-      >
+      <Button type="primary" color="#faad14" :loading="customLoading">
         <template #icon>
-          <SearchOutlined />
+          <CrownOutlined />
         </template>
-        Search
+        #faad14
       </Button>
-      <Button
-        type="reverse"
-        shape="round"
-        size="large"
-        :style="getThemeStyle(primaryColor)"
-        :loading="customLoading"
-      >
+      <Button ghost type="primary" color="#ff6900" :loading="customLoading">
         <template #icon>
-          <DownloadOutlined />
+          <CrownOutlined />
         </template>
+        #ff6900
+      </Button>
+      <Button type="primary" shape="round" color="#18a058" :loading="customLoading">
+        <template #icon>
+          <CrownOutlined />
+        </template>
+        #18a058
       </Button>
     </Space>
   </Space>
 </template>
-<style lang="less" scoped>
-.custom-class1 {
-  height: 40px;
-  font-size: 18px;
-  border-color: #faad14;
-  color: #faad14;
-  &:hover {
-    color: #ffc53d !important;
-    border-color: #ffc53d;
-  }
-  &:active {
-    color: #d48806 !important;
-    border-color: #d48806;
-  }
-}
-.custom-class2 {
-  height: 40px;
-  font-size: 18px;
-  background: #faad14;
-  border-color: #faad14;
-  &:hover {
-    background: #ffc53d;
-    border-color: #ffc53d;
-  }
-  &:active {
-    background: #d48806;
-    border-color: #d48806;
-  }
-}
-</style>
 ```
 
 :::
@@ -883,10 +777,7 @@ function getThemeStyle(color: string) {
   <Space>
     <Button type="primary" ghost href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">
       <template #icon>
-        <img
-          style="width: 1em; height: 1em"
-          src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg"
-        />
+        <img style="width: 1em; height: 1em" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
       </template>
       Vue Amazing UI
     </Button>
@@ -1086,67 +977,36 @@ const loadingType = ref('dynamic')
 
 :::
 
-<style lang="less" scoped>
-.custom-class1 {
-  height: 40px;
-  font-size: 18px;
-  border-color: #faad14;
-  color: #faad14;
-  &:hover {
-    color: #ffc53d !important;
-    border-color: #ffc53d;
-  }
-  &:active {
-    color: #d48806 !important;
-    border-color: #d48806;
-  }
-}
-.custom-class2 {
-  height: 40px;
-  font-size: 18px;
-  background: #faad14;
-  border-color: #faad14;
-  &:hover {
-    background: #ffc53d;
-    border-color: #ffc53d;
-  }
-  &:active {
-    background: #d48806;
-    border-color: #d48806;
-  }
-}
-</style>
-
 ## APIs
 
 ### Button
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-type | 设置按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
-shape | 设置按钮形状 | 'default' &#124; 'circle' &#124; 'round' | 'default'
-icon | 设置按钮图标 | VNode &#124; Slot | undefined
-size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-ghost | 按钮背景是否透明，仅当 `type: 'primary' \| 'danger'` 时生效 | boolean | false
-buttonClass | 设置按钮类名 | string | undefined
-rippleColor | 点击时的波纹颜色，一般不需要设置，默认会根据 `type` 自动匹配，主要用于自定义样式时 | string | undefined
-href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | undefined
-target | 如何打开目标链接，相当于 `a` 链接的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self'
-keyboard | 是否支持键盘操作 | boolean | true
-disabled | 是否禁用 | boolean | false
-loading | 是否加载中 | boolean | false
-loadingType | 加载指示符类型 | 'static' &#124; 'dynamic' | 'dynamic'
-block | 是否将按钮宽度调整为其父宽度 | boolean | false
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| type | 设置按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' |
+| shape | 设置按钮形状 | 'default' &#124; 'circle' &#124; 'round' | 'default' |
+| icon | 设置按钮图标 | VNode &#124; Slot | undefined |
+| size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| ghost | 按钮背景是否透明，仅当 `type: 'primary' \| 'danger'` 时生效 | boolean | false |
+| buttonClass | 设置按钮类名 | string | undefined |
+| color | 按钮颜色 | string | undefined |
+| href | 点击跳转的地址，与 `a` 链接的 `href` 属性一致 | string | undefined |
+| target | 如何打开目标链接，相当于 `a` 链接的 `target` 属性，`href` 存在时生效 | '\_self' &#124; '\_blank' | '\_self' |
+| keyboard | 是否支持键盘操作 | boolean | true |
+| disabled | 是否禁用 | boolean | false |
+| loading | 是否加载中 | boolean | false |
+| loadingType | 加载指示符类型 | 'static' &#124; 'dynamic' | 'dynamic' |
+| block | 是否将按钮宽度调整为其父宽度 | boolean | false |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-default | 自定义按钮内容 | v-slot:default
-icon | 自定义按钮图标 | v-slot:icon
+| 名称    | 说明           | 类型           |
+| :------ | :------------- | :------------- |
+| default | 自定义按钮内容 | v-slot:default |
+| icon    | 自定义按钮图标 | v-slot:icon    |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-click | 点击按钮时的回调 | (e: Event) => void
+| 名称  | 说明             | 类型               |
+| :---- | :--------------- | :----------------- |
+| click | 点击按钮时的回调 | (e: Event) => void |

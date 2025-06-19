@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useInject } from 'components/utils'
 export interface Item {
   title?: string // 标题
   description?: string // 描述
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   dotted: false,
   current: 1
 })
+const { colorPalettes } = useInject('Steps') // 主题色注入
 const emits = defineEmits(['update:current', 'change'])
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -30,8 +32,8 @@ const totalWidth = computed(() => {
     return props.width
   }
 })
+// 步骤总数
 const totalSteps = computed(() => {
-  // 步骤总数
   return props.items.length
 })
 const currentStep = computed(() => {
@@ -43,8 +45,8 @@ const currentStep = computed(() => {
     return props.current
   }
 })
+// 点击切换选择步骤
 function onChange(index: number): void {
-  // 点击切换选择步骤
   if (currentStep.value !== index) {
     emits('update:current', index)
     emits('change', index)
@@ -62,10 +64,10 @@ function onChange(index: number): void {
     }"
     :style="`
       --steps-width: ${totalWidth};
-      --steps-primary-color: #1677ff;
-      --steps-primary-color-hover: #1677ff;
-      --steps-icon-color: #e6f4ff;
-      --steps-icon-color-hover: #1677ff;
+      --steps-primary-color: ${colorPalettes[5]};
+      --steps-primary-color-hover: ${colorPalettes[5]};
+      --steps-icon-color: ${colorPalettes[0]};
+      --steps-icon-color-hover: ${colorPalettes[5]};
     `"
   >
     <div

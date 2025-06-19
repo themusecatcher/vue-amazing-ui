@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, nextTick } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Option {
   label: string // 选项名
   value: string | number // 选项值
@@ -28,8 +28,9 @@ const checkboxChecked = ref<boolean>(false) // v-model:checked 是否选中标�
 const optionsCheckedValue = ref<(string | number)[]>([]) // v-model:value 已选中的选项值
 const wave = ref<boolean>(false) // 使用 v-model:checked 时的复选框动画选中效果标志
 const waveOptionsValue = ref<(string | number)[]>([]) // 使用 v-model:value 时的复选框动画选中效果标志
-const slotsExist = useSlotsExist(['default'])
+const { colorPalettes } = useInject('Checkbox') // 主题色注入
 const emits = defineEmits(['update:value', 'update:checked', 'change'])
+const slotsExist = useSlotsExist(['default'])
 // 选项总数
 const optionsAmount = computed(() => {
   return props.options.length
@@ -107,7 +108,7 @@ function onWaveOptionEnd(value: string | number): void {
     v-if="optionsAmount"
     class="m-checkbox"
     :class="{ 'checkbox-vertical': vertical }"
-    :style="`--checkbox-gap: ${gapValue}; --checkbox-primary-color: #1677ff;`"
+    :style="`--checkbox-gap: ${gapValue}; --checkbox-primary-color: ${colorPalettes[5]};`"
     v-bind="$attrs"
   >
     <div
@@ -134,7 +135,7 @@ function onWaveOptionEnd(value: string | number): void {
     v-else
     class="checkbox-wrap"
     :class="{ 'checkbox-disabled': disabled }"
-    :style="`--checkbox-primary-color: #1677ff;`"
+    :style="`--checkbox-primary-color: ${colorPalettes[5]};`"
     @click="disabled ? () => false : onChecked()"
     v-bind="$attrs"
   >

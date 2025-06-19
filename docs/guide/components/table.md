@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*展示行列数据*
+_展示行列数据_
 
 ## 何时使用
 
@@ -1303,7 +1303,7 @@ const dataSource = ref([
 
 ## 自定义样式
 
-*使用 `rowClassName` 和 `Column.className` 自定义表格样式*
+_使用 `rowClassName` 和 `Column.className` 自定义表格样式_
 
 <br/>
 
@@ -1390,7 +1390,7 @@ const rowClassName = (record: Record<string, any>, rowIndex: number) => {
 
 ## 三种尺寸
 
-*另两种紧凑型的列表；小型列表适用于对话框内*
+_另两种紧凑型的列表；小型列表适用于对话框内_
 
 <br/>
 
@@ -1451,7 +1451,9 @@ const dataSourceSize = ref([
 <template>
   <Flex vertical>
     <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
-    <Space align="center"> size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" /> </Space>
+    <Space align="center">
+      size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    </Space>
     <Table :columns="columnsSize" :data-source="dataSourceSize" :bordered="sizeBordered" :size="size" />
   </Flex>
 </template>
@@ -1521,7 +1523,9 @@ const dataSourceAlign = ref([
 <template>
   <Flex vertical>
     <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
-    <Space align="center"> align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" /> </Space>
+    <Space align="center">
+      align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
+    </Space>
     <Table :columns="columnsAlign" :data-source="dataSourceAlign" :bordered="alignBordered" />
   </Flex>
 </template>
@@ -1741,7 +1745,7 @@ const dataSource = ref([
 
 ## 单元格自动省略
 
-*设置 `column.ellipsis` 可以让单元格内容根据宽度自动省略*
+_设置 `column.ellipsis` 可以让单元格内容根据宽度自动省略_
 
 <br/>
 
@@ -1843,7 +1847,7 @@ const dataSource = ref([
 
 ## 合并单元格
 
-*表头只支持列合并，使用 `column` 里的 `colSpan` 进行设置；表格支持行/列合并，使用 `customCell` 将单元格属性 `colSpan` 或 `rowSpan` 设为 `0` 时，设置的表格不会渲染*
+_表头只支持列合并，使用 `column` 里的 `colSpan` 进行设置；表格支持行/列合并，使用 `customCell` 将单元格属性 `colSpan` 或 `rowSpan` 设为 `0` 时，设置的表格不会渲染_
 
 <br/>
 
@@ -1977,6 +1981,7 @@ const dataSourceMerge = ref([
 ## 可编辑单元格
 
 <Button style="margin-bottom: 16px" type="primary" :icon="() => h(PlusOutlined)" @click="handleCellAdd">新增</Button>
+
 <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
   <template #bodyCell="{ column, text, record }">
     <template v-if="column.dataIndex === 'name'">
@@ -2283,7 +2288,7 @@ const handleTableChange = (page: number, pageSize: number) => {
 
 ## 可展开
 
-*当表格内容较多不能一次性完全展示时*
+_当表格内容较多不能一次性完全展示时_
 
 <br/>
 
@@ -2391,8 +2396,7 @@ const handleExpandedRowsChange = (expandedRows: string[]) => {
 
 ## 固定列
 
-*对于列数很多的数据，可以固定前后的列，横向滚动查看其它数据，需要和 `scroll.x` 配合使用*
-*建议指定 `scroll.x` 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 `scroll.x`*
+_对于列数很多的数据，可以固定前后的列，横向滚动查看其它数据，需要和 `scroll.x` 配合使用_ _建议指定 `scroll.x` 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 `scroll.x`_
 
 <br/>
 
@@ -2464,7 +2468,7 @@ const dataSourceFixColumn = ref([
 
 ## 固定表头
 
-*方便一页内展示大量数据*
+_方便一页内展示大量数据_
 
 <br/>
 
@@ -2510,8 +2514,7 @@ const dataSourceFixHeader = ref(data)
 
 ## 固定头和列
 
-*适合同时展示有大量数据和数据列*
-*建议指定 `scroll.x` 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 `scroll.x`*
+_适合同时展示有大量数据和数据列_ _建议指定 `scroll.x` 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 `scroll.x`_
 
 <br/>
 
@@ -2563,11 +2566,7 @@ for (let i = 0; i < 100; i++) {
 const dataSourceFixHeaderAndColumn = ref(data)
 </script>
 <template>
-  <Table
-    :columns="columnsFixHeaderAndColumn"
-    :data-source="dataSourceFixHeaderAndColumn"
-    :scroll="{ x: 1500, y: 300 }"
-  >
+  <Table :columns="columnsFixHeaderAndColumn" :data-source="dataSourceFixHeaderAndColumn" :scroll="{ x: 1500, y: 300 }">
     <template #bodyCell="{ column }">
       <template v-if="column.key === 'action'">
         <a>action</a>
@@ -2581,7 +2580,7 @@ const dataSourceFixHeaderAndColumn = ref(data)
 
 ## 随页面滚动的固定表头和滚动条
 
-*对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条*
+_对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条_
 
 <br/>
 
@@ -2653,7 +2652,7 @@ const dataSourceFixHeaderAndScrollbar = ref(data)
 
 ## 表头分组
 
-*`columns[n]` 可以内嵌 children，以渲染分组表头*
+_`columns[n]` 可以内嵌 children，以渲染分组表头_
 
 <br/>
 
@@ -2857,7 +2856,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
 
 ## 可选择
 
-*可通过 `rowSelection` 属性来自定义选择功能*
+_可通过 `rowSelection` 属性来自定义选择功能_
 
 <br/>
 
@@ -3097,102 +3096,103 @@ watchEffect(() => {
 
 ### Table
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-header | 表格标题 | string &#124; slot | undefined
-footer | 表格尾部 | string &#124; slot | undefined
-columns | 表格列的配置项 | [Column](#column-type)[] | []
-dataSource | 表格数据数组 | object[] | []
-bordered | 是否展示外边框和列边框 | boolean | false
-rowClassName | 自定义行的类名 | string &#124; ((record: Record<string, any>, rowIndex: number) => string) | undefined
-size | 表格大小 | 'large' &#124; 'middle' &#124; small | 'large'
-striped | 是否使用斑马条纹 | boolean | false
-loading | 是否加载中 | boolean | false
-spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置数据加载中 | object | {}
-emptyProps | `Empty` 组件属性配置，参考 [Empty Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html#empty)，用于配置暂无数据 | object | {}
-ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于全局配置文本省略 | object | {}
-showSorterTooltip | 表头是否显示下一次排序的 `tooltip` 提示 | boolean | true
-sortDirections | 支持的排序方式 | ('ascend' &#124; 'descend')[] | ['ascend', 'descend']
-sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于全局配置排序弹出提示 | object | {}
-sticky | 是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定 | boolean | false
-showPagination | 是否显示分页 | boolean | true
-pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html#pagination)，用于配置分页功能 | object | {}
-rowSelection | 列表项是否可选择 | [Selection](#selection-type) | undefined
-scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [ScrollOption](#scrolloption-type) &#124; boolean | undefined
-scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar)，用于配置表格滚动条 | object | {}
-tableLayout | 表格布局方式，设为 `fixed` 表示内容不会影响列的布局，参考 [table-layout](https://developer.mozilla.org/zh-CN/docs/Web/CSS/table-layout) 属性，固定表头/列或使用了 `column.ellipsis` 时，默认值为 `fixed` | 'auto' &#124; 'fixed' | undefined
-showExpandColumn | 是否展示展开列 | boolean | false
-expandColumnTitle | 自定义展开列表头 | string &#124; slot | undefined
-expandColumnWidth | 展开列的宽度 | string &#124; number | 48
-expandCell | 自定义展开按钮 | slot | undefined
-expandedRowRender | 自定义额外的展开行内容 | slot | undefined
-expandFixed | 是否固定展开列 | boolean | false
-expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性；需与 `dataSource` 数据中的 `key` 配合使用 | (string \| number)[] | []
-expandRowByClick | 点击行是否展开 | boolean | false
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| header | 表格标题 | string &#124; slot | undefined |
+| footer | 表格尾部 | string &#124; slot | undefined |
+| columns | 表格列的配置项 | [Column](#column-type)[] | [] |
+| dataSource | 表格数据数组 | object[] | [] |
+| bordered | 是否展示外边框和列边框 | boolean | false |
+| rowClassName | 自定义行的类名 | string &#124; ((record: Record<string, any>, rowIndex: number) => string) | undefined |
+| size | 表格大小 | 'large' &#124; 'middle' &#124; small | 'large' |
+| striped | 是否使用斑马条纹 | boolean | false |
+| loading | 是否加载中 | boolean | false |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置数据加载中 | object | {} |
+| emptyProps | `Empty` 组件属性配置，参考 [Empty Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html#empty)，用于配置暂无数据 | object | {} |
+| ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于全局配置文本省略 | object | {} |
+| showSorterTooltip | 表头是否显示下一次排序的 `tooltip` 提示 | boolean | true |
+| sortDirections | 支持的排序方式 | ('ascend' &#124; 'descend')[] | ['ascend', 'descend'] |
+| sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于全局配置排序弹出提示 | object | {} |
+| sticky | 是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定 | boolean | false |
+| showPagination | 是否显示分页 | boolean | true |
+| pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html#pagination)，用于配置分页功能 | object | {} |
+| rowKey | 表格内容行的唯一标识 `key`，可以是字符串或一个函数 | string &#124; ((record: Record<string, any>, index?: number) => string) | 'key' |
+| rowSelection | 列表项是否可选择 | [Selection](#selection-type) | undefined |
+| scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [ScrollOption](#scrolloption-type) &#124; boolean | undefined |
+| scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar)，用于配置表格滚动条 | object | {} |
+| tableLayout | 表格布局方式，设为 `fixed` 表示内容不会影响列的布局，参考 [table-layout](https://developer.mozilla.org/zh-CN/docs/Web/CSS/table-layout) 属性，固定表头/列或使用了 `column.ellipsis` 时，默认值为 `fixed` | 'auto' &#124; 'fixed' | undefined |
+| showExpandColumn | 是否展示展开列 | boolean | false |
+| expandColumnTitle | 自定义展开列表头 | string &#124; slot | undefined |
+| expandColumnWidth | 展开列的宽度 | string &#124; number | 48 |
+| expandCell | 自定义展开按钮 | slot | undefined |
+| expandedRowRender | 自定义额外的展开行内容 | slot | undefined |
+| expandFixed | 是否固定展开列 | boolean | false |
+| expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性；需与 `dataSource` 数据中的 `key` 配合使用 | (string \| number)[] | [] |
+| expandRowByClick | 点击行是否展开 | boolean | false |
 
 ### Column Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-title? | 列头显示文字 | string | undefined
-align? | 列文本的对齐方式 | 'left' &#124; 'center' &#124; 'right' | undefined
-width? | 列宽度，单位 `px` | string &#124; number | undefined
-className? | 自定义列的类名 | string | undefined
-colSpan? | 表头列合并,设置为 `0` 时，不渲染 | number | undefined
-dataIndex | 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略 | string | undefined
-key? | 自定义列标识 | string | undefined
-ellipsis? | 超过宽度是否自动省略 | boolean | undefined
-ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于单独配置某列文本省略 | object | undefined
-fixed? | 列是否固定 | 'left' &#124; 'right' | undefined
-slot? | 列插槽名称索引 | string | undefined
-children? | 列表头分组的子节点 | [Column](#column-type)[] | undefined
-showSorterTooltip? | 表头是否显示下一次排序的 `tooltip` 提示，较高优先级 | boolean | undefined
-sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于单独配置某列的排序弹出提示，较高优先级 | object | undefined
-defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' | undefined
-sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] | undefined
-sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | Function | undefined
-customCell? | 设置单元格属性 | (record: Record<string, any>, rowIndex: number, column: Column) => object &#124; undefined | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title? | 列头显示文字 | string | undefined |
+| align? | 列文本的对齐方式 | 'left' &#124; 'center' &#124; 'right' | undefined |
+| width? | 列宽度，单位 `px` | string &#124; number | undefined |
+| className? | 自定义列的类名 | string | undefined |
+| colSpan? | 表头列合并,设置为 `0` 时，不渲染 | number | undefined |
+| dataIndex? | 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略 | string | undefined |
+| key? | 自定义列标识，未设置 `dataIndex` 时作为 `Vue` 唯一的标识 | string | undefined |
+| ellipsis? | 超过宽度是否自动省略 | boolean | undefined |
+| ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于单独配置某列文本省略 | object | undefined |
+| fixed? | 列是否固定 | 'left' &#124; 'right' | undefined |
+| slot? | 列插槽名称索引 | string | undefined |
+| children? | 列表头分组的子节点 | [Column](#column-type)[] | undefined |
+| showSorterTooltip? | 表头是否显示下一次排序的 `tooltip` 提示，较高优先级 | boolean | undefined |
+| sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于单独配置某列的排序弹出提示，较高优先级 | object | undefined |
+| defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' | undefined |
+| sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] | undefined |
+| sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | Function | undefined |
+| customCell? | 设置单元格属性 | (record: Record<string, any>, rowIndex: number, column: Column) => object &#124; undefined | undefined |
 
 ### Selection Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-columnTitle? | 自定义选择框标题 | string &#124; VNode | undefined
-columnWidth? | 列表选择框宽度 | string &#124; number | undefined
-fixed? | 复选框列是否固定在左边 | boolean | undefined
-hideSelectAll? | 是否隐藏全选复选框 | boolean | undefined
-type? | 复选框/单选框 | 'checkbox' &#124; 'radio' | undefined
-selectedRowKeys? | 选中项的 `key` 数组，需和 `onChange` 配合使用 | string[] | undefined
-onChange? | 选中项发生变化时的回调 | (selectedRowKeys: string[], selectedRows: Record<string, any>[]) => void | undefined
-onSelect? | 点击除全选外某行选择框时的回调 | (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => void | undefined
-onSelectAll? | 点击复选框全选时的回调 | (selected: boolean, selectedRows: Record<string, any>[], changeRows: Record<string, any>[], selectedRowKeys: string[], changeRowKeys: string[]) => void | undefined
-getSelectionProps? | 选择框组件的属性配置 | (record: Record<string, any>, rowIndex: number) => object | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| columnTitle? | 自定义选择框标题 | string &#124; VNode | undefined |
+| columnWidth? | 列表选择框宽度 | string &#124; number | undefined |
+| fixed? | 复选框列是否固定在左边 | boolean | undefined |
+| hideSelectAll? | 是否隐藏全选复选框 | boolean | undefined |
+| type? | 复选框/单选框 | 'checkbox' &#124; 'radio' | undefined |
+| selectedRowKeys? | 选中项的 `key` 数组，需和 `onChange` 配合使用 | string[] | undefined |
+| onChange? | 选中项发生变化时的回调 | (selectedRowKeys: string[], selectedRows: Record<string, any>[]) => void | undefined |
+| onSelect? | 点击除全选外某行选择框时的回调 | (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => void | undefined |
+| onSelectAll? | 点击复选框全选时的回调 | (selected: boolean, selectedRows: Record<string, any>[], changeRows: Record<string, any>[], selectedRowKeys: string[], changeRowKeys: string[]) => void | undefined |
+| getSelectionProps? | 选择框组件的属性配置 | (record: Record<string, any>, rowIndex: number) => object | undefined |
 
 ### ScrollOption Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-initialScrollPositionOnChange? | 当分页、排序变化后是否滚动到表格初始位置 | boolean | undefined
-x? | 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，`true` 和 `'max-content'` | string &#124; number &#124; true | undefined
-y? | 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值 | string &#124; number | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| initialScrollPositionOnChange? | 当分页、排序变化后是否滚动到表格初始位置 | boolean | undefined |
+| x? | 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，`true` 和 `'max-content'` | string &#124; number &#124; true | undefined |
+| y? | 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值 | string &#124; number | undefined |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-header | 自定义表格标题 | v-slot:header
-footer | 自定义表格尾部 | v-slot:footer
-expandColumnTitle | 自定义展开列表头 | v-slot:expandColumnTitle
-headerCell | 个性化头部单元格 | v-slot:headerCell="{ column, title }"
-expandCell | 自定义展开按钮 | v-slot:expandCell="{ record, index, expanded }"
-bodyCell | 个性化单元格 | v-slot:bodyCell="{ column, record, text, index }"
-expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender="{ record, index, expanded }"
+| 名称              | 说明                   | 类型                                                   |
+| :---------------- | :--------------------- | :----------------------------------------------------- |
+| header            | 自定义表格标题         | v-slot:header                                          |
+| footer            | 自定义表格尾部         | v-slot:footer                                          |
+| expandColumnTitle | 自定义展开列表头       | v-slot:expandColumnTitle                               |
+| headerCell        | 个性化头部单元格       | v-slot:headerCell="{ column, title }"                  |
+| expandCell        | 自定义展开按钮         | v-slot:expandCell="{ record, index, expanded }"        |
+| bodyCell          | 个性化单元格           | v-slot:bodyCell="{ column, record, text, index }"      |
+| expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender="{ record, index, expanded }" |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-expand | 点击展开图标时的回调 | (expanded: boolean, record: Record<string, any>) => void
-expandedRowsChange | 展开的行变化时的回调 | (expandedRows: string[]) => void
-sortChange | 排序变化时的回调 | (column: [Column](#column-type), currentDataSource: Record<string, any>[]) => void
-change | 分页变化时的回调 | (pager: { page: number, pageSize: number }) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| expand | 点击展开图标时的回调 | (expanded: boolean, record: Record<string, any>) => void |
+| expandedRowsChange | 展开的行变化时的回调 | (expandedRows: string[]) => void |
+| sortChange | 排序变化时的回调 | (column: [Column](#column-type), currentDataSource: Record<string, any>[]) => void |
+| change | 分页变化时的回调 | (pager: { page: number, pageSize: number }) => void |

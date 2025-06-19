@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
+import { useInject } from 'components/utils'
 export interface Props {
   containerClass?: string // 加载条容器的类名
   containerStyle?: CSSProperties // 加载条容器的样式
@@ -10,29 +11,48 @@ export interface Props {
   colorError?: string // 加载错误颜色
   to?: string | HTMLElement // 加载条的挂载位置，可选：元素标签名（例如 body）或者元素本身
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   containerClass: undefined,
   containerStyle: () => ({}),
   loadingBarSize: 2,
-  colorLoading: '#1677ff',
-  colorFinish: '#1677ff',
+  colorLoading: undefined,
+  colorFinish: undefined,
   colorError: '#ff4d4f',
   to: 'body'
 })
 const showLoadingBar = ref<boolean>(false) // 加载条是否显示
 const loadingBarRef = ref() // 加载条元素引用
+const transitionDisabled = ref(false) // 是否禁用过渡，表示使用仅由 JavaScript 执行的动画
 const loadingStarted = ref<boolean>(false) // 加载条是否开始
 const loadingFinishing = ref<boolean>(false) // 加载条是否完成
 const loadingErroring = ref<boolean>(false) // 加载条是否报错
-function init(): void {
+const { colorPalettes } = useInject('LoadingBar') // 主题色注入
+const colorLoadingComputed = computed(() => {
+  if (props.colorLoading === undefined) {
+    return colorPalettes.value[5]
+  } else {
+    return props.colorLoading
+  }
+})
+const colorFinishComputed = computed(() => {
+  if (props.colorFinish === undefined) {
+    return colorPalettes.value[5]
+  } else {
+    return props.colorFinish
+  }
+})
+async function init(): Promise<void> {
   showLoadingBar.value = false
   loadingFinishing.value = false
   loadingErroring.value = false
+  transitionDisabled.value = true
+  await nextTick()
+  transitionDisabled.value = false
 }
 // 加载条开始加载的回调函数
 async function start(from = 0, to = 80, status: 'starting' | 'error' = 'starting'): Promise<void> {
   loadingStarted.value = true
-  init()
+  await init()
   if (loadingFinishing.value) {
     return
   }
@@ -90,8 +110,8 @@ function onAfterEnter(): void {
     showLoadingBar.value = false
   }
 }
-function onAfterLeave(): void {
-  init()
+async function onAfterLeave(): Promise<void> {
+  await init()
 }
 defineExpose({
   start,
@@ -100,14 +120,25 @@ defineExpose({
 })
 </script>
 <template>
-  <Teleport :disabled="!to" :to="to">
-    <Transition name="fade-in" @after-enter="onAfterEnter" @after-leave="onAfterLeave">
+  <Teleport :disabled="!to" :to="to || 'body'">
+    <Transition
+      name="fade-in"
+      appear
+      @after-enter="onAfterEnter"
+      @after-leave="onAfterLeave"
+      :css="!transitionDisabled"
+    >
       <div
         v-show="showLoadingBar"
         class="m-loading-bar-container"
         :class="containerClass"
         :style="[
-          `--loading-bar-size: ${loadingBarSize}px; --loading-bar-color-loading: ${colorLoading}; --loading-bar-color-finish: ${colorFinish}; --loading-bar-color-error: ${colorError};`,
+          `
+            --loading-bar-size: ${loadingBarSize}px;
+            --loading-bar-color-loading: ${colorLoadingComputed};
+            --loading-bar-color-finish: ${colorFinishComputed};
+            --loading-bar-color-error: ${colorError};
+          `,
           containerStyle
         ]"
       >

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*下载文件并自定义文件名的工具函数*
+_下载文件并自定义文件名的工具函数_
 
 ::: details Show Source Code
 
@@ -55,14 +55,13 @@ export function downloadFile(url: string, fileName?: string): void {
 ```vue
 <script setup lang="ts">
 import { downloadFile } from 'vue-amazing-ui'
-
 donwloadFile('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf', 'Markdown')
 </script>
 ```
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-url | 文件的 `URL`，支持网络路径或本地路径 | string | undefined
-fileName? | 文件的命名，如果未提供，则从 `URL` 中尝试提取 | string | undefined
+| 参数      | 说明                                          | 类型   | 默认值    |
+| --------- | --------------------------------------------- | ------ | --------- |
+| url       | 文件的 `URL`，支持网络路径或本地路径          | string | undefined |
+| fileName? | 文件的命名，如果未提供，则从 `URL` 中尝试提取 | string | undefined |

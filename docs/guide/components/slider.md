@@ -2,14 +2,14 @@
 
 <GlobalElement />
 
-*滑动型输入器，展示当前值和可选范围*
+_滑动型输入器，展示当前值和可选范围_
 
 ## 何时使用
 
 - 当用户需要在数值区间/自定义区间内进行选择时
 
 <script setup lang="ts">
-import { ref, h, watchEffect } from 'vue'
+import { ref, h, watchEffect, isVNode } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
 const singleValue = ref<number>(20)
 const doubleValue = ref<number[]>([20, 80])
@@ -325,7 +325,7 @@ watchEffect(() => {
 
 ## 自定义刻度标记
 
-*使用 marks 属性可以添加刻度标记*
+_使用 marks 属性可以添加刻度标记_
 
 <br/>
 
@@ -348,7 +348,7 @@ watchEffect(() => {
   </Slider>
 </Flex>
 
-*同时设置 `marks` & `step` 属性*
+_同时设置 `marks` & `step` 属性_
 
 <br/>
 
@@ -371,7 +371,7 @@ watchEffect(() => {
   </Slider>
 </Flex>
 
-*设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分*
+_设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分_
 
 <br/>
 
@@ -412,7 +412,7 @@ const marks = ref<Record<number, any>>({
   37: '37°C',
   100: {
     style: {
-      color: '#f50',
+      color: '#f50'
     },
     label: '100°C'
   }
@@ -508,10 +508,8 @@ watchEffect(() => {
   <Slider vertical range v-model:value="markVerticalDoubleValue1" :marks="marks" />
   <Slider vertical range v-model:value="markVerticalDoubleValue2" :marks="verticalMarks" :step="10" />
   <Slider vertical range v-model:value="markVerticalDoubleValue3" :marks="verticalMarks" step="mark">
-    <template #mark="{ label, isVNode, value }">
-      <template v-if="isVNode">
-        {{ value }}°C
-      </template>
+    <template #mark="{ label, value }">
+      <template v-if="isVNode(label)"> {{ value }}°C </template>
       <template v-else>{{ label }}</template>
     </template>
   </Slider>
@@ -521,7 +519,7 @@ watchEffect(() => {
 
 ```vue
 <script setup lang="ts">
-import { ref, h, watchEffect } from 'vue'
+import { ref, h, watchEffect, isVNode } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
 const verticalSingleValue = ref<number>(37)
 const verticalDoubleValue = ref<number[]>([20, 80])
@@ -535,7 +533,7 @@ const marks = ref<Record<number, any>>({
   37: '37°C',
   100: {
     style: {
-      color: '#f50',
+      color: '#f50'
     },
     label: '100°C'
   }
@@ -579,10 +577,8 @@ watchEffect(() => {
     <Slider vertical range v-model:value="markVerticalDoubleValue1" :marks="marks" />
     <Slider vertical range v-model:value="markVerticalDoubleValue2" :marks="verticalMarks" :step="10" />
     <Slider vertical range v-model:value="markVerticalDoubleValue3" :marks="verticalMarks" step="mark">
-      <template #mark="{ label, isVNode, value }">
-        <template v-if="isVNode">
-          {{ value }}°C
-        </template>
+      <template #mark="{ label, value }">
+        <template v-if="isVNode(label)"> {{ value }}°C </template>
         <template v-else>{{ label }}</template>
       </template>
     </Slider>
@@ -663,7 +659,7 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('formatDoubleValue', formatDoubleValue.value)
 })
-function formatter (value: number) {
+function formatter(value: number) {
   return `${value}%`
 }
 </script>
@@ -741,7 +737,7 @@ watchEffect(() => {
 
 ## 自定义样式
 
-*通过修改样式变量可以自定义滑动输入条样式、标记样式、`Tooltip` 样式*
+_通过修改样式变量可以自定义滑动输入条样式、标记样式、`Tooltip` 样式_
 
 <Flex vertical gap="large">
   <Slider :style="singleCustomStyle" v-model:value="customStyleSingleValue" />
@@ -797,7 +793,13 @@ watchEffect(() => {
 <template>
   <Flex vertical gap="large">
     <Slider :style="singleCustomStyle" v-model:value="customStyleSingleValue" />
-    <Slider :style="rangeCustomStyle" range v-model:value="customStyleDoubleValue" :marks="marks" :tooltip-style="tooltipStyle" />
+    <Slider
+      :style="rangeCustomStyle"
+      range
+      v-model:value="customStyleDoubleValue"
+      :marks="marks"
+      :tooltip-style="tooltipStyle"
+    />
   </Flex>
 </template>
 ```
@@ -808,37 +810,37 @@ watchEffect(() => {
 
 ### Slider
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width | 滑动输入条宽度，单位 `px`，水平模式时生效 | string &#124; number | '100%'
-height | 滑动输入条高度，单位 `px`，垂直模式时生效 | string &#124; number | '100%'
-vertical | 是否启用垂直模式 | boolean | false
-min | 最小值 | number | 0
-max | 最大值 | number | 100
-marks | 刻度标记，`key` 的类型必须为 `number` 且取值在闭区间 `[min, max]` 内，每个标记可以单独设置样式 | [Marks](#marks-type) | {}
-disabled | 是否禁用 | boolean | false
-range | 是否使用双滑块模式 | boolean | false
-step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除；当 `marks` 不为空对象时，可以设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分 | number &#124; 'mark' | 1
-tooltip | 是否展示 `Tooltip` | boolean | true
-tooltipOpen | 是否一直显示 `tooltip` | boolean | false
-tooltipStyle | 自定义 `Tooltip` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value
-value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `false` 时，使用 `number`，否则用 `[number, number]` | number &#124; number[] | 0
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width | 滑动输入条宽度，单位 `px`，水平模式时生效 | string &#124; number | '100%' |
+| height | 滑动输入条高度，单位 `px`，垂直模式时生效 | string &#124; number | '100%' |
+| vertical | 是否启用垂直模式 | boolean | false |
+| min | 最小值 | number | 0 |
+| max | 最大值 | number | 100 |
+| marks | 刻度标记，`key` 的类型必须为 `number` 且取值在闭区间 `[min, max]` 内，每个标记可以单独设置样式 | [Marks](#marks-type) | {} |
+| disabled | 是否禁用 | boolean | false |
+| range | 是否使用双滑块模式 | boolean | false |
+| step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除；当 `marks` 不为空对象时，可以设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分 | number &#124; 'mark' | 1 |
+| tooltip | 是否展示 `Tooltip` | boolean | true |
+| tooltipOpen | 是否一直显示 `tooltip` | boolean | false |
+| tooltipStyle | 自定义 `Tooltip` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value |
+| value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `false` 时，使用 `number`，否则用 `[number, number]` | number &#124; number[] | 0 |
 
 ### Marks Type
 
-名称 | 值
-:-- | :--
-Marks | { [markValue: number]: string &#124; VNode &#124; { style: [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties), label: string &#124; VNode } &#124; (() => VNode) }
+| 名称 | 值 |
+| :-- | :-- |
+| Marks | { [markValue: number]: string &#124; VNode &#124; (() => VNode) &#124; { style: [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties), label: string &#124; VNode &#124; (() => VNode) } } |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-mark | 自定义刻度标记 | v-slot:mark="{ label, isVNode, value }"
+| 名称 | 说明           | 类型                           |
+| :--- | :------------- | :----------------------------- |
+| mark | 自定义刻度标记 | v-slot:mark="{ label, value }" |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 当前取值变化后的回调 | (value: number &#124; number[]) => void
+| 名称   | 说明                 | 类型                                    |
+| :----- | :------------------- | :-------------------------------------- |
+| change | 当前取值变化后的回调 | (value: number &#124; number[]) => void |

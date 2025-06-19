@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, nextTick } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Option {
   label: string // 选项名
   value: string | number | boolean // 选项值
@@ -31,8 +31,9 @@ const props = withDefaults(defineProps<Props>(), {
 const radioChecked = ref<boolean>(false)
 const optionsCheckedValue = ref<string | number | boolean>()
 const wave = ref<boolean>(false)
-const slotsExist = useSlotsExist(['default'])
+const { colorPalettes } = useInject('Radio') // 主题色注入
 const emits = defineEmits(['update:checked', 'update:value', 'change'])
+const slotsExist = useSlotsExist(['default'])
 // 选项总数
 const optionsAmount = computed(() => {
   return props.options.length
@@ -95,7 +96,10 @@ function onWaveEnd(): void {
     v-if="optionsAmount"
     class="m-radio"
     :class="{ 'radio-vertical': !button && vertical }"
-    :style="`--radio-gap: ${gapValue}; --radio-primary-color: #1677ff;`"
+    :style="`
+      --radio-gap: ${gapValue};
+      --radio-primary-color: ${colorPalettes[5]};
+    `"
     v-bind="$attrs"
   >
     <template v-if="!button">
@@ -151,7 +155,7 @@ function onWaveEnd(): void {
       v-if="!button"
       class="radio-wrap"
       :class="{ 'radio-disabled': disabled }"
-      :style="`--radio-primary-color: #1677ff;`"
+      :style="`--radio-primary-color: ${colorPalettes[5]};`"
       @click="disabled ? () => false : onChecked()"
       v-bind="$attrs"
     >
@@ -178,7 +182,7 @@ function onWaveEnd(): void {
         'radio-button-small': buttonSize === 'small',
         'radio-button-large': buttonSize === 'large'
       }"
-      :style="`--radio-primary-color: #1677ff;`"
+      :style="`--radio-primary-color: ${colorPalettes[5]};`"
       @click="disabled ? () => false : onChecked()"
       v-bind="$attrs"
     >

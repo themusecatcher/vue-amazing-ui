@@ -113,6 +113,10 @@ export default defineConfig({
               link: '/guide/ondemand'
             },
             {
+              text: '定制主题',
+              link: '/guide/customize'
+            },
+            {
               text: '更新日志',
               link: '/guide/changelog'
             }
@@ -174,6 +178,10 @@ export default defineConfig({
               link: '/guide/components/colorpicker'
             },
             {
+              text: '全局化配置 ConfigProvider',
+              link: '/guide/components/configprovider'
+            },
+            {
               text: '倒计时 Countdown',
               link: '/guide/components/countdown'
             },
@@ -220,6 +228,10 @@ export default defineConfig({
             {
               text: '栅格 Grid',
               link: '/guide/components/grid'
+            },
+            {
+              text: '高亮文本 Highlight',
+              link: '/guide/components/highlight'
             },
             {
               text: '图片 Image',
@@ -330,7 +342,7 @@ export default defineConfig({
               link: '/guide/components/steps'
             },
             {
-              text: '触摸滑动插件 Swiper',
+              text: '触摸滑动 Swiper',
               link: '/guide/components/swiper'
             },
             {
@@ -456,6 +468,14 @@ export default defineConfig({
             {
               text: 'useSlotsExist 监听插槽存在',
               link: '/utils/functions/slots-exist'
+            },
+            {
+              text: 'useInject 获取注入数据',
+              link: '/utils/functions/injection'
+            },
+            {
+              text: 'useOptionsSupported 否支持事件监听器选项',
+              link: '/utils/functions/options-supported'
             }
           ]
         }

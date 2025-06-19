@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*用于页面和区块的加载中状态*
+_用于页面和区块的加载中状态_
 
 ## 何时使用
 
@@ -52,7 +52,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -87,7 +89,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="spin-dot">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -122,7 +126,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="spin-line">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -157,7 +163,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="ring-circle">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -231,7 +239,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="dynamic-circle">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -266,7 +276,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="magic-ring">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -472,7 +484,14 @@ const size = ref('middle')
       <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" />
       <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
       <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-line" />
-      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" :spin-circle-percent="50" indicator="ring-circle" />
+      <Spin
+        class="u-spin"
+        :size="size"
+        color="#fadb14"
+        :spinning="spinning"
+        :spin-circle-percent="50"
+        indicator="ring-circle"
+      />
       <Spin
         class="u-spin"
         :size="size"
@@ -483,7 +502,14 @@ const size = ref('middle')
         indicator="ring-rail"
       />
       <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
-      <Spin class="u-spin" :size="size" color="#fadb14" magic-ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
+      <Spin
+        class="u-spin"
+        :size="size"
+        color="#fadb14"
+        magic-ring-color="#ffe58f"
+        :spinning="spinning"
+        indicator="magic-ring"
+      />
     </Space>
   </Space>
 </template>
@@ -523,23 +549,23 @@ const size = ref('middle')
 
 ### Spin
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-spinning | 是否为加载中状态 | boolean | true
-size | 加载中尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-tip | 描述文案 | string &#124; slot | undefined
-indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'ring-circle' &#124; 'ring-rail' &#124; 'dynamic-circle' &#124; 'magic-ring' | 'dot'
-color | 指示符颜色，当 `indicator: 'magic-ring'` 时为外环颜色 | string | '#1677ff'
-spinCircleWidth | 圆环宽度，单位是加载指示符宽度的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 12
-spinCirclePercent | 圆环长度百分比 (`0～100`)，单位是圆环周长的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 33
-ringRailColor | 圆环轨道颜色，仅当 `indicator: 'ring-rail'` 时生效 | string | 'rgba(0, 0, 0, 0.12)'
-magicRingColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | '#4096ff'
-rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | boolean | false
-speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位 `ms`，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | number | 800
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| spinning | 是否为加载中状态 | boolean | true |
+| size | 加载中尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| tip | 描述文案 | string &#124; slot | undefined |
+| indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'ring-circle' &#124; 'ring-rail' &#124; 'dynamic-circle' &#124; 'magic-ring' | 'dot' |
+| color | 指示符颜色，当 `indicator: 'magic-ring'` 时为外环颜色 | string | undefined |
+| spinCircleWidth | 圆环宽度，单位是加载指示符宽度的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 12 |
+| spinCirclePercent | 圆环长度百分比 (`0～100`)，单位是圆环周长的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 33 |
+| ringRailColor | 圆环轨道颜色，仅当 `indicator: 'ring-rail'` 时生效 | string | 'rgba(0, 0, 0, 0.12)' |
+| magicRingColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | undefined |
+| rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | boolean | false |
+| speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位 `ms`，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | number | 800 |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-tip | 自定义描述文案 | v-slot:tip
-default | 自定义内容 | v-slot:default
+| 名称    | 说明           | 类型           |
+| :------ | :------------- | :------------- |
+| tip     | 自定义描述文案 | v-slot:tip     |
+| default | 自定义内容     | v-slot:default |

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useResizeObserver, useSlotsExist } from 'components/utils'
+import { useResizeObserver, useSlotsExist, useInject } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   tab?: string // 页签显示文字 string | slot
@@ -53,6 +53,7 @@ const scrollMax = ref(0) // 最大滚动距离
 const scrollLeft = ref(0) // 水平滚动距离
 const scrollTop = ref(0) // 垂直滚动距离
 const transition = ref(false)
+const { colorPalettes } = useInject('Tabs') // 主题色注入
 const emits = defineEmits(['update:activeKey', 'change'])
 const slotsExist = useSlotsExist(['prefix', 'suffix'])
 const activeIndex = computed(() => {
@@ -304,7 +305,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
         'tabs-card': type === 'card'
       }
     ]"
-    :style="`--tabs-primary-color: #1677ff;`"
+    :style="`--tabs-primary-color: ${colorPalettes[5]};`"
   >
     <div class="m-tabs-nav" :style="tabStyle">
       <div v-if="showPrefix" class="tabs-prefix">

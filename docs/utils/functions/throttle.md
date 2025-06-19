@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*如果短时间内大量触发同一事件，那么在函数执行一次之后，该函数在指定的时间 `delay` 期限内不再工作，直至过了这段时间才重新生效*
+_如果短时间内大量触发同一事件，那么在函数执行一次之后，该函数在指定的时间 `delay` 期限内不再工作，直至过了这段时间才重新生效_
 
 ::: details Show Source Code
 
@@ -17,9 +17,10 @@
  * @param delay 节流的时间间隔，单位 ms，默认为 300ms
  * @returns 返回一个新的节流的函数
  */
-export function throttle(fn: Function, delay: number = 300): any {
+export function throttle(fn: Function, delay: number = 300): Function {
   let valid = true // 用于标记函数是否可以执行
   return function (...args: any[]) {
+    if (!valid) return false // 返回 false，表示当前不执行函数
     // 返回一个新的函数，该函数负责执行节流逻辑
     if (valid) {
       fn(...args) // 执行原函数
@@ -28,7 +29,6 @@ export function throttle(fn: Function, delay: number = 300): any {
         valid = true
       }, delay)
     }
-    return false // 返回false，表示当前不执行函数
   }
 }
 ```
@@ -42,7 +42,6 @@ export function throttle(fn: Function, delay: number = 300): any {
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
-
 const scrollTop = ref(0)
 useEventListener(window, 'scroll', throttle(showPosition, 100))
 function showPosition () {
@@ -58,10 +57,9 @@ function showPosition () {
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
-
 const scrollTop = ref(0)
 useEventListener(window, 'scroll', throttle(showPosition, 100))
-function showPosition () {
+function showPosition() {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
 </script>
@@ -69,7 +67,7 @@ function showPosition () {
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-fn | 要被节流的函数 | Function | undefined
-delay | 节流的时间间隔，单位 `ms` | number | 300
+| 参数  | 说明                      | 类型     | 默认值    |
+| ----- | ------------------------- | -------- | --------- |
+| fn    | 要被节流的函数            | Function | undefined |
+| delay | 节流的时间间隔，单位 `ms` | number   | 300       |

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*复选框*
+_复选框_
 
 ## 何时使用
 
@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ref, watch, watchEffect } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
   {
     label: '北京市',
@@ -65,9 +65,8 @@ const optionsDisabled = ref<CheckboxOption[]>([
     value: 6
   }
 ])
-const checked = ref<CheckboxProps['checked']>(false)
-const selectedOptions = ref<CheckboxProps['value']>([2])
-const primaryColor = ref('#ff6900')
+const checked = ref<boolean>(false)
+const selectedOptions = ref<(string | number)[]>([2])
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -77,8 +76,8 @@ watchEffect(() => {
 function onChange(value: boolean | (string | number)[]) {
   console.log('change', value)
 }
-const checkAll = ref<CheckboxProps['checked']>(false) // 是否全选
-const indeterminate = ref<CheckboxProps['indeterminate']>(false) // 全选样式控制
+const checkAll = ref<boolean>(false) // 是否全选
+const indeterminate = ref<boolean>(false) // 全选样式控制
 watch(
   selectedOptions,
   (to: any) => {
@@ -109,8 +108,7 @@ function onCheckAllChange(checked: boolean) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import type { CheckboxProps } from 'vue-amazing-ui'
-const checked = ref<CheckboxProps['checked']>(false)
+const checked = ref<boolean>(false)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -134,7 +132,7 @@ function onChange(value: boolean) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
   {
     label: '北京市',
@@ -161,7 +159,7 @@ const options = ref<CheckboxOption[]>([
     value: 6
   }
 ])
-const selectedOptions = ref<CheckboxProps['value']>([2])
+const selectedOptions = ref<(number | string)[]>([2])
 watchEffect(() => {
   console.log('selectedOptions', selectedOptions.value)
 })
@@ -185,7 +183,7 @@ function onChange(value: (string | number)[]) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
   {
     label: '北京市',
@@ -212,7 +210,7 @@ const options = ref<CheckboxOption[]>([
     value: 6
   }
 ])
-const selectedOptions = ref<CheckboxProps['value']>([2])
+const selectedOptions = ref<(number | string)[]>([2])
 </script>
 <template>
   <Checkbox :options="options" v-model:value="selectedOptions" disabled />
@@ -230,7 +228,7 @@ const selectedOptions = ref<CheckboxProps['value']>([2])
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption } from 'vue-amazing-ui'
 const optionsDisabled = ref<CheckboxOption[]>([
   {
     label: '北京市',
@@ -258,7 +256,7 @@ const optionsDisabled = ref<CheckboxOption[]>([
     value: 6
   }
 ])
-const selectedOptions = ref<CheckboxProps['value']>([2])
+const selectedOptions = ref<(number | string)[]>([2])
 watchEffect(() => {
   console.log('selectedOptions', selectedOptions.value)
 })
@@ -282,7 +280,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watch, watchEffect } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
   {
     label: '北京市',
@@ -309,7 +307,7 @@ const options = ref<CheckboxOption[]>([
     value: 6
   }
 ])
-const selectedOptions = ref<CheckboxProps['value']>([2])
+const selectedOptions = ref<(number | string)[]>([2])
 watchEffect(() => {
   console.log('selectedOptions', selectedOptions.value)
 })
@@ -352,7 +350,7 @@ function onCheckAllChange(checked: boolean) {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
   {
     label: '北京市',
@@ -379,7 +377,7 @@ const options = ref<CheckboxOption[]>([
     value: 6
   }
 ])
-const selectedOptions = ref<CheckboxProps['value']>([2])
+const selectedOptions = ref<(number | string)[]>([2])
 watchEffect(() => {
   console.log('selectedOptions', selectedOptions.value)
 })
@@ -405,7 +403,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
   {
     label: '北京市',
@@ -432,7 +430,7 @@ const options = ref<CheckboxOption[]>([
     value: 6
   }
 ])
-const selectedOptions = ref<CheckboxProps['value']>([2])
+const selectedOptions = ref<(number | string)[]>([2])
 watchEffect(() => {
   console.log('selectedOptions', selectedOptions.value)
 })
@@ -472,7 +470,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
   {
     label: '北京市',
@@ -499,7 +497,7 @@ const options = ref<CheckboxOption[]>([
     value: 6
   }
 ])
-const selectedOptions = ref<CheckboxProps['value']>([2])
+const selectedOptions = ref<(number | string)[]>([2])
 watchEffect(() => {
   console.log('selectedOptions', selectedOptions.value)
 })
@@ -510,78 +508,13 @@ const verticalGap = ref(8)
   <Flex vertical>
     <Row :gutter="24">
       <Col :span="12">
-        <Flex gap="small" vertical>
-          horizontal gap: <Slider v-model:value="horizontalGap" />
-        </Flex>
+        <Flex gap="small" vertical> horizontal gap: <Slider v-model:value="horizontalGap" /> </Flex>
       </Col>
       <Col :span="12">
-        <Flex gap="small" vertical>
-          vertical gap: <Slider v-model:value="verticalGap" />
-        </Flex>
+        <Flex gap="small" vertical> vertical gap: <Slider v-model:value="verticalGap" /> </Flex>
       </Col>
     </Row>
     <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="selectedOptions" />
-  </Flex>
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Flex vertical>
-  <Space align="center">checkboxPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
-  <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" v-model:checked="checked"> Checkbox </Checkbox>
-  <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" :options="options" v-model:value="selectedOptions" />
-</Flex>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { CheckboxProps, CheckboxOption } from 'vue-amazing-ui'
-const options = ref<CheckboxOption[]>([
-  {
-    label: '北京市',
-    value: 1
-  },
-  {
-    label: '纽约市',
-    value: 2
-  },
-  {
-    label: '布宜诺斯艾利斯',
-    value: 3
-  },
-  {
-    label: '伊斯坦布尔',
-    value: 4
-  },
-  {
-    label: '拜占庭',
-    value: 5
-  },
-  {
-    label: '君士坦丁堡',
-    value: 6
-  }
-])
-const checked = ref<CheckboxProps['checked']>(false)
-const selectedOptions = ref<CheckboxProps['value']>([2])
-const primaryColor = ref('#ff6900')
-watchEffect(() => {
-  console.log('checked', checked.value)
-})
-watchEffect(() => {
-  console.log('selectedOptions', selectedOptions.value)
-})
-</script>
-<template>
-  <Flex vertical>
-    <Space align="center">checkboxPrimaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /></Space>
-    <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" v-model:checked="checked"> Checkbox </Checkbox>
-    <Checkbox :style="`--checkbox-primary-color: ${primaryColor}`" :options="options" v-model:value="selectedOptions" />
   </Flex>
 </template>
 ```
@@ -592,32 +525,32 @@ watchEffect(() => {
 
 ### Checkbox
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-options | 复选框选项数据 | [Option](#option-type)[] | []
-disabled | 是否禁用 | boolean | false
-vertical | 是否垂直排列 | boolean | false
-value <Tag color="cyan">v-model</Tag> | 当前选中的值，配合 `options` 使用 | (string &#124; number)[] | []
-gap | 多个复选框之间的间距；垂直排列时为垂直间距，单位 `px`；数组间距用于水平排列折行时：`[水平间距, 垂直间距]` | number | 8
-indeterminate | 全选时的样式控制 | boolean | false
-checked <Tag color="cyan">v-model</Tag> | 当前是否选中 | boolean | false
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| options | 复选框选项数据 | [Option](#option-type)[] | [] |
+| disabled | 是否禁用 | boolean | false |
+| vertical | 是否垂直排列 | boolean | false |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的值，配合 `options` 使用 | (string &#124; number)[] | [] |
+| gap | 多个复选框之间的间距；垂直排列时为垂直间距，单位 `px`；数组间距用于水平排列折行时：`[水平间距, 垂直间距]` | number | 8 |
+| indeterminate | 全选时的样式控制 | boolean | false |
+| checked <Tag color="cyan">v-model</Tag> | 当前是否选中 | boolean | false |
 
 ### Option Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-label | 选项名 | string | undefined
-value | 选项值 | string &#124; number | undefined
-disabled? | 是否禁用选项 | boolean | undefined
+| 名称      | 说明         | 类型                 | 默认值    |
+| :-------- | :----------- | :------------------- | :-------- |
+| label     | 选项名       | string               | undefined |
+| value     | 选项值       | string &#124; number | undefined |
+| disabled? | 是否禁用选项 | boolean              | undefined |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-default | 自定义选项名 | v-slot:default="{ option, label, index }"
+| 名称    | 说明         | 类型                                      |
+| :------ | :----------- | :---------------------------------------- |
+| default | 自定义选项名 | v-slot:default="{ option, label, index }" |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 变化时回调函数 | (value: boolean \| (string \| number)[]) => void
+| 名称   | 说明           | 类型                                             |
+| :----- | :------------- | :----------------------------------------------- |
+| change | 变化时回调函数 | (value: boolean \| (string \| number)[]) => void |

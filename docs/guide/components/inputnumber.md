@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*通过鼠标或键盘，输入范围内的数值*
+_通过鼠标或键盘，输入范围内的数值_
 
 ## 何时使用
 
@@ -11,14 +11,11 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { formatNumber } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
 const value = ref(3)
 const lazyValue = ref(6)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)
 const disabled = ref(true)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -37,16 +34,6 @@ function formatter(value: number): string {
 function parser(value: string): number {
   return Number(value.replace(/[,%]/g, ''))
 }
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-number-primary-color': color,
-    '--input-number-primary-color-hover': colorPalettes[4],
-    '--input-number-primary-color-focus': colorPalettes[4],
-    '--input-number-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
 function onChange(number: number) {
   console.log('change', number)
 }
@@ -57,8 +44,7 @@ function onEnter(e: KeyboardEvent) {
 
 ## 基本使用
 
-::: tip `.lazy`
-默认情况下，`v-model` 会在每次 `input` 事件后更新数据 (`IME` 拼字阶段的状态例外)。你可以添加 `lazy` 修饰符来改为在每次 `change` 事件后更新数据
+::: tip `.lazy` 默认情况下，`v-model` 会在每次 `input` 事件后更新数据 (`IME` 拼字阶段的状态例外)。你可以添加 `lazy` 修饰符来改为在每次 `change` 事件后更新数据
 
 ```vue
 <!-- 在 "change" 事件后同步更新而不是 "input" -->
@@ -97,7 +83,7 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
-function onChange (number: number) {
+function onChange(number: number) {
   console.log('change', number)
 }
 function onEnter(e: KeyboardEvent) {
@@ -106,13 +92,7 @@ function onEnter(e: KeyboardEvent) {
 </script>
 <template>
   <Space gap="small" vertical>
-    <InputNumber
-      :width="120"
-      v-model:value="value"
-      placeholder="Basic usage"
-      @change="onChange"
-      @enter="onEnter"
-    />
+    <InputNumber :width="120" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
     <InputNumber
       :width="120"
       v-model:value.lazy="lazyValue"
@@ -214,12 +194,7 @@ function parser(value: string): number {
       :formatter="(value: string) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
       :parser="(value: string) => value.replace(/\$\s?|(,*)/g, '')"
     />
-    <InputNumber
-      :width="120"
-      v-model:value="formatValue2"
-      :formatter="formatter"
-      :parser="parser"
-    />
+    <InputNumber :width="120" v-model:value="formatValue2" :formatter="formatter" :parser="parser" />
   </Space>
 </template>
 ```
@@ -293,77 +268,34 @@ const disabled = ref(true)
 
 :::
 
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <Space align="center">
-    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-  </Space>
-  <InputNumber :width="130" :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import { generate } from '@ant-design/colors'
-const value = ref(3)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-number-primary-color': color,
-    '--input-number-primary-color-hover': colorPalettes[4],
-    '--input-number-primary-color-focus': colorPalettes[4],
-    '--input-number-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-    <Space align="center">
-      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-    </Space>
-    <InputNumber :width="130" :style="getThemeStyle(primaryColor)" v-model:value="value" placeholder="custom theme" />
-  </Space>
-</template>
-```
-
-:::
-
 ## APIs
 
 ### InputNumber
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width | 数字输入框宽度，单位 `px` | string &#124; number | 90
-min | 最小值 | number | -Infinity
-max | 最大值 | number | Infinity
-step | 每次改变步数，可以为小数 | number | 1
-precision | 数值精度 | number | 0
-prefix | 前缀图标 | string &#124; slot | undefined
-formatter | 指定展示值的格式 | (value: number \| string) => string | undefined
-parser | 指定从 `formatter` 里转换回数字的方式，和 `formatter` 搭配使用 | (value: string) => number | undefined
-keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true
-disabled | 是否禁用 | boolean | false
-placeholder | 数字输入的占位符 | string | undefined
-value <Tag color="cyan">v-model</Tag> | 当前值 | number | undefined
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width | 数字输入框宽度，单位 `px` | string &#124; number | 90 |
+| min | 最小值 | number | -Infinity |
+| max | 最大值 | number | Infinity |
+| step | 每次改变步数，可以为小数 | number | 1 |
+| precision | 数值精度 | number | 0 |
+| prefix | 前缀图标 | string &#124; slot | undefined |
+| formatter | 指定展示值的格式 | (value: number \| string) => string | undefined |
+| parser | 指定从 `formatter` 里转换回数字的方式，和 `formatter` 搭配使用 | (value: string) => number | undefined |
+| keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true |
+| disabled | 是否禁用 | boolean | false |
+| placeholder | 数字输入的占位符 | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前值 | number | undefined |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-prefix | 自定义前缀图标 | v-slot:prefix
+| 名称   | 说明           | 类型          |
+| :----- | :------------- | :------------ |
+| prefix | 自定义前缀图标 | v-slot:prefix |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 变化回调 | (value: number) => void
-enter | 按下回车的回调 | (e: KeyboardEvent) => void
+| 名称   | 说明           | 类型                       |
+| :----- | :------------- | :------------------------- |
+| change | 变化回调       | (value: number) => void    |
+| enter  | 按下回车的回调 | (e: KeyboardEvent) => void |

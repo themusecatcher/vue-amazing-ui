@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*选项卡切换组件*
+_选项卡切换组件_
 
 ## 何时使用
 
@@ -147,7 +147,6 @@ const moreTabPages = ref<TabsItem[]>([
     content: 'Content of Tab Pane 8'
   }
 ])
-const primaryColor = ref('#ff6900')
 const activeKey = ref<TabsProps['activeKey']>('1')
 const iconActiveKey = ref<TabsProps['activeKey']>(0)
 const moreActiveKey = ref<TabsProps['activeKey']>('1')
@@ -347,7 +346,7 @@ function onChange(key: string | number) {
 
 ## 禁用某一项
 
-*禁用 `key: 3` 标签页*
+_禁用 `key: 3` 标签页_
 
 <br/>
 
@@ -1013,85 +1012,6 @@ watchEffect(() => {
 
 :::
 
-## 自定义主题色
-
-<Flex vertical>
-  <Space align="center">
-    tabsPrimaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-  </Space>
-  <Tabs :style="`--tabs-primary-color: ${primaryColor}`" :items="tabItems" v-model:active-key="activeKey" />
-  <Tabs
-    :style="`--tabs-primary-color: ${primaryColor}`"
-    :items="tabItems"
-    v-model:active-key="activeKey"
-    type="card"
-  />
-</Flex>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { TabsProps, TabsItem } from 'vue-amazing-ui'
-const tabItems = ref<TabsItem[]>([
-  {
-    key: '1',
-    tab: 'Tab 1',
-    content: 'Content of Tab Pane 1'
-  },
-  {
-    key: '2',
-    tab: 'Tab 2',
-    content: 'Content of Tab Pane 2'
-  },
-  {
-    key: '3',
-    tab: 'Tab 3',
-    content: 'Content of Tab Pane 3'
-  },
-  {
-    key: '4',
-    tab: 'Tab 4',
-    content: 'Content of Tab Pane 4'
-  },
-  {
-    key: '5',
-    tab: 'Tab 5',
-    content: 'Content of Tab Pane 5'
-  },
-  {
-    key: '6',
-    tab: 'Tab 6',
-    content: 'Content of Tab Pane 6'
-  }
-])
-const primaryColor = ref('#ff6900')
-const activeKey = ref<TabsProps['activeKey']>('1')
-watchEffect(() => {
-  console.log('activeKey', activeKey.value)
-})
-</script>
-<template>
-  <Flex vertical>
-    <Space align="center">
-      tabsPrimaryColor:
-      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    </Space>
-    <Tabs :style="`--tabs-primary-color: ${primaryColor}`" :items="tabItems" v-model:active-key="activeKey" />
-    <Tabs
-      :style="`--tabs-primary-color: ${primaryColor}`"
-      :items="tabItems"
-      v-model:active-key="activeKey"
-      type="card"
-    />
-  </Flex>
-</template>
-```
-
-:::
-
 ## 自定义内容
 
 <Tabs :items="tabItems" v-model:active-key="activeKey">
@@ -1350,42 +1270,42 @@ const state = reactive<TabsProps>({
 
 ### Tabs
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-items | 标签页数组 | [Item](#item-type)[] | []
-prefix | 标签页前缀 | string &#124; slot | undefined
-suffix | 标签页后缀 | string &#124; slot | undefined
-animated | 是否启用切换动画，在 `tabPosition: 'top' \| 'bottom'` 时有效 | boolean | true
-centered | 标签是否居中展示 | boolean | false
-size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-type | 标签页的类型 |'line' &#124; 'card' | 'line'
-tabGutter | 页签之前的间隙大小，单位 `px` | number | undefined
-tabStyle | 自定义页签样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-tabPosition | 自定义页签位置 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'top'
-contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | undefined
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| items | 标签页数组 | [Item](#item-type)[] | [] |
+| prefix | 标签页前缀 | string &#124; slot | undefined |
+| suffix | 标签页后缀 | string &#124; slot | undefined |
+| animated | 是否启用切换动画，在 `tabPosition: 'top' \| 'bottom'` 时有效 | boolean | true |
+| centered | 标签是否居中展示 | boolean | false |
+| size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| type | 标签页的类型 | 'line' &#124; 'card' | 'line' |
+| tabGutter | 页签之前的间隙大小，单位 `px` | number | undefined |
+| tabStyle | 自定义页签样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| tabPosition | 自定义页签位置 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'top' |
+| contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | undefined |
 
 ### Item Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number | undefined
-tab? | 页签显示文字 | string | undefined
-icon? | 页签图标 | VNode | undefined
-content? | 标签页内容 | string &#124; slot | undefined
-disabled? | 是否禁用页签 | boolean | false
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number | undefined |
+| tab? | 页签显示文字 | string | undefined |
+| icon? | 页签图标 | VNode | undefined |
+| content? | 标签页内容 | string &#124; slot | undefined |
+| disabled? | 是否禁用页签 | boolean | false |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-tab | 自定义页签显示文字 | v-slot:tab="{ item, tab, key }"
-content | 自定义标签页内容 | v-slot:content="{ item, content, key }"
-prefix | 自定义标签页前缀 | v-slot:prefix
-suffix | 自定义标签页后缀 | v-slot:suffix
+| 名称    | 说明               | 类型                                    |
+| :------ | :----------------- | :-------------------------------------- |
+| tab     | 自定义页签显示文字 | v-slot:tab="{ item, tab, key }"         |
+| content | 自定义标签页内容   | v-slot:content="{ item, content, key }" |
+| prefix  | 自定义标签页前缀   | v-slot:prefix                           |
+| suffix  | 自定义标签页后缀   | v-slot:suffix                           |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 切换面板的回调 | (key: string &#124; number) => void
+| 名称   | 说明           | 类型                                |
+| :----- | :------------- | :---------------------------------- |
+| change | 切换面板的回调 | (key: string &#124; number) => void |

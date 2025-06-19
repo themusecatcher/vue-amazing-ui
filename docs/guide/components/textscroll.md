@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*文字滚动*
+_文字滚动_
 
 ## 何时使用
 
@@ -125,13 +125,7 @@ function onClick(item: TextScrollItem) {
 
 ## 垂直文字滚动
 
-<TextScroll
-  style="background-color: #e6f4ff"
-  :items="scrollItems"
-  :item-style="{ fontSize: '20px' }"
-  vertical
-  @click="onClick"
-/>
+<TextScroll style="background-color: #e6f4ff" :items="scrollItems" :item-style="{ fontSize: '20px' }" vertical @click="onClick" />
 
 ::: details Show Code
 
@@ -230,13 +224,7 @@ function onClick(item: TextScrollItem) {
 
 ## 自定义样式
 
-<TextScroll
-  style="background-color: #e6f4ff; border-radius: 12px"
-  :items="scrollItems"
-  :item-style="{ fontSize: '20px', fontWeight: 500, color: '#FF9800' }"
-  :height="60"
-  @click="onClick"
-/>
+<TextScroll style="background-color: #e6f4ff; border-radius: 12px" :items="scrollItems" :item-style="{ fontSize: '20px', fontWeight: 500, color: '#FF9800' }" :height="60" @click="onClick" />
 
 ::: details Show Code
 
@@ -336,12 +324,7 @@ function onClick(item: TextScrollItem) {
 
 ## 自定义展示条数和间距
 
-<TextScroll
-  :items="scrollItems"
-  :amount="3"
-  :gap="30"
-  @click="onClick"
-/>
+<TextScroll :items="scrollItems" :amount="3" :gap="30" @click="onClick" />
 
 ::: details Show Code
 
@@ -380,12 +363,7 @@ function onClick(item: TextScrollItem) {
 }
 </script>
 <template>
-  <TextScroll
-    :items="scrollItems"
-    :amount="3"
-    :gap="30"
-    @click="onClick"
-  />
+  <TextScroll :items="scrollItems" :amount="3" :gap="30" @click="onClick" />
 </template>
 ```
 
@@ -854,40 +832,40 @@ const state = reactive({
 
 ### TextScroll
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-items | 滚动文字数组，`single` 为 `true` 时，类型为 `Item`；多条文字水平滚动时，数组长度必须大于等于 `amount` 才能滚动 | [Item](#item-type)[] &#124; [Item](#item-type) | []
-single | 是否启用单条文字滚动效果，水平滚动时生效，为 `true` 时，`amount` 自动设为 `1` | boolean | false
-width | 滚动区域宽度，单位 `px` | string &#124; number | '100%'
-height | 滚动区域高度，单位 `px` | number | 50
-itemStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-hrefHoverColor | 链接文字鼠标悬浮颜色；仅当 `href` 存在时生效 | string | '#1677ff'
-amount | 滚动区域展示条数，水平滚动时生效 | number | 4
-gap | 水平滚动文字各列间距或垂直滚动文字两边的间距，单位 `px` |  number | 20
-speed | 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效 | number | 48
-vertical | 是否垂直滚动 | boolean | false
-duration | 垂直滚动过渡持续时间，单位 `ms`，垂直滚动时生效 | number | 1000
-interval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000
-pauseOnMouseEnter | 鼠标移入是否暂停滚动 | boolean | false
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| items | 滚动文字数组，`single` 为 `true` 时，类型为 `Item`；多条文字水平滚动时，数组长度必须大于等于 `amount` 才能滚动 | [Item](#item-type)[] &#124; [Item](#item-type) | [] |
+| single | 是否启用单条文字滚动效果，水平滚动时生效，为 `true` 时，`amount` 自动设为 `1` | boolean | false |
+| width | 滚动区域宽度，单位 `px` | string &#124; number | '100%' |
+| height | 滚动区域高度，单位 `px` | number | 50 |
+| itemStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| hrefHoverColor | 链接文字鼠标悬浮颜色；仅当 `href` 存在时生效 | string | undefined |
+| amount | 滚动区域展示条数，水平滚动时生效 | number | 4 |
+| gap | 水平滚动文字各列间距或垂直滚动文字两边的间距，单位 `px` | number | 20 |
+| speed | 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效 | number | 48 |
+| vertical | 是否垂直滚动 | boolean | false |
+| duration | 垂直滚动过渡持续时间，单位 `ms`，垂直滚动时生效 | number | 1000 |
+| interval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000 |
+| pauseOnMouseEnter | 鼠标移入是否暂停滚动 | boolean | false |
 
 ### Item Type
 
-名称 | 说明 | 类型 | 默认
--- | -- | -- | --
-title | 文字标题 | string | undefined
-href? | 跳转链接 | string | undefined
-target? | 跳转链接打开方式，`href` 存在时生效 | '_self' &#124; '_blank' | undefined
+| 名称    | 说明                                | 类型                      | 默认      |
+| ------- | ----------------------------------- | ------------------------- | --------- |
+| title   | 文字标题                            | string                    | undefined |
+| href?   | 跳转链接                            | string                    | undefined |
+| target? | 跳转链接打开方式，`href` 存在时生效 | '\_self' &#124; '\_blank' | undefined |
 
 ## Methods
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-start | 开始滚动 | () => void
-stop | 暂停滚动 | () => void
-reset | 重置滚动 | () => void
+| 名称  | 说明     | 类型       |
+| :---- | :------- | :--------- |
+| start | 开始滚动 | () => void |
+| stop  | 暂停滚动 | () => void |
+| reset | 重置滚动 | () => void |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-click | 点击标题时的回调 | (item: [Item](#item-type)) => void
+| 名称  | 说明             | 类型                               |
+| :---- | :--------------- | :--------------------------------- |
+| click | 点击标题时的回调 | (item: [Item](#item-type)) => void |

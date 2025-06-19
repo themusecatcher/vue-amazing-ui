@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { rafTimeout, cancelRaf } from 'components/utils'
+import { rafTimeout, cancelRaf, useInject } from 'components/utils'
 export interface Props {
   content?: string // 提示内容
   duration?: number // 自动关闭的延时，单位 ms，设置 null 时，不自动关闭
@@ -19,8 +19,8 @@ export interface Message {
   top?: string | number // 消息距离顶部的位置，单位 px
   class?: string // 自定义类名
   style?: CSSProperties // 自定义样式
-  onClick?: Function // 点击 message 时的回调函数
-  onClose?: Function // 关闭时的回调函数
+  onClick?: () => void // 点击 message 时的回调函数
+  onClose?: () => void // 关闭时的回调函数
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
 const resetTimer = ref()
@@ -28,8 +28,9 @@ const showMessage = ref<boolean[]>([])
 const hideTimers = ref<any[]>([])
 const messageContent = ref<Message[]>([])
 const closeDuration = ref<number | null>(null) // 自动关闭延时
+const messageTop = ref<string>() // message 距离顶部的位置
+const { colorPalettes } = useInject('Message') // 主题色注入
 const emits = defineEmits(['click', 'close'])
-const messageTop = ref<string>()
 // 所有提示是否已经全部变为 false
 const clear = computed(() => {
   return showMessage.value.every((show: boolean) => !show)
@@ -183,7 +184,7 @@ defineExpose({
     class="m-message"
     :style="`
       top: ${messageTop};
-      --message-primary-color: #1677ff;
+      --message-primary-color: ${colorPalettes[5]};
       --message-success-color: #52c41a;
       --message-warning-color: #faad14;
       --message-error-color: #ff4d4f;

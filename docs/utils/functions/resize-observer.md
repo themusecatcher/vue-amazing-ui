@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化的组合式函数*
+_使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化的组合式函数_
 
 ::: details Show Source Code
 
@@ -19,12 +19,12 @@
  * @returns 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
  */
 import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
-import type { Ref } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 export function useResizeObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: ResizeObserverCallback,
   options: object = {}
-) {
+): { start: () => void; stop: () => void } {
   const isSupported = useSupported(() => window && 'ResizeObserver' in window)
   let observer: ResizeObserver | undefined
   const stopObservation = ref(false)
@@ -65,23 +65,23 @@ export function useResizeObserver(
       flush: 'post'
     }
   )
-  const stop = () => {
-    stopObservation.value = true
-    cleanup()
-  }
   const start = () => {
     stopObservation.value = false
     observeElements()
   }
+  const stop = () => {
+    stopObservation.value = true
+    cleanup()
+  }
   // 在组件卸载前清理 ResizeObserver
   onBeforeUnmount(() => cleanup())
   return {
-    stop,
-    start
+    start,
+    stop
   }
 }
 // 辅助函数
-export function useSupported(callback: () => unknown) {
+export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   const isMounted = useMounted()
   return computed(() => {
     // to trigger the ref
@@ -89,7 +89,7 @@ export function useSupported(callback: () => unknown) {
     return Boolean(callback())
   })
 }
-export function useMounted() {
+export function useMounted(): Ref<boolean> {
   const isMounted = ref(false)
   // 获取当前组件的实例
   const instance = getCurrentInstance()
@@ -110,14 +110,13 @@ export function useMounted() {
 
 ## 基本使用
 
-*请缩放下面的盒子来观察变化*
+_请缩放下面的盒子来观察变化_
 
 <br/>
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useResizeObserver } from 'vue-amazing-ui'
-
 const el = ref(null)
 const state = reactive({
   borderBlockSize: null,
@@ -218,7 +217,6 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useResizeObserver } from 'vue-amazing-ui'
-
 const el = ref(null)
 const state = reactive({
   borderBlockSize: null,
@@ -290,7 +288,7 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
     min-width: 300px;
     min-height: 450px;
     max-width: 688px;
-    border: 1px solid #2e2e32;;
+    border: 1px solid #2e2e32;
     border-radius: 4px;
     outline: none;
     white-space: pre;
@@ -319,8 +317,8 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-target | 要观察的目标，可以是 `Ref` 对象、`Ref` 数组、`HTMLElement` 或 `HTMLElement` 数组 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined
-callback | 当元素尺寸变化时调用的回调函数 | ResizeObserverCallback | undefined
-options | `ResizeObserver` 选项，用于定制观察行为，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver/observe#options) | object | {}
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| target | 要观察的目标，可以是 `Ref` 对象、`Ref` 数组、`HTMLElement` 或 `HTMLElement` 数组 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined |
+| callback | 当元素尺寸变化时调用的回调函数 | ResizeObserverCallback | undefined |
+| options | `ResizeObserver` 选项，用于定制观察行为，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver/observe#options) | object | {} |

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*开关选择器*
+_开关选择器_
 
 ## 何时使用
 
@@ -10,23 +10,12 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { generate } from '@ant-design/colors'
 const checked = ref(true)
-const primaryColor = ref('#ff6900')
 const customValue1 = ref('no')
 const customValue2 = ref(2)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--switch-primary-color': color,
-    '--switch-primary-color-hover': colorPalettes[4],
-    '--switch-ripple-color': color
-  }
-  return style
-}
 function onChange(checked: boolean) {
   console.log('checked', checked)
 }
@@ -234,7 +223,12 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Switch class="theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }">
+  <Switch
+    class="theme-switch"
+    v-model="checked"
+    ripple-color="#faad14"
+    :circle-style="{ background: checked ? '#001529' : '#fff' }"
+  >
     <template #node="{ checked }">
       <svg
         v-if="checked"
@@ -296,51 +290,9 @@ watchEffect(() => {
 .svg-light {
   width: 12px;
   height: 12px;
-  fill: rgba(60, 60, 67, .75);
+  fill: rgba(60, 60, 67, 0.75);
 }
 </style>
-```
-
-:::
-
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center">
-    primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
-  </Space>
-  <Switch :style="getThemeStyle(primaryColor)" v-model="checked" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import { generate } from '@ant-design/colors'
-const checked = ref(true)
-const primaryColor = ref('#ff6900')
-watchEffect(() => {
-  console.log('checked', checked.value)
-})
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--switch-primary-color': color,
-    '--switch-primary-color-hover': colorPalettes[4],
-    '--switch-ripple-color': color
-  }
-  return style
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center">
-      primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    </Space>
-    <Switch :style="getThemeStyle(primaryColor)" v-model="checked" />
-  </Space>
-</template>
 ```
 
 :::
@@ -398,29 +350,29 @@ const customValue2 = ref(2)
 
 ### Switch
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-checked | 选中时的内容 | string &#124; slot | undefined
-checkedValue | 选中时的值 | boolean &#124; string &#124; number | true
-unchecked | 未选中时的内容 | string &#124; slot | undefined
-uncheckedValue | 未选中时的值 | boolean &#124; string &#124; number | false
-loading | 是否加载中 | boolean | false
-disabled | 是否禁用 | boolean | false
-size | 开关大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-rippleColor | 点击时的波纹颜色，当自定义选中颜色时需要设置 | string | '#1677ff'
-circleStyle | 圆点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-modelValue <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean &#124; string &#124; number | false
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| checked | 选中时的内容 | string &#124; slot | undefined |
+| checkedValue | 选中时的值 | boolean &#124; string &#124; number | true |
+| unchecked | 未选中时的内容 | string &#124; slot | undefined |
+| uncheckedValue | 未选中时的值 | boolean &#124; string &#124; number | false |
+| loading | 是否加载中 | boolean | false |
+| disabled | 是否禁用 | boolean | false |
+| size | 开关大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| rippleColor | 点击时的波纹颜色，当自定义选中颜色时需要设置 | string | undefined |
+| circleStyle | 圆点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| modelValue <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean &#124; string &#124; number | false |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-checked | 自定义选中时的内容 | v-slot:checked
-unchecked | 自定义未选中时的内容 | v-slot:unchecked
-node | 自定义开关节点 | v-slot:node="{ checked }"
+| 名称      | 说明                 | 类型                      |
+| :-------- | :------------------- | :------------------------ |
+| checked   | 自定义选中时的内容   | v-slot:checked            |
+| unchecked | 自定义未选中时的内容 | v-slot:unchecked          |
+| node      | 自定义开关节点       | v-slot:node="{ checked }" |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 变化时的回调 | (checked: boolean) => void
+| 名称   | 说明         | 类型                       |
+| :----- | :----------- | :------------------------- |
+| change | 变化时的回调 | (checked: boolean) => void |

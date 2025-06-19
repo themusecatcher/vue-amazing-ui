@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*全局展示通知提醒信息*
+_全局展示通知提醒信息_
 
 ## 何时使用
 
@@ -22,10 +22,7 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { CloudFilled, FireFilled } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const notification = ref()
-const customNotification = ref()
-const primaryColor = ref('#ff6900')
 function onOpen(description: string) {
   notification.value.open({
     title: 'Notification Title',
@@ -89,21 +86,6 @@ function onStyleCustom(description: string) {
     }
   })
 }
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6]
-  }
-  return style
-}
-function onThemeCustom(description: string) {
-  customNotification.value.info({
-    title: 'Notification Title',
-    description
-  })
-}
 function onOpenPlacement(placement: string) {
   notification.value.info({
     title: 'Notification Title',
@@ -135,7 +117,6 @@ function onClose() {
 </script>
 
 <Notification ref="notification" @close="onClose" />
-<Notification ref="customNotification" :style="`--notification-primary-color: ${primaryColor};`" @close="onClose" />
 
 ## 基本使用
 
@@ -269,22 +250,9 @@ function onClose() {
 
 ## 自定义样式
 
-<Space vertical>
-  <Space>
-    <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
-    <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
-  </Space>
-  <Space align="center">
-    notificationPrimaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    <Button
-      :style="getThemeStyle(primaryColor)"
-      type="primary"
-      @click="onThemeCustom('This is a custom theme notification')"
-    >
-      Custom Theme
-    </Button>
-  </Space>
+<Space>
+  <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
+  <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
 </Space>
 
 <style lang="less" scoped>
@@ -302,10 +270,7 @@ function onClose() {
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { CloudFilled, FireFilled } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const notification = ref()
-const customNotification = ref()
-const primaryColor = ref('#ff6900')
 function onClassCustom(description: string) {
   notification.value.open({
     title: 'Notification Title',
@@ -325,46 +290,17 @@ function onStyleCustom(description: string) {
     }
   })
 }
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6]
-  }
-  return style
-}
-function onThemeCustom(description: string) {
-  customNotification.value.info({
-    title: 'Notification Title',
-    description
-  })
-}
 function onClose() {
   // 通知提醒关闭时的回调函数
   console.log('notification closed')
 }
 </script>
 <template>
-  <Space vertical>
-    <Space>
-      <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
-      <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
-    </Space>
-    <Space align="center">
-      notificationPrimaryColor:
-      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-      <Button
-        :style="getThemeStyle(primaryColor)"
-        type="primary"
-        @click="onThemeCustom('This is a custom theme notification')"
-      >
-        Custom Theme
-      </Button>
-    </Space>
+  <Space>
+    <Button type="primary" @click="onClassCustom('This is a custom class notification')">Custom Class</Button>
+    <Button type="primary" @click="onStyleCustom('This is a custom style notification')">Custom Style</Button>
   </Space>
   <Notification ref="notification" @close="onClose" />
-  <Notification ref="customNotification" :style="`--notification-primary-color: ${primaryColor};`" @close="onClose" />
 </template>
 <style lang="less" scoped>
 :deep(.custom-class) {
@@ -468,47 +404,47 @@ function onClose() {
 
 ### Notification
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-title | 通知提醒标题 | string | undefined
-description | 通知提醒内容 | string | undefined
-duration | 自动关闭的延时时长，单位 `ms`，默认 `4500ms`；设置 `null` 时，不自动关闭 | number &#124; null | 4500
-top | 消息从顶部弹出时，距离顶部的位置，单位 `px` | number | 24
-bottom | 消息从底部弹出时，距离底部的位置，单位 `px` | number | 24
-placement | 消息弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | 'topRight'
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title | 通知提醒标题 | string | undefined |
+| description | 通知提醒内容 | string | undefined |
+| duration | 自动关闭的延时时长，单位 `ms`，默认 `4500ms`；设置 `null` 时，不自动关闭 | number &#124; null | 4500 |
+| top | 消息从顶部弹出时，距离顶部的位置，单位 `px` | number | 24 |
+| bottom | 消息从底部弹出时，距离底部的位置，单位 `px` | number | 24 |
+| placement | 消息弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | 'topRight' |
 
 ### Notification Type
 
 <br/>
 
-*调用时传入的 `Notification` 类型，以下属性均具有更高优先级*
+_调用时传入的 `Notification` 类型，以下属性均具有更高优先级_
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-title? | 通知提醒标题 | string | undefined
-description? | 通知提醒内容 | string | undefined
-icon? | 自定义图标 | VNode | undefined
-class? | 自定义类名 | string | undefined
-style? | 自定义样式 | string | undefined
-duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null | undefined
-placement? | 通知提醒弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | undefined
-onClose | 关闭时的回调函数 | Function | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title? | 通知提醒标题 | string | undefined |
+| description? | 通知提醒内容 | string | undefined |
+| icon? | 自定义图标 | VNode | undefined |
+| class? | 自定义类名 | string | undefined |
+| style? | 自定义样式 | string | undefined |
+| duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null | undefined |
+| placement? | 通知提醒弹出位置 | 'topLeft' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottomRight' | undefined |
+| onClose | 关闭时的回调函数 | Function | undefined |
 
 ## Methods
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-open | 基本通知提醒 | (data: [Notification](#notification-type)) => void
-info | 信息通知提醒 | (data: [Notification](#notification-type)) => void
-success | 成功通知提醒 | (data: [Notification](#notification-type)) => void
-error | 失败通知提醒 | (data: [Notification](#notification-type)) => void
-warning | 警告通知提醒 | (data: [Notification](#notification-type)) => void
+| 名称    | 说明         | 类型                                               |
+| :------ | :----------- | :------------------------------------------------- |
+| open    | 基本通知提醒 | (data: [Notification](#notification-type)) => void |
+| info    | 信息通知提醒 | (data: [Notification](#notification-type)) => void |
+| success | 成功通知提醒 | (data: [Notification](#notification-type)) => void |
+| error   | 失败通知提醒 | (data: [Notification](#notification-type)) => void |
+| warning | 警告通知提醒 | (data: [Notification](#notification-type)) => void |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-close | 通知提醒关闭时的回调 | () => void
+| 名称  | 说明                 | 类型       |
+| :---- | :------------------- | :--------- |
+| close | 通知提醒关闭时的回调 | () => void |
 
 ## 全局挂载使用
 

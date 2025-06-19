@@ -25,8 +25,8 @@ enum TypeStartColor {
   error = 'rgba(255, 77, 79, 0.6)'
 }
 enum TypeEndColor {
-  primary = '#1677FF',
-  info = '#1677FF',
+  primary = '#1677ff',
+  info = '#1677ff',
   success = '#52c41a',
   warning = '#faad14',
   error = '#ff4d4f'
@@ -63,9 +63,7 @@ const fontSize = computed(() => {
   if (typeof props.size === 'number') {
     return `${props.size}px`
   }
-  if (typeof props.size === 'string') {
-    return props.size
-  }
+  return props.size
 })
 function isNumber(value: string | number): boolean {
   return typeof value === 'number'

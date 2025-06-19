@@ -4,6 +4,7 @@ import Spin from 'components/spin'
 import Message from 'components/message'
 import Image from 'components/image'
 import Space from 'components/space'
+import { useInject } from 'components/utils'
 export interface FileType {
   name?: string // 文件名
   url: any // 文件地址
@@ -26,9 +27,9 @@ export interface Props {
   imageProps?: object // Image 组件属性配置，用于配置图片预览
   messageProps?: object // Message 组件属性配置，用于配置操作消息提示
   actionMessage?: MessageType // 操作完成的消息提示，传 {} 即可不显示任何消息提示
-  beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 开始上传；支持返回一个 Promise 对象（如服务端校验等），Promise 对象 reject 时停止上传，resolve 时开始上传；通常用来校验用户上传的文件格式和大小
+  beforeUpload?: (file: File) => boolean | Promise<any> // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 开始上传；支持返回一个 Promise 对象（如服务端校验等），Promise 对象 reject 时停止上传，resolve 时开始上传；通常用来校验用户上传的文件格式和大小
   uploadMode?: 'base64' | 'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
-  customRequest?: Function // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
+  customRequest?: (file: File) => any // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
   fileList?: FileType[] // (v-model) 已上传的文件列表
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -55,6 +56,7 @@ const uploading = ref<boolean[]>([]) // 上传中
 const uploadInputRef = ref() // 上传文件控件引用
 const imageRef = ref()
 const messageRef = ref()
+const { colorPalettes } = useInject('Upload') // 主题色注入
 const emits = defineEmits(['update:fileList', 'drop', 'change', 'preview', 'remove'])
 const maxFileCount = computed(() => {
   if (props.maxCount === undefined) {
@@ -105,7 +107,7 @@ function onDrop(e: DragEvent, index: number) {
         break
       }
     }
-    // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
+    // input 的 change 事件默认保存上一次 input 的 value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
     uploadInputRef.value[index].value = ''
   }
   emits('drop', e)
@@ -125,7 +127,7 @@ function onUpload(e: any, index: number) {
         break
       }
     }
-    // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
+    // input 的 change 事件默认保存上一次 input 的value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
     uploadInputRef.value[index].value = ''
   }
 }
@@ -147,7 +149,7 @@ const uploadFile = async (file: File, index: number) => {
             // 如果是布尔值，根据值 resolve 或 reject
             result ? resolve(result) : reject(new Error('Function returned false'))
           } else {
-            // 否则，直接resolve返回值
+            // 否则，直接 resolve 返回值
             resolve(result)
           }
         }
@@ -179,8 +181,8 @@ const uploadFile = async (file: File, index: number) => {
     })
 }
 function base64Upload(file: File, index: number) {
-  var reader = new FileReader()
-  reader.readAsDataURL(file) // 以base64方式读取文件
+  const reader = new FileReader()
+  reader.readAsDataURL(file) // 以 base64 方式读取文件
   reader.onloadstart = function (e) {
     // 当读取操作开始时触发
     // reader.abort() // 取消上传
@@ -195,7 +197,7 @@ function base64Upload(file: File, index: number) {
     // console.log('读取错误 onerror:', e)
   }
   reader.onprogress = function (e) {
-    // 在读取Blob时触发，读取上传进度，50ms左右调用一次
+    // 在读取 Blob 时触发，读取上传进度，50ms 左右调用一次
     // console.log('读取中 onprogress:', e)
     // console.log('已读取:', Math.ceil(e.loaded / e.total * 100))
     if (e.loaded === e.total) {
@@ -206,7 +208,7 @@ function base64Upload(file: File, index: number) {
   reader.onload = function (e) {
     // 当读取操作成功完成时调用
     // console.log('读取成功 onload:', e)
-    // 该文件的base64数据，如果是图片，则前端可直接用来展示图片
+    // 该文件的 base64 数据，如果是图片，则前端可直接用来展示图片
     uploadedFiles.value.push({
       name: file.name,
       url: e.target?.result
@@ -282,7 +284,7 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-upload-wrap" :style="`--upload-primary-color: #1677ff;`">
+  <div class="m-upload-wrap" :style="`--upload-primary-color: ${colorPalettes[5]};`">
     <Space gap="small" v-bind="spaceProps">
       <div class="upload-item-panel" v-for="n of showUpload" :key="n">
         <div

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*采用分页的形式分隔长列表，每次只加载一个页面*
+_采用分页的形式分隔长列表，每次只加载一个页面_
 
 ## 何时使用
 
@@ -11,12 +11,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { PaginationProps } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(500)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const placementOptions = [
   {
     label: 'left',
@@ -47,33 +44,6 @@ const sizeOptions = [
   }
 ]
 const size = ref<PaginationProps['size']>('middle')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--pagination-primary-color': color,
-    '--pagination-primary-color-focus-visible': colorPalettes[2]
-  }
-  return style
-}
-function getSelectThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--select-primary-color-hover': colorPalettes[4],
-    '--select-primary-color-focus': colorPalettes[4],
-    '--select-primary-shadow-color': primaryShadowColor.value,
-    '--select-item-bg-color-active': colorPalettes[0]
-  }
-  return style
-}
-function getInputThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-primary-color-hover': colorPalettes[4],
-    '--input-primary-color-focus': colorPalettes[4],
-    '--input-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
 function onChange(page: number, pageSize: number) {
   // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
@@ -96,7 +66,8 @@ function pageSizeChange(page: number, pageSize: number) {
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) {
+  // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -122,7 +93,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 import { ref } from 'vue'
 import type { PaginationProps } from 'vue-amazing-ui'
 const page = ref(1)
-const total = ref(98)
+const total = ref(500)
 const placementOptions = [
   {
     label: 'left',
@@ -138,7 +109,8 @@ const placementOptions = [
   }
 ]
 const placement = ref<PaginationProps['placement']>('left')
-function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) {
+  // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -167,7 +139,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 import { ref } from 'vue'
 import type { PaginationProps } from 'vue-amazing-ui'
 const page = ref(1)
-const total = ref(98)
+const total = ref(500)
 const sizeOptions = [
   {
     label: 'small',
@@ -183,7 +155,8 @@ const sizeOptions = [
   }
 ]
 const size = ref<PaginationProps['size']>('middle')
-function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) {
+  // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -200,14 +173,7 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 
 ## 自定义 pageSize 切换选项
 
-<Pagination
-  v-model:page="page"
-  v-model:page-size="pageSize"
-  :total="total"
-  :page-size-options="[10, 20, 30, 40, 50]"
-  @change="onChange"
-  @pageSizeChange="pageSizeChange"
-/>
+<Pagination v-model:page="page" v-model:page-size="pageSize" :total="total" :page-size-options="[10, 20, 30, 40, 50]" @change="onChange" @pageSizeChange="pageSizeChange" />
 
 ::: details Show Code
 
@@ -216,12 +182,14 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 import { ref } from 'vue'
 const page = ref(1)
 const pageSize = ref(10)
-const total = ref(98)
-function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+const total = ref(500)
+function onChange(page: number, pageSize: number) {
+  // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
-function pageSizeChange (page: number, pageSize: number) { // 每页条数 pageSize 变化的回调
+function pageSizeChange(page: number, pageSize: number) {
+  // 每页条数 pageSize 变化的回调
   console.log('pageSizeChange page', page)
   console.log('pageSizeChange pageSize', pageSize)
 }
@@ -250,8 +218,9 @@ function pageSizeChange (page: number, pageSize: number) { // 每页条数 pageS
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-const total = ref(98)
-function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+const total = ref(500)
+function onChange(page: number, pageSize: number) {
+  // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -273,8 +242,9 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-const total = ref(98)
-function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+const total = ref(500)
+function onChange(page: number, pageSize: number) {
+  // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -310,8 +280,9 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-const total = ref(98)
-function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+const total = ref(500)
+function onChange(page: number, pageSize: number) {
+  // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -347,8 +318,9 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-const total = ref(98)
-function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+const total = ref(500)
+function onChange(page: number, pageSize: number) {
+  // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -360,115 +332,30 @@ function onChange (page: number, pageSize: number) { // 页码 page 或每页条
 
 :::
 
-## 自定义主题色
-
-<Flex vertical>
-  <Space align="center">
-    primaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    primaryShadowColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-  </Space>
-  <Pagination
-    :style="getThemeStyle(primaryColor)"
-    v-model:page="page"
-    :total="total"
-    show-quick-jumper
-    :changer-props="{ style: getSelectThemeStyle(primaryColor) }"
-    :jumper-props="{ style: getInputThemeStyle(primaryColor) }"
-    @change="onChange"
-  />
-</Flex>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import { generate } from '@ant-design/colors'
-const page = ref(1)
-const total = ref(98)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--pagination-primary-color': color,
-    '--pagination-primary-color-focus-visible': colorPalettes[2]
-  }
-  return style
-}
-function getSelectThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--select-primary-color-hover': colorPalettes[4],
-    '--select-primary-color-focus': colorPalettes[4],
-    '--select-primary-shadow-color': primaryShadowColor.value,
-    '--select-item-bg-color-active': colorPalettes[0]
-  }
-  return style
-}
-function getInputThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-primary-color-hover': colorPalettes[4],
-    '--input-primary-color-focus': colorPalettes[4],
-    '--input-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-function onChange (page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
-  console.log('change page', page)
-  console.log('change pageSize', pageSize)
-}
-</script>
-<template>
-  <Flex vertical>
-    <Space align="center">
-      primaryColor:
-      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-      primaryShadowColor:
-      <ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-    </Space>
-    <Pagination
-      :style="getThemeStyle(primaryColor)"
-      v-model:page="page"
-      :total="total"
-      show-quick-jumper
-      :changer-props="{ style: getSelectThemeStyle(primaryColor) }"
-      :jumper-props="{ style: getInputThemeStyle(primaryColor) }"
-      @change="onChange"
-    />
-  </Flex>
-</template>
-```
-
-:::
-
 ## APIs
 
 ### Pagination
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-page <Tag color="cyan">v-model</Tag> | 当前页数 | number | 1
-pageSize <Tag color="cyan">v-model</Tag> | 每页条数 | number | 10
-total | 数据总数 | number | 0
-disabled | 是否禁用 | boolean | false
-pageAmount | 显示的页码数 | number | 5
-hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false
-showQuickJumper | 是否可以快速跳转至某页 | boolean | false
-jumperProps | 快速跳转组件 `props`，参考 [Input Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html#input) | object | {}
-showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined
-changerProps | `pageSize` 切换器组件 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {}
-pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100]
-showTotal | 用于显示数据总量和当前数据顺序 | boolean &#124; ((total: number, range: number[]) => string) | false
-placement | 分页展示位置 | 'left' &#124; 'center' &#124; 'right' | 'center'
-size | 分页按钮大小 | 'large' &#124; 'middle' &#124; 'small' | 'large'
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| page <Tag color="cyan">v-model</Tag> | 当前页数 | number | 1 |
+| pageSize <Tag color="cyan">v-model</Tag> | 每页条数 | number | 10 |
+| total | 数据总数 | number | 0 |
+| disabled | 是否禁用 | boolean | false |
+| pageAmount | 显示的页码数 | number | 5 |
+| hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false |
+| showQuickJumper | 是否可以快速跳转至某页 | boolean | false |
+| jumperProps | 快速跳转组件 `props`，参考 [Input Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html#input) | object | {} |
+| showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined |
+| changerProps | `pageSize` 切换器组件 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {} |
+| pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100] |
+| showTotal | 用于显示数据总量和当前数据顺序 | boolean &#124; ((total: number, range: number[]) => string) | false |
+| placement | 分页展示位置 | 'left' &#124; 'center' &#124; 'right' | 'center' |
+| size | 分页按钮大小 | 'large' &#124; 'middle' &#124; 'small' | 'large' |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 页码 `page` 或每页条数 `pageSize` 改变的回调 | (page: number, pageSize: number) => void
-pageSizeChange | 每页条数 `pageSize` 变化的回调 | (page: number, pageSize: number) => void
+| 名称           | 说明                                         | 类型                                     |
+| :------------- | :------------------------------------------- | :--------------------------------------- |
+| change         | 页码 `page` 或每页条数 `pageSize` 改变的回调 | (page: number, pageSize: number) => void |
+| pageSizeChange | 每页条数 `pageSize` 变化的回调               | (page: number, pageSize: number) => void |
